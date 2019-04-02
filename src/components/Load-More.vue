@@ -35,6 +35,11 @@
           <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="0.8s" repeatCount="indefinite" />
         </path>
       </svg>
+      <p v-if="allLoaded && list.length > 0" :class="$style.noMore">没有更多了~</p>
+      <div :class="$style.noContent" v-if="list.length === 0">
+        <pl-svg :class="$style.noContentIcon" :name="icon"></pl-svg>
+        <p :class="$style.noContentTip" v-text="noContentTip"></p>
+      </div>
     </div>
   </div>
 </template>
@@ -57,7 +62,7 @@ export default {
     * 请求参数
     * 必须包含：current: 页码
     * */
-    options: {
+    form: {
       type: Object,
       required: true
     },
@@ -81,8 +86,19 @@ export default {
       return this.$refs.container
     }
   },
+  watch: {
+    form: {
+      handler: async function () {
+        this.options = JSON.parse(JSON.stringify(this.form))
+        this.resetState()
+        this.list = await this.getData()
+      },
+      deep: true
+    }
+  },
   data () {
     return {
+      options: null,
       total: 0,
       list: [],
       startY: 0,
@@ -94,22 +110,18 @@ export default {
       allLoaded: false, // 已全部加载完毕
       timer: 0,
       offsetHeight: 0,
-      rotate: 0 // 记录loading旋转的角度
+      rotate: 0, // 记录loading旋转的角度
+      scrollHandler: null
     }
   },
   async created () {
-    this.top = 100
+    this.scrollHandler = throttle(this.infiniteScroll, 300)
+    this.options = JSON.parse(JSON.stringify(this.form))
+    this.resetState()
     this.list = await this.getData()
   },
   mounted () {
-    this.pullLoading.addEventListener('transitionend', () => {
-      this.pullLoading.style.transition = null
-      this.rotate = 0
-    })
-    window.addEventListener('scroll', throttle(this.infiniteScroll, 300))
-  },
-  directives: {
-    // infiniteScroll
+    window.addEventListener('scroll', this.scrollHandler)
   },
   methods: {
     getData () {
@@ -137,11 +149,26 @@ export default {
     loaded () {
       this.$nextTick(() => {
         this.$nextTick(() => {
+          this.pullLoading.style.transition = 'top linear .5s'
           this.loading = false
           this.top = this.defaultTop
           this.offsetHeight = this.$el.offsetHeight
+          // 如果因为一些原因过渡没有被取消，0.6s后强行取消
+          setTimeout(() => {
+            this.pullLoading.style.transition = null
+            this.rotate = 0
+          }, 600)
         })
       })
+    },
+    resetState () {
+      this.options.current = 1
+      this.allLoaded = false
+      this.pulling = false
+      this.pulling = false
+      this.bottomLoading = false
+      this.top = 100
+      window.scrollTo(0, 0)
     },
     touchstart (e) {
       this.startY = e.touches[0].clientY
@@ -179,6 +206,7 @@ export default {
       }
     },
     async infiniteScroll () {
+      console.log(this.offsetHeight - window.scrollY - this.innerHeight)
       if (this.offsetHeight - window.scrollY - this.innerHeight <= 0 && !this.loading && !this.allLoaded) {
         this.options.current++
         try {
@@ -193,6 +221,12 @@ export default {
         }
       }
     }
+  },
+  deactivated () {
+    window.removeEventListener('scroll', this.scrollHandler)
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.scrollHandler)
   }
 }
 // fn是我们需要包装的事件回调, delay是时间间隔的阈值
@@ -254,7 +288,26 @@ function throttle (fn, delay) {
   .loadMoreContainer {
     min-height: 200px;
     .bottomLoadingIcon {
-      margin: 30px auto 0;
+      margin: 30px auto 30px;
     }
+  }
+  .noMore {
+    line-height: 60px;
+    font-size: 28px;
+    color: #999;
+    text-align: center;
+  }
+  .noContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .noContentIcon {
+    width: 80%;
+  }
+  .noContentTip {
+    margin-top: 20px;
+    font-size: 32px;
+    color: #999;
   }
 </style>

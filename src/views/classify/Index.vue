@@ -11,7 +11,7 @@
       </router-link>
     </div>
 
-    <main>
+    <main :class="$style.classifyMain">
       <ul :class="$style.classifyList">
         <li
           v-for="(item, index) of classifyList"
@@ -33,23 +33,21 @@
           <classify-item img="//gw.alicdn.com/tps/O1CN01HoU6GR1Oli1OYGPbk_!!2960761746-2-beehive-scenes.png_140x10000.jpg_.webp" text="平板电脑" />
         </div>-->
         <div :class="$style.tip" v-text="currentClassify.categoryName"></div>
-          <div :class="$style.list">
-            <load-more :request-methods="getProduct" :options="form" ref="loadMore" no-content-tip="此分类下还没有商品">
-              <template v-slot="{ list }">
-                <lesson-item
-                  v-for="item of list"
-                  :key="item.sequenceNbr"
-                  size="small"
-                  :id="item.sequenceNbr"
-                  :title="item.productName"
-                  :desc="item.productDesc"
-                  :price="item.productOptions[0].price"
-                  :img="item.productImage[0].mediaUrl"
-                  :border="true"
-                />
-              </template>
-            </load-more>
-          </div>
+        <load-more :request-methods="getProduct" :form="form" ref="loadMore" no-content-tip="此分类下还没有商品">
+          <template v-slot="{ list }">
+            <lesson-item
+              v-for="item of list"
+              :key="item.sequenceNbr"
+              size="small"
+              :id="item.sequenceNbr"
+              :title="item.productName"
+              :desc="item.productDesc"
+              :price="item.productOptions[0].price"
+              :img="item.productImage[0].mediaUrl"
+              :border="true"
+            />
+          </template>
+        </load-more>
       </div>
     </main>
   </div>
@@ -129,20 +127,21 @@ export default {
 <style module lang="scss">
 .classify {
   position: relative;
+  padding-bottom: 88px;
   background-color: #f1f4f5;
-  height: calc(100vh - 88px);
-  overflow: hidden;
-  main {
-    display: flex;
-  }
 }
 .search {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   height: 92px;
+  width: 100%;
   align-items: center;
   padding: 0 40px;
   background-color: #fff;
+  box-sizing: border-box;
+  z-index: 9;
   &:after {
     @include border-half-bottom(#e7e7e7);
   }
@@ -157,6 +156,7 @@ export default {
   text-align: center;
   background-color: #f5f5f8;
   border-radius: 30px;
+  box-sizing: border-box;
   svg {
     width: 32px;
     height: 32px;
@@ -175,7 +175,13 @@ export default {
     }
   }
 }
+.classifyMain {
+  min-height: 100vh;
+  padding-top: 92px;
+  background-color: #fff;
+}
 .classify-list {
+  position: fixed;
   height: calc(100vh - 180px);
   background-color: #f1f4f5;
   overflow: auto;
@@ -208,10 +214,8 @@ export default {
   flex-wrap: wrap;
 }
 .content {
-  width: 590px;
-  height: calc(100vh - 179px);
+  padding-left: 180px;
   background-color: #fff;
-  overflow: auto;
   z-index: 1;
 }
 .tip {
@@ -236,7 +240,4 @@ export default {
     right: 132px;
   }
 }
-  .list {
-    padding-left: 20px;
-  }
 </style>

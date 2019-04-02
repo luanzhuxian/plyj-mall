@@ -1,5 +1,5 @@
 <template>
-  <load-more :requestMethods="getOrderList" :options="form" ref="loadMore" no-content-tip="暂无订单">
+  <load-more :requestMethods="getOrderList" :form="form" ref="loadMore" no-content-tip="暂无订单">
     <template v-slot="{ list }">
       <router-link
               v-for="(item, i) of list"
