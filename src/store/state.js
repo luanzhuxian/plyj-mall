@@ -1,5 +1,5 @@
-let token = localStorage.getItem('token')
-// let token = 'd079572c-3ae5-4035-90be-1a0671aec1fe'
+// let token = localStorage.getItem('token')
+let token = '5855d758-6365-49fa-80a9-b565629df64c'
 export default {
   theme: 'base-theme',
   userInfo: {

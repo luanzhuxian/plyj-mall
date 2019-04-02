@@ -19,7 +19,9 @@
         </path>
       </svg>
     </div>
-    <slot v-bind:list="list" v-bind:total="total"></slot>
+    <div class="load-more-container" ref="container">
+      <slot v-bind:list="list" v-bind:total="total"></slot>
+    </div>
   </div>
 </template>
 
@@ -59,6 +61,9 @@ export default {
     },
     pullLoading: function () {
       return this.$refs.pullLoading
+    },
+    container: function () {
+      return this.$refs.container
     }
   },
   data () {
@@ -100,6 +105,7 @@ export default {
       })
     },
     loaded () {
+      this.pulling = false
       clearTimeout(this.timer)
       if (this.defaultTop === this.top) {
         this.loading = false
@@ -120,9 +126,10 @@ export default {
       this.getData()
     },
     touchMove (e) {
-      if (this.pulling) {
-        e.preventDefault()
-      }
+      // if (this.pulling) {
+      //   e.preventDefault()
+      // }
+      // console.log(this.container.scrollTop)
       if (window.scrollY === 0) {
         this.pulling = true
         let top = e.touches[0].clientY - this.startY
@@ -138,6 +145,8 @@ export default {
   .loadMore {
     position: relative;
     overflow: hidden;
+  }
+  .container {
   }
   .pullLoading {
     position: absolute;
