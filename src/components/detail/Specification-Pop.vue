@@ -34,7 +34,7 @@
               <div>购买数量</div>
               <div>
                 <button :disabled="count <= min" @click="minus">-</button>
-                <input v-model="count" type="number" @change="countChange">
+                <input v-model.number="count" type="number" @change="countChange">
                 <button :disabled="count >= stock" @click="add">+</button>
               </div>
             </div>
@@ -95,7 +95,6 @@ export default {
   },
   methods: {
     close () {
-      console.log(123)
       this.$emit('update:visible', false)
     },
     setShow (show) {
@@ -119,9 +118,11 @@ export default {
     countChange () {
       if (this.count <= this.min) {
         this.count = this.min
+        this.$toast(`此规格最小购买量为${this.min}`)
       }
       if (this.count >= this.stock) {
         this.count = this.stock
+        this.$toast(`购买数量不能大于库存`)
       }
     },
     minus () {
