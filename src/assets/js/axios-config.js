@@ -43,7 +43,7 @@ async function response (response) {
         tag: 'responseError',
         method: config.method,
         url: response.config.url,
-        data: data ? JSON.parse(config.data) : null,
+        data: config.data ? JSON.parse(config.data) : null,
         params: config.params || null,
         message: `${data.devMessage}_${data.message}`
       }

@@ -15,6 +15,7 @@ import { Loadmore } from 'mint-ui'
 import animated from 'animate.css'
 import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
+import Toast from './components/penglai-ui/toast'
 // import LogLine from 'logline'
 // import { saveLog } from './apis/base-api'
 // LogLine.using(LogLine.PROTOCOL.INDEXEDDB)
@@ -56,6 +57,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
       message: err.message
     }
   }
+  Toast(error.message)
   console.error(error)
   // try {
   //   await saveLog(error)
