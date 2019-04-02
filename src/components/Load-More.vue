@@ -206,7 +206,6 @@ export default {
       }
     },
     async infiniteScroll () {
-      console.log(this.offsetHeight - window.scrollY - this.innerHeight)
       if (this.offsetHeight - window.scrollY - this.innerHeight <= 0 && !this.loading && !this.allLoaded) {
         this.options.current++
         try {
