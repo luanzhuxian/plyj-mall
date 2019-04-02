@@ -1,7 +1,5 @@
 <template>
-  <!--<load-more :requestMethods="getOrderList" :options="form" ref="loadMore" no-content-tip="暂无订单">-->
-  <!--</load-more>-->
-  <more :requestMethods="getOrderList" :options="form" ref="loadMore" no-content-tip="暂无订单">
+  <load-more :requestMethods="getOrderList" :options="form" ref="loadMore" no-content-tip="暂无订单">
     <template v-slot="{ list }">
       <router-link
               v-for="(item, i) of list"
@@ -40,7 +38,7 @@
         </div>
       </router-link>
     </template>
-  </more>
+  </load-more>
 </template>
 <script>
 import OrderItem from '../../../../components/item/Order-Item.vue'
@@ -54,15 +52,14 @@ import {
   physicalorderReceivingForVirtual
 } from '../../../../apis/order-manager'
 import wechatPay from '../../../../assets/js/wechat/wechat-pay'
-import More from '../../../../components/Load-More2.vue'
+import LoadMore from '../../../../components/Load-More.vue'
 
 export default {
   name: 'List-Component',
   components: {
     OrderItem,
     Price,
-    // LoadMore,
-    More
+    LoadMore
   },
   props: {
     form: Object
