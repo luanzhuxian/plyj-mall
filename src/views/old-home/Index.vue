@@ -197,7 +197,7 @@ export default {
   methods: {
     async getBanner (homeData) {
       let banner = homeData.filter(item => item.moduleType === 'BANNER')[0]
-      if (banner && banner.values.length) {
+      if (banner && banner.values && banner.values.length) {
         let goodsIds = []
         let other = []
         let goods = []
@@ -233,11 +233,9 @@ export default {
         }
       }
       for (let m of module2) {
-        if (m.values) {
-          for (let val of m.values) {
-            val.contentId = val.link.split('/').splice(-1, 1)[0]
-            this.modules[m.moduleSuffix].push(val)
-          }
+        for (let val of m.values || []) {
+          val.contentId = val.link.split('/').splice(-1, 1)[0]
+          this.modules[m.moduleSuffix].push(val)
         }
       }
       return Promise.resolve()
@@ -252,7 +250,7 @@ export default {
       }
       if (this.agentUser) {
         try {
-          let { result } = await createBrokerShare()
+          let { result } = await createBrokerShare(productSeq)
           result = result || {}
           route.params.brokerId = result.sequenceNbr || null
         } catch (e) {
