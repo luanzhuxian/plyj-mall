@@ -11,10 +11,10 @@ import imgError from './assets/images/img_error.png'
 import directive from './directive'
 import { beforeEach, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
+import { Loadmore } from 'mint-ui'
 import animated from 'animate.css'
 import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
-import Toast from './components/penglai-ui/toast'
 // import LogLine from 'logline'
 // import { saveLog } from './apis/base-api'
 // LogLine.using(LogLine.PROTOCOL.INDEXEDDB)
@@ -25,6 +25,7 @@ Vue.use(gallery, {
   swipeThreshold: 150
 })
 Vue.use(animated)
+Vue.component(Loadmore.name, Loadmore)
 
 for (let k of Object.keys(directive)) {
   Vue.directive(k, directive[k])
@@ -42,7 +43,6 @@ new Vue({
 
 router.beforeResolve(beforeEach)
 router.onError(onError)
-
 Vue.config.errorHandler = async function (err, vm, info) {
   let message = err.message
   let error
@@ -56,7 +56,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
       message: err.message
     }
   }
-  Toast(error.message)
+  console.error(error)
   // try {
   //   await saveLog(error)
   // } catch (e) {

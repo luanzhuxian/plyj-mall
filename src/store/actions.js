@@ -10,6 +10,7 @@ import {
   getAddress
 } from '../apis/address'
 import Qs from 'qs'
+import Toast from '../components/penglai-ui/toast'
 export default {
   /* 获取商城信息 */
   [type.GET_MALL_INFO]: ({ commit }, payload) => {
@@ -20,6 +21,7 @@ export default {
         commit(type.GET_MALL_INFO, result)
         resolve(result)
       } catch (e) {
+        Toast(e.message)
         reject(e)
       }
     })
@@ -40,6 +42,7 @@ export default {
           window.location.replace(openIdUrl)
         }
       } catch (e) {
+        Toast(e.message)
         reject(e)
       }
     })
@@ -56,6 +59,8 @@ export default {
           // 再次登录
           commit(type.LOG_OUT)
           dispatch(type.LOGIN)
+        } else {
+          Toast(e.message)
         }
         reject(e)
       }
@@ -68,6 +73,7 @@ export default {
         commit(type.ADDRESS_LIST, result)
         resolve()
       } catch (e) {
+        Toast(e.message)
         reject(e)
       }
     })

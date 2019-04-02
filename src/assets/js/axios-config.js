@@ -14,8 +14,8 @@ axios.interceptors.response.use(response, resError)
 
 function request (config) {
   /* 刷新token创建时间 */
-  // let token = localStorage.getItem('token')
-  let token = 'b039d453-4607-491a-8896-104877da3227'
+  let token = localStorage.getItem('token')
+  // let token = '3fdbc8d5-27f1-4e1b-9d75-5b799f7afb97'
   config.headers = {
     product: 'welcome_to_penglai_yaji',
     tokenType: 'wechat',
@@ -37,15 +37,15 @@ async function response (response) {
     if (data.message.indexOf('运行时') > -1) {
       msg = '服务器正在怀疑器生~( ˶‾᷄࿀‾᷅˵ )'
     }
-    if (!/登录信息失效/.test(data.message)) {
+    if (data.message.indexOf('登录信息失效') === -1) {
+      Toast(msg)
       let err = {
         tag: 'responseError',
         method: config.method,
         url: response.config.url,
-        data: config.data ? JSON.parse(config.data) : null,
+        data: data ? JSON.parse(config.data) : null,
         params: config.params || null,
-        devMessage: data.devMessage,
-        message: data.message
+        message: `${data.devMessage}_${data.message}`
       }
       return Promise.reject(new Error(JSON.stringify(err)))
     }

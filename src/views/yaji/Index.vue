@@ -6,22 +6,22 @@
       <pl-svg name="add-friend" />
     </div>-->
     <ModuleTitle size="middle" title="分享就赚钱" badge="HOT" class="mt-40" />
+    <div :class="$style.shareList">
       <load-more :request-methods="getActivityProduct" :options="form" no-content-tip="暂无活动商品">
         <template v-slot="{ list }">
-          <div :class="$style.shareList">
-            <ShareItem
-              v-for="(item, i) of list"
-              :key="i"
-              :price="item.priceModels[0].price"
-              :grade="5"
-              :id="item.contentId"
-              :desc="item.productDesc"
-              :title="item.productName"
-              :img="item.productImage[0].mediaUrl"
-            />
-          </div>
+          <ShareItem
+            v-for="(item, i) of list"
+            :key="i"
+            :price="item.priceModels[0].price"
+            :grade="5"
+            :id="item.contentId"
+            :desc="item.productDesc"
+            :title="item.productName"
+            :img="item.productImage[0].mediaUrl"
+          />
         </template>
       </load-more>
+    </div>
   </div>
 </template>
 
@@ -68,6 +68,7 @@ export default {
   .yaji {
     height: 100vh;
     padding: 28px 40px;
+    overflow: scroll;
   }
   .add-friend {
     display: flex;

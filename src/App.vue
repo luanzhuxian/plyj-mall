@@ -61,6 +61,14 @@ export default {
       await this.getUserInfo()
     } else {
       await this.login()
+      // 登录完成后删除code
+      // let { name, params, query } = this.$route
+      // delete query.code
+      // this.$router.replace({
+      //   name,
+      //   params,
+      //   query
+      // })
     }
     this.logined = true
   },
@@ -81,4 +89,6 @@ export default {
 </script>
 <style module>
   @import "assets/scss/theme/base.scss";
+</style>
+<style>
 </style>

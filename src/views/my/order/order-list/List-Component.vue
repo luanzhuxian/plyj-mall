@@ -1,51 +1,49 @@
 <template>
-    <!--<load-more :requestMethods="getOrderList" :options="form" ref="loadMore" no-content-tip="暂无订单">-->
-    <!--</load-more>-->
-  <more :requestMethods="getOrderList" :options="form" ref="loadMore" no-content-tip="暂无订单">
-      <template v-slot="{ list }">
-        <router-link
-                v-for="(item, i) of list"
-                tag="div"
-                :key="i"
-                :to="{ name: 'OrderDetail', params: { orderId: item.orderInfoModel.orderSn } }"
-                :class="'mb-28 ' + $style.orderBox">
-          <div class="fz-24">
-            <pl-list title="订单编号：" :content="item.orderInfoModel.orderSn" />
-            <p :class="$style.status" v-text="orderStatus[item.orderInfoModel.orderStatus]" />
+  <load-more :requestMethods="getOrderList" :options="form" ref="loadMore" no-content-tip="暂无订单">
+    <template v-slot="{ list }">
+      <router-link
+        v-for="(item, i) of list"
+        tag="div"
+        :key="i"
+        :to="{ name: 'OrderDetail', params: { orderId: item.orderInfoModel.orderSn } }"
+        :class="'mb-28 ' + $style.orderBox">
+        <div class="fz-24">
+          <pl-list title="订单编号：" :content="item.orderInfoModel.orderSn" />
+          <p :class="$style.status" v-text="orderStatus[item.orderInfoModel.orderStatus]" />
+        </div>
+        <order-item
+          :img="item.mediaInfoModel[0].mediaUrl"
+          :name="item.orderProductRelationModel.productName"
+          :option="item.orderProductRelationModel.optionName"
+          :count="item.orderProductRelationModel.count"
+          :price="item.orderProductRelationModel.productPrice"
+          border />
+        <div :class="$style.orderBoxBottom">
+          <price prefix-text="总价：" :price="item.orderInfoModel.amount + item.orderInfoModel.freight" size="small" plain />
+          <div :class="$style.buttons" v-if="item.orderInfoModel.orderStatus !== 'CLOSED'">
+            <pl-button v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'" type="warning" round @click="pay(item.orderInfoModel.orderSn, item.orderInfoModel.orderType)">去支付</pl-button>
+            <pl-button
+              v-if="item.orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
+              @click="confirmGet(item.orderInfoModel.orderType, item.orderInfoModel.orderSn)"
+              type="warning" round>
+              确认收货
+            </pl-button>
+            <pl-button
+              v-if="item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO'"
+              type="warning" plain round
+              @click="$router.push({ name: 'CommentOrder', params: { orderId: item.orderInfoModel.orderSn } })">
+              去评价
+            </pl-button>
           </div>
-          <order-item
-                  :img="item.mediaInfoModel[0].mediaUrl"
-                  :name="item.orderProductRelationModel.productName"
-                  :option="item.orderProductRelationModel.optionName"
-                  :count="item.orderProductRelationModel.count"
-                  :price="item.orderProductRelationModel.productPrice"
-                  border />
-          <div :class="$style.orderBoxBottom">
-            <price prefix-text="总价：" :price="item.orderInfoModel.amount + item.orderInfoModel.freight" size="small" plain />
-            <div :class="$style.buttons" v-if="item.orderInfoModel.orderStatus !== 'CLOSED'">
-              <pl-button v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'" type="warning" round @click="pay(item.orderInfoModel.orderSn, item.orderInfoModel.orderType)">去支付</pl-button>
-              <pl-button
-                      v-if="item.orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
-                      @click="confirmGet(item.orderInfoModel.orderType, item.orderInfoModel.orderSn)"
-                      type="warning" round>
-                确认收货
-              </pl-button>
-              <pl-button
-                      v-if="item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO'"
-                      type="warning" plain round
-                      @click="$router.push({ name: 'CommentOrder', params: { orderId: item.orderInfoModel.orderSn } })">
-                去评价
-              </pl-button>
-            </div>
-          </div>
-        </router-link>
-      </template>
-    </more>
+        </div>
+      </router-link>
+    </template>
+  </load-more>
 </template>
 <script>
 import OrderItem from '../../../../components/item/Order-Item.vue'
 import Price from '../../../../components/Price.vue'
-// import LoadMore from '../../../../components/Load-More.vue'
+import LoadMore from '../../../../components/Load-More.vue'
 import { mapGetters } from 'vuex'
 import {
   getOrderList,
@@ -54,15 +52,12 @@ import {
   physicalorderReceivingForVirtual
 } from '../../../../apis/order-manager'
 import wechatPay from '../../../../assets/js/wechat/wechat-pay'
-import More from '../../../../components/Load-More2.vue'
-
 export default {
   name: 'List-Component',
   components: {
     OrderItem,
     Price,
-    // LoadMore,
-    More
+    LoadMore
   },
   props: {
     form: Object
@@ -82,7 +77,7 @@ export default {
     this.form.userId = this.userId
   },
   activated () {
-    // this.$refs.loadMore.refresh()
+    this.$refs.loadMore.refresh()
   },
   methods: {
     async pay (id, orderType) {
