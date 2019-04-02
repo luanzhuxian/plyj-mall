@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.orders">
+  <div class="order-list">
     <pl-tab :tabs="tabs" size="small" :active-id.sync="currentStatus" @change="tabChange" />
     <keep-alive>
       <router-view />
@@ -57,10 +57,3 @@ export default {
   }
 }
 </script>
-
-<style module lang="scss">
-  .orders {
-    height: 100vh;
-    overflow: hidden;
-  }
-</style>

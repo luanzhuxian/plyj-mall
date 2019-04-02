@@ -32,8 +32,6 @@ export default {
 
 <style module lang="scss">
   .wait-ship {
-    height: 90vh;
     padding: 28px 28px 10vh 28px;
-    overflow: scroll;
   }
 </style>
