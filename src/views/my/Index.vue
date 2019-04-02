@@ -26,7 +26,7 @@
         <p v-text="balance" />
       </div>
       <div>
-        <p>今日返利（元）</p>
+        <p>今日润笔（元）</p>
         <p v-text="currentBalance" />
         <pl-svg name="right"></pl-svg>
       </div>

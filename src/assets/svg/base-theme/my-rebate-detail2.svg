@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
-    <title>累计返利icon</title>
+    <title>累计润笔icon</title>
     <desc>Created with Sketch.</desc>
     <g id="账户金额" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g transform="translate(-64.000000, -941.000000)" id="分组-9-Copy-2">
             <g transform="translate(40.000000, 917.000000)">
-                <g id="累计返利icon" transform="translate(24.000000, 24.000000)">
+                <g id="累计润笔icon" transform="translate(24.000000, 24.000000)">
                     <rect id="矩形" fill="#F2B036" x="0" y="0" width="36" height="36" rx="4"></rect>
                     <g id="jinbi" transform="translate(7.000000, 8.000000)" fill-rule="nonzero">
                         <path d="M14.3131875,0.0295833333 C17.5331875,1.84291667 19.7280446,5.32291667 19.7280446,9.32291667 C19.7280446,13.3229167 17.5463304,16.7895833 14.3131875,18.61625 C19.1366161,18.3229167 22.9611875,14.2829167 22.9611875,9.32291667 C22.9480446,4.37625 19.1366161,0.33625 14.3131875,0.0295833333 L14.3131875,0.0295833333 Z" id="路径" fill="#EEEEEE"></path>

@@ -19,7 +19,7 @@
 
       <!-- 当前选择的规格 -->
       <specification-box :current="currentSpec" @click="showSpecifica = true" ref="specification" />
-      <!-- helper 返利价格 -->
+      <!-- helper 润笔价格 -->
       <helper-price v-if="agentProduct" :current="currentSpec" />
       <!--<DetailOtherInfo type="lesson" />-->
     </DetailInfoBox>

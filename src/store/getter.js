@@ -19,9 +19,9 @@ export default {
   openId: state => state.userInfo.openId,
   userId: state => state.userInfo.userId,
   balance: state => state.userInfo.balance, // 可提现金额
-  currentBalance: state => state.userInfo.currentBalance, // 今日返利
-  cumulativeBalance: state => state.userInfo.cumulativeBalance, // 累计返利
-  roleCode: state => state.userInfo.roleCode, // 累计返利
+  currentBalance: state => state.userInfo.currentBalance, // 今日润笔
+  cumulativeBalance: state => state.userInfo.cumulativeBalance, // 累计润笔
+  roleCode: state => state.userInfo.roleCode, // 累计润笔
   roleMap: state => state.roleMap,
   roleName: state => state.roleMap[state.userInfo.roleCode] || '',
 

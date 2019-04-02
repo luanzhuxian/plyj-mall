@@ -14,7 +14,7 @@
           <router-link tag="button" :to="{ name: 'WithdrawCash' }" style="width: 27.733vw;" :class="$style.myButton + ' mt-22'">提现</router-link>
         </div>
         <div :class="$style.todayRebate">
-          <p class="fz-24 gray-3">今日返利</p>
+          <p class="fz-24 gray-3">今日润笔</p>
           <p class="fz-50 bold">{{currentBalance}} <i class="fz-26">元</i></p>
           <p class="gray-4 fz-26 mt-22">今天你赚了多少</p>
         </div>
@@ -25,7 +25,7 @@
       <div class="radius-20 bg-white">
         <div>
           <div :class="$style.title">
-            <pl-svg name="my-rebate" />累计返利
+            <pl-svg name="my-rebate" />累计润笔
           </div>
           <div :class="$style.middle">
             <p class="fz-44 bold">{{cumulativeBalance}} <i class="fz-20 gray-3">元</i></p>
@@ -51,7 +51,7 @@
       <div class="radius-20 bg-white">
         <div :class="$style.detail">
           <div :class="$style.title">
-            <pl-svg name="my-rebate-detail2" />返利明细
+            <pl-svg name="my-rebate-detail2" />润笔明细
           </div>
           <div :class="'fz-22 gray-2 ' + $style.middle">
             <pl-svg name="my-rebate-detail1" />
