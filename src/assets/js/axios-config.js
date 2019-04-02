@@ -45,7 +45,8 @@ async function response (response) {
         url: response.config.url,
         data: config.data ? JSON.parse(config.data) : null,
         params: config.params || null,
-        message: `${data.devMessage}_${data.message}`
+        devMessage: data.devMessage || '',
+        message: data.message || ''
       }
       return Promise.reject(new Error(JSON.stringify(err)))
     }

@@ -9,7 +9,7 @@
       :key="index">
       <!-- 商品 -->
       <img
-        v-if="item.linkType === 'goods'"
+        v-if="item.linkType === 'goods' && item.contentId"
         :class="$style.bannerImg"
         data-status="ON_SALE"
         @click="toProductDetail(item.contentId)"
@@ -17,7 +17,7 @@
       >
       <!-- 分类 -->
       <router-link
-        v-else-if="item.linkType === 'category'"
+        v-else-if="item.linkType === 'category' && item.link"
         :class="$style.bannerImg"
         tag="img"
         :src="item.fileId"
@@ -210,7 +210,7 @@ export default {
         }
         // 获取商品分享id
         for (let item of goodsIds) {
-          let id = item.link.split('/').splice(-1, 1)[0]
+          let id = item.link ? item.link.split('/').splice(-1, 1)[0] : null
           item.contentId = id
           goods.push(item)
         }
