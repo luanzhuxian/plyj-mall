@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="85px" viewBox="0 0 70 85" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>待发货</title>
+    <desc>Created with Sketch.</desc>
+    <g id="我的" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-194.000000, -647.000000)" id="我的订单">
+            <g transform="translate(0.000000, 548.000000)">
+                <g id="分组-11" transform="translate(47.000000, 85.000000)">
+                    <g id="待发货" transform="translate(146.000000, 8.000000)">
+                        <g transform="translate(12.000000, 0.000000)">
+                            <rect id="矩形" x="0" y="0" width="48" height="48"></rect>
+                            <g id="分组-10" transform="translate(0.000000, 6.000000)">
+                                <rect id="矩形" stroke="#F2B036" stroke-width="4" fill-opacity="0.1" fill="#E1FDEC" x="2" y="2" width="44" height="32" rx="8"></rect>
+                                <rect id="矩形" fill="#F2B036" x="4" y="10" width="40" height="4"></rect>
+                            </g>
+                            <polygon id="矩形" fill="#F2B036" points="18 6 30 6 30 26 24.200011 24 18 26"></polygon>
+                        </g>
+                        <text font-family="MicrosoftYaHeiUI, Microsoft YaHei UI" font-size="24" font-weight="normal" fill="#2E2E2E">
+                            <tspan x="0" y="88">待发货</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44px" height="72px" viewBox="0 0 44 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>标签 2-发现（未选中）</title>
+    <desc>Created with Sketch.</desc>
+    <g id="标签-2-发现（未选中）" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="标签-首页-copy-3">
+            <text id="发现" font-family="PingFangSC-Medium, PingFang SC" font-size="20" font-weight="400" fill="#999999">
+                <tspan x="2" y="65">发现</tspan>
+            </text>
+            <g id="首页">
+                <rect id="矩形" x="0" y="0" width="44" height="44"></rect>
+                <g id="dibugeicon_faxian" transform="translate(4.000000, 4.000000)" stroke="#CCCCCC" stroke-width="4">
+                    <g id="分组">
+                        <path d="M13.584149,22.4157823 C14.675565,23.5125484 16.070152,24 17.464739,24 C18.859326,24 20.253913,23.451617 21.3453289,22.4157823 C23.1037212,20.6487703 25.4684557,13.0932707 25.9535295,11.5699845 C26.074798,11.1434643 25.9535295,10.6560127 25.6503584,10.3513555 C25.3471873,10.0466983 24.8621136,9.92483539 24.437674,10.0466983 C22.9218186,10.4732184 15.4031755,12.8495449 13.6447832,14.6774884 C11.4619514,16.8100891 11.4619514,20.2831817 13.584149,22.4157823 Z" id="形状" fill-rule="nonzero"></path>
+                        <path d="M18,0 C8.0588745,0 0,8.0588745 0,18 C0,27.9411255 8.0588745,36 18,36 L18,36 C27.9411255,36 36,27.9411255 36,18" id="路径" stroke-linecap="round"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

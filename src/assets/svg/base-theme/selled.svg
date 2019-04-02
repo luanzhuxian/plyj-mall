@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>人物-人</title>
+    <desc>Created with Sketch.</desc>
+    <g id="详情页" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="特惠团购" transform="translate(-568.000000, -959.000000)">
+            <g id="详情" transform="translate(40.000000, 796.000000)">
+                <g id="分组-16" transform="translate(527.000000, 160.000000)">
+                    <g id="人物-人" transform="translate(0.000000, 2.000000)">
+                        <rect id="矩形" fill="#000000" opacity="0" x="0" y="0" width="28" height="28"></rect>
+                        <path d="M17.85,14.6125 C19.775,13.3875 21,11.2 21,8.75 C21,4.9 17.85,1.75 14,1.75 C10.15,1.75 7,4.9 7,8.75 C7,11.2 8.225,13.3875 10.15,14.6125 C5.25,16.1875 1.75,20.825 1.75,26.25 L3.5,26.25 C3.5,20.475 8.225,15.75 14,15.75 C19.775,15.75 24.5,20.475 24.5,26.25 L26.25,26.25 C26.25,20.825 22.75,16.1875 17.85,14.6125 Z M14,14 C11.1125,14 8.75,11.6375 8.75,8.75 C8.75,5.8625 11.1125,3.5 14,3.5 C16.8875,3.5 19.25,5.8625 19.25,8.75 C19.25,11.6375 16.8875,14 14,14 Z" id="形状" fill="#999999" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

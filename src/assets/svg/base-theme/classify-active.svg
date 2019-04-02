@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44px" height="72px" viewBox="0 0 44 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>标签-分类（选中）</title>
+    <desc>Created with Sketch.</desc>
+    <g id="标签-分类（选中）" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="标签-首页-copy-4">
+            <text id="类别" font-family="PingFangSC-Medium, PingFang SC" font-size="20" font-weight="400" fill="#F2B036">
+                <tspan x="2" y="65">类别</tspan>
+            </text>
+            <g id="首页">
+                <rect id="矩形" x="0" y="0" width="44" height="44"></rect>
+                <g id="分组-3" transform="translate(2.000000, 4.000000)">
+                    <circle id="椭圆形" stroke="#F2B036" stroke-width="4.4" fill="#E1FDEC" cx="7" cy="7" r="4.8"></circle>
+                    <circle id="椭圆形-copy" stroke="#F2B036" stroke-width="4.4" fill="#E1FDEC" cx="33" cy="29" r="4.8"></circle>
+                    <rect id="矩形" fill="#F2B036" x="18" y="4" width="22" height="6" rx="3"></rect>
+                    <rect id="矩形-copy-2" fill="#F2B036" x="0" y="26" width="22" height="6" rx="3"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

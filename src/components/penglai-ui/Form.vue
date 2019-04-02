@@ -1,0 +1,54 @@
+<template>
+  <form class="pl-form">
+    <slot></slot>
+  </form>
+</template>
+
+<script>
+export default {
+  name: 'pl-form',
+  props: {
+    model: Object,
+    rules: Object,
+    align: String,
+    labelWidth: [String, Number]
+  },
+  activated () {
+  },
+  methods: {
+    validate () {
+      if (this.rules) {
+        for (let fields of Object.keys(this.rules)) {
+          if (!this.validateByFields(fields)) {
+            return false
+          }
+        }
+      }
+      return true
+    },
+    validateByFields (fields) {
+      let validateRules = this.rules[fields]
+      let val = this.model[fields] || ''
+      for (let rule of validateRules) {
+        if (rule.required) {
+          if (!val.trim()) {
+            this.error = true
+            console.warn(fields + ' is required')
+            this.$toast(rule.message)
+            return false
+          }
+        } else if (rule.validator) {
+          if (!rule.validator(val)) {
+            this.error = true
+            this.$toast(rule.message)
+            return false
+          }
+        }
+      }
+      return true
+    }
+  }
+}
+</script>
+<style lang="scss">
+</style>

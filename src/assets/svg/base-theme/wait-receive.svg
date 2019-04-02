@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="85px" viewBox="0 0 70 85" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>待收货</title>
+    <desc>Created with Sketch.</desc>
+    <g id="我的" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-340.000000, -647.000000)" id="我的订单">
+            <g transform="translate(0.000000, 548.000000)">
+                <g id="分组-11" transform="translate(47.000000, 85.000000)">
+                    <g id="待收货" transform="translate(292.000000, 8.000000)">
+                        <g transform="translate(12.000000, 0.000000)">
+                            <rect id="矩形" x="0" y="0" width="48" height="48"></rect>
+                            <g id="分组-12" transform="translate(0.000000, 8.000000)">
+                                <path d="M8,6 L24,6 L24,32 L8,32 C3.581722,32 5.41083001e-16,28.418278 0,24 L0,14 C-5.41083001e-16,9.581722 3.581722,6 8,6 Z" id="矩形" fill-opacity="0.1" fill="#E1FDEC"></path>
+                                <rect id="矩形-copy" fill-opacity="0.1" fill="#E1FDEC" x="24" y="0" width="24" height="32" rx="2"></rect>
+                                <path d="M45.8148805,0.0928735188 L26,0.0928735188 C24.8954305,0.0928735188 24,0.988304019 24,2.09287352 L24,31.1431557 L2,31.1431557 L2,14 C2,9.581722 5.581722,6 10,6 L14.2289625,6" id="路径" stroke="#F2B036" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M24,7 L37.9444444,7" id="路径-3" stroke="#F2B036" stroke-width="4" stroke-linecap="round"></path>
+                                <path d="M24,15 L34.1111111,15" id="路径-4" stroke="#F2B036" stroke-width="4" stroke-linecap="round"></path>
+                                <circle id="椭圆形" stroke="#F2B036" stroke-width="3.6" fill="#E1FDEC" cx="14" cy="31" r="3.2"></circle>
+                            </g>
+                        </g>
+                        <text font-family="MicrosoftYaHeiUI, Microsoft YaHei UI" font-size="24" font-weight="normal" fill="#2E2E2E">
+                            <tspan x="0" y="88">待收货</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

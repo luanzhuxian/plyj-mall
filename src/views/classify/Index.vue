@@ -1,0 +1,242 @@
+<template>
+  <div :class="$style.classify">
+    <div :class="$style.search">
+      <router-link
+        tag="div"
+        :class="$style.searchBox"
+        :to="{ name: 'Search' }"
+      >
+        <pl-svg name="search"></pl-svg>
+        <input type="text" placeholder="搜索商品">
+      </router-link>
+    </div>
+
+    <main>
+      <ul :class="$style.classifyList">
+        <li
+          v-for="(item, index) of classifyList"
+          :class="{[$style.classifyActive]: item.sequenceNbr === currentClassify.sequenceNbr}"
+          :key="index"
+          v-text="item.categoryName"
+          @click="classifyClick(item)"
+        />
+      </ul>
+
+      <div :class="$style.content">
+        <!--<div :class="$style.tip">全部</div>-->
+        <!--<div :class="$style.classifyList2">
+          <classify-item img="//gw.alicdn.com/tps/TB1Sl1ea4rI8KJjy0FpSuv5hVXa.jpg_140x10000Q75.jpg_.webp" text="手机" />
+          <classify-item img="//gw.alicdn.com/tps/O1CN01s4LwGN1wddyf7vsrj_!!2497896331.jpg_140x10000Q75.jpg_.webp" text="手机保护壳" />
+          <classify-item img="//gw.alicdn.com/tps/TB2uX59ehAlyKJjSZFyXXbm_XXa_!!2970158389-0-beehive-scenes.jpg_140x10000Q75.jpg_.webp" text="笔记本电脑" />
+          <classify-item img="//gw.alicdn.com/tps/TB247WlX2AkyKJjy0FfXXaxhpXa_!!2302025017.jpg_140x10000Q75.jpg_.webp" text="智能手环" />
+          <classify-item img="//gw.alicdn.com/tps/TB2oFzffhhmpuFjSZFyXXcLdFXa_!!558893385-0-beehive-scenes.jpg_140x10000Q75.jpg_.webp" text="显示器" />
+          <classify-item img="//gw.alicdn.com/tps/O1CN01HoU6GR1Oli1OYGPbk_!!2960761746-2-beehive-scenes.png_140x10000.jpg_.webp" text="平板电脑" />
+        </div>-->
+        <div :class="$style.tip" v-text="currentClassify.categoryName"></div>
+          <div :class="$style.list">
+            <load-more :request-methods="getProduct" :options="form" ref="loadMore" no-content-tip="此分类下还没有商品">
+              <template v-slot="{ list }">
+                <lesson-item
+                  v-for="item of list"
+                  :key="item.sequenceNbr"
+                  size="small"
+                  :id="item.sequenceNbr"
+                  :title="item.productName"
+                  :desc="item.productDesc"
+                  :price="item.productOptions[0].price"
+                  :img="item.productImage[0].mediaUrl"
+                  :border="true"
+                />
+              </template>
+            </load-more>
+          </div>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script>
+import LessonItem from '../../components/item/Lesson-Item.vue'
+// import ClassifyItem from '../../components/Classify-Item.vue'
+import LoadMore from '../../components/Load-More.vue'
+import {
+  getCategoryTree,
+  getProduct
+} from '../../apis/classify'
+export default {
+  name: 'Classify',
+  components: {
+    LessonItem,
+    // ClassifyItem,
+    LoadMore
+  },
+  data () {
+    return {
+      currentClassify: {
+        sequenceNbr: '',
+        categoryName: '全部'
+      },
+      classifyList: [{
+        categoryName: '全部',
+        sequenceNbr: ''
+      }],
+      form: {
+        categoryCode: '',
+        current: 1,
+        size: 10,
+        productStatus: 'ON_SALE'
+      },
+      getProduct
+    }
+  },
+  props: ['optionId'],
+  created () {
+    this.getCategoryTree()
+  },
+  activated () {
+    this.form.categoryCode = this.optionId || ''
+    if (this.classifyList.length > 1) {
+      // 查找当前传入的分类ID对应的分类对象
+      this.classifyClick(this.classifyList.find(item => {
+        return item.sequenceNbr === this.optionId
+      }))
+    }
+  },
+  methods: {
+    classifyClick (classify) {
+      if (classify) {
+        if (this.currentClassify.sequenceNbr === classify.sequenceNbr) return
+        this.currentClassify = classify
+        this.form.categoryCode = classify.sequenceNbr
+        this.form.current = 1
+      }
+    },
+    async getCategoryTree () {
+      try {
+        const { result } = await getCategoryTree()
+        this.classifyList = this.classifyList.concat(result)
+        if (this.optionId) {
+          this.classifyClick(this.classifyList.find(item => item.sequenceNbr === this.optionId))
+        }
+      } catch (e) {
+        throw e
+      }
+    }
+  }
+}
+</script>
+
+<style module lang="scss">
+.classify {
+  position: relative;
+  background-color: #f1f4f5;
+  height: calc(100vh - 88px);
+  overflow: hidden;
+  main {
+    display: flex;
+  }
+}
+.search {
+  position: relative;
+  display: flex;
+  height: 92px;
+  align-items: center;
+  padding: 0 40px;
+  background-color: #fff;
+  &:after {
+    @include border-half-bottom(#e7e7e7);
+  }
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 30px;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  background-color: #f5f5f8;
+  border-radius: 30px;
+  svg {
+    width: 32px;
+    height: 32px;
+    margin-right: 15px;
+    vertical-align: -5px;
+  }
+  input {
+    width: 125px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    background-color: transparent;
+    &::placeholder {
+      color: #01C2C3;
+      letter-spacing: 3px;
+    }
+  }
+}
+.classify-list {
+  height: calc(100vh - 180px);
+  background-color: #f1f4f5;
+  overflow: auto;
+  z-index: 2;
+  li {
+    position: relative;
+    width: 160px;
+    font-size: 26px;
+    text-align: center;
+    line-height: 108px;
+    &:nth-last-of-type(1) {
+      margin-bottom: 108px;
+      &:after {
+        display: none;
+      }
+    }
+    &:after {
+      @include border-half-bottom(#fff);
+    }
+    transition: background-color .2s linear, color .2s linear;
+  }
+  .classify-active {
+    background-color: #fff;
+    color: #aaaabb;
+  }
+}
+.classify-list2 {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.content {
+  width: 590px;
+  height: calc(100vh - 179px);
+  background-color: #fff;
+  overflow: auto;
+  z-index: 1;
+}
+.tip {
+  position: relative;
+  margin-top: 36px;
+  margin-bottom: 40px;
+  text-align: center;
+  font-size: 24px;
+  &:before, &:after {
+    position: absolute;
+    top: 50%;
+    transform: (-50%);
+    width: 54px;
+    height: 1px;
+    content: '';
+    background-color: #e7e7e7;
+  }
+  &:before {
+    left: 132px;
+  }
+  &:after {
+    right: 132px;
+  }
+}
+  .list {
+    padding-left: 20px;
+  }
+</style>

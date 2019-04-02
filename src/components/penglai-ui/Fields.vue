@@ -1,0 +1,111 @@
+<template>
+  <div class="pl-fields">
+    <div :class="'pl-fields_box ' + size" @click="handleClick">
+      <div class="pl-fields_text">
+        <pl-svg
+          :color="iconColor"
+          v-if="icon && iconPosition === 'left'"
+          class="pl-fields_icon"
+          :name="icon"
+          :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
+        />
+        <span v-text="text" :style="{ fontWeight: rightTextWeight }"></span>
+        <pl-svg
+          :color="iconColor"
+          v-if="icon && iconPosition === 'right'"
+          class="pl-fields_icon"
+          :name="icon"
+          :style="{ paddingLeft: iconGap / 7.5 + 'vw'}"
+        />
+      </div>
+      <div class="pl-fields_right">
+        <span v-if="rightText" class="pl-fields_right_text" v-text="rightText"></span>
+        <pl-svg v-if="route" class="pl-fields_right_icon" name="right" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'pl-fields',
+  props: {
+    icon: String,
+    iconColor: String,
+    iconGap: Number, // 图片和文字直接的间隙
+    iconPosition: {
+      type: String,
+      default: 'left'
+    },
+    text: String,
+    rightTextWeight: {
+      type: String,
+      default: 'normal'
+    },
+    rightText: String,
+    route: {
+      type: Object,
+      default: function () {
+        return null
+      }
+    },
+    size: {
+      type: String,
+      default: 'large'
+    }
+  },
+  methods: {
+    handleClick () {
+      if (this.route) {
+        this.$router.push(this.route)
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.pl-fields {
+  position: relative;
+  background-color: #fff;
+  &:nth-last-of-type(1):after {
+    display: none;
+  }
+  &:after {
+    @include border-half-bottom(#e7e7e7);
+  }
+}
+  .pl-fields_box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    &.large {
+      height: 100px;
+    }
+    &.small {
+      height: 70px;
+    }
+  }
+  .pl-fields_text {
+    font-size: 28px;
+    flex: 1;
+  }
+  .pl-fields_icon {
+    width: 34px;
+    height: 34px;
+    vertical-align: -7px;
+  }
+  .pl-fields_right {
+    margin-right: 30px;
+    .pl-fields_right_text {
+      font-size: 28px;
+      color: #999;
+    }
+    .pl-fields_right_icon {
+      width: 22px;
+      margin-left: 10px;
+      fill: #ccc;
+      vertical-align: -3px;
+    }
+  }
+</style>

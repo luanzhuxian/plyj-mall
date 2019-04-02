@@ -1,0 +1,126 @@
+@import "./reset";
+@import "theme/base";
+@import "transition";
+@import "mint-ui";
+
+.slide-padding {
+  padding: 0 $--slide-padding;
+}
+.mt-80 {
+  margin-top: 80px;
+}
+.mt-40 {
+  margin-top: 40px;
+}
+.mt-56 {
+  margin-top: 56px;
+}
+.mt-28 {
+  margin-top: 28px;
+}
+.mb-28 {
+  margin-bottom: 28px;
+}
+.mt-22 {
+  margin-top: 22px;
+}
+.radius-20 {
+  border-radius: $--radius1;
+}
+.radius-10 {
+  border-radius: $--radius2;
+}
+.bg-white {
+  background-color: #fff;
+}
+
+/* 字体大小 */
+.bold {
+  font-weight: bold;
+}
+.fz-20 {
+  font-size: 20px;
+}
+.fz-22 {
+  font-size: 22px;
+}
+.fz-24 {
+  font-size: 24px;
+}
+.fz-26 {
+  font-size: 26px;
+}
+.fz-28 {
+  font-size: 28px;
+}
+.fz-30 {
+  font-size: 30px;
+}
+.fz-32 {
+  font-size: 32px;
+}
+.fz-34 {
+  font-size: 34px;
+}
+.fz-40 {
+  font-size: 30px;
+}
+.fz-44 {
+  font-size: 44px;
+}
+.fz-50 {
+  font-size: 50px;
+}
+.fz-56 {
+  font-size: 56px;
+}
+.fz-60 {
+  font-size: 60px;
+}
+/* 字体灰色系 */
+.gray-0 {
+  color: var(--font-color_gray0);
+}
+.gray-1 {
+  color: var(--font-color_gray1);
+}
+.gray-2 {
+  color: var(--font-color_gray2);
+}
+.gray-3 {
+  color: var(--font-color_gray3);
+}
+.gray-4 {
+  color: var(--font-color_gray4);
+}
+.gray-5 {
+  color: var(--font-color_gray5);
+}
+.gray-6 {
+  color: var(--font-color_gray6);
+}
+
+.rmb {
+  &:before {
+    content: '¥'
+  }
+}
+.partition {
+  position: relative;
+  overflow: visible !important;
+  &:after {
+    position: absolute;
+    content: '';
+    bottom: -10px !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 21px !important;
+    transform: scale(1) !important;
+    background: url("../images/partition.png") no-repeat center center !important;
+    background-size: 102% !important;
+    z-index: 2;
+  }
+}
+.mint-indicator-wrapper {
+  z-index: 9000!important;
+}

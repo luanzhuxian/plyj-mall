@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44px" height="72px" viewBox="0 0 44 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>标签-我的（选中）</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M16,32 C24.836556,32 32,24.836556 32,16 C32,7.163444 24.836556,0 16,0 C7.163444,0 0,7.163444 0,16 C0,24.836556 7.163444,32 16,32 Z" id="path-1"></path>
+    </defs>
+    <g id="标签-我的（选中）" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="标签-首页-copy-6">
+            <text id="我的" font-family="PingFangSC-Medium, PingFang SC" font-size="20" font-weight="400" fill="#F2B036">
+                <tspan x="2" y="65">我的</tspan>
+            </text>
+            <g id="首页">
+                <rect id="矩形" x="0" y="0" width="44" height="44"></rect>
+                <path d="M22,42 C10.954305,42 2,33.045695 2,22 C2,10.954305 10.954305,2 22,2 C33.045695,2 42,10.954305 42,22 C42,33.045695 33.045695,42 22,42 Z" id="路径" fill="#F2B036" fill-rule="nonzero"></path>
+                <g id="路径-2" transform="translate(6.000000, 6.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="路径" fill="#E1FDEC" fill-rule="nonzero" xlink:href="#path-1"></use>
+                    <path d="M16,41 C20.418278,41 24,37.418278 24,33 C24,28.581722 20.418278,25 16,25 C11.581722,25 8,28.581722 8,33 C8,37.418278 11.581722,41 16,41 Z M16,45 C9.372583,45 4,39.627417 4,33 C4,26.372583 9.372583,21 16,21 C22.627417,21 28,26.372583 28,33 C28,39.627417 22.627417,45 16,45 Z" id="椭圆形" fill="#F2B036" fill-rule="nonzero" mask="url(#mask-2)"></path>
+                    <path d="M16,15 C17.6568542,15 19,13.6568542 19,12 C19,10.3431458 17.6568542,9 16,9 C14.3431458,9 13,10.3431458 13,12 C13,13.6568542 14.3431458,15 16,15 Z M16,19 C12.1340068,19 9,15.8659932 9,12 C9,8.13400675 12.1340068,5 16,5 C19.8659932,5 23,8.13400675 23,12 C23,15.8659932 19.8659932,19 16,19 Z" id="椭圆形" fill="#F2B036" fill-rule="nonzero" mask="url(#mask-2)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

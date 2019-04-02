@@ -1,0 +1,48 @@
+/* vue transition name */
+// fade
+.fade-enter-active {
+  transition: opacity .2s ease-in;
+}
+.fade-leave-active {
+  transition: opacity .2s ease-out;
+}
+.fade-leave, .fade-enter-to {
+  opacity: 1;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+// slide
+.slide-enter-to, .slide-leave {
+  bottom: 0!important;
+}
+.slide-enter-active {
+  transition: bottom .4s ease;
+}
+.slide-leave-active {
+  transition: bottom .4s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-enter, .slide-leave-to {
+  bottom: -100%!important;
+}
+
+.fade-left-enter-active {
+  transition: transform 3s linear;
+}
+.fade-left-leave-active {
+  transition: transform 3s linear;
+}
+.fade-left-enter {
+  transform: translateX(100%);
+}
+.fade-left-enter-to {
+  transform: translateX(0);
+}
+.fade-left-leave {
+  transform: translateX(0);
+}
+.fade-left-leave-to {
+  transform: translateX(-100%);
+}
+
+.animate-enter-active {}
