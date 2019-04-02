@@ -52,7 +52,7 @@ export default [
     name: 'AccumulatedRebate',
     component: () => import('../views/my/coffers/Accumulated-Rebate.vue'),
     meta: {
-      title: '累计返利'
+      title: '累计润笔'
     }
   },
   {
@@ -60,7 +60,7 @@ export default [
     name: 'RebateList',
     component: () => import('../views/my/coffers/Rebate-List.vue'),
     meta: {
-      title: '返利明细'
+      title: '润笔明细'
     }
   },
   {

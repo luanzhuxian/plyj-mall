@@ -2,7 +2,7 @@
   <div :class="$style.accumulatedRebate">
     <main class="radius-20 bg-white">
       <div class="partition">
-        <span class="gray-1 fz-32 bold">累计返利</span>
+        <span class="gray-1 fz-32 bold">累计润笔</span>
         <span class="fz-56 gray-1 bold" v-text="userInfo.cumulativeBalance" />
       </div>
 
@@ -12,22 +12,22 @@
       </div>
 
       <div>
-        <span class="gray-1 fz-32">已申请返利</span>
+        <span class="gray-1 fz-32">已申请润笔</span>
         <span class="fz-40 gray-1 bold" v-text="userInfo.applyBalance"></span>
       </div>
 
       <div class="partition">
-        <span class="gray-1 fz-32">成功提现返利</span>
+        <span class="gray-1 fz-32">成功提现润笔</span>
         <span class="fz-40 gray-1 bold" v-text="userInfo.successBalance" />
       </div>
 
       <div>
-        <span class="gray-1 fz-32">待打款返利</span>
+        <span class="gray-1 fz-32">待打款润笔</span>
         <span class="fz-40 gray-1 bold" v-text="userInfo.awaitBalance" />
       </div>
 
       <div>
-        <span class="gray-1 fz-32">无效返利</span>
+        <span class="gray-1 fz-32">无效润笔</span>
         <span class="fz-40 gray-1 bold" v-text="userInfo.rejectBalance"></span>
       </div>
     </main>
