@@ -54,14 +54,14 @@
 
   <div :class="$style.imgModule"  v-if="modules.B.length">
     <router-link
-      v-if="modules.B[0].linkType === 'category'"
+      v-if="modules.B[0].linkType === 'category' && modules.B[0].contentId"
       tag="img"
       :to="{ name: 'Classify', params: { optionId: modules.B[0].contentId } }"
       :src="modules.B[0].fileId"
       :class="$style.imgModuleImg"
     />
     <img
-      v-else-if="modules.B[0].linkType === 'goods'"
+      v-else-if="modules.B[0].linkType === 'goods' && modules.B[0].contentId"
       :src="modules.B[0].fileId"
       :class="$style.imgModuleImg"
       @click="toProductDetail(modules.B[0].contentId)"
@@ -88,14 +88,14 @@
 
   <div  :class="$style.imgModule" v-if="modules.D.length">
     <router-link
-      v-if="modules.D[0].linkType === 'category'"
+      v-if="modules.D[0].linkType === 'category' && modules.D[0].contentId"
       tag="img"
       :to="{ name: 'Classify', params: { optionId: modules.D[0].contentId } }"
       :src="modules.D[0].fileId"
       :class="$style.imgModuleImg"
     />
     <img
-      v-else-if="modules.D[0].linkType === 'goods'"
+      v-else-if="modules.D[0].linkType === 'goods' && modules.D[0].contentId"
       :src="modules.D[0].fileId"
       :class="$style.imgModuleImg"
       @click="toProductDetail(modules.D[0].contentId)"
@@ -234,7 +234,7 @@ export default {
       }
       for (let m of module2) {
         for (let val of m.values || []) {
-          val.contentId = val.link.split('/').splice(-1, 1)[0]
+          val.contentId = val.link ? val.link.split('/').splice(-1, 1)[0] : null
           this.modules[m.moduleSuffix].push(val)
         }
       }
