@@ -44,7 +44,7 @@
         </template>
       </div>
       <div :class="$style.content">
-        <pl-input v-model="form.refundModel.content" type="textarea" maxlength="500" placeholder="产品满足你的期待吗？说说它的优点和缺点吧" :min-rows="5" :max-rows="10" />
+        <pl-input v-model="form.refundModel.content" type="textarea" maxlength="500" placeholder="请描述你的问题" :min-rows="5" :max-rows="10" />
       </div>
       <div :class="$style.images">
         <pl-upload-img
