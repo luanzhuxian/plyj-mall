@@ -12,7 +12,7 @@ module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      // template: process.env.NODE_ENV === 'production' ? 'public/index-prod.html' : 'public/index.html',
+      template: process.env.NODE_ENV === 'production' ? 'public/index-prod.html' : 'public/index.html',
       filename: 'index.html'
     }
   },
