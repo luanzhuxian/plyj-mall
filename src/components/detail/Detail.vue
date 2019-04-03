@@ -61,6 +61,7 @@ export default {
     line-height: 32px;
     img {
       width: 670px !important;
+      height: auto !important;
       margin: 10px 0 !important;
     }
   }
