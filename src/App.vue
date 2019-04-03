@@ -40,10 +40,10 @@ export default {
         // 如果不是商品详情页面，采用其他分享策略
         share({
           appId: this.appId,
-          title: `朋来雅集-${route.meta.title}`,
-          desc: '朋来雅集，一对一打造专属教育机构自己的线上阵营',
+          title: `${this.mallName}-${route.meta.title}`,
+          desc: this.mallDesc,
           link: window.location.href,
-          imgUrl: 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
+          imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
         })
       }
     }
@@ -52,7 +52,7 @@ export default {
     routeName: function () {
       return this.$route.name
     },
-    ...mapGetters(['mallSeq', 'userId', 'openId', 'token', 'appId'])
+    ...mapGetters(['mallSeq', 'userId', 'openId', 'token', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
   },
   async created () {
     await this.getMallInfo()
@@ -71,9 +71,6 @@ export default {
       // })
     }
     this.logined = true
-  },
-  mounted () {
-    this.setTheme('base-theme')
   },
   methods: {
     ...mapMutations({
