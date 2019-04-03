@@ -75,7 +75,9 @@ export default {
       formAlign: null,
       rule: null,
       prop: '',
-      error: false
+      error: false,
+      bfscrolltop: 0,
+      isIOS: false
     }
   },
   created () {
@@ -83,6 +85,12 @@ export default {
     this.setAlign()
     this.rule = this.$parent.rule
     this.prop = this.$parent.prop
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.bfscrolltop = document.body.scrollTop
+      this.isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    })
   },
   methods: {
     handleInput (e) {
@@ -103,12 +111,14 @@ export default {
         /* 防止苹果手机出现‘完成’ */
         e.target.blur()
       } else {
+        // if (this.isIOS) document.body.scrollTop = document.body.scrollHeight
         this.$emit('focus', e)
         this.focus = true
         this.trigger('focus', e.target.value)
       }
     },
     handleBlur (e) {
+      if (this.isIOS) document.body.scrollTop = this.bfscrolltop
       this.$emit('blur', e)
       this.focus = false
       this.trigger('blur', e.target.value)

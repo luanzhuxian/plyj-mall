@@ -21,7 +21,8 @@
                     :key="i"
                     :class="{ [$style.active]: item.optionCode === selected.optionCode }"
                     @click="change(item)"
-                    v-text="item.optionName" />
+                    v-text="item.optionName"
+                />
               </ul>
             </div>
             <!--<div :class="$style.size">-->
@@ -228,6 +229,7 @@ export default {
   }
   .color-list, .size-list {
     display: flex;
+    flex-wrap: wrap;
     li {
       position: relative;
       margin-right: 26px;
