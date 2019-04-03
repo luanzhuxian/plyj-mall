@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.refundList">
-    <load-more :request-methods="getOrderList" :options="form">
+    <load-more :request-methods="getOrderList" :form="form">
       <template v-slot="{ list }">
         <router-link
           v-for="item of list"

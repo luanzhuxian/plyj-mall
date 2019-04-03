@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.rebateList">
     <LoadMore :requestMethods="getBrokerageList"
-              :options="form"
+              :form="form"
               @more="more"
               @refresh="refresh"
               icon="no-content2">
@@ -26,22 +26,22 @@
                   </div>
                 </div>
               </li>
-              <li v-for="(pro, j) of item"
-                  :key="j"
-                  :class="{ [$style.item]: true, partition: j < item.length - 1 }" >
-                <img v-img-error :src="pro.mediaInfoModels[0].mediaUrl" alt="">
-                <div :class="$style.itemRight">
-                  <div :class="$style.titlePrice">
-                    <p class="fz-28" v-text="pro.productName" />
-                    <p class="fz-34 bold">+ <i v-text="pro.price" /></p>
-                  </div>
-                  <p class="gray-2 fz-24">数量：<i v-text="pro.count" /></p>
-                  <div :class="$style.timeStatus">
-                    <span class="fz-22 gray-3" v-text="pro.createTime"></span>
-                    <span :class="{'fz-26': true, [$style.statusActive]: pro.status === 'AWAIT' }" v-text="status[pro.status]"></span>
-                  </div>
-                </div>
-              </li>
+              <!--<li v-for="(pro, j) of item"-->
+                  <!--:key="j"-->
+                  <!--:class="{ [$style.item]: true, partition: j < item.length - 1 }" >-->
+                <!--<img v-img-error :src="pro.mediaInfoModels[0].mediaUrl" alt="">-->
+                <!--<div :class="$style.itemRight">-->
+                  <!--<div :class="$style.titlePrice">-->
+                    <!--<p class="fz-28" v-text="pro.productName" />-->
+                    <!--<p class="fz-34 bold">+ <i v-text="pro.price" /></p>-->
+                  <!--</div>-->
+                  <!--<p class="gray-2 fz-24">数量：<i v-text="pro.count" /></p>-->
+                  <!--<div :class="$style.timeStatus">-->
+                    <!--<span class="fz-22 gray-3" v-text="pro.createTime"></span>-->
+                    <!--<span :class="{'fz-26': true, [$style.statusActive]: pro.status === 'AWAIT' }" v-text="status[pro.status]"></span>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</li>-->
             </ul>
           </li>
         </ul>

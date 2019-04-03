@@ -11,7 +11,7 @@
     <div :class="$style.content">
       <load-more
         v-if="seached"
-        :options="form"
+        :form="form"
         :request-methods="searchProduct"
         ref="loadMore"
         no-content-tip="抱歉，没有相关商品"
@@ -57,9 +57,9 @@
       <ul :class="$style.keyWordList">
         <li
           class="fz-28 gray-2"
-          v-for="item of history"
+          v-for="(item, i) of history"
           v-text="item"
-          :key="item + '_1'"
+          :key="`${item}_${i}`"
           @click="search(item)"
         />
       </ul>

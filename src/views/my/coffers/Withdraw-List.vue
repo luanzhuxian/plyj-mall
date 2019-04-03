@@ -2,9 +2,10 @@
   <div class="withdraw-list">
     <pl-tab :tabs="tabs" @change="tabChange" :activeId="activeId"></pl-tab>
     <LoadMore :request-methods="getWithdrawDepositOfUser"
-              :options="form" @refresh="refresh"
-              @more="more"
+              :form="form"
               ref="loadmore"
+              @refresh="refresh"
+              @more="more"
               no-content-tip="暂无提现记录"
               icon="no-content2">
       <template>
@@ -82,9 +83,6 @@ export default {
   methods: {
     tabChange (item) {
       this.form.status = item.id
-      this.$nextTick(() => {
-        this.$refs.loadmore.refresh()
-      })
     },
     async getCount () {
       try {

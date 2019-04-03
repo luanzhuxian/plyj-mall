@@ -4,7 +4,7 @@
     <load-more
       v-if="showLoadmore"
       :request-methods="getComments"
-      :options="form"
+      :form="form"
       ref="loadMore"
       noContentTip="暂无评论">
       <template v-slot="{ list }">

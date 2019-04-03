@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve && npm run svg",
+    "start": "vue-cli-service serve",
     "build": "vue-cli-service build --model production",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
@@ -21,7 +21,6 @@
     "qs": "^6.6.0",
     "vue": "^2.6.6",
     "vue-awesome-swiper": "^3.1.3",
-    "vue-infinite-scroll": "^2.0.2",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.2",
     "vuex": "^3.1.0"

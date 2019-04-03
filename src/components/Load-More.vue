@@ -16,7 +16,7 @@
            fill="#fe7700">
         <path opacity=".25" d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"/>
         <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z">
-          <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" :dur="loading ? '0.8s' : '99999s'" repeatCount="indefinite" />
+          <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" :dur="loading ? '0.8s' : '999999999s'" repeatCount="indefinite" />
         </path>
       </svg>
     </div>
@@ -36,7 +36,7 @@
         </path>
       </svg>
       <p v-if="allLoaded && list.length > 0" :class="$style.noMore">没有更多了~</p>
-      <div :class="$style.noContent" v-if="list.length === 0">
+      <div :class="$style.noContent" v-if="list.length === 0 && !loading">
         <pl-svg :class="$style.noContentIcon" :name="icon"></pl-svg>
         <p :class="$style.noContentTip" v-text="noContentTip"></p>
       </div>
@@ -47,7 +47,7 @@
 <script>
 // import infiniteScroll from 'vue-infinite-scroll'
 export default {
-  name: 'Load-More2',
+  name: 'Load-More',
   props: {
     isSearch: {
       type: Boolean,
@@ -90,8 +90,7 @@ export default {
     form: {
       handler: async function () {
         this.options = JSON.parse(JSON.stringify(this.form))
-        this.resetState()
-        this.list = await this.getData()
+        this.refresh()
       },
       deep: true
     }
@@ -117,8 +116,7 @@ export default {
   async created () {
     this.scrollHandler = throttle(this.infiniteScroll, 300)
     this.options = JSON.parse(JSON.stringify(this.form))
-    this.resetState()
-    this.list = await this.getData()
+    this.refresh()
   },
   mounted () {
     window.addEventListener('scroll', this.scrollHandler)
@@ -173,6 +171,12 @@ export default {
     touchstart (e) {
       this.startY = e.touches[0].clientY
     },
+    // 刷新
+    async refresh () {
+      this.resetState()
+      this.list = await this.getData()
+      this.$emit('refresh', this.list, this.total)
+    },
     // 本次下拉动作结束
     async touchend (e) {
       this.startY = 0
@@ -186,8 +190,9 @@ export default {
         // 为顶部loading设置过渡
         this.pullLoading.style.transition = 'top linear .5s'
         // 只有在loading完成出现在视野中时，松开才发起请求
-        if (this.top > 0) {
+        if (this.top > 50) {
           this.list = await this.getData()
+          this.$emit('refresh', this.list, this.total)
         } else {
           this.loaded()
         }
@@ -214,6 +219,7 @@ export default {
           for (let item of list) {
             this.list.push(item)
           }
+          this.$emit('more', this.list, this.total, list)
           this.bottomLoading = false
         } catch (e) {
           this.bottomLoading = false

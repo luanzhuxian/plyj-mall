@@ -11,7 +11,6 @@ import imgError from './assets/images/img_error.png'
 import directive from './directive'
 import { beforeEach, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
-import { Loadmore } from 'mint-ui'
 import animated from 'animate.css'
 import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
@@ -26,7 +25,6 @@ Vue.use(gallery, {
   swipeThreshold: 150
 })
 Vue.use(animated)
-Vue.component(Loadmore.name, Loadmore)
 
 for (let k of Object.keys(directive)) {
   Vue.directive(k, directive[k])
