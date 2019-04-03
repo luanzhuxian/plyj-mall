@@ -3,7 +3,7 @@ html {
   -webkit-tap-highlight-color: transparent; //解决点击后出现阴影问题
   height: 100%;
   text-size-adjust : none;//禁止横屏时，放大字体
-  overflow-scrolling: touch;/*快速滚动和回弹，模拟原生app效果*/
+  -webkit-overflow-scrolling: touch;
 }
 body {
   position: relative;

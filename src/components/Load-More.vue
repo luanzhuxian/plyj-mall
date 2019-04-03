@@ -2,7 +2,7 @@
   <!-- 使用前必须保证滚动容器是window -->
   <div :class="$style.loadMore"
        v-on:touchstart="touchstart"
-       v-finger:touch-move="touchMove"
+       v-finger:touch-move.capture="touchMove"
        v-finger:touch-end="touchend"
        ref="loadMore">
     <div :class="{ [$style.pullLoading]: true }"
@@ -13,7 +13,7 @@
            viewBox="0 0 32 32"
            width="32"
            height="32"
-           fill="#fe7700">
+           :fill="top > minPullDis ? '#fe7700' : '#a99d99'">
         <path opacity=".25" d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"/>
         <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z">
           <!--<animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" :dur="loading ? '0.8s' : '999999999s'" repeatCount="indefinite" />-->
@@ -22,7 +22,7 @@
     </div>
     <div :class="$style.loadMoreContainer" ref="container">
       <slot v-bind:list="list" v-bind:total="total"></slot>
-      <svg :class="$style.bottomLoadingIcon"
+      <svg :class="{ [$style.bottomLoadingIcon]: true, [$style.btoRotate]: loading }"
            xmlns="http://www.w3.org/2000/svg"
            viewBox="0 0 32 32"
            v-if="bottomLoading"
@@ -32,7 +32,7 @@
            fill="#fe7700">
         <path opacity=".25" d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"/>
         <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z">
-          <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="0.8s" repeatCount="indefinite" />
+          <!--<animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="0.8s" repeatCount="indefinite" />-->
         </path>
       </svg>
       <p v-if="allLoaded && list.length > 0" :class="$style.noMore">没有更多了~</p>
@@ -75,6 +75,25 @@ export default {
       default: 'no-content'
     }
   },
+  data () {
+    return {
+      options: null,
+      total: 0,
+      list: [],
+      startY: 0,
+      defaultTop: -90, // 固定值
+      top: -90, // 动态变化的
+      pulling: false, // 正在向下拉动
+      loading: false,
+      bottomLoading: false,
+      allLoaded: false, // 已全部加载完毕
+      timer: 0,
+      offsetHeight: 0,
+      rotate: 0, // 记录loading旋转的角度
+      scrollHandler: null,
+      minPullDis: 60 // 最小触发距离
+    }
+  },
   computed: {
     innerHeight: function () {
       return window.innerHeight
@@ -95,30 +114,12 @@ export default {
       deep: true
     }
   },
-  data () {
-    return {
-      options: null,
-      total: 0,
-      list: [],
-      startY: 0,
-      defaultTop: -90, // 固定值
-      top: -90, // 动态变化的
-      pulling: false, // 正在向下拉动
-      loading: false,
-      bottomLoading: false,
-      allLoaded: false, // 已全部加载完毕
-      timer: 0,
-      offsetHeight: 0,
-      rotate: 0, // 记录loading旋转的角度
-      scrollHandler: null
-    }
-  },
-  async created () {
-    this.scrollHandler = throttle(this.infiniteScroll, 300)
-    this.options = JSON.parse(JSON.stringify(this.form))
+  created () {
+    this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
+    this.options = JSON.parse(JSON.stringify(this.form)) // 复制请求参数
     this.refresh()
   },
-  mounted () {
+  activated () {
     window.addEventListener('scroll', this.scrollHandler)
   },
   methods: {
@@ -163,7 +164,6 @@ export default {
       this.options.current = 1
       this.allLoaded = false
       this.pulling = false
-      this.pulling = false
       this.bottomLoading = false
       this.top = 100
       window.scrollTo(0, 0)
@@ -180,7 +180,6 @@ export default {
     // 本次下拉动作结束
     async touchend (e) {
       this.startY = 0
-      console.log(this.pulling)
       if (this.pulling) {
         // 重置页码为1
         this.options.current = 1
@@ -191,7 +190,7 @@ export default {
         // 为顶部loading设置过渡
         this.pullLoading.style.transition = 'top linear .5s'
         // 只有在loading完成出现在视野中时，松开才发起请求
-        if (this.top > 50) {
+        if (this.top > this.minPullDis) {
           this.list = await this.getData()
           this.$emit('refresh', this.list, this.total)
         } else {
@@ -200,8 +199,10 @@ export default {
       }
     },
     touchMove (e) {
-      console.log(e.deltaY, window.scrollY, this.pulling)
-      // 向下拉，并且已经拉到了头
+      // 如果使在顶部，并且是向下拉，禁止默认行为
+      if (e.deltaY >= 0 && window.scrollY === 0) {
+        e.preventDefault()
+      }
       if (this.pulling) {
         e.preventDefault()
         e.stopPropagation()
@@ -216,7 +217,6 @@ export default {
       }
     },
     async infiniteScroll () {
-      console.log(this.offsetHeight - window.scrollY - this.innerHeight, !this.loading, !this.allLoaded)
       if (this.offsetHeight - window.scrollY - this.innerHeight <= 0 && !this.loading && !this.allLoaded) {
         this.options.current++
         try {
@@ -275,6 +275,7 @@ function throttle (fn, delay) {
   .loadMore {
     position: relative;
     overflow: hidden;
+    -webkit-overflow-scrolling: touch;
   }
   .pullLoading {
     position: absolute;
@@ -283,7 +284,7 @@ function throttle (fn, delay) {
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: translate(-50%, -50%) rotate(var(--rotate));
+    transform: translate3d(-50%, -50%, 0) rotate(var(--rotate));
     background-color: #fff;
     width: 70px;
     height: 70px;
@@ -293,8 +294,10 @@ function throttle (fn, delay) {
     .pullLoadingIcon {
       width: 50px;
       height: 50px;
+      animation: rotate .8s linear infinite;
+      animation-play-state: paused;
       &.rotate {
-        animation: rotate .8s linear infinite;
+        animation-play-state: running;
       }
     }
   }
@@ -302,6 +305,9 @@ function throttle (fn, delay) {
     min-height: 200px;
     .bottomLoadingIcon {
       margin: 30px auto 30px;
+      &.btoRotate {
+        animation: rotate .8s linear infinite;
+      }
     }
   }
   .noMore {
