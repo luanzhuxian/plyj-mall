@@ -1,14 +1,14 @@
 <template>
   <!-- 使用前必须保证滚动容器是window -->
   <div :class="$style.loadMore"
-       v-on:touchmove="touchMove"
        v-on:touchstart="touchstart"
-       v-on:touchend="touchend"
+       v-finger:touch-move="touchMove"
+       v-finger:touch-end="touchend"
        ref="loadMore">
-    <div :class="$style.pullLoading"
+    <div :class="{ [$style.pullLoading]: true }"
          ref="pullLoading"
          :style="{ '--top': `${top / 7.5}vw`, '--rotate': `${rotate}deg`}">
-      <svg :class="$style.pullLoadingIcon"
+      <svg :class="{ [$style.pullLoadingIcon]: true, [$style.rotate]: loading}"
            xmlns="http://www.w3.org/2000/svg"
            viewBox="0 0 32 32"
            width="32"
@@ -16,7 +16,7 @@
            fill="#fe7700">
         <path opacity=".25" d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"/>
         <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z">
-          <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" :dur="loading ? '0.8s' : '999999999s'" repeatCount="indefinite" />
+          <!--<animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" :dur="loading ? '0.8s' : '999999999s'" repeatCount="indefinite" />-->
         </path>
       </svg>
     </div>
@@ -180,6 +180,7 @@ export default {
     // 本次下拉动作结束
     async touchend (e) {
       this.startY = 0
+      console.log(this.pulling)
       if (this.pulling) {
         // 重置页码为1
         this.options.current = 1
@@ -199,18 +200,23 @@ export default {
       }
     },
     touchMove (e) {
+      console.log(e.deltaY, window.scrollY, this.pulling)
+      // 向下拉，并且已经拉到了头
       if (this.pulling) {
         e.preventDefault()
-      }
-      this.pulling = false
-      if (window.scrollY === 0) {
-        this.pulling = true
+        e.stopPropagation()
         let top = e.touches[0].clientY - this.startY
         this.top = this.defaultTop + top
         this.rotate = top
       }
+      if (e.deltaY > 0 && window.scrollY === 0) {
+        e.preventDefault()
+        e.stopPropagation()
+        this.pulling = true
+      }
     },
     async infiniteScroll () {
+      console.log(this.offsetHeight - window.scrollY - this.innerHeight, !this.loading, !this.allLoaded)
       if (this.offsetHeight - window.scrollY - this.innerHeight <= 0 && !this.loading && !this.allLoaded) {
         this.options.current++
         try {
@@ -274,20 +280,22 @@ function throttle (fn, delay) {
     position: absolute;
     left: 50%;
     top: var(--top);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transform: translate(-50%, -50%) rotate(var(--rotate));
+    background-color: #fff;
     width: 70px;
     height: 70px;
-    background-color: #fff;
-    border-radius: 35px;
+    border-radius: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     z-index: 9;
     .pullLoadingIcon {
-      position: absolute;
-      left: 50%;
-      top: 50%;
       width: 50px;
       height: 50px;
-      transform: translate(-50%, -50%);
+      &.rotate {
+        animation: rotate .8s linear infinite;
+      }
     }
   }
   .loadMoreContainer {
@@ -314,5 +322,9 @@ function throttle (fn, delay) {
     margin-top: 20px;
     font-size: 32px;
     color: #999;
+  }
+  @keyframes rotate {
+    from { transform: rotate(0deg) }
+    to { transform: rotate(360deg) }
   }
 </style>

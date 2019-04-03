@@ -72,9 +72,6 @@ export default {
     }
     this.logined = true
   },
-  mounted () {
-    this.setTheme('base-theme')
-  },
   methods: {
     ...mapMutations({
       setTheme: SET_THEME

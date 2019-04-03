@@ -15,6 +15,8 @@ import animated from 'animate.css'
 import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
 import Toast from './components/penglai-ui/toast'
+import AlloyFinger from 'alloyfinger'
+import AlloyFingerVue from 'alloyfinger/vue/alloy_finger_vue'
 // import LogLine from 'logline'
 // import { saveLog } from './apis/base-api'
 // LogLine.using(LogLine.PROTOCOL.INDEXEDDB)
@@ -25,6 +27,7 @@ Vue.use(gallery, {
   swipeThreshold: 150
 })
 Vue.use(animated)
+Vue.use(AlloyFingerVue, { AlloyFinger })
 
 for (let k of Object.keys(directive)) {
   Vue.directive(k, directive[k])

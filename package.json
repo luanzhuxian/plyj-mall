@@ -11,6 +11,7 @@
     "svg": "vsvg -s ./src/assets/svg -t ./src/assets/fonts/svg"
   },
   "dependencies": {
+    "alloyfinger": "^0.1.16",
     "animate.css": "^3.7.0",
     "axios": "^0.18.0",
     "exif-js": "^2.3.0",
