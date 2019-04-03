@@ -61,16 +61,15 @@ export default {
       await this.getUserInfo()
     } else {
       await this.login()
-      // 登录完成后删除code
-      // let { name, params, query } = this.$route
-      // delete query.code
-      // this.$router.replace({
-      //   name,
-      //   params,
-      //   query
-      // })
     }
     this.logined = true
+    share({
+      appId: this.appId,
+      title: `${this.mallName}-${this.$route.meta.title}`,
+      desc: this.mallDesc,
+      link: window.location.href,
+      imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
+    })
   },
   methods: {
     ...mapMutations({
