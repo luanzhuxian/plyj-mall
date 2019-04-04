@@ -91,7 +91,9 @@ export default {
       offsetHeight: 0,
       rotate: 0, // 记录loading旋转的角度
       scrollHandler: null,
-      minPullDis: 60 // 最小触发距离
+      minPullDis: 60, // 最小触发距离
+      // 缓存发起的所有请求
+      requestBuffer: []
     }
   },
   computed: {
@@ -105,19 +107,9 @@ export default {
       return this.$refs.container
     }
   },
-  watch: {
-    form: {
-      handler: async function () {
-        this.options = JSON.parse(JSON.stringify(this.form))
-        this.refresh()
-      },
-      deep: true
-    }
-  },
   created () {
     this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
     this.options = JSON.parse(JSON.stringify(this.form)) // 复制请求参数
-    this.refresh()
   },
   activated () {
     window.addEventListener('scroll', this.scrollHandler)
@@ -173,6 +165,7 @@ export default {
     },
     // 刷新
     async refresh () {
+      this.options = JSON.parse(JSON.stringify(this.form))
       this.resetState()
       this.list = await this.getData()
       this.$emit('refresh', this.list, this.total)

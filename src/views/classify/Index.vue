@@ -84,29 +84,35 @@ export default {
         size: 10,
         productStatus: 'ON_SALE'
       },
-      getProduct
+      getProduct,
+      $refresh: null
     }
   },
   props: ['optionId'],
   created () {
     this.getCategoryTree()
   },
+  mounted () {
+    this.$refresh = this.$refs.loadMore.refresh
+  },
   activated () {
-    this.form.categoryCode = this.optionId || ''
     if (this.classifyList.length > 1) {
+      console.log(123123)
       // 查找当前传入的分类ID对应的分类对象
       this.classifyClick(this.classifyList.find(item => {
-        return item.sequenceNbr === this.optionId
+        return item.sequenceNbr === this.optionId || ''
       }))
     }
   },
   methods: {
     classifyClick (classify) {
+      console.log(classify)
       if (classify) {
         if (this.currentClassify.sequenceNbr === classify.sequenceNbr) return
         this.currentClassify = classify
         this.form.categoryCode = classify.sequenceNbr
         this.form.current = 1
+        this.$refresh()
       }
     },
     async getCategoryTree () {
