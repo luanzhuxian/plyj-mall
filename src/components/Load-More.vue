@@ -312,6 +312,7 @@ function throttle (fn, delay) {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 40px;
   }
   .noContentIcon {
     width: 80%;
