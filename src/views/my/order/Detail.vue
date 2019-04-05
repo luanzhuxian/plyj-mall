@@ -27,30 +27,27 @@
         <pl-list title="订单编号：" :content="orderInfoModel.orderSn" />
       </div>
 
-      <div :class="$style.orderInfo">
+      <div :class="$style.orderInfo" v-for="item of relationModel" :key="item.productModel.contentId">
         <order-item
-          v-for="item of relationModel"
-          :key="item.orderProductRelationModel.productSeq"
           :img="item.mediaInfoModels[0].mediaUrl"
-          :name="item.orderProductRelationModel.productName"
+          :name="item.productModel.productName"
           :count="item.orderProductRelationModel.count"
           :option="item.orderProductRelationModel.optionName"
           :price="item.orderProductRelationModel.productPrice"
           route-name="Lesson"
           :product-seq="item.orderProductRelationModel.productSeq"
         />
+
         <pl-button
           v-if="canIApplyService && !supplierOrder"
           plain round
           @click="$router.push({ name: 'RefundApply', params: { orderId } })">
           申请售后
         </pl-button>
-      </div>
 
-      <div :class="$style.explain" v-if="orderInfoModel.productType === 'VIRTUAL_GOODS'">
-        <ModuleTitle title="使用说明" />
-        <div :class="$style.explainBox + ' fz-26 gray-2'">
-          这门课提供的思维方法和行动工具，能够帮助你这门课提供的思维方法和行动工具，能够帮助你这门课提供的思维方法和行动工具，能够帮助你
+        <div :class="$style.explain" v-if="item.productModel.productType === 'VIRTUAL_GOODS'">
+          <ModuleTitle title="使用说明" />
+          <div :class="$style.explainBox + ' fz-26 gray-2'" v-text="item.productModel.productUseMethod"></div>
         </div>
       </div>
 
