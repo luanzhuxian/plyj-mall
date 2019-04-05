@@ -61,7 +61,7 @@ export default {
     RDSERVER_MOBILE_REGISTER: 'RDSERVER_MOBILE_REGISTER', // 研发服务端-免费注册验证码
     PUBLIC_USER_UPDATE_MOBILE: 'PUBLIC_USER_UPDATE_MOBILE'// 研发服务端-免费注册验证码
   },
-  orderStatus: {
+  orderStatusMap: {
     NEW: '待提交',
     WAIT_PAY: '待支付',
     WAIT_SHIP: '待发货',

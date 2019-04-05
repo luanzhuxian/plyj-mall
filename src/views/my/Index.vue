@@ -34,21 +34,21 @@
 
     <!-- 我的订单 -->
     <div :class="$style.myOrders">
-      <ModuleTitle title="我的订单" tip="全部订单" suffix-icon="right" :route="{ name: 'AllOrders' }" />
+      <ModuleTitle title="我的订单" tip="全部订单" suffix-icon="right" :route="{ name: 'Orders' }" />
       <div :class="$style.orderStatus">
-        <router-link :to="{ name: 'waitPay' }">
+        <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
           <pl-svg name="wait-pay"></pl-svg>
           <span :class="$style.badge" v-if="count.WAIT_PAY" v-text="count.WAIT_PAY" />
         </router-link>
-        <router-link :to="{ name: 'waitShip' }">
+        <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
           <pl-svg name="wait-ship"></pl-svg>
           <span :class="$style.badge" v-if="count.WAIT_SHIP" v-text="count.WAIT_SHIP"></span>
         </router-link>
-        <router-link :to="{ name: 'waitReceive' }">
+        <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
           <pl-svg name="wait-receive"></pl-svg>
           <span :class="$style.badge" v-if="count.WAIT_RECEIVE" v-text="count.WAIT_RECEIVE"></span>
         </router-link>
-        <router-link :to="{ name: 'waitComment' }">
+        <router-link :to="{ name: 'Orders', params: { status: 'FINISHED' } }">
           <pl-svg name="wait-comment"></pl-svg>
           <span :class="$style.badge" v-if="count.FINISHED" v-text="count.FINISHED"></span>
         </router-link>

@@ -19,7 +19,7 @@
                                 <circle id="椭圆形" stroke="#F2B036" stroke-width="3.6" fill="#E1FDEC" cx="14" cy="31" r="3.2"></circle>
                             </g>
                         </g>
-                        <text font-family="MicrosoftYaHeiUI, Microsoft YaHei UI" font-size="24" font-weight="normal" fill="#2E2E2E">
+                        <text font-family="MicrosoftYaHeiUI, Microsoft YaHei UI" font-size="24" font-weight="normal" fill="#2E2E2E" transform="translate(-1 -10)">
                             <tspan x="0" y="88">待收货</tspan>
                         </text>
                     </g>

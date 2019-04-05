@@ -8,21 +8,19 @@
     <div :class="{ [$style.pullLoading]: true }"
          ref="pullLoading"
          :style="{ '--top': `${top / 7.5}vw`, '--rotate': `${rotate}deg`}">
-      <svg :class="{ [$style.pullLoadingIcon]: true, [$style.rotate]: loading}"
+      <svg :class="{ [$style.pullLoadingIcon]: true, [$style.rotate]: pending}"
            xmlns="http://www.w3.org/2000/svg"
            viewBox="0 0 32 32"
            width="32"
            height="32"
            :fill="top > minPullDis ? '#fe7700' : '#a99d99'">
         <path opacity=".25" d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"/>
-        <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z">
-          <!--<animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" :dur="loading ? '0.8s' : '999999999s'" repeatCount="indefinite" />-->
-        </path>
+        <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z"></path>
       </svg>
     </div>
     <div :class="$style.loadMoreContainer" ref="container">
       <slot v-bind:list="list" v-bind:total="total"></slot>
-      <svg :class="{ [$style.bottomLoadingIcon]: true, [$style.btoRotate]: loading }"
+      <svg :class="{ [$style.bottomLoadingIcon]: true, [$style.btoRotate]: pending }"
            xmlns="http://www.w3.org/2000/svg"
            viewBox="0 0 32 32"
            v-if="bottomLoading"
@@ -36,7 +34,7 @@
         </path>
       </svg>
       <p v-if="allLoaded && list.length > 0" :class="$style.noMore">没有更多了~</p>
-      <div :class="$style.noContent" v-if="list.length === 0 && !loading">
+      <div :class="$style.noContent" v-if="list.length === 0 && !pending">
         <pl-svg :class="$style.noContentIcon" :name="icon"></pl-svg>
         <p :class="$style.noContentTip" v-text="noContentTip"></p>
       </div>
@@ -45,14 +43,35 @@
 </template>
 
 <script>
-// import infiniteScroll from 'vue-infinite-scroll'
 export default {
   name: 'Load-More',
+  data () {
+    return {
+      options: null,
+      total: 0,
+      list: [],
+      startY: 0,
+      defaultTop: -90, // 固定值
+      top: -90, // 动态变化的
+      pulling: false, // 正在向下拉动
+      pending: false, // loading
+      bottomLoading: false,
+      allLoaded: false, // 已全部加载完毕
+      timer: 0,
+      offsetHeight: 0,
+      rotate: 0, // 记录loading旋转的角度
+      scrollHandler: null,
+      minPullDis: 60, // 最小触发距离
+      // 缓存发起的所有请求
+      requestBuffer: []
+    }
+  },
   props: {
     isSearch: {
       type: Boolean,
       default: false
     },
+    loading: Boolean,
     // 请求方法
     requestMethods: {
       type: Function,
@@ -75,27 +94,6 @@ export default {
       default: 'no-content'
     }
   },
-  data () {
-    return {
-      options: null,
-      total: 0,
-      list: [],
-      startY: 0,
-      defaultTop: -90, // 固定值
-      top: -90, // 动态变化的
-      pulling: false, // 正在向下拉动
-      loading: false,
-      bottomLoading: false,
-      allLoaded: false, // 已全部加载完毕
-      timer: 0,
-      offsetHeight: 0,
-      rotate: 0, // 记录loading旋转的角度
-      scrollHandler: null,
-      minPullDis: 60, // 最小触发距离
-      // 缓存发起的所有请求
-      requestBuffer: []
-    }
-  },
   computed: {
     innerHeight: function () {
       return window.innerHeight
@@ -109,7 +107,6 @@ export default {
   },
   created () {
     this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
-    this.options = JSON.parse(JSON.stringify(this.form)) // 复制请求参数
   },
   activated () {
     window.addEventListener('scroll', this.scrollHandler)
@@ -118,7 +115,8 @@ export default {
     getData () {
       return new Promise(async (resolve, reject) => {
         try {
-          this.loading = true
+          this.$emit('update:loading', true)
+          this.pending = true
           let { result } = await this.requestMethods(this.options)
           if (result.records.length === 0) {
             this.allLoaded = true
@@ -141,7 +139,8 @@ export default {
       this.$nextTick(() => {
         this.$nextTick(() => {
           this.pullLoading.style.transition = 'top linear .5s'
-          this.loading = false
+          this.$emit('update:loading', false)
+          this.pending = false
           this.top = this.defaultTop
           this.offsetHeight = this.$el.offsetHeight
           // 如果因为一些原因过渡没有被取消，0.6s后强行取消
@@ -210,7 +209,7 @@ export default {
       }
     },
     async infiniteScroll () {
-      if (this.offsetHeight - window.scrollY - this.innerHeight <= 0 && !this.loading && !this.allLoaded) {
+      if (this.offsetHeight - window.scrollY - this.innerHeight <= 0 && !this.pending && !this.allLoaded) {
         this.options.current++
         try {
           this.bottomLoading = true

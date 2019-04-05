@@ -18,7 +18,7 @@
                                     <circle id="椭圆形-copy-3" fill="#F2B036" cx="35" cy="17" r="3"></circle>
                                 </g>
                             </g>
-                            <text id="待付款" font-family="MicrosoftYaHeiUI, Microsoft YaHei UI" font-size="24" font-weight="normal" fill="#2E2E2E">
+                            <text id="待付款" font-family="MicrosoftYaHeiUI, Microsoft YaHei UI" font-size="24" font-weight="normal" fill="#2E2E2E" transform="translate(-1 -10)">
                                 <tspan x="0" y="88">待评价</tspan>
                             </text>
                         </g>

@@ -6,7 +6,7 @@
       <pl-svg name="add-friend" />
     </div>-->
     <ModuleTitle size="middle" title="分享就赚钱" badge="HOT" class="mt-40" />
-    <load-more :request-methods="getActivityProduct" :form="form" no-content-tip="暂无活动商品">
+    <load-more :request-methods="getActivityProduct" :form="form" ref="loadMore" no-content-tip="暂无活动商品">
       <template v-slot="{ list }">
         <ShareItem
           v-for="(item, i) of list"
@@ -56,6 +56,9 @@ export default {
   },
   created () {
     this.form.agencyCode = this.agencyCode
+  },
+  mounted () {
+    this.$refs.loadMore.refresh()
   },
   methods: {
   }

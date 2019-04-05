@@ -10,14 +10,13 @@
 
     <div :class="$style.content">
       <load-more
-        v-if="seached"
+        v-show="seached"
         :form="form"
         :request-methods="searchProduct"
         ref="loadMore"
         no-content-tip="抱歉，没有相关商品"
         icon="no-search"
-        @more="more"
-        @refresh="refresh">
+        @refresh="refreshHandler">
         <template v-slot="{ list }">
           <lesson-item
             border
@@ -77,8 +76,6 @@ import {
 import { mapGetters } from 'vuex'
 import LessonItem from '../../components/item/Lesson-Item.vue'
 import LoadMore from '../../components/Load-More.vue'
-// import { DelayExec } from '../../assets/js/util'
-// let delayExec = new DelayExec(300)
 export default {
   name: 'Search',
   components: {
@@ -97,7 +94,8 @@ export default {
       searchProduct,
       hot: [],
       history: [],
-      seached: false // 标记是否搜索过
+      seached: false, // 标记是否搜索过
+      $refresh: null
     }
   },
   computed: {
@@ -105,6 +103,9 @@ export default {
   },
   created () {
     this.form.agencyCode = this.agencyCode
+  },
+  mounted () {
+    this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
     this.getHotKeyword()
@@ -117,9 +118,7 @@ export default {
         this.searachContent = this.form.searachContent = keyword
       }
       this.seached = true
-      this.$nextTick(() => {
-        this.$refs.loadMore.refresh()
-      })
+      this.$refresh()
     },
     async getHotKeyword () {
       try {
@@ -155,12 +154,7 @@ export default {
       this.searachContent = ''
       this.seached = false
     },
-    more (list) {
-      this.getHistory()
-      this.list = list
-    },
-    refresh (list) {
-      this.list = list
+    refreshHandler () {
       this.getHistory()
     }
   }

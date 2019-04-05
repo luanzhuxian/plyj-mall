@@ -33,7 +33,7 @@
           <classify-item img="//gw.alicdn.com/tps/O1CN01HoU6GR1Oli1OYGPbk_!!2960761746-2-beehive-scenes.png_140x10000.jpg_.webp" text="平板电脑" />
         </div>-->
         <div :class="$style.tip" v-text="currentClassify.categoryName"></div>
-        <load-more :request-methods="getProduct" :form="form" ref="loadMore" no-content-tip="此分类下还没有商品">
+        <load-more :request-methods="getProduct" :form="form" ref="loadMore" :loading.sync="loading" no-content-tip="此分类下还没有商品">
           <template v-slot="{ list }">
             <lesson-item
               v-for="item of list"
@@ -85,7 +85,8 @@ export default {
         productStatus: 'ON_SALE'
       },
       getProduct,
-      $refresh: null
+      $refresh: null,
+      loading: false
     }
   },
   props: ['optionId'],
@@ -96,19 +97,14 @@ export default {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    if (this.classifyList.length > 1) {
-      console.log(123123)
-      // 查找当前传入的分类ID对应的分类对象
-      this.classifyClick(this.classifyList.find(item => {
-        return item.sequenceNbr === this.optionId || ''
-      }))
+    if (this.classifyList.length > 1 && this.optionId) {
+      this.classifyClick(this.classifyList.find(item => item.sequenceNbr === this.optionId))
     }
   },
   methods: {
     classifyClick (classify) {
-      console.log(classify)
+      if (this.loading) return
       if (classify) {
-        if (this.currentClassify.sequenceNbr === classify.sequenceNbr) return
         this.currentClassify = classify
         this.form.categoryCode = classify.sequenceNbr
         this.form.current = 1
@@ -119,9 +115,7 @@ export default {
       try {
         const { result } = await getCategoryTree()
         this.classifyList = this.classifyList.concat(result)
-        if (this.optionId) {
-          this.classifyClick(this.classifyList.find(item => item.sequenceNbr === this.optionId))
-        }
+        this.classifyClick(this.classifyList.find(item => item.sequenceNbr === (this.optionId || '')))
       } catch (e) {
         throw e
       }
