@@ -116,6 +116,9 @@ export default {
   created () {
     this.form.userId = this.userId
   },
+  mounted () {
+    this.$refresh = this.$refs.loadMore.refresh
+  },
   activated () {
     this.form.orderStatus = this.status || ''
     if (this.status === 'FINISHED') {
@@ -124,9 +127,6 @@ export default {
       this.form.assessment = ''
     }
     this.$refresh()
-  },
-  mounted () {
-    this.$refresh = this.$refs.loadMore.refresh
   },
   methods: {
     tabChange (item) {

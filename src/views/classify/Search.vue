@@ -210,6 +210,7 @@ export default {
   }
   .content {
     padding-left: 40px;
+    margin-top: 40px;
   }
   .search-select {
     position: relative;

@@ -44,6 +44,7 @@ export default {
   .price {
     display: inline-flex;
     align-items: baseline;
+    flex-wrap: wrap;
     .prefix-text {
       font-weight: normal;
     }

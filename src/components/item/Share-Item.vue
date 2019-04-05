@@ -3,12 +3,12 @@
     <img v-lazy="img" :key="img" class="radius-20" alt="">
     <div :class="$style.content + ' radius-20'">
       <div :class="$style.contentBox">
-        <div>
-          <h3 v-text="title" />
+        <div :class="$style.contentTop">
+          <h3 :class="$style.title" v-text="title" />
           <p :class="$style.desc" v-text="desc" />
-          <Grade size="mini" :grade="grade" />
+          <Grade :class="$style.grade" size="mini" :grade="grade" />
         </div>
-        <div>
+        <div :class="$style.contentBottom">
           <Price size="middle" :price="price" />
           <pl-button shadow type="warning" size="middle" @click="buyNow">立即购买</pl-button>
         </div>
@@ -76,15 +76,15 @@ export default {
     justify-content: space-between;
     width: 342px;
     height: 202px;
-    h3 {
+    .title {
       font-size: 28px;
       font-weight: bold;
       @include elps;
     }
-    > div:nth-of-type(1) {
-      width: 280px;
+    .contentTop {
+      width: 240px;
     }
-    > div:nth-of-type(2) {
+    .contentBottom {
       display: inline-flex;
       align-items: flex-end;
       justify-content: space-between;
@@ -97,9 +97,12 @@ export default {
     }
     .desc {
       font-size: 20px;
-      margin-top: 8px;
+      margin-top: 12px;
       color: #999;
       @include elps;
+    }
+    .grade {
+      margin-top: 12px;
     }
   }
 </style>

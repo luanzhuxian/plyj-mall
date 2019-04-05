@@ -2,8 +2,9 @@
   <div :class="$style.rebateList">
     <LoadMore :requestMethods="getBrokerageList"
               :form="form"
+              ref="loadMore"
               @more="more"
-              @refresh="refresh"
+              @refresh="refreshHandler"
               icon="no-content2">
       <template>
         <ul>
@@ -85,8 +86,11 @@ export default {
     this.form.userId = this.userId
     this.form.agencyCode = this.agencyCode
   },
+  mounted () {
+    this.$refs.loadMore.refresh()
+  },
   methods: {
-    refresh (list) {
+    refreshHandler (list) {
       this.formatList = []
       this.batching(list)
     },

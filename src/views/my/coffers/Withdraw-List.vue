@@ -1,13 +1,14 @@
 <template>
   <div class="withdraw-list">
-    <pl-tab :tabs="tabs" @change="tabChange" :activeId="activeId"></pl-tab>
-    <LoadMore :request-methods="getWithdrawDepositOfUser"
-              :form="form"
-              ref="loadmore"
-              @refresh="refresh"
-              @more="more"
-              no-content-tip="暂无提现记录"
-              icon="no-content2">
+    <pl-tab :tabs="tabs" @change="tabChange" :activeId="form.status"></pl-tab>
+    <LoadMore
+      :request-methods="getWithdrawDepositOfUser"
+      :form="form"
+      ref="loadMore"
+      @refresh="refreshHandler"
+      @more="more"
+      no-content-tip="暂无提现记录"
+      icon="no-content2">
       <template>
         <ul :class="$style.monthList">
           <li class="mt-28" v-for="(yearMonth, i) of formatList" :key="i">
@@ -47,7 +48,6 @@ export default {
   },
   data () {
     return {
-      activeId: '',
       tabs: [
         { name: '全部', id: '' },
         { name: '未审核', id: 'AWAIT' }
@@ -71,18 +71,24 @@ export default {
       // 未通过的列表
       noPassList: [],
       formatList: [],
-      getWithdrawDepositOfUser
+      getWithdrawDepositOfUser,
+      $refresh: null
     }
   },
   computed: {
     ...mapGetters(['agencyCode'])
   },
+  mounted () {
+    this.$refresh = this.$refs.loadMore.refresh
+  },
   activated () {
     this.form.agencyCode = this.agencyCode
+    this.$refresh()
   },
   methods: {
     tabChange (item) {
       this.form.status = item.id
+      this.$refresh()
     },
     async getCount () {
       try {
@@ -95,7 +101,7 @@ export default {
         throw e
       }
     },
-    refresh (list, total) {
+    refreshHandler (list, total) {
       this.formatList = []
       this.batching(list, total)
     },

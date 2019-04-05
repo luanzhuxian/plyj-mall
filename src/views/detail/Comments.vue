@@ -2,7 +2,6 @@
   <div :class="$style.comments">
     <TopText title="评论专区" tip="这里有你想看的" />
     <load-more
-      v-if="showLoadmore"
       :request-methods="getComments"
       :form="form"
       ref="loadMore"
@@ -44,11 +43,11 @@ export default {
         productSeq: ''
       },
       getComments,
-      showLoadmore: false,
       showPop: false,
       isSupplierProduct: false,
       priceModels: [],
-      detail: {}
+      detail: {},
+      $refresh: null
     }
   },
   computed: {
@@ -58,12 +57,14 @@ export default {
     }
   },
   props: ['productSeq'],
+  mounted () {
+    this.$refresh = this.$refs.loadMore.refresh
+  },
   activated () {
-    this.showLoadmore = false
     this.$nextTick(() => {
       this.form.productSeq = this.productSeq
       this.form.mallSeq = this.mallSeq
-      this.showLoadmore = true
+      this.$refresh()
       this.getdetail()
     })
   },

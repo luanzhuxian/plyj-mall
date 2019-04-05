@@ -35,17 +35,19 @@
         <div :class="$style.tip" v-text="currentClassify.categoryName"></div>
         <load-more :request-methods="getProduct" :form="form" ref="loadMore" :loading.sync="loading" no-content-tip="此分类下还没有商品">
           <template v-slot="{ list }">
-            <lesson-item
-              v-for="item of list"
-              :key="item.sequenceNbr"
-              size="small"
-              :id="item.sequenceNbr"
-              :title="item.productName"
-              :desc="item.productDesc"
-              :price="item.productOptions[0].price"
-              :img="item.productImage[0].mediaUrl"
-              :border="true"
-            />
+            <div :class="$style.productList">
+              <lesson-item
+                v-for="item of list"
+                :key="item.sequenceNbr"
+                size="small"
+                :id="item.sequenceNbr"
+                :title="item.productName"
+                :desc="item.productDesc"
+                :price="item.productOptions[0].price"
+                :img="item.productImage[0].mediaUrl"
+                :border="true"
+              />
+            </div>
           </template>
         </load-more>
       </div>
@@ -217,6 +219,10 @@ export default {
   padding-left: 180px;
   background-color: #fff;
   z-index: 1;
+}
+.productList {
+  display: grid;
+  grid-row-gap: 24px;
 }
 .tip {
   position: relative;

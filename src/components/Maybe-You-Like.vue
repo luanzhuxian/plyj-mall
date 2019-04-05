@@ -1,5 +1,5 @@
 <template>
-  <div class="Maybe-You-Like" v-if="maybeLike.length">
+  <div :class="$style.maybeYouLike" v-if="maybeLike.length">
     <module-title size="middle" :title="title" />
     <lesson-item
       v-for="item of maybeLike"
@@ -89,5 +89,8 @@ export default {
 </script>
 
 <style module lang="scss">
-
+  .maybeYouLike {
+    display: grid;
+    grid-row-gap: 28px;
+  }
 </style>

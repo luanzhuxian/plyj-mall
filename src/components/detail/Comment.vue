@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style.comment + ' radius-20'">
+  <div :class="$style.comment + ' radius-20'" v-show="listTemp.length > 0">
     <div :class="$style.commentItem" v-for="item of listTemp" :key="item.sequenceNbr">
+      <!-- 头像 -->
       <img v-img-error :src="item.headUrl || ''" alt="">
       <div :class="$style.content">
-        <!-- 头像 -->
         <div :class="$style.name" v-text="item.nickName" />
         <!-- 评分 -->
         <div :class="$style.grade">
@@ -60,9 +60,12 @@ export default {
     }
   },
   props: {
+    // 如果没有传入size和productSeq，则需要传入评论列表
+    // 这样做是为了方便在商品详情和评论专区形成通用性
+    // 评论专区有刷新和请求全部列表的需求，而商品详情只需要3条评论，且不需要刷新评论
+    // 因此，传入size和productSeq将更方便，因为无需额外在商品详情中请求评论列表
     size: Number,
     productSeq: String,
-    // 传入list或者使用自带的list渲染
     list: {
       type: Array,
       default: function () {

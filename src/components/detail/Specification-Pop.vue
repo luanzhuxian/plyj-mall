@@ -33,7 +33,7 @@
             <!--</div>-->
             <div :class="$style.count">
               <div>购买数量</div>
-              <div>
+              <div :class="$style.countCtr">
                 <button :disabled="count <= min" @click="minus">-</button>
                 <input v-model.number="count" type="number" @change="countChange">
                 <button :disabled="count >= stock" @click="add">+</button>
@@ -230,14 +230,16 @@ export default {
   .color-list, .size-list {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     li {
       position: relative;
-      margin-right: 26px;
-      margin-bottom: 13px;
-      padding: 10px 20px;
+      line-height: 54px;
+      margin: 0 13px 13px 0;
+      padding: 0 20px;
       color: #666;
+      font-size: 24px;
       background-color: #f3f3f3;
-      border-radius: 10px;
+      border-radius: $--radius2;
       &.active {
         background: none;
         color: $--primary-color;
@@ -248,23 +250,21 @@ export default {
     }
   }
   .count {
-    > div {
-      display: flex;
+    > .countCtr {
+      display: grid;
+      grid-template-columns: 60px 120px 60px;
+      grid-column-gap: 3px;
+      height: 60px;
       button {
-        width: 60px;
-        height: 60px;
         font-size: 26px;
         font-weight: bold;
         color: #999;
         background-color: #f3f3f3;
-        margin-right: 3px;
       }
       input {
-        height: 60px;
-        width: 120px;
         padding: 0 10px;
-        margin-right: 3px;
         text-align: center;
+        font-size: 20px;
         background-color: #f3f3f3;
       }
     }
