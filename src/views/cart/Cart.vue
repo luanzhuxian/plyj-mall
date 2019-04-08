@@ -207,7 +207,8 @@ export default {
             optionCode: this.optionCode
           })
           this.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
-          this.totalMoney += this.sixEnergyNewOrderReturnModel.freight
+          // 先乘后加再除以，防止出现浮点数精度问题
+          this.totalMoney = (this.totalMoney * 100 + this.sixEnergyNewOrderReturnModel.freight * 100) / 100
 
           this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
           this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
