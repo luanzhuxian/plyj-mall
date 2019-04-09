@@ -106,7 +106,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
   .pl-upload-img {
   }
   .pl-img-list {
