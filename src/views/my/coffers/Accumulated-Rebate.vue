@@ -7,7 +7,7 @@
       </div>
 
       <div>
-        <span class="gray-1 fz-32">可提现金额</span>
+        <span class="gray-1 fz-32">可提现润笔</span>
         <span class="fz-40 gray-1 bold" v-text="userInfo.balance"></span>
       </div>
 

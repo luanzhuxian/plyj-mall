@@ -22,7 +22,7 @@
     <!-- 金库 -->
     <router-link tag="div" :to="{ name: 'Coffers' }" :class="$style.myMoney">
       <div>
-        <p>可提现金额（元）</p>
+        <p>可提现润笔（元）</p>
         <p v-text="balance" />
       </div>
       <div>

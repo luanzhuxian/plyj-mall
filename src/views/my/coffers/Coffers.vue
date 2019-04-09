@@ -9,7 +9,7 @@
       </div>
       <div>
         <div :class="$style.withdrawals">
-          <p class="fz-24 gray-3">可提现金额</p>
+          <p class="fz-24 gray-3">可提现润笔</p>
           <p class="fz-50 bold">{{balance}} <i class="fz-26">元</i></p>
           <router-link tag="button" :to="{ name: 'WithdrawCash' }" style="width: 27.733vw;" :class="$style.myButton + ' mt-22'">提现</router-link>
         </div>
