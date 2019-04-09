@@ -138,7 +138,7 @@ export default {
     loaded () {
       this.$nextTick(() => {
         this.$nextTick(() => {
-          this.pullLoading.style.transition = 'top linear .5s'
+          this.pullLoading.style.transition = 'top .5s ease-in-out'
           this.$emit('update:loading', false)
           this.pending = false
           this.top = this.defaultTop
