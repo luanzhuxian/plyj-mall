@@ -19,7 +19,7 @@
 
       <div :class="$style.allMoney">
         <span class="fz-26 gray-2">可提现 {{balance}}元</span>
-        <pl-button type="text" @click="form.price = balance">全部提现</pl-button>
+        <pl-button type="text" @click="withdrawAll">全部提现</pl-button>
       </div>
     </div>
     <div class="fz-24 gray-3" style="margin-bottom: 8.5vw; line-height: 5.8vw;">
@@ -36,7 +36,6 @@ import { withdrawDeposit } from '../../../apis/money'
 import { mapGetters } from 'vuex'
 import { USER_INFO } from '../../../store/mutation-type'
 import { isMoney } from '../../../assets/js/validate.js'
-
 export default {
   name: 'Withdraw-Deposit',
   data () {
@@ -49,9 +48,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'userId', 'openId', 'appId', 'balance'])
+    ...mapGetters(['agencyCode', 'userId', 'openId', 'appId'])
   },
   created () {
+    this.balance = 1000
     this.form.agencyCode = this.agencyCode
     this.form.userId = this.userId
   },
@@ -59,6 +59,7 @@ export default {
     async withdrawDeposit () {
       if (this.form.price <= 0) return this.$toast('提现金额必须大于0')
       if (this.form.price > this.balance) return this.$toast('不能大于可提现金额')
+      if (this.form.price > 200) return this.$toast('提现金额不能大于200')
       if (!isMoney(this.form.price)) return this.$toast('提现金额只允许两位小数')
       try {
         await this.$confirm('您确认提现吗？')
@@ -69,6 +70,11 @@ export default {
         this.$store.dispatch(USER_INFO, { appId: this.appId })
       } catch (e) {
         throw e
+      }
+    },
+    withdrawAll () {
+      if (this.balance > 200) {
+        this.form.price = 200
       }
     }
   }
