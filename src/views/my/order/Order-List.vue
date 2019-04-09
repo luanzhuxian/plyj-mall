@@ -5,23 +5,23 @@
       <load-more :requestMethods="getOrderList" :form="form" ref="loadMore" :loading.sync="loading" no-content-tip="暂无订单">
         <template v-slot="{ list }">
           <router-link
-                  v-for="(item, i) of list"
-                  tag="div"
-                  :key="i"
-                  :to="{ name: 'OrderDetail', params: { orderId: item.orderInfoModel.orderSn } }"
-                  :class="'mb-28 ' + $style.orderBox"
+            v-for="(item, i) of list"
+            tag="div"
+            :key="i"
+            :to="{ name: 'OrderDetail', params: { orderId: item.orderInfoModel.orderSn } }"
+            :class="'mb-28 ' + $style.orderBox"
           >
             <div class="fz-24">
               <pl-list title="订单编号：" :content="item.orderInfoModel.orderSn" />
               <p :class="$style.status" v-text="orderStatusMap[item.orderInfoModel.orderStatus]" />
             </div>
             <order-item
-                    :img="item.mediaInfoModel[0].mediaUrl"
-                    :name="item.orderProductRelationModel.productName"
-                    :option="item.orderProductRelationModel.optionName"
-                    :count="item.orderProductRelationModel.count"
-                    :price="item.orderProductRelationModel.productPrice"
-                    border
+              :img="item.mediaInfoModel[0].mediaUrl"
+              :name="item.orderProductRelationModel.productName"
+              :option="item.orderProductRelationModel.optionName"
+              :count="item.orderProductRelationModel.count"
+              :price="item.orderProductRelationModel.productPrice"
+              border
             />
             <div :class="$style.orderBoxBottom">
               <price prefix-text="总价：" :price="item.orderInfoModel.amount + item.orderInfoModel.freight" size="small" plain />

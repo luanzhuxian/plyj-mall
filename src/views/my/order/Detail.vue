@@ -4,7 +4,7 @@
       <!-- 已完成 本次交易已完成，感谢下次光临 -->
       <!-- 待付款 等待买家付款… -->
       <!-- 待收货 还剩14天24时后自动确认… -->
-      <top-text :title="orderStatus[orderInfoModel.orderStatus]" :tip="tips[orderInfoModel.orderStatus]" />
+      <top-text :title="orderStatusMap[orderInfoModel.orderStatus]" :tip="tips[orderInfoModel.orderStatus]" />
       <a :href="`tel:${supportPhone}`">
         <pl-svg :class="$style.callMe" name="phone2" />
       </a>
@@ -35,6 +35,7 @@
           :option="item.orderProductRelationModel.optionName"
           :price="item.orderProductRelationModel.productPrice"
           route-name="Lesson"
+          border
           :product-seq="item.orderProductRelationModel.productSeq"
         />
 
@@ -160,7 +161,7 @@ export default {
   },
   props: ['orderId'],
   computed: {
-    ...mapGetters(['orderStatus']),
+    ...mapGetters(['orderStatusMap']),
     // 是否可以申请售后
     canIApplyService: function () {
       return (this.currentStatus === 'FINISHED' || this.currentStatus === 'WAIT_RECEIVE' || this.currentStatus === 'WAIT_SHIP') && this.orderType !== 'VIRTUAL_GOODS'
@@ -287,7 +288,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    padding: 32px 28px;
+    padding: 32px 0 32px 28px;
     min-height: 140px;
     button {
       margin-top: 28px;
@@ -297,31 +298,29 @@ export default {
     }
   }
   .explain {
+    width: 100%;
     position: relative;
     margin-top: 16px;
     margin-left: 28px;
-    padding-bottom: 28px;
-    &:after {
-      @include border-half-bottom(#e7e7e7);
-    }
   }
   .explain-box {
     margin-top: 16px;
     margin-right: 28px;
     padding: 24px 30px;
     background-color: #f3f3f3;
+    border-radius: $--radius2;
   }
   .product-money {
     margin-left: 28px;
     position: relative;
-    padding: 14px 28px 14px 0;
+    padding: 8px 28px 8px 0;
+    line-height: 50px;
     &:after {
       @include border-half-bottom(#e7e7e7);
     }
     p {
       display: flex;
       justify-content: space-between;
-      line-height: 48px;
     }
   }
   .truth-money {
@@ -343,7 +342,7 @@ export default {
     position: relative;
     padding: 0 28px 0 28px;
     text-align: right;
-    button {
+    > button {
       margin-top: 24px;
       margin-left: 20px;
     }
