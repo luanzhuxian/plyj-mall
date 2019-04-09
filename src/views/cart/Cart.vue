@@ -209,8 +209,6 @@ export default {
           this.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
           // 先乘后加再除以，防止出现浮点数精度问题
           this.totalMoney = (this.totalMoney * 100 + this.sixEnergyNewOrderReturnModel.freight * 100) / 100
-
-          this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
           this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
           this.form.orderSn = result.orderSn // 添加运费订单数据到表单
           this.form.billNo = result.billNo // 添加运费订单数据到表单
@@ -242,18 +240,18 @@ export default {
       CREDENTIAL.packageValue = CREDENTIAL.package
       // 支付完成后的去向
       let payDone = {
-        PHYSICAL_GOODS: 'waitShip',
-        VIRTUAL_GOODS: 'waitReceive'
+        PHYSICAL_GOODS: { name: 'Orders', params: { status: 'WAIT_SHIP' } },
+        VIRTUAL_GOODS: { name: 'Orders', params: { status: 'WAIT_RECEIVE' } }
       }
       try {
         await wechatPay(CREDENTIAL)
         this.loading = false
         // 供应商商品支付完成后直接跳转至待收货
         if (this.supplierProduct) {
-          this.$router.replace({ name: 'waitReceive' })
+          this.$router.replace(payDone.VIRTUAL_GOODS)
         } else {
           // 跳转至待发货或待收货，这取决于商品类型
-          this.$router.replace({ name: payDone[this.productType] })
+          this.$router.replace(payDone[this.productType])
         }
       } catch (e) {
         this.loading = false
@@ -267,7 +265,7 @@ export default {
           }
         }
         // 待付款
-        this.$router.replace({ name: 'waitPay' })
+        this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
         throw e
       }
     }
