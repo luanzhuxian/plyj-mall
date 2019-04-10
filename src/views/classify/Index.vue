@@ -178,9 +178,10 @@ export default {
   }
 }
 .classifyMain {
-  min-height: 100vh;
-  padding-top: 92px;
+  min-height: calc(100vh - 92px);
+  padding: 92px 0;
   background-color: #fff;
+  box-sizing: border-box;
 }
 .classify-list {
   position: fixed;
