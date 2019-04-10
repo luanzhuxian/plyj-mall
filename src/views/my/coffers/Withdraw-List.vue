@@ -4,10 +4,8 @@
       :class="{ [$style.selectStatus]: true, [$style.tabOpen]: tabOpen }"
       @click="tabOpen = !tabOpen"
     >
-      <p
-        :class="$style.onOff"
-      >
-        <span style="margin-right: 8px;">全部</span>
+      <p :class="$style.onOff">
+        <span style="margin-right: 8px;" v-text="currentSelect" />
         <pl-svg
           :class="$style.triangle"
           name="triangle"
@@ -98,6 +96,7 @@ export default {
   data () {
     return {
       tabOpen: false,
+      currentSelect: '全部',
       tabs: [
         { name: '全部', id: '' },
         { name: '待审核', id: 'AWAIT' },
@@ -141,6 +140,7 @@ export default {
   methods: {
     tabChange (item) {
       this.form.status = item.id
+      this.currentSelect = item.name
       this.$refresh()
     },
     async getCount () {
