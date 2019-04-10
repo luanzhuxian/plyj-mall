@@ -13,7 +13,7 @@
         <!--<pl-input placeholder="邮箱" v-model="form.email" />-->
       <!--</pl-form-item>-->
       <pl-form-item border prop="addressPrefix">
-        <pl-input placeholder="所在地区" readonly v-model="form.addressPrefix" @click="showCitySelector = true" />
+        <pl-input placeholder="所在地区" readonly v-model="form.addressPrefix" @click="showCitySelector = true" @clear="addrClear" />
       </pl-form-item>
       <pl-form-item prop="agencyAddress">
         <pl-input placeholder="详细地址：如道路、门牌号、小区等" v-model="form.agencyAddress" />
@@ -29,7 +29,7 @@
       删除收货地址
     </div>
 
-    <CitySelector :show.sync="showCitySelector" @select="selectCity" />
+    <CitySelector :show.sync="showCitySelector" @select="selectCity" ref="citySelector" />
 
     <pl-button :class="$style.submit" size="huge" type="warning" :loading="loading" @click="submit">提交</pl-button>
   </div>
@@ -106,6 +106,9 @@ export default {
         this.form[k] = this.address[k] || ''
       }
       this.defaultAddress = this.form.defaultAddress === 'YES'
+    },
+    addrClear () {
+      this.$refs.citySelector.clear()
     },
     async submit () {
       if (this.$refs.form.validate()) {

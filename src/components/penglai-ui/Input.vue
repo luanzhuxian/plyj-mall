@@ -35,7 +35,7 @@
           textAlign: align || formAlign
         }"
       >
-      <pl-svg v-if="!disabled" v-show="value" class="pl-input_clear" name="close2" @click="clear" />
+      <pl-svg v-if="!disabled" v-show="value" class="pl-input_clear" name="close2" @click.stop.prevent="clear" />
     </div>
     <div class="pl-input_suffix">
       <slot name="suffix"></slot>
@@ -129,6 +129,7 @@ export default {
     },
     clear () {
       this.$emit('input', '')
+      this.$emit('clear')
     },
     setAlign () {
       this.formAlign = this.align || this.$parent.align || this.$parent.$parent.align
