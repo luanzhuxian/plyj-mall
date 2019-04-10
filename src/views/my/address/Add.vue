@@ -137,7 +137,12 @@ export default {
       address: {}
     }
   },
-  props: ['addressId'],
+  props: {
+    addressId: {
+      type: String,
+      default: null
+    }
+  },
   computed: {
     ...mapGetters(['agencyCode', 'mallSeq', 'addressList', 'selectedAddress'])
   },

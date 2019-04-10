@@ -204,7 +204,12 @@ export default {
       orderInfoModel: {}
     }
   },
-  props: ['orderId'],
+  props: {
+    orderId: {
+      type: String,
+      default: null
+    }
+  },
   computed: {
     content: function () {
       return this.$route.query.content || '明细'

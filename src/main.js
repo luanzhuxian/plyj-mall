@@ -14,7 +14,7 @@ import PenglaiUI from './components/penglai-ui'
 import animated from 'animate.css'
 import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
-import Toast from './components/penglai-ui/toast'
+// import Toast from './components/penglai-ui/toast'
 import AlloyFinger from 'alloyfinger'
 import AlloyFingerVue from 'alloyfinger/vue/alloy_finger_vue'
 import filters from './filter'
@@ -44,7 +44,10 @@ new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  renderError: (h, err) => {
+    console.error(err)
+  }
 })
 
 router.beforeResolve(beforeEach)

@@ -26,15 +26,24 @@ export default {
     }
   },
   props: {
-    label: String,
+    label: {
+      type: String,
+      default: ''
+    },
     labelWidth: {
       type: [String, Number],
       default: 'max-content'
     },
-    align: String,
+    align: {
+      type: String,
+      default: ''
+    },
     border: Boolean,
     // 字段名称
-    prop: String
+    prop: {
+      type: String,
+      default: ''
+    }
   },
   created () {
     this.parentAlign = this.$parent.align

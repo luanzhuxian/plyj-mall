@@ -44,19 +44,34 @@
 export default {
   name: 'PlFields',
   props: {
-    icon: String,
-    iconColor: String,
-    iconGap: Number, // 图片和文字直接的间隙
+    icon: {
+      type: String,
+      default: ''
+    },
+    iconColor: {
+      type: String,
+      default: ''
+    },
+    iconGap: {
+      type: Number,
+      default: 0
+    }, // 图片和文字直接的间隙
     iconPosition: {
       type: String,
       default: 'left'
     },
-    text: String,
+    text: {
+      type: String,
+      default: ''
+    },
     rightTextWeight: {
       type: String,
       default: 'normal'
     },
-    rightText: String,
+    rightText: {
+      type: String,
+      default: ''
+    },
     route: {
       type: Object,
       default: function () {

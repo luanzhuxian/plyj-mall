@@ -105,7 +105,12 @@ export default {
       productsDetail: []
     }
   },
-  props: ['orderSn'],
+  props: {
+    orderSn: {
+      type: String,
+      default: null
+    }
+  },
   activated () {
     this.getDetail()
   },

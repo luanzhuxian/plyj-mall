@@ -154,7 +154,16 @@ export default {
       showSpecifica: false
     }
   },
-  props: ['productSeq', 'brokerId'],
+  props: {
+    productSeq: {
+      type: String,
+      default: null
+    },
+    brokerId: {
+      type: String,
+      default: null
+    }
+  },
   computed: {
     ...mapGetters(['appId', 'mallDomain'])
   },

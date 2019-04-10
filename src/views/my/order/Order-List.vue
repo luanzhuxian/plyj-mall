@@ -142,7 +142,12 @@ export default {
       $router: null
     }
   },
-  props: ['status'],
+  props: {
+    status: {
+      type: String,
+      default: null
+    }
+  },
   computed: {
     ...mapGetters(['orderStatusMap', 'userId'])
   },

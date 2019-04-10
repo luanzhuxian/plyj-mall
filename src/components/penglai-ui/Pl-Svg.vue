@@ -20,9 +20,13 @@ export default {
   props: {
     name: {
       type: String,
-      require: true
+      require: true,
+      default: ''
     },
-    color: String
+    color: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {

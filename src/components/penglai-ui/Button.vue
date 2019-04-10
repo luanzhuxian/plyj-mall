@@ -44,8 +44,14 @@ export default {
     round: Boolean,
     // 是否朴素
     plain: Boolean,
-    prefixIcon: String,
-    text: String,
+    prefixIcon: {
+      type: String,
+      default: ''
+    },
+    text: {
+      type: String,
+      default: ''
+    },
     loading: Boolean,
     shadow: Boolean
   },

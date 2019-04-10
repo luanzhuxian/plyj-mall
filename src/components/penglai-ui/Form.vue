@@ -8,10 +8,26 @@
 export default {
   name: 'PlForm',
   props: {
-    model: Object,
-    rules: Object,
-    align: String,
-    labelWidth: [String, Number]
+    model: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    rules: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    },
+    align: {
+      type: String,
+      default: ''
+    },
+    labelWidth: {
+      type: [String, Number],
+      default: ''
+    }
   },
   activated () {
   },

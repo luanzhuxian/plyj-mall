@@ -17,8 +17,14 @@
 export default {
   name: 'PlList',
   props: {
-    title: String,
-    content: String,
+    title: {
+      type: String,
+      default: ''
+    },
+    content: {
+      type: String,
+      default: ''
+    },
     titleColor: {
       type: String,
       default: '#999'

@@ -72,10 +72,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'userId', 'openId', 'appId'])
+    ...mapGetters(['agencyCode', 'userId', 'openId', 'appId', 'balance'])
   },
   created () {
-    this.balance = 1000
     this.form.agencyCode = this.agencyCode
     this.form.userId = this.userId
   },
@@ -88,8 +87,7 @@ export default {
       try {
         await this.$confirm('您确认提现吗？')
         await withdrawDeposit(this.form)
-        this.$toast('提现成功，请等待审核结果')
-        this.$router.push({ name: 'WithdrawList' })
+        this.$router.replace({ name: 'WithdrawCashSuccess' })
         // 刷新个人信息
         this.$store.dispatch(USER_INFO, { appId: this.appId })
       } catch (e) {

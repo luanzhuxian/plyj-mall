@@ -156,7 +156,12 @@ export default {
       orderStatus: ''
     }
   },
-  props: ['orderId'],
+  props: {
+    orderId: {
+      type: String,
+      default: null
+    }
+  },
   computed: {
     ...mapGetters(['agencyCode', 'mallSeq'])
   },

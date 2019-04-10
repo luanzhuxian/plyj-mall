@@ -61,11 +61,26 @@ export default {
     }
   },
   props: {
-    cancelText: String,
-    confirmText: String,
-    message: String,
-    viceMessage: String,
-    icon: String,
+    cancelText: {
+      type: String,
+      default: ''
+    },
+    confirmText: {
+      type: String,
+      default: ''
+    },
+    message: {
+      type: String,
+      default: ''
+    },
+    viceMessage: {
+      type: String,
+      default: ''
+    },
+    icon: {
+      type: String,
+      default: ''
+    },
     type: {
       type: String,
       default: 'confirm'

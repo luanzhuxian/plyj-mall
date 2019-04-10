@@ -117,7 +117,12 @@ export default {
       }
     }
   },
-  props: ['orderId'],
+  props: {
+    orderId: {
+      type: String,
+      default: null
+    }
+  },
   activated () {
     this.getInvoice(this.orderId)
     this.getOrderDetail(this.orderId)

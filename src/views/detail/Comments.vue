@@ -69,7 +69,12 @@ export default {
       return this.detail.productImage ? this.detail.productImage[0].mediaUrl : ''
     }
   },
-  props: ['productSeq'],
+  props: {
+    productSeq: {
+      type: String,
+      default: null
+    }
+  },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },

@@ -25,8 +25,14 @@ export default {
     }
   },
   props: {
-    mobile: [String, Number],
-    smstype: String,
+    mobile: {
+      type: String,
+      default: ''
+    },
+    smstype: {
+      type: String,
+      default: ''
+    },
     disabled: Boolean
   },
   created () {

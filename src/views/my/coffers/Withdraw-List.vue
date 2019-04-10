@@ -59,7 +59,7 @@
             <ul :class="$style.list + ' mt-28'">
               <router-link
                 tag="li"
-                v-for="(item, i) of yearMonth"
+                v-for="item of yearMonth"
                 :class="{ [$style.item]: true, partition: i < yearMonth.length - 1 }"
                 :to="{name: 'WithdrawDetail', params: {id: item.sequenceNbr}}"
                 :key="item.sequenceNbr"

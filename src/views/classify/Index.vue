@@ -103,7 +103,12 @@ export default {
       loading: false
     }
   },
-  props: ['optionId'],
+  props: {
+    optionId: {
+      type: String,
+      default: null
+    }
+  },
   created () {
     this.getCategoryTree()
   },

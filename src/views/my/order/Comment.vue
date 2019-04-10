@@ -86,7 +86,12 @@ export default {
       img: ''
     }
   },
-  props: ['orderId'],
+  props: {
+    orderId: {
+      type: String,
+      default: null
+    }
+  },
   computed: {
     ...mapGetters(['mallSeq', 'agencyCode', 'openId'])
   },

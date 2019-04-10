@@ -21,8 +21,14 @@ export default {
     value: 'value'
   },
   props: {
-    value: [String, Boolean, Number],
-    label: [String, Boolean, Number]
+    value: {
+      type: [String, Boolean, Number],
+      default: ''
+    },
+    label: {
+      type: [String, Boolean, Number],
+      default: ''
+    }
   },
   methods: {
     handleChange (e) {

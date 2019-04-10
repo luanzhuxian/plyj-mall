@@ -51,7 +51,12 @@ export default {
       type: String,
       required: true
     },
-    formData: Object, // 其他表单字段
+    formData: {
+      type: Object,
+      default: function () {
+        return null
+      }
+    }, // 其他表单字段
     // 图片最大体积,单位M
     size: {
       type: Number,

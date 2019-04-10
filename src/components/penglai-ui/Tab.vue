@@ -14,7 +14,12 @@
 export default {
   name: 'PlTab',
   props: {
-    tabs: Array,
+    tabs: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
     options: {
       type: Object,
       default: function () {
@@ -28,7 +33,10 @@ export default {
       type: String,
       default: 'large'
     },
-    activeId: [String, Number]
+    activeId: {
+      type: [String, Number],
+      default: ''
+    }
   },
   data () {
     return {
