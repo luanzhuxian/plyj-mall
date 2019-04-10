@@ -23,7 +23,7 @@
       </li>
       <li>
         <span>到账查询</span>
-        <span>微信：我-钱包-零钱-零钱明细</span>
+        <span>微信：企业发红包-领取红包</span>
       </li>
     </ul>
   </div>
