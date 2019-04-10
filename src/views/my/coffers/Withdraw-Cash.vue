@@ -13,7 +13,7 @@
       <div class="mt-28">
         <p class="fz-30 gray-2">提现金额</p>
         <label :class="$style.input + ' mt-28'">
-          <i class="fz-50">¥</i><input v-model="form.price" class="fz-50" placeholder="请输入金额" type="number">
+          <i class="fz-50">¥</i><input v-model.number="form.price" class="fz-50" placeholder="请输入金额" type="number">
         </label>
       </div>
 
@@ -27,7 +27,7 @@
       你申请提现后，商户会通过微信给您发送【红包】，如果您 24小时未领取，【红包】将自动失效<br>
       请您记得领取哦！
     </div>
-    <pl-button size="huge" type="warning" @click="withdrawDeposit">确认提现</pl-button>
+    <pl-button size="huge" type="warning" :disabled="!form.price" @click="withdrawDeposit">确认提现</pl-button>
   </div>
 </template>
 
