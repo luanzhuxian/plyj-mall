@@ -51,20 +51,38 @@ export default {
     value: 'value'
   },
   props: {
-    placeholder: String,
+    placeholder: {
+      type: String,
+      default: 'text'
+    },
     type: {
       type: String,
       default: 'text'
     },
-    prefixIcon: String,
-    value: [String, Number],
+    prefixIcon: {
+      type: String,
+      default: 'text'
+    },
+    value: {
+      type: [String, Number],
+      default: ''
+    },
     maxlength: {
       type: [String, Number],
       default: 2000
     },
-    minRows: Number,
-    maxRows: Number,
-    align: String,
+    minRows: {
+      type: Number,
+      default: 5
+    },
+    maxRows: {
+      type: Number,
+      default: 10
+    },
+    align: {
+      type: String,
+      default: 'left'
+    },
     disabled: Boolean,
     readonly: Boolean
   },
