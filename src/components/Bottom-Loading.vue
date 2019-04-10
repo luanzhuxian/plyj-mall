@@ -1,13 +1,16 @@
 <template>
   <div :class="$style.bottomLoading">
-    <span v-text="text"></span>
-    <pl-svg :class="$style.loading" name="btn-loading"></pl-svg>
+    <span v-text="text" />
+    <pl-svg
+      :class="$style.loading"
+      name="btn-loading"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Bottom-Loading',
+  name: 'BottomLoading',
   props: {
     text: String
   }

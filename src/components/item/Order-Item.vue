@@ -1,19 +1,36 @@
 <template>
-  <div :class="{
+  <div
+    :class="{
       [$style.orderItem]: true,
       [$style.border]: border
     }"
-       @click="handleClick"
+    @click="handleClick"
   >
-    <img v-lazy="img" :key="img" alt="商品图片">
+    <img
+      v-lazy="img"
+      :key="img"
+      alt="商品图片"
+    >
     <div :class="$style.right">
       <div :class="$style.rightTop">
-        <div :class="$style.name" v-text="name"></div>
-        <div :class="$style.price+' rmb'" v-text="price" />
+        <div
+          :class="$style.name"
+          v-text="name"
+        />
+        <div
+          :class="$style.price+' rmb'"
+          v-text="price"
+        />
       </div>
       <div :class="$style.rightBottom">
-        <div :class="$style.specification" v-text="option" />
-        <div :class="$style.count" v-text="count" />
+        <div
+          :class="$style.specification"
+          v-text="option"
+        />
+        <div
+          :class="$style.count"
+          v-text="count"
+        />
       </div>
     </div>
   </div>
@@ -22,7 +39,7 @@
 <script>
 import { createBrokerShare } from '../../apis/product'
 export default {
-  name: 'order-item',
+  name: 'OrderItem',
   data () {
     return {
       brokerId: ''

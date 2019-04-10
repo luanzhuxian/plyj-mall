@@ -10,7 +10,11 @@
       </DetailDesc>
       <DetailTags :tags="tags" />
       <div :class="$style.price">
-        <Price price="29.9" size="huge" original-price="499" />
+        <Price
+          price="29.9"
+          size="huge"
+          original-price="499"
+        />
         <div :class="$style.service">
           <pl-svg name="time" />
           <span>随时退</span>
@@ -19,18 +23,21 @@
       <DetailOtherInfo type="feature" />
     </DetailInfoBox>
 
-    <DetailInfo :content="content" title="体验详情" />
+    <DetailInfo
+      :content="content"
+      title="体验详情"
+    />
 
     <div class="slide-padding mt-80">
-      <ModuleTitle title="授课老师"></ModuleTitle>
+      <ModuleTitle title="授课老师" />
       <Teaching />
     </div>
     <div class="slide-padding mt-80">
-      <ModuleTitle title="雅客评论"></ModuleTitle>
+      <ModuleTitle title="雅客评论" />
       <Comment />
     </div>
     <div class="slide-padding mt-80">
-      <ModuleTitle title="品牌介绍"></ModuleTitle>
+      <ModuleTitle title="品牌介绍" />
       <BrandIntro />
     </div>
     <!-- 适用时间 -->
@@ -38,7 +45,7 @@
       <ApplicableTime time="周五至周日 09:00-12:00" />
     </div>
     <div class="slide-padding mt-80">
-      <ModuleTitle title="商家推荐"></ModuleTitle>
+      <ModuleTitle title="商家推荐" />
       <FeatureLessonItem
         img="//img.alicdn.com/imgextra/i4/1652742042/TB2k5g2IbGYBuNjy0FoXXciBFXa_!!1652742042.jpg_2200x2200Q90s50.jpg_.webp"
         title="标题标题标题标题标题标题标题"
@@ -57,7 +64,10 @@
       />
     </div>
 
-    <buy-now type="warning" text="立即购买" />
+    <buy-now
+      type="warning"
+      text="立即购买"
+    />
   </div>
 </template>
 <script>
@@ -78,7 +88,7 @@ import ApplicableTime from '../../components/detail/Applicable-Time.vue'
 import BuyNow from '../../components/detail/Buy-Now.vue'
 
 export default {
-  name: 'Feature-Lesson',
+  name: 'FeatureLesson',
   components: {
     Price,
     ModuleTitle,

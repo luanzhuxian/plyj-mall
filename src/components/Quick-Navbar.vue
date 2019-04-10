@@ -1,49 +1,68 @@
 <template>
-  <div class="quick-navbar" ref="QuickBox">
+  <div
+    class="quick-navbar"
+    ref="QuickBox"
+  >
     <transition name="fade">
-      <div :class="$style.mask" v-show="showBar" @click="showBar = false"></div>
+      <div
+        :class="$style.mask"
+        v-show="showBar"
+        @click="showBar = false"
+      />
     </transition>
-    <ul :class="{
-      [$style.navbar]: true,
-      [$style.showBar]: showBar
-    }">
-      <li :class="$style.onOff" @click="showBar = !showBar">
-        <pl-svg :class="$style.doubleArrow" name="double-arrow"></pl-svg>
+    <ul
+      :class="{
+        [$style.navbar]: true,
+        [$style.showBar]: showBar
+      }"
+    >
+      <li
+        :class="$style.onOff"
+        @click="showBar = !showBar"
+      >
+        <pl-svg
+          :class="$style.doubleArrow"
+          name="double-arrow"
+        />
         <span v-show="showBar">收起</span>
         <span v-show="!showBar">快速导航</span>
       </li>
       <router-link
         tag="li"
         active-class="active"
-        :to="{name: 'Home'}">
+        :to="{name: 'Home'}"
+      >
         <pl-svg name="find" />
       </router-link>
       <router-link
         tag="li"
         active-class="active"
-        :to="{name: 'Classify'}">
+        :to="{name: 'Classify'}"
+      >
         <pl-svg name="classify" />
       </router-link>
       <router-link
         tag="li"
         active-class="active"
-        :to="{ name: (agentUser || isAdmin) ? 'Yaji' : 'WhatsHelper' }">
+        :to="{ name: (agentUser || isAdmin) ? 'Yaji' : 'WhatsHelper' }"
+      >
         <pl-svg name="yaji" />
       </router-link>
       <router-link
         tag="li"
         active-class="active"
-        :to="{name: 'My'}">
+        :to="{name: 'My'}"
+      >
         <pl-svg name="my" />
       </router-link>
     </ul>
-</div>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Quick-Navbar',
+  name: 'QuickNavbar',
   data () {
     return {
       hidden: true,

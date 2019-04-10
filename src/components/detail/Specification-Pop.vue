@@ -1,15 +1,36 @@
 <template>
   <transition name="fade">
-    <div :class="$style.specificationsPop" v-show="showSpec" @click.self.stop="close">
+    <div
+      :class="$style.specificationsPop"
+      v-show="showSpec"
+      @click.self.stop="close"
+    >
       <transition name="slide">
-        <div :class="$style.specBox" v-show="showBox">
+        <div
+          :class="$style.specBox"
+          v-show="showBox"
+        >
           <div>
             <div :class="$style.baseInfo">
-              <img v-img-error :src="img" alt="">
+              <img
+                v-img-error
+                :src="img"
+                alt=""
+              >
               <div :class="$style.baseInfoRight">
-                <p :class="$style.price" v-text="selected.price" />
-                <p :class="$style.original">原价：<del class="rmb" v-text="selected.originPrice" /></p>
-                <p :class="$style.repertory">库存<i v-text="selected.stock" />件</p>
+                <p
+                  :class="$style.price"
+                  v-text="selected.price"
+                />
+                <p :class="$style.original">
+                  原价：<del
+                    class="rmb"
+                    v-text="selected.originPrice"
+                  />
+                </p>
+                <p :class="$style.repertory">
+                  库存<i v-text="selected.stock" />件
+                </p>
               </div>
             </div>
 
@@ -17,11 +38,12 @@
               <!--<div>颜色</div>-->
               <div>规格</div>
               <ul :class="$style.colorList">
-                <li v-for="(item, i) of data"
-                    :key="i"
-                    :class="{ [$style.active]: item.optionCode === selected.optionCode }"
-                    @click="change(item)"
-                    v-text="item.optionName"
+                <li
+                  v-for="(item, i) of data"
+                  :key="i"
+                  :class="{ [$style.active]: item.optionCode === selected.optionCode }"
+                  @click="change(item)"
+                  v-text="item.optionName"
                 />
               </ul>
             </div>
@@ -34,13 +56,34 @@
             <div :class="$style.count">
               <div>购买数量</div>
               <div :class="$style.countCtr">
-                <button :disabled="count <= min" @click="minus">-</button>
-                <input v-model.number="count" type="number" @change="countChange">
-                <button :disabled="count >= stock" @click="add">+</button>
+                <button
+                  :disabled="count <= min"
+                  @click="minus"
+                >
+                  -
+                </button>
+                <input
+                  v-model.number="count"
+                  type="number"
+                  @change="countChange"
+                >
+                <button
+                  :disabled="count >= stock"
+                  @click="add"
+                >
+                  +
+                </button>
               </div>
             </div>
           </div>
-          <pl-button :class="$style.confirm" size="large" type="warning" @click="confirm">确定</pl-button>
+          <pl-button
+            :class="$style.confirm"
+            size="large"
+            type="warning"
+            @click="confirm"
+          >
+            确定
+          </pl-button>
         </div>
       </transition>
     </div>
@@ -49,7 +92,7 @@
 
 <script>
 export default {
-  name: 'Specification-Pop',
+  name: 'SpecificationPop',
   props: {
     visible: Boolean,
     // 所有规格

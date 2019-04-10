@@ -1,8 +1,11 @@
 <template>
   <div :class="$style.expressItem">
-    <pl-svg name="express"></pl-svg>
+    <pl-svg name="express" />
     <div :class="$style.right+' fz-28'">
-      <div class="bold" v-text="expressName"></div>
+      <div
+        class="bold"
+        v-text="expressName"
+      />
       <div>运单号：<i v-text="expressNumber" /></div>
     </div>
   </div>
@@ -10,7 +13,7 @@
 
 <script>
 export default {
-  name: 'Express-Item',
+  name: 'ExpressItem',
   props: {
     expressName: String,
     expressNumber: String

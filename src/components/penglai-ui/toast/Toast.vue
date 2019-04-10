@@ -1,18 +1,21 @@
 <template>
   <transition
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-          type="animation"
+    enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut"
+    type="animation"
   >
-    <div class="pl-toast" v-show="show">
-      <span>{{message}}</span>
+    <div
+      class="pl-toast"
+      v-show="show"
+    >
+      <span>{{ message }}</span>
     </div>
   </transition>
 </template>
 
 <script>
 export default {
-  name: 'toast',
+  name: 'Toast',
   components: {
   },
   data () {

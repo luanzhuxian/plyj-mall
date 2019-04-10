@@ -1,27 +1,45 @@
 <template>
   <div :class="$style.my">
     <div :class="$style.top">
-      <img :src="avatar" alt="头像">
+      <img
+        :src="avatar"
+        alt="头像"
+      >
       <!-- 未登录 -->
       <!--<pl-svg :class="$style.dafaultFace" name="default-face" />-->
       <div :class="$style.baseInfo">
-        <span :class="$style.name" v-text="userName" />
-        <span :class="$style.level" v-text="roleName"></span>
+        <span
+          :class="$style.name"
+          v-text="userName"
+        />
+        <span
+          :class="$style.level"
+          v-text="roleName"
+        />
         <!-- 未登录 -->
         <!--<pl-svg :class="$style.loginBtn" name="login-btn" />-->
       </div>
       <!-- 申请helper -->
-      <router-link v-if="!agentUser && !isAdmin" :to="{ name: 'ApplyHelper' }" :class="$style.apply">
-        <pl-svg name="apply-helper"></pl-svg>
+      <router-link
+        v-if="!agentUser && !isAdmin"
+        :to="{ name: 'ApplyHelper' }"
+        :class="$style.apply"
+      >
+        <pl-svg name="apply-helper" />
       </router-link>
     </div>
     <div :class="$style.tip">
-      如果您还不了解什么是Helper，请点击查看 <router-link :to="{ name: 'WhatsHelper' }">什么是Helper？</router-link><pl-svg name="right"></pl-svg>
+      如果您还不了解什么是Helper，请点击查看 <router-link :to="{ name: 'WhatsHelper' }">
+        什么是Helper？
+      </router-link><pl-svg name="right" />
     </div>
 
     <!-- 金库 -->
     <div :class="$style.myMoney">
-      <router-link tag="div" :to="{ name: 'WithdrawCash' }">
+      <router-link
+        tag="div"
+        :to="{ name: 'WithdrawCash' }"
+      >
         <p>可提现润笔（元）</p>
         <p v-text="balance" />
       </router-link>
@@ -33,35 +51,75 @@
 
     <!-- 我的订单 -->
     <div :class="$style.myOrders">
-      <ModuleTitle title="我的订单" tip="全部订单" suffix-icon="right" :route="{ name: 'Orders' }" />
+      <ModuleTitle
+        title="我的订单"
+        tip="全部订单"
+        suffix-icon="right"
+        :route="{ name: 'Orders' }"
+      />
       <div :class="$style.orderStatus">
         <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
-          <pl-svg name="wait-pay"></pl-svg>
-          <span :class="$style.badge" v-if="count.WAIT_PAY" v-text="count.WAIT_PAY" />
+          <pl-svg name="wait-pay" />
+          <span
+            :class="$style.badge"
+            v-if="count.WAIT_PAY"
+            v-text="count.WAIT_PAY"
+          />
         </router-link>
         <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
-          <pl-svg name="wait-ship"></pl-svg>
-          <span :class="$style.badge" v-if="count.WAIT_SHIP" v-text="count.WAIT_SHIP"></span>
+          <pl-svg name="wait-ship" />
+          <span
+            :class="$style.badge"
+            v-if="count.WAIT_SHIP"
+            v-text="count.WAIT_SHIP"
+          />
         </router-link>
         <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
-          <pl-svg name="wait-receive"></pl-svg>
-          <span :class="$style.badge" v-if="count.WAIT_RECEIVE" v-text="count.WAIT_RECEIVE"></span>
+          <pl-svg name="wait-receive" />
+          <span
+            :class="$style.badge"
+            v-if="count.WAIT_RECEIVE"
+            v-text="count.WAIT_RECEIVE"
+          />
         </router-link>
         <router-link :to="{ name: 'Orders', params: { status: 'FINISHED' } }">
-          <pl-svg name="wait-comment"></pl-svg>
-          <span :class="$style.badge" v-if="count.FINISHED" v-text="count.FINISHED"></span>
+          <pl-svg name="wait-comment" />
+          <span
+            :class="$style.badge"
+            v-if="count.FINISHED"
+            v-text="count.FINISHED"
+          />
         </router-link>
         <router-link :to="{ name: 'RefundList' }">
-          <pl-svg name="after-sale"></pl-svg>
-          <span :class="$style.badge" v-if="count.POST_SALE_SERVICE" v-text="count.POST_SALE_SERVICE" />
+          <pl-svg name="after-sale" />
+          <span
+            :class="$style.badge"
+            v-if="count.POST_SALE_SERVICE"
+            v-text="count.POST_SALE_SERVICE"
+          />
         </router-link>
       </div>
     </div>
 
     <div :class="$style.setting + ' radius-20'">
-      <pl-fields icon="coffers" :icon-gap="16" text="小金库" :route="{ name: 'Coffers' }"></pl-fields>
-      <pl-fields icon="address" :icon-gap="16" text="地址管理" :route="{ name: 'Address' }"></pl-fields>
-      <pl-fields icon="setting" :icon-gap="16" text="账号设置" :route="{ name: 'Setting' }"></pl-fields>
+      <pl-fields
+        icon="coffers"
+        :icon-gap="16"
+        text="小金库"
+        :route="{ name: 'Coffers' }"
+      />
+      <pl-fields
+        icon="address"
+        :icon-gap="16"
+        text="地址管理"
+        :route="{ name: 'Address' }"
+      />
+      <pl-fields
+        icon="setting"
+        :icon-gap="16"
+        text="账号设置"
+        :route="{ name: 'Setting' }"
+      />
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.detailInfoBox + ' radius-20'">
     <div :class="$style.detailBox">
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>

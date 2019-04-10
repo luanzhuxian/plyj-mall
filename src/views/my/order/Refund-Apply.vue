@@ -1,30 +1,63 @@
 <template>
   <div :class="$style.refundApply">
     <div style="position: relative;">
-      <top-text title="请选择服务类型" tip="小主，时间宝贵，请您三思哦～" />
+      <top-text
+        title="请选择服务类型"
+        tip="小主，时间宝贵，请您三思哦～"
+      />
       <!--<top-text title="退款成功" tip="2018年7月23日 17:31:32" />-->
       <!--<top-text title="退款失败" tip="2018年7月23日 17:31:32" />-->
       <a href="tel:15091719776">
-        <pl-svg :class="$style.callMe" name="phone2" />
+        <pl-svg
+          :class="$style.callMe"
+          name="phone2"
+        />
       </a>
     </div>
 
     <div :class="$style.type">
-      <span :class="{ [$style.active]: form.type === 'REFUND' }" @click="form.type = 'REFUND'">退款</span>
+      <span
+        :class="{ [$style.active]: form.type === 'REFUND' }"
+        @click="form.type = 'REFUND'"
+      >退款</span>
       <span
         v-if="orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
-        :class="{ [$style.active]: form.type === 'RETURN_REFUND' }" @click="form.type = 'RETURN_REFUND'">
+        :class="{ [$style.active]: form.type === 'RETURN_REFUND' }"
+        @click="form.type = 'RETURN_REFUND'"
+      >
         退货退款
       </span>
     </div>
 
-    <div :class="$style.express + ' radius-20'" v-show="form.type === 'RETURN_REFUND'">
-      <pl-form align="right" :model="form.expressInfoModel" :rules="rules" ref="form">
-        <pl-form-item prop="courierCompany" border label="快递公司：">
-          <pl-input v-model="form.expressInfoModel.courierCompany" placeholder="请输入快递公司名称"></pl-input>
+    <div
+      :class="$style.express + ' radius-20'"
+      v-show="form.type === 'RETURN_REFUND'"
+    >
+      <pl-form
+        align="right"
+        :model="form.expressInfoModel"
+        :rules="rules"
+        ref="form"
+      >
+        <pl-form-item
+          prop="courierCompany"
+          border
+          label="快递公司："
+        >
+          <pl-input
+            v-model="form.expressInfoModel.courierCompany"
+            placeholder="请输入快递公司名称"
+          />
         </pl-form-item>
-        <pl-form-item prop="courierNo" border label="快递单号：">
-          <pl-input v-model="form.expressInfoModel.courierNo" placeholder="请输入快递单号"></pl-input>
+        <pl-form-item
+          prop="courierNo"
+          border
+          label="快递单号："
+        >
+          <pl-input
+            v-model="form.expressInfoModel.courierNo"
+            placeholder="请输入快递单号"
+          />
         </pl-form-item>
       </pl-form>
     </div>
@@ -44,7 +77,14 @@
         </template>
       </div>
       <div :class="$style.content">
-        <pl-input v-model="form.refundModel.content" type="textarea" maxlength="500" placeholder="请描述你的问题" :min-rows="5" :max-rows="10" />
+        <pl-input
+          v-model="form.refundModel.content"
+          type="textarea"
+          maxlength="500"
+          placeholder="请描述你的问题"
+          :min-rows="5"
+          :max-rows="10"
+        />
       </div>
       <div :class="$style.images">
         <pl-upload-img
@@ -54,10 +94,18 @@
           :size="0.5"
           :images.sync="images"
           @remove="removeImg"
-          @success="uploaded" />
+          @success="uploaded"
+        />
       </div>
       <div :class="'mt-28 '+$style.submit">
-        <pl-button round plain type="warning" @click="submit">确认提交</pl-button>
+        <pl-button
+          round
+          plain
+          type="warning"
+          @click="submit"
+        >
+          确认提交
+        </pl-button>
       </div>
     </main>
   </div>
@@ -72,7 +120,7 @@ import {
 } from '../../../apis/order-manager'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Refund-Apply',
+  name: 'RefundApply',
   components: {
     TopText,
     OrderItem

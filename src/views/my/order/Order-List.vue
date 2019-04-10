@@ -1,8 +1,19 @@
 <template>
   <div class="orders">
-    <pl-tab :tabs="tabs" size="small" :active-id.sync="form.orderStatus" @change="tabChange" />
+    <pl-tab
+      :tabs="tabs"
+      size="small"
+      :active-id.sync="form.orderStatus"
+      @change="tabChange"
+    />
     <div :class="$style.orderList">
-      <load-more :requestMethods="getOrderList" :form="form" ref="loadMore" :loading.sync="loading" no-content-tip="暂无订单">
+      <load-more
+        :request-methods="getOrderList"
+        :form="form"
+        ref="loadMore"
+        :loading.sync="loading"
+        no-content-tip="暂无订单"
+      >
         <template v-slot="{ list }">
           <router-link
             v-for="(item, i) of list"
@@ -12,8 +23,14 @@
             :class="'mb-28 ' + $style.orderBox"
           >
             <div class="fz-24">
-              <pl-list title="订单编号：" :content="item.orderInfoModel.orderSn" />
-              <p :class="$style.status" v-text="orderStatusMap[item.orderInfoModel.orderStatus]" />
+              <pl-list
+                title="订单编号："
+                :content="item.orderInfoModel.orderSn"
+              />
+              <p
+                :class="$style.status"
+                v-text="orderStatusMap[item.orderInfoModel.orderStatus]"
+              />
             </div>
             <order-item
               :img="item.mediaInfoModel[0].mediaUrl"
@@ -24,20 +41,38 @@
               border
             />
             <div :class="$style.orderBoxBottom">
-              <price prefix-text="总价：" :price="item.orderInfoModel.amount + item.orderInfoModel.freight" size="small" plain />
-              <div :class="$style.buttons" v-if="item.orderInfoModel.orderStatus !== 'CLOSED'">
-                <pl-button v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'" type="warning" round @click="pay(item.orderInfoModel.orderSn, item.orderInfoModel.orderType)">去支付</pl-button>
+              <price
+                prefix-text="总价："
+                :price="item.orderInfoModel.amount + item.orderInfoModel.freight"
+                size="small"
+                plain
+              />
+              <div
+                :class="$style.buttons"
+                v-if="item.orderInfoModel.orderStatus !== 'CLOSED'"
+              >
                 <pl-button
-                        v-if="item.orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
-                        @click="confirmGet(item.orderInfoModel.orderType, item.orderInfoModel.orderSn)"
-                        type="warning" round
+                  v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'"
+                  type="warning"
+                  round
+                  @click="pay(item.orderInfoModel.orderSn, item.orderInfoModel.orderType)"
+                >
+                  去支付
+                </pl-button>
+                <pl-button
+                  v-if="item.orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
+                  @click="confirmGet(item.orderInfoModel.orderType, item.orderInfoModel.orderSn)"
+                  type="warning"
+                  round
                 >
                   确认收货
                 </pl-button>
                 <pl-button
-                        v-if="item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO'"
-                        type="warning" plain round
-                        @click="$router.push({ name: 'CommentOrder', params: { orderId: item.orderInfoModel.orderSn } })"
+                  v-if="item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO'"
+                  type="warning"
+                  plain
+                  round
+                  @click="$router.push({ name: 'CommentOrder', params: { orderId: item.orderInfoModel.orderSn } })"
                 >
                   去评价
                 </pl-button>
@@ -63,7 +98,7 @@ import {
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import LoadMore from '../../../components/Load-More.vue'
 export default {
-  name: 'Order-List',
+  name: 'OrderList',
   components: {
     OrderItem,
     Price,

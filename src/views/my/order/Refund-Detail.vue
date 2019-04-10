@@ -1,11 +1,17 @@
 <template>
   <div :class="$style.refundDetail">
     <div style="position: relative;">
-      <top-text title="待退款" tip="商家正在处理，如有问题请咨询商家" />
+      <top-text
+        title="待退款"
+        tip="商家正在处理，如有问题请咨询商家"
+      />
       <!--<top-text title="退款成功" tip="2018年7月23日 17:31:32" />-->
       <!--<top-text title="退款失败" tip="2018年7月23日 17:31:32" />-->
       <a :href="`tel:${$store.getters.supportPhone}`">
-        <pl-svg :class="$style.callMe" name="phone2" />
+        <pl-svg
+          :class="$style.callMe"
+          name="phone2"
+        />
       </a>
     </div>
 
@@ -14,9 +20,14 @@
         <span>退款总金额</span>
         <!--<span>已退款 -> 退款成功</span>-->
         <!--<span>已退款 -> 退款失败</span>-->
-        <span :class="$style.price + ' rmb'" v-text="refundAmount"></span>
+        <span
+          :class="$style.price + ' rmb'"
+          v-text="refundAmount"
+        />
       </div>
-      <div class="gray-3 fz-26">审核中</div>
+      <div class="gray-3 fz-26">
+        审核中
+      </div>
       <!--<div class="gray-3">已退回微信零钱 -> 退款成功</div>-->
       <!--<div class="gray-3">退款已驳回，请联系商家 -> 退款失败</div>-->
     </div>
@@ -38,18 +49,33 @@
       </div>
       <div :class="$style.totalPrice">
         <span class="fz-24">总价：</span>
-        <Price :price="refundAmount" size="small" />
+        <Price
+          :price="refundAmount"
+          size="small"
+        />
       </div>
     </div>
 
     <div :class="$style.refundInfo + ' radius-20 mt-28'">
       <div :class="$style.infoList">
-        <pl-list title="退款编号：" :content="refundId" />
-        <pl-list title="申请时间：" :content="applyDate" />
-        <pl-list title="服务类型：" :content="serviceType" />
+        <pl-list
+          title="退款编号："
+          :content="refundId"
+        />
+        <pl-list
+          title="申请时间："
+          :content="applyDate"
+        />
+        <pl-list
+          title="服务类型："
+          :content="serviceType"
+        />
       </div>
       <div :class="$style.reason">
-        <pl-list title="问题描述：" :content="problemDesc" />
+        <pl-list
+          title="问题描述："
+          :content="problemDesc"
+        />
       </div>
     </div>
   </div>
@@ -62,7 +88,7 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import Price from '../../../components/Price.vue'
 import { getRefundDetail } from '../../../apis/order-manager'
 export default {
-  name: 'Refund-Detail',
+  name: 'RefundDetail',
   components: {
     TopText,
     ModuleTitle,

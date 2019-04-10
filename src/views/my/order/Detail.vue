@@ -4,31 +4,52 @@
       <!-- 已完成 本次交易已完成，感谢下次光临 -->
       <!-- 待付款 等待买家付款… -->
       <!-- 待收货 还剩14天24时后自动确认… -->
-      <top-text :title="orderStatusMap[orderInfoModel.orderStatus]" :tip="tips[orderInfoModel.orderStatus]" />
+      <top-text
+        :title="orderStatusMap[orderInfoModel.orderStatus]"
+        :tip="tips[orderInfoModel.orderStatus]"
+      />
       <a :href="`tel:${supportPhone}`">
-        <pl-svg :class="$style.callMe" name="phone2" />
+        <pl-svg
+          :class="$style.callMe"
+          name="phone2"
+        />
       </a>
     </div>
 
     <div :class="$style.receivingInfo">
-      <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+      <transition
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
         <express-item
           v-if="orderExpressInfoModel"
           :express-name="orderExpressInfoModel.courierCompany"
           :express-number="orderExpressInfoModel.courierNo"
         />
       </transition>
-      <address-item v-if="address.realName" :address="address" />
+      <address-item
+        v-if="address.realName"
+        :address="address"
+      />
     </div>
 
     <div :class="$style.detail">
-
       <div :class="'fz-24 '+$style.createTime">
-        <pl-list title="下单时间：" :content="orderInfoModel.createTime" />
-        <pl-list title="订单编号：" :content="orderInfoModel.orderSn" />
+        <pl-list
+          title="下单时间："
+          :content="orderInfoModel.createTime"
+        />
+        <pl-list
+          title="订单编号："
+          :content="orderInfoModel.orderSn"
+        />
       </div>
 
-      <div :class="$style.orderInfo" v-for="item of relationModel" :key="item.productModel.contentId">
+      <div
+        :class="$style.orderInfo"
+        v-for="item of relationModel"
+        :key="item.productModel.contentId"
+      >
         <order-item
           :img="item.mediaInfoModels[0].mediaUrl"
           :name="item.productModel.productName"
@@ -41,61 +62,92 @@
 
         <pl-button
           v-if="canIApplyService && !supplierOrder"
-          plain round
-          @click="$router.push({ name: 'RefundApply', params: { orderId } })">
+          plain
+          round
+          @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+        >
           申请售后
         </pl-button>
 
-        <div :class="$style.explain" v-if="item.productModel.productType === 'VIRTUAL_GOODS'">
+        <div
+          :class="$style.explain"
+          v-if="item.productModel.productType === 'VIRTUAL_GOODS'"
+        >
           <ModuleTitle title="使用说明" />
-          <div :class="$style.explainBox + ' fz-26 gray-2'" v-text="item.productModel.productUseMethod"></div>
+          <div
+            :class="$style.explainBox + ' fz-26 gray-2'"
+            v-text="item.productModel.productUseMethod"
+          />
         </div>
       </div>
 
-      <div :class="$style.productMoney  + ' fz-28 gray-3'">
+      <div :class="$style.productMoney + ' fz-28 gray-3'">
         <p>
           <span>商品金额</span>
-          <span class="rmb" v-text="orderInfoModel.productAmount" />
+          <span
+            class="rmb"
+            v-text="orderInfoModel.productAmount"
+          />
         </p>
         <p>
           <span>运费（快递）</span>
-          <span class="rmb" v-text="orderInfoModel.freight"></span>
+          <span
+            class="rmb"
+            v-text="orderInfoModel.freight"
+          />
         </p>
       </div>
 
       <div :class="$style.truthMoney">
-        <p class="fz-30">实际支付：</p>
-        <p class="fz-30 rmb" v-text="orderInfoModel.amount + orderInfoModel.freight" />
+        <p class="fz-30">
+          实际支付：
+        </p>
+        <p
+          class="fz-30 rmb"
+          v-text="orderInfoModel.amount + orderInfoModel.freight"
+        />
       </div>
 
       <div :class="$style.buttons">
         <pl-button
-          round plain
+          round
+          plain
           @click="cancel"
-          v-if="orderInfoModel.orderStatus === 'WAIT_PAY'">
+          v-if="orderInfoModel.orderStatus === 'WAIT_PAY'"
+        >
           取消订单
         </pl-button>
         <pl-button
-          round plain type="warning"
+          round
+          plain
+          type="warning"
           v-if="orderInfoModel.assessment === 'NO' && orderInfoModel.orderStatus === 'FINISHED'"
-          @click="$router.push({ name: 'CommentOrder', params: { orderId } })">
+          @click="$router.push({ name: 'CommentOrder', params: { orderId } })"
+        >
           去评价
         </pl-button>
         <pl-button
-          round type="warning"
+          round
+          type="warning"
           v-if="orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
           @click="confirmGet(orderInfoModel.orderType)"
-        >确认收货</pl-button>
+        >
+          确认收货
+        </pl-button>
         <pl-button
           v-if="orderInfoModel.orderStatus === 'FINISHED' && !orderInvoiceModel && !supplierOrder"
-          plain round
-          @click="$router.push({ name: 'Invoice', params: { orderId } })">
+          plain
+          round
+          @click="$router.push({ name: 'Invoice', params: { orderId } })"
+        >
           申请发票
         </pl-button>
         <pl-button
           v-if="orderInvoiceModel && !supplierOrder"
-          plain round
-          @click="$router.push({ name: 'InvoiceDetail', params: { orderId } })">
+          plain
+          round
+          @click="$router.push({ name: 'InvoiceDetail', params: { orderId } })"
+        >
           查看发票
         </pl-button>
       </div>
@@ -121,7 +173,7 @@ import { mapGetters } from 'vuex'
 import Moment from 'moment'
 
 export default {
-  name: 'Order-Detail',
+  name: 'OrderDetail',
   components: {
     TopText,
     OrderItem,

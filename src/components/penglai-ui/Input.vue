@@ -78,8 +78,9 @@
 </template>
 
 <script>
+import { getLine, throttle } from './lib/util'
 export default {
-  name: 'pl-input',
+  name: 'PlInput',
   model: {
     event: 'input',
     value: 'value'
@@ -107,7 +108,7 @@ export default {
     },
     maxlength: {
       type: Number,
-      default: 10
+      default: 2000
     },
     minRows: {
       type: Number,
@@ -115,7 +116,7 @@ export default {
     },
     maxRows: {
       type: Number,
-      default: 2000
+      default: 10
     },
     align: {
       type: String,
@@ -135,7 +136,8 @@ export default {
       error: false,
       passwordType: 'password',
       bfscrolltop: 0,
-      isIOS: false
+      isIOS: false,
+      getLine: null
     }
   },
   created () {
@@ -149,20 +151,23 @@ export default {
       this.bfscrolltop = document.body.scrollTop
       this.isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
     })
+    this.getLine = throttle(getLine, 200)
   },
   methods: {
     handleInput (e) {
-      if (this.type === 'textarea') {
-        /*  动态跳转textarea的行数 */
-        let lineHeight = Number.parseInt(getComputedStyle(e.target).getPropertyValue('line-height'))
-        if (this.rows < this.maxRows || !this.maxRows) {
-          if (lineHeight * this.rows < e.target.scrollHeight) {
+      let val = e.target.value
+      this.getLine(e.target, currentLine => {
+        if (this.maxRows !== 0) {
+          if (currentLine > this.minRows && currentLine < this.maxRows) {
             this.rows++
           }
+        } else if (currentLine > this.minRows && currentLine) {
+          this.rows++
         }
-      }
-      this.$emit('input', e.target.value)
-      this.trigger('input', e.target.value)
+      })
+      if (!val) this.rows = this.minRows
+      this.$emit('input', val)
+      this.trigger('input', val)
     },
     handleFocus (e) {
       if (this.readonly) {
@@ -211,9 +216,10 @@ export default {
     position: relative;
     display: inline-flex;
     flex: 1;
+    width: 100%;
     height: 100%;
     align-items: center;
-    background-color: #fff;
+    background-color: transparent;
     box-sizing: border-box;
     &.border {
       padding: 0 24px;
@@ -281,12 +287,14 @@ export default {
     textarea {
       box-sizing: border-box;
       width: 100%;
+      padding: 24px;
       min-height: 100px;
-      line-height: 50px;
-      font-size: 32px;
+      line-height: 40px;
+      font-size: 26px;
       border: none;
       outline: none;
       resize: none;
+      background: transparent;
     }
   }
 </style>

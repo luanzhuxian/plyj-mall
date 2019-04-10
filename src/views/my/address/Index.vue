@@ -1,24 +1,44 @@
 <template>
   <div :class="$style.address">
-    <ul :class="$style.addressList" v-if="addressList.length">
+    <ul
+      :class="$style.addressList"
+      v-if="addressList.length"
+    >
       <li
         :class="$style.addressItem + ' radius-20'"
         v-for="(item, i) of addressList"
         @click="handleClick(item)"
-        :key="i">
-        <img :src="createImage(item.realName[0])" alt="">
+        :key="i"
+      >
+        <img
+          :src="createImage(item.realName[0])"
+          alt=""
+        >
         <div :class="$style.controller">
           <div :class="$style.detail">
             <div>
-              <span :class="$style.name" v-text="item.realName" />
-              <span :class="$style.phone + ' bold'" v-text="item.mobile" />
+              <span
+                :class="$style.name"
+                v-text="item.realName"
+              />
+              <span
+                :class="$style.phone + ' bold'"
+                v-text="item.mobile"
+              />
             </div>
             <p :class="$style.addressDetail + ' fz-24'">
-              <img v-if="item.defaultAddress === 'YES'" :src="createType('默认')" alt=""> <span v-text="item.addressPrefix" /> <span v-text="item.agencyAddress" />
+              <img
+                v-if="item.defaultAddress === 'YES'"
+                :src="createType('默认')"
+                alt=""
+              > <span v-text="item.addressPrefix" /> <span v-text="item.agencyAddress" />
             </p>
           </div>
           <div :class="$style.editOrDelete">
-            <span class="fz-28 gray-3" @click.stop="$router.push({ name: 'AddAddress', params: { addressId: item.sequenceNbr } })">编辑</span>
+            <span
+              class="fz-28 gray-3"
+              @click.stop="$router.push({ name: 'AddAddress', params: { addressId: item.sequenceNbr } })"
+            >编辑</span>
           </div>
         </div>
       </li>
@@ -31,9 +51,10 @@
         [$style.addAddress]: true,
         [$style.bottom]: addressList.length > 0,
         'fz-28 bold radius-20': true
-      }">
+      }"
+    >
       <span>点击这里，添加一个新地址</span>
-      <pl-svg name="add"></pl-svg>
+      <pl-svg name="add" />
     </router-link>
   </div>
 </template>

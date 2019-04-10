@@ -3,7 +3,13 @@
     <div :class="$style.phone">
       <a :href="'tel:' + supportPhone"><pl-svg name="phone" /></a>
     </div>
-    <pl-button :type="type" size="large" @click="handleClick">{{text}}</pl-button>
+    <pl-button
+      :type="type"
+      size="large"
+      @click="handleClick"
+    >
+      {{ text }}
+    </pl-button>
   </div>
 </template>
 
@@ -12,7 +18,7 @@ import { mapGetters } from 'vuex'
 import { getPenglaiAppid } from '../../apis/base-api'
 
 export default {
-  name: 'Buy-Now',
+  name: 'BuyNow',
   props: {
     text: String,
     type: String,

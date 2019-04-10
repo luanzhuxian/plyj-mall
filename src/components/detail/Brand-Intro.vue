@@ -1,10 +1,26 @@
 <template>
   <div :class="$style.barndIntro + ' radius-20'">
     <div :class="$style.imgs">
-      <img class="radius-10" src="//img.alicdn.com/imgextra/i1/1652742042/TB2wHiEdCzqK1RjSZPcXXbTepXa_!!1652742042.jpg_1080x1800Q50s50.jpg_.webp" alt="">
-      <img class="radius-10" src="//img.alicdn.com/imgextra/i3/1652742042/TB2aHS2dxjaK1RjSZKzXXXVwXXa_!!1652742042.jpg_1080x1800Q50s50.jpg_.webp" alt="">
-      <img class="radius-10" src="//img.alicdn.com/imgextra/i2/1652742042/TB22mjxXhTpK1RjSZFGXXcHqFXa_!!1652742042.jpg_1152x1920Q50s50.jpg_.webp" alt="">
-      <img class="radius-10" src="//img.alicdn.com/imgextra/i4/1652742042/TB2c6tcmrZnBKNjSZFKXXcGOVXa_!!1652742042.jpg_1152x1920Q50s50.jpg_.webp" alt="">
+      <img
+        class="radius-10"
+        src="//img.alicdn.com/imgextra/i1/1652742042/TB2wHiEdCzqK1RjSZPcXXbTepXa_!!1652742042.jpg_1080x1800Q50s50.jpg_.webp"
+        alt=""
+      >
+      <img
+        class="radius-10"
+        src="//img.alicdn.com/imgextra/i3/1652742042/TB2aHS2dxjaK1RjSZKzXXXVwXXa_!!1652742042.jpg_1080x1800Q50s50.jpg_.webp"
+        alt=""
+      >
+      <img
+        class="radius-10"
+        src="//img.alicdn.com/imgextra/i2/1652742042/TB22mjxXhTpK1RjSZFGXXcHqFXa_!!1652742042.jpg_1152x1920Q50s50.jpg_.webp"
+        alt=""
+      >
+      <img
+        class="radius-10"
+        src="//img.alicdn.com/imgextra/i4/1652742042/TB2c6tcmrZnBKNjSZFKXXcGOVXa_!!1652742042.jpg_1152x1920Q50s50.jpg_.webp"
+        alt=""
+      >
     </div>
     <div :class="$style.name">
       <span>西安有鹏来教育</span>
@@ -18,7 +34,7 @@
 
 <script>
 export default {
-  name: 'Brand-Intro'
+  name: 'BrandIntro'
 }
 </script>
 

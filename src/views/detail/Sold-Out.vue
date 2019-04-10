@@ -1,14 +1,20 @@
 <template>
   <div :class="$style.soldOut">
-    <pl-svg name="sold-out"></pl-svg>
+    <pl-svg name="sold-out" />
     <p>抱歉，该商品已下架</p>
-    <pl-button plain size="middle" @click="$router.replace({ name: 'Home' })">返回首页</pl-button>
+    <pl-button
+      plain
+      size="middle"
+      @click="$router.replace({ name: 'Home' })"
+    >
+      返回首页
+    </pl-button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Sold-Out'
+  name: 'SoldOut'
 }
 </script>
 

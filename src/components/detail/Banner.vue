@@ -1,12 +1,20 @@
 <template>
   <div :class="'detail-banner' + ' ' + $style.detailBanner">
     <swiper :options="swiperOption">
-      <swiperSlide v-for="(img, index) of banners" :key="index">
+      <swiperSlide
+        v-for="(img, index) of banners"
+        :key="index"
+      >
         <!-- 加了Key以后。图片可动态切换 -->
-        <img :class="$style.bannerImg" v-lazy="img" :key="img" alt="">
+        <img
+          :class="$style.bannerImg"
+          v-lazy="img"
+          :key="img"
+          alt=""
+        >
       </swiperSlide>
     </swiper>
-    <div :class="'swiper-pagination ' + $style.pagination"></div>
+    <div :class="'swiper-pagination ' + $style.pagination" />
   </div>
 </template>
 

@@ -1,18 +1,46 @@
 <template>
   <transition name="fade">
-    <div :class="$style.messageBox" v-if="showMask" @click.self="handleCancel">
+    <div
+      :class="$style.messageBox"
+      v-if="showMask"
+      @click.self="handleCancel"
+    >
       <transition
         enter-active-class="animated bounceInDown"
-        leave-active-class="animated bounceOutDown">
-        <div :class="$style.messageBoxContent" v-show="showBox">
+        leave-active-class="animated bounceOutDown"
+      >
+        <div
+          :class="$style.messageBoxContent"
+          v-show="showBox"
+        >
           <div :class="$style.message">
-            <pl-svg :class="$style.icon" v-if="icon" :name="icon"></pl-svg>
-            <p :class="$style.mainMessage" v-text="message"></p>
-            <p :class="$style.viceMessage" v-if="viceMessage" v-text="viceMessage"></p>
+            <pl-svg
+              :class="$style.icon"
+              v-if="icon"
+              :name="icon"
+            />
+            <p
+              :class="$style.mainMessage"
+              v-text="message"
+            />
+            <p
+              :class="$style.viceMessage"
+              v-if="viceMessage"
+              v-text="viceMessage"
+            />
           </div>
           <div :class="$style.buttons">
-            <button @click="handleCancel" v-if="type === 'confirm'" :class="$style.cancel" v-text="cancelText"></button>
-            <button @click="handleConfirm" :class="$style.confirm" v-text="confirmText"></button>
+            <button
+              @click="handleCancel"
+              v-if="type === 'confirm'"
+              :class="$style.cancel"
+              v-text="cancelText"
+            />
+            <button
+              @click="handleConfirm"
+              :class="$style.confirm"
+              v-text="confirmText"
+            />
           </div>
         </div>
       </transition>
@@ -22,7 +50,7 @@
 
 <script>
 export default {
-  name: 'Message-Box',
+  name: 'MessageBox',
   data () {
     return {
       show: false,

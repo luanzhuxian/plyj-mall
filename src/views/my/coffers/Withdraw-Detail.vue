@@ -2,7 +2,10 @@
   <div :class="$style.withdrawDetail">
     <div :class="$style.money">
       <span class="gray-3 fz-28">出账金额</span>
-      <span class="fz-60 bold rmb" v-text="detail.price" />
+      <span
+        class="fz-60 bold rmb"
+        v-text="detail.price"
+      />
     </div>
     <ul :class="$style.detail + ' fz-28'">
       <li>
@@ -26,8 +29,8 @@
         <span>微信：企业发红包-领取红包</span>
       </li>
       <!--<li>-->
-        <!--<span>失败原因</span>-->
-        <!--<span>微信：企业发红包-领取红包</span>-->
+      <!--<span>失败原因</span>-->
+      <!--<span>微信：企业发红包-领取红包</span>-->
       <!--</li>-->
     </ul>
   </div>
@@ -36,7 +39,7 @@
 <script>
 import { getWithdrawDepositDetail } from '../../../apis/money'
 export default {
-  name: 'Withdraw-Detail',
+  name: 'WithdrawDetail',
   data () {
     return {
       detail: {},

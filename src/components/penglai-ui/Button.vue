@@ -1,6 +1,6 @@
 <template>
   <button
-    :disabled='disabled || loading'
+    :disabled="disabled || loading"
     @click.stop="handleClick"
     :class="{
       'pl-button': true,
@@ -12,16 +12,24 @@
     }"
   >
     <span>
-      <pl-svg v-if="loading" class="pl-button__loading" name="btn-loading"></pl-svg>
-      <pl-svg class="pl-button__prefix-icon" v-if="prefixIcon" :name="prefixIcon" />
-      <slot>{{text}}</slot>
+      <pl-svg
+        v-if="loading"
+        class="pl-button__loading"
+        name="btn-loading"
+      />
+      <pl-svg
+        class="pl-button__prefix-icon"
+        v-if="prefixIcon"
+        :name="prefixIcon"
+      />
+      <slot>{{ text }}</slot>
     </span>
   </button>
 </template>
 
 <script>
 export default {
-  name: 'pl-button',
+  name: 'PlButton',
   props: {
     type: {
       type: String,

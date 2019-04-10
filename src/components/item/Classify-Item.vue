@@ -1,13 +1,17 @@
 <template>
   <div :class="$style.classifyItem">
-    <img class="radius-20" :src="img" :alt="text">
+    <img
+      class="radius-20"
+      :src="img"
+      :alt="text"
+    >
     <div v-text="text" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Classify-Item',
+  name: 'ClassifyItem',
   props: {
     text: String,
     img: String

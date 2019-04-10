@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.notFound">
-    {{s}}秒后跳转回首页...
+    {{ s }}秒后跳转回首页...
   </div>
 </template>
 

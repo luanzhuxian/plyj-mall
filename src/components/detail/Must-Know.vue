@@ -53,7 +53,7 @@
 
 <script>
 export default {
-  name: 'Must-Know'
+  name: 'MustKnow'
 }
 </script>
 

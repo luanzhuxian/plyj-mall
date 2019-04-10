@@ -1,12 +1,12 @@
 <template>
   <form class="pl-form">
-    <slot></slot>
+    <slot />
   </form>
 </template>
 
 <script>
 export default {
-  name: 'pl-form',
+  name: 'PlForm',
   props: {
     model: Object,
     rules: Object,

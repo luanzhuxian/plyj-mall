@@ -1,11 +1,21 @@
 <template>
-  <div :class="$style.addressItem"
-       v-if="data.realName"
-       @click="addressList">
-    <pl-svg name="address3"></pl-svg>
+  <div
+    :class="$style.addressItem"
+    v-if="data.realName"
+    @click="addressList"
+  >
+    <pl-svg name="address3" />
     <div :class="$style.right+' fz-28'">
-      <div :class="$style.name"> {{data.realName}} <i class="bold" v-text="data.mobile" /></div>
-      <div :class="$style.address" v-text="data.addressPrefix + data.agencyAddress" />
+      <div :class="$style.name">
+        {{ data.realName }} <i
+          class="bold"
+          v-text="data.mobile"
+        />
+      </div>
+      <div
+        :class="$style.address"
+        v-text="data.addressPrefix + data.agencyAddress"
+      />
     </div>
   </div>
   <div
@@ -14,9 +24,10 @@
     :class="{
       [$style.addAddress]: true,
       'fz-28 bold radius-20': true
-    }">
+    }"
+  >
     <span>点击这里，添加一个新地址</span>
-    <pl-svg name="add"></pl-svg>
+    <pl-svg name="add" />
   </div>
 </template>
 
@@ -24,7 +35,7 @@
 import { mapGetters } from 'vuex'
 import { setSession } from '../assets/js/util'
 export default {
-  name: 'Address-Item',
+  name: 'AddressItem',
   computed: {
     ...mapGetters(['selectedAddress']),
     data: function () {

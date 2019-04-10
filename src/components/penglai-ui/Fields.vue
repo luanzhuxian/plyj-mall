@@ -1,6 +1,9 @@
 <template>
   <div class="pl-fields">
-    <div :class="'pl-fields_box ' + size" @click="handleClick">
+    <div
+      :class="'pl-fields_box ' + size"
+      @click="handleClick"
+    >
       <div class="pl-fields_text">
         <pl-svg
           :color="iconColor"
@@ -9,7 +12,10 @@
           :name="icon"
           :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
         />
-        <span v-text="text" :style="{ fontWeight: rightTextWeight }"></span>
+        <span
+          v-text="text"
+          :style="{ fontWeight: rightTextWeight }"
+        />
         <pl-svg
           :color="iconColor"
           v-if="icon && iconPosition === 'right'"
@@ -19,8 +25,16 @@
         />
       </div>
       <div class="pl-fields_right">
-        <span v-if="rightText" class="pl-fields_right_text" v-text="rightText"></span>
-        <pl-svg v-if="route" class="pl-fields_right_icon" name="right" />
+        <span
+          v-if="rightText"
+          class="pl-fields_right_text"
+          v-text="rightText"
+        />
+        <pl-svg
+          v-if="route"
+          class="pl-fields_right_icon"
+          name="right"
+        />
       </div>
     </div>
   </div>
@@ -28,7 +42,7 @@
 
 <script>
 export default {
-  name: 'pl-fields',
+  name: 'PlFields',
   props: {
     icon: String,
     iconColor: String,

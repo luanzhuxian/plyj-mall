@@ -1,13 +1,19 @@
 <template>
   <div :class="$style.topText">
     <div :class="$style.left">
-      <h2 v-text="title"></h2>
-      <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-        <p v-if="tip" v-text="tip"></p>
+      <h2 v-text="title" />
+      <transition
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
+        <p
+          v-if="tip"
+          v-text="tip"
+        />
       </transition>
     </div>
     <div>
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>

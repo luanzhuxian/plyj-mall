@@ -2,10 +2,17 @@
   <div :class="$style.search">
     <div :class="$style.searchBar">
       <div :class="$style.searchBox">
-        <pl-svg name="search"></pl-svg>
-        <input v-model.trim="searachContent" type="search" placeholder="搜索商品" @search="search(searachContent)">
+        <pl-svg name="search" />
+        <input
+          v-model.trim="searachContent"
+          type="search"
+          placeholder="搜索商品"
+          @search="search(searachContent)"
+        >
       </div>
-      <button @click="cancel">取消</button>
+      <button @click="cancel">
+        取消
+      </button>
     </div>
 
     <div :class="$style.content">
@@ -16,7 +23,8 @@
         ref="loadMore"
         no-content-tip="抱歉，没有相关商品"
         icon="no-search"
-        @refresh="refreshHandler">
+        @refresh="refreshHandler"
+      >
         <template v-slot="{ list }">
           <lesson-item
             border
@@ -33,7 +41,10 @@
       </load-more>
     </div>
 
-    <div  v-show="!seached" :class="{ [$style.searchSelect]: true, [$style.border]: true }">
+    <div
+      v-show="!seached"
+      :class="{ [$style.searchSelect]: true, [$style.border]: true }"
+    >
       <div :class="$style.top">
         <span>热门搜索</span>
       </div>
@@ -48,10 +59,16 @@
       </ul>
     </div>
 
-    <div  v-show="!seached" :class="$style.searchSelect">
+    <div
+      v-show="!seached"
+      :class="$style.searchSelect"
+    >
       <div :class="$style.top">
         <span>历史搜索</span>
-        <pl-svg @click="deleteHistory" name="delete"></pl-svg>
+        <pl-svg
+          @click="deleteHistory"
+          name="delete"
+        />
       </div>
       <ul :class="$style.keyWordList">
         <li

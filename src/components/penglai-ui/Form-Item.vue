@@ -2,19 +2,23 @@
   <div
     :class="{'pl-form-item': true, border}"
   >
-    <label ref="label" class="pl-form-item_label" v-text="label"></label>
+    <label
+      ref="label"
+      class="pl-form-item_label"
+      v-text="label"
+    />
     <div
       class="pl-form-item_content"
       :style="{ 'text-align': align || parentAlign }"
     >
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'pl-form-item',
+  name: 'PlFormItem',
   data () {
     return {
       parentAlign: null,

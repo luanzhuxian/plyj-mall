@@ -2,8 +2,8 @@
   <div :class="$style.lesson">
     <DetailBanner :banners="banners" />
     <DetailInfoBox>
-      <DetailTitle v-text="detail.productName"></DetailTitle>
-      <DetailDesc v-text="detail.productDesc"></DetailDesc>
+      <DetailTitle v-text="detail.productName" />
+      <DetailDesc v-text="detail.productDesc" />
       <div :class="$style.price">
         <Price
           v-if="detail.priceModels && detail.priceModels[0]"
@@ -18,48 +18,75 @@
       </div>
 
       <!-- 当前选择的规格 -->
-      <specification-box :current="currentSpec" @click="showSpecifica = true" ref="specification" />
+      <specification-box
+        :current="currentSpec"
+        @click="showSpecifica = true"
+        ref="specification"
+      />
       <!-- helper 润笔价格 -->
-      <helper-price v-if="agentProduct" :current="currentSpec" />
+      <helper-price
+        v-if="agentProduct"
+        :current="currentSpec"
+      />
       <!--<DetailOtherInfo type="lesson" />-->
     </DetailInfoBox>
 
-    <DetailInfo v-if="detail.detailContent" title="详情信息" :content="detail.detailContent || '暂无详情'" />
+    <DetailInfo
+      v-if="detail.detailContent"
+      title="详情信息"
+      :content="detail.detailContent || '暂无详情'"
+    />
 
     <!--<div class="slide-padding mt-80">-->
-      <!--<ModuleTitle title="商品详情" />-->
-      <!--<Specific total-price="500" />-->
+    <!--<ModuleTitle title="商品详情" />-->
+    <!--<Specific total-price="500" />-->
     <!--</div>-->
 
     <!--<div class="slide-padding mt-80">-->
-      <!--<ModuleTitle title="购买须知" />-->
-      <!--<MustKnow />-->
+    <!--<ModuleTitle title="购买须知" />-->
+    <!--<MustKnow />-->
     <!--</div>-->
 
     <!--<div class="slide-padding mt-80">-->
-      <!--<ModuleTitle title="授课老师" />-->
-      <!--<Teaching />-->
+    <!--<ModuleTitle title="授课老师" />-->
+    <!--<Teaching />-->
     <!--</div>-->
 
     <div class="slide-padding mt-80">
       <ModuleTitle title="雅客评论" />
-      <Comment :size="3" :product-seq="productSeq" />
+      <Comment
+        :size="3"
+        :product-seq="productSeq"
+      />
     </div>
 
     <!--<div class="slide-padding mt-80">-->
-      <!--<ModuleTitle title="品牌介绍" />-->
-      <!--<BrandIntro />-->
+    <!--<ModuleTitle title="品牌介绍" />-->
+    <!--<BrandIntro />-->
     <!--</div>-->
 
     <!--<div class="slide-padding mt-28">-->
-      <!--<ApplicableTime time="请购买后向商家咨询！" />-->
+    <!--<ApplicableTime time="请购买后向商家咨询！" />-->
     <!--</div>-->
     <div class="slide-padding mt-80">
-      <MaybeYouLike title="商家推荐" :product-id="productSeq" />
+      <MaybeYouLike
+        title="商家推荐"
+        :product-id="productSeq"
+      />
     </div>
 
-    <buy-now type="warning" text="立即购买" @click="buyNow" ref="buyNow" />
-    <specification-pop :data="detail.priceModels" :productImage="detail.productImage" :visible.sync="showSpecifica" @confirm="specChanged" />
+    <buy-now
+      type="warning"
+      text="立即购买"
+      @click="buyNow"
+      ref="buyNow"
+    />
+    <specification-pop
+      :data="detail.priceModels"
+      :product-image="detail.productImage"
+      :visible.sync="showSpecifica"
+      @confirm="specChanged"
+    />
   </div>
 </template>
 

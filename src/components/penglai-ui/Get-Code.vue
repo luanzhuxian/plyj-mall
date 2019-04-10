@@ -1,7 +1,11 @@
 <template>
   <div class="pl-get-code">
-    <button :disabled="disabled || !mobile || timing || loading" :class="{ timing: time > 0 }" @click.prevent="handleClick">
-      {{timing ? `${time}s` : '获取验证码'}}
+    <button
+      :disabled="disabled || !mobile || timing || loading"
+      :class="{ timing: time > 0 }"
+      @click.prevent="handleClick"
+    >
+      {{ timing ? `${time}s` : '获取验证码' }}
     </button>
   </div>
 </template>
@@ -10,7 +14,7 @@
 import { isPhone } from '../../assets/js/validate'
 import { sendCode } from '../../apis/base-api'
 export default {
-  name: 'get-code',
+  name: 'GetCode',
   data () {
     return {
       fixedTime: 60,

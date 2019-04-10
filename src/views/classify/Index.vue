@@ -6,8 +6,11 @@
         :class="$style.searchBox"
         :to="{ name: 'Search' }"
       >
-        <pl-svg name="search"></pl-svg>
-        <input type="text" placeholder="搜索商品">
+        <pl-svg name="search" />
+        <input
+          type="text"
+          placeholder="搜索商品"
+        >
       </router-link>
     </div>
 
@@ -32,8 +35,17 @@
           <classify-item img="//gw.alicdn.com/tps/TB2oFzffhhmpuFjSZFyXXcLdFXa_!!558893385-0-beehive-scenes.jpg_140x10000Q75.jpg_.webp" text="显示器" />
           <classify-item img="//gw.alicdn.com/tps/O1CN01HoU6GR1Oli1OYGPbk_!!2960761746-2-beehive-scenes.png_140x10000.jpg_.webp" text="平板电脑" />
         </div>-->
-        <div :class="$style.tip" v-text="currentClassify.categoryName"></div>
-        <load-more :request-methods="getProduct" :form="form" ref="loadMore" :loading.sync="loading" no-content-tip="此分类下还没有商品">
+        <div
+          :class="$style.tip"
+          v-text="currentClassify.categoryName"
+        />
+        <load-more
+          :request-methods="getProduct"
+          :form="form"
+          ref="loadMore"
+          :loading.sync="loading"
+          no-content-tip="此分类下还没有商品"
+        >
           <template v-slot="{ list }">
             <div :class="$style.productList">
               <lesson-item

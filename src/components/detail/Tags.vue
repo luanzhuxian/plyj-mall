@@ -1,6 +1,10 @@
 <template>
   <ul :class="$style.tags">
-    <li v-for="(tag, index) of tags" :key="index" v-text="tag" />
+    <li
+      v-for="(tag, index) of tags"
+      :key="index"
+      v-text="tag"
+    />
   </ul>
 </template>
 

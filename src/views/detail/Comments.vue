@@ -1,17 +1,30 @@
 <template>
   <div :class="$style.comments">
-    <TopText title="评论专区" tip="这里有你想看的" />
+    <TopText
+      title="评论专区"
+      tip="这里有你想看的"
+    />
     <load-more
       :request-methods="getComments"
       :form="form"
       ref="loadMore"
-      noContentTip="暂无评论">
+      no-content-tip="暂无评论"
+    >
       <template v-slot="{ list }">
         <Comment :list="list" />
       </template>
     </load-more>
-    <buy-now type="warning" text="立即购买" @click="buyNow" ref="buyNow" />
-    <specification-pop :visible.sync="showPop" :data="priceModels" @confirm="popConfirm" />
+    <buy-now
+      type="warning"
+      text="立即购买"
+      @click="buyNow"
+      ref="buyNow"
+    />
+    <specification-pop
+      :visible.sync="showPop"
+      :data="priceModels"
+      @confirm="popConfirm"
+    />
   </div>
 </template>
 

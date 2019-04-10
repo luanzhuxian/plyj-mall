@@ -1,20 +1,41 @@
 <template>
-  <div :class="$style.feature + ' radius-20'" @click="handleClick">
+  <div
+    :class="$style.feature + ' radius-20'"
+    @click="handleClick"
+  >
     <!-- 特色课组件 -->
-    <img v-lazy="img" :key="img" alt="">
+    <img
+      v-lazy="img"
+      :key="img"
+      alt=""
+    >
     <div :class="$style.right">
       <div>
         <h3 v-text="title" />
-        <div :class="$style.sellCount" v-if="time && count">
+        <div
+          :class="$style.sellCount"
+          v-if="time && count"
+        >
           <pl-svg name="time2" />
-          <span><i v-text="time"></i>小时</span>
+          <span><i v-text="time" />小时</span>
           <span>已售 <i v-text="count" /></span>
         </div>
-        <div :class="$style.desc" v-if="desc" v-text="desc"></div>
+        <div
+          :class="$style.desc"
+          v-if="desc"
+          v-text="desc"
+        />
       </div>
-      <price :price="price" :original-price="originalPrice" size="small" />
+      <price
+        :price="price"
+        :original-price="originalPrice"
+        size="small"
+      />
     </div>
-    <pl-svg :class="$style.cart" name="shopping-cart" />
+    <pl-svg
+      :class="$style.cart"
+      name="shopping-cart"
+    />
   </div>
 </template>
 
@@ -22,7 +43,7 @@
 import Price from '../Price.vue'
 import { createBrokerShare } from '../../apis/product'
 export default {
-  name: 'Feature-Lesson-Item',
+  name: 'FeatureLessonItem',
   components: {
     Price
   },

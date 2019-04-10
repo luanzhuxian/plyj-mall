@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'pl-tab',
+  name: 'PlTab',
   props: {
     tabs: Array,
     options: {

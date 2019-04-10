@@ -5,7 +5,10 @@
       @click="tabOpen = !tabOpen"
     >
       <p :class="$style.onOff">
-        <span style="margin-right: 8px;" v-text="currentSelect" />
+        <span
+          style="margin-right: 8px;"
+          v-text="currentSelect"
+        />
         <pl-svg
           :class="$style.triangle"
           name="triangle"

@@ -1,8 +1,15 @@
 <template>
-  <div :class="$style.groupBuying + ' radius-20'" @click="handleClick">
+  <div
+    :class="$style.groupBuying + ' radius-20'"
+    @click="handleClick"
+  >
     <!-- 团购课组件 -->
     <div :class="$style.content">
-      <img class="radius-10" :src="img" alt="">
+      <img
+        class="radius-10"
+        :src="img"
+        alt=""
+      >
       <div :class="$style.right">
         <div :class="$style.title">
           <h3 v-text="title" />
@@ -11,8 +18,17 @@
             <i>4.8</i>
           </div>
         </div>
-        <price :price="price" :originalPrice="originalPrice" size="small" />
-        <pl-button type="warning" :class="$style.button">立即抢购</pl-button>
+        <price
+          :price="price"
+          :original-price="originalPrice"
+          size="small"
+        />
+        <pl-button
+          type="warning"
+          :class="$style.button"
+        >
+          立即抢购
+        </pl-button>
       </div>
     </div>
   </div>
@@ -22,7 +38,7 @@
 import Price from './Price.vue'
 
 export default {
-  name: 'Group-Buying',
+  name: 'GroupBuying',
   components: {
     Price
   },

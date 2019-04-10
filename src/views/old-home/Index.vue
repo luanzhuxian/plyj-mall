@@ -1,127 +1,188 @@
 <template>
-<div :class="$style.mallHome + ' mall-home'">
-  <div :class="$style.top">
-    <top-text :title="mallName + ' 欢迎您'" :tip="moment().format('MM月DD日 dddd')"></top-text>
-  </div>
-  <swiper :options="swiper" :class="$style.banner">
-    <swiper-slide
-      v-for="(item, index) of banner"
-      :key="index">
-      <!-- 商品 -->
-      <img
-        v-if="item.linkType === 'goods' && item.contentId"
-        :class="$style.bannerImg"
-        data-status="ON_SALE"
-        @click="toProductDetail(item.contentId)"
-        :src="item.fileId"
-      >
-      <!-- 分类 -->
-      <router-link
-        v-else-if="item.linkType === 'category' && item.link"
-        :class="$style.bannerImg"
-        tag="img"
-        :src="item.fileId"
-        alt=""
-        :to="{ name: 'Classify', params: { optionId: item.link.split('/').splice(-1, 1)[0] } }"
+  <div :class="$style.mallHome + ' mall-home'">
+    <div :class="$style.top">
+      <top-text
+        :title="mallName + ' 欢迎您'"
+        :tip="moment().format('MM月DD日 dddd')"
       />
-      <!-- 其它 -->
-      <img v-else :src="item.fileId" :class="$style.bannerImg" >
-    </swiper-slide>
-    <div class="banner-pagination" slot="pagination" />
-  </swiper>
-
-  <div :class="$style.goodGift" v-if="modules.A.length">
-    <div :class="$style.moduleHead">
-      <div :class="$style.moduleTitle">甄选好礼</div>
-      <p>为了帮您甄选好礼，您知道我有多努力吗？</p>
     </div>
-    <swiper :options="recommend" :class="$style.swiper">
-      <swiper-slide v-for="item of modules.A" :key="item.contentId">
-        <CategoryItem
-          tag="div"
-          :key="item.contentId"
-          :img="item.productImage && item.productImage[0].mediaUrl"
-          :productName="item.productName"
-          :productId="item.sequenceNbr"
-          :isActive="item.agentProduct"
-          size="mini"
-          :price="item.priceModels && item.priceModels[0].price"
-        />
-      </swiper-slide>
-      <div v-if="modules.A.length > 3" class="good-gift-pagination" slot="pagination" />
-    </swiper>
-  </div>
-
-  <div :class="$style.imgModule"  v-if="modules.B.length">
-    <router-link
-      v-if="modules.B[0].linkType === 'category' && modules.B[0].contentId"
-      tag="img"
-      :to="{ name: 'Classify', params: { optionId: modules.B[0].contentId } }"
-      :src="modules.B[0].fileId"
-      :class="$style.imgModuleImg"
-    />
-    <img
-      v-else-if="modules.B[0].linkType === 'goods' && modules.B[0].contentId"
-      :src="modules.B[0].fileId"
-      :class="$style.imgModuleImg"
-      @click="toProductDetail(modules.B[0].contentId)"
-    />
-    <img v-else :src="modules.B[0].fileId" :class="$style.imgModuleImg" />
-  </div>
-
-  <div :class="$style.goodsModule"  v-if="modules.C.length">
-    <swiper :options="goods" style="overflow: visible">
-      <swiper-slide v-for="item of modules.C" :key="item.contentId">
-        <div :class="$style.slideWrap">
-          <CategoryItem
-            :img="item.productImage && item.productImage[0].mediaUrl"
-            :productName="item.productName"
-            :productId="item.sequenceNbr"
-            :isActive="item.agentProduct"
-            size="mini"
-            :price="item.priceModels && item.priceModels[0].price"
-          />
-        </div>
-      </swiper-slide>
-    </swiper>
-  </div>
-
-  <div  :class="$style.imgModule" v-if="modules.D.length">
-    <router-link
-      v-if="modules.D[0].linkType === 'category' && modules.D[0].contentId"
-      tag="img"
-      :to="{ name: 'Classify', params: { optionId: modules.D[0].contentId } }"
-      :src="modules.D[0].fileId"
-      :class="$style.imgModuleImg"
-    />
-    <img
-      v-else-if="modules.D[0].linkType === 'goods' && modules.D[0].contentId"
-      :src="modules.D[0].fileId"
-      :class="$style.imgModuleImg"
-      @click="toProductDetail(modules.D[0].contentId)"
+    <swiper
+      :options="swiper"
+      :class="$style.banner"
     >
-    <img v-else :src="modules.D[0].fileId" :class="$style.imgModuleImg" />
-  </div>
+      <swiper-slide
+        v-for="(item, index) of banner"
+        :key="index"
+      >
+        <!-- 商品 -->
+        <img
+          v-if="item.linkType === 'goods' && item.contentId"
+          :class="$style.bannerImg"
+          data-status="ON_SALE"
+          @click="toProductDetail(item.contentId)"
+          :src="item.fileId"
+        >
+        <!-- 分类 -->
+        <router-link
+          v-else-if="item.linkType === 'category' && item.link"
+          :class="$style.bannerImg"
+          tag="img"
+          :src="item.fileId"
+          alt=""
+          :to="{ name: 'Classify', params: { optionId: item.link.split('/').splice(-1, 1)[0] } }"
+        />
+        <!-- 其它 -->
+        <img
+          v-else
+          :src="item.fileId"
+          :class="$style.bannerImg"
+        >
+      </swiper-slide>
+      <div
+        class="banner-pagination"
+        slot="pagination"
+      />
+    </swiper>
 
-  <div :class="$style.goodsModule" v-if="modules.E.length">
-    <swiper :options="goods" style="overflow: visible">
-      <swiper-slide v-for="item of modules.E" :key="item.contentId">
-        <div :class="$style.slideWrap">
+    <div
+      :class="$style.goodGift"
+      v-if="modules.A.length"
+    >
+      <div :class="$style.moduleHead">
+        <div :class="$style.moduleTitle">
+          甄选好礼
+        </div>
+        <p>为了帮您甄选好礼，您知道我有多努力吗？</p>
+      </div>
+      <swiper
+        :options="recommend"
+        :class="$style.swiper"
+      >
+        <swiper-slide
+          v-for="item of modules.A"
+          :key="item.contentId"
+        >
           <CategoryItem
+            tag="div"
+            :key="item.contentId"
             :img="item.productImage && item.productImage[0].mediaUrl"
-            :productName="item.productName"
-            :productId="item.sequenceNbr"
-            :isActive="item.agentProduct"
+            :product-name="item.productName"
+            :product-id="item.sequenceNbr"
+            :is-active="item.agentProduct"
             size="mini"
             :price="item.priceModels && item.priceModels[0].price"
           />
-        </div>
-      </swiper-slide>
-    </swiper>
-  </div>
+        </swiper-slide>
+        <div
+          v-if="modules.A.length > 3"
+          class="good-gift-pagination"
+          slot="pagination"
+        />
+      </swiper>
+    </div>
 
-  <you-like v-if="showLike"></you-like>
-</div>
+    <div
+      :class="$style.imgModule"
+      v-if="modules.B.length"
+    >
+      <router-link
+        v-if="modules.B[0].linkType === 'category' && modules.B[0].contentId"
+        tag="img"
+        :to="{ name: 'Classify', params: { optionId: modules.B[0].contentId } }"
+        :src="modules.B[0].fileId"
+        :class="$style.imgModuleImg"
+      />
+      <img
+        v-else-if="modules.B[0].linkType === 'goods' && modules.B[0].contentId"
+        :src="modules.B[0].fileId"
+        :class="$style.imgModuleImg"
+        @click="toProductDetail(modules.B[0].contentId)"
+      >
+      <img
+        v-else
+        :src="modules.B[0].fileId"
+        :class="$style.imgModuleImg"
+      >
+    </div>
+
+    <div
+      :class="$style.goodsModule"
+      v-if="modules.C.length"
+    >
+      <swiper
+        :options="goods"
+        style="overflow: visible"
+      >
+        <swiper-slide
+          v-for="item of modules.C"
+          :key="item.contentId"
+        >
+          <div :class="$style.slideWrap">
+            <CategoryItem
+              :img="item.productImage && item.productImage[0].mediaUrl"
+              :product-name="item.productName"
+              :product-id="item.sequenceNbr"
+              :is-active="item.agentProduct"
+              size="mini"
+              :price="item.priceModels && item.priceModels[0].price"
+            />
+          </div>
+        </swiper-slide>
+      </swiper>
+    </div>
+
+    <div
+      :class="$style.imgModule"
+      v-if="modules.D.length"
+    >
+      <router-link
+        v-if="modules.D[0].linkType === 'category' && modules.D[0].contentId"
+        tag="img"
+        :to="{ name: 'Classify', params: { optionId: modules.D[0].contentId } }"
+        :src="modules.D[0].fileId"
+        :class="$style.imgModuleImg"
+      />
+      <img
+        v-else-if="modules.D[0].linkType === 'goods' && modules.D[0].contentId"
+        :src="modules.D[0].fileId"
+        :class="$style.imgModuleImg"
+        @click="toProductDetail(modules.D[0].contentId)"
+      >
+      <img
+        v-else
+        :src="modules.D[0].fileId"
+        :class="$style.imgModuleImg"
+      >
+    </div>
+
+    <div
+      :class="$style.goodsModule"
+      v-if="modules.E.length"
+    >
+      <swiper
+        :options="goods"
+        style="overflow: visible"
+      >
+        <swiper-slide
+          v-for="item of modules.E"
+          :key="item.contentId"
+        >
+          <div :class="$style.slideWrap">
+            <CategoryItem
+              :img="item.productImage && item.productImage[0].mediaUrl"
+              :product-name="item.productName"
+              :product-id="item.sequenceNbr"
+              :is-active="item.agentProduct"
+              size="mini"
+              :price="item.priceModels && item.priceModels[0].price"
+            />
+          </div>
+        </swiper-slide>
+      </swiper>
+    </div>
+
+    <you-like v-if="showLike" />
+  </div>
 </template>
 
 <script>

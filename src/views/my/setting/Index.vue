@@ -1,16 +1,32 @@
 <template>
   <div :class="$style.setting">
     <div :class="$style.top">
-      <img :src="avatar" alt="">
+      <img
+        :src="avatar"
+        alt=""
+      >
       <div :class="$style.baseInfo">
-        <span :class="$style.name" v-text="userName" />
-        <span :class="$style.level" v-text="roleName" />
+        <span
+          :class="$style.name"
+          v-text="userName"
+        />
+        <span
+          :class="$style.level"
+          v-text="roleName"
+        />
       </div>
     </div>
 
     <div :class="$style.set">
-      <pl-fields text="手机号" :right-text="mobile || '未绑定'" :route="{ name: 'BindMobile' }" />
-      <pl-fields text="微信号" :right-text="userName" />
+      <pl-fields
+        text="手机号"
+        :right-text="mobile || '未绑定'"
+        :route="{ name: 'BindMobile' }"
+      />
+      <pl-fields
+        text="微信号"
+        :right-text="userName"
+      />
     </div>
   </div>
 </template>

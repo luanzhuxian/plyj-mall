@@ -1,48 +1,69 @@
 <template>
   <div :class="$style.rebateList">
     <LoadMore
-      :requestMethods="getBrokerageList"
+      :request-methods="getBrokerageList"
       :form="form"
       ref="loadMore"
       @more="more"
       @refresh="refreshHandler"
-      icon="no-content2">
+      icon="no-content2"
+    >
       <template>
         <ul>
-          <li v-for="item of formatList" :key="item.timestamp">
-            <span class="fz-28 gray-3">{{item.year}}年{{item.month}}月</span>
+          <li
+            v-for="item of formatList"
+            :key="item.timestamp"
+          >
+            <span class="fz-28 gray-3">{{ item.year }}年{{ item.month }}月</span>
             <ul :class="$style.list + ' mt-28'">
-              <li v-for="(pro, j) of item"
-                  :key="j"
-                  :class="{ [$style.item]: true, partition: j < item.length }" >
-                <img :class="$style.listItemImg" v-img-error :src="pro.mediaInfoModels[0].mediaUrl" alt="">
+              <li
+                v-for="(pro, j) of item"
+                :key="j"
+                :class="{ [$style.item]: true, partition: j < item.length }"
+              >
+                <img
+                  :class="$style.listItemImg"
+                  v-img-error
+                  :src="pro.mediaInfoModels[0].mediaUrl"
+                  alt=""
+                >
                 <div :class="$style.itemRight">
                   <div :class="$style.titlePrice">
-                    <p class="fz-28" v-text="pro.productName" />
-                    <p class="fz-34 bold">+ <i v-text="pro.price" /></p>
+                    <p
+                      class="fz-28"
+                      v-text="pro.productName"
+                    />
+                    <p class="fz-34 bold">
+                      + <i v-text="pro.price" />
+                    </p>
                   </div>
-                  <p class="gray-2 fz-24">数量：<i v-text="pro.count" /></p>
+                  <p class="gray-2 fz-24">
+                    数量：<i v-text="pro.count" />
+                  </p>
                   <div :class="$style.timeStatus">
-                    <span class="fz-22 gray-3" >{{pro.createTime}}</span>
-                    <span :class="{'fz-26': true, [$style.statusActive]: pro.status === 'AWAIT' }" v-text="status[pro.status]"></span>
+                    <span class="fz-22 gray-3">{{ pro.createTime }}</span>
+                    <span
+                      :class="{'fz-26': true, [$style.statusActive]: pro.status === 'AWAIT' }"
+                      v-text="status[pro.status]"
+                    />
                   </div>
                 </div>
               </li>
               <!--<li v-for="(pro, j) of item"-->
-                  <!--:key="j"-->
-                  <!--:class="{ [$style.item]: true, partition: j < item.length - 1 }" >-->
-                <!--<img v-img-error :src="pro.mediaInfoModels[0].mediaUrl" alt="">-->
-                <!--<div :class="$style.itemRight">-->
-                  <!--<div :class="$style.titlePrice">-->
-                    <!--<p class="fz-28" v-text="pro.productName" />-->
-                    <!--<p class="fz-34 bold">+ <i v-text="pro.price" /></p>-->
-                  <!--</div>-->
-                  <!--<p class="gray-2 fz-24">数量：<i v-text="pro.count" /></p>-->
-                  <!--<div :class="$style.timeStatus">-->
-                    <!--<span class="fz-22 gray-3" v-text="pro.createTime"></span>-->
-                    <!--<span :class="{'fz-26': true, [$style.statusActive]: pro.status === 'AWAIT' }" v-text="status[pro.status]"></span>-->
-                  <!--</div>-->
-                <!--</div>-->
+              <!--:key="j"-->
+              <!--:class="{ [$style.item]: true, partition: j < item.length - 1 }" >-->
+              <!--<img v-img-error :src="pro.mediaInfoModels[0].mediaUrl" alt="">-->
+              <!--<div :class="$style.itemRight">-->
+              <!--<div :class="$style.titlePrice">-->
+              <!--<p class="fz-28" v-text="pro.productName" />-->
+              <!--<p class="fz-34 bold">+ <i v-text="pro.price" /></p>-->
+              <!--</div>-->
+              <!--<p class="gray-2 fz-24">数量：<i v-text="pro.count" /></p>-->
+              <!--<div :class="$style.timeStatus">-->
+              <!--<span class="fz-22 gray-3" v-text="pro.createTime"></span>-->
+              <!--<span :class="{'fz-26': true, [$style.statusActive]: pro.status === 'AWAIT' }" v-text="status[pro.status]"></span>-->
+              <!--</div>-->
+              <!--</div>-->
               <!--</li>-->
             </ul>
           </li>
@@ -57,7 +78,7 @@ import { getBrokerageList } from '../../../apis/money'
 import { mapGetters } from 'vuex'
 import LoadMore from '../../../components/Load-More.vue'
 export default {
-  name: 'Rebate-List.vue',
+  name: 'RebateListVue',
   components: {
     LoadMore
   },

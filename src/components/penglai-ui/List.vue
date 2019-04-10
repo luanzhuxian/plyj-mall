@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'pl-list',
+  name: 'PlList',
   props: {
     title: String,
     content: String,

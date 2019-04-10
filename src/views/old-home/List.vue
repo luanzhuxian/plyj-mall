@@ -1,10 +1,12 @@
 <template>
   <div class="more-list">
     <div class="list-head">
-      <router-link :to="{name: 'Home'}"><i class="iconfont icon-zhenxuan_backx"/></router-link>
+      <router-link :to="{name: 'Home'}">
+        <i class="iconfont icon-zhenxuan_backx" />
+      </router-link>
       甄选好货
     </div>
-    <you-like :showTitle="true"></you-like>
+    <you-like :show-title="true" />
   </div>
 </template>
 

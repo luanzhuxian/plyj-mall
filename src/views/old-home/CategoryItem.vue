@@ -9,11 +9,24 @@
     @click="jump"
     :style="{margin}"
   >
-    <img v-lazy="img" alt="">
-    <p :class="{ [$style.name]: true, [$style.isActive]: false}" v-text="productName" />
-    <p v-if="size === 'middle'" :class="$style.desc" v-text="productDesc" />
+    <img
+      v-lazy="img"
+      alt=""
+    >
+    <p
+      :class="{ [$style.name]: true, [$style.isActive]: false}"
+      v-text="productName"
+    />
+    <p
+      v-if="size === 'middle'"
+      :class="$style.desc"
+      v-text="productDesc"
+    />
     <div :class="$style.price">
-      <Price :price="price" :size="size" />
+      <Price
+        :price="price"
+        :size="size"
+      />
     </div>
   </div>
 </template>

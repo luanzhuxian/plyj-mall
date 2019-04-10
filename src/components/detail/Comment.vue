@@ -1,38 +1,73 @@
 <template>
-  <div :class="$style.comment + ' radius-20'" v-show="listTemp.length > 0">
-    <div :class="$style.commentItem" v-for="item of listTemp" :key="item.sequenceNbr">
+  <div
+    :class="$style.comment + ' radius-20'"
+    v-show="listTemp.length > 0"
+  >
+    <div
+      :class="$style.commentItem"
+      v-for="item of listTemp"
+      :key="item.sequenceNbr"
+    >
       <!-- 头像 -->
-      <img v-img-error :src="item.headUrl || ''" alt="">
+      <img
+        v-img-error
+        :src="item.headUrl || ''"
+        alt=""
+      >
       <div :class="$style.content">
-        <div :class="$style.name" v-text="item.nickName" />
+        <div
+          :class="$style.name"
+          v-text="item.nickName"
+        />
         <!-- 评分 -->
         <div :class="$style.grade">
-          评分 <Grade size="mini" :grade="item.goodsScore" />
+          评分 <Grade
+            size="mini"
+            :grade="item.goodsScore"
+          />
         </div>
         <!-- 内容 -->
-        <div :class="$style.commentContent" v-text="item.content"></div>
+        <div
+          :class="$style.commentContent"
+          v-text="item.content"
+        />
         <!-- 图片 -->
         <div :class="$style.imgs + ' radius-20'">
           <!-- 只在评论专区页面显示全部图片，其他显示 3 张 -->
           <template v-for="(img, j) of item.mediaInfoModels">
-            <img v-if="j < 3" :key="j" v-img-error :src="img.mediaUrl" v-gallery="item.sequenceNbr" alt="">
+            <img
+              v-if="j < 3"
+              :key="j"
+              v-img-error
+              :src="img.mediaUrl"
+              v-gallery="item.sequenceNbr"
+              alt=""
+            >
           </template>
         </div>
         <!-- 回复 -->
-        <div :class="$style.reply" v-if="item.childs.length">
+        <div
+          :class="$style.reply"
+          v-if="item.childs.length"
+        >
           <span>商家回复：</span>
-          {{item.childs[0].content}}
+          {{ item.childs[0].content }}
         </div>
       </div>
     </div>
-    <p :class="$style.noComments" v-if="listTemp.length === 0 && productSeq">
+    <p
+      :class="$style.noComments"
+      v-if="listTemp.length === 0 && productSeq"
+    >
       <span>暂无评论</span>
     </p>
     <router-link
-      v-if="this.productSeq && total > 3" tag="div"
+      v-if="this.productSeq && total > 3"
+      tag="div"
       :to="{ name: 'Comments', params: { productSeq } }"
-      :class="$style.seeMore">
-      <span>查看全部评论（{{total}}）</span>
+      :class="$style.seeMore"
+    >
+      <span>查看全部评论（{{ total }}）</span>
       <pl-svg name="right" />
     </router-link>
   </div>

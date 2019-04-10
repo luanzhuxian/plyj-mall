@@ -1,20 +1,28 @@
 <template>
-<div :class="$style.whatIsHelper">
-  <div :class="$style.one" />
-  <button v-if="!agentUser && !isAdmin" @click="() => {$router.push({name: 'ApplyHelper'})}" :class="$style.applyBroker">
-    申请成为Helper
-  </button>
-  <div :class="$style.two" />
-  <button v-if="!agentUser && !isAdmin" @click="() => {$router.push({name: 'ApplyHelper'})}" :class="$style.applyBroker">
-    申请成为Helper
-  </button>
-</div>
+  <div :class="$style.whatIsHelper">
+    <div :class="$style.one" />
+    <button
+      v-if="!agentUser && !isAdmin"
+      @click="() => {$router.push({name: 'ApplyHelper'})}"
+      :class="$style.applyBroker"
+    >
+      申请成为Helper
+    </button>
+    <div :class="$style.two" />
+    <button
+      v-if="!agentUser && !isAdmin"
+      @click="() => {$router.push({name: 'ApplyHelper'})}"
+      :class="$style.applyBroker"
+    >
+      申请成为Helper
+    </button>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'What-Is-Broker',
+  name: 'WhatIsBroker',
   computed: {
     ...mapGetters(['agentUser', 'isAdmin'])
   },

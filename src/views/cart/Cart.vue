@@ -1,6 +1,9 @@
 <template>
   <div :class="$style.cart">
-    <div :class="$style.address + ' radius-20'" v-if="this.productType === 'PHYSICAL_GOODS'">
+    <div
+      :class="$style.address + ' radius-20'"
+      v-if="this.productType === 'PHYSICAL_GOODS'"
+    >
       <AddressItem />
     </div>
 
@@ -19,29 +22,54 @@
       <div :class="$style.money">
         <p class="fz-28">
           <span>商品金额</span>
-          <span class="rmb" v-text="form.amount" />
+          <span
+            class="rmb"
+            v-text="form.amount"
+          />
         </p>
         <p class="fz-28">
           <span>快递</span>
           <span class="rmb">
-            <i v-if="supplierProduct && sixEnergyNewOrderReturnModel" v-text="sixEnergyNewOrderReturnModel.freight"></i>
+            <i
+              v-if="supplierProduct && sixEnergyNewOrderReturnModel"
+              v-text="sixEnergyNewOrderReturnModel.freight"
+            />
             <i v-else>0</i>
           </span>
         </p>
       </div>
+    </div>
 
-      <div :class="$style.totalMoney + ' fz-30'">
-        <span class="bold">合计：</span>
-        <span class="rmb fz-32 bold" v-text="totalMoney" />
+    <div :class="$style.product + ' radius-20 mt-28'">
+      <div :class="$style.orderTop">
+        订单备注（选填）
       </div>
+      <div style="background-color: #F3F3F3;">
+        <pl-input
+          v-model="form.remark"
+          placeholder="选填，请填写订单备注信息，并与商家协商一致"
+          type="textarea"
+        />
+      </div>
+    </div>
 
-      <div :class="$style.confirm">
-        <div>
-          <span class="fz-20 gray-2">实际支付</span>
-          <span class="rmb fz-32" v-text="totalMoney" />
-        </div>
-        <pl-button :disabled="disableSubmit" :loading="loading" type="warning" size="large" @click="submitOrder">确认付款</pl-button>
+    <div :class="$style.confirm">
+      <div>
+        <span class="fz-20 gray-2">实际支付</span>
+        <span
+          class="rmb fz-32"
+          v-text="totalMoney"
+        />
       </div>
+      <pl-button
+        :disabled="disableSubmit"
+        :loading="loading"
+        type="warning"
+        size="large"
+        @click="submitOrder"
+      >
+        确认付款
+      </pl-button>
     </div>
   </div>
 </template>
@@ -89,6 +117,7 @@ export default {
         agencyCode: '',
         addressSeq: '',
         mallSeq: '',
+        remark: '',
         share: '', // 根据此商品是不是经纪人分享的,来判断是否需要传此参数
         amount: '', // 总价
         products: [
@@ -275,7 +304,7 @@ export default {
 
 <style module lang="scss">
   .cart {
-    padding: 20px 40px;
+    padding: 20px 40px 120px;
   }
   .address {
     margin-bottom: 28px;

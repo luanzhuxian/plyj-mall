@@ -1,30 +1,36 @@
 <template>
-  <div :class="$style.like" v-if="likeProduct.length > 0">
-    <div :class="$style.title">猜你喜欢</div>
+  <div
+    :class="$style.like"
+    v-if="likeProduct.length > 0"
+  >
+    <div :class="$style.title">
+      猜你喜欢
+    </div>
     <div :class="$style.likeGoodsList">
       <CategoryItem
-        v-for="(item, index) in likeProduct" :key="index"
-        :productId="item.sequenceNbr"
+        v-for="(item, index) in likeProduct"
+        :key="index"
+        :product-id="item.sequenceNbr"
         :price="item.productPriceModel && item.productPriceModel[0].price"
         :img="item.mediaInfoModel && item.mediaInfoModel[0].mediaUrl"
-        :productName="item.productName"
-        :productDesc="item.productDesc"
+        :product-name="item.productName"
+        :product-desc="item.productDesc"
       />
-        <!--<router-link-->
-          <!--tag="li"-->
-          <!--v-for="(item, index) in likeProduct" :key="index"-->
-          <!--:to="{name: 'Product', params: {id: item.sequenceNbr}}">-->
-          <!--<div class="goods335"><img :src="item.mediaInfoModel && item.mediaInfoModel[0].mediaUrl" /></div>-->
-          <!--&lt;!&ndash;<div class="goods-desc">-->
-            <!--{{item.productDesc}}-->
-          <!--</div>&ndash;&gt;-->
-          <!--<div class="goods-title">-->
-            <!--{{item.productName}}-->
-          <!--</div>-->
-          <!--<div class="goods-price">-->
-            <!--¥{{item.productPriceModel && item.productPriceModel[0].price}}-->
-          <!--</div>-->
-        <!--</router-link>-->
+      <!--<router-link-->
+      <!--tag="li"-->
+      <!--v-for="(item, index) in likeProduct" :key="index"-->
+      <!--:to="{name: 'Product', params: {id: item.sequenceNbr}}">-->
+      <!--<div class="goods335"><img :src="item.mediaInfoModel && item.mediaInfoModel[0].mediaUrl" /></div>-->
+      <!--&lt;!&ndash;<div class="goods-desc">-->
+      <!--{{item.productDesc}}-->
+      <!--</div>&ndash;&gt;-->
+      <!--<div class="goods-title">-->
+      <!--{{item.productName}}-->
+      <!--</div>-->
+      <!--<div class="goods-price">-->
+      <!--¥{{item.productPriceModel && item.productPriceModel[0].price}}-->
+      <!--</div>-->
+      <!--</router-link>-->
     </div>
   </div>
 </template>

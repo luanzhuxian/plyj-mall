@@ -1,14 +1,32 @@
 <template>
   <div :class="$style.comment">
-    <top-text title="发表评论" tip="说说您本次购买的感受吧" />
+    <top-text
+      title="发表评论"
+      tip="说说您本次购买的感受吧"
+    />
     <main class="radius-20 bg-white mt-28">
       <div :class="$style.grade">
-        <img v-img-error :src="img" alt="">
+        <img
+          v-img-error
+          :src="img"
+          alt=""
+        >
         <span class="fz-26 gray-2">本次感受</span>
-        <Grade size="middle" :grade.sync="form.goodsScore" selectable />
+        <Grade
+          size="middle"
+          :grade.sync="form.goodsScore"
+          selectable
+        />
       </div>
       <div :class="$style.content">
-        <pl-input v-model="form.content" type="textarea" maxlength="500" placeholder="产品满足你的期待吗？说说它的优点和缺点吧" :min-rows="5" :max-rows="10" />
+        <pl-input
+          v-model="form.content"
+          type="textarea"
+          maxlength="500"
+          placeholder="产品满足你的期待吗？说说它的优点和缺点吧"
+          :min-rows="5"
+          :max-rows="10"
+        />
       </div>
       <div :class="$style.images">
         <pl-upload-img
@@ -22,7 +40,15 @@
         />
       </div>
       <div :class="'mt-28 '+$style.submit">
-        <pl-button :loading="loading" round plain type="warning" @click="submit">发布评论</pl-button>
+        <pl-button
+          :loading="loading"
+          round
+          plain
+          type="warning"
+          @click="submit"
+        >
+          发布评论
+        </pl-button>
       </div>
     </main>
   </div>

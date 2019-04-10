@@ -1,12 +1,25 @@
 <template>
   <div :class="$style.yaji">
-    <top-text :title="`您好 ${userName}，`" tip="今天您赚到润笔了吗？"></top-text>
+    <top-text
+      :title="`您好 ${userName}，`"
+      tip="今天您赚到润笔了吗？"
+    />
     <!--<div :class="$style.addFriend + ' radius-20 bold'">
       <span>邀请您的好友一起加入Helper吧！</span>
       <pl-svg name="add-friend" />
     </div>-->
-    <ModuleTitle size="middle" title="分享就赚钱" badge="HOT" class="mt-40" />
-    <load-more :request-methods="getActivityProduct" :form="form" ref="loadMore" no-content-tip="暂无活动商品">
+    <ModuleTitle
+      size="middle"
+      title="分享就赚钱"
+      badge="HOT"
+      class="mt-40"
+    />
+    <load-more
+      :request-methods="getActivityProduct"
+      :form="form"
+      ref="loadMore"
+      no-content-tip="暂无活动商品"
+    >
       <template v-slot="{ list }">
         <ShareItem
           v-for="(item, i) of list"

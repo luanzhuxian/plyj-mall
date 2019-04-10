@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.appointment + ' radius-20'" @click="handleClick">
+  <div
+    :class="$style.appointment + ' radius-20'"
+    @click="handleClick"
+  >
     <!--预约礼-->
     <div>
       <pl-svg name="yuyue" />
@@ -8,11 +11,21 @@
     <div>领取 <pl-svg name="right" /></div>
 
     <transition name="fade">
-      <div :class="$style.makeAnAppointment" v-show="show" @click.stop.self="show = false">
+      <div
+        :class="$style.makeAnAppointment"
+        v-show="show"
+        @click.stop.self="show = false"
+      >
         <div :class="$style.content">
           <h3>预约试听</h3>
           <p>请留下您的联系方式，方便商家稍后联系您</p>
-          <p :class="$style.tel + ' radius-20'"><input v-model="phone" type="tel" maxlength="11"></p>
+          <p :class="$style.tel + ' radius-20'">
+            <input
+              v-model="phone"
+              type="tel"
+              maxlength="11"
+            >
+          </p>
           <p><pl-svg name="safe" />号码仅此商家可见</p>
           <p>
             <pl-button

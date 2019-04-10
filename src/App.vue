@@ -4,7 +4,7 @@
       <router-view v-if="logined" />
     </keep-alive>
     <navbar v-if="showNavbar.indexOf(routeName) > -1" />
-    <QuickNavbar v-else></QuickNavbar>
+    <QuickNavbar v-else />
   </div>
 </template>
 

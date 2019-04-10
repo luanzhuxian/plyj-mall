@@ -1,18 +1,49 @@
 <template>
-  <div :class="$style.shareItem" @click="buyNow">
-    <img v-lazy="img" :key="img" class="radius-20" alt="">
+  <div
+    :class="$style.shareItem"
+    @click="buyNow"
+  >
+    <img
+      v-lazy="img"
+      :key="img"
+      class="radius-20"
+      alt=""
+    >
     <div :class="$style.content + ' radius-20'">
       <div :class="$style.contentBox">
         <div :class="$style.contentTop">
-          <h3 :class="$style.title" v-text="title" />
-          <p :class="$style.desc" v-text="desc" />
-          <Grade :class="$style.grade" size="mini" :grade="grade" />
+          <h3
+            :class="$style.title"
+            v-text="title"
+          />
+          <p
+            :class="$style.desc"
+            v-text="desc"
+          />
+          <Grade
+            :class="$style.grade"
+            size="mini"
+            :grade="grade"
+          />
         </div>
         <div :class="$style.contentBottom">
-          <Price size="middle" :price="price" />
-          <pl-button shadow type="warning" size="middle" @click="buyNow">立即购买</pl-button>
+          <Price
+            size="middle"
+            :price="price"
+          />
+          <pl-button
+            shadow
+            type="warning"
+            size="middle"
+            @click="buyNow"
+          >
+            立即购买
+          </pl-button>
         </div>
-        <pl-svg :class="$style.share" name="share"></pl-svg>
+        <pl-svg
+          :class="$style.share"
+          name="share"
+        />
       </div>
     </div>
   </div>
@@ -23,7 +54,7 @@ import Grade from '../Grade'
 import Price from '../Price.vue'
 import { createBrokerShare } from '../../apis/product'
 export default {
-  name: 'Share-Item',
+  name: 'ShareItem',
   components: {
     Grade,
     Price

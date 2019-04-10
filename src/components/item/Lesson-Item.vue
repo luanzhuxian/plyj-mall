@@ -1,17 +1,48 @@
 <template>
-  <div :class="$style.lesson + ' ' + $style[size] + ' ' + (border ? $style.border : '')" @click="handleClick">
+  <div
+    :class="$style.lesson + ' ' + $style[size] + ' ' + (border ? $style.border : '')"
+    @click="handleClick"
+  >
     <!-- 课程组件 -->
-    <img :class="$style[size] + ' ' +  $style.img" v-lazy="img" :key="img" alt="">
+    <img
+      :class="$style[size] + ' ' + $style.img"
+      v-lazy="img"
+      :key="img"
+      alt=""
+    >
     <div :class="$style.right">
       <div>
-        <div v-text="title" :class="$style[size] + ' ' + $style.name"></div>
-        <div v-if="tags.length > 0" :class="$style.tag">
-          <span v-for="(tag, index) of tags" :key="index" v-text="tag"></span>
+        <div
+          v-text="title"
+          :class="$style[size] + ' ' + $style.name"
+        />
+        <div
+          v-if="tags.length > 0"
+          :class="$style.tag"
+        >
+          <span
+            v-for="(tag, index) of tags"
+            :key="index"
+            v-text="tag"
+          />
         </div>
-        <div v-if="desc" :class="$style.desc + ' ' + $style[size]" v-text="desc"></div>
+        <div
+          v-if="desc"
+          :class="$style.desc + ' ' + $style[size]"
+          v-text="desc"
+        />
       </div>
-      <div v-if="count" :class="$style.count">已售 <i v-text="count"></i></div>
-      <price :size="size" :price="price" :originalPrice="originalPrice" />
+      <div
+        v-if="count"
+        :class="$style.count"
+      >
+        已售 <i v-text="count" />
+      </div>
+      <price
+        :size="size"
+        :price="price"
+        :original-price="originalPrice"
+      />
     </div>
   </div>
 </template>
@@ -20,7 +51,7 @@
 import Price from '../Price.vue'
 import { createBrokerShare } from '../../apis/product'
 export default {
-  name: 'Lesson-Item',
+  name: 'LessonItem',
   components: {
     Price
   },

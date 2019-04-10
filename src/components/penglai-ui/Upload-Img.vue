@@ -1,16 +1,29 @@
 <template>
   <div class="pl-upload-img">
     <ul class="pl-img-list">
-      <li class="img" v-for="(img, i) of images" :key="i">
+      <li
+        class="img"
+        v-for="(img, i) of images"
+        :key="i"
+      >
         <img :src="img">
-        <pl-svg class="remove-btn iconfont icon-qingchu" name="close" @click="removeImg(i)"></pl-svg>
+        <pl-svg
+          class="remove-btn iconfont icon-qingchu"
+          name="close"
+          @click="removeImg(i)"
+        />
       </li>
       <li v-if="imgs.length < count || !count">
         <label class="upload-img-box">
-          <pl-svg name="camera"></pl-svg>
+          <pl-svg name="camera" />
           <span>上传凭证</span>
-          <span v-if="count > 0">（最多{{count}}张）</span>
-          <input @change="change" type="file" accept="image/*"  style="display: none;">
+          <span v-if="count > 0">（最多{{ count }}张）</span>
+          <input
+            @change="change"
+            type="file"
+            accept="image/*"
+            style="display: none;"
+          >
         </label>
       </li>
     </ul>
@@ -21,7 +34,7 @@ import compress from '../../assets/js/compress-image'
 import { Indicator } from 'mint-ui'
 import axios from 'axios'
 export default {
-  name: 'pl-upload-img',
+  name: 'PlUploadImg',
   data () {
     return {
       imgs: []

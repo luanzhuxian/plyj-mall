@@ -2,32 +2,56 @@
   <div :class="$style.withdrawDeposit">
     <div :class="$style.wrap + ' bg-white radius-20'">
       <div :class="$style.way">
-        <pl-svg name="my-wechat"></pl-svg>
+        <pl-svg name="my-wechat" />
         <div>
-          <p class="fz-30">提现通过【红包】发放</p>
+          <p class="fz-30">
+            提现通过【红包】发放
+          </p>
           <!--<p class="fz-28 gray-3">未绑定账号</p>-->
         </div>
-        <pl-svg name="right"></pl-svg>
+        <pl-svg name="right" />
       </div>
 
       <div class="mt-28">
-        <p class="fz-30 gray-2">提现金额</p>
+        <p class="fz-30 gray-2">
+          提现金额
+        </p>
         <label :class="$style.input + ' mt-28'">
-          <i class="fz-50">¥</i><input v-model.number="form.price" class="fz-50" placeholder="请输入金额" type="number">
+          <i class="fz-50">¥</i><input
+            v-model.number="form.price"
+            class="fz-50"
+            placeholder="请输入金额"
+            type="number"
+          >
         </label>
       </div>
 
       <div :class="$style.allMoney">
-        <span class="fz-26 gray-2">可提现 {{balance}}元</span>
-        <pl-button type="text" @click="withdrawAll">全部提现</pl-button>
+        <span class="fz-26 gray-2">可提现 {{ balance }}元</span>
+        <pl-button
+          type="text"
+          @click="withdrawAll"
+        >
+          全部提现
+        </pl-button>
       </div>
     </div>
-    <div class="fz-24 gray-3" style="margin-bottom: 8.5vw; line-height: 5.8vw;">
+    <div
+      class="fz-24 gray-3"
+      style="margin-bottom: 8.5vw; line-height: 5.8vw;"
+    >
       单次提现限额<i style="color: #E7B250;">200</i>元，每日限制提现申请不超过<i style="color: #E7B250;">10</i>次<br>
       你申请提现后，商户会通过微信给您发送【红包】，如果您 24小时未领取，【红包】将自动失效<br>
       请您记得领取哦！
     </div>
-    <pl-button size="huge" type="warning" :disabled="!form.price" @click="withdrawDeposit">确认提现</pl-button>
+    <pl-button
+      size="huge"
+      type="warning"
+      :disabled="!form.price"
+      @click="withdrawDeposit"
+    >
+      确认提现
+    </pl-button>
   </div>
 </template>
 
@@ -37,7 +61,7 @@ import { mapGetters } from 'vuex'
 import { USER_INFO } from '../../../store/mutation-type'
 import { isMoney } from '../../../assets/js/validate.js'
 export default {
-  name: 'Withdraw-Deposit',
+  name: 'WithdrawDeposit',
   data () {
     return {
       form: {

@@ -1,20 +1,55 @@
 <template>
   <div :class="$style.applyHelper">
-    <TopText :title="form.auditStatus ? statusTitle[form.auditStatus]: '申请Helper'" :tip="form.auditStatus ? statusTip[form.auditStatus] : '第一桶金从这里开始'" />
-    <pl-form ref="form" :model="form" :rules="rules" class="radius-20">
+    <TopText
+      :title="form.auditStatus ? statusTitle[form.auditStatus]: '申请Helper'"
+      :tip="form.auditStatus ? statusTip[form.auditStatus] : '第一桶金从这里开始'"
+    />
+    <pl-form
+      ref="form"
+      :model="form"
+      :rules="rules"
+      class="radius-20"
+    >
       <pl-form-item prop="name">
-        <pl-input :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'" placeholder="请输入您的姓名" v-model="form.name" prefix-icon="name"/>
+        <pl-input
+          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
+          placeholder="请输入您的姓名"
+          v-model="form.name"
+          prefix-icon="name"
+        />
       </pl-form-item>
       <pl-form-item prop="idCard">
-        <pl-input :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'" placeholder="请输入您的身份证号" prefix-icon="id-card" v-model="form.idCard"/>
+        <pl-input
+          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
+          placeholder="请输入您的身份证号"
+          prefix-icon="id-card"
+          v-model="form.idCard"
+        />
       </pl-form-item>
       <pl-form-item prop="mobile">
-        <pl-input :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'" placeholder="请输入您的手机号" prefix-icon="mobile" v-model="form.mobile" />
+        <pl-input
+          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
+          placeholder="请输入您的手机号"
+          prefix-icon="mobile"
+          v-model="form.mobile"
+        />
       </pl-form-item>
-      <pl-form-item prop="verificationCode" v-if="!form.auditStatus || (form.auditStatus === 'REJECT')">
-        <pl-input :disabled="form.auditStatus === 'AWAIT'" placeholder="请输入验证码" prefix-icon="code" v-model="form.verificationCode">
+      <pl-form-item
+        prop="verificationCode"
+        v-if="!form.auditStatus || (form.auditStatus === 'REJECT')"
+      >
+        <pl-input
+          :disabled="form.auditStatus === 'AWAIT'"
+          placeholder="请输入验证码"
+          prefix-icon="code"
+          v-model="form.verificationCode"
+        >
           <template v-slot:suffix>
-            <get-code :disabled="form.auditStatus === 'AWAIT'" :smstype="smstype.AGENT_USER_INFO" :mobile="form.mobile" />
+            <get-code
+              :disabled="form.auditStatus === 'AWAIT'"
+              :smstype="smstype.AGENT_USER_INFO"
+              :mobile="form.mobile"
+            />
           </template>
         </pl-input>
       </pl-form-item>
@@ -25,14 +60,16 @@
       type="warning"
       size="huge"
       :loading="loading"
-      @click="submit">
+      @click="submit"
+    >
       提交
     </pl-button>
     <pl-button
       v-else
       type="warning"
       size="huge"
-      @click="$router.replace({ name: 'Home' })">
+      @click="$router.replace({ name: 'Home' })"
+    >
       返回首页
     </pl-button>
   </div>
@@ -49,7 +86,7 @@ import { isPhone, isName, isIdCard } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
 import { USER_INFO } from '../../store/mutation-type'
 export default {
-  name: 'Apply-Helper',
+  name: 'ApplyHelper',
   components: {
     TopText
   },

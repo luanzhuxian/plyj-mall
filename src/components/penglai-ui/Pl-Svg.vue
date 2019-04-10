@@ -13,7 +13,7 @@
 import SvgIcon from 'vue-svgicon'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'pl-svg',
+  name: 'PlSvg',
   components: {
     svgicon: SvgIcon
   },
