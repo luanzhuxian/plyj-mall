@@ -1,3 +1,4 @@
+import './lib/transition.scss'
 import Button from './Button.vue'
 import Input from './Input.vue'
 import GetCode from './Get-Code.vue'

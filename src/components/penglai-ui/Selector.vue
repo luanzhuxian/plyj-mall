@@ -1,16 +1,17 @@
 <template>
   <div
     :class="{ 'pl-selector': true, ['pl-selector-' + size]: true }"
-    @click="showSelect = !showSelect"
+    @click="onOff"
   >
     <span v-text="label" />
     <pl-svg
       name="go-down"
       :class="{ 'pl-selector-open': showSelect }"
     />
-    <transition name="pl-picker-collapse">
+    <transition name="fade">
       <ul
         class="pl-selector-picker"
+        ref="picker"
         v-show="showSelect"
       >
         <li
@@ -50,6 +51,9 @@ export default {
     this.label = this.data[0].label
   },
   methods: {
+    onOff () {
+      this.showSelect = !this.showSelect
+    },
     handleChange (item) {
       this.label = item.label
       this.$emit('change', item)
@@ -86,7 +90,7 @@ export default {
     top: 110%;
     left: 0;
     width: max-content;
-    height: 200px;
+    /*height: 300px;*/
     padding: 10px 20px;
     border-radius: 10px;
     font-size: 32px;
