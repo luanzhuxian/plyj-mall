@@ -151,7 +151,7 @@ export default {
       this.bfscrolltop = document.body.scrollTop
       this.isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
     })
-    this.getLine = throttle(getLine, 200)
+    this.getLine = throttle(getLine, 1000)
   },
   methods: {
     handleInput (e) {
