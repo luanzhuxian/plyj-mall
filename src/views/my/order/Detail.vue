@@ -108,7 +108,10 @@
         />
       </div>
 
-      <div :class="$style.buttons">
+      <div
+        :class="$style.buttons"
+        v-if="orderInfoModel.orderStatus !== 'CLOSED' && orderInfoModel.orderStatus !== 'FINISHED'"
+      >
         <pl-button
           round
           plain
@@ -150,6 +153,16 @@
         >
           查看发票
         </pl-button>
+      </div>
+    </div>
+
+    <div :class="$style.remark + ' radius-20 mt-28'">
+      <div :class="$style.remarkTop">
+        <span>订单备注（选填）</span>
+        <pl-svg :class="$style.remarkIcon" name="warning"></pl-svg>
+      </div>
+      <div :class="$style.remarkContent">
+        123
       </div>
     </div>
   </div>
@@ -390,9 +403,6 @@ export default {
     > p:nth-of-type(2) {
       color: $--primary-color;
     }
-    &:before {
-      @include border-half-bottom(#e7e7e7);
-    }
   }
   .buttons {
     position: relative;
@@ -402,5 +412,33 @@ export default {
       margin-top: 24px;
       margin-left: 20px;
     }
+    &:before {
+      @include border-half-bottom(#e7e7e7);
+    }
+  }
+
+  .remark {
+    padding: 24px 28px 18px;
+    background-color: #fff;
+  }
+  .remarkTop {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    padding-bottom: 22px;
+    &:after {
+      @include border-half-bottom(#e7e7e7)
+    }
+  }
+  .remarkIcon {
+    width: 28px;
+  }
+  .remarkContent {
+    padding: 20px 0;
+    font-size: 26px;
+    color: #666;
   }
 </style>

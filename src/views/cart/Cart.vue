@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div :class="$style.product + ' radius-20 mt-28'">
+    <div :class="$style.remark + ' radius-20 mt-28'">
       <div :class="$style.orderTop">
         订单备注（选填）
       </div>
@@ -310,7 +310,7 @@ export default {
     margin-bottom: 28px;
     background-color: #fff;
   }
-  .product {
+  .product, .remark {
     padding: 24px 28px 18px;
     background-color: #fff;
   }
