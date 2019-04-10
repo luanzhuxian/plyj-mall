@@ -1,11 +1,12 @@
 <template>
   <div :class="$style.rebateList">
-    <LoadMore :requestMethods="getBrokerageList"
-              :form="form"
-              ref="loadMore"
-              @more="more"
-              @refresh="refreshHandler"
-              icon="no-content2">
+    <LoadMore
+      :requestMethods="getBrokerageList"
+      :form="form"
+      ref="loadMore"
+      @more="more"
+      @refresh="refreshHandler"
+      icon="no-content2">
       <template>
         <ul>
           <li v-for="item of formatList" :key="item.timestamp">
@@ -14,7 +15,7 @@
               <li v-for="(pro, j) of item"
                   :key="j"
                   :class="{ [$style.item]: true, partition: j < item.length }" >
-                <img v-img-error :src="pro.mediaInfoModels[0].mediaUrl" alt="">
+                <img :class="$style.listItemImg" v-img-error :src="pro.mediaInfoModels[0].mediaUrl" alt="">
                 <div :class="$style.itemRight">
                   <div :class="$style.titlePrice">
                     <p class="fz-28" v-text="pro.productName" />
@@ -22,7 +23,7 @@
                   </div>
                   <p class="gray-2 fz-24">数量：<i v-text="pro.count" /></p>
                   <div :class="$style.timeStatus">
-                    <span class="fz-22 gray-3" v-text="pro.createTime"></span>
+                    <span class="fz-22 gray-3" >{{pro.createTime}}</span>
                     <span :class="{'fz-26': true, [$style.statusActive]: pro.status === 'AWAIT' }" v-text="status[pro.status]"></span>
                   </div>
                 </div>
@@ -158,22 +159,25 @@ export default {
     display: flex;
     padding: 30px;
     background-color: #fff;
-    img {
+    .listItemImg {
       width: 82px;
       height: 82px;
+      margin-top: 4px;
       margin-right: 26px;
       object-fit: cover;
-      border-radius: 50%;
+      border-radius: $--radius2;
     }
   }
   .item-right {
     display: inline-flex;
-    width: 100%;
     flex-direction: column;
+    flex: 1;
   }
   .title-price {
     display: inline-flex;
     justify-content: space-between;
+    margin-bottom: 8px;
+    line-height: 40px;
     p {
       &:nth-of-type(1) {
         width: 350px;
@@ -184,7 +188,7 @@ export default {
   .time-status {
     display: inline-flex;
     justify-content: space-between;
-    margin-top: 18px;
+    margin-top: 14px;
     span {
       align-self: flex-end;
       &.status-active {

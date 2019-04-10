@@ -20,17 +20,16 @@
     </div>
 
     <!-- 金库 -->
-    <router-link tag="div" :to="{ name: 'Coffers' }" :class="$style.myMoney">
-      <div>
+    <div :class="$style.myMoney">
+      <router-link tag="div" :to="{ name: 'WithdrawCash' }">
         <p>可提现润笔（元）</p>
         <p v-text="balance" />
-      </div>
+      </router-link>
       <div>
         <p>今日润笔（元）</p>
         <p v-text="currentBalance" />
-        <pl-svg name="right"></pl-svg>
       </div>
-    </router-link>
+    </div>
 
     <!-- 我的订单 -->
     <div :class="$style.myOrders">
@@ -60,6 +59,7 @@
     </div>
 
     <div :class="$style.setting + ' radius-20'">
+      <pl-fields icon="coffers" :icon-gap="16" text="小金库" :route="{ name: 'Coffers' }"></pl-fields>
       <pl-fields icon="address" :icon-gap="16" text="地址管理" :route="{ name: 'Address' }"></pl-fields>
       <pl-fields icon="setting" :icon-gap="16" text="账号设置" :route="{ name: 'Setting' }"></pl-fields>
     </div>
@@ -188,7 +188,7 @@ export default {
   }
   .my-money {
     display: flex;
-    div {
+    > div {
       position: relative;
       display: inline-flex;
       flex-direction: column;
@@ -196,7 +196,7 @@ export default {
       padding: 28px;
       color: #999;
       background-color: #fff;
-      p {
+      > p {
         &:nth-of-type(1) {
           font-size: 26px;
           margin-bottom: 10px;
@@ -205,14 +205,6 @@ export default {
           font-size: 44px;
           font-weight: bold;
         }
-      }
-      svg {
-        position: absolute;
-        right: 36px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 26px;
-        fill: #ccc;
       }
     }
   }

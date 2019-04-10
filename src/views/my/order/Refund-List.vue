@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.refundList">
-    <load-more :request-methods="getOrderList" :form="form">
+    <load-more :request-methods="getOrderList" :form="form" ref="loadmore">
       <template v-slot="{ list }">
         <router-link
           v-for="item of list"
@@ -59,6 +59,12 @@ export default {
   },
   created () {
     this.form.userId = this.userId
+  },
+  mounted () {
+    this.refresh = this.$refs.loadmore.refresh
+  },
+  activated () {
+    this.refresh()
   },
   methods: {
   }
