@@ -1,11 +1,21 @@
 <template>
-  <label class="pl-input" @click="handleClick">
-    <div class="pl-input_prefix" v-if="prefixIcon">
-      <pl-svg :class="{ focus }" :name="prefixIcon"></pl-svg>
+  <label
+    :class="{ 'pl-input': true, border }"
+    @click="handleClick"
+  >
+    <div
+      class="pl-input_prefix"
+      v-if="prefixIcon"
+    >
+      <pl-svg
+        :class="{ focus }"
+        :name="prefixIcon"
+      />
     </div>
     <div
       class="pl-textarea_box"
-      v-if="type === 'textarea'">
+      v-if="type === 'textarea'"
+    >
       <textarea
         :maxlength="maxlength"
         :value="value"
@@ -16,12 +26,15 @@
         :disabled="disabled"
         :readonly="readonly"
         :rows="rows"
-        :placeholder="placeholder">
-      </textarea>
+        :placeholder="placeholder"
+      />
     </div>
-    <div v-else class="pl-input_box">
+    <div
+      v-else
+      class="pl-input_box"
+    >
       <input
-        :type="type"
+        :type="type === 'password' ? passwordType : type"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
@@ -29,16 +42,37 @@
         :value="value"
         :disabled="disabled"
         :readonly="readonly"
+        :autocomplete="autocomplete"
         :placeholder="placeholder"
         :unselectable="readonly ? 'on' : ''"
         :style="{
           textAlign: align || formAlign
         }"
       >
-      <pl-svg v-if="!disabled" v-show="value" class="pl-input_clear" name="close2" @click.stop.prevent="clear" />
+      <pl-svg
+        v-if="!disabled && type.indexOf('password') === -1"
+        v-show="value"
+        class="pl-input_clear"
+        name="close2"
+        @click="clear"
+      />
+      <pl-svg
+        v-if="type === 'password' && passwordType === 'password'"
+        v-show="value"
+        class="pl-input_clear"
+        name="hidden-key"
+        @click="passwordType = 'show-password'"
+      />
+      <pl-svg
+        v-if="type === 'password' && passwordType === 'show-password'"
+        v-show="value"
+        class="pl-input_clear"
+        name="show-key"
+        @click="passwordType = 'password'"
+      />
     </div>
     <div class="pl-input_suffix">
-      <slot name="suffix"></slot>
+      <slot name="suffix" />
     </div>
   </label>
 </template>
@@ -53,7 +87,7 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: 'text'
+      default: ''
     },
     type: {
       type: String,
@@ -61,15 +95,19 @@ export default {
     },
     prefixIcon: {
       type: String,
-      default: 'text'
+      default: ''
+    },
+    autocomplete: {
+      type: String,
+      default: ''
     },
     value: {
       type: [String, Number],
       default: ''
     },
     maxlength: {
-      type: [String, Number],
-      default: 2000
+      type: Number,
+      default: 10
     },
     minRows: {
       type: Number,
@@ -77,14 +115,15 @@ export default {
     },
     maxRows: {
       type: Number,
-      default: 10
+      default: 2000
     },
     align: {
       type: String,
       default: 'left'
     },
     disabled: Boolean,
-    readonly: Boolean
+    readonly: Boolean,
+    border: Boolean
   },
   data () {
     return {
@@ -94,6 +133,7 @@ export default {
       rule: null,
       prop: '',
       error: false,
+      passwordType: 'password',
       bfscrolltop: 0,
       isIOS: false
     }
@@ -136,7 +176,7 @@ export default {
       }
     },
     handleBlur (e) {
-      if (this.isIOS) document.body.scrollTop = this.bfscrolltop
+      document.body.scrollTop = this.bfscrolltop
       this.$emit('blur', e)
       this.focus = false
       this.trigger('blur', e.target.value)
@@ -169,11 +209,19 @@ export default {
 <style lang="scss">
   .pl-input {
     position: relative;
-    display: flex;
+    display: inline-flex;
     flex: 1;
     height: 100%;
     align-items: center;
     background-color: #fff;
+    box-sizing: border-box;
+    &.border {
+      padding: 0 24px;
+      height: 100%;
+      &:after {
+        @include border-half(#e7e7e7, 32px)
+      }
+    }
     .pl-input_box {
       position: relative;
       flex: 1;
@@ -182,18 +230,12 @@ export default {
       input {
         display: block;
         width: 100%;
-        padding-right: 28px;
-        font-size: 30px;
+        font-size: 32px;
         color: #333;
         box-sizing: border-box;
+        background-color: transparent !important;
         &::-webkit-input-placeholder {
-          color: #ccc;
-        }
-        &[type=search]::-webkit-search-cancel-button{
-          -webkit-appearance: none;// 去掉默认的小×
-        }
-        &::-webkit-input-placeholder {
-          font-size: 26px;
+          font-size: 28px;
           color: #ccc;
         }
         &:disabled {
@@ -209,14 +251,15 @@ export default {
       }
       .pl-input_clear {
         width: 40px;
-        padding-right: 40px;
+        padding-right: 20px;
         fill: #ccc;
-      }
-      textarea {
+        path {
+          fill: #ccc;
+        }
       }
     }
     .pl-input_prefix {
-      padding: 0 28px 0 40px;
+      margin-right: 27px;
       svg {
         width: 36px;
         height: 36px;
@@ -235,15 +278,14 @@ export default {
   }
   .pl-textarea_box {
     width: 100%;
-    padding: 20px 28px;
     textarea {
       box-sizing: border-box;
       width: 100%;
       min-height: 100px;
-      line-height: 37px;
+      line-height: 50px;
+      font-size: 32px;
       border: none;
       outline: none;
-      font-size: 28px;
       resize: none;
     }
   }
