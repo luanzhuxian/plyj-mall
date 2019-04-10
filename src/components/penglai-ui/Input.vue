@@ -235,10 +235,10 @@ export default {
       }
     }
     &.pl-input-small {
-      height: 92px;
+      min-height: 92px;
     }
     &.pl-input-middle {
-      height: 110px;
+      min-height: 110px;
     }
     .pl-input_box {
       position: relative;
