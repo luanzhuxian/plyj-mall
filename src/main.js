@@ -49,6 +49,7 @@ new Vue({
 
 router.beforeResolve(beforeEach)
 router.onError(onError)
+/* 处理所有组件抛出的错误 */
 Vue.config.errorHandler = async function (err, vm, info) {
   let message = err.message
   let error

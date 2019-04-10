@@ -12,7 +12,8 @@
 
     <div :class="$style.receivingInfo">
       <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-        <express-item v-if="orderExpressInfoModel"
+        <express-item
+          v-if="orderExpressInfoModel"
           :express-name="orderExpressInfoModel.courierCompany"
           :express-number="orderExpressInfoModel.courierNo"
         />
@@ -35,7 +36,6 @@
           :option="item.orderProductRelationModel.optionName"
           :price="item.orderProductRelationModel.productPrice"
           route-name="Lesson"
-          border
           :product-seq="item.orderProductRelationModel.productSeq"
         />
 
@@ -300,8 +300,12 @@ export default {
   .explain {
     width: 100%;
     position: relative;
-    margin-top: 16px;
+    margin-top: 32px;
     margin-left: 28px;
+    padding-top: 20px;
+    &:after {
+      @include border-half-top(#e7e7e7)
+    }
   }
   .explain-box {
     margin-top: 16px;

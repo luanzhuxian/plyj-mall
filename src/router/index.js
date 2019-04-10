@@ -7,6 +7,7 @@ import yaji from './yaji'
 import detail from './detail'
 import order from './order'
 import setting from './setting'
+import Cart from './cart'
 import NotFound from '../views/404.vue'
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
@@ -35,7 +36,7 @@ export const routes = [
 export const router = new Router({
   mode: 'history',
   base: window.location.pathname.split('/')[1] || '',
-  routes: [...routes, ...home, ...my, ...classify, ...yaji, ...detail, ...order, ...setting],
+  routes: [...routes, ...home, ...my, ...classify, ...yaji, ...detail, ...order, ...setting, ...Cart],
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }
   }
