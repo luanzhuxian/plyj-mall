@@ -1,7 +1,5 @@
 <template>
-  <div
-    :class="{'pl-form-item': true, border}"
-  >
+  <div :class="{'pl-form-item': true, border}">
     <label
       ref="label"
       class="pl-form-item_label"
@@ -92,7 +90,7 @@ export default {
       flex: 1;
       display: flex;
       align-items: center;
-      height: 110px;
+      height: auto;
     }
   }
 </style>

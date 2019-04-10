@@ -1,6 +1,6 @@
 <template>
   <label
-    :class="{ 'pl-input': true, border }"
+    :class="{ 'pl-input': true, border, ['pl-input-' + size]: true }"
     @click="handleClick"
   >
     <div
@@ -90,6 +90,10 @@ export default {
       type: String,
       default: ''
     },
+    size: {
+      type: String,
+      default: 'small'
+    },
     type: {
       type: String,
       default: 'text'
@@ -137,19 +141,21 @@ export default {
       passwordType: 'password',
       bfscrolltop: 0,
       isIOS: false,
-      getLine: null
+      getLine: null,
+      $form: null,
+      $formItem: null
     }
-  },
-  created () {
-    this.rows = this.minRows || 0
-    this.setAlign()
-    this.rule = this.$parent.rule
-    this.prop = this.$parent.prop
   },
   mounted () {
     this.$nextTick(() => {
+      this.rows = this.minRows || 0
       this.bfscrolltop = document.body.scrollTop
+      this.$form = this.$parent.$parent
+      this.$formItem = this.$parent
+      this.rule = this.$formItem.rule
+      this.prop = this.$formItem.prop
       this.isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      this.setAlign()
     })
     this.getLine = throttle(getLine, 1000)
   },
@@ -195,13 +201,13 @@ export default {
       this.$emit('clear')
     },
     setAlign () {
-      this.formAlign = this.align || this.$parent.align || this.$parent.$parent.align
+      this.formAlign = this.align || this.$formItem.align || this.$form.align
     },
     trigger (event) {
       if (this.rule) {
         let validateRules = this.rule.filter(item => item.trigger === event)
         if (validateRules.length > 0) {
-          this.$parent.$parent.validateByFields(this.prop)
+          this.error = !this.$form.validateByFields(this.prop)
         }
       }
     },
@@ -227,6 +233,12 @@ export default {
       &:after {
         @include border-half(#e7e7e7, 32px)
       }
+    }
+    &.pl-input-small {
+      height: 92px;
+    }
+    &.pl-input-middle {
+      height: 110px;
     }
     .pl-input_box {
       position: relative;

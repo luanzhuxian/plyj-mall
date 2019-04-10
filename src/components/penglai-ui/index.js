@@ -11,8 +11,8 @@ import UploadImg from './Upload-Img.vue'
 import Fields from './Fields.vue'
 import Switch from './Switch.vue'
 import PlSvg from './Pl-Svg.vue'
-import MessageBox from './message-box/index'
-
+import MessageBox from './message-box'
+import Selector from './Selector.vue'
 const components = [
   Button,
   Input,
@@ -26,7 +26,8 @@ const components = [
   Fields,
   PlSvg,
   Switch,
-  MessageBox
+  MessageBox,
+  Selector
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {
@@ -61,5 +62,6 @@ export default {
   Fields,
   PlSvg,
   Switch,
-  MessageBox
+  MessageBox,
+  Selector
 }
