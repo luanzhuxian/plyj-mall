@@ -1,6 +1,9 @@
 <template>
-  <div :class="{'pl-form-item': true, border}">
-    <label
+  <label :class="{'pl-form-item': true, border}">
+    <div class="pl-form-item_prefix">
+      <slot name="prefix" />
+    </div>
+    <span
       ref="label"
       class="pl-form-item_label"
       v-text="label"
@@ -11,7 +14,10 @@
     >
       <slot />
     </div>
-  </div>
+    <div class="pl-form-item_suffix">
+      <slot name="suffix" />
+    </div>
+  </label>
 </template>
 
 <script>

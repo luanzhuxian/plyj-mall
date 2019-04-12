@@ -1,10 +1,10 @@
 <template>
-  <label
+  <div
     :class="{ 'pl-input': true, border, ['pl-input-' + size]: true }"
     @click="handleClick"
   >
     <div
-      class="pl-input_prefix"
+      class="pl-input_prefixicon"
       v-if="prefixIcon"
     >
       <pl-svg
@@ -71,10 +71,16 @@
         @click="passwordType = 'password'"
       />
     </div>
-    <div class="pl-input_suffix">
-      <slot name="suffix" />
+    <div
+      class="pl-input_suffixicon"
+      v-if="suffixIcon"
+    >
+      <pl-svg
+        :class="{ focus }"
+        :name="suffixIcon"
+      />
     </div>
-  </label>
+  </div>
 </template>
 
 <script>
@@ -99,6 +105,10 @@ export default {
       default: 'text'
     },
     prefixIcon: {
+      type: String,
+      default: ''
+    },
+    suffixIcon: {
       type: String,
       default: ''
     },
@@ -276,7 +286,7 @@ export default {
         }
       }
     }
-    .pl-input_prefix {
+    .pl-input_prefixicon, .pl-input_suffixicon {
       margin-right: 27px;
       svg {
         width: 36px;
@@ -291,7 +301,9 @@ export default {
         }
       }
     }
-    .pl-input_suffix {
+    .pl-input_suffixicon {
+      margin-left: 27px;
+      margin-right: 0;
     }
   }
   .pl-textarea_box {

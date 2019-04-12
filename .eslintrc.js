@@ -8,16 +8,8 @@ module.exports = {
   },
 
   env: {
-    browser: true,
+    browser: true
   },
-
-  extends: [
-    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
-    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-    'plugin:vue/essential', 
-    // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-    'standard'
-  ],
 
   // required to lint *.vue files
   plugins: [
@@ -29,7 +21,14 @@ module.exports = {
     'generator-star-spacing': 'off',
     'no-debugger': 'off',
     'no-underscore-dangle': 0,
-    camelcase: 0
+    camelcase: 0,
+    "vue/max-attributes-per-line": [2, {
+      "singleline": 2,
+      "multiline": {
+        "max": 2,
+        "allowFirstLine": false
+      }
+    }]
   },
 
   'extends': [
