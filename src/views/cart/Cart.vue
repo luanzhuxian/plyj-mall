@@ -117,7 +117,7 @@ export default {
         agencyCode: '',
         addressSeq: '',
         mallSeq: '',
-        remark: '',
+        // remark: '',
         share: '', // 根据此商品是不是经纪人分享的,来判断是否需要传此参数
         amount: '', // 总价
         products: [
