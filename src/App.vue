@@ -31,6 +31,13 @@ export default {
         'Yaji',
         'Classify',
         'WhatsHelper'
+      ],
+      // 允许分享和复制链接的页面
+      shareRoutes: [
+        'Home',
+        'Classify',
+        'Yaji',
+        'My'
       ]
     }
   },
@@ -38,13 +45,17 @@ export default {
     $route (route) {
       if (!/^\/detail/.test(route.path)) {
         // 如果不是商品详情页面，采用其他分享策略
+        let willHide = []
+        if (this.shareRoutes.indexOf(route.name) === -1) {
+          willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
+        }
         share({
           appId: this.appId,
           title: `${this.mallName}-${route.meta.title}`,
           desc: this.mallDesc,
           link: window.location.href,
           imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
-        })
+        }, willHide)
       }
     }
   },

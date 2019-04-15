@@ -9,6 +9,7 @@
     <swiper
       :options="swiper"
       :class="$style.banner"
+      v-if="banner.length > 0"
     >
       <swiper-slide
         v-for="(item, index) of banner"

@@ -213,7 +213,7 @@ export default {
     span {
       align-self: flex-end;
       &.status-active {
-        color: var(--primary-color);
+        color: $--primary-color;
       }
     }
   }

@@ -65,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'mallId', 'userName'])
+    ...mapGetters(['agencyCode', 'mallId', 'userName', 'agentUser'])
   },
   created () {
     this.form.agencyCode = this.agencyCode
@@ -74,6 +74,13 @@ export default {
     this.$refs.loadMore.refresh()
   },
   methods: {
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.agentUser) {
+        vm.$router.push({ name: 'My' })
+      }
+    })
   }
 }
 </script>
