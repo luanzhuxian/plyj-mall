@@ -184,7 +184,6 @@
     <you-like v-if="showLike" />
   </div>
 </template>
-
 <script>
 import TopText from '../../components/Top-Text.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'

@@ -8,9 +8,12 @@
       ref="form"
       :model="form"
       :rules="rules"
-      class="radius-20"
+      :class="$style.form + ' radius-20'"
     >
-      <pl-form-item prop="name">
+      <pl-form-item
+        prop="name"
+        border
+      >
         <pl-input
           :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
           placeholder="请输入您的姓名"
@@ -18,7 +21,10 @@
           prefix-icon="name"
         />
       </pl-form-item>
-      <pl-form-item prop="idCard">
+      <pl-form-item
+        prop="idCard"
+        border
+      >
         <pl-input
           :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
           placeholder="请输入您的身份证号"
@@ -26,7 +32,10 @@
           v-model="form.idCard"
         />
       </pl-form-item>
-      <pl-form-item prop="mobile">
+      <pl-form-item
+        prop="mobile"
+        border
+      >
         <pl-input
           :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
           placeholder="请输入您的手机号"
@@ -43,15 +52,14 @@
           placeholder="请输入验证码"
           prefix-icon="code"
           v-model="form.verificationCode"
-        >
-          <template v-slot:suffix>
-            <get-code
-              :disabled="form.auditStatus === 'AWAIT'"
-              :smstype="smstype.AGENT_USER_INFO"
-              :mobile="form.mobile"
-            />
-          </template>
-        </pl-input>
+        />
+        <template v-slot:suffix>
+          <get-code
+            :disabled="form.auditStatus === 'AWAIT'"
+            :smstype="smstype.AGENT_USER_INFO"
+            :mobile="form.mobile"
+          />
+        </template>
       </pl-form-item>
     </pl-form>
     <pl-button
@@ -123,11 +131,12 @@ export default {
           { validator: isPhone, message: '手机号格式有误', trigger: 'blur' }
         ],
         verificationCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
-      }
+      },
+      agentUser: false
     }
   },
   computed: {
-    ...mapGetters(['userId', 'smstype', 'agencyCode', 'agentUser', 'isAdmin'])
+    ...mapGetters(['userId', 'smstype', 'agencyCode', 'isAdmin'])
   },
   activated () {
     this.getHelperInfo()
@@ -161,11 +170,12 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if (vm.agentUser || vm.isAdmin) {
-        vm.$router.replace({ name: 'My' })
-      }
-    })
+    next()
+    // next(vm => {
+    //   if (vm.agentUser || vm.isAdmin) {
+    //     vm.$router.replace({ name: 'My' })
+    //   }
+    // })
   }
 }
 </script>
@@ -190,5 +200,9 @@ export default {
         color: $--primary-color;
       }
     }
+  }
+  .form {
+    padding: 20px;
+    background-color: #fff;
   }
 </style>

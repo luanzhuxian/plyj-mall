@@ -21,16 +21,8 @@ module.exports = {
     'generator-star-spacing': 'off',
     'no-debugger': 'off',
     'no-underscore-dangle': 0,
-    camelcase: 0,
-    "vue/max-attributes-per-line": [2, {
-      "singleline": 2,
-      "multiline": {
-        "max": 2,
-        "allowFirstLine": false
-      }
-    }]
+    camelcase: 0
   },
-
   'extends': [
     'plugin:vue/strongly-recommended',
     'standard'
