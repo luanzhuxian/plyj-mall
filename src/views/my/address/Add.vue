@@ -19,6 +19,7 @@
         <pl-input
           placeholder="收货人"
           v-model="form.realName"
+          size="middle"
         />
       </pl-form-item>
       <pl-form-item
@@ -28,6 +29,7 @@
         <pl-input
           placeholder="手机号"
           v-model="form.mobile"
+          size="middle"
         />
       </pl-form-item>
       <!--<pl-form-item border>-->
@@ -43,12 +45,14 @@
           v-model="form.addressPrefix"
           @click="showCitySelector = true"
           @clear="addrClear"
+          size="middle"
         />
       </pl-form-item>
       <pl-form-item prop="agencyAddress">
         <pl-input
           placeholder="详细地址：如道路、门牌号、小区等"
           v-model="form.agencyAddress"
+          size="middle"
         />
       </pl-form-item>
     </pl-form>

@@ -9,6 +9,7 @@
       :model="form"
       :rules="rules"
       :class="$style.form + ' radius-20'"
+      :label-width="44"
     >
       <pl-form-item
         prop="name"
@@ -19,6 +20,7 @@
           placeholder="请输入您的姓名"
           v-model="form.name"
           prefix-icon="name"
+          size="middle"
         />
       </pl-form-item>
       <pl-form-item
@@ -30,6 +32,7 @@
           placeholder="请输入您的身份证号"
           prefix-icon="id-card"
           v-model="form.idCard"
+          size="middle"
         />
       </pl-form-item>
       <pl-form-item
@@ -41,6 +44,7 @@
           placeholder="请输入您的手机号"
           prefix-icon="mobile"
           v-model="form.mobile"
+          size="middle"
         />
       </pl-form-item>
       <pl-form-item
@@ -52,6 +56,7 @@
           placeholder="请输入验证码"
           prefix-icon="code"
           v-model="form.verificationCode"
+          size="middle"
         />
         <template v-slot:suffix>
           <get-code
@@ -202,7 +207,6 @@ export default {
     }
   }
   .form {
-    padding: 20px;
     background-color: #fff;
   }
 </style>
