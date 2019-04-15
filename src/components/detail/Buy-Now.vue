@@ -1,7 +1,14 @@
 <template>
   <div :class="$style.buyNow">
     <div :class="$style.phone">
-      <a :href="'tel:' + supportPhone"><pl-svg name="phone" /></a>
+      <a
+        :class="$style.link"
+        :href="'tel:' + supportPhone"
+      ><pl-svg name="phone" /></a>
+      <a
+        :class="$style.link"
+        :href="'tel:' + supportPhone"
+      ><pl-svg name="home" /></a>
     </div>
     <pl-button
       :type="type"
@@ -20,9 +27,18 @@ import { getPenglaiAppid } from '../../apis/base-api'
 export default {
   name: 'BuyNow',
   props: {
-    text: String,
-    type: String,
-    phone: String,
+    text: {
+      type: String,
+      default: ''
+    },
+    type: {
+      type: String,
+      default: ''
+    },
+    phone: {
+      type: String,
+      default: ''
+    },
     detail: {
       type: Object,
       default: function () {
@@ -74,8 +90,24 @@ export default {
       margin-right: 40px;
     }
     .phone {
-      width: 150px;
+      display: flex;
+      justify-content: space-around;
+      width: 258px;
       text-align: center;
+      > .link {
+        position: relative;
+        flex: 1;
+        &:nth-of-type(1):after {
+          position: absolute;
+          content: '';
+          top: 50%;
+          right: 0;
+          width: 1px;
+          height: 50%;
+          transform: translateY(-50%);
+          background-color: #e7e7e7;
+        }
+      }
       svg {
         width: 40px;
         color: #666;
