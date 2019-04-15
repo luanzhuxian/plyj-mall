@@ -103,9 +103,9 @@ export default {
       tabs: [
         { name: '全部', id: '' },
         { name: '待审核', id: 'AWAIT' },
-        { name: '待领取', id: 'dalinqu' },
-        { name: '领取成功', id: 'success' },
-        { name: '领取失败', id: 'failed' }
+        { name: '待领取', id: 'PASS' },
+        { name: '领取成功', id: 'RECEIVED' },
+        { name: '领取失败', id: 'FAIL' }
       ],
       form: {
         agencyCode: '',
