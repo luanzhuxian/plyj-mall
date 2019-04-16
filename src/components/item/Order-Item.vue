@@ -47,13 +47,34 @@ export default {
   },
   props: {
     border: Boolean,
-    img: String,
-    name: String,
-    option: String,
-    price: [String, Number],
-    count: [String, Number],
-    productSeq: String,
-    routeName: String
+    img: {
+      type: String,
+      default: ''
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    option: {
+      type: String,
+      default: ''
+    },
+    price: {
+      type: [String, Number],
+      default: 0
+    },
+    count: {
+      type: [String, Number],
+      default: 0
+    },
+    productSeq: {
+      type: String,
+      default: ''
+    },
+    routeName: {
+      type: String,
+      default: ''
+    }
   },
   watch: {
     productSeq (val) {

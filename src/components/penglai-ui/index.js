@@ -13,7 +13,7 @@ import Switch from './Switch.vue'
 import PlSvg from './Pl-Svg.vue'
 import MessageBox from './message-box'
 import Selector from './Selector.vue'
-import Toast from './toast'
+import { Toast } from './toast'
 const components = [
   Button,
   Input,

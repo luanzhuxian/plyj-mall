@@ -66,21 +66,25 @@ export default {
     ...mapGetters(['mallSeq', 'userId', 'openId', 'token', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
   },
   async created () {
-    await this.getMallInfo()
-    /* token 存在并且还未过期 */
-    if (this.token) {
-      await this.getUserInfo()
-    } else {
-      await this.login()
+    try {
+      await this.getMallInfo()
+      /* token 存在并且还未过期 */
+      if (this.token) {
+        await this.getUserInfo()
+      } else {
+        await this.login()
+      }
+      this.logined = true
+      share({
+        appId: this.appId,
+        title: `${this.mallName}-${this.$route.meta.title}`,
+        desc: this.mallDesc,
+        link: window.location.href,
+        imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
+      })
+    } catch (e) {
+      throw e
     }
-    this.logined = true
-    share({
-      appId: this.appId,
-      title: `${this.mallName}-${this.$route.meta.title}`,
-      desc: this.mallDesc,
-      link: window.location.href,
-      imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
-    })
   },
   methods: {
     ...mapMutations({

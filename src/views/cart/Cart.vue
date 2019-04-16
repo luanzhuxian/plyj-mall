@@ -58,7 +58,7 @@
         <span class="fz-20 gray-2">实际支付</span>
         <span
           class="rmb fz-32"
-          v-text="totalMoney"
+          v-text="totalMoney || 0"
         />
       </div>
       <pl-button
@@ -234,7 +234,7 @@ export default {
         }
         this.loading = true
         let { result } = await this.typeMap[this.productType](this.form)
-        this.pay(result.CREDENTIAL)
+        await this.pay(result.CREDENTIAL)
       } catch (e) {
         this.loading = false
         throw e
@@ -270,7 +270,7 @@ export default {
         this.loading = true
         let { result } = await getOpenIdByCode(code)
         let payData = await this.typeMap[this.productType](this.form, result)
-        this.pay(payData.result.CREDENTIAL, payData.result.orderModel.orderSn)
+        await this.pay(payData.result.CREDENTIAL, payData.result.orderModel.orderSn)
         delete this.form.sixEnergyNewOrderReturnModel
         delete this.form.orderSn
         delete this.form.billNo
@@ -289,32 +289,31 @@ export default {
         PHYSICAL_GOODS: { name: 'Orders', params: { status: 'WAIT_SHIP' } },
         VIRTUAL_GOODS: { name: 'Orders', params: { status: 'WAIT_RECEIVE' } }
       }
-      try {
-        await wechatPay(CREDENTIAL)
-        this.loading = false
-        // 供应商商品支付完成后直接跳转至待收货
-        if (this.supplierProduct) {
-          this.$router.replace(payDone.VIRTUAL_GOODS)
-        } else {
-          // 跳转至待发货或待收货，这取决于商品类型
-          this.$router.replace(payDone[this.productType])
-        }
-      } catch (e) {
-        this.loading = false
-        // 支付失败时，如果是供应商商品，则取消订单，并跳回商品详情
-        if (this.supplierProduct) {
-          try {
-            await this.typeMapOfCancel[this.productType](orderSn)
-            return this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
-          } catch (e) {
-            throw e
+      return new Promise(async (resolve, reject) => {
+        try {
+          await wechatPay(CREDENTIAL)
+          this.loading = false
+          if (this.supplierProduct) { // 供应商商品支付完成后直接跳转至待收货
+            this.$router.replace(payDone.VIRTUAL_GOODS)
+          } else {
+            this.$router.replace(payDone[this.productType]) // 跳转至待发货或待收货，这取决于商品类型
           }
+          resolve()
+        } catch (e) {
+          this.loading = false
+          if (this.supplierProduct) { // 支付失败时，如果是供应商商品，则取消订单，并跳回商品详情
+            try {
+              await this.typeMapOfCancel[this.productType](orderSn)
+              this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
+            } catch (e) {
+              reject(e)
+            }
+          } else { // 待付款
+            this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+          }
+          reject(e)
         }
-        // 待付款
-        this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
-        console.log(e)
-        throw e
-      }
+      })
     }
   }
 }

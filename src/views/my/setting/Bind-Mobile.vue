@@ -8,6 +8,7 @@
       v-if="step === 1"
       class="mt-28 radius-20"
       style="overflow: hidden;"
+      label-width="40px"
     >
       <pl-form-item border>
         <pl-input
@@ -24,14 +25,13 @@
           prefix-icon="code"
           v-model="bindForm.verifyCode"
           placeholder="请输入验证码"
-        >
-          <template v-slot:suffix>
-            <get-code
-              :mobile="bindForm.mobile"
-              :smstype="smstype.PUBLIC_USER_INFO"
-            />
-          </template>
-        </pl-input>
+        />
+        <template v-slot:suffix>
+          <get-code
+            :mobile="bindForm.mobile"
+            :smstype="smstype.PUBLIC_USER_INFO"
+          />
+        </template>
       </pl-form-item>
     </pl-form>
 

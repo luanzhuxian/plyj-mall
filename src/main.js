@@ -11,6 +11,7 @@ import imgError from './assets/images/img_error.png'
 import directive from './directive'
 import { beforeEach, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
+import { Toast } from './components/penglai-ui/toast'
 import animated from 'animate.css'
 import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
@@ -65,7 +66,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
       message: err.message
     }
   }
-  vm.$toast(error.message)
+  Toast(error.message)
   console.error(error)
   // try {
   //   await saveLog(error)

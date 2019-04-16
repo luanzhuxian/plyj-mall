@@ -12,7 +12,6 @@ export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, p
             signType: 'MD5', // 微信签名方式:
             paySign: paySign // 微信签名
           }, function (res) {
-            console.warn(res)
             if (res.err_msg.indexOf('ok') > -1) {
               // 支付成功, 由于后端要等待微信服务器的成功回调，导致后端成功回调晚于前端，所以前端延迟执行
               setTimeout(() => {
