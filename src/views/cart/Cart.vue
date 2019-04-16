@@ -234,7 +234,7 @@ export default {
         }
         this.loading = true
         let { result } = await this.typeMap[this.productType](this.form)
-        await this.pay(result.CREDENTIAL)
+        await this.pay(result.CREDENTIAL, result.orderModel.orderSn)
       } catch (e) {
         this.loading = false
         throw e
@@ -284,20 +284,11 @@ export default {
     },
     async pay (CREDENTIAL, orderSn) {
       CREDENTIAL.packageValue = CREDENTIAL.package
-      // 支付完成后的去向
-      let payDone = {
-        PHYSICAL_GOODS: { name: 'Orders', params: { status: 'WAIT_SHIP' } },
-        VIRTUAL_GOODS: { name: 'Orders', params: { status: 'WAIT_RECEIVE' } }
-      }
       return new Promise(async (resolve, reject) => {
         try {
           await wechatPay(CREDENTIAL)
           this.loading = false
-          if (this.supplierProduct) { // 供应商商品支付完成后直接跳转至待收货
-            this.$router.replace(payDone.VIRTUAL_GOODS)
-          } else {
-            this.$router.replace(payDone[this.productType]) // 跳转至待发货或待收货，这取决于商品类型
-          }
+          this.$router.replace({ name: 'PaySuccess', params: { orderId: orderSn } })
           resolve()
         } catch (e) {
           this.loading = false
