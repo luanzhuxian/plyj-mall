@@ -57,6 +57,7 @@
                   v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'"
                   type="warning"
                   round
+                  :loading="payloading"
                   @click="pay(item.orderInfoModel.orderSn, item.orderInfoModel.orderType)"
                 >
                   去支付
@@ -108,6 +109,7 @@ export default {
   },
   data () {
     return {
+      payloading: false,
       tabs: [
         {
           name: '全部',
@@ -181,6 +183,7 @@ export default {
       })
     },
     async pay (id, orderType) {
+      this.payloading = true
       try {
         const { result } = await getAwaitPayInfo(id)
         // 调用微信支付api
@@ -192,6 +195,8 @@ export default {
         }
       } catch (e) {
         throw e
+      } finally {
+        this.payloading = false
       }
     },
     // 确定收货
