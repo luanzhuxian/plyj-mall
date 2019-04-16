@@ -5,10 +5,12 @@
         :class="$style.link"
         :href="'tel:' + supportPhone"
       ><pl-svg name="phone" /></a>
-      <a
+      <router-link
         :class="$style.link"
-        :href="'tel:' + supportPhone"
-      ><pl-svg name="home" /></a>
+        :to="{ name: 'Home' }"
+      >
+        <pl-svg name="home" />
+      </router-link>
     </div>
     <pl-button
       :type="type"

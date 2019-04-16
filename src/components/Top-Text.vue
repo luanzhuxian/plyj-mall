@@ -22,14 +22,21 @@
 export default {
   name: 'TopText',
   props: {
-    title: String,
-    tip: String
+    title: {
+      type: String,
+      default: ''
+    },
+    tip: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>
 
 <style module lang="scss">
   .top-text {
+    min-height: 104px;
     .left {
       h2 {
         font-size: 40px;

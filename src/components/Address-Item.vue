@@ -43,7 +43,12 @@ export default {
     }
   },
   props: {
-    address: Object
+    address: {
+      type: Object,
+      default: function () {
+        return null
+      }
+    }
   },
   methods: {
     addressList () {
@@ -76,6 +81,7 @@ export default {
     padding: 28px 28px 28px 0;
     background-color: #fff;
     border-radius: 20px;
+    min-height: 100px;
     svg {
       width: 64px;
       height: 64px;

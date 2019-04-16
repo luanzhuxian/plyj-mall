@@ -14,7 +14,6 @@ import PenglaiUI from './components/penglai-ui'
 import animated from 'animate.css'
 import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
-import Toast from './components/penglai-ui/toast'
 import AlloyFinger from 'alloyfinger'
 import AlloyFingerVue from 'alloyfinger/vue/alloy_finger_vue'
 import filters from './filter'
@@ -66,7 +65,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
       message: err.message
     }
   }
-  Toast(error.message)
+  vm.$toast(error.message)
   console.error(error)
   // try {
   //   await saveLog(error)

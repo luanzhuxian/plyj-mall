@@ -59,16 +59,16 @@
           route-name="Lesson"
           :product-seq="item.orderProductRelationModel.productSeq"
         />
-
-        <pl-button
-          v-if="canIApplyService && !supplierOrder"
-          plain
-          round
-          @click="$router.push({ name: 'RefundApply', params: { orderId } })"
-        >
-          申请售后
-        </pl-button>
-
+        <div :class="$style.buttons">
+          <pl-button
+            v-if="canIApplyService && !supplierOrder"
+            plain
+            round
+            @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+          >
+            申请售后
+          </pl-button>
+        </div>
         <div
           :class="$style.explain"
           v-if="item.productModel.productType === 'VIRTUAL_GOODS'"
@@ -158,12 +158,16 @@
 
     <div :class="$style.remark + ' radius-20 mt-28'">
       <div :class="$style.remarkTop">
-        <span>订单备注（选填）</span>
-        <pl-svg :class="$style.remarkIcon" name="warning"></pl-svg>
+        <span>订单备注</span>
+        <pl-svg
+          :class="$style.remarkIcon"
+          name="warning"
+        />
       </div>
-      <div :class="$style.remarkContent">
-        123
-      </div>
+      <div
+        :class="$style.remarkContent"
+        v-text="orderDetailModel.orderPostscript"
+      />
     </div>
   </div>
 </template>
@@ -224,7 +228,12 @@ export default {
       timer: 0
     }
   },
-  props: ['orderId'],
+  props: {
+    orderId: {
+      type: String,
+      default: ''
+    }
+  },
   computed: {
     ...mapGetters(['orderStatusMap']),
     // 是否可以申请售后
@@ -406,14 +415,11 @@ export default {
   }
   .buttons {
     position: relative;
-    padding: 0 28px 0 28px;
+    padding: 0 28px;
     text-align: right;
     > button {
       margin-top: 24px;
       margin-left: 20px;
-    }
-    &:before {
-      @include border-half-bottom(#e7e7e7);
     }
   }
 

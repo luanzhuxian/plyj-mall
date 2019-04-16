@@ -46,7 +46,7 @@
       </div>
       <div style="background-color: #F3F3F3;">
         <pl-input
-          v-model="form.remark"
+          v-model="form.orderPostscript"
           placeholder="选填，请填写订单备注信息，并与商家协商一致"
           type="textarea"
         />
@@ -117,7 +117,6 @@ export default {
         agencyCode: '',
         addressSeq: '',
         mallSeq: '',
-        // remark: '',
         share: '', // 根据此商品是不是经纪人分享的,来判断是否需要传此参数
         amount: '', // 总价
         products: [
@@ -129,13 +128,31 @@ export default {
         ],
         source: 'PUBLIC',
         orderType: '',
-        supplierOrder: false
+        supplierOrder: false,
+        orderPostscript: '' // 备注
       },
       supplierProduct: false,
       sixEnergyNewOrderReturnModel: null
     }
   },
-  props: ['productSeq', 'count', 'optionCode', 'brokerId'],
+  props: {
+    productSeq: {
+      type: String,
+      default: ''
+    },
+    count: {
+      type: [Number, String],
+      default: 1
+    },
+    optionCode: {
+      type: String,
+      default: ''
+    },
+    brokerId: {
+      type: String,
+      default: ''
+    }
+  },
   computed: {
     ...mapGetters(['agencyCode', 'mallSeq', 'selectedAddress', 'openId', 'mobile'])
   },
@@ -295,6 +312,7 @@ export default {
         }
         // 待付款
         this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+        console.log(e)
         throw e
       }
     }

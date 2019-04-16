@@ -3,7 +3,6 @@ import Button from './Button.vue'
 import Input from './Input.vue'
 import GetCode from './Get-Code.vue'
 import Tab from './Tab.vue'
-import Toast from './toast'
 import Form from './Form'
 import FormItem from './Form-Item'
 import Radio from './Radio.vue'
@@ -14,6 +13,7 @@ import Switch from './Switch.vue'
 import PlSvg from './Pl-Svg.vue'
 import MessageBox from './message-box'
 import Selector from './Selector.vue'
+import Toast from './toast'
 const components = [
   Button,
   Input,

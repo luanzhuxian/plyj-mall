@@ -16,6 +16,7 @@ ToastConstructor.prototype.close = function () {
 * duration: 显示的时长
 * */
 let Toast = (options = {}) => {
+  console.log(123)
   // let instance = getInstance()
   clearTimeout(instance.timer)
   let duration = options.duration || 3000
