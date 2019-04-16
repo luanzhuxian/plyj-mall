@@ -29,6 +29,7 @@
             :option="item.orderProductRelationModel.optionName"
             :price="item.orderProductRelationModel.productPrice"
             :count="item.orderProductRelationModel.count"
+            border
           />
           <div :class="$style.status + ' mt-28'">
             <pl-button

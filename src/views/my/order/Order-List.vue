@@ -49,7 +49,9 @@
               />
               <div
                 :class="$style.buttons"
-                v-if="item.orderInfoModel.orderStatus !== 'CLOSED'"
+                v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY' ||
+                  item.orderInfoModel.orderStatus === 'WAIT_RECEIVE' ||
+                  (item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO')"
               >
                 <pl-button
                   v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'"
@@ -184,9 +186,9 @@ export default {
         // 调用微信支付api
         await wechatPay(result)
         if (orderType === 'PHYSICAL_GOODS') {
-          this.$router.push({ name: 'waitShip' })
+          this.$router.push({ name: 'Orders', params: { status: 'WAIT_SHIP' } })
         } else {
-          this.$router.push({ name: 'waitReceive' })
+          this.$router.push({ name: 'Orders', params: { status: 'WAIT_RECEIVE' } })
         }
       } catch (e) {
         throw e

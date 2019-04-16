@@ -156,7 +156,10 @@
       </div>
     </div>
 
-    <div :class="$style.remark + ' radius-20 mt-28'">
+    <div
+      v-if="orderDetailModel.orderPostscript"
+      :class="$style.remark + ' radius-20 mt-28'"
+    >
       <div :class="$style.remarkTop">
         <span>订单备注</span>
         <pl-svg
@@ -211,8 +214,9 @@ export default {
       supportPhone: '',
       tips: {
         WAIT_PAY: '',
-        WAIT_SHIP: '',
-        WAIT_RECEIVE: ''
+        WAIT_SHIP: '等待卖家发货…',
+        WAIT_RECEIVE: '',
+        FINISHED: '本次交易已完成，感谢下次光临'
       },
       cancelFnMap: {
         PHYSICAL_GOODS: physicalOrderCancellation,

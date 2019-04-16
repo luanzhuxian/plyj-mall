@@ -38,10 +38,14 @@
     <div :class="$style.myMoney">
       <router-link
         tag="div"
+        :class="$style.runbi"
         :to="{ name: 'WithdrawCash' }"
       >
         <p>可提现润笔（元）</p>
-        <p v-text="balance" />
+        <p>
+          <span v-text="balance" />
+          <span :class="$style.withdrawTip">提现</span>
+        </p>
       </router-link>
       <div>
         <p>今日润笔（元）</p>
@@ -245,6 +249,7 @@ export default {
     }
   }
   .my-money {
+    position: relative;
     display: flex;
     > div {
       position: relative;
@@ -265,6 +270,16 @@ export default {
         }
       }
     }
+  }
+  .runbi {
+    position: relative;
+  }
+  .withdraw-tip {
+    margin-left: 48px;
+    line-height: 44px;
+    font-weight: normal;
+    font-size: 28px;
+    color: #85A5FF;
   }
   .my-orders {
     padding: 20px 28px;

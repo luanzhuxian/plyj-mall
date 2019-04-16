@@ -22,7 +22,7 @@
         <pl-input
           v-model="form.content"
           type="textarea"
-          maxlength="500"
+          :maxlength="500"
           placeholder="产品满足你的期待吗？说说它的优点和缺点吧"
           :min-rows="5"
           :max-rows="10"
