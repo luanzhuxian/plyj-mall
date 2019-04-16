@@ -202,7 +202,7 @@ export default {
           await physicalorderReceivingForVirtual(orderId)
         }
         // 跳转至待评价
-        this.$router.push({ name: 'waitComment' })
+        this.$router.push({ name: 'Orders', params: { status: 'FINISHED' } })
       } catch (e) {
         throw e
       }
