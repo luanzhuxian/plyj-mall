@@ -31,6 +31,8 @@ export const getJSApi = appid => axios.get(`/apis/wx/redirect/query/js/api?appid
 export function getUserInfo () {
   return axios.get(`/apis/v1/account/account/info`)
 }
+// 获取TST数据
+export const getSTS = () => axios.get('/apis/v1/oss/upload/sts')
 
 // 获取猜你喜欢商品
 export const getYouLikeData = ({ agencyCode, userId, productSeq = '' }) =>

@@ -33,7 +33,6 @@
           field="file"
           :count="6"
           :size="0.5"
-          url="/apis/v1/oss/upload/img"
           :images="images"
           @success="uploaded"
           @remove="removeImg"
@@ -113,12 +112,14 @@ export default {
         throw e
       }
     },
-    uploaded ({ result }) {
-      result.mediaFilename = result.mediaFileName
-      result.mediaType = 'image'
-      delete result.mediaFileName
-      this.form.mediaInfoModels.push(result)
-      this.images.push(result.mediaUrl)
+    uploaded (res) {
+      let obj = {
+        mediaType: 'image',
+        mediaFilename: res.name.split('/').splice(-1, 1)[0],
+        mediaUrl: res.url
+      }
+      this.form.mediaInfoModels.push(obj)
+      this.images.push(res.url)
     },
     removeImg (index) {
       this.images.splice(index, 1)

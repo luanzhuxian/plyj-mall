@@ -6,7 +6,10 @@
         v-for="(img, i) of images"
         :key="i"
       >
-        <img :src="img">
+        <img
+          v-gallery
+          :src="img"
+        >
         <pl-svg
           class="remove-btn iconfont icon-qingchu"
           name="close"
@@ -30,9 +33,8 @@
   </div>
 </template>
 <script>
-import compress from '../../assets/js/compress-image'
+import { upload, compress } from '../../assets/js/upload-image'
 import { Indicator } from 'mint-ui'
-import axios from 'axios'
 export default {
   name: 'PlUploadImg',
   data () {
@@ -41,22 +43,6 @@ export default {
     }
   },
   props: {
-    // 图片在表单中对应的属性名
-    field: {
-      type: String,
-      required: true
-    },
-    // 图片上传的服务器地址
-    url: {
-      type: String,
-      required: true
-    },
-    formData: {
-      type: Object,
-      default: function () {
-        return null
-      }
-    }, // 其他表单字段
     // 图片最大体积,单位M
     size: {
       type: Number,
@@ -74,41 +60,34 @@ export default {
       }
     }
   },
-  computed: {
-    sizeByte: function f () {
-      // 字节形式表示的图片体积
-      return this.size * 1024 * 1024
-    }
-  },
   created () {
   },
   methods: {
     async change (e) {
       const fileList = e.target.files
-      Indicator.open()
-      for (let blob of fileList) {
-        if (blob.size > this.sizeByte) {
+      Indicator.open('正在上传图片')
+      try {
+        for (let blob of fileList) {
           // 如果图片体积过大，压缩至期望的大小
-          blob = await compress.compress(blob, this.size)
+          blob = await compress(blob, this.size)
+          this.up(blob)
         }
-        try {
-          let formData = new FormData()
-          formData.append(this.field, blob)
-          if (this.formData) {
-            for (let k of Object.keys(this.formData)) {
-              formData.append(k, this.formData[k])
-            }
-          }
-          const data = await axios.post(this.url, formData)
-          this.$emit('success', data)
-          Indicator.close()
-        } catch (e) {
-          Indicator.close()
-          throw e
-        }
+      } catch (e) {
+        throw e
+      } finally {
+        e.target.type = 'text'
+        e.target.type = 'file'
       }
-      e.target.type = 'text'
-      e.target.type = 'file'
+    },
+    async up (file) {
+      try {
+        let res = await upload({ file })
+        this.$emit('success', res)
+      } catch (e) {
+        throw e
+      } finally {
+        Indicator.close()
+      }
     },
     async removeImg (index) {
       try {
