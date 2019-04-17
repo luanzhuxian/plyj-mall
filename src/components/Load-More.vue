@@ -167,7 +167,11 @@ export default {
     },
     async loadMore () {
       this.options.current++
-      await this.getData()
+      try {
+        await this.getData()
+      } catch (e) {
+        throw e
+      }
     },
     // 本次请求完成，设置loading的位置为初始状态，并重新求得列表的高度
     loaded () {
@@ -201,8 +205,12 @@ export default {
     async refresh () {
       this.options = JSON.parse(JSON.stringify(this.form))
       this.resetState()
-      this.list = await this.getData()
-      this.$emit('refresh', this.list, this.total)
+      try {
+        this.list = await this.getData()
+        this.$emit('refresh', this.list, this.total)
+      } catch (e) {
+        throw e
+      }
     },
     // 本次下拉动作结束
     async touchend (e) {
@@ -256,6 +264,7 @@ export default {
           this.bottomLoading = false
         } catch (e) {
           this.bottomLoading = false
+          throw e
         }
       }
     }

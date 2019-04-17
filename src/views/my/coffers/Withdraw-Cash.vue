@@ -78,6 +78,11 @@ export default {
     this.form.agencyCode = this.agencyCode
     this.form.userId = this.userId
   },
+  activated () {
+  },
+  deactivated () {
+    this.form.price = ''
+  },
   methods: {
     async withdrawDeposit () {
       if (this.form.price <= 0) return this.$toast('提现金额必须大于0')

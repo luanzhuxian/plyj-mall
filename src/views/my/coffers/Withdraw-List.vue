@@ -105,7 +105,8 @@ export default {
         { name: '待审核', id: 'AWAIT' },
         { name: '待领取', id: 'PASS' },
         { name: '领取成功', id: 'RECEIVED' },
-        { name: '领取失败', id: 'FAIL' }
+        { name: '领取失败', id: 'FAIL' },
+        { name: '已驳回', id: 'REJECT' }
       ],
       form: {
         agencyCode: '',
