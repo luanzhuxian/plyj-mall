@@ -57,7 +57,8 @@
                   v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'"
                   type="warning"
                   round
-                  :loading="payloading"
+                  :loading="payloading && currentPayId === item.orderInfoModel.orderSn"
+                  :disabled="payloading"
                   @click="pay(item.orderInfoModel.orderSn, item.orderInfoModel.orderType)"
                 >
                   去支付
@@ -143,7 +144,8 @@ export default {
       loading: false,
       getOrderList,
       $refresh: null,
-      $router: null
+      $router: null,
+      currentPayId: '' // 当前正在支付的订单id
     }
   },
   props: {
@@ -184,6 +186,7 @@ export default {
     },
     async pay (id, orderType) {
       this.payloading = true
+      this.currentPayId = id
       try {
         const { result } = await getAwaitPayInfo(id)
         // 调用微信支付api
