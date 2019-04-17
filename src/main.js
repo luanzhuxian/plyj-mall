@@ -59,15 +59,16 @@ Vue.config.errorHandler = async function (err, vm, info) {
   if (/responseError/.test(message)) {
     error = JSON.parse(err.message)
     error.component = vm.$options.name
+    error.rotue = vm.$route
   } else {
     error = {
       tag: 'otherError',
       component: vm.$options.name,
-      message: err.message
+      message: err.message,
+      rotue: vm.$route
     }
   }
   Toast(error.message)
-  console.error(error)
   // try {
   //   await saveLog(error)
   // } catch (e) {
