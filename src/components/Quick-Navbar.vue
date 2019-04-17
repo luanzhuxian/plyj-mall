@@ -124,7 +124,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 88px;
+    width: 92px;
     height: 72px;
     margin: 0 !important;
     font-size: 18px;
@@ -134,13 +134,12 @@ export default {
     border-radius: 10px 0 0 10px;
     span {
       display: inline-block;
-      width: 36px;
+      width: 50px;
       line-height: 24px;
     }
     .double-arrow {
       width: 18px;
       height: 18px;
-      margin-right: 5px;
       vertical-align: -5px;
       transform: rotateY(180deg);
       transition: transform .5s ease-in-out;
