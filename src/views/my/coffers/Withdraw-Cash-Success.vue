@@ -50,17 +50,18 @@ export default {
   }
 
   .tip1 {
-    width: 209px;
+    width: 100%;
     height: 53px;
     margin: 60px 0 20px 0;
     font-size: 40px;
     color: rgba(51, 51, 51, 1);
     line-height: 53px;
     letter-spacing: 1px;
+    text-align: center;
   }
 
   .tip2 {
-    width: 659px;
+    width: 100%;
     line-height: 46px;
     font-size: 28px;
     text-align: center;

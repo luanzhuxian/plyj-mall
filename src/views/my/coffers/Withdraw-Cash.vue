@@ -102,6 +102,8 @@ export default {
     withdrawAll () {
       if (this.balance > 200) {
         this.form.price = 200
+      } else {
+        this.form.price = this.balance
       }
     }
   }
