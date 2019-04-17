@@ -65,11 +65,12 @@ export default {
   methods: {
     async change (e) {
       const fileList = e.target.files
-      Indicator.open('正在上传图片')
       try {
         for (let blob of fileList) {
           // 如果图片体积过大，压缩至期望的大小
+          Indicator.open('正在压缩图片')
           blob = await compress(blob, this.size)
+          Indicator.close()
           this.up(blob)
         }
       } catch (e) {
@@ -81,6 +82,7 @@ export default {
     },
     async up (file) {
       try {
+        Indicator.open('正在上传图片')
         let res = await upload({ file })
         this.$emit('success', res)
       } catch (e) {

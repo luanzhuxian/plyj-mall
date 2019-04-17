@@ -30,7 +30,6 @@
       </div>
       <div :class="$style.images">
         <pl-upload-img
-          field="file"
           :count="6"
           :size="0.5"
           :images="images"
