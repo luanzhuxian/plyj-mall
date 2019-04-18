@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     classifyClick (classify) {
-      if (this.loading) return
+      if (this.loading || classify === this.currentClassify) return
       if (classify) {
         this.currentClassify = classify
         this.form.categoryCode = classify.sequenceNbr
