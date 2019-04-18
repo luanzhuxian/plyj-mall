@@ -43,7 +43,7 @@
           round
           plain
           type="warning"
-          @click="submit"
+          @click="confirm"
         >
           发布评论
         </pl-button>
@@ -124,7 +124,7 @@ export default {
       this.images.splice(index, 1)
       this.form.mediaInfoModels.splice(index, 1)
     },
-    async submit () {
+    async confirm () {
       if (!this.form.content.trim()) return this.$toast('请输入评价内容')
       try {
         this.loading = true
