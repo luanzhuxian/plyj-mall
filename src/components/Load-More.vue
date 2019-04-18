@@ -5,6 +5,7 @@
     @touchstart="touchstart"
     v-finger:touch-move.capture="touchMove"
     v-finger:touch-end="touchend"
+    v-finger:touch-start="touchstart"
     ref="loadMore"
   >
     <div
@@ -98,7 +99,8 @@ export default {
       scrollHandler: null,
       minPullDis: 60, // 最小触发距离
       // 缓存发起的所有请求
-      requestBuffer: []
+      requestBuffer: [],
+      identifier: 0 // 手指标识符
     }
   },
   props: {
@@ -195,9 +197,6 @@ export default {
       this.top = 100
       window.scrollTo(0, 0)
     },
-    touchstart (e) {
-      this.startY = e.touches[0].clientY
-    },
     // 刷新
     async refresh () {
       this.options = JSON.parse(JSON.stringify(this.form))
@@ -209,10 +208,19 @@ export default {
         throw e
       }
     },
+    touchstart (e) {
+      let touches = Array.from(e.touches)
+      if (touches.length > 1) return
+      this.identifier = touches[0].identifier // 记录当前第一根手指的标识符
+      this.startY = e.touches[0].clientY
+    },
     // 本次下拉动作结束
     async touchend (e) {
-      this.startY = 0
-      if (this.pulling) {
+      let changedTouches = Array.from(e.changedTouches)
+      // 判断松开的手指是不是第一次按下的手指
+      let finger = changedTouches.find(item => item.identifier === this.identifier)
+      if (this.pulling && finger) {
+        this.startY = 0
         // 重置页码为1
         this.options.current = 1
         // allLoaded 全部加载完成设置为false，以便下次加载更多
@@ -231,7 +239,9 @@ export default {
       }
     },
     touchMove (e) {
+      // console.log(e.touches[0].identifier, this.identifier)
       if (this.pending) return
+      if (e.touches.length > 1) return
       // 如果使在顶部，并且是向下拉，禁止默认行为
       if (e.deltaY >= 0 && window.scrollY === 0) {
         e.preventDefault()
@@ -250,7 +260,7 @@ export default {
       }
     },
     async infiniteScroll () {
-      console.log(this.offsetHeight, window.scrollY, window.innerHeight, this.pending, this.allLoaded)
+      // console.log(this.offsetHeight, window.scrollY, window.innerHeight, this.pending, this.allLoaded)
       if (this.offsetHeight - window.scrollY - window.innerHeight <= 0 && !this.pending && !this.allLoaded) {
         this.options.current++
         try {
