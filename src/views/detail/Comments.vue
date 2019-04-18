@@ -112,8 +112,6 @@ export default {
 <style module lang="scss">
   .comments {
     padding: 28px 40px 120px;
-    height: 100vh;
-    overflow: scroll;
     box-sizing: border-box;
   }
   .content {
