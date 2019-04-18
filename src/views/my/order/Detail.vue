@@ -245,38 +245,49 @@ export default {
       return (this.currentStatus === 'FINISHED' || this.currentStatus === 'WAIT_RECEIVE' || this.currentStatus === 'WAIT_SHIP') && this.orderType !== 'VIRTUAL_GOODS'
     }
   },
-  activated () {
-    this.getDetail()
+  async activated () {
+    try {
+      await this.getDetail()
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
-    async getDetail () {
-      clearInterval(this.timer)
-      let { result } = await getOrderDetail(this.orderId)
-      let { orderInfoModel, orderDetailModel, relationModel, supportPhone, orderExpressInfoModel, orderInvoiceModel, supplierOrder } = result
-      this.detail = result
-      this.supplierOrder = supplierOrder
-      this.orderInfoModel = orderInfoModel
-      this.orderDetailModel = orderDetailModel
-      this.relationModel = relationModel
-      this.orderInvoiceModel = orderInvoiceModel
-      this.orderExpressInfoModel = orderExpressInfoModel && orderExpressInfoModel.filter(val => {
-        return val.orderStatus === 'WAIT_RECEIVE'
-      })[0]
+    getDetail () {
+      return new Promise(async (resolve, reject) => {
+        try {
+          clearInterval(this.timer)
+          let { result } = await getOrderDetail(this.orderId)
+          let { orderInfoModel, orderDetailModel, relationModel, supportPhone, orderExpressInfoModel, orderInvoiceModel, supplierOrder } = result
+          this.detail = result
+          this.supplierOrder = supplierOrder
+          this.orderInfoModel = orderInfoModel
+          this.orderDetailModel = orderDetailModel
+          this.relationModel = relationModel
+          this.orderInvoiceModel = orderInvoiceModel
+          this.orderExpressInfoModel = orderExpressInfoModel && orderExpressInfoModel.filter(val => {
+            return val.orderStatus === 'WAIT_RECEIVE'
+          })[0]
 
-      this.currentStatus = orderInfoModel.orderStatus
-      this.supportPhone = supportPhone
-      this.orderType = orderInfoModel.orderType
+          this.currentStatus = orderInfoModel.orderStatus
+          this.supportPhone = supportPhone
+          this.orderType = orderInfoModel.orderType
 
-      copyFields(this.address, result.orderDetailModel)
+          copyFields(this.address, result.orderDetailModel)
 
-      let now = Number(result.currentServerTime) // 服务器时间
-      if (orderInfoModel.orderStatus === 'WAIT_PAY') {
-        let startTime = Moment((this.orderInfoModel.createTime)).valueOf()
-        this.countDown(24 * 60 * 60 * 1000 - now + startTime + 2000, 'WAIT_PAY')
-      } else if (orderInfoModel.orderStatus === 'WAIT_RECEIVE') {
-        let startTime = Number(result.sendTime)
-        this.countDown(10 * 24 * 60 * 60 * 1000 - now + startTime + 2000, 'WAIT_RECEIVE')
-      }
+          let now = Number(result.currentServerTime) // 服务器时间
+          if (orderInfoModel.orderStatus === 'WAIT_PAY') {
+            let startTime = Moment((this.orderInfoModel.createTime)).valueOf()
+            this.countDown(24 * 60 * 60 * 1000 - now + startTime + 2000, 'WAIT_PAY')
+          } else if (orderInfoModel.orderStatus === 'WAIT_RECEIVE') {
+            let startTime = Number(result.sendTime)
+            this.countDown(10 * 24 * 60 * 60 * 1000 - now + startTime + 2000, 'WAIT_RECEIVE')
+          }
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
+      })
     },
     // 确定收货
     async confirmGet (orderType) {

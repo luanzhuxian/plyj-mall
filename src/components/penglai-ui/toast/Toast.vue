@@ -35,7 +35,7 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: max-content;
+    width: 80%;
     height: max-content;
     display: inline-flex;
     flex-direction: column;

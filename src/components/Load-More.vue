@@ -130,9 +130,6 @@ export default {
     }
   },
   computed: {
-    innerHeight: function () {
-      return window.innerHeight
-    },
     pullLoading: function () {
       return this.$refs.pullLoading
     },
@@ -177,15 +174,15 @@ export default {
     loaded () {
       this.$nextTick(() => {
         this.$nextTick(() => {
-          this.pullLoading.style.transition = 'top .5s ease-in-out'
+          this.pullLoading.style.transition = 'transform .5s ease-in-out'
           this.$emit('update:loading', false)
-          this.pending = false
           this.top = this.defaultTop
           this.offsetHeight = this.$el.offsetHeight
           // 如果因为一些原因过渡没有被取消，0.6s后强行取消
           setTimeout(() => {
             this.pullLoading.style.transition = null
             this.rotate = 0
+            this.pending = false
           }, 600)
         })
       })
@@ -223,7 +220,7 @@ export default {
         // 表示下拉动作结束
         this.pulling = false
         // 为顶部loading设置过渡
-        this.pullLoading.style.transition = 'top linear .5s'
+        this.pullLoading.style.transition = 'transform linear .5s'
         // 只有在loading完成出现在视野中时，松开才发起请求
         if (this.top > this.minPullDis) {
           this.list = await this.getData()
@@ -234,6 +231,7 @@ export default {
       }
     },
     touchMove (e) {
+      if (this.pending) return
       // 如果使在顶部，并且是向下拉，禁止默认行为
       if (e.deltaY >= 0 && window.scrollY === 0) {
         e.preventDefault()
@@ -252,7 +250,8 @@ export default {
       }
     },
     async infiniteScroll () {
-      if (this.offsetHeight - window.scrollY - this.innerHeight <= 0 && !this.pending && !this.allLoaded) {
+      console.log(this.offsetHeight, window.scrollY, window.innerHeight, this.pending, this.allLoaded)
+      if (this.offsetHeight - window.scrollY - window.innerHeight <= 0 && !this.pending && !this.allLoaded) {
         this.options.current++
         try {
           this.bottomLoading = true
@@ -271,9 +270,11 @@ export default {
   },
   deactivated () {
     window.removeEventListener('scroll', this.scrollHandler)
+    this.offsetHeight = 0
   },
   beforeDestroy () {
     window.removeEventListener('scroll', this.scrollHandler)
+    this.offsetHeight = 0
   }
 }
 </script>
@@ -287,11 +288,11 @@ export default {
   .pullLoading {
     position: absolute;
     left: 50%;
-    top: var(--top);
+    top: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: translate3d(-50%, -50%, 0) rotate(var(--rotate));
+    transform: translate3d(-50%, var(--top), 0) rotate(var(--rotate));
     background-color: #fff;
     width: 70px;
     height: 70px;

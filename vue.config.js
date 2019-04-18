@@ -1,7 +1,7 @@
 console.log('------------------------- ' + process.env.NODE_ENV + ' -------------------------')
-console.log(process.argv)
 let argv = process.argv
 let model = argv[argv.indexOf('--model') + 1]
+console.log('------------------------- model: ' + model + ' -------------------------')
 // const externals =
 //   process.env.NODE_ENV === 'production'
 //     ? {
@@ -15,7 +15,7 @@ module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      template: model === 'dev' ? 'public/index.html' : 'public/index-prod.html',
+      template: (model === 'dev' || process.env.NODE_ENV === 'development') ? 'public/index.html' : 'public/index-prod.html',
       filename: 'index.html'
     }
   },
@@ -34,7 +34,7 @@ module.exports = {
     },
     proxy: {
       '/apis': {
-        target: 'http://192.168.130.34'
+        target: 'http://192.168.130.74'
       }
     }
   },

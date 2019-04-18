@@ -20,9 +20,13 @@
           v-for="(item, index) of classifyList"
           :class="{[$style.classifyActive]: item.sequenceNbr === currentClassify.sequenceNbr}"
           :key="index"
-          v-text="item.categoryName"
           @click="classifyClick(item)"
-        />
+        >
+          <span
+            :class="$style.classifyText"
+            v-text="item.categoryName"
+          />
+        </li>
       </ul>
 
       <div :class="$style.content">
@@ -206,12 +210,17 @@ export default {
   background-color: #f1f4f5;
   overflow: auto;
   z-index: 2;
-  li {
+  > li {
     position: relative;
-    width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    min-height: 88px;
+    padding: 10px 20px;
     font-size: 26px;
     text-align: center;
-    line-height: 108px;
+    white-space: pre-wrap;
     &:nth-last-of-type(1) {
       margin-bottom: 108px;
       &:after {
@@ -226,6 +235,9 @@ export default {
   .classify-active {
     background-color: #fff;
     color: #aaaabb;
+  }
+  .classifyText {
+    line-height: 36px;
   }
 }
 .classify-list2 {
