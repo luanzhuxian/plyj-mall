@@ -139,8 +139,10 @@ export default {
       return this.$refs.container
     }
   },
-  created () {
-    this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
+  mounted () {
+    this.$nextTick(() => {
+      this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
+    })
   },
   activated () {
     window.addEventListener('scroll', this.scrollHandler)
