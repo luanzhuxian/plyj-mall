@@ -9,7 +9,7 @@
           v-if="detail.priceModels && detail.priceModels[0]"
           size="huge"
           :price="detail.priceModels[0].price"
-          :original-price="detail.priceModels[0].originPrice"
+          :original-price="detail.supplierProduct ? '' : detail.priceModels[0].originPrice"
         />
         <div :class="$style.count">
           <pl-svg name="selled" />
