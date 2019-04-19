@@ -60,10 +60,11 @@ export default {
       id: 'all',
       result: {},
       status: {
-        PASS: '已到账',
+        PASS: '待领取',
+        RECEIVED: '领取成功',
         AWAIT: '待审核',
         REJECT: '驳回',
-        FAIL: '提现失败'
+        FAIL: '领取失败'
       }
     }
   },
