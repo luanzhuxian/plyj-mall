@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     async withdrawDeposit () {
-      if (this.form.price <= 0) return this.$toast('提现金额必须大于0')
+      if (this.form.price < 1) return this.$toast('提现金额必须大于1元')
       if (this.form.price > this.balance) return this.$toast('不能大于可提现金额')
       if (this.form.price > 200) return this.$toast('提现金额不能大于200')
       if (!isMoney(this.form.price)) return this.$toast('提现金额只允许两位小数')

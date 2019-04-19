@@ -176,6 +176,7 @@ export default {
         item.yearMoneth = item.year + item.month
       }
       this.list = [...this.list, ...list]
+      if (this.list.length === 0) return
       this.sortUserTime()
     },
     // 按时间排序
