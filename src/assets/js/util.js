@@ -119,3 +119,25 @@ export function throttle (fn, delay) {
     }
   }
 }
+
+// 重置表单
+export function resetForm (form) {
+  for (let k of Object.keys(form)) {
+    let val = form[k]
+    if (typeof val === 'string') {
+      form[k] = ''
+      continue
+    }
+    if (typeof val === 'number') {
+      form[k] = 0
+      continue
+    }
+    if (Array.isArray(form[k])) {
+      form[k].splice(0, form[k].length)
+      continue
+    }
+    if (typeof val === 'object') {
+      resetForm(val)
+    }
+  }
+}

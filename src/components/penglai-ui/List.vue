@@ -6,10 +6,17 @@
       :style="{ color: titleColor }"
     />
     <span
+      v-if="content"
       class="pl-list_content"
       v-text="content"
       :style="{ color: contentColor }"
     />
+    <div
+      v-if="!content"
+      class="pl-list_content"
+    >
+      <slot />
+    </div>
   </div>
 </template>
 

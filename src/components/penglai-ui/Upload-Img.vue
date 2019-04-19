@@ -16,7 +16,7 @@
           @click="removeImg(i)"
         />
       </li>
-      <li v-if="imgs.length < count || !count">
+      <li v-if="images.length < count || !count">
         <label class="upload-img-box">
           <pl-svg name="camera" />
           <span>上传凭证</span>
@@ -39,7 +39,6 @@ export default {
   name: 'PlUploadImg',
   data () {
     return {
-      imgs: []
     }
   },
   props: {

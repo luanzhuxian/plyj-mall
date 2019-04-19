@@ -116,6 +116,7 @@ import {
   returnRequest,
   getOrderDetail
 } from '../../../apis/order-manager'
+import { resetForm } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
 export default {
   name: 'RefundApply',
@@ -211,6 +212,8 @@ export default {
       try {
         await this.$confirm('确定提交吗？')
         await returnRequest(this.form)
+        resetForm(this.form)
+        this.images = []
         this.$toast('申请售后成功，请等待卖家反馈')
         this.$router.replace({ name: 'RefundList' })
       } catch (e) {

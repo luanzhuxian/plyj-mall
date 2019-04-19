@@ -73,6 +73,21 @@
       </div>
       <div :class="$style.reason">
         <pl-list
+          title="退款凭证："
+          v-if="problemImages.length > 0"
+        >
+          <div :class="$style.reasonImages">
+            <img
+              v-for="(img, i) of problemImages"
+              :key="i"
+              v-img-error
+              v-gallery
+              :src="img"
+              alt="退款图片"
+            >
+          </div>
+        </pl-list>
+        <pl-list
           title="问题描述："
           :content="problemDesc"
         />
@@ -102,7 +117,8 @@ export default {
       applyDate: '',
       problemDesc: '',
       refundAmount: '',
-      productsDetail: []
+      productsDetail: [],
+      problemImages: []
     }
   },
   props: {
@@ -118,13 +134,14 @@ export default {
     async getDetail () {
       try {
         let { result } = await getRefundDetail(this.orderSn)
-        let { serviceType, refundId, applyDate, problemDesc, refundAmount, productsDetail } = result
+        let { serviceType, refundId, applyDate, problemDesc, refundAmount, productsDetail, problemImages } = result
         this.serviceType = serviceType
         this.refundId = refundId
         this.applyDate = applyDate
         this.problemDesc = problemDesc
         this.refundAmount = Number(refundAmount) || 0
         this.productsDetail = productsDetail || []
+        this.problemImages = problemImages || []
       } catch (e) {
         throw e
       }
@@ -187,6 +204,17 @@ export default {
       &:after {
         @include border-half-bottom(#e7e7e7);
       }
+    }
+  }
+  .reasonImages {
+    display: grid;
+    grid-template-columns: 144px 144px 144px;
+    grid-gap: 10px;
+    padding-bottom: 40px;
+    > img {
+      width: 144px;
+      height: 144px;
+      object-fit: cover;
     }
   }
 </style>
