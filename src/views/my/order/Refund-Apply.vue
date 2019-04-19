@@ -80,7 +80,7 @@
         <pl-input
           v-model="form.refundModel.content"
           type="textarea"
-          maxlength="500"
+          :maxlength="500"
           placeholder="请描述你的问题"
           :min-rows="5"
           :max-rows="10"

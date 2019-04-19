@@ -39,6 +39,7 @@ export function compress (file, size, fileType) {
   return new Promise(async (resolve, reject) => {
     try {
       if (size <= file.size) {
+        file = await compressImage(file)
         if (fileType === 'base64') {
           let base64 = await blobToBase64(file)
           resolve(base64)
@@ -46,7 +47,6 @@ export function compress (file, size, fileType) {
           resolve(file)
         }
       } else {
-        file = await compressImage(file)
         if (fileType === 'base64') {
           let base64 = await blobToBase64(file)
           resolve(base64)
