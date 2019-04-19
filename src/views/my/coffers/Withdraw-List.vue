@@ -74,7 +74,7 @@
                     v-text="item.createTime"
                   />
                   <span
-                    :class="{ 'fz-26 gray-3': true, [$style.statusPass]: item.status === 'PASS' }"
+                    :class="{ 'fz-26 gray-3': true, [$style.statusPass]: item.status === 'RECEIVED' }"
                     v-text="status[item.status]"
                   />
                 </div>
@@ -115,10 +115,11 @@ export default {
         status: ''
       },
       status: {
-        PASS: '已到账',
+        PASS: '待领取',
+        RECEIVED: '领取成功',
         AWAIT: '待审核',
         REJECT: '驳回',
-        FAIL: '提现失败'
+        FAIL: '领取失败'
       },
       // 笔数
       total: 0,
