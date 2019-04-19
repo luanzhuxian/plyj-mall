@@ -137,7 +137,7 @@
       class="mt-28"
       size="large"
       type="warning"
-      @click="submit"
+      @click="confirm"
     >
       提交
     </pl-button>
@@ -220,7 +220,7 @@ export default {
     await this.getOrderDetail()
   },
   methods: {
-    async submit () {
+    async confirm () {
       try {
         if (this.form.invoiceType === 1) {
           if (!this.$refs.form.validate()) return

@@ -102,7 +102,7 @@
           round
           plain
           type="warning"
-          @click="submit"
+          @click="confirm"
         >
           确认提交
         </pl-button>
@@ -192,7 +192,7 @@ export default {
     removeImg (index) {
       this.form.refundModel.images.splice(index, 1)
     },
-    async submit () {
+    async confirm () {
       if (this.form.type === 'RETURN_REFUND') {
         // 退款退货
         if (this.$refs.form.validate()) {

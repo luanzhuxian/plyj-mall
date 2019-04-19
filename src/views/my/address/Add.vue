@@ -81,7 +81,7 @@
       size="huge"
       type="warning"
       :loading="loading"
-      @click="submit"
+      @click="confirm"
     >
       提交
     </pl-button>
@@ -168,7 +168,7 @@ export default {
     addrClear () {
       this.$refs.citySelector.clear()
     },
-    async submit () {
+    async confirm () {
       if (this.$refs.form.validate()) {
         let currentAddress = null
         this.loading = true

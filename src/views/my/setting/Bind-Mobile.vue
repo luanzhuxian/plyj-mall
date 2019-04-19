@@ -88,7 +88,7 @@
         size="huge"
         type="warning"
         :loading="loading"
-        @click="submit"
+        @click="confirm"
       >
         提交
       </pl-button>
@@ -171,7 +171,7 @@ export default {
         throw e
       }
     },
-    async submit () {
+    async confirm () {
       try {
         if (this.mobile) {
           if (!this.$refs.updateForm.validate()) return

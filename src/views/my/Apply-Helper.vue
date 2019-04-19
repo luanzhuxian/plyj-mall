@@ -73,7 +73,7 @@
       type="warning"
       size="huge"
       :loading="loading"
-      @click="submit"
+      @click="confirm"
     >
       提交
     </pl-button>
@@ -155,7 +155,7 @@ export default {
         throw e
       }
     },
-    async submit () {
+    async confirm () {
       if (this.$refs.form.validate()) {
         try {
           this.loading = true
