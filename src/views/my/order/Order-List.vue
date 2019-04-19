@@ -192,11 +192,13 @@ export default {
         // 调用微信支付api
         await wechatPay(result)
         if (orderType === 'PHYSICAL_GOODS') {
+          this.form.orderStatus = 'WAIT_SHIP'
           this.tabChange({
             name: '待发货',
             id: 'WAIT_SHIP'
           })
         } else {
+          this.form.orderStatus = 'WAIT_RECEIVE'
           this.tabChange({
             name: '待收货',
             id: 'WAIT_RECEIVE'
@@ -218,6 +220,7 @@ export default {
           await physicalorderReceivingForVirtual(orderId)
         }
         // 跳转至待评价
+        this.form.orderStatus = 'FINISHED'
         this.tabChange({
           name: '待评价',
           id: 'FINISHED'
