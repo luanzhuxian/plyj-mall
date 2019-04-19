@@ -88,8 +88,6 @@
       </div>
       <div :class="$style.images">
         <pl-upload-img
-          field="file"
-          url="/apis/v1/oss/upload/img"
           :count="6"
           :size="0.5"
           :images.sync="images"
@@ -182,12 +180,14 @@ export default {
       this.relationModel = relationModel
       this.form.operationType = this.statusTypeMap[orderInfoModel.orderStatus]
     },
-    uploaded ({ result }) {
-      this.images.push(result.mediaUrl)
-      result.mediaFilename = result.mediaFileName
-      result.mediaType = 'image'
-      delete result.mediaFileName
-      this.form.refundModel.images.push(result)
+    uploaded ({ url, name }) {
+      this.images.push(url)
+      let ossModel = {
+        mediaFilename: name.split('/').splice(-1, 1)[0],
+        mediaUrl: url,
+        mediaType: 'image'
+      }
+      this.form.refundModel.images.push(ossModel)
     },
     removeImg (index) {
       this.form.refundModel.images.splice(index, 1)
