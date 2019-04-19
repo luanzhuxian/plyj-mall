@@ -172,15 +172,6 @@ export default {
     }
     this.$refresh()
   },
-  beforeRouteUpdate () {
-    this.form.orderStatus = this.status || ''
-    if (this.status === 'FINISHED') {
-      this.form.assessment = 'NO'
-    } else {
-      this.form.assessment = ''
-    }
-    this.$refresh()
-  },
   methods: {
     tabChange (item) {
       this.$nextTick(() => {
@@ -201,9 +192,15 @@ export default {
         // 调用微信支付api
         await wechatPay(result)
         if (orderType === 'PHYSICAL_GOODS') {
-          this.$router.replace({ name: 'Orders', params: { status: 'WAIT_SHIP' } })
+          this.tabChange({
+            name: '待发货',
+            id: 'WAIT_SHIP'
+          })
         } else {
-          this.$router.replace({ name: 'Orders', params: { status: 'WAIT_RECEIVE' } })
+          this.tabChange({
+            name: '待收货',
+            id: 'WAIT_RECEIVE'
+          })
         }
       } catch (e) {
         throw e
@@ -221,7 +218,10 @@ export default {
           await physicalorderReceivingForVirtual(orderId)
         }
         // 跳转至待评价
-        this.$router.replace({ name: 'Orders', params: { status: 'FINISHED' } })
+        this.tabChange({
+          name: '待评价',
+          id: 'FINISHED'
+        })
       } catch (e) {
         throw e
       }
