@@ -60,14 +60,13 @@
           prefix-icon="code"
           v-model="updateForm.verifyCode"
           placeholder="请输入验证码"
-        >
-          <template v-slot:suffix>
-            <get-code
-              :mobile="updateForm.mobile"
-              :smstype="smstype.PUBLIC_USER_UPDATE_MOBILE"
-            />
-          </template>
-        </pl-input>
+        />
+        <template v-slot:suffix>
+          <get-code
+            :mobile="updateForm.mobile"
+            :smstype="smstype.PUBLIC_USER_UPDATE_MOBILE"
+          />
+        </template>
       </pl-form-item>
     </pl-form>
 

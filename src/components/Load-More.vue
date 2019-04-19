@@ -140,14 +140,19 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(() => {
-      this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
-    })
   },
   activated () {
-    window.addEventListener('scroll', this.scrollHandler)
+    if (!this.scrollHandler) {
+      this.bindScroll()
+    }
   },
   methods: {
+    bindScroll () {
+      this.$nextTick(() => {
+        this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
+        window.addEventListener('scroll', this.scrollHandler)
+      })
+    },
     getData () {
       return new Promise(async (resolve, reject) => {
         try {
@@ -282,10 +287,12 @@ export default {
   },
   deactivated () {
     window.removeEventListener('scroll', this.scrollHandler)
+    this.scrollHandler = null
     this.offsetHeight = 0
   },
   beforeDestroy () {
     window.removeEventListener('scroll', this.scrollHandler)
+    this.scrollHandler = null
     this.offsetHeight = 0
   }
 }
