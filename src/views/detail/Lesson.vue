@@ -241,7 +241,7 @@ export default {
     resetState () {
       this.buyNowHasClicked = false
       this.currentSpec = {}
-      this.banners = []
+      this.banners.splice(0, 1000000)
     }
   }
 }
