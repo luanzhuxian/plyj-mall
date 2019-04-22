@@ -3,13 +3,12 @@ html {
   -webkit-tap-highlight-color: transparent; //解决点击后出现阴影问题
   height: 100%;
   text-size-adjust : none;//禁止横屏时，放大字体
-  -webkit-overflow-scrolling: touch;
 }
 body {
   position: relative;
   height: 100%;
   color: $--font-color_gray1;
-  background-color: var(--background-color);
+  background-color: $--background-color;
   font-family: $--font-family, sans-serif;
 }
 img, textarea, input {
@@ -19,7 +18,6 @@ body, h1, h2, h3, h4, h5, i, h6, hr, p, span, a, blockquote, div, table, dl, dt,
   margin: 0;
   padding: 0;
   font-family: $--font-family, sans-serif;
-  -webkit-overflow-scrolling: touch !important;
 }
 svg {
   color: currentColor;

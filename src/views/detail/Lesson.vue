@@ -249,7 +249,7 @@ export default {
 
 <style module lang="scss">
   .lesson {
-    margin-bottom: 120px;
+    padding-bottom: 120px;
   }
   .price {
     display: flex;

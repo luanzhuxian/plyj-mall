@@ -4,6 +4,7 @@
     :class="$style.loadMore"
     @touchstart="touchstart"
     v-finger:touch-move.capture="touchMove"
+    v-finger:press-move.capture="touchMove"
     v-finger:touch-end="touchend"
     v-finger:touch-start="touchstart"
     ref="loadMore"
@@ -150,7 +151,7 @@ export default {
     bindScroll () {
       this.$nextTick(() => {
         this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
-        window.addEventListener('scroll', this.scrollHandler)
+        window.addEventListener('scroll', this.scrollHandler, { passive: false })
       })
     },
     getData () {
@@ -246,25 +247,33 @@ export default {
       }
     },
     touchMove (e) {
+      console.log(e)
       // console.log(e.touches[0].identifier, this.identifier)
+      // console.log(this.pending, this.pulling)
+      console.log(e.deltaY, window.scrollY)
       if (this.pending) return
       if (e.touches.length > 1) return
       // 如果使在顶部，并且是向下拉，禁止默认行为
-      if (e.deltaY >= 0 && window.scrollY === 0) {
-        e.preventDefault()
-      }
-      if (this.pulling) {
-        e.preventDefault()
-        e.stopPropagation()
+      // if (e.deltaY >= 0 && window.scrollY === 0) {
+      //   e.preventDefault()
+      // }
+      if (e.deltaY >= 0 && window.scrollY <= 0) {
+        // e.preventDefault()
+        // e.stopPropagation()
+        this.pulling = true
         let top = e.touches[0].clientY - this.startY
         this.top = this.defaultTop + top
         this.rotate = top
+      } else {
+        e.returnValue = true
       }
-      if (e.deltaY > 0 && window.scrollY === 0) {
-        e.preventDefault()
-        e.stopPropagation()
-        this.pulling = true
-      }
+      // if (this.pulling) {
+      //   // e.preventDefault()
+      //   // e.stopPropagation()
+      //   let top = e.touches[0].clientY - this.startY
+      //   this.top = this.defaultTop + top
+      //   this.rotate = top
+      // }
     },
     async infiniteScroll () {
       // console.log(this.offsetHeight, window.scrollY, window.innerHeight, this.pending, this.allLoaded)
@@ -302,7 +311,6 @@ export default {
   .loadMore {
     position: relative;
     overflow: hidden;
-    -webkit-overflow-scrolling: touch;
   }
   .pullLoading {
     position: absolute;
@@ -321,10 +329,8 @@ export default {
     .pullLoadingIcon {
       width: 50px;
       height: 50px;
-      animation: rotate .8s linear infinite;
-      animation-play-state: paused;
       &.rotate {
-        animation-play-state: running;
+        animation: rotate .8s infinite linear;
       }
     }
   }
