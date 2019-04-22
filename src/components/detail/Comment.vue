@@ -99,8 +99,14 @@ export default {
     // 这样做是为了方便在商品详情和评论专区形成通用性
     // 评论专区有刷新和请求全部列表的需求，而商品详情只需要3条评论，且不需要刷新评论
     // 因此，传入size和productSeq将更方便，因为无需额外在商品详情中请求评论列表
-    size: Number,
-    productSeq: String,
+    size: {
+      type: Number,
+      default: 3
+    },
+    productSeq: {
+      type: String,
+      default: ''
+    },
     list: {
       type: Array,
       default: function () {
@@ -111,7 +117,7 @@ export default {
   computed: {
     ...mapGetters(['mallSeq'])
   },
-  created () {
+  activated () {
     this.form.mallSeq = this.mallSeq
     this.form.productSeq = this.productSeq
     this.form.size = this.size

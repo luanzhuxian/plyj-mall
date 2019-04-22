@@ -175,9 +175,6 @@ export default {
   activated () {
     this.getDetail()
   },
-  beforeRouteUpdate (to, from, next) {
-    next()
-  },
   methods: {
     async getDetail () {
       this.resetState() // 重置一些状态
