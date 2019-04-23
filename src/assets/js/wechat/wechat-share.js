@@ -2,9 +2,9 @@ import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
 import { DelayExec } from '../../../assets/js/util'
 const WX = window.wx
-let delay = new DelayExec(200)
+let delay = new DelayExec(100)
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
-  await delay.exec() // 延迟执行，节流执行频率，使频率不能高于每秒5次
+  await delay.exec() // 延迟执行，节流执行频率，使频率不能高于每秒10次
   let jsApi = await getJSApi(appId) // 每次分享时，获取js-api
   const config = getConfig(jsApi.result, appId, link)
   WX.config(config)

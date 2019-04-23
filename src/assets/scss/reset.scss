@@ -1,15 +1,17 @@
 /*===reset===*/
 html {
   -webkit-tap-highlight-color: transparent; //解决点击后出现阴影问题
-  height: 100%;
   text-size-adjust : none;//禁止横屏时，放大字体
+  overflow: auto;
+  -webkit-overflow-scrolling: auto;
+  -webkit-appearance: none;
 }
 body {
   position: relative;
-  height: 100%;
   color: $--font-color_gray1;
   background-color: $--background-color;
   font-family: $--font-family, sans-serif;
+  overflow: auto;
 }
 img, textarea, input {
   box-sizing: border-box;

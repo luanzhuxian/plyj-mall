@@ -2,11 +2,6 @@
   <!-- 使用前必须保证滚动容器是window -->
   <div
     :class="$style.loadMore"
-    @touchstart="touchstart"
-    v-finger:touch-move.capture="touchMove"
-    v-finger:press-move.capture="touchMove"
-    v-finger:touch-end="touchend"
-    v-finger:touch-start="touchstart"
     ref="loadMore"
   >
     <div
@@ -143,6 +138,11 @@ export default {
   mounted () {
   },
   activated () {
+    let el = this.$el
+    /* for the fucking IOS10 */
+    el.addEventListener('touchstart', this.touchstart, { passive: true })
+    el.addEventListener('touchmove', this.touchMove)
+    el.addEventListener('touchend', this.touchend, { passive: true })
     if (!this.scrollHandler) {
       this.bindScroll()
     }
@@ -151,7 +151,7 @@ export default {
     bindScroll () {
       this.$nextTick(() => {
         this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
-        window.addEventListener('scroll', this.scrollHandler, { passive: false })
+        window.addEventListener('scroll', this.scrollHandler, { passive: true })
       })
     },
     getData () {
@@ -224,9 +224,9 @@ export default {
     },
     // 本次下拉动作结束
     async touchend (e) {
-      let changedTouches = Array.from(e.changedTouches)
+      let touches = Array.from(e.changedTouches)
       // 判断松开的手指是不是第一次按下的手指
-      let finger = changedTouches.find(item => item.identifier === this.identifier)
+      let finger = touches.find(item => item.identifier === this.identifier)
       if (this.pulling && finger) {
         this.startY = 0
         // 重置页码为1
@@ -247,33 +247,29 @@ export default {
       }
     },
     touchMove (e) {
-      console.log(e)
+      let touches = Array.from(e.touches)
+      if (touches.length > 1) return
+      let finger = touches.find(item => item.identifier === this.identifier)
+
+      let deltaY = finger.clientY - this.startY
+      // console.log(deltaY)
+      // console.log(finger.clientY - this.startY)
       // console.log(e.touches[0].identifier, this.identifier)
       // console.log(this.pending, this.pulling)
-      console.log(e.deltaY, window.scrollY)
       if (this.pending) return
       if (e.touches.length > 1) return
       // 如果使在顶部，并且是向下拉，禁止默认行为
-      // if (e.deltaY >= 0 && window.scrollY === 0) {
-      //   e.preventDefault()
-      // }
-      if (e.deltaY >= 0 && window.scrollY <= 0) {
+      if (deltaY >= 0 && window.scrollY === 0) {
+        e.stopPropagation()
+        e.preventDefault()
+        this.pulling = true
+      }
+      if (this.pulling) {
         // e.preventDefault()
         // e.stopPropagation()
-        this.pulling = true
-        let top = e.touches[0].clientY - this.startY
-        this.top = this.defaultTop + top
-        this.rotate = top
-      } else {
-        e.returnValue = true
+        this.top = this.defaultTop + deltaY
+        this.rotate = deltaY
       }
-      // if (this.pulling) {
-      //   // e.preventDefault()
-      //   // e.stopPropagation()
-      //   let top = e.touches[0].clientY - this.startY
-      //   this.top = this.defaultTop + top
-      //   this.rotate = top
-      // }
     },
     async infiniteScroll () {
       // console.log(this.offsetHeight, window.scrollY, window.innerHeight, this.pending, this.allLoaded)
@@ -295,11 +291,21 @@ export default {
     }
   },
   deactivated () {
+    let el = this.$el
+    /* for the fucking IOS10 */
+    el.removeEventListener('touchstart', this.touchstart)
+    el.removeEventListener('touchmove', this.touchMove)
+    el.removeEventListener('touchend', this.touchend)
     window.removeEventListener('scroll', this.scrollHandler)
     this.scrollHandler = null
     this.offsetHeight = 0
   },
   beforeDestroy () {
+    let el = this.$el
+    /* for the fucking IOS10 */
+    el.removeEventListener('touchstart', this.touchstart)
+    el.removeEventListener('touchmove', this.touchMove)
+    el.removeEventListener('touchend', this.touchend)
     window.removeEventListener('scroll', this.scrollHandler)
     this.scrollHandler = null
     this.offsetHeight = 0
