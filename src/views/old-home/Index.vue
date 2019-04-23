@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.mallHome + ' mall-home'">
+  <div
+    v-if="loaded"
+    :class="$style.mallHome + ' mall-home'"
+  >
     <div :class="$style.top">
       <top-text
         :title="mallName + ' 欢迎您'"
@@ -184,6 +187,32 @@
 
     <you-like v-if="showLike" />
   </div>
+
+  <div
+    v-else
+    :class="$style.skeleton"
+  >
+    <div :class="$style.skeAnimation + ' ' + $style.skeWelcome" />
+    <div :class="$style.skeAnimation + ' ' + $style.skeDate" />
+    <div :class="$style.skeAnimation + ' ' + $style.skeA" />
+    <div :class="$style.skeB">
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+    </div>
+    <div :class="$style.skeAnimation + ' ' + $style.skeC" />
+    <div :class="$style.skeD">
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+    </div>
+    <div :class="$style.skeAnimation + ' ' + $style.skeE" />
+    <div :class="$style.skeF">
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+    </div>
+  </div>
 </template>
 <script>
 import TopText from '../../components/Top-Text.vue'
@@ -209,6 +238,7 @@ export default {
   data () {
     return {
       showLike: false,
+      loaded: false,
       swiper: {
         slidesPerView: 'auto',
         centeredSlides: true,
@@ -251,6 +281,7 @@ export default {
       await this.getBanner(result)
       await this.getModule(result)
       this.showLike = true
+      this.loaded = true
     } catch (e) {
       throw e
     }
@@ -328,6 +359,47 @@ export default {
   @import "index.scss";
   .mall-home {
     overflow: hidden;
+  }
+
+  .skeleton {
+    padding: 30px 40px;
+    > div {
+    }
+  }
+  .skeWelcome {
+    width: 60%;
+    height: 53px;
+  }
+  .skeDate {
+    width: 40%;
+    height: 37px;
+    margin-top: 14px;
+    background-color: #eee;
+  }
+  .skeA, .skeC, .skeE {
+    height: 324px;
+    margin-top: 60px;
+    background-color: #eee;
+  }
+  .skeB, .skeD, .skeF {
+    display: grid;
+    width: 100%;
+    height: 220px;
+    margin-top: 60px;
+    justify-content: space-between;
+    grid-template-columns: repeat(3, 200px);
+    > div {
+      background-color: #eee;
+    }
+  }
+  .skeAnimation {
+    background: #eee linear-gradient(90deg, #eee 30%, rgba(255, 255, 255, .5) 48%, rgba(255, 255, 255, .5) 52%, #eee 70%) no-repeat 130% center;
+    background-size: 200% 100%;
+    animation: bgc .8s linear infinite;
+  }
+  @keyframes bgc {
+    0% { background-position: 130% center; }
+    100% { background-position: -130% center; }
   }
 </style>
 <style lang="scss">

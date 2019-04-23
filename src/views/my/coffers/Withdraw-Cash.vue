@@ -9,7 +9,7 @@
           </p>
           <!--<p class="fz-28 gray-3">未绑定账号</p>-->
         </div>
-        <pl-svg name="right" />
+        <!--<pl-svg name="right" />-->
       </div>
 
       <div class="mt-28">

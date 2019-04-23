@@ -60,12 +60,30 @@ export default {
     Price
   },
   props: {
-    price: [String, Number],
-    title: String,
-    desc: String,
-    grade: Number,
-    img: String,
-    id: String
+    price: {
+      type: [String, Number],
+      default: 0
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    desc: {
+      type: String,
+      default: ''
+    },
+    grade: {
+      type: Number,
+      default: 1
+    },
+    img: {
+      type: String,
+      default: ''
+    },
+    id: {
+      type: String,
+      default: ''
+    }
   },
   methods: {
     async buyNow () {
