@@ -24,8 +24,12 @@
           :class="$style.doubleArrow"
           name="double-arrow"
         />
-        <span v-show="showBar">收起</span>
-        <span v-show="!showBar">快速导航</span>
+        <div :class="$style.tip">
+          <p v-text="showBar ? '收起' : '快速'" />
+          <p v-show="!showBar">
+            导航
+          </p>
+        </div>
       </li>
       <router-link
         tag="li"
@@ -127,15 +131,20 @@ export default {
     width: 92px;
     height: 72px;
     margin: 0 !important;
-    font-size: 18px;
     color: #fbfbfb;
     text-align: center;
     background-color: rgba(58, 58, 58, .6);
     border-radius: 10px 0 0 10px;
-    span {
-      display: inline-block;
-      width: 50px;
-      line-height: 24px;
+    .tip {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      > p {
+        display: inline-block;
+        width: 50px;
+        line-height: 30px;
+        font-size: 20px;
+      }
     }
     .double-arrow {
       width: 18px;
