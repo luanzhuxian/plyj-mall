@@ -46,7 +46,7 @@ new Vue({
   store,
   render: h => h(App),
   renderError: (h, err) => {
-    console.error(err)
+    console.log(err)
   }
 })
 
@@ -69,6 +69,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
     }
   }
   Toast(error.message)
+  console.error(err)
   // try {
   //   await saveLog(error)
   // } catch (e) {

@@ -31,6 +31,7 @@
       <slot
         :list="list"
         :total="total"
+        :loading="loading"
       />
       <svg
         :class="{ [$style.bottomLoadingIcon]: true, [$style.btoRotate]: pending }"
@@ -150,6 +151,7 @@ export default {
   methods: {
     bindScroll () {
       this.$nextTick(() => {
+        this.offsetHeight = this.$el.offsetHeight
         this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
         window.addEventListener('scroll', this.scrollHandler, { passive: true })
       })
@@ -273,6 +275,7 @@ export default {
     },
     async infiniteScroll () {
       // console.log(this.offsetHeight, window.scrollY, window.innerHeight, this.pending, this.allLoaded)
+      if (this.offsetHeight === 0) return
       if (this.offsetHeight - window.scrollY - window.innerHeight <= 0 && !this.pending && !this.allLoaded) {
         this.options.current++
         try {

@@ -18,6 +18,7 @@
       :request-methods="getActivityProduct"
       :form="form"
       ref="loadMore"
+      :loading.sync="loading"
       no-content-tip="暂无活动商品"
     >
       <template v-slot="{ list }">
@@ -35,7 +36,7 @@
         </template>
 
         <div
-          v-else
+          v-else-if="loading"
           :class="$style.skeleton"
         >
           <div :class="$style.left + ' ' + $style.skeAnimation" />
@@ -163,12 +164,6 @@ export default {
     }
   }
   .skeAnimation {
-    background: #eee linear-gradient(90deg, #eee 30%, rgba(255, 255, 255, .5) 48%, rgba(255, 255, 255, .5) 52%, #eee 70%) no-repeat 130% center;
-    background-size: 200% 100%;
-    animation: bgc .8s linear infinite;
-  }
-  @keyframes bgc {
-    0% { background-position: 130% center; }
-    100% { background-position: -130% center; }
+    @include skeAnimation(#eee)
   }
 </style>

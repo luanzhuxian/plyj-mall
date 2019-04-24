@@ -16,9 +16,9 @@
       >
         <template v-slot="{ list }">
           <router-link
-            v-for="(item, i) of list"
+            v-for="item of list"
             tag="div"
-            :key="i"
+            :key="item.orderInfoModel.sequenceNbr"
             :to="{ name: 'OrderDetail', params: { orderId: item.orderInfoModel.orderSn } }"
             :class="'mb-28 ' + $style.orderBox"
           >
@@ -162,15 +162,16 @@ export default {
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
+    this.$refresh()
   },
   activated () {
-    this.form.orderStatus = this.status || ''
-    if (this.status === 'FINISHED') {
-      this.form.assessment = 'NO'
-    } else {
-      this.form.assessment = ''
-    }
-    this.$refresh()
+    // this.form.orderStatus = this.status || ''
+    // if (this.status === 'FINISHED') {
+    //   this.form.assessment = 'NO'
+    // } else {
+    //   this.form.assessment = ''
+    // }
+    // this.$refresh()
   },
   methods: {
     tabChange (item) {

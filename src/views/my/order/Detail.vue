@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.orderDetail">
+  <div
+    v-if="loaded"
+    :class="$style.orderDetail"
+  >
     <div :class="$style.top">
       <!-- 已完成 本次交易已完成，感谢下次光临 -->
       <!-- 待付款 等待买家付款… -->
@@ -17,16 +20,11 @@
     </div>
 
     <div :class="$style.receivingInfo">
-      <transition
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
-      >
-        <express-item
-          v-if="orderExpressInfoModel"
-          :express-name="orderExpressInfoModel.courierCompany"
-          :express-number="orderExpressInfoModel.courierNo"
-        />
-      </transition>
+      <express-item
+        v-if="orderExpressInfoModel"
+        :express-name="orderExpressInfoModel.courierCompany"
+        :express-number="orderExpressInfoModel.courierNo"
+      />
       <address-item
         v-if="address.realName"
         :address="address"
@@ -173,6 +171,47 @@
       />
     </div>
   </div>
+
+  <div
+    v-else
+    :class="$style.skeleton"
+  >
+    <div :class="$style.skeleton1 + ' ' + $style.skeAnimation" />
+    <div :class="$style.skeleton2 + ' ' + $style.skeAnimation" />
+    <div :class="$style.skeleton3">
+      <div :class="$style.skeleton31">
+        <div :class="$style.skeleton311 + ' ' + $style.skeAnimation" />
+        <div :class="$style.skeleton312">
+          <div :class="$style.skeleton3121 + ' ' + $style.skeAnimation" />
+          <div :class="$style.skeleton3122 + ' ' + $style.skeAnimation" />
+        </div>
+      </div>
+      <div :class="$style.skeleton31">
+        <div :class="$style.skeleton311 + ' ' + $style.skeAnimation" />
+        <div :class="$style.skeleton312">
+          <div :class="$style.skeleton3121 + ' ' + $style.skeAnimation" />
+          <div :class="$style.skeleton3122 + ' ' + $style.skeAnimation" />
+        </div>
+      </div>
+    </div>
+    <div :class="$style.skeleton4">
+      <div :class="$style.skeleton41 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton42 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton43">
+        <div :class="$style.skeleton431 + ' ' + $style.skeAnimation" />
+        <div :class="$style.skeleton432">
+          <div :class="$style.skeleton4321 + ' ' + $style.skeAnimation" />
+          <div :class="$style.skeleton4322 + ' ' + $style.skeAnimation" />
+          <div :class="$style.skeleton4323 + ' ' + $style.skeAnimation" />
+        </div>
+      </div>
+      <div :class="$style.skeleton44 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton45 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton46 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton47 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton48 + ' ' + $style.skeAnimation" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -226,10 +265,11 @@ export default {
       orderDetailModel: {},
       relationModel: [],
       orderExpressInfoModel: null,
-      orderInvoiceModel: null,
+      orderInvoiceModel: {},
       currentStatus: '',
       orderType: '',
-      timer: 0
+      timer: 0,
+      loaded: false
     }
   },
   props: {
@@ -256,19 +296,29 @@ export default {
     getDetail () {
       return new Promise(async (resolve, reject) => {
         try {
+          this.loaded = false
           clearInterval(this.timer)
           let { result } = await getOrderDetail(this.orderId)
-          let { orderInfoModel, orderDetailModel, relationModel, supportPhone, orderExpressInfoModel, orderInvoiceModel, supplierOrder } = result
+          let {
+            orderInfoModel,
+            orderDetailModel,
+            relationModel,
+            supportPhone,
+            orderExpressInfoModel,
+            orderInvoiceModel,
+            supplierOrder
+          } = result
           this.detail = result
           this.supplierOrder = supplierOrder
           this.orderInfoModel = orderInfoModel
           this.orderDetailModel = orderDetailModel
           this.relationModel = relationModel
           this.orderInvoiceModel = orderInvoiceModel
-          this.orderExpressInfoModel = orderExpressInfoModel && orderExpressInfoModel.filter(val => {
-            return val.orderStatus === 'WAIT_RECEIVE'
-          })[0]
-
+          if (orderExpressInfoModel) {
+            this.orderExpressInfoModel = orderExpressInfoModel.filter(val => {
+              return val.orderStatus === 'WAIT_RECEIVE'
+            })[0]
+          }
           this.currentStatus = orderInfoModel.orderStatus
           this.supportPhone = supportPhone
           this.orderType = orderInfoModel.orderType
@@ -284,6 +334,7 @@ export default {
             this.countDown(10 * 24 * 60 * 60 * 1000 - now + startTime + 2000, 'WAIT_RECEIVE')
           }
           resolve()
+          this.loaded = true
         } catch (e) {
           reject(e)
         }
@@ -461,5 +512,110 @@ export default {
     padding: 20px 0;
     font-size: 26px;
     color: #666;
+  }
+
+  .skeleton {
+    padding: 28px 40px;
+  }
+  .skeleton1 {
+    width: 200px;
+    height: 53px;
+  }
+  .skeleton2 {
+    width: 500px;
+    height: 37px;
+    margin-top: 14px;
+  }
+  .skeleton3 {
+    margin-top: 28px;
+    background-color: #fff;
+    .skeleton3-1 {
+      display: flex;
+      align-items: center;
+      padding: 34px 28px;
+    }
+    .skeleton3-1-1 {
+      width: 64px;
+      height: 64px;
+    }
+    .skeleton3-1-2 {
+      margin-left: 28px;
+    }
+    .skeleton3-1-2-1 {
+      width: 150px;
+      height: 37px;
+    }
+    .skeleton3-1-2-2 {
+      width: 300px;
+      height: 30px;
+      margin-top: 6px;
+    }
+  }
+  .skeleton4 {
+    margin-top: 30px;
+    padding: 24px 28px;
+    background-color: #fff;
+  }
+  .skeleton4-1 {
+    width: 364px;
+    height: 32px;
+  }
+  .skeleton4-2 {
+    width: 214px;
+    height: 32px;
+    margin-top: 8px;
+  }
+  .skeleton4-3 {
+    display: flex;
+    margin-top: 30px;
+  }
+  .skeleton4-3-1 {
+    width: 140px;
+    height: 140px;
+  }
+  .skeleton4-3-2 {
+    margin-left: 18px;
+  }
+  .skeleton4-3-2-1 {
+    width: 150px;
+    height: 32px;
+  }
+  .skeleton4-3-2-2 {
+    width: 250px;
+    height: 32px;
+    margin-top: 8px;
+  }
+  .skeleton4-3-2-3 {
+    width: 100px;
+    height: 32px;
+    margin-top: 8px;
+  }
+  .skeleton4-4 {
+    width: 112px;
+    height: 37px;
+    margin-top: 80px;
+  }
+  .skeleton4-5 {
+    width: 300px;
+    height: 40px;
+    margin-top: 12px;
+  }
+  .skeleton4-6 {
+    width: 150px;
+    height: 37px;
+    margin-top: 50px;
+  }
+  .skeleton4-7 {
+    width: 250px;
+    height: 37px;
+    margin-top: 14px;
+  }
+  .skeleton4-8 {
+    width: 350px;
+    height: 40px;
+    margin-top: 50px;
+  }
+  .skeAnimation {
+    @include skeAnimation(#eee)
   }
 </style>

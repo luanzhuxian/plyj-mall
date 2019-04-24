@@ -188,6 +188,7 @@ export default {
     },
     confirm () {
       if (this.checkCount(this.count)) {
+        this.count = Number.parseInt(this.count)
         this.close()
         this.$emit('confirm', Object.assign({ count: this.count }, this.selected))
       }
