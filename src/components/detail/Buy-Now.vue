@@ -62,8 +62,9 @@ export default {
         // 如果是供应商商品，这样跳转至提交订单页面
         let { result } = await getPenglaiAppid()
         let { protocol, host } = location
-        let href = `${protocol}//${host}/${this.mallDomain}/my/order/submit/${productSeq}/${optionCode}/${count}${brokerId ? ('/' + brokerId) : ''}`
+        let href = `${protocol}//${host}/${this.mallDomain}/order/submit/${productSeq}/${optionCode}/${count}${brokerId ? ('/' + brokerId) : ''}`
         let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${result}&redirect_uri=${href}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
+        // console.log(url)
         return location.replace(url)
       }
       if (brokerId) {

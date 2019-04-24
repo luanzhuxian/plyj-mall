@@ -196,7 +196,11 @@ export default {
       productCount: count,
       productSeq: productSeq
     }
-    this.getProductDetail()
+    try {
+      await this.getProductDetail()
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
     async getProductDetail () {
@@ -209,23 +213,20 @@ export default {
         this.form.orderType = this.productType = result.productType
         this.form.addressSeq = result.productType === 'PHYSICAL_GOODS' ? (this.selectedAddress.sequenceNbr || '') : ''
         this.getOption(result.priceModels)
+        this.loading = false
 
         // 供应商获取运费, 如果出错，返回商品详情
         if (this.supplierProduct) {
-          try {
-            await this.getFreightOfSupplier()
-          } catch (e) {
-            if (/库存不足/.test(e.message)) {
-              this.disableSubmit = true
-              return
-            } else {
-              this.$router.replace({ name: 'SoldOut' })
-            }
-          }
+          await this.getFreightOfSupplier()
         }
         this.disableSubmit = false
       } catch (e) {
         this.disableSubmit = false
+        if (/库存不足/.test(e.message)) {
+          this.disableSubmit = true
+        } else {
+          this.$router.replace({ name: 'SoldOut' })
+        }
         throw e
       } finally {
         this.loading = false
