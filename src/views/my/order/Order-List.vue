@@ -162,7 +162,6 @@ export default {
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
-    this.$refresh()
   },
   activated () {
     if (this.form.orderStatus !== this.status) {
