@@ -58,6 +58,7 @@ import Grade from '../../../components/Grade.vue'
 import { getOrderDetail } from '../../../apis/order-manager'
 import { mapGetters } from 'vuex'
 import { submitComment } from '../../../apis/comment'
+import { resetForm } from '../../../assets/js/util'
 
 export default {
   name: 'Comment',
@@ -95,6 +96,13 @@ export default {
   },
   activated () {
     this.getOrderDetail()
+  },
+  deactivated () {
+    resetForm(this.form, {
+      goodsScore: 5,
+      serviceScore: 5,
+      timeScore: 5
+    })
   },
   methods: {
     async getOrderDetail () {

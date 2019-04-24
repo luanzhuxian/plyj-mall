@@ -165,13 +165,15 @@ export default {
     this.$refresh()
   },
   activated () {
-    // this.form.orderStatus = this.status || ''
-    // if (this.status === 'FINISHED') {
-    //   this.form.assessment = 'NO'
-    // } else {
-    //   this.form.assessment = ''
-    // }
-    // this.$refresh()
+    if (this.form.orderStatus !== this.status) {
+      this.form.orderStatus = this.status || ''
+      if (this.status === 'FINISHED') {
+        this.form.assessment = 'NO'
+      } else {
+        this.form.assessment = ''
+      }
+      this.$refresh()
+    }
   },
   methods: {
     tabChange (item) {
