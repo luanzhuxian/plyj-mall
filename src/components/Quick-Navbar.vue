@@ -120,7 +120,7 @@ export default {
   }
   .on-off {
     position: absolute;
-    left: -88px;
+    left: -92px;
     display: flex;
     justify-content: center;
     align-items: center;
