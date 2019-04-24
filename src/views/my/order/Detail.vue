@@ -248,6 +248,7 @@ export default {
       },
       orderInfoModel: {},
       orderDetailModel: {},
+      orderRefundDetail: {},
       relationModel: [],
       orderExpressInfoModel: null,
       orderInvoiceModel: {},
@@ -267,7 +268,9 @@ export default {
     ...mapGetters(['orderStatusMap']),
     // 是否可以申请售后
     canIApplyService: function () {
-      return (this.currentStatus === 'FINISHED' || this.currentStatus === 'WAIT_RECEIVE' || this.currentStatus === 'WAIT_SHIP') && this.orderType !== 'VIRTUAL_GOODS'
+      return (this.currentStatus === 'FINISHED' || this.currentStatus === 'WAIT_RECEIVE' || this.currentStatus === 'WAIT_SHIP') &&
+        this.orderType !== 'VIRTUAL_GOODS' && // 不是虚拟商品
+        !this.orderRefundDetail.refundId // 没有申请过
     }
   },
   async activated () {
@@ -294,7 +297,8 @@ export default {
             supportPhone,
             orderExpressInfoModel,
             orderInvoiceModel,
-            supplierOrder
+            supplierOrder,
+            orderRefundDetail
           } = result
           this.detail = result
           this.supplierOrder = supplierOrder
@@ -302,6 +306,7 @@ export default {
           this.orderDetailModel = orderDetailModel
           this.relationModel = relationModel
           this.orderInvoiceModel = orderInvoiceModel
+          this.orderRefundDetail = orderRefundDetail
           if (orderExpressInfoModel) {
             this.orderExpressInfoModel = orderExpressInfoModel.filter(val => {
               return val.orderStatus === 'WAIT_RECEIVE'

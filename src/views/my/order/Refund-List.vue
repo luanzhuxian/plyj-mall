@@ -40,7 +40,6 @@
               已退款
             </pl-button>
             <pl-button
-              v-if="item.orderInfoModel.orderStatus === 'FINISHED_REFUND'"
               type="primary"
               plain
               round

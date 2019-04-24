@@ -114,6 +114,7 @@ export default {
   methods: {
     refreshHandler (list) {
       this.formatList = []
+      this.list = []
       this.batching(list)
     },
     more (allList, total, currentList) {
@@ -131,37 +132,49 @@ export default {
         item.year = date.getFullYear()
         item.yearMoneth = item.year + item.month
       }
-      this.list = [...list]
+      this.list = [...this.list, ...list]
+      if (this.list.length === 0) return
+      this.sortUserTime()
+    },
+    // 按时间排序
+    sortUserTime () {
+      this.list.sort((i, j) => {
+        return i.createTimestamp < j.createTimestamp
+      })
       this.format()
     },
-
     // 按年月分组
     format () {
-      if (this.list.length === 0) return
-      let list = this.list
-      // 每次取出list中的第一个作为标准
-      let warp = [list[0]]
-      warp.year = list[0].year
-      warp.month = list[0].month
-      // 然后删除list中的第一个
-      list.splice(0, 1)
-      // 用wrap中的第一个与list中的其他做比较，去除年月相同的项目放入warp中
-      for (let item of list) {
-        if (item.yearMoneth === warp[0].yearMoneth) {
-          warp.push(item)
+      this.formatList = []
+      let listTemp = [...this.list]
+      let m = listTemp[0].month
+      let y = listTemp[0].year
+      while (!this.foramtListLength()) {
+        let filter = this.list.filter(item => {
+          return m === item.month && item.year === y
+        })
+        filter.month = m
+        filter.year = y
+        this.formatList.push(filter)
+        // 删除已经过滤出来的项
+        for (let item of filter) {
+          let index = listTemp.indexOf(item)
+          listTemp.splice(index, 1)
         }
-      }
-      // 从list中删除存在与warp中的项
-      for (let item of warp) {
-        let index = list.indexOf(item)
-        if (index !== -1) {
-          list.splice(index, 1)
+        if (listTemp.length === 0) {
+          break
         }
+        m = listTemp[0].month
+        y = listTemp[0].year
       }
-      // 此时已经按年月分号了一组数据，放入formatList中
-      this.formatList.push(warp)
-      // 进行尾递归，直到list中没有数据
-      return this.format()
+    },
+    // 判断已经格式化的数量是否等于总数
+    foramtListLength () {
+      let len = 0
+      for (let item of this.formatList) {
+        len += item.length
+      }
+      return len === this.list.length
     }
   }
 }
