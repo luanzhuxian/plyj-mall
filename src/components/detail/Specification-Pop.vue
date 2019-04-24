@@ -294,21 +294,25 @@ export default {
   }
   .count {
     > .countCtr {
-      display: grid;
-      grid-template-columns: 60px 120px 60px;
-      grid-column-gap: 3px;
+      display: flex;
       height: 60px;
       button {
+        height: 60px;
+        width: 60px;
         font-size: 26px;
         font-weight: bold;
         color: #999;
         background-color: #f3f3f3;
       }
       input {
+        width: 80px;
+        height: 60px;
+        margin: 0 2px;
         padding: 0 10px;
         text-align: center;
         font-size: 20px;
         background-color: #f3f3f3;
+        border-radius: 0 !important;
       }
     }
   }

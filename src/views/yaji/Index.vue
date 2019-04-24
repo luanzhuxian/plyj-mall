@@ -21,16 +21,31 @@
       no-content-tip="暂无活动商品"
     >
       <template v-slot="{ list }">
-        <ShareItem
-          v-for="(item, i) of list"
-          :key="i"
-          :price="item.priceModels[0].price"
-          :grade="5"
-          :id="item.contentId"
-          :desc="item.productDesc"
-          :title="item.productName"
-          :img="item.productImage[0].mediaUrl"
-        />
+        <template v-if="list.length > 0">
+          <ShareItem
+            v-for="(item, i) of list"
+            :key="i"
+            :price="item.priceModels[0].price"
+            :grade="5"
+            :id="item.contentId"
+            :desc="item.productDesc"
+            :title="item.productName"
+            :img="item.productImage[0].mediaUrl"
+          />
+        </template>
+
+        <div
+          v-else
+          :class="$style.skeleton"
+        >
+          <div :class="$style.left + ' ' + $style.skeAnimation" />
+          <div :class="$style.right">
+            <div :class="$style.rightA + ' ' + $style.skeAnimation" />
+            <div :class="$style.rightB + ' ' + $style.skeAnimation" />
+            <div :class="$style.rightC + ' ' + $style.skeAnimation" />
+            <div :class="$style.rightD + ' ' + $style.skeAnimation" />
+          </div>
+        </div>
       </template>
     </load-more>
   </div>
@@ -105,5 +120,55 @@ export default {
       fill: #fff;
       font-weight: bold;
     }
+  }
+  .skeleton {
+    position: relative;
+    width: 670px;
+    height: 318px;
+    margin: 28px auto 0;
+    .left {
+      width: 480px;
+      height: 318px;
+      border-radius: $--radius1;
+    }
+    .right {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      width: 342px;
+      height: 206px;
+      padding: 28px 20px;
+      border-radius: $--radius1;
+      background-color: #dadada;
+    }
+    .rightA {
+      width: 288px;
+      height: 40px;
+    }
+    .rightB {
+      width: 180px;
+      height: 28px;
+      margin-top: 12px;
+    }
+    .rightC {
+      height: 14px;
+      width: 100px;
+      margin-top: 12px;
+    }
+    .rightD {
+      width: 220px;
+      height: 53px;
+      margin-top: 40px;
+    }
+  }
+  .skeAnimation {
+    background: #eee linear-gradient(90deg, #eee 30%, rgba(255, 255, 255, .5) 48%, rgba(255, 255, 255, .5) 52%, #eee 70%) no-repeat 130% center;
+    background-size: 200% 100%;
+    animation: bgc .8s linear infinite;
+  }
+  @keyframes bgc {
+    0% { background-position: 130% center; }
+    100% { background-position: -130% center; }
   }
 </style>
