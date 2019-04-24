@@ -35,7 +35,7 @@
           />
         </template>
 
-        <div
+        <!--<div
           v-else-if="loading"
           :class="$style.skeleton"
         >
@@ -46,7 +46,7 @@
             <div :class="$style.rightC + ' ' + $style.skeAnimation" />
             <div :class="$style.rightD + ' ' + $style.skeAnimation" />
           </div>
-        </div>
+        </div>-->
       </template>
     </load-more>
   </div>

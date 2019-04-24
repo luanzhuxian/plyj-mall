@@ -60,7 +60,8 @@ export default {
       isSupplierProduct: false,
       priceModels: [],
       detail: {},
-      $refresh: null
+      $refresh: null,
+      loading: false
     }
   },
   computed: {
@@ -98,9 +99,17 @@ export default {
       }
     },
     async popConfirm (option) {
-      let { result } = await createBrokerShare(this.productSeq)
-      result = result || {}
-      this.$refs.buyNow.jumpSubmit(option, this.isSupplierProduct, result.sequenceNbr || null)
+      if (this.loading) return
+      try {
+        this.loading = true
+        let { result } = await createBrokerShare(this.productSeq)
+        result = result || {}
+        this.$refs.buyNow.jumpSubmit(option, this.isSupplierProduct, result.sequenceNbr || null)
+      } catch (e) {
+        throw e
+      } finally {
+        this.loading = false
+      }
     },
     buyNow () {
       this.showPop = true

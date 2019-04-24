@@ -268,7 +268,8 @@ export default {
         E: []
       },
       maybeLike: [],
-      moment
+      moment,
+      creatingBroker: false
     }
   },
   computed: {
@@ -340,14 +341,16 @@ export default {
       let route = {
         name: 'Lesson', params: { productSeq, brokerId: null }
       }
-      if (this.agentUser) {
+      if (this.agentUser && !this.creatingBroker) {
         try {
+          this.creatingBroker = true
           let { result } = await createBrokerShare(productSeq)
           result = result || {}
           route.params.brokerId = result.sequenceNbr || null
         } catch (e) {
           throw e
         } finally {
+          this.creatingBroker = false
           this.$router.push(route)
         }
       }

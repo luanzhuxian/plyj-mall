@@ -59,6 +59,11 @@ export default {
     Grade,
     Price
   },
+  data () {
+    return {
+      loading: false
+    }
+  },
   props: {
     price: {
       type: [String, Number],
@@ -87,12 +92,15 @@ export default {
   },
   methods: {
     async buyNow () {
-      if (this.id) {
-        let { result } = await createBrokerShare(this.id)
-        if (result) {
-          this.$router.push({ name: 'Lesson', params: { productSeq: this.id, brokerId: result.sequenceNbr } })
-        } else {
-          this.$router.push({ name: 'Lesson', params: { productSeq: this.id } })
+      if (this.id && !this.loading) {
+        try {
+          this.loading = true
+          let { result } = await createBrokerShare(this.id)
+          this.$router.push({ name: 'Lesson', params: { productSeq: this.id, brokerId: result.sequenceNbr || null } })
+        } catch (e) {
+          throw e
+        } finally {
+          this.loading = false
         }
       }
     }

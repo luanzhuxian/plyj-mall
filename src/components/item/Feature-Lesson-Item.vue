@@ -47,21 +47,58 @@ export default {
   components: {
     Price
   },
+  data () {
+    return {
+      loading: false
+    }
+  },
   props: {
-    img: String,
-    title: String,
-    time: String,
-    count: [String, Number],
-    price: [String, Number],
-    originalPrice: [String, Number],
-    productSeq: String,
-    desc: String
+    img: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    time: {
+      type: String,
+      default: ''
+    },
+    count: {
+      type: [String, Number],
+      default: ''
+    },
+    price: {
+      type: [String, Number],
+      default: ''
+    },
+    originalPrice: {
+      type: [String, Number],
+      default: ''
+    },
+    productSeq: {
+      type: String,
+      default: ''
+    },
+    desc: {
+      type: String,
+      default: ''
+    }
   },
   methods: {
     async handleClick () {
-      let { result } = await createBrokerShare(this.productSeq)
-      // this.$router.push({ name: 'FeatureLesson', params: { productSeq: this.productSeq, brokerId: result ? result.sequenceNbr : null } })
-      this.$router.push({ name: 'Lesson', params: { productSeq: this.productSeq, brokerId: result ? result.sequenceNbr : null } })
+      if (this.loading) return
+      try {
+        this.loading = true
+        let { result } = await createBrokerShare(this.productSeq)
+        // this.$router.push({ name: 'FeatureLesson', params: { productSeq: this.productSeq, brokerId: result ? result.sequenceNbr : null } })
+        this.$router.push({ name: 'Lesson', params: { productSeq: this.productSeq, brokerId: result ? result.sequenceNbr : null } })
+      } catch (e) {
+        throw e
+      } finally {
+        this.loading = false
+      }
     }
   }
 }

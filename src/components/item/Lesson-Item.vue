@@ -55,20 +55,46 @@ export default {
   components: {
     Price
   },
+  data () {
+    return {
+      loading: false
+    }
+  },
   props: {
-    id: String,
-    img: String,
-    title: String,
+    id: {
+      type: String,
+      default: ''
+    },
+    img: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
+    },
     tags: {
       type: Array,
       default: function () {
         return []
       }
     },
-    desc: String,
-    count: [String, Number],
-    price: [String, Number],
-    originalPrice: [String, Number],
+    desc: {
+      type: String,
+      default: ''
+    },
+    count: {
+      type: [String, Number],
+      default: ''
+    },
+    price: {
+      type: [String, Number],
+      default: ''
+    },
+    originalPrice: {
+      type: [String, Number],
+      default: ''
+    },
     size: {
       type: String,
       default: 'large'
@@ -77,9 +103,17 @@ export default {
   },
   methods: {
     async handleClick () {
-      let { result } = await createBrokerShare(this.id)
-      result = result || {}
-      this.$router.push({ name: 'Lesson', params: { productSeq: this.id, brokerId: result.sequenceNbr || null } })
+      if (this.loading) return
+      try {
+        this.loading = true
+        let { result } = await createBrokerShare(this.id)
+        result = result || {}
+        this.$router.push({ name: 'Lesson', params: { productSeq: this.id, brokerId: result.sequenceNbr || null } })
+      } catch (e) {
+        throw e
+      } finally {
+        this.loading = false
+      }
     }
   }
 }

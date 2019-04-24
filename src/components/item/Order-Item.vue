@@ -42,7 +42,8 @@ export default {
   name: 'OrderItem',
   data () {
     return {
-      brokerId: ''
+      brokerId: '',
+      loading: false
     }
   },
   props: {
@@ -98,13 +99,16 @@ export default {
       }
     },
     async getBorkerId () {
-      if (this.productSeq) {
+      if (this.productSeq && !this.loading) {
         try {
+          this.loading = true
           let share = await createBrokerShare(this.productSeq)
           share.result = share.result || {}
           this.brokerId = share.result.sequenceNbr || null
         } catch (e) {
           throw e
+        } finally {
+          this.loading = false
         }
       }
     }
