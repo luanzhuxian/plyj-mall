@@ -292,6 +292,9 @@ export default {
       throw e
     }
   },
+  deactivated () {
+    this.orderExpressInfoModel = null
+  },
   methods: {
     getDetail () {
       return new Promise(async (resolve, reject) => {

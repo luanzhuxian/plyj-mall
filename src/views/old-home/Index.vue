@@ -393,13 +393,7 @@ export default {
     }
   }
   .skeAnimation {
-    background: #eee linear-gradient(90deg, #eee 30%, rgba(255, 255, 255, .5) 48%, rgba(255, 255, 255, .5) 52%, #eee 70%) no-repeat 130% center;
-    background-size: 200% 100%;
-    animation: bgc .8s linear infinite;
-  }
-  @keyframes bgc {
-    0% { background-position: 130% center; }
-    100% { background-position: -130% center; }
+    @include skeAnimation(#eee)
   }
 </style>
 <style lang="scss">

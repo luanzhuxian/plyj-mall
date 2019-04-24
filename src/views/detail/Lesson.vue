@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.lesson">
     <DetailBanner :banners="banners" />
-    <DetailInfoBox>
+    <DetailInfoBox :loading="loading">
       <DetailTitle v-text="detail.productName" />
       <DetailDesc v-text="detail.productDesc" />
       <div :class="$style.price">
@@ -109,7 +109,6 @@ import SpecificationBox from '../../components/detail/Specification-Box.vue'
 import ModuleTitle from '../../components/Module-Title.vue'
 import Price from '../../components/Price.vue'
 import { getProductDetail } from '../../apis/product'
-import { Indicator } from 'mint-ui'
 import MaybeYouLike from '../../components/Maybe-You-Like.vue'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
@@ -151,7 +150,8 @@ export default {
       },
       isSupplierProduct: false,
       agentProduct: false,
-      showSpecifica: false
+      showSpecifica: false,
+      loading: false
     }
   },
   props: {
@@ -177,12 +177,12 @@ export default {
   },
   methods: {
     async getDetail () {
+      this.loading = true
       this.resetState() // 重置一些状态
-      Indicator.open({ spinnerType: 'fading-circle' })
       try {
         let { result } = await getProductDetail(this.productSeq)
         if (result.productStatus !== 'ON_SALE') {
-          Indicator.close()
+          this.loading = false
           return this.$router.replace({ name: 'SoldOut' })
         }
         let { mallSeq, sequenceNbr, supplierProduct, agentProduct, priceModels, productImage } = result
@@ -206,7 +206,6 @@ export default {
         // 统计销售数量
         this.detail = result
         this.currentSpec = priceModels[0]
-        Indicator.close()
         // 配置分享
         share({
           appId: this.appId,
@@ -215,8 +214,8 @@ export default {
           link: window.location.href,
           imgUrl: result.productImage[0].mediaUrl + '?x-oss-process=image/resize,w_200'
         })
+        this.loading = false
       } catch (e) {
-        Indicator.close()
         this.$router.replace({ name: 'SoldOut' })
         throw e
       }
