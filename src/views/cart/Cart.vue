@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.cart">
+  <div
+    v-if="!loading"
+    :class="$style.cart"
+  >
     <div
       :class="$style.address + ' radius-20'"
       v-if="this.productType === 'PHYSICAL_GOODS'"
@@ -63,13 +66,29 @@
       </div>
       <pl-button
         :disabled="disableSubmit"
-        :loading="loading"
+        :loading="submiting"
         type="warning"
         size="large"
         @click="submitOrder"
       >
         确认付款
       </pl-button>
+    </div>
+  </div>
+
+  <div
+    :class="$style.skeleton"
+    v-else
+  >
+    <div :class="$style.skeleton1">
+      <AddressItemSkeleton />
+    </div>
+    <div :class="$style.skeleton2">
+      <div :class="$style.skeleton21 + ' ' + $style.skeAnimation" />
+      <OrderItemSkeleton />
+      <div :class="$style.skeleton22 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton23 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton24 + ' ' + $style.skeAnimation" />
     </div>
   </div>
 </template>
@@ -90,17 +109,22 @@ import { getProductDetail } from '../../apis/product'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { setSession } from '../../assets/js/util'
 import { mapGetters } from 'vuex'
+import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
+import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Qs from 'qs'
 export default {
   name: 'Cart',
   components: {
     AddressItem,
-    OrderItem
+    OrderItem,
+    OrderItemSkeleton,
+    AddressItemSkeleton
   },
   data () {
     return {
       disableSubmit: false, // 临时禁用提交按钮，尤其在供应商商品支付时，来回跳转的过程中有效，防止支付数据未拿到时用户点击提交按钮
-      loading: false,
+      submiting: false,
+      loading: true,
       detail: {},
       option: {},
       totalMoney: 0,
@@ -178,6 +202,7 @@ export default {
     async getProductDetail () {
       try {
         this.disableSubmit = true
+        this.loading = true
         let { result } = await getProductDetail(this.productSeq)
         this.detail = result
         this.form.supplierOrder = this.supplierProduct = result.supplierProduct
@@ -202,6 +227,8 @@ export default {
       } catch (e) {
         this.disableSubmit = false
         throw e
+      } finally {
+        this.loading = false
       }
     },
     /* 获取规格 */
@@ -232,11 +259,11 @@ export default {
         if (this.supplierProduct) {
           return this.supplierPay()
         }
-        this.loading = true
+        this.submiting = true
         let { result } = await this.typeMap[this.productType](this.form)
         await this.pay(result.CREDENTIAL, result.orderModel.orderSn)
       } catch (e) {
-        this.loading = false
+        this.submiting = false
         throw e
       }
     },
@@ -267,7 +294,7 @@ export default {
     async supplierPay () {
       let code = Qs.parse(location.search.substring(1)).code
       try {
-        this.loading = true
+        this.submiting = true
         let { result } = await getOpenIdByCode(code)
         let payData = await this.typeMap[this.productType](this.form, result)
         await this.pay(payData.result.CREDENTIAL, payData.result.orderModel.orderSn)
@@ -275,7 +302,7 @@ export default {
         delete this.form.orderSn
         delete this.form.billNo
       } catch (e) {
-        this.loading = false
+        this.submiting = false
         delete this.form.sixEnergyNewOrderReturnModel
         delete this.form.orderSn
         delete this.form.billNo
@@ -287,11 +314,11 @@ export default {
       return new Promise(async (resolve, reject) => {
         try {
           await wechatPay(CREDENTIAL)
-          this.loading = false
+          this.submiting = false
           this.$router.replace({ name: 'PaySuccess', params: { orderId: orderSn } })
           resolve()
         } catch (e) {
-          this.loading = false
+          this.submiting = false
           if (this.supplierProduct) { // 支付失败时，如果是供应商商品，则取消订单，并跳回商品详情
             try {
               await this.typeMapOfCancel[this.productType](orderSn)
@@ -373,5 +400,39 @@ export default {
     > button {
       flex: 1;
     }
+  }
+
+  .skeleton {
+    padding: 20px 40px;
+  }
+  .skeleton1 {
+    background-color: #fff;
+  }
+  .skeleton2 {
+    margin-top: 28px;
+    padding: 20px 28px;
+    background-color: #fff;
+  }
+  .skeleton2-1 {
+    width: 112px;
+    height: 37px;
+  }
+  .skeleton2-2 {
+    width: 122px;
+    height: 37px;
+    margin-top: 23px;
+  }
+  .skeleton2-3 {
+    width: 112px;
+    height: 37px;
+    margin-top: 13px;
+  }
+  .skeleton2-4 {
+    width: 150px;
+    height: 37px;
+    margin-top: 28px;
+  }
+  .skeAnimation {
+    @include skeAnimation(#eee)
   }
 </style>

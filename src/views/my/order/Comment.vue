@@ -103,6 +103,7 @@ export default {
       serviceScore: 5,
       timeScore: 5
     })
+    this.images = []
   },
   methods: {
     async getOrderDetail () {

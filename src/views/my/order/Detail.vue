@@ -179,32 +179,13 @@
     <div :class="$style.skeleton1 + ' ' + $style.skeAnimation" />
     <div :class="$style.skeleton2 + ' ' + $style.skeAnimation" />
     <div :class="$style.skeleton3">
-      <div :class="$style.skeleton31">
-        <div :class="$style.skeleton311 + ' ' + $style.skeAnimation" />
-        <div :class="$style.skeleton312">
-          <div :class="$style.skeleton3121 + ' ' + $style.skeAnimation" />
-          <div :class="$style.skeleton3122 + ' ' + $style.skeAnimation" />
-        </div>
-      </div>
-      <div :class="$style.skeleton31">
-        <div :class="$style.skeleton311 + ' ' + $style.skeAnimation" />
-        <div :class="$style.skeleton312">
-          <div :class="$style.skeleton3121 + ' ' + $style.skeAnimation" />
-          <div :class="$style.skeleton3122 + ' ' + $style.skeAnimation" />
-        </div>
-      </div>
+      <AddressItemSkeleton />
+      <AddressItemSkeleton />
     </div>
     <div :class="$style.skeleton4">
       <div :class="$style.skeleton41 + ' ' + $style.skeAnimation" />
       <div :class="$style.skeleton42 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton43">
-        <div :class="$style.skeleton431 + ' ' + $style.skeAnimation" />
-        <div :class="$style.skeleton432">
-          <div :class="$style.skeleton4321 + ' ' + $style.skeAnimation" />
-          <div :class="$style.skeleton4322 + ' ' + $style.skeAnimation" />
-          <div :class="$style.skeleton4323 + ' ' + $style.skeAnimation" />
-        </div>
-      </div>
+      <OrderItemSkeleton />
       <div :class="$style.skeleton44 + ' ' + $style.skeAnimation" />
       <div :class="$style.skeleton45 + ' ' + $style.skeAnimation" />
       <div :class="$style.skeleton46 + ' ' + $style.skeAnimation" />
@@ -220,6 +201,8 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import ModuleTitle from '../../../components/Module-Title.vue'
 import ExpressItem from '../../../components/item/Express-Item.vue'
 import AddressItem from '../../../components/Address-Item.vue'
+import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
+import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import {
   getOrderDetail,
   physicalOrderCancellation,
@@ -238,7 +221,9 @@ export default {
     OrderItem,
     ModuleTitle,
     ExpressItem,
-    AddressItem
+    AddressItem,
+    OrderItemSkeleton,
+    AddressItemSkeleton
   },
   data () {
     return {
@@ -532,27 +517,6 @@ export default {
   .skeleton3 {
     margin-top: 28px;
     background-color: #fff;
-    .skeleton3-1 {
-      display: flex;
-      align-items: center;
-      padding: 34px 28px;
-    }
-    .skeleton3-1-1 {
-      width: 64px;
-      height: 64px;
-    }
-    .skeleton3-1-2 {
-      margin-left: 28px;
-    }
-    .skeleton3-1-2-1 {
-      width: 150px;
-      height: 37px;
-    }
-    .skeleton3-1-2-2 {
-      width: 300px;
-      height: 30px;
-      margin-top: 6px;
-    }
   }
   .skeleton4 {
     margin-top: 30px;
@@ -565,31 +529,6 @@ export default {
   }
   .skeleton4-2 {
     width: 214px;
-    height: 32px;
-    margin-top: 8px;
-  }
-  .skeleton4-3 {
-    display: flex;
-    margin-top: 30px;
-  }
-  .skeleton4-3-1 {
-    width: 140px;
-    height: 140px;
-  }
-  .skeleton4-3-2 {
-    margin-left: 18px;
-  }
-  .skeleton4-3-2-1 {
-    width: 150px;
-    height: 32px;
-  }
-  .skeleton4-3-2-2 {
-    width: 250px;
-    height: 32px;
-    margin-top: 8px;
-  }
-  .skeleton4-3-2-3 {
-    width: 100px;
     height: 32px;
     margin-top: 8px;
   }
