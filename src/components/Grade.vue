@@ -21,7 +21,10 @@
 export default {
   name: 'Grade',
   props: {
-    grade: Number,
+    grade: {
+      type: Number,
+      default: 1
+    },
     size: {
       type: String,
       default: 'small'
