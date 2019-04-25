@@ -241,7 +241,7 @@ export default {
         await this.$confirm('检查无误并确定提交？')
         await applyOrderInvoice(this.form)
         this.$destroy()
-        this.$router.replace({ name: 'AllOrders' })
+        this.$router.replace({ name: 'Orders' })
       } catch (e) {
         throw e
       }
