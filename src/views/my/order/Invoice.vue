@@ -43,18 +43,20 @@
           label="抬头类型："
           border
         >
-          <pl-radio
-            v-model="form.invoiceType"
-            :label="0"
-          >
-            个人或事业单位
-          </pl-radio>
-          <pl-radio
-            v-model="form.invoiceType"
-            :label="1"
-          >
-            企业
-          </pl-radio>
+          <div :class="$style.invoiceTypeRadio">
+            <pl-radio
+              v-model="form.invoiceType"
+              :label="0"
+            >
+              个人或事业单位
+            </pl-radio>
+            <pl-radio
+              v-model="form.invoiceType"
+              :label="1"
+            >
+              企业
+            </pl-radio>
+          </div>
         </pl-form-item>
         <pl-form-item
           prop="invoiceTitle"
@@ -334,5 +336,8 @@ export default {
     &.hidden {
       height: 218px;
     }
+  }
+  .invoiceTypeRadio {
+    padding: 30px 0;
   }
 </style>

@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     select (e) {
-      this.$router.replace({ name: 'Invoice', params: { id: this.orderId }, query: { content: e.target.innerText } })
+      this.$router.replace({ name: 'Invoice', params: { orderId: this.orderId }, query: { content: e.target.innerText } })
     }
   }
 }
