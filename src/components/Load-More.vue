@@ -1,58 +1,111 @@
 <template>
   <!-- 使用前必须保证滚动容器是window -->
-  <div :class="$style.loadMore"
-       v-on:touchstart="touchstart"
-       v-finger:touch-move.capture="touchMove"
-       v-finger:touch-end="touchend"
-       ref="loadMore">
-    <div :class="{ [$style.pullLoading]: true }"
-         ref="pullLoading"
-         :style="{ '--top': `${top / 7.5}vw`, '--rotate': `${rotate}deg`}">
-      <svg :class="{ [$style.pullLoadingIcon]: true, [$style.rotate]: loading}"
-           xmlns="http://www.w3.org/2000/svg"
-           viewBox="0 0 32 32"
-           width="32"
-           height="32"
-           :fill="top > minPullDis ? '#fe7700' : '#a99d99'">
-        <path opacity=".25" d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"/>
-        <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z">
-          <!--<animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" :dur="loading ? '0.8s' : '999999999s'" repeatCount="indefinite" />-->
-        </path>
+  <div
+    :class="$style.loadMore"
+    ref="loadMore"
+  >
+    <div
+      :class="{ [$style.pullLoading]: true }"
+      ref="pullLoading"
+      :style="{ '--top': `${top / 7.5}vw`, '--rotate': `${rotate}deg`}"
+    >
+      <svg
+        :class="{ [$style.pullLoadingIcon]: true, [$style.rotate]: pending}"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 32 32"
+        width="32"
+        height="32"
+        :fill="top > minPullDis ? '#fe7700' : '#a99d99'"
+      >
+        <path
+          opacity=".25"
+          d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"
+        />
+        <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z" />
       </svg>
     </div>
-    <div :class="$style.loadMoreContainer" ref="container">
-      <slot v-bind:list="list" v-bind:total="total"></slot>
-      <svg :class="{ [$style.bottomLoadingIcon]: true, [$style.btoRotate]: loading }"
-           xmlns="http://www.w3.org/2000/svg"
-           viewBox="0 0 32 32"
-           v-if="bottomLoading"
-           width="32"
-           height="32"
-           style="display: block;"
-           fill="#fe7700">
-        <path opacity=".25" d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"/>
+    <div
+      :class="$style.loadMoreContainer"
+      ref="container"
+    >
+      <slot
+        :list="list"
+        :total="total"
+        :loading="loading"
+      />
+      <svg
+        :class="{ [$style.bottomLoadingIcon]: true, [$style.btoRotate]: pending }"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 32 32"
+        v-if="bottomLoading"
+        width="32"
+        height="32"
+        style="display: block;"
+        fill="#fe7700"
+      >
+        <path
+          opacity=".25"
+          d="M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4"
+        />
         <path d="M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z">
           <!--<animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="0.8s" repeatCount="indefinite" />-->
         </path>
       </svg>
-      <p v-if="allLoaded && list.length > 0" :class="$style.noMore">没有更多了~</p>
-      <div :class="$style.noContent" v-if="list.length === 0 && !loading">
-        <pl-svg :class="$style.noContentIcon" :name="icon"></pl-svg>
-        <p :class="$style.noContentTip" v-text="noContentTip"></p>
+      <p
+        v-if="allLoaded && list.length > 0"
+        :class="$style.noMore"
+      >
+        没有更多了~
+      </p>
+      <div
+        :class="$style.noContent"
+        v-if="list.length === 0 && !pending"
+      >
+        <pl-svg
+          :class="$style.noContentIcon"
+          :name="icon"
+        />
+        <p
+          :class="$style.noContentTip"
+          v-text="noContentTip"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import infiniteScroll from 'vue-infinite-scroll'
+import { throttle } from '../assets/js/util'
 export default {
-  name: 'Load-More',
+  name: 'LoadMore',
+  data () {
+    return {
+      options: null,
+      total: 0,
+      list: [],
+      startY: 0,
+      defaultTop: -90, // 固定值
+      top: -90, // 动态变化的
+      pulling: false, // 正在向下拉动
+      pending: false, // loading
+      bottomLoading: false,
+      allLoaded: false, // 已全部加载完毕
+      timer: 0,
+      offsetHeight: 0,
+      rotate: 0, // 记录loading旋转的角度
+      scrollHandler: null,
+      minPullDis: 60, // 最小触发距离
+      // 缓存发起的所有请求
+      requestBuffer: [],
+      identifier: 0 // 手指标识符
+    }
+  },
   props: {
     isSearch: {
       type: Boolean,
       default: false
     },
+    loading: Boolean,
     // 请求方法
     requestMethods: {
       type: Function,
@@ -75,29 +128,7 @@ export default {
       default: 'no-content'
     }
   },
-  data () {
-    return {
-      options: null,
-      total: 0,
-      list: [],
-      startY: 0,
-      defaultTop: -90, // 固定值
-      top: -90, // 动态变化的
-      pulling: false, // 正在向下拉动
-      loading: false,
-      bottomLoading: false,
-      allLoaded: false, // 已全部加载完毕
-      timer: 0,
-      offsetHeight: 0,
-      rotate: 0, // 记录loading旋转的角度
-      scrollHandler: null,
-      minPullDis: 60 // 最小触发距离
-    }
-  },
   computed: {
-    innerHeight: function () {
-      return window.innerHeight
-    },
     pullLoading: function () {
       return this.$refs.pullLoading
     },
@@ -105,28 +136,31 @@ export default {
       return this.$refs.container
     }
   },
-  watch: {
-    form: {
-      handler: async function () {
-        this.options = JSON.parse(JSON.stringify(this.form))
-        this.refresh()
-      },
-      deep: true
-    }
-  },
-  created () {
-    this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
-    this.options = JSON.parse(JSON.stringify(this.form)) // 复制请求参数
-    this.refresh()
+  mounted () {
   },
   activated () {
-    window.addEventListener('scroll', this.scrollHandler)
+    let el = this.$el
+    /* for the fucking IOS10 */
+    el.addEventListener('touchstart', this.touchstart, { passive: true })
+    el.addEventListener('touchmove', this.touchMove)
+    el.addEventListener('touchend', this.touchend, { passive: true })
+    if (!this.scrollHandler) {
+      this.bindScroll()
+    }
   },
   methods: {
+    bindScroll () {
+      this.$nextTick(() => {
+        this.offsetHeight = this.$el.offsetHeight
+        this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
+        window.addEventListener('scroll', this.scrollHandler, { passive: true })
+      })
+    },
     getData () {
       return new Promise(async (resolve, reject) => {
         try {
-          this.loading = true
+          this.$emit('update:loading', true)
+          this.pending = true
           let { result } = await this.requestMethods(this.options)
           if (result.records.length === 0) {
             this.allLoaded = true
@@ -142,20 +176,25 @@ export default {
     },
     async loadMore () {
       this.options.current++
-      await this.getData()
+      try {
+        await this.getData()
+      } catch (e) {
+        throw e
+      }
     },
     // 本次请求完成，设置loading的位置为初始状态，并重新求得列表的高度
     loaded () {
       this.$nextTick(() => {
         this.$nextTick(() => {
-          this.pullLoading.style.transition = 'top linear .5s'
-          this.loading = false
+          this.pullLoading.style.transition = 'transform .5s ease-in-out'
+          this.$emit('update:loading', false)
           this.top = this.defaultTop
           this.offsetHeight = this.$el.offsetHeight
           // 如果因为一些原因过渡没有被取消，0.6s后强行取消
           setTimeout(() => {
             this.pullLoading.style.transition = null
             this.rotate = 0
+            this.pending = false
           }, 600)
         })
       })
@@ -168,19 +207,30 @@ export default {
       this.top = 100
       window.scrollTo(0, 0)
     },
-    touchstart (e) {
-      this.startY = e.touches[0].clientY
-    },
     // 刷新
     async refresh () {
+      this.options = JSON.parse(JSON.stringify(this.form))
       this.resetState()
-      this.list = await this.getData()
-      this.$emit('refresh', this.list, this.total)
+      try {
+        this.list = await this.getData()
+        this.$emit('refresh', this.list, this.total)
+      } catch (e) {
+        throw e
+      }
+    },
+    touchstart (e) {
+      let touches = Array.from(e.touches)
+      if (touches.length > 1) return
+      this.identifier = touches[0].identifier // 记录当前第一根手指的标识符
+      this.startY = e.touches[0].clientY
     },
     // 本次下拉动作结束
     async touchend (e) {
-      this.startY = 0
-      if (this.pulling) {
+      let touches = Array.from(e.changedTouches)
+      // 判断松开的手指是不是第一次按下的手指
+      let finger = touches.find(item => item.identifier === this.identifier)
+      if (this.pulling && finger) {
+        this.startY = 0
         // 重置页码为1
         this.options.current = 1
         // allLoaded 全部加载完成设置为false，以便下次加载更多
@@ -188,7 +238,7 @@ export default {
         // 表示下拉动作结束
         this.pulling = false
         // 为顶部loading设置过渡
-        this.pullLoading.style.transition = 'top linear .5s'
+        this.pullLoading.style.transition = 'transform linear .5s'
         // 只有在loading完成出现在视野中时，松开才发起请求
         if (this.top > this.minPullDis) {
           this.list = await this.getData()
@@ -199,25 +249,34 @@ export default {
       }
     },
     touchMove (e) {
+      let touches = Array.from(e.touches)
+      if (touches.length > 1) return
+      let finger = touches.find(item => item.identifier === this.identifier)
+
+      let deltaY = finger.clientY - this.startY
+      // console.log(deltaY)
+      // console.log(finger.clientY - this.startY)
+      // console.log(e.touches[0].identifier, this.identifier)
+      // console.log(this.pending, this.pulling)
+      if (this.pending) return
+      if (e.touches.length > 1) return
       // 如果使在顶部，并且是向下拉，禁止默认行为
-      if (e.deltaY >= 0 && window.scrollY === 0) {
+      if (deltaY >= 0 && window.scrollY === 0) {
+        e.stopPropagation()
         e.preventDefault()
+        this.pulling = true
       }
       if (this.pulling) {
-        e.preventDefault()
-        e.stopPropagation()
-        let top = e.touches[0].clientY - this.startY
-        this.top = this.defaultTop + top
-        this.rotate = top
-      }
-      if (e.deltaY > 0 && window.scrollY === 0) {
-        e.preventDefault()
-        e.stopPropagation()
-        this.pulling = true
+        // e.preventDefault()
+        // e.stopPropagation()
+        this.top = this.defaultTop + deltaY
+        this.rotate = deltaY
       }
     },
     async infiniteScroll () {
-      if (this.offsetHeight - window.scrollY - this.innerHeight <= 0 && !this.loading && !this.allLoaded) {
+      // console.log(this.offsetHeight, window.scrollY, window.innerHeight, this.pending, this.allLoaded)
+      if (this.offsetHeight === 0) return
+      if (this.offsetHeight - window.scrollY - window.innerHeight <= 0 && !this.pending && !this.allLoaded) {
         this.options.current++
         try {
           this.bottomLoading = true
@@ -229,44 +288,30 @@ export default {
           this.bottomLoading = false
         } catch (e) {
           this.bottomLoading = false
+          throw e
         }
       }
     }
   },
   deactivated () {
+    let el = this.$el
+    /* for the fucking IOS10 */
+    el.removeEventListener('touchstart', this.touchstart)
+    el.removeEventListener('touchmove', this.touchMove)
+    el.removeEventListener('touchend', this.touchend)
     window.removeEventListener('scroll', this.scrollHandler)
+    this.scrollHandler = null
+    this.offsetHeight = 0
   },
   beforeDestroy () {
+    let el = this.$el
+    /* for the fucking IOS10 */
+    el.removeEventListener('touchstart', this.touchstart)
+    el.removeEventListener('touchmove', this.touchMove)
+    el.removeEventListener('touchend', this.touchend)
     window.removeEventListener('scroll', this.scrollHandler)
-  }
-}
-// fn是我们需要包装的事件回调, delay是时间间隔的阈值
-function throttle (fn, delay) {
-  // last为上一次触发回调的时间, timer是定时器
-  let last = 0; let timer = null
-  // 将throttle处理结果当作函数返回
-
-  return function () {
-    // 保留调用时的this上下文
-    let context = this
-    // 保留调用时传入的参数
-    let args = arguments
-    // 记录本次触发回调的时间
-    let now = +new Date()
-
-    // 判断上次触发的时间和本次触发的时间差是否小于时间间隔的阈值
-    if (now - last < delay) {
-      // 如果时间间隔小于我们设定的时间间隔阈值，则为本次触发操作设立一个新的定时器
-      clearTimeout(timer)
-      timer = setTimeout(function () {
-        last = now
-        fn.apply(context, args)
-      }, delay)
-    } else {
-      // 如果时间间隔超出了我们设定的时间间隔阈值，那就不等了，无论如何要反馈给用户一次响应
-      last = now
-      fn.apply(context, args)
-    }
+    this.scrollHandler = null
+    this.offsetHeight = 0
   }
 }
 </script>
@@ -275,16 +320,15 @@ function throttle (fn, delay) {
   .loadMore {
     position: relative;
     overflow: hidden;
-    -webkit-overflow-scrolling: touch;
   }
   .pullLoading {
     position: absolute;
     left: 50%;
-    top: var(--top);
+    top: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: translate3d(-50%, -50%, 0) rotate(var(--rotate));
+    transform: translate3d(-50%, var(--top), 0) rotate(var(--rotate));
     background-color: #fff;
     width: 70px;
     height: 70px;
@@ -294,10 +338,8 @@ function throttle (fn, delay) {
     .pullLoadingIcon {
       width: 50px;
       height: 50px;
-      animation: rotate .8s linear infinite;
-      animation-play-state: paused;
       &.rotate {
-        animation-play-state: running;
+        animation: rotate .8s infinite linear;
       }
     }
   }
@@ -320,6 +362,7 @@ function throttle (fn, delay) {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 40px;
   }
   .noContentIcon {
     width: 80%;

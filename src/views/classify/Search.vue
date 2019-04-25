@@ -2,22 +2,29 @@
   <div :class="$style.search">
     <div :class="$style.searchBar">
       <div :class="$style.searchBox">
-        <pl-svg name="search"></pl-svg>
-        <input v-model.trim="searachContent" type="search" placeholder="搜索商品" @search="search(searachContent)">
+        <pl-svg name="search" />
+        <input
+          v-model.trim="searachContent"
+          type="search"
+          placeholder="搜索商品"
+          @search="search(searachContent)"
+        >
       </div>
-      <button @click="cancel">取消</button>
+      <button @click="cancel">
+        取消
+      </button>
     </div>
 
     <div :class="$style.content">
       <load-more
-        v-if="seached"
+        v-show="seached"
         :form="form"
         :request-methods="searchProduct"
         ref="loadMore"
         no-content-tip="抱歉，没有相关商品"
         icon="no-search"
-        @more="more"
-        @refresh="refresh">
+        @refresh="refreshHandler"
+      >
         <template v-slot="{ list }">
           <lesson-item
             border
@@ -34,7 +41,10 @@
       </load-more>
     </div>
 
-    <div  v-show="!seached" :class="{ [$style.searchSelect]: true, [$style.border]: true }">
+    <div
+      v-show="!seached"
+      :class="{ [$style.searchSelect]: true, [$style.border]: true }"
+    >
       <div :class="$style.top">
         <span>热门搜索</span>
       </div>
@@ -49,10 +59,16 @@
       </ul>
     </div>
 
-    <div  v-show="!seached" :class="$style.searchSelect">
+    <div
+      v-show="!seached"
+      :class="$style.searchSelect"
+    >
       <div :class="$style.top">
         <span>历史搜索</span>
-        <pl-svg @click="deleteHistory" name="delete"></pl-svg>
+        <pl-svg
+          @click="deleteHistory"
+          name="delete"
+        />
       </div>
       <ul :class="$style.keyWordList">
         <li
@@ -77,8 +93,6 @@ import {
 import { mapGetters } from 'vuex'
 import LessonItem from '../../components/item/Lesson-Item.vue'
 import LoadMore from '../../components/Load-More.vue'
-// import { DelayExec } from '../../assets/js/util'
-// let delayExec = new DelayExec(300)
 export default {
   name: 'Search',
   components: {
@@ -97,7 +111,8 @@ export default {
       searchProduct,
       hot: [],
       history: [],
-      seached: false // 标记是否搜索过
+      seached: false, // 标记是否搜索过
+      $refresh: null
     }
   },
   computed: {
@@ -105,6 +120,9 @@ export default {
   },
   created () {
     this.form.agencyCode = this.agencyCode
+  },
+  mounted () {
+    this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
     this.getHotKeyword()
@@ -117,9 +135,7 @@ export default {
         this.searachContent = this.form.searachContent = keyword
       }
       this.seached = true
-      this.$nextTick(() => {
-        this.$refs.loadMore.refresh()
-      })
+      this.$refresh()
     },
     async getHotKeyword () {
       try {
@@ -155,12 +171,7 @@ export default {
       this.searachContent = ''
       this.seached = false
     },
-    more (list) {
-      this.getHistory()
-      this.list = list
-    },
-    refresh (list) {
-      this.list = list
+    refreshHandler () {
       this.getHistory()
     }
   }
@@ -216,6 +227,7 @@ export default {
   }
   .content {
     padding-left: 40px;
+    margin-top: 40px;
   }
   .search-select {
     position: relative;

@@ -1,15 +1,15 @@
 <template>
   <div :class="$style.lesson">
     <DetailBanner :banners="banners" />
-    <DetailInfoBox>
-      <DetailTitle v-text="detail.productName"></DetailTitle>
-      <DetailDesc v-text="detail.productDesc"></DetailDesc>
+    <DetailInfoBox :loading="loading">
+      <DetailTitle v-text="detail.productName" />
+      <DetailDesc v-text="detail.productDesc" />
       <div :class="$style.price">
         <Price
           v-if="detail.priceModels && detail.priceModels[0]"
           size="huge"
           :price="detail.priceModels[0].price"
-          :original-price="detail.priceModels[0].originPrice"
+          :original-price="detail.supplierProduct ? '' : detail.priceModels[0].originPrice"
         />
         <div :class="$style.count">
           <pl-svg name="selled" />
@@ -18,48 +18,75 @@
       </div>
 
       <!-- 当前选择的规格 -->
-      <specification-box :current="currentSpec" @click="showSpecifica = true" ref="specification" />
+      <specification-box
+        :current="currentSpec"
+        @click="showSpecifica = true"
+        ref="specification"
+      />
       <!-- helper 润笔价格 -->
-      <helper-price v-if="agentProduct" :current="currentSpec" />
+      <helper-price
+        v-if="agentProduct"
+        :current="currentSpec"
+      />
       <!--<DetailOtherInfo type="lesson" />-->
     </DetailInfoBox>
 
-    <DetailInfo v-if="detail.detailContent" title="详情信息" :content="detail.detailContent || '暂无详情'" />
+    <DetailInfo
+      v-if="detail.detailContent"
+      title="详情信息"
+      :content="detail.detailContent || '暂无详情'"
+    />
 
     <!--<div class="slide-padding mt-80">-->
-      <!--<ModuleTitle title="商品详情" />-->
-      <!--<Specific total-price="500" />-->
+    <!--<ModuleTitle title="商品详情" />-->
+    <!--<Specific total-price="500" />-->
     <!--</div>-->
 
     <!--<div class="slide-padding mt-80">-->
-      <!--<ModuleTitle title="购买须知" />-->
-      <!--<MustKnow />-->
+    <!--<ModuleTitle title="购买须知" />-->
+    <!--<MustKnow />-->
     <!--</div>-->
 
     <!--<div class="slide-padding mt-80">-->
-      <!--<ModuleTitle title="授课老师" />-->
-      <!--<Teaching />-->
+    <!--<ModuleTitle title="授课老师" />-->
+    <!--<Teaching />-->
     <!--</div>-->
 
     <div class="slide-padding mt-80">
       <ModuleTitle title="雅客评论" />
-      <Comment :size="3" :product-seq="productSeq" />
+      <Comment
+        :size="3"
+        :product-seq="productSeq"
+      />
     </div>
 
     <!--<div class="slide-padding mt-80">-->
-      <!--<ModuleTitle title="品牌介绍" />-->
-      <!--<BrandIntro />-->
+    <!--<ModuleTitle title="品牌介绍" />-->
+    <!--<BrandIntro />-->
     <!--</div>-->
 
     <!--<div class="slide-padding mt-28">-->
-      <!--<ApplicableTime time="请购买后向商家咨询！" />-->
+    <!--<ApplicableTime time="请购买后向商家咨询！" />-->
     <!--</div>-->
     <div class="slide-padding mt-80">
-      <MaybeYouLike title="商家推荐" :product-id="productSeq" />
+      <MaybeYouLike
+        title="商家推荐"
+        :product-id="productSeq"
+      />
     </div>
 
-    <buy-now type="warning" text="立即购买" @click="buyNow" ref="buyNow" />
-    <specification-pop :data="detail.priceModels" :productImage="detail.productImage" :visible.sync="showSpecifica" @confirm="specChanged" />
+    <buy-now
+      type="warning"
+      text="立即购买"
+      @click="buyNow"
+      ref="buyNow"
+    />
+    <specification-pop
+      :data="detail.priceModels"
+      :product-image="detail.productImage"
+      :visible.sync="showSpecifica"
+      @confirm="specChanged"
+    />
   </div>
 </template>
 
@@ -82,7 +109,6 @@ import SpecificationBox from '../../components/detail/Specification-Box.vue'
 import ModuleTitle from '../../components/Module-Title.vue'
 import Price from '../../components/Price.vue'
 import { getProductDetail } from '../../apis/product'
-import { Indicator } from 'mint-ui'
 import MaybeYouLike from '../../components/Maybe-You-Like.vue'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
@@ -124,10 +150,20 @@ export default {
       },
       isSupplierProduct: false,
       agentProduct: false,
-      showSpecifica: false
+      showSpecifica: false,
+      loading: false
     }
   },
-  props: ['productSeq', 'brokerId'],
+  props: {
+    productSeq: {
+      type: String,
+      default: null
+    },
+    brokerId: {
+      type: String,
+      default: null
+    }
+  },
   computed: {
     ...mapGetters(['appId', 'mallDomain'])
   },
@@ -139,17 +175,14 @@ export default {
   activated () {
     this.getDetail()
   },
-  beforeRouteUpdate (to, from, next) {
-    next()
-  },
   methods: {
     async getDetail () {
+      this.loading = true
       this.resetState() // 重置一些状态
-      Indicator.open({ spinnerType: 'fading-circle' })
       try {
         let { result } = await getProductDetail(this.productSeq)
         if (result.productStatus !== 'ON_SALE') {
-          Indicator.close()
+          this.loading = false
           return this.$router.replace({ name: 'SoldOut' })
         }
         let { mallSeq, sequenceNbr, supplierProduct, agentProduct, priceModels, productImage } = result
@@ -173,7 +206,6 @@ export default {
         // 统计销售数量
         this.detail = result
         this.currentSpec = priceModels[0]
-        Indicator.close()
         // 配置分享
         share({
           appId: this.appId,
@@ -182,8 +214,8 @@ export default {
           link: window.location.href,
           imgUrl: result.productImage[0].mediaUrl + '?x-oss-process=image/resize,w_200'
         })
+        this.loading = false
       } catch (e) {
-        Indicator.close()
         this.$router.replace({ name: 'SoldOut' })
         throw e
       }
@@ -208,7 +240,7 @@ export default {
     resetState () {
       this.buyNowHasClicked = false
       this.currentSpec = {}
-      this.banners = []
+      this.banners.splice(0, 1000000)
     }
   }
 }
@@ -216,7 +248,7 @@ export default {
 
 <style module lang="scss">
   .lesson {
-    margin-bottom: 120px;
+    padding-bottom: 120px;
   }
   .price {
     display: flex;

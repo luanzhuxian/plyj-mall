@@ -1,49 +1,72 @@
 <template>
-  <div class="quick-navbar" ref="QuickBox">
+  <div
+    class="quick-navbar"
+    ref="QuickBox"
+  >
     <transition name="fade">
-      <div :class="$style.mask" v-show="showBar" @click="showBar = false"></div>
+      <div
+        :class="$style.mask"
+        v-show="showBar"
+        @click="showBar = false"
+      />
     </transition>
-    <ul :class="{
-      [$style.navbar]: true,
-      [$style.showBar]: showBar
-    }">
-      <li :class="$style.onOff" @click="showBar = !showBar">
-        <pl-svg :class="$style.doubleArrow" name="double-arrow"></pl-svg>
-        <span v-show="showBar">收起</span>
-        <span v-show="!showBar">快速导航</span>
+    <ul
+      :class="{
+        [$style.navbar]: true,
+        [$style.showBar]: showBar
+      }"
+    >
+      <li
+        :class="$style.onOff"
+        @click="showBar = !showBar"
+      >
+        <pl-svg
+          :class="$style.doubleArrow"
+          name="double-arrow"
+        />
+        <div :class="$style.tip">
+          <p v-text="showBar ? '收起' : '快速'" />
+          <p v-show="!showBar">
+            导航
+          </p>
+        </div>
       </li>
       <router-link
         tag="li"
         active-class="active"
-        :to="{name: 'Home'}">
+        :to="{name: 'Home'}"
+      >
         <pl-svg name="find" />
       </router-link>
       <router-link
         tag="li"
         active-class="active"
-        :to="{name: 'Classify'}">
+        :to="{name: 'Classify'}"
+      >
         <pl-svg name="classify" />
       </router-link>
       <router-link
         tag="li"
         active-class="active"
-        :to="{ name: (agentUser || isAdmin) ? 'Yaji' : 'WhatsHelper' }">
+        :to="{ name: (agentUser || isAdmin) ? 'Yaji' : 'WhatsHelper' }"
+      >
         <pl-svg name="yaji" />
       </router-link>
       <router-link
         tag="li"
         active-class="active"
-        :to="{name: 'My'}">
+        :to="{name: 'My'}"
+      >
         <pl-svg name="my" />
       </router-link>
     </ul>
-</div>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Quick-Navbar',
+  name: 'QuickNavbar',
   data () {
     return {
       hidden: true,
@@ -101,27 +124,31 @@ export default {
   }
   .on-off {
     position: absolute;
-    left: -88px;
+    left: -92px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 88px;
+    width: 92px;
     height: 72px;
     margin: 0 !important;
-    font-size: 18px;
     color: #fbfbfb;
     text-align: center;
     background-color: rgba(58, 58, 58, .6);
     border-radius: 10px 0 0 10px;
-    span {
-      display: inline-block;
-      width: 36px;
-      line-height: 24px;
+    .tip {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      > p {
+        display: inline-block;
+        width: 50px;
+        line-height: 30px;
+        font-size: 20px;
+      }
     }
     .double-arrow {
       width: 18px;
       height: 18px;
-      margin-right: 5px;
       vertical-align: -5px;
       transform: rotateY(180deg);
       transition: transform .5s ease-in-out;

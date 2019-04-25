@@ -4,10 +4,13 @@
     <DetailInfoBox>
       <DetailTitle>88元包邮 2.27号10点开抢 MG小象休闲衬衣复古港味长袖格子衬衫</DetailTitle>
       <DetailDesc>102人买过</DetailDesc>
-      <DetailOtherInfo type="audition"></DetailOtherInfo>
+      <DetailOtherInfo type="audition" />
     </DetailInfoBox>
     <!-- 课程介绍 -->
-    <DetailInfo title="课程介绍" :content="content" />
+    <DetailInfo
+      title="课程介绍"
+      :content="content"
+    />
 
     <!-- 授课老师 -->
     <div class="slide-padding mt-80">
@@ -44,7 +47,10 @@
       />
     </div>
 
-    <buy-now type="primary" text="免费领取" />
+    <buy-now
+      type="primary"
+      text="免费领取"
+    />
   </div>
 </template>
 
@@ -64,7 +70,7 @@ import AuditionItem from '../../components/item/Audition-Item.vue'
 import BuyNow from '../../components/detail/Buy-Now.vue'
 
 export default {
-  name: 'Audition.vue',
+  name: 'AuditionVue',
   components: {
     DetailBanner,
     DetailInfoBox,

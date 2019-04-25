@@ -1,23 +1,34 @@
 <template>
   <label class="pl-radio">
-    <input :checked="label === value" type="radio" :value="value" @change="handleChange">
-    <span class="pl-radio-inner"></span>
+    <input
+      :checked="label === value"
+      type="radio"
+      :value="value"
+      @change="handleChange"
+    >
+    <span class="pl-radio-inner" />
     <span class="pl-radio-text">
-      <slot></slot>
+      <slot />
     </span>
   </label>
 </template>
 
 <script>
 export default {
-  name: 'pl-radio',
+  name: 'PlRadio',
   model: {
     event: 'change',
     value: 'value'
   },
   props: {
-    value: [String, Boolean, Number],
-    label: [String, Boolean, Number]
+    value: {
+      type: [String, Boolean, Number],
+      default: ''
+    },
+    label: {
+      type: [String, Boolean, Number],
+      default: ''
+    }
   },
   methods: {
     handleChange (e) {

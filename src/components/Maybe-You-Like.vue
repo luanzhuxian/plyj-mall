@@ -1,6 +1,12 @@
 <template>
-  <div class="Maybe-You-Like" v-if="maybeLike.length">
-    <module-title size="middle" :title="title" />
+  <div
+    :class="$style.maybeYouLike"
+    v-if="maybeLike.length"
+  >
+    <module-title
+      size="middle"
+      :title="title"
+    />
     <lesson-item
       v-for="item of maybeLike"
       :key="item.sequenceNbr"
@@ -24,7 +30,7 @@ import { mapGetters } from 'vuex'
 import { DelayExec } from '../assets/js/util'
 let delay = new DelayExec(1000)
 export default {
-  name: 'Maybe-You-Like',
+  name: 'MaybeYouLike',
   components: {
     ModuleTitle,
     LessonItem
@@ -89,5 +95,8 @@ export default {
 </script>
 
 <style module lang="scss">
-
+  .maybeYouLike {
+    display: grid;
+    grid-row-gap: 28px;
+  }
 </style>

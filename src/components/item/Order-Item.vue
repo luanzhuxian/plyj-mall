@@ -1,19 +1,36 @@
 <template>
-  <div :class="{
+  <div
+    :class="{
       [$style.orderItem]: true,
       [$style.border]: border
     }"
-       @click="handleClick"
+    @click="handleClick"
   >
-    <img v-lazy="img" :key="img" alt="商品图片">
+    <img
+      v-lazy="img"
+      :key="img"
+      alt="商品图片"
+    >
     <div :class="$style.right">
       <div :class="$style.rightTop">
-        <div :class="$style.name" v-text="name"></div>
-        <div :class="$style.price+' rmb'" v-text="price" />
+        <div
+          :class="$style.name"
+          v-text="name"
+        />
+        <div
+          :class="$style.price+' rmb'"
+          v-text="price"
+        />
       </div>
       <div :class="$style.rightBottom">
-        <div :class="$style.specification" v-text="option" />
-        <div :class="$style.count" v-text="count" />
+        <div
+          :class="$style.specification"
+          v-text="option"
+        />
+        <div
+          :class="$style.count"
+          v-text="count"
+        />
       </div>
     </div>
   </div>
@@ -22,21 +39,43 @@
 <script>
 import { createBrokerShare } from '../../apis/product'
 export default {
-  name: 'order-item',
+  name: 'OrderItem',
   data () {
     return {
-      brokerId: ''
+      brokerId: '',
+      loading: false
     }
   },
   props: {
     border: Boolean,
-    img: String,
-    name: String,
-    option: String,
-    price: [String, Number],
-    count: [String, Number],
-    productSeq: String,
-    routeName: String
+    img: {
+      type: String,
+      default: ''
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    option: {
+      type: String,
+      default: ''
+    },
+    price: {
+      type: [String, Number],
+      default: 0
+    },
+    count: {
+      type: [String, Number],
+      default: 0
+    },
+    productSeq: {
+      type: String,
+      default: ''
+    },
+    routeName: {
+      type: String,
+      default: ''
+    }
   },
   watch: {
     productSeq (val) {
@@ -60,13 +99,16 @@ export default {
       }
     },
     async getBorkerId () {
-      if (this.productSeq) {
+      if (this.productSeq && !this.loading) {
         try {
+          this.loading = true
           let share = await createBrokerShare(this.productSeq)
           share.result = share.result || {}
           this.brokerId = share.result.sequenceNbr || null
         } catch (e) {
           throw e
+        } finally {
+          this.loading = false
         }
       }
     }

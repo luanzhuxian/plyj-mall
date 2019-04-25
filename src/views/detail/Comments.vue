@@ -1,18 +1,30 @@
 <template>
   <div :class="$style.comments">
-    <TopText title="评论专区" tip="这里有你想看的" />
+    <TopText
+      title="评论专区"
+      tip="这里有你想看的"
+    />
     <load-more
-      v-if="showLoadmore"
       :request-methods="getComments"
       :form="form"
       ref="loadMore"
-      noContentTip="暂无评论">
+      no-content-tip="暂无评论"
+    >
       <template v-slot="{ list }">
         <Comment :list="list" />
       </template>
     </load-more>
-    <buy-now type="warning" text="立即购买" @click="buyNow" ref="buyNow" />
-    <specification-pop :visible.sync="showPop" :data="priceModels" @confirm="popConfirm" />
+    <buy-now
+      type="warning"
+      text="立即购买"
+      @click="buyNow"
+      ref="buyNow"
+    />
+    <specification-pop
+      :visible.sync="showPop"
+      :data="priceModels"
+      @confirm="popConfirm"
+    />
   </div>
 </template>
 
@@ -44,11 +56,12 @@ export default {
         productSeq: ''
       },
       getComments,
-      showLoadmore: false,
       showPop: false,
       isSupplierProduct: false,
       priceModels: [],
-      detail: {}
+      detail: {},
+      $refresh: null,
+      loading: false
     }
   },
   computed: {
@@ -57,13 +70,20 @@ export default {
       return this.detail.productImage ? this.detail.productImage[0].mediaUrl : ''
     }
   },
-  props: ['productSeq'],
+  props: {
+    productSeq: {
+      type: String,
+      default: null
+    }
+  },
+  mounted () {
+    this.$refresh = this.$refs.loadMore.refresh
+  },
   activated () {
-    this.showLoadmore = false
     this.$nextTick(() => {
       this.form.productSeq = this.productSeq
       this.form.mallSeq = this.mallSeq
-      this.showLoadmore = true
+      this.$refresh()
       this.getdetail()
     })
   },
@@ -79,9 +99,17 @@ export default {
       }
     },
     async popConfirm (option) {
-      let { result } = await createBrokerShare(this.productSeq)
-      result = result || {}
-      this.$refs.buyNow.jumpSubmit(option, this.isSupplierProduct, result.sequenceNbr || null)
+      if (this.loading) return
+      try {
+        this.loading = true
+        let { result } = await createBrokerShare(this.productSeq)
+        result = result || {}
+        this.$refs.buyNow.jumpSubmit(option, this.isSupplierProduct, result.sequenceNbr || null)
+      } catch (e) {
+        throw e
+      } finally {
+        this.loading = false
+      }
     },
     buyNow () {
       this.showPop = true
@@ -93,8 +121,6 @@ export default {
 <style module lang="scss">
   .comments {
     padding: 28px 40px 120px;
-    height: 100vh;
-    overflow: scroll;
     box-sizing: border-box;
   }
   .content {

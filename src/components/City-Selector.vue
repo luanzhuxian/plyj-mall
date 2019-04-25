@@ -1,89 +1,114 @@
 <template>
-<div :class="$style.citySelector" v-if="show">
-  <div :class="$style.mask" @click="$emit('update:show', false)" />
-  <div :class="{[$style.selector]: true, [$style.visabled]: visabled}">
-    <div :class="$style.selected">
-      <span
-        :class="{[$style.active]: !(Boolean(city) || Boolean(counties))}"
-        v-text="province ? province.name : '请选择'"
-        @click="returnBack(province, 'province')"
-      />
-      <span
-        v-if="cityList.length > 0"
-        :class="{[$style.active]: Boolean(city) && !Boolean(counties)}"
-        v-text="city ? city.name : '请选择'"
-        @click="returnBack(city, 'city')"
-      />
-      <span
-        v-if="countiesList.length > 0"
-        :class="{[$style.active]: Boolean(counties) && !Boolean(town)}"
-        v-text="counties ? counties.name : '请选择'"
-        @click="returnBack(counties, 'counties')"
-      />
-      <span
-        v-if="townList.length > 0"
-        :class="{[$style.active]: Boolean(town)}"
-        v-text="town ? town.name : '请选择'"
-      />
-    </div>
-    <div :class="$style.list">
-      <ul :class="$style.cityList" v-if="cityList.length === 0 && countiesList.length === 0" @click="provinceClick">
-        <li
-          v-for="(p, i) of provinceList"
-          :key="i" v-text="p.locationName"
-          :data-name='p.locationName'
-          :data-code='p.locationCode'
-          :class="{ [$style.active]: province && (province.code === p.locationCode) }"
+  <div
+    :class="$style.citySelector"
+    v-if="show"
+  >
+    <div
+      :class="$style.mask"
+      @click="$emit('update:show', false)"
+    />
+    <div :class="{[$style.selector]: true, [$style.visabled]: visabled}">
+      <div :class="$style.selected">
+        <span
+          :class="{[$style.active]: !(Boolean(city) || Boolean(counties))}"
+          v-text="province ? province.name : '请选择'"
+          @click="returnBack(province, 'province')"
         />
-      </ul>
-      <ul :class="$style.cityList" v-if="cityList.length > 0 && countiesList.length === 0" @click="cityClick">
-        <li
-          v-for="(c, i) of cityList"
-          :key="i" v-text="c.locationName"
-          :data-name='c.locationName'
-          :data-code='c.locationCode'
-          :class="{ [$style.active]: city && (city.code === c.locationCode) }"
+        <span
+          v-if="cityList.length > 0"
+          :class="{[$style.active]: Boolean(city) && !Boolean(counties)}"
+          v-text="city ? city.name : '请选择'"
+          @click="returnBack(city, 'city')"
         />
-      </ul>
-      <ul :class="$style.cityList" v-if="countiesList.length > 0 && townList.length === 0" @click="countiesClick">
-        <li
-          v-for="(c, i) of countiesList"
-          :key="i"
-          v-text="c.locationName"
-          :data-name='c.locationName'
-          :data-code='c.locationCode'
-          :class="{ [$style.active]: counties && (counties.code === c.locationCode) }"
+        <span
+          v-if="countiesList.length > 0"
+          :class="{[$style.active]: Boolean(counties) && !Boolean(town)}"
+          v-text="counties ? counties.name : '请选择'"
+          @click="returnBack(counties, 'counties')"
         />
-      </ul>
-      <ul :class="$style.cityList" v-if="townList.length > 0" @click="townClick">
-        <li
-          v-for="(t, i) of townList"
-          :key="i"
-          v-text="t.locationName"
-          :data-name='t.locationName'
-          :class="{ [$style.active]: town && (town.code === t.locationCode) }"
-          :data-code='t.locationCode' />
-      </ul>
+        <span
+          v-if="townList.length > 0"
+          :class="{[$style.active]: Boolean(town)}"
+          v-text="town ? town.name : '请选择'"
+        />
+      </div>
+      <div :class="$style.list">
+        <ul
+          :class="$style.cityList"
+          v-if="cityList.length === 0 && countiesList.length === 0"
+          @click="provinceClick"
+        >
+          <li
+            v-for="(p, i) of provinceList"
+            :key="i"
+            v-text="p.locationName"
+            :data-name="p.locationName"
+            :data-code="p.locationCode"
+            :class="{ [$style.active]: province && (province.code === p.locationCode) }"
+          />
+        </ul>
+        <ul
+          :class="$style.cityList"
+          v-if="cityList.length > 0 && countiesList.length === 0"
+          @click="cityClick"
+        >
+          <li
+            v-for="(c, i) of cityList"
+            :key="i"
+            v-text="c.locationName"
+            :data-name="c.locationName"
+            :data-code="c.locationCode"
+            :class="{ [$style.active]: city && (city.code === c.locationCode) }"
+          />
+        </ul>
+        <ul
+          :class="$style.cityList"
+          v-if="countiesList.length > 0 && townList.length === 0"
+          @click="countiesClick"
+        >
+          <li
+            v-for="(c, i) of countiesList"
+            :key="i"
+            v-text="c.locationName"
+            :data-name="c.locationName"
+            :data-code="c.locationCode"
+            :class="{ [$style.active]: counties && (counties.code === c.locationCode) }"
+          />
+        </ul>
+        <ul
+          :class="$style.cityList"
+          v-if="townList.length > 0"
+          @click="townClick"
+        >
+          <li
+            v-for="(t, i) of townList"
+            :key="i"
+            v-text="t.locationName"
+            :data-name="t.locationName"
+            :class="{ [$style.active]: town && (town.code === t.locationCode) }"
+            :data-code="t.locationCode"
+          />
+        </ul>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 import { getCityListByParentId } from '../apis/address'
 export default {
-  name: 'City-Selector',
+  name: 'CitySelector',
   data () {
     return {
       visabled: false,
       cityList: [],
       countiesList: [],
       townList: [],
+      provinceList: [],
       province: null,
       city: null,
       counties: null,
-      town: null,
-      provinceList: []
+      town: null
     }
   },
   props: {
@@ -112,6 +137,15 @@ export default {
     }
   },
   methods: {
+    clear () {
+      this.cityList.splice(0, 999)
+      this.countiesList.splice(0, 999)
+      this.townList.splice(0, 999)
+      this.province = null
+      this.city = null
+      this.counties = null
+      this.town = null
+    },
     async provinceClick (e) {
       if (e.target.tagName !== 'LI') return
       let target = e.target

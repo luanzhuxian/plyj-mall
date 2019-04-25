@@ -1,13 +1,16 @@
 <template>
   <div :class="$style.noContent">
-    <pl-svg :name="icon"></pl-svg>
-    <p :class="$style.text" v-text="text"></p>
+    <pl-svg :name="icon" />
+    <p
+      :class="$style.text"
+      v-text="text"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'No-Content',
+  name: 'NoContent',
   props: {
     text: String,
     icon: {

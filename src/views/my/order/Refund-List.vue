@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.refundList">
-    <load-more :request-methods="getOrderList" :form="form">
+    <load-more
+      :request-methods="getOrderList"
+      :form="form"
+      ref="loadmore"
+    >
       <template v-slot="{ list }">
         <router-link
           v-for="item of list"
@@ -10,8 +14,14 @@
           :key="item.orderInfoModel.orderSn"
         >
           <div :class="$style.orderId">
-            <pl-list title="下单时间：" :content="item.orderCreateDate" />
-            <pl-list title="订单编号：" :content="item.orderInfoModel.orderSn" />
+            <pl-list
+              title="下单时间："
+              :content="item.orderCreateDate"
+            />
+            <pl-list
+              title="订单编号："
+              :content="item.orderInfoModel.orderSn"
+            />
           </div>
           <OrderItem
             :img="item.mediaInfoModel[0].mediaUrl"
@@ -19,10 +29,23 @@
             :option="item.orderProductRelationModel.optionName"
             :price="item.orderProductRelationModel.productPrice"
             :count="item.orderProductRelationModel.count"
+            border
           />
           <div :class="$style.status + ' mt-28'">
-            <pl-button v-if="item.orderInfoModel.orderStatus === 'CLOSED'" plain round>已退款</pl-button>
-            <pl-button v-if="item.orderInfoModel.orderStatus === 'FINISHED_REFUND'" type="primary" plain round>审核中</pl-button>
+            <pl-button
+              v-if="item.orderInfoModel.orderStatus === 'CLOSED'"
+              plain
+              round
+            >
+              已退款
+            </pl-button>
+            <pl-button
+              type="primary"
+              plain
+              round
+            >
+              审核中
+            </pl-button>
           </div>
         </router-link>
       </template>
@@ -36,7 +59,7 @@ import { getOrderList } from '../../../apis/order-manager'
 import LoadMore from '../../../components/Load-More.vue'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Refund-List',
+  name: 'RefundList',
   components: {
     OrderItem,
     LoadMore
@@ -59,6 +82,12 @@ export default {
   },
   created () {
     this.form.userId = this.userId
+  },
+  mounted () {
+    this.refresh = this.$refs.loadmore.refresh
+  },
+  activated () {
+    this.refresh()
   },
   methods: {
   }

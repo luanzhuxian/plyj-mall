@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.detailDesc">
-    <slot></slot>
+    <slot />
   </div>
 </template>
 

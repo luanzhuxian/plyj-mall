@@ -1,15 +1,31 @@
 <template>
   <nav :class="$style.navbar">
-    <router-link :class="$style.route" tag="div" :to="{ name: 'Home' }">
+    <router-link
+      :class="$style.route"
+      tag="div"
+      :to="{ name: 'Home' }"
+    >
       <pl-svg :name="homeActive ? 'find-active' : 'find'" />
     </router-link>
-    <router-link :class="$style.route" tag="div" :to="{ name: 'Classify' }">
+    <router-link
+      :class="$style.route"
+      tag="div"
+      :to="{ name: 'Classify' }"
+    >
       <pl-svg :name="classifyActive ? 'classify-active' : 'classify'" />
     </router-link>
-    <router-link :class="$style.route" tag="div" :to="{ name: (agentUser || isAdmin) ? 'Yaji' : 'WhatsHelper' }">
+    <router-link
+      :class="$style.route"
+      tag="div"
+      :to="{ name: (agentUser || isAdmin) ? 'Yaji' : 'WhatsHelper' }"
+    >
       <pl-svg :name="yajiActive ? 'yaji-active' : 'yaji'" />
     </router-link>
-    <router-link :class="$style.route" tag="div" :to="{ name: 'My' }">
+    <router-link
+      :class="$style.route"
+      tag="div"
+      :to="{ name: 'My' }"
+    >
       <pl-svg :name="myActive ? 'my-active' : 'my'" />
     </router-link>
   </nav>

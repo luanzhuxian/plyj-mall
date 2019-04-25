@@ -1,15 +1,36 @@
 <template>
   <transition name="fade">
-    <div :class="$style.specificationsPop" v-show="showSpec" @click.self.stop="close">
+    <div
+      :class="$style.specificationsPop"
+      v-show="showSpec"
+      @click.self.stop="close"
+    >
       <transition name="slide">
-        <div :class="$style.specBox" v-show="showBox">
+        <div
+          :class="$style.specBox"
+          v-show="showBox"
+        >
           <div>
             <div :class="$style.baseInfo">
-              <img v-img-error :src="img" alt="">
+              <img
+                v-img-error
+                :src="img"
+                alt=""
+              >
               <div :class="$style.baseInfoRight">
-                <p :class="$style.price" v-text="selected.price" />
-                <p :class="$style.original">原价：<del class="rmb" v-text="selected.originPrice" /></p>
-                <p :class="$style.repertory">库存<i v-text="selected.stock" />件</p>
+                <p
+                  :class="$style.price"
+                  v-text="selected.price"
+                />
+                <p :class="$style.original">
+                  原价：<del
+                    class="rmb"
+                    v-text="selected.originPrice"
+                  />
+                </p>
+                <p :class="$style.repertory">
+                  库存<i v-text="selected.stock" />件
+                </p>
               </div>
             </div>
 
@@ -17,11 +38,12 @@
               <!--<div>颜色</div>-->
               <div>规格</div>
               <ul :class="$style.colorList">
-                <li v-for="(item, i) of data"
-                    :key="i"
-                    :class="{ [$style.active]: item.optionCode === selected.optionCode }"
-                    @click="change(item)"
-                    v-text="item.optionName"
+                <li
+                  v-for="(item, i) of data"
+                  :key="i"
+                  :class="{ [$style.active]: item.optionCode === selected.optionCode }"
+                  @click="change(item)"
+                  v-text="item.optionName"
                 />
               </ul>
             </div>
@@ -33,14 +55,35 @@
             <!--</div>-->
             <div :class="$style.count">
               <div>购买数量</div>
-              <div>
-                <button :disabled="count <= min" @click="minus">-</button>
-                <input v-model.number="count" type="number" @change="countChange">
-                <button :disabled="count >= stock" @click="add">+</button>
+              <div :class="$style.countCtr">
+                <button
+                  :disabled="count <= min"
+                  @click="minus"
+                >
+                  -
+                </button>
+                <input
+                  v-model.number="count"
+                  type="number"
+                  @change="countChange"
+                >
+                <button
+                  :disabled="count >= stock"
+                  @click="add"
+                >
+                  +
+                </button>
               </div>
             </div>
           </div>
-          <pl-button :class="$style.confirm" size="large" type="warning" @click="confirm">确定</pl-button>
+          <pl-button
+            :class="$style.confirm"
+            size="large"
+            type="warning"
+            @click="confirm"
+          >
+            确定
+          </pl-button>
         </div>
       </transition>
     </div>
@@ -49,7 +92,7 @@
 
 <script>
 export default {
-  name: 'Specification-Pop',
+  name: 'SpecificationPop',
   props: {
     visible: Boolean,
     // 所有规格
@@ -145,6 +188,7 @@ export default {
     },
     confirm () {
       if (this.checkCount(this.count)) {
+        this.count = Number.parseInt(this.count)
         this.close()
         this.$emit('confirm', Object.assign({ count: this.count }, this.selected))
       }
@@ -230,14 +274,16 @@ export default {
   .color-list, .size-list {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     li {
       position: relative;
-      margin-right: 26px;
-      margin-bottom: 13px;
-      padding: 10px 20px;
+      line-height: 54px;
+      margin: 0 13px 13px 0;
+      padding: 0 20px;
       color: #666;
+      font-size: 24px;
       background-color: #f3f3f3;
-      border-radius: 10px;
+      border-radius: $--radius2;
       &.active {
         background: none;
         color: $--primary-color;
@@ -248,24 +294,26 @@ export default {
     }
   }
   .count {
-    > div {
+    > .countCtr {
       display: flex;
+      height: 60px;
       button {
-        width: 60px;
         height: 60px;
+        width: 60px;
         font-size: 26px;
         font-weight: bold;
         color: #999;
         background-color: #f3f3f3;
-        margin-right: 3px;
       }
       input {
+        width: 80px;
         height: 60px;
-        width: 120px;
+        margin: 0 2px;
         padding: 0 10px;
-        margin-right: 3px;
         text-align: center;
+        font-size: 20px;
         background-color: #f3f3f3;
+        border-radius: 0 !important;
       }
     }
   }

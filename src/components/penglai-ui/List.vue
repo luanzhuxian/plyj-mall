@@ -6,19 +6,32 @@
       :style="{ color: titleColor }"
     />
     <span
+      v-if="content"
       class="pl-list_content"
       v-text="content"
       :style="{ color: contentColor }"
     />
+    <div
+      v-if="!content"
+      class="pl-list_content"
+    >
+      <slot />
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'pl-list',
+  name: 'PlList',
   props: {
-    title: String,
-    content: String,
+    title: {
+      type: String,
+      default: ''
+    },
+    content: {
+      type: String,
+      default: ''
+    },
     titleColor: {
       type: String,
       default: '#999'

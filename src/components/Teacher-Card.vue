@@ -1,17 +1,30 @@
 <template>
   <div :class="$style.teacherCard + ' '">
     <div :class="$style.content">
-      <img class="radius-10" :src="img" alt="">
-      <p :class="$style.name" v-text="name"></p>
-      <p :class="$style.type" v-text="type"></p>
-      <p :class="$style.desc" v-text="desc"></p>
+      <img
+        class="radius-10"
+        :src="img"
+        alt=""
+      >
+      <p
+        :class="$style.name"
+        v-text="name"
+      />
+      <p
+        :class="$style.type"
+        v-text="type"
+      />
+      <p
+        :class="$style.desc"
+        v-text="desc"
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Teacher-Card',
+  name: 'TeacherCard',
   props: {
     img: String,
     name: String,

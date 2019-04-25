@@ -2,9 +2,9 @@ import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
 import { DelayExec } from '../../../assets/js/util'
 const WX = window.wx
-let delay = new DelayExec(200)
+let delay = new DelayExec(100)
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
-  await delay.exec() // 延迟执行，节流执行频率，使频率不能高于每秒5次
+  await delay.exec() // 延迟执行，节流执行频率，使频率不能高于每秒10次
   let jsApi = await getJSApi(appId) // 每次分享时，获取js-api
   const config = getConfig(jsApi.result, appId, link)
   WX.config(config)
@@ -20,6 +20,7 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
 }
 
 function setWechatShare (title, desc, imgUrl, link, willHide = []) {
+  // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
   WX.hideMenuItems({
     menuList: [
       'menuItem:editTag',
@@ -32,8 +33,11 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
       'menuItem:share:qq',
       'menuItem:share:facebook',
       'menuItem:share:QZone',
+      'menuItem:share:weiboApp',
+      // 'menuItem:share:appMessage', // 发送给朋友
+      // 'menuItem:share:timeline', // 分享到朋友圈
       ...willHide // 以上是默认隐藏的按钮
-    ] // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
+    ]
   })
   // 分享到朋友圈
   WX.onMenuShareTimeline({

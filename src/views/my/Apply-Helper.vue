@@ -1,22 +1,70 @@
 <template>
   <div :class="$style.applyHelper">
-    <TopText :title="form.auditStatus ? statusTitle[form.auditStatus]: '申请Helper'" :tip="form.auditStatus ? statusTip[form.auditStatus] : '第一桶金从这里开始'" />
-    <pl-form ref="form" :model="form" :rules="rules" class="radius-20">
-      <pl-form-item prop="name">
-        <pl-input :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'" placeholder="请输入您的姓名" v-model="form.name" prefix-icon="name"/>
+    <TopText
+      :title="form.auditStatus ? statusTitle[form.auditStatus]: '申请Helper'"
+      :tip="form.auditStatus ? statusTip[form.auditStatus] : '第一桶金从这里开始'"
+    />
+    <pl-form
+      ref="form"
+      :model="form"
+      :rules="rules"
+      :class="$style.form + ' radius-20'"
+      :label-width="44"
+    >
+      <pl-form-item
+        prop="name"
+        border
+      >
+        <pl-input
+          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
+          placeholder="请输入您的姓名"
+          v-model="form.name"
+          prefix-icon="name"
+          size="middle"
+        />
       </pl-form-item>
-      <pl-form-item prop="idCard">
-        <pl-input :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'" placeholder="请输入您的身份证号" prefix-icon="id-card" v-model="form.idCard"/>
+      <pl-form-item
+        prop="idCard"
+        border
+      >
+        <pl-input
+          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
+          placeholder="请输入您的身份证号"
+          prefix-icon="id-card"
+          v-model="form.idCard"
+          size="middle"
+        />
       </pl-form-item>
-      <pl-form-item prop="mobile">
-        <pl-input :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'" placeholder="请输入您的手机号" prefix-icon="mobile" v-model="form.mobile" />
+      <pl-form-item
+        prop="mobile"
+        border
+      >
+        <pl-input
+          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
+          placeholder="请输入您的手机号"
+          prefix-icon="mobile"
+          v-model="form.mobile"
+          size="middle"
+        />
       </pl-form-item>
-      <pl-form-item prop="verificationCode" v-if="!form.auditStatus || (form.auditStatus === 'REJECT')">
-        <pl-input :disabled="form.auditStatus === 'AWAIT'" placeholder="请输入验证码" prefix-icon="code" v-model="form.verificationCode">
-          <template v-slot:suffix>
-            <get-code :disabled="form.auditStatus === 'AWAIT'" :smstype="smstype.AGENT_USER_INFO" :mobile="form.mobile" />
-          </template>
-        </pl-input>
+      <pl-form-item
+        prop="verificationCode"
+        v-if="!form.auditStatus || (form.auditStatus === 'REJECT')"
+      >
+        <pl-input
+          :disabled="form.auditStatus === 'AWAIT'"
+          placeholder="请输入验证码"
+          prefix-icon="code"
+          v-model="form.verificationCode"
+          size="middle"
+        />
+        <template v-slot:suffix>
+          <get-code
+            :disabled="form.auditStatus === 'AWAIT'"
+            :smstype="smstype.AGENT_USER_INFO"
+            :mobile="form.mobile"
+          />
+        </template>
       </pl-form-item>
     </pl-form>
     <pl-button
@@ -25,14 +73,16 @@
       type="warning"
       size="huge"
       :loading="loading"
-      @click="submit">
+      @click="confirm"
+    >
       提交
     </pl-button>
     <pl-button
       v-else
       type="warning"
       size="huge"
-      @click="$router.replace({ name: 'Home' })">
+      @click="$router.replace({ name: 'Home' })"
+    >
       返回首页
     </pl-button>
   </div>
@@ -49,7 +99,7 @@ import { isPhone, isName, isIdCard } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
 import { USER_INFO } from '../../store/mutation-type'
 export default {
-  name: 'Apply-Helper',
+  name: 'ApplyHelper',
   components: {
     TopText
   },
@@ -86,11 +136,12 @@ export default {
           { validator: isPhone, message: '手机号格式有误', trigger: 'blur' }
         ],
         verificationCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
-      }
+      },
+      agentUser: false
     }
   },
   computed: {
-    ...mapGetters(['userId', 'smstype', 'agencyCode', 'agentUser', 'isAdmin'])
+    ...mapGetters(['userId', 'smstype', 'agencyCode', 'isAdmin'])
   },
   activated () {
     this.getHelperInfo()
@@ -104,7 +155,7 @@ export default {
         throw e
       }
     },
-    async submit () {
+    async confirm () {
       if (this.$refs.form.validate()) {
         try {
           this.loading = true
@@ -124,11 +175,12 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if (vm.agentUser || vm.isAdmin) {
-        vm.$router.replace({ name: 'My' })
-      }
-    })
+    next()
+    // next(vm => {
+    //   if (vm.agentUser || vm.isAdmin) {
+    //     vm.$router.replace({ name: 'My' })
+    //   }
+    // })
   }
 }
 </script>
@@ -153,5 +205,8 @@ export default {
         color: $--primary-color;
       }
     }
+  }
+  .form {
+    background-color: #fff;
   }
 </style>

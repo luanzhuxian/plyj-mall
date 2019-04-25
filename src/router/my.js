@@ -32,6 +32,14 @@ export default [
     }
   },
   {
+    path: '/my/withdraw/success',
+    name: 'WithdrawCashSuccess',
+    component: () => import('../views/my/coffers/Withdraw-Cash-Success.vue'),
+    meta: {
+      title: '提现申请成功'
+    }
+  },
+  {
     path: '/my/withdraw/list',
     name: 'WithdrawList',
     component: () => import('../views/my/coffers/Withdraw-List.vue'),

@@ -1,11 +1,21 @@
 <template>
-  <label class="pl-input" @click="handleClick">
-    <div class="pl-input_prefix" v-if="prefixIcon">
-      <pl-svg :class="{ focus }" :name="prefixIcon"></pl-svg>
+  <div
+    :class="{ 'pl-input': true, border, ['pl-input-' + size]: true }"
+    @click="handleClick"
+  >
+    <div
+      class="pl-input_prefixicon"
+      v-if="prefixIcon"
+    >
+      <pl-svg
+        :class="{ focus }"
+        :name="prefixIcon"
+      />
     </div>
     <div
       class="pl-textarea_box"
-      v-if="type === 'textarea'">
+      v-if="type === 'textarea'"
+    >
       <textarea
         :maxlength="maxlength"
         :value="value"
@@ -16,12 +26,15 @@
         :disabled="disabled"
         :readonly="readonly"
         :rows="rows"
-        :placeholder="placeholder">
-      </textarea>
+        :placeholder="placeholder"
+      />
     </div>
-    <div v-else class="pl-input_box">
+    <div
+      v-else
+      class="pl-input_box"
+    >
       <input
-        :type="type"
+        :type="type === 'password' ? passwordType : type"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
@@ -29,44 +42,103 @@
         :value="value"
         :disabled="disabled"
         :readonly="readonly"
+        :autocomplete="autocomplete"
         :placeholder="placeholder"
         :unselectable="readonly ? 'on' : ''"
         :style="{
           textAlign: align || formAlign
         }"
       >
-      <pl-svg v-if="!disabled" v-show="value" class="pl-input_clear" name="close2" @click="clear" />
+      <pl-svg
+        v-if="!disabled && type.indexOf('password') === -1"
+        v-show="value"
+        class="pl-input_clear"
+        name="close2"
+        @click="clear"
+      />
+      <pl-svg
+        v-if="type === 'password' && passwordType === 'password'"
+        v-show="value"
+        class="pl-input_clear"
+        name="hidden-key"
+        @click="passwordType = 'show-password'"
+      />
+      <pl-svg
+        v-if="type === 'password' && passwordType === 'show-password'"
+        v-show="value"
+        class="pl-input_clear"
+        name="show-key"
+        @click="passwordType = 'password'"
+      />
     </div>
-    <div class="pl-input_suffix">
-      <slot name="suffix"></slot>
+    <div
+      class="pl-input_suffixicon"
+      v-if="suffixIcon"
+    >
+      <pl-svg
+        :class="{ focus }"
+        :name="suffixIcon"
+      />
     </div>
-  </label>
+  </div>
 </template>
 
 <script>
+import { getLine, throttle } from './lib/util'
 export default {
-  name: 'pl-input',
+  name: 'PlInput',
   model: {
     event: 'input',
     value: 'value'
   },
   props: {
-    placeholder: String,
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    size: {
+      type: String,
+      default: 'small'
+    },
     type: {
       type: String,
       default: 'text'
     },
-    prefixIcon: String,
-    value: [String, Number],
-    maxlength: {
+    prefixIcon: {
+      type: String,
+      default: ''
+    },
+    suffixIcon: {
+      type: String,
+      default: ''
+    },
+    autocomplete: {
+      type: String,
+      default: ''
+    },
+    value: {
       type: [String, Number],
+      default: ''
+    },
+    maxlength: {
+      type: Number,
       default: 2000
     },
-    minRows: Number,
-    maxRows: Number,
-    align: String,
+    minRows: {
+      type: Number,
+      default: 5
+    },
+    maxRows: {
+      type: Number,
+      default: 10
+    },
+    align: {
+      type: String,
+      default: 'left'
+    },
     disabled: Boolean,
-    readonly: Boolean
+    readonly: Boolean,
+    border: Boolean
   },
   data () {
     return {
@@ -76,35 +148,42 @@ export default {
       rule: null,
       prop: '',
       error: false,
+      passwordType: 'password',
       bfscrolltop: 0,
-      isIOS: false
+      isIOS: false,
+      getLine: null,
+      $form: null,
+      $formItem: null
     }
-  },
-  created () {
-    this.rows = this.minRows || 0
-    this.setAlign()
-    this.rule = this.$parent.rule
-    this.prop = this.$parent.prop
   },
   mounted () {
     this.$nextTick(() => {
+      this.rows = this.minRows || 0
       this.bfscrolltop = document.body.scrollTop
+      this.$form = this.$parent.$parent
+      this.$formItem = this.$parent
+      this.rule = this.$formItem.rule
+      this.prop = this.$formItem.prop
       this.isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      this.setAlign()
     })
+    this.getLine = throttle(getLine, 1000)
   },
   methods: {
     handleInput (e) {
-      if (this.type === 'textarea') {
-        /*  动态跳转textarea的行数 */
-        let lineHeight = Number.parseInt(getComputedStyle(e.target).getPropertyValue('line-height'))
-        if (this.rows < this.maxRows || !this.maxRows) {
-          if (lineHeight * this.rows < e.target.scrollHeight) {
+      let val = e.target.value
+      this.getLine(e.target, currentLine => {
+        if (this.maxRows !== 0) {
+          if (currentLine > this.minRows && currentLine < this.maxRows) {
             this.rows++
           }
+        } else if (currentLine > this.minRows && currentLine) {
+          this.rows++
         }
-      }
-      this.$emit('input', e.target.value)
-      this.trigger('input', e.target.value)
+      })
+      if (!val) this.rows = this.minRows
+      this.$emit('input', val)
+      this.trigger('input', val)
     },
     handleFocus (e) {
       if (this.readonly) {
@@ -118,7 +197,7 @@ export default {
       }
     },
     handleBlur (e) {
-      if (this.isIOS) document.body.scrollTop = this.bfscrolltop
+      document.body.scrollTop = this.bfscrolltop
       this.$emit('blur', e)
       this.focus = false
       this.trigger('blur', e.target.value)
@@ -129,15 +208,16 @@ export default {
     },
     clear () {
       this.$emit('input', '')
+      this.$emit('clear')
     },
     setAlign () {
-      this.formAlign = this.align || this.$parent.align || this.$parent.$parent.align
+      this.formAlign = this.align || this.$formItem.align || this.$form.align
     },
     trigger (event) {
       if (this.rule) {
         let validateRules = this.rule.filter(item => item.trigger === event)
         if (validateRules.length > 0) {
-          this.$parent.$parent.validateByFields(this.prop)
+          this.error = !this.$form.validateByFields(this.prop)
         }
       }
     },
@@ -150,11 +230,26 @@ export default {
 <style lang="scss">
   .pl-input {
     position: relative;
-    display: flex;
+    display: inline-flex;
     flex: 1;
+    width: 100%;
     height: 100%;
     align-items: center;
-    background-color: #fff;
+    background-color: transparent;
+    box-sizing: border-box;
+    &.border {
+      padding: 0 24px;
+      height: 100%;
+      &:after {
+        @include border-half(#e7e7e7, 32px)
+      }
+    }
+    &.pl-input-small {
+      min-height: 92px;
+    }
+    &.pl-input-middle {
+      min-height: 110px;
+    }
     .pl-input_box {
       position: relative;
       flex: 1;
@@ -163,18 +258,12 @@ export default {
       input {
         display: block;
         width: 100%;
-        padding-right: 28px;
-        font-size: 30px;
+        font-size: 32px;
         color: #333;
         box-sizing: border-box;
+        background-color: transparent !important;
         &::-webkit-input-placeholder {
-          color: #ccc;
-        }
-        &[type=search]::-webkit-search-cancel-button{
-          -webkit-appearance: none;// 去掉默认的小×
-        }
-        &::-webkit-input-placeholder {
-          font-size: 26px;
+          font-size: 28px;
           color: #ccc;
         }
         &:disabled {
@@ -190,14 +279,15 @@ export default {
       }
       .pl-input_clear {
         width: 40px;
-        padding-right: 40px;
+        padding-right: 20px;
         fill: #ccc;
-      }
-      textarea {
+        path {
+          fill: #ccc;
+        }
       }
     }
-    .pl-input_prefix {
-      padding: 0 28px 0 40px;
+    .pl-input_prefixicon, .pl-input_suffixicon {
+      margin-right: 27px;
       svg {
         width: 36px;
         height: 36px;
@@ -211,21 +301,24 @@ export default {
         }
       }
     }
-    .pl-input_suffix {
+    .pl-input_suffixicon {
+      margin-left: 27px;
+      margin-right: 0;
     }
   }
   .pl-textarea_box {
     width: 100%;
-    padding: 20px 28px;
     textarea {
       box-sizing: border-box;
       width: 100%;
+      padding: 24px;
       min-height: 100px;
-      line-height: 37px;
+      line-height: 40px;
+      font-size: 26px;
       border: none;
       outline: none;
-      font-size: 28px;
       resize: none;
+      background: transparent;
     }
   }
 </style>

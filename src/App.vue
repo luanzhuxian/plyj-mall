@@ -4,7 +4,7 @@
       <router-view v-if="logined" />
     </keep-alive>
     <navbar v-if="showNavbar.indexOf(routeName) > -1" />
-    <QuickNavbar v-else></QuickNavbar>
+    <QuickNavbar v-else />
   </div>
 </template>
 
@@ -31,6 +31,13 @@ export default {
         'Yaji',
         'Classify',
         'WhatsHelper'
+      ],
+      // 允许分享和复制链接的页面
+      shareRoutes: [
+        'Home',
+        'Classify',
+        'Yaji',
+        'My'
       ]
     }
   },
@@ -38,12 +45,17 @@ export default {
     $route (route) {
       if (!/^\/detail/.test(route.path)) {
         // 如果不是商品详情页面，采用其他分享策略
+        let willHide = []
+        if (this.shareRoutes.indexOf(route.name) === -1) {
+          willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
+        }
         share({
           appId: this.appId,
           title: `${this.mallName}-${route.meta.title}`,
           desc: this.mallDesc,
           link: window.location.href,
-          imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
+          imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
+          willHide
         })
       }
     }
@@ -55,21 +67,25 @@ export default {
     ...mapGetters(['mallSeq', 'userId', 'openId', 'token', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
   },
   async created () {
-    await this.getMallInfo()
-    /* token 存在并且还未过期 */
-    if (this.token) {
-      await this.getUserInfo()
-    } else {
-      await this.login()
+    try {
+      await this.getMallInfo()
+      /* token 存在并且还未过期 */
+      if (this.token) {
+        await this.getUserInfo()
+      } else {
+        await this.login()
+      }
+      this.logined = true
+      share({
+        appId: this.appId,
+        title: `${this.mallName}-${this.$route.meta.title}`,
+        desc: this.mallDesc,
+        link: window.location.href,
+        imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
+      })
+    } catch (e) {
+      throw e
     }
-    this.logined = true
-    share({
-      appId: this.appId,
-      title: `${this.mallName}-${this.$route.meta.title}`,
-      desc: this.mallDesc,
-      link: window.location.href,
-      imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
-    })
   },
   methods: {
     ...mapMutations({

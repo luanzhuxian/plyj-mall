@@ -9,7 +9,7 @@ export default {
       state.addressList[0] ||
       {}
   },
-  orderStatus: state => state.orderStatus,
+  orderStatusMap: state => state.orderStatusMap,
 
   avatar: state => state.userInfo.img,
   userName: state => state.userInfo.userName,

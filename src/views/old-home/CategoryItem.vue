@@ -9,11 +9,24 @@
     @click="jump"
     :style="{margin}"
   >
-    <img v-lazy="img" alt="">
-    <p :class="{ [$style.name]: true, [$style.isActive]: false}" v-text="productName" />
-    <p v-if="size === 'middle'" :class="$style.desc" v-text="productDesc" />
+    <img
+      v-lazy="img"
+      alt=""
+    >
+    <p
+      :class="{ [$style.name]: true, [$style.isActive]: false}"
+      v-text="productName"
+    />
+    <p
+      v-if="size === 'middle'"
+      :class="$style.desc"
+      v-text="productDesc"
+    />
     <div :class="$style.price">
-      <Price :price="price" :size="size" />
+      <Price
+        :price="price"
+        :size="size"
+      />
     </div>
   </div>
 </template>
@@ -26,40 +39,59 @@ export default {
   components: {
     Price
   },
+  data () {
+    return {
+      loading: false
+    }
+  },
   props: {
     productId: {
       type: String,
-      require: true
+      require: true,
+      default: ''
     },
     img: {
       type: String,
-      require: true
+      require: true,
+      default: ''
     },
     productName: {
       type: String,
-      require: true
+      require: true,
+      default: ''
     },
     price: {
       type: [String, Number],
-      require: true
+      require: true,
+      default: ''
     },
     size: {
       type: String,
       default: 'middle'
     },
-    margin: String,
-    productDesc: String,
+    margin: {
+      type: String,
+      default: ''
+    },
+    productDesc: {
+      type: String,
+      default: ''
+    },
     isActive: Boolean // 是否加入经济人活动
   },
   methods: {
     async jump () {
+      if (this.loading) return
       //     :to="{name: 'Lesson', params: { productSeq: productId, brokerId: '' }}"
       try {
+        this.loading = true
         let { result } = await createBrokerShare(this.productId)
         result = result || {}
         this.$router.push({ name: 'Lesson', params: { productSeq: this.productId, brokerId: result.sequenceNbr || null } })
       } catch (e) {
         throw e
+      } finally {
+        this.loading = false
       }
     }
   }

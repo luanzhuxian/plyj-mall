@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { router } from '../../router'
-import Toast from '../../components/penglai-ui/toast'
 import store from '../../store'
 import { LOG_OUT, LOGIN } from '../../store/mutation-type'
 axios.defaults.headers = {
@@ -15,7 +14,7 @@ axios.interceptors.response.use(response, resError)
 function request (config) {
   /* 刷新token创建时间 */
   let token = localStorage.getItem('token')
-  // let token = '0498a33a-30b5-4b5d-add4-9e29bd75be39'
+  // let token = '7a52df2c-ebb4-47d7-b8b4-898b56fc0495'
   config.headers = {
     product: 'welcome_to_penglai_yaji',
     tokenType: 'wechat',
@@ -38,7 +37,6 @@ async function response (response) {
       msg = '服务器正在怀疑器生~( ˶‾᷄࿀‾᷅˵ )'
     }
     if (data.message.indexOf('登录信息失效') === -1) {
-      Toast(msg)
       let err = {
         tag: 'responseError',
         method: config.method,
@@ -68,10 +66,9 @@ function resError (error) {
   if (msg.indexOf('50') > -1) {
     msg = '服务器正在开小差~( ˶‾᷄࿀‾᷅˵ )'
   }
-  if (msg.indexOf('Network Error') === -1) {
-    Toast(msg)
-  } else {
+  if (msg.indexOf('Network Error') > -1) {
     router.push({ name: 'NetError' })
+    return
   }
-  return Promise.reject(msg)
+  return Promise.reject(new Error(msg))
 }

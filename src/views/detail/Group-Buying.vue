@@ -5,15 +5,28 @@
       <DetailTitle>标题标题标题标题标题标题标题标题标题</DetailTitle>
       <DetailDesc>简介简洁</DetailDesc>
       <DetailService />
-      <pl-svg :class="$style.groupPrice" name="group-price" />
-      <Price price="9.9" size="huger" original-price="599"></Price>
+      <pl-svg
+        :class="$style.groupPrice"
+        name="group-price"
+      />
+      <Price
+        price="9.9"
+        size="huger"
+        original-price="599"
+      />
     </DetailInfoBox>
 
-    <DetailInfo title="课程详情" :content="content" />
+    <DetailInfo
+      title="课程详情"
+      :content="content"
+    />
 
     <div class="slide-padding mt-80">
       <ModuleTitle title="团购详情" />
-      <Specific total-price="666" group-price="233" />
+      <Specific
+        total-price="666"
+        group-price="233"
+      />
     </div>
 
     <div class="slide-padding mt-80">
@@ -49,7 +62,10 @@
         original-price="9999.99"
       />
     </div>
-    <buy-now type="warning" text="9.9元 立即抢购" />
+    <buy-now
+      type="warning"
+      text="9.9元 立即抢购"
+    />
   </div>
 </template>
 
@@ -71,7 +87,7 @@ import GroupBuyingItem from '../../components/Group-Buying-Item.vue'
 import Price from '../../components/Price.vue'
 import BuyNow from '../../components/detail/Buy-Now.vue'
 export default {
-  name: 'Group-Buying',
+  name: 'GroupBuying',
   components: {
     DetailBanner,
     DetailInfoBox,

@@ -1,9 +1,19 @@
 <template>
   <div :class="$style.grade + ' ' + $style[size]">
     <div :class="$style.stars">
-      <pl-svg v-for="i of 5" name="star" :class="{ [$style.selected]: grade >= i }" :key="i" @click="handleClick(i)"></pl-svg>
+      <pl-svg
+        v-for="i of 5"
+        name="star"
+        :class="{ [$style.selected]: grade >= i }"
+        :key="i"
+        @click="handleClick(i)"
+      />
     </div>
-    <span v-if="selectable" :class="$style.text+' fz-26 gray-3'" v-text="gradeText[grade]"></span>
+    <span
+      v-if="selectable"
+      :class="$style.text+' fz-26 gray-3'"
+      v-text="gradeText[grade]"
+    />
   </div>
 </template>
 

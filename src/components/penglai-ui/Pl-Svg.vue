@@ -13,16 +13,20 @@
 import SvgIcon from 'vue-svgicon'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'pl-svg',
+  name: 'PlSvg',
   components: {
     svgicon: SvgIcon
   },
   props: {
     name: {
       type: String,
-      require: true
+      require: true,
+      default: ''
     },
-    color: String
+    color: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {

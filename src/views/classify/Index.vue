@@ -6,8 +6,11 @@
         :class="$style.searchBox"
         :to="{ name: 'Search' }"
       >
-        <pl-svg name="search"></pl-svg>
-        <input type="text" placeholder="搜索商品">
+        <pl-svg name="search" />
+        <input
+          type="text"
+          placeholder="搜索商品"
+        >
       </router-link>
     </div>
 
@@ -17,9 +20,13 @@
           v-for="(item, index) of classifyList"
           :class="{[$style.classifyActive]: item.sequenceNbr === currentClassify.sequenceNbr}"
           :key="index"
-          v-text="item.categoryName"
           @click="classifyClick(item)"
-        />
+        >
+          <span
+            :class="$style.classifyText"
+            v-text="item.categoryName"
+          />
+        </li>
       </ul>
 
       <div :class="$style.content">
@@ -32,20 +39,31 @@
           <classify-item img="//gw.alicdn.com/tps/TB2oFzffhhmpuFjSZFyXXcLdFXa_!!558893385-0-beehive-scenes.jpg_140x10000Q75.jpg_.webp" text="显示器" />
           <classify-item img="//gw.alicdn.com/tps/O1CN01HoU6GR1Oli1OYGPbk_!!2960761746-2-beehive-scenes.png_140x10000.jpg_.webp" text="平板电脑" />
         </div>-->
-        <div :class="$style.tip" v-text="currentClassify.categoryName"></div>
-        <load-more :request-methods="getProduct" :form="form" ref="loadMore" no-content-tip="此分类下还没有商品">
+        <div
+          :class="$style.tip"
+          v-text="currentClassify.categoryName"
+        />
+        <load-more
+          :request-methods="getProduct"
+          :form="form"
+          ref="loadMore"
+          :loading.sync="loading"
+          no-content-tip="此分类下还没有商品"
+        >
           <template v-slot="{ list }">
-            <lesson-item
-              v-for="item of list"
-              :key="item.sequenceNbr"
-              size="small"
-              :id="item.sequenceNbr"
-              :title="item.productName"
-              :desc="item.productDesc"
-              :price="item.productOptions[0].price"
-              :img="item.productImage[0].mediaUrl"
-              :border="true"
-            />
+            <div :class="$style.productList">
+              <lesson-item
+                v-for="item of list"
+                :key="item.sequenceNbr"
+                size="small"
+                :id="item.sequenceNbr"
+                :title="item.productName"
+                :desc="item.productDesc"
+                :price="item.productOptions[0].price"
+                :img="item.productImage[0].mediaUrl"
+                :border="true"
+              />
+            </div>
           </template>
         </load-more>
       </div>
@@ -84,38 +102,43 @@ export default {
         size: 10,
         productStatus: 'ON_SALE'
       },
-      getProduct
+      getProduct,
+      $refresh: null,
+      loading: false
     }
   },
-  props: ['optionId'],
+  props: {
+    optionId: {
+      type: String,
+      default: null
+    }
+  },
   created () {
     this.getCategoryTree()
   },
+  mounted () {
+    this.$refresh = this.$refs.loadMore.refresh
+  },
   activated () {
-    this.form.categoryCode = this.optionId || ''
-    if (this.classifyList.length > 1) {
-      // 查找当前传入的分类ID对应的分类对象
-      this.classifyClick(this.classifyList.find(item => {
-        return item.sequenceNbr === this.optionId
-      }))
+    if (this.classifyList.length > 1 && this.optionId) {
+      this.classifyClick(this.classifyList.find(item => item.sequenceNbr === this.optionId))
     }
   },
   methods: {
     classifyClick (classify) {
+      if (this.loading || classify === this.currentClassify) return
       if (classify) {
-        if (this.currentClassify.sequenceNbr === classify.sequenceNbr) return
         this.currentClassify = classify
         this.form.categoryCode = classify.sequenceNbr
         this.form.current = 1
+        this.$refresh()
       }
     },
     async getCategoryTree () {
       try {
         const { result } = await getCategoryTree()
         this.classifyList = this.classifyList.concat(result)
-        if (this.optionId) {
-          this.classifyClick(this.classifyList.find(item => item.sequenceNbr === this.optionId))
-        }
+        this.classifyClick(this.classifyList.find(item => item.sequenceNbr === (this.optionId || '')))
       } catch (e) {
         throw e
       }
@@ -176,9 +199,10 @@ export default {
   }
 }
 .classifyMain {
-  min-height: 100vh;
-  padding-top: 92px;
+  min-height: calc(100vh - 92px);
+  padding: 92px 0;
   background-color: #fff;
+  box-sizing: border-box;
 }
 .classify-list {
   position: fixed;
@@ -186,12 +210,17 @@ export default {
   background-color: #f1f4f5;
   overflow: auto;
   z-index: 2;
-  li {
+  > li {
     position: relative;
-    width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    min-height: 88px;
+    padding: 10px 20px;
     font-size: 26px;
     text-align: center;
-    line-height: 108px;
+    white-space: pre-wrap;
     &:nth-last-of-type(1) {
       margin-bottom: 108px;
       &:after {
@@ -207,6 +236,9 @@ export default {
     background-color: #fff;
     color: #aaaabb;
   }
+  .classifyText {
+    line-height: 36px;
+  }
 }
 .classify-list2 {
   display: flex;
@@ -217,6 +249,10 @@ export default {
   padding-left: 180px;
   background-color: #fff;
   z-index: 1;
+}
+.productList {
+  display: grid;
+  grid-row-gap: 24px;
 }
 .tip {
   position: relative;

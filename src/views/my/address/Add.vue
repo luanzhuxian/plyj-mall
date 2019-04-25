@@ -1,37 +1,90 @@
 <template>
   <div :class="$style.addAddress">
-    <TopText :title="addressId ? '修改地址' : '添加新地址'" tip="请认真填写，不然可能收不到宝贝哟～"></TopText>
+    <TopText
+      :title="addressId ? '修改地址' : '添加新地址'"
+      tip="请认真填写，不然可能收不到宝贝哟～"
+    />
 
-    <pl-form ref="form" :model="form" :class="$style.form + ' radius-20'" label-width="40" :rules="rules">
-      <pl-form-item border prop="realName">
-        <pl-input placeholder="收货人" v-model="form.realName" />
+    <pl-form
+      ref="form"
+      :model="form"
+      :class="$style.form + ' radius-20'"
+      label-width="40"
+      :rules="rules"
+    >
+      <pl-form-item
+        border
+        prop="realName"
+      >
+        <pl-input
+          placeholder="收货人"
+          v-model="form.realName"
+          size="middle"
+        />
       </pl-form-item>
-      <pl-form-item border prop="mobile">
-        <pl-input placeholder="手机号" v-model="form.mobile" />
+      <pl-form-item
+        border
+        prop="mobile"
+      >
+        <pl-input
+          placeholder="手机号"
+          v-model="form.mobile"
+          size="middle"
+        />
       </pl-form-item>
       <!--<pl-form-item border>-->
-        <!--<pl-input placeholder="邮箱" v-model="form.email" />-->
+      <!--<pl-input placeholder="邮箱" v-model="form.email" />-->
       <!--</pl-form-item>-->
-      <pl-form-item border prop="addressPrefix">
-        <pl-input placeholder="所在地区" readonly v-model="form.addressPrefix" @click="showCitySelector = true" />
+      <pl-form-item
+        border
+        prop="addressPrefix"
+      >
+        <pl-input
+          placeholder="所在地区"
+          readonly
+          v-model="form.addressPrefix"
+          @click="showCitySelector = true"
+          @clear="addrClear"
+          size="middle"
+        />
       </pl-form-item>
       <pl-form-item prop="agencyAddress">
-        <pl-input placeholder="详细地址：如道路、门牌号、小区等" v-model="form.agencyAddress" />
+        <pl-input
+          placeholder="详细地址：如道路、门牌号、小区等"
+          v-model="form.agencyAddress"
+          size="middle"
+        />
       </pl-form-item>
     </pl-form>
 
     <div :class="$style.setDefault + ' radius-20'">
       <span class="fz-30">设置为默认</span>
-      <pl-switch v-model="defaultAddress"></pl-switch>
+      <pl-switch v-model="defaultAddress" />
     </div>
 
-    <div v-if="addressId" :class="$style.removeAddr" @click="removeAddr">
+    <div
+      v-if="addressId"
+      :class="$style.removeAddr"
+      @click="removeAddr"
+    >
       删除收货地址
     </div>
 
-    <CitySelector :show.sync="showCitySelector" @select="selectCity" />
+    <CitySelector
+      :show.sync="showCitySelector"
+      @select="selectCity"
+      ref="citySelector"
+    />
 
-    <pl-button :class="$style.submit" size="huge" type="warning" :loading="loading" @click="submit">提交</pl-button>
+    <pl-button
+      :class="$style.submit"
+      size="huge"
+      type="warning"
+      :loading="loading"
+      @click="confirm"
+    >
+      提交
+    </pl-button>
   </div>
 </template>
 
@@ -88,7 +141,12 @@ export default {
       address: {}
     }
   },
-  props: ['addressId'],
+  props: {
+    addressId: {
+      type: String,
+      default: null
+    }
+  },
   computed: {
     ...mapGetters(['agencyCode', 'mallSeq', 'addressList', 'selectedAddress'])
   },
@@ -107,7 +165,10 @@ export default {
       }
       this.defaultAddress = this.form.defaultAddress === 'YES'
     },
-    async submit () {
+    addrClear () {
+      this.$refs.citySelector.clear()
+    },
+    async confirm () {
       if (this.$refs.form.validate()) {
         let currentAddress = null
         this.loading = true

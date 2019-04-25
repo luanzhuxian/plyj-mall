@@ -1,129 +1,219 @@
 <template>
-<div :class="$style.mallHome + ' mall-home'">
-  <div :class="$style.top">
-    <top-text :title="mallName + ' 欢迎您'" :tip="moment().format('MM月DD日 dddd')"></top-text>
-  </div>
-  <swiper :options="swiper" :class="$style.banner">
-    <swiper-slide
-      v-for="(item, index) of banner"
-      :key="index">
-      <!-- 商品 -->
-      <img
-        v-if="item.linkType === 'goods' && item.contentId"
-        :class="$style.bannerImg"
-        data-status="ON_SALE"
-        @click="toProductDetail(item.contentId)"
-        :src="item.fileId"
-      >
-      <!-- 分类 -->
-      <router-link
-        v-else-if="item.linkType === 'category' && item.link"
-        :class="$style.bannerImg"
-        tag="img"
-        :src="item.fileId"
-        alt=""
-        :to="{ name: 'Classify', params: { optionId: item.link.split('/').splice(-1, 1)[0] } }"
+  <div
+    v-if="loaded"
+    :class="$style.mallHome + ' mall-home'"
+  >
+    <div :class="$style.top">
+      <top-text
+        :title="mallName + ' 欢迎您'"
+        :tip="moment().format('MM月DD日 dddd')"
       />
-      <!-- 其它 -->
-      <img v-else :src="item.fileId" :class="$style.bannerImg" >
-    </swiper-slide>
-    <div class="banner-pagination" slot="pagination" />
-  </swiper>
-
-  <div :class="$style.goodGift" v-if="modules.A.length">
-    <div :class="$style.moduleHead">
-      <div :class="$style.moduleTitle">甄选好礼</div>
-      <p>为了帮您甄选好礼，您知道我有多努力吗？</p>
     </div>
-    <swiper :options="recommend" :class="$style.swiper">
-      <swiper-slide v-for="item of modules.A" :key="item.contentId">
-        <CategoryItem
-          tag="div"
-          :key="item.contentId"
-          :img="item.productImage && item.productImage[0].mediaUrl"
-          :productName="item.productName"
-          :productId="item.sequenceNbr"
-          :isActive="item.agentProduct"
-          size="mini"
-          :price="item.priceModels && item.priceModels[0].price"
-        />
-      </swiper-slide>
-      <div v-if="modules.A.length > 3" class="good-gift-pagination" slot="pagination" />
-    </swiper>
-  </div>
-
-  <div :class="$style.imgModule"  v-if="modules.B.length">
-    <router-link
-      v-if="modules.B[0].linkType === 'category' && modules.B[0].contentId"
-      tag="img"
-      :to="{ name: 'Classify', params: { optionId: modules.B[0].contentId } }"
-      :src="modules.B[0].fileId"
-      :class="$style.imgModuleImg"
-    />
-    <img
-      v-else-if="modules.B[0].linkType === 'goods' && modules.B[0].contentId"
-      :src="modules.B[0].fileId"
-      :class="$style.imgModuleImg"
-      @click="toProductDetail(modules.B[0].contentId)"
-    />
-    <img v-else :src="modules.B[0].fileId" :class="$style.imgModuleImg" />
-  </div>
-
-  <div :class="$style.goodsModule"  v-if="modules.C.length">
-    <swiper :options="goods" style="overflow: visible">
-      <swiper-slide v-for="item of modules.C" :key="item.contentId">
-        <div :class="$style.slideWrap">
-          <CategoryItem
-            :img="item.productImage && item.productImage[0].mediaUrl"
-            :productName="item.productName"
-            :productId="item.sequenceNbr"
-            :isActive="item.agentProduct"
-            size="mini"
-            :price="item.priceModels && item.priceModels[0].price"
-          />
-        </div>
-      </swiper-slide>
-    </swiper>
-  </div>
-
-  <div  :class="$style.imgModule" v-if="modules.D.length">
-    <router-link
-      v-if="modules.D[0].linkType === 'category' && modules.D[0].contentId"
-      tag="img"
-      :to="{ name: 'Classify', params: { optionId: modules.D[0].contentId } }"
-      :src="modules.D[0].fileId"
-      :class="$style.imgModuleImg"
-    />
-    <img
-      v-else-if="modules.D[0].linkType === 'goods' && modules.D[0].contentId"
-      :src="modules.D[0].fileId"
-      :class="$style.imgModuleImg"
-      @click="toProductDetail(modules.D[0].contentId)"
+    <swiper
+      :options="swiper"
+      :class="$style.banner"
+      v-if="banner.length > 0"
     >
-    <img v-else :src="modules.D[0].fileId" :class="$style.imgModuleImg" />
-  </div>
+      <swiper-slide
+        v-for="(item, index) of banner"
+        :key="index"
+      >
+        <!-- 商品 -->
+        <img
+          v-if="item.linkType === 'goods' && item.contentId"
+          :class="$style.bannerImg"
+          data-status="ON_SALE"
+          @click="toProductDetail(item.contentId)"
+          :src="item.fileId"
+        >
+        <!-- 分类 -->
+        <router-link
+          v-else-if="item.linkType === 'category' && item.link"
+          :class="$style.bannerImg"
+          tag="img"
+          :src="item.fileId"
+          alt=""
+          :to="{ name: 'Classify', params: { optionId: item.link.split('/').splice(-1, 1)[0] } }"
+        />
+        <!-- 其它 -->
+        <img
+          v-else
+          :src="item.fileId"
+          :class="$style.bannerImg"
+        >
+      </swiper-slide>
+      <div
+        class="banner-pagination"
+        slot="pagination"
+      />
+    </swiper>
 
-  <div :class="$style.goodsModule" v-if="modules.E.length">
-    <swiper :options="goods" style="overflow: visible">
-      <swiper-slide v-for="item of modules.E" :key="item.contentId">
-        <div :class="$style.slideWrap">
+    <div
+      :class="$style.goodGift"
+      v-if="modules.A.length"
+    >
+      <div :class="$style.moduleHead">
+        <div :class="$style.moduleTitle">
+          甄选好礼
+        </div>
+        <p>为了帮您甄选好礼，您知道我有多努力吗？</p>
+      </div>
+      <swiper
+        :options="recommend"
+        :class="$style.swiper"
+      >
+        <swiper-slide
+          v-for="item of modules.A"
+          :key="item.contentId"
+        >
           <CategoryItem
+            tag="div"
+            :key="item.contentId"
             :img="item.productImage && item.productImage[0].mediaUrl"
-            :productName="item.productName"
-            :productId="item.sequenceNbr"
-            :isActive="item.agentProduct"
+            :product-name="item.productName"
+            :product-id="item.sequenceNbr"
+            :is-active="item.agentProduct"
             size="mini"
             :price="item.priceModels && item.priceModels[0].price"
           />
-        </div>
-      </swiper-slide>
-    </swiper>
+        </swiper-slide>
+        <div
+          v-if="modules.A.length > 3"
+          class="good-gift-pagination"
+          slot="pagination"
+        />
+      </swiper>
+    </div>
+
+    <div
+      :class="$style.imgModule"
+      v-if="modules.B.length"
+    >
+      <router-link
+        v-if="modules.B[0].linkType === 'category' && modules.B[0].contentId"
+        tag="img"
+        :to="{ name: 'Classify', params: { optionId: modules.B[0].contentId } }"
+        :src="modules.B[0].fileId"
+        :class="$style.imgModuleImg"
+      />
+      <img
+        v-else-if="modules.B[0].linkType === 'goods' && modules.B[0].contentId"
+        :src="modules.B[0].fileId"
+        :class="$style.imgModuleImg"
+        @click="toProductDetail(modules.B[0].contentId)"
+      >
+      <img
+        v-else
+        :src="modules.B[0].fileId"
+        :class="$style.imgModuleImg"
+      >
+    </div>
+
+    <div
+      :class="$style.goodsModule"
+      v-if="modules.C.length"
+    >
+      <swiper
+        :options="goods"
+        style="overflow: visible"
+      >
+        <swiper-slide
+          v-for="item of modules.C"
+          :key="item.contentId"
+        >
+          <div :class="$style.slideWrap">
+            <CategoryItem
+              :img="item.productImage && item.productImage[0].mediaUrl"
+              :product-name="item.productName"
+              :product-id="item.sequenceNbr"
+              :is-active="item.agentProduct"
+              size="mini"
+              :price="item.priceModels && item.priceModels[0].price"
+            />
+          </div>
+        </swiper-slide>
+      </swiper>
+    </div>
+
+    <div
+      :class="$style.imgModule"
+      v-if="modules.D.length"
+    >
+      <router-link
+        v-if="modules.D[0].linkType === 'category' && modules.D[0].contentId"
+        tag="img"
+        :to="{ name: 'Classify', params: { optionId: modules.D[0].contentId } }"
+        :src="modules.D[0].fileId"
+        :class="$style.imgModuleImg"
+      />
+      <img
+        v-else-if="modules.D[0].linkType === 'goods' && modules.D[0].contentId"
+        :src="modules.D[0].fileId"
+        :class="$style.imgModuleImg"
+        @click="toProductDetail(modules.D[0].contentId)"
+      >
+      <img
+        v-else
+        :src="modules.D[0].fileId"
+        :class="$style.imgModuleImg"
+      >
+    </div>
+
+    <div
+      :class="$style.goodsModule"
+      v-if="modules.E.length"
+    >
+      <swiper
+        :options="goods"
+        style="overflow: visible"
+      >
+        <swiper-slide
+          v-for="item of modules.E"
+          :key="item.contentId"
+        >
+          <div :class="$style.slideWrap">
+            <CategoryItem
+              :img="item.productImage && item.productImage[0].mediaUrl"
+              :product-name="item.productName"
+              :product-id="item.sequenceNbr"
+              :is-active="item.agentProduct"
+              size="mini"
+              :price="item.priceModels && item.priceModels[0].price"
+            />
+          </div>
+        </swiper-slide>
+      </swiper>
+    </div>
+
+    <you-like v-if="showLike" />
   </div>
 
-  <you-like v-if="showLike"></you-like>
-</div>
+  <div
+    v-else
+    :class="$style.skeleton"
+  >
+    <div :class="$style.skeAnimation + ' ' + $style.skeWelcome" />
+    <div :class="$style.skeAnimation + ' ' + $style.skeDate" />
+    <div :class="$style.skeAnimation + ' ' + $style.skeA" />
+    <div :class="$style.skeB">
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+    </div>
+    <div :class="$style.skeAnimation + ' ' + $style.skeC" />
+    <div :class="$style.skeD">
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+    </div>
+    <div :class="$style.skeAnimation + ' ' + $style.skeE" />
+    <div :class="$style.skeF">
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+      <div :class="$style.skeAnimation" />
+    </div>
+  </div>
 </template>
-
 <script>
 import TopText from '../../components/Top-Text.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
@@ -148,6 +238,7 @@ export default {
   data () {
     return {
       showLike: false,
+      loaded: false,
       swiper: {
         slidesPerView: 'auto',
         centeredSlides: true,
@@ -177,7 +268,8 @@ export default {
         E: []
       },
       maybeLike: [],
-      moment
+      moment,
+      creatingBroker: false
     }
   },
   computed: {
@@ -190,6 +282,7 @@ export default {
       await this.getBanner(result)
       await this.getModule(result)
       this.showLike = true
+      this.loaded = true
     } catch (e) {
       throw e
     }
@@ -248,14 +341,16 @@ export default {
       let route = {
         name: 'Lesson', params: { productSeq, brokerId: null }
       }
-      if (this.agentUser) {
+      if (this.agentUser && !this.creatingBroker) {
         try {
+          this.creatingBroker = true
           let { result } = await createBrokerShare(productSeq)
           result = result || {}
           route.params.brokerId = result.sequenceNbr || null
         } catch (e) {
           throw e
         } finally {
+          this.creatingBroker = false
           this.$router.push(route)
         }
       }
@@ -267,6 +362,41 @@ export default {
   @import "index.scss";
   .mall-home {
     overflow: hidden;
+  }
+
+  .skeleton {
+    padding: 30px 40px;
+    > div {
+    }
+  }
+  .skeWelcome {
+    width: 60%;
+    height: 53px;
+  }
+  .skeDate {
+    width: 40%;
+    height: 37px;
+    margin-top: 14px;
+    background-color: #eee;
+  }
+  .skeA, .skeC, .skeE {
+    height: 324px;
+    margin-top: 60px;
+    background-color: #eee;
+  }
+  .skeB, .skeD, .skeF {
+    display: grid;
+    width: 100%;
+    height: 220px;
+    margin-top: 60px;
+    justify-content: space-between;
+    grid-template-columns: repeat(3, 200px);
+    > div {
+      background-color: #eee;
+    }
+  }
+  .skeAnimation {
+    @include skeAnimation(#eee)
   }
 </style>
 <style lang="scss">

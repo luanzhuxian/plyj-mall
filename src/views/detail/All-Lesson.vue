@@ -1,13 +1,17 @@
 <template>
   <div :class="$style.allLesson">
-    <TopText title="全部课程" tip="这里什么都有，随便挑吧！" />
+    <TopText
+      title="全部课程"
+      tip="这里什么都有，随便挑吧！"
+    />
     <ul :class="$style.classifyList">
       <li
         v-for="(item, i) of classifyList"
         :class="{ [$style.active]: currentClassify === item.name }"
         @click="changeClassify(item)"
-        :key="i">
-        {{item.name}}({{item.count}})
+        :key="i"
+      >
+        {{ item.name }}({{ item.count }})
       </li>
     </ul>
 
@@ -34,7 +38,7 @@
 import LessonItem from '../../components/item/Lesson-Item.vue'
 import TopText from '../../components/Top-Text.vue'
 export default {
-  name: 'All-Lesson',
+  name: 'AllLesson',
   components: {
     LessonItem,
     TopText

@@ -1,4 +1,7 @@
 console.log('------------------------- ' + process.env.NODE_ENV + ' -------------------------')
+let argv = process.argv
+let model = argv[argv.indexOf('--model') + 1]
+console.log('------------------------- model: ' + model + ' -------------------------')
 // const externals =
 //   process.env.NODE_ENV === 'production'
 //     ? {
@@ -12,12 +15,14 @@ module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      template: process.env.NODE_ENV === 'production' ? 'public/index-prod.html' : 'public/index.html',
+      template: (model === 'dev' || process.env.NODE_ENV === 'development') ? 'public/index.html' : 'public/index-prod.html',
       filename: 'index.html'
     }
   },
+
   assetsDir: 'static',
   outputDir: 'mall',
+
   devServer: {
     host: '0.0.0.0',
     port: 4000,
@@ -33,6 +38,7 @@ module.exports = {
       }
     }
   },
+
   css: {
     loaderOptions: {
       css: {
@@ -57,8 +63,12 @@ module.exports = {
       }
     }
   },
-  productionSourceMap: false // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
+
+  // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
   // configureWebpack: {
   //   externals
   // }
+  productionSourceMap: false,
+
+  lintOnSave: true
 }

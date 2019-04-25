@@ -1,5 +1,5 @@
 let token = localStorage.getItem('token')
-// let token = '0498a33a-30b5-4b5d-add4-9e29bd75be39'
+// let token = 'd7b78a81-1f03-4d96-b173-ed39fd7095ca'
 export default {
   theme: 'base-theme',
   userInfo: {
@@ -61,7 +61,7 @@ export default {
     RDSERVER_MOBILE_REGISTER: 'RDSERVER_MOBILE_REGISTER', // 研发服务端-免费注册验证码
     PUBLIC_USER_UPDATE_MOBILE: 'PUBLIC_USER_UPDATE_MOBILE'// 研发服务端-免费注册验证码
   },
-  orderStatus: {
+  orderStatusMap: {
     NEW: '待提交',
     WAIT_PAY: '待支付',
     WAIT_SHIP: '待发货',

@@ -1,17 +1,27 @@
 <template>
   <div :class="$style.invoice">
-    <Address-Item></Address-Item>
+    <Address-Item />
 
     <div :class="$style.orderInfo + ' radius-20 mt-28'">
-      <img v-img-error :src="orderInfoModel.img" alt="">
+      <img
+        v-img-error
+        :src="orderInfoModel.img"
+        alt=""
+      >
       <div :class="$style.right">
         <div>
           <span class="fz-28">订单编号 </span>
-          <span class="fz-24" v-text="orderId" />
+          <span
+            class="fz-24"
+            v-text="orderId"
+          />
         </div>
         <div>
           <span class="fz-28">开票金额 </span>
-          <span :class="'rmb fz-26 '+$style.money" v-text="form.amount" />
+          <span
+            :class="'rmb fz-26 '+$style.money"
+            v-text="form.amount"
+          />
         </div>
       </div>
     </div>
@@ -22,33 +32,98 @@
         <span class="fz-24">纸质发票</span>
       </div>
 
-      <pl-form :class="{ [$style.invoiceForm]: true, [$style.hidden]: form.invoiceType === 0 }"
-               align="right" ref="form" :rules="rules" :model="form">
-        <pl-form-item label="抬头类型：" border>
-          <pl-radio v-model="form.invoiceType" :label="0">个人或事业单位</pl-radio>
-          <pl-radio v-model="form.invoiceType" :label="1">企业</pl-radio>
+      <pl-form
+        :class="{ [$style.invoiceForm]: true, [$style.hidden]: form.invoiceType === 0 }"
+        align="right"
+        ref="form"
+        :rules="rules"
+        :model="form"
+      >
+        <pl-form-item
+          label="抬头类型："
+          border
+        >
+          <div :class="$style.invoiceTypeRadio">
+            <pl-radio
+              v-model="form.invoiceType"
+              :label="0"
+            >
+              个人或事业单位
+            </pl-radio>
+            <pl-radio
+              v-model="form.invoiceType"
+              :label="1"
+            >
+              企业
+            </pl-radio>
+          </div>
         </pl-form-item>
-        <pl-form-item prop="invoiceTitle" label="发票抬头：" border>
-          <pl-input v-model="form.invoiceTitle" placeholder="抬头名"></pl-input>
+        <pl-form-item
+          prop="invoiceTitle"
+          label="发票抬头："
+          border
+        >
+          <pl-input
+            v-model="form.invoiceTitle"
+            placeholder="抬头名"
+          />
         </pl-form-item>
-        <pl-form-item prop="idNo" label="纳税人识别号：" border>
-          <pl-input v-model="form.idNo" placeholder="请输入纳税人识别号"></pl-input>
+        <pl-form-item
+          prop="idNo"
+          label="纳税人识别号："
+          border
+        >
+          <pl-input
+            v-model="form.idNo"
+            placeholder="请输入纳税人识别号"
+          />
         </pl-form-item>
-        <pl-form-item prop="bankName" label="开户银行：" border>
-          <pl-input v-model="form.bankName" placeholder="选填"></pl-input>
+        <pl-form-item
+          prop="bankName"
+          label="开户银行："
+          border
+        >
+          <pl-input
+            v-model="form.bankName"
+            placeholder="选填"
+          />
         </pl-form-item>
-        <pl-form-item prop="bankAccount" label="银行账号：" border>
-          <pl-input v-model="form.bankAccount" placeholder="选填"></pl-input>
+        <pl-form-item
+          prop="bankAccount"
+          label="银行账号："
+          border
+        >
+          <pl-input
+            v-model="form.bankAccount"
+            placeholder="选填"
+          />
         </pl-form-item>
-        <pl-form-item prop="companyAddr" label="企业地址：" border>
-          <pl-input v-model="form.companyAddr" placeholder="选填"></pl-input>
+        <pl-form-item
+          prop="companyAddr"
+          label="企业地址："
+          border
+        >
+          <pl-input
+            v-model="form.companyAddr"
+            placeholder="选填"
+          />
         </pl-form-item>
-        <pl-form-item prop="companyPhone" label="企业电话：" border>
-          <pl-input v-model="form.companyPhone" placeholder="选填"></pl-input>
+        <pl-form-item
+          prop="companyPhone"
+          label="企业电话："
+          border
+        >
+          <pl-input
+            v-model="form.companyPhone"
+            placeholder="选填"
+          />
         </pl-form-item>
       </pl-form>
     </div>
-    <div class="radius-20 mt-28 bg-white" style="overflow: hidden; padding-left: 28px;">
+    <div
+      class="radius-20 mt-28 bg-white"
+      style="overflow: hidden; padding-left: 28px;"
+    >
       <pl-fields
         text="发票内容"
         right-text-weight="bold"
@@ -60,7 +135,14 @@
         :route="{ name: 'InvoiceContent', params: { id: orderId } }"
       />
     </div>
-    <pl-button class="mt-28" size="large" type="warning" @click="submit">提交</pl-button>
+    <pl-button
+      class="mt-28"
+      size="large"
+      type="warning"
+      @click="confirm"
+    >
+      提交
+    </pl-button>
   </div>
 </template>
 
@@ -124,7 +206,12 @@ export default {
       orderInfoModel: {}
     }
   },
-  props: ['orderId'],
+  props: {
+    orderId: {
+      type: String,
+      default: null
+    }
+  },
   computed: {
     content: function () {
       return this.$route.query.content || '明细'
@@ -135,7 +222,7 @@ export default {
     await this.getOrderDetail()
   },
   methods: {
-    async submit () {
+    async confirm () {
       try {
         if (this.form.invoiceType === 1) {
           if (!this.$refs.form.validate()) return
@@ -156,7 +243,7 @@ export default {
         await this.$confirm('检查无误并确定提交？')
         await applyOrderInvoice(this.form)
         this.$destroy()
-        this.$router.replace({ name: 'AllOrders' })
+        this.$router.replace({ name: 'Orders' })
       } catch (e) {
         throw e
       }
@@ -249,5 +336,8 @@ export default {
     &.hidden {
       height: 218px;
     }
+  }
+  .invoiceTypeRadio {
+    padding: 30px 0;
   }
 </style>

@@ -1,18 +1,49 @@
 <template>
-  <div :class="$style.shareItem" @click="buyNow">
-    <img v-lazy="img" :key="img" class="radius-20" alt="">
+  <div
+    :class="$style.shareItem"
+    @click="buyNow"
+  >
+    <img
+      v-lazy="img"
+      :key="img"
+      class="radius-20"
+      alt=""
+    >
     <div :class="$style.content + ' radius-20'">
       <div :class="$style.contentBox">
-        <div>
-          <h3 v-text="title" />
-          <p :class="$style.desc" v-text="desc" />
-          <Grade size="mini" :grade="grade" />
+        <div :class="$style.contentTop">
+          <h3
+            :class="$style.title"
+            v-text="title"
+          />
+          <p
+            :class="$style.desc"
+            v-text="desc"
+          />
+          <Grade
+            :class="$style.grade"
+            size="mini"
+            :grade="grade"
+          />
         </div>
-        <div>
-          <Price size="middle" :price="price" />
-          <pl-button shadow type="warning" size="middle" @click="buyNow">立即购买</pl-button>
+        <div :class="$style.contentBottom">
+          <Price
+            size="middle"
+            :price="price"
+          />
+          <pl-button
+            shadow
+            type="warning"
+            size="middle"
+            @click="buyNow"
+          >
+            立即购买
+          </pl-button>
         </div>
-        <pl-svg :class="$style.share" name="share"></pl-svg>
+        <pl-svg
+          :class="$style.share"
+          name="share"
+        />
       </div>
     </div>
   </div>
@@ -23,27 +54,53 @@ import Grade from '../Grade'
 import Price from '../Price.vue'
 import { createBrokerShare } from '../../apis/product'
 export default {
-  name: 'Share-Item',
+  name: 'ShareItem',
   components: {
     Grade,
     Price
   },
+  data () {
+    return {
+      loading: false
+    }
+  },
   props: {
-    price: [String, Number],
-    title: String,
-    desc: String,
-    grade: Number,
-    img: String,
-    id: String
+    price: {
+      type: [String, Number],
+      default: 0
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    desc: {
+      type: String,
+      default: ''
+    },
+    grade: {
+      type: Number,
+      default: 1
+    },
+    img: {
+      type: String,
+      default: ''
+    },
+    id: {
+      type: String,
+      default: ''
+    }
   },
   methods: {
     async buyNow () {
-      if (this.id) {
-        let { result } = await createBrokerShare(this.id)
-        if (result) {
-          this.$router.push({ name: 'Lesson', params: { productSeq: this.id, brokerId: result.sequenceNbr } })
-        } else {
-          this.$router.push({ name: 'Lesson', params: { productSeq: this.id } })
+      if (this.id && !this.loading) {
+        try {
+          this.loading = true
+          let { result } = await createBrokerShare(this.id)
+          this.$router.push({ name: 'Lesson', params: { productSeq: this.id, brokerId: result.sequenceNbr || null } })
+        } catch (e) {
+          throw e
+        } finally {
+          this.loading = false
         }
       }
     }
@@ -76,15 +133,15 @@ export default {
     justify-content: space-between;
     width: 342px;
     height: 202px;
-    h3 {
+    .title {
       font-size: 28px;
       font-weight: bold;
       @include elps;
     }
-    > div:nth-of-type(1) {
-      width: 280px;
+    .contentTop {
+      width: 240px;
     }
-    > div:nth-of-type(2) {
+    .contentBottom {
       display: inline-flex;
       align-items: flex-end;
       justify-content: space-between;
@@ -97,9 +154,12 @@ export default {
     }
     .desc {
       font-size: 20px;
-      margin-top: 8px;
+      margin-top: 12px;
       color: #999;
       @include elps;
+    }
+    .grade {
+      margin-top: 12px;
     }
   }
 </style>

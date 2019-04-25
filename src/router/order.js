@@ -1,61 +1,11 @@
 export default [
   {
-    path: '/my/orders',
+    path: '/my/orders/:status?',
     name: 'Orders',
-    component: () => import('../views/my/order/order-list/Index.vue'),
-    meta: {
-      title: '我的订单'
-    },
-    children: [
-      {
-        path: 'all',
-        name: 'AllOrders',
-        component: () => import('../views/my/order/order-list/All.vue'),
-        meta: {
-          title: '我的订单-全部'
-        }
-      },
-      {
-        path: 'wait-pay',
-        name: 'waitPay',
-        component: () => import('../views/my/order/order-list/Wait-Pay.vue'),
-        meta: {
-          title: '我的订单-待付款'
-        }
-      },
-      {
-        path: 'wait-ship',
-        name: 'waitShip',
-        component: () => import('../views/my/order/order-list/Wait-Ship.vue'),
-        meta: {
-          title: '我的订单-待发货'
-        }
-      },
-      {
-        path: 'wait-receive',
-        name: 'waitReceive',
-        component: () => import('../views/my/order/order-list/Wait-Receive.vue'),
-        meta: {
-          title: '我的订单-待收货'
-        }
-      },
-      {
-        path: 'wait-comment',
-        name: 'waitComment',
-        component: () => import('../views/my/order/order-list/Wait-Comment.vue'),
-        meta: {
-          title: '我的订单-待评价'
-        }
-      }
-    ]
-  },
-  {
-    path: '/my/order/submit/:productSeq/:optionCode/:count/:brokerId?',
-    name: 'Cart',
-    component: () => import('../views/cart/Cart.vue'),
+    component: () => import('../views/my/order/Order-List.vue'),
     props: true,
     meta: {
-      title: '提交订单'
+      title: '我的订单'
     }
   },
   {
@@ -121,7 +71,7 @@ export default [
     }
   },
   {
-    path: '/my/orders/refund-list',
+    path: '/my/order/refund-list',
     name: 'RefundList',
     component: () => import('../views/my/order/Refund-List.vue'),
     meta: {

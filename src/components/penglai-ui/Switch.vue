@@ -1,22 +1,28 @@
 <template>
-  <label :class="{
-    'pl-switch': true,
-    checked: value
-  }">
-    <input type="checkbox" :checked="value" @change="handleChange">
+  <label
+    :class="{
+      'pl-switch': true,
+      checked: value
+    }"
+  >
+    <input
+      type="checkbox"
+      :checked="value"
+      @change="handleChange"
+    >
     <span
       :class="{
         'pl-switch_on_off': true,
         'pl-switch_on': value,
         'pl-switch_off': !value
-      }">
-    </span>
+      }"
+    />
   </label>
 </template>
 
 <script>
 export default {
-  name: 'pl-switch',
+  name: 'PlSwitch',
   model: {
     event: 'change',
     value: 'value'

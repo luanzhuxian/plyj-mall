@@ -1,6 +1,12 @@
 <template>
-  <div :class="$style.cart">
-    <div :class="$style.address + ' radius-20'" v-if="this.productType === 'PHYSICAL_GOODS'">
+  <div
+    v-if="!loading"
+    :class="$style.cart"
+  >
+    <div
+      :class="$style.address + ' radius-20'"
+      v-if="this.productType === 'PHYSICAL_GOODS'"
+    >
       <AddressItem />
     </div>
 
@@ -19,29 +25,70 @@
       <div :class="$style.money">
         <p class="fz-28">
           <span>商品金额</span>
-          <span class="rmb" v-text="form.amount" />
+          <span
+            class="rmb"
+            v-text="form.amount"
+          />
         </p>
         <p class="fz-28">
           <span>快递</span>
           <span class="rmb">
-            <i v-if="supplierProduct && sixEnergyNewOrderReturnModel" v-text="sixEnergyNewOrderReturnModel.freight"></i>
+            <i
+              v-if="supplierProduct && sixEnergyNewOrderReturnModel"
+              v-text="sixEnergyNewOrderReturnModel.freight"
+            />
             <i v-else>0</i>
           </span>
         </p>
       </div>
+    </div>
 
-      <div :class="$style.totalMoney + ' fz-30'">
-        <span class="bold">合计：</span>
-        <span class="rmb fz-32 bold" v-text="totalMoney" />
+    <div :class="$style.remark + ' radius-20 mt-28'">
+      <div :class="$style.orderTop">
+        订单备注（选填）
       </div>
+      <div style="background-color: #F3F3F3;">
+        <pl-input
+          v-model="form.orderPostscript"
+          placeholder="选填，请填写订单备注信息，并与商家协商一致"
+          type="textarea"
+        />
+      </div>
+    </div>
 
-      <div :class="$style.confirm">
-        <div>
-          <span class="fz-20 gray-2">实际支付</span>
-          <span class="rmb fz-32" v-text="totalMoney" />
-        </div>
-        <pl-button :disabled="disableSubmit" :loading="loading" type="warning" size="large" @click="submitOrder">确认付款</pl-button>
+    <div :class="$style.confirm">
+      <div>
+        <span class="fz-20 gray-2">实际支付</span>
+        <span
+          class="rmb fz-32"
+          v-text="totalMoney || 0"
+        />
       </div>
+      <pl-button
+        :disabled="disableSubmit"
+        :loading="submiting"
+        type="warning"
+        size="large"
+        @click="submitOrder"
+      >
+        确认付款
+      </pl-button>
+    </div>
+  </div>
+
+  <div
+    :class="$style.skeleton"
+    v-else
+  >
+    <div :class="$style.skeleton1">
+      <AddressItemSkeleton />
+    </div>
+    <div :class="$style.skeleton2">
+      <div :class="$style.skeleton21 + ' ' + $style.skeAnimation" />
+      <OrderItemSkeleton />
+      <div :class="$style.skeleton22 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton23 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton24 + ' ' + $style.skeAnimation" />
     </div>
   </div>
 </template>
@@ -62,17 +109,22 @@ import { getProductDetail } from '../../apis/product'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { setSession } from '../../assets/js/util'
 import { mapGetters } from 'vuex'
+import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
+import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Qs from 'qs'
 export default {
   name: 'Cart',
   components: {
     AddressItem,
-    OrderItem
+    OrderItem,
+    OrderItemSkeleton,
+    AddressItemSkeleton
   },
   data () {
     return {
       disableSubmit: false, // 临时禁用提交按钮，尤其在供应商商品支付时，来回跳转的过程中有效，防止支付数据未拿到时用户点击提交按钮
-      loading: false,
+      submiting: false,
+      loading: true,
       detail: {},
       option: {},
       totalMoney: 0,
@@ -100,13 +152,31 @@ export default {
         ],
         source: 'PUBLIC',
         orderType: '',
-        supplierOrder: false
+        supplierOrder: false,
+        orderPostscript: '' // 备注
       },
       supplierProduct: false,
       sixEnergyNewOrderReturnModel: null
     }
   },
-  props: ['productSeq', 'count', 'optionCode', 'brokerId'],
+  props: {
+    productSeq: {
+      type: String,
+      default: ''
+    },
+    count: {
+      type: [Number, String],
+      default: 1
+    },
+    optionCode: {
+      type: String,
+      default: ''
+    },
+    brokerId: {
+      type: String,
+      default: ''
+    }
+  },
   computed: {
     ...mapGetters(['agencyCode', 'mallSeq', 'selectedAddress', 'openId', 'mobile'])
   },
@@ -126,36 +196,40 @@ export default {
       productCount: count,
       productSeq: productSeq
     }
-    this.getProductDetail()
+    try {
+      await this.getProductDetail()
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
     async getProductDetail () {
       try {
         this.disableSubmit = true
+        this.loading = true
         let { result } = await getProductDetail(this.productSeq)
         this.detail = result
         this.form.supplierOrder = this.supplierProduct = result.supplierProduct
         this.form.orderType = this.productType = result.productType
         this.form.addressSeq = result.productType === 'PHYSICAL_GOODS' ? (this.selectedAddress.sequenceNbr || '') : ''
         this.getOption(result.priceModels)
+        this.loading = false
 
         // 供应商获取运费, 如果出错，返回商品详情
         if (this.supplierProduct) {
-          try {
-            await this.getFreightOfSupplier()
-          } catch (e) {
-            if (/库存不足/.test(e.message)) {
-              this.disableSubmit = true
-              return
-            } else {
-              this.$router.replace({ name: 'SoldOut' })
-            }
-          }
+          await this.getFreightOfSupplier()
         }
         this.disableSubmit = false
       } catch (e) {
         this.disableSubmit = false
+        if (/库存不足/.test(e.message)) {
+          this.disableSubmit = true
+        } else {
+          this.$router.replace({ name: 'SoldOut' })
+        }
         throw e
+      } finally {
+        this.loading = false
       }
     },
     /* 获取规格 */
@@ -186,11 +260,11 @@ export default {
         if (this.supplierProduct) {
           return this.supplierPay()
         }
-        this.loading = true
+        this.submiting = true
         let { result } = await this.typeMap[this.productType](this.form)
-        this.pay(result.CREDENTIAL)
+        await this.pay(result.CREDENTIAL, result.orderModel.orderSn)
       } catch (e) {
-        this.loading = false
+        this.submiting = false
         throw e
       }
     },
@@ -207,9 +281,8 @@ export default {
             optionCode: this.optionCode
           })
           this.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
-          this.totalMoney += this.sixEnergyNewOrderReturnModel.freight
-
-          this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
+          // 先乘后加再除以，防止出现浮点数精度问题
+          this.totalMoney = (this.totalMoney * 100 + this.sixEnergyNewOrderReturnModel.freight * 100) / 100
           this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
           this.form.orderSn = result.orderSn // 添加运费订单数据到表单
           this.form.billNo = result.billNo // 添加运费订单数据到表单
@@ -222,15 +295,15 @@ export default {
     async supplierPay () {
       let code = Qs.parse(location.search.substring(1)).code
       try {
-        this.loading = true
+        this.submiting = true
         let { result } = await getOpenIdByCode(code)
         let payData = await this.typeMap[this.productType](this.form, result)
-        this.pay(payData.result.CREDENTIAL, payData.result.orderModel.orderSn)
+        await this.pay(payData.result.CREDENTIAL, payData.result.orderModel.orderSn)
         delete this.form.sixEnergyNewOrderReturnModel
         delete this.form.orderSn
         delete this.form.billNo
       } catch (e) {
-        this.loading = false
+        this.submiting = false
         delete this.form.sixEnergyNewOrderReturnModel
         delete this.form.orderSn
         delete this.form.billNo
@@ -239,36 +312,27 @@ export default {
     },
     async pay (CREDENTIAL, orderSn) {
       CREDENTIAL.packageValue = CREDENTIAL.package
-      // 支付完成后的去向
-      let payDone = {
-        PHYSICAL_GOODS: 'waitShip',
-        VIRTUAL_GOODS: 'waitReceive'
-      }
-      try {
-        await wechatPay(CREDENTIAL)
-        this.loading = false
-        // 供应商商品支付完成后直接跳转至待收货
-        if (this.supplierProduct) {
-          this.$router.replace({ name: 'waitReceive' })
-        } else {
-          // 跳转至待发货或待收货，这取决于商品类型
-          this.$router.replace({ name: payDone[this.productType] })
-        }
-      } catch (e) {
-        this.loading = false
-        // 支付失败时，如果是供应商商品，则取消订单，并跳回商品详情
-        if (this.supplierProduct) {
-          try {
-            await this.typeMapOfCancel[this.productType](orderSn)
-            return this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
-          } catch (e) {
-            throw e
+      return new Promise(async (resolve, reject) => {
+        try {
+          await wechatPay(CREDENTIAL)
+          this.submiting = false
+          this.$router.replace({ name: 'PaySuccess', params: { orderId: orderSn } })
+          resolve()
+        } catch (e) {
+          this.submiting = false
+          if (this.supplierProduct) { // 支付失败时，如果是供应商商品，则取消订单，并跳回商品详情
+            try {
+              await this.typeMapOfCancel[this.productType](orderSn)
+              this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
+            } catch (e) {
+              reject(e)
+            }
+          } else { // 待付款
+            this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
           }
+          reject(e)
         }
-        // 待付款
-        this.$router.replace({ name: 'waitPay' })
-        throw e
-      }
+      })
     }
   }
 }
@@ -276,13 +340,13 @@ export default {
 
 <style module lang="scss">
   .cart {
-    padding: 20px 40px;
+    padding: 20px 40px 120px;
   }
   .address {
     margin-bottom: 28px;
     background-color: #fff;
   }
-  .product {
+  .product, .remark {
     padding: 24px 28px 18px;
     background-color: #fff;
   }
@@ -337,5 +401,39 @@ export default {
     > button {
       flex: 1;
     }
+  }
+
+  .skeleton {
+    padding: 20px 40px;
+  }
+  .skeleton1 {
+    background-color: #fff;
+  }
+  .skeleton2 {
+    margin-top: 28px;
+    padding: 20px 28px;
+    background-color: #fff;
+  }
+  .skeleton2-1 {
+    width: 112px;
+    height: 37px;
+  }
+  .skeleton2-2 {
+    width: 122px;
+    height: 37px;
+    margin-top: 23px;
+  }
+  .skeleton2-3 {
+    width: 112px;
+    height: 37px;
+    margin-top: 13px;
+  }
+  .skeleton2-4 {
+    width: 150px;
+    height: 37px;
+    margin-top: 28px;
+  }
+  .skeAnimation {
+    @include skeAnimation(#eee)
   }
 </style>

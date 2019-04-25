@@ -1,8 +1,8 @@
+import './lib/transition.scss'
 import Button from './Button.vue'
 import Input from './Input.vue'
 import GetCode from './Get-Code.vue'
 import Tab from './Tab.vue'
-import Toast from './toast'
 import Form from './Form'
 import FormItem from './Form-Item'
 import Radio from './Radio.vue'
@@ -11,8 +11,9 @@ import UploadImg from './Upload-Img.vue'
 import Fields from './Fields.vue'
 import Switch from './Switch.vue'
 import PlSvg from './Pl-Svg.vue'
-import MessageBox from './message-box/index'
-
+import MessageBox from './message-box'
+import Selector from './Selector.vue'
+import { Toast } from './toast'
 const components = [
   Button,
   Input,
@@ -26,7 +27,8 @@ const components = [
   Fields,
   PlSvg,
   Switch,
-  MessageBox
+  MessageBox,
+  Selector
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {
@@ -61,5 +63,6 @@ export default {
   Fields,
   PlSvg,
   Switch,
-  MessageBox
+  MessageBox,
+  Selector
 }

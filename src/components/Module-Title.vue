@@ -1,14 +1,36 @@
 <template>
   <div :class="$style.title + ' ' + $style[size]">
-    <h2 ref="h2" v-text="title" :class="{ [$style.badge]: badge }" :data-badge="badge"></h2>
-    <div :class="$style.right" @click="clickHandle">
+    <h2
+      ref="h2"
+      v-text="title"
+      :class="{ [$style.badge]: badge }"
+      :data-badge="badge"
+    />
+    <div
+      :class="$style.right"
+      @click="clickHandle"
+    >
       <pl-svg
         v-if="prefixIcon"
         :name="prefixIcon"
       />
-      <div v-if="prefixIcon && tip" :class="$style.gap"><!-- 间隙 --></div>
-      <span v-if="tip" :class="$style.tip" v-text="tip" />
-      <div v-if="suffixIcon && tip" :class="$style.gap"><!-- 间隙 --></div>
+      <div
+        v-if="prefixIcon && tip"
+        :class="$style.gap"
+      >
+        <!-- 间隙 -->
+      </div>
+      <span
+        v-if="tip"
+        :class="$style.tip"
+        v-text="tip"
+      />
+      <div
+        v-if="suffixIcon && tip"
+        :class="$style.gap"
+      >
+        <!-- 间隙 -->
+      </div>
       <pl-svg
         v-if="suffixIcon"
         :name="suffixIcon"
@@ -19,7 +41,7 @@
 
 <script>
 export default {
-  name: 'Module-Title',
+  name: 'ModuleTitle',
   props: {
     title: String,
     prefixIcon: String, // 右侧前边图标

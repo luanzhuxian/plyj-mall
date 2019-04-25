@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.detailInfo">
-    <h3 v-text="title"></h3>
+    <h3 v-text="title" />
     <div
       v-lazy-container="{ selector: 'img', error: imgError }"
       :class="$style.content"
@@ -61,6 +61,7 @@ export default {
     line-height: 32px;
     img {
       width: 670px !important;
+      height: auto !important;
       margin: 10px 0 !important;
     }
   }

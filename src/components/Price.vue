@@ -1,16 +1,32 @@
 <template>
-  <div ref="price"
-       :class="{
-        [$style.price]: true,
-        [$style[size]]: true,
-        [$style.plain]: plain
-       }">
+  <div
+    ref="price"
+    :class="{
+      [$style.price]: true,
+      [$style[size]]: true,
+      [$style.plain]: plain
+    }"
+  >
     <span :class="$style.currentPrice">
-      <span v-if="prefixText" :class="$style.prefixText" v-text="prefixText"></span>
-      <i :class="$style.integer" v-text="integer"></i>
-      <i v-if="float" :class="$style.float" v-text="float"></i>
+      <span
+        v-if="prefixText"
+        :class="$style.prefixText"
+        v-text="prefixText"
+      />
+      <i
+        :class="$style.integer"
+        v-text="integer"
+      />
+      <i
+        v-if="float"
+        :class="$style.float"
+        v-text="float"
+      />
     </span>
-    <del v-if="originalPrice" v-text="'¥' + originalPrice" />
+    <del
+      v-if="originalPrice"
+      v-text="'¥' + originalPrice"
+    />
   </div>
 </template>
 
@@ -44,6 +60,7 @@ export default {
   .price {
     display: inline-flex;
     align-items: baseline;
+    flex-wrap: wrap;
     .prefix-text {
       font-weight: normal;
     }

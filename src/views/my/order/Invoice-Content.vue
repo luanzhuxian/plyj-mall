@@ -1,19 +1,22 @@
 <template>
-<div :class="$style.invoiceContent">
-  <ul :class="$style.contentList" @click="select">
-    <li>明细</li>
-    <li>办公用品</li>
-    <li>耗材</li>
-    <li>电脑配件</li>
-    <li>培训费</li>
-    <li>其他</li>
-  </ul>
-</div>
+  <div :class="$style.invoiceContent">
+    <ul
+      :class="$style.contentList"
+      @click="select"
+    >
+      <li>明细</li>
+      <li>办公用品</li>
+      <li>耗材</li>
+      <li>电脑配件</li>
+      <li>培训费</li>
+      <li>其他</li>
+    </ul>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'Invoice-Content',
+  name: 'InvoiceContent',
   data () {
     return {
     }
@@ -27,7 +30,7 @@ export default {
   },
   methods: {
     select (e) {
-      this.$router.replace({ name: 'Invoice', params: { id: this.orderId }, query: { content: e.target.innerText } })
+      this.$router.replace({ name: 'Invoice', params: { orderId: this.orderId }, query: { content: e.target.innerText } })
     }
   }
 }

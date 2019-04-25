@@ -1,14 +1,27 @@
 <template>
-  <div :class="$style.specificationBox" @click="handleClick">
+  <div
+    :class="$style.specificationBox"
+    @click="handleClick"
+  >
     <!-- 事件不能绑定在父元素上，因为与弹出框的关闭会相互干扰 -->
     <div>
-      <pl-svg name="specification" :class="$style.specIcon" />
+      <pl-svg
+        name="specification"
+        :class="$style.specIcon"
+      />
       <span class="fz-28">规格</span>
     </div>
     <div :class="$style.specification">
-      <span class="fz-22 gray-4" v-if="!current.optionName">请选择规格</span>
-      <span class="fz-22 gray-4" v-else v-text="current.optionName"></span>
-      <pl-svg name="right"></pl-svg>
+      <span
+        class="fz-22 gray-4"
+        v-if="!current.optionName"
+      >请选择规格</span>
+      <span
+        class="fz-22 gray-4"
+        v-else
+        v-text="current.optionName"
+      />
+      <pl-svg name="right" />
     </div>
 
     <!--<specification-pop :img="img" :data="detail.priceModels" :visible="showSpecifica" @close="popClose" @confirm="selectSpec" />-->
@@ -17,7 +30,7 @@
 
 <script>
 export default {
-  name: 'Specification-Box',
+  name: 'SpecificationBox',
   data () {
     return {
     }

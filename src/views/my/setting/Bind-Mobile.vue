@@ -1,8 +1,15 @@
 <template>
   <div :class="$style.bindMobile">
-    <TopText :title="title" :tip="mobile ? '为了保障您的账户安全，请输入有效的手机号～' : '为了保障您的账户安全，请绑定手机号～'" />
-    <pl-form v-if="step === 1" class="mt-28 radius-20" style="overflow: hidden;">
-
+    <TopText
+      :title="title"
+      :tip="mobile ? '为了保障您的账户安全，请输入有效的手机号～' : '为了保障您的账户安全，请绑定手机号～'"
+    />
+    <pl-form
+      v-if="step === 1"
+      class="mt-28 radius-20"
+      style="overflow: hidden;"
+      label-width="40px"
+    >
       <pl-form-item border>
         <pl-input
           prefix-icon="mobile"
@@ -14,23 +21,32 @@
       </pl-form-item>
 
       <pl-form-item>
-        <pl-input prefix-icon="code" v-model="bindForm.verifyCode" placeholder="请输入验证码">
-          <template v-slot:suffix>
-            <get-code :mobile="bindForm.mobile" :smstype="smstype.PUBLIC_USER_INFO" />
-          </template>
-        </pl-input>
+        <pl-input
+          prefix-icon="code"
+          v-model="bindForm.verifyCode"
+          placeholder="请输入验证码"
+        />
+        <template v-slot:suffix>
+          <get-code
+            :mobile="bindForm.mobile"
+            :smstype="smstype.PUBLIC_USER_INFO"
+          />
+        </template>
       </pl-form-item>
-
     </pl-form>
 
-    <pl-form v-if="step === 2"
-             ref="updateForm"
-             :rules="rules"
-             :model="updateForm"
-             class="mt-28 radius-20"
-             style="overflow: hidden;">
-
-      <pl-form-item border prop="mobile">
+    <pl-form
+      v-if="step === 2"
+      ref="updateForm"
+      :rules="rules"
+      :model="updateForm"
+      class="mt-28 radius-20"
+      style="overflow: hidden;"
+    >
+      <pl-form-item
+        border
+        prop="mobile"
+      >
         <pl-input
           prefix-icon="mobile"
           type="number"
@@ -40,18 +56,41 @@
       </pl-form-item>
 
       <pl-form-item prop="verifyCode">
-        <pl-input prefix-icon="code" v-model="updateForm.verifyCode" placeholder="请输入验证码">
-          <template v-slot:suffix>
-            <get-code :mobile="updateForm.mobile" :smstype="smstype.PUBLIC_USER_UPDATE_MOBILE" />
-          </template>
-        </pl-input>
+        <pl-input
+          prefix-icon="code"
+          v-model="updateForm.verifyCode"
+          placeholder="请输入验证码"
+        />
+        <template v-slot:suffix>
+          <get-code
+            :mobile="updateForm.mobile"
+            :smstype="smstype.PUBLIC_USER_UPDATE_MOBILE"
+          />
+        </template>
       </pl-form-item>
-
     </pl-form>
 
     <div class="mt-56">
-      <pl-button v-if="mobile && step === 1" :disabled="!bindForm.verifyCode" :loading="loading" size="huge" type="warning" @click="next">下一步</pl-button>
-      <pl-button v-else :disabled="!bindForm.verifyCode" size="huge" type="warning" :loading="loading" @click="submit">提交</pl-button>
+      <pl-button
+        v-if="mobile && step === 1"
+        :disabled="!bindForm.verifyCode"
+        :loading="loading"
+        size="huge"
+        type="warning"
+        @click="next"
+      >
+        下一步
+      </pl-button>
+      <pl-button
+        v-else
+        :disabled="!bindForm.verifyCode"
+        size="huge"
+        type="warning"
+        :loading="loading"
+        @click="confirm"
+      >
+        提交
+      </pl-button>
     </div>
   </div>
 </template>
@@ -63,7 +102,7 @@ import { mapGetters } from 'vuex'
 import { USER_INFO } from '../../../store/mutation-type'
 import { getSession } from '../../../assets/js/util'
 export default {
-  name: 'Bind-Mobile',
+  name: 'BindMobile',
   components: {
     TopText
   },
@@ -131,7 +170,7 @@ export default {
         throw e
       }
     },
-    async submit () {
+    async confirm () {
       try {
         if (this.mobile) {
           if (!this.$refs.updateForm.validate()) return

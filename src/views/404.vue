@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.notFound">
-    {{s}}秒后跳转回首页...
+    {{ s }}秒后跳转回首页...
   </div>
 </template>
 
@@ -9,14 +9,18 @@ export default {
   name: '404',
   data () {
     return {
-      s: 3
+      s: 3,
+      timer: 0
     }
   },
-  created () {
-    setInterval(() => {
+  activated () {
+    clearInterval(this.timer)
+    this.timer = setInterval(() => {
       this.s--
       if (this.s === 0) {
+        clearInterval(this.timer)
         this.$router.push({ name: 'Home' })
+        this.s = 3
       }
     }, 1000)
   }

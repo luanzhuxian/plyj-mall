@@ -1,7 +1,10 @@
 <template>
   <div :class="$style.teaching + ' radius-20'">
     <div :class="$style.teacherFace">
-      <img src="//img.alicdn.com/imgextra/i2/1652742042/TB2sV2wGv9TBuNjy0FcXXbeiFXa_!!1652742042.jpg_2200x2200Q50s50.jpg_.webp" alt="">
+      <img
+        src="//img.alicdn.com/imgextra/i2/1652742042/TB2sV2wGv9TBuNjy0FcXXbeiFXa_!!1652742042.jpg_2200x2200Q50s50.jpg_.webp"
+        alt=""
+      >
       <div :class="$style.right">
         <span :class="$style.name">阎老师</span>
         <div :class="$style.subject">
@@ -12,9 +15,24 @@
     </div>
 
     <div :class="$style.intro">
-      <pl-list title="主攻方向：" title-color="#838383" content-color="#a5a5a5" content="少儿奥数"></pl-list>
-      <pl-list title="个人经历：" title-color="#838383" content-color="#a5a5a5" content="西北工业大学软件工程硕士西北工业大学软件工程硕士西北工业大学软件工程硕士西北工业大学软件工程硕士"></pl-list>
-      <pl-list title="荣誉资质：" title-color="#838383" content-color="#a5a5a5" content="国家特级教师，2018年全国优"></pl-list>
+      <pl-list
+        title="主攻方向："
+        title-color="#838383"
+        content-color="#a5a5a5"
+        content="少儿奥数"
+      />
+      <pl-list
+        title="个人经历："
+        title-color="#838383"
+        content-color="#a5a5a5"
+        content="西北工业大学软件工程硕士西北工业大学软件工程硕士西北工业大学软件工程硕士西北工业大学软件工程硕士"
+      />
+      <pl-list
+        title="荣誉资质："
+        title-color="#838383"
+        content-color="#a5a5a5"
+        content="国家特级教师，2018年全国优"
+      />
     </div>
   </div>
 </template>

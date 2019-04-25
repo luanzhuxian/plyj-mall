@@ -1,20 +1,28 @@
 <template>
-  <div
-    :class="{'pl-form-item': true, border}"
-  >
-    <label ref="label" class="pl-form-item_label" v-text="label"></label>
+  <label :class="{'pl-form-item': true, border}">
+    <div class="pl-form-item_prefix">
+      <slot name="prefix" />
+    </div>
+    <span
+      ref="label"
+      class="pl-form-item_label"
+      v-text="label"
+    />
     <div
       class="pl-form-item_content"
       :style="{ 'text-align': align || parentAlign }"
     >
-      <slot></slot>
+      <slot />
     </div>
-  </div>
+    <div class="pl-form-item_suffix">
+      <slot name="suffix" />
+    </div>
+  </label>
 </template>
 
 <script>
 export default {
-  name: 'pl-form-item',
+  name: 'PlFormItem',
   data () {
     return {
       parentAlign: null,
@@ -22,15 +30,24 @@ export default {
     }
   },
   props: {
-    label: String,
+    label: {
+      type: String,
+      default: ''
+    },
     labelWidth: {
       type: [String, Number],
       default: 'max-content'
     },
-    align: String,
+    align: {
+      type: String,
+      default: ''
+    },
     border: Boolean,
     // 字段名称
-    prop: String
+    prop: {
+      type: String,
+      default: ''
+    }
   },
   created () {
     this.parentAlign = this.$parent.align
@@ -79,7 +96,7 @@ export default {
       flex: 1;
       display: flex;
       align-items: center;
-      height: 110px;
+      height: auto;
     }
   }
 </style>
