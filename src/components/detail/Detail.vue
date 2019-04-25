@@ -20,8 +20,14 @@ export default {
     }
   },
   props: {
-    content: String,
-    title: String
+    content: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
+    }
   },
   created () {
     this.matchedHtml()

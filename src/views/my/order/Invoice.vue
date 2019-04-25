@@ -151,6 +151,7 @@ import { applyOrderInvoice, getOrderDetail } from '../../../apis/order-manager'
 import { checkLength } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 import AddressItem from '../../../components/Address-Item.vue'
+import { resetForm } from '../../../assets/js/util'
 export default {
   name: 'Invoice',
   components: {
@@ -243,7 +244,7 @@ export default {
         await this.$confirm('检查无误并确定提交？')
         await applyOrderInvoice(this.form)
         this.$destroy()
-        this.$router.replace({ name: 'Orders' })
+        this.$router.push({ name: 'Orders' })
       } catch (e) {
         throw e
       }

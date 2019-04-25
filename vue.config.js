@@ -29,12 +29,12 @@ module.exports = {
     hot: true,
     open: true,
     overlay: {
-      warnings: true,
-      errors: true
+      warnings: false,
+      errors: false
     },
     proxy: {
       '/apis': {
-        target: 'http://192.168.130.34'
+        target: 'http://192.168.130.74'
       }
     }
   },
@@ -70,5 +70,5 @@ module.exports = {
   // }
   productionSourceMap: false,
 
-  lintOnSave: true
+  lintOnSave: false
 }

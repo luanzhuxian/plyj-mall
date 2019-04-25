@@ -15,8 +15,14 @@
 export default {
   name: 'ExpressItem',
   props: {
-    expressName: String,
-    expressNumber: String
+    expressName: {
+      type: String,
+      default: ''
+    },
+    expressNumber: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>

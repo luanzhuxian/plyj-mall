@@ -139,7 +139,7 @@
           v-if="orderInfoModel.orderStatus === 'FINISHED' && !orderInvoiceModel && !supplierOrder"
           plain
           round
-          @click="$router.push({ name: 'Invoice', params: { orderId } })"
+          @click="$router.replace({ name: 'Invoice', params: { orderId } })"
         >
           申请发票
         </pl-button>
