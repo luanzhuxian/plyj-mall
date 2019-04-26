@@ -29,8 +29,8 @@ module.exports = {
     hot: true,
     open: true,
     overlay: {
-      warnings: false,
-      errors: false
+      warnings: true,
+      errors: true
     },
     proxy: {
       '/apis': {
@@ -70,5 +70,5 @@ module.exports = {
   // }
   productionSourceMap: false,
 
-  lintOnSave: false
+  lintOnSave: true
 }

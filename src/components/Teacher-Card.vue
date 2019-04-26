@@ -26,10 +26,22 @@
 export default {
   name: 'TeacherCard',
   props: {
-    img: String,
-    name: String,
-    type: String,
-    desc: String
+    img: {
+      type: String,
+      default: ''
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    type: {
+      type: String,
+      default: ''
+    },
+    desc: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>

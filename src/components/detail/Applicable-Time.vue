@@ -12,7 +12,10 @@
 export default {
   name: 'ApplicableTime',
   props: {
-    time: String
+    time: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>

@@ -12,7 +12,12 @@
 export default {
   name: 'DetailTags',
   props: {
-    tags: Array
+    tags: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    }
   }
 }
 </script>

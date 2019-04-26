@@ -73,3 +73,5 @@ export const getMoney = (productSeq, optionCode, number) => axios.get(`/apis/v1/
 // 算供应商商品的运费
 export const getFreightOfSupplier = ({ productSeq, productCount, addressSeq, mallSeq, optionCode }) =>
   axios.post('/apis/v1/order/physicalorder/wechat/freight', null, { params: { productSeq, productCount, addressSeq, mallSeq, optionCode } })
+/* GET 商城端-获取订单物流信息 */
+export const getFreightData = orderSn => axios.get(`/apis/v1/order/logistics/${orderSn}`)

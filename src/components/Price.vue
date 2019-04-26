@@ -34,12 +34,24 @@
 export default {
   name: 'Price',
   props: {
-    price: [String, Number],
-    originalPrice: [String, Number],
+    price: {
+      type: [String, Number],
+      default: ''
+    },
+    originalPrice: {
+      type: [String, Number],
+      default: ''
+    },
     /* mini small middle large */
-    size: [String, Number],
+    size: {
+      type: [String, Number],
+      default: ''
+    },
     plain: Boolean,
-    prefixText: String
+    prefixText: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {

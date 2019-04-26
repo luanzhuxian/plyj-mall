@@ -12,7 +12,10 @@
 export default {
   name: 'BottomLoading',
   props: {
-    text: String
+    text: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>

@@ -43,14 +43,26 @@
 export default {
   name: 'ModuleTitle',
   props: {
-    title: String,
-    prefixIcon: String, // 右侧前边图标
-    suffixIcon: String, // 右侧后边图标
+    title: {
+      type: String,
+      default: ''
+    },
+    prefixIcon: { // 右侧前边图标
+      type: String,
+      default: ''
+    },
+    suffixIcon: { // 右侧后边图标
+      type: String,
+      default: ''
+    },
     iconColor: { // 图标颜色
       type: String,
       default: '#a8a8a8'
     },
-    tip: String, // 右侧文字
+    tip: { // 右侧文字
+      type: String,
+      default: ''
+    },
     route: { // 右侧跳转路由
       type: Object,
       default: function () {
@@ -58,7 +70,10 @@ export default {
       }
     },
     // 标记
-    badge: String,
+    badge: {
+      type: String,
+      default: ''
+    },
     size: {
       type: String,
       default: 'small'

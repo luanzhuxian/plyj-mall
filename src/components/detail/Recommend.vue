@@ -22,7 +22,10 @@ export default {
     LessonItem
   },
   props: {
-    title: String
+    title: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>

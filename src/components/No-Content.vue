@@ -12,7 +12,10 @@
 export default {
   name: 'NoContent',
   props: {
-    text: String,
+    text: {
+      type: String,
+      default: ''
+    },
     icon: {
       type: String,
       default: 'no-content'

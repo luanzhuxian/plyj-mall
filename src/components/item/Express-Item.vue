@@ -1,6 +1,12 @@
 <template>
-  <div :class="$style.expressItem">
-    <pl-svg name="express" />
+  <div
+    :class="$style.expressItem"
+    @click="handleClick"
+  >
+    <pl-svg
+      name="express"
+      :class="$style.icon"
+    />
     <div :class="$style.right+' fz-28'">
       <div
         class="bold"
@@ -8,6 +14,12 @@
       />
       <div>运单号：<i v-text="expressNumber" /></div>
     </div>
+
+    <pl-svg
+      :class="$style.rightIcon"
+      name="right"
+      color="#ebebeb"
+    />
   </div>
 </template>
 
@@ -22,6 +34,15 @@ export default {
     expressNumber: {
       type: String,
       default: ''
+    },
+    orderId: {
+      type: String,
+      default: ''
+    }
+  },
+  methods: {
+    handleClick () {
+      this.$router.push({ name: 'Freight', params: { orderId: this.orderId } })
     }
   }
 }
@@ -38,12 +59,19 @@ export default {
     &:after {
       @include border-half-bottom(#e7e7e7);
     }
-    svg {
+    .right {
+      flex: 1;
+    }
+    > .icon {
       width: 64px;
       height: 64px;
       margin-left: 28px;
       margin-right: 28px;
       fill: $--warning-color;
     }
+  }
+  .rightIcon {
+    width: 30px;
+    height: 30px ;
   }
 </style>

@@ -40,8 +40,14 @@ export default {
   components: {
   },
   props: {
-    totalPrice: [String, Number],
-    groupPrice: [String, Number]
+    totalPrice: {
+      type: [String, Number],
+      default: ''
+    },
+    groupPrice: {
+      type: [String, Number],
+      default: ''
+    }
   }
 }
 </script>

@@ -23,7 +23,7 @@ export default {
   props: {
     grade: {
       type: Number,
-      default: 1
+      default: 0
     },
     size: {
       type: String,

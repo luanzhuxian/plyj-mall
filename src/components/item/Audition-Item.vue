@@ -38,9 +38,18 @@
 export default {
   name: 'AuditionItem',
   props: {
-    img: String,
-    title: String,
-    count: [String, Number],
+    img: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    count: {
+      type: [String, Number],
+      default: ''
+    },
     tags: {
       type: Array,
       default: function () {

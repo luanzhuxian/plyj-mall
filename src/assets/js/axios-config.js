@@ -13,8 +13,8 @@ axios.interceptors.response.use(response, resError)
 
 function request (config) {
   /* 刷新token创建时间 */
-  let token = localStorage.getItem('token')
-  // let token = '7a52df2c-ebb4-47d7-b8b4-898b56fc0495'
+  // let token = localStorage.getItem('token')
+  let token = '1aac8e1a-a824-4de8-960b-2a0cc089289d'
   config.headers = {
     product: 'welcome_to_penglai_yaji',
     tokenType: 'wechat',

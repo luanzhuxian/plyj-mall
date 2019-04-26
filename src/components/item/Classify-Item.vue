@@ -13,8 +13,14 @@
 export default {
   name: 'ClassifyItem',
   props: {
-    text: String,
-    img: String
+    text: {
+      type: String,
+      default: ''
+    },
+    img: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>

@@ -24,6 +24,7 @@
         v-if="orderExpressInfoModel"
         :express-name="orderExpressInfoModel.courierCompany"
         :express-number="orderExpressInfoModel.courierNo"
+        :order-id="orderId"
       />
       <address-item
         v-if="address.realName"

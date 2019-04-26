@@ -41,7 +41,10 @@ export default {
     }
   },
   props: {
-    productId: String,
+    productId: {
+      type: String,
+      default: ''
+    },
     title: {
       type: String,
       default: '猜你喜欢'

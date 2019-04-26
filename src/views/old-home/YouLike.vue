@@ -45,7 +45,10 @@ export default {
     }
   },
   props: {
-    productSeq: String
+    productSeq: {
+      type: String,
+      default: ''
+    }
   },
   computed: {
     ...mapGetters(['agencyCode', 'userId'])

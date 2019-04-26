@@ -77,5 +77,14 @@ export default [
     meta: {
       title: '售后列表'
     }
+  },
+  {
+    path: '/my/order/freight/:orderId',
+    name: 'Freight',
+    component: () => import('../views/my/order/Freight.vue'),
+    props: true,
+    meta: {
+      title: '物流信息'
+    }
   }
 ]

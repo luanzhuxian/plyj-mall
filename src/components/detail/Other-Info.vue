@@ -37,7 +37,10 @@
 export default {
   name: 'DetailOtherInfo',
   props: {
-    type: String
+    type: {
+      type: String,
+      default: ''
+    }
   }
 }
 </script>

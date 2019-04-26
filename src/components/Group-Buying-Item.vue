@@ -43,10 +43,22 @@ export default {
     Price
   },
   props: {
-    img: String,
-    title: String,
-    price: [String, Number],
-    originalPrice: [String, Number],
+    img: {
+      type: String,
+      default: ''
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    price: {
+      type: [String, Number],
+      default: ''
+    },
+    originalPrice: {
+      type: [String, Number],
+      default: ''
+    },
     tags: {
       type: Array,
       default: function () {
