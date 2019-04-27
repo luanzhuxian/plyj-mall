@@ -109,7 +109,7 @@
 
       <div
         :class="$style.buttons"
-        v-if="orderInfoModel.orderStatus !== 'CLOSED' && orderInfoModel.orderStatus === 'FINISHED'"
+        v-if="orderInfoModel.orderStatus !== 'CLOSED'"
       >
         <pl-button
           round
