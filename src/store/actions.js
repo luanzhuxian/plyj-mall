@@ -64,7 +64,7 @@ export default {
   [type.ADDRESS_LIST]: ({ commit, state }, { agencyCode }) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let { result } = await getAddress(agencyCode)
+        let { result } = await getAddress({ agencyCode, mallSeq: state.mallInfo.sequenceNbr })
         commit(type.ADDRESS_LIST, result)
         resolve()
       } catch (e) {
