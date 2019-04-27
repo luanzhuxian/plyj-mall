@@ -164,15 +164,13 @@ export default {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    if (this.form.orderStatus !== this.status || this.status === 'FINISHED') {
-      this.form.orderStatus = this.status || ''
-      if (this.status === 'FINISHED') {
-        this.form.assessment = 'NO'
-      } else {
-        this.form.assessment = ''
-      }
-      this.$refresh()
+    this.form.orderStatus = this.status || ''
+    if (this.status === 'FINISHED') {
+      this.form.assessment = 'NO'
+    } else {
+      this.form.assessment = ''
     }
+    this.$refresh()
   },
   methods: {
     tabChange (item) {
