@@ -1,5 +1,5 @@
 import Compressor from 'compressorjs'
-import { getSTS } from '../../apis/base-api'
+import { getSTS } from '../../apis/common'
 const OSS = require('ali-oss')
 let EXPIRATION = 0
 const REGION = 'oss-cn-hangzhou'
@@ -68,8 +68,8 @@ export async function upload ({ file }) {
   }
   if (LIFETIME < Date.now() - new Date(EXPIRATION).getTime()) {
     // 如果凭证过期
-    let { result } = await getSTS()
-    let credentials = result.credentials
+    let { data } = await getSTS()
+    let credentials = data.result.credentials
     for (let k of Object.keys(STS)) {
       STS[k] = credentials[k]
     }
@@ -83,7 +83,7 @@ export async function upload ({ file }) {
     stsToken: securityToken,
     bucket: BUCKET
   })
-  let key = `img/${randomString(8)}-${randomString(8)}-${randomString(8)}-${randomString(8)}_${Date.now()}${ext}`
+  let key = `img/${randomString(99)}${ext}`
   return client.put(key, file)
 }
 function compressImage (file) {
@@ -110,6 +110,7 @@ export function blobToBase64 (blob) {
 }
 // 生成随机字符串
 function randomString (len) {
+  let date = new Date()
   // 48~57 数字， 65~90 大写，  97~122 小写
   const LIB = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
   let parseInt = Number.parseInt
@@ -119,5 +120,14 @@ function randomString (len) {
     let index = parseInt(random() * 62)
     randomStr.push(LIB[index])
   }
-  return randomStr.join('')
+  let dateString = `
+    ${date.getFullYear()}
+    ${String(date.getMonth() + 1).padStart(2, '0')}
+    ${String(date.getDate()).padStart(2, '0')}
+    ${String(date.getHours()).padStart(2, '0')}
+    ${String(date.getMinutes()).padStart(2, '0')}
+    ${String(date.getSeconds()).padStart(2, '0')}
+  `
+  dateString = dateString.replace(/\s/g, '')
+  return randomStr.join('') + dateString
 }
