@@ -1,5 +1,5 @@
 import Compressor from 'compressorjs'
-import { getSTS } from '../../apis/common'
+import { getSTS } from '../../apis/base-api'
 const OSS = require('ali-oss')
 let EXPIRATION = 0
 const REGION = 'oss-cn-hangzhou'
@@ -68,8 +68,8 @@ export async function upload ({ file }) {
   }
   if (LIFETIME < Date.now() - new Date(EXPIRATION).getTime()) {
     // 如果凭证过期
-    let { data } = await getSTS()
-    let credentials = data.result.credentials
+    let { result } = await getSTS()
+    let credentials = result.credentials
     for (let k of Object.keys(STS)) {
       STS[k] = credentials[k]
     }
