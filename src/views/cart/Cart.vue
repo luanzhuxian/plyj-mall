@@ -33,11 +33,7 @@
         <p class="fz-28">
           <span>快递</span>
           <span class="rmb">
-            <i
-              v-if="supplierProduct && sixEnergyNewOrderReturnModel"
-              v-text="sixEnergyNewOrderReturnModel.freight"
-            />
-            <i v-else>0</i>
+            <i v-text="freight" />
           </span>
         </p>
       </div>
@@ -156,7 +152,7 @@ export default {
         orderPostscript: '' // 备注
       },
       supplierProduct: false,
-      sixEnergyNewOrderReturnModel: null
+      freight: 0 // 运费
     }
   },
   props: {
@@ -216,9 +212,9 @@ export default {
         this.loading = false
 
         // 供应商获取运费, 如果出错，返回商品详情
-        if (this.supplierProduct) {
-          await this.getFreightOfSupplier()
-        }
+        // if (this.supplierProduct) {
+        await this.getFreightOfSupplier()
+        // }
         this.disableSubmit = false
       } catch (e) {
         this.disableSubmit = false
@@ -280,9 +276,10 @@ export default {
             mallSeq: this.mallSeq,
             optionCode: this.optionCode
           })
-          this.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
+          // this.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
+          this.freight = this.supplierProduct ? result.sixEnergyNewOrderReturnModel.freight : result.freight
           // 先乘后加再除以，防止出现浮点数精度问题
-          this.totalMoney = (this.totalMoney * 100 + this.sixEnergyNewOrderReturnModel.freight * 100) / 100
+          this.totalMoney = (this.totalMoney * 100 + this.freight * 100) / 100
           this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
           this.form.orderSn = result.orderSn // 添加运费订单数据到表单
           this.form.billNo = result.billNo // 添加运费订单数据到表单
