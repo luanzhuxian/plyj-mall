@@ -49,14 +49,9 @@ export default {
         if (this.shareRoutes.indexOf(route.name) === -1) {
           willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
         }
-        share({
-          appId: this.appId,
-          title: `${this.mallName}-${route.meta.title}`,
-          desc: this.mallDesc,
-          link: window.location.href,
-          imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
-          willHide
-        })
+        if (this.appId) {
+          this.share(willHide)
+        }
       }
     }
   },
@@ -76,13 +71,7 @@ export default {
         await this.login()
       }
       this.logined = true
-      share({
-        appId: this.appId,
-        title: `${this.mallName}-${this.$route.meta.title}`,
-        desc: this.mallDesc,
-        link: window.location.href,
-        imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
-      })
+      this.share()
     } catch (e) {
       throw e
     }
@@ -95,7 +84,17 @@ export default {
       getMallInfo: GET_MALL_INFO,
       login: LOGIN,
       getUserInfo: USER_INFO
-    })
+    }),
+    share (willHide = []) {
+      share({
+        appId: this.appId,
+        title: `${this.mallName}-${this.$route.meta.title}`,
+        desc: this.mallDesc,
+        link: window.location.href,
+        imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
+        willHide
+      })
+    }
   }
 }
 </script>
