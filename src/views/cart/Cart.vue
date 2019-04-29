@@ -33,7 +33,7 @@
         <p class="fz-28">
           <span>快递</span>
           <span class="rmb">
-            <i v-text="freight" />
+            <i v-text="form.freight || freight" />
           </span>
         </p>
       </div>
@@ -149,10 +149,11 @@ export default {
         source: 'PUBLIC',
         orderType: '',
         supplierOrder: false,
-        orderPostscript: '' // 备注
+        orderPostscript: '', // 备注
+        freight: 0 // 用于显示供普通商品的运费
       },
       supplierProduct: false,
-      freight: 0 // 运费
+      freight: 0 // 用于显示供应商商品的运费
     }
   },
   props: {
@@ -180,18 +181,6 @@ export default {
     selectedAddress () {}
   },
   async activated () {
-    let { productSeq, count, optionCode, brokerId = '' } = this
-
-    let { result } = await getMoney(productSeq, optionCode, count)
-    this.form.amount = this.totalMoney = result
-    this.form.agencyCode = this.agencyCode
-    this.form.mallSeq = this.mallSeq
-    this.form.share = brokerId
-    this.form.products[0] = {
-      optionCode: optionCode,
-      productCount: count,
-      productSeq: productSeq
-    }
     try {
       await this.getProductDetail()
     } catch (e) {
@@ -201,17 +190,31 @@ export default {
   methods: {
     async getProductDetail () {
       try {
+        let { productSeq, count, optionCode, brokerId = '', agencyCode, mallSeq } = this
         this.disableSubmit = true
         this.loading = true
-        let { result } = await getProductDetail(this.productSeq)
-        this.detail = result
-        this.form.supplierOrder = this.supplierProduct = result.supplierProduct
-        this.form.orderType = this.productType = result.productType
-        this.form.addressSeq = result.productType === 'PHYSICAL_GOODS' ? (this.selectedAddress.sequenceNbr || '') : ''
-        this.getOption(result.priceModels)
+        let productDetail = await getProductDetail(this.productSeq)
+        let { supplierProduct, productType, priceModels } = productDetail.result
+        this.detail = productDetail.result
+        this.form.supplierOrder = this.supplierProduct = supplierProduct
+        this.form.orderType = this.productType = productType
+        this.form.addressSeq = productType === 'PHYSICAL_GOODS' ? (this.selectedAddress.sequenceNbr || '') : ''
         this.loading = false
+        this.form.agencyCode = agencyCode
+        this.form.mallSeq = mallSeq
+        this.form.share = brokerId
+        this.form.products[0] = {
+          optionCode: optionCode,
+          productCount: count,
+          productSeq: productSeq
+        }
+        this.getOption(priceModels)
 
-        // 获取运费，供应商商品与普通商品接口一样
+        // 算钱
+        let { result } = await getMoney(productSeq, optionCode, count, this.form.addressSeq)
+        this.form.amount = this.totalMoney = result
+
+        // 获取运费
         await this.getFreight()
         this.disableSubmit = false
       } catch (e) {
@@ -262,7 +265,7 @@ export default {
         throw e
       }
     },
-    // 获取供应商商品运费
+    // 获取商品运费
     getFreight () {
       if (!this.selectedAddress || !this.selectedAddress.sequenceNbr) return
       return new Promise(async (resolve, reject) => {
@@ -274,10 +277,14 @@ export default {
             mallSeq: this.mallSeq,
             optionCode: this.optionCode
           })
-          // this.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
-          this.freight = this.supplierProduct ? result.sixEnergyNewOrderReturnModel.freight : result.freight
+          if (this.supplierProduct) {
+            this.freight = result.sixEnergyNewOrderReturnModel.freight
+            delete this.form.freight
+          } else {
+            this.form.freight = result.freight
+          }
           // 先乘后加再除以，防止出现浮点数精度问题
-          this.totalMoney = (this.totalMoney * 100 + this.freight * 100) / 100
+          this.totalMoney = (this.totalMoney * 100 + this.form.freight * 100) / 100
           this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
           this.form.orderSn = result.orderSn // 添加运费订单数据到表单
           this.form.billNo = result.billNo // 添加运费订单数据到表单

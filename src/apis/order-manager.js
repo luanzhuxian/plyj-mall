@@ -69,7 +69,7 @@ export const getAwaitPayInfo = id => axios.get(`/apis/v1/order/ordermanager/unif
 export const getRefundDetail = orderSn => axios.get(`/apis/v1/order/ordermanager/refund/detail/${orderSn}`)
 
 // 算钱
-export const getMoney = (productSeq, optionCode, number) => axios.get(`/apis/v1/product/productinfo/price?productSeq=${productSeq}&optionCode=${optionCode}&number=${number}`)
+export const getMoney = (productSeq, optionCode, number, addressSeq) => axios.get(`/apis/v1/product/productinfo/price?productSeq=${productSeq}&optionCode=${optionCode}&number=${number}&addressSeq=${addressSeq}`)
 // 算供应商商品的运费
 export const getFreight = ({ productSeq, productCount, addressSeq, mallSeq, optionCode }) =>
   axios.post('/apis/v1/order/physicalorder/wechat/freight', null, { params: { productSeq, productCount, addressSeq, mallSeq, optionCode } })
