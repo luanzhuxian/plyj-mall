@@ -98,7 +98,7 @@ import {
   getMoney,
   physicalOrderCancellation,
   virtualOrderCancellation,
-  getFreightOfSupplier
+  getFreight
 } from '../../apis/order-manager'
 import { getOpenIdByCode } from '../../apis/base-api'
 import { getProductDetail } from '../../apis/product'
@@ -211,10 +211,8 @@ export default {
         this.getOption(result.priceModels)
         this.loading = false
 
-        // 供应商获取运费, 如果出错，返回商品详情
-        // if (this.supplierProduct) {
-        await this.getFreightOfSupplier()
-        // }
+        // 获取运费，供应商商品与普通商品接口一样
+        await this.getFreight()
         this.disableSubmit = false
       } catch (e) {
         this.disableSubmit = false
@@ -265,11 +263,11 @@ export default {
       }
     },
     // 获取供应商商品运费
-    getFreightOfSupplier () {
+    getFreight () {
       if (!this.selectedAddress || !this.selectedAddress.sequenceNbr) return
       return new Promise(async (resolve, reject) => {
         try {
-          let { result } = await getFreightOfSupplier({
+          let { result } = await getFreight({
             productSeq: this.productSeq,
             productCount: this.count,
             addressSeq: this.selectedAddress.sequenceNbr,
