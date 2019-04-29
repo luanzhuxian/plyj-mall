@@ -11,7 +11,10 @@
       :price="item.orderProductRelationModel.productPrice"
       :count="item.orderProductRelationModel.count"
     />
-    <ul :class="$style.freightList">
+    <ul
+      :class="$style.freightList"
+      v-if="freightData.length > 0"
+    >
       <li
         v-for="item of freightData"
         :key="item.msgTime"
@@ -26,6 +29,13 @@
         </p>
       </li>
     </ul>
+
+    <p
+      :class="$style.tip"
+      v-else
+    >
+      暂无物流信息
+    </p>
   </div>
 </template>
 
@@ -114,5 +124,10 @@ export default {
   .msgTime {
     font-size: 20px;
     color: #999;
+  }
+  .tip {
+    font-size: 24px;
+    text-align: center;
+    color: $--font-color_gray3;
   }
 </style>

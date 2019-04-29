@@ -275,6 +275,8 @@ export default {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    max-height: 300px;
+    overflow: auto;
     li {
       position: relative;
       line-height: 54px;
