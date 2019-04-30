@@ -308,11 +308,7 @@ export default {
           this.relationModel = relationModel
           this.orderInvoiceModel = orderInvoiceModel
           this.orderRefundDetail = orderRefundDetail
-          if (orderExpressInfoModel) {
-            this.orderExpressInfoModel = orderExpressInfoModel.filter(val => {
-              return val.orderStatus === 'WAIT_RECEIVE'
-            })[0]
-          }
+          this.orderExpressInfoModel = orderExpressInfoModel[0]
           this.currentStatus = orderInfoModel.orderStatus
           this.supportPhone = supportPhone
           this.orderType = orderInfoModel.orderType
