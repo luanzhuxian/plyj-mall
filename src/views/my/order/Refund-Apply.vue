@@ -20,13 +20,13 @@
         :class="{ [$style.active]: form.type === 'REFUND' }"
         @click="form.type = 'REFUND'"
       >退款</span>
-      <span
+      <!--<span
         v-if="orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
         :class="{ [$style.active]: form.type === 'RETURN_REFUND' }"
         @click="form.type = 'RETURN_REFUND'"
       >
         退货退款
-      </span>
+      </span>-->
     </div>
 
     <div
