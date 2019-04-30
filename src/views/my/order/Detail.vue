@@ -308,7 +308,9 @@ export default {
           this.relationModel = relationModel
           this.orderInvoiceModel = orderInvoiceModel
           this.orderRefundDetail = orderRefundDetail
-          this.orderExpressInfoModel = orderExpressInfoModel[0]
+          if (orderExpressInfoModel) {
+            this.orderExpressInfoModel = orderExpressInfoModel[0]
+          }
           this.currentStatus = orderInfoModel.orderStatus
           this.supportPhone = supportPhone
           this.orderType = orderInfoModel.orderType
