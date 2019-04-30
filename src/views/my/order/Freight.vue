@@ -42,7 +42,7 @@
 
     <p
       :class="$style.tip"
-      v-else
+      v-else-if="!loading"
     >
       暂无物流信息
     </p>
@@ -59,6 +59,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       freightData: [],
       orderDetail: {
         relationModel: []
@@ -73,6 +74,7 @@ export default {
   },
   async activated () {
     try {
+      this.loading = true
       let orderDetail = await getOrderDetail(this.orderId)
       this.orderDetail = orderDetail.result
       let freightData = await getFreightData(this.orderId)
@@ -80,6 +82,8 @@ export default {
       this.freightData = freightData.result
     } catch (e) {
       throw e
+    } finally {
+      this.loading = false
     }
   }
 }

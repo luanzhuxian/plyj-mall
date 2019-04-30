@@ -22,7 +22,7 @@
     <div :class="$style.receivingInfo">
       <express-item
         v-if="orderExpressInfoModel"
-        :express-name="orderExpressInfoModel.courierCompany"
+        :express-name="orderExpressInfoModel.courierCompanyName"
         :express-number="orderExpressInfoModel.courierNo"
         :order-id="orderId"
       />
