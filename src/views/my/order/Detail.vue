@@ -103,7 +103,7 @@
         </p>
         <p
           class="fz-30 rmb"
-          v-text="(orderInfoModel.amount + orderInfoModel.freight) || 0"
+          v-text="orderInfoModel.amount || 0"
         />
       </div>
 
