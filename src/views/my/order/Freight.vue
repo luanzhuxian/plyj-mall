@@ -20,6 +20,16 @@
         :key="item.msgTime"
         :class="$style.freightItem"
       >
+        <svg
+          :class="$style.circle"
+          viewBox="0 0 20 20"
+        >
+          <circle
+            cx="10"
+            cy="10"
+            r="10"
+          />
+        </svg>
         <p
           :class="$style.msg"
           v-text="item.content"
@@ -66,6 +76,7 @@ export default {
       let orderDetail = await getOrderDetail(this.orderId)
       this.orderDetail = orderDetail.result
       let freightData = await getFreightData(this.orderId)
+      freightData.result.sort((a, b) => b.msgTime - a.msgTime)
       this.freightData = freightData.result
     } catch (e) {
       throw e
@@ -88,29 +99,32 @@ export default {
   }
   .freightItem {
     position: relative;
-    padding-bottom: 40px;
+    margin-bottom: 40px;
     padding-left: 50px;
-    &:before {
+    &:nth-of-type(1) {
+      color: red;
+      .circle {
+        fill: red;
+      }
+    }
+    .circle {
       position: absolute;
       left: 0;
-      top: calc(50% - 50px);
-      transform: translateY(50%);
-      content: '';
-      width: 20px;
-      height: 20px;
-      border: 1px solid #fff;
-      border-radius: 11px;
-      background-color: #bbb;
-      z-index: 1;
+      top: 40%;
+      transform: translateY(-50%);
+      fill: #ccc;
+      width: 2.5vw;
+      z-index: 2;
     }
     &:after {
       position: absolute;
-      left: 10px;
-      top: calc(50% - 10px);
+      left: 1.25vw;
+      top: calc(40% + 10px);
       content: '';
       width: 1px;
-      height: calc(50% + 20px);
-      background-color: #bbb;
+      height: calc(100% + 40px);
+      transform: scaleX(0.5);
+      background-color: #ccc;
     }
     &:nth-last-of-type(1):after {
       display: none;
