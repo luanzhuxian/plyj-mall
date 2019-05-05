@@ -3,6 +3,7 @@
     <keep-alive>
       <router-view v-if="logined" />
     </keep-alive>
+
     <navbar v-if="showNavbar.indexOf(routeName) > -1" />
     <QuickNavbar v-else />
   </div>
@@ -64,13 +65,10 @@ export default {
   async created () {
     try {
       await this.getMallInfo()
-      /* token 存在并且还未过期 */
       if (!this.token) {
         await this.login()
       }
       await this.getUserInfo()
-      console.log('userId: ', this.userId)
-      console.log('openId: ', this.openId)
       this.logined = true
       this.share()
     } catch (e) {
@@ -99,7 +97,7 @@ export default {
   }
 }
 </script>
-<style module>
+<style module lang="scss">
   @import "assets/scss/theme/base.scss";
 </style>
 <style>

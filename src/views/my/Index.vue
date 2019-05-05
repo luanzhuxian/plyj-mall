@@ -151,21 +151,15 @@ export default {
   computed: {
     ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName'])
   },
-  activated () {
-    this.getCount()
-  },
-  methods: {
-    // 获取未处理订单的数量
-    async getCount () {
-      try {
-        const data = await orderPhysicalorderSummary(this.userId)
-        this.count = data.result
-        for (let k of Object.keys(this.count)) {
-          if (this.count[k] > 99) this.count[k] = '99+'
-        }
-      } catch (e) {
-        throw e
+  async activated () {
+    try {
+      const data = await orderPhysicalorderSummary(this.userId)
+      this.count = data.result
+      for (let k of Object.keys(this.count)) {
+        if (this.count[k] > 99) this.count[k] = '99+'
       }
+    } catch (e) {
+      throw e
     }
   }
 }
