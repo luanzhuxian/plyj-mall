@@ -70,9 +70,11 @@ export default {
       } else {
         await this.login()
       }
-      console.log(this.userId)
-      this.logined = true
-      this.share()
+      this.$nextTick(() => {
+        console.log(this.userId)
+        this.logined = true
+        this.share()
+      })
     } catch (e) {
       throw e
     }

@@ -33,7 +33,7 @@ export default {
           let loginInfo = await login(wechatData.result.OPEN_ID)
           commit(type.SET_TOKEN, loginInfo.result.token)
           commit(type.USER_INFO, Object.assign(wechatData, loginInfo))
-          resolve()
+          resolve(loginInfo)
         } else {
           let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${getters.appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
           window.location.replace(openIdUrl)
@@ -42,8 +42,9 @@ export default {
         if (e.message.indexOf('code') > -1) { // 如果code无效重新登录
           let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${getters.appId}&redirect_uri=${location.href.split('?')[0]}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
           window.location.replace(openIdUrl)
+        } else {
+          reject(e)
         }
-        reject(e)
       }
     })
   },
