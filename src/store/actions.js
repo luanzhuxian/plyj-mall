@@ -33,7 +33,7 @@ export default {
           let loginInfo = await login(wechatData.result.OPEN_ID)
           commit(type.SET_TOKEN, loginInfo.result.token)
           commit(type.USER_INFO, Object.assign(wechatData, loginInfo))
-          window.location.replace(location.href.split('?')[0])
+          // window.location.replace(location.href.split('?')[0])
           resolve()
         } else {
           let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${getters.appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
@@ -55,7 +55,8 @@ export default {
         if (e.message.indexOf('登录信息') > -1) {
           // 再次登录
           commit(type.LOG_OUT)
-          dispatch(type.LOGIN)
+          // dispatch(type.LOGIN)
+          window.location.replace(location.href.split('?')[0])
         }
         reject(e)
       }
