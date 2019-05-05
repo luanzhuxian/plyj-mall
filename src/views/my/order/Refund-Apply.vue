@@ -164,11 +164,9 @@ export default {
   computed: {
     ...mapGetters(['agencyCode', 'mallSeq'])
   },
-  created () {
+  activated () {
     this.form.refundModel.agencyCode = this.agencyCode
     this.form.refundModel.mallSeq = this.mallSeq
-  },
-  activated () {
     this.form.orderId = this.orderId
     this.getOrderDetail()
   },
@@ -212,7 +210,9 @@ export default {
       try {
         await this.$confirm('确定提交吗？')
         await returnRequest(this.form)
-        resetForm(this.form)
+        resetForm(this.form, {
+          type: 'REFUND'
+        })
         this.images = []
         this.$toast('申请售后成功，请等待卖家反馈')
         this.$router.replace({ name: 'RefundList' })
