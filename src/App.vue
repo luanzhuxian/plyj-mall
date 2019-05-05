@@ -70,6 +70,7 @@ export default {
       } else {
         await this.login()
       }
+      console.log(this.userId)
       this.logined = true
       this.share()
     } catch (e) {
