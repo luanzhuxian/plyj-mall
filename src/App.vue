@@ -65,16 +65,14 @@ export default {
     try {
       await this.getMallInfo()
       /* token 存在并且还未过期 */
-      if (this.token) {
-        await this.getUserInfo()
-      } else {
+      if (!this.token) {
         await this.login()
       }
-      this.$nextTick(() => {
-        console.log(this.userId)
-        this.logined = true
-        this.share()
-      })
+      await this.getUserInfo()
+      console.log('userId: ', this.userId)
+      console.log('openId: ', this.openId)
+      this.logined = true
+      this.share()
     } catch (e) {
       throw e
     }
