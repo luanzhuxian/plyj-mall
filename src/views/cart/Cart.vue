@@ -279,12 +279,13 @@ export default {
           })
           if (this.supplierProduct) {
             this.freight = result.sixEnergyNewOrderReturnModel.freight
+            this.totalMoney = (this.totalMoney * 100 + this.freight * 100) / 100
             delete this.form.freight
           } else {
             this.form.freight = result.freight
+            this.totalMoney = (this.totalMoney * 100 + this.form.freight * 100) / 100
           }
           // 先乘后加再除以，防止出现浮点数精度问题
-          this.totalMoney = (this.totalMoney * 100 + this.form.freight * 100) / 100
           this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
           this.form.orderSn = result.orderSn // 添加运费订单数据到表单
           this.form.billNo = result.billNo // 添加运费订单数据到表单
