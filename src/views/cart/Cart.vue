@@ -146,6 +146,7 @@ export default {
             productSeq: ''
           }
         ],
+        sixEnergyNewOrderReturnModel: null,
         source: 'PUBLIC',
         orderType: '',
         supplierOrder: false,
@@ -285,8 +286,7 @@ export default {
             this.form.freight = result.freight
             this.totalMoney = (this.totalMoney * 100 + this.form.freight * 100) / 100
           }
-          // 先乘后加再除以，防止出现浮点数精度问题
-          this.form.sixEnergyNewOrderReturnModel = this.sixEnergyNewOrderReturnModel // 添加运费数据到表单
+          this.form.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel // 添加运费数据到表单
           this.form.orderSn = result.orderSn // 添加运费订单数据到表单
           this.form.billNo = result.billNo // 添加运费订单数据到表单
           resolve()
@@ -310,6 +310,7 @@ export default {
         delete this.form.sixEnergyNewOrderReturnModel
         delete this.form.orderSn
         delete this.form.billNo
+        this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
         throw e
       }
     },
