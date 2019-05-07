@@ -27,13 +27,18 @@ export default {
   [type.LOGIN]: ({ commit, dispatch }, payload) => {
     return new Promise(async (resolve, reject) => {
       let search = Qs.parse(location.search.substring(1))
+      // 商城信息
       let { appid, agencyCode } = await dispatch(type.GET_MALL_INFO)
       try {
         if (search.code) {
+          // 微信
           const wechatData = await getOpenId(appid, search.code)
+          // 登录授权
           let loginInfo = await login(wechatData.result.OPEN_ID)
+          // 用户信息
           let { result } = await getUserInfo()
           commit(type.SET_TOKEN, loginInfo.result.token)
+          // 用户地址列表
           await dispatch(type.ADDRESS_LIST, Object.assign(result, { agencyCode }))
           commit(type.USER_INFO, Object.assign(wechatData, loginInfo, result, payload))
           resolve(loginInfo)
