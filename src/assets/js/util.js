@@ -69,28 +69,6 @@ export function copyFields (template, target) {
   }
   return template
 }
-
-// 获取当前文字大概的行数
-export function getLine (el, fn) {
-  let str = el.value || el.innerText
-  let computedStyle = getComputedStyle(el)
-  let fontSize = Number.parseInt(computedStyle.getPropertyValue('font-size'))
-  let width = Number.parseInt(computedStyle.getPropertyValue('width'))
-  let num = 0
-  let i = 0
-  let codePoint = str.codePointAt(i)
-  while (codePoint) {
-    if (codePoint > 127) {
-      num += 2
-    } else {
-      num++
-    }
-    i++
-    codePoint = str.codePointAt(i)
-  }
-  let byteOnRow = Math.floor(width / fontSize)
-  fn(Math.floor(num / byteOnRow))
-}
 // 节流阀
 // fn是我们需要包装的事件回调, delay是时间间隔的阈值
 export function throttle (fn, delay) {

@@ -66,8 +66,9 @@ export default {
     try {
       if (!this.token) {
         await this.login()
+      } else {
+        await this.getUserInfo()
       }
-      await this.getUserInfo()
       this.logined = true
       this.share()
     } catch (e) {
