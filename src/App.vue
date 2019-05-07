@@ -13,7 +13,7 @@
 import Navbar from './components/Navbar.vue'
 import QuickNavbar from './components/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { SET_THEME, GET_MALL_INFO, LOGIN, USER_INFO } from './store/mutation-type'
+import { SET_THEME, LOGIN, USER_INFO } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
 export default {
   components: {
@@ -64,7 +64,6 @@ export default {
   },
   async created () {
     try {
-      await this.getMallInfo()
       if (!this.token) {
         await this.login()
       }
@@ -80,7 +79,6 @@ export default {
       setTheme: SET_THEME
     }),
     ...mapActions({
-      getMallInfo: GET_MALL_INFO,
       login: LOGIN,
       getUserInfo: USER_INFO
     }),

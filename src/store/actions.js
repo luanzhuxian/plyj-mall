@@ -52,6 +52,7 @@ export default {
     return new Promise(async (resolve, reject) => {
       try {
         let { result } = await getUserInfo()
+        await dispatch(type.GET_MALL_INFO)
         commit(type.USER_INFO, Object.assign(result, payload))
         await dispatch(type.ADDRESS_LIST, Object.assign(result, { agencyCode: state.mallInfo.agencyCode }))
         resolve(result)
