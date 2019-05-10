@@ -65,11 +65,6 @@ export default {
         await dispatch(type.ADDRESS_LIST, Object.assign(result, { agencyCode: state.mallInfo.agencyCode }))
         resolve(result)
       } catch (e) {
-        if (e.message.indexOf('登录信息') > -1) {
-          // 再次登录
-          commit(type.LOG_OUT)
-          window.location.replace(location.href.split('?')[0])
-        }
         reject(e)
       }
     })
