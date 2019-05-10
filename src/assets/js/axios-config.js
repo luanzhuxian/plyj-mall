@@ -12,9 +12,7 @@ axios.interceptors.request.use(request, reqError)
 axios.interceptors.response.use(response, resError)
 
 function request (config) {
-  /* 刷新token创建时间 */
   let token = localStorage.getItem('token')
-  // let token = '1aac8e1a-a824-4de8-960b-2a0cc089289d'
   config.headers = {
     product: 'welcome_to_penglai_yaji',
     tokenType: 'wechat',
@@ -33,10 +31,10 @@ async function response (response) {
   const config = response.config
   if (data.status !== 200) {
     let msg = data.message
-    if (data.message.indexOf('运行时') > -1) {
-      msg = '服务器正在怀疑器生~( ˶‾᷄࿀‾᷅˵ )'
+    if (msg.indexOf('运行时') > -1) {
+      msg = '服务器正在怀疑人生~( ˶‾᷄࿀‾᷅˵ )'
     }
-    if (data.message.indexOf('登录信息失效') === -1) {
+    if (msg.indexOf('登录信息失效') === -1) {
       let err = {
         tag: 'responseError',
         method: config.method,
@@ -44,10 +42,11 @@ async function response (response) {
         data: config.data ? JSON.parse(config.data) : null,
         params: config.params || null,
         devMessage: data.devMessage || '',
-        message: data.message || ''
+        message: msg || ''
       }
       return Promise.reject(new Error(JSON.stringify(err)))
     }
+    // 接口报‘登录信息失效’， 退出登录，并重新发起登录
     store.commit(LOG_OUT)
     store.dispatch(LOGIN)
     return Promise.reject(new Error(msg))

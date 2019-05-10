@@ -60,15 +60,11 @@ export default {
     routeName: function () {
       return this.$route.name
     },
-    ...mapGetters(['mallSeq', 'userId', 'openId', 'token', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
+    ...mapGetters(['mallSeq', 'userId', 'openId', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
   },
   async created () {
     try {
-      if (!this.token) {
-        await this.login()
-      } else {
-        await this.getUserInfo()
-      }
+      await this.getUserInfo()
       this.logined = true
       this.share()
     } catch (e) {
