@@ -1,4 +1,4 @@
-const TOKEN = '6d6e1d78-1e2d-439b-ac62-ed1f4e73e7bb'
+const TOKEN = '2e1628a1-2c8a-41da-9829-8d20107a40bc'
 
 console.log('------------------------- ' + process.env.NODE_ENV + ' -------------------------')
 let argv = process.argv
