@@ -220,7 +220,7 @@ export default {
       overflow: hidden;
       background-color: transparent;
       &::placeholder {
-        color: #01C2C3;
+        color: #BCBCBC;
         letter-spacing: 3px;
       }
     }

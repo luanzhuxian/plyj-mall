@@ -1,9 +1,11 @@
 <template>
-  <div :class="$style.classifyItem">
+  <div
+    :class="$style.classifyItem"
+    @click="itemClick"
+  >
     <img
       class="radius-20"
       :src="img"
-      :alt="text"
     >
     <div v-text="text" />
   </div>
@@ -13,6 +15,10 @@
 export default {
   name: 'ClassifyItem',
   props: {
+    cid: {
+      type: String,
+      default: ''
+    },
     text: {
       type: String,
       default: ''
@@ -20,6 +26,15 @@ export default {
     img: {
       type: String,
       default: ''
+    }
+  },
+  methods: {
+    itemClick () {
+      if (this.cid) {
+        this.$emit('click', this.cid)
+      } else {
+        this.$alert('子分类数据错误！')
+      }
     }
   }
 }

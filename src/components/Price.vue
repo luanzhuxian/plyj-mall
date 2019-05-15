@@ -184,7 +184,7 @@ export default {
   }
   .integer {
     &:before {
-      content: '¥';
+      content: '¥ ';
     }
   }
   .float {

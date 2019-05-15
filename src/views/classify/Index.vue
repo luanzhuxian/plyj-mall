@@ -30,17 +30,24 @@
       </ul>
 
       <div :class="$style.content">
-        <!--<div :class="$style.tip">全部</div>-->
-        <!--<div :class="$style.classifyList2">
-          <classify-item img="//gw.alicdn.com/tps/TB1Sl1ea4rI8KJjy0FpSuv5hVXa.jpg_140x10000Q75.jpg_.webp" text="手机" />
-          <classify-item img="//gw.alicdn.com/tps/O1CN01s4LwGN1wddyf7vsrj_!!2497896331.jpg_140x10000Q75.jpg_.webp" text="手机保护壳" />
-          <classify-item img="//gw.alicdn.com/tps/TB2uX59ehAlyKJjSZFyXXbm_XXa_!!2970158389-0-beehive-scenes.jpg_140x10000Q75.jpg_.webp" text="笔记本电脑" />
-          <classify-item img="//gw.alicdn.com/tps/TB247WlX2AkyKJjy0FfXXaxhpXa_!!2302025017.jpg_140x10000Q75.jpg_.webp" text="智能手环" />
-          <classify-item img="//gw.alicdn.com/tps/TB2oFzffhhmpuFjSZFyXXcLdFXa_!!558893385-0-beehive-scenes.jpg_140x10000Q75.jpg_.webp" text="显示器" />
-          <classify-item img="//gw.alicdn.com/tps/O1CN01HoU6GR1Oli1OYGPbk_!!2960761746-2-beehive-scenes.png_140x10000.jpg_.webp" text="平板电脑" />
-        </div>-->
+        <template v-if="currentClassify.childs && currentClassify.childs.length">
+          <div
+            :class="$style.tip"
+            v-text="currentClassify.categoryName"
+          />
+          <div :class="$style.classifyList2">
+            <classify-item
+              :cid="item.sequenceNbr"
+              :img="item.categoryPic"
+              :text="item.categoryName"
+              v-for="item of currentClassify.childs"
+              :key="item.sequenceNbr"
+              @click="subClassifyClick"
+            />
+          </div>
+        </template>
         <div
-          :class="$style.tip"
+          :class="$style.title"
           v-text="currentClassify.categoryName"
         />
         <load-more
@@ -52,16 +59,14 @@
         >
           <template v-slot="{ list }">
             <div :class="$style.productList">
-              <lesson-item
+              <goods-item
                 v-for="item of list"
                 :key="item.sequenceNbr"
-                size="small"
                 :id="item.sequenceNbr"
                 :title="item.productName"
                 :desc="item.productDesc"
                 :price="item.productOptions[0].price"
                 :img="item.productImage[0].mediaUrl"
-                :border="true"
               />
             </div>
           </template>
@@ -72,8 +77,9 @@
 </template>
 
 <script>
-import LessonItem from '../../components/item/Lesson-Item.vue'
-// import ClassifyItem from '../../components/Classify-Item.vue'
+import { mapGetters } from 'vuex'
+import GoodsItem from '../../components/item/Goods-Item.vue'
+import ClassifyItem from '../../components/item/Classify-Item.vue'
 import LoadMore from '../../components/Load-More.vue'
 import {
   getCategoryTree,
@@ -82,9 +88,15 @@ import {
 export default {
   name: 'Classify',
   components: {
-    LessonItem,
-    // ClassifyItem,
+    GoodsItem,
+    ClassifyItem,
     LoadMore
+  },
+  props: {
+    optionId: {
+      type: String,
+      default: null
+    }
   },
   data () {
     return {
@@ -98,6 +110,7 @@ export default {
       }],
       form: {
         categoryCode: '',
+        subCategory: '',
         current: 1,
         size: 10,
         productStatus: 'ON_SALE'
@@ -107,11 +120,8 @@ export default {
       loading: false
     }
   },
-  props: {
-    optionId: {
-      type: String,
-      default: null
-    }
+  computed: {
+    ...mapGetters(['mallSeq'])
   },
   created () {
     this.getCategoryTree()
@@ -130,13 +140,23 @@ export default {
       if (classify) {
         this.currentClassify = classify
         this.form.categoryCode = classify.sequenceNbr
+        this.form.subCategory = ''
+        this.form.current = 1
+        this.$refresh()
+      }
+    },
+    subClassifyClick (subCategory) {
+      if (this.loading) return
+      if (subCategory) {
+        this.form.categoryCode = this.currentClassify.sequenceNbr
+        this.form.subCategory = subCategory
         this.form.current = 1
         this.$refresh()
       }
     },
     async getCategoryTree () {
       try {
-        const { result } = await getCategoryTree()
+        const { result } = await getCategoryTree(this.mallSeq)
         this.classifyList = this.classifyList.concat(result)
         this.classifyClick(this.classifyList.find(item => item.sequenceNbr === (this.optionId || '')))
       } catch (e) {
@@ -193,7 +213,7 @@ export default {
     font-weight: bold;
     background-color: transparent;
     &::placeholder {
-      color: #01C2C3;
+      color: #BCBCBC;
       letter-spacing: 3px;
     }
   }
@@ -244,15 +264,19 @@ export default {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  border-bottom: 1px solid #F0F0F0;
 }
 .content {
-  padding-left: 180px;
+  margin-left: 160px;
+  padding: 0 20px;
   background-color: #fff;
   z-index: 1;
 }
 .productList {
-  display: grid;
-  grid-row-gap: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 .tip {
   position: relative;
@@ -260,6 +284,7 @@ export default {
   margin-bottom: 40px;
   text-align: center;
   font-size: 24px;
+  font-weight: bolder;
   &:before, &:after {
     position: absolute;
     top: 50%;
@@ -275,5 +300,12 @@ export default {
   &:after {
     right: 132px;
   }
+}
+
+.title{
+  margin: 32px 0 20px 0;
+  color: #2E2E2E;
+  font-size: 28px;
+  font-weight: bolder;
 }
 </style>
