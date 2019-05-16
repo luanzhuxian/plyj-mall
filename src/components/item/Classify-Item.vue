@@ -6,6 +6,7 @@
     <img
       class="radius-20"
       :src="img"
+      v-img-error
     >
     <div v-text="text" />
   </div>

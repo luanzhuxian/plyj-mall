@@ -30,6 +30,15 @@
       </ul>
 
       <div :class="$style.content">
+        <div
+          :class="$style.banner"
+          v-if="currentClassify.parentCode"
+        >
+          <img
+            :src="currentClassify.categoryPic"
+            v-img-error
+          >
+        </div>
         <template v-if="currentClassify.childs && currentClassify.childs.length">
           <div
             :class="$style.tip"
@@ -272,6 +281,17 @@ export default {
   background-color: #fff;
   z-index: 1;
 }
+.banner{
+  width: 548px;
+  height: 180px;
+  margin-top: 20px;
+  &>img{
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: contain;
+  }
+}
 .productList {
   display: flex;
   flex-wrap: wrap;
@@ -280,8 +300,8 @@ export default {
 }
 .tip {
   position: relative;
-  margin-top: 36px;
-  margin-bottom: 40px;
+  margin-top: 32px;
+  margin-bottom: 28px;
   text-align: center;
   font-size: 24px;
   font-weight: bolder;
@@ -301,7 +321,6 @@ export default {
     right: 132px;
   }
 }
-
 .title{
   margin: 32px 0 20px 0;
   color: #2E2E2E;
