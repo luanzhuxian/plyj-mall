@@ -121,11 +121,12 @@ export default {
   width: 100%;
   padding: 10px 28px 16px 28px;
   .name {
-    height: 60px;
+    height: 56px;
+    line-height: 28px;
     font-weight: bold;
     color: #333;
-    @include elps-wrap(2);
     font-size: 20px;
+    @include elps-wrap(2);
   }
 }
 .tag {
