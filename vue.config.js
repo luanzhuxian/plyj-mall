@@ -1,4 +1,4 @@
-const TOKEN = '346748f2-3a0e-4495-a7bf-94f2268000b0'
+const TOKEN = ''
 
 console.log('------------------------- ' + process.env.NODE_ENV + ' -------------------------')
 let argv = process.argv
@@ -38,7 +38,9 @@ module.exports = {
       '/apis': {
         target: 'http://192.168.130.34',
         bypass: function (req) {
-          req.headers.token = TOKEN
+          if (TOKEN) {
+            req.headers.token = TOKEN
+          }
         }
       }
     }
