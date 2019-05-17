@@ -31,8 +31,11 @@ export default {
   },
   methods: {
     itemClick () {
-      if (this.cid) {
-        this.$emit('click', this.cid)
+      if (this.cid && this.text) {
+        this.$emit('click', {
+          cid: this.cid,
+          name: this.text
+        })
       } else {
         this.$alert('子分类数据错误！')
       }
@@ -47,7 +50,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 33.333%;
-  margin-bottom: 60px;
+  margin-bottom: 32px;
   > div {
     margin-top: 8px;
     color: #666;

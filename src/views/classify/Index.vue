@@ -37,10 +37,6 @@
           <img :src="currentClassify.categoryPic">
         </div>
         <template v-if="currentClassify.childs && currentClassify.childs.length">
-          <div
-            :class="$style.tip"
-            v-text="currentClassify.categoryName"
-          />
           <div :class="$style.classifyList2">
             <classify-item
               :cid="item.sequenceNbr"
@@ -54,7 +50,7 @@
         </template>
         <div
           :class="$style.title"
-          v-text="currentClassify.categoryName"
+          v-text="currentClassify.subCategoryName || currentClassify.categoryName"
         />
         <load-more
           :request-methods="getProduct"
@@ -108,7 +104,8 @@ export default {
     return {
       currentClassify: {
         sequenceNbr: '',
-        categoryName: '全部'
+        categoryName: '全部',
+        subCategoryName: ''
       },
       classifyList: [{
         categoryName: '全部',
@@ -151,14 +148,13 @@ export default {
         this.$refresh()
       }
     },
-    subClassifyClick (subCategory) {
+    subClassifyClick ({ cid, name }) {
       if (this.loading) return
-      if (subCategory) {
-        this.form.categoryCode = this.currentClassify.sequenceNbr
-        this.form.subCategory = subCategory
-        this.form.current = 1
-        this.$refresh()
-      }
+      this.currentClassify.subCategoryName = name
+      this.form.categoryCode = this.currentClassify.sequenceNbr
+      this.form.subCategory = cid
+      this.form.current = 1
+      this.$refresh()
     },
     async getCategoryTree () {
       try {
@@ -270,6 +266,7 @@ export default {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  margin-top: 32px;
   border-bottom: 1px solid #F0F0F0;
 }
 .content {
@@ -294,29 +291,6 @@ export default {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-}
-.tip {
-  position: relative;
-  margin-top: 32px;
-  margin-bottom: 28px;
-  text-align: center;
-  font-size: 24px;
-  font-weight: bolder;
-  &:before, &:after {
-    position: absolute;
-    top: 50%;
-    transform: (-50%);
-    width: 54px;
-    height: 1px;
-    content: '';
-    background-color: #e7e7e7;
-  }
-  &:before {
-    left: 132px;
-  }
-  &:after {
-    right: 132px;
-  }
 }
 .title{
   margin: 32px 0 20px 0;
