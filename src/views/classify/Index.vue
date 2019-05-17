@@ -142,6 +142,7 @@ export default {
       if (this.loading || classify === this.currentClassify) return
       if (classify) {
         this.currentClassify = classify
+        this.currentClassify.subCategoryName = ''
         this.form.categoryCode = classify.sequenceNbr
         this.form.subCategory = ''
         this.form.current = 1
