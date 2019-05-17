@@ -6,7 +6,7 @@
     <img
       class="radius-20"
       :src="img"
-      v-img-error
+      v-img-error="'classifyIcon'"
     >
     <div v-text="text" />
   </div>

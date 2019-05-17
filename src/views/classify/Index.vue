@@ -32,12 +32,9 @@
       <div :class="$style.content">
         <div
           :class="$style.banner"
-          v-if="currentClassify.parentCode"
+          v-if="currentClassify.parentCode && currentClassify.categoryPic"
         >
-          <img
-            :src="currentClassify.categoryPic"
-            v-img-error
-          >
+          <img :src="currentClassify.categoryPic">
         </div>
         <template v-if="currentClassify.childs && currentClassify.childs.length">
           <div
