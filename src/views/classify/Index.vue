@@ -267,7 +267,7 @@ export default {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-  margin-top: 32px;
+  padding-top: 32px;
   border-bottom: 1px solid #F0F0F0;
 }
 .content {
