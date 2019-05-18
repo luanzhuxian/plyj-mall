@@ -35,6 +35,7 @@ module.exports = {
       errors: true
     },
     proxy: {
+      // 37测试 34 开发 王恩74 李宾哲132 赵伟116 牛昌昌92
       '/apis': {
         target: 'http://192.168.130.34',
         bypass: function (req) {
