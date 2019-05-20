@@ -18,22 +18,21 @@ export default {
         let domainName = window.location.pathname.split('/')[1] || ''
         const { result } = await getMallInfo(domainName)
         commit(type.GET_MALL_INFO, result)
-        // 检查该商城 openId 是否存在
-        dispatch(type.SET_OPENID, result.sequenceNbr)
+
+        let mallSeq = result.sequenceNbr
+        let openId = localStorage.getItem(mallSeq)
+        if (!openId) {
+          // 如果openid不存在，获取一下opendId
+          dispatch(type.GET_OPENID)
+          return
+        } else {
+          commit(type.SET_OPENID, { mallSeq, openId })
+        }
         resolve(result)
       } catch (e) {
         reject(e)
       }
     })
-  },
-  [type.SET_OPENID]: async ({ commit, dispatch }, mallSeq) => {
-    let openId = localStorage.getItem(mallSeq)
-    if (!openId) {
-      // 如果openid不存在，获取一下opendId
-      await dispatch(type.GET_OPENID)
-    } else {
-      commit(type.SET_OPENID, { mallSeq, openId })
-    }
   },
   [type.GET_OPENID]: ({ commit, dispatch }) => {
     return new Promise(async (resolve, reject) => {
