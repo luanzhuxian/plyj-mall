@@ -7,14 +7,10 @@ export default {
     document.body.id = theme
   },
   [type.GET_MALL_INFO] (state, payload) {
-    for (let k of Object.keys(state.mallInfo)) {
-      state.mallInfo[k] = payload[k]
-    }
+    state.mallInfo = payload
   },
   [type.USER_INFO] (state, payload) {
-    for (let k of Object.keys(state.userInfo)) {
-      state.userInfo[k] = payload[k]
-    }
+    state.userInfo = payload
   },
   [type.SET_TOKEN] (state, payload) {
     state.token = payload.token

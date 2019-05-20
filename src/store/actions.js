@@ -21,6 +21,7 @@ export default {
 
         let mallSeq = result.sequenceNbr
         let openId = localStorage.getItem(mallSeq)
+        console.log('openId: ', openId)
         if (!openId) {
           // 如果openid不存在，获取一下opendId
           dispatch(type.GET_OPENID)
