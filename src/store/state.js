@@ -30,7 +30,6 @@ export default {
     userId: ''
   },
   mallInfo: {
-    agencyCode: '',
     appid: '',
     logoUrl: '',
     mallDesc: '',

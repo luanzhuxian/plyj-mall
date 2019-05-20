@@ -134,9 +134,7 @@ export default {
         VIRTUAL_GOODS: virtualOrderCancellation
       },
       form: {
-        agencyCode: '',
         addressSeq: '',
-        mallSeq: '',
         share: '', // 根据此商品是不是经纪人分享的,来判断是否需要传此参数
         amount: '', // 总价
         products: [
@@ -176,7 +174,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'mallSeq', 'selectedAddress', 'openId', 'mobile'])
+    ...mapGetters(['selectedAddress', 'openId', 'mobile'])
   },
   watch: {
     selectedAddress () {}
@@ -191,7 +189,7 @@ export default {
   methods: {
     async getProductDetail () {
       try {
-        let { productSeq, count, optionCode, brokerId = '', agencyCode, mallSeq } = this
+        let { productSeq, count, optionCode, brokerId = '' } = this
         this.disableSubmit = true
         this.loading = true
         let productDetail = await getProductDetail(this.productSeq)
@@ -201,8 +199,6 @@ export default {
         this.form.orderType = this.productType = productType
         this.form.addressSeq = productType === 'PHYSICAL_GOODS' ? (this.selectedAddress.sequenceNbr || '') : ''
         this.loading = false
-        this.form.agencyCode = agencyCode
-        this.form.mallSeq = mallSeq
         this.form.share = brokerId
         this.form.products[0] = {
           optionCode: optionCode,
@@ -275,7 +271,6 @@ export default {
             productSeq: this.productSeq,
             productCount: this.count,
             addressSeq: this.selectedAddress.sequenceNbr,
-            mallSeq: this.mallSeq,
             optionCode: this.optionCode
           })
           if (this.supplierProduct) {

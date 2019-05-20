@@ -141,7 +141,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userId', 'smstype', 'agencyCode', 'isAdmin'])
+    ...mapGetters(['userId', 'smstype', 'isAdmin'])
   },
   activated () {
     this.getHelperInfo()
@@ -149,7 +149,7 @@ export default {
   methods: {
     async getHelperInfo () {
       try {
-        let { result } = await agentUserInfoAudit(this.userId, this.agencyCode)
+        let { result } = await agentUserInfoAudit(this.userId)
         Object.assign(this.form, result)
       } catch (e) {
         throw e

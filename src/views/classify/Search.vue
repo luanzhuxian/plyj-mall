@@ -103,7 +103,6 @@ export default {
     return {
       searachContent: '',
       form: {
-        agencyCode: '',
         searachContent: '',
         current: 1,
         size: 10
@@ -116,10 +115,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userId', 'agencyCode'])
-  },
-  created () {
-    this.form.agencyCode = this.agencyCode
+    ...mapGetters(['userId'])
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh

@@ -60,7 +60,7 @@ export default {
     routeName: function () {
       return this.$route.name
     },
-    ...mapGetters(['mallSeq', 'userId', 'openId', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
+    ...mapGetters(['userId', 'openId', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
   },
   async created () {
     try {

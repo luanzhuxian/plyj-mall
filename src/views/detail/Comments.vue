@@ -35,7 +35,6 @@ import SpecificationPop from '../../components/detail/Specification-Pop'
 import TopText from '../../components/Top-Text.vue'
 import loadMore from '../../components/Load-More.vue'
 import { getComments } from '../../apis/comment'
-import { mapGetters } from 'vuex'
 import { getProductDetail, createBrokerShare } from '../../apis/product'
 
 export default {
@@ -52,7 +51,6 @@ export default {
       form: {
         current: 1,
         size: 10,
-        mallSeq: '',
         productSeq: ''
       },
       getComments,
@@ -65,7 +63,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['mallSeq']),
     img: function () {
       return this.detail.productImage ? this.detail.productImage[0].mediaUrl : ''
     }
@@ -82,7 +79,6 @@ export default {
   activated () {
     this.$nextTick(() => {
       this.form.productSeq = this.productSeq
-      this.form.mallSeq = this.mallSeq
       this.$refresh()
       this.getdetail()
     })

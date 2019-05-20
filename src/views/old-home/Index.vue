@@ -277,7 +277,7 @@ export default {
   },
   async created () {
     try {
-      let { result } = await getHomeData(this.agencyCode)
+      let { result } = await getHomeData()
       // 优先加载banner，其他请求必须在banner之后
       await this.getBanner(result)
       await this.getModule(result)

@@ -117,7 +117,6 @@ import {
   getOrderDetail
 } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
-import { mapGetters } from 'vuex'
 export default {
   name: 'RefundApply',
   components: {
@@ -132,8 +131,6 @@ export default {
         operationType: '', // 在何种情况下退款
         refundModel: {
           content: '',
-          agencyCode: '',
-          mallSeq: '',
           images: []
         },
         expressInfoModel: {
@@ -161,11 +158,7 @@ export default {
       default: null
     }
   },
-  computed: {
-    ...mapGetters(['agencyCode', 'mallSeq'])
-  },
   activated () {
-    this.form.refundModel.agencyCode = this.agencyCode
     this.form.refundModel.mallSeq = this.mallSeq
     this.form.orderId = this.orderId
     this.getOrderDetail()

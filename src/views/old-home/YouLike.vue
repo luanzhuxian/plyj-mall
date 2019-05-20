@@ -51,7 +51,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'userId'])
+    ...mapGetters(['userId'])
   },
   watch: {
     productSeq () {
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     getList () {
-      getYouLikeData({ agencyCode: this.agencyCode, userId: this.userId, productSeq: this.productSeq || '' })
+      getYouLikeData({ userId: this.userId, productSeq: this.productSeq || '' })
         .then(res => {
           for (let r of res.result) {
             r.productPriceModel.sort((a, b) => {

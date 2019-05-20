@@ -65,17 +65,15 @@ export default {
   data () {
     return {
       form: {
-        agencyCode: '',
         price: '',
         userId: ''
       }
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'userId', 'openId', 'appId', 'balance'])
+    ...mapGetters(['userId', 'openId', 'appId', 'balance'])
   },
   created () {
-    this.form.agencyCode = this.agencyCode
     this.form.userId = this.userId
   },
   activated () {

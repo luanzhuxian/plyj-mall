@@ -26,13 +26,11 @@ export default {
   roleMap: state => state.roleMap,
   roleName: state => state.roleMap[state.userInfo.roleCode] || '',
 
-  mallSeq: state => state.mallInfo.sequenceNbr,
   appId: state => state.mallInfo.appid,
   mallDomain: state => state.mallInfo.mallDomain,
   mallName: state => state.mallInfo.mallName,
   mallDesc: state => state.mallInfo.mallDesc,
   logoUrl: state => state.mallInfo.logoUrl,
   mallStatus: state => state.mallInfo.status,
-  agencyCode: state => state.mallInfo.agencyCode,
   supportPhone: state => state.mallInfo.supportPhone
 }

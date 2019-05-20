@@ -80,17 +80,17 @@ export default {
         await dispatch(type.GET_MALL_INFO)
         let { result } = await getUserInfo()
         commit(type.USER_INFO, result)
-        await dispatch(type.ADDRESS_LIST, Object.assign(result, { agencyCode: getters.agencyCode }))
+        await dispatch(type.ADDRESS_LIST)
         resolve(result)
       } catch (e) {
         reject(e)
       }
     })
   },
-  [type.ADDRESS_LIST]: ({ commit, state }, { agencyCode }) => {
+  [type.ADDRESS_LIST]: ({ commit }) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let { result } = await getAddress({ agencyCode, mallSeq: state.mallInfo.sequenceNbr })
+        let { result } = await getAddress()
         commit(type.ADDRESS_LIST, result)
         resolve()
       } catch (e) {
@@ -110,8 +110,4 @@ export default {
       }
     })
   }
-  // 朋来APPId
-  // [type.GET_PL_APPID]: ({ commit, state }, { agencyCode }) => {
-  //   return new Promise()
-  // }
 }
