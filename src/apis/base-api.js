@@ -7,7 +7,7 @@ export const sendCode = (smsType, mobile) => axios.post(`/apis/v1/systemctl/sms/
 // 验证手机短信
 export const checkMobileCode = (smsType, mobile, verifyCode) => axios.get(`/apis/v1/systemctl/sms/${smsType}/verify/${mobile}/${verifyCode}/verification`)
 // 根据域名获取商城id
-export const getMallInfo = domainName => axios.get(`/apis/wx/redirect/query/appid?domainName=${domainName}`)
+export const getMallInfo = domainName => axios.get(`/apis/v1/base/baseMall/query/appid?domainName=${domainName}`)
 
 export const getOpenId = (appid, code) => axios.post(`/apis/v1/base/baseUserInfo/${appid}/greet?code=${code}`)
 // openId登录
