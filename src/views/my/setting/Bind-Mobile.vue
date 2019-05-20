@@ -180,14 +180,13 @@ export default {
           let { name, params, query } = getSession('willBind')
           if (name) {
             await this.$store.dispatch(REFRESH_TOKEN)
-            await this.$store.dispatch(USER_INFO)
             this.$router.replace({ name, params, query })
             sessionStorage.removeItem('willBind')
             this.$toast('绑定手机号成功！')
             return
           }
         }
-        await this.$store.dispatch(USER_INFO)
+        await this.$store.dispatch(REFRESH_TOKEN)
         this.loading = false
         this.$router.replace({ name: 'My' })
       } catch (e) {

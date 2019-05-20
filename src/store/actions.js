@@ -22,10 +22,11 @@ export default {
 
         let mallSeq = result.sequenceNbr
         let openId = localStorage.getItem(mallSeq)
-        console.log('openId: ', openId)
+        console.warn('openId: ', openId)
         if (!openId) {
+          console.warn('获取openid')
           // 如果openid不存在，获取一下opendId
-          dispatch(type.GET_OPENID)
+          await dispatch(type.GET_OPENID)
           return
         } else {
           commit(type.SET_OPENID, { mallSeq, openId })
@@ -63,6 +64,7 @@ export default {
   },
   [type.LOGIN]: ({ commit, dispatch, state, getters }, openId) => {
     return new Promise(async (resolve, reject) => {
+      console.warn('登录...')
       let loginInfo = await login(state.openId)
       commit(type.SET_TOKEN, loginInfo.result)
       // 用户信息
@@ -97,12 +99,12 @@ export default {
       }
     })
   },
-  [type.REFRESH_TOKEN]: ({ commit, state }) => {
+  [type.REFRESH_TOKEN]: ({ commit, state, dispatch }) => {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log(state.refresh_token)
-        let loginInfo = await refreshToken(state.refresh_token)
-        commit(type.SET_TOKEN, loginInfo.result)
+        let { result } = await refreshToken(state.refresh_token)
+        commit(type.SET_TOKEN, result)
+        await dispatch(type.USER_INFO)
         resolve()
       } catch (e) {
         reject(e)

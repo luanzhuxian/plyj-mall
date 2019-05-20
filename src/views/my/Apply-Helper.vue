@@ -165,7 +165,6 @@ export default {
             await AuditCreate(this.form)
           }
           await this.$store.dispatch(REFRESH_TOKEN)
-          await this.$store.dispatch(USER_INFO)
           this.loading = false
           this.$router.replace({ name: 'My' })
         } catch (e) {
