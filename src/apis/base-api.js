@@ -11,7 +11,7 @@ export const getMallInfo = domainName => axios.get(`/apis/v1/base/baseMall/query
 
 export const getOpenId = (appid, code) => axios.post(`/apis/v1/base/baseUserInfo/${appid}/greet?code=${code}`)
 // openId登录
-export const login = openId => axios.post(`/apis/v1/privilege/auth/openId`, { loginId: openId })
+export const login = openId => axios.post(`/apis/v1/privilege/auth/openId`, { openId: openId })
 // cookie登录
 // export const loginByCookie = () => axios.post(`/apis/v1/privilege/auth/cookie`)
 // 获取jsapi
