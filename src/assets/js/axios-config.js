@@ -2,7 +2,6 @@ import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
 import { LOG_OUT, LOGIN } from '../../store/mutation-type'
-import Cookie from 'js-cookie'
 
 axios.defaults.headers = {
   'Content-Type': 'application/json;charset=UTF-8'
@@ -14,12 +13,11 @@ axios.interceptors.request.use(request, reqError)
 axios.interceptors.response.use(response, resError)
 
 function request (config) {
-  let token = Cookie.get('token')
   config.headers = {
-    token: token || null,
-    agencyCode: store.getters.agencyCode || '',
-    openId: store.getters.openId || '',
-    mallId: store.getters.mallSeq,
+    token: store.state.token || null,
+    agencyCode: store.state.mallInfo.agencyCode || '',
+    openId: store.state.openId || '',
+    mallId: store.state.mallInfo.mallSeq,
     domainName: window.location.pathname.split('/')[1] || ''
   }
   return config
