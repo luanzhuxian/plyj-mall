@@ -35,24 +35,24 @@ export default {
       }
     })
   },
-  [type.GET_OPENID]: ({ commit, dispatch }) => {
+  [type.GET_OPENID]: ({ commit, dispatch, getters }) => {
     return new Promise(async (resolve, reject) => {
       let search = Qs.parse(location.search.substring(1))
-      let { appid, sequenceNbr } = await dispatch(type.GET_MALL_INFO)
+      let appId = getters.appId
       try {
         if (search.code) {
           // 微信
-          const wechatData = await getOpenId(appid, search.code)
-          commit(type.SET_OPENID, { mallSeq: sequenceNbr, openId: wechatData.result.OPEN_ID })
+          const wechatData = await getOpenId(appId, search.code)
+          commit(type.SET_OPENID, { mallSeq: getters.mallSeq, openId: wechatData.result.OPEN_ID })
           // 拿到 openId 后，直接登录
           await dispatch(type.LOGIN)
         } else {
-          let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+          let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
           window.location.replace(openIdUrl)
         }
       } catch (e) {
         if (e.message.indexOf('code') > -1) { // 如果code无效重新登录
-          let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${location.href.split('?')[0]}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+          let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${location.href.split('?')[0]}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
           window.location.replace(openIdUrl)
         } else {
           reject(e)
