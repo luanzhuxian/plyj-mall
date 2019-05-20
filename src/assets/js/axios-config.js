@@ -18,6 +18,7 @@ function request (config) {
   config.headers = {
     token: token || null,
     agencyCode: store.getters.agencyCode || '',
+    openId: store.getters.openId || '',
     domainName: window.location.pathname.split('/')[1] || ''
   }
   return config
