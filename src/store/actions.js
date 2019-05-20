@@ -35,6 +35,8 @@ export default {
           const wechatData = await getOpenId(appid, search.code)
           // 登录授权
           let loginInfo = await login(wechatData.result.OPEN_ID)
+          console.log(loginInfo)
+          console.log(loginInfo.result)
           commit(type.SET_TOKEN, loginInfo.result.token)
           // 用户信息
           let { result } = await getUserInfo()
