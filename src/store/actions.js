@@ -101,7 +101,7 @@ export default {
     return new Promise(async (resolve, reject) => {
       try {
         console.log(state.refresh_token)
-        let loginInfo = await refreshToken(state.refresh_token);
+        let loginInfo = await refreshToken(state.refresh_token)
         commit(type.SET_TOKEN, loginInfo.result)
         resolve()
       } catch (e) {

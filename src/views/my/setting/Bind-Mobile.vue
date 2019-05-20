@@ -99,7 +99,7 @@
 import TopText from '../../../components/Top-Text.vue'
 import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
-import { USER_INFO } from '../../../store/mutation-type'
+import { USER_INFO, REFRESH_TOKEN } from '../../../store/mutation-type'
 import { getSession } from '../../../assets/js/util'
 export default {
   name: 'BindMobile',
