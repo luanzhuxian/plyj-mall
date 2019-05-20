@@ -4,9 +4,41 @@ const refresh_token = Cookie.get('refresh_token') || ''
 
 export default {
   theme: 'base-theme',
-  userInfo: {},
-  loginInfo: {},
-  mallInfo: {},
+  userInfo: {
+    agentUser: false,
+    applyBalance: 0,
+    awaitBalance: 0,
+    balance: 0,
+    cumulativeBalance: 0,
+    currentBalance: 0,
+    img: '',
+    mobile: null,
+    openId: '',
+    rejectBalance: 0,
+    roleCode: '',
+    status: null,
+    successBalance: 0,
+    userId: '',
+    userName: ''
+  },
+  loginInfo: {
+    SESSION_ID: '',
+    expire: '',
+    refresh_token: '',
+    refresh_token_expire: '',
+    token: '',
+    userId: ''
+  },
+  mallInfo: {
+    agencyCode: '',
+    appid: '',
+    logoUrl: '',
+    mallDesc: '',
+    mallDomain: '',
+    mallName: '',
+    sequenceNbr: '',
+    supportPhone: ''
+  },
   token,
   openId: '',
   refresh_token,

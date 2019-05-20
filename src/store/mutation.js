@@ -1,16 +1,16 @@
 import * as type from './mutation-type'
 import Cookie from 'js-cookie'
-
+import { copyFields } from '../assets/js/util'
 export default {
   [type.SET_THEME] (state, theme) {
     state.theme = theme
     document.body.id = theme
   },
   [type.GET_MALL_INFO] (state, payload) {
-    state.mallInfo = payload
+    copyFields(state.mallInfo, payload)
   },
   [type.USER_INFO] (state, payload) {
-    state.userInfo = payload
+    copyFields(state.userInfo, payload)
   },
   [type.SET_TOKEN] (state, payload) {
     state.token = payload.token
@@ -42,7 +42,5 @@ export default {
   },
   [type.LOG_OUT] (state, payload) {
     state.token = ''
-    sessionStorage.clear()
-    localStorage.clear()
   }
 }

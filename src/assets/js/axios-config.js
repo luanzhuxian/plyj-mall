@@ -16,8 +16,8 @@ function request (config) {
   config.headers = {
     token: store.state.token || null,
     agencyCode: store.state.mallInfo.agencyCode || '',
+    mallId: store.state.mallInfo.sequenceNbr,
     openId: store.state.openId || '',
-    mallId: store.state.mallInfo.mallSeq,
     domainName: window.location.pathname.split('/')[1] || ''
   }
   return config

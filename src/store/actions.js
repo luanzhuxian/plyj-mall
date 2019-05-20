@@ -19,7 +19,6 @@ export default {
         let domainName = window.location.pathname.split('/')[1] || ''
         const { result } = await getMallInfo(domainName)
         commit(type.GET_MALL_INFO, result)
-
         let mallSeq = result.sequenceNbr
         let openId = localStorage.getItem(mallSeq)
         console.warn('openId: ', openId)
