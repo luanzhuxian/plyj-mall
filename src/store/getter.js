@@ -17,7 +17,7 @@ export default {
   agentUser: state => state.userInfo.agentUser, // helper
   isAdmin: state => state.userInfo.roleCode === 'ENTERPRISE_ADMIN', // 企业管理员
   mobile: state => state.userInfo.mobile,
-  openId: state => state.userInfo.openId,
+  openId: state => state.openId,
   userId: state => state.userInfo.userId,
   balance: state => state.userInfo.balance, // 可提现金额
   currentBalance: state => state.userInfo.currentBalance, // 今日润笔

@@ -19,12 +19,14 @@ export default {
   [type.SET_TOKEN] (state, payload) {
     state.token = payload.token
     state.refresh_token = payload.refresh_token
+    state.openId = payload.openId
     Cookie.set('token', payload.token, {
       expires: new Date(Date.now() + payload.expire * 1000 - 60000000)
     })
     Cookie.set('refresh_token', payload.refresh_token, {
       expires: new Date(Date.now() + payload.refresh_token_expire * 1000 - 60000000)
     })
+    Cookie.set('openId', payload.openId)
   },
   [type.ADDRESS_LIST] (state, payload) {
     state.addressList = payload
