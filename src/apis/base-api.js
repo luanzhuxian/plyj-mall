@@ -15,7 +15,7 @@ export const login = openId => axios.post(`/apis/v1/privilege/auth/openId`, { op
 // cookie登录
 // export const loginByCookie = () => axios.post(`/apis/v1/privilege/auth/cookie`)
 // 获取jsapi
-export const getJSApi = appid => axios.get(`/apis/wx/redirect/query/js/api?appid=${appid}`)
+export const getJSApi = appid => axios.get(`/apis/v1/base/baseMall/query/js/api?appid=${appid}`)
 
 // 获取当前用户信息
 export function getUserInfo () {
