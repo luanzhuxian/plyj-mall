@@ -1,6 +1,7 @@
 export default {
   theme: state => state.theme,
   token: state => state.token,
+  refresh_token: state => state.refresh_token,
   smstype: state => state.smstype,
   addressList: state => state.addressList,
   selectedAddress: state => {

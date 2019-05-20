@@ -3,7 +3,7 @@ import axios from 'axios'
 export const createAddress = (data) => axios.post('/apis/v1/publicuser/address', Object.assign(data, { type: 2 }))
 // 获取地址列表
 export const getAddress = ({ agencyCode, mallSeq, type = 2 }) =>
-  axios.get(`/apis/v1/publicuser/address/me/list?agencyCode=${agencyCode}&mallSeq=${mallSeq}&type=${type}`)
+  axios.get(`/apis/v1/publicuser/address/me/list?mallSeq=${mallSeq}&type=${type}`)
 
 export const updateAddress = (data, sequenceNbr) => axios.put(`/apis/v1/publicuser/address/${sequenceNbr}`, Object.assign(data, { type: 2 }))
 

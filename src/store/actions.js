@@ -40,7 +40,7 @@ export default {
           let { result } = await getUserInfo()
           // 用户地址列表
           await dispatch(type.ADDRESS_LIST, Object.assign(result, { agencyCode }))
-          commit(type.USER_INFO, Object.assign(wechatData, loginInfo, result, payload))
+          commit(type.USER_INFO, Object.assign(result, payload))
           resolve(loginInfo)
         } else {
           let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
@@ -56,12 +56,12 @@ export default {
       }
     })
   },
-  [type.USER_INFO]: ({ commit, dispatch, state }, payload = {}) => {
+  [type.USER_INFO]: ({ commit, dispatch, state }) => {
     return new Promise(async (resolve, reject) => {
       try {
         await dispatch(type.GET_MALL_INFO)
         let { result } = await getUserInfo()
-        commit(type.USER_INFO, Object.assign(result, payload))
+        commit(type.USER_INFO, result)
         await dispatch(type.ADDRESS_LIST, Object.assign(result, { agencyCode: state.mallInfo.agencyCode }))
         resolve(result)
       } catch (e) {

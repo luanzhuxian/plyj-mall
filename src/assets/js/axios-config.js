@@ -2,6 +2,8 @@ import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
 import { LOG_OUT, LOGIN } from '../../store/mutation-type'
+import Cookie from 'js-cookie'
+
 axios.defaults.headers = {
   'Content-Type': 'application/json;charset=UTF-8'
 }
@@ -12,11 +14,10 @@ axios.interceptors.request.use(request, reqError)
 axios.interceptors.response.use(response, resError)
 
 function request (config) {
-  let token = localStorage.getItem('token')
+  let token = Cookie.get('token')
   config.headers = {
-    product: 'welcome_to_penglai_yaji',
-    tokenType: 'wechat',
     token: token || null,
+    agencyCode: store.getters.agencyCode || '',
     domainName: window.location.pathname.split('/')[1] || ''
   }
   return config

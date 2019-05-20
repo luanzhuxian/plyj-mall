@@ -1,4 +1,4 @@
-const TOKEN = ''
+const TOKEN = 'f4cfb884-b43a-40e7-995b-7ea95fc118ea'
 
 console.log('------------------------- ' + process.env.NODE_ENV + ' -------------------------')
 let argv = process.argv
@@ -35,13 +35,10 @@ module.exports = {
       errors: true
     },
     proxy: {
-      // 37测试 34 开发 王恩74 李宾哲132 赵伟116 牛昌昌92
       '/apis': {
-        target: 'http://192.168.130.34',
+        target: 'http://192.168.130.74',
         bypass: function (req) {
-          if (TOKEN) {
-            req.headers.token = TOKEN
-          }
+          req.headers.token = TOKEN
         }
       }
     }

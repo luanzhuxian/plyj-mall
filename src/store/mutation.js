@@ -1,4 +1,6 @@
 import * as type from './mutation-type'
+import Cookie from 'js-cookie'
+
 export default {
   [type.SET_THEME] (state, theme) {
     state.theme = theme
@@ -15,8 +17,14 @@ export default {
     }
   },
   [type.SET_TOKEN] (state, payload) {
-    state.token = payload
-    localStorage.setItem('token', payload)
+    state.token = payload.token
+    state.refresh_token = payload.refresh_token
+    Cookie.set('token', payload.token, {
+      expires: new Date(Date.now() + payload.expire * 1000 - 60000000)
+    })
+    Cookie.set('refresh_token', payload.refresh_token, {
+      expires: new Date(Date.now() + payload.refresh_token_expire * 1000 - 60000000)
+    })
   },
   [type.ADDRESS_LIST] (state, payload) {
     state.addressList = payload
