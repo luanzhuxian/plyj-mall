@@ -37,7 +37,7 @@ export default {
           let loginInfo = await login(wechatData.result.OPEN_ID)
           console.log(loginInfo)
           console.log(loginInfo.result)
-          commit(type.SET_TOKEN, loginInfo.result.token)
+          commit(type.SET_TOKEN, loginInfo.result)
           // 用户信息
           let { result } = await getUserInfo()
           // 用户地址列表
