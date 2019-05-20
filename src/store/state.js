@@ -1,6 +1,5 @@
 import Cookie from 'js-cookie'
 const token = Cookie.get('token') || ''
-const openId = Cookie.get('openId') || ''
 const refresh_token = Cookie.get('refresh_token') || ''
 
 export default {
@@ -9,7 +8,7 @@ export default {
   loginInfo: {},
   mallInfo: {},
   token,
-  openId,
+  openId: '',
   refresh_token,
   addressList: [],
   selectedAddress: null, // 选中的地址
