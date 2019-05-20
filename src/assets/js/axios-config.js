@@ -19,6 +19,7 @@ function request (config) {
     token: token || null,
     agencyCode: store.getters.agencyCode || '',
     openId: store.getters.openId || '',
+    mallId: store.getters.mallSeq,
     domainName: window.location.pathname.split('/')[1] || ''
   }
   return config

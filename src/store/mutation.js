@@ -26,7 +26,6 @@ export default {
     Cookie.set('refresh_token', payload.refresh_token, {
       expires: new Date(Date.now() + payload.refresh_token_expire * 1000 - 60000000)
     })
-    Cookie.set('openId', payload.openId)
   },
   [type.SET_OPENID] (state, payload) {
     state.openId = payload.openId
