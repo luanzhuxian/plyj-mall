@@ -13,7 +13,7 @@
 import Navbar from './components/Navbar.vue'
 import QuickNavbar from './components/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { SET_THEME, LOGIN, USER_INFO } from './store/mutation-type'
+import { SET_THEME, USER_INFO } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
 export default {
   components: {
@@ -76,7 +76,6 @@ export default {
       setTheme: SET_THEME
     }),
     ...mapActions({
-      login: LOGIN,
       getUserInfo: USER_INFO
     }),
     share (willHide = []) {

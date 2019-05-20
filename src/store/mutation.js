@@ -28,6 +28,10 @@ export default {
     })
     Cookie.set('openId', payload.openId)
   },
+  [type.SET_OPENID] (state, payload) {
+    state.openId = payload.openId
+    localStorage.setItem(payload.mallSeq, payload.openId)
+  },
   [type.ADDRESS_LIST] (state, payload) {
     state.addressList = payload
   },

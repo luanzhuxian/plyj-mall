@@ -12,38 +12,40 @@ import {
 import Qs from 'qs'
 export default {
   /* 获取商城信息 */
-  [type.GET_MALL_INFO]: ({ commit }, payload) => {
+  [type.GET_MALL_INFO]: ({ commit, dispatch }) => {
     return new Promise(async (resolve, reject) => {
       try {
         let domainName = window.location.pathname.split('/')[1] || ''
         const { result } = await getMallInfo(domainName)
         commit(type.GET_MALL_INFO, result)
+        // 检查该商城 openId 是否存在
+        dispatch(type.SET_OPENID, result.sequenceNbr)
         resolve(result)
       } catch (e) {
         reject(e)
       }
     })
   },
-  [type.LOGIN]: ({ commit, dispatch }, payload) => {
+  [type.SET_OPENID]: async ({ commit, dispatch }, mallSeq) => {
+    let openId = localStorage.getItem(mallSeq)
+    if (!openId) {
+      // 如果openid不存在，获取一下opendId
+      await dispatch(type.GET_OPENID)
+    } else {
+      commit(type.SET_OPENID, { mallSeq, openId })
+    }
+  },
+  [type.GET_OPENID]: ({ commit, dispatch }) => {
     return new Promise(async (resolve, reject) => {
       let search = Qs.parse(location.search.substring(1))
-      // 商城信息
-      let { appid, agencyCode } = await dispatch(type.GET_MALL_INFO)
+      let { appid, sequenceNbr } = await dispatch(type.GET_MALL_INFO)
       try {
         if (search.code) {
           // 微信
           const wechatData = await getOpenId(appid, search.code)
-          // 登录授权
-          let loginInfo = await login(wechatData.result.OPEN_ID)
-          console.log(loginInfo)
-          console.log(loginInfo.result)
-          commit(type.SET_TOKEN, loginInfo.result)
-          // 用户信息
-          let { result } = await getUserInfo()
-          // 用户地址列表
-          await dispatch(type.ADDRESS_LIST, Object.assign(result, { agencyCode }))
-          commit(type.USER_INFO, Object.assign(result, payload))
-          resolve(loginInfo)
+          commit(type.SET_OPENID, { mallSeq: sequenceNbr, openId: wechatData.result.OPEN_ID })
+          // 拿到 openId 后，直接登录
+          await dispatch(type.LOGIN)
         } else {
           let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
           window.location.replace(openIdUrl)
@@ -58,13 +60,25 @@ export default {
       }
     })
   },
-  [type.USER_INFO]: ({ commit, dispatch, state }) => {
+  [type.LOGIN]: ({ commit, dispatch, state, getters }, openId) => {
+    return new Promise(async (resolve, reject) => {
+      let loginInfo = await login(state.openId)
+      commit(type.SET_TOKEN, loginInfo.result)
+      // 用户信息
+      let { result } = await getUserInfo()
+      // 用户地址列表
+      await dispatch(type.ADDRESS_LIST)
+      commit(type.USER_INFO, Object.assign(result))
+      resolve(loginInfo)
+    })
+  },
+  [type.USER_INFO]: ({ commit, dispatch, getters }) => {
     return new Promise(async (resolve, reject) => {
       try {
         await dispatch(type.GET_MALL_INFO)
         let { result } = await getUserInfo()
         commit(type.USER_INFO, result)
-        await dispatch(type.ADDRESS_LIST, Object.assign(result, { agencyCode: state.mallInfo.agencyCode }))
+        await dispatch(type.ADDRESS_LIST, Object.assign(result, { agencyCode: getters.agencyCode }))
         resolve(result)
       } catch (e) {
         reject(e)
