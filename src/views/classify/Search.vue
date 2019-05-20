@@ -6,7 +6,7 @@
         <input
           v-model.trim="searachContent"
           type="search"
-          placeholder="搜索商品"
+          placeholder="你想要的应有尽有"
           @search="search(searachContent)"
         >
       </div>

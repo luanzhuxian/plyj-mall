@@ -9,7 +9,7 @@
         <pl-svg name="search" />
         <input
           type="text"
-          placeholder="搜索商品"
+          placeholder="你想要的应有尽有"
         >
       </router-link>
     </div>
@@ -51,6 +51,7 @@
         <div
           :class="$style.title"
           v-text="currentClassify.subCategoryName || currentClassify.categoryName"
+          v-show="!isEmpty"
         />
         <load-more
           :request-methods="getProduct"
@@ -58,6 +59,7 @@
           ref="loadMore"
           :loading.sync="loading"
           no-content-tip="此分类下还没有商品"
+          @listState="isEmpty = $event"
         >
           <template v-slot="{ list }">
             <div :class="$style.productList">
@@ -118,9 +120,9 @@ export default {
         size: 10,
         productStatus: 'ON_SALE'
       },
-      getProduct,
       $refresh: null,
-      loading: false
+      loading: false,
+      isEmpty: false
     }
   },
   computed: {
@@ -138,6 +140,7 @@ export default {
     }
   },
   methods: {
+    getProduct,
     classifyClick (classify) {
       if (this.loading || classify === this.currentClassify) return
       if (classify) {
@@ -195,23 +198,19 @@ export default {
 .search-box {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 30px;
+  padding: 0 20px;
   width: 100%;
   height: 60px;
-  text-align: center;
   background-color: #f5f5f8;
   border-radius: 30px;
   box-sizing: border-box;
   svg {
-    width: 32px;
-    height: 32px;
-    margin-right: 15px;
-    vertical-align: -5px;
+    width: 28px;
+    height: 28px;
+    margin-right: 20px;
   }
   input {
-    width: 125px;
-    text-align: center;
+    width: 566px;
     font-size: 28px;
     font-weight: bold;
     background-color: transparent;
@@ -265,7 +264,6 @@ export default {
 }
 .classify-list2 {
   display: flex;
-  justify-content: space-around;
   flex-wrap: wrap;
   padding-top: 32px;
   border-bottom: 1px solid #F0F0F0;

@@ -164,6 +164,9 @@ export default {
           let { result } = await this.requestMethods(this.options)
           if (result.records.length === 0) {
             this.allLoaded = true
+            this.$emit('listState', true)
+          } else {
+            this.$emit('listState', false)
           }
           resolve(result.records)
           this.total = result.total

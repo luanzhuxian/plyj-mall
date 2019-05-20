@@ -121,8 +121,7 @@ export default {
   width: 100%;
   padding: 10px 28px 16px 28px;
   .name {
-    height: 56px;
-    line-height: 28px;
+    height: 55px;
     font-weight: bold;
     color: #333;
     font-size: 20px;
