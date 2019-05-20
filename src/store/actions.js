@@ -3,7 +3,8 @@ import {
   getMallInfo,
   getOpenId,
   getUserInfo,
-  login
+  login,
+  refreshToken
   // getPenglaiAppid
 } from '../apis/base-api'
 import {
@@ -90,6 +91,18 @@ export default {
       try {
         let { result } = await getAddress({ agencyCode, mallSeq: state.mallInfo.sequenceNbr })
         commit(type.ADDRESS_LIST, result)
+        resolve()
+      } catch (e) {
+        reject(e)
+      }
+    })
+  },
+  [type.REFRESH_TOKEN]: ({ commit, state }) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        console.log(state.refresh_token)
+        let loginInfo = await refreshToken(state.refresh_token);
+        commit(type.SET_TOKEN, loginInfo.result)
         resolve()
       } catch (e) {
         reject(e)

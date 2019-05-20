@@ -179,6 +179,7 @@ export default {
           await bindMobile(this.bindForm)
           let { name, params, query } = getSession('willBind')
           if (name) {
+            await this.$store.dispatch(REFRESH_TOKEN)
             await this.$store.dispatch(USER_INFO)
             this.$router.replace({ name, params, query })
             sessionStorage.removeItem('willBind')
