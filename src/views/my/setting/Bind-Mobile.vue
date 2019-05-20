@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div :class="$style.bindMobile">
     <TopText
       :title="title"
@@ -111,15 +111,13 @@ export default {
       loading: false,
       bindForm: {
         mobile: '',
-        verifyCode: '',
-        openId: ''
+        verifyCode: ''
       },
       updateForm: {
         mobile: '',
         oldVerifyCode: '',
         oldMobile: '',
-        verifyCode: '',
-        openId: ''
+        verifyCode: ''
       },
       rules: {
         verifyCode: [{ required: true, message: '请输入验证码' }],
@@ -145,7 +143,6 @@ export default {
   },
   activated () {
     this.bindForm.mobile = this.mobile || ''
-    this.updateForm.openId = this.bindForm.openId = this.openId
     this.updateForm.oldMobile = this.mobile || ''
   },
   deactivated () {
