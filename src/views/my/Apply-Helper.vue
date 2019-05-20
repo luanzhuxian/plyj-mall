@@ -97,7 +97,7 @@ import {
 } from '../../apis/broker-manager'
 import { isPhone, isName, isIdCard } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
-import { USER_INFO, REFRESH_TOKEN } from '../../store/mutation-type'
+import { REFRESH_TOKEN } from '../../store/mutation-type'
 export default {
   name: 'ApplyHelper',
   components: {
