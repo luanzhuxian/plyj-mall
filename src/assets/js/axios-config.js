@@ -2,7 +2,7 @@ import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
 import { REFRESH_TOKEN } from '../../store/mutation-type'
-
+const mallInfo = JSON.parse(localStorage.getItem('mallInfo'))
 axios.defaults.headers = {
   'Content-Type': 'application/json;charset=UTF-8'
 }
@@ -15,8 +15,8 @@ axios.interceptors.response.use(response, resError)
 function request (config) {
   config.headers = {
     token: store.state.token || null,
-    agencyCode: store.state.mallInfo.agencyCode || '',
-    mallId: store.state.mallInfo.sequenceNbr,
+    agencyCode: mallInfo.agencyCode || '',
+    mallId: mallInfo.sequenceNbr || '',
     openId: store.state.openId || '',
     domainName: window.location.pathname.split('/')[1] || ''
   }

@@ -7,6 +7,7 @@ export default {
     document.body.id = theme
   },
   [type.GET_MALL_INFO] (state, payload) {
+    localStorage.setItem('mallInfo', JSON.stringify(payload))
     copyFields(state.mallInfo, payload)
   },
   [type.USER_INFO] (state, payload) {
