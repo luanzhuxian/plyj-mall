@@ -60,18 +60,20 @@ export default {
     routeName: function () {
       return this.$route.name
     },
-    ...mapGetters(['userId', 'openId', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
+    ...mapGetters(['userId', 'openId', 'appId', 'token', 'mallName', 'mallDesc', 'logoUrl'])
   },
   async created () {
     try {
-      console.warn('获取用户信息......')
       await this.getMallInfo()
-      await this.getUserInfo()
+      if (this.token) {
+        await this.getUserInfo()
+      } else {
+        await this.login()
+        await this.getUserInfo()
+      }
       this.logined = true
       this.share()
-      console.warn('获取用户信息成功......')
     } catch (e) {
-      await this.login()
       throw e
     }
   },

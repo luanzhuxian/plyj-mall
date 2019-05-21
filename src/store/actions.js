@@ -75,8 +75,6 @@ export default {
           return
         }
         commit(type.SET_TOKEN, loginInfo.result)
-        // 用户信息
-        await dispatch(type.USER_INFO)
         resolve(loginInfo)
       } catch (e) {
         dispatch(type.GET_OPENID)
