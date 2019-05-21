@@ -27,7 +27,6 @@ export default {
           console.warn('获取openid')
           // 如果openid不存在，获取一下opendId
           await dispatch(type.GET_OPENID)
-          return
         } else {
           commit(type.SET_OPENID, { mallSeq, openId })
         }
