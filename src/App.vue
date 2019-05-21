@@ -64,9 +64,11 @@ export default {
   },
   async created () {
     try {
+      console.warn('获取用户信息......')
       await this.getUserInfo()
       this.logined = true
       this.share()
+      console.warn('获取用户信息成功......')
     } catch (e) {
       throw e
     }

@@ -1,5 +1,3 @@
-const TOKEN = 'f4cfb884-b43a-40e7-995b-7ea95fc118ea'
-
 console.log('------------------------- ' + process.env.NODE_ENV + ' -------------------------')
 let argv = process.argv
 let model = argv[argv.indexOf('--model') + 1]
@@ -36,10 +34,7 @@ module.exports = {
     },
     proxy: {
       '/apis': {
-        target: 'http://192.168.130.74',
-        bypass: function (req) {
-          req.headers.token = TOKEN
-        }
+        target: 'http://192.168.130.74'
       }
     }
   },
