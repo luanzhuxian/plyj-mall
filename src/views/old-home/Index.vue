@@ -63,12 +63,11 @@
         :class="$style.swiper"
       >
         <swiper-slide
-          v-for="item of modules.A"
-          :key="item.contentId"
+          v-for="(item, i) of modules.A"
+          :key="i"
         >
           <CategoryItem
             tag="div"
-            :key="item.contentId"
             :img="item.productImage && item.productImage[0].mediaUrl"
             :product-name="item.productName"
             :product-id="item.sequenceNbr"
@@ -118,8 +117,8 @@
         style="overflow: visible"
       >
         <swiper-slide
-          v-for="item of modules.C"
-          :key="item.contentId"
+          v-for="(item, i) of modules.C"
+          :key="i"
         >
           <div :class="$style.slideWrap">
             <CategoryItem
@@ -168,8 +167,8 @@
         style="overflow: visible"
       >
         <swiper-slide
-          v-for="item of modules.E"
-          :key="item.contentId"
+          v-for="(item, i) of modules.E"
+          :key="i"
         >
           <div :class="$style.slideWrap">
             <CategoryItem
