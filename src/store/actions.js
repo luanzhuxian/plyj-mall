@@ -37,15 +37,17 @@ export default {
       }
     })
   },
-  [type.GET_OPENID]: ({ commit, dispatch, getters }) => {
+  [type.GET_OPENID]: ({ commit, dispatch, state }) => {
+    console.warn('获取openid.....')
     return new Promise(async (resolve, reject) => {
       let search = Qs.parse(location.search.substring(1))
-      let appId = getters.appId
+      let appId = state.mallInfo.appid
       try {
         if (search.code) {
           // 微信
           const wechatData = await getOpenId(appId, search.code)
-          commit(type.SET_OPENID, { mallSeq: getters.mallSeq, openId: wechatData.result.OPEN_ID })
+          console.warn('获取openid成功：', wechatData)
+          commit(type.SET_OPENID, { mallSeq: state.mallInfo.sequenceNbr, openId: wechatData.result.OPEN_ID })
           // 拿到 openId 后，直接登录
           await dispatch(type.LOGIN)
         } else {
