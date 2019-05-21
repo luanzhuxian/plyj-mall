@@ -281,7 +281,11 @@ export default {
             this.form.freight = result.freight
             this.totalMoney = (this.totalMoney * 100 + this.form.freight * 100) / 100
           }
-          this.form.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel // 添加运费数据到表单
+          // 添加六能运费数据到表单
+          this.form.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
+          if (!result.sixEnergyNewOrderReturnModel) {
+            delete this.form.sixEnergyNewOrderReturnModel
+          }
           this.form.orderSn = result.orderSn // 添加运费订单数据到表单
           this.form.billNo = result.billNo // 添加运费订单数据到表单
           resolve()

@@ -47,8 +47,7 @@ export default {
           // 微信
           const { result } = await getOpenId(appId, search.code)
           commit(type.SET_OPENID, { mallSeq: state.mallInfo.sequenceNbr, openId: result.OPEN_ID })
-          // 拿到 openId 后，直接登录
-          await dispatch(type.LOGIN)
+          resolve()
         } else {
           let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
           window.location.replace(openIdUrl)
@@ -77,10 +76,7 @@ export default {
         }
         commit(type.SET_TOKEN, loginInfo.result)
         // 用户信息
-        const USERINFO = await getUserInfo()
-        commit(type.USER_INFO, USERINFO.result)
-        // 用户地址列表
-        await dispatch(type.ADDRESS_LIST)
+        await dispatch(type.USER_INFO)
         resolve(loginInfo)
       } catch (e) {
         dispatch(type.GET_OPENID)
@@ -91,7 +87,6 @@ export default {
   [type.USER_INFO]: ({ commit, dispatch, getters }) => {
     return new Promise(async (resolve, reject) => {
       try {
-        await dispatch(type.GET_MALL_INFO)
         let { result } = await getUserInfo()
         commit(type.USER_INFO, result)
         await dispatch(type.ADDRESS_LIST)
