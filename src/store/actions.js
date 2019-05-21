@@ -67,14 +67,27 @@ export default {
   [type.LOGIN]: ({ commit, dispatch, state, getters }, openId) => {
     return new Promise(async (resolve, reject) => {
       console.warn('登录...')
-      let loginInfo = await login(state.openId)
-      commit(type.SET_TOKEN, loginInfo.result)
-      // 用户信息
-      let { result } = await getUserInfo()
-      // 用户地址列表
-      await dispatch(type.ADDRESS_LIST)
-      commit(type.USER_INFO, Object.assign(result))
-      resolve(loginInfo)
+      try {
+        let loginInfo = null
+        // 通过openid登录
+        if (state.openId) {
+          loginInfo = await login(state.openId)
+        } else {
+          // openid有问题时重新获取openid
+          dispatch(type.GET_OPENID)
+          return
+        }
+        commit(type.SET_TOKEN, loginInfo.result)
+        // 用户信息
+        const USERINFO = await getUserInfo()
+        commit(type.USER_INFO, USERINFO.result)
+        // 用户地址列表
+        await dispatch(type.ADDRESS_LIST)
+        resolve(loginInfo)
+      } catch (e) {
+        dispatch(type.GET_OPENID)
+        reject(e)
+      }
     })
   },
   [type.USER_INFO]: ({ commit, dispatch, getters }) => {
@@ -113,6 +126,8 @@ export default {
         }
         resolve()
       } catch (e) {
+        // refresh_token失效
+        await dispatch(type.LOGIN)
         reject(e)
       }
     })

@@ -43,4 +43,4 @@ export const saveLog = data =>
   axios.post('/apis/v1/systemctl/log', data)
 
 // 获取当前用户信息
-export const refreshToken = refreshToken => axios.get(`/apis/v1/privilege/auth/refresh?code=${refreshToken}`)
+export const refreshToken = refreshToken => axios.get(`/apis/v1/privilege/auth/refresh?refreshToken=${refreshToken}`)
