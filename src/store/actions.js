@@ -37,17 +37,16 @@ export default {
       }
     })
   },
+  // 获取openid并登录
   [type.GET_OPENID]: ({ commit, dispatch, state }) => {
-    console.warn('获取openid.....')
     return new Promise(async (resolve, reject) => {
       let search = Qs.parse(location.search.substring(1))
       let appId = state.mallInfo.appid
       try {
         if (search.code) {
           // 微信
-          const wechatData = await getOpenId(appId, search.code)
-          console.warn('获取openid成功：', wechatData)
-          commit(type.SET_OPENID, { mallSeq: state.mallInfo.sequenceNbr, openId: wechatData.result.OPEN_ID })
+          const { result } = await getOpenId(appId, search.code)
+          commit(type.SET_OPENID, { mallSeq: state.mallInfo.sequenceNbr, openId: result.OPEN_ID })
           // 拿到 openId 后，直接登录
           await dispatch(type.LOGIN)
         } else {
@@ -64,9 +63,8 @@ export default {
       }
     })
   },
-  [type.LOGIN]: ({ commit, dispatch, state, getters }, openId) => {
+  [type.LOGIN]: ({ commit, dispatch, state }) => {
     return new Promise(async (resolve, reject) => {
-      console.warn('登录...')
       try {
         let loginInfo = null
         // 通过openid登录
