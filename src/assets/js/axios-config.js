@@ -2,7 +2,7 @@ import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
 import { REFRESH_TOKEN } from '../../store/mutation-type'
-const mallInfo = JSON.parse(localStorage.getItem('mallInfo'))
+const mallInfo = JSON.parse(localStorage.getItem('mallInfo')) || {}
 axios.defaults.headers = {
   'Content-Type': 'application/json;charset=UTF-8'
 }
