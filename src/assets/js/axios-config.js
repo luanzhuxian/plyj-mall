@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
-import { LOG_OUT, LOGIN } from '../../store/mutation-type'
+import { REFRESH_TOKEN } from '../../store/mutation-type'
 
 axios.defaults.headers = {
   'Content-Type': 'application/json;charset=UTF-8'
@@ -47,9 +47,8 @@ async function response (response) {
       }
       return Promise.reject(new Error(JSON.stringify(err)))
     }
-    // 接口报‘登录信息失效’， 退出登录，并重新发起登录
-    store.commit(LOG_OUT)
-    store.dispatch(LOGIN)
+    // 接口报‘登录信息失效，退出登录，并重新发起登录
+    store.dispatch(REFRESH_TOKEN)
     return Promise.reject(new Error(msg))
   }
   return data

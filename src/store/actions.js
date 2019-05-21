@@ -104,9 +104,13 @@ export default {
   [type.REFRESH_TOKEN]: ({ commit, state, dispatch }) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let { result } = await refreshToken(state.refresh_token)
-        commit(type.SET_TOKEN, result)
-        await dispatch(type.USER_INFO)
+        if (state.refresh_token) {
+          let { result } = await refreshToken(state.refresh_token)
+          commit(type.SET_TOKEN, result)
+          await dispatch(type.USER_INFO)
+        } else {
+          await dispatch(type.LOGIN)
+        }
         resolve()
       } catch (e) {
         reject(e)
