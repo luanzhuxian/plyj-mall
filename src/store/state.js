@@ -1,4 +1,7 @@
-let token = localStorage.getItem('token')
+import Cookie from 'js-cookie'
+const token = Cookie.get('token') || ''
+const refresh_token = Cookie.get('refresh_token') || ''
+
 export default {
   theme: 'base-theme',
   userInfo: {
@@ -9,45 +12,35 @@ export default {
     cumulativeBalance: 0,
     currentBalance: 0,
     img: '',
-    mobile: '',
+    mobile: null,
     openId: '',
     rejectBalance: 0,
-    status: '',
+    roleCode: '',
+    status: null,
     successBalance: 0,
     userId: '',
-    userName: '',
-    roleCode: '',
-    OPEN_ID: '',
-    JS_API: '',
-    token: ''
+    userName: ''
+  },
+  loginInfo: {
+    SESSION_ID: '',
+    expire: '',
+    refresh_token: '',
+    refresh_token_expire: '',
+    token: '',
+    userId: ''
   },
   mallInfo: {
-    addressPrefix: '',
-    agencyAddress: '',
-    agencyCode: '',
-    appSecret: '',
     appid: '',
-    city: '',
-    country: null,
-    distributeStatus: '',
-    englishName: '',
-    expirationTime: '',
-    flag: false,
-    keyPath: '',
     logoUrl: '',
     mallDesc: '',
     mallDomain: '',
     mallName: '',
-    mallType: '',
-    mchId: '',
-    mchKey: '',
-    province: '',
-    region: '',
     sequenceNbr: '',
-    status: 1,
     supportPhone: ''
   },
   token,
+  openId: '',
+  refresh_token,
   addressList: [],
   selectedAddress: null, // 选中的地址
   // 短信类型

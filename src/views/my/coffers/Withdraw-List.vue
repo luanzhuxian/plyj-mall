@@ -89,7 +89,6 @@
 
 <script>
 import { getWithdrawDepositOfUser, getDepositCount } from '../../../apis/money'
-import { mapGetters } from 'vuex'
 import LoadMore from '../../../components/Load-More.vue'
 export default {
   name: 'WithdrawList',
@@ -109,7 +108,6 @@ export default {
         { name: '已驳回', id: 'REJECT' }
       ],
       form: {
-        agencyCode: '',
         current: 1,
         size: 10,
         status: ''
@@ -132,15 +130,9 @@ export default {
       $refresh: null
     }
   },
-  computed: {
-    ...mapGetters(['agencyCode'])
-  },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
     this.$refresh()
-  },
-  created () {
-    this.form.agencyCode = this.agencyCode
   },
   methods: {
     tabChange (item) {

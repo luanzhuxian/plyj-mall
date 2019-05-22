@@ -19,6 +19,7 @@
     "compressorjs": "^1.0.5",
     "exif-js": "^2.3.0",
     "img-vuer": "^0.17.1",
+    "js-cookie": "^2.2.0",
     "logline": "^1.1.2",
     "mint-ui": "^2.2.13",
     "moment": "^2.24.0",

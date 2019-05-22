@@ -6,26 +6,16 @@ import axios from 'axios'
 export const sendCode = (smsType, mobile) => axios.post(`/apis/v1/systemctl/sms/${smsType}/verify/${mobile}`)
 // 验证手机短信
 export const checkMobileCode = (smsType, mobile, verifyCode) => axios.get(`/apis/v1/systemctl/sms/${smsType}/verify/${mobile}/${verifyCode}/verification`)
-// 上传图片
-export function uploadImage (file) {
-  let formData = new FormData()
-  formData.append('file', file)
-  return axios.post(`/apis/v1/oss/upload/img`, formData)
-}
-// 删除已上传的图片
-export function deleteImage (fileName) {
-  return axios.put(`/apis/v1/oss/upload/img/delete?fileName=${fileName}`)
-}
 // 根据域名获取商城id
-export const getMallInfo = domainName => axios.get(`/apis/wx/redirect/query/appid?domainName=${domainName}`)
+export const getMallInfo = domainName => axios.get(`/apis/v1/base/baseMall/query/appid?domainName=${domainName}`)
 
-export const getOpenId = (appid, code) => axios.post(`/apis/wx/redirect/${appid}/greet?code=${code}`)
+export const getOpenId = (appid, code) => axios.post(`/apis/v1/base/baseUserInfo/${appid}/greet?code=${code}`)
 // openId登录
-export const login = openId => axios.post(`/apis/v1/privilege/auth/openId`, { loginId: openId })
+export const login = openId => axios.post(`/apis/v1/privilege/auth/openId`, { openId: openId })
 // cookie登录
 // export const loginByCookie = () => axios.post(`/apis/v1/privilege/auth/cookie`)
 // 获取jsapi
-export const getJSApi = appid => axios.get(`/apis/wx/redirect/query/js/api?appid=${appid}`)
+export const getJSApi = appid => axios.get(`/apis/v1/base/baseMall/query/js/api?appid=${appid}`)
 
 // 获取当前用户信息
 export function getUserInfo () {
@@ -35,15 +25,15 @@ export function getUserInfo () {
 export const getSTS = () => axios.get('/apis/v1/oss/upload/sts')
 
 // 获取猜你喜欢商品
-export const getYouLikeData = ({ agencyCode, userId, productSeq = '' }) =>
-  axios.get('/apis/v1/product/productinfo/likes', { params: { agencyCode, userId, productSeq } })
+export const getYouLikeData = ({ userId, productSeq = '' }) =>
+  axios.get('/apis/v1/product/productinfo/likes', { params: { userId, productSeq } })
 // 根据code获取openId (供应商支付时使用)
 export const getOpenIdByCode = code => axios.get(`/apis/v1/agency/AgencyMall/penglai/user/openid?code=${code}`)
 // 获取朋来appid
 export const getPenglaiAppid = () => axios.get(`/apis/v1/agency/AgencyMall/penglai/appid`)
 
 // 用户绑定手机号
-export const bindMobile = data => axios.put('/apis/v1/publicuser/userwechatinfo/mobile/bind', data)
+export const bindMobile = data => axios.put('/apis/v1/base/baseUserInfo/mobile/bind', data)
 // 用户修改手机号
 export function updateMobile (data) {
   return axios.put('/apis/v1/publicuser/userwechatinfo/mobile/update', data)
@@ -51,3 +41,6 @@ export function updateMobile (data) {
 //
 export const saveLog = data =>
   axios.post('/apis/v1/systemctl/log', data)
+
+// 获取当前用户信息
+export const refreshToken = refreshToken => axios.get(`/apis/v1/privilege/auth/refresh?refreshToken=${refreshToken}`)

@@ -72,7 +72,6 @@ export default {
       total: 10,
       loading: false,
       form: {
-        agencyCode: '',
         type: '',
         current: 1,
         size: 10
@@ -81,10 +80,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'mallId', 'userName', 'agentUser'])
-  },
-  created () {
-    this.form.agencyCode = this.agencyCode
+    ...mapGetters(['mallId', 'userName', 'agentUser'])
   },
   mounted () {
     this.$refs.loadMore.refresh()

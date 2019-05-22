@@ -120,8 +120,6 @@ export default {
         mobile: '', // stirng 联系电话1
         realName: '', // stirng 收货人名称
         addressLable: 'HOME', // stirng 地址标识 家庭地址HOME，工作地址WORK, 其他地址：OTHER
-        agencyCode: '',
-        mallSeq: '',
         defaultAddress: 'NO',
         town: '' // 街道、镇、乡
         // email: ''
@@ -148,11 +146,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'mallSeq', 'addressList', 'selectedAddress'])
+    ...mapGetters(['addressList', 'selectedAddress'])
   },
   activated () {
-    this.form.mallSeq = this.mallSeq
-    this.form.agencyCode = this.agencyCode
     if (this.addressId) {
       this.address = this.addressList.filter(item => item.sequenceNbr === this.addressId)[0]
       this.setAddress()
@@ -185,7 +181,7 @@ export default {
             let { result } = await createAddress(this.form)
             currentAddress = result
           }
-          await this.$store.dispatch(ADDRESS_LIST, { agencyCode: this.agencyCode })
+          await this.$store.dispatch(ADDRESS_LIST)
           let addressReturn = JSON.parse(sessionStorage.getItem('addressReturn') || '{}')
           if (addressReturn.name) {
             /* 如果来自提交订单页面，那么点击地址时，选中当前地址为默认地址，但并不是真的设置为默认地址 */
@@ -232,7 +228,7 @@ export default {
           if (this.selectedAddress.sequenceNbr === this.addressId) {
             this.$store.commit(SELETC_ADDRESS, null)
           }
-          await this.$store.dispatch(ADDRESS_LIST, { agencyCode: this.agencyCode })
+          await this.$store.dispatch(ADDRESS_LIST)
           this.$router.replace({ name: 'Address' })
         }
       } catch (e) {

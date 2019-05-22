@@ -269,11 +269,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'userId', 'mallName'])
+    ...mapGetters(['userId', 'mallName'])
   },
   async created () {
     try {
-      let { result } = await getHomeData(this.agencyCode)
+      let { result } = await getHomeData()
       this.homeData = result
       this.getBanner()
       this.getModule()

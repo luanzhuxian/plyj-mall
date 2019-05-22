@@ -1,22 +1,31 @@
 import * as type from './mutation-type'
+import Cookie from 'js-cookie'
+import { copyFields } from '../assets/js/util'
 export default {
   [type.SET_THEME] (state, theme) {
     state.theme = theme
     document.body.id = theme
   },
   [type.GET_MALL_INFO] (state, payload) {
-    for (let k of Object.keys(state.mallInfo)) {
-      state.mallInfo[k] = payload[k]
-    }
+    localStorage.setItem('mallInfo', JSON.stringify(payload))
+    copyFields(state.mallInfo, payload)
   },
   [type.USER_INFO] (state, payload) {
-    for (let k of Object.keys(state.userInfo)) {
-      state.userInfo[k] = payload[k]
-    }
+    copyFields(state.userInfo, payload)
   },
   [type.SET_TOKEN] (state, payload) {
-    state.token = payload
-    localStorage.setItem('token', payload)
+    state.token = payload.token
+    state.refresh_token = payload.refresh_token
+    Cookie.set('token', payload.token, {
+      expires: new Date(Date.now() + payload.expire * 1000 - 60000000)
+    })
+    Cookie.set('refresh_token', payload.refresh_token, {
+      expires: new Date(Date.now() + payload.refresh_token_expire * 1000 - 60000000)
+    })
+  },
+  [type.SET_OPENID] (state, payload) {
+    state.openId = payload.openId
+    localStorage.setItem(payload.mallSeq, payload.openId)
   },
   [type.ADDRESS_LIST] (state, payload) {
     state.addressList = payload
@@ -34,7 +43,5 @@ export default {
   },
   [type.LOG_OUT] (state, payload) {
     state.token = ''
-    sessionStorage.clear()
-    localStorage.clear()
   }
 }

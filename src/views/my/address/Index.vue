@@ -115,8 +115,7 @@ export default {
       await this.$confirm('您确定删除这条地址吗？')
       try {
         await deleteAddress(item.sequenceNbr)
-        let agencyCode = this.$store.getters.agencyCode
-        await this.$store.dispatch(ADDRESS_LIST, { agencyCode })
+        await this.$store.dispatch(ADDRESS_LIST)
       } catch (e) {
         throw e
       }
