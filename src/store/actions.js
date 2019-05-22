@@ -11,6 +11,7 @@ import {
   getAddress
 } from '../apis/address'
 import Qs from 'qs'
+import Cookie from 'js-cookie'
 export default {
   /* 获取商城信息 */
   [type.GET_MALL_INFO]: ({ commit, dispatch }) => {
@@ -20,11 +21,8 @@ export default {
         const { result } = await getMallInfo(domainName)
         commit(type.GET_MALL_INFO, result)
         let mallSeq = result.sequenceNbr
-        let openId = localStorage.getItem(mallSeq)
-        console.warn('openId: ', openId)
-        console.warn('mallSeq: ', mallSeq)
+        let openId = Cookie.get('openId')
         if (!openId) {
-          console.warn('获取openid')
           // 如果openid不存在，获取一下opendId
           await dispatch(type.GET_OPENID)
         } else {

@@ -1,14 +1,21 @@
 import * as type from './mutation-type'
 import Cookie from 'js-cookie'
 import { copyFields } from '../assets/js/util'
+const CalcCookieTime = expire => {
+  // 本地cookie较服务器提前一小时过期
+  return new Date(Date.now() + expire * 1000 - 60000000)
+}
+
 export default {
   [type.SET_THEME] (state, theme) {
     state.theme = theme
     document.body.id = theme
   },
   [type.GET_MALL_INFO] (state, payload) {
-    localStorage.setItem('mallInfo', JSON.stringify(payload))
     copyFields(state.mallInfo, payload)
+    Cookie.set('mallId', payload.sequenceNbr, {
+      expires: CalcCookieTime(604800)
+    })
   },
   [type.USER_INFO] (state, payload) {
     copyFields(state.userInfo, payload)
@@ -17,15 +24,18 @@ export default {
     state.token = payload.token
     state.refresh_token = payload.refresh_token
     Cookie.set('token', payload.token, {
-      expires: new Date(Date.now() + payload.expire * 1000 - 60000000)
+      expires: CalcCookieTime(payload.expire)
     })
     Cookie.set('refresh_token', payload.refresh_token, {
-      expires: new Date(Date.now() + payload.refresh_token_expire * 1000 - 60000000)
+      expires: CalcCookieTime(payload.refresh_token_expire)
     })
   },
   [type.SET_OPENID] (state, payload) {
     state.openId = payload.openId
-    localStorage.setItem(payload.mallSeq, payload.openId)
+    Cookie.set('openId', payload.openId, {
+      expires: CalcCookieTime(604800),
+      path: `/${payload.mallSeq}/`
+    })
   },
   [type.ADDRESS_LIST] (state, payload) {
     state.addressList = payload
