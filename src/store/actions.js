@@ -89,7 +89,16 @@ export default {
         await dispatch(type.ADDRESS_LIST)
         resolve(result)
       } catch (e) {
-        reject(e)
+        /*
+        * 获取用户信息失败,可能原因： token失效
+        * 所以不要第一时间抛错， 尝试刷新一次token，如果刷新失败，再抛错
+        * */
+        try {
+          await dispatch(type.REFRESH_TOKEN)
+          resolve(e)
+        } catch (e) {
+          reject(e)
+        }
       }
     })
   },

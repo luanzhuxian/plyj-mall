@@ -10,8 +10,8 @@ export function agentUserInfoAuditPage ({ current, size }) {
   return axios.get(`/apis/v1/agent/user/info/audit/page?current=${current}&size=${size}`)
 }
 // GET 根据用户ID 与 机构码 查询用户经纪人信息
-export const agentUserInfoAudit = (userId, code) => {
-  return axios.get(`/apis/v1/agent/user/info/audit/${userId}/${code}`)
+export const agentUserInfoAudit = () => {
+  return axios.get(`/apis/v1/agent/user/info/audit`)
 }
 // PUT 修改经纪人审核状态
 export function changeBrokerStatus (id) {
