@@ -13,8 +13,12 @@ export default {
   },
   [type.GET_MALL_INFO] (state, payload) {
     copyFields(state.mallInfo, payload)
+    // 缓存10周
     Cookie.set('mallId', payload.sequenceNbr, {
-      expires: CalcCookieTime(604800)
+      expires: CalcCookieTime(6048000)
+    })
+    Cookie.set('agencyCode', payload.agencyCode, {
+      expires: CalcCookieTime(6048000)
     })
   },
   [type.USER_INFO] (state, payload) {
@@ -32,6 +36,7 @@ export default {
   },
   [type.SET_OPENID] (state, payload) {
     state.openId = payload.openId
+    // openid根据不同的商城来区分
     Cookie.set('openId', payload.openId, {
       expires: CalcCookieTime(604800),
       path: `/${payload.mallSeq}/`
