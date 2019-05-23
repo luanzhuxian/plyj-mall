@@ -124,7 +124,7 @@ export default {
         resolve()
       } catch (e) {
         // refresh_token失效
-        await dispatch(type.LOG_OUT)
+        commit(type.LOG_OUT)
         reject(e)
       }
     })
