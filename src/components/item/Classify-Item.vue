@@ -59,7 +59,7 @@ export default {
   > img {
     width: 96px;
     height: 96px;
-    object-fit: cover;
+    object-fit: contain;
   }
 }
 </style>
