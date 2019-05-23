@@ -36,7 +36,7 @@ export const getPenglaiAppid = () => axios.get(`/apis/v1/agency/AgencyMall/pengl
 export const bindMobile = data => axios.put('/apis/v1/base/baseUserInfo/mobile/bind', data)
 // 用户修改手机号
 export function updateMobile (data) {
-  return axios.put('/apis/v1/publicuser/userwechatinfo/mobile/update', data)
+  return axios.put('/apis/v1/base/baseUserInfo/mobile/update', data)
 }
 //
 export const saveLog = data =>

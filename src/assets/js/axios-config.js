@@ -27,7 +27,6 @@ function reqError (error) {
 async function response (response) {
   const data = response.data
   const URL = response.config.url
-  console.log(response)
   const config = response.config
   if (data.status !== 200) {
     let msg = data.message
@@ -46,15 +45,22 @@ async function response (response) {
       }
       return Promise.reject(new Error(JSON.stringify(err)))
     }
-    // if (msg.indexOf('Token失效') > -1) {
-    //   // 退出登录并重新登录
-    //   store.commit(LOG_OUT)
-    //   store.dispatch(LOGIN)
-    //   return
-    // }
     // 接口报‘登录信息失效，退出登录，并重新发起登录
     if (URL.indexOf('/apis/v1/account/account/info') === -1 && URL.indexOf('/apis/v1/privilege/auth/refresh') === -1) {
-      store.dispatch(REFRESH_TOKEN)
+      try {
+        await store.dispatch(REFRESH_TOKEN)
+        let config = response.config
+        let { method, data, headers, url } = config
+        const res = await axios({
+          method,
+          data,
+          url,
+          headers
+        })
+        return res
+      } catch (e) {
+        return Promise.reject(e)
+      }
     }
     return Promise.reject(new Error(msg))
   }
