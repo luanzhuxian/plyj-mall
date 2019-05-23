@@ -35,7 +35,7 @@ export default {
     })
   },
   [type.SET_OPENID] (state, payload) {
-    console.warning(`/${payload.mallSeq}/`, state.openId)
+    console.warn(`/${payload.mallSeq}/`, state.openId)
     state.openId = payload.openId
     // openid根据不同的商城来区分
     Cookie.set('openId', payload.openId, {
