@@ -48,7 +48,9 @@ async function response (response) {
       return Promise.reject(new Error(JSON.stringify(err)))
     }
     // 接口报‘登录信息失效，退出登录，并重新发起登录
-    store.dispatch(REFRESH_TOKEN)
+    if (response.path !== '/apis/v1/account/account/info') {
+      store.dispatch(REFRESH_TOKEN)
+    }
     return Promise.reject(new Error(msg))
   }
   return data
