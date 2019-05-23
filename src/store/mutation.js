@@ -57,7 +57,10 @@ export default {
     }
     state.selectedAddress = payload
   },
-  [type.LOG_OUT] (state, payload) {
-    state.token = ''
+  [type.LOG_OUT] () {
+    Cookie.remove('mallId')
+    Cookie.remove('openId')
+    Cookie.remove('refresh_token')
+    Cookie.remove('token')
   }
 }
