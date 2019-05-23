@@ -35,7 +35,7 @@ export default {
     })
   },
   [type.SET_OPENID] (state, payload) {
-    let openIdPath = `/${payload.mallSeq}/`
+    let openIdPath = `/${payload.mallSeq}`
     state.openId = payload.openId
     console.warn(openIdPath, payload.openId)
 
