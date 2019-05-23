@@ -37,8 +37,6 @@ export default {
   [type.SET_OPENID] (state, payload) {
     let openIdPath = `/${payload.mallSeq}`
     state.openId = payload.openId
-    console.warn(openIdPath, payload.openId)
-
     // openid根据不同的商城来区分
     Cookie.set('openId', payload.openId, {
       expires: CalcCookieTime(6048000),

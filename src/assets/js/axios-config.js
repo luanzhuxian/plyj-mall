@@ -3,6 +3,7 @@ import { router } from '../../router'
 import store from '../../store'
 import { REFRESH_TOKEN } from '../../store/mutation-type'
 // const mallInfo = JSON.parse(localStorage.getItem('mallInfo')) || {}
+import Cookie from 'js-cookie'
 axios.defaults.headers = {
   'Content-Type': 'application/json;charset=UTF-8'
 }
@@ -13,13 +14,9 @@ axios.interceptors.request.use(request, reqError)
 axios.interceptors.response.use(response, resError)
 
 function request (config) {
-  // config.headers = {
-  //   token: store.state.token || null,
-  //   agencyCode: mallInfo.agencyCode || '',
-  //   mallId: mallInfo.sequenceNbr || '',
-  //   openId: store.state.openId || '',
-  //   domainName: window.location.pathname.split('/')[1] || ''
-  // }
+  config.headers = {
+    openId: Cookie.get('openId') || ''
+  }
   return config
 }
 
