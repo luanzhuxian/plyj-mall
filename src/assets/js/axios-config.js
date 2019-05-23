@@ -26,6 +26,7 @@ function reqError (error) {
 
 async function response (response) {
   const data = response.data
+  console.log(response)
   const config = response.config
   if (data.status !== 200) {
     let msg = data.message
@@ -51,7 +52,7 @@ async function response (response) {
     //   return
     // }
     // 接口报‘登录信息失效，退出登录，并重新发起登录
-    if (response.path !== '/apis/v1/account/account/info') {
+    if (response.config.url !== '/apis/v1/account/account/info') {
       store.dispatch(REFRESH_TOKEN)
     }
     return Promise.reject(new Error(msg))
