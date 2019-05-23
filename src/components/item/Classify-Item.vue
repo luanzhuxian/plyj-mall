@@ -57,8 +57,8 @@ export default {
     font-size: 22px;
   }
   > img {
-    width: 120px;
-    height: 120px;
+    width: 96px;
+    height: 96px;
     object-fit: cover;
   }
 }
