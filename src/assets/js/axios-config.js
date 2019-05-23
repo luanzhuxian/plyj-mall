@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
-import { REFRESH_TOKEN, LOG_OUT, LOGIN } from '../../store/mutation-type'
+import { REFRESH_TOKEN } from '../../store/mutation-type'
 // const mallInfo = JSON.parse(localStorage.getItem('mallInfo')) || {}
 import Cookie from 'js-cookie'
 axios.defaults.headers = {
@@ -44,12 +44,12 @@ async function response (response) {
       }
       return Promise.reject(new Error(JSON.stringify(err)))
     }
-    if (msg.indexOf('Token失效') > -1) {
-      // 退出登录并重新登录
-      store.commit(LOG_OUT)
-      store.dispatch(LOGIN)
-      return
-    }
+    // if (msg.indexOf('Token失效') > -1) {
+    //   // 退出登录并重新登录
+    //   store.commit(LOG_OUT)
+    //   store.dispatch(LOGIN)
+    //   return
+    // }
     // 接口报‘登录信息失效，退出登录，并重新发起登录
     if (response.path !== '/apis/v1/account/account/info') {
       store.dispatch(REFRESH_TOKEN)
