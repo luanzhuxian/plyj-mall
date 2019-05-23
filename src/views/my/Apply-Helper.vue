@@ -97,7 +97,7 @@ import {
 } from '../../apis/broker-manager'
 import { isPhone, isName, isIdCard } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
-import { USER_INFO } from '../../store/mutation-type'
+import { REFRESH_TOKEN } from '../../store/mutation-type'
 export default {
   name: 'ApplyHelper',
   components: {
@@ -141,7 +141,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userId', 'smstype', 'agencyCode', 'isAdmin'])
+    ...mapGetters(['smstype', 'isAdmin'])
   },
   activated () {
     this.getHelperInfo()
@@ -149,7 +149,7 @@ export default {
   methods: {
     async getHelperInfo () {
       try {
-        let { result } = await agentUserInfoAudit(this.userId, this.agencyCode)
+        let { result } = await agentUserInfoAudit()
         Object.assign(this.form, result)
       } catch (e) {
         throw e
@@ -164,7 +164,7 @@ export default {
           } else {
             await AuditCreate(this.form)
           }
-          await this.$store.dispatch(USER_INFO)
+          await this.$store.dispatch(REFRESH_TOKEN)
           this.loading = false
           this.$router.replace({ name: 'My' })
         } catch (e) {

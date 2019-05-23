@@ -81,7 +81,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import GoodsItem from '../../components/item/Goods-Item.vue'
 import ClassifyItem from '../../components/item/Classify-Item.vue'
 import LoadMore from '../../components/Load-More.vue'
@@ -125,9 +124,6 @@ export default {
       isEmpty: false
     }
   },
-  computed: {
-    ...mapGetters(['mallSeq'])
-  },
   created () {
     this.getCategoryTree()
   },
@@ -162,7 +158,7 @@ export default {
     },
     async getCategoryTree () {
       try {
-        const { result } = await getCategoryTree(this.mallSeq)
+        const { result } = await getCategoryTree()
         this.classifyList = this.classifyList.concat(result)
         this.classifyClick(this.classifyList.find(item => item.sequenceNbr === (this.optionId || '')))
       } catch (e) {

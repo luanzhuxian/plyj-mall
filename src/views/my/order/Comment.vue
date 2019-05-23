@@ -70,8 +70,6 @@ export default {
     return {
       loading: false,
       form: {
-        mallSeq: '',
-        agencyCode: '',
         orderSn: '',
         productSeq: '',
         goodsScore: 5,
@@ -92,7 +90,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['mallSeq', 'agencyCode', 'openId'])
+    ...mapGetters(['openId'])
   },
   activated () {
     this.getOrderDetail()
@@ -113,7 +111,6 @@ export default {
         this.relationModel = relationModel
         this.form.orderSn = this.orderId
         this.form.mallSeq = this.mallSeq
-        this.form.agencyCode = this.agencyCode
         this.form.productSeq = relationModel[0].orderProductRelationModel.productSeq
         this.img = relationModel[0].mediaInfoModels[0].mediaUrl
       } catch (e) {

@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div :class="$style.bindMobile">
     <TopText
       :title="title"
@@ -99,7 +99,7 @@
 import TopText from '../../../components/Top-Text.vue'
 import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
-import { USER_INFO } from '../../../store/mutation-type'
+import { REFRESH_TOKEN } from '../../../store/mutation-type'
 import { getSession } from '../../../assets/js/util'
 export default {
   name: 'BindMobile',
@@ -111,15 +111,13 @@ export default {
       loading: false,
       bindForm: {
         mobile: '',
-        verifyCode: '',
-        openId: ''
+        verifyCode: ''
       },
       updateForm: {
         mobile: '',
         oldVerifyCode: '',
         oldMobile: '',
-        verifyCode: '',
-        openId: ''
+        verifyCode: ''
       },
       rules: {
         verifyCode: [{ required: true, message: '请输入验证码' }],
@@ -129,7 +127,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['mobile', 'smstype', 'mallSeq', 'openId']),
+    ...mapGetters(['mobile', 'smstype', 'openId']),
     title: function () {
       if (this.step === 1 && this.mobile) {
         return '修改手机'
@@ -145,7 +143,6 @@ export default {
   },
   activated () {
     this.bindForm.mobile = this.mobile || ''
-    this.updateForm.openId = this.bindForm.openId = this.openId
     this.updateForm.oldMobile = this.mobile || ''
   },
   deactivated () {
@@ -182,14 +179,14 @@ export default {
           await bindMobile(this.bindForm)
           let { name, params, query } = getSession('willBind')
           if (name) {
-            await this.$store.dispatch(USER_INFO)
+            await this.$store.dispatch(REFRESH_TOKEN)
             this.$router.replace({ name, params, query })
             sessionStorage.removeItem('willBind')
             this.$toast('绑定手机号成功！')
             return
           }
         }
-        await this.$store.dispatch(USER_INFO)
+        await this.$store.dispatch(REFRESH_TOKEN)
         this.loading = false
         this.$router.replace({ name: 'My' })
       } catch (e) {

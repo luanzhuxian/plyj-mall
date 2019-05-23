@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
-import { LOG_OUT, LOGIN } from '../../store/mutation-type'
+import { REFRESH_TOKEN } from '../../store/mutation-type'
+// const mallInfo = JSON.parse(localStorage.getItem('mallInfo')) || {}
+import Cookie from 'js-cookie'
 axios.defaults.headers = {
   'Content-Type': 'application/json;charset=UTF-8'
 }
@@ -12,12 +14,8 @@ axios.interceptors.request.use(request, reqError)
 axios.interceptors.response.use(response, resError)
 
 function request (config) {
-  let token = localStorage.getItem('token')
   config.headers = {
-    product: 'welcome_to_penglai_yaji',
-    tokenType: 'wechat',
-    token: token || null,
-    domainName: window.location.pathname.split('/')[1] || ''
+    openId: Cookie.get('openId') || ''
   }
   return config
 }
@@ -28,13 +26,14 @@ function reqError (error) {
 
 async function response (response) {
   const data = response.data
+  const URL = response.config.url
   const config = response.config
   if (data.status !== 200) {
     let msg = data.message
     if (msg.indexOf('运行时') > -1) {
       msg = '服务器正在怀疑人生~( ˶‾᷄࿀‾᷅˵ )'
     }
-    if (msg.indexOf('登录信息失效') === -1) {
+    if (msg.indexOf('登录信息失效') === -1 && msg.indexOf('Token失效') === -1) {
       let err = {
         tag: 'responseError',
         method: config.method,
@@ -46,9 +45,25 @@ async function response (response) {
       }
       return Promise.reject(new Error(JSON.stringify(err)))
     }
-    // 接口报‘登录信息失效’， 退出登录，并重新发起登录
-    store.commit(LOG_OUT)
-    store.dispatch(LOGIN)
+    // 接口报‘登录信息失效，退出登录，并重新发起登录
+    if (URL.indexOf('/apis/v1/account/account/info') === -1 && URL.indexOf('/apis/v1/privilege/auth/refresh') === -1) {
+      try {
+        await store.dispatch(REFRESH_TOKEN)
+        let config = response.config
+        let { method, data, headers, url } = config
+        const res = await axios({
+          method,
+          data,
+          url,
+          headers: {
+            openId: headers.openId
+          }
+        })
+        return res
+      } catch (e) {
+        return Promise.reject(e)
+      }
+    }
     return Promise.reject(new Error(msg))
   }
   return data

@@ -89,8 +89,7 @@ export default {
         current: 1,
         size: 10,
         userId: '',
-        status: '',
-        agencyCode: ''
+        status: ''
       },
       status: {
         AWAIT: '待入账',
@@ -106,7 +105,6 @@ export default {
   },
   created () {
     this.form.userId = this.userId
-    this.form.agencyCode = this.agencyCode
   },
   mounted () {
     this.$refs.loadMore.refresh()

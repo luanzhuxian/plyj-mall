@@ -75,7 +75,6 @@
 <script>
 import Grade from '../Grade.vue'
 import { getComments } from '../../apis/comment'
-import { mapGetters } from 'vuex'
 export default {
   name: 'Comment',
   components: {
@@ -86,7 +85,6 @@ export default {
       form: {
         current: 1,
         size: '',
-        mallSeq: '',
         productSeq: ''
       },
       listTemp: [],
@@ -114,11 +112,7 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapGetters(['mallSeq'])
-  },
   activated () {
-    this.form.mallSeq = this.mallSeq
     this.form.productSeq = this.productSeq
     this.form.size = this.size
     this.getList()

@@ -145,7 +145,6 @@ export default {
       commentForm: {
         current: 1,
         size: 3,
-        mallSeq: '',
         productSeq: ''
       },
       isSupplierProduct: false,
@@ -185,8 +184,7 @@ export default {
           this.loading = false
           return this.$router.replace({ name: 'SoldOut' })
         }
-        let { mallSeq, sequenceNbr, supplierProduct, agentProduct, priceModels, productImage } = result
-        this.commentForm.mallSeq = mallSeq
+        let { sequenceNbr, supplierProduct, agentProduct, priceModels, productImage } = result
         this.commentForm.productSeq = sequenceNbr
         this.isSupplierProduct = supplierProduct
         this.agentProduct = agentProduct

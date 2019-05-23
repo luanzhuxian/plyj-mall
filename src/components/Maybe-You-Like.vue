@@ -56,7 +56,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'userId'])
+    ...mapGetters(['userId'])
   },
   watch: {
     productId () {
@@ -75,10 +75,9 @@ export default {
   methods: {
     async getList () {
       await delay.exec()
-      if (!this.agencyCode || !this.userId) return
+      if (!this.userId) return
       try {
         let { result } = await getYouLikeData({
-          agencyCode: this.agencyCode,
           userId: this.userId,
           productSeq: this.productId
         })

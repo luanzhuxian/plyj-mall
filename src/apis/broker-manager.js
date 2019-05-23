@@ -6,12 +6,12 @@ export const AuditCreate = ({ idCard, mobile, name, verificationCode, weChatNumb
 export const updateAudit = (sequenceNbr, { idCard, mobile, name, verificationCode, weChatNumber }) =>
   axios.put(`/apis/v1/agent/user/info/audit/${sequenceNbr}`, { idCard, mobile, name, verificationCode, weChatNumber })
 // GET 分页查询经纪人信息
-export function agentUserInfoAuditPage ({ agencyCode, current, size }) {
-  return axios.get(`/apis/v1/agent/user/info/audit/page?agencyCode=${agencyCode}&current=${current}&size=${size}`)
+export function agentUserInfoAuditPage ({ current, size }) {
+  return axios.get(`/apis/v1/agent/user/info/audit/page?current=${current}&size=${size}`)
 }
 // GET 根据用户ID 与 机构码 查询用户经纪人信息
-export const agentUserInfoAudit = (userId, code) => {
-  return axios.get(`/apis/v1/agent/user/info/audit/${userId}/${code}`)
+export const agentUserInfoAudit = () => {
+  return axios.get(`/apis/v1/agent/user/info/audit`)
 }
 // PUT 修改经纪人审核状态
 export function changeBrokerStatus (id) {
