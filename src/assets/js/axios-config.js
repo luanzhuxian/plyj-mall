@@ -55,7 +55,9 @@ async function response (response) {
           method,
           data,
           url,
-          headers
+          headers: {
+            openId: headers.openId
+          }
         })
         return res
       } catch (e) {
