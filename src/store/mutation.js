@@ -62,5 +62,6 @@ export default {
     Cookie.remove('openId')
     Cookie.remove('refresh_token')
     Cookie.remove('token')
+    window.location.reload()
   }
 }

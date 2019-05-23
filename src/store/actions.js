@@ -125,7 +125,6 @@ export default {
       } catch (e) {
         // refresh_token失效
         await dispatch(type.LOG_OUT)
-        await dispatch(type.LOGIN)
         reject(e)
       }
     })
