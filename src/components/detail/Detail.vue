@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style.detailInfo">
+  <div :class="$style.detailInfo + ' ql-snow'">
     <h3 v-text="title" />
     <div
       v-lazy-container="{ selector: 'img', error: imgError }"
-      :class="$style.content"
+      :class="$style.content + ' ql-container ql-editor'"
       v-html="afterHtml"
     />
   </div>
@@ -62,7 +62,7 @@ export default {
   }
   .content {
     color: #999 !important;
-    font-size: 24px !important;
+    font-size: 14px !important;
     line-height: 32px;
     img {
       width: 670px !important;
@@ -81,13 +81,12 @@ export default {
  */
   .ql-container {
     box-sizing: border-box;
-    font-family: Helvetica, Arial, sans-serif;
     font-size: 13px;
     height: 100%;
-    margin: 0px;
+    margin: 0;
     position: relative;
   }
-  .ql-container.ql-disabled .ql-tooltip {
+  .ql-container.ql-disabled {
     visibility: hidden;
   }
   .ql-container.ql-disabled .ql-editor ul[data-checked] > li::before {
@@ -470,133 +469,6 @@ export default {
     position: absolute;
     right: 15px;
   }
-  .ql-snow.ql-toolbar:after,
-  .ql-snow .ql-toolbar:after {
-    clear: both;
-    content: '';
-    display: table;
-  }
-  .ql-snow.ql-toolbar button,
-  .ql-snow .ql-toolbar button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    display: inline-block;
-    float: left;
-    height: 24px;
-    padding: 3px 5px;
-    width: 28px;
-  }
-  .ql-snow.ql-toolbar button svg,
-  .ql-snow .ql-toolbar button svg {
-    float: left;
-    height: 100%;
-  }
-  .ql-snow.ql-toolbar button:active:hover,
-  .ql-snow .ql-toolbar button:active:hover {
-    outline: none;
-  }
-  .ql-snow.ql-toolbar input.ql-image[type=file],
-  .ql-snow .ql-toolbar input.ql-image[type=file] {
-    display: none;
-  }
-  .ql-snow.ql-toolbar button:hover,
-  .ql-snow .ql-toolbar button:hover,
-  .ql-snow.ql-toolbar button:focus,
-  .ql-snow .ql-toolbar button:focus,
-  .ql-snow.ql-toolbar button.ql-active,
-  .ql-snow .ql-toolbar button.ql-active,
-  .ql-snow.ql-toolbar .ql-picker-label:hover,
-  .ql-snow .ql-toolbar .ql-picker-label:hover,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active,
-  .ql-snow.ql-toolbar .ql-picker-item:hover,
-  .ql-snow .ql-toolbar .ql-picker-item:hover,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-    color: #06c;
-  }
-  .ql-picker-label:before {
-    position: absolute;
-  }
-  .ql-snow.ql-toolbar button:hover .ql-fill,
-  .ql-snow .ql-toolbar button:hover .ql-fill,
-  .ql-snow.ql-toolbar button:focus .ql-fill,
-  .ql-snow .ql-toolbar button:focus .ql-fill,
-  .ql-snow.ql-toolbar button.ql-active .ql-fill,
-  .ql-snow .ql-toolbar button.ql-active .ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill,
-  .ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar button:focus .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar button:focus .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
-    fill: #06c;
-  }
-  .ql-snow.ql-toolbar button:hover .ql-stroke,
-  .ql-snow .ql-toolbar button:hover .ql-stroke,
-  .ql-snow.ql-toolbar button:focus .ql-stroke,
-  .ql-snow .ql-toolbar button:focus .ql-stroke,
-  .ql-snow.ql-toolbar button.ql-active .ql-stroke,
-  .ql-snow .ql-toolbar button.ql-active .ql-stroke,
-  .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke,
-  .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke,
-  .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke,
-  .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke,
-  .ql-snow.ql-toolbar button:hover .ql-stroke-miter,
-  .ql-snow .ql-toolbar button:hover .ql-stroke-miter,
-  .ql-snow.ql-toolbar button:focus .ql-stroke-miter,
-  .ql-snow .ql-toolbar button:focus .ql-stroke-miter,
-  .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter,
-  .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter,
-  .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
-  .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter,
-  .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
-  .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter,
-  .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
-  .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter,
-  .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter,
-  .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
-    stroke: #06c;
-  }
-  @media (pointer: coarse) {
-    .ql-snow.ql-toolbar button:hover:not(.ql-active),
-    .ql-snow .ql-toolbar button:hover:not(.ql-active) {
-      color: #444;
-    }
-    .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-fill,
-    .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-fill,
-    .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill,
-    .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-stroke.ql-fill {
-      fill: #444;
-    }
-    .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-stroke,
-    .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-stroke,
-    .ql-snow.ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter,
-    .ql-snow .ql-toolbar button:hover:not(.ql-active) .ql-stroke-miter {
-      stroke: #444;
-    }
-  }
   .ql-snow {
     box-sizing: border-box;
   }
@@ -609,17 +481,6 @@ export default {
   .ql-snow .ql-out-bottom,
   .ql-snow .ql-out-top {
     visibility: hidden;
-  }
-  .ql-snow .ql-tooltip {
-    position: absolute;
-    transform: translateY(10px);
-  }
-  .ql-snow .ql-tooltip a {
-    cursor: pointer;
-    text-decoration: none;
-  }
-  .ql-snow .ql-tooltip.ql-flip {
-    transform: translateY(-10px);
   }
   .ql-snow .ql-formats {
     display: inline-block;
@@ -824,31 +685,31 @@ export default {
   }
   .ql-snow .ql-picker.ql-header .ql-picker-label::before,
   .ql-snow .ql-picker.ql-header .ql-picker-item::before {
-    content: '普通文本';
+    content: 'Normal';
   }
   .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
   .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
-    content: '标题1';
+    content: 'Heading 1';
   }
   .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
   .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
-    content: '标题 2';
+    content: 'Heading 2';
   }
   .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
   .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
-    content: '标题 3';
+    content: 'Heading 3';
   }
   .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="4"]::before,
   .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
-    content: '标题 4';
+    content: 'Heading 4';
   }
   .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="5"]::before,
   .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="5"]::before {
-    content: '标题 5';
+    content: 'Heading 5';
   }
   .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="6"]::before,
   .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
-    content: '标题 6';
+    content: 'Heading 6';
   }
   .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
     font-size: 2em;
@@ -892,22 +753,6 @@ export default {
   .ql-snow .ql-picker.ql-size {
     width: 98px;
   }
-  .ql-snow .ql-picker.ql-size .ql-picker-label::before,
-  .ql-snow .ql-picker.ql-size .ql-picker-item::before {
-    content: '正常';
-  }
-  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value=small]::before,
-  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=small]::before {
-    content: '小';
-  }
-  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value=large]::before,
-  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=large]::before {
-    content: '大';
-  }
-  .ql-snow .ql-picker.ql-size .ql-picker-label[data-value=huge]::before,
-  .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=huge]::before {
-    content: '最大';
-  }
   .ql-snow .ql-picker.ql-size .ql-picker-item[data-value=small]::before {
     font-size: 10px;
   }
@@ -922,98 +767,6 @@ export default {
   }
   .ql-snow .ql-color-picker.ql-color .ql-picker-item {
     background-color: #000;
-  }
-  .ql-toolbar.ql-snow {
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-    padding: 8px;
-  }
-  .ql-toolbar.ql-snow .ql-formats {
-    margin-right: 15px;
-  }
-  .ql-toolbar.ql-snow .ql-picker-label {
-    border: 1px solid transparent;
-  }
-  .ql-toolbar.ql-snow .ql-picker-options {
-    border: 1px solid transparent;
-    box-shadow: rgba(0,0,0,0.2) 0 2px 8px;
-  }
-  .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
-    border-color: #ccc;
-  }
-  .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
-    border-color: #ccc;
-  }
-  .ql-toolbar.ql-snow .ql-color-picker .ql-picker-item.ql-selected,
-  .ql-toolbar.ql-snow .ql-color-picker .ql-picker-item:hover {
-    border-color: #000;
-  }
-  .ql-toolbar.ql-snow + .ql-container.ql-snow {
-    border-top: 0px;
-  }
-  .ql-snow .ql-tooltip {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0px 0px 5px #ddd;
-    color: #444;
-    padding: 5px 12px;
-    white-space: nowrap;
-  }
-  .ql-snow .ql-tooltip::before {
-    content: "链接地址:";
-    line-height: 26px;
-    margin-right: 8px;
-  }
-  .ql-snow .ql-tooltip input[type=text] {
-    display: none;
-    border: 1px solid #ccc;
-    font-size: 13px;
-    height: 26px;
-    margin: 0px;
-    padding: 3px 5px;
-    width: 170px;
-  }
-  .ql-snow .ql-tooltip a.ql-preview {
-    display: inline-block;
-    max-width: 200px;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    vertical-align: top;
-  }
-  .ql-snow .ql-tooltip a.ql-action::after {
-    border-right: 1px solid #ccc;
-    content: '编辑';
-    margin-left: 16px;
-    padding-right: 8px;
-  }
-  .ql-snow .ql-tooltip a.ql-remove::before {
-    content: '删除';
-    margin-left: 8px;
-  }
-  .ql-snow .ql-tooltip a {
-    line-height: 26px;
-  }
-  .ql-snow .ql-tooltip.ql-editing a.ql-preview,
-  .ql-snow .ql-tooltip.ql-editing a.ql-remove {
-    display: none;
-  }
-  .ql-snow .ql-tooltip.ql-editing input[type=text] {
-    display: inline-block;
-  }
-  .ql-snow .ql-tooltip.ql-editing a.ql-action::after {
-    border-right: 0px;
-    content: '保存';
-    padding-right: 0px;
-  }
-  .ql-snow .ql-tooltip[data-mode=link]::before {
-    content: "输入跳转链接:";
-  }
-  .ql-snow .ql-tooltip[data-mode=formula]::before {
-    content: "输入公式:";
-  }
-  .ql-snow .ql-tooltip[data-mode=video]::before {
-    content: "岛入视频:";
   }
   .ql-snow a {
     color: #06c;
