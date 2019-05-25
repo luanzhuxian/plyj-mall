@@ -17,16 +17,16 @@ export default {
   [type.GET_MALL_INFO]: ({ commit, dispatch }) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let domainName = window.location.pathname.split('/')[1] || ''
-        const { result } = await getMallInfo(domainName)
+        // 商城名称
+        let mallDomain = window.location.pathname.split('/')[1] || ''
+        const { result } = await getMallInfo(mallDomain)
         commit(type.GET_MALL_INFO, result)
-        let mallSeq = result.sequenceNbr
         let openId = Cookie.get('openId')
         if (!openId) {
           // 如果openid不存在，获取一下opendId
           await dispatch(type.GET_OPENID)
         } else {
-          commit(type.SET_OPENID, { mallSeq, openId })
+          commit(type.SET_OPENID, { mallDomain, openId })
         }
         resolve(result)
       } catch (e) {
@@ -43,7 +43,7 @@ export default {
         if (search.code) {
           // 微信
           const { result } = await getOpenId(appId, search.code)
-          commit(type.SET_OPENID, { mallSeq: state.mallInfo.sequenceNbr, openId: result.OPEN_ID })
+          commit(type.SET_OPENID, { mallDomain: state.mallInfo.mallDomain, openId: result.OPEN_ID })
           resolve()
         } else {
           let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`

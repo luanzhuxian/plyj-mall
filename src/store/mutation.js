@@ -35,7 +35,7 @@ export default {
     })
   },
   [type.SET_OPENID] (state, payload) {
-    let openIdPath = `/${payload.mallSeq}`
+    let openIdPath = `/${payload.mallDomain}`
     state.openId = payload.openId
     // openid根据不同的商城来区分
     Cookie.set('openId', payload.openId, {
