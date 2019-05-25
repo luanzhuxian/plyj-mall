@@ -35,13 +35,8 @@ export default {
     })
   },
   [type.SET_OPENID] (state, payload) {
-    let openIdPath = `/${payload.mallDomain}`
     state.openId = payload.openId
-    // openid根据不同的商城来区分
-    Cookie.set('openId', payload.openId, {
-      expires: CalcCookieTime(6048000),
-      path: openIdPath
-    })
+    localStorage.setItem('openId_' + payload.mallDomain, payload.openId)
   },
   [type.ADDRESS_LIST] (state, payload) {
     state.addressList = payload

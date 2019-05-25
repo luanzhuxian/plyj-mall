@@ -5,13 +5,11 @@ import {
   getUserInfo,
   login,
   refreshToken
-  // getPenglaiAppid
 } from '../apis/base-api'
 import {
   getAddress
 } from '../apis/address'
 import Qs from 'qs'
-import Cookie from 'js-cookie'
 export default {
   /* 获取商城信息 */
   [type.GET_MALL_INFO]: ({ commit, dispatch }) => {
@@ -21,9 +19,10 @@ export default {
         let mallDomain = window.location.pathname.split('/')[1] || ''
         const { result } = await getMallInfo(mallDomain)
         commit(type.GET_MALL_INFO, result)
-        let openId = Cookie.get('openId')
+        // 获取本地缓存openId
+        let openId = localStorage.getItem(`openId_${mallDomain}`) || ''
+        // 如果openId不存在，获取一下openId
         if (!openId) {
-          // 如果openid不存在，获取一下opendId
           await dispatch(type.GET_OPENID)
         } else {
           commit(type.SET_OPENID, { mallDomain, openId })

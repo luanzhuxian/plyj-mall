@@ -2,8 +2,6 @@ import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
 import { REFRESH_TOKEN } from '../../store/mutation-type'
-// const mallInfo = JSON.parse(localStorage.getItem('mallInfo')) || {}
-import Cookie from 'js-cookie'
 axios.defaults.headers = {
   'Content-Type': 'application/json;charset=UTF-8'
 }
@@ -14,8 +12,9 @@ axios.interceptors.request.use(request, reqError)
 axios.interceptors.response.use(response, resError)
 
 function request (config) {
+  let mallDomain = location.pathname.split('/')[1]
   config.headers = {
-    openId: Cookie.get('openId') || ''
+    openId: localStorage.getItem(`openId_${mallDomain}`) || ''
   }
   return config
 }
