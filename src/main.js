@@ -29,14 +29,13 @@ Vue.use(gallery, {
 })
 Vue.use(animated)
 // Vue.use(AlloyFingerVue, { AlloyFinger })
-
 for (let k of Object.keys(directive)) {
   Vue.directive(k, directive[k])
 }
 for (let k of Object.keys(filters)) {
   Vue.filter(k, filters[k])
 }
-/* 路由守卫 */
+// UI组件库
 Vue.use(PenglaiUI)
 Vue.config.productionTip = false
 /* eslint-disable */
