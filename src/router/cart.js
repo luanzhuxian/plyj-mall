@@ -1,5 +1,14 @@
 export default [
   {
+    path: '/order/shopping-cart',
+    name: 'ShoppingCart',
+    component: () => import('../views/cart/Shopping-Cart.vue'),
+    props: true,
+    meta: {
+      title: '购物车'
+    }
+  },
+  {
     path: '/order/submit/:productSeq/:optionCode/:count/:brokerId?',
     name: 'Cart',
     component: () => import('../views/cart/Cart.vue'),
