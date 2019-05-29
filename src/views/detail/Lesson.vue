@@ -83,7 +83,7 @@
     />
     <specification-pop
       :data="detail.priceModels"
-      :product-image="detail.productImage"
+      :product-image="detail.productImage ? detail.productImage[0].mediaUrl : ''"
       :visible.sync="showSpecifica"
       @confirm="specChanged"
     />

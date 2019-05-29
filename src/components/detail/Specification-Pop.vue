@@ -14,7 +14,7 @@
             <div :class="$style.baseInfo">
               <img
                 v-img-error
-                :src="img"
+                :src="productImage"
                 alt=""
               >
               <div :class="$style.baseInfoRight">
@@ -103,10 +103,8 @@ export default {
       }
     },
     productImage: {
-      type: Array,
-      default: function () {
-        return [{}]
-      }
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -117,11 +115,6 @@ export default {
       count: 1,
       min: 1,
       stock: 1
-    }
-  },
-  computed: {
-    img: function () {
-      return this.productImage[0].mediaUrl || ''
     }
   },
   watch: {
@@ -136,6 +129,11 @@ export default {
   },
   created () {
     this.setShow(this.visible)
+  },
+  mounted () {
+    this.selected = this.data[0]
+    this.min = this.count = this.data[0].minBuyNum || 1
+    this.stock = this.data[0].stock
   },
   methods: {
     close () {
@@ -276,7 +274,9 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     max-height: 300px;
+    padding: 0 5px;
     overflow: auto;
+    box-sizing: border-box;
     li {
       position: relative;
       line-height: 54px;
@@ -290,7 +290,7 @@ export default {
         background: none;
         color: $--primary-color;
         &:after {
-          @include border-half($--primary-color, 20px)
+          @include border-half($--primary-color, 18px)
         }
       }
     }
