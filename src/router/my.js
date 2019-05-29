@@ -4,7 +4,7 @@ export default [
     name: 'My',
     component: () => import('../views/my/Index.vue'),
     meta: {
-      title: '我的'
+      title: '个人中心'
     }
   },
   {

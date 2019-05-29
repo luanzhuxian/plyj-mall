@@ -12,55 +12,61 @@
           :class="$style.name"
           v-text="userName"
         />
-        <span
-          :class="$style.level"
-          v-text="roleName"
-        />
+        <div :class="$style.levelapply">
+          <span
+            :class="$style.level"
+            v-text="roleName"
+          />
+          <router-link
+            v-if="!agentUser && !isAdmin"
+            :to="{ name: 'ApplyHelper' }"
+            :class="$style.apply"
+          >
+            <pl-svg name="apply-helper" />
+          </router-link>
+        </div>
         <!-- 未登录 -->
         <!--<pl-svg :class="$style.loginBtn" name="login-btn" />-->
       </div>
       <!-- 申请helper -->
-      <router-link
-        v-if="!agentUser && !isAdmin"
-        :to="{ name: 'ApplyHelper' }"
-        :class="$style.apply"
-      >
-        <pl-svg name="apply-helper" />
-      </router-link>
+      <div :class="$style.settingBox">
+        <router-link
+          v-if="!isAdmin"
+          :class="$style.settingEnter"
+          :to="{ name: '' }"
+        >
+          <pl-svg name="my-setting" />
+        </router-link>
+      </div>
+      <!-- 设置入口 -->
     </div>
-    <div :class="$style.tip">
-      如果您还不了解什么是Helper，请点击查看 <router-link :to="{ name: 'WhatsHelper' }">
-        什么是Helper？
-      </router-link><pl-svg name="right" />
-    </div>
-
     <!-- 金库 -->
     <div :class="$style.myMoney">
       <router-link
         tag="div"
         :class="$style.runbi"
-        :to="{ name: 'WithdrawCash' }"
+        :to="{ name: 'Coffers' }"
       >
-        <p>可提现润笔（元）</p>
-        <p>
-          <span v-text="balance" />
-          <span :class="$style.withdrawTip">提现</span>
-        </p>
+        <div>
+          <p>可提现润笔（元）</p>
+          <p>
+            <span v-text="balance" />
+            <!--          <span :class="$style.withdrawTip">提现</span>-->
+          </p>
+        </div>
+        <div>
+          <p>今日润笔（元）</p>
+          <p v-text="currentBalance" />
+        </div>
+        <pl-svg
+          :class="$style.my-right"
+          name="my-right"
+        />
       </router-link>
-      <div>
-        <p>今日润笔（元）</p>
-        <p v-text="currentBalance" />
-      </div>
     </div>
 
     <!-- 我的订单 -->
     <div :class="$style.myOrders">
-      <ModuleTitle
-        title="我的订单"
-        tip="全部订单"
-        suffix-icon="right"
-        :route="{ name: 'Orders' }"
-      />
       <div :class="$style.orderStatus">
         <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
           <pl-svg name="wait-pay" />
@@ -104,7 +110,12 @@
         </router-link>
       </div>
     </div>
-
+    <div :class="$style.tip">
+      <span :class="$style.tipCircle" />
+      <router-link :to="{ name: 'WhatsHelper' }">
+        成为Helper，第一桶金从这里开始>>
+      </router-link>
+    </div>
     <div :class="$style.setting + ' radius-20'">
       <pl-fields
         icon="coffers"
@@ -129,14 +140,10 @@
 </template>
 
 <script>
-import ModuleTitle from '../../components/Module-Title.vue'
 import { orderPhysicalorderSummary } from '../../apis/order-manager'
 import { mapGetters } from 'vuex'
 export default {
   name: 'My',
-  components: {
-    ModuleTitle
-  },
   data () {
     return {
       count: {
@@ -192,13 +199,11 @@ export default {
     margin-left: 28px;
     display: inline-flex;
     flex-direction: column;
-    justify-content: space-between;
-    flex: 1;
   }
   .name {
     font-size: 42px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
   }
   .level {
     font-size: 22px;
@@ -211,16 +216,19 @@ export default {
     }
   }
   .tip {
-    height: 56px;
+    display: flex;
+    align-items: center;
+    height: 88px;
     padding: 0 28px;
+    margin: 0 24px;
+    border-radius: 20px;
     line-height: 56px;
-    font-size: 22px;
+    font-size: 26px;
     color: #fe7700;
-    background-color: #fff7e6;
+    background-color: #FCF0DE;
     a {
-      font-weight: bolder;
-      color: #fe7700;
-      border-bottom: 2px solid #fe7700;
+      color: #98832E;
+      text-decoration: none;
     }
     svg {
       display: inline-flex;
@@ -237,22 +245,49 @@ export default {
       box-sizing: border-box;
     }
   }
+  .tip-circle{
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #98832E;
+    margin-right: 20px;
+  }
   .apply {
+    padding-left: 32px;
     svg {
-      width: 166px;
+      width: 158px;
+    }
+  }
+  .levelapply{
+    display: flex;
+    align-items: center;
+  }
+  .setting-box{
+    position: absolute;
+    top: 36px;
+    right: 32px;
+  }
+  .setting-enter{
+    svg{
+      width: 42px;
     }
   }
   .my-money {
     position: relative;
     display: flex;
+  }
+  .runbi {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-left: 12px;
+    background-color: #fff;
     > div {
-      position: relative;
       display: inline-flex;
       flex-direction: column;
       flex: 1;
       padding: 28px;
       color: #999;
-      background-color: #fff;
       > p {
         &:nth-of-type(1) {
           font-size: 26px;
@@ -264,9 +299,12 @@ export default {
         }
       }
     }
-  }
-  .runbi {
-    position: relative;
+    svg{
+      width: 18px;
+      height: 26px;
+      margin-right: 28px;
+      margin-top: 70px;
+    }
   }
   .withdraw-tip {
     margin-left: 48px;
@@ -277,8 +315,9 @@ export default {
   }
   .my-orders {
     padding: 20px 28px;
-    margin-top: 16px;
+    margin: 16px 24px 24px;
     background-color: #fff;
+    border-radius: 20px;
   }
   .order-status {
     display: flex;
