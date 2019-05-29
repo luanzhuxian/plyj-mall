@@ -17,9 +17,12 @@
     <router-link
       :class="$style.route"
       tag="div"
-      :to="{ name: (agentUser || isAdmin) ? 'Yaji' : 'WhatsHelper' }"
+      :to="{ name: 'ShoppingCart' }"
     >
-      <pl-svg :name="yajiActive ? 'yaji-active' : 'yaji'" />
+      <pl-svg
+        :class="$style.cart"
+        :name="yajiActive ? 'cart-active' : 'cart'"
+      />
     </router-link>
     <router-link
       :class="$style.route"
@@ -45,7 +48,7 @@ export default {
       return this.$route.matched.some(val => val.name === 'My')
     },
     yajiActive: function () {
-      return this.$route.path.indexOf('yaji') > -1
+      return this.$route.path.indexOf('cart') > -1
     },
     classifyActive: function () {
       return this.$route.matched.some(val => val.name === 'Classify')
@@ -78,6 +81,9 @@ export default {
     font-size: 20px;
     svg {
       width: 44px;
+    }
+    .cart {
+      width: 58px;
     }
   }
 </style>

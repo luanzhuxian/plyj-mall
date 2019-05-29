@@ -33,6 +33,7 @@ export default {
     }
   },
   created () {
+    console.log(this.name)
     this.setTheme()
   },
   computed: {
