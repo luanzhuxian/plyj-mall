@@ -1,5 +1,5 @@
 <template>
-  <label
+  <div
     class="pl-checkbox"
     :style="{
       display: inline ? 'inline-flex' : 'flex',
@@ -12,16 +12,32 @@
       :checked="value || checked"
       @change="handleChange"
       v-show="false"
+      :disabled="disabled"
+      ref="checkbox"
+      :id="'checkbox' + _uid"
     >
     <slot name="prefix" />
-    <span
-      :class="{
-        'pl-checkbox-inner': true,
-        'checked': value || checked
-      }"
-    />
+    <label
+      :for="'checkbox' + _uid"
+      ref="label"
+    >
+      <span
+        :class="{
+          'pl-checkbox-inner': true,
+          'checked': value || checked,
+          'disabled': disabled
+        }"
+      >
+        <pl-svg
+          class="check"
+          name="check"
+          color="#fff"
+          v-show="value || checked"
+        />
+      </span>
+    </label>
     <slot name="suffix" />
-  </label>
+  </div>
 </template>
 
 <script>
@@ -50,6 +66,10 @@ export default {
     value: {
       type: Boolean
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     inline: {
       type: Boolean
     },
@@ -71,6 +91,29 @@ export default {
         this.$parent.change(this.checked, this.data)
       } else {
         this.$emit('change', e.currentTarget.checked)
+        this.checked = e.currentTarget.checked
+      }
+    },
+    // 选中
+    selected () {
+      if (!this.checked) {
+        this.checked = true
+        if (this.data) {
+          this.$parent.change(this.checked, this.data)
+        } else {
+          this.$emit('change', true)
+        }
+      }
+    },
+    // 取消选中
+    cancel () {
+      if (this.checked) {
+        this.checked = false
+        if (this.data) {
+          this.$parent.change(this.checked, this.data)
+        } else {
+          this.$emit('change', false)
+        }
       }
     }
   }
@@ -80,13 +123,16 @@ export default {
 <style lang="scss">
   .pl-checkbox {
     align-items: center;
+    align-self: center;
     &:nth-last-of-type(1) {
       margin-bottom: 0 !important;
       margin-right: 0 !important;
     }
   }
   .pl-checkbox-inner {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 36px;
     height: 36px;
     border: 3px solid #999;
@@ -95,6 +141,13 @@ export default {
     &.checked {
       border: none;
       background-color: $--primary-color;
+    }
+    &.disabled {
+      background-color: #ddd;
+      border-color: #ccc;
+    }
+    .check {
+      width: 22px;
     }
   }
 </style>

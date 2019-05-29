@@ -9,6 +9,7 @@ export default {
   name: 'PlCheckboxGroup',
   data () {
     return {
+      isCheckAll: false
     }
   },
   model: {
@@ -23,9 +24,6 @@ export default {
       }
     }
   },
-  mounted () {
-    console.log(this.$children[0])
-  },
   methods: {
     change (checked, data) {
       if (checked) {
@@ -34,6 +32,17 @@ export default {
         this.group.splice(this.group.indexOf(data), 1)
       }
       this.$emit('change', this.group)
+    },
+    changeAll (flage) {
+      let children = this.$children
+      for (let c of children) {
+        if (flage) {
+          c.selected()
+        } else {
+          c.cancel()
+        }
+      }
+      this.isCheckAll = flage
     }
   }
 }

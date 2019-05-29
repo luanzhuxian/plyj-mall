@@ -70,7 +70,7 @@ export default {
   align-items: center;
   width: 100%;
   background-color: #fff;
-  z-index: 8000;
+  z-index: 2;
 }
   .route {
     display: inline-flex;

@@ -23,6 +23,12 @@
 .mt-22 {
   margin-top: 22px;
 }
+.ml-10 {
+  margin-left: 10px;
+}
+.mr-10 {
+  margin-right: 10px;
+}
 .radius-20 {
   border-radius: $--radius1;
 }
@@ -97,6 +103,9 @@
 }
 .gray-6 {
   color: var(--font-color_gray6);
+}
+.primary-color {
+  color: var(--primary-color);
 }
 
 .rmb {
