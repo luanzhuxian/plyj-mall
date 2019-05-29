@@ -2,9 +2,9 @@
 var icon = require('vue-svgicon')
 icon.register({
   'base-theme/apply-helper': {
-    width: 166,
-    height: 56,
-    viewBox: '0 0 166 56',
-    data: '<defs><linearGradient x1="0%" y1="50%" x2="97.033%" y2="50%" id="svgicon_base-theme_apply-helper_a"><stop stop-color="#FF8F2E" offset="0%"/><stop stop-color="#F70" offset="100%"/></linearGradient></defs><g _fill="none" fill-rule="evenodd"><rect pid="0" _fill="url(#svgicon_base-theme_apply-helper_a)" width="166" height="56" rx="28"/><g _fill="#FFF"><path pid="1" d="M38 34.35a1.7 1.7 0 0 1-.474 1.221c-.31.316-.73.472-1.152.43h-.929c-.806 0-.758-.56-1.026-1.652-.827-2.542-2.207-4.828-4.021-6.662-1.65-1.08.44-.36.44-3.824a7.486 7.486 0 0 0-.514-2.758c-.256-.587-.476-1.133.514-1.093 1.945.048 3.516 1.744 3.58 3.864-.003 1.29-.6 2.49-1.588 3.198l.586.16c2.708 1.142 4.517 3.95 4.584 7.115zm-5.244 1.891c0 .88-.354 1.759-1.735 1.759H17.736C16 37.987 16 37.08 16 36.241c.006-4.048 2.436-7.617 5.989-8.794-1.476-.854-2.377-2.55-2.322-4.37 0-2.804 2.084-5.077 4.656-5.077 2.572 0 4.657 2.273 4.657 5.077.043 1.803-.838 3.483-2.286 4.357 3.58 1.163 6.053 4.722 6.111 8.794l-.049.013z" fill-rule="nonzero"/><text font-family="MicrosoftYaHeiUI-Bold, Microsoft YaHei UI" font-size="20" font-weight="bold" transform="translate(16 14)"><tspan x="30" y="22">申请</tspan> <tspan x="70" y="22" font-family="HelveticaNeue-Bold, Helvetica Neue">Helper</tspan></text></g></g>'
+    width: 79,
+    height: 22,
+    viewBox: '0 0 79 22',
+    data: '<defs><linearGradient x1="0%" y1="50%" x2="97.033%" y2="50%" id="svgicon_base-theme_apply-helper_a"><stop stop-color="#FF8F2E" offset="0%"/><stop stop-color="#F70" offset="100%"/></linearGradient></defs><g _fill="none" fill-rule="evenodd"><rect pid="0" _fill="url(#svgicon_base-theme_apply-helper_a)" width="79" height="22" rx="11"/><g _fill="#FFF"><path pid="1" d="M17 14.175a.85.85 0 0 1-.237.61.709.709 0 0 1-.576.216h-.464c-.404 0-.38-.28-.514-.826a8.445 8.445 0 0 0-2.01-3.332c-.825-.54.22-.18.22-1.912a3.743 3.743 0 0 0-.257-1.379c-.128-.293-.238-.566.257-.546.972.024 1.758.872 1.79 1.932-.001.645-.3 1.245-.794 1.599l.293.08c1.354.571 2.259 1.975 2.292 3.558zm-2.622.946c0 .44-.177.879-.868.879H6.868C6 15.993 6 15.54 6 15.12c.003-2.023 1.218-3.808 2.994-4.396-.738-.427-1.188-1.275-1.16-2.186C7.833 7.136 8.875 6 10.161 6c1.285 0 2.328 1.136 2.328 2.538.021.902-.42 1.742-1.143 2.179 1.79.581 3.027 2.361 3.056 4.397l-.025.007z" fill-rule="nonzero"/><text font-family="MicrosoftYaHeiUI-Bold, Microsoft YaHei UI" font-size="10" font-weight="bold" transform="translate(6 4)"><tspan x="15" y="11">申请</tspan> <tspan x="35" y="11" font-family="HelveticaNeue-Bold, Helvetica Neue">Helper</tspan></text></g></g>'
   }
 })
