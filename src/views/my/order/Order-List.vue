@@ -4,6 +4,7 @@
       :tabs="tabs"
       size="small"
       :active-id.sync="form.orderStatus"
+      :count="count"
       @change="tabChange"
     />
     <div :class="$style.orderList">
@@ -13,6 +14,7 @@
         ref="loadMore"
         :loading.sync="loading"
         no-content-tip="暂无订单"
+        @refresh="getOrderSummary"
       >
         <template v-slot="{ list }">
           <router-link
@@ -92,15 +94,16 @@
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
 import Price from '../../../components/Price.vue'
+import LoadMore from '../../../components/Load-More.vue'
 import { mapGetters } from 'vuex'
 import {
   getOrderList,
   getAwaitPayInfo,
   physicalorderReceiving,
-  physicalorderReceivingForVirtual
+  physicalorderReceivingForVirtual,
+  orderPhysicalorderSummary
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
-import LoadMore from '../../../components/Load-More.vue'
 export default {
   name: 'OrderList',
   components: {
@@ -143,9 +146,17 @@ export default {
       },
       loading: false,
       getOrderList,
+      orderPhysicalorderSummary,
       $refresh: null,
       $router: null,
-      currentPayId: '' // 当前正在支付的订单id
+      currentPayId: '', // 当前正在支付的订单id
+      count: {
+        FINISHED: 0,
+        POST_SALE_SERVICE: 0,
+        WAIT_PAY: 0,
+        WAIT_RECEIVE: 0,
+        WAIT_SHIP: 0
+      }
     }
   },
   props: {
@@ -183,6 +194,17 @@ export default {
         }
         this.$refresh()
       })
+    },
+    async getOrderSummary () {
+      try {
+        const { result } = await this.orderPhysicalorderSummary(this.userId)
+        for (let k of Object.keys(result)) {
+          if (result[k] > 99) result[k] = '99+'
+        }
+        this.count = result
+      } catch (e) {
+        throw e
+      }
     },
     async pay (id, orderType) {
       this.payloading = true
