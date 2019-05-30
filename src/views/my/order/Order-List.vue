@@ -6,7 +6,20 @@
       :active-id.sync="form.orderStatus"
       :count="count"
       @change="tabChange"
-    />
+    >
+      <div
+        :class="$style.tabCount"
+        v-for="(item, i) of tabs"
+        :key="i"
+        :slot="'tab-pane-' + i"
+      >
+        <span
+          :class="$style.tabCountNumber"
+          v-if="count[item.id]"
+          v-text="count[item.id]"
+        />
+      </div>
+    </pl-tab>
     <div :class="$style.orderList">
       <load-more
         :request-methods="getOrderList"
@@ -308,5 +321,25 @@ export default {
         margin-bottom: 20px;
       }
     }
+  }
+  .tab-count {
+    position: absolute;
+    top: 5px;
+    right: -45px;
+    width: 56px;
+    height: 56px;
+    line-height: 54px;
+    font-size: 28px;
+    transform: scale(.5);
+    transform-origin: 0 0;
+    color: #fff;
+  }
+  .tab-count-number {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: url("../../../assets/images/my/circle.png") no-repeat center center;
+    background-size: 100%;
   }
 </style>

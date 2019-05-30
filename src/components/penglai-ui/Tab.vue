@@ -8,11 +8,7 @@
       @click="handleClick(item)"
     >
       {{ item[options.name] }}
-      <span
-        class="pl-tab__count"
-        v-if="count[item.id]"
-        v-text="count[item.id]"
-      />
+      <slot :name="'tab-pane-' + i" />
     </div>
   </div>
 </template>
@@ -113,22 +109,6 @@ export default {
           content: '';
         }
       }
-    }
-    &__count {
-      display: inline-flex;
-      justify-content: center;
-      position: absolute;
-      top: 5px;
-      right: -45px;
-      width: 56px;
-      height: 56px;
-      line-height: 54px;
-      font-size: 28px;
-      transform: scale(.5);
-      transform-origin: 0 0;
-      color: #fff;
-      background: url("../../assets/images/my/circle.png") no-repeat center center;
-      background-size: 100%;
     }
   }
 </style>
