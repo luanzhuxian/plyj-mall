@@ -58,6 +58,11 @@ export default {
     }
   }
 }
+document.addEventListener('click', demo)
+document.removeEventListener('click', demo)
+function demo () {
+  console.log(123)
+}
 </script>
 
 <style module lang="scss">
@@ -80,10 +85,10 @@ export default {
     height: 88px;
     font-size: 20px;
     svg {
-      width: 44px;
+      width: 40px;
     }
     .cart {
-      width: 58px;
+      width: 60px;
     }
   }
 </style>

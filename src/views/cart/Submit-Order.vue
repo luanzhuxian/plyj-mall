@@ -109,7 +109,7 @@ import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Qs from 'qs'
 export default {
-  name: 'Cart',
+  name: 'SubmitOrder',
   components: {
     AddressItem,
     OrderItem,

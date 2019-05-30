@@ -119,9 +119,11 @@ export default {
   },
   watch: {
     data (val) {
-      this.selected = val[0]
-      this.min = this.count = val[0].minBuyNum || 1
-      this.stock = val[0].stock
+      if (val && val.length > 0) {
+        this.selected = val[0]
+        this.min = this.count = val[0].minBuyNum || 1
+        this.stock = val[0].stock
+      }
     },
     visible (val) {
       this.setShow(val)
@@ -131,9 +133,9 @@ export default {
     this.setShow(this.visible)
   },
   mounted () {
-    this.selected = this.data[0]
-    this.min = this.count = this.data[0].minBuyNum || 1
-    this.stock = this.data[0].stock
+    // this.selected = this.data[0]
+    // this.min = this.count = this.data[0].minBuyNum || 1
+    // this.stock = this.data[0].stock
   },
   methods: {
     close () {
@@ -274,7 +276,7 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     max-height: 300px;
-    padding: 0 5px;
+    padding: 5px;
     overflow: auto;
     box-sizing: border-box;
     li {

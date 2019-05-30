@@ -52,7 +52,8 @@ export default {
   },
   data () {
     return {
-      showSpecifica: false
+      showSpecifica: false,
+      currentOption: null
     }
   },
   props: {
@@ -78,8 +79,9 @@ export default {
   },
   methods: {
     // 改变规格
-    specChanged (current) {
-      console.log(current)
+    specChanged (option) {
+      this.currentOption = option
+      this.$emit('optionChange', option)
     }
   }
 }

@@ -25,6 +25,7 @@
               :img="item.img"
               :count="item.count"
               :specifications="item.priceModels"
+              @optionChange="optionChange"
             />
           </template>
         </pl-checkbox>
@@ -50,6 +51,7 @@
         </span>
         <button
           :class="$style.settlementBtn"
+          @click="settlement"
         >
           结算(0)
         </button>
@@ -149,6 +151,14 @@ export default {
     },
     checkAll () {
       this.$refs.checkboxGroup.changeAll(this.checkedAll)
+    },
+    // 改变规格
+    optionChange (option) {
+      console.log(option)
+    },
+    // 结算
+    settlement () {
+      this.$router.push({ name: 'SubmitOrder' })
     }
   }
 }

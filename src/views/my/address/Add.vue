@@ -241,7 +241,7 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next()
-    if (from.name === 'Cart') {
+    if (from.name === 'SubmitOrder') {
       sessionStorage.setItem('selectAddress', JSON.stringify({
         name: from.name,
         params: from.params,

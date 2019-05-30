@@ -10,8 +10,8 @@ export default [
   },
   {
     path: '/order/submit/:productSeq/:optionCode/:count/:brokerId?',
-    name: 'Cart',
-    component: () => import('../views/cart/Cart.vue'),
+    name: 'SubmitOrder',
+    component: () => import('../views/cart/Submit-Order.vue'),
     props: true,
     meta: {
       title: '提交订单'
