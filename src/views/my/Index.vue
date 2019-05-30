@@ -109,6 +109,24 @@
           />
         </router-link>
       </div>
+      <div :class="$style.newLogistics">
+        <div :class="$style.logisticsTitle">
+          最新物流
+        </div>
+        <div :class="$style.logisticsContent">
+          <div :class="$style.contentLeft">
+            <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559206487599&di=882d71c63c8238a102dff133972156e6&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fblog%2F201507%2F22%2F20150722175714_LwSjG.jpeg">
+          </div>
+          <div :class="$style.contentRight">
+            <div :class="$style.deliveryStatus">
+              派送中
+            </div>
+            <div :class="$style.deliveryDetails">
+              [西安市] 快件已在鱼化寨签收
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div :class="$style.tip">
       <span :class="$style.tipCircle" />
@@ -116,6 +134,7 @@
         成为Helper，第一桶金从这里开始>>
       </router-link>
     </div>
+    <you-like style="margin-top: 32px" />
     <div :class="$style.setting + ' radius-20'">
       <pl-fields
         icon="coffers"
@@ -141,9 +160,13 @@
 
 <script>
 import { orderPhysicalorderSummary } from '../../apis/order-manager'
+import youLike from './../old-home/YouLike.vue'
 import { mapGetters } from 'vuex'
 export default {
   name: 'My',
+  components: {
+    youLike
+  },
   data () {
     return {
       count: {
@@ -314,15 +337,17 @@ export default {
     color: #85A5FF;
   }
   .my-orders {
-    padding: 20px 28px;
+    /*padding: 20px 28px;*/
     margin: 16px 24px 24px;
     background-color: #fff;
     border-radius: 20px;
   }
   .order-status {
+    padding-top: 38px;
     display: flex;
     justify-content: space-around;
-    margin-top: 30px;
+    /*margin-top: 30px;*/
+    padding-bottom: 15px;
     a {
       position: relative;
       font-size: 20px;
@@ -348,6 +373,51 @@ export default {
     }
     a:nth-last-of-type(1) .badge {
       right: -14px;
+    }
+  }
+  .new-logistics{
+    background-color: #FBFBFB;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    .logistics-title{
+      padding-top: 16px;
+      padding-left: 32px;
+      font-size:24px;
+      font-family:PingFangSC-Regular;
+      font-weight:400;
+      color:rgba(102,102,102,1);
+      line-height:34px;
+    }
+    .logistics-content{
+      display: flex;
+      flex-direction: row;
+      padding: 16px 0 24px 32px;
+      .content-left{
+        width: 88px;
+        height: 88px;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .content-right{
+        padding-left: 24px;
+        .delivery-status{
+          font-size:28px;
+          font-family:PingFangSC-Regular;
+          font-weight:400;
+          color:rgba(24,144,255,1);
+          line-height:40px;
+        }
+        .delivery-details{
+          margin-top: 14px;
+          font-size:24px;
+          font-family:PingFangSC-Regular;
+          font-weight:400;
+          color:rgba(102,102,102,1);
+          line-height:34px;
+        }
+      }
     }
   }
   .setting {
