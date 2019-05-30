@@ -233,9 +233,11 @@ export default {
     async submitOrder () {
       let { name, params, query } = this.$route
       if (!this.mobile) {
-        await this.$confirm('您还没有绑定手机，请先绑定手机号')
-        this.$router.push({ name: 'BindMobile' })
-        setSession('willBind', { name, params, query })
+        this.$confirm('您还没有绑定手机，请先绑定手机')
+          .then(() => {
+            this.$router.push({ name: 'BindMobile' })
+            setSession('willBind', { name, params, query })
+          })
         return
       }
       try {

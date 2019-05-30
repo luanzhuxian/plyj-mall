@@ -132,18 +132,19 @@ export default {
   .message-box-content {
     position: relative;
     top: calc(30vh);
-    width: 490px;
+    width: 540px;
     margin: 0 auto;
     background-color: #fff;
     text-align: center;
-    border-radius: 20px;
+    border-radius: 10px;
     overflow: hidden;
     .message {
       display: flex;
       align-items: center;
       justify-content: center;
+      min-height: 140px;
       padding: 20px 0;
-      min-height: 100px;
+      color: #2e2e2e;
       .vice-message {
         margin-top: 24px;
         font-size: 28px;
@@ -151,9 +152,8 @@ export default {
       }
       .main-message {
         padding: 0 10px;
-        color: #333;
-        font-size: 32px;
-        font-weight: bold;
+        font-size: 34px;
+        line-height: 48px;
       }
     }
   }
@@ -165,14 +165,14 @@ export default {
       border: none;
       height: 88px;
       font-size: 34px;
-      font-weight: bold;
+      font-weight: 500;
       background-color: #fff;
       &.confirm {
-        color: #1890FF;
+        color: #FE7700;
       }
       &.cancel {
         position: relative;
-        color: #999;
+        color: #666;
         font-weight: normal;
         &:after {
           @include border-half-right(#efefef)

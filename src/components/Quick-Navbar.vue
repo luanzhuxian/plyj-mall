@@ -48,9 +48,12 @@
       <router-link
         tag="li"
         active-class="active"
-        :to="{ name: (agentUser || isAdmin) ? 'Yaji' : 'WhatsHelper' }"
+        :to="{ name: 'ShoppingCart' }"
       >
-        <pl-svg name="yaji" />
+        <pl-svg
+          :class="$style.cart"
+          name="cart"
+        />
       </router-link>
       <router-link
         tag="li"
@@ -120,6 +123,9 @@ export default {
     }
     svg {
       width: 44px;
+    }
+    .cart {
+      width: 64px !important;
     }
   }
   .on-off {
