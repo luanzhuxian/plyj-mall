@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import AddressItem from '../../components/Address-Item.vue'
+import AddressItem from '../../components/item/Address-Item.vue'
 import OrderItem from '../../components/item/Order-Item.vue'
 import {
   submitPhysicalOrder,

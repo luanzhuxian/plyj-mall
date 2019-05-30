@@ -273,7 +273,7 @@ import TopText from '../../../components/Top-Text.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import ModuleTitle from '../../../components/Module-Title.vue'
 import ExpressItem from '../../../components/item/Express-Item.vue'
-import AddressItem from '../../../components/Address-Item.vue'
+import AddressItem from '../../../components/item/Address-Item.vue'
 import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import {

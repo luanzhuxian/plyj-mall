@@ -150,7 +150,7 @@
 import { applyOrderInvoice, getOrderDetail } from '../../../apis/order-manager'
 import { checkLength } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
-import AddressItem from '../../../components/Address-Item.vue'
+import AddressItem from '../../../components/item/Address-Item.vue'
 export default {
   name: 'Invoice',
   components: {

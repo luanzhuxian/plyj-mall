@@ -238,16 +238,6 @@ export default {
   },
   deactivated () {
     this.clearForm()
-  },
-  beforeRouteEnter (to, from, next) {
-    next()
-    if (from.name === 'SubmitOrder') {
-      sessionStorage.setItem('selectAddress', JSON.stringify({
-        name: from.name,
-        params: from.params,
-        query: from.query
-      }))
-    }
   }
 }
 </script>
