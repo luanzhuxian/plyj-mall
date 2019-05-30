@@ -33,7 +33,7 @@
         <router-link
           v-if="!isAdmin"
           :class="$style.settingEnter"
-          :to="{ name: '' }"
+          :to="{ name: 'Setting' }"
         >
           <pl-svg name="my-setting" />
         </router-link>
@@ -134,7 +134,10 @@
         成为Helper，第一桶金从这里开始>>
       </router-link>
     </div>
-    <you-like style="margin-top: 32px" />
+    <you-like
+      :is-my="true"
+      style="margin-top: 16px"
+    />
     <div :class="$style.setting + ' radius-20'">
       <pl-fields
         icon="coffers"

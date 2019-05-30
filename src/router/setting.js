@@ -2,7 +2,15 @@ export default [
   {
     path: '/my/setting',
     name: 'Setting',
-    component: () => import('../views/my/setting/Index.vue'),
+    component: () => import('../views/my/setting/index.vue'),
+    meta: {
+      title: '朋来雅集'
+    }
+  },
+  {
+    path: '/my/edit',
+    name: 'SettingEdit',
+    component: () => import('../views/my/setting/edit.vue'),
     meta: {
       title: '设置'
     }

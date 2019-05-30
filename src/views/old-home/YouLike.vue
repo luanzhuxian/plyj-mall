@@ -3,7 +3,16 @@
     :class="$style.like"
     v-if="likeProduct.length > 0"
   >
-    <div :class="$style.title">
+    <div
+      v-if="isMy"
+      :class="$style.titleMy"
+    >
+      <img src="../../assets/images/my/youLike.png">
+    </div>
+    <div
+      v-else
+      :class="$style.title"
+    >
       猜你喜欢
     </div>
     <div :class="$style.likeGoodsList">
@@ -48,6 +57,10 @@ export default {
     productSeq: {
       type: String,
       default: ''
+    },
+    isMy: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -90,6 +103,15 @@ export default {
     font-size: 32px;
     font-weight: bold;
     margin-bottom: 28px;
+  }
+  .title-my{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+    img{
+      width: 256px;
+      height: 40px;
+    }
   }
   .like-goods-list {
     display: flex;
