@@ -34,7 +34,7 @@
 
     <div :class="$style.settlement">
       <pl-checkbox
-        v-model="checkedAll"
+        :checked="checkedAll"
         @change="checkAll"
       >
         <span
@@ -143,14 +143,12 @@ export default {
   },
   methods: {
     selectedChange (selected) {
-      if (selected.length === this.products.length) {
-        this.checkedAll = true
-      } else {
-        this.checkedAll = false
-      }
+      console.log(selected)
+      this.checkedAll = selected.length === this.products.length
     },
-    checkAll () {
-      this.$refs.checkboxGroup.changeAll(this.checkedAll)
+    checkAll (val) {
+      this.checkedAll = val
+      this.$refs.checkboxGroup.changeAll(val)
     },
     // 改变规格
     optionChange (option) {

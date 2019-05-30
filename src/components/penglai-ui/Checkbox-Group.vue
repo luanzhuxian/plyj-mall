@@ -13,7 +13,7 @@ export default {
     }
   },
   model: {
-    value: 'group',
+    prop: 'group',
     event: 'change'
   },
   props: {

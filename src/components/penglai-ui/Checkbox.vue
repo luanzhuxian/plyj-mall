@@ -9,7 +9,7 @@
   >
     <input
       type="checkbox"
-      :checked="value || checked"
+      :checked="checked || localChecked"
       @change="handleChange"
       v-show="false"
       :disabled="disabled"
@@ -24,7 +24,7 @@
       <span
         :class="{
           'pl-checkbox-inner': true,
-          'checked': value || checked,
+          'checked': checked || localChecked,
           'disabled': disabled
         }"
       >
@@ -32,7 +32,7 @@
           class="check"
           name="check"
           color="#fff"
-          v-show="value || checked"
+          v-show="checked || localChecked"
         />
       </span>
     </label>
@@ -45,11 +45,11 @@ export default {
   name: 'PlCheckbox',
   data () {
     return {
-      checked: false
+      localChecked: false
     }
   },
   model: {
-    value: 'value',
+    prop: 'checked',
     event: 'change'
   },
   props: {
@@ -63,7 +63,7 @@ export default {
         return null
       }
     },
-    value: {
+    checked: {
       type: Boolean
     },
     disabled: {
@@ -84,36 +84,38 @@ export default {
       default: 0
     }
   },
+  watch: {
+    checked (val) {
+      this.localChecked = val
+    }
+  },
+  mounted () {
+    this.localChecked = this.checked
+  },
   methods: {
     handleChange (e) {
+      this.localChecked = e.currentTarget.checked
       if (this.data) {
-        this.checked = e.currentTarget.checked
-        this.$parent.change(this.checked, this.data)
+        this.$parent.change(this.localChecked, this.data)
+        this.$emit('change', this.localChecked)
       } else {
-        this.$emit('change', e.currentTarget.checked)
-        this.checked = e.currentTarget.checked
+        this.$emit('change', this.localChecked)
       }
     },
     // 选中
     selected () {
-      if (!this.checked) {
-        this.checked = true
-        if (this.data) {
-          this.$parent.change(this.checked, this.data)
-        } else {
-          this.$emit('change', true)
-        }
+      if (!this.localChecked) {
+        this.$parent.change(true, this.data)
+        this.$emit('change', true)
+        this.localChecked = true
       }
     },
     // 取消选中
     cancel () {
-      if (this.checked) {
-        this.checked = false
-        if (this.data) {
-          this.$parent.change(this.checked, this.data)
-        } else {
-          this.$emit('change', false)
-        }
+      if (this.localChecked) {
+        this.$parent.change(false, this.data)
+        this.$emit('change', false)
+        this.localChecked = false
       }
     }
   }

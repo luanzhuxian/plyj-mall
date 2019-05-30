@@ -365,6 +365,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 50px;
   }
   .noContentIcon {
     width: 80%;
