@@ -19,60 +19,69 @@
       </a>
     </div>
 
-    <div :class="$style.receivingInfo">
+    <div
+      :class="$style.panel"
+      v-if="orderExpressInfoModel"
+    >
       <express-item
-        v-if="orderExpressInfoModel"
         :express-name="orderExpressInfoModel.courierCompanyName"
         :express-number="orderExpressInfoModel.courierNo"
         :order-id="orderId"
       />
-      <address-item
-        v-if="address.realName"
-        :address="address"
-      />
     </div>
 
-    <div :class="$style.detail">
-      <div :class="'fz-24 '+$style.createTime">
-        <pl-list
-          title="下单时间："
-          :content="orderInfoModel.createTime"
-        />
-        <pl-list
-          title="订单编号："
-          :content="orderInfoModel.orderSn"
-        />
-      </div>
-
+    <div :class="$style.panel">
       <div
         :class="$style.orderInfo"
         v-for="item of relationModel"
         :key="item.productModel.contentId"
       >
         <order-item
+          size="small"
           :img="item.mediaInfoModels[0].mediaUrl"
           :name="item.productModel.productName"
           :count="item.orderProductRelationModel.count"
           :option="item.orderProductRelationModel.optionName"
           :price="item.orderProductRelationModel.productPrice"
-          route-name="Lesson"
           :product-seq="item.orderProductRelationModel.productSeq"
+          route-name="Lesson"
         />
         <div :class="$style.buttons">
+          <pl-button
+            plain
+            round
+            @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+          >
+            退款完成
+          </pl-button>
           <pl-button
             v-if="canIApplyService && !supplierOrder"
             plain
             round
             @click="$router.push({ name: 'RefundApply', params: { orderId } })"
           >
-            申请售后
+            申请退款
+          </pl-button>
+          <pl-button
+            type="warning"
+            plain
+            round
+            @click="$router.push({ name: 'CommentOrder', params: { orderId: item.orderInfoModel.orderSn } })"
+          >
+            晒单评价
           </pl-button>
         </div>
-        <div
+        <!-- <div
           :class="$style.explain"
           v-if="item.productModel.productType === 'VIRTUAL_GOODS'"
+        > -->
+        <div
+          :class="$style.explain"
         >
-          <ModuleTitle title="使用说明" />
+          <ModuleTitle
+            title="使用说明"
+            size="mini"
+          />
           <div
             :class="$style.explainBox + ' fz-26 gray-2'"
             v-text="item.productModel.productUseMethod"
@@ -98,65 +107,64 @@
       </div>
 
       <div :class="$style.truthMoney">
-        <p class="fz-30">
-          实际支付：
-        </p>
-        <p
+        <span :class="$style.totalCount">共1件</span>
+        <span class="fz-30">
+          总价：
+        </span>
+        <span
           class="fz-30 rmb"
           v-text="orderInfoModel.amount || 0"
         />
       </div>
-
-      <div
-        :class="$style.buttons"
-        v-if="orderInfoModel.orderStatus !== 'CLOSED'"
-      >
-        <pl-button
-          round
-          plain
-          @click="cancel"
-          v-if="orderInfoModel.orderStatus === 'WAIT_PAY'"
-        >
-          取消订单
-        </pl-button>
-        <pl-button
-          round
-          plain
-          type="warning"
-          v-if="orderInfoModel.assessment === 'NO' && orderInfoModel.orderStatus === 'FINISHED'"
-          @click="$router.push({ name: 'CommentOrder', params: { orderId } })"
-        >
-          去评价
-        </pl-button>
-        <pl-button
-          round
-          type="warning"
-          v-if="orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
-          @click="confirmGet(orderInfoModel.orderType)"
-        >
-          确认收货
-        </pl-button>
-        <pl-button
-          v-if="orderInfoModel.orderStatus === 'FINISHED' && !orderInvoiceModel && !supplierOrder"
-          plain
-          round
-          @click="$router.replace({ name: 'Invoice', params: { orderId } })"
-        >
-          申请发票
-        </pl-button>
-        <pl-button
-          v-if="orderInvoiceModel && !supplierOrder"
-          plain
-          round
-          @click="$router.push({ name: 'InvoiceDetail', params: { orderId } })"
-        >
-          查看发票
-        </pl-button>
-      </div>
     </div>
 
     <div
+      :class="$style.panel"
+      v-if="address.realName"
+    >
+      <address-item
+        :address="address"
+      />
+    </div>
+
+    <div :class="[$style.panel, $style.otherInfo]">
+      <div :class="$style.infoTop">
+        <pl-list
+          title="下单时间："
+          :content="orderInfoModel.createTime"
+        />
+        <pl-list
+          title="订单编号："
+          :content="orderInfoModel.orderSn"
+        />
+        <pl-list
+          title="支付方式："
+          :content="orderInfoModel.orderSn"
+        />
+        <pl-list
+          title="支付时间："
+          :content="orderInfoModel.orderSn"
+        />
+        <pl-list
+          title="配送方式："
+          :content="orderInfoModel.orderSn"
+        />
+        <pl-list
+          title="发货时间："
+          :content="orderInfoModel.orderSn"
+        />
+      </div>
+      <div :class="$style.infoBottom">
+        <span :class="$style.title">发票信息：</span>
+        <span>未开票</span>
+      </div>
+    </div>
+
+    <!-- <div
       v-if="orderDetailModel.orderPostscript"
+      :class="$style.remark + ' radius-20 mt-28'"
+    > -->
+    <div
       :class="$style.remark + ' radius-20 mt-28'"
     >
       <div :class="$style.remarkTop">
@@ -170,6 +178,70 @@
         :class="$style.remarkContent"
         v-text="orderDetailModel.orderPostscript"
       />
+    </div>
+    <div :class="$style.footer">
+      <!-- <pl-button
+        round
+        plain
+        @click="cancel"
+        v-if="orderInfoModel.orderStatus === 'WAIT_PAY'"
+      >
+        取消订单
+      </pl-button>
+      <pl-button
+        round
+        plain
+        type="warning"
+        v-if="orderInfoModel.assessment === 'NO' && orderInfoModel.orderStatus === 'FINISHED'"
+        @click="$router.push({ name: 'CommentOrder', params: { orderId } })"
+      >
+        去评价
+      </pl-button>
+      <pl-button
+        round
+        type="warning"
+        v-if="orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
+        @click="confirmGet(orderInfoModel.orderType)"
+      >
+        确认收货
+      </pl-button>
+      <pl-button
+        v-if="orderInfoModel.orderStatus === 'FINISHED' && !orderInvoiceModel && !supplierOrder"
+        plain
+        round
+        @click="$router.replace({ name: 'Invoice', params: { orderId } })"
+      >
+        申请发票
+      </pl-button>
+      <pl-button
+        v-if="orderInvoiceModel && !supplierOrder"
+        plain
+        round
+        @click="$router.push({ name: 'InvoiceDetail', params: { orderId } })"
+      >
+        查看发票
+      </pl-button> -->
+      <pl-button
+        plain
+        round
+        @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+      >
+        删除订单
+      </pl-button>
+      <pl-button
+        plain
+        round
+        @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+      >
+        联系我们
+      </pl-button>
+      <pl-button
+        plain
+        round
+        @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+      >
+        查看物流
+      </pl-button>
     </div>
   </div>
 
@@ -374,7 +446,7 @@ export default {
           return
         }
         if (flag === 'WAIT_RECEIVE') this.tips.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
-        if (flag === 'WAIT_PAY') this.tips.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动取消`
+        if (flag === 'WAIT_PAY') this.tips.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
       }, 1000)
     }
   }
@@ -383,10 +455,12 @@ export default {
 
 <style module lang="scss">
   .order-detail {
-    padding: 28px 40px;
+    padding: 28px 24px 140px;
   }
   .top {
     position: relative;
+    margin-bottom: 28px;
+    padding: 0 16px;
   }
   .call-me {
     position: absolute;
@@ -395,24 +469,30 @@ export default {
     width: 38px;
     height: 80px;
   }
-  .receiving-info {
-    margin-top: 28px;
+  .panel {
     background-color: #fff;
     border-radius: $--radius1;
+    margin-bottom: 20px;
   }
-  .detail {
-    margin-top: 28px;
-    padding: 24px 0;
-    border-radius: $--radius1;
-    background-color: #fff;
-    .create-time {
-      position: relative;
-      margin-left: 28px;
-      padding-bottom: 24px;
-      line-height: 38px;
-      &:after {
-        @include border-half-bottom(#e7e7e7);
+  .other-info {
+    position: relative;
+    line-height: 34px;
+    font-size: 24px;
+    .info-top {
+      padding: 24px 24px 16px;
+      border-bottom: 1px solid #F0F0F0;
+      > div {
+        margin-bottom: 20px;
+        &:nth-last-of-type(1) {
+          margin-bottom: 0;
+        }
       }
+    }
+    .info-bottom {
+      padding: 24px;
+    }
+    .title {
+      color: #666666;
     }
   }
   .order-info {
@@ -420,39 +500,33 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    padding: 32px 0 32px 28px;
+    padding: 28px 0 24px 24px;
     min-height: 140px;
-    button {
-      margin-top: 28px;
-    }
-    &:after {
-      @include border-half-bottom(#e7e7e7);
-    }
   }
   .explain {
     width: 100%;
     position: relative;
-    margin-top: 32px;
-    margin-left: 28px;
-    padding-top: 20px;
+    margin-top: 24px;
+    margin-left: 24px;
+    padding-top: 16px;
     &:after {
       @include border-half-top(#e7e7e7)
     }
   }
   .explain-box {
-    margin-top: 16px;
-    margin-right: 28px;
+    margin-top: 14px;
+    margin-right: 24px;
     padding: 24px 30px;
     background-color: #f3f3f3;
     border-radius: $--radius2;
   }
   .product-money {
-    margin-left: 28px;
+    margin-left: 24px;
     position: relative;
-    padding: 8px 28px 8px 0;
+    padding: 12px 24px 12px 0;
     line-height: 50px;
     &:after {
-      @include border-half-bottom(#e7e7e7);
+      @include border-half-top(#e7e7e7);
     }
     p {
       display: flex;
@@ -462,27 +536,32 @@ export default {
   .truth-money {
     position: relative;
     display: flex;
-    margin-left: 28px;
-    padding-right: 28px;
-    justify-content: space-between;
+    margin-left: 24px;
+    padding: 0 24px 24px 0;
+    justify-content: flex-end;
     align-items: center;
-    height: 76px;
-    > p:nth-of-type(2) {
-      color: $--primary-color;
+    > span {
+      &:nth-of-type(1) {
+        color: #999999;
+        margin-right: 12px;
+      }
+      &:nth-last-of-type(1) {
+        color: $--primary-color;
+      }
     }
   }
   .buttons {
     position: relative;
-    padding: 0 28px;
+    padding: 0 24px;
     text-align: right;
     > button {
-      margin-top: 24px;
-      margin-left: 20px;
+      margin-top: 0;
+      margin-left: 24px;
     }
   }
 
   .remark {
-    padding: 24px 28px 18px;
+    padding: 24px 24px 18px;
     background-color: #fff;
   }
   .remarkTop {
@@ -504,6 +583,21 @@ export default {
     padding: 20px 0;
     font-size: 26px;
     color: #666;
+  }
+
+  .footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #FFF;
+    display: flex;
+    justify-content: flex-end;
+    padding: 18px 24px;
+
+    > button {
+      margin-left: 20px;
+    }
   }
 
   .skeleton {

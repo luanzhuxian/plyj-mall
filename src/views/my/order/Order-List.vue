@@ -35,13 +35,18 @@
             tag="div"
             :key="item.orderInfoModel.sequenceNbr"
             :to="{ name: 'OrderDetail', params: { orderId: item.orderInfoModel.orderSn } }"
-            :class="'mb-28 ' + $style.orderBox"
+            :class="$style.orderBox"
           >
-            <div class="fz-24">
-              <pl-list
-                title="订单编号："
-                :content="item.orderInfoModel.orderSn"
-              />
+            <div class="">
+              <div :class="$style.orderBoxLeft">
+                <span :class="$style.orderTag">
+                  实体商品
+                </span>
+                <pl-list
+                  title="订单编号："
+                  :content="item.orderInfoModel.orderSn"
+                />
+              </div>
               <p
                 :class="$style.status"
                 v-text="orderStatusMap[item.orderInfoModel.orderStatus]"
@@ -56,18 +61,29 @@
               border
             />
             <div :class="$style.orderBoxBottom">
-              <price
-                prefix-text="总价："
-                :price="item.orderInfoModel.amount + item.orderInfoModel.freight"
-                size="small"
-                plain
-              />
+              <div class="">
+                <span :class="$style.totalCount">共1件商品</span>
+                <price
+                  prefix-text="总价："
+                  :price="item.orderInfoModel.amount + item.orderInfoModel.freight"
+                  size="small"
+                  plain
+                />
+              </div>
               <div
                 :class="$style.buttons"
                 v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY' ||
                   item.orderInfoModel.orderStatus === 'WAIT_RECEIVE' ||
                   (item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO')"
               >
+                <pl-button
+                  v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'"
+                  round
+                  plain
+                  @click="cancel"
+                >
+                  取消订单
+                </pl-button>
                 <pl-button
                   v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'"
                   type="warning"
@@ -79,14 +95,30 @@
                   去支付
                 </pl-button>
                 <pl-button
+                  v-if="item.orderInfoModel.orderStatus === 'FINISHED' || item.orderInfoModel.orderStatus === 'CLOSED'"
+                  round
+                  plain
+                  @click="deleteOrder"
+                >
+                  删除订单
+                </pl-button>
+                <pl-button
+                  v-if="item.orderInfoModel.orderStatus === 'WAIT_RECEIVE' || item.orderInfoModel.orderStatus === 'FINISHED'"
+                  round
+                  plain
+                  @click="checkLogisticsInfo"
+                >
+                  查看物流
+                </pl-button>
+                <pl-button
                   v-if="item.orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
-                  @click="confirmGet(item.orderInfoModel.orderType, item.orderInfoModel.orderSn)"
                   type="warning"
                   round
+                  @click="confirmGet(item.orderInfoModel.orderType, item.orderInfoModel.orderSn)"
                 >
                   确认收货
                 </pl-button>
-                <pl-button
+                <!-- <pl-button
                   v-if="item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO'"
                   type="warning"
                   plain
@@ -94,7 +126,7 @@
                   @click="$router.push({ name: 'CommentOrder', params: { orderId: item.orderInfoModel.orderSn } })"
                 >
                   去评价
-                </pl-button>
+                </pl-button> -->
               </div>
             </div>
           </router-link>
@@ -269,9 +301,10 @@ export default {
 </script>
 <style module lang="scss">
   .orderList {
-    padding: 20px 40px 120px;
+    padding: 22px 24px 120px;
   }
   .order-box {
+    margin-bottom: 20px;
     padding-left: 28px;
     padding-bottom: 24px;
     border-radius: 20px;
@@ -282,12 +315,11 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 80px;
-        padding-right: 28px;
-        margin-bottom: 30px;
-        &:after {
-          @include border-half-bottom(#e7e7e7);
-        }
+        // height: 80px;
+        padding: 22px 24px 36px 0;
+        // &:after {
+        //   @include border-half-bottom(#e7e7e7);
+        // }
       }
     }
     .status {
@@ -298,9 +330,16 @@ export default {
     margin-top: 16px;
     > div {
       display: flex;
-      padding-right: 28px;
+      padding-right: 24px;
       justify-content: flex-end;
-      align-items: flex-end;
+      align-items: baseline;
+    }
+    .total-count {
+      font-size: 20px;
+      font-family: MicrosoftYaHeiUI;
+      color: #999999;
+      // line-height: 28px;
+      margin-right: 12px;
     }
     .price {
       font-size: 40px;
@@ -315,10 +354,9 @@ export default {
     .buttons {
       display: flex;
       flex-wrap: wrap;
-      margin-top: 32px;
+      margin-top: 24px;
       button {
-        margin-left: 20px;
-        margin-bottom: 20px;
+        margin-left: 24px;
       }
     }
   }
@@ -341,5 +379,20 @@ export default {
     height: 100%;
     background: url("../../../assets/images/my/circle.png") no-repeat center center;
     background-size: 100%;
+  }
+  .order-box-left {
+    display: inline-flex;
+    align-items: center;
+  }
+  .order-tag {
+    width: 104px;
+    height: 28px;
+    background: #F2B036;
+    border-radius: 14px;
+    font-size: 20px;
+    color: #FFFFFF;
+    line-height: 28px;
+    margin-right: 12px;
+    text-align: center;
   }
 </style>

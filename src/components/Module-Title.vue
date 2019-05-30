@@ -114,6 +114,12 @@ export default {
       }
     }
 
+    &.mini {
+      h2 {
+        font-size: 28px;
+        line-height: 38px;
+      }
+    }
     &.small {
       h2 { font-size: 32px; }
     }

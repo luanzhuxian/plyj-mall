@@ -78,14 +78,14 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 28px 28px 28px 0;
+    padding: 28px 24px 24px 0;
     background-color: #fff;
     border-radius: 20px;
     min-height: 100px;
     svg {
       width: 64px;
       height: 64px;
-      margin-left: 28px;
+      margin-left: 24px;
       margin-right: 28px;
       fill: $--warning-color;
     }
@@ -95,6 +95,11 @@ export default {
       flex-direction: column;
       .name {
         margin-bottom: 15px;
+        color: #2E2E2E;
+      }
+      .address {
+        font-size: 24px;
+        color: #333;
       }
     }
   }

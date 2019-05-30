@@ -1,6 +1,7 @@
 <template>
   <div
     :class="{
+      [$style[size]]: true,
       [$style.orderItem]: true,
       [$style.border]: border
     }"
@@ -12,25 +13,36 @@
       alt="商品图片"
     >
     <div :class="$style.right">
-      <div :class="$style.rightTop">
-        <div
-          :class="$style.name"
-          v-text="name"
-        />
-        <div
-          :class="$style.price+' rmb'"
-          v-text="price"
-        />
+      <div class="">
+        <div :class="$style.rightTop">
+          <div
+            :class="$style.name"
+            v-text="name"
+          />
+          <div :class="$style.priceWrapper">
+            <div
+              :class="$style.price + ' rmb'"
+              v-text="price"
+            />
+            <div
+              :class="$style.count"
+              v-text="count"
+            />
+          </div>
+        </div>
+        <div :class="$style.rightBottom">
+          <div
+            :class="$style.specification"
+            v-text="option"
+          />
+          <div :class="$style.date">
+            <span>时间：</span>
+            <span>2019.12.1</span>
+          </div>
+        </div>
       </div>
-      <div :class="$style.rightBottom">
-        <div
-          :class="$style.specification"
-          v-text="option"
-        />
-        <div
-          :class="$style.count"
-          v-text="count"
-        />
+      <div :class="$style.refundInfo">
+        退款中
       </div>
     </div>
   </div>
@@ -47,6 +59,10 @@ export default {
     }
   },
   props: {
+    size: {
+      type: String,
+      default: 'medium'
+    },
     border: Boolean,
     img: {
       type: String,
@@ -122,48 +138,88 @@ export default {
     display: flex;
     width: 100%;
     &.border {
-      &:after {
-        @include border-half-bottom(#e7e7e7);
-      }
+      // &:after {
+      //   @include border-half-bottom(#e7e7e7);
+      // }
       padding-bottom: 30px;
     }
     > img {
-      width: 140px;
-      height: 140px;
       object-fit: cover;
     }
-  }
-  .right {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    padding: 0 28px 0 18px;
-  }
-  .right-top {
-    display: flex;
-    justify-content: space-between;
-    font-size: 24px;
-    .name {
-      width: 290px;
-      color: #454553;
-      @include elps-wrap(2);
+    .right {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .price {
-      margin-left: 20px;
+    .right-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      .name {
+        flex: 1;
+        color: #454553;
+        font-size: 22px;
+        @include elps-wrap(2);
+      }
+      .price-wrapper {
+        padding-left: 26px;
+      }
+      .price {
+        font-family: HelveticaNeue;
+      }
+      .count {
+        text-align: right;
+        color: #999;
+        font-size: 22px;
+        &::before {
+          content: 'x';
+        }
+      }
     }
-  }
-  .specification {
-    width: 290px;
-    @include elps-wrap(2)
-  }
-  .right-bottom {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-    color: #999;
-    font-size: 22px;
-    .count:before {
-      content: 'x';
+    .right-bottom {
+      display: flex;
+      color: #999;
+      font-size: 20px;
+    }
+    .specification {
+      // width: 290px;
+      @include elps-wrap(2)
+    }
+    .refund-info {
+      text-align: right;
+      font-family: MicrosoftYaHeiUI;
+      color: #F2B036;
+    }
+    &.medium {
+      > img {
+        width: 164px;
+        height: 164px;
+      }
+      .right {
+        padding: 0 24px 0 20px;
+      }
+      .right-top {
+        .refund-info {
+          font-size: 24px;
+          line-height: 32px;
+        }
+      }
+    }
+    &.small {
+      > img {
+        width: 140px;
+        height: 140px;
+      }
+      .right {
+        padding: 0 24px 0 16px;
+      }
+      .right-top {
+        .refund-info {
+          font-size: 24px;
+          line-height: 32px;
+        }
+      }
     }
   }
 </style>

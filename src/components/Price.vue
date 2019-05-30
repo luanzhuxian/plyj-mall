@@ -7,7 +7,10 @@
       [$style.plain]: plain
     }"
   >
-    <span :class="$style.currentPrice">
+    <span
+      :class="$style.currentPrice"
+      :style="{ marginRight: originalPrice ? '10px' : '0' }"
+    >
       <span
         v-if="prefixText"
         :class="$style.prefixText"
@@ -178,7 +181,6 @@ export default {
   }
   .current-price {
     display: inline-block;
-    margin-right: 10px;
     color: $--primary-color;
     font-weight: bold;
   }

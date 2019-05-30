@@ -1,7 +1,5 @@
 <template>
   <button
-    :disabled="disabled || loading"
-    @click.stop="handleClick"
     :class="{
       'pl-button': true,
       [`pl-button__${type}`]: true,
@@ -10,6 +8,8 @@
       'plain': plain,
       'shadow': shadow
     }"
+    :disabled="disabled || loading"
+    @click.stop="handleClick"
   >
     <span>
       <pl-svg
@@ -129,9 +129,9 @@ export default {
     }
     /* small */
     &.pl-button__small {
-      padding: 0 22px;
+      padding: 0 32px;
       height: 50px;
-      font-size: 26px;
+      font-size: 24px;
       border-radius: 10px;
       &.round {
         border-radius: 25px;
