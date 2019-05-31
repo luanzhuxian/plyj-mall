@@ -19,12 +19,11 @@
       <span
         class="fz-22 gray-4"
         v-else
-        v-text="current.optionName"
-      />
+      >
+        {{ current.optionName }} × {{ current.count }}
+      </span>
       <pl-svg name="right" />
     </div>
-
-    <!--<specification-pop :img="img" :data="detail.priceModels" :visible="showSpecifica" @close="popClose" @confirm="selectSpec" />-->
   </div>
 </template>
 

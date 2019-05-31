@@ -3,7 +3,7 @@
     <button
       :class="$style.subtract"
       @click.stop="subtract"
-      :disabled="localCount <= min"
+      :disabled="localCount <= min || loading"
     >
       －
     </button>
@@ -16,7 +16,7 @@
     <button
       :class="$style.add"
       @click.stop="add"
-      :disabled="localCount >= max"
+      :disabled="localCount >= max || loading"
     >
       ＋
     </button>
@@ -28,7 +28,8 @@ export default {
   name: 'Count',
   data () {
     return {
-      localCount: 1
+      localCount: 1,
+      loading: false
     }
   },
   props: {
@@ -55,21 +56,34 @@ export default {
   },
   methods: {
     add () {
-      this.localCount++
-      this.$emit('change', this.localCount)
+      let temp = this.localCount
+      temp++
+      this.emitChange(temp)
     },
     subtract () {
-      this.localCount--
-      this.$emit('change', this.localCount)
+      let temp = this.localCount
+      temp--
+      this.emitChange(temp)
     },
     valueChange (e) {
       let val = Number(e.target.value)
       if (val && (val < this.max && val > this.min)) {
-        this.localCount = val
+        this.emitChange(val)
       } else {
         e.target.value = this.localCount
       }
-      this.$emit('change', this.localCount)
+    },
+    emitChange (count) {
+      this.loading = true
+      /*
+      * 触发change事件，在外部调用回调函数后，再改变localCount，并且可以指定localCount
+      * */
+      this.$emit('change', count, (err, number) => {
+        if (!err) {
+          this.localCount = number || count
+        }
+        this.loading = false
+      })
     }
   }
 }

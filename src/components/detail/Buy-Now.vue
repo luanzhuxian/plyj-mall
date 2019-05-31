@@ -46,6 +46,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getPenglaiAppid } from '../../apis/base-api'
+import { addToCart } from '../../apis/shopping-cart'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 
 export default {
@@ -55,7 +56,9 @@ export default {
   },
   data () {
     return {
-      showSpecifica: false // 显示规格弹框
+      showSpecifica: false, // 显示规格弹框
+      clickAddToCart: false,
+      clickBuyNow: false
     }
   },
   props: {
@@ -106,11 +109,18 @@ export default {
     specChanged (model) {
       this.$emit('update:currentModel', model)
       this.$nextTick(() => {
-        this.submit()
+        if (this.clickAddToCart) {
+          this.addToCart()
+        }
+        if (this.clickBuyNow) {
+          this.submit()
+        }
       })
     },
     // 跳转至提交订单页面
     async submit () {
+      this.clickBuyNow = true
+      this.clickAddToCart = false
       const { isSupplierProduct, brokerId, currentModel } = this
       if (!currentModel || !currentModel.count) {
         this.showSpecifica = true
@@ -132,17 +142,30 @@ export default {
         this.$router.push({ name: 'SubmitOrder', params: { productSeq, count, optionCode } })
       }
     },
-    addToCart () {
-      const { isSupplierProduct, brokerId, option } = this
-      if (!option || !option.count) {
-        // 触发无数据事件，在父组件中处理无数据的情况
-        this.$emit('nodata')
+    async addToCart () {
+      this.clickAddToCart = true
+      this.clickBuyNow = false
+      const { currentModel } = this
+      if (!currentModel || !currentModel.count) {
+        this.showSpecifica = true
         return
       }
-      console.log(isSupplierProduct, brokerId)
+      const { productSeq, count, optionCode } = currentModel
+      try {
+        await addToCart({
+          productId: productSeq,
+          productCount: count,
+          skuCode: optionCode
+        })
+        this.$success('加入成功')
+      } catch (e) {
+        throw e
+      }
     },
     reset () {
       this.showSpecifica = false
+      this.clickAddToCart = false
+      this.clickBuyNow = false
     }
   }
 }

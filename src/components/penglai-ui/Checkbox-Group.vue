@@ -24,6 +24,11 @@ export default {
       }
     }
   },
+  watch: {
+    group (val) {
+      this.$emit('change', val)
+    }
+  },
   methods: {
     change (checked, data) {
       if (checked) {
@@ -31,7 +36,6 @@ export default {
       } else {
         this.group.splice(this.group.indexOf(data), 1)
       }
-      this.$emit('change', this.group)
     },
     changeAll (flage) {
       let children = this.$children

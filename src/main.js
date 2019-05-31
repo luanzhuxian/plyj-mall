@@ -72,7 +72,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
     message: error.message
   })
   console.error(err)
-  vm.$destroy()
+  // vm.$destroy()
   // try {
   //   await saveLog(error)
   // } catch (e) {

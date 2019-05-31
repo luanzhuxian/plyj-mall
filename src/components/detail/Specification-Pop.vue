@@ -22,7 +22,10 @@
                   :class="$style.price"
                   v-text="selected.price"
                 />
-                <p :class="$style.original">
+                <p
+                  :class="$style.original"
+                  v-if="selected.originPrice"
+                >
                   原价：<del
                     class="rmb"
                     v-text="selected.originPrice"
@@ -42,7 +45,7 @@
                   v-for="(item, i) of data"
                   :key="i"
                   :class="{ [$style.active]: item.optionCode === selected.optionCode }"
-                  @click="change(item)"
+                  @click.stop="change(item)"
                   v-text="item.optionName"
                 />
               </ul>
@@ -58,7 +61,7 @@
               <div :class="$style.countCtr">
                 <button
                   :disabled="count <= min"
-                  @click="minus"
+                  @click.stop="minus"
                 >
                   -
                 </button>
@@ -69,7 +72,7 @@
                 >
                 <button
                   :disabled="count >= stock"
-                  @click="add"
+                  @click.stop="add"
                 >
                   +
                 </button>
@@ -80,7 +83,7 @@
             :class="$style.confirm"
             size="large"
             type="warning"
-            @click="confirm"
+            @click.stop="confirm"
           >
             确定
           </pl-button>
@@ -105,6 +108,16 @@ export default {
     productImage: {
       type: String,
       default: ''
+    },
+    // 默认数量
+    defaultCount: {
+      type: Number,
+      default: 0
+    },
+    // 默认选中的规格
+    defaultCode: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -118,28 +131,48 @@ export default {
     }
   },
   watch: {
-    data (val) {
-      if (val && val.length > 0) {
-        this.selected = val[0]
-        this.min = this.count = val[0].minBuyNum || 1
-        this.stock = val[0].stock
-      }
+    data: {
+      handler (val) {
+        if (val && val.length > 0) {
+          this.init()
+          // this.selected = val[0]
+          // this.min = this.count = val[0].minBuyNum || 1
+          // this.stock = val[0].stock
+        }
+      },
+      deep: true,
+      immediate: true
     },
     visible (val) {
       this.setShow(val)
+    },
+    defaultCount () {
+      this.init()
+    },
+    defaultCode () {
+      this.init()
     }
   },
   created () {
     this.setShow(this.visible)
   },
-  mounted () {
-    // this.selected = this.data[0]
-    // this.min = this.count = this.data[0].minBuyNum || 1
-    // this.stock = this.data[0].stock
-  },
   methods: {
     close () {
       this.$emit('update:visible', false)
+    },
+    init () {
+      this.count = this.defaultCount
+      const currentSku = this.data.find(item => item.optionCode === this.defaultCode)
+      if (currentSku) {
+        this.selected = currentSku || {}
+      } else {
+        this.selected = this.data[0] || {}
+      }
+      this.min = this.selected.minBuyNum || 1
+      if (!this.count) {
+        this.count = this.min
+      }
+      this.stock = this.selected.stock
     },
     setShow (show) {
       if (show) {
@@ -162,11 +195,11 @@ export default {
     countChange () {
       if (this.count <= this.min) {
         this.count = this.min
-        this.$toast(`此规格最小购买量为${this.min}`)
+        this.$warning(`此规格最小购买量为${this.min}`)
       }
       if (this.count >= this.stock) {
         this.count = this.stock
-        this.$toast(`购买数量不能大于库存`)
+        this.$warning(`购买数量不能大于库存`)
       }
     },
     minus () {
@@ -177,11 +210,11 @@ export default {
     },
     checkCount (count) {
       if (count < this.min) {
-        this.$toast(`此规格最小购买量为${this.min}`)
+        this.$warning(`此规格最小购买量为${this.min}`)
         return false
       }
       if (count > this.stock) {
-        this.$toast(`购买数量不能大于库存`)
+        this.$warning(`购买数量不能大于库存`)
         return false
       }
       return true
