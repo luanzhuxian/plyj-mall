@@ -1,4 +1,5 @@
 import './lib/transition.scss'
+import './fonts/iconfont.css'
 import Button from './Button.vue'
 import Input from './Input.vue'
 import GetCode from './Get-Code.vue'
@@ -51,6 +52,24 @@ const install = function (Vue, opts = {}) {
     zIndex: opts.size || 2000
   }
   Vue.prototype.$toast = Toast
+  Vue.prototype.$error = message => {
+    Toast({
+      type: 'error',
+      message
+    })
+  }
+  Vue.prototype.$success = message => {
+    Toast({
+      type: 'success',
+      message
+    })
+  }
+  Vue.prototype.$warning = message => {
+    Toast({
+      type: 'warning',
+      message
+    })
+  }
 }
 
 export default {
