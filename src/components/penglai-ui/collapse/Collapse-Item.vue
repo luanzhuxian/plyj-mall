@@ -32,10 +32,10 @@
       />
 
       <pl-svg
-        v-if="useRightIcon"
+        v-if="!useRightIcon"
         class="pl-collapse-item__right-icon"
         :name="rightIcon.name"
-        :color="rightIcon.color"
+        color="#CCC"
       />
       <slot
         v-else
