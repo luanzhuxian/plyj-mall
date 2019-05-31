@@ -58,10 +58,7 @@
           <p>今日润笔（元）</p>
           <p v-text="currentBalance" />
         </div>
-        <pl-svg
-          :class="$style.my-right"
-          name="my-right"
-        />
+        <pl-svg name="my-right" />
       </router-link>
     </div>
 
@@ -304,15 +301,14 @@ export default {
   }
   .runbi {
     display: flex;
-    flex-direction: row;
     width: 100%;
-    padding-left: 12px;
+    align-items: center;
+    padding: 28px 28px 28px 48px;
     background-color: #fff;
     > div {
       display: inline-flex;
       flex-direction: column;
       flex: 1;
-      padding: 28px;
       color: #999;
       > p {
         &:nth-of-type(1) {
@@ -325,11 +321,9 @@ export default {
         }
       }
     }
-    svg{
+    > svg{
       width: 18px;
       height: 26px;
-      margin-right: 28px;
-      margin-top: 70px;
     }
   }
   .withdraw-tip {
