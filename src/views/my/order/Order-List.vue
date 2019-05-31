@@ -92,7 +92,7 @@
                   :disabled="payloading"
                   @click="pay(item.orderInfoModel.orderSn, item.orderInfoModel.orderType)"
                 >
-                  去支付
+                  去付款
                 </pl-button>
                 <pl-button
                   v-if="item.orderInfoModel.orderStatus === 'FINISHED' || item.orderInfoModel.orderStatus === 'CLOSED'"

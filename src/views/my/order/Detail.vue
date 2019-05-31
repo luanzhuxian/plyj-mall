@@ -63,6 +63,7 @@
             申请退款
           </pl-button>
           <pl-button
+            v-if="orderInfoModel.assessment === 'NO' && orderInfoModel.orderStatus === 'FINISHED'"
             type="warning"
             plain
             round
@@ -71,12 +72,9 @@
             晒单评价
           </pl-button>
         </div>
-        <!-- <div
-          :class="$style.explain"
-          v-if="item.productModel.productType === 'VIRTUAL_GOODS'"
-        > -->
         <div
           :class="$style.explain"
+          v-if="item.productModel.productType === 'VIRTUAL_GOODS'"
         >
           <ModuleTitle
             title="使用说明"
@@ -98,7 +96,7 @@
           />
         </p>
         <p>
-          <span>运费（快递）</span>
+          <span>运费</span>
           <span
             class="rmb"
             v-text="orderInfoModel.freight"
@@ -155,8 +153,22 @@
         />
       </div>
       <div :class="$style.infoBottom">
-        <span :class="$style.title">发票信息：</span>
-        <span>未开票</span>
+        <collapse v-model="collepseActiveNames">
+          <collapse-item name="1">
+            <div slot="title">
+              <span :class="$style.invoiceTitle">发票信息：</span>
+              <span>未开票</span>
+            </div>
+            <div>
+              <div :class="$style.invoiceName">
+                西安大梦想家艺术培训有限公司
+              </div>
+              <div :class="$style.invoiceNumber">
+                13777327727327273727
+              </div>
+            </div>
+          </collapse-item>
+        </collapse>
       </div>
     </div>
 
@@ -180,31 +192,7 @@
       />
     </div>
     <div :class="$style.footer">
-      <!-- <pl-button
-        round
-        plain
-        @click="cancel"
-        v-if="orderInfoModel.orderStatus === 'WAIT_PAY'"
-      >
-        取消订单
-      </pl-button>
-      <pl-button
-        round
-        plain
-        type="warning"
-        v-if="orderInfoModel.assessment === 'NO' && orderInfoModel.orderStatus === 'FINISHED'"
-        @click="$router.push({ name: 'CommentOrder', params: { orderId } })"
-      >
-        去评价
-      </pl-button>
-      <pl-button
-        round
-        type="warning"
-        v-if="orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
-        @click="confirmGet(orderInfoModel.orderType)"
-      >
-        确认收货
-      </pl-button>
+      <!--
       <pl-button
         v-if="orderInfoModel.orderStatus === 'FINISHED' && !orderInvoiceModel && !supplierOrder"
         plain
@@ -222,6 +210,15 @@
         查看发票
       </pl-button> -->
       <pl-button
+        v-if="orderInfoModel.orderStatus === 'WAIT_PAY'"
+        round
+        plain
+        @click="cancel"
+      >
+        取消订单
+      </pl-button>
+      <pl-button
+        v-if="orderInfoModel.orderStatus === 'FINISHED' || orderInfoModel.orderStatus === 'CLOSED'"
         plain
         round
         @click="$router.push({ name: 'RefundApply', params: { orderId } })"
@@ -236,11 +233,30 @@
         联系我们
       </pl-button>
       <pl-button
+        v-if="orderInfoModel.orderStatus === 'FINISHED' || orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
         plain
         round
         @click="$router.push({ name: 'RefundApply', params: { orderId } })"
       >
         查看物流
+      </pl-button>
+      <pl-button
+        v-if="orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
+        round
+        type="warning"
+        @click="confirmGet(orderInfoModel.orderType)"
+      >
+        确认收货
+      </pl-button>
+      <pl-button
+        v-if="orderInfoModel.orderStatus === 'WAIT_PAY'"
+        type="warning"
+        round
+        :loading="payloading && currentPayId === orderInfoModel.orderSn"
+        :disabled="payloading"
+        @click="pay(orderInfoModel.orderSn, orderInfoModel.orderType)"
+      >
+        去付款
       </pl-button>
     </div>
   </div>
@@ -276,6 +292,8 @@ import ExpressItem from '../../../components/item/Express-Item.vue'
 import AddressItem from '../../../components/item/Address-Item.vue'
 import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
+import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
+import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import {
   getOrderDetail,
   physicalOrderCancellation,
@@ -296,7 +314,9 @@ export default {
     ExpressItem,
     AddressItem,
     OrderItemSkeleton,
-    AddressItemSkeleton
+    AddressItemSkeleton,
+    Collapse,
+    CollapseItem
   },
   data () {
     return {
@@ -328,7 +348,8 @@ export default {
       currentStatus: '',
       orderType: '',
       timer: 0,
-      loaded: false
+      loaded: false,
+      collepseActiveNames: []
     }
   },
   props: {
@@ -491,8 +512,21 @@ export default {
     .info-bottom {
       padding: 24px;
     }
-    .title {
+    .invoice-title {
       color: #666666;
+    }
+    .invoice-name {
+      font-size: 28px;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      color: #2E2E2E;
+      line-height: 40px;
+      margin-bottom: 12px;
+    }
+    .invoice-number {
+      font-size: 24px;
+      font-family: Helvetica;
+      line-height: 28px;
     }
   }
   .order-info {

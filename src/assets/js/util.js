@@ -127,3 +127,7 @@ export function resetForm (form, def = {}) {
     }
   }
 }
+
+export function isDef (value) {
+  return value !== undefined && value !== null
+}

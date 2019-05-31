@@ -19,7 +19,7 @@
     <pl-svg
       :class="$style.rightIcon"
       name="right"
-      color="#D2D2D2"
+      color="#CCC"
     />
   </div>
 </template>
