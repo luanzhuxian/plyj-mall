@@ -101,32 +101,35 @@ export default {
   },
   methods: {
     init () {
-      this.skuList = this.data ? this.data.skuModels : []
-      this.id = this.data ? this.data.id : ''
-      this.productId = this.data ? this.data.cartProductId : ''
-      this.count = this.data ? this.data.cartProductCount : 0
-      this.currentSkuCode = this.data ? this.data.cartSkuCode : 0
-      this.currentSkuModel = this.skuList.find(item => item.optionCode === this.data.cartSkuCode) || {}
+      const data = this.data
+      this.skuList = data ? data.skuModels : []
+      this.id = data ? data.id : ''
+      this.productId = data ? data.cartProductId : ''
+      this.count = data ? data.cartProductCount : 0
+      this.currentSkuCode = data ? data.cartSkuCode : 0
+      this.currentSkuModel = this.skuList.find(item => item.optionCode === data.cartSkuCode) || {}
     },
     // 改变规格
     async specChanged (option) {
       try {
         const isUpdateSku = await updateCartProductSku({
           id: this.id,
-          skuCode: option.optionCode
-        })
-        const isUpdateCount = await updateCartProductCount({
-          id: this.id,
+          skuCode: option.optionCode,
           number: option.count
         })
+        // const isUpdateCount = await updateCartProductCount({
+        //   id: this.id,
+        //   number: option.count
+        // })
         if (isUpdateSku.result) {
           this.currentSkuModel = option
           this.currentSkuCode = option.optionCode
-        }
-        if (isUpdateCount.result) {
           this.count = option.count
         }
-        this.$emit('optionChange')
+        // if (isUpdateCount.result) {
+        //   this.count = option.count
+        // }
+        this.$emit('change')
       } catch (e) {
         throw e
       }
@@ -140,6 +143,7 @@ export default {
         if (result) {
           next()
           this.count = count
+          this.$emit('change')
         }
       } catch (err) {
         next(err)

@@ -9,7 +9,7 @@ export default [
     }
   },
   {
-    path: '/order/submit/:productSeq/:optionCode/:count/:brokerId?',
+    path: '/order/submit/:brokerId?',
     name: 'SubmitOrder',
     component: () => import('../views/cart/Submit-Order.vue'),
     props: true,

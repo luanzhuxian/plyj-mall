@@ -56,13 +56,13 @@ export const applyOrderInvoice = (data) => axios.post(`/apis/v1/invoice/OrderInv
 // 发票详情
 export const invoiceDetail = (orderNo) => axios.get(`/apis/v1/invoice/OrderInvoice/findByOrderSn?orderSn=${orderNo}`)
 // 提交订单-实体商品   openId 存在时表示供应商商品
-export const submitPhysicalOrder = (data, openId = '') => {
-  return axios.post(`/apis/v1/order/physicalorder/wechat?openId=${openId}`, data)
-}
+// export const submitPhysicalOrder = (data, openId = '') => {
+//   return axios.post(`/apis/v1/order/physicalorder/wechat?openId=${openId}`, data)
+// }
 // 提交订单-虚拟 openId 存在时表示供应商商品
-export const submitVirtualOrder = (data, openId = '') => {
-  return axios.post(`/apis/v1/order/virtualorder/wechat?openId=${openId}`, data)
-}
+// export const submitVirtualOrder = (data, openId = '') => {
+//   return axios.post(`/apis/v1/order/virtualorder/wechat?openId=${openId}`, data)
+// }
 // 获取待支付商品支付需要的数据
 export const getAwaitPayInfo = id => axios.get(`/apis/v1/order/ordermanager/unifiedOrder/${id}`)
 // 售后详情

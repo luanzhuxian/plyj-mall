@@ -10,7 +10,7 @@ export const getCartList = () => axios.get('/apis/v1/mall/shopping_cart/query/cu
 export const addToCart = data => axios.post('/apis/v1/mall/shopping_cart/insert', data)
 /*
 * 更新购物车商品的规格
-* @data object {id, skuCode}
+* @data object {id, skuCode, number}
 * */
 export const updateCartProductSku = data => axios.put('/apis/v1/mall/shopping_cart/update/sku', data)
 /*
@@ -23,3 +23,13 @@ export const updateCartProductCount = data => axios.put('/apis/v1/mall/shopping_
 * @ids array
 * */
 export const deleteCartProducts = ids => axios.post('/apis/v1/mall/shopping_cart/deletes', ids)
+/*
+* 结算
+* @products array { cartProducts: [{productId, optionCode, count}] }
+* */
+export const confirmCart = products => axios.post('/apis/v1/order/cart/confirm', products)
+/*
+* 提交订单
+* @data object { cartProducts: [ {productId,optionCode,productType,count,message} ] }
+* */
+export const submitOrder = data => axios.post('/apis/v1/order/unifiedOrder', data)

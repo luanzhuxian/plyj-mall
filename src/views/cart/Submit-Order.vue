@@ -1,27 +1,111 @@
 <template>
   <div
     v-if="!loading"
-    :class="$style.cart"
+    :class="$style.submitOrder"
   >
     <div
       :class="$style.address + ' radius-20'"
-      v-if="this.productType === 'PHYSICAL_GOODS'"
+      v-if="physicalProducts.length > 0"
     >
       <AddressItem />
     </div>
 
-    <div :class="$style.product + ' radius-20'">
+    <div
+      v-if="physicalProducts.length > 0"
+      :class="$style.productBox"
+    >
+      <OrderItem
+        v-for="(item, i) of physicalProducts"
+        :key="i"
+        :img="item.productImageUrls ? item.productImageUrls[0] : ''"
+        :name="item.productName"
+        :count="item.count"
+        :option="item.optionName"
+        :price="item.price"
+        is-submit
+        :gap="32"
+        :product-type="1"
+        border
+      />
+      <div :class="$style.otherInfo">
+        <div :class="$style.infoItem">
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">配送方式</span>
+            <span
+              v-if="freight === 0"
+              :class="$style.itemContent"
+            >快递免邮</span>
+          </div>
+          <span
+            v-if="freight > 0"
+            :class="$style.freight"
+          >
+            ¥ {{ freight }}
+          </span>
+        </div>
+        <div :class="$style.infoItem">
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">订单备注</span>
+            <input
+              :class="$style.remark"
+              type="text"
+              placeholder="选填"
+              v-model="remark"
+            >
+          </div>
+        </div>
+      </div>
+
+      <div :class="$style.subtotal">
+        <span>小计：</span>
+        <span :class="$style.subtotalPrice">￥{{ amount }}</span>
+      </div>
+    </div>
+
+    <template v-if="virtualProducts.length > 0">
+      <div
+        v-for="(item, i) of virtualProducts"
+        :key="i"
+        :class="$style.productBox"
+      >
+        <OrderItem
+          :key="i"
+          :img="item.productImageUrls ? item.productImageUrls[0] : ''"
+          :name="item.productName"
+          :count="item.count"
+          :option="item.optionName"
+          :price="item.price"
+          is-submit
+          :gap="32"
+          :product-type="2"
+          border
+        />
+        <div :class="$style.otherInfo">
+          <div :class="$style.infoItem">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">订单备注</span>
+              <input
+                :class="$style.remark"
+                type="text"
+                placeholder="选填"
+                v-model="item.remark"
+              >
+            </div>
+          </div>
+        </div>
+
+        <div :class="$style.subtotal">
+          <span>小计：</span>
+          <span :class="$style.subtotalPrice">￥{{ item.amount }}</span>
+        </div>
+      </div>
+    </template>
+
+    <!--<div :class="$style.product + ' radius-20'">
       <div :class="$style.orderTop">
         订单信息
       </div>
-      <OrderItem
-        :img="detail.productImage ? detail.productImage[0].mediaUrl : ''"
-        :name="detail.productName"
-        :count="count"
-        :option="option.optionName"
-        :price="option.price"
-        border
-      />
+
       <div :class="$style.money">
         <p class="fz-28">
           <span>商品金额</span>
@@ -50,14 +134,14 @@
           type="textarea"
         />
       </div>
-    </div>
+    </div>-->
 
     <div :class="$style.confirm">
       <div>
         <span class="fz-20 gray-2">实际支付</span>
         <span
           class="rmb fz-32"
-          v-text="totalMoney || 0"
+          v-text="totalAmount || 0"
         />
       </div>
       <pl-button
@@ -93,21 +177,17 @@
 import AddressItem from '../../components/item/Address-Item.vue'
 import OrderItem from '../../components/item/Order-Item.vue'
 import {
-  submitPhysicalOrder,
-  submitVirtualOrder,
-  getMoney,
-  physicalOrderCancellation,
-  virtualOrderCancellation,
-  getFreight
-} from '../../apis/order-manager'
-import { getOpenIdByCode } from '../../apis/base-api'
-import { getProductDetail } from '../../apis/product'
+  confirmCart,
+  submitOrder
+} from '../../apis/shopping-cart'
+// import { getOpenIdByCode } from '../../apis/base-api'
+// import { getProductDetail } from '../../apis/product'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
-import { setSession } from '../../assets/js/util'
+// import { setSession } from '../../assets/js/util'
 import { mapGetters } from 'vuex'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
-import Qs from 'qs'
+// import Qs from 'qs'
 export default {
   name: 'SubmitOrder',
   components: {
@@ -118,41 +198,13 @@ export default {
   },
   data () {
     return {
-      disableSubmit: false, // 临时禁用提交按钮，尤其在供应商商品支付时，来回跳转的过程中有效，防止支付数据未拿到时用户点击提交按钮
       submiting: false,
-      loading: true,
-      detail: {},
-      option: {},
-      totalMoney: 0,
-      productType: '',
-      typeMap: {
-        PHYSICAL_GOODS: submitPhysicalOrder,
-        VIRTUAL_GOODS: submitVirtualOrder
-      },
-      typeMapOfCancel: {
-        PHYSICAL_GOODS: physicalOrderCancellation,
-        VIRTUAL_GOODS: virtualOrderCancellation
-      },
-      form: {
-        addressSeq: '',
-        share: '', // 根据此商品是不是经纪人分享的,来判断是否需要传此参数
-        amount: '', // 总价
-        products: [
-          {
-            optionCode: '',
-            productCount: '',
-            productSeq: ''
-          }
-        ],
-        sixEnergyNewOrderReturnModel: null,
-        source: 'PUBLIC',
-        orderType: '',
-        supplierOrder: false,
-        orderPostscript: '', // 备注
-        freight: 0 // 用于显示供普通商品的运费
-      },
-      supplierProduct: false,
-      freight: 0 // 用于显示供应商商品的运费
+      freight: 0,
+      totalAmount: 0,
+      amount: 0,
+      physicalProducts: [],
+      virtualProducts: [],
+      remark: '' // 物理订单备注
     }
   },
   props: {
@@ -179,142 +231,191 @@ export default {
   watch: {
     selectedAddress () {}
   },
-  async activated () {
-    try {
-      await this.getProductDetail()
-    } catch (e) {
-      throw e
-    }
+  activated () {
+    this.getProductDetail()
+  },
+  deactivated () {
+    // localStorage.removeItem('confirmList')
   },
   methods: {
     async getProductDetail () {
+      const proList = JSON.parse(localStorage.getItem('confirmList'))
+      console.log(proList)
       try {
-        let { productSeq, count, optionCode, brokerId = '' } = this
-        this.disableSubmit = true
-        this.loading = true
-        let productDetail = await getProductDetail(this.productSeq)
-        let { supplierProduct, productType, priceModels } = productDetail.result
-        this.detail = productDetail.result
-        this.form.supplierOrder = this.supplierProduct = supplierProduct
-        this.form.orderType = this.productType = productType
-        this.form.addressSeq = productType === 'PHYSICAL_GOODS' ? (this.selectedAddress.sequenceNbr || '') : ''
-        this.loading = false
-        this.form.share = brokerId
-        this.form.products[0] = {
-          optionCode: optionCode,
-          productCount: count,
-          productSeq: productSeq
+        const { result } = await confirmCart({ cartProducts: proList })
+        const { amount, totalAmount, freight, physicalProducts, virtualProducts } = result
+        // 为每个虚拟订单都添加备注字段
+        for (const p of physicalProducts) {
+          p.remark = ''
         }
-        this.getOption(priceModels)
-
-        // 算钱
-        let { result } = await getMoney(productSeq, optionCode, count, this.form.addressSeq)
-        this.form.amount = this.totalMoney = result
-
-        // 获取运费
-        await this.getFreight()
-        this.disableSubmit = false
+        this.amount = amount
+        this.totalAmount = totalAmount
+        this.freight = Number(freight)
+        this.physicalProducts = physicalProducts
+        this.virtualProducts = virtualProducts
       } catch (e) {
-        this.disableSubmit = false
-        if (/库存不足/.test(e.message)) {
-          this.disableSubmit = true
-        } else {
-          this.$router.replace({ name: 'SoldOut' })
-        }
         throw e
-      } finally {
-        this.loading = false
       }
+      // try {
+      //   let { productSeq, count, optionCode, brokerId = '' } = this
+      //   this.disableSubmit = true
+      //   this.loading = true
+      //   let productDetail = await getProductDetail(this.productSeq)
+      //   let { supplierProduct, productType, priceModels } = productDetail.result
+      //   this.detail = productDetail.result
+      //   this.form.supplierOrder = this.supplierProduct = supplierProduct
+      //   this.form.orderType = this.productType = productType
+      //   this.form.addressSeq = productType === 'PHYSICAL_GOODS' ? (this.selectedAddress.sequenceNbr || '') : ''
+      //   this.loading = false
+      //   this.form.share = brokerId
+      //   this.form.products[0] = {
+      //     optionCode: optionCode,
+      //     productCount: count,
+      //     productSeq: productSeq
+      //   }
+      //   this.getOption(priceModels)
+      //
+      //   // 算钱
+      //   let { result } = await getMoney(productSeq, optionCode, count, this.form.addressSeq)
+      //   this.form.amount = this.totalMoney = result
+      //
+      //   // 获取运费
+      //   await this.getFreight()
+      //   this.disableSubmit = false
+      // } catch (e) {
+      //   this.disableSubmit = false
+      //   if (/库存不足/.test(e.message)) {
+      //     this.disableSubmit = true
+      //   } else {
+      //     this.$router.replace({ name: 'SoldOut' })
+      //   }
+      //   throw e
+      // } finally {
+      //   this.loading = false
+      // }
     },
     /* 获取规格 */
     getOption (options) {
       this.option = options.filter(item => item.optionCode === this.optionCode)[0] || {}
     },
+    // 提交订单
     async submitOrder () {
-      let { name, params, query } = this.$route
-      if (!this.mobile) {
-        this.$confirm('您还没有绑定手机，请先绑定手机')
-          .then(() => {
-            this.$router.push({ name: 'BindMobile' })
-            setSession('willBind', { name, params, query })
-          })
-        return
+      this.submiting = true
+      const cartProducts = []
+      for (const item of this.physicalProducts) {
+        const { productId, optionCode, count } = item
+        cartProducts.push({
+          productId,
+          optionCode,
+          productType: 'PHYSICAL_GOODS',
+          count,
+          message: this.remark
+        })
       }
+      for (const item of this.virtualProducts) {
+        const { productId, optionCode, count, remark } = item
+        cartProducts.push({
+          productId,
+          optionCode,
+          productType: 'VIRTUAL_GOODS',
+          count,
+          message: remark
+        })
+      }
+      console.log(this.selectedAddress)
+
       try {
-        if (this.productType === 'PHYSICAL_GOODS' && !this.form.addressSeq) {
-          /* 提醒选择地址 */
-          await this.$confirm('您还没有收货地址，请先添加收货地址')
-          setSession('addressReturn', {
-            name,
-            params,
-            query
-          })
-          this.$router.push({ name: 'AddAddress' })
-          return
-        }
-        // 走供应商商品支付流程
-        if (this.supplierProduct) {
-          return this.supplierPay()
-        }
-        this.submiting = true
-        let { result } = await this.typeMap[this.productType](this.form)
-        await this.pay(result.CREDENTIAL, result.orderModel.orderSn)
+        const { result } = await submitOrder({ addressSeq: this.selectedAddress.sequenceNbr, cartProducts })
+        await this.pay(result)
       } catch (e) {
-        this.submiting = false
         throw e
+      } finally {
+        this.submiting = false
       }
+      // let { name, params, query } = this.$route
+      // if (!this.mobile) {
+      //   this.$confirm('您还没有绑定手机，请先绑定手机')
+      //     .then(() => {
+      //       this.$router.push({ name: 'BindMobile' })
+      //       setSession('willBind', { name, params, query })
+      //     })
+      //   return
+      // }
+      // try {
+      //   if (this.productType === 'PHYSICAL_GOODS' && !this.form.addressSeq) {
+      //     /* 提醒选择地址 */
+      //     await this.$confirm('您还没有收货地址，请先添加收货地址')
+      //     setSession('addressReturn', {
+      //       name,
+      //       params,
+      //       query
+      //     })
+      //     this.$router.push({ name: 'AddAddress' })
+      //     return
+      //   }
+      //   // 走供应商商品支付流程
+      //   if (this.supplierProduct) {
+      //     return this.supplierPay()
+      //   }
+      //   this.submiting = true
+      //   let { result } = await this.typeMap[this.productType](this.form)
+      //   await this.pay(result.CREDENTIAL, result.orderModel.orderSn)
+      // } catch (e) {
+      //   this.submiting = false
+      //   throw e
+      // }
     },
     // 获取商品运费
-    getFreight () {
-      if (!this.selectedAddress || !this.selectedAddress.sequenceNbr) return
-      return new Promise(async (resolve, reject) => {
-        try {
-          let { result } = await getFreight({
-            productSeq: this.productSeq,
-            productCount: this.count,
-            addressSeq: this.selectedAddress.sequenceNbr,
-            optionCode: this.optionCode
-          })
-          if (this.supplierProduct) {
-            this.freight = result.sixEnergyNewOrderReturnModel.freight
-            this.totalMoney = (this.totalMoney * 100 + this.freight * 100) / 100
-            delete this.form.freight
-          } else {
-            this.form.freight = result.freight
-            this.totalMoney = (this.totalMoney * 100 + this.form.freight * 100) / 100
-          }
-          // 添加六能运费数据到表单
-          this.form.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
-          if (!result.sixEnergyNewOrderReturnModel) {
-            delete this.form.sixEnergyNewOrderReturnModel
-          }
-          this.form.orderSn = result.orderSn // 添加运费订单数据到表单
-          this.form.billNo = result.billNo // 添加运费订单数据到表单
-          resolve()
-        } catch (e) {
-          reject(e)
-        }
-      })
-    },
-    async supplierPay () {
-      let code = Qs.parse(location.search.substring(1)).code
-      try {
-        this.submiting = true
-        let { result } = await getOpenIdByCode(code)
-        let payData = await this.typeMap[this.productType](this.form, result)
-        await this.pay(payData.result.CREDENTIAL, payData.result.orderModel.orderSn)
-        delete this.form.sixEnergyNewOrderReturnModel
-        delete this.form.orderSn
-        delete this.form.billNo
-      } catch (e) {
-        this.submiting = false
-        delete this.form.sixEnergyNewOrderReturnModel
-        delete this.form.orderSn
-        delete this.form.billNo
-        this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
-        throw e
-      }
-    },
+    // getFreight () {
+    //   if (!this.selectedAddress || !this.selectedAddress.sequenceNbr) return
+    //   return new Promise(async (resolve, reject) => {
+    //     try {
+    //       let { result } = await getFreight({
+    //         productSeq: this.productSeq,
+    //         productCount: this.count,
+    //         addressSeq: this.selectedAddress.sequenceNbr,
+    //         optionCode: this.optionCode
+    //       })
+    //       if (this.supplierProduct) {
+    //         this.freight = result.sixEnergyNewOrderReturnModel.freight
+    //         this.totalMoney = (this.totalMoney * 100 + this.freight * 100) / 100
+    //         delete this.form.freight
+    //       } else {
+    //         this.form.freight = result.freight
+    //         this.totalMoney = (this.totalMoney * 100 + this.form.freight * 100) / 100
+    //       }
+    //       // 添加六能运费数据到表单
+    //       this.form.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
+    //       if (!result.sixEnergyNewOrderReturnModel) {
+    //         delete this.form.sixEnergyNewOrderReturnModel
+    //       }
+    //       this.form.orderSn = result.orderSn // 添加运费订单数据到表单
+    //       this.form.billNo = result.billNo // 添加运费订单数据到表单
+    //       resolve()
+    //     } catch (e) {
+    //       reject(e)
+    //     }
+    //   })
+    // },
+    // async supplierPay () {
+    //   let code = Qs.parse(location.search.substring(1)).code
+    //   try {
+    //     this.submiting = true
+    //     let { result } = await getOpenIdByCode(code)
+    //     let payData = await this.typeMap[this.productType](this.form, result)
+    //     await this.pay(payData.result.CREDENTIAL, payData.result.orderModel.orderSn)
+    //     delete this.form.sixEnergyNewOrderReturnModel
+    //     delete this.form.orderSn
+    //     delete this.form.billNo
+    //   } catch (e) {
+    //     this.submiting = false
+    //     delete this.form.sixEnergyNewOrderReturnModel
+    //     delete this.form.orderSn
+    //     delete this.form.billNo
+    //     this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
+    //     throw e
+    //   }
+    // },
     async pay (CREDENTIAL, orderSn) {
       CREDENTIAL.packageValue = CREDENTIAL.package
       return new Promise(async (resolve, reject) => {
@@ -325,16 +426,18 @@ export default {
           resolve()
         } catch (e) {
           this.submiting = false
-          if (this.supplierProduct) { // 支付失败时，如果是供应商商品，则取消订单，并跳回商品详情
-            try {
-              await this.typeMapOfCancel[this.productType](orderSn)
-              this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
-            } catch (e) {
-              reject(e)
-            }
-          } else { // 待付款
-            this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
-          }
+          this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+
+          // if (this.supplierProduct) { // 支付失败时，如果是供应商商品，则取消订单，并跳回商品详情
+          //   try {
+          //     await this.typeMapOfCancel[this.productType](orderSn)
+          //     this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
+          //   } catch (e) {
+          //     reject(e)
+          //   }
+          // } else { // 待付款
+          //   this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+          // }
           reject(e)
         }
       })
@@ -344,8 +447,56 @@ export default {
 </script>
 
 <style module lang="scss">
-  .cart {
-    padding: 20px 40px 120px;
+  .submitOrder {
+    padding: 20px 24px 120px;
+  }
+  .productBox {
+    width: 100%;
+    margin: 0 0 20px 0;
+    padding: 32px 24px 24px 24px;
+    border-radius: $--radius1;
+    background-color: #fff;
+    box-sizing: border-box;
+  }
+
+  .otherInfo {
+    margin-top: 44px;
+    padding-left: 68px;
+    > .infoItem {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 54px;
+      font-size: 24px;
+      .freightType {
+        flex: 1;
+        display: inline-flex;
+        justify-content: space-between;
+      }
+      .freight {
+        flex: 1.7;
+        text-align: right;
+      }
+      .itemLabel {
+        color: #333;
+      }
+      .itemContent {
+        color: #666;
+      }
+      .remark {
+        flex: 1;
+        height: 100%;
+        padding: 0 0 0 22px;
+        font-size: 24px;
+      }
+    }
+  }
+  .subtotal {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: right;
+    > .subtotalPrice {
+      color: #FE7700;
+    }
   }
   .address {
     margin-bottom: 28px;
@@ -401,7 +552,8 @@ export default {
     > div {
       display: flex;
       flex-direction: column;
-      width: 200px;
+      padding-right: 20px;
+      min-width: 200px;
     }
     > button {
       flex: 1;

@@ -23,12 +23,14 @@
       <button
         :class="$style.addToCart"
         @click="addToCart"
+        :disabled="loading"
       >
         加入购物车
       </button>
       <button
         :class="$style.buyNowBtn"
         @click="submit"
+        :disabled="loading"
       >
         立即购买
       </button>
@@ -45,7 +47,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getPenglaiAppid } from '../../apis/base-api'
+// import { getPenglaiAppid } from '../../apis/base-api'
 import { addToCart } from '../../apis/shopping-cart'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 
@@ -58,7 +60,8 @@ export default {
     return {
       showSpecifica: false, // 显示规格弹框
       clickAddToCart: false,
-      clickBuyNow: false
+      clickBuyNow: false,
+      loading: false
     }
   },
   props: {
@@ -121,13 +124,17 @@ export default {
     async submit () {
       this.clickBuyNow = true
       this.clickAddToCart = false
-      const { isSupplierProduct, brokerId, currentModel } = this
+      const {
+        /* isSupplierProduct, */
+        brokerId,
+        currentModel
+      } = this
       if (!currentModel || !currentModel.count) {
         this.showSpecifica = true
         return
       }
       const { productSeq, count, optionCode } = currentModel
-      if (isSupplierProduct) {
+      /* if (isSupplierProduct) {
         // 如果是供应商商品，这样跳转至提交订单页面
         let { result } = await getPenglaiAppid()
         let { protocol, host } = location
@@ -135,11 +142,16 @@ export default {
         let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${result}&redirect_uri=${href}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
         // console.log(url)
         return location.replace(url)
-      }
+      } */
+      localStorage.setItem('confirmList', JSON.stringify([{
+        productId: productSeq,
+        optionCode: optionCode,
+        count: count
+      }]))
       if (brokerId) {
-        this.$router.push({ name: 'SubmitOrder', params: { productSeq, count, optionCode, brokerId } })
+        this.$router.push({ name: 'SubmitOrder', params: { brokerId } })
       } else {
-        this.$router.push({ name: 'SubmitOrder', params: { productSeq, count, optionCode } })
+        this.$router.push({ name: 'SubmitOrder' })
       }
     },
     async addToCart () {
@@ -150,6 +162,7 @@ export default {
         this.showSpecifica = true
         return
       }
+      this.loading = true
       const { productSeq, count, optionCode } = currentModel
       try {
         await addToCart({
@@ -160,6 +173,8 @@ export default {
         this.$success('加入成功')
       } catch (e) {
         throw e
+      } finally {
+        this.loading = false
       }
     },
     reset () {
@@ -221,6 +236,9 @@ export default {
   .addToCart, .buyNowBtn {
     flex: 1;
     color: currentColor;
+    &:disabled {
+      opacity: .5;
+    }
   }
   .addToCart {
     background-color: $--warning-color;

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive>
+    <keep-alive :exclude="['ShoppingCart']">
       <router-view v-if="logined" />
     </keep-alive>
 

@@ -67,7 +67,7 @@ export default {
     },
     valueChange (e) {
       let val = Number(e.target.value)
-      if (val && (val < this.max && val > this.min)) {
+      if (val && (val <= this.max && val >= this.min)) {
         this.emitChange(val)
       } else {
         e.target.value = this.localCount

@@ -2,7 +2,7 @@
   <div :class="$style.shoppingCart">
     <div :class="$style.top">
       <span :class="$style.count">
-        购物车宝贝 <i>10</i> 件
+        购物车宝贝 <i v-text="total" /> 件
       </span>
       <span
         :class="$style.manage"
@@ -11,7 +11,10 @@
       />
     </div>
 
-    <div :class="$style.productList">
+    <div
+      :class="$style.productList"
+      v-if="!loading"
+    >
       <pl-checkbox-group
         v-model="checkedList"
         ref="checkboxGroup"
@@ -27,6 +30,7 @@
             <CartItem
               :data="item"
               :key="item.id"
+              @change="proChange"
             />
           </template>
         </pl-checkbox>
@@ -53,27 +57,30 @@
       </pl-checkbox>
       <div>
         <span
-          v-if="!isManage"
+          v-show="!isManage"
           class="fz-22 gray-3 mr-10"
         >
           不含运费
         </span>
         <span
-          v-if="!isManage"
+          v-show="!isManage"
           class="fz-24 mr-10"
         >
           合计：
-          <i class="rmb fz-28 primary-color">0.00</i>
+          <i
+            class="rmb fz-28 primary-color"
+            v-text="summation"
+          />
         </span>
         <button
           :class="$style.settlementBtn"
           @click="settlement"
-          v-if="!isManage"
+          v-show="!isManage"
         >
           结算(0)
         </button>
         <button
-          v-if="isManage"
+          v-show="isManage"
           :class="$style.delete"
           :disabled="checkedList.length === 0"
           @click="removePro"
@@ -82,46 +89,67 @@
         </button>
       </div>
     </div>
+
+    <CartItemSkeleton v-if="loading" />
+    <CartItemSkeleton v-if="loading" />
   </div>
 </template>
 
 <script>
 import CartItem from '../../components/item/Cart-Item.vue'
+import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
 import {
   getCartList,
   deleteCartProducts
+  // confirmCart
 } from '../../apis/shopping-cart'
 export default {
   name: 'ShoppingCart',
   components: {
-    CartItem
+    CartItem,
+    CartItemSkeleton
   },
   data () {
     return {
       checkedAll: false,
       products: [],
       checkedList: [],
-      isManage: false
+      isManage: false,
+      total: 0,
+      loading: false,
+      summation: 0 // 合计
     }
   },
-  activated () {
-    this.getList()
-  },
-  deactivated () {
-    this.isManage = false
+  created () {
+    this.loading = true
+    try {
+      this.getList()
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
     async getList () {
       try {
         const { result } = await getCartList()
-        this.$set(this, 'products', result)
-        this.$forceUpdate()
+        this.products.splice(0, 500)
+        for (let item of result) {
+          this.products.push(item)
+        }
+        this.total = result.length
+        // 更新选中的商品
+        for (let [i, item] of this.checkedList.entries()) {
+          const newPro = result.find(pro => pro.id === item.id)
+          this.checkedList.splice(i, 1, newPro)
+        }
+        this.loading = false
       } catch (e) {
         throw e
       }
     },
     selectedChange (selected) {
       this.checkedAll = selected.length === this.products.length
+      this.computeMoney()
     },
     checkAll (val) {
       this.checkedAll = val
@@ -141,9 +169,34 @@ export default {
         throw e
       }
     },
+    proChange () {
+      this.getList()
+    },
     // 结算
     settlement () {
+      let confirmList = []
+      if (this.checkedList.length === 0) return
+      for (let pro of this.checkedList) {
+        const { cartProductCount, cartProductId, cartSkuCode } = pro
+        confirmList.push({
+          productId: cartProductId,
+          optionCode: cartSkuCode,
+          count: cartProductCount
+        })
+      }
+      localStorage.setItem('confirmList', JSON.stringify(confirmList))
       this.$router.push({ name: 'SubmitOrder' })
+    },
+    computeMoney () {
+      let total = 0
+      for (let item of this.checkedList) {
+        const skuCode = item.cartSkuCode
+        const skuModels = item.skuModels
+        const count = item.cartProductCount
+        const currentSku = skuModels.find(item => item.optionCode === skuCode)
+        total += currentSku.price * 100 * count
+      }
+      this.summation = total / 100
     }
   }
 }
