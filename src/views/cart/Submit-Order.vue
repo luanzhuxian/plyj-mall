@@ -101,41 +101,6 @@
       </div>
     </template>
 
-    <!--<div :class="$style.product + ' radius-20'">
-      <div :class="$style.orderTop">
-        订单信息
-      </div>
-
-      <div :class="$style.money">
-        <p class="fz-28">
-          <span>商品金额</span>
-          <span
-            class="rmb"
-            v-text="form.amount"
-          />
-        </p>
-        <p class="fz-28">
-          <span>快递</span>
-          <span class="rmb">
-            <i v-text="form.freight || freight" />
-          </span>
-        </p>
-      </div>
-    </div>
-
-    <div :class="$style.remark + ' radius-20 mt-28'">
-      <div :class="$style.orderTop">
-        订单备注（选填）
-      </div>
-      <div style="background-color: #F3F3F3;">
-        <pl-input
-          v-model="form.orderPostscript"
-          placeholder="选填，请填写订单备注信息，并与商家协商一致"
-          type="textarea"
-        />
-      </div>
-    </div>-->
-
     <div :class="$style.confirm">
       <div>
         <span class="fz-20 gray-2">实际支付</span>
@@ -145,7 +110,6 @@
         />
       </div>
       <pl-button
-        :disabled="disableSubmit"
         :loading="submiting"
         type="warning"
         size="large"
@@ -154,6 +118,43 @@
         确认付款
       </pl-button>
     </div>
+
+    <div
+      :class="$style.invioce"
+      @click="showPopup = true"
+    >
+      <div>
+        <pl-svg
+          :class="$style.invioceIcon"
+          name="invoice"
+        />
+        发票
+      </div>
+      <div style="color: #666;">
+        {{ invioceType }}
+        <pl-svg
+          :class="$style.rightIcon"
+          name="right"
+          color="#ccc"
+        />
+      </div>
+    </div>
+
+    <pl-popup :show.sync="showPopup">
+      <div :class="$style.invioceBox">
+        <div :class="$style.title">
+          是否需要发票？
+        </div>
+        <div :class="$style.content">
+          <button @click="noNeed">
+            不需要
+          </button>
+          <button @click="need">
+            纸质发票
+          </button>
+        </div>
+      </div>
+    </pl-popup>
   </div>
 
   <div
@@ -198,13 +199,16 @@ export default {
   },
   data () {
     return {
+      showPopup: true,
       submiting: false,
+      loading: false,
       freight: 0,
       totalAmount: 0,
       amount: 0,
       physicalProducts: [],
       virtualProducts: [],
-      remark: '' // 物理订单备注
+      remark: '', // 物理订单备注
+      invioceType: '不需要'
     }
   },
   props: {
@@ -240,7 +244,7 @@ export default {
   methods: {
     async getProductDetail () {
       const proList = JSON.parse(localStorage.getItem('confirmList'))
-      console.log(proList)
+      this.loading = true
       try {
         const { result } = await confirmCart({ cartProducts: proList })
         const { amount, totalAmount, freight, physicalProducts, virtualProducts } = result
@@ -253,6 +257,7 @@ export default {
         this.freight = Number(freight)
         this.physicalProducts = physicalProducts
         this.virtualProducts = virtualProducts
+        this.loading = false
       } catch (e) {
         throw e
       }
@@ -322,8 +327,6 @@ export default {
           message: remark
         })
       }
-      console.log(this.selectedAddress)
-
       try {
         const { result } = await submitOrder({ addressSeq: this.selectedAddress.sequenceNbr, cartProducts })
         await this.pay(result)
@@ -332,90 +335,90 @@ export default {
       } finally {
         this.submiting = false
       }
-      // let { name, params, query } = this.$route
-      // if (!this.mobile) {
-      //   this.$confirm('您还没有绑定手机，请先绑定手机')
-      //     .then(() => {
-      //       this.$router.push({ name: 'BindMobile' })
-      //       setSession('willBind', { name, params, query })
-      //     })
-      //   return
-      // }
-      // try {
-      //   if (this.productType === 'PHYSICAL_GOODS' && !this.form.addressSeq) {
-      //     /* 提醒选择地址 */
-      //     await this.$confirm('您还没有收货地址，请先添加收货地址')
-      //     setSession('addressReturn', {
-      //       name,
-      //       params,
-      //       query
-      //     })
-      //     this.$router.push({ name: 'AddAddress' })
-      //     return
-      //   }
-      //   // 走供应商商品支付流程
-      //   if (this.supplierProduct) {
-      //     return this.supplierPay()
-      //   }
-      //   this.submiting = true
-      //   let { result } = await this.typeMap[this.productType](this.form)
-      //   await this.pay(result.CREDENTIAL, result.orderModel.orderSn)
-      // } catch (e) {
-      //   this.submiting = false
-      //   throw e
-      // }
+      /* let { name, params, query } = this.$route
+      if (!this.mobile) {
+        this.$confirm('您还没有绑定手机，请先绑定手机')
+          .then(() => {
+            this.$router.push({ name: 'BindMobile' })
+            setSession('willBind', { name, params, query })
+          })
+        return
+      }
+      try {
+        if (this.productType === 'PHYSICAL_GOODS' && !this.form.addressSeq) {
+          /!* 提醒选择地址 *!/
+          await this.$confirm('您还没有收货地址，请先添加收货地址')
+          setSession('addressReturn', {
+            name,
+            params,
+            query
+          })
+          this.$router.push({ name: 'AddAddress' })
+          return
+        }
+        // 走供应商商品支付流程
+        if (this.supplierProduct) {
+          return this.supplierPay()
+        }
+        this.submiting = true
+        let { result } = await this.typeMap[this.productType](this.form)
+        await this.pay(result.CREDENTIAL, result.orderModel.orderSn)
+      } catch (e) {
+        this.submiting = false
+        throw e
+      } */
     },
     // 获取商品运费
-    // getFreight () {
-    //   if (!this.selectedAddress || !this.selectedAddress.sequenceNbr) return
-    //   return new Promise(async (resolve, reject) => {
-    //     try {
-    //       let { result } = await getFreight({
-    //         productSeq: this.productSeq,
-    //         productCount: this.count,
-    //         addressSeq: this.selectedAddress.sequenceNbr,
-    //         optionCode: this.optionCode
-    //       })
-    //       if (this.supplierProduct) {
-    //         this.freight = result.sixEnergyNewOrderReturnModel.freight
-    //         this.totalMoney = (this.totalMoney * 100 + this.freight * 100) / 100
-    //         delete this.form.freight
-    //       } else {
-    //         this.form.freight = result.freight
-    //         this.totalMoney = (this.totalMoney * 100 + this.form.freight * 100) / 100
-    //       }
-    //       // 添加六能运费数据到表单
-    //       this.form.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
-    //       if (!result.sixEnergyNewOrderReturnModel) {
-    //         delete this.form.sixEnergyNewOrderReturnModel
-    //       }
-    //       this.form.orderSn = result.orderSn // 添加运费订单数据到表单
-    //       this.form.billNo = result.billNo // 添加运费订单数据到表单
-    //       resolve()
-    //     } catch (e) {
-    //       reject(e)
-    //     }
-    //   })
-    // },
-    // async supplierPay () {
-    //   let code = Qs.parse(location.search.substring(1)).code
-    //   try {
-    //     this.submiting = true
-    //     let { result } = await getOpenIdByCode(code)
-    //     let payData = await this.typeMap[this.productType](this.form, result)
-    //     await this.pay(payData.result.CREDENTIAL, payData.result.orderModel.orderSn)
-    //     delete this.form.sixEnergyNewOrderReturnModel
-    //     delete this.form.orderSn
-    //     delete this.form.billNo
-    //   } catch (e) {
-    //     this.submiting = false
-    //     delete this.form.sixEnergyNewOrderReturnModel
-    //     delete this.form.orderSn
-    //     delete this.form.billNo
-    //     this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
-    //     throw e
-    //   }
-    // },
+    /* getFreight () {
+      if (!this.selectedAddress || !this.selectedAddress.sequenceNbr) return
+      return new Promise(async (resolve, reject) => {
+        try {
+          let { result } = await getFreight({
+            productSeq: this.productSeq,
+            productCount: this.count,
+            addressSeq: this.selectedAddress.sequenceNbr,
+            optionCode: this.optionCode
+          })
+          if (this.supplierProduct) {
+            this.freight = result.sixEnergyNewOrderReturnModel.freight
+            this.totalMoney = (this.totalMoney * 100 + this.freight * 100) / 100
+            delete this.form.freight
+          } else {
+            this.form.freight = result.freight
+            this.totalMoney = (this.totalMoney * 100 + this.form.freight * 100) / 100
+          }
+          // 添加六能运费数据到表单
+          this.form.sixEnergyNewOrderReturnModel = result.sixEnergyNewOrderReturnModel
+          if (!result.sixEnergyNewOrderReturnModel) {
+            delete this.form.sixEnergyNewOrderReturnModel
+          }
+          this.form.orderSn = result.orderSn // 添加运费订单数据到表单
+          this.form.billNo = result.billNo // 添加运费订单数据到表单
+          resolve()
+        } catch (e) {
+          reject(e)
+        }
+      })
+    },
+    async supplierPay () {
+      let code = Qs.parse(location.search.substring(1)).code
+      try {
+        this.submiting = true
+        let { result } = await getOpenIdByCode(code)
+        let payData = await this.typeMap[this.productType](this.form, result)
+        await this.pay(payData.result.CREDENTIAL, payData.result.orderModel.orderSn)
+        delete this.form.sixEnergyNewOrderReturnModel
+        delete this.form.orderSn
+        delete this.form.billNo
+      } catch (e) {
+        this.submiting = false
+        delete this.form.sixEnergyNewOrderReturnModel
+        delete this.form.orderSn
+        delete this.form.billNo
+        this.$router.replace({ name: 'Lesson', params: { productSeq: this.productSeq } })
+        throw e
+      }
+    }, */
     async pay (CREDENTIAL, orderSn) {
       CREDENTIAL.packageValue = CREDENTIAL.package
       return new Promise(async (resolve, reject) => {
@@ -441,6 +444,14 @@ export default {
           reject(e)
         }
       })
+    },
+    // 需要发票
+    noNeed () {
+      this.invioceType = '不需要'
+      this.showPopup = false
+    },
+    need () {
+      this.invioceType = '纸质发票'
     }
   }
 }
@@ -531,6 +542,54 @@ export default {
       }
     }
   }
+  .invioce {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height:70px;
+    padding: 0 28px;
+    border-radius: $--radius1;
+    background-color: #fff;
+    > div {
+      display: inline-flex;
+      align-items: center;
+      font-size: 26px;
+    }
+  }
+  .invioceIcon {
+    width: 26px;
+    margin-right: 20px;
+  }
+  .rightIcon {
+    width: 20px;
+    margin-left: 20px;
+  }
+  .invioceBox {
+    .title {
+      position: relative;
+      height: 114px;
+      line-height: 114px;
+      font-size: 36px;
+      padding: 0 40px;
+      &:after {
+        @include border-half-bottom(#e7e7e7)
+      }
+    }
+    .content {
+      padding: 62px 40px;
+      > button {
+        width: 100%;
+        height: 88px;
+        margin-bottom: 28px;
+        font-size: 32px;
+        color: #387AF6;
+        font-weight: 500;
+        background-color: #F1F0F7;
+        border-radius: $--radius2;
+      }
+    }
+  }
+
   .total-money {
     line-height: 66px;
     text-align: right;

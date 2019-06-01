@@ -2,7 +2,7 @@ export default [
   {
     path: '/my/setting',
     name: 'Setting',
-    component: () => import('../views/my/setting/index.vue'),
+    component: () => import('../views/my/setting/Index.vue'),
     meta: {
       title: '朋来雅集'
     }
@@ -10,7 +10,7 @@ export default [
   {
     path: '/my/edit',
     name: 'SettingEdit',
-    component: () => import('../views/my/setting/edit.vue'),
+    component: () => import('../views/my/setting/Edit.vue'),
     meta: {
       title: '设置'
     }
@@ -21,6 +21,40 @@ export default [
     component: () => import('../views/my/setting/Bind-Mobile.vue'),
     meta: {
       title: '设置手机'
+    }
+  },
+  {
+    path: '/my/address',
+    name: 'Address',
+    component: () => import('../views/my/address/Index.vue'),
+    meta: {
+      title: '地址管理'
+    }
+  },
+  {
+    path: '/my/address/add/:addressId?',
+    name: 'AddAddress',
+    component: () => import('../views/my/address/Add.vue'),
+    props: true,
+    meta: {
+      title: '添加地址'
+    }
+  },
+  {
+    path: '/my/setting/invoice',
+    name: 'Invoice',
+    component: () => import('../views/my/invoice/Invoice.vue'),
+    meta: {
+      title: '我的发票'
+    }
+  },
+  {
+    path: '/my/setting/invoice/edit/:id?',
+    name: 'AddInvoice',
+    props: true,
+    component: () => import('../views/my/invoice/Add-Invoice.vue'),
+    meta: {
+      title: '发票管理'
     }
   }
 ]

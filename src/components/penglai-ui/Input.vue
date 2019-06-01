@@ -248,7 +248,7 @@ export default {
       min-height: 92px;
     }
     &.pl-input-middle {
-      min-height: 110px;
+      min-height: 108px;
     }
     .pl-input_box {
       position: relative;

@@ -70,22 +70,5 @@ export default [
     meta: {
       title: '润笔明细'
     }
-  },
-  {
-    path: '/my/address',
-    name: 'Address',
-    component: () => import('../views/my/address/Index.vue'),
-    meta: {
-      title: '地址管理'
-    }
-  },
-  {
-    path: '/my/address/add/:addressId?',
-    name: 'AddAddress',
-    component: () => import('../views/my/address/Add.vue'),
-    props: true,
-    meta: {
-      title: '添加地址'
-    }
   }
 ]

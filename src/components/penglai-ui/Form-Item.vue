@@ -60,8 +60,7 @@ export default {
   },
   methods: {
     setLabelWidth () {
-      let parentLabelWidth = Number.parseInt(this.$parent.labelWidth)
-
+      let parentLabelWidth = Number.parseInt(this.$parent.labelWidth || this.labelWidth)
       if (parentLabelWidth) {
         this.$refs.label.style.setProperty('--label-width', (parentLabelWidth / 7.5) + 'vw')
       } else {

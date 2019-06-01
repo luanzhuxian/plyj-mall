@@ -32,7 +32,8 @@
       >
         <pl-svg
           class="pl-popup__close"
-          name="close"
+          name="close2"
+          color="#ccc"
         />
       </div>
     </div>
@@ -56,28 +57,34 @@ export default {
     }
   },
   watch: {
-    show (val) {
-      if (val) {
-        // 显示dialog
-        this.showPopup = true
-        // 显示mask
-        this.showMask = true
-        setTimeout(() => {
-          this.showBox = true
-        }, 200)
-      } else {
-        this.showBox = false
-        // 隐藏mask
-        setTimeout(() => {
-          this.showMask = false
-          // 隐藏dialog
+    show: {
+      handler: function (val) {
+        if (val) {
+          // 显示dialog
+          this.showPopup = true
+          // 显示mask
+          this.showMask = true
           setTimeout(() => {
-            this.showPopup = false
-            this.$emit('update:show', false)
+            this.showBox = true
           }, 200)
-        }, 300)
-      }
+        } else {
+          this.showBox = false
+          // 隐藏mask
+          setTimeout(() => {
+            this.showMask = false
+            // 隐藏dialog
+            setTimeout(() => {
+              this.showPopup = false
+              this.$emit('update:show', false)
+            }, 200)
+          }, 300)
+        }
+      },
+      immediate: true
     }
+  },
+  created () {
+    console.log(123)
   },
   data () {
     return {
@@ -101,7 +108,7 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 9999;
+  z-index: 3;
 
   &__mask {
     position: absolute;
@@ -149,6 +156,10 @@ export default {
     position: absolute;
     top: 24px;
     right: 26px;
+    > svg {
+      width: 46px;
+      height: 46px;
+    }
   }
 
   &__close {
