@@ -136,8 +136,6 @@ export default {
       return this.$refs.container
     }
   },
-  mounted () {
-  },
   activated () {
     let el = this.$el
     /* for the fucking IOS10 */
@@ -164,7 +162,9 @@ export default {
           let { result } = await this.requestMethods(this.options)
           if (result.records.length === 0) {
             this.allLoaded = true
-            this.$emit('listState', true)
+            if (!this.options) {
+              this.$emit('listState', true)
+            }
           } else {
             this.$emit('listState', false)
           }
