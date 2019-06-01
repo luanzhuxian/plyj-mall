@@ -296,6 +296,7 @@
     <popup
       ref="popup"
       title="退款原因"
+      :show-close-icon="false"
     >
       <div :class="$style.buttonWrapper">
         <pl-button

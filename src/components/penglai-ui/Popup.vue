@@ -79,6 +79,9 @@ export default {
           this.showPopup = false
         }, 200)
       }, 300)
+    },
+    stopTouch (e) {
+      e.preventDefault()
     }
   }
 }
@@ -125,7 +128,7 @@ export default {
 
   &__title {
     box-sizing: border-box;
-    padding: 28px 0 56px;
+    padding: 28px 0;
     font-size: 42px;
     color: #333;
     text-align: center;
