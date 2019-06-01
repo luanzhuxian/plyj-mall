@@ -153,20 +153,27 @@ export default {
       justify-content: space-between;
     }
     .right-top {
+      position: relative;
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
+      padding-right: 100px;
+      height: 52px;
       .name {
         flex: 1;
+        line-height: 26px;
         color: #454553;
         font-size: 22px;
         @include elps-wrap(2);
       }
       .price-wrapper {
+        position: absolute;
+        right: 0;
+        top: 0;
         padding-left: 26px;
       }
       .price {
-        font-family: HelveticaNeue;
+        font-size: 24px;
       }
       .count {
         text-align: right;
@@ -188,7 +195,6 @@ export default {
     }
     .refund-info {
       text-align: right;
-      font-family: MicrosoftYaHeiUI;
       color: #F2B036;
     }
     &.medium {
