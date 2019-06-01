@@ -13,7 +13,7 @@
       alt="商品图片"
     >
     <div :class="$style.right">
-      <div class="">
+      <div>
         <div :class="$style.rightTop">
           <div
             :class="$style.name"
@@ -32,17 +32,48 @@
         </div>
         <div :class="$style.rightBottom">
           <div
-            :class="$style.specification"
+            :class="{
+              [$style.specification]: true,
+              [$style.isSubmit]: isSubmit
+            }"
             v-text="option"
           />
-          <div :class="$style.date">
+          <div
+            v-if="time"
+            :class="$style.date"
+          >
             <span>时间：</span>
-            <span>2019.12.1</span>
+            <span v-text="time" />
           </div>
         </div>
       </div>
       <div :class="$style.refundInfo">
-        退款中
+        <div>
+          <span
+            :class="$style.tip"
+            v-if="productType !== 0 && productType === 1"
+          >
+            支持开具发票
+          </span>
+          <span
+            :class="$style.tip"
+            v-if="productType !== 0 && productType === 2"
+          >
+            不支持开具发票
+          </span>
+          <span
+            :class="$style.tip"
+            v-if="productType !== 0 && productType === 2"
+          >
+            暂不支持退换货
+          </span>
+        </div>
+
+        <span
+          v-if="status"
+          :class="$style.status"
+          v-text="status"
+        />
       </div>
     </div>
   </div>
@@ -91,6 +122,23 @@ export default {
     routeName: {
       type: String,
       default: ''
+    },
+    time: {
+      type: String,
+      default: ''
+    },
+    status: {
+      type: String,
+      default: ''
+    },
+    // 是否在提交订单处展示，这里样式有所不同
+    isSubmit: {
+      type: Boolean
+    },
+    // 商品类型（1:实体, 2:虚拟）
+    productType: {
+      type: Number,
+      default: 0
     }
   },
   watch: {
@@ -189,12 +237,27 @@ export default {
       font-size: 20px;
     }
     .specification {
-      // width: 290px;
-      @include elps-wrap(2)
+      color: #999;
+      font-size: 20px;
+      @include elps-wrap(2);
+      &.isSubmit {
+        padding: 0 8px;
+        line-height: 44px;
+        background-color: #f9f9f9;
+        border-radius: $--radius2;
+      }
     }
     .refund-info {
-      text-align: right;
-      color: #F2B036;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      > .status {
+        color: #F2B036;
+      }
+      .tip {
+        font-size: 22px;
+        color: #999;
+      }
     }
     &.medium {
       > img {
@@ -205,9 +268,8 @@ export default {
         padding-left: 24px;
       }
       .right-top {
-        .refund-info {
+        .refund-info > .status {
           font-size: 24px;
-          line-height: 32px;
         }
       }
     }
@@ -220,9 +282,8 @@ export default {
         padding-left: 16px;
       }
       .right-top {
-        .refund-info {
+        .refund-info > .status {
           font-size: 24px;
-          line-height: 32px;
         }
       }
     }
