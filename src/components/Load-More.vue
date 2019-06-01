@@ -97,7 +97,9 @@ export default {
       minPullDis: 60, // 最小触发距离
       // 缓存发起的所有请求
       requestBuffer: [],
-      identifier: 0 // 手指标识符
+      identifier: 0, // 手指标识符
+      requestMethods: '', // 请求方法
+      from: '' // from入参
     }
   },
   props: {
@@ -107,18 +109,19 @@ export default {
     },
     loading: Boolean,
     // 请求方法
-    requestMethods: {
-      type: Function,
-      required: true
-    },
+    // requestMethods: {
+    //   type: Function,
+    //   required: true
+    // },
     /*
     * 请求参数
     * 必须包含：current: 页码
     * */
-    form: {
-      type: Object,
-      required: true
-    },
+
+    // form: {
+    //   type: Object,
+    //   required: true
+    // },
     noContentTip: {
       type: String,
       default: '暂无内容'
