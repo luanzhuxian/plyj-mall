@@ -55,8 +55,6 @@
         />
 
         <load-more
-          :request-methods.sync="requestMethods"
-          :form="form"
           ref="loadMore"
           :loading.sync="loading"
           no-content-tip="此分类下还没有商品"
@@ -134,6 +132,9 @@ export default {
     this.getCategoryTree()
   },
   mounted () {
+    // 去掉prop传参 refs调用
+    this.$refs.loadMore.setForm(this.form)
+    this.$refs.loadMore.setMethods(getProduct)
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
