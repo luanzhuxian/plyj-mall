@@ -2,8 +2,10 @@
   <div
     :class="{
       [$style[size]]: true,
-      [$style.orderItem]: true,
-      [$style.border]: border
+      [$style.orderItem]: true
+    }"
+    :style="{
+      marginBottom: gap / 7.5 + 'vw'
     }"
     @click="handleClick"
   >
@@ -90,11 +92,15 @@ export default {
     }
   },
   props: {
+    // 两个item之间的间距
+    gap: {
+      type: Number,
+      default: 30
+    },
     size: {
       type: String,
       default: 'medium'
     },
-    border: Boolean,
     img: {
       type: String,
       default: ''
@@ -185,11 +191,8 @@ export default {
     position: relative;
     display: flex;
     width: 100%;
-    &.border {
-      // &:after {
-      //   @include border-half-bottom(#e7e7e7);
-      // }
-      padding-bottom: 30px;
+    &:nth-last-of-type(1) {
+      margin-bottom: 0 !important;
     }
     > img {
       object-fit: cover;
