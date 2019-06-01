@@ -16,6 +16,7 @@ import MessageBox from './message-box'
 import Selector from './Selector.vue'
 import Checkbox from './Checkbox.vue'
 import CheckboxGroup from './Checkbox-Group.vue'
+import Popup from './Popup.vue'
 import { Toast } from './toast'
 const components = [
   Button,
@@ -33,7 +34,8 @@ const components = [
   MessageBox,
   Selector,
   Checkbox,
-  CheckboxGroup
+  CheckboxGroup,
+  Popup
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {
@@ -87,5 +89,8 @@ export default {
   PlSvg,
   Switch,
   MessageBox,
-  Selector
+  Selector,
+  Checkbox,
+  CheckboxGroup,
+  Popup
 }

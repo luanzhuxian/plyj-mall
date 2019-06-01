@@ -41,7 +41,7 @@
 
 <script>
 export default {
-  name: 'Popup',
+  name: 'PlPopup',
   props: {
     title: {
       type: String,
@@ -50,6 +50,33 @@ export default {
     showCloseIcon: {
       type: Boolean,
       default: true
+    },
+    show: {
+      type: Boolean
+    }
+  },
+  watch: {
+    show (val) {
+      if (val) {
+        // 显示dialog
+        this.showPopup = true
+        // 显示mask
+        this.showMask = true
+        setTimeout(() => {
+          this.showBox = true
+        }, 200)
+      } else {
+        this.showBox = false
+        // 隐藏mask
+        setTimeout(() => {
+          this.showMask = false
+          // 隐藏dialog
+          setTimeout(() => {
+            this.showPopup = false
+            this.$emit('update:show', false)
+          }, 200)
+        }, 300)
+      }
     }
   },
   data () {
@@ -60,28 +87,8 @@ export default {
     }
   },
   methods: {
-    show () {
-      // 显示dialog
-      this.showPopup = true
-      // 显示mask
-      this.showMask = true
-      setTimeout(() => {
-        this.showBox = true
-      }, 200)
-    },
     close () {
-      this.showBox = false
-      // 隐藏mask
-      setTimeout(() => {
-        this.showMask = false
-        // 隐藏dialog
-        setTimeout(() => {
-          this.showPopup = false
-        }, 200)
-      }, 300)
-    },
-    stopTouch (e) {
-      e.preventDefault()
+      this.$emit('update:show', false)
     }
   }
 }
