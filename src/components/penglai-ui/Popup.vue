@@ -18,6 +18,10 @@
       >
         {{ title }}
       </div>
+      <slot
+        v-else
+        name="title"
+      />
       <div class="pl-popup__content">
         <slot />
       </div>
@@ -43,7 +47,10 @@ export default {
       type: String,
       default: ''
     },
-    showCloseIcon: Boolean
+    showCloseIcon: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
@@ -135,8 +142,8 @@ export default {
   }
 
   &__close {
-    width: 46px;
-    height: 46px;
+    width: 19px;
+    height: 19px;
   }
 }
 </style>
