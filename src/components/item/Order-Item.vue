@@ -170,7 +170,6 @@ export default {
         position: absolute;
         right: 0;
         top: 0;
-        padding-left: 26px;
       }
       .price {
         font-size: 24px;
@@ -203,7 +202,7 @@ export default {
         height: 164px;
       }
       .right {
-        padding: 0 24px 0 20px;
+        padding-left: 24px;
       }
       .right-top {
         .refund-info {
@@ -218,7 +217,7 @@ export default {
         height: 140px;
       }
       .right {
-        padding: 0 24px 0 16px;
+        padding-left: 16px;
       }
       .right-top {
         .refund-info {
