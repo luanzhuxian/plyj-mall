@@ -58,7 +58,10 @@
           <p>今日润笔（元）</p>
           <p v-text="currentBalance" />
         </div>
-        <pl-svg name="my-right" />
+        <pl-svg
+          :class="$style.myRight"
+          name="my-right"
+        />
       </router-link>
     </div>
 
@@ -135,26 +138,26 @@
       :is-my="true"
       style="margin-top: 16px"
     />
-    <div :class="$style.setting + ' radius-20'">
-      <pl-fields
-        icon="coffers"
-        :icon-gap="16"
-        text="小金库"
-        :route="{ name: 'Coffers' }"
-      />
-      <pl-fields
-        icon="address"
-        :icon-gap="16"
-        text="地址管理"
-        :route="{ name: 'Address' }"
-      />
-      <pl-fields
-        icon="setting"
-        :icon-gap="16"
-        text="账号设置"
-        :route="{ name: 'Setting' }"
-      />
-    </div>
+    <!--    <div :class="$style.setting + ' radius-20'">-->
+    <!--      <pl-fields-->
+    <!--        icon="coffers"-->
+    <!--        :icon-gap="16"-->
+    <!--        text="小金库"-->
+    <!--        :route="{ name: 'Coffers' }"-->
+    <!--      />-->
+    <!--      <pl-fields-->
+    <!--        icon="address"-->
+    <!--        :icon-gap="16"-->
+    <!--        text="地址管理"-->
+    <!--        :route="{ name: 'Address' }"-->
+    <!--      />-->
+    <!--      <pl-fields-->
+    <!--        icon="setting"-->
+    <!--        :icon-gap="16"-->
+    <!--        text="账号设置"-->
+    <!--        :route="{ name: 'Setting' }"-->
+    <!--      />-->
+    <!--    </div>-->
   </div>
 </template>
 
@@ -235,7 +238,6 @@ export default {
     &:before {
       content: 'Lv';
       margin-right: 8px;
-      font-family: PingFang SC;
     }
   }
   .tip {
@@ -380,7 +382,6 @@ export default {
       padding-top: 16px;
       padding-left: 32px;
       font-size:24px;
-      font-family:PingFangSC-Regular;
       font-weight:400;
       color:rgba(102,102,102,1);
       line-height:34px;
@@ -401,7 +402,6 @@ export default {
         padding-left: 24px;
         .delivery-status{
           font-size:28px;
-          font-family:PingFangSC-Regular;
           font-weight:400;
           color:rgba(24,144,255,1);
           line-height:40px;
@@ -409,7 +409,6 @@ export default {
         .delivery-details{
           margin-top: 14px;
           font-size:24px;
-          font-family:PingFangSC-Regular;
           font-weight:400;
           color:rgba(102,102,102,1);
           line-height:34px;
