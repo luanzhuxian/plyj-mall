@@ -451,6 +451,7 @@ export default {
       this.showPopup = false
     },
     need () {
+      this.$router.push({ name: 'ApplyInvoice' })
       this.invioceType = '纸质发票'
     }
   }

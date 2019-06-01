@@ -56,5 +56,14 @@ export default [
     meta: {
       title: '发票管理'
     }
+  },
+  {
+    path: '/my/setting/invoice/apply',
+    name: 'ApplyInvoice',
+    props: true,
+    component: () => import('../views/my/invoice/Apply-Invoice.vue'),
+    meta: {
+      title: '发票管理'
+    }
   }
 ]
