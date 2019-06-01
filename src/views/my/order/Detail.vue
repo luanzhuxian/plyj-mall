@@ -154,29 +154,32 @@
       </div>
       <div :class="$style.infoBottom">
         <collapse v-model="collepseActiveNames">
-          <collapse-item name="1">
-            <div slot="title">
-              <span :class="$style.invoiceTitle">发票信息：</span>
-              <span>未开票</span>
-            </div>
-            <div>
+          <collapse-item
+            name="1"
+            :disabled="false"
+            :use-right-icon="false"
+          >
+            <template slot="title">
+              <div>
+                <span :class="$style.invoiceTitle">发票信息：</span>
+                <span>未开票</span>
+              </div>
+            </template>
+            <template slot="default">
               <div :class="$style.invoiceName">
                 西安大梦想家艺术培训有限公司
               </div>
               <div :class="$style.invoiceNumber">
                 13777327727327273727
               </div>
-            </div>
+            </template>
           </collapse-item>
         </collapse>
       </div>
     </div>
 
-    <!-- <div
-      v-if="orderDetailModel.orderPostscript"
-      :class="$style.remark + ' radius-20 mt-28'"
-    > -->
     <div
+      v-if="orderDetailModel.orderPostscript"
       :class="$style.remark + ' radius-20 mt-28'"
     >
       <div :class="$style.remarkTop">
@@ -259,6 +262,12 @@
         去付款
       </pl-button>
     </div>
+    <picker
+      show-toolbar
+      :columns="columns"
+      @change="onChange"
+      @confirm="onConfirm"
+    />
   </div>
 
   <div
@@ -294,6 +303,7 @@ import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
+import Picker from '../../../components/penglai-ui/picker/Picker.vue'
 import {
   getOrderDetail,
   physicalOrderCancellation,
@@ -316,7 +326,8 @@ export default {
     OrderItemSkeleton,
     AddressItemSkeleton,
     Collapse,
-    CollapseItem
+    CollapseItem,
+    Picker
   },
   data () {
     return {
@@ -349,7 +360,8 @@ export default {
       orderType: '',
       timer: 0,
       loaded: false,
-      collepseActiveNames: []
+      collepseActiveNames: [],
+      columns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因']
     }
   },
   props: {
@@ -361,7 +373,7 @@ export default {
   computed: {
     ...mapGetters(['orderStatusMap']),
     // 是否可以申请售后
-    canIApplyService: function () {
+    canIApplyService () {
       return (this.currentStatus === 'FINISHED' || this.currentStatus === 'WAIT_RECEIVE' || this.currentStatus === 'WAIT_SHIP') &&
         this.orderType !== 'VIRTUAL_GOODS' && // 不是虚拟商品
         !this.orderRefundDetail.refundId // 没有申请过
@@ -469,6 +481,12 @@ export default {
         if (flag === 'WAIT_RECEIVE') this.tips.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
         if (flag === 'WAIT_PAY') this.tips.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
       }, 1000)
+    },
+    onChange (picker, value, index) {
+      console.log(`当前值：${value}, 当前索引：${index}`)
+    },
+    onConfirm () {
+      console.log(`confirm`)
     }
   }
 }

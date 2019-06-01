@@ -62,6 +62,10 @@
 import { ChildrenMixin } from './relation'
 import { isDef } from '../../../assets/js/util'
 
+function raf (fn) {
+  return window.requestAnimationFrame(fn)
+}
+
 export default {
   name: 'CollapseItem',
   mixins: [ChildrenMixin('Collapse')],
@@ -140,7 +144,7 @@ export default {
         this.inited = true
       }
 
-      this.raf(() => {
+      raf(() => {
         const { content, wrapper } = this.$refs
         if (!content || !wrapper) {
           return
@@ -150,7 +154,7 @@ export default {
         if (clientHeight) {
           const contentHeight = `${clientHeight}px`
           wrapper.style.height = expanded ? 0 : contentHeight
-          this.raf(() => {
+          raf(() => {
             wrapper.style.height = expanded ? contentHeight : 0
           })
         } else {
@@ -164,9 +168,6 @@ export default {
     this.inited = this.expanded
   },
   methods: {
-    raf (fn) {
-      return window.requestAnimationFrame(fn)
-    },
     onClick () {
       if (this.disabled) {
         return
