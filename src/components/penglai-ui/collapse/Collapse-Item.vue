@@ -199,7 +199,6 @@ export default {
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
-    // overflow: hidden;
     color: #333;
     font-size: 24px;
     line-height: 34px;

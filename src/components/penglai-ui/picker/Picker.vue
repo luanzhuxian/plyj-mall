@@ -145,9 +145,9 @@ export default {
     },
     emit (event) {
       if (this.simple) {
-        this.$emit(event, this.getColumnValue(0), this.getColumnIndex(0))
+        this.$emit(event, this, this.getColumnValue(0), this.getColumnIndex(0))
       } else {
-        this.$emit(event, this.getValues(), this.getIndexes())
+        this.$emit(event, this, this.getValues(), this.getIndexes())
       }
     },
     onChange (columnIndex) {

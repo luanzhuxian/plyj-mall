@@ -115,12 +115,12 @@ export default {
     bottom: 0;
     transform: translateY(100%);
     width: 100%;
-    max-height: 70%;
+    // max-height: 70%;
     background-color: #fff;
     border-radius: 20px 20px 0 0;
     transition: transform .3s ease-in-out;
     z-index: 2;
-    overflow: auto;
+    overflow: hidden;
     &.show {
       transform: translateY(0);
     }
@@ -129,7 +129,7 @@ export default {
   &__title {
     box-sizing: border-box;
     padding: 28px 0;
-    font-size: 42px;
+    font-size: 30px;
     color: #333;
     text-align: center;
   }

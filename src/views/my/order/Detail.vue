@@ -287,26 +287,45 @@
         去付款
       </pl-button>
     </div>
-    <picker
-      show-toolbar
-      :columns="columns"
-      @change="onChange"
-      @confirm="onConfirm"
-    />
+
+    <popup
+      ref="picker"
+      :show-close-icon="false"
+    >
+      <picker
+        show-toolbar
+        :columns="columns"
+        @change="onChange"
+        @confirm="onConfirm"
+        @cancel="onCancel"
+      />
+    </popup>
+
     <popup
       ref="popup"
       title="退款原因"
       :show-close-icon="false"
     >
-      <div :class="$style.buttonWrapper">
-        <pl-button
-          size="larger"
-          type="warning"
-          @click="closePopup"
-        >
-          关闭
-        </pl-button>
-      </div>
+      <template>
+        <ul :class="$style.popupContentWrapper">
+          <li
+            v-for="(item, index) of popupOptions"
+            :key="index"
+            :class="$style.popupItem"
+          >
+            {{ item }}
+          </li>
+        </ul>
+        <div :class="$style.popupButtonWrapper">
+          <pl-button
+            size="larger"
+            type="warning"
+            @click="closePopup"
+          >
+            关闭
+          </pl-button>
+        </div>
+      </template>
     </popup>
   </div>
 
@@ -403,7 +422,8 @@ export default {
       timer: 0,
       loaded: false,
       collepseActiveNames: [],
-      columns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因']
+      columns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
+      popupOptions: ['质量问题', '不想要了', '商品信息填写错误', '卖家发错货', '商品与描述不符合', '收到商品少件、破损或污渍', '质量问题']
     }
   },
   props: {
@@ -527,8 +547,11 @@ export default {
     onChange (picker, value, index) {
       console.log(`当前值：${value}, 当前索引：${index}`)
     },
-    onConfirm () {
-      console.log(`confirm`)
+    onConfirm (picker, value, index) {
+      console.log(`当前值：${value}, 当前索引：${index}`)
+    },
+    onCancel () {
+      this.$refs.picker.close()
     },
     showPopup () {
       this.$refs.popup.show()
@@ -700,10 +723,25 @@ export default {
     }
   }
 
-  .button-wrapper {
+  .popup-content-wrapper {
+    padding: 28px 0 0 24px;
+    background-color: #FFF;
+    max-height: 526px;
+    overflow-y: scroll;
+  }
+  .popup-button-wrapper {
     padding: 16px 24px;
     background-color: #FFF;
     border-top: 1px solid #F0F0F0;
+  }
+  .popup-item {
+    font-size: 30px;
+    color: #000000;
+    line-height: 88px;
+    border-bottom: 1px solid #F0F0F0;
+    &:nth-last-of-type(1) {
+      border-bottom: none;
+    }
   }
 
   .skeleton {

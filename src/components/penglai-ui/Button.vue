@@ -176,8 +176,8 @@ export default {
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
         margin-right: 5px;
-        vertical-align: -7px;
         fill: currentColor;
+        vertical-align: -7px;
       }
     }
     /* huge */
@@ -194,7 +194,7 @@ export default {
         fill: currentColor;
       }
     }
-     /* larger */
+    /* larger */
     &.pl-button__larger {
       width: 100%;
       height: 90px;
@@ -204,11 +204,10 @@ export default {
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
         margin-right: 5px;
-        vertical-align: -5px;
         fill: currentColor;
+        vertical-align: -7px;
       }
     }
-
   }
 
   .pl-button__loading {
