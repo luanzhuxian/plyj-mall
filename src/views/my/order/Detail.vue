@@ -256,7 +256,7 @@
       <pl-button
         plain
         round
-        @click="showPopup"
+        @click="showMoal"
       >
         联系我们
       </pl-button>
@@ -290,6 +290,7 @@
 
     <popup
       ref="picker"
+      :show.sync="showPicker"
       :show-close-icon="false"
     >
       <picker
@@ -304,17 +305,28 @@
     <popup
       ref="popup"
       title="退款原因"
+      :show.sync="showPopup"
       :show-close-icon="false"
     >
       <template>
         <ul :class="$style.popupContentWrapper">
-          <li
-            v-for="(item, index) of popupOptions"
-            :key="index"
-            :class="$style.popupItem"
+          <pl-checkbox-group
+            v-model="checkList"
+            @change="onCheckboxChange"
           >
-            {{ item }}
-          </li>
+            <pl-checkbox
+              :class="$style.popupItem"
+              v-for="(item, index) of popupOptions"
+              :key="index"
+              :data="index"
+            >
+              <template slot="prefix">
+                <div :class="$style.popupItemText">
+                  {{ item }}
+                </div>
+              </template>
+            </pl-checkbox>
+          </pl-checkbox-group>
         </ul>
         <div :class="$style.popupButtonWrapper">
           <pl-button
@@ -423,7 +435,10 @@ export default {
       loaded: false,
       collepseActiveNames: [],
       columns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
-      popupOptions: ['质量问题', '不想要了', '商品信息填写错误', '卖家发错货', '商品与描述不符合', '收到商品少件、破损或污渍', '质量问题']
+      popupOptions: ['质量问题', '不想要了', '商品信息填写错误', '卖家发错货', '商品与描述不符合', '收到商品少件、破损或污渍', '质量问题'],
+      checkList: [],
+      showPopup: false,
+      showPicker: false
     }
   },
   props: {
@@ -551,13 +566,18 @@ export default {
       console.log(`当前值：${value}, 当前索引：${index}`)
     },
     onCancel () {
-      this.$refs.picker.close()
+      this.showPicker = false
     },
-    showPopup () {
-      this.$refs.popup.show()
+    showMoal () {
+      this.showPopup = true
+      // this.showPicker = true
+      // this.$refs.popup.show()
     },
     closePopup () {
-      this.$refs.popup.close()
+      this.showPopup = false
+    },
+    onCheckboxChange (value) {
+      console.log(value, this.checkList)
     }
   }
 }
@@ -735,13 +755,18 @@ export default {
     border-top: 1px solid #F0F0F0;
   }
   .popup-item {
+    flex: 1;
     font-size: 30px;
     color: #000000;
     line-height: 88px;
     border-bottom: 1px solid #F0F0F0;
+    padding-right: 24px;
     &:nth-last-of-type(1) {
       border-bottom: none;
     }
+  }
+  .popup-item-text {
+    flex: 1;
   }
 
   .skeleton {

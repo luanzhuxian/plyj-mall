@@ -17,7 +17,7 @@
         :key="index"
         class="ellipsis pl-picker-column__item"
         :class="{ 'pl-picker-column__item--disabled': isOptionDisabled(option) }"
-        :style="{ fontSize: `${fontSizeList[index]}px` }"
+        :style="{ fontSize: `${fontSizeList[index] / 7.5}vh` }"
         @click="() => onClickItem(index)"
       >
         {{ getOptionText(option) }}
@@ -96,10 +96,10 @@ export default {
     },
     wrapperStyle () {
       return {
-        transform: `translate3d(0, ${this.offset + this.baseOffset}px, 0)`,
+        transform: `translate3d(0, ${(this.offset + this.baseOffset) / 7.5}vh, 0)`,
         // transform: `translate3d(0, ${this.itemHeight}px, 0)`,
         transitionDuration: `${this.duration}ms`,
-        lineHeight: `${this.itemHeight}px`
+        lineHeight: `${this.itemHeight / 7.5}vh`
       }
     }
   },
@@ -127,7 +127,7 @@ export default {
   methods: {
     calFontSize (current) {
       const { options } = this
-      const fontSize = 42
+      const fontSize = 21
       this.fontSizeList = options.map((option, index) => fontSize - (Math.abs(current - index) * 8))
       this.$forceUpdate()
     },

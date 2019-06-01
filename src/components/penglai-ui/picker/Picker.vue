@@ -117,12 +117,12 @@ export default {
     },
     frameStyle () {
       return {
-        height: `${this.itemHeight}px`
+        height: `${this.itemHeight / 7.5}vh`
       }
     },
     columnsStyle () {
       return {
-        height: `${this.wrapHeight}px`
+        height: `${this.wrapHeight / 7.5}vh`
       }
     },
     maskStyle () {
