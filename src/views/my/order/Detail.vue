@@ -176,6 +176,31 @@
           </collapse-item>
         </collapse>
       </div>
+      <div :class="$style.infoBottom">
+        <collapse v-model="collepseActiveNames">
+          <collapse-item
+            name="1"
+            disabled
+            use-right-icon
+          >
+            <template slot="title">
+              <div>
+                <span :class="$style.invoiceTitle">发票信息：</span>
+                <span>未开票</span>
+              </div>
+            </template>
+            <template slot="right-icon">
+              <pl-button
+                round
+                plain
+                @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+              >
+                立即申请
+              </pl-button>
+            </template>
+          </collapse-item>
+        </collapse>
+      </div>
     </div>
 
     <div
@@ -231,7 +256,7 @@
       <pl-button
         plain
         round
-        @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+        @click="showPopup"
       >
         联系我们
       </pl-button>
@@ -268,6 +293,20 @@
       @change="onChange"
       @confirm="onConfirm"
     />
+    <popup
+      ref="popup"
+      title="退款原因"
+    >
+      <div :class="$style.buttonWrapper">
+        <pl-button
+          size="larger"
+          type="warning"
+          @click="closePopup"
+        >
+          关闭
+        </pl-button>
+      </div>
+    </popup>
   </div>
 
   <div
@@ -304,6 +343,7 @@ import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import Picker from '../../../components/penglai-ui/picker/Picker.vue'
+import Popup from '../../../components/penglai-ui/Popup.vue'
 import {
   getOrderDetail,
   physicalOrderCancellation,
@@ -327,7 +367,8 @@ export default {
     AddressItemSkeleton,
     Collapse,
     CollapseItem,
-    Picker
+    Picker,
+    Popup
   },
   data () {
     return {
@@ -487,6 +528,12 @@ export default {
     },
     onConfirm () {
       console.log(`confirm`)
+    },
+    showPopup () {
+      this.$refs.popup.show()
+    },
+    closePopup () {
+      this.$refs.popup.close()
     }
   }
 }
@@ -650,6 +697,12 @@ export default {
     > button {
       margin-left: 20px;
     }
+  }
+
+  .button-wrapper {
+    padding: 16px 24px;
+    background-color: #FFF;
+    border-top: 1px solid #F0F0F0;
   }
 
   .skeleton {
