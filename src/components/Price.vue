@@ -4,32 +4,41 @@
     :class="{
       [$style.price]: true,
       [$style[size]]: true,
-      [$style.plain]: plain
+      [$style.plain]: plain,
+      [$style.priceBox]:agentPrice
     }"
   >
-    <span
-      :class="$style.currentPrice"
-      :style="{ marginRight: originalPrice ? '10px' : '0' }"
-    >
+    <div>
       <span
-        v-if="prefixText"
-        :class="$style.prefixText"
-        v-text="prefixText"
+        :class="$style.currentPrice"
+        :style="{ marginRight: originalPrice ? '10px' : '0' }"
+      >
+        <span
+          v-if="prefixText"
+          :class="$style.prefixText"
+          v-text="prefixText"
+        />
+        <i
+          :class="$style.integer"
+          v-text="integer"
+        />
+        <i
+          v-if="float"
+          :class="$style.float"
+          v-text="float"
+        />
+      </span>
+      <del
+        v-if="originalPrice"
+        v-text="'¥' + originalPrice"
       />
-      <i
-        :class="$style.integer"
-        v-text="integer"
-      />
-      <i
-        v-if="float"
-        :class="$style.float"
-        v-text="float"
-      />
-    </span>
-    <del
-      v-if="originalPrice"
-      v-text="'¥' + originalPrice"
-    />
+    </div>
+    <div
+      :class="$style.agentPrice"
+      v-if="agentPrice"
+    >
+      返润笔 ¥{{ agentPrice }}
+    </div>
   </div>
 </template>
 
@@ -53,6 +62,10 @@ export default {
     plain: Boolean,
     prefixText: {
       type: String,
+      default: ''
+    },
+    agentPrice: {
+      type: [String, Number],
       default: ''
     }
   },
@@ -199,5 +212,12 @@ export default {
       font-weight: normal;
       color: $--font-color_gray1;
     }
+  }
+  .agentPrice{
+    font-size: 16px;
+    color: #666666;
+  }
+  .price-box{
+    justify-content: space-between;
   }
 </style>
