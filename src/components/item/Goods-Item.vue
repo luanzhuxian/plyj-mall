@@ -31,6 +31,7 @@
       <price
         size="small"
         :price="price"
+        :agent-price="agentPrice"
         :original-price="originalPrice"
       />
     </div>
@@ -78,6 +79,10 @@ export default {
       default: ''
     },
     originalPrice: {
+      type: [String, Number],
+      default: ''
+    },
+    agentPrice: {
       type: [String, Number],
       default: ''
     }

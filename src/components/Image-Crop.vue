@@ -51,7 +51,10 @@
           >
         </div>
       </div>
-      <div class="ctrl">
+      <div
+        class="ctrl"
+        :class="$style.ctrl"
+      >
         <div
           class="back"
           flex="33"
@@ -63,12 +66,13 @@
         </div>
         <div
           class="rotate"
+          :class="$style.rotate"
           @click="rotateChange"
           flex="33"
           layout="column"
           layout-align="center center"
         >
-          旋转
+          <pl-svg name="my-rotate" />
         </div>
         <div
           class="submit"
@@ -879,13 +883,30 @@ export default {
         text-align: center;
         font-size: 16px;
         color: white;
-        height: 50px;
+        height: 100px;
+      background-color: #000;
+      border-top: 1px solid #666;
         & > div {
             line-height: 50px;
-            border: 1px solid fade(white, 10%);
+            /*border: 1px solid fade(white, 10%);*/
             background: fade(white, 10%);
             flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
     }
 }
+</style>
+<style module lang="scss">
+  .rotate{
+    svg{
+      width: 40px;
+    }
+  }
+  .ctrl{
+    >div{
+      font-size: 30px;
+    }
+  }
 </style>

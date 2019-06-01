@@ -149,6 +149,12 @@ export default {
     }
   },
   methods: {
+    setMethods (method) {
+      this.requestMethods = method
+    },
+    setForm (form) {
+      this.form = form
+    },
     bindScroll () {
       this.$nextTick(() => {
         this.offsetHeight = this.$el.offsetHeight

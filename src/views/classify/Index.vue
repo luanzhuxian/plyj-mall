@@ -53,8 +53,9 @@
           v-text="currentClassify.subCategoryName || currentClassify.categoryName"
           v-show="!isEmpty"
         />
+
         <load-more
-          :request-methods="getProduct"
+          :request-methods.sync="requestMethods"
           :form="form"
           ref="loadMore"
           :loading.sync="loading"
@@ -69,7 +70,8 @@
                 :id="item.sequenceNbr"
                 :title="item.productName"
                 :desc="item.productDesc"
-                :price="item.productOptions[0].price"
+                :price="item.priceModels?item.priceModels[0].price:item.productOptions[0].price"
+                :agent-price="item.priceModels?item.priceModels[0].agentPrice:''"
                 :img="item.productImage[0].mediaUrl"
               />
             </div>
@@ -81,15 +83,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import GoodsItem from '../../components/item/Goods-Item.vue'
 import ClassifyItem from '../../components/item/Classify-Item.vue'
 import LoadMore from '../../components/Load-More.vue'
-import {
-  getCategoryTree,
-  getProduct
-} from '../../apis/classify'
+import { getCategoryTree, getProduct } from '../../apis/classify'
+import { getActivityProduct } from '../../apis/broker'
 export default {
   name: 'Classify',
+  computed: {
+    ...mapGetters(['agentUser'])
+  },
   components: {
     GoodsItem,
     ClassifyItem,
@@ -121,7 +125,9 @@ export default {
       },
       $refresh: null,
       loading: false,
-      isEmpty: false
+      isEmpty: false,
+      requestMethods: getProduct,
+      agentShow: false
     }
   },
   created () {
@@ -136,15 +142,37 @@ export default {
     }
   },
   methods: {
-    getProduct,
     classifyClick (classify) {
       if (this.loading || classify === this.currentClassify) return
+      if (classify && (classify.sequenceNbr === '1')) {
+        this.agentShow = true
+        this.currentClassify = classify
+        this.form = {
+          type: '',
+          current: 1,
+          size: 10
+        }
+        this.$refs.loadMore.setMethods(getActivityProduct)
+        this.$refs.loadMore.setForm(this.form)
+        // this.requestMethods = getActivityProduct
+        this.$refresh()
+        return
+      }
       if (classify) {
+        this.agentShow = false
         this.currentClassify = classify
         this.currentClassify.subCategoryName = ''
+        this.$refs.loadMore.setMethods(getProduct)
+        this.form = {
+          categoryCode: '',
+          subCategory: '',
+          current: 1,
+          size: 10,
+          productStatus: 'ON_SALE'
+        }
         this.form.categoryCode = classify.sequenceNbr
         this.form.subCategory = ''
-        this.form.current = 1
+        this.$refs.loadMore.setForm(this.form)
         this.$refresh()
       }
     },
@@ -160,6 +188,12 @@ export default {
       try {
         const { result } = await getCategoryTree()
         this.classifyList = this.classifyList.concat(result)
+        if (this.agentUser) {
+          this.classifyList.push({
+            categoryName: 'helper专区',
+            sequenceNbr: '1'
+          })
+        }
         this.classifyClick(this.classifyList.find(item => item.sequenceNbr === (this.optionId || '')))
       } catch (e) {
         throw e
