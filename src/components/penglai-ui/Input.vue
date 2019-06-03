@@ -183,7 +183,7 @@ export default {
       })
       if (!val) this.rows = this.minRows
       this.$emit('input', val)
-      this.trigger('input', val)
+      this.trigger(e)
     },
     handleFocus (e) {
       if (this.readonly) {
@@ -193,18 +193,18 @@ export default {
         // if (this.isIOS) document.body.scrollTop = document.body.scrollHeight
         this.$emit('focus', e)
         this.focus = true
-        this.trigger('focus', e.target.value)
+        this.trigger(e)
       }
     },
     handleBlur (e) {
       document.body.scrollTop = this.bfscrolltop
       this.$emit('blur', e)
       this.focus = false
-      this.trigger('blur', e.target.value)
+      this.trigger(e)
     },
     handleChange (e) {
       this.$emit('change', e)
-      this.trigger('change', e.target.value)
+      this.trigger(e)
     },
     clear () {
       this.$emit('input', '')
@@ -215,10 +215,7 @@ export default {
     },
     trigger (event) {
       if (this.rule) {
-        let validateRules = this.rule.filter(item => item.trigger === event)
-        if (validateRules.length > 0) {
-          this.error = !this.$form.validateByFields(this.prop)
-        }
+        this.error = !this.$form.validateByFields(this.prop, event)
       }
     },
     handleClick (e) {

@@ -42,10 +42,13 @@ export default {
       }
       return true
     },
-    validateByFields (fields) {
+    validateByFields (fields, ev) {
       let validateRules = this.rules[fields]
       let val = this.model[fields] || ''
       for (let rule of validateRules) {
+        if (ev && rule.trigger !== ev.type) {
+          continue
+        }
         if (rule.required) {
           if (!val.trim()) {
             this.error = true

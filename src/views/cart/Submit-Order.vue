@@ -476,6 +476,11 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
+    if (to.name !== 'ApplyInvoice') {
+      localStorage.removeItem('INVOICE_MODEL')
+      localStorage.removeItem('CONFIRM_LIST')
+      localStorage.removeItem('APPLY_INVOICE')
+    }
     next()
   }
 }

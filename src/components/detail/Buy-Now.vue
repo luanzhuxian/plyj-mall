@@ -99,7 +99,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['supportPhone', 'mallDomain'])
+    ...mapGetters(['supportPhone', 'mallDomain', 'mobile'])
   },
   activated () {
     this.reset()
@@ -122,6 +122,7 @@ export default {
     },
     // 跳转至提交订单页面
     async submit () {
+      if (!this.hasBind()) return
       this.clickBuyNow = true
       this.clickAddToCart = false
       const {
@@ -143,7 +144,7 @@ export default {
         // console.log(url)
         return location.replace(url)
       } */
-      localStorage.setItem('confirmList', JSON.stringify([{
+      localStorage.setItem('CONFIRM_LIST', JSON.stringify([{
         productId: productSeq,
         optionCode: optionCode,
         count: count
@@ -155,6 +156,7 @@ export default {
       }
     },
     async addToCart () {
+      if (!this.hasBind()) return
       this.clickAddToCart = true
       this.clickBuyNow = false
       const { currentModel } = this
@@ -181,6 +183,17 @@ export default {
       this.showSpecifica = false
       this.clickAddToCart = false
       this.clickBuyNow = false
+    },
+    hasBind () {
+      if (!this.mobile) {
+        this.$confirm('您还没有绑定手机，请先绑定手机')
+          .then(() => {
+            localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify(this.$route))
+            this.$router.push({ name: 'BindMobile' })
+          })
+          .catch(() => {})
+        return false
+      }
     }
   }
 }

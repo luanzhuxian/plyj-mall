@@ -133,7 +133,7 @@ export default {
           { required: true, message: '请输入手机号码', trigger: 'blur' },
           { validator: isPhone, message: '手机号码格式错误', trigger: 'blur' }
         ],
-        addressPrefix: [ { required: true, message: '请选择地址', trigger: 'blur' } ],
+        addressPrefix: [ { required: true, message: '请选择地址' } ],
         agencyAddress: [ { required: true, message: '请输入详细地址', trigger: 'blur' } ]
       },
       address: {}
@@ -182,19 +182,9 @@ export default {
             currentAddress = result
           }
           await this.$store.dispatch(ADDRESS_LIST)
-          let addressReturn = JSON.parse(localStorage.getItem('ADDRESS_RETURN')) || {}
-          if (addressReturn.name) {
-            /* 如果来自提交订单页面，那么点击地址时，选中当前地址为默认地址，但并不是真的设置为默认地址 */
-            this.$store.commit(SELETC_ADDRESS, currentAddress)
-            this.$router.replace({
-              name: addressReturn.name,
-              params: addressReturn.params,
-              query: addressReturn.query
-            })
-            localStorage.removeItem('ADDRESS_RETURN')
-          } else {
-            this.$router.replace({ name: 'Address' })
-          }
+          /* 如果来自提交订单页面，那么点击地址时，选中当前地址为默认地址，但并不是真的设置为默认地址 */
+          this.$store.commit(SELETC_ADDRESS, currentAddress)
+          this.goBack()
           this.loading = false
         } catch (e) {
           this.loading = false
@@ -229,10 +219,24 @@ export default {
             this.$store.commit(SELETC_ADDRESS, null)
           }
           await this.$store.dispatch(ADDRESS_LIST)
-          this.$router.replace({ name: 'Address' })
+          this.goBack()
         }
       } catch (e) {
         throw e
+      }
+    },
+    goBack () {
+      const addressReturn = JSON.parse(localStorage.getItem('ADDRESS_RETURN')) || {}
+      const { name, params, query } = addressReturn
+      if (name) {
+        this.$router.replace({
+          name: name,
+          params: params,
+          query: query
+        })
+        localStorage.removeItem('ADDRESS_RETURN')
+      } else {
+        this.$router.go(-1)
       }
     }
   },
