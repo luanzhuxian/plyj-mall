@@ -29,13 +29,13 @@
         text="我的地址"
         :icon="`my-address`"
         :icon-gap="24"
-        :route="{ name: '' }"
+        :route="{ name: 'Address' }"
       />
       <pl-fields
         text="我的发票"
         :icon="`my-invoice`"
         :icon-gap="24"
-        :route="{ name: '' }"
+        :route="{ name: 'Invoice' }"
       />
     </div>
   </div>
