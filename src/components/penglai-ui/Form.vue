@@ -50,13 +50,13 @@ export default {
           if (!val.trim()) {
             this.error = true
             console.warn(fields + ' is required')
-            this.$toast(rule.message)
+            this.$warning(rule.message)
             return false
           }
         } else if (rule.validator) {
           if (!rule.validator(val)) {
             this.error = true
-            this.$toast(rule.message)
+            this.$warning(rule.message)
             return false
           }
         }

@@ -59,18 +59,26 @@
 
       <pl-form
         :class="$style.firmInvioce"
-        v-show="type === 2"
+        v-if="type === 2 && invoiceList.length === 0"
+        :model="form"
+        :rules="rules"
+        ref="form"
       >
-        <pl-form-item border>
+        <pl-form-item
+          border
+          prop="firmName"
+        >
           <pl-input
             size="middle"
             placeholder="单位名称"
+            v-model="form.firmName"
           />
         </pl-form-item>
-        <pl-form-item>
+        <pl-form-item prop="tin">
           <pl-input
             size="middle"
             placeholder="纳税人识别号"
+            v-model="form.tin"
           />
           <pl-svg
             slot="suffix"
@@ -80,7 +88,34 @@
           />
         </pl-form-item>
       </pl-form>
-      <button :class="$style.addInvoice">
+
+      <pl-form
+        :class="$style.firmInvioce"
+        v-if="type === 2 && invoiceList.length > 0"
+        :model="form"
+        :rules="rules"
+        ref="form"
+      >
+        <pl-form-item
+          v-for="item of invoiceList"
+          :key="item.id"
+          border
+        >
+          <pl-radio
+            :key="item.id"
+            :label="item.id"
+            v-model="currentInvoice"
+          >
+            <InvoiceItem :data="item" />
+          </pl-radio>
+        </pl-form-item>
+      </pl-form>
+
+      <button
+        :class="$style.addInvoice"
+        v-if="invoiceList.length > 0 && type === 2"
+        @click="addInfo"
+      >
         <pl-svg
           name="add"
           color="#bfbfbf"
@@ -123,6 +158,7 @@
     <pl-button
       type="warning"
       size="huge"
+      @click="confirm"
     >
       确定
     </pl-button>
@@ -152,18 +188,36 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import {
+  addInvoice,
+  getInvoiceList
+} from '../../../apis/invoice'
+import InvoiceItem from '../../../components/item/Invoice-Item'
 export default {
   name: 'ApplyInvoice',
+  components: {
+    InvoiceItem
+  },
   data () {
     return {
       showInvioceIntro: false,
-      type: 1, // 1：个人，2：单位
       applyInvoice: {}, // 待开票商品
-      checkedList: []
+      checkedList: [],
+      invoiceList: [], // 已添加的发票信息列表
+      type: 1,
+      currentInvoice: '', // 当前选中的发票信息
+      form: {
+        tin: '',
+        firmName: ''
+      },
+      rules: {
+        firmName: [{ required: true, message: '请输入单位名称', trigger: 'blur' }],
+        tin: [{ required: true, message: '请输入纳税人识别号', trigger: 'blur' }]
+      }
     }
   },
   computed: {
-    ...mapGetters(['selectedAddress']),
+    ...mapGetters(['selectedAddress', 'userId']),
     realName () {
       return this.selectedAddress.realName
     },
@@ -172,22 +226,36 @@ export default {
     },
     physicalProducts () {
       return this.applyInvoice.physicalProducts || []
-    },
-    virtualProducts () {
-      return this.applyInvoice.virtualProducts || []
     }
   },
-  mounted () {
-    const applyInvoice = JSON.parse(localStorage.getItem('applyInvoice'))
-    if (!applyInvoice) {
+  activated () {
+    const APPLY_INVOICE = JSON.parse(localStorage.getItem('APPLY_INVOICE'))
+    if (!APPLY_INVOICE) {
       this.$router.replace({ name: 'Home' })
       this.$destroy()
     }
-    this.applyInvoice = applyInvoice
+    this.applyInvoice = APPLY_INVOICE
+    try {
+      this.getInvoiceList()
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
     change (type) {
       this.type = type
+    },
+    async getInvoiceList () {
+      try {
+        const { result } = await getInvoiceList(this.userId)
+        this.invoiceList = result
+        this.currentInvoice = result[0].id
+      } catch (e) {
+        throw e
+      }
+    },
+    getCurrentInvoice () {
+      return this.invoiceList.find(item => item.id === this.currentInvoice)
     },
     selectChange (e, pro) {
       const checked = e.target.checked
@@ -196,7 +264,63 @@ export default {
       } else {
         this.checkedList.splice(this.checkedList.indexOf(pro), 1)
       }
+    },
+    addInfo () {
+      localStorage.setItem('EDIT_INVOICE_FROM', JSON.stringify(this.$route))
+      this.$router.push({ name: 'AddInvoice' })
+    },
+    confirm () {
+      if (this.checkedList.length === 0) {
+        this.$warning('请选择要开票的商品')
+        return
+      }
+      let invoiceModel = null
+      let invoiceAmount = 0
+      const orderDetails = []
+      if (this.type === 1) {
+        invoiceModel = {
+          invoiceType: 1,
+          invoiceTitle: this.realName,
+          receiverMobile: this.mobile,
+          userAddressId: this.selectedAddress.sequenceNbr
+        }
+      } else {
+        const currentInvoice = this.getCurrentInvoice()
+        if (currentInvoice) {
+          this.form.tin = currentInvoice.tin
+          this.form.firmName = currentInvoice.entName
+        }
+        if (!this.$refs.form.validate()) return
+        invoiceModel = {
+          invoiceType: 2,
+          tin: this.form.tin,
+          invoiceTitle: this.form.firmName,
+          userAddressId: this.selectedAddress.sequenceNbr
+        }
+        if (!currentInvoice.id) {
+          addInvoice({
+            userId: this.userId,
+            entName: this.form.firmName,
+            tin: this.form.tin
+          })
+        }
+      }
+      for (let pro of this.checkedList) {
+        invoiceAmount += Number(pro.amount) * 100
+        orderDetails.push({
+          productId: pro.productId,
+          skuCode: pro.optionCode
+        })
+      }
+      invoiceModel.orderDetails = orderDetails
+      invoiceModel.invoiceAmount = invoiceAmount / 100
+      localStorage.setItem('INVOICE_MODEL', JSON.stringify(invoiceModel))
+      this.$router.replace({ name: 'SubmitOrder' })
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    localStorage.removeItem('APPLY_INVOICE')
+    next()
   }
 }
 </script>

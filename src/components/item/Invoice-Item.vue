@@ -3,16 +3,16 @@
     <div :class="$style.left">
       <p
         :class="$style.name"
-        v-text="data.name"
+        v-text="data.entName"
       />
       <p
         :class="$style.number"
-        v-text="data.number"
+        v-text="data.tin"
       />
     </div>
     <div
       :class="$style.right"
-      @click="edit"
+      @click.stop.prevent="edit"
     >
       编辑
     </div>
@@ -32,7 +32,9 @@ export default {
   },
   methods: {
     edit () {
-      this.$router.push({ name: 'AddInvoice', params: { id: '123123123' } })
+      // 点击编辑时，保存当前路由，修改后返回当前页面
+      localStorage.setItem('EDIT_INVOICE_FROM', JSON.stringify(this.$route))
+      this.$router.push({ name: 'AddInvoice', params: { id: this.data.id } })
     }
   }
 }
@@ -44,14 +46,15 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
-    padding: 28px 32px 28px 28px;
+    padding: 28px 0 28px 28px;
     background-color: #fff;
     border-radius: $--radius1;
     box-sizing: border-box;
   }
   .right {
     position: relative;
-    padding-left: 30px;
+    height: 100%;
+    padding: 30px 32px 30px 30px;
     margin-left: 30px;
     font-size: 28px;
     color: $--font-color_gray3;

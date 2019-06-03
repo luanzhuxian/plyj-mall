@@ -83,9 +83,6 @@ export default {
       immediate: true
     }
   },
-  created () {
-    console.log(123)
-  },
   data () {
     return {
       showPopup: false,

@@ -25,6 +25,7 @@
           :key="item.id"
           :data="item"
           :gap-column="24"
+          border
         >
           <template v-slot:suffix>
             <CartItem
@@ -41,6 +42,7 @@
       <pl-checkbox
         :checked="checkedAll"
         @change="checkAll"
+        border
       >
         <span
           slot="suffix"
@@ -184,7 +186,7 @@ export default {
           count: cartProductCount
         })
       }
-      localStorage.setItem('confirmList', JSON.stringify(confirmList))
+      localStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
       this.$router.push({ name: 'SubmitOrder' })
     },
     computeMoney () {

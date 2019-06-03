@@ -131,7 +131,7 @@
         发票
       </div>
       <div style="color: #666;">
-        {{ invioceType }}
+        {{ invioceType === 1 ? '不需要' : '纸质发票' }}
         <pl-svg
           :class="$style.rightIcon"
           name="right"
@@ -199,7 +199,7 @@ export default {
   },
   data () {
     return {
-      showPopup: true,
+      showPopup: false,
       submiting: false,
       loading: false,
       freight: 0,
@@ -208,7 +208,8 @@ export default {
       physicalProducts: [],
       virtualProducts: [],
       remark: '', // 物理订单备注
-      invioceType: '不需要'
+      invioceType: 1,
+      INVOICE_MODEL: null
     }
   },
   props: {
@@ -236,14 +237,16 @@ export default {
     selectedAddress () {}
   },
   activated () {
+    this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL'))
+    this.invioceType = this.INVOICE_MODEL ? 2 : 1
     this.getProductDetail()
-  },
-  deactivated () {
-    // localStorage.removeItem('confirmList')
   },
   methods: {
     async getProductDetail () {
-      const proList = JSON.parse(localStorage.getItem('confirmList'))
+      const proList = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
+      if (!proList) {
+        return this.$router.replace({ name: 'Home' })
+      }
       this.loading = true
       try {
         const { result } = await confirmCart({ cartProducts: proList })
@@ -300,9 +303,9 @@ export default {
       // }
     },
     /* 获取规格 */
-    getOption (options) {
-      this.option = options.filter(item => item.optionCode === this.optionCode)[0] || {}
-    },
+    // getOption (options) {
+    //   this.option = options.filter(item => item.optionCode === this.optionCode)[0] || {}
+    // },
     // 提交订单
     async submitOrder () {
       this.submiting = true
@@ -328,7 +331,11 @@ export default {
         })
       }
       try {
-        const { result } = await submitOrder({ addressSeq: this.selectedAddress.sequenceNbr, cartProducts })
+        const { result } = await submitOrder({
+          addressSeq: this.selectedAddress.sequenceNbr,
+          cartProducts,
+          invoiceModel: this.INVOICE_MODEL
+        })
         await this.pay(result)
       } catch (e) {
         throw e
@@ -426,10 +433,14 @@ export default {
           await wechatPay(CREDENTIAL)
           this.submiting = false
           this.$router.replace({ name: 'PaySuccess', params: { orderId: orderSn } })
+          localStorage.removeItem('INVOICE_MODEL')
+          localStorage.removeItem('CONFIRM_LIST')
           resolve()
         } catch (e) {
           this.submiting = false
           this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+          localStorage.removeItem('INVOICE_MODEL')
+          localStorage.removeItem('CONFIRM_LIST')
 
           // if (this.supplierProduct) { // 支付失败时，如果是供应商商品，则取消订单，并跳回商品详情
           //   try {
@@ -447,8 +458,9 @@ export default {
     },
     // 需要发票
     noNeed () {
-      this.invioceType = '不需要'
+      this.invioceType = 1
       this.showPopup = false
+      localStorage.removeItem('INVOICE_MODEL')
     },
     need () {
       if (!this.selectedAddress.realName) {
@@ -456,13 +468,16 @@ export default {
         return
       }
       const applyInvoice = {
-        physicalProducts: this.physicalProducts,
-        virtualProducts: this.virtualProducts
+        physicalProducts: this.physicalProducts
       }
-      localStorage.setItem('applyInvoice', JSON.stringify(applyInvoice))
+      localStorage.setItem('APPLY_INVOICE', JSON.stringify(applyInvoice))
       this.$router.push({ name: 'ApplyInvoice' })
-      this.invioceType = '纸质发票'
+      this.invioceType = 2
+      this.showPopup = false
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    next()
   }
 }
 </script>
