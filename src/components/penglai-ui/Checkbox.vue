@@ -8,13 +8,13 @@
     }"
   >
     <input
+      v-show="false"
+      :id="'checkbox' + _uid"
+      ref="checkbox"
       type="checkbox"
       :checked="checked || localChecked"
-      @change="handleChange"
-      v-show="false"
       :disabled="disabled"
-      ref="checkbox"
-      :id="'checkbox' + _uid"
+      @change="handleChange"
     >
     <slot name="prefix" />
     <label
@@ -25,7 +25,8 @@
         :class="{
           'pl-checkbox-inner': true,
           'checked': checked || localChecked,
-          'disabled': disabled
+          'disabled': disabled,
+          'border': !hideIconBorder
         }"
       >
         <pl-svg
@@ -82,6 +83,14 @@ export default {
     gapRow: {
       type: Number,
       default: 0
+    },
+    hideIconBorder: {
+      type: Boolean,
+      dafault: false
+    },
+    canPrefixClick: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -117,6 +126,14 @@ export default {
         this.$emit('change', false)
         this.localChecked = false
       }
+    },
+    handleClick () {
+      if (!this.canPrefixClick) return
+      if (!this.localChecked) {
+        this.selected()
+      } else {
+        this.cancel()
+      }
     }
   }
 }
@@ -137,7 +154,6 @@ export default {
     justify-content: center;
     width: 36px;
     height: 36px;
-    border: 3px solid #999;
     border-radius: 18px;
     box-sizing: border-box;
     &.checked {
@@ -150,6 +166,9 @@ export default {
     }
     .check {
       width: 22px;
+    }
+    &.border {
+      border: 3px solid #999;
     }
   }
 </style>

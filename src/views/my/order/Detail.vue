@@ -315,13 +315,19 @@
             @change="onCheckboxChange"
           >
             <pl-checkbox
+              :ref="`checkbox-${index}`"
               :class="$style.popupItem"
               v-for="(item, index) of popupOptions"
               :key="index"
               :data="index"
+              hide-icon-border
+              can-prefix-click
             >
               <template slot="prefix">
-                <div :class="$style.popupItemText">
+                <div
+                  :class="$style.popupItemText"
+                  @click="handleCheckboxClick(index)"
+                >
                   {{ item }}
                 </div>
               </template>
@@ -577,7 +583,10 @@ export default {
       this.showPopup = false
     },
     onCheckboxChange (value) {
-      console.log(value, this.checkList)
+      console.log(value)
+    },
+    handleCheckboxClick (index) {
+      this.$refs[`checkbox-${index}`][0].handleClick()
     }
   }
 }
