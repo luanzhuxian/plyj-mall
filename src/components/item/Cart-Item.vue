@@ -208,6 +208,7 @@ export default {
   .cartItemImage {
     width: 164px;
     height: 164px;
+    border-radius: $--radius2;
     object-fit: cover;
   }
   .cartItemContent {

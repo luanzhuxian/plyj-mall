@@ -5,7 +5,10 @@
       @click.stop="subtract"
       :disabled="localCount <= min || loading"
     >
-      －
+      <pl-svg
+        name="jian"
+        :color="localCount <= min ? '#ccc' : '#666'"
+      />
     </button>
     <input
       :class="$style.input"
@@ -18,7 +21,10 @@
       @click.stop="add"
       :disabled="localCount >= max || loading"
     >
-      ＋
+      <pl-svg
+        name="add2"
+        :color="localCount >= max ? '#ccc' : '#666'"
+      />
     </button>
   </div>
 </template>
@@ -93,34 +99,48 @@ export default {
   .count {
     position: relative;
     display: inline-flex;
+    align-items: center;
     width: 146px;
     line-height: 66px;
-    border: 1px solid #e7e7e7;
     box-sizing: border-box;
     border-radius: 8px;
+    background-color: transparent;
+    &:after {
+      @include border-half(#e7e7e7, 16px);
+      z-index: 1;
+    }
     .input {
       flex: 1;
       width: 100%;
+      height: 90%;
       font-size: 20px;
       text-align: center;
+      z-index: 2;
     }
     .subtract, .add {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 40px;
       height: 36px;
       font-size: 25px;
       color: #666;
       box-sizing: border-box;
       font-weight: lighter;
-      &:disabled {
-        color: #e7e7e7;
-
-      }
+       svg {
+         width: 14px;
+       }
     }
     .subtract {
-      border-right: 1px solid #e7e7e7;
+      &:after {
+        @include border-half-right(#e7e7e7)
+      }
     }
     .add {
-      border-left: 1px solid #e7e7e7;
+      &:after {
+        @include border-half-left(#e7e7e7)
+      }
     }
   }
 </style>
