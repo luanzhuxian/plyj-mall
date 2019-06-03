@@ -1,12 +1,6 @@
 <template>
   <div :class="$style.refundApply">
     <div style="position: relative;">
-      <top-text
-        title="请选择服务类型"
-        tip="小主，时间宝贵，请您三思哦～"
-      />
-      <!--<top-text title="退款成功" tip="2018年7月23日 17:31:32" />-->
-      <!--<top-text title="退款失败" tip="2018年7月23日 17:31:32" />-->
       <a href="tel:15091719776">
         <pl-svg
           :class="$style.callMe"
@@ -15,202 +9,302 @@
       </a>
     </div>
 
-    <div :class="$style.type">
-      <span
-        :class="{ [$style.active]: form.type === 'REFUND' }"
-        @click="form.type = 'REFUND'"
-      >退款</span>
-      <!--<span
-        v-if="orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
-        :class="{ [$style.active]: form.type === 'RETURN_REFUND' }"
-        @click="form.type = 'RETURN_REFUND'"
-      >
-        退货退款
-      </span>-->
-    </div>
-
-    <div
-      :class="$style.express + ' radius-20'"
-      v-show="form.type === 'RETURN_REFUND'"
+    <section
+      v-if="relationModel.mediaInfoModels"
+      :class="$style.order"
     >
-      <pl-form
-        align="right"
-        :model="form.expressInfoModel"
-        :rules="rules"
-        ref="form"
+      <img
+        :class="$style.orderPicture"
+        v-lazy="relationModel.mediaInfoModels[0].mediaUrl"
+        alt="商品图片"
       >
-        <pl-form-item
-          prop="courierCompany"
-          border
-          label="快递公司："
+      <div :class="$style.orderInfo">
+        <div :class="$style.orderInfoName">
+          {{ relationModel.productModel.productName }}
+        </div>
+        <div :class="$style.orderInfoOption">
+          {{ relationModel.productModel.optionName }}
+        </div>
+      </div>
+    </section>
+
+    <section :class="$style.content">
+      <ul :class="[$style.panel, $style.panelTop]">
+        <li :class="$style.item">
+          <div :class="$style.itemLeft">
+            服务类型：
+          </div>
+          <div :class="[$style.itemRight, $style.bold]">
+            退款
+          </div>
+        </li>
+        <li
+          :class="$style.item"
+          @click="showPopup('goodsStatus')"
         >
-          <pl-input
-            v-model="form.expressInfoModel.courierCompany"
-            placeholder="请输入快递公司名称"
-          />
-        </pl-form-item>
-        <pl-form-item
-          prop="courierNo"
-          border
-          label="快递单号："
+          <div :class="$style.itemLeft">
+            货物状态：
+          </div>
+          <div :class="$style.itemRight">
+            <span v-if="form.goodsStatus">
+              {{ form.goodsStatus }}
+            </span>
+            <span v-else>
+              请选择
+              <pl-svg
+                :class="$style.itemIcon"
+                name="right"
+                color="#DEDEDE"
+              />
+            </span>
+          </div>
+        </li>
+        <li
+          :class="$style.item"
+          @click="showPopup('refundReason')"
         >
-          <pl-input
-            v-model="form.expressInfoModel.courierNo"
-            placeholder="请输入快递单号"
+          <div :class="$style.itemLeft">
+            请选择退货原因：
+          </div>
+          <div :class="$style.itemRight">
+            <span v-if="form.refundReason">
+              {{ form.refundReason }}
+            </span>
+            <span v-else>
+              请选择
+              <pl-svg
+                :class="$style.itemIcon"
+                name="right"
+                color="#DEDEDE"
+              />
+            </span>
+          </div>
+        </li>
+        <li :class="$style.item">
+          <div :class="$style.itemLeft">
+            退款金额：
+          </div>
+          <div :class="$style.itemRight">
+            <div :class="$style.price">
+              ￥76.64
+            </div>
+            <div :class="$style.tips">
+              运费不可退，如有疑问，请联系商家协商
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div :class="[$style.panel, $style.panelBottom]">
+        <div :class="$style.description">
+          <label for="description">
+            原因描述：
+            <textarea
+              v-model="form.description"
+              placeholder="请填写您的原因"
+              name="description"
+              rows="8"
+              cols="80"
+              maxlength="200"
+            />
+          </label>
+
+          <!-- <pl-input
+            v-model="form.description"
+            type="textarea"
+            placeholder="请填写您的原因"
+            :maxlength="200"
+            :min-rows="5"
+            :max-rows="10"
+          /> -->
+        </div>
+        <div :class="$style.images">
+          <pl-upload-img
+            :count="9"
+            :size="0.5"
+            :images.sync="imgList"
+            @remove="removeImg"
+            @success="uploaded"
           />
-        </pl-form-item>
-      </pl-form>
+        </div>
+      </div>
+    </section>
+
+    <div :class="$style.buttonWrapper">
+      <pl-button
+        size="larger"
+        type="warning"
+        @click="confirm"
+      >
+        提交申请
+      </pl-button>
     </div>
 
-    <main class="radius-20 bg-white mt-28">
-      <div :class="$style.product">
-        <template v-if="relationModel.length">
-          <OrderItem
-            v-for="item of relationModel"
-            :key="item.productModel.contentId"
-            :img="item.mediaInfoModels[0].mediaUrl"
-            :name="item.productModel.productName"
-            :option="item.orderProductRelationModel.optionName"
-            :price="item.orderProductRelationModel.productPrice"
-            :count="item.orderProductRelationModel.count"
-          />
-        </template>
-      </div>
-      <div :class="$style.content">
-        <pl-input
-          v-model="form.refundModel.content"
-          type="textarea"
-          :maxlength="500"
-          placeholder="请描述你的问题"
-          :min-rows="5"
-          :max-rows="10"
-        />
-      </div>
-      <div :class="$style.images">
-        <pl-upload-img
-          :count="6"
-          :size="0.5"
-          :images.sync="images"
-          @remove="removeImg"
-          @success="uploaded"
-        />
-      </div>
-      <div :class="'mt-28 '+$style.submit">
-        <pl-button
-          round
-          plain
-          type="warning"
-          @click="confirm"
-        >
-          确认提交
-        </pl-button>
-      </div>
-    </main>
+    <pl-popup
+      ref="popup"
+      title="退款原因"
+      :show.sync="isPopupShow"
+      :show-close-icon="false"
+      @close="closePopup"
+    >
+      <template>
+        <ul :class="$style.popupContentWrapper">
+          <radio-group-component
+            v-model="radio"
+            @change="onRadioChange"
+          >
+            <template>
+              <div
+                :class="$style.popupItem"
+                v-for="(item, index) of popupOptions"
+                :key="index"
+                @click="handleRadioClick(item.text)"
+              >
+                <div :class="$style.popupItemText">
+                  {{ item.text }}
+                </div>
+                <radio-component :name="item.text" />
+              </div>
+            </template>
+          </radio-group-component>
+        </ul>
+        <div :class="$style.popupButtonWrapper">
+          <pl-button
+            size="larger"
+            type="warning"
+            @click="closePopup"
+          >
+            关闭
+          </pl-button>
+        </div>
+      </template>
+    </pl-popup>
   </div>
 </template>
 
 <script>
-import TopText from '../../../components/Top-Text.vue'
-import OrderItem from '../../../components/item/Order-Item.vue'
 import {
-  returnRequest,
   getOrderDetail
 } from '../../../apis/order-manager'
-import { resetForm } from '../../../assets/js/util'
 export default {
-  name: 'RefundApply',
-  components: {
-    TopText,
-    OrderItem
-  },
+  name: 'Refund',
   data () {
     return {
-      images: [],
-      form: {
-        type: 'REFUND', // 退款类型  RETURN_REFUND REFUND
-        operationType: '', // 在何种情况下退款
-        refundModel: {
-          content: '',
-          images: []
-        },
-        expressInfoModel: {
-          courierCompany: '',
-          courierNo: ''
-        }
-      },
       relationModel: [],
-      orderInfoModel: {},
       statusTypeMap: {
         WAIT_SHIP: 'WAIT_SHIP_REFUND_RULE', // 待发货的待退款
         WAIT_RECEIVE: 'WAIT_RECEIVE_REFUND_RULE', // 待收货的待退款
         FINISHED: 'FINISHED_REFUND_RULE' // 待收货的待退款
       },
-      rules: {
-        courierCompany: [{ required: true, message: '请输入快递公司', trigger: 'blur' }],
-        courierNo: [{ required: true, message: '请输入快递单号', trigger: 'blur' }]
+      orderStatus: '',
+      operationType: '', // 在何种情况下退款,
+      form: {
+        type: 'REFUND', // 退款类型  RETURN_REFUND REFUND
+        goodsStatus: '',
+        refundReason: '',
+        amount: '',
+        description: '',
+        imgList: []
       },
-      orderStatus: ''
+      imgList: [],
+      isPopupShow: false,
+      currentPopupName: '',
+      popupOptions: [],
+      goodsStatusOptions: [
+        {
+          name: '0',
+          text: '未收到货'
+        }, {
+          name: '1',
+          text: '已收到货'
+        }
+      ],
+      refundReasonOptions: [
+        {
+          name: '0',
+          text: '质量问题'
+        }, {
+          name: '1',
+          text: '不想要了'
+        }, {
+          name: '2',
+          text: '商品信息填写错误'
+        }, {
+          name: '3',
+          text: '卖家发错货'
+        }, {
+          name: '4',
+          text: '商品与描述不符合'
+        }, {
+          name: '5',
+          text: '收到商品少件、破损或污渍'
+        }, {
+          name: '6',
+          text: '质量问题'
+        }
+      ],
+      radio: ''
     }
   },
   props: {
     orderId: {
       type: String,
       default: null
+    },
+    refundType: {
+      type: String,
+      default: null
     }
   },
+  created () {
+    console.log(this.refundType)
+  },
   activated () {
-    this.form.refundModel.mallSeq = this.mallSeq
-    this.form.orderId = this.orderId
+    console.log(this.refundType)
     this.getOrderDetail()
   },
   methods: {
     async getOrderDetail () {
       const { result } = await getOrderDetail(this.orderId)
       let { relationModel, orderInfoModel } = result
-      this.orderInfoModel = orderInfoModel
+      this.relationModel = relationModel[0]
       this.orderStatus = orderInfoModel.orderStatus
-      this.relationModel = relationModel
-      this.form.operationType = this.statusTypeMap[orderInfoModel.orderStatus]
+      this.operationType = this.statusTypeMap[orderInfoModel.orderStatus]
     },
-    uploaded ({ url, name }) {
-      this.images.push(url)
-      let ossModel = {
-        mediaFilename: name.split('/').splice(-1, 1)[0],
-        mediaUrl: url,
-        mediaType: 'image'
-      }
-      this.form.refundModel.images.push(ossModel)
+    showPopup (name) {
+      this.currentPopupName = name
+      this.popupOptions = this[`${name}Options`]
+      this.$nextTick(() => {
+        this.isPopupShow = true
+      })
     },
-    removeImg (index) {
-      this.form.refundModel.images.splice(index, 1)
+    closePopup () {
+      const { currentPopupName, radio } = this
+      this.form[currentPopupName] = radio
+      console.log(currentPopupName, radio, this.form[currentPopupName])
+      this.isPopupShow = false
     },
+    handleRadioClick (value) {
+      this.radio = value
+    },
+    onRadioChange (value) {
+      console.log(value)
+    },
+    uploaded () {},
+    removeImg () {},
     async confirm () {
       if (this.form.type === 'RETURN_REFUND') {
         // 退款退货
-        if (this.$refs.form.validate()) {
-          if (!this.form.refundModel.content) return this.$toast('请输入内容')
-          this.request()
-        }
+        // if (this.$refs.form.validate()) {
+        //   if (!this.form.refundModel.content) return this.$toast('请输入内容')
+        //   this.request()
+        // }
       } else {
-        if (!this.form.refundModel.content) return this.$toast('请输入内容')
-        // 如果是退货
-        this.form.expressInfoModel.courierCompany = ''
-        this.form.expressInfoModel.courierNo = ''
-        this.request()
-      }
-    },
-    async request () {
-      try {
-        await this.$confirm('确定提交吗？')
-        await returnRequest(this.form)
-        resetForm(this.form, {
-          type: 'REFUND'
-        })
-        this.images = []
-        this.$toast('申请售后成功，请等待卖家反馈')
-        this.$router.replace({ name: 'RefundList' })
-      } catch (e) {
-        throw e
+        // if (!this.form.refundModel.content) return this.$toast('请输入内容')
+        // // 如果是退货
+        // this.form.expressInfoModel.courierCompany = ''
+        // this.form.expressInfoModel.courierNo = ''
+        // this.request()
       }
     }
   }
@@ -219,11 +313,9 @@ export default {
 
 <style module lang="scss">
   .refund-apply {
-    padding: 28px 40px;
-    main {
-      overflow: hidden;
-      padding-bottom: 28px;
-    }
+    box-sizing: border-box;
+    min-height: 100vh;
+    padding-bottom: 122px;
   }
   .call-me {
     position: absolute;
@@ -232,48 +324,162 @@ export default {
     width: 38px;
     height: 80px;
   }
-  .express {
-    padding-left: 28px;
+
+  .order {
+    padding: 24px;
+    background-color: #FFF;
+    display: flex;
+  }
+  .order-picture {
+    width: 140px;
+    height: 140px;
+    margin-right: 16px;
+  }
+  .order-info {
+    flex: 1;
+  }
+  .order-info-name {
+    font-size: 22px;
+    line-height: 26px;
+    margin-bottom: 8px;
+    height: 52px;
+    @include elps-wrap(2);
+  }
+  .order-info-option {
+    font-size: 20px;
+    line-height: 28px;
+    color: #999999;
+    @include elps-wrap(1);
+  }
+
+  .content {
+    padding: 20px 24px;
+  }
+
+  .panel {
+    border-radius: 20px;
     background-color: #fff;
     overflow: hidden;
+    margin-bottom: 20px;
   }
-  .type {
-    margin: 45px 0 40px 0;
-    font-size: 24px;
-    color: #fff;
-    font-weight: bold;
-    text-align: left;
-    span {
-      display: inline-block;
-      width: 160px;
-      margin-right: 24px;
-      line-height: 64px;
-      text-align: center;
-      border-radius: 32px;
-      background-color: #ddd;
-      &.active {
-        background-color: $--warning-color;
+
+  .panel-top {
+    padding-left: 28px;
+  }
+
+  .panel-bottom {
+    padding: 20px 28px;
+  }
+
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 108px;
+    border-bottom: 1px solid #F0F0F0;
+    font-size: 28px;
+    color: #666666;
+    line-height: 40px;
+    padding-right: 28px;
+
+    &:nth-last-of-type(1) {
+      border: none;
+      height: auto;
+      padding: 34px 28px 34px 0;
+      align-items: flex-start;
+
+      .item-right {
+        display: block;
+        text-align: right;
       }
     }
   }
-  .product {
-    position: relative;
-    margin-left: 28px;
-    padding: 30px 0;
-    &:after {
-      @include border-half-bottom(#e7e7e7);
-    }
-  }
-  .images {
-    padding: 28px;
-  }
-  .submit {
+
+  .item-right {
+    flex: 1;
     display: flex;
     justify-content: flex-end;
-    position: relative;
-    &:after { @include border-half-top(#e7e7e7); }
-    padding-top: 28px;
-    padding-right: 28px;
-    margin-left: 28px;
+    align-items: center;
+    color: #999999;
   }
+
+  .item-icon {
+    width: 22px;
+    // margin-left: 12px;
+  }
+
+  .description {
+    label {
+      font-size: 28px;
+      color: #666;
+      line-height: 40px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 222px;
+      border: none;
+      outline: none;
+      resize: none;
+      padding-top: 12px;
+      &::-webkit-input-placeholder {
+        font-size: 26px;
+        color: #ccc;
+      }
+    }
+  }
+
+  .button-wrapper {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 16px 24px;
+    background-color: #FFF;
+  }
+
+  .popup-content-wrapper {
+    padding: 28px 0 0 24px;
+    background-color: #FFF;
+    height: 526px;
+    overflow-y: scroll;
+  }
+  .popup-button-wrapper {
+    padding: 16px 24px;
+    background-color: #FFF;
+    border-top: 1px solid #F0F0F0;
+  }
+  .popup-item {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    font-size: 30px;
+    color: #000000;
+    line-height: 88px;
+    border-bottom: 1px solid #F0F0F0;
+    padding-right: 24px;
+    &:nth-last-of-type(1) {
+      border-bottom: none;
+    }
+  }
+  .popup-item-text {
+    flex: 1;
+  }
+
+  .bold {
+    color: #000;
+    font-weight: bold;
+  }
+
+  .tips {
+    font-size:22px;
+    line-height: 32px;
+    margin-top: 10px;
+  }
+
+  .price {
+    color: #FE7700;
+    font-family: Helvetica;
+  }
+
 </style>

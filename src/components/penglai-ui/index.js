@@ -17,6 +17,8 @@ import MessageBox from './message-box'
 import Selector from './Selector.vue'
 import Checkbox from './Checkbox.vue'
 import CheckboxGroup from './Checkbox-Group.vue'
+import RadioComponent from './radio/Radio.vue'
+import RadioGroupComponent from './radio/Radio-Group.vue'
 import Popup from './Popup.vue'
 import { Toast } from './toast'
 const components = [
@@ -36,6 +38,8 @@ const components = [
   Selector,
   Checkbox,
   CheckboxGroup,
+  RadioComponent,
+  RadioGroupComponent,
   Popup
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */

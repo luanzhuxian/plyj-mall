@@ -152,10 +152,10 @@ export default {
     text-align: center;
     span {
       color: #999;
-      font-size: 22px;
+      font-size: 10px;
     }
     svg {
-      width: 36px;
+      width: 40px;
       fill: #999;
     }
   }

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { ParentMixin } from './relation'
+import { ParentMixin } from '../../../mixins/relation'
 
 export default {
   name: 'Collapse',

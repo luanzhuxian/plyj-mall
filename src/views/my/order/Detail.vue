@@ -50,7 +50,7 @@
           <pl-button
             plain
             round
-            @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+            @click="$router.push({ name: 'Refund', params: { orderId } })"
           >
             退款完成
           </pl-button>
@@ -58,7 +58,7 @@
             v-if="canIApplyService && !supplierOrder"
             plain
             round
-            @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+            @click="$router.push({ name: 'Refund', params: { orderId } })"
           >
             申请退款
           </pl-button>
@@ -157,7 +157,6 @@
           <collapse-item
             name="1"
             :disabled="false"
-            :use-right-icon="false"
           >
             <template slot="title">
               <div>
@@ -193,7 +192,7 @@
               <pl-button
                 round
                 plain
-                @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+                @click="$router.push({ name: 'Refund', params: { orderId } })"
               >
                 立即申请
               </pl-button>
@@ -249,14 +248,14 @@
         v-if="orderInfoModel.orderStatus === 'FINISHED' || orderInfoModel.orderStatus === 'CLOSED'"
         plain
         round
-        @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+        @click="$router.push({ name: 'Refund', params: { orderId } })"
       >
         删除订单
       </pl-button>
       <pl-button
         plain
         round
-        @click="showMoal"
+        @click="isPickerShow=true"
       >
         联系我们
       </pl-button>
@@ -264,7 +263,7 @@
         v-if="orderInfoModel.orderStatus === 'FINISHED' || orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
         plain
         round
-        @click="$router.push({ name: 'RefundApply', params: { orderId } })"
+        @click="$router.push({ name: 'Refund', params: { orderId } })"
       >
         查看物流
       </pl-button>
@@ -288,63 +287,19 @@
       </pl-button>
     </div>
 
-    <popup
+    <pl-popup
       ref="picker"
-      :show.sync="showPicker"
+      :show.sync="isPickerShow"
       :show-close-icon="false"
     >
       <picker
         show-toolbar
-        :columns="columns"
+        :columns="pickerColumns"
         @change="onChange"
         @confirm="onConfirm"
         @cancel="onCancel"
       />
-    </popup>
-
-    <popup
-      ref="popup"
-      title="退款原因"
-      :show.sync="showPopup"
-      :show-close-icon="false"
-    >
-      <template>
-        <ul :class="$style.popupContentWrapper">
-          <pl-checkbox-group
-            v-model="checkList"
-            @change="onCheckboxChange"
-          >
-            <pl-checkbox
-              :ref="`checkbox-${index}`"
-              :class="$style.popupItem"
-              v-for="(item, index) of popupOptions"
-              :key="index"
-              :data="index"
-              hide-icon-border
-              can-prefix-click
-            >
-              <template slot="prefix">
-                <div
-                  :class="$style.popupItemText"
-                  @click="handleCheckboxClick(index)"
-                >
-                  {{ item }}
-                </div>
-              </template>
-            </pl-checkbox>
-          </pl-checkbox-group>
-        </ul>
-        <div :class="$style.popupButtonWrapper">
-          <pl-button
-            size="larger"
-            type="warning"
-            @click="closePopup"
-          >
-            关闭
-          </pl-button>
-        </div>
-      </template>
-    </popup>
+    </pl-popup>
   </div>
 
   <div
@@ -381,7 +336,6 @@ import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import Picker from '../../../components/penglai-ui/picker/Picker.vue'
-import Popup from '../../../components/penglai-ui/Popup.vue'
 import {
   getOrderDetail,
   physicalOrderCancellation,
@@ -405,8 +359,7 @@ export default {
     AddressItemSkeleton,
     Collapse,
     CollapseItem,
-    Picker,
-    Popup
+    Picker
   },
   data () {
     return {
@@ -440,11 +393,8 @@ export default {
       timer: 0,
       loaded: false,
       collepseActiveNames: [],
-      columns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
-      popupOptions: ['质量问题', '不想要了', '商品信息填写错误', '卖家发错货', '商品与描述不符合', '收到商品少件、破损或污渍', '质量问题'],
-      checkList: [],
-      showPopup: false,
-      showPicker: false
+      pickerColumns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
+      isPickerShow: false
     }
   },
   props: {
@@ -565,28 +515,14 @@ export default {
         if (flag === 'WAIT_PAY') this.tips.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
       }, 1000)
     },
-    onChange (picker, value, index) {
+    onPickerChange (picker, value, index) {
       console.log(`当前值：${value}, 当前索引：${index}`)
     },
-    onConfirm (picker, value, index) {
+    onPickerConfirm (picker, value, index) {
       console.log(`当前值：${value}, 当前索引：${index}`)
     },
-    onCancel () {
-      this.showPicker = false
-    },
-    showMoal () {
-      this.showPopup = true
-      // this.showPicker = true
-      // this.$refs.popup.show()
-    },
-    closePopup () {
-      this.showPopup = false
-    },
-    onCheckboxChange (value) {
-      console.log(value)
-    },
-    handleCheckboxClick (index) {
-      this.$refs[`checkbox-${index}`][0].handleClick()
+    onPickerCancel () {
+      this.isPickerShow = false
     }
   }
 }
@@ -652,7 +588,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    padding: 28px 0 24px 24px;
+    padding: 28px 24px 24px;
     min-height: 140px;
   }
   .explain {
@@ -704,7 +640,6 @@ export default {
   }
   .buttons {
     position: relative;
-    padding: 0 24px;
     text-align: right;
     > button {
       margin-top: 0;
@@ -750,32 +685,6 @@ export default {
     > button {
       margin-left: 20px;
     }
-  }
-
-  .popup-content-wrapper {
-    padding: 28px 0 0 24px;
-    background-color: #FFF;
-    max-height: 526px;
-    overflow-y: scroll;
-  }
-  .popup-button-wrapper {
-    padding: 16px 24px;
-    background-color: #FFF;
-    border-top: 1px solid #F0F0F0;
-  }
-  .popup-item {
-    flex: 1;
-    font-size: 30px;
-    color: #000000;
-    line-height: 88px;
-    border-bottom: 1px solid #F0F0F0;
-    padding-right: 24px;
-    &:nth-last-of-type(1) {
-      border-bottom: none;
-    }
-  }
-  .popup-item-text {
-    flex: 1;
   }
 
   .skeleton {

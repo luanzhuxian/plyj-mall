@@ -53,6 +53,15 @@ export default [
     }
   },
   {
+    path: '/my/orders/refund/:orderId',
+    name: 'Refund',
+    component: () => import('../views/my/order/Refund.vue'),
+    props: true,
+    meta: {
+      title: '申请退款'
+    }
+  },
+  {
     path: '/my/orders/refund-apply/:orderId',
     name: 'RefundApply',
     component: () => import('../views/my/order/Refund-Apply.vue'),

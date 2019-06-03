@@ -93,6 +93,7 @@ export default {
   methods: {
     close () {
       this.$emit('update:show', false)
+      this.$emit('close')
     }
   }
 }
@@ -146,7 +147,7 @@ export default {
   }
 
   &__content {
-    height: 70vh;
+    max-height: 70vh;
     overflow: auto;
   }
 

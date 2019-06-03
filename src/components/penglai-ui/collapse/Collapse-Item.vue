@@ -32,7 +32,7 @@
       />
 
       <pl-svg
-        v-if="!useRightIcon"
+        v-if="!$slots['right-icon']"
         class="pl-collapse-item__right-icon"
         :name="rightIcon.name"
         color="#CCC"
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { ChildrenMixin } from './relation'
+import { ChildrenMixin } from '../../../mixins/relation'
 import { isDef } from '../../../assets/js/util'
 
 function raf (fn) {
@@ -79,7 +79,6 @@ export default {
         }
       }
     },
-    useRightIcon: Boolean,
     center: Boolean,
     disabled: Boolean,
     titleStyle: {
