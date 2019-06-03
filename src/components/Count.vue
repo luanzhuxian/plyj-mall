@@ -101,6 +101,7 @@ export default {
     .input {
       flex: 1;
       width: 100%;
+      font-size: 22px;
       text-align: center;
     }
     .subtract, .add {
