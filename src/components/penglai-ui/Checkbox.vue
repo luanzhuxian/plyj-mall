@@ -31,22 +31,16 @@
       >
         <svg
           v-if="checked || localChecked"
-          class="iconfont"
+          class="pl-icon"
         >
           <use xlink:href="#icon-xuanzhong" />
         </svg>
         <svg
           v-else
-          class="iconfont weixuanzhong1"
+          class="pl-icon"
         >
           <use xlink:href="#icon-weixuanzhong1" />
         </svg>
-        <!--<pl-svg
-          class="check"
-          name="check"
-          color="#fff"
-          v-show="checked || localChecked"
-        />-->
       </span>
     </label>
     <slot name="suffix" />
@@ -168,9 +162,8 @@ export default {
     height: 36px;
     border-radius: 18px;
     box-sizing: border-box;
-    > svg {
-      width: 36px;
-      height: 36px;
+    > .pl-icon {
+      height: 35px;
     }
     > .weixuanzhong1 {
       display: none;
@@ -178,9 +171,6 @@ export default {
     &.disabled {
       background-color: #ddd;
       border-color: #ccc;
-    }
-    .check {
-      width: 22px;
     }
     &.border {
       > .weixuanzhong1 {
