@@ -6,7 +6,7 @@
       </span>
       <span
         :class="$style.manage"
-        @click="isManage = !isManage"
+        @click="manage"
         v-text="isManage ? '完成' : '管理'"
       />
     </div>
@@ -136,6 +136,9 @@ export default {
         const { result } = await getCartList()
         this.products.splice(0, 500)
         for (let item of result) {
+          // 如果商品已下架或当前规格商品数量不足，禁用
+          const currentSku = item.skuModels.find(sku => sku.optionCode === item.cartSkuCode)
+          item.disabled = currentSku.stock < item.cartProductCount || item.productStatus === 'UNSHELVE'
           this.products.push(item)
         }
         this.total = result.length
@@ -150,8 +153,24 @@ export default {
       }
     },
     selectedChange (selected) {
-      this.checkedAll = selected.length === this.products.length
+      this.checkedAll = selected.length === this.products.filter(item => !item.disabled).length
       this.computeMoney()
+    },
+    // 管理
+    manage () {
+      this.$refs.checkboxGroup.changeAll(false)
+      this.checkedAll = false
+      this.isManage = !this.isManage
+      for (let item of this.products) {
+        if (this.isManage) {
+          // 管理时，所有项都可选中，同时记录原有禁用状态
+          item.tempDisabled = item.disabled
+          item.disabled = false
+        } else {
+          item.disabled = item.tempDisabled
+          delete item.tempDisabled
+        }
+      }
     },
     checkAll (val) {
       this.checkedAll = val

@@ -40,6 +40,8 @@ export default {
     changeAll (flage) {
       let children = this.$children
       for (let c of children) {
+        // 有禁用项时，全选时跳过
+        if (c.disabled || c.data.disabled) continue
         if (flage) {
           c.selected()
         } else {

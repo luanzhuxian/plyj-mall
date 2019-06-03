@@ -13,7 +13,7 @@
       ref="checkbox"
       type="checkbox"
       :checked="checked || localChecked"
-      :disabled="disabled"
+      :disabled="data && data.disabled || disabled"
       @change="handleChange"
     >
     <slot name="prefix" />
@@ -25,22 +25,29 @@
         :class="{
           'pl-checkbox-inner': true,
           'checked': checked || localChecked,
-          'disabled': disabled,
           border
         }"
       >
         <svg
-          v-if="checked || localChecked"
+          v-if="data && data.disabled || disabled"
           class="pl-icon"
         >
-          <use xlink:href="#icon-xuanzhong" />
+          <use xlink:href="#icon-jinyong1" />
         </svg>
-        <svg
-          v-else
-          class="pl-icon"
-        >
-          <use xlink:href="#icon-weixuanzhong1" />
-        </svg>
+        <template v-else>
+          <svg
+            v-if="checked || localChecked"
+            class="pl-icon"
+          >
+            <use xlink:href="#icon-xuanzhong" />
+          </svg>
+          <svg
+            v-else
+            class="pl-icon"
+          >
+            <use xlink:href="#icon-weixuanzhong1" />
+          </svg>
+        </template>
       </span>
     </label>
     <slot name="suffix" />
@@ -74,8 +81,7 @@ export default {
       type: Boolean
     },
     disabled: {
-      type: Boolean,
-      default: false
+      type: Boolean
     },
     inline: {
       type: Boolean
@@ -167,10 +173,6 @@ export default {
     }
     > .weixuanzhong1 {
       display: none;
-    }
-    &.disabled {
-      background-color: #ddd;
-      border-color: #ccc;
     }
     &.border {
       > .weixuanzhong1 {

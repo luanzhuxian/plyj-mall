@@ -17,30 +17,57 @@
         @click.stop="goDetail"
       />
 
-      <div
-        :class="$style.currentSku"
-        @click.stop="showSpecifica = true"
+      <span
+        :class="$style.unshelve"
+        v-if="data.productStatus === 'UNSHELVE'"
       >
-        <span v-text="currentSkuModel.optionName" />
-        <pl-svg
-          :class="$style.arrow"
-          name="right"
-          color="#ccc"
-        />
-      </div>
+        该商品已失效
+      </span>
 
-      <div :class="$style.priceCount">
-        <i
-          :class="$style.price + ' rmb'"
-          v-text="currentSkuModel.price"
-        />
-        <count
-          :count="count"
-          ref="count"
-          :max="currentSkuModel.stock"
-          :min="currentSkuModel.minBuyNum"
-          @change="countChange"
-        />
+      <template v-else>
+        <div
+          :class="$style.currentSku"
+          @click.stop="showSpecifica = true"
+        >
+          <span v-text="currentSkuModel.optionName" />
+          <pl-svg
+            :class="$style.arrow"
+            name="right"
+            color="#ccc"
+          />
+        </div>
+
+        <div
+          :class="$style.priceCount"
+          v-if="!overflowStock"
+        >
+          <i
+            :class="$style.price + ' rmb'"
+            v-text="currentSkuModel.price"
+          />
+          <count
+            :count="count"
+            ref="count"
+            :max="currentSkuModel.stock"
+            :min="currentSkuModel.minBuyNum"
+            @change="countChange"
+          />
+        </div>
+      </template>
+      <div
+        v-if="overflowStock"
+        :class="$style.reelect"
+      >
+        <span>请重新选择商品规格</span>
+        <pl-button
+          round
+          plain
+          size="mini"
+          type="primary"
+          @click.stop="showSpecifica = true"
+        >
+          重选
+        </pl-button>
       </div>
     </div>
 
@@ -97,6 +124,12 @@ export default {
       },
       deep: true,
       immediate: true
+    }
+  },
+  computed: {
+    // 已选数量是否超出库存
+    overflowStock () {
+      return this.data.cartProductCount > this.currentSkuModel.stock
     }
   },
   methods: {
@@ -190,6 +223,11 @@ export default {
     line-height: 32px;
     @include elps-wrap(2);
   }
+  .unshelve {
+    font-size: 20px;
+    color: #999;
+    margin-bottom: 56px;
+  }
   .currentSku{
     display: inline-flex;
     align-items: center;
@@ -213,5 +251,11 @@ export default {
       font-size: 28px;
       color: $--primary-color;
     }
+  }
+  .reelect {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
   }
 </style>
