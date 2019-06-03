@@ -121,7 +121,7 @@ export default {
       }
     },
     handleClick (item) {
-      let addressReturn = JSON.parse(sessionStorage.getItem('addressReturn')) || {}
+      let addressReturn = JSON.parse(localStorage.getItem('ADDRESS_RETURN')) || {}
       if (addressReturn.name) {
         /* 如果来自提交订单页面，那么点击地址时，选中当前地址为默认地址，但并不是真的设置为默认地址 */
         this.$store.commit(SELETC_ADDRESS, item)
@@ -130,7 +130,7 @@ export default {
           params: addressReturn.params,
           query: addressReturn.query
         })
-        sessionStorage.removeItem('addressReturn')
+        localStorage.removeItem('ADDRESS_RETURN')
       }
     }
   }

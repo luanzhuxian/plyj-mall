@@ -176,6 +176,7 @@ export default {
       width: 35px;
       height: 35px;
       background-position: center center;
+      background-repeat: no-repeat;
       background-size: 100%;
     }
     > .weixuanzhong1 {

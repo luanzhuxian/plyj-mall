@@ -41,7 +41,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { setSession } from '../../assets/js/util'
 export default {
   name: 'AddressItem',
   computed: {
@@ -60,21 +59,11 @@ export default {
   },
   methods: {
     addressList () {
-      let { name, params, query } = this.$route
-      setSession('addressReturn', {
-        name,
-        params,
-        query
-      })
+      localStorage.setItem('ADDRESS_RETURN', JSON.stringify(this.$route))
       this.$router.push({ name: 'Address' })
     },
     addAddress () {
-      let { name, params, query } = this.$route
-      setSession('addressReturn', {
-        name,
-        params,
-        query
-      })
+      localStorage.setItem('ADDRESS_RETURN', JSON.stringify(this.$route))
       this.$router.push({ name: 'AddAddress' })
     }
   }

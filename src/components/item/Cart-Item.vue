@@ -234,10 +234,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     width: 358px;
+    margin-bottom: 4px;
     padding: 0 16px 0 8px;
     line-height: 44px;
     border-radius: $--radius2;
     background-color: #f9f9f9;
+    font-size: 20px;
     @include elps();
     > .arrow {
       width: 10px;
