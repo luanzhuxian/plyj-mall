@@ -1,5 +1,6 @@
 import './lib/transition.scss'
 import './fonts/iconfont.css'
+import './fonts/iconfont.js'
 import Button from './Button.vue'
 import Input from './Input.vue'
 import GetCode from './Get-Code.vue'

@@ -427,7 +427,6 @@ export default {
       }
     }, */
     async pay (CREDENTIAL, orderSn) {
-      CREDENTIAL.packageValue = CREDENTIAL.package
       return new Promise(async (resolve, reject) => {
         try {
           await wechatPay(CREDENTIAL)

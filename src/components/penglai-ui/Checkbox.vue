@@ -29,12 +29,24 @@
           border
         }"
       >
-        <pl-svg
+        <svg
+          v-if="checked || localChecked"
+          class="iconfont"
+        >
+          <use xlink:href="#icon-xuanzhong" />
+        </svg>
+        <svg
+          v-else
+          class="iconfont weixuanzhong1"
+        >
+          <use xlink:href="#icon-weixuanzhong1" />
+        </svg>
+        <!--<pl-svg
           class="check"
           name="check"
           color="#fff"
           v-show="checked || localChecked"
-        />
+        />-->
       </span>
     </label>
     <slot name="suffix" />
@@ -156,11 +168,12 @@ export default {
     height: 36px;
     border-radius: 18px;
     box-sizing: border-box;
-    &.checked {
-      &:before {
-        display: none;
-      }
-      background-color: $--primary-color;
+    > svg {
+      width: 36px;
+      height: 36px;
+    }
+    > .weixuanzhong1 {
+      display: none;
     }
     &.disabled {
       background-color: #ddd;
@@ -170,17 +183,8 @@ export default {
       width: 22px;
     }
     &.border {
-      &:before {
-        position: absolute;
-        content: '';
-        width: 200%;
-        height: 200%;
-        left: -50%;
-        top: -50%;
-        transform: scale(.5);
-        border-radius: 36px;
-        border: 3px solid #999;
-        box-sizing: border-box;
+      > .weixuanzhong1 {
+        display: inline-block;
       }
     }
   }

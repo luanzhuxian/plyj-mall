@@ -1,18 +1,26 @@
-@font-face {font-family: "pl-icon";
-  src: url('iconfont.eot?t=1559277881269'); /* IE9 */
-  src: url('iconfont.eot?t=1559277881269#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAMsAAsAAAAAB/QAAALgAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDDAqDQIMAATYCJAMQCwoABCAFhG0HRhvgBhHVk+FkPxJsWzgruYL84Txl6KQmWV+CiOyo6pmePRhPMqIcCjngvWcobM5V9WRUhBrJ2SePvpDituzSPAWAT9w7bZ4HNp99Ksc5FnVRF2AcUEB7YxTZxC6CAKxBdxETIz6dhwDBpFMaady0dWcCUcA0AWT0iGEDCLQCKBqlAxG8nrWKrMIRaBabqyhW8sfLJwYJBIOzgLnthzYZTH1/uD/Szvo/i96UhHC/ywAcYIHSgIJ073V0xMpEaSzBBa+SDyha54/8/98fTk3IXf94BgviAUpDAajsJi34wzEBAX8EAQP+yBIswIuYHAiEAGOAO55GebZFQ0MjgnxpMPqBVKfefdv53rsuD0q63fcn3b/f9cGDbvfudbl7t+fGoym9Zm85sGTfJnpsPpy25NCsw0uPzj4y98n6hQzuGrI0rsuwjaNzB3cdNnBI56GZdtZDB5nuIdRlZhKJrgpbe+q8/vqlLuP8r18Nbv/QlwXizQzZUyu+1p4Q8Zal2pOoRTkLcybmTGKnT50xr92cHU9K+rpGY0cWZVVavTq549hBDRqPG1joDRrbuMGgcQCl4K+0XXdlR7+I2l93IQrAo/jbNfjU/7MUOwsIxKwQ/inhzBYtxcComkuwoHIq5Y0cDBAMw/Af4Inm+R6quNmlIAQSp2EIIA2WQHLJSi8NRwiV4RFIPQRTimabQ4hhDBbRIKCY+Q6ESE7CEM4lWCK5Rlb6Mzji+QKPSLEIpqvE7BlCvugp+DgGtaAD84dkafHILAdRfsPwnjSbYs58IdcUhr7pmukrLsh7LKifMIh48EwzXJzLcJoIVqaMVpooso5t6/tu1Fia1YEjoxZ0YP6QLC2edpZD6/43DO9J80jTgv+FXFPv0DfdDPJVscxqepdr6icMIh480wwXx4YTTBCs/aMyWmniitg6tl47P1fRnK+an3AXEAw4UMWIFRXHduSIJQRNezschZRw/aYOT0YnpQA=') format('woff2'),
-  url('iconfont.woff?t=1559277881269') format('woff'),
-  url('iconfont.ttf?t=1559277881269') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
-  url('iconfont.svg?t=1559277881269#iconfont') format('svg'); /* iOS 4.1- */
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1559549005100'); /* IE9 */
+  src: url('iconfont.eot?t=1559549005100#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAUQAAsAAAAAC5wAAATAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDagqJNIdHATYCJAMkCxQABCAFhG0HgQAb0wkRVZyByX4UuHsCrb6GgpKb8EKMy0VcsPn/fOg39R0ceLRmJJ2ICdmczNy/K6K00y8TeD438f3joJSkpvFTYkJNut07/f21LfYks0sy1tLpuKTpSt/1ytIgNEaiFEKCcHj+55jp8vnA8tvWLpFl0Unj8YAGVHlVfGSJ1yAnyLeAtyHhgup6IAAZH9QB6dLt/L4hoiHICGbMman8hujSo2NwBFu1Qo5SZA84bGY7Ewdgt/785CMaEREYTBbC1gHTDqJGBzOwshmrWzrGqAgIyrMCuJwELKAOAApkVah9CVhTWkeXn7CrU/wAyNgolBloTjFnVTazLGzMNHGP5Ef8N+8FwGDhwsZAYyJAeAhylbALQiKYgTIFGDCnUIAHcxoFBDCn89MqZqAWLCpmohYUFbOQAhxUNhPOp1xSj7gBRACkJ8CEQVAG6kEWCz1L0wcKpUqqprlUomlVhyyRMY5SorpV4dyr08qGpJcPzawYnmGuMK75rvuv6ldGH7liWcPJ8etFwlbLxiFCTqU0Ux8kRUI/IMt6Lj2Z3NT1ODWGC9s95sAV2WlcI5zveojiv04IMtoOXgX0q4ryZ4MmGGlJaXp6cro/MzXTl5GSMSIjY1hm5vD09KFpaaPloy/9r32vjBdtqI39tUYdvh4x2nfsknHhCEYevRplXNGv+q/7rqV9YeOVKcPG/qCh0z+xcsqjCvBeqllM3rC0sqlG8LBDHedl4vbeEzjlwMRgbgG9w7O2FJajseuyuOhoTpFknbkotq9i2x8R8qX+53qf63+JcfJf6n3hLboYvt4z9/mtQiDfZWFnYZdeoLCVv6efjwpdFuyJ/Tka3IWOt3vtnR1eB4UdRYU2PB3tjZJoUiN7R5pelOS1vfPUHeCxPNejJIll9I6inDobu5LRo5tdRY7KVcSc9z++w7hxs8bN5QJorJ7FaVoTtZrGYs6x7X/8gv7+TVHy4szFGp6uFlUn/HrlXOvg1ucU460mzXNd22K3xi6PXVHSOx7z3n/DqdyKcVznxcmCpy33CL9dHO7sczDPT168vxNyw1qPZmtaNhW1mqaI7YveOWjbdufG8jBnyJHjh+vX2BrqDF3RdX1b4oaphBTb5Sn9/p0+FTkqVxFzhxPfSAAArA3sf3YdYBU2hufv8Dni5p35Ot7R5puoUACQHf6tr15k6RRD93NMK5BacPALUvbQt0gwSP1sXebnIEmm69kZOOCHgEPf7fZbrilIHVZCdAkuwBBEAUtUBUmxdYCjaAI8UXuQ1XZ0siIAaSN9A2r5ACCcvoBh9xpYTt9Iiv0BTrA/4DnDgmxYAs6pqJaZo86EPmMEwSvo0BRSMvHIyLxFVWc+OUU6/hGp0h5wLccbOcICqYwd1ZPymCVIMjkcws0wywyUZBIM2YqZy1XblmGPZIUmb4x0RpCPoQgIvAJayChIdTQb+Z7+FlJqGR/FNHyxP0KkoicHLouTAnkkL1I1bEt+5YniYfJLQF7SjRw4JCvKxKAByvBFCRRiljiHv7TKpkEyrdyqX5kv6zEAmfBgKZWRzszKlZ07h/D3qdCF6k328xnQ9mfZ8co3w8kxGlITOHtxrANfD1fUfvEWe7zT5agdWneQWPZq6BoNAAAA') format('woff2'),
+  url('iconfont.woff?t=1559549005100') format('woff'),
+  url('iconfont.ttf?t=1559549005100') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1559549005100#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .pl-icon {
-  font-family: "pl-icon" !important;
+  font-family: "iconfont" !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-warning:before {
+  content: "\e836";
+}
+
+.icon-camera:before {
+  content: "\e614";
 }
 
 .icon-jinggao:before {
@@ -25,5 +33,17 @@
 
 .icon-shibai:before {
   content: "\e66a";
+}
+
+.icon-xuanzhong:before {
+  content: "\e664";
+}
+
+.icon-weixuanzhong1:before {
+  content: "\e666";
+}
+
+.icon-jinyong1:before {
+  content: "\e667";
 }
 

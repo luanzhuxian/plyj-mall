@@ -1,6 +1,6 @@
 // 微信支付方法
-export default function wechatPay ({ appId, timeStamp, nonceStr, prepay_id, paySign }) {
-  console.log(appId, timeStamp, nonceStr, prepay_id, paySign)
+export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, paySign, signType }) {
+  console.log(appId, timeStamp, nonceStr, packageValue, paySign)
   return new Promise((resolve, reject) => {
     try {
       if (window.WeixinJSBridge) {
@@ -9,8 +9,8 @@ export default function wechatPay ({ appId, timeStamp, nonceStr, prepay_id, payS
             appId: appId, // 公众号名称，由商户传入
             timeStamp: timeStamp, // 时间戳，自1970年以来的秒数
             nonceStr: nonceStr, // 随机串
-            package: prepay_id, //
-            signType: 'MD5', // 微信签名方式:
+            package: packageValue, //
+            signType: signType, // 微信签名方式:
             paySign: paySign // 微信签名
           }, function (res) {
             console.log(res)
