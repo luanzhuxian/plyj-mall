@@ -148,6 +148,7 @@ export default {
     }
   }
   .pl-checkbox-inner {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -156,7 +157,9 @@ export default {
     border-radius: 18px;
     box-sizing: border-box;
     &.checked {
-      border: none !important;
+      &:before {
+        display: none;
+      }
       background-color: $--primary-color;
     }
     &.disabled {
@@ -167,7 +170,18 @@ export default {
       width: 22px;
     }
     &.border {
-      border: 3px solid #999;
+      &:before {
+        position: absolute;
+        content: '';
+        width: 200%;
+        height: 200%;
+        left: -50%;
+        top: -50%;
+        transform: scale(.5);
+        border-radius: 36px;
+        border: 3px solid #999;
+        box-sizing: border-box;
+      }
     }
   }
 </style>
