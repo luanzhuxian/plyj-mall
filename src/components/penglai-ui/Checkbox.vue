@@ -28,25 +28,22 @@
           border
         }"
       >
-        <svg
+        <span
           v-if="data && data.disabled || disabled"
-          class="pl-icon"
-        >
-          <use xlink:href="#icon-jinyong1" />
-        </svg>
+          class="icon"
+          :style="{ backgroundImage: `url(${disabledChecked})` }"
+        />
         <template v-else>
-          <svg
+          <span
             v-if="checked || localChecked"
-            class="pl-icon"
-          >
-            <use xlink:href="#icon-xuanzhong" />
-          </svg>
-          <svg
+            class="icon"
+            :style="{ backgroundImage: `url(${checkedIcon})` }"
+          />
+          <span
             v-else
-            class="pl-icon"
-          >
-            <use xlink:href="#icon-weixuanzhong1" />
-          </svg>
+            class="icon"
+            :style="{ backgroundImage: `url(${noChecked})` }"
+          />
         </template>
       </span>
     </label>
@@ -55,11 +52,17 @@
 </template>
 
 <script>
+import checkedIcon from './image/checked.png'
+import noChecked from './image/no-checked.png'
+import disabledChecked from './image/disabled-check.png'
 export default {
   name: 'PlCheckbox',
   data () {
     return {
-      localChecked: false
+      localChecked: false,
+      checkedIcon,
+      noChecked,
+      disabledChecked
     }
   },
   model: {
@@ -168,8 +171,12 @@ export default {
     height: 36px;
     border-radius: 18px;
     box-sizing: border-box;
-    > .pl-icon {
+    > .icon {
+      display: inline-block;
+      width: 35px;
       height: 35px;
+      background-position: center center;
+      background-size: 100%;
     }
     > .weixuanzhong1 {
       display: none;

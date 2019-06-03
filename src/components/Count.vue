@@ -128,6 +128,7 @@ export default {
       color: #666;
       box-sizing: border-box;
       font-weight: lighter;
+      z-index: 2;
        svg {
          width: 14px;
        }
