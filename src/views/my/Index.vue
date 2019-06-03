@@ -100,13 +100,11 @@
             v-text="count.POST_SALE_SERVICE"
           />
         </router-link>
+        <div :class="$style.segmentation">
+          <pl-svg name="my-segmentation" />
+        </div>
         <router-link :to="{ name: 'Orders', params: { status: 'ALl_ORDER' } }">
           <pl-svg name="my-order-list" />
-          <span
-            :class="$style.badge"
-            v-if="count.FINISHED"
-            v-text="count.FINISHED"
-          />
         </router-link>
       </div>
       <div :class="$style.newLogistics">
@@ -372,6 +370,10 @@ export default {
     }
     a:nth-last-of-type(1) .badge {
       right: -14px;
+    }
+    .segmentation{
+      position: absolute;
+      right: 160px;
     }
   }
   .new-logistics{
