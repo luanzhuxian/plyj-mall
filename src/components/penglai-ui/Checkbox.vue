@@ -26,7 +26,7 @@
           'pl-checkbox-inner': true,
           'checked': checked || localChecked,
           'disabled': disabled,
-          'border': !hideIconBorder
+          border
         }"
       >
         <pl-svg
@@ -84,9 +84,8 @@ export default {
       type: Number,
       default: 0
     },
-    hideIconBorder: {
-      type: Boolean,
-      dafault: false
+    border: {
+      type: Boolean
     },
     canPrefixClick: {
       type: Boolean,
@@ -157,7 +156,7 @@ export default {
     border-radius: 18px;
     box-sizing: border-box;
     &.checked {
-      border: none;
+      border: none !important;
       background-color: $--primary-color;
     }
     &.disabled {
