@@ -1,5 +1,5 @@
 // 微信支付方法
-export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, paySign }) {
+export default function wechatPay ({ appId, timeStamp, nonceStr, prepay_id, paySign }) {
   return new Promise((resolve, reject) => {
     try {
       if (window.WeixinJSBridge) {
@@ -8,7 +8,7 @@ export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, p
             appId: appId, // 公众号名称，由商户传入
             timeStamp: timeStamp, // 时间戳，自1970年以来的秒数
             nonceStr: nonceStr, // 随机串
-            package: packageValue, //
+            package: prepay_id, //
             signType: 'MD5', // 微信签名方式:
             paySign: paySign // 微信签名
           }, function (res) {
@@ -20,7 +20,6 @@ export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, p
             } else if (res.err_msg.indexOf('cancel') > -1) {
               reject(new Error('取消支付'))
             } else if (res.err_msg.indexOf('fail') > -1) {
-              console.dir(res)
               reject(new Error('支付失败: ' + res.err_msg))
             }
           })
