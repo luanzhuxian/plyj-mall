@@ -451,6 +451,15 @@ export default {
       this.showPopup = false
     },
     need () {
+      if (!this.selectedAddress.realName) {
+        this.$warning('请先选择收货地址')
+        return
+      }
+      const applyInvoice = {
+        physicalProducts: this.physicalProducts,
+        virtualProducts: this.virtualProducts
+      }
+      localStorage.setItem('applyInvoice', JSON.stringify(applyInvoice))
       this.$router.push({ name: 'ApplyInvoice' })
       this.invioceType = '纸质发票'
     }

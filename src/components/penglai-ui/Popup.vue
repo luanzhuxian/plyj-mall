@@ -149,7 +149,8 @@ export default {
   }
 
   &__content {
-    max-height: 70%;
+    height: 70vh;
+    overflow: auto;
   }
 
   &__close-wrapper {

@@ -7,9 +7,12 @@
           name="warning2"
           color="#1890FF"
         />
-        <p>发票将会与商品同时邮寄，单商品仅支持一次开票服务，请确保填写开票信息真实有效。</p>
+        <p v-text="type === 1 ? '自营产品订单完成后24小时内开具，点击“我的订单”查看和下载。' : '发票将会与商品同时邮寄，单商品仅支持一次开票服务，请确保填写开票信息真实有效。'" />
       </div>
-      <button :class="$style.button">
+      <button
+        @click="showInvioceIntro = true"
+        :class="$style.button"
+      >
         发票须知
       </button>
     </div>
@@ -39,21 +42,160 @@
           单位
         </button>
       </div>
+
+      <div
+        :class="$style.personInvioce"
+        v-show="type === 1"
+      >
+        <div :class="$style.personName">
+          <span>姓名：</span>
+          <span v-text="realName" />
+        </div>
+        <div :class="$style.personMobile">
+          <span>手机号：</span>
+          <span>{{ mobile | formatAccount }}</span>
+        </div>
+      </div>
+
+      <pl-form
+        :class="$style.firmInvioce"
+        v-show="type === 2"
+      >
+        <pl-form-item border>
+          <pl-input
+            size="middle"
+            placeholder="单位名称"
+          />
+        </pl-form-item>
+        <pl-form-item>
+          <pl-input
+            size="middle"
+            placeholder="纳税人识别号"
+          />
+          <pl-svg
+            slot="suffix"
+            name="warning"
+            color="#FE7700"
+            style="width: 36px; margin: 0 36px;"
+          />
+        </pl-form-item>
+      </pl-form>
+      <button :class="$style.addInvoice">
+        <pl-svg
+          name="add"
+          color="#bfbfbf"
+        />
+        <span>添加信息</span>
+      </button>
     </div>
+
+    <div :class="$style.selectProducts">
+      <p :class="$style.title">
+        选择开票商品
+      </p>
+
+      <ul :class="$style.selectList">
+        <li
+          v-for="pro of physicalProducts"
+          :key="pro.productId"
+        >
+          <label>
+            <input
+              v-show="false"
+              type="checkbox"
+              @change="e => { selectChange(e, pro) }"
+            >
+            <img
+              :class="$style.proImg"
+              :src="pro.productImageUrls[0]"
+              alt=""
+            >
+            <pl-svg
+              :class="$style.selectIcon"
+              name="success"
+              :color="checkedList.indexOf(pro) > -1 ? '#F2B036' : '#ccc'"
+            />
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <pl-button
+      type="warning"
+      size="huge"
+    >
+      确定
+    </pl-button>
+    <pl-popup :show.sync="showInvioceIntro">
+      <h2
+        :class="$style.invioceIntroTitle"
+        slot="title"
+      >
+        发票税号说明
+      </h2>
+      <div :class="$style.invioceIntroContent">
+        <h3>1. 什么是纳税人识别号/统一社会信用代码？</h3>
+        <p> 纳税人识别号，通常简称为“税号”，就是税务登记证上的号，每个企业的识别号都是唯一的，相当于税务局颁发给企业的“身份证”号。统一社会信用代码，是一组长度为 18 位的用于法人和其他组织身份识别的代码。统一社会信用代码由国家标准委发布。 2015 年 10 月 1 日起，国家启动将企业依次申请的工商营业执照、组织机构代码证和税务登记证三证合为一证，并将三证号码合并为统一社会信用代码。目前大部分企业均已完成合并，另有少部分企业其纳税人识别号仍然有效。请注意此公告并不适用于政府机构及事业单位中的非企业单位，因此，如贵单位属于这种类型，可无需填写纳税人识别号 l 统一社会信用代码，谨慎起见，请您与贵单位财务部门联系确认。 </p>
+        <h3>2. 为什么要填写纳税人识别号/统一社会信用代码？ </h3>
+        <p>根据国家税务总局 2017 年 16 号公告，从 7 月 1 日起企业（包括公司、非公司制企业法人、企业分支机构、个人独资企业、合伙企业和其他企业）索取票面带有“购买方纳税人识别号”栏目的发票时，应向销售方提供纳税人识别号或统一社会信用代码。因此，当您选择开具企业抬头增值税普通发票时，请根据提示准确填写贵单位号码，以免影响您的发票报报销。 </p>
+        <h3>3. 如何获取/知晓纳税人识别号/统一社会信用代码？ </h3>
+        <p> 您可向贵单位的财务部门索取；另外也可以根据单位名称在国家企业信用信息公示系统 <a href="https://www.gsxt.gov.cnlindex.html">（https://www.gsxt.gov.cnlindex.html）</a>查询统一社会信用代码。</p>
+        <h2 :class="$style.invioceIntroTitle">
+          发票须知
+        </h2>
+        <p><strong>第一条：</strong>发票金额不含优惠券和其余优惠支付部分。 </p>
+        <p><strong>第二条：</strong>第三方卖家销售的商品／服务的发票由卖家自行出具、提供，发票类型和内容由卖家根据实际商品、服务情况决定。 </p>
+      </div>
+    </pl-popup>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'ApplyInvoice',
   data () {
     return {
-      type: 1 // 1：个人，2：单位
+      showInvioceIntro: false,
+      type: 1, // 1：个人，2：单位
+      applyInvoice: {}, // 待开票商品
+      checkedList: []
     }
+  },
+  computed: {
+    ...mapGetters(['selectedAddress']),
+    realName () {
+      return this.selectedAddress.realName
+    },
+    mobile () {
+      return this.selectedAddress.mobile
+    },
+    physicalProducts () {
+      return this.applyInvoice.physicalProducts || []
+    },
+    virtualProducts () {
+      return this.applyInvoice.virtualProducts || []
+    }
+  },
+  mounted () {
+    const applyInvoice = JSON.parse(localStorage.getItem('applyInvoice'))
+    if (!applyInvoice) {
+      this.$router.replace({ name: 'Home' })
+      this.$destroy()
+    }
+    this.applyInvoice = applyInvoice
   },
   methods: {
     change (type) {
       this.type = type
+    },
+    selectChange (e, pro) {
+      const checked = e.target.checked
+      if (checked) {
+        this.checkedList.push(pro)
+      } else {
+        this.checkedList.splice(this.checkedList.indexOf(pro), 1)
+      }
     }
   }
 }
@@ -75,10 +217,13 @@ export default {
     display: flex;
     color: $--font-color_gray2;
     > .warning {
-      width: 54px;
+      width: 36px;
       height: 36px;
-      margin-top: 2px;
+      margin-top: 4px;
       margin-right: 12px;
+    }
+    > p {
+      flex: 1;
     }
   }
 
@@ -94,6 +239,7 @@ export default {
     margin-top: 28px;
     border-radius: $--radius1;
     background-color: #fff;
+    overflow: hidden;
     > .buttons {
       position: relative;
       display: flex;
@@ -106,12 +252,15 @@ export default {
         width: 50px;
         height: 200%;
         overflow: hidden;
-        z-index: 8;
-        transform: rotate(12deg);
+        z-index: 2;
+        transform: rotate(-12deg);
         background-color: #fcfcfc;
         &.active {
-          right: 42.6%;
-          transform: rotate(168deg);
+          right: 43.5%;
+          &:after {
+            left: -2px;
+          }
+
         }
         &:after {
           position: absolute;
@@ -135,4 +284,88 @@ export default {
       }
     }
   }
+  .personInvioce {
+    padding-left: 40px;
+    font-size: 30px;
+    line-height: 108px;
+    > div:nth-of-type(1) {
+      position: relative;
+      &:after {
+        @include border-half-bottom(#e7e7e7)
+      }
+    }
+  }
+  .firmInvioce {
+    padding-left: 40px;
+  }
+  .invioceIntroTitle {
+    font-size: 36px;
+    margin: 60px 0;
+    text-align: center;
+  }
+  .addInvoice {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 90px;
+    font-size: 28px;
+    color: #999;
+    background-color: #fcfcfc;
+    &:before {
+      @include border-half-top(#f0f0f0)
+    }
+    > svg {
+      width: 38px;
+      height: 38px;
+      margin-right: 12px;
+    }
+  }
+  .invioceIntroContent {
+    padding: 0 40px;
+    h3 {
+      margin-bottom: 52px;
+      font-size: 32px;
+    }
+    a {
+      color: $--primary-color;
+    }
+    p {
+      margin-bottom: 52px;
+      font-size: 28px;
+      line-height: 38px;
+    }
+  }
+  .selectProducts {
+    margin: 48px 0;
+    > .title {
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+  }
+  .selectList {
+    display: flex;
+    > li {
+      position: relative;
+      margin-right: 16px;
+      padding: 28px;
+      border-radius: $--radius2;
+      background-color: #fff;
+    }
+  }
+  .proImg {
+    width: 105px;
+    height: 105px;
+    object-fit: cover;
+    border-radius: $--radius2;
+  }
+  .selectIcon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+  }
+
 </style>
