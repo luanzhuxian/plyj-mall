@@ -162,7 +162,7 @@ export default {
       tabs: [
         {
           name: '全部',
-          id: ''
+          id: 'ALl_ORDER'
         },
         {
           name: '待付款',

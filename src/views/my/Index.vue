@@ -92,20 +92,20 @@
             v-text="count.WAIT_RECEIVE"
           />
         </router-link>
-        <router-link :to="{ name: 'Orders', params: { status: 'FINISHED' } }">
-          <pl-svg name="wait-comment" />
-          <span
-            :class="$style.badge"
-            v-if="count.FINISHED"
-            v-text="count.FINISHED"
-          />
-        </router-link>
         <router-link :to="{ name: 'RefundList' }">
           <pl-svg name="after-sale" />
           <span
             :class="$style.badge"
             v-if="count.POST_SALE_SERVICE"
             v-text="count.POST_SALE_SERVICE"
+          />
+        </router-link>
+        <router-link :to="{ name: 'Orders', params: { status: 'ALl_ORDER' } }">
+          <pl-svg name="my-order-list" />
+          <span
+            :class="$style.badge"
+            v-if="count.FINISHED"
+            v-text="count.FINISHED"
           />
         </router-link>
       </div>

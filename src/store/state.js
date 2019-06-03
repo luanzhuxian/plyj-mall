@@ -5,7 +5,7 @@ const refresh_token = Cookie.get('refresh_token') || ''
 export default {
   theme: 'base-theme',
   userInfo: {
-    agentUser: false,
+    isAgentUser: false,
     applyBalance: 0,
     awaitBalance: 0,
     balance: 0,
