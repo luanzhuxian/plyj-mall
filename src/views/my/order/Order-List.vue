@@ -267,22 +267,22 @@ export default {
       try {
         // const { result } = await getAwaitPayInfo(id)
         const { result } = await secondaryPayment(orderId)
-        console.log(result)
         // 调用微信支付api
         await wechatPay(result)
-        if (orderType === 'PHYSICAL') {
-          this.form.orderStatus = 'WAIT_SHIP'
-          this.tabChange({
-            name: '待发货',
-            id: 'WAIT_SHIP'
-          })
-        } else {
-          this.form.orderStatus = 'WAIT_RECEIVE'
-          this.tabChange({
-            name: '待收货',
-            id: 'WAIT_RECEIVE'
-          })
-        }
+        this.$router.push({ name: 'PaySuccess', params: { orderId } })
+        // if (orderType === 'PHYSICAL') {
+        //   this.form.orderStatus = 'WAIT_SHIP'
+        //   this.tabChange({
+        //     name: '待发货',
+        //     id: 'WAIT_SHIP'
+        //   })
+        // } else {
+        //   this.form.orderStatus = 'WAIT_RECEIVE'
+        //   this.tabChange({
+        //     name: '待收货',
+        //     id: 'WAIT_RECEIVE'
+        //   })
+        // }
       } catch (e) {
         throw e
       } finally {

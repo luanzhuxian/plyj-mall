@@ -42,8 +42,8 @@ export const getOrderList = ({ current, size, orderStatus }) => {
 }
 // 查看每种订单的数量
 export function orderPhysicalorderSummary (userId) {
-  return axios.get(`/apis/v1/order/ordermanager/summary/${userId}`)
-  // return axios.get(`/apis/v1/order/current/user`)
+  // return axios.get(`/apis/v1/order/ordermanager/summary/${userId}`)
+  return axios.get(`/apis/v1/order/current/user`)
 }
 // 订单详情
 export function getOrderDetail (orderSn) {
