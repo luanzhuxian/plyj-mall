@@ -19,25 +19,24 @@
     <!--&gt;-->
     <!--{{ text }}-->
     <!--</pl-button>-->
-    <div
-      :class="$style.buttons"
-      @click="buttonClick"
+    <!--<div-->
+    <!--:class="$style.buttons"-->
+    <!--&gt;-->
+    <button
+      :class="$style.addToCart"
+      @click="addToCart"
+      :disabled="loading"
     >
-      <button
-        :class="$style.addToCart"
-        data-method="addToCart"
-        :disabled="loading"
-      >
-        加入购物车
-      </button>
-      <button
-        :class="$style.buyNowBtn"
-        data-method="submit"
-        :disabled="loading"
-      >
-        立即购买
-      </button>
-    </div>
+      加入购物车
+    </button>
+    <button
+      :class="$style.buyNowBtn"
+      @click="submit"
+      :disabled="loading"
+    >
+      立即购买
+    </button>
+    <!--</div>-->
 
     <specification-pop
       :data="priceModels"
@@ -253,16 +252,20 @@ export default {
     overflow: hidden;
   }
   .addToCart, .buyNowBtn {
-    flex: 1;
-    color: currentColor;
+    width: 234px;
+    height: 80px;
+    color: #fff;
+    font-size: 30px;
     &:disabled {
       opacity: .5;
     }
   }
   .addToCart {
+    border-radius: 10px 0 0 10px;
     background-color: $--warning-color;
   }
   .buyNowBtn {
+    border-radius: 0 10px 10px 0;
     background-color: $--primary-color;
   }
 </style>
