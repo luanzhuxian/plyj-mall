@@ -133,6 +133,7 @@ export default {
   },
   activated () {
     this.loading = true
+    this.resetState()
     try {
       this.getList()
     } catch (e) {
@@ -140,10 +141,17 @@ export default {
     }
   },
   methods: {
+    resetState () {
+      this.checkedAll = false
+      this.products.splice(0, 500)
+      this.checkedList.splice(0, 500)
+      this.isManage = false
+      this.total = 0
+      this.summation = 0
+    },
     async getList () {
       try {
         const { result } = await getCartList()
-        this.products.splice(0, 500)
         for (let item of result) {
           // 如果商品已下架或当前规格商品数量不足，禁用
           const currentSku = item.skuModels.find(sku => sku.optionCode === item.cartSkuCode)

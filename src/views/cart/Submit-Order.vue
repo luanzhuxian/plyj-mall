@@ -29,12 +29,24 @@
       />
       <div :class="$style.otherInfo">
         <div :class="$style.infoItem">
-          <div :class="$style.freightType">
+          <div
+            :class="{
+              [$style.freightType]: true,
+              [$style.hasFreight]: freight > 0
+            }"
+          >
             <span :class="$style.itemLabel">配送方式</span>
             <span
               v-if="freight === 0"
               :class="$style.itemContent"
-            >快递免邮</span>
+            >
+              快递免邮
+            </span>
+            <span
+              v-if="freight > 0"
+              :class="$style.itemContent"
+              v-text="templateName"
+            />
           </div>
           <span
             v-if="freight > 0"
@@ -120,6 +132,7 @@
     </div>
 
     <div
+      v-if="physicalProducts.length > 0"
       :class="$style.invioce"
       @click="showPopup = true"
     >
@@ -249,8 +262,8 @@ export default {
       }
       this.loading = true
       try {
-        const { result } = await confirmCart({ cartProducts: proList })
-        const { amount, totalAmount, freight, physicalProducts, virtualProducts } = result
+        const { result } = await confirmCart({ cartProducts: proList, addressSeq: this.selectedAddress.sequenceNbr })
+        const { amount, totalAmount, freight, physicalProducts, virtualProducts, templateName } = result
         // 为每个虚拟订单都添加备注字段
         for (const p of physicalProducts) {
           p.remark = ''
@@ -260,6 +273,7 @@ export default {
         this.freight = Number(freight)
         this.physicalProducts = physicalProducts
         this.virtualProducts = virtualProducts
+        this.templateName = templateName
         this.loading = false
       } catch (e) {
         throw e
@@ -512,16 +526,19 @@ export default {
         flex: 1;
         display: inline-flex;
         justify-content: space-between;
+        &.hasFreight{
+          justify-content: flex-start;
+        }
+        .itemLabel {
+          color: #333;
+        }
+        .itemContent {
+          color: #666;
+          margin-left: 24px;
+        }
       }
       .freight {
-        flex: 1.7;
         text-align: right;
-      }
-      .itemLabel {
-        color: #333;
-      }
-      .itemContent {
-        color: #666;
       }
       .remark {
         flex: 1;

@@ -97,12 +97,12 @@
         ref="form"
       >
         <pl-form-item
-          v-for="item of invoiceList"
+          v-for="(item, i) of invoiceList"
           :key="item.id"
           border
         >
           <pl-radio
-            :key="item.id"
+            :key="i"
             :label="item.id"
             v-model="currentInvoice"
           >
@@ -131,8 +131,8 @@
 
       <ul :class="$style.selectList">
         <li
-          v-for="pro of physicalProducts"
-          :key="pro.productId"
+          v-for="(pro, i) of physicalProducts"
+          :key="i"
         >
           <label>
             <input
@@ -470,12 +470,18 @@ export default {
   }
   .selectList {
     display: flex;
+    overflow: auto;
     > li {
+      display: inline-flex;
+      align-items: center;
       position: relative;
       margin-right: 16px;
       padding: 28px;
       border-radius: $--radius2;
       background-color: #fff;
+      > label {
+        display: inline-flex;
+      }
     }
   }
   .proImg {
