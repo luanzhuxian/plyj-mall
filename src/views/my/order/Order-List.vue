@@ -151,7 +151,7 @@ import { mapGetters } from 'vuex'
 import {
   getOrderList,
   // getAwaitPayInfo,
-  secondaryPayment,
+  getAwaitPayInfo,
   physicalorderReceiving,
   physicalorderReceivingForVirtual,
   cancelOrder,
@@ -265,8 +265,7 @@ export default {
       this.payloading = true
       this.currentPayId = orderId
       try {
-        // const { result } = await getAwaitPayInfo(id)
-        const { result } = await secondaryPayment(orderId)
+        const { result } = await getAwaitPayInfo(orderId)
         // 调用微信支付api
         await wechatPay(result)
         this.$router.push({ name: 'PaySuccess', params: { orderId } })

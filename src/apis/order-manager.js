@@ -62,10 +62,8 @@ export const invoiceDetail = (orderNo) => axios.get(`/apis/v1/invoice/OrderInvoi
 //   return axios.post(`/apis/v1/order/virtualorder/wechat?openId=${openId}`, data)
 // }
 
-// 获取待支付商品支付需要的数据
-export const getAwaitPayInfo = id => axios.get(`/apis/v1/order/ordermanager/unifiedOrder/${id}`)
-// 获取待支付商品支付需要的数据
-export const secondaryPayment = orderId => axios.post(`/apis/v1/order/secondaryPayment/${orderId}`)
+// 获取待支付商品支付需要的数据（二次支付）
+export const getAwaitPayInfo = orderId => axios.post(`/apis/v1/order/secondaryPayment/${orderId}`)
 
 // 售后详情
 export const getRefundDetail = orderSn => axios.get(`/apis/v1/order/ordermanager/refund/detail/${orderSn}`)
