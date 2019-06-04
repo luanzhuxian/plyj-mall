@@ -75,6 +75,7 @@ export default {
     flex: 1;
   }
   .name {
+    width: 100%;
     margin-bottom: 14px;
     font-weight: 500;
     font-size: 28px;

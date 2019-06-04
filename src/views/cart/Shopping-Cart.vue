@@ -213,11 +213,13 @@ export default {
       let confirmList = []
       if (this.checkedList.length === 0) return
       for (let pro of this.checkedList) {
-        const { cartProductCount, cartProductId, cartSkuCode } = pro
+        const { cartProductCount, cartProductId, cartSkuCode, agentUser } = pro
+        console.log(agentUser)
         confirmList.push({
           productId: cartProductId,
           optionCode: cartSkuCode,
-          count: cartProductCount
+          count: cartProductCount,
+          agentUser
         })
       }
       localStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))

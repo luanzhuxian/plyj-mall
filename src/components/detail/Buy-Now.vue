@@ -132,7 +132,6 @@ export default {
       this.clickAddToCart = false
       const {
         /* isSupplierProduct, */
-        brokerId,
         currentModel
       } = this
       if (!currentModel || !currentModel.count) {
@@ -152,13 +151,10 @@ export default {
       localStorage.setItem('CONFIRM_LIST', JSON.stringify([{
         productId: productSeq,
         optionCode: optionCode,
-        count: count
+        count: count,
+        agentUser: this.brokerId || ''
       }]))
-      if (brokerId) {
-        this.$router.push({ name: 'SubmitOrder', params: { brokerId } })
-      } else {
-        this.$router.push({ name: 'SubmitOrder' })
-      }
+      this.$router.push({ name: 'SubmitOrder' })
     },
     async addToCart () {
       if (!this.hasBind()) return
@@ -175,7 +171,8 @@ export default {
         await addToCart({
           productId: productSeq,
           productCount: count,
-          skuCode: optionCode
+          skuCode: optionCode,
+          agentUser: this.brokerId || ''
         })
         this.$success('加入成功')
       } catch (e) {
