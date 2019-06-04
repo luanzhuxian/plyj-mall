@@ -35,7 +35,7 @@
             服务类型：
           </div>
           <div :class="[$style.itemRight, $style.bold]">
-            退款
+            {{ refundType === 'REFUND' ? '退款' : '退款退货' }}
           </div>
         </li>
         <li
@@ -105,18 +105,9 @@
               name="description"
               rows="8"
               cols="80"
-              maxlength="200"
+              maxlength="400"
             />
           </label>
-
-          <!-- <pl-input
-            v-model="form.description"
-            type="textarea"
-            placeholder="请填写您的原因"
-            :maxlength="200"
-            :min-rows="5"
-            :max-rows="10"
-          /> -->
         </div>
         <div :class="$style.images">
           <pl-upload-img
@@ -140,9 +131,10 @@
       </pl-button>
     </div>
 
+    <!-- 弹窗 -->
     <pl-popup
       ref="popup"
-      title="退款原因"
+      :title="popupTitle"
       :show.sync="isPopupShow"
       :show-close-icon="false"
       @close="closePopup"
@@ -185,12 +177,23 @@
 <script>
 import {
   getOrderDetail
+  // returnRequest
 } from '../../../apis/order-manager'
+
 export default {
   name: 'Refund',
+  props: {
+    orderId: {
+      type: String,
+      default: null
+    },
+    refundType: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
-      relationModel: [],
       statusTypeMap: {
         WAIT_SHIP: 'WAIT_SHIP_REFUND_RULE', // 待发货的待退款
         WAIT_RECEIVE: 'WAIT_RECEIVE_REFUND_RULE', // 待收货的待退款
@@ -198,6 +201,7 @@ export default {
       },
       orderStatus: '',
       operationType: '', // 在何种情况下退款,
+      relationModel: [],
       form: {
         type: 'REFUND', // 退款类型  RETURN_REFUND REFUND
         goodsStatus: '',
@@ -209,18 +213,21 @@ export default {
       imgList: [],
       isPopupShow: false,
       currentPopupName: '',
+      popupTitle: '',
       popupOptions: [],
-      goodsStatusOptions: [
-        {
+      goodsStatusInfo: {
+        title: '货物状态',
+        options: [{
           name: '0',
           text: '未收到货'
         }, {
           name: '1',
           text: '已收到货'
-        }
-      ],
-      refundReasonOptions: [
-        {
+        }]
+      },
+      refundReasonInfo: {
+        title: '退款原因',
+        options: [{
           name: '0',
           text: '质量问题'
         }, {
@@ -241,26 +248,14 @@ export default {
         }, {
           name: '6',
           text: '质量问题'
-        }
-      ],
+        }]
+      },
       radio: ''
     }
   },
-  props: {
-    orderId: {
-      type: String,
-      default: null
-    },
-    refundType: {
-      type: String,
-      default: null
-    }
-  },
   created () {
-    console.log(this.refundType)
   },
   activated () {
-    console.log(this.refundType)
     this.getOrderDetail()
   },
   methods: {
@@ -273,7 +268,8 @@ export default {
     },
     showPopup (name) {
       this.currentPopupName = name
-      this.popupOptions = this[`${name}Options`]
+      this.popupTitle = this[`${name}Info`].title
+      this.popupOptions = this[`${name}Info`].options
       this.$nextTick(() => {
         this.isPopupShow = true
       })
@@ -281,7 +277,6 @@ export default {
     closePopup () {
       const { currentPopupName, radio } = this
       this.form[currentPopupName] = radio
-      console.log(currentPopupName, radio, this.form[currentPopupName])
       this.isPopupShow = false
     },
     handleRadioClick (value) {
@@ -290,9 +285,27 @@ export default {
     onRadioChange (value) {
       console.log(value)
     },
-    uploaded () {},
-    removeImg () {},
+    uploaded (res) {
+      if (res.res.status === 200) {
+        this.imgList.push(res.url)
+        // let ossModel = {
+        //   mediaType: 'image',
+        //   mediaFilename: res.name.split('/').splice(-1, 1)[0],
+        //   mediaUrl: res.url
+        // }
+        // this.form.imgList.push(ossModel)
+      }
+    },
+    removeImg (index, list) {
+      console.log(index, list, this.imgList)
+      // this.form.imgList.splice(index, 1)
+    },
     async confirm () {
+      if (!this.form.refundReason) {
+        this.$toast('请选择退货原因')
+      } else {
+
+      }
       if (this.form.type === 'RETURN_REFUND') {
         // 退款退货
         // if (this.$refs.form.validate()) {
@@ -306,6 +319,20 @@ export default {
         // this.form.expressInfoModel.courierNo = ''
         // this.request()
       }
+    },
+    async request () {
+      // try {
+      //   await this.$confirm('确定提交吗？')
+      //   await returnRequest(this.form)
+      //   resetForm(this.form, {
+      //     type: 'REFUND'
+      //   })
+      //   this.images = []
+      //   this.$toast('申请售后成功，请等待卖家反馈')
+      //   this.$router.replace({ name: 'RefundList' })
+      // } catch (e) {
+      //   throw e
+      // }
     }
   }
 }

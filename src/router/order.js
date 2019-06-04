@@ -62,12 +62,20 @@ export default [
     }
   },
   {
-    path: '/my/orders/refund-apply/:orderId',
+    path: '/my/orders/refund-apply/:orderId/:refundType',
     name: 'RefundApply',
     component: () => import('../views/my/order/Refund-Apply.vue'),
     props: true,
     meta: {
       title: '申请退款'
+    }
+  },
+  {
+    path: '/my/order/refund-list',
+    name: 'RefundList',
+    component: () => import('../views/my/order/Refund-List.vue'),
+    meta: {
+      title: '售后列表'
     }
   },
   {
@@ -77,14 +85,6 @@ export default [
     props: true,
     meta: {
       title: '退款详情'
-    }
-  },
-  {
-    path: '/my/order/refund-list',
-    name: 'RefundList',
-    component: () => import('../views/my/order/Refund-List.vue'),
-    meta: {
-      title: '售后列表'
     }
   },
   {
