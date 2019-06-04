@@ -271,7 +271,7 @@
         v-if="orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
         round
         type="warning"
-        @click="confirmGet(orderInfoModel.orderType)"
+        @click="confirmReceipt(orderInfoModel.orderType)"
       >
         确认收货
       </pl-button>
@@ -339,8 +339,7 @@ import Picker from '../../../components/penglai-ui/picker/Picker.vue'
 import {
   getOrderDetail,
   cancelOrder,
-  physicalorderReceiving,
-  physicalorderReceivingForVirtual
+  confirmReceipt
 } from '../../../apis/order-manager'
 import { copyFields } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
@@ -466,14 +465,10 @@ export default {
       })
     },
     // 确定收货
-    async confirmGet (orderType) {
+    async confirmReceipt (orderType) {
       try {
         await this.$confirm('您确定收货吗？')
-        if (orderType === 'PHYSICAL_GOODS') {
-          await physicalorderReceiving(this.orderId)
-        } else {
-          await physicalorderReceivingForVirtual(this.orderId)
-        }
+        await confirmReceipt(this.orderId)
         // 跳转至待评价
         this.$router.push({ name: 'Orders', params: { status: 'FINISHED' } })
       } catch (e) {

@@ -1,6 +1,5 @@
 // 微信支付方法
 export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, paySign, signType }) {
-  console.log(appId, timeStamp, nonceStr, packageValue, paySign)
   return new Promise((resolve, reject) => {
     try {
       if (window.WeixinJSBridge) {
@@ -13,12 +12,11 @@ export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, p
             signType: signType, // 微信签名方式:
             paySign: paySign // 微信签名
           }, function (res) {
-            console.log(res)
             if (res.err_msg.indexOf('ok') > -1) {
               // 支付成功, 由于后端要等待微信服务器的成功回调，导致后端成功回调晚于前端，所以前端延迟执行
               setTimeout(() => {
                 resolve('ok')
-              }, 600)
+              }, 1000)
             } else if (res.err_msg.indexOf('cancel') > -1) {
               reject(new Error('取消支付'))
             } else if (res.err_msg.indexOf('fail') > -1) {

@@ -144,7 +144,7 @@ export default {
       justify-content: center;
       min-height: 140px;
       padding: 20px 0;
-      color: #2e2e2e;
+      color: #2E2E2E;
       .vice-message {
         margin-top: 24px;
         font-size: 28px;
@@ -163,7 +163,7 @@ export default {
   }
   .buttons {
     display: flex;
-    border-top: 1px solid #d3d1d2;
+    border-top: 1px solid #D3D1D2;
     button {
       flex: 1;
       border: none;
@@ -179,7 +179,7 @@ export default {
         color: #666;
         font-weight: normal;
         &:after {
-          @include border-half-right(#efefef)
+          @include border-half-right(#D3D1D2)
         }
       }
     }

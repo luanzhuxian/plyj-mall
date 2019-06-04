@@ -34,7 +34,7 @@
             tag="div"
             v-for="item of list"
             :key="item.orderInfoModel.orderSn"
-            :to="{ name: 'RefundDetail', params: { orderSn: item.orderInfoModel.orderSn } }"
+            :to="{ name: 'RefundDetail', params: { orderId: item.orderInfoModel.orderId } }"
             :class="$style.refundItem"
           >
             <div :class="$style.orderId">
@@ -126,7 +126,7 @@ import { mapGetters } from 'vuex'
 
 const tabs = [{
   name: '全部',
-  id: 'ALl_ORDER'
+  id: 'ALL_ORDER'
 }, {
   name: '待审核',
   id: 'WAIT_PAY'

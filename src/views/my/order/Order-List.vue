@@ -68,16 +68,10 @@
                 <span :class="$style.totalCount">{{ `共${item.products.length}件商品` }}</span>
                 <price
                   prefix-text="总价："
-                  price="1000"
+                  :price="item.totalPrice"
                   size="small"
                   plain
                 />
-                <!-- <price
-                  prefix-text="总价："
-                  :price="item.amount + item.orderInfoModel.freight"
-                  size="small"
-                  plain
-                /> -->
               </div>
               <div
                 :class="$style.buttons"
@@ -87,7 +81,7 @@
                   v-if="item.status === 'WAIT_PAY'"
                   round
                   plain
-                  @click="cancelOrder(item.id, i)"
+                  @click="cancelOrder(item, i)"
                 >
                   取消订单
                 </pl-button>
@@ -105,7 +99,7 @@
                   v-if="item.status === 'FINISHED' || item.status === 'CLOSED'"
                   round
                   plain
-                  @click="deleteOrder(item.id, i)"
+                  @click="deleteOrder(item, i)"
                 >
                   删除订单
                 </pl-button>
@@ -121,19 +115,10 @@
                   v-if="item.status === 'WAIT_RECEIVE'"
                   type="warning"
                   round
-                  @click="confirmReceipt(item.orderType, item.id)"
+                  @click="confirmReceipt(item.id, item.orderType)"
                 >
                   确认收货
                 </pl-button>
-                <!-- <pl-button
-                  v-if="item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO'"
-                  type="warning"
-                  plain
-                  round
-                  @click="$router.push({ name: 'CommentOrder', params: { orderId: item.orderInfoModel.orderSn } })"
-                >
-                  去评价
-                </pl-button> -->
               </div>
             </div>
           </router-link>
@@ -150,10 +135,8 @@ import LoadMore from '../../../components/Load-More.vue'
 import { mapGetters } from 'vuex'
 import {
   getOrderList,
-  // getAwaitPayInfo,
   getAwaitPayInfo,
-  physicalorderReceiving,
-  physicalorderReceivingForVirtual,
+  confirmReceipt,
   cancelOrder,
   orderPhysicalorderSummary
 } from '../../../apis/order-manager'
@@ -161,7 +144,7 @@ import wechatPay from '../../../assets/js/wechat/wechat-pay'
 
 const tabs = [{
   name: '全部',
-  id: 'ALl_ORDER'
+  id: 'ALL_ORDER'
 }, {
   name: '待付款',
   id: 'WAIT_PAY'
@@ -229,9 +212,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['orderStatusMap', 'userId'])
+    ...mapGetters(['orderStatusMap', 'orderStatusMapCamel'])
   },
-  created () {},
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
@@ -251,15 +233,17 @@ export default {
       this.getOrderSummary()
     },
     async getOrderSummary () {
-      // try {
-      //   const { result } = await this.orderPhysicalorderSummary(this.userId)
-      //   for (let k of Object.keys(result)) {
-      //     if (result[k] > 99) result[k] = '99+'
-      //   }
-      //   this.count = result
-      // } catch (e) {
-      //   throw e
-      // }
+      try {
+        const { orderStatusMapCamel } = this
+        const { result } = await orderPhysicalorderSummary(this.userId)
+        for (let key of Object.keys(result)) {
+          if (orderStatusMapCamel.hasOwnProperty(key)) {
+            this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
+          }
+        }
+      } catch (e) {
+        throw e
+      }
     },
     async pay (orderId, orderType) {
       this.payloading = true
@@ -268,20 +252,19 @@ export default {
         const { result } = await getAwaitPayInfo(orderId)
         // 调用微信支付api
         await wechatPay(result)
-        this.$router.push({ name: 'PaySuccess', params: { orderId } })
-        // if (orderType === 'PHYSICAL') {
-        //   this.form.orderStatus = 'WAIT_SHIP'
-        //   this.tabChange({
-        //     name: '待发货',
-        //     id: 'WAIT_SHIP'
-        //   })
-        // } else {
-        //   this.form.orderStatus = 'WAIT_RECEIVE'
-        //   this.tabChange({
-        //     name: '待收货',
-        //     id: 'WAIT_RECEIVE'
-        //   })
-        // }
+        if (orderType === 'PHYSICAL') {
+          this.form.orderStatus = 'WAIT_SHIP'
+          this.tabChange({
+            name: '待发货',
+            id: 'WAIT_SHIP'
+          })
+        } else {
+          this.form.orderStatus = 'WAIT_RECEIVE'
+          this.tabChange({
+            name: '待收货',
+            id: 'WAIT_RECEIVE'
+          })
+        }
       } catch (e) {
         throw e
       } finally {
@@ -289,14 +272,10 @@ export default {
       }
     },
     // 确定收货
-    async confirmReceipt (orderType, orderId) {
+    async confirmReceipt (orderId, orderType) {
       try {
         await this.$confirm('您确定收货吗？')
-        if (orderType === 'PHYSICAL_GOODS') {
-          await physicalorderReceiving(orderId)
-        } else {
-          await physicalorderReceivingForVirtual(orderId)
-        }
+        await confirmReceipt(orderId)
         // 跳转至待评价
         this.form.orderStatus = 'FINISHED'
         this.tabChange({
@@ -307,17 +286,23 @@ export default {
         throw e
       }
     },
-    async cancelOrder (orderId, index) {
+    async cancelOrder (item, index) {
+      const orderId = item.id
+      const { orderStatus } = this.form
       try {
-        await this.$confirm('一旦取消，将无法恢复，确认要取消订单？')
+        await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
         await cancelOrder(orderId)
-        this.orderList.splice(index, 1)
+        if (orderStatus === 'ALL_ORDER') {
+          item.status = 'CLOSED'
+        } else {
+          this.orderList.splice(index, 1)
+        }
+        this.getOrderSummary()
       } catch (e) {
         throw e
       }
     },
-    deleteOrder (orderId, index) {
-    },
+    deleteOrder (item, index) {},
     toFreightPage (orderId) {
       this.$router.push({ name: 'Freight', params: { orderId } })
     }

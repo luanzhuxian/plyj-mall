@@ -11,6 +11,7 @@ export default {
       {}
   },
   orderStatusMap: state => state.orderStatusMap,
+  orderStatusMapCamel: state => state.orderStatusMapCamel,
 
   avatar: state => state.userInfo.img,
   userName: state => state.userInfo.userName,

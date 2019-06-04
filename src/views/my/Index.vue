@@ -98,7 +98,7 @@
         <div :class="$style.segmentation">
           <pl-svg name="my-segmentation" />
         </div>
-        <router-link :to="{ name: 'Orders', params: { status: 'ALl_ORDER' } }">
+        <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
           <pl-svg name="my-order-list" />
         </router-link>
       </div>
@@ -175,14 +175,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName'])
+    ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'orderStatusMapCamel'])
   },
   async activated () {
     try {
-      const data = await orderPhysicalorderSummary(this.userId)
-      this.count = data.result
-      for (let k of Object.keys(this.count)) {
-        if (this.count[k] > 99) this.count[k] = '99+'
+      const { orderStatusMapCamel } = this
+      const { result } = await orderPhysicalorderSummary(this.userId)
+      for (let key of Object.keys(result)) {
+        if (orderStatusMapCamel.hasOwnProperty(key)) {
+          this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
+        }
       }
     } catch (e) {
       throw e

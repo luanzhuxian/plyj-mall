@@ -7,14 +7,12 @@ import axios from 'axios'
 // export function physicalorder (data) {
 //   return axios.post(`/apis/v1/order/physicalorder`, data)
 // }
+
 // 用户确认收货
-export function physicalorderReceiving (orderSn) {
-  return axios.put(`/apis/v1/order/physicalorder/receiving/${orderSn}`)
+export function confirmReceipt (orderId) {
+  return axios.put(`/apis/v1/order/receiving/${orderId}`)
 }
-// 用户确认收货-虚拟商品
-export function physicalorderReceivingForVirtual (orderSn) {
-  return axios.put(`/apis/v1/order/virtualorder/receiving/${orderSn}`)
-}
+
 // 订单支付成功回调-实体
 export function physicalorderPaymentSuccess (orderSn) {
   return axios.put(`/apis/v1/order/physicalorder/payment/success/${orderSn}`)

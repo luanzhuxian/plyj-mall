@@ -82,23 +82,11 @@ export default {
     FINISHED_REFUND: '待退款'
   },
   orderStatusMapCamel: {
-    // allOrder: 'ALl_ORDER',
-    // new: 'NEW',
-    // waitPayment: 'WAIT_PAY',
-    // waitDelivery: 'WAIT_SHIP',
-    // waitCollect: 'WAIT_RECEIVE',
-    // FINISHED: 'FINISHED',
-    // CLOSED: 'CLOSED',
-    // afterSale: 'AFTER_SALE',
-    // comment: 'COMMENT',
-    // // WAIT_REFUND: '待退款',
-    // // WAIT_RETURN: '等待买家发货',
-    // // RETURN_RECEIVE: '等待商家收货',
-    // // 待发货的待退款
-    // WAIT_SHIP_REFUND: '待退款',
-    // // 待收货的待退款
-    // WAIT_RECEIVE_REFUND: '待退款',
-    // // 订单完成的待退款
-    // FINISHED_REFUND: '待退款'
+    new: 'NEW',
+    waitPayment: 'WAIT_PAY',
+    waitDelivery: 'WAIT_SHIP',
+    waitCollect: 'WAIT_RECEIVE',
+    comment: 'FINISHED',
+    afterSale: 'AFTER_SALE'
   }
 }
