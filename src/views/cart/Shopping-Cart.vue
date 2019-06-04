@@ -5,92 +5,101 @@
         购物车宝贝 <i v-text="total" /> 件
       </span>
       <span
+        v-if="products.length > 0"
         :class="$style.manage"
         @click="manage"
         v-text="isManage ? '完成' : '管理'"
       />
     </div>
 
-    <div
-      :class="$style.productList"
-      v-if="!loading"
-    >
-      <pl-checkbox-group
-        v-model="checkedList"
-        ref="checkboxGroup"
-        @change="selectedChange"
+    <template v-if="products.length > 0">
+      <div
+        :class="$style.productList"
+        v-if="!loading"
       >
+        <pl-checkbox-group
+          v-model="checkedList"
+          ref="checkboxGroup"
+          @change="selectedChange"
+        >
+          <pl-checkbox
+            v-for="item of products"
+            :key="item.id"
+            :data="item"
+            :gap-column="24"
+            border
+          >
+            <template v-slot:suffix>
+              <CartItem
+                :data="item"
+                :key="item.id"
+                @change="proChange"
+              />
+            </template>
+          </pl-checkbox>
+        </pl-checkbox-group>
+      </div>
+      <!-- 结算或删除 -->
+      <div :class="$style.settlement">
         <pl-checkbox
-          v-for="item of products"
-          :key="item.id"
-          :data="item"
-          :gap-column="24"
+          :checked="checkedAll"
+          @change="checkAll"
           border
         >
-          <template v-slot:suffix>
-            <CartItem
-              :data="item"
-              :key="item.id"
-              @change="proChange"
-            />
-          </template>
-        </pl-checkbox>
-      </pl-checkbox-group>
-    </div>
-
-    <div :class="$style.settlement">
-      <pl-checkbox
-        :checked="checkedAll"
-        @change="checkAll"
-        border
-      >
-        <span
-          slot="suffix"
-          class="fz-24 gray-2 ml-10"
-        >
-          全选
-          <i
-            v-if="isManage"
-            :class="$style.selectedCount"
+          <span
+            slot="suffix"
+            class="fz-24 gray-2 ml-10"
           >
-            (共{{ checkedList.length }}件)
-          </i>
-        </span>
-      </pl-checkbox>
-      <div :class="$style.control">
-        <span
-          v-show="!isManage"
-          class="fz-22 gray-3"
-        >
-          不含运费
-        </span>
-        <span
-          v-show="!isManage"
-          class="fz-24"
-        >
-          合计：
-          <i
-            :class="$style.summation + ' rmb'"
-            v-text="summation"
-          />
-        </span>
-        <button
-          :class="$style.settlementBtn"
-          @click="settlement"
-          v-show="!isManage"
-        >
-          结算({{ checkedList.length }})
-        </button>
-        <button
-          v-show="isManage"
-          :class="$style.delete"
-          :disabled="checkedList.length === 0"
-          @click="removePro"
-        >
-          删除
-        </button>
+            全选
+            <i
+              v-if="isManage"
+              :class="$style.selectedCount"
+            >
+              (共{{ checkedList.length }}件)
+            </i>
+          </span>
+        </pl-checkbox>
+
+        <div :class="$style.control">
+          <span
+            v-show="!isManage"
+            class="fz-22 gray-3"
+          >
+            不含运费
+          </span>
+          <span
+            v-show="!isManage"
+            class="fz-24"
+          >
+            合计：
+            <i
+              :class="$style.summation + ' rmb'"
+              v-text="summation"
+            />
+          </span>
+          <button
+            :class="$style.settlementBtn"
+            @click="settlement"
+            v-show="!isManage"
+          >
+            结算({{ checkedList.length }})
+          </button>
+          <button
+            v-show="isManage"
+            :class="$style.delete"
+            :disabled="checkedList.length === 0"
+            @click="removePro"
+          >
+            删除
+          </button>
+        </div>
       </div>
-    </div>
+    </template>
+
+    <NoContent
+      v-else
+      text="那么多好商品，你都不加入购物车吗？"
+    />
 
     <CartItemSkeleton v-if="loading" />
     <CartItemSkeleton v-if="loading" />
@@ -99,6 +108,7 @@
 
 <script>
 import CartItem from '../../components/item/Cart-Item.vue'
+import NoContent from '../../components/No-Content.vue'
 import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
 import {
   getCartList,
@@ -109,7 +119,8 @@ export default {
   name: 'ShoppingCart',
   components: {
     CartItem,
-    CartItemSkeleton
+    CartItemSkeleton,
+    NoContent
   },
   data () {
     return {

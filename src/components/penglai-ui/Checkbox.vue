@@ -47,6 +47,7 @@
         </template>
       </span>
     </label>
+
     <slot name="suffix" />
   </div>
 </template>
@@ -160,6 +161,10 @@ export default {
     &:nth-last-of-type(1) {
       margin-bottom: 0 !important;
       margin-right: 0 !important;
+    }
+    > label {
+      display: inline-flex;
+      align-items: center;
     }
   }
   .pl-checkbox-inner {
