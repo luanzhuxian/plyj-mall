@@ -71,9 +71,10 @@ export default [
     }
   },
   {
-    path: '/my/order/refund-list',
+    path: '/my/order/refund-list/:status?',
     name: 'RefundList',
     component: () => import('../views/my/order/Refund-List.vue'),
+    props: true,
     meta: {
       title: '售后列表'
     }

@@ -134,7 +134,6 @@ export default {
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        fill: #000;
         background-color: #000;
         display: flex;
         justify-content: center;
@@ -143,7 +142,6 @@ export default {
         &--close {
           width: 14px;
           height: 14px;
-          fill: #FFF;
           path {
             fill: #FFF;
           }

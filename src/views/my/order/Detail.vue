@@ -295,9 +295,9 @@
       <picker
         show-toolbar
         :columns="pickerColumns"
-        @change="onChange"
-        @confirm="onConfirm"
-        @cancel="onCancel"
+        @change="onPickerChange"
+        @confirm="onPickerConfirm"
+        @cancel="onPickerCancel"
       />
     </pl-popup>
   </div>
@@ -338,8 +338,7 @@ import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.
 import Picker from '../../../components/penglai-ui/picker/Picker.vue'
 import {
   getOrderDetail,
-  physicalOrderCancellation,
-  virtualOrderCancellation,
+  cancelOrder,
   physicalorderReceiving,
   physicalorderReceivingForVirtual
 } from '../../../apis/order-manager'
@@ -377,10 +376,6 @@ export default {
         WAIT_SHIP: '等待卖家发货…',
         WAIT_RECEIVE: '',
         FINISHED: '本次交易已完成，感谢下次光临'
-      },
-      cancelFnMap: {
-        PHYSICAL_GOODS: physicalOrderCancellation,
-        VIRTUAL_GOODS: virtualOrderCancellation
       },
       orderInfoModel: {},
       orderDetailModel: {},
@@ -488,7 +483,7 @@ export default {
     async cancel () {
       try {
         await this.$confirm('您确定取消订单吗？')
-        await this.cancelFnMap[this.orderType](this.orderId)
+        await cancelOrder(this.orderId)
         this.getDetail()
       } catch (e) {
         throw e

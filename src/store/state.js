@@ -53,6 +53,16 @@ export default {
     RDSERVER_MOBILE_REGISTER: 'RDSERVER_MOBILE_REGISTER', // 研发服务端-免费注册验证码
     PUBLIC_USER_UPDATE_MOBILE: 'PUBLIC_USER_UPDATE_MOBILE'// 研发服务端-免费注册验证码
   },
+  roleMap: {
+    SUPER_ADMIN: '超级管理员',
+    ENTERPRISE_ADMIN: '企业级管理',
+    ADMIN: '高级管理员',
+    EMPLOYEE: '子账号',
+    HELPER: 'Helper',
+    MEMBERSHIP: '普通会员',
+    SUPER_ADMIN_EMPLOYEE: '朋来雅集商户中心员工账号',
+    VISITOR: '游客'
+  },
   orderStatusMap: {
     NEW: '待提交',
     WAIT_PAY: '待付款',
@@ -60,7 +70,7 @@ export default {
     WAIT_RECEIVE: '待收货',
     FINISHED: '订单完成',
     CLOSED: '订单关闭',
-    // POST_SALE_SERVICE  售后状态
+    // AFTER_SALE  售后状态
     // WAIT_REFUND: '待退款',
     // WAIT_RETURN: '等待买家发货',
     // RETURN_RECEIVE: '等待商家收货',
@@ -71,14 +81,24 @@ export default {
     // 订单完成的待退款
     FINISHED_REFUND: '待退款'
   },
-  roleMap: {
-    SUPER_ADMIN: '超级管理员',
-    ENTERPRISE_ADMIN: '企业级管理',
-    ADMIN: '高级管理员',
-    EMPLOYEE: '子账号',
-    HELPER: 'Helper',
-    MEMBERSHIP: '普通会员',
-    SUPER_ADMIN_EMPLOYEE: '朋来雅集商户中心员工账号',
-    VISITOR: '游客'
+  orderStatusMapCamel: {
+    // allOrder: 'ALl_ORDER',
+    // new: 'NEW',
+    // waitPayment: 'WAIT_PAY',
+    // waitDelivery: 'WAIT_SHIP',
+    // waitCollect: 'WAIT_RECEIVE',
+    // FINISHED: 'FINISHED',
+    // CLOSED: 'CLOSED',
+    // afterSale: 'AFTER_SALE',
+    // comment: 'COMMENT',
+    // // WAIT_REFUND: '待退款',
+    // // WAIT_RETURN: '等待买家发货',
+    // // RETURN_RECEIVE: '等待商家收货',
+    // // 待发货的待退款
+    // WAIT_SHIP_REFUND: '待退款',
+    // // 待收货的待退款
+    // WAIT_RECEIVE_REFUND: '待退款',
+    // // 订单完成的待退款
+    // FINISHED_REFUND: '待退款'
   }
 }

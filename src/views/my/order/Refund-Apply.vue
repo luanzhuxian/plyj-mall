@@ -304,7 +304,7 @@ export default {
       if (!this.form.refundReason) {
         this.$toast('请选择退货原因')
       } else {
-
+        this.$router.push({ name: 'RefundList' })
       }
       if (this.form.type === 'RETURN_REFUND') {
         // 退款退货

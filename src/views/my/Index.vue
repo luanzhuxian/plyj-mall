@@ -96,8 +96,8 @@
           <pl-svg name="after-sale" />
           <span
             :class="$style.badge"
-            v-if="count.POST_SALE_SERVICE"
-            v-text="count.POST_SALE_SERVICE"
+            v-if="count.AFTER_SALE"
+            v-text="count.AFTER_SALE"
           />
         </router-link>
         <div :class="$style.segmentation">
@@ -171,11 +171,11 @@ export default {
   data () {
     return {
       count: {
-        FINISHED: 0,
-        POST_SALE_SERVICE: 0,
         WAIT_PAY: 0,
+        WAIT_SHIP: 0,
         WAIT_RECEIVE: 0,
-        WAIT_SHIP: 0
+        FINISHED: 0,
+        AFTER_SALE: 0
       }
     }
   },

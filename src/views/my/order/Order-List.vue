@@ -1,8 +1,8 @@
 <template>
   <div class="orders">
     <pl-tab
-      :tabs="tabs"
       size="small"
+      :tabs="tabs"
       :active-id.sync="form.orderStatus"
       :count="count"
       @change="tabChange"
@@ -22,99 +22,106 @@
     </pl-tab>
     <div :class="$style.orderList">
       <load-more
-        :request-methods="getOrderList"
-        :form="form"
         ref="loadMore"
+        :form="form"
         :loading.sync="loading"
+        :request-methods="getOrderList"
         no-content-tip="暂无订单"
-        @refresh="getOrderSummary"
+        @refresh="onRefresh"
       >
         <template v-slot="{ list }">
           <router-link
-            v-for="item of list"
             tag="div"
-            :key="item.orderInfoModel.sequenceNbr"
-            :to="{ name: 'OrderDetail', params: { orderId: item.orderInfoModel.orderSn } }"
-            :class="$style.orderBox"
+            v-for="(item, i) of orderList"
+            :key="i"
+            :to="{ name: 'OrderDetail', params: { orderId: item.id } }"
+            :class="$style.orderItem"
           >
-            <div class="">
-              <div :class="$style.orderBoxLeft">
-                <span :class="$style.orderTag">
-                  实体商品
-                </span>
+            <div>
+              <div :class="$style.orderItemLeft">
+                <span
+                  :class="$style.orderTag"
+                  v-text="orderTypeMap[item.orderType]"
+                />
                 <pl-list
                   title="订单编号："
-                  :content="item.orderInfoModel.orderSn"
+                  :content="item.id"
                 />
               </div>
               <p
                 :class="$style.status"
-                v-text="orderStatusMap[item.orderInfoModel.orderStatus]"
+                v-text="item.status === 'FINISHED' ? item.commentStatus ? orderFinishMap['FINISH'] : orderFinishMap['COMMENT'] : orderStatusMap[item.status]"
               />
             </div>
             <order-item
-              :img="item.mediaInfoModel[0].mediaUrl"
-              :name="item.orderProductRelationModel.productName"
-              :option="item.orderProductRelationModel.optionName"
-              :count="item.orderProductRelationModel.count"
-              :price="item.orderProductRelationModel.productPrice"
+              v-for="(product, j) of item.products"
+              :key="j"
+              :img="product.productImg"
+              :name="product.productName"
+              :option="product.skuName"
+              :count="product.purchaseQuantity"
+              :price="product.unitPrice"
               border
             />
-            <div :class="$style.orderBoxBottom">
-              <div class="">
-                <span :class="$style.totalCount">共1件商品</span>
+            <div :class="$style.orderItemBottom">
+              <div>
+                <span :class="$style.totalCount">{{ `共${item.products.length}件商品` }}</span>
                 <price
                   prefix-text="总价："
-                  :price="item.orderInfoModel.amount + item.orderInfoModel.freight"
+                  price="1000"
                   size="small"
                   plain
                 />
+                <!-- <price
+                  prefix-text="总价："
+                  :price="item.amount + item.orderInfoModel.freight"
+                  size="small"
+                  plain
+                /> -->
               </div>
               <div
                 :class="$style.buttons"
-                v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY' ||
-                  item.orderInfoModel.orderStatus === 'WAIT_RECEIVE' ||
-                  (item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO')"
+                v-if="item.status !== 'WAIT_SHIP'"
               >
                 <pl-button
-                  v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'"
+                  v-if="item.status === 'WAIT_PAY'"
                   round
                   plain
-                  @click="cancel"
+                  @click="cancelOrder(item.id, i)"
                 >
                   取消订单
                 </pl-button>
                 <pl-button
-                  v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'"
+                  v-if="item.status === 'WAIT_PAY'"
                   type="warning"
                   round
-                  :loading="payloading && currentPayId === item.orderInfoModel.orderSn"
+                  :loading="payloading && currentPayId === item.id"
                   :disabled="payloading"
-                  @click="pay(item.orderInfoModel.orderSn, item.orderInfoModel.orderType)"
+                  @click="pay(item.id, item.orderType)"
                 >
                   去付款
                 </pl-button>
                 <pl-button
-                  v-if="item.orderInfoModel.orderStatus === 'FINISHED' || item.orderInfoModel.orderStatus === 'CLOSED'"
+                  v-if="item.status === 'FINISHED' || item.status === 'CLOSED'"
                   round
                   plain
-                  @click="deleteOrder"
+                  @click="deleteOrder(item.id, i)"
                 >
                   删除订单
                 </pl-button>
                 <pl-button
-                  v-if="item.orderInfoModel.orderStatus === 'WAIT_RECEIVE' || item.orderInfoModel.orderStatus === 'FINISHED'"
+                  v-if="item.status === 'WAIT_RECEIVE' || item.status === 'FINISHED'"
                   round
                   plain
-                  @click="checkLogisticsInfo"
+                  @click="toFreightPage(item.id)"
                 >
                   查看物流
                 </pl-button>
                 <pl-button
-                  v-if="item.orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
+                  v-if="item.status === 'WAIT_RECEIVE'"
                   type="warning"
                   round
-                  @click="confirmGet(item.orderInfoModel.orderType, item.orderInfoModel.orderSn)"
+                  @click="confirmReceipt(item.orderType, item.id)"
                 >
                   确认收货
                 </pl-button>
@@ -143,12 +150,50 @@ import LoadMore from '../../../components/Load-More.vue'
 import { mapGetters } from 'vuex'
 import {
   getOrderList,
-  getAwaitPayInfo,
+  // getAwaitPayInfo,
+  secondaryPayment,
   physicalorderReceiving,
   physicalorderReceivingForVirtual,
+  cancelOrder,
   orderPhysicalorderSummary
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
+
+const tabs = [{
+  name: '全部',
+  id: 'ALl_ORDER'
+}, {
+  name: '待付款',
+  id: 'WAIT_PAY'
+}, {
+  name: '待发货',
+  id: 'WAIT_SHIP'
+}, {
+  name: '待收货',
+  id: 'WAIT_RECEIVE'
+}, {
+  name: '待评价',
+  id: 'FINISHED'
+}]
+
+const orderTypeMap = {
+  PHYSICAL: '实体商品',
+  VIRTUAL: '虚拟商品'
+}
+
+const orderFinishMap = {
+  FINISH: '交易成功',
+  COMMENT: '待评价'
+}
+
+const count = {
+  FINISHED: 0,
+  AFTER_SALE: 0,
+  WAIT_PAY: 0,
+  WAIT_RECEIVE: 0,
+  WAIT_SHIP: 0
+}
+
 export default {
   name: 'OrderList',
   components: {
@@ -158,50 +203,23 @@ export default {
   },
   data () {
     return {
-      payloading: false,
-      tabs: [
-        {
-          name: '全部',
-          id: 'ALl_ORDER'
-        },
-        {
-          name: '待付款',
-          id: 'WAIT_PAY'
-        },
-        {
-          name: '待发货',
-          id: 'WAIT_SHIP'
-        },
-        {
-          name: '待收货',
-          id: 'WAIT_RECEIVE'
-        },
-        {
-          name: '待评价',
-          id: 'FINISHED'
-        }
-      ],
+      tabs,
+      orderList: [],
       form: {
-        userId: '',
         current: 1,
         size: 10,
-        orderStatus: '',
-        assessment: '',
-        orderSnOrName: ''
+        orderStatus: ''
       },
-      loading: false,
       getOrderList,
       orderPhysicalorderSummary,
+      loading: false,
+      payloading: false,
       $refresh: null,
       $router: null,
       currentPayId: '', // 当前正在支付的订单id
-      count: {
-        FINISHED: 0,
-        POST_SALE_SERVICE: 0,
-        WAIT_PAY: 0,
-        WAIT_RECEIVE: 0,
-        WAIT_SHIP: 0
-      }
+      count,
+      orderTypeMap,
+      orderFinishMap
     }
   },
   props: {
@@ -213,52 +231,46 @@ export default {
   computed: {
     ...mapGetters(['orderStatusMap', 'userId'])
   },
-  created () {
-    this.form.userId = this.userId
-  },
+  created () {},
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
     this.form.orderStatus = this.status || ''
-    if (this.status === 'FINISHED') {
-      this.form.assessment = 'NO'
-    } else {
-      this.form.assessment = ''
-    }
     this.$refresh()
   },
   methods: {
     tabChange (item) {
       this.$nextTick(() => {
         this.$router.replace({ name: 'Orders', params: { status: item.id || null } })
-        if (item.id === 'FINISHED') {
-          this.form.assessment = 'NO'
-        } else {
-          this.form.assessment = ''
-        }
         this.$refresh()
       })
     },
-    async getOrderSummary () {
-      try {
-        const { result } = await this.orderPhysicalorderSummary(this.userId)
-        for (let k of Object.keys(result)) {
-          if (result[k] > 99) result[k] = '99+'
-        }
-        this.count = result
-      } catch (e) {
-        throw e
-      }
+    onRefresh (list, total) {
+      this.orderList = list
+      this.getOrderSummary()
     },
-    async pay (id, orderType) {
+    async getOrderSummary () {
+      // try {
+      //   const { result } = await this.orderPhysicalorderSummary(this.userId)
+      //   for (let k of Object.keys(result)) {
+      //     if (result[k] > 99) result[k] = '99+'
+      //   }
+      //   this.count = result
+      // } catch (e) {
+      //   throw e
+      // }
+    },
+    async pay (orderId, orderType) {
       this.payloading = true
-      this.currentPayId = id
+      this.currentPayId = orderId
       try {
-        const { result } = await getAwaitPayInfo(id)
+        // const { result } = await getAwaitPayInfo(id)
+        const { result } = await secondaryPayment(orderId)
+        console.log(result)
         // 调用微信支付api
         await wechatPay(result)
-        if (orderType === 'PHYSICAL_GOODS') {
+        if (orderType === 'PHYSICAL') {
           this.form.orderStatus = 'WAIT_SHIP'
           this.tabChange({
             name: '待发货',
@@ -278,7 +290,7 @@ export default {
       }
     },
     // 确定收货
-    async confirmGet (orderType, orderId) {
+    async confirmReceipt (orderType, orderId) {
       try {
         await this.$confirm('您确定收货吗？')
         if (orderType === 'PHYSICAL_GOODS') {
@@ -295,18 +307,31 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    async cancelOrder (orderId, index) {
+      try {
+        await this.$confirm('一旦取消，将无法恢复，确认要取消订单？')
+        await cancelOrder(orderId)
+        this.orderList.splice(index, 1)
+      } catch (e) {
+        throw e
+      }
+    },
+    deleteOrder (orderId, index) {
+    },
+    toFreightPage (orderId) {
+      this.$router.push({ name: 'Freight', params: { orderId } })
     }
   }
 }
 </script>
 <style module lang="scss">
-  .orderList {
+  .order-list {
     padding: 22px 24px 120px;
   }
-  .order-box {
+  .order-item {
     margin-bottom: 20px;
-    padding-left: 28px;
-    padding-bottom: 24px;
+    padding: 0 24px 28px;
     border-radius: 20px;
     background-color: #fff;
     > div {
@@ -315,8 +340,7 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        // height: 80px;
-        padding: 22px 24px 36px 0;
+        padding: 22px 0 36px;
         // &:after {
         //   @include border-half-bottom(#e7e7e7);
         // }
@@ -324,13 +348,14 @@ export default {
     }
     .status {
       color: var(--primary-color);
+      font-size: 24px;
+      line-height: 34px;
     }
   }
-  .order-box-bottom {
+  .order-item-bottom {
     margin-top: 16px;
     > div {
       display: flex;
-      padding-right: 24px;
       justify-content: flex-end;
       align-items: baseline;
     }
@@ -380,7 +405,7 @@ export default {
     background: url("../../../assets/images/my/circle.png") no-repeat center center;
     background-size: 100%;
   }
-  .order-box-left {
+  .order-item-left {
     display: inline-flex;
     align-items: center;
   }

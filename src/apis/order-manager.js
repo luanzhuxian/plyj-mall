@@ -27,13 +27,9 @@ export function physicalorderPaymentSuccessVirtual (orderSn) {
 export function returnRequest ({ orderId, operationType, type, refundModel, expressInfoModel }) {
   return axios.put(`/apis/v1/order/physicalorder/refundment/${orderId}?operationType=${operationType}&serviceType=${type}`, { refundModel, expressInfoModel })
 }
-// PUT 用户取消订单-实体
-export function physicalOrderCancellation (orderSn) {
-  return axios.put(`/apis/v1/order/physicalorder/cancellation/${orderSn}`)
-}
-// PUT 用户取消订单-虚拟
-export function virtualOrderCancellation (orderSn) {
-  return axios.put(`/apis/v1/order/virtualorder/cancellation/${orderSn}`)
+// PUT 用户取消订单
+export function cancelOrder (orderId) {
+  return axios.put(`/apis/v1/order/cancel/${orderId}`)
 }
 // PUT 用户发货
 export function physicalorderShipmentPublic (orderSn) {
@@ -41,11 +37,13 @@ export function physicalorderShipmentPublic (orderSn) {
 }
 // 获取订单列表
 // NEW:待提交 WAIT_PAY:待支付 WAIT_SHIP:待发货 WAIT_RECEIVE:待收货 FINISHED:订单完成 WAIT_REFUND:待退款 WAIT_RETURN:等待买家发货 RETURN_RECEIVE:等待商家收货 CLOSED:订单关闭
-export const getOrderList = ({ userId, current, size, orderStatus, assessment, orderSnOrName }) =>
-  axios.get(`/apis/v1/order/ordermanager/page/${userId}?current=${current}&size=${size}&orderStatus=${orderStatus}&assessment=${assessment}&orderSnOrName=${orderSnOrName}`)
+export const getOrderList = ({ current, size, orderStatus }) => {
+  return axios.get(`/apis/v1/order/current/user/page?current=${current}&size=${size}&orderStatus=${orderStatus}`)
+}
 // 查看每种订单的数量
 export function orderPhysicalorderSummary (userId) {
   return axios.get(`/apis/v1/order/ordermanager/summary/${userId}`)
+  // return axios.get(`/apis/v1/order/current/user`)
 }
 // 订单详情
 export function getOrderDetail (orderSn) {
@@ -63,8 +61,12 @@ export const invoiceDetail = (orderNo) => axios.get(`/apis/v1/invoice/OrderInvoi
 // export const submitVirtualOrder = (data, openId = '') => {
 //   return axios.post(`/apis/v1/order/virtualorder/wechat?openId=${openId}`, data)
 // }
+
 // 获取待支付商品支付需要的数据
 export const getAwaitPayInfo = id => axios.get(`/apis/v1/order/ordermanager/unifiedOrder/${id}`)
+// 获取待支付商品支付需要的数据
+export const secondaryPayment = orderId => axios.post(`/apis/v1/order/secondaryPayment/${orderId}`)
+
 // 售后详情
 export const getRefundDetail = orderSn => axios.get(`/apis/v1/order/ordermanager/refund/detail/${orderSn}`)
 
