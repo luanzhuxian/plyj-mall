@@ -57,20 +57,20 @@
           </i>
         </span>
       </pl-checkbox>
-      <div>
+      <div :class="$style.control">
         <span
           v-show="!isManage"
-          class="fz-22 gray-3 mr-10"
+          class="fz-22 gray-3"
         >
           不含运费
         </span>
         <span
           v-show="!isManage"
-          class="fz-24 mr-10"
+          class="fz-24"
         >
           合计：
           <i
-            class="rmb fz-28 primary-color"
+            :class="$style.summation + ' rmb'"
             v-text="summation"
           />
         </span>
@@ -79,7 +79,7 @@
           @click="settlement"
           v-show="!isManage"
         >
-          结算(0)
+          结算({{ checkedList.length }})
         </button>
         <button
           v-show="isManage"
@@ -266,13 +266,25 @@ export default {
     font-size: 22px;
     color: #b0b0b0;
   }
-  .settlement-btn {
-    width: 176px;
-    height: 70px;
-    font-size: 24px;
-    color: #fff;
-    background-color: $--warning-color;
-    border-radius: $--radius2;
+  .control {
+    display: inline-flex;
+    align-items: center;
+    line-height: 50px;
+    > span {
+      margin-right: 12px;
+    }
+    .settlement-btn {
+      width: 176px;
+      height: 70px;
+      font-size: 24px;
+      color: #fff;
+      background-color: $--warning-color;
+      border-radius: $--radius2;
+    }
+    .summation {
+      color: $--primary-color;
+      vertical-align: -2px;
+    }
   }
   .delete {
     width: 120px;
