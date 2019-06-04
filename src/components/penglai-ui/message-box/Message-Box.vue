@@ -151,9 +151,13 @@ export default {
         color: #b4b4b4;
       }
       .main-message {
-        padding: 0 10px;
+        width: 100%;
+        padding: 0 54px;
+        white-space: pre-wrap;
+        word-break: break-all;
         font-size: 34px;
         line-height: 48px;
+        box-sizing: border-box;
       }
     }
   }
@@ -163,7 +167,7 @@ export default {
     button {
       flex: 1;
       border: none;
-      height: 88px;
+      height: 100px;
       font-size: 34px;
       font-weight: 500;
       background-color: #fff;
