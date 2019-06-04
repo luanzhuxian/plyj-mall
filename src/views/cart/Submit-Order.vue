@@ -469,12 +469,12 @@ export default {
         }
       })
     },
-    // 需要发票
     noNeed () {
       this.invioceType = 1
       this.showPopup = false
       localStorage.removeItem('INVOICE_MODEL')
     },
+    // 需要发票
     need () {
       if (!this.selectedAddress.realName) {
         this.$warning('请先选择收货地址')
