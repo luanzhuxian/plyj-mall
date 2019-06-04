@@ -1,17 +1,23 @@
 <template>
   <div :class="$style.invoice">
-    <InvoiceItem
-      v-for="(item, i) of list"
-      :key="i"
-      :data="item"
+    <template v-if="list.length > 0">
+      <InvoiceItem
+        v-for="(item, i) of list"
+        :key="i"
+        :data="item"
+      />
+    </template>
+    <NoContent
+      v-else
+      text="暂无发票信息记录"
+      icon="no-content2"
     />
-
     <router-link
       tag="div"
       :to="{ name: 'AddInvoice' }"
       :class="{
         [$style.addInvoice]: true,
-        [$style.bottom]: list.length > 0,
+        [$style.bottom]: true,
         'fz-28 bold radius-20': true
       }"
     >
@@ -26,12 +32,14 @@
 
 <script>
 import InvoiceItem from '../../../components/item/Invoice-Item.vue'
+import NoContent from '../../../components/No-Content.vue'
 import { getInvoiceList } from '../../../apis/invoice'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Invoice',
   components: {
-    InvoiceItem
+    InvoiceItem,
+    NoContent
   },
   data () {
     return {

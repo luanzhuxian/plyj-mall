@@ -16,6 +16,10 @@ export default {
       type: String,
       default: ''
     },
+    /*
+    * no-content
+    * no-content2
+    * */
     icon: {
       type: String,
       default: 'no-content'
