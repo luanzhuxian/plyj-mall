@@ -52,7 +52,7 @@
 <script>
 import Grade from '../Grade'
 import Price from '../Price.vue'
-import { createBrokerShare } from '../../apis/product'
+import { mapGetters } from 'vuex'
 export default {
   name: 'ShareItem',
   components: {
@@ -61,7 +61,6 @@ export default {
   },
   data () {
     return {
-      loading: false
     }
   },
   props: {
@@ -90,18 +89,14 @@ export default {
       default: ''
     }
   },
+  computed: {
+    ...mapGetters(['userId', 'agentUser'])
+  },
   methods: {
     async buyNow () {
-      if (this.id && !this.loading) {
-        try {
-          this.loading = true
-          let { result } = await createBrokerShare(this.id)
-          this.$router.push({ name: 'Lesson', params: { productSeq: this.id, brokerId: result.sequenceNbr || null } })
-        } catch (e) {
-          throw e
-        } finally {
-          this.loading = false
-        }
+      if (this.id) {
+        const { userId, agentUser } = this
+        this.$router.push({ name: 'Lesson', params: { productSeq: this.id, brokerId: agentUser ? userId : null } })
       }
     }
   }

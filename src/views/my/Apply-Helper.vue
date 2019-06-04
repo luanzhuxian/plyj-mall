@@ -97,7 +97,7 @@ import {
 } from '../../apis/broker-manager'
 import { isPhone, isName, isIdCard } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
-import { REFRESH_TOKEN } from '../../store/mutation-type'
+import { REFRESH_TOKEN, USER_INFO } from '../../store/mutation-type'
 export default {
   name: 'ApplyHelper',
   components: {
@@ -150,6 +150,10 @@ export default {
     async getHelperInfo () {
       try {
         let { result } = await agentUserInfoAudit()
+        if (result.auditStatus === 'PASS') {
+          // 如果审核通过，刷新一下用户信息
+          await this.$store.dispatch(USER_INFO)
+        }
         Object.assign(this.form, result)
       } catch (e) {
         throw e

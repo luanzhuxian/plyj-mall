@@ -18,17 +18,13 @@
             v-text="roleName"
           />
           <router-link
-            v-if="!agentUser && !isAdmin"
             :to="{ name: 'ApplyHelper' }"
             :class="$style.apply"
           >
             <pl-svg name="apply-helper" />
           </router-link>
         </div>
-        <!-- 未登录 -->
-        <!--<pl-svg :class="$style.loginBtn" name="login-btn" />-->
       </div>
-      <!-- 申请helper -->
       <div :class="$style.settingBox">
         <router-link
           v-if="!isAdmin"
@@ -38,7 +34,6 @@
           <pl-svg name="my-setting" />
         </router-link>
       </div>
-      <!-- 设置入口 -->
     </div>
     <!-- 金库 -->
     <div :class="$style.myMoney">

@@ -219,9 +219,7 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import YouLike from './YouLike.vue'
 import CategoryItem from './CategoryItem.vue'
 import { getHomeData, getHomeProduct } from '../../apis/home'
-import { createBrokerShare } from '../../apis/product'
 import { mapGetters } from 'vuex'
-// import { mapGetters } from '../../apis/'
 import 'swiper/dist/css/swiper.css'
 import moment from 'moment'
 
@@ -267,12 +265,11 @@ export default {
         E: []
       },
       maybeLike: [],
-      moment,
-      creatingBroker: false
+      moment
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'agentUser', 'mallName'])
+    ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId'])
   },
   async created () {
     try {
@@ -338,21 +335,9 @@ export default {
     * */
     async toProductDetail (productSeq) {
       let route = {
-        name: 'Lesson', params: { productSeq, brokerId: null }
+        name: 'Lesson', params: { productSeq, brokerId: this.agentUser ? this.userId : null }
       }
-      if (this.agentUser && !this.creatingBroker) {
-        try {
-          this.creatingBroker = true
-          let { result } = await createBrokerShare(productSeq)
-          result = result || {}
-          route.params.brokerId = result.sequenceNbr || null
-        } catch (e) {
-          throw e
-        } finally {
-          this.creatingBroker = false
-          this.$router.push(route)
-        }
-      }
+      this.$router.push(route)
     }
   }
 }

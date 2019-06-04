@@ -224,8 +224,7 @@ export default {
       window.scrollTo(0, 0)
     },
     // 刷新，可以传入一个请求方法，用于替换当前请求方法
-    refresh (requestMethods) {
-      if (requestMethods && requestMethods !== this.requestMethods) this.requestMethods = requestMethods
+    refresh () {
       try {
         this.$nextTick(async () => {
           this.resetState()

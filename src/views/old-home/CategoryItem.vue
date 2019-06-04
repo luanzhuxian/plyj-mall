@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { createBrokerShare } from '../../apis/product'
+import { mapGetters } from 'vuex'
 import Price from '../../components/Price.vue'
 export default {
   name: 'YouLikeItem',
@@ -41,7 +41,6 @@ export default {
   },
   data () {
     return {
-      loading: false
     }
   },
   props: {
@@ -79,20 +78,13 @@ export default {
     },
     isActive: Boolean // 是否加入经济人活动
   },
+  computed: {
+    ...mapGetters(['userId', 'agentUser'])
+  },
   methods: {
     async jump () {
-      if (this.loading) return
-      //     :to="{name: 'Lesson', params: { productSeq: productId, brokerId: '' }}"
-      try {
-        this.loading = true
-        let { result } = await createBrokerShare(this.productId)
-        result = result || {}
-        this.$router.push({ name: 'Lesson', params: { productSeq: this.productId, brokerId: result.sequenceNbr || null } })
-      } catch (e) {
-        throw e
-      } finally {
-        this.loading = false
-      }
+      const { productId, agentUser, userId } = this
+      this.$router.push({ name: 'Lesson', params: { productSeq: productId, brokerId: agentUser ? userId : null } })
     }
   }
 }

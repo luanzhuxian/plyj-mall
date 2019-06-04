@@ -89,7 +89,7 @@ import {
   updateCartProductCount,
   updateCartProductSku
 } from '../../apis/shopping-cart'
-import { createBrokerShare } from '../../apis/product'
+import { mapGetters } from 'vuex'
 export default {
   name: 'CartItem',
   components: {
@@ -131,7 +131,8 @@ export default {
     // 已选数量是否超出库存
     overflowStock () {
       return this.data.cartProductCount > this.currentSkuModel.stock
-    }
+    },
+    ...mapGetters(['agentUser', 'userId'])
   },
   methods: {
     init () {
@@ -188,12 +189,7 @@ export default {
     },
     async goDetail () {
       const productSeq = this.data.cartProductId
-      try {
-        let { result } = await createBrokerShare(productSeq)
-        this.$router.push({ name: 'Lesson', params: { productSeq, brokerId: result.sequenceNbr || null } })
-      } catch (e) {
-
-      }
+      this.$router.push({ name: 'Lesson', params: { productSeq: productSeq, brokerId: this.agentUser ? this.userId : null } })
     }
   }
 }

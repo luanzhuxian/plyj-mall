@@ -49,7 +49,7 @@
 
 <script>
 import Price from '../Price.vue'
-import { createBrokerShare } from '../../apis/product'
+import { mapGetters } from 'vuex'
 export default {
   name: 'LessonItem',
   components: {
@@ -57,7 +57,6 @@ export default {
   },
   data () {
     return {
-      loading: false
     }
   },
   props: {
@@ -101,19 +100,13 @@ export default {
     },
     border: Boolean
   },
+  computed: {
+    ...mapGetters(['userId', 'agentUser'])
+  },
   methods: {
     async handleClick () {
-      if (this.loading) return
-      try {
-        this.loading = true
-        let { result } = await createBrokerShare(this.id)
-        result = result || {}
-        this.$router.push({ name: 'Lesson', params: { productSeq: this.id, brokerId: result.sequenceNbr || null } })
-      } catch (e) {
-        throw e
-      } finally {
-        this.loading = false
-      }
+      const { agentUser, userId, id } = this
+      this.$router.push({ name: 'Lesson', params: { productSeq: id, brokerId: agentUser ? userId : null } })
     }
   }
 }

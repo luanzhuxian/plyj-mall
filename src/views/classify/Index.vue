@@ -56,7 +56,7 @@
 
         <load-more
           ref="loadMore"
-          :request-methods="getProduct"
+          :request-methods="requestMethods"
           :loading.sync="loading"
           :form="form"
           no-content-tip="此分类下还没有商品"
@@ -132,7 +132,7 @@ export default {
       $refresh: null,
       loading: false,
       isEmpty: false,
-      getProduct,
+      requestMethods: getProduct,
       agentShow: false
     }
   },
@@ -158,8 +158,9 @@ export default {
         // 点击的是helper专区
         this.agentShow = true
         this.currentClassify = classify
+        this.requestMethods = getActivityProduct
         this.form = JSON.parse(JSON.stringify(this.helpeFormTemplate))
-        this.$refresh(getActivityProduct)
+        this.$refresh()
         return
       }
       if (classify) {
@@ -169,10 +170,11 @@ export default {
         this.currentClassify.subCategoryName = ''
         if (!this.form.hasOwnProperty('categoryName')) {
           this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
+          this.requestMethods = getProduct
         }
         this.form.categoryCode = classify.sequenceNbr
         this.form.subCategory = ''
-        this.$refresh(getProduct)
+        this.$refresh()
       }
     },
     subClassifyClick ({ cid, name }) {
