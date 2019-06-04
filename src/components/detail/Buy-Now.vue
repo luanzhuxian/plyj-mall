@@ -19,17 +19,20 @@
     <!--&gt;-->
     <!--{{ text }}-->
     <!--</pl-button>-->
-    <div :class="$style.buttons">
+    <div
+      :class="$style.buttons"
+      @click="buttonClick"
+    >
       <button
         :class="$style.addToCart"
-        @click="addToCart"
+        data-method="addToCart"
         :disabled="loading"
       >
         加入购物车
       </button>
       <button
         :class="$style.buyNowBtn"
-        @click="submit"
+        data-method="submit"
         :disabled="loading"
       >
         立即购买
@@ -119,6 +122,9 @@ export default {
           this.submit()
         }
       })
+    },
+    buttonClick (e) {
+      this[e.target.dataset['method']]()
     },
     // 跳转至提交订单页面
     async submit () {
