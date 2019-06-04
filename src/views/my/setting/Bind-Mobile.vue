@@ -184,7 +184,6 @@ export default {
               params,
               query
             })
-            localStorage.removeItem('BIND_MOBILE_FROM')
             this.$toast('绑定手机号成功！')
             return
           }
@@ -197,6 +196,10 @@ export default {
         throw e
       }
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    localStorage.removeItem('BIND_MOBILE_FROM')
+    next()
   }
 }
 </script>

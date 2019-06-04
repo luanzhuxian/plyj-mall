@@ -29,11 +29,10 @@
             :gap-column="24"
             border
           >
-            <template v-slot:suffix>
+            <template v-slot:suffix="{ data }">
               <CartItem
-                :data="item"
-                :key="item.id"
-                @change="proChange"
+                :data="data"
+                :key="data.id"
               />
             </template>
           </pl-checkbox>
@@ -97,7 +96,7 @@
     </template>
 
     <NoContent
-      v-else
+      v-else-if="!loading"
       text="那么多好商品，你都不加入购物车吗？"
     />
 
@@ -113,7 +112,6 @@ import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
 import {
   getCartList,
   deleteCartProducts
-  // confirmCart
 } from '../../apis/shopping-cart'
 export default {
   name: 'ShoppingCart',
@@ -133,7 +131,7 @@ export default {
       summation: 0 // 合计
     }
   },
-  created () {
+  activated () {
     this.loading = true
     try {
       this.getList()
@@ -200,9 +198,6 @@ export default {
       } catch (e) {
         throw e
       }
-    },
-    proChange () {
-      this.getList()
     },
     // 结算
     settlement () {
@@ -294,7 +289,6 @@ export default {
     }
     .summation {
       color: $--primary-color;
-      vertical-align: -2px;
     }
   }
   .delete {

@@ -85,6 +85,8 @@
       :is-supplier-product="isSupplierProduct"
     />
     <specification-pop
+      :default-code="currentModel.optionCode"
+      :default-count="currentModel.count"
       :data="detail.priceModels"
       :product-image="detail.productImage ? detail.productImage[0].mediaUrl : ''"
       :visible.sync="showSpecifica"

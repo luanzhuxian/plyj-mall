@@ -117,7 +117,12 @@ export default {
     * */
     form: {
       type: Object,
-      required: true
+      required: true,
+      default: function () {
+        return {
+          current: 1
+        }
+      }
     },
     noContentTip: {
       type: String,
@@ -140,7 +145,6 @@ export default {
   },
   activated () {
     let el = this.$el
-    /* for the fucking IOS10 */
     el.addEventListener('touchstart', this.touchstart, { passive: true })
     el.addEventListener('touchmove', this.touchMove)
     el.addEventListener('touchend', this.touchend, { passive: true })
@@ -210,9 +214,10 @@ export default {
       this.top = 100
       window.scrollTo(0, 0)
     },
-    // 刷新
-    async refresh () {
+    // 刷新，可以传入一个请求方法，用于替换当前请求方法
+    async refresh (requestMethods) {
       this.options = JSON.parse(JSON.stringify(this.form))
+      if (requestMethods && requestMethods !== this.requestMethods) this.requestMethods = requestMethods
       this.resetState()
       try {
         this.list = await this.getData()
@@ -298,7 +303,6 @@ export default {
   },
   deactivated () {
     let el = this.$el
-    /* for the fucking IOS10 */
     el.removeEventListener('touchstart', this.touchstart)
     el.removeEventListener('touchmove', this.touchMove)
     el.removeEventListener('touchend', this.touchend)
@@ -308,7 +312,6 @@ export default {
   },
   beforeDestroy () {
     let el = this.$el
-    /* for the fucking IOS10 */
     el.removeEventListener('touchstart', this.touchstart)
     el.removeEventListener('touchmove', this.touchMove)
     el.removeEventListener('touchend', this.touchend)

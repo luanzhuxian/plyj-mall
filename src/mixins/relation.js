@@ -54,6 +54,7 @@ export function ChildrenMixin (parent, options = {}) {
 export function ParentMixin (parent) {
   return {
     provide () {
+      console.log(parent, this)
       return {
         [parent]: this
       }

@@ -476,7 +476,8 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    if (to.name !== 'ApplyInvoice') {
+    console.log(to.name)
+    if (to.name !== 'ApplyInvoice' && to.name !== 'Address') {
       localStorage.removeItem('INVOICE_MODEL')
       localStorage.removeItem('CONFIRM_LIST')
       localStorage.removeItem('APPLY_INVOICE')

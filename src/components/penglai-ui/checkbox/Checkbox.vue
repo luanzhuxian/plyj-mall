@@ -35,12 +35,12 @@
         />
         <template v-else>
           <span
-            v-if="checked || localChecked"
+            v-show="checked || localChecked"
             class="icon"
             :style="{ backgroundImage: `url(${checkedIcon})` }"
           />
           <span
-            v-else
+            v-show="!checked && !localChecked"
             class="icon"
             :style="{ backgroundImage: `url(${noChecked})` }"
           />
@@ -48,14 +48,17 @@
       </span>
     </label>
 
-    <slot name="suffix" />
+    <slot
+      name="suffix"
+      :data="data"
+    />
   </div>
 </template>
 
 <script>
-import checkedIcon from './image/checked.png'
-import noChecked from './image/no-checked.png'
-import disabledChecked from './image/disabled-check.png'
+import checkedIcon from '../image/checked.png'
+import noChecked from '../image/no-checked.png'
+import disabledChecked from '../image/disabled-check.png'
 export default {
   name: 'PlCheckbox',
   data () {

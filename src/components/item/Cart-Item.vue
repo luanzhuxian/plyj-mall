@@ -98,6 +98,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       showSpecifica: false,
       currentSkuModel: {},
       skuList: [],
@@ -143,26 +144,27 @@ export default {
       this.currentSkuModel = this.skuList.find(item => item.optionCode === data.cartSkuCode) || {}
     },
     // 改变规格
-    async specChanged (option) {
+    async specChanged (option, old) {
       try {
+        // 请求修改
         const isUpdateSku = await updateCartProductSku({
           id: this.id,
           skuCode: option.optionCode,
           number: option.count
         })
-        // const isUpdateCount = await updateCartProductCount({
-        //   id: this.id,
-        //   number: option.count
-        // })
+        // 刷新显示
         if (isUpdateSku.result) {
           this.currentSkuModel = option
           this.currentSkuCode = option.optionCode
           this.count = option.count
+          this.$emit('change')
+          this.$emit('skuChange')
+        } else {
+          // 修改失败，回滚
+          this.currentSkuModel = old
+          this.currentSkuCode = old.optionCode
+          this.count = old.count
         }
-        // if (isUpdateCount.result) {
-        //   this.count = option.count
-        // }
-        this.$emit('change')
       } catch (e) {
         throw e
       }
@@ -177,6 +179,7 @@ export default {
           next()
           this.count = count
           this.$emit('change')
+          this.$emit('countChange')
         }
       } catch (err) {
         next(err)

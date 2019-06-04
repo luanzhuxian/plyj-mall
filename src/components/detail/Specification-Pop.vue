@@ -125,6 +125,7 @@ export default {
       showBox: false,
       showSpec: false,
       selected: {},
+      oldSelect: {},
       count: 1,
       min: 1,
       stock: 1
@@ -188,6 +189,7 @@ export default {
       }
     },
     change (option) {
+      this.oldSelect = this.selected
       this.selected = option
       this.min = this.count = option.minBuyNum || 1
       this.stock = option.stock
@@ -223,8 +225,14 @@ export default {
       if (this.checkCount(this.count)) {
         this.count = Number.parseInt(this.count)
         this.close()
-        this.$emit('confirm', Object.assign({ count: this.count }, this.selected))
+        this.$emit('confirm', Object.assign({ count: this.count }, this.selected), this.oldSelect, this.revert)
       }
+    },
+    // 回滚（如果规格选择失败，回滚到上一个选择的规格），取决于是否决定这样做
+    revert () {
+      this.selected = this.oldSelect
+      this.min = this.count = this.oldSelect.minBuyNum || 1
+      this.stock = this.oldSelect.stock
     }
   }
 }

@@ -20,7 +20,7 @@
         class="fz-22 gray-4"
         v-else
       >
-        {{ current.optionName }} × {{ current.count }}
+        {{ current.optionName }}  {{ current.count ? `× ${current.count}` : '' }}
       </span>
       <pl-svg name="right" />
     </div>

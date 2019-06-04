@@ -56,7 +56,9 @@
 
         <load-more
           ref="loadMore"
+          :request-methods="getProduct"
           :loading.sync="loading"
+          :form="form"
           no-content-tip="此分类下还没有商品"
           @listState="isEmpty = $event"
         >
@@ -114,27 +116,34 @@ export default {
         categoryName: '全部',
         sequenceNbr: ''
       }],
-      form: {
+      form: {},
+      classifyFormTemplate: {
         categoryCode: '',
         subCategory: '',
         current: 1,
         size: 10,
         productStatus: 'ON_SALE'
       },
+      helpeFormTemplate: {
+        type: '',
+        current: 1,
+        size: 10
+      },
       $refresh: null,
       loading: false,
       isEmpty: false,
-      requestMethods: getProduct,
+      getProduct,
       agentShow: false
     }
   },
   created () {
+    this.form = this.classifyFormTemplate
     this.getCategoryTree()
   },
   mounted () {
     // 去掉prop传参 refs调用
-    this.$refs.loadMore.setForm(this.form)
-    this.$refs.loadMore.setMethods(getProduct)
+    // this.$refs.loadMore.setForm(this.form)
+    // this.$refs.loadMore.setMethods(getProduct)
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
@@ -146,34 +155,24 @@ export default {
     classifyClick (classify) {
       if (this.loading || classify === this.currentClassify) return
       if (classify && (classify.sequenceNbr === '1')) {
+        // 点击的是helper专区
         this.agentShow = true
         this.currentClassify = classify
-        this.form = {
-          type: '',
-          current: 1,
-          size: 10
-        }
-        this.$refs.loadMore.setMethods(getActivityProduct)
-        this.$refs.loadMore.setForm(this.form)
-        // this.requestMethods = getActivityProduct
-        this.$refresh()
+        this.form = JSON.parse(JSON.stringify(this.helpeFormTemplate))
+        this.$refresh(getActivityProduct)
         return
       }
       if (classify) {
+        // 点击分类
         this.agentShow = false
         this.currentClassify = classify
         this.currentClassify.subCategoryName = ''
-        this.$refs.loadMore.setMethods(getProduct)
-        this.form = {
-          categoryCode: '',
-          subCategory: '',
-          current: 1,
-          size: 10,
-          productStatus: 'ON_SALE'
+        if (!this.form.hasOwnProperty('categoryName')) {
+          this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
         }
+        this.$refresh(getProduct)
         this.form.categoryCode = classify.sequenceNbr
         this.form.subCategory = ''
-        this.$refs.loadMore.setForm(this.form)
         this.$refresh()
       }
     },
