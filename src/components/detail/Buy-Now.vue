@@ -199,6 +199,7 @@ export default {
           .catch(() => {})
         return false
       }
+      return true
     }
   }
 }
