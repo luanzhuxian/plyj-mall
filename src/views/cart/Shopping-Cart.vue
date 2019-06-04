@@ -201,7 +201,8 @@ export default {
       await this.$confirm(`确定将这${ids.length}个宝物删除？`)
       try {
         await deleteCartProducts(ids)
-        this.checkedList = []
+        this.products.splice(0, 500)
+        this.checkedList.splice(0, 500)
         this.getList()
       } catch (e) {
         throw e
