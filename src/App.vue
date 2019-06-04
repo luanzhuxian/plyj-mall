@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive>
+    <keep-alive :exclude="[]">
       <router-view v-if="logined" />
     </keep-alive>
 
@@ -29,7 +29,7 @@ export default {
       showNavbar: [
         'Home',
         'My',
-        'Yaji',
+        'ShoppingCart',
         'Classify',
         'WhatsHelper'
       ],

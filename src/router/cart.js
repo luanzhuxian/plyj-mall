@@ -1,8 +1,17 @@
 export default [
   {
-    path: '/order/submit/:productSeq/:optionCode/:count/:brokerId?',
-    name: 'Cart',
-    component: () => import('../views/cart/Cart.vue'),
+    path: '/order/shopping-cart',
+    name: 'ShoppingCart',
+    component: () => import('../views/cart/Shopping-Cart.vue'),
+    props: true,
+    meta: {
+      title: '购物车'
+    }
+  },
+  {
+    path: '/order/submit/:brokerId?',
+    name: 'SubmitOrder',
+    component: () => import('../views/cart/Submit-Order.vue'),
     props: true,
     meta: {
       title: '提交订单'

@@ -19,14 +19,14 @@
 
       <!-- 当前选择的规格 -->
       <specification-box
-        :current="currentSpec"
+        :current="currentModel"
         @click="showSpecifica = true"
         ref="specification"
       />
       <!-- helper 润笔价格 -->
       <helper-price
         v-if="agentProduct"
-        :current="currentSpec"
+        :current="currentModel"
       />
       <!--<DetailOtherInfo type="lesson" />-->
     </DetailInfoBox>
@@ -57,6 +57,7 @@
       <Comment
         :size="3"
         :product-seq="productSeq"
+        :broker-id="brokerId"
       />
     </div>
 
@@ -77,13 +78,17 @@
 
     <buy-now
       type="warning"
-      text="立即购买"
-      @click="buyNow"
       ref="buyNow"
+      :current-model.sync="currentModel"
+      :broker-id="brokerId"
+      :price-models="detail.priceModels"
+      :is-supplier-product="isSupplierProduct"
     />
     <specification-pop
+      :default-code="currentModel.optionCode"
+      :default-count="currentModel.count"
       :data="detail.priceModels"
-      :product-image="detail.productImage"
+      :product-image="detail.productImage ? detail.productImage[0].mediaUrl : ''"
       :visible.sync="showSpecifica"
       @confirm="specChanged"
     />
@@ -140,8 +145,7 @@ export default {
     return {
       banners: [],
       detail: {},
-      currentSpec: {}, // 当前选中的规格
-      buyNowHasClicked: false, // 是否点击过购买按钮
+      currentModel: {}, // 当前选中的规格
       commentForm: {
         current: 1,
         size: 3,
@@ -203,7 +207,8 @@ export default {
         }
         // 统计销售数量
         this.detail = result
-        this.currentSpec = priceModels[0]
+        // 显示选中第一个规格
+        this.currentModel = priceModels[0]
         // 配置分享
         share({
           appId: this.appId,
@@ -220,24 +225,10 @@ export default {
     },
     // 选中规格
     specChanged (option) {
-      this.currentSpec = option
-      if (this.buyNowHasClicked) this.jumpSubmit(option)
-    },
-    // 立即购买
-    buyNow () {
-      if (!this.currentSpec.count) {
-        this.buyNowHasClicked = true
-        this.showSpecifica = true
-        return
-      }
-      this.jumpSubmit(this.currentSpec)
-    },
-    jumpSubmit (option) {
-      this.$refs.buyNow.jumpSubmit(option, this.isSupplierProduct, this.brokerId)
+      this.currentModel = option
     },
     resetState () {
-      this.buyNowHasClicked = false
-      this.currentSpec = {}
+      this.currentModel = {}
       this.banners.splice(0, 1000000)
     }
   }

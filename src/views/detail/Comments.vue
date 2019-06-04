@@ -16,14 +16,11 @@
     </load-more>
     <buy-now
       type="warning"
-      text="立即购买"
-      @click="buyNow"
       ref="buyNow"
-    />
-    <specification-pop
-      :visible.sync="showPop"
-      :data="priceModels"
-      @confirm="popConfirm"
+      :current-model.sync="currentModel"
+      :broker-id="brokerId"
+      :price-models="detail.priceModels"
+      :is-supplier-product="isSupplierProduct"
     />
   </div>
 </template>
@@ -31,11 +28,10 @@
 <script>
 import Comment from '../../components/detail/Comment.vue'
 import BuyNow from '../../components/detail/Buy-Now.vue'
-import SpecificationPop from '../../components/detail/Specification-Pop'
 import TopText from '../../components/Top-Text.vue'
 import loadMore from '../../components/Load-More.vue'
 import { getComments } from '../../apis/comment'
-import { getProductDetail, createBrokerShare } from '../../apis/product'
+import { getProductDetail } from '../../apis/product'
 
 export default {
   name: 'Comments',
@@ -43,8 +39,7 @@ export default {
     Comment,
     BuyNow,
     TopText,
-    loadMore,
-    SpecificationPop
+    loadMore
   },
   data () {
     return {
@@ -54,12 +49,13 @@ export default {
         productSeq: ''
       },
       getComments,
-      showPop: false,
+      showSpecifica: false,
       isSupplierProduct: false,
       priceModels: [],
       detail: {},
       $refresh: null,
-      loading: false
+      loading: false,
+      currentModel: null
     }
   },
   computed: {
@@ -71,12 +67,17 @@ export default {
     productSeq: {
       type: String,
       default: null
+    },
+    brokerId: {
+      type: String,
+      default: null
     }
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
+    this.reset()
     this.$nextTick(() => {
       this.form.productSeq = this.productSeq
       this.$refresh()
@@ -94,21 +95,12 @@ export default {
         throw e
       }
     },
-    async popConfirm (option) {
-      if (this.loading) return
-      try {
-        this.loading = true
-        let { result } = await createBrokerShare(this.productSeq)
-        result = result || {}
-        this.$refs.buyNow.jumpSubmit(option, this.isSupplierProduct, result.sequenceNbr || null)
-      } catch (e) {
-        throw e
-      } finally {
-        this.loading = false
-      }
-    },
-    buyNow () {
-      this.showPop = true
+    reset () {
+      this.currentModel = null
+      this.isSupplierProduct = false
+      this.form.current = 1
+      this.form.size = 1
+      this.form.productSeq = ''
     }
   }
 }

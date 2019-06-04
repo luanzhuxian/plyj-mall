@@ -1,5 +1,11 @@
 <template>
-  <label class="pl-radio">
+  <label
+    class="pl-radio"
+    :style="{
+      display: inline ? 'inline-flex' : 'flex',
+      width: inline ? null : '100%'
+    }"
+  >
     <input
       :checked="label === value"
       type="radio"
@@ -7,7 +13,7 @@
       @change="handleChange"
     >
     <span class="pl-radio-inner" />
-    <span class="pl-radio-text">
+    <span class="pl-radio-content">
       <slot />
     </span>
   </label>
@@ -28,6 +34,9 @@ export default {
     label: {
       type: [String, Boolean, Number],
       default: ''
+    },
+    inline: {
+      type: Boolean
     }
   },
   methods: {
@@ -40,15 +49,12 @@ export default {
 
 <style lang="scss">
   .pl-radio {
-    display: inline-block;
+    align-items: center;
     margin-right: 30px;
     input {
       width: 0;
       height: 0;
       &:checked {
-        ~ .pl-radio-text {
-          color: #999!important;
-        }
         + .pl-radio-inner {
           padding: 4px;
           border: 3px solid $--warning-color;
@@ -57,14 +63,15 @@ export default {
         }
       }
     }
-    .pl-radio-text {
+    .pl-radio-content {
+      flex: 1;
       font-size: 26px;
     }
   }
   .pl-radio-inner {
     display: inline-block;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     margin-right: 12px;
     border: 1px solid #999;
     border-radius: 50%;

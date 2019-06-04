@@ -18,12 +18,13 @@ ToastConstructor.prototype.close = function () {
 export const Toast = (options = {}) => {
   // let instance = getInstance()
   clearTimeout(instance.timer)
-  let duration = options.duration || 3000
+  let duration = options.duration || 2000
   if (typeof options === 'string') {
     instance.message = options
   }
   if (typeof options === 'object') {
     instance.message = options.message
+    instance.type = options.type
   }
   document.body.appendChild(instance.$el)
   Vue.nextTick(() => {

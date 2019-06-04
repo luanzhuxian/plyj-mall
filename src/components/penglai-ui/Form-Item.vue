@@ -1,6 +1,9 @@
 <template>
   <label :class="{'pl-form-item': true, border}">
-    <div class="pl-form-item_prefix">
+    <div
+      v-if="hasPrefix"
+      class="pl-form-item_prefix"
+    >
       <slot name="prefix" />
     </div>
     <span
@@ -14,7 +17,10 @@
     >
       <slot />
     </div>
-    <div class="pl-form-item_suffix">
+    <div
+      v-if="hasSuffix"
+      class="pl-form-item_suffix"
+    >
       <slot name="suffix" />
     </div>
   </label>
@@ -58,10 +64,17 @@ export default {
   mounted () {
     this.setLabelWidth()
   },
+  computed: {
+    hasPrefix () {
+      return this.$slots.hasOwnProperty('prefix')
+    },
+    hasSuffix () {
+      return this.$slots.hasOwnProperty('suffix')
+    }
+  },
   methods: {
     setLabelWidth () {
-      let parentLabelWidth = Number.parseInt(this.$parent.labelWidth)
-
+      let parentLabelWidth = Number.parseInt(this.$parent.labelWidth || this.labelWidth)
       if (parentLabelWidth) {
         this.$refs.label.style.setProperty('--label-width', (parentLabelWidth / 7.5) + 'vw')
       } else {

@@ -42,21 +42,24 @@ export default {
       }
       return true
     },
-    validateByFields (fields) {
+    validateByFields (fields, ev) {
       let validateRules = this.rules[fields]
       let val = this.model[fields] || ''
       for (let rule of validateRules) {
+        if (ev && rule.trigger !== ev.type) {
+          continue
+        }
         if (rule.required) {
           if (!val.trim()) {
             this.error = true
             console.warn(fields + ' is required')
-            this.$toast(rule.message)
+            this.$warning(rule.message)
             return false
           }
         } else if (rule.validator) {
           if (!rule.validator(val)) {
             this.error = true
-            this.$toast(rule.message)
+            this.$warning(rule.message)
             return false
           }
         }

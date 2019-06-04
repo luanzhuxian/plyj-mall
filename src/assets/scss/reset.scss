@@ -10,7 +10,6 @@ body {
   position: relative;
   color: $--font-color_gray1;
   background-color: $--background-color;
-  font-family: $--font-family, sans-serif;
   overflow: auto;
 }
 img, textarea, input {
@@ -19,7 +18,7 @@ img, textarea, input {
 body, h1, h2, h3, h4, h5, i, h6, hr, p, span, a, blockquote, div, table, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td, iframe, label, svg, path, defs {
   margin: 0;
   padding: 0;
-  font-family: $--font-family, sans-serif;
+  font-family: $--font-family;
 }
 svg {
   color: currentColor;
@@ -44,7 +43,15 @@ sub { vertical-align: text-bottom; }
 
 input, select, button { font: 100%  $--font-family; vertical-align: baseline; *vertical-align: middle; outline: none;}
 
-input[type=checkbox], input[type=radio] { vertical-align: middle; }
+input[type=checkbox], input[type=radio] {
+  vertical-align: middle;
+}
+input[type=number] {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+}
 
 textarea { overflow: auto; font: 100%  $--font-family; }
 

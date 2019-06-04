@@ -10,11 +10,13 @@
           v-gallery
           :src="img"
         >
-        <pl-svg
-          class="remove-btn iconfont icon-qingchu"
-          name="close"
-          @click="removeImg(i)"
-        />
+        <div class="remove-btn">
+          <pl-svg
+            class="remove-btn--close iconfont icon-qingchu"
+            name="close"
+            @click="removeImg(i)"
+          />
+        </div>
       </li>
       <li v-if="images.length < count || !count">
         <label class="upload-img-box">
@@ -127,16 +129,24 @@ export default {
       }
       .remove-btn {
         position: absolute;
-        right: -17px;
-        top: -14px;
-        width: 34px;
-        height: 34px;
-        line-height: 34px;
+        right: -15px;
+        top: -18px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
-        fill: red;
-        text-align: center;
-        path {
-          fill: red;
+        fill: #000;
+        background-color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &--close {
+          width: 14px;
+          height: 14px;
+          fill: #FFF;
+          path {
+            fill: #FFF;
+          }
         }
       }
     }
@@ -152,10 +162,10 @@ export default {
     text-align: center;
     span {
       color: #999;
-      font-size: 22px;
+      font-size: 10px;
     }
     svg {
-      width: 36px;
+      width: 40px;
       fill: #999;
     }
   }

@@ -14,7 +14,7 @@
             <div :class="$style.baseInfo">
               <img
                 v-img-error
-                :src="img"
+                :src="productImage"
                 alt=""
               >
               <div :class="$style.baseInfoRight">
@@ -22,7 +22,10 @@
                   :class="$style.price"
                   v-text="selected.price"
                 />
-                <p :class="$style.original">
+                <p
+                  :class="$style.original"
+                  v-if="selected.originPrice"
+                >
                   原价：<del
                     class="rmb"
                     v-text="selected.originPrice"
@@ -42,7 +45,7 @@
                   v-for="(item, i) of data"
                   :key="i"
                   :class="{ [$style.active]: item.optionCode === selected.optionCode }"
-                  @click="change(item)"
+                  @click.stop="change(item)"
                   v-text="item.optionName"
                 />
               </ul>
@@ -58,7 +61,7 @@
               <div :class="$style.countCtr">
                 <button
                   :disabled="count <= min"
-                  @click="minus"
+                  @click.stop="minus"
                 >
                   -
                 </button>
@@ -69,7 +72,7 @@
                 >
                 <button
                   :disabled="count >= stock"
-                  @click="add"
+                  @click.stop="add"
                 >
                   +
                 </button>
@@ -80,7 +83,7 @@
             :class="$style.confirm"
             size="large"
             type="warning"
-            @click="confirm"
+            @click.stop="confirm"
           >
             确定
           </pl-button>
@@ -103,10 +106,18 @@ export default {
       }
     },
     productImage: {
-      type: Array,
-      default: function () {
-        return [{}]
-      }
+      type: String,
+      default: ''
+    },
+    // 默认数量
+    defaultCount: {
+      type: Number,
+      default: 0
+    },
+    // 默认选中的规格
+    defaultCode: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -114,24 +125,33 @@ export default {
       showBox: false,
       showSpec: false,
       selected: {},
+      oldSelect: {},
       count: 1,
       min: 1,
       stock: 1
     }
   },
-  computed: {
-    img: function () {
-      return this.productImage[0].mediaUrl || ''
-    }
-  },
   watch: {
-    data (val) {
-      this.selected = val[0]
-      this.min = this.count = val[0].minBuyNum || 1
-      this.stock = val[0].stock
+    data: {
+      handler (val) {
+        if (val && val.length > 0) {
+          this.init()
+          // this.selected = val[0]
+          // this.min = this.count = val[0].minBuyNum || 1
+          // this.stock = val[0].stock
+        }
+      },
+      deep: true,
+      immediate: true
     },
     visible (val) {
       this.setShow(val)
+    },
+    defaultCount () {
+      this.init()
+    },
+    defaultCode () {
+      this.init()
     }
   },
   created () {
@@ -140,6 +160,20 @@ export default {
   methods: {
     close () {
       this.$emit('update:visible', false)
+    },
+    init () {
+      this.count = this.defaultCount
+      const currentSku = this.data.find(item => item.optionCode === this.defaultCode)
+      if (currentSku) {
+        this.selected = currentSku || {}
+      } else {
+        this.selected = this.data[0] || {}
+      }
+      this.min = this.selected.minBuyNum || 1
+      if (!this.count) {
+        this.count = this.min
+      }
+      this.stock = this.selected.stock
     },
     setShow (show) {
       if (show) {
@@ -155,6 +189,7 @@ export default {
       }
     },
     change (option) {
+      this.oldSelect = this.selected
       this.selected = option
       this.min = this.count = option.minBuyNum || 1
       this.stock = option.stock
@@ -162,11 +197,11 @@ export default {
     countChange () {
       if (this.count <= this.min) {
         this.count = this.min
-        this.$toast(`此规格最小购买量为${this.min}`)
+        this.$warning(`此规格最小购买量为${this.min}`)
       }
       if (this.count >= this.stock) {
         this.count = this.stock
-        this.$toast(`购买数量不能大于库存`)
+        this.$warning(`购买数量不能大于库存`)
       }
     },
     minus () {
@@ -177,11 +212,11 @@ export default {
     },
     checkCount (count) {
       if (count < this.min) {
-        this.$toast(`此规格最小购买量为${this.min}`)
+        this.$warning(`此规格最小购买量为${this.min}`)
         return false
       }
       if (count > this.stock) {
-        this.$toast(`购买数量不能大于库存`)
+        this.$warning(`购买数量不能大于库存`)
         return false
       }
       return true
@@ -190,8 +225,14 @@ export default {
       if (this.checkCount(this.count)) {
         this.count = Number.parseInt(this.count)
         this.close()
-        this.$emit('confirm', Object.assign({ count: this.count }, this.selected))
+        this.$emit('confirm', Object.assign({ count: this.count }, this.selected), this.oldSelect, this.revert)
       }
+    },
+    // 回滚（如果规格选择失败，回滚到上一个选择的规格），取决于是否决定这样做
+    revert () {
+      this.selected = this.oldSelect
+      this.min = this.count = this.oldSelect.minBuyNum || 1
+      this.stock = this.oldSelect.stock
     }
   }
 }
@@ -276,7 +317,9 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     max-height: 300px;
+    padding: 5px;
     overflow: auto;
+    box-sizing: border-box;
     li {
       position: relative;
       line-height: 54px;
@@ -290,7 +333,7 @@ export default {
         background: none;
         color: $--primary-color;
         &:after {
-          @include border-half($--primary-color, 20px)
+          @include border-half($--primary-color, 18px)
         }
       }
     }

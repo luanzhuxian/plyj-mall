@@ -44,3 +44,7 @@ export const saveLog = data =>
 
 // 获取当前用户信息
 export const refreshToken = refreshToken => axios.get(`/apis/v1/privilege/auth/refresh?refreshToken=${refreshToken}`)
+
+// 修改用户头像，昵称
+export const userInfoSettings = data =>
+  axios.post('/apis/v1/base/baseUserInfo/settings', data)

@@ -1,7 +1,5 @@
 <template>
   <button
-    :disabled="disabled || loading"
-    @click.stop="handleClick"
     :class="{
       'pl-button': true,
       [`pl-button__${type}`]: true,
@@ -10,6 +8,8 @@
       'plain': plain,
       'shadow': shadow
     }"
+    :disabled="disabled || loading"
+    @click.stop="handleClick"
   >
     <span>
       <pl-svg
@@ -87,7 +87,7 @@ export default {
       box-shadow: 0 4px 20px rgba(153, 153, 153, 0.2);
     }
     /* 默认的 */
-    &.pl-button__default {
+    &__default {
       background-color: $--font-color_gray3;
       color: #fff;
       &:active {
@@ -98,7 +98,7 @@ export default {
       }
     }
     /* 主色调 */
-    &.pl-button__primary {
+    &__primary {
       background-color: $--primary-color;
       color: #fff;
       &:active {
@@ -109,7 +109,7 @@ export default {
       }
     }
     /* 警告色 */
-    &.pl-button__warning {
+    &__warning {
       background-color: $--warning-color;
       color: #fff;
       &:active {
@@ -120,18 +120,37 @@ export default {
         color: $--warning-color
       }
     }
-    &.pl-button__text {
+    &__text {
       background-color: transparent;
       font-size: 26px;
       color: $--primary-color;
       padding: 0 !important;
       margin: 0 !important;
     }
+    &__mini {
+      padding: 0 18px;
+      height: 40px;
+      font-size: 20px;
+      border-radius: 10px;
+      &.round {
+        border-radius: 20px;
+      }
+      &.plain {
+        &:after {
+          @include border-half(currentColor, 40px)
+        }
+      }
+      .pl-button__prefix-icon, .pl-button__loading {
+        width: 20px;
+        vertical-align: -1px;
+        fill: currentColor;
+      }
+    }
     /* small */
-    &.pl-button__small {
-      padding: 0 22px;
+    &__small {
+      padding: 0 32px;
       height: 50px;
-      font-size: 26px;
+      font-size: 24px;
       border-radius: 10px;
       &.round {
         border-radius: 25px;
@@ -148,7 +167,7 @@ export default {
       }
     }
     /* middle */
-    &.pl-button__middle {
+    &__middle {
       padding: 0 22px;
       line-height: 60px;
       font-size: 28px;
@@ -167,7 +186,7 @@ export default {
       }
     }
     /* large */
-    &.pl-button__large {
+    &__large {
       width: 100%;
       height: 80px;
       font-size: 28px;
@@ -181,7 +200,7 @@ export default {
       }
     }
     /* huge */
-    &.pl-button__huge {
+    &__huge {
       width: 100%;
       height: 108px;
       font-size: 36px;
@@ -194,7 +213,20 @@ export default {
         fill: currentColor;
       }
     }
-
+    /* larger */
+    &__larger {
+      width: 100%;
+      height: 90px;
+      font-size: 32px;
+      border-radius: 10px;
+      text-align: center;
+      .pl-button__prefix-icon, .pl-button__loading {
+        width: 35px;
+        margin-right: 5px;
+        fill: currentColor;
+        vertical-align: -7px;
+      }
+    }
   }
 
   .pl-button__loading {

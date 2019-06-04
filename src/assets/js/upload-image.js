@@ -41,14 +41,14 @@ export function compress (file, size, fileType) {
       if (size <= file.size) {
         file = await compressImage(file)
         if (fileType === 'base64') {
-          let base64 = await blobToBase64(file)
+          const base64 = await blobToBase64(file)
           resolve(base64)
         } else {
           resolve(file)
         }
       } else {
         if (fileType === 'base64') {
-          let base64 = await blobToBase64(file)
+          const base64 = await blobToBase64(file)
           resolve(base64)
         } else {
           resolve(file)
@@ -60,9 +60,9 @@ export function compress (file, size, fileType) {
   })
 }
 export async function upload ({ file }) {
-  let ext
+  let ext = null
   try {
-    ext = /.jpg|.png|.gif|.jpeg|.bmp/i.exec(file.name)[0] || ''
+    ext = /jpg|png|gif|jpeg|bmp/i.exec(file.type)[0] || ''
   } catch (e) {
     throw new Error('不允许的图片格式')
   }
@@ -75,7 +75,7 @@ export async function upload ({ file }) {
     }
     EXPIRATION = new Date(credentials.expiration).getTime()
   }
-  let { securityToken, accessKeySecret, accessKeyId } = STS
+  const { securityToken, accessKeySecret, accessKeyId } = STS
   const client = new OSS({
     region: REGION,
     accessKeyId: accessKeyId,
@@ -83,7 +83,7 @@ export async function upload ({ file }) {
     stsToken: securityToken,
     bucket: BUCKET
   })
-  let key = `img/${randomString(99)}${ext}`
+  const key = `img/${randomString()}.${ext}`
   return client.put(key, file)
 }
 function compressImage (file) {
@@ -101,7 +101,7 @@ function compressImage (file) {
 }
 export function blobToBase64 (blob) {
   return new Promise((resolve, reject) => {
-    let reader = new FileReader()
+    const reader = new FileReader()
     reader.onload = function () {
       resolve(reader.result.split(',')[1])
     }
@@ -109,15 +109,17 @@ export function blobToBase64 (blob) {
   })
 }
 // 生成随机字符串
-function randomString (len) {
-  let date = new Date()
+function randomString () {
+  // 随机串的长度为 10 ~ 100 的随机数
+  const len = Number.parseInt(Math.random() * 91 + 10)
+  const date = new Date()
   // 48~57 数字， 65~90 大写，  97~122 小写
   const LIB = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
-  let parseInt = Number.parseInt
-  let random = Math.random
-  let randomStr = []
+  const parseInt = Number.parseInt
+  const random = Math.random
+  const randomStr = []
   for (let i = 0; i < len; i++) {
-    let index = parseInt(random() * 62)
+    const index = parseInt(random() * 62)
     randomStr.push(LIB[index])
   }
   let dateString = `
@@ -130,4 +132,20 @@ function randomString (len) {
   `
   dateString = dateString.replace(/\s/g, '')
   return randomStr.join('') + dateString
+}
+
+export function createObjectUrl (blob) {
+  let url
+  if (window.createObjectURL) { // basic
+    url = window.createObjectURL(blob)
+  } else if (window.URL) { // mozilla(firefox)
+    url = window.URL.createObjectURL(blob)
+  } else if (window.webkitURL) { // webkit or chrome
+    url = window.webkitURL.createObjectURL(blob)
+  }
+  return url
+}
+
+export function revokeObjectURL (URL) {
+  window.URL.revokeObjectURL(URL)
 }

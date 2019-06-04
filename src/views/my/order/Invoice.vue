@@ -47,12 +47,14 @@
             <pl-radio
               v-model="form.invoiceType"
               :label="0"
+              inline
             >
               个人或事业单位
             </pl-radio>
             <pl-radio
               v-model="form.invoiceType"
               :label="1"
+              inline
             >
               企业
             </pl-radio>
@@ -150,7 +152,7 @@
 import { applyOrderInvoice, getOrderDetail } from '../../../apis/order-manager'
 import { checkLength } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
-import AddressItem from '../../../components/Address-Item.vue'
+import AddressItem from '../../../components/item/Address-Item.vue'
 export default {
   name: 'Invoice',
   components: {

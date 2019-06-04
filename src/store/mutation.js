@@ -58,5 +58,11 @@ export default {
     Cookie.remove('refresh_token')
     Cookie.remove('token')
     window.location.reload()
+  },
+  [type.SET_AVATAR] (state, payload) {
+    state.userInfo.img = payload
+  },
+  [type.SET_USERNAME] (state, payload) {
+    state.userInfo.userName = payload
   }
 }

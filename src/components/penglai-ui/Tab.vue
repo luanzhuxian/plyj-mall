@@ -3,10 +3,13 @@
     <div
       v-for="(item, i) of tabs"
       :key="i"
-      v-text="item[options.name]"
+      class="pl-tab__pane"
       :class="{ active: item[options.id] === currentId }"
       @click="handleClick(item)"
-    />
+    >
+      {{ item[options.name] }}
+      <slot :name="'tab-pane-' + i" />
+    </div>
   </div>
 </template>
 
@@ -36,6 +39,10 @@ export default {
     activeId: {
       type: [String, Number],
       default: ''
+    },
+    count: {
+      type: Object,
+      default: null
     }
   },
   data () {
@@ -86,7 +93,7 @@ export default {
         line-height: 100px;
       }
     }
-    > div {
+    &__pane {
       position: relative;
       &:after {
         position: absolute;

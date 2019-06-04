@@ -5,7 +5,7 @@ const refresh_token = Cookie.get('refresh_token') || ''
 export default {
   theme: 'base-theme',
   userInfo: {
-    agentUser: false,
+    isAgentUser: false,
     applyBalance: 0,
     awaitBalance: 0,
     balance: 0,
@@ -55,7 +55,7 @@ export default {
   },
   orderStatusMap: {
     NEW: '待提交',
-    WAIT_PAY: '待支付',
+    WAIT_PAY: '待付款',
     WAIT_SHIP: '待发货',
     WAIT_RECEIVE: '待收货',
     FINISHED: '订单完成',

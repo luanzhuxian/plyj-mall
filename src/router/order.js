@@ -26,23 +26,23 @@ export default [
       title: '发表评论'
     }
   },
-  {
-    path: '/my/orders/invoice/:orderId',
-    name: 'Invoice',
-    component: () => import('../views/my/order/Invoice.vue'),
-    props: true,
-    meta: {
-      title: '申请发票'
-    }
-  },
-  {
-    path: '/my/orders/invoice/:id/content',
-    name: 'InvoiceContent',
-    component: () => import('../views/my/order/Invoice-Content.vue'),
-    meta: {
-      title: '选择发票内容'
-    }
-  },
+  // {
+  //   path: '/my/orders/invoice/:orderId',
+  //   name: 'Invoice',
+  //   component: () => import('../views/my/order/Invoice.vue'),
+  //   props: true,
+  //   meta: {
+  //     title: '申请发票'
+  //   }
+  // },
+  // {
+  //   path: '/my/orders/invoice/:id/content',
+  //   name: 'InvoiceContent',
+  //   component: () => import('../views/my/order/Invoice-Content.vue'),
+  //   meta: {
+  //     title: '选择发票内容'
+  //   }
+  // },
   {
     path: '/my/orders/invoice/:orderId/detail',
     name: 'InvoiceDetail',
@@ -53,12 +53,29 @@ export default [
     }
   },
   {
-    path: '/my/orders/refund-apply/:orderId',
+    path: '/my/orders/refund/:orderId',
+    name: 'Refund',
+    component: () => import('../views/my/order/Refund.vue'),
+    props: true,
+    meta: {
+      title: '申请退款'
+    }
+  },
+  {
+    path: '/my/orders/refund-apply/:orderId/:refundType',
     name: 'RefundApply',
     component: () => import('../views/my/order/Refund-Apply.vue'),
     props: true,
     meta: {
       title: '申请退款'
+    }
+  },
+  {
+    path: '/my/order/refund-list',
+    name: 'RefundList',
+    component: () => import('../views/my/order/Refund-List.vue'),
+    meta: {
+      title: '售后列表'
     }
   },
   {
@@ -68,14 +85,6 @@ export default [
     props: true,
     meta: {
       title: '退款详情'
-    }
-  },
-  {
-    path: '/my/order/refund-list',
-    name: 'RefundList',
-    component: () => import('../views/my/order/Refund-List.vue'),
-    meta: {
-      title: '售后列表'
     }
   },
   {

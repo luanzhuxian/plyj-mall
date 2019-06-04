@@ -8,7 +8,19 @@
       class="pl-toast"
       v-show="show"
     >
-      <span>{{ message }}</span>
+      <i
+        v-if="type === 'warning'"
+        class="pl-icon icon-jinggao"
+      />
+      <i
+        v-if="type === 'success'"
+        class="pl-icon icon-chenggong"
+      />
+      <i
+        v-if="type === 'error'"
+        class="pl-icon icon-shibai"
+      />
+      <span class="toast-message">{{ message }}</span>
     </div>
   </transition>
 </template>
@@ -23,7 +35,8 @@ export default {
       show: false,
       message: '',
       duration: '',
-      timer: 0
+      timer: 0,
+      type: ''
     }
   }
 }
@@ -36,23 +49,26 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     max-width: 80%;
-    height: max-content;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 30px;
+    padding: 58px 62px;
+    word-break: keep-all;
     background-color: rgba(0, 0, 0, .7);
     color: #fff;
-    white-space: wrap;
     text-align: center;
-    border-radius: 20px;
+    border-radius: 4px;
     z-index: 9999;
     svg {
       width: 72px;
       fill: #fff;
     }
-    span {
+    .toast-message {
+      margin-top: 16px;
       font-size: 28px;
+    }
+    .pl-icon {
+      font-size: 72px;
     }
   }
 </style>

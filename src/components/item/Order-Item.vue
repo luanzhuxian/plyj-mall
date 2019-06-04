@@ -1,8 +1,11 @@
 <template>
   <div
     :class="{
-      [$style.orderItem]: true,
-      [$style.border]: border
+      [$style[size]]: true,
+      [$style.orderItem]: true
+    }"
+    :style="{
+      marginBottom: gap / 7.5 + 'vw'
     }"
     @click="handleClick"
   >
@@ -12,24 +15,66 @@
       alt="商品图片"
     >
     <div :class="$style.right">
-      <div :class="$style.rightTop">
-        <div
-          :class="$style.name"
-          v-text="name"
-        />
-        <div
-          :class="$style.price+' rmb'"
-          v-text="price"
-        />
+      <div>
+        <div :class="$style.rightTop">
+          <div
+            :class="$style.name"
+            v-text="name"
+          />
+          <div :class="$style.priceWrapper">
+            <div
+              :class="$style.price + ' rmb'"
+              v-text="price"
+            />
+            <div
+              :class="$style.count"
+              v-text="count"
+            />
+          </div>
+        </div>
+        <div :class="$style.rightBottom">
+          <div
+            :class="{
+              [$style.specification]: true,
+              [$style.isSubmit]: isSubmit
+            }"
+            v-text="option"
+          />
+          <div
+            v-if="time"
+            :class="$style.date"
+          >
+            <span>时间：</span>
+            <span v-text="time" />
+          </div>
+        </div>
       </div>
-      <div :class="$style.rightBottom">
-        <div
-          :class="$style.specification"
-          v-text="option"
-        />
-        <div
-          :class="$style.count"
-          v-text="count"
+      <div :class="$style.refundInfo">
+        <div>
+          <span
+            :class="$style.tip"
+            v-if="productType !== 0 && productType === 1"
+          >
+            支持开具发票
+          </span>
+          <span
+            :class="$style.tip"
+            v-if="productType !== 0 && productType === 2"
+          >
+            不支持开具发票
+          </span>
+          <span
+            :class="$style.tip"
+            v-if="productType !== 0 && productType === 2"
+          >
+            暂不支持退换货
+          </span>
+        </div>
+
+        <span
+          v-if="status"
+          :class="$style.status"
+          v-text="status"
         />
       </div>
     </div>
@@ -47,7 +92,15 @@ export default {
     }
   },
   props: {
-    border: Boolean,
+    // 两个item之间的间距
+    gap: {
+      type: Number,
+      default: 30
+    },
+    size: {
+      type: String,
+      default: 'medium'
+    },
     img: {
       type: String,
       default: ''
@@ -75,6 +128,23 @@ export default {
     routeName: {
       type: String,
       default: ''
+    },
+    time: {
+      type: String,
+      default: ''
+    },
+    status: {
+      type: String,
+      default: ''
+    },
+    // 是否在提交订单处展示，这里样式有所不同
+    isSubmit: {
+      type: Boolean
+    },
+    // 商品类型（1:实体, 2:虚拟）
+    productType: {
+      type: Number,
+      default: 0
     }
   },
   watch: {
@@ -121,49 +191,105 @@ export default {
     position: relative;
     display: flex;
     width: 100%;
-    &.border {
-      &:after {
-        @include border-half-bottom(#e7e7e7);
-      }
-      padding-bottom: 30px;
+    &:nth-last-of-type(1) {
+      margin-bottom: 0 !important;
     }
     > img {
-      width: 140px;
-      height: 140px;
+      border-radius: $--radius2;
       object-fit: cover;
     }
-  }
-  .right {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    padding: 0 28px 0 18px;
-  }
-  .right-top {
-    display: flex;
-    justify-content: space-between;
-    font-size: 24px;
-    .name {
-      width: 290px;
-      color: #454553;
+    .right {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .right-top {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding-right: 100px;
+      height: 52px;
+      .name {
+        flex: 1;
+        line-height: 26px;
+        color: #454553;
+        font-size: 22px;
+        @include elps-wrap(2);
+      }
+      .price-wrapper {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+      .price {
+        font-size: 24px;
+      }
+      .count {
+        text-align: right;
+        color: #999;
+        font-size: 22px;
+        &::before {
+          content: 'x';
+        }
+      }
+    }
+    .right-bottom {
+      display: flex;
+      color: #999;
+      font-size: 20px;
+    }
+    .specification {
+      color: #999;
+      font-size: 20px;
       @include elps-wrap(2);
+      &.isSubmit {
+        padding: 0 8px;
+        line-height: 44px;
+        background-color: #f9f9f9;
+        border-radius: $--radius2;
+      }
     }
-    .price {
-      margin-left: 20px;
+    .refund-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      > .status {
+        color: #F2B036;
+      }
+      .tip {
+        font-size: 22px;
+        color: #999;
+      }
     }
-  }
-  .specification {
-    width: 290px;
-    @include elps-wrap(2)
-  }
-  .right-bottom {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-    color: #999;
-    font-size: 22px;
-    .count:before {
-      content: 'x';
+    &.medium {
+      > img {
+        width: 164px;
+        height: 164px;
+      }
+      .right {
+        padding-left: 24px;
+      }
+      .right-top {
+        .refund-info > .status {
+          font-size: 24px;
+        }
+      }
+    }
+    &.small {
+      > img {
+        width: 140px;
+        height: 140px;
+      }
+      .right {
+        padding-left: 16px;
+      }
+      .right-top {
+        .refund-info > .status {
+          font-size: 24px;
+        }
+      }
     }
   }
 </style>

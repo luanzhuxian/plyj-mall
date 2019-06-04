@@ -53,11 +53,12 @@
           v-text="currentClassify.subCategoryName || currentClassify.categoryName"
           v-show="!isEmpty"
         />
+
         <load-more
-          :request-methods="getProduct"
-          :form="form"
           ref="loadMore"
+          :request-methods="getProduct"
           :loading.sync="loading"
+          :form="form"
           no-content-tip="此分类下还没有商品"
           @listState="isEmpty = $event"
         >
@@ -69,7 +70,8 @@
                 :id="item.sequenceNbr"
                 :title="item.productName"
                 :desc="item.productDesc"
-                :price="item.productOptions[0].price"
+                :price="item.priceModels?item.priceModels[0].price:item.productOptions[0].price"
+                :agent-price="item.priceModels?item.priceModels[0].agentPrice:''"
                 :img="item.productImage[0].mediaUrl"
               />
             </div>
@@ -81,15 +83,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import GoodsItem from '../../components/item/Goods-Item.vue'
 import ClassifyItem from '../../components/item/Classify-Item.vue'
 import LoadMore from '../../components/Load-More.vue'
-import {
-  getCategoryTree,
-  getProduct
-} from '../../apis/classify'
+import { getCategoryTree, getProduct } from '../../apis/classify'
+import { getActivityProduct } from '../../apis/broker'
 export default {
   name: 'Classify',
+  computed: {
+    ...mapGetters(['agentUser'])
+  },
   components: {
     GoodsItem,
     ClassifyItem,
@@ -112,22 +116,34 @@ export default {
         categoryName: '全部',
         sequenceNbr: ''
       }],
-      form: {
+      form: {},
+      classifyFormTemplate: {
         categoryCode: '',
         subCategory: '',
         current: 1,
         size: 10,
         productStatus: 'ON_SALE'
       },
+      helpeFormTemplate: {
+        type: '',
+        current: 1,
+        size: 10
+      },
       $refresh: null,
       loading: false,
-      isEmpty: false
+      isEmpty: false,
+      getProduct,
+      agentShow: false
     }
   },
   created () {
+    this.form = this.classifyFormTemplate
     this.getCategoryTree()
   },
   mounted () {
+    // 去掉prop传参 refs调用
+    // this.$refs.loadMore.setForm(this.form)
+    // this.$refs.loadMore.setMethods(getProduct)
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
@@ -136,15 +152,27 @@ export default {
     }
   },
   methods: {
-    getProduct,
     classifyClick (classify) {
       if (this.loading || classify === this.currentClassify) return
+      if (classify && (classify.sequenceNbr === '1')) {
+        // 点击的是helper专区
+        this.agentShow = true
+        this.currentClassify = classify
+        this.form = JSON.parse(JSON.stringify(this.helpeFormTemplate))
+        this.$refresh(getActivityProduct)
+        return
+      }
       if (classify) {
+        // 点击分类
+        this.agentShow = false
         this.currentClassify = classify
         this.currentClassify.subCategoryName = ''
+        if (!this.form.hasOwnProperty('categoryName')) {
+          this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
+        }
+        this.$refresh(getProduct)
         this.form.categoryCode = classify.sequenceNbr
         this.form.subCategory = ''
-        this.form.current = 1
         this.$refresh()
       }
     },
@@ -160,6 +188,12 @@ export default {
       try {
         const { result } = await getCategoryTree()
         this.classifyList = this.classifyList.concat(result)
+        if (this.agentUser) {
+          this.classifyList.push({
+            categoryName: 'helper专区',
+            sequenceNbr: '1'
+          })
+        }
         this.classifyClick(this.classifyList.find(item => item.sequenceNbr === (this.optionId || '')))
       } catch (e) {
         throw e

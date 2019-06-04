@@ -1,4 +1,6 @@
 import './lib/transition.scss'
+import './fonts/iconfont.css'
+import './fonts/iconfont.js'
 import Button from './Button.vue'
 import Input from './Input.vue'
 import GetCode from './Get-Code.vue'
@@ -13,6 +15,11 @@ import Switch from './Switch.vue'
 import PlSvg from './Pl-Svg.vue'
 import MessageBox from './message-box'
 import Selector from './Selector.vue'
+import Checkbox from './checkbox/Checkbox.vue'
+import CheckboxGroup from './checkbox/Checkbox-Group.vue'
+import RadioComponent from './radio/Radio.vue'
+import RadioGroupComponent from './radio/Radio-Group.vue'
+import Popup from './Popup.vue'
 import { Toast } from './toast'
 const components = [
   Button,
@@ -28,7 +35,12 @@ const components = [
   PlSvg,
   Switch,
   MessageBox,
-  Selector
+  Selector,
+  Checkbox,
+  CheckboxGroup,
+  RadioComponent,
+  RadioGroupComponent,
+  Popup
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {
@@ -47,6 +59,24 @@ const install = function (Vue, opts = {}) {
     zIndex: opts.size || 2000
   }
   Vue.prototype.$toast = Toast
+  Vue.prototype.$error = message => {
+    Toast({
+      type: 'error',
+      message
+    })
+  }
+  Vue.prototype.$success = message => {
+    Toast({
+      type: 'success',
+      message
+    })
+  }
+  Vue.prototype.$warning = message => {
+    Toast({
+      type: 'warning',
+      message
+    })
+  }
 }
 
 export default {
@@ -64,5 +94,8 @@ export default {
   PlSvg,
   Switch,
   MessageBox,
-  Selector
+  Selector,
+  Checkbox,
+  CheckboxGroup,
+  Popup
 }

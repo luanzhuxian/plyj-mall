@@ -42,7 +42,7 @@ export default {
         font-size: 40px;
       }
       > p {
-        margin-top: 14px;
+        margin-top: 8px;
         color: #999;
         font-size: 28px;
       }

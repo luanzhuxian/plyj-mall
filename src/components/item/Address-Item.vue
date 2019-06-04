@@ -4,8 +4,11 @@
     v-if="data.realName"
     @click="addressList"
   >
-    <pl-svg name="address3" />
-    <div :class="$style.right+' fz-28'">
+    <pl-svg
+      :class="$style.address3"
+      name="address3"
+    />
+    <div :class="$style.right">
       <div :class="$style.name">
         {{ data.realName }} <i
           class="bold"
@@ -17,6 +20,11 @@
         v-text="data.addressPrefix + data.agencyAddress"
       />
     </div>
+    <pl-svg
+      :class="$style.rightIcon"
+      name="right"
+      color="#cdcdcd"
+    />
   </div>
   <div
     v-else
@@ -27,13 +35,15 @@
     }"
   >
     <span>点击这里，添加一个新地址</span>
-    <pl-svg name="add" />
+    <pl-svg
+      name="add"
+      color="#fff"
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { setSession } from '../assets/js/util'
 export default {
   name: 'AddressItem',
   computed: {
@@ -52,21 +62,11 @@ export default {
   },
   methods: {
     addressList () {
-      let { name, params, query } = this.$route
-      setSession('addressReturn', {
-        name,
-        params,
-        query
-      })
+      localStorage.setItem('ADDRESS_RETURN', JSON.stringify(this.$route))
       this.$router.push({ name: 'Address' })
     },
     addAddress () {
-      let { name, params, query } = this.$route
-      setSession('addressReturn', {
-        name,
-        params,
-        query
-      })
+      localStorage.setItem('ADDRESS_RETURN', JSON.stringify(this.$route))
       this.$router.push({ name: 'AddAddress' })
     }
   }
@@ -78,23 +78,31 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 28px 28px 28px 0;
+    padding: 28px 24px;
     background-color: #fff;
     border-radius: 20px;
     min-height: 100px;
-    svg {
+    .address3 {
       width: 64px;
       height: 64px;
-      margin-left: 28px;
       margin-right: 28px;
       fill: $--warning-color;
+    }
+    .rightIcon {
+      width: 18px;
+      transform: scaleY(1.2);
     }
     .right {
       display: flex;
       flex: 1;
       flex-direction: column;
       .name {
-        margin-bottom: 15px;
+        margin-bottom: 18px;
+        font-size: 28px;
+        color: #2e2e2e;
+      }
+      .address {
+        font-size: 24px;
       }
     }
   }

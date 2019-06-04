@@ -100,7 +100,6 @@ import TopText from '../../../components/Top-Text.vue'
 import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import { REFRESH_TOKEN } from '../../../store/mutation-type'
-import { getSession } from '../../../assets/js/util'
 export default {
   name: 'BindMobile',
   components: {
@@ -177,11 +176,14 @@ export default {
         } else {
           this.loading = true
           await bindMobile(this.bindForm)
-          let { name, params, query } = getSession('willBind')
+          let { name, params, query } = localStorage.getItem('BIND_MOBILE_FROM')
           if (name) {
             await this.$store.dispatch(REFRESH_TOKEN)
-            this.$router.replace({ name, params, query })
-            sessionStorage.removeItem('willBind')
+            this.$router.replace({
+              name,
+              params,
+              query
+            })
             this.$toast('绑定手机号成功！')
             return
           }
@@ -194,6 +196,10 @@ export default {
         throw e
       }
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    localStorage.removeItem('BIND_MOBILE_FROM')
+    next()
   }
 }
 </script>
