@@ -170,10 +170,9 @@ export default {
         if (!this.form.hasOwnProperty('categoryName')) {
           this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
         }
-        this.$refresh(getProduct)
         this.form.categoryCode = classify.sequenceNbr
         this.form.subCategory = ''
-        this.$refresh()
+        this.$refresh(getProduct)
       }
     },
     subClassifyClick ({ cid, name }) {

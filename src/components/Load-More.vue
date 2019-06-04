@@ -141,6 +141,15 @@ export default {
       return this.$refs.container
     }
   },
+  watch: {
+    form: {
+      handler () {
+        this.options = JSON.parse(JSON.stringify(this.form))
+      },
+      immediate: true,
+      deep: true
+    }
+  },
   activated () {
     let el = this.$el
     el.addEventListener('touchstart', this.touchstart, { passive: true })
@@ -215,13 +224,18 @@ export default {
       window.scrollTo(0, 0)
     },
     // 刷新，可以传入一个请求方法，用于替换当前请求方法
-    async refresh (requestMethods) {
-      this.options = JSON.parse(JSON.stringify(this.form))
+    refresh (requestMethods) {
       if (requestMethods && requestMethods !== this.requestMethods) this.requestMethods = requestMethods
-      this.resetState()
       try {
-        this.list = await this.getData()
-        this.$emit('refresh', this.list, this.total)
+        this.$nextTick(async () => {
+          this.resetState()
+          try {
+            this.list = await this.getData()
+            this.$emit('refresh', this.list, this.total)
+          } catch (e) {
+            throw e
+          }
+        })
       } catch (e) {
         throw e
       }
