@@ -80,7 +80,7 @@ export default [
     }
   },
   {
-    path: '/my/orders/refund/:orderId',
+    path: '/my/orders/refund-detail/:orderId',
     name: 'RefundDetail',
     component: () => import('../views/my/order/Refund-Detail.vue'),
     props: true,

@@ -305,7 +305,6 @@ export default {
     &__item {
       padding: 0 5px;
       color: #333333;
-      transition: all .2s ease-in;
 
       &--disabled {
         opacity: .4;

@@ -31,9 +31,9 @@
           v-text="rightText"
         />
         <pl-svg
-          v-if="route"
+          v-if="route || showRightIcon"
           class="pl-fields_right_icon"
-          name="right"
+          :name="rightIcon"
         />
       </div>
     </div>
@@ -72,6 +72,11 @@ export default {
       type: String,
       default: ''
     },
+    rightIcon: {
+      type: String,
+      default: 'right'
+    },
+    showRightIcon: Boolean,
     route: {
       type: Object,
       default: function () {
@@ -85,6 +90,7 @@ export default {
   },
   methods: {
     handleClick () {
+      this.$emit('click')
       if (this.route) {
         this.$router.push(this.route)
       }
@@ -126,6 +132,8 @@ export default {
   }
   .pl-fields_right {
     margin-right: 30px;
+    display: flex;
+    align-items: center;
     .pl-fields_right_text {
       font-size: 28px;
       color: #999;

@@ -156,7 +156,6 @@
         <collapse v-model="collepseActiveNames">
           <collapse-item
             name="1"
-            :disabled="false"
           >
             <template slot="title">
               <div>
@@ -180,7 +179,6 @@
           <collapse-item
             name="1"
             disabled
-            use-right-icon
           >
             <template slot="title">
               <div>
@@ -386,9 +384,9 @@ export default {
       orderType: '',
       timer: 0,
       loaded: false,
-      collepseActiveNames: [],
+      isPickerShow: false,
       pickerColumns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
-      isPickerShow: false
+      collepseActiveNames: []
     }
   },
   props: {

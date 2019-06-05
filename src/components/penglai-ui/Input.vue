@@ -59,7 +59,7 @@
         }"
       >
       <pl-svg
-        v-if="!disabled && type.indexOf('password') === -1"
+        v-if="!disabled && align !== 'right' && type.indexOf('password') === -1"
         v-show="value"
         class="pl-input_clear"
         name="close2"

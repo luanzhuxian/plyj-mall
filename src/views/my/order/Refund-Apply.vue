@@ -1,6 +1,9 @@
 <template>
-  <div :class="$style.refundApply">
-    <div style="position: relative;">
+  <div
+    class="refund-apply"
+    :class="$style.refundApply"
+  >
+    <div style="position: relative; z-index: 9999;">
       <a href="tel:15091719776">
         <pl-svg
           :class="$style.callMe"
@@ -9,11 +12,14 @@
       </a>
     </div>
 
-    <section
-      v-if="relationModel.mediaInfoModels"
-      :class="$style.order"
-    >
-      <img
+    <section :class="$style.orderInfo">
+      <order-item
+        :img="'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png'"
+        :name="'McQ Alexander McQueen 2018春夏新款棉氨男士…'"
+        :option="'课程：英语互动'"
+        hide-price
+      />
+      <!-- <img
         :class="$style.orderPicture"
         v-lazy="relationModel.mediaInfoModels[0].mediaUrl"
         alt="商品图片"
@@ -25,75 +31,42 @@
         <div :class="$style.orderInfoOption">
           {{ relationModel.productModel.optionName }}
         </div>
-      </div>
+      </div> -->
     </section>
 
     <section :class="$style.content">
-      <ul :class="[$style.panel, $style.panelTop]">
-        <li :class="$style.item">
-          <div :class="$style.itemLeft">
-            服务类型：
-          </div>
-          <div :class="[$style.itemRight, $style.bold]">
-            {{ refundType === 'REFUND' ? '退款' : '退款退货' }}
-          </div>
-        </li>
-        <li
-          :class="$style.item"
+      <div :class="[$style.panel, $style.panelTop]">
+        <pl-fields
+          class="right-text--bold"
+          text="服务类型："
+          :right-text="refundType === 'REFUND' ? '退款' : '退款退货'"
+        />
+        <pl-fields
+          text="货物状态："
+          :right-text="form.goodsStatus || '请选择'"
+          show-right-icon
           @click="showPopup('goodsStatus')"
-        >
-          <div :class="$style.itemLeft">
-            货物状态：
-          </div>
-          <div :class="$style.itemRight">
-            <span v-if="form.goodsStatus">
-              {{ form.goodsStatus }}
-            </span>
-            <span v-else>
-              请选择
-              <pl-svg
-                :class="$style.itemIcon"
-                name="right"
-                color="#DEDEDE"
-              />
-            </span>
-          </div>
-        </li>
-        <li
-          :class="$style.item"
+        />
+        <pl-fields
+          text="请选择退货原因："
+          :right-text="form.refundReason || '请选择'"
+          show-right-icon
           @click="showPopup('refundReason')"
-        >
-          <div :class="$style.itemLeft">
-            请选择退货原因：
-          </div>
-          <div :class="$style.itemRight">
-            <span v-if="form.refundReason">
-              {{ form.refundReason }}
-            </span>
-            <span v-else>
-              请选择
-              <pl-svg
-                :class="$style.itemIcon"
-                name="right"
-                color="#DEDEDE"
-              />
-            </span>
-          </div>
-        </li>
-        <li :class="$style.item">
-          <div :class="$style.itemLeft">
+        />
+        <div :class="$style.item">
+          <span :class="$style.itemLeft">
             退款金额：
-          </div>
-          <div :class="$style.itemRight">
+          </span>
+          <span :class="$style.itemRight">
             <div :class="$style.price">
               ￥76.64
             </div>
             <div :class="$style.tips">
               运费不可退，如有疑问，请联系商家协商
             </div>
-          </div>
-        </li>
-      </ul>
+          </span>
+        </div>
+      </div>
 
       <div :class="[$style.panel, $style.panelBottom]">
         <div :class="$style.description">
@@ -121,7 +94,7 @@
       </div>
     </section>
 
-    <div :class="$style.buttonWrapper">
+    <div :class="$style.footer">
       <pl-button
         size="larger"
         type="warning"
@@ -175,6 +148,7 @@
 </template>
 
 <script>
+import OrderItem from '../../../components/item/Order-Item.vue'
 import {
   getOrderDetail
   // returnRequest
@@ -182,6 +156,9 @@ import {
 
 export default {
   name: 'Refund',
+  components: {
+    OrderItem
+  },
   props: {
     orderId: {
       type: String,
@@ -344,6 +321,9 @@ export default {
     min-height: 100vh;
     padding-bottom: 122px;
   }
+  .content {
+    padding: 20px 24px;
+  }
   .call-me {
     position: absolute;
     top: -28px;
@@ -351,36 +331,10 @@ export default {
     width: 38px;
     height: 80px;
   }
-
-  .order {
+  .order-info {
     padding: 24px;
     background-color: #FFF;
     display: flex;
-  }
-  .order-picture {
-    width: 140px;
-    height: 140px;
-    margin-right: 16px;
-  }
-  .order-info {
-    flex: 1;
-  }
-  .order-info-name {
-    font-size: 22px;
-    line-height: 26px;
-    margin-bottom: 8px;
-    height: 52px;
-    @include elps-wrap(2);
-  }
-  .order-info-option {
-    font-size: 20px;
-    line-height: 28px;
-    color: #999999;
-    @include elps-wrap(1);
-  }
-
-  .content {
-    padding: 20px 24px;
   }
 
   .panel {
@@ -389,11 +343,9 @@ export default {
     overflow: hidden;
     margin-bottom: 20px;
   }
-
   .panel-top {
     padding-left: 28px;
   }
-
   .panel-bottom {
     padding: 20px 28px;
   }
@@ -401,38 +353,15 @@ export default {
   .item {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    height: 108px;
-    border-bottom: 1px solid #F0F0F0;
+    align-items: flex-start;
     font-size: 28px;
     color: #666666;
     line-height: 40px;
-    padding-right: 28px;
-
-    &:nth-last-of-type(1) {
-      border: none;
-      height: auto;
-      padding: 34px 28px 34px 0;
-      align-items: flex-start;
-
-      .item-right {
-        display: block;
-        text-align: right;
-      }
+    padding: 34px 28px 34px 0;
+    .item-right {
+      display: block;
+      text-align: right;
     }
-  }
-
-  .item-right {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    color: #999999;
-  }
-
-  .item-icon {
-    width: 22px;
-    // margin-left: 12px;
   }
 
   .description {
@@ -456,7 +385,7 @@ export default {
     }
   }
 
-  .button-wrapper {
+  .footer {
     position: fixed;
     left: 0;
     right: 0;
@@ -493,20 +422,43 @@ export default {
     flex: 1;
   }
 
-  .bold {
-    color: #000;
-    font-weight: bold;
-  }
-
   .tips {
     font-size:22px;
     line-height: 32px;
     margin-top: 10px;
   }
-
   .price {
     color: #FE7700;
-    font-family: Helvetica;
+    font-family: HelveticaNeue-Medium;
+    font-weight: 500;
+  }
+</style>
+
+<style lang="scss">
+.refund-apply {
+  .pl-fields {
+    &:nth-last-of-type(1):after {
+      display: block;
+    }
   }
 
+  .pl-fields_box {
+    &.large {
+      height: 108px;
+    }
+  }
+
+  .pl-fields_text {
+    color: #666;
+  }
+  .pl-fields_right > .pl-fields_right_icon {
+    fill: #DEDEDE;
+  }
+  .right-text--bold {
+    .pl-fields_right > .pl-fields_right_text {
+      color: #000;
+      font-weight: bold;
+    }
+  }
+}
 </style>

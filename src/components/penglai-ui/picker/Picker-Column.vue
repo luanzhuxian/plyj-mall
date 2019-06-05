@@ -17,7 +17,6 @@
         :key="index"
         class="ellipsis pl-picker-column__item"
         :class="{ 'pl-picker-column__item--disabled': isOptionDisabled(option) }"
-        :style="{ fontSize: `${fontSizeList[index] / 7.5}vh` }"
         @click="() => onClickItem(index)"
       >
         {{ getOptionText(option) }}

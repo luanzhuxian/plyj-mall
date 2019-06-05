@@ -16,12 +16,18 @@
     >
     <div :class="$style.right">
       <div>
-        <div :class="$style.rightTop">
+        <div
+          :class="$style.rightTop"
+          :style="{ paddingRight: hidePrice ? '0px' : '' }"
+        >
           <div
             :class="$style.name"
             v-text="name"
           />
-          <div :class="$style.priceWrapper">
+          <div
+            v-if="!hidePrice"
+            :class="$style.priceWrapper"
+          >
             <div
               :class="$style.price + ' rmb'"
               v-text="price"
@@ -145,7 +151,8 @@ export default {
     productType: {
       type: Number,
       default: 0
-    }
+    },
+    hidePrice: Boolean
   },
   watch: {
     productSeq (val) {

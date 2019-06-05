@@ -20,6 +20,12 @@
         />
       </div>
     </pl-tab>
+    <router-link
+      tag="div"
+      :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }"
+    >
+      123
+    </router-link>
     <div :class="$style.orderList">
       <load-more
         ref="loadMore"
@@ -171,19 +177,25 @@ const orderFinishMap = {
 }
 
 const count = {
-  FINISHED: 0,
-  AFTER_SALE: 0,
   WAIT_PAY: 0,
   WAIT_RECEIVE: 0,
-  WAIT_SHIP: 0
+  WAIT_SHIP: 0,
+  FINISHED: 0,
+  AFTER_SALE: 0
 }
 
 export default {
   name: 'OrderList',
   components: {
+    LoadMore,
     OrderItem,
-    Price,
-    LoadMore
+    Price
+  },
+  props: {
+    status: {
+      type: String,
+      default: null
+    }
   },
   data () {
     return {
@@ -199,17 +211,10 @@ export default {
       loading: false,
       payloading: false,
       $refresh: null,
-      $router: null,
       currentPayId: '', // 当前正在支付的订单id
       count,
       orderTypeMap,
       orderFinishMap
-    }
-  },
-  props: {
-    status: {
-      type: String,
-      default: null
     }
   },
   computed: {
@@ -364,7 +369,6 @@ export default {
       font-size: 20px;
       font-family: MicrosoftYaHeiUI;
       color: #999999;
-      // line-height: 28px;
       margin-right: 12px;
     }
     .price {

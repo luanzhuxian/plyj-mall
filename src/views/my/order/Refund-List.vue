@@ -27,67 +27,61 @@
         :loading.sync="loading"
         :request-methods="getOrderList"
         no-content-tip="暂无订单"
-        @refresh="getOrderSummary"
+        @refresh="onRefresh"
       >
         <template v-slot="{ list }">
           <router-link
             tag="div"
-            v-for="item of list"
-            :key="item.orderInfoModel.orderSn"
-            :to="{ name: 'RefundDetail', params: { orderId: item.orderInfoModel.orderId } }"
+            v-for="(item, i) of orderList"
+            :key="i"
+            :to="{ name: 'RefundDetail', params: { orderId: item.id } }"
             :class="$style.refundItem"
           >
-            <div :class="$style.orderId">
-              <pl-list
-                title="下单时间："
-                :content="item.orderCreateDate"
-              />
-              <pl-list
-                title="退单号："
-                :content="item.orderInfoModel.orderSn"
-              />
-            </div>
             <div>
               <div :class="$style.orderItemLeft">
-                <span :class="$style.orderTag">
-                  实体商品
-                </span>
+                <span
+                  :class="$style.orderTag"
+                  v-text="orderTypeMap[item.orderType]"
+                />
                 <pl-list
                   title="退单号："
-                  :content="item.orderInfoModel.orderSn"
+                  :content="item.id"
                 />
               </div>
               <p
                 :class="$style.status"
-                v-text="orderStatusMap[item.orderInfoModel.orderStatus]"
+                v-text="orderStatusMap[item.status]"
               />
             </div>
             <order-item
-              :img="item.mediaInfoModel[0].mediaUrl"
-              :name="item.orderProductRelationModel.productName"
-              :option="item.orderProductRelationModel.optionName"
-              :price="item.orderProductRelationModel.productPrice"
-              :count="item.orderProductRelationModel.count"
+              v-for="(product, j) of item.products"
+              :key="j"
+              :img="product.productImg"
+              :name="product.productName"
+              :option="product.skuName"
+              :count="product.purchaseQuantity"
+              :price="product.unitPrice"
               border
             />
             <div :class="$style.orderItemBottom">
-              <div class="">
-                <span :class="$style.totalCount">共1件商品</span>
+              <div>
+                <span :class="$style.totalCount">{{ `共${item.totalCount}件商品` }}</span>
                 <price
                   prefix-text="总价："
-                  :price="item.orderInfoModel.amount + item.orderInfoModel.freight"
-                  size="small"
+                  :price="item.totalPrice"
+                  size="medium"
                   plain
                 />
               </div>
               <div
                 :class="$style.buttons"
-                v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY' ||
-                  item.orderInfoModel.orderStatus === 'WAIT_RECEIVE' ||
-                  (item.orderInfoModel.orderStatus === 'FINISHED' && item.orderInfoModel.assessment === 'NO')"
+                v-if="item.status !== 'WAIT_SHIP'"
               >
+                <span :class="$style.reundType">
+                  {{ '退款退货' }}
+                </span>
                 <pl-button
-                  v-if="item.orderInfoModel.orderStatus === 'WAIT_PAY'"
+                  v-if="item.status === 'WAIT_PAY'"
                   round
                   plain
                   @click="cancel"
@@ -95,17 +89,17 @@
                   取消申请
                 </pl-button>
                 <pl-button
-                  v-if="item.orderInfoModel.orderStatus === 'WAIT_RECEIVE' || item.orderInfoModel.orderStatus === 'FINISHED'"
                   round
                   plain
-                  @click="checkLogisticsInfo"
+                  @click="checkDetail"
                 >
                   查看详情
                 </pl-button>
                 <pl-button
+                  type="warning"
                   round
                   plain
-                  @click="checkLogisticsInfo"
+                  @click="checkExpressInfo"
                 >
                   寄件运单号
                 </pl-button>
@@ -120,9 +114,13 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import { getOrderList, orderPhysicalorderSummary } from '../../../apis/order-manager'
+import Price from '../../../components/Price.vue'
 import LoadMore from '../../../components/Load-More.vue'
 import { mapGetters } from 'vuex'
+import {
+  getOrderList,
+  orderPhysicalorderSummary
+} from '../../../apis/order-manager'
 
 const tabs = [{
   name: '全部',
@@ -138,71 +136,96 @@ const tabs = [{
   id: 'WAIT_RECEIVE'
 }]
 
+const orderTypeMap = {
+  PHYSICAL: '实体商品',
+  VIRTUAL: '虚拟商品'
+}
+
+const count = {
+  WAIT_PAY: 0,
+  WAIT_RECEIVE: 0,
+  WAIT_SHIP: 0
+}
+
+const orderStatusMap = {
+  WAIT_PAY: '待审核',
+  WAIT_SHIP: '退换货',
+  WAIT_RECEIVE: '退款成功'
+}
+
 export default {
   name: 'RefundList',
   components: {
+    LoadMore,
     OrderItem,
-    LoadMore
+    Price
+  },
+  props: {
+    status: {
+      type: String,
+      default: null
+    }
   },
   data () {
     return {
       tabs,
+      orderList: [],
       form: {
-        userId: '',
         current: 1,
         size: 10,
-        orderStatus: '',
-        assessment: '',
-        orderSnOrName: ''
+        orderStatus: ''
       },
       getOrderList,
       orderPhysicalorderSummary,
       loading: false,
       $refresh: null,
-      count: {
-        FINISHED: 0,
-        AFTER_SALE: 0,
-        WAIT_PAY: 0,
-        WAIT_RECEIVE: 0,
-        WAIT_SHIP: 0
-      }
+      count,
+      orderTypeMap,
+      orderStatusMap
     }
   },
   computed: {
-    ...mapGetters(['userId'])
-  },
-  created () {
-    this.form.userId = this.userId
+    // ...mapGetters(['orderStatusMap', 'orderStatusMapCamel'])
+    ...mapGetters(['orderStatusMapCamel'])
   },
   mounted () {
-    this.refresh = this.$refs.loadMore.refresh
+    this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    // this.refresh()
+    this.form.orderStatus = this.status || ''
+    this.$refresh()
   },
   methods: {
     tabChange (item) {
       this.$nextTick(() => {
         this.$router.replace({ name: 'RefundList', params: { status: item.id || null } })
-        if (item.id === 'FINISHED') {
-          this.form.assessment = 'NO'
-        } else {
-          this.form.assessment = ''
-        }
         this.$refresh()
       })
     },
+    onRefresh (list, total) {
+      const counter = (array) => (key) => array.reduce((total, current) => total + (key ? current[key] : current), 0)
+      for (let item of list) {
+        item.totalCount = counter(item.products)('purchaseQuantity')
+      }
+      this.orderList = list
+      this.getOrderSummary()
+    },
     async getOrderSummary () {
       try {
-        const { result } = await this.orderPhysicalorderSummary(this.userId)
-        for (let k of Object.keys(result)) {
-          if (result[k] > 99) result[k] = '99+'
+        const { orderStatusMapCamel } = this
+        const { result } = await orderPhysicalorderSummary(this.userId)
+        for (let key of Object.keys(result)) {
+          if (orderStatusMapCamel.hasOwnProperty(key)) {
+            this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
+          }
         }
-        this.count = result
       } catch (e) {
         throw e
       }
-    }
+    },
+    cancel () {},
+    checkDetail () {},
+    checkExpressInfo () {}
   }
 }
 </script>
@@ -211,22 +234,10 @@ export default {
   .order-list {
     padding: 22px 24px 120px;
   }
-  // .order-id {
-  //   position: relative;
-  //   padding-bottom: 24px;
-  //   margin-bottom: 24px;
-  //   &:after {
-  //     @include border-half-bottom(#e7e7e7);
-  //   }
-  // }
   .refund-item {
-    // padding: 24px 28px;
-    // margin-bottom: 28px;
-    // background-color: #fff;
-    // border-radius: 20px;
+
     margin-bottom: 20px;
-    padding-left: 28px;
-    padding-bottom: 24px;
+    padding: 0 24px 28px;
     border-radius: 20px;
     background-color: #fff;
     > div {
@@ -235,8 +246,7 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        // height: 80px;
-        padding: 22px 24px 36px 0;
+        padding: 22px 0 36px;
         // &:after {
         //   @include border-half-bottom(#e7e7e7);
         // }
@@ -244,14 +254,48 @@ export default {
     }
     .status {
       color: var(--primary-color);
+      font-size: 24px;
+      line-height: 34px;
     }
   }
-  // .status {
-  //   text-align: right;
-  //   button {
-  //     margin-left: 20px;
-  //   }
-  // }
+  .order-item-bottom {
+    margin-top: 16px;
+    > div {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+    }
+    .total-count {
+      font-size: 20px;
+      font-family: MicrosoftYaHeiUI;
+      color: #999999;
+      margin-right: 12px;
+    }
+    .price {
+      font-size: 40px;
+      align-self: flex-end;
+      &:before {
+        margin-right: 10px;
+        padding-bottom: 4px;
+        font-size: 24px;
+        content: '总价：¥';
+      }
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      button {
+        margin-left: 24px;
+      }
+    }
+    .reund-type {
+      font-size: 24px;
+      color: #FE7700;
+      line-height: 32px;
+      margin-right: 16px;
+    }
+  }
   .tab-count {
     position: absolute;
     top: 5px;
@@ -271,5 +315,20 @@ export default {
     height: 100%;
     background: url("../../../assets/images/my/circle.png") no-repeat center center;
     background-size: 100%;
+  }
+  .order-item-left {
+    display: inline-flex;
+    align-items: center;
+  }
+  .order-tag {
+    width: 104px;
+    height: 28px;
+    background: #F2B036;
+    border-radius: 14px;
+    font-size: 20px;
+    color: #FFFFFF;
+    line-height: 28px;
+    margin-right: 12px;
+    text-align: center;
   }
 </style>
