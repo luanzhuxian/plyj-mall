@@ -57,6 +57,12 @@ export default {
   components: {
     OrderItem
   },
+  props: {
+    orderId: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       loading: false,
@@ -64,12 +70,6 @@ export default {
       orderDetail: {
         relationModel: []
       }
-    }
-  },
-  props: {
-    orderId: {
-      type: String,
-      default: ''
     }
   },
   async activated () {

@@ -21,13 +21,17 @@ export function physicalorderPaymentSuccess (orderSn) {
 export function physicalorderPaymentSuccessVirtual (orderSn) {
   return axios.put(`/apis/v1/order/virtualorder/payment/success/${orderSn}`)
 }
-// PUT 用户申请退货退款
+// 用户申请退货退款
 export function returnRequest ({ orderId, operationType, type, refundModel, expressInfoModel }) {
   return axios.put(`/apis/v1/order/physicalorder/refundment/${orderId}?operationType=${operationType}&serviceType=${type}`, { refundModel, expressInfoModel })
 }
-// PUT 用户取消订单
+// 用户取消订单
 export function cancelOrder (orderId) {
   return axios.put(`/apis/v1/order/cancel/${orderId}`)
+}
+// 用户删除订单
+export function deleteOrder (orderId) {
+  return axios.get(`/apis/v1/order/current/user/order/${orderId}`)
 }
 // PUT 用户发货
 export function physicalorderShipmentPublic (orderSn) {
@@ -72,4 +76,4 @@ export const getMoney = (productSeq, optionCode, number, addressSeq) => axios.ge
 export const getFreight = ({ productSeq, productCount, addressSeq, optionCode }) =>
   axios.post('/apis/v1/order/physicalorder/wechat/freight', null, { params: { productSeq, productCount, addressSeq, optionCode } })
 /* GET 商城端-获取订单物流信息 */
-export const getFreightData = orderSn => axios.get(`/apis/v1/order/logistics/${orderSn}`)
+export const getFreightData = orderId => axios.get(`/apis/v1/order/logistics/${orderId}`)

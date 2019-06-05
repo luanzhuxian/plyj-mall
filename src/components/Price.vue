@@ -140,6 +140,23 @@ export default {
         font-size: 24px;
       }
     }
+    &.medium {
+      .integer {
+        font-size: 36px;
+        &:before {
+          font-size: 24px;
+        }
+      }
+      .prefix-text {
+        font-size: 24px;
+      }
+      .float {
+        font-size: 24px;
+      }
+      del {
+        font-size: 24px;
+      }
+    }
     &.large {
       .integer {
         font-size: 44px;

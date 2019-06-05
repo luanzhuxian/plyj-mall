@@ -65,11 +65,11 @@
             />
             <div :class="$style.orderItemBottom">
               <div>
-                <span :class="$style.totalCount">{{ `共${item.products.length}件商品` }}</span>
+                <span :class="$style.totalCount">{{ `共${item.totalCount}件商品` }}</span>
                 <price
                   prefix-text="总价："
                   :price="item.totalPrice"
-                  size="small"
+                  size="medium"
                   plain
                 />
               </div>
@@ -138,6 +138,7 @@ import {
   getAwaitPayInfo,
   confirmReceipt,
   cancelOrder,
+  deleteOrder,
   orderPhysicalorderSummary
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
@@ -229,6 +230,10 @@ export default {
       })
     },
     onRefresh (list, total) {
+      const counter = (array) => (key) => array.reduce((total, current) => total + (key ? current[key] : current), 0)
+      for (let item of list) {
+        item.totalCount = counter(item.products)('purchaseQuantity')
+      }
       this.orderList = list
       this.getOrderSummary()
     },
@@ -298,11 +303,23 @@ export default {
           this.orderList.splice(index, 1)
         }
         this.getOrderSummary()
+        this.$success('订单取消成功')
       } catch (e) {
         throw e
       }
     },
-    deleteOrder (item, index) {},
+    async deleteOrder (item, index) {
+      const orderId = item.id
+      try {
+        await this.$confirm('订单一旦删除，将无法恢复 确认要删除订单？')
+        await deleteOrder(orderId)
+        this.orderList.splice(index, 1)
+        this.getOrderSummary()
+        this.$success('订单删除成功')
+      } catch (e) {
+        throw e
+      }
+    },
     toFreightPage (orderId) {
       this.$router.push({ name: 'Freight', params: { orderId } })
     }
