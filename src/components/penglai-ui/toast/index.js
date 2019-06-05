@@ -2,9 +2,6 @@ import Vue from 'vue'
 import ToastComponent from './Toast.vue'
 
 let ToastConstructor = Vue.extend(ToastComponent)
-let instance = new ToastConstructor({
-  el: document.createElement('div')
-})
 ToastConstructor.prototype.close = function () {
   this.show = false
   this.$el.addEventListener('animationend', removeDom)
@@ -16,7 +13,9 @@ ToastConstructor.prototype.close = function () {
 * duration: 显示的时长
 * */
 export const Toast = (options = {}) => {
-  // let instance = getInstance()
+  let instance = new ToastConstructor({
+    el: document.createElement('div')
+  })
   clearTimeout(instance.timer)
   let duration = options.duration || 2000
   if (typeof options === 'string') {
