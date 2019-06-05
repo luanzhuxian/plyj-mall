@@ -20,23 +20,15 @@
         :key="item.msgTime"
         :class="$style.freightItem"
       >
-        <svg
-          :class="$style.circle"
-          viewBox="0 0 20 20"
-        >
-          <circle
-            cx="10"
-            cy="10"
-            r="10"
-          />
-        </svg>
-        <p
-          :class="$style.msg"
+        <div :class="$style.datetime">
+          <span :class="$style.date">{{ item.msgTime * 1000 | dateFormat('MM-DD') }}</span>
+          <span :class="$style.time">{{ item.msgTime * 1000 | dateFormat('HH:mm') }}</span>
+        </div>
+
+        <div
+          :class="$style.freightContent"
           v-text="item.content"
         />
-        <p :class="$style.msgTime">
-          {{ item.msgTime * 1000 | formatDateTime }}
-        </p>
       </li>
     </ul>
 
@@ -50,7 +42,7 @@
 </template>
 
 <script>
-import { getFreightData, getOrderDetail } from '../../../apis/order-manager'
+import { getFreightData } from '../../../apis/order-manager'
 import OrderItem from '../../../components/item/Order-Item.vue'
 export default {
   name: 'Freight',
@@ -75,8 +67,8 @@ export default {
   async activated () {
     try {
       this.loading = true
-      let orderDetail = await getOrderDetail(this.orderId)
-      this.orderDetail = orderDetail.result
+      // let orderDetail = await getOrderDetail(this.orderId)
+      // this.orderDetail = orderDetail.result
       let freightData = await getFreightData(this.orderId)
       freightData.result.sort((a, b) => b.msgTime - a.msgTime)
       this.freightData = freightData.result
@@ -102,46 +94,80 @@ export default {
     margin-top: 40px;
   }
   .freightItem {
-    position: relative;
-    margin-bottom: 40px;
-    padding-left: 50px;
+    display: flex;
+    padding-bottom: 20px;
     &:nth-of-type(1) {
-      color: red;
-      .circle {
-        fill: red;
+      .datetime {
+        color: #333;
+      }
+      .freightContent {
+        color: #333;
+        &:before {
+          background: linear-gradient(180deg, #FFAF00, #FE7700);
+        }
       }
     }
-    .circle {
+    &:nth-last-of-type(1) {
+      > .freightContent {
+        &:after {
+          display: none;
+        }
+        &:before {
+          left: 11px;
+          width: 42px;
+          height: 42px;
+          border-radius: 21px;
+          background: #fff url("../../../assets/images/shipped.png") no-repeat center center;
+          background-size: 50%;
+          border: 1px solid #D8D8D8;
+          box-sizing: border-box;
+        }
+      }
+    }
+  }
+  .datetime {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: right;
+    color: #999;
+    > .date {
+      font-size: 22px;
+      line-height: 32px;
+    }
+    > .time {
+      font-size: 18px;
+      line-height: 26px;
+    }
+  }
+  .freightContent {
+    position: relative;
+    flex: 1;
+    padding-left: 62px;
+    font-size: 22px;
+    line-height: 32px;
+    color: #999;
+    &:before {
       position: absolute;
-      left: 0;
-      top: 40%;
-      transform: translateY(-50%);
-      fill: #ccc;
-      width: 2.5vw;
+      content: '';
+      left: 24px;
+      top: 10px;
+      width: 14px;
+      height: 14px;
+      border-radius: 7px;
+      background: #D8D8D8;
       z-index: 2;
     }
     &:after {
       position: absolute;
-      left: 1.25vw;
-      top: calc(40% + 10px);
       content: '';
+      left: 31px;
+      top: 24px;
       width: 1px;
-      height: calc(100% + 40px);
-      transform: scaleX(0.5);
-      background-color: #ccc;
+      height: 120%;
+      border-radius: 7px;
+      background-color: #D8D8D8;
+      z-index: 1;
     }
-    &:nth-last-of-type(1):after {
-      display: none;
-    }
-  }
-  .msg {
-    position: relative;
-    margin-bottom: 10px;
-    font-size: 28px;
-  }
-  .msgTime {
-    font-size: 20px;
-    color: #999;
   }
   .tip {
     font-size: 24px;

@@ -2,19 +2,9 @@ import moment from 'moment'
 import 'moment/locale/zh-cn.js'
 
 export default {
-  formatDateTime (val) {
-    if (!val) return ''
-    if (typeof val === 'number') {
-      return moment(val).format('YYYY-MM-DD HH:mm:ss')
-    }
-    if (typeof Number(val) === 'number' && !!Number(val)) {
-      return moment(val).format('YYYY-MM-DD HH:mm:ss')
-    }
-    if (typeof val === 'string') {
-      return val
-    }
+  dateFormat (val, format) {
+    return moment(val).format(format)
   },
-
   // 隐藏账号中间几个字符
   formatAccount (str) {
     if (!str) return ''

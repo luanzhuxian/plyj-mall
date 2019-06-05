@@ -102,7 +102,10 @@
           <pl-svg name="my-order-list" />
         </router-link>
       </div>
-      <div :class="$style.newLogistics">
+      <router-link
+        :class="$style.newLogistics"
+        :to="{ name: 'Freight', params: { orderId: '1135893298540593152' } }"
+      >
         <div :class="$style.logisticsTitle">
           最新物流
         </div>
@@ -119,7 +122,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </router-link>
     </div>
     <div :class="$style.tip">
       <span :class="$style.tipCircle" />
