@@ -24,8 +24,7 @@
           type="textarea"
           :maxlength="500"
           placeholder="产品满足你的期待吗？说说它的优点和缺点吧"
-          :min-rows="5"
-          :max-rows="10"
+          :min-rows="8"
         />
       </div>
       <div :class="$style.images">
@@ -171,8 +170,11 @@ export default {
       margin-right: 30px;
     }
   }
+  .content {
+    margin-bottom: 20px;
+  }
   .images {
-    padding: 28px;
+    padding: 0 28px;
   }
   .submit {
     display: flex;

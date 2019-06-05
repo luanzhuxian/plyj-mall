@@ -115,22 +115,19 @@ export default {
     width: 100%;
     .img {
       position: relative;
-      width: auto;
-      min-width: 144px;
-      height: 144px;
       margin-right: 20px;
       margin-bottom: 20px;
       box-shadow: 0 5px 30px 0 rgba(0, 0, 0, .2);
       img {
         position: relative;
-        height: 100%;
-        left: 50%;
-        transform: translateX(-50%);
+        width: 184px;
+        height: 184px;
+        object-fit: cover;
       }
       .remove-btn {
         position: absolute;
         right: -15px;
-        top: -18px;
+        top: -15px;
         width: 32px;
         height: 32px;
         border-radius: 50%;
@@ -154,13 +151,13 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 144px;
-    height: 144px;
+    width: 184px;
+    height: 184px;
     border: 1px dashed #999;
     text-align: center;
     span {
       color: #999;
-      font-size: 10px;
+      font-size: 23px;
     }
     svg {
       width: 40px;

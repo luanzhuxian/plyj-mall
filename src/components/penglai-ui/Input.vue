@@ -17,6 +17,7 @@
       v-if="type === 'textarea'"
     >
       <textarea
+        class="pl-input-textarea"
         :maxlength="maxlength"
         :value="value"
         @input="handleInput"
@@ -28,6 +29,14 @@
         :rows="rows"
         :placeholder="placeholder"
       />
+      <span
+        class="pl-input__word-count"
+        v-if="maxlength > 0"
+      >
+        <i v-text="value.length" />
+        /
+        <i v-text="maxlength" />
+      </span>
     </div>
     <div
       v-else
@@ -84,7 +93,6 @@
 </template>
 
 <script>
-import { getLine, throttle } from './lib/util'
 export default {
   name: 'PlInput',
   model: {
@@ -122,15 +130,15 @@ export default {
     },
     maxlength: {
       type: Number,
-      default: 2000
+      default: 0
     },
     minRows: {
       type: Number,
-      default: 5
+      default: 1
     },
     maxRows: {
       type: Number,
-      default: 10
+      default: 0
     },
     align: {
       type: String,
@@ -167,21 +175,10 @@ export default {
       this.isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
       this.setAlign()
     })
-    this.getLine = throttle(getLine, 1000)
   },
   methods: {
     handleInput (e) {
       let val = e.target.value
-      this.getLine(e.target, currentLine => {
-        if (this.maxRows !== 0) {
-          if (currentLine > this.minRows && currentLine < this.maxRows) {
-            this.rows++
-          }
-        } else if (currentLine > this.minRows && currentLine) {
-          this.rows++
-        }
-      })
-      if (!val) this.rows = this.minRows
       this.$emit('input', val)
       this.trigger(e)
     },
@@ -304,11 +301,12 @@ export default {
     }
   }
   .pl-textarea_box {
+    position: relative;
     width: 100%;
-    textarea {
+    padding: 24px;
+    .pl-input-textarea {
       box-sizing: border-box;
       width: 100%;
-      padding: 24px;
       min-height: 100px;
       line-height: 40px;
       font-size: 26px;
@@ -316,6 +314,20 @@ export default {
       outline: none;
       resize: none;
       background: transparent;
+    }
+    .pl-input__word-count {
+      position: absolute;
+      bottom: 0;
+      right: 28px;
+      line-height: 32px;
+      > i {
+        &:nth-of-type(1) {
+          color: #666;
+        }
+        &:nth-of-type(2) {
+          color: #999;
+        }
+      }
     }
   }
 </style>
