@@ -45,8 +45,9 @@
             <span
               v-if="freight > 0"
               :class="$style.itemContent"
-              v-text="templateName"
-            />
+            >
+              普通快递
+            </span>
           </div>
           <span
             v-if="freight > 0"

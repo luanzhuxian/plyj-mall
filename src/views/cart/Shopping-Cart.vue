@@ -214,7 +214,6 @@ export default {
       if (this.checkedList.length === 0) return
       for (let pro of this.checkedList) {
         const { cartProductCount, cartProductId, cartSkuCode, agentUser } = pro
-        console.log(agentUser)
         confirmList.push({
           productId: cartProductId,
           optionCode: cartSkuCode,
