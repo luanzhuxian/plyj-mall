@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.refund">
-    <div style="position: relative;">
+    <div style="position: relative; z-index: 9999;">
       <a href="tel:15091719776">
         <pl-svg
           :class="$style.callMe"
@@ -9,25 +9,16 @@
       </a>
     </div>
 
-    <div
-      v-if="relationModel.mediaInfoModels"
-      :class="$style.order"
-    >
-      <img
-        :class="$style.orderPicture"
-        v-lazy="relationModel.mediaInfoModels[0].mediaUrl"
-        alt="商品图片"
-      >
-      <div :class="$style.orderInfo">
-        <div :class="$style.orderInfoName">
-          {{ relationModel.productModel.productName }}
-        </div>
-        <div :class="$style.orderInfoOption">
-          {{ relationModel.productModel.optionName }}
-        </div>
-      </div>
-    </div>
-    <div :class="$style.content">
+    <section :class="$style.orderInfo">
+      <order-item
+        :img="'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png'"
+        :name="'McQ Alexander McQueen 2018春夏新款棉氨男士…'"
+        :option="'课程：英语互动'"
+        hide-price
+      />
+    </section>
+
+    <section :class="$style.content">
       <div :class="$style.panel">
         <router-link
           tag="div"
@@ -73,16 +64,25 @@
           />
         </router-link>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
 <script>
-import {
-  getOrderDetail
-} from '../../../apis/order-manager'
+import OrderItem from '../../../components/item/Order-Item.vue'
+import { getOrderDetail } from '../../../apis/order-manager'
+
 export default {
   name: 'Refund',
+  components: {
+    OrderItem
+  },
+  props: {
+    orderId: {
+      type: String,
+      default: null
+    }
+  },
   data () {
     return {
       type: 'REFUND', // 退款类型  RETURN_REFUND REFUND
@@ -94,12 +94,6 @@ export default {
       },
       orderStatus: '',
       operationType: '' // 在何种情况下退款
-    }
-  },
-  props: {
-    orderId: {
-      type: String,
-      default: null
     }
   },
   activated () {
@@ -126,31 +120,10 @@ export default {
     height: 80px;
   }
 
-  .order {
+  .order-info {
     padding: 24px;
     background-color: #FFF;
     display: flex;
-  }
-  .order-picture {
-    width: 140px;
-    height: 140px;
-    margin-right: 16px;
-  }
-  .order-info {
-    flex: 1;
-  }
-  .order-info-name {
-    font-size: 22px;
-    line-height: 26px;
-    margin-bottom: 8px;
-    height: 52px;
-    @include elps-wrap(2);
-  }
-  .order-info-option {
-    font-size: 20px;
-    line-height: 28px;
-    color: #999999;
-    @include elps-wrap(1);
   }
 
   .content {

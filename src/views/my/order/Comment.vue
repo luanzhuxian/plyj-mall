@@ -1,5 +1,8 @@
 <template>
-  <div :class="$style.comment">
+  <div
+    class="comment"
+    :class="$style.comment"
+  >
     <top-text
       title="发表评论"
       tip="说说您本次购买的感受吧"
@@ -22,32 +25,31 @@
         <pl-input
           v-model="form.content"
           type="textarea"
-          :maxlength="500"
+          :maxlength="100"
           placeholder="产品满足你的期待吗？说说它的优点和缺点吧"
           :min-rows="8"
         />
       </div>
       <div :class="$style.images">
         <pl-upload-img
-          :count="6"
+          :count="9"
           :size="0.5"
           :images="images"
           @success="uploaded"
           @remove="removeImg"
         />
       </div>
-      <div :class="'mt-28 '+$style.submit">
-        <pl-button
-          :loading="loading"
-          round
-          plain
-          type="warning"
-          @click="confirm"
-        >
-          发布评论
-        </pl-button>
-      </div>
     </main>
+    <div :class="$style.footer">
+      <pl-button
+        :loading="loading"
+        size="larger"
+        type="warning"
+        @click="confirm"
+      >
+        发布评论
+      </pl-button>
+    </div>
   </div>
 </template>
 
@@ -147,7 +149,7 @@ export default {
 
 <style module lang="scss">
   .comment {
-    padding: 28px 40px;
+    padding: 28px 40px 140px;
     main {
       overflow: hidden;
       padding-bottom: 28px;
@@ -176,13 +178,30 @@ export default {
   .images {
     padding: 0 28px;
   }
-  .submit {
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
-    &:after { @include border-half-top(#e7e7e7); }
-    padding-top: 28px;
-    padding-right: 28px;
-    margin-left: 28px;
+  .footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 16px 24px;
+    background-color: #FFF;
   }
+</style>
+<style lang="scss">
+.comment {
+  .pl-textarea_box > .pl-input-textarea {
+    &::-webkit-input-placeholder {
+      font-size: 28px;
+      color: #CCCCCC;
+      line-height: 38px;
+    }
+  }
+  .pl-textarea_box > .pl-input__word-count {
+    color: #CCCCCC !important;
+    > i {
+      color: #CCCCCC !important;
+    }
+  }
+}
+
 </style>

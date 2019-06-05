@@ -19,19 +19,6 @@
         :option="'课程：英语互动'"
         hide-price
       />
-      <!-- <img
-        :class="$style.orderPicture"
-        v-lazy="relationModel.mediaInfoModels[0].mediaUrl"
-        alt="商品图片"
-      >
-      <div :class="$style.orderInfo">
-        <div :class="$style.orderInfoName">
-          {{ relationModel.productModel.productName }}
-        </div>
-        <div :class="$style.orderInfoOption">
-          {{ relationModel.productModel.optionName }}
-        </div>
-      </div> -->
     </section>
 
     <section :class="$style.content">
@@ -149,10 +136,7 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import {
-  getOrderDetail
-  // returnRequest
-} from '../../../apis/order-manager'
+import { getOrderDetail } from '../../../apis/order-manager'
 
 export default {
   name: 'Refund',
@@ -321,9 +305,7 @@ export default {
     min-height: 100vh;
     padding-bottom: 122px;
   }
-  .content {
-    padding: 20px 24px;
-  }
+
   .call-me {
     position: absolute;
     top: -28px;
@@ -331,10 +313,15 @@ export default {
     width: 38px;
     height: 80px;
   }
+
   .order-info {
     padding: 24px;
     background-color: #FFF;
     display: flex;
+  }
+
+  .content {
+    padding: 20px 24px;
   }
 
   .panel {

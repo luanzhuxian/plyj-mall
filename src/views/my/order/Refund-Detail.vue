@@ -197,7 +197,7 @@
     </div>
 
     <div
-      v-if="0"
+      v-if="1"
       :class="$style.footerSubmit"
     >
       <pl-button
@@ -209,9 +209,16 @@
       </pl-button>
     </div>
     <div
-      v-if="1"
+      v-else
       :class="$style.footer"
     >
+      <pl-button
+        round
+        plain
+        @click="deleteOrder"
+      >
+        删除订单
+      </pl-button>
       <pl-button
         round
         plain
@@ -228,15 +235,16 @@
       <pl-button
         round
         plain
+        @click="cancel"
       >
         取消申请
       </pl-button>
-      <pl-button
+      <!-- <pl-button
         round
         plain
       >
         重新申请
-      </pl-button>
+      </pl-button> -->
     </div>
 
     <pl-popup
@@ -358,7 +366,15 @@ export default {
     onPickerCancel () {
       this.isPickerShow = false
     },
-    submit () {}
+    submit () {
+      if (!this.form.expressName.trim()) return this.$toast('请选择物流公司')
+    },
+    async deleteOrder () {
+      await this.$confirm('确认删除订单？')
+    },
+    async cancel () {
+      await this.$confirm('确认要关闭退货申请？')
+    }
   }
 }
 </script>
@@ -519,7 +535,8 @@ export default {
     bottom: 0;
     padding: 18px 24px 18px 0;
     background-color: #FFF;
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
     > button {
       margin-left: 20px;
     }
