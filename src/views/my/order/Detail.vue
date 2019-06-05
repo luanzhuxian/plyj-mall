@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="loaded"
+    v-if="!loaded"
     :class="$style.orderDetail"
   >
     <div :class="$style.top">

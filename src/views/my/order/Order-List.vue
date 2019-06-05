@@ -20,12 +20,6 @@
         />
       </div>
     </pl-tab>
-    <router-link
-      tag="div"
-      :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }"
-    >
-      123
-    </router-link>
     <div :class="$style.orderList">
       <load-more
         ref="loadMore"

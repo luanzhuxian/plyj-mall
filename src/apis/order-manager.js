@@ -49,7 +49,7 @@ export function orderPhysicalorderSummary (userId) {
 }
 // 订单详情
 export function getOrderDetail (orderSn) {
-  return axios.get(`/apis/v1/order/ordermanager/detail/${orderSn}`)
+  return axios.get(`/apis/v1/order/detail/${orderSn}`)
 }
 // 申请发票
 export const applyOrderInvoice = (data) => axios.post(`/apis/v1/invoice/OrderInvoice/add/v2`, data)
