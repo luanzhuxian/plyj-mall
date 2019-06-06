@@ -43,9 +43,9 @@
       />
     </div>
     <div
-      v-show="show"
       ref="wrapper"
       class="pl-collapse-item__wrapper"
+      :style="{ '--height': show ? (collapseHeight + 'px') : (currentHeight + 'px') }"
       @transitionend="onTransitionEnd"
     >
       <div
@@ -62,9 +62,9 @@
 import { ChildrenMixin } from '../../../mixins/relation'
 import { isDef } from '../../../assets/js/util'
 
-function raf (fn) {
-  return window.requestAnimationFrame(fn)
-}
+// function raf (fn) {
+//   return window.requestAnimationFrame(fn)
+// }
 
 export default {
   name: 'CollapseItem',
@@ -112,8 +112,9 @@ export default {
   },
   data () {
     return {
-      show: null,
-      inited: null
+      show: false,
+      collapseHeight: 0,
+      currentHeight: 0
     }
   },
   computed: {
@@ -133,38 +134,35 @@ export default {
     }
   },
   watch: {
-    expanded (expanded, prev) {
-      if (prev === null) {
-        return
-      }
+    expanded (expanded) {
+      this.show = expanded
 
-      if (expanded) {
-        this.show = true
-        this.inited = true
-      }
-
-      raf(() => {
-        const { content, wrapper } = this.$refs
-        if (!content || !wrapper) {
-          return
-        }
-
-        const { clientHeight } = content
-        if (clientHeight) {
-          const contentHeight = `${clientHeight}px`
-          wrapper.style.height = expanded ? 0 : contentHeight
-          raf(() => {
-            wrapper.style.height = expanded ? contentHeight : 0
-          })
-        } else {
-          this.onTransitionEnd()
-        }
-      })
+      // raf(() => {
+      //   const { content, wrapper } = this.$refs
+      //   if (!content || !wrapper) {
+      //     return
+      //   }
+      //
+      //   const { clientHeight } = content
+      //   if (clientHeight) {
+      //     const contentHeight = `${clientHeight}px`
+      //     wrapper.style.height = expanded ? 0 : contentHeight
+      //     raf(() => {
+      //       wrapper.style.height = expanded ? contentHeight : 0
+      //     })
+      //   } else {
+      //     this.onTransitionEnd()
+      //   }
+      // })
     }
   },
   created () {
     this.show = this.expanded
-    this.inited = this.expanded
+  },
+  updated () {
+    this.$nextTick(() => {
+      this.collapseHeight = this.$refs.content.offsetHeight
+    })
   },
   methods: {
     onClick () {
@@ -174,6 +172,7 @@ export default {
 
       const { parent } = this
       const name = parent.accordion && this.currentName === parent.value ? '' : this.currentName
+      console.log(name)
       this.parent.switch(name, !this.expanded)
     },
 
@@ -192,7 +191,6 @@ export default {
 <style lang="scss">
 .pl-collapse-item {
   position: relative;
-
   &__title {
     display: flex;
     justify-content: space-between;
@@ -221,9 +219,10 @@ export default {
   }
 
   &__wrapper {
+    height: var(--height);
     overflow: hidden;
     transition: height .3s ease-in-out;
-    will-change: height;
+    /*will-change: height;*/
   }
 
   &__content {
