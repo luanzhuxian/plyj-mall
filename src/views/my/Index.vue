@@ -18,6 +18,7 @@
             v-text="roleName"
           />
           <router-link
+            v-if="!agentUser"
             :to="{ name: 'ApplyHelper' }"
             :class="$style.apply"
           >
@@ -36,7 +37,10 @@
       </div>
     </div>
     <!-- 金库 -->
-    <div :class="$style.myMoney">
+    <div
+      v-if="agentUser"
+      :class="$style.myMoney"
+    >
       <router-link
         tag="div"
         :class="$style.runbi"
@@ -124,7 +128,10 @@
         </div>
       </router-link>
     </div>
-    <div :class="$style.tip">
+    <div
+      :class="$style.tip"
+      v-if="!agentUser"
+    >
       <span :class="$style.tipCircle" />
       <router-link :to="{ name: 'WhatsHelper' }">
         成为Helper，第一桶金从这里开始>>
