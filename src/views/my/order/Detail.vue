@@ -1,61 +1,51 @@
 <template>
   <div
-    v-if="!loaded"
+    v-if="loaded"
     :class="$style.orderDetail"
   >
     <div :class="$style.top">
-      <!-- 已完成 本次交易已完成，感谢下次光临 -->
-      <!-- 待付款 等待买家付款… -->
-      <!-- 待收货 还剩14天24时后自动确认… -->
       <top-text
-        :title="orderStatusMap[orderInfoModel.orderStatus]"
-        :tip="tips[orderInfoModel.orderStatus]"
+        :title="orderStatusMap[orderStatus]"
+        :tip="suggestionMap[orderStatus]"
       />
-      <a :href="`tel:${supportPhone}`">
+      <!-- <a :href="`tel:${supportPhone}`">
         <pl-svg
           :class="$style.callMe"
           name="phone2"
         />
-      </a>
+      </a> -->
     </div>
 
     <div
       :class="$style.panel"
-      v-if="orderExpressInfoModel"
+      v-if="orderType === 'PHYSICAL' && (orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED')"
     >
       <express-item
-        :express-name="orderExpressInfoModel.courierCompanyName"
-        :express-number="orderExpressInfoModel.courierNo"
         :order-id="orderId"
+        :express-name="logisticsInfoModel && logisticsInfoModel.courierCompany"
+        :express-number="logisticsInfoModel && logisticsInfoModel.courierNo"
+        :express-status="logisticsInfoModel && logisticsInfoModel.logisticTrackModels[logisticsInfoModel.logisticTrackModels.length-1].content"
       />
     </div>
 
     <div :class="$style.panel">
       <div
         :class="$style.orderInfo"
-        v-for="item of relationModel"
-        :key="item.productModel.contentId"
+        v-for="item of productInfoModel.productDetailModels"
+        :key="item.productId"
       >
         <order-item
           size="small"
-          :img="item.mediaInfoModels[0].mediaUrl"
-          :name="item.productModel.productName"
-          :count="item.orderProductRelationModel.count"
-          :option="item.orderProductRelationModel.optionName"
-          :price="item.orderProductRelationModel.productPrice"
-          :product-seq="item.orderProductRelationModel.productSeq"
+          :img="item.productImg"
+          :name="item.productName"
+          :count="item.count"
+          :option="item.optionName"
+          :price="item.price"
           route-name="Lesson"
         />
         <div :class="$style.buttons">
           <pl-button
-            plain
-            round
-            @click="$router.push({ name: 'Refund', params: { orderId } })"
-          >
-            退款完成
-          </pl-button>
-          <pl-button
-            v-if="canIApplyService && !supplierOrder"
+            v-if="canApplyRefund && item.afterSalesStatus === 0"
             plain
             round
             @click="$router.push({ name: 'Refund', params: { orderId } })"
@@ -63,65 +53,80 @@
             申请退款
           </pl-button>
           <pl-button
-            v-if="orderInfoModel.assessment === 'NO' && orderInfoModel.orderStatus === 'FINISHED'"
+            v-if="canApplyRefund && item.afterSalesStatus === 1"
+            plain
+            round
+            @click="$router.push({ name: 'RefundDetail', params: { orderId } })"
+          >
+            退款中
+          </pl-button>
+          <pl-button
+            class="refund-finish"
+            v-if="canApplyRefund && item.afterSalesStatus === 2"
+            plain
+            round
+            @click="$router.push({ name: 'RefundDetail', params: { orderId } })"
+          >
+            退款完成
+          </pl-button>
+          <pl-button
+            v-if="orderStatus === 'FINISHED' && item.assessmentStatus === 0"
             type="warning"
             plain
             round
-            @click="$router.push({ name: 'CommentOrder', params: { orderId: item.orderInfoModel.orderSn } })"
+            @click="$router.push({ name: 'CommentOrder', params: { orderId: orderId, productId: item.productId } })"
           >
             晒单评价
           </pl-button>
         </div>
         <div
           :class="$style.explain"
-          v-if="item.productModel.productType === 'VIRTUAL_GOODS'"
+          v-if="orderType === 'VIRTUAL'"
         >
           <ModuleTitle
             title="使用说明"
             size="mini"
           />
           <div
-            :class="$style.explainBox + ' fz-26 gray-2'"
-            v-text="item.productModel.productUseMethod"
+            :class="$style.explainBox"
+            v-text="item.productUseMethod"
           />
         </div>
       </div>
 
-      <div :class="$style.productMoney + ' fz-28 gray-3'">
+      <div :class="$style.productPrice">
         <p>
           <span>商品金额</span>
           <span
             class="rmb"
-            v-text="orderInfoModel.productAmount"
+            v-text="productInfoModel.productsTotalAmount || 0"
           />
         </p>
-        <p>
+        <p v-if="orderType === 'PHYSICAL'">
           <span>运费</span>
           <span
             class="rmb"
-            v-text="orderInfoModel.freight"
+            v-text="productInfoModel.freight || 0"
           />
         </p>
       </div>
 
-      <div :class="$style.truthMoney">
-        <span :class="$style.totalCount">共1件</span>
+      <div :class="$style.amount">
+        <span :class="$style.totalCount">{{ `共${productInfoModel.totalCount}件` }}</span>
         <span class="fz-30">
           总价：
         </span>
         <span
           class="fz-30 rmb"
-          v-text="orderInfoModel.amount || 0"
+          v-text="productInfoModel.amount || 0"
         />
       </div>
     </div>
 
-    <div
-      :class="$style.panel"
-      v-if="address.realName"
-    >
+    <div :class="$style.panel">
       <address-item
         :address="address"
+        not-link
       />
     </div>
 
@@ -129,54 +134,58 @@
       <div :class="$style.infoTop">
         <pl-list
           title="下单时间："
-          :content="orderInfoModel.createTime"
+          :content="tradingInfoModel.createTime"
         />
         <pl-list
           title="订单编号："
-          :content="orderInfoModel.orderSn"
+          :content="tradingInfoModel.serialNo"
         />
         <pl-list
+          v-if="orderStatus === 'WAIT_SHIP' || orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
           title="支付方式："
-          :content="orderInfoModel.orderSn"
+          :content="tradingInfoModel.payMethod"
         />
         <pl-list
+          v-if="orderStatus === 'WAIT_SHIP' || orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
           title="支付时间："
-          :content="orderInfoModel.orderSn"
+          :content="tradingInfoModel.payTime"
         />
         <pl-list
+          v-if="orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
           title="配送方式："
-          :content="orderInfoModel.orderSn"
+          :content="logisticsInfoModel && logisticsInfoModel.courierCompany"
         />
         <pl-list
+          v-if="orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
           title="发货时间："
-          :content="orderInfoModel.orderSn"
+          :content="logisticsInfoModel && logisticsInfoModel.shipTime"
         />
       </div>
       <div :class="$style.infoBottom">
         <collapse v-model="collepseActiveNames">
           <collapse-item
+            v-if="invoiceModel && invoiceModel.invoiceType"
             name="1"
           >
             <template slot="title">
               <div>
                 <span :class="$style.invoiceTitle">发票信息：</span>
-                <span>未开票</span>
+                <span v-text="invoiceMap[invoiceModel.invoiceType].type" />
               </div>
             </template>
             <template slot="default">
-              <div :class="$style.invoiceName">
-                西安大梦想家艺术培训有限公司
-              </div>
-              <div :class="$style.invoiceNumber">
-                13777327727327273727
-              </div>
+              <div
+                :class="$style.invoiceName"
+                v-text="invoiceModel.invoiceTitle"
+              />
+              <div
+                :class="$style.invoiceNumber"
+                v-text="invoiceMap[invoiceModel.invoiceType].number"
+              />
             </template>
           </collapse-item>
-        </collapse>
-      </div>
-      <div :class="$style.infoBottom">
-        <collapse v-model="collepseActiveNames">
           <collapse-item
+            v-else
             name="1"
             disabled
           >
@@ -188,112 +197,122 @@
             </template>
             <template slot="right-icon">
               <pl-button
+                v-if="orderStatus !== 'WAIT_PAY' && orderStatus !== 'CLOSED'"
                 round
                 plain
-                @click="$router.push({ name: 'Refund', params: { orderId } })"
+                @click="$router.push({ name: 'ApplyInvoice' })"
               >
                 立即申请
               </pl-button>
+              <span v-else />
             </template>
           </collapse-item>
         </collapse>
       </div>
     </div>
 
-    <div
-      v-if="orderDetailModel.orderPostscript"
-      :class="$style.remark + ' radius-20 mt-28'"
-    >
-      <div :class="$style.remarkTop">
-        <span>订单备注</span>
-        <pl-svg
-          :class="$style.remarkIcon"
-          name="warning"
-        />
-      </div>
-      <div
-        :class="$style.remarkContent"
-        v-text="orderDetailModel.orderPostscript"
-      />
-    </div>
     <div :class="$style.footer">
-      <!--
       <pl-button
-        v-if="orderInfoModel.orderStatus === 'FINISHED' && !orderInvoiceModel && !supplierOrder"
-        plain
-        round
-        @click="$router.replace({ name: 'Invoice', params: { orderId } })"
-      >
-        申请发票
-      </pl-button>
-      <pl-button
-        v-if="orderInvoiceModel && !supplierOrder"
-        plain
-        round
-        @click="$router.push({ name: 'InvoiceDetail', params: { orderId } })"
-      >
-        查看发票
-      </pl-button> -->
-      <pl-button
-        v-if="orderInfoModel.orderStatus === 'WAIT_PAY'"
+        v-if="orderStatus === 'WAIT_PAY'"
         round
         plain
-        @click="cancel"
+        @click="cancelOrder"
       >
         取消订单
       </pl-button>
       <pl-button
-        v-if="orderInfoModel.orderStatus === 'FINISHED' || orderInfoModel.orderStatus === 'CLOSED'"
+        v-if="orderStatus === 'FINISHED' || orderStatus === 'CLOSED'"
         plain
         round
-        @click="$router.push({ name: 'Refund', params: { orderId } })"
+        @click="deleteOrder"
       >
         删除订单
       </pl-button>
       <pl-button
         plain
         round
-        @click="isPickerShow=true"
+        @click="isPopupShow=true"
       >
         联系我们
       </pl-button>
       <pl-button
-        v-if="orderInfoModel.orderStatus === 'FINISHED' || orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
+        v-if="orderStatus === 'FINISHED' || orderStatus === 'WAIT_RECEIVE'"
         plain
         round
-        @click="$router.push({ name: 'Refund', params: { orderId } })"
+        @click="$router.push({ name: 'Freight', params: { orderId } })"
       >
         查看物流
       </pl-button>
       <pl-button
-        v-if="orderInfoModel.orderStatus === 'WAIT_RECEIVE'"
+        v-if="orderStatus === 'WAIT_RECEIVE'"
         round
         type="warning"
-        @click="confirmReceipt(orderInfoModel.orderType)"
+        @click="confirmReceipt"
       >
         确认收货
       </pl-button>
       <pl-button
-        v-if="orderInfoModel.orderStatus === 'WAIT_PAY'"
+        v-if="orderStatus === 'WAIT_PAY'"
         type="warning"
         round
-        :loading="payloading && currentPayId === orderInfoModel.orderSn"
+        :loading="payloading && currentPayId === orderId"
         :disabled="payloading"
-        @click="pay(orderInfoModel.orderSn, orderInfoModel.orderType)"
+        @click="pay"
       >
         去付款
       </pl-button>
     </div>
 
     <pl-popup
+      ref="contact"
+      :show.sync="isPopupShow"
+    >
+      <template name="title">
+        <div :class="$style.popupTitle">
+          <pl-svg
+            :class="$style.popupTitleIcon"
+            name="rows"
+          />
+          <span>联系我们</span>
+        </div>
+      </template>
+      <template>
+        <div :class="$style.popupContent">
+          <div :class="$style.popupAddress">
+            <pl-svg
+              :class="$style.popupAddressLeftIcon"
+              name="address-blue"
+            />
+            <span :class="$style.popupAddressText">
+              陕西省西安市雁塔区丈八沟街道新加坡腾飞科汇城东楼1007
+            </span>
+            <pl-svg
+              :class="$style.popupAddressRightIcon"
+              name="copy"
+            />
+          </div>
+          <pl-button
+            size="larger"
+            background-color="#387AF6"
+            prefix-icon="mobile-blue"
+            round
+            @click="call"
+          >
+            立即拨打
+          </pl-button>
+        </div>
+      </template>
+    </pl-popup>
+
+    <pl-popup
       ref="picker"
       :show.sync="isPickerShow"
-      :show-close-icon="false"
+      hide-close-icon
+      @close="onPickerCancel"
     >
       <pl-picker
         show-toolbar
         :columns="pickerColumns"
-        @change="onPickerChange"
         @confirm="onPickerConfirm"
         @cancel="onPickerCancel"
       />
@@ -335,12 +354,32 @@ import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import {
   getOrderDetail,
+  getAwaitPayInfo,
+  confirmReceipt,
   cancelOrder,
-  confirmReceipt
+  deleteOrder
 } from '../../../apis/order-manager'
-import { copyFields } from '../../../assets/js/util'
+import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { mapGetters } from 'vuex'
 import Moment from 'moment'
+
+const suggestionMap = {
+  WAIT_PAY: '',
+  WAIT_SHIP: '请耐心等待商家发货…',
+  WAIT_RECEIVE: '',
+  FINISHED: '本次交易已完成，感谢下次光临',
+  CLOSED: '订单取消'
+}
+const invoiceMap = {
+  '1': {
+    type: '个人',
+    number: 'receiverMobile'
+  },
+  '2': {
+    type: '单位',
+    number: 'tin'
+  }
+}
 
 export default {
   name: 'OrderDetail',
@@ -355,51 +394,47 @@ export default {
     Collapse,
     CollapseItem
   },
-  data () {
-    return {
-      detail: {},
-      supplierOrder: true, // 是否是供应商订单
-      address: {
-        realName: ' ',
-        mobile: ' ',
-        addressPrefix: ' ',
-        agencyAddress: ' '
-      },
-      supportPhone: '',
-      tips: {
-        WAIT_PAY: '',
-        WAIT_SHIP: '等待卖家发货…',
-        WAIT_RECEIVE: '',
-        FINISHED: '本次交易已完成，感谢下次光临'
-      },
-      orderInfoModel: {},
-      orderDetailModel: {},
-      orderRefundDetail: {},
-      relationModel: [],
-      orderExpressInfoModel: null,
-      orderInvoiceModel: {},
-      currentStatus: '',
-      orderType: '',
-      timer: 0,
-      loaded: false,
-      isPickerShow: false,
-      pickerColumns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
-      collepseActiveNames: []
-    }
-  },
   props: {
     orderId: {
       type: String,
       default: ''
     }
   },
+  data () {
+    return {
+      supplierOrder: true, // 是否是供应商订单
+      orderType: '',
+      orderStatus: '',
+      detail: {},
+      receiverModel: {},
+      logisticsInfoModel: {},
+      productInfoModel: {},
+      tradingInfoModel: [],
+      invoiceModel: {},
+      operationRecordModel: {},
+      address: {
+        realName: ' ',
+        mobile: ' ',
+        addressPrefix: ' ',
+        agencyAddress: ' '
+      },
+      currentPayId: '',
+      timer: 0,
+      loaded: false,
+      payloading: false,
+      isPopupShow: false,
+      isPickerShow: false,
+      pickerColumns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
+      collepseActiveNames: [],
+      suggestionMap,
+      invoiceMap
+    }
+  },
   computed: {
     ...mapGetters(['orderStatusMap']),
     // 是否可以申请售后
-    canIApplyService () {
-      return (this.currentStatus === 'FINISHED' || this.currentStatus === 'WAIT_RECEIVE' || this.currentStatus === 'WAIT_SHIP') &&
-        this.orderType !== 'VIRTUAL_GOODS' && // 不是虚拟商品
-        !this.orderRefundDetail.refundId // 没有申请过
+    canApplyRefund () {
+      return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED') && this.orderType !== 'VIRTUAL_GOODS'
     }
   },
   async activated () {
@@ -410,47 +445,46 @@ export default {
     }
   },
   deactivated () {
-    this.orderExpressInfoModel = null
+    this.logisticsInfoModel = null
   },
   methods: {
     getDetail () {
+      const counter = array => key => array.reduce((total, current) => total + current[key], 0)
+      const checkIsRefundSuccessful = products => {
+        const array = products.filter(product => product.afterSalesStatus === 3)
+        console.log(products, array)
+        return products.length === array.length
+      }
       return new Promise(async (resolve, reject) => {
         try {
           this.loaded = false
           clearInterval(this.timer)
           let { result } = await getOrderDetail(this.orderId)
-          let {
-            orderInfoModel,
-            orderDetailModel,
-            relationModel,
-            supportPhone,
-            orderExpressInfoModel,
-            orderInvoiceModel,
-            supplierOrder,
-            orderRefundDetail
-          } = result
           this.detail = result
-          this.supplierOrder = supplierOrder
-          this.orderInfoModel = orderInfoModel
-          this.orderDetailModel = orderDetailModel
-          this.relationModel = relationModel
-          this.orderInvoiceModel = orderInvoiceModel
-          this.orderRefundDetail = orderRefundDetail
-          if (orderExpressInfoModel) {
-            this.orderExpressInfoModel = orderExpressInfoModel[0]
+          this.orderStatus = result.orderStatus
+          this.orderType = result.orderType
+          this.receiverModel = result.receiverModel
+          this.logisticsInfoModel = result.logisticsInfoModel
+          this.productInfoModel = result.productInfoModel
+          this.tradingInfoModel = result.tradingInfoModel
+          this.invoiceModel = (result.invoiceModel && result.invoiceModel.invoiceType) ? result.invoiceModel : { invoiceType: 0 }
+          this.operationRecordModel = result.operationRecordModel
+          this.productInfoModel.totalCount = counter(result.productInfoModel.productDetailModels)('count')
+          this.address.realName = result.receiverModel.name
+          this.address.mobile = result.receiverModel.mobile
+          this.address.agencyAddress = result.receiverModel.address
+          if (result.orderStatus === 'CLOSED') {
+            if (checkIsRefundSuccessful(result.productInfoModel.productDetailModels)) {
+              this.suggestionMap['CLOSED'] = '退款完成'
+            }
           }
-          this.currentStatus = orderInfoModel.orderStatus
-          this.supportPhone = supportPhone
-          this.orderType = orderInfoModel.orderType
-
-          copyFields(this.address, result.orderDetailModel)
 
           let now = Number(result.currentServerTime) // 服务器时间
-          if (orderInfoModel.orderStatus === 'WAIT_PAY') {
-            let startTime = Moment((this.orderInfoModel.createTime)).valueOf()
+          if (result.orderStatus === 'WAIT_PAY') {
+            let startTime = Moment((result.tradingInfoModel.createTime)).valueOf()
             this.countDown(24 * 60 * 60 * 1000 - now + startTime + 2000, 'WAIT_PAY')
-          } else if (orderInfoModel.orderStatus === 'WAIT_RECEIVE') {
-            let startTime = Number(result.sendTime)
+          } else if (result.orderStatus === 'WAIT_RECEIVE') {
+            let startTime = Number(result.logisticsInfoModel.shipTime)
             this.countDown(10 * 24 * 60 * 60 * 1000 - now + startTime + 2000, 'WAIT_RECEIVE')
           }
           resolve()
@@ -460,22 +494,55 @@ export default {
         }
       })
     },
-    // 确定收货
-    async confirmReceipt (orderType) {
+    async pay () {
+      const { orderId } = this
+      this.payloading = true
+      this.currentPayId = orderId
+      try {
+        const { result } = await getAwaitPayInfo(orderId)
+        // 调用微信支付api
+        await wechatPay(result)
+        this.$router.push({ name: 'PaySuccess', params: { orderId } })
+      } catch (e) {
+        throw e
+      } finally {
+        this.payloading = false
+      }
+    },
+    async confirmReceipt () {
+      const { orderId } = this
       try {
         await this.$confirm('您确定收货吗？')
-        await confirmReceipt(this.orderId)
-        // 跳转至待评价
-        this.$router.push({ name: 'Orders', params: { status: 'FINISHED' } })
+        await confirmReceipt(orderId)
+        this.$success('确认收货成功')
+        setTimeout(() => {
+          this.$router.push({ name: 'OrderComplete', params: { orderId } })
+        }, 2000)
       } catch (e) {
         throw e
       }
     },
-    async cancel () {
+    async cancelOrder () {
       try {
-        await this.$confirm('您确定取消订单吗？')
+        const reason = await this.showPicker()
+        console.log(reason)
+        await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
         await cancelOrder(this.orderId)
+        this.$success('订单取消成功')
         this.getDetail()
+      } catch (e) {
+        throw e
+      }
+    },
+    async deleteOrder () {
+      const { orderId } = this
+      try {
+        await this.$confirm('订单一旦删除，将无法恢复 确认要删除订单？')
+        await deleteOrder(orderId)
+        this.$success('订单删除成功')
+        setTimeout(() => {
+          this.$router.push({ name: 'Orders', params: { status: 'ALL_ORDER' } })
+        }, 2000)
       } catch (e) {
         throw e
       }
@@ -490,26 +557,37 @@ export default {
         let s = String(_data.seconds)
         remanent -= 1000
         if (remanent <= 0) {
-          this.tips[flag] = ''
+          this.suggestionMap[flag] = ''
           clearInterval(this.timer)
-          this.tips.WAIT_PAY = ''
-          this.tips.WAIT_RECEIVE = ''
-          // this.getDetail()
+          this.suggestionMap.WAIT_PAY = ''
+          this.suggestionMap.WAIT_RECEIVE = ''
+          this.getDetail()
           return
         }
-        if (flag === 'WAIT_RECEIVE') this.tips.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
-        if (flag === 'WAIT_PAY') this.tips.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
+        if (flag === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        if (flag === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
       }, 1000)
     },
-    onPickerChange (picker, value, index) {
-      console.log(`当前值：${value}, 当前索引：${index}`)
+    showPicker () {
+      return new Promise((resolve, reject) => {
+        this.isPickerShow = true
+        this.resolve = resolve
+        this.reject = reject
+      })
     },
     onPickerConfirm (picker, value, index) {
-      console.log(`当前值：${value}, 当前索引：${index}`)
+      this.isPickerShow = false
+      this.resolve && this.resolve(value)
+      this.resolve = null
+      this.reject = null
     },
     onPickerCancel () {
       this.isPickerShow = false
-    }
+      this.reject && this.reject(false)
+      this.resolve = null
+      this.reject = null
+    },
+    call () {}
   }
 }
 </script>
@@ -523,13 +601,13 @@ export default {
     margin-bottom: 28px;
     padding: 0 16px;
   }
-  .call-me {
-    position: absolute;
-    top: -28px;
-    right: 40px;
-    width: 38px;
-    height: 80px;
-  }
+  // .call-me {
+  //   position: absolute;
+  //   top: -28px;
+  //   right: 40px;
+  //   width: 38px;
+  //   height: 80px;
+  // }
   .panel {
     background-color: #fff;
     border-radius: $--radius1;
@@ -593,12 +671,16 @@ export default {
     padding: 24px 30px;
     background-color: #f3f3f3;
     border-radius: $--radius2;
+    font-size: 26px;
+    color: #666666;
   }
-  .product-money {
+  .product-price {
     margin-left: 24px;
     position: relative;
     padding: 12px 24px 12px 0;
     line-height: 50px;
+    font-size: 26px;
+    color: #666666;
     &:after {
       @include border-half-top(#e7e7e7);
     }
@@ -607,7 +689,7 @@ export default {
       justify-content: space-between;
     }
   }
-  .truth-money {
+  .amount {
     position: relative;
     display: flex;
     margin-left: 24px;
@@ -633,31 +715,6 @@ export default {
     }
   }
 
-  .remark {
-    padding: 24px 24px 18px;
-    background-color: #fff;
-  }
-  .remarkTop {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 28px;
-    font-weight: bold;
-    padding-bottom: 22px;
-    &:after {
-      @include border-half-bottom(#e7e7e7)
-    }
-  }
-  .remarkIcon {
-    width: 28px;
-  }
-  .remarkContent {
-    padding: 20px 0;
-    font-size: 26px;
-    color: #666;
-  }
-
   .footer {
     position: fixed;
     left: 0;
@@ -671,6 +728,48 @@ export default {
     > button {
       margin-left: 20px;
     }
+  }
+
+  .popup-title {
+    padding: 40px 42px 32px;
+    display: flex;
+    align-items: center;
+    font-size:40px;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    color: #000000;
+    line-height: 56px;
+  }
+  .popup-title-icon {
+    width: 26px;
+    margin-right: 26px
+  }
+  .popup-content {
+    padding: 35px 30px;
+  }
+  .popup-address {
+    padding: 20px 30px;
+    margin-bottom: 20px;
+    background-color: #F9F9F9;
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: #000;
+    line-height: 40px;
+    border-radius: 10px;
+  }
+  .popup-address-text {
+    flex: 1;
+  }
+  .popup-address-left-icon {
+    width: 36px;
+    margin-right: 24px
+  }
+  .popup-address-right-icon {
+    width: 39px;
+    margin-left: 40px
   }
 
   .skeleton {
@@ -730,5 +829,16 @@ export default {
   }
   .skeAnimation {
     @include skeAnimation(#eee)
+  }
+</style>
+
+<style lang="scss">
+  .refund-finish {
+    .pl-button__default.plain {
+      color: #CCC;
+    }
+    .pl-button__small.plain:after {
+      border: 1px solid #CCC;
+    }
   }
 </style>

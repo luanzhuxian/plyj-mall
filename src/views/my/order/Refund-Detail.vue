@@ -8,14 +8,6 @@
         title="退换货"
         tip="请根据商家收货地址，将商品寄回"
       />
-      <!--<top-text title="退款成功" tip="2018年7月23日 17:31:32" />-->
-      <!--<top-text title="退款失败" tip="2018年7月23日 17:31:32" />-->
-      <a :href="`tel:${$store.getters.supportPhone}`">
-        <pl-svg
-          :class="$style.callMe"
-          name="phone2"
-        />
-      </a>
     </div>
 
     <section :class="[$style.panel, $style.expressPanel]">
@@ -36,7 +28,7 @@
       <div :class="$style.expressItem">
         <pl-svg
           :class="$style.expressIcon"
-          name="express"
+          name="express-receive"
         />
         <div :class="$style.right">
           <div :class="$style.main">
@@ -250,7 +242,7 @@
     <pl-popup
       ref="picker"
       :show.sync="isPickerShow"
-      :show-close-icon="false"
+      hide-close-icon
     >
       <picker
         show-toolbar
@@ -382,13 +374,6 @@ export default {
 <style module lang="scss">
   .refund-detail {
     padding: 28px 24px 140px;
-  }
-  .call-me {
-    position: absolute;
-    top: -28px;
-    right: 40px;
-    width: 38px;
-    height: 80px;
   }
   .panel {
     background-color: #fff;

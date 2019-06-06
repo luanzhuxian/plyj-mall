@@ -21,6 +21,7 @@
       />
     </div>
     <pl-svg
+      v-if="!notLink"
       :class="$style.rightIcon"
       name="right"
       color="#cdcdcd"
@@ -58,10 +59,12 @@ export default {
       default: function () {
         return null
       }
-    }
+    },
+    notLink: Boolean
   },
   methods: {
     addressList () {
+      if (this.notLink) return
       localStorage.setItem('ADDRESS_RETURN', JSON.stringify(this.$route))
       this.$router.push({ name: 'Address' })
     },

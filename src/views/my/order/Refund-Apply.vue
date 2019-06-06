@@ -96,7 +96,7 @@
       ref="popup"
       :title="popupTitle"
       :show.sync="isPopupShow"
-      :show-close-icon="false"
+      hide-close-icon
       @close="closePopup"
     >
       <template>

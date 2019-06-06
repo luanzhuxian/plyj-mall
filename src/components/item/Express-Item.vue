@@ -12,9 +12,10 @@
         <span v-text="expressName" />
         <span v-text="expressNumber" />
       </div>
-      <div :class="$style.sub">
-        快件正在派送中，派送业务员
-      </div>
+      <div
+        :class="$style.sub"
+        v-text="expressStatus"
+      />
     </div>
     <pl-svg
       :class="$style.rightIcon"
@@ -28,6 +29,10 @@
 export default {
   name: 'ExpressItem',
   props: {
+    orderId: {
+      type: String,
+      default: ''
+    },
     expressName: {
       type: String,
       default: ''
@@ -36,7 +41,7 @@ export default {
       type: String,
       default: ''
     },
-    orderId: {
+    expressStatus: {
       type: String,
       default: ''
     }

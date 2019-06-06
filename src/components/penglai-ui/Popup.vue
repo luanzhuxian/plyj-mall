@@ -26,7 +26,7 @@
         <slot />
       </div>
       <div
-        v-if="showCloseIcon"
+        v-if="!hideCloseIcon"
         class="pl-popup__close-wrapper"
         @click="close"
       >
@@ -48,13 +48,8 @@ export default {
       type: String,
       default: ''
     },
-    showCloseIcon: {
-      type: Boolean,
-      default: true
-    },
-    show: {
-      type: Boolean
-    }
+    hideCloseIcon: Boolean,
+    show: Boolean
   },
   watch: {
     show: {

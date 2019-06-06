@@ -71,21 +71,22 @@ export default {
     return {
       loading: false,
       form: {
-        orderSn: '',
-        productSeq: '',
+        orderId: '',
+        productId: '',
         goodsScore: 5,
-        serviceScore: 5,
-        timeScore: 5,
         content: '',
         mediaInfoModels: []
       },
-      relationModel: {},
       img: '',
       images: []
     }
   },
   props: {
     orderId: {
+      type: String,
+      default: null
+    },
+    productId: {
       type: String,
       default: null
     }
@@ -98,9 +99,7 @@ export default {
   },
   deactivated () {
     resetForm(this.form, {
-      goodsScore: 5,
-      serviceScore: 5,
-      timeScore: 5
+      goodsScore: 5
     })
     this.images = []
   },
@@ -108,12 +107,10 @@ export default {
     async getOrderDetail () {
       try {
         let { result } = await getOrderDetail(this.orderId)
-        const { relationModel } = result
-        this.relationModel = relationModel
-        this.form.orderSn = this.orderId
-        this.form.mallSeq = this.mallSeq
-        this.form.productSeq = relationModel[0].orderProductRelationModel.productSeq
-        this.img = relationModel[0].mediaInfoModels[0].mediaUrl
+        this.img = result.productInfoModel.productDetailModels[0].productImg
+        this.form.orderId = this.orderId
+        this.form.mallId = this.mallSeq
+        this.form.productId = this.productId
       } catch (e) {
         throw e
       }

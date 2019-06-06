@@ -18,7 +18,7 @@ export default [
     }
   },
   {
-    path: '/my/orders/comment/:orderId',
+    path: '/my/orders/comment/:orderId/:productId',
     name: 'CommentOrder',
     component: () => import('../views/my/order/Comment.vue'),
     props: true,
@@ -95,6 +95,15 @@ export default [
     props: true,
     meta: {
       title: '物流信息'
+    }
+  },
+  {
+    path: '/my/order/complete/:orderId',
+    name: 'OrderComplete',
+    component: () => import('../views/my/order/Order-Complete.vue'),
+    props: true,
+    meta: {
+      title: '交易完成'
     }
   }
 ]

@@ -107,7 +107,7 @@
                   v-if="item.status === 'WAIT_RECEIVE' || item.status === 'FINISHED'"
                   round
                   plain
-                  @click="toFreightPage(item.id)"
+                  @click="$router.push({ name: 'Freight', params: { orderId: item.id } })"
                 >
                   查看物流
                 </pl-button>
@@ -275,7 +275,6 @@ export default {
         this.payloading = false
       }
     },
-    // 确定收货
     async confirmReceipt (orderId, orderType) {
       try {
         await this.$confirm('您确定收货吗？')
@@ -318,9 +317,6 @@ export default {
       } catch (e) {
         throw e
       }
-    },
-    toFreightPage (orderId) {
-      this.$router.push({ name: 'Freight', params: { orderId } })
     }
   }
 }

@@ -31,7 +31,7 @@ export function cancelOrder (orderId) {
 }
 // 用户删除订单
 export function deleteOrder (orderId) {
-  return axios.get(`/apis/v1/order/current/user/order/${orderId}`)
+  return axios.delete(`/apis/v1/order/current/user/order/${orderId}`)
 }
 // PUT 用户发货
 export function physicalorderShipmentPublic (orderSn) {

@@ -8,6 +8,7 @@
       'plain': plain,
       'shadow': shadow
     }"
+    :style="{ background: backgroundColor }"
     :disabled="disabled || loading"
     @click.stop="handleClick"
   >
@@ -53,7 +54,11 @@ export default {
       default: ''
     },
     loading: Boolean,
-    shadow: Boolean
+    shadow: Boolean,
+    backgroundColor: {
+      type: String,
+      default: ''
+    }
   },
   methods: {
     handleClick (e) {

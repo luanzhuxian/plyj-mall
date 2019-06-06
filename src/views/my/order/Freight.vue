@@ -7,18 +7,19 @@
         alt=""
       >
       <div :class="$style.middle">
-        <div :class="$style.main">
-          派送中
-        </div>
+        <div
+          :class="$style.main"
+          v-text="lastRecord"
+        />
         <div :class="$style.sub">
-          韵达快递 123467890890
+          <span v-text="courierCompany" />
+          <span v-text="courierNo" />
         </div>
       </div>
       <div :class="$style.right">
         <pl-svg
           :class="$style.icon"
           name="service"
-          color="#666666"
         />
         <div :class="$style.iconText">
           物流客服
@@ -73,7 +74,9 @@ export default {
       loading: false,
       img: '',
       freightData: [],
-      orderDetail: {}
+      courierCompany: '',
+      courierNo: '',
+      lastRecord: ''
     }
   },
   async activated () {
@@ -82,9 +85,12 @@ export default {
       let orderDetail = await getOrderDetail(this.orderId)
       this.orderDetail = orderDetail.result
       this.img = orderDetail.result.productInfoModel.productDetailModels[0].productImg
-      let freightData = await getFreightData(this.orderId)
-      freightData.result.sort((a, b) => b.msgTime - a.msgTime)
-      this.freightData = freightData.result
+      let { result } = await getFreightData(this.orderId)
+      result.trackModelList.sort((a, b) => b.msgTime - a.msgTime)
+      this.freightData = result.trackModelList
+      this.courierCompany = result.courierCompany
+      this.courierNo = result.courierNo
+      this.lastRecord = result.trackModelList.slice(-1)[0].content
     } catch (e) {
       throw e
     } finally {
@@ -219,6 +225,9 @@ export default {
     .sub {
       font-size: 24px;
       line-height: 34px;
+      > span:nth-of-type(1) {
+        margin-right: 10px;
+      }
     }
     .icon {
       width: 35px;
