@@ -31,8 +31,8 @@
     <div :class="$style.panel">
       <div
         :class="$style.orderInfo"
-        v-for="item of productInfoModel.productDetailModels"
-        :key="item.productId"
+        v-for="(item, i) of productInfoModel.productDetailModels"
+        :key="i"
       >
         <order-item
           size="small"
@@ -173,16 +173,14 @@
                 <span v-text="invoiceMap[invoiceModel.invoiceType].type" />
               </div>
             </template>
-            <template slot="default">
-              <div
-                :class="$style.invoiceName"
-                v-text="invoiceModel.invoiceTitle"
-              />
-              <div
-                :class="$style.invoiceNumber"
-                v-text="invoiceMap[invoiceModel.invoiceType].number"
-              />
-            </template>
+            <div
+              :class="$style.invoiceName"
+              v-text="invoiceModel.invoiceTitle"
+            />
+            <div
+              :class="$style.invoiceNumber"
+              v-text="invoiceMap[invoiceModel.invoiceType].number"
+            />
           </collapse-item>
           <collapse-item
             v-else
@@ -303,20 +301,11 @@
         </div>
       </template>
     </pl-popup>
-
-    <pl-popup
-      ref="picker"
+    <pl-picker
       :show.sync="isPickerShow"
-      hide-close-icon
-      @close="onPickerCancel"
-    >
-      <pl-picker
-        show-toolbar
-        :columns="pickerColumns"
-        @confirm="onPickerConfirm"
-        @cancel="onPickerCancel"
-      />
-    </pl-popup>
+      :slots="pickerColumns"
+      @confirm="onPickerConfirm"
+    />
   </div>
 
   <div
@@ -424,7 +413,13 @@ export default {
       payloading: false,
       isPopupShow: false,
       isPickerShow: false,
-      pickerColumns: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
+      pickerColumns: [
+        {
+          flex: 1,
+          values: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
+          textAlign: 'center'
+        }
+      ],
       collepseActiveNames: [],
       suggestionMap,
       invoiceMap
@@ -452,7 +447,6 @@ export default {
       const counter = array => key => array.reduce((total, current) => total + current[key], 0)
       const checkIsRefundSuccessful = products => {
         const array = products.filter(product => product.afterSalesStatus === 3)
-        console.log(products, array)
         return products.length === array.length
       }
       return new Promise(async (resolve, reject) => {
@@ -524,8 +518,6 @@ export default {
     },
     async cancelOrder () {
       try {
-        const reason = await this.showPicker()
-        console.log(reason)
         await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
         await cancelOrder(this.orderId)
         this.$success('订单取消成功')
@@ -568,24 +560,8 @@ export default {
         if (flag === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
       }, 1000)
     },
-    showPicker () {
-      return new Promise((resolve, reject) => {
-        this.isPickerShow = true
-        this.resolve = resolve
-        this.reject = reject
-      })
-    },
-    onPickerConfirm (picker, value, index) {
-      this.isPickerShow = false
-      this.resolve && this.resolve(value)
-      this.resolve = null
-      this.reject = null
-    },
-    onPickerCancel () {
-      this.isPickerShow = false
-      this.reject && this.reject(false)
-      this.resolve = null
-      this.reject = null
+    onPickerConfirm (selected) {
+      console.log(selected)
     },
     call () {}
   }

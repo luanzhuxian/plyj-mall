@@ -20,7 +20,7 @@ import CheckboxGroup from './checkbox/Checkbox-Group.vue'
 import RadioComponent from './radio/Radio.vue'
 import RadioGroupComponent from './radio/Radio-Group.vue'
 import Popup from './Popup.vue'
-import Picker from './pl-picker/Picker.vue'
+import Picker from './picker/Picker.vue'
 import { Toast } from './toast'
 const components = [
   Button,

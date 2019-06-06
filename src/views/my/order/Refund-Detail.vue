@@ -238,20 +238,11 @@
         重新申请
       </pl-button> -->
     </div>
-
-    <pl-popup
-      ref="picker"
+    <pl-picker
       :show.sync="isPickerShow"
-      hide-close-icon
-    >
-      <picker
-        show-toolbar
-        :columns="pickerColumns"
-        @change="onPickerChange"
-        @confirm="onPickerConfirm"
-        @cancel="onPickerCancel"
-      />
-    </pl-popup>
+      :slots="pickerColumns"
+      @confirm="onPickerConfirm"
+    />
   </div>
 </template>
 
@@ -261,28 +252,7 @@ import ModuleTitle from '../../../components/Module-Title.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
-import Picker from '../../../components/penglai-ui/picker/Picker.vue'
 import { getRefundDetail } from '../../../apis/order-manager'
-
-const express = {
-  '顺丰快递': ['1', '2', '3', '4'],
-  '韵达快递': ['11', '22', '33', '44'],
-  '圆通快递': ['111', '222', '333', '444'],
-  '申通快递': ['1111', '2222', '3333', '4444']
-}
-
-const pickerColumns = [
-  {
-    values: Object.keys(express),
-    className: 'column1'
-  },
-  {
-    values: express['顺丰快递'],
-    className: 'column2',
-    defaultIndex: 2
-  }
-]
-
 export default {
   name: 'RefundDetail',
   components: {
@@ -290,8 +260,7 @@ export default {
     ModuleTitle,
     OrderItem,
     Collapse,
-    CollapseItem,
-    Picker
+    CollapseItem
   },
   data () {
     return {
@@ -307,7 +276,13 @@ export default {
         expressNo: ''
       },
       isPickerShow: false,
-      pickerColumns,
+      pickerColumns: [
+        {
+          flex: 1,
+          textAlign: 'center',
+          values: ['顺丰快递', '韵达快递', '圆通快递', '申通快递']
+        }
+      ],
       collepseActiveNames: [],
       imgList: [
         'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png',
@@ -346,13 +321,9 @@ export default {
     },
     showPicker () {
     },
-    onPickerChange (picker, value, index) {
-      console.log(`当前值：${value}, 当前索引：${index}`)
-      picker.setColumnValues(1, express[value[0]])
-    },
-    onPickerConfirm (picker, value, index) {
-      console.log(`当前值：${value}, 当前索引：${index}`)
-      this.form.expressName = value[0]
+    onPickerConfirm (selected) {
+      console.log(selected)
+      this.form.expressName = selected[0]
       this.isPickerShow = false
     },
     onPickerCancel () {
