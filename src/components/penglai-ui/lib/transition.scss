@@ -29,3 +29,22 @@
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+.picker-translate-enter  {
+  transform: translateY(100%);
+}
+.picker-translate-leave-to {
+  transform: translateY(100%);
+}
+.picker-translate-enter-active {
+  transition: transform .2s ease-in;
+}
+.picker-translate-leave-active {
+  transition: transform .2s ease-out;
+}
+.picker-translate-leave  {
+  transform: translateY(0);
+}
+.picker-translate-enter-to {
+  transform: translateY(0);
+}

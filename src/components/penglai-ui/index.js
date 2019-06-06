@@ -20,6 +20,7 @@ import CheckboxGroup from './checkbox/Checkbox-Group.vue'
 import RadioComponent from './radio/Radio.vue'
 import RadioGroupComponent from './radio/Radio-Group.vue'
 import Popup from './Popup.vue'
+import Picker from './pl-picker/Picker.vue'
 import { Toast } from './toast'
 const components = [
   Button,
@@ -40,7 +41,8 @@ const components = [
   CheckboxGroup,
   RadioComponent,
   RadioGroupComponent,
-  Popup
+  Popup,
+  Picker
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {
@@ -97,5 +99,6 @@ export default {
   Selector,
   Checkbox,
   CheckboxGroup,
-  Popup
+  Popup,
+  Picker
 }

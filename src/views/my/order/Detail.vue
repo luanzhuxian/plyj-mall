@@ -290,7 +290,7 @@
       :show.sync="isPickerShow"
       :show-close-icon="false"
     >
-      <picker
+      <pl-picker
         show-toolbar
         :columns="pickerColumns"
         @change="onPickerChange"
@@ -333,7 +333,6 @@ import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
-import Picker from '../../../components/penglai-ui/picker/Picker.vue'
 import {
   getOrderDetail,
   cancelOrder,
@@ -354,8 +353,7 @@ export default {
     OrderItemSkeleton,
     AddressItemSkeleton,
     Collapse,
-    CollapseItem,
-    Picker
+    CollapseItem
   },
   data () {
     return {
