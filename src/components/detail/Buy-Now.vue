@@ -49,7 +49,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-// import { getPenglaiAppid } from '../../apis/base-api'
 import { addToCart } from '../../apis/shopping-cart'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 
@@ -93,15 +92,10 @@ export default {
     // 是否为供应商商品
     isSupplierProduct: {
       type: Boolean
-    },
-    // 经纪人Id,
-    brokerId: {
-      type: String,
-      default: null
     }
   },
   computed: {
-    ...mapGetters(['supportPhone', 'mallDomain', 'mobile'])
+    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId'])
   },
   activated () {
     this.reset()
@@ -122,9 +116,6 @@ export default {
         }
       })
     },
-    buttonClick (e) {
-      this[e.target.dataset['method']]()
-    },
     // 跳转至提交订单页面
     async submit () {
       if (!this.hasBind()) return
@@ -139,23 +130,17 @@ export default {
         return
       }
       const { productSeq, count, optionCode } = currentModel
-      /* if (isSupplierProduct) {
-        // 如果是供应商商品，这样跳转至提交订单页面
-        let { result } = await getPenglaiAppid()
-        let { protocol, host } = location
-        let href = `${protocol}//${host}/${this.mallDomain}/order/submit/${productSeq}/${optionCode}/${count}${brokerId ? ('/' + brokerId) : ''}`
-        let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${result}&redirect_uri=${href}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
-        // console.log(url)
-        return location.replace(url)
-      } */
+      // helper分享时携带的id
+      const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
       localStorage.setItem('CONFIRM_LIST', JSON.stringify([{
         productId: productSeq,
         optionCode: optionCode,
         count: count,
-        agentUser: this.brokerId || ''
+        agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.$router.push({ name: 'SubmitOrder' })
     },
+    // 加入购物车
     async addToCart () {
       if (!this.hasBind()) return
       this.clickAddToCart = true
@@ -167,12 +152,14 @@ export default {
       }
       this.loading = true
       const { productSeq, count, optionCode } = currentModel
+      // helper分享时携带的id
+      const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
       try {
         await addToCart({
           productId: productSeq,
           productCount: count,
           skuCode: optionCode,
-          agentUser: this.brokerId || ''
+          agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
         })
         this.$success('加入成功')
       } catch (e) {

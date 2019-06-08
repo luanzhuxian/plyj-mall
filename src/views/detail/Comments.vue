@@ -18,7 +18,6 @@
       type="warning"
       ref="buyNow"
       :current-model.sync="currentModel"
-      :broker-id="brokerId"
       :price-models="detail.priceModels"
       :is-supplier-product="isSupplierProduct"
     />
@@ -65,10 +64,6 @@ export default {
   },
   props: {
     productSeq: {
-      type: String,
-      default: null
-    },
-    brokerId: {
       type: String,
       default: null
     }

@@ -80,7 +80,6 @@
       type="warning"
       ref="buyNow"
       :current-model.sync="currentModel"
-      :broker-id="brokerId"
       :price-models="detail.priceModels"
       :is-supplier-product="isSupplierProduct"
     />
@@ -164,7 +163,7 @@ export default {
     },
     brokerId: {
       type: String,
-      default: null
+      default: ''
     }
   },
   computed: {
@@ -177,6 +176,11 @@ export default {
   },
   activated () {
     this.getDetail()
+  },
+  mounted () {
+    // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
+    // 详情页只做存储，具体判断过程在点击立即购买和加入购物车时判断
+    sessionStorage.setItem('shareBrokerId', this.brokerId)
   },
   methods: {
     async getDetail () {
