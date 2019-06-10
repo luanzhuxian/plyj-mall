@@ -137,7 +137,7 @@ export default {
       const translateY = this.translateY
       this.setTranslate(speedValue)
       speedValue *= 1 - COEFFICIENT
-      // 初始速度必须大于12，且，移动距离在最大最下移动距离之间
+      // 初始速度必须大于10，且，移动距离在最大最小移动距离之间
       if (initedSpeed * direction >= 10 &&
           speedValue * direction >= 1 &&
           translateY <= MAX_TRANSLATE_Y + 50 &&
