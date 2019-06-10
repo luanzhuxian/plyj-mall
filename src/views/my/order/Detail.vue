@@ -456,34 +456,47 @@ export default {
       return new Promise(async (resolve, reject) => {
         try {
           this.loaded = false
-          clearInterval(this.timer)
           let { result } = await getOrderDetail(this.orderId)
+          const {
+            orderStatus,
+            orderType,
+            receiverModel,
+            logisticsInfoModel,
+            productInfoModel,
+            tradingInfoModel,
+            invoiceModel,
+            operationRecordModel
+          } = result
           this.detail = result
-          this.orderStatus = result.orderStatus
-          this.orderType = result.orderType
-          this.receiverModel = result.receiverModel
-          this.logisticsInfoModel = result.logisticsInfoModel
-          this.productInfoModel = result.productInfoModel
-          this.tradingInfoModel = result.tradingInfoModel
-          this.invoiceModel = (result.invoiceModel && result.invoiceModel.invoiceType) ? result.invoiceModel : { invoiceType: 0 }
-          this.operationRecordModel = result.operationRecordModel
-          this.productInfoModel.totalCount = counter(result.productInfoModel.productDetailModels)('count')
-          this.shippingAddress.realName = result.receiverModel.name
-          this.shippingAddress.mobile = result.receiverModel.mobile
-          this.shippingAddress.agencyAddress = result.receiverModel.address
+          this.orderStatus = orderStatus
+          this.orderType = orderType
+          this.receiverModel = receiverModel
+          this.logisticsInfoModel = logisticsInfoModel
+          this.productInfoModel = productInfoModel
+          this.tradingInfoModel = tradingInfoModel
+          this.invoiceModel = (invoiceModel && invoiceModel.invoiceType) ? invoiceModel : { invoiceType: 0 }
+          this.operationRecordModel = operationRecordModel
+          this.productInfoModel.totalCount = counter(productInfoModel.productDetailModels)('count')
+          this.shippingAddress.realName = receiverModel.name
+          this.shippingAddress.mobile = receiverModel.mobile
+          this.shippingAddress.agencyAddress = receiverModel.address
           if (result.orderStatus === 'CLOSED') {
-            if (checkIsRefundSuccessful(result.productInfoModel.productDetailModels)) {
+            if (checkIsRefundSuccessful(productInfoModel.productDetailModels)) {
               this.suggestionMap['CLOSED'] = '退款完成'
             }
           }
 
           let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
           if (result.orderStatus === 'WAIT_PAY') {
-            let startTime = Moment((result.tradingInfoModel.createTime)).valueOf()
-            this.countDown(24 * 60 * 60 * 1000 + startTime - now + 2000, 'WAIT_PAY')
+            let startTime = Moment((tradingInfoModel.createTime)).valueOf()
+            if (now - startTime < 24 * 60 * 60 * 1000) {
+              this.countDown(24 * 60 * 60 * 1000 + startTime - now + 2000, 'WAIT_PAY')
+            }
           } else if (result.orderStatus === 'WAIT_RECEIVE') {
-            let startTime = Moment((result.tradingInfoModel.createTime)).valueOf()
-            this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now + 2000, 'WAIT_RECEIVE')
+            let startTime = Moment((tradingInfoModel.createTime)).valueOf()
+            if (now - startTime < 24 * 60 * 60 * 1000) {
+              this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now + 2000, 'WAIT_RECEIVE')
+            }
           }
           resolve()
           this.loaded = true
@@ -545,6 +558,7 @@ export default {
     },
     // 倒计时
     countDown (remanent, flag) {
+      clearInterval(this.timer)
       this.timer = setInterval(() => {
         let { _data } = Moment.duration(remanent)
         let d = String(_data.days)
@@ -552,6 +566,7 @@ export default {
         let m = String(_data.minutes)
         let s = String(_data.seconds)
         remanent -= 1000
+        console.log(remanent)
         if (remanent <= 0) {
           this.suggestionMap[flag] = ''
           clearInterval(this.timer)

@@ -319,7 +319,9 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    localStorage.removeItem('APPLY_INVOICE')
+    if (to.name !== 'AddInvoice') {
+      localStorage.removeItem('APPLY_INVOICE')
+    }
     next()
   }
 }
