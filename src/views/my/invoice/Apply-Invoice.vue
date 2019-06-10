@@ -342,8 +342,7 @@ export default {
             invoiceType: this.type,
             invoiceTitle: this.type === 1 ? this.receiveName : this.form.firmName,
             tin: this.type === 2 ? this.form.tin : '',
-            orderDetails: orderDetailsTemp,
-            userId: this.userId
+            orderDetails: orderDetailsTemp
           })
         } catch (e) {
           throw e

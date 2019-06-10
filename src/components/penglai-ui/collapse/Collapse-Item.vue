@@ -190,6 +190,10 @@ export default {
 <style lang="scss">
 .pl-collapse-item {
   position: relative;
+  margin-bottom: 20px;
+  &:nth-last-of-type(1) {
+    margin-bottom: 0;
+  }
   &__title {
     display: flex;
     justify-content: space-between;

@@ -211,15 +211,12 @@ export default {
     }
   },
   created () {
-  },
-  activated () {
     this.getOrderDetail()
   },
   methods: {
     async getOrderDetail () {
       const { result } = await getOrderDetail(this.orderId)
-      const products = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)
-      this.productInfo = products.length ? products[0] : {}
+      this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
       this.orderStatus = result.orderStatus
       this.operationType = refundReasonKeyMap[result.orderStatus]
       this.form.refundType = this.refundType

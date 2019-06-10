@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive :exclude="[]">
+    <keep-alive :exclude="exclude">
       <router-view v-if="logined" />
     </keep-alive>
 
@@ -23,9 +23,7 @@ export default {
   data () {
     return {
       logined: false,
-      exclude: [
-        'Home'
-      ],
+      exclude: ['Refund'],
       showNavbar: [
         'Home',
         'My',

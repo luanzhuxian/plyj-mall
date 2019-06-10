@@ -188,16 +188,17 @@
                 :class="$style.invoiceNumber"
                 v-text="item[invoiceMap[item.invoiceType].fields]"
               />
-              <template slot="right-icon">
+              <template
+                slot="right-icon"
+                v-if="canIApplyInvoice"
+              >
                 <pl-button
-                  v-if="canIApplyInvoice"
                   round
                   plain
                   @click="applyInvoice"
                 >
                   立即申请
                 </pl-button>
-                <span v-else />
               </template>
             </collapse-item>
           </template>
@@ -432,7 +433,7 @@ export default {
     canIApplyInvoice () {
       return this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
-        this.invoiceModelList.length < this.productInfoModel.productDetailModels.length
+        this.productInfoModel.productDetailModels.filter(item => item.invoiceStatus !== 3).length > 0
     }
   },
   async activated () {

@@ -24,4 +24,4 @@ export const removeInvoice = id => axios.post('/apis/v1/base/baseUserInvoice/del
 * @data object {invoiceType, invoiceTitle, tin, orderDetails:[], receiverMobile, userId}
 * @orderDetails array [{"orderId":"","orderDetailId":""}]
 * */
-export const applyInvoice = data => axios.post('/apis/v1/invoice/invoice/admin/applyInvoice', data)
+export const applyInvoice = data => axios.post('/apis/v1/invoice/invoice/consumer/applyInvoice', data)
