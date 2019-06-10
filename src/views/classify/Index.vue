@@ -51,8 +51,21 @@
         <div
           :class="$style.title"
           v-text="currentClassify.subCategoryName || currentClassify.categoryName"
-          v-show="!isEmpty"
+          v-show="!isEmpty && currentClassify.childs && currentClassify.childs.length"
         />
+        <div
+          :class="$style.title"
+          style="text-align: center;"
+          v-show="!isEmpty && currentClassify.categoryName && currentClassify.categoryName === '全部'"
+        >
+          全部商品
+        </div>
+        <div
+          :class="$style.title"
+          v-show="!isEmpty && currentClassify.sequenceNbr && currentClassify.sequenceNbr === '1'"
+        >
+          热门推荐
+        </div>
 
         <load-more
           ref="loadMore"
@@ -61,6 +74,7 @@
           :form="form"
           no-content-tip="此分类下还没有商品"
           @listState="isEmpty = $event"
+          :style="`margin-top: ${20/7.5}vw;`"
         >
           <template v-slot="{ list }">
             <div :class="$style.productList">
@@ -323,7 +337,7 @@ export default {
   justify-content: space-between;
 }
 .title{
-  margin: 32px 0 20px 0;
+  margin-top: 32px;
   color: #2E2E2E;
   font-size: 28px;
   font-weight: bolder;
