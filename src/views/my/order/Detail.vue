@@ -167,13 +167,17 @@
             v-for="(item, i) of invoiceModelList"
           >
             <collapse-item
-              name="1"
+              :name="i"
               :key="i"
             >
               <template slot="title">
                 <div>
                   <span :class="$style.invoiceTitle">发票信息：</span>
-                  <span v-text="invoiceMap[item.invoiceType].type" />
+                  <span
+                    v-if="invoiceModelList.length > 0"
+                    v-text="invoiceMap[item.invoiceType].type"
+                  />
+                  <span v-else>未开票</span>
                 </div>
               </template>
               <div
