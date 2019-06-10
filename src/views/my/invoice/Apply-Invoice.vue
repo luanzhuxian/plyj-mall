@@ -297,7 +297,7 @@ export default {
           invoiceTitle: this.form.firmName,
           userAddressId: this.selectedAddress.sequenceNbr
         }
-        if (!currentInvoice.id) {
+        if (!currentInvoice || !currentInvoice.id) {
           addInvoice({
             userId: this.userId,
             entName: this.form.firmName,
