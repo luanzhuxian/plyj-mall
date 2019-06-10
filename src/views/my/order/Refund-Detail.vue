@@ -263,7 +263,7 @@ export default {
     CollapseItem
   },
   props: {
-    orderSn: {
+    id: {
       type: String,
       default: null
     }

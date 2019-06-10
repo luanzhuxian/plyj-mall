@@ -48,7 +48,7 @@
             v-if="canApplyRefund && item.afterSalesStatus === 0"
             plain
             round
-            @click="$router.push({ name: 'Refund', params: { orderId, productId: item.productId } })"
+            @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId } })"
           >
             申请退款
           </pl-button>
@@ -138,7 +138,7 @@
         />
         <pl-list
           title="订单编号："
-          :content="tradingInfoModel.serialNo"
+          :content="orderId"
         />
         <pl-list
           v-if="orderStatus === 'WAIT_SHIP' || orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
@@ -343,8 +343,8 @@ import {
   deleteOrder
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
-import { mapGetters } from 'vuex'
 import Moment from 'moment'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'OrderDetail',
@@ -532,7 +532,7 @@ export default {
     },
     async cancelOrder (reason) {
       try {
-        await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
+        await this.$confirm('订单一旦取消，将无法恢复，确认要取消订单？')
         await cancelOrder(this.orderId)
         this.$success('订单取消成功')
         this.getDetail()
@@ -708,6 +708,7 @@ export default {
       &:nth-of-type(1) {
         color: #999999;
         margin-right: 12px;
+        font-size: 20px;
       }
       &:nth-last-of-type(1) {
         color: $--primary-color;

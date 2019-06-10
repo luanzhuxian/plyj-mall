@@ -53,7 +53,7 @@ export default [
     }
   },
   {
-    path: '/my/orders/refund/:orderId/:productId',
+    path: '/my/orders/refund/:orderId/:orderProductRId',
     name: 'Refund',
     component: () => import('../views/my/order/Refund.vue'),
     props: true,
@@ -62,7 +62,7 @@ export default [
     }
   },
   {
-    path: '/my/orders/refund-apply/:orderId/:productId/:refundType',
+    path: '/my/orders/refund-apply/:orderId/:orderProductRId/:refundType',
     name: 'RefundApply',
     component: () => import('../views/my/order/Refund-Apply.vue'),
     props: true,
@@ -80,7 +80,7 @@ export default [
     }
   },
   {
-    path: '/my/orders/refund-detail/:orderId',
+    path: '/my/orders/refund-detail/:id',
     name: 'RefundDetail',
     component: () => import('../views/my/order/Refund-Detail.vue'),
     props: true,
@@ -98,7 +98,8 @@ export default [
     }
   },
   {
-    path: '/my/order/complete/:orderId',
+    // path: '/my/order/complete/:orderId',
+    path: '/my/order/complete',
     name: 'OrderComplete',
     component: () => import('../views/my/order/Order-Complete.vue'),
     props: true,

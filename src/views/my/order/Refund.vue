@@ -35,7 +35,7 @@
 
         <router-link
           tag="div"
-          :to="{ name: 'RefundApply', params: { orderId, productId, refundType: '2' } }"
+          :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '2' } }"
           :class="$style.item"
         >
           <div :class="$style.itemLeft">
@@ -74,7 +74,7 @@ export default {
       type: String,
       default: null
     },
-    productId: {
+    orderProductRId: {
       type: String,
       default: null
     }
@@ -99,7 +99,7 @@ export default {
     async getProductDetail () {
       // getOrderDetail(this.orderId)
       const { result } = await getOrderDetail(this.orderId)
-      const products = result.productInfoModel.productDetailModels.filter(product => product.productId === this.productId)
+      const products = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)
       this.productInfo = products.length ? products[0] : {}
       // this.orderStatus = orderInfoModel.orderStatus
       // this.operationType = this.statusTypeMap[orderInfoModel.orderStatus]

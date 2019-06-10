@@ -21,13 +21,13 @@
         />
         <pl-fields
           text="货物状态："
-          :right-text="form.goodsStatus || '请选择'"
+          :right-text="form.goodsStatusText || '请选择'"
           show-right-icon
           @click="showPopup('goodsStatus')"
         />
         <pl-fields
           text="请选择退货原因："
-          :right-text="form.refundReason || '请选择'"
+          :right-text="form.refundReasonText || '请选择'"
           show-right-icon
           @click="showPopup('refundReason')"
         />
@@ -37,7 +37,7 @@
           </span>
           <span :class="$style.itemRight">
             <div :class="$style.price">
-              ￥76.64
+              {{ `￥${form.actualRefund}` }}
             </div>
             <div :class="$style.tips">
               运费不可退，如有疑问，请联系商家协商
@@ -59,7 +59,7 @@
               maxlength="400"
             /> -->
             <pl-input
-              v-model="form.reson"
+              v-model="form.applyContent"
               type="textarea"
               placeholder="请填写您的原因"
               :maxlength="400"
@@ -95,12 +95,12 @@
       :title="popupTitle"
       :show.sync="isPopupShow"
       hide-close-icon
-      @close="closePopup"
+      @close="isPopupShow = false"
     >
       <template>
         <ul :class="$style.popupContentWrapper">
           <radio-group-component
-            v-model="radio"
+            v-model="form[currentPopupName]"
             @change="onRadioChange"
           >
             <template>
@@ -108,12 +108,13 @@
                 :class="$style.popupItem"
                 v-for="(item, index) of popupOptions"
                 :key="index"
-                @click="handleRadioClick(item.text)"
+                @click="handleRadioClick(item)"
               >
-                <div :class="$style.popupItemText">
-                  {{ item.text }}
-                </div>
-                <radio-component :name="item.text" />
+                <div
+                  :class="$style.popupItemText"
+                  v-text="item.dictDataValue"
+                />
+                <radio-component :name="item.dictDataKey" />
               </div>
             </template>
           </radio-group-component>
@@ -122,7 +123,7 @@
           <pl-button
             size="larger"
             type="warning"
-            @click="closePopup"
+            @click="isPopupShow = false"
           >
             关闭
           </pl-button>
@@ -134,11 +135,28 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import { getOrderDetail } from '../../../apis/order-manager'
+import { getOrderDetail, getRefundReasonMap, applyRefund } from '../../../apis/order-manager'
+import { resetForm } from '../../../assets/js/util'
 
 const refundTypeMap = {
   '1': '退款',
   '2': '退款退货'
+}
+
+const refundStatusMap = [
+  {
+    dictDataKey: '1',
+    dictDataValue: '已收到货'
+  }, {
+    dictDataKey: '2',
+    dictDataValue: '未收到货'
+  }
+]
+
+const refundReasonKeyMap = {
+  'WAIT_SHIP': 'REASONBUYERPAID',
+  'WAIT_RECEIVE': 'REASONSNOTRECEIVEDGOODS',
+  'FINISHED': 'REASONSRECEIVEDGOODS'
 }
 
 export default {
@@ -151,7 +169,7 @@ export default {
       type: String,
       default: null
     },
-    productId: {
+    orderProductRId: {
       type: String,
       default: null
     },
@@ -162,22 +180,20 @@ export default {
   },
   data () {
     return {
-      statusTypeMap: {
-        WAIT_SHIP: 'WAIT_SHIP_REFUND_RULE', // 待发货的待退款
-        WAIT_RECEIVE: 'WAIT_RECEIVE_REFUND_RULE', // 待收货的待退款
-        FINISHED: 'FINISHED_REFUND_RULE' // 待收货的待退款
-      },
       refundTypeMap,
+      refundReasonKeyMap,
       orderStatus: '',
       operationType: '', // 在何种情况下退款,
       productInfo: {},
       form: {
-        refundType: this.refundType,
+        refundType: '',
         goodsStatus: '',
+        goodsStatusText: '',
         refundReason: '',
-        amount: '',
-        reson: '',
-        imgList: []
+        refundReasonText: '',
+        actualRefund: 200.36,
+        applyContent: '',
+        pictures: []
       },
       imgList: [],
       isPopupShow: false,
@@ -186,40 +202,12 @@ export default {
       popupOptions: [],
       goodsStatusInfo: {
         title: '货物状态',
-        options: [{
-          name: '2',
-          text: '未收到货'
-        }, {
-          name: '1',
-          text: '已收到货'
-        }]
+        options: refundStatusMap
       },
       refundReasonInfo: {
         title: '退款原因',
-        options: [{
-          name: '0',
-          text: '质量问题'
-        }, {
-          name: '1',
-          text: '不想要了'
-        }, {
-          name: '2',
-          text: '商品信息填写错误'
-        }, {
-          name: '3',
-          text: '卖家发错货'
-        }, {
-          name: '4',
-          text: '商品与描述不符合'
-        }, {
-          name: '5',
-          text: '收到商品少件、破损或污渍'
-        }, {
-          name: '6',
-          text: '质量问题'
-        }]
-      },
-      radio: ''
+        options: []
+      }
     }
   },
   created () {
@@ -230,10 +218,14 @@ export default {
   methods: {
     async getOrderDetail () {
       const { result } = await getOrderDetail(this.orderId)
-      const products = result.productInfoModel.productDetailModels.filter(product => product.productId === this.productId)
+      const products = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)
       this.productInfo = products.length ? products[0] : {}
       this.orderStatus = result.orderStatus
-      this.operationType = this.statusTypeMap[result.orderStatus]
+      this.operationType = refundReasonKeyMap[result.orderStatus]
+      this.form.refundType = this.refundType
+      this.form.actualRefund = result.productInfoModel.productsTotalAmount
+      const { result: refundReason } = await getRefundReasonMap(this.operationType)
+      this.refundReasonInfo.options = refundReason
     },
     showPopup (name) {
       this.currentPopupName = name
@@ -243,65 +235,60 @@ export default {
         this.isPopupShow = true
       })
     },
-    closePopup () {
-      const { currentPopupName, radio } = this
-      this.form[currentPopupName] = radio
-      this.isPopupShow = false
-    },
-    handleRadioClick (value) {
-      this.radio = value
+    handleRadioClick (item) {
+      let { currentPopupName, form } = this
+      form[currentPopupName] = item.dictDataKey
+      form[`${currentPopupName}Text`] = item.dictDataValue
     },
     onRadioChange (value) {
       console.log(value)
     },
     uploaded (res) {
       if (res.res.status === 200) {
-        this.imgList.push(res.url)
         // let ossModel = {
         //   mediaType: 'image',
         //   mediaFilename: res.name.split('/').splice(-1, 1)[0],
         //   mediaUrl: res.url
         // }
-        // this.form.imgList.push(ossModel)
+        this.form.pictures.push(res.url)
+        this.imgList.push(res.url)
       }
     },
     removeImg (index, list) {
-      console.log(index, list, this.imgList)
-      // this.form.imgList.splice(index, 1)
+      this.imgList.splice(index, 1)
+      this.form.pictures.splice(index, 1)
     },
     async confirm () {
       if (!this.form.refundReason) {
         this.$toast('请选择退货原因')
       } else {
-        this.$router.push({ name: 'RefundList' })
-      }
-      if (this.form.type === 'RETURN_REFUND') {
-        // 退款退货
-        // if (this.$refs.form.validate()) {
-        //   if (!this.form.refundModel.content) return this.$toast('请输入内容')
-        //   this.request()
-        // }
-      } else {
-        // if (!this.form.refundModel.content) return this.$toast('请输入内容')
-        // // 如果是退货
-        // this.form.expressInfoModel.courierCompany = ''
-        // this.form.expressInfoModel.courierNo = ''
-        // this.request()
+        this.request()
       }
     },
     async request () {
-      // try {
-      //   await this.$confirm('确定提交吗？')
-      //   await returnRequest(this.form)
-      //   resetForm(this.form, {
-      //     type: 'REFUND'
-      //   })
-      //   this.images = []
-      //   this.$toast('申请售后成功，请等待卖家反馈')
-      //   this.$router.replace({ name: 'RefundList' })
-      // } catch (e) {
-      //   throw e
-      // }
+      try {
+        const { orderProductRId } = this
+        const {
+          refundType,
+          goodsStatus: receiveStatus,
+          refundReason: applyReason,
+          actualRefund,
+          applyContent,
+          pictures
+        } = this.form
+        await this.$confirm('确定提交吗？')
+        await applyRefund({ orderDetailId: orderProductRId, receiveStatus, applyReason, refundType, actualRefund, applyContent, pictures })
+        resetForm(this.form, {
+          refundType: '1'
+        })
+        this.imgList = []
+        this.$success('申请售后成功，请等待卖家反馈')
+        setTimeout(() => {
+          this.$router.replace({ name: 'RefundList', params: { status: '' } })
+        }, 2000)
+      } catch (e) {
+        throw e
+      }
     }
   }
 }

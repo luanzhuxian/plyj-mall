@@ -25,7 +25,7 @@
         ref="loadMore"
         :form="form"
         :loading.sync="loading"
-        :request-methods="getOrderList"
+        :request-methods="getRefundOrderList"
         no-content-tip="暂无订单"
         @refresh="onRefresh"
       >
@@ -50,38 +50,34 @@
               </div>
               <p
                 :class="$style.status"
-                v-text="orderStatusMap[item.status]"
+                v-text="orderStatusMap[item.returnStatus]"
               />
             </div>
             <order-item
-              v-for="(product, j) of item.products"
-              :key="j"
-              :img="product.productImg"
-              :name="product.productName"
-              :option="product.skuName"
-              :count="product.purchaseQuantity"
-              :price="product.unitPrice"
+              :img="item.pictures"
+              :name="item.productName"
+              :option="item.skuName"
+              :count="item.productCount"
+              :price="item.productPrice"
               border
             />
             <div :class="$style.orderItemBottom">
               <div>
-                <span :class="$style.totalCount">{{ `共${item.totalCount}件商品` }}</span>
+                <span :class="$style.totalCount">{{ `共${item.productCount}件商品` }}</span>
                 <price
-                  prefix-text="总价："
-                  :price="item.totalPrice"
+                  prefix-text="退款金额："
+                  :price="item.actualRefund"
                   size="medium"
                   plain
                 />
               </div>
-              <div
-                :class="$style.buttons"
-                v-if="item.status !== 'WAIT_SHIP'"
-              >
-                <span :class="$style.reundType">
-                  {{ '退款退货' }}
-                </span>
+              <div :class="$style.buttons">
+                <span
+                  :class="$style.reundType"
+                  v-text="refundTypeMap[item.refundType]"
+                />
                 <pl-button
-                  v-if="item.status === 'WAIT_PAY'"
+                  v-if="item.returnStatus === 'WAIT_CHECK'"
                   round
                   plain
                   @click="cancel"
@@ -91,11 +87,12 @@
                 <pl-button
                   round
                   plain
-                  @click="checkDetail"
+                  @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"
                 >
                   查看详情
                 </pl-button>
                 <pl-button
+                  v-if="item.returnStatus === 'REFUND_PRODUCT'"
                   type="warning"
                   round
                   plain
@@ -118,22 +115,22 @@ import Price from '../../../components/Price.vue'
 import LoadMore from '../../../components/Load-More.vue'
 import { mapGetters } from 'vuex'
 import {
-  getOrderList,
+  getRefundOrderList,
   orderPhysicalorderSummary
 } from '../../../apis/order-manager'
 
 const tabs = [{
   name: '全部',
-  id: 'ALL_ORDER'
+  id: ''
 }, {
   name: '待审核',
-  id: 'WAIT_PAY'
+  id: 'WAIT_CHECK'
 }, {
   name: '退换货',
-  id: 'WAIT_SHIP'
+  id: 'REFUND_PRODUCT'
 }, {
   name: '退款成功',
-  id: 'WAIT_RECEIVE'
+  id: 'FINISHED'
 }]
 
 const orderTypeMap = {
@@ -142,15 +139,20 @@ const orderTypeMap = {
 }
 
 const count = {
-  WAIT_PAY: 0,
-  WAIT_RECEIVE: 0,
-  WAIT_SHIP: 0
+  WAIT_CHECK: 0,
+  REFUND_PRODUCT: 0,
+  FINISHED: 0
 }
 
 const orderStatusMap = {
-  WAIT_PAY: '待审核',
-  WAIT_SHIP: '退换货',
-  WAIT_RECEIVE: '退款成功'
+  WAIT_CHECK: '待审核',
+  REFUND_PRODUCT: '退换货',
+  FINISHED: '退款成功'
+}
+
+const refundTypeMap = {
+  '1': '退款',
+  '2': '退款退货'
 }
 
 export default {
@@ -173,26 +175,26 @@ export default {
       form: {
         current: 1,
         size: 10,
-        orderStatus: ''
+        returnStatus: ''
       },
-      getOrderList,
+      getRefundOrderList,
       orderPhysicalorderSummary,
       loading: false,
       $refresh: null,
       count,
       orderTypeMap,
-      orderStatusMap
+      orderStatusMap,
+      refundTypeMap
     }
   },
   computed: {
-    // ...mapGetters(['orderStatusMap', 'orderStatusMapCamel'])
     ...mapGetters(['orderStatusMapCamel'])
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    this.form.orderStatus = this.status || ''
+    this.form.returnStatus = this.status
     this.$refresh()
   },
   methods: {
@@ -203,10 +205,6 @@ export default {
       })
     },
     onRefresh (list, total) {
-      const counter = (array) => (key) => array.reduce((total, current) => total + (key ? current[key] : current), 0)
-      for (let item of list) {
-        item.totalCount = counter(item.products)('purchaseQuantity')
-      }
       this.orderList = list
       this.getOrderSummary()
     },
@@ -223,8 +221,16 @@ export default {
         throw e
       }
     },
-    cancel () {},
-    checkDetail () {},
+    async cancel (item, index) {
+      try {
+        await this.$confirm('退单正在审核中，确定要取消？')
+        // await cancelOrder(item.orderId)
+        this.$success('退单取消成功')
+        this.orderList.splice(index, 1)
+      } catch (e) {
+        throw e
+      }
+    },
     checkExpressInfo () {}
   }
 }

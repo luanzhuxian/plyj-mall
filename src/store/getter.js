@@ -34,5 +34,6 @@ export default {
   mallDesc: state => state.mallInfo.mallDesc,
   logoUrl: state => state.mallInfo.logoUrl,
   mallStatus: state => state.mallInfo.status,
-  supportPhone: state => state.mallInfo.supportPhone
+  supportPhone: state => state.mallInfo.supportPhone,
+  mallId: state => state.mallInfo.sequenceNbr
 }

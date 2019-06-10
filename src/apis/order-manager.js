@@ -77,3 +77,15 @@ export const getFreight = ({ productSeq, productCount, addressSeq, optionCode })
   axios.post('/apis/v1/order/physicalorder/wechat/freight', null, { params: { productSeq, productCount, addressSeq, optionCode } })
 /* GET 商城端-获取订单物流信息 */
 export const getFreightData = orderId => axios.get(`/apis/v1/order/logistics/${orderId}`)
+
+// GET 获取退货原因数据字典 invoiceType 待发货: REASONBUYERPAID 待收货: REASONSNOTRECEIVEDGOODS 已收货: REASONSRECEIVEDGOODS
+export const getRefundReasonMap = invoiceType => axios.get(`/apis/v1/systemctl/sysdictionary/detail/list/${invoiceType}`)
+
+// 申请售后
+export const applyRefund = params => axios.post(`/apis/v1/refund/refund/customer/apply`, params)
+
+// 售后列表查询
+export const getRefundOrderList = params => axios.post(`/apis/v1/refund/refund/admin/selectRefund`, params)
+
+// 售后详情查询
+export const getRefundOrderDetail = params => axios.post(`/apis/v1/refund/refund/admin/selectRefundDetail`, params)

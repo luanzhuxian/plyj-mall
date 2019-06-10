@@ -218,7 +218,7 @@ export default {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    this.form.orderStatus = this.status || ''
+    this.form.orderStatus = this.status
     this.$refresh()
   },
   methods: {
