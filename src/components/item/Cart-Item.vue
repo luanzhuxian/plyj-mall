@@ -156,8 +156,9 @@ export default {
         // 刷新显示
         if (isUpdateSku.result) {
           this.currentSkuModel = option
-          this.currentSkuCode = option.optionCode
-          this.count = option.count
+          // 直接修改父组件的数据，也在父组件中建投change事件，通过接口来刷新数据。但是会导致接口调用频繁
+          this.data.cartSkuCode = this.currentSkuCode = option.optionCode
+          this.data.cartProductCount = this.count = option.count
           this.$emit('change')
           this.$emit('skuChange')
         } else {
@@ -178,6 +179,8 @@ export default {
         })
         if (result) {
           next()
+          // 直接修改父组件的数据，也在父组件中建投change事件，通过接口来刷新数据。但是会导致接口调用频繁
+          this.data.cartProductCount = count
           this.count = count
           this.$emit('change')
           this.$emit('countChange')
