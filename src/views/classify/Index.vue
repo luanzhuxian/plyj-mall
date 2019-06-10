@@ -86,7 +86,7 @@
                 :desc="item.productDesc"
                 :price="item.priceModels?item.priceModels[0].price:item.productOptions[0].price"
                 :agent-price="item.priceModels?item.priceModels[0].agentPrice:''"
-                :img="item.productImage[0].mediaUrl"
+                :img="item.productImg"
               />
             </div>
           </template>

@@ -88,12 +88,11 @@
 </template>
 
 <script>
-import { createBrokerShare } from '../../apis/product'
+import { mapGetters } from 'vuex'
 export default {
   name: 'OrderItem',
   data () {
     return {
-      brokerId: '',
       loading: false
     }
   },
@@ -154,13 +153,10 @@ export default {
     },
     hidePrice: Boolean
   },
-  watch: {
-    productSeq (val) {
-      this.getBorkerId()
-    }
+  computed: {
+    ...mapGetters(['userId', 'agentUser'])
   },
-  created () {
-    this.getBorkerId()
+  watch: {
   },
   methods: {
     handleClick (e) {
@@ -170,23 +166,9 @@ export default {
           name: this.routeName,
           params: {
             productSeq: this.productSeq,
-            brokerId: this.brokerId
+            brokerId: this.agentUser ? this.userId : ''
           }
         })
-      }
-    },
-    async getBorkerId () {
-      if (this.productSeq && !this.loading) {
-        try {
-          this.loading = true
-          let share = await createBrokerShare(this.productSeq)
-          share.result = share.result || {}
-          this.brokerId = share.result.sequenceNbr || null
-        } catch (e) {
-          throw e
-        } finally {
-          this.loading = false
-        }
       }
     }
   }

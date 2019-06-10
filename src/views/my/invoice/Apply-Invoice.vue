@@ -49,11 +49,11 @@
       >
         <div :class="$style.personName">
           <span>姓名：</span>
-          <span v-text="realName" />
+          <span v-text="receiveName || realName" />
         </div>
         <div :class="$style.personMobile">
           <span>手机号：</span>
-          <span>{{ mobile | formatAccount }}</span>
+          <span>{{ mobile || receiveMobile | formatAccount }}</span>
         </div>
       </div>
 
@@ -142,7 +142,7 @@
             >
             <img
               :class="$style.proImg"
-              :src="pro.productImageUrls[0]"
+              :src="pro.productImg"
               alt=""
             >
             <pl-svg
@@ -159,6 +159,7 @@
       type="warning"
       size="huge"
       @click="confirm"
+      :loading="loading"
     >
       确定
     </pl-button>
@@ -190,7 +191,8 @@
 import { mapGetters } from 'vuex'
 import {
   addInvoice,
-  getInvoiceList
+  getInvoiceList,
+  applyInvoice
 } from '../../../apis/invoice'
 import InvoiceItem from '../../../components/item/Invoice-Item'
 export default {
@@ -213,7 +215,8 @@ export default {
       rules: {
         firmName: [{ required: true, message: '请输入单位名称', trigger: 'blur' }],
         tin: [{ required: true, message: '请输入纳税人识别号', trigger: 'blur' }]
-      }
+      },
+      loading: false
     }
   },
   computed: {
@@ -226,6 +229,15 @@ export default {
     },
     physicalProducts () {
       return this.applyInvoice.physicalProducts || []
+    },
+    orderId () {
+      return this.$route.query.orderId || ''
+    },
+    receiveMobile () {
+      return this.$route.query.receiveMobile || ''
+    },
+    receiveName () {
+      return this.$route.query.receiveName || ''
     }
   },
   activated () {
@@ -269,7 +281,7 @@ export default {
       localStorage.setItem('EDIT_INVOICE_FROM', JSON.stringify(this.$route))
       this.$router.push({ name: 'AddInvoice' })
     },
-    confirm () {
+    async confirm () {
       if (this.checkedList.length === 0) {
         this.$warning('请选择要开票的商品')
         return
@@ -314,13 +326,46 @@ export default {
       }
       invoiceModel.orderDetails = orderDetails
       invoiceModel.invoiceAmount = invoiceAmount / 100
-      localStorage.setItem('INVOICE_MODEL', JSON.stringify(invoiceModel))
-      this.$router.replace({ name: 'SubmitOrder' })
+
+      if (this.orderId) {
+        // 二次申请发票
+        const orderDetailsTemp = []
+        for (let item of this.checkedList) {
+          orderDetailsTemp.push({
+            orderId: this.orderId,
+            orderDetailId: item.orderProductRId
+          })
+        }
+        try {
+          this.loading = true
+          await applyInvoice({
+            invoiceType: this.type,
+            invoiceTitle: this.type === 1 ? this.receiveName : this.form.firmName,
+            tin: this.type === 2 ? this.form.tin : '',
+            orderDetails: orderDetailsTemp,
+            userId: this.userId
+          })
+        } catch (e) {
+          throw e
+        } finally {
+          this.loading = false
+        }
+      } else {
+        localStorage.setItem('INVOICE_MODEL', JSON.stringify(invoiceModel))
+      }
+
+      const APPLY_INVOICE_FROM = JSON.parse(localStorage.getItem('APPLY_INVOICE_FROM'))
+      this.$router.replace({
+        name: APPLY_INVOICE_FROM.name,
+        query: APPLY_INVOICE_FROM.query,
+        params: APPLY_INVOICE_FROM.params
+      })
     }
   },
   beforeRouteLeave (to, from, next) {
     if (to.name !== 'AddInvoice') {
       localStorage.removeItem('APPLY_INVOICE')
+      localStorage.removeItem('APPLY_INVOICE_FROM')
     }
     next()
   }

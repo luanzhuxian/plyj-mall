@@ -94,7 +94,7 @@ export default {
       this.currentModel = null
       this.isSupplierProduct = false
       this.form.current = 1
-      this.form.size = 1
+      this.form.size = 10
       this.form.productSeq = ''
     }
   }

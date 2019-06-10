@@ -5,7 +5,7 @@
   >
     <img
       :class="$style.cartItemImage"
-      :src="data.productImg[0]"
+      :src="data.productImg"
       alt=""
       @click="goDetail"
     >

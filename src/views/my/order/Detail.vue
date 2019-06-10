@@ -163,48 +163,40 @@
       </div>
       <div :class="$style.infoBottom">
         <collapse v-model="collepseActiveNames">
-          <collapse-item
-            v-if="invoiceModel && invoiceModel.invoiceType"
-            name="1"
+          <template
+            v-for="(item, i) of invoiceModelList"
           >
-            <template slot="title">
-              <div>
-                <span :class="$style.invoiceTitle">发票信息：</span>
-                <span v-text="invoiceMap[invoiceModel.invoiceType].type" />
-              </div>
-            </template>
-            <div
-              :class="$style.invoiceName"
-              v-text="invoiceModel.invoiceTitle"
-            />
-            <div
-              :class="$style.invoiceNumber"
-              v-text="invoiceModel[invoiceMap[invoiceModel.invoiceType].number]"
-            />
-          </collapse-item>
-          <collapse-item
-            v-else
-            name="1"
-            disabled
-          >
-            <template slot="title">
-              <div>
-                <span :class="$style.invoiceTitle">发票信息：</span>
-                <span>未开票</span>
-              </div>
-            </template>
-            <template slot="right-icon">
-              <pl-button
-                v-if="orderStatus !== 'WAIT_PAY' && orderStatus !== 'CLOSED'"
-                round
-                plain
-                @click="$router.push({ name: 'ApplyInvoice' })"
-              >
-                立即申请
-              </pl-button>
-              <span v-else />
-            </template>
-          </collapse-item>
+            <collapse-item
+              name="1"
+              :key="i"
+            >
+              <template slot="title">
+                <div>
+                  <span :class="$style.invoiceTitle">发票信息：</span>
+                  <span v-text="invoiceMap[item.invoiceType].type" />
+                </div>
+              </template>
+              <div
+                :class="$style.invoiceName"
+                v-text="item.invoiceTitle"
+              />
+              <div
+                :class="$style.invoiceNumber"
+                v-text="item[invoiceMap[item.invoiceType].fields]"
+              />
+              <template slot="right-icon">
+                <pl-button
+                  v-if="canIApplyInvoice"
+                  round
+                  plain
+                  @click="applyInvoice"
+                >
+                  立即申请
+                </pl-button>
+                <span v-else />
+              </template>
+            </collapse-item>
+          </template>
         </collapse>
       </div>
     </div>
@@ -295,7 +287,6 @@
               size="larger"
               background-color="#387AF6"
               prefix-icon="mobile-blue"
-              round
               @click="call"
             >
               立即拨打
@@ -355,24 +346,6 @@ import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { mapGetters } from 'vuex'
 import Moment from 'moment'
 
-const suggestionMap = {
-  WAIT_PAY: '',
-  WAIT_SHIP: '请耐心等待商家发货…',
-  WAIT_RECEIVE: '',
-  FINISHED: '本次交易已完成，感谢下次光临',
-  CLOSED: '订单取消'
-}
-const invoiceMap = {
-  '1': {
-    type: '个人',
-    number: 'receiverMobile'
-  },
-  '2': {
-    type: '单位',
-    number: 'tin'
-  }
-}
-
 export default {
   name: 'OrderDetail',
   components: {
@@ -402,7 +375,8 @@ export default {
       logisticsInfoModel: {},
       productInfoModel: {},
       tradingInfoModel: [],
-      invoiceModel: {},
+      invoiceModelList: [],
+      noInvoiceProList: [], // 未申请发票的商品
       operationRecordModel: {},
       shippingAddress: {
         realName: ' ',
@@ -424,8 +398,23 @@ export default {
         }
       ],
       collepseActiveNames: [],
-      suggestionMap,
-      invoiceMap,
+      suggestionMap: {
+        WAIT_PAY: '',
+        WAIT_SHIP: '请耐心等待商家发货…',
+        WAIT_RECEIVE: '',
+        FINISHED: '本次交易已完成，感谢下次光临',
+        CLOSED: '订单取消'
+      },
+      invoiceMap: {
+        '1': {
+          type: '个人',
+          fields: 'receiverMobile' // 要显示的字段名称
+        },
+        '2': {
+          type: '单位',
+          fields: 'tin' // 要显示的字段名称
+        }
+      },
       resolve: null
     }
   },
@@ -434,6 +423,12 @@ export default {
     // 是否可以申请售后
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED') && this.orderType !== 'VIRTUAL_GOODS'
+    },
+    // 是否可以申请发票
+    canIApplyInvoice () {
+      return this.orderStatus !== 'WAIT_PAY' &&
+        this.orderStatus !== 'CLOSED' &&
+        this.invoiceModelList.length < this.productInfoModel.productDetailModels.length
     }
   },
   async activated () {
@@ -464,7 +459,7 @@ export default {
             logisticsInfoModel,
             productInfoModel,
             tradingInfoModel,
-            invoiceModel,
+            invoiceModelList,
             operationRecordModel
           } = result
           this.detail = result
@@ -474,7 +469,7 @@ export default {
           this.logisticsInfoModel = logisticsInfoModel
           this.productInfoModel = productInfoModel
           this.tradingInfoModel = tradingInfoModel
-          this.invoiceModel = (invoiceModel && invoiceModel.invoiceType) ? invoiceModel : { invoiceType: 0 }
+          this.invoiceModelList = invoiceModelList
           this.operationRecordModel = operationRecordModel
           this.productInfoModel.totalCount = counter(productInfoModel.productDetailModels)('count')
           this.shippingAddress.realName = receiverModel.name
@@ -485,6 +480,8 @@ export default {
               this.suggestionMap['CLOSED'] = '退款完成'
             }
           }
+          // invoiceStatus 2 未开票， 3 已开票
+          this.noInvoiceProList = productInfoModel.productDetailModels.filter(item => item.invoiceStatus === 2)
 
           let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
           if (result.orderStatus === 'WAIT_PAY') {
@@ -566,7 +563,6 @@ export default {
         let m = String(_data.minutes)
         let s = String(_data.seconds)
         remanent -= 1000
-        console.log(remanent)
         if (remanent <= 0) {
           this.suggestionMap[flag] = ''
           clearInterval(this.timer)
@@ -582,8 +578,23 @@ export default {
     onPickerConfirm (selected) {
       this.cancelOrder(selected[0])
     },
+    // 拨打客服电话
     call () {
-      window.location.href = 'tel://110'
+      window.location.href = `tel://${this.supportPhone}`
+    },
+    // 申请发票
+    applyInvoice () {
+      localStorage.setItem('APPLY_INVOICE', JSON.stringify({ physicalProducts: this.noInvoiceProList }))
+      localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify(this.$route))
+      const { mobile, name } = this.receiverModel
+      this.$router.push({
+        name: 'ApplyInvoice',
+        query: {
+          orderId: this.orderId,
+          receiveMobile: mobile,
+          receiveName: name
+        }
+      })
     }
   }
 }

@@ -17,7 +17,7 @@
       <OrderItem
         v-for="(item, i) of physicalProducts"
         :key="i"
-        :img="item.productImageUrls ? item.productImageUrls[0] : ''"
+        :img="item.productImg"
         :name="item.productName"
         :count="item.count"
         :option="item.optionName"
@@ -83,7 +83,7 @@
       >
         <OrderItem
           :key="i"
-          :img="item.productImageUrls ? item.productImageUrls[0] : ''"
+          :img="item.productImg"
           :name="item.productName"
           :count="item.count"
           :option="item.optionName"
@@ -264,7 +264,7 @@ export default {
           cartProducts: proList,
           addressSeq: this.selectedAddress.sequenceNbr
         })
-        const { amount, totalAmount, freight, physicalProducts, virtualProducts, templateName } = result
+        const { amount, totalAmount, freight, physicalProducts, virtualProducts } = result
         // 为每个虚拟订单都添加备注字段
         for (const p of physicalProducts) {
           p.remark = ''
@@ -274,7 +274,6 @@ export default {
         this.freight = Number(freight)
         this.physicalProducts = physicalProducts
         this.virtualProducts = virtualProducts
-        this.templateName = templateName
         this.loading = false
       } catch (e) {
         throw e
@@ -352,6 +351,7 @@ export default {
         physicalProducts: this.physicalProducts
       }
       localStorage.setItem('APPLY_INVOICE', JSON.stringify(applyInvoice))
+      localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify(this.$route))
       this.$router.push({ name: 'ApplyInvoice' })
       this.invioceType = 2
       this.showPopup = false
