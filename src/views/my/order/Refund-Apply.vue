@@ -3,20 +3,11 @@
     class="refund-apply"
     :class="$style.refundApply"
   >
-    <div style="position: relative; z-index: 9999;">
-      <a href="tel:15091719776">
-        <pl-svg
-          :class="$style.callMe"
-          name="phone2"
-        />
-      </a>
-    </div>
-
     <section :class="$style.orderInfo">
       <order-item
-        :img="'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png'"
-        :name="'McQ Alexander McQueen 2018春夏新款棉氨男士…'"
-        :option="'课程：英语互动'"
+        :img="productInfo.productImg"
+        :name="productInfo.productName"
+        :option="productInfo.optionName"
         hide-price
       />
     </section>
@@ -26,7 +17,7 @@
         <pl-fields
           class="right-text--bold"
           text="服务类型："
-          :right-text="refundType === 'REFUND' ? '退款' : '退款退货'"
+          :right-text="refundTypeMap[refundType]"
         />
         <pl-fields
           text="货物状态："
@@ -56,16 +47,23 @@
       </div>
 
       <div :class="[$style.panel, $style.panelBottom]">
-        <div :class="$style.description">
-          <label for="description">
+        <div :class="$style.reson">
+          <label for="reson">
             原因描述：
-            <textarea
-              v-model="form.description"
+            <!-- <textarea
+              v-model="form.reson"
               placeholder="请填写您的原因"
-              name="description"
+              name="reson"
               rows="8"
               cols="80"
               maxlength="400"
+            /> -->
+            <pl-input
+              v-model="form.reson"
+              type="textarea"
+              placeholder="请填写您的原因"
+              :maxlength="400"
+              :min-rows="8"
             />
           </label>
         </div>
@@ -138,6 +136,11 @@
 import OrderItem from '../../../components/item/Order-Item.vue'
 import { getOrderDetail } from '../../../apis/order-manager'
 
+const refundTypeMap = {
+  '1': '退款',
+  '2': '退款退货'
+}
+
 export default {
   name: 'Refund',
   components: {
@@ -145,6 +148,10 @@ export default {
   },
   props: {
     orderId: {
+      type: String,
+      default: null
+    },
+    productId: {
       type: String,
       default: null
     },
@@ -160,15 +167,16 @@ export default {
         WAIT_RECEIVE: 'WAIT_RECEIVE_REFUND_RULE', // 待收货的待退款
         FINISHED: 'FINISHED_REFUND_RULE' // 待收货的待退款
       },
+      refundTypeMap,
       orderStatus: '',
       operationType: '', // 在何种情况下退款,
-      relationModel: [],
+      productInfo: {},
       form: {
-        type: 'REFUND', // 退款类型  RETURN_REFUND REFUND
+        refundType: this.refundType,
         goodsStatus: '',
         refundReason: '',
         amount: '',
-        description: '',
+        reson: '',
         imgList: []
       },
       imgList: [],
@@ -179,7 +187,7 @@ export default {
       goodsStatusInfo: {
         title: '货物状态',
         options: [{
-          name: '0',
+          name: '2',
           text: '未收到货'
         }, {
           name: '1',
@@ -222,10 +230,10 @@ export default {
   methods: {
     async getOrderDetail () {
       const { result } = await getOrderDetail(this.orderId)
-      let { relationModel, orderInfoModel } = result
-      this.relationModel = relationModel[0]
-      this.orderStatus = orderInfoModel.orderStatus
-      this.operationType = this.statusTypeMap[orderInfoModel.orderStatus]
+      const products = result.productInfoModel.productDetailModels.filter(product => product.productId === this.productId)
+      this.productInfo = products.length ? products[0] : {}
+      this.orderStatus = result.orderStatus
+      this.operationType = this.statusTypeMap[result.orderStatus]
     },
     showPopup (name) {
       this.currentPopupName = name
@@ -306,14 +314,6 @@ export default {
     padding-bottom: 122px;
   }
 
-  .call-me {
-    position: absolute;
-    top: -28px;
-    right: 40px;
-    width: 38px;
-    height: 80px;
-  }
-
   .order-info {
     padding: 24px;
     background-color: #FFF;
@@ -351,7 +351,8 @@ export default {
     }
   }
 
-  .description {
+  .reson {
+    margin-bottom: 20px;
     label {
       font-size: 28px;
       color: #666;
@@ -359,12 +360,12 @@ export default {
     }
 
     textarea {
-      width: 100%;
-      height: 222px;
-      border: none;
-      outline: none;
-      resize: none;
-      padding-top: 12px;
+      // width: 100%;
+      // height: 222px;
+      // border: none;
+      // outline: none;
+      // resize: none;
+      // padding-top: 12px;
       &::-webkit-input-placeholder {
         font-size: 26px;
         color: #ccc;
@@ -445,6 +446,24 @@ export default {
     .pl-fields_right > .pl-fields_right_text {
       color: #000;
       font-weight: bold;
+    }
+  }
+
+  .pl-textarea_box {
+    padding-left: 0;
+
+    > .pl-input-textarea {
+      &::-webkit-input-placeholder {
+        font-size: 28px;
+        color: #CCCCCC;
+        line-height: 38px;
+      }
+    }
+    > .pl-input__word-count {
+      color: #CCCCCC !important;
+      > i {
+        color: #CCCCCC !important;
+      }
     }
   }
 }

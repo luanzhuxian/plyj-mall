@@ -172,7 +172,6 @@ export default {
 
       const { parent } = this
       const name = parent.accordion && this.currentName === parent.value ? '' : this.currentName
-      console.log(name)
       this.parent.switch(name, !this.expanded)
     },
 

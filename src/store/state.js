@@ -31,6 +31,7 @@ export default {
   },
   mallInfo: {
     appid: '',
+    address: '',
     logoUrl: '',
     mallDesc: '',
     mallDomain: '',

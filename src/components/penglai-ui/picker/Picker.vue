@@ -113,6 +113,7 @@ export default {
         setTimeout(() => {
           this.showPicker = false
           this.selected = []
+          this.$emit('close')
         }, 200)
       }, 200)
     },

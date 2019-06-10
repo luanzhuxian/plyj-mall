@@ -109,7 +109,6 @@ export default {
         let { result } = await getOrderDetail(this.orderId)
         this.img = result.productInfoModel.productDetailModels[0].productImg
         this.form.orderId = this.orderId
-        this.form.mallId = this.mallSeq
         this.form.productId = this.productId
       } catch (e) {
         throw e
@@ -134,7 +133,10 @@ export default {
         this.loading = true
         await submitComment(this.openId, this.form)
         this.loading = false
-        this.$router.replace({ name: 'OrderDetail', params: { orderId: this.orderId } })
+        this.$success('评价成功')
+        setTimeout(() => {
+          this.$router.replace({ name: 'OrderDetail', params: { orderId: this.orderId } })
+        }, 2000)
       } catch (e) {
         this.loading = false
         throw e
@@ -200,5 +202,4 @@ export default {
     }
   }
 }
-
 </style>

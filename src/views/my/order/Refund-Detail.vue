@@ -262,6 +262,12 @@ export default {
     Collapse,
     CollapseItem
   },
+  props: {
+    orderSn: {
+      type: String,
+      default: null
+    }
+  },
   data () {
     return {
       serviceType: '',
@@ -294,12 +300,6 @@ export default {
       ]
     }
   },
-  props: {
-    orderSn: {
-      type: String,
-      default: null
-    }
-  },
   activated () {
     // this.getDetail()
   },
@@ -319,14 +319,8 @@ export default {
         throw e
       }
     },
-    showPicker () {
-    },
     onPickerConfirm (selected) {
-      console.log(selected)
       this.form.expressName = selected[0]
-      this.isPickerShow = false
-    },
-    onPickerCancel () {
       this.isPickerShow = false
     },
     submit () {

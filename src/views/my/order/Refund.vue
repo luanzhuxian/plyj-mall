@@ -1,19 +1,10 @@
 <template>
   <div :class="$style.refund">
-    <div style="position: relative; z-index: 9999;">
-      <a href="tel:15091719776">
-        <pl-svg
-          :class="$style.callMe"
-          name="phone2"
-        />
-      </a>
-    </div>
-
     <section :class="$style.orderInfo">
       <order-item
-        :img="'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png'"
-        :name="'McQ Alexander McQueen 2018春夏新款棉氨男士…'"
-        :option="'课程：英语互动'"
+        :img="productInfo.productImg"
+        :name="productInfo.productName"
+        :option="productInfo.optionName"
         hide-price
       />
     </section>
@@ -22,7 +13,7 @@
       <div :class="$style.panel">
         <router-link
           tag="div"
-          :to="{ name: 'RefundApply', params: { orderId, refundType: 'REFUND' } }"
+          :to="{ name: 'RefundApply', params: { orderId, refundType: '1' } }"
           :class="$style.item"
         >
           <div :class="$style.itemLeft">
@@ -44,7 +35,7 @@
 
         <router-link
           tag="div"
-          :to="{ name: 'RefundApply', params: { orderId, refundType: 'RETURN_REFUND' } }"
+          :to="{ name: 'RefundApply', params: { orderId, productId, refundType: '2' } }"
           :class="$style.item"
         >
           <div :class="$style.itemLeft">
@@ -70,6 +61,7 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
+// import { getProductDetail } from '../../../apis/product'
 import { getOrderDetail } from '../../../apis/order-manager'
 
 export default {
@@ -81,45 +73,42 @@ export default {
     orderId: {
       type: String,
       default: null
+    },
+    productId: {
+      type: String,
+      default: null
     }
   },
   data () {
     return {
-      type: 'REFUND', // 退款类型  RETURN_REFUND REFUND
-      relationModel: [],
-      statusTypeMap: {
-        WAIT_SHIP: 'WAIT_SHIP_REFUND_RULE', // 待发货的待退款
-        WAIT_RECEIVE: 'WAIT_RECEIVE_REFUND_RULE', // 待收货的待退款
-        FINISHED: 'FINISHED_REFUND_RULE' // 待收货的待退款
-      },
-      orderStatus: '',
-      operationType: '' // 在何种情况下退款
+      refundType: 'REFUND', // 退款类型  RETURN_REFUND REFUND
+      productInfo: {}
+      // statusTypeMap: {
+      //   WAIT_SHIP: 'WAIT_SHIP_REFUND_RULE', // 待发货的待退款
+      //   WAIT_RECEIVE: 'WAIT_RECEIVE_REFUND_RULE', // 待收货的待退款
+      //   FINISHED: 'FINISHED_REFUND_RULE' // 待收货的待退款
+      // },
+      // orderStatus: '',
+      // operationType: '' // 在何种情况下退款
     }
   },
   activated () {
-    this.getOrderDetail()
+    this.getProductDetail()
   },
   methods: {
-    async getOrderDetail () {
+    async getProductDetail () {
+      // getOrderDetail(this.orderId)
       const { result } = await getOrderDetail(this.orderId)
-      let { relationModel, orderInfoModel } = result
-      this.relationModel = relationModel[0]
-      this.orderStatus = orderInfoModel.orderStatus
-      this.operationType = this.statusTypeMap[orderInfoModel.orderStatus]
+      const products = result.productInfoModel.productDetailModels.filter(product => product.productId === this.productId)
+      this.productInfo = products.length ? products[0] : {}
+      // this.orderStatus = orderInfoModel.orderStatus
+      // this.operationType = this.statusTypeMap[orderInfoModel.orderStatus]
     }
   }
 }
 </script>
 
 <style module lang="scss">
-  .call-me {
-    position: absolute;
-    top: -28px;
-    right: 40px;
-    width: 38px;
-    height: 80px;
-  }
-
   .order-info {
     padding: 24px;
     background-color: #FFF;

@@ -6,7 +6,7 @@
     <div :class="$style.top">
       <top-text
         :title="orderStatusMap[orderStatus]"
-        :tip="suggestionMap[orderStatus]"
+        :tip="orderType === 'VIRTUAL' ? '' : suggestionMap[orderStatus]"
       />
       <!-- <a :href="`tel:${supportPhone}`">
         <pl-svg
@@ -48,7 +48,7 @@
             v-if="canApplyRefund && item.afterSalesStatus === 0"
             plain
             round
-            @click="$router.push({ name: 'Refund', params: { orderId } })"
+            @click="$router.push({ name: 'Refund', params: { orderId, productId: item.productId } })"
           >
             申请退款
           </pl-button>
@@ -125,7 +125,7 @@
 
     <div :class="$style.panel">
       <address-item
-        :address="address"
+        :address="shippingAddress"
         not-link
       />
     </div>
@@ -214,7 +214,7 @@
         v-if="orderStatus === 'WAIT_PAY'"
         round
         plain
-        @click="cancelOrder"
+        @click="isPickerShow = true"
       >
         取消订单
       </pl-button>
@@ -281,23 +281,26 @@
               :class="$style.popupAddressLeftIcon"
               name="address-blue"
             />
-            <span :class="$style.popupAddressText">
-              陕西省西安市雁塔区丈八沟街道新加坡腾飞科汇城东楼1007
-            </span>
+            <span
+              :class="$style.popupAddressText"
+              v-text="address"
+            />
             <pl-svg
               :class="$style.popupAddressRightIcon"
               name="copy"
             />
           </div>
-          <pl-button
-            size="larger"
-            background-color="#387AF6"
-            prefix-icon="mobile-blue"
-            round
-            @click="call"
-          >
-            立即拨打
-          </pl-button>
+          <a :href="`tel: ${supportPhone}`">
+            <pl-button
+              size="larger"
+              background-color="#387AF6"
+              prefix-icon="mobile-blue"
+              round
+              @click="call"
+            >
+              立即拨打
+            </pl-button>
+          </a>
         </div>
       </template>
     </pl-popup>
@@ -401,7 +404,7 @@ export default {
       tradingInfoModel: [],
       invoiceModel: {},
       operationRecordModel: {},
-      address: {
+      shippingAddress: {
         realName: ' ',
         mobile: ' ',
         addressPrefix: ' ',
@@ -422,11 +425,12 @@ export default {
       ],
       collepseActiveNames: [],
       suggestionMap,
-      invoiceMap
+      invoiceMap,
+      resolve: null
     }
   },
   computed: {
-    ...mapGetters(['orderStatusMap']),
+    ...mapGetters(['orderStatusMap', 'address', 'supportPhone']),
     // 是否可以申请售后
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED') && this.orderType !== 'VIRTUAL_GOODS'
@@ -464,22 +468,22 @@ export default {
           this.invoiceModel = (result.invoiceModel && result.invoiceModel.invoiceType) ? result.invoiceModel : { invoiceType: 0 }
           this.operationRecordModel = result.operationRecordModel
           this.productInfoModel.totalCount = counter(result.productInfoModel.productDetailModels)('count')
-          this.address.realName = result.receiverModel.name
-          this.address.mobile = result.receiverModel.mobile
-          this.address.agencyAddress = result.receiverModel.address
+          this.shippingAddress.realName = result.receiverModel.name
+          this.shippingAddress.mobile = result.receiverModel.mobile
+          this.shippingAddress.agencyAddress = result.receiverModel.address
           if (result.orderStatus === 'CLOSED') {
             if (checkIsRefundSuccessful(result.productInfoModel.productDetailModels)) {
               this.suggestionMap['CLOSED'] = '退款完成'
             }
           }
 
-          let now = Number(result.currentServerTime) // 服务器时间
+          let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
           if (result.orderStatus === 'WAIT_PAY') {
             let startTime = Moment((result.tradingInfoModel.createTime)).valueOf()
-            this.countDown(24 * 60 * 60 * 1000 - now + startTime + 2000, 'WAIT_PAY')
+            this.countDown(24 * 60 * 60 * 1000 + startTime - now + 2000, 'WAIT_PAY')
           } else if (result.orderStatus === 'WAIT_RECEIVE') {
-            let startTime = Number(result.logisticsInfoModel.shipTime)
-            this.countDown(10 * 24 * 60 * 60 * 1000 - now + startTime + 2000, 'WAIT_RECEIVE')
+            let startTime = Moment((result.tradingInfoModel.createTime)).valueOf()
+            this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now + 2000, 'WAIT_RECEIVE')
           }
           resolve()
           this.loaded = true
@@ -516,7 +520,7 @@ export default {
         throw e
       }
     },
-    async cancelOrder () {
+    async cancelOrder (reason) {
       try {
         await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
         await cancelOrder(this.orderId)
@@ -561,9 +565,11 @@ export default {
       }, 1000)
     },
     onPickerConfirm (selected) {
-      console.log(selected)
+      this.cancelOrder(selected[0])
     },
-    call () {}
+    call () {
+      window.location.href = 'tel://110'
+    }
   }
 }
 </script>
