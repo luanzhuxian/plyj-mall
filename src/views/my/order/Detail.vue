@@ -179,7 +179,7 @@
             />
             <div
               :class="$style.invoiceNumber"
-              v-text="invoiceMap[invoiceModel.invoiceType].number"
+              v-text="invoiceModel[invoiceMap[invoiceModel.invoiceType].number]"
             />
           </collapse-item>
           <collapse-item
