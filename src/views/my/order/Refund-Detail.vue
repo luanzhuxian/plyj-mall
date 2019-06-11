@@ -3,26 +3,34 @@
     class="refund-detail"
     :class="$style.refundDetail"
   >
-    <div style="position: relative;">
+    <div :class="$style.title">
       <top-text
-        title="退换货"
-        tip="请根据商家收货地址，将商品寄回"
+        :title="refundStatusMap[refundStatus]"
+        :tip="suggestionMap[refundStatus]"
       />
     </div>
 
-    <section :class="[$style.panel, $style.expressPanel]">
-      <div :class="$style.expressItem">
+    <section
+      v-if="refundStatus === 'REFUND_PRODUCT'"
+      :class="[$style.panel, $style.expressPanel]"
+    >
+      <div
+        v-if="refundDetail.shipSn"
+        :class="$style.expressItem"
+      >
         <pl-svg
           :class="$style.expressIcon"
           name="express"
         />
         <div :class="$style.right">
-          <div :class="[$style.main, $style.bold]">
-            顺丰快递
-          </div>
-          <div :class="$style.sub">
-            运单号：123467890890
-          </div>
+          <div
+            :class="[$style.main, $style.bold]"
+            v-text="refundDetail.shipChannelText"
+          />
+          <div
+            :class="$style.sub"
+            v-text="`运单号：${refundDetail.shipSn}`"
+          />
         </div>
       </div>
       <div :class="$style.expressItem">
@@ -34,21 +42,25 @@
           <div :class="$style.main">
             <span
               :class="$style.name"
-              v-text="'退货信息：王五'"
+              v-text="`退货信息：${refundDetail.refundUserName}`"
             />
             <span
               :class="$style.phone"
-              v-text="'136****8888'"
+              v-text="refundDetail.refundMobile"
             />
           </div>
-          <div :class="$style.sub">
-            陕西省 西安市 新城区 xx街道 撒大大大说的的的阿斯顿为峰峰
-          </div>
+          <div
+            :class="$style.sub"
+            v-text="refundDetail.refundAddress"
+          />
         </div>
       </div>
     </section>
 
-    <section :class="[$style.panel, $style.expressInfoPanel]">
+    <section
+      v-if="refundStatus !== 'REFUND_PRODUCT'"
+      :class="[$style.panel, $style.expressInfoPanel]"
+    >
       <pl-fields
         text="快递公司："
         :right-text="form.expressName || '请选择'"
@@ -79,31 +91,41 @@
             应退金额：
           </span>
           <span :class="$style.itemRight">
-            <div :class="$style.price">
-              ￥76.64
-            </div>
-            <div :class="$style.tips">
-              运费不可退，如有疑问，请联系商家协商
-            </div>
-            <div :class="$style.tips">
-              <div>退款返还您的实际付款金额，优惠劵将不予退回</div>
-              <div>退款到帐时间，请查看您的付款账户</div>
-            </div>
+            <div
+              v-if="refundDetail.actualPayAmount"
+              :class="$style.price"
+              v-text="`￥${refundDetail.actualPayAmount}`"
+            />
           </span>
         </div>
-        <div :class="[$style.item, $style.larger]">
+        <div
+          v-if="refundStatus==='WAIT_CHECK' || (refundStatus==='WAIT_CHECK' && refundDetail.shipSn)"
+          :class="[$style.item, $style.larger]"
+        >
           <span :class="[$style.itemLeft, $style.bold]">
             实退金额：
           </span>
-          <span :class="[$style.itemRight, $style.price]">
-            ￥20.00
-          </span>
+          <span
+            v-if="refundDetail.actualRefund"
+            :class="[$style.itemRight, $style.price]"
+            v-text="`￥${refundDetail.actualRefund}`"
+          />
+        </div>
+        <div
+          v-if="refundStatus==='WAIT_CHECK'"
+          :class="$style.tips"
+        >
+          运费不可退，如有疑问，请联系商家协商
+        </div>
+        <div
+          v-if="refundStatus==='FINISHED' || refundStatus==='CANCEL'"
+          :class="$style.tips"
+        >
+          <div>退款返还您的实际付款金额，优惠劵将不予退回</div>
+          <div>退款到帐时间，请查看您的付款账户</div>
         </div>
       </div>
-      <div
-        v-if="1"
-        :class="$style.bottom"
-      >
+      <div :class="$style.bottom">
         <collapse v-model="collepseActiveNames">
           <collapse-item
             name="1"
@@ -124,47 +146,37 @@
       />
       <div :class="$style.productInfo">
         <order-item
-          :img="'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png'"
-          :name="'McQ Alexander McQueen 2018春夏新款棉氨男士…'"
-          :option="'课程：英语互动'"
+          :img="refundDetail.productPic"
+          :name="refundDetail.productName"
+          :option="refundDetail.skuName"
           hide-price
         />
-        <!-- <order-item
-          v-for="(item, i) of productsDetail"
-          :key="i"
-          :img="item.mediaInfoModels[0].mediaUrl"
-          :name="'McQ Alexander McQueen 2018春夏新款棉氨男士…'"
-          :option="'课程：英语互动'"
-          count="12"
-          price="123"
-          route-name="Lesson"
-          :product-seq="item.productSeq"
-        /> -->
       </div>
       <div :class="$style.infoList">
         <pl-list
           title="退单编号："
-          :content="'2938794686'"
+          :content="refundDetail.id"
         />
         <pl-list
           title="服务类型："
-          :content="'退款退货'"
+          :content="refundTypeMap[refundDetail.refundType]"
         />
         <pl-list
+          v-if="refundDetail.refundType===1"
           title="货物状态："
-          :content="'未收到货'"
+          :content="receiveStatusMap[refundDetail.receiveStatus]"
         />
         <pl-list
           title="退款原因："
-          :content="'质量问题'"
+          :content="refundDetail.applyReasonText"
         />
         <pl-list
           title="申请件数："
-          :content="'1件'"
+          :content="`${refundDetail.productCount}件`"
         />
         <pl-list
           title="申请时间："
-          :content="'2017-12-18 10:5'"
+          :content="refundDetail.applyTime"
         />
         <pl-list
           :class="$style.imgListWrapper"
@@ -172,10 +184,10 @@
         >
           <div :class="$style.imgList">
             <img
-              v-for="(img, i) of imgList"
+              v-for="(img, i) of refundDetail.pictures"
               :key="i"
               :src="img"
-              v-gallery
+              v-gallery:image
               v-img-error
               alt="退款图片"
             >
@@ -183,13 +195,13 @@
         </pl-list>
         <pl-list
           title="问题描述："
-          :content="'质量有问题'"
+          :content="refundDetail.applyContent"
         />
       </div>
     </div>
 
     <div
-      v-if="1"
+      v-if="refundStatus !== 'REFUND_PRODUCT' && !refundDetail.shipSn"
       :class="$style.footerSubmit"
     >
       <pl-button
@@ -207,37 +219,77 @@
       <pl-button
         round
         plain
-        @click="deleteOrder"
-      >
-        删除订单
-      </pl-button>
-      <pl-button
-        round
-        plain
-        @click="() => {}"
+        @click="isPopupShow=true"
       >
         联系我们
       </pl-button>
       <pl-button
+        v-if="refundStatus==='WAIT_CHECK'"
         round
         plain
+        @click="$router.push({ name: 'RefundApply', params: { orderId: refundDetail.orderId, orderProductRId: refundDetail.orderDetailId, refundType: refundDetail.refundType, type: 'EDIT' } })"
       >
         更改退单
       </pl-button>
       <pl-button
+        v-if="refundStatus==='WAIT_CHECK'"
         round
         plain
-        @click="cancel"
+        @click="cancelApplication"
       >
         取消申请
       </pl-button>
-      <!-- <pl-button
+      <pl-button
+        v-if="false"
         round
         plain
+        @click="$router.push({ name: 'Refund', params: { orderId: refundDetail.orderId, orderProductRId: refundDetail.orderDetailId } })"
       >
         重新申请
-      </pl-button> -->
+      </pl-button>
     </div>
+    <pl-popup
+      ref="contact"
+      :show.sync="isPopupShow"
+    >
+      <template name="title">
+        <div :class="$style.popupTitle">
+          <pl-svg
+            :class="$style.popupTitleIcon"
+            name="rows"
+          />
+          <span>联系我们</span>
+        </div>
+      </template>
+      <template>
+        <div :class="$style.popupContent">
+          <div :class="$style.popupAddress">
+            <pl-svg
+              :class="$style.popupAddressLeftIcon"
+              name="address-blue"
+            />
+            <span
+              :class="$style.popupAddressText"
+              v-text="address"
+            />
+            <pl-svg
+              :class="$style.popupAddressRightIcon"
+              name="copy"
+            />
+          </div>
+          <a :href="`tel: ${supportPhone}`">
+            <pl-button
+              size="larger"
+              background-color="#387AF6"
+              prefix-icon="mobile-blue"
+              round
+            >
+              立即拨打
+            </pl-button>
+          </a>
+        </div>
+      </template>
+    </pl-popup>
     <pl-picker
       :show.sync="isPickerShow"
       :slots="pickerColumns"
@@ -252,7 +304,23 @@ import ModuleTitle from '../../../components/Module-Title.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
-import { getRefundOrderDetail } from '../../../apis/order-manager'
+import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication } from '../../../apis/order-manager'
+import { mapGetters } from 'vuex'
+
+const expressMapCode = 'KYYQJKDGS'
+
+const suggestionMap = {
+  WAIT_CHECK: '请耐心等待商家审核，如有问题请联系客服',
+  REFUND_PRODUCT: '请根据商家收货地址，将商品寄回',
+  FINISHED: '您的退款申请已受理完成',
+  CANCEL: '因为您超时操作，本次退款申请已关闭'
+}
+
+const receiveStatusMap = {
+  '1': '已收到货',
+  '2': '未收到货'
+}
+
 export default {
   name: 'RefundDetail',
   components: {
@@ -270,67 +338,81 @@ export default {
   },
   data () {
     return {
-      serviceType: '',
-      refundId: '',
-      applyDate: '',
-      problemDesc: '',
-      refundAmount: '',
-      productsDetail: [],
-      problemImages: [],
+      refundStatus: '',
+      refundDetail: {},
       form: {
         expressName: '',
         expressNo: ''
       },
+      isPopupShow: false,
       isPickerShow: false,
       pickerColumns: [
         {
           flex: 1,
           textAlign: 'center',
-          values: ['顺丰快递', '韵达快递', '圆通快递', '申通快递']
+          values: []
         }
       ],
       collepseActiveNames: [],
-      imgList: [
-        'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png',
-        'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png',
-        'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png',
-        'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png',
-        'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png',
-        'http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/S1TG7SeB-NNr5dAtb-lbBjEtQX-pB9jMx6w_1556513907615.png'
-      ]
+      suggestionMap,
+      receiveStatusMap,
+      expressMap: []
     }
   },
+  computed: {
+    ...mapGetters(['refundStatusMap', 'refundTypeMap', 'address', 'supportPhone'])
+  },
   activated () {
-    // this.getDetail()
+    this.getDetail()
+    this.getExpressMap()
   },
   methods: {
     async getDetail () {
       try {
-        let { result } = await getRefundOrderDetail(this.id)
-        let { serviceType, refundId, applyDate, problemDesc, refundAmount, productsDetail, problemImages } = result
-        this.serviceType = serviceType
-        this.refundId = refundId
-        this.applyDate = applyDate
-        this.problemDesc = problemDesc
-        this.refundAmount = Number(refundAmount) || 0
-        this.productsDetail = productsDetail || []
-        this.problemImages = problemImages || []
+        const { id } = this
+        const { result } = await getRefundOrderDetail({ id })
+        this.refundStatus = result.returnStatus
+        this.refundDetail = Object.assign({}, result)
       } catch (e) {
         throw e
       }
+    },
+    async getExpressMap () {
+      const { result: expressMap } = await getExpressMap(expressMapCode)
+      this.expressMap = expressMap
+      this.pickerColumns[0].values = expressMap.map(item => item.dictDataValue)
     },
     onPickerConfirm (selected) {
       this.form.expressName = selected[0]
       this.isPickerShow = false
     },
-    submit () {
-      if (!this.form.expressName.trim()) return this.$toast('请选择物流公司')
+    async submit () {
+      try {
+        if (!this.form.expressName) return this.$toast('请选择物流公司')
+        if (!this.form.expressNo.trim()) return this.$toast('请输入快递单号')
+        const { dictDataKey: shipChannel } = this.expressMap.find(item => item.dictDataValue === this.form.expressName)
+        const params = {
+          id: this.id,
+          shipChannel,
+          shipSn: this.form.expressNo
+        }
+        await submitExpressInfo(params)
+        this.$success('提交申请成功')
+        this.getDetail()
+      } catch (e) {
+        throw e
+      }
     },
-    async deleteOrder () {
-      await this.$confirm('确认删除订单？')
-    },
-    async cancel () {
-      await this.$confirm('确认要关闭退货申请？')
+    async cancelApplication () {
+      try {
+        const { id } = this
+        await this.$confirm('退单正在审核中，确定要取消？')
+        await cancelRefundApplication({ id })
+        this.$success('取消申请成功')
+        this.getDetail()
+      } catch (e) {
+        throw e
+      }
     }
   }
 }
@@ -339,6 +421,9 @@ export default {
 <style module lang="scss">
   .refund-detail {
     padding: 28px 24px 140px;
+  }
+  .title {
+    margin-bottom: 28px;
   }
   .panel {
     background-color: #fff;
@@ -418,7 +503,7 @@ export default {
       }
     }
     .larger {
-      margin-top: 10px;
+      margin-top: 14px;
       font-size: 34px;
       .price {
         font-size: 36px;
@@ -427,8 +512,9 @@ export default {
     .tips {
       font-size: 22px;
       line-height: 32px;
-      margin-top: 10px;
-      color: #999999
+      margin-top: 14px;
+      color: #999999;
+      text-align: right;
     }
     .price {
       color: #FE7700;
@@ -494,6 +580,49 @@ export default {
 
   .bold {
     font-weight: bold;
+  }
+
+  /** 联系我们底部弹窗 **/
+  .popup-title {
+    padding: 40px 42px 32px;
+    display: flex;
+    align-items: center;
+    font-size:40px;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    color: #000000;
+    line-height: 56px;
+  }
+  .popup-title-icon {
+    width: 26px;
+    margin-right: 26px
+  }
+  .popup-content {
+    padding: 35px 30px;
+  }
+  .popup-address {
+    padding: 20px 30px;
+    margin-bottom: 20px;
+    background-color: #F9F9F9;
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: #000;
+    line-height: 40px;
+    border-radius: 10px;
+  }
+  .popup-address-text {
+    flex: 1;
+  }
+  .popup-address-left-icon {
+    width: 36px;
+    margin-right: 24px
+  }
+  .popup-address-right-icon {
+    width: 39px;
+    margin-left: 40px
   }
 </style>
 

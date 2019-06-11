@@ -6,14 +6,9 @@
 
 <script>
 import { ParentMixin } from '../../../mixins/relation'
-
 export default {
   name: 'Collapse',
   mixins: [ParentMixin('Collapse')],
-  model: {
-    event: 'change',
-    prop: 'value'
-  },
   props: {
     // 为true时，只能同时打开一个collepse-item
     accordion: Boolean,
@@ -36,6 +31,7 @@ export default {
           : this.value.filter(activeName => activeName !== name)
       }
       this.$emit('change', name)
+      this.$emit('input', name)
     }
   }
 }

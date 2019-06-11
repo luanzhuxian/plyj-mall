@@ -30,7 +30,6 @@
         v-else
         name="title"
       />
-
       <pl-svg
         v-if="!$slots['right-icon']"
         class="pl-collapse-item__right-icon"
@@ -43,9 +42,9 @@
       />
     </div>
     <div
+      v-show="show"
       ref="wrapper"
       class="pl-collapse-item__wrapper"
-      :style="{ '--height': show ? (collapseHeight + 'px') : (currentHeight + 'px') }"
       @transitionend="onTransitionEnd"
     >
       <div
@@ -61,11 +60,9 @@
 <script>
 import { ChildrenMixin } from '../../../mixins/relation'
 import { isDef } from '../../../assets/js/util'
-
-// function raf (fn) {
-//   return window.requestAnimationFrame(fn)
-// }
-
+function raf (fn) {
+  return window.requestAnimationFrame(fn)
+}
 export default {
   name: 'CollapseItem',
   mixins: [ChildrenMixin('Collapse')],
@@ -112,21 +109,18 @@ export default {
   },
   data () {
     return {
-      show: false,
-      collapseHeight: 0,
-      currentHeight: 0
+      show: null,
+      inited: null
     }
   },
   computed: {
     currentName () {
       return isDef(this.name) ? this.name : this.index
     },
-
     expanded () {
       if (!this.parent) {
         return null
       }
-
       const { value } = this.parent
       return this.parent.accordion
         ? value === this.currentName
@@ -134,47 +128,45 @@ export default {
     }
   },
   watch: {
-    expanded (expanded) {
-      this.show = expanded
-
-      // raf(() => {
-      //   const { content, wrapper } = this.$refs
-      //   if (!content || !wrapper) {
-      //     return
-      //   }
-      //
-      //   const { clientHeight } = content
-      //   if (clientHeight) {
-      //     const contentHeight = `${clientHeight}px`
-      //     wrapper.style.height = expanded ? 0 : contentHeight
-      //     raf(() => {
-      //       wrapper.style.height = expanded ? contentHeight : 0
-      //     })
-      //   } else {
-      //     this.onTransitionEnd()
-      //   }
-      // })
+    expanded (expanded, prev) {
+      if (prev === null) {
+        return
+      }
+      if (expanded) {
+        this.show = true
+        this.inited = true
+      }
+      raf(() => {
+        const { content, wrapper } = this.$refs
+        if (!content || !wrapper) {
+          return
+        }
+        const { clientHeight } = content
+        if (clientHeight) {
+          const contentHeight = `${clientHeight}px`
+          wrapper.style.height = expanded ? 0 : contentHeight
+          raf(() => {
+            wrapper.style.height = expanded ? contentHeight : 0
+          })
+        } else {
+          this.onTransitionEnd()
+        }
+      })
     }
   },
   created () {
     this.show = this.expanded
-  },
-  updated () {
-    this.$nextTick(() => {
-      this.collapseHeight = this.$refs.content.offsetHeight
-    })
+    this.inited = this.expanded
   },
   methods: {
     onClick () {
       if (this.disabled) {
         return
       }
-
       const { parent } = this
       const name = parent.accordion && this.currentName === parent.value ? '' : this.currentName
       this.parent.switch(name, !this.expanded)
     },
-
     onTransitionEnd () {
       if (!this.expanded) {
         this.show = false
@@ -183,17 +175,12 @@ export default {
       }
     }
   }
-
 }
 </script>
 
 <style lang="scss">
 .pl-collapse-item {
   position: relative;
-  margin-bottom: 20px;
-  &:nth-last-of-type(1) {
-    margin-bottom: 0;
-  }
   &__title {
     display: flex;
     justify-content: space-between;
@@ -203,31 +190,25 @@ export default {
     font-size: 24px;
     line-height: 34px;
     background-color: #FFF;
-
     &--expanded {
       .pl-collapse-item__right-icon {
         transform: rotate(-90deg);
       }
     }
-
     &-text {
       flex: 1
     }
   }
-
   &__right-icon {
     width: 22px;
     transform: rotate(90deg);
     transition: .3s;
   }
-
   &__wrapper {
-    height: var(--height);
     overflow: hidden;
     transition: height .3s ease-in-out;
-    /*will-change: height;*/
+    will-change: height;
   }
-
   &__content {
     padding: 16px 0 0;
     color: #333333;

@@ -13,7 +13,7 @@
       <div :class="$style.panel">
         <router-link
           tag="div"
-          :to="{ name: 'RefundApply', params: { orderId, refundType: '1' } }"
+          :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '1', type: 'APPLY' } }"
           :class="$style.item"
         >
           <div :class="$style.itemLeft">
@@ -35,7 +35,7 @@
 
         <router-link
           tag="div"
-          :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '2' } }"
+          :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '2', type: 'APPLY' } }"
           :class="$style.item"
         >
           <div :class="$style.itemLeft">
@@ -61,7 +61,6 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-// import { getProductDetail } from '../../../apis/product'
 import { getOrderDetail } from '../../../apis/order-manager'
 
 export default {

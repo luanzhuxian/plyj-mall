@@ -135,15 +135,11 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import { getOrderDetail, getRefundReasonMap, applyRefund } from '../../../apis/order-manager'
+import { getOrderDetail, applyRefund, getMap as getRefundReasonMap } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
+import { mapGetters } from 'vuex'
 
-const refundTypeMap = {
-  '1': '退款',
-  '2': '退款退货'
-}
-
-const refundStatusMap = [
+const receiveStatusMap = [
   {
     dictDataKey: '1',
     dictDataValue: '已收到货'
@@ -174,13 +170,16 @@ export default {
       default: null
     },
     refundType: {
-      type: String,
+      type: [String, Number],
       default: ''
+    },
+    type: {
+      type: String,
+      default: 'APPLY'
     }
   },
   data () {
     return {
-      refundTypeMap,
       refundReasonKeyMap,
       orderStatus: '',
       operationType: '', // 在何种情况下退款,
@@ -200,7 +199,7 @@ export default {
       },
       goodsStatusInfo: {
         title: '货物状态',
-        options: refundStatusMap
+        options: receiveStatusMap
       },
       refundReasonInfo: {
         title: '退款原因',
@@ -213,9 +212,16 @@ export default {
       imgList: []
     }
   },
+  computed: {
+    ...mapGetters(['refundTypeMap'])
+  },
   created () {
     this.form.orderDetailId = this.orderProductRId
     this.getOrderDetail()
+    if (this.type === 'EDIT') {
+      this.get()
+    }
+    console.log(this.type)
   },
   methods: {
     async getOrderDetail () {
@@ -225,8 +231,10 @@ export default {
       this.operationType = refundReasonKeyMap[result.orderStatus]
       this.form.refundType = this.refundType
       this.form.actualRefund = result.productInfoModel.productsTotalAmount
-      const { result: refundReason } = await getRefundReasonMap(this.operationType)
-      this.refundReasonInfo.options = refundReason
+      const { result: refundReasonMap } = await getRefundReasonMap(this.operationType)
+      this.refundReasonInfo.options = refundReasonMap
+    },
+    async get () {
     },
     showPopup (name) {
       this.currentPopupName = name

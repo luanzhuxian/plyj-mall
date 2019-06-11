@@ -50,11 +50,11 @@
               </div>
               <p
                 :class="$style.status"
-                v-text="returnStatusMap[item.returnStatus]"
+                v-text="refundStatusMap[item.returnStatus]"
               />
             </div>
             <order-item
-              :img="item.pictures"
+              :img="item.productPic"
               :name="item.productName"
               :option="item.skuName"
               :count="item.productCount"
@@ -80,17 +80,10 @@
                   v-if="item.returnStatus === 'WAIT_CHECK'"
                   round
                   plain
-                  @click="cancel"
+                  @click="cancelApplication(item, i)"
                 >
                   取消申请
                 </pl-button>
-                <!-- <pl-button
-                  round
-                  plain
-                  @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"
-                >
-                  查看详情
-                </pl-button> -->
                 <pl-button
                   v-if="item.returnStatus === 'REFUND_PRODUCT'"
                   type="warning"
@@ -113,11 +106,12 @@
 import OrderItem from '../../../components/item/Order-Item.vue'
 import Price from '../../../components/Price.vue'
 import LoadMore from '../../../components/Load-More.vue'
-import { mapGetters } from 'vuex'
 import {
   getRefundOrderList,
-  orderPhysicalorderSummary
+  refundOrderSummary,
+  cancelRefundApplication
 } from '../../../apis/order-manager'
+import { mapGetters } from 'vuex'
 
 const tabs = [{
   name: '全部',
@@ -133,26 +127,16 @@ const tabs = [{
   id: 'FINISHED'
 }]
 
-const orderTypeMap = {
-  PHYSICAL: '实体商品',
-  VIRTUAL: '虚拟商品'
-}
-
 const count = {
   WAIT_CHECK: 0,
   REFUND_PRODUCT: 0,
   FINISHED: 0
 }
 
-const returnStatusMap = {
-  WAIT_CHECK: '待审核',
-  REFUND_PRODUCT: '退换货',
-  FINISHED: '退款成功'
-}
-
-const refundTypeMap = {
-  '1': '退款',
-  '2': '退款退货'
+const refundStatusMapCamel = {
+  waitCheck: 'WAIT_CHECK',
+  refundProduct: 'REFUND_PRODUCT',
+  finished: 'FINISHED'
 }
 
 export default {
@@ -178,17 +162,15 @@ export default {
         returnStatus: ''
       },
       getRefundOrderList,
-      orderPhysicalorderSummary,
+      refundOrderSummary,
       loading: false,
       $refresh: null,
       count,
-      orderTypeMap,
-      returnStatusMap,
-      refundTypeMap
+      refundStatusMapCamel
     }
   },
   computed: {
-    ...mapGetters(['orderStatusMapCamel'])
+    ...mapGetters(['refundStatusMap', 'orderTypeMap', 'refundTypeMap'])
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
@@ -206,32 +188,31 @@ export default {
     },
     onRefresh (list, total) {
       this.orderList = list
-      this.getOrderSummary()
+      this.getRefundOrderSummary()
     },
-    async getOrderSummary () {
+    async getRefundOrderSummary () {
       try {
-        const { orderStatusMapCamel } = this
-        const { result } = await orderPhysicalorderSummary(this.userId)
+        const { refundStatusMapCamel } = this
+        const { result } = await refundOrderSummary()
         for (let key of Object.keys(result)) {
-          if (orderStatusMapCamel.hasOwnProperty(key)) {
-            this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
+          if (refundStatusMapCamel.hasOwnProperty(key)) {
+            this.count[refundStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
           }
         }
       } catch (e) {
         throw e
       }
     },
-    async cancel (item, index) {
+    async cancelApplication (item, index) {
       try {
         await this.$confirm('退单正在审核中，确定要取消？')
-        // await cancelOrder(item.orderId)
-        // this.$success('退单取消成功')
-        // this.orderList.splice(index, 1)
+        await cancelRefundApplication({ id: item.id })
+        this.$success('取消申请成功')
+        this.orderList.splice(index, 1)
       } catch (e) {
         throw e
       }
-    },
-    checkExpressInfo () {}
+    }
   }
 }
 </script>
@@ -293,13 +274,15 @@ export default {
       margin-top: 24px;
       button {
         margin-left: 24px;
+        &:nth-of-type(1) {
+          margin-left: 40px;
+        }
       }
     }
     .reund-type {
       font-size: 24px;
       color: #FE7700;
       line-height: 32px;
-      margin-right: 16px;
     }
   }
   .tab-count {

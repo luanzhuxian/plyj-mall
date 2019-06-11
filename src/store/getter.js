@@ -12,6 +12,9 @@ export default {
   },
   orderStatusMap: state => state.orderStatusMap,
   orderStatusMapCamel: state => state.orderStatusMapCamel,
+  refundStatusMap: state => state.refundStatusMap,
+  orderTypeMap: state => state.orderTypeMap,
+  refundTypeMap: state => state.refundTypeMap,
 
   avatar: state => state.userInfo.img,
   userName: state => state.userInfo.userName,

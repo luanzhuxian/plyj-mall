@@ -57,7 +57,7 @@
             v-if="canApplyRefund && item.afterSalesStatus === 1"
             plain
             round
-            @click="$router.push({ name: 'RefundDetail', params: { orderId } })"
+            @click="$router.push({ name: 'RefundDetail', params: { id: orderId } })"
           >
             退款中
           </pl-button>
@@ -230,7 +230,7 @@
         联系我们
       </pl-button>
       <pl-button
-        v-if="orderStatus === 'FINISHED' || orderStatus === 'WAIT_RECEIVE'"
+        v-if="orderType === 'PHYSICAL' && (orderStatus === 'FINISHED' || orderStatus === 'WAIT_RECEIVE')"
         plain
         round
         @click="$router.push({ name: 'Freight', params: { orderId } })"
@@ -292,7 +292,6 @@
               background-color="#387AF6"
               prefix-icon="mobile-blue"
               round
-              @click="call"
             >
               立即拨打
             </pl-button>
@@ -543,7 +542,7 @@ export default {
     async cancelOrder (reason) {
       try {
         await this.$confirm('订单一旦取消，将无法恢复，确认要取消订单？')
-        await cancelOrder(this.orderId)
+        await cancelOrder(this.orderId, reason)
         this.$success('订单取消成功')
         this.getDetail()
       } catch (e) {
@@ -586,9 +585,6 @@ export default {
     },
     onPickerConfirm (selected) {
       this.cancelOrder(selected[0])
-    },
-    call () {
-      window.location.href = 'tel://110'
     }
   }
 }
@@ -731,6 +727,7 @@ export default {
     }
   }
 
+  /** 联系我们底部弹窗 **/
   .popup-title {
     padding: 40px 42px 32px;
     display: flex;

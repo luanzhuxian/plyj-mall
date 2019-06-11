@@ -25,9 +25,9 @@ export function physicalorderPaymentSuccessVirtual (orderSn) {
 export function returnRequest ({ orderId, operationType, type, refundModel, expressInfoModel }) {
   return axios.put(`/apis/v1/order/physicalorder/refundment/${orderId}?operationType=${operationType}&serviceType=${type}`, { refundModel, expressInfoModel })
 }
-// 用户取消订单
-export function cancelOrder (orderId) {
-  return axios.put(`/apis/v1/order/cancel/${orderId}`)
+// 用户取消订单 userType：1 用户取消  2 商户取消
+export function cancelOrder (orderId, cancelReason) {
+  return axios.put(`/apis/v1/order/cancel/${orderId}?userType=1&cancelReason=${cancelReason}`)
 }
 // 用户删除订单
 export function deleteOrder (orderId) {
@@ -75,8 +75,8 @@ export const getFreight = ({ productSeq, productCount, addressSeq, optionCode })
 /* GET 商城端-获取订单物流信息 */
 export const getFreightData = orderId => axios.get(`/apis/v1/order/logistics/${orderId}`)
 
-// GET 获取退货原因数据字典 invoiceType 待发货: REASONBUYERPAID 待收货: REASONSNOTRECEIVEDGOODS 已收货: REASONSRECEIVEDGOODS
-export const getRefundReasonMap = invoiceType => axios.get(`/apis/v1/systemctl/sysdictionary/detail/list/${invoiceType}`)
+// GET 获取数据字典
+export const getMap = code => axios.get(`/apis/v1/systemctl/sysdictionary/detail/list/${code}`)
 
 // 申请售后
 export const applyRefund = params => axios.post(`/apis/v1/refund/refund/customer/apply`, params)
@@ -86,3 +86,12 @@ export const getRefundOrderList = params => axios.post(`/apis/v1/refund/refund/c
 
 // 售后详情查询
 export const getRefundOrderDetail = params => axios.post(`/apis/v1/refund/refund/admin/selectRefundDetail`, params)
+
+// 售后数量汇总
+export const refundOrderSummary = () => axios.get(`/apis/v1/refund/refund/consumer/selectRefundCountTotal`)
+
+// 售后提交物流信息
+export const submitExpressInfo = params => axios.post(`/apis/v1/refund/refund/consumer/shipModify`, params)
+
+// 取消售后申请
+export const cancelRefundApplication = params => axios.post(`/apis/v1/refund/refund/admin/cancel`, params)

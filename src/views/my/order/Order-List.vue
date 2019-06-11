@@ -61,6 +61,7 @@
               :option="product.skuName"
               :count="product.purchaseQuantity"
               :price="product.unitPrice"
+              :status="refundStatusMap[product.afterSalesStatus]"
               border
             />
             <div :class="$style.orderItemBottom">
@@ -170,6 +171,12 @@ const orderFinishMap = {
   COMMENT: '待评价'
 }
 
+const refundStatusMap = {
+  '1': '退款中',
+  '2': '退款成功',
+  '3': '退款驳回'
+}
+
 const count = {
   WAIT_PAY: 0,
   WAIT_RECEIVE: 0,
@@ -208,7 +215,8 @@ export default {
       currentPayId: '', // 当前正在支付的订单id
       count,
       orderTypeMap,
-      orderFinishMap
+      orderFinishMap,
+      refundStatusMap
     }
   },
   computed: {

@@ -246,6 +246,7 @@ export default {
       justify-content: space-between;
       > .status {
         color: #F2B036;
+        font-size: 24px;
       }
       .tip {
         font-size: 22px;

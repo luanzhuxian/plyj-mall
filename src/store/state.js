@@ -89,5 +89,19 @@ export default {
     waitCollect: 'WAIT_RECEIVE',
     comment: 'FINISHED',
     afterSale: 'AFTER_SALE'
+  },
+  refundStatusMap: {
+    WAIT_CHECK: '待审核',
+    REFUND_PRODUCT: '退换货',
+    FINISHED: '退款成功',
+    CANCEL: '退款关闭'
+  },
+  orderTypeMap: {
+    PHYSICAL: '实体商品',
+    VIRTUAL: '虚拟商品'
+  },
+  refundTypeMap: {
+    '1': '退款',
+    '2': '退款退货'
   }
 }

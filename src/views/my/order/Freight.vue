@@ -17,13 +17,15 @@
         </div>
       </div>
       <div :class="$style.right">
-        <pl-svg
-          :class="$style.icon"
-          name="service"
-        />
-        <div :class="$style.iconText">
-          物流客服
-        </div>
+        <a :href="`tel: ${courierCompanyMobile}`">
+          <pl-svg
+            :class="$style.icon"
+            name="service"
+          />
+          <div :class="$style.iconText">
+            物流客服
+          </div>
+        </a>
       </div>
     </div>
     <div
@@ -76,6 +78,7 @@ export default {
       freightData: [],
       courierCompany: '',
       courierNo: '',
+      courierCompanyMobile: '',
       lastRecord: ''
     }
   },
@@ -90,6 +93,7 @@ export default {
       this.freightData = result.trackModelList
       this.courierCompany = result.courierCompany
       this.courierNo = result.courierNo
+      this.courierCompanyMobile = result.courierCompanyMobile
       this.lastRecord = result.trackModelList.slice(-1)[0].content
     } catch (e) {
       throw e
@@ -217,6 +221,10 @@ export default {
       justify-content: center;
       align-items: center;
       border-left: 1px solid #F0F0F0;
+      > a {
+        display: block;
+        text-align: center;
+      }
     }
     .main {
       font-size: 28px;
