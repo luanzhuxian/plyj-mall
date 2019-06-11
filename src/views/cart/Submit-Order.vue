@@ -241,10 +241,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedAddress', 'openId', 'mobile'])
-  },
-  watch: {
-    selectedAddress () {}
+    ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList'])
   },
   activated () {
     this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL'))
@@ -281,8 +278,12 @@ export default {
     },
     // 提交订单
     async submitOrder () {
-      this.submiting = true
       const cartProducts = []
+      if (this.physicalProducts.length > 0 && this.addressList <= 0) {
+        this.$confirm('您还没有收货地址，请先添加收货地址')
+        return
+      }
+      this.submiting = true
       for (const item of this.physicalProducts) {
         const { productId, optionCode, count, agentUser } = item
         cartProducts.push({
