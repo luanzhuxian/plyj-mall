@@ -34,6 +34,7 @@
                 :data="data"
                 :key="data.id"
                 @skuChange="getList"
+                @countChange="computeMoney"
               />
             </template>
           </pl-checkbox>
@@ -135,7 +136,6 @@ export default {
   },
   activated () {
     this.loading = true
-    this.resetState()
     try {
       this.getList()
     } catch (e) {
@@ -154,8 +154,7 @@ export default {
     async getList () {
       try {
         const { result } = await getCartList()
-        this.products.splice(0, 500)
-        this.checkedList.splice(0, 500)
+        this.resetState()
         for (let item of result) {
           // 如果商品已下架或当前规格商品数量不足，禁用
           const currentSku = item.skuModels.find(sku => sku.optionCode === item.cartSkuCode)
@@ -171,6 +170,8 @@ export default {
         this.loading = false
       } catch (e) {
         throw e
+      } finally {
+        this.checkAll(false)
       }
     },
     selectedChange (selected) {
