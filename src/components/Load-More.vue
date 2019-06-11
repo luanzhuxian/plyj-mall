@@ -175,9 +175,10 @@ export default {
           let { result } = await this.requestMethods(this.options)
           if (result.records.length === 0) {
             this.allLoaded = true
-            if (!this.options) {
-              this.$emit('listState', true)
-            }
+            this.$emit('listState', true)
+            // if (!this.options) {
+            //   this.$emit('listState', true)
+            // }
           } else {
             this.$emit('listState', false)
           }
@@ -381,7 +382,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 200px;
   }
   .noContentIcon {
     width: 80%;

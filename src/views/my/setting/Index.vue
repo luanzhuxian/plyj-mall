@@ -12,7 +12,7 @@
         />
         <span
           :class="$style.phoneNumber"
-          v-text="mobile||'未设置'"
+          v-text="mobile?`${mobile.substring(0, 3)}****${mobile.substring(mobile.length-4)}`:'未设置'"
         />
       </div>
       <router-link

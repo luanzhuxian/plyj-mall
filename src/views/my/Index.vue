@@ -18,7 +18,7 @@
             v-text="roleName"
           />
           <router-link
-            v-if="!agentUser"
+            v-if="!agentUser&&(roleCode === 'MEMBERSHIP'||roleCode === 'VISITOR')"
             :to="{ name: 'ApplyHelper' }"
             :class="$style.apply"
           >
@@ -130,7 +130,7 @@
     </div>
     <div
       :class="$style.tip"
-      v-if="!agentUser"
+      v-if="!agentUser&&(roleCode === 'MEMBERSHIP'||roleCode === 'VISITOR')"
     >
       <span :class="$style.tipCircle" />
       <router-link :to="{ name: 'WhatsHelper' }">
@@ -185,7 +185,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'orderStatusMapCamel'])
+    ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode', 'orderStatusMapCamel'])
   },
   async activated () {
     try {

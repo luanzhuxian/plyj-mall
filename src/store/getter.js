@@ -23,7 +23,7 @@ export default {
   balance: state => state.userInfo.balance, // 可提现金额
   currentBalance: state => state.userInfo.currentBalance, // 今日润笔
   cumulativeBalance: state => state.userInfo.cumulativeBalance, // 累计润笔
-  roleCode: state => state.userInfo.roleCode, // 累计润笔
+  roleCode: state => state.userInfo.roleCode, // 个人角色
   roleMap: state => state.roleMap,
   roleName: state => state.roleMap[state.userInfo.roleCode] || '',
 

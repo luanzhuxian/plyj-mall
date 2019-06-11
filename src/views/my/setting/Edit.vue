@@ -43,7 +43,7 @@
           <input
             type="text"
             v-model="newUserName"
-            placeholder="请输入1-2位字符用户名"
+            placeholder="请输入1-12位字符用户名"
           >
         </div>
         <div :class="$style.inputBottom">
@@ -57,7 +57,7 @@
             :class="$style.confirm"
             @click="confirm()"
           >
-            确认
+            保存
           </div>
         </div>
       </div>
@@ -123,12 +123,13 @@ export default {
       this.inputShow = false
     },
     async confirm () {
-      const reg = /^[\u4e00-\u9fa5]+$/
+      // const reg = /^[\u4e00-\u9fa5]+$/
+      var regex = new RegExp('^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_]){1,20}$')
       if (!this.newUserName) {
-        return this.$toast('请输入发票抬头')
+        return this.$toast('请输入用户名')
       }
-      if (!reg.test(this.newUserName)) {
-        return this.$toast('请输入汉字')
+      if (!regex.test(this.newUserName)) {
+        return this.$toast('不能输入字符及空格')
       }
       if (this.newUserName.length > 12) {
         return this.$toast('请输入1-12位汉字')
