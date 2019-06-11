@@ -203,7 +203,7 @@ export default {
       try {
         const { result } = await getCategoryTree()
         this.classifyList = this.classifyList.concat(result)
-        if (!this.agentUser) {
+        if (this.agentUser) {
           this.classifyList.push({
             categoryName: 'helper',
             sequenceNbr: '1'

@@ -14,7 +14,6 @@
       <div
         :class="$style.productName"
         v-text="data.productName"
-        @click.stop="goDetail"
       />
 
       <span

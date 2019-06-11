@@ -28,7 +28,7 @@ export default [
     name: 'Address',
     component: () => import('../views/my/address/Index.vue'),
     meta: {
-      title: '地址管理'
+      title: '我的地址'
     }
   },
   {
