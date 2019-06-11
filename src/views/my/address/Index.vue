@@ -21,10 +21,9 @@
                 :class="$style.name"
                 v-text="item.realName"
               />
-              <span
-                :class="$style.phone + ' bold'"
-                v-text="item.mobile"
-              />
+              <span :class="$style.phone + ' bold'">
+                {{ item.mobile | formatAccount }}
+              </span>
             </div>
             <p :class="$style.addressDetail + ' fz-24'">
               <img

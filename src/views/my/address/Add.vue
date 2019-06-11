@@ -211,7 +211,7 @@ export default {
     },
     async removeAddr () {
       try {
-        await this.$confirm('确定删除该地址吗？')
+        await this.$confirm('是否删除该地址？')
         let { result } = await deleteAddress(this.addressId)
         if (result) {
           // 移除成功后判断移除的地址是不是当前选中的地址
