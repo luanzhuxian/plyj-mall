@@ -57,7 +57,7 @@
             v-if="canApplyRefund && item.afterSalesStatus === 1"
             plain
             round
-            @click="$router.push({ name: 'RefundDetail', params: { id: orderId } })"
+            @click="$router.push({ name: 'RefundDetail', params: { id: item.mallRefundId } })"
           >
             退款中
           </pl-button>

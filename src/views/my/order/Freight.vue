@@ -50,7 +50,6 @@
         </li>
       </ul>
     </div>
-
     <p
       :class="$style.tip"
       v-else-if="!loading"

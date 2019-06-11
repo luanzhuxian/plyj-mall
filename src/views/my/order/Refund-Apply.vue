@@ -99,10 +99,7 @@
     >
       <template>
         <ul :class="$style.popupContentWrapper">
-          <radio-group-component
-            v-model="radio[currentPopupName]"
-            @change="onRadioChange"
-          >
+          <radio-group-component v-model="radio[currentPopupName]">
             <template>
               <div
                 :class="$style.popupItem"
@@ -249,16 +246,8 @@ export default {
       radio[currentPopupName] = item.dictDataKey
       radio[`${currentPopupName}Text`] = item.dictDataValue
     },
-    onRadioChange (value) {
-      console.log(value)
-    },
     uploaded (res) {
       if (res.res.status === 200) {
-        // let ossModel = {
-        //   mediaType: 'image',
-        //   mediaFilename: res.name.split('/').splice(-1, 1)[0],
-        //   mediaUrl: res.url
-        // }
         this.form.pictures.push(res.url)
         this.imgList.push(res.url)
       }
@@ -268,11 +257,8 @@ export default {
       this.form.pictures.splice(index, 1)
     },
     async confirm () {
-      if (!this.radio.refundReason) {
-        this.$toast('请选择退货原因')
-      } else {
-        this.request()
-      }
+      if (!this.radio.refundReason) return this.$toast('请选择退货原因')
+      this.request()
     },
     async request () {
       try {

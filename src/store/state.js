@@ -94,7 +94,9 @@ export default {
     WAIT_CHECK: '待审核',
     REFUND_PRODUCT: '退换货',
     FINISHED: '退款成功',
-    CANCEL: '退款关闭'
+    CLOSED: '退款关闭',
+    CANCEL: '退款关闭',
+    REJECT: '退款关闭'
   },
   orderTypeMap: {
     PHYSICAL: '实体商品',

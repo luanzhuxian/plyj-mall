@@ -58,7 +58,7 @@
     </section>
 
     <section
-      v-if="refundStatus !== 'REFUND_PRODUCT'"
+      v-if="refundStatus === 'REFUND_PRODUCT'"
       :class="[$style.panel, $style.expressInfoPanel]"
     >
       <pl-fields
@@ -132,7 +132,26 @@
             title="退款进度"
           >
             <template slot="default">
-              您的退款申请已受理完成，到账周期请查看退款明细
+              <ul :class="$style.refundProgressList">
+                <li
+                  v-for="(item, index) of refundProgress"
+                  :key="index"
+                  :class="$style.refundProgressItem"
+                >
+                  <div :class="$style.datetime">
+                    <span :class="$style.date">
+                      {{ item.createTimeArray[0] }}
+                    </span>
+                    <span :class="$style.time">
+                      {{ item.createTimeArray[1] }}
+                    </span>
+                  </div>
+                  <div
+                    :class="$style.refundProgressContent"
+                    v-text="item.operatingLog"
+                  />
+                </li>
+              </ul>
             </template>
           </collapse-item>
         </collapse>
@@ -201,7 +220,7 @@
     </div>
 
     <div
-      v-if="refundStatus !== 'REFUND_PRODUCT' && !refundDetail.shipSn"
+      v-if="refundStatus === 'REFUND_PRODUCT' && !refundDetail.shipSn"
       :class="$style.footerSubmit"
     >
       <pl-button
@@ -313,12 +332,21 @@ const suggestionMap = {
   WAIT_CHECK: '请耐心等待商家审核，如有问题请联系客服',
   REFUND_PRODUCT: '请根据商家收货地址，将商品寄回',
   FINISHED: '您的退款申请已受理完成',
-  CANCEL: '因为您超时操作，本次退款申请已关闭'
+  CLOSED: '因为您超时操作，本次退款申请已关闭',
+  CANCEL: '本次退款申请已取消',
+  REJECT: '本次退款申请已驳回'
 }
 
 const receiveStatusMap = {
   '1': '已收到货',
   '2': '未收到货'
+}
+
+function rebuild (list) {
+  let array = list.split(' ')
+  array[0] = array[0].slice(array[0].indexOf('-') + 1)
+  array[1] = array[1].slice(0, array[1].lastIndexOf(':'))
+  return array
 }
 
 export default {
@@ -344,6 +372,7 @@ export default {
         expressName: '',
         expressNo: ''
       },
+      refundProgress: [],
       isPopupShow: false,
       isPickerShow: false,
       pickerColumns: [
@@ -373,6 +402,11 @@ export default {
         const { result } = await getRefundOrderDetail({ id })
         this.refundStatus = result.returnStatus
         this.refundDetail = Object.assign({}, result)
+        this.refundProgress = result.operations.map(item => {
+          item.createTimeArray = rebuild(item.createTime)
+          return item
+        })
+        console.log(this.refundProgress)
       } catch (e) {
         throw e
       }
@@ -623,6 +657,75 @@ export default {
   .popup-address-right-icon {
     width: 39px;
     margin-left: 40px
+  }
+
+  /** 退款进度**/
+  .refundProgressItem {
+    display: flex;
+    padding-bottom: 30px;
+    &:nth-of-type(1) {
+      .datetime {
+        color: #333;
+      }
+      .refundProgressContent {
+        color: #333;
+        &:before {
+          background: linear-gradient(180deg, #FFAF00, #FE7700);
+        }
+      }
+    }
+    &:nth-last-of-type(1) {
+      padding-bottom: 0;
+      > .refundProgressContent {
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+  .datetime {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: right;
+    color: #999;
+    > .date {
+      font-size: 22px;
+      line-height: 32px;
+    }
+    > .time {
+      font-size: 18px;
+      line-height: 26px;
+    }
+  }
+  .refundProgressContent {
+    position: relative;
+    flex: 1;
+    padding-left: 62px;
+    font-size: 22px;
+    line-height: 32px;
+    color: #999;
+    &:before {
+      position: absolute;
+      content: '';
+      left: 24px;
+      top: 10px;
+      width: 14px;
+      height: 14px;
+      border-radius: 7px;
+      background: #D8D8D8;
+      z-index: 2;
+    }
+    &:after {
+      position: absolute;
+      content: '';
+      left: 31px;
+      top: 24px;
+      width: 1px;
+      height: 150%;
+      border-radius: 7px;
+      background-color: #D8D8D8;
+      z-index: 1;
+    }
   }
 </style>
 
