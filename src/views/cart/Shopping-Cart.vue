@@ -33,6 +33,7 @@
               <CartItem
                 :data="data"
                 :key="data.id"
+                @skuChange="getList"
               />
             </template>
           </pl-checkbox>
@@ -152,6 +153,8 @@ export default {
     async getList () {
       try {
         const { result } = await getCartList()
+        this.products.splice(0, 500)
+        this.checkedList.splice(0, 500)
         for (let item of result) {
           // 如果商品已下架或当前规格商品数量不足，禁用
           const currentSku = item.skuModels.find(sku => sku.optionCode === item.cartSkuCode)
@@ -309,7 +312,8 @@ export default {
     border: 2px solid $--primary-color;
     border-radius: $--radius2;
     &:disabled {
-      opacity: 0.5;
+      color: #ccc;
+      border-color: #cfcfcf;
     }
   }
 </style>
