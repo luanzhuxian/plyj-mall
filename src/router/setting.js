@@ -37,7 +37,7 @@ export default [
     component: () => import('../views/my/address/Add.vue'),
     props: true,
     meta: {
-      title: '添加地址'
+      title: '地址管理'
     }
   },
   {

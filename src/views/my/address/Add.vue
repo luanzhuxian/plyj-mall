@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.addAddress">
     <TopText
-      :title="addressId ? '修改地址' : '添加新地址'"
+      :title="addressId ? '编辑地址' : '添加新地址'"
       tip="请认真填写，不然可能收不到宝贝哟～"
     />
 
@@ -58,7 +58,7 @@
     </pl-form>
 
     <div :class="$style.setDefault + ' radius-20'">
-      <span class="fz-30">设置为默认</span>
+      <span class="fz-30">设为默认地址</span>
       <pl-switch v-model="defaultAddress" />
     </div>
 
@@ -67,7 +67,7 @@
       :class="$style.removeAddr"
       @click="removeAddr"
     >
-      删除收货地址
+      删除该地址
     </div>
 
     <CitySelector
