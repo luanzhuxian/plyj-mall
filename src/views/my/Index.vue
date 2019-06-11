@@ -91,7 +91,7 @@
             v-text="count.WAIT_RECEIVE"
           />
         </router-link>
-        <router-link :to="{ name: 'RefundList', params: { status: '' } }">
+        <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
           <pl-svg name="after-sale" />
           <span
             :class="$style.badge"

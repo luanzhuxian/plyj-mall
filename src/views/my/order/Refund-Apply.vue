@@ -21,13 +21,13 @@
         />
         <pl-fields
           text="货物状态："
-          :right-text="form.goodsStatusText || '请选择'"
+          :right-text="radio.goodsStatusText || '请选择'"
           show-right-icon
           @click="showPopup('goodsStatus')"
         />
         <pl-fields
           text="请选择退货原因："
-          :right-text="form.refundReasonText || '请选择'"
+          :right-text="radio.refundReasonText || '请选择'"
           show-right-icon
           @click="showPopup('refundReason')"
         />
@@ -100,7 +100,7 @@
       <template>
         <ul :class="$style.popupContentWrapper">
           <radio-group-component
-            v-model="form[currentPopupName]"
+            v-model="radio[currentPopupName]"
             @change="onRadioChange"
           >
             <template>
@@ -186,20 +186,18 @@ export default {
       operationType: '', // 在何种情况下退款,
       productInfo: {},
       form: {
+        orderDetailId: this.orderProductRId,
         refundType: '',
-        goodsStatus: '',
-        goodsStatusText: '',
-        refundReason: '',
-        refundReasonText: '',
         actualRefund: 200.36,
         applyContent: '',
         pictures: []
       },
-      imgList: [],
-      isPopupShow: false,
-      currentPopupName: '',
-      popupTitle: '',
-      popupOptions: [],
+      radio: {
+        goodsStatus: '',
+        goodsStatusText: '',
+        refundReason: '',
+        refundReasonText: ''
+      },
       goodsStatusInfo: {
         title: '货物状态',
         options: refundStatusMap
@@ -207,10 +205,16 @@ export default {
       refundReasonInfo: {
         title: '退款原因',
         options: []
-      }
+      },
+      isPopupShow: false,
+      currentPopupName: '',
+      popupTitle: '',
+      popupOptions: [],
+      imgList: []
     }
   },
   created () {
+    this.form.orderDetailId = this.orderProductRId
     this.getOrderDetail()
   },
   methods: {
@@ -233,9 +237,9 @@ export default {
       })
     },
     handleRadioClick (item) {
-      let { currentPopupName, form } = this
-      form[currentPopupName] = item.dictDataKey
-      form[`${currentPopupName}Text`] = item.dictDataValue
+      let { currentPopupName, radio } = this
+      radio[currentPopupName] = item.dictDataKey
+      radio[`${currentPopupName}Text`] = item.dictDataValue
     },
     onRadioChange (value) {
       console.log(value)
@@ -256,7 +260,7 @@ export default {
       this.form.pictures.splice(index, 1)
     },
     async confirm () {
-      if (!this.form.refundReason) {
+      if (!this.radio.refundReason) {
         this.$toast('请选择退货原因')
       } else {
         this.request()
@@ -264,24 +268,20 @@ export default {
     },
     async request () {
       try {
-        const { orderProductRId } = this
-        const {
-          refundType,
-          goodsStatus: receiveStatus,
-          refundReason: applyReason,
-          actualRefund,
-          applyContent,
-          pictures
-        } = this.form
+        const params = {
+          ...this.form,
+          receiveStatus: this.radio.goodsStatus,
+          applyReason: this.radio.refundReason
+        }
         await this.$confirm('确定提交吗？')
-        await applyRefund({ orderDetailId: orderProductRId, receiveStatus, applyReason, refundType, actualRefund, applyContent, pictures })
+        await applyRefund(params)
         resetForm(this.form, {
           refundType: '1'
         })
         this.imgList = []
         this.$success('申请售后成功，请等待卖家反馈')
         setTimeout(() => {
-          this.$router.replace({ name: 'RefundList', params: { status: '' } })
+          this.$router.replace({ name: 'RefundList', params: { status: 'ALL_ORDER' } })
         }, 2000)
       } catch (e) {
         throw e

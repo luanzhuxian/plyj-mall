@@ -84,19 +84,19 @@
                 >
                   取消申请
                 </pl-button>
-                <pl-button
+                <!-- <pl-button
                   round
                   plain
                   @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"
                 >
                   查看详情
-                </pl-button>
+                </pl-button> -->
                 <pl-button
                   v-if="item.returnStatus === 'REFUND_PRODUCT'"
                   type="warning"
                   round
                   plain
-                  @click="checkExpressInfo"
+                  @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"
                 >
                   寄件运单号
                 </pl-button>
@@ -121,7 +121,7 @@ import {
 
 const tabs = [{
   name: '全部',
-  id: ''
+  id: 'ALL_ORDER'
 }, {
   name: '待审核',
   id: 'WAIT_CHECK'
@@ -200,7 +200,7 @@ export default {
   methods: {
     tabChange (item) {
       this.$nextTick(() => {
-        this.$router.replace({ name: 'RefundList', params: { status: item.id || null } })
+        this.$router.replace({ name: 'RefundList', params: { status: item.id } })
         this.$refresh()
       })
     },
@@ -225,8 +225,8 @@ export default {
       try {
         await this.$confirm('退单正在审核中，确定要取消？')
         // await cancelOrder(item.orderId)
-        this.$success('退单取消成功')
-        this.orderList.splice(index, 1)
+        // this.$success('退单取消成功')
+        // this.orderList.splice(index, 1)
       } catch (e) {
         throw e
       }

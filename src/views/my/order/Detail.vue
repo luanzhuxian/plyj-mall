@@ -46,7 +46,7 @@
         />
         <div :class="$style.buttons">
           <pl-button
-            v-if="canApplyRefund && item.afterSalesStatus === 0"
+            v-if="orderType === 'PHYSICAL' && canApplyRefund && item.afterSalesStatus === 0"
             plain
             round
             @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId } })"
