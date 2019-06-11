@@ -80,6 +80,7 @@
           <button
             :class="$style.settlementBtn"
             @click="settlement"
+            :disabled="checkedList.length === 0"
             v-show="!isManage"
           >
             结算({{ checkedList.length }})
@@ -277,6 +278,7 @@ export default {
     bottom: 88px;
     background-color: #fff;
     box-sizing: border-box;
+    z-index: 4;
     &:after {
       @include border-half-bottom(#e7e7e7)
     }
@@ -299,6 +301,10 @@ export default {
       color: #fff;
       background-color: $--warning-color;
       border-radius: $--radius2;
+      &:disabled {
+        color: #fff;
+        background-color: #ccc;
+      }
     }
     .summation {
       color: $--primary-color;
