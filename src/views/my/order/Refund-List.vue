@@ -3,7 +3,7 @@
     <pl-tab
       size="small"
       :tabs="tabs"
-      :active-id.sync="form.orderStatus"
+      :active-id.sync="form.returnStatus"
       :count="count"
       @change="tabChange"
     >
@@ -34,7 +34,7 @@
             tag="div"
             v-for="(item, i) of orderList"
             :key="i"
-            :to="{ name: 'RefundDetail', params: { orderId: item.id } }"
+            :to="{ name: 'RefundDetail', params: { id: item.id } }"
             :class="$style.refundItem"
           >
             <div>
@@ -50,7 +50,7 @@
               </div>
               <p
                 :class="$style.status"
-                v-text="orderStatusMap[item.returnStatus]"
+                v-text="returnStatusMap[item.returnStatus]"
               />
             </div>
             <order-item
@@ -144,7 +144,7 @@ const count = {
   FINISHED: 0
 }
 
-const orderStatusMap = {
+const returnStatusMap = {
   WAIT_CHECK: '待审核',
   REFUND_PRODUCT: '退换货',
   FINISHED: '退款成功'
@@ -183,7 +183,7 @@ export default {
       $refresh: null,
       count,
       orderTypeMap,
-      orderStatusMap,
+      returnStatusMap,
       refundTypeMap
     }
   },

@@ -82,7 +82,7 @@ export const getRefundReasonMap = invoiceType => axios.get(`/apis/v1/systemctl/s
 export const applyRefund = params => axios.post(`/apis/v1/refund/refund/customer/apply`, params)
 
 // 售后列表查询
-export const getRefundOrderList = params => axios.post(`/apis/v1/refund/refund/admin/selectRefund`, params)
+export const getRefundOrderList = params => axios.post(`/apis/v1/refund/refund/consumer/selectRefund`, params)
 
 // 售后详情查询
 export const getRefundOrderDetail = params => axios.post(`/apis/v1/refund/refund/admin/selectRefundDetail`, params)

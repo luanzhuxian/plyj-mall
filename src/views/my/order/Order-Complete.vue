@@ -6,8 +6,8 @@
     <div :class="$style.top">
       <div :class="$style.text">
         <pl-svg
-          :class="$style.callMe"
-          name="phone2"
+          :class="$style.icon"
+          name="success"
         />
         <span>交易完成</span>
       </div>
@@ -16,7 +16,7 @@
           plain
           round
           size="middle"
-          @click="$router.push({ name: 'Refund', params: { orderId, productId: item.productId } })"
+          @click="$router.push({ name: 'Home' })"
         >
           返回首页
         </pl-button>
@@ -24,17 +24,14 @@
           plain
           round
           size="middle"
-          @click="$router.push({ name: 'Refund', params: { orderId, productId: item.productId } })"
+          @click="$router.push({ name: 'Orders', params: { status: 'FINISHED' } })"
         >
           立即评价
         </pl-button>
       </div>
     </div>
-    <div class="">
-      <you-like
-        :is-my="true"
-        style="margin-top: 16px"
-      />
+    <div :class="$style.wrapper">
+      <you-like :is-my="true" />
     </div>
   </div>
 </template>
@@ -64,29 +61,38 @@ export default {
 <style module lang="scss">
 .order-complete {
   box-sizing: border-box;
-  height: 264px;
-  padding: 32px 0 88px;
-  overflow: hidden;
-  // background-image: url('../../../assets//base-theme/order-complete-bg.svg');
-  background-image: url('../../../assets/images/order-complete-bg.png');
-  background-size: 100% 100%;
-  background-position: center center;
-  background-repeat: no-repeat;
-
-  .text,
+  min-height: 100vh;
+  .top {
+    box-sizing: border-box;
+    height: 264px;
+    padding: 32px 0 88px;
+    overflow: hidden;
+    background-image: url('../../../assets/images/order-complete-bg.png');
+    background-size: 100% 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
   .button {
     display: flex;
     justify-content: center;
     align-items: center;
   }
-
   .text {
     font-size: 36px;
     color: #FFF;
     line-height: 50px;
     margin-bottom: 34px;
+    text-align: center;
   }
-
+  .icon {
+    width: 40px;
+    fill: #FFF;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .wrapper {
+    margin-top: 32px;
+  }
   button {
     &:nth-of-type(1) {
       margin-right: 60px;
@@ -100,8 +106,13 @@ export default {
     .pl-button__default.plain {
       color: #FFF;
     }
-    .pl-button__small.plain:after {
+    .pl-button__middle {
+      padding: 0 38px;
+      font-size: 26px;
+    }
+    .pl-button__middle.plain:after {
       border: 1px solid #FFF;
+      border-radius: 60px;
     }
   }
 </style>

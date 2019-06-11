@@ -98,8 +98,7 @@ export default [
     }
   },
   {
-    // path: '/my/order/complete/:orderId',
-    path: '/my/order/complete',
+    path: '/my/order/complete/:orderId',
     name: 'OrderComplete',
     component: () => import('../views/my/order/Order-Complete.vue'),
     props: true,
