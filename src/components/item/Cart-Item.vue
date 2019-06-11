@@ -73,7 +73,7 @@
 
     <SpecificationPop
       :data="skuList"
-      :product-image="data.productImg[0]"
+      :product-image="data.productImg"
       :visible.sync="showSpecifica"
       @confirm="specChanged"
       :default-count="count"
