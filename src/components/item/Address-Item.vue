@@ -10,10 +10,12 @@
     />
     <div :class="$style.right">
       <div :class="$style.name">
-        {{ data.realName }} <i
+        {{ data.realName }}
+        <i
           class="bold"
-          v-text="data.mobile"
-        />
+        >
+          {{ data.mobile | formatAccount }}
+        </i>
       </div>
       <div
         :class="$style.address"
