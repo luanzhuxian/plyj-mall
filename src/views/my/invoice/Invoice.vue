@@ -71,7 +71,7 @@ export default {
 
 <style module lang="scss">
   .invoice {
-    padding: 24px 40px;
+    padding: 24px 40px 150px 40px;
   }
   .addInvoice {
     display: flex;
@@ -85,6 +85,7 @@ export default {
       position: fixed;
       bottom: 20px;
       width: 590px;
+      z-index: 1;
     }
     > svg {
       width: 40px;
