@@ -252,7 +252,7 @@ import ModuleTitle from '../../../components/Module-Title.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
-import { getRefundDetail } from '../../../apis/order-manager'
+import { getRefundOrderDetail } from '../../../apis/order-manager'
 export default {
   name: 'RefundDetail',
   components: {
@@ -306,7 +306,7 @@ export default {
   methods: {
     async getDetail () {
       try {
-        let { result } = await getRefundDetail(this.orderSn)
+        let { result } = await getRefundOrderDetail(this.id)
         let { serviceType, refundId, applyDate, problemDesc, refundAmount, productsDetail, problemImages } = result
         this.serviceType = serviceType
         this.refundId = refundId

@@ -42,6 +42,7 @@
           :option="item.optionName"
           :price="item.price"
           route-name="Lesson"
+          :product-seq="item.productId"
         />
         <div :class="$style.buttons">
           <pl-button
@@ -163,9 +164,7 @@
       </div>
       <div :class="$style.infoBottom">
         <collapse v-model="collepseActiveNames">
-          <template
-            v-for="(item, i) of invoiceModelList"
-          >
+          <template v-for="(item, i) of invoiceModelList">
             <collapse-item
               :name="i"
               :key="i"
@@ -292,6 +291,7 @@
               size="larger"
               background-color="#387AF6"
               prefix-icon="mobile-blue"
+              round
               @click="call"
             >
               立即拨打
@@ -351,6 +351,24 @@ import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import Moment from 'moment'
 import { mapGetters } from 'vuex'
 
+const suggestionMap = {
+  WAIT_PAY: '',
+  WAIT_SHIP: '请耐心等待商家发货…',
+  WAIT_RECEIVE: '',
+  FINISHED: '本次交易已完成，感谢下次光临',
+  CLOSED: '订单取消'
+}
+const invoiceMap = {
+  '1': {
+    type: '个人',
+    number: 'receiverMobile'
+  },
+  '2': {
+    type: '单位',
+    number: 'tin'
+  }
+}
+
 export default {
   name: 'OrderDetail',
   components: {
@@ -381,7 +399,6 @@ export default {
       productInfoModel: {},
       tradingInfoModel: [],
       invoiceModelList: [],
-      noInvoiceProList: [], // 未申请发票的商品
       operationRecordModel: {},
       shippingAddress: {
         realName: ' ',
@@ -403,24 +420,8 @@ export default {
         }
       ],
       collepseActiveNames: [],
-      suggestionMap: {
-        WAIT_PAY: '',
-        WAIT_SHIP: '请耐心等待商家发货…',
-        WAIT_RECEIVE: '',
-        FINISHED: '本次交易已完成，感谢下次光临',
-        CLOSED: '订单取消'
-      },
-      invoiceMap: {
-        '1': {
-          type: '个人',
-          fields: 'receiverMobile' // 要显示的字段名称
-        },
-        '2': {
-          type: '单位',
-          fields: 'tin' // 要显示的字段名称
-        }
-      },
-      resolve: null
+      suggestionMap,
+      invoiceMap
     }
   },
   computed: {
@@ -560,7 +561,6 @@ export default {
     },
     // 倒计时
     countDown (remanent, flag) {
-      clearInterval(this.timer)
       this.timer = setInterval(() => {
         let { _data } = Moment.duration(remanent)
         let d = String(_data.days)
@@ -583,23 +583,8 @@ export default {
     onPickerConfirm (selected) {
       this.cancelOrder(selected[0])
     },
-    // 拨打客服电话
     call () {
-      window.location.href = `tel://${this.supportPhone}`
-    },
-    // 申请发票
-    applyInvoice () {
-      localStorage.setItem('APPLY_INVOICE', JSON.stringify({ physicalProducts: this.noInvoiceProList }))
-      localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify(this.$route))
-      const { mobile, name } = this.receiverModel
-      this.$router.push({
-        name: 'ApplyInvoice',
-        query: {
-          orderId: this.orderId,
-          receiveMobile: mobile,
-          receiveName: name
-        }
-      })
+      window.location.href = 'tel://110'
     }
   }
 }
