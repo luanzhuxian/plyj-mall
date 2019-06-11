@@ -118,7 +118,7 @@
           总价：
         </span>
         <span
-          class="fz-30 rmb"
+          :class="$style.totalMoney + ' fz-30 rmb'"
           v-text="productInfoModel.amount || 0"
         />
       </div>
@@ -450,6 +450,10 @@ export default {
   methods: {
     getDetail () {
       const counter = array => key => array.reduce((total, current) => total + current[key], 0)
+      /*
+      * afterSalesStatus
+      * 0：无售后，1 待审核，2 已通过，3 已驳回
+      * */
       const checkIsRefundSuccessful = products => {
         const array = products.filter(product => product.afterSalesStatus === 3)
         return products.length === array.length
@@ -694,15 +698,13 @@ export default {
     padding: 0 24px 24px 0;
     justify-content: flex-end;
     align-items: center;
-    > span {
-      &:nth-of-type(1) {
-        color: #999999;
-        margin-right: 12px;
-        font-size: 20px;
-      }
-      &:nth-last-of-type(1) {
-        color: $--primary-color;
-      }
+    .totalCount {
+      font-size: 24px;
+      color: #999999;
+      margin-right: 12px;
+    }
+    .totalMoney {
+      color: $--primary-color;
     }
   }
   .buttons {

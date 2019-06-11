@@ -160,7 +160,7 @@ const refundReasonKeyMap = {
 }
 
 export default {
-  name: 'Refund',
+  name: 'RefundApply',
   components: {
     OrderItem
   },
