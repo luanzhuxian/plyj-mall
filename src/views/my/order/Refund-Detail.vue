@@ -1,12 +1,13 @@
 <template>
   <div
+    v-if="loaded"
     class="refund-detail"
     :class="$style.refundDetail"
   >
     <div :class="$style.title">
       <top-text
         :title="refundStatusMap[refundStatus]"
-        :tip="suggestionMap[refundStatus]"
+        :tip="refundStatus === 'REFUND_PRODUCT' ? refundDetail.shipSn ? suggestionMap[refundStatus][1] : suggestionMap[refundStatus][0] : suggestionMap[refundStatus]"
       />
     </div>
 
@@ -58,7 +59,7 @@
     </section>
 
     <section
-      v-if="refundStatus === 'REFUND_PRODUCT'"
+      v-if="refundStatus === 'REFUND_PRODUCT' && !refundDetail.shipSn"
       :class="[$style.panel, $style.expressInfoPanel]"
     >
       <pl-fields
@@ -94,12 +95,12 @@
             <div
               v-if="refundDetail.actualPayAmount"
               :class="$style.price"
-              v-text="`￥${refundDetail.actualPayAmount}`"
+              v-text="`￥${refundDetail.shouldRefund}`"
             />
           </span>
         </div>
         <div
-          v-if="refundStatus==='WAIT_CHECK' || (refundStatus==='WAIT_CHECK' && refundDetail.shipSn)"
+          v-if="refundStatus==='WAIT_CHECK' || (refundStatus==='REFUND_PRODUCT' && refundDetail.shipSn)"
           :class="[$style.item, $style.larger]"
         >
           <span :class="[$style.itemLeft, $style.bold]">
@@ -197,6 +198,8 @@
           title="申请时间："
           :content="refundDetail.applyTime"
         />
+      </div>
+      <div :class="[$style.infoList, $style.borderTop]">
         <pl-list
           :class="$style.imgListWrapper"
           title="问题描述："
@@ -246,7 +249,7 @@
         v-if="refundStatus==='WAIT_CHECK'"
         round
         plain
-        @click="$router.push({ name: 'RefundApply', params: { orderId: refundDetail.orderId, orderProductRId: refundDetail.orderDetailId, refundType: refundDetail.refundType, type: 'EDIT' } })"
+        @click="$router.push({ name: 'RefundApply', params: { orderId: refundDetail.orderId, orderProductRId: refundDetail.orderDetailId, refundType: refundDetail.refundType, type: 'MODIFY', refundId: refundDetail.id } })"
       >
         更改退单
       </pl-button>
@@ -315,6 +318,28 @@
       @confirm="onPickerConfirm"
     />
   </div>
+
+  <div
+    v-else
+    :class="$style.skeleton"
+  >
+    <div :class="$style.skeleton1 + ' ' + $style.skeAnimation" />
+    <div :class="$style.skeleton2 + ' ' + $style.skeAnimation" />
+    <div :class="$style.skeleton3">
+      <AddressItemSkeleton />
+      <AddressItemSkeleton />
+    </div>
+    <div :class="$style.skeleton4">
+      <div :class="$style.skeleton41 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton42 + ' ' + $style.skeAnimation" />
+      <OrderItemSkeleton />
+      <div :class="$style.skeleton44 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton45 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton46 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton47 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeleton48 + ' ' + $style.skeAnimation" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -323,6 +348,8 @@ import ModuleTitle from '../../../components/Module-Title.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
+import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
+import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication } from '../../../apis/order-manager'
 import { mapGetters } from 'vuex'
 
@@ -330,11 +357,11 @@ const expressMapCode = 'KYYQJKDGS'
 
 const suggestionMap = {
   WAIT_CHECK: '请耐心等待商家审核，如有问题请联系客服',
-  REFUND_PRODUCT: '请根据商家收货地址，将商品寄回',
+  REFUND_PRODUCT: ['请根据商家收货地址，将商品寄回', '请耐心等待商家收货'],
   FINISHED: '您的退款申请已受理完成',
   CLOSED: '因为您超时操作，本次退款申请已关闭',
-  CANCEL: '本次退款申请已取消',
-  REJECT: '本次退款申请已驳回'
+  CANCEL: '您已撤销退款申请，退款已关闭',
+  REJECT: '商家驳回您的退款申请，如有问题请尽快与商家协商'
 }
 
 const receiveStatusMap = {
@@ -355,6 +382,8 @@ export default {
     TopText,
     ModuleTitle,
     OrderItem,
+    OrderItemSkeleton,
+    AddressItemSkeleton,
     Collapse,
     CollapseItem
   },
@@ -366,6 +395,7 @@ export default {
   },
   data () {
     return {
+      loaded: false,
       refundStatus: '',
       refundDetail: {},
       form: {
@@ -394,10 +424,12 @@ export default {
   activated () {
     this.getDetail()
     this.getExpressMap()
+    this.collepseActiveNames = []
   },
   methods: {
     async getDetail () {
       try {
+        this.loaded = false
         const { id } = this
         const { result } = await getRefundOrderDetail({ id })
         this.refundStatus = result.returnStatus
@@ -406,11 +438,12 @@ export default {
           item.createTimeArray = rebuild(item.createTime)
           return item
         })
-        console.log(this.refundProgress)
+        this.loaded = true
       } catch (e) {
         throw e
       }
     },
+    // 获取快递公司数据字典
     async getExpressMap () {
       const { result: expressMap } = await getExpressMap(expressMapCode)
       this.expressMap = expressMap
@@ -559,22 +592,21 @@ export default {
   }
 
   .refund-info-panel {
-    padding: 20px 24px 20px;
+    padding: 20px 0 20px 24px;
     .product-info {
       position: relative;
-      padding: 20px 0;
+      padding: 20px 24px 24px 0;
       margin-top: 20px;
       &:before {
         @include border-half-top(#e7e7e7);
       }
     }
+    .info-list {
+      padding-right: 24px;
+    }
     .img-list-wrapper {
-      position: relative;
       padding-top: 22px;
       margin-top: 4px;
-      &:before {
-        @include border-half-top(#F0F0F0);
-      }
     }
     .img-list {
       display: grid;
@@ -612,11 +644,17 @@ export default {
     }
   }
 
+  .border-top {
+    position: relative;
+    &:before {
+      @include border-half-top(#F0F0F0);
+    }
+  }
   .bold {
     font-weight: bold;
   }
 
-  /** 联系我们底部弹窗 **/
+  /** popup start **/
   .popup-title {
     padding: 40px 42px 32px;
     display: flex;
@@ -658,8 +696,12 @@ export default {
     width: 39px;
     margin-left: 40px
   }
+  /** popup end **/
 
-  /** 退款进度**/
+  /** progress start **/
+  .refundProgressList {
+    padding: 28px 0 8px;
+  }
   .refundProgressItem {
     display: flex;
     padding-bottom: 30px;
@@ -727,6 +769,68 @@ export default {
       z-index: 1;
     }
   }
+  /** progress end **/
+
+  /** skeleton start **/
+  .skeleton {
+    padding: 28px 40px;
+  }
+  .skeleton1 {
+    width: 200px;
+    height: 53px;
+  }
+  .skeleton2 {
+    width: 500px;
+    height: 37px;
+    margin-top: 14px;
+  }
+  .skeleton3 {
+    margin-top: 28px;
+    background-color: #fff;
+  }
+  .skeleton4 {
+    margin-top: 30px;
+    padding: 24px 28px;
+    background-color: #fff;
+  }
+  .skeleton4-1 {
+    width: 364px;
+    height: 32px;
+  }
+  .skeleton4-2 {
+    width: 214px;
+    height: 32px;
+    margin-top: 8px;
+  }
+  .skeleton4-4 {
+    width: 112px;
+    height: 37px;
+    margin-top: 80px;
+  }
+  .skeleton4-5 {
+    width: 300px;
+    height: 40px;
+    margin-top: 12px;
+  }
+  .skeleton4-6 {
+    width: 150px;
+    height: 37px;
+    margin-top: 50px;
+  }
+  .skeleton4-7 {
+    width: 250px;
+    height: 37px;
+    margin-top: 14px;
+  }
+  .skeleton4-8 {
+    width: 350px;
+    height: 40px;
+    margin-top: 50px;
+  }
+  .skeAnimation {
+    @include skeAnimation(#eee)
+  }
+  /** skeleton end **/
 </style>
 
 <style lang="scss">

@@ -50,14 +50,6 @@
         <div :class="$style.reson">
           <label for="reson">
             原因描述：
-            <!-- <textarea
-              v-model="form.reson"
-              placeholder="请填写您的原因"
-              name="reson"
-              rows="8"
-              cols="80"
-              maxlength="400"
-            /> -->
             <pl-input
               v-model="form.applyContent"
               type="textarea"
@@ -132,11 +124,11 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import { getOrderDetail, applyRefund, getMap as getRefundReasonMap } from '../../../apis/order-manager'
-import { resetForm } from '../../../assets/js/util'
+import { getOrderDetail, getRefundOrderDetail, applyRefund, modifyRefund, getMap as getRefundReasonMap } from '../../../apis/order-manager'
+// import { resetForm } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
 
-const receiveStatusMap = [
+const receiveStatusOptions = [
   {
     dictDataKey: '1',
     dictDataValue: '已收到货'
@@ -145,6 +137,11 @@ const receiveStatusMap = [
     dictDataValue: '未收到货'
   }
 ]
+
+const receiveStatusMap = {
+  '1': '已收到货',
+  '2': '未收到货'
+}
 
 const refundReasonKeyMap = {
   'WAIT_SHIP': 'REASONBUYERPAID',
@@ -166,13 +163,19 @@ export default {
       type: String,
       default: null
     },
+    // 1: '退款', 2: '退款退货'
     refundType: {
       type: [String, Number],
-      default: ''
+      default: null
     },
+    // APPLY, MODIFY
     type: {
       type: String,
       default: 'APPLY'
+    },
+    refundId: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -196,7 +199,7 @@ export default {
       },
       goodsStatusInfo: {
         title: '货物状态',
-        options: receiveStatusMap
+        options: receiveStatusOptions
       },
       refundReasonInfo: {
         title: '退款原因',
@@ -215,10 +218,9 @@ export default {
   created () {
     this.form.orderDetailId = this.orderProductRId
     this.getOrderDetail()
-    if (this.type === 'EDIT') {
-      this.get()
+    if (this.type === 'MODIFY') {
+      this.getRefundInfo()
     }
-    console.log(this.type)
   },
   methods: {
     async getOrderDetail () {
@@ -226,12 +228,23 @@ export default {
       this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
       this.orderStatus = result.orderStatus
       this.operationType = refundReasonKeyMap[result.orderStatus]
-      this.form.refundType = this.refundType
       this.form.actualRefund = result.productInfoModel.productsTotalAmount
+      this.form.refundType = this.refundType
       const { result: refundReasonMap } = await getRefundReasonMap(this.operationType)
       this.refundReasonInfo.options = refundReasonMap
     },
-    async get () {
+    async getRefundInfo () {
+      const { refundId: id } = this
+      const { result } = await getRefundOrderDetail({ id })
+      this.form.refundType = result.refundType
+      this.form.actualRefund = result.actualRefund
+      this.form.applyContent = result.applyContent
+      this.form.pictures = [...result.pictures]
+      this.imgList = [...result.pictures]
+      this.radio.goodsStatus = String(result.receiveStatus)
+      this.radio.goodsStatusText = receiveStatusMap[result.receiveStatus]
+      this.radio.refundReason = String(result.applyReason)
+      this.radio.refundReasonText = result.applyReasonText
     },
     showPopup (name) {
       this.currentPopupName = name
@@ -252,8 +265,7 @@ export default {
         this.imgList.push(res.url)
       }
     },
-    removeImg (index, list) {
-      this.imgList.splice(index, 1)
+    removeImg (index) {
       this.form.pictures.splice(index, 1)
     },
     async confirm () {
@@ -262,20 +274,23 @@ export default {
     },
     async request () {
       try {
+        const { type } = this
         const params = {
           ...this.form,
           receiveStatus: this.radio.goodsStatus,
           applyReason: this.radio.refundReason
         }
+        const fn = type === 'MODIFY' ? modifyRefund : applyRefund
+        const message = type === 'MODIFY' ? '更改退单成功，请等待卖家反馈' : '申请售后成功，请等待卖家反馈'
+        if (type === 'MODIFY') params.id = this.refundId
+
         await this.$confirm('确定提交吗？')
-        await applyRefund(params)
-        resetForm(this.form, {
-          refundType: '1'
-        })
-        this.imgList = []
-        this.$success('申请售后成功，请等待卖家反馈')
+        const { result } = await fn(params)
+        // resetForm(this.form)
+        // this.imgList = []
+        this.$success(message)
         setTimeout(() => {
-          this.$router.replace({ name: 'RefundList', params: { status: 'ALL_ORDER' } })
+          this.$router.replace({ name: 'RefundDetail', params: { id: result.id } })
         }, 2000)
       } catch (e) {
         throw e

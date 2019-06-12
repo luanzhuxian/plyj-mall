@@ -46,7 +46,7 @@
         />
         <div :class="$style.buttons">
           <pl-button
-            v-if="orderType === 'PHYSICAL' && canApplyRefund && item.afterSalesStatus === 0"
+            v-if="orderType === 'PHYSICAL' && canApplyRefund && (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)"
             plain
             round
             @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId } })"
@@ -335,10 +335,10 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import ModuleTitle from '../../../components/Module-Title.vue'
 import ExpressItem from '../../../components/item/Express-Item.vue'
 import AddressItem from '../../../components/item/Address-Item.vue'
-import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
-import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
+import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
+import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import {
   getOrderDetail,
   getAwaitPayInfo,
@@ -389,7 +389,7 @@ export default {
   },
   data () {
     return {
-      supplierOrder: true, // 是否是供应商订单
+      loaded: false,
       orderType: '',
       orderStatus: '',
       detail: {},
@@ -405,9 +405,8 @@ export default {
         addressPrefix: ' ',
         agencyAddress: ' '
       },
-      currentPayId: '',
       timer: 0,
-      loaded: false,
+      currentPayId: '',
       payloading: false,
       isPopupShow: false,
       isPickerShow: false,
@@ -770,6 +769,7 @@ export default {
     margin-left: 40px
   }
 
+  /** skeleton start **/
   .skeleton {
     padding: 28px 40px;
   }
@@ -828,6 +828,7 @@ export default {
   .skeAnimation {
     @include skeAnimation(#eee)
   }
+  /** skeleton end **/
 </style>
 
 <style lang="scss">

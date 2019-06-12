@@ -124,7 +124,6 @@ export default {
       this.images.push(res.url)
     },
     removeImg (index) {
-      this.images.splice(index, 1)
       this.form.mediaInfoModels.splice(index, 1)
     },
     async confirm () {

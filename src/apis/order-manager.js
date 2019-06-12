@@ -81,6 +81,9 @@ export const getMap = code => axios.get(`/apis/v1/systemctl/sysdictionary/detail
 // 申请售后
 export const applyRefund = params => axios.post(`/apis/v1/refund/refund/customer/apply`, params)
 
+// 更改退单
+export const modifyRefund = params => axios.post(`/apis/v1/refund/refund/customer/modifyRefund`, params)
+
 // 售后列表查询
 export const getRefundOrderList = params => axios.post(`/apis/v1/refund/refund/consumer/selectRefund`, params)
 

@@ -62,7 +62,7 @@ export default [
     }
   },
   {
-    path: '/my/orders/refund-apply/:orderId/:orderProductRId/:refundType/:type',
+    path: '/my/orders/refund-apply/:orderId/:orderProductRId/:refundType/:type/:refundId?',
     name: 'RefundApply',
     component: () => import('../views/my/order/Refund-Apply.vue'),
     props: true,
