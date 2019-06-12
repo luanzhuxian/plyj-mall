@@ -91,6 +91,10 @@ export function isMoney (val) {
   return /(^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$)/.test(val)
 }
 
+export function isPositive (val) {
+  return /^([1-9]\d+(\.\d+)?|0\.\d+)$/.test(val)
+}
+
 // 判断身份证号码是否正确
 export function isIdCard (val) {
   if (typeof val !== 'string' && typeof val !== 'number') {

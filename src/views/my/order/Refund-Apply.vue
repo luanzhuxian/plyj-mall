@@ -24,8 +24,8 @@
         <pl-fields
           text="货物状态："
           :right-text="radio.goodsStatusText || '请选择'"
-          show-right-icon
-          @click="showPopup('goodsStatus')"
+          :show-right-icon="!isWaitShip()"
+          @click="() => {isWaitShip() ? '' : showPopup('goodsStatus')}"
         />
         <pl-fields
           text="请选择退货原因："
@@ -38,16 +38,27 @@
             退款金额：
           </span>
           <span :class="$style.itemRight">
-            <div :class="$style.price">
+            <!-- <div
+              :class="$style.price + ' rmb'"
+              contenteditable
+              v-text="form.actualRefund"
+              @input="onInput"
+            /> -->
+            <pl-input
+              v-model="form.actualRefund"
+              type="number"
+              placeholder="请输入"
+              align="right"
+            />
+            <!-- <div :class="$style.price">
               {{ `￥${form.actualRefund}` }}
-            </div>
+            </div> -->
             <div :class="$style.tips">
               运费不可退，如有疑问，请联系商家协商
             </div>
           </span>
         </div>
       </div>
-
       <div :class="[$style.panel, $style.panelBottom]">
         <div :class="$style.reson">
           <label for="reson">
@@ -128,7 +139,7 @@
 import OrderItem from '../../../components/item/Order-Item.vue'
 import { getOrderDetail, getRefundOrderDetail, applyRefund, modifyRefund, getMap as getRefundReasonMap } from '../../../apis/order-manager'
 // import { resetForm } from '../../../assets/js/util'
-import { isMoney } from '../../../assets/js/validate'
+import { isPositive } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 
 const receiveStatusOptions = [
@@ -190,7 +201,7 @@ export default {
       form: {
         orderDetailId: this.orderProductRId,
         refundType: '',
-        actualRefund: 200.36,
+        actualRefund: 0,
         applyContent: '',
         pictures: []
       },
@@ -226,6 +237,13 @@ export default {
     }
   },
   methods: {
+    onInput (e) {
+      console.log(e)
+      this.form.actualRefund = e.target.innerText
+    },
+    isWaitShip () {
+      return this.orderStatus === 'WAIT_SHIP'
+    },
     async getOrderDetail () {
       const { result } = await getOrderDetail(this.orderId)
       this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
@@ -235,19 +253,30 @@ export default {
       this.form.refundType = this.refundType
       const { result: refundReasonMap } = await getRefundReasonMap(this.operationType)
       this.refundReasonInfo.options = refundReasonMap
+      if (this.isWaitShip()) {
+        this.radio.goodsStatus = '2'
+        this.radio.goodsStatusText = '未收到货'
+      }
     },
-    async getRefundInfo () {
-      const { refundId: id } = this
-      const { result } = await getRefundOrderDetail({ id })
-      this.form.refundType = result.refundType
-      this.form.actualRefund = result.actualRefund
-      this.form.applyContent = result.applyContent
-      this.form.pictures = [...result.pictures]
-      this.imgList = [...result.pictures]
-      this.radio.goodsStatus = String(result.receiveStatus)
-      this.radio.goodsStatusText = receiveStatusMap[result.receiveStatus]
-      this.radio.refundReason = String(result.applyReason)
-      this.radio.refundReasonText = result.applyReasonText
+    getRefundInfo () {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const { refundId: id } = this
+          const { result } = await getRefundOrderDetail({ id })
+          this.form.refundType = result.refundType
+          this.form.actualRefund = result.actualRefund
+          this.form.applyContent = result.applyContent
+          this.form.pictures = [...result.pictures]
+          this.imgList = [...result.pictures]
+          this.radio.goodsStatus = this.isWaitShip() ? '2' : String(result.receiveStatus)
+          this.radio.goodsStatusText = this.isWaitShip() ? '未收到货' : receiveStatusMap[result.receiveStatus]
+          this.radio.refundReason = String(result.applyReason)
+          this.radio.refundReasonText = result.applyReasonText
+          resolve(true)
+        } catch (e) {
+          reject(e)
+        }
+      })
     },
     showPopup (name) {
       this.currentPopupName = name
@@ -273,8 +302,7 @@ export default {
     },
     async confirm () {
       if (!this.radio.refundReason) return this.$toast('请选择退货原因')
-      if (!this.radio.actualRefund) return this.$toast('请输入退款金额')
-      if (!isMoney(this.radio.actualRefund)) return this.$toast('退款金额必须是数字')
+      if (!isPositive(this.form.actualRefund)) return this.$toast('退款金额必须是大零的数字')
       this.request()
     },
     async request () {
@@ -346,6 +374,7 @@ export default {
     .item-right {
       display: block;
       text-align: right;
+      flex: 1;
     }
   }
 
@@ -413,11 +442,15 @@ export default {
     line-height: 32px;
     margin-top: 10px;
   }
-  .price {
-    color: #FE7700;
-    font-family: HelveticaNeue-Medium;
-    font-weight: 500;
-  }
+  // .price {
+  //   display: inline-block;
+  //   color: #FE7700;
+  //   font-family: HelveticaNeue-Medium;
+  //   font-weight: 500;
+  //   outline: none;
+  //   text-decoration: none !important;
+  //   text-align: right;
+  // }
 </style>
 
 <style lang="scss">
@@ -427,13 +460,11 @@ export default {
       display: block;
     }
   }
-
   .pl-fields_box {
     &.large {
       height: 108px;
     }
   }
-
   .pl-fields_text {
     color: #666;
   }
@@ -447,9 +478,18 @@ export default {
     }
   }
 
+  .pl-input.pl-input-small {
+    min-height: auto;
+  }
+  .pl-input > .pl-input_box > input {
+    text-align: right;
+    color: #FE7700;
+    font-family: HelveticaNeue-Medium;
+    font-weight: 500;
+  }
+
   .pl-textarea_box {
     padding-left: 0;
-
     > .pl-input-textarea {
       &::-webkit-input-placeholder {
         font-size: 28px;

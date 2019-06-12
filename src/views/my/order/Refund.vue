@@ -36,7 +36,7 @@
         </router-link>
 
         <router-link
-          v-if="orderType === 'PHYSICAL' && orderStatus!=='WAIT_PAY' && orderStatus!=='WAIT_SHIP'"
+          v-if="orderType === 'PHYSICAL' && orderStatus !== 'WAIT_SHIP'"
           tag="div"
           :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '2', type: 'APPLY' } }"
           :class="$style.item"
