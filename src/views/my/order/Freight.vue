@@ -94,7 +94,7 @@ export default {
       this.courierCompany = result.courierCompany
       this.courierNo = result.courierNo
       this.courierCompanyMobile = result.courierCompanyMobile
-      this.lastRecord = result.trackModelList.slice(0)[0].content
+      if (this.freightData.length > 0) this.lastRecord = this.freightData[0].content
     } catch (e) {
       throw e
     } finally {

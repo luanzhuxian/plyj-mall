@@ -168,12 +168,13 @@ export default {
           this.checkedList.splice(i, 1, newPro)
         }
         this.loading = false
+
+        this.$nextTick(() => {
+          if (this.total > 0) this.checkAll(false)
+        })
       } catch (e) {
         throw e
       } finally {
-        this.$nextTick(() => {
-          this.checkAll(false)
-        })
       }
     },
     selectedChange (selected) {
