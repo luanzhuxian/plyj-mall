@@ -371,11 +371,15 @@ const receiveStatusMap = {
   '2': '未收到货'
 }
 
-function rebuild (list) {
+function rebuildDate (list) {
   let array = list.split(' ')
   array[0] = array[0].slice(array[0].indexOf('-') + 1)
   array[1] = array[1].slice(0, array[1].lastIndexOf(':'))
   return array
+}
+
+function replaceMobile (mobile) {
+  return mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
 }
 
 export default {
@@ -437,9 +441,12 @@ export default {
         this.refundStatus = result.returnStatus
         this.refundDetail = Object.assign({}, result)
         this.refundProgress = result.operations.map(item => {
-          item.createTimeArray = rebuild(item.createTime)
+          item.createTimeArray = rebuildDate(item.createTime)
           return item
         })
+        if (result.refundMobile) {
+          this.refundDetail.refundMobile = replaceMobile(result.refundMobile)
+        }
         this.loaded = true
       } catch (e) {
         throw e

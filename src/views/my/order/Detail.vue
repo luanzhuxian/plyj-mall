@@ -164,19 +164,16 @@
       </div>
       <div :class="$style.infoBottom">
         <collapse v-model="collepseActiveNames">
-          <template v-for="(item, i) of invoiceModelList">
+          <template v-if="invoiceModelList && invoiceModelList.length">
             <collapse-item
+              v-for="(item, i) of invoiceModelList"
               :name="i"
               :key="i"
             >
               <template slot="title">
                 <div>
                   <span :class="$style.invoiceTitle">发票信息：</span>
-                  <span
-                    v-if="invoiceModelList.length > 0"
-                    v-text="invoiceMap[item.invoiceType].type"
-                  />
-                  <span v-else>未开票</span>
+                  <span v-text="invoiceMap[item.invoiceType].type" />
                 </div>
               </template>
               <div
@@ -187,7 +184,7 @@
                 :class="$style.invoiceNumber"
                 v-text="item[invoiceMap[item.invoiceType].fields]"
               />
-              <template
+              <!-- <template
                 slot="right-icon"
                 v-if="canIApplyInvoice"
               >
@@ -198,6 +195,30 @@
                 >
                   立即申请
                 </pl-button>
+              </template> -->
+            </collapse-item>
+          </template>
+          <template v-else>
+            <collapse-item
+              name="1"
+              disabled
+            >
+              <template slot="title">
+                <div>
+                  <span :class="$style.invoiceTitle">发票信息：</span>
+                  <span>未开票</span>
+                </div>
+              </template>
+              <template slot="right-icon">
+                <pl-button
+                  v-if="orderStatus !== 'WAIT_PAY' && orderStatus !== 'CLOSED'"
+                  round
+                  plain
+                  @click="applyInvoice"
+                >
+                  立即申请
+                </pl-button>
+                <span v-else />
               </template>
             </collapse-item>
           </template>
@@ -360,11 +381,11 @@ const suggestionMap = {
 const invoiceMap = {
   '1': {
     type: '个人',
-    number: 'receiverMobile'
+    fields: 'receiverMobile'
   },
   '2': {
     type: '单位',
-    number: 'tin'
+    fields: 'tin'
   }
 }
 
@@ -446,6 +467,30 @@ export default {
     this.logisticsInfoModel = null
   },
   methods: {
+    // 倒计时
+    countDown (remanent, flag) {
+      this.timer = setInterval(() => {
+        let { _data } = Moment.duration(remanent)
+        let d = String(_data.days)
+        let h = String(_data.hours)
+        let m = String(_data.minutes)
+        let s = String(_data.seconds)
+        remanent -= 1000
+        if (remanent <= 0) {
+          this.suggestionMap[flag] = ''
+          clearInterval(this.timer)
+          this.suggestionMap.WAIT_PAY = ''
+          this.suggestionMap.WAIT_RECEIVE = ''
+          this.getDetail()
+          return
+        }
+        if (flag === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        if (flag === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
+      }, 1000)
+    },
+    onPickerConfirm (selected) {
+      this.cancelOrder(selected[0])
+    },
     getDetail () {
       const counter = array => key => array.reduce((total, current) => total + current[key], 0)
       /*
@@ -561,29 +606,19 @@ export default {
         throw e
       }
     },
-    // 倒计时
-    countDown (remanent, flag) {
-      this.timer = setInterval(() => {
-        let { _data } = Moment.duration(remanent)
-        let d = String(_data.days)
-        let h = String(_data.hours)
-        let m = String(_data.minutes)
-        let s = String(_data.seconds)
-        remanent -= 1000
-        if (remanent <= 0) {
-          this.suggestionMap[flag] = ''
-          clearInterval(this.timer)
-          this.suggestionMap.WAIT_PAY = ''
-          this.suggestionMap.WAIT_RECEIVE = ''
-          this.getDetail()
-          return
+    // 申请发票
+    applyInvoice () {
+      localStorage.setItem('APPLY_INVOICE', JSON.stringify({ physicalProducts: this.noInvoiceProList }))
+      localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify(this.$route))
+      const { mobile, name } = this.receiverModel
+      this.$router.push({
+        name: 'ApplyInvoice',
+        query: {
+          orderId: this.orderId,
+          receiveMobile: mobile,
+          receiveName: name
         }
-        if (flag === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
-        if (flag === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
-      }, 1000)
-    },
-    onPickerConfirm (selected) {
-      this.cancelOrder(selected[0])
+      })
     }
   }
 }
