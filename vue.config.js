@@ -1,10 +1,13 @@
+/* ********************************************* 环境 *************************************** */
 console.log('------------------------- ' + process.env.NODE_ENV + ' -------------------------')
 let argv = process.argv
 let model = argv[argv.indexOf('--model') + 1]
+/* ********************************************* 模式 *************************************** */
 console.log('------------------------- model: ' + model + ' -------------------------')
+
 const externals =
-  // 生产环境或者开发模式的生成环境中，使用CDN库依赖
-  (process.env.NODE_ENV === 'production' || model === 'dev')
+  // 生产环境或者开发模式，使用CDN库依赖
+  process.env.NODE_ENV === 'production'
     ? {
       'vue': 'Vue',
       'vuex': 'Vuex',
@@ -17,7 +20,7 @@ module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      template: (model === 'dev' || process.env.NODE_ENV === 'development') ? 'public/index.html' : 'public/index-prod.html',
+      template: process.env.NODE_ENV === 'development' ? 'public/index.html' : model === 'dev' ? 'public/index-prod-dev.html' : 'public/index-prod.html',
       filename: 'index.html'
     }
   },
