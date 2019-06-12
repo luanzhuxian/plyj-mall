@@ -135,7 +135,7 @@ export default {
     },
     async remove () {
       try {
-        await this.$confirm('是否删除该发票信息。')
+        await this.$confirm('是否删除该发票信息？')
         await removeInvoice(this.id)
         this.goBack()
       } catch (e) {
