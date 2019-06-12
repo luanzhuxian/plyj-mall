@@ -139,6 +139,9 @@ export default {
     },
     container: function () {
       return this.$refs.container
+    },
+    empty () {
+      return this.list.length === 0
     }
   },
   watch: {
@@ -148,6 +151,9 @@ export default {
       },
       immediate: true,
       deep: true
+    },
+    empty (val) {
+      this.$emit('listState', val)
     }
   },
   activated () {
@@ -175,12 +181,6 @@ export default {
           let { result } = await this.requestMethods(this.options)
           if (result.records.length === 0) {
             this.allLoaded = true
-            this.$emit('listState', true)
-            // if (!this.options) {
-            //   this.$emit('listState', true)
-            // }
-          } else {
-            this.$emit('listState', false)
           }
           resolve(result.records)
           this.total = result.total
@@ -288,7 +288,7 @@ export default {
         e.preventDefault()
         this.pulling = true
       }
-      if (this.pulling) {
+      if (this.pulling && this.top <= 100) {
         // e.preventDefault()
         // e.stopPropagation()
         this.top = this.defaultTop + deltaY

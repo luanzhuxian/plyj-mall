@@ -24,7 +24,7 @@
     <!--&gt;-->
     <button
       :class="$style.addToCart"
-      @click="addToCart"
+      @click="addToCartBtn"
       :disabled="loading"
     >
       加入购物车
@@ -141,17 +141,15 @@ export default {
       this.$router.push({ name: 'SubmitOrder' })
     },
     // 加入购物车
-    async addToCart () {
+    async addToCartBtn () {
       if (!this.hasBind()) return
       this.clickAddToCart = true
       this.clickBuyNow = false
-      const { currentModel } = this
-      if (!currentModel || !currentModel.count) {
-        this.showSpecifica = true
-        return
-      }
+      this.showSpecifica = true
+    },
+    async addToCart () {
       this.loading = true
-      const { productSeq, count, optionCode } = currentModel
+      const { productSeq, count, optionCode } = this.currentModel
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
       try {
