@@ -75,10 +75,10 @@ export default {
   },
   computed: {
     integer: function () {
-      return this.price ? String(this.price).split('.')[0] : ''
+      return this.price ? String(this.price).split('.')[0] : 0
     },
     float: function () {
-      return this.price ? String(this.price).split('.')[1] : ''
+      return this.price ? String(this.price).split('.')[1] : 0
     }
   }
 }
