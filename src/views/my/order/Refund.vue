@@ -5,6 +5,8 @@
         :img="productInfo.productImg"
         :name="productInfo.productName"
         :option="productInfo.optionName"
+        route-name="Lesson"
+        :product-seq="productInfo.productId"
         hide-price
       />
     </section>
@@ -34,6 +36,7 @@
         </router-link>
 
         <router-link
+          v-if="orderType === 'PHYSICAL' && orderStatus!=='WAIT_PAY' && orderStatus!=='WAIT_SHIP'"
           tag="div"
           :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '2', type: 'APPLY' } }"
           :class="$style.item"
@@ -80,7 +83,8 @@ export default {
   },
   data () {
     return {
-      refundType: 'REFUND', // 退款类型  RETURN_REFUND REFUND
+      orderStatus: '',
+      orderType: '',
       productInfo: {}
       // statusTypeMap: {
       //   WAIT_SHIP: 'WAIT_SHIP_REFUND_RULE', // 待发货的待退款
@@ -100,7 +104,8 @@ export default {
       const { result } = await getOrderDetail(this.orderId)
       const products = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)
       this.productInfo = products.length ? products[0] : {}
-      // this.orderStatus = orderInfoModel.orderStatus
+      this.orderStatus = result.orderStatus
+      this.orderType = result.orderType
       // this.operationType = this.statusTypeMap[orderInfoModel.orderStatus]
     }
   }

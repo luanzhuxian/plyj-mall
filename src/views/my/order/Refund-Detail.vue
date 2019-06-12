@@ -169,6 +169,8 @@
           :img="refundDetail.productPic"
           :name="refundDetail.productName"
           :option="refundDetail.skuName"
+          route-name="Lesson"
+          :product-seq="refundDetail.productId"
           hide-price
         />
       </div>

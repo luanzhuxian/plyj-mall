@@ -8,6 +8,8 @@
         :img="productInfo.productImg"
         :name="productInfo.productName"
         :option="productInfo.optionName"
+        route-name="Lesson"
+        :product-seq="productInfo.productId"
         hide-price
       />
     </section>
@@ -126,6 +128,7 @@
 import OrderItem from '../../../components/item/Order-Item.vue'
 import { getOrderDetail, getRefundOrderDetail, applyRefund, modifyRefund, getMap as getRefundReasonMap } from '../../../apis/order-manager'
 // import { resetForm } from '../../../assets/js/util'
+import { isMoney } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 
 const receiveStatusOptions = [
@@ -228,7 +231,7 @@ export default {
       this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
       this.orderStatus = result.orderStatus
       this.operationType = refundReasonKeyMap[result.orderStatus]
-      this.form.actualRefund = result.productInfoModel.productsTotalAmount
+      this.form.actualRefund = this.productInfo.amount
       this.form.refundType = this.refundType
       const { result: refundReasonMap } = await getRefundReasonMap(this.operationType)
       this.refundReasonInfo.options = refundReasonMap
@@ -270,6 +273,8 @@ export default {
     },
     async confirm () {
       if (!this.radio.refundReason) return this.$toast('请选择退货原因')
+      if (!this.radio.actualRefund) return this.$toast('请输入退款金额')
+      if (!isMoney(this.radio.actualRefund)) return this.$toast('退款金额必须是数字')
       this.request()
     },
     async request () {
