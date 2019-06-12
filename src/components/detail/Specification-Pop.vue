@@ -68,7 +68,7 @@
                 <input
                   v-model.number="count"
                   type="number"
-                  @change="countChange"
+                  @input="countChange"
                 >
                 <button
                   :disabled="count >= stock"
@@ -195,11 +195,12 @@ export default {
       this.stock = option.stock
     },
     countChange () {
-      if (this.count <= this.min) {
+      if (this.count === '') return
+      if (this.count < this.min) {
         this.count = this.min
         this.$warning(`此规格最小购买量为${this.min}`)
       }
-      if (this.count >= this.stock) {
+      if (this.count > this.stock) {
         this.count = this.stock
         this.$warning(`购买数量不能大于库存`)
       }
@@ -322,9 +323,8 @@ export default {
     box-sizing: border-box;
     li {
       position: relative;
-      line-height: 54px;
       margin: 0 13px 13px 0;
-      padding: 0 20px;
+      padding: 10px 20px;
       color: #666;
       font-size: 24px;
       background-color: #f3f3f3;
