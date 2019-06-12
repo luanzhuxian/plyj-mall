@@ -305,6 +305,7 @@
             <pl-svg
               :class="$style.popupAddressRightIcon"
               name="copy"
+              @click="doCopy"
             />
           </div>
           <a :href="`tel: ${supportPhone}`">
@@ -464,7 +465,8 @@ export default {
     }
   },
   deactivated () {
-    this.logisticsInfoModel = null
+    this.collepseActiveNames = []
+    // this.logisticsInfoModel = null
   },
   methods: {
     // 倒计时
@@ -619,6 +621,14 @@ export default {
           receiveName: name
         }
       })
+    },
+    doCopy () {
+      this.$copyText(this.address)
+        .then(e => {
+          this.$toast('复制成功')
+        }, e => {
+          console.log(e)
+        })
     }
   }
 }
@@ -633,13 +643,6 @@ export default {
     margin-bottom: 28px;
     padding: 0 16px;
   }
-  // .call-me {
-  //   position: absolute;
-  //   top: -28px;
-  //   right: 40px;
-  //   width: 38px;
-  //   height: 80px;
-  // }
   .panel {
     background-color: #fff;
     border-radius: $--radius1;

@@ -15,6 +15,7 @@ import { Toast } from './components/penglai-ui/toast'
 import animated from 'animate.css'
 import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
+import VueClipboard from 'vue-clipboard2'
 // import AlloyFinger from 'alloyfinger'
 // import AlloyFingerVue from 'alloyfinger/vue/alloy_finger_vue'
 import filters from './filter'
@@ -28,6 +29,7 @@ Vue.use(gallery, {
   swipeThreshold: 150
 })
 Vue.use(animated)
+Vue.use(VueClipboard)
 // Vue.use(AlloyFingerVue, { AlloyFinger })
 for (let k of Object.keys(directive)) {
   Vue.directive(k, directive[k])

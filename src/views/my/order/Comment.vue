@@ -70,6 +70,7 @@ export default {
   data () {
     return {
       loading: false,
+      productInfo: {},
       form: {
         orderId: '',
         productId: '',
@@ -107,7 +108,8 @@ export default {
     async getOrderDetail () {
       try {
         let { result } = await getOrderDetail(this.orderId)
-        this.img = result.productInfoModel.productDetailModels[0].productImg
+        this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.productId === this.productId)[0] || {}
+        this.img = this.productInfo.productImg
         this.form.orderId = this.orderId
         this.form.productId = this.productId
       } catch (e) {

@@ -299,6 +299,7 @@
             <pl-svg
               :class="$style.popupAddressRightIcon"
               name="copy"
+              @click="doCopy"
             />
           </div>
           <a :href="`tel: ${supportPhone}`">
@@ -353,6 +354,7 @@ import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.
 import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication } from '../../../apis/order-manager'
+import { resetForm } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
 
 const expressMapCode = 'KYYQJKDGS'
@@ -430,6 +432,9 @@ export default {
   activated () {
     this.getDetail()
     this.getExpressMap()
+  },
+  deactivated () {
+    resetForm(this.form)
     this.collepseActiveNames = []
   },
   methods: {
@@ -489,6 +494,14 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    doCopy () {
+      this.$copyText(this.address)
+        .then(e => {
+          this.$toast('复制成功')
+        }, e => {
+          console.log(e)
+        })
     }
   }
 }

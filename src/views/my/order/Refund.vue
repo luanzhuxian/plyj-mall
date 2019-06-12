@@ -86,13 +86,6 @@ export default {
       orderStatus: '',
       orderType: '',
       productInfo: {}
-      // statusTypeMap: {
-      //   WAIT_SHIP: 'WAIT_SHIP_REFUND_RULE', // 待发货的待退款
-      //   WAIT_RECEIVE: 'WAIT_RECEIVE_REFUND_RULE', // 待收货的待退款
-      //   FINISHED: 'FINISHED_REFUND_RULE' // 待收货的待退款
-      // },
-      // orderStatus: '',
-      // operationType: '' // 在何种情况下退款
     }
   },
   activated () {
@@ -100,13 +93,10 @@ export default {
   },
   methods: {
     async getProductDetail () {
-      // getOrderDetail(this.orderId)
       const { result } = await getOrderDetail(this.orderId)
-      const products = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)
-      this.productInfo = products.length ? products[0] : {}
+      this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
       this.orderStatus = result.orderStatus
       this.orderType = result.orderType
-      // this.operationType = this.statusTypeMap[orderInfoModel.orderStatus]
     }
   }
 }

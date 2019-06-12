@@ -237,10 +237,6 @@ export default {
     }
   },
   methods: {
-    onInput (e) {
-      console.log(e)
-      this.form.actualRefund = e.target.innerText
-    },
     isWaitShip () {
       return this.orderStatus === 'WAIT_SHIP'
     },
