@@ -300,9 +300,10 @@ export default {
     async cancelOrder (item, index) {
       const orderId = item.id
       const { orderStatus } = this.form
+      const reason = '用户取消订单（未选原因）'
       try {
         await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
-        await cancelOrder(orderId)
+        await cancelOrder(orderId, reason)
         if (orderStatus === 'ALL_ORDER') {
           item.status = 'CLOSED'
         } else {

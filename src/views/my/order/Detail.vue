@@ -466,7 +466,7 @@ export default {
   },
   deactivated () {
     this.collepseActiveNames = []
-    // this.logisticsInfoModel = null
+    this.logisticsInfoModel = null
   },
   methods: {
     // 倒计时
