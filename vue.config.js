@@ -13,14 +13,16 @@ const externals =
       'vuex': 'Vuex',
       'vue-router': 'VueRouter',
       'moment': 'moment',
-      'axios': 'axios'
+      'axios': 'axios',
+      'swiper': 'swiper',
+      'vue-awesome-swiper': 'VueAwesomeSwiper'
     }
     : {}
 module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      template: process.env.NODE_ENV === 'development' ? 'public/index.html' : model === 'dev' ? 'public/index-prod-dev.html' : 'public/index-prod.html',
+      template: process.env.NODE_ENV === 'development' ? 'public-dev/local.html' : model === 'dev' ? 'public-dev/index-dev.html' : 'public/index.html',
       filename: 'index.html'
     }
   },
