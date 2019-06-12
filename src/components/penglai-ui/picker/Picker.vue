@@ -177,9 +177,6 @@ export default {
     }
     &__confirm {
       color: #FE7700;
-      &:disabled {
-        opacity: 0.5;
-      }
     }
   }
   .pl-picker-content {

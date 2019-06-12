@@ -289,11 +289,11 @@ export default {
         this.pulling = true
       }
       if (this.pulling && this.top <= 100) {
-        // e.preventDefault()
-        // e.stopPropagation()
-        this.top = this.defaultTop + deltaY
-        this.rotate = deltaY
+        e.preventDefault()
+        e.stopPropagation()
+        this.top = this.defaultTop + deltaY / 1.5
       }
+      this.rotate = deltaY
     },
     async infiniteScroll () {
       // console.log(this.offsetHeight, window.scrollY, window.innerHeight, this.pending, this.allLoaded)

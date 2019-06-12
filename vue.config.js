@@ -2,15 +2,17 @@ console.log('------------------------- ' + process.env.NODE_ENV + ' ------------
 let argv = process.argv
 let model = argv[argv.indexOf('--model') + 1]
 console.log('------------------------- model: ' + model + ' -------------------------')
-// const externals =
-//   process.env.NODE_ENV === 'production'
-//     ? {
-//       'vue': 'Vue',
-//       'vuex': 'Vuex',
-//       'vue-router': 'VueRouter',
-//       'axios': 'axios'
-//     }
-//     : {}
+const externals =
+  // 生产环境或者开发模式的生成环境中，使用CDN库依赖
+  (process.env.NODE_ENV === 'production' || model === 'dev')
+    ? {
+      'vue': 'Vue',
+      'vuex': 'Vuex',
+      'vue-router': 'VueRouter',
+      'moment': 'moment',
+      'axios': 'axios'
+    }
+    : {}
 module.exports = {
   pages: {
     index: {
@@ -64,11 +66,9 @@ module.exports = {
       }
     }
   },
-
-  // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
-  // configureWebpack: {
-  //   externals
-  // }
+  configureWebpack: {
+    externals
+  },
   productionSourceMap: false,
 
   lintOnSave: true
