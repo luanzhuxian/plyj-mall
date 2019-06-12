@@ -223,8 +223,6 @@ export default {
       const { result: count } = await orderPhysicalorderSummary(this.userId)
       const { result: list } = await getNewFreight()
       this.newFreight = list
-      console.log(count)
-      console.log(list)
       for (let key of Object.keys(count)) {
         if (orderStatusMapCamel.hasOwnProperty(key)) {
           this.count[orderStatusMapCamel[key]] = count[key] > 99 ? '99+' : count[key]
