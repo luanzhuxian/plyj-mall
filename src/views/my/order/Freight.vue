@@ -75,6 +75,7 @@ export default {
       loading: false,
       img: '',
       freightData: [],
+      productInfo: {},
       courierCompany: '',
       courierNo: '',
       courierCompanyMobile: '',
@@ -84,16 +85,16 @@ export default {
   async activated () {
     try {
       this.loading = true
-      let orderDetail = await getOrderDetail(this.orderId)
-      this.orderDetail = orderDetail.result
-      this.img = orderDetail.result.productInfoModel.productDetailModels[0].productImg
+      let { result: orderDetail } = await getOrderDetail(this.orderId)
+      this.productInfo = orderDetail.productInfoModel.productDetailModels[0]
+      this.img = this.productInfo.productImg
       let { result } = await getFreightData(this.orderId)
       result.trackModelList.sort((a, b) => b.msgTime - a.msgTime)
       this.freightData = result.trackModelList
       this.courierCompany = result.courierCompany
       this.courierNo = result.courierNo
       this.courierCompanyMobile = result.courierCompanyMobile
-      this.lastRecord = result.trackModelList.slice(-1)[0].content
+      this.lastRecord = result.trackModelList.slice(0)[0].content
     } catch (e) {
       throw e
     } finally {

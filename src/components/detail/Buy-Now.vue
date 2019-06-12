@@ -241,9 +241,6 @@ export default {
     height: 80px;
     color: #fff;
     font-size: 30px;
-    &:disabled {
-      opacity: .5;
-    }
   }
   .addToCart {
     border-radius: 10px 0 0 10px;

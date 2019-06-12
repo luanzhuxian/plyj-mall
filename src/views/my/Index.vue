@@ -106,27 +106,46 @@
           <pl-svg name="my-order-list" />
         </router-link>
       </div>
-      <router-link
+      <div
+        v-if="newFreight.length > 0"
         :class="$style.newLogistics"
-        :to="{ name: 'Freight', params: { orderId: '1135893298540593152' } }"
       >
         <div :class="$style.logisticsTitle">
           最新物流
         </div>
-        <div :class="$style.logisticsContent">
-          <div :class="$style.contentLeft">
-            <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559206487599&di=882d71c63c8238a102dff133972156e6&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fblog%2F201507%2F22%2F20150722175714_LwSjG.jpeg">
-          </div>
-          <div :class="$style.contentRight">
-            <div :class="$style.deliveryStatus">
-              派送中
-            </div>
-            <div :class="$style.deliveryDetails">
-              [西安市] 快件已在鱼化寨签收
-            </div>
-          </div>
-        </div>
-      </router-link>
+        <swiper
+          :options="swiperOption"
+          style="overflow: hidden;"
+        >
+          <swiper-slide
+            :class="$style.swiperSlide"
+            v-for="(item, i) of newFreight"
+            :key="i"
+          >
+            <router-link
+              tag="div"
+              :to="{ name: 'Freight', params: { orderId: item.orderId } }"
+              :class="$style.logisticsContent"
+            >
+              <div :class="$style.contentLeft">
+                <img
+                  v-img-error
+                  :src="item.productImageUrls[0]"
+                >
+              </div>
+              <div :class="$style.contentRight">
+                <div :class="$style.deliveryStatus">
+                  派送中
+                </div>
+                <div
+                  :class="$style.deliveryDetails"
+                  v-text="item.orderLogisticTrackModel.content"
+                />
+              </div>
+            </router-link>
+          </swiper-slide>
+        </swiper>
+      </div>
     </div>
     <div
       :class="$style.tip"
@@ -166,12 +185,16 @@
 
 <script>
 import { orderPhysicalorderSummary } from '../../apis/order-manager'
+import { getNewFreight } from '../../apis/my'
 import youLike from './../old-home/YouLike.vue'
 import { mapGetters } from 'vuex'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   name: 'My',
   components: {
-    youLike
+    youLike,
+    swiper,
+    swiperSlide
   },
   data () {
     return {
@@ -181,7 +204,14 @@ export default {
         WAIT_RECEIVE: 0,
         FINISHED: 0,
         AFTER_SALE: 0
-      }
+      },
+      swiperOption: {
+        direction: 'vertical',
+        autoHeight: true,
+        autoplay: true,
+        height: window.innerWidth / 750 * 148
+      },
+      newFreight: []
     }
   },
   computed: {
@@ -190,10 +220,14 @@ export default {
   async activated () {
     try {
       const { orderStatusMapCamel } = this
-      const { result } = await orderPhysicalorderSummary(this.userId)
-      for (let key of Object.keys(result)) {
+      const { result: count } = await orderPhysicalorderSummary(this.userId)
+      const { result: list } = await getNewFreight()
+      this.newFreight = list
+      console.log(count)
+      console.log(list)
+      for (let key of Object.keys(count)) {
         if (orderStatusMapCamel.hasOwnProperty(key)) {
-          this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
+          this.count[orderStatusMapCamel[key]] = count[key] > 99 ? '99+' : count[key]
         }
       }
     } catch (e) {
@@ -387,6 +421,9 @@ export default {
     background-color: #FBFBFB;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    .swiperSlide {
+      height: 146px;
+    }
     .logistics-title{
       padding-top: 16px;
       padding-left: 32px;
@@ -399,7 +436,7 @@ export default {
       display: flex;
       flex-direction: row;
       padding: 16px 0 24px 32px;
-      .content-left{
+      .content-left {
         width: 88px;
         height: 88px;
         img{
