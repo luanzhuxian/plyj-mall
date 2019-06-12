@@ -171,7 +171,9 @@ export default {
       } catch (e) {
         throw e
       } finally {
-        this.checkAll(false)
+        this.$nextTick(() => {
+          this.checkAll(false)
+        })
       }
     },
     selectedChange (selected) {

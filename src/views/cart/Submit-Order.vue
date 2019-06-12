@@ -116,7 +116,7 @@
 
     <div :class="$style.confirm">
       <div>
-        <span class="fz-20 gray-2">实际支付</span>
+        <span class="fz-20 gray-2">合计</span>
         <span
           class="rmb fz-32"
           v-text="totalAmount || 0"
