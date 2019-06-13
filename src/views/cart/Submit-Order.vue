@@ -312,7 +312,7 @@ export default {
           cartProducts,
           invoiceModel: this.INVOICE_MODEL
         })
-        await this.pay(result)
+        await this.pay(result, result.orderLists[0])
       } catch (e) {
         throw e
       } finally {
