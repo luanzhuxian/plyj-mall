@@ -18,6 +18,7 @@
         </i>
       </div>
       <div
+        v-if="!hideAddress"
         :class="$style.address"
         v-text="data.addressPrefix + data.agencyAddress"
       />
@@ -62,6 +63,7 @@ export default {
         return null
       }
     },
+    hideAddress: Boolean,
     notLink: Boolean
   },
   methods: {

@@ -105,7 +105,7 @@
                   删除订单
                 </pl-button>
                 <pl-button
-                  v-if="item.status === 'WAIT_RECEIVE' || item.status === 'FINISHED'"
+                  v-if="item.orderType === 'PHYSICAL' && (item.status === 'WAIT_RECEIVE' || item.status === 'FINISHED')"
                   round
                   plain
                   @click="$router.push({ name: 'Freight', params: { orderId: item.id } })"

@@ -46,7 +46,7 @@
         />
         <div :class="$style.buttons">
           <pl-button
-            v-if="orderType === 'PHYSICAL' && canApplyRefund && (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)"
+            v-if="canApplyRefund && (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)"
             plain
             round
             @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId } })"
@@ -127,6 +127,7 @@
     <div :class="$style.panel">
       <address-item
         :address="shippingAddress"
+        :hide-address="orderType === 'VIRTUAL'"
         not-link
       />
     </div>
@@ -162,7 +163,10 @@
           :content="logisticsInfoModel && logisticsInfoModel.shipTime"
         />
       </div>
-      <div :class="$style.infoBottom">
+      <div
+        v-if="orderType === 'PHYSICAL'"
+        :class="$style.infoBottom"
+      >
         <collapse v-model="collepseActiveNames">
           <template v-if="invoiceModelList && invoiceModelList.length">
             <collapse-item
@@ -443,7 +447,7 @@ export default {
     ...mapGetters(['orderStatusMap', 'address', 'supportPhone']),
     // 是否可以申请售后
     canApplyRefund () {
-      return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED') && this.orderType !== 'VIRTUAL_GOODS'
+      return this.orderType === 'PHYSICAL' && (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
     },
     // 是否可以申请发票
     canIApplyInvoice () {
