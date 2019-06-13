@@ -1,5 +1,5 @@
 import * as type from './mutation-type'
-import Cookie from 'js-cookie'
+import Cookies from 'js-cookie'
 import { copyFields } from '../assets/js/util'
 const CalcCookieTime = expire => {
   // 本地cookie较服务器提前一小时过期
@@ -14,10 +14,10 @@ export default {
   [type.GET_MALL_INFO] (state, payload) {
     copyFields(state.mallInfo, payload)
     // 缓存10周
-    Cookie.set('mallId', payload.sequenceNbr, {
+    Cookies.set('mallId', payload.sequenceNbr, {
       expires: CalcCookieTime(6048000)
     })
-    Cookie.set('agencyCode', payload.agencyCode, {
+    Cookies.set('agencyCode', payload.agencyCode, {
       expires: CalcCookieTime(6048000)
     })
   },
@@ -27,10 +27,10 @@ export default {
   [type.SET_TOKEN] (state, payload) {
     state.token = payload.token
     state.refresh_token = payload.refresh_token
-    Cookie.set('token', payload.token, {
+    Cookies.set('token', payload.token, {
       expires: CalcCookieTime(payload.expire)
     })
-    Cookie.set('refresh_token', payload.refresh_token, {
+    Cookies.set('refresh_token', payload.refresh_token, {
       expires: CalcCookieTime(payload.refresh_token_expire)
     })
   },
@@ -53,10 +53,10 @@ export default {
     state.selectedAddress = payload
   },
   [type.LOG_OUT] () {
-    Cookie.remove('mallId')
-    Cookie.remove('openId')
-    Cookie.remove('refresh_token')
-    Cookie.remove('token')
+    Cookies.remove('mallId')
+    Cookies.remove('openId')
+    Cookies.remove('refresh_token')
+    Cookies.remove('token')
     window.location.reload()
   },
   [type.SET_AVATAR] (state, payload) {

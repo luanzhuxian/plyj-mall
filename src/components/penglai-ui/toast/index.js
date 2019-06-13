@@ -39,3 +39,23 @@ function removeDom (e) {
   e.target.parentNode.removeChild(e.target)
   e.target.removeEventListener('animationend', removeDom)
 }
+
+Vue.prototype.$toast = Toast
+Vue.prototype.$error = message => {
+  Toast({
+    type: 'error',
+    message
+  })
+}
+Vue.prototype.$success = message => {
+  Toast({
+    type: 'success',
+    message
+  })
+}
+Vue.prototype.$warning = message => {
+  Toast({
+    type: 'warning',
+    message
+  })
+}

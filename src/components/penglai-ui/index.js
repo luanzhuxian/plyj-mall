@@ -21,7 +21,8 @@ import RadioComponent from './radio/Radio.vue'
 import RadioGroupComponent from './radio/Radio-Group.vue'
 import Popup from './Popup.vue'
 import Picker from './picker/Picker.vue'
-import { Toast } from './toast'
+export { Toast } from './toast'
+export { Indicator } from './indicator'
 const components = [
   Button,
   Input,
@@ -60,45 +61,8 @@ const install = function (Vue, opts = {}) {
     size: opts.size || '',
     zIndex: opts.size || 2000
   }
-  Vue.prototype.$toast = Toast
-  Vue.prototype.$error = message => {
-    Toast({
-      type: 'error',
-      message
-    })
-  }
-  Vue.prototype.$success = message => {
-    Toast({
-      type: 'success',
-      message
-    })
-  }
-  Vue.prototype.$warning = message => {
-    Toast({
-      type: 'warning',
-      message
-    })
-  }
 }
 
 export default {
-  install,
-  Button,
-  Input,
-  GetCode,
-  Tab,
-  Form,
-  FormItem,
-  Radio,
-  List,
-  UploadImg,
-  Fields,
-  PlSvg,
-  Switch,
-  MessageBox,
-  Selector,
-  Checkbox,
-  CheckboxGroup,
-  Popup,
-  Picker
+  install
 }

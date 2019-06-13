@@ -316,8 +316,12 @@ export default {
         for (let val of m.values || []) {
           if (val.link) ids.push(val.link)
         }
-        let { result } = await getHomeProduct(ids)
-        for (let item of result) {
+        let res = []
+        if (ids.length > 0) {
+          let { result } = await getHomeProduct(ids)
+          res = result
+        }
+        for (let item of res) {
           this.modules[m.moduleSuffix].push(item)
         }
       }

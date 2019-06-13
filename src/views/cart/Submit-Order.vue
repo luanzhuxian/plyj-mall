@@ -163,7 +163,10 @@
           <button @click="noNeed">
             不需要
           </button>
-          <button @click="need">
+          <button
+            @click="need"
+            v-if="physicalProducts.length > 0"
+          >
             纸质发票
           </button>
         </div>

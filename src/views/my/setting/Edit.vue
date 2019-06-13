@@ -71,7 +71,6 @@ import { SET_AVATAR, SET_USERNAME } from '../../../store/mutation-type'
 import imageCrop from '../../../components/Image-Crop'
 import { upload } from '../../../assets/js/upload-image'
 import { userInfoSettings } from '../../../apis/base-api'
-import { Indicator } from 'mint-ui'
 export default {
   name: 'Setting',
   data () {
@@ -104,7 +103,6 @@ export default {
     },
     async uploadImg () {
       const $Blob = this.getBlobBydataURI(this.img.base64, 'image/jpeg')
-      Indicator.open('正在上传图片')
       const res = await upload({ file: $Blob })
       if (res && res.url) {
         const settingRes = await userInfoSettings({ headImgUrl: res.url })
@@ -113,7 +111,6 @@ export default {
           console.log(settingRes)
         }
       }
-      Indicator.close()
     },
     editUserName () {
       this.inputShow = true

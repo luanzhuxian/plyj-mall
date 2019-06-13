@@ -16,7 +16,9 @@ const externals =
       'axios': 'axios',
       'swiper': 'swiper',
       'vue-awesome-swiper': 'VueAwesomeSwiper',
-      'ali-oss': 'OSS'
+      'ali-oss': 'OSS',
+      'compressorjs': 'Compressor',
+      'js-cookie': 'Cookies'
     }
     : {}
 module.exports = {

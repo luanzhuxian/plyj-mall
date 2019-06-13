@@ -36,7 +36,7 @@
 </template>
 <script>
 import { upload, compress } from '../../assets/js/upload-image'
-import { Indicator } from 'mint-ui'
+import { Indicator } from '../penglai-ui'
 export default {
   name: 'PlUploadImg',
   data () {

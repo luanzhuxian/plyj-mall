@@ -1,6 +1,6 @@
-import Cookie from 'js-cookie'
-const token = Cookie.get('token') || ''
-const refresh_token = Cookie.get('refresh_token') || ''
+import Cookies from 'js-cookie'
+const token = Cookies.get('token') || ''
+const refresh_token = Cookies.get('refresh_token') || ''
 
 export default {
   theme: 'base-theme',
