@@ -15,7 +15,8 @@ const externals =
       'moment': 'moment',
       'axios': 'axios',
       'swiper': 'swiper',
-      'vue-awesome-swiper': 'VueAwesomeSwiper'
+      'vue-awesome-swiper': 'VueAwesomeSwiper',
+      'ali-oss': 'OSS'
     }
     : {}
 module.exports = {
