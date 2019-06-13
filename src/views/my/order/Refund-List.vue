@@ -271,7 +271,9 @@ export default {
     .buttons {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       margin-top: 24px;
+      min-height: 52px;
       button {
         margin-left: 24px;
         &:nth-of-type(1) {

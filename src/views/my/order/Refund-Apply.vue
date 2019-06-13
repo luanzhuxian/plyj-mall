@@ -316,9 +316,10 @@ export default {
     },
     async request () {
       try {
-        const { type } = this
+        const { type, form: { actualRefund, ...rest } } = this
         const params = {
-          ...this.form,
+          ...rest,
+          actualRefund: Number(actualRefund),
           receiveStatus: this.radio.goodsStatus,
           applyReason: this.radio.refundReason,
           ...(type === 'MODIFY' ? { id: this.refundId } : null)
