@@ -184,18 +184,6 @@
                 :class="$style.invoiceNumber"
                 v-text="item[invoiceMap[item.invoiceType].fields]"
               />
-              <!-- <template
-                slot="right-icon"
-                v-if="canIApplyInvoice"
-              >
-                <pl-button
-                  round
-                  plain
-                  @click="applyInvoice"
-                >
-                  立即申请
-                </pl-button>
-              </template> -->
             </collapse-item>
           </template>
           <template v-else>
@@ -332,21 +320,28 @@
     v-else
     :class="$style.skeleton"
   >
-    <div :class="$style.skeleton1 + ' ' + $style.skeAnimation" />
-    <div :class="$style.skeleton2 + ' ' + $style.skeAnimation" />
+    <div :class="[$style.skeleton1, $style.skeAnimation]" />
+    <div :class="[$style.skeleton2, $style.skeAnimation]" />
     <div :class="$style.skeleton3">
-      <AddressItemSkeleton />
       <AddressItemSkeleton />
     </div>
     <div :class="$style.skeleton4">
-      <div :class="$style.skeleton41 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton42 + ' ' + $style.skeAnimation" />
-      <OrderItemSkeleton />
-      <div :class="$style.skeleton44 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton45 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton46 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton47 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton48 + ' ' + $style.skeAnimation" />
+      <OrderItemSkeleton :class="$style.skeletionOrder" />
+      <div :class="[$style.skeleton41, $style.skeAnimation]" />
+      <div :class="[$style.skeleton42, $style.skeAnimation]" />
+    </div>
+    <div :class="$style.skeleton3">
+      <AddressItemSkeleton />
+    </div>
+    <div :class="$style.skeleton4">
+      <div :class="[$style.skeleton41, $style.skeAnimation]" />
+      <div :class="[$style.skeleton42, $style.skeAnimation]" />
+      <div :class="[$style.skeleton41, $style.skeAnimation]" />
+      <div :class="[$style.skeleton42, $style.skeAnimation]" />
+      <div :class="[$style.skeleton41, $style.skeAnimation]" />
+      <div :class="[$style.skeleton42, $style.skeAnimation]" />
+      <div :class="[$style.skeleton41, $style.skeAnimation]" />
+      <div :class="[$style.skeleton42, $style.skeAnimation]" />
     </div>
   </div>
 </template>
@@ -821,7 +816,7 @@ export default {
     margin-top: 14px;
   }
   .skeleton3 {
-    margin-top: 28px;
+    margin-top: 30px;
     background-color: #fff;
   }
   .skeleton4 {
@@ -832,36 +827,19 @@ export default {
   .skeleton4-1 {
     width: 364px;
     height: 32px;
+    margin-bottom: 8px;
   }
   .skeleton4-2 {
     width: 214px;
     height: 32px;
-    margin-top: 8px;
+    margin-bottom: 20px;
+    &:nth-last-of-type(1) {
+      margin-bottom: 0;
+    }
   }
-  .skeleton4-4 {
-    width: 112px;
-    height: 37px;
-    margin-top: 80px;
-  }
-  .skeleton4-5 {
-    width: 300px;
-    height: 40px;
-    margin-top: 12px;
-  }
-  .skeleton4-6 {
-    width: 150px;
-    height: 37px;
-    margin-top: 50px;
-  }
-  .skeleton4-7 {
-    width: 250px;
-    height: 37px;
-    margin-top: 14px;
-  }
-  .skeleton4-8 {
-    width: 350px;
-    height: 40px;
-    margin-top: 50px;
+  .skeletion-order {
+    margin-top: 0px;
+    margin-bottom: 20px;
   }
   .skeAnimation {
     @include skeAnimation(#eee)

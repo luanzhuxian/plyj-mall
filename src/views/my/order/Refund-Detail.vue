@@ -326,21 +326,31 @@
     v-else
     :class="$style.skeleton"
   >
-    <div :class="$style.skeleton1 + ' ' + $style.skeAnimation" />
-    <div :class="$style.skeleton2 + ' ' + $style.skeAnimation" />
+    <div :class="[$style.skeleton1 + ' ' + $style.skeAnimation]" />
+    <div :class="[$style.skeleton2 + ' ' + $style.skeAnimation]" />
     <div :class="$style.skeleton3">
       <AddressItemSkeleton />
       <AddressItemSkeleton />
     </div>
     <div :class="$style.skeleton4">
-      <div :class="$style.skeleton41 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton42 + ' ' + $style.skeAnimation" />
+      <div :class="$style.skeletonPrice">
+        <div :class="[$style.skeletonPriceLeft, $style.skeAnimation]" />
+        <div :class="[$style.skeletonPriceRight, $style.skeAnimation]" />
+      </div>
+      <div :class="$style.skeletonPrice">
+        <div :class="[$style.skeletonPriceLeft, $style.skeAnimation]" />
+        <div :class="[$style.skeletonPriceRight, $style.skeAnimation]" />
+      </div>
+    </div>
+    <div :class="$style.skeleton4">
+      <div :class="[$style.skeleton41, $style.skeAnimation]" />
+      <div :class="[$style.skeleton42, $style.skeAnimation]" />
       <OrderItemSkeleton />
-      <div :class="$style.skeleton44 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton45 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton46 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton47 + ' ' + $style.skeAnimation" />
-      <div :class="$style.skeleton48 + ' ' + $style.skeAnimation" />
+      <div :class="[$style.skeleton44, $style.skeAnimation]" />
+      <div :class="[$style.skeleton45, $style.skeAnimation]" />
+      <div :class="[$style.skeleton46, $style.skeAnimation]" />
+      <div :class="[$style.skeleton47, $style.skeAnimation]" />
+      <div :class="[$style.skeleton48, $style.skeAnimation]" />
     </div>
   </div>
 </template>
@@ -829,7 +839,7 @@ export default {
     margin-top: 14px;
   }
   .skeleton3 {
-    margin-top: 28px;
+    margin-top: 30px;
     background-color: #fff;
   }
   .skeleton4 {
@@ -870,6 +880,17 @@ export default {
     width: 350px;
     height: 40px;
     margin-top: 50px;
+  }
+  .skeleton-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .skeleton-price-left,
+  .skeleton-price-right {
+    width: 120px;
+    height: 37px;
   }
   .skeAnimation {
     @include skeAnimation(#eee)
