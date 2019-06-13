@@ -123,7 +123,8 @@ export default {
       .freightContent {
         color: #333;
         &:before {
-          background: linear-gradient(180deg, #FFAF00, #FE7700);
+          background: url("../../../assets/images/circle-active.png") no-repeat center center;
+          background-size: 100%;
         }
       }
     }
@@ -174,17 +175,18 @@ export default {
       top: 10px;
       width: 14px;
       height: 14px;
-      border-radius: 7px;
-      background: #D8D8D8;
+      background: url("../../../assets/images/circle.png") no-repeat center center;
+      background-size: 100%;
       z-index: 2;
     }
     &:after {
       position: absolute;
       content: '';
-      left: 31px;
+      left: 30px;
       top: 24px;
       width: 1px;
       height: 130%;
+      transform: scaleX(0.5);
       border-radius: 7px;
       background-color: #D8D8D8;
       z-index: 1;
