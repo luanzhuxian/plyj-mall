@@ -85,6 +85,14 @@
                   取消申请
                 </pl-button>
                 <pl-button
+                  v-if="item.returnStatus === 'WAIT_CHECK' || item.returnStatus === 'FINISHED'"
+                  round
+                  plain
+                  @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"
+                >
+                  查看详情
+                </pl-button>
+                <pl-button
                   v-if="item.returnStatus === 'REFUND_PRODUCT'"
                   type="warning"
                   round
@@ -273,7 +281,6 @@ export default {
       flex-wrap: wrap;
       align-items: center;
       margin-top: 24px;
-      min-height: 52px;
       button {
         margin-left: 24px;
         &:nth-of-type(1) {
