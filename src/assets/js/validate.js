@@ -92,7 +92,10 @@ export function isMoney (val) {
 }
 
 export function isPositive (val) {
-  return /^([1-9]\d+(\.\d+)?|0\.\d+)$/.test(val)
+  if (val <= 0) {
+    return false
+  }
+  return /^\d+(\.\d{1,2})?$/.test(val)
 }
 
 // 判断身份证号码是否正确

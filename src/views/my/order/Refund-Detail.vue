@@ -93,7 +93,7 @@
           </span>
           <span :class="$style.itemRight">
             <div
-              v-if="refundDetail.actualPayAmount"
+              v-if="refundDetail.shouldRefund"
               :class="$style.price"
               v-text="`￥${refundDetail.shouldRefund}`"
             />
@@ -455,7 +455,7 @@ export default {
           refundUserName: refundDetail.refundUserName,
           refundMobile: refundDetail.refundMobile,
           refundAddress: refundDetail.refundAddress,
-          actualPayAmount: refundDetail.actualPayAmount,
+          actualRefund: refundDetail.actualRefund,
           shouldRefund: refundDetail.shouldRefund,
           productId: refundDetail.productId,
           productPic: refundDetail.productPic,

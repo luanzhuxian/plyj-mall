@@ -38,19 +38,21 @@
             退款金额：
           </span>
           <span :class="$style.itemRight">
-            <!-- <div
-              :class="$style.price + ' rmb'"
-              contenteditable
-              v-text="form.actualRefund"
-              @input="onInput"
-            /> -->
-            <pl-input
+            <div :class="$style.priceWrapper">
+              <div
+                id="edit"
+                :class="$style.price + ' rmb'"
+                contenteditable
+                v-text="form.actualRefund"
+                @input="onInput"
+              />
+            </div>
+            <!-- <pl-input
               v-model="form.actualRefund"
               type="number"
               placeholder="请输入"
               align="right"
-              @input="onInput"
-            />
+            /> -->
             <!-- <div :class="$style.price">
               {{ `￥${form.actualRefund}` }}
             </div> -->
@@ -202,7 +204,7 @@ export default {
       form: {
         orderDetailId: this.orderProductRId,
         refundType: '',
-        actualRefund: 0,
+        actualRefund: '',
         applyContent: '',
         pictures: []
       },
@@ -238,9 +240,15 @@ export default {
     }
   },
   methods: {
-    onInput (value) {
-      console.log(value)
-      // this.form.actualRefund = '￥' + value
+    onInput (e) {
+      const selection = window.getSelection()
+      const lastAnchorOffset = selection.anchorOffset
+      this.form.actualRefund = e.target.innerText
+      this.$nextTick(() => {
+        if (lastAnchorOffset) {
+          selection.collapse(document.getElementById('edit').firstChild, lastAnchorOffset)
+        }
+      })
     },
     isWaitShip () {
       return this.orderStatus === 'WAIT_SHIP'
@@ -303,7 +311,7 @@ export default {
     },
     async confirm () {
       if (!this.radio.refundReason) return this.$toast('请选择退货原因')
-      if (!isPositive(this.form.actualRefund)) return this.$toast('退款金额必须是大零的数字')
+      if (!isPositive(this.form.actualRefund)) return this.$toast('退款金额必须大于零，小数点后最多两位')
       this.request()
     },
     async request () {
@@ -317,8 +325,6 @@ export default {
         }
         const fn = type === 'MODIFY' ? modifyRefund : applyRefund
         const message = type === 'MODIFY' ? '更改退单成功，请等待卖家反馈' : '申请售后成功，请等待卖家反馈'
-        // if (type === 'MODIFY') params.id = this.refundId
-
         await this.$confirm('确定提交吗？')
         const { result } = await fn(params)
         this.$success(message)
@@ -436,15 +442,18 @@ export default {
     line-height: 32px;
     margin-top: 10px;
   }
-  // .price {
-  //   display: inline-block;
-  //   color: #FE7700;
-  //   font-family: HelveticaNeue-Medium;
-  //   font-weight: 500;
-  //   outline: none;
-  //   text-decoration: none !important;
-  //   text-align: right;
-  // }
+  .price-wrapper {
+    max-width: 500px;
+    overflow: scroll;
+  }
+  .price {
+    display: inline-block;
+    color: #FE7700;
+    font-family: HelveticaNeue-Medium;
+    font-weight: 500;
+    outline: none;
+    text-align: right;
+  }
 </style>
 
 <style lang="scss">
