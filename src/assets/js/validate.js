@@ -92,6 +92,7 @@ export function isMoney (val) {
 }
 
 export function isPositive (val) {
+  console.log(val, typeof val, /^\d+(\.\d{1,2})?$/.test(val))
   if (val <= 0) {
     return false
   }
