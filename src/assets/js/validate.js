@@ -92,11 +92,11 @@ export function isMoney (val) {
 }
 
 export function isPositive (val) {
-  console.log(val, typeof val, /^\d+(\.\d{1,2})?$/.test(val))
+  console.log(val, typeof val, /^\d+(\.\d{1,2})?$/.test(val), /^\d+(\.\d{1,2})?$/.test(Number(val)))
   if (val <= 0) {
     return false
   }
-  return /^\d+(\.\d{1,2})?$/.test(val)
+  return /^\d+(\.\d{1,2})?$/.test(Number(val))
 }
 
 // 判断身份证号码是否正确
