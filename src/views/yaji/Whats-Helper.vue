@@ -35,7 +35,7 @@ export default {
 }
 </script>
 
-<style module lang="less">
+<style module lang="scss">
 .what-is-helper {
   width: 100%;
   padding-bottom: 100px;

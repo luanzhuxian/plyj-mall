@@ -800,7 +800,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
 .m-image-crop {
     position: relative;
     display: inline-block;
