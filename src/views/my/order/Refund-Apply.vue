@@ -49,6 +49,7 @@
               type="number"
               placeholder="请输入"
               align="right"
+              @input="onInput"
             />
             <!-- <div :class="$style.price">
               {{ `￥${form.actualRefund}` }}
@@ -237,6 +238,10 @@ export default {
     }
   },
   methods: {
+    onInput (value) {
+      console.log(value)
+      // this.form.actualRefund = '￥' + value
+    },
     isWaitShip () {
       return this.orderStatus === 'WAIT_SHIP'
     },
@@ -307,16 +312,15 @@ export default {
         const params = {
           ...this.form,
           receiveStatus: this.radio.goodsStatus,
-          applyReason: this.radio.refundReason
+          applyReason: this.radio.refundReason,
+          ...(type === 'MODIFY' ? { id: this.refundId } : null)
         }
         const fn = type === 'MODIFY' ? modifyRefund : applyRefund
         const message = type === 'MODIFY' ? '更改退单成功，请等待卖家反馈' : '申请售后成功，请等待卖家反馈'
-        if (type === 'MODIFY') params.id = this.refundId
+        // if (type === 'MODIFY') params.id = this.refundId
 
         await this.$confirm('确定提交吗？')
         const { result } = await fn(params)
-        // resetForm(this.form)
-        // this.imgList = []
         this.$success(message)
         setTimeout(() => {
           this.$router.replace({ name: 'RefundDetail', params: { id: result.id } })
@@ -383,12 +387,6 @@ export default {
     }
 
     textarea {
-      // width: 100%;
-      // height: 222px;
-      // border: none;
-      // outline: none;
-      // resize: none;
-      // padding-top: 12px;
       &::-webkit-input-placeholder {
         font-size: 26px;
         color: #ccc;

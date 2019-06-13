@@ -441,17 +441,39 @@ export default {
     async getDetail () {
       try {
         this.loaded = false
-        const { id } = this
+        const { id, refundDetail } = this
         const { result } = await getRefundOrderDetail({ id })
-        this.refundStatus = result.returnStatus
-        this.refundDetail = Object.assign({}, result)
+        this.refundStatus = result.returnStatus;  // eslint-disable-line
+        ({
+          id: refundDetail.id,
+          orderId: refundDetail.orderId,
+          orderDetailId: refundDetail.orderDetailId,
+          refundType: refundDetail.refundType,
+          receiveStatus: refundDetail.receiveStatus,
+          shipSn: refundDetail.shipSn,
+          shipChannelText: refundDetail.shipChannelText,
+          refundUserName: refundDetail.refundUserName,
+          refundMobile: refundDetail.refundMobile,
+          refundAddress: refundDetail.refundAddress,
+          actualPayAmount: refundDetail.actualPayAmount,
+          shouldRefund: refundDetail.shouldRefund,
+          productId: refundDetail.productId,
+          productPic: refundDetail.productPic,
+          productName: refundDetail.productName,
+          productCount: refundDetail.productCount,
+          skuName: refundDetail.skuName,
+          applyReasonText: refundDetail.applyReasonText,
+          applyTime: refundDetail.applyTime,
+          applyContent: refundDetail.applyContent,
+          pictures: refundDetail.pictures
+        } = result)
+        if (result.refundMobile) {
+          this.refundDetail.refundMobile = replaceMobile(result.refundMobile)
+        }
         this.refundProgress = result.operations.map(item => {
           item.createTimeArray = rebuildDate(item.createTime)
           return item
         })
-        if (result.refundMobile) {
-          this.refundDetail.refundMobile = replaceMobile(result.refundMobile)
-        }
         this.loaded = true
       } catch (e) {
         throw e
