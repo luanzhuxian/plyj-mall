@@ -141,7 +141,7 @@
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
 import { getOrderDetail, getRefundOrderDetail, applyRefund, modifyRefund, getMap as getRefundReasonMap } from '../../../apis/order-manager'
-// import { resetForm } from '../../../assets/js/util'
+import { resetForm } from '../../../assets/js/util'
 import { isPositive } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 
@@ -197,7 +197,6 @@ export default {
   },
   data () {
     return {
-      refundReasonKeyMap,
       orderStatus: '',
       operationType: '', // 在何种情况下退款,
       productInfo: {},
@@ -226,18 +225,25 @@ export default {
       currentPopupName: '',
       popupTitle: '',
       popupOptions: [],
-      imgList: []
+      imgList: [],
+      refundReasonKeyMap
     }
   },
   computed: {
     ...mapGetters(['refundTypeMap'])
   },
-  created () {
+  activated () {
     this.form.orderDetailId = this.orderProductRId
     this.getOrderDetail()
     if (this.type === 'MODIFY') {
       this.getRefundInfo()
     }
+  },
+  deactivated () {
+    resetForm(this.form)
+    resetForm(this.radio)
+    this.imgList = []
+    this.isPopupShow = false
   },
   methods: {
     onInput (e) {
@@ -272,8 +278,8 @@ export default {
         try {
           const { refundId: id } = this
           const { result } = await getRefundOrderDetail({ id })
-          this.form.refundType = result.refundType
-          this.form.actualRefund = result.actualRefund
+          // this.form.refundType = result.refundType
+          // this.form.actualRefund = result.actualRefund
           this.form.applyContent = result.applyContent
           this.form.pictures = [...result.pictures]
           this.imgList = [...result.pictures]
@@ -312,6 +318,7 @@ export default {
     async confirm () {
       if (!this.radio.refundReason) return this.$toast('请选择退货原因')
       if (!isPositive(this.form.actualRefund)) return this.$toast('退款金额必须大于零，小数点后最多两位')
+      if (this.form.actualRefund > this.productInfo.amount) return this.$toast('退款金额不能大于订单金额')
       this.request()
     },
     async request () {

@@ -6,19 +6,13 @@
     <div :class="$style.top">
       <top-text
         :title="orderStatusMap[orderStatus]"
-        :tip="orderType === 'VIRTUAL' ? '' : suggestionMap[orderStatus]"
+        :tip="suggestionMap[orderStatus]"
       />
-      <!-- <a :href="`tel:${supportPhone}`">
-        <pl-svg
-          :class="$style.callMe"
-          name="phone2"
-        />
-      </a> -->
     </div>
 
     <div
       :class="$style.panel"
-      v-if="orderType === 'PHYSICAL' && (orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED')"
+      v-if="hasExpressInfo"
     >
       <express-item
         :order-id="orderId"
@@ -153,12 +147,12 @@
           :content="tradingInfoModel.payTime"
         />
         <pl-list
-          v-if="orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
+          v-if="hasExpressInfo"
           title="配送方式："
           :content="logisticsInfoModel && logisticsInfoModel.courierCompany"
         />
         <pl-list
-          v-if="orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
+          v-if="hasExpressInfo"
           title="发货时间："
           :content="logisticsInfoModel && logisticsInfoModel.shipTime"
         />
@@ -446,6 +440,10 @@ export default {
   computed: {
     ...mapGetters(['orderStatusMap', 'address', 'supportPhone']),
     // 是否可以申请售后
+    hasExpressInfo () {
+      return this.orderType === 'PHYSICAL' && (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
+    },
+    // 是否可以申请售后
     canApplyRefund () {
       return this.orderType === 'PHYSICAL' && (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
     },
@@ -466,6 +464,10 @@ export default {
   deactivated () {
     this.collepseActiveNames = []
     this.logisticsInfoModel = null
+    this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY = ''
+    if (this.timer) {
+      clearInterval(this.timer)
+    }
   },
   methods: {
     // 倒计时
@@ -485,8 +487,8 @@ export default {
           this.getDetail()
           return
         }
-        if (flag === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
         if (flag === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
+        if (flag === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
       }, 1000)
     },
     onPickerConfirm (selected) {
@@ -545,7 +547,7 @@ export default {
             }
           } else if (result.orderStatus === 'WAIT_RECEIVE') {
             let startTime = Moment((tradingInfoModel.createTime)).valueOf()
-            if (now - startTime < 24 * 60 * 60 * 1000) {
+            if (now - startTime < 10 * 24 * 60 * 60 * 1000) {
               this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now + 2000, 'WAIT_RECEIVE')
             }
           }

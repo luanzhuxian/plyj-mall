@@ -23,9 +23,7 @@ export default {
   data () {
     return {
       logined: false,
-      exclude: [
-        'RefundApply'
-      ],
+      exclude: [],
       showNavbar: [
         'Home',
         'My',

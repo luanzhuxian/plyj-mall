@@ -166,7 +166,7 @@ export default {
           name: this.routeName,
           params: {
             productSeq: this.productSeq,
-            brokerId: this.agentUser ? this.userId : ''
+            brokerId: this.agentUser ? this.userId : null
           }
         })
       }

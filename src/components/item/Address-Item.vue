@@ -9,7 +9,10 @@
       name="address3"
     />
     <div :class="$style.right">
-      <div :class="$style.name">
+      <div
+        :class="$style.name"
+        :style="{ marginBottom: hideAddress ? '0' : '' }"
+      >
         {{ data.realName }}
         <i
           class="bold"
