@@ -148,7 +148,7 @@
             <pl-svg
               :class="$style.selectIcon"
               name="success"
-              :color="checkedList.indexOf(pro) > -1 ? '#F2B036' : '#ccc'"
+              :color="isSelected(pro) ? '#F2B036' : '#ccc'"
             />
           </label>
         </li>
@@ -240,7 +240,7 @@ export default {
       return this.$route.query.receiveName || ''
     }
   },
-  activated () {
+  created () {
     const APPLY_INVOICE = JSON.parse(localStorage.getItem('APPLY_INVOICE'))
     if (!APPLY_INVOICE) {
       this.$router.replace({ name: 'Home' })
@@ -254,6 +254,9 @@ export default {
     }
   },
   methods: {
+    isSelected (pro) {
+      return this.checkedList.some(item => item.optionCode === pro.optionCode)
+    },
     change (type) {
       this.type = type
     },

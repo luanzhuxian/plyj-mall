@@ -67,10 +67,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
       rotue: vm.$route
     }
   }
-  vm.$toast({
-    type: 'error',
-    message: error.message
-  })
+  vm.$error(error.message)
   console.error(err)
   // vm.$destroy()
   // try {

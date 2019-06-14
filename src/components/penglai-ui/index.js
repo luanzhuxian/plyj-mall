@@ -23,6 +23,7 @@ import Popup from './Popup.vue'
 import Picker from './picker/Picker.vue'
 import { Timeline, TimelineItem } from './timeline'
 import { Indicator } from './indicator'
+export { Toast } from './toast'
 const components = [
   Button,
   Input,

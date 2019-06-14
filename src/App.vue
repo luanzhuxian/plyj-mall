@@ -23,7 +23,9 @@ export default {
   data () {
     return {
       logined: false,
-      exclude: [],
+      exclude: [
+        'ApplyInvoice'
+      ],
       showNavbar: [
         'Home',
         'My',
