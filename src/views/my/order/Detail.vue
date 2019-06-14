@@ -688,12 +688,13 @@ export default {
       color: #2E2E2E;
       line-height: 40px;
       margin-bottom: 12px;
+      padding-left: 15px;
     }
     .invoice-number {
       font-size: 24px;
       font-family: Helvetica;
       line-height: 28px;
-      padding-bottom: 20px;
+      padding-left: 15px;
     }
   }
   .order-info {
@@ -874,5 +875,17 @@ export default {
     .pl-button__small.plain:after {
       border: 1px solid #CCC;
     }
+
   }
+  .pl-collapse-item {
+    .pl-collapse-item__content {
+      padding-bottom: 20px;
+    }
+    &:nth-last-of-type(1) {
+      .pl-collapse-item__content {
+        padding-bottom: 0;
+      }
+    }
+  }
+
 </style>

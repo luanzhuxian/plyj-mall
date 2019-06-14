@@ -9,10 +9,7 @@
       name="address3"
     />
     <div :class="$style.right">
-      <div
-        :class="$style.name"
-        :style="{ marginBottom: hideAddress ? '0' : '' }"
-      >
+      <div :class="$style.name">
         {{ data.realName }}
         <i
           class="bold"
@@ -107,11 +104,11 @@ export default {
       flex: 1;
       flex-direction: column;
       .name {
-        margin-bottom: 18px;
         font-size: 28px;
         color: #2e2e2e;
       }
       .address {
+        margin-top: 18px;
         font-size: 24px;
       }
     }

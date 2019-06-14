@@ -158,7 +158,7 @@ export default {
     box-sizing: border-box;
     color: #333;
     font-size: 24px;
-    line-height: 34px;
+    line-height: 40px;
     background-color: #FFF;
     &--expanded {
       .pl-collapse-item__icon--right {
