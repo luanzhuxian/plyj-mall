@@ -162,12 +162,12 @@ export default {
             disabledList.push(item)
           }
         }
+        // 将禁用的挪到最后
         for (let item of disabledList) {
           result.push(item)
         }
         this.products = result
         this.total = result.length
-        // 将禁用的挪到最后
         this.loading = false
       } catch (e) {
         throw e
