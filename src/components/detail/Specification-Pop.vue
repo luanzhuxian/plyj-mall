@@ -159,6 +159,7 @@ export default {
   },
   methods: {
     close () {
+      this.revert()
       this.$emit('update:visible', false)
     },
     init () {
@@ -225,14 +226,14 @@ export default {
     confirm () {
       if (this.checkCount(this.count)) {
         this.count = Number.parseInt(this.count)
-        this.close()
+        this.$emit('update:visible', false)
         this.$emit('confirm', Object.assign({ count: this.count }, this.selected), this.oldSelect, this.revert)
       }
     },
-    // 回滚（如果规格选择失败，回滚到上一个选择的规格），取决于是否决定这样做
+    // 回滚（如果规格选择失败，或者没选，回滚到上一个选择的规格），取决于是否决定这样做
     revert () {
       this.selected = this.oldSelect
-      this.min = this.count = this.oldSelect.minBuyNum || 1
+      this.min = this.count = this.defaultCount || this.oldSelect.minBuyNum || 1
       this.stock = this.oldSelect.stock
     }
   }
