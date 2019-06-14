@@ -164,7 +164,7 @@ export default {
         try {
           this.loading = true
           if (this.form.auditStatus === 'REJECT') {
-            await updateAudit(this.form.sequenceNbr, this.form)
+            await updateAudit(this.form.id, this.form)
           } else {
             await AuditCreate(this.form)
           }
