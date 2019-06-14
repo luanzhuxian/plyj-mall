@@ -132,28 +132,18 @@
             name="1"
             title="退款进度"
           >
-            <template slot="default">
-              <ul :class="$style.refundProgressList">
-                <li
-                  v-for="(item, index) of refundProgress"
-                  :key="index"
-                  :class="$style.refundProgressItem"
-                >
-                  <div :class="$style.datetime">
-                    <span :class="$style.date">
-                      {{ item.createTimeArray[0] }}
-                    </span>
-                    <span :class="$style.time">
-                      {{ item.createTimeArray[1] }}
-                    </span>
-                  </div>
-                  <div
-                    :class="$style.refundProgressContent"
-                    v-text="item.operatingLog"
-                  />
-                </li>
-              </ul>
-            </template>
+            <pl-timelint>
+              <pl-timeline-item
+                v-for="(item, i) of refundProgress"
+                :key="i"
+                :timestamp="item.createTime"
+              >
+                <div
+                  :class="$style.refundProgressContent"
+                  v-text="item.operatingLog"
+                />
+              </pl-timeline-item>
+            </pl-timelint>
           </collapse-item>
         </collapse>
       </div>
@@ -750,82 +740,11 @@ export default {
     width: 39px;
     margin-left: 40px
   }
-  /** popup end **/
-
-  /** progress start **/
-  .refundProgressList {
-    padding: 28px 0 8px;
-  }
-  .refundProgressItem {
-    display: flex;
-    padding-bottom: 30px;
-    &:nth-of-type(1) {
-      .datetime {
-        color: #333;
-      }
-      .refundProgressContent {
-        color: #333;
-        &:before {
-          background: linear-gradient(180deg, #FFAF00, #FE7700);
-        }
-      }
-    }
-    &:nth-last-of-type(1) {
-      padding-bottom: 0;
-      > .refundProgressContent {
-        &:after {
-          display: none;
-        }
-      }
-    }
-  }
-  .datetime {
-    display: inline-flex;
-    flex-direction: column;
-    text-align: right;
-    color: #999;
-    > .date {
-      font-size: 22px;
-      line-height: 32px;
-    }
-    > .time {
-      font-size: 18px;
-      line-height: 26px;
-    }
-  }
   .refundProgressContent {
-    position: relative;
-    flex: 1;
-    padding-left: 62px;
     font-size: 22px;
     line-height: 32px;
     color: #999;
-    &:before {
-      position: absolute;
-      content: '';
-      left: 24px;
-      top: 10px;
-      width: 14px;
-      height: 14px;
-      border-radius: 7px;
-      background: #D8D8D8;
-      z-index: 2;
-    }
-    &:after {
-      position: absolute;
-      content: '';
-      left: 31px;
-      top: 24px;
-      width: 1px;
-      height: 150%;
-      border-radius: 7px;
-      background-color: #D8D8D8;
-      z-index: 1;
-    }
   }
-  /** progress end **/
-
-  /** skeleton start **/
   .skeleton {
     padding: 28px 40px;
   }

@@ -21,6 +21,7 @@ import RadioComponent from './radio/Radio.vue'
 import RadioGroupComponent from './radio/Radio-Group.vue'
 import Popup from './Popup.vue'
 import Picker from './picker/Picker.vue'
+import { Timeline, TimelineItem } from './timeline'
 export { Toast } from './toast'
 export { Indicator } from './indicator'
 const components = [
@@ -43,7 +44,9 @@ const components = [
   RadioComponent,
   RadioGroupComponent,
   Popup,
-  Picker
+  Picker,
+  Timeline,
+  TimelineItem
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {

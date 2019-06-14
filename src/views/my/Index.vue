@@ -217,19 +217,35 @@ export default {
   computed: {
     ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode', 'orderStatusMapCamel'])
   },
-  async activated () {
+  activated () {
     try {
-      const { orderStatusMapCamel } = this
-      const { result: count } = await orderPhysicalorderSummary(this.userId)
-      const { result: list } = await getNewFreight()
-      this.newFreight = list
-      for (let key of Object.keys(count)) {
-        if (orderStatusMapCamel.hasOwnProperty(key)) {
-          this.count[orderStatusMapCamel[key]] = count[key] > 99 ? '99+' : count[key]
-        }
-      }
+      this.getNewFreight()
+      this.orderPhysicalorderSummary()
     } catch (e) {
       throw e
+    }
+  },
+  methods: {
+    async getNewFreight () {
+      try {
+        const { result } = await getNewFreight()
+        this.newFreight = result
+      } catch (e) {
+        throw e
+      }
+    },
+    async orderPhysicalorderSummary () {
+      try {
+        const { orderStatusMapCamel } = this
+        const { result } = await orderPhysicalorderSummary(this.userId)
+        for (let key of Object.keys(result)) {
+          if (orderStatusMapCamel.hasOwnProperty(key)) {
+            this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
+          }
+        }
+      } catch (e) {
+        throw e
+      }
     }
   }
 }
