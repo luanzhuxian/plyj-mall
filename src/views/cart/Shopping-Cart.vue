@@ -145,9 +145,6 @@ export default {
   methods: {
     resetState () {
       this.checkedAll = false
-      this.products.splice(0, 500)
-      this.checkedList.splice(0, 500)
-      this.isManage = false
       this.total = 0
       this.summation = 0
     },
@@ -159,19 +156,10 @@ export default {
           // 如果商品已下架或当前规格商品数量不足，禁用
           const currentSku = item.skuModels.find(sku => sku.optionCode === item.cartSkuCode)
           item.disabled = currentSku.stock < item.cartProductCount || item.productStatus === 'UNSHELVE'
-          this.products.push(item)
         }
+        this.products = result
         this.total = result.length
-        // 更新选中的商品
-        for (let [i, item] of this.checkedList.entries()) {
-          const newPro = result.find(pro => pro.id === item.id)
-          this.checkedList.splice(i, 1, newPro)
-        }
         this.loading = false
-
-        this.$nextTick(() => {
-          if (this.total > 0) this.checkAll(false)
-        })
       } catch (e) {
         throw e
       } finally {
@@ -209,7 +197,6 @@ export default {
       await this.$confirm(`确定将这${ids.length}个宝物删除？`)
       try {
         await deleteCartProducts(ids)
-        this.products.splice(0, 500)
         this.checkedList.splice(0, 500)
         this.getList()
       } catch (e) {

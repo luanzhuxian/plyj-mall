@@ -112,12 +112,20 @@ export default {
     }
   },
   watch: {
-    checked (val) {
-      this.localChecked = val
+    checked: {
+      handler (val) {
+        this.localChecked = val
+      },
+      immediate: true
+    },
+    data: {
+      handler (val) {
+        if (val) {
+          console.log(val)
+        }
+      },
+      immediate: true
     }
-  },
-  mounted () {
-    this.localChecked = this.checked
   },
   methods: {
     handleChange (e) {
@@ -131,27 +139,19 @@ export default {
     },
     // 选中
     selected () {
-      if (!this.localChecked) {
-        this.$parent.change(true, this.data)
-        this.$emit('change', true)
-        this.localChecked = true
-      }
+      // if (!this.localChecked) {
+      //   this.$parent.change(true, this.data)
+      this.$emit('change', true)
+      this.localChecked = true
+      // }
     },
     // 取消选中
     cancel () {
-      if (this.localChecked) {
-        this.$parent.change(false, this.data)
-        this.$emit('change', false)
-        this.localChecked = false
-      }
-    },
-    handleClick () {
-      if (!this.canPrefixClick) return
-      if (!this.localChecked) {
-        this.selected()
-      } else {
-        this.cancel()
-      }
+      // if (this.localChecked) {
+      //   this.$parent.change(false, this.data)
+      this.$emit('change', false)
+      this.localChecked = false
+      // }
     }
   }
 }

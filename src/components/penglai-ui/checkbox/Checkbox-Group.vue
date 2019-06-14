@@ -26,6 +26,7 @@ export default {
   },
   watch: {
     group (val) {
+      console.log(1)
       this.$emit('change', val)
     }
   },
@@ -47,6 +48,7 @@ export default {
         } else {
           c.cancel()
         }
+        this.change(flage, c.data)
       }
       this.isCheckAll = flage
     }
