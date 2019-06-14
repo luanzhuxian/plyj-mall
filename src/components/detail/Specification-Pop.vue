@@ -230,11 +230,15 @@ export default {
         this.$emit('confirm', Object.assign({ count: this.count }, this.selected), this.oldSelect, this.revert)
       }
     },
-    // 回滚（如果规格选择失败，或者没选，回滚到上一个选择的规格），取决于是否决定这样做
+    // 回滚（如果规格选择失败，或者没选，回滚到最初规格）
     revert () {
-      this.selected = this.oldSelect
-      this.min = this.count = this.defaultCount || this.oldSelect.minBuyNum || 1
-      this.stock = this.oldSelect.stock
+      if (this.defaultCode) {
+        this.selected = this.data.find(item => item.optionCode === this.defaultCode)
+      } else {
+        this.selected = this.data[0]
+      }
+      this.count = this.defaultCount || this.selected.minBuyNum
+      this.stock = this.selected.stock
     }
   }
 }
