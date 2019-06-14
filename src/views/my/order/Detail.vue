@@ -459,6 +459,9 @@ export default {
         this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
         this.productInfoModel.productDetailModels.some(item => item.invoiceStatus === 8)
+    },
+    noInvoiceProList () {
+      return this.productInfoModel.productDetailModels.filter(item => item.invoiceStatus === 8)
     }
   },
   async activated () {
@@ -543,7 +546,6 @@ export default {
             }
           }
           // invoiceStatus 2 未开票， 3 已开票
-          this.noInvoiceProList = productInfoModel.productDetailModels.filter(item => item.invoiceStatus === 2)
 
           let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
           if (result.orderStatus === 'WAIT_PAY') {
