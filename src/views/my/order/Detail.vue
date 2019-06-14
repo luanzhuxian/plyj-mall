@@ -137,6 +137,12 @@
           :content="orderId"
         />
         <pl-list
+          title="订单备注："
+          :content="message"
+        />
+      </div>
+      <div :class="$style.infoBottom">
+        <pl-list
           v-if="orderStatus === 'WAIT_SHIP' || orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
           title="支付方式："
           :content="tradingInfoModel.payMethod"
@@ -404,6 +410,7 @@ export default {
       loaded: false,
       orderType: '',
       orderStatus: '',
+      message: '',
       detail: {},
       receiverModel: {},
       logisticsInfoModel: {},
@@ -508,6 +515,7 @@ export default {
           const {
             orderStatus,
             orderType,
+            message,
             receiverModel,
             logisticsInfoModel,
             productInfoModel,
@@ -518,6 +526,7 @@ export default {
           this.detail = result
           this.orderStatus = orderStatus
           this.orderType = orderType
+          this.message = message
           this.receiverModel = receiverModel
           this.logisticsInfoModel = logisticsInfoModel
           this.productInfoModel = productInfoModel
@@ -651,7 +660,7 @@ export default {
     line-height: 34px;
     font-size: 24px;
     .info-top {
-      padding: 24px 24px 16px;
+      padding: 24px;
       border-bottom: 1px solid #F0F0F0;
       > div {
         margin-bottom: 20px;
@@ -662,6 +671,10 @@ export default {
     }
     .info-bottom {
       padding: 24px;
+      border-bottom: 1px solid #F0F0F0;
+      &:nth-last-of-type(1) {
+        margin-bottom: 0;
+      }
     }
     .invoice-title {
       color: #666666;
