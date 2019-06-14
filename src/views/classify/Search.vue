@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     async search (keyword) {
-      if (!keyword) return this.$toast('请输入要搜索的内容')
+      if (!keyword) return this.$warning('请输入要搜索的内容')
       if (keyword) {
         this.searachContent = this.form.searachContent = keyword
       }

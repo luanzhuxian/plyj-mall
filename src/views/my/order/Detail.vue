@@ -632,7 +632,7 @@ export default {
     doCopy () {
       this.$copyText(this.address)
         .then(e => {
-          this.$toast('复制成功')
+          this.$success('复制成功')
         }, e => {
           console.log(e)
         })

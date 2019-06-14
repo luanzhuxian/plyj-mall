@@ -491,8 +491,8 @@ export default {
     },
     async submit () {
       try {
-        if (!this.form.expressName) return this.$toast('请选择物流公司')
-        if (!this.form.expressNo.trim()) return this.$toast('请输入快递单号')
+        if (!this.form.expressName) return this.$warning('请选择物流公司')
+        if (!this.form.expressNo.trim()) return this.$warning('请输入快递单号')
         const { dictDataKey: shipChannel } = this.expressMap.find(item => item.dictDataValue === this.form.expressName)
         const params = {
           id: this.id,
@@ -520,7 +520,7 @@ export default {
     doCopy () {
       this.$copyText(this.address)
         .then(e => {
-          this.$toast('复制成功')
+          this.$success('复制成功')
         }, e => {
           console.log(e)
         })

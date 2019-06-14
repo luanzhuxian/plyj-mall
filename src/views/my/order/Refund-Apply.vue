@@ -316,9 +316,9 @@ export default {
       this.form.pictures.splice(index, 1)
     },
     async confirm () {
-      if (!this.radio.refundReason) return this.$toast('请选择退货原因')
-      if (!isPositive(this.form.actualRefund)) return this.$toast('退款金额必须大于零，小数点后最多两位')
-      if (this.form.actualRefund > this.productInfo.amount) return this.$toast('退款金额大于最大退款金额，请修改')
+      if (!this.radio.refundReason) return this.$warning('请选择退货原因')
+      if (!isPositive(this.form.actualRefund)) return this.$warning('退款金额必须大于零，小数点后最多两位')
+      if (this.form.actualRefund > this.productInfo.amount) return this.$warning('退款金额大于最大退款金额，请修改')
       this.request()
     },
     async request () {

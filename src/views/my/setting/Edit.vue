@@ -2,7 +2,7 @@
   <div :class="$style.setting">
     <div :class="$style.top">
       <img
-        :src="img.base64||avatar"
+        :src="avatar"
         alt=""
       >
       <div :class="$style.baseInfo">
@@ -17,7 +17,7 @@
         />
       </div>
       <image-crop
-        style="width: 16vw;height: 16vw;border-radius: 50%;position: absolute;"
+        style="width: 16vw;height: 16vw; border-radius: 50%; position: absolute;"
         :proportion="{ w: 50, h: 50 }"
         v-model="img"
       />
@@ -73,11 +73,15 @@ export default {
     async uploadImg () {
       const $Blob = this.getBlobBydataURI(this.img.base64, 'image/jpeg')
       try {
+        this.$indicator.open('正在上传图片')
         const { url } = await upload({ file: $Blob })
         await userInfoSettings({ headImgUrl: url })
         this.setAvatar(url)
+        this.$success('上传成功')
       } catch (e) {
         throw e
+      } finally {
+        this.$indicator.close()
       }
     },
     async editUserName () {

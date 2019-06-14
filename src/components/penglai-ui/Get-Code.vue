@@ -46,7 +46,7 @@ export default {
   methods: {
     async handleClick (e) {
       if (!isPhone(this.mobile)) {
-        return this.$toast('手机号格式错误')
+        return this.$error('手机号格式错误')
       }
       this.$emit('click', e)
       try {

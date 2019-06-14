@@ -158,7 +158,7 @@ export default {
           this.step = 2
           this.updateForm.oldVerifyCode = this.bindForm.verifyCode
         } else {
-          this.$toast('验证码输入有误')
+          this.$warning('验证码输入有误')
         }
         this.loading = false
       } catch (e) {
@@ -172,7 +172,7 @@ export default {
           if (!this.$refs.updateForm.validate()) return
           this.loading = true
           await updateMobile(this.updateForm)
-          this.$toast('修改手机号成功！')
+          this.$success('修改手机号成功！')
         } else {
           this.loading = true
           await bindMobile(this.bindForm)
@@ -184,7 +184,7 @@ export default {
               params,
               query
             })
-            this.$toast('绑定手机号成功！')
+            this.$success('绑定手机号成功！')
             return
           }
         }

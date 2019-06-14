@@ -14,7 +14,7 @@
     </svg>
     <slot />
     <input
-      v-show="state==1"
+      v-show="state === 1"
       class="path"
       @change="imageChange"
       ref="path"
@@ -22,7 +22,7 @@
       type="file"
     >
     <div
-      v-show="state==2"
+      v-show="state === 2"
       ref="fileView"
       class="file-view"
       v-touch:move="move"
@@ -115,10 +115,10 @@ export default {
       viewBox: { width: 0, height: 0, left: 0, top: 0 }, // 截取区
       rotate: 0, // 旋转角度 0 1 2 3
       point1: null, // 触控点1
-      point2: null, // 触控点2
-      indicator: {
-        visible: false
-      }
+      point2: null // 触控点2
+      // indicator: {
+      //   visible: false
+      // }
     }
   },
   props: {
@@ -196,10 +196,8 @@ export default {
         }
 
         let showView = () => {
-          this.indicator.visible = true
           this.loadImg()
           setTimeout(() => {
-            this.indicator.visible = false
             this.state = 2
             this.$nextTick(function () {
               this.file2SizePosition()
@@ -209,20 +207,14 @@ export default {
         if (this.skipCrop) {
           this.uploadCanvas()
         } else {
-          if (
-            this.config.isSlice &&
-                        this.filRealitySize.width /
-                            this.filRealitySize.height ===
-                            this.proportion.w / this.proportion.h
-          ) {
-            var flag = window.confirm(
-              '文件已符合规定尺寸，是否直接使用？'
-            )
-            if (flag) {
-              this.uploadCanvas()
-            } else {
-              showView()
-            }
+          if (this.config.isSlice && this.filRealitySize.width / this.filRealitySize.height === this.proportion.w / this.proportion.h) {
+            // let flag = window.confirm('文件已符合规定尺寸，是否直接使用？')
+            // if (flag) {
+            //   this.uploadCanvas()
+            // } else {
+            //   showView()
+            // }
+            this.uploadCanvas()
           } else {
             showView()
           }
@@ -234,9 +226,7 @@ export default {
       if (imgWidth > this.config.size) {
         imgWidth = this.config.size
       }
-      let imgHeight =
-                imgWidth *
-                (this.filRealitySize.height / this.filRealitySize.width)
+      let imgHeight = imgWidth * (this.filRealitySize.height / this.filRealitySize.width)
       // 解决兼容 ios
       let canvas = document.createElement('canvas')
       let ctx = canvas.getContext('2d')

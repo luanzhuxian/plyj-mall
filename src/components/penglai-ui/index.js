@@ -22,8 +22,7 @@ import RadioGroupComponent from './radio/Radio-Group.vue'
 import Popup from './Popup.vue'
 import Picker from './picker/Picker.vue'
 import { Timeline, TimelineItem } from './timeline'
-export { Toast } from './toast'
-export { Indicator } from './indicator'
+import { Indicator } from './indicator'
 const components = [
   Button,
   Input,
@@ -64,6 +63,7 @@ const install = function (Vue, opts = {}) {
     size: opts.size || '',
     zIndex: opts.size || 2000
   }
+  Vue.prototype.$indicator = Indicator
 }
 
 export default {

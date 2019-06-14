@@ -9,7 +9,7 @@ import './assets/fonts/svg/index'
 import imgError from './assets/images/img_error.png'
 import directive from './directive'
 import { beforeEach, onError } from './assets/js/router-guard'
-import PenglaiUI, { Toast } from './components/penglai-ui'
+import PenglaiUI from './components/penglai-ui'
 import animated from 'animate.css'
 import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
@@ -67,7 +67,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
       rotue: vm.$route
     }
   }
-  Toast({
+  vm.$toast({
     type: 'error',
     message: error.message
   })

@@ -61,10 +61,10 @@ export default {
     },
     now () {
       if (!this.phone) {
-        return this.$toast('请输入手机号')
+        return this.$warning('请输入手机号')
       }
       if (!isPhone(this.phone)) {
-        return this.$toast('请输入正确的手机号')
+        return this.$warning('请输入正确的手机号')
       }
       this.loading = true
       setTimeout(() => {

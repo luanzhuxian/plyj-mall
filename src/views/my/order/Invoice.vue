@@ -230,7 +230,7 @@ export default {
           if (!this.$refs.form.validate()) return
         }
         if (this.form.invoiceType === 0) {
-          if (!this.form.invoiceTitle.trim()) return this.$toast('请输入发票抬头')
+          if (!this.form.invoiceTitle.trim()) return this.$warning('请输入发票抬头')
         }
         this.form.detail = this.content
         this.form.orderSn = this.orderId
@@ -239,7 +239,7 @@ export default {
         this.form.recvMobile = this.selectedAddress.mobile
         this.form.recvName = this.selectedAddress.realName
         if (!this.form.recvMobile || !this.form.recvMobile) {
-          this.$toast('请选择发票邮寄地址')
+          this.$warning('请选择发票邮寄地址')
           return
         }
         await this.$confirm('检查无误并确定提交？')

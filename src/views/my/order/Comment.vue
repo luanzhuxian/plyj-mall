@@ -129,7 +129,7 @@ export default {
       this.form.mediaInfoModels.splice(index, 1)
     },
     async confirm () {
-      if (!this.form.content.trim()) return this.$toast('请输入评价内容')
+      if (!this.form.content.trim()) return this.$warning('请输入评价内容')
       try {
         this.loading = true
         await submitComment(this.openId, this.form)
