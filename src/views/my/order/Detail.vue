@@ -717,7 +717,6 @@ export default {
   }
   .explain-box {
     margin-top: 14px;
-    margin-right: 24px;
     padding: 24px 30px;
     background-color: #f3f3f3;
     border-radius: $--radius2;
