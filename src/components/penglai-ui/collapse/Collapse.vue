@@ -29,6 +29,7 @@ export default {
         name = expanded
           ? this.value.concat(name)
           : this.value.filter(activeName => activeName !== name)
+        console.log(expanded, this.value, name)
       }
       this.$emit('change', name)
       this.$emit('input', name)

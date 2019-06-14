@@ -18,7 +18,7 @@
         :order-id="orderId"
         :express-name="logisticsInfoModel && logisticsInfoModel.courierCompany"
         :express-number="logisticsInfoModel && logisticsInfoModel.courierNo"
-        :express-status="logisticsInfoModel && logisticsInfoModel.logisticTrackModels[logisticsInfoModel.logisticTrackModels.length-1].content"
+        :express-status="logisticsInfoModel && logisticsInfoModel.logisticTrackModels.length ? logisticsInfoModel.logisticTrackModels[logisticsInfoModel.logisticTrackModels.length-1].content : ''"
       />
     </div>
 
@@ -691,6 +691,7 @@ export default {
       font-size: 24px;
       font-family: Helvetica;
       line-height: 28px;
+      padding-bottom: 20px;
     }
   }
   .order-info {
