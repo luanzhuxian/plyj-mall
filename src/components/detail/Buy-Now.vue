@@ -105,20 +105,19 @@ export default {
       this.$emit('click', this)
     },
     // 选中规格
-    specChanged (model) {
+    async specChanged (model) {
       this.$emit('update:currentModel', model)
-      this.$nextTick(() => {
+      try {
+        await this.$nextTick()
         if (this.clickAddToCart) {
-          try {
-            this.addToCart()
-          } catch (e) {
-            throw e
-          }
+          await this.addToCart()
         }
         if (this.clickBuyNow) {
           this.submit()
         }
-      })
+      } catch (e) {
+        throw e
+      }
     },
     // 跳转至提交订单页面
     async submit () {
@@ -151,24 +150,26 @@ export default {
       this.clickBuyNow = false
       this.showSpecifica = true
     },
-    async addToCart () {
+    addToCart () {
       this.loading = true
       const { productSeq, count, optionCode } = this.currentModel
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
-      try {
-        await addToCart({
-          productId: productSeq,
-          productCount: count,
-          skuCode: optionCode,
-          agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
-        })
-        this.$success('加入成功')
-      } catch (e) {
-        throw e
-      } finally {
-        this.loading = false
-      }
+      return new Promise(async (resolve, reject) => {
+        try {
+          await addToCart({
+            productId: productSeq,
+            productCount: count,
+            skuCode: optionCode,
+            agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
+          })
+          this.$success('加入成功')
+        } catch (e) {
+          reject(e)
+        } finally {
+          this.loading = false
+        }
+      })
     },
     reset () {
       this.showSpecifica = false
