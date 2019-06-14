@@ -109,7 +109,11 @@ export default {
       this.$emit('update:currentModel', model)
       this.$nextTick(() => {
         if (this.clickAddToCart) {
-          this.addToCart()
+          try {
+            this.addToCart()
+          } catch (e) {
+            throw e
+          }
         }
         if (this.clickBuyNow) {
           this.submit()
