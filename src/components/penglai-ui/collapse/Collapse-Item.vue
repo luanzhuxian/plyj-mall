@@ -42,10 +42,8 @@
       />
     </div>
     <div
-      v-show="show"
-      ref="wrapper"
       class="pl-collapse-item__wrapper"
-      @transitionend="onTransitionEnd"
+      :style="{ '--contentHeight': `${contentHeight}px`}"
     >
       <div
         ref="content"
@@ -60,9 +58,6 @@
 <script>
 import { ChildrenMixin } from '../../../mixins/relation'
 import { isDef } from '../../../assets/js/util'
-function raf (fn) {
-  return window.requestAnimationFrame(fn)
-}
 export default {
   name: 'CollapseItem',
   mixins: [ChildrenMixin('Collapse')],
@@ -109,8 +104,7 @@ export default {
   },
   data () {
     return {
-      show: null,
-      inited: null
+      contentHeight: 0
     }
   },
   computed: {
@@ -118,61 +112,37 @@ export default {
       return isDef(this.name) ? this.name : this.index
     },
     expanded () {
-      if (!this.parent) {
+      if (!this.$parent) {
         return null
       }
-      const { value } = this.parent
-      return this.parent.accordion
+      const { value } = this.$parent
+      return this.$parent.accordion
         ? value === this.currentName
         : value.some(name => name === this.currentName)
+    },
+    offsetHeight () {
+      return this.$refs.content ? this.$refs.content.offsetHeight : 0
     }
   },
   watch: {
-    expanded (expanded, prev) {
-      if (prev === null) {
-        return
-      }
-      if (expanded) {
-        this.show = true
-        this.inited = true
-      }
-      raf(() => {
-        const { content, wrapper } = this.$refs
-        if (!content || !wrapper) {
-          return
-        }
-        const { clientHeight } = content
-        if (clientHeight) {
-          const contentHeight = `${clientHeight}px`
-          wrapper.style.height = expanded ? 0 : contentHeight
-          raf(() => {
-            wrapper.style.height = expanded ? contentHeight : 0
-          })
+    expanded (expanded) {
+      this.$nextTick(() => {
+        if (expanded) {
+          this.contentHeight = this.offsetHeight
         } else {
-          this.onTransitionEnd()
+          this.contentHeight = 0
         }
       })
     }
-  },
-  created () {
-    this.show = this.expanded
-    this.inited = this.expanded
   },
   methods: {
     onClick () {
       if (this.disabled) {
         return
       }
-      const { parent } = this
-      const name = parent.accordion && this.currentName === parent.value ? '' : this.currentName
-      this.parent.switch(name, !this.expanded)
-    },
-    onTransitionEnd () {
-      if (!this.expanded) {
-        this.show = false
-      } else {
-        this.$refs.wrapper.style.height = null
-      }
+      const { $parent } = this
+      const name = $parent.accordion && this.currentName === $parent.value ? '' : this.currentName
+      this.$parent.switch(name, !this.expanded)
     }
   }
 }
@@ -205,9 +175,10 @@ export default {
     transition: .3s;
   }
   &__wrapper {
+    transform: translate3d(0, 0, 0);
+    height: var(--contentHeight);
     overflow: hidden;
     transition: height .3s ease-in-out;
-    will-change: height;
   }
   &__content {
     padding: 16px 0 0;

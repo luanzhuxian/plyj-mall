@@ -704,7 +704,6 @@ export default {
     display: flex;
     align-items: center;
     font-size:40px;
-    font-family: PingFangSC-Semibold;
     font-weight: 600;
     color: #000000;
     line-height: 56px;
