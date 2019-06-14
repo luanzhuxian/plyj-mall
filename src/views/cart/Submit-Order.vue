@@ -135,7 +135,7 @@
     <div
       v-if="physicalProducts.length > 0"
       :class="$style.invioce"
-      @click="showPopup = true"
+      @click="selectInvoice"
     >
       <div>
         <pl-svg
@@ -252,6 +252,13 @@ export default {
     this.getProductDetail()
   },
   methods: {
+    selectInvoice () {
+      if (!this.selectedAddress.realName) {
+        this.$warning('请先选择收货地址')
+        return
+      }
+      this.showPopup = true
+    },
     async getProductDetail () {
       const proList = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
       if (!proList) {
@@ -347,10 +354,6 @@ export default {
     },
     // 需要发票
     need () {
-      if (!this.selectedAddress.realName) {
-        this.$warning('请先选择收货地址')
-        return
-      }
       const applyInvoice = {
         physicalProducts: this.physicalProducts
       }
