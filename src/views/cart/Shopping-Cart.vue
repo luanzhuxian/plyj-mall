@@ -152,13 +152,22 @@ export default {
       try {
         const { result } = await getCartList()
         this.resetState()
+        const disabledList = []
         for (let item of result) {
           // 如果商品已下架或当前规格商品数量不足，禁用
           const currentSku = item.skuModels.find(sku => sku.optionCode === item.cartSkuCode)
           item.disabled = currentSku.stock < item.cartProductCount || item.productStatus === 'UNSHELVE'
+          if (item.disabled) {
+            result.splice(result.indexOf(item), 1)
+            disabledList.push(item)
+          }
+        }
+        for (let item of disabledList) {
+          result.push(item)
         }
         this.products = result
         this.total = result.length
+        // 将禁用的挪到最后
         this.loading = false
       } catch (e) {
         throw e
