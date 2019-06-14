@@ -195,17 +195,6 @@
                   <span>未开票</span>
                 </div>
               </template>
-              <template slot="right-icon">
-                <pl-button
-                  v-if="orderStatus !== 'WAIT_PAY' && orderStatus !== 'CLOSED'"
-                  round
-                  plain
-                  @click="applyInvoice"
-                >
-                  立即申请
-                </pl-button>
-                <span v-else />
-              </template>
             </collapse-item>
           </template>
         </collapse>
@@ -243,6 +232,14 @@
         @click="$router.push({ name: 'Freight', params: { orderId } })"
       >
         查看物流
+      </pl-button>
+      <pl-button
+        v-if="canIApplyInvoice"
+        round
+        plain
+        @click="applyInvoice"
+      >
+        申请发票
       </pl-button>
       <pl-button
         v-if="orderStatus === 'WAIT_RECEIVE'"
@@ -310,7 +307,7 @@
     <pl-picker
       :show.sync="isPickerShow"
       :slots="pickerColumns"
-      @confirm="onPickerConfirm"
+      @confirm="(selected) => { cancelOrder(selected[0]) }"
     />
   </div>
 
@@ -441,17 +438,20 @@ export default {
     ...mapGetters(['orderStatusMap', 'address', 'supportPhone']),
     // 是否可以申请售后
     hasExpressInfo () {
-      return this.orderType === 'PHYSICAL' && (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
+      return this.orderType === 'PHYSICAL' &&
+        (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
     },
     // 是否可以申请售后
     canApplyRefund () {
-      return this.orderType === 'PHYSICAL' && (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
+      return this.orderType === 'PHYSICAL' &&
+        (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
     },
-    // 是否可以申请发票
+    // 是否可以申请发票，invoiceStatus： 8:'可申请' 1:'已申请' 3:'已开票' 7:'不支持'
     canIApplyInvoice () {
-      return this.orderStatus !== 'WAIT_PAY' &&
+      return this.orderType === 'PHYSICAL' &&
+        this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
-        this.productInfoModel.productDetailModels.filter(item => item.invoiceStatus !== 3).length > 0
+        this.productInfoModel.productDetailModels.some(item => item.invoiceStatus === 8)
     }
   },
   async activated () {
@@ -490,9 +490,6 @@ export default {
         if (flag === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
         if (flag === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
       }, 1000)
-    },
-    onPickerConfirm (selected) {
-      this.cancelOrder(selected[0])
     },
     getDetail () {
       const counter = array => key => array.reduce((total, current) => total + current[key], 0)
@@ -761,7 +758,7 @@ export default {
     padding: 18px 24px;
 
     > button {
-      margin-left: 20px;
+      margin-left: 15px;
     }
   }
 

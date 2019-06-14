@@ -31,14 +31,14 @@
         name="title"
       />
       <pl-svg
-        v-if="!$slots['right-icon']"
-        class="pl-collapse-item__right-icon"
-        :name="rightIcon.name"
+        v-if="!$slots['icon-right'] && !disabled"
+        class="pl-collapse-item__icon--right"
+        :name="iconRight.name"
         color="#CCC"
       />
       <slot
         v-else
-        name="right-icon"
+        name="icon-right"
       />
     </div>
     <div
@@ -67,7 +67,7 @@ export default {
   name: 'CollapseItem',
   mixins: [ChildrenMixin('Collapse')],
   props: {
-    rightIcon: {
+    iconRight: {
       type: Object,
       default () {
         return {
@@ -191,7 +191,7 @@ export default {
     line-height: 34px;
     background-color: #FFF;
     &--expanded {
-      .pl-collapse-item__right-icon {
+      .pl-collapse-item__icon--right {
         transform: rotate(-90deg);
       }
     }
@@ -199,7 +199,7 @@ export default {
       flex: 1
     }
   }
-  &__right-icon {
+  &__icon--right {
     width: 22px;
     transform: rotate(90deg);
     transition: .3s;

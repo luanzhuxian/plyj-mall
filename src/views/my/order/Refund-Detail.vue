@@ -132,7 +132,7 @@
             name="1"
             title="退款进度"
           >
-            <pl-timelint>
+            <pl-timeline>
               <pl-timeline-item
                 v-for="(item, i) of refundProgress"
                 :key="i"
@@ -143,7 +143,7 @@
                   v-text="item.operatingLog"
                 />
               </pl-timeline-item>
-            </pl-timelint>
+            </pl-timeline>
           </collapse-item>
         </collapse>
       </div>

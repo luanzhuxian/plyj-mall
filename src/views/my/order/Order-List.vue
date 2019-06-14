@@ -126,6 +126,12 @@
         </template>
       </load-more>
     </div>
+    <pl-picker
+      :show.sync="isPickerShow"
+      :slots="pickerColumns"
+      @confirm="(selected) => { this.resolve(selected[0]) }"
+      @close="reject(false)"
+    />
   </div>
 </template>
 
@@ -209,10 +215,18 @@ export default {
       },
       getOrderList,
       orderPhysicalorderSummary,
+      $refresh: null,
       loading: false,
       payloading: false,
-      $refresh: null,
       currentPayId: '', // 当前正在支付的订单id
+      isPickerShow: false,
+      pickerColumns: [
+        {
+          flex: 1,
+          values: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
+          textAlign: 'center'
+        }
+      ],
       count,
       orderTypeMap,
       orderFinishMap,
@@ -234,6 +248,13 @@ export default {
       this.$nextTick(() => {
         this.$router.replace({ name: 'Orders', params: { status: item.id || null } })
         this.$refresh()
+      })
+    },
+    showPicker () {
+      return new Promise((resolve, reject) => {
+        this.isPickerShow = true
+        this.resolve = resolve
+        this.reject = reject
       })
     },
     onRefresh (list, total) {
@@ -300,8 +321,8 @@ export default {
     async cancelOrder (item, index) {
       const orderId = item.id
       const { orderStatus } = this.form
-      const reason = '用户取消订单（未选原因）'
       try {
+        const reason = await this.showPicker()
         await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
         await cancelOrder(orderId, reason)
         if (orderStatus === 'ALL_ORDER') {
