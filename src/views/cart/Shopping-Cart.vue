@@ -171,8 +171,7 @@ export default {
     },
     // 管理
     manage () {
-      this.$refs.checkboxGroup.changeAll(false)
-      this.checkedAll = false
+      this.checkAll(false)
       this.isManage = !this.isManage
       for (let item of this.products) {
         if (this.isManage) {

@@ -118,13 +118,20 @@ export default {
       },
       immediate: true
     },
+    /*
+    * 数据
+    * 可添加属性disabled来规定禁用的项
+    * 可添加属性checked来规定默认选中的项
+    * */
     data: {
       handler (val) {
         if (val) {
-          console.log(val)
+          if (val.checked) {
+            this.selected()
+          }
         }
       },
-      immediate: true
+      immediate: true // 立即改变，此处不应该深度监听
     }
   },
   methods: {
@@ -140,17 +147,23 @@ export default {
     // 选中
     selected () {
       // if (!this.localChecked) {
-      //   this.$parent.change(true, this.data)
+      this.$parent.change(true, this.data)
       this.$emit('change', true)
       this.localChecked = true
+      if (this.data.hasOwnProperty('checked')) {
+        this.data.checked = true
+      }
       // }
     },
     // 取消选中
     cancel () {
       // if (this.localChecked) {
-      //   this.$parent.change(false, this.data)
+      this.$parent.change(false, this.data)
       this.$emit('change', false)
       this.localChecked = false
+      if (this.data.hasOwnProperty('checked')) {
+        this.data.checked = false
+      }
       // }
     }
   }
