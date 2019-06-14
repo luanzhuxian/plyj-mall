@@ -86,7 +86,7 @@ export default {
     currentModel: {
       type: Object,
       default: function () {
-        return null
+        return {}
       }
     },
     // 是否为供应商商品
@@ -128,7 +128,7 @@ export default {
         /* isSupplierProduct, */
         currentModel
       } = this
-      if (!currentModel || !currentModel.count) {
+      if (!currentModel.count) {
         this.showSpecifica = true
         return
       }
