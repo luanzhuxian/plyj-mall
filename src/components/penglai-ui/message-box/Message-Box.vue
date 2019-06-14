@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div
-      :class="$style.messageBox"
+      class="message-box"
       v-if="showMask"
       @click.self="handleCancel"
     >
@@ -10,35 +10,43 @@
         leave-active-class="animated bounceOutDown"
       >
         <div
-          :class="$style.messageBoxContent"
+          class="message-box-content"
           v-show="showBox"
         >
-          <div :class="$style.message">
-            <pl-svg
+          <div class="message">
+            <!--<pl-svg
               :class="$style.icon"
               v-if="icon"
               :name="icon"
-            />
+            />-->
             <p
-              :class="$style.mainMessage"
+              class="main-message"
               v-text="message"
             />
             <p
-              :class="$style.viceMessage"
+              class="vice-message"
               v-if="viceMessage"
               v-text="viceMessage"
             />
+            <input
+              v-if="type === 'propmt'"
+              ref="input"
+              class="propmt-input"
+              v-model="propmtValue"
+              :placeholder="placeholder"
+              type="text"
+            >
           </div>
-          <div :class="$style.buttons">
+          <div class="buttons">
             <button
               @click="handleCancel"
-              v-if="type === 'confirm'"
-              :class="$style.cancel"
+              v-if="type === 'confirm' || type === 'propmt'"
+              class="message-box-cancel"
               v-text="cancelText"
             />
             <button
               @click="handleConfirm"
-              :class="$style.confirm"
+              class="message-box-confirm"
               v-text="confirmText"
             />
           </div>
@@ -56,8 +64,13 @@ export default {
       show: false,
       showMask: false,
       showBox: false,
-      resolve: null,
-      reject: null
+      propmtValue: '',
+      placeholder: '',
+      /*
+      * type等于propmt时校验的校验规则，如果为空，则不校验
+      * arrayObject [{ validator: Function, message: String }]
+      * */
+      rules: []
     }
   },
   props: {
@@ -92,6 +105,11 @@ export default {
         this.showMask = true
         setTimeout(() => {
           this.showBox = true
+          if (this.type === 'propmt') {
+            this.$nextTick(() => {
+              this.$refs.input.focus()
+            })
+          }
         }, 200)
       } else {
         this.showBox = false
@@ -107,14 +125,33 @@ export default {
       this.$emit('cancel')
     },
     handleConfirm () {
+      if (this.type === 'propmt' && !this.validate()) return
+      this.$emit('confirm', this.propmtValue)
       this.show = false
-      this.$emit('confirm')
+      this.propmtValue = ''
+    },
+    validate () {
+      let val = this.propmtValue
+      for (let rule of this.rules) {
+        if (rule.required) {
+          if (!val.trim()) {
+            this.$warning(rule.message)
+            return false
+          }
+        } else if (rule.validator) {
+          if (!rule.validator(val)) {
+            this.$warning(rule.message)
+            return false
+          }
+        }
+      }
+      return true
     }
   }
 }
 </script>
 
-<style module lang="scss">
+<style lang="scss">
   .message-box {
     position: fixed;
     top: 0;
@@ -124,11 +161,11 @@ export default {
     background-color: rgba(0, 0, 0, .65);
     z-index: 9999;
   }
-  .icon {
+  /*.icon {
     width: 180px;
     height: 180px;
     margin-bottom: 24px;
-  }
+  }*/
   .message-box-content {
     position: relative;
     top: calc(30vh);
@@ -140,25 +177,32 @@ export default {
     overflow: hidden;
     .message {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 140px;
       padding: 20px 0;
       color: #2E2E2E;
-      .vice-message {
-        margin-top: 24px;
-        font-size: 28px;
-        color: #b4b4b4;
-      }
-      .main-message {
-        width: 100%;
-        padding: 0 54px;
-        white-space: pre-wrap;
-        word-break: break-all;
-        font-size: 34px;
-        line-height: 48px;
-        box-sizing: border-box;
-      }
+    }
+    .vice-message {
+      margin-top: 24px;
+      font-size: 28px;
+      color: #b4b4b4;
+    }
+    .main-message {
+      width: 100%;
+      padding: 0 54px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-size: 34px;
+      line-height: 48px;
+      box-sizing: border-box;
+    }
+    .propmt-input {
+      width: 80%;
+      height: 80px;
+      font-size: 28px;
+      text-align: center;
     }
   }
   .buttons {
@@ -171,10 +215,10 @@ export default {
       font-size: 34px;
       font-weight: 500;
       background-color: #fff;
-      &.confirm {
+      &.message-box-confirm {
         color: #FE7700;
       }
-      &.cancel {
+      &.message-box-cancel {
         position: relative;
         color: #666;
         font-weight: normal;

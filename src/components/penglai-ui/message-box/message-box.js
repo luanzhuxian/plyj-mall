@@ -52,10 +52,38 @@ let alert = (config = {}) => {
     })
   })
 }
+let propmt = (config = {}) => {
+  return new Promise((resolve, reject) => {
+    document.body.appendChild(Instance.$el)
+    Instance.$nextTick(() => {
+      let { cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, placeholder = '请输入', rules = [], value = '' } = config
+      Instance.message = message
+      Instance.viceMessage = viceMessage
+      Instance.placeholder = placeholder
+      Instance.propmtValue = value
+      Instance.rules = rules
+      if (typeof config === 'string') {
+        Instance.message = config
+      }
+      Instance.cancelText = cancelText
+      Instance.confirmText = confirmText
+      Instance.type = 'propmt'
+      Instance.icon = icon
+      Instance.show = true
+      Instance.$on('cancel', function () {
+        reject(new Error('cancel'))
+      })
+      Instance.$on('confirm', function (val) {
+        resolve(val)
+      })
+    })
+  })
+}
 
 let install = (Vue) => {
   Vue.prototype.$alert = alert
   Vue.prototype.$confirm = confirm
+  Vue.prototype.$propmt = propmt
 }
 
 export const MessageBox = {

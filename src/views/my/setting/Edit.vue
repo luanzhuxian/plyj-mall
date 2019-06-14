@@ -9,7 +9,7 @@
         <span
           :class="$style.name"
           v-text="userName"
-          @click="editUserName()"
+          @click="editUserName"
         />
         <span
           :class="$style.level"
@@ -33,35 +33,6 @@
         :right-text="userName"
       />
     </div>
-    <div
-      :class="$style.inputBg"
-      v-if="inputShow"
-      @click="inputShow = false"
-    >
-      <div @click.stop>
-        <div :class="$style.inputTop">
-          <input
-            type="text"
-            v-model="newUserName"
-            placeholder="请输入1-12位字符用户名"
-          >
-        </div>
-        <div :class="$style.inputBottom">
-          <div
-            :class="$style.cancel"
-            @click="cancel()"
-          >
-            取消
-          </div>
-          <div
-            :class="$style.confirm"
-            @click="confirm()"
-          >
-            保存
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -75,9 +46,7 @@ export default {
   name: 'Setting',
   data () {
     return {
-      img: {},
-      inputShow: false,
-      newUserName: ''
+      img: {}
     }
   },
   components: { imageCrop },
@@ -103,39 +72,33 @@ export default {
     },
     async uploadImg () {
       const $Blob = this.getBlobBydataURI(this.img.base64, 'image/jpeg')
-      const res = await upload({ file: $Blob })
-      if (res && res.url) {
-        const settingRes = await userInfoSettings({ headImgUrl: res.url })
-        if ((settingRes.devMessage === 'SUCCESS') && (settingRes.status === 200)) {
-          this.setAvatar(res.url)
-          console.log(settingRes)
+      try {
+        const { url } = await upload({ file: $Blob })
+        await userInfoSettings({ headImgUrl: url })
+        this.setAvatar(url)
+      } catch (e) {
+        throw e
+      }
+    },
+    async editUserName () {
+      const testUserName = (val) => {
+        return /^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_]){1,12}$/.test(val)
+      }
+      try {
+        const val = await this.$propmt({
+          placeholder: '请输入1-12位字符用户名',
+          confirmText: '保存',
+          rules: [
+            { required: true, message: '请输入用户名' },
+            { validator: testUserName, message: '用户名格式为1~12位中文或英文字符' }
+          ]
+        })
+        await userInfoSettings({ nickName: val })
+        this.setUserName(val)
+      } catch (e) {
+        if (e.message !== 'cancel') {
+          throw e
         }
-      }
-    },
-    editUserName () {
-      this.inputShow = true
-    },
-    cancel () {
-      this.newUserName = ''
-      this.inputShow = false
-    },
-    async confirm () {
-      // const reg = /^[\u4e00-\u9fa5]+$/
-      var regex = new RegExp('^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_]){1,20}$')
-      if (!this.newUserName) {
-        return this.$toast('请输入用户名')
-      }
-      if (!regex.test(this.newUserName)) {
-        return this.$toast('不能输入字符及空格')
-      }
-      if (this.newUserName.length > 12) {
-        return this.$toast('请输入1-12位汉字')
-      }
-
-      const res = await userInfoSettings({ nickName: this.newUserName })
-      if ((res.devMessage === 'SUCCESS') && (res.status === 200)) {
-        this.setUserName(this.newUserName)
-        this.inputShow = false
       }
     }
   }
