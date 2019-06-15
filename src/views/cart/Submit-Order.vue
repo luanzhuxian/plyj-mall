@@ -329,18 +329,24 @@ export default {
         this.submiting = false
       }
     },
-    async pay (CREDENTIAL, orderSn) {
+    async pay (CREDENTIAL, orderId) {
       return new Promise(async (resolve, reject) => {
         try {
           await wechatPay(CREDENTIAL)
           this.submiting = false
-          this.$router.replace({ name: 'PaySuccess', params: { orderId: orderSn } })
+          this.$router.replace({ name: 'PaySuccess', params: { orderId } })
           localStorage.removeItem('INVOICE_MODEL')
           localStorage.removeItem('CONFIRM_LIST')
           resolve()
         } catch (e) {
+          // 支付失败
           this.submiting = false
-          this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+          if (this.virtualProducts.length > 0 && this.physicalProducts.length > 0) {
+            this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+          } else {
+            // 只有一种商品时，直接进入详情页
+            this.$router.replace({ name: 'OrderDetail', params: { orderId } })
+          }
           localStorage.removeItem('INVOICE_MODEL')
           localStorage.removeItem('CONFIRM_LIST')
           reject(e)
