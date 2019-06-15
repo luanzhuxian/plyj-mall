@@ -98,53 +98,51 @@ export default {
   data () {
     return {
       loading: false,
-      showSpecifica: false,
-      currentSkuModel: {},
-      skuList: [],
-      id: '',
-      productId: '',
-      count: 0,
-      currentSkuCode: ''
+      showSpecifica: false
     }
   },
   props: {
     data: {
       type: Object,
       default: function () {
-        return null
+        return {}
+      }
+    },
+    cartList: {
+      type: Array,
+      default: function () {
+        return []
       }
     }
   },
-  watch: {
-    data: {
-      handler (val) {
-        if (val) {
-          this.init()
-        }
-      },
-      deep: true,
-      immediate: true
-    }
-  },
   computed: {
+    ...mapGetters(['agentUser', 'userId']),
+    count () {
+      return this.data.cartProductCount || 0
+    },
+    skuList () {
+      return this.data.skuModels || []
+    },
+    currentSkuCode () {
+      return this.data.cartSkuCode || ''
+    },
+    currentSkuModel () {
+      return this.skuList.find(item => item.optionCode === this.data.cartSkuCode) || {}
+    },
     // 已选数量是否超出库存
     overflowStock () {
       return this.data.cartProductCount > this.currentSkuModel.stock
     },
-    ...mapGetters(['agentUser', 'userId'])
+    id () {
+      return this.data.id || ''
+    },
+    productId () {
+      return this.data.cartProductId || ''
+    }
   },
   methods: {
-    init () {
-      const data = this.data
-      this.skuList = data ? data.skuModels : []
-      this.id = data ? data.id : ''
-      this.productId = data ? data.cartProductId : ''
-      this.count = data ? data.cartProductCount : 0
-      this.currentSkuCode = data ? data.cartSkuCode : 0
-      this.currentSkuModel = this.skuList.find(item => item.optionCode === data.cartSkuCode) || {}
-    },
     // 改变规格
-    async specChanged (option, old) {
+    async specChanged (option, revert) {
       try {
         // 请求修改
         const isUpdateSku = await updateCartProductSku({
@@ -154,19 +152,20 @@ export default {
         })
         // 刷新显示
         if (isUpdateSku.result) {
-          this.currentSkuModel = option
-          // 直接修改父组件的数据，也在父组件中建投change事件，通过接口来刷新数据。但是会导致接口调用频繁
-          this.data.cartSkuCode = this.currentSkuCode = option.optionCode
-          this.data.cartProductCount = this.count = option.count
+          // 直接修改父组件的数据，也在父组件中监听change事件，通过接口来刷新数据。但是会导致接口调用频繁
+          // 直接修改可以触发计算属性，使得数据真实一致
+          this.data.cartSkuCode = option.optionCode
+          this.data.cartProductCount = option.count
+          this.isDouble(option.optionCode)
           this.$emit('change')
           this.$emit('skuChange')
         } else {
-          // 修改失败，回滚
-          this.currentSkuModel = old
-          this.currentSkuCode = old.optionCode
-          this.count = old.count
+          // 修改失败，回滚选框中的值
+          revert()
         }
       } catch (e) {
+        // 修改失败，回滚选框中的值
+        revert()
         throw e
       }
     },
@@ -180,7 +179,6 @@ export default {
           next()
           // 直接修改父组件的数据，也可以在父组件中监听change事件，通过接口来刷新数据，但是会导致接口调用频繁
           this.data.cartProductCount = count
-          this.count = count
           this.$emit('change')
           this.$emit('countChange')
         }
@@ -192,6 +190,16 @@ export default {
     async goDetail () {
       const productSeq = this.data.cartProductId
       this.$router.push({ name: 'Lesson', params: { productSeq: productSeq, brokerId: this.agentUser ? this.userId : null } })
+    },
+    // 修改规格成功后，判断当前规格是否已经存在于购物车中，如果存在，删之
+    isDouble (optionCode) {
+      for (let cartPro of this.cartList) {
+        console.log(cartPro.cartSkuCode, optionCode)
+        if (cartPro.cartSkuCode === optionCode && this.id !== cartPro.id) {
+          this.cartList.splice(this.cartList.indexOf(this.data), 1)
+          break
+        }
+      }
     }
   }
 }

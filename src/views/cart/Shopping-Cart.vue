@@ -33,7 +33,8 @@
               <CartItem
                 :data="data"
                 :key="data.id"
-                @skuChange="getList"
+                :cart-list="products"
+                @skuChange="computeMoney"
                 @countChange="computeMoney"
               />
             </template>
@@ -103,15 +104,15 @@
       text="那么多好商品，你都不加入购物车吗？"
     />
 
-    <CartItemSkeleton v-if="loading" />
-    <CartItemSkeleton v-if="loading" />
+    <!--<CartItemSkeleton v-if="loading" />-->
+    <!--<CartItemSkeleton v-if="loading" />-->
   </div>
 </template>
 
 <script>
 import CartItem from '../../components/item/Cart-Item.vue'
 import NoContent from '../../components/No-Content.vue'
-import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
+// import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
 import {
   getCartList,
   deleteCartProducts
@@ -120,7 +121,7 @@ export default {
   name: 'ShoppingCart',
   components: {
     CartItem,
-    CartItemSkeleton,
+    // CartItemSkeleton,
     NoContent
   },
   data () {
@@ -134,8 +135,7 @@ export default {
       summation: 0 // 合计
     }
   },
-  activated () {
-    this.loading = true
+  created () {
     try {
       this.getList()
     } catch (e) {
@@ -149,6 +149,7 @@ export default {
       this.summation = 0
     },
     async getList () {
+      this.loading = true
       try {
         const { result } = await getCartList()
         this.resetState()
@@ -168,10 +169,10 @@ export default {
         }
         this.products = result
         this.total = result.length
-        this.loading = false
       } catch (e) {
         throw e
       } finally {
+        this.loading = false
       }
     },
     selectedChange (selected) {

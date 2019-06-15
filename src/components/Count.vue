@@ -53,12 +53,12 @@ export default {
     }
   },
   watch: {
-    count (val) {
-      this.localCount = val
+    count: {
+      handler (val) {
+        this.localCount = val
+      },
+      immediate: true
     }
-  },
-  mounted () {
-    this.localCount = this.count
   },
   methods: {
     add () {

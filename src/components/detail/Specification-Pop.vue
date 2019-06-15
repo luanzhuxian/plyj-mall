@@ -227,7 +227,8 @@ export default {
       if (this.checkCount(this.count)) {
         this.count = Number.parseInt(this.count)
         this.$emit('update:visible', false)
-        this.$emit('confirm', Object.assign({ count: this.count }, this.selected), this.oldSelect, this.revert)
+        // confirm事件提供一个回滚方法，以便在必要的时候回滚显示状态
+        this.$emit('confirm', Object.assign({ count: this.count }, this.selected), this.revert)
       }
     },
     // 回滚（如果规格选择失败，或者没选，回滚到最初规格）
