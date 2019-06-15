@@ -24,7 +24,6 @@ export default {
     return {
       logined: false,
       exclude: [
-        'ApplyInvoice',
         'ShoppingCart'
       ],
       showNavbar: [

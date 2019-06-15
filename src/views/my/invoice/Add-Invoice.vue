@@ -151,7 +151,7 @@ export default {
       this.$router.replace({
         name,
         params,
-        query
+        query: Object.assign({ id: this.id }, query)
       })
     }
   },

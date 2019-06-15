@@ -240,7 +240,7 @@ export default {
       return this.$route.query.receiveName || ''
     }
   },
-  created () {
+  activated () {
     const APPLY_INVOICE = JSON.parse(localStorage.getItem('APPLY_INVOICE'))
     if (!APPLY_INVOICE) {
       this.$router.replace({ name: 'Home' })
@@ -264,7 +264,7 @@ export default {
       try {
         const { result } = await getInvoiceList(this.userId)
         this.invoiceList = result
-        this.currentInvoice = result[0].id
+        this.currentInvoice = this.currentInvoice || this.$route.query.id || result[0].id
       } catch (e) {
         throw e
       }

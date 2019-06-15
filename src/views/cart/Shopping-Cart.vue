@@ -159,12 +159,12 @@ export default {
           const currentSku = item.skuModels.find(sku => sku.optionCode === item.cartSkuCode)
           item.disabled = currentSku.stock < item.cartProductCount || item.productStatus === 'UNSHELVE'
           if (item.disabled) {
-            result.splice(result.indexOf(item), 1)
             disabledList.push(item)
           }
         }
         // 将禁用的挪到最后
         for (let item of disabledList) {
+          result.splice(result.indexOf(item), 1)
           result.push(item)
         }
         this.products = result
