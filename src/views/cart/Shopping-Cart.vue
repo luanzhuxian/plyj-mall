@@ -34,7 +34,7 @@
                 :data="data"
                 :key="data.id"
                 :cart-list="products"
-                @skuChange="computeMoney"
+                @skuChange="skuChange"
                 @countChange="computeMoney"
               />
             </template>
@@ -238,6 +238,21 @@ export default {
         total += currentSku.price * 100 * count
       }
       this.summation = total / 100
+    },
+    // 规格变化
+    skuChange (option) {
+      this.isDouble(option.optionCode)
+      this.computeMoney()
+    },
+    // 判断当前规格是否已经存在于购物车中，如果存在，删之
+    isDouble (optionCode) {
+      for (let cartPro of this.products) {
+        if (cartPro.cartSkuCode === optionCode && this.id !== cartPro.id) {
+          this.products.splice(this.products.indexOf(cartPro), 1)
+          this.checkedList.splice(this.checkedList.indexOf(cartPro), 1)
+          break
+        }
+      }
     }
   }
 }

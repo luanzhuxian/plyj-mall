@@ -107,12 +107,6 @@ export default {
       default: function () {
         return {}
       }
-    },
-    cartList: {
-      type: Array,
-      default: function () {
-        return []
-      }
     }
   },
   computed: {
@@ -156,9 +150,8 @@ export default {
           // 直接修改可以触发计算属性，使得数据真实一致
           this.data.cartSkuCode = option.optionCode
           this.data.cartProductCount = option.count
-          this.isDouble(option.optionCode)
           this.$emit('change')
-          this.$emit('skuChange')
+          this.$emit('skuChange', option)
         } else {
           // 修改失败，回滚选框中的值
           revert()
@@ -190,16 +183,6 @@ export default {
     async goDetail () {
       const productSeq = this.data.cartProductId
       this.$router.push({ name: 'Lesson', params: { productSeq: productSeq, brokerId: this.agentUser ? this.userId : null } })
-    },
-    // 修改规格成功后，判断当前规格是否已经存在于购物车中，如果存在，删之
-    isDouble (optionCode) {
-      for (let cartPro of this.cartList) {
-        console.log(cartPro.cartSkuCode, optionCode)
-        if (cartPro.cartSkuCode === optionCode && this.id !== cartPro.id) {
-          this.cartList.splice(this.cartList.indexOf(this.data), 1)
-          break
-        }
-      }
     }
   }
 }
