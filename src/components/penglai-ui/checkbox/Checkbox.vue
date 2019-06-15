@@ -146,25 +146,25 @@ export default {
     },
     // 选中
     selected () {
-      // if (!this.localChecked) {
-      this.$parent.change(true, this.data)
-      this.$emit('change', true)
-      this.localChecked = true
-      if (this.data.hasOwnProperty('checked')) {
-        this.data.checked = true
+      if (!this.localChecked) {
+        this.$parent.change(true, this.data)
+        this.$emit('change', true)
+        this.localChecked = true
+        if (this.data.hasOwnProperty('checked')) {
+          this.data.checked = true
+        }
       }
-      // }
     },
     // 取消选中
     cancel () {
-      // if (this.localChecked) {
-      this.$parent.change(false, this.data)
-      this.$emit('change', false)
-      this.localChecked = false
-      if (this.data.hasOwnProperty('checked')) {
-        this.data.checked = false
+      if (this.localChecked) {
+        this.$parent.change(false, this.data)
+        this.$emit('change', false)
+        this.localChecked = false
+        if (this.data.hasOwnProperty('checked')) {
+          this.data.checked = false
+        }
       }
-      // }
     }
   }
 }

@@ -151,7 +151,7 @@ export default {
           this.data.cartSkuCode = option.optionCode
           this.data.cartProductCount = option.count
           this.$emit('change')
-          this.$emit('skuChange', option)
+          this.$emit('skuChange', this.data)
         } else {
           // 修改失败，回滚选框中的值
           revert()
