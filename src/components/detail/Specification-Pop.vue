@@ -4,6 +4,7 @@
       :class="$style.specificationsPop"
       v-show="showSpec"
       @click.self.stop="close"
+      @transitionend="closed"
     >
       <transition name="slide">
         <div
@@ -40,15 +41,16 @@
             <div :class="$style.color">
               <!--<div>颜色</div>-->
               <div>规格</div>
-              <ul :class="$style.colorList">
-                <li
+              <div :class="$style.colorList">
+                <button
                   v-for="(item, i) of data"
                   :key="i"
                   :class="{ [$style.active]: item.optionCode === selected.optionCode }"
                   @click.stop="change(item)"
+                  :disabled="isDisabled(item)"
                   v-text="item.optionName"
                 />
-              </ul>
+              </div>
             </div>
             <!--<div :class="$style.size">-->
             <!--<div>尺寸</div>-->
@@ -60,7 +62,7 @@
               <div>购买数量</div>
               <div :class="$style.countCtr">
                 <button
-                  :disabled="count <= min"
+                  :disabled="count <= min || currentDisabled"
                   @click.stop="minus"
                 >
                   -
@@ -69,9 +71,10 @@
                   v-model.number="count"
                   type="number"
                   @input="countChange"
+                  :disabled="currentDisabled"
                 >
                 <button
-                  :disabled="count >= stock"
+                  :disabled="count >= stock || currentDisabled"
                   @click.stop="add"
                 >
                   +
@@ -84,6 +87,7 @@
             size="large"
             type="warning"
             @click.stop="confirm"
+            :disabled="currentDisabled"
           >
             确定
           </pl-button>
@@ -131,14 +135,14 @@ export default {
       stock: 1
     }
   },
+  created () {
+    this.setShow(this.visible)
+  },
   watch: {
     data: {
       handler (val) {
         if (val && val.length > 0) {
           this.init()
-          // this.selected = val[0]
-          // this.min = this.count = val[0].minBuyNum || 1
-          // this.stock = val[0].stock
         }
       },
       deep: true,
@@ -154,13 +158,23 @@ export default {
       this.init()
     }
   },
-  created () {
-    this.setShow(this.visible)
+  computed: {
+    currentDisabled () {
+      return this.selected.stock === 0 || this.selected.stock < this.selected.minBuyNum
+    }
   },
   methods: {
     close () {
       this.revert()
       this.$emit('update:visible', false)
+    },
+    closed () {
+      if (!this.visible) {
+        this.$emit('closed')
+      }
+    },
+    isDisabled (option) {
+      return option.stock === 0 || option.stock < option.minBuyNum
     },
     init () {
       this.count = this.defaultCount
@@ -327,7 +341,7 @@ export default {
     padding: 5px;
     overflow: auto;
     box-sizing: border-box;
-    li {
+    > button {
       position: relative;
       margin: 0 13px 13px 0;
       padding: 10px 20px;
@@ -335,6 +349,12 @@ export default {
       font-size: 24px;
       background-color: #f3f3f3;
       border-radius: $--radius2;
+      &:disabled {
+        color: #ccc !important;
+        &:after {
+          border-color: #ccc !important;
+        }
+      }
       &.active {
         background: none;
         color: $--primary-color;
@@ -355,6 +375,9 @@ export default {
         font-weight: bold;
         color: #999;
         background-color: #f3f3f3;
+        &:disabled {
+          color: #ccc !important;
+        }
       }
       input {
         width: 80px;
@@ -365,6 +388,9 @@ export default {
         font-size: 20px;
         background-color: #f3f3f3;
         border-radius: 0 !important;
+        &:disabled {
+          color: #ccc !important;
+        }
       }
     }
   }

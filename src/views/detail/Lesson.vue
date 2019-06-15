@@ -81,7 +81,7 @@
       ref="buyNow"
       :current-model.sync="currentModel"
       :price-models="detail.priceModels"
-      :is-supplier-product="isSupplierProduct"
+      :has-selected-from-out.sync="hasSelectedFromOut"
     />
     <specification-pop
       :default-code="currentModel.optionCode"
@@ -150,10 +150,10 @@ export default {
         size: 3,
         productSeq: ''
       },
-      isSupplierProduct: false,
       agentProduct: false,
       showSpecifica: false,
-      loading: false
+      loading: false,
+      hasSelectedFromOut: false
     }
   },
   props: {
@@ -192,9 +192,8 @@ export default {
           this.loading = false
           return this.$router.replace({ name: 'SoldOut' })
         }
-        let { sequenceNbr, supplierProduct, agentProduct, priceModels, productImage } = result
+        let { sequenceNbr, agentProduct, priceModels, productImage } = result
         this.commentForm.productSeq = sequenceNbr
-        this.isSupplierProduct = supplierProduct
         this.agentProduct = agentProduct
         result.salesVolume = 0
         // 按价格从低到高排序
@@ -211,8 +210,6 @@ export default {
         }
         // 统计销售数量
         this.detail = result
-        // 显示选中第一个规格
-        this.currentModel = priceModels[0]
         // 配置分享
         share({
           appId: this.appId,
@@ -230,6 +227,7 @@ export default {
     // 选中规格
     specChanged (option) {
       this.currentModel = option
+      this.hasSelectedFromOut = true
     },
     resetState () {
       this.currentModel = {}

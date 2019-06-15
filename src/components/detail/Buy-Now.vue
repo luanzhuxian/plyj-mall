@@ -12,34 +12,23 @@
         <pl-svg name="home" />
       </router-link>
     </div>
-    <!--<pl-button-->
-    <!--:type="type"-->
-    <!--size="large"-->
-    <!--@click="handleClick"-->
-    <!--&gt;-->
-    <!--{{ text }}-->
-    <!--</pl-button>-->
-    <!--<div-->
-    <!--:class="$style.buttons"-->
-    <!--&gt;-->
     <button
       :class="$style.addToCart"
-      @click="addToCartBtn"
+      @click="clickHandler(1)"
       :disabled="loading"
     >
       加入购物车
     </button>
     <button
       :class="$style.buyNowBtn"
-      @click="submit"
+      @click="clickHandler(2)"
       :disabled="loading"
     >
       立即购买
     </button>
-    <!--</div>-->
-
     <specification-pop
       :data="priceModels"
+      :default-code="defaultCode"
       :product-image="image"
       :visible.sync="showSpecifica"
       @confirm="specChanged"
@@ -51,7 +40,6 @@
 import { mapGetters } from 'vuex'
 import { addToCart } from '../../apis/shopping-cart'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
-
 export default {
   name: 'BuyNow',
   components: {
@@ -69,6 +57,10 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    // 是否在外部选择了规格
+    hasSelectedFromOut: {
+      type: Boolean
     },
     // 规格列表
     priceModels: {
@@ -88,16 +80,23 @@ export default {
       default: function () {
         return {}
       }
-    },
-    // 是否为供应商商品
-    isSupplierProduct: {
-      type: Boolean
     }
   },
   computed: {
-    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId'])
+    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId']),
+    defaultCode () {
+      return this.currentModel.optionCode || ''
+    }
+  },
+  watch: {
+    currentModel: {
+      handler () {
+      },
+      deep: true
+    }
   },
   activated () {
+    console.log(123)
     this.reset()
   },
   methods: {
@@ -107,6 +106,7 @@ export default {
     // 选中规格
     async specChanged (model) {
       this.$emit('update:currentModel', model)
+      this.$emit('update:hasSelectedFromOut', false)
       try {
         await this.$nextTick()
         if (this.clickAddToCart) {
@@ -121,17 +121,7 @@ export default {
     },
     // 跳转至提交订单页面
     async submit () {
-      if (!this.hasBind()) return
-      this.clickBuyNow = true
-      this.clickAddToCart = false
-      const {
-        /* isSupplierProduct, */
-        currentModel
-      } = this
-      if (!currentModel.count) {
-        this.showSpecifica = true
-        return
-      }
+      const currentModel = this.currentModel
       const { productSeq, count, optionCode } = currentModel
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
@@ -141,13 +131,31 @@ export default {
         count: count,
         agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
+      this.$emit('update:hasSelectedFromOut', false)
       this.$router.push({ name: 'SubmitOrder' })
     },
-    // 加入购物车
-    async addToCartBtn () {
+    async clickHandler (type) {
       if (!this.hasBind()) return
-      this.clickAddToCart = true
-      this.clickBuyNow = false
+      if (this.hasSelectedFromOut) {
+        // 立即加入购物车
+        if (type === 1) {
+          this.addToCart()
+        }
+        // 立即购买
+        if (type === 2) {
+          this.submit()
+        }
+        return
+      }
+      // 加入购物车按钮
+      if (type === 1) {
+        this.clickAddToCart = true
+      }
+      // 立即购买按钮
+      if (type === 2) {
+        this.clickBuyNow = true
+        this.clickAddToCart = false
+      }
       this.showSpecifica = true
     },
     addToCart () {
@@ -164,6 +172,7 @@ export default {
             agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
           })
           this.$success('加入成功')
+          this.$emit('update:hasSelectedFromOut', false)
         } catch (e) {
           reject(e)
         } finally {
