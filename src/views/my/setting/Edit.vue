@@ -90,11 +90,11 @@ export default {
       }
       try {
         const val = await this.$propmt({
-          placeholder: '请输入1-12位字符用户名',
+          placeholder: '请输入1-12个字用户名',
           confirmText: '保存',
           rules: [
             { required: true, message: '请输入用户名' },
-            { validator: testUserName, message: '用户名格式为1~12位中文或英文字符' }
+            { validator: testUserName, message: '用户名格式为1-12个中文或英文' }
           ]
         })
         await userInfoSettings({ nickName: val })

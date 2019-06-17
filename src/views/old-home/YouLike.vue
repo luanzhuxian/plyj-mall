@@ -21,6 +21,7 @@
         :key="index"
         :product-id="item.sequenceNbr"
         :price="item.productPriceModel && item.productPriceModel[0].price"
+        :origin-price="item.productPriceModel && item.productPriceModel[0].originPrice"
         :img="item.mediaInfoModel && item.mediaInfoModel[0].mediaUrl"
         :product-name="item.productName"
         :product-desc="item.productDesc"

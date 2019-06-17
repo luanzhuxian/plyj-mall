@@ -25,6 +25,7 @@
     <div :class="$style.price">
       <Price
         :price="price"
+        :original-price="originPrice"
         :size="size"
       />
     </div>
@@ -60,6 +61,11 @@ export default {
       default: ''
     },
     price: {
+      type: [String, Number],
+      require: true,
+      default: ''
+    },
+    originPrice: {
       type: [String, Number],
       require: true,
       default: ''

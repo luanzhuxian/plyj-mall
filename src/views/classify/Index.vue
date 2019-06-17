@@ -28,13 +28,20 @@
           />
         </li>
       </ul>
-
       <div :class="$style.content">
         <div
           :class="$style.banner"
-          v-if="currentClassify.parentCode && currentClassify.bannerPic"
+          v-if="currentClassify.parentCode && currentClassify.bannerPic && currentClassify.sequenceNbr !== '1'"
         >
           <img :src="currentClassify.bannerPic">
+        </div>
+        <div
+          :class="$style.banner"
+          v-if="currentClassify.sequenceNbr === '1'"
+        >
+          <img
+            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/helperBanner.png"
+          >
         </div>
         <template v-if="currentClassify.childs && currentClassify.childs.length">
           <div :class="$style.classifyList2">
@@ -83,7 +90,6 @@
                 :key="item.sequenceNbr"
                 :id="item.sequenceNbr"
                 :title="item.productName"
-                :desc="item.productDesc"
                 :price="item.priceModels?item.priceModels[0].price:item.productOptions[0].price"
                 :agent-price="item.priceModels?item.priceModels[0].agentPrice:''"
                 :img="item.productImg"
@@ -205,7 +211,7 @@ export default {
         this.classifyList = this.classifyList.concat(result)
         if (this.agentUser) {
           this.classifyList.push({
-            categoryName: 'helper',
+            categoryName: 'Helper',
             sequenceNbr: '1'
           })
         }
