@@ -69,7 +69,7 @@ export default {
     WAIT_PAY: '待付款',
     WAIT_SHIP: '待发货',
     WAIT_RECEIVE: '待收货',
-    FINISHED: '订单完成',
+    FINISHED: '交易成功',
     CLOSED: '订单关闭',
     // AFTER_SALE  售后状态
     // WAIT_REFUND: '待退款',
@@ -79,7 +79,7 @@ export default {
     WAIT_SHIP_REFUND: '待退款',
     // 待收货的待退款
     WAIT_RECEIVE_REFUND: '待退款',
-    // 订单完成的待退款
+    // 交易成功的待退款
     FINISHED_REFUND: '待退款'
   },
   orderStatusMapCamel: {
@@ -92,7 +92,8 @@ export default {
   },
   refundStatusMap: {
     WAIT_CHECK: '待审核',
-    REFUND_PRODUCT: '退换货',
+    REFUND_PRODUCT_WAIT_RETURN: '退换货', // 退换货-待退货
+    REFUND_PRODUCT: '退换货', // 退换货-已退货
     FINISHED: '退款成功',
     CLOSED: '退款关闭',
     CANCEL: '退款关闭',

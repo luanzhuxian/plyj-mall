@@ -251,6 +251,9 @@ export default {
     this.invioceType = this.INVOICE_MODEL ? 2 : 1
     this.getProductDetail()
   },
+  deactivated () {
+    this.remark = ''
+  },
   methods: {
     selectInvoice () {
       if (!this.selectedAddress.realName) {

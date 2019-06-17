@@ -33,7 +33,7 @@ export default {
       return moment(this.timestamp).format('MM-DD')
     },
     time () {
-      return moment(this.timestamp).format('HH-ss')
+      return moment(this.timestamp).format('HH:ss')
     }
   }
 }

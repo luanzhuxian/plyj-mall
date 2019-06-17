@@ -7,16 +7,16 @@
     <div :class="$style.title">
       <top-text
         :title="refundStatusMap[refundStatus]"
-        :tip="refundStatus === 'REFUND_PRODUCT' ? refundDetail.shipSn ? suggestionMap[refundStatus][1] : suggestionMap[refundStatus][0] : suggestionMap[refundStatus]"
+        :tip="suggestionMap[refundStatus]"
       />
     </div>
 
     <section
-      v-if="refundStatus === 'REFUND_PRODUCT'"
+      v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN' || refundStatus === 'REFUND_PRODUCT'"
       :class="[$style.panel, $style.expressPanel]"
     >
       <div
-        v-if="refundDetail.shipSn"
+        v-if="refundStatus === 'REFUND_PRODUCT'"
         :class="$style.expressItem"
       >
         <pl-svg
@@ -59,7 +59,7 @@
     </section>
 
     <section
-      v-if="refundStatus === 'REFUND_PRODUCT' && !refundDetail.shipSn"
+      v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
       :class="[$style.panel, $style.expressInfoPanel]"
     >
       <pl-fields
@@ -100,7 +100,7 @@
           </span>
         </div>
         <div
-          v-if="refundStatus==='WAIT_CHECK' || (refundStatus==='REFUND_PRODUCT' && refundDetail.shipSn)"
+          v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT'"
           :class="[$style.item, $style.larger]"
         >
           <span :class="[$style.itemLeft, $style.bold]">
@@ -113,7 +113,7 @@
           />
         </div>
         <div
-          v-if="refundStatus==='WAIT_CHECK'"
+          v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT_WAIT_RETURN'"
           :class="$style.tips"
         >
           运费不可退，如有疑问，请联系商家协商
@@ -193,6 +193,7 @@
       </div>
       <div :class="[$style.infoList, $style.borderTop]">
         <pl-list
+          v-if="refundDetail.pictures.length"
           :class="$style.imgListWrapper"
           title="问题描述："
         >
@@ -215,7 +216,7 @@
     </div>
 
     <div
-      v-if="refundStatus === 'REFUND_PRODUCT' && !refundDetail.shipSn"
+      v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
       :class="$style.footerSubmit"
     >
       <pl-button
@@ -361,7 +362,8 @@ const expressMapCode = 'KYYQJKDGS'
 
 const suggestionMap = {
   WAIT_CHECK: '请耐心等待商家审核，如有问题请联系客服',
-  REFUND_PRODUCT: ['请根据商家收货地址，将商品寄回', '请耐心等待商家收货'],
+  REFUND_PRODUCT_WAIT_RETURN: '请根据商家收货地址，将商品寄回',
+  REFUND_PRODUCT: '请耐心等待商家收货',
   FINISHED: '您的退款申请已受理完成',
   CLOSED: '因为您超时操作，本次退款申请已关闭',
   CANCEL: '您已撤销退款申请，退款已关闭',

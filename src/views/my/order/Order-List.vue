@@ -180,7 +180,9 @@ const orderFinishMap = {
 const refundStatusMap = {
   '1': '退款中',
   '2': '退款成功',
-  '3': '退款驳回'
+  '3': '退款驳回',
+  '4': '退款中', //  退换货-已退货
+  '5': '退款中' //  退换货-待退货
 }
 
 const count = {

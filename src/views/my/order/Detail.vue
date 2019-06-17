@@ -48,7 +48,7 @@
             申请退款
           </pl-button>
           <pl-button
-            v-if="canApplyRefund && item.afterSalesStatus === 1"
+            v-if="item.afterSalesStatus === 1 || item.afterSalesStatus === 5"
             plain
             round
             @click="$router.push({ name: 'RefundDetail', params: { id: item.mallRefundId } })"
@@ -57,12 +57,21 @@
           </pl-button>
           <pl-button
             class="refund-finish"
-            v-if="canApplyRefund && item.afterSalesStatus === 2"
+            v-if="item.afterSalesStatus === 2"
             plain
             round
-            @click="$router.push({ name: 'RefundDetail', params: { orderId } })"
+            @click="$router.push({ name: 'RefundDetail', params: { id: item.mallRefundId } })"
           >
             退款完成
+          </pl-button>
+          <pl-button
+            v-if="item.afterSalesStatus === 4"
+            type="warning"
+            plain
+            round
+            @click="$router.push({ name: 'RefundDetail', params: { id: item.mallRefundId } })"
+          >
+            寄件运单号
           </pl-button>
           <pl-button
             v-if="orderStatus === 'FINISHED' && item.assessmentStatus === 0"
@@ -141,24 +150,25 @@
           :content="message"
         />
       </div>
-      <div :class="$style.infoBottom">
+      <div
+        v-if="!isClosedByCancle"
+        :class="$style.infoBottom"
+      >
         <pl-list
-          v-if="orderStatus === 'WAIT_SHIP' || orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
           title="支付方式："
           :content="tradingInfoModel.payMethod"
         />
         <pl-list
-          v-if="orderStatus === 'WAIT_SHIP' || orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED'"
           title="支付时间："
           :content="tradingInfoModel.payTime"
         />
         <pl-list
-          v-if="hasExpressInfo"
+          v-if="hasExpressInfo || isClosedByRefund"
           title="配送方式："
           :content="logisticsInfoModel && logisticsInfoModel.courierCompany"
         />
         <pl-list
-          v-if="hasExpressInfo"
+          v-if="hasExpressInfo || isClosedByRefund"
           title="发货时间："
           :content="logisticsInfoModel && logisticsInfoModel.shipTime"
         />
@@ -424,6 +434,7 @@ export default {
         addressPrefix: ' ',
         agencyAddress: ' '
       },
+      isAllProductRefund: false,
       timer: 0,
       currentPayId: '',
       payloading: false,
@@ -443,7 +454,12 @@ export default {
   },
   computed: {
     ...mapGetters(['orderStatusMap', 'address', 'supportPhone']),
-    // 是否可以申请售后
+    isClosedByCancle () {
+      return this.orderStatus === 'CLOSED' && !this.tradingInfoModel.payTime
+    },
+    isClosedByRefund () {
+      return this.orderStatus === 'CLOSED' && this.tradingInfoModel.payTime && this.isAllProductRefund
+    },
     hasExpressInfo () {
       return this.orderType === 'PHYSICAL' &&
         (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
@@ -503,12 +519,12 @@ export default {
     },
     getDetail () {
       const counter = array => key => array.reduce((total, current) => total + current[key], 0)
-      /*
+      /* 是否所有商品退货成功
       * afterSalesStatus
-      * 0：无售后，1 待审核，2 已通过，3 已驳回
+      * 0：无售后，1 待审核，2 已通过，3 已驳回，5 退换货-待退货 4 退换货-已退货
       * */
-      const checkIsRefundSuccessful = products => {
-        const array = products.filter(product => product.afterSalesStatus === 3)
+      const isAllProductRefund = products => {
+        const array = products.filter(product => product.afterSalesStatus === 2)
         return products.length === array.length
       }
       return new Promise(async (resolve, reject) => {
@@ -536,16 +552,12 @@ export default {
           this.tradingInfoModel = tradingInfoModel
           this.invoiceModelList = invoiceModelList
           this.operationRecordModel = operationRecordModel
-          this.productInfoModel.totalCount = counter(productInfoModel.productDetailModels)('count')
-          this.shippingAddress.realName = receiverModel.name
-          this.shippingAddress.mobile = receiverModel.mobile
-          this.shippingAddress.agencyAddress = receiverModel.address
+          this.productInfoModel.totalCount = counter(productInfoModel.productDetailModels)('count');  // eslint-disable-line
+          ({ name: this.shippingAddress.realName, mobile: this.shippingAddress.mobile, address: this.shippingAddress.agencyAddress } = receiverModel)
           if (result.orderStatus === 'CLOSED') {
-            if (checkIsRefundSuccessful(productInfoModel.productDetailModels)) {
-              this.suggestionMap['CLOSED'] = '退款完成'
-            }
+            this.isAllProductRefund = isAllProductRefund(productInfoModel.productDetailModels)
+            this.suggestionMap['CLOSED'] = this.isAllProductRefund ? '退款完成' : '订单取消'
           }
-          // invoiceStatus 2 未开票， 3 已开票
 
           let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
           if (result.orderStatus === 'WAIT_PAY') {

@@ -268,6 +268,7 @@ export default {
       this.form.refundType = this.refundType
       const { result: refundReasonMap } = await getRefundReasonMap(this.operationType)
       this.refundReasonInfo.options = refundReasonMap
+      // 待发货状态默认为未收到货
       if (this.isWaitShip()) {
         this.radio.goodsStatus = '2'
         this.radio.goodsStatusText = '未收到货'
@@ -278,11 +279,10 @@ export default {
         try {
           const { refundId: id } = this
           const { result } = await getRefundOrderDetail({ id })
-          // this.form.refundType = result.refundType
-          // this.form.actualRefund = result.actualRefund
           this.form.applyContent = result.applyContent
           this.form.pictures = [...result.pictures]
           this.imgList = [...result.pictures]
+          // 待发货状态默认为未收到货
           this.radio.goodsStatus = this.isWaitShip() ? '2' : String(result.receiveStatus)
           this.radio.goodsStatusText = this.isWaitShip() ? '未收到货' : receiveStatusMap[result.receiveStatus]
           this.radio.refundReason = String(result.applyReason)
