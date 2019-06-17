@@ -349,6 +349,7 @@ export default {
       font-size: 24px;
       background-color: #f3f3f3;
       border-radius: $--radius2;
+      overflow: visible;
       &:disabled {
         color: #ccc !important;
         &:after {
