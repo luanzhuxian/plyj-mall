@@ -79,6 +79,7 @@
     <buy-now
       type="warning"
       ref="buyNow"
+      :image="detail.productImage ? detail.productImage[0].mediaUrl : ''"
       :current-model.sync="currentModel"
       :price-models="detail.priceModels"
       :has-selected-from-out.sync="hasSelectedFromOut"

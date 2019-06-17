@@ -32,7 +32,6 @@ async function response (response) {
     if (msg.indexOf('运行时') > -1) {
       msg = '服务器正在怀疑人生~( ˶‾᷄࿀‾᷅˵ )'
     }
-    alert(msg)
     if (msg.indexOf('登录信息失效') === -1 || msg.indexOf('Token失效') === -1) {
       let err = {
         tag: 'responseError',
