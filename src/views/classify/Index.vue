@@ -91,7 +91,7 @@
                 :id="item.sequenceNbr"
                 :title="item.productName"
                 :price="item.priceModels?item.priceModels[0].price:item.productOptions[0].price"
-                :agent-price="item.priceModels?item.priceModels[0].agentPrice:''"
+                :agent-price="item.priceModels&&item.priceModels.length?item.priceModels[0].agentEndPrice.toString():''"
                 :img="item.productImg"
               />
             </div>

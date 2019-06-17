@@ -207,17 +207,18 @@ export default {
         if (this.skipCrop) {
           this.uploadCanvas()
         } else {
-          if (this.config.isSlice && this.filRealitySize.width / this.filRealitySize.height === this.proportion.w / this.proportion.h) {
-            // let flag = window.confirm('文件已符合规定尺寸，是否直接使用？')
-            // if (flag) {
-            //   this.uploadCanvas()
-            // } else {
-            //   showView()
-            // }
-            this.uploadCanvas()
-          } else {
-            showView()
-          }
+          showView()
+          // if (this.config.isSlice && this.filRealitySize.width / this.filRealitySize.height === this.proportion.w / this.proportion.h) {
+          //   // let flag = window.confirm('文件已符合规定尺寸，是否直接使用？')
+          //   // if (flag) {
+          //   //   this.uploadCanvas()
+          //   // } else {
+          //   //   showView()
+          //   // }
+          //
+          // } else {
+          //   showView()
+          // }
         }
       }
     },
