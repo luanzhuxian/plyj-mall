@@ -218,10 +218,6 @@ export default {
     justify-content: space-between;
     grid-row-gap: 10px;
     margin-top: 20px;
-    /*width: fit-content;*/
-    /*align-items: center;*/
-    /*margin-top: 20px;*/
-    /*margin-right: -10px;*/
     overflow: hidden;
     img {
       width: 162px;

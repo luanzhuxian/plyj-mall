@@ -122,11 +122,12 @@ export default {
         if (this.id) {
           this.form.id = this.id
           await updateInvoice(this.form)
+          this.goBack(this.id)
         } else {
           delete this.form.id
-          await addInvoice(this.form)
+          const { result } = await addInvoice(this.form)
+          this.goBack(result.id)
         }
-        this.goBack()
       } catch (e) {
         throw e
       } finally {
@@ -142,7 +143,7 @@ export default {
         throw e
       }
     },
-    goBack () {
+    goBack (id) {
       const EDIT_INVOICE_FROM = JSON.parse(localStorage.getItem('EDIT_INVOICE_FROM'))
       if (!EDIT_INVOICE_FROM) {
         return this.$router.go(-1)
@@ -151,7 +152,7 @@ export default {
       this.$router.replace({
         name,
         params,
-        query: Object.assign({ id: this.id }, query)
+        query: Object.assign(query, { id })
       })
     }
   },
