@@ -150,6 +150,9 @@ export default {
           // 直接修改可以触发计算属性，使得数据真实一致
           this.data.cartSkuCode = option.optionCode
           this.data.cartProductCount = option.count
+          if (this.data.hasOwnProperty('disabled')) {
+            this.data.disabled = false
+          }
           this.$emit('change')
           this.$emit('skuChange', this.data)
         } else {
