@@ -54,7 +54,7 @@ export default {
       detail: {},
       $refresh: null,
       loading: false,
-      currentModel: null
+      currentModel: {}
     }
   },
   computed: {
@@ -91,7 +91,7 @@ export default {
       }
     },
     reset () {
-      this.currentModel = null
+      this.currentModel = {}
       this.isSupplierProduct = false
       this.form.current = 1
       this.form.size = 10

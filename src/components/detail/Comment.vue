@@ -32,11 +32,14 @@
           v-text="item.content"
         />
         <!-- 图片 -->
-        <div :class="$style.imgs + ' radius-20'">
+        <div
+          :class="$style.imgs + ' radius-20'"
+          v-if="item.mediaInfoModels.length > 0"
+        >
           <!-- 只在评论专区页面显示全部图片，其他显示 3 张 -->
           <template v-for="(img, j) of item.mediaInfoModels">
             <img
-              v-if="j < 3"
+              v-if="routeName !== 'Comments' ? j < 3 : true"
               :key="j"
               v-img-error
               :src="img.mediaUrl"
@@ -128,6 +131,11 @@ export default {
       }
     }
   },
+  computed: {
+    routeName () {
+      return this.$route.name
+    }
+  },
   methods: {
     getList () {
       if (this.productSeq && this.size) {
@@ -167,7 +175,7 @@ export default {
     display: flex;
     padding-bottom: 28px;
     margin-bottom: 32px;
-    img {
+    > img {
       width: 80px;
       height: 80px;
       margin-right: 24px;
@@ -203,19 +211,24 @@ export default {
     font-size: 28px;
   }
   .imgs {
-    width: fit-content;
-    display: flex;
-    align-items: center;
+    display: grid;
+    padding-right: 30px;
+    grid-template-columns: repeat(auto-fill, 162px);
+    grid-template-rows: repeat(auto-fill, 162px);
+    justify-content: space-between;
+    grid-row-gap: 10px;
     margin-top: 20px;
-    margin-right: -10px;
+    /*width: fit-content;*/
+    /*align-items: center;*/
+    /*margin-top: 20px;*/
+    /*margin-right: -10px;*/
     overflow: hidden;
-    flex-wrap: wrap;
     img {
       width: 162px;
       height: 162px;
       border-radius: 0;
-      margin: 0 10px 10px 0;
       object-fit: cover;
+      background-color: #ccc;
       &:nth-last-of-type(1), &:nth-of-type(3n) {
         border-bottom-right-radius: 20px;
         border-top-right-radius: 20px;
@@ -251,6 +264,7 @@ export default {
     }
   }
   .reply {
+    margin-top: 10px;
     margin-right: 30px;
     padding: 20px 24px;
     background-color: #f6f6f6;
