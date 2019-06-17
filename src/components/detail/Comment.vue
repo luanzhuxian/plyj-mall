@@ -201,6 +201,7 @@ export default {
     margin-top: 16px;
     padding-right: 30px;
     font-size: 28px;
+    word-break: break-all;
   }
   .imgs {
     display: grid;
@@ -208,7 +209,7 @@ export default {
     grid-template-columns: repeat(auto-fill, 162px);
     grid-template-rows: repeat(auto-fill, 162px);
     justify-content: space-between;
-    grid-row-gap: 10px;
+    grid-gap: 10px 10px;
     margin-top: 20px;
     overflow: hidden;
     img {
