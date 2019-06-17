@@ -70,7 +70,7 @@
               v-model="form.applyContent"
               type="textarea"
               placeholder="请填写您的原因"
-              :maxlength="400"
+              :maxlength="maxLength"
               :min-rows="8"
             />
           </label>
@@ -221,6 +221,7 @@ export default {
         title: '退款原因',
         options: []
       },
+      maxLength: 400,
       isPopupShow: false,
       currentPopupName: '',
       popupTitle: '',
@@ -231,6 +232,13 @@ export default {
   },
   computed: {
     ...mapGetters(['refundTypeMap'])
+  },
+  watch: {
+    'form.applyContent' (value) {
+      if (value.length === this.maxLength) {
+        this.$toast(`最多输入${this.maxLength}个字`)
+      }
+    }
   },
   activated () {
     this.form.orderDetailId = this.orderProductRId

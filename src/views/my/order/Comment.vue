@@ -25,7 +25,7 @@
         <pl-input
           v-model="form.content"
           type="textarea"
-          :maxlength="100"
+          :maxlength="maxLength"
           placeholder="产品满足你的期待吗？说说它的优点和缺点吧"
           :min-rows="8"
         />
@@ -79,7 +79,8 @@ export default {
         mediaInfoModels: []
       },
       img: '',
-      images: []
+      images: [],
+      maxLength: 100
     }
   },
   props: {
@@ -94,6 +95,13 @@ export default {
   },
   computed: {
     ...mapGetters(['openId'])
+  },
+  watch: {
+    'form.content' (value) {
+      if (value.length === this.maxLength) {
+        this.$toast(`最多输入${this.maxLength}个字`)
+      }
+    }
   },
   activated () {
     this.getOrderDetail()
@@ -189,17 +197,19 @@ export default {
 </style>
 <style lang="scss">
 .comment {
-  .pl-textarea_box > .pl-input-textarea {
-    &::-webkit-input-placeholder {
-      font-size: 28px;
-      color: #CCCCCC;
-      line-height: 38px;
+  .pl-textarea_box {
+    > .pl-input-textarea {
+      &::-webkit-input-placeholder {
+        font-size: 28px;
+        color: #CCCCCC;
+        line-height: 38px;
+      }
     }
-  }
-  .pl-textarea_box > .pl-input__word-count {
-    color: #CCCCCC !important;
-    > i {
+    > .pl-input__word-count {
       color: #CCCCCC !important;
+      > i {
+        color: #CCCCCC !important;
+      }
     }
   }
 }
