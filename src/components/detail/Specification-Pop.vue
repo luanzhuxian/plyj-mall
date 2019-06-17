@@ -137,6 +137,7 @@ export default {
     this.setShow(this.visible)
   },
   watch: {
+    // 规格列表加载完成时，初始化一下
     data: {
       handler (val) {
         if (!this.inited && val && val.length > 0) {
@@ -148,6 +149,13 @@ export default {
     },
     visible (val) {
       this.setShow(val)
+    },
+    // 默认数量变化时，实时更新当前数量
+    defaultCount: {
+      handler (val) {
+        this.count = val
+      },
+      immediate: true
     }
   },
   computed: {
@@ -168,6 +176,7 @@ export default {
     isDisabled (option) {
       return option.stock === 0 || option.stock < option.minBuyNum
     },
+    // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个，并触发一次change事件
     init () {
       this.inited = true
       this.count = this.defaultCount

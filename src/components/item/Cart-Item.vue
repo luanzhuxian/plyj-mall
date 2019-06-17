@@ -148,18 +148,20 @@ export default {
     async specChanged (option, revert) {
       try {
         // 请求修改
+        const { optionCode, count } = option
         const isUpdateSku = await updateCartProductSku({
           id: this.id,
-          skuCode: option.optionCode,
-          number: option.count
+          skuCode: optionCode,
+          number: count
         })
         // 刷新显示
         if (isUpdateSku.result) {
           // 直接修改父组件的数据，也在父组件中监听change事件，通过接口来刷新数据。但是会导致接口调用频繁
           // 直接修改可以触发计算属性，使得数据真实一致
-          this.data.cartSkuCode = option.optionCode
-          this.data.cartProductCount = option.count
+          this.data.cartSkuCode = optionCode
+          this.data.cartProductCount = count
           if (this.data.hasOwnProperty('disabled')) {
+            // 修改完成后，取消禁用，如果禁用的话
             this.data.disabled = false
           }
           this.$emit('change')
@@ -195,7 +197,13 @@ export default {
     },
     async goDetail () {
       const productSeq = this.data.cartProductId
-      this.$router.push({ name: 'Lesson', params: { productSeq: productSeq, brokerId: this.agentUser ? this.userId : null } })
+      this.$router.push({
+        name: 'Lesson',
+        params: {
+          productSeq: productSeq,
+          brokerId: this.agentUser ? this.userId : null
+        }
+      })
     }
   }
 }
