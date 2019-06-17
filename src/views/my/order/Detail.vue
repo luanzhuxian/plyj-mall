@@ -563,12 +563,12 @@ export default {
           if (result.orderStatus === 'WAIT_PAY') {
             let startTime = Moment((tradingInfoModel.createTime)).valueOf()
             if (now - startTime < 24 * 60 * 60 * 1000) {
-              this.countDown(24 * 60 * 60 * 1000 + startTime - now + 2000, 'WAIT_PAY')
+              this.countDown(24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_PAY')
             }
           } else if (result.orderStatus === 'WAIT_RECEIVE') {
             let startTime = Moment((tradingInfoModel.createTime)).valueOf()
             if (now - startTime < 10 * 24 * 60 * 60 * 1000) {
-              this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now + 2000, 'WAIT_RECEIVE')
+              this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_RECEIVE')
             }
           }
           resolve()
