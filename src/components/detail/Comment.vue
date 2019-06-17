@@ -36,17 +36,14 @@
           :class="$style.imgs + ' radius-20'"
           v-if="item.mediaInfoModels.length > 0"
         >
-          <!-- 只在评论专区页面显示全部图片，其他显示 3 张 -->
-          <template v-for="(img, j) of item.mediaInfoModels">
-            <img
-              v-if="routeName !== 'Comments' ? j < 3 : true"
-              :key="j"
-              v-img-error
-              :src="img.mediaUrl"
-              v-gallery="item.sequenceNbr"
-              alt=""
-            >
-          </template>
+          <img
+            v-for="(img, j) of item.mediaInfoModels"
+            :key="j"
+            v-img-error
+            :src="img.mediaUrl"
+            v-gallery="item.sequenceNbr"
+            alt=""
+          >
         </div>
         <!-- 回复 -->
         <div
@@ -129,11 +126,6 @@ export default {
       if (val.length > 0) {
         this.listTemp = val
       }
-    }
-  },
-  computed: {
-    routeName () {
-      return this.$route.name
     }
   },
   methods: {
