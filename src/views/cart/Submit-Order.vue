@@ -410,6 +410,7 @@ export default {
           justify-content: flex-start;
         }
         .itemLabel {
+          width: max-content;
           color: #333;
         }
         .itemContent {
@@ -423,7 +424,8 @@ export default {
       .remark {
         flex: 1;
         height: 100%;
-        padding: 0 0 0 22px;
+        padding: 0;
+        margin-left: 22px;
         font-size: 24px;
       }
     }
