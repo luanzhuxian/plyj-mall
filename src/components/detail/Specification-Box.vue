@@ -14,13 +14,13 @@
     <div :class="$style.specification">
       <span
         class="fz-22 gray-4"
-        v-if="!current.optionName"
+        v-if="!name"
       >请选择规格</span>
       <span
         class="fz-22 gray-4"
         v-else
       >
-        {{ current.optionName }}  {{ current.count ? `× ${current.count}` : '' }}
+        {{ name }}  {{ count ? `× ${count}` : '' }}
       </span>
       <pl-svg name="right" />
     </div>
@@ -32,12 +32,24 @@ export default {
   name: 'SpecificationBox',
   data () {
     return {
+      count: 1,
+      name: ''
     }
   },
   props: {
     current: {
       type: Object,
       default: () => ({})
+    }
+  },
+  watch: {
+    current: {
+      handler (val) {
+        this.count = val.count || 1
+        this.name = val.optionName || ''
+      },
+      deep: true,
+      immediate: true
     }
   },
   methods: {

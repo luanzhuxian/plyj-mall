@@ -209,7 +209,7 @@ export default {
     grid-template-columns: repeat(auto-fill, 162px);
     grid-template-rows: repeat(auto-fill, 162px);
     justify-content: space-between;
-    grid-gap: 10px 10px;
+    grid-row-gap: 10px;
     margin-top: 20px;
     overflow: hidden;
     img {

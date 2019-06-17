@@ -20,8 +20,8 @@
       <!-- 当前选择的规格 -->
       <specification-box
         :current="currentModel"
-        @click="showSpecifica = true"
         ref="specification"
+        @click="showSpecifica = true"
       />
       <!-- helper 润笔价格 -->
       <helper-price
@@ -82,7 +82,6 @@
       :image="detail.productImage ? detail.productImage[0].mediaUrl : ''"
       :current-model.sync="currentModel"
       :price-models="detail.priceModels"
-      :has-selected-from-out.sync="hasSelectedFromOut"
     />
     <specification-pop
       :default-code="currentModel.optionCode"
@@ -90,8 +89,27 @@
       :data="detail.priceModels"
       :product-image="detail.productImage ? detail.productImage[0].mediaUrl : ''"
       :visible.sync="showSpecifica"
-      @confirm="specChanged"
-    />
+      @change="specChanged"
+    >
+      <template v-slot:footer="{ selected }">
+        <div :class="$style.buttons">
+          <button
+            :class="$style.add"
+            :disabled="adding"
+            @click="addToCart(selected)"
+          >
+            加入购物车
+          </button>
+          <button
+            :class="$style.buy"
+            :disabled="adding"
+            @click="buyNow(selected)"
+          >
+            立即购买
+          </button>
+        </div>
+      </template>
+    </specification-pop>
   </div>
 </template>
 
@@ -118,6 +136,8 @@ import MaybeYouLike from '../../components/Maybe-You-Like.vue'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
+import { addToCart } from '../../apis/shopping-cart'
+
 export default {
   name: 'Lesson',
   components: {
@@ -145,6 +165,7 @@ export default {
     return {
       banners: [],
       detail: {},
+      showSpecifica: false,
       currentModel: {}, // 当前选中的规格
       commentForm: {
         current: 1,
@@ -152,9 +173,8 @@ export default {
         productSeq: ''
       },
       agentProduct: false,
-      showSpecifica: false,
       loading: false,
-      hasSelectedFromOut: false
+      adding: false
     }
   },
   props: {
@@ -168,7 +188,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'mallDomain'])
+    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId'])
   },
   watch: {
     productSeq () {
@@ -189,6 +209,7 @@ export default {
       this.resetState() // 重置一些状态
       try {
         let { result } = await getProductDetail(this.productSeq)
+        result.salesVolume = 0
         if (result.productStatus !== 'ON_SALE') {
           this.loading = false
           return this.$router.replace({ name: 'SoldOut' })
@@ -196,22 +217,16 @@ export default {
         let { sequenceNbr, agentProduct, priceModels, productImage } = result
         this.commentForm.productSeq = sequenceNbr
         this.agentProduct = agentProduct
-        result.salesVolume = 0
-        // 按价格从低到高排序
-        priceModels.sort((a, b) => {
-          return a.price - b.price
-        })
-        // 总销量
+        // 计算总销量 添加count属性
         for (let item of priceModels) {
+          item.count = 1
           result.salesVolume += item.salesVolume
         }
         // 所有图片
         for (let item of productImage) {
           this.banners.push(item.mediaUrl)
         }
-        // 统计销售数量
         this.detail = result
-        // 配置分享
         share({
           appId: this.appId,
           title: result.productName,
@@ -228,11 +243,45 @@ export default {
     // 选中规格
     specChanged (option) {
       this.currentModel = option
-      this.hasSelectedFromOut = true
     },
     resetState () {
       this.currentModel = {}
       this.banners.splice(0, 1000000)
+    },
+    addToCart (selected) {
+      this.adding = true
+      const { productSeq, count, optionCode } = selected
+      // helper分享时携带的id
+      const shareBrokerId = sessionStorage.getItem('shareBrokerId')
+      return new Promise(async (resolve, reject) => {
+        try {
+          await addToCart({
+            productId: productSeq,
+            productCount: count,
+            skuCode: optionCode,
+            agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
+          })
+          this.$success('加入成功')
+          this.showSpecifica = false
+        } catch (e) {
+          reject(e)
+        } finally {
+          this.adding = false
+        }
+      })
+    },
+    buyNow (selected) {
+      const { productSeq, count, optionCode } = selected
+      // helper分享时携带的id
+      const shareBrokerId = sessionStorage.getItem('shareBrokerId')
+      localStorage.setItem('CONFIRM_LIST', JSON.stringify([{
+        productId: productSeq,
+        optionCode: optionCode,
+        count: count,
+        agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
+      }]))
+      this.showSpecifica = false
+      this.$router.push({ name: 'SubmitOrder' })
     }
   }
 }
@@ -256,6 +305,23 @@ export default {
     svg {
       width: 24px;
       margin-right: 10px;
+    }
+  }
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    > button {
+      width: 340px;
+      line-height: 80px;
+      color: #fff;
+      font-size: 30px;
+      border-radius: $--radius2;
+    }
+    .add {
+      background-color: $--warning-color;
+    }
+    .buy {
+      background-color: $--primary-color;
     }
   }
 </style>

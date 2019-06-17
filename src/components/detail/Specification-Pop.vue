@@ -82,15 +82,13 @@
               </div>
             </div>
           </div>
-          <pl-button
-            :class="$style.confirm"
-            size="large"
-            type="warning"
-            @click.stop="confirm"
-            :disabled="currentDisabled"
-          >
-            确定
-          </pl-button>
+          <div :class="$style.footer">
+            <slot
+              name="footer"
+              :selected="selected"
+              :revert="revert"
+            />
+          </div>
         </div>
       </transition>
     </div>
@@ -129,10 +127,10 @@ export default {
       showBox: false,
       showSpec: false,
       selected: {},
-      oldSelect: {},
       count: 1,
       min: 1,
-      stock: 1
+      stock: 1,
+      inited: false
     }
   },
   created () {
@@ -141,21 +139,15 @@ export default {
   watch: {
     data: {
       handler (val) {
-        if (val && val.length > 0) {
+        if (!this.inited && val && val.length > 0) {
           this.init()
         }
       },
-      deep: true,
+      deep: false,
       immediate: true
     },
     visible (val) {
       this.setShow(val)
-    },
-    defaultCount () {
-      this.init()
-    },
-    defaultCode () {
-      this.init()
     }
   },
   computed: {
@@ -165,7 +157,7 @@ export default {
   },
   methods: {
     close () {
-      this.revert()
+      // this.revert()
       this.$emit('update:visible', false)
     },
     closed () {
@@ -177,18 +169,17 @@ export default {
       return option.stock === 0 || option.stock < option.minBuyNum
     },
     init () {
+      this.inited = true
       this.count = this.defaultCount
       const currentSku = this.data.find(item => item.optionCode === this.defaultCode)
-      if (currentSku) {
-        this.selected = currentSku || {}
-      } else {
-        this.selected = this.data[0] || {}
-      }
-      this.min = this.selected.minBuyNum || 1
+      let selected = null
+      selected = currentSku || this.data[0]
+      this.min = selected.minBuyNum || 1
       if (!this.count) {
         this.count = this.min
       }
-      this.stock = this.selected.stock
+      this.stock = selected.stock
+      this.change(selected)
     },
     setShow (show) {
       if (show) {
@@ -204,10 +195,10 @@ export default {
       }
     },
     change (option) {
-      this.oldSelect = this.selected
       this.selected = option
-      this.min = this.count = option.minBuyNum || 1
+      this.selected.count = this.min = this.count = option.minBuyNum || 1
       this.stock = option.stock
+      this.$emit('change', option)
     },
     countChange () {
       if (this.count === '') return
@@ -219,31 +210,17 @@ export default {
         this.count = this.stock
         this.$warning(`购买数量不能大于库存`)
       }
+      this.selected.count = this.count
     },
     minus () {
       this.count--
+      this.$set(this.selected, 'count', this.count)
+      this.$emit('change', this.selected)
     },
     add () {
       this.count++
-    },
-    checkCount (count) {
-      if (count < this.min) {
-        this.$warning(`此规格最小购买量为${this.min}`)
-        return false
-      }
-      if (count > this.stock) {
-        this.$warning(`购买数量不能大于库存`)
-        return false
-      }
-      return true
-    },
-    confirm () {
-      if (this.checkCount(this.count)) {
-        this.count = Number.parseInt(this.count)
-        this.$emit('update:visible', false)
-        // confirm事件提供一个回滚方法，以便在必要的时候回滚显示状态
-        this.$emit('confirm', Object.assign({ count: this.count }, this.selected), this.revert)
-      }
+      this.$set(this.selected, 'count', this.count)
+      this.$emit('change', this.selected)
     },
     // 回滚（如果规格选择失败，或者没选，回滚到最初规格）
     revert () {
@@ -395,7 +372,7 @@ export default {
       }
     }
   }
-  .confirm {
+  .footer {
     position: relative;
   }
 </style>

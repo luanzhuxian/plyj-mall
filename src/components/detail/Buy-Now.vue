@@ -31,8 +31,18 @@
       :default-code="defaultCode"
       :product-image="image"
       :visible.sync="showSpecifica"
-      @confirm="specChanged"
-    />
+    >
+      <template v-slot:footer="{ selected }">
+        <pl-button
+          type="warning"
+          size="large"
+          :loading="loading"
+          @click="confirm(selected)"
+        >
+          确定
+        </pl-button>
+      </template>
+    </specification-pop>
   </div>
 </template>
 
@@ -96,7 +106,6 @@ export default {
     }
   },
   activated () {
-    console.log(123)
     this.reset()
   },
   methods: {
@@ -104,9 +113,10 @@ export default {
       this.$emit('click', this)
     },
     // 选中规格
-    async specChanged (model) {
+    async confirm (model) {
+      console.log(model)
       this.$emit('update:currentModel', model)
-      this.$emit('update:hasSelectedFromOut', false)
+      // this.$emit('update:hasSelectedFromOut', false)
       try {
         await this.$nextTick()
         if (this.clickAddToCart) {
@@ -131,25 +141,15 @@ export default {
         count: count,
         agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
-      this.$emit('update:hasSelectedFromOut', false)
+      this.showSpecifica = false
       this.$router.push({ name: 'SubmitOrder' })
     },
     async clickHandler (type) {
       if (!this.hasBind()) return
-      if (this.hasSelectedFromOut) {
-        // 立即加入购物车
-        if (type === 1) {
-          this.addToCart()
-        }
-        // 立即购买
-        if (type === 2) {
-          this.submit()
-        }
-        return
-      }
       // 加入购物车按钮
       if (type === 1) {
         this.clickAddToCart = true
+        this.clickBuyNow = false
       }
       // 立即购买按钮
       if (type === 2) {
@@ -172,7 +172,7 @@ export default {
             agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
           })
           this.$success('加入成功')
-          this.$emit('update:hasSelectedFromOut', false)
+          this.showSpecifica = false
         } catch (e) {
           reject(e)
         } finally {

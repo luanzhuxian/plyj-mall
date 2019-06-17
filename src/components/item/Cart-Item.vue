@@ -74,10 +74,19 @@
       :data="skuList"
       :product-image="data.productImg"
       :visible.sync="showSpecifica"
-      @confirm="specChanged"
       :default-count="count"
       :default-code="currentSkuCode"
-    />
+    >
+      <template v-slot:footer="{ selected, revert }">
+        <pl-button
+          type="warning"
+          size="large"
+          @click="specChanged(selected, revert)"
+        >
+          确定
+        </pl-button>
+      </template>
+    </SpecificationPop>
   </div>
 </template>
 
@@ -155,6 +164,7 @@ export default {
           }
           this.$emit('change')
           this.$emit('skuChange', this.data)
+          this.showSpecifica = false
         } else {
           // 修改失败，回滚选框中的值
           revert()
