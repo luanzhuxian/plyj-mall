@@ -226,7 +226,12 @@ export default {
         })
       }
       localStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
-      this.$router.push({ name: 'SubmitOrder' })
+      this.$router.push({
+        name: 'SubmitOrder',
+        query: {
+          isCart: true
+        }
+      })
     },
     computeMoney () {
       let total = 0

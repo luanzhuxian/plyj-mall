@@ -222,7 +222,8 @@ export default {
       virtualProducts: [],
       remark: '', // 物理订单备注
       invioceType: 1,
-      INVOICE_MODEL: null
+      INVOICE_MODEL: null,
+      isCart: false
     }
   },
   props: {
@@ -249,6 +250,7 @@ export default {
   activated () {
     this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL'))
     this.invioceType = this.INVOICE_MODEL ? 2 : 1
+    this.isCart = JSON.parse(this.$route.query.isCart)
     this.getProductDetail()
   },
   deactivated () {
@@ -323,6 +325,7 @@ export default {
         const { result } = await submitOrder({
           addressSeq: this.selectedAddress.sequenceNbr,
           cartProducts,
+          cartSource: this.isCart,
           invoiceModel: this.INVOICE_MODEL
         })
         await this.pay(result, result.orderLists[0])

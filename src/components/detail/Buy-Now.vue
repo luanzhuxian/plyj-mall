@@ -114,7 +114,6 @@ export default {
     },
     // 选中规格
     async confirm (model) {
-      console.log(model)
       this.$emit('update:currentModel', model)
       // this.$emit('update:hasSelectedFromOut', false)
       try {
@@ -142,7 +141,12 @@ export default {
         agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
-      this.$router.push({ name: 'SubmitOrder' })
+      this.$router.push({
+        name: 'SubmitOrder',
+        query: {
+          isCart: false
+        }
+      })
     },
     async clickHandler (type) {
       if (!this.hasBind()) return

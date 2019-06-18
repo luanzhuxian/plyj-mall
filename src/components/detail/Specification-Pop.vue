@@ -310,17 +310,11 @@ export default {
     }
   }
   .color {
-    &:before {
-      @include border-half-top(#e7e7e7);
-    }
-    &:after {
-      @include border-half-bottom(#e7e7e7)
-    }
+    border-bottom: 1px solid #e7e7e7;
+    border-top: 1px solid #e7e7e7;
   }
   .size {
-    &:after {
-      @include border-half-bottom(#e7e7e7)
-    }
+    border-bottom: 1px solid #e7e7e7;
   }
   .color-list, .size-list {
     display: flex;
@@ -350,9 +344,6 @@ export default {
         color: $--primary-color;
         border: 1px solid currentColor;
         border-radius: 9px;
-       /* &:after {
-          @include border-half($--primary-color, 18px)
-        }*/
       }
     }
   }
