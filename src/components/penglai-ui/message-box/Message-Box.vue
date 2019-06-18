@@ -4,6 +4,7 @@
       class="message-box"
       v-if="showMask"
       @click.self="handleCancel"
+      @transitionend="closed"
     >
       <transition
         enter-active-class="animated bounceInDown"
@@ -128,7 +129,6 @@ export default {
       if (this.type === 'propmt' && !this.validate()) return
       this.$emit('confirm', this.propmtValue)
       this.show = false
-      this.propmtValue = ''
     },
     validate () {
       let val = this.propmtValue
@@ -146,6 +146,9 @@ export default {
         }
       }
       return true
+    },
+    closed () {
+      this.propmtValue = ''
     }
   }
 }
