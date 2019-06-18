@@ -165,7 +165,7 @@ export default {
       this.$refs.citySelector.clear()
     },
     async confirm () {
-      if (this.mobile) {
+      if (!this.mobile) {
         await this.$confirm('您还没有绑定手机，请先绑定手机')
         localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify(this.$route))
         this.$router.push({ name: 'BindMobile' })
