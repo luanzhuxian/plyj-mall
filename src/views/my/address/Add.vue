@@ -146,7 +146,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['addressList', 'selectedAddress'])
+    ...mapGetters(['addressList', 'selectedAddress', 'mobile'])
   },
   activated () {
     if (this.addressId) {
@@ -165,6 +165,12 @@ export default {
       this.$refs.citySelector.clear()
     },
     async confirm () {
+      if (this.mobile) {
+        await this.$confirm('您还没有绑定手机，请先绑定手机')
+        localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify(this.$route))
+        this.$router.push({ name: 'BindMobile' })
+        return
+      }
       if (this.$refs.form.validate()) {
         let currentAddress = null
         this.loading = true

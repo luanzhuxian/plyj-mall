@@ -92,9 +92,6 @@ export default {
         this.up()
       } catch (e) {
         throw e
-      } finally {
-        e.target.type = 'text'
-        e.target.type = 'file'
       }
     },
     async up () {
@@ -113,6 +110,7 @@ export default {
       } catch (e) {
         throw e
       } finally {
+        this.refreshInput()
         this.$indicator.close()
         this.compress = []
         this.ups = []
