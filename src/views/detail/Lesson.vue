@@ -198,6 +198,9 @@ export default {
   activated () {
     this.getDetail()
   },
+  deactivated () {
+    this.showSpecifica = false
+  },
   mounted () {
     // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
     // 详情页只做存储，具体判断过程在点击立即购买和加入购物车时判断

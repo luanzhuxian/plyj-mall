@@ -105,7 +105,7 @@ export default {
       deep: true
     }
   },
-  activated () {
+  deactivated () {
     this.reset()
   },
   methods: {
