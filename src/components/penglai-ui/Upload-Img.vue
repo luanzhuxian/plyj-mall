@@ -25,8 +25,9 @@
           <span v-if="count > 0">（最多{{ count }}张）</span>
           <input
             @change="change"
-            type="file"
+            :type="type"
             accept="image/*"
+            :multiple="multiple"
             style="display: none;"
           >
         </label>
@@ -40,7 +41,14 @@ export default {
   name: 'PlUploadImg',
   data () {
     return {
+      type: 'file',
+      ups: [],
+      compress: []
     }
+  },
+  model: {
+    event: 'success',
+    prop: 'images'
   },
   props: {
     // 图片最大体积,单位M
@@ -58,21 +66,30 @@ export default {
       default: function () {
         return []
       }
-    }
+    },
+    multiple: Boolean
   },
   created () {
   },
   methods: {
     async change (e) {
-      const fileList = e.target.files
+      let fileList = Array.from(e.target.files)
+      let legitimate = fileList.some(file => !/.jpg|.png|.gif|.jpeg|.bmp/i.test(file.name))
+      if (legitimate) {
+        this.$error('不允许的图片格式')
+        this.refreshInput()
+        throw new Error('不允许的图片格式')
+      }
+      if (this.images.length + fileList.length >= this.count) {
+        this.refreshInput()
+        return this.$warning(`只允许上传${this.count}张图片`)
+      }
       try {
         for (let blob of fileList) {
-          // 如果图片体积过大，压缩至期望的大小
-          this.$indicator.open('正在压缩图片')
-          blob = await compress(blob, this.size)
-          this.$indicator.close()
-          this.up(blob)
+          this.compress.push(compress(blob, this.size))
+          this.ups.push(upload(blob))
         }
+        this.up()
       } catch (e) {
         throw e
       } finally {
@@ -80,26 +97,41 @@ export default {
         e.target.type = 'file'
       }
     },
-    async up (file) {
+    async up () {
       try {
+        this.$indicator.open('正在压缩图片')
+        await Promise.all(this.compress)
+        this.$indicator.close()
         this.$indicator.open('正在上传图片')
-        let res = await upload({ file })
-        this.$emit('success', res)
+        const data = await Promise.all(this.ups)
+        let imgs = []
+        for (let img of data) {
+          imgs.push(img.url)
+        }
+        this.$emit('success', imgs)
+        this.$emit('change', [this.images, ...imgs])
       } catch (e) {
         throw e
       } finally {
         this.$indicator.close()
+        this.compress = []
+        this.ups = []
       }
     },
     async removeImg (index) {
       try {
         let rm = this.images.splice(index, 1)
         this.$emit('change', this.images)
-        this.$emit('update:images', this.images)
         this.$emit('remove', index, rm)
       } catch (e) {
         throw e
       }
+    },
+    refreshInput () {
+      this.type = 'text'
+      this.$nextTick(() => {
+        this.type = 'file'
+      })
     }
   }
 }

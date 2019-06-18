@@ -317,6 +317,7 @@ export default {
     .pl-input__word-count {
       position: absolute;
       bottom: 0;
+      font-size: 20px;
       right: 28px;
       line-height: 32px;
       > i {

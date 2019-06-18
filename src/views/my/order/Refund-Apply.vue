@@ -79,9 +79,8 @@
           <pl-upload-img
             :count="9"
             :size="0.5"
-            :images.sync="imgList"
-            @remove="removeImg"
-            @success="uploaded"
+            v-model="form.pictures"
+            multiple
           />
         </div>
       </div>
@@ -226,7 +225,6 @@ export default {
       currentPopupName: '',
       popupTitle: '',
       popupOptions: [],
-      imgList: [],
       refundReasonKeyMap
     }
   },
@@ -250,7 +248,6 @@ export default {
   deactivated () {
     resetForm(this.form)
     resetForm(this.radio)
-    this.imgList = []
     this.isPopupShow = false
   },
   methods: {
@@ -289,7 +286,6 @@ export default {
           const { result } = await getRefundOrderDetail({ id })
           this.form.applyContent = result.applyContent
           this.form.pictures = [...result.pictures]
-          this.imgList = [...result.pictures]
           // 待发货状态默认为未收到货
           this.radio.goodsStatus = this.isWaitShip() ? '2' : String(result.receiveStatus)
           this.radio.goodsStatusText = this.isWaitShip() ? '未收到货' : receiveStatusMap[result.receiveStatus]
@@ -313,15 +309,6 @@ export default {
       let { currentPopupName, radio } = this
       radio[currentPopupName] = item.dictDataKey
       radio[`${currentPopupName}Text`] = item.dictDataValue
-    },
-    uploaded (res) {
-      if (res.res.status === 200) {
-        this.form.pictures.push(res.url)
-        this.imgList.push(res.url)
-      }
-    },
-    removeImg (index) {
-      this.form.pictures.splice(index, 1)
     },
     async confirm () {
       if (!this.radio.refundReason) return this.$warning('请选择退货原因')

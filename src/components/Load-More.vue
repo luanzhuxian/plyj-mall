@@ -38,8 +38,6 @@
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 32 32"
         v-if="bottomLoading"
-        width="32"
-        height="32"
         style="display: block;"
         fill="#fe7700"
       >
@@ -367,6 +365,8 @@ export default {
     min-height: 200px;
     .bottomLoadingIcon {
       margin: 30px auto 30px;
+      width: 62px;
+      height: 62px;
       &.btoRotate {
         animation: rotate .8s linear infinite;
       }

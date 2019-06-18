@@ -71,7 +71,7 @@ export default {
       const $Blob = this.getBlobBydataURI(this.img.base64, 'image/jpeg')
       try {
         this.$indicator.open('正在上传图片')
-        const { url } = await upload({ file: $Blob })
+        const { url } = await upload($Blob)
         await userInfoSettings({ headImgUrl: url })
         this.setAvatar(url)
         this.$success('上传成功')

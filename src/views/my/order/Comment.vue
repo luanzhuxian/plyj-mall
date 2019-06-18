@@ -33,10 +33,9 @@
       <div :class="$style.images">
         <pl-upload-img
           :count="9"
-          :size="0.5"
-          :images="images"
-          @success="uploaded"
-          @remove="removeImg"
+          :size="0.8"
+          v-model="images"
+          multiple
         />
       </div>
     </main>
@@ -101,6 +100,18 @@ export default {
       if (value.length === this.maxLength) {
         this.$toast(`最多输入${this.maxLength}个字`)
       }
+    },
+    images (val) {
+      console.log(val)
+      this.form.mediaInfoModels = []
+      for (let url of val) {
+        let obj = {
+          mediaType: 'image',
+          mediaFilename: url.split('/').splice(-1, 1)[0],
+          mediaUrl: url
+        }
+        this.form.mediaInfoModels.push(obj)
+      }
     }
   },
   activated () {
@@ -124,18 +135,18 @@ export default {
         throw e
       }
     },
-    uploaded (res) {
-      let obj = {
-        mediaType: 'image',
-        mediaFilename: res.name.split('/').splice(-1, 1)[0],
-        mediaUrl: res.url
-      }
-      this.form.mediaInfoModels.push(obj)
-      this.images.push(res.url)
-    },
-    removeImg (index) {
-      this.form.mediaInfoModels.splice(index, 1)
-    },
+    // uploaded (res) {
+    //   let obj = {
+    //     mediaType: 'image',
+    //     mediaFilename: res.name.split('/').splice(-1, 1)[0],
+    //     mediaUrl: res.url
+    //   }
+    //   this.form.mediaInfoModels.push(obj)
+    //   this.images.push(res.url)
+    // },
+    // removeImg (index) {
+    //   this.form.mediaInfoModels.splice(index, 1)
+    // },
     async confirm () {
       if (!this.form.content.trim()) return this.$warning('请输入评价内容')
       try {

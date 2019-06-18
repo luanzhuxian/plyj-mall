@@ -1,15 +1,9 @@
 import Compressor from 'compressorjs'
 import { getSTS } from '../../apis/base-api'
 const OSS = require('ali-oss')
-let EXPIRATION = 0
 const REGION = 'oss-cn-hangzhou'
 const BUCKET = 'penglai-weimall'
-const LIFETIME = 600000 // 10分钟
-const STS = {
-  securityToken: '',
-  accessKeySecret: '',
-  accessKeyId: ''
-}
+const STSLIFETIME = 600000 // STS有效时间，10分钟
 Compressor.setDefaults({
   checkOrientation: true, // 检查方向
   // 表示压缩后的图像尺寸大于原始图像尺寸时，是否输出原始图像而不是压缩后的图像，但以下情况除外:
@@ -59,27 +53,29 @@ export function compress (file, size, fileType) {
     }
   })
 }
-export async function upload ({ file }) {
+export async function upload (file) {
+  let sts = JSON.parse(localStorage.getItem('sts')) || {}
   let ext = null
+  let credentials = null
   try {
-    ext = /jpg|png|gif|jpeg|bmp/i.exec(file.type)[0] || ''
+    ext = /jpg|png|gif|jpeg|bmp/i.exec(file.type) || ''
   } catch (e) {
     throw new Error('不允许的图片格式')
   }
-  if (LIFETIME < Date.now() - new Date(EXPIRATION).getTime()) {
-    // 如果凭证过期
+  if (!sts.time || STSLIFETIME < Date.now() - sts.time) {
+    // sts过期
     let { result } = await getSTS()
-    let credentials = result.credentials
-    for (let k of Object.keys(STS)) {
-      STS[k] = credentials[k]
-    }
-    EXPIRATION = new Date(credentials.expiration).getTime()
+    credentials = result.credentials
+    result.time = Date.now()
+    localStorage.setItem('sts', JSON.stringify(result))
+  } else {
+    credentials = sts.credentials
   }
-  const { securityToken, accessKeySecret, accessKeyId } = STS
+  const { securityToken, accessKeySecret, accessKeyId } = credentials
   const client = new OSS({
     region: REGION,
-    accessKeyId: accessKeyId,
-    accessKeySecret: accessKeySecret,
+    accessKeyId,
+    accessKeySecret,
     stsToken: securityToken,
     bucket: BUCKET
   })
