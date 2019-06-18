@@ -19,6 +19,7 @@
       <image-crop
         style="width: 16vw;height: 16vw; border-radius: 50%; position: absolute;"
         :proportion="{ w: 50, h: 50 }"
+        @submit="submitImg"
         v-model="img"
       />
     </div>
@@ -53,17 +54,11 @@ export default {
   computed: {
     ...mapGetters(['avatar', 'userName', 'mobile', 'roleName'])
   },
-  watch: {
-    'img.base64': {
-      handler (newName, oldName) {
-        if (newName) {
-          this.uploadImg()
-        }
-      }
-    }
-  },
   methods: {
     ...mapMutations({ setAvatar: SET_AVATAR, setUserName: SET_USERNAME }),
+    submitImg () {
+      this.uploadImg()
+    },
     getBlobBydataURI (dataURI, type) {
       let binary = atob(dataURI.split(',')[1])
       let array = []
