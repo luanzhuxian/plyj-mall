@@ -43,11 +43,11 @@
               <div>规格</div>
               <div :class="$style.colorList">
                 <button
-                  v-for="(item, i) of data"
+                  v-for="(item, i) of localData"
                   :key="i"
                   :class="{ [$style.active]: item.optionCode === selected.optionCode }"
                   @click.stop="change(item)"
-                  :disabled="isDisabled(item)"
+                  :disabled="item.disabled"
                   v-text="item.optionName"
                 />
               </div>
@@ -82,7 +82,10 @@
               </div>
             </div>
           </div>
-          <div :class="$style.footer">
+          <div
+            :class="$style.footer"
+            v-if="selected.optionCode"
+          >
             <slot
               name="footer"
               :selected="selected"
@@ -130,7 +133,8 @@ export default {
       count: 1,
       min: 1,
       stock: 1,
-      inited: false
+      inited: false,
+      localData: []
     }
   },
   created () {
@@ -163,7 +167,7 @@ export default {
   },
   computed: {
     currentDisabled () {
-      return this.selected.stock === 0 || this.selected.stock < this.selected.minBuyNum
+      return this.isDisabled(this.selected)
     }
   },
   methods: {
@@ -177,19 +181,27 @@ export default {
       }
     },
     isDisabled (option) {
-      return option.stock === 0 || option.stock < option.minBuyNum
+      return !option.optionCode || (option.stock === 0 || option.stock < option.minBuyNum)
     },
-    // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个，并触发一次change事件
+    // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个(禁用的不能选中)，并触发一次change事件
     init () {
+      let selected = null
       this.inited = true
       this.count = this.defaultCount
-      const currentSku = this.data.find(item => item.optionCode === this.defaultCode)
-      let selected = null
-      selected = currentSku || this.data[0]
+      let currentSku = this.data.find(item => {
+        item.disabled = this.isDisabled(item)
+        return item.optionCode === this.defaultCode
+      })
+      if (!currentSku) {
+        selected = this.data.filter(item => !item.disabled)[0] || {}
+      } else {
+        selected = currentSku
+      }
       this.min = selected.minBuyNum || 1
       if (!this.count) {
         this.count = this.min
       }
+      this.localData = this.data
       this.stock = selected.stock
       this.change(selected)
     },
@@ -327,23 +339,24 @@ export default {
     > button {
       position: relative;
       margin: 0 13px 13px 0;
-      padding: 10px 20px;
+      padding: 0 20px;
+      width: max-content;
+      line-height: 60px;
       color: #666;
       font-size: 24px;
       background-color: #f3f3f3;
+      border: 1px solid #f3f3f3;
       border-radius: $--radius2;
       overflow: visible;
+      box-sizing: border-box;
       &:disabled {
         color: #ccc !important;
-        &:after {
-          border-color: #ccc !important;
-        }
       }
       &.active {
-        background: none;
         color: $--primary-color;
         border: 1px solid currentColor;
         border-radius: 9px;
+        background: none;
       }
     }
   }
