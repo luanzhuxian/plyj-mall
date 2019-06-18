@@ -103,11 +103,9 @@ export default {
 .pl-fields {
   position: relative;
   background-color: #fff;
+  border-bottom: 1px solid #e7e7e7;
   &:nth-last-of-type(1):after {
     display: none;
-  }
-  &:after {
-    @include border-half-bottom(#e7e7e7);
   }
 }
   .pl-fields_box {

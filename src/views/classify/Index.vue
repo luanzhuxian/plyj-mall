@@ -242,9 +242,7 @@ export default {
   background-color: #fff;
   box-sizing: border-box;
   z-index: 9;
-  &:after {
-    @include border-half-bottom(#e7e7e7);
-  }
+  border-bottom: 1px solid #f7f7f7;
 }
 .search-box {
   display: flex;
@@ -294,14 +292,12 @@ export default {
     font-size: 26px;
     text-align: center;
     white-space: pre-wrap;
+    border-bottom: 1px solid #fff;
     &:nth-last-of-type(1) {
       margin-bottom: 108px;
       &:after {
         display: none;
       }
-    }
-    &:after {
-      @include border-half-bottom(#fff);
     }
     transition: background-color .2s linear, color .2s linear;
   }

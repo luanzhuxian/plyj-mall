@@ -143,9 +143,7 @@ export default {
       position: relative;
       font-size: 30px;
       text-align: center;
-      &:after {
-        @include border-half-bottom(#e7e7e7);
-      }
+      border-bottom: 1px solid #e7e7e7;
     }
     p {
       font-size: 26px;

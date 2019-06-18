@@ -75,10 +75,7 @@ export default {
         align-items: center;
         height: 124px;
         padding: 0 30px;
-        &:after {
-          @include border-half-bottom(#e7e7e7);
-          left: -310px;
-        }
+        border-bottom: 1px solid #f7f7f7;
         &:nth-of-type(1) {
           height: 138px;
         }

@@ -234,9 +234,8 @@ export default {
     &.border {
       padding: 0 24px;
       height: 100%;
-      &:after {
-        @include border-half(#e7e7e7, 32px)
-      }
+      border: 1px solid #e7e7e7;
+      border-radius: 16px;
     }
     &.pl-input-small {
       min-height: 92px;

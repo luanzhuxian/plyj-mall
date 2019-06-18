@@ -95,9 +95,7 @@ export default {
     align-items: center;
     padding: 0 30px;
     height: 144px;
-    &:after {
-      @include border-half-bottom(#e7e7e7);
-    }
+    border-bottom: 1px solid #f7f7f7;
   }
   .detail {
     padding: 30px;

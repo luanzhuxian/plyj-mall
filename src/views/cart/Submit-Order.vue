@@ -458,16 +458,12 @@ export default {
     font-weight: bold;
     padding-bottom: 22px;
     margin-bottom: 30px;
-    &:after {
-      @include border-half-bottom(#e7e7e7)
-    }
+    border-bottom: 1px solid #e7e7e7;
   }
   .money {
     position: relative;
     padding: 22px 0;
-    &:after {
-      @include border-half-bottom(#e7e7e7);
-    }
+    border-bottom: 1px solid #e7e7e7;
     > p {
       display: flex;
       justify-content: space-between;
@@ -506,9 +502,7 @@ export default {
       line-height: 114px;
       font-size: 36px;
       padding: 0 40px;
-      &:after {
-        @include border-half-bottom(#e7e7e7)
-      }
+      border-bottom: 1px solid #e7e7e7;
     }
     .content {
       padding: 62px 40px;

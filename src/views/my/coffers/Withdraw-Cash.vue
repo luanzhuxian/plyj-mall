@@ -122,6 +122,7 @@ export default {
     padding-bottom: 22px;
     align-items: center;
     height: 80px;
+    border-bottom: 1px solid #f7f7f7;
     > div {
       flex: 1;
     }
@@ -134,15 +135,13 @@ export default {
         fill: #999;
       }
     }
-    &:after {
-      @include border-half-bottom(#e7e7e7);
-    }
   }
   .input {
     position: relative;
     display: flex;
     padding-bottom: 30px;
     overflow: hidden;
+    border-bottom: 1px solid #f7f7f7;
     i {
       margin-right: 16px;
       font-size: 55px;
@@ -150,9 +149,6 @@ export default {
     }
     input {
       color: #333;
-    }
-    &:after {
-      @include border-half-bottom(#e7e7e7);
     }
   }
   .all-money {

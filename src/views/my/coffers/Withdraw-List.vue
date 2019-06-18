@@ -223,9 +223,7 @@ export default {
     font-size: 28px;
     background-color: #fff;
     text-align: center;
-    &:after {
-      @include border-half-bottom(#e7e7e7)
-    }
+    border-bottom: 1px solid #f7f7f7;
     &.tabOpen {
       .onOff {
         color: $--warning-color;

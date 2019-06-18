@@ -105,10 +105,7 @@ export default {
     box-sizing: border-box;
     border-radius: 8px;
     background-color: transparent;
-    &:after {
-      @include border-half(#e7e7e7, 16px);
-      z-index: 1;
-    }
+    border: 1px solid #e7e7e7;
     .input {
       flex: 1;
       width: 100%;
@@ -134,14 +131,10 @@ export default {
        }
     }
     .subtract {
-      &:after {
-        @include border-half-right(#e7e7e7)
-      }
+      border-right: 1px solid #e7e7e7;
     }
     .add {
-      &:after {
-        @include border-half-left(#e7e7e7)
-      }
+      border-left: 1px solid #e7e7e7;
     }
   }
 </style>

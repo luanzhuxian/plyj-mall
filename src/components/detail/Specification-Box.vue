@@ -69,9 +69,7 @@ export default {
     padding: 30px 0;
     background-color: #fff;
     overflow: hidden;
-    &:before {
-      @include border-half-top(#e7e7e7)
-    }
+    border-top: 1px solid #e7e7e7;
     .specification {
       display: inline-flex;
       justify-content: flex-end;

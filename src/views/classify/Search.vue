@@ -187,9 +187,7 @@ export default {
     position: relative;
     height: 92px;
     padding: 0 40px;
-    &:after {
-      @include border-half-bottom(#e7e7e7);
-    }
+    border-bottom: 1px solid #f7f7f7;
     button {
       font-size: 28px;
       color: #1890FF;
@@ -230,9 +228,7 @@ export default {
     width: 670px;
     margin: 0 auto;
     padding-bottom: 50px;
-    &.border:after {
-      @include border-half-bottom(#e7e7e7);
-    }
+    border-bottom: 1px solid #f7f7f7;
     .top {
       display: flex;
       justify-content: space-between;

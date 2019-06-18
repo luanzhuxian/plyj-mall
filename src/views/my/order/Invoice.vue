@@ -315,9 +315,7 @@ export default {
     height: 108px;
     line-height: 108px;
     padding: 0 28px;
-    &:after{
-      @include border-half-bottom(#e7e7e7)
-    }
+    border-bottom: 1px solid #e7e7e7;
     span:nth-of-type(2) {
       position: relative;
       display: inline-block;
@@ -325,9 +323,8 @@ export default {
       text-align: center;
       line-height: 52px;
       color: $--warning-color;
-      &:after {
-        @include border-half($--warning-color, 53px)
-      }
+      border: 1px solid $--warning-color;
+      border-radius: 26px;
     }
   }
   .invoice-form {

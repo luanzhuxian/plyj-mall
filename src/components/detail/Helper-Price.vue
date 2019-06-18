@@ -47,9 +47,7 @@ export default {
     align-items: start;
     padding: 20px 0;
     background-color: #fff;
-    &:before {
-      @include border-half-top(#e7e7e7);
-    }
+    border-top: 1px solid #e7e7e7;
     svg {
       width: 30px;
       height: 30px;

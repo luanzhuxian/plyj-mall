@@ -216,9 +216,7 @@ export default {
     padding: 15px 0;
     font-size: 24px;
     text-align: left;
-    &:after {
-      @include  border-half-bottom(#f3f3f3);
-    }
+    border-bottom: 1px solid #f3f3f3;
     span {
       &:nth-of-type(1) {
         width: 160px;

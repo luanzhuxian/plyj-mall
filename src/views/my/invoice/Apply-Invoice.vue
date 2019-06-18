@@ -463,9 +463,7 @@ export default {
     line-height: 108px;
     > div:nth-of-type(1) {
       position: relative;
-      &:after {
-        @include border-half-bottom(#e7e7e7)
-      }
+      border-bottom: 1px solid #e7e7e7;
     }
   }
   .firmInvioce {
@@ -486,9 +484,7 @@ export default {
     font-size: 28px;
     color: #999;
     background-color: #fcfcfc;
-    &:before {
-      @include border-half-top(#f0f0f0)
-    }
+    border-top: 1px solid #f0f0f0;
     > svg {
       width: 38px;
       height: 38px;

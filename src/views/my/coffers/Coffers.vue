@@ -198,9 +198,7 @@ export default {
     border-radius: 33px;
     color: #ABA9EB;
     font-size: 24px;
-    &:after {
-      @include border-half(#ABA9EB, 66px)
-    }
+    border: 1px solid #ABA9EB;
   }
   .see-more {
     width: 277px;

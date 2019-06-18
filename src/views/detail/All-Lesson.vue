@@ -110,9 +110,7 @@ export default {
       vertical-align: baseline;
       &.active {
         color: $--warning-color;
-        &:after {
-          @include border-half($--warning-color, 60px)
-        }
+        border: 1px solid $--warning-color;
       }
     }
   }

@@ -47,7 +47,7 @@ $--radius2: 10px;
 //##
 //#0.5像素边框
 //##
-@mixin border-half-bottom($color) {
+/*@mixin border-half-bottom($color) {
   position: absolute;
   content: "";
   width: 200%;
@@ -102,7 +102,7 @@ $--radius2: 10px;
   border-radius: $radius;
   transform: scale(.5);
   box-sizing: border-box;
-}
+}*/
 // 文字两端对齐
 @mixin text-justify () {
   text-align:justify;

@@ -62,9 +62,7 @@ export default {
     padding: 28px 24px 28px;
     background-color: #fff;
     border-radius: 20px;
-    &:after {
-      @include border-half-bottom(#e7e7e7);
-    }
+    border-bottom: 1px solid #e7e7e7;
     .right {
       flex: 1;
     }

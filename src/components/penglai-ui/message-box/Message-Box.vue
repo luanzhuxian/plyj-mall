@@ -222,9 +222,7 @@ export default {
         position: relative;
         color: #666;
         font-weight: normal;
-        &:after {
-          @include border-half-right(#D3D1D2)
-        }
+        border-right: 1px solid #D3D1D2;
       }
     }
   }

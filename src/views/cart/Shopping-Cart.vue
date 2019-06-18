@@ -297,9 +297,7 @@ export default {
     background-color: #fff;
     box-sizing: border-box;
     z-index: 4;
-    &:after {
-      @include border-half-bottom(#e7e7e7)
-    }
+    border-bottom: 1px solid #e7e7e7;
   }
   .selectedCount {
     font-size: 22px;

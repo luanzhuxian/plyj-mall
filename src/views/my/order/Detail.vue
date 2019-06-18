@@ -723,9 +723,7 @@ export default {
     margin-top: 24px;
     margin-left: 24px;
     padding-top: 16px;
-    &:after {
-      @include border-half-top(#e7e7e7)
-    }
+    border-top: 1px solid #e7e7e7;
   }
   .explain-box {
     margin-top: 14px;
@@ -742,9 +740,7 @@ export default {
     line-height: 50px;
     font-size: 26px;
     color: #666666;
-    &:after {
-      @include border-half-top(#e7e7e7);
-    }
+    border-top: 1px solid #e7e7e7;
     p {
       display: flex;
       justify-content: space-between;

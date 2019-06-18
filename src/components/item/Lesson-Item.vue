@@ -117,9 +117,7 @@ export default {
   display: grid;
   &.border {
     position: relative;
-    &:after {
-      @include border-half-bottom(#e7e7e7);
-    }
+    border-bottom: 1px solid #f7f7f7;
   }
   &:nth-last-of-type(1) {
     &:after {

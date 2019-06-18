@@ -204,9 +204,7 @@ export default {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    &:before {
-      @include border-half-left(#e7e7e7)
-    }
+    border-left: 1px solid #e7e7e7;
     span {
       position: relative;
       align-self: center;

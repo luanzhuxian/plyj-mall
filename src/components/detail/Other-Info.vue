@@ -52,6 +52,7 @@ export default {
     font-size: 22px;
     color: #999;
     line-height: 32px;
+    border-top: 1px solid #e7e7e7;
     p {
       margin-bottom: 9px;
     }
@@ -60,9 +61,6 @@ export default {
       margin-right: 10px;
       vertical-align: -4px;
       fill: currentColor;
-    }
-    &:before {
-      @include border-half-top(#e7e7e7)
     }
   }
   .address {
@@ -76,7 +74,7 @@ export default {
     height: 36px;
     padding-left: 40px;
     font-size: 0;
-    @include border-half-left(#e7e7e7);
+    border-left: 1px solid #e7e7e7;
     svg {
       margin: 0;
       width: 36px;

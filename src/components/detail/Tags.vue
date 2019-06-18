@@ -34,9 +34,7 @@ export default {
       font-size: 20px;
       background-color: #f6f7fa;
       border-radius: 4px;
-      &:after {
-        @include border-half(#e1e2e6, 8px)
-      }
+      border: 1px solid #e7e7e7;
     }
   }
 </style>

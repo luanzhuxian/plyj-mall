@@ -242,9 +242,6 @@ export default {
         justify-content: space-between;
         align-items: center;
         padding: 22px 0 36px;
-        // &:after {
-        //   @include border-half-bottom(#e7e7e7);
-        // }
       }
     }
     .status {

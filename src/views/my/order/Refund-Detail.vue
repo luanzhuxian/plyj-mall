@@ -643,9 +643,7 @@ export default {
       position: relative;
       padding: 20px 24px 24px 0;
       margin-top: 20px;
-      &:before {
-        @include border-half-top(#e7e7e7);
-      }
+      border-top: 1px solid #e7e7e7;
     }
     .info-list {
       padding-right: 24px;
@@ -692,9 +690,7 @@ export default {
 
   .border-top {
     position: relative;
-    &:before {
-      @include border-half-top(#F0F0F0);
-    }
+    border-top: 1px solid #F0F0F0;
   }
   .bold {
     font-weight: bold;

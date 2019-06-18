@@ -281,9 +281,7 @@ export default {
       font-size: 0;
       overflow: scroll;
       white-space: nowrap;
-      &:after {
-        @include border-half-bottom(#e7e7e7)
-      }
+      border: 1px solid #e7e7e7;
       span {
         display: inline-block;
         position: relative;

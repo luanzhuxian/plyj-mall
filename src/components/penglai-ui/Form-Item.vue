@@ -92,9 +92,7 @@ export default {
     align-items: center;
     background-color: #fff;
     &.border {
-      &:after {
-        @include border-half-bottom(#e7e7e7);
-      }
+      border-bottom: 1px solid #e7e7e7;
     }
     &:nth-last-of-type(1):after {
       display: none;

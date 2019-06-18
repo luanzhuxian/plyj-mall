@@ -48,9 +48,7 @@ export default {
       font-size: 30px;
       color: #2e2e2e;
       line-height: 102px;
-      &:after {
-        @include border-half-bottom(#f3f3f3)
-      }
+      border-bottom: 1px solid #f3f3f3;
     }
   }
 </style>

@@ -167,15 +167,13 @@ export default {
     display: flex;
     padding-bottom: 28px;
     margin-bottom: 32px;
+    border-bottom: 1px solid #e7e7e7;
     > img {
       width: 80px;
       height: 80px;
       margin-right: 24px;
       object-fit: cover;
       border-radius: 50%;
-    }
-    &:after {
-      @include border-half-bottom(#e7e7e7);
     }
     &:nth-last-of-type(1) {
       margin-bottom: 0;
