@@ -146,12 +146,13 @@
           :content="orderId"
         />
         <pl-list
+          v-if="message"
           title="订单备注："
           :content="message"
         />
       </div>
       <div
-        v-if="!isClosedByCancle"
+        v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle"
         :class="$style.infoBottom"
       >
         <pl-list

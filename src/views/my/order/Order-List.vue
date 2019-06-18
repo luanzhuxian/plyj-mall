@@ -291,12 +291,16 @@ export default {
       try {
         await this.$confirm('您确定收货吗？')
         await confirmReceipt(orderId)
+        this.$success('确认收货成功')
+        setTimeout(() => {
+          this.$router.push({ name: 'OrderComplete', params: { orderId } })
+        }, 2000)
         // 跳转至待评价
-        this.form.orderStatus = 'FINISHED'
-        this.tabChange({
-          name: '待评价',
-          id: 'FINISHED'
-        })
+        // this.form.orderStatus = 'FINISHED'
+        // this.tabChange({
+        //   name: '待评价',
+        //   id: 'FINISHED'
+        // })
       } catch (e) {
         throw e
       }

@@ -26,14 +26,14 @@
         <pl-fields
           text="货物状态："
           :right-text="radio.goodsStatusText || '请选择'"
-          :show-right-icon="canGoodsStatusChange"
+          show-right-icon
           @click="() => {canGoodsStatusChange ? showPopup('goodsStatus') : ''}"
         />
         <pl-fields
           text="退货原因："
           :right-text="radio.refundReasonText || '请选择'"
           show-right-icon
-          @click="showPopup('refundReason')"
+          @click="() => {canRefundReasonChange ? showPopup('refundReason') : ''}"
         />
         <div :class="$style.item">
           <span :class="$style.itemLeft">
@@ -170,11 +170,17 @@ const goodsStatusMap = {
   '2': '未收到货'
 }
 
-const refundReasonKeyMap = {
-  'WAIT_SHIP': 'REASONBUYERPAID',
-  'WAIT_RECEIVE': 'REASONSNOTRECEIVEDGOODS',
-  'FINISHED': 'REASONSRECEIVEDGOODS'
-}
+// const refundReasonKeyMap = {
+//   'WAIT_SHIP': 'REASONBUYERPAID',
+//   'WAIT_RECEIVE': {
+//     '1': {
+//       '1': 'REASONSRECEIVEDGOODS',
+//       '2': 'REASONSNOTRECEIVEDGOODS'
+//     },
+//     '2': 'REASONSRECEIVEDGOODS'
+//   },
+//   'FINISHED': 'REASONSRECEIVEDGOODS'
+// }
 
 export default {
   name: 'RefundApply',
@@ -240,8 +246,7 @@ export default {
       isPopupShow: false,
       currentPopupName: '',
       popupTitle: '',
-      popupOptions: [],
-      refundReasonKeyMap
+      popupOptions: []
     }
   },
   computed: {
@@ -258,7 +263,33 @@ export default {
     },
     canGoodsStatusChange () {
       return !this.isWaitShip && !this.isRefundGoods
+    },
+    canRefundReasonChange () {
+      return this.radio.goodsStatus && this.radio.goodsStatusText
+    },
+    refundReasonCode () {
+      return (
+        this.orderStatus === 'WAIT_SHIP'
+          ? 'REASONBUYERPAID'
+          : (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
+            ? this.radio.refundType === '1'
+              ? this.radio.goodsStatus === '1'
+                ? 'REASONSRECEIVEDGOODS'
+                : 'REASONSNOTRECEIVEDGOODS'
+              : 'REASONSRECEIVEDGOODS'
+            : '')
     }
+    // const refundReasonKeyMap = {
+    //   'WAIT_SHIP': 'REASONBUYERPAID',
+    //   'WAIT_RECEIVE': {
+    //     '1': {
+    //       '1': 'REASONSRECEIVEDGOODS',
+    //       '2': 'REASONSNOTRECEIVEDGOODS'
+    //     },
+    //     '2': 'REASONSRECEIVEDGOODS'
+    //   },
+    //   'FINISHED': 'REASONSRECEIVEDGOODS'
+    // }
   },
   watch: {
     'form.applyContent' (value) {
@@ -300,20 +331,20 @@ export default {
       const { result } = await getOrderDetail(this.orderId)
       this.orderStatus = result.orderStatus
       this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
-      this.form.actualRefund = this.productInfo.amount
-      // 获取数据字典
-      const { result: refundReasonMap } = await getRefundReasonMap(refundReasonKeyMap[result.orderStatus])
-      this.refundReasonInfo.options = refundReasonMap
       // 待发货状态默认为未收到货
       if (result.orderStatus === 'WAIT_SHIP') {
         this.radio.goodsStatus = '2'
         this.radio.goodsStatusText = '未收到货'
       }
+      if (this.type === 'APPLY') this.form.actualRefund = this.productInfo.amount;  // eslint-disable-line
+      // 获取数据字典
+      ({ result: this.refundReasonInfo.options } = await getRefundReasonMap(this.refundReasonCode))
     },
     getRefundInfo () {
       return new Promise(async (resolve, reject) => {
         try {
           const { result } = await getRefundOrderDetail({ id: this.refundId })
+          this.form.actualRefund = result.actualRefund
           this.form.applyContent = result.applyContent
           this.form.pictures = [...result.pictures]
           this.imgList = [...result.pictures]
@@ -338,13 +369,21 @@ export default {
         this.isPopupShow = true
       })
     },
-    handleRadioClick (item) {
+    async handleRadioClick (item) {
       let { currentPopupName, radio } = this
       radio[currentPopupName] = item.dictDataKey
       radio[`${currentPopupName}Text`] = item.dictDataValue
       if (currentPopupName === 'refundType') {
         this.radio.goodsStatus = this.isRefundGoods ? '1' : ''
         this.radio.goodsStatusText = this.isRefundGoods ? '已收到货' : ''
+        this.radio.refundReason = ''
+        this.radio.refundReasonText = '';  // eslint-disable-line
+        ({ result: this.refundReasonInfo.options } = await getRefundReasonMap(this.refundReasonCode))
+      }
+      if (currentPopupName === 'goodsStatus') {
+        this.radio.refundReason = ''
+        this.radio.refundReasonText = '';  // eslint-disable-line
+        ({ result: this.refundReasonInfo.options } = await getRefundReasonMap(this.refundReasonCode))
       }
     },
     async confirm () {

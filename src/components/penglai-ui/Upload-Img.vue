@@ -106,7 +106,6 @@ export default {
           this.images.push(img.url)
           imgs.push(img.url)
         }
-        console.log(this.images)
         this.$emit('success', imgs)
         this.$emit('change', this.images)
       } catch (e) {
