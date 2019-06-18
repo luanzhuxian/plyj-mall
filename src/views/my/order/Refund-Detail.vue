@@ -222,6 +222,8 @@
       <pl-button
         size="larger"
         type="warning"
+        :loading="loading"
+        :disabled="loading"
         @click="submit"
       >
         提交申请
@@ -405,6 +407,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       loaded: false,
       refundStatus: '',
       refundDetail: {},
@@ -491,23 +494,6 @@ export default {
       this.form.expressName = selected[0]
       this.isPickerShow = false
     },
-    async submit () {
-      try {
-        if (!this.form.expressName) return this.$warning('请选择物流公司')
-        if (!this.form.expressNo.trim()) return this.$warning('请输入快递单号')
-        const { dictDataKey: shipChannel } = this.expressMap.find(item => item.dictDataValue === this.form.expressName)
-        const params = {
-          id: this.id,
-          shipChannel,
-          shipSn: this.form.expressNo
-        }
-        await submitExpressInfo(params)
-        this.$success('提交申请成功')
-        this.getDetail()
-      } catch (e) {
-        throw e
-      }
-    },
     async cancelApplication () {
       try {
         const { id } = this
@@ -517,6 +503,27 @@ export default {
         this.getDetail()
       } catch (e) {
         throw e
+      }
+    },
+    async submit () {
+      try {
+        if (!this.form.expressName) return this.$warning('请选择物流公司')
+        if (!this.form.expressNo.trim()) return this.$warning('请输入快递单号')
+        this.loading = true
+        const { dictDataKey: shipChannel } = this.expressMap.find(item => item.dictDataValue === this.form.expressName)
+        const params = {
+          id: this.id,
+          shipChannel,
+          shipSn: this.form.expressNo
+        }
+        await submitExpressInfo(params)
+        this.loading = false
+        this.$success('提交申请成功')
+        this.getDetail()
+      } catch (e) {
+        throw e
+      } finally {
+        this.loading = false
       }
     },
     doCopy () {

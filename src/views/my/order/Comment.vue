@@ -41,9 +41,10 @@
     </main>
     <div :class="$style.footer">
       <pl-button
-        :loading="loading"
         size="larger"
         type="warning"
+        :loading="loading"
+        :disabled="loading"
         @click="confirm"
       >
         发布评论
@@ -145,8 +146,9 @@ export default {
           this.$router.replace({ name: 'OrderDetail', params: { orderId: this.orderId } })
         }, 2000)
       } catch (e) {
-        this.loading = false
         throw e
+      } finally {
+        this.loading = false
       }
     }
   }

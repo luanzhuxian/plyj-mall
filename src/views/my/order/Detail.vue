@@ -583,10 +583,10 @@ export default {
       })
     },
     async pay () {
-      const { orderId } = this
-      this.payloading = true
-      this.currentPayId = orderId
       try {
+        const { orderId } = this
+        this.currentPayId = orderId
+        this.payloading = true
         const { result } = await getAwaitPayInfo(orderId)
         // 调用微信支付api
         await wechatPay(result)

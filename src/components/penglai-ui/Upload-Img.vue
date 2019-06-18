@@ -80,7 +80,7 @@ export default {
         this.refreshInput()
         throw new Error('不允许的图片格式')
       }
-      if (this.images.length + fileList.length >= this.count) {
+      if (this.images.length + fileList.length > this.count) {
         this.refreshInput()
         return this.$warning(`只允许上传${this.count}张图片`)
       }

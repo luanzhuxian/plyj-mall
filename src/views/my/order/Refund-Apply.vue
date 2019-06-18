@@ -89,6 +89,8 @@
       <pl-button
         size="larger"
         type="warning"
+        :loading="loading"
+        :disabled="loading"
         @click="confirm"
       >
         提交申请
@@ -205,6 +207,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       orderStatus: '',
       productInfo: {},
       form: {
@@ -353,6 +356,7 @@ export default {
     },
     async request () {
       try {
+        this.loading = true
         const { type, form: { actualRefund, ...rest } } = this
         const params = {
           ...rest,
@@ -366,12 +370,15 @@ export default {
         const message = type === 'MODIFY' ? '更改退单成功，请等待卖家反馈' : '申请售后成功，请等待卖家反馈'
         await this.$confirm('确定提交吗？')
         const { result } = await fn(params)
+        this.loading = false
         this.$success(message)
         setTimeout(() => {
           this.$router.replace({ name: 'RefundDetail', params: { id: result.id } })
         }, 2000)
       } catch (e) {
         throw e
+      } finally {
+        this.loading = false
       }
     }
   }
