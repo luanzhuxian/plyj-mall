@@ -54,9 +54,11 @@ export default {
     ...mapGetters(['avatar', 'userName', 'mobile', 'roleName'])
   },
   watch: {
-    async img (val) {
-      if (val.base64) {
-        this.uploadImg()
+    'img.base64': {
+      handler (newName, oldName) {
+        if (newName) {
+          this.uploadImg()
+        }
       }
     }
   },
