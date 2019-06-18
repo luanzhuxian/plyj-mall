@@ -220,7 +220,7 @@ export default {
       }
       if (this.count > this.stock) {
         this.count = this.stock
-        this.$warning(`购买数量不能大于库存`)
+        this.$warning(`购买的宝贝数超过剩余库存`)
       }
       this.selected.count = this.count
     },
