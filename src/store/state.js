@@ -82,14 +82,6 @@ export default {
     // 交易成功的待退款
     FINISHED_REFUND: '待退款'
   },
-  orderStatusMapCamel: {
-    new: 'NEW',
-    waitPayment: 'WAIT_PAY',
-    waitDelivery: 'WAIT_SHIP',
-    waitCollect: 'WAIT_RECEIVE',
-    comment: 'FINISHED',
-    afterSale: 'AFTER_SALE'
-  },
   refundStatusMap: {
     WAIT_CHECK: '待审核',
     REFUND_PRODUCT_WAIT_RETURN: '退换货', // 退换货-待退货

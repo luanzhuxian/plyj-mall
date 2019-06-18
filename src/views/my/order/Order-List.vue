@@ -4,7 +4,6 @@
       size="small"
       :tabs="tabs"
       :active-id.sync="form.orderStatus"
-      :count="count"
       @change="tabChange"
     >
       <div
@@ -12,13 +11,7 @@
         v-for="(item, i) of tabs"
         :key="i"
         :slot="'tab-pane-' + i"
-      >
-        <span
-          :class="$style.tabCountNumber"
-          v-if="count[item.id]"
-          v-text="count[item.id]"
-        />
-      </div>
+      />
     </pl-tab>
     <div :class="$style.orderList">
       <load-more
@@ -145,8 +138,7 @@ import {
   getAwaitPayInfo,
   confirmReceipt,
   cancelOrder,
-  deleteOrder,
-  orderPhysicalorderSummary
+  deleteOrder
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 
@@ -185,14 +177,6 @@ const refundStatusMap = {
   '5': '退款中' //  退换货-待退货
 }
 
-const count = {
-  WAIT_PAY: 0,
-  WAIT_RECEIVE: 0,
-  WAIT_SHIP: 0,
-  FINISHED: 0,
-  AFTER_SALE: 0
-}
-
 export default {
   name: 'OrderList',
   components: {
@@ -216,7 +200,6 @@ export default {
         orderStatus: ''
       },
       getOrderList,
-      orderPhysicalorderSummary,
       $refresh: null,
       loading: false,
       payloading: false,
@@ -229,14 +212,13 @@ export default {
           textAlign: 'center'
         }
       ],
-      count,
       orderTypeMap,
       orderFinishMap,
       refundStatusMap
     }
   },
   computed: {
-    ...mapGetters(['orderStatusMap', 'orderStatusMapCamel'])
+    ...mapGetters(['orderStatusMap'])
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
@@ -265,21 +247,20 @@ export default {
         item.totalCount = counter(item.products)('purchaseQuantity')
       }
       this.orderList = list
-      this.getOrderSummary()
     },
-    async getOrderSummary () {
-      try {
-        const { orderStatusMapCamel } = this
-        const { result } = await orderPhysicalorderSummary(this.userId)
-        for (let key of Object.keys(result)) {
-          if (orderStatusMapCamel.hasOwnProperty(key)) {
-            this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
-          }
-        }
-      } catch (e) {
-        throw e
-      }
-    },
+    // async getOrderSummary () {
+    //   try {
+    //     const { orderStatusMapCamel } = this
+    //     const { result } = await orderPhysicalorderSummary(this.userId)
+    //     for (let key of Object.keys(result)) {
+    //       if (orderStatusMapCamel.hasOwnProperty(key)) {
+    //         this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
+    //       }
+    //     }
+    //   } catch (e) {
+    //     throw e
+    //   }
+    // },
     async pay (orderId, orderType) {
       this.payloading = true
       this.currentPayId = orderId
@@ -420,14 +401,6 @@ export default {
     transform: scale(.5);
     transform-origin: 0 0;
     color: #fff;
-  }
-  .tab-count-number {
-    display: inline-flex;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background: url("../../../assets/images/my/circle.png") no-repeat center center;
-    background-size: 100%;
   }
   .order-item-left {
     display: inline-flex;

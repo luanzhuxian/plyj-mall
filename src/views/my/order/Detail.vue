@@ -217,7 +217,11 @@
       </div>
     </div>
 
-    <div :class="$style.footer">
+    <div
+      class="footer"
+      :class="$style.footer"
+      :style="{ justifyContent: orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED' ? 'space-around' : 'flex-end' }"
+    >
       <pl-button
         v-if="orderStatus === 'WAIT_PAY'"
         round
@@ -783,6 +787,9 @@ export default {
 
     > button {
       margin-left: 15px;
+      &:nth-of-type(1) {
+        margin-left: 0;
+      }
     }
   }
 
@@ -882,7 +889,6 @@ export default {
     .pl-button__small.plain:after {
       border: 1px solid #CCC;
     }
-
   }
   .pl-collapse-item {
     .pl-collapse-item__content {
@@ -894,5 +900,9 @@ export default {
       }
     }
   }
-
+  .footer {
+    .pl-button__small {
+      padding: 0 25px;
+    }
+  }
 </style>

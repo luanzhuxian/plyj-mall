@@ -19,16 +19,18 @@
         <pl-fields
           class="right-text--bold"
           text="服务类型："
-          :right-text="refundTypeMap[refundType]"
+          :right-text="radio.refundTypeText || '请选择'"
+          :show-right-icon="canRefundTypeChange"
+          @click="() => {canRefundTypeChange ? showPopup('refundType') : ''}"
         />
         <pl-fields
           text="货物状态："
           :right-text="radio.goodsStatusText || '请选择'"
-          :show-right-icon="!isWaitShip()"
-          @click="() => {isWaitShip() ? '' : showPopup('goodsStatus')}"
+          :show-right-icon="canGoodsStatusChange"
+          @click="() => {canGoodsStatusChange ? showPopup('goodsStatus') : ''}"
         />
         <pl-fields
-          text="请选择退货原因："
+          text="退货原因："
           :right-text="radio.refundReasonText || '请选择'"
           show-right-icon
           @click="showPopup('refundReason')"
@@ -53,9 +55,6 @@
               placeholder="请输入"
               align="right"
             /> -->
-            <!-- <div :class="$style.price">
-              {{ `￥${form.actualRefund}` }}
-            </div> -->
             <div :class="$style.tips">
               运费不可退，如有疑问，请联系商家协商
             </div>
@@ -144,7 +143,17 @@ import { resetForm } from '../../../assets/js/util'
 import { isPositive } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 
-const receiveStatusOptions = [
+const refundTypeOptions = [
+  {
+    dictDataKey: '1',
+    dictDataValue: '退款'
+  }, {
+    dictDataKey: '2',
+    dictDataValue: '退款退货'
+  }
+]
+
+const goodsStatusOptions = [
   {
     dictDataKey: '1',
     dictDataValue: '已收到货'
@@ -154,7 +163,7 @@ const receiveStatusOptions = [
   }
 ]
 
-const receiveStatusMap = {
+const goodsStatusMap = {
   '1': '已收到货',
   '2': '未收到货'
 }
@@ -197,24 +206,28 @@ export default {
   data () {
     return {
       orderStatus: '',
-      operationType: '', // 在何种情况下退款,
       productInfo: {},
       form: {
         orderDetailId: this.orderProductRId,
-        refundType: '',
         actualRefund: '',
         applyContent: '',
         pictures: []
       },
       radio: {
+        refundType: '',
+        refundTypeText: '',
         goodsStatus: '',
         goodsStatusText: '',
         refundReason: '',
         refundReasonText: ''
       },
+      refundTypeInfo: {
+        title: '服务类型',
+        options: refundTypeOptions
+      },
       goodsStatusInfo: {
         title: '货物状态',
-        options: receiveStatusOptions
+        options: goodsStatusOptions
       },
       refundReasonInfo: {
         title: '退款原因',
@@ -229,7 +242,20 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['refundTypeMap'])
+    ...mapGetters(['refundTypeMap']),
+    isWaitShip () {
+      return this.orderStatus === 'WAIT_SHIP'
+    },
+    // 退款退货，货物状态默认为已收到货，不可修改
+    isRefundGoods () {
+      return this.radio.refundType === '2'
+    },
+    canRefundTypeChange () {
+      return !this.isWaitShip && this.type === 'MODIFY'
+    },
+    canGoodsStatusChange () {
+      return !this.isWaitShip && !this.isRefundGoods
+    }
   },
   watch: {
     'form.applyContent' (value) {
@@ -240,6 +266,12 @@ export default {
   },
   activated () {
     this.form.orderDetailId = this.orderProductRId
+    this.radio.refundType = String(this.refundType)
+    this.radio.refundTypeText = this.refundTypeMap[this.refundType]
+    if (this.isRefundGoods) {
+      this.radio.goodsStatus = '1'
+      this.radio.goodsStatusText = '已收到货'
+    }
     this.getOrderDetail()
     if (this.type === 'MODIFY') {
       this.getRefundInfo()
@@ -261,20 +293,16 @@ export default {
         }
       })
     },
-    isWaitShip () {
-      return this.orderStatus === 'WAIT_SHIP'
-    },
     async getOrderDetail () {
       const { result } = await getOrderDetail(this.orderId)
-      this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
       this.orderStatus = result.orderStatus
-      this.operationType = refundReasonKeyMap[result.orderStatus]
+      this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
       this.form.actualRefund = this.productInfo.amount
-      this.form.refundType = this.refundType
-      const { result: refundReasonMap } = await getRefundReasonMap(this.operationType)
+      // 获取数据字典
+      const { result: refundReasonMap } = await getRefundReasonMap(refundReasonKeyMap[result.orderStatus])
       this.refundReasonInfo.options = refundReasonMap
       // 待发货状态默认为未收到货
-      if (this.isWaitShip()) {
+      if (result.orderStatus === 'WAIT_SHIP') {
         this.radio.goodsStatus = '2'
         this.radio.goodsStatusText = '未收到货'
       }
@@ -282,15 +310,17 @@ export default {
     getRefundInfo () {
       return new Promise(async (resolve, reject) => {
         try {
-          const { refundId: id } = this
-          const { result } = await getRefundOrderDetail({ id })
+          const { result } = await getRefundOrderDetail({ id: this.refundId })
           this.form.applyContent = result.applyContent
           this.form.pictures = [...result.pictures]
-          // 待发货状态默认为未收到货
-          this.radio.goodsStatus = this.isWaitShip() ? '2' : String(result.receiveStatus)
-          this.radio.goodsStatusText = this.isWaitShip() ? '未收到货' : receiveStatusMap[result.receiveStatus]
+          this.imgList = [...result.pictures]
           this.radio.refundReason = String(result.applyReason)
           this.radio.refundReasonText = result.applyReasonText
+          // 待发货状态默认为未收到货
+          if (result.orderStatus !== 'WAIT_SHIP') {
+            this.radio.goodsStatus = String(result.receiveStatus)
+            this.radio.goodsStatusText = goodsStatusMap[result.receiveStatus]
+          }
           resolve(true)
         } catch (e) {
           reject(e)
@@ -309,8 +339,13 @@ export default {
       let { currentPopupName, radio } = this
       radio[currentPopupName] = item.dictDataKey
       radio[`${currentPopupName}Text`] = item.dictDataValue
+      if (currentPopupName === 'refundType') {
+        this.radio.goodsStatus = this.isRefundGoods ? '1' : ''
+        this.radio.goodsStatusText = this.isRefundGoods ? '已收到货' : ''
+      }
     },
     async confirm () {
+      if (!this.radio.goodsStatus) return this.$warning('请选择货物状态')
       if (!this.radio.refundReason) return this.$warning('请选择退货原因')
       if (!isPositive(this.form.actualRefund)) return this.$warning('退款金额必须大于零，小数点后最多两位')
       if (this.form.actualRefund > this.productInfo.amount) return this.$warning('退款金额大于最大退款金额，请修改')
@@ -322,6 +357,7 @@ export default {
         const params = {
           ...rest,
           actualRefund: Number(actualRefund),
+          refundType: this.radio.refundType,
           receiveStatus: this.radio.goodsStatus,
           applyReason: this.radio.refundReason,
           ...(type === 'MODIFY' ? { id: this.refundId } : null)

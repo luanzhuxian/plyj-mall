@@ -119,7 +119,7 @@
           运费不可退，如有疑问，请联系商家协商
         </div>
         <div
-          v-if="refundStatus==='FINISHED' || refundStatus==='CANCEL'"
+          v-if="refundStatus==='FINISHED' || refundStatus==='CLOSED' || refundStatus==='CANCEL' || refundStatus==='REJECT'"
           :class="$style.tips"
         >
           <div>退款返还您的实际付款金额，优惠劵将不予退回</div>
@@ -255,7 +255,7 @@
         取消申请
       </pl-button>
       <pl-button
-        v-if="false"
+        v-if="refundStatus==='CLOSED' || refundStatus==='CANCEL' || refundStatus==='REJECT'"
         round
         plain
         @click="$router.push({ name: 'Refund', params: { orderId: refundDetail.orderId, orderProductRId: refundDetail.orderDetailId } })"

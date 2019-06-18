@@ -11,7 +11,6 @@ export default {
       {}
   },
   orderStatusMap: state => state.orderStatusMap,
-  orderStatusMapCamel: state => state.orderStatusMapCamel,
   refundStatusMap: state => state.refundStatusMap,
   orderTypeMap: state => state.orderTypeMap,
   refundTypeMap: state => state.refundTypeMap,

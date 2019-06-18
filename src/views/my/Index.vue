@@ -189,6 +189,16 @@ import { getNewFreight } from '../../apis/my'
 import youLike from './../old-home/YouLike.vue'
 import { mapGetters } from 'vuex'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+
+const orderStatusMapCamel = {
+  new: 'NEW',
+  waitPayment: 'WAIT_PAY',
+  waitDelivery: 'WAIT_SHIP',
+  waitCollect: 'WAIT_RECEIVE',
+  comment: 'FINISHED',
+  afterSale: 'AFTER_SALE'
+}
+
 export default {
   name: 'My',
   components: {
@@ -215,7 +225,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode', 'orderStatusMapCamel'])
+    ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode'])
   },
   activated () {
     try {
@@ -236,7 +246,6 @@ export default {
     },
     async orderPhysicalorderSummary () {
       try {
-        const { orderStatusMapCamel } = this
         const { result } = await orderPhysicalorderSummary(this.userId)
         for (let key of Object.keys(result)) {
           if (orderStatusMapCamel.hasOwnProperty(key)) {

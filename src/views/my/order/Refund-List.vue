@@ -4,7 +4,6 @@
       size="small"
       :tabs="tabs"
       :active-id.sync="form.returnStatus"
-      :count="count"
       @change="tabChange"
     >
       <div
@@ -12,13 +11,7 @@
         v-for="(item, i) of tabs"
         :key="i"
         :slot="'tab-pane-' + i"
-      >
-        <span
-          :class="$style.tabCountNumber"
-          v-if="count[item.id]"
-          v-text="count[item.id]"
-        />
-      </div>
+      />
     </pl-tab>
     <div :class="$style.orderList">
       <load-more
@@ -116,7 +109,6 @@ import Price from '../../../components/Price.vue'
 import LoadMore from '../../../components/Load-More.vue'
 import {
   getRefundOrderList,
-  refundOrderSummary,
   cancelRefundApplication
 } from '../../../apis/order-manager'
 import { mapGetters } from 'vuex'
@@ -134,18 +126,6 @@ const tabs = [{
   name: '退款成功',
   id: 'FINISHED'
 }]
-
-const count = {
-  WAIT_CHECK: 0,
-  REFUND_PRODUCT: 0,
-  FINISHED: 0
-}
-
-const refundStatusMapCamel = {
-  waitCheck: 'WAIT_CHECK',
-  refundProduct: 'REFUND_PRODUCT',
-  finished: 'FINISHED'
-}
 
 export default {
   name: 'RefundList',
@@ -170,11 +150,8 @@ export default {
         returnStatus: ''
       },
       getRefundOrderList,
-      refundOrderSummary,
       loading: false,
-      $refresh: null,
-      count,
-      refundStatusMapCamel
+      $refresh: null
     }
   },
   computed: {
@@ -196,20 +173,6 @@ export default {
     },
     onRefresh (list, total) {
       this.orderList = list
-      this.getRefundOrderSummary()
-    },
-    async getRefundOrderSummary () {
-      try {
-        const { refundStatusMapCamel } = this
-        const { result } = await refundOrderSummary()
-        for (let key of Object.keys(result)) {
-          if (refundStatusMapCamel.hasOwnProperty(key)) {
-            this.count[refundStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
-          }
-        }
-      } catch (e) {
-        throw e
-      }
     },
     async cancelApplication (item, index) {
       try {
@@ -302,14 +265,6 @@ export default {
     transform: scale(.5);
     transform-origin: 0 0;
     color: #fff;
-  }
-  .tab-count-number {
-    display: inline-flex;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background: url("../../../assets/images/my/circle.png") no-repeat center center;
-    background-size: 100%;
   }
   .order-item-left {
     display: inline-flex;
