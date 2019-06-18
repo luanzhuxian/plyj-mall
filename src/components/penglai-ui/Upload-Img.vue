@@ -47,7 +47,7 @@ export default {
     }
   },
   model: {
-    event: 'success',
+    event: 'change',
     prop: 'images'
   },
   props: {
@@ -103,10 +103,12 @@ export default {
         const data = await Promise.all(this.ups)
         let imgs = []
         for (let img of data) {
+          this.images.push(img.url)
           imgs.push(img.url)
         }
+        console.log(this.images)
         this.$emit('success', imgs)
-        this.$emit('change', [this.images, ...imgs])
+        this.$emit('change', this.images)
       } catch (e) {
         throw e
       } finally {
