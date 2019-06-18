@@ -328,19 +328,19 @@ export default {
           cartSource: this.isCart,
           invoiceModel: this.INVOICE_MODEL
         })
-        await this.pay(result, result.orderLists[0])
+        await this.pay(result, result.orderLists[0], result.orderLists.length)
       } catch (e) {
         throw e
       } finally {
         this.submiting = false
       }
     },
-    async pay (CREDENTIAL, orderId) {
+    async pay (CREDENTIAL, orderId, orderCount) {
       return new Promise(async (resolve, reject) => {
         try {
           await wechatPay(CREDENTIAL)
           this.submiting = false
-          this.$router.replace({ name: 'PaySuccess', params: { orderId } })
+          this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount } })
           localStorage.removeItem('INVOICE_MODEL')
           localStorage.removeItem('CONFIRM_LIST')
           resolve()

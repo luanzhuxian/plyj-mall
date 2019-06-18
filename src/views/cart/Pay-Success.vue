@@ -12,7 +12,8 @@
     </p>
     <router-link
       :class="$style.tip3"
-      :to="{ name: 'OrderDetail', params: { orderId } }"
+      :replace="true"
+      :to="orderCount === 1 ? { name: 'OrderDetail', params: { orderId } } : { name: 'Orders', params: { status: 'ALL_ORDER' } }"
     >
       查看订单
     </router-link>
@@ -33,6 +34,10 @@ export default {
     orderId: {
       type: String,
       default: ''
+    },
+    orderCount: {
+      type: [Number, String],
+      default: 1
     }
   },
   beforeRouteEnter (to, from, next) {
