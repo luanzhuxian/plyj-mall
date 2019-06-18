@@ -136,6 +136,9 @@ export default {
   created () {
     this.setShow(this.visible)
   },
+  deactivated () {
+    this.inited = false
+  },
   watch: {
     // 规格列表加载完成时，初始化一下
     data: {
@@ -345,9 +348,11 @@ export default {
       &.active {
         background: none;
         color: $--primary-color;
-        &:after {
+        border: 1px solid currentColor;
+        border-radius: 9px;
+       /* &:after {
           @include border-half($--primary-color, 18px)
-        }
+        }*/
       }
     }
   }

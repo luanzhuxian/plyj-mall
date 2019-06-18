@@ -141,9 +141,11 @@ export default {
         border-radius: 20px;
       }
       &.plain {
-        &:after {
+        border: 1px solid currentColor;
+        border-radius: 20px;
+        /*&:after {
           @include border-half(currentColor, 40px)
-        }
+        }*/
       }
       .pl-button__prefix-icon, .pl-button__loading {
         width: 20px;
@@ -161,9 +163,11 @@ export default {
         border-radius: 25px;
       }
       &.plain {
-        &:after {
+        border: 1px solid currentColor;
+        border-radius: 25px;
+        /*&:after {
           @include border-half(currentColor, 50px)
-        }
+        }*/
       }
       .pl-button__prefix-icon, .pl-button__loading {
         width: 24px;
@@ -185,9 +189,11 @@ export default {
         fill: currentColor;
       }
       &.plain {
-        &:after {
+        border: 1px solid currentColor;
+        border-radius: 12px;
+        /*&:after {
           @include border-half(currentColor, 24px)
-        }
+        }*/
       }
     }
     /* large */
