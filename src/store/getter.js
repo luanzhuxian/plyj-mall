@@ -18,7 +18,7 @@ export default {
 
   avatar: state => state.userInfo.img,
   userName: state => state.userInfo.userName,
-  agentUser: state => state.userInfo.isAgentUser || true, // helper
+  agentUser: state => state.userInfo.isAgentUser, // helper
   isAdmin: state => state.userInfo.roleCode === 'ENTERPRISE_ADMIN', // 企业管理员
   mobile: state => state.userInfo.mobile,
   openId: state => state.openId,

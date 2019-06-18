@@ -102,7 +102,6 @@ export default {
       }
     },
     images (val) {
-      console.log(val)
       this.form.mediaInfoModels = []
       for (let url of val) {
         let obj = {
@@ -135,18 +134,6 @@ export default {
         throw e
       }
     },
-    // uploaded (res) {
-    //   let obj = {
-    //     mediaType: 'image',
-    //     mediaFilename: res.name.split('/').splice(-1, 1)[0],
-    //     mediaUrl: res.url
-    //   }
-    //   this.form.mediaInfoModels.push(obj)
-    //   this.images.push(res.url)
-    // },
-    // removeImg (index) {
-    //   this.form.mediaInfoModels.splice(index, 1)
-    // },
     async confirm () {
       if (!this.form.content.trim()) return this.$warning('请输入评价内容')
       try {
