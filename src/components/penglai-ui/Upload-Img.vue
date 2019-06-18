@@ -87,7 +87,6 @@ export default {
       try {
         for (let blob of fileList) {
           this.compress.push(compress(blob, this.size))
-          this.ups.push(upload(blob))
         }
         this.up()
       } catch (e) {
@@ -97,8 +96,11 @@ export default {
     async up () {
       try {
         this.$indicator.open('正在压缩图片')
-        await Promise.all(this.compress)
+        const smallImgs = await Promise.all(this.compress)
         this.$indicator.close()
+        for (let img of smallImgs) {
+          this.ups.push(upload(img))
+        }
         this.$indicator.open('正在上传图片')
         const data = await Promise.all(this.ups)
         let imgs = []
