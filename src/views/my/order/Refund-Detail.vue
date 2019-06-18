@@ -209,6 +209,7 @@
           </div>
         </pl-list>
         <pl-list
+          v-if="refundDetail.applyContent"
           title="问题描述："
           :content="refundDetail.applyContent"
         />
