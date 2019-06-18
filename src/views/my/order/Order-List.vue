@@ -313,7 +313,7 @@ export default {
         } else {
           this.orderList.splice(index, 1)
         }
-        this.getOrderSummary()
+        // this.getOrderSummary()
         this.$success('订单取消成功')
       } catch (e) {
         throw e
@@ -325,7 +325,7 @@ export default {
         await this.$confirm('订单一旦删除，将无法恢复 确认要删除订单？')
         await deleteOrder(orderId)
         this.orderList.splice(index, 1)
-        this.getOrderSummary()
+        // this.getOrderSummary()
         this.$success('订单删除成功')
       } catch (e) {
         throw e
