@@ -118,7 +118,7 @@ export default {
           commit(type.SET_TOKEN, result)
           await dispatch(type.USER_INFO)
         } else {
-          await dispatch(type.LOGIN)
+          commit(type.LOG_OUT)
         }
         resolve()
       } catch (e) {

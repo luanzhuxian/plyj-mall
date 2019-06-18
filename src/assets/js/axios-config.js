@@ -25,14 +25,15 @@ function reqError (error) {
 
 async function response (response) {
   const data = response.data
-  const URL = response.config.url
   const config = response.config
   if (data.status !== 200) {
     let msg = data.message
+    let loginInvalid = msg.indexOf('登录信息失效') >= 0
+    let tokenInvalid = msg.indexOf('Token失效') >= 0
     if (msg.indexOf('运行时') > -1) {
       msg = '服务器正在怀疑人生~( ˶‾᷄࿀‾᷅˵ )'
     }
-    if (msg.indexOf('登录信息失效') === -1 || msg.indexOf('Token失效') === -1) {
+    if (!loginInvalid && !tokenInvalid) {
       let err = {
         tag: 'responseError',
         method: config.method,
@@ -44,8 +45,8 @@ async function response (response) {
       }
       return Promise.reject(new Error(JSON.stringify(err)))
     }
-    // 接口报‘登录信息失效，退出登录，并重新发起登录
-    if (URL.indexOf('/apis/v1/account/account/info') === -1 && URL.indexOf('/apis/v1/privilege/auth/refresh') === -1) {
+    // 刷新token还没失效
+    if (!tokenInvalid) {
       try {
         await store.dispatch(REFRESH_TOKEN)
         let config = response.config

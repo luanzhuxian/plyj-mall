@@ -54,7 +54,6 @@ export default {
   },
   [type.LOG_OUT] () {
     Cookies.remove('mallId')
-    Cookies.remove('openId')
     Cookies.remove('refresh_token')
     Cookies.remove('token')
     window.location.reload()
