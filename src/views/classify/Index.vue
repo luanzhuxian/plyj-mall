@@ -211,7 +211,7 @@ export default {
         this.classifyList = this.classifyList.concat(result)
         if (this.agentUser) {
           this.classifyList.push({
-            categoryName: 'Helper',
+            categoryName: 'Helper专区',
             sequenceNbr: '1'
           })
         }
