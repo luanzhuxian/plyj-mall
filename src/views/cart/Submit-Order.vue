@@ -347,7 +347,7 @@ export default {
         } catch (e) {
           // 支付失败
           this.submiting = false
-          if (this.virtualProducts.length > 0 || this.physicalProducts.length > 0) {
+          if (this.virtualProducts.length > 1 || this.physicalProducts.length > 1) {
             this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
           } else {
             // 只有一种商品时，直接进入详情页
