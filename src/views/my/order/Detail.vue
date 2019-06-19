@@ -255,7 +255,7 @@
         查看物流
       </pl-button>
       <pl-button
-        v-if="canIApplyInvoice"
+        v-if="canApplyInvoice"
         round
         plain
         @click="applyInvoice"
@@ -476,7 +476,7 @@ export default {
         (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
     },
     // 是否可以申请发票，invoiceStatus： 8:'可申请' 1:'已申请' 3:'已开票' 7:'不支持'
-    canIApplyInvoice () {
+    canApplyInvoice () {
       return this.orderType === 'PHYSICAL' &&
         this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
@@ -487,8 +487,6 @@ export default {
     }
   },
   async activated () {
-    console.log(this.$ref)
-    // console.log(this.$ref.footer.children)
     try {
       await this.getDetail()
     } catch (e) {
@@ -787,7 +785,7 @@ export default {
     padding: 18px 24px;
 
     > button {
-      margin-left: 15px;
+      margin-left: 18px;
       &:nth-of-type(1) {
         margin-left: 0;
       }
@@ -901,9 +899,9 @@ export default {
       }
     }
   }
-  .footer {
-    .pl-button__small {
-      padding: 0 25px;
-    }
-  }
+  // .footer {
+  //   .pl-button__small {
+  //     padding: 0 32px;
+  //   }
+  // }
 </style>
