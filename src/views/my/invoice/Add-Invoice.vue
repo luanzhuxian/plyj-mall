@@ -70,6 +70,7 @@ import {
 } from '../../../apis/invoice'
 import { mapGetters } from 'vuex'
 import { copyFields, resetForm } from '../../../assets/js/util'
+import { isDutyNumber } from '../../../assets/js/validate'
 export default {
   name: 'AddInvoice',
   components: {
@@ -83,7 +84,10 @@ export default {
       },
       rules: {
         entName: [{ required: true, message: '请输入单位名称', trigger: 'blur' }],
-        tin: [{ required: true, message: '请输入纳税人识别号', trigger: 'blur' }]
+        tin: [
+          { required: true, message: '请输入纳税人识别号', trigger: 'blur' },
+          { validator: isDutyNumber, message: '纳税人识别号格式错误', trigger: 'blur' }
+        ]
       }
     }
   },

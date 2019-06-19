@@ -97,6 +97,10 @@ export function isPositive (val) {
   }
   return /^\d+(\.\d{1,2})?$/.test(Number(val))
 }
+/* 校验税号 */
+export function isDutyNumber (val) {
+  return /^[\da-zA-Z]{1,25}$/.test(val)
+}
 
 // 判断身份证号码是否正确
 export function isIdCard (val) {
