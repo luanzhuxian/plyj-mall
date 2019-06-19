@@ -138,6 +138,7 @@
             <input
               v-show="false"
               type="checkbox"
+              :checked="isSelected(pro)"
               @change="e => { selectChange(e, pro) }"
             >
             <img
@@ -236,7 +237,9 @@ export default {
     if (!APPLY_INVOICE) {
       this.$router.replace({ name: 'Home' })
       this.$destroy()
+      return
     }
+    this.checkedList = [...APPLY_INVOICE.physicalProducts]
     this.applyInvoice = APPLY_INVOICE
     try {
       this.getInvoiceList()
