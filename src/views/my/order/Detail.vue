@@ -30,7 +30,7 @@
       >
         <order-item
           size="small"
-          :img="item.productImg"
+          :img="item.productImg + '?x-oss-process=style/thum'"
           :name="item.productName"
           :count="item.count"
           :option="item.optionName"

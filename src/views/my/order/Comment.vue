@@ -11,7 +11,7 @@
       <div :class="$style.grade">
         <img
           v-img-error
-          :src="img"
+          :src="img + '?x-oss-process=style/thum'"
           alt=""
         >
         <span class="fz-26 gray-2">本次感受</span>

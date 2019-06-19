@@ -49,7 +49,7 @@
             <order-item
               v-for="(product, j) of item.products"
               :key="j"
-              :img="product.productImg"
+              :img="product.productImg + '?x-oss-process=style/thum'"
               :name="product.productName"
               :option="product.skuName"
               :count="product.purchaseQuantity"

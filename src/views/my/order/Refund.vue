@@ -2,7 +2,7 @@
   <div :class="$style.refund">
     <section :class="$style.orderInfo">
       <order-item
-        :img="productInfo.productImg"
+        :img="productInfo.productImg + '?x-oss-process=style/thum'"
         :name="productInfo.productName"
         :option="productInfo.optionName"
         route-name="Lesson"

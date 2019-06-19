@@ -47,7 +47,7 @@
               />
             </div>
             <order-item
-              :img="item.productPic"
+              :img="item.productPic + '?x-oss-process=style/thum'"
               :name="item.productName"
               :option="item.skuName"
               :count="item.productCount"

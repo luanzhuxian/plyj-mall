@@ -153,7 +153,7 @@
       />
       <div :class="$style.productInfo">
         <order-item
-          :img="refundDetail.productPic"
+          :img="refundDetail.productPic + '?x-oss-process=style/thum'"
           :name="refundDetail.productName"
           :option="refundDetail.skuName"
           route-name="Lesson"
