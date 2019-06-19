@@ -346,8 +346,10 @@ export default {
           resolve()
         } catch (e) {
           // 支付失败
+          let vLen = this.virtualProducts.length
+          let pLen = this.physicalProducts.length
           this.submiting = false
-          if (this.virtualProducts.length > 1 || this.physicalProducts.length > 1) {
+          if (vLen > 1 || pLen > 1 || vLen + pLen > 1) {
             this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
           } else {
             // 只有一种商品时，直接进入详情页
