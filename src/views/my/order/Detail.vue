@@ -219,9 +219,9 @@
     </div>
 
     <div
+      ref="footer"
       class="footer"
       :class="$style.footer"
-      :style="{ justifyContent: orderStatus === 'WAIT_RECEIVE' || orderStatus === 'FINISHED' ? 'space-around' : 'flex-end' }"
     >
       <pl-button
         v-if="orderStatus === 'WAIT_PAY'"
@@ -486,6 +486,8 @@ export default {
     }
   },
   async activated () {
+    console.log(this.$ref)
+    // console.log(this.$ref.footer.children)
     try {
       await this.getDetail()
     } catch (e) {
