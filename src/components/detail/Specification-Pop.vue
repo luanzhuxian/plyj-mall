@@ -21,11 +21,11 @@
               <div :class="$style.baseInfoRight">
                 <p
                   :class="$style.price"
-                  v-text="selected.price || data[0].price"
+                  v-text="selected.price || (data[0] && data[0].price)"
                 />
                 <p
                   :class="$style.original"
-                  v-if="selected.originPrice || data[0].originPrice"
+                  v-if="selected.originPrice || (data[0] && data[0].originPrice)"
                 >
                   原价：<del
                     class="rmb"
