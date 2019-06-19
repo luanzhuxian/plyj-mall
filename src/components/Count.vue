@@ -4,9 +4,7 @@
       :class="$style.subtract"
       @click.stop="subtract"
       :disabled="localCount <= min || loading"
-    >
-      -
-    </button>
+    />
     <input
       :class="$style.input"
       type="number"
@@ -17,9 +15,7 @@
       :class="$style.add"
       @click.stop="add"
       :disabled="localCount >= max || loading"
-    >
-      +
-    </button>
+    />
   </div>
 </template>
 
@@ -112,18 +108,32 @@ export default {
       position: relative;
       width: 40px;
       height: 36px;
-      line-height: 34px;
       z-index: 2;
-      font-size: 24px;
+      vertical-align: -5px;
       &:disabled {
         opacity: 0.5;
+      }
+      &:before {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        line-height: 34px;
+        transform: translateX(-50%);
+        width: 20px;
+        font-size: 24px;
       }
     }
     .subtract {
       border-right: 1px solid #e7e7e7;
+      &:before {
+        content: '-';
+      }
     }
     .add {
       border-left: 1px solid #e7e7e7;
+      &:before {
+        content: '+';
+      }
     }
   }
 </style>

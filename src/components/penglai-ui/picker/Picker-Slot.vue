@@ -2,8 +2,8 @@
   <div
     class="pl-picker-slot"
     :style="{ flex: data.flex }"
-    @touchmove.prevent="touchmove"
-    @touchend.prevent="touchend"
+    @touchmove.prevent.stop="touchmove"
+    @touchend.prevent.stop="touchend"
   >
     <div
       ref="mark"
