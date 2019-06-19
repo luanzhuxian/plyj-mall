@@ -136,6 +136,24 @@ export default {
       throw e
     }
   },
+  deactivated () {
+    this.cityList = []
+    this.countiesList = []
+    this.townList = []
+    this.province = null
+    this.city = null
+    this.counties = null
+    this.town = null
+  },
+  destroyed () {
+    this.cityList = []
+    this.countiesList = []
+    this.townList = []
+    this.province = null
+    this.city = null
+    this.counties = null
+    this.town = null
+  },
   methods: {
     clear () {
       this.cityList.splice(0, 999)
