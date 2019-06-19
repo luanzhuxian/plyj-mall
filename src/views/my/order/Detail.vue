@@ -74,7 +74,7 @@
             寄件运单号
           </pl-button>
           <pl-button
-            v-if="orderStatus === 'FINISHED' && item.assessmentStatus === 0"
+            v-if="orderStatus === 'FINISHED' && item.assessmentStatus === 0 && item.afterSalesStatus === 0"
             type="warning"
             plain
             round
@@ -232,7 +232,7 @@
         取消订单
       </pl-button>
       <pl-button
-        v-if="orderStatus === 'FINISHED' || orderStatus === 'CLOSED'"
+        v-if="(orderStatus === 'FINISHED' || orderStatus === 'CLOSED') && isDeleteBtnShow"
         plain
         round
         @click="deleteOrder"
@@ -439,7 +439,8 @@ export default {
         addressPrefix: ' ',
         agencyAddress: ' '
       },
-      isAllProductRefund: false,
+      isAllProductRefund: true,
+      isDeleteBtnShow: true,
       timer: 0,
       currentPayId: '',
       payloading: false,
@@ -498,6 +499,8 @@ export default {
     this.collepseActiveNames = []
     this.logisticsInfoModel = null
     this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY = ''
+    this.isAllProductRefund = true
+    this.isDeleteBtnShow = true
     if (this.timer) {
       clearInterval(this.timer)
     }
@@ -525,15 +528,6 @@ export default {
       }, 1000)
     },
     getDetail () {
-      const counter = array => key => array.reduce((total, current) => total + current[key], 0)
-      /* 是否所有商品退货成功
-      * afterSalesStatus
-      * 0：无售后，1 待审核，2 已通过，3 已驳回，5 退换货-待退货 4 退换货-已退货
-      * */
-      const isAllProductRefund = products => {
-        const array = products.filter(product => product.afterSalesStatus === 2)
-        return products.length === array.length
-      }
       return new Promise(async (resolve, reject) => {
         try {
           this.loaded = false
@@ -559,10 +553,14 @@ export default {
           this.tradingInfoModel = tradingInfoModel
           this.invoiceModelList = invoiceModelList
           this.operationRecordModel = operationRecordModel
-          this.productInfoModel.totalCount = counter(productInfoModel.productDetailModels)('count');  // eslint-disable-line
+          // afterSalesStatus 0：无售后，1 待审核，2 已通过，3 已驳回，5 退换货-待退货 4 退换货-已退货
+          this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
+            if (current.afterSalesStatus !== 2) this.isAllProductRefund = false
+            if (current.afterSalesStatus !== 0 && current.afterSalesStatus !== 2) this.isDeleteBtnShow = false
+            return total + current['count']
+          }, 0);  // eslint-disable-line
           ({ name: this.shippingAddress.realName, mobile: this.shippingAddress.mobile, address: this.shippingAddress.agencyAddress } = receiverModel)
           if (result.orderStatus === 'CLOSED') {
-            this.isAllProductRefund = isAllProductRefund(productInfoModel.productDetailModels)
             this.suggestionMap['CLOSED'] = this.isAllProductRefund ? '退款完成' : '订单取消'
           }
 

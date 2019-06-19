@@ -24,7 +24,7 @@
           plain
           round
           size="middle"
-          @click="$router.push({ name: 'Orders', params: { status: 'FINISHED' } })"
+          @click="$router.push({ name: 'OrderDetail', params: { orderId } })"
         >
           立即评价
         </pl-button>

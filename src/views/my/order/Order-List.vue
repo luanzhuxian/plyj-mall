@@ -21,6 +21,7 @@
         :request-methods="getOrderList"
         no-content-tip="暂无订单"
         @refresh="onRefresh"
+        @more="onRefresh"
       >
         <template v-slot="{ list }">
           <router-link
@@ -90,7 +91,7 @@
                   去付款
                 </pl-button>
                 <pl-button
-                  v-if="item.status === 'FINISHED' || item.status === 'CLOSED'"
+                  v-if="(item.status === 'FINISHED' || item.status === 'CLOSED') && item.isDeleteBtnShow"
                   round
                   plain
                   @click="deleteOrder(item, i)"
@@ -250,6 +251,7 @@ export default {
       const counter = (array) => (key) => array.reduce((total, current) => total + (key ? current[key] : current), 0)
       for (let item of list) {
         item.totalCount = counter(item.products)('purchaseQuantity')
+        item.isDeleteBtnShow = !item.products.some(product => (product.afterSalesStatus !== 0 && product.afterSalesStatus !== 2))
       }
       this.orderList = list
     },
