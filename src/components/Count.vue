@@ -123,6 +123,7 @@ export default {
       height: 36px;
       z-index: 2;
        > svg {
+         display: inline-block;
          width: 14px;
        }
     }
