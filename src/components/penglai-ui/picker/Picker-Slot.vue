@@ -98,6 +98,7 @@ export default {
     },
     touchmove (e) {
       e.preventDefault()
+      e.stopPropagation()
       if (!started) return
       const { clientY } = e.touches[0]
       const moved = clientY - startY
@@ -106,6 +107,7 @@ export default {
     },
     touchend (e) {
       e.preventDefault()
+      e.stopPropagation()
       started = false
       document.removeEventListener('touchmove', this.touchmvoe)
       initedSpeed = speedValue = this.speed(e.changedTouches[0].clientY)
@@ -114,7 +116,8 @@ export default {
     // y: 运动距离
     setTranslate (y) {
       const activeOffsetTop = this.activeOffsetTop
-      this.translateY += y
+      // 移动速度是手指滑动速度的2/3
+      this.translateY += y * 2 / 3
       /*
          * 规律：
          * 位移每减少一个this.translateY，active就增加1
