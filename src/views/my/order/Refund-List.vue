@@ -157,11 +157,15 @@ export default {
   computed: {
     ...mapGetters(['refundStatusMap', 'orderTypeMap', 'refundTypeMap'])
   },
+  beforeRouteEnter (to, from, next) {
+    to.meta.noRefresh = from.name === 'RefundDetail'
+    next()
+  },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    console.log('refresh')
+    if (this.$route.meta.noRefresh) return
     this.form.returnStatus = this.status
     this.$refresh()
   },

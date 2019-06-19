@@ -220,10 +220,15 @@ export default {
   computed: {
     ...mapGetters(['orderStatusMap'])
   },
+  beforeRouteEnter (to, from, next) {
+    to.meta.noRefresh = from.name === 'OrderDetail'
+    next()
+  },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
+    if (this.$route.meta.noRefresh) return
     this.form.orderStatus = this.status
     this.$refresh()
   },

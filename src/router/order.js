@@ -5,7 +5,8 @@ export default [
     component: () => import('../views/my/order/Order-List.vue'),
     props: true,
     meta: {
-      title: '我的订单'
+      title: '我的订单',
+      noRefresh: false
     }
   },
   {
@@ -76,7 +77,8 @@ export default [
     component: () => import('../views/my/order/Refund-List.vue'),
     props: true,
     meta: {
-      title: '售后列表'
+      title: '售后列表',
+      noRefresh: false
     }
   },
   {
