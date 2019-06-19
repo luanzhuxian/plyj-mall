@@ -99,10 +99,7 @@
             />
           </span>
         </div>
-        <div
-          v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT'"
-          :class="[$style.item, $style.larger]"
-        >
+        <div :class="[$style.item, $style.larger]">
           <span :class="[$style.itemLeft, $style.bold]">
             实退金额：
           </span>
@@ -359,6 +356,7 @@ import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
+import { isExpressNumber } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 
 const expressMapCode = 'KYYQJKDGS'
@@ -510,6 +508,7 @@ export default {
       try {
         if (!this.form.expressName) return this.$warning('请选择物流公司')
         if (!this.form.expressNo.trim()) return this.$warning('请输入快递单号')
+        if (!isExpressNumber(this.form.expressNo)) return this.$warning('请输入正确的快递单号')
         this.loading = true
         const { dictDataKey: shipChannel } = this.expressMap.find(item => item.dictDataValue === this.form.expressName)
         const params = {

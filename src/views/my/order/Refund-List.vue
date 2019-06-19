@@ -161,6 +161,7 @@ export default {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
+    console.log('refresh')
     this.form.returnStatus = this.status
     this.$refresh()
   },
