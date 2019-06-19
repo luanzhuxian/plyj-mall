@@ -25,7 +25,7 @@
       />
       <!-- helper 润笔价格 -->
       <helper-price
-        v-if="agentProduct"
+        v-if="agentProduct && currentModel.optionCode"
         :current="currentModel"
       />
       <!--<DetailOtherInfo type="lesson" />-->
