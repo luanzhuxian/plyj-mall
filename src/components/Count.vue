@@ -5,10 +5,7 @@
       @click.stop="subtract"
       :disabled="localCount <= min || loading"
     >
-      <pl-svg
-        name="jian"
-        :color="localCount <= min ? '#ccc' : '#666'"
-      />
+      -
     </button>
     <input
       :class="$style.input"
@@ -21,10 +18,7 @@
       @click.stop="add"
       :disabled="localCount >= max || loading"
     >
-      <pl-svg
-        name="add2"
-        :color="localCount >= max ? '#ccc' : '#666'"
-      />
+      +
     </button>
   </div>
 </template>
@@ -116,16 +110,14 @@ export default {
     }
     .subtract, .add {
       position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
       width: 40px;
       height: 36px;
+      line-height: 34px;
       z-index: 2;
-       > svg {
-         display: inline-block;
-         width: 14px;
-       }
+      font-size: 24px;
+      &:disabled {
+        opacity: 0.5;
+      }
     }
     .subtract {
       border-right: 1px solid #e7e7e7;
