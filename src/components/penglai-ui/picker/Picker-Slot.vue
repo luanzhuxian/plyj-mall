@@ -89,6 +89,11 @@ export default {
   },
   methods: {
     touchstart (e) {
+      if (this.scrolling) {
+        return
+      }
+      e.preventDefault()
+      e.stopPropagation()
       started = true
       let { clientY } = e.touches[0]
       startY = clientY
@@ -97,15 +102,16 @@ export default {
       this.$emit('update:scrolling', true)
     },
     touchmove (e) {
+      if (!started) return
       e.preventDefault()
       e.stopPropagation()
-      if (!started) return
       const { clientY } = e.touches[0]
       const moved = clientY - startY
       this.setTranslate(moved)
       startY += moved
     },
     touchend (e) {
+      if (!started) return
       e.preventDefault()
       e.stopPropagation()
       started = false
