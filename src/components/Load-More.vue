@@ -273,7 +273,7 @@ export default {
       if (touches.length > 1) return
       let finger = touches.find(item => item.identifier === this.identifier)
 
-      let deltaY = finger.clientY - this.startY
+      let deltaY = (finger.clientY - this.startY) / 3
       // console.log(deltaY)
       // console.log(finger.clientY - this.startY)
       // console.log(e.touches[0].identifier, this.identifier)
@@ -289,7 +289,7 @@ export default {
       if (this.pulling && this.top <= 100) {
         e.preventDefault()
         e.stopPropagation()
-        this.top = this.defaultTop + deltaY / 1.5
+        this.top = this.defaultTop + deltaY
       }
       this.rotate = deltaY
     },

@@ -21,11 +21,11 @@
               <div :class="$style.baseInfoRight">
                 <p
                   :class="$style.price"
-                  v-text="selected.price"
+                  v-text="selected.price || data[0].price"
                 />
                 <p
                   :class="$style.original"
-                  v-if="selected.originPrice"
+                  v-if="selected.originPrice || data[0].originPrice"
                 >
                   原价：<del
                     class="rmb"
@@ -33,7 +33,7 @@
                   />
                 </p>
                 <p :class="$style.repertory">
-                  库存<i v-text="selected.stock" />件
+                  库存<i v-text="selected.stock || 0" />件
                 </p>
               </div>
             </div>
