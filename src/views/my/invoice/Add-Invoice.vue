@@ -37,7 +37,7 @@
           slot="suffix"
           name="warning"
           color="#FE7700"
-          @click="showInvioceIntro = true"
+          @click.prevent="showInvioceIntro = true"
         />
       </pl-form-item>
     </pl-form>
