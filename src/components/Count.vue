@@ -117,17 +117,12 @@ export default {
     .subtract, .add {
       position: relative;
       display: inline-flex;
-      text-align: center;
       align-items: center;
       justify-content: center;
       width: 40px;
       height: 36px;
-      font-size: 25px;
-      color: #666;
-      box-sizing: border-box;
-      font-weight: lighter;
       z-index: 2;
-       svg {
+       > svg {
          width: 14px;
        }
     }
