@@ -2,6 +2,7 @@
   <div
     class="pl-picker"
     v-if="showPicker"
+    @touchmove="touchmove"
   >
     <transition name="fade">
       <div
@@ -123,6 +124,9 @@ export default {
     confirm () {
       this.$emit('confirm', this.selected)
       this.close()
+    },
+    touchmove (e) {
+      e.preventDefault()
     }
   }
 }

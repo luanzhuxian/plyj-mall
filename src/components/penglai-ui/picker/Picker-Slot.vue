@@ -2,8 +2,8 @@
   <div
     class="pl-picker-slot"
     :style="{ flex: data.flex }"
-    @touchmove.prevent.stop="touchmove"
-    @touchend.prevent.stop="touchend"
+    @touchmove="touchmove"
+    @touchend="touchend"
   >
     <div
       ref="mark"
@@ -97,6 +97,7 @@ export default {
       this.$emit('update:scrolling', true)
     },
     touchmove (e) {
+      e.preventDefault()
       if (!started) return
       const { clientY } = e.touches[0]
       const moved = clientY - startY
@@ -104,6 +105,7 @@ export default {
       startY += moved
     },
     touchend (e) {
+      e.preventDefault()
       started = false
       document.removeEventListener('touchmove', this.touchmvoe)
       initedSpeed = speedValue = this.speed(e.changedTouches[0].clientY)
