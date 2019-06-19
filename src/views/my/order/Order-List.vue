@@ -1,19 +1,20 @@
 <template>
-  <div class="orders">
+  <div :class="$style.orderList">
     <pl-tab
+      :class="$style.tabBar"
       size="small"
       :tabs="tabs"
       :active-id.sync="form.orderStatus"
       @change="tabChange"
     >
       <div
-        :class="$style.tabCount"
+        :class="$style.tabPane"
         v-for="(item, i) of tabs"
         :key="i"
         :slot="'tab-pane-' + i"
       />
     </pl-tab>
-    <div :class="$style.orderList">
+    <div :class="$style.list">
       <load-more
         ref="loadMore"
         :form="form"
@@ -25,16 +26,16 @@
       >
         <template v-slot="{ list }">
           <router-link
+            :class="$style.listItem"
             tag="div"
             v-for="(item, i) of orderList"
             :key="i"
             :to="{ name: 'OrderDetail', params: { orderId: item.id } }"
-            :class="$style.orderItem"
           >
             <div>
-              <div :class="$style.orderItemLeft">
+              <div :class="$style.listItemLeft">
                 <span
-                  :class="$style.orderTag"
+                  :class="$style.tag"
                   v-text="orderTypeMap[item.orderType]"
                 />
                 <pl-list
@@ -58,7 +59,7 @@
               :status="refundStatusMap[product.afterSalesStatus]"
               border
             />
-            <div :class="$style.orderItemBottom">
+            <div :class="$style.listItemBottom">
               <div>
                 <span :class="$style.totalCount">{{ `共${item.totalCount}件商品` }}</span>
                 <price
@@ -347,9 +348,31 @@ export default {
 </script>
 <style module lang="scss">
   .order-list {
+    padding-top: 80px;
+  }
+  .tab-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2999;
+  }
+  .tab-pane {
+    position: absolute;
+    top: 5px;
+    right: -45px;
+    width: 56px;
+    height: 56px;
+    line-height: 54px;
+    font-size: 28px;
+    transform: scale(.5);
+    transform-origin: 0 0;
+    color: #fff;
+  }
+  .list {
     padding: 22px 24px 120px;
   }
-  .order-item {
+  .list-item {
     margin-bottom: 20px;
     padding: 0 24px 28px;
     border-radius: 20px;
@@ -369,7 +392,7 @@ export default {
       line-height: 34px;
     }
   }
-  .order-item-bottom {
+  .list-item-bottom {
     margin-top: 16px;
     > div {
       display: flex;
@@ -401,31 +424,19 @@ export default {
       }
     }
   }
-  .tab-count {
-    position: absolute;
-    top: 5px;
-    right: -45px;
-    width: 56px;
-    height: 56px;
-    line-height: 54px;
-    font-size: 28px;
-    transform: scale(.5);
-    transform-origin: 0 0;
-    color: #fff;
-  }
-  .order-item-left {
+  .list-item-left {
     display: inline-flex;
     align-items: center;
-  }
-  .order-tag {
-    width: 104px;
-    height: 28px;
-    background: #F2B036;
-    border-radius: 14px;
-    font-size: 20px;
-    color: #FFFFFF;
-    line-height: 28px;
-    margin-right: 12px;
-    text-align: center;
+    .tag {
+      width: 104px;
+      height: 28px;
+      background: #F2B036;
+      border-radius: 14px;
+      font-size: 20px;
+      color: #FFFFFF;
+      line-height: 28px;
+      margin-right: 12px;
+      text-align: center;
+    }
   }
 </style>
