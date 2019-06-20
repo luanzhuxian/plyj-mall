@@ -33,7 +33,7 @@
         class="pl-input__word-count"
         v-if="maxlength > 0"
       >
-        <i v-text="value.length" />
+        <i v-text="value.length > maxlength ? maxlength : value.length" />
         /
         <i v-text="maxlength" />
       </span>
@@ -97,7 +97,7 @@ export default {
   name: 'PlInput',
   model: {
     event: 'input',
-    value: 'value'
+    prop: 'value'
   },
   props: {
     placeholder: {

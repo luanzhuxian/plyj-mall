@@ -159,16 +159,30 @@ export default {
     ...mapGetters(['refundStatusMap', 'orderTypeMap', 'refundTypeMap'])
   },
   beforeRouteEnter (to, from, next) {
-    next(vm => {
-      to.meta.noRefresh = (from.name === 'RefundDetail' && !from.meta.needRefresh)
-      if (from.meta.needRefresh) delete from.meta.needRefresh
-    })
+    to.meta.noRefresh = from.name === 'RefundDetail'
+    to.meta.removeItem = from.meta.removeItem || null
+    to.meta.returnStatus = from.meta.returnStatus || null
+    if (from.meta.noRefresh) delete from.meta.noRefresh
+    if (from.meta.removeItem) delete from.meta.removeItem
+    if (from.meta.returnStatus) delete from.meta.returnStatus
+    next()
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    if (this.noRefresh) return
+    const currentRoute = this.$router.currentRoute
+    if (currentRoute.meta.noRefresh) {
+      if (currentRoute.meta.removeItem) {
+        this.orderList = this.orderList.filter(item => item.id !== currentRoute.meta.removeItem)
+        !this.orderList.length && this.$refresh()
+      }
+      if (currentRoute.meta.returnStatus) {
+        const item = this.orderList.find(item => item.id === currentRoute.meta.returnStatus)
+        item.returnStatus = 'REFUND_PRODUCT'
+      }
+      return
+    }
     this.form.returnStatus = this.status
     this.$refresh()
   },

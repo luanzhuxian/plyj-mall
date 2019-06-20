@@ -41,6 +41,10 @@ export function isEn (val) {
   return /^([A-Za-z]{2,20})$/.test(val)
 }
 
+export function isEmoji (val) {
+  return /[\uD800-\uDBFF\uDC00-\uDFFF]/g.test(val)
+}
+
 // 校验快递单号
 export function isExpressNumber (str) {
   return /^[0-9a-zA-Z]+$/.test(str)

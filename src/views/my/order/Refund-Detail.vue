@@ -504,7 +504,7 @@ export default {
         await cancelRefundApplication({ id })
         this.$success('取消申请成功')
         this.getDetail()
-        this.$router.history.current.meta.needRefresh = true
+        this.$router.history.current.meta.removeItem = id // 保存id，返回列表页后从列表中移除
       } catch (e) {
         throw e
       }
@@ -525,7 +525,7 @@ export default {
         this.loading = false
         this.$success('提交申请成功')
         this.getDetail()
-        this.$router.history.current.meta.needRefresh = true
+        this.$router.history.current.meta.returnStatus = this.id // 保存id，返回列表页后从列表中更新
       } catch (e) {
         throw e
       } finally {

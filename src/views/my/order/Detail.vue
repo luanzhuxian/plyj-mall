@@ -615,7 +615,7 @@ export default {
         await cancelOrder(this.orderId, reason)
         this.$success('订单取消成功')
         this.getDetail()
-        this.$router.history.current.meta.needRefresh = true
+        this.$router.history.current.meta.removeItem = this.orderId // 保存id，返回列表页后从列表中移除
       } catch (e) {
         throw e
       }
@@ -628,7 +628,7 @@ export default {
         this.$success('订单删除成功')
         setTimeout(() => {
           // this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDER' } })
-          this.$router.history.current.meta.needRefresh = true
+          this.$router.history.current.meta.removeItem = orderId // 保存id，返回列表页后从列表中移除
           this.$router.go(-1)
         }, 2000)
       } catch (e) {

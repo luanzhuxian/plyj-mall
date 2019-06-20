@@ -279,17 +279,6 @@ export default {
               : 'REASONSRECEIVEDGOODS'
             : '')
     }
-    // const refundReasonKeyMap = {
-    //   'WAIT_SHIP': 'REASONBUYERPAID',
-    //   'WAIT_RECEIVE': {
-    //     '1': {
-    //       '1': 'REASONSRECEIVEDGOODS',
-    //       '2': 'REASONSNOTRECEIVEDGOODS'
-    //     },
-    //     '2': 'REASONSRECEIVEDGOODS'
-    //   },
-    //   'FINISHED': 'REASONSRECEIVEDGOODS'
-    // }
   },
   watch: {
     'form.applyContent' (value) {
