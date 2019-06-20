@@ -24,7 +24,7 @@
                 <img
                   :class="$style.listItemImg"
                   v-img-error
-                  :src="pro.mediaInfoModels[0].mediaUrl"
+                  :src="pro.mediaInfoModels[0]"
                   alt=""
                 >
                 <div :class="$style.itemRight">
