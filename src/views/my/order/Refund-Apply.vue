@@ -142,7 +142,7 @@
 import OrderItem from '../../../components/item/Order-Item.vue'
 import { getOrderDetail, getRefundOrderDetail, applyRefund, modifyRefund, getMap as getRefundReasonMap } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
-import { isPositive } from '../../../assets/js/validate'
+import { isPositive, isEmoji } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 
 const refundTypeOptions = [
@@ -282,7 +282,10 @@ export default {
   },
   watch: {
     'form.applyContent' (value) {
-      if (value.length === this.maxLength) {
+      const { maxLength } = this
+      const reg = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
+      const max = isEmoji(value) ? value.replace(reg, 'a').length + maxLength : maxLength
+      if (value.length === max) {
         this.$toast(`最多输入${this.maxLength}个字`)
       }
     }

@@ -168,7 +168,8 @@ export default {
   computed: {
     length () {
       const { value } = this
-      return isEmoji(value) ? value.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, 'a').length : value.length
+      const reg = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
+      return isEmoji(value) ? value.replace(reg, 'a').length : value.length
     }
   },
   mounted () {
