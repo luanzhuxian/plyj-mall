@@ -10,7 +10,7 @@
     @click="handleClick"
   >
     <img
-      v-lazy="img + '?x-oss-process=style/thum'"
+      v-lazy="img"
       :key="img"
       alt="商品图片"
     >
