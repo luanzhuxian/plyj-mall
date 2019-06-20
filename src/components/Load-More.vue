@@ -365,8 +365,8 @@ export default {
     min-height: 200px;
     .bottomLoadingIcon {
       margin: 30px auto 30px;
-      width: 62px;
-      height: 62px;
+      width: 50px;
+      height: 50px;
       &.btoRotate {
         animation: rotate .8s linear infinite;
       }

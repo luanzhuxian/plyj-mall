@@ -68,7 +68,7 @@
         >
           <CategoryItem
             tag="div"
-            :img="item.productImage && item.productImage[0].mediaUrl"
+            :img="item.productImage && item.productImage[0].mediaUrl+ '?x-oss-process=style/thum-small'"
             :product-name="item.productName"
             :product-id="item.sequenceNbr"
             :is-active="item.agentProduct"
@@ -122,7 +122,7 @@
         >
           <div :class="$style.slideWrap">
             <CategoryItem
-              :img="item.productImage && item.productImage[0].mediaUrl"
+              :img="item.productImage && item.productImage[0].mediaUrl+ '?x-oss-process=style/thum-small'"
               :product-name="item.productName"
               :product-id="item.sequenceNbr"
               :is-active="item.agentProduct"
@@ -172,7 +172,7 @@
         >
           <div :class="$style.slideWrap">
             <CategoryItem
-              :img="item.productImage && item.productImage[0].mediaUrl"
+              :img="item.productImage && item.productImage[0].mediaUrl+ '?x-oss-process=style/thum-small'"
               :product-name="item.productName"
               :product-id="item.sequenceNbr"
               :is-active="item.agentProduct"

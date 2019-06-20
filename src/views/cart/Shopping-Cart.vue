@@ -90,7 +90,7 @@
           <button
             v-show="isManage"
             :class="$style.delete"
-            :disabled="checkedList.length === 0"
+            :disabled="checkedList.length === 0 || removing"
             @click="removePro"
           >
             删除
@@ -104,7 +104,7 @@
       text="那么多好商品，你都不加入购物车吗？"
     />
 
-    <!--<CartItemSkeleton v-if="loading" />-->
+    <CartItemSkeleton v-if="loading" />
     <!--<CartItemSkeleton v-if="loading" />-->
   </div>
 </template>
@@ -112,7 +112,7 @@
 <script>
 import CartItem from '../../components/item/Cart-Item.vue'
 import NoContent from '../../components/No-Content.vue'
-// import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
+import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
 import {
   getCartList,
   deleteCartProducts
@@ -121,7 +121,7 @@ export default {
   name: 'ShoppingCart',
   components: {
     CartItem,
-    // CartItemSkeleton,
+    CartItemSkeleton,
     NoContent
   },
   data () {
@@ -132,6 +132,7 @@ export default {
       isManage: false,
       total: 0,
       loading: false,
+      removing: false,
       summation: 0 // 合计
     }
   },
@@ -205,11 +206,14 @@ export default {
       }
       await this.$confirm(`确定将这${ids.length}个宝物删除？`)
       try {
+        this.removing = true
         await deleteCartProducts(ids)
         this.checkedList.splice(0, 500)
         this.getList()
       } catch (e) {
         throw e
+      } finally {
+        this.removing = false
       }
     },
     // 结算

@@ -47,7 +47,7 @@
           <div :class="$style.classifyList2">
             <classify-item
               :cid="item.sequenceNbr"
-              :img="item.categoryPic"
+              :img="item.categoryPic + '?x-oss-process=style/thum-small'"
               :text="item.categoryName"
               v-for="item of currentClassify.childs"
               :key="item.sequenceNbr"
@@ -92,7 +92,7 @@
                 :title="item.productName"
                 :price="item.priceModels?item.priceModels[0].price:item.productOptions[0].price"
                 :agent-price="item.priceModels&&item.priceModels.length?item.priceModels[0].agentEndPrice.toString():''"
-                :img="item.productImg"
+                :img="item.productImg + '?x-oss-process=style/thum-small'"
               />
             </div>
           </template>

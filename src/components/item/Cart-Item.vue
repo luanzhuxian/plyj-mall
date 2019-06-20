@@ -5,7 +5,7 @@
   >
     <img
       :class="$style.cartItemImage"
-      :src="data.productImg"
+      :src="data.productImg + '?x-oss-process=style/thum'"
       alt=""
       @click="goDetail"
     >
