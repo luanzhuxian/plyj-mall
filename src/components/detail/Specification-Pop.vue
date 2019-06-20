@@ -29,7 +29,7 @@
                 >
                   原价：<del
                     class="rmb"
-                    v-text="selected.originPrice"
+                    v-text="selected.originPrice || (data[0] && data[0].originPrice)"
                   />
                 </p>
                 <p :class="$style.repertory">
