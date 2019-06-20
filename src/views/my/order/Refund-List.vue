@@ -159,15 +159,16 @@ export default {
     ...mapGetters(['refundStatusMap', 'orderTypeMap', 'refundTypeMap'])
   },
   beforeRouteEnter (to, from, next) {
-    to.meta.noRefresh = (from.name === 'RefundDetail' && !from.meta.needRefresh)
-    if (from.meta.needRefresh) delete from.meta.needRefresh
-    next()
+    next(vm => {
+      to.meta.noRefresh = (from.name === 'RefundDetail' && !from.meta.needRefresh)
+      if (from.meta.needRefresh) delete from.meta.needRefresh
+    })
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    if (this.$route.meta.noRefresh) return
+    if (this.noRefresh) return
     this.form.returnStatus = this.status
     this.$refresh()
   },

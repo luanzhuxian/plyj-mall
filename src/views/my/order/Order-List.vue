@@ -223,15 +223,16 @@ export default {
     ...mapGetters(['orderStatusMap'])
   },
   beforeRouteEnter (to, from, next) {
-    to.meta.noRefresh = (from.name === 'OrderDetail' && !from.meta.needRefresh) || from.name === 'Freight'
-    if (from.meta.needRefresh) delete from.meta.needRefresh
-    next()
+    next(vm => {
+      vm.noRefresh = (from.name === 'OrderDetail' && !from.meta.needRefresh) || from.name === 'Freight'
+      if (from.meta.needRefresh) delete from.meta.needRefresh
+    })
   },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    if (this.$route.meta.noRefresh) return
+    if (this.noRefresh) return
     this.form.orderStatus = this.status
     this.$refresh()
   },
