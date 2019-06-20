@@ -159,7 +159,8 @@ export default {
     ...mapGetters(['refundStatusMap', 'orderTypeMap', 'refundTypeMap'])
   },
   beforeRouteEnter (to, from, next) {
-    to.meta.noRefresh = from.name === 'RefundDetail'
+    to.meta.noRefresh = (from.name === 'RefundDetail' && !from.meta.needRefresh)
+    if (from.meta.needRefresh) delete from.meta.needRefresh
     next()
   },
   mounted () {

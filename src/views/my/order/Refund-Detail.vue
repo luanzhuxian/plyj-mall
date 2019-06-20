@@ -504,6 +504,7 @@ export default {
         await cancelRefundApplication({ id })
         this.$success('取消申请成功')
         this.getDetail()
+        this.$router.history.current.meta.needRefresh = true
       } catch (e) {
         throw e
       }
@@ -524,6 +525,7 @@ export default {
         this.loading = false
         this.$success('提交申请成功')
         this.getDetail()
+        this.$router.history.current.meta.needRefresh = true
       } catch (e) {
         throw e
       } finally {

@@ -223,8 +223,8 @@ export default {
     ...mapGetters(['orderStatusMap'])
   },
   beforeRouteEnter (to, from, next) {
-    to.meta.noRefresh = (from.name === 'OrderDetail' && !from.meta.isDelete) || from.name === 'Freight'
-    if (from.meta.isDelete) delete from.meta.isDelete
+    to.meta.noRefresh = (from.name === 'OrderDetail' && !from.meta.needRefresh) || from.name === 'Freight'
+    if (from.meta.needRefresh) delete from.meta.needRefresh
     next()
   },
   mounted () {
@@ -306,6 +306,7 @@ export default {
           item.status = 'CLOSED'
         } else {
           this.orderList.splice(index, 1)
+          this.$forceUpdate()
         }
         this.$success('订单取消成功')
       } catch (e) {
@@ -318,6 +319,7 @@ export default {
         await this.$confirm('订单一旦删除，将无法恢复 确认要删除订单？')
         await deleteOrder(orderId)
         this.orderList.splice(index, 1)
+        this.$forceUpdate()
         this.$success('订单删除成功')
       } catch (e) {
         throw e
