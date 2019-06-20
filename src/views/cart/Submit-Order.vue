@@ -251,10 +251,11 @@ export default {
     this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL'))
     this.invioceType = this.INVOICE_MODEL ? 2 : 1
     this.isCart = JSON.parse(this.$route.query.isCart)
-    this.getProductDetail()
+    if (this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
+      this.getProductDetail()
+    }
   },
   deactivated () {
-    this.remark = ''
   },
   methods: {
     selectInvoice () {
@@ -383,6 +384,12 @@ export default {
       localStorage.removeItem('INVOICE_MODEL')
       localStorage.removeItem('CONFIRM_LIST')
       localStorage.removeItem('APPLY_INVOICE')
+      this.remark = ''
+      this.physicalProducts = []
+      this.virtualProducts = []
+      this.invioceType = 1
+      this.INVOICE_MODEL = null
+      this.isCart = false
     }
     next()
   }
