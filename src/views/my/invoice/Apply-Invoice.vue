@@ -258,7 +258,7 @@ export default {
       try {
         const { result } = await getInvoiceList(this.userId)
         this.invoiceList = result
-        this.currentInvoice = this.$route.query.id || result[0].id
+        this.currentInvoice = this.$route.query.id || this.currentInvoice || result[0].id
       } catch (e) {
         throw e
       }
