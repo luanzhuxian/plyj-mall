@@ -199,10 +199,10 @@
             <img
               v-for="(img, i) of refundDetail.pictures"
               :key="i"
-              :src="img"
-              v-gallery:image
+              :src="img + '?x-oss-process=style/thum'"
               v-img-error
               alt="退款图片"
+              @click="preview(img)"
             >
           </div>
         </pl-list>
@@ -539,6 +539,12 @@ export default {
         }, e => {
           console.log(e)
         })
+    },
+    preview (img) {
+      window.wx.previewImage({
+        current: img, // 当前显示图片的http链接
+        urls: [...this.refundDetail.pictures] // 需要预览的图片http链接列表
+      })
     }
   }
 }
