@@ -235,7 +235,7 @@ export default {
   activated () {
     const APPLY_INVOICE = JSON.parse(localStorage.getItem('APPLY_INVOICE'))
     if (!APPLY_INVOICE) {
-      this.$router.replace({ name: 'Home' })
+      this.$router.go(-1)
       this.$destroy()
       return
     }
@@ -350,12 +350,16 @@ export default {
         localStorage.setItem('INVOICE_MODEL', JSON.stringify(invoiceModel))
       }
 
-      const APPLY_INVOICE_FROM = JSON.parse(localStorage.getItem('APPLY_INVOICE_FROM'))
-      this.$router.replace({
-        name: APPLY_INVOICE_FROM.name,
-        query: APPLY_INVOICE_FROM.query,
-        params: APPLY_INVOICE_FROM.params
-      })
+      const APPLY_INVOICE_FROM = JSON.parse(localStorage.getItem('APPLY_INVOICE_FROM')) || {}
+      if (APPLY_INVOICE_FROM.name) {
+        this.$router.replace({
+          name: APPLY_INVOICE_FROM.name,
+          query: APPLY_INVOICE_FROM.query,
+          params: APPLY_INVOICE_FROM.params
+        })
+      } else {
+        this.$router.go(-1)
+      }
     }
   },
   beforeRouteLeave (to, from, next) {
