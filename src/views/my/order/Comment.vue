@@ -59,7 +59,6 @@ import Grade from '../../../components/Grade.vue'
 import { getOrderDetail } from '../../../apis/order-manager'
 import { submitComment } from '../../../apis/comment'
 import { resetForm } from '../../../assets/js/util'
-import { isEmoji } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -99,10 +98,7 @@ export default {
   },
   watch: {
     'form.content' (value) {
-      const { maxLength } = this
-      const reg = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
-      const max = isEmoji(value) ? value.replace(reg, 'a').length + maxLength : maxLength
-      if (value.length === max) {
+      if (value.length === this.maxLength) {
         this.$toast(`最多输入${this.maxLength}个字`)
       }
     },

@@ -33,7 +33,7 @@
         class="pl-input__word-count"
         v-if="maxlength > 0"
       >
-        <i v-text="length" />
+        <i v-text="value.length > maxlength ? maxlength : value.length" />
         /
         <i v-text="maxlength" />
       </span>
@@ -93,7 +93,6 @@
 </template>
 
 <script>
-import { isEmoji } from '../../assets/js/validate'
 export default {
   name: 'PlInput',
   model: {
@@ -163,13 +162,6 @@ export default {
       getLine: null,
       $form: null,
       $formItem: null
-    }
-  },
-  computed: {
-    length () {
-      const { value } = this
-      const reg = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g
-      return isEmoji(value) ? value.replace(reg, 'a').length : value.length
     }
   },
   mounted () {
