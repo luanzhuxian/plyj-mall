@@ -40,8 +40,8 @@
             v-for="(img, j) of item.mediaInfoModels"
             :key="j"
             v-img-error
-            :src="img.mediaUrl"
-            v-gallery="item.sequenceNbr"
+            :src="img.mediaUrl + '?x-oss-process=style/thum'"
+            v-imger:comment="img.mediaUrl"
             alt=""
           >
         </div>

@@ -11,7 +11,6 @@ import directive from './directive'
 import { beforeEach, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
 import animated from 'animate.css'
-import gallery from 'img-vuer'
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 // import AlloyFinger from 'alloyfinger'
@@ -22,9 +21,6 @@ import filters from './filter'
 // LogLine.using(LogLine.PROTOCOL.INDEXEDDB)
 Vue.use(VueLazyload, {
   error: imgError
-})
-Vue.use(gallery, {
-  swipeThreshold: 150
 })
 Vue.use(animated)
 Vue.use(VueClipboard)
