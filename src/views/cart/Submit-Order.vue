@@ -373,7 +373,11 @@ export default {
         physicalProducts: this.physicalProducts
       }
       localStorage.setItem('APPLY_INVOICE', JSON.stringify(applyInvoice))
-      localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify(this.$route))
+      localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
+        name: this.$route.name,
+        params: this.$route.params,
+        query: this.$route.query
+      }))
       this.$router.push({ name: 'ApplyInvoice' })
       this.invioceType = 2
       this.showPopup = false

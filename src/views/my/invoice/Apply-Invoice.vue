@@ -275,7 +275,11 @@ export default {
       }
     },
     addInfo () {
-      localStorage.setItem('EDIT_INVOICE_FROM', JSON.stringify(this.$route))
+      localStorage.setItem('EDIT_INVOICE_FROM', JSON.stringify({
+        name: this.$route.name,
+        params: this.$route.params,
+        query: this.$route.query
+      }))
       this.$router.push({ name: 'AddInvoice' })
     },
     async confirm () {

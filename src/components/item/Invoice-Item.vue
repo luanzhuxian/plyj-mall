@@ -33,7 +33,11 @@ export default {
   methods: {
     edit () {
       // 点击编辑时，保存当前路由，修改后返回当前页面
-      localStorage.setItem('EDIT_INVOICE_FROM', JSON.stringify(this.$route))
+      localStorage.setItem('EDIT_INVOICE_FROM', JSON.stringify({
+        name: this.$route.name,
+        params: this.$route.params,
+        query: this.$route.query
+      }))
       this.$router.push({ name: 'AddInvoice', params: { id: this.data.id } })
     }
   }

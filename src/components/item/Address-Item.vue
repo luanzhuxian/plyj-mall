@@ -69,11 +69,19 @@ export default {
   methods: {
     addressList () {
       if (this.notLink) return
-      localStorage.setItem('ADDRESS_RETURN', JSON.stringify(this.$route))
+      localStorage.setItem('ADDRESS_RETURN', JSON.stringify({
+        name: this.$route.name,
+        params: this.$route.params,
+        query: this.$route.query
+      }))
       this.$router.push({ name: 'Address' })
     },
     addAddress () {
-      localStorage.setItem('ADDRESS_RETURN', JSON.stringify(this.$route))
+      localStorage.setItem('ADDRESS_RETURN', JSON.stringify({
+        name: this.$route.name,
+        params: this.$route.params,
+        query: this.$route.query
+      }))
       this.$router.push({ name: 'AddAddress' })
     }
   }

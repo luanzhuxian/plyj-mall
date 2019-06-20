@@ -638,7 +638,11 @@ export default {
     // 申请发票
     applyInvoice () {
       localStorage.setItem('APPLY_INVOICE', JSON.stringify({ physicalProducts: this.noInvoiceProList }))
-      localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify(this.$route))
+      localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
+        name: this.$route.name,
+        params: this.$route.params,
+        query: this.$route.query
+      }))
       const { mobile, name } = this.receiverModel
       this.$router.push({
         name: 'ApplyInvoice',
