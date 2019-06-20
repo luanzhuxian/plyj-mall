@@ -176,7 +176,7 @@ export default {
         } else {
           this.loading = true
           await bindMobile(this.bindForm)
-          let { name, params, query } = localStorage.getItem('BIND_MOBILE_FROM')
+          let { name, params, query } = JSON.parse(localStorage.getItem('BIND_MOBILE_FROM')) || {}
           if (name) {
             await this.$store.dispatch(REFRESH_TOKEN)
             this.$router.replace({
