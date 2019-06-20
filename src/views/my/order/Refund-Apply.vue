@@ -409,7 +409,9 @@ export default {
         this.loading = false
         this.$success(message)
         setTimeout(() => {
-          this.$router.replace({ name: 'RefundDetail', params: { id: result.id } })
+          this.type === 'APPLY'
+            ? this.$router.replace({ name: 'RefundDetail', params: { id: result.id } })
+            : this.$router.go(-1)
         }, 2000)
       } catch (e) {
         throw e

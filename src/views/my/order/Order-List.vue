@@ -223,7 +223,8 @@ export default {
     ...mapGetters(['orderStatusMap'])
   },
   beforeRouteEnter (to, from, next) {
-    to.meta.noRefresh = from.name === 'OrderDetail'
+    to.meta.noRefresh = (from.name === 'OrderDetail' && !from.meta.isDelete) || from.name === 'Freight'
+    if (from.meta.isDelete) delete from.meta.isDelete
     next()
   },
   mounted () {
@@ -256,19 +257,6 @@ export default {
       }
       this.orderList = list
     },
-    // async getOrderSummary () {
-    //   try {
-    //     const { orderStatusMapCamel } = this
-    //     const { result } = await orderPhysicalorderSummary(this.userId)
-    //     for (let key of Object.keys(result)) {
-    //       if (orderStatusMapCamel.hasOwnProperty(key)) {
-    //         this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
-    //       }
-    //     }
-    //   } catch (e) {
-    //     throw e
-    //   }
-    // },
     async pay (orderId, orderType) {
       this.payloading = true
       this.currentPayId = orderId
@@ -303,12 +291,6 @@ export default {
         setTimeout(() => {
           this.$router.push({ name: 'OrderComplete', params: { orderId } })
         }, 2000)
-        // 跳转至待评价
-        // this.form.orderStatus = 'FINISHED'
-        // this.tabChange({
-        //   name: '待评价',
-        //   id: 'FINISHED'
-        // })
       } catch (e) {
         throw e
       }
@@ -325,7 +307,6 @@ export default {
         } else {
           this.orderList.splice(index, 1)
         }
-        // this.getOrderSummary()
         this.$success('订单取消成功')
       } catch (e) {
         throw e
@@ -337,7 +318,6 @@ export default {
         await this.$confirm('订单一旦删除，将无法恢复 确认要删除订单？')
         await deleteOrder(orderId)
         this.orderList.splice(index, 1)
-        // this.getOrderSummary()
         this.$success('订单删除成功')
       } catch (e) {
         throw e

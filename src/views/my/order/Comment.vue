@@ -143,7 +143,8 @@ export default {
         this.loading = false
         this.$success('评价成功')
         setTimeout(() => {
-          this.$router.replace({ name: 'OrderDetail', params: { orderId: this.orderId } })
+          // this.$router.replace({ name: 'OrderDetail', params: { orderId: this.orderId } })
+          this.$router.go(-1)
         }, 2000)
       } catch (e) {
         throw e

@@ -74,7 +74,7 @@
             寄件运单号
           </pl-button>
           <pl-button
-            v-if="orderStatus === 'FINISHED' && item.assessmentStatus === 0 && item.afterSalesStatus === 0"
+            v-if="orderStatus === 'FINISHED' && item.assessmentStatus === 0 && (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)"
             type="warning"
             plain
             round
@@ -626,7 +626,9 @@ export default {
         await deleteOrder(orderId)
         this.$success('订单删除成功')
         setTimeout(() => {
-          this.$router.push({ name: 'Orders', params: { status: 'ALL_ORDER' } })
+          // this.$router.push({ name: 'Orders', params: { status: 'ALL_ORDER' } })
+          this.$router.history.current.meta.isDelete = true
+          this.$router.go(-1)
         }, 2000)
       } catch (e) {
         throw e
