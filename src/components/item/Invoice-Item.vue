@@ -80,6 +80,7 @@ export default {
     font-weight: 500;
     font-size: 28px;
     color: #2E2E2E;
+    word-break: break-all;
   }
   .number {
     font-size: 24px;

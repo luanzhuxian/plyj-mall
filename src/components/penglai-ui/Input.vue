@@ -262,6 +262,7 @@ export default {
         &:disabled {
           background-color: #fff;
           color: #999;
+          opacity: 1 !important;
         }
         &:read-only {
           -webkit-user-select: none;

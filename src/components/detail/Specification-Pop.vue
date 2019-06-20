@@ -25,7 +25,7 @@
                 />
                 <p
                   :class="$style.original"
-                  v-if="selected.originPrice || (data[0] && data[0].originPrice)"
+                  v-if="selected.originPrice"
                 >
                   原价：<del
                     class="rmb"

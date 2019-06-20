@@ -7,8 +7,8 @@
         :key="i"
       >
         <img
-          v-gallery
-          :src="img"
+          v-imger:uploadList="img"
+          :src="img + '?x-oss-process=style/thum'"
         >
         <div class="remove-btn">
           <pl-svg
