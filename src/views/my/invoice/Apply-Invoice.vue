@@ -235,18 +235,12 @@ export default {
   },
   activated () {
     const APPLY_INVOICE = JSON.parse(localStorage.getItem('APPLY_INVOICE'))
-    console.log(APPLY_INVOICE)
     if (!APPLY_INVOICE) {
       this.$router.go(-1)
       this.$destroy()
       return
     }
-    for (const item of APPLY_INVOICE.physicalProducts) {
-      if (item.returnStatus === 0 || item.returnStatus === 3 || item.returnStatus === '') {
-        this.checkedList.push(item)
-      }
-    }
-    // this.checkedList = [...APPLY_INVOICE.physicalProducts]
+    this.checkedList = [...APPLY_INVOICE.physicalProducts]
     this.applyInvoice = APPLY_INVOICE
     try {
       this.getInvoiceList()
