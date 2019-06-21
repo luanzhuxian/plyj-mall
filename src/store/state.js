@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 const token = Cookies.get('token') || ''
 const refresh_token = Cookies.get('refresh_token') || ''
-
+const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress'))
 export default {
   theme: 'base-theme',
   userInfo: {
@@ -43,7 +43,7 @@ export default {
   openId: '',
   refresh_token,
   addressList: [],
-  selectedAddress: null, // 选中的地址
+  selectedAddress: selectedAddress, // 选中的地址
   // 短信类型
   smstype: {
     AGENCY_MOBILE_REGISTER: 'AGENCY_MOBILE_REGISTER', // 商户后台-免费注册验证码

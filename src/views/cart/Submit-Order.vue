@@ -247,6 +247,20 @@ export default {
   computed: {
     ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList'])
   },
+  watch: {
+    selectedAddress: {
+      handler (val) {
+        // 地址变化时，如果已经选择了发票，且发票类型为个人，将改变发票信息为当前地址信息
+        if (this.INVOICE_MODEL && this.INVOICE_MODEL.invoiceType === 1) {
+          this.INVOICE_MODEL.userAddressId = val.sequenceNbr
+          this.INVOICE_MODEL.receiverMobile = val.mobile
+          this.INVOICE_MODEL.invoiceTitle = val.realName
+          localStorage.setItem('INVOICE_MODEL', JSON.stringify(this.INVOICE_MODEL))
+        }
+      },
+      deep: true
+    }
+  },
   activated () {
     this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL'))
     this.invioceType = this.INVOICE_MODEL ? 2 : 1

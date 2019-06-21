@@ -51,6 +51,7 @@ export default {
       return
     }
     state.selectedAddress = payload
+    localStorage.setItem('selectedAddress', JSON.stringify(payload))
   },
   [type.LOG_OUT] () {
     Cookies.remove('mallId')
