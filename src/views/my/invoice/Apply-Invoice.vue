@@ -133,6 +133,7 @@
         <li
           v-for="(pro, i) of physicalProducts"
           :key="i"
+          v-show="pro.returnStatus === 0 || pro.returnStatus === 3 || pro.returnStatus === ''"
         >
           <label>
             <input
@@ -241,7 +242,7 @@ export default {
       return
     }
     for (const item of APPLY_INVOICE.physicalProducts) {
-      if (item.returnStatus === 0 || item.returnStatus === 3) {
+      if (item.returnStatus === 0 || item.returnStatus === 3 || item.returnStatus === '') {
         this.checkedList.push(item)
       }
     }
@@ -255,7 +256,7 @@ export default {
   },
   methods: {
     isSelected (pro) {
-      return this.checkedList.some(item => item.optionCode === pro.optionCode && (item.returnStatus === 0 || item.returnStatus === 3))
+      return this.checkedList.some(item => item.optionCode === pro.optionCode && (item.returnStatus === 0 || item.returnStatus === 3 || pro.returnStatus === ''))
     },
     change (type) {
       this.type = type
@@ -273,13 +274,11 @@ export default {
       return this.invoiceList.find(item => item.id === this.currentInvoice)
     },
     selectChange (e, pro) {
-      if (pro.returnStatus === 0 || pro.returnStatus === 3) {
-        const checked = e.target.checked
-        if (checked) {
-          this.checkedList.push(pro)
-        } else {
-          this.checkedList.splice(this.checkedList.indexOf(pro), 1)
-        }
+      const checked = e.target.checked
+      if (checked) {
+        this.checkedList.push(pro)
+      } else {
+        this.checkedList.splice(this.checkedList.indexOf(pro), 1)
       }
     },
     addInfo () {
