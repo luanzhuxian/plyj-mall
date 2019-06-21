@@ -486,6 +486,24 @@ export default {
       return this.productInfoModel.productDetailModels.filter(item => item.invoiceStatus === 8)
     }
   },
+  // 不要删
+  // beforeRouteEnter (to, from, next) {
+  //   if (from.name === 'PaySuccess') {
+  //     to.meta.payOrderId = from.meta.payOrderId || null
+  //     if (from.meta.payOrderId) delete from.meta.payOrderId
+  //   }
+  //   if (from.name === 'OrderComplete') {
+  //     to.meta.receiveOrderId = from.meta.receiveOrderId || null
+  //     if (from.meta.receiveOrderId) delete from.meta.receiveOrderId
+  //   }
+  //   if (from.name === 'CommentOrder') {
+  //     to.meta.commentOId = from.meta.commentOId || null
+  //     to.meta.commentPId = from.meta.commentPId || null
+  //     if (from.meta.commentOId) delete from.meta.commentOId
+  //     if (from.meta.commentPId) delete from.meta.commentPId
+  //   }
+  //   next()
+  // },
   async activated () {
     try {
       await this.getDetail()
@@ -615,7 +633,7 @@ export default {
         await cancelOrder(this.orderId, reason)
         this.$success('订单取消成功')
         this.getDetail()
-        this.$router.history.current.meta.removeItem = this.orderId // 保存id，返回列表页后从列表中移除
+        this.$router.history.current.meta.cancelOrderId = this.orderId // 保存id，返回列表页后从列表中移除
       } catch (e) {
         throw e
       }
@@ -628,7 +646,7 @@ export default {
         this.$success('订单删除成功')
         setTimeout(() => {
           // this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDER' } })
-          this.$router.history.current.meta.removeItem = orderId // 保存id，返回列表页后从列表中移除
+          this.$router.history.current.meta.deleteOrderId = orderId // 保存id，返回列表页后从列表中移除
           this.$router.go(-1)
         }, 2000)
       } catch (e) {

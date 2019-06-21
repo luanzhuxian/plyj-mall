@@ -144,6 +144,8 @@ export default {
         this.$success('评价成功')
         setTimeout(() => {
           // this.$router.replace({ name: 'OrderDetail', params: { orderId: this.orderId } })
+          this.$router.history.current.meta.commentOId = this.orderId
+          this.$router.history.current.meta.commentPId = this.productId
           this.$router.go(-1)
         }, 2000)
       } catch (e) {

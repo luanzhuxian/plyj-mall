@@ -222,25 +222,68 @@ export default {
   computed: {
     ...mapGetters(['orderStatusMap'])
   },
-  beforeRouteEnter (to, from, next) {
-    to.meta.noRefresh = from.name === 'OrderDetail' || from.name === 'Freight'
-    to.meta.removeItem = from.meta.removeItem || null
-    if (from.meta.noRefresh) delete from.meta.noRefresh
-    if (from.meta.removeItem) delete from.meta.removeItem
-    next()
-  },
+  // 不要删
+  // beforeRouteEnter (to, from, next) {
+  //   to.meta.noRefresh = from.name === 'OrderDetail' || from.name === 'Freight'
+  //   to.meta.receiveOrderId = from.meta.receiveOrderId || null
+  //   to.meta.deleteOrderId = from.meta.deleteOrderId || null
+  //   to.meta.cancelOrderId = from.meta.cancelOrderId || null
+  //   to.meta.commentOId = from.meta.commentOId || null
+  //   to.meta.commentPId = from.meta.commentPId || null
+  //   if (from.meta.noRefresh) delete from.meta.noRefresh
+  //   if (from.meta.receiveOrderId) delete from.meta.receiveOrderId
+  //   if (from.meta.deleteOrderId) delete from.meta.deleteOrderId
+  //   if (from.meta.cancelOrderId) delete from.meta.cancelOrderId
+  //   if (from.meta.commentOId) delete from.meta.commentOId
+  //   if (from.meta.commentPId) delete from.meta.commentPId
+  //   console.log(to)
+  //   next()
+  // },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    const currentRoute = this.$router.currentRoute
-    if (currentRoute.meta.noRefresh) {
-      if (currentRoute.meta.removeItem) {
-        this.orderList = this.orderList.filter(item => item.id !== currentRoute.meta.removeItem)
-        !this.orderList.length && this.$refresh()
-      }
-      return
-    }
+    // 不要删
+    // const currentRoute = this.$router.currentRoute
+    // if (currentRoute.meta.noRefresh) {
+    //   if (currentRoute.meta.receiveOrderId) {
+    //     this.orderList = this.orderList.filter(item => item.id !== currentRoute.meta.receiveOrderId)
+    //     !this.orderList.length && this.$refresh()
+    //     delete currentRoute.meta.receiveOrderId
+    //   }
+    //   if (currentRoute.meta.deleteOrderId) {
+    //     this.orderList = this.orderList.filter(item => item.id !== currentRoute.meta.deleteOrderId)
+    //     !this.orderList.length && this.$refresh()
+    //     delete currentRoute.meta.deleteOrderId
+    //   }
+    //   if (currentRoute.meta.cancelOrderId) {
+    //     if (this.status === 'ALL_ORDER') {
+    //       const order = this.orderList.find(item => item.id === currentRoute.meta.cancelOrderId)
+    //       order && (order.status = 'CLOSED')
+    //     } else if (this.status === 'WAIT_PAY') {
+    //       this.orderList = this.orderList.filter(item => item.id !== currentRoute.meta.cancelOrderId)
+    //       !this.orderList.length && this.$refresh()
+    //     }
+    //     delete currentRoute.meta.cancelOrderId
+    //   }
+    //   if (currentRoute.meta.commentOId && currentRoute.meta.commentPId) {
+    //     debugger
+    //     const order = this.orderList.find(item => item.id === currentRoute.meta.commentOId)
+    //     if (!order) return
+    //     const product = order.products.find(item => item.id === currentRoute.meta.commentPId)
+    //     if (!product) return
+    //     product.assessmentStatus = 1
+    //     order.commentStatus = !order.products.some(item => item.assessmentStatus !== 1)
+    //     if (this.status === 'FINISHED') {
+    //       this.orderList = this.orderList.filter(item => item.commentStatus)
+    //       !this.orderList.length && this.$refresh()
+    //     }
+    //     delete currentRoute.meta.commentOId
+    //     delete currentRoute.meta.commentPId
+    //   }
+    //   return
+    // }
+
     this.form.orderStatus = this.status
     this.$refresh()
   },

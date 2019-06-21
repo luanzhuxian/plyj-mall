@@ -50,6 +50,12 @@ export default {
       default: ''
     }
   },
+  beforeRouteLeave (to, from, next) {
+    if (to.name === 'OrderDetail') {
+      from.meta.receiveOrderId = this.orderId
+    }
+    next()
+  },
   data () {
     return {
     }
