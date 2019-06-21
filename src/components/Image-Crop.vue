@@ -202,7 +202,7 @@ export default {
             this.$nextTick(function () {
               this.file2SizePosition()
             })
-          }, 800)
+          }, 200)
         }
         if (this.skipCrop) {
           this.uploadCanvas()
