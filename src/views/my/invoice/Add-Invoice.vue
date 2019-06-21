@@ -117,7 +117,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userId'])
+    ...mapGetters(['userId', 'mobile'])
   },
   activated () {
     try {
@@ -182,6 +182,22 @@ export default {
   beforeRouteLeave (to, form, next) {
     localStorage.removeItem('EDIT_INVOICE_FROM')
     next()
+  },
+  async beforeRouteEnter (to, from, next) {
+    next(async vm => {
+      if (!vm.mobile) {
+        try {
+          await vm.$confirm('您还没绑定手机，请先绑定手机')
+          vm.$router.replace({ name: 'BindMobile' })
+        } catch (e) {
+          vm.$router.replace({
+            name: from.name,
+            params: from.params,
+            query: from.query
+          })
+        }
+      }
+    })
   }
 }
 </script>

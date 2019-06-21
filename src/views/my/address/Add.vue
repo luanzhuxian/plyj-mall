@@ -165,16 +165,6 @@ export default {
       this.$refs.citySelector.clear()
     },
     async confirm () {
-      if (!this.mobile) {
-        await this.$confirm('您还没有绑定手机，请先绑定手机')
-        localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-          name: this.$route.name,
-          params: this.$route.params,
-          query: this.$route.query
-        }))
-        this.$router.push({ name: 'BindMobile' })
-        return
-      }
       if (this.$refs.form.validate()) {
         let currentAddress = null
         this.loading = true
@@ -252,6 +242,22 @@ export default {
   },
   deactivated () {
     this.clearForm()
+  },
+  async beforeRouteEnter (to, from, next) {
+    next(async vm => {
+      if (!vm.mobile) {
+        try {
+          await vm.$confirm('您还没绑定手机，请先绑定手机')
+          vm.$router.replace({ name: 'BindMobile' })
+        } catch (e) {
+          vm.$router.replace({
+            name: from.name,
+            params: from.params,
+            query: from.query
+          })
+        }
+      }
+    })
   }
 }
 </script>
