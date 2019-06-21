@@ -234,12 +234,18 @@ export default {
   },
   activated () {
     const APPLY_INVOICE = JSON.parse(localStorage.getItem('APPLY_INVOICE'))
+    console.log(APPLY_INVOICE)
     if (!APPLY_INVOICE) {
       this.$router.go(-1)
       this.$destroy()
       return
     }
-    this.checkedList = [...APPLY_INVOICE.physicalProducts]
+    for (const item of APPLY_INVOICE.physicalProducts) {
+      if (item.returnStatus === 0 || item.returnStatus === 3) {
+        this.checkedList.push(item)
+      }
+    }
+    // this.checkedList = [...APPLY_INVOICE.physicalProducts]
     this.applyInvoice = APPLY_INVOICE
     try {
       this.getInvoiceList()
@@ -249,7 +255,7 @@ export default {
   },
   methods: {
     isSelected (pro) {
-      return this.checkedList.some(item => item.optionCode === pro.optionCode)
+      return this.checkedList.some(item => item.optionCode === pro.optionCode && (item.returnStatus === 0 || item.returnStatus === 3))
     },
     change (type) {
       this.type = type
@@ -267,11 +273,13 @@ export default {
       return this.invoiceList.find(item => item.id === this.currentInvoice)
     },
     selectChange (e, pro) {
-      const checked = e.target.checked
-      if (checked) {
-        this.checkedList.push(pro)
-      } else {
-        this.checkedList.splice(this.checkedList.indexOf(pro), 1)
+      if (pro.returnStatus === 0 || pro.returnStatus === 3) {
+        const checked = e.target.checked
+        if (checked) {
+          this.checkedList.push(pro)
+        } else {
+          this.checkedList.splice(this.checkedList.indexOf(pro), 1)
+        }
       }
     },
     addInfo () {

@@ -480,7 +480,7 @@ export default {
       return this.orderType === 'PHYSICAL' &&
         this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
-        this.productInfoModel.productDetailModels.some(item => item.invoiceStatus === 8)
+        this.productInfoModel.productDetailModels.some(item => item.invoiceStatus === 8 && (item.returnStatus === 0 || item.returnStatus === 3))
     },
     noInvoiceProList () {
       return this.productInfoModel.productDetailModels.filter(item => item.invoiceStatus === 8)
