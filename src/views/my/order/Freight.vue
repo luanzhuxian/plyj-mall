@@ -93,6 +93,9 @@ export default {
     } finally {
       this.loading = false
     }
+  },
+  deactivated () {
+    this.lastRecord = ''
   }
 }
 </script>
@@ -128,6 +131,7 @@ export default {
       padding-left: 20px;
       flex: 1;
       color: #000;
+      word-break: break-all;
     }
     .right {
       padding: 0 48px;
