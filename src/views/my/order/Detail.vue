@@ -48,20 +48,12 @@
             申请退款
           </pl-button>
           <pl-button
-            v-if="item.afterSalesStatus === 1"
+            v-if="item.afterSalesStatus === 1 || item.afterSalesStatus === 4 || item.afterSalesStatus === 9"
             plain
             round
             @click="$router.push({ name: 'RefundDetail', params: { id: item.mallRefundId } })"
           >
             退款中
-          </pl-button>
-          <pl-button
-            v-if="item.afterSalesStatus === 5"
-            plain
-            round
-            @click="$router.push({ name: 'RefundDetail', params: { id: item.mallRefundId } })"
-          >
-            待退货
           </pl-button>
           <pl-button
             class="refund-finish"
@@ -73,7 +65,7 @@
             退款完成
           </pl-button>
           <pl-button
-            v-if="item.afterSalesStatus === 4"
+            v-if="item.afterSalesStatus === 5"
             type="warning"
             plain
             round
