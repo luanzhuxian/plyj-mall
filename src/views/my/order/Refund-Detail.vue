@@ -255,14 +255,6 @@
       >
         取消申请
       </pl-button>
-      <!-- <pl-button
-        v-if="isReApplyBtnShow"
-        round
-        plain
-        @click="$router.push({ name: 'Refund', params: { orderId: refundDetail.orderId, orderProductRId: refundDetail.orderDetailId } })"
-      >
-        重新申请
-      </pl-button> -->
     </div>
     <pl-popup
       ref="contact"
@@ -433,9 +425,6 @@ export default {
   },
   computed: {
     ...mapGetters(['refundStatusMap', 'refundTypeMap', 'address', 'supportPhone'])
-    // isReApplyBtnShow () {
-    //   return (this.refundStatus === 'CLOSED' || this.refundStatus === 'CANCEL' || this.refundStatus === 'REJECT') && (this.afterSalesStatus === 0 || this.afterSalesStatus === 3)
-    // }
   },
   activated () {
     this.getDetail()

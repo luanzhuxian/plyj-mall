@@ -482,13 +482,13 @@ export default {
         this.orderStatus !== 'CLOSED' &&
         this.productInfoModel.productDetailModels.some(item => {
           return item.invoiceStatus === 8 &&
-            (item.returnStatus === 0 || item.returnStatus === 3)
+            (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)
         })
     },
     noInvoiceProList () {
       return this.productInfoModel.productDetailModels.filter(item => {
         return item.invoiceStatus === 8 &&
-          (item.returnStatus === 0 || item.returnStatus === 3)
+          (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)
       })
     }
   },
@@ -575,10 +575,10 @@ export default {
           this.tradingInfoModel = tradingInfoModel
           this.invoiceModelList = invoiceModelList
           this.operationRecordModel = operationRecordModel
-          // afterSalesStatus 0：无售后，1 待审核，2 已通过，3 已驳回，5 退换货-待退货 4 退换货-已退货
+          // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
-            if (current.afterSalesStatus !== 2) this.isAllProductRefund = false
-            if (current.afterSalesStatus !== 0 && current.afterSalesStatus !== 2) this.isDeleteBtnShow = false
+            this.isAllProductRefund = (current.afterSalesStatus === 2)
+            this.isDeleteBtnShow = !(current.afterSalesStatus !== 0 && current.afterSalesStatus !== 2)
             return total + current['count']
           }, 0);  // eslint-disable-line
           ({ name: this.shippingAddress.realName, mobile: this.shippingAddress.mobile, address: this.shippingAddress.agencyAddress } = receiverModel)
