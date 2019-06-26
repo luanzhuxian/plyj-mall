@@ -234,7 +234,7 @@ export default {
           appId: this.appId,
           title: result.productName,
           desc: result.productDesc,
-          link: window.location.href + '?demo=demo',
+          link: window.location.href,
           imgUrl: result.productImage[0].mediaUrl + '?x-oss-process=image/resize,w_200'
         })
         this.loading = false
