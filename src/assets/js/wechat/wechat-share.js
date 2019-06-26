@@ -39,8 +39,7 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
       ...willHide // 以上是默认隐藏的按钮
     ]
   })
-  // 分享到朋友圈
-  WX.onMenuShareTimeline({
+  WX.updateTimelineShareData({
     title: `${title} ${desc}`, // 分享标题
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
     imgUrl, // 分享图标
@@ -48,18 +47,38 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
       console.warn('分享到朋友圈成功')
     }
   })
-  // 分享给朋友
-  WX.onMenuShareAppMessage({
+  // 分享到朋友圈
+  // WX.onMenuShareTimeline({
+  //   title: `${title} ${desc}`, // 分享标题
+  //   link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+  //   imgUrl, // 分享图标
+  //   success: () => {
+  //     console.warn('分享到朋友圈成功')
+  //   }
+  // })
+  WX.updateAppMessageShareData({
     title, // 分享标题
     desc, // 分享描述
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
     imgUrl, // 分享图标
-    type: 'link',
-    dataUrl: '',
+    // type: 'link',
+    // dataUrl: '',
     success: () => {
       console.warn('分享到朋友成功')
     }
   })
+  // 分享给朋友
+  // WX.onMenuShareAppMessage({
+  //   title, // 分享标题
+  //   desc, // 分享描述
+  //   link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+  //   imgUrl, // 分享图标
+  //   type: 'link',
+  //   dataUrl: '',
+  //   success: () => {
+  //     console.warn('分享到朋友成功')
+  //   }
+  // })
 }
 /* 生成微信分享配置对象 */
 function getConfig (jsapi, appId, link) {
