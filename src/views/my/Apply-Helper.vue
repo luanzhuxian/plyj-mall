@@ -95,7 +95,7 @@ import {
   agentUserInfoAudit,
   updateAudit
 } from '../../apis/broker-manager'
-import { isPhone, isName, isIdCard } from '../../assets/js/validate'
+import { isPhone, isName, isIdCard, checkLength } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
 import { REFRESH_TOKEN, USER_INFO } from '../../store/mutation-type'
 export default {
@@ -129,13 +129,16 @@ export default {
         ],
         idCard: [
           { required: true, message: '请输入身份证号码', trigger: 'blur' },
-          { validator: isIdCard, message: '身份证号格式有误', trigger: 'blur' }
+          { validator: isIdCard, message: '请填写正确的身份证号', trigger: 'blur' }
         ],
         mobile: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
-          { validator: isPhone, message: '手机号格式有误', trigger: 'blur' }
+          { validator: isPhone, message: '手机号不正确', trigger: 'blur' }
         ],
-        verificationCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+        verificationCode: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { validator: checkLength(5), message: '请填写正确的4位验证码', trigger: 'blur' }
+        ]
       },
       agentUser: false
     }
@@ -170,7 +173,10 @@ export default {
           }
           await this.$store.dispatch(REFRESH_TOKEN)
           this.loading = false
-          this.$router.replace({ name: 'My' })
+          this.$success('已成功提交认证 请耐心等待审核')
+          setTimeout(() => {
+            this.$router.replace({ name: 'My' })
+          }, 2000)
         } catch (e) {
           this.loading = false
           throw e

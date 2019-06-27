@@ -1,165 +1,185 @@
 <template>
-  <div :class="$style.my">
+  <div :class="$style.personalCenter">
     <div :class="$style.top">
       <img
         :src="avatar"
         alt="头像"
       >
-      <!-- 未登录 -->
-      <!--<pl-svg :class="$style.dafaultFace" name="default-face" />-->
-      <div :class="$style.baseInfo">
+      <div :class="$style.basicInfo">
         <span
-          :class="$style.name"
+          :class="$style.main"
           v-text="userName"
         />
-        <div :class="$style.levelapply">
+        <div :class="$style.sub">
           <span
             :class="$style.level"
             v-text="roleName"
           />
           <router-link
-            v-if="!agentUser&&(roleCode === 'MEMBERSHIP'||roleCode === 'VISITOR')"
+            v-if="isApplyBtnShow"
+            :class="$style.applyBtn"
             :to="{ name: 'ApplyHelper' }"
-            :class="$style.apply"
           >
-            <pl-svg name="apply-helper" />
+            <pl-svg name="helper-apply" />
           </router-link>
+          <div
+            v-if="!agentUser && isOnProgress"
+            :class="$style.progress"
+          >
+            <span :class="$style.progressLeft">
+              {{ applicationStatus ? applicationStatusMap[applicationStatus] : '' }}
+            </span>
+            <!-- <span
+              :class="$style.progressRight"
+              @click="isModalShow=true"
+            >
+              查看进度
+            </span> -->
+          </div>
         </div>
       </div>
-      <div :class="$style.settingBox">
+      <div :class="$style.setting">
         <router-link
           v-if="!isAdmin"
-          :class="$style.settingEnter"
           :to="{ name: 'Setting' }"
         >
-          <pl-svg name="my-setting" />
+          <pl-svg name="setting-white" />
         </router-link>
       </div>
     </div>
-    <!-- 金库 -->
-    <div
-      v-if="agentUser"
-      :class="$style.myMoney"
-    >
+
+    <div :class="$style.content">
+      <!-- 金库 -->
       <router-link
-        tag="div"
-        :class="$style.runbi"
+        v-if="agentUser"
+        :class="[$style.panel, $style.finance]"
         :to="{ name: 'Coffers' }"
       >
         <div>
           <p>可提现润笔（元）</p>
           <p>
-            <span v-text="balance" />
-            <!--          <span :class="$style.withdrawTip">提现</span>-->
+            <span v-text="balance || '0.00'" />
+            <!-- <span :class="$style.withdrawTip">提现</span> -->
           </p>
         </div>
         <div>
           <p>今日润笔（元）</p>
-          <p v-text="currentBalance" />
+          <p v-text="currentBalance || '0.00'" />
         </div>
         <pl-svg
           :class="$style.myRight"
           name="my-right"
         />
       </router-link>
-    </div>
-
-    <!-- 我的订单 -->
-    <div :class="$style.myOrders">
-      <div :class="$style.orderStatus">
-        <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
-          <pl-svg name="wait-pay" />
-          <span
-            :class="$style.badge"
-            v-if="count.WAIT_PAY"
-            v-text="count.WAIT_PAY"
-          />
-        </router-link>
-        <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
-          <pl-svg name="wait-ship" />
-          <span
-            :class="$style.badge"
-            v-if="count.WAIT_SHIP"
-            v-text="count.WAIT_SHIP"
-          />
-        </router-link>
-        <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
-          <pl-svg name="wait-receive" />
-          <span
-            :class="$style.badge"
-            v-if="count.WAIT_RECEIVE"
-            v-text="count.WAIT_RECEIVE"
-          />
-        </router-link>
-        <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
-          <pl-svg name="after-sale" />
-          <span
-            :class="$style.badge"
-            v-if="count.AFTER_SALE"
-            v-text="count.AFTER_SALE"
-          />
-        </router-link>
-        <div :class="$style.segmentation">
-          <pl-svg name="my-segmentation" />
+      <!-- 我的订单 -->
+      <div :class="$style.panel">
+        <div :class="$style.orderStatus">
+          <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
+            <pl-svg name="wait-pay" />
+            <span
+              :class="$style.badge"
+              v-if="count.WAIT_PAY"
+              v-text="count.WAIT_PAY"
+            />
+          </router-link>
+          <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
+            <pl-svg name="wait-ship" />
+            <span
+              :class="$style.badge"
+              v-if="count.WAIT_SHIP"
+              v-text="count.WAIT_SHIP"
+            />
+          </router-link>
+          <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
+            <pl-svg name="wait-receive" />
+            <span
+              :class="$style.badge"
+              v-if="count.WAIT_RECEIVE"
+              v-text="count.WAIT_RECEIVE"
+            />
+          </router-link>
+          <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
+            <pl-svg name="after-sale" />
+            <span
+              :class="$style.badge"
+              v-if="count.AFTER_SALE"
+              v-text="count.AFTER_SALE"
+            />
+          </router-link>
+          <div :class="$style.segmentation">
+            <pl-svg name="my-segmentation" />
+          </div>
+          <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
+            <pl-svg name="my-order-list" />
+          </router-link>
         </div>
-        <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
-          <pl-svg name="my-order-list" />
-        </router-link>
-      </div>
-      <div
-        v-if="newFreight.length > 0"
-        :class="$style.newLogistics"
-      >
-        <div :class="$style.logisticsTitle">
-          最新物流
-        </div>
-        <swiper
-          :options="swiperOption"
-          style="overflow: hidden;"
+        <div
+          v-if="newFreight.length > 0"
+          :class="$style.newLogistics"
         >
-          <swiper-slide
-            :class="$style.swiperSlide"
-            v-for="(item, i) of newFreight"
-            :key="i"
+          <div :class="$style.logisticsTitle">
+            最新物流
+          </div>
+          <swiper
+            :options="swiperOption"
+            style="overflow: hidden;"
           >
-            <router-link
-              tag="div"
-              :to="{ name: 'Freight', params: { orderId: item.orderId } }"
-              :class="$style.logisticsContent"
+            <swiper-slide
+              :class="$style.swiperSlide"
+              v-for="(item, i) of newFreight"
+              :key="i"
             >
-              <div :class="$style.contentLeft">
-                <img
-                  v-img-error
-                  :src="item.productImageUrls[0]"
-                >
-              </div>
-              <div :class="$style.contentRight">
-                <div :class="$style.deliveryStatus">
-                  派送中
+              <router-link
+                :class="$style.logisticsContent"
+                :to="{ name: 'Freight', params: { orderId: item.orderId } }"
+              >
+                <div :class="$style.contentLeft">
+                  <img
+                    v-img-error
+                    :src="item.productImageUrls[0]"
+                  >
                 </div>
-                <div
-                  :class="$style.deliveryDetails"
-                  v-text="item.orderLogisticTrackModel.content"
-                />
-              </div>
-            </router-link>
-          </swiper-slide>
-        </swiper>
+                <div :class="$style.contentRight">
+                  <div :class="$style.deliveryStatus">
+                    派送中
+                  </div>
+                  <div
+                    :class="$style.deliveryDetails"
+                    v-text="item.orderLogisticTrackModel.content"
+                  />
+                </div>
+              </router-link>
+            </swiper-slide>
+          </swiper>
+        </div>
       </div>
-    </div>
-    <div
-      :class="$style.tip"
-      v-if="!agentUser&&(roleCode === 'MEMBERSHIP'||roleCode === 'VISITOR')"
-    >
-      <span :class="$style.tipCircle" />
-      <router-link :to="{ name: 'WhatsHelper' }">
-        成为Helper，第一桶金从这里开始>>
+      <router-link
+        v-if="isApplyBtnShow"
+        :class="[$style.panel, $style.tip]"
+        :to="{ name: 'WhatsHelper' }"
+      >
+        <span :class="$style.tipCircle" />
+        <span>成为Helper，第一桶金从这里开始>></span>
       </router-link>
+      <you-like
+        :class="$style.recommend"
+        :is-my="true"
+      />
     </div>
-    <you-like
-      :is-my="true"
-      style="margin-top: 16px"
-    />
+    <modal
+      ref="modal"
+      :show.sync="isModalShow"
+      title="Helper认证审核进度"
+      title-align="left"
+      hide-footer
+    >
+      <Progress
+        :class="$style.progressModal"
+        :steps="progress"
+        active="1"
+      />
+    </modal>
+
     <!--    <div :class="$style.setting + ' radius-20'">-->
     <!--      <pl-fields-->
     <!--        icon="coffers"-->
@@ -184,11 +204,13 @@
 </template>
 
 <script>
-import { orderPhysicalorderSummary } from '../../apis/order-manager'
-import { getNewFreight } from '../../apis/my'
 import youLike from './../old-home/YouLike.vue'
-import { mapGetters } from 'vuex'
+import Modal from '../../components/penglai-ui/Modal.vue'
+import Progress from './components/Progress.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { orderPhysicalorderSummary, getHelperApplicationProgress } from '../../apis/order-manager'
+import { getNewFreight } from '../../apis/my'
+import { mapGetters } from 'vuex'
 
 const orderStatusMapCamel = {
   new: 'NEW',
@@ -199,10 +221,17 @@ const orderStatusMapCamel = {
   afterSale: 'AFTER_SALE'
 }
 
+const applicationStatusMap = {
+  'AWAIT': 'Helper审核中...',
+  'REJECT': '申请被驳回'
+}
+
 export default {
   name: 'My',
   components: {
     youLike,
+    Modal,
+    Progress,
     swiper,
     swiperSlide
   },
@@ -221,16 +250,27 @@ export default {
         autoplay: true,
         height: window.innerWidth / 750 * 148
       },
-      newFreight: []
+      newFreight: [],
+      progress: [],
+      applicationStatus: '',
+      applicationStatusMap,
+      isOnProgress: false, // 正在申请中
+      isModalShow: false
     }
   },
   computed: {
-    ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode'])
+    ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode']),
+    isApplyBtnShow () {
+      return !this.agentUser &&
+      this.applicationStatus !== 'AWAIT' &&
+      (this.roleCode === 'MEMBERSHIP' || this.roleCode === 'VISITOR')
+    }
   },
   activated () {
     try {
       this.getNewFreight()
       this.orderPhysicalorderSummary()
+      this.getProgress()
     } catch (e) {
       throw e
     }
@@ -255,133 +295,163 @@ export default {
       } catch (e) {
         throw e
       }
-    }
+    },
+    async getProgress () {
+      try {
+        let arr
+        const { result } = await getHelperApplicationProgress()
+        this.isOnProgress = result && result !== ''
+        if (result) {
+          this.applicationStatus = result.status
+          if (result.status === 'AWAIT') {
+            arr = [{
+              text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
+            }, {
+              text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
+            }]
+          } else if (result.status === 'REJECT') {
+            arr = [{
+              text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
+            }, {
+              text: '认证申请被驳回；', desc: '请重新申请认证'
+            }]
+          }
+          this.progress = arr
+        }
+      } catch (e) {
+        throw e
+      }
+    },
+    checkProgress () {}
   }
 }
 </script>
 
 <style module lang="scss">
-  .my {
-    margin-bottom: 120px;
+  .personal-center {
+    box-sizing: border-box;
+    min-height: 100vh;
+    padding-bottom: 90px;
   }
+  .content {
+    position: relative;
+    top: -24px;
+    padding: 0 24px 40px;
+  }
+  .panel {
+    position: relative;
+    background: #fff;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    overflow: hidden;
+   }
+
+  /* 头部 starts */
   .top {
+    position: relative;
     display: flex;
     align-items: center;
-    height: 200px;
-    padding: 0 28px;
-    background-color: #fff;
+    padding: 16px 32px 54px 46px;
+    background-color: #F2B036;
     img {
-      width: 120px;
-      height: 120px;
+      width: 110px;
+      height: 110px;
       object-fit: cover;
       border-radius: 50%;
     }
-    .dafault-face {
-      width: 120px;
-    }
-    .login-btn {
-      width: 200px;
-    }
   }
-  .base-info {
-    margin-left: 28px;
+  .basic-info {
+    flex: 1;
+    padding-left: 32px;
     display: inline-flex;
     flex-direction: column;
-  }
-  .name {
-    font-size: 42px;
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  .level {
-    font-size: 22px;
-    font-weight: bolder;
-    color: #b8b8b8;
-    &:before {
-      content: 'Lv';
-      margin-right: 8px;
+    justify-content: center;
+    .main {
+      font-size: 42px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      padding-bottom: 20rpx;
+      font-size: 42rpx;
+      font-weight: bold;
+      color: #fff;
+      line-height: 52rpx;
     }
-  }
-  .tip {
-    display: flex;
-    align-items: center;
-    height: 88px;
-    padding: 0 28px;
-    margin: 0 24px;
-    border-radius: 20px;
-    line-height: 56px;
-    font-size: 26px;
-    color: #fe7700;
-    background-color: #FCF0DE;
-    a {
-      color: #98832E;
-      text-decoration: none;
-    }
-    svg {
-      display: inline-flex;
+    .sub {
+      display: flex;
       align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      padding: 4px;
-      margin-left: 8px;
-      vertical-align: -4px;
-      border-radius: 50%;
-      background-color: #fe7700;
-      fill: #fff;
-      box-sizing: border-box;
+      line-height: 44px;
+    }
+    .level {
+      font-size: 20px;
+      font-weight: bolder;
+      color: #FFF;
+      &:before {
+        content: 'Lv';
+        margin-right: 8px;
+      }
+    }
+    .apply-btn {
+      margin-left: 32px;
+      height: 44px;
+      line-height: 44px;
+      svg {
+        width: 158px;
+      }
+    }
+    .progress {
+      display: flex;
+      margin-left: 32px;
+      overflow: hidden;
+      border-radius: 10px;
+      border: 1px solid #FFF;
+      span {
+        display: inline-block;
+        height: 44px;
+        line-height: 44px;
+        font-size: 20px;
+        text-align: center;
+      }
+      .progress-left {
+        padding: 0 10px;
+        background-color: #FFF;
+        color: #FE7700;
+      }
+      .progress-right {
+        display: inline-block;
+        width: 120px;
+        background-color: #F2B036;
+        color: #FFF;
+      }
     }
   }
-  .tip-circle{
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-color: #98832E;
-    margin-right: 20px;
-  }
-  .apply {
-    padding-left: 32px;
-    svg {
-      width: 158px;
-    }
-  }
-  .levelapply{
-    display: flex;
-    align-items: center;
-  }
-  .setting-box{
+  .setting {
     position: absolute;
     top: 36px;
     right: 32px;
-  }
-  .setting-enter{
-    svg{
+    svg {
       width: 42px;
     }
   }
-  .my-money {
-    position: relative;
+  /* 头部 ends */
+
+  /* 小金库 starts */
+  .finance {
     display: flex;
-  }
-  .runbi {
-    display: flex;
-    width: 100%;
     align-items: center;
-    padding: 28px 28px 28px 48px;
+    padding: 28px 28px 32px 40px;
     background-color: #fff;
     > div {
+      flex: 1;
       display: inline-flex;
       flex-direction: column;
-      flex: 1;
       color: #999;
       > p {
         &:nth-of-type(1) {
           font-size: 26px;
-          margin-bottom: 10px;
+          margin-bottom: 8px;
         }
         &:nth-of-type(2) {
-          font-size: 44px;
-          font-weight: bold;
+          font-size: 46px;
         }
       }
     }
@@ -390,28 +460,27 @@ export default {
       height: 26px;
     }
   }
-  .withdraw-tip {
-    margin-left: 48px;
-    line-height: 44px;
-    font-weight: normal;
-    font-size: 28px;
-    color: #85A5FF;
-  }
-  .my-orders {
-    /*padding: 20px 28px;*/
-    margin: 16px 24px 24px;
-    background-color: #fff;
-    border-radius: 20px;
-  }
+  // .withdraw-tip {
+  //   margin-left: 48px;
+  //   line-height: 44px;
+  //   font-weight: normal;
+  //   font-size: 28px;
+  //   color: #85A5FF;
+  // }
+  /* 小金库 ends */
+
+  /* 订单 starts */
   .order-status {
-    padding-top: 38px;
+    padding: 30px 0;
     display: flex;
     justify-content: space-around;
-    /*margin-top: 30px;*/
-    padding-bottom: 15px;
+    align-items: center;
     a {
       position: relative;
       font-size: 20px;
+      &:nth-last-of-type(1) .badge {
+        right: -14px;
+      }
     }
     svg {
       height: 85px;
@@ -432,33 +501,26 @@ export default {
       background: url("../../assets/images/my/circle.png") no-repeat center center;
       background-size: 100%;
     }
-    a:nth-last-of-type(1) .badge {
-      right: -14px;
-    }
-    .segmentation{
+    .segmentation {
       position: absolute;
       right: 160px;
     }
   }
-  .new-logistics{
+
+  .new-logistics {
+    padding: 16px 32px 24px;
     background-color: #FBFBFB;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
     .swiperSlide {
       height: 146px;
     }
-    .logistics-title{
-      padding-top: 16px;
-      padding-left: 32px;
-      font-size:24px;
-      font-weight:400;
-      color:rgba(102,102,102,1);
-      line-height:34px;
+    .logistics-title {
+      font-size: 24px;
+      color: #666666;
+      line-height: 34px;
     }
-    .logistics-content{
+    .logistics-content {
       display: flex;
       flex-direction: row;
-      padding: 16px 0 24px 32px;
       .content-left {
         width: 88px;
         height: 88px;
@@ -467,29 +529,53 @@ export default {
           height: 100%;
         }
       }
-      .content-right{
+      .content-right {
         padding-left: 24px;
-        .delivery-status{
-          font-size:28px;
-          font-weight:400;
-          color:rgba(24,144,255,1);
-          line-height:40px;
+        .delivery-status {
+          font-size: 28px;
+          font-weight: 400;
+          color: #1890FF;
+          line-height: 40px;
         }
-        .delivery-details{
+        .delivery-details {
           margin-top: 14px;
-          font-size:24px;
-          font-weight:400;
-          color:rgba(102,102,102,1);
-          line-height:34px;
+          font-size: 24px;
+          color: #666666;
+          line-height: 34px;
         }
       }
     }
   }
-  .setting {
-    width: 642px;
-    margin: 30px auto 0;
-    padding-left: 28px;
-    background-color: #fff;
-    overflow: hidden;
+  /* 订单 ends */
+
+  /* tip starts */
+  .tip {
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    height: 88px;
+    line-height: 56px;
+    font-size: 26px;
+    color: #98832E;
+    background-color: #FCF0DE;
+  }
+  .tip-circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #98832E;
+    margin-right: 20px;
+  }
+  /* tip ends */
+
+  .recommend {
+    margin-top: 32px;
+    padding: 0 !important;
+  }
+
+  .progress-modal {
+    box-sizing: border-box;
+    padding-top: 40px;
+    height: 600px;
   }
 </style>
