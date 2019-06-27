@@ -43,7 +43,7 @@
     </div>
     <div
       class="pl-collapse-item__wrapper"
-      :style="{ '--contentHeight': `${contentHeight}px`}"
+      :style="{ '--contentHeight': `${contentHeight}px` }"
     >
       <div
         ref="content"
@@ -127,11 +127,7 @@ export default {
   watch: {
     expanded (expanded) {
       this.$nextTick(() => {
-        if (expanded) {
-          this.contentHeight = this.offsetHeight
-        } else {
-          this.contentHeight = 0
-        }
+        this.contentHeight = expanded ? this.offsetHeight : 0
       })
     }
   },

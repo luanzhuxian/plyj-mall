@@ -33,7 +33,7 @@
           :img="item.productImg + '?x-oss-process=style/thum'"
           :name="item.productName"
           :count="item.count"
-          :option="item.optionName"
+          :option="item.optionName2 ? `${item.optionName}；${item.optionName2}` : item.optionName"
           :price="item.price"
           route-name="Lesson"
           :product-seq="item.productId"
