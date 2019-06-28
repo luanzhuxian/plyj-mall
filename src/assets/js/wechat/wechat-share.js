@@ -39,6 +39,8 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
       ...willHide // 以上是默认隐藏的按钮
     ]
   })
+  // 分享到朋友圈
+
   WX.updateTimelineShareData({
     title: `${title} ${desc}`, // 分享标题
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -47,7 +49,6 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
       console.warn('分享到朋友圈成功')
     }
   })
-  // 分享到朋友圈
   // WX.onMenuShareTimeline({
   //   title: `${title} ${desc}`, // 分享标题
   //   link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -56,18 +57,16 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
   //     console.warn('分享到朋友圈成功')
   //   }
   // })
+  // 分享给朋友
   WX.updateAppMessageShareData({
     title, // 分享标题
     desc, // 分享描述
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
     imgUrl, // 分享图标
-    // type: 'link',
-    // dataUrl: '',
     success: () => {
       console.warn('分享到朋友成功')
     }
   })
-  // 分享给朋友
   // WX.onMenuShareAppMessage({
   //   title, // 分享标题
   //   desc, // 分享描述
@@ -100,14 +99,16 @@ function getConfig (jsapi, appId, link) {
       'showOptionMenu',
       'hideMenuItems',
       'hideAllNonBaseMenuItem',
-      'showAllNonBaseMenuItem'
+      'showAllNonBaseMenuItem',
+      'updateAppMessageShareData',
+      'updateTimelineShareData'
     ] // 必填，需要使用的JS接口列表
   }
 }
 // 生成随机字符串
 function randomString () {
   // 48~57 数字， 65~90 大写，  97~122 小写
-  const LIB = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+  const LIB = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'
   let randomStr = []
   for (let i = 0; i < 16; i++) {
     let index = Number.parseInt(Math.random() * 62)
