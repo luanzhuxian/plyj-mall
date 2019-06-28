@@ -4,10 +4,10 @@
       <div :class="$style.searchBox">
         <pl-svg name="search" />
         <input
-          v-model.trim="searachContent"
+          v-model.trim="searchContent"
           type="search"
           placeholder="你想要的应有尽有"
-          @search="search(searachContent)"
+          @search="search(searchContent)"
         >
       </div>
       <button @click="cancel">
@@ -17,25 +17,26 @@
 
     <div :class="$style.content">
       <load-more
+        ref="loadMore"
         v-show="seached"
         :form="form"
         :request-methods="searchProduct"
-        ref="loadMore"
-        no-content-tip="抱歉，没有相关商品"
         icon="no-search"
+        no-content-tip="抱歉，没有相关商品"
         @refresh="refreshHandler"
+        @more="refreshHandler"
       >
         <template v-slot="{ list }">
           <lesson-item
             border
-            v-for="item of list"
-            :key="item.sequenceNbr"
+            v-for="(item, index) of prodList"
+            :key="index"
+            :id="item.id"
             :title="item.productName"
             :desc="item.productDesc"
-            :img="item.mediaInfoModel[0].mediaUrl"
-            :price="item.productPriceModel[0].price"
-            :original-price="item.productPriceModel[0].originPrice"
-            :id="item.contentId"
+            :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
+            :price="item.productSkuModels.length && item.productSkuModels[0].price"
+            :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
           />
         </template>
       </load-more>
@@ -90,9 +91,10 @@ import {
   getHistoryKeyword,
   deleteHistoryKeyword
 } from '../../apis/search'
-import { mapGetters } from 'vuex'
 import LessonItem from '../../components/item/Lesson-Item.vue'
 import LoadMore from '../../components/Load-More.vue'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Search',
   components: {
@@ -101,17 +103,18 @@ export default {
   },
   data () {
     return {
-      searachContent: '',
+      searchContent: '',
       form: {
-        searachContent: '',
+        searchContent: '',
         current: 1,
         size: 10
       },
-      searchProduct,
       hot: [],
       history: [],
+      prodList: [],
       seached: false, // 标记是否搜索过
-      $refresh: null
+      $refresh: null,
+      searchProduct
     }
   },
   computed: {
@@ -127,9 +130,7 @@ export default {
   methods: {
     async search (keyword) {
       if (!keyword) return this.$warning('请输入要搜索的内容')
-      if (keyword) {
-        this.searachContent = this.form.searachContent = keyword
-      }
+      this.searchContent = this.form.searchContent = keyword
       this.seached = true
       this.$refresh()
     },
@@ -143,31 +144,34 @@ export default {
     },
     async getHistory () {
       try {
-        let { result } = await getHistoryKeyword(this.userId)
-        this.history = result
+        let { result } = await getHistoryKeyword()
+        this.history = [...new Set(result)]
       } catch (e) {
         throw e
       }
     },
     async deleteHistory () {
       try {
-        let { result } = await deleteHistoryKeyword(this.userId)
-        if (result) {
-          this.getHistory()
-        }
+        let { result } = await deleteHistoryKeyword()
+        if (result) this.history = []
       } catch (e) {
         throw e
       }
     },
     cancel () {
-      if (!this.form.searachContent && !this.searachContent) {
+      if (!this.form.searchContent && !this.searchContent) {
         return this.$router.push({ name: 'Classify' })
       }
-      this.form.searachContent = ''
-      this.searachContent = ''
+      this.searchContent = this.form.searchContent = ''
       this.seached = false
     },
-    refreshHandler () {
+    refreshHandler (list) {
+      for (let item of list) {
+        item.productSkuModels.sort((a, b) => {
+          return a.price - b.price
+        })
+      }
+      this.prodList = list
       this.getHistory()
     }
   }

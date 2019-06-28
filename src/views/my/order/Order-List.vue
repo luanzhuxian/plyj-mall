@@ -302,8 +302,8 @@ export default {
         this.reject = reject
       })
     },
-    onRefresh (list, total) {
-      const counter = (array) => (key) => array.reduce((total, current) => total + (key ? current[key] : current), 0)
+    onRefresh (list) {
+      const counter = (array) => (key) => array.reduce((acc, current) => acc + (key ? current[key] : current), 0)
       for (let item of list) {
         item.totalCount = counter(item.products)('purchaseQuantity')
         item.isDeleteBtnShow = !item.products.some(product => (product.afterSalesStatus !== 0 && product.afterSalesStatus !== 2))

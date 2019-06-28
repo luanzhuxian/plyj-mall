@@ -19,12 +19,12 @@
       <CategoryItem
         v-for="(item, index) in likeProduct"
         :key="index"
-        :product-id="item.sequenceNbr"
-        :price="item.productPriceModel && item.productPriceModel[0].price"
-        :origin-price="item.productPriceModel && item.productPriceModel[0].originPrice"
-        :img="item.mediaInfoModel && item.mediaInfoModel[0].mediaUrl + '?x-oss-process=style/thum-middle'"
+        :product-id="item.id"
         :product-name="item.productName"
         :product-desc="item.productDesc"
+        :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
+        :price="item.productSkuModels.length && item.productSkuModels[0].price"
+        :origin-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
       />
       <!--<router-link-->
       <!--tag="li"-->
@@ -45,9 +45,10 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import { getYouLikeData } from '../../apis/base-api'
 import CategoryItem from './CategoryItem.vue'
+import { getYouLikeData } from '../../apis/base-api'
+import { mapGetters } from 'vuex'
+
 export default {
   data () {
     return {
@@ -77,10 +78,10 @@ export default {
   },
   methods: {
     getList () {
-      getYouLikeData({ userId: this.userId, productSeq: this.productSeq || '' })
+      getYouLikeData()
         .then(res => {
-          for (let r of res.result) {
-            r.productPriceModel.sort((a, b) => {
+          for (let list of res.result) {
+            list.productSkuModels.sort((a, b) => {
               return a.price - b.price
             })
           }

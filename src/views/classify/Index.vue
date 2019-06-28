@@ -18,7 +18,7 @@
       <ul :class="$style.classifyList">
         <li
           v-for="(item, index) of classifyList"
-          :class="{[$style.classifyActive]: item.sequenceNbr === currentClassify.sequenceNbr}"
+          :class="{[$style.classifyActive]: item.id === currentClassify.id}"
           :key="index"
           @click="classifyClick(item)"
         >
@@ -31,13 +31,13 @@
       <div :class="$style.content">
         <div
           :class="$style.banner"
-          v-if="currentClassify.parentCode && currentClassify.bannerPic && currentClassify.sequenceNbr !== '1'"
+          v-if="currentClassify.parentCode && currentClassify.bannerPic && currentClassify.id !== '1'"
         >
           <img :src="currentClassify.bannerPic">
         </div>
         <div
           :class="$style.banner"
-          v-if="currentClassify.sequenceNbr === '1'"
+          v-if="currentClassify.id === '1'"
         >
           <img
             src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/helperBanner.png"
@@ -46,11 +46,11 @@
         <template v-if="currentClassify.childs && currentClassify.childs.length">
           <div :class="$style.classifyList2">
             <classify-item
-              :cid="item.sequenceNbr"
+              v-for="item of currentClassify.childs"
+              :key="item.id"
+              :cid="item.id"
               :img="item.categoryPic + '?x-oss-process=style/thum-small'"
               :text="item.categoryName"
-              v-for="item of currentClassify.childs"
-              :key="item.sequenceNbr"
               @click="subClassifyClick"
             />
           </div>
@@ -69,30 +69,32 @@
         </div>
         <div
           :class="$style.title"
-          v-show="!isEmpty && currentClassify.sequenceNbr && currentClassify.sequenceNbr === '1'"
+          v-show="!isEmpty && currentClassify.id && currentClassify.id === '1'"
         >
           热门推荐
         </div>
 
         <load-more
           ref="loadMore"
+          :form="form"
           :request-methods="requestMethods"
           :loading.sync="loading"
-          :form="form"
           no-content-tip="此分类下还没有商品"
           @listState="isEmpty = $event"
+          @refresh="refreshHandler"
+          @more="refreshHandler"
           :style="`margin-top: ${20/7.5}vw;`"
         >
           <template v-slot="{ list }">
             <div :class="$style.productList">
               <goods-item
-                v-for="item of list"
-                :key="item.sequenceNbr"
-                :id="item.sequenceNbr"
+                v-for="(item, index) of prodList"
+                :key="index"
+                :id="item.id"
                 :title="item.productName"
-                :price="item.priceModels?item.priceModels[0].price:item.productOptions[0].price"
-                :agent-price="item.priceModels&&item.priceModels.length?item.priceModels[0].agentEndPrice.toString():''"
-                :img="item.productImg + '?x-oss-process=style/thum-small'"
+                :img="item.productMainImage + '?x-oss-process=style/thum-small'"
+                :price="item.productSkuModels.length && item.productSkuModels[0].price"
+                :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
               />
             </div>
           </template>
@@ -103,17 +105,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import GoodsItem from '../../components/item/Goods-Item.vue'
 import ClassifyItem from '../../components/item/Classify-Item.vue'
 import LoadMore from '../../components/Load-More.vue'
 import { getCategoryTree, getProduct } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Classify',
-  computed: {
-    ...mapGetters(['agentUser'])
-  },
   components: {
     GoodsItem,
     ClassifyItem,
@@ -128,33 +128,36 @@ export default {
   data () {
     return {
       currentClassify: {
-        sequenceNbr: '',
+        id: '',
         categoryName: '全部',
         subCategoryName: ''
       },
       classifyList: [{
         categoryName: '全部',
-        sequenceNbr: ''
+        id: ''
       }],
-      form: {},
       classifyFormTemplate: {
-        categoryCode: '',
-        subCategory: '',
+        categoryId: '',
+        subCategoryId: '',
         current: 1,
-        size: 10,
-        productStatus: 'ON_SALE'
+        size: 10
       },
-      helpeFormTemplate: {
+      helperFormTemplate: {
         type: '',
         current: 1,
         size: 10
       },
-      $refresh: null,
+      form: {},
+      prodList: [],
       loading: false,
       isEmpty: false,
-      requestMethods: getProduct,
-      agentShow: false
+      agentShow: false,
+      $refresh: null,
+      requestMethods: getProduct
     }
+  },
+  computed: {
+    ...mapGetters(['agentUser'])
   },
   created () {
     this.form = this.classifyFormTemplate
@@ -168,18 +171,18 @@ export default {
   },
   activated () {
     if (this.classifyList.length > 1 && this.optionId) {
-      this.classifyClick(this.classifyList.find(item => item.sequenceNbr === this.optionId))
+      this.classifyClick(this.classifyList.find(item => item.id === this.optionId))
     }
   },
   methods: {
     classifyClick (classify) {
       if (this.loading || classify === this.currentClassify) return
-      if (classify && (classify.sequenceNbr === '1')) {
+      if (classify && (classify.id === '1')) {
         // 点击的是helper专区
         this.agentShow = true
         this.currentClassify = classify
         this.requestMethods = getActivityProduct
-        this.form = JSON.parse(JSON.stringify(this.helpeFormTemplate))
+        this.form = JSON.parse(JSON.stringify(this.helperFormTemplate))
         this.$refresh()
         return
       }
@@ -188,20 +191,20 @@ export default {
         this.agentShow = false
         this.currentClassify = classify
         this.currentClassify.subCategoryName = ''
-        if (!this.form.hasOwnProperty('categoryName')) {
-          this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
-          this.requestMethods = getProduct
-        }
-        this.form.categoryCode = classify.sequenceNbr
-        this.form.subCategory = ''
+        // if (!this.form.hasOwnProperty('categoryName')) {
+        this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
+        this.requestMethods = getProduct
+        // }
+        this.form.categoryId = classify.id
+        this.form.subCategoryId = ''
         this.$refresh()
       }
     },
     subClassifyClick ({ cid, name }) {
       if (this.loading) return
       this.currentClassify.subCategoryName = name
-      this.form.categoryCode = this.currentClassify.sequenceNbr
-      this.form.subCategory = cid
+      this.form.categoryId = this.currentClassify.id
+      this.form.subCategoryId = cid
       this.form.current = 1
       this.$refresh()
     },
@@ -212,13 +215,21 @@ export default {
         if (this.agentUser) {
           this.classifyList.push({
             categoryName: 'Helper专区',
-            sequenceNbr: '1'
+            id: '1'
           })
         }
-        this.classifyClick(this.classifyList.find(item => item.sequenceNbr === (this.optionId || '')))
+        this.classifyClick(this.classifyList.find(item => item.id === (this.optionId || '')))
       } catch (e) {
         throw e
       }
+    },
+    refreshHandler (list) {
+      for (let item of list) {
+        item.productSkuModels.sort((a, b) => {
+          return a.price - b.price
+        })
+      }
+      this.prodList = list
     }
   }
 }
