@@ -1,8 +1,11 @@
 <template>
-  <div :class="$style.applyHelper">
+  <div
+    class="apply-helper"
+    :class="$style.applyHelper"
+  >
     <TopText
-      :title="form.auditStatus ? statusTitle[form.auditStatus]: '申请Helper'"
-      :tip="form.auditStatus ? statusTip[form.auditStatus] : '第一桶金从这里开始'"
+      :title="form.auditStatus ? statusTitle[form.auditStatus]: '自购省钱，分享赚钱'"
+      :tip="form.auditStatus ? statusTip[form.auditStatus] : '开启全民分享模式，第一桶金从这里开始'"
     />
     <pl-form
       ref="form"
@@ -17,7 +20,7 @@
       >
         <pl-input
           :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
-          placeholder="请输入您的姓名"
+          placeholder="请输入您的真实姓名"
           v-model="form.name"
           prefix-icon="name"
           size="middle"
@@ -60,7 +63,7 @@
         />
         <template v-slot:suffix>
           <get-code
-            :disabled="form.auditStatus === 'AWAIT'"
+            :disabled="form.auditStatus === 'AWAIT' || !isMobileValid"
             :smstype="smstype.AGENT_USER_INFO"
             :mobile="form.mobile"
           />
@@ -69,13 +72,13 @@
     </pl-form>
     <pl-button
       v-if="form.auditStatus !== 'AWAIT'"
-      :disabled="form.auditStatus === 'AWAIT'"
+      :disabled="form.auditStatus === 'AWAIT' || isBtnDisable"
       type="warning"
       size="huge"
       :loading="loading"
       @click="confirm"
     >
-      提交
+      提交认证
     </pl-button>
     <pl-button
       v-else
@@ -85,6 +88,12 @@
     >
       返回首页
     </pl-button>
+    <div :class="$style.suggestion">
+      <p>申请helper流程：</p>
+      <p>1.填写完善Helper资料信息；</p>
+      <p>2.提交认证后，需商家审核，审核时间为1-3个工作日；</p>
+      <p>3.审核通过后，即可拥有Helper的权益；</p>
+    </div>
   </div>
 </template>
 
@@ -95,9 +104,12 @@ import {
   agentUserInfoAudit,
   updateAudit
 } from '../../apis/broker-manager'
-import { isPhone, isName, isIdCard, checkLength } from '../../assets/js/validate'
+import { hasValue, isPhone, isName, isIdCard } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
 import { REFRESH_TOKEN, USER_INFO } from '../../store/mutation-type'
+
+const isCode = (code) => code.length === 4
+
 export default {
   name: 'ApplyHelper',
   components: {
@@ -107,11 +119,10 @@ export default {
     return {
       loading: false,
       form: {
+        name: '',
         idCard: '',
         mobile: '',
-        name: '',
         verificationCode: '',
-        weChatNumber: '',
         auditStatus: ''
       },
       statusTip: {
@@ -137,14 +148,29 @@ export default {
         ],
         verificationCode: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
-          { validator: checkLength(5), message: '请填写正确的4位验证码', trigger: 'blur' }
+          { validator: isCode, message: '请填写正确的4位验证码', trigger: 'blur' }
         ]
       },
       agentUser: false
     }
   },
   computed: {
-    ...mapGetters(['smstype', 'isAdmin'])
+    ...mapGetters(['smstype', 'isAdmin']),
+    isNameValid () {
+      return hasValue(this.form.name) && isName(this.form.name)
+    },
+    isIDValid () {
+      return hasValue(this.form.idCard) && isIdCard(this.form.idCard)
+    },
+    isMobileValid () {
+      return hasValue(this.form.mobile) && isPhone(this.form.mobile)
+    },
+    isCodeValid () {
+      return hasValue(this.form.verificationCode) && isCode(this.form.verificationCode)
+    },
+    isBtnDisable () {
+      return !this.isNameValid || !this.isIDValid || !this.isMobileValid || !this.isCodeValid
+    }
   },
   activated () {
     this.getHelperInfo()
@@ -203,20 +229,21 @@ export default {
       margin-bottom: 56px;
       overflow: hidden;
     }
-    .get-code {
-      display: inline-block;
-      width: 230px;
-      text-align: center;
-      font-size: 30px;
-      color: #ccc;
-      border-left: 1px solid #ccc;
-      text-decoration: underline;
-      &.active {
-        color: $--primary-color;
-      }
-    }
   }
   .form {
     background-color: #fff;
+  }
+  .suggestion {
+    margin-top: 32px;
+    font-size: 26px;
+    color: #999999;
+    line-height: 52px;
+  }
+</style>
+<style lang="scss">
+  .apply-helper {
+    .pl-get-code {
+      border-left: 2px solid #E7E7E7;
+    }
   }
 </style>

@@ -117,6 +117,7 @@ export default {
       border-left: 1px solid #e7e7e7;
       &:disabled {
         color: #ccc;
+        text-decoration: none;
       }
       &.timing {
         text-decoration: none;

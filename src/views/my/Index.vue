@@ -227,11 +227,6 @@ const orderStatusMapCamel = {
   afterSale: 'AFTER_SALE'
 }
 
-const applicationMap = {
-  'AWAIT': 'Helper审核中...',
-  'REJECT': '申请被驳回'
-}
-
 export default {
   name: 'My',
   components: {
@@ -243,7 +238,10 @@ export default {
   },
   data () {
     return {
-      applicationMap,
+      applicationMap: {
+        'AWAIT': 'Helper审核中...',
+        'REJECT': '申请被驳回'
+      },
       count: {
         WAIT_PAY: 0,
         WAIT_SHIP: 0,
