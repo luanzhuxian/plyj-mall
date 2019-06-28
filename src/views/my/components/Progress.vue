@@ -5,7 +5,7 @@
         v-for="(item, index) of steps"
         :key="index"
         class="hairline step step--vertical"
-        :class="{ 'step--finish': index < active ? 'step--process' : index === active }"
+        :class="{ 'step--finish': index < active, 'step--process' : index === active }"
       >
         <div
           class="step__title"
@@ -81,6 +81,14 @@ export default {
 
     &--finish {
       color: #333333;
+      .step__title {
+        color: #F2B036;
+      }
+    }
+    &--process {
+      .step__title {
+        color: #F2B036;
+      }
     }
 
     &__title {

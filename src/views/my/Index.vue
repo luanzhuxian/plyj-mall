@@ -178,11 +178,12 @@
       title="Helper认证审核进度"
       title-align="left"
       hide-footer
+      close-on-click-overlay
     >
       <Progress
         :class="$style.progressModal"
         :steps="progress"
-        active="1"
+        :active="1"
       />
     </modal>
 

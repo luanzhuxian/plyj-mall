@@ -195,7 +195,7 @@ export default {
     height: 100%;
     background: rgba(0, 0, 0, 0.65);
     opacity: 0;
-    transition: opacity .2s ease-in-out;
+    transition: opacity .3s ease-in-out;
     &.show {
       opacity: 1;
     }
@@ -209,7 +209,7 @@ export default {
     background-color: #FFF;
     border-radius: 20px;
     opacity: 0;
-    transition: opacity .2s ease-in-out;
+    transition: opacity .3s ease-in-out;
     &.show {
       opacity: 1;
     }
