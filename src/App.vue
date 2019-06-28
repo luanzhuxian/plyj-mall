@@ -91,7 +91,7 @@ export default {
         appId: this.appId,
         title: `${this.mallName}-${this.$route.meta.title}`,
         desc: this.mallDesc,
-        link: window.location.href + '?demo=test',
+        link: window.location.href,
         imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
         willHide
       })
