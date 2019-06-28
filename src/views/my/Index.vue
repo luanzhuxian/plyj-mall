@@ -23,18 +23,24 @@
             <pl-svg name="helper-apply" />
           </router-link>
           <div
-            v-if="!agentUser && isOnProgress"
+            v-if="!agentUser && isApplied"
             :class="$style.progress"
           >
             <span :class="$style.progressLeft">
-              {{ applicationStatus ? applicationStatusMap[applicationStatus] : '' }}
+              {{ applicationMap[applyStatus] || '' }}
             </span>
-            <!-- <span
+            <span
+              v-if="applyStatus === 'AWAIT'"
               :class="$style.progressRight"
-              @click="isModalShow=true"
-            >
-              查看进度
-            </span> -->
+              @click="isModalShow = true"
+              v-text="'查看进度'"
+            />
+            <router-link
+              v-if="applyStatus === 'REJECT'"
+              :class="$style.progressRight"
+              :to="{ name: 'ApplyHelper' }"
+              v-text="'重新申请'"
+            />
           </div>
         </div>
       </div>
@@ -221,7 +227,7 @@ const orderStatusMapCamel = {
   afterSale: 'AFTER_SALE'
 }
 
-const applicationStatusMap = {
+const applicationMap = {
   'AWAIT': 'Helper审核中...',
   'REJECT': '申请被驳回'
 }
@@ -237,6 +243,7 @@ export default {
   },
   data () {
     return {
+      applicationMap,
       count: {
         WAIT_PAY: 0,
         WAIT_SHIP: 0,
@@ -252,9 +259,7 @@ export default {
       },
       newFreight: [],
       progress: [],
-      applicationStatus: '',
-      applicationStatusMap,
-      isOnProgress: false, // 正在申请中
+      applyStatus: '',
       isModalShow: false
     }
   },
@@ -262,8 +267,13 @@ export default {
     ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode']),
     isApplyBtnShow () {
       return !this.agentUser &&
-      this.applicationStatus !== 'AWAIT' &&
-      (this.roleCode === 'MEMBERSHIP' || this.roleCode === 'VISITOR')
+        (this.roleCode === 'MEMBERSHIP' || this.roleCode === 'VISITOR') &&
+        this.applyStatus === 'NOT_APPLY'
+    },
+    // 是否申请过helper
+    isApplied () {
+      return this.applyStatus === 'AWAIT' ||
+        this.applyStatus === 'REJECT'
     }
   },
   activated () {
@@ -275,6 +285,12 @@ export default {
       throw e
     }
   },
+  deactivated () {
+    this.isModalShow = false
+    this.applyStatus = ''
+    this.progress = []
+    this.newFreight = []
+  },
   methods: {
     async getNewFreight () {
       try {
@@ -284,6 +300,7 @@ export default {
         throw e
       }
     },
+    // 获取各个状态订单数量
     async orderPhysicalorderSummary () {
       try {
         const { result } = await orderPhysicalorderSummary(this.userId)
@@ -296,33 +313,30 @@ export default {
         throw e
       }
     },
+    // 获取helper申请进度
     async getProgress () {
       try {
-        let arr
         const { result } = await getHelperApplicationProgress()
-        this.isOnProgress = result && result !== ''
+        this.applyStatus = result ? result.status : 'NOT_APPLY'
         if (result) {
-          this.applicationStatus = result.status
           if (result.status === 'AWAIT') {
-            arr = [{
+            this.progress = [{
               text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
             }, {
               text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
             }]
           } else if (result.status === 'REJECT') {
-            arr = [{
+            this.progress = [{
               text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
             }, {
               text: '认证申请被驳回；', desc: '请重新申请认证'
             }]
           }
-          this.progress = arr
         }
       } catch (e) {
         throw e
       }
-    },
-    checkProgress () {}
+    }
   }
 }
 </script>
@@ -404,7 +418,8 @@ export default {
       overflow: hidden;
       border-radius: 10px;
       border: 1px solid #FFF;
-      span {
+      span,
+      a {
         display: inline-block;
         height: 44px;
         line-height: 44px;
