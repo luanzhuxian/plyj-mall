@@ -315,10 +315,11 @@ export default {
       }
       this.submiting = true
       for (const item of this.physicalProducts) {
-        const { productId, optionCode, count, agentUser } = item
+        const { productId, skuCode1, skuCode2, count, agentUser } = item
         cartProducts.push({
           productId,
-          optionCode,
+          skuCode1,
+          skuCode2,
           productType: 'PHYSICAL_GOODS',
           count,
           agentUser,
@@ -326,10 +327,11 @@ export default {
         })
       }
       for (const item of this.virtualProducts) {
-        const { productId, optionCode, count, remark, agentUser } = item
+        const { productId, skuCode1, skuCode2, count, agentUser, remark } = item
         cartProducts.push({
           productId,
-          optionCode,
+          skuCode1,
+          skuCode2,
           productType: 'VIRTUAL_GOODS',
           count,
           agentUser,

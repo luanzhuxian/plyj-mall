@@ -199,10 +199,11 @@ export default {
       let confirmList = []
       if (this.checkedList.length === 0) return
       for (let pro of this.checkedList) {
-        const { cartProductCount, cartProductId, cartSkuCode, agentUser } = pro
+        const { cartProductCount, cartProductId, cartSkuCode, cartSkuCode2, agentUser } = pro
         confirmList.push({
           productId: cartProductId,
-          skuId: cartSkuCode,
+          skuCode1: cartSkuCode,
+          skuCode2: cartSkuCode2,
           count: cartProductCount,
           agentUser
         })
