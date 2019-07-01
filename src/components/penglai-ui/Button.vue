@@ -82,7 +82,6 @@ export default {
     }
     /* 朴素的 */
     &.plain {
-      background: none !important;
       &:disabled {
         color: #999 !important;
       }
@@ -100,6 +99,7 @@ export default {
       }
       &.plain {
         color: $--font-color_gray3;
+        background-color: #fff;
       }
     }
     /* 主色调 */
@@ -111,6 +111,7 @@ export default {
       }
       &.plain {
         color: $--primary-color;
+        background-color: #FFF8F9;
       }
     }
     /* 警告色 */
@@ -122,7 +123,8 @@ export default {
         color: #ccc;
       }
       &.plain {
-        color: $--warning-color
+        color: $--warning-color;
+        background-color: $--primary-color;
       }
     }
     &__text {

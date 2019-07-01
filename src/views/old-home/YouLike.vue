@@ -3,10 +3,7 @@
     :class="$style.like"
     v-if="likeProduct.length > 0"
   >
-    <div
-      v-if="isMy"
-      :class="$style.titleMy"
-    >
+    <div v-if="isMy" :class="$style.titleMy">
       <img src="../../assets/images/my/youLike.png">
     </div>
     <div
@@ -56,7 +53,7 @@ export default {
     }
   },
   props: {
-    productSeq: {
+    productId: {
       type: String,
       default: ''
     },
@@ -69,7 +66,7 @@ export default {
     ...mapGetters(['userId'])
   },
   watch: {
-    productSeq () {
+    productId () {
       this.getList()
     }
   },

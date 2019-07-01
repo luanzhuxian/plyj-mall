@@ -1,14 +1,8 @@
 <template>
   <div :class="$style.buyNow">
     <div :class="$style.phone">
-      <a
-        :class="$style.link"
-        :href="'tel:' + supportPhone"
-      ><pl-svg name="phone" /></a>
-      <router-link
-        :class="$style.link"
-        :to="{ name: 'Home' }"
-      >
+      <a :class="$style.link" :href="'tel:' + supportPhone"><pl-svg name="phone" /></a>
+      <router-link :class="$style.link" :to="{ name: 'Home' }">
         <pl-svg name="home" />
       </router-link>
     </div>
@@ -27,17 +21,19 @@
       立即购买
     </button>
     <specification-pop
-      :data="priceModels"
-      :default-code="defaultCode"
       :product-image="image"
       :visible.sync="showSpecifica"
+      :sku-list="skuList"
+      :sku-attr-list="skuAttrList"
+      :sku="currentSku"
+      @change="specChanged"
     >
-      <template v-slot:footer="{ selected }">
+      <template v-slot:footer="{ currentSku }">
         <pl-button
           type="warning"
           size="large"
           :loading="loading"
-          @click="confirm(selected)"
+          @click="confirm()"
         >
           确定
         </pl-button>
@@ -68,12 +64,13 @@ export default {
       type: String,
       default: ''
     },
-    // 是否在外部选择了规格
-    hasSelectedFromOut: {
-      type: Boolean
+    skuList: {
+      type: Array,
+      default: function () {
+        return []
+      }
     },
-    // 规格列表
-    priceModels: {
+    skuAttrList: {
       type: Array,
       default: function () {
         return []
@@ -85,25 +82,19 @@ export default {
       default: ''
     },
     // 购买的规格
-    currentModel: {
+    currentSku: {
       type: Object,
       default: function () {
         return {}
       }
+    },
+    productId: {
+      type: String,
+      default: ''
     }
   },
   computed: {
-    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId']),
-    defaultCode () {
-      return this.currentModel.optionCode || ''
-    }
-  },
-  watch: {
-    currentModel: {
-      handler () {
-      },
-      deep: true
-    }
+    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId'])
   },
   deactivated () {
     this.reset()
@@ -113,9 +104,7 @@ export default {
       this.$emit('click', this)
     },
     // 选中规格
-    async confirm (model) {
-      this.$emit('update:currentModel', model)
-      // this.$emit('update:hasSelectedFromOut', false)
+    async confirm () {
       try {
         await this.$nextTick()
         if (this.clickAddToCart) {
@@ -130,13 +119,14 @@ export default {
     },
     // 跳转至提交订单页面
     async submit () {
-      const currentModel = this.currentModel
-      const { productSeq, count, optionCode } = currentModel
+      const { count, skuCode1, skuCode2 = '' } = this.currentSku
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
       localStorage.setItem('CONFIRM_LIST', JSON.stringify([{
-        productId: productSeq,
-        optionCode: optionCode,
+        productId: this.productId,
+        productCount: count,
+        skuCode: skuCode1,
+        skuCode2,
         count: count,
         agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
@@ -164,15 +154,16 @@ export default {
     },
     addToCart () {
       this.loading = true
-      const { productSeq, count, optionCode } = this.currentModel
+      const { count, skuCode1, skuCode2 = '' } = this.currentSku
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
       return new Promise(async (resolve, reject) => {
         try {
           await addToCart({
-            productId: productSeq,
+            productId: this.productId,
             productCount: count,
-            skuCode: optionCode,
+            skuCode: skuCode1,
+            skuCode2,
             agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
           })
           this.$success('加入成功')
@@ -183,6 +174,10 @@ export default {
           this.loading = false
         }
       })
+    },
+    specChanged (sku) {
+      this.$emit('change', sku)
+      this.$emit('update:currentSku', sku)
     },
     reset () {
       this.showSpecifica = false

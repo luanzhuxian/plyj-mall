@@ -76,7 +76,7 @@ export default {
       type: [String, Number],
       default: ''
     },
-    productSeq: {
+    productId: {
       type: String,
       default: ''
     },
@@ -90,8 +90,8 @@ export default {
   },
   methods: {
     async handleClick () {
-      const { productSeq, userId, agentUser } = this
-      this.$router.push({ name: 'Lesson', params: { productSeq: productSeq, brokerId: agentUser ? userId : null } })
+      const { productId, userId, agentUser } = this
+      this.$router.push({ name: 'Lesson', params: { productId: productId, brokerId: agentUser ? userId : null } })
     }
   }
 }

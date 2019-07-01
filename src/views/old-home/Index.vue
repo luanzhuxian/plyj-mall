@@ -337,9 +337,9 @@ export default {
     * 跳转至商品详情
     * 跳转之前，如果当前用户是helper，尝试获取该商品的brokerId
     * */
-    async toProductDetail (productSeq) {
+    async toProductDetail (productId) {
       let route = {
-        name: 'Lesson', params: { productSeq, brokerId: this.agentUser ? this.userId : null }
+        name: 'Lesson', params: { productId, brokerId: this.agentUser ? this.userId : null }
       }
       this.$router.push(route)
     }

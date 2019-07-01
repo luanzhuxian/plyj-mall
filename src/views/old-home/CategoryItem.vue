@@ -90,7 +90,7 @@ export default {
   methods: {
     async jump () {
       const { productId, agentUser, userId } = this
-      this.$router.push({ name: 'Lesson', params: { productSeq: productId, brokerId: agentUser ? userId : null } })
+      this.$router.push({ name: 'Lesson', params: { productId: productId, brokerId: agentUser ? userId : null } })
     }
   }
 }

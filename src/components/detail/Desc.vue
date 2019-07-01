@@ -12,9 +12,9 @@ export default {
 
 <style module lang="scss">
   .detail-desc {
-    margin-top: 16px;
-    margin-bottom: 30px;
-    font-size: 24px;
+    margin-top: 12px;
+    margin-bottom: 28px;
+    font-size: 22px;
     line-height: 32px;
     color: #666;
   }

@@ -13,10 +13,7 @@
     </div>
 
     <template v-if="products.length > 0">
-      <div
-        :class="$style.productList"
-        v-if="!loading"
-      >
+      <div :class="$style.productList" v-if="!loading">
         <pl-checkbox-group
           v-model="checkedList"
           ref="checkboxGroup"
@@ -43,41 +40,22 @@
       </div>
       <!-- 结算或删除 -->
       <div :class="$style.settlement">
-        <pl-checkbox
-          :checked="checkedAll"
-          @change="checkAll"
-          border
-        >
-          <span
-            slot="suffix"
-            class="fz-24 gray-2 ml-10"
-          >
+        <pl-checkbox :checked="checkedAll" @change="checkAll" border>
+          <span slot="suffix" class="fz-24 gray-2 ml-10">
             全选
-            <i
-              v-if="isManage"
-              :class="$style.selectedCount"
-            >
+            <i v-if="isManage" :class="$style.selectedCount">
               (共{{ checkedList.length }}件)
             </i>
           </span>
         </pl-checkbox>
 
         <div :class="$style.control">
-          <span
-            v-show="!isManage"
-            class="fz-22 gray-3"
-          >
+          <span v-show="!isManage" class="fz-22 gray-3">
             不含运费
           </span>
-          <span
-            v-show="!isManage"
-            class="fz-24"
-          >
+          <span v-show="!isManage" class="fz-24">
             合计：
-            <i
-              :class="$style.summation + ' rmb'"
-              v-text="summation"
-            />
+            <i :class="$style.summation + ' rmb'" v-text="summation" />
           </span>
           <button
             :class="$style.settlementBtn"
@@ -98,12 +76,10 @@
         </div>
       </div>
     </template>
-
     <NoContent
       v-else-if="!loading"
       text="那么多好商品，你都不加入购物车吗？"
     />
-
     <CartItemSkeleton v-if="loading" />
     <!--<CartItemSkeleton v-if="loading" />-->
   </div>
@@ -157,8 +133,10 @@ export default {
         const disabledList = []
         for (let item of result) {
           // 如果商品已下架或当前规格商品数量不足，禁用
-          const currentSku = item.skuModels.find(sku => sku.optionCode === item.cartSkuCode)
-          item.disabled = currentSku.stock < item.cartProductCount || item.productStatus === 'UNSHELVE'
+          const currentSku = item.skuModels.find(sku => {
+            return sku.cartSkuCode === item.skuCode1 && sku.cartSkuCode2 === item.skuCode2
+          })
+          item.disabled = currentSku.stock < item.cartProductCount || item.productStatus !== 2
           if (item.disabled) {
             disabledList.push(item)
           }
@@ -224,7 +202,7 @@ export default {
         const { cartProductCount, cartProductId, cartSkuCode, agentUser } = pro
         confirmList.push({
           productId: cartProductId,
-          optionCode: cartSkuCode,
+          skuId: cartSkuCode,
           count: cartProductCount,
           agentUser
         })
@@ -237,13 +215,15 @@ export default {
         }
       })
     },
+    // 根据id查找规格id
     computeMoney () {
       let total = 0
       for (let item of this.checkedList) {
-        const skuCode = item.cartSkuCode
+        const skuCode1 = item.cartSkuCode
+        const skuCode2 = item.cartSkuCode2
         const skuModels = item.skuModels
         const count = item.cartProductCount
-        const currentSku = skuModels.find(item => item.optionCode === skuCode)
+        const currentSku = skuModels.find(item => item.skuCode1 === skuCode1 && item.skuCode2 === skuCode2)
         total += currentSku.price * 100 * count
       }
       this.summation = total / 100
@@ -255,7 +235,9 @@ export default {
     },
     // 判断当前规格是否已经存在于购物车中，如果存在，删之
     isDouble (data) {
-      let currentSkuCount = this.products.filter(cartPro => cartPro.cartSkuCode === data.cartSkuCode)
+      let currentSkuCount = this.products.filter(cartPro => {
+        return cartPro.cartSkuCode === data.cartSkuCode && cartPro.cartSkuCode2 === data.cartSkuCode
+      })
       if (currentSkuCount.length >= 2) {
         this.products.splice(this.products.indexOf(data), 1)
         this.checkedList.splice(this.checkedList.indexOf(data), 1)

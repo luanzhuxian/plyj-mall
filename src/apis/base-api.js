@@ -26,7 +26,6 @@ export const getSTS = () => axios.get('/apis/v1/oss/upload/sts')
 
 // 获取猜你喜欢商品
 export const getYouLikeData = () => axios.get('/apis/v1/product/likes')
-
 // 根据code获取openId (供应商支付时使用)
 export const getOpenIdByCode = code => axios.get(`/apis/v1/agency/AgencyMall/penglai/user/openid?code=${code}`)
 // 获取朋来appid

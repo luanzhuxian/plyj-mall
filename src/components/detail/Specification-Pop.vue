@@ -7,64 +7,50 @@
       @transitionend="closed"
     >
       <transition name="slide">
-        <div
-          :class="$style.specBox"
-          v-show="showBox"
-        >
+        <div :class="$style.specBox" v-show="showBox">
           <div>
             <div :class="$style.baseInfo">
               <img
+                v-if="localCurrentSku.skuImage"
                 v-img-error
-                :src="productImage"
+                :src="localCurrentSku.skuImage[0] || productImage + '?x-oss-process=style/thum'"
                 alt=""
               >
               <div :class="$style.baseInfoRight">
-                <p
-                  :class="$style.price"
-                  v-text="selected.price || (data[0] && data[0].price)"
-                />
-                <p
-                  :class="$style.original"
-                  v-if="selected.originPrice"
-                >
-                  原价：<del
-                    class="rmb"
-                    v-text="selected.originPrice || (data[0] && data[0].originPrice)"
-                  />
+                <p :class="$style.price" v-text="localCurrentSku.price" />
+                <p :class="$style.original" v-if="localCurrentSku.originalPrice">
+                  原价：<del class="rmb" v-text="localCurrentSku.originalPrice" />
                 </p>
                 <p :class="$style.repertory">
-                  库存<i v-text="selected.stock || 0" />件
+                  库存<i v-text="localCurrentSku.stock || 0" />件
                 </p>
               </div>
             </div>
 
-            <div :class="$style.color">
-              <!--<div>颜色</div>-->
-              <div>规格</div>
-              <div :class="$style.colorList">
-                <button
-                  v-for="(item, i) of localData"
-                  :key="i"
-                  :class="{ [$style.active]: item.optionCode === selected.optionCode }"
-                  @click.stop="change(item)"
-                  :disabled="item.disabled"
-                  v-text="item.optionName"
-                />
+            <template v-if="skuAttrList && skuAttrList.length">
+              <div :class="$style.color" v-for="(item, i) of skuAttrList" :key="i">
+                <div v-text="item.productAttributeName" />
+                <div :class="$style.colorList">
+                  <template v-if="item.productAttributeValues && item.productAttributeValues.length">
+                    <template v-for="(s, j) of item.productAttributeValues">
+                      <button
+                        v-if="!s.isDisabled && !s.isNoStock"
+                        :key="j"
+                        @click.stop="change(i, s.id)"
+                        :disabled="s.disabled"
+                        :class="{ [$style.active]: selected.indexOf(s.id) > -1 }"
+                        v-text="s.productAttributeValueName"
+                      />
+                    </template>
+                  </template>
+                </div>
               </div>
-            </div>
-            <!--<div :class="$style.size">-->
-            <!--<div>尺寸</div>-->
-            <!--<ul :class="$style.sizeList">-->
-            <!--<li>L</li>-->
-            <!--</ul>-->
-            <!--</div>-->
+            </template>
+
             <div :class="$style.count">
               <div>购买数量</div>
               <div :class="$style.countCtr">
-                <button
-                  :disabled="count <= min || currentDisabled"
-                  @click.stop="minus"
-                >
+                <button :disabled="count <= min || currentDisabled" @click.stop="minus">
                   -
                 </button>
                 <input
@@ -73,22 +59,16 @@
                   @input="countChange"
                   :disabled="currentDisabled"
                 >
-                <button
-                  :disabled="count >= stock || currentDisabled"
-                  @click.stop="add"
-                >
+                <button :disabled="count >= localCurrentSku.stock || currentDisabled" @click.stop="add">
                   +
                 </button>
               </div>
             </div>
           </div>
-          <div
-            :class="$style.footer"
-            v-if="selected.optionCode"
-          >
+          <div :class="$style.footer" v-if="localCurrentSku.id">
             <slot
               name="footer"
-              :selected="selected"
+              :currentSku="localCurrentSku"
               :revert="revert"
             />
           </div>
@@ -99,12 +79,18 @@
 </template>
 
 <script>
+/* eslint-disabled */
 export default {
   name: 'SpecificationPop',
   props: {
     visible: Boolean,
-    // 所有规格
-    data: {
+    skuList: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    skuAttrList: {
       type: Array,
       default: function () {
         return []
@@ -117,24 +103,26 @@ export default {
     // 默认数量
     defaultCount: {
       type: Number,
-      default: 0
+      default: 1
     },
-    // 默认选中的规格
-    defaultCode: {
-      type: String,
-      default: ''
+    // 初始的规格，它可以作为一个默认值，用以回滚
+    sku: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   data () {
     return {
       showBox: false,
       showSpec: false,
-      selected: {},
       count: 1,
       min: 1,
-      stock: 1,
       inited: false,
-      localData: []
+      localData: [],
+      selected: [],
+      localCurrentSku: {}
     }
   },
   created () {
@@ -145,7 +133,7 @@ export default {
   },
   watch: {
     // 规格列表加载完成时，初始化一下
-    data: {
+    skuAttrList: {
       handler (val) {
         if (!this.inited && val && val.length > 0) {
           this.init()
@@ -163,16 +151,32 @@ export default {
         this.count = val
       },
       immediate: true
+    },
+    sku: {
+      handler (val) {
+        this.localCurrentSku = val
+      },
+      deep: true
+    },
+    localCurrentSku: {
+      handler (val) {
+        if (val.id) {
+          this.selected.splice(0, 1, val.skuCode1)
+          this.selected.splice(1, 1, val.skuCode2 || '')
+        }
+      },
+      immediate: true,
+      deep: true
     }
   },
   computed: {
     currentDisabled () {
-      return this.isDisabled(this.selected)
+      return false
     }
   },
   methods: {
     close () {
-      // this.revert()
+      this.revert()
       this.$emit('update:visible', false)
     },
     closed () {
@@ -180,30 +184,30 @@ export default {
         this.$emit('closed')
       }
     },
-    isDisabled (option) {
-      return !option.optionCode || (option.stock === 0 || option.stock < option.minBuyNum)
-    },
     // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个(禁用的不能选中)，并触发一次change事件
     init () {
-      let selected = null
+      this.selected = []
       this.inited = true
-      this.count = this.defaultCount
-      let currentSku = this.data.find(item => {
-        item.disabled = this.isDisabled(item)
-        return item.optionCode === this.defaultCode
-      })
-      if (!currentSku) {
-        selected = this.data.filter(item => !item.disabled)[0] || {}
+      if (this.sku.id) {
+        this.selected.push(this.sku.skuCode1)
+        this.selected.push(this.sku.skuCode2 || '')
       } else {
-        selected = currentSku
+        for (let [i, attr] of this.skuAttrList.entries()) {
+          for (let val of attr.productAttributeValues) {
+            let skus = this.skuList.filter(item => item[`skuCode${i + 1}`] === val.id)
+            // 判断此类规格是否全部售罄
+            this.$set(val, 'isNoStock', skus.every(item => item.stock === 0))
+            // 判断此类规格是否全部禁用
+            this.$set(val, 'isDisabled', skus.every(item => item.status === 0))
+          }
+          // 找出没有完全经用的规格
+          let noDisabledOrNoStock = attr.productAttributeValues.filter(item => !item.isNoStock && !item.isDisabled)
+          if (noDisabledOrNoStock.length) {
+            this.selected.push(noDisabledOrNoStock[0].id)
+          }
+        }
       }
-      this.min = selected.minBuyNum || 1
-      if (!this.count) {
-        this.count = this.min
-      }
-      this.localData = this.data
-      this.stock = selected.stock
-      this.change(selected)
+      this.localCurrentSku = this.setSku(this.selected)
     },
     setShow (show) {
       if (show) {
@@ -218,11 +222,26 @@ export default {
         }, 300)
       }
     },
-    change (option) {
-      this.selected = option
-      this.selected.count = this.min = this.count = option.minBuyNum || 1
-      this.stock = option.stock
-      this.$emit('change', option)
+    setSku (ids) {
+      let iterator = ids[Symbol.iterator]()
+      let skuAttr = iterator.next()
+      let skuList = this.skuList
+      let skuNo = 1
+      while (!skuAttr.done) {
+        skuList = skuList.filter(item => item['skuCode' + skuNo] === skuAttr.value)
+        skuAttr = iterator.next()
+        skuNo++
+      }
+      skuList[0].count = skuList[0].minBuyNum
+      this.min = skuList[0].minBuyNum
+      this.count = this.min
+      this.localCurrentSku = skuList[0]
+      this.$emit('change', this.localCurrentSku)
+      return skuList[0]
+    },
+    change (index, id) {
+      this.selected.splice(index, 1, id)
+      this.setSku(this.selected)
     },
     countChange () {
       if (this.count === '') return
@@ -230,31 +249,27 @@ export default {
         this.count = this.min
         this.$warning(`此规格最小购买量为${this.min}`)
       }
-      if (this.count > this.stock) {
-        this.count = this.stock
+      if (this.count > this.localCurrentSku.stock) {
+        this.count = this.localCurrentSku.stock
         this.$warning(`购买的宝贝数超过剩余库存`)
       }
-      this.selected.count = this.count
+      this.localCurrentSku.count = this.count
+      this.$emit('change', this.localCurrentSku)
     },
     minus () {
       this.count--
-      this.$set(this.selected, 'count', this.count)
-      this.$emit('change', this.selected)
+      this.$set(this.localCurrentSku, 'count', this.count)
+      this.$emit('change', this.localCurrentSku)
     },
     add () {
       this.count++
-      this.$set(this.selected, 'count', this.count)
-      this.$emit('change', this.selected)
+      this.$set(this.localCurrentSku, 'count', this.count)
+      this.$emit('change', this.localCurrentSku)
     },
     // 回滚（如果规格选择失败，或者没选，回滚到最初规格）
     revert () {
-      if (this.defaultCode) {
-        this.selected = this.data.find(item => item.optionCode === this.defaultCode)
-      } else {
-        this.selected = this.data[0]
-      }
-      this.count = this.defaultCount || this.selected.minBuyNum
-      this.stock = this.selected.stock
+      this.$emit('change', this.sku)
+      this.localCurrentSku = this.sku
     }
   }
 }
@@ -293,6 +308,7 @@ export default {
       display: flex;
       align-items: flex-end;
       padding-bottom: 24px;
+      border-bottom: 1px solid #e7e7e7;
     }
   }
   .base-info-right {
@@ -323,7 +339,6 @@ export default {
   }
   .color {
     border-bottom: 1px solid #e7e7e7;
-    border-top: 1px solid #e7e7e7;
   }
   .size {
     border-bottom: 1px solid #e7e7e7;

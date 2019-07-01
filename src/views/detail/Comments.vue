@@ -45,7 +45,7 @@ export default {
       form: {
         current: 1,
         size: 10,
-        productSeq: ''
+        productId: ''
       },
       getComments,
       showSpecifica: false,
@@ -63,7 +63,7 @@ export default {
     }
   },
   props: {
-    productSeq: {
+    productId: {
       type: String,
       default: null
     }
@@ -74,7 +74,7 @@ export default {
   activated () {
     this.reset()
     this.$nextTick(() => {
-      this.form.productSeq = this.productSeq
+      this.form.productId = this.productId
       this.$refresh()
       this.getdetail()
     })
@@ -82,7 +82,7 @@ export default {
   methods: {
     async getdetail () {
       try {
-        let { result } = await getProductDetail(this.productSeq)
+        let { result } = await getProductDetail(this.productId)
         this.detail = result
         this.priceModels = result.priceModels
         this.isSupplierProduct = result.supplierProduct
@@ -95,7 +95,7 @@ export default {
       this.isSupplierProduct = false
       this.form.current = 1
       this.form.size = 10
-      this.form.productSeq = ''
+      this.form.productId = ''
     }
   }
 }

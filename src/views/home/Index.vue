@@ -18,7 +18,7 @@
                   v-lazy="item.fileId"
                   v-if="item.link && item.linkType === 'goods'"
                   alt=""
-                  :to="{ name: 'Lesson', params: { productSeq: item.contentId, brokerId: agentUser ? userId : null } }"
+                  :to="{ name: 'Lesson', params: { productId: item.contentId, brokerId: agentUser ? userId : null } }"
                 />
                 <!-- 分类 -->
                 <router-link

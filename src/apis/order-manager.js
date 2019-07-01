@@ -67,11 +67,6 @@ export const invoiceDetail = (orderNo) => axios.get(`/apis/v1/invoice/OrderInvoi
 // 获取待支付商品支付需要的数据（二次支付）
 export const getAwaitPayInfo = orderId => axios.post(`/apis/v1/order/secondaryPayment/${orderId}`)
 
-// 算钱
-export const getMoney = (productSeq, optionCode, number, addressSeq) => axios.get(`/apis/v1/product/productinfo/price?productSeq=${productSeq}&optionCode=${optionCode}&number=${number}&addressSeq=${addressSeq}`)
-// 算供应商商品的运费
-export const getFreight = ({ productSeq, productCount, addressSeq, optionCode }) =>
-  axios.post('/apis/v1/order/physicalorder/wechat/freight', null, { params: { productSeq, productCount, addressSeq, optionCode } })
 /* GET 商城端-获取订单物流信息 */
 export const getFreightData = orderId => axios.get(`/apis/v1/order/logistics/${orderId}`)
 

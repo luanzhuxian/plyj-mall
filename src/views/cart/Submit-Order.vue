@@ -227,7 +227,7 @@ export default {
     }
   },
   props: {
-    productSeq: {
+    productId: {
       type: String,
       default: ''
     },

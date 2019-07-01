@@ -1,41 +1,36 @@
 <template>
-  <div
-    :class="$style.comment + ' radius-20'"
-    v-show="listTemp.length > 0"
-  >
-    <div
-      :class="$style.commentItem"
-      v-for="item of listTemp"
-      :key="item.sequenceNbr"
-    >
+  <div :class="$style.comment + ' radius-20'" v-if="listTemp.length > 0">
+    <div :class="$style.header">
+      <pl-button size="small" type="primary" round plain>
+        全部
+      </pl-button>
+      <pl-button size="small" type="primary" round plain>
+        最新
+      </pl-button>
+      <pl-button size="small" type="primary" round plain>
+        有图
+      </pl-button>
+    </div>
+    <div :class="$style.commentItem" v-for="item of listTemp" :key="item.sequenceNbr">
       <!-- 头像 -->
-      <img
-        v-img-error
-        :src="item.headUrl || ''"
-        alt=""
-      >
+      <img v-img-error :src="item.headUrl || ''" alt="">
       <div :class="$style.content">
-        <div
-          :class="$style.name"
-          v-text="item.nickName"
-        />
-        <!-- 评分 -->
-        <div :class="$style.grade">
-          评分 <Grade
-            size="mini"
-            :grade="item.goodsScore"
-          />
+        <div :class="$style.contentTop">
+          <div :class="$style.name" v-text="item.nickName" />
+          <div :class="$style.grade">
+            评分 <Grade size="mini" :grade="item.goodsScore" />
+          </div>
+        </div>
+
+        <!-- 时间  规格 -->
+        <div :class="$style.itemSku">
+          <span v-text="item.createTime.split(' ')[0]" />
+          <span>颜色“白色”，版本“55寸 4核处理器”</span>
         </div>
         <!-- 内容 -->
-        <div
-          :class="$style.commentContent"
-          v-text="item.content"
-        />
+        <div :class="$style.commentContent" v-text="item.content" />
         <!-- 图片 -->
-        <div
-          :class="$style.imgs + ' radius-20'"
-          v-if="item.mediaInfoModels.length > 0"
-        >
+        <div :class="$style.imgs + ' radius-20'" v-if="item.mediaInfoModels.length > 0">
           <img
             v-for="(img, j) of item.mediaInfoModels"
             :key="j"
@@ -46,25 +41,19 @@
           >
         </div>
         <!-- 回复 -->
-        <div
-          :class="$style.reply"
-          v-if="item.childs.length"
-        >
+        <div :class="$style.reply" v-if="item.childs.length">
           <span>商家回复：</span>
           {{ item.childs[0].content }}
         </div>
       </div>
     </div>
-    <p
-      :class="$style.noComments"
-      v-if="listTemp.length === 0 && productSeq"
-    >
+    <p :class="$style.noComments" v-if="listTemp.length === 0 && productId">
       <span>暂无评论</span>
     </p>
     <router-link
-      v-if="this.productSeq && total > 3"
+      v-if="this.productId && total > 3"
       tag="div"
-      :to="{ name: 'Comments', params: { productSeq } }"
+      :to="{ name: 'Comments', params: { productId } }"
       :class="$style.seeMore"
     >
       <span>查看全部评论（{{ total }}）</span>
@@ -85,7 +74,7 @@ export default {
       form: {
         current: 1,
         size: '',
-        productSeq: ''
+        productId: ''
       },
       listTemp: [],
       timer: 0,
@@ -93,15 +82,15 @@ export default {
     }
   },
   props: {
-    // 如果没有传入size和productSeq，则需要传入评论列表
+    // 如果没有传入size和productId，则需要传入评论列表
     // 这样做是为了方便在商品详情和评论专区形成通用性
     // 评论专区有刷新和请求全部列表的需求，而商品详情只需要3条评论，且不需要刷新评论
-    // 因此，传入size和productSeq将更方便，因为无需额外在商品详情中请求评论列表
+    // 因此，传入size和productId将更方便，因为无需额外在商品详情中请求评论列表
     size: {
       type: Number,
       default: 3
     },
-    productSeq: {
+    productId: {
       type: String,
       default: ''
     },
@@ -113,14 +102,17 @@ export default {
     }
   },
   activated () {
-    this.form.productSeq = this.productSeq
+    this.form.productId = this.productId
     this.form.size = this.size
-    this.getList()
   },
   watch: {
-    productSeq (val) {
-      this.form.productSeq = val
-      this.getList()
+    productId: {
+      handler  (val) {
+        this.form.productId = val
+        console.log(123)
+        this.getList()
+      },
+      immediate: true
     },
     list (val) {
       if (val.length > 0) {
@@ -130,11 +122,13 @@ export default {
   },
   methods: {
     getList () {
-      if (this.productSeq && this.size) {
+      console.log(this.productId && this.size)
+      if (this.productId && this.size) {
         clearTimeout(this.timer)
         this.timer = setTimeout(async () => {
           try {
             this.clear()
+            console.log(123123)
             let { result } = await getComments(this.form)
             this.total = result.total
             for (let item of result.records) {
@@ -157,15 +151,25 @@ export default {
   .comment {
     /*min-height: 500px;*/
     margin-top: 28px;
-    padding: 30px 0 30px 30px;
+    /*padding: 0 40px;*/
     background-color: #fff;
     font-size: 24px;
     overflow: scroll;
   }
+  .header {
+    display: flex;
+    align-items: center;
+    height: 120px;
+    padding: 0 30px;
+    border-bottom: 1px solid #f0f0f0;
+    > button {
+      margin-right: 20px;
+    }
+  }
   .comment-item {
     position: relative;
     display: flex;
-    padding-bottom: 28px;
+    padding: 30px;
     margin-bottom: 32px;
     border-bottom: 1px solid #e7e7e7;
     > img {
@@ -184,19 +188,8 @@ export default {
   }
 .content {
   flex: 1;
-  .name {
-    font-size: 28px;
-    color: #446889;
-  }
-  .grade {
-    margin-top: 8px;
-    font-size: 24px;
-    > div {
-      vertical-align: -4px;
-    }
-  }
   .comment-content {
-    margin-top: 16px;
+    margin-top: 20px;
     padding-right: 30px;
     font-size: 28px;
     word-break: break-all;
@@ -225,6 +218,31 @@ export default {
         border-bottom-left-radius: 20px;
       }
     }
+  }
+}
+.contentTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .name {
+    font-size: 28px;
+    color: #446889;
+  }
+  .grade {
+    margin-top: 8px;
+    font-size: 24px;
+    > div {
+      vertical-align: -4px;
+    }
+  }
+}
+.itemSku {
+  display: flex;
+  margin-top: 8px;
+  font-size: 24px;
+  color: #999;
+  > span {
+    margin-right: 12px;
   }
 }
 .noComments {

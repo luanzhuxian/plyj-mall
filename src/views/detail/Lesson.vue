@@ -2,64 +2,67 @@
   <div :class="$style.lesson">
     <DetailBanner :banners="banners" />
     <DetailInfoBox :loading="loading">
+      <div :class="$style.price">
+        <div :class="$style.priceLeft">
+          <Price
+            v-if="productSkuModels.length"
+            size="huge"
+            :price="currentPrice"
+            :original-price="currentOriginalPrice"
+          />
+          <div :class="$style.count">
+            <span v-text="detail.showSalesVolume" />人购买
+          </div>
+        </div>
+        <div :class="$style.priceRight" v-if="currentModel.realRebate">
+          <p class="fz-22 gray-1">
+            <span :class="$style.returnRunbi">返还</span><i v-text="currentModel.realRebate" />润笔
+          </p>
+          <p class="fz-22 gray-3">
+            分享下单即可获得R币
+          </p>
+        </div>
+      </div>
       <DetailTitle v-text="detail.productName" />
       <DetailDesc v-text="detail.productDesc" />
-      <div :class="$style.price">
-        <Price
-          v-if="detail.priceModels && detail.priceModels[0]"
-          size="huge"
-          :price="detail.priceModels[0].price"
-          :original-price="detail.supplierProduct ? '' : detail.priceModels[0].originPrice"
-        />
-        <div :class="$style.count">
-          <pl-svg name="selled" />
-          <span>已售 {{ detail.salesVolume }}</span>
+      <Tags :tags="detail.labelModels" />
+    </DetailInfoBox>
+
+    <Field label="发货" content="普通快递" />
+    <Field
+      label="选择"
+      can-click
+      @click="showSpecifica = true"
+    >
+      <span v-if="currentModel.skuCode1Name" v-text="currentModel.skuCode1Name" />
+      <template v-if="currentModel.skuCode2Name">
+        / <i v-text="currentModel.skuCode2Name" />
+      </template>
+      <span v-if="!currentModel.id">请选择规格</span>
+    </Field>
+
+    <div :class="$style.detailOrComment">
+      <div :class="$style.tabs">
+        <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
+          雅客评论(1)
+        </div>
+        <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2">
+          商品详情
         </div>
       </div>
 
-      <!-- 当前选择的规格 -->
-      <specification-box
-        :current="currentModel"
-        ref="specification"
-        @click="showSpecifica = true"
-      />
-      <!-- helper 润笔价格 -->
-      <helper-price
-        v-if="agentProduct && currentModel.optionCode"
-        :current="currentModel"
-      />
-      <!--<DetailOtherInfo type="lesson" />-->
-    </DetailInfoBox>
-
-    <DetailInfo
-      v-if="detail.detailContent"
-      title="详情信息"
-      :content="detail.detailContent || '暂无详情'"
-    />
-
-    <!--<div class="slide-padding mt-80">-->
-    <!--<ModuleTitle title="商品详情" />-->
-    <!--<Specific total-price="500" />-->
-    <!--</div>-->
-
-    <!--<div class="slide-padding mt-80">-->
-    <!--<ModuleTitle title="购买须知" />-->
-    <!--<MustKnow />-->
-    <!--</div>-->
-
-    <!--<div class="slide-padding mt-80">-->
-    <!--<ModuleTitle title="授课老师" />-->
-    <!--<Teaching />-->
-    <!--</div>-->
-
-    <div class="slide-padding mt-80">
-      <ModuleTitle title="雅客评论" />
-      <Comment
-        :size="3"
-        :product-seq="productSeq"
-        :broker-id="brokerId"
-      />
+      <div>
+        <Comment v-show="tab === 1" :size="3" :product-id="productId" :broker-id="brokerId" />
+        <DetailInfo
+          v-show="tab === 2"
+          :content="detail.detail || '暂无详情'"
+        />
+      </div>
     </div>
+
+    <!--<div class="slide-padding mt-80">
+      <ModuleTitle title="雅客评论" />
+    </div>-->
 
     <!--<div class="slide-padding mt-80">-->
     <!--<ModuleTitle title="品牌介绍" />-->
@@ -72,38 +75,40 @@
     <div class="slide-padding mt-80">
       <MaybeYouLike
         title="商家推荐"
-        :product-id="productSeq"
+        :product-id="productId"
       />
     </div>
 
     <buy-now
       type="warning"
       ref="buyNow"
-      :image="detail.productImage ? detail.productImage[0].mediaUrl : ''"
-      :current-model.sync="currentModel"
-      :price-models="detail.priceModels"
+      :image="detail.productMainImage"
+      :product-id="productId"
+      :sku-list="detail.productSkuModels"
+      :sku-attr-list="detail.productAttributes"
+      :current-sku.sync="currentModel"
     />
     <specification-pop
-      :default-code="currentModel.optionCode"
       :default-count="currentModel.count"
-      :data="detail.priceModels"
-      :product-image="detail.productImage ? detail.productImage[0].mediaUrl : ''"
+      :sku-list="detail.productSkuModels"
+      :sku-attr-list="detail.productAttributes"
+      :product-image="detail.productMainImage"
       :visible.sync="showSpecifica"
-      @change="specChanged"
+      :sku="currentModel"
     >
-      <template v-slot:footer="{ selected }">
+      <template v-slot:footer="{ currentSku }">
         <div :class="$style.buttons">
           <button
             :class="$style.add"
             :disabled="adding"
-            @click="addToCart(selected)"
+            @click="addToCart(currentSku)"
           >
             加入购物车
           </button>
           <button
             :class="$style.buy"
             :disabled="adding"
-            @click="buyNow(selected)"
+            @click="buyNow(currentSku)"
           >
             立即购买
           </button>
@@ -118,19 +123,12 @@ import DetailBanner from '../../components/detail/Banner.vue'
 import DetailInfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
 import DetailDesc from '../../components/detail/Desc.vue'
-// import DetailOtherInfo from '../../components/detail/Other-Info.vue'
 import DetailInfo from '../../components/detail/Detail.vue'
-// import MustKnow from '../../components/detail/Must-Know.vue'
-// import Specific from '../../components/detail/Specific.vue'
-// import Teaching from '../../components/detail/Teaching.vue'
 import Comment from '../../components/detail/Comment.vue'
-import HelperPrice from '../../components/detail/Helper-Price.vue'
 import BuyNow from '../../components/detail/Buy-Now.vue'
-// import BrandIntro from '../../components/detail/Brand-Intro.vue'
-// import ApplicableTime from '../../components/detail/Applicable-Time.vue'
-import SpecificationBox from '../../components/detail/Specification-Box.vue'
-import ModuleTitle from '../../components/Module-Title.vue'
+import Tags from '../../components/detail/Tags.vue'
 import Price from '../../components/Price.vue'
+import Field from '../../components/detail/Field.vue'
 import { getProductDetail } from '../../apis/product'
 import MaybeYouLike from '../../components/Maybe-You-Like.vue'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
@@ -144,41 +142,38 @@ export default {
     DetailBanner,
     DetailTitle,
     DetailDesc,
-    // DetailOtherInfo,
     DetailInfo,
-    // MustKnow,
-    // Specific,
-    // Teaching,
     Comment,
-    HelperPrice,
-    // BrandIntro,
-    // ApplicableTime,
-    ModuleTitle,
     Price,
+    Field,
+    Tags,
     BuyNow,
     DetailInfoBox,
-    SpecificationBox,
     SpecificationPop,
     MaybeYouLike
   },
   data () {
     return {
       banners: [],
-      detail: {},
+      detail: {
+        assessmentModelPage: {}
+      },
+      productSkuModels: [],
       showSpecifica: false,
       currentModel: {}, // 当前选中的规格
       commentForm: {
         current: 1,
         size: 3,
-        productSeq: ''
+        productId: ''
       },
       agentProduct: false,
       loading: false,
-      adding: false
+      adding: false,
+      tab: 2
     }
   },
   props: {
-    productSeq: {
+    productId: {
       type: String,
       default: null
     },
@@ -188,10 +183,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId'])
+    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId']),
+    currentPrice () {
+      return this.currentModel.price || this.productSkuModels[0].price
+    },
+    currentOriginalPrice () {
+      return this.currentModel.originalPrice || this.productSkuModels[0].originalPrice
+    }
   },
   watch: {
-    productSeq () {
+    productId () {
       this.getDetail()
     }
   },
@@ -204,38 +205,33 @@ export default {
   mounted () {
     // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
     // 详情页只做存储，具体判断过程在点击立即购买和加入购物车时判断
-    sessionStorage.setItem('shareBrokerId', this.brokerId)
+    sessionStorage.setItem('shareBrokerId', this.brokerId || '')
   },
   methods: {
     async getDetail () {
       this.loading = true
       this.resetState() // 重置一些状态
       try {
-        let { result } = await getProductDetail(this.productSeq)
-        result.salesVolume = 0
-        if (result.productStatus !== 'ON_SALE') {
+        let { result } = await getProductDetail(this.productId)
+        if (result.productStatus !== 2) {
           this.loading = false
           return this.$router.replace({ name: 'SoldOut' })
         }
-        let { sequenceNbr, agentProduct, priceModels, productImage } = result
-        this.commentForm.productSeq = sequenceNbr
+        let { id, agentProduct, mediaInfoIds } = result
+        this.commentForm.productId = id
         this.agentProduct = agentProduct
-        // 计算总销量 添加count属性
-        for (let item of priceModels) {
-          item.count = 1
-          result.salesVolume += item.salesVolume
-        }
         // 所有图片
-        for (let item of productImage) {
+        for (let item of mediaInfoIds) {
           this.banners.push(item.mediaUrl)
         }
         this.detail = result
+        this.productSkuModels = result.productSkuModels
         share({
           appId: this.appId,
           title: result.productName,
           desc: result.productDesc,
           link: window.location.href,
-          imgUrl: result.productImage[0].mediaUrl + '?x-oss-process=image/resize,w_200'
+          imgUrl: result.productMainImage + '?x-oss-process=image/resize,w_200'
         })
         this.loading = false
       } catch (e) {
@@ -243,25 +239,23 @@ export default {
         throw e
       }
     },
-    // 选中规格
-    specChanged (option) {
-      this.currentModel = option
-    },
     resetState () {
       this.currentModel = {}
       this.banners.splice(0, 1000000)
     },
     addToCart (selected) {
+      this.currentModel = selected
       this.adding = true
-      const { productSeq, count, optionCode } = selected
+      const { count, skuCode2 = '', skuCode1 } = selected
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId')
       return new Promise(async (resolve, reject) => {
         try {
           await addToCart({
-            productId: productSeq,
+            productId: this.productId,
             productCount: count,
-            skuCode: optionCode,
+            skuCode: skuCode1,
+            skuCode2,
             agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
           })
           this.$success('加入成功')
@@ -274,12 +268,13 @@ export default {
       })
     },
     buyNow (selected) {
-      const { productSeq, count, optionCode } = selected
+      this.currentModel = selected
+      const { productId, count, id } = selected
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId')
       localStorage.setItem('CONFIRM_LIST', JSON.stringify([{
-        productId: productSeq,
-        optionCode: optionCode,
+        productId: productId,
+        optionCode: id,
         count: count,
         agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
@@ -302,18 +297,38 @@ export default {
   .price {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: start;
     margin-bottom: 30px;
   }
-  .count {
+  .priceLeft {
+    flex: 1;
     display: inline-flex;
-    align-items: center;
-    font-size: 24px;
-    color: #999;
-    svg {
-      width: 24px;
-      margin-right: 10px;
+    flex-direction: column;
+  }
+  .priceRight {
+    flex: 1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 8px;
+    > p {
+      margin-top: 6px;
     }
+    .returnRunbi {
+      display: inline-block;
+      width: 58px;
+      height: 26px;
+      margin-right: 10px;
+      text-align: center;
+      color: #fff;
+      font-size: 18px;
+      background-color: #FE7700;
+      border-radius: 13px;
+    }
+  }
+  .count {
+    font-size: 24px;
+    color: #FE7700;
   }
   .buttons {
     display: flex;
@@ -330,6 +345,29 @@ export default {
     }
     .buy {
       background-color: $--primary-color;
+    }
+  }
+  .detailOrComment {
+    margin-top: 20px;
+    background-color: #fff;
+  }
+  .tabs {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid #e7e7e7;
+    margin-bottom: 20px;
+    > div {
+      width: max-content;
+      font-size: 26px;
+      color: #999;
+      height: 90px;
+      line-height: 90px;
+      box-sizing: border-box;
+      &.activeTab {
+        color: #000;
+        border-bottom: 2px solid #000;
+      }
     }
   }
 </style>

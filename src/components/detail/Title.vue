@@ -12,9 +12,10 @@ export default {
 
 <style module lang="scss">
   .detail-title {
-    margin-top: 40px;
-    font-size: 36px;
+    margin-top: 26px;
+    font-size: 28px;
     line-height: 48px;
     font-weight: bold;
+    color: #000;
   }
 </style>

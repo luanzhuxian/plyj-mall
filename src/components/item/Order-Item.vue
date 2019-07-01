@@ -126,7 +126,7 @@ export default {
       type: [String, Number],
       default: 0
     },
-    productSeq: {
+    productId: {
       type: String,
       default: ''
     },
@@ -160,12 +160,12 @@ export default {
   },
   methods: {
     handleClick (e) {
-      if (this.productSeq) {
+      if (this.productId) {
         e.stopPropagation()
         this.$router.push({
           name: this.routeName,
           params: {
-            productSeq: this.productSeq,
+            productId: this.productId,
             brokerId: this.agentUser ? this.userId : null
           }
         })

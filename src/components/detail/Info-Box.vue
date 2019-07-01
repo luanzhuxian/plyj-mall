@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="!loading"
-    :class="$style.detailInfoBox + ' radius-20'"
+    :class="$style.detailInfoBox"
   >
     <div :class="$style.detailBox">
       <slot />
@@ -31,14 +31,10 @@ export default {
 <style module lang="scss">
   .detail-info-box {
     position: relative;
-    top: -60px;
-    width: 670px;
-    margin: 0 auto;
     background-color: #fff;
     z-index: 10; // swiper的指示器是10, 这里不能低于10
-    box-shadow: 0 20px 50px rgba(0, 0, 0, .1);
     .detail-box {
-      padding: 0 30px;
+      padding: 12px 24px;
       overflow: hidden;
     }
   }
@@ -52,7 +48,6 @@ export default {
     z-index: 11; // swiper的指示器是10, 这里不能低于10
     box-shadow: 0 20px 50px rgba(0, 0, 0, .1);
     box-sizing: border-box;
-    border-radius: $--radius1;
   }
   .skeleton1 {
     width: 400px;

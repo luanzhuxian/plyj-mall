@@ -57,7 +57,7 @@
         </template>
         <div
           :class="$style.title"
-          v-text="currentClassify.subCategoryName || currentClassify.categoryName"
+          v-text="currentClassify.subCategoryIdName || currentClassify.categoryName"
           v-show="!isEmpty && currentClassify.childs && currentClassify.childs.length"
         />
         <div
