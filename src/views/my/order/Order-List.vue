@@ -86,7 +86,7 @@
                   type="warning"
                   round
                   :loading="payloading && currentPayId === item.id"
-                  :disabled="payloading"
+                  :disabled="payloading && currentPayId === item.id"
                   @click="pay(item.id, item.orderType)"
                 >
                   去付款
