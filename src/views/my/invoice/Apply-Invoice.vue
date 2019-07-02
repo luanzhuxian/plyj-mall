@@ -323,7 +323,8 @@ export default {
         invoiceAmount += Number(pro.amount) * 100
         orderDetails.push({
           productId: pro.productId,
-          skuCode: pro.optionCode
+          skuCode1: pro.skuCode1,
+          skuCode2: pro.skuCode2
         })
       }
       invoiceModel.orderDetails = orderDetails
