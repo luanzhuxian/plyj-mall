@@ -209,15 +209,14 @@ export default {
         }
       }
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    next()
-    // next(vm => {
-    //   if (vm.agentUser || vm.isAdmin) {
-    //     vm.$router.replace({ name: 'My' })
-    //   }
-    // })
   }
+  // beforeRouteEnter (to, from, next) {
+  //   next(vm => {
+  //     if (vm.agentUser || vm.isAdmin) {
+  //       vm.$router.replace({ name: 'My' })
+  //     }
+  //   })
+  // }
 }
 </script>
 

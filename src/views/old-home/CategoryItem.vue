@@ -6,43 +6,46 @@
       [$style.proItemMiddle]: size === 'middle',
       [$style.proItemMini]: size === 'mini',
     }"
-    @click="jump"
     :style="{margin}"
+    @click="jump"
   >
-    <img
-      v-lazy="img"
-      alt=""
-    >
+    <img v-lazy="img" :alt="productName">
+    <p :class="{ [$style.name]: true, [$style.isActive]: false }" v-text="productName" />
     <p
-      :class="{ [$style.name]: true, [$style.isActive]: false}"
-      v-text="productName"
-    />
-    <p
-      v-if="size === 'middle'"
       :class="$style.desc"
+      v-if="size === 'middle'"
       v-text="productDesc"
     />
-    <div :class="$style.price">
+    <div :class="{ [$style.price]: true, [$style.flex]: sale }">
       <Price
         :price="price"
         :original-price="originPrice"
         :size="size"
+        :style="{ display: sale ? 'inline-block' : 'block' }"
       />
+      <span :class="$style.sale" v-if="sale" v-text="`${sale >= 9999 ? '9999+' : sale}人付款`" />
+    </div>
+    <div :class="$style.labels" v-if="labels.length">
+      <span
+        :class="$style.label"
+        :style="{ color: labelColor[i], borderColor: labelColor[i] }"
+        v-for="(item, i) of labels"
+        :key="i"
+      >
+        {{ item.labelName }}
+      </span>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import Price from '../../components/Price.vue'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'YouLikeItem',
   components: {
     Price
-  },
-  data () {
-    return {
-    }
   },
   props: {
     productId: {
@@ -82,7 +85,22 @@ export default {
       type: String,
       default: ''
     },
-    isActive: Boolean // 是否加入经济人活动
+    isActive: Boolean, // 是否加入经济人活动,
+    sale: {
+      type: [Number, String],
+      default: 0
+    },
+    labels: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
+  data () {
+    return {
+      labelColor: ['#E83B27', '#92B1E5', '#F3BE41', '#60C684']
+    }
   },
   computed: {
     ...mapGetters(['userId', 'agentUser'])
@@ -173,6 +191,34 @@ export default {
       }
       .price {
         margin-top: 8px;
+        @include elps();
+      }
+      .sale {
+        font-size: 20px;
+        color: #999999;
+      }
+      .labels {
+       display: flex;
+       align-items: center;
+       flex-wrap: wrap;
+       margin: 0 -8px;
+     }
+     .label {
+       box-sizing: border-box;
+       height: 30px;
+       line-height: 28px;
+       border-radius: 8px;
+       border-width: 1px;
+       border-style: solid;
+       font-size: 20px;
+       padding: 0 8px;
+       margin-top: 8px;
+       margin-left: 8px;
+     }
+      .flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
       }
     }
   }

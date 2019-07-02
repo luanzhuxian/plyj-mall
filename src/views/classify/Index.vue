@@ -91,8 +91,8 @@
                 v-for="(item, index) of prodList"
                 :key="index"
                 :id="item.id"
-                :title="item.productName"
                 :img="item.productMainImage + '?x-oss-process=style/thum-small'"
+                :title="item.productName"
                 :price="item.productSkuModels.length && item.productSkuModels[0].price"
                 :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
               />
@@ -225,9 +225,7 @@ export default {
     },
     refreshHandler (list) {
       for (let item of list) {
-        item.productSkuModels.sort((a, b) => {
-          return a.price - b.price
-        })
+        item.productSkuModels.sort((a, b) => a.price - b.price)
       }
       this.prodList = list
     }

@@ -363,6 +363,7 @@
 </template>
 
 <script>
+import Moment from 'moment'
 import TopText from '../../../components/Top-Text.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import ModuleTitle from '../../../components/Module-Title.vue'
@@ -380,7 +381,6 @@ import {
   deleteOrder
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
-import Moment from 'moment'
 import { mapGetters } from 'vuex'
 
 const suggestionMap = {

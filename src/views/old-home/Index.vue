@@ -1,23 +1,14 @@
 <template>
-  <div
-    v-if="loaded"
-    :class="$style.mallHome + ' mall-home'"
-  >
+  <div v-if="loaded" :class="$style.mallHome + ' mall-home'">
     <div :class="$style.top">
-      <top-text
-        :title="mallName + ' 欢迎您'"
-        :tip="moment().format('MM月DD日 dddd')"
-      />
+      <top-text :title="mallName + ' 欢迎您'" :tip="date" />
     </div>
     <swiper
       :options="swiper"
       :class="$style.banner"
       v-if="banner.length > 0"
     >
-      <swiper-slide
-        v-for="(item, index) of banner"
-        :key="index"
-      >
+      <swiper-slide v-for="(item, index) of banner" :key="index">
         <!-- 商品 -->
         <img
           v-if="item.linkType === 'goods' && item.contentId"
@@ -42,38 +33,28 @@
           :class="$style.bannerImg"
         >
       </swiper-slide>
-      <div
-        class="banner-pagination"
-        slot="pagination"
-      />
+      <div class="banner-pagination" slot="pagination" />
     </swiper>
 
-    <div
-      :class="$style.goodGift"
-      v-if="modules.A.length"
-    >
+    <div :class="$style.goodGift" v-if="modules.A.length">
       <div :class="$style.moduleHead">
         <div :class="$style.moduleTitle">
           甄选好礼
         </div>
         <p>为了帮您甄选好礼，您知道我有多努力吗？</p>
       </div>
-      <swiper
-        :options="recommend"
-        :class="$style.swiper"
-      >
-        <swiper-slide
-          v-for="(item, i) of modules.A"
-          :key="i"
-        >
-          <CategoryItem
+      <swiper :class="$style.swiper" :options="recommend">
+        <swiper-slide v-for="(item, i) of modules.A" :key="i">
+          <category-item
             tag="div"
-            :img="item.productMainImage + '?x-oss-process=style/thum-small'"
-            :product-name="item.productName"
-            :product-id="item.sequenceNbr"
-            :is-active="item.agentProduct"
             size="mini"
-            :price="item.priceModels && item.priceModels[0].price"
+            :img="item.productMainImage + '?x-oss-process=style/thum-small'"
+            :is-active="item.agentProduct"
+            :product-id="item.id"
+            :product-name="item.productName"
+            :price="item.productSkuModels.length && item.productSkuModels[0].price"
+            :sale="item.salesVolume"
+            :labels="item.labelModels"
           />
         </swiper-slide>
         <div
@@ -84,10 +65,7 @@
       </swiper>
     </div>
 
-    <div
-      :class="$style.imgModule"
-      v-if="modules.B.length"
-    >
+    <div :class="$style.imgModule" v-if="modules.B.length">
       <router-link
         v-if="modules.B[0].linkType === 'category' && modules.B[0].contentId"
         tag="img"
@@ -108,18 +86,9 @@
       >
     </div>
 
-    <div
-      :class="$style.goodsModule"
-      v-if="modules.C.length"
-    >
-      <swiper
-        :options="goods"
-        style="overflow: visible"
-      >
-        <swiper-slide
-          v-for="(item, i) of modules.C"
-          :key="i"
-        >
+    <div :class="$style.goodsModule" v-if="modules.C.length">
+      <swiper :options="goods" style="overflow: visible">
+        <swiper-slide v-for="(item, i) of modules.C" :key="i">
           <div :class="$style.slideWrap">
             <CategoryItem
               :img="item.productImage && item.productImage[0].mediaUrl+ '?x-oss-process=style/thum-small'"
@@ -134,10 +103,7 @@
       </swiper>
     </div>
 
-    <div
-      :class="$style.imgModule"
-      v-if="modules.D.length"
-    >
+    <div :class="$style.imgModule" v-if="modules.D.length">
       <router-link
         v-if="modules.D[0].linkType === 'category' && modules.D[0].contentId"
         tag="img"
@@ -158,18 +124,9 @@
       >
     </div>
 
-    <div
-      :class="$style.goodsModule"
-      v-if="modules.E.length"
-    >
-      <swiper
-        :options="goods"
-        style="overflow: visible"
-      >
-        <swiper-slide
-          v-for="(item, i) of modules.E"
-          :key="i"
-        >
+    <div :class="$style.goodsModule" v-if="modules.E.length">
+      <swiper :options="goods" style="overflow: visible">
+        <swiper-slide v-for="(item, i) of modules.E" :key="i">
           <div :class="$style.slideWrap">
             <CategoryItem
               :img="item.productImage && item.productImage[0].mediaUrl+ '?x-oss-process=style/thum-small'"
@@ -184,13 +141,10 @@
       </swiper>
     </div>
 
-    <you-like v-if="showLike" />
+    <you-like />
   </div>
 
-  <div
-    v-else
-    :class="$style.skeleton"
-  >
+  <div v-else :class="$style.skeleton">
     <div :class="$style.skeAnimation + ' ' + $style.skeWelcome" />
     <div :class="$style.skeAnimation + ' ' + $style.skeDate" />
     <div :class="$style.skeAnimation + ' ' + $style.skeA" />
@@ -214,27 +168,26 @@
   </div>
 </template>
 <script>
+import moment from 'moment'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import TopText from '../../components/Top-Text.vue'
-import YouLike from './YouLike.vue'
 import CategoryItem from './CategoryItem.vue'
-import { getHomeData, getHomeProduct } from '../../apis/home'
+import YouLike from './YouLike.vue'
+import { getHomeData, getProduct } from '../../apis/home'
 import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
-import moment from 'moment'
 
 export default {
   name: 'Home',
   components: {
     swiper,
     swiperSlide,
-    YouLike,
+    TopText,
     CategoryItem,
-    TopText
+    YouLike
   },
   data () {
     return {
-      showLike: false,
       loaded: false,
       swiper: {
         slidesPerView: 'auto',
@@ -265,7 +218,7 @@ export default {
         E: []
       },
       maybeLike: [],
-      moment
+      date: moment().format('MM月DD日 dddd')
     }
   },
   computed: {
@@ -277,7 +230,6 @@ export default {
       // 优先加载banner，其他请求必须在banner之后
       await this.getBanner(result)
       await this.getModule(result)
-      this.showLike = true
       this.loaded = true
     } catch (e) {
       throw e
@@ -285,23 +237,18 @@ export default {
   },
   methods: {
     async getBanner (homeData) {
-      let banner = homeData.filter(item => item.moduleType === 'BANNER')[0]
+      let banner = homeData.find(item => item.moduleType === 'BANNER') || {}
       if (banner && banner.values && banner.values.length) {
-        let goodsIds = []
-        let other = []
         let goods = []
+        let other = []
         for (let val of banner.values) {
           if (val.linkType === 'goods') {
-            goodsIds.push(val)
+            // 获取商品分享id
+            val.contentId = val.link ? val.link.split('/').splice(-1, 1)[0] : null
+            goods.push(val)
           } else {
             other.push(val)
           }
-        }
-        // 获取商品分享id
-        for (let item of goodsIds) {
-          let id = item.link ? item.link.split('/').splice(-1, 1)[0] : null
-          item.contentId = id
-          goods.push(item)
         }
         this.banner = [...goods, ...other]
       }
@@ -312,21 +259,27 @@ export default {
       let module1 = MODULE.filter(item => /A|C|E/.test(item.moduleSuffix))
       let module2 = MODULE.filter(item => /B|D/.test(item.moduleSuffix))
       for (let m of module1) {
-        let ids = []
-        for (let val of m.values || []) {
-          if (val.link) ids.push(val.link)
-        }
-        let res = []
-        if (ids.length > 0) {
-          let { result } = await getHomeProduct(ids)
-          res = result
-        }
-        for (let item of res) {
-          this.modules[m.moduleSuffix].push(item)
+        if (!m.values || !m.values.length) continue
+        const ids = m.values
+          .filter(val => !!val.link)
+          .map(val => val.link)
+
+        if (ids.length) {
+          try {
+            let { result } = await getProduct(ids)
+            for (let item of result) {
+              item.productSkuModels.sort((a, b) => a.price - b.price)
+            }
+            Array.prototype.push.apply(this.modules[m.moduleSuffix], result)
+          } catch (e) {
+            throw e
+          }
         }
       }
+
       for (let m of module2) {
-        for (let val of m.values || []) {
+        if (!m.values || !m.values.length) continue
+        for (let val of m.values) {
           val.contentId = val.link ? val.link.split('/').splice(-1, 1)[0] : null
           this.modules[m.moduleSuffix].push(val)
         }
@@ -337,9 +290,9 @@ export default {
     * 跳转至商品详情
     * 跳转之前，如果当前用户是helper，尝试获取该商品的brokerId
     * */
-    async toProductDetail (productId) {
+    async toProductDetail (productSeq) {
       let route = {
-        name: 'Lesson', params: { productId, brokerId: this.agentUser ? this.userId : null }
+        name: 'Lesson', params: { productSeq, brokerId: this.agentUser ? this.userId : null }
       }
       this.$router.push(route)
     }
@@ -351,7 +304,7 @@ export default {
   .mall-home {
     overflow: hidden;
   }
-
+  /* skeleton starts */
   .skeleton {
     padding: 30px 40px;
     > div {
@@ -386,6 +339,7 @@ export default {
   .skeAnimation {
     @include skeAnimation(#eee)
   }
+  /* skeleton ends */
 </style>
 <style lang="scss">
   .mall-home {

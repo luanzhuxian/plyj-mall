@@ -9,34 +9,21 @@
     }"
   >
     <div>
-      <span
-        :class="$style.currentPrice"
-        :style="{ marginRight: originalPrice ? '10px' : '0' }"
-      >
+      <span :class="$style.currentPrice" :style="{ marginRight: originalPrice ? '10px' : '0' }">
         <span
           v-if="prefixText"
           :class="$style.prefixText"
           v-text="prefixText"
         />
-        <i
-          :class="$style.integer"
-          v-text="integer"
-        />
-        <i
-          v-if="float"
-          :class="$style.float"
-          v-text="float"
-        />
+        <i :class="$style.integer" v-text="integer" />
+        <i v-if="float" :class="$style.float" v-text="float" />
       </span>
       <del
         v-if="originalPrice"
         v-text="'¥' + originalPrice"
       />
     </div>
-    <div
-      :class="$style.agentPrice"
-      v-if="agentPrice"
-    >
+    <div :class="$style.agentPrice" v-if="agentPrice">
       返润笔 ¥{{ agentPrice }}
     </div>
   </div>

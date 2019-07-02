@@ -10,10 +10,10 @@
       <CategoryItem
         v-for="(item, index) in likeProduct"
         :key="index"
+        :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
         :product-id="item.id"
         :product-name="item.productName"
         :product-desc="item.productDesc"
-        :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
         :price="item.productSkuModels.length && item.productSkuModels[0].price"
         :origin-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
       />
@@ -72,9 +72,7 @@ export default {
       getYouLikeData()
         .then(res => {
           for (let list of res.result) {
-            list.productSkuModels.sort((a, b) => {
-              return a.price - b.price
-            })
+            list.productSkuModels.sort((a, b) => a.price - b.price)
           }
           this.likeProduct = res.result
         }).catch(e => {
