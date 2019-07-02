@@ -116,12 +116,26 @@
       <button>知道了</button>
     </div>
 
-    <div :class="$style.buttomTip" v-if="productStatus === 1">
+    <div :class="$style.buttomTip" v-if="!loading && productStatus === 1">
       该商品已下架
     </div>
-    <div :class="$style.buttomTip" v-if="noStock">
+    <div :class="$style.buttomTip" v-if="!loading && noStock">
       该商品已全部售罄，请选择其它商品购买
     </div>
+    <transition name="fade">
+      <div :class="$style.saveHaibao" v-if="showHaibao">
+        <img :src="haibao" alt="">
+        <div :class="$style.saveButton">
+          <button :class="$style.share">
+            立即分享
+          </button>
+          <a :class="$style.saveImg" :href="haibao" download="分享.jpeg">
+            保存图片
+          </a>
+        </div>
+        <pl-svg name="close3" color="#fff" @click="showHaibao = false; haibao = ''" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -180,8 +194,10 @@ export default {
         productId: ''
       },
       agentProduct: false,
+      showHaibao: false,
       loading: false,
       adding: false,
+      haibao: '',
       tab: 2
     }
   },
@@ -246,7 +262,6 @@ export default {
         })
         this.loading = false
       } catch (e) {
-        this.$router.replace({ name: 'SoldOut' })
         throw e
       }
     },
@@ -367,7 +382,8 @@ export default {
             ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1372 + (80 - 56) / 2 + 80 / 4)
             ctx.stroke()
           }
-          console.log(canvas.toDataURL('image/jpeg', 0.7))
+          this.haibao = canvas.toDataURL('image/jpeg', 0.7)
+          this.showHaibao = true
           break
         } catch (e) {
           index++
@@ -514,6 +530,48 @@ export default {
     }
     > p {
       margin-top: 4px;
+    }
+  }
+  .saveHaibao {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .7);
+    z-index: 10000;
+    > img {
+      width: 560px;
+    }
+    .saveButton {
+      margin-top: 48px;
+      > button, a {
+        display: inline-block;
+        text-align: center;
+        width: 228px;
+        line-height: 80px;
+        font-size: 32px;
+        border-radius: 40px;
+      }
+      .share {
+        margin-right: 32px;
+        color: #fff;
+        background-color: #FE7700;
+      }
+      .saveImg {
+        color: #FE7700;
+        background-color: #fff;
+      }
+    }
+    > svg {
+      width: 48px;
+      height: 48px;
+      margin-top: 64px;
+      color: #fff;
     }
   }
 </style>
