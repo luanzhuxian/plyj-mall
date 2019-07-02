@@ -254,7 +254,7 @@ export default {
         direction: 'vertical',
         autoHeight: true,
         autoplay: true,
-        height: window.innerWidth / 750 * 148
+        height: window.innerWidth / 750 * 88
       },
       newFreight: [],
       progress: [],
@@ -531,6 +531,7 @@ export default {
       font-size: 24px;
       color: #666666;
       line-height: 34px;
+      margin-bottom: 16px;
     }
     .logistics-content {
       display: flex;
