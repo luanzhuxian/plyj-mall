@@ -175,7 +175,7 @@ export default {
         }
         this.products = result
         this.total = result.length
-        this.currentPro = this.products[0]
+        this.currentPro = this.products[0] || {}
       } catch (e) {
         throw e
       } finally {

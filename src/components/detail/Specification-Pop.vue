@@ -113,14 +113,6 @@ export default {
     }
   },
   data () {
-    // 所有组合
-    this.allGroup = []
-    // 所有实际存在的组合，如果某些规格被隐藏，会存在理想组合数量不等于实际组合数量的情况
-    this.allGroupActual = []
-    // 所有实际存在且没有禁用的组合
-    // 所有被禁用的组合id
-    this.allDisableGroupActual = []
-
     this.flatSkuAttrList = []
     return {
       showBox: false,
@@ -130,7 +122,14 @@ export default {
       inited: false,
       selected: [],
       localCurrentSku: {},
-      allNoDisableGroupActual: []
+      // 所有组合
+      allGroup: [],
+      // 所有实际存在的组合，如果某些规格被隐藏，会存在理想组合数量不等于实际组合数量的情况
+      allGroupActual: [],
+      // 所有实际存在且没有禁用的组合
+      allNoDisableGroupActual: [],
+      // 所有被禁用的组合id
+      allDisableGroupActual: []
     }
   },
   created () {
@@ -238,12 +237,16 @@ export default {
       let all = this.getAllGroupById(ids[0])
       let disabled = all.filter(item => item.status === 0 || item.stock < item.minBuyNum)
       for (let item of disabled) {
-        let disableAttr = this.flatSkuAttrList.find(attr => attr.id === item.skuCode2)
+        let disableAttr = this.flatSkuAttrList.find(attr => {
+          return item.skuCode2 ? attr.id === item.skuCode2 : attr.id === item.skuCode1
+        })
         this.$set(disableAttr, 'disabled', true)
       }
       let noDisabled = all.filter(item => item.status === 1 && item.stock >= item.minBuyNum)
       for (let item of noDisabled) {
-        let noDisableAttr = this.flatSkuAttrList.find(attr => attr.id === item.skuCode2)
+        let noDisableAttr = this.flatSkuAttrList.find(attr => {
+          return item.skuCode2 ? attr.id === item.skuCode2 : attr.id === item.skuCode1
+        })
         this.$set(noDisableAttr, 'disabled', false)
       }
       let iterator = ids[Symbol.iterator]()
