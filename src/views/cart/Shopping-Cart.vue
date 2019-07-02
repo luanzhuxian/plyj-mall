@@ -134,7 +134,7 @@ export default {
         for (let item of result) {
           // 如果商品已下架或当前规格商品数量不足，禁用
           const currentSku = item.skuModels.find(sku => {
-            return sku.cartSkuCode === item.skuCode1 && sku.cartSkuCode2 === item.skuCode2
+            return sku.skuCode1 === item.cartSkuCode && sku.skuCode2 === item.cartSkuCode2
           })
           item.disabled = currentSku.stock < item.cartProductCount || item.productStatus !== 2
           if (item.disabled) {
