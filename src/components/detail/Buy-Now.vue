@@ -28,14 +28,13 @@
       :sku-list="skuList"
       :sku-attr-list="skuAttrList"
       :sku="currentSku"
-      @change="specChanged"
     >
       <template v-slot:footer="{ currentSku }">
         <pl-button
           type="warning"
           size="large"
           :loading="loading"
-          @click="confirm()"
+          @click="confirm(currentSku)"
         >
           确定
         </pl-button>
@@ -106,30 +105,29 @@ export default {
       this.$emit('click', this)
     },
     // 选中规格
-    async confirm () {
+    async confirm (options) {
       try {
         await this.$nextTick()
         if (this.clickAddToCart) {
-          await this.addToCart()
+          await this.addToCart(options)
         }
         if (this.clickBuyNow) {
-          this.submit()
+          this.submit(options)
         }
       } catch (e) {
         throw e
       }
     },
     // 跳转至提交订单页面
-    async submit () {
-      const { count, skuCode1, skuCode2 = '' } = this.currentSku
+    async submit (options) {
+      const { count, skuCode1, skuCode2 = '' } = options
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
       localStorage.setItem('CONFIRM_LIST', JSON.stringify([{
         productId: this.productId,
-        productCount: count,
-        skuCode: skuCode1,
-        skuCode2,
         count: count,
+        skuCode1: skuCode1,
+        skuCode2,
         agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
@@ -154,9 +152,9 @@ export default {
       }
       this.showSpecifica = true
     },
-    addToCart () {
+    addToCart (options) {
       this.loading = true
-      const { count, skuCode1, skuCode2 = '' } = this.currentSku
+      const { count, skuCode1, skuCode2 = '' } = options
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
       return new Promise(async (resolve, reject) => {
@@ -169,6 +167,7 @@ export default {
             agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
           })
           this.$success('加入成功')
+          this.$emit('update:currentSku', options)
           this.showSpecifica = false
         } catch (e) {
           reject(e)

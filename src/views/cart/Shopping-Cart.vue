@@ -20,8 +20,8 @@
           @change="selectedChange"
         >
           <pl-checkbox
-            v-for="item of products"
-            :key="item.id"
+            v-for="(item, i) of products"
+            :key="i"
             :data="item"
             :gap-column="24"
             border
@@ -29,10 +29,10 @@
             <template v-slot:suffix="{ data }">
               <CartItem
                 :data="data"
-                :key="data.id"
-                :cart-list="products"
+                :key="i"
                 @skuChange="skuChange"
                 @countChange="computeMoney"
+                @skuClick="skuClick(data)"
               />
             </template>
           </pl-checkbox>
@@ -82,6 +82,26 @@
     />
     <CartItemSkeleton v-if="loading" />
     <!--<CartItemSkeleton v-if="loading" />-->
+
+    <SpecificationPop
+      :default-count="currentPro.cartProductCount"
+      :visible.sync="showSpecifica"
+      :sku-attr-list="currentPro.productAttributes"
+      :sku-list="currentPro.skuModels"
+      :product-image="currentPro.productImg"
+      :sku="currentSku"
+    >
+      <template v-slot:footer="{ currentSku, revert }">
+        <pl-button
+          type="warning"
+          size="large"
+          :loading="updating"
+          @click="specChanged(currentSku, revert)"
+        >
+          确定
+        </pl-button>
+      </template>
+    </SpecificationPop>
   </div>
 </template>
 
@@ -89,16 +109,19 @@
 import CartItem from '../../components/item/Cart-Item.vue'
 import NoContent from '../../components/No-Content.vue'
 import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
+import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import {
   getCartList,
-  deleteCartProducts
+  deleteCartProducts,
+  updateCartProductSku
 } from '../../apis/shopping-cart'
 export default {
   name: 'ShoppingCart',
   components: {
     CartItem,
     CartItemSkeleton,
-    NoContent
+    NoContent,
+    SpecificationPop
   },
   data () {
     return {
@@ -108,7 +131,11 @@ export default {
       isManage: false,
       total: 0,
       loading: false,
+      updating: false,
       removing: false,
+      showSpecifica: false,
+      currentPro: {},
+      currentSku: {},
       summation: 0 // 合计
     }
   },
@@ -148,10 +175,57 @@ export default {
         }
         this.products = result
         this.total = result.length
+        this.currentPro = this.products[0]
       } catch (e) {
         throw e
       } finally {
         this.loading = false
+      }
+    },
+    skuClick (data) {
+      this.currentPro = data
+      this.currentSku = this.currentPro.skuModels.find(item => {
+        return item.skuCode1 === this.currentPro.cartSkuCode && item.skuCode2 === this.currentPro.cartSkuCode2
+      })
+      this.$nextTick(() => {
+        this.showSpecifica = true
+      })
+    },
+    // 改变规格
+    async specChanged (option, revert) {
+      try {
+        // 请求修改
+        this.updating = true
+        const { skuCode1, count, skuCode2 } = option
+        const isUpdateSku = await updateCartProductSku({
+          id: this.currentPro.id,
+          skuCode: skuCode1,
+          skuCode2: skuCode2,
+          number: count
+        })
+        // 刷新显示
+        if (isUpdateSku.result) {
+          // 直接修改父组件的数据，也在父组件中监听change事件，通过接口来刷新数据。但是会导致接口调用频繁
+          // 直接修改可以触发计算属性，使得数据真实一致
+          this.currentPro.cartSkuCode = skuCode1
+          this.currentPro.cartSkuCode2 = skuCode2
+          this.currentPro.cartProductCount = count
+          if (this.currentPro.hasOwnProperty('disabled')) {
+            // 修改完成后，取消禁用，如果禁用的话
+            this.currentPro.disabled = false
+          }
+          this.showSpecifica = false
+          this.$set(this.products, this.products.indexOf(this.currentPro), this.currentPro)
+        } else {
+          // 修改失败，回滚选框中的值
+          revert()
+        }
+      } catch (e) {
+        // 修改失败，回滚选框中的值
+        revert()
+        throw e
+      } finally {
+        this.updating = false
       }
     },
     selectedChange (selected) {
@@ -236,7 +310,6 @@ export default {
     },
     // 判断当前规格是否已经存在于购物车中，如果存在，删之
     isDouble (data) {
-      console.log(data)
       let currentSkuCount = this.products.filter(cartPro => {
         return cartPro.cartSkuCode === data.cartSkuCode && cartPro.cartSkuCode2 === data.cartSkuCode2
       })

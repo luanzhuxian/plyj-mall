@@ -4,7 +4,6 @@
       :class="$style.specificationsPop"
       v-show="showSpec"
       @click.self.stop="close"
-      @transitionend="closed"
     >
       <transition name="slide">
         <div :class="$style.specBox" v-show="showBox">
@@ -34,10 +33,9 @@
                   <template v-if="item.productAttributeValues && item.productAttributeValues.length">
                     <template v-for="(s, j) of item.productAttributeValues">
                       <button
-                        v-if="!s.isDisabled && !s.isNoStock"
                         :key="j"
                         @click.stop="change(i, s.id)"
-                        :disabled="s.disabled"
+                        :disabled="s.disabled || s.isNoStock"
                         :class="{ [$style.active]: selected.indexOf(s.id) > -1 }"
                         v-text="s.productAttributeValueName"
                       />
@@ -80,6 +78,7 @@
 
 <script>
 /* eslint-disabled */
+
 export default {
   name: 'SpecificationPop',
   props: {
@@ -114,15 +113,24 @@ export default {
     }
   },
   data () {
+    // 所有组合
+    this.allGroup = []
+    // 所有实际存在的组合，如果某些规格被隐藏，会存在理想组合数量不等于实际组合数量的情况
+    this.allGroupActual = []
+    // 所有实际存在且没有禁用的组合
+    // 所有被禁用的组合id
+    this.allDisableGroupActual = []
+
+    this.flatSkuAttrList = []
     return {
       showBox: false,
       showSpec: false,
       count: 1,
       min: 1,
       inited: false,
-      localData: [],
       selected: [],
-      localCurrentSku: {}
+      localCurrentSku: {},
+      allNoDisableGroupActual: []
     }
   },
   created () {
@@ -136,7 +144,6 @@ export default {
     skuAttrList: {
       handler (val) {
         if (!this.inited && val && val.length > 0) {
-          this.init()
         }
       },
       deep: false,
@@ -144,6 +151,9 @@ export default {
     },
     visible (val) {
       this.setShow(val)
+      if (val) {
+        this.init()
+      }
     },
     // 默认数量变化时，实时更新当前数量
     defaultCount: {
@@ -156,7 +166,7 @@ export default {
       handler (val) {
         this.localCurrentSku = val
       },
-      deep: true
+      immediate: true
     },
     localCurrentSku: {
       handler (val) {
@@ -179,33 +189,31 @@ export default {
       this.revert()
       this.$emit('update:visible', false)
     },
-    closed () {
-      if (!this.visible) {
-        this.$emit('closed')
-      }
-    },
     // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个(禁用的不能选中)，并触发一次change事件
     init () {
       this.selected = []
       this.inited = true
-      if (this.sku.id) {
-        this.selected.push(this.sku.skuCode1)
-        this.selected.push(this.sku.skuCode2 || '')
-      } else {
-        for (let [i, attr] of this.skuAttrList.entries()) {
-          for (let val of attr.productAttributeValues) {
-            let skus = this.skuList.filter(item => item[`skuCode${i + 1}`] === val.id)
-            // 判断此类规格是否全部售罄
-            this.$set(val, 'isNoStock', skus.every(item => item.stock === 0))
-            // 判断此类规格是否全部禁用
-            this.$set(val, 'isDisabled', skus.every(item => item.status === 0))
-          }
-          // 找出没有完全经用的规格
-          let noDisabledOrNoStock = attr.productAttributeValues.filter(item => !item.isNoStock && !item.isDisabled)
-          if (noDisabledOrNoStock.length) {
-            this.selected.push(noDisabledOrNoStock[0].id)
-          }
+      this.getAllGroup()
+      this.getAllGroupActual()
+      for (let [i, attr] of this.skuAttrList.entries()) {
+        for (let val of attr.productAttributeValues) {
+          let skus = this.skuList.filter(item => item[`skuCode${i + 1}`] === val.id)
+          // 判断此类规格是否全部售罄
+          this.$set(val, 'isNoStock', skus.every(item => item.stock < item.minBuyNum))
+          this.flatSkuAttrList.push(val)
         }
+      }
+      // 如果有默认的sku
+      if (this.sku.id) {
+        if (!this.idsIsDisabled([this.sku.skuCode1, this.sku.skuCode2 || ''])) {
+          this.selected.push(this.sku.skuCode1)
+          this.selected.push(this.sku.skuCode2)
+        } else {
+          // 有禁用的
+          this.selected = [...this.allNoDisableGroupActual[0]]
+        }
+      } else {
+        this.selected = [...this.allNoDisableGroupActual[0]]
       }
       this.localCurrentSku = this.setSku(this.selected)
     },
@@ -223,12 +231,29 @@ export default {
       }
     },
     setSku (ids) {
+      let skuList = this.skuList
+      if (this.idsIsDisabled(ids)) {
+        ids = [...this.allNoDisableGroupActual[0]]
+      }
+      let all = this.getAllGroupById(ids[0])
+      let disabled = all.filter(item => item.status === 0 || item.stock < item.minBuyNum)
+      for (let item of disabled) {
+        let disableAttr = this.flatSkuAttrList.find(attr => attr.id === item.skuCode2)
+        this.$set(disableAttr, 'disabled', true)
+      }
+      let noDisabled = all.filter(item => item.status === 1 && item.stock >= item.minBuyNum)
+      for (let item of noDisabled) {
+        let noDisableAttr = this.flatSkuAttrList.find(attr => attr.id === item.skuCode2)
+        this.$set(noDisableAttr, 'disabled', false)
+      }
       let iterator = ids[Symbol.iterator]()
       let skuAttr = iterator.next()
-      let skuList = this.skuList
       let skuNo = 1
+
       while (!skuAttr.done) {
-        skuList = skuList.filter(item => item['skuCode' + skuNo] === skuAttr.value)
+        skuList = skuList.filter(item => {
+          return item['skuCode' + skuNo] === skuAttr.value
+        })
         skuAttr = iterator.next()
         skuNo++
       }
@@ -242,6 +267,69 @@ export default {
     change (index, id) {
       this.selected.splice(index, 1, id)
       this.setSku(this.selected)
+    },
+    // 判断一组id是否禁用
+    idsIsDisabled (ids) {
+      return this.allDisableGroupActual.some(item => {
+        return item.every(id => {
+          return ids.indexOf(id) > -1
+        })
+      })
+    },
+    // 获取所有组合
+    getAllGroup () {
+      let attrs = []
+      for (let attr of this.skuAttrList) {
+        attrs.push(attr.productAttributeValues)
+      }
+      for (let i = 0; i < attrs.length; i++) {
+        let value1 = attrs[i]
+        i++
+        let value2 = attrs[i]
+        for (let val1 of value1) {
+          let group = [val1.id]
+          if (value2) {
+            for (let val2 of value2) {
+              let group = [val1.id, val2.id]
+              this.allGroup.push(group)
+            }
+          } else {
+            this.allGroup.push(group)
+          }
+        }
+      }
+    },
+    // 获取所有实际的组合
+    getAllGroupActual () {
+      this.allDisableGroupActual = []
+      this.allNoDisableGroupActual = []
+      this.allGroupActual = []
+      for (let i of this.skuList) {
+        if (i.stock < i.minBuyNum) {
+          let group = [i.skuCode1]
+          let skuCode2 = i.skuCode2
+          if (skuCode2) {
+            group.push(skuCode2)
+          }
+          this.allDisableGroupActual.push(group)
+          this.allGroupActual.push(group)
+        } else {
+          let group = [i.skuCode1]
+          let skuCode2 = i.skuCode2
+          if (skuCode2) {
+            group.push(skuCode2)
+          }
+          this.allNoDisableGroupActual.push(group)
+          this.allGroupActual.push(group)
+        }
+      }
+      // console.log(this.allDisableGroupActual, 329)
+      // console.log(this.allNoDisableGroupActual, 330)
+      // console.log(this.allGroupActual, 331)
+    },
+    // 用第一个id获取所有组合
+    getAllGroupById (firstId) {
+      return this.skuList.filter(item => item.skuCode1 === firstId)
     },
     countChange () {
       if (this.count === '') return

@@ -18,7 +18,7 @@
       </span>
 
       <template v-else>
-        <div :class="$style.currentSku" @click.stop="showSpecifica = true">
+        <div :class="$style.currentSku" @click.stop="skuClick">
           <div v-if="currentSkuModel">
             <span v-text="currentSkuModel.skuCode1Name" />
             <template v-if="currentSkuModel.skuCode2Name">
@@ -55,46 +55,23 @@
         </pl-button>
       </div>
     </div>
-
-    <SpecificationPop
-      :default-count="count"
-      :sku-list="data.skuModels"
-      :sku-attr-list="data.productAttributes"
-      :product-image="data.productImg"
-      :visible.sync="showSpecifica"
-      :sku="currentSkuModel"
-    >
-      <template v-slot:footer="{ currentSku, revert }">
-        <pl-button
-          type="warning"
-          size="large"
-          @click="specChanged(currentSku, revert)"
-        >
-          确定
-        </pl-button>
-      </template>
-    </SpecificationPop>
   </div>
 </template>
 
 <script>
 import Count from '../../components/Count.vue'
-import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import {
-  updateCartProductCount,
-  updateCartProductSku
+  updateCartProductCount
 } from '../../apis/shopping-cart'
 import { mapGetters } from 'vuex'
 export default {
   name: 'CartItem',
   components: {
-    Count,
-    SpecificationPop
+    Count
   },
   data () {
     return {
       loading: false,
-      showSpecifica: false,
       currentSkuModel: {}
     }
   },
@@ -111,14 +88,6 @@ export default {
     count () {
       return this.data.cartProductCount || 0
     },
-    skuList () {
-      if (Array.isArray(this.data.skuModels)) {
-        this.data.skuModels.map(item => {
-          item.count = item.minBuyNum
-        })
-      }
-      return this.data.skuModels || []
-    },
     // 已选数量是否超出库存
     overflowStock () {
       return this.data.cartProductCount > this.currentSkuModel.stock
@@ -131,53 +100,19 @@ export default {
     }
   },
   watch: {
-    skuList: {
+    data: {
       handler (val) {
-        this.currentSkuModel = val.find(item => {
-          return item.skuCode1 === this.data.cartSkuCode && item.skuCode2 === this.data.cartSkuCode2
-        }) || {}
+        if (val) {
+          this.currentSkuModel = val.skuModels.find(item => {
+            return item.skuCode1 === this.data.cartSkuCode && item.skuCode2 === this.data.cartSkuCode2
+          }) || {}
+        }
       },
-      deep: true,
-      immediate: true
+      immediate: true,
+      deep: true
     }
   },
   methods: {
-    // 改变规格
-    async specChanged (option, revert) {
-      try {
-        // 请求修改
-        const { skuCode1, count, skuCode2 } = option
-        const isUpdateSku = await updateCartProductSku({
-          id: this.id,
-          skuCode: skuCode1,
-          skuCode2: skuCode2,
-          number: count
-        })
-        // 刷新显示
-        if (isUpdateSku.result) {
-          // 直接修改父组件的数据，也在父组件中监听change事件，通过接口来刷新数据。但是会导致接口调用频繁
-          // 直接修改可以触发计算属性，使得数据真实一致
-          this.data.cartSkuCode = skuCode1
-          this.data.cartSkuCode2 = skuCode2
-          this.data.cartProductCount = count
-          if (this.data.hasOwnProperty('disabled')) {
-            // 修改完成后，取消禁用，如果禁用的话
-            this.data.disabled = false
-          }
-          this.$emit('change')
-          this.$emit('skuChange', this.data)
-          this.showSpecifica = false
-          this.currentSkuModel = option
-        } else {
-          // 修改失败，回滚选框中的值
-          revert()
-        }
-      } catch (e) {
-        // 修改失败，回滚选框中的值
-        revert()
-        throw e
-      }
-    },
     async countChange (count, next) {
       try {
         const { result } = await updateCartProductCount({
@@ -205,6 +140,9 @@ export default {
           brokerId: this.agentUser ? this.userId : null
         }
       })
+    },
+    skuClick (e) {
+      this.$emit('skuClick', e)
     }
   }
 }
