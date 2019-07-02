@@ -44,7 +44,7 @@
     <div :class="$style.detailOrComment">
       <div :class="$style.tabs">
         <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
-          雅客评论(1)
+          雅客评论({{ detail.assessmentModelPage.total }})
         </div>
         <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2">
           商品详情

@@ -13,7 +13,7 @@
     <div :class="$style.cartItemContent">
       <div :class="$style.productName" v-text="data.productName" />
 
-      <span :class="$style.unshelve" v-if="data.productStatus === 'UNSHELVE'">
+      <span :class="$style.unshelve" v-if="data.productStatus === 1">
         该商品已失效
       </span>
 
