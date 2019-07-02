@@ -90,13 +90,16 @@
       <swiper :options="goods" style="overflow: visible">
         <swiper-slide v-for="(item, i) of modules.C" :key="i">
           <div :class="$style.slideWrap">
-            <CategoryItem
-              :img="item.productImage && item.productImage[0].mediaUrl+ '?x-oss-process=style/thum-small'"
-              :product-name="item.productName"
-              :product-id="item.sequenceNbr"
-              :is-active="item.agentProduct"
+            <category-item
+              tag="div"
               size="mini"
-              :price="item.priceModels && item.priceModels[0].price"
+              :img="item.productMainImage + '?x-oss-process=style/thum-small'"
+              :is-active="item.agentProduct"
+              :product-id="item.id"
+              :product-name="item.productName"
+              :price="item.productSkuModels.length && item.productSkuModels[0].price"
+              :sale="item.salesVolume"
+              :labels="item.labelModels"
             />
           </div>
         </swiper-slide>
@@ -128,13 +131,16 @@
       <swiper :options="goods" style="overflow: visible">
         <swiper-slide v-for="(item, i) of modules.E" :key="i">
           <div :class="$style.slideWrap">
-            <CategoryItem
-              :img="item.productImage && item.productImage[0].mediaUrl+ '?x-oss-process=style/thum-small'"
-              :product-name="item.productName"
-              :product-id="item.sequenceNbr"
-              :is-active="item.agentProduct"
+            <category-item
+              tag="div"
               size="mini"
-              :price="item.priceModels && item.priceModels[0].price"
+              :img="item.productMainImage + '?x-oss-process=style/thum-small'"
+              :is-active="item.agentProduct"
+              :product-id="item.id"
+              :product-name="item.productName"
+              :price="item.productSkuModels.length && item.productSkuModels[0].price"
+              :sale="item.salesVolume"
+              :labels="item.labelModels"
             />
           </div>
         </swiper-slide>
