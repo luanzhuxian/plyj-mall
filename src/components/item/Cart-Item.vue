@@ -158,6 +158,7 @@ export default {
           // 直接修改父组件的数据，也在父组件中监听change事件，通过接口来刷新数据。但是会导致接口调用频繁
           // 直接修改可以触发计算属性，使得数据真实一致
           this.data.cartSkuCode = skuCode1
+          this.data.cartSkuCode2 = skuCode2
           this.data.cartProductCount = count
           if (this.data.hasOwnProperty('disabled')) {
             // 修改完成后，取消禁用，如果禁用的话

@@ -236,8 +236,9 @@ export default {
     },
     // 判断当前规格是否已经存在于购物车中，如果存在，删之
     isDouble (data) {
+      console.log(data)
       let currentSkuCount = this.products.filter(cartPro => {
-        return cartPro.cartSkuCode === data.cartSkuCode && cartPro.cartSkuCode2 === data.cartSkuCode
+        return cartPro.cartSkuCode === data.cartSkuCode && cartPro.cartSkuCode2 === data.cartSkuCode2
       })
       if (currentSkuCount.length >= 2) {
         this.products.splice(this.products.indexOf(data), 1)
