@@ -52,7 +52,7 @@ export default {
 </script>
 <style module lang="scss">
   .detail-info {
-    padding: 0 $--slide-padding;
+    padding: 30px 40px ;
     h3 {
       margin-bottom: 28px;
       font-size: 32px;

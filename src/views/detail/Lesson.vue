@@ -43,11 +43,11 @@
 
     <div :class="$style.detailOrComment">
       <div :class="$style.tabs">
-        <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
-          雅客评论({{ detail.assessmentModelPage.total }})
-        </div>
         <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2">
           商品详情
+        </div>
+        <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
+          雅客评论({{ detail.assessmentModelPage.total }})
         </div>
       </div>
 
@@ -72,11 +72,8 @@
     <!--<div class="slide-padding mt-28">-->
     <!--<ApplicableTime time="请购买后向商家咨询！" />-->
     <!--</div>-->
-    <div class="slide-padding mt-80">
-      <MaybeYouLike
-        title="商家推荐"
-        :product-id="productId"
-      />
+    <div style="background-color: #f4f5f9;">
+      <you-like :is-my="true" />
     </div>
 
     <buy-now
@@ -94,7 +91,7 @@
       :sku-attr-list="detail.productAttributes"
       :product-image="detail.productMainImage"
       :visible.sync="showSpecifica"
-      :sku="currentModel"
+      :sku.sync="currentModel"
     >
       <template v-slot:footer="{ currentSku }">
         <div :class="$style.buttons">
@@ -130,11 +127,12 @@ import Tags from '../../components/detail/Tags.vue'
 import Price from '../../components/Price.vue'
 import Field from '../../components/detail/Field.vue'
 import { getProductDetail } from '../../apis/product'
-import MaybeYouLike from '../../components/Maybe-You-Like.vue'
+// import MaybeYouLike from '../../components/Maybe-You-Like.vue'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
 import { addToCart } from '../../apis/shopping-cart'
+import youLike from './../old-home/YouLike.vue'
 
 export default {
   name: 'Lesson',
@@ -150,7 +148,8 @@ export default {
     BuyNow,
     DetailInfoBox,
     SpecificationPop,
-    MaybeYouLike
+    // MaybeYouLike,
+    youLike
   },
   data () {
     return {
@@ -221,9 +220,7 @@ export default {
         this.commentForm.productId = id
         this.agentProduct = agentProduct
         // 所有图片
-        for (let item of mediaInfoIds) {
-          this.banners.push(item.mediaUrl)
-        }
+        this.banners = mediaInfoIds
         this.detail = result
         this.productSkuModels = result.productSkuModels
         share({

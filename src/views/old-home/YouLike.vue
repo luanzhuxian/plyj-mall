@@ -91,6 +91,7 @@ export default {
   .like {
     margin-top: 60px;
     padding: 0 32px;
+    background-color: transparent;
   }
   .title {
     font-size: 32px;
