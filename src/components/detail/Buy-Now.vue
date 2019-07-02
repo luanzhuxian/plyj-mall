@@ -1,7 +1,9 @@
 <template>
   <div :class="$style.buyNow">
     <div :class="$style.phone">
-      <a :class="$style.link" :href="'tel:' + supportPhone"><pl-svg name="phone" /></a>
+      <a :class="$style.link" :href="'tel:' + supportPhone">
+        <pl-svg name="phone" />
+      </a>
       <router-link :class="$style.link" :to="{ name: 'Home' }">
         <pl-svg name="home" />
       </router-link>

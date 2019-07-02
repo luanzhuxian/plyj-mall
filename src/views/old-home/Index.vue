@@ -214,8 +214,8 @@
   </div>
 </template>
 <script>
-import TopText from '../../components/Top-Text.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import TopText from '../../components/Top-Text.vue'
 import YouLike from './YouLike.vue'
 import CategoryItem from './CategoryItem.vue'
 import { getHomeData, getHomeProduct } from '../../apis/home'

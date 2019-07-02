@@ -1,20 +1,11 @@
 <template>
   <div :class="$style.personalCenter">
     <div :class="$style.top">
-      <img
-        :src="avatar"
-        alt="头像"
-      >
+      <img :src="avatar" alt="头像">
       <div :class="$style.basicInfo">
-        <span
-          :class="$style.main"
-          v-text="userName"
-        />
+        <span :class="$style.main" v-text="userName" />
         <div :class="$style.sub">
-          <span
-            :class="$style.level"
-            v-text="roleName"
-          />
+          <span :class="$style.level" v-text="roleName" />
           <router-link
             v-if="isApplyBtnShow"
             :class="$style.applyBtn"
@@ -22,33 +13,22 @@
           >
             <pl-svg name="helper-apply" />
           </router-link>
-          <div
-            v-if="!agentUser && isApplied"
-            :class="$style.progress"
-          >
-            <span :class="$style.progressLeft">
-              {{ applicationMap[applyStatus] || '' }}
-            </span>
+          <div v-if="!agentUser && isApplied" :class="$style.progress">
             <span
               v-if="applyStatus === 'AWAIT'"
+              :class="$style.progressLeft"
+              v-text="'Helper审核中...'"
+            />
+            <span
               :class="$style.progressRight"
               @click="isModalShow = true"
               v-text="'查看进度'"
-            />
-            <router-link
-              v-if="applyStatus === 'REJECT'"
-              :class="$style.progressRight"
-              :to="{ name: 'ApplyHelper' }"
-              v-text="'重新申请'"
             />
           </div>
         </div>
       </div>
       <div :class="$style.setting">
-        <router-link
-          v-if="!isAdmin"
-          :to="{ name: 'Setting' }"
-        >
+        <router-link v-if="!isAdmin" :to="{ name: 'Setting' }">
           <pl-svg name="setting-white" />
         </router-link>
       </div>
@@ -72,10 +52,7 @@
           <p>今日润笔（元）</p>
           <p v-text="currentBalance || '0.00'" />
         </div>
-        <pl-svg
-          :class="$style.myRight"
-          name="my-right"
-        />
+        <pl-svg :class="$style.myRight" name="my-right" />
       </router-link>
       <!-- 我的订单 -->
       <div :class="$style.panel">
@@ -119,40 +96,25 @@
             <pl-svg name="my-order-list" />
           </router-link>
         </div>
-        <div
-          v-if="newFreight.length > 0"
-          :class="$style.newLogistics"
-        >
+        <div v-if="newFreight.length > 0" :class="$style.newLogistics">
           <div :class="$style.logisticsTitle">
             最新物流
           </div>
-          <swiper
-            :options="swiperOption"
-            style="overflow: hidden;"
-          >
+          <swiper :options="swiperOption" style="overflow: hidden;">
             <swiper-slide
               :class="$style.swiperSlide"
               v-for="(item, i) of newFreight"
               :key="i"
             >
-              <router-link
-                :class="$style.logisticsContent"
-                :to="{ name: 'Freight', params: { orderId: item.orderId } }"
-              >
+              <router-link :class="$style.logisticsContent" :to="{ name: 'Freight', params: { orderId: item.orderId } }">
                 <div :class="$style.contentLeft">
-                  <img
-                    v-img-error
-                    :src="item.productImageUrls[0]"
-                  >
+                  <img v-img-error :src="item.productImageUrls[0]">
                 </div>
                 <div :class="$style.contentRight">
                   <div :class="$style.deliveryStatus">
                     派送中
                   </div>
-                  <div
-                    :class="$style.deliveryDetails"
-                    v-text="item.orderLogisticTrackModel.content"
-                  />
+                  <div :class="$style.deliveryDetails" v-text="item.orderLogisticTrackModel.content" />
                 </div>
               </router-link>
             </swiper-slide>
@@ -167,10 +129,7 @@
         <span :class="$style.tipCircle" />
         <span>成为Helper，第一桶金从这里开始>></span>
       </router-link>
-      <you-like
-        :class="$style.recommend"
-        :is-my="true"
-      />
+      <you-like :class="$style.recommend" :is-my="true" />
     </div>
     <modal
       ref="modal"
@@ -183,7 +142,7 @@
       <Progress
         :class="$style.progressModal"
         :steps="progress"
-        :active="1"
+        :active="0"
       />
     </modal>
 
@@ -239,10 +198,6 @@ export default {
   },
   data () {
     return {
-      applicationMap: {
-        'AWAIT': 'Helper审核中...',
-        'REJECT': '申请被驳回'
-      },
       count: {
         WAIT_PAY: 0,
         WAIT_SHIP: 0,
@@ -267,7 +222,7 @@ export default {
     isApplyBtnShow () {
       return !this.agentUser &&
         (this.roleCode === 'MEMBERSHIP' || this.roleCode === 'VISITOR') &&
-        this.applyStatus === 'NOT_APPLY'
+        (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT')
     },
     // 是否申请过helper
     isApplied () {
@@ -317,20 +272,21 @@ export default {
       try {
         const { result } = await getHelperApplicationProgress()
         this.applyStatus = result ? result.status : 'NOT_APPLY'
-        if (result) {
-          if (result.status === 'AWAIT') {
-            this.progress = [{
-              text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
-            }, {
-              text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
-            }]
-          } else if (result.status === 'REJECT') {
-            this.progress = [{
-              text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
-            }, {
-              text: '认证申请被驳回；', desc: '请重新申请认证'
-            }]
-          }
+        if (!result) return
+        if (result.status === 'AWAIT') {
+          this.progress = [{
+            text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
+          }, {
+            text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
+          }]
+        } else if (result.status === 'REJECT') {
+          this.progress = [{
+            text: 'Helper认证资料被驳回', desc: result.auditTime.replace(/-/g, '.')
+          }, {
+            text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
+          }, {
+            text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
+          }]
         }
       } catch (e) {
         throw e
@@ -405,6 +361,7 @@ export default {
     }
     .apply-btn {
       margin-left: 32px;
+      margin-right: -16px;
       height: 44px;
       line-height: 44px;
       svg {

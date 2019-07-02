@@ -7,16 +7,9 @@
         class="hairline step step--vertical"
         :class="{ 'step--finish': index < active, 'step--process' : index === active }"
       >
-        <div
-          class="step__title"
-          style="{ color: index === active ? activeColor : '' }"
-        >
-          <div>
-            {{ item.text }}
-          </div>
-          <div class="step__title-desc">
-            {{ item.desc }}
-          </div>
+        <div class="step__title" style="{ color: index === active ? activeColor : '' }">
+          <div v-text="item.text" />
+          <div class="step__title-desc" v-text="item.desc" />
         </div>
         <div class="step__circle-container">
           <div
@@ -33,8 +26,12 @@
         <div
           v-if="index !== steps.length - 1"
           class="step__line step__line--after"
-          :style="{ backgroundColor: (index < active + 1) ? activeColor : '' }"
         />
+        <!-- <div
+          v-if="index !== steps.length - 1"
+          class="step__line step__line--after"
+          :style="{ backgroundColor: (index < active + 1) ? activeColor : '' }"
+        /> -->
       </div>
     </div>
   </div>

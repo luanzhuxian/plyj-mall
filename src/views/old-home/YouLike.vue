@@ -1,15 +1,9 @@
 <template>
-  <div
-    :class="$style.like"
-    v-if="likeProduct.length > 0"
-  >
+  <div v-if="likeProduct.length > 0" :class="$style.like">
     <div v-if="isMy" :class="$style.titleMy">
       <img src="../../assets/images/my/youLike.png">
     </div>
-    <div
-      v-else
-      :class="$style.title"
-    >
+    <div v-else :class="$style.title">
       猜你喜欢
     </div>
     <div :class="$style.likeGoodsList">
