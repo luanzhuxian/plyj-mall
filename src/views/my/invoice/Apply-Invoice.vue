@@ -145,6 +145,7 @@
             <img
               :class="$style.proImg"
               :src="pro.productImg"
+              v-img-error
               alt=""
             >
             <pl-svg

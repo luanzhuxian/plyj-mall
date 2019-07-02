@@ -30,7 +30,6 @@
               <CartItem
                 :data="data"
                 :key="i"
-                @skuChange="skuChange"
                 @countChange="computeMoney"
                 @skuClick="skuClick(data)"
               />
@@ -216,6 +215,8 @@ export default {
           }
           this.showSpecifica = false
           this.$set(this.products, this.products.indexOf(this.currentPro), this.currentPro)
+          this.computeMoney()
+          this.isDouble(option)
         } else {
           // 修改失败，回滚选框中的值
           revert()
@@ -305,17 +306,16 @@ export default {
     },
     // 规格变化
     skuChange (data) {
-      this.isDouble(data)
-      this.computeMoney()
     },
     // 判断当前规格是否已经存在于购物车中，如果存在，删之
-    isDouble (data) {
+    isDouble (options) {
+      // 查找此规格对应的商品
       let currentSkuCount = this.products.filter(cartPro => {
-        return cartPro.cartSkuCode === data.cartSkuCode && cartPro.cartSkuCode2 === data.cartSkuCode2
+        return cartPro.cartSkuCode === options.skuCode1 && cartPro.cartSkuCode2 === options.skuCode2
       })
       if (currentSkuCount.length >= 2) {
-        this.products.splice(this.products.indexOf(data), 1)
-        this.checkedList.splice(this.checkedList.indexOf(data), 1)
+        this.products.splice(this.products.indexOf(currentSkuCount[0]), 1)
+        this.checkedList.splice(this.checkedList.indexOf(currentSkuCount[0]), 1)
       }
     }
   }

@@ -30,15 +30,15 @@ export default {
   },
   props: {
     max: {
-      type: Number,
+      type: [Number, String],
       default: Number.MAX_VALUE
     },
     min: {
-      type: Number,
+      type: [Number, String],
       default: 1
     },
     count: {
-      type: Number,
+      type: [Number, String],
       default: 1
     }
   },
