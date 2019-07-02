@@ -98,8 +98,8 @@ export default {
         background-color: $--font-color_gray3;
       }
       &.plain {
-        color: $--font-color_gray3;
-        background-color: #fff;
+        color: #666;
+        background-color: transparent;
       }
     }
     /* 主色调 */

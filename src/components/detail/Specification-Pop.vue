@@ -262,6 +262,7 @@ export default {
       this.count = this.min
       this.localCurrentSku = skuList[0]
       this.$emit('change', this.localCurrentSku)
+      this.$emit('update:sku', this.localCurrentSku)
       return skuList[0]
     },
     change (index, id) {

@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.soldOut">
     <pl-svg name="sold-out" />
-    <p>抱歉，该商品已下架</p>
+    <p>抱歉，该商品已删除</p>
     <pl-button
       plain
       size="middle"
       @click="$router.replace({ name: 'Home' })"
     >
-      返回首页
+      去逛商城
     </pl-button>
   </div>
 </template>
@@ -24,9 +24,10 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    padding-top: 120px;
+    height: 500px;
     svg {
-      width: 420px;
+      width: 442px;
     }
     P {
       font-size: 32px;

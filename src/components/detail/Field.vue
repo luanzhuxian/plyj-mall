@@ -27,7 +27,9 @@ export default {
   },
   methods: {
     clickHandler (e) {
-      this.$emit('click', e)
+      if (this.canClick) {
+        this.$emit('click', e)
+      }
     }
   }
 }
