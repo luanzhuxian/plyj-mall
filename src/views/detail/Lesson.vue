@@ -17,7 +17,13 @@
               :original-price="currentOriginalPrice"
             />
             <div :class="$style.count">
-              <span v-text="detail.showSalesVolume" />人购买
+              <span v-if="detail.pageviews === 0 && detail.salesVolume">正在热销中</span>
+              <template v-else-if="detail.salesVolume > 0 && detail.salesVolume < 10">
+                <span v-text="detail.pageviews" />人已关注
+              </template>
+              <template v-else-if="detail.salesVolume > 10">
+                <span v-text="detail.salesVolume" />人购买
+              </template>
             </div>
           </div>
           <div :class="$style.priceRight" v-if="currentModel.realRebate">

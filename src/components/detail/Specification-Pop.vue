@@ -12,7 +12,7 @@
               <img
                 v-if="localCurrentSku.skuImage"
                 v-img-error
-                :src="localCurrentSku.skuImage[0] || productImage + '?x-oss-process=style/thum'"
+                :src="(localCurrentSku.skuImage[0] || productImage) + '?x-oss-process=style/thum'"
                 alt=""
               >
               <div :class="$style.baseInfoRight">
