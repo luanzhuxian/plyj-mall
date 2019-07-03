@@ -12,7 +12,7 @@
               <img
                 v-if="currentSku.skuImage"
                 v-img-error
-                :src="(currentSku.skuImage[0] || productImage) + '?x-oss-process=style/thum'"
+                :src="skuImage + '?x-oss-process=style/thum'"
                 alt=""
               >
               <div :class="$style.baseInfoRight">
@@ -41,7 +41,7 @@
             </div>
             <!-- 规格2 -->
             <div :class="$style.color" v-if="skuCode2List.length && skuAttrList.length > 1">
-              <div v-text="skuAttrList[0].productAttributeName" />
+              <div v-text="skuAttrList[1].productAttributeName" />
               <div :class="$style.colorList">
                 <button
                   v-for="(item, i) of skuCode2List"
@@ -170,6 +170,10 @@ export default {
     },
     currentSku () {
       return this.skuList.find(item => item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2) || {}
+    },
+    skuImage () {
+      let currentSku1 = this.skuAttrList[0].productAttributeValues.find(item => item.id === this.currentSku1)
+      return currentSku1.productAttributeImage[0] || this.productImage
     }
   },
   methods: {
