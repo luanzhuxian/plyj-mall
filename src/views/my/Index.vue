@@ -100,7 +100,7 @@
           <div :class="$style.logisticsTitle">
             最新物流
           </div>
-          <swiper :options="swiperOption" style="overflow: hidden;">
+          <swiper :options="swiperOption" :height="swiperHeight" style="overflow: hidden;">
             <swiper-slide
               :class="$style.swiperSlide"
               v-for="(item, i) of newFreight"
@@ -209,7 +209,7 @@ export default {
         direction: 'vertical',
         autoHeight: true,
         autoplay: true,
-        height: window.innerWidth / 750 * 88
+        height: this.swiperHeight || window.innerWidth / 750 * 88
       },
       newFreight: [],
       progress: [],
@@ -228,6 +228,9 @@ export default {
     isApplied () {
       return this.applyStatus === 'AWAIT' ||
         this.applyStatus === 'REJECT'
+    },
+    swiperHeight () {
+      return window.innerWidth / 750 * 88
     }
   },
   async activated () {
@@ -278,6 +281,9 @@ export default {
       try {
         const { result } = await getHelperApplicationProgress()
         this.applyStatus = result ? result.status : 'NOT_APPLY'
+        console.log('agentUser', this.agentUser)
+        console.log('roleCode', this.roleCode)
+        console.log('applyStatus', this.applyStatus)
         if (!result) return
         if (result.status === 'AWAIT') {
           this.progress = [{
