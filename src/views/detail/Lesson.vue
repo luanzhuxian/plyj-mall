@@ -303,7 +303,7 @@ export default {
             skuCode2,
             agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
           })
-          this.$success('加入成功')
+          this.$success('已添加到购物车')
           this.showSpecifica = false
           this.getCartCount()
         } catch (e) {
