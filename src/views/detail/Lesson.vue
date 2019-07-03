@@ -158,7 +158,8 @@ import { getProductDetail } from '../../apis/product'
 // import MaybeYouLike from '../../components/Maybe-You-Like.vue'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
 import youLike from './../old-home/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
@@ -244,6 +245,9 @@ export default {
     sessionStorage.setItem('shareBrokerId', this.brokerId || '')
   },
   methods: {
+    ...mapActions({
+      getCartCount: GET_CART_COUNT
+    }),
     async getDetail () {
       this.loading = true
       this.resetState() // 重置一些状态
@@ -301,6 +305,7 @@ export default {
           })
           this.$success('加入成功')
           this.showSpecifica = false
+          this.getCartCount()
         } catch (e) {
           reject(e)
         } finally {
@@ -396,8 +401,8 @@ export default {
           ctx.strokeStyle = '#999'
           ctx.beginPath()
           ctx.lineWidth = '4'
-          ctx.moveTo(96 + priceWidth + 44, 1372 + (80 - 56) / 2 + 80 / 4)
-          ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1372 + (80 - 56) / 2 + 80 / 4)
+          ctx.moveTo(96 + priceWidth + 44, 1372 + (80 - 56) / 2 + 80 / 3)
+          ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1372 + (80 - 56) / 2 + 80 / 3)
           ctx.stroke()
         }
         this.haibao = canvas.toDataURL('image/jpeg', 0.7)

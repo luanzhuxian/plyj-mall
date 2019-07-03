@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 export default {
@@ -111,7 +112,13 @@ export default {
   deactivated () {
     this.reset()
   },
+  mounted () {
+    this.getCartCount()
+  },
   methods: {
+    ...mapActions({
+      getCartCount: GET_CART_COUNT
+    }),
     handleClick () {
       this.$emit('click', this)
     },
@@ -179,6 +186,7 @@ export default {
           })
           this.$success('已添加到购物车')
           this.$emit('update:currentSku', options)
+          this.getCartCount()
           this.showSpecifica = false
         } catch (e) {
           reject(e)

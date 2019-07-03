@@ -4,7 +4,8 @@ import {
   getOpenId,
   getUserInfo,
   login,
-  refreshToken
+  refreshToken,
+  getCartCount
 } from '../apis/base-api'
 import {
   getAddress
@@ -128,8 +129,14 @@ export default {
       }
     })
   },
-  [type.GET_CART_COUNT]: ({ commit, satte, dispatch }) => {
-    return new Promise((resolve, reject) => {
+  [type.GET_CART_COUNT]: ({ commit }) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { result } = await getCartCount()
+        commit(type.GET_CART_COUNT, result)
+      } catch (e) {
+        reject(e)
+      }
     })
   }
 }

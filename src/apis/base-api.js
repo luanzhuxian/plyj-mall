@@ -47,3 +47,6 @@ export const refreshToken = refreshToken => axios.get(`/apis/v1/privilege/auth/r
 // 修改用户头像，昵称
 export const userInfoSettings = data =>
   axios.post('/apis/v1/base/baseUserInfo/settings', data)
+// 获取购物车数量
+export const getCartCount = () =>
+  axios.get('/apis/v1/mall/shopping_cart/query/count')
