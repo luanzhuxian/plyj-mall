@@ -59,7 +59,7 @@
             商品详情
           </div>
           <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
-            雅客评论({{ detail.assessmentModelPage.total }})
+            雅客评论({{ detail.assessmentCount }})
           </div>
         </div>
 
@@ -188,9 +188,7 @@ export default {
     return {
       banners: [],
       productStatus: 2,
-      detail: {
-        assessmentModelPage: {}
-      },
+      detail: {},
       productSkuModels: [],
       showSpecifica: false,
       currentModel: {}, // 当前选中的规格
@@ -325,6 +323,7 @@ export default {
       canvas.height = 1528
       let imgs = this.detail.mediaInfoIds
       let index = 0
+      this.showHaibao = true
       // 加载一张正确的图片
       while (index < imgs.length) {
         try {
@@ -339,8 +338,7 @@ export default {
           ctx.fillStyle = '#000'
           ctx.textBaseline = 'top'
           // 填充商品名称
-          // let str = this.detail.productName
-          let str = '拉山口感觉按实际开来多个和啊卡金色的光辉'
+          let str = this.detail.productName
           let charArr = []
           let strArr = []
           let txtWidth = 0
@@ -389,7 +387,6 @@ export default {
             ctx.stroke()
           }
           this.haibao = canvas.toDataURL('image/jpeg', 0.7)
-          this.showHaibao = true
           break
         } catch (e) {
           index++
@@ -552,6 +549,8 @@ export default {
     z-index: 10000;
     > img {
       width: 560px;
+      height: 764px;
+      object-fit: cover;
     }
     .saveButton {
       margin-top: 48px;
