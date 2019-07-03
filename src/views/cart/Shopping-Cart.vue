@@ -84,11 +84,11 @@
     <!--<CartItemSkeleton v-if="loading" />-->
 
     <SpecificationPop
-      :default-count="currentPro.cartProductCount"
+      :default-count="cartProductCount"
       :visible.sync="showSpecifica"
-      :sku-attr-list="currentPro.productAttributes"
-      :sku-list="currentPro.skuModels"
-      :product-image="currentPro.productImg"
+      :sku-attr-list="productAttributes"
+      :sku-list="skuModels"
+      :product-image="productImg"
       :sku="currentSku"
     >
       <template v-slot:footer="{ currentSku, revert }">
@@ -137,6 +137,20 @@ export default {
       currentPro: {},
       currentSku: {},
       summation: 0 // 合计
+    }
+  },
+  computed: {
+    productAttributes () {
+      return this.currentPro.productAttributes || []
+    },
+    skuModels () {
+      return this.currentPro.skuModels || []
+    },
+    cartProductCount () {
+      return this.currentPro.cartProductCount || 1
+    },
+    productImg () {
+      return this.currentPro.productImg || ''
     }
   },
   created () {
