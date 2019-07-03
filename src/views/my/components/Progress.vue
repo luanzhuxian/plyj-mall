@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="pl-progress steps--vertical">
-    <div class="step__wrapper">
+    <div class="step__wrapper" v-if="steps.length">
       <div
         v-for="(item, index) of steps"
         :key="index"
@@ -33,6 +33,9 @@
           :style="{ backgroundColor: (index < active + 1) ? activeColor : '' }"
         /> -->
       </div>
+    </div>
+    <div class="no-content" v-else>
+      没找到您要的信息。。。
     </div>
   </div>
 </template>
@@ -158,6 +161,16 @@ export default {
       }
     }
   }
+}
+
+.no-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #999;
+  width: 100%;
+  text-align: center;
 }
 
 .steps--vertical {

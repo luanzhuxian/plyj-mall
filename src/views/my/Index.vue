@@ -60,33 +60,33 @@
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
             <pl-svg name="wait-pay" />
             <span
-              :class="$style.badge"
+              :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_PAY > 99 }"
               v-if="count.WAIT_PAY"
-              v-text="count.WAIT_PAY"
+              v-text="count.WAIT_PAY > 99 ? '99+' : count.WAIT_PAY"
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
             <pl-svg name="wait-ship" />
             <span
-              :class="$style.badge"
+              :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_SHIP > 99 }"
               v-if="count.WAIT_SHIP"
-              v-text="count.WAIT_SHIP"
+              v-text="count.WAIT_SHIP > 99 ? '99+' : count.WAIT_SHIP"
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
             <pl-svg name="wait-receive" />
             <span
-              :class="$style.badge"
+              :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_RECEIVE > 99 }"
               v-if="count.WAIT_RECEIVE"
-              v-text="count.WAIT_RECEIVE"
+              v-text="count.WAIT_RECEIVE > 99 ? '99+' : count.WAIT_RECEIVE"
             />
           </router-link>
           <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
             <pl-svg name="after-sale" />
             <span
-              :class="$style.badge"
+              :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.AFTER_SALE > 99 }"
               v-if="count.AFTER_SALE"
-              v-text="count.AFTER_SALE"
+              v-text="count.AFTER_SALE > 99 ? '99+' : count.AFTER_SALE"
             />
           </router-link>
           <div :class="$style.segmentation">
@@ -100,7 +100,7 @@
           <div :class="$style.logisticsTitle">
             最新物流
           </div>
-          <swiper :options="swiperOption" :height="swiperHeight" style="overflow: hidden;">
+          <swiper :options="swiperOption" style="overflow: hidden;">
             <swiper-slide
               :class="$style.swiperSlide"
               v-for="(item, i) of newFreight"
@@ -145,27 +145,6 @@
         :active="0"
       />
     </modal>
-
-    <!--    <div :class="$style.setting + ' radius-20'">-->
-    <!--      <pl-fields-->
-    <!--        icon="coffers"-->
-    <!--        :icon-gap="16"-->
-    <!--        text="小金库"-->
-    <!--        :route="{ name: 'Coffers' }"-->
-    <!--      />-->
-    <!--      <pl-fields-->
-    <!--        icon="address"-->
-    <!--        :icon-gap="16"-->
-    <!--        text="地址管理"-->
-    <!--        :route="{ name: 'Address' }"-->
-    <!--      />-->
-    <!--      <pl-fields-->
-    <!--        icon="setting"-->
-    <!--        :icon-gap="16"-->
-    <!--        text="账号设置"-->
-    <!--        :route="{ name: 'Setting' }"-->
-    <!--      />-->
-    <!--    </div>-->
   </div>
 </template>
 
@@ -209,11 +188,11 @@ export default {
         direction: 'vertical',
         autoHeight: true,
         autoplay: true,
-        height: this.swiperHeight || window.innerWidth / 750 * 88
+        height: window.innerWidth / 750 * 88
       },
       newFreight: [],
       progress: [],
-      applyStatus: '',
+      applyStatus: 'NOT_APPLY',
       isModalShow: false
     }
   },
@@ -227,9 +206,6 @@ export default {
     isApplied () {
       return this.applyStatus === 'AWAIT' ||
         this.applyStatus === 'REJECT'
-    },
-    swiperHeight () {
-      return window.innerWidth / 750 * 88
     }
   },
   async activated () {
@@ -249,7 +225,6 @@ export default {
   },
   deactivated () {
     this.isModalShow = false
-    this.applyStatus = ''
     this.progress = []
     this.newFreight = []
   },
@@ -279,10 +254,7 @@ export default {
     async getProgress () {
       try {
         const { result } = await getHelperApplicationProgress()
-        this.applyStatus = result ? result.status : 'NOT_APPLY'
-        console.log('agentUser', this.agentUser)
-        console.log('roleCode', this.roleCode)
-        console.log('applyStatus', this.applyStatus)
+        this.applyStatus = (result && result.status) ? result.status : 'NOT_APPLY'
         if (!result) return
         if (result.status === 'AWAIT') {
           this.progress = [{
@@ -473,15 +445,25 @@ export default {
       position: absolute;
       top: -14px;
       right: -28px;
-      width: 56px;
-      height: 56px;
-      line-height: 54px;
+      width: 50px;
+      height: 50px;
+      line-height: 48px;
       font-size: 28px;
       transform: scale(.5);
       transform-origin: 0 0;
       color: #fff;
-      background: url("../../assets/images/my/circle.png") no-repeat center center;
+      // background: url("../../assets/images/my/circle.png") no-repeat center center;
+      background-color: #F2B036;
       background-size: 100%;
+      border-radius: 50%;
+      &.badge-after-sale {
+        right: -10px;
+      }
+      &.oval {
+        padding: 0 10px;
+        width: auto;
+        right: -40px;
+      }
     }
     .segmentation {
       position: absolute;
