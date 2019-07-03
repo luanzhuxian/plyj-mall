@@ -72,6 +72,9 @@
                 <button :disabled="count >= localCurrentSku.stock || currentDisabled" @click.stop="add">
                   +
                 </button>
+                <p :class="$style.residue">
+                  余<i v-text="residue" />件
+                </p>
               </div>
             </div>
           </div>
@@ -175,6 +178,9 @@ export default {
     skuImage () {
       let currentSku1 = this.skuAttrList[0].productAttributeValues.find(item => item.id === this.currentSku1)
       return currentSku1.productAttributeImage ? currentSku1.productAttributeImage[0] || this.productImage : this.productImage
+    },
+    residue () {
+      return this.localCurrentSku.stock - this.count || 0
     }
   },
   methods: {
@@ -390,6 +396,7 @@ export default {
   .count {
     > .countCtr {
       display: flex;
+      align-items: center;
       height: 60px;
       button {
         height: 60px;
@@ -416,6 +423,11 @@ export default {
         }
       }
     }
+  }
+  .residue {
+    margin-left: 20px;
+    font-size: 24px;
+    color: #999;
   }
   .footer {
     position: relative;
