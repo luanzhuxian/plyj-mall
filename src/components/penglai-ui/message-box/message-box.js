@@ -8,7 +8,7 @@ let confirm = (config = {}) => {
   return new Promise((resolve, reject) => {
     document.body.appendChild(Instance.$el)
     Instance.$nextTick(() => {
-      let { cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon } = config
+      let { cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, closeOnClickMask = true } = config
       Instance.message = message
       Instance.viceMessage = viceMessage
       if (typeof config === 'string') {
@@ -19,6 +19,7 @@ let confirm = (config = {}) => {
       Instance.icon = icon
       Instance.type = 'confirm'
       Instance.show = true
+      Instance.closeOnClickMask = closeOnClickMask
       Instance.$on('cancel', function () {
         reject(new Error(''))
       })

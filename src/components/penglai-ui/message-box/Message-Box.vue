@@ -3,7 +3,7 @@
     <div
       class="message-box"
       v-if="showMask"
-      @click.self="() => { isClickMaskDisable ? '' : handleCancel() }"
+      @click.self="() => { closeOnClickMask ? handleCancel() : '' }"
       @transitionend="closed"
     >
       <transition
@@ -99,8 +99,11 @@ export default {
       type: String,
       default: 'confirm'
     },
-    // 禁用点击浮层关闭
-    isClickMaskDisable: Boolean
+    // 点击浮层是否关闭
+    closeOnClickMask: {
+      type: Boolean,
+      default: true
+    }
   },
   watch: {
     show: function (val) {
