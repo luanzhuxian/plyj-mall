@@ -131,16 +131,13 @@
     </div>
     <transition name="fade">
       <div :class="$style.saveHaibao" v-if="showHaibao">
-        <img :src="haibao" alt="">
-        <div :class="$style.saveButton">
-          <button :class="$style.share">
-            立即分享
-          </button>
-          <a :class="$style.saveImg" :href="haibao" download="分享.jpeg">
-            保存图片
-          </a>
+        <div :class="$style.saveHaibaoContent">
+          <img :src="haibao" alt="">
+          <div :class="$style.saveButton">
+            长按识别或保存二维码，分享给朋友吧！
+          </div>
+          <pl-svg name="close3" color="#fff" @click="showHaibao = false;" />
         </div>
-        <pl-svg name="close3" color="#fff" @click="showHaibao = false;" />
       </div>
     </transition>
   </div>
@@ -553,36 +550,35 @@ export default {
     height: 100%;
     background-color: rgba(0, 0, 0, .7);
     z-index: 10000;
-    > img {
-      width: 560px;
-      height: 764px;
-      object-fit: cover;
-    }
-    .saveButton {
-      margin-top: 48px;
-      > button, a {
-        display: inline-block;
+    .saveHaibaoContent {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      width: max-content;
+      height: max-content;
+      > .saveButton {
+        width: 560px;
+        margin-top: -4px;
         text-align: center;
-        width: 228px;
-        line-height: 80px;
-        font-size: 32px;
-        border-radius: 40px;
+        line-height: 66px;
+        font-size: 28px;
+        color: #666;
+        background-color: #FBFBFB;
       }
-      .share {
-        margin-right: 32px;
+      > img {
+        width: 560px;
+        height: 764px;
+        object-fit: cover;
+      }
+      > svg {
+        position: absolute;
+        top: -64px;
+        right: 0;
+        width: 48px;
+        height: 48px;
         color: #fff;
-        background-color: #FE7700;
       }
-      .saveImg {
-        color: #FE7700;
-        background-color: #fff;
-      }
-    }
-    > svg {
-      width: 48px;
-      height: 48px;
-      margin-top: 64px;
-      color: #fff;
     }
   }
 </style>

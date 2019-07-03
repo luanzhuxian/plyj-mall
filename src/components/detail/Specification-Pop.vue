@@ -173,7 +173,7 @@ export default {
     },
     skuImage () {
       let currentSku1 = this.skuAttrList[0].productAttributeValues.find(item => item.id === this.currentSku1)
-      return currentSku1.productAttributeImage[0] || this.productImage
+      return currentSku1.productAttributeImage ? currentSku1.productAttributeImage[0] || this.productImage : this.productImage
     }
   },
   methods: {
