@@ -7,10 +7,10 @@
       <order-item
         :img="productInfo.productImg + '?x-oss-process=style/thum'"
         :name="productInfo.productName"
-        :option="productInfo.optionName"
-        route-name="Lesson"
+        :option="productInfo.skuCode2Name ? `${productInfo.skuCode1Name}；${productInfo.skuCode2Name}` : productInfo.skuCode1Name"
         :product-seq="productInfo.productId"
         hide-price
+        route-name="Lesson"
       />
     </section>
 
