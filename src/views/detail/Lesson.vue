@@ -265,6 +265,17 @@ export default {
           imgUrl: result.productMainImage + '?x-oss-process=image/resize,w_200'
         })
         this.loading = false
+        // 加载一张图片，为生成海报备用
+        let imgs = this.detail.mediaInfoIds
+        let index = 0
+        while (index < imgs.length) {
+          try {
+            this.haibaoImg = await this.loadImage(imgs[index])
+            break
+          } catch (e) {
+            index++
+          }
+        }
       } catch (e) {
         throw e
       }
@@ -317,6 +328,11 @@ export default {
       })
     },
     async createHaibao () {
+      let img = this.haibaoImg
+      if (!img) {
+        this.$error('图片加载错误')
+        return
+      }
       this.showHaibao = true
       if (this.haibao) {
         return
@@ -325,75 +341,68 @@ export default {
       let ctx = canvas.getContext('2d')
       canvas.width = 1120
       canvas.height = 1528
-      let imgs = this.detail.mediaInfoIds
-      let index = 0
-      // 加载一张正确的图片
-      while (index < imgs.length) {
-        try {
-          let img = await this.loadImage(imgs[index])
-          let min = Math.min(img.width, img.height)
-          let qrcode = await generateQrcode(300, window.location.href, null, 'canvas')
-          ctx.drawImage(img, 0, 0, min, min, 0, 0, 1120, 1120)
-          ctx.fillStyle = '#fff'
-          ctx.fillRect(0, 1120, 1120, 408)
-          ctx.drawImage(qrcode, 750, 1160, 320, 320)
-          ctx.font = '56px Microsoft YaHei UI'
-          ctx.fillStyle = '#000'
-          ctx.textBaseline = 'top'
-          // 填充商品名称
-          let str = this.detail.productName
-          let charArr = []
-          let strArr = []
-          let txtWidth = 0
-          let lineCount = 0 // 文字行数
-          for (let i = 0; i < str.length; i++) {
-            let char = str[i]
-            charArr.push(char)
-            txtWidth += ctx.measureText(char).width
-            if (txtWidth >= 620 || i === str.length - 1) {
-              lineCount++
-              // 行数等于2时，停止循环，并将最后一个字符替换为...
-              if (lineCount === 2) charArr.splice(-1, 1, '...')
-              // 文本换行
-              strArr.push(charArr.join(''))
-              if (lineCount === 2) break
-              txtWidth = 0
-              charArr = []
-            }
+      try {
+        let min = Math.min(img.width, img.height)
+        let qrcode = await generateQrcode(300, window.location.href, null, 'canvas')
+        ctx.drawImage(img, 0, 0, min, min, 0, 0, 1120, 1120)
+        ctx.fillStyle = '#fff'
+        ctx.fillRect(0, 1120, 1120, 408)
+        ctx.drawImage(qrcode, 750, 1160, 320, 320)
+        ctx.font = '56px Microsoft YaHei UI'
+        ctx.fillStyle = '#000'
+        ctx.textBaseline = 'top'
+        // 填充商品名称
+        let str = this.detail.productName
+        let charArr = []
+        let strArr = []
+        let txtWidth = 0
+        let lineCount = 0 // 文字行数
+        for (let i = 0; i < str.length; i++) {
+          let char = str[i]
+          charArr.push(char)
+          txtWidth += ctx.measureText(char).width
+          if (txtWidth >= 620 || i === str.length - 1) {
+            lineCount++
+            // 行数等于2时，停止循环，并将最后一个字符替换为...
+            if (lineCount === 2) charArr.splice(-1, 1, '...')
+            // 文本换行
+            strArr.push(charArr.join(''))
+            if (lineCount === 2) break
+            txtWidth = 0
+            charArr = []
           }
-          let lineHeight = 80
-          for (let [i, str] of strArr.entries()) {
-            ctx.fillText(str, 48, 1160 + lineHeight * i)
-          }
-          // 填充价钱
-          let minSku = this.detail.productSkuModels[0]
-          let price = minSku.price
-          let originalPrice = minSku.originalPrice
-          ctx.fillStyle = '#FE7700'
-          // 1372 + (76 - 56) / 2 文字距离顶部的距离 + 行高的一半，下同
-          ctx.fillText('¥', 48, 1372 + (76 - 56) / 2)
-          ctx.font = 'bold 88px Microsoft YaHei UI'
-          ctx.fillText(price, 96, 1352 + (104 - 88) / 2)
-          if (originalPrice) {
-            let priceWidth = ctx.measureText(price).width
-            ctx.fillStyle = '#999'
-            ctx.font = '56px Microsoft YaHei UI'
-            ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1372 + (80 - 56) / 2)
-            let originalPriceWidth = ctx.measureText(`¥${originalPrice}`).width
-            ctx.save()
-            // 设置删除线
-            ctx.strokeStyle = '#999'
-            ctx.beginPath()
-            ctx.lineWidth = '4'
-            ctx.moveTo(96 + priceWidth + 44, 1372 + (80 - 56) / 2 + 80 / 4)
-            ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1372 + (80 - 56) / 2 + 80 / 4)
-            ctx.stroke()
-          }
-          this.haibao = canvas.toDataURL('image/jpeg', 0.7)
-          break
-        } catch (e) {
-          index++
         }
+        let lineHeight = 80
+        for (let [i, str] of strArr.entries()) {
+          ctx.fillText(str, 48, 1160 + lineHeight * i)
+        }
+        // 填充价钱
+        let minSku = this.detail.productSkuModels[0]
+        let price = minSku.price
+        let originalPrice = minSku.originalPrice
+        ctx.fillStyle = '#FE7700'
+        // 1372 + (76 - 56) / 2 文字距离顶部的距离 + 行高的一半，下同
+        ctx.fillText('¥', 48, 1372 + (76 - 56) / 2)
+        ctx.font = 'bold 88px Microsoft YaHei UI'
+        ctx.fillText(price, 96, 1352 + (104 - 88) / 2)
+        if (originalPrice) {
+          let priceWidth = ctx.measureText(price).width
+          ctx.fillStyle = '#999'
+          ctx.font = '56px Microsoft YaHei UI'
+          ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1372 + (80 - 56) / 2)
+          let originalPriceWidth = ctx.measureText(`¥${originalPrice}`).width
+          ctx.save()
+          // 设置删除线
+          ctx.strokeStyle = '#999'
+          ctx.beginPath()
+          ctx.lineWidth = '4'
+          ctx.moveTo(96 + priceWidth + 44, 1372 + (80 - 56) / 2 + 80 / 4)
+          ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1372 + (80 - 56) / 2 + 80 / 4)
+          ctx.stroke()
+        }
+        this.haibao = canvas.toDataURL('image/jpeg', 0.7)
+      } catch (e) {
+        throw e
       }
     },
     loadImage (src) {

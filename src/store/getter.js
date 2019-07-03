@@ -37,5 +37,6 @@ export default {
   logoUrl: state => state.mallInfo.logoUrl,
   mallStatus: state => state.mallInfo.status,
   supportPhone: state => state.mallInfo.supportPhone,
-  mallId: state => state.mallInfo.sequenceNbr
+  mallId: state => state.mallInfo.sequenceNbr,
+  cartCount: state => state.cartCount
 }

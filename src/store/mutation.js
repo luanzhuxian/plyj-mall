@@ -64,5 +64,8 @@ export default {
   },
   [type.SET_USERNAME] (state, payload) {
     state.userInfo.userName = payload
+  },
+  [type.GET_CART_COUNT] (state, payload) {
+    state.cartCount = payload
   }
 }

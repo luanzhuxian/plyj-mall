@@ -7,21 +7,28 @@
       <router-link :class="$style.link" :to="{ name: 'Home' }">
         <pl-svg name="home" />
       </router-link>
+      <router-link :class="$style.link + ' ' + $style.toCart" :to="{ name: 'ShoppingCart' }">
+        <i v-if="cartCount > 99" :class="$style.cartCount">99+</i>
+        <i v-else-if="cartCount > 0" :class="$style.cartCount" v-text="cartCount" />
+        <pl-svg name="cart2" />
+      </router-link>
     </div>
-    <button
-      :class="$style.addToCart"
-      @click="clickHandler(1)"
-      :disabled="loading || allDisabled"
-    >
-      加入购物车
-    </button>
-    <button
-      :class="$style.buyNowBtn"
-      @click="clickHandler(2)"
-      :disabled="loading || allDisabled"
-    >
-      立即购买
-    </button>
+    <div :class="$style.buttons">
+      <button
+        :class="$style.addToCart"
+        @click="clickHandler(1)"
+        :disabled="loading || allDisabled"
+      >
+        加入购物车
+      </button>
+      <button
+        :class="$style.buyNowBtn"
+        @click="clickHandler(2)"
+        :disabled="loading || allDisabled"
+      >
+        立即购买
+      </button>
+    </div>
     <specification-pop
       :product-image="image"
       :visible.sync="showSpecifica"
@@ -95,7 +102,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId']),
+    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId', 'cartCount']),
     // 所有规格禁用状态
     allDisabled () {
       return this.skuList.every(item => item.stock < item.minBuyNum)
@@ -216,9 +223,11 @@ export default {
     bottom: 0;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
     height: 110px;
     background-color: #fff;
+    border-top: 1px solid #e7e7e7;
     z-index: 11;
     .phone {
       display: flex;
@@ -228,7 +237,7 @@ export default {
       > .link {
         position: relative;
         flex: 1;
-        &:nth-of-type(1):after {
+        /*&:nth-of-type(1):after {
           position: absolute;
           content: '';
           top: 50%;
@@ -237,27 +246,41 @@ export default {
           height: 50%;
           transform: translateY(-50%);
           background-color: #e7e7e7;
+        }*/
+        &.toCart {
+          position: relative;
+          svg {
+            width: 78px;
+          }
         }
-      }
-      svg {
-        width: 40px;
-        color: $--font-color_gray2;
-        fill: $--font-color_gray2 !important;
+        svg {
+          width: 40px;
+          color: $--font-color_gray2;
+          fill: $--font-color_gray2 !important;
+        }
+        .cartCount {
+          position: absolute;
+          right: -12px;
+          top: -8px;
+          width: 48px;
+          height: 36px;
+          line-height: 32px;
+          color: #fff;
+          background-color: #FE7700;
+          border-radius: 18px;
+          font-size: 24px;
+          border: 2px solid #fff;
+          box-sizing: border-box;
+        }
       }
     }
   }
   .buttons {
     display: inline-flex;
-    justify-content: flex-start;
-    width: 468px;
-    height: 80px;
-    font-size: 30px;
-    color: #fff;
-    border-radius: $--radius2;
-    overflow: hidden;
+    padding-right: 16px;
   }
   .addToCart, .buyNowBtn {
-    width: 234px;
+    width: 220px;
     height: 80px;
     color: #fff;
     font-size: 30px;

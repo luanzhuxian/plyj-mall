@@ -127,5 +127,9 @@ export default {
         reject(e)
       }
     })
+  },
+  [type.GET_CART_COUNT]: ({ commit, satte, dispatch }) => {
+    return new Promise((resolve, reject) => {
+    })
   }
 }

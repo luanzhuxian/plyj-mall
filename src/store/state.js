@@ -4,6 +4,7 @@ const refresh_token = Cookies.get('refresh_token') || ''
 const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress'))
 export default {
   theme: 'base-theme',
+  cartCount: 0,
   userInfo: {
     isAgentUser: false,
     applyBalance: 0,
