@@ -3,18 +3,19 @@
     <button
       :class="$style.subtract"
       @click.stop="subtract"
-      :disabled="localCount <= min || loading"
+      :disabled="localCount <= min || loading || disabled"
     />
     <input
       :class="$style.input"
       type="number"
       :value="localCount"
+      :disabled="disabled"
       @change="valueChange"
     >
     <button
       :class="$style.add"
       @click.stop="add"
-      :disabled="localCount >= max || loading"
+      :disabled="localCount >= max || loading || disabled"
     />
   </div>
 </template>
@@ -40,7 +41,8 @@ export default {
     count: {
       type: [Number, String],
       default: 1
-    }
+    },
+    disabled: Boolean
   },
   watch: {
     count: {
@@ -103,6 +105,10 @@ export default {
       font-size: 20px;
       text-align: center;
       z-index: 2;
+      &:disabled {
+        background-color: #fff;
+        color: #999;
+      }
     }
     .subtract, .add {
       position: relative;

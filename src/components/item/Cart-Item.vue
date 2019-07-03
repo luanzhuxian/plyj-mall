@@ -18,7 +18,7 @@
       </span>
 
       <template v-else-if="!allDisabled">
-        <div :class="$style.currentSku" @click.stop="skuClick">
+        <div :class="{ [$style.currentSku]: true, [$style.disabled]: disabled }" @click.stop="skuClick">
           <div v-if="currentSkuModel">
             <span v-text="currentSkuModel.skuCode1Name" />
             <template v-if="currentSkuModel.skuCode2Name">
@@ -32,6 +32,7 @@
           <count
             :count="count"
             ref="count"
+            :disabled="disabled"
             :max="currentSkuModel.stock"
             :min="currentSkuModel.minBuyNum"
             @change="countChange"
@@ -83,7 +84,8 @@ export default {
       default: function () {
         return {}
       }
-    }
+    },
+    disabled: Boolean
   },
   computed: {
     ...mapGetters(['agentUser', 'userId']),
@@ -148,6 +150,9 @@ export default {
       })
     },
     skuClick (e) {
+      if (this.disabled) {
+        return
+      }
       this.$emit('skuClick', e)
     }
   }
@@ -203,6 +208,9 @@ export default {
       width: 10px;
       height: 18px;
       transform: rotate(90deg) scaleY(1.2);
+    }
+    &.disabled {
+      color: #999;
     }
   }
   .priceCount {

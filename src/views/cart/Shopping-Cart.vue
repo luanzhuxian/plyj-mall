@@ -30,6 +30,7 @@
               <CartItem
                 :data="data"
                 :key="i"
+                :disabled="isManage"
                 @countChange="computeMoney"
                 @skuClick="skuClick(data)"
               />
