@@ -140,7 +140,7 @@
             保存图片
           </a>
         </div>
-        <pl-svg name="close3" color="#fff" @click="showHaibao = false; haibao = ''" />
+        <pl-svg name="close3" color="#fff" @click="showHaibao = false;" />
       </div>
     </transition>
   </div>
@@ -239,6 +239,7 @@ export default {
   deactivated () {
     this.showSpecifica = false
     this.currentModel = {}
+    this.haibao = ''
   },
   mounted () {
     // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
@@ -319,13 +320,16 @@ export default {
       })
     },
     async createHaibao () {
+      this.showHaibao = true
+      if (this.haibao) {
+        return
+      }
       let canvas = document.createElement('canvas')
       let ctx = canvas.getContext('2d')
       canvas.width = 1120
       canvas.height = 1528
       let imgs = this.detail.mediaInfoIds
       let index = 0
-      this.showHaibao = true
       // 加载一张正确的图片
       while (index < imgs.length) {
         try {
