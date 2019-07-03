@@ -2,11 +2,12 @@
   <div :class="$style.lesson">
     <template v-if="productStatus !== 0">
       <!-- 海报按钮 -->
-      <div :class="$style.haibao" @click="createHaibao">
-        <pl-svg name="haibao" />
-        <p>分享海报</p>
-      </div>
-      <DetailBanner :banners="banners" />
+      <DetailBanner :banners="banners">
+        <div :class="$style.haibao" @click="createHaibao">
+          <pl-svg name="haibao" />
+          <p>分享海报</p>
+        </div>
+      </DetailBanner>
       <DetailInfoBox :loading="loading">
         <div :class="$style.price">
           <div :class="$style.priceLeft">
@@ -513,7 +514,7 @@ export default {
     }
   }
   .haibao {
-    position: fixed;
+    position: absolute;
     right: 0;
     top: 20px;
     display: flex;

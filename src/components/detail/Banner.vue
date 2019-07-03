@@ -18,6 +18,7 @@
       </swiperSlide>
     </swiper>
     <div :class="'swiper-pagination ' + $style.pagination" />
+    <slot />
   </div>
 
   <div
