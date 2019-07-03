@@ -7,6 +7,7 @@
     >
       <transition name="slide">
         <div :class="$style.specBox" v-show="showBox">
+          <pl-svg :class="$style.close" name="close2" color="#ccc" @click.stop="close" />
           <div>
             <div :class="$style.baseInfo" v-if="currentSku">
               <img
@@ -288,6 +289,13 @@ export default {
     height: 100%;
     background-color: rgba(0, 0, 0, .65);
     z-index: 12;
+  }
+  .close {
+    position: absolute;
+    top: 24px;
+    right: 26px;
+    width: 46px;
+    height: 46px;
   }
   .spec-box {
     position: absolute;
