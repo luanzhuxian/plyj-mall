@@ -220,9 +220,8 @@ export default {
   computed: {
     ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode']),
     isApplyBtnShow () {
-      return !this.agentUser &&
-        (this.roleCode === 'MEMBERSHIP' || this.roleCode === 'VISITOR') &&
-        (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT')
+      return this.roleCode === 'VISITOR' ||
+        (!this.agentUser && this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT'))
     },
     // 是否申请过helper
     isApplied () {
