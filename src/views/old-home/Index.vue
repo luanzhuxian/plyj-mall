@@ -53,8 +53,6 @@
             :product-id="item.id"
             :product-name="item.productName"
             :price="item.productSkuModels.length && item.productSkuModels[0].price"
-            :sale="item.salesVolume"
-            :labels="item.labelModels"
           />
         </swiper-slide>
         <div
@@ -148,8 +146,6 @@
               :product-id="item.id"
               :product-name="item.productName"
               :price="item.productSkuModels.length && item.productSkuModels[0].price"
-              :sale="item.salesVolume"
-              :labels="item.labelModels"
             />
           </div>
         </swiper-slide>

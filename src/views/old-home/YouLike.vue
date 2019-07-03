@@ -17,21 +17,6 @@
         :price="item.productSkuModels.length && item.productSkuModels[0].price"
         :origin-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
       />
-      <!--<router-link-->
-      <!--tag="li"-->
-      <!--v-for="(item, index) in likeProduct" :key="index"-->
-      <!--:to="{name: 'Product', params: {id: item.sequenceNbr}}">-->
-      <!--<div class="goods335"><img :src="item.mediaInfoModel && item.mediaInfoModel[0].mediaUrl" /></div>-->
-      <!--&lt;!&ndash;<div class="goods-desc">-->
-      <!--{{item.productDesc}}-->
-      <!--</div>&ndash;&gt;-->
-      <!--<div class="goods-title">-->
-      <!--{{item.productName}}-->
-      <!--</div>-->
-      <!--<div class="goods-price">-->
-      <!--¥{{item.productPriceModel && item.productPriceModel[0].price}}-->
-      <!--</div>-->
-      <!--</router-link>-->
     </div>
   </div>
 </template>
