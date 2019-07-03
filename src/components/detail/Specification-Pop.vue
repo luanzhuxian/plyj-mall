@@ -57,7 +57,7 @@
             <div :class="$style.count">
               <div>
                 <span>购买数量</span>
-                <span>(每账号限购3件)</span>
+                <span class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购3件)</span>
               </div>
               <div :class="$style.countCtr">
                 <button :disabled="count <= min || currentDisabled" @click.stop="minus">
@@ -190,7 +190,6 @@ export default {
     },
     // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个(禁用的不能选中)，并触发一次change事件
     init () {
-      console.log(this.sku, 182)
       this.inited = true
       if (this.sku.id && this.sku.stock >= this.sku.minBuyNum && this.sku.count <= this.sku.stock) {
         this.skuChange(this.sku.skuCode1, this.sku.skuCode2)
