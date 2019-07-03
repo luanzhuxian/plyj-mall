@@ -90,7 +90,7 @@
       <swiper :options="goods" style="overflow: visible">
         <swiper-slide v-for="(item, i) of modules.C" :key="i">
           <div :class="$style.slideWrap">
-            <category-item
+            <!-- <category-item
               tag="div"
               size="mini"
               :img="item.productMainImage + '?x-oss-process=style/thum-small'"
@@ -100,6 +100,15 @@
               :price="item.productSkuModels.length && item.productSkuModels[0].price"
               :sale="item.salesVolume"
               :labels="item.labelModels"
+            /> -->
+            <category-item
+              tag="div"
+              size="mini"
+              :img="item.productMainImage + '?x-oss-process=style/thum-small'"
+              :is-active="item.agentProduct"
+              :product-id="item.id"
+              :product-name="item.productName"
+              :price="item.productSkuModels.length && item.productSkuModels[0].price"
             />
           </div>
         </swiper-slide>

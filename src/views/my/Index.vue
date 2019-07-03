@@ -230,8 +230,14 @@ export default {
         this.applyStatus === 'REJECT'
     }
   },
-  activated () {
+  async activated () {
     try {
+      if (this.roleCode === 'VISITOR') {
+        await this.$confirm({ message: '为了您的账号安全，请绑定手机号', confirmText: '去绑定', isClickMaskDisable: true })
+        setTimeout(() => {
+          this.$router.push({ name: 'BindMobile' })
+        }, 1000)
+      }
       this.getNewFreight()
       this.orderPhysicalorderSummary()
       this.getProgress()
