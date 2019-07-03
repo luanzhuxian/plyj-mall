@@ -186,8 +186,11 @@ export default {
       this.currentSku = this.currentPro.skuModels.find(item => {
         return item.skuCode1 === this.currentPro.cartSkuCode && item.skuCode2 === this.currentPro.cartSkuCode2
       })
+      this.currentSku.count = data.cartProductCount
       this.$nextTick(() => {
-        this.showSpecifica = true
+        this.$nextTick(() => {
+          this.showSpecifica = true
+        })
       })
     },
     // 改变规格
@@ -318,6 +321,28 @@ export default {
         this.checkedList.splice(this.checkedList.indexOf(currentSkuCount[0]), 1)
       }
     }
+  },
+  beforeRouteEnter (to, form, next) {
+    next(vm => {
+      if (!vm.$store.getters.mobile) {
+        vm.$confirm('您还没有绑定手机，请先绑定手机')
+          .then(() => {
+            localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+              name: form.name,
+              params: form.params,
+              query: form.query
+            }))
+            this.$router.replace({ name: 'BindMobile' })
+          })
+          .catch(() => {
+            vm.$router.replace({
+              name: form.name,
+              params: form.params,
+              query: form.query
+            })
+          })
+      }
+    })
   }
 }
 </script>

@@ -17,7 +17,7 @@
         该商品已失效
       </span>
 
-      <template v-else>
+      <template v-else-if="!allDisabled">
         <div :class="$style.currentSku" @click.stop="skuClick">
           <div v-if="currentSkuModel">
             <span v-text="currentSkuModel.skuCode1Name" />
@@ -27,7 +27,6 @@
           </div>
           <pl-svg :class="$style.arrow" name="right" color="#ccc" />
         </div>
-
         <div :class="$style.priceCount" v-if="!overflowStock">
           <i :class="$style.price + ' rmb'" v-text="currentSkuModel.price" />
           <count
@@ -39,8 +38,11 @@
           />
         </div>
       </template>
+      <span :class="$style.unshelve" v-if="allDisabled">
+        全部售罄
+      </span>
       <div
-        v-if="overflowStock"
+        v-if="overflowStock && !allDisabled"
         :class="$style.reelect"
       >
         <span>请重新选择商品规格</span>
@@ -97,6 +99,10 @@ export default {
     },
     productId () {
       return this.data.cartProductId || ''
+    },
+    // 所有规格禁用状态
+    allDisabled () {
+      return this.data.skuModels.every(item => item.stock < item.minBuyNum)
     }
   },
   watch: {

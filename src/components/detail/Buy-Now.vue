@@ -11,14 +11,14 @@
     <button
       :class="$style.addToCart"
       @click="clickHandler(1)"
-      :disabled="loading"
+      :disabled="loading || allDisabled"
     >
       加入购物车
     </button>
     <button
       :class="$style.buyNowBtn"
       @click="clickHandler(2)"
-      :disabled="loading"
+      :disabled="loading || allDisabled"
     >
       立即购买
     </button>
@@ -95,7 +95,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId'])
+    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId']),
+    // 所有规格禁用状态
+    allDisabled () {
+      return this.skuList.every(item => item.stock < item.minBuyNum)
+    }
   },
   deactivated () {
     this.reset()
@@ -257,6 +261,9 @@ export default {
     height: 80px;
     color: #fff;
     font-size: 30px;
+    &:disabled {
+      color: rgba(255, 255, 255, .4);
+    }
   }
   .addToCart {
     border-radius: 10px 0 0 10px;

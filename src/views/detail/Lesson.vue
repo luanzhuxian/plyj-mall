@@ -117,11 +117,11 @@
       </template>
     </specification-pop>
 
-    <div class="guide">
+    <!--<div class="guide">
       <p>点击右上角图标</p>
       <p>分享商品给好友 可赚取更多润笔</p>
       <button>知道了</button>
-    </div>
+    </div>-->
 
     <div :class="$style.buttomTip" v-if="!loading && productStatus === 1">
       该商品已下架
@@ -238,6 +238,7 @@ export default {
   },
   deactivated () {
     this.showSpecifica = false
+    this.currentModel = {}
   },
   mounted () {
     // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
