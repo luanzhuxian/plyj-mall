@@ -97,6 +97,7 @@
       :product-image="detail.productMainImage"
       :visible.sync="showSpecifica"
       :sku.sync="currentModel"
+      :limiting="detail.purchaseQuantity"
     >
       <template v-slot:footer="{ currentSku }">
         <div :class="$style.buttons">
