@@ -27,9 +27,15 @@
               </template>
             </div>
           </div>
-          <div :class="$style.priceRight" v-if="currentModel.realRebate">
+          <div :class="$style.priceRight" v-if="agentUser && (minRebate || maxRebate)">
             <p class="fz-22 gray-1">
-              <span :class="$style.returnRunbi">返还</span><i v-text="currentModel.realRebate" />润笔
+              <span :class="$style.returnRunbi">
+                返还
+              </span>
+              <i v-if="minRebate" v-text="minRebate" />
+              <i v-if="minRebate && maxRebate && minRebate !== maxRebate">~</i>
+              <i v-if="maxRebate && minRebate !== maxRebate" v-text="maxRebate" />
+              润笔
             </p>
             <p class="fz-22 gray-3">
               分享下单即可获得R币
@@ -119,12 +125,6 @@
       </template>
     </specification-pop>
 
-    <!--<div class="guide">
-      <p>点击右上角图标</p>
-      <p>分享商品给好友 可赚取更多润笔</p>
-      <button>知道了</button>
-    </div>-->
-
     <div :class="$style.buttomTip" v-if="!loading && productStatus === 1">
       该商品已下架
     </div>
@@ -157,7 +157,6 @@ import Tags from '../../components/detail/Tags.vue'
 import Price from '../../components/Price.vue'
 import Field from '../../components/detail/Field.vue'
 import { getProductDetail } from '../../apis/product'
-// import MaybeYouLike from '../../components/Maybe-You-Like.vue'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
@@ -181,7 +180,6 @@ export default {
     BuyNow,
     DetailInfoBox,
     SpecificationPop,
-    // MaybeYouLike,
     youLike,
     SoldOut,
     Comments
@@ -233,6 +231,18 @@ export default {
     },
     limiting () {
       return Number(this.detail.purchaseQuantity) || 0
+    },
+    productSkuModels () {
+      return this.detail.productSkuModels || []
+    },
+    rebateList () {
+      return this.productSkuModels.map(item => item.realRebate) || []
+    },
+    maxRebate () {
+      return Math.max(...this.rebateList)
+    },
+    minRebate () {
+      return Math.min(...this.rebateList)
     }
   },
   watch: {

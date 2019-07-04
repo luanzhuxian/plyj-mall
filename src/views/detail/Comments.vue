@@ -1,14 +1,22 @@
 <template>
   <div :class="$style.comment + ' radius-20'" ref="comment">
     <div :class="$style.header" v-if="list.length > 0">
-      <pl-button size="small" :type="form.flag ? '' : 'primary'" round plain @click="all">
+      <pl-button size="small" :type="form.flag ? 'default' : 'primary'" round plain @click="all">
         全部
       </pl-button>
-      <pl-button size="small" :type="form.flag ? 'primary' : ''" round plain @click="hasImage">
-        有图
+      <pl-button size="small" :type="form.flag ? 'primary' : 'default'" round plain @click="hasImage">
+        有图({{ list[0].assessmentPicCount }})
       </pl-button>
     </div>
-    <div :class="$style.commentItem" v-for="(item, i) of list" :id="'item' + i" :key="item.id" @click="goDetail(item)">
+    <div
+      v-for="(item, i) of list"
+      :class="{
+        [$style.commentItem]: true,
+        'last-item': i === length - 1
+      }"
+      :key="item.id"
+      @click="goDetail(item)"
+    >
       <!-- 头像 -->
       <img v-img-error :src="item.headUrl || ''" alt="">
       <div :class="$style.content">
@@ -86,7 +94,7 @@ export default {
       return this.list.length
     }
   },
-  created () {
+  activated () {
     this.reset()
     this.form.productId = this.productId
     this.getList()
@@ -142,8 +150,7 @@ export default {
       if (!this.show) return
       if (this.loading) return
       if (this.length === this.total) return
-      let lastId = 'item' + (this.length - 1)
-      if (document.getElementById(lastId).getBoundingClientRect().top - window.innerHeight < 0) {
+      if (document.querySelector('.last-item').getBoundingClientRect().top - window.innerHeight < 0) {
         this.form.current++
         this.more()
       }

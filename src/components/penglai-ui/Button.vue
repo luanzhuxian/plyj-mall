@@ -94,6 +94,7 @@ export default {
       &.plain {
         color: #666;
         background-color: transparent;
+        border: 1px solid #666;
       }
     }
     /* 主色调 */
@@ -106,6 +107,7 @@ export default {
       &.plain {
         color: $--primary-color;
         background-color: #FFF8F9;
+        border: 1px solid #FE7700;
       }
     }
     /* 警告色 */
@@ -155,10 +157,6 @@ export default {
       &.round {
         border-radius: 25px;
       }
-      &.plain {
-        border: 1px solid currentColor;
-        border-radius: 25px;
-      }
       .pl-button__prefix-icon, .pl-button__loading {
         width: 24px;
         vertical-align: -1px;
@@ -177,10 +175,6 @@ export default {
       .pl-button__prefix-icon, .pl-button__loading {
         width: 26px;
         fill: currentColor;
-      }
-      &.plain {
-        border: 1px solid currentColor;
-        border-radius: 12px;
       }
     }
     /* large */

@@ -45,7 +45,7 @@ module.exports = {
     proxy: {
       // 37测试 34开发 王恩74 李宾哲132 赵伟116 牛昌昌92
       '/apis': {
-        target: 'http://192.168.130.132'
+        target: 'http://192.168.130.116'
       }
     }
   },
@@ -53,7 +53,7 @@ module.exports = {
   css: {
     loaderOptions: {
       css: {
-        localIdentName: '[local]_[hash:base64:10]',
+        localIdentName: '[local]-[hash:base64:10]',
         camelCase: 'only'
       },
       sass: {
