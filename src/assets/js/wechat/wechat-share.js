@@ -40,13 +40,12 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
     ]
   })
   // 分享到朋友圈
-
   WX.updateTimelineShareData({
     title: `${title} ${desc}`, // 分享标题
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
     imgUrl, // 分享图标
     success: () => {
-      console.warn('分享到朋友圈成功')
+      console.warn('配置”分享到朋友圈“成功！')
     }
   })
   // 分享给朋友
@@ -56,7 +55,7 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
     imgUrl, // 分享图标
     success: () => {
-      console.warn('分享到朋友成功')
+      console.warn('配置”分享到朋友“成功！')
     }
   })
 }

@@ -280,12 +280,12 @@ export default {
         this.banners = mediaInfoIds
         this.detail = result
         this.productSkuModels = result.productSkuModels
-        share({
+        await share({
           appId: this.appId,
           title: result.productName,
           desc: result.productDesc,
           link: window.location.href,
-          imgUrl: result.productMainImage + '?x-oss-process=image/resize,w_200'
+          imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
         this.loading = false
         // 加载一张图片，为生成海报备用
