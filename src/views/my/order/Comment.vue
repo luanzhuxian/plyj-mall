@@ -11,7 +11,7 @@
       <div :class="$style.grade">
         <img
           v-img-error
-          :src="img + '?x-oss-process=style/thum'"
+          :src="productImg + '?x-oss-process=style/thum'"
           alt=""
         >
         <span class="fz-26 gray-2">本次感受</span>
@@ -89,7 +89,7 @@ export default {
         skuCode1: '',
         skuCode2: ''
       },
-      img: '',
+      productImg: '',
       images: [],
       maxLength: 100
     }
@@ -120,7 +120,7 @@ export default {
     this.form.productId = this.productId
     this.form.skuCode1 = this.$route.query.skuCode1 || ''
     this.form.skuCode2 = this.$route.query.skuCode2 || ''
-    this.img = this.$route.query.img || ''
+    this.productImg = this.$route.query.productImg || ''
   },
   deactivated () {
     resetForm(this.form, {

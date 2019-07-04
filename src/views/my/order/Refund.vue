@@ -2,11 +2,11 @@
   <div :class="$style.refund">
     <section :class="$style.orderInfo">
       <order-item
-        :img="productInfo.productImg + '?x-oss-process=style/thum'"
-        :name="productInfo.productName"
-        :option="productInfo.skuCode2Name ? `${productInfo.skuCode1Name}/${productInfo.skuCode2Name}` : productInfo.skuCode1Name"
+        :img="productImg + '?x-oss-process=style/thum'"
+        :name="productName"
+        :option="skuCode2Name ? `${skuCode1Name}/${skuCode2Name}` : skuCode1Name"
         route-name="Lesson"
-        :product-seq="productInfo.productId"
+        :product-id="productId"
         hide-price
       />
     </section>
@@ -64,7 +64,6 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import { getOrderDetail } from '../../../apis/order-manager'
 
 export default {
   name: 'Refund',
@@ -85,19 +84,21 @@ export default {
     return {
       orderStatus: '',
       orderType: '',
-      productInfo: {}
+      productId: '',
+      productImg: '',
+      productName: '',
+      skuCode1Name: '',
+      skuCode2Name: ''
     }
   },
   activated () {
-    this.getProductDetail()
-  },
-  methods: {
-    async getProductDetail () {
-      const { result } = await getOrderDetail(this.orderId)
-      this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
-      this.orderStatus = result.orderStatus
-      this.orderType = result.orderType
-    }
+    this.orderStatus = this.$route.query.orderStatus || ''
+    this.orderType = this.$route.query.orderType || ''
+    this.productId = this.$route.query.productId || ''
+    this.productImg = this.$route.query.productImg || ''
+    this.productName = this.$route.query.productName || ''
+    this.skuCode1Name = this.$route.query.skuCode1Name || ''
+    this.skuCode2Name = this.$route.query.skuCode2Name || ''
   }
 }
 </script>

@@ -36,14 +36,14 @@
           :option="item.skuCode2Name ? `${item.skuCode1Name}/${item.skuCode2Name}` : item.skuCode1Name"
           :price="item.price"
           route-name="Lesson"
-          :product-seq="item.productId"
+          :product-id="item.productId"
         />
         <div :class="$style.buttons">
           <pl-button
             v-if="item.supportRefund && canApplyRefund && (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)"
             plain
             round
-            @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId } })"
+            @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name } })"
           >
             申请退款
           </pl-button>
@@ -78,7 +78,7 @@
             type="warning"
             plain
             round
-            @click="$router.push({ name: 'CommentOrder', params: { orderId: orderId, productId: item.productId }, query: { img: item.productImg, skuCode1: item.skuCode1, skuCode2: item.skuCode2 } })"
+            @click="$router.push({ name: 'CommentOrder', params: { orderId: orderId, productId: item.productId }, query: { productImg: item.productImg, skuCode1: item.skuCode1, skuCode2: item.skuCode2 } })"
           >
             晒单评价
           </pl-button>

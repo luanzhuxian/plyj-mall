@@ -157,7 +157,7 @@
           :name="refundDetail.productName"
           :option="refundDetail.skuName2 ? `${refundDetail.skuName}/${refundDetail.skuName2}` : refundDetail.skuName"
           route-name="Lesson"
-          :product-seq="refundDetail.productId"
+          :product-id="refundDetail.productId"
           hide-price
         />
       </div>
@@ -445,6 +445,8 @@ export default {
           id: refundDetail.id,
           orderId: refundDetail.orderId,
           orderDetailId: refundDetail.orderDetailId,
+          orderType: refundDetail.orderType,
+          orderStatus: refundDetail.orderStatus,
           refundType: refundDetail.refundType,
           receiveStatus: refundDetail.receiveStatus,
           shipSn: refundDetail.shipSn,
