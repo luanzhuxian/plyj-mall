@@ -49,7 +49,7 @@
       <Field v-if="productType === 'PHYSICAL_GOODS'" label="发货" content="普通快递" />
       <Field
         label="选择"
-        :can-click="!noStock"
+        :can-click="!noStock && detail.productStatus === 2"
         @click="showSpecifica = true"
       >
         <template v-if="currentModel.skuCode1Name">
@@ -96,6 +96,7 @@
       :sku-list="detail.productSkuModels"
       :sku-attr-list="detail.productAttributes"
       :current-sku.sync="currentModel"
+      :product-status="detail.productStatus"
     />
     <specification-pop
       :default-count="defaultCount"

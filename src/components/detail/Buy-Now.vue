@@ -100,13 +100,17 @@ export default {
     productId: {
       type: String,
       default: ''
+    },
+    productStatus: {
+      type: Number,
+      default: 2
     }
   },
   computed: {
     ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId', 'cartCount']),
     // 所有规格禁用状态
     allDisabled () {
-      return this.skuList.every(item => item.stock < item.minBuyNum)
+      return this.skuList.every(item => item.stock < item.minBuyNum) || this.productStatus !== 2
     }
   },
   deactivated () {
