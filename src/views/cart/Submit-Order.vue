@@ -261,12 +261,17 @@ export default {
       deep: true
     }
   },
-  activated () {
+  async activated () {
     this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL'))
     this.invioceType = this.INVOICE_MODEL ? 2 : 1
     this.isCart = JSON.parse(this.$route.query.isCart)
     if (this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
-      this.getProductDetail()
+      try {
+        await this.getProductDetail()
+      } catch (e) {
+        this.$router.go(-1)
+        throw e
+      }
     }
   },
   deactivated () {
