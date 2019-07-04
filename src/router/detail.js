@@ -9,12 +9,12 @@ export default [
     }
   },
   {
-    path: '/detail/comments/:productId',
-    name: 'Comments',
-    component: () => import('../views/detail/Comments.vue'),
+    path: '/detail/comments/detail',
+    name: 'CommentDetail',
+    component: () => import('../views/detail/Comment-Detail.vue'),
     props: true,
     meta: {
-      title: '评论专区'
+      title: '评论详情'
     }
   },
   {

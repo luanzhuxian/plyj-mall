@@ -26,32 +26,34 @@
                 </p>
               </div>
             </div>
-            <!-- 规格1 -->
-            <div :class="$style.color" v-if="skuAttrList && skuAttrList.length">
-              <div v-text="skuAttrList[0].productAttributeName" />
-              <div :class="$style.colorList">
-                <button
-                  v-for="(item, i) of skuAttrList[0].productAttributeValues"
-                  :key="i"
-                  @click.stop="skuChange(item.id)"
-                  :disabled="sku1IsAllDisabled(item.id)"
-                  :class="{ [$style.active]: currentSku1 === item.id }"
-                  v-text="item.productAttributeValueName"
-                />
+            <div :class="$style.skuBox">
+              <!-- 规格1 -->
+              <div :class="$style.color" v-if="skuAttrList && skuAttrList.length">
+                <div v-text="skuAttrList[0].productAttributeName" />
+                <div :class="$style.colorList">
+                  <button
+                    v-for="(item, i) of skuAttrList[0].productAttributeValues"
+                    :key="i"
+                    @click.stop="skuChange(item.id)"
+                    :disabled="sku1IsAllDisabled(item.id)"
+                    :class="{ [$style.active]: currentSku1 === item.id }"
+                    v-text="item.productAttributeValueName"
+                  />
+                </div>
               </div>
-            </div>
-            <!-- 规格2 -->
-            <div :class="$style.color" v-if="skuCode2List.length && skuAttrList.length > 1">
-              <div v-text="skuAttrList[1].productAttributeName" />
-              <div :class="$style.colorList">
-                <button
-                  v-for="(item, i) of skuCode2List"
-                  :key="i"
-                  @click.stop="subSkuChange(item.skuCode2)"
-                  :disabled="item.disabled"
-                  :class="{ [$style.active]: currentSku2 === item.skuCode2 }"
-                  v-text="item.skuCode2Name"
-                />
+              <!-- 规格2 -->
+              <div :class="$style.color" v-if="skuCode2List.length && skuAttrList.length > 1">
+                <div v-text="skuAttrList[1].productAttributeName" />
+                <div :class="$style.colorList">
+                  <button
+                    v-for="(item, i) of skuCode2List"
+                    :key="i"
+                    @click.stop="subSkuChange(item.skuCode2)"
+                    :disabled="item.disabled"
+                    :class="{ [$style.active]: currentSku2 === item.skuCode2 }"
+                    v-text="item.skuCode2Name"
+                  />
+                </div>
               </div>
             </div>
             <div :class="$style.count">
@@ -140,8 +142,11 @@ export default {
       currentSku2: ''
     }
   },
-  created () {
-    this.setShow(this.visible)
+  // created () {
+  //   this.setShow(this.visible)
+  // },
+  deactivated () {
+    this.reset()
   },
   watch: {
     visible (val) {
@@ -149,13 +154,6 @@ export default {
       if (val) {
         this.init()
       }
-    },
-    // 默认数量变化时，实时更新当前数量
-    defaultCount: {
-      handler (val) {
-        this.count = val
-      },
-      immediate: true
     },
     currentSku: {
       handler (val) {
@@ -280,6 +278,7 @@ export default {
     revert () {
       this.$emit('change', this.sku)
       this.localCurrentSku = this.sku
+      this.count = this.defaultCount
     }
   }
 }
@@ -360,11 +359,14 @@ export default {
   .size {
     border-bottom: 1px solid #e7e7e7;
   }
+  .skuBox {
+    max-height: 450px;
+    overflow: scroll;
+  }
   .color-list, .size-list {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    max-height: 300px;
     padding: 5px;
     overflow: auto;
     box-sizing: border-box;

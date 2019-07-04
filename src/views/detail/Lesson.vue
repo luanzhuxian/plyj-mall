@@ -18,9 +18,9 @@
               :original-price="currentOriginalPrice"
             />
             <div :class="$style.count">
-              <span v-if="detail.pageviews === 0 && detail.salesVolume">正在热销中</span>
+              <span v-if="detail.salesVolume === 0">正在热销中</span>
               <template v-else-if="detail.salesVolume > 0 && detail.salesVolume < 10">
-                <span v-text="detail.pageviews" />人已关注
+                <span v-text="detail.pageviews" />
               </template>
               <template v-else-if="detail.salesVolume > 10">
                 <span v-text="detail.salesVolume" />人购买
@@ -65,7 +65,8 @@
         </div>
 
         <div>
-          <Comment v-show="tab === 1" :size="3" :product-id="productId" :broker-id="brokerId" />
+          <Comments v-show="tab === 1" :product-id="productId" :show="tab === 1" />
+          <!--<Comment v-show="tab === 1" :size="3" :product-id="productId" :broker-id="brokerId" />-->
           <DetailInfo
             v-show="tab === 2"
             :content="detail.detail || '暂无详情'"
@@ -90,7 +91,7 @@
       :current-sku.sync="currentModel"
     />
     <specification-pop
-      :default-count="currentModel.count"
+      :default-count="defaultCount"
       :sku-list="detail.productSkuModels"
       :sku-attr-list="detail.productAttributes"
       :product-image="detail.productMainImage"
@@ -144,12 +145,12 @@
 </template>
 
 <script>
+/* eslint-disable */
 import DetailBanner from '../../components/detail/Banner.vue'
 import DetailInfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
 import DetailDesc from '../../components/detail/Desc.vue'
 import DetailInfo from '../../components/detail/Detail.vue'
-import Comment from '../../components/detail/Comment.vue'
 import BuyNow from '../../components/detail/Buy-Now.vue'
 import Tags from '../../components/detail/Tags.vue'
 import Price from '../../components/Price.vue'
@@ -164,6 +165,7 @@ import { addToCart } from '../../apis/shopping-cart'
 import youLike from './../old-home/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
 import { generateQrcode } from '../../assets/js/util'
+import Comments from './Comments.vue'
 
 export default {
   name: 'Lesson',
@@ -172,7 +174,6 @@ export default {
     DetailTitle,
     DetailDesc,
     DetailInfo,
-    Comment,
     Price,
     Field,
     Tags,
@@ -181,7 +182,8 @@ export default {
     SpecificationPop,
     // MaybeYouLike,
     youLike,
-    SoldOut
+    SoldOut,
+    Comments
   },
   data () {
     return {
@@ -224,6 +226,9 @@ export default {
     },
     noStock () {
       return this.productSkuModels.every(item => item.stock < item.minBuyNum)
+    },
+    defaultCount () {
+      return this.currentModel.count
     }
   },
   watch: {
@@ -315,13 +320,14 @@ export default {
     },
     buyNow (selected) {
       this.currentModel = selected
-      const { productId, count, id } = selected
+      const { skuCode1, count, skuCode2 } = selected
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId')
       localStorage.setItem('CONFIRM_LIST', JSON.stringify([{
-        productId: productId,
-        optionCode: id,
+        productId: this.productId,
         count: count,
+        skuCode1: skuCode1,
+        skuCode2,
         agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
@@ -494,7 +500,6 @@ export default {
     justify-content: space-around;
     align-items: center;
     border-bottom: 1px solid #e7e7e7;
-    margin-bottom: 20px;
     > div {
       width: max-content;
       font-size: 26px;

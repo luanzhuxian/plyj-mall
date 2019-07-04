@@ -48,27 +48,27 @@ new Vue({
 router.beforeResolve(beforeEach)
 router.onError(onError)
 /* 处理所有组件抛出的错误 */
-Vue.config.errorHandler = async function (err, vm, info) {
-  let message = err.message
-  let error
-  if (/responseError/.test(message)) {
-    error = JSON.parse(err.message)
-    error.component = vm.$options.name
-    error.rotue = vm.$route
-  } else {
-    error = {
-      tag: 'otherError',
-      component: vm.$options.name,
-      message: err.message,
-      rotue: vm.$route
-    }
-  }
-  vm.$error(error.message)
-  console.error(err)
-  // vm.$destroy()
-  // try {
-  //   await saveLog(error)
-  // } catch (e) {
-  //   console.error(e)
-  // }
-}
+// Vue.config.errorHandler = async function (err, vm, info) {
+//   let message = err.message
+//   let error
+//   if (/responseError/.test(message)) {
+//     error = JSON.parse(err.message)
+//     error.component = vm.$options.name
+//     error.rotue = vm.$route
+//   } else {
+//     error = {
+//       tag: 'otherError',
+//       component: vm.$options.name,
+//       message: err.message,
+//       rotue: vm.$route
+//     }
+//   }
+//   vm.$error(error.message)
+//   console.error(err)
+//   // vm.$destroy()
+//   // try {
+//   //   await saveLog(error)
+//   // } catch (e) {
+//   //   console.error(e)
+//   // }
+// }

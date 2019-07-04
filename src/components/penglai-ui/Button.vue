@@ -80,12 +80,6 @@ export default {
       background-color: #ccc !important;
       color: #fefefe !important;
     }
-    /* 朴素的 */
-    &.plain {
-      &:disabled {
-        color: #999 !important;
-      }
-    }
     /* 有阴影的 */
     &.shadow {
       box-shadow: 0 4px 20px rgba(153, 153, 153, 0.2);
