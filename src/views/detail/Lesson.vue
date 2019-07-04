@@ -232,9 +232,6 @@ export default {
     limiting () {
       return Number(this.detail.purchaseQuantity) || 0
     },
-    productSkuModels () {
-      return this.detail.productSkuModels || []
-    },
     rebateList () {
       return this.productSkuModels.map(item => item.realRebate) || []
     },
