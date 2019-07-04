@@ -21,7 +21,7 @@
               <template v-else-if="detail.salesVolume > 0 && detail.salesVolume < 10">
                 <span v-text="detail.pageviews" />人关注
               </template>
-              <template v-else-if="detail.salesVolume > 10">
+              <template v-else-if="detail.salesVolume >= 10">
                 <span v-text="detail.salesVolume" />人购买
               </template>
             </div>
