@@ -9,28 +9,17 @@
       v-if="banner.length > 0"
     >
       <swiper-slide v-for="(item, index) of banner" :key="index">
-        <!-- 商品 -->
-        <img
-          v-if="item.linkType === 'goods' && item.contentId"
-          :class="$style.bannerImg"
-          data-status="ON_SALE"
-          @click="toProductDetail(item.contentId)"
-          :src="item.fileId"
-        >
-        <!-- 分类 -->
         <router-link
-          v-else-if="item.linkType === 'category' && item.link"
           :class="$style.bannerImg"
+          v-if="item.linkType && item.link"
           tag="img"
-          :src="item.fileId"
-          alt=""
-          :to="{ name: 'Classify', params: { optionId: item.link.split('/').splice(-1, 1)[0] } }"
+          :src="item.image"
+          :to="getRouteLink(item)"
         />
-        <!-- 其它 -->
         <img
-          v-else
-          :src="item.fileId"
           :class="$style.bannerImg"
+          v-else
+          :src="item.image"
         >
       </swiper-slide>
       <div class="banner-pagination" slot="pagination" />
@@ -65,22 +54,16 @@
 
     <div :class="$style.imgModule" v-if="modules.B.length">
       <router-link
-        v-if="modules.B[0].linkType === 'category' && modules.B[0].contentId"
-        tag="img"
-        :to="{ name: 'Classify', params: { optionId: modules.B[0].contentId } }"
-        :src="modules.B[0].fileId"
         :class="$style.imgModuleImg"
+        v-if="modules.B[0].linkType && modules.B[0].link"
+        tag="img"
+        :src="modules.B[0].image"
+        :to="getRouteLink(modules.B[0])"
       />
       <img
-        v-else-if="modules.B[0].linkType === 'goods' && modules.B[0].contentId"
-        :src="modules.B[0].fileId"
         :class="$style.imgModuleImg"
-        @click="toProductDetail(modules.B[0].contentId)"
-      >
-      <img
         v-else
-        :src="modules.B[0].fileId"
-        :class="$style.imgModuleImg"
+        :src="modules.B[0].image"
       >
     </div>
 
@@ -115,22 +98,16 @@
 
     <div :class="$style.imgModule" v-if="modules.D.length">
       <router-link
-        v-if="modules.D[0].linkType === 'category' && modules.D[0].contentId"
-        tag="img"
-        :to="{ name: 'Classify', params: { optionId: modules.D[0].contentId } }"
-        :src="modules.D[0].fileId"
         :class="$style.imgModuleImg"
+        v-if="modules.D[0].linkType && modules.D[0].link"
+        tag="img"
+        :src="modules.D[0].image"
+        :to="getRouteLink(modules.D[0])"
       />
       <img
-        v-else-if="modules.D[0].linkType === 'goods' && modules.D[0].contentId"
-        :src="modules.D[0].fileId"
         :class="$style.imgModuleImg"
-        @click="toProductDetail(modules.D[0].contentId)"
-      >
-      <img
         v-else
-        :src="modules.D[0].fileId"
-        :class="$style.imgModuleImg"
+        :src="modules.D[0].image"
       >
     </div>
 
@@ -250,18 +227,7 @@ export default {
     async getBanner (homeData) {
       let banner = homeData.find(item => item.moduleType === 'BANNER') || {}
       if (banner && banner.values && banner.values.length) {
-        let goods = []
-        let other = []
-        for (let val of banner.values) {
-          if (val.linkType === 'goods') {
-            // 获取商品分享id
-            val.contentId = val.link ? val.link.split('/').splice(-1, 1)[0] : null
-            goods.push(val)
-          } else {
-            other.push(val)
-          }
-        }
-        this.banner = [...goods, ...other]
+        this.banner = banner.values
       }
       return Promise.resolve()
     },
@@ -290,22 +256,26 @@ export default {
 
       for (let m of module2) {
         if (!m.values || !m.values.length) continue
-        for (let val of m.values) {
-          val.contentId = val.link ? val.link.split('/').splice(-1, 1)[0] : null
-          this.modules[m.moduleSuffix].push(val)
-        }
+        this.modules[m.moduleSuffix] = m.values
       }
       return Promise.resolve()
     },
-    /*
-    * 跳转至商品详情
-    * 跳转之前，如果当前用户是helper，尝试获取该商品的brokerId
-    * */
-    async toProductDetail (productSeq) {
-      let route = {
-        name: 'Lesson', params: { productSeq, brokerId: this.agentUser ? this.userId : null }
+    getRouteLink ({ linkType, link }) {
+      const name = linkType === 'goods'
+        ? 'Lesson'
+        : linkType === 'category'
+          ? 'Classify'
+          : null
+      const index = link.lastIndexOf('/')
+      const id = index ? link.substring(index + 1) : null
+      return {
+        name,
+        params: {
+          ...(linkType === 'category' ? { optionId: id } : null),
+          ...(linkType === 'goods' ? { productId: id } : null),
+          ...(linkType === 'goods' && this.agentUser ? { brokerId: this.userId } : null) // 如果当前用户是helper，尝试获取该商品的brokerId
+        }
       }
-      this.$router.push(route)
     }
   }
 }

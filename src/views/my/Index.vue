@@ -210,7 +210,6 @@ export default {
   },
   async activated () {
     try {
-      this.getNewFreight()
       this.orderPhysicalorderSummary()
       this.getProgress()
       if (this.roleCode === 'VISITOR') {
@@ -218,6 +217,8 @@ export default {
         setTimeout(() => {
           this.$router.push({ name: 'BindMobile' })
         }, 1000)
+      } else {
+        this.getNewFreight()
       }
     } catch (e) {
       throw e
