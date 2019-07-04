@@ -251,7 +251,11 @@ export default {
   },
   methods: {
     isSelected (pro) {
-      return this.checkedList.some(item => item.optionCode === pro.optionCode && (item.returnStatus === 0 || item.returnStatus === 3 || pro.returnStatus === ''))
+      return this.checkedList.some(item => {
+        return item.skuCode1 === pro.skuCode1 &&
+          item.skuCode2 === pro.skuCode2 &&
+          (item.returnStatus === 0 || item.returnStatus === 3 || pro.returnStatus === '')
+      })
     },
     change (type) {
       this.type = type
