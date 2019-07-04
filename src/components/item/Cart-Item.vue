@@ -22,7 +22,7 @@
           <div v-if="currentSkuModel">
             <span v-text="currentSkuModel.skuCode1Name" />
             <template v-if="currentSkuModel.skuCode2Name">
-              / <span v-text="currentSkuModel.skuCode2Name" />
+              ，<span v-text="currentSkuModel.skuCode2Name" />
             </template>
           </div>
           <pl-svg :class="$style.arrow" name="right" color="#ccc" />
