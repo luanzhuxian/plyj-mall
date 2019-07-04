@@ -56,7 +56,6 @@
 <script>
 import TopText from '../../../components/Top-Text.vue'
 import Grade from '../../../components/Grade.vue'
-import { getOrderDetail } from '../../../apis/order-manager'
 import { submitComment } from '../../../apis/comment'
 import { resetForm } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
@@ -67,6 +66,16 @@ export default {
     TopText,
     Grade
   },
+  props: {
+    orderId: {
+      type: String,
+      default: null
+    },
+    productId: {
+      type: String,
+      default: null
+    }
+  },
   data () {
     return {
       loading: false,
@@ -76,21 +85,13 @@ export default {
         productId: '',
         goodsScore: 5,
         content: '',
-        mediaInfoModels: []
+        mediaInfoModels: [],
+        skuCode1: '',
+        skuCode2: ''
       },
       img: '',
       images: [],
       maxLength: 100
-    }
-  },
-  props: {
-    orderId: {
-      type: String,
-      default: null
-    },
-    productId: {
-      type: String,
-      default: null
     }
   },
   computed: {
@@ -115,7 +116,11 @@ export default {
     }
   },
   activated () {
-    this.getOrderDetail()
+    this.form.orderId = this.orderId
+    this.form.productId = this.productId
+    this.form.skuCode1 = this.$route.query.skuCode1 || ''
+    this.form.skuCode2 = this.$route.query.skuCode2 || ''
+    this.img = this.$route.query.img || ''
   },
   deactivated () {
     resetForm(this.form, {
@@ -124,22 +129,17 @@ export default {
     this.images = []
   },
   methods: {
-    async getOrderDetail () {
-      try {
-        let { result } = await getOrderDetail(this.orderId)
-        this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.productId === this.productId)[0] || {}
-        this.img = this.productInfo.productImg
-        this.form.orderId = this.orderId
-        this.form.productId = this.productId
-      } catch (e) {
-        throw e
-      }
-    },
     async confirm () {
       if (!this.form.content.trim()) return this.$warning('请输入评价内容')
+
       try {
         this.loading = true
-        await submitComment(this.openId, this.form)
+        const { form: { skuCode2, ...rest } } = this
+        const params = {
+          ...rest,
+          ...(skuCode2 ? { skuCode2 } : null)
+        }
+        await submitComment(this.openId, params)
         this.loading = false
         this.$success('评价成功')
         setTimeout(() => {

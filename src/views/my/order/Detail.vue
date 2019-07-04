@@ -78,7 +78,7 @@
             type="warning"
             plain
             round
-            @click="$router.push({ name: 'CommentOrder', params: { orderId: orderId, productId: item.productId } })"
+            @click="$router.push({ name: 'CommentOrder', params: { orderId: orderId, productId: item.productId }, query: { img: item.productImg, skuCode1: item.skuCode1, skuCode2: item.skuCode2 } })"
           >
             晒单评价
           </pl-button>
@@ -930,9 +930,9 @@ export default {
       }
     }
   }
-  // .footer {
-  //   .pl-button__small {
-  //     padding: 0 32px;
-  //   }
-  // }
+  .pl-button__warning.plain {
+    background-color: #FFF;
+    border: 1px solid #FE7700;
+    color: #FE7700;
+  }
 </style>

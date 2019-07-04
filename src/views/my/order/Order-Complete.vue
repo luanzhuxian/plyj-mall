@@ -116,9 +116,12 @@ export default {
       padding: 0 38px;
       font-size: 26px;
     }
-    .pl-button__middle.plain:after {
-      border: 1px solid #FFF;
-      border-radius: 60px;
+    .pl-button__middle.plain{
+      border-color: #FFF;
+      &:after {
+        border: 1px solid #FFF;
+        border-radius: 60px;
+      }
     }
   }
 </style>
