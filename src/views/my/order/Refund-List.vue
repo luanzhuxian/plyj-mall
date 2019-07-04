@@ -50,7 +50,7 @@
             <order-item
               :img="item.productPic + '?x-oss-process=style/thum'"
               :name="item.productName"
-              :option="item.skuName2 ? `${item.skuName}/${item.skuName2}` : item.skuName"
+              :option="item.skuName2 ? `${item.skuName};${item.skuName2}` : item.skuName"
               :count="item.productCount"
               :price="item.productPrice"
               border

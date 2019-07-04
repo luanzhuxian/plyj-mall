@@ -7,7 +7,7 @@
       <order-item
         :img="productInfo.productImg + '?x-oss-process=style/thum'"
         :name="productInfo.productName"
-        :option="productInfo.skuCode2Name ? `${productInfo.skuCode1Name}/${productInfo.skuCode2Name}` : productInfo.skuCode1Name"
+        :option="productInfo.skuCode2Name ? `${productInfo.skuCode1Name};${productInfo.skuCode2Name}` : productInfo.skuCode1Name"
         :product-id="productInfo.productId"
         hide-price
         route-name="Lesson"
