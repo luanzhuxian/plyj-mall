@@ -47,7 +47,7 @@
         <Tags :tags="detail.labelModels" />
       </DetailInfoBox>
 
-      <Field label="发货" content="普通快递" />
+      <Field v-if="productType === 'PHYSICAL_GOODS'" label="发货" content="普通快递" />
       <Field
         label="选择"
         :can-click="!noStock"
@@ -240,6 +240,9 @@ export default {
     },
     minRebate () {
       return Math.min(...this.rebateList)
+    },
+    productType () {
+      return this.detail.productType
     }
   },
   watch: {
@@ -257,6 +260,7 @@ export default {
     this.showSpecifica = false
     this.currentModel = {}
     this.haibao = ''
+    this.showHaibao = false
   },
   mounted () {
     // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
@@ -268,9 +272,9 @@ export default {
       getCartCount: GET_CART_COUNT
     }),
     async getDetail () {
-      this.loading = true
-      this.resetState() // 重置一些状态
       try {
+        this.loading = true
+        this.resetState() // 重置一些状态
         let { result } = await getProductDetail(this.productId)
         let { id, agentProduct, mediaInfoIds, productStatus } = result
         this.productStatus = productStatus
@@ -280,14 +284,13 @@ export default {
         this.banners = mediaInfoIds
         this.detail = result
         this.productSkuModels = result.productSkuModels
-        await share({
+        share({
           appId: this.appId,
           title: result.productName,
           desc: result.productDesc,
           link: window.location.href,
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
-        this.loading = false
         // 加载一张图片，为生成海报备用
         let imgs = this.detail.mediaInfoIds
         let index = 0
@@ -301,6 +304,8 @@ export default {
         }
       } catch (e) {
         throw e
+      } finally {
+        this.loading = false
       }
     },
     resetState () {
