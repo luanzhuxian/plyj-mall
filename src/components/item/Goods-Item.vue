@@ -28,12 +28,16 @@
         :class="$style.desc"
         v-text="desc"
       />
-      <price
-        size="small"
-        :price="price"
-        :agent-price="agentPrice"
-        :original-price="originalPrice"
-      />
+      <div :class="$style.price">
+        <price
+          size="mini"
+          :price="price"
+          :original-price="originalPrice"
+        />
+        <span :class="$style.rebate" v-if="rebate">
+          {{ `返润笔 ¥${rebate}` }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -81,9 +85,9 @@ export default {
       type: [String, Number],
       default: ''
     },
-    agentPrice: {
+    rebate: {
       type: [String, Number],
-      default: ''
+      default: 0
     }
   },
   computed: {
@@ -117,7 +121,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  padding: 10px 28px 16px 28px;
+  padding: 4px 12px 18px;
   .name {
     height: 55px;
     font-weight: bold;
@@ -149,5 +153,16 @@ export default {
 .count {
   color: #999;
   font-size: 20px;
+}
+.price {
+  @include elps();
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.rebate {
+  font-size: 18px;
+  color: #666666;
+  line-height: 22px;
 }
 </style>

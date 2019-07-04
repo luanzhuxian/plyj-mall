@@ -95,6 +95,7 @@
                 :title="item.productName"
                 :price="item.productSkuModels.length && item.productSkuModels[0].price"
                 :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
+                :rebate="item.productSkuModels[0].rebate"
               />
             </div>
           </template>

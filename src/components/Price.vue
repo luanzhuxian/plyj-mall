@@ -4,8 +4,7 @@
     :class="{
       [$style.price]: true,
       [$style[size]]: true,
-      [$style.plain]: plain,
-      [$style.priceBox]:agentPrice
+      [$style.plain]: plain
     }"
   >
     <div>
@@ -22,9 +21,6 @@
         v-if="originalPrice"
         v-text="'¥' + originalPrice"
       />
-    </div>
-    <div :class="$style.agentPrice" v-if="agentPrice">
-      返润笔 ¥{{ agentPrice }}
     </div>
   </div>
 </template>
@@ -49,10 +45,6 @@ export default {
     plain: Boolean,
     prefixText: {
       type: String,
-      default: ''
-    },
-    agentPrice: {
-      type: [String, Number],
       default: ''
     }
   },
@@ -216,12 +208,5 @@ export default {
       font-weight: normal;
       color: $--font-color_gray1;
     }
-  }
-  .agentPrice{
-    font-size: 16px;
-    color: #666666;
-  }
-  .price-box{
-    justify-content: space-between;
   }
 </style>
