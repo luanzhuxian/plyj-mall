@@ -95,7 +95,9 @@ export default {
       default () {
         return []
       }
-    }
+    },
+    // 是否采用 replace 的方式跳转至详情
+    replace: Boolean
   },
   data () {
     return {
@@ -108,7 +110,11 @@ export default {
   methods: {
     async jump () {
       const { productId, agentUser, userId } = this
-      this.$router.push({ name: 'Lesson', params: { productId: productId, brokerId: agentUser ? userId : null } })
+      if (this.replace) {
+        this.$router.replace({ name: 'Lesson', params: { productId: productId, brokerId: agentUser ? userId : null } })
+      } else {
+        this.$router.push({ name: 'Lesson', params: { productId: productId, brokerId: agentUser ? userId : null } })
+      }
     }
   }
 }

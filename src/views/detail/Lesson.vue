@@ -244,6 +244,9 @@ export default {
   },
   watch: {
     productId () {
+      this.showSpecifica = false
+      this.currentModel = {}
+      this.haibao = ''
       this.getDetail()
     }
   },
