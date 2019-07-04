@@ -97,7 +97,7 @@
       :product-image="detail.productMainImage"
       :visible.sync="showSpecifica"
       :sku.sync="currentModel"
-      :limiting="detail.purchaseQuantity"
+      :limiting="limiting"
     >
       <template v-slot:footer="{ currentSku }">
         <div :class="$style.buttons">
@@ -230,6 +230,9 @@ export default {
     },
     defaultCount () {
       return this.currentModel.count
+    },
+    limiting () {
+      return Number(this.detail.purchaseQuantity) || 0
     }
   },
   watch: {

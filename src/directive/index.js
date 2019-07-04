@@ -15,8 +15,12 @@ export default {
       }
     }
   },
+  /*
+  * v-imger:group="url"
+  * */
   imger: {
     inserted: function (el, { value, arg }) {
+      value = value || el.src || ''
       if (!arg) id++
       let currentArg = arg || 'imgerList_' + id
       if (IMGERLIST[currentArg]) {

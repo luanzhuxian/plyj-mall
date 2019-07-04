@@ -13,7 +13,7 @@
     <div :class="$style.content">
       <div :class="$style.text" v-text="detail.content" />
       <div :class="$style.imgs">
-        <img v-for="(item, i) of detail.mediaInfoEntityList" :key="i" :src="item.mediaUrl" alt="">
+        <img v-for="(item, i) of detail.mediaInfoEntityList" :key="i" :src="item.mediaUrl" v-imger:comment alt="">
       </div>
       <div :class="$style.reply" v-if="detail.childs.length">
         <span>商家回复：</span>
