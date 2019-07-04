@@ -20,7 +20,7 @@
         :img="item.productImg"
         :name="item.productName"
         :count="item.count"
-        :option="item.skuCode2Name ? `${item.skuCode1Name}，${item.skuCode2Name}` : item.skuCode1Name"
+        :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
         :price="item.price"
         is-submit
         :gap="32"
@@ -86,7 +86,7 @@
           :img="item.productImg"
           :name="item.productName"
           :count="item.count"
-          :option="item.skuCode2Name ? `${item.skuCode1Name}/${item.skuCode2Name}` : item.skuCode1Name"
+          :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
           :price="item.price"
           is-submit
           :gap="32"

@@ -113,6 +113,13 @@ export default {
       return this.skuList.every(item => item.stock < item.minBuyNum) || this.productStatus !== 2
     }
   },
+  async activated () {
+    try {
+      await this.getCartCount()
+    } catch (e) {
+      throw e
+    }
+  },
   deactivated () {
     this.reset()
   },
