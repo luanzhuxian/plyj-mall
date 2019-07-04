@@ -459,6 +459,7 @@ export default {
           productName: refundDetail.productName,
           productCount: refundDetail.productCount,
           skuName: refundDetail.skuName,
+          skuName2: refundDetail.skuName2,
           applyReasonText: refundDetail.applyReasonText,
           applyTime: refundDetail.applyTime,
           applyContent: refundDetail.applyContent,

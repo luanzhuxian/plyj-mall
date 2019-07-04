@@ -51,9 +51,10 @@
 </template>
 
 <script>
-import { getComments } from '../../apis/comment'
 import Grade from '../../components/Grade.vue'
+import { getComments } from '../../apis/comment'
 import { resetForm } from '../../assets/js/util'
+
 export default {
   name: 'Comments',
   components: {
