@@ -163,6 +163,7 @@ export default {
       handler (val) {
         this.localCurrentSku = val
         this.localCurrentSku.count = val.minBuyNum
+        this.count = val.minBuyNum
         this.min = val.minBuyNum
         this.$emit('change', val)
         this.$emit('update:sku', val)
@@ -380,9 +381,8 @@ export default {
     > button {
       position: relative;
       margin: 0 13px 13px 0;
-      padding: 0 20px;
+      padding: 10px 20px;
       width: max-content;
-      line-height: 60px;
       color: #666;
       font-size: 24px;
       background-color: #f3f3f3;

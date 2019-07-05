@@ -166,7 +166,7 @@ import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
 import youLike from './../old-home/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
-import { generateQrcode } from '../../assets/js/util'
+import { generateQrcode, cutImageCenter } from '../../assets/js/util'
 import Comments from './Comments.vue'
 
 export default {
@@ -365,6 +365,8 @@ export default {
       if (this.haibao) {
         return
       }
+      // 截取中间部分
+      img = cutImageCenter(img)
       let canvas = document.createElement('canvas')
       let ctx = canvas.getContext('2d')
       canvas.width = 1120

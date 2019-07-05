@@ -207,3 +207,24 @@ export async function generateQrcode (size = 300, text = '', image = '', type = 
     }
   })
 }
+/*
+* 截取图片中间部分
+* @img 已加载完成的 img 对象
+* */
+export function cutImageCenter (img) {
+  const canvas = document.createElement('canvas')
+  let w = img.width
+  let h = img.height
+  let min = Math.min(w, h)
+  canvas.width = min
+  canvas.height = min
+  const ctx = canvas.getContext('2d')
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  if (w >= h) {
+    ctx.drawImage(img, (w - h) / 2, 0, h, h, 0, 0, h, h)
+  } else {
+    ctx.drawImage(img, 0, (h - w) / 2, w, w, 0, 0, w, w)
+  }
+  return canvas
+}
