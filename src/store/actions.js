@@ -85,6 +85,7 @@ export default {
         let { result } = await getUserInfo()
         commit(type.USER_INFO, result)
         await dispatch(type.ADDRESS_LIST)
+        localStorage.setItem('refresh_count', 0)
         resolve(result)
       } catch (e) {
         /*
@@ -113,6 +114,13 @@ export default {
   },
   [type.REFRESH_TOKEN]: ({ commit, state, dispatch }) => {
     return new Promise(async (resolve, reject) => {
+      let refreshCount = localStorage.getItem('refresh_count') || 0
+      localStorage.setItem('refresh_count', (refreshCount + 1))
+      if (Number(refreshCount) > 3) {
+        localStorage.setItem('refresh_count', 0)
+        commit(type.LOG_OUT)
+        return
+      }
       try {
         if (state.refresh_token) {
           let { result } = await refreshToken(state.refresh_token)

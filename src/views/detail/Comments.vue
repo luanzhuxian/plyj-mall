@@ -5,50 +5,52 @@
         全部
       </pl-button>
       <pl-button size="small" :type="form.flag ? 'primary' : 'default'" round plain @click="hasImage">
-        有图({{ assessmentPicCount }})
+        有图 <i v-if="assessmentPicCount">({{ assessmentPicCount }})</i>
       </pl-button>
     </div>
-    <div :class="$style.commentItem" v-for="(item, i) of list" :id="'item' + i" :key="item.id" @click="goDetail(item)">
-      <!-- 头像 -->
-      <img v-img-error :src="item.headUrl || ''" alt="">
-      <div :class="$style.content">
-        <div :class="$style.contentTop">
-          <div :class="$style.name" v-text="item.nickName" />
-          <div :class="$style.grade">
-            评分 <Grade size="mini" :grade="item.goodsScore" />
+    <template v-if="list.length > 0">
+      <div :class="$style.commentItem" v-for="(item, i) of list" :id="'item' + i" :key="item.id" @click="goDetail(item)">
+        <!-- 头像 -->
+        <img v-img-error :src="item.headUrl || ''" alt="">
+        <div :class="$style.content">
+          <div :class="$style.contentTop">
+            <div :class="$style.name" v-text="item.nickName" />
+            <div :class="$style.grade">
+              评分 <Grade size="mini" :grade="item.goodsScore" />
+            </div>
+          </div>
+
+          <!-- 时间  规格 -->
+          <div :class="$style.itemSku">
+            <span v-text="item.createTime.split(' ')[0]" />
+            <i v-text="item.orderProductREntity.attribute1" />
+            “<i v-text="item.orderProductREntity.skuName" />”
+            <template v-if="item.orderProductREntity.skuName2">
+              ，<i v-text="item.orderProductREntity.attribute2" />
+              “<i v-text="item.orderProductREntity.skuName2" />”
+            </template>
+            <!--<span>颜色“白色”，版本“55寸 4核处理器”</span>-->
+          </div>
+          <!-- 内容 -->
+          <div :class="$style.commentContent" v-text="item.content" />
+          <!-- 图片 -->
+          <div :class="$style.imgs + ' radius-20'" v-if="item.mediaInfoEntityList.length > 0">
+            <img
+              v-for="(img, j) of item.mediaInfoEntityList"
+              :key="j"
+              v-img-error
+              :src="img.mediaUrl + '?x-oss-process=style/thum'"
+              v-imger:comment="img.mediaUrl"
+              alt=""
+            >
+          </div>
+          <!-- 回复 -->
+          <div :class="$style.reply" v-if="item.childs.length">
+            <span v-text="item.childs[0].content" />
           </div>
         </div>
-
-        <!-- 时间  规格 -->
-        <div :class="$style.itemSku">
-          <span v-text="item.createTime.split(' ')[0]" />
-          <i v-text="item.orderProductREntity.attribute1" />
-          “<i v-text="item.orderProductREntity.skuName" />”
-          <template v-if="item.orderProductREntity.skuName2">
-            ，<i v-text="item.orderProductREntity.attribute2" />
-            “<i v-text="item.orderProductREntity.skuName2" />”
-          </template>
-          <!--<span>颜色“白色”，版本“55寸 4核处理器”</span>-->
-        </div>
-        <!-- 内容 -->
-        <div :class="$style.commentContent" v-text="item.content" />
-        <!-- 图片 -->
-        <div :class="$style.imgs + ' radius-20'" v-if="item.mediaInfoEntityList.length > 0">
-          <img
-            v-for="(img, j) of item.mediaInfoEntityList"
-            :key="j"
-            v-img-error
-            :src="img.mediaUrl + '?x-oss-process=style/thum'"
-            v-imger:comment="img.mediaUrl"
-            alt=""
-          >
-        </div>
-        <!-- 回复 -->
-        <div :class="$style.reply" v-if="item.childs.length">
-          <span v-text="item.childs[0].content" />
-        </div>
       </div>
-    </div>
+    </template>
     <p :class="$style.noComments" v-if="length === 0 && productId">
       <span>暂无评论</span>
     </p>
@@ -90,7 +92,7 @@ export default {
       return this.list.length
     },
     assessmentPicCount () {
-      return this.list[0].assessmentPicCount
+      return length && this.list[0].assessmentPicCount
     }
   },
   activated () {
@@ -171,6 +173,7 @@ export default {
       }
     },
     hasImage () {
+      console.log(1)
       if (this.loading) return
       this.reset()
       this.form.flag = true
@@ -207,6 +210,9 @@ export default {
     display: flex;
     padding: 30px 0;
     border-bottom: 1px solid #e7e7e7;
+    &:nth-last-of-type(1) {
+      border: none;
+    }
     > img {
       width: 80px;
       height: 80px;
@@ -287,6 +293,7 @@ export default {
   }
   .noComments {
     display: flex;
+    margin: 32px;
     flex-direction: column;
     align-items: center;
     text-align: center;

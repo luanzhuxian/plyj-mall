@@ -8,17 +8,18 @@
       </div>
       <DetailBanner @slideChange="slideChange" :banners="banners" />
       <DetailInfoBox :loading="loading">
-        <div :class="$style.price">
+        <div :class="$style.priceBox">
           <div :class="$style.priceLeft">
-            <Price
-              v-if="productSkuModels.length"
-              size="huge"
-              :price="currentPrice"
-              :original-price="currentOriginalPrice"
-            />
+            <div :class="$style.price">
+              <i v-text="minPrice" />
+              <template v-if="minPrice !== maxPrice">
+                ~ <i v-text="maxPrice" />
+              </template>
+            </div>
             <div :class="$style.count">
-              <span v-if="detail.salesVolume === 0">正在热销中</span>
-              <template v-else-if="detail.salesVolume > 0 && detail.salesVolume < 10">
+              <del v-text="maxOriginalPrice" />
+              <span v-if="detail.salesVolume === 0 && detail.productStatus === 2">正在热销中</span>
+              <template v-else-if="detail.salesVolume > 0 && detail.salesVolume < 10 || detail.productStatus === 1">
                 <span v-text="detail.pageviews" />人关注
               </template>
               <template v-else-if="detail.salesVolume >= 10">
@@ -29,12 +30,11 @@
           <div :class="$style.priceRight" v-if="agentUser && (minRebate || maxRebate)">
             <p class="fz-22 gray-1">
               <span :class="$style.returnRunbi">
-                返还
+                润笔
               </span>
               <i v-if="minRebate" v-text="minRebate" />
               <i v-if="minRebate && maxRebate && minRebate !== maxRebate">~</i>
               <i v-if="maxRebate && minRebate !== maxRebate" v-text="maxRebate" />
-              润笔
             </p>
             <p class="fz-22 gray-3">
               分享下单即可获得润笔
@@ -242,6 +242,21 @@ export default {
     },
     minRebate () {
       return Math.min(...this.rebateList)
+    },
+    priceList () {
+      return this.productSkuModels.map(item => item.price) || []
+    },
+    originalPriceList () {
+      return this.productSkuModels.map(item => item.originalPrice) || []
+    },
+    maxPrice () {
+      return Math.max(...this.priceList)
+    },
+    minPrice () {
+      return Math.min(...this.priceList)
+    },
+    maxOriginalPrice () {
+      return Math.max(...this.originalPriceList)
     },
     productType () {
       return this.detail.productType
@@ -457,30 +472,42 @@ export default {
   .lesson {
     padding-bottom: 120px;
   }
-  .price {
+  .priceBox {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: start;
-    margin-bottom: 30px;
+
   }
   .priceLeft {
     flex: 1;
     display: inline-flex;
     flex-direction: column;
   }
+  .price {
+    line-height: 48px;
+    margin-bottom: 4px;
+    color: #FE7700;
+    font-size: 40px;
+    &:before {
+      content: '¥';
+      font-size: 24px;
+    }
+  }
   .priceRight {
     flex: 1;
     display: inline-flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-top: 8px;
+    margin-top: 5px;
     > p {
       margin-top: 6px;
     }
     .returnRunbi {
       display: inline-block;
-      width: 58px;
-      height: 26px;
+      width: 60px;
+      height: 28px;
+      line-height: 28px;
       margin-right: 10px;
       text-align: center;
       color: #fff;
@@ -491,7 +518,13 @@ export default {
   }
   .count {
     font-size: 24px;
-    color: #FE7700;
+    color: #999999;
+    del {
+      margin-right: 32px;
+      &:before {
+        content: '¥';
+      }
+    }
   }
   .buttons {
     display: flex;
