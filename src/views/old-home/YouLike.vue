@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     getList () {
-      getYouLikeData()
+      getYouLikeData(this.productId)
         .then(res => {
           for (let list of res.result) {
             list.productSkuModels.sort((a, b) => a.price - b.price)

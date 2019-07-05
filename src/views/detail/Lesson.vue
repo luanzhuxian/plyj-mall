@@ -85,7 +85,7 @@
     <SoldOut v-else />
 
     <div style="background-color: #f4f5f9;">
-      <you-like :is-my="true" />
+      <you-like :product-id="productId" :is-my="true" />
     </div>
 
     <buy-now
