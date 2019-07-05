@@ -23,7 +23,7 @@
 
     <div :class="$style.product">
       <div :class="$style.sku">
-        {{ detail.orderProductREntity.attribute1 }} ”{{ detail.orderProductREntity.skuName }}“
+        {{ detail.orderProductREntity.attribute1 }} “{{ detail.orderProductREntity.skuName }}”
         <template v-if="detail.orderProductREntity.skuName2">
           ，{{ detail.orderProductREntity.attribute2 }} “{{ detail.orderProductREntity.skuName2 }}”
         </template>
