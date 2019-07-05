@@ -29,7 +29,8 @@ export default {
         IMGERLIST[currentArg] = [value]
       }
       IMGERLIST[currentArg] = [...new Set(IMGERLIST[currentArg])]
-      el.addEventListener('click', function () {
+      el.addEventListener('click', function (e) {
+        e.stopPropagation()
         window.wx.previewImage({
           current: value, // 当前显示图片的http链接
           urls: [...IMGERLIST[currentArg]] // 需要预览的图片http链接列表
