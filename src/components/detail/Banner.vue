@@ -3,7 +3,7 @@
     v-if="banners.length > 0"
     :class="'detail-banner' + ' ' + $style.detailBanner"
   >
-    <swiper :options="swiperOption">
+    <swiper ref="swiper" :options="swiperOption" @slideChange="slideChange">
       <swiperSlide
         v-for="(img, index) of banners"
         :key="index"
@@ -52,6 +52,16 @@ export default {
           el: '.swiper-pagination'
         }
       }
+    }
+  },
+  computed: {
+    swiper () {
+      return this.$refs.swiper.swiper
+    }
+  },
+  methods: {
+    slideChange () {
+      this.$emit('slideChange', this.swiper.activeIndex)
     }
   }
 }

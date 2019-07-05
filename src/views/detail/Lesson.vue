@@ -6,7 +6,7 @@
         <pl-svg name="haibao" />
         <p>分享海报</p>
       </div>
-      <DetailBanner :banners="banners" />
+      <DetailBanner @slideChange="slideChange" :banners="banners" />
       <DetailInfoBox :loading="loading">
         <div :class="$style.price">
           <div :class="$style.priceLeft">
@@ -295,21 +295,16 @@ export default {
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
         // 加载一张图片，为生成海报备用
-        let imgs = this.detail.mediaInfoIds
-        let index = 0
-        while (index < imgs.length) {
-          try {
-            this.haibaoImg = await this.loadImage(imgs[index])
-            break
-          } catch (e) {
-            index++
-          }
-        }
+        this.haibaoImg = await this.loadImage(this.detail.mediaInfoIds[0])
       } catch (e) {
         throw e
       } finally {
         this.loading = false
       }
+    },
+    async slideChange (index) {
+      this.haibaoImg = await this.loadImage(this.detail.mediaInfoIds[index])
+      this.haibao = ''
     },
     resetState () {
       this.currentModel = {}

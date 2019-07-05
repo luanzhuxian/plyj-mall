@@ -31,14 +31,16 @@
               <div :class="$style.color" v-if="skuAttrList && skuAttrList.length">
                 <div v-text="skuAttrList[0].productAttributeName" />
                 <div :class="$style.colorList">
-                  <button
-                    v-for="(item, i) of skuAttrList[0].productAttributeValues"
-                    :key="i"
-                    @click.stop="skuChange(item.id)"
-                    :disabled="sku1IsAllDisabled(item.id)"
-                    :class="{ [$style.active]: currentSku1 === item.id }"
-                    v-text="item.productAttributeValueName"
-                  />
+                  <template v-for="(item, i) of skuAttrList[0].productAttributeValues">
+                    <button
+                      v-if="attrIsHear(item.id)"
+                      :key="i"
+                      @click.stop="skuChange(item.id)"
+                      :disabled="sku1IsAllDisabled(item.id)"
+                      :class="{ [$style.active]: currentSku1 === item.id }"
+                      v-text="item.productAttributeValueName"
+                    />
+                  </template>
                 </div>
               </div>
               <!-- 规格2 -->
@@ -252,6 +254,9 @@ export default {
     },
     subSkuChange (sku2) {
       this.currentSku2 = sku2
+    },
+    attrIsHear (attrId) {
+      return this.skuList.some(item => item.skuCode1 === attrId || item.skuCode2 === attrId)
     },
     countChange () {
       if (this.count === '') return
