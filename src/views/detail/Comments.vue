@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.comment + ' radius-20'" ref="comment">
     <div :class="$style.header" v-if="total > 0">
-      <pl-button size="small" :type="form.flag ? '' : 'primary'" round plain @click="all">
+      <pl-button size="small" :type="form.flag ? 'default' : 'primary'" round plain @click="all">
         全部
       </pl-button>
-      <pl-button size="small" :type="form.flag ? 'primary' : ''" round plain @click="hasImage">
+      <pl-button size="small" :type="form.flag ? 'primary' : 'default'" round plain @click="hasImage">
         有图
       </pl-button>
     </div>
