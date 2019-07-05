@@ -33,7 +33,7 @@
         class="pl-input__word-count"
         v-if="maxlength > 0"
       >
-        <i v-text="value.length > maxlength ? maxlength : value.length" />
+        <i v-text="length > maxlength ? maxlength : length" />
         /
         <i v-text="maxlength" />
       </span>
@@ -93,6 +93,8 @@
 </template>
 
 <script>
+import { toArray, hasUnicode } from '../../assets/js/unicode-to-array'
+
 export default {
   name: 'PlInput',
   model: {
@@ -162,6 +164,25 @@ export default {
       getLine: null,
       $form: null,
       $formItem: null
+    }
+  },
+  computed: {
+    // 统计包含emoji表情的字长
+    length () {
+      const { value } = this
+      // const arr = toArray(value)
+      // console.log(arr)
+      return hasUnicode(value) // 是否包含emoji表情
+        ? toArray(value).length
+        : value.length
+    }
+  },
+  watch: {
+    length (value) {
+      if (!this.maxlength) return
+      if (value === this.maxlength) {
+        this.$emit('alert')
+      }
     }
   },
   mounted () {

@@ -28,6 +28,7 @@
           :maxlength="maxLength"
           placeholder="产品满足你的期待吗？说说它的优点和缺点吧"
           :min-rows="8"
+          @alert="alert"
         />
       </div>
       <div :class="$style.images">
@@ -98,11 +99,6 @@ export default {
     ...mapGetters(['openId'])
   },
   watch: {
-    'form.content' (value) {
-      if (value.length === this.maxLength) {
-        this.$toast(`最多输入${this.maxLength}个字`)
-      }
-    },
     images (val) {
       this.form.mediaInfoModels = []
       for (let url of val) {
@@ -129,6 +125,9 @@ export default {
     this.images = []
   },
   methods: {
+    alert () {
+      this.$toast(`最多输入${this.maxLength}个字`)
+    },
     async confirm () {
       if (!this.form.content.trim()) return this.$warning('请输入评价内容')
 
