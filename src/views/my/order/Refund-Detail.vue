@@ -155,7 +155,7 @@
         <order-item
           :img="refundDetail.productPic + '?x-oss-process=style/thum'"
           :name="refundDetail.productName"
-          :option="refundDetail.skuName2 ? `${refundDetail.skuName};${refundDetail.skuName2}` : refundDetail.skuName"
+          :option="refundDetail.skuName2 ? `${refundDetail.skuName},${refundDetail.skuName2}` : refundDetail.skuName"
           route-name="Lesson"
           :product-id="refundDetail.productId"
           hide-price

@@ -53,7 +53,7 @@
               :key="j"
               :img="product.productImg + '?x-oss-process=style/thum'"
               :name="product.productName"
-              :option="product.skuName2 ? `${product.skuName}，${product.skuName2}` : product.skuName"
+              :option="product.skuName2 ? `${product.skuName},${product.skuName2}` : product.skuName"
               :count="product.purchaseQuantity"
               :price="product.unitPrice"
               :status="refundStatusMap[product.afterSalesStatus]"
