@@ -22,7 +22,13 @@
         <!-- 时间  规格 -->
         <div :class="$style.itemSku">
           <span v-text="item.createTime.split(' ')[0]" />
-          <span>颜色“白色”，版本“55寸 4核处理器”</span>
+          <i v-text="item.orderProductREntity.attribute1" />
+          “<i v-text="item.orderProductREntity.skuName" />”
+          <template v-if="item.orderProductREntity.skuName2">
+            ，<i v-text="item.orderProductREntity.attribute2" />
+            “<i v-text="item.orderProductREntity.skuName2" />”
+          </template>
+          <!--<span>颜色“白色”，版本“55寸 4核处理器”</span>-->
         </div>
         <!-- 内容 -->
         <div :class="$style.commentContent" v-text="item.content" />
@@ -84,7 +90,7 @@ export default {
       return this.list.length
     }
   },
-  created () {
+  activated () {
     this.reset()
     this.form.productId = this.productId
     this.getList()
