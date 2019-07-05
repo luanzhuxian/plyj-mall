@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.comment + ' radius-20'" ref="comment">
-    <div :class="$style.header" v-if="list.length > 0">
+    <div :class="$style.header" v-if="total > 0">
       <pl-button size="small" :type="form.flag ? '' : 'primary'" round plain @click="all">
         全部
       </pl-button>
@@ -39,8 +39,7 @@
         </div>
         <!-- 回复 -->
         <div :class="$style.reply" v-if="item.childs.length">
-          <span>商家回复：</span>
-          {{ item.childs[0].content }}
+          <span v-text="item.childs[0].content" />
         </div>
       </div>
     </div>
@@ -204,6 +203,7 @@ export default {
       margin-top: 22px;
       font-size: 28px;
       word-break: break-all;
+      @include elps-wrap(3);
     }
     .imgs {
       display: grid;
@@ -292,7 +292,12 @@ export default {
     border-radius: 16px;
     font-size: 24px;
     span {
-      font-weight: bold;
+      display: inline-block;
+      @include elps-wrap(3);
+      &:before {
+        content: '商家回复：';
+        font-weight: bold;
+      }
     }
   }
 </style>
