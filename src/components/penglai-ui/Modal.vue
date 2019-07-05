@@ -6,13 +6,13 @@
     <div
       class="overlay"
       :class="{ show: isOverlayShow }"
-      :style="{ zIndex: zIndex }"
+      :style="{ zIndex }"
       @click="onClickOverlay"
     />
     <div
       class="pl-modal__content"
       :class="{ show: isModalShow }"
-      :style="{ zIndex: zIndex + 1, width: width, height: height }"
+      :style="{ zIndex: zIndex + 1, width, height }"
     >
       <pl-svg
         v-if="!hideCloseButton"
@@ -128,10 +128,14 @@ export default {
   },
   watch: {
     show (value) {
-      this.isShow = value
-      setTimeout(() => {
-        this.isOverlayShow = this.isModalShow = true
-      }, 200)
+      if (value) {
+        this.isShow = value
+        setTimeout(() => {
+          this.isOverlayShow = this.isModalShow = true
+        }, 200)
+      } else {
+        this.isOverlayShow && this.isModalShow && this.closeModal()
+      }
     }
   },
   methods: {
@@ -148,7 +152,10 @@ export default {
       })
     },
     closeModal () {
-      this.isShow = this.isOverlayShow = this.isModalShow = false
+      this.isOverlayShow = this.isModalShow = false
+      setTimeout(() => {
+        this.isShow = false
+      }, 200)
     },
     handleAction (e, action) {
       if (this.asyncClose) this[`loading.${action}`] = true
