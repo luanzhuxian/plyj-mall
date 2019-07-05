@@ -26,6 +26,10 @@ import { getYouLikeData } from '../../apis/base-api'
 import { mapGetters } from 'vuex'
 
 export default {
+  name: 'YouLike',
+  components: {
+    CategoryItem
+  },
   data () {
     return {
       likeProduct: []
@@ -64,9 +68,6 @@ export default {
           throw e
         })
     }
-  },
-  components: {
-    CategoryItem
   }
 }
 </script>

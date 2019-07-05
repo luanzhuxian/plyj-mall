@@ -169,6 +169,7 @@ export default {
   computed: {
     // 统计包含emoji表情的字长
     length () {
+      if (!this.maxlength) return false
       const { value } = this
       return hasUnicode(value) // 是否包含emoji表情
         ? toArray(value).length
@@ -178,7 +179,7 @@ export default {
   watch: {
     // 字数长度达到最大值提醒
     length (value) {
-      if (!this.maxlength) return
+      if (!this.maxlength) return false
       if (value > this.maxlength) {
         this.$emit('alert')
       }
