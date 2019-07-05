@@ -5,7 +5,7 @@
         全部
       </pl-button>
       <pl-button size="small" :type="form.flag ? 'primary' : 'default'" round plain @click="hasImage">
-        有图
+        有图({{ assessmentPicCount }})
       </pl-button>
     </div>
     <div :class="$style.commentItem" v-for="(item, i) of list" :id="'item' + i" :key="item.id" @click="goDetail(item)">
@@ -88,12 +88,30 @@ export default {
   computed: {
     length () {
       return this.list.length
+    },
+    assessmentPicCount () {
+      return this.list[0].assessmentPicCount
     }
   },
   activated () {
     this.reset()
     this.form.productId = this.productId
     this.getList()
+  },
+  deactivated () {
+    this.total = 0
+    this.list = []
+  },
+  watch: {
+    show: {
+      handler (val) {
+        if (val) {
+          this.reset()
+          this.form.productId = this.productId
+          this.getList()
+        }
+      }
+    }
   },
   mounted () {
     window.addEventListener('scroll', this.scroll)

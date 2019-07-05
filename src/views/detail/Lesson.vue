@@ -263,6 +263,7 @@ export default {
     this.currentModel = {}
     this.haibao = ''
     this.showHaibao = false
+    this.tab = 2
   },
   mounted () {
     // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
