@@ -71,6 +71,7 @@
               placeholder="请填写您的原因"
               :maxlength="maxLength"
               :min-rows="8"
+              @alert="alert"
             />
           </label>
         </div>
@@ -280,13 +281,6 @@ export default {
             : '')
     }
   },
-  watch: {
-    'form.applyContent' (value) {
-      if (value.length === this.maxLength) {
-        this.$toast(`最多输入${this.maxLength}个字`)
-      }
-    }
-  },
   activated () {
     this.form.orderDetailId = this.orderProductRId
     this.radio.refundType = String(this.refundType)
@@ -306,6 +300,9 @@ export default {
     this.isPopupShow = false
   },
   methods: {
+    alert () {
+      this.$toast(`最多输入${this.maxLength}个字`)
+    },
     onInput (e) {
       const selection = window.getSelection()
       const lastAnchorOffset = selection.anchorOffset

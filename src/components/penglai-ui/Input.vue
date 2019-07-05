@@ -170,17 +170,16 @@ export default {
     // 统计包含emoji表情的字长
     length () {
       const { value } = this
-      // const arr = toArray(value)
-      // console.log(arr)
       return hasUnicode(value) // 是否包含emoji表情
         ? toArray(value).length
         : value.length
     }
   },
   watch: {
+    // 字数长度达到最大值提醒
     length (value) {
       if (!this.maxlength) return
-      if (value === this.maxlength) {
+      if (value > this.maxlength) {
         this.$emit('alert')
       }
     }
