@@ -318,8 +318,10 @@ export default {
       }
     },
     async slideChange (index) {
-      this.haibaoImg = await this.loadImage(this.detail.mediaInfoIds[index])
-      this.haibao = ''
+      if (!this.showHaibao) {
+        this.haibaoImg = await this.loadImage(this.detail.mediaInfoIds[index])
+        this.haibao = ''
+      }
     },
     resetState () {
       this.currentModel = {}
