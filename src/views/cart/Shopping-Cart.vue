@@ -200,8 +200,11 @@ export default {
       this.currentPro = data
       this.currentSku = this.currentPro.skuModels.find(item => {
         return item.skuCode1 === this.currentPro.cartSkuCode && item.skuCode2 === this.currentPro.cartSkuCode2
-      })
-      this.currentSku.count = data.cartProductCount
+      }) || {}
+      console.log(this.currentSku)
+      if (this.currentSku.id) {
+        this.currentSku.count = data.cartProductCount
+      }
       this.$nextTick(() => {
         this.$nextTick(() => {
           this.showSpecifica = true

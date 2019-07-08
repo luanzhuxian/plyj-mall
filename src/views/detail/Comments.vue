@@ -316,15 +316,16 @@ export default {
     margin-top: 20px;
     margin-right: 30px;
     padding: 20px 24px;
-    background-color: #f6f6f6;
+    background-color: #f8f8f8;
     border-radius: 16px;
     font-size: 24px;
+    color: #999999;
     span {
       display: inline-block;
       @include elps-wrap(3);
+      word-break: break-all;
       &:before {
         content: '商家回复：';
-        font-weight: bold;
       }
     }
   }

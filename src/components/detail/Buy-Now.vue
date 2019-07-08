@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.buyNow">
     <div :class="$style.phone">
-      <a :class="$style.link" :href="'tel:' + supportPhone">
-        <pl-svg name="phone" />
-      </a>
       <router-link :class="$style.link" :to="{ name: 'Home' }">
         <pl-svg name="home" />
       </router-link>
+      <a :class="$style.link + ' ' + $style.callUs" :href="'tel:' + supportPhone">
+        <pl-svg name="call-us" />
+      </a>
       <router-link :class="$style.link + ' ' + $style.toCart" :to="{ name: 'ShoppingCart' }">
         <i v-if="cartCount > 99" :class="$style.cartCount">99+</i>
         <i v-else-if="cartCount > 0" :class="$style.cartCount" v-text="cartCount" />
@@ -256,6 +256,9 @@ export default {
       > .link {
         position: relative;
         flex: 1;
+        &.callUs > svg {
+          width: 77px !important;
+        }
         /*&:nth-of-type(1):after {
           position: absolute;
           content: '';

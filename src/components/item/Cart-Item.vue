@@ -17,7 +17,7 @@
         该商品已失效
       </span>
 
-      <template v-else-if="!allDisabled">
+      <template v-else-if="!allDisabled && currentSkuModel.id">
         <div :class="{ [$style.currentSku]: true, [$style.disabled]: disabled }" @click.stop="skuClick">
           <div v-if="currentSkuModel">
             <span v-text="currentSkuModel.skuCode1Name" />
@@ -43,7 +43,7 @@
         全部售罄
       </span>
       <div
-        v-if="overflowStock && !allDisabled && !noSold"
+        v-if="overflowStock && !allDisabled && !noSold || !currentSkuModel.id"
         :class="$style.reelect"
       >
         <span>请重新选择商品规格</span>
@@ -52,7 +52,7 @@
           plain
           size="mini"
           type="primary"
-          @click.stop="showSpecifica = true"
+          @click.stop="skuClick"
         >
           重选
         </pl-button>
@@ -74,8 +74,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
-      currentSkuModel: {}
+      loading: false
     }
   },
   props: {
@@ -109,16 +108,21 @@ export default {
     // 下架或删除
     noSold () {
       return this.data.productStatus === 1 || this.data.productStatus === 0
+    },
+    currentSkuModel () {
+      return this.data.skuModels.find(item => {
+        return item.skuCode1 === this.data.cartSkuCode && item.skuCode2 === this.data.cartSkuCode2
+      }) || {}
     }
   },
   watch: {
     data: {
       handler (val) {
-        if (val) {
-          this.currentSkuModel = val.skuModels.find(item => {
-            return item.skuCode1 === this.data.cartSkuCode && item.skuCode2 === this.data.cartSkuCode2
-          }) || {}
-        }
+        // if (val) {
+        //   this.currentSkuModel = val.skuModels.find(item => {
+        //     return item.skuCode1 === this.data.cartSkuCode && item.skuCode2 === this.data.cartSkuCode2
+        //   }) || {}
+        // }
       },
       immediate: true,
       deep: true
