@@ -282,10 +282,11 @@ export default {
         }
         .cartCount {
           position: absolute;
-          right: -12px;
+          right: -6px;
           top: -8px;
-          width: 48px;
           height: 36px;
+          min-width: 36px;
+          padding: 0 5px;
           line-height: 32px;
           color: #fff;
           background-color: #FE7700;

@@ -32,7 +32,7 @@
               <span :class="$style.returnRunbi">
                 润笔
               </span>
-              <i v-if="minRebate" v-text="minRebate" />
+              <i v-if="minRebate" class="rmb" v-text="minRebate" />
               <i v-if="minRebate && maxRebate && minRebate !== maxRebate">~</i>
               <i v-if="maxRebate && minRebate !== maxRebate" v-text="maxRebate" />
             </p>
