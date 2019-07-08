@@ -225,6 +225,7 @@ export default {
     },
     skuChange (skuCode1, skuCode2) {
       this.currentSku1 = skuCode1
+      skuCode2 = skuCode2 || this.currentSku2 || ''
       let skuCode2List = this.skuList.filter(item => item.skuCode1 === skuCode1)
       for (let item of skuCode2List) {
         if (item.stock < item.minBuyNum) {
@@ -236,7 +237,7 @@ export default {
       let noDisabled = skuCode2List.filter(item => !item.disabled)
       if (skuCode2) {
         let currentSku2 = skuCode2List.find(item => item.skuCode2 === skuCode2)
-        if (!currentSku2.disabled) {
+        if (currentSku2 && !currentSku2.disabled) {
           this.currentSku2 = skuCode2
         } else {
           this.currentSku2 = noDisabled.length ? noDisabled[0].skuCode2 || '' : ''

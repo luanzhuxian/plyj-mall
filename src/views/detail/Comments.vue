@@ -4,8 +4,8 @@
       <pl-button size="small" :type="form.flag ? 'default' : 'primary'" round plain @click="all">
         全部
       </pl-button>
-      <pl-button size="small" :type="form.flag ? 'primary' : 'default'" round plain @click="hasImage">
-        有图 <i v-if="assessmentPicCount">({{ assessmentPicCount }})</i>
+      <pl-button v-if="assessmentPicCount" size="small" :type="form.flag ? 'primary' : 'default'" round plain @click="hasImage">
+        有图 <i>({{ assessmentPicCount }})</i>
       </pl-button>
     </div>
     <template v-if="list.length > 0">

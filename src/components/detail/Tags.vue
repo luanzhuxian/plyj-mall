@@ -32,6 +32,7 @@ export default {
       padding: 6px 12px;
       color: #666;
       font-size: 20px;
+      word-break: break-all;
       background-color: #f6f7fa;
       border-radius: 4px;
       border: 1px solid #e1e2e6;
