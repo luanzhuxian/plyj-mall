@@ -13,7 +13,7 @@
     <div :class="$style.cartItemContent">
       <div :class="$style.productName" v-text="data.productName" />
 
-      <span :class="$style.unshelve" v-if="data.productStatus === 1">
+      <span :class="$style.unshelve" v-if="noSold">
         该商品已失效
       </span>
 
@@ -43,7 +43,7 @@
         全部售罄
       </span>
       <div
-        v-if="overflowStock && !allDisabled"
+        v-if="overflowStock && !allDisabled && !noSold"
         :class="$style.reelect"
       >
         <span>请重新选择商品规格</span>
@@ -105,6 +105,10 @@ export default {
     // 所有规格禁用状态
     allDisabled () {
       return this.data.skuModels.every(item => item.stock < item.minBuyNum)
+    },
+    // 下架或删除
+    noSold () {
+      return this.data.productStatus === 1 || this.data.productStatus === 0
     }
   },
   watch: {
