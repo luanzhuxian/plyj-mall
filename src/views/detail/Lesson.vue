@@ -373,6 +373,9 @@ export default {
       })
     },
     async createHaibao () {
+      if (this.loading) {
+        return
+      }
       let img = this.haibaoImg
       if (!img) {
         this.$error('图片加载错误')
@@ -390,7 +393,7 @@ export default {
       canvas.height = 1528
       try {
         let min = Math.min(img.width, img.height)
-        let qrcode = await generateQrcode(300, window.location.href, null, 'canvas')
+        let qrcode = await generateQrcode(300, window.location.href, 0, img, 5, 'canvas')
         ctx.drawImage(img, 0, 0, min, min, 0, 0, 1120, 1120)
         ctx.fillStyle = '#fff'
         ctx.fillRect(0, 1120, 1120, 408)

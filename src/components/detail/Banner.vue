@@ -14,6 +14,7 @@
           v-lazy="img"
           :key="img"
           alt=""
+          crossOrigin=""
         >
       </swiperSlide>
     </swiper>

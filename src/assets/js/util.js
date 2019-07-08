@@ -149,68 +149,69 @@ export function suffixPx (value) {
   value = String(value)
   return isNumber(value) ? `${value}px` : value
 }
-/*
-* size 大小
-* text 内容
-* image 中心的图片
-* type 返回值类型 canvas, url
-* */
-export async function generateQrcode (size = 300, text = '', image = '', type = 'url') {
-  // https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-category-icon/art-class.png
-  let canvas = new window.Qrcode({
+/**
+ * 生成商品二维码
+ * @param size {number} 二维码尺寸，必填
+ * @param text {string} 二维码内容，必填
+ * @param padding {number} 二维码的白边大小，默认未0
+ * @param img {HTMLElement} 二维码中心图片,可以是img或canvas
+ * @param centerPadding 二维码中心图片的白边大小，默认未0
+ * @param type {string} 生成的类型 canvas: 生成canvas, url 生成base64
+ * @returns {Promise<*>}
+ */
+export async function generateQrcode (size, text, padding = 0, img, centerPadding = 0, type) {
+  const imageSize = 100 // 中心图片的宽高
+  const devicePixelRatio = window.devicePixelRatio
+  let canvas
+  canvas = new window.Qrcode({
     render: 'canvas',
     correctLevel: 3, // 纠错级别
     text, // 内容
     size, // 大小
     background: '#ffffff',
-    foreground: '#598BF8',
-    pdground: '#fe7b21'
+    foreground: '#000000',
+    pdground: '#000000'
     // image: '', 不起作用，注释掉
     // imageSize: 30
   })
   return new Promise((resolve) => {
-    if (image) {
-      let img = new Image()
-      let imageSize = 50 // 中心图片的宽高
-      img.crossOrigin = '' // 允许跨域图片
-      img.src = image
-      img.onload = () => {
-        let imgHeight = img.height
-        let imgWidth = img.width
-        let scale = imageSize / imgWidth
-        let smallWidth = imgWidth * scale
-        let smallHeight = imgHeight * scale
-        let ctx = canvas.getContext('2d')
-        ctx.drawImage(img, size / 2 - smallWidth / 2, size / 2 - smallHeight / 2, smallWidth, smallHeight)
-        if (type === 'url') {
-          resolve(canvas.toDataURL())
-        }
-        if (type === 'canvas') {
-          resolve(canvas)
-        }
-      }
-      img.onerror = () => {
-        if (type === 'url') {
-          resolve(canvas.toDataURL())
-        }
-        if (type === 'canvas') {
-          resolve(canvas)
-        }
-      }
-    } else {
-      if (type === 'url') {
-        resolve(canvas.toDataURL())
-      }
-      if (type === 'canvas') {
-        resolve(canvas)
-      }
+    // 生成中心图片内边距
+    if (centerPadding > 0) {
+      let tempCanvas = document.createElement('canvas')
+      tempCanvas.width = imageSize + centerPadding * 2
+      tempCanvas.height = imageSize + centerPadding * 2
+      let tempCtx = tempCanvas.getContext('2d')
+      tempCtx.fillStyle = '#ffffff'
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
+      tempCtx.drawImage(img, centerPadding, centerPadding, imageSize, imageSize)
+      img = tempCanvas
+    }
+    let ctx = canvas.getContext('2d')
+    ctx.drawImage(img, (size * devicePixelRatio - img.width) / 2, (size * devicePixelRatio - img.width) / 2, img.width, img.width)
+    // 绘制二维码内边距
+    if (padding > 0) {
+      let tempCanvas = document.createElement('canvas')
+      tempCanvas.width = canvas.width + padding * 2
+      tempCanvas.height = canvas.height + padding * 2
+      let tempCtx = tempCanvas.getContext('2d')
+      tempCtx.fillStyle = '#ffffff'
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
+      tempCtx.drawImage(canvas, padding, padding, canvas.width, canvas.height)
+      canvas = tempCanvas
+    }
+    if (type === 'url') {
+      resolve(canvas.toDataURL())
+    }
+    if (type === 'canvas') {
+      resolve(canvas)
     }
   })
 }
-/*
-* 截取图片中间部分
-* @img 已加载完成的 img 对象
-* */
+/**
+ * 截取图片中间部分
+ * @param img {HTMLElement} 要截取的图片
+ * @returns {HTMLElement} 返回canvas对象
+ */
 export function cutImageCenter (img) {
   const canvas = document.createElement('canvas')
   let w = img.width
