@@ -44,11 +44,15 @@ export default {
     expressStatus: {
       type: String,
       default: ''
+    },
+    img: {
+      type: String,
+      default: ''
     }
   },
   methods: {
     handleClick () {
-      this.$router.push({ name: 'Freight', params: { orderId: this.orderId } })
+      this.$router.push({ name: 'Freight', params: { orderId: this.orderId }, query: { img: this.img } })
     }
   }
 }

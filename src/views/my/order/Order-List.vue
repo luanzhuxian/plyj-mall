@@ -103,7 +103,7 @@
                   v-if="item.orderType === 'PHYSICAL' && (item.status === 'WAIT_RECEIVE' || item.status === 'FINISHED')"
                   round
                   plain
-                  @click="$router.push({ name: 'Freight', params: { orderId: item.id } })"
+                  @click="$router.push({ name: 'Freight', params: { orderId: item.id }, query: { img: item.products.length && item.products[0].productImg } })"
                 >
                   查看物流
                 </pl-button>

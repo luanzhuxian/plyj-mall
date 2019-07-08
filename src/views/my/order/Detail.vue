@@ -19,6 +19,7 @@
         :express-name="logisticsInfoModel && logisticsInfoModel.courierCompany"
         :express-number="logisticsInfoModel && logisticsInfoModel.courierNo"
         :express-status="logisticsInfoModel && logisticsInfoModel.logisticTrackModels.length ? logisticsInfoModel.logisticTrackModels[logisticsInfoModel.logisticTrackModels.length-1].content : ''"
+        :img="productInfoModel.productDetailModels[0].productImg"
       />
     </div>
 
@@ -250,7 +251,7 @@
         v-if="orderType === 'PHYSICAL' && (orderStatus === 'FINISHED' || orderStatus === 'WAIT_RECEIVE')"
         plain
         round
-        @click="$router.push({ name: 'Freight', params: { orderId } })"
+        @click="$router.push({ name: 'Freight', params: { orderId }, query: { img: productInfoModel.productDetailModels[0].productImg } })"
       >
         查看物流
       </pl-button>

@@ -106,7 +106,10 @@
               v-for="(item, i) of newFreight"
               :key="i"
             >
-              <router-link :class="$style.logisticsContent" :to="{ name: 'Freight', params: { orderId: item.orderId } }">
+              <router-link
+                :class="$style.logisticsContent"
+                :to="{ name: 'Freight', params: { orderId: item.orderId }, query: { img: item.productImageUrls[0] } }"
+              >
                 <div :class="$style.contentLeft">
                   <img v-img-error :src="item.productImageUrls[0]">
                 </div>

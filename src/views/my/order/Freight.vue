@@ -3,7 +3,7 @@
     <div :class="[$style.panel, $style.panelTop]">
       <img
         v-img-error
-        :src="img"
+        :src="img + '?x-oss-process=style/thum'"
         alt=""
       >
       <div :class="$style.middle">
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { getFreightData, getOrderDetail } from '../../../apis/order-manager'
+import { getFreightData } from '../../../apis/order-manager'
 
 export default {
   name: 'Freight',
@@ -68,7 +68,6 @@ export default {
       loading: false,
       img: '',
       freightData: [],
-      productInfo: {},
       courierCompany: '',
       courierNo: '',
       courierCompanyMobile: '',
@@ -78,16 +77,16 @@ export default {
   async activated () {
     try {
       this.loading = true
-      let { result: orderDetail } = await getOrderDetail(this.orderId)
-      this.productInfo = orderDetail.productInfoModel.productDetailModels[0]
-      this.img = this.productInfo.productImg
+      this.img = this.$route.query.img || ''
       let { result } = await getFreightData(this.orderId)
       result.trackModelList.sort((a, b) => b.msgTime - a.msgTime)
       this.freightData = result.trackModelList
       this.courierCompany = result.courierCompany
       this.courierNo = result.courierNo
       this.courierCompanyMobile = result.courierCompanyMobile
-      if (this.freightData.length > 0) this.lastRecord = this.freightData[0].content
+      if (this.freightData.length > 0) {
+        this.lastRecord = this.freightData[0].content
+      }
     } catch (e) {
       throw e
     } finally {
