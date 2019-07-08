@@ -45,12 +45,12 @@ import { upload } from '../../../assets/js/upload-image'
 import { userInfoSettings } from '../../../apis/base-api'
 export default {
   name: 'Setting',
+  components: { imageCrop },
   data () {
     return {
       img: {}
     }
   },
-  components: { imageCrop },
   computed: {
     ...mapGetters(['avatar', 'userName', 'mobile', 'roleName'])
   },
