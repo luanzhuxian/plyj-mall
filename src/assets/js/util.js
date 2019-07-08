@@ -219,8 +219,6 @@ export function cutImageCenter (img) {
   canvas.width = min
   canvas.height = min
   const ctx = canvas.getContext('2d')
-  ctx.fillStyle = '#ffffff'
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
   if (w >= h) {
     ctx.drawImage(img, (w - h) / 2, 0, h, h, 0, 0, h, h)
   } else {

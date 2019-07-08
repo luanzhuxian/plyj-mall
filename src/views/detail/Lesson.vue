@@ -238,10 +238,10 @@ export default {
       return this.productSkuModels.filter(item => Number(item.realRebate) !== 0).map(item => item.realRebate) || []
     },
     maxRebate () {
-      return Math.max(...this.rebateList)
+      return this.rebateList.length ? Math.max(...this.rebateList) : 0
     },
     minRebate () {
-      return Math.min(...this.rebateList)
+      return this.rebateList.length ? Math.min(...this.rebateList) : 0
     },
     priceList () {
       return this.productSkuModels.map(item => item.price) || []
