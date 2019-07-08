@@ -236,11 +236,9 @@ export default {
     }
     .imgs {
       display: grid;
-      padding-right: 30px;
       grid-template-columns: repeat(auto-fill, 162px);
       grid-template-rows: repeat(auto-fill, 162px);
-      justify-content: space-between;
-      grid-row-gap: 10px;
+      grid-gap: 10px;
       margin-top: 20px;
       overflow: hidden;
       img {
