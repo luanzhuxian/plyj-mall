@@ -579,6 +579,7 @@ export default {
     font-size: 30px;
     text-align: center;
     color: #fff;
+    z-index: 13;
     &:before {
       position: absolute;
       left: 78px;
