@@ -177,7 +177,7 @@ export default {
           const currentSku = item.skuModels.find(sku => {
             return sku.skuCode1 === item.cartSkuCode && sku.skuCode2 === item.cartSkuCode2
           })
-          item.disabled = currentSku && (currentSku.stock < item.cartProductCount || item.productStatus !== 2)
+          item.disabled = currentSku ? (currentSku.stock < item.cartProductCount || item.productStatus !== 2) : true
           if (item.disabled) {
             disabledList.push(item)
           }

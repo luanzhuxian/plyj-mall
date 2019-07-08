@@ -4,7 +4,7 @@
       <pl-button size="small" :type="form.flag ? 'default' : 'primary'" round plain @click="all">
         全部
       </pl-button>
-      <pl-button v-if="assessmentPicCount" size="small" :type="form.flag ? 'primary' : 'default'" round plain @click="hasImage">
+      <pl-button v-if="assessmentPicCount > 0" size="small" :type="form.flag ? 'primary' : 'default'" round plain @click="hasImage">
         有图 <i>({{ assessmentPicCount }})</i>
       </pl-button>
     </div>
@@ -70,7 +70,7 @@ export default {
     return {
       form: {
         current: 1,
-        size: 10,
+        size: 5,
         productId: '',
         flag: false // 有图
       },
@@ -92,7 +92,7 @@ export default {
       return this.list.length
     },
     assessmentPicCount () {
-      return length && this.list[0].assessmentPicCount
+      return this.list[0] ? this.list[0].assessmentPicCount : 0
     }
   },
   activated () {
@@ -151,7 +151,7 @@ export default {
     reset () {
       resetForm(this.form, {
         current: 1,
-        size: 10,
+        size: 5,
         productId: this.productId,
         flag: false
       })
@@ -173,7 +173,6 @@ export default {
       }
     },
     hasImage () {
-      console.log(1)
       if (this.loading) return
       this.reset()
       this.form.flag = true
