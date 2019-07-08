@@ -235,7 +235,7 @@ export default {
       return Number(this.detail.purchaseQuantity) || 0
     },
     rebateList () {
-      return this.productSkuModels.map(item => item.realRebate) || []
+      return this.productSkuModels.filter(item => Number(item.realRebate) !== 0).map(item => item.realRebate) || []
     },
     maxRebate () {
       return Math.max(...this.rebateList)
