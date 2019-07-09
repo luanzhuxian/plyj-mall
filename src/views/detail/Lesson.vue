@@ -229,7 +229,7 @@ export default {
       return this.productSkuModels.every(item => item.stock < item.minBuyNum)
     },
     defaultCount () {
-      return this.currentModel.count
+      return this.currentModel.count || 1
     },
     limiting () {
       return this.detail.purchaseLimit ? (this.detail.purchaseQuantity) : 0
