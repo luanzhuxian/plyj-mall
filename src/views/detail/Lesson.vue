@@ -232,7 +232,7 @@ export default {
       return this.currentModel.count
     },
     limiting () {
-      return Number(this.detail.purchaseQuantity) || 0
+      return this.detail.purchaseLimit ? (this.detail.purchaseQuantity) : 0
     },
     rebateList () {
       return this.productSkuModels.filter(item => Number(item.realRebate) !== 0).map(item => item.realRebate) || []
