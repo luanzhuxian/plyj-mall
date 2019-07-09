@@ -23,12 +23,14 @@
           <!-- 时间  规格 -->
           <div :class="$style.itemSku">
             <span v-text="item.createTimeText.split(' ')[0]" />
-            <i v-text="item.orderProductREntity.attribute1" />
-            “<i v-text="item.orderProductREntity.skuName" />”
-            <template v-if="item.orderProductREntity.skuName2">
-              ，<i v-text="item.orderProductREntity.attribute2" />
-              “<i v-text="item.orderProductREntity.skuName2" />”
-            </template>
+            <span>
+              <i v-text="item.orderProductREntity.attribute1" />
+              “<i v-text="item.orderProductREntity.skuName" />”
+              <template v-if="item.orderProductREntity.skuName2">
+                ，<i v-text="item.orderProductREntity.attribute2" />
+                “<i v-text="item.orderProductREntity.skuName2" />”
+              </template>
+            </span>
             <!--<span>颜色“白色”，版本“55寸 4核处理器”</span>-->
           </div>
           <!-- 内容 -->
@@ -54,17 +56,26 @@
     <p :class="$style.noComments" v-if="length === 0 && productId">
       <span>暂无评论</span>
     </p>
+    <!--<image-swiper append-to-body>
+      <image-swiper-slide />
+      <image-swiper-slide />
+      <image-swiper-slide />
+    </image-swiper>-->
   </div>
 </template>
 
 <script>
 import Grade from '../../components/Grade.vue'
+// import ImageSwiper from '../../components/detail/image-preview/Image-Swiper.vue'
+// import ImageSwiperSlide from '../../components/detail/image-preview/Image-Swiper-Slide.vue'
 import { getComments } from '../../apis/comment'
 import { resetForm } from '../../assets/js/util'
 export default {
   name: 'Comments',
   components: {
     Grade
+    // ImageSwiper,
+    // ImageSwiperSlide
   },
   data () {
     return {

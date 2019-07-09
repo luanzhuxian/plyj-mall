@@ -211,7 +211,9 @@ export default {
     border-radius: $--radius2;
     background-color: #f9f9f9;
     font-size: 20px;
-    @include elps();
+    > div {
+      @include elps();
+    }
     > .arrow {
       width: 10px;
       height: 18px;

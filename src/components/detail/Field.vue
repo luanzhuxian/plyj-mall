@@ -2,7 +2,7 @@
   <div :class="$style.fieldBox" @click="clickHandler">
     <div :class="$style.label" v-text="label" />
     <div v-if="content" :class="$style.fieldContent" v-text="content" />
-    <div :class="$style.fieldContent">
+    <div v-else :class="$style.fieldContent">
       <slot />
     </div>
     <div v-if="canClick" :class="$style.canClick">
@@ -54,6 +54,7 @@ export default {
     flex: 1;
     font-size: 28px;
     color: #000;
+    @include elps();
   }
   .canClick {
     svg {
