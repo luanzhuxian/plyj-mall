@@ -45,7 +45,7 @@
               </div>
               <p
                 :class="$style.status"
-                v-text="item.status === 'FINISHED' ? item.commentStatus ? orderFinishMap['FINISH'] : orderFinishMap['COMMENT'] : orderStatusMap[item.status]"
+                v-text="item.status === 'FINISHED' ? item.commentStatus ? '交易成功' : '待评价' : orderStatusMap[item.status]"
               />
             </div>
             <order-item
@@ -166,11 +166,6 @@ const orderTypeMap = {
   VIRTUAL: '虚拟商品'
 }
 
-const orderFinishMap = {
-  FINISH: '交易成功',
-  COMMENT: '待评价'
-}
-
 const refundStatusMap = {
   '1': '退款中',
   '2': '退款成功',
@@ -216,7 +211,6 @@ export default {
         }
       ],
       orderTypeMap,
-      orderFinishMap,
       refundStatusMap
     }
   },

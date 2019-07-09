@@ -94,7 +94,7 @@
                 :img="item.productMainImage + '?x-oss-process=style/thum-small'"
                 :title="item.productName"
                 :price="item.productSkuModels.length && item.productSkuModels[0].price"
-                :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
+                :original-price="item.originalPrice"
                 :rebate="currentClassify.id === '1' ? item.productSkuModels[0].realRebate : ''"
               />
             </div>
@@ -225,7 +225,11 @@ export default {
       }
     },
     refreshHandler (list) {
+      if (!list.length) return
       for (let item of list) {
+        item.originalPrice = item.productSkuModels.reduce((max, current) => {
+          return current.originalPrice > max ? current.originalPrice : max
+        }, 0)
         item.productSkuModels.sort((a, b) => a.price - b.price)
       }
       this.prodList = list

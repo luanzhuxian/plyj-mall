@@ -26,23 +26,6 @@ export default [
       title: '发表评论'
     }
   },
-  // {
-  //   path: '/my/orders/invoice/:orderId',
-  //   name: 'Invoice',
-  //   component: () => import('../views/my/order/Invoice.vue'),
-  //   props: true,
-  //   meta: {
-  //     title: '申请发票'
-  //   }
-  // },
-  // {
-  //   path: '/my/orders/invoice/:id/content',
-  //   name: 'InvoiceContent',
-  //   component: () => import('../views/my/order/Invoice-Content.vue'),
-  //   meta: {
-  //     title: '选择发票内容'
-  //   }
-  // },
   {
     path: '/my/orders/invoice/:orderId/detail',
     name: 'InvoiceDetail',
