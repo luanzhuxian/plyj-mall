@@ -40,14 +40,14 @@ export default {
   },
   [type.ADDRESS_LIST] (state, payload) {
     state.addressList = payload
+    if (!payload || payload.length === 0) {
+      state.selectedAddress = {}
+      localStorage.removeItem('selectedAddress')
+    }
   },
   [type.SELETC_ADDRESS] (state, payload) {
-    if (!payload) {
-      state.selectedAddress = null
-      return
-    }
-    if (payload.length === 0) {
-      state.selectedAddress = null
+    if (payload.length === 0 || !payload) {
+      state.selectedAddress = {}
       return
     }
     state.selectedAddress = payload

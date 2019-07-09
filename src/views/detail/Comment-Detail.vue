@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <p :class="$style.time" v-text="detail.createTime" />
+    <p :class="$style.time" v-text="detail.createTimeText" />
     <div :class="$style.content">
       <div :class="$style.text" v-text="detail.content" />
       <div :class="$style.imgs">
