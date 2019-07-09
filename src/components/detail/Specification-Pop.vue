@@ -77,7 +77,7 @@
                   +
                 </button>
                 <p :class="$style.residue">
-                  余<i v-text="residue" />件
+                  库存<i v-text="residue" />件
                 </p>
               </div>
             </div>
@@ -183,7 +183,8 @@ export default {
       return currentSku1.productAttributeImage ? currentSku1.productAttributeImage[0] || this.productImage : this.productImage
     },
     residue () {
-      return this.localCurrentSku.stock - this.count || 0
+      return this.localCurrentSku.stock
+      // return this.localCurrentSku.stock - this.count || 0
     }
   },
   methods: {
