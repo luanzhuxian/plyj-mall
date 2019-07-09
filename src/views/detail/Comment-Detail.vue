@@ -120,6 +120,7 @@ export default {
     background-color: #F8F8F8;
     font-size: 24px;
     line-height: 34px;
+    word-break: break-all;
   }
   .product {
     margin-top: 24px;
