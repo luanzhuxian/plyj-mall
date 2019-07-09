@@ -11,9 +11,8 @@
         <!-- 加了Key以后。图片可动态切换 -->
         <img
           :class="$style.bannerImg"
-          v-lazy="img"
-          :key="img"
           alt=""
+          :src="img"
           crossOrigin=""
         >
       </swiperSlide>
