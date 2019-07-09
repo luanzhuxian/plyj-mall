@@ -286,9 +286,11 @@ export default {
     },
     // 回滚（如果规格选择失败，或者没选，回滚到最初规格）
     revert () {
-      this.$emit('change', this.sku)
-      this.localCurrentSku = this.sku
-      this.count = this.defaultCount
+      if (this.sku.id) {
+        this.$emit('change', this.sku)
+        this.localCurrentSku = this.sku
+        this.count = this.defaultCount
+      }
     }
   }
 }

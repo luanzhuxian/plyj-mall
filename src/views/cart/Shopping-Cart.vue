@@ -250,8 +250,10 @@ export default {
       }
     },
     selectedChange (selected) {
-      this.checkedAll = selected.length === this.products.filter(item => !item.disabled).length
-      this.computeMoney()
+      if (!this.isManage) {
+        this.checkedAll = selected.length === this.products.filter(item => !item.disabled).length
+        this.computeMoney()
+      }
     },
     // 管理
     manage () {
@@ -323,9 +325,6 @@ export default {
         total += currentSku.price * 100 * count
       }
       this.summation = total / 100
-    },
-    // 规格变化
-    skuChange (data) {
     },
     // 判断当前规格是否已经存在于购物车中，如果存在，删之
     isDouble (options) {
