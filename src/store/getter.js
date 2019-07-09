@@ -8,7 +8,7 @@ export default {
     return state.selectedAddress ||
       state.addressList.filter(item => item.defaultAddress === 'YES')[0] ||
       state.addressList[0] ||
-      null
+      {}
   },
   orderStatusMap: state => state.orderStatusMap,
   refundStatusMap: state => state.refundStatusMap,

@@ -39,14 +39,18 @@ export default {
     localStorage.setItem('openId_' + payload.mallDomain, payload.openId)
   },
   [type.ADDRESS_LIST] (state, payload) {
-    state.addressList = payload
-    if (!payload || payload.length === 0) {
+    payload = payload || []
+    state.addressList.splice(0, state.addressList.length)
+    for (let item of payload) {
+      state.addressList.push(item)
+    }
+    if (payload.length === 0) {
       state.selectedAddress = {}
       localStorage.removeItem('selectedAddress')
     }
   },
   [type.SELETC_ADDRESS] (state, payload) {
-    if (payload.length === 0 || !payload) {
+    if (!payload) {
       state.selectedAddress = {}
       return
     }
