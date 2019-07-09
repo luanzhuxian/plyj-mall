@@ -22,7 +22,7 @@
 
           <!-- 时间  规格 -->
           <div :class="$style.itemSku">
-            <span v-text="item.createTime.split(' ')[0]" />
+            <span v-text="item.createTimeText.split(' ')[0]" />
             <i v-text="item.orderProductREntity.attribute1" />
             “<i v-text="item.orderProductREntity.skuName" />”
             <template v-if="item.orderProductREntity.skuName2">
