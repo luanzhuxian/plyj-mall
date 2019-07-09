@@ -271,7 +271,7 @@ export default {
         this.count = this.localCurrentSku.stock
         this.$warning(`购买的宝贝数超过剩余库存`)
       }
-      this.localCurrentSku.count = this.count
+      this.count = this.localCurrentSku.count = Number.parseInt(this.count)
       this.$emit('change', this.localCurrentSku)
     },
     minus () {
