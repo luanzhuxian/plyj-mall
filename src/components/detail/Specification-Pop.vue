@@ -372,7 +372,7 @@ export default {
     border-bottom: 1px solid #e7e7e7;
   }
   .skuBox {
-    max-height: 450px;
+    max-height: 420px;
     overflow: scroll;
   }
   .color-list, .size-list {
