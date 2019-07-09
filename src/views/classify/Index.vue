@@ -225,7 +225,6 @@ export default {
       }
     },
     refreshHandler (list) {
-      if (!list.length) return
       for (let item of list) {
         item.originalPrice = item.productSkuModels.reduce((max, current) => {
           return current.originalPrice > max ? current.originalPrice : max
