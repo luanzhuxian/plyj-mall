@@ -95,7 +95,7 @@
                 :title="item.productName"
                 :price="item.productSkuModels.length && item.productSkuModels[0].price"
                 :original-price="item.originalPrice"
-                :rebate="currentClassify.id === '1' ? item.productSkuModels[0].realRebate : ''"
+                :rebate="currentClassify.id === '1' ? item.realRebate : ''"
               />
             </div>
           </template>
@@ -226,9 +226,11 @@ export default {
     },
     refreshHandler (list) {
       for (let item of list) {
-        item.originalPrice = item.productSkuModels.reduce((max, current) => {
-          return current.originalPrice > max ? current.originalPrice : max
-        }, 0)
+        item.originalPrice = item.realRebate = 0
+        item.productSkuModels.forEach(current => {
+          item.originalPrice = current.originalPrice > item.originalPrice ? current.originalPrice : item.originalPrice
+          item.realRebate = current.realRebate > item.realRebate ? current.realRebate : item.realRebate
+        })
         item.productSkuModels.sort((a, b) => a.price - b.price)
       }
       this.prodList = list
