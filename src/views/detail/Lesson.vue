@@ -586,9 +586,9 @@ export default {
     &:before {
       position: absolute;
       left: 78px;
-      bottom: -26px;
+      bottom: -28px;
       content: '';
-      border: 13px solid transparent;
+      border: 14px solid transparent;
       border-top-color: rgba(0, 0, 0, .7);
     }
   }
