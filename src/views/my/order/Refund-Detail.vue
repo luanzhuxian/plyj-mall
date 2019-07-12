@@ -380,6 +380,12 @@ function replaceMobile (mobile) {
   return mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
 }
 
+function updateLocalStorage (key, value) {
+  const arr = JSON.parse(localStorage.getItem(key) || '[]')
+  arr.push(value)
+  localStorage.setItem(key, JSON.stringify(arr))
+}
+
 export default {
   name: 'RefundDetail',
   components: {
@@ -496,7 +502,7 @@ export default {
         await cancelRefundApplication({ id })
         this.$success('取消申请成功')
         this.getDetail()
-        this.$router.history.current.meta.removeItem = id // 保存id，返回列表页后从列表中移除
+        updateLocalStorage('UPDATE_REFUND_LIST', { id, action: 'cancel' })
       } catch (e) {
         throw e
       }
@@ -517,7 +523,7 @@ export default {
         this.loading = false
         this.$success('提交申请成功')
         this.getDetail()
-        this.$router.history.current.meta.returnStatus = this.id // 保存id，返回列表页后从列表中更新
+        updateLocalStorage('UPDATE_REFUND_LIST', { id: this.id, action: 'ship' })
       } catch (e) {
         throw e
       } finally {

@@ -171,18 +171,6 @@ const goodsStatusMap = {
   '2': '未收到货'
 }
 
-// const refundReasonKeyMap = {
-//   'WAIT_SHIP': 'REASONBUYERPAID',
-//   'WAIT_RECEIVE': {
-//     '1': {
-//       '1': 'REASONSRECEIVEDGOODS',
-//       '2': 'REASONSNOTRECEIVEDGOODS'
-//     },
-//     '2': 'REASONSRECEIVEDGOODS'
-//   },
-//   'FINISHED': 'REASONSRECEIVEDGOODS'
-// }
-
 export default {
   name: 'RefundApply',
   components: {

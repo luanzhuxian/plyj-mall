@@ -384,6 +384,12 @@ import {
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { mapGetters } from 'vuex'
 
+function updateLocalStorage (key, value) {
+  const arr = JSON.parse(localStorage.getItem(key) || '[]')
+  arr.push(value)
+  localStorage.setItem(key, JSON.stringify(arr))
+}
+
 const suggestionMap = {
   WAIT_PAY: '',
   WAIT_SHIP: '请耐心等待商家发货…',
@@ -493,24 +499,6 @@ export default {
       })
     }
   },
-  // 不要删
-  // beforeRouteEnter (to, from, next) {
-  //   if (from.name === 'PaySuccess') {
-  //     to.meta.payOrderId = from.meta.payOrderId || null
-  //     if (from.meta.payOrderId) delete from.meta.payOrderId
-  //   }
-  //   if (from.name === 'OrderComplete') {
-  //     to.meta.receiveOrderId = from.meta.receiveOrderId || null
-  //     if (from.meta.receiveOrderId) delete from.meta.receiveOrderId
-  //   }
-  //   if (from.name === 'CommentOrder') {
-  //     to.meta.commentOId = from.meta.commentOId || null
-  //     to.meta.commentPId = from.meta.commentPId || null
-  //     if (from.meta.commentOId) delete from.meta.commentOId
-  //     if (from.meta.commentPId) delete from.meta.commentPId
-  //   }
-  //   next()
-  // },
   async activated () {
     try {
       await this.getDetail()
@@ -614,6 +602,7 @@ export default {
         const { result } = await getAwaitPayInfo(orderId)
         // 调用微信支付api
         await wechatPay(result)
+        updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'pay' })
         this.$router.push({ name: 'PaySuccess', params: { orderId } })
       } catch (e) {
         throw e
@@ -627,6 +616,7 @@ export default {
         await this.$confirm('您确定收货吗？')
         await confirmReceipt(orderId)
         this.$success('确认收货成功')
+        updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'receive' })
         setTimeout(() => {
           this.$router.push({ name: 'OrderComplete', params: { orderId } })
         }, 2000)
@@ -640,7 +630,7 @@ export default {
         await cancelOrder(this.orderId, reason)
         this.$success('订单取消成功')
         this.getDetail()
-        this.$router.history.current.meta.cancelOrderId = this.orderId // 保存id，返回列表页后从列表中移除
+        updateLocalStorage('UPDATE_ORDER_LIST', { id: this.orderId, action: 'cancel' })
       } catch (e) {
         throw e
       }
@@ -651,9 +641,8 @@ export default {
         await this.$confirm('订单一旦删除，将无法恢复 确认要删除订单？')
         await deleteOrder(orderId)
         this.$success('订单删除成功')
+        updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'delete' })
         setTimeout(() => {
-          // this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDER' } })
-          this.$router.history.current.meta.deleteOrderId = orderId // 保存id，返回列表页后从列表中移除
           this.$router.go(-1)
         }, 2000)
       } catch (e) {

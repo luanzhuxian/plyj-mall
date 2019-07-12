@@ -47,12 +47,6 @@ export default {
     } else {
       next({ name: 'Home' })
     }
-  },
-  beforeRouteLeave (to, from, next) {
-    if (to.name === 'OrderDetail') {
-      from.meta.payOrderId = this.orderId
-    }
-    next()
   }
 }
 </script>

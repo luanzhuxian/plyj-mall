@@ -111,7 +111,7 @@
                   v-if="item.status === 'WAIT_RECEIVE'"
                   type="warning"
                   round
-                  @click="confirmReceipt(item.id, item.orderType)"
+                  @click="confirmReceipt(item, i)"
                 >
                   确认收货
                 </pl-button>
@@ -217,67 +217,72 @@ export default {
   computed: {
     ...mapGetters(['orderStatusMap'])
   },
-  // 不要删
-  // beforeRouteEnter (to, from, next) {
-  //   to.meta.noRefresh = from.name === 'OrderDetail' || from.name === 'Freight'
-  //   to.meta.receiveOrderId = from.meta.receiveOrderId || null
-  //   to.meta.deleteOrderId = from.meta.deleteOrderId || null
-  //   to.meta.cancelOrderId = from.meta.cancelOrderId || null
-  //   to.meta.commentOId = from.meta.commentOId || null
-  //   to.meta.commentPId = from.meta.commentPId || null
-  //   if (from.meta.noRefresh) delete from.meta.noRefresh
-  //   if (from.meta.receiveOrderId) delete from.meta.receiveOrderId
-  //   if (from.meta.deleteOrderId) delete from.meta.deleteOrderId
-  //   if (from.meta.cancelOrderId) delete from.meta.cancelOrderId
-  //   if (from.meta.commentOId) delete from.meta.commentOId
-  //   if (from.meta.commentPId) delete from.meta.commentPId
-  //   console.log(to)
-  //   next()
-  // },
+  beforeRouteEnter (to, from, next) {
+    to.meta.noRefresh = from.name === 'OrderDetail' || from.name === 'Freight'
+    next()
+  },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    // 不要删
-    // const currentRoute = this.$router.currentRoute
-    // if (currentRoute.meta.noRefresh) {
-    //   if (currentRoute.meta.receiveOrderId) {
-    //     this.orderList = this.orderList.filter(item => item.id !== currentRoute.meta.receiveOrderId)
-    //     !this.orderList.length && this.$refresh()
-    //     delete currentRoute.meta.receiveOrderId
-    //   }
-    //   if (currentRoute.meta.deleteOrderId) {
-    //     this.orderList = this.orderList.filter(item => item.id !== currentRoute.meta.deleteOrderId)
-    //     !this.orderList.length && this.$refresh()
-    //     delete currentRoute.meta.deleteOrderId
-    //   }
-    //   if (currentRoute.meta.cancelOrderId) {
-    //     if (this.status === 'ALL_ORDER') {
-    //       const order = this.orderList.find(item => item.id === currentRoute.meta.cancelOrderId)
-    //       order && (order.status = 'CLOSED')
-    //     } else if (this.status === 'WAIT_PAY') {
-    //       this.orderList = this.orderList.filter(item => item.id !== currentRoute.meta.cancelOrderId)
-    //       !this.orderList.length && this.$refresh()
-    //     }
-    //     delete currentRoute.meta.cancelOrderId
-    //   }
-    //   if (currentRoute.meta.commentOId && currentRoute.meta.commentPId) {
-    //     debugger
-    //     const order = this.orderList.find(item => item.id === currentRoute.meta.commentOId)
-    //     if (!order) return
-    //     const product = order.products.find(item => item.id === currentRoute.meta.commentPId)
-    //     if (!product) return
-    //     product.assessmentStatus = 1
-    //     order.commentStatus = !order.products.some(item => item.assessmentStatus !== 1)
-    //     if (this.status === 'FINISHED') {
-    //       this.orderList = this.orderList.filter(item => item.commentStatus)
-    //       !this.orderList.length && this.$refresh()
-    //     }
-    //     delete currentRoute.meta.commentOId
-    //     delete currentRoute.meta.commentPId
-    //   }
-    //   return
-    // }
+    const handler = (action) => {
+      if (action === 'pay') {
+        return (order, index) => {
+          if (this.status === 'ALL_ORDER') {
+            order.status = order.orderType === 'PHYSICAL' ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
+          } else if (this.status === 'WAIT_PAY') {
+            this.orderList.splice(index, 1)
+          }
+        }
+      }
+      if (action === 'receive') {
+        return (order, index) => {
+          if (this.status === 'ALL_ORDER') {
+            order.status = 'FINISHED'
+          } else if (this.status === 'WAIT_RECEIVE') {
+            this.orderList.splice(index, 1)
+          }
+        }
+      }
+      if (action === 'cancel') {
+        return (order, index) => {
+          if (this.status === 'ALL_ORDER') {
+            order.status = 'CLOSED'
+          } else if (this.status === 'WAIT_PAY') {
+            this.orderList.splice(index, 1)
+          }
+        }
+      }
+      if (action === 'delete') {
+        return (order, index) => {
+          this.orderList.splice(index, 1)
+        }
+      }
+      if (action === 'comment') {
+        return (order, index, pid) => {
+          const product = order.products.find(prod => prod.id === pid)
+          if (!product) return
+          product.assessmentStatus = 1 // 商品评价状态改为已评价
+          order.commentStatus = !order.products.some(prod => prod.assessmentStatus !== 1) // 根据所有商品的评价状态重新设置订单的评价状态，0：有商品待评价 1：所有商品已评价
+          if (this.status === 'FINISHED' && order.commentStatus) {
+            this.orderList.splice(index, 1)
+          }
+        }
+      }
+    }
+
+    if (this.$router.currentRoute.meta.noRefresh) {
+      const arr = JSON.parse(localStorage.getItem('UPDATE_ORDER_LIST') || '[]')
+      if (!arr.length) return
+      for (let item of arr) {
+        const index = this.orderList.findIndex(order => order.id === item.id)
+        if (index === -1) continue
+        handler(item.action)(this.orderList[index], index, item.pid)
+      }
+      localStorage.removeItem('UPDATE_ORDER_LIST')
+      this.orderList.length ? this.$forceUpdate() : this.$refresh()
+      return
+    }
 
     this.form.orderStatus = this.status
     this.$refresh()
@@ -330,11 +335,18 @@ export default {
         this.payloading = false
       }
     },
-    async confirmReceipt (orderId, orderType) {
+    async confirmReceipt (item, index) {
+      const orderId = item.id
+      const { orderStatus } = this.form
       try {
         await this.$confirm('您确定收货吗？')
         await confirmReceipt(orderId)
         this.$success('确认收货成功')
+        if (orderStatus === 'ALL_ORDER') {
+          item.status = 'FINISHED'
+        } else {
+          this.orderList.splice(index, 1)
+        }
         setTimeout(() => {
           this.$router.push({ name: 'OrderComplete', params: { orderId } })
         }, 2000)
@@ -349,13 +361,12 @@ export default {
         const reason = await this.showPicker()
         await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
         await cancelOrder(orderId, reason)
+        this.$success('订单取消成功')
         if (orderStatus === 'ALL_ORDER') {
           item.status = 'CLOSED'
         } else {
           this.orderList.splice(index, 1)
-          this.$forceUpdate()
         }
-        this.$success('订单取消成功')
       } catch (e) {
         throw e
       }

@@ -61,6 +61,12 @@ import { submitComment } from '../../../apis/comment'
 import { resetForm } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
 
+function updateLocalStorage (key, value) {
+  const arr = JSON.parse(localStorage.getItem(key) || '[]')
+  arr.push(value)
+  localStorage.setItem(key, JSON.stringify(arr))
+}
+
 export default {
   name: 'Comment',
   components: {
@@ -141,10 +147,8 @@ export default {
         await submitComment(this.openId, params)
         this.loading = false
         this.$success('评价成功')
+        updateLocalStorage('UPDATE_ORDER_LIST', { id: this.orderId, pid: this.productId, action: 'comment' })
         setTimeout(() => {
-          // this.$router.replace({ name: 'OrderDetail', params: { orderId: this.orderId } })
-          this.$router.history.current.meta.commentOId = this.orderId
-          this.$router.history.current.meta.commentPId = this.productId
           this.$router.go(-1)
         }, 2000)
       } catch (e) {

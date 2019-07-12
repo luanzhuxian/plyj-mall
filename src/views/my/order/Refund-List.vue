@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.refundList">
+  <div class="refund-list" :class="$style.refundList">
     <pl-tab
       :class="$style.tabBar"
       size="small"
@@ -158,33 +158,48 @@ export default {
   computed: {
     ...mapGetters(['refundStatusMap', 'orderTypeMap', 'refundTypeMap'])
   },
-  // 不要删
-  // beforeRouteEnter (to, from, next) {
-  //   to.meta.noRefresh = from.name === 'RefundDetail'
-  //   to.meta.removeItem = from.meta.removeItem || null
-  //   to.meta.returnStatus = from.meta.returnStatus || null
-  //   if (from.meta.noRefresh) delete from.meta.noRefresh
-  //   if (from.meta.removeItem) delete from.meta.removeItem
-  //   if (from.meta.returnStatus) delete from.meta.returnStatus
-  //   next()
-  // },
+  beforeRouteEnter (to, from, next) {
+    to.meta.noRefresh = from.name === 'RefundDetail'
+    next()
+  },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    // 不要删
-    // const currentRoute = this.$router.currentRoute
-    // if (currentRoute.meta.noRefresh) {
-    //   if (currentRoute.meta.removeItem) {
-    //     this.orderList = this.orderList.filter(item => item.id !== currentRoute.meta.removeItem)
-    //     !this.orderList.length && this.$refresh()
-    //   }
-    //   if (currentRoute.meta.returnStatus) {
-    //     const item = this.orderList.find(item => item.id === currentRoute.meta.returnStatus)
-    //     item && (item.returnStatus = 'REFUND_PRODUCT')
-    //   }
-    //   return
-    // }
+    const handler = (action) => {
+      if (action === 'cancel') {
+        return (order, index) => {
+          if (this.status === 'ALL_ORDER') {
+            order.returnStatus = 'CANCEL'
+          } else if (this.status === 'WAIT_CHECK') {
+            this.orderList.splice(index, 1)
+          }
+        }
+      }
+      if (action === 'ship') {
+        return (order, index) => {
+          if (this.status === 'ALL_ORDER') {
+            order.returnStatus = 'REFUND_PRODUCT'
+          } else if (this.status === 'WAIT_CHECK') {
+            this.orderList.splice(index, 1)
+          }
+        }
+      }
+    }
+
+    if (this.$router.currentRoute.meta.noRefresh) {
+      const arr = JSON.parse(localStorage.getItem('UPDATE_REFUND_LIST') || '[]')
+      if (!arr.length) return
+      for (let item of arr) {
+        const index = this.orderList.findIndex(order => order.id === item.id)
+        if (index === -1) continue
+        handler(item.action)(this.orderList[index], index)
+      }
+      localStorage.removeItem('UPDATE_REFUND_LIST')
+      this.orderList.length ? this.$forceUpdate() : this.$refresh()
+      return
+    }
+
     this.form.returnStatus = this.status
     this.$refresh()
   },
@@ -314,4 +329,11 @@ export default {
       text-align: center;
     }
   }
+</style>
+<style lang="scss">
+.refund-list {
+  .pl-button__warning.plain {
+    color: #FFF;
+  }
+}
 </style>
