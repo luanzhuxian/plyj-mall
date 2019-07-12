@@ -1,7 +1,8 @@
 <template>
   <div :class="$style.plImagePreview">
     <div :class="$style.header">
-      <slot :totalSlide="totalSlide" :activeIndex="activeIndex" name="header" />
+      <pl-svg :class="$style.closeSwiper" name="close" color="#fff" />
+      <span :class="$style.number">{{ activeIndex + 1 }}/{{ totalSlide }}</span>
     </div>
     <swiper :options="swiperOption" @slideChange="slideChange" ref="swiper">
       <slot :total="totalSlide" :activeIndex="activeIndex" />
@@ -70,13 +71,32 @@ export default {
     background-color: rgba(0, 0, 0, .5);
     z-index: 9999;
   }
-
+  .header {
+    position: relative;
+    width: 100%;
+    color: #fff;
+    font-size: 28px;
+    padding: 24px 0;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(0, 0, 0, .5), rgba(0, 0, 0, 0));
+  }
+  .number {
+    text-shadow: 1px -2px 3px #333;
+  }
+  .closeSwiper {
+    position: absolute;
+    top: 32px;
+    left: 40px;
+    width: 23px;
+  }
   .header {
     position: absolute;
     width: 100%;
+    z-index: 20;
   }
   .footer {
     position: absolute;
     width: 100%;
   }
+
 </style>
