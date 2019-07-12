@@ -43,7 +43,7 @@
         border
       >
         <pl-input
-          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS' || mobile"
+          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS' || Boolean(mobile)"
           placeholder="请输入您的手机号"
           prefix-icon="mobile"
           v-model="form.mobile"
