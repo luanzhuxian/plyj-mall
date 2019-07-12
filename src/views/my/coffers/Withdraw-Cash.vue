@@ -87,8 +87,8 @@ export default {
       if (this.form.price > this.balance) return this.$warning('不能大于可提现金额')
       if (this.form.price > 200) return this.$warning('提现金额不能大于200')
       if (!isMoney(this.form.price)) return this.$warning('提现金额只允许两位小数')
+      await this.$confirm('您确认提现吗？')
       try {
-        await this.$confirm('您确认提现吗？')
         await withdrawDeposit(this.form)
         this.$router.replace({ name: 'WithdrawCashSuccess' })
         // 刷新个人信息

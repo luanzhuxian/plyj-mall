@@ -22,7 +22,7 @@
 
           <!-- 时间  规格 -->
           <div :class="$style.itemSku">
-            <span v-text="item.createTimeText.split(' ')[0]" />
+            <span v-text="item.createTimeText" />
             <span>
               <i v-text="item.orderProductREntity.attribute1" />
               “<i v-text="item.orderProductREntity.skuName" />”
@@ -56,26 +56,32 @@
     <p :class="$style.noComments" v-if="length === 0 && productId">
       <span>暂无评论</span>
     </p>
-    <!--<image-swiper append-to-body>
+    <image-swiper append-to-body>
+      <template v-slot:header="{ totalSlide, activeIndex }">
+        <div :class="$style.imgSwiperHeader">
+          <pl-svg :class="$style.closeSwiper" name="close" color="#fff" />
+          <span :class="$style.number">{{ activeIndex + 1 }}/{{ totalSlide }}</span>
+        </div>
+      </template>
       <image-swiper-slide />
       <image-swiper-slide />
       <image-swiper-slide />
-    </image-swiper>-->
+    </image-swiper>
   </div>
 </template>
 
 <script>
 import Grade from '../../components/Grade.vue'
-// import ImageSwiper from '../../components/detail/image-preview/Image-Swiper.vue'
-// import ImageSwiperSlide from '../../components/detail/image-preview/Image-Swiper-Slide.vue'
+import ImageSwiper from '../../components/detail/image-preview/Image-Swiper.vue'
+import ImageSwiperSlide from '../../components/detail/image-preview/Image-Swiper-Slide.vue'
 import { getComments } from '../../apis/comment'
 import { resetForm } from '../../assets/js/util'
 export default {
   name: 'Comments',
   components: {
-    Grade
-    // ImageSwiper,
-    // ImageSwiperSlide
+    Grade,
+    ImageSwiper,
+    ImageSwiperSlide
   },
   data () {
     return {
@@ -354,5 +360,23 @@ export default {
         content: '商家回复：';
       }
     }
+  }
+  .imgSwiperHeader {
+    position: relative;
+    width: 100%;
+    color: #fff;
+    font-size: 28px;
+    padding: 24px 0;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, 0));
+  }
+  .number {
+    text-shadow: 1px -2px 3px #333;
+  }
+  .closeSwiper {
+    position: absolute;
+    top: 32px;
+    left: 40px;
+    width: 23px;
   }
 </style>

@@ -13,8 +13,8 @@ import PenglaiUI from './components/penglai-ui'
 import animated from 'animate.css'
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
-// import AlloyFinger from 'alloyfinger'
-// import AlloyFingerVue from 'alloyfinger/vue/alloy_finger_vue'
+import AlloyFinger from 'alloyfinger'
+import AlloyFingerVue from 'alloyfinger/vue/alloy_finger_vue'
 import filters from './filter'
 // import LogLine from 'logline'
 // import { saveLog } from './apis/base-api'
@@ -24,7 +24,7 @@ Vue.use(VueLazyload, {
 })
 Vue.use(animated)
 Vue.use(VueClipboard)
-// Vue.use(AlloyFingerVue, { AlloyFinger })
+Vue.use(AlloyFingerVue, { AlloyFinger })
 for (let k of Object.keys(directive)) {
   Vue.directive(k, directive[k])
 }

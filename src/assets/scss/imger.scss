@@ -1,0 +1,23 @@
+.imger-swiper-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .9);
+  z-index: 10000;
+  .swiper-slide {
+    position: relative;
+    display: flex;
+    align-items: center;
+    //background-repeat: no-repeat;
+    //background-position: var(--deltaX) var(--deltaY);
+    //background-size: 100%;
+    img {
+      &.scaling {
+        transform: scale(var(--scale)) translate3d(var(--deltaX), var(--deltaY), 0);
+      }
+      width: 100%;
+    }
+  }
+}
