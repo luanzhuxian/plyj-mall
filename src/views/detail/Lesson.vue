@@ -72,10 +72,10 @@
         </div>
 
         <div>
-          <Comments v-show="tab === 1" :product-id="productId" :show="tab === 1" />
+          <Comments v-if="tab === 1" :product-id="productId" :show="tab === 1" />
           <!--<Comment v-show="tab === 1" :size="3" :product-id="productId" :broker-id="brokerId" />-->
           <DetailInfo
-            v-show="tab === 2"
+            v-if="tab === 2"
             :content="detail.detail || '暂无详情'"
           />
         </div>
@@ -267,11 +267,16 @@ export default {
       this.showSpecifica = false
       this.currentModel = {}
       this.haibao = ''
+      this.tab = 2
       this.getDetail()
     }
   },
   activated () {
-    this.getDetail()
+    try {
+      this.getDetail()
+    } catch (e) {
+      throw e
+    }
   },
   deactivated () {
     this.showSpecifica = false
@@ -295,6 +300,11 @@ export default {
         this.resetState() // 重置一些状态
         let { result } = await getProductDetail(this.productId)
         let { id, agentProduct, mediaInfoIds, productStatus } = result
+        if (!result) {
+          this.$error('该商品异常')
+          this.$router.go(-1)
+          return
+        }
         this.productStatus = productStatus
         this.commentForm.productId = id
         this.agentProduct = agentProduct

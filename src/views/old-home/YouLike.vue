@@ -8,8 +8,8 @@
     </div>
     <div :class="$style.likeGoodsList">
       <CategoryItem
-        v-for="(item, index) in likeProduct"
-        :key="index"
+        v-for="(item) in likeProduct"
+        :key="item.id"
         :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
         :product-id="item.id"
         :product-name="item.productName"
