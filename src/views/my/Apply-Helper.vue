@@ -43,7 +43,7 @@
         border
       >
         <pl-input
-          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
+          :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS' || Boolean(mobile)"
           placeholder="请输入您的手机号"
           prefix-icon="mobile"
           v-model="form.mobile"
@@ -155,7 +155,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['smstype', 'isAdmin']),
+    ...mapGetters(['smstype', 'isAdmin', 'mobile']),
     isNameValid () {
       return hasValue(this.form.name) && isName(this.form.name)
     },
@@ -174,6 +174,7 @@ export default {
   },
   activated () {
     this.getHelperInfo()
+    this.form.mobile = this.mobile
   },
   methods: {
     async getHelperInfo () {

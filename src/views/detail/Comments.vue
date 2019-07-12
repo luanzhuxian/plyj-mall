@@ -106,10 +106,14 @@ export default {
       return this.list[0] ? this.list[0].assessmentPicCount : 0
     }
   },
-  activated () {
+  async activated () {
     this.reset()
     this.form.productId = this.productId
-    this.getList()
+    try {
+      await this.getList()
+    } catch (e) {
+      throw e
+    }
   },
   deactivated () {
     this.total = 0
@@ -117,17 +121,28 @@ export default {
   },
   watch: {
     show: {
-      handler (val) {
+      async handler (val) {
+        console.log(val)
         if (val) {
-          this.reset()
-          this.form.productId = this.productId
-          this.getList()
+
         }
       }
     }
   },
+  async created () {
+    this.reset()
+    this.form.productId = this.productId
+    try {
+      await this.getList()
+    } catch (e) {
+      throw e
+    }
+  },
   mounted () {
     window.addEventListener('scroll', this.scroll)
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.scroll)
   },
   methods: {
     async getList () {
