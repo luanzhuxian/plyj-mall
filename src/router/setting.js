@@ -65,5 +65,13 @@ export default [
     meta: {
       title: '发票管理'
     }
+  },
+  {
+    path: '/my/setting/students-management',
+    name: 'StudentsManagement',
+    component: () => import('../views/my/setting/students-management.vue'),
+    meta: {
+      title: '学员管理'
+    }
   }
 ]
