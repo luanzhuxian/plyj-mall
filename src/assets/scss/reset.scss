@@ -81,6 +81,9 @@ input {
 button {
   border: none;
   background: none;
+  &:disabled {
+    opacity: 1 !important;
+  }
 }
 .el-button--primary:focus, .el-button--primary:hover{
   background:#ec742e;
