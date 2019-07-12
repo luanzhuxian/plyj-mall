@@ -14,6 +14,11 @@ export function revokeObjectURL (URL) {
   window.URL.revokeObjectURL(URL)
 }
 
+/**
+ * 大小数字
+ * @param n {number} 要转换的数字
+ * @returns {string}
+ */
 export function DX (n) {
   if (!/^(0|[1-9]\d*)(\.\d+)?$/.test(n)) {
     return '数据非法'
@@ -70,8 +75,12 @@ export function copyFields (template, target) {
   }
   return template
 }
-// 节流阀
-// fn是我们需要包装的事件回调, delay是时间间隔的阈值
+/**
+ * 节流阀
+ * @param fn {Function} 需要包装的事件回调
+ * @param delay {Number} 时间间隔的阈值
+ * @returns {Function} 包装后的函数
+ */
 export function throttle (fn, delay) {
   // last为上一次触发回调的时间, timer是定时器
   let last = 0; let timer = null
@@ -99,11 +108,11 @@ export function throttle (fn, delay) {
   }
 }
 
-/*
-* 重置表单
-* form: 表单
-* def: 默认值
-* */
+/**
+ * 重置表单
+ * @param form {Object} 表单
+ * @param def {Object} 默认的属性值
+ */
 export function resetForm (form, def = {}) {
   for (let k of Object.keys(form)) {
     let val = form[k]
