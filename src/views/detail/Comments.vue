@@ -56,26 +56,19 @@
     <p :class="$style.noComments" v-if="length === 0 && productId">
       <span>暂无评论</span>
     </p>
-    <image-swiper append-to-body>
-      <image-swiper-slide />
-      <image-swiper-slide />
-      <image-swiper-slide />
-    </image-swiper>
+    <!--<vue-preview :slides="slide1" @close="handleClose" />-->
+    <!--<image-swiper />-->
   </div>
 </template>
 
 <script>
 import Grade from '../../components/Grade.vue'
-import ImageSwiper from '../../components/detail/image-preview/Image-Swiper.vue'
-import ImageSwiperSlide from '../../components/detail/image-preview/Image-Swiper-Slide.vue'
 import { getComments } from '../../apis/comment'
 import { resetForm } from '../../assets/js/util'
 export default {
   name: 'Comments',
   components: {
-    Grade,
-    ImageSwiper,
-    ImageSwiperSlide
+    Grade
   },
   data () {
     return {
@@ -88,7 +81,25 @@ export default {
       getComments,
       loading: false,
       list: [],
-      total: 0
+      total: 0,
+      slide1: [
+        {
+          src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
+          msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
+          alt: 'picture1',
+          title: 'Image Caption 1',
+          w: 600,
+          h: 400
+        },
+        {
+          src: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_b.jpg',
+          msrc: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_m.jpg',
+          alt: 'picture2',
+          title: 'Image Caption 2',
+          w: 1200,
+          h: 900
+        }
+      ]
     }
   },
   props: {

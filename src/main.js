@@ -16,6 +16,16 @@ import VueClipboard from 'vue-clipboard2'
 import AlloyFinger from 'alloyfinger'
 import AlloyFingerVue from 'alloyfinger/vue/alloy_finger_vue'
 import filters from './filter'
+// Vue.use(VuePreview, {
+//   mainClass: 'pswp--minimal--dark',
+//   barsSize: { top: 0, bottom: 0 },
+//   captionEl: false,
+//   fullscreenEl: false,
+//   shareEl: false,
+//   bgOpacity: 0.85,
+//   tapToClose: true,
+//   tapToToggleControls: false
+// })
 // import LogLine from 'logline'
 // import { saveLog } from './apis/base-api'
 // LogLine.using(LogLine.PROTOCOL.INDEXEDDB)
