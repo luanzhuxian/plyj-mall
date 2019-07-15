@@ -1,0 +1,41 @@
+.pswp__header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 88px;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+  z-index: 10;
+  .pswp-counter {
+    line-height: 88px;
+    font-size: 28px;
+    color: #FFF;
+  }
+  .pswp__button--close {
+    position: absolute;
+    left: 40px;
+    top: 32px;
+    opacity: 1;
+    > svg {
+      width: 23px;
+    }
+  }
+}
+.pswp__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+

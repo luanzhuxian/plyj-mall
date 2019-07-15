@@ -42,7 +42,7 @@
               :key="j"
               v-img-error
               :src="img.mediaUrl + '?x-oss-process=style/thum'"
-              v-imger:comment="img.mediaUrl"
+              @click.stop="preview(img.mediaUrl)"
               alt=""
             >
           </div>
@@ -56,8 +56,15 @@
     <p :class="$style.noComments" v-if="length === 0 && productId">
       <span>暂无评论</span>
     </p>
-    <!--<vue-preview :slides="slide1" @close="handleClose" />-->
-    <!--<image-swiper />-->
+    <image-swiper @slideChange="slideChange" :show.sync="showImageSwipe" :index="previewIndex" :items="imgs" :total="imgs.length">
+      <template v-slot:footer>
+        <div :class="$style.swiperFooter">
+          <p :class="$style.swiperFooterUsername" v-text="currentContent.nickName" />
+          <p :class="$style.swiperFooterSku" v-text="currentContent.sku" />
+          <p :class="$style.swiperFooterContent" v-text="currentContent.content" />
+        </div>
+      </template>
+    </image-swiper>
   </div>
 </template>
 
@@ -65,13 +72,16 @@
 import Grade from '../../components/Grade.vue'
 import { getComments } from '../../apis/comment'
 import { resetForm } from '../../assets/js/util'
+import ImageSwiper from '../../components/detail/Image-Swiper.vue'
 export default {
   name: 'Comments',
   components: {
-    Grade
+    Grade,
+    ImageSwiper
   },
   data () {
     return {
+      showImageSwipe: false,
       form: {
         current: 1,
         size: 5,
@@ -82,24 +92,10 @@ export default {
       loading: false,
       list: [],
       total: 0,
-      slide1: [
-        {
-          src: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_b.jpg',
-          msrc: 'https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg',
-          alt: 'picture1',
-          title: 'Image Caption 1',
-          w: 600,
-          h: 400
-        },
-        {
-          src: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_b.jpg',
-          msrc: 'https://farm4.staticflickr.com/3902/14985871946_86abb8c56f_m.jpg',
-          alt: 'picture2',
-          title: 'Image Caption 2',
-          w: 1200,
-          h: 900
-        }
-      ]
+      imgs: [],
+      imgsMap: {},
+      currentContent: {},
+      previewIndex: 0
     }
   },
   props: {
@@ -130,16 +126,6 @@ export default {
     this.total = 0
     this.list = []
   },
-  watch: {
-    show: {
-      async handler (val) {
-        console.log(val)
-        if (val) {
-
-        }
-      }
-    }
-  },
   async created () {
     this.reset()
     this.form.productId = this.productId
@@ -165,6 +151,8 @@ export default {
           this.list.push(item)
         }
         this.total = result.total
+        this.size = result.size
+        this.getImageList(result.records)
       } catch (e) {
         throw e
       } finally {
@@ -178,7 +166,9 @@ export default {
         for (let item of result.records) {
           this.list.push(item)
         }
+        this.getImageList(result.records)
         this.total = result.total
+        this.size = result.size
       } catch (e) {
         throw e
       } finally {
@@ -203,6 +193,7 @@ export default {
       if (!this.show) return
       if (this.loading) return
       if (this.length === this.total) return
+      if (this.assessmentPicCount > 0 && this.length === this.assessmentPicCount) return
       let lastId = 'item' + (this.length - 1)
       if (document.getElementById(lastId).getBoundingClientRect().top - window.innerHeight < 0) {
         this.form.current++
@@ -210,16 +201,65 @@ export default {
       }
     },
     hasImage () {
-      if (this.loading) return
+      if (this.form.flag || this.loading) return
+      this.imgs = []
+      this.imgsMap = {}
       this.reset()
       this.form.flag = true
       this.getList()
     },
     all () {
-      if (this.loading) return
+      if (!this.form.flag || this.loading) return
+      this.imgs = []
+      this.imgsMap = {}
       this.reset()
       this.form.flag = false
       this.getList()
+    },
+    preview (url) {
+      this.previewIndex = this.imgs.findIndex(item => item.src === url)
+      this.showImageSwipe = true
+    },
+    // 批量加载图片
+    batchLoadImg (url) {
+      return new Promise((resolve, reject) => {
+        let img = new Image()
+        img.src = url
+        img.onload = () => {
+          this.imgs.push({
+            src: img.src,
+            w: img.naturalWidth,
+            h: img.naturalHeight
+          })
+          resolve()
+        }
+        img.onerror = (e) => {
+          reject(e)
+        }
+      })
+    },
+    slideChange (index, total) {
+      this.currentContent = this.imgsMap[this.imgs[index].src]
+      // 进行到倒数第二张时,请求更多，只有在查看有图模式下可行
+      if (total - index - 1 === 1 && this.form.flag) {
+        this.form.current++
+        this.more()
+      }
+    },
+    // 提取图片相关信息
+    async getImageList (comments) {
+      for (let item of comments) {
+        if (item.mediaInfoEntityList.length === 0) continue
+        let pro = item.orderProductREntity
+        for (let img of item.mediaInfoEntityList) {
+          await this.batchLoadImg(img.mediaUrl)
+          this.imgsMap[img.mediaUrl] = {
+            nickName: item.nickName,
+            content: item.content,
+            sku: `${pro.attribute1}“${pro.skuName}”` + (pro.attribute2 ? `，${pro.attribute2}“${pro.skuName2}”` : '')
+          }
+        }
+      }
     }
   }
 }
@@ -365,5 +405,27 @@ export default {
         content: '商家回复：';
       }
     }
+  }
+  .swiper-footer {
+    padding: 30px 24px;
+    background: linear-gradient(360deg, rgba(0, 0, 0, .8), rgba(0, 0, 0, 0));
+  }
+  .swiper-footer-username {
+    font-size: 28px;
+    line-height: 40px;
+    color: #fff;
+  }
+  .swiper-footer-sku {
+    width: calc(100vw - 48px);
+    font-size: 26px;
+    line-height: 36px;
+    color: #ccc;
+    @include elps();
+  }
+  .swiper-footer-content {
+    font-size: 26px;
+    color: #fff;
+    line-height: 36px;
+    @include elps-wrap(3);
   }
 </style>
