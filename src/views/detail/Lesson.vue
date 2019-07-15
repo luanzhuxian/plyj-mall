@@ -411,10 +411,10 @@ export default {
       }
     },
     loadImage (src) {
+      let img = new Image()
+      img.crossOrigin = ''
+      img.src = src + '?id=' + Date.now()
       return new Promise((resolve, reject) => {
-        let img = new Image()
-        img.crossOrigin = ''
-        img.src = src
         img.onload = () => {
           resolve(img)
         }
