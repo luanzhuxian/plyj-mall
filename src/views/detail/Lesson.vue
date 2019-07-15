@@ -6,44 +6,13 @@
         <pl-svg name="haibao" />
         <p>分享海报</p>
       </div>
-      <DetailBanner @slideChange="slideChange" :banners="banners" />
+      <DetailBanner @slideChange="slideChange" type="lesson" :banners="banners" />
       <DetailInfoBox :loading="loading">
-        <div :class="$style.priceBox">
-          <div :class="$style.priceLeft">
-            <div :class="$style.price">
-              <i v-text="minPrice" />
-              <template v-if="minPrice !== maxPrice">
-                ~ <i v-text="maxPrice" />
-              </template>
-            </div>
-            <div :class="$style.count">
-              <del v-text="maxOriginalPrice" />
-              <span v-if="detail.salesVolume === 0 && detail.productStatus === 2">正在热销中</span>
-              <template v-else-if="detail.salesVolume > 0 && detail.salesVolume < 10 || detail.productStatus === 1">
-                <span v-text="detail.pageviews" />人关注
-              </template>
-              <template v-else-if="detail.salesVolume >= 10">
-                <span v-text="detail.salesVolume" />人购买
-              </template>
-            </div>
-          </div>
-          <div :class="$style.priceRight" v-if="agentUser && (minRebate || maxRebate)">
-            <p class="fz-22 gray-1">
-              <span :class="$style.returnRunbi">
-                润笔
-              </span>
-              <i v-if="minRebate" class="rmb" v-text="minRebate" />
-              <i v-if="minRebate && maxRebate && minRebate !== maxRebate">~</i>
-              <i v-if="maxRebate && minRebate !== maxRebate" v-text="maxRebate" />
-            </p>
-            <p class="fz-22 gray-3">
-              分享下单即可获得润笔
-            </p>
-          </div>
-        </div>
+        <info-header :detail="detail" />
         <DetailTitle v-text="detail.productName" />
         <DetailDesc v-text="detail.productDesc" />
         <Tags :tags="detail.labelModels" />
+        <useful-life start="2019.01.01" end="2020.12.21" />
       </DetailInfoBox>
 
       <Field v-if="productType === 'PHYSICAL_GOODS'" label="发货" content="普通快递" />
@@ -73,13 +42,13 @@
 
         <div>
           <Comments v-if="tab === 1" :product-id="productId" :show="tab === 1" />
-          <!--<Comment v-show="tab === 1" :size="3" :product-id="productId" :broker-id="brokerId" />-->
           <DetailInfo
             v-if="tab === 2"
             :content="detail.detail || '暂无详情'"
           />
         </div>
       </div>
+      <Instructions content="啊喀什觉得规划卡上级领导关怀" />
     </template>
 
     <SoldOut v-else />
@@ -156,6 +125,9 @@ import DetailDesc from '../../components/detail/Desc.vue'
 import DetailInfo from '../../components/detail/Detail.vue'
 import BuyNow from '../../components/detail/Buy-Now.vue'
 import Tags from '../../components/detail/Tags.vue'
+import UsefulLife from '../../components/detail/Useful-Life.vue'
+import InfoHeader from '../../components/detail/Info-Header.vue'
+import Instructions from '../../components/detail/Instructions.vue'
 import Price from '../../components/Price.vue'
 import Field from '../../components/detail/Field.vue'
 import { getProductDetail } from '../../apis/product'
@@ -184,7 +156,10 @@ export default {
     SpecificationPop,
     youLike,
     SoldOut,
-    Comments
+    Comments,
+    UsefulLife,
+    InfoHeader,
+    Instructions
   },
   data () {
     return {
@@ -219,12 +194,6 @@ export default {
   },
   computed: {
     ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId']),
-    currentPrice () {
-      return this.currentModel.price || this.productSkuModels[0].price
-    },
-    currentOriginalPrice () {
-      return this.currentModel.originalPrice || this.productSkuModels[0].originalPrice
-    },
     noStock () {
       return this.productSkuModels.every(item => item.stock < item.minBuyNum)
     },
@@ -233,30 +202,6 @@ export default {
     },
     limiting () {
       return this.detail.purchaseLimit ? (this.detail.purchaseQuantity) : 0
-    },
-    rebateList () {
-      return this.productSkuModels.filter(item => Number(item.realRebate) !== 0).map(item => item.realRebate) || []
-    },
-    maxRebate () {
-      return this.rebateList.length ? Math.max(...this.rebateList) : 0
-    },
-    minRebate () {
-      return this.rebateList.length ? Math.min(...this.rebateList) : 0
-    },
-    priceList () {
-      return this.productSkuModels.map(item => item.price) || []
-    },
-    originalPriceList () {
-      return this.productSkuModels.map(item => item.originalPrice) || []
-    },
-    maxPrice () {
-      return Math.max(...this.priceList)
-    },
-    minPrice () {
-      return Math.min(...this.priceList)
-    },
-    maxOriginalPrice () {
-      return Math.max(...this.originalPriceList)
     },
     productType () {
       return this.detail.productType
@@ -474,8 +419,7 @@ export default {
           resolve(img)
         }
         img.onerror = (e) => {
-          console.log(e)
-          reject(e)
+          reject(new Error('图片加载错误'))
         }
       })
     }
@@ -486,60 +430,6 @@ export default {
 <style module lang="scss">
   .lesson {
     padding-bottom: 120px;
-  }
-  .priceBox {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-
-  }
-  .priceLeft {
-    flex: 1;
-    display: inline-flex;
-    flex-direction: column;
-  }
-  .price {
-    line-height: 48px;
-    margin-bottom: 4px;
-    color: #FE7700;
-    font-size: 40px;
-    &:before {
-      content: '¥';
-      font-size: 24px;
-    }
-  }
-  .priceRight {
-    flex: 1;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-top: 5px;
-    > p {
-      margin-top: 6px;
-    }
-    .returnRunbi {
-      display: inline-block;
-      width: 60px;
-      height: 28px;
-      line-height: 28px;
-      margin-right: 10px;
-      text-align: center;
-      color: #fff;
-      font-size: 18px;
-      background-color: #FE7700;
-      border-radius: 13px;
-    }
-  }
-  .count {
-    font-size: 24px;
-    color: #999999;
-    del {
-      margin-right: 32px;
-      &:before {
-        content: '¥';
-      }
-    }
   }
   .buttons {
     display: flex;
@@ -574,6 +464,7 @@ export default {
       height: 90px;
       line-height: 90px;
       box-sizing: border-box;
+      font-weight: bold;
       &.activeTab {
         color: #000;
         border-bottom: 2px solid #000;

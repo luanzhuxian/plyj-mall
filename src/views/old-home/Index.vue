@@ -24,7 +24,6 @@
       </swiper-slide>
       <div class="banner-pagination" slot="pagination" />
     </swiper>
-
     <div :class="$style.goodGift" v-if="modules.A.length">
       <div :class="$style.moduleHead">
         <div :class="$style.moduleTitle">

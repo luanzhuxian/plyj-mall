@@ -1,7 +1,12 @@
 <template>
   <div
     v-if="banners.length > 0"
-    :class="'detail-banner' + ' ' + $style.detailBanner"
+    :class="{
+      'detail-banner': true,
+      [$style.detailBanner]: true,
+      [$style.lesson]: type === 'lesson',
+      [$style.product]: type === 'product'
+    }"
   >
     <swiper ref="swiper" :options="swiperOption" @slideChange="slideChange">
       <swiperSlide
@@ -13,7 +18,6 @@
           :class="$style.bannerImg"
           alt=""
           :src="img"
-          crossOrigin=""
         >
       </swiperSlide>
     </swiper>
@@ -41,6 +45,10 @@ export default {
       default: function () {
         return []
       }
+    },
+    type: {
+      type: String,
+      default: 'product'
     }
   },
   data () {
@@ -69,17 +77,27 @@ export default {
 <style module lang="scss">
   .detail-banner {
     position: relative;
-    height: 750px;
     font-size: 0;
+    &.lesson {
+      height: 502px;
+      .banner-img {
+        width: 750px;
+        height: 502px;
+        object-fit: cover;
+      }
+    }
+    &.product {
+      height: 750px;
+      .banner-img {
+        width: 750px;
+        height: 750px;
+        object-fit: cover;
+      }
+    }
   }
   .pagination {
     width: 100%;
     bottom: 94px;
-  }
-  .banner-img {
-    width: 750px;
-    height: 750px;
-    object-fit: cover;
   }
   .skeleton {
     height: 750px;
