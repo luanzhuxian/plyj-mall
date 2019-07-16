@@ -36,27 +36,18 @@
             }"
           >
             <span :class="$style.itemLabel">配送方式</span>
-            <span
-              v-if="freight === 0"
-              :class="$style.itemContent"
-            >
+            <span v-if="freight === 0" :class="$style.itemContent">
               快递免邮
             </span>
-            <span
-              v-if="freight > 0"
-              :class="$style.itemContent"
-            >
+            <span v-if="freight > 0" :class="$style.itemContent">
               普通快递
             </span>
           </div>
-          <span
-            v-if="freight > 0"
-            :class="$style.freight"
-          >
+          <span v-if="freight > 0" :class="$style.freight">
             ¥ {{ freight }}
           </span>
         </div>
-        <div :class="$style.infoItem">
+        <div :class="$style.infoItem" v-if="!isAloneProduct">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">订单备注</span>
             <input
@@ -67,11 +58,13 @@
             >
           </div>
         </div>
-      </div>
 
-      <div :class="$style.subtotal">
-        <span>小计：</span>
-        <span :class="$style.subtotalPrice">￥{{ amount }}</span>
+        <div :class="$style.infoItem">
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">商品金额</span>
+            <span :class="$style.subtotalPrice + ' rmb'">{{ amount }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -94,7 +87,7 @@
           border
         />
         <div :class="$style.otherInfo">
-          <div :class="$style.infoItem">
+          <div :class="$style.infoItem" v-if="!isAloneProduct">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">订单备注</span>
               <input
@@ -105,11 +98,73 @@
               >
             </div>
           </div>
-        </div>
+          <div :class="$style.infoItem">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">购买数量</span>
+              <div :class="$style.editCount">
+                <span>剩余99件</span>
+                <Count :min="item.minBuyNum" :max="item.stock" :count="item.count" />
+              </div>
+            </div>
+          </div>
 
-        <div :class="$style.subtotal">
-          <span>小计：</span>
-          <span :class="$style.subtotalPrice">￥{{ item.amount }}</span>
+          <div :class="$style.infoItem">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">商品金额</span>
+              <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template v-if="formalClass.length > 0">
+      <div
+        v-for="(item, i) of formalClass"
+        :key="i"
+        :class="$style.productBox"
+      >
+        <OrderItem
+          :key="i"
+          :img="item.productImg"
+          :name="item.productName"
+          :count="item.count"
+          :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
+          :price="item.price"
+          is-submit
+          :gap="32"
+          :product-type="2"
+          border
+        />
+        <div :class="$style.otherInfo">
+          <div :class="$style.infoItem" v-if="!isAloneProduct">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">订单备注</span>
+              <input
+                :class="$style.remark"
+                type="text"
+                placeholder="选填"
+                v-model="item.remark"
+              >
+            </div>
+          </div>
+
+          <div :class="$style.infoItem">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">购买数量</span>
+              <div :class="$style.editCount">
+                <span>剩余99件</span>
+                <Count :min="1" :max="item.count" :count="item.count" />
+              </div>
+            </div>
+          </div>
+
+          <div :class="$style.infoItem">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">商品金额</span>
+              <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </template>
@@ -131,7 +186,6 @@
         确认付款
       </pl-button>
     </div>
-
     <div
       v-if="physicalProducts.length > 0"
       :class="$style.invioce"
@@ -153,7 +207,6 @@
         />
       </div>
     </div>
-
     <pl-popup :show.sync="showPopup">
       <div :class="$style.invioceBox">
         <div :class="$style.title">
@@ -172,6 +225,12 @@
         </div>
       </div>
     </pl-popup>
+
+    <!-- 订单备注（只有一个商品时显示） -->
+    <div :class="$style.oneProductMark" v-if="isAloneProduct">
+      <span>订单备注</span>
+      <input type="text" placeholder="请和商家协商一致后填写" v-model="remark">
+    </div>
   </div>
 
   <div
@@ -202,13 +261,15 @@ import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { mapGetters } from 'vuex'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
+import Count from '../../components/Count.vue'
 export default {
   name: 'SubmitOrder',
   components: {
     AddressItem,
     OrderItem,
     OrderItemSkeleton,
-    AddressItemSkeleton
+    AddressItemSkeleton,
+    Count
   },
   data () {
     return {
@@ -220,6 +281,7 @@ export default {
       amount: 0,
       physicalProducts: [],
       virtualProducts: [],
+      formalClass: [],
       remark: '', // 物理订单备注
       invioceType: 1,
       INVOICE_MODEL: null,
@@ -245,7 +307,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList'])
+    ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList']),
+    // 是否只有一个商品
+    isAloneProduct () {
+      return this.physicalProducts.length + this.virtualProducts.length + this.formalClass.length === 1
+    },
+    // 只有一个商品时，返回这个商品
+    aloneProduct () {
+      if (this.isAloneProduct) {
+        return this.formalClass[0] || this.physicalProducts[0] || this.virtualProducts[0]
+      } else {
+        return null
+      }
+    }
   },
   watch: {
     selectedAddress: {
@@ -259,6 +333,16 @@ export default {
         }
       },
       deep: true
+    },
+    remark (val) {
+      // 当只有一个商品时，订单备注样式在底部
+      // 这时，每个商品块中的备注输入框就会隐藏
+      // 如果是实体商品，这无所谓，因为实体商品共用一个备注
+      // 但是虚拟商品和课程每个商品都有单独是备注，这个备注字段在每个商品的对象中储存
+      // 但是底部的备注绑定是共用的备注数据，所以，要将这个共用的备注数据写入到单独商品的备注字段中
+      if (this.isAloneProduct) {
+        this.aloneProduct.remark = val
+      }
     }
   },
   async activated () {
@@ -294,7 +378,7 @@ export default {
           cartProducts: proList,
           addressSeq: this.selectedAddress.sequenceNbr
         })
-        const { amount, totalAmount, freight, physicalProducts, virtualProducts } = result
+        const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass } = result
         // 为每个虚拟订单都添加备注字段
         for (const p of physicalProducts) {
           p.remark = ''
@@ -304,6 +388,7 @@ export default {
         this.freight = Number(freight)
         this.physicalProducts = physicalProducts
         this.virtualProducts = virtualProducts
+        this.formalClass = formalClass
         this.loading = false
       } catch (e) {
         throw e
@@ -455,6 +540,15 @@ export default {
           color: #666;
           margin-left: 24px;
         }
+        .edit-count {
+          display: flex;
+          align-items: center;
+          > span {
+            margin-right: 16px;
+            font-size: 20px;
+            color: #999;
+          }
+        }
       }
       .freight {
         text-align: right;
@@ -468,13 +562,9 @@ export default {
       }
     }
   }
-  .subtotal {
-    font-size: 30px;
-    font-weight: bold;
-    text-align: right;
-    > .subtotalPrice {
-      color: #FE7700;
-    }
+  .subtotalPrice {
+    font-size: 24px;
+    color: #000;
   }
   .address {
     margin-bottom: 28px;
@@ -612,5 +702,19 @@ export default {
   }
   .skeAnimation {
     @include skeAnimation(#eee)
+  }
+  .oneProductMark {
+    display: flex;
+    margin-top: 20px;
+    padding: 0 28px;
+    line-height: 88px;
+    font-size: 28px;
+    background-color: #fff;
+    border-radius: 20px;
+    > input {
+      flex: 1;
+      margin-left: 68px;
+      background-color: transparent;
+    }
   }
 </style>
