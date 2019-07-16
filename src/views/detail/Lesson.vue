@@ -146,9 +146,9 @@ import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
 import youLike from './../old-home/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
-import { generateQrcode, cutImageCenter } from '../../assets/js/util'
+import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
-
+const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
   components: {
@@ -201,7 +201,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId']),
+    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName']),
     noStock () {
       return this.productSkuModels.every(item => item.stock < item.minBuyNum)
     },
@@ -266,7 +266,6 @@ export default {
         this.detail = result
         this.productSkuModels = result.productSkuModels
         this.currentModel = result.productSkuModels[0]
-        console.log(this.currentModel, 269)
         share({
           appId: this.appId,
           title: result.productName,
@@ -350,69 +349,59 @@ export default {
       if (this.haibao) {
         return
       }
+      // 截取头像
+      let lodedAvatar
+      try {
+        lodedAvatar = await this.loadImage(this.avatar)
+      } catch (e) {
+        lodedAvatar = await this.loadImage(avatar)
+      }
+      const arcAvatar = cutArcImage(lodedAvatar)
       // 截取中间部分
       img = cutImageCenter(img)
       let canvas = document.createElement('canvas')
-      let ctx = canvas.getContext('2d')
       canvas.width = 1120
-      canvas.height = 1528
+      canvas.height = 1720
+      let ctx = canvas.getContext('2d')
+      // 绘制头部
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(0, 0, 1120, 192)
+      ctx.drawImage(arcAvatar, 32, 32, 128, 128)
+      drawText(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 300, 1)
+      let userNameWidth = ctx.measureText(this.userName).width
+      drawText(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + userNameWidth, 74, '发现了好东西要与你分享', 68)
+
       try {
         let min = Math.min(img.width, img.height)
         let qrcode = await generateQrcode(300, window.location.href, 0, img, 10, 'canvas')
-        ctx.drawImage(img, 0, 0, min, min, 0, 0, 1120, 1120)
+        ctx.drawImage(img, 0, 0, min, min, 0, 192, 1120, 1120)
         ctx.fillStyle = '#fff'
-        ctx.fillRect(0, 1120, 1120, 408)
-        ctx.drawImage(qrcode, 750, 1160, 320, 320)
-        ctx.font = '56px Microsoft YaHei UI'
-        ctx.fillStyle = '#000'
-        ctx.textBaseline = 'top'
+        ctx.fillRect(0, 1312, 1120, 408)
+        ctx.drawImage(qrcode, 750, 1352, 320, 320)
         // 填充商品名称
         let str = this.detail.productName
-        let charArr = []
-        let strArr = []
-        let txtWidth = 0
-        let lineCount = 0 // 文字行数
-        for (let i = 0; i < str.length; i++) {
-          let char = str[i]
-          charArr.push(char)
-          txtWidth += ctx.measureText(char).width
-          if (txtWidth >= 620 || i === str.length - 1) {
-            lineCount++
-            // 行数等于2时，停止循环，并将最后一个字符替换为...
-            if (lineCount === 2) charArr.splice(-1, 1, '...')
-            // 文本换行
-            strArr.push(charArr.join(''))
-            if (lineCount === 2) break
-            txtWidth = 0
-            charArr = []
-          }
-        }
-        let lineHeight = 80
-        for (let [i, str] of strArr.entries()) {
-          ctx.fillText(str, 48, 1160 + lineHeight * i)
-        }
+        drawText(ctx, '56px Microsoft YaHei UI', '#000', 'top')(ctx, 48, 1352, str, 80, 620, 2)
         // 填充价钱
         let minSku = this.detail.productSkuModels[0]
         let price = minSku.price
         let originalPrice = minSku.originalPrice
         ctx.fillStyle = '#FE7700'
-        // 1372 + (76 - 56) / 2 文字距离顶部的距离 + 行高的一半，下同
-        ctx.fillText('¥', 48, 1372 + (76 - 56) / 2)
-        ctx.font = 'bold 88px Microsoft YaHei UI'
-        ctx.fillText(price, 96, 1352 + (104 - 88) / 2)
+        ctx.fillText('¥', 48, 1564 + (76 - 56) / 2)
+        drawText(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1544 + (104 - 88) / 2, String(price), 104)
+        // 绘制原价
         if (originalPrice) {
           let priceWidth = ctx.measureText(price).width
           ctx.fillStyle = '#999'
           ctx.font = '56px Microsoft YaHei UI'
-          ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1372 + (80 - 56) / 2)
+          ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1564 + (80 - 56) / 2)
           let originalPriceWidth = ctx.measureText(`¥${originalPrice}`).width
           ctx.save()
           // 设置删除线
           ctx.strokeStyle = '#999'
           ctx.beginPath()
           ctx.lineWidth = '4'
-          ctx.moveTo(96 + priceWidth + 44, 1372 + (80 - 56) / 2 + 80 / 3)
-          ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1372 + (80 - 56) / 2 + 80 / 3)
+          ctx.moveTo(96 + priceWidth + 44, 1564 + (80 - 56) / 2 + 80 / 3)
+          ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1564 + (80 - 56) / 2 + 80 / 3)
           ctx.stroke()
         }
         this.haibao = canvas.toDataURL('image/jpeg', 0.7)
@@ -433,6 +422,57 @@ export default {
         }
       })
     }
+  }
+}
+
+/**
+ * 设置文字基本属性
+ * @param ctx {CanvasRenderingContext2D} 2d context
+ * @param font {String} 字体
+ * @param color {String} 颜色
+ * @param verticalAlign {String} 文字对齐方式
+ * @returns {createText} {Function} 绘制文字的函数
+ */
+function drawText (ctx, font, color, verticalAlign) {
+  ctx.font = font
+  ctx.fillStyle = color
+  ctx.textBaseline = verticalAlign
+  return createText
+}
+
+/**
+ * 绘制文本
+ * @param ctx {CanvasRenderingContext2D} 2d context
+ * @param x {Number} 文本开始的x坐标
+ * @param y {Number} 文本开始的y坐标
+ * @param width {Number} 每行文本的宽度
+ * @param text {String} 文本
+ * @param lineHeight {Number} 行高
+ * @param lineNumber {Number} 行数（超过行数时，以...结尾）
+ */
+function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
+  // 填充商品名称
+  let charArr = []
+  let strArr = []
+  let txtWidth = 0
+  let lineCount = 0 // 文字行数
+  for (let i = 0; i < text.length; i++) {
+    let char = text[i]
+    charArr.push(char)
+    txtWidth += ctx.measureText(char).width
+    if (txtWidth >= width || i === text.length - 1) {
+      lineCount++
+      // 行数等于2时，停止循环，并将最后一个字符替换为...
+      if (lineCount === lineNumber) charArr.splice(-1, 1, '...')
+      // 文本换行
+      strArr.push(charArr.join(''))
+      if (lineCount === lineNumber) break
+      txtWidth = 0
+      charArr = []
+    }
+  }
+  for (let [i, str] of strArr.entries()) {
+    ctx.fillText(str, x, y + lineHeight * i)
   }
 }
 </script>
@@ -556,7 +596,6 @@ export default {
       }
       > img {
         width: 560px;
-        height: 764px;
         object-fit: cover;
       }
       > svg {

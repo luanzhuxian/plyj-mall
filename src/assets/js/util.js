@@ -223,8 +223,8 @@ export async function generateQrcode (size, text, padding = 0, img, centerPaddin
  */
 export function cutImageCenter (img) {
   const canvas = document.createElement('canvas')
-  let w = img.width
-  let h = img.height
+  let w = img.naturalWidth
+  let h = img.naturalHeight
   let min = Math.min(w, h)
   canvas.width = min
   canvas.height = min
@@ -234,5 +234,21 @@ export function cutImageCenter (img) {
   } else {
     ctx.drawImage(img, 0, (h - w) / 2, w, w, 0, 0, w, w)
   }
+  return canvas
+}
+/**
+ * 把图片截成圆形
+ * @param img {HTMLElement} 要截取的图片
+ * @returns {HTMLElement} 返回canvas对象
+ */
+export function cutArcImage (img) {
+  const centerCanvas = cutImageCenter(img)
+  const canvas = cutImageCenter(img)
+  const w = canvas.width = centerCanvas.width
+  const h = canvas.height = centerCanvas.height
+  const ctx = canvas.getContext('2d')
+  ctx.arc(w / 2, h / 2, h / 2, 0, Math.PI * 2, false)
+  ctx.clip()
+  ctx.drawImage(centerCanvas, 0, 0, w, h, 0, 0, w, h)
   return canvas
 }
