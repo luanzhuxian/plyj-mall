@@ -1,4 +1,5 @@
 /* eslint-disable */
+require('./add-bold')
 require('./add-friend')
 require('./add')
 require('./add2')
@@ -87,6 +88,7 @@ require('./sold-out')
 require('./specification')
 require('./stage')
 require('./star')
+require('./student-manage')
 require('./success')
 require('./theme-btn')
 require('./three-dot')

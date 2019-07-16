@@ -176,9 +176,15 @@ export default {
       return false
     },
     currentSku () {
-      return this.skuList.find(item => {
+      let current = this.skuList.find(item => {
         return item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2
       }) || {}
+      if (this.sku.skuCode1 === current.skuCode1 && this.sku.skuCode2 === current.skuCode2) {
+        current.count = this.defaultCount
+      } else {
+        current.count = current.minBuyNum
+      }
+      return current
     },
     skuImage () {
       let currentSku1 = this.skuAttrList[0].productAttributeValues.find(item => item.id === this.currentSku1)

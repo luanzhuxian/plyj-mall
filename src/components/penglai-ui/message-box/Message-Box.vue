@@ -188,7 +188,7 @@ export default {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 140px;
+      min-height: 100px;
       padding: 20px 0;
       color: #2E2E2E;
     }
@@ -199,11 +199,12 @@ export default {
     }
     .main-message {
       width: 100%;
-      padding: 0 54px;
+      padding: 0 46px;
       white-space: pre-wrap;
       word-break: break-all;
       font-size: 34px;
       line-height: 48px;
+      color: #000;
       box-sizing: border-box;
     }
     .propmt-input {

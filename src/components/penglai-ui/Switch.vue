@@ -7,7 +7,7 @@
   >
     <input
       type="checkbox"
-      :checked="value"
+      :checked="localValue"
       @change="handleChange"
     >
     <span
@@ -28,11 +28,32 @@ export default {
     value: 'value'
   },
   props: {
-    value: Boolean
+    value: {
+      type: [Boolean, Number],
+      default: 0
+    },
+    activeText: {
+      type: [String, Number],
+      default: null
+    },
+    inactiveText: {
+      type: [String, Number],
+      default: null
+    }
+  },
+  computed: {
+    localValue () {
+      return Boolean(this.value)
+    }
   },
   methods: {
     handleChange (e) {
-      this.$emit('change', e.target.checked)
+      let checked = e.target.checked
+      if (this.activeText !== null && this.inactiveText !== null) {
+        this.$emit('change', checked ? this.activeText : this.inactiveText)
+      } else {
+        this.$emit('change', e.target.checked)
+      }
     }
   }
 }

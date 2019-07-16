@@ -37,6 +37,12 @@
         :icon-gap="24"
         :route="{ name: 'Invoice' }"
       />
+      <pl-fields
+        text="学员管理"
+        icon="student-manage"
+        :icon-gap="24"
+        :route="{ name: 'StudentList' }"
+      />
     </div>
   </div>
 </template>

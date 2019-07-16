@@ -67,11 +67,30 @@ export default [
     }
   },
   {
-    path: '/my/setting/students-management',
-    name: 'StudentsManagement',
-    component: () => import('../views/my/setting/students-management.vue'),
+    path: '/my/setting/student',
+    name: 'StudentList',
+    props: true,
+    component: () => import('../views/my/student/List.vue'),
     meta: {
       title: '学员管理'
+    }
+  },
+  {
+    path: '/my/setting/student/add/:id?',
+    name: 'AddStudent',
+    props: true,
+    component: () => import('../views/my/student/Add.vue'),
+    meta: {
+      title: '新增学员'
+    }
+  },
+  {
+    path: '/my/setting/student/edit/:id',
+    name: 'EditStudent',
+    props: true,
+    component: () => import('../views/my/student/Add.vue'),
+    meta: {
+      title: '编辑学员'
     }
   }
 ]

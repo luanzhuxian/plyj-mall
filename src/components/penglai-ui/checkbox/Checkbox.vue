@@ -30,19 +30,16 @@
       >
         <span
           v-if="data && data.disabled || disabled"
-          class="icon"
-          :style="{ backgroundImage: `url(${disabledChecked})` }"
+          class="pl-checkbox__inner disabled"
         />
         <template v-else>
           <span
             v-show="checked || localChecked"
-            class="icon"
-            :style="{ backgroundImage: `url(${checkedIcon})` }"
+            class="pl-checkbox__inner checked"
           />
           <span
             v-show="!checked && !localChecked"
-            class="icon"
-            :style="{ backgroundImage: `url(${noChecked})` }"
+            class="pl-checkbox__inner"
           />
         </template>
       </span>
@@ -137,33 +134,32 @@ export default {
   methods: {
     handleChange (e) {
       this.localChecked = e.currentTarget.checked
-      if (this.data) {
-        this.$parent.change(this.localChecked, this.data)
-        this.$emit('change', this.localChecked)
+      if (this.localChecked) {
+        this.selected()
       } else {
-        this.$emit('change', this.localChecked)
+        this.cancel()
       }
     },
     // 选中
     selected () {
-      if (!this.localChecked) {
+      if (this.$parent.change) {
         this.$parent.change(true, this.data)
-        this.$emit('change', true)
-        this.localChecked = true
-        if (this.data.hasOwnProperty('checked')) {
-          this.data.checked = true
-        }
+      }
+      this.localChecked = true
+      this.$emit('change', true, this.data)
+      if (this.data && this.data.hasOwnProperty('checked')) {
+        this.data.checked = true
       }
     },
     // 取消选中
     cancel () {
-      if (this.localChecked) {
+      if (this.$parent.change) {
         this.$parent.change(false, this.data)
-        this.$emit('change', false)
-        this.localChecked = false
-        if (this.data.hasOwnProperty('checked')) {
-          this.data.checked = false
-        }
+      }
+      this.localChecked = false
+      this.$emit('change', false, this.data)
+      if (this.data && this.data.hasOwnProperty('checked')) {
+        this.data.checked = false
       }
     }
   }
@@ -192,13 +188,43 @@ export default {
     height: 36px;
     border-radius: 18px;
     box-sizing: border-box;
-    > .icon {
+    > .pl-checkbox__inner {
       display: inline-block;
-      width: 35px;
-      height: 35px;
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-size: 100%;
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      border: 2px solid #ccc;
+      box-sizing: border-box;
+      &.checked {
+        position: relative;
+        background-color: #F2B036;
+        border: none;
+        &:before {
+          position: absolute;
+          top: 20px;
+          left: 7px;
+          content: '';
+          width: 10px;
+          height: 3px;
+          transform: rotate(45deg);
+          background-color: #fff;
+          border-radius: 2px;
+        }
+        &:after {
+          position: absolute;
+          top: 18px;
+          left: 12px;
+          content: '';
+          width: 20px;
+          height: 3px;
+          transform: rotate(-45deg);
+          background-color: #fff;
+          border-radius: 2px;
+        }
+      }
+      &.disabled {
+        background-color: #ddd;
+      }
     }
     > .weixuanzhong1 {
       display: none;
