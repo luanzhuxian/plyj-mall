@@ -6,13 +6,21 @@
         <pl-svg name="haibao" />
         <p>分享海报</p>
       </div>
-      <DetailBanner @slideChange="slideChange" type="lesson" :banners="banners" />
+      <DetailBanner
+        @slideChange="slideChange"
+        :type="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' ? 'lesson' : 'product'"
+        :banners="banners"
+      />
       <DetailInfoBox :loading="loading">
         <info-header :detail="detail" />
         <DetailTitle v-text="detail.productName" />
         <DetailDesc v-text="detail.productDesc" />
         <Tags :tags="detail.labelModels" />
-        <useful-life start="2019.01.01" end="2020.12.21" />
+        <useful-life
+          v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
+          :start="detail.validityPeriodStart"
+          :end="detail.validityPeriodEnd"
+        />
       </DetailInfoBox>
 
       <Field v-if="productType === 'PHYSICAL_GOODS'" label="发货" content="普通快递" />
@@ -48,7 +56,7 @@
           />
         </div>
       </div>
-      <Instructions content="啊喀什觉得规划卡上级领导关怀" />
+      <Instructions :content="detail.useDesc" />
     </template>
 
     <SoldOut v-else />
@@ -257,6 +265,8 @@ export default {
         this.banners = mediaInfoIds
         this.detail = result
         this.productSkuModels = result.productSkuModels
+        this.currentModel = result.productSkuModels[0]
+        console.log(this.currentModel, 269)
         share({
           appId: this.appId,
           title: result.productName,

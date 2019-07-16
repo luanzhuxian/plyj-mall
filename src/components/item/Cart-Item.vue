@@ -29,14 +29,26 @@
         </div>
         <div :class="$style.priceCount" v-if="!overflowStock">
           <i :class="$style.price + ' rmb'" v-text="currentSkuModel.price" />
-          <count
-            :count="count"
-            ref="count"
-            :disabled="disabled"
-            :max="currentSkuModel.stock"
-            :min="currentSkuModel.minBuyNum"
-            @change="countChange"
-          />
+          <div :class="$style.count">
+            <button
+              :class="$style.subtract"
+              @click.stop="subtract"
+              :disabled="localCount <= minBuyNum || loading || disabled"
+            />
+            <!-- 用number会导致神奇的问题 -->
+            <input
+              type="tel"
+              :class="$style.input"
+              :value="localCount"
+              :disabled="disabled"
+              @change="valueChange"
+            >
+            <button
+              :class="$style.add"
+              @click.stop="add"
+              :disabled="localCount >= stock || loading || disabled"
+            />
+          </div>
         </div>
       </template>
       <span :class="$style.unshelve" v-if="allDisabled">
@@ -62,19 +74,16 @@
 </template>
 
 <script>
-import Count from '../../components/Count.vue'
 import {
   updateCartProductCount
 } from '../../apis/shopping-cart'
 import { mapGetters } from 'vuex'
 export default {
   name: 'CartItem',
-  components: {
-    Count
-  },
   data () {
     return {
-      loading: false
+      loading: false,
+      localCount: 1
     }
   },
   props: {
@@ -113,40 +122,23 @@ export default {
       return this.data.skuModels.find(item => {
         return item.skuCode1 === this.data.cartSkuCode && item.skuCode2 === this.data.cartSkuCode2
       }) || {}
+    },
+    stock () {
+      return this.currentSkuModel.stock || 1
+    },
+    minBuyNum () {
+      return this.currentSkuModel.minBuyNum || 1
     }
   },
   watch: {
-    data: {
+    count: {
       handler (val) {
-        // if (val) {
-        //   this.currentSkuModel = val.skuModels.find(item => {
-        //     return item.skuCode1 === this.data.cartSkuCode && item.skuCode2 === this.data.cartSkuCode2
-        //   }) || {}
-        // }
+        this.localCount = val
       },
-      immediate: true,
-      deep: true
+      immediate: true
     }
   },
   methods: {
-    async countChange (count, next) {
-      try {
-        const { result } = await updateCartProductCount({
-          id: this.id,
-          number: count
-        })
-        if (result) {
-          next()
-          // 直接修改父组件的数据，也可以在父组件中监听change事件，通过接口来刷新数据，但是会导致接口调用频繁
-          this.data.cartProductCount = count
-          this.$emit('change')
-          this.$emit('countChange')
-        }
-      } catch (err) {
-        next(err)
-        throw err
-      }
-    },
     async goDetail () {
       const productId = this.data.cartProductId
       this.$router.push({
@@ -162,6 +154,43 @@ export default {
         return
       }
       this.$emit('skuClick', e)
+    },
+    add () {
+      let temp = this.localCount
+      temp++
+      this.emitChange(temp)
+    },
+    subtract () {
+      let temp = this.localCount
+      temp--
+      this.emitChange(temp)
+    },
+    valueChange (e) {
+      let val = Number.parseInt(e.target.value)
+      if (val && (val <= this.stock && val >= this.minBuyNum)) {
+        this.emitChange(val)
+      } else {
+        e.target.value = this.localCount
+      }
+    },
+    async emitChange (count) {
+      this.loading = true
+      try {
+        const { result } = await updateCartProductCount({
+          id: this.id,
+          number: count
+        })
+        if (result) {
+          // 直接修改父组件的数据，也可以在父组件中监听change事件，通过接口来刷新数据，但是会导致接口调用频繁
+          this.data.cartProductCount = count
+          this.$emit('change')
+          this.$emit('countChange')
+        }
+      } catch (err) {
+        throw err
+      } finally {
+        this.loading = false
+      }
     }
   }
 }
@@ -236,5 +265,59 @@ export default {
     justify-content: space-between;
     align-items: center;
     font-size: 20px;
+  }
+  .count {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 146px;
+    line-height: 66px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background-color: transparent;
+    border: 1px solid #e7e7e7;
+    .input {
+      flex: 1;
+      width: 100%;
+      height: 90%;
+      font-size: 20px;
+      text-align: center;
+      z-index: 2;
+      &:disabled {
+        background-color: #fff;
+        color: #999;
+      }
+    }
+    .subtract, .add {
+      position: relative;
+      width: 40px;
+      height: 36px;
+      z-index: 2;
+      vertical-align: -5px;
+      &:disabled {
+        opacity: 0.5;
+      }
+      &:before {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        line-height: 34px;
+        transform: translateX(-50%);
+        width: 20px;
+        font-size: 24px;
+      }
+    }
+    .subtract {
+      border-right: 1px solid #e7e7e7;
+      &:before {
+        content: '-';
+      }
+    }
+    .add {
+      border-left: 1px solid #e7e7e7;
+      &:before {
+        content: '+';
+      }
+    }
   }
 </style>

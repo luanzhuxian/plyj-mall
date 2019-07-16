@@ -4,8 +4,11 @@
       <pl-svg name="date" />
       <span>有效期：</span>
     </div>
-    <div :class="$style.date">
+    <div v-if="start" :class="$style.date">
       {{ start }}-{{ end }}
+    </div>
+    <div v-else :class="$style.date">
+      无限期
     </div>
   </div>
 </template>

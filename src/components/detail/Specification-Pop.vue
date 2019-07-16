@@ -142,7 +142,6 @@ export default {
       showSpec: false,
       count: 1,
       min: 1,
-      inited: false,
       localCurrentSku: {},
       skuCode2List: [],
       currentSku1: '',
@@ -150,6 +149,9 @@ export default {
     }
   },
   deactivated () {
+    this.close()
+  },
+  beforeDestroy () {
     this.close()
   },
   watch: {
@@ -161,10 +163,8 @@ export default {
     },
     currentSku: {
       handler (val) {
+        if (!val.id) return
         this.localCurrentSku = val
-        this.localCurrentSku.count = val.minBuyNum
-        this.count = val.minBuyNum
-        this.min = val.minBuyNum
         this.$emit('change', val)
         this.$emit('update:sku', val)
       },
@@ -176,7 +176,9 @@ export default {
       return false
     },
     currentSku () {
-      return this.skuList.find(item => item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2) || {}
+      return this.skuList.find(item => {
+        return item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2
+      }) || {}
     },
     skuImage () {
       let currentSku1 = this.skuAttrList[0].productAttributeValues.find(item => item.id === this.currentSku1)
@@ -184,7 +186,6 @@ export default {
     },
     residue () {
       return this.localCurrentSku.stock
-      // return this.localCurrentSku.stock - this.count || 0
     }
   },
   methods: {
@@ -194,10 +195,12 @@ export default {
     },
     // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个(禁用的不能选中)，并触发一次change事件
     init () {
-      this.inited = true
+      // 有默认规格，并且默认规格有效
+      this.localCurrentSku.count = this.count = this.sku.count
       if (this.sku.id && this.sku.stock >= this.sku.minBuyNum && this.sku.count <= this.sku.stock) {
         this.skuChange(this.sku.skuCode1, this.sku.skuCode2)
       } else {
+        // 没有默认规格，并且默认规格失效
         let noDisable = this.skuList.find(item => item.stock >= item.minBuyNum)
         if (!noDisable) {
           this.$emit('change', {})
@@ -246,7 +249,6 @@ export default {
       } else {
         this.currentSku2 = noDisabled.length ? noDisabled[0].skuCode2 || '' : ''
       }
-
       let sku2AttrList = []
       for (let item of skuCode2List) {
         if (item.skuCode2) {
@@ -254,9 +256,16 @@ export default {
         }
       }
       this.skuCode2List = skuCode2List
+      this.setCount()
     },
     subSkuChange (sku2) {
       this.currentSku2 = sku2
+      this.setCount()
+    },
+    setCount () {
+      this.localCurrentSku.count = this.currentSku.count || 1
+      this.count = this.currentSku.count || 1
+      this.min = this.currentSku.minBuyNum || 1
     },
     attrIsHear (attrId) {
       return this.skuList.some(item => item.skuCode1 === attrId || item.skuCode2 === attrId)
@@ -289,7 +298,7 @@ export default {
       if (this.sku.id) {
         this.$emit('change', this.sku)
         this.localCurrentSku = this.sku
-        this.count = this.defaultCount
+        this.count = this.sku.count
       }
     }
   }

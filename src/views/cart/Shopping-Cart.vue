@@ -29,7 +29,6 @@
             <template v-slot:suffix="{ data }">
               <CartItem
                 :data="data"
-                :key="i"
                 :disabled="isManage"
                 @countChange="computeMoney"
                 @skuClick="skuClick(data)"
@@ -81,8 +80,6 @@
       text="那么多好商品，你都不加入购物车吗？"
     />
     <CartItemSkeleton v-if="loading" />
-    <!--<CartItemSkeleton v-if="loading" />-->
-
     <SpecificationPop
       :default-count="cartProductCount"
       :visible.sync="showSpecifica"
@@ -106,6 +103,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import CartItem from '../../components/item/Cart-Item.vue'
 import NoContent from '../../components/No-Content.vue'
 import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
@@ -204,9 +202,9 @@ export default {
       if (this.currentSku.id) {
         this.currentSku.count = data.cartProductCount
       }
+      this.showSpecifica = true
       this.$nextTick(() => {
         this.$nextTick(() => {
-          this.showSpecifica = true
         })
       })
     },
