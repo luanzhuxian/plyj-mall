@@ -56,7 +56,10 @@
           />
         </div>
       </div>
-      <Instructions :content="detail.useDesc" />
+      <Instructions
+        v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
+        :content="detail.useDesc"
+      />
     </template>
 
     <SoldOut v-else />

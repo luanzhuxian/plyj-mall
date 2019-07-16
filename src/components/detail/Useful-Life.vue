@@ -5,7 +5,7 @@
       <span>有效期：</span>
     </div>
     <div v-if="start" :class="$style.date">
-      {{ start }}-{{ end }}
+      {{ start | dateFormat('YYYY.MM.DD') }}-{{ end | dateFormat('YYYY.MM.DD') }}
     </div>
     <div v-else :class="$style.date">
       无限期
@@ -45,7 +45,7 @@ export default {
     display: inline-flex;
     align-items: center;
     color: #999;
-    font-weight: bold;
+    font-weight: 500;
     > svg {
       width: 30px;
       margin-right: 6px;
