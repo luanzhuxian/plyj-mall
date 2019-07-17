@@ -11,8 +11,11 @@
     </div>
 
     <!-- 核销码 -->
-    <div :class="$style.qrcodeBox" v-if="orderType === 'FORMAL_CLASS' && orderStatus !== 'WAIT_PAY'">
-      <img :src="qrImg" alt="" v-imger>
+    <div
+      :class="$style.qrcodeBox"
+      v-if="orderType === 'FORMAL_CLASS' && orderStatus !== 'WAIT_PAY'"
+    >
+      <img :src="qrImg" alt="" v-imger :style="{ opacity: (allDated || allFinish) ? 0.4 : 1 }">
       <div
         :class="{
           [$style.codeListBox]: true,
@@ -30,7 +33,7 @@
         />
         <ul :class="$style.codeList">
           <template v-for="(item, i) of redeemCodeModels">
-            <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode === 1 }" :key="i" v-if="collapseQrCode ? i === 0 : true">
+            <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode === 4 }" :key="i" v-if="collapseQrCode ? i === 0 : true">
               <div :class="$style.codeBox">
                 <span :class="$style.codeValue" v-text="item.redeemCode" />
                 <span :class="$style.codeStatus" v-text="item.status" />
@@ -38,7 +41,7 @@
               <div :class="$style.whoUse" v-if="!collapseQrCode">
                 <pl-svg
                   name="name-card"
-                  :color="item.statusCode === 1 ? '#e1e1e1' : '#ccc'"
+                  :color="item.statusCode === 4 ? '#e1e1e1' : '#ccc'"
                 />
                 <span :class="{ [$style.name]: true }" v-text="item.name" />
                 <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
@@ -582,6 +585,14 @@ export default {
         return item.invoiceStatus === 8 &&
           (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)
       })
+    },
+    // 核销码全部过期
+    allDated () {
+      return this.redeemCodeModels.every(item => item.statusCode === 4)
+    },
+    // 核销码全部核销
+    allFinish () {
+      return this.redeemCodeModels.every(item => item.statusCode === 1)
     }
   },
   async activated () {
