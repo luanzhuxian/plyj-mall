@@ -43,7 +43,7 @@ async function response (response) {
         devMessage: data.devMessage || '',
         message: msg || ''
       }
-      return Promise.reject(new Error(JSON.stringify(err)))
+      return Promise.reject(new Error(JSON.stringify(err, null, 4)))
     }
     // 刷新token还没失效
     if (!tokenInvalid) {

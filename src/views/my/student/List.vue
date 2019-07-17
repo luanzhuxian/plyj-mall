@@ -4,9 +4,11 @@
       :form="form"
       ref="load"
       :request-methods="getList"
+      @refresh="refresh"
+      @more="more"
     >
-      <template v-slot="{ list }">
-        <ul>
+      <template>
+        <ul v-if="list.length > 0">
           <li
             v-for="(item, i) of list"
             :class="{
@@ -15,7 +17,13 @@
             }"
             :key="i"
           >
-            <pl-checkbox v-if="canSelect" :data="item" @change="selectChange" />
+            <pl-checkbox
+              v-if="canSelect"
+              :data="item"
+              :checked="item.checked"
+              @change="selectChange"
+              :disabled="checked.indexOf(item) === -1 && checked.length === maxCount"
+            />
             <div :class="$style.content">
               <div :class="$style.name">
                 <span v-text="item.stuName" />
@@ -23,9 +31,14 @@
               </div>
               <div :class="$style.phone" v-text="item.stuMobile" />
             </div>
-            <router-link tag="div" :to="{ name: 'EditStudent', params: { id: item.id } }" :class="$style.edit">
+            <button
+              tag="div"
+              :class="$style.edit"
+              @click="$router.push({ name: 'EditStudent', params: { id: item.id }, query: $route.query })"
+              :disabled="checked.indexOf(item) === -1 && checked.length === maxCount"
+            >
               编辑
-            </router-link>
+            </button>
           </li>
         </ul>
       </template>
@@ -47,7 +60,7 @@
         <span v-text="canSelect ? '新增学员' : '点击这里，新增一个学员信息'" />
         <pl-svg name="add-bold" :color="!canSelect ? '#fff' : '#F2B036'" />
       </button>
-      <button v-if="canSelect" :class="$style.confirmBtn">
+      <button v-if="canSelect" @click="confirmSelect" :class="$style.confirmBtn">
         <span>确定</span>
         <span>({{ checked.length }})</span>
       </button>
@@ -70,23 +83,58 @@ export default {
         size: 10
       },
       getList,
-      checked: []
+      checked: [],
+      list: []
     }
   },
   computed: {
     canSelect () {
-      return false
+      return this.$route.query.select === 'YES'
+    },
+    // 选择的学员所对应的商品
+    proId () {
+      return this.$route.query.pro
+    },
+    // 最大可选数量
+    maxCount () {
+      return Number(this.$route.query.count) || 0
     }
   },
   activated () {
     this.$refs.load.refresh()
+    this.CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || null
+  },
+  deactivated () {
+    this.checked = []
+    this.$destroy()
   },
   methods: {
     selectChange (checked, data) {
       if (checked) {
-        this.checked.push(data)
+        if (this.checked.length < this.maxCount) {
+          this.checked.push(data)
+        } else {
+          this.$warning(`最多选择${this.maxCount}名学员`)
+        }
       } else {
         this.checked.splice(this.checked.indexOf(data), 1)
+      }
+    },
+    confirmSelect () {
+      let checked = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+      checked[this.proId] = this.checked
+      localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
+      let { name, params, query } = JSON.parse(localStorage.getItem('SELECT_STUDENT_FROM')) || {}
+      if (name) {
+        this.$router.push({
+          name,
+          params,
+          query
+        })
+      } else {
+        this.$router.replace({
+          name: 'Home'
+        })
       }
     },
     createType (text) {
@@ -104,7 +152,42 @@ export default {
       ctx.fillText(text, 37, 25)
 
       return canvas.toDataURL()
+    },
+    refresh (list) {
+      list.map(item => {
+        item.checked = false
+      })
+      this.setDefaultChecked(list)
+      this.list = list
+    },
+    more (list) {
+      list.map(item => {
+        item.checked = false
+      })
+      this.setDefaultChecked(list)
+      this.list = list
+    },
+    setDefaultChecked (list) {
+      if (this.CHECKED_STUDENT && this.CHECKED_STUDENT[this.proId]) {
+        let current = this.CHECKED_STUDENT[this.proId].map(item => item.id)
+        list.map(item => {
+          item.checked = current.indexOf(item.id) > -1
+        })
+      }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.canSelect) {
+        vm.from = from
+      }
+    })
+  },
+  beforeRouteLeave (to, from, next) {
+    if (to.name !== 'EditStudent' && to.name !== 'AddStudent') {
+      localStorage.removeItem('SELECT_STUDENT_FROM')
+    }
+    next()
   }
 }
 </script>

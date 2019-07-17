@@ -1,12 +1,12 @@
 <template lang="html">
   <div
-    v-if="showPopup"
+    v-show="showPopup"
     class="pl-popup"
   >
     <div
       class="pl-popup__mask"
       :class="{ show: showMask }"
-      @click="close"
+      @click="maskClick"
     />
     <div
       class="pl-popup__box"
@@ -49,7 +49,11 @@ export default {
       default: ''
     },
     hideCloseIcon: Boolean,
-    show: Boolean
+    show: Boolean,
+    closeOnClickModal: {
+      type: Boolean,
+      default: true
+    }
   },
   watch: {
     show: {
@@ -89,6 +93,11 @@ export default {
     close () {
       this.$emit('update:show', false)
       this.$emit('close')
+    },
+    maskClick () {
+      if (this.closeOnClickModal) {
+        this.close()
+      }
     }
   }
 }

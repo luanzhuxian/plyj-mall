@@ -223,17 +223,12 @@ export default {
       window.scrollTo(0, 0)
     },
     // 刷新，可以传入一个请求方法，用于替换当前请求方法
-    refresh () {
+    async refresh () {
       try {
-        this.$nextTick(async () => {
-          this.resetState()
-          try {
-            this.list = await this.getData()
-            this.$emit('refresh', this.list, this.total)
-          } catch (e) {
-            throw e
-          }
-        })
+        await this.$nextTick()
+        this.resetState()
+        this.list = await this.getData()
+        this.$emit('refresh', this.list, this.total)
       } catch (e) {
         throw e
       }

@@ -9,24 +9,27 @@
     >
       <AddressItem />
     </div>
-
+    <!-- 实体 -->
     <div
       v-if="physicalProducts.length > 0"
       :class="$style.productBox"
     >
-      <OrderItem
-        v-for="(item, i) of physicalProducts"
-        :key="i"
-        :img="item.productImg"
-        :name="item.productName"
-        :count="item.count"
-        :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-        :price="item.price"
-        is-submit
-        :gap="32"
-        :product-type="1"
-        border
-      />
+      <div :class="$style.orderItemBox">
+        <OrderItem
+          v-for="item of physicalProducts"
+          :key="item.skuCode1"
+          :img="item.productImg"
+          :name="item.productName"
+          :count="item.count"
+          :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
+          :price="item.price"
+          is-submit
+          :gap="32"
+          :product-type="1"
+          border
+        />
+      </div>
+
       <div :class="$style.otherInfo">
         <div :class="$style.infoItem">
           <div
@@ -47,7 +50,7 @@
             ¥ {{ freight }}
           </span>
         </div>
-        <div :class="$style.infoItem" v-if="!isAloneProduct">
+        <div :class="$style.infoItem" v-if="isCart">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">订单备注</span>
             <input
@@ -59,6 +62,21 @@
           </div>
         </div>
 
+        <div :class="$style.infoItem" v-if="!isCart">
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">购买数量</span>
+            <div :class="$style.editCount">
+              <span>剩余99件</span>
+              <Count
+                :min="physicalProducts[0].minBuyNum"
+                :max="physicalProducts[0].stock"
+                :count="physicalProducts[0].count"
+                @change="(count, next) => { countChange(count, item, next) }"
+              />
+            </div>
+          </div>
+        </div>
+
         <div :class="$style.infoItem">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">商品金额</span>
@@ -67,27 +85,29 @@
         </div>
       </div>
     </div>
-
+    <!-- 虚拟 -->
     <template v-if="virtualProducts.length > 0">
       <div
-        v-for="(item, i) of virtualProducts"
-        :key="i"
+        v-for="item of virtualProducts"
+        :key="item.skuCode1"
         :class="$style.productBox"
       >
-        <OrderItem
-          :key="i"
-          :img="item.productImg"
-          :name="item.productName"
-          :count="item.count"
-          :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-          :price="item.price"
-          is-submit
-          :gap="32"
-          :product-type="2"
-          border
-        />
+        <div :class="$style.orderItemBox">
+          <OrderItem
+            :key="item.skuCode1"
+            :img="item.productImg"
+            :name="item.productName"
+            :count="item.count"
+            :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
+            :price="item.price"
+            is-submit
+            :gap="32"
+            :product-type="2"
+            border
+          />
+        </div>
         <div :class="$style.otherInfo">
-          <div :class="$style.infoItem" v-if="!isAloneProduct">
+          <div :class="$style.infoItem" v-if="isCart">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">订单备注</span>
               <input
@@ -98,12 +118,17 @@
               >
             </div>
           </div>
-          <div :class="$style.infoItem">
+          <div :class="$style.infoItem" v-if="!isCart">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
                 <span>剩余99件</span>
-                <Count :min="item.minBuyNum" :max="item.stock" :count="item.count" />
+                <Count
+                  :min="item.minBuyNum"
+                  :max="item.stock"
+                  :count="item.count"
+                  @change="(count, next) => { countChange(count, item, next) }"
+                />
               </div>
             </div>
           </div>
@@ -118,26 +143,50 @@
       </div>
     </template>
 
+    <!-- 课程 -->
     <template v-if="formalClass.length > 0">
       <div
-        v-for="(item, i) of formalClass"
-        :key="i"
+        v-for="item of formalClass"
+        :key="item.skuCode1"
         :class="$style.productBox"
       >
-        <OrderItem
-          :key="i"
-          :img="item.productImg"
-          :name="item.productName"
-          :count="item.count"
-          :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-          :price="item.price"
-          is-submit
-          :gap="32"
-          :product-type="2"
-          border
-        />
+        <div :class="$style.orderItemBox">
+          <OrderItem
+            :key="item.skuCode1"
+            :img="item.productImg"
+            :name="item.productName"
+            :count="item.count"
+            :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
+            :price="item.price"
+            is-submit
+            :gap="32"
+            :product-type="2"
+            border
+          />
+        </div>
         <div :class="$style.otherInfo">
-          <div :class="$style.infoItem" v-if="!isAloneProduct">
+          <div
+            :class="{
+              [$style.infoItem]: true,
+              [$style.lessonError]: lessonErrorId === item.productId
+            }"
+            v-if="isCart && item.needStudentInfo" @click="selectStudent(item)"
+          >
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">学员信息</span>
+              <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.productId">
+                <pl-svg name="warning" color="#F24724" />
+                <span v-text="lessonErrorTip" />
+              </div>
+              <div>
+                <span v-if="CHECKED_STUDENT[item.productId]">已选{{ CHECKED_STUDENT[item.productId].length }}人</span>
+                <span v-else>已选0人</span>
+                <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
+              </div>
+            </div>
+          </div>
+
+          <div :class="$style.infoItem" v-if="isCart">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">订单备注</span>
               <input
@@ -149,12 +198,17 @@
             </div>
           </div>
 
-          <div :class="$style.infoItem">
+          <div :class="$style.infoItem" v-if="!isCart">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
-                <span>剩余99件</span>
-                <Count :min="1" :max="item.count" :count="item.count" />
+                <span>剩余{{ item.stock }}件</span>
+                <Count
+                  :min="item.minBuyNum"
+                  :max="item.stock"
+                  :count="item.count"
+                  @change="(count, next) => { countChange(count, item, next) }"
+                />
               </div>
             </div>
           </div>
@@ -186,27 +240,67 @@
         确认付款
       </pl-button>
     </div>
-    <div
-      v-if="physicalProducts.length > 0"
-      :class="$style.invioce"
-      @click="selectInvoice"
-    >
-      <div>
-        <pl-svg
-          :class="$style.invioceIcon"
-          name="invoice"
-        />
-        发票
-      </div>
-      <div style="color: #666;">
-        {{ invioceType === 1 ? '不需要' : '纸质发票' }}
-        <pl-svg
-          :class="$style.rightIcon"
-          name="right"
-          color="#ccc"
-        />
-      </div>
+
+    <div v-if="physicalProducts.length > 0" :class="$style.itemSelector" @click="selectInvoice">
+      <pl-fields
+        size="middle"
+        text="发票"
+        icon="invoice"
+        :icon-gap="12"
+        show-right-icon
+        :right-text="invioceType === 1 ? '不需要' : '纸质发票'"
+        left-text-weight="bold"
+      />
     </div>
+
+    <div v-if="formalClass.length === 1 && !isCart && formalClass[0].needStudentInfo" :class="$style.itemSelector" @click="selectStudent(formalClass[0])">
+      <pl-fields
+        size="middle"
+        text="学员信息"
+        icon="name-card"
+        :icon-gap="12"
+        :right-text="`已选${getStudentCountByProId(formalClass[0].productId)}人`"
+        show-right-icon
+        left-text-weight="bold"
+      >
+        <ul :class="$style.studentList" v-show="CHECKED_STUDENT[formalClass[0].productId] && CHECKED_STUDENT[formalClass[0].productId].length > 0">
+          <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[formalClass[0].productId]" :key="i">
+            <p :class="$style.studentName">
+              <span>姓名</span>
+              <span v-text="item.stuMobile" />
+            </p>
+            <p :class="$style.studentPhone">
+              <span>电话</span>
+              <span v-text="item.stuName" />
+            </p>
+          </li>
+        </ul>
+      </pl-fields>
+    </div>
+
+    <div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click="showContactPopup = true">
+      <pl-fields
+        size="middle"
+        text="联系人信息"
+        icon="contact"
+        :icon-gap="12"
+        :right-text="contactInfoModel.name && contactInfoModel.mobile ? '已选择' : `未选择`"
+        show-right-icon
+        left-text-weight="bold"
+      >
+        <div v-show="contactInfoModel.name && contactInfoModel.mobile" :class="$style.contactDetail">
+          <span class="fz-28" v-text="contactInfoModel.name" />
+          <span class="fz-28" v-text="contactInfoModel.mobile" />
+        </div>
+      </pl-fields>
+    </div>
+
+    <!-- 订单备注（只有一个商品时显示） -->
+    <div :class="$style.oneProductMark" v-if="!isCart">
+      <span>订单备注</span>
+      <input type="text" placeholder="请和商家协商一致后填写" v-model="remark">
+    </div>
+
     <pl-popup :show.sync="showPopup">
       <div :class="$style.invioceBox">
         <div :class="$style.title">
@@ -225,12 +319,27 @@
         </div>
       </div>
     </pl-popup>
-
-    <!-- 订单备注（只有一个商品时显示） -->
-    <div :class="$style.oneProductMark" v-if="isAloneProduct">
-      <span>订单备注</span>
-      <input type="text" placeholder="请和商家协商一致后填写" v-model="remark">
-    </div>
+    <pl-popup
+      :show.sync="showContactPopup"
+      :close-on-click-modal="false"
+    >
+      <div :class="$style.addContact">
+        <div :class="$style.addContactTop">
+          联系人信息
+        </div>
+        <pl-form :model="contactInfoModel" :rules="rules" ref="contactForm">
+          <pl-form-item prop="name" label="姓名：" :label-width="204" :gap-top="20">
+            <pl-input v-model="contactInfoModel.name" />
+          </pl-form-item>
+          <pl-form-item prop="mobile" label="手机号码：" :label-width="204" :gap-top="20">
+            <pl-input v-model="contactInfoModel.mobile" />
+          </pl-form-item>
+        </pl-form>
+        <pl-button size="huge" type="warning" @click="useContact">
+          使用
+        </pl-button>
+      </div>
+    </pl-popup>
   </div>
 
   <div
@@ -262,6 +371,8 @@ import { mapGetters } from 'vuex'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Count from '../../components/Count.vue'
+import { isName, isPhone } from '../../assets/js/validate'
+import { resetForm } from '../../assets/js/util'
 export default {
   name: 'SubmitOrder',
   components: {
@@ -274,6 +385,7 @@ export default {
   data () {
     return {
       showPopup: false,
+      showContactPopup: false,
       submiting: false,
       loading: false,
       freight: 0,
@@ -284,8 +396,24 @@ export default {
       formalClass: [],
       remark: '', // 物理订单备注
       invioceType: 1,
-      INVOICE_MODEL: null,
-      isCart: false
+      INVOICE_MODEL: {},
+      CHECKED_STUDENT: {},
+      rules: {
+        name: [
+          { required: true, message: '请输入联系人姓名', trigger: 'blur' },
+          { validator: isName, message: '联系人姓名只支持中英文，且中文为2~10字，英文为2~20字', trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: '请输入联系人手机号', trigger: 'blur' },
+          { validator: isPhone, message: '联系人手机号格式错误', trigger: 'blur' }
+        ]
+      },
+      contactInfoModel: {
+        name: '',
+        mobile: ''
+      },
+      lessonErrorId: '',
+      lessonErrorTip: ''
     }
   },
   props: {
@@ -319,6 +447,15 @@ export default {
       } else {
         return null
       }
+    },
+    isCart () {
+      return this.$route.query.isCart === 'YES'
+    },
+    // 课程的总数量
+    formalClassCount () {
+      return this.getTotal(this.formalClass, (total, item) => {
+        return total + item.count
+      })
     }
   },
   watch: {
@@ -335,10 +472,6 @@ export default {
       deep: true
     },
     remark (val) {
-      // 当只有一个商品时，订单备注样式在底部
-      // 这时，每个商品块中的备注输入框就会隐藏
-      // 如果是实体商品，这无所谓，因为实体商品共用一个备注
-      // 但是虚拟商品和课程每个商品都有单独是备注，这个备注字段在每个商品的对象中储存
       // 但是底部的备注绑定是共用的备注数据，所以，要将这个共用的备注数据写入到单独商品的备注字段中
       if (this.isAloneProduct) {
         this.aloneProduct.remark = val
@@ -346,11 +479,12 @@ export default {
     }
   },
   async activated () {
-    this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL'))
-    this.invioceType = this.INVOICE_MODEL ? 2 : 1
-    this.isCart = JSON.parse(this.$route.query.isCart)
     try {
       await this.getProductDetail()
+      this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL')) || null
+      this.CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+      this.invioceType = this.INVOICE_MODEL ? 2 : 1
+      this.lessonErrorId = ''
     } catch (e) {
       this.$router.go(-1)
       throw e
@@ -359,6 +493,30 @@ export default {
   deactivated () {
   },
   methods: {
+    // 计算商品总数
+    getTotal (list, fn) {
+      let total = 0
+      for (let item of list) {
+        total = fn(total, item)
+      }
+      return total
+    },
+    // 获取当前课程选择的学员数量
+    getStudentCountByProId (proId) {
+      let currentStudents = this.CHECKED_STUDENT[proId]
+      if (currentStudents) {
+        return currentStudents.length
+      }
+      return 0
+    },
+    // 修改数量
+    countChange (count, pro, next) {
+      let CONFIRM_LIST = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
+      let thisPro = CONFIRM_LIST.find(item => item.productId === pro.productId)
+      thisPro.count = count
+      localStorage.setItem('CONFIRM_LIST', JSON.stringify(CONFIRM_LIST))
+      this.getProductDetail(next)
+    },
     selectInvoice () {
       if (!this.selectedAddress.realName) {
         this.$warning('请先选择收货地址')
@@ -366,12 +524,30 @@ export default {
       }
       this.showPopup = true
     },
-    async getProductDetail () {
+    selectStudent (pro) {
+      localStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
+        name: this.$route.name,
+        query: this.$route.query,
+        params: this.$route.params
+      }))
+      this.$router.push({
+        name: 'StudentList',
+        query: {
+          select: 'YES',
+          pro: pro.productId,
+          count: pro.count
+        }
+      })
+    },
+    useContact () {
+      this.showContactPopup = false
+    },
+    async getProductDetail (callback) {
       const proList = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
       if (!proList) {
         return this.$router.replace({ name: 'Home' })
       }
-      this.loading = true
+      if (!callback) this.loading = true
       try {
         // 获取订单详细数据
         const { result } = await confirmCart({
@@ -390,6 +566,7 @@ export default {
         this.virtualProducts = virtualProducts
         this.formalClass = formalClass
         this.loading = false
+        if (callback) callback()
       } catch (e) {
         throw e
       }
@@ -401,7 +578,6 @@ export default {
         this.$confirm('您还没有收货地址，请先添加收货地址')
         return
       }
-      this.submiting = true
       for (const item of this.physicalProducts) {
         const { productId, skuCode1, skuCode2, count, agentUser } = item
         cartProducts.push({
@@ -426,13 +602,63 @@ export default {
           message: remark
         })
       }
-      try {
-        const { result } = await submitOrder({
-          addressSeq: this.selectedAddress.sequenceNbr,
-          cartProducts,
-          cartSource: this.isCart,
-          invoiceModel: this.INVOICE_MODEL
+      for (const item of this.formalClass) {
+        const { productId, skuCode1, skuCode2, count, agentUser, remark, needStudentInfo } = item
+        if (needStudentInfo && !this.CHECKED_STUDENT[productId]) {
+          this.lessonErrorId = productId
+          this.$nextTick(() => {
+            let errorEl = document.querySelector('.' + this.$style.lessonError)
+            errorEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'nearest'
+            })
+            this.lessonErrorTip = '请选择学员信息'
+          })
+          return this.$error('请选择学员信息')
+        }
+        if (needStudentInfo && this.CHECKED_STUDENT[productId].length < count) {
+          this.lessonErrorId = productId
+          this.$nextTick(() => {
+            let errorEl = document.querySelector('.' + this.$style.lessonError)
+            errorEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'nearest'
+            })
+            this.lessonErrorTip = `请选择${count}名学员信息`
+          })
+          return this.$error(`请选择${count}名学员信息`)
+        }
+        cartProducts.push({
+          productId,
+          skuCode1,
+          skuCode2,
+          productType: 'FORMAL_CLASS',
+          studentIds: needStudentInfo ? this.CHECKED_STUDENT[productId].map(item => item.id) : null,
+          count,
+          agentUser,
+          message: remark
         })
+      }
+      // contactInfoModel
+      const data = {
+        addressSeq: this.selectedAddress.sequenceNbr,
+        cartProducts,
+        cartSource: this.isCart,
+        invoiceModel: this.INVOICE_MODEL
+      }
+      if (this.physicalProducts.length === 0) {
+        // 没有实体商品时，必须有联系人信息
+        if (this.$refs.contactForm.validate()) {
+          data.contactInfoModel = this.contactInfoModel
+        } else {
+          return
+        }
+      }
+      try {
+        this.submiting = true
+        const { result } = await submitOrder(data)
         await this.pay(result, result.orderLists[0], result.orderLists.length)
       } catch (e) {
         throw e
@@ -474,7 +700,7 @@ export default {
     // 需要发票
     need () {
       const applyInvoice = {
-        physicalProducts: this.physicalProducts
+        physicalProducts: this.physicalProducts.filter(item => item.price !== 0)
       }
       localStorage.setItem('APPLY_INVOICE', JSON.stringify(applyInvoice))
       localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
@@ -488,16 +714,21 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    if (to.name !== 'ApplyInvoice' && to.name !== 'Address' && to.name !== 'AddAddress') {
+    if (to.name !== 'ApplyInvoice' &&
+      to.name !== 'Address' &&
+      to.name !== 'AddAddress' &&
+      to.name !== 'StudentList') {
       localStorage.removeItem('INVOICE_MODEL')
       localStorage.removeItem('CONFIRM_LIST')
       localStorage.removeItem('APPLY_INVOICE')
+      localStorage.removeItem('CHECKED_STUDENT')
       this.remark = ''
       this.physicalProducts = []
       this.virtualProducts = []
       this.invioceType = 1
-      this.INVOICE_MODEL = null
-      this.isCart = false
+      this.INVOICE_MODEL = {}
+      this.CHECKED_STUDENT = {}
+      resetForm(this.contactInfoModel)
     }
     next()
   }
@@ -511,20 +742,40 @@ export default {
   .productBox {
     width: 100%;
     margin: 0 0 20px 0;
-    padding: 32px 24px 24px 24px;
+    padding: 32px 0 24px 0;
     border-radius: $--radius1;
     background-color: #fff;
     box-sizing: border-box;
+    .orderItemBox {
+      padding: 0 24px;
+    }
   }
 
   .otherInfo {
     margin-top: 44px;
-    padding-left: 68px;
     > .infoItem {
       display: flex;
+      padding-left: 68px;
+      padding-right: 28px;
       justify-content: space-between;
-      margin-bottom: 54px;
+      line-height: 88px;
       font-size: 24px;
+      border: 2px solid #fff;
+      &.lessonError {
+        animation: bordrFlicker .15s ease;
+        animation-iteration-count: 5;
+        border: 2px solid #F24724;
+        .lessonErrorTip {
+          flex: 1;
+          display: inline-flex;
+          align-items: center;
+          margin-left: 22px;
+          color: #F24724;
+          > svg {
+            width: 32px;
+          }
+        }
+      }
       .freightType {
         flex: 1;
         display: inline-flex;
@@ -595,27 +846,12 @@ export default {
       }
     }
   }
-  .invioce {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height:70px;
-    padding: 0 28px;
-    border-radius: $--radius1;
+  .item-selector {
+    margin-bottom: 20px;
+    padding-left: 24px;
     background-color: #fff;
-    > div {
-      display: inline-flex;
-      align-items: center;
-      font-size: 26px;
-    }
-  }
-  .invioceIcon {
-    width: 26px;
-    margin-right: 20px;
-  }
-  .rightIcon {
-    width: 20px;
-    margin-left: 20px;
+    border-radius: 20px;
+    overflow: hidden;
   }
   .invioceBox {
     .title {
@@ -659,6 +895,7 @@ export default {
     height: 110px;
     background-color: #fff;
     box-sizing: border-box;
+    z-index: 2;
     > div {
       display: flex;
       flex-direction: column;
@@ -716,5 +953,61 @@ export default {
       margin-left: 68px;
       background-color: transparent;
     }
+  }
+  .right-arrow {
+    width: 24px;
+    margin-left: 12px;
+    vertical-align: -3px;
+  }
+  .student-list {
+    background-color: #fff;
+    padding-right: 24px;
+    .student-item {
+      padding: 24px 0;
+      font-size: 28px;
+      line-height: 40px;
+      border-bottom: 1px solid #e7e7e7;
+      &:nth-last-of-type(1) {
+        border-bottom: none;
+      }
+      > .student-name {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 26px;
+      }
+      > .student-phone {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+  .contact-detail {
+    padding: 24px 0;
+    > span:nth-of-type(1) {
+      margin-right: 24px;
+      font-weight: 500;
+    }
+  }
+  .add-contact {
+    padding: 40px 20px;
+    .add-contact-top {
+      font-size: 40px;
+      color: #000;
+    }
+    button {
+      margin-top: 48px;
+    }
+    label {
+      background-color: #f9f9f9 !important;
+      padding-left: 32px;
+      span {
+        color: #999 !important;
+      }
+    }
+  }
+  @keyframes bordrFlicker {
+    0% { border-color: #F24724 }
+    50% { border-color: transparent }
+    100% { border-color: #F24724 }
   }
 </style>

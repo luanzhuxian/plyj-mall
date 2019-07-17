@@ -335,7 +335,7 @@ export default {
       this.$router.push({
         name: 'SubmitOrder',
         query: {
-          isCart: false
+          isCart: 'NO'
         }
       })
     },

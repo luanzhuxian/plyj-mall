@@ -14,7 +14,7 @@
         />
         <span
           v-text="text"
-          :style="{ fontWeight: rightTextWeight }"
+          :style="{ fontWeight: leftTextWeight }"
         />
         <pl-svg
           :color="iconColor"
@@ -29,6 +29,7 @@
           v-if="rightText"
           class="pl-fields_right_text"
           v-text="rightText"
+          :style="{ fontWeight: rightTextWeight }"
         />
         <pl-svg
           v-if="route || showRightIcon"
@@ -36,6 +37,10 @@
           :name="rightIcon"
         />
       </div>
+    </div>
+
+    <div v-if="hasSlot">
+      <slot />
     </div>
   </div>
 </template>
@@ -68,6 +73,10 @@ export default {
       type: String,
       default: 'normal'
     },
+    leftTextWeight: {
+      type: String,
+      default: 'normal'
+    },
     rightText: {
       type: String,
       default: ''
@@ -88,6 +97,11 @@ export default {
       default: 'large'
     }
   },
+  computed: {
+    hasSlot () {
+      return Boolean(this.$slots.default)
+    }
+  },
   methods: {
     handleClick () {
       this.$emit('click')
@@ -103,17 +117,17 @@ export default {
 .pl-fields {
   position: relative;
   background-color: #fff;
-  border-bottom: 1px solid #e7e7e7;
-  &:nth-last-of-type(1):after {
-    display: none;
-  }
 }
   .pl-fields_box {
     position: relative;
     display: flex;
     align-items: center;
+    border-bottom: 1px solid #e7e7e7;
     &.large {
       height: 100px;
+    }
+    &.middle {
+      height: 88px;
     }
     &.small {
       height: 70px;
@@ -138,9 +152,10 @@ export default {
     }
     .pl-fields_right_icon {
       width: 22px;
+      margin-top: 2px;
       margin-left: 10px;
       fill: #ccc;
-      vertical-align: -3px;
+      transform: scaleY(1.2);
     }
   }
 </style>

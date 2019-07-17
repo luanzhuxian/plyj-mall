@@ -184,7 +184,7 @@ export default {
       margin-bottom: 0 !important;
     }
     > img {
-      border-radius: $--radius2;
+      border-radius: 4px;
       object-fit: cover;
     }
     .right {

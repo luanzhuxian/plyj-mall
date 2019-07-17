@@ -1,5 +1,10 @@
 <template>
-  <label :class="{'pl-form-item': true, border}">
+  <label
+    :class="{'pl-form-item': true, border}"
+    :style="{
+      marginTop: gapTop / 7.5 + 'vw'
+    }"
+  >
     <div
       v-if="hasPrefix"
       class="pl-form-item_prefix"
@@ -53,6 +58,11 @@ export default {
     prop: {
       type: String,
       default: ''
+    },
+    // 竖直间隔
+    gapTop: {
+      type: Number,
+      default: 0
     }
   },
   created () {

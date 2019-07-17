@@ -54,7 +54,7 @@
       :loading="loading"
       @click="confirm"
     >
-      保存并使用
+      {{ canSelect ? '保存并使用' : '保存' }}
     </pl-button>
   </div>
 </template>
@@ -101,6 +101,14 @@ export default {
       default: ''
     }
   },
+  computed: {
+    canSelect () {
+      return this.$route.query.select === 'YES'
+    },
+    proId () {
+      return this.$route.query.pro
+    }
+  },
   async activated () {
     if (this.id) {
       this.form.id = this.id
@@ -128,7 +136,20 @@ export default {
           } else {
             await add(this.form)
           }
-          this.$router.replace({ name: 'StudentList' })
+          if (this.canSelect) {
+            let { name, params, query } = JSON.parse(localStorage.getItem('SELECT_STUDENT_FROM')) || {}
+            console.log(localStorage.getItem('CHECKED_STUDENT'))
+            let checked = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+            if (name) {
+              checked[this.proId] = [this.form]
+              localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
+              this.$router.replace({ name, params, query })
+            } else {
+              this.$router.replace({ name: 'StudentList' })
+            }
+          } else {
+            this.$router.replace({ name: 'StudentList' })
+          }
         } catch (e) {
           throw e
         } finally {
@@ -147,6 +168,10 @@ export default {
         throw e
       }
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    localStorage.removeItem('SELECT_STUDENT_FROM')
+    next()
   }
 }
 </script>

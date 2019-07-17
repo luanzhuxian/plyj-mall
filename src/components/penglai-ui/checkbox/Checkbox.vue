@@ -81,15 +81,9 @@ export default {
         return null
       }
     },
-    checked: {
-      type: Boolean
-    },
-    disabled: {
-      type: Boolean
-    },
-    inline: {
-      type: Boolean
-    },
+    checked: Boolean,
+    disabled: Boolean,
+    inline: Boolean,
     // 纵向间隙
     gapColumn: {
       type: Number,
@@ -100,13 +94,8 @@ export default {
       type: Number,
       default: 0
     },
-    border: {
-      type: Boolean
-    },
-    canPrefixClick: {
-      type: Boolean,
-      default: false
-    }
+    border: Boolean,
+    canPrefixClick: Boolean
   },
   watch: {
     checked: {
@@ -146,6 +135,7 @@ export default {
         this.$parent.change(true, this.data)
       }
       this.localChecked = true
+      // 调用回调，可使状态回到未选择
       this.$emit('change', true, this.data)
       if (this.data && this.data.hasOwnProperty('checked')) {
         this.data.checked = true
