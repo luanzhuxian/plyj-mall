@@ -45,4 +45,15 @@
   transform: translateX(-100%);
 }
 
-.animate-enter-active {}
+.collapse-enter-active {
+  transition: height 20s ease-in;
+}
+.collapse-leave-active {
+  transition: height 20s ease-out;
+}
+.collapse-leave, .collapse-enter-to {
+  height: var(--transition-collapse-heigth) !important;
+}
+.collapse-enter, .collapse-leave-to {
+  height: 0;
+}

@@ -23,7 +23,6 @@
           :count="item.count"
           :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
           :price="item.price"
-          is-submit
           :gap="32"
           :product-type="1"
           border
@@ -667,11 +666,15 @@ export default {
       }
     },
     async pay (CREDENTIAL, orderId, orderCount) {
+      let orderType = ''
+      if (this.formalClass.length > 0 && this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
+        orderType = this.formalClass
+      }
       return new Promise(async (resolve, reject) => {
         try {
           await wechatPay(CREDENTIAL)
           this.submiting = false
-          this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount } })
+          this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount }, query: { orderType } })
           localStorage.removeItem('INVOICE_MODEL')
           localStorage.removeItem('CONFIRM_LIST')
           resolve()

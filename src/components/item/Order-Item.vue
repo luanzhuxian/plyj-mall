@@ -40,10 +40,7 @@
         </div>
         <div :class="$style.rightBottom">
           <div
-            :class="{
-              [$style.specification]: true,
-              [$style.isSubmit]: isSubmit
-            }"
+            :class="$style.specification"
             v-text="option"
           />
           <div
@@ -142,10 +139,6 @@ export default {
       type: String,
       default: ''
     },
-    // 是否在提交订单处展示，这里样式有所不同
-    isSubmit: {
-      type: Boolean
-    },
     // 商品类型（1:实体, 2:虚拟）
     productType: {
       type: Number,
@@ -230,15 +223,11 @@ export default {
       font-size: 20px;
     }
     .specification {
-      color: #999;
       font-size: 20px;
-      @include elps-wrap(2);
-      &.isSubmit {
-        padding: 0 8px;
-        line-height: 44px;
-        background-color: #f9f9f9;
-        border-radius: $--radius2;
-      }
+      padding: 0 8px;
+      line-height: 44px;
+      background-color: #f9f9f9;
+      border-radius: $--radius2;
     }
     .refund-info {
       display: flex;

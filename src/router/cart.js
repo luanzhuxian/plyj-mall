@@ -18,7 +18,7 @@ export default [
     }
   },
   {
-    path: '/order/submit/success/:orderId/:orderCount',
+    path: '/order/submit/success/:orderId/:orderCount?',
     name: 'PaySuccess',
     component: () => import('../views/cart/Pay-Success.vue'),
     props: true,

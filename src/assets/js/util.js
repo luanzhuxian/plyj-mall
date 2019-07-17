@@ -185,18 +185,20 @@ export async function generateQrcode (size, text, padding = 0, img, centerPaddin
   })
   return new Promise((resolve) => {
     // 生成中心图片内边距
-    if (centerPadding > 0) {
-      let tempCanvas = document.createElement('canvas')
-      tempCanvas.width = imageSize + centerPadding * 2
-      tempCanvas.height = imageSize + centerPadding * 2
-      let tempCtx = tempCanvas.getContext('2d')
-      tempCtx.fillStyle = '#ffffff'
-      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
-      tempCtx.drawImage(img, centerPadding, centerPadding, imageSize, imageSize)
-      img = tempCanvas
+    if (img) {
+      if (centerPadding > 0) {
+        let tempCanvas = document.createElement('canvas')
+        tempCanvas.width = imageSize + centerPadding * 2
+        tempCanvas.height = imageSize + centerPadding * 2
+        let tempCtx = tempCanvas.getContext('2d')
+        tempCtx.fillStyle = '#ffffff'
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
+        tempCtx.drawImage(img, centerPadding, centerPadding, imageSize, imageSize)
+        img = tempCanvas
+      }
+      let ctx = canvas.getContext('2d')
+      ctx.drawImage(img, (size * devicePixelRatio - img.width) / 2, (size * devicePixelRatio - img.width) / 2, img.width, img.width)
     }
-    let ctx = canvas.getContext('2d')
-    ctx.drawImage(img, (size * devicePixelRatio - img.width) / 2, (size * devicePixelRatio - img.width) / 2, img.width, img.width)
     // 绘制二维码内边距
     if (padding > 0) {
       let tempCanvas = document.createElement('canvas')

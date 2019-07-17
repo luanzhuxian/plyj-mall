@@ -5,9 +5,48 @@
   >
     <div :class="$style.top">
       <top-text
-        :title="orderStatusMap[orderStatus]"
+        :title="orderStatusAlias"
         :tip="suggestionMap[orderStatus]"
       />
+    </div>
+
+    <!-- 核销码 -->
+    <div :class="$style.qrcodeBox" v-if="orderType === 'FORMAL_CLASS' && orderStatus !== 'WAIT_PAY'">
+      <img :src="qrImg" alt="" v-imger>
+      <div
+        :class="{
+          [$style.codeListBox]: true,
+          [$style.collapse]: collapseQrCode
+        }"
+        @click="() => collapseQrCode = !collapseQrCode"
+      >
+        <h2 :class="$style.title">
+          核销码
+        </h2>
+        <pl-svg
+          :class="{ [$style.collapse]: collapseQrCode }"
+          name="right"
+          color="#999"
+        />
+        <ul :class="$style.codeList">
+          <template v-for="(item, i) of redeemCodeModels">
+            <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode === 1 }" :key="i" v-if="collapseQrCode ? i === 0 : true">
+              <div :class="$style.codeBox">
+                <span :class="$style.codeValue" v-text="item.redeemCode" />
+                <span :class="$style.codeStatus" v-text="item.status" />
+              </div>
+              <div :class="$style.whoUse" v-if="!collapseQrCode">
+                <pl-svg
+                  name="name-card"
+                  :color="item.statusCode === 1 ? '#e1e1e1' : '#ccc'"
+                />
+                <span :class="{ [$style.name]: true }" v-text="item.name" />
+                <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
+              </div>
+            </li>
+          </template>
+        </ul>
+      </div>
     </div>
 
     <div
@@ -86,7 +125,7 @@
         </div>
         <div
           :class="$style.explain"
-          v-if="orderType === 'VIRTUAL'"
+          v-if="orderType === 'VIRTUAL' || orderType === 'FORMAL_CLASS'"
         >
           <ModuleTitle
             title="使用说明"
@@ -130,10 +169,51 @@
 
     <div :class="$style.panel">
       <address-item
+        v-if="shippingAddress.agencyAddress"
         :address="shippingAddress"
         :hide-address="orderType === 'VIRTUAL'"
         not-link
       />
+    </div>
+    <div :class="$style.panel2">
+      <pl-fields
+        size="middle"
+        text="学员信息"
+        icon="name-card"
+        :icon-gap="12"
+        can-collapse
+        show-right-icon
+        :right-text="`已选${studentInfoModels.length}人`"
+        left-text-weight="bold"
+      >
+        <ul :class="$style.studentList">
+          <li :class="$style.studentItem" v-for="(item, i) of studentInfoModels" :key="i">
+            <p :class="$style.studentName">
+              <span>姓名</span>
+              <span v-text="item.name" />
+            </p>
+            <p :class="$style.studentPhone">
+              <span>电话</span>
+              <span v-text="item.mobile" />
+            </p>
+          </li>
+        </ul>
+      </pl-fields>
+    </div>
+
+    <div :class="$style.panel2" v-if="!shippingAddress.agencyAddress">
+      <pl-fields
+        size="middle"
+        text="联系人信息"
+        icon="contact"
+        :icon-gap="12"
+        left-text-weight="bold"
+      >
+        <div :class="$style.contactDetail">
+          <span class="fz-28" v-text="shippingAddress.realName" />
+          <span class="fz-28" v-text="shippingAddress.mobile" />
+        </div>
+      </pl-fields>
     </div>
 
     <div :class="[$style.panel, $style.otherInfo]">
@@ -282,7 +362,6 @@
         去付款
       </pl-button>
     </div>
-
     <pl-popup
       ref="contact"
       :show.sync="isPopupShow"
@@ -382,6 +461,7 @@ import {
   deleteOrder
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
+import { generateQrcode } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
 
 function updateLocalStorage (key, value) {
@@ -430,6 +510,7 @@ export default {
   data () {
     return {
       loaded: false,
+      collapseQrCode: false,
       orderType: '',
       orderStatus: '',
       message: '',
@@ -439,7 +520,10 @@ export default {
       productInfoModel: {},
       tradingInfoModel: [],
       invoiceModelList: [],
+      studentInfoModels: [],
+      redeemCodeModels: [],
       operationRecordModel: {},
+      orderStatusAlias: '',
       shippingAddress: {
         realName: ' ',
         mobile: ' ',
@@ -462,11 +546,12 @@ export default {
       ],
       collepseActiveNames: [],
       suggestionMap,
-      invoiceMap
+      invoiceMap,
+      qrImg: ''
     }
   },
   computed: {
-    ...mapGetters(['orderStatusMap', 'address', 'supportPhone']),
+    ...mapGetters(['address', 'supportPhone']),
     isClosedByCancle () {
       return this.orderStatus === 'CLOSED' && !this.tradingInfoModel.payTime
     },
@@ -545,6 +630,7 @@ export default {
           let { result } = await getOrderDetail(this.orderId)
           const {
             orderStatus,
+            orderId,
             orderType,
             message,
             receiverModel,
@@ -552,7 +638,10 @@ export default {
             productInfoModel,
             tradingInfoModel,
             invoiceModelList,
-            operationRecordModel
+            operationRecordModel,
+            studentInfoModels,
+            orderStatusAlias,
+            redeemCodeModels
           } = result
           this.detail = result
           this.orderStatus = orderStatus
@@ -564,6 +653,13 @@ export default {
           this.tradingInfoModel = tradingInfoModel
           this.invoiceModelList = invoiceModelList
           this.operationRecordModel = operationRecordModel
+          this.studentInfoModels = studentInfoModels || []
+          this.redeemCodeModels = redeemCodeModels || []
+          this.orderStatusAlias = orderStatusAlias
+          if (orderType === 'FORMAL_CLASS' && orderStatus !== 'WAIT_PAY') {
+            // 生成核销码二维码
+            this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
+          }
           // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             this.isAllProductRefund = (current.afterSalesStatus === 2)
@@ -603,7 +699,7 @@ export default {
         // 调用微信支付api
         await wechatPay(result)
         updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'pay' })
-        this.$router.push({ name: 'PaySuccess', params: { orderId } })
+        this.$router.push({ name: 'PaySuccess', params: { orderId }, query: { orderType: this.orderType } })
       } catch (e) {
         throw e
       } finally {
@@ -688,10 +784,112 @@ export default {
     margin-bottom: 28px;
     padding: 0 16px;
   }
+  .qrcodeBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 48px 0 32px 0;
+    background-color: #fff;
+    border-radius: 20px;
+    > img {
+      width: 298px;
+      margin-bottom: 32px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .title {
+      margin-right: 32px;
+      margin-top: 5px;
+      font-size: 24px;
+      color: #999;
+    }
+    .codeListBox {
+      position: relative;
+      display: flex;
+      width: 504px;
+      padding: 12px 20px;
+      background-color: #f7f7f7;
+      overflow: hidden;
+      &.collapse {
+        height: 38px;
+      }
+      > svg {
+        position: absolute;
+        top: 14px;
+        right: 20px;
+        width: 32px;
+        transform: rotate(-90deg);
+        transition: transform .2s linear;
+        &.collapse {
+          transform: rotate(90deg);
+        }
+      }
+    }
+    .codeList {
+      flex: 1;
+      margin-top: -2px;
+      .codeItem {
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e7e7e7;
+        &:nth-last-of-type(1) {
+          border-bottom: none;
+        }
+        &.used {
+          .code-value {
+            color: #ccc;
+          }
+          .code-status {
+            color: #ccc;
+          }
+          .who-use {
+            > span {
+              color: #ccc;
+            }
+          }
+        }
+      }
+    }
+    .codeBox {
+      .code-value {
+        font-size: 32px;
+      }
+      .code-status {
+        margin-left: 20px;
+        font-size: 24px;
+        vertical-align: 2px;
+      }
+    }
+    .who-use {
+      margin-top: 6px;
+      line-height: 34px;
+      > svg {
+        width: 34px;
+        margin-right: 4px;
+        vertical-align: -4px;
+      }
+      > span {
+        font-size: 24px;
+        color: #666;
+        &.name {
+          margin-right: 20px;
+        }
+      }
+    }
+
+  }
   .panel {
+    margin-bottom: 20px;
     background-color: #fff;
     border-radius: $--radius1;
+  }
+  .panel2 {
     margin-bottom: 20px;
+    padding-left: 24px;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #fff;
   }
   .other-info {
     position: relative;
@@ -897,6 +1095,35 @@ export default {
   }
   .skeAnimation {
     @include skeAnimation(#eee)
+  }
+  .student-list {
+    background-color: #fff;
+    padding-right: 24px;
+    .student-item {
+      padding: 24px 0;
+      font-size: 28px;
+      line-height: 40px;
+      border-bottom: 1px solid #e7e7e7;
+      &:nth-last-of-type(1) {
+        border-bottom: none;
+      }
+      > .student-name {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 26px;
+      }
+      > .student-phone {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+  .contact-detail {
+    padding: 24px 0;
+    > span:nth-of-type(1) {
+      margin-right: 24px;
+      font-weight: 500;
+    }
   }
   /** skeleton end **/
 </style>

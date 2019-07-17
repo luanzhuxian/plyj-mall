@@ -24,7 +24,7 @@
           :style="{ paddingLeft: iconGap / 7.5 + 'vw'}"
         />
       </div>
-      <div class="pl-fields_right">
+      <div class="pl-fields_right" @click.stop="fieldsRightClick">
         <span
           v-if="rightText"
           class="pl-fields_right_text"
@@ -33,21 +33,35 @@
         />
         <pl-svg
           v-if="route || showRightIcon"
-          class="pl-fields_right_icon"
+          :class="{
+            'pl-fields_right_icon': true,
+            'is-collapse': canCollapse && collapse,
+            'no-collapse': canCollapse && !collapse
+          }"
           :name="rightIcon"
         />
       </div>
     </div>
 
-    <div v-if="hasSlot">
-      <slot />
-    </div>
+    <transition name="collapse">
+      <div
+        v-if="hasSlot"
+        v-show="canCollapse ? collapse : true"
+      >
+        <slot />
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
 export default {
   name: 'PlFields',
+  data () {
+    return {
+      collapse: false
+    }
+  },
   props: {
     icon: {
       type: String,
@@ -95,11 +109,19 @@ export default {
     size: {
       type: String,
       default: 'large'
-    }
+    },
+    // 支持展开slot
+    canCollapse: Boolean
   },
   computed: {
     hasSlot () {
       return Boolean(this.$slots.default)
+    },
+    slot () {
+      return this.$slots.default[0] ? this.$slots.default[0].elm : {}
+    },
+    height () {
+      return this.slot
     }
   },
   methods: {
@@ -107,6 +129,11 @@ export default {
       this.$emit('click')
       if (this.route) {
         this.$router.push(this.route)
+      }
+    },
+    fieldsRightClick () {
+      if (this.canCollapse) {
+        this.collapse = !this.collapse
       }
     }
   }
@@ -156,6 +183,13 @@ export default {
       margin-left: 10px;
       fill: #ccc;
       transform: scaleY(1.2);
+      transition: transform .2s linear;
+      &.no-collapse {
+        transform: rotate(90deg);
+      }
+      &.is-collapse {
+        transform: rotate(-90deg);
+      }
     }
   }
 </style>
