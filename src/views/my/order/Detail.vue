@@ -38,7 +38,7 @@
                 <span :class="$style.codeValue" v-text="item.redeemCode" />
                 <span :class="$style.codeStatus" v-text="item.status" />
               </div>
-              <div :class="$style.whoUse" v-if="!collapseQrCode">
+              <div :class="$style.whoUse" v-if="!collapseQrCode && (item.statusCode === 0 || item.statusCode === 1)">
                 <pl-svg
                   name="name-card"
                   :color="item.statusCode === 4 ? '#e1e1e1' : '#ccc'"
@@ -877,7 +877,7 @@ export default {
       line-height: 34px;
       > svg {
         width: 34px;
-        margin-right: 4px;
+        margin-right: 8px;
         vertical-align: -4px;
       }
       > span {
