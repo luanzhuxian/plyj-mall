@@ -603,30 +603,35 @@ export default {
       }
       for (const item of this.formalClass) {
         const { productId, skuCode1, skuCode2, count, agentUser, remark, needStudentInfo } = item
-        if (needStudentInfo && !this.CHECKED_STUDENT[productId]) {
-          this.lessonErrorId = productId
-          this.$nextTick(() => {
-            let errorEl = document.querySelector('.' + this.$style.lessonError)
-            errorEl.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-              inline: 'nearest'
+        const currentStudent = this.CHECKED_STUDENT[productId]
+        if (needStudentInfo && !currentStudent) {
+          if (this.isCart) {
+            this.lessonErrorId = productId
+            this.$nextTick(() => {
+              let errorEl = document.querySelector('.' + this.$style.lessonError)
+              errorEl.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest'
+              })
+              this.lessonErrorTip = '请选择学员信息'
             })
-            this.lessonErrorTip = '请选择学员信息'
-          })
+          }
           return this.$error('请选择学员信息')
         }
-        if (needStudentInfo && this.CHECKED_STUDENT[productId].length < count) {
-          this.lessonErrorId = productId
-          this.$nextTick(() => {
-            let errorEl = document.querySelector('.' + this.$style.lessonError)
-            errorEl.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-              inline: 'nearest'
+        if (needStudentInfo && currentStudent && currentStudent.length < count) {
+          if (this.isCart) {
+            this.lessonErrorId = productId
+            this.$nextTick(() => {
+              let errorEl = document.querySelector('.' + this.$style.lessonError)
+              errorEl.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest'
+              })
+              this.lessonErrorTip = `请选择${count}名学员信息`
             })
-            this.lessonErrorTip = `请选择${count}名学员信息`
-          })
+          }
           return this.$error(`请选择${count}名学员信息`)
         }
         cartProducts.push({
