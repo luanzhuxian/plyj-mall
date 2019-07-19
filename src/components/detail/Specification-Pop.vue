@@ -120,7 +120,7 @@ export default {
     // 默认数量
     defaultCount: {
       type: Number,
-      default: 1
+      default: 0
     },
     // 初始的规格，它可以作为一个默认值，用以回滚
     // 必须包含属性：count[number] skuCode1[string] skuCode2[string]
@@ -180,7 +180,7 @@ export default {
         return item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2
       }) || {}
       if (this.sku.skuCode1 === current.skuCode1 && this.sku.skuCode2 === current.skuCode2) {
-        current.count = this.defaultCount
+        current.count = this.defaultCount || current.minBuyNum
       } else {
         current.count = current.minBuyNum
       }
@@ -269,9 +269,10 @@ export default {
       this.setCount()
     },
     setCount () {
-      this.localCurrentSku.count = this.currentSku.count || 1
-      this.count = this.currentSku.count || 1
       this.min = this.currentSku.minBuyNum || 1
+      let max = Math.max(this.currentSku.count, this.min)
+      this.localCurrentSku.count = max
+      this.count = max
     },
     attrIsHear (attrId) {
       return this.skuList.some(item => item.skuCode1 === attrId || item.skuCode2 === attrId)
