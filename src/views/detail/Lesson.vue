@@ -269,6 +269,7 @@ export default {
         this.detail = result
         this.productSkuModels = result.productSkuModels
         this.currentModel = result.productSkuModels[0]
+        this.currentModel.count = result.productSkuModels[0].minBuyNum
         share({
           appId: this.appId,
           title: result.productName,
