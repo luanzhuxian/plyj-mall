@@ -218,11 +218,12 @@ export default {
       }
     }
     .right-bottom {
-      display: flex;
+      padding-right: 100px;
       color: #999;
       font-size: 20px;
     }
     .specification {
+      width: 100%;
       font-size: 20px;
       padding: 0 8px;
       line-height: 44px;

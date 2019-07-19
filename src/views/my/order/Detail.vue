@@ -52,10 +52,7 @@
       </div>
     </div>
 
-    <div
-      :class="$style.panel"
-      v-if="hasExpressInfo"
-    >
+    <div :class="$style.panel" v-if="hasExpressInfo">
       <express-item
         :order-id="orderId"
         :express-name="logisticsInfoModel && logisticsInfoModel.courierCompany"
@@ -515,7 +512,7 @@ export default {
   data () {
     return {
       loaded: false,
-      collapseQrCode: false,
+      collapseQrCode: true,
       orderType: '',
       orderStatus: '',
       message: '',
@@ -609,6 +606,7 @@ export default {
     this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY = ''
     this.isAllProductRefund = true
     this.isDeleteBtnShow = true
+    this.collapseQrCode = true
     clearInterval(this.timer)
     clearInterval(this.timer2)
   },
@@ -737,7 +735,7 @@ export default {
       try {
         await this.$confirm('订单一旦取消，将无法恢复，确认要取消订单？')
         await cancelOrder(this.orderId, reason)
-        this.$success('订单取消成功')
+        this.$success('交易关闭')
         this.getDetail()
         updateLocalStorage('UPDATE_ORDER_LIST', { id: this.orderId, action: 'cancel' })
       } catch (e) {
@@ -747,9 +745,9 @@ export default {
     async deleteOrder () {
       const { orderId } = this
       try {
-        await this.$confirm('订单一旦删除，将无法恢复 确认要删除订单？')
+        await this.$confirm('是否删除当前订单？ 删除后不可找回')
         await deleteOrder(orderId)
-        this.$success('订单删除成功')
+        this.$success('删除成功')
         updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'delete' })
         setTimeout(() => {
           this.$router.go(-1)

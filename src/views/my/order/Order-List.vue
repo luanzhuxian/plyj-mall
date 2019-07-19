@@ -45,7 +45,7 @@
               </div>
               <p
                 :class="$style.status"
-                v-text="item.status === 'FINISHED' ? item.commentStatus ? '交易成功' : '待评价' : orderStatusMap[item.status]"
+                v-text="item.statusText"
               />
             </div>
             <order-item
@@ -60,14 +60,10 @@
               border
             />
             <div :class="$style.listItemBottom">
-              <div>
+              <div :class="$style.priceWrapper">
                 <span :class="$style.totalCount">{{ `共${item.totalCount}件商品` }}</span>
-                <price
-                  prefix-text="总价："
-                  :price="item.totalPrice"
-                  size="medium"
-                  plain
-                />
+                <span :class="$style.bold">总价：</span>
+                <span :class="$style.price">{{ item.totalPrice }}</span>
               </div>
               <div
                 :class="$style.buttons"
@@ -108,12 +104,28 @@
                   查看物流
                 </pl-button>
                 <pl-button
-                  v-if="item.status === 'WAIT_RECEIVE'"
+                  v-if="item.orderType === 'PHYSICAL' && item.status === 'WAIT_RECEIVE'"
                   type="warning"
                   round
                   @click="confirmReceipt(item, i)"
                 >
                   确认收货
+                </pl-button>
+                <pl-button
+                  v-if="item.orderType !== 'PHYSICAL' && item.status === 'WAIT_RECEIVE'"
+                  type="warning"
+                  round
+                  @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"
+                >
+                  去使用
+                </pl-button>
+                <pl-button
+                  v-if="item.status === 'FINISHED' && !item.commentStatus"
+                  round
+                  plain
+                  @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"
+                >
+                  去评价
                 </pl-button>
               </div>
             </div>
@@ -132,9 +144,7 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import Price from '../../../components/Price.vue'
 import LoadMore from '../../../components/Load-More.vue'
-import { mapGetters } from 'vuex'
 import {
   getOrderList,
   getAwaitPayInfo,
@@ -163,7 +173,9 @@ const tabs = [{
 
 const orderTypeMap = {
   PHYSICAL: '实体商品',
-  VIRTUAL: '虚拟商品'
+  VIRTUAL: '虚拟商品',
+  FORMAL_CLASS: '课程商品',
+  EXPERIENCE_CLASS: '课程商品'
 }
 
 const refundStatusMap = {
@@ -179,8 +191,7 @@ export default {
   name: 'OrderList',
   components: {
     LoadMore,
-    OrderItem,
-    Price
+    OrderItem
   },
   props: {
     status: {
@@ -213,9 +224,6 @@ export default {
       orderTypeMap,
       refundStatusMap
     }
-  },
-  computed: {
-    ...mapGetters(['orderStatusMap'])
   },
   beforeRouteEnter (to, from, next) {
     to.meta.noRefresh = from.name === 'OrderDetail' || from.name === 'Freight'
@@ -361,7 +369,7 @@ export default {
         const reason = await this.showPicker()
         await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
         await cancelOrder(orderId, reason)
-        this.$success('订单取消成功')
+        this.$success('交易关闭')
         if (orderStatus === 'ALL_ORDER') {
           item.status = 'CLOSED'
         } else {
@@ -374,11 +382,11 @@ export default {
     async deleteOrder (item, index) {
       const orderId = item.id
       try {
-        await this.$confirm('订单一旦删除，将无法恢复 确认要删除订单？')
+        await this.$confirm('是否删除当前订单？ 删除后不可找回')
         await deleteOrder(orderId)
         this.orderList.splice(index, 1)
         this.$forceUpdate()
-        this.$success('订单删除成功')
+        this.$success('删除成功')
       } catch (e) {
         throw e
       }
@@ -439,20 +447,30 @@ export default {
       justify-content: flex-end;
       align-items: baseline;
     }
+    .price-wrapper {
+      display: flex;
+      align-items: center;
+    }
     .total-count {
       font-size: 20px;
       font-family: MicrosoftYaHeiUI;
       color: #999999;
       margin-right: 12px;
     }
+    .bold {
+      font-size: 30px;
+      font-weight: bold;
+      color: #333333;
+    }
     .price {
-      font-size: 40px;
       align-self: flex-end;
+      font-size: 32px;
+      color: #FE7700;
       &:before {
-        margin-right: 10px;
+        // margin-right: 10px;
         padding-bottom: 4px;
-        font-size: 24px;
-        content: '总价：¥';
+        font-size: 20px;
+        content: '¥';
       }
     }
     .buttons {
