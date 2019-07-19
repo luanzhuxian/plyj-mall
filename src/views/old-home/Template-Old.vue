@@ -10,6 +10,7 @@
     >
       <swiper-slide v-for="(item, index) of data['BANNER'].values" :key="index">
         <router-link
+          :class="$style.img"
           v-if="item.type && item.value"
           tag="img"
           :src="item.image"
