@@ -1,7 +1,13 @@
 <template>
   <div v-if="loaded" :class="$style.home">
     <template-old
+      v-if="type !== 1"
       ref="template-old"
+      :data="modules"
+    />
+    <template-new
+      v-else
+      ref="template-new"
       :data="modules"
     />
   </div>
@@ -31,12 +37,14 @@
 <script>
 import 'swiper/dist/css/swiper.css'
 import TemplateOld from './Template-Old.vue'
+import TemplateNew from './Template-New.vue'
 import { getTemplate } from '../../apis/home'
 
 export default {
   name: 'Home',
   components: {
-    TemplateOld
+    TemplateOld,
+    TemplateNew
   },
   data () {
     return {
@@ -56,7 +64,6 @@ export default {
     try {
       const { modules } = this
       const { result } = await getTemplate()
-      console.log(result)
       this.type = result.type
       if (result.type === 1) { // 旧模板
         const bannerList = result.moduleModels.filter(module => module.moduleType === 1)
