@@ -26,6 +26,7 @@ export default {
         centeredSlides: true,
         autoplay: true,
         loop: false,
+        spaceBetween: 20,
         pagination: {
           el: '.banner-pagination',
           clickable: true
@@ -70,6 +71,9 @@ export default {
     background-color: rgba(0, 0, 0, .3);
     border-radius: 9px;
     z-index: 1;
+    /deep/.swiper-slide {
+      border-radius: 10px;
+    }
     /deep/.swiper-pagination-bullet {
       width: 10px !important;
       height: 10px !important;
