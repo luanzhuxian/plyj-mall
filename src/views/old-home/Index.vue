@@ -1,7 +1,7 @@
 <template>
   <div v-if="loaded" :class="$style.home">
     <template-old
-      v-if="type !== 1"
+      v-if="type === 1"
       ref="template-old"
       :data="modules"
     />
