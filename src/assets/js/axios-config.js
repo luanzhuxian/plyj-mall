@@ -2,6 +2,13 @@ import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
 import { REFRESH_TOKEN } from '../../store/mutation-type'
+class ReponseError extends Error {
+  constructor (message) {
+    super(message)
+    this.message = message
+    this.name = 'ReponseError'
+  }
+}
 axios.defaults.headers = {
   'Content-Type': 'application/json;charset=UTF-8'
 }
@@ -35,7 +42,6 @@ async function response (response) {
     }
     if (!loginInvalid && !tokenInvalid) {
       let err = {
-        tag: 'responseError',
         method: config.method,
         url: response.config.url,
         data: config.data ? JSON.parse(config.data) : null,
@@ -43,7 +49,7 @@ async function response (response) {
         devMessage: data.devMessage || '',
         message: msg || ''
       }
-      return Promise.reject(new Error(JSON.stringify(err, null, 4)))
+      return Promise.reject(new ReponseError(JSON.stringify(err, null, 4)))
     }
     // 刷新token还没失效
     if (!tokenInvalid) {
@@ -84,5 +90,7 @@ function resError (error) {
     router.push({ name: 'NetError' })
     return
   }
-  return Promise.reject(new Error(msg))
+  return Promise.reject(new ReponseError(JSON.stringify({
+    message: msg
+  }, null, 4)))
 }
