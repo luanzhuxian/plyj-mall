@@ -35,7 +35,7 @@
               tag="div"
               :class="$style.edit"
               @click="$router.push({ name: 'EditStudent', params: { id: item.id }, query: $route.query })"
-              :disabled="checked.indexOf(item) === -1 && checked.length === maxCount"
+              :disabled="checked.indexOf(item) === -1 && checked.length === maxCount && proId"
             >
               编辑
             </button>
