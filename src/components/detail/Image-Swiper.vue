@@ -82,6 +82,7 @@ export default {
       const gallery = new window.PhotoSwipe(this.$refs.pswp, window.PhotoSwipeUI_Default, this.items, this.options)
       gallery.init()
       gallery.listen('afterChange', this.afterChange)
+      gallery.listen('close', this.close)
       this.gallery = gallery
       this.currentIndex = gallery.getCurrentIndex()
       this.$emit('slideChange', this.currentIndex, this.total)

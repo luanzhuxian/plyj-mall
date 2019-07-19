@@ -13,7 +13,7 @@
     <!-- 核销码 -->
     <div
       :class="$style.qrcodeBox"
-      v-if="orderType === 'FORMAL_CLASS' && orderStatus !== 'WAIT_PAY'"
+      v-if="studentInfoModels.length > 0 && orderStatus !== 'WAIT_PAY'"
     >
       <img :src="qrImg" alt="" v-imger :style="{ opacity: (allDated || allFinish) ? 0.4 : 1 }">
       <div
@@ -33,7 +33,7 @@
         />
         <ul :class="$style.codeList">
           <template v-for="(item, i) of redeemCodeModels">
-            <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode === 4 }" :key="i" v-if="collapseQrCode ? i === 0 : true">
+            <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }" :key="i" v-if="collapseQrCode ? i === 0 : true">
               <div :class="$style.codeBox">
                 <span :class="$style.codeValue" v-text="item.redeemCode" />
                 <span :class="$style.codeStatus" v-text="item.status" />
@@ -41,7 +41,7 @@
               <div :class="$style.whoUse" v-if="!collapseQrCode && item.name && (item.statusCode === 0 || item.statusCode === 1)">
                 <pl-svg
                   name="name-card"
-                  :color="item.statusCode === 4 ? '#e1e1e1' : '#ccc'"
+                  :color="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'"
                 />
                 <span :class="{ [$style.name]: true }" v-text="item.name" />
                 <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
@@ -347,7 +347,7 @@
         申请发票
       </pl-button>
       <pl-button
-        v-if="orderStatus === 'WAIT_RECEIVE' && orderType !== 'FORMAL_CLASS'"
+        v-if="orderStatus === 'WAIT_RECEIVE' && orderType !== 'FORMAL_CLASS' && studentInfoModels.length === 0"
         round
         type="warning"
         @click="confirmReceipt"
@@ -461,7 +461,9 @@ import {
   getAwaitPayInfo,
   confirmReceipt,
   cancelOrder,
-  deleteOrder
+  deleteOrder,
+  getVerificationStatus,
+  setVerificationStatus
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { generateQrcode } from '../../../assets/js/util'
@@ -567,7 +569,7 @@ export default {
     },
     // 是否可以申请售后
     canApplyRefund () {
-      return this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED'
+      return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED') && this.productInfoModel.amount > 0
     },
     // 是否可以申请发票，invoiceStatus： 8:'可申请' 1:'已申请' 3:'已开票' 7:'不支持'
     canApplyInvoice () {
@@ -607,9 +609,8 @@ export default {
     this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY = ''
     this.isAllProductRefund = true
     this.isDeleteBtnShow = true
-    if (this.timer) {
-      clearInterval(this.timer)
-    }
+    clearInterval(this.timer)
+    clearInterval(this.timer2)
   },
   methods: {
     // 倒计时
@@ -633,7 +634,7 @@ export default {
         if (flag === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
       }, 1000)
     },
-    getDetail () {
+    getDetail (flag) {
       return new Promise(async (resolve, reject) => {
         try {
           this.loaded = false
@@ -670,6 +671,8 @@ export default {
             // 生成核销码二维码
             this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
           }
+          await setVerificationStatus(orderId)
+          this.refreshStatus()
           // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             this.isAllProductRefund = (current.afterSalesStatus === 2)
@@ -780,6 +783,22 @@ export default {
         }, e => {
           console.log(e)
         })
+    },
+    // 定时器，实时刷新核销状态，如果有核销的话
+    refreshStatus () {
+      clearInterval(this.timer2)
+      if (this.redeemCodeModels.some(item => item.statusCode === 0)) {
+        this.timer2 = setInterval(async () => {
+          try {
+            let { result } = await getVerificationStatus(this.orderId)
+            if (result) {
+              this.getDetail(true)
+            }
+          } catch (e) {
+            clearInterval(this.timer2)
+          }
+        }, 3000)
+      }
     }
   }
 }

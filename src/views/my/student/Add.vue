@@ -131,17 +131,19 @@ export default {
       if (this.$refs.form.validate()) {
         try {
           this.loading = true
+          let result
           if (this.id) {
-            await edit([this.form])
+            let { result: res } = await edit([this.form])
+            result = res
           } else {
-            await add(this.form)
+            let { result: res } = await add(this.form)
+            result = res
           }
           if (this.canSelect) {
             let { name, params, query } = JSON.parse(localStorage.getItem('SELECT_STUDENT_FROM')) || {}
-            console.log(localStorage.getItem('CHECKED_STUDENT'))
             let checked = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
             if (name) {
-              checked[this.proId] = [this.form]
+              checked[this.proId] = [result]
               localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
               this.$router.replace({ name, params, query })
             } else {
@@ -163,14 +165,22 @@ export default {
         confirmText: '删除'
       })
       try {
-        await remove([this.id])
+        let { result } = await remove([this.id])
+        if (result) {
+          this.$router.replace({
+            name: 'StudentList',
+            query: this.$route.query
+          })
+        }
       } catch (e) {
         throw e
       }
     }
   },
   beforeRouteLeave (to, from, next) {
-    localStorage.removeItem('SELECT_STUDENT_FROM')
+    if (to.name !== 'StudentList') {
+      localStorage.removeItem('SELECT_STUDENT_FROM')
+    }
     next()
   }
 }

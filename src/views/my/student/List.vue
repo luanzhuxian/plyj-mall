@@ -55,7 +55,7 @@
           [$style.addBtn]: true,
           [$style.canSelect]: !canSelect
         }"
-        @click="$router.push({ name: 'AddStudent' })"
+        @click="$router.push({ name: 'AddStudent', query: $route.query })"
       >
         <span v-text="canSelect ? '新增学员' : '点击这里，新增一个学员信息'" />
         <pl-svg name="add-bold" :color="!canSelect ? '#fff' : '#F2B036'" />

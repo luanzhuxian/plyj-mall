@@ -96,3 +96,6 @@ export const cancelRefundApplication = params => axios.post(`/apis/v1/refund/ref
 
 // 查看申请helper进度
 export const getHelperApplicationProgress = () => axios.get(`/apis/v1/agent/user/info/audit/status`)
+// 获取是否核销
+export const getVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpafter?orderId=${orderId}`)
+export const setVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpbefore?orderId=${orderId}`)

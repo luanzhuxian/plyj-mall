@@ -25,6 +25,7 @@
         />
         <pl-fields
           text="货物状态："
+          v-if="detail.orderType === 'PHYSICAL'"
           :right-text="radio.goodsStatusText || '请选择'"
           show-right-icon
           @click="() => {canGoodsStatusChange ? showPopup('goodsStatus') : ''}"
@@ -205,6 +206,7 @@ export default {
       loading: false,
       orderStatus: '',
       productInfo: {},
+      detail: {},
       form: {
         orderDetailId: this.orderProductRId,
         actualRefund: '',
@@ -254,7 +256,7 @@ export default {
       return !this.isWaitShip && !this.isRefundGoods
     },
     canRefundReasonChange () {
-      return this.radio.goodsStatus && this.radio.goodsStatusText
+      return this.detail.orderType === 'VIRTUAL' || (this.radio.goodsStatus && this.radio.goodsStatusText)
     },
     refundReasonCode () {
       return (
@@ -304,6 +306,7 @@ export default {
     async getOrderDetail () {
       const { result } = await getOrderDetail(this.orderId)
       this.orderStatus = result.orderStatus
+      this.detail = result
       this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
       // 待发货状态默认为未收到货
       if (result.orderStatus === 'WAIT_SHIP') {
@@ -361,7 +364,7 @@ export default {
       }
     },
     async confirm () {
-      if (!this.radio.goodsStatus) return this.$warning('请选择货物状态')
+      if (!this.radio.goodsStatus && this.detail.orderType === 'PHYSICAL') return this.$warning('请选择货物状态')
       if (!this.radio.refundReason) return this.$warning('请选择退货原因')
       if (!isPositive(this.form.actualRefund)) return this.$warning('退款金额必须大于零，小数点后最多两位')
       if (this.form.actualRefund > this.productInfo.amount) return this.$warning('退款金额大于最大退款金额，请修改')

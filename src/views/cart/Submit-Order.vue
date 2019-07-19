@@ -143,9 +143,9 @@
     </template>
 
     <!-- 课程 -->
-    <template v-if="classList.length > 0">
+    <template v-if="lessonList.length > 0">
       <div
-        v-for="item of classList"
+        v-for="item of lessonList"
         :key="item.skuCode1"
         :class="$style.productBox"
       >
@@ -252,18 +252,22 @@
       />
     </div>
 
-    <div v-if="classList.length === 1 && !isCart && classList[0].needStudentInfo" :class="$style.itemSelector" @click.capture="selectStudent(classList[0])">
+    <div
+      v-if="lessonList.length === 1 && lessonList[0].needStudentInfo && !isCart"
+      :class="$style.itemSelector"
+      @click.capture="selectStudent(lessonList[0])"
+    >
       <pl-fields
         size="middle"
         text="学员信息"
         icon="name-card"
         :icon-gap="12"
-        :right-text="`已选${getStudentCountByProId(classList[0].productId)}人`"
+        :right-text="`已选${getStudentCountByProId(lessonList[0].productId)}人`"
         show-right-icon
         left-text-weight="bold"
       >
-        <ul :class="$style.studentList" v-show="CHECKED_STUDENT[classList[0].productId] && CHECKED_STUDENT[classList[0].productId].length > 0">
-          <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[classList[0].productId]" :key="i">
+        <!--<ul :class="$style.studentList" v-show="CHECKED_STUDENT[lessonList[0].productId] && CHECKED_STUDENT[lessonList[0].productId].length > 0">
+          <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[lessonList[0].productId]" :key="i">
             <p :class="$style.studentName">
               <span>姓名</span>
               <span v-text="item.stuMobile" />
@@ -273,7 +277,7 @@
               <span v-text="item.stuName" />
             </p>
           </li>
-        </ul>
+        </ul>-->
       </pl-fields>
     </div>
 
@@ -392,7 +396,7 @@ export default {
       amount: 0,
       physicalProducts: [],
       virtualProducts: [],
-      classList: [],
+      lessonList: [],
       remark: '', // 物理订单备注
       invioceType: 1,
       INVOICE_MODEL: {},
@@ -437,12 +441,12 @@ export default {
     ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList']),
     // 是否只有一个商品
     isAloneProduct () {
-      return this.physicalProducts.length + this.virtualProducts.length + this.classList.length === 1
+      return this.physicalProducts.length + this.virtualProducts.length + this.lessonList.length === 1
     },
     // 只有一个商品时，返回这个商品
     aloneProduct () {
       if (this.isAloneProduct) {
-        return this.classList[0] || this.physicalProducts[0] || this.virtualProducts[0]
+        return this.lessonList[0] || this.physicalProducts[0] || this.virtualProducts[0]
       } else {
         return null
       }
@@ -452,7 +456,7 @@ export default {
     },
     // 课程的总数量
     formalClassCount () {
-      return this.getTotal(this.classList, (total, item) => {
+      return this.getTotal(this.lessonList, (total, item) => {
         return total + item.count
       })
     }
@@ -558,14 +562,20 @@ export default {
         for (const p of physicalProducts) {
           p.remark = ''
         }
+        formalClass.map(item => { item.type = 'FORMAL_CLASS' })
+        experienceClass.map(item => { item.type = 'EXPERIENCE_CLASS' })
+        virtualProducts.map(item => { item.type = 'VIRTUAL_GOODS' })
+        // 把虚拟商品中需要学生的商品移动到课程列表
+        let needStudent = virtualProducts.filter(item => item.needStudentInfo)
+        for (let item of needStudent) {
+          virtualProducts.splice(virtualProducts.indexOf(item), 1)
+        }
         this.amount = amount
         this.totalAmount = totalAmount
         this.freight = Number(freight)
         this.physicalProducts = physicalProducts
         this.virtualProducts = virtualProducts
-        formalClass.map(item => { item.type = 'FORMAL_CLASS' })
-        experienceClass.map(item => { item.type = 'EXPERIENCE_CLASS' })
-        this.classList = [...formalClass, ...experienceClass]
+        this.lessonList = [...formalClass, ...experienceClass, ...needStudent]
         this.loading = false
         if (callback) callback()
       } catch (e) {
@@ -603,7 +613,7 @@ export default {
           message: remark
         })
       }
-      for (const item of this.classList) {
+      for (const item of this.lessonList) {
         const { productId, skuCode1, skuCode2, count, agentUser, remark, needStudentInfo } = item
         const currentStudent = this.CHECKED_STUDENT[productId]
         if (needStudentInfo && !currentStudent) {
@@ -675,7 +685,7 @@ export default {
     },
     async pay (CREDENTIAL, orderId, orderCount) {
       let orderType = ''
-      if (this.classList.length > 0 && this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
+      if (this.lessonList.length > 0 && this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
         orderType = 'FORMAL_CLASS'
       }
       return new Promise(async (resolve, reject) => {
