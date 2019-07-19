@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import youLike from './../old-home/YouLike.vue'
+import youLike from './../old-home/components/YouLike.vue'
 export default {
   name: 'PaySuccess',
   components: {

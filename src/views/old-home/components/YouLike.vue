@@ -1,7 +1,7 @@
 <template>
   <div v-if="likeProduct.length > 0" :class="$style.like">
     <div v-if="isMy" :class="$style.titleMy">
-      <img src="../../assets/images/my/youLike.png">
+      <img src="@/assets/images/my/youLike.png">
     </div>
     <div v-else :class="$style.title">
       猜你喜欢
@@ -22,7 +22,7 @@
 </template>
 <script>
 import CategoryItem from './CategoryItem.vue'
-import { getYouLikeData } from '../../apis/base-api'
+import { getYouLikeData } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 
 export default {

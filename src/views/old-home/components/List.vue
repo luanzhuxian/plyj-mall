@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import YouLike from '../../components/YouLike.vue'
+import YouLike from './YouLike.vue'
 
 export default {
   name: 'List',
