@@ -132,6 +132,8 @@ export default {
       }
     },
     fieldsRightClick () {
+      console.log(123)
+      this.$emit('click')
       if (this.canCollapse) {
         this.collapse = !this.collapse
       }

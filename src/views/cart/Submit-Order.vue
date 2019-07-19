@@ -70,7 +70,7 @@
                 :min="physicalProducts[0].minBuyNum"
                 :max="physicalProducts[0].stock"
                 :count="physicalProducts[0].count"
-                @change="(count, next) => { countChange(count, item, next) }"
+                @change="(count, next) => { countChange(count, physicalProducts[0], next) }"
               />
             </div>
           </div>
@@ -252,7 +252,7 @@
       />
     </div>
 
-    <div v-if="formalClass.length === 1 && !isCart && formalClass[0].needStudentInfo" :class="$style.itemSelector" @click="selectStudent(formalClass[0])">
+    <div v-if="formalClass.length === 1 && !isCart && formalClass[0].needStudentInfo" :class="$style.itemSelector" @click.capture="selectStudent(formalClass[0])">
       <pl-fields
         size="middle"
         text="学员信息"
@@ -277,7 +277,7 @@
       </pl-fields>
     </div>
 
-    <div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click="showContactPopup = true">
+    <div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click.capture="showContactPopup = true">
       <pl-fields
         size="middle"
         text="联系人信息"
