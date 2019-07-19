@@ -66,6 +66,8 @@ export default {
     .toast-message {
       margin-top: 16px;
       font-size: 28px;
+      max-width: 80vw;
+      word-break: break-all;
     }
     .pl-icon {
       font-size: 72px;
