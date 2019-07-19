@@ -647,7 +647,7 @@ export default {
       }
       // contactInfoModel
       const data = {
-        addressSeq: this.selectedAddress.sequenceNbr,
+        addressSeq: this.physicalProducts.length > 0 ? this.selectedAddress.sequenceNbr : '',
         cartProducts,
         cartSource: this.isCart,
         invoiceModel: this.INVOICE_MODEL
@@ -673,11 +673,13 @@ export default {
     async pay (CREDENTIAL, orderId, orderCount) {
       let orderType = ''
       if (this.formalClass.length > 0 && this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
-        orderType = this.formalClass
+        orderType = 'FORMAL_CLASS'
       }
       return new Promise(async (resolve, reject) => {
         try {
-          await wechatPay(CREDENTIAL)
+          if (CREDENTIAL.appId) {
+            await wechatPay(CREDENTIAL)
+          }
           this.submiting = false
           this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount }, query: { orderType } })
           localStorage.removeItem('INVOICE_MODEL')

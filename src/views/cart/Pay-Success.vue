@@ -3,7 +3,7 @@
     <div :class="$style.top">
       <pl-svg
         :class="$style.icon"
-        :name="orderType === 'FORMAL_CLASS' ? 'signup-success' : pay-success"
+        :name="orderType === 'FORMAL_CLASS' ? 'signup-success' : 'pay-success'"
       />
       <p :class="$style.tip1">
         <span v-if="orderType === 'FORMAL_CLASS'">报名/学习成功</span>
