@@ -349,11 +349,11 @@ export default {
       display: inline-block;
       width: 10px;
       height: 17px;
-      border-radius: 5px !important;
-      transform: rotate(45deg);
       background-color: #d8d8d8;
-      opacity: 1;
+      border-radius: 5px !important;
       margin: 0 16px 0 0 !important;
+      transform: rotate(45deg);
+      opacity: 1;
       &.swiper-pagination-bullet-active {
         background-color: #333;
       }

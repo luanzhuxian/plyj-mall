@@ -134,8 +134,8 @@ export default {
         subCategoryName: ''
       },
       classifyList: [{
-        categoryName: '全部',
-        id: ''
+        id: '',
+        categoryName: '全部'
       }],
       classifyFormTemplate: {
         categoryId: '',
