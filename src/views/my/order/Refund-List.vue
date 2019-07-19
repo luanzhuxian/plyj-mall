@@ -20,7 +20,7 @@
         :form="form"
         :loading.sync="loading"
         :request-methods="getRefundOrderList"
-        no-content-tip="暂无订单"
+        no-content-tip="您还没有相关订单~"
         @refresh="onRefresh"
       >
         <template v-slot="{ list }">
