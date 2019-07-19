@@ -160,7 +160,8 @@ export default {
     },
     cancel () {
       if (!this.form.searchContent && !this.searchContent) {
-        return this.$router.push({ name: 'Classify' })
+        // return this.$router.push({ name: 'Classify' })
+        return this.$router.go(-1)
       }
       this.searchContent = this.form.searchContent = ''
       this.seached = false

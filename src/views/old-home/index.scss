@@ -1,14 +1,74 @@
 .template-new {
-  .top {
-    padding: 30px 40px;
+  .search {
+    padding: 12px 24px 24px;
+    background-color: #EDEDED;
   }
-  .banner {
-    height: 354px;
+  .input-wrapper {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+    height: 60px;
+    background-color: #FFF;
+    border-radius: 30px;
+    overflow: hidden;
+    svg {
+      width: 28px;
+      height: 28px;
+      margin-right: 20px;
+    }
+    input {
+      width: 100%;
+      height: 60px;
+      font-size: 28px;
+      font-weight: bold;
+      background-color: #FFF;
+      &::placeholder {
+        line-height: 40px;
+        color: #BCBCBC;
+        letter-spacing: 3px;
+      }
+    }
+  }
+
+  .banner-module {
+    background-color: #EDEDED;
+    .swiper-wrapper {
+      position: relative;
+      padding: 24px;
+      background-color: #FFF;
+      border-radius: 20px 20px 0 0;
+    }
+  }
+
+  .swiper {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
     .img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: 468px;
       background-color: #fff;
+      object-fit: cover;
     }
+  }
+
+  .module {
+    padding: 0 24px;
+    .title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 36px;
+      font-family: PingFang SC;
+      font-weight: 600;
+      line-height: 50px;
+      color: #333333;
+    }
+  }
+
+  .popular-module {
+    margin-top: 16px;
   }
 }
