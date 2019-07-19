@@ -77,6 +77,7 @@
       :sku-attr-list="detail.productAttributes"
       :current-sku.sync="currentModel"
       :product-status="detail.productStatus"
+      :confirm-text="confirmText"
     />
     <specification-pop
       :default-count="defaultCount"
@@ -101,7 +102,7 @@
             :disabled="adding || noStock"
             @click="buyNow(currentSku)"
           >
-            立即购买
+            {{ confirmText }}
           </button>
         </div>
       </template>
@@ -147,7 +148,7 @@ import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
 import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
-import youLike from './../old-home/components/YouLike.vue'
+import youLike from './../home/components/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
 import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
@@ -216,6 +217,13 @@ export default {
     },
     productType () {
       return this.detail.productType
+    },
+    confirmText () {
+      let textMap = {
+        FORMAL_CLASS: '立即学习',
+        EXPERIENCE_CLASS: '立即报名'
+      }
+      return textMap[this.productType] || '立即购买'
     }
   },
   watch: {
@@ -386,9 +394,10 @@ export default {
         let str = this.detail.productName
         drawText(ctx, '56px Microsoft YaHei UI', '#000', 'top')(ctx, 48, 1352, str, 80, 620, 2)
         // 填充价钱
-        let minSku = this.detail.productSkuModels[0]
-        let price = minSku.price
-        let originalPrice = minSku.originalPrice
+        let priceList = this.detail.productSkuModels.map(item => item.price)
+        let originalPriceList = this.detail.productSkuModels.map(item => item.originalPrice)
+        let price = Math.min(...priceList)
+        let originalPrice = Math.max(...originalPriceList)
         ctx.fillStyle = '#FE7700'
         ctx.fillText('¥', 48, 1564 + (76 - 56) / 2)
         drawText(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1544 + (104 - 88) / 2, String(price), 104)

@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import youLike from './../old-home/components/YouLike.vue'
+import youLike from './../home/components/YouLike.vue'
 import Modal from '../../components/penglai-ui/Modal.vue'
 import Progress from './components/Progress.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'

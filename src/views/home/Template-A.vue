@@ -1,5 +1,5 @@
-<template lang="html">
-  <div :class="$style.templateOld">
+<template>
+  <div :class="$style.homeTemplateA">
     <div :class="$style.top">
       <top-text :title="mallName + ' 欢迎您'" :tip="date" />
     </div>
@@ -24,7 +24,7 @@
       </swiper-slide>
       <div class="banner-pagination" slot="pagination" />
     </swiper>
-    <div :class="$style.gift" v-if="data['MODULEA'].values.length">
+    <div :class="$style.gift" v-if="data['MODULE_A'].values.length">
       <div :class="$style.head">
         <div :class="$style.title">
           甄选好礼
@@ -32,7 +32,7 @@
         <p>为了帮您甄选好礼，您知道我有多努力吗？</p>
       </div>
       <swiper :class="$style.swiper" :options="swiperOptionGift">
-        <swiper-slide v-for="(item, i) of data['MODULEA'].values" :key="i">
+        <swiper-slide v-for="(item, i) of data['MODULE_A'].values" :key="i">
           <category-item
             tag="div"
             size="mini"
@@ -43,31 +43,31 @@
           />
         </swiper-slide>
         <div
-          v-if="data['MODULEA'].values.length > 3"
+          v-if="data['MODULE_A'].values.length > 3"
           class="good-gift-pagination"
           slot="pagination"
         />
       </swiper>
     </div>
 
-    <div :class="$style.activity" v-if="data['MODULEB'].values.length">
+    <div :class="$style.activity" v-if="data['MODULE_B'].values.length">
       <router-link
         :class="$style.img"
-        v-if="data['MODULEB'].values[0].type && data['MODULEB'].values[0].value"
+        v-if="data['MODULE_B'].values[0].type && data['MODULE_B'].values[0].value"
         tag="img"
-        :src="data['MODULEB'].values[0].image"
-        :to="getRouteLink(data['MODULEB'].values[0])"
+        :src="data['MODULE_B'].values[0].image"
+        :to="getRouteLink(data['MODULE_B'].values[0])"
       />
       <img
         :class="$style.img"
         v-else
-        :src="data['MODULEB'].values[0].image"
+        :src="data['MODULE_B'].values[0].image"
       >
     </div>
 
-    <div :class="$style.products" v-if="data['MODULEC'].values.length">
+    <div :class="$style.products" v-if="data['MODULE_C'].values.length">
       <swiper :options="swiperOptionProd">
-        <swiper-slide v-for="(item, i) of data['MODULEC'].values" :key="i">
+        <swiper-slide v-for="(item, i) of data['MODULE_C'].values" :key="i">
           <div :class="$style.wrapper">
             <!-- <category-item
               tag="div"
@@ -93,24 +93,24 @@
       </swiper>
     </div>
 
-    <div :class="$style.activity" v-if="data['MODULED'].values.length">
+    <div :class="$style.activity" v-if="data['MODULE_D'].values.length">
       <router-link
         :class="$style.image"
-        v-if="data['MODULED'].values[0].type && data['MODULED'].values[0].value"
+        v-if="data['MODULE_D'].values[0].type && data['MODULE_D'].values[0].value"
         tag="img"
-        :src="data['MODULED'].values[0].image"
-        :to="getRouteLink(data['MODULED'].values[0])"
+        :src="data['MODULE_D'].values[0].image"
+        :to="getRouteLink(data['MODULE_D'].values[0])"
       />
       <img
         :class="$style.img"
         v-else
-        :src="data['MODULED'].values[0].image"
+        :src="data['MODULE_D'].values[0].image"
       >
     </div>
 
-    <div :class="$style.products" v-if="data['MODULEE'].values.length">
+    <div :class="$style.products" v-if="data['MODULE_E'].values.length">
       <swiper :options="swiperOptionProd">
-        <swiper-slide v-for="(item, i) of data['MODULEE'].values" :key="i">
+        <swiper-slide v-for="(item, i) of data['MODULE_E'].values" :key="i">
           <div :class="$style.wrapper">
             <category-item
               tag="div"
@@ -136,9 +136,8 @@ import TopText from '../../components/Top-Text.vue'
 import CategoryItem from './components/CategoryItem.vue'
 import YouLike from './components/YouLike.vue'
 import { mapGetters } from 'vuex'
-
 export default {
-  name: 'TemplateOld',
+  name: 'HomeTemplateA',
   components: {
     swiper,
     swiperSlide,
@@ -146,16 +145,9 @@ export default {
     CategoryItem,
     YouLike
   },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
-  },
   data () {
     return {
+      data: {},
       swiperOptionBanner: {
         slidesPerView: 'auto',
         centeredSlides: true,
@@ -182,6 +174,9 @@ export default {
   computed: {
     ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId'])
   },
+  created () {
+    this.data = JSON.parse(localStorage.getItem('TEMPLATE_MODULES'))
+  },
   methods: {
     getRouteLink ({ type, value }) {
       const name = type === 1 ? 'Classify' : 'Lesson'
@@ -200,114 +195,77 @@ export default {
 </script>
 
 <style module lang="scss">
-.template-old {
-  .top {
-    padding: 30px 40px;
-  }
-  .banner {
-    height: 354px;
-    .img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      background-color: #fff;
+  .home-template-a {
+    .top {
+      padding: 30px 40px;
     }
-  }
+    .banner {
+      height: 354px;
+      .img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background-color: #fff;
+      }
+    }
 
-  .gift {
-    width: 686px;
-    padding: 40px 30px 30px 30px;
-    margin: 48px auto 80px;
-    background-color: #fff;
-    border-radius: $--radius1;
-    box-sizing: border-box;
-    .head {
-      text-align: center;
+    .gift {
+      width: 686px;
+      padding: 40px 30px 30px 30px;
+      margin: 48px auto 80px;
+      background-color: #fff;
+      border-radius: $--radius1;
+      box-sizing: border-box;
+      .head {
+        text-align: center;
+        margin-bottom: 40px;
+        .title {
+          font-size: 36px;
+          color: #000;
+          font-weight: bold;
+        }
+        p {
+          margin-top: 10px;
+          font-size: 24px;
+          color: #666;
+        }
+      }
+    }
+
+    .activity {
+      margin-top: 41px;
+      padding: 0 32px;
+      height: 324px;
+      .img {
+        width: 100%;
+        height: 100%;
+        border-radius: $--radius1;
+        overflow: hidden;
+        object-fit: cover;
+      }
+    }
+
+    .products {
+      margin-top: 28px;
       margin-bottom: 40px;
-      .title {
-        font-size: 36px;
-        color: #000;
-        font-weight: bold;
+      padding: 0 32px;
+      .wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 248px;
+        padding: 28px 0;
+        background-color: #fff;
+        border-radius: $--radius1;
+        width: 100%;
+        margin-right: 20px;
       }
-      p {
-        margin-top: 10px;
-        font-size: 24px;
-        color: #666;
-      }
     }
-  }
-
-  .activity {
-    margin-top: 41px;
-    padding: 0 32px;
-    height: 324px;
-    .img {
-      width: 100%;
-      height: 100%;
-      border-radius: $--radius1;
-      overflow: hidden;
-      object-fit: cover;
+    .broker {
+      margin-top: 30px
     }
-  }
-
-  .products {
-    margin-top: 28px;
-    margin-bottom: 40px;
-    padding: 0 32px;
-    .wrapper {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 248px;
-      padding: 28px 0;
-      background-color: #fff;
-      border-radius: $--radius1;
-      width: 100%;
-      margin-right: 20px;
-    }
-  }
-  .broker {
-    margin-top: 30px
-  }
-  .youLike {
-    padding: 0 32px;
-  }
-}
-</style>
-<style lang="scss">
-  .swiper-slide {
-    display: inline-flex;
-    justify-content: center;
-  }
-  .banner-pagination {
-    position: absolute;
-    bottom: 30px;
-    right: 50%;
-    transform: translateX(50%);
-    z-index: 9;
-    span {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin-left: 7px;
-      background-color: rgba(255, 255, 255, 1) !important;
-    }
-  }
-  .good-gift-pagination {
-    margin-top: 33px;
-    text-align: center;
-    span {
-      display: inline-block;
-      width: 10px;
-      height: 17px;
-      background-color: #d8d8d8;
-      border-radius: 5px !important;
-      margin: 0 16px 0 0 !important;
-      transform: rotate(45deg);
-      opacity: 1;
-      &.swiper-pagination-bullet-active {
-        background-color: #333;
-      }
+    .youLike {
+      padding: 0 32px;
     }
   }
 </style>

@@ -231,6 +231,7 @@
         />
       </div>
       <pl-button
+        style="width: 28vw;"
         :loading="submiting"
         type="warning"
         size="large"
@@ -912,9 +913,10 @@ export default {
     bottom: 0;
     left: 0;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0 40px 0 30px;
+    padding: 0 24px;
     height: 110px;
     background-color: #fff;
     box-sizing: border-box;
@@ -924,9 +926,6 @@ export default {
       flex-direction: column;
       padding-right: 20px;
       min-width: 200px;
-    }
-    > button {
-      flex: 1;
     }
   }
 

@@ -26,7 +26,7 @@
         @click="clickHandler(2)"
         :disabled="loading || allDisabled"
       >
-        立即购买
+        {{ confirmText }}
       </button>
     </div>
     <specification-pop
@@ -89,6 +89,10 @@ export default {
     image: {
       type: String,
       default: ''
+    },
+    confirmText: {
+      type: String,
+      default: '立即购买'
     },
     // 购买的规格
     currentSku: {
