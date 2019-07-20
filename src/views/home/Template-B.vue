@@ -3,6 +3,8 @@
     <Search />
     <Banner :data="banner" />
     <HotItem />
+    <Best />
+    <BestRecommend />
   </div>
 </template>
 
@@ -10,12 +12,16 @@
 import Search from './components/Search.vue'
 import Banner from './components/Banner.vue'
 import HotItem from './components/Hot-Item.vue'
+import Best from './components/Best.vue'
+import BestRecommend from './components/Best-Recommend.vue'
 export default {
   name: 'HomeTemplateB',
   components: {
     Banner,
     Search,
-    HotItem
+    HotItem,
+    Best,
+    BestRecommend
   },
   data () {
     return {

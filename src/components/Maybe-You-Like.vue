@@ -82,7 +82,6 @@ export default {
           productId: this.productId
         })
         for (let item of result) {
-          console.log(item)
           // 按照价格从低到高排序
           item.productPriceModel.sort((a, b) => {
             return a.price - b.price

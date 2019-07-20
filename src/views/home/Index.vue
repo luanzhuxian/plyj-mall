@@ -1,23 +1,25 @@
 <template>
   <div :class="$style.home">
-    <router-view v-if="loaded" />
+    <TemplateA v-if="type === 1" />
+    <TemplateB v-else-if="type === 2" />
   </div>
 </template>
 
 <script>
 import 'swiper/dist/css/swiper.css'
 import { getTemplate } from '../../apis/home'
+import TemplateA from './Template-A.vue'
+import TemplateB from './Template-B.vue'
 export default {
   name: 'Home',
+  components: {
+    TemplateA,
+    TemplateB
+  },
   data () {
     return {
       loaded: false,
       type: 0
-    }
-  },
-  activated () {
-    if (this.type) {
-      this.jump()
     }
   },
   async created () {
@@ -47,21 +49,12 @@ export default {
         modules['MODULE_A'] = prodList[0]
         modules['MODULE_C'] = prodList[1]
         modules['MODULE_E'] = prodList[2]
-        localStorage.setItem('TEMPLATE_MODULES', JSON.stringify(modules))
         this.loaded = true
         let { type } = result
         type = 2
         this.type = type
-        this.jump()
       } catch (e) {
         throw e
-      }
-    },
-    jump () {
-      if (this.type === 1) {
-        this.$router.replace({ name: 'TemplateA' })
-      } else if (this.type === 2) {
-        this.$router.replace({ name: 'TemplateB' })
       }
     }
   }
@@ -69,6 +62,6 @@ export default {
 </script>
 <style module lang="scss">
   .home {
-    background-color: #f4f5f9;
+    padding-bottom: 88px;
   }
 </style>

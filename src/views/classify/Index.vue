@@ -235,7 +235,7 @@ export default {
       this.prodList = list
     },
     findDefault () {
-      if (this.classifyList.length > 1 && this.optionId) {
+      if (this.classifyList.length > 1) {
         let finded = this.classifyList.find(item => item.id === this.optionId)
         if (finded) {
           this.classifyClick(finded)

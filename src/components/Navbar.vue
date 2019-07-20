@@ -58,11 +58,6 @@ export default {
     }
   }
 }
-document.addEventListener('click', demo)
-document.removeEventListener('click', demo)
-function demo () {
-  console.log(123)
-}
 </script>
 
 <style module lang="scss">

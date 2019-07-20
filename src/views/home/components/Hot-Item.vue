@@ -22,19 +22,12 @@
             </div>
             <span :class="$style.howManyPay">33人付款</span>
           </div>
-          <ul :class="$style.tags">
-            <li
-              :class="$style.tag" v-for="(item, i) of tags"
-              :key="i"
-              v-text="item"
-              :style="{ color: color[i] }"
-            />
-          </ul>
+          <Tags size="middle" />
         </div>
       </div>
 
       <div :class="$style.other">
-        <div :class="$style.proItem">
+        <div :class="$style.proItem" v-for="i of 4" :key="i">
           <img :class="$style.img" src="https://img.alicdn.com/tfs/TB1t9C9axv1gK0jSZFFXXb0sXXa-990-400.jpg_1080x1800Q90s50.jpg" alt="">
           <div :class="$style.content">
             <div :class="$style.proName">
@@ -47,14 +40,7 @@
               </div>
               <span :class="$style.howManyPay">33人付款</span>
             </div>
-            <ul :class="$style.tags">
-              <li
-                :class="$style.tag" v-for="(item, i) of tags"
-                :key="i"
-                v-text="item"
-                :style="{ color: color[i] }"
-              />
-            </ul>
+            <tags />
           </div>
         </div>
       </div>
@@ -63,22 +49,14 @@
 </template>
 
 <script>
+import Tags from './Tags.vue'
 export default {
   name: 'HotItem',
+  components: {
+    Tags
+  },
   data () {
     return {
-      tags: [
-        '线下',
-        '智能白板',
-        '智能白板智能白板智能',
-        '白板'
-      ],
-      color: [
-        '#E83B27',
-        '#92B1E5',
-        '#F3BE41',
-        '#60C684'
-      ]
     }
   }
 }
@@ -170,22 +148,6 @@ export default {
           color: #999;
         }
       }
-      .tags {
-        display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        margin-top: 8px;
-        .tag {
-          margin-right: 8px;
-          margin-bottom: 8px;
-          padding: 0 12px;
-          font-size: 20px;
-          line-height: 28px;
-          border: 1px solid currentColor;
-          box-sizing: border-box;
-          border-radius: 6px;
-        }
-      }
     }
     &.first {
       width: 100%;
@@ -200,25 +162,16 @@ export default {
           @include elps();
         }
       }
-      .tags {
-        .tag {
-          margin-right: 12px;
-          padding: 0 12px;
-          font-size: 24px;
-          line-height: 36px;
-          border: 1px solid currentColor;
-          box-sizing: border-box;
-          border-radius: 8px;
-        }
-      }
       .how-many-pay {
         font-size: 24px !important;
       }
     }
   }
   .other {
-    display: flex;
+    display: grid;
     margin-top: 22px;
+    grid-template-columns: 340px 340px;
+    grid-gap: 22px;
   }
   @keyframes bgc-move {
     0% { background-position: 150% 0 }

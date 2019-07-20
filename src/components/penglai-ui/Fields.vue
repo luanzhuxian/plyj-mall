@@ -132,8 +132,10 @@ export default {
       }
     },
     fieldsRightClick () {
-      console.log(123)
       this.$emit('click')
+      if (this.route) {
+        this.$router.push(this.route)
+      }
       if (this.canCollapse) {
         this.collapse = !this.collapse
       }
