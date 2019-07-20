@@ -191,7 +191,8 @@ export default {
       loading: false,
       adding: false,
       haibao: '',
-      tab: 2
+      tab: 2,
+      imgels: []
     }
   },
   props: {
@@ -286,16 +287,20 @@ export default {
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
         // 加载一张图片，为生成海报备用
-        this.haibaoImg = await this.loadImage(this.detail.mediaInfoIds[0])
+        for (let img of this.detail.mediaInfoIds) {
+          let imgel = await this.loadImage(img)
+          this.imgels.push(imgel)
+        }
+        this.haibaoImg = this.imgels[0]
       } catch (e) {
         throw e
       } finally {
         this.loading = false
       }
     },
-    async slideChange (index) {
+    async slideChange (imgs, index) {
       if (!this.showHaibao) {
-        this.haibaoImg = await this.loadImage(this.detail.mediaInfoIds[index])
+        this.haibaoImg = this.imgels[index]
         this.haibao = ''
       }
     },
@@ -424,7 +429,7 @@ export default {
     loadImage (src) {
       let img = new Image()
       img.crossOrigin = ''
-      img.src = src + '?id=' + Date.now()
+      img.src = src
       return new Promise((resolve, reject) => {
         img.onload = () => {
           resolve(img)

@@ -98,7 +98,8 @@ export default {
     // 立即结束倒计时
     finishCountDown () {
       localStorage.removeItem('sendTime')
-      this.time = -1
+      this.time = 0
+      this.timing = false
     }
   }
 }

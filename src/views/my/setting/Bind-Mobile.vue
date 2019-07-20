@@ -30,6 +30,7 @@
           <get-code
             :mobile="bindForm.mobile"
             :smstype="smstype.PUBLIC_USER_INFO"
+            ref="getCode"
           />
         </template>
       </pl-form-item>
@@ -164,6 +165,8 @@ export default {
       } catch (e) {
         this.loading = false
         throw e
+      } finally {
+        this.$refs.getCode.finishCountDown()
       }
     },
     async confirm () {

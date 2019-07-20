@@ -18,6 +18,7 @@
           :class="$style.bannerImg"
           alt=""
           :src="img"
+          ref="img"
         >
       </swiperSlide>
     </swiper>
@@ -68,7 +69,7 @@ export default {
   },
   methods: {
     slideChange () {
-      this.$emit('slideChange', this.swiper.activeIndex)
+      this.$emit('slideChange', this.$refs.img, this.swiper.activeIndex)
     }
   }
 }

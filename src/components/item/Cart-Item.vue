@@ -5,7 +5,7 @@
   >
     <img
       :class="$style.cartItemImage"
-      :src="data.productImg + '?x-oss-process=style/thum'"
+      :src="currentImage + '?x-oss-process=style/thum'"
       alt=""
       @click="goDetail"
     >
@@ -137,6 +137,16 @@ export default {
     },
     minBuyNum () {
       return this.currentSkuModel.minBuyNum || 1
+    },
+    currentImage () {
+      let cartSkuCode = this.data.cartSkuCode
+      console.log(cartSkuCode)
+      try {
+        let currentSkuAttr = this.data.productAttributes[0].productAttributeValues.find(item => item.id === cartSkuCode)
+        return currentSkuAttr.productAttributeImage[0] || this.data.productImg
+      } catch (e) {
+        return this.data.productImg
+      }
     }
   },
   watch: {
