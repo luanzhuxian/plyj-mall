@@ -267,18 +267,18 @@
         show-right-icon
         left-text-weight="bold"
       >
-        <!--<ul :class="$style.studentList" v-show="CHECKED_STUDENT[lessonList[0].productId] && CHECKED_STUDENT[lessonList[0].productId].length > 0">
+        <ul :class="$style.studentList" v-show="CHECKED_STUDENT[lessonList[0].productId] && CHECKED_STUDENT[lessonList[0].productId].length > 0">
           <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[lessonList[0].productId]" :key="i">
             <p :class="$style.studentName">
               <span>姓名</span>
-              <span v-text="item.stuMobile" />
+              <span v-text="item.stuName" />
             </p>
             <p :class="$style.studentPhone">
               <span>电话</span>
-              <span v-text="item.stuName" />
+              <span v-text="item.stuMobile" />
             </p>
           </li>
-        </ul>-->
+        </ul>
       </pl-fields>
     </div>
 
@@ -514,12 +514,22 @@ export default {
       return 0
     },
     // 修改数量
-    countChange (count, pro, next) {
+    async countChange (count, pro, next) {
       let CONFIRM_LIST = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
       let thisPro = CONFIRM_LIST.find(item => item.productId === pro.productId)
+      let thisStudents = this.CHECKED_STUDENT[pro.productId]
       thisPro.count = count
       localStorage.setItem('CONFIRM_LIST', JSON.stringify(CONFIRM_LIST))
-      this.getProductDetail(next)
+      try {
+        await this.getProductDetail(true)
+        next()
+        if (count < thisStudents.length) {
+          thisStudents.pop()
+          localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
+        }
+      } catch (e) {
+        throw e
+      }
     },
     selectInvoice () {
       if (!this.selectedAddress.realName) {
@@ -546,12 +556,12 @@ export default {
     useContact () {
       this.showContactPopup = false
     },
-    async getProductDetail (callback) {
+    async getProductDetail (flag) {
       const proList = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
       if (!proList) {
         return this.$router.replace({ name: 'Home' })
       }
-      if (!callback) this.loading = true
+      if (!flag) this.loading = true
       try {
         // 获取订单详细数据
         const { result } = await confirmCart({
@@ -578,7 +588,6 @@ export default {
         this.virtualProducts = virtualProducts
         this.lessonList = [...formalClass, ...experienceClass, ...needStudent]
         this.loading = false
-        if (callback) callback()
       } catch (e) {
         throw e
       }

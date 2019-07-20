@@ -665,7 +665,7 @@ export default {
           this.studentInfoModels = studentInfoModels || []
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
-          if (orderType === 'FORMAL_CLASS' && orderStatus !== 'WAIT_PAY') {
+          if (studentInfoModels.length > 0 && orderStatus !== 'WAIT_PAY') {
             // 生成核销码二维码
             this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
           }
@@ -681,21 +681,26 @@ export default {
           if (result.orderStatus === 'CLOSED') {
             this.suggestionMap['CLOSED'] = this.isAllProductRefund ? '退款完成' : '订单取消'
           }
-
           let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
+          this.loaded = true
+          resolve()
           if (result.orderStatus === 'WAIT_PAY') {
             let startTime = Moment((tradingInfoModel.createTime)).valueOf()
             if (now - startTime < 24 * 60 * 60 * 1000) {
               this.countDown(24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_PAY')
             }
+            return
+          }
+          // 有学生信息且已支付时不倒计时
+          if (studentInfoModels.length > 0) {
+            let { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels
+            this.suggestionMap.WAIT_RECEIVE = validityPeriodStart ? `有效期 ${validityPeriodEnd}` : '长期有效'
           } else if (result.orderStatus === 'WAIT_RECEIVE') {
             let startTime = Moment((tradingInfoModel.createTime)).valueOf()
             if (now - startTime < 10 * 24 * 60 * 60 * 1000) {
               this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_RECEIVE')
             }
           }
-          resolve()
-          this.loaded = true
         } catch (e) {
           reject(e)
         }

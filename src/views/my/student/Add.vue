@@ -134,7 +134,9 @@ export default {
           let result
           if (this.id) {
             let { result: res } = await edit([this.form])
-            result = res
+            if (res) {
+              result = this.form
+            }
           } else {
             let { result: res } = await add(this.form)
             result = res
@@ -143,7 +145,14 @@ export default {
             let { name, params, query } = JSON.parse(localStorage.getItem('SELECT_STUDENT_FROM')) || {}
             let checked = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
             if (name) {
-              checked[this.proId] = [result]
+              checked[this.proId] = checked[this.proId] || []
+              let finded = checked[this.proId].find(item => item.id === result.id)
+              if (finded) {
+                Object.assign(finded, result)
+              } else {
+                checked[this.proId].push(result)
+              }
+              // 去重
               localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
               this.$router.replace({ name, params, query })
             } else {
