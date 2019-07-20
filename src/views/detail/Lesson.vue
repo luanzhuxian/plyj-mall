@@ -379,9 +379,8 @@ export default {
       ctx.fillStyle = '#fff'
       ctx.fillRect(0, 0, 1120, 192)
       ctx.drawImage(arcAvatar, 32, 32, 128, 128)
-      drawText(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 300, 1)
-      let userNameWidth = ctx.measureText(this.userName).width
-      drawText(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + userNameWidth, 74, '发现了好东西要与你分享', 68)
+      let textWidth = drawText(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 300, 1)
+      drawText(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
 
       try {
         let min = Math.min(img.width, img.height)
@@ -458,7 +457,7 @@ function drawText (ctx, font, color, verticalAlign) {
  * @param ctx {CanvasRenderingContext2D} 2d context
  * @param x {Number} 文本开始的x坐标
  * @param y {Number} 文本开始的y坐标
- * @param width {Number} 每行文本的宽度
+ * @param width {Number} 每行文本的最大宽度
  * @param text {String} 文本
  * @param lineHeight {Number} 行高
  * @param lineNumber {Number} 行数（超过行数时，以...结尾）
@@ -469,17 +468,21 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
   let strArr = []
   let txtWidth = 0
   let lineCount = 0 // 文字行数
+  let ellipsisWidth = ctx.measureText('...').width
   for (let i = 0; i < text.length; i++) {
     let char = text[i]
     charArr.push(char)
     txtWidth += ctx.measureText(char).width
+    if (lineCount === lineNumber - 1 && txtWidth + ellipsisWidth >= width) {
+      // 最后一行的文字
+      charArr.push('...')
+      strArr.push(charArr.join(''))
+      break
+    }
+    // 文本换行
     if (txtWidth >= width || i === text.length - 1) {
       lineCount++
-      // 行数等于2时，停止循环，并将最后一个字符替换为...
-      if (lineCount === lineNumber) charArr.splice(-1, 1, '...')
-      // 文本换行
       strArr.push(charArr.join(''))
-      if (lineCount === lineNumber) break
       txtWidth = 0
       charArr = []
     }
@@ -487,6 +490,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
   for (let [i, str] of strArr.entries()) {
     ctx.fillText(str, x, y + lineHeight * i)
   }
+  return  ctx.measureText(strArr[0]).width
 }
 </script>
 
