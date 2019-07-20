@@ -107,6 +107,9 @@ export default {
     },
     proId () {
       return this.$route.query.pro
+    },
+    count () {
+      return this.$route.query.count
     }
   },
   async activated () {
@@ -142,24 +145,23 @@ export default {
             result = res
           }
           if (this.canSelect) {
-            let { name, params, query } = JSON.parse(localStorage.getItem('SELECT_STUDENT_FROM')) || {}
             let checked = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
-            if (name) {
-              checked[this.proId] = checked[this.proId] || []
+            checked[this.proId] = checked[this.proId] || []
+            if (checked[this.proId].length < this.count) {
               let finded = checked[this.proId].find(item => item.id === result.id)
               if (finded) {
                 Object.assign(finded, result)
               } else {
                 checked[this.proId].push(result)
               }
-              // 去重
               localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
-              this.$router.replace({ name, params, query })
-            } else {
-              this.$router.replace({ name: 'StudentList' })
             }
+            this.$router.replace({
+              name: 'StudentList',
+              query: this.$route.query
+            })
           } else {
-            this.$router.replace({ name: 'StudentList' })
+            this.$router.go(-1)
           }
         } catch (e) {
           throw e
