@@ -30,7 +30,7 @@ export default {
     }
   },
   created () {
-    this.data = JSON.parse(localStorage.getItem('#FFEDEDED')) || this.data
+    this.data = JSON.parse(localStorage.getItem('TEMPLATE_MODULES')) || this.data
   },
   computed: {
     banner () {

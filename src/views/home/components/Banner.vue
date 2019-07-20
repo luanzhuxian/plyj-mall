@@ -4,7 +4,12 @@
       :options="swiperOptionBanner"
     >
       <swiperSlide v-for="(item, i) of data.values" :key="i">
-        <img :class="$style.img" :src="item.image" :alt="item.name">
+        <router-link v-if="item.type === 1" :to="{ name: 'Classify', params: { optionId: item.value } }">
+          <img :class="$style.img" :src="item.image" :alt="item.name">
+        </router-link>
+        <router-link v-if="item.type === 2" :to="{ name: 'Lesson', params: { productId: item.value, brokerId: agentUser ? userId : null } }">
+          <img :class="$style.img" :src="item.image" :alt="item.name">
+        </router-link>
       </swiperSlide>
       <div class="banner-pagination" slot="pagination" />
     </swiper>
@@ -13,6 +18,7 @@
 
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Banner',
   components: {
@@ -41,6 +47,9 @@ export default {
         return { values: [] }
       }
     }
+  },
+  computed: {
+    ...mapGetters(['agentUser', 'userId'])
   }
 }
 </script>

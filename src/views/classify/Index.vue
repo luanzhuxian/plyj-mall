@@ -171,12 +171,11 @@ export default {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
-    if (this.classifyList.length > 1 && this.optionId) {
-      this.classifyClick(this.classifyList.find(item => item.id === this.optionId))
-    }
+    this.findDefault()
   },
   methods: {
     classifyClick (classify) {
+      console.log(classify)
       if (this.loading || classify === this.currentClassify) return
       if (classify && (classify.id === '1')) {
         // 点击的是helper专区
@@ -219,7 +218,7 @@ export default {
             id: '1'
           })
         }
-        this.classifyClick(this.classifyList.find(item => item.id === (this.optionId || '')))
+        this.findDefault()
       } catch (e) {
         throw e
       }
@@ -234,6 +233,17 @@ export default {
         item.productSkuModels.sort((a, b) => a.price - b.price)
       }
       this.prodList = list
+    },
+    findDefault () {
+      if (this.classifyList.length > 1 && this.optionId) {
+        let finded = this.classifyList.find(item => item.id === this.optionId)
+        if (finded) {
+          this.classifyClick(finded)
+        } else {
+          finded = this.classifyList.find(item => item.id === '')
+          this.classifyClick(finded)
+        }
+      }
     }
   }
 }
