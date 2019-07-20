@@ -379,8 +379,8 @@ export default {
       ctx.fillStyle = '#fff'
       ctx.fillRect(0, 0, 1120, 192)
       ctx.drawImage(arcAvatar, 32, 32, 128, 128)
-      let textWidth = drawText(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 300, 1)
-      drawText(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
+      let textWidth = fontStyle(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 300, 1)
+      fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
 
       try {
         let min = Math.min(img.width, img.height)
@@ -391,7 +391,7 @@ export default {
         ctx.drawImage(qrcode, 750, 1352, 320, 320)
         // 填充商品名称
         let str = this.detail.productName
-        drawText(ctx, '56px Microsoft YaHei UI', '#000', 'top')(ctx, 48, 1352, str, 80, 620, 2)
+        fontStyle(ctx, '56px Microsoft YaHei UI', '#000', 'top')(ctx, 48, 1352, str, 80, 620, 2)
         // 填充价钱
         let priceList = this.detail.productSkuModels.map(item => item.price)
         let originalPriceList = this.detail.productSkuModels.map(item => item.originalPrice)
@@ -399,7 +399,7 @@ export default {
         let originalPrice = Math.max(...originalPriceList)
         ctx.fillStyle = '#FE7700'
         ctx.fillText('¥', 48, 1564 + (76 - 56) / 2)
-        drawText(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1544 + (104 - 88) / 2, String(price), 104)
+        fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1544 + (104 - 88) / 2, String(price), 104)
         // 绘制原价
         if (originalPrice) {
           let priceWidth = ctx.measureText(price).width
@@ -445,7 +445,7 @@ export default {
  * @param verticalAlign {String} 文字对齐方式
  * @returns {createText} {Function} 绘制文字的函数
  */
-function drawText (ctx, font, color, verticalAlign) {
+function fontStyle (ctx, font, color, verticalAlign) {
   ctx.font = font
   ctx.fillStyle = color
   ctx.textBaseline = verticalAlign
