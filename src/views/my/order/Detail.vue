@@ -573,6 +573,7 @@ export default {
       return this.orderType === 'PHYSICAL' &&
         this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
+        this.productInfoModel.amount &&
         this.productInfoModel.productDetailModels.some(item => {
           return item.invoiceStatus === 8 &&
             (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)
