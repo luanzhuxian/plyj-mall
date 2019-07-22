@@ -669,8 +669,10 @@ export default {
             // 生成核销码二维码
             this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
           }
-          await setVerificationStatus(orderId)
-          this.refreshStatus()
+          if (orderStatus !== 'CLOSED') {
+            await setVerificationStatus(orderId)
+            this.refreshStatus()
+          }
           // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             this.isAllProductRefund = (current.afterSalesStatus === 2)
@@ -693,7 +695,7 @@ export default {
           }
           // 有学生信息且已支付时不倒计时
           if (studentInfoModels.length > 0) {
-            let { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels
+            let { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels[0]
             this.suggestionMap.WAIT_RECEIVE = validityPeriodStart ? `有效期 ${validityPeriodEnd}` : '长期有效'
           } else if (result.orderStatus === 'WAIT_RECEIVE') {
             let startTime = Moment((tradingInfoModel.createTime)).valueOf()
