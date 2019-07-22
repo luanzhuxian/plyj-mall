@@ -10,6 +10,9 @@ import {
 import {
   getAddress
 } from '../apis/address'
+import {
+  getList
+} from '../apis/student'
 import Qs from 'qs'
 export default {
   /* 获取商城信息 */
@@ -142,9 +145,19 @@ export default {
       try {
         const { result } = await getCartCount()
         commit(type.GET_CART_COUNT, result)
+        resolve()
       } catch (e) {
         reject(e)
       }
     })
+  },
+  [type.STUDENTS]: async ({ commit }, params) => {
+    try {
+      const { result } = await getList(params)
+      commit(type.STUDENTS, result.records)
+      return result.records
+    } catch (e) {
+      throw e
+    }
   }
 }

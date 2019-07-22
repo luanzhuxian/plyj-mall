@@ -71,5 +71,8 @@ export default {
   },
   [type.GET_CART_COUNT] (state, payload) {
     state.cartCount = payload
+  },
+  [type.STUDENTS] (state, payload) {
+    state.students = payload
   }
 }

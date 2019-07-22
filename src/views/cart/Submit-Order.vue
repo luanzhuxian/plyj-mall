@@ -371,7 +371,8 @@ import {
   submitOrder
 } from '../../apis/shopping-cart'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import { STUDENTS } from '../../store/mutation-type'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Count from '../../components/Count.vue'
@@ -485,6 +486,14 @@ export default {
   async activated () {
     try {
       await this.getProductDetail()
+      // 填充默认学生
+      let students = await this[STUDENTS]({ current: 1, size: 1 })
+      if (students.length) {
+        for (let item of this.lessonList) {
+          this.$set(this.CHECKED_STUDENT, item.productId, students)
+        }
+        localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
+      }
       this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL')) || null
       this.CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
       this.invioceType = this.INVOICE_MODEL ? 2 : 1
@@ -497,6 +506,7 @@ export default {
   deactivated () {
   },
   methods: {
+    ...mapActions([STUDENTS]),
     // 计算商品总数
     getTotal (list, fn) {
       let total = 0

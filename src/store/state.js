@@ -44,6 +44,7 @@ export default {
   openId: '',
   refresh_token,
   addressList: [],
+  students: [],
   selectedAddress: selectedAddress, // 选中的地址
   // 短信类型
   smstype: {
