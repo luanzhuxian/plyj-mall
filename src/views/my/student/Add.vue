@@ -187,6 +187,7 @@ export default {
       try {
         let { result } = await remove([this.id])
         if (result) {
+          this.$success('删除成功')
           this.$router.replace({
             name: 'StudentList',
             query: this.$route.query
