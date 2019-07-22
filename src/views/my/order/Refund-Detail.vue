@@ -156,15 +156,19 @@
           :img="refundDetail.productPic + '?x-oss-process=style/thum'"
           :name="refundDetail.productName"
           :option="refundDetail.skuName2 ? `${refundDetail.skuName},${refundDetail.skuName2}` : refundDetail.skuName"
-          route-name="Lesson"
+          :count="refundDetail.productCount"
           :product-id="refundDetail.productId"
-          hide-price
+          route-name="Lesson"
         />
       </div>
       <div :class="$style.infoList">
         <pl-list
           title="退单编号："
           :content="refundDetail.id"
+        />
+        <pl-list
+          title="订单编号："
+          :content="refundDetail.orderId"
         />
         <pl-list
           title="服务类型："
@@ -181,7 +185,6 @@
           :content="refundDetail.applyReasonText"
         />
         <pl-list
-          v-if="refundDetail.orderType === 'PHYSICAL'"
           title="申请件数："
           :content="`${refundDetail.productCount}件`"
         />
@@ -190,7 +193,12 @@
           :content="refundDetail.applyTime"
         />
       </div>
-      <div :class="[$style.infoList, $style.borderTop]">
+      <div :class="[$style.infoList, $style.borderTop]" v-if="refundDetail.pictures.length || refundDetail.applyContent">
+        <pl-list
+          v-if="refundDetail.applyContent"
+          title="问题描述："
+          :content="refundDetail.applyContent"
+        />
         <pl-list
           v-if="refundDetail.pictures.length"
           :class="$style.imgListWrapper"
@@ -207,11 +215,6 @@
             >
           </div>
         </pl-list>
-        <pl-list
-          v-if="refundDetail.applyContent"
-          title="问题描述："
-          :content="refundDetail.applyContent"
-        />
       </div>
     </div>
 
@@ -233,6 +236,14 @@
       v-else
       :class="$style.footer"
     >
+      <pl-button
+        v-if="refundStatus === 'FINISHED' || refundStatus === 'CLOSED' || refundStatus === 'CANCEL' || refundStatus === 'REJECT'"
+        round
+        plain
+        @click="deleteOrder"
+      >
+        删除
+      </pl-button>
       <pl-button
         round
         plain
@@ -348,7 +359,7 @@ import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
-import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication } from '../../../apis/order-manager'
+import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication, deleteRefundOrder } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
 import { isExpressNumber } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
@@ -508,6 +519,20 @@ export default {
         throw e
       }
     },
+    async deleteOrder () {
+      try {
+        const { id } = this
+        await this.$confirm('是否删除当前订单？ 删除后不可找回')
+        await deleteRefundOrder({ id })
+        this.$success('删除成功')
+        updateLocalStorage('UPDATE_REFUND_LIST', { id, action: 'delete' })
+        setTimeout(() => {
+          this.$router.go(-1)
+        }, 2000)
+      } catch (e) {
+        throw e
+      }
+    },
     async submit () {
       try {
         if (!this.form.expressName) return this.$warning('请选择物流公司')
@@ -562,7 +587,7 @@ export default {
       padding: 28px 24px;
       display: flex;
       align-items: center;
-      border-top: 1px solid #F0F0F0;
+      border-top: 2px solid #F0F0F0;
 
       &:nth-of-type(1) {
         border: none;
@@ -613,7 +638,7 @@ export default {
     }
     .bottom {
       padding: 24px;
-      border-top: 1px solid #F0F0F0;
+      border-top: 2px solid #F0F0F0;
     }
     .item {
       display: flex;
@@ -655,7 +680,7 @@ export default {
       position: relative;
       padding: 20px 24px 24px 0;
       margin-top: 20px;
-      border-top: 1px solid #e7e7e7;
+      border-top: 2px solid #e7e7e7;
     }
     .info-list {
       padding-right: 24px;
@@ -702,7 +727,7 @@ export default {
 
   .border-top {
     position: relative;
-    border-top: 1px solid #F0F0F0;
+    border-top: 2px solid #F0F0F0;
   }
   .bold {
     font-weight: bold;

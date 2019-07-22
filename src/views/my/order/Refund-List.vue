@@ -75,6 +75,14 @@
                   取消申请
                 </pl-button>
                 <pl-button
+                  v-if="item.returnStatus === 'FINISHED' || item.returnStatus === 'CLOSED' || item.returnStatus === 'CANCEL' || item.returnStatus === 'REJECT'"
+                  round
+                  plain
+                  @click="deleteOrder(item, i)"
+                >
+                  删除
+                </pl-button>
+                <pl-button
                   v-if="item.returnStatus === 'WAIT_CHECK' || item.returnStatus === 'REFUND_PRODUCT' || item.returnStatus === 'FINISHED'"
                   round
                   plain
@@ -91,14 +99,6 @@
                 >
                   寄件运单号
                 </pl-button>
-                <pl-button
-                  v-if="item.returnStatus === 'FINISHED'"
-                  round
-                  plain
-                  @click="deleteOrder(item, i)"
-                >
-                  删除订单
-                </pl-button>
               </div>
             </div>
           </router-link>
@@ -113,7 +113,8 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import LoadMore from '../../../components/Load-More.vue'
 import {
   getRefundOrderList,
-  cancelRefundApplication
+  cancelRefundApplication,
+  deleteRefundOrder
 } from '../../../apis/order-manager'
 import { mapGetters } from 'vuex'
 
@@ -187,6 +188,11 @@ export default {
           }
         }
       }
+      if (action === 'delete') {
+        return (order, index) => {
+          this.orderList.splice(index, 1)
+        }
+      }
     }
 
     if (this.$router.currentRoute.meta.noRefresh) {
@@ -228,7 +234,7 @@ export default {
     async deleteOrder (item, index) {
       try {
         await this.$confirm('是否删除当前订单？ 删除后不可找回')
-        // await deleteOrder({ id: item.id })
+        await deleteRefundOrder({ id: item.id })
         this.orderList.splice(index, 1)
         this.$forceUpdate()
         this.$success('删除成功')
@@ -325,7 +331,13 @@ export default {
       align-items: center;
       margin-top: 24px;
       button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
         margin-left: 24px;
+        width: 136px;
+        padding: 0;
         &:nth-of-type(1) {
           margin-left: 40px;
         }

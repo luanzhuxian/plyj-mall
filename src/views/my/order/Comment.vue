@@ -175,7 +175,7 @@ export default {
     align-items: center;
     height: 100px;
     padding: 0 28px;
-    border-bottom: 1px solid #e7e7e7;
+    border-bottom: 2px solid #e7e7e7;
     img {
       width: 80px;
       height: 80px;

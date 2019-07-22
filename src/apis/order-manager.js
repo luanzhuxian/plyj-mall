@@ -97,6 +97,9 @@ export const submitExpressInfo = params => axios.post(`/apis/v1/refund/refund/co
 // 取消售后申请
 export const cancelRefundApplication = params => axios.post(`/apis/v1/refund/refund/admin/cancel`, params)
 
+// 删除售后申请
+export const deleteRefundOrder = params => axios.post(`/apis/v1/refund/refund/admin/delete`, params)
+
 // 查看申请helper进度
 export const getHelperApplicationProgress = () => axios.get(`/apis/v1/agent/user/info/audit/status`)
 

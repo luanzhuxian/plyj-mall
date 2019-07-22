@@ -255,48 +255,51 @@
           :content="logisticsInfoModel && logisticsInfoModel.shipTime"
         />
       </div>
-      <div
-        v-if="orderType === 'PHYSICAL'"
-        :class="$style.infoBottom"
-      >
-        <collapse v-model="collepseActiveNames">
-          <template v-if="invoiceModelList && invoiceModelList.length">
-            <collapse-item
-              v-for="(item, i) of invoiceModelList"
-              :name="i"
-              :key="i"
-            >
-              <template slot="title">
-                <div>
-                  <span :class="$style.invoiceTitle">发票信息：</span>
-                  <span v-text="invoiceMap[item.invoiceType].type" />
-                </div>
-              </template>
-              <div
-                :class="$style.invoiceName"
-                v-text="item.invoiceTitle"
-              />
-              <div
-                :class="$style.invoiceNumber"
-                v-text="item[invoiceMap[item.invoiceType].fields]"
-              />
-            </collapse-item>
-          </template>
-          <template v-else>
-            <collapse-item
-              name="1"
-              disabled
-            >
-              <template slot="title">
-                <div>
-                  <span :class="$style.invoiceTitle">发票信息：</span>
-                  <span>未开票</span>
-                </div>
-              </template>
-            </collapse-item>
-          </template>
-        </collapse>
-      </div>
+    </div>
+
+    <div
+      v-if="orderType === 'PHYSICAL'"
+      :class="[$style.panel, $style.invoice]"
+    >
+      <collapse v-model="collepseActiveNames">
+        <template v-if="invoiceModelList && invoiceModelList.length">
+          <!-- <collapse-item
+            v-for="(item, i) of invoiceModelList"
+            :name="i"
+            :key="i"
+          > -->
+          <collapse-item>
+            <template slot="title">
+              <div>
+                <span :class="$style.invoiceTitle">发票信息：</span>
+              </div>
+            </template>
+            <div :class="$style.item" v-for="(item, i) of invoiceModelList" :key="i">
+              <div>
+                <span :class="$style.type" v-text="invoiceMap[item.invoiceType].main" />
+                <span :class="$style.name" v-text="item.invoiceTitle" />
+              </div>
+              <div>
+                <span v-text="invoiceMap[item.invoiceType].sub" />
+                <span v-text="item[invoiceMap[item.invoiceType].fields]" />
+              </div>
+            </div>
+          </collapse-item>
+        </template>
+        <template v-else>
+          <collapse-item
+            name="1"
+            disabled
+          >
+            <template slot="title">
+              <div>
+                <span :class="$style.invoiceTitle">发票信息：</span>
+                <span>未开票</span>
+              </div>
+            </template>
+          </collapse-item>
+        </template>
+      </collapse>
     </div>
 
     <div
@@ -481,11 +484,13 @@ const suggestionMap = {
 }
 const invoiceMap = {
   '1': {
-    type: '个人',
+    main: '个人',
+    sub: '手机号：',
     fields: 'receiverMobile'
   },
   '2': {
-    type: '单位',
+    main: '单位',
+    sub: '纳税人识别号：',
     fields: 'tin'
   }
 }
@@ -940,7 +945,7 @@ export default {
     font-size: 24px;
     .info-top {
       padding: 24px;
-      border-bottom: 1px solid #F0F0F0;
+      border-bottom: 2px solid #F0F0F0;
       > div {
         margin-bottom: 20px;
         &:nth-last-of-type(1) {
@@ -950,28 +955,53 @@ export default {
     }
     .info-bottom {
       padding: 24px;
-      border-bottom: 1px solid #F0F0F0;
       &:nth-last-of-type(1) {
         margin-bottom: 0;
       }
     }
+  }
+  .invoice {
+    padding: 24px;
     .invoice-title {
       color: #666666;
     }
-    .invoice-name {
-      font-size: 28px;
-      font-family: PingFangSC-Medium;
-      font-weight: 500;
-      color: #2E2E2E;
-      line-height: 40px;
-      margin-bottom: 12px;
-      padding-left: 15px;
-    }
-    .invoice-number {
+    .item {
       font-size: 24px;
       font-family: Helvetica;
+      font-weight: 400;
       line-height: 28px;
-      padding-left: 15px;
+      color: #333333;
+      border-bottom: 2px solid #F0F0F0;
+      padding: 24px 0 14px;
+      &:nth-of-type(1) {
+        padding-top: 0;
+      }
+      &:nth-last-of-type(1) {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      > div {
+        padding-bottom: 8px;
+      }
+    }
+    .type {
+      display: inline-block;
+      width: 74px;
+      height: 32px;
+      line-height: 32px;
+      background: #FDEFD6;
+      border-radius: 4px;
+      font-size: 24px;
+      color: #FE7700;
+      text-align: center;
+      margin-right: 12px;
+    }
+    .name {
+      font-size: 28px;
+      font-family: PingFangSC-Medium;
+      font-weight: bold;
+      color: #2E2E2E;
+      line-height: 40px;
     }
   }
   .order-info {
@@ -988,7 +1018,7 @@ export default {
     margin-top: 24px;
     margin-left: 24px;
     padding-top: 16px;
-    border-top: 1px solid #e7e7e7;
+    border-top: 2px solid #e7e7e7;
   }
   .explain-box {
     margin-top: 14px;
@@ -1005,7 +1035,7 @@ export default {
     line-height: 50px;
     font-size: 26px;
     color: #666666;
-    border-top: 1px solid #e7e7e7;
+    border-top: 2px solid #e7e7e7;
     p {
       display: flex;
       justify-content: space-between;
@@ -1031,8 +1061,14 @@ export default {
     position: relative;
     text-align: right;
     > button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
       margin-top: 0;
       margin-left: 24px;
+      width: 136px;
+      padding: 0;
     }
   }
 
@@ -1146,7 +1182,7 @@ export default {
       padding: 24px 0;
       font-size: 28px;
       line-height: 40px;
-      border-bottom: 1px solid #e7e7e7;
+      border-bottom: 2px solid #e7e7e7;
       &:nth-last-of-type(1) {
         border-bottom: none;
       }

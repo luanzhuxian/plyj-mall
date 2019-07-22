@@ -24,11 +24,9 @@
             :class="$style.name"
             v-text="name"
           />
-          <div
-            v-if="!hidePrice"
-            :class="$style.priceWrapper"
-          >
+          <div :class="$style.priceWrapper">
             <div
+              v-if="!hidePrice"
               :class="$style.price + ' rmb'"
               v-text="price"
             />

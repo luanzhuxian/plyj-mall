@@ -472,9 +472,16 @@ export default {
     .buttons {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       margin-top: 24px;
-      button {
+      > button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
         margin-left: 24px;
+        width: 136px;
+        padding: 0;
       }
     }
   }
