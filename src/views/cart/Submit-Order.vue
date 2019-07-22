@@ -117,7 +117,7 @@
                 <span>
                   {{ item.validityPeriodStart | dateFormat('YYYY.MM.DD') }}
                 </span>
-                <template v-if="item.validityPeriodStart.split('')[0] !== item.validityPeriodEnd.split('')[0]">
+                <template v-if="item.validityPeriodStart.split(' ')[0] !== item.validityPeriodEnd.split(' ')[0]">
                   -
                   <span>
                     {{ item.validityPeriodEnd | dateFormat('YYYY.MM.DD') }}
@@ -196,7 +196,7 @@
                 <span>
                   {{ item.validityPeriodStart | dateFormat('YYYY.MM.DD') }}
                 </span>
-                <template v-if="item.validityPeriodStart.split('')[0] !== item.validityPeriodEnd.split('')[0]">
+                <template v-if="item.validityPeriodStart.split(' ')[0] !== item.validityPeriodEnd.split(' ')[0]">
                   -
                   <span>
                     {{ item.validityPeriodEnd | dateFormat('YYYY.MM.DD') }}
@@ -533,6 +533,7 @@ export default {
       await this.getProductDetail()
       // 填充默认学生
       let students = await this[STUDENTS]({ current: 1, size: 1 })
+      students = students.filter(item => item.defaultStatus === 1)
       if (students.length && Object.keys(this.CHECKED_STUDENT).length === 0) {
         for (let item of this.lessonList) {
           this.$set(this.CHECKED_STUDENT, item.skuCode1, students)

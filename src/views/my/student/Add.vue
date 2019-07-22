@@ -138,31 +138,40 @@ export default {
           if (this.id) {
             let { result: res } = await edit([this.form])
             if (res) {
-              result = this.form
+              result = res
             }
           } else {
             let { result: res } = await add(this.form)
             result = res
           }
           if (this.canSelect) {
-            let checked = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
-            checked[this.proId] = checked[this.proId] || []
-            if (checked[this.proId].length < this.count) {
-              let finded = checked[this.proId].find(item => item.id === result.id)
-              if (finded) {
-                Object.assign(finded, result)
+            let checkedData = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+            let checked = checkedData[this.proId] || []
+            let finded = checked.find(item => item.id === result.id)
+            if (finded) { // 编辑的是已选择的项
+              Object.assign(finded, result)
+            } else if (result.defaultStatus === 1) { // 编辑的不是已选择的，但是是默认的
+              let def = checked.find(item => item.defaultStatus === 1)
+              if (def) { // 如果原来选中的里边有默认的，就替换这个默认的
+                Object.assign(def, result)
+              } else if (checked.length < this.count) {
+                checked.push(result)
               } else {
-                checked[this.proId].push(result)
+                checked.splice(-1, 1, result)
               }
-              localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
+            } else if (checked.length < this.count) {
+              // 编辑的不是选中的，且选中的数量不超过最大选中数量
+              checked.push(result)
+            } else {
+              // 编辑的不是选中的，且选中的数量等于最大选中数量，则替换最后一个
+              checked.splice(-1, 1, result)
             }
-            this.$router.replace({
-              name: 'StudentList',
-              query: this.$route.query
-            })
-          } else {
-            this.$router.go(-1)
+            localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
           }
+          this.$router.replace({
+            name: 'StudentList',
+            query: this.$route.query
+          })
         } catch (e) {
           throw e
         } finally {
@@ -182,6 +191,15 @@ export default {
             name: 'StudentList',
             query: this.$route.query
           })
+          let checkedData = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+          if (checkedData[this.proId]) {
+            let find = checkedData[this.proId].find(item => item.id === this.id)
+            if (find) {
+              let index = checkedData[this.proId].indexOf(find)
+              checkedData[this.proId].splice(index, 1)
+              localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
+            }
+          }
         }
       } catch (e) {
         throw e
