@@ -98,7 +98,7 @@ export default {
     VIRTUAL: '虚拟商品'
   },
   refundTypeMap: {
-    '1': '退款',
+    '1': '仅退款',
     '2': '退款退货'
   }
 }

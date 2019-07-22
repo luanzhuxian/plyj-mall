@@ -147,17 +147,17 @@ import { resetForm } from '../../../assets/js/util'
 import { isPositive } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 
-const refundTypeOptions = [
+const refundTypePopupOptions = [
   {
     dictDataKey: '1',
-    dictDataValue: '退款'
+    dictDataValue: '仅退款'
   }, {
     dictDataKey: '2',
     dictDataValue: '退款退货'
   }
 ]
 
-const goodsStatusOptions = [
+const goodsStatusPopupOptions = [
   {
     dictDataKey: '1',
     dictDataValue: '已收到货'
@@ -223,11 +223,11 @@ export default {
       },
       refundTypeInfo: {
         title: '服务类型',
-        options: refundTypeOptions
+        options: refundTypePopupOptions
       },
       goodsStatusInfo: {
         title: '货物状态',
-        options: goodsStatusOptions
+        options: goodsStatusPopupOptions
       },
       refundReasonInfo: {
         title: '退款原因',
@@ -502,6 +502,7 @@ export default {
     font-size:22px;
     line-height: 32px;
     margin-top: 10px;
+    color: #999999;
   }
   .price-wrapper {
     max-width: 500px;

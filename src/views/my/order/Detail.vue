@@ -568,14 +568,15 @@ export default {
     },
     // 是否可以申请售后
     canApplyRefund () {
-      return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED') && this.productInfoModel.amount > 0
+      return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' &&
+       this.orderType === 'PHYSICAL')) && this.productInfoModel.amount > 0
     },
     // 是否可以申请发票，invoiceStatus： 8:'可申请' 1:'已申请' 3:'已开票' 7:'不支持'
     canApplyInvoice () {
       return this.orderType === 'PHYSICAL' &&
         this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
-        this.productInfoModel.amount &&
+        this.productInfoModel.amount > 0 &&
         this.productInfoModel.productDetailModels.some(item => {
           return item.invoiceStatus === 8 &&
             (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)
@@ -598,7 +599,9 @@ export default {
   },
   async activated () {
     try {
+      this.loaded = false
       await this.getDetail()
+      this.loaded = true
     } catch (e) {
       throw e
     }
@@ -615,7 +618,7 @@ export default {
   },
   methods: {
     // 倒计时
-    countDown (remanent, flag) {
+    countDown (remanent, orderStatus) {
       this.timer = setInterval(() => {
         let { _data } = Moment.duration(remanent)
         let d = String(_data.days)
@@ -624,21 +627,26 @@ export default {
         let s = String(_data.seconds)
         remanent -= 1000
         if (remanent <= 0) {
-          this.suggestionMap[flag] = ''
+          this.suggestionMap[orderStatus] = ''
           clearInterval(this.timer)
-          this.suggestionMap.WAIT_PAY = ''
-          this.suggestionMap.WAIT_RECEIVE = ''
+          this.suggestionMap.WAIT_PAY = this.suggestionMap.WAIT_RECEIVE = ''
           this.getDetail()
           return
         }
-        if (flag === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
-        if (flag === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        if (orderStatus === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
+        if (orderStatus === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
       }, 1000)
     },
-    getDetail (flag) {
+    setTime (result, orderStatus) {
+      let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
+      let startTime = Moment((result.tradingInfoModel.createTime)).valueOf()
+      if (now - startTime < 24 * 60 * 60 * 1000) {
+        this.countDown(24 * 60 * 60 * 1000 + startTime - now - 2000, orderStatus)
+      }
+    },
+    getDetail () {
       return new Promise(async (resolve, reject) => {
         try {
-          this.loaded = false
           let { result } = await getOrderDetail(this.orderId)
           const {
             orderStatus,
@@ -668,44 +676,42 @@ export default {
           this.studentInfoModels = studentInfoModels || []
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
-          if (studentInfoModels.length > 0 && orderStatus !== 'WAIT_PAY') {
-            // 生成核销码二维码
-            this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
-          }
-          if (orderStatus !== 'CLOSED') {
-            await setVerificationStatus(orderId)
-            this.refreshStatus()
-          }
           // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             this.isAllProductRefund = (current.afterSalesStatus === 2)
             this.isDeleteBtnShow = !(current.afterSalesStatus !== 0 && current.afterSalesStatus !== 2)
             return total + current['count']
           }, 0);  // eslint-disable-line
-          ({ name: this.shippingAddress.realName, mobile: this.shippingAddress.mobile, address: this.shippingAddress.agencyAddress } = receiverModel)
+          ({
+            name: this.shippingAddress.realName,
+            mobile: this.shippingAddress.mobile,
+            address: this.shippingAddress.agencyAddress
+          } = receiverModel)
+          if (studentInfoModels.length > 0 && orderStatus !== 'WAIT_PAY') {
+            // 生成核销码二维码
+            this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
+          }
+
           if (result.orderStatus === 'CLOSED') {
             this.suggestionMap['CLOSED'] = this.isAllProductRefund ? '退款完成' : '订单取消'
+          } else {
+            await setVerificationStatus(orderId)
+            this.refreshStatus()
           }
-          let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
-          this.loaded = true
-          resolve()
+
           if (result.orderStatus === 'WAIT_PAY') {
-            let startTime = Moment((tradingInfoModel.createTime)).valueOf()
-            if (now - startTime < 24 * 60 * 60 * 1000) {
-              this.countDown(24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_PAY')
-            }
-            return
+            this.setTime(result, 'WAIT_PAY')
           }
-          // 有学生信息且已支付时不倒计时
-          if (studentInfoModels.length > 0) {
-            let { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels[0]
-            this.suggestionMap.WAIT_RECEIVE = validityPeriodStart ? `有效期 ${validityPeriodEnd}` : '长期有效'
-          } else if (result.orderStatus === 'WAIT_RECEIVE') {
-            let startTime = Moment((tradingInfoModel.createTime)).valueOf()
-            if (now - startTime < 10 * 24 * 60 * 60 * 1000) {
-              this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_RECEIVE')
+          if (result.orderStatus === 'WAIT_RECEIVE') {
+            // 有学生信息时不倒计时
+            if (result.studentInfoModels.length > 0) {
+              let { validityPeriodStart, validityPeriodEnd } = result.productInfoModel.productDetailModels[0]
+              this.suggestionMap.WAIT_RECEIVE = validityPeriodStart ? `有效期 ${validityPeriodEnd}` : '长期有效'
+            } else {
+              this.setTime(result, 'WAIT_RECEIVE')
             }
           }
+          resolve()
         } catch (e) {
           reject(e)
         }

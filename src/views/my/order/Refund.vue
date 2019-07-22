@@ -20,7 +20,7 @@
         >
           <div :class="$style.itemLeft">
             <div :class="$style.itemTitle">
-              退款(无需退货)
+              仅退款(无需退货)
             </div>
             <div>
               未收到货（包含未签收），请您先联系商家协商
