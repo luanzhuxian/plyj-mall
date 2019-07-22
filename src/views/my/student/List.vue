@@ -93,7 +93,7 @@ export default {
     },
     // 选择的学员所对应的商品
     proId () {
-      return this.$route.query.pro
+      return this.$route.query.sku
     },
     // 最大可选数量
     maxCount () {

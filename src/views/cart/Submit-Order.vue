@@ -167,18 +167,18 @@
           <div
             :class="{
               [$style.infoItem]: true,
-              [$style.lessonError]: lessonErrorId === item.productId
+              [$style.lessonError]: lessonErrorId === item.skuCode1
             }"
             v-if="isCart && item.needStudentInfo" @click="selectStudent(item)"
           >
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">学员信息</span>
-              <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.productId">
+              <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.skuCode1">
                 <pl-svg name="warning" color="#F24724" />
                 <span v-text="lessonErrorTip" />
               </div>
               <div>
-                <span v-if="CHECKED_STUDENT[item.productId]">已选{{ CHECKED_STUDENT[item.productId].length }}人</span>
+                <span v-if="CHECKED_STUDENT[item.skuCode1]">已选{{ CHECKED_STUDENT[item.skuCode1].length }}人</span>
                 <span v-else>已选0人</span>
                 <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
               </div>
@@ -267,8 +267,8 @@
         show-right-icon
         left-text-weight="bold"
       >
-        <ul :class="$style.studentList" v-show="CHECKED_STUDENT[lessonList[0].productId] && CHECKED_STUDENT[lessonList[0].productId].length > 0">
-          <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[lessonList[0].productId]" :key="i">
+        <ul :class="$style.studentList" v-show="CHECKED_STUDENT[lessonList[0].skuCode1] && CHECKED_STUDENT[lessonList[0].skuCode1].length > 0">
+          <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[lessonList[0].skuCode1]" :key="i">
             <p :class="$style.studentName">
               <span>姓名</span>
               <span v-text="item.stuName" />
@@ -488,9 +488,9 @@ export default {
       await this.getProductDetail()
       // 填充默认学生
       let students = await this[STUDENTS]({ current: 1, size: 1 })
-      if (students.length) {
+      if (students.length && Object.keys(this.CHECKED_STUDENT).length === 0) {
         for (let item of this.lessonList) {
-          this.$set(this.CHECKED_STUDENT, item.productId, students)
+          this.$set(this.CHECKED_STUDENT, item.skuCode1, students)
         }
         localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
       }
@@ -558,7 +558,7 @@ export default {
         name: 'StudentList',
         query: {
           select: 'YES',
-          pro: pro.productId,
+          sku: pro.skuCode1,
           count: pro.count
         }
       })
@@ -635,10 +635,10 @@ export default {
       }
       for (const item of this.lessonList) {
         const { productId, skuCode1, skuCode2, count, agentUser, remark, needStudentInfo } = item
-        const currentStudent = this.CHECKED_STUDENT[productId]
+        const currentStudent = this.CHECKED_STUDENT[skuCode1]
         if (needStudentInfo && !currentStudent) {
           if (this.isCart) {
-            this.lessonErrorId = productId
+            this.lessonErrorId = skuCode1
             this.$nextTick(() => {
               let errorEl = document.querySelector('.' + this.$style.lessonError)
               errorEl.scrollIntoView({
@@ -653,7 +653,7 @@ export default {
         }
         if (needStudentInfo && currentStudent && currentStudent.length < count) {
           if (this.isCart) {
-            this.lessonErrorId = productId
+            this.lessonErrorId = skuCode1
             this.$nextTick(() => {
               let errorEl = document.querySelector('.' + this.$style.lessonError)
               errorEl.scrollIntoView({
@@ -666,13 +666,12 @@ export default {
           }
           return this.$error(`请选择${count}名学员信息`)
         }
-        console.log(item)
         cartProducts.push({
           productId,
           skuCode1,
           skuCode2,
           productType: item.type,
-          studentIds: needStudentInfo ? this.CHECKED_STUDENT[productId].map(item => item.id) : null,
+          studentIds: needStudentInfo ? this.CHECKED_STUDENT[skuCode1].map(item => item.id) : null,
           count,
           agentUser,
           message: remark

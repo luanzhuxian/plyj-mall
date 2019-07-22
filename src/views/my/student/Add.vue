@@ -106,7 +106,7 @@ export default {
       return this.$route.query.select === 'YES'
     },
     proId () {
-      return this.$route.query.pro
+      return this.$route.query.sku
     },
     count () {
       return this.$route.query.count
