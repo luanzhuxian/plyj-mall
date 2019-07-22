@@ -4,23 +4,29 @@
       <span :class="$style.title">精品课程</span>
     </div>
     <ul :class="$style.proList">
-      <li :class="$style.proItem" v-for="i of 6" :key="i">
-        <img :class="$style.img" src="https://gdp.alicdn.com/imgextra/i3/263817957/O1CN01rVIC5i28eM2SiFhPT_!!263817957.jpg" alt="">
+      <li :class="$style.proItem" v-for="(item, i) of data.values" :key="i">
+        <img :class="$style.img" :src="item.image" alt="">
         <div :class="$style.itemContent">
-          <p :class="$style.proName">
-            少儿英语三节名师英语体验课程
-          </p>
+          <p :class="$style.proName" v-text="item.goodsInfo.productName" />
           <div :class="$style.bottom">
             <div :class="$style.priceBox">
               <div :class="$style.price">
                 <span>¥</span>
-                <span>1.9</span>
+                <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
               </div>
-              <div :class="$style.howManyBuy">
-                999人报名
-              </div>
+              <span :class="$style.howManyBuy" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+              <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                <span :class="$style.howManyBuy">
+                  {{ item.goodsInfo.pageviews }}人关注
+                </span>
+              </template>
+              <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                <span :class="$style.howManyBuy">
+                  {{ item.goodsInfo.salesVolume }}人报名
+                </span>
+              </template>
             </div>
-            <button>立即学习<!-- 立即报名 --></button>
+            <button> {{ item.goodsInfo.productType === 'FORMAL_CLASS' ? '立即报名' : '立即学习' }}</button>
           </div>
         </div>
       </li>
@@ -30,7 +36,25 @@
 
 <script>
 export default {
-  name: 'Best'
+  name: 'Best',
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  },
+  methods: {
+    getMinPrice (skuList) {
+      let priceList = skuList.map(item => item.price)
+      return Math.min(...priceList)
+    },
+    getMaxPrice (skuList) {
+      let priceList = skuList.map(item => item.price)
+      return Math.max(...priceList)
+    }
+  }
 }
 </script>
 

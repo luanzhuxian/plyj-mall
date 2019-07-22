@@ -9,7 +9,7 @@
     <li
       :class="$style.tag" v-for="(item, i) of tags"
       :key="i"
-      v-text="item"
+      v-text="item.labelName"
       :style="{ color: color[i] }"
     />
   </ul>
@@ -36,12 +36,7 @@ export default {
     tags: {
       type: Array,
       default () {
-        return [
-          '线下',
-          '智能白板',
-          '智能白板智能白板智能',
-          '白板'
-        ]
+        return []
       }
     }
   }

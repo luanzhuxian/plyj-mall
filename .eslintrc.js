@@ -22,7 +22,9 @@ module.exports = {
     'no-debugger': 'off',
     'no-underscore-dangle': 0,
     camelcase: 0,
-    'vue/max-attributes-per-line': 'off'
+    'vue/max-attributes-per-line': 'off',
+    'vue/multiline-html-element-content-newline': 'off',
+    'vue/singleline-html-element-content-newline': 'off'
   },
   'extends': [
     'plugin:vue/strongly-recommended',

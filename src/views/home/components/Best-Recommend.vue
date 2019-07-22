@@ -3,35 +3,46 @@
     <div :class="$style.title">
       精品推荐
     </div>
-    <div :class="$style.product">
-      <div :class="$style.img" :style="{ backgroundImage: `url(https://img.alicdn.com/tfs/TB1t9C9axv1gK0jSZFFXXb0sXXa-990-400.jpg_1080x1800Q90s50.jpg)` }">
-        <div :class="$style.type">
-          体验课
-        </div>
-        <div :class="$style.howManyBuy">
-          <pl-svg name="hot" />
-          <span>1万人报名</span>
-        </div>
-      </div>
-
-      <div :class="$style.content">
-        <div :class="$style.name">
-          缤纷鸟少儿英语缤纷鸟少儿英语缤纷鸟少儿
-          英语缤纷鸟少儿英语
-        </div>
-        <Tags size="middle" />
-        <div :class="$style.bottom">
-          <div :class="$style.priceBox">
-            <span>¥</span>
-            <span>0</span>
-            <del>¥550</del>
+    <template v-if="type === 3">
+      <div :class="$style.product" v-for="(item, i) of data.values" :key="i">
+        <div :class="$style.img" :style="{ backgroundImage: `url(${item.image})` }">
+          <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
+            体验课
           </div>
-          <button>立即报名</button>
+          <div :class="$style.howManyBuy">
+            <pl-svg name="hot" />
+            <span v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+            <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+              <span>
+                {{ item.goodsInfo.pageviews }}人关注
+              </span>
+            </template>
+            <template v-else-if="item.goodsInfo.salesVolume >= 10">
+              <span>
+                {{ item.goodsInfo.salesVolume }}人{{ item.goodsInfo.productType === 'FORMAL_CLASS' || item.goodsInfo.productType === 'EXPERIENCE_CLASS' ? '报名' : '购买' }}
+              </span>
+            </template>
+          </div>
+        </div>
+
+        <div :class="$style.content">
+          <div :class="$style.name" v-text="item.goodsInfo.productName" />
+          <Tags size="middle" />
+          <div :class="$style.bottom">
+            <div :class="$style.priceBox">
+              <span>¥</span>
+              <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+              <del>¥{{ getMinOrinalPrice(item.goodsInfo.productSkuModels) }}</del>
+            </div>
+            <button v-if="item.goodsInfo.productType === 'FORMAL_CLASS'">立即报名</button>
+            <button v-else-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">立即学习</button>
+            <button v-else>立即购买</button>
+          </div>
         </div>
       </div>
-    </div>
+    </template>
     <!-- 瀑布流 -->
-    <div :class="$style.waterfallBox">
+    <div v-if="type === 2" :class="$style.waterfallBox">
       <ul :class="$style.waterfall" v-if="listLeft.length">
         <li
           v-for="(item, i) of listLeft"
@@ -41,15 +52,23 @@
             [$style.long]: i % 2 === 1
           }"
         >
-          <img :class="$style.img" :src="item.img" alt="">
+          <img :class="$style.img" :src="item.image" alt="">
           <div :class="$style.content">
-            <p :class="$style.name" v-text="item.name" />
-            <p :class="$style.desc" v-text="item.desc" />
+            <p :class="$style.name" v-text="item.goodsInfo.productName" />
+            <p :class="$style.desc" v-text="item.goodsInfo.productDesc" />
             <p :class="$style.bottom">
-              <span :class="$style.price" v-text="item.price" />
-              <span :class="$style.many">
-                <i v-text="item.many" />人付款
-              </span>
+              <span :class="$style.price" v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+              <span :class="$style.many" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+              <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                <span :class="$style.many">
+                  {{ item.goodsInfo.pageviews }}人关注
+                </span>
+              </template>
+              <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                <span :class="$style.many">
+                  {{ item.goodsInfo.salesVolume }}人付款
+                </span>
+              </template>
             </p>
           </div>
         </li>
@@ -63,15 +82,23 @@
             [$style.long]: (i + 1) % 2 === 1
           }"
         >
-          <img :class="$style.img" :src="item.img" alt="">
+          <img :class="$style.img" :src="item.image" alt="">
           <div :class="$style.content">
-            <p :class="$style.name" v-text="item.name" />
-            <p :class="$style.desc" v-text="item.desc" />
+            <p :class="$style.name" v-text="item.goodsInfo.productName" />
+            <p :class="$style.desc" v-text="item.goodsInfo.productDesc" />
             <p :class="$style.bottom">
-              <span :class="$style.price" v-text="item.price" />
-              <span :class="$style.many">
-                <i v-text="item.many" />人付款
-              </span>
+              <span :class="$style.price" v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+              <span :class="$style.many" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+              <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                <span :class="$style.many">
+                  {{ item.goodsInfo.pageviews }}人关注
+                </span>
+              </template>
+              <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                <span :class="$style.many">
+                  {{ item.goodsInfo.salesVolume }}人付款
+                </span>
+              </template>
             </p>
           </div>
         </li>
@@ -96,26 +123,28 @@ export default {
   },
   data () {
     return {
-      data: []
     }
   },
-  created () {
-    for (let i = 0; i < 19; i++) {
-      this.data.push({
-        name: '韩都衣舍旗舰店'.repeat(Math.random() * 4 + 1),
-        price: i + 1,
-        many: 333 + i,
-        desc: '韩都衣舍旗舰店韩都衣舍旗舰店韩都衣舍旗舰店',
-        img: 'https://img.alicdn.com/bao/uploaded/i1/TB12Dlyb3FY.1VjSZFqXXadbXXa.jpg_190x190Q75s0.jpg_.webp'
-      })
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return {
+          values: []
+        }
+      }
+    },
+    type: {
+      type: Number,
+      default: 2
     }
   },
   computed: {
     listLeft () {
-      return this.data.filter((item, i) => i % 2 === 0)
+      return this.data.values.filter((item, i) => i % 2 === 0)
     },
     listRight () {
-      return this.data.filter((item, i) => (i + 1) % 2 === 0)
+      return this.data.values.filter((item, i) => (i + 1) % 2 === 0)
     }
   },
   methods: {
@@ -127,6 +156,18 @@ export default {
     setLongImage (i) {
       console.log(i + 4 - (i + 1), i + 4 - (i + 1) === 3)
       return i + 4 - i + 1 === 3
+    },
+    getMinPrice (skuList) {
+      let priceList = skuList.map(item => item.price)
+      return Math.min(...priceList)
+    },
+    getMinOrinalPrice (skuList) {
+      let priceList = skuList.map(item => item.originalPrice)
+      return Math.min(...priceList)
+    },
+    getMaxPrice (skuList) {
+      let priceList = skuList.map(item => item.price)
+      return Math.max(...priceList)
     }
   }
 }
@@ -167,6 +208,7 @@ export default {
     overflow: hidden;
     background-color: #fff;
     .img {
+      position: relative;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -184,6 +226,8 @@ export default {
         border-radius: 10px;
       }
       .how-many-buy {
+        position: absolute;
+        bottom: 0;
         width: 100%;
         font-size: 28px;
         padding-left: 20px;
@@ -195,6 +239,7 @@ export default {
           width: 36px;
           vertical-align: -2px;
           path {
+            box-shadow: 0 0 0 4px red;
           }
         }
       }

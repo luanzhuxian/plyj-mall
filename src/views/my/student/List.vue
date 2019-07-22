@@ -13,7 +13,7 @@
             v-for="(item, i) of list"
             :class="{
               [$style.item]: true,
-              [$style.active]: checked.indexOf(item) > -1
+              [$style.active]: checked.some(check => item.id === check.id)
             }"
             :key="i"
           >
@@ -110,10 +110,8 @@ export default {
   methods: {
     selectChange (checked, data) {
       if (checked) {
-        if (this.checked.length < this.maxCount) {
+        if (this.checked.length < this.maxCount && !this.checked.some(item => item.id === data.id)) {
           this.checked.push(data)
-        } else {
-          this.$warning(`最多选择${this.maxCount}名学员`)
         }
       } else {
         this.checked.splice(this.checked.indexOf(data), 1)
@@ -169,6 +167,7 @@ export default {
     setDefaultChecked (list) {
       if (this.CHECKED_STUDENT && this.CHECKED_STUDENT[this.proId]) {
         let current = this.CHECKED_STUDENT[this.proId].map(item => item.id)
+        console.log(current)
         list.map(item => {
           item.checked = current.indexOf(item.id) > -1
         })

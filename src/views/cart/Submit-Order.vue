@@ -102,7 +102,7 @@
             :count="item.count"
             :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
             :price="item.price"
-            :support-refund="Boolean(item.supportRefund)"
+            :support-refund="item.supportRefund"
             is-submit
             :gap="32"
             :product-type="2"
@@ -181,7 +181,7 @@
             :count="item.count"
             :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
             :price="item.price"
-            :support-refund="Boolean(item.supportRefund)"
+            :support-refund="item.supportRefund"
             is-submit
             :gap="32"
             :product-type="2"
@@ -765,7 +765,7 @@ export default {
           resolve()
         } catch (e) {
           // 支付失败
-          let vLen = this.virtualProducts.length
+          let vLen = this.virtualProducts.length + this.lessonList.length
           let pLen = this.physicalProducts.length
           this.submiting = false
           if (vLen > 1 || (pLen > 1 && vLen > 0)) {

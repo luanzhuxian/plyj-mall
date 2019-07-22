@@ -9,40 +9,65 @@
     </div>
 
     <div :class="$style.proBox">
-      <div :class="{ [$style.first]: true, [$style.proItem]: true }">
-        <img :class="$style.img" src="https://img.alicdn.com/tfs/TB1t9C9axv1gK0jSZFFXXb0sXXa-990-400.jpg_1080x1800Q90s50.jpg" alt="">
+      <div
+        v-for="(item, i) of first"
+        :class="{
+          [$style.first]: true,
+          [$style.proItem]: true,
+          [$style.other]: i > 0
+        }"
+        :key="i"
+      >
+        <img :class="$style.img" :src="item.image" alt="">
         <div :class="$style.content">
-          <div :class="$style.proName">
-            青苗幼儿早教班
-          </div>
+          <div :class="$style.proName" v-text="item.name" />
           <div :class="$style.proPrice">
             <div :class="$style.price">
               <span>¥</span>
-              <span>10000</span>
+              <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
             </div>
-            <span :class="$style.howManyPay">33人付款</span>
+            <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+            <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+              <span :class="$style.howManyPay">
+                {{ item.goodsInfo.pageviews }}人关注
+              </span>
+            </template>
+            <template v-else-if="item.goodsInfo.salesVolume >= 10">
+              <span :class="$style.howManyPay">
+                {{ item.goodsInfo.salesVolume }}人付款
+              </span>
+            </template>
           </div>
-          <Tags size="middle" />
+          <Tags size="middle" :tags="item.goodsInfo.labelModels" />
         </div>
       </div>
 
-      <div :class="$style.other">
-        <div :class="$style.proItem" v-for="i of 4" :key="i">
-          <img :class="$style.img" src="https://img.alicdn.com/tfs/TB1t9C9axv1gK0jSZFFXXb0sXXa-990-400.jpg_1080x1800Q90s50.jpg" alt="">
+      <div :class="$style.other" v-if="data.values.length > 1">
+        <div :class="$style.proItem" v-for="(item, i) of this.data.values" :key="i">
+          <img :class="$style.img" :src="item.image" alt="">
           <div :class="$style.content">
-            <div :class="$style.proName">
-              青苗幼儿早教班
-            </div>
+            <div :class="$style.proName" v-text="item.name" />
             <div :class="$style.proPrice">
               <div :class="$style.price">
                 <span>¥</span>
-                <span>10000</span>
+                <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
               </div>
-              <span :class="$style.howManyPay">33人付款</span>
+              <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+              <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                <span :class="$style.howManyPay">
+                  {{ item.goodsInfo.pageviews }}人关注
+                </span>
+              </template>
+              <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                <span :class="$style.howManyPay">
+                  {{ item.goodsInfo.salesVolume }}人付款
+                </span>
+              </template>
             </div>
             <tags />
           </div>
         </div>
+        <div v-if="data.values.length % 2 === 0" :class="$style.pro" />
       </div>
     </div>
   </div>
@@ -55,8 +80,33 @@ export default {
   components: {
     Tags
   },
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return { values: [] }
+      }
+    }
+  },
   data () {
     return {
+    }
+  },
+  computed: {
+    first () {
+      /* eslint-disable */
+      console.log(this.data.values)
+      return this.data.values.splice(0, 1)
+    }
+  },
+  methods: {
+    getMinPrice (skuList) {
+      let priceList = skuList.map(item => item.price)
+      return Math.min(...priceList)
+    },
+    getMaxPrice (skuList) {
+      let priceList = skuList.map(item => item.price)
+      return Math.max(...priceList)
     }
   }
 }
@@ -172,6 +222,12 @@ export default {
     margin-top: 22px;
     grid-template-columns: 340px 340px;
     grid-gap: 22px;
+  }
+  .pro {
+    width: 340px;
+    background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/img/product-item.png") no-repeat center center;
+    background-size: 109%;
+    border-radius: 20px;
   }
   @keyframes bgc-move {
     0% { background-position: 150% 0 }

@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.homeTemplateB">
     <Search />
-    <Banner :data="banner" />
-    <HotItem />
-    <Best />
-    <BestRecommend />
+    <Banner :data="BANNER" />
+    <HotItem :data="POPULAR" />
+    <Best v-if="type === 3" :data="CLASS" />
+    <BestRecommend :data="RECOMMEND" :type="type" />
   </div>
 </template>
 
@@ -25,37 +25,34 @@ export default {
   },
   data () {
     return {
-      data: {
-        BANNER: {},
-        MODULE_A: {},
-        MODULE_B: {},
-        MODULE_C: {},
-        MODULE_D: {},
-        MODULE_E: {}
+    }
+  },
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return {}
       }
+    },
+    type: {
+      type: Number,
+      default: 2
     }
   },
   created () {
-    this.data = JSON.parse(localStorage.getItem('TEMPLATE_MODULES')) || this.data
   },
   computed: {
-    banner () {
-      return this.data.BANNER
+    BANNER () {
+      return this.data.BANNER || {}
     },
-    moduleA () {
-      return this.data.MODULE_A
+    POPULAR () {
+      return this.data.POPULAR || { values: [] }
     },
-    moduleB () {
-      return this.data.MODULE_B
+    RECOMMEND () {
+      return this.data.RECOMMEND || { values: [] }
     },
-    moduleC () {
-      return this.data.MODULE_C
-    },
-    moduleD () {
-      return this.data.MODULE_D
-    },
-    moduleE () {
-      return this.data.MODULE_E
+    CLASS () {
+      return this.data.CLASS || {}
     }
   }
 }

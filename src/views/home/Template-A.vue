@@ -147,7 +147,6 @@ export default {
   },
   data () {
     return {
-      data: {},
       swiperOptionBanner: {
         slidesPerView: 'auto',
         centeredSlides: true,
@@ -169,6 +168,14 @@ export default {
         slidesPerGroup: 3
       },
       date: moment().format('MM月DD日 dddd')
+    }
+  },
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return {}
+      }
     }
   },
   computed: {
