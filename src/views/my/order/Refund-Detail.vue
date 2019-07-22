@@ -171,7 +171,7 @@
           :content="refundTypeMap[refundDetail.refundType]"
         />
         <pl-list
-          v-if="refundDetail.refundType===1"
+          v-if="refundDetail.refundType === 1 && refundDetail.orderType === 'PHYSICAL'"
           title="货物状态："
           :content="receiveStatusMap[refundDetail.receiveStatus]"
         />
@@ -181,6 +181,7 @@
           :content="refundDetail.applyReasonText"
         />
         <pl-list
+          v-if="refundDetail.orderType === 'PHYSICAL'"
           title="申请件数："
           :content="`${refundDetail.productCount}件`"
         />

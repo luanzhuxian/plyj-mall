@@ -703,7 +703,7 @@ export default {
             // 有学生信息时不倒计时
             if (result.studentInfoModels.length > 0) {
               let { validityPeriodStart, validityPeriodEnd } = result.productInfoModel.productDetailModels[0]
-              this.suggestionMap.WAIT_RECEIVE = validityPeriodStart ? `有效期 ${validityPeriodEnd}` : '长期有效'
+              this.suggestionMap.WAIT_RECEIVE = validityPeriodStart ? `有效期 ${validityPeriodStart.split(' ')[0]} 至 ${validityPeriodEnd.split(' ')[0]}` : '长期有效'
             } else {
               this.setTime(result, 'WAIT_RECEIVE')
             }
