@@ -84,7 +84,7 @@ export default {
           font-size: 14px;
           color: #fff;
           font-weight: normal;
-          background: linear-gradient(60deg, #FE7700 25%, rgba(255, 255, 255, .5), #FE7700 85%);
+          background: linear-gradient(60deg, #FE7700 35%, rgba(255, 255, 255, .5), #FE7700 75%);
           background-size: 200%;
           border-radius: 12px;
           animation: bgc-move 2s ease infinite;

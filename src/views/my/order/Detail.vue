@@ -35,7 +35,9 @@
           <template v-for="(item, i) of redeemCodeModels">
             <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }" :key="i" v-if="collapseQrCode ? i === 0 : true">
               <div :class="$style.codeBox">
-                <span :class="$style.codeValue" v-text="item.redeemCode" />
+                <span :class="$style.codeValue">
+                  {{ item.redeemCode | separator(' ', 4) }}
+                </span>
                 <span :class="$style.codeStatus" v-text="item.status" />
               </div>
               <div :class="$style.whoUse" v-if="!collapseQrCode && item.name && (item.statusCode === 0 || item.statusCode === 1)">
