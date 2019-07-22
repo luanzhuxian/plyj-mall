@@ -140,7 +140,6 @@ export default {
     },
     currentImage () {
       let cartSkuCode = this.data.cartSkuCode
-      console.log(cartSkuCode)
       try {
         let currentSkuAttr = this.data.productAttributes[0].productAttributeValues.find(item => item.id === cartSkuCode)
         return currentSkuAttr.productAttributeImage[0] || this.data.productImg
@@ -194,7 +193,6 @@ export default {
   .cartItem {
     display: flex;
     flex: 1;
-    margin-left: 24px;
     padding: 22px 20px;
     border-radius: $--radius1;
     background-color: #fff;

@@ -439,3 +439,10 @@ export default {
     }
   }
 </style>
+<style scoped lang="scss">
+  /deep/.pl-checkbox {
+    padding-left: 22px;
+    background-color: #fff;
+    border-radius: 20px;
+  }
+</style>
