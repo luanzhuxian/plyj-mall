@@ -35,9 +35,7 @@
           <template v-for="(item, i) of redeemCodeModels">
             <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }" :key="i" v-if="collapseQrCode ? i === 0 : true">
               <div :class="$style.codeBox">
-                <span :class="$style.codeValue">
-                  {{ item.redeemCode | separator(' ', 4) }}
-                </span>
+                <span :class="$style.codeValue" v-text="item.redeemCode" />
                 <span :class="$style.codeStatus" v-text="item.status" />
               </div>
               <div :class="$style.whoUse" v-if="!collapseQrCode && item.name && (item.statusCode === 0 || item.statusCode === 1)">
@@ -478,7 +476,7 @@ const suggestionMap = {
   WAIT_PAY: '',
   WAIT_SHIP: '请耐心等待商家发货…',
   WAIT_RECEIVE: '',
-  FINISHED: '本次交易已完成，感谢下次光临',
+  FINISHED: '本次交易已完成，期待下次光临',
   CLOSED: '订单取消'
 }
 const invoiceMap = {
@@ -568,8 +566,7 @@ export default {
     },
     // 是否可以申请售后
     canApplyRefund () {
-      return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' &&
-       this.orderType === 'PHYSICAL')) && this.productInfoModel.amount > 0
+      return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) && this.productInfoModel.amount > 0
     },
     // 是否可以申请发票，invoiceStatus： 8:'可申请' 1:'已申请' 3:'已开票' 7:'不支持'
     canApplyInvoice () {
@@ -774,7 +771,8 @@ export default {
     },
     // 申请发票
     applyInvoice () {
-      localStorage.setItem('APPLY_INVOICE', JSON.stringify({ physicalProducts: this.noInvoiceProList }))
+      const physicalProducts = this.noInvoiceProList.filter(item => item.price > 0)
+      localStorage.setItem('APPLY_INVOICE', JSON.stringify({ physicalProducts }))
       localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
         name: this.$route.name,
         params: this.$route.params,

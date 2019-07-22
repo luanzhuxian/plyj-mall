@@ -50,12 +50,6 @@
                 @input="onInput"
               />
             </div>
-            <!-- <pl-input
-              v-model="form.actualRefund"
-              type="number"
-              placeholder="请输入"
-              align="right"
-            /> -->
             <div :class="$style.tips">
               运费不可退，如有疑问，请联系商家协商
             </div>
@@ -142,7 +136,7 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import { getOrderDetail, getRefundOrderDetail, applyRefund, modifyRefund, getMap as getRefundReasonMap } from '../../../apis/order-manager'
+import { getOrderDetail, getRefundOrderDetail, applyRefund, modifyRefund, getMap as getRefundReasonMap, getMaxRefund } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
 import { isPositive } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
@@ -256,11 +250,12 @@ export default {
       return !this.isWaitShip && !this.isRefundGoods
     },
     canRefundReasonChange () {
-      return this.detail.orderType === 'VIRTUAL' || (this.radio.goodsStatus && this.radio.goodsStatusText)
+      return this.detail.orderType !== 'PHYSICAL' || (this.radio.goodsStatus && this.radio.goodsStatusText)
     },
     refundReasonCode () {
-      return (
-        this.orderStatus === 'WAIT_SHIP'
+      return this.detail.orderType !== 'PHYSICAL'
+        ? 'REASONREFUNDVIRTURALANDCLASS'
+        : (this.orderStatus === 'WAIT_SHIP'
           ? 'REASONBUYERPAID'
           : (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
             ? this.radio.refundType === '1'
@@ -271,7 +266,7 @@ export default {
             : '')
     }
   },
-  activated () {
+  async activated () {
     this.form.orderDetailId = this.orderProductRId
     this.radio.refundType = String(this.refundType)
     this.radio.refundTypeText = this.refundTypeMap[this.refundType]
@@ -279,10 +274,15 @@ export default {
       this.radio.goodsStatus = '1'
       this.radio.goodsStatusText = '已收到货'
     }
-    this.getOrderDetail()
+    await this.getOrderDetail()
+    if (this.type === 'APPLY') {
+      ({ result: this.form.actualRefund } = await getMaxRefund(this.orderProductRId))
+    }
     if (this.type === 'MODIFY') {
       this.getRefundInfo()
-    }
+    };  // eslint-disable-line
+    // 获取数据字典
+    ({ result: this.refundReasonInfo.options } = await getRefundReasonMap(this.refundReasonCode))
   },
   deactivated () {
     resetForm(this.form)
@@ -313,9 +313,7 @@ export default {
         this.radio.goodsStatus = '2'
         this.radio.goodsStatusText = '未收到货'
       }
-      if (this.type === 'APPLY') this.form.actualRefund = this.productInfo.amount;  // eslint-disable-line
-      // 获取数据字典
-      ({ result: this.refundReasonInfo.options } = await getRefundReasonMap(this.refundReasonCode))
+      return Promise.resolve()
     },
     getRefundInfo () {
       return new Promise(async (resolve, reject) => {

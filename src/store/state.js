@@ -95,7 +95,9 @@ export default {
   },
   orderTypeMap: {
     PHYSICAL: '实体商品',
-    VIRTUAL: '虚拟商品'
+    VIRTUAL: '虚拟商品',
+    FORMAL_CLASS: '课程商品',
+    EXPERIENCE_CLASS: '课程商品'
   },
   refundTypeMap: {
     '1': '仅退款',

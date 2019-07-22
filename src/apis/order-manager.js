@@ -73,6 +73,9 @@ export const getFreightData = orderId => axios.get(`/apis/v1/order/logistics/${o
 // GET 获取数据字典
 export const getMap = code => axios.get(`/apis/v1/systemctl/sysdictionary/detail/list/${code}`)
 
+// 获取最大退款值
+export const getMaxRefund = orderProductRId => axios.get(`/apis/v1/refund/refund/getAmountOfRefundable/${orderProductRId}`)
+
 // 申请售后
 export const applyRefund = params => axios.post(`/apis/v1/refund/refund/customer/apply`, params)
 
@@ -96,6 +99,7 @@ export const cancelRefundApplication = params => axios.post(`/apis/v1/refund/ref
 
 // 查看申请helper进度
 export const getHelperApplicationProgress = () => axios.get(`/apis/v1/agent/user/info/audit/status`)
+
 // 获取是否核销
 export const getVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpafter?orderId=${orderId}`)
 export const setVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpbefore?orderId=${orderId}`)

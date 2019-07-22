@@ -56,14 +56,10 @@
               border
             />
             <div :class="$style.listItemBottom">
-              <div>
+              <div :class="$style.priceWrapper">
                 <span :class="$style.totalCount">{{ `共${item.productCount}件商品` }}</span>
-                <price
-                  prefix-text="退款金额："
-                  :price="item.actualRefund"
-                  size="medium"
-                  plain
-                />
+                <span :class="$style.bold">总价：</span>
+                <span :class="$style.price">{{ item.actualRefund }}</span>
               </div>
               <div :class="$style.buttons">
                 <span
@@ -95,6 +91,14 @@
                 >
                   寄件运单号
                 </pl-button>
+                <pl-button
+                  v-if="item.returnStatus === 'FINISHED'"
+                  round
+                  plain
+                  @click="deleteOrder(item, i)"
+                >
+                  删除订单
+                </pl-button>
               </div>
             </div>
           </router-link>
@@ -106,7 +110,6 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import Price from '../../../components/Price.vue'
 import LoadMore from '../../../components/Load-More.vue'
 import {
   getRefundOrderList,
@@ -132,8 +135,7 @@ export default {
   name: 'RefundList',
   components: {
     LoadMore,
-    OrderItem,
-    Price
+    OrderItem
   },
   props: {
     status: {
@@ -222,6 +224,17 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    async deleteOrder (item, index) {
+      try {
+        await this.$confirm('是否删除当前订单？ 删除后不可找回')
+        // await deleteOrder({ id: item.id })
+        this.orderList.splice(index, 1)
+        this.$forceUpdate()
+        this.$success('删除成功')
+      } catch (e) {
+        throw e
+      }
     }
   }
 }
@@ -280,20 +293,30 @@ export default {
       justify-content: flex-end;
       align-items: baseline;
     }
+    .price-wrapper {
+      display: flex;
+      align-items: center;
+    }
     .total-count {
       font-size: 20px;
       font-family: MicrosoftYaHeiUI;
       color: #999999;
       margin-right: 12px;
     }
+    .bold {
+      font-size: 30px;
+      font-weight: bold;
+      color: #333333;
+    }
     .price {
-      font-size: 40px;
       align-self: flex-end;
+      font-size: 32px;
+      color: #FE7700;
       &:before {
-        margin-right: 10px;
+        // margin-right: 10px;
         padding-bottom: 4px;
-        font-size: 24px;
-        content: '总价：¥';
+        font-size: 20px;
+        content: '¥';
       }
     }
     .buttons {

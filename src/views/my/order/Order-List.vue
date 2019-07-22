@@ -153,6 +153,7 @@ import {
   deleteOrder
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
+import { mapGetters } from 'vuex'
 
 const tabs = [{
   name: '全部',
@@ -170,13 +171,6 @@ const tabs = [{
   name: '待评价',
   id: 'FINISHED'
 }]
-
-const orderTypeMap = {
-  PHYSICAL: '实体商品',
-  VIRTUAL: '虚拟商品',
-  FORMAL_CLASS: '课程商品',
-  EXPERIENCE_CLASS: '课程商品'
-}
 
 const refundStatusMap = {
   '1': '退款中',
@@ -221,9 +215,11 @@ export default {
           textAlign: 'center'
         }
       ],
-      orderTypeMap,
       refundStatusMap
     }
+  },
+  computed: {
+    ...mapGetters(['orderTypeMap'])
   },
   beforeRouteEnter (to, from, next) {
     to.meta.noRefresh = from.name === 'OrderDetail' || from.name === 'Freight'
