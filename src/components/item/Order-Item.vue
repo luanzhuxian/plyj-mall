@@ -68,7 +68,7 @@
           </span>
           <span
             :class="$style.tip"
-            v-if="productType !== 0 && productType === 2"
+            v-if="!supportRefund"
           >
             暂不支持退换货
           </span>
@@ -144,7 +144,8 @@ export default {
       type: Number,
       default: 0
     },
-    hidePrice: Boolean
+    hidePrice: Boolean,
+    supportRefund: Boolean
   },
   computed: {
     ...mapGetters(['userId', 'agentUser'])

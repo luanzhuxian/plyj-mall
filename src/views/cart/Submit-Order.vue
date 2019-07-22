@@ -9,7 +9,8 @@
     >
       <AddressItem />
     </div>
-    <!-- 实体 -->
+
+    <!-- *************************实体************************* -->
     <div
       v-if="physicalProducts.length > 0"
       :class="$style.productBox"
@@ -23,6 +24,7 @@
           :count="item.count"
           :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
           :price="item.price"
+          :support-refund="Boolean(item.supportRefund)"
           :gap="32"
           :product-type="1"
           border
@@ -84,7 +86,8 @@
         </div>
       </div>
     </div>
-    <!-- 虚拟 -->
+
+    <!-- *************************虚拟************************* -->
     <template v-if="virtualProducts.length > 0">
       <div
         v-for="item of virtualProducts"
@@ -99,6 +102,7 @@
             :count="item.count"
             :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
             :price="item.price"
+            :support-refund="Boolean(item.supportRefund)"
             is-submit
             :gap="32"
             :product-type="2"
@@ -106,6 +110,26 @@
           />
         </div>
         <div :class="$style.otherInfo">
+          <div :class="$style.infoItem">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">使用时间</span>
+              <p class="fz-24" v-if="item.validityPeriodStart">
+                <span>
+                  {{ item.validityPeriodStart | dateFormat('YYYY.MM.DD') }}
+                </span>
+                <template v-if="item.validityPeriodStart.split('')[0] !== item.validityPeriodEnd.split('')[0]">
+                  -
+                  <span>
+                    {{ item.validityPeriodEnd | dateFormat('YYYY.MM.DD') }}
+                  </span>
+                </template>
+              </p>
+              <p v-else class="fz-24">
+                长期有效
+              </p>
+            </div>
+          </div>
+
           <div :class="$style.infoItem" v-if="isCart">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">订单备注</span>
@@ -142,7 +166,7 @@
       </div>
     </template>
 
-    <!-- 课程 -->
+    <!-- *************************课程************************* -->
     <template v-if="lessonList.length > 0">
       <div
         v-for="item of lessonList"
@@ -157,6 +181,7 @@
             :count="item.count"
             :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
             :price="item.price"
+            :support-refund="Boolean(item.supportRefund)"
             is-submit
             :gap="32"
             :product-type="2"
@@ -164,6 +189,26 @@
           />
         </div>
         <div :class="$style.otherInfo">
+          <div :class="$style.infoItem">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">使用时间</span>
+              <p class="fz-24" v-if="item.validityPeriodStart">
+                <span>
+                  {{ item.validityPeriodStart | dateFormat('YYYY.MM.DD') }}
+                </span>
+                <template v-if="item.validityPeriodStart.split('')[0] !== item.validityPeriodEnd.split('')[0]">
+                  -
+                  <span>
+                    {{ item.validityPeriodEnd | dateFormat('YYYY.MM.DD') }}
+                  </span>
+                </template>
+              </p>
+              <p v-else class="fz-24">
+                长期有效
+              </p>
+            </div>
+          </div>
+
           <div
             :class="{
               [$style.infoItem]: true,
@@ -263,7 +308,7 @@
         text="学员信息"
         icon="name-card"
         :icon-gap="12"
-        :right-text="`已选${getStudentCountByProId(lessonList[0].productId)}人`"
+        :right-text="`已选${getStudentCountByProId(lessonList[0].skuCode1)}人`"
         show-right-icon
         left-text-weight="bold"
       >
@@ -527,7 +572,7 @@ export default {
     async countChange (count, pro, next) {
       let CONFIRM_LIST = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
       let thisPro = CONFIRM_LIST.find(item => item.productId === pro.productId)
-      let thisStudents = this.CHECKED_STUDENT[pro.productId]
+      let thisStudents = this.CHECKED_STUDENT[pro.skuCode1]
       thisPro.count = count
       localStorage.setItem('CONFIRM_LIST', JSON.stringify(CONFIRM_LIST))
       try {
