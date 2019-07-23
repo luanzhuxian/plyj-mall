@@ -24,7 +24,7 @@
           :count="item.count"
           :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
           :price="item.price"
-          :support-refund="Boolean(item.supportRefund)"
+          :support-refund="item.supportRefund"
           :gap="32"
           :product-type="1"
           border
@@ -392,6 +392,7 @@
     <pl-popup
       :show.sync="showContactPopup"
       :close-on-click-modal="false"
+      @close="contactInfoModel.name = ''; contactInfoModel.mobile = '';"
     >
       <div :class="$style.addContact">
         <div :class="$style.addContactTop">
