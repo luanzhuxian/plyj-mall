@@ -22,7 +22,9 @@
                   原价：<del class="rmb" v-text="currentSku.originalPrice" />
                 </p>
                 <p :class="$style.repertory" v-if="currentSku.skuCode1Name">
-                  已选“<i v-text="currentSku.skuCode1Name" />，<i v-text="currentSku.skuCode2Name" />”
+                  已选：
+                  “<i v-text="currentSku.skuCode1Name" />
+                  <template v-if="currentSku.skuCode2Name">，<i v-text="currentSku.skuCode2Name" />”</template>
                 </p>
               </div>
             </div>
