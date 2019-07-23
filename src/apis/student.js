@@ -16,7 +16,7 @@ export const remove = data => axios.post('/apis/v1/studentmanagement/delete', da
  * @param data {Object} {current, size}
  * @returns {Promise<AxiosResponse<T>>}
  */
-export const getList = data => axios.get('/apis/v1/studentmanagement/find', { params: data })
+export const getList = () => axios.get('/apis/v1/studentmanagement/find')
 /**
  * 学员信息编辑
  * @param data {Array} [{defaultStatus, stuMobile, stuName, id}]

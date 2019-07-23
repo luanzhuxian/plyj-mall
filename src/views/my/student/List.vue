@@ -1,48 +1,37 @@
 <template>
   <div :class="$style.studentList">
-    <load-more
-      :form="form"
-      ref="load"
-      :request-methods="getList"
-      @refresh="refresh"
-      @more="more"
-    >
-      <template>
-        <ul v-if="list.length > 0">
-          <li
-            v-for="(item, i) of list"
-            :class="{
-              [$style.item]: true,
-              [$style.active]: checked.some(check => item.id === check.id)
-            }"
-            :key="i"
-          >
-            <pl-checkbox
-              v-if="canSelect"
-              :data="item"
-              :checked="item.checked"
-              @change="selectChange"
-              :disabled="checked.indexOf(item) === -1 && checked.length === maxCount"
-            />
-            <div :class="$style.content">
-              <div :class="$style.name">
-                <span v-text="item.stuName" />
-                <img v-if="item.defaultStatus === 1" :src="createType('默认')" alt="">
-              </div>
-              <div :class="$style.phone" v-text="item.stuMobile" />
-            </div>
-            <button
-              tag="div"
-              :class="$style.edit"
-              @click="$router.push({ name: 'EditStudent', params: { id: item.id }, query: $route.query })"
-            >
-              编辑
-            </button>
-          </li>
-        </ul>
-      </template>
-    </load-more>
-
+    <ul v-if="list.length > 0">
+      <li
+        v-for="(item, i) of list"
+        :class="{
+          [$style.item]: true,
+          [$style.active]: checked.some(check => item.id === check.id)
+        }"
+        :key="i"
+      >
+        <pl-checkbox
+          v-if="canSelect"
+          :data="item"
+          :checked="item.checked"
+          @change="selectChange"
+          :disabled="checked.indexOf(item) === -1 && checked.length === maxCount"
+        />
+        <div :class="$style.content">
+          <div :class="$style.name">
+            <span v-text="item.stuName" />
+            <img v-if="item.defaultStatus === 1" :src="createType('默认')" alt="">
+          </div>
+          <div :class="$style.phone" v-text="item.stuMobile" />
+        </div>
+        <button
+          tag="div"
+          :class="$style.edit"
+          @click="$router.push({ name: 'EditStudent', params: { id: item.id }, query: $route.query })"
+        >
+          编辑
+        </button>
+      </li>
+    </ul>
     <div
       :class="{
         [$style.buttons]: true,
@@ -69,19 +58,14 @@
 
 <script>
 import { getList } from '../../../apis/student'
-import LoadMore from '../../../components/Load-More.vue'
 export default {
   name: 'StudentList',
-  components: {
-    LoadMore
-  },
   data () {
     return {
       form: {
         current: 1,
         size: 10
       },
-      getList,
       checked: [],
       list: []
     }
@@ -99,15 +83,28 @@ export default {
       return Number(this.$route.query.count) || 0
     }
   },
-  activated () {
-    this.$refs.load.refresh()
+  async activated () {
+    await this.getList()
     this.CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || null
+    this.setDefaultChecked(this.list)
   },
   deactivated () {
     this.checked = []
     this.$destroy()
   },
   methods: {
+    async getList () {
+      try {
+        const { result } = await getList()
+        for (let item of result.records) {
+          item.checked = false
+        }
+        this.list = result.records
+        return result.records
+      } catch (e) {
+        throw e
+      }
+    },
     selectChange (checked, data) {
       if (checked) {
         if (this.checked.length < this.maxCount && !this.checked.some(item => item.id === data.id)) {
@@ -150,26 +147,14 @@ export default {
 
       return canvas.toDataURL()
     },
-    refresh (list) {
-      list.map(item => {
-        item.checked = false
-      })
-      this.setDefaultChecked(list)
-      this.list = list
-    },
-    more (list) {
-      list.map(item => {
-        item.checked = false
-      })
-      this.setDefaultChecked(list)
-      this.list = list
-    },
     setDefaultChecked (list) {
       if (this.CHECKED_STUDENT && this.CHECKED_STUDENT[this.proId]) {
         let current = this.CHECKED_STUDENT[this.proId].map(item => item.id)
-        console.log(current)
         list.map(item => {
           item.checked = current.indexOf(item.id) > -1
+          if (current.indexOf(item.id) > -1) {
+            this.checked.push(item)
+          }
         })
       }
     }

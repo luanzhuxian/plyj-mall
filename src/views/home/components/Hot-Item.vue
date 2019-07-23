@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.hotItem">
     <div :class="$style.top">
-      <span :class="$style.title">热销单品</span>
-      <p :class="$style.more">
+      <span :class="$style.title" v-text="moduleName" />
+      <!--<p :class="$style.more">
         <span>查看更多</span>
         <pl-svg name="right" color="#ccc" />
-      </p>
+      </p>-->
     </div>
 
     <div :class="$style.proBox">
@@ -17,8 +17,9 @@
           [$style.other]: i > 0
         }"
         :key="i"
+        @click="jump(item)"
       >
-        <img :class="$style.img" :src="item.image" alt="">
+        <img :class="$style.img" :src="item.image + '?x-oss-process=style/thum-small'" v-img-error alt="">
         <div :class="$style.content">
           <div :class="$style.proName" v-text="item.name" />
           <div :class="$style.proPrice">
@@ -43,8 +44,13 @@
       </div>
 
       <div :class="$style.other" v-if="data.values.length > 1">
-        <div :class="$style.proItem" v-for="(item, i) of this.data.values" :key="i">
-          <img :class="$style.img" :src="item.image" alt="">
+        <div
+          :class="$style.proItem"
+          v-for="(item, i) of this.data.values"
+          :key="i"
+          @click="jump(item)"
+        >
+          <img :class="$style.img" :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
           <div :class="$style.content">
             <div :class="$style.proName" v-text="item.name" />
             <div :class="$style.proPrice">
@@ -67,7 +73,7 @@
             <tags />
           </div>
         </div>
-        <div v-if="data.values.length % 2 === 0" :class="$style.pro" />
+        <div v-if="data.values.length % 2 === 1" :class="$style.pro" />
       </div>
     </div>
   </div>
@@ -75,6 +81,7 @@
 
 <script>
 import Tags from './Tags.vue'
+import { mapGetters } from 'vuex'
 export default {
   name: 'HotItem',
   components: {
@@ -95,9 +102,12 @@ export default {
   computed: {
     first () {
       /* eslint-disable */
-      console.log(this.data.values)
       return this.data.values.splice(0, 1)
-    }
+    },
+    moduleName () {
+      return this.data.moduleName
+    },
+    ...mapGetters(['agentUser', 'userId'])
   },
   methods: {
     getMinPrice (skuList) {
@@ -107,6 +117,15 @@ export default {
     getMaxPrice (skuList) {
       let priceList = skuList.map(item => item.price)
       return Math.max(...priceList)
+    },
+    jump (item) {
+      let { type, value } = item
+      let { agentUser, userId } = this
+      if (type === 1) {
+        this.$router.push({ name: 'Classify', params: { optionId: value } })
+      } else {
+        this.$router.push({ name: 'Lesson', params: { productId: value, brokerId: agentUser ? userId : null } })
+      }
     }
   }
 }
@@ -114,7 +133,7 @@ export default {
 
 <style module lang="scss">
   .hot-item {
-    padding: 34px 24px 0;
+    padding: 34px 24px;
     background-color: #F4F5F9;
     .top {
       display: flex;

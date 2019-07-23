@@ -69,14 +69,14 @@ export default {
           modules.RECOMMEND = moduleModels[3]
         }
         if (type === 2) {
-          const modules = {
+          modules = {
             BANNER: null,
             POPULAR: null,
             RECOMMEND: null
           }
           modules.BANNER = moduleModels[0]
           modules.POPULAR = moduleModels[1]
-          modules.RECOMMEND = moduleModels[1]
+          modules.RECOMMEND = moduleModels[2]
         }
         this.modules = modules
         this.loaded = true

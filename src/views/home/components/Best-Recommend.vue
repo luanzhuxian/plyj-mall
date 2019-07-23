@@ -5,7 +5,7 @@
     </div>
     <template v-if="type === 3">
       <div :class="$style.product" v-for="(item, i) of data.values" :key="i">
-        <div :class="$style.img" :style="{ backgroundImage: `url(${item.image})` }">
+        <div :class="$style.img" :style="{ backgroundImage: `url(${item.image + '?x-oss-process=style/thum-middle'})` }">
           <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
             体验课
           </div>
@@ -60,7 +60,7 @@
             [$style.long]: i % 2 === 1
           }"
         >
-          <img :class="$style.img" :src="item.image" alt="">
+          <img :class="$style.img" :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
           <div :class="$style.content">
             <p :class="$style.name" v-text="item.goodsInfo.productName" />
             <p :class="$style.desc" v-text="item.goodsInfo.productDesc" />
@@ -112,7 +112,7 @@
         </li>
       </ul>
     </div>
-    <button :class="$style.seeAll">
+    <button :class="$style.seeAll" v-if="type === 2">
       <span>查看全部</span>
       <pl-svg name="right" color="#272536" />
     </button>

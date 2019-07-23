@@ -531,17 +531,19 @@ export default {
   async activated () {
     try {
       await this.getProductDetail()
-      // 填充默认学生
-      let students = await this[STUDENTS]({ current: 1, size: 1 })
-      students = students.filter(item => item.defaultStatus === 1)
-      if (students.length && Object.keys(this.CHECKED_STUDENT).length === 0) {
-        for (let item of this.lessonList) {
-          this.$set(this.CHECKED_STUDENT, item.skuCode1, students)
-        }
-        localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
-      }
       this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL')) || null
       this.CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+      // 填充默认学生
+      if (Object.keys(this.CHECKED_STUDENT).length === 0) {
+        let students = await this[STUDENTS]()
+        let def = students.find(item => item.defaultStatus === 1)
+        if (def) {
+          for (let item of this.lessonList) {
+            this.$set(this.CHECKED_STUDENT, item.skuCode1, [def])
+          }
+          localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
+        }
+      }
       this.invioceType = this.INVOICE_MODEL ? 2 : 1
       this.lessonErrorId = ''
     } catch (e) {

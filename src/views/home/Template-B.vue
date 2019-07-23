@@ -4,7 +4,11 @@
     <Banner :data="BANNER" />
     <HotItem :data="POPULAR" />
     <Best v-if="type === 3" :data="CLASS" />
-    <BestRecommend :data="RECOMMEND" :type="type" />
+    <BestRecommend
+      v-if="data.values && data.values.length"
+      :data="RECOMMEND"
+      :type="type"
+    />
   </div>
 </template>
 
