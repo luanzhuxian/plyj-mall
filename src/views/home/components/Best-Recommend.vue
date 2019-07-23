@@ -32,11 +32,19 @@
             <div :class="$style.priceBox">
               <span>¥</span>
               <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
-              <del>¥{{ getMinOrinalPrice(item.goodsInfo.productSkuModels) }}</del>
+              <del>
+                ¥{{ getMinOrinalPrice(item.goodsInfo.productSkuModels) }}
+              </del>
             </div>
-            <button v-if="item.goodsInfo.productType === 'FORMAL_CLASS'">立即报名</button>
-            <button v-else-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">立即学习</button>
-            <button v-else>立即购买</button>
+            <button v-if="item.goodsInfo.productType === 'FORMAL_CLASS'">
+              立即报名
+            </button>
+            <button v-else-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
+              立即学习
+            </button>
+            <button v-else>
+              立即购买
+            </button>
           </div>
         </div>
       </div>

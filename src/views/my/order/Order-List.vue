@@ -264,7 +264,7 @@ export default {
       }
       if (action === 'comment') {
         return (order, index, pid) => {
-          const product = order.products.find(prod => prod.id === pid)
+          const product = order.products.find(prod => prod.productId === pid)
           if (!product) return
           product.assessmentStatus = 1 // 商品评价状态改为已评价
           order.commentStatus = !order.products.some(prod => prod.assessmentStatus !== 1) // 根据所有商品的评价状态重新设置订单的评价状态，0：有商品待评价 1：所有商品已评价

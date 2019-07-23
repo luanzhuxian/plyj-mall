@@ -85,7 +85,7 @@
             round
             @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name } })"
           >
-            申请退款
+            {{ item.afterSalesStatus === 3 ? '重新申请' : '申请退款' }}
           </pl-button>
           <pl-button
             v-if="item.afterSalesStatus === 1 || item.afterSalesStatus === 4 || item.afterSalesStatus === 9"
@@ -271,7 +271,7 @@
           <collapse-item>
             <template slot="title">
               <div>
-                <span :class="$style.invoiceTitle">发票信息：</span>
+                <span :class="$style.invoiceTitle">发票信息：{{ invoiceModelList.length }}个</span>
               </div>
             </template>
             <div :class="$style.item" v-for="(item, i) of invoiceModelList" :key="i">
