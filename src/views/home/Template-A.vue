@@ -295,7 +295,7 @@ export default {
       height: 16px;
       margin-right: 12px!important;
       background-color: #000;
-      transform: rotate(35deg);
+      transform: rotate(45deg);
       border-radius: 4px;
     }
   }

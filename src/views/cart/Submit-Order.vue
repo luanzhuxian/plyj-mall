@@ -130,6 +130,27 @@
             </div>
           </div>
 
+          <div
+            :class="{
+              [$style.infoItem]: true,
+              [$style.lessonError]: lessonErrorId === item.skuCode1
+            }"
+            v-if="isCart && item.needStudentInfo" @click="selectStudent(item)"
+          >
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">学员信息</span>
+              <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.skuCode1">
+                <pl-svg name="warning" color="#F24724" />
+                <span v-text="lessonErrorTip" />
+              </div>
+              <div>
+                <span v-if="CHECKED_STUDENT[item.skuCode1]">已选{{ CHECKED_STUDENT[item.skuCode1].length }}人</span>
+                <span v-else>已选0人</span>
+                <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
+              </div>
+            </div>
+          </div>
+
           <div :class="$style.infoItem" v-if="isCart">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">订单备注</span>
@@ -533,12 +554,14 @@ export default {
       await this.getProductDetail()
       this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL')) || null
       this.CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+      console.log(this.needStudentList)
+
       // 填充默认学生
       if (Object.keys(this.CHECKED_STUDENT).length === 0) {
         let students = await this[STUDENTS]()
         let def = students.find(item => item.defaultStatus === 1)
         if (def) {
-          for (let item of this.lessonList) {
+          for (let item of this.needStudentList) {
             this.$set(this.CHECKED_STUDENT, item.skuCode1, [def])
           }
           localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
@@ -634,17 +657,13 @@ export default {
         formalClass.map(item => { item.type = 'FORMAL_CLASS' })
         experienceClass.map(item => { item.type = 'EXPERIENCE_CLASS' })
         virtualProducts.map(item => { item.type = 'VIRTUAL_GOODS' })
-        // 把虚拟商品中需要学生的商品移动到课程列表
-        let needStudent = virtualProducts.filter(item => item.needStudentInfo)
-        for (let item of needStudent) {
-          virtualProducts.splice(virtualProducts.indexOf(item), 1)
-        }
         this.amount = amount
         this.totalAmount = totalAmount
         this.freight = Number(freight)
         this.physicalProducts = physicalProducts
         this.virtualProducts = virtualProducts
-        this.lessonList = [...formalClass, ...experienceClass, ...needStudent]
+        this.lessonList = [...formalClass, ...experienceClass]
+        this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 1)]
         this.loading = false
       } catch (e) {
         throw e
