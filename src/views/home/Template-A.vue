@@ -22,7 +22,7 @@
           :src="item.image"
         >
       </swiper-slide>
-      <div class="banner-pagination" slot="pagination" />
+      <div class="home-banner-pagination" slot="pagination" />
     </swiper>
     <div :class="$style.gift" v-if="data['MODULE_A'].values.length">
       <div :class="$style.head">
@@ -153,7 +153,7 @@ export default {
         autoplay: true,
         loop: false,
         pagination: {
-          el: '.banner-pagination',
+          el: '.home-banner-pagination',
           clickable: true
         }
       },
@@ -180,9 +180,6 @@ export default {
   },
   computed: {
     ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId'])
-  },
-  created () {
-    this.data = JSON.parse(localStorage.getItem('TEMPLATE_MODULES'))
   },
   methods: {
     getRouteLink ({ type, value }) {
@@ -264,7 +261,6 @@ export default {
         padding: 28px 0;
         background-color: #fff;
         border-radius: $--radius1;
-        width: 100%;
         margin-right: 20px;
       }
     }
@@ -273,6 +269,34 @@ export default {
     }
     .youLike {
       padding: 0 32px;
+    }
+  }
+</style>
+<style lang="scss">
+  .home-banner-pagination {
+    position: absolute;
+    bottom: 24px !important;
+    text-align: center;
+    z-index: 1;
+    .swiper-pagination-bullet {
+      width: 12px !important;
+      height: 12px !important;
+      background-color: rgba(255, 255, 255, .5) !important;
+      &.swiper-pagination-bullet-active {
+        background-color: #fff !important;
+      }
+    }
+  }
+  .good-gift-pagination {
+    margin-top: 32px;
+    text-align: center;
+    .swiper-pagination-bullet {
+      width: 8px !important;
+      height: 16px;
+      margin-right: 12px!important;
+      background-color: #000;
+      transform: rotate(35deg);
+      border-radius: 4px;
     }
   }
 </style>

@@ -14,7 +14,7 @@ Compressor.setDefaults({
   // 设置了minHeight选项，其值大于图像的自然高度。
   strict: true,
   // minWidth 输出图像的最小宽度。该值应该大于0，并且不应该大于maxWidth。
-  // maxWidth 输出图像的最大宽度。这个值应该大于0。
+  maxWidth: 1270, // 输出图像的最大宽度。这个值应该大于0。
   // width: 1920,
   // minHeight 输出图像的最小高度。该值应该大于0，并且不应该大于maxHeight
   // maxHeight 输出图像的最大高度。这个值应该大于0

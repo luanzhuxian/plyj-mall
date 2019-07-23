@@ -1,7 +1,15 @@
 <template>
   <div :class="$style.home">
     <TemplateA :data="modules" v-if="type === 1" />
-    <TemplateB :data="modules" v-else :type="type" />
+    <TemplateB :data="modules" v-else-if="type === 2" :type="type" />
+    <div :class="$style.skeleton" v-else>
+      <div :class="$style.skeletonA" />
+      <div :class="$style.skeletonB" />
+      <div :class="$style.skeletonC" />
+      <div :class="$style.skeletonD" />
+      <div :class="$style.skeletonA" />
+      <div :class="$style.skeletonB" />
+    </div>
   </div>
 </template>
 
@@ -91,5 +99,26 @@ export default {
 <style module lang="scss">
   .home {
     padding-bottom: 88px;
+  }
+  .skeleton {
+    padding: 24px;
+    .skeleton-a {
+      width: 70vw;
+      height: 60px;
+      @include skeAnimation(#eee)
+    }
+    .skeleton-b {
+      width: 50vw;
+      height: 40px;
+      margin-top: 20px;
+      @include skeAnimation(#eee)
+    }
+    .skeleton-c {
+      height: 320px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      border-radius: 20px;
+      @include skeAnimation(#eee)
+    }
   }
 </style>

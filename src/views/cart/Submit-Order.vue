@@ -767,7 +767,7 @@ export default {
           resolve()
         } catch (e) {
           // 支付失败
-          let vLen = this.virtualProducts.length + this.lessonList.length
+          let vLen = this.virtualProducts.length
           let pLen = this.physicalProducts.length
           this.submiting = false
           if (vLen > 1 || (pLen > 1 && vLen > 0)) {
