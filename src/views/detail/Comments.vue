@@ -93,7 +93,7 @@ export default {
       list: [],
       total: 0,
       imgs: [],
-      imgsMap: {},
+      imgsMap: {}, // 保存图片地址与评论信息关系
       currentContent: {},
       previewIndex: 0
     }
@@ -227,7 +227,8 @@ export default {
         img.src = url
         img.onload = () => {
           this.imgs.push({
-            src: img.src,
+            src: img.src + '?x-oss-process=style/thum-1200',
+            oSrc: img.src,
             w: img.naturalWidth,
             h: img.naturalHeight
           })
@@ -239,7 +240,7 @@ export default {
       })
     },
     slideChange (index, total) {
-      this.currentContent = this.imgsMap[this.imgs[index].src]
+      this.currentContent = this.imgsMap[this.imgs[index].oSrc]
       // 进行到倒数第二张时,请求更多，只有在查看有图模式下可行
       if (total - index - 1 === 1 && this.form.flag) {
         this.form.current++
