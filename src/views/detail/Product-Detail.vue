@@ -76,6 +76,7 @@
       :current-sku.sync="currentModel"
       :product-status="detail.productStatus"
       :confirm-text="confirmText"
+      :limiting="limiting"
     />
     <specification-pop
       :default-count="defaultCount"

@@ -35,6 +35,7 @@
       :sku-list="skuList"
       :sku-attr-list="skuAttrList"
       :sku="currentSku"
+      :limiting="limiting"
     >
       <template v-slot:footer="{ currentSku }">
         <pl-button
@@ -108,6 +109,11 @@ export default {
     productStatus: {
       type: Number,
       default: 2
+    },
+    // 限购数量
+    limiting: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
