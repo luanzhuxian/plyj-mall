@@ -112,7 +112,7 @@
         </li>
       </ul>
     </div>
-    <button :class="$style.seeAll" v-if="type === 2">
+    <button :class="$style.seeAll" v-if="type === 2 && maxSee > localValue.length" @click="seeAll">
       <span>查看全部</span>
       <pl-svg name="right" color="#272536" />
     </button>
@@ -131,6 +131,8 @@ export default {
   },
   data () {
     return {
+      // 最小查看数量
+      minSee: 10
     }
   },
   props: {
@@ -149,22 +151,19 @@ export default {
   },
   computed: {
     listLeft () {
-      return this.data.values.filter((item, i) => i % 2 === 0)
+      return this.localValue.filter((item, i) => i % 2 === 0)
     },
     listRight () {
-      return this.data.values.filter((item, i) => (i + 1) % 2 === 0)
+      return this.localValue.filter((item, i) => (i + 1) % 2 === 0)
+    },
+    localValue () {
+      return this.data.values.slice(0, this.minSee)
+    },
+    maxSee () {
+      return this.data.values.length
     }
   },
   methods: {
-    /**
-     * 计算长图的下标
-     * 下标出现有如下规律：
-     * 1,2,5,6,9,10,13,14
-     */
-    setLongImage (i) {
-      console.log(i + 4 - (i + 1), i + 4 - (i + 1) === 3)
-      return i + 4 - i + 1 === 3
-    },
     getMinPrice (skuList) {
       let priceList = skuList.map(item => item.price)
       return Math.min(...priceList)
@@ -176,6 +175,12 @@ export default {
     getMaxPrice (skuList) {
       let priceList = skuList.map(item => item.price)
       return Math.max(...priceList)
+    },
+    seeAll () {
+      // if (this.minSee < this.maxSee) {
+      //   this.minSee++
+      // }
+      this.minSee = this.maxSee
     }
   }
 }

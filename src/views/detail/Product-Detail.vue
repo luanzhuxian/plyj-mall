@@ -285,6 +285,7 @@ export default {
           link: window.location.href,
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
+        this.imgels = []
         // 加载一张图片，为生成海报备用
         for (let img of this.detail.mediaInfoIds) {
           let imgel = await this.loadImage(img)

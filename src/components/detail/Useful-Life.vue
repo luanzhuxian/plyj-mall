@@ -13,7 +13,7 @@
       </span>
     </div>
     <div v-else :class="$style.date">
-      无限期
+      长期有效
     </div>
   </div>
 </template>
