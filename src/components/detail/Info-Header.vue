@@ -8,7 +8,7 @@
         </template>
       </div>
       <div :class="$style.count">
-        <del v-if="minPrice !== maxPrice || maxOriginalPrice !== maxPrice" v-text="maxOriginalPrice" />
+        <del v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
         <span v-if="salesVolume === 0 && productStatus === 2">正在热销中</span>
         <template v-else-if="salesVolume > 0 && salesVolume < 10 || productStatus === 1">
           <span v-text="pageviews" />人关注

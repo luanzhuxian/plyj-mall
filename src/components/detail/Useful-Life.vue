@@ -5,7 +5,7 @@
       <span>有效期：</span>
     </div>
     <div v-if="start" :class="$style.date">
-      <span v-if="start.split(' ')[0] !== start.split(' ')[0]">
+      <span v-if="start.split(' ')[0] !== end.split(' ')[0]">
         {{ start | dateFormat('YYYY.MM.DD') }}-{{ end | dateFormat('YYYY.MM.DD') }}
       </span>
       <span v-else>
