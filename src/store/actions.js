@@ -13,7 +13,11 @@ import {
 import {
   getList
 } from '../apis/student'
+import {
+  DelayExec
+} from '../assets/js/util'
 import Qs from 'qs'
+let delay = new DelayExec(500)
 export default {
   /* 获取商城信息 */
   [type.GET_MALL_INFO]: ({ commit, dispatch }) => {
@@ -126,6 +130,7 @@ export default {
       }
       try {
         if (state.refresh_token) {
+          await delay.exec()
           let { result } = await refreshToken(state.refresh_token)
           commit(type.SET_TOKEN, result)
           await dispatch(type.USER_INFO)

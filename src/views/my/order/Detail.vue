@@ -13,7 +13,7 @@
     <!-- 核销码 -->
     <div
       :class="$style.qrcodeBox"
-      v-if="studentInfoModels.length > 0 && orderStatus !== 'WAIT_PAY'"
+      v-if="redeemCodeModels.length > 0 && orderStatus !== 'WAIT_PAY'"
     >
       <img :src="qrImg" alt="" v-imger :style="{ opacity: (allDated || allFinish) ? 0.4 : 1 }">
       <div
@@ -689,7 +689,7 @@ export default {
             mobile: this.shippingAddress.mobile,
             address: this.shippingAddress.agencyAddress
           } = receiverModel)
-          if (studentInfoModels.length > 0 && orderStatus !== 'WAIT_PAY') {
+          if (redeemCodeModels.length > 0 && orderStatus !== 'WAIT_PAY') {
             // 生成核销码二维码
             this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
           }
