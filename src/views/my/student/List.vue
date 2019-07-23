@@ -43,7 +43,7 @@
           [$style.addBtn]: true,
           [$style.canSelect]: !canSelect
         }"
-        @click="$router.push({ name: 'AddStudent', query: $route.query })"
+        @click="addNew"
       >
         <span v-text="canSelect ? '新增学员' : '点击这里，新增一个学员信息'" />
         <pl-svg name="add-bold" :color="!canSelect ? '#fff' : '#F2B036'" />
@@ -113,6 +113,12 @@ export default {
       } else {
         this.checked.splice(this.checked.indexOf(data), 1)
       }
+    },
+    addNew () {
+      if (this.canSelect) {
+        localStorage.setItem('CHECKED_STUDENT', JSON.stringify({ [this.proId]: this.checked }))
+      }
+      this.$router.push({ name: 'AddStudent', query: this.$route.query })
     },
     confirmSelect () {
       let checked = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
