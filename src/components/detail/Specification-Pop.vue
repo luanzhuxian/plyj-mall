@@ -18,8 +18,8 @@
               >
               <div :class="$style.baseInfoRight">
                 <p :class="$style.price" v-text="currentSku.price" />
-                <p :class="$style.original" v-if="currentSku.originalPrice">
-                  原价：<del class="rmb" v-if="currentSku.price !== currentSku.originalPrice" v-text="currentSku.originalPrice" />
+                <p :class="$style.original" v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice">
+                  原价：<del class="rmb" v-text="currentSku.originalPrice" />
                 </p>
                 <p :class="$style.repertory" v-if="currentSku.skuCode1Name">
                   已选：
