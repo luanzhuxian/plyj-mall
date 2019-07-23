@@ -722,6 +722,15 @@ export default {
     justify-content: flex-end;
     > button {
       margin-left: 20px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      width: 152px;
+      padding: 0;
+      &:nth-of-type(1) {
+        margin-left: 0;
+      }
     }
   }
 

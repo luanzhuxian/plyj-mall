@@ -80,12 +80,12 @@
         />
         <div :class="$style.buttons">
           <pl-button
-            v-if="canApplyRefund && item.supportRefund"
+            v-if="item.supportRefund && canApplyRefund && (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)"
             plain
             round
-            @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name } })"
+            @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name, count: item.count } })"
           >
-            {{ item.afterSalesStatus === 3 ? '重新申请' : '申请退款' }}
+            {{ item.afterSalesStatus === 3 ? '再次申请' : '申请退款' }}
           </pl-button>
           <pl-button
             v-if="item.afterSalesStatus === 1 || item.afterSalesStatus === 4 || item.afterSalesStatus === 9"
@@ -175,7 +175,8 @@
         not-link
       />
     </div>
-    <div :class="$style.panel2" v-if="studentInfoModels.length > 0">
+
+    <!-- <div :class="$style.panelPadding" v-if="studentInfoModels.length > 0">
       <pl-fields
         size="middle"
         text="学员信息"
@@ -199,9 +200,9 @@
           </li>
         </ul>
       </pl-fields>
-    </div>
+    </div> -->
 
-    <div :class="$style.panel2" v-if="!shippingAddress.agencyAddress">
+    <div :class="[$style.panel, $style.contact]" v-if="!shippingAddress.agencyAddress">
       <pl-fields
         size="middle"
         text="联系人信息"
@@ -245,12 +246,12 @@
           :content="tradingInfoModel.payTime"
         />
         <pl-list
-          v-if="hasExpressInfo || isClosedByRefund"
+          v-if="hasExpressInfo"
           title="配送方式："
           :content="logisticsInfoModel && logisticsInfoModel.courierCompany"
         />
         <pl-list
-          v-if="hasExpressInfo || isClosedByRefund"
+          v-if="hasExpressInfo"
           title="发货时间："
           :content="logisticsInfoModel && logisticsInfoModel.shipTime"
         />
@@ -263,11 +264,6 @@
     >
       <collapse v-model="collepseActiveNames">
         <template v-if="invoiceModelList && invoiceModelList.length">
-          <!-- <collapse-item
-            v-for="(item, i) of invoiceModelList"
-            :name="i"
-            :key="i"
-          > -->
           <collapse-item>
             <template slot="title">
               <div>
@@ -331,7 +327,7 @@
         联系我们
       </pl-button>
       <pl-button
-        v-if="orderType === 'PHYSICAL' && (orderStatus === 'FINISHED' || orderStatus === 'WAIT_RECEIVE')"
+        v-if="hasExpressInfo"
         plain
         round
         @click="$router.push({ name: 'Freight', params: { orderId }, query: { img: productInfoModel.productDetailModels[0].productImg } })"
@@ -347,7 +343,7 @@
         申请发票
       </pl-button>
       <pl-button
-        v-if="orderStatus === 'WAIT_RECEIVE' && orderType !== 'FORMAL_CLASS' && studentInfoModels.length === 0"
+        v-if="orderType === 'PHYSICAL' && orderStatus === 'WAIT_RECEIVE'"
         round
         type="warning"
         @click="confirmReceipt"
@@ -567,7 +563,7 @@ export default {
     },
     hasExpressInfo () {
       return this.orderType === 'PHYSICAL' &&
-        (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
+        (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED' || this.isClosedByRefund)
     },
     // 是否可以申请售后
     canApplyRefund () {
@@ -705,8 +701,9 @@ export default {
             this.setTime(result, 'WAIT_PAY')
           }
           if (result.orderStatus === 'WAIT_RECEIVE') {
-            // 有学生信息时不倒计时
-            if (result.studentInfoModels.length > 0) {
+            if (this.orderType === 'PHYSICAL') {
+              this.setTime(result, 'WAIT_RECEIVE')
+            } else {
               let { validityPeriodStart, validityPeriodEnd } = result.productInfoModel.productDetailModels[0]
               if (validityPeriodStart) {
                 const start = validityPeriodStart.split(' ')[0]
@@ -717,8 +714,6 @@ export default {
               } else {
                 this.suggestionMap.WAIT_RECEIVE = '长期有效'
               }
-            } else {
-              this.setTime(result, 'WAIT_RECEIVE')
             }
           }
           resolve()
@@ -939,14 +934,9 @@ export default {
     margin-bottom: 20px;
     background-color: #fff;
     border-radius: $--radius1;
-  }
-  .panel2 {
-    margin-bottom: 20px;
-    padding-left: 24px;
-    border-radius: 20px;
     overflow: hidden;
-    background-color: #fff;
   }
+
   .other-info {
     position: relative;
     line-height: 34px;
@@ -1080,6 +1070,39 @@ export default {
     }
   }
 
+  .contact {
+    padding-left: 24px;
+    .contact-detail {
+      padding: 24px 0;
+      > span:nth-of-type(1) {
+        margin-right: 24px;
+        font-weight: 500;
+      }
+    }
+  }
+  // .student-list {
+  //   background-color: #fff;
+  //   padding-right: 24px;
+  //   .student-item {
+  //     padding: 24px 0;
+  //     font-size: 28px;
+  //     line-height: 40px;
+  //     border-bottom: 1px solid #e7e7e7;
+  //     &:nth-last-of-type(1) {
+  //       border-bottom: none;
+  //     }
+  //     > .student-name {
+  //       display: flex;
+  //       justify-content: space-between;
+  //       margin-bottom: 26px;
+  //     }
+  //     > .student-phone {
+  //       display: flex;
+  //       justify-content: space-between;
+  //     }
+  //   }
+  // }
+
   .footer {
     position: fixed;
     left: 0;
@@ -1091,7 +1114,13 @@ export default {
     padding: 18px 24px;
 
     > button {
-      margin-left: 18px;
+      margin-left: 20px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      width: 152px;
+      padding: 0;
       &:nth-of-type(1) {
         margin-left: 0;
       }
@@ -1182,35 +1211,6 @@ export default {
   }
   .skeAnimation {
     @include skeAnimation(#eee)
-  }
-  .student-list {
-    background-color: #fff;
-    padding-right: 24px;
-    .student-item {
-      padding: 24px 0;
-      font-size: 28px;
-      line-height: 40px;
-      border-bottom: 1px solid #e7e7e7;
-      &:nth-last-of-type(1) {
-        border-bottom: none;
-      }
-      > .student-name {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 26px;
-      }
-      > .student-phone {
-        display: flex;
-        justify-content: space-between;
-      }
-    }
-  }
-  .contact-detail {
-    padding: 24px 0;
-    > span:nth-of-type(1) {
-      margin-right: 24px;
-      font-weight: 500;
-    }
   }
   /** skeleton end **/
 </style>

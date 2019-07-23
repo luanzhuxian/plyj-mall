@@ -4,10 +4,11 @@
       <order-item
         :img="productImg + '?x-oss-process=style/thum'"
         :name="productName"
+        :count="count"
         :option="skuCode2Name ? `${skuCode1Name},${skuCode2Name}` : skuCode1Name"
+        hide-price
         route-name="Lesson"
         :product-id="productId"
-        hide-price
       />
     </section>
 
@@ -88,7 +89,8 @@ export default {
       productImg: '',
       productName: '',
       skuCode1Name: '',
-      skuCode2Name: ''
+      skuCode2Name: '',
+      count: ''
     }
   },
   activated () {
@@ -99,6 +101,7 @@ export default {
     this.productName = this.$route.query.productName || ''
     this.skuCode1Name = this.$route.query.skuCode1Name || ''
     this.skuCode2Name = this.$route.query.skuCode2Name || ''
+    this.count = this.$route.query.count || ''
   }
 }
 </script>
