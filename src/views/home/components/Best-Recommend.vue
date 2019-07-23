@@ -3,7 +3,7 @@
     <div :class="$style.title">
       精品推荐
     </div>
-    <template v-if="type === 3">
+    <template v-if="styleType === 2">
       <div :class="$style.product" v-for="(item, i) of data.values" :key="i">
         <div :class="$style.img" :style="{ backgroundImage: `url(${item.image + '?x-oss-process=style/thum-middle'})` }">
           <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
@@ -50,7 +50,7 @@
       </div>
     </template>
     <!-- 瀑布流 -->
-    <div v-if="type === 2" :class="$style.waterfallBox">
+    <div v-if="styleType === 1" :class="$style.waterfallBox">
       <ul :class="$style.waterfall" v-if="listLeft.length">
         <li
           v-for="(item, i) of listLeft"
@@ -181,6 +181,9 @@ export default {
       //   this.minSee++
       // }
       this.minSee = this.maxSee
+    },
+    styleType () {
+      return this.data.styleType || -1
     }
   }
 }

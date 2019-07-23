@@ -286,12 +286,7 @@ export default {
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
         this.imgels = []
-        // 加载一张图片，为生成海报备用
-        for (let img of this.detail.mediaInfoIds) {
-          let imgel = await this.loadImage(img)
-          this.imgels.push(imgel)
-        }
-        this.haibaoImg = this.imgels[0]
+        this.haibaoImg = await this.loadImage(this.detail.mediaInfoIds[0])
       } catch (e) {
         throw e
       } finally {
@@ -299,6 +294,12 @@ export default {
       }
     },
     async slideChange (imgs, index) {
+      if (this.imgels.length < imgs.length) {
+        for (let i of imgs) {
+          i.crossOrigin = ''
+          this.imgels.push(i.cloneNode(true))
+        }
+      }
       if (!this.showHaibao) {
         this.haibaoImg = this.imgels[index]
         this.haibao = ''

@@ -55,7 +55,6 @@ export default {
             'MODULE_E': null
           }
           const bannerList = result.moduleModels.filter(module => module.moduleType === 1)
-          console.log(bannerList)
           const prodList = result.moduleModels.filter(module => module.moduleType === 2)
           modules['BANNER'] = bannerList[0]
           modules['MODULE_B'] = bannerList[1]
