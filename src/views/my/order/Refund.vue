@@ -125,7 +125,7 @@ export default {
     align-items: center;
     padding: 20px 24px 20px 32px;
     &:nth-of-type(1) {
-      border-bottom: 2px solid #F0F0F0;
+      border-bottom: 1px solid #F0F0F0;
     }
   }
 

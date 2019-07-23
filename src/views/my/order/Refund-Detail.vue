@@ -587,7 +587,7 @@ export default {
       padding: 28px 24px;
       display: flex;
       align-items: center;
-      border-top: 2px solid #F0F0F0;
+      border-top: 1px solid #F0F0F0;
 
       &:nth-of-type(1) {
         border: none;
@@ -638,7 +638,7 @@ export default {
     }
     .bottom {
       padding: 24px;
-      border-top: 2px solid #F0F0F0;
+      border-top: 1px solid #F0F0F0;
     }
     .item {
       display: flex;
@@ -680,7 +680,7 @@ export default {
       position: relative;
       padding: 20px 24px 24px 0;
       margin-top: 20px;
-      border-top: 2px solid #e7e7e7;
+      border-top: 1px solid #e7e7e7;
     }
     .info-list {
       padding-right: 24px;
@@ -727,7 +727,7 @@ export default {
 
   .border-top {
     position: relative;
-    border-top: 2px solid #F0F0F0;
+    border-top: 1px solid #F0F0F0;
   }
   .bold {
     font-weight: bold;

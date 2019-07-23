@@ -708,7 +708,15 @@ export default {
             // 有学生信息时不倒计时
             if (result.studentInfoModels.length > 0) {
               let { validityPeriodStart, validityPeriodEnd } = result.productInfoModel.productDetailModels[0]
-              this.suggestionMap.WAIT_RECEIVE = validityPeriodStart ? `有效期 ${validityPeriodStart.split(' ')[0]} 至 ${validityPeriodEnd.split(' ')[0]}` : '长期有效'
+              if (validityPeriodStart) {
+                const start = validityPeriodStart.split(' ')[0]
+                const end = validityPeriodEnd.split(' ')[0]
+                this.suggestionMap.WAIT_RECEIVE = start === end
+                  ? `有效期 ${validityPeriodStart.split(' ')[0]}`
+                  : `有效期 ${validityPeriodStart.split(' ')[0]} 至 ${validityPeriodEnd.split(' ')[0]}`
+              } else {
+                this.suggestionMap.WAIT_RECEIVE = '长期有效'
+              }
             } else {
               this.setTime(result, 'WAIT_RECEIVE')
             }
@@ -878,7 +886,7 @@ export default {
       .codeItem {
         margin-bottom: 8px;
         padding-bottom: 8px;
-        border-bottom: 2px solid #e7e7e7;
+        border-bottom: 1px solid #e7e7e7;
         &:nth-last-of-type(1) {
           border-bottom: none;
           margin: 0;
@@ -945,7 +953,7 @@ export default {
     font-size: 24px;
     .info-top {
       padding: 24px;
-      border-bottom: 2px solid #F0F0F0;
+      border-bottom: 1px solid #F0F0F0;
       > div {
         margin-bottom: 20px;
         &:nth-last-of-type(1) {
@@ -971,7 +979,7 @@ export default {
       font-weight: 400;
       line-height: 28px;
       color: #333333;
-      border-bottom: 2px solid #F0F0F0;
+      border-bottom: 1px solid #F0F0F0;
       padding: 24px 0 14px;
       &:nth-of-type(1) {
         padding-top: 0;
@@ -1018,7 +1026,7 @@ export default {
     margin-top: 24px;
     margin-left: 24px;
     padding-top: 16px;
-    border-top: 2px solid #e7e7e7;
+    border-top: 1px solid #e7e7e7;
   }
   .explain-box {
     margin-top: 14px;
@@ -1035,7 +1043,7 @@ export default {
     line-height: 50px;
     font-size: 26px;
     color: #666666;
-    border-top: 2px solid #e7e7e7;
+    border-top: 1px solid #e7e7e7;
     p {
       display: flex;
       justify-content: space-between;
@@ -1182,7 +1190,7 @@ export default {
       padding: 24px 0;
       font-size: 28px;
       line-height: 40px;
-      border-bottom: 2px solid #e7e7e7;
+      border-bottom: 1px solid #e7e7e7;
       &:nth-last-of-type(1) {
         border-bottom: none;
       }

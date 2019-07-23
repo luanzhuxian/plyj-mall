@@ -477,7 +477,7 @@ export default {
   .popup-button-wrapper {
     padding: 16px 24px;
     background-color: #FFF;
-    border-top: 2px solid #F0F0F0;
+    border-top: 1px solid #F0F0F0;
   }
   .popup-item {
     display: flex;
@@ -486,7 +486,7 @@ export default {
     font-size: 30px;
     color: #000000;
     line-height: 88px;
-    border-bottom: 2px solid #F0F0F0;
+    border-bottom: 1px solid #F0F0F0;
     padding-right: 24px;
     &:nth-last-of-type(1) {
       border-bottom: none;
