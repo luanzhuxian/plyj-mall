@@ -205,7 +205,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName']),
+    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile']),
     noStock () {
       return this.productSkuModels.every(item => item.stock < item.minBuyNum)
     },
@@ -309,7 +309,26 @@ export default {
       this.currentModel = {}
       this.banners.splice(0, 1000000)
     },
+    hasBind () {
+      if (!this.mobile) {
+        this.$confirm('您还没有绑定手机，请先绑定手机')
+          .then(() => {
+            localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+              name: this.$route.name,
+              params: this.$route.params,
+              query: this.$route.query
+            }))
+            this.$router.push({ name: 'BindMobile' })
+          })
+          .catch(() => {})
+        return false
+      }
+      return true
+    },
     addToCart (selected) {
+      if (!this.hasBind()) {
+        return
+      }
       this.currentModel = selected
       this.adding = true
       const { count, skuCode2 = '', skuCode1 } = selected
@@ -335,6 +354,9 @@ export default {
       })
     },
     buyNow (selected) {
+      if (!this.hasBind()) {
+        return
+      }
       this.currentModel = selected
       const { skuCode1, count, skuCode2 } = selected
       // helper分享时携带的id
