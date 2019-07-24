@@ -320,21 +320,21 @@
     </div>
 
     <div
-      v-if="lessonList.length === 1 && lessonList[0].needStudentInfo && !isCart"
+      v-if="needStudentList.length === 1 && needStudentList[0].needStudentInfo && !isCart"
       :class="$style.itemSelector"
-      @click.capture="selectStudent(lessonList[0])"
+      @click.capture="selectStudent(needStudentList[0])"
     >
       <pl-fields
         size="middle"
         text="学员信息"
         icon="name-card"
         :icon-gap="12"
-        :right-text="`已选${getStudentCountByProId(lessonList[0].skuCode1)}人`"
+        :right-text="`已选${getStudentCountByProId(needStudentList[0].skuCode1)}人`"
         show-right-icon
         left-text-weight="bold"
       >
-        <ul :class="$style.studentList" v-show="CHECKED_STUDENT[lessonList[0].skuCode1] && CHECKED_STUDENT[lessonList[0].skuCode1].length > 0">
-          <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[lessonList[0].skuCode1]" :key="i">
+        <ul :class="$style.studentList" v-show="CHECKED_STUDENT[needStudentList[0].skuCode1] && CHECKED_STUDENT[needStudentList[0].skuCode1].length > 0">
+          <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[needStudentList[0].skuCode1]" :key="i">
             <p :class="$style.studentName">
               <span>姓名</span>
               <span v-text="item.stuName" />
@@ -466,6 +466,7 @@ export default {
       physicalProducts: [],
       virtualProducts: [],
       lessonList: [],
+      needStudentList: [],
       remark: '', // 物理订单备注
       invioceType: 1,
       INVOICE_MODEL: {},
@@ -555,18 +556,21 @@ export default {
       await this.getProductDetail()
       this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL')) || null
       this.CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
-      console.log(this.needStudentList)
-
-      // 填充默认学生
-      if (Object.keys(this.CHECKED_STUDENT).length === 0) {
-        let students = await this[STUDENTS]()
-        let def = students.find(item => item.defaultStatus === 1)
-        if (def) {
-          for (let item of this.needStudentList) {
+      // 已有学生信息的商品skuCode1
+      let hasStudent = Object.keys(this.CHECKED_STUDENT)
+      let students = await this[STUDENTS]()
+      let def = students.find(item => item.defaultStatus === 1)
+      if (def) { // 如果有默认学员
+        for (let item of this.needStudentList) {
+          if (hasStudent.indexOf(item.skuCode1) === -1) { // 如果当前商品没有选择学生
             this.$set(this.CHECKED_STUDENT, item.skuCode1, [def])
           }
-          localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
         }
+        localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
+      }
+      // 填充默认学生
+      if (Object.keys(this.CHECKED_STUDENT).length === 0) {
+
       }
       this.invioceType = this.INVOICE_MODEL ? 2 : 1
       this.lessonErrorId = ''
@@ -690,7 +694,7 @@ export default {
         })
       }
       for (const item of this.virtualProducts) {
-        const { productId, skuCode1, skuCode2, count, agentUser, remark } = item
+        const { productId, skuCode1, skuCode2, count, agentUser, remark, needStudentInfo } = item
         cartProducts.push({
           productId,
           skuCode1,
@@ -698,7 +702,8 @@ export default {
           productType: 'VIRTUAL_GOODS',
           count,
           agentUser,
-          message: remark
+          message: remark,
+          studentIds: needStudentInfo ? this.CHECKED_STUDENT[skuCode1].map(item => item.id) : null
         })
       }
       for (const item of this.lessonList) {
