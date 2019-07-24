@@ -8,7 +8,7 @@
       <pl-svg name="search" />
       <input
         type="text"
-        placeholder="你想要的应有尽有"
+        :placeholder="placeholder"
       >
     </router-link>
   </div>
@@ -16,7 +16,13 @@
 
 <script>
 export default {
-  name: 'Search'
+  name: 'Search',
+  props: {
+    placeholder: {
+      type: String,
+      default: '搜索'
+    }
+  }
 }
 </script>
 

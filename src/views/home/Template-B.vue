@@ -1,7 +1,9 @@
 <template>
   <div :class="$style.homeTemplateB">
-    <Search />
+    <Search placeholder="搜索商品" />
     <Banner :data="BANNER" />
+    <img :class="$style.img88" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansibo.gif" alt="">
+    <img :class="$style.img88" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhidejiaoyu.gif" alt="">
     <HotItem :data="POPULAR" />
     <Best v-if="type === 3" :data="CLASS" />
     <BestRecommend
@@ -64,5 +66,11 @@ export default {
 <style module lang="scss">
   .home-Template-b {
     background-color: #EDEDED;
+    font-size: 0;
+  }
+  .img88 {
+    padding: 10px 0;
+    width: 100%;
+    background-color: #fff;
   }
 </style>

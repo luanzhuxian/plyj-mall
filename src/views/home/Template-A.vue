@@ -24,6 +24,10 @@
       </swiper-slide>
       <div class="home-banner-pagination" slot="pagination" />
     </swiper>
+
+    <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansibo.gif" alt="">
+    <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhidejiaoyu.gif" alt="">
+
     <div :class="$style.gift" v-if="data['MODULE_A'].values.length">
       <div :class="$style.head">
         <div :class="$style.title">
