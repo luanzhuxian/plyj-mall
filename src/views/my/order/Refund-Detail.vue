@@ -116,7 +116,7 @@
           运费不可退，如有疑问，请联系商家协商
         </div>
         <div
-          v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(returnStatus)"
+          v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
           :class="$style.tips"
         >
           <div>退款返还您的实际付款金额，优惠劵将不予退回</div>
@@ -155,8 +155,9 @@
         <order-item
           :img="refundDetail.productPic + '?x-oss-process=style/thum'"
           :name="refundDetail.productName"
-          :option="refundDetail.skuName2 ? `${refundDetail.skuName},${refundDetail.skuName2}` : refundDetail.skuName"
+          :price="refundDetail.productPrice"
           :count="refundDetail.productCount"
+          :option="refundDetail.skuName2 ? `${refundDetail.skuName},${refundDetail.skuName2}` : refundDetail.skuName"
           :product-id="refundDetail.productId"
           route-name="Lesson"
         />
@@ -237,7 +238,7 @@
       :class="$style.footer"
     >
       <pl-button
-        v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(returnStatus)"
+        v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
         round
         plain
         @click="deleteOrder"
@@ -476,6 +477,7 @@ export default {
           shouldRefund: refundDetail.shouldRefund,
           productId: refundDetail.productId,
           productPic: refundDetail.productPic,
+          productPrice: refundDetail.productPrice,
           productName: refundDetail.productName,
           productCount: refundDetail.productCount,
           skuName: refundDetail.skuName,

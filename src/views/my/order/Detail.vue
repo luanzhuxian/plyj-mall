@@ -15,7 +15,7 @@
       :class="$style.qrcodeBox"
       v-if="redeemCodeModels.length > 0 && orderStatus !== 'WAIT_PAY'"
     >
-      <img :src="qrImg" alt="" v-imger :style="{ opacity: (allDated || allFinish) ? 0.4 : 1 }">
+      <img :src="qrImg" alt="" v-imger :style="{ opacity: isAllCodeUnuseful ? 0.4 : 1 }">
       <div
         :class="{
           [$style.codeListBox]: true,
@@ -73,9 +73,9 @@
           size="small"
           :img="item.productImg + '?x-oss-process=style/thum'"
           :name="item.productName"
+          :price="item.price"
           :count="item.count"
           :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-          :price="item.price"
           :product-id="item.productId"
           route-name="Lesson"
         />
@@ -84,7 +84,7 @@
             v-if="item.supportRefund && canApplyRefund && ~[0, 3, 6].indexOf(item.afterSalesStatus)"
             plain
             round
-            @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name, count: item.count } })"
+            @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name, count: usefulCodeCount } })"
           >
             {{ (item.afterSalesStatus === 3 || item.afterSalesStatus === 6) ? '再次申请' : '申请退款' }}
           </pl-button>
@@ -586,13 +586,13 @@ export default {
           ~[0, 3, 6].indexOf(item.afterSalesStatus)
       })
     },
-    // 核销码全部过期
-    allDated () {
-      return this.redeemCodeModels.every(item => item.statusCode === 4)
+    // 核销码状: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
+    // 核销码全部过期或核销
+    isAllCodeUnuseful () {
+      return this.redeemCodeModels.every(item => item.statusCode === 1 || item.statusCode === 4)
     },
-    // 核销码全部核销
-    allFinish () {
-      return this.redeemCodeModels.every(item => item.statusCode === 1)
+    usefulCodeCount () {
+      return this.redeemCodeModels.filter(item => item.statusCode === 0).length
     },
     isArrowShow () {
       return this.studentInfoModels.length || this.productInfoModel.productDetailModels.length !== 1
@@ -691,9 +691,11 @@ export default {
             mobile: this.shippingAddress.mobile,
             address: this.shippingAddress.agencyAddress
           } = receiverModel)
-          if (redeemCodeModels.length > 0 && orderStatus !== 'WAIT_PAY') {
-            // 生成核销码二维码
-            this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
+          if (this.orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
+            if (orderStatus !== 'WAIT_PAY') {
+              // 生成核销码二维码
+              this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
+            }
           }
 
           if (result.orderStatus === 'CLOSED') {

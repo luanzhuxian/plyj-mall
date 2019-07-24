@@ -7,7 +7,7 @@
       <order-item
         :img="productInfo.productImg + '?x-oss-process=style/thum'"
         :name="productInfo.productName"
-        :count="productInfo.count"
+        :count="count"
         :option="productInfo.skuCode2Name ? `${productInfo.skuCode1Name},${productInfo.skuCode2Name}` : productInfo.skuCode1Name"
         :product-id="productInfo.productId"
         hide-price
@@ -228,14 +228,15 @@ export default {
         title: '退款原因',
         options: []
       },
-      maxLength: 400,
-      maxRefund: null,
       popup: {
         isPopupShow: false,
         popupTitle: '',
         currentPopupName: '',
         popupOptions: []
-      }
+      },
+      maxLength: 400,
+      maxRefund: 0,
+      count: 0
     }
   },
   computed: {
@@ -280,8 +281,9 @@ export default {
     }
     await this.getOrderDetail()
     if (this.type === 'APPLY') {
-      ({ result: this.form.actualRefund } = await getMaxRefund(this.orderProductRId))
-      this.maxRefund = this.form.actualRefund
+      const { result } = await getMaxRefund(this.orderProductRId)
+      this.form.actualRefund = this.maxRefund = result.refundableAmount
+      this.count = result.refundableCount
     }
     if (this.type === 'MODIFY') {
       this.getRefundInfo()
