@@ -770,11 +770,11 @@ export default {
       }
       if (this.physicalProducts.length === 0) {
         // 没有实体商品时，必须有联系人信息
-        if (this.$refs.contactForm.validate()) {
-          data.contactInfoModel = this.contactInfoModel
-        } else {
+        if (!this.contactInfoModel.name || !this.contactInfoModel.mobile) {
+          this.$warning('请填写联系人信息')
           return
         }
+        data.contactInfoModel = this.contactInfoModel
       }
       try {
         this.submiting = true
