@@ -228,52 +228,30 @@
           :content="orderId"
         />
         <pl-list
-          v-if="message"
-          title="订单备注："
-          :content="message"
-        />
-        <div v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle">
-          <pl-list
-            title="支付方式："
-            :content="tradingInfoModel.payMethod"
-          />
-          <pl-list
-            title="支付时间："
-            :content="tradingInfoModel.payTime"
-          />
-          <pl-list
-            v-if="hasExpressInfo"
-            title="配送方式："
-            :content="logisticsInfoModel && logisticsInfoModel.courierCompany"
-          />
-          <pl-list
-            v-if="hasExpressInfo"
-            title="发货时间："
-            :content="logisticsInfoModel && logisticsInfoModel.shipTime"
-          />
-        </div>
-      </div>
-      <div
-        v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle"
-        :class="$style.infoBottom"
-      >
-        <pl-list
+          v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle"
           title="支付方式："
           :content="tradingInfoModel.payMethod"
         />
         <pl-list
+          v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle"
           title="支付时间："
           :content="tradingInfoModel.payTime"
         />
         <pl-list
-          v-if="hasExpressInfo"
+          v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle && hasExpressInfo"
           title="配送方式："
           :content="logisticsInfoModel && logisticsInfoModel.courierCompany"
         />
         <pl-list
-          v-if="hasExpressInfo"
+          v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle && hasExpressInfo"
           title="发货时间："
           :content="logisticsInfoModel && logisticsInfoModel.shipTime"
+        />
+      </div>
+      <div :class="$style.infoBottom" v-if="message">
+        <pl-list
+          title="订单备注："
+          :content="message"
         />
       </div>
     </div>

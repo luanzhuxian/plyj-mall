@@ -16,10 +16,7 @@
     >
     <div :class="$style.right">
       <div>
-        <div
-          :class="$style.rightTop"
-          :style="{ paddingRight: hidePrice ? '0px' : '' }"
-        >
+        <div :class="$style.rightTop">
           <div
             :class="$style.name"
             v-text="name"
