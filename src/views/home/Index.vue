@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.home">
     <TemplateA :data="modules" v-if="type === 1" />
-    <TemplateB :data="modules" v-else-if="type === 2" :type="type" />
+    <TemplateB :data="modules" v-else-if="type === 2 || type === 3" :type="type" />
     <div :class="$style.skeleton" v-else>
       <div :class="$style.skeletonA" />
       <div :class="$style.skeletonB" />
