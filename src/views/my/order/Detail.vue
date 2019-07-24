@@ -75,20 +75,20 @@
           :count="item.count"
           :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
           :price="item.price"
-          route-name="Lesson"
           :product-id="item.productId"
+          route-name="Lesson"
         />
         <div :class="$style.buttons">
           <pl-button
-            v-if="item.supportRefund && canApplyRefund && (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)"
+            v-if="item.supportRefund && canApplyRefund && ~[0, 3, 6].indexOf(item.afterSalesStatus)"
             plain
             round
             @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name, count: item.count } })"
           >
-            {{ item.afterSalesStatus === 3 ? '再次申请' : '申请退款' }}
+            {{ (item.afterSalesStatus === 3 || item.afterSalesStatus === 6) ? '再次申请' : '申请退款' }}
           </pl-button>
           <pl-button
-            v-if="item.afterSalesStatus === 1 || item.afterSalesStatus === 4 || item.afterSalesStatus === 9"
+            v-if="~[1, 4, 9].indexOf(item.afterSalesStatus)"
             plain
             round
             @click="$router.push({ name: 'RefundDetail', params: { id: item.mallRefundId } })"
@@ -114,7 +114,7 @@
             寄件运单号
           </pl-button>
           <pl-button
-            v-if="orderStatus === 'FINISHED' && item.assessmentStatus === 0 && (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)"
+            v-if="orderStatus === 'FINISHED' && item.assessmentStatus === 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)"
             type="warning"
             plain
             round
@@ -232,6 +232,26 @@
           title="订单备注："
           :content="message"
         />
+        <div v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle">
+          <pl-list
+            title="支付方式："
+            :content="tradingInfoModel.payMethod"
+          />
+          <pl-list
+            title="支付时间："
+            :content="tradingInfoModel.payTime"
+          />
+          <pl-list
+            v-if="hasExpressInfo"
+            title="配送方式："
+            :content="logisticsInfoModel && logisticsInfoModel.courierCompany"
+          />
+          <pl-list
+            v-if="hasExpressInfo"
+            title="发货时间："
+            :content="logisticsInfoModel && logisticsInfoModel.shipTime"
+          />
+        </div>
       </div>
       <div
         v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle"
@@ -567,7 +587,8 @@ export default {
     },
     // 是否可以申请售后
     canApplyRefund () {
-      return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) && this.productInfoModel.amount > 0
+      return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) &&
+      this.productInfoModel.amount > 0
     },
     // 是否可以申请发票，invoiceStatus： 8:'可申请' 1:'已申请' 3:'已开票' 7:'不支持'
     canApplyInvoice () {
@@ -577,13 +598,13 @@ export default {
         this.productInfoModel.amount > 0 &&
         this.productInfoModel.productDetailModels.some(item => {
           return item.invoiceStatus === 8 &&
-            (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)
+            ~[0, 3, 6].indexOf(item.afterSalesStatus)
         })
     },
     noInvoiceProList () {
       return this.productInfoModel.productDetailModels.filter(item => {
         return item.invoiceStatus === 8 &&
-          (item.afterSalesStatus === 0 || item.afterSalesStatus === 3)
+          ~[0, 3, 6].indexOf(item.afterSalesStatus)
       })
     },
     // 核销码全部过期
@@ -674,10 +695,10 @@ export default {
           this.studentInfoModels = studentInfoModels || []
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
-          // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货
+          // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             this.isAllProductRefund = (current.afterSalesStatus === 2)
-            this.isDeleteBtnShow = !(current.afterSalesStatus !== 0 && current.afterSalesStatus !== 2)
+            this.isDeleteBtnShow = [0, 2, 3, 6].includes(current.afterSalesStatus) // 只要有一个商品在售后状态则不显示删除按钮
             return total + current['count']
           }, 0);  // eslint-disable-line
           ({
@@ -1119,7 +1140,7 @@ export default {
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
-      width: 152px;
+      width: 162px;
       padding: 0;
       &:nth-of-type(1) {
         margin-left: 0;

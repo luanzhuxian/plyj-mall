@@ -116,7 +116,7 @@
           运费不可退，如有疑问，请联系商家协商
         </div>
         <div
-          v-if="refundStatus==='FINISHED' || refundStatus==='CLOSED' || refundStatus==='CANCEL' || refundStatus==='REJECT'"
+          v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(returnStatus)"
           :class="$style.tips"
         >
           <div>退款返还您的实际付款金额，优惠劵将不予退回</div>
@@ -237,7 +237,7 @@
       :class="$style.footer"
     >
       <pl-button
-        v-if="refundStatus === 'FINISHED' || refundStatus === 'CLOSED' || refundStatus === 'CANCEL' || refundStatus === 'REJECT'"
+        v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(returnStatus)"
         round
         plain
         @click="deleteOrder"
@@ -726,7 +726,7 @@ export default {
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
-      width: 152px;
+      width: 162px;
       padding: 0;
       &:nth-of-type(1) {
         margin-left: 0;

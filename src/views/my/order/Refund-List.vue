@@ -75,7 +75,7 @@
                   取消申请
                 </pl-button>
                 <pl-button
-                  v-if="item.returnStatus === 'FINISHED' || item.returnStatus === 'CLOSED' || item.returnStatus === 'CANCEL' || item.returnStatus === 'REJECT'"
+                  v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(item.returnStatus)"
                   round
                   plain
                   @click="deleteOrder(item, i)"
@@ -83,7 +83,7 @@
                   删除
                 </pl-button>
                 <pl-button
-                  v-if="item.returnStatus === 'WAIT_CHECK' || item.returnStatus === 'REFUND_PRODUCT' || item.returnStatus === 'FINISHED'"
+                  v-if="~['WAIT_CHECK', 'REFUND_PRODUCT', 'FINISHED'].indexOf(item.returnStatus)"
                   round
                   plain
                   @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"

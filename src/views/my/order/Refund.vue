@@ -6,9 +6,9 @@
         :name="productName"
         :count="count"
         :option="skuCode2Name ? `${skuCode1Name},${skuCode2Name}` : skuCode1Name"
+        :product-id="productId"
         hide-price
         route-name="Lesson"
-        :product-id="productId"
       />
     </section>
 

@@ -120,7 +120,7 @@
                   去使用
                 </pl-button>
                 <pl-button
-                  v-if="item.status === 'FINISHED' && !item.commentStatus"
+                  v-if="item.status === 'FINISHED' && item.commentStatus === 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)"
                   round
                   plain
                   @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"
@@ -309,7 +309,7 @@ export default {
       const counter = (array) => (key) => array.reduce((acc, current) => acc + (key ? current[key] : current), 0)
       for (let item of list) {
         item.totalCount = counter(item.products)('purchaseQuantity')
-        item.isDeleteBtnShow = !item.products.some(product => (product.afterSalesStatus !== 0 && product.afterSalesStatus !== 2))
+        item.isDeleteBtnShow = !item.products.some(product => ![0, 2, 3, 6].includes(product.afterSalesStatus)) // 只要有一个商品在售后状态则不显示删除按钮
       }
       this.orderList = list
     },

@@ -7,6 +7,7 @@
       <order-item
         :img="productInfo.productImg + '?x-oss-process=style/thum'"
         :name="productInfo.productName"
+        :count="productInfo.count"
         :option="productInfo.skuCode2Name ? `${productInfo.skuCode1Name},${productInfo.skuCode2Name}` : productInfo.skuCode1Name"
         :product-id="productInfo.productId"
         hide-price
