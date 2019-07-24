@@ -97,18 +97,18 @@
     <!-- 弹窗 -->
     <pl-popup
       ref="popup"
-      :title="popupTitle"
-      :show.sync="isPopupShow"
+      :title="popup.popupTitle"
+      :show.sync="popup.isPopupShow"
       hide-close-icon
-      @close="isPopupShow = false"
+      @close="popup.isPopupShow = false"
     >
       <template>
         <ul :class="$style.popupContentWrapper">
-          <radio-group-component v-model="radio[currentPopupName]">
+          <radio-group-component v-model="radio[popup.currentPopupName]">
             <template>
               <div
                 :class="$style.popupItem"
-                v-for="(item, index) of popupOptions"
+                v-for="(item, index) of popup.popupOptions"
                 :key="index"
                 @click="handleRadioClick(item)"
               >
@@ -125,7 +125,7 @@
           <pl-button
             size="larger"
             type="warning"
-            @click="isPopupShow = false"
+            @click="popup.isPopupShow = false"
           >
             关闭
           </pl-button>
@@ -229,10 +229,13 @@ export default {
         options: []
       },
       maxLength: 400,
-      isPopupShow: false,
-      currentPopupName: '',
-      popupTitle: '',
-      popupOptions: []
+      maxRefund: null,
+      popup: {
+        isPopupShow: false,
+        popupTitle: '',
+        currentPopupName: '',
+        popupOptions: []
+      }
     }
   },
   computed: {
@@ -278,6 +281,7 @@ export default {
     await this.getOrderDetail()
     if (this.type === 'APPLY') {
       ({ result: this.form.actualRefund } = await getMaxRefund(this.orderProductRId))
+      this.maxRefund = this.form.actualRefund
     }
     if (this.type === 'MODIFY') {
       this.getRefundInfo()
@@ -288,7 +292,7 @@ export default {
   deactivated () {
     resetForm(this.form)
     resetForm(this.radio)
-    this.isPopupShow = false
+    this.popup.isPopupShow = false
   },
   methods: {
     alert () {
@@ -320,7 +324,7 @@ export default {
       return new Promise(async (resolve, reject) => {
         try {
           const { result } = await getRefundOrderDetail({ id: this.refundId })
-          this.form.actualRefund = result.actualRefund
+          this.form.actualRefund = this.maxRefund = result.actualRefund
           this.form.applyContent = result.applyContent
           this.form.pictures = [...result.pictures]
           this.imgList = [...result.pictures]
@@ -338,15 +342,16 @@ export default {
       })
     },
     showPopup (name) {
-      this.currentPopupName = name
-      this.popupTitle = this[`${name}Info`].title
-      this.popupOptions = this[`${name}Info`].options
+      this.popup.currentPopupName = name
+      this.popup.opupTitle = this[`${name}Info`].title
+      this.popup.popupOptions = this[`${name}Info`].options
       this.$nextTick(() => {
-        this.isPopupShow = true
+        this.popup.isPopupShow = true
       })
     },
     async handleRadioClick (item) {
-      let { currentPopupName, radio } = this
+      const { radio } = this
+      const { currentPopupName } = this.popup
       radio[currentPopupName] = item.dictDataKey
       radio[`${currentPopupName}Text`] = item.dictDataValue
       if (currentPopupName === 'refundType') {
@@ -366,7 +371,7 @@ export default {
       if (!this.radio.goodsStatus && this.detail.orderType === 'PHYSICAL') return this.$warning('请选择货物状态')
       if (!this.radio.refundReason) return this.$warning('请选择退货原因')
       if (!isPositive(this.form.actualRefund)) return this.$warning('退款金额必须大于零，小数点后最多两位')
-      if (this.form.actualRefund > this.productInfo.amount) return this.$warning('退款金额大于最大退款金额，请修改')
+      if (this.form.actualRefund > this.maxRefund) return this.$warning('退款金额大于最大退款金额，请修改')
       try {
         this.loading = true
         const { type, form: { actualRefund, ...rest } } = this

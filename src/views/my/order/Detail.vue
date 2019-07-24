@@ -21,12 +21,13 @@
           [$style.codeListBox]: true,
           [$style.collapse]: collapseQrCode
         }"
-        @click="() => collapseQrCode = !collapseQrCode"
+        @click="() => { isArrowShow ? collapseQrCode = !collapseQrCode : '' }"
       >
         <h2 :class="$style.title">
           核销码
         </h2>
         <pl-svg
+          v-if="isArrowShow"
           :class="{ [$style.collapse]: collapseQrCode }"
           name="right"
           color="#999"
@@ -592,6 +593,9 @@ export default {
     // 核销码全部核销
     allFinish () {
       return this.redeemCodeModels.every(item => item.statusCode === 1)
+    },
+    isArrowShow () {
+      return this.studentInfoModels.length || this.productInfoModel.productDetailModels.length !== 1
     }
   },
   async activated () {
@@ -637,8 +641,11 @@ export default {
     setTime (result, orderStatus) {
       let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
       let startTime = Moment((result.tradingInfoModel.createTime)).valueOf()
-      if (now - startTime < 24 * 60 * 60 * 1000) {
-        this.countDown(24 * 60 * 60 * 1000 + startTime - now - 2000, orderStatus)
+      if (orderStatus === 'WAIT_PAY' && (now - startTime < 24 * 60 * 60 * 1000)) {
+        this.countDown(24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_PAY')
+      }
+      if (orderStatus === 'WAIT_RECEIVE' && (now - startTime < 10 * 24 * 60 * 60 * 1000)) {
+        this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_RECEIVE')
       }
     },
     getDetail () {
