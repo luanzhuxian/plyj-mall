@@ -348,7 +348,7 @@
       </pl-fields>
     </div>
 
-    <div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click.capture="showContactPopup = true">
+    <div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click.capture="chooseContact">
       <pl-fields
         size="middle"
         text="联系人信息"
@@ -392,18 +392,18 @@
     <pl-popup
       :show.sync="showContactPopup"
       :close-on-click-modal="false"
-      @close="contactInfoModel.name = ''; contactInfoModel.mobile = '';"
+      @close="contactInfoForm.name = ''; contactInfoForm.mobile = '';"
     >
       <div :class="$style.addContact">
         <div :class="$style.addContactTop">
           联系人信息
         </div>
-        <pl-form :model="contactInfoModel" :rules="rules" ref="contactForm">
+        <pl-form :model="contactInfoForm" :rules="rules" ref="contactForm">
           <pl-form-item prop="name" label="姓名：" :label-width="204" :gap-top="20">
-            <pl-input v-model="contactInfoModel.name" />
+            <pl-input v-model="contactInfoForm.name" />
           </pl-form-item>
           <pl-form-item prop="mobile" label="手机号码：" :label-width="204" :gap-top="20">
-            <pl-input v-model="contactInfoModel.mobile" />
+            <pl-input v-model="contactInfoForm.mobile" />
           </pl-form-item>
         </pl-form>
         <pl-button size="huge" type="warning" @click="useContact">
@@ -482,6 +482,10 @@ export default {
         ]
       },
       contactInfoModel: {
+        name: '',
+        mobile: ''
+      },
+      contactInfoForm: {
         name: '',
         mobile: ''
       },
@@ -639,8 +643,15 @@ export default {
         }
       })
     },
+    chooseContact () {
+      this.contactInfoForm = Object.assign({}, this.contactInfoForm, this.contactInfoModel)
+      this.showContactPopup = true
+    },
     useContact () {
-      this.showContactPopup = false
+      if (this.$refs.contactForm.validate()) {
+        this.showContactPopup = false
+        this.contactInfoModel = Object.assign({}, this.contactInfoModel, this.contactInfoForm)
+      }
     },
     async getProductDetail (flag) {
       const proList = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
