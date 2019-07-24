@@ -2,14 +2,29 @@
   <div :class="$style.homeTemplateB">
     <Search placeholder="搜索商品" />
     <Banner :data="BANNER" />
-    <img :class="$style.img88" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansibo.gif" alt="">
-    <img :class="$style.img88" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhidejiaoyu.gif" alt="">
+    <img
+      v-if="data88[mallId]"
+      :class="$style.img88"
+      :src="data88[mallId].gif" alt=""
+      @click="showHaibao"
+    >
     <HotItem :data="POPULAR" />
     <Best v-if="type === 3" :data="CLASS" />
     <BestRecommend
       :data="RECOMMEND"
       :type="type"
     />
+    <transition name="fade">
+      <div :class="$style.haibao" v-if="haibao">
+        <img @click="haibao = ''" :src="haibao" alt="">
+      </div>
+    </transition>
+    <transition name="fade">
+      <div :class="$style.pop" v-if="pop">
+        <img :src="pop" alt="">
+        <pl-svg @click="pop = ''" name="close3" color="#fff" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -19,6 +34,7 @@ import Banner from './components/Banner.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
+import { mapGetters } from 'vuex'
 export default {
   name: 'HomeTemplateB',
   components: {
@@ -30,6 +46,20 @@ export default {
   },
   data () {
     return {
+      haibao: '',
+      pop: '',
+      data88: {
+        '1057573777392603136': {
+          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
+          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif'
+        },
+        '1108363572472762368': {
+          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
+          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif'
+        }
+      }
     }
   },
   props: {
@@ -44,9 +74,14 @@ export default {
       default: 2
     }
   },
+  activated () {
+    this.showPop(500)
+  },
   created () {
+    this.showPop(1500)
   },
   computed: {
+    ...mapGetters(['mallId']),
     BANNER () {
       return this.data.BANNER || {}
     },
@@ -59,6 +94,19 @@ export default {
     CLASS () {
       return this.data.CLASS || {}
     }
+  },
+  methods: {
+    getHaibao () {
+
+    },
+    showPop (delay) {
+      setTimeout(() => {
+        this.pop = this.data88[this.mallId].pop
+      }, delay)
+    },
+    showHaibao () {
+      this.haibao = this.data88[this.mallId].haibao
+    }
   }
 }
 </script>
@@ -69,8 +117,41 @@ export default {
     font-size: 0;
   }
   .img88 {
-    padding: 10px 0;
     width: 100%;
-    background-color: #fff;
+    padding-top: 16px;
+    background-color: #f4f5f9;
+  }
+  .pop, .haibao {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 5;
+    > img {
+      width: 560px;
+    }
+    > svg {
+      width: 48px;
+      margin-top: 64px;
+    }
+  }
+  .haibao {
+    text-align: center;
+    overflow: auto;
+    z-index: 5;
+    > img {
+      width: 100%;
+      justify-items: flex-start !important;
+    }
+    > svg {
+      width: 48px;
+      margin-top: 64px;
+    }
   }
 </style>

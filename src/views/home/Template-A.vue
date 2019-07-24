@@ -25,8 +25,12 @@
       <div class="home-banner-pagination" slot="pagination" />
     </swiper>
 
-    <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansibo.gif" alt="">
-    <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhidejiaoyu.gif" alt="">
+    <img
+      v-if="data88[mallId]"
+      :class="$style.img88"
+      :src="data88[mallId].gif" alt=""
+      @click="showHaibao"
+    >
 
     <div :class="$style.gift" v-if="data['MODULE_A'].values.length">
       <div :class="$style.head">
@@ -130,6 +134,18 @@
     </div>
 
     <you-like />
+
+    <transition name="fade">
+      <div :class="$style.haibao" v-if="haibao">
+        <img @click="haibao = ''" :src="haibao" alt="">
+      </div>
+    </transition>
+    <transition name="fade">
+      <div :class="$style.pop" v-if="pop">
+        <img :src="pop" alt="">
+        <pl-svg @click="pop = ''" name="close3" color="#fff" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -140,6 +156,7 @@ import TopText from '../../components/Top-Text.vue'
 import CategoryItem from './components/CategoryItem.vue'
 import YouLike from './components/YouLike.vue'
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'HomeTemplateA',
   components: {
@@ -171,7 +188,21 @@ export default {
         slidesPerView: 2.5,
         slidesPerGroup: 3
       },
-      date: moment().format('MM月DD日 dddd')
+      date: moment().format('MM月DD日 dddd'),
+      haibao: '',
+      pop: '',
+      data88: {
+        '1057573777392603136': {
+          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
+          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif'
+        },
+        '1108363572472762368': {
+          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
+          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif'
+        }
+      }
     }
   },
   props: {
@@ -183,7 +214,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId'])
+    ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId', 'mallId'])
+  },
+  activated () {
+    this.showPop(500)
+  },
+  created () {
+    this.showPop(1500)
   },
   methods: {
     getRouteLink ({ type, value }) {
@@ -197,6 +234,15 @@ export default {
           ...(type === 2 && this.agentUser ? { brokerId: this.userId } : null) // 如果当前用户是helper，尝试获取该商品的brokerId
         }
       }
+    },
+    showPop (delay) {
+      setTimeout(() => {
+        this.pop = this.data88[this.mallId].pop
+      }, delay)
+    },
+    showHaibao () {
+      console.log(this.data88[this.mallId])
+      this.haibao = this.data88[this.mallId].haibao
     }
   }
 }
@@ -273,6 +319,45 @@ export default {
     }
     .youLike {
       padding: 0 32px;
+    }
+  }
+
+  .img88 {
+    width: 100%;
+    padding-top: 16px;
+    background-color: #f4f5f9;
+  }
+  .pop, .haibao {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 5;
+    > img {
+      width: 560px;
+    }
+    > svg {
+      width: 48px;
+      margin-top: 64px;
+    }
+  }
+  .haibao {
+    text-align: center;
+    overflow: auto;
+    z-index: 5;
+    > img {
+      width: 100%;
+      justify-items: flex-start !important;
+    }
+    > svg {
+      width: 48px;
+      margin-top: 64px;
     }
   }
 </style>
