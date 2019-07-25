@@ -337,7 +337,7 @@ export default {
     overflow: auto;
     z-index: 5;
     > img {
-      width: 100%;
+      width: 90%;
       justify-items: flex-start !important;
     }
   }
