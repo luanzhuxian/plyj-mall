@@ -17,7 +17,6 @@
     />
     <transition name="fade">
       <div :class="$style.haibao" v-if="haibao">
-        <pl-svg name="close3" @click="haibao = ''" color="#fff" />
         <img @click="haibao = ''" :src="haibao" alt="">
       </div>
     </transition>
@@ -136,14 +135,6 @@ export default {
     > img {
       width: 100%;
       justify-items: flex-start !important;
-    }
-    > svg {
-      position: absolute;
-      top: 12px;
-      left: 20px;
-      width: 48px;
-      margin-top: 64px;
-      z-index: 10;
     }
   }
 </style>

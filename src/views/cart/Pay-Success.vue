@@ -33,7 +33,6 @@
     </div>
     <transition name="fade">
       <div :class="$style.haibao" v-if="haibao">
-        <pl-svg name="close3" @click="haibao = ''" color="#fff" />
         <img @click="haibao = ''" :src="haibao" alt="">
       </div>
     </transition>
@@ -137,14 +136,6 @@ export default {
   > img {
     width: 90%;
     justify-items: flex-start !important;
-  }
-  > svg {
-    position: absolute;
-    top: 70px;
-    left: 50px;
-    width: 48px;
-    margin-top: 64px;
-    z-index: 10;
   }
 }
 </style>
