@@ -137,6 +137,7 @@
 
     <transition name="fade">
       <div :class="$style.haibao" v-if="haibao">
+        <pl-svg name="close3" @click="haibao = ''" color="#fff" />
         <img @click="haibao = ''" :src="haibao" alt="">
       </div>
     </transition>
@@ -155,7 +156,7 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import TopText from '../../components/Top-Text.vue'
 import CategoryItem from './components/CategoryItem.vue'
 import YouLike from './components/YouLike.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'HomeTemplateA',
@@ -190,19 +191,7 @@ export default {
       },
       date: moment().format('MM月DD日 dddd'),
       haibao: '',
-      pop: '',
-      data88: {
-        '1057573777392603136': {
-          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
-          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif'
-        },
-        '1108363572472762368': {
-          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
-          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif'
-        }
-      }
+      pop: ''
     }
   },
   props: {
@@ -214,13 +203,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId', 'mallId'])
+    ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId', 'mallId']),
+    ...mapState(['data88'])
   },
   activated () {
     this.showPop(500)
   },
   created () {
-    this.showPop(1500)
+    this.showPop(500)
   },
   methods: {
     getRouteLink ({ type, value }) {
@@ -241,7 +231,6 @@ export default {
       }, delay)
     },
     showHaibao () {
-      console.log(this.data88[this.mallId])
       this.haibao = this.data88[this.mallId].haibao
     }
   }
@@ -356,8 +345,12 @@ export default {
       justify-items: flex-start !important;
     }
     > svg {
+      position: absolute;
+      top: 12px;
+      left: 20px;
       width: 48px;
       margin-top: 64px;
+      z-index: 10;
     }
   }
 </style>

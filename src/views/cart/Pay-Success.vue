@@ -31,7 +31,12 @@
         完成，返回首页
       </pl-button>
     </div>
-
+    <transition name="fade">
+      <div :class="$style.haibao" v-if="haibao">
+        <pl-svg name="close3" @click="haibao = ''" color="#fff" />
+        <img @click="haibao = ''" :src="haibao" alt="">
+      </div>
+    </transition>
     <you-like :is-my="true" />
   </div>
 </template>
@@ -43,6 +48,11 @@ export default {
   components: {
     youLike
   },
+  data () {
+    return {
+      haibao: ''
+    }
+  },
   props: {
     orderId: {
       type: String,
@@ -53,9 +63,17 @@ export default {
       default: 1
     }
   },
+  activated () {
+    this.showHaibao()
+  },
   computed: {
     orderType () {
       return this.$route.query.orderType
+    }
+  },
+  methods: {
+    showHaibao () {
+      this.haibao = this.$store.state.data88[this.$store.getters.mallId].haibao
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -101,5 +119,32 @@ export default {
   margin: 48px 0;
   font-size: 30px;
   color: #387af6;
+}
+.haibao {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, .5);
+  text-align: center;
+  overflow: auto;
+  z-index: 5;
+  > img {
+    width: 90%;
+    justify-items: flex-start !important;
+  }
+  > svg {
+    position: absolute;
+    top: 70px;
+    left: 50px;
+    width: 48px;
+    margin-top: 64px;
+    z-index: 10;
+  }
 }
 </style>

@@ -17,6 +17,7 @@
     />
     <transition name="fade">
       <div :class="$style.haibao" v-if="haibao">
+        <pl-svg name="close3" @click="haibao = ''" color="#fff" />
         <img @click="haibao = ''" :src="haibao" alt="">
       </div>
     </transition>
@@ -35,7 +36,7 @@ import Banner from './components/Banner.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'HomeTemplateB',
   components: {
@@ -48,19 +49,7 @@ export default {
   data () {
     return {
       haibao: '',
-      pop: '',
-      data88: {
-        '1057573777392603136': {
-          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
-          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif'
-        },
-        '1108363572472762368': {
-          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
-          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif'
-        }
-      }
+      pop: ''
     }
   },
   props: {
@@ -79,10 +68,11 @@ export default {
     this.showPop(500)
   },
   created () {
-    this.showPop(1500)
+    this.showPop(500)
   },
   computed: {
     ...mapGetters(['mallId']),
+    ...mapState(['data88']),
     BANNER () {
       return this.data.BANNER || {}
     },
@@ -151,8 +141,12 @@ export default {
       justify-items: flex-start !important;
     }
     > svg {
+      position: absolute;
+      top: 12px;
+      left: 20px;
       width: 48px;
       margin-top: 64px;
+      z-index: 10;
     }
   }
 </style>
