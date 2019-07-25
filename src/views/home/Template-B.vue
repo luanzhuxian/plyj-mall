@@ -11,6 +11,7 @@
     <HotItem :data="POPULAR" />
     <Best v-if="type === 3" :data="CLASS" />
     <BestRecommend
+      v-if="RECOMMEND.values && RECOMMEND.values.length"
       :data="RECOMMEND"
       :type="type"
     />

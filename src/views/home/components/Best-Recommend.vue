@@ -4,7 +4,12 @@
       精品推荐
     </div>
     <template v-if="styleType === 2">
-      <div :class="$style.product" v-for="(item, i) of data.values" :key="i">
+      <div
+        :class="$style.product"
+        v-for="(item, i) of data.values"
+        :key="i"
+        @click="clickHandler(item)"
+      >
         <div :class="$style.img" :style="{ backgroundImage: `url(${item.image + '?x-oss-process=style/thum-middle'})` }">
           <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
             体验课
@@ -51,7 +56,10 @@
     </template>
     <!-- 瀑布流 -->
     <div v-if="styleType === 1" :class="$style.waterfallBox">
-      <ul :class="$style.waterfall" v-if="listLeft.length">
+      <ul
+        :class="$style.waterfall"
+        v-if="listLeft.length"
+      >
         <li
           v-for="(item, i) of listLeft"
           :key="i"
@@ -59,6 +67,7 @@
             [$style.item]: true,
             [$style.long]: i % 2 === 1
           }"
+          @click="clickHandler(item)"
         >
           <img :class="$style.img" :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
           <div :class="$style.content">
@@ -89,6 +98,7 @@
             [$style.item]: true,
             [$style.long]: (i + 1) % 2 === 1
           }"
+          @click="clickHandler(item)"
         >
           <img :class="$style.img" :src="item.image" alt="">
           <div :class="$style.content">
@@ -124,6 +134,7 @@
 
 <script>
 import Tags from './Tags.vue'
+import { mapGetters } from 'vuex'
 export default {
   name: 'BestRecommend',
   components: {
@@ -150,6 +161,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['agentUser', 'userId']),
     listLeft () {
       return this.localValue.filter((item, i) => i % 2 === 0)
     },
@@ -161,6 +173,9 @@ export default {
     },
     maxSee () {
       return this.data.values.length
+    },
+    styleType () {
+      return this.data.styleType || -1
     }
   },
   methods: {
@@ -182,8 +197,8 @@ export default {
       // }
       this.minSee = this.maxSee
     },
-    styleType () {
-      return this.data.styleType || -1
+    clickHandler (item) {
+      this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.agentUser ? this.userId : null } })
     }
   }
 }

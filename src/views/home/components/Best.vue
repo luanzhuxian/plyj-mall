@@ -1,10 +1,15 @@
 <template>
   <div :class="$style.best">
     <div :class="$style.top">
-      <span :class="$style.title">精品课程</span>
+      <span :class="$style.title" v-text="data.moduleName" />
     </div>
     <ul :class="$style.proList">
-      <li :class="$style.proItem" v-for="(item, i) of data.values" :key="i">
+      <li
+        :class="$style.proItem"
+        v-for="(item, i) of data.values"
+        :key="i"
+        @click="clickHandler(item)"
+      >
         <img :class="$style.img" :src="item.image" alt="">
         <div :class="$style.itemContent">
           <p :class="$style.proName" v-text="item.goodsInfo.productName" />
@@ -35,6 +40,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Best',
   props: {
@@ -45,6 +51,9 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['agentUser', 'userId'])
+  },
   methods: {
     getMinPrice (skuList) {
       let priceList = skuList.map(item => item.price)
@@ -53,6 +62,9 @@ export default {
     getMaxPrice (skuList) {
       let priceList = skuList.map(item => item.price)
       return Math.max(...priceList)
+    },
+    clickHandler (item) {
+      this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.agentUser ? this.userId : null } })
     }
   }
 }
