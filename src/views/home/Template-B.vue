@@ -64,9 +64,6 @@ export default {
       default: 2
     }
   },
-  activated () {
-    this.showPop(500)
-  },
   created () {
     this.showPop(500)
   },

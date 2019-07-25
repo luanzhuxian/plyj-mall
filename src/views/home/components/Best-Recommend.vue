@@ -1,8 +1,6 @@
 <template>
   <div :class="$style.bestRecommend">
-    <div :class="$style.title">
-      精品推荐
-    </div>
+    <div :class="$style.title" v-text="data.moduleName" />
     <template v-if="styleType === 2">
       <div
         :class="$style.product"
@@ -24,7 +22,7 @@
             </template>
             <template v-else-if="item.goodsInfo.salesVolume >= 10">
               <span>
-                {{ item.goodsInfo.salesVolume }}人{{ item.goodsInfo.productType === 'FORMAL_CLASS' || item.goodsInfo.productType === 'EXPERIENCE_CLASS' ? '报名' : '购买' }}
+                {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人{{ item.goodsInfo.productType === 'FORMAL_CLASS' || item.goodsInfo.productType === 'EXPERIENCE_CLASS' ? '报名' : '购买' }}
               </span>
             </template>
           </div>
@@ -83,7 +81,7 @@
               </template>
               <template v-else-if="item.goodsInfo.salesVolume >= 10">
                 <span :class="$style.many">
-                  {{ item.goodsInfo.salesVolume }}人付款
+                  {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
                 </span>
               </template>
             </p>
@@ -114,7 +112,7 @@
               </template>
               <template v-else-if="item.goodsInfo.salesVolume >= 10">
                 <span :class="$style.many">
-                  {{ item.goodsInfo.salesVolume }}人付款
+                  {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
                 </span>
               </template>
             </p>

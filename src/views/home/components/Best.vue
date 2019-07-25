@@ -27,11 +27,11 @@
               </template>
               <template v-else-if="item.goodsInfo.salesVolume >= 10">
                 <span :class="$style.howManyBuy">
-                  {{ item.goodsInfo.salesVolume }}人报名
+                  {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人报名
                 </span>
               </template>
             </div>
-            <button> {{ item.goodsInfo.productType === 'FORMAL_CLASS' ? '立即报名' : '立即学习' }}</button>
+            <button> {{ item.goodsInfo.productType === 'FORMAL_CLASS' ? '立即学习' : '立即报名' }}</button>
           </div>
         </div>
       </li>
@@ -106,8 +106,10 @@ export default {
     padding: 16px;
     box-sizing: border-box;
     .pro-name {
+      height: 72px;
       font-weight: bold;
       font-size: 24px;
+      line-height: 36px;
       color: #000;
       @include elps-wrap(2);
     }

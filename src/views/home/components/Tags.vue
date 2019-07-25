@@ -48,25 +48,30 @@ export default {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    margin-top: 8px;
     .tag {
       border: 1px solid currentColor;
       box-sizing: border-box;
     }
-    &.middle > .tag {
-      margin-right: 12px;
-      padding: 0 12px;
-      font-size: 24px;
-      line-height: 36px;
-      border-radius: 8px;
+    &.middle {
+      min-height: 36px;
+      > .tag {
+        margin-right: 12px;
+        padding: 0 12px;
+        font-size: 24px;
+        line-height: 36px;
+        border-radius: 8px;
+      }
     }
-    &.small > .tag {
-      margin-right: 8px;
-      margin-bottom: 8px;
-      padding: 0 12px;
-      font-size: 20px;
-      line-height: 28px;
-      border-radius: 6px;
+    &.small {
+      min-height: 28px;
+      > .tag {
+        margin-right: 8px;
+        margin-bottom: 8px;
+        padding: 0 12px;
+        font-size: 20px;
+        line-height: 28px;
+        border-radius: 6px;
+      }
     }
   }
 </style>

@@ -22,6 +22,7 @@
         <img :class="$style.img" :src="item.image + '?x-oss-process=style/thum-small'" v-img-error alt="">
         <div :class="$style.content">
           <div :class="$style.proName" v-text="item.name" />
+          <Tags size="middle" :tags="item.goodsInfo.labelModels" />
           <div :class="$style.proPrice">
             <div :class="$style.price">
               <span>¥</span>
@@ -35,11 +36,10 @@
             </template>
             <template v-else-if="item.goodsInfo.salesVolume >= 10">
               <span :class="$style.howManyPay">
-                {{ item.goodsInfo.salesVolume }}人付款
+                {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
               </span>
             </template>
           </div>
-          <Tags size="middle" :tags="item.goodsInfo.labelModels" />
         </div>
       </div>
 
@@ -53,6 +53,7 @@
           <img :class="$style.img" :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
           <div :class="$style.content">
             <div :class="$style.proName" v-text="item.name" />
+            <tags size="small" :tags="item.goodsInfo.labelModels.slice(0, 2)" />
             <div :class="$style.proPrice">
               <div :class="$style.price">
                 <span>¥</span>
@@ -66,11 +67,10 @@
               </template>
               <template v-else-if="item.goodsInfo.salesVolume >= 10">
                 <span :class="$style.howManyPay">
-                  {{ item.goodsInfo.salesVolume }}人付款
+                  {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
                 </span>
               </template>
             </div>
-            <tags />
           </div>
         </div>
         <div v-if="data.values.length % 2 === 1" :class="$style.pro" />
@@ -188,6 +188,7 @@ export default {
       margin-bottom: 6px;
       .pro-name {
         height: 72px;
+        margin-bottom: 8px;
         font-size: 28px;
         font-weight: bold;
         line-height: 36px;
@@ -200,13 +201,16 @@ export default {
         justify-content: space-between;
         .price {
           span {
+            display: inline-block;
             color: #FE7700;
             &:nth-of-type(1) {
               font-size: 24px;
+              line-height: 28px;
               font-weight: 600;
             }
             &:nth-of-type(2) {
               font-size: 40px;
+              line-height: 36px;
               font-weight: bold;
             }
           }
@@ -215,6 +219,7 @@ export default {
           display: inline-block;
           font-size: 20px;
           color: #999;
+          vertical-align: -4px;
         }
       }
     }
@@ -227,6 +232,7 @@ export default {
       }
       .content {
         .pro-name {
+          margin-bottom: 12px;
           height: 36px;
           @include elps();
         }
@@ -245,7 +251,7 @@ export default {
   .pro {
     width: 340px;
     background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/img/product-item.png") no-repeat center center;
-    background-size: 109%;
+    background-size: 115%;
     border-radius: 20px;
   }
   @keyframes bgc-move {

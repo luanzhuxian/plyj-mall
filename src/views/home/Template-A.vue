@@ -206,9 +206,6 @@ export default {
     ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId', 'mallId']),
     ...mapState(['data88'])
   },
-  activated () {
-    this.showPop(500)
-  },
   created () {
     this.showPop(500)
   },
