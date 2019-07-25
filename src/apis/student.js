@@ -29,3 +29,8 @@ export const edit = data => axios.post('/apis/v1/studentmanagement/update', data
  * @returns {Promise<AxiosResponse<T>>}
  */
 export const getDetail = id => axios.get('/apis/v1/studentmanagement/findById', { params: { id } })
+/**
+ * 是否需要打开默认开关
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export const wouldINeedOpenDefault = () => axios.get('/apis/v1/studentmanagement/buttonstatus')

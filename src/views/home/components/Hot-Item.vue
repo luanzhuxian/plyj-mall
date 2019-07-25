@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <div :class="$style.other" v-if="data.values.length > 1">
+      <div :class="$style.other" v-if="data.values.length > 0">
         <div
           :class="$style.proItem"
           v-for="(item, i) of this.data.values"

@@ -67,7 +67,8 @@ import {
   add,
   remove,
   edit,
-  getDetail
+  getDetail,
+  wouldINeedOpenDefault
 } from '../../../apis/student'
 export default {
   name: 'AddStudent',
@@ -113,6 +114,8 @@ export default {
     }
   },
   async activated () {
+    let { result } = await wouldINeedOpenDefault()
+    this.form.defaultStatus = result ? 0 : 1
     if (this.id) {
       this.form.id = this.id
       try {

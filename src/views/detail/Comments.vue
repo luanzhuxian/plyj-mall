@@ -217,7 +217,9 @@ export default {
       this.getList()
     },
     preview (url) {
-      this.previewIndex = this.imgs.findIndex(item => item.src === url)
+      console.log(url)
+      this.previewIndex = this.imgs.findIndex(item => item.oSrc === url)
+      console.log(this.previewIndex)
       this.showImageSwipe = true
     },
     // 批量加载图片
@@ -240,7 +242,8 @@ export default {
       })
     },
     slideChange (index, total) {
-      this.currentContent = this.imgsMap[this.imgs[index].oSrc]
+      let imgName = this.getImgName(this.imgs[index].oSrc)
+      this.currentContent = this.imgsMap[imgName]
       // 进行到倒数第二张时,请求更多，只有在查看有图模式下可行
       if (total - index - 1 === 1 && this.form.flag) {
         this.form.current++
@@ -254,13 +257,18 @@ export default {
         let pro = item.orderProductREntity
         for (let img of item.mediaInfoEntityList) {
           await this.batchLoadImg(img.mediaUrl)
-          this.imgsMap[img.mediaUrl] = {
+          let imgName = this.getImgName(img.mediaUrl)
+          this.imgsMap[imgName] = {
             nickName: item.nickName,
             content: item.content,
             sku: `${pro.attribute1}“${pro.skuName}”` + (pro.attribute2 ? `，${pro.attribute2}“${pro.skuName2}”` : '')
           }
         }
       }
+    },
+    getImgName (url) {
+      let path = url.substring(url.indexOf('img/'))
+      return path.split('/')[1].split('.')[0].replace('-', '')
     }
   }
 }
