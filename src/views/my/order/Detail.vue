@@ -149,10 +149,9 @@
         </p>
         <p v-if="productInfoModel.couponDeduction > 0">
           <span>优惠券</span>
-          <i>-</i>
           <span
             class="rmb"
-            v-text="productInfoModel.couponDeduction || 0"
+            v-text="'-' + productInfoModel.couponDeduction || 0"
           />
         </p>
         <p v-if="orderType === 'PHYSICAL'">
