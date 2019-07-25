@@ -22,7 +22,7 @@
             </template>
             <template v-else-if="item.goodsInfo.salesVolume >= 10">
               <span>
-                {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人{{ item.goodsInfo.productType === 'FORMAL_CLASS' || item.goodsInfo.productType === 'EXPERIENCE_CLASS' ? '报名' : '购买' }}
+                {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人{{ item.goodsInfo.productType === 'FORMAL_CLASS' ? '学习' : '报名' }}
               </span>
             </template>
           </div>
