@@ -147,6 +147,13 @@
             v-text="productInfoModel.productsTotalAmount || 0"
           />
         </p>
+        <p v-if="productInfoModel.couponDeduction > 0">
+          <span>优惠券</span>
+          <span
+            class="rmb"
+            v-text="productInfoModel.couponDeduction || 0"
+          />
+        </p>
         <p v-if="orderType === 'PHYSICAL'">
           <span>运费</span>
           <span
@@ -163,7 +170,7 @@
         </span>
         <span
           :class="$style.totalMoney + ' fz-30 rmb'"
-          v-text="productInfoModel.amount || 0"
+          v-text="productInfoModel.actuallyAmount || 0"
         />
       </div>
     </div>
