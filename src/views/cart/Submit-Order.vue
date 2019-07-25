@@ -512,7 +512,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList']),
+    ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName']),
     // 是否只有一个商品
     isAloneProduct () {
       return this.physicalProducts.length + this.virtualProducts.length + this.lessonList.length === 1
@@ -578,6 +578,8 @@ export default {
       }
       this.invioceType = this.INVOICE_MODEL ? 2 : 1
       this.lessonErrorId = ''
+      this.contactInfoModel.name = this.realName || this.userName
+      this.contactInfoModel.mobile = this.mobile
     } catch (e) {
       this.$router.go(-1)
       throw e
