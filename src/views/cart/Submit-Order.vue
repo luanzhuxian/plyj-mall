@@ -708,6 +708,8 @@ export default {
       }
       for (const item of this.virtualProducts) {
         const { productId, skuCode1, skuCode2, count, agentUser, remark, needStudentInfo } = item
+        const currentStudent = this.CHECKED_STUDENT[skuCode1]
+        if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
         cartProducts.push({
           productId,
           skuCode1,
@@ -722,36 +724,7 @@ export default {
       for (const item of this.lessonList) {
         const { productId, skuCode1, skuCode2, count, agentUser, remark, needStudentInfo } = item
         const currentStudent = this.CHECKED_STUDENT[skuCode1]
-        if (needStudentInfo && !currentStudent) {
-          if (this.isCart) {
-            this.lessonErrorId = skuCode1
-            this.$nextTick(() => {
-              let errorEl = document.querySelector('.' + this.$style.lessonError)
-              errorEl.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-                inline: 'nearest'
-              })
-              this.lessonErrorTip = '请选择学员信息'
-            })
-          }
-          return this.$error('请选择学员信息')
-        }
-        if (needStudentInfo && currentStudent && currentStudent.length < count) {
-          if (this.isCart) {
-            this.lessonErrorId = skuCode1
-            this.$nextTick(() => {
-              let errorEl = document.querySelector('.' + this.$style.lessonError)
-              errorEl.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-                inline: 'nearest'
-              })
-              this.lessonErrorTip = `请选择${count}名学员信息`
-            })
-          }
-          return this.$error(`请选择${count}名学员信息`)
-        }
+        if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
         cartProducts.push({
           productId,
           skuCode1,
@@ -788,6 +761,55 @@ export default {
         this.submiting = false
       }
     },
+    /**
+     * 判断是否选择了学生
+     * @param needStudent {Boolean} 是否需要学员
+     * @param currentStudent {Array} 已选学生列表
+     * @param skuCode1 {string} 规格1的id，作为每个单独商品学员数据存储的key
+     * @param count {Number} 商品数量，用来判断学生数量
+     */
+    hasStudents (needStudent, currentStudent, skuCode1, count) {
+      if (needStudent && !currentStudent) {
+        if (this.isCart) {
+          this.lessonErrorId = skuCode1
+          this.$nextTick(() => {
+            let errorEl = document.querySelector('.' + this.$style.lessonError)
+            errorEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'nearest'
+            })
+            this.lessonErrorTip = '请选择学员信息'
+          })
+        }
+        this.$error('请选择学员信息')
+        return false
+      }
+      if (needStudent && currentStudent && currentStudent.length < count) {
+        if (this.isCart) {
+          this.lessonErrorId = skuCode1
+          this.$nextTick(() => {
+            let errorEl = document.querySelector('.' + this.$style.lessonError)
+            errorEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'nearest'
+            })
+            this.lessonErrorTip = `请选择${count}名学员信息`
+          })
+        }
+        this.$error(`请选择${count}名学员信息`)
+        return false
+      }
+      return true
+    },
+    /**
+     * 支付
+     * @param CREDENTIAL {Object} 支付数据
+     * @param orderId {String} 订单Id
+     * @param orderCount {Number} 订单数量
+     * @returns {Promise<*>}
+     */
     async pay (CREDENTIAL, orderId, orderCount) {
       let orderType = ''
       if (this.lessonList.length > 0 && this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
