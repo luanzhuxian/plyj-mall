@@ -39,11 +39,8 @@
                 <span :class="$style.codeValue" v-text="item.redeemCode" />
                 <span :class="$style.codeStatus" v-text="item.status" />
               </div>
-              <div :class="$style.whoUse" v-if="!collapseQrCode && item.name && (item.statusCode === 0 || item.statusCode === 1)">
-                <pl-svg
-                  name="name-card"
-                  :color="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'"
-                />
+              <div :class="$style.whoUse" v-if="!collapseQrCode && item.name">
+                <pl-svg name="name-card" :color="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
                 <span :class="{ [$style.name]: true }" v-text="item.name" />
                 <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
               </div>
@@ -81,7 +78,7 @@
         />
         <div :class="$style.buttons">
           <pl-button
-            v-if="item.supportRefund && canApplyRefund && ~[0, 3, 6].indexOf(item.afterSalesStatus)"
+            v-if="item.supportRefund && item.price > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus) && canApplyRefund"
             plain
             round
             @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name, count: usefulCodeCount } })"
@@ -539,8 +536,6 @@ export default {
         addressPrefix: ' ',
         agencyAddress: ' '
       },
-      isAllProductRefund: true,
-      isDeleteBtnShow: true,
       timer: 0,
       currentPayId: '',
       payloading: false,
@@ -564,17 +559,25 @@ export default {
     isClosedByCancle () {
       return this.orderStatus === 'CLOSED' && !this.tradingInfoModel.payTime
     },
-    isClosedByRefund () {
-      return this.orderStatus === 'CLOSED' && this.tradingInfoModel.payTime && this.isAllProductRefund
+    // isClosedByRefund () {
+    //   return this.orderStatus === 'CLOSED' && this.tradingInfoModel.payTime && this.isAllProductRefund
+    // },
+    isAllProductRefund () {
+      return this.productInfoModel.productDetailModels.every(product => product.afterSalesStatus === 2)
+    },
+    isDeleteBtnShow () {
+      // 只要有一个商品在售后状态则不显示删除按钮
+      return this.productInfoModel.productDetailModels.every(product => [0, 2, 3, 6].includes(product.afterSalesStatus))
     },
     hasExpressInfo () {
-      return this.orderType === 'PHYSICAL' &&
-        (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED' || this.isClosedByRefund)
+      return this.orderType === 'PHYSICAL' && this.logisticsInfoModel && this.logisticsInfoModel.courierNo
+      // (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED' || this.isClosedByRefund)
     },
     // 是否可以申请售后
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) &&
-      this.productInfoModel.amount > 0
+      this.productInfoModel.amount > 0 &&
+      this.productInfoModel.actuallyAmount > 0
     },
     // 是否可以申请发票，invoiceStatus： 8:'可申请' 1:'已申请' 3:'已开票' 7:'不支持'
     canApplyInvoice () {
@@ -602,7 +605,7 @@ export default {
       return this.redeemCodeModels.filter(item => item.statusCode === 0).length
     },
     isArrowShow () {
-      return this.redeemCodeModels.length || this.productInfoModel.productDetailModels.length !== 1
+      return this.studentInfoModels.length || this.redeemCodeModels.length > 1
     }
   },
   async activated () {
@@ -618,9 +621,9 @@ export default {
     this.collepseActiveNames = []
     this.logisticsInfoModel = null
     this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY = ''
-    this.isAllProductRefund = true
-    this.isDeleteBtnShow = true
     this.collapseQrCode = true
+    this.isPopupShow = false
+    this.isPickerShow = false
     clearInterval(this.timer)
     clearInterval(this.timer2)
   },
@@ -646,13 +649,12 @@ export default {
       }, 1000)
     },
     setTime (result, orderStatus) {
+      let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
+      let duration = orderStatus === 'WAIT_PAY' ? (24 * 60 * 60 * 1000) : (10 * 24 * 60 * 60 * 1000)
       let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
-      let startTime = Moment((result.tradingInfoModel.createTime)).valueOf()
-      if (orderStatus === 'WAIT_PAY' && (now - startTime < 24 * 60 * 60 * 1000)) {
-        this.countDown(24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_PAY')
-      }
-      if (orderStatus === 'WAIT_RECEIVE' && (now - startTime < 10 * 24 * 60 * 60 * 1000)) {
-        this.countDown(10 * 24 * 60 * 60 * 1000 + startTime - now - 2000, 'WAIT_RECEIVE')
+      let startTime = Moment(time).valueOf()
+      if (now - startTime < duration) {
+        this.countDown(duration + startTime - now - 2000, orderStatus)
       }
     },
     getDetail () {
@@ -689,8 +691,6 @@ export default {
           this.orderStatusAlias = orderStatusAlias
           // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
-            this.isAllProductRefund = (current.afterSalesStatus === 2)
-            this.isDeleteBtnShow = [0, 2, 3, 6].includes(current.afterSalesStatus) // 只要有一个商品在售后状态则不显示删除按钮
             return total + current['count']
           }, 0);  // eslint-disable-line
           ({

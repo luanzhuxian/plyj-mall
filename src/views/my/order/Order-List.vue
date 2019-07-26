@@ -63,7 +63,7 @@
               <div :class="$style.priceWrapper">
                 <span :class="$style.totalCount">{{ `共${item.totalCount}件商品` }}</span>
                 <span :class="$style.bold">总价：</span>
-                <span :class="$style.price">{{ item.totalPrice }}</span>
+                <span :class="$style.price">{{ item.actuallyAmount }}</span>
               </div>
               <div
                 :class="$style.buttons"
