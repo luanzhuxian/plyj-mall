@@ -615,7 +615,7 @@ export default {
       try {
         await this.getProductDetail(true)
         next()
-        if (count < thisStudents.length) {
+        if (thisStudents && count < thisStudents.length) {
           thisStudents.pop()
           localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
         }

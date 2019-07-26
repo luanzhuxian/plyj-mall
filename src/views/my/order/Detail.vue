@@ -602,7 +602,7 @@ export default {
       return this.redeemCodeModels.filter(item => item.statusCode === 0).length
     },
     isArrowShow () {
-      return this.studentInfoModels.length || this.productInfoModel.productDetailModels.length !== 1
+      return this.redeemCodeModels.length || this.productInfoModel.productDetailModels.length !== 1
     }
   },
   async activated () {
