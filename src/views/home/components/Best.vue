@@ -36,6 +36,7 @@
           </div>
         </div>
       </li>
+      <li v-if="data.values.length % 2 === 1" :class="$style.pro + ' ' + $style.proItem" />
     </ul>
   </div>
 </template>
@@ -156,5 +157,12 @@ export default {
       font-size: 20px;
       color: #fe7700;
     }
+  }
+  .pro {
+    width: 340px;
+    height: 413px;
+    background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/img/product-item.png") no-repeat center center;
+    background-size: 115%;
+    border-radius: 20px;
   }
 </style>
