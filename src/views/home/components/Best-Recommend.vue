@@ -40,7 +40,7 @@
               <span>¥</span>
               <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
               <del>
-                ¥{{ getMinOrinalPrice(item.goodsInfo.productSkuModels) }}
+                ¥{{ getMaxOrinalPrice(item.goodsInfo.productSkuModels) }}
               </del>
             </div>
             <button v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
@@ -188,6 +188,10 @@ export default {
     getMinOrinalPrice (skuList) {
       let priceList = skuList.map(item => item.originalPrice)
       return Math.min(...priceList)
+    },
+    getMaxOrinalPrice (skuList) {
+      let priceList = skuList.map(item => item.originalPrice)
+      return Math.max(...priceList)
     },
     getMaxPrice (skuList) {
       let priceList = skuList.map(item => item.price)
