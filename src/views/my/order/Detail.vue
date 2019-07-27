@@ -41,7 +41,7 @@
                 </span>
                 <span :class="$style.codeStatus" v-text="item.status" />
               </div>
-              <div :class="$style.whoUse" v-if="!collapseQrCode && item.name">
+              <div :class="$style.whoUse" v-if="!collapseQrCode">
                 <pl-svg name="name-card" :color="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
                 <span :class="{ [$style.name]: true }" v-text="item.name" />
                 <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
@@ -80,7 +80,7 @@
         />
         <div :class="$style.buttons">
           <pl-button
-            v-if="item.supportRefund && item.price > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus) && canApplyRefund"
+            v-if="isRefundBtnShow(item) && canApplyRefund"
             plain
             round
             @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name, count: usefulCodeCount } })"
@@ -100,7 +100,8 @@
             v-if="item.afterSalesStatus === 2"
             plain
             round
-            @click="$router.push({ name: 'RefundDetail', params: { id: item.mallRefundId } })"
+            :style="{ opacity: item.afterSalesStatusExtend === 5 ? 0.3 : 1 }"
+            @click="item.afterSalesStatusExtend === 5 ? '' : $router.push({ name: 'RefundDetail', params: { id: item.mallRefundId } })"
           >
             退款完成
           </pl-button>
@@ -125,7 +126,7 @@
         </div>
         <div
           :class="$style.explain"
-          v-if="orderType === 'VIRTUAL' || orderType === 'FORMAL_CLASS'"
+          v-if="orderType !== 'PHYSICAL'"
         >
           <ModuleTitle
             title="使用说明"
@@ -470,6 +471,7 @@ import {
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { generateQrcode } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
+
 function updateLocalStorage (key, value) {
   const arr = JSON.parse(localStorage.getItem(key) || '[]')
   arr.push(value)
@@ -580,23 +582,22 @@ export default {
     // 是否可以申请售后
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) &&
-      this.productInfoModel.actuallyAmount > 0
+      this.productInfoModel.actuallyAmount > 0 &&
+      (this.orderType === 'PHYSICAL' || this.usefulCodeCount > 0)
     },
     // 是否可以申请发票，invoiceStatus： 8:'可申请' 1:'已申请' 3:'已开票' 7:'不支持'
     canApplyInvoice () {
       return this.orderType === 'PHYSICAL' &&
         this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
-        this.productInfoModel.amount > 0 &&
+        this.productInfoModel.productsTotalAmount - this.productInfoModel.couponDeduction > 0 &&
         this.productInfoModel.productDetailModels.some(item => {
-          return item.invoiceStatus === 8 &&
-            ~[0, 3, 6].indexOf(item.afterSalesStatus)
+          return item.price > 0 && item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
         })
     },
     noInvoiceProList () {
       return this.productInfoModel.productDetailModels.filter(item => {
-        return item.invoiceStatus === 8 &&
-          ~[0, 3, 6].indexOf(item.afterSalesStatus)
+        return item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
       })
     },
     // 核销码状: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
@@ -632,6 +633,9 @@ export default {
     await deleteImage([qrcodeKey])
   },
   methods: {
+    isRefundBtnShow (item) {
+      return item.supportRefund && Number(item.price) + Number(item.freight) > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
+    },
     // 倒计时
     countDown (remanent, orderStatus) {
       this.timer = setInterval(() => {
