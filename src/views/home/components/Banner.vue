@@ -4,12 +4,7 @@
       :options="swiperOptionBanner"
     >
       <swiperSlide v-for="(item, i) of data.values" :key="i">
-        <router-link v-if="item.type === 1" :to="{ name: 'Classify', params: { optionId: item.value } }">
-          <img :class="$style.img" :src="item.image" :alt="item.name">
-        </router-link>
-        <router-link v-if="item.type === 2" :to="{ name: 'Lesson', params: { productId: item.value, brokerId: agentUser ? userId : null } }">
-          <img :class="$style.img" :src="item.image" :alt="item.name">
-        </router-link>
+        <img :class="$style.img" :src="item.image" :alt="item.name" @click="imgClick(item)">
       </swiperSlide>
       <div v-show="data.values.length > 1" class="banner-pagination" slot="pagination" />
     </swiper>
@@ -50,6 +45,16 @@ export default {
   },
   computed: {
     ...mapGetters(['agentUser', 'userId'])
+  },
+  methods: {
+    imgClick (item) {
+      if (!item.value) return
+      if (item.type === 1) {
+        this.$router.push({ name: 'Classify', params: { optionId: item.value } })
+      } else if (item.type === 2) {
+        this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.agentUser ? this.userId : null } })
+      }
+    }
   }
 }
 </script>
