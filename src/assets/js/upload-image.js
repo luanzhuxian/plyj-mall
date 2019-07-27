@@ -53,15 +53,10 @@ export function compress (file, size, fileType) {
     }
   })
 }
-export async function upload (file) {
+async function getClient () {
   let sts = JSON.parse(localStorage.getItem('sts')) || {}
-  let ext = null
   let credentials = null
-  try {
-    ext = /jpg|png|gif|jpeg|bmp/i.exec(file.type) || ''
-  } catch (e) {
-    throw new Error('不允许的图片格式')
-  }
+
   if (!sts.time || STSLIFETIME < Date.now() - sts.time) {
     // sts过期
     let { result } = await getSTS()
@@ -72,13 +67,22 @@ export async function upload (file) {
     credentials = sts.credentials
   }
   const { securityToken, accessKeySecret, accessKeyId } = credentials
-  const client = new OSS({
+  return new OSS({
     region: REGION,
     accessKeyId,
     accessKeySecret,
     stsToken: securityToken,
     bucket: BUCKET
   })
+}
+export async function upload (file) {
+  let ext = null
+  try {
+    ext = /jpg|png|gif|jpeg|bmp/i.exec(file.type)[0]
+  } catch (e) {
+    throw new Error('不允许的图片格式')
+  }
+  let client = await getClient()
   const key = `img/${randomString()}.${ext}`
   return client.put(key, file)
 }
@@ -106,28 +110,31 @@ export function blobToBase64 (blob) {
 }
 // 生成随机字符串
 function randomString () {
-  // 随机串的长度为 10 ~ 100 的随机数
-  const len = Number.parseInt(Math.random() * 91 + 10)
-  const date = new Date()
+  // 随机串的长度为 10 ~ 50 的随机数
+  const len = Number.parseInt(Math.random() * 51 + 10)
+  // const date = new Date()
   // 48~57 数字， 65~90 大写，  97~122 小写
-  const LIB = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890'
+  const LIB = 'qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM1234567890'
   const parseInt = Number.parseInt
   const random = Math.random
   const randomStr = []
   for (let i = 0; i < len; i++) {
     const index = parseInt(random() * 62)
     randomStr.push(LIB[index])
+    if (i !== 0 && i % 8 === 0) {
+      randomStr.push('-')
+    }
   }
-  let dateString = `
-    ${date.getFullYear()}
-    ${String(date.getMonth() + 1).padStart(2, '0')}
-    ${String(date.getDate()).padStart(2, '0')}
-    ${String(date.getHours()).padStart(2, '0')}
-    ${String(date.getMinutes()).padStart(2, '0')}
-    ${String(date.getSeconds()).padStart(2, '0')}
-  `
-  dateString = dateString.replace(/\s/g, '')
-  return randomStr.join('') + dateString
+  // let dateString = `
+  //   ${date.getFullYear()}
+  //   ${String(date.getMonth() + 1).padStart(2, '0')}
+  //   ${String(date.getDate()).padStart(2, '0')}
+  //   ${String(date.getHours()).padStart(2, '0')}
+  //   ${String(date.getMinutes()).padStart(2, '0')}
+  //   ${String(date.getSeconds()).padStart(2, '0')}
+  // `
+  // dateString = dateString.replace(/\s/g, '')
+  return randomStr.join('') + '-' + Date.now()
 }
 
 export function createObjectUrl (blob) {
@@ -144,4 +151,31 @@ export function createObjectUrl (blob) {
 
 export function revokeObjectURL (URL) {
   window.URL.revokeObjectURL(URL)
+}
+/**
+ * 删除图片接口
+ * @param key 图片名称 {Array}
+ * @returns {Promise<void>}
+ */
+export async function deleteImage (key) {
+  let client = await getClient()
+  // 单独删除咱不可用，所以需传入key的数组
+  // if (typeof key === 'string') {
+  //   try {
+  //     await client.delete(key)
+  //   } catch (e) {
+  //     throw e
+  //   }
+  // }
+  // 批量删除
+  if (Array.isArray(key)) {
+    try {
+      await client.deleteMulti(key)
+      console.warn(`image is deleted !`)
+    } catch (e) {
+      throw e
+    }
+  } else {
+    throw new Error('key 必须是数组！')
+  }
 }

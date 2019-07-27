@@ -36,7 +36,9 @@
           <template v-for="(item, i) of redeemCodeModels">
             <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }" :key="i" v-if="collapseQrCode ? i === 0 : true">
               <div :class="$style.codeBox">
-                <span :class="$style.codeValue" v-text="item.redeemCode" />
+                <span :class="$style.codeValue">
+                  {{ item.redeemCode | separator(' ', 4) }}
+                </span>
                 <span :class="$style.codeStatus" v-text="item.status" />
               </div>
               <div :class="$style.whoUse" v-if="!collapseQrCode && item.name">
@@ -455,6 +457,7 @@ import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
+import { upload, deleteImage } from '../../../assets/js/upload-image'
 import {
   getOrderDetail,
   getAwaitPayInfo,
@@ -467,7 +470,6 @@ import {
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { generateQrcode } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
-
 function updateLocalStorage (key, value) {
   const arr = JSON.parse(localStorage.getItem(key) || '[]')
   arr.push(value)
@@ -493,6 +495,8 @@ const invoiceMap = {
     fields: 'tin'
   }
 }
+// 上传到服务器的二维码，离开页面后要删除
+let qrcodeKey = ''
 
 export default {
   name: 'OrderDetail',
@@ -616,7 +620,7 @@ export default {
       throw e
     }
   },
-  deactivated () {
+  async deactivated () {
     this.collepseActiveNames = []
     this.logisticsInfoModel = null
     this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY = ''
@@ -625,6 +629,7 @@ export default {
     this.isPickerShow = false
     clearInterval(this.timer)
     clearInterval(this.timer2)
+    await deleteImage([qrcodeKey])
   },
   methods: {
     // 倒计时
@@ -700,7 +705,20 @@ export default {
           if (this.orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
             if (orderStatus !== 'WAIT_PAY') {
               // 生成核销码二维码
-              this.qrImg = await generateQrcode(300, orderId, 34, null, null, 'url')
+              // 不使用await
+              generateQrcode(300, orderId, 34, null, null, 'blob')
+                .then(async (blob) => {
+                  try {
+                    let { name, url } = await upload(blob)
+                    qrcodeKey = name
+                    this.qrImg = url
+                  } catch (e) {
+                    this.$error('生成二维码失败')
+                  }
+                })
+                .catch(() => {
+                  this.$error('生成二维码失败')
+                })
             }
           }
 

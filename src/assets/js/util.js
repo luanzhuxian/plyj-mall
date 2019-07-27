@@ -212,9 +212,12 @@ export async function generateQrcode (size, text, padding = 0, img, centerPaddin
     }
     if (type === 'url') {
       resolve(canvas.toDataURL())
-    }
-    if (type === 'canvas') {
+    } else if (type === 'canvas') {
       resolve(canvas)
+    } else if (type === 'blob') {
+      canvas.toBlob(blob => {
+        resolve(blob)
+      }, 'image/jpeg', 0.7)
     }
   })
 }
