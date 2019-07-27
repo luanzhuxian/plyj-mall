@@ -34,7 +34,7 @@
 
         <div :class="$style.content">
           <div :class="$style.name" v-text="item.goodsInfo.productName" />
-          <Tags size="middle" />
+          <Tags size="middle" :tags="item.goodsInfo.labelModels" />
           <div :class="$style.bottom">
             <div :class="$style.priceBox">
               <span>¥</span>
@@ -43,10 +43,10 @@
                 ¥{{ getMinOrinalPrice(item.goodsInfo.productSkuModels) }}
               </del>
             </div>
-            <button v-if="item.goodsInfo.productType === 'FORMAL_CLASS'">
+            <button v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
               立即报名
             </button>
-            <button v-else-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
+            <button v-else-if="item.goodsInfo.productType === 'FORMAL_CLASS'">
               立即学习
             </button>
             <button v-else>
