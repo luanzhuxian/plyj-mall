@@ -11,6 +11,7 @@
         @click="clickHandler(item)"
       >
         <img :class="$style.img" :src="item.image" alt="">
+        <span v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'" :class="$style.experience">体验课</span>
         <div :class="$style.itemContent">
           <p :class="$style.proName" v-text="item.goodsInfo.productName" />
           <div :class="$style.bottom">
@@ -92,6 +93,7 @@ export default {
     margin-top: 20px;
   }
   .pro-item {
+    position: relative;
     width: 340px;
     border-radius: 20px;
     overflow: hidden;
@@ -101,6 +103,19 @@ export default {
       height: 228px;
       object-fit: cover;
     }
+  }
+  .experience {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 100px;
+    font-size: 24px;
+    text-align: center;
+    color: #fff;
+    line-height: 42px;
+    background-color: #F2B036;
+    border-radius: 6px;
+    z-index: 1;
   }
   .item-content {
     padding: 16px;

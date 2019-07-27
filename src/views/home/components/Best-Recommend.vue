@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.bestRecommend">
-    <div :class="$style.title" v-text="data.moduleName" />
+    <div :class="$style.title">
+      <span>-</span>
+      <span v-text="data.moduleName" />
+      <span>-</span>
+    </div>
     <template v-if="styleType === 2">
       <div
         :class="$style.product"
@@ -216,19 +220,17 @@ export default {
     font-weight: bolder;
     color: #F2B036;
     letter-spacing: 14px;
-    &:after, &:before {
-      position: absolute;
-      top: 50%;
-      content: '';
-      width: 20px;
-      height: 4px;
-      background-color: currentColor;
-    }
-    &:after {
-      right: 32%;
-    }
-    &:before {
-      left: 30%;
+    span {
+      display: inline-block;
+      &:nth-last-of-type(1) {
+        transform: scaleX(2);
+        margin-left: 18px;
+      }
+      &:nth-of-type(1) {
+        margin-right: 18px;
+        transform: scaleX(2);
+        transform-origin: 0;
+      }
     }
   }
   .product {
