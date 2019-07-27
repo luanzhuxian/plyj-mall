@@ -443,7 +443,7 @@ import { STUDENTS } from '../../store/mutation-type'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Count from '../../components/Count.vue'
-import { isName, isPhone } from '../../assets/js/validate'
+import { checkLength, isPhone } from '../../assets/js/validate'
 import { resetForm } from '../../assets/js/util'
 export default {
   name: 'SubmitOrder',
@@ -474,7 +474,7 @@ export default {
       rules: {
         name: [
           { required: true, message: '请输入联系人姓名', trigger: 'blur' },
-          { validator: isName, message: '联系人姓名只支持中英文，且中文为2~10字，英文为2~20字', trigger: 'blur' }
+          { validator: checkLength(12), message: '联系人姓名为1~12个字符', trigger: 'blur' }
         ],
         mobile: [
           { required: true, message: '请输入联系人手机号', trigger: 'blur' },
