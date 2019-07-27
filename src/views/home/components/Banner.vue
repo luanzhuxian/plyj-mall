@@ -11,7 +11,7 @@
           <img :class="$style.img" :src="item.image" :alt="item.name">
         </router-link>
       </swiperSlide>
-      <div class="banner-pagination" slot="pagination" />
+      <div v-show="data.values.length > 1" class="banner-pagination" slot="pagination" />
     </swiper>
   </div>
 </template>

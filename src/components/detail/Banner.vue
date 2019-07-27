@@ -67,6 +67,11 @@ export default {
       return this.$refs.swiper.swiper
     }
   },
+  updated () {
+    if (this.$refs.img) {
+      this.$emit('slideChange', this.$refs.img, 0)
+    }
+  },
   methods: {
     slideChange () {
       this.$emit('slideChange', this.$refs.img, this.swiper.activeIndex)

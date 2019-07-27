@@ -286,7 +286,6 @@ export default {
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
         this.imgels = []
-        this.haibaoImg = await this.loadImage(this.detail.mediaInfoIds[0])
       } catch (e) {
         throw e
       } finally {
@@ -300,10 +299,8 @@ export default {
           this.imgels.push(i.cloneNode(true))
         }
       }
-      if (!this.showHaibao) {
-        this.haibaoImg = this.imgels[index]
-        this.haibao = ''
-      }
+      this.haibaoImg = this.imgels[index]
+      this.haibao = ''
     },
     resetState () {
       this.currentModel = {}
