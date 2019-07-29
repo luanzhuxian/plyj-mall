@@ -8,8 +8,8 @@
       :src="data88[mallId].gif" alt=""
       @click="showHaibao"
     >
-    <HotItem :data="POPULAR" />
-    <Best v-if="type === 3" :data="CLASS" />
+    <HotItem :data="POPULAR" v-if="POPULAR.showStatue === 1" />
+    <Best v-if="type === 3 && CLASS.showStatue === 1" :data="CLASS" />
     <BestRecommend
       v-if="RECOMMEND.values && RECOMMEND.values.length"
       :data="RECOMMEND"

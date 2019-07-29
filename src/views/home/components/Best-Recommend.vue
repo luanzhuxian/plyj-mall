@@ -283,6 +283,7 @@ export default {
   .content {
     padding: 16px;
     .name {
+      margin-bottom: 8px;
       font-size: 32px;
       line-height: 42px;
       font-weight: bold;

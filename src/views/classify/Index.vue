@@ -181,6 +181,7 @@ export default {
         this.currentClassify = classify
         this.requestMethods = getActivityProduct
         this.form = JSON.parse(JSON.stringify(this.helperFormTemplate))
+        this.$router.push({ name: 'Classify', params: { optionId: '1' } })
         this.$refresh()
         return
       }
@@ -195,6 +196,7 @@ export default {
         // }
         this.form.categoryId = classify.id
         this.form.subCategoryId = ''
+        this.$router.push({ name: 'Classify', params: { optionId: classify.id } })
         this.$refresh()
       }
     },

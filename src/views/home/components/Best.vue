@@ -74,7 +74,7 @@ export default {
 
 <style module lang="scss">
   .best {
-    padding: 48px 24px 24px 24px;
+    padding: 24px;
     background-color: #f4f5f9;
   }
   .top {

@@ -133,7 +133,7 @@ export default {
 
 <style module lang="scss">
   .hot-item {
-    padding: 34px 24px;
+    padding: 34px 24px 24px 24px;
     background-color: #F4F5F9;
     .top {
       display: flex;
