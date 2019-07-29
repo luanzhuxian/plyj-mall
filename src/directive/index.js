@@ -15,9 +15,9 @@ export default {
       }
     }
   },
-  /*
-  * v-imger:group="url"
-  * */
+  /**
+   * v-imger:group="url"
+   */
   imger: {
     inserted: function (el, { value, arg }) {
       value = value || el.src || ''

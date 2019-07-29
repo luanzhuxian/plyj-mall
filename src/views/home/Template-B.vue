@@ -105,6 +105,7 @@ export default {
   }
   .img88 {
     width: 100%;
+    padding-bottom: 24px;
     padding-top: 16px;
     background-color: #f4f5f9;
   }
