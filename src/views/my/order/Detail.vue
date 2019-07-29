@@ -914,9 +914,9 @@ export default {
       }
       > svg {
         position: absolute;
-        top: 14px;
+        top: 20px;
         right: 20px;
-        width: 32px;
+        width: 26px;
         transform: rotate(-90deg);
         transition: transform .2s linear;
         &.collapse {
@@ -956,7 +956,7 @@ export default {
         font-size: 32px;
       }
       .code-status {
-        margin-left: 20px;
+        margin-left: 15px;
         font-size: 24px;
         vertical-align: 2px;
       }
