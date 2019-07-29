@@ -15,7 +15,7 @@
       :class="$style.qrcodeBox"
       v-if="redeemCodeModels.length > 0 && orderStatus !== 'WAIT_PAY'"
     >
-      <img :src="qrImg" alt="" v-imger :style="{ opacity: isAllCodeUnuseful ? 0.4 : 1 }">
+      <img :src="qrImg" alt="" v-imger :style="{ opacity: isAllCodeUseless ? 0.4 : 1 }">
       <div
         :class="{
           [$style.codeListBox]: true,
@@ -83,7 +83,20 @@
             v-if="isRefundBtnShow(item) && canApplyRefund"
             plain
             round
-            @click="$router.push({ name: 'Refund', params: { orderId, orderProductRId: item.orderProductRId }, query: { orderStatus, orderType, productId: item.productId, productImg: item.productImg, productName: item.productName, skuCode1Name: item.skuCode1Name, skuCode2Name: item.skuCode2Name, count: usefulCodeCount } })"
+            @click="$router.push({
+              name: 'Refund',
+              params: { orderId, orderProductRId: item.orderProductRId },
+              query: {
+                orderStatus,
+                orderType,
+                productId: item.productId,
+                productImg: item.productImg,
+                productName: item.productName,
+                skuCode1Name: item.skuCode1Name,
+                skuCode2Name: item.skuCode2Name,
+                count: orderType === 'PHYSICAL' ? item.count : usefulCodeCount
+              }
+             })"
           >
             {{ (item.afterSalesStatus === 3 || item.afterSalesStatus === 6) ? '再次申请' : '申请退款' }}
           </pl-button>
@@ -602,8 +615,8 @@ export default {
     },
     // 核销码状: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
     // 核销码全部过期或核销
-    isAllCodeUnuseful () {
-      return this.redeemCodeModels.every(item => item.statusCode === 1 || item.statusCode === 4)
+    isAllCodeUseless () {
+      return this.redeemCodeModels.every(item => item.statusCode === 1 || item.statusCode === 3 || item.statusCode === 4)
     },
     usefulCodeCount () {
       return this.redeemCodeModels.filter(item => item.statusCode === 0).length
@@ -634,7 +647,7 @@ export default {
   },
   methods: {
     isRefundBtnShow (item) {
-      return item.supportRefund && Number(item.price) + Number(item.freight) > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
+      return item.supportRefund && Number(item.refundPrice) > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
     },
     // 倒计时
     countDown (remanent, orderStatus) {

@@ -15,9 +15,10 @@
     <section :class="$style.content">
       <div :class="$style.panel">
         <router-link
-          tag="div"
-          :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '1', type: 'APPLY' } }"
           :class="$style.item"
+          tag="div"
+          replace
+          :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '1', type: 'APPLY' } }"
         >
           <div :class="$style.itemLeft">
             <div :class="$style.itemTitle">
@@ -38,9 +39,10 @@
 
         <router-link
           v-if="orderType === 'PHYSICAL' && orderStatus !== 'WAIT_SHIP'"
-          tag="div"
-          :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '2', type: 'APPLY' } }"
           :class="$style.item"
+          tag="div"
+          replace
+          :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '2', type: 'APPLY' } }"
         >
           <div :class="$style.itemLeft">
             <div :class="$style.itemTitle">
