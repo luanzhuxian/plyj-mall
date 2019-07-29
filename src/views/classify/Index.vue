@@ -196,7 +196,7 @@ export default {
         // }
         this.form.categoryId = classify.id
         this.form.subCategoryId = ''
-        this.$router.push({ name: 'Classify', params: { optionId: classify.id } })
+        this.$router.push({ name: 'Classify', params: { optionId: classify.id || null } })
         this.$refresh()
       }
     },

@@ -188,14 +188,23 @@ export default {
   },
   methods: {
     getRouteLink ({ type, value }) {
-      const name = type === 1 ? 'Classify' : 'Lesson'
+      // const name = type === 1 ? 'Classify' : 'Lesson'
       const id = (type === 1 && value === '全部商品') ? '' : value
-      return {
-        name,
-        params: {
-          ...(type === 1 ? { optionId: id } : null),
-          ...(type === 2 ? { productId: id } : null),
-          ...(type === 2 && this.agentUser ? { brokerId: this.userId } : null) // 如果当前用户是helper，尝试获取该商品的brokerId
+      if (type === 1) {
+        return {
+          name: 'Classify',
+          params: {
+            optionId: id || null
+          }
+        }
+      }
+      if (type === 2) {
+        return {
+          name: 'Lesson',
+          params: {
+            productId: id || null,
+            brokerId: this.agentUser ? this.userId : null
+          }
         }
       }
     }
