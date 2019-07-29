@@ -34,7 +34,7 @@
         />
         <ul :class="$style.codeList">
           <template v-for="(item, i) of redeemCodeModels">
-            <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }" :key="i" v-if="collapseQrCode ? i === 0 : true">
+            <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }" :key="i" v-show="collapseQrCode ? i === 0 : true">
               <div :class="$style.codeBox">
                 <span :class="$style.codeValue">
                   {{ item.redeemCode | separator(' ', 4) }}
@@ -941,6 +941,7 @@ export default {
     .codeBox {
       .code-value {
         font-size: 32px;
+        font-family: Monaco, sans-serif !important;
       }
       .code-status {
         margin-left: 20px;
