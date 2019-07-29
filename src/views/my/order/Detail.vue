@@ -36,9 +36,9 @@
           <template v-for="(item, i) of redeemCodeModels">
             <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }" :key="i" v-show="collapseQrCode ? i === 0 : true">
               <div :class="$style.codeBox">
-                <span :class="$style.codeValue">
+                <code :class="$style.codeValue">
                   {{ item.redeemCode | separator(' ', 4) }}
-                </span>
+                </code>
                 <span :class="$style.codeStatus" v-text="item.status" />
               </div>
               <div :class="$style.whoUse" v-show="!collapseQrCode && item.name">
@@ -941,7 +941,6 @@ export default {
     .codeBox {
       .code-value {
         font-size: 32px;
-        font-family: Monaco, "Helvetica Neue", sans-serif !important;
       }
       .code-status {
         margin-left: 20px;

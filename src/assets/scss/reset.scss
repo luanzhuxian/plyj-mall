@@ -15,11 +15,15 @@ body {
 img, textarea, input {
   box-sizing: border-box;
 }
-body, h1, h2, h3, h4, h5, i, h6, hr, p, span, a, blockquote, div, table, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td, iframe, label, svg, path, defs {
+body, h1, h2, h3, h4, h5, i, h6, code, hr, p, span, a, blockquote, div, table, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td, iframe, label, svg, path, defs {
   margin: 0;
   padding: 0;
   word-break: break-all;
   font-family: $--font-family;
+}
+/* 使用苹果和安卓分别支持的等宽字体显示 */
+code {
+  font-family: Monaco, "Helvetica Neue", sans-serif !important;
 }
 svg {
   color: currentColor;
