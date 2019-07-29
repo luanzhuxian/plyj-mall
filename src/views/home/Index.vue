@@ -1,7 +1,23 @@
 <template>
   <div :class="$style.home">
-    <TemplateA :data="modules" v-if="type === 1" />
-    <TemplateB :data="modules" v-else-if="type === 2 || type === 3" :type="type" />
+    <TemplateA :data="modules" v-if="type === 1">
+      <img
+        slot="88"
+        v-if="data88[mallId]"
+        :class="$style.img88"
+        :src="data88[mallId].gif" alt=""
+        @click="showHaibao"
+      >
+    </TemplateA>
+    <TemplateB :data="modules" v-else-if="type === 2 || type === 3" :type="type">
+      <img
+        slot="88"
+        v-if="data88[mallId]"
+        :class="$style.img88"
+        :src="data88[mallId].gif" alt=""
+        @click="showHaibao"
+      >
+    </TemplateB>
     <div :class="$style.skeleton" v-else>
       <div :class="$style.skeletonA" />
       <div :class="$style.skeletonB" />
@@ -10,6 +26,18 @@
       <div :class="$style.skeletonA" />
       <div :class="$style.skeletonB" />
     </div>
+
+    <transition name="fade">
+      <div :class="$style.haibao" v-if="haibao">
+        <img @click="haibao = ''" :src="haibao" alt="">
+      </div>
+    </transition>
+    <transition name="fade">
+      <div :class="$style.pop" v-if="pop">
+        <img :src="pop" alt="">
+        <pl-svg @click="pop = ''" name="close3" color="#fff" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -18,6 +46,7 @@ import 'swiper/dist/css/swiper.css'
 import { getTemplate } from '../../apis/home'
 import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Home',
   components: {
@@ -28,17 +57,43 @@ export default {
     return {
       loaded: false,
       type: 0,
-      modules: {}
+      modules: {},
+      haibao: '',
+      pop: '',
+      data88: {
+        '1057573777392603136': {
+          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
+          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif'
+        },
+        '1108363572472762368': {
+          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
+          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif'
+        }
+      }
     }
   },
   async created () {
     try {
-      this.getTemplate()
+      await this.getTemplate()
+      this.showPop(500)
     } catch (e) {
       throw e
     }
   },
+  computed: {
+    ...mapGetters(['mallId'])
+  },
   methods: {
+    showPop (delay) {
+      setTimeout(() => {
+        this.pop = this.data88[this.mallId].pop
+      }, delay)
+    },
+    showHaibao () {
+      this.haibao = this.data88[this.mallId].haibao
+    },
     async getTemplate () {
       try {
         const { result } = await getTemplate()
@@ -119,5 +174,42 @@ export default {
       border-radius: 20px;
       @include skeAnimation(#eee)
     }
+  }
+
+  .pop, .haibao {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 5;
+    > img {
+      width: 560px;
+    }
+    > svg {
+      width: 48px;
+      margin-top: 64px;
+    }
+  }
+  .haibao {
+    text-align: center;
+    overflow: auto;
+    z-index: 5;
+    > img {
+      width: 90%;
+      justify-items: flex-start !important;
+    }
+  }
+
+  .img88 {
+    width: 100%;
+    padding-bottom: 24px;
+    padding-top: 16px;
+    background-color: #f4f5f9;
   }
 </style>

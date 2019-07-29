@@ -24,14 +24,7 @@
       </swiper-slide>
       <div class="home-banner-pagination" slot="pagination" />
     </swiper>
-
-    <img
-      v-if="data88[mallId]"
-      :class="$style.img88"
-      :src="data88[mallId].gif" alt=""
-      @click="showHaibao"
-    >
-
+    <slot name="88" />
     <div :class="$style.gift" v-if="data['MODULE_A'].values.length">
       <div :class="$style.head">
         <div :class="$style.title">
@@ -134,18 +127,6 @@
     </div>
 
     <you-like />
-
-    <transition name="fade">
-      <div :class="$style.haibao" v-if="haibao">
-        <img @click="haibao = ''" :src="haibao" alt="">
-      </div>
-    </transition>
-    <transition name="fade">
-      <div :class="$style.pop" v-if="pop">
-        <img :src="pop" alt="">
-        <pl-svg @click="pop = ''" name="close3" color="#fff" />
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -205,9 +186,6 @@ export default {
     ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId', 'mallId']),
     ...mapState(['data88'])
   },
-  created () {
-    this.showPop(500)
-  },
   methods: {
     getRouteLink ({ type, value }) {
       const name = type === 1 ? 'Classify' : 'Lesson'
@@ -220,14 +198,6 @@ export default {
           ...(type === 2 && this.agentUser ? { brokerId: this.userId } : null) // 如果当前用户是helper，尝试获取该商品的brokerId
         }
       }
-    },
-    showPop (delay) {
-      setTimeout(() => {
-        this.pop = this.data88[this.mallId].pop
-      }, delay)
-    },
-    showHaibao () {
-      this.haibao = this.data88[this.mallId].haibao
     }
   }
 }
@@ -304,41 +274,6 @@ export default {
     }
     .youLike {
       padding: 0 32px;
-    }
-  }
-
-  .img88 {
-    width: 100%;
-    padding-top: 16px;
-    background-color: #f4f5f9;
-  }
-  .pop, .haibao {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, .5);
-    z-index: 5;
-    > img {
-      width: 560px;
-    }
-    > svg {
-      width: 48px;
-      margin-top: 64px;
-    }
-  }
-  .haibao {
-    text-align: center;
-    overflow: auto;
-    z-index: 5;
-    > img {
-      width: 90%;
-      justify-items: flex-start !important;
     }
   }
 </style>
