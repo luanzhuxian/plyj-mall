@@ -41,7 +41,7 @@
                 </span>
                 <span :class="$style.codeStatus" v-text="item.status" />
               </div>
-              <div :class="$style.whoUse" v-if="!collapseQrCode">
+              <div :class="$style.whoUse" v-show="!collapseQrCode && item.name">
                 <pl-svg name="name-card" :color="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
                 <span :class="{ [$style.name]: true }" v-text="item.name" />
                 <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
@@ -941,7 +941,7 @@ export default {
     .codeBox {
       .code-value {
         font-size: 32px;
-        font-family: Monaco, sans-serif !important;
+        font-family: Monaco, "Helvetica Neue", sans-serif !important;
       }
       .code-status {
         margin-left: 20px;
