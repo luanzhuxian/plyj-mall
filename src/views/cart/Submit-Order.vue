@@ -67,7 +67,7 @@
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">购买数量</span>
             <div :class="$style.editCount">
-              <span>剩余{{ item.stock }}件</span>
+              <span>剩余{{ physicalProducts[0].stock }}件</span>
               <Count
                 :min="physicalProducts[0].minBuyNum"
                 :max="physicalProducts[0].stock"
