@@ -214,6 +214,7 @@ export default {
         await this.$confirm('是否删除该地址？')
         let { result } = await deleteAddress(this.addressId)
         if (result) {
+          this.$success('已删除')
           // 移除成功后判断移除的地址是不是当前选中的地址
           if (this.selectedAddress.sequenceNbr === this.addressId) {
             this.$store.commit(SELETC_ADDRESS, null)

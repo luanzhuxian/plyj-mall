@@ -42,6 +42,8 @@
 
 <script>
 import youLike from './../home/components/YouLike.vue'
+import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
   name: 'PaySuccess',
   components: {
@@ -49,7 +51,23 @@ export default {
   },
   data () {
     return {
-      haibao: ''
+      haibao: '',
+      data88: {
+        '1530139721': {
+          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
+          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif',
+          startTime: 1564588800000, // 2019-08-01 00:00:00
+          endTime: 1568563199000 // 2019-09-15 23:59:59
+        },
+        '1532969341': {
+          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
+          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif',
+          startTime: 1564588800000, // 2019-08-01 00:00:00
+          endTime: 1567267199000 // 2019-08-31 23:59:59
+        }
+      }
     }
   },
   props: {
@@ -63,16 +81,24 @@ export default {
     }
   },
   activated () {
-    this.showHaibao()
+    this.showPop()
   },
   computed: {
+    ...mapGetters(['mallId', 'serverTime']),
     orderType () {
       return this.$route.query.orderType
     }
   },
   methods: {
-    showHaibao () {
-      this.haibao = this.$store.state.data88[this.$store.getters.mallId].haibao
+    showPop (delay) {
+      let serverTime = moment(this.serverTime).valueOf()
+      let mallId = this.mallId
+      let data = this.data88[mallId]
+      if (data && data.startTime <= serverTime && data.endTime >= serverTime) {
+        setTimeout(() => {
+          this.haibao = this.data88[mallId].haibao
+        }, delay)
+      }
     }
   },
   beforeRouteEnter (to, from, next) {
