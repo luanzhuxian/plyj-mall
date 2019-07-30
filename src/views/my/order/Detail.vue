@@ -957,7 +957,7 @@ export default {
         font-size: 32px;
       }
       .code-status {
-        margin-left: 15px;
+        margin-left: 5px;
         font-size: 24px;
         vertical-align: 2px;
       }

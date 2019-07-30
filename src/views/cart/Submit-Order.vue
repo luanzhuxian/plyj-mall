@@ -67,7 +67,7 @@
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">购买数量</span>
             <div :class="$style.editCount">
-              <span>剩余99件</span>
+              <span>剩余{{ item.stock }}件</span>
               <Count
                 :min="physicalProducts[0].minBuyNum"
                 :max="physicalProducts[0].stock"
@@ -166,7 +166,7 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
-                <span>剩余99件</span>
+                <span>剩余{{ item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
                   :max="item.stock"
@@ -473,12 +473,12 @@ export default {
       CHECKED_STUDENT: {},
       rules: {
         name: [
-          { required: true, message: '请输入联系人姓名', trigger: 'blur' },
-          { validator: checkLength(12), message: '联系人姓名为1~12个字符', trigger: 'blur' }
+          { required: true, message: '请输入联系人姓名' },
+          { validator: checkLength(12), message: '联系人姓名为1~12个字符' }
         ],
         mobile: [
-          { required: true, message: '请输入联系人手机号', trigger: 'blur' },
-          { validator: isPhone, message: '联系人手机号格式错误', trigger: 'blur' }
+          { required: true, message: '请输入联系人手机号' },
+          { validator: isPhone, message: '联系人手机号格式错误' }
         ]
       },
       contactInfoModel: {
@@ -572,14 +572,18 @@ export default {
         }
         localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
       }
-      // 填充默认学生
-      if (Object.keys(this.CHECKED_STUDENT).length === 0) {
-
-      }
       this.invioceType = this.INVOICE_MODEL ? 2 : 1
       this.lessonErrorId = ''
-      this.contactInfoModel.name = this.realName || this.userName
-      this.contactInfoModel.mobile = this.mobile
+
+      // 联系人信息
+      let contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
+      if (contactModel) {
+        this.contactInfoModel.name = contactModel.name || this.userName
+        this.contactInfoModel.mobile = contactModel.mobile || this.mobile
+      } else {
+        this.contactInfoModel.name = this.realName || this.userName
+        this.contactInfoModel.mobile = this.mobile
+      }
     } catch (e) {
       this.$router.go(-1)
       throw e
@@ -653,6 +657,7 @@ export default {
       if (this.$refs.contactForm.validate()) {
         this.showContactPopup = false
         this.contactInfoModel = Object.assign({}, this.contactInfoModel, this.contactInfoForm)
+        localStorage.setItem('CONTACT_INFO_MODEL', JSON.stringify(this.contactInfoModel))
       }
     },
     async getProductDetail (flag) {

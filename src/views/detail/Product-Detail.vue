@@ -276,7 +276,7 @@ export default {
         this.banners = mediaInfoIds
         this.detail = result
         this.productSkuModels = result.productSkuModels
-        this.currentModel = result.productSkuModels[0]
+        this.currentModel = result.productSkuModels.find(item => item.minBuyNum <= item.stock)
         this.currentModel.count = result.productSkuModels[0].minBuyNum
         share({
           appId: this.appId,
