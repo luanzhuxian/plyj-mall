@@ -44,7 +44,7 @@
               </div>
               <p
                 :class="$style.status"
-                v-text="refundStatusMap[item.returnStatus]"
+                v-text="item.returnStatusText"
               />
             </div>
             <order-item
@@ -83,7 +83,7 @@
                   删除
                 </pl-button>
                 <pl-button
-                  v-if="~['WAIT_CHECK', 'REFUND_PRODUCT', 'FINISHED'].indexOf(item.returnStatus)"
+                  v-if="~['WAIT_CHECK', 'REFUND_PRODUCT', 'FINISHED', 'REFUNDING'].indexOf(item.returnStatus)"
                   round
                   plain
                   @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"
@@ -160,7 +160,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['refundStatusMap', 'orderTypeMap', 'refundTypeMap'])
+    ...mapGetters(['orderTypeMap', 'refundTypeMap'])
   },
   beforeRouteEnter (to, from, next) {
     to.meta.noRefresh = from.name === 'RefundDetail'

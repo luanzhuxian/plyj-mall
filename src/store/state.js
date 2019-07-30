@@ -85,15 +85,6 @@ export default {
     // 交易成功的待退款
     FINISHED_REFUND: '待退款'
   },
-  refundStatusMap: {
-    WAIT_CHECK: '待审核',
-    REFUND_PRODUCT_WAIT_RETURN: '退换货', // 退换货-待退货
-    REFUND_PRODUCT: '退换货', // 退换货-已退货
-    FINISHED: '退款成功',
-    CLOSED: '退款关闭',
-    CANCEL: '退款关闭',
-    REJECT: '退款关闭'
-  },
   orderTypeMap: {
     PHYSICAL: '实体商品',
     VIRTUAL: '虚拟商品',

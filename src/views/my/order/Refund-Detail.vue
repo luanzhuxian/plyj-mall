@@ -6,7 +6,7 @@
   >
     <div :class="$style.title">
       <top-text
-        :title="refundStatusMap[refundStatus]"
+        :title="refundDetail.returnStatusText"
         :tip="suggestionMap[refundStatus]"
       />
     </div>
@@ -369,6 +369,7 @@ const expressMapCode = 'KYYQJKDGS'
 
 const suggestionMap = {
   WAIT_CHECK: '请耐心等待商家审核，如有问题请联系客服',
+  REFUNDING: '请耐心等待商家审核，如有问题请联系客服',
   REFUND_PRODUCT_WAIT_RETURN: '请根据商家收货地址，将商品寄回',
   REFUND_PRODUCT: '请耐心等待商家收货',
   FINISHED: '您的退款申请已受理完成',
@@ -420,6 +421,7 @@ export default {
     return {
       loading: false,
       loaded: false,
+      // refundStatus WAIT_CHECK: '待审核', REFUNDING: '退款中', REFUND_PRODUCT_WAIT_RETURN: '退换货-待退货', REFUND_PRODUCT: '退换货-已退货', FINISHED: '退款成功', CLOSED: '退款关闭', CANCEL: '退款关闭', REJECT: '退款关闭'
       refundStatus: '',
       refundDetail: {},
       form: {
@@ -443,7 +445,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['refundStatusMap', 'refundTypeMap', 'address', 'supportPhone'])
+    ...mapGetters(['refundTypeMap', 'address', 'supportPhone'])
   },
   activated () {
     this.getDetail()
@@ -468,6 +470,7 @@ export default {
           orderStatus: refundDetail.orderStatus,
           refundType: refundDetail.refundType,
           receiveStatus: refundDetail.receiveStatus,
+          returnStatusText: refundDetail.returnStatusText,
           shipSn: refundDetail.shipSn,
           shipChannelText: refundDetail.shipChannelText,
           refundUserName: refundDetail.refundUserName,
