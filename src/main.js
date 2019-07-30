@@ -48,6 +48,8 @@ Vue.config.errorHandler = async function (err, vm, info) {
     vm.$error(error.message)
     console.error(err)
   } catch (e) {
-    console.error(err)
+    if (err.name !== 'MessageBoxCancel') {
+      console.error(err)
+    }
   }
 }

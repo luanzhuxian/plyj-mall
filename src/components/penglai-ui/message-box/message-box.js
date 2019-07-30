@@ -1,5 +1,12 @@
 import Vue from 'vue'
 import MessageBpx from './Message-Box.vue'
+class MessageBoxCancel extends Error {
+  constructor (message) {
+    super(message)
+    this.message = message
+    this.name = 'MessageBoxCancel'
+  }
+}
 let MessageBoxClass = Vue.extend(MessageBpx)
 let Instance = new MessageBoxClass({
   el: document.createElement('div')
@@ -21,7 +28,7 @@ let confirm = (config = {}) => {
       Instance.show = true
       Instance.closeOnClickMask = closeOnClickMask
       Instance.$on('cancel', function () {
-        reject(new Error(''))
+        reject(new MessageBoxCancel('cancel'))
       })
       Instance.$on('confirm', function () {
         resolve()
@@ -45,7 +52,7 @@ let alert = (config = {}) => {
       Instance.icon = icon
       Instance.show = true
       Instance.$on('cancel', function () {
-        reject(new Error(''))
+        reject(new MessageBoxCancel('cancel'))
       })
       Instance.$on('confirm', function () {
         resolve()
@@ -72,7 +79,7 @@ let propmt = (config = {}) => {
       Instance.icon = icon
       Instance.show = true
       Instance.$on('cancel', function () {
-        reject(new Error('cancel'))
+        reject(new MessageBoxCancel('cancel'))
       })
       Instance.$on('confirm', function (val) {
         resolve(val)

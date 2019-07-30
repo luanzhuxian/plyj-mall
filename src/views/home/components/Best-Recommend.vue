@@ -124,7 +124,7 @@
         </li>
       </ul>
     </div>
-    <button :class="$style.seeAll" v-if="type === 2 && maxSee > localValue.length" @click="seeAll">
+    <button :class="$style.seeAll" v-if="maxSee > localValue.length" @click="seeAll">
       <span>查看全部</span>
       <pl-svg name="right" color="#272536" />
     </button>
