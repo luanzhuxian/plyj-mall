@@ -1,5 +1,6 @@
 import { router } from '../../router'
 import store from '../../store'
+// 小金库相关页面，非helper不能访问
 const notAllowedCoffer = [
   'Coffers',
   'WithdrawCash',
@@ -19,7 +20,6 @@ export const beforeResolve = function (to, from, next) {
   } else {
     next()
   }
-  console.log()
   document.title = to.meta.title
 }
 export const afterEach = function (to, from) {
