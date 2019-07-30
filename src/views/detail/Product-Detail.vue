@@ -7,7 +7,6 @@
         <p>分享海报</p>
       </div>
       <DetailBanner
-        @slideChange="slideChange"
         :type="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' ? 'lesson' : 'product'"
         :banners="banners"
       />
@@ -285,23 +284,24 @@ export default {
           link: window.location.href,
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
-        this.imgels = []
+        this.haibaoImg = await this.loadImage(result.productMainImage)
+        // this.imgels = []
       } catch (e) {
         throw e
       } finally {
         this.loading = false
       }
     },
-    async slideChange (imgs, index) {
-      if (this.imgels.length < imgs.length) {
-        for (let i of imgs) {
-          i.crossOrigin = ''
-          this.imgels.push(i.cloneNode(true))
-        }
-      }
-      this.haibaoImg = this.imgels[index]
-      this.haibao = ''
-    },
+    // async slideChange (imgs, index) {
+    //   if (this.imgels.length < imgs.length) {
+    //     for (let i of imgs) {
+    //       i.crossOrigin = ''
+    //       this.imgels.push(i.cloneNode(true))
+    //     }
+    //   }
+    //   this.haibaoImg = this.imgels[0]
+    //   // this.haibao = ''
+    // },
     resetState () {
       this.currentModel = {}
       this.banners.splice(0, 1000000)
