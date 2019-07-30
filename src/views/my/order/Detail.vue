@@ -119,6 +119,7 @@
             退款完成
           </pl-button>
           <pl-button
+            :class="$style.large"
             v-if="item.afterSalesStatus === 5"
             type="warning"
             plain
@@ -1116,6 +1117,10 @@ export default {
       margin-left: 24px;
       width: 136px;
       padding: 0;
+    }
+    .large {
+      width: auto;
+      padding: 0 25px;
     }
   }
 

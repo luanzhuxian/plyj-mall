@@ -91,10 +91,11 @@
                   查看详情
                 </pl-button>
                 <pl-button
+                  :class="$style.large"
                   v-if="item.returnStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
                   type="warning"
-                  round
                   plain
+                  round
                   @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"
                 >
                   寄件运单号
@@ -342,6 +343,13 @@ export default {
           margin-left: 40px;
         }
       }
+      .large {
+        width: auto;
+        padding: 0 25px;
+        // background-color: #FFF !important;
+        // border: 1px solid #FE7700 !important;
+        // color: #FE7700 !important;
+      }
     }
     .reund-type {
       font-size: 24px;
@@ -368,7 +376,9 @@ export default {
 <style lang="scss">
 .refund-list {
   .pl-button__warning.plain {
-    color: #FFF;
+    background-color: #FFF;
+    border: 1px solid #FE7700;
+    color: #FE7700;
   }
 }
 </style>
