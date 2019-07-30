@@ -8,7 +8,7 @@ import './assets/scss/index.scss'
 import './assets/fonts/svg/index'
 import imgError from './assets/images/img_error.png'
 import directive from './directive'
-import { beforeEach, onError } from './assets/js/router-guard'
+import { beforeResolve, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
 import animated from 'animate.css'
 import VueLazyload from 'vue-lazyload'
@@ -39,7 +39,7 @@ new Vue({
   }
 })
 
-router.beforeResolve(beforeEach)
+router.beforeResolve(beforeResolve)
 router.onError(onError)
 /* 处理所有组件抛出的错误 */
 Vue.config.errorHandler = async function (err, vm, info) {
