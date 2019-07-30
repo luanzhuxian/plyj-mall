@@ -15,7 +15,7 @@
       :class="$style.qrcodeBox"
       v-if="redeemCodeModels.length > 0 && orderStatus !== 'WAIT_PAY'"
     >
-      <img :src="qrImg" alt="" v-imger :style="{ opacity: isAllCodeUseless ? 0.4 : 1 }">
+      <img :src="qrImg" alt="" v-imger:QR="qrImg" :style="{ opacity: isAllCodeUseless ? 0.4 : 1 }">
       <div
         :class="{
           [$style.codeListBox]: true,
@@ -917,7 +917,7 @@ export default {
         position: absolute;
         top: 20px;
         right: 20px;
-        width: 26px;
+        width: 22px;
         transform: rotate(-90deg);
         transition: transform .2s linear;
         &.collapse {
