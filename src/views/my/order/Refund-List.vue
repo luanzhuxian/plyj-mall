@@ -196,7 +196,7 @@ export default {
       }
     }
 
-    if (this.$router.currentRoute.meta.noRefresh) {
+    if (this.orderList.length && this.$router.currentRoute.meta.noRefresh) {
       const arr = JSON.parse(localStorage.getItem('UPDATE_REFUND_LIST') || '[]')
       if (!arr.length) return
       for (let item of arr) {
