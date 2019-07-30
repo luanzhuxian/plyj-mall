@@ -12,7 +12,7 @@
     <TemplateB :data="modules" v-else-if="type === 2 || type === 3" :type="type">
       <img
         slot="88"
-        v-if="data88[mallId]"
+        v-if="show88"
         :class="$style.img88"
         :src="data88[mallId].gif" alt=""
         @click="showHaibao"
@@ -47,6 +47,7 @@ import { getTemplate } from '../../apis/home'
 import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
   name: 'Home',
   components: {
@@ -61,15 +62,19 @@ export default {
       haibao: '',
       pop: '',
       data88: {
-        '1057573777392603136': {
+        '1530139721': {
           haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
           pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif'
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif',
+          startTime: 1564588800000, // 2019-08-01 00:00:00
+          endTime: 1568563199000 // 2019-09-15 23:59:59
         },
-        '1108363572472762368': {
+        '1532969341': {
           haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
           pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif'
+          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif',
+          startTime: 1564588800000, // 2019-08-01 00:00:00
+          endTime: 1567267199000 // 2019-08-31 23:59:59
         }
       }
     }
@@ -77,19 +82,46 @@ export default {
   async created () {
     try {
       await this.getTemplate()
-      this.showPop(500)
     } catch (e) {
       throw e
     }
   },
   computed: {
-    ...mapGetters(['mallId'])
+    ...mapGetters(['mallId', 'serverTime']),
+    serverTimestump () {
+      return moment(this.serverTime).valueOf()
+    },
+    cur88Data () {
+      return this.data88[this.mallId] || {}
+    },
+    curStartTime () {
+      return this.cur88Data.startTime || 0
+    },
+    curEndTime () {
+      return this.cur88Data.endTime || 0
+    },
+    show88 () {
+      let { serverTimestump, curStartTime, curEndTime } = this
+      return Boolean(curStartTime && serverTimestump >= curStartTime && serverTimestump <= curEndTime)
+    }
+  },
+  watch: {
+    show88: {
+      handler (val) {
+        if (val) {
+          this.showPop(500)
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
     showPop (delay) {
-      setTimeout(() => {
-        this.pop = this.data88[this.mallId].pop
-      }, delay)
+      if (this.data88[this.mallId]) {
+        setTimeout(() => {
+          this.pop = this.data88[this.mallId].pop
+        }, delay)
+      }
     },
     showHaibao () {
       this.haibao = this.data88[this.mallId].haibao

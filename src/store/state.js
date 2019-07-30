@@ -20,7 +20,8 @@ export default {
     status: null,
     successBalance: 0,
     userId: '',
-    userName: ''
+    userName: '',
+    serverTime: ''
   },
   loginInfo: {
     SESSION_ID: '',
