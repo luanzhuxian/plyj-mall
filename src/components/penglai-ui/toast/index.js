@@ -17,13 +17,17 @@ export const Toast = (options = {}) => {
     el: document.createElement('div')
   })
   clearTimeout(instance.timer)
-  let duration = options.duration || 2000
+  let duration = options.duration || 3000
   if (typeof options === 'string') {
     instance.message = options
   }
   if (typeof options === 'object') {
     instance.message = options.message
     instance.type = options.type
+    instance.countDownTime = options.countDownTime
+    if (options.slot) {
+      instance.$slots.default = options.slot
+    }
   }
   document.body.appendChild(instance.$el)
   Vue.nextTick(() => {
@@ -40,11 +44,17 @@ function removeDom (e) {
   e.target.removeEventListener('animationend', removeDom)
 }
 
-Vue.prototype.$toast = Toast
-Vue.prototype.$error = message => {
+Vue.prototype.$toast = options => {
+  if (typeof options !== 'object') {
+    console.error('options must be an object')
+    return
+  }
+  Toast(options)
+}
+Vue.prototype.$error = options => {
   Toast({
     type: 'error',
-    message
+    options
   })
 }
 Vue.prototype.$success = message => {

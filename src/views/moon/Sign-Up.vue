@@ -28,24 +28,24 @@
           :class="$style.formItem"
           label="机构名称"
           :label-style="labelStyle"
-          prop="o"
+          prop="enterpriseName"
         >
           <pl-input
             size="mini"
             placeholder="请输入机构名称"
-            v-model="form.o"
+            v-model="form.enterpriseName"
           />
         </pl-form-item>
         <pl-form-item
           :class="$style.formItem"
           label="联系人"
           :label-style="labelStyle"
-          prop="name"
+          prop="contactName"
         >
           <pl-input
             size="mini"
             placeholder="请输入联系人姓名"
-            v-model="form.name"
+            v-model="form.contactName"
           />
         </pl-form-item>
         <pl-form-item
@@ -66,6 +66,7 @@
           size="large"
           type="warning"
           round
+          :loading="loading"
           @click.prevent="confirm"
         >
           立即提交
@@ -78,6 +79,7 @@
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { isPhone, isName } from '../../assets/js/validate'
+import { collectUserInfo } from '../../apis/base-api'
 export default {
   name: 'SignUp',
   components: {
@@ -86,6 +88,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       swiperOptionBanner: {
         slidesPerView: 'auto',
         centeredSlides: true,
@@ -99,13 +102,13 @@ export default {
       },
       labelStyle: { fontWeight: 'normal', color: '#666' },
       form: {
-        o: '',
-        name: '',
+        enterpriseName: '',
+        contactName: '',
         mobile: ''
       },
       rules: {
-        o: [{ required: true, message: '请输入机构名称' }],
-        name: [
+        enterpriseName: [{ required: true, message: '请输入机构名称' }],
+        contactName: [
           { required: true, message: '请输入联系人姓名' },
           { validator: isName, message: '姓名只支持中文或英文，且在2~10个字符之间' }
         ],
@@ -117,9 +120,36 @@ export default {
     }
   },
   methods: {
-    confirm () {
+    async confirm () {
+      let h = this.$createElement
+      let countDown = {
+        time: 3000
+      }
+      let slot = h('p', {
+        domProps: {
+          innerText: countDown.time
+        }
+      })
+      this.$toast({
+        type: 'success',
+        message: '报名提交成功',
+        slot,
+        duration: 30000000
+      })
+      console.log(slot)
+      setInterval(() => {
+        slot.data.domProps.time--
+      }, 1000)
       if (this.$refs.form.validate()) {
-
+        try {
+          this.loading = true
+          await collectUserInfo(this.form)
+          this.$success('')
+        } catch (e) {
+          throw e
+        } finally {
+          this.loading = false
+        }
       }
     }
   }

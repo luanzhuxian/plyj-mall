@@ -20,7 +20,10 @@
         v-if="type === 'error'"
         class="pl-icon icon-shibai"
       />
-      <span class="toast-message">{{ message }}</span>
+      <div class="toast-message">
+        <p v-text="message" />
+        <slot />
+      </div>
     </div>
   </transition>
 </template>
