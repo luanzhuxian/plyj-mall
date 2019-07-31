@@ -58,7 +58,9 @@
                   </p>
                   <p>
                     <span :class="$style.title">电话：</span>
-                    <span v-text="pro.purchaserMobile" />
+                    <span>
+                      {{ pro.purchaserMobile | formatAccount }}
+                    </span>
                   </p>
                 </div>
               </li>
