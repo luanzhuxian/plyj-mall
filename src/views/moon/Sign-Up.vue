@@ -81,6 +81,7 @@
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { isPhone, checkLength } from '../../assets/js/validate'
 import { collectUserInfo } from '../../apis/base-api'
+import { resetForm } from '../../assets/js/util'
 import CountDown from './Count-Down.vue'
 import { mapGetters } from 'vuex'
 export default {
@@ -97,6 +98,7 @@ export default {
         centeredSlides: true,
         autoplay: true,
         loop: false,
+        disableOnInteraction: false,
         spaceBetween: 20,
         pagination: {
           el: '.banner-pagination',
@@ -131,6 +133,9 @@ export default {
   mounted () {
     this.form.contactName = this.userName
     this.form.mobile = this.mobile
+  },
+  deactivated () {
+    resetForm(this.form)
   },
   methods: {
     async confirm () {
@@ -171,7 +176,6 @@ export default {
       position: absolute;
       top: 628px;
       width: 100%;
-      height: calc(100vh - 628px);
       padding: 36px 48px;
       background-color: #fff;
       border-radius: 20px 20px 0 0;
