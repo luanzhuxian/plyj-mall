@@ -35,7 +35,7 @@
                         v-text="pro.productName"
                       />
                       <p class="fz-34 bold">
-                        + <i v-text="pro.price" />
+                        + ¥<i v-text="pro.price" />
                       </p>
                     </div>
                     <p class="gray-2 fz-24">

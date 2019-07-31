@@ -107,9 +107,7 @@ import {
 import { hasValue, isPhone, isName, isIdCard } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
 import { REFRESH_TOKEN, USER_INFO } from '../../store/mutation-type'
-
 const isCode = (code) => code.length === 4
-
 export default {
   name: 'ApplyHelper',
   components: {
