@@ -78,8 +78,9 @@
 
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import { isPhone, isName } from '../../assets/js/validate'
+import { isPhone, isName, checkLength } from '../../assets/js/validate'
 import { collectUserInfo } from '../../apis/base-api'
+import CountDown from './Count-Down.vue'
 export default {
   name: 'SignUp',
   components: {
@@ -107,7 +108,10 @@ export default {
         mobile: ''
       },
       rules: {
-        enterpriseName: [{ required: true, message: '请输入机构名称' }],
+        enterpriseName: [
+          { required: true, message: '请输入机构名称' },
+          { validator: checkLength(255), message: '机构名称过长' }
+        ],
         contactName: [
           { required: true, message: '请输入联系人姓名' },
           { validator: isName, message: '姓名只支持中文或英文，且在2~10个字符之间' }
@@ -122,29 +126,18 @@ export default {
   methods: {
     async confirm () {
       let h = this.$createElement
-      let countDown = {
-        time: 3000
-      }
-      let slot = h('p', {
-        domProps: {
-          innerText: countDown.time
-        }
-      })
-      this.$toast({
-        type: 'success',
-        message: '报名提交成功',
-        slot,
-        duration: 30000000
-      })
-      console.log(slot)
-      setInterval(() => {
-        slot.data.domProps.time--
-      }, 1000)
       if (this.$refs.form.validate()) {
         try {
           this.loading = true
           await collectUserInfo(this.form)
-          this.$success('')
+          this.$toast({
+            type: 'success',
+            message: '报名提交成功',
+            slot: h(CountDown)
+          })
+          setTimeout(() => {
+            this.$router.replace({ name: 'Home' })
+          }, 3000)
         } catch (e) {
           throw e
         } finally {
