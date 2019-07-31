@@ -338,7 +338,7 @@ export default {
             productCount: count,
             skuCode: skuCode1,
             skuCode2,
-            agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
+            agentUser: this.agentUser ? (shareBrokerId || this.userId) : (shareBrokerId || null) // 如果当前用户是经纪人，则覆盖其他经纪人的id
           })
           this.$success('已添加到购物车')
           this.showSpecifica = false
@@ -363,7 +363,7 @@ export default {
         count: count,
         skuCode1: skuCode1,
         skuCode2,
-        agentUser: this.agentUser ? this.userId : shareBrokerId // 如果当前用户是经纪人，则覆盖其他经纪人的id
+        agentUser: this.agentUser ? (shareBrokerId || this.userId) : (shareBrokerId || null) // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
       this.$router.push({
