@@ -52,6 +52,7 @@ export default {
   [type.SELETC_ADDRESS] (state, payload) {
     if (!payload) {
       state.selectedAddress = {}
+      localStorage.removeItem('selectedAddress')
       return
     }
     state.selectedAddress = payload

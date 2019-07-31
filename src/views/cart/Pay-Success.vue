@@ -81,7 +81,7 @@ export default {
     }
   },
   activated () {
-    this.showPop()
+    this.showPop(500)
   },
   computed: {
     ...mapGetters(['mallId', 'serverTime']),

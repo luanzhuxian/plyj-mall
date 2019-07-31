@@ -6,7 +6,7 @@ export default {
   addressList: state => state.addressList,
   selectedAddress: state => {
     return state.selectedAddress ||
-      state.addressList.filter(item => item.defaultAddress === 'YES')[0] ||
+      state.addressList.find(item => item.defaultAddress === 'YES') ||
       state.addressList[0] ||
       {}
   },

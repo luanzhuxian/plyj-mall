@@ -219,8 +219,11 @@ export default {
           if (this.selectedAddress.sequenceNbr === this.addressId) {
             this.$store.commit(SELETC_ADDRESS, null)
           }
-          await this.$store.dispatch(ADDRESS_LIST)
-          this.goBack()
+          const addressList = await this.$store.dispatch(ADDRESS_LIST)
+          if (addressList.length > 0) {
+            this.$store.commit(SELETC_ADDRESS, addressList[0])
+          }
+          this.$router.replace({ name: 'Address' })
         }
       } catch (e) {
         throw e

@@ -113,7 +113,7 @@ export default {
       try {
         let { result } = await getAddress()
         commit(type.ADDRESS_LIST, result)
-        resolve()
+        resolve(result)
       } catch (e) {
         reject(e)
       }
