@@ -124,6 +124,9 @@ export default {
   mounted () {
     this.$refs.loadMore.refresh()
   },
+  activated () {
+    this.$refs.loadMore.refresh()
+  },
   methods: {
     refreshHandler (list) {
       this.formatList = []
