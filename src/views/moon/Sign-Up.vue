@@ -122,7 +122,7 @@ export default {
         ],
         mobile: [
           { required: true, message: '请输入联系人电话' },
-          { validator: isPhone, message: '手机号格式错误' }
+          { validator: isPhone, message: '联系人电话格式错误' }
         ]
       }
     }
