@@ -4,6 +4,7 @@
       <!-- 月光宝盒项目 -->
       <img
         slot="88"
+        v-if="mallId === '1057573777392603136'"
         :class="$style.img88"
         src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
       >

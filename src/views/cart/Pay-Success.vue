@@ -38,7 +38,7 @@
     </transition>
     <img
       v-if="showMoonCake"
-      style="width: 100%; position: fixed; bottom: 0;"
+      style="width: 100%; display: block; margin-top: 46px;"
       src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/pay-success.jpg" alt=""
       @click="$router.replace({ name: 'SignUp' })"
     >
