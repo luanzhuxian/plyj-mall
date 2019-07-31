@@ -82,6 +82,7 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { isPhone, isName, checkLength } from '../../assets/js/validate'
 import { collectUserInfo } from '../../apis/base-api'
 import CountDown from './Count-Down.vue'
+import { mapGetters } from 'vuex'
 export default {
   name: 'SignUp',
   components: {
@@ -123,6 +124,13 @@ export default {
         ]
       }
     }
+  },
+  computed: {
+    ...mapGetters(['userName', 'mobile'])
+  },
+  mounted () {
+    this.form.contactName = this.userName
+    this.form.mobile = this.mobile
   },
   methods: {
     async confirm () {
