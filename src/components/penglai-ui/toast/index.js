@@ -51,10 +51,10 @@ Vue.prototype.$toast = options => {
   }
   Toast(options)
 }
-Vue.prototype.$error = options => {
+Vue.prototype.$error = message => {
   Toast({
     type: 'error',
-    options
+    message
   })
 }
 Vue.prototype.$success = message => {
