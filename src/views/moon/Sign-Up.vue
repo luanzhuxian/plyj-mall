@@ -82,7 +82,6 @@
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { isPhone, checkLength } from '../../assets/js/validate'
 import { collectUserInfo } from '../../apis/base-api'
-import { resetForm } from '../../assets/js/util'
 import CountDown from './Count-Down.vue'
 import { mapGetters } from 'vuex'
 export default {
@@ -136,13 +135,7 @@ export default {
     this.form.contactName = this.userName
     this.form.mobile = this.mobile
   },
-  activated () {
-    if (this.$refs.swiper) {
-      this.$refs.swiper.swiper.autoplay.start()
-    }
-  },
   deactivated () {
-    resetForm(this.form)
     this.$destroy()
   },
   methods: {
@@ -184,6 +177,7 @@ export default {
       position: absolute;
       top: 628px;
       width: 100%;
+      min-height: calc(100vh - 628px);
       padding: 36px 48px;
       background-color: #fff;
       border-radius: 20px 20px 0 0;
