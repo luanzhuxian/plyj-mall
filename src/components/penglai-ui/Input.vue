@@ -258,6 +258,9 @@ export default {
       border: 1px solid #e7e7e7;
       border-radius: 16px;
     }
+    &.pl-input-mini {
+      min-height: 88px;
+    }
     &.pl-input-small {
       min-height: 92px;
     }

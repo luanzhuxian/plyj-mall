@@ -190,6 +190,9 @@ export default {
         fill: currentColor;
         vertical-align: -7px;
       }
+      &.round {
+        border-radius: 40px;
+      }
     }
     /* huge */
     &__huge {

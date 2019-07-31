@@ -15,6 +15,10 @@
       ref="label"
       class="pl-form-item_label"
       v-text="label"
+      :style="{
+        '--label-width': currentLableWidth,
+        ...labelStyle
+      }"
     />
     <div
       class="pl-form-item_content"
@@ -37,7 +41,8 @@ export default {
   data () {
     return {
       parentAlign: null,
-      rule: null
+      rule: null,
+      currentLableWidth: 0
     }
   },
   props: {
@@ -48,6 +53,13 @@ export default {
     labelWidth: {
       type: [String, Number],
       default: 'max-content'
+    },
+    // 自定义lable样式
+    labelStyle: {
+      type: Object,
+      default () {
+        return {}
+      }
     },
     align: {
       type: String,
@@ -86,9 +98,9 @@ export default {
     setLabelWidth () {
       let parentLabelWidth = Number.parseInt(this.$parent.labelWidth || this.labelWidth)
       if (parentLabelWidth) {
-        this.$refs.label.style.setProperty('--label-width', (parentLabelWidth / 7.5) + 'vw')
+        this.currentLableWidth = parentLabelWidth / 7.5 + 'vw'
       } else {
-        this.$refs.label.style.setProperty('--label-width', this.labelWidth)
+        this.currentLableWidth = this.labelWidth / 7.5 + 'vw'
       }
     }
   }
