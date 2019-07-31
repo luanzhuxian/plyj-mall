@@ -1,11 +1,12 @@
 <template>
   <div :class="$style.detailInfo + ' ql-snow'">
     <h3 v-text="title" />
-    <div
-      v-lazy-container="{ selector: 'img', error: imgError }"
-      :class="$style.content + ' ql-container ql-editor'"
-      v-html="afterHtml"
-    />
+    <lazy-component>
+      <div
+        :class="$style.content + ' ql-container ql-editor'"
+        v-html="afterHtml"
+      />
+    </lazy-component>
   </div>
 </template>
 
@@ -39,13 +40,13 @@ export default {
   },
   methods: {
     matchedHtml () {
-      let str = this.content
-      let matched = str.match(/src="\S+"/g) || []
-      for (let src of matched) {
-        str = str.replace(src, `data-${src}`)
-      }
-      this.afterHtml = str
-      str = null
+      // let str = this.content
+      // let matched = str.match(/src="\S+"/g) || []
+      // for (let src of matched) {
+      //   str = str.replace(src, `data-${src}`)
+      // }
+      this.afterHtml = this.content
+      // str = null
     }
   }
 }

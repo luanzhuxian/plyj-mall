@@ -15,7 +15,8 @@ import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
 Vue.use(VueLazyload, {
-  error: imgError
+  error: imgError,
+  lazyComponent: true
 })
 Vue.use(animated)
 Vue.use(VueClipboard)

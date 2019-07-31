@@ -79,7 +79,7 @@
 
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import { isPhone, isName, checkLength } from '../../assets/js/validate'
+import { isPhone, checkLength } from '../../assets/js/validate'
 import { collectUserInfo } from '../../apis/base-api'
 import CountDown from './Count-Down.vue'
 import { mapGetters } from 'vuex'
@@ -116,7 +116,7 @@ export default {
         ],
         contactName: [
           { required: true, message: '请输入联系人姓名' },
-          { validator: isName, message: '姓名只支持中文或英文，且在2~10个字符之间' }
+          { validator: checkLength(12), message: '姓名不能超过12个字符' }
         ],
         mobile: [
           { required: true, message: '请输入联系人电话' },
