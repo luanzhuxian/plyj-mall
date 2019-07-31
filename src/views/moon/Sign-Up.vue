@@ -2,6 +2,7 @@
   <div :class="$style.signUp">
     <swiper
       :options="swiperOptionBanner"
+      ref="swiper"
     >
       <swiperSlide>
         <img :class="$style.banner" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/banner1.jpg" alt="">
@@ -96,9 +97,10 @@ export default {
       swiperOptionBanner: {
         slidesPerView: 'auto',
         centeredSlides: true,
-        autoplay: true,
         loop: false,
-        disableOnInteraction: false,
+        autoplay: {
+          disableOnInteraction: false
+        },
         spaceBetween: 20,
         pagination: {
           el: '.banner-pagination',
@@ -134,8 +136,14 @@ export default {
     this.form.contactName = this.userName
     this.form.mobile = this.mobile
   },
+  activated () {
+    if (this.$refs.swiper) {
+      this.$refs.swiper.swiper.autoplay.start()
+    }
+  },
   deactivated () {
     resetForm(this.form)
+    this.$destroy()
   },
   methods: {
     async confirm () {
