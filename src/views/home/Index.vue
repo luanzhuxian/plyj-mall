@@ -1,6 +1,13 @@
 <template>
   <div :class="$style.home">
     <TemplateA :data="modules" v-if="type === 1">
+      <!-- 月光宝盒项目 -->
+      <img
+        slot="88"
+        :class="$style.img88"
+        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
+      >
+      <!-- 88无现金日 -->
       <img
         slot="88"
         v-if="data88[mallId]"
@@ -10,6 +17,13 @@
       >
     </TemplateA>
     <TemplateB :data="modules" v-else-if="type === 2 || type === 3" :type="type">
+      <!-- 月光宝盒项目 -->
+      <img
+        slot="88"
+        :class="$style.img88"
+        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
+      >
+      <!-- 88无现金日 -->
       <img
         slot="88"
         v-if="show88"
@@ -76,7 +90,8 @@ export default {
           startTime: 1564588800000, // 2019-08-01 00:00:00
           endTime: 1567267199000 // 2019-08-31 23:59:59
         }
-      }
+      },
+      dataMoonLightBox: {}
     }
   },
   async created () {

@@ -9,7 +9,7 @@
       icon="no-content2"
     >
       <template>
-        <ul>
+        <ul class="mt-40">
           <li
             v-for="item of formatList"
             :key="item.timestamp"
@@ -21,32 +21,45 @@
                 :key="j"
                 :class="{ [$style.item]: true, partition: j < item.length }"
               >
-                <img
-                  :class="$style.listItemImg"
-                  v-img-error
-                  :src="pro.mediaInfoModels[0]"
-                  alt=""
-                >
-                <div :class="$style.itemRight">
-                  <div :class="$style.titlePrice">
-                    <p
-                      class="fz-28"
-                      v-text="pro.productName"
-                    />
-                    <p class="fz-34 bold">
-                      + <i v-text="pro.price" />
+                <div :class="$style.mainContent">
+                  <img
+                    :class="$style.listItemImg"
+                    v-img-error
+                    :src="pro.mediaInfoModels[0]"
+                    alt=""
+                  >
+                  <div :class="$style.itemRight">
+                    <div :class="$style.titlePrice">
+                      <p
+                        class="fz-28"
+                        v-text="pro.productName"
+                      />
+                      <p class="fz-34 bold">
+                        + <i v-text="pro.price" />
+                      </p>
+                    </div>
+                    <p class="gray-2 fz-24">
+                      数量：<i v-text="pro.count" />
                     </p>
+                    <div :class="$style.timeStatus">
+                      <span class="fz-22 gray-3">{{ pro.createTime }}</span>
+                      <span
+                        :class="{'fz-26': true, [$style.statusActive]: pro.status === 'AWAIT' }"
+                        v-text="status[pro.status]"
+                      />
+                    </div>
                   </div>
-                  <p class="gray-2 fz-24">
-                    数量：<i v-text="pro.count" />
+                </div>
+
+                <div :class="$style.rebateFrom">
+                  <p>
+                    <span :class="$style.title">姓名：</span>
+                    <span v-text="pro.purchaser" />
                   </p>
-                  <div :class="$style.timeStatus">
-                    <span class="fz-22 gray-3">{{ pro.createTime }}</span>
-                    <span
-                      :class="{'fz-26': true, [$style.statusActive]: pro.status === 'AWAIT' }"
-                      v-text="status[pro.status]"
-                    />
-                  </div>
+                  <p>
+                    <span :class="$style.title">电话：</span>
+                    <span v-text="pro.purchaserMobile" />
+                  </p>
                 </div>
               </li>
               <!--<li v-for="(pro, j) of item"-->
@@ -180,24 +193,47 @@ export default {
 
 <style module lang="scss">
   .rebate-list {
-    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .list {
+    width: 680px;
     margin-bottom: 56px;
     border-radius: 20px;
     overflow: hidden;
   }
   .item {
-    display: flex;
-    padding: 30px;
     background-color: #fff;
-    .listItemImg {
-      width: 82px;
-      height: 82px;
-      margin-top: 4px;
-      margin-right: 26px;
-      object-fit: cover;
-      border-radius: $--radius2;
+    > .main-content {
+      padding: 30px 30px 16px 30px;
+      display: flex;
+      .listItemImg {
+        width: 82px;
+        height: 82px;
+        margin-top: 4px;
+        margin-right: 26px;
+        object-fit: cover;
+        border-radius: $--radius2;
+      }
+    }
+    > .rebate-from {
+      margin-left: 30px;
+      padding-top: 24px;
+      padding-bottom: 27px;
+      padding-right: 30px;
+      font-size: 24px;
+      border-top: 1px solid #e7e7e7;
+      > p {
+        display: flex;
+        justify-content: space-between;
+        > .title {
+          color: #666;
+        }
+        &:nth-last-of-type(1) {
+          margin-top: 16px;
+        }
+      }
     }
   }
   .item-right {
