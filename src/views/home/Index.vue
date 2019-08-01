@@ -11,7 +11,7 @@
       <!-- 88无现金日 -->
       <img
         slot="88"
-        v-if="data88[mallId]"
+        v-if="show88"
         :class="$style.img88"
         :src="data88[mallId].gif" alt=""
         @click="showHaibao"

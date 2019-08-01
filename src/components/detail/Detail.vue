@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.detailInfo + ' ql-snow'">
+  <div :class="$style.detailInfo + ' ql-snow'" ref="detail">
     <h3 v-text="title" />
     <lazy-component>
       <div
@@ -46,6 +46,14 @@ export default {
       //   str = str.replace(src, `data-${src}`)
       // }
       this.afterHtml = this.content
+      this.$nextTick(() => {
+        this.$nextTick(() => {
+          let imgList = this.$refs.detail.querySelectorAll('img')
+          for (let img of imgList) {
+            img.parentNode.style.fontSize = 0
+          }
+        })
+      })
       // str = null
     }
   }
@@ -62,13 +70,14 @@ export default {
     }
   }
   .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     color: #999 !important;
     font-size: 14px !important;
-    line-height: 32px;
     img {
       width: 670px !important;
       height: auto !important;
-      margin: 10px 0 !important;
     }
   }
 </style>

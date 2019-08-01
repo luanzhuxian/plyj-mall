@@ -69,8 +69,10 @@ async function response (response) {
       } catch (e) {
         return Promise.reject(e)
       }
+    } else {
+      location.reload()
+      return
     }
-    return Promise.reject(new Error(msg))
   }
   return data
 }
