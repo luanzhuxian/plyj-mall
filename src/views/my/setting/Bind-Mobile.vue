@@ -187,6 +187,7 @@ export default {
               params,
               query
             })
+            this.$refs.getCode.finishCountDown()
             this.$success('绑定手机号成功！')
             return
           }

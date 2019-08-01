@@ -389,9 +389,9 @@ export default {
         const message = type === 'MODIFY' ? '更改退单成功，请等待卖家反馈' : '申请售后成功，请等待卖家反馈'
         await this.$confirm('确定提交吗？')
         const { result } = await fn(params)
-        this.loading = false
         this.$success(message)
         setTimeout(() => {
+          this.loading = false
           this.type === 'APPLY'
             ? this.$router.replace({ name: 'RefundDetail', params: { id: result.id } })
             : this.$router.go(-1)

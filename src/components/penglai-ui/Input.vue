@@ -284,8 +284,8 @@ export default {
           color: #ccc;
         }
         &:disabled {
-          background-color: #fff;
-          color: #999;
+          background-color: #fff !important;
+          color: #999 !important;
           opacity: 1 !important;
         }
         &:read-only {

@@ -61,11 +61,10 @@ export default {
         throw e
       }
     },
-
-    /*
-    * 倒计时任务
-    * @residue 剩余时间
-    * */
+    /**
+     * 倒计时任务
+     * @param residue 剩余时间
+     */
     *countDown (residue) {
       this.time = residue
       yield this.time
@@ -73,11 +72,11 @@ export default {
         yield --this.time
       }
     },
-    /*
-    * 运行倒计时任务
-    * @countDown 要运行的任务
-    * @residue 剩余时间，如果不传，使用默认时间
-    * */
+    /**
+     * 运行倒计时任务
+     * @param countDown 要运行的任务
+     * @param residue 剩余时间，如果不传，使用默认时间
+     */
     run (countDown, residue) {
       let task = countDown(residue !== undefined ? residue : this.fixedTime)
       let result = task.next()

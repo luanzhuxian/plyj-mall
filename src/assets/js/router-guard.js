@@ -1,25 +1,26 @@
 import { router } from '../../router'
-import store from '../../store'
+// import store from '../../store'
 // 小金库相关页面，非helper不能访问
-const notAllowedCoffer = [
-  'Coffers',
-  'WithdrawCash',
-  'WithdrawCashSuccess',
-  'WithdrawList',
-  'WithdrawDetail',
-  'AccumulatedRebate',
-  'RebateList'
-]
+// const notAllowedCoffer = [
+//   'Coffers',
+//   'WithdrawCash',
+//   'WithdrawCashSuccess',
+//   'WithdrawList',
+//   'WithdrawDetail',
+//   'AccumulatedRebate',
+//   'RebateList'
+// ]
 export const beforeEach = function (to, from, next) {
 }
 export const beforeResolve = function (to, from, next) {
-  if (!store.getters.agentUser && notAllowedCoffer.indexOf(to.name) > -1) {
-    next({
-      path: '/'
-    })
-  } else {
-    next()
-  }
+  // console.log(store.getters.agentUser)
+  // if (!store.getters.agentUser && notAllowedCoffer.indexOf(to.name) > -1) {
+  //   next({
+  //     path: '/'
+  //   })
+  // } else {
+  next()
+  // }
   document.title = to.meta.title
 }
 export const afterEach = function (to, from) {

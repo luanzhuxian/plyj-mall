@@ -139,7 +139,7 @@ export default {
     // 批处理数据，增加年月属性
     batching (list) {
       list.sort((i, j) => {
-        return i.timestamp < j.timestamp
+        return j.timestamp - i.timestamp
       })
       for (let item of list) {
         item.timestamp = Number(item.timestamp)
@@ -155,7 +155,7 @@ export default {
     // 按时间排序
     sortUserTime () {
       this.list.sort((i, j) => {
-        return i.createTimestamp < j.createTimestamp
+        return j.timestamp - i.timestamp
       })
       this.format()
     },

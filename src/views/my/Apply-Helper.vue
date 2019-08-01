@@ -80,6 +80,7 @@
             :disabled="form.auditStatus === 'AWAIT' || !isMobileValid"
             :smstype="smstype.AGENT_USER_INFO"
             :mobile="form.mobile"
+            ref="getCode"
           />
         </template>
       </pl-form-item>
@@ -236,6 +237,8 @@ export default {
           await this.$store.dispatch(USER_INFO)
         }
         Object.assign(this.form, result)
+        let str = this.form.name.split('-')
+        this.form.name = str[1] || str[0]
       } catch (e) {
         throw e
       }
@@ -257,9 +260,10 @@ export default {
             await AuditCreate(this.form)
           }
           await this.$store.dispatch(REFRESH_TOKEN)
-          this.loading = false
           this.$success('已成功提交认证 请耐心等待审核')
+          this.$refs.getCode.finishCountDown()
           setTimeout(() => {
+            this.loading = false
             this.$router.replace({ name: 'My' })
           }, 2000)
         } catch (e) {
