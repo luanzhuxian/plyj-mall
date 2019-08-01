@@ -129,6 +129,7 @@ export default {
       },
       statusTitle: {
         REJECT: '已拒绝',
+        PASS: '已通过',
         AWAIT: '审核中...'
       },
       rules: {
