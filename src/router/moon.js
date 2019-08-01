@@ -6,5 +6,13 @@ export default [
     meta: {
       title: '朋来雅集'
     }
+  },
+  {
+    path: '/moon/cake',
+    name: 'MoonCake',
+    component: () => import('../views/moon/Moon-Cake.vue'),
+    meta: {
+      title: '朋来雅集'
+    }
   }
 ]

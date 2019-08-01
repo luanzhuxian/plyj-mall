@@ -134,7 +134,7 @@ export default {
       rules: {
         name: [
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
-          { validator: isName, message: '姓名只支持中英文，且中文为2~10字，英文为2~20字', trigger: 'blur' }
+          { validator: isName, message: '姓名只支持中英文，且中文为2~10字，英文为2~50字', trigger: 'blur' }
         ],
         idCard: [
           { required: true, message: '请输入身份证号码', trigger: 'blur' },

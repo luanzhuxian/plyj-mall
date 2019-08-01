@@ -5,7 +5,7 @@
       <router-link
         slot="88"
         v-if="mallId === '1057573777392603136'"
-        :to="{ name: 'Lesson', params: { productId: '1156515687099793408', brokerId: agentUser ? userId : null } }"
+        :to="{ name: 'MoonCake' }"
       >
         <img
           :class="$style.img88"
@@ -26,7 +26,7 @@
       <router-link
         slot="88"
         v-if="mallId === '1057573777392603136'"
-        :to="{ name: 'Lesson', params: { productId: '1156515687099793408', brokerId: agentUser ? userId : null } }"
+        :to="{ name: 'MoonCake' }"
       >
         <img
           :class="$style.img88"

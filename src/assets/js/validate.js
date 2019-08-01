@@ -31,7 +31,7 @@ export function checkLength (length) {
 // 姓名检查
 export function isName (name) {
   if (codePointNo(name) <= 20) {
-    return /^[a-zA-Z_\u4e00-\u9fa5\\-]{2,20}$/.test(name)
+    return /^[a-zA-Z_\u4e00-\u9fa5\\-]{2,50}$/.test(name)
   }
   return false
 }

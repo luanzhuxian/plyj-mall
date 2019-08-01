@@ -7,8 +7,8 @@ import yaji from './yaji'
 import detail from './detail'
 import order from './order'
 import setting from './setting'
-import Moon from './cart'
-import Cart from './moon'
+import Cart from './cart'
+import Moon from './moon'
 import NotFound from '../views/404.vue'
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
