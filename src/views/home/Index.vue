@@ -2,12 +2,16 @@
   <div :class="$style.home">
     <TemplateA :data="modules" v-if="type === 1">
       <!-- 月光宝盒项目 -->
-      <img
+      <router-link
         slot="88"
         v-if="mallId === '1057573777392603136'"
-        :class="$style.img88"
-        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
+        :to="{ name: 'Lesson', params: { productId: '1156515687099793408', brokerId: agentUser ? userId : null } }"
       >
+        <img
+          :class="$style.img88"
+          src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
+        >
+      </router-link>
       <!-- 88无现金日 -->
       <img
         slot="88"
@@ -19,11 +23,16 @@
     </TemplateA>
     <TemplateB :data="modules" v-else-if="type === 2 || type === 3" :type="type">
       <!-- 月光宝盒项目 -->
-      <img
+      <router-link
         slot="88"
-        :class="$style.img88"
-        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
+        v-if="mallId === '1057573777392603136'"
+        :to="{ name: 'Lesson', params: { productId: '1156515687099793408', brokerId: agentUser ? userId : null } }"
       >
+        <img
+          :class="$style.img88"
+          src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
+        >
+      </router-link>
       <!-- 88无现金日 -->
       <img
         slot="88"
@@ -103,7 +112,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['mallId', 'serverTime']),
+    ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId']),
     serverTimestump () {
       return moment(this.serverTime).valueOf()
     },
