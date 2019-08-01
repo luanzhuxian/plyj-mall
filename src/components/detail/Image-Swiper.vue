@@ -79,13 +79,20 @@ export default {
   },
   methods: {
     async init () {
-      const gallery = new window.PhotoSwipe(this.$refs.pswp, window.PhotoSwipeUI_Default, this.items, this.options)
-      gallery.init()
-      gallery.listen('afterChange', this.afterChange)
-      gallery.listen('close', this.close)
-      this.gallery = gallery
-      this.currentIndex = gallery.getCurrentIndex()
-      this.$emit('slideChange', this.currentIndex, this.total)
+      try {
+        const gallery = new window.PhotoSwipe(this.$refs.pswp, window.PhotoSwipeUI_Default, this.items, this.options)
+        gallery.init()
+        gallery.listen('afterChange', this.afterChange)
+        gallery.listen('close', this.close)
+        this.gallery = gallery
+        this.currentIndex = gallery.getCurrentIndex()
+        this.$emit('slideChange', this.currentIndex, this.total)
+      } catch (e) {
+        setTimeout(() => {
+          this.init()
+        }, 200)
+        this.$emit('update:show', false)
+      }
     },
     loadImg (src) {
       return new Promise((resolve, reject) => {

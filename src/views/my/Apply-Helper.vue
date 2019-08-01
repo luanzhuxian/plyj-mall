@@ -15,6 +15,20 @@
       :label-width="44"
     >
       <pl-form-item
+        v-if="isYaji"
+        prop="name"
+        border
+      >
+        <pl-input
+          :disabled="true"
+          placeholder="请选择您的君区"
+          v-model="area"
+          prefix-icon="name"
+          size="middle"
+          @click="showPicker = true"
+        />
+      </pl-form-item>
+      <pl-form-item
         prop="name"
         border
       >
@@ -94,6 +108,12 @@
       <p>2.提交认证后，需商家审核，审核时间为1-3个工作日；</p>
       <p>3.审核通过后，即可拥有Helper的权益；</p>
     </div>
+
+    <pl-picker
+      :show.sync="showPicker"
+      :slots="areas"
+      @confirm="areaConfirm"
+    />
   </div>
 </template>
 
@@ -107,6 +127,7 @@ import {
 import { hasValue, isPhone, isName, isIdCard } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
 import { REFRESH_TOKEN, USER_INFO } from '../../store/mutation-type'
+
 const isCode = (code) => code.length === 4
 export default {
   name: 'ApplyHelper',
@@ -116,6 +137,7 @@ export default {
   data () {
     return {
       loading: false,
+      showPicker: false,
       form: {
         name: '',
         idCard: '',
@@ -123,6 +145,7 @@ export default {
         verificationCode: '',
         auditStatus: ''
       },
+      area: '',
       statusTip: {
         REJECT: '您的申请被拒绝，您可以选择重新申请',
         AWAIT: '审核中不可修改，请您耐心等待1-3个工作日'
@@ -150,11 +173,37 @@ export default {
           { validator: isCode, message: '请填写正确的4位验证码', trigger: 'blur' }
         ]
       },
-      agentUser: false
+      agentUser: false,
+      areas: [
+        {
+          values: [
+            '西安分公司',
+            '郑州分公司',
+            '成都分公司',
+            '沈阳分公司',
+            '济南分公司',
+            '广州分公司',
+            '合肥分公司',
+            '武汉分公司',
+            '长沙分公司',
+            '江苏君区',
+            '浙江君区',
+            '君学书院',
+            '课程中心',
+            '客服中心',
+            '管理咨询中心',
+            '教育产业研究院',
+            '商务中心',
+            '其他'
+          ],
+          textAlign: 'center',
+          flex: 1
+        }
+      ]
     }
   },
   computed: {
-    ...mapGetters(['smstype', 'isAdmin', 'mobile']),
+    ...mapGetters(['smstype', 'isAdmin', 'mobile', 'mallId']),
     isNameValid () {
       return hasValue(this.form.name) && isName(this.form.name)
     },
@@ -169,6 +218,9 @@ export default {
     },
     isBtnDisable () {
       return !this.isNameValid || !this.isIDValid || !this.isMobileValid || !this.isCodeValid
+    },
+    isYaji () {
+      return this.mallId === '1057573777392603136'
     }
   },
   activated () {
@@ -188,10 +240,17 @@ export default {
         throw e
       }
     },
+    areaConfirm (val) {
+      this.area = val[0]
+    },
     async confirm () {
       if (this.$refs.form.validate()) {
         try {
           this.loading = true
+          if (this.isYaji) {
+            if (!this.area) return this.$warning('请选择君区')
+            this.form.name = this.area === '其他' ? this.form.name : (this.area + '-' + this.form.name)
+          }
           if (this.form.auditStatus === 'REJECT') {
             await updateAudit(this.form.id, this.form)
           } else {
@@ -223,15 +282,18 @@ export default {
 <style module lang="scss">
   .apply-helper {
     padding: 28px 40px;
+
     form {
       margin-top: 36px;
       margin-bottom: 56px;
       overflow: hidden;
     }
   }
+
   .form {
     background-color: #fff;
   }
+
   .suggestion {
     margin-top: 32px;
     font-size: 26px;

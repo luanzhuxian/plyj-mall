@@ -83,7 +83,7 @@ export default {
     },
     async editUserName () {
       const testUserName = (val) => {
-        return /^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_]){1,12}$/.test(val)
+        return /^[a-zA-Z_\u4e00-\u9fa5\\-]{1,12}$/.test(val)
       }
       try {
         const val = await this.$propmt({

@@ -37,10 +37,10 @@
   transform: translateY(100%);
 }
 .picker-translate-enter-active {
-  transition: transform .2s ease-in;
+  transition: transform .5s ease;
 }
 .picker-translate-leave-active {
-  transition: transform .2s ease-out;
+  transition: transform .5s ease;
 }
 .picker-translate-leave  {
   transform: translateY(0);
