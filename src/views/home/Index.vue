@@ -86,14 +86,14 @@ export default {
       haibao: '',
       pop: '',
       data88: {
-        '1530139721': {
+        '1110736772377198592': {
           haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
           pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
           gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif',
           startTime: 1564588800000, // 2019-08-01 00:00:00
           endTime: 1568563199000 // 2019-09-15 23:59:59
         },
-        '1532969341': {
+        '1120991459349135360': {
           haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
           pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
           gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif',
