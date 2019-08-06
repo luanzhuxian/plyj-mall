@@ -238,9 +238,9 @@ export default {
       for (let item of list) {
         // item.status: 0: 规格禁用 1: 规格启用
         const arr = item.productSkuModels.filter(item => item.status === 1)
-        item.price = Math.min(...arr.map(item => item.price)) || 0
+        item.price = Math.min(...arr.map(item => Number(item.price))) || 0
         if (this.currentClassify.id === '1') {
-          item.realRebate = Math.max(...arr.map(item => item.realRebate)) || 0
+          item.realRebate = Math.max(...arr.map(item => Number(item.realRebate))) || 0
         }
       }
       this.prodList = list
