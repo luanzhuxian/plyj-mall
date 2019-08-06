@@ -22,6 +22,7 @@
       />
       <div class="toast-message">
         <p v-text="message" />
+        <p class="toast-vice-message" v-text="viceMessage" />
         <slot />
       </div>
     </div>
@@ -37,6 +38,7 @@ export default {
     return {
       show: false,
       message: '',
+      viceMessage: '',
       duration: '',
       timer: 0,
       type: ''
@@ -71,6 +73,10 @@ export default {
       font-size: 28px;
       max-width: 95vw;
       word-break: break-all;
+      .toast-vice-message {
+        margin-top: 4px;
+        font-size: 18px;
+      }
     }
     .pl-icon {
       font-size: 72px;

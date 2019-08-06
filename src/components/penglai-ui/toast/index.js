@@ -23,6 +23,7 @@ export const Toast = (options = {}) => {
   }
   if (typeof options === 'object') {
     instance.message = options.message
+    instance.viceMessage = options.viceMessage
     instance.type = options.type
     instance.countDownTime = options.countDownTime
     if (options.slot) {

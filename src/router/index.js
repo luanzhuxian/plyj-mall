@@ -9,6 +9,7 @@ import order from './order'
 import setting from './setting'
 import Cart from './cart'
 import Moon from './moon'
+import Appointment from './appointment'
 import NotFound from '../views/404.vue'
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
@@ -47,6 +48,7 @@ export const router = new Router({
     ...order,
     ...setting,
     ...Cart,
+    ...Appointment,
     ...Moon
   ],
   scrollBehavior (to, from, savedPosition) {
