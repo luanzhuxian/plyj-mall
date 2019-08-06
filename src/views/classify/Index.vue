@@ -93,7 +93,7 @@
                 :id="item.id"
                 :img="item.productMainImage + '?x-oss-process=style/thum-small'"
                 :title="item.productName"
-                :price="item.productSkuModels.length && item.productSkuModels[0].price"
+                :price="item.price"
                 :rebate="currentClassify.id === '1' ? item.realRebate : ''"
               />
             </div>
@@ -223,16 +223,6 @@ export default {
         throw e
       }
     },
-    refreshHandler (list) {
-      for (let item of list) {
-        item.realRebate = 0
-        item.productSkuModels.forEach(current => {
-          item.realRebate = current.realRebate > item.realRebate ? current.realRebate : item.realRebate
-        })
-        item.productSkuModels.sort((a, b) => a.price - b.price)
-      }
-      this.prodList = list
-    },
     findDefault () {
       if (this.classifyList.length > 1) {
         let finded = this.classifyList.find(item => item.id === this.optionId)
@@ -243,6 +233,17 @@ export default {
           this.classifyClick(finded)
         }
       }
+    },
+    refreshHandler (list) {
+      for (let item of list) {
+        // item.status: 0: 规格禁用 1: 规格启用
+        const arr = item.productSkuModels.filter(item => item.status === 1)
+        item.price = Math.min(...arr.map(item => item.price)) || 0
+        if (this.currentClassify.id === '1') {
+          item.realRebate = Math.max(...arr.map(item => item.realRebate)) || 0
+        }
+      }
+      this.prodList = list
     }
   }
 }
