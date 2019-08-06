@@ -4,6 +4,7 @@
     <Banner :data="BANNER" />
     <slot name="88" />
     <HotItem :data="POPULAR" v-if="POPULAR.showStatue === 1" />
+    <appointment-gift />
     <Best v-if="type === 3 && CLASS.showStatue === 1" :data="CLASS" />
     <BestRecommend
       v-if="RECOMMEND.values && RECOMMEND.values.length"
@@ -19,6 +20,7 @@ import Banner from './components/Banner.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
+import AppointmentGift from './components/Appointment-Gift.vue'
 import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'HomeTemplateB',
@@ -27,7 +29,8 @@ export default {
     Search,
     HotItem,
     Best,
-    BestRecommend
+    BestRecommend,
+    AppointmentGift
   },
   data () {
     return {

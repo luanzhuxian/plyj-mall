@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18" viewBox="0 0 18 18">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.299" y1="0.33" x2="1.035" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fd780a"/>
+      <stop offset="1" stop-color="#fe4332"/>
+    </linearGradient>
+  </defs>
+  <g id="校区介绍" transform="translate(-0.588 -0.588)">
+    <path id="路径_17" data-name="路径 17" d="M9.588,9.588m-9,0a9,9,0,1,0,9-9,9,9,0,0,0-9,9Z" fill="url(#linear-gradient)"/>
+    <path id="路径_18" data-name="路径 18" d="M14.07,12.313,12.213,10.58a3.363,3.363,0,1,0-5.313.058L5.105,12.313H6.383l.6.715-.012.961,2.1-2.111a3.09,3.09,0,0,0,1.033-.014l2.109,2.125-.012-.961.6-.715H14.07ZM8.483,10.36,8.7,9.1l-.911-.894L9.055,8.03l.568-1.143.561,1.146,1.263.188-.917.888.212,1.259-1.128-.6-1.132.591Z" fill="#fff"/>
+  </g>
+</svg>
