@@ -3,7 +3,7 @@
     <div
       v-if="data.YUYUE && data.YUYUE.values.length"
       :class="$style.appointmentGift"
-      @click="showPop = true"
+      @click="yuyueNow"
     >
       <pl-svg :class="$style.giftIcon" name="gift" />
       <div :class="$style.right">
@@ -115,6 +115,21 @@ export default {
     this.appointmentMobile = this.mobile || ''
   },
   methods: {
+    yuyueNow () {
+      if (!this.mobile) {
+        this.$confirm('您还没又绑定手机，请先绑定手机')
+          .then(() => {
+            localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+              name: this.$route.name,
+              params: this.$route.params,
+              query: this.$route.query
+            }))
+            this.$router.push({ name: 'BindMobile' })
+          })
+        return
+      }
+      this.showPop = true
+    },
     jump (item) {
       if (item.type === 1) {
         this.$router.push({ name: 'SchoolShow' })
