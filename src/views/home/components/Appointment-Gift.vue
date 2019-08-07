@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.appointment">
     <div
-      v-if="data.YUYUE && data.YUYUE.values.length"
+      v-if="data.YUYUE.showStatue === 1 && data.YUYUE && data.YUYUE.values.length"
       :class="$style.appointmentGift"
       @click="yuyueNow"
     >
@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div :class="$style.content">
+    <div :class="$style.content" v-if="data.PINGXUAN.showStatue === 1 && data.PINGXUAN && data.PINGXUAN.values.length">
       <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
         <div :class="$style.left">
           <div :class="$style.title" v-text="PINGXUAN.values[0].mallName" />

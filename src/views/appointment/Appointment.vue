@@ -6,7 +6,7 @@
       :style="{ backgroundImage: `url(${A.mediaDetailModelList[0].mediaUrl})`}"
     >
       <div :class="$style.topContent">
-        <a :class="$style.callService" href="">
+        <a :class="$style.callService" :href="`tel:${supportPhone}`">
           <pl-svg name="call-service" />
         </a>
         <div :class="$style.top">
@@ -17,8 +17,8 @@
           <p :class="$style.desc" v-text="mallDesc" />
           <div :class="$style.address">
             <pl-svg name="address4" />
-            <span :class="$style.addressContent">陕西省西安市天谷七路新加坡腾飞科汇城</span>
-            <button :class="$style.copyAddress" @click="copy('陕西省西安市天谷七路新加坡腾飞科汇城')">复制</button>
+            <span :class="$style.addressContent" v-text="address" />
+            <button :class="$style.copyAddress" @click="copy">复制</button>
           </div>
         </div>
       </div>
@@ -175,6 +175,12 @@ export default {
     mallBrandingRequestModels () {
       return this.data.mallBrandingRequestModels || []
     },
+    address () {
+      return this.data.address || ''
+    },
+    supportPhone () {
+      return this.data.supportPhone || ''
+    },
     A () {
       return this.mallBrandingRequestModels.find(item => item.type === 0) || null
     },
@@ -197,8 +203,8 @@ export default {
   methods: {
     getData () {
     },
-    copy (text) {
-      this.$copyText(text).then((e) => {
+    copy () {
+      this.$copyText(this.address).then((e) => {
         this.$success('已复制')
       }, function (e) {
         alert('Can not copy')
