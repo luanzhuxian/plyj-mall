@@ -134,6 +134,7 @@ export default {
   async created () {
     try {
       let { result } = await getData()
+      localStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
       this.data = result
     } catch (e) {
       throw e

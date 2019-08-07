@@ -35,38 +35,14 @@ export default {
   },
   methods: {
     canplay () {
-      // console.log(123)
-      // this.$refs.video.play()
-      // setTimeout(() => {
-      //   let canvas = this.$refs.canvas
-      //   let ctx = canvas.getContext('2d')
-      //   ctx.drawImage(this.$refs.video, 0, 0)
-      //   this.IMG = canvas.toBlob(res => {
-      //     console.log(res)
-      //     console.dir(this.$refs.video.buffered)
-      //   })
-      // }, 1000)
     },
     async loadeddata () {
-      // console.log(321)
-      // let video = this.$refs.video
-      // this.videoWidth = video.videoWidth
-      // this.videoHeight = video.videoHeight
-      // video.play()
-      // setTimeout(async () => {
-      //   video.pause()
-      //   await this.$nextTick()
-      //   let canvas = this.$refs.canvas
-      //   let ctx = canvas.getContext('2d')
-      //   ctx.drawImage(video, 0, 0)
-      //   this.IMG = canvas.toDataURL()
-      // }, 100)
-
-      // console.log(video)
     },
     play () {
       this.isPlay = true
-      this.$refs.video.play()
+      this.$nextTick(() => {
+        this.$refs.video.play()
+      })
     },
     ended () {
       this.isPlay = false
