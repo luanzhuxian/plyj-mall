@@ -1,5 +1,7 @@
 <template>
   <div :class="$style.personalCenter">
+    <pl-canvas-video />
+
     <div :class="$style.top">
       <img :src="avatar" alt="头像">
       <div :class="$style.basicInfo">
@@ -148,6 +150,7 @@
         :active="0"
       />
     </modal>
+
   </div>
 </template>
 

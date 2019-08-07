@@ -37,7 +37,7 @@
       <div :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="school_show" />
         <span :class="$style.title">校区展示</span>
-        <pl-svg :class="$style.enter" name="enter" />
+        <pl-svg @click="$router.push({ name: 'SchoolShow' })" :class="$style.enter" name="enter" />
       </div>
       <ul :class="$style.contentList">
         <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
@@ -78,6 +78,7 @@
         <pl-svg :class="$style.moduleIcon" name="video" />
         <span :class="$style.title">宣传视频</span>
       </div>
+      <pl-canvas-video />
     </div>
 
     <div
@@ -270,13 +271,6 @@ export default {
         padding-bottom: 64px;
         overflow: auto;
         border: 1px solid transparent;
-        /*&:after {*/
-          /*position: relative;*/
-          /*display: inline-block;*/
-          /*content: '';*/
-          /*width: 24px !important;*/
-          /*height: 24px !important;*/
-        /*}*/
         > li {
           display: inline-block;
           width: 282px;

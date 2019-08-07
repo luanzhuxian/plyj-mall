@@ -9,9 +9,9 @@ export default [
     }
   },
   {
-    path: '/appointment/detail',
-    name: 'AppointmentDetail',
-    component: () => import('../views/appointment/Appointment-Detail.vue'),
+    path: '/appointment/school-show',
+    name: 'SchoolShow',
+    component: () => import('../views/appointment/School-Show.vue'),
     props: true,
     meta: {
       title: '朋来雅集'
