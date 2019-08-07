@@ -5,12 +5,15 @@ html {
   overflow: auto;
   -webkit-overflow-scrolling: auto;
   -webkit-appearance: none;
+  //scroll-behavior: smooth;
 }
 body {
   position: relative;
   color: $--font-color_gray1;
   background-color: $--background-color;
   overflow: auto;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 img, textarea, input {
   box-sizing: border-box;

@@ -23,7 +23,6 @@
         </div>
       </div>
     </div>
-
     <div
       :class="{
         [$style.module]: true,
@@ -31,7 +30,7 @@
       }"
       v-if="B"
     >
-      <div :class="$style.moduleTitle" v-if="B">
+      <div :id="typeMap[B.type]" :class="$style.moduleTitle" v-if="B">
         <pl-svg :class="$style.moduleIcon" name="school_show" />
         <span :class="$style.title" v-text="B.titleName" />
         <pl-svg @click="$router.push({ name: 'SchoolShow' })" :class="$style.enter" name="enter" />
@@ -52,7 +51,7 @@
       }"
       v-if="C"
     >
-      <div :class="$style.moduleTitle">
+      <div :id="typeMap[C.type]" :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="five_pointed" />
         <span :class="$style.title" v-text="C.titleName" />
         <pl-svg @click="$router.push({ name: 'StudentShow' })" :class="$style.enter" name="enter" />
@@ -73,7 +72,7 @@
       }"
       v-if="D"
     >
-      <div :class="$style.moduleTitle">
+      <div :id="typeMap[D.type]" :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="video" />
         <span :class="$style.title">宣传视频</span>
       </div>
@@ -87,7 +86,7 @@
       }"
       v-if="E"
     >
-      <div :class="$style.moduleTitle">
+      <div :id="typeMap[E.type]" :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="school_intro" />
         <span :class="$style.title">校区介绍</span>
       </div>
@@ -100,7 +99,7 @@
       }"
       v-if="F && F.mediaDetailModelList.length"
     >
-      <div :class="$style.moduleTitle">
+      <div :id="typeMap[F.type]" :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="aptitude" />
         <span :class="$style.title">相关资质</span>
       </div>
@@ -128,7 +127,15 @@ export default {
   },
   data () {
     return {
-      data: {}
+      data: {},
+      typeMap: {
+        '0': 'a',
+        '1': 'b',
+        '2': 'c',
+        '3': 'd',
+        '4': 'e',
+        '5': 'f'
+      }
     }
   },
   async created () {
@@ -139,6 +146,20 @@ export default {
     } catch (e) {
       throw e
     }
+  },
+  async activated () {
+    let hash = this.$route.hash
+    if (hash) {
+      hash = hash.replace('#', '')
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth'
+        let a = document.getElementById(this.typeMap[hash])
+        window.scrollTo(0, a.offsetTop)
+      }, 300)
+    }
+  },
+  deactivated () {
+    document.documentElement.style.scrollBehavior = ''
   },
   computed: {
     mallName () {
@@ -154,22 +175,22 @@ export default {
       return this.data.mallBrandingRequestModels || []
     },
     A () {
-      return this.mallBrandingRequestModels[0] || null
+      return this.mallBrandingRequestModels.find(item => item.type === 0) || null
     },
     B () {
-      return this.mallBrandingRequestModels[1] || null
+      return this.mallBrandingRequestModels.find(item => item.type === 1) || null
     },
     C () {
-      return this.mallBrandingRequestModels[2] || null
+      return this.mallBrandingRequestModels.find(item => item.type === 2) || null
     },
     D () {
-      return this.mallBrandingRequestModels[3] || null
+      return this.mallBrandingRequestModels.find(item => item.type === 3) || null
     },
     E () {
-      return this.mallBrandingRequestModels[4] || null
+      return this.mallBrandingRequestModels.find(item => item.type === 4) || null
     },
     F () {
-      return this.mallBrandingRequestModels[5] || null
+      return this.mallBrandingRequestModels.find(item => item.type === 5) || null
     }
   },
   methods: {

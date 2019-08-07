@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { getData } from '../../apis/appointment'
 export default {
   name: 'SchoolShow',
   data () {
@@ -18,9 +19,19 @@ export default {
       data: {}
     }
   },
-  mounted () {
+  async mounted () {
     let data = JSON.parse(localStorage.getItem('PINGXUAN'))
-    this.data = data[1]
+    if (!data) {
+      try {
+        let { result } = await getData()
+        localStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
+        this.data = result.mallBrandingRequestModels.find(item => item.type === 1)
+      } catch (e) {
+        throw e
+      }
+    } else {
+      this.data = data.find(item => item.type === 1)
+    }
   }
 }
 </script>

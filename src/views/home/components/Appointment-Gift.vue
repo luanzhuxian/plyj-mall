@@ -42,6 +42,7 @@
             v-for="(item, i) of mallBrandingRequestModels"
             :key="i"
             v-text="item.titleName"
+            @click="jump(item)"
           />
         </ul>
       </div>
@@ -114,6 +115,17 @@ export default {
     this.appointmentMobile = this.mobile || ''
   },
   methods: {
+    jump (item) {
+      if (item.type === 1) {
+        this.$router.push({ name: 'SchoolShow' })
+        return
+      }
+      if (item.type === 2) {
+        this.$router.push({ name: 'StudentShow' })
+        return
+      }
+      this.$router.push({ name: 'Appointment', hash: `#${item.type}` })
+    },
     async confirm () {
       try {
         if (!isPhone(this.appointmentMobile)) {
