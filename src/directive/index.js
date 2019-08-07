@@ -28,7 +28,6 @@ export default {
       } else {
         IMGERLIST[currentArg] = [value]
       }
-      IMGERLIST[currentArg] = [...new Set(IMGERLIST[currentArg])]
       el.addEventListener('click', function (e) {
         e.stopPropagation()
         window.wx.previewImage({
