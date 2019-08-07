@@ -72,6 +72,7 @@ export default {
     position: relative;
     border: none;
     outline: none;
+    text-align: center;
     span {
       display: inline-block;
       vertical-align: bottom;
