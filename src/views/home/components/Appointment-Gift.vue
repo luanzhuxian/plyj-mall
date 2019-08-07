@@ -1,13 +1,18 @@
 <template>
   <div :class="$style.appointment">
-    <div :class="$style.appointmentGift" @click="showPop = true">
+    <div
+      v-if="data.YUYUE && data.YUYUE.values.length"
+      :class="$style.appointmentGift"
+      @click="showPop = true"
+    >
       <pl-svg :class="$style.giftIcon" name="gift" />
       <div :class="$style.right">
         <pl-svg name="yuyue2" />
       </div>
       <div :class="$style.left">
-        <p>免费试听, 2小时外教课</p>
-        <p>到店礼精美礼品+外教口语体</p>
+        <template v-for="(item, i) of data.YUYUE.values">
+          <p v-if="i < 2" :key="i" v-text="item.value" />
+        </template>
         <div :class="$style.now">
           <span>立即预约</span>
           <pl-svg name="right" color="#7E6E4D" />
@@ -16,15 +21,10 @@
     </div>
 
     <div :class="$style.content">
-      <div :class="$style.top">
+      <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
         <div :class="$style.left">
-          <div :class="$style.title">
-            吉地堡少儿英语
-          </div>
-          <div :class="$style.desc">
-            吉的堡教育，致力于2-12岁幼儿园及英
-            语培训学校。 结合全球最尖端的教育
-          </div>
+          <div :class="$style.title" v-text="PINGXUAN.values[0].mallName" />
+          <div :class="$style.desc" v-text="PINGXUAN.values[0].mallDesc" />
         </div>
         <div :class="$style.center">
           <img :src="logoUrl" alt="">
@@ -38,10 +38,11 @@
           教育特色 :
         </div>
         <ul :class="$style.tags">
-          <li>校区展示</li>
-          <li>学员风采</li>
-          <li>校区介绍</li>
-          <li>视频宣传</li>
+          <li
+            v-for="(item, i) of mallBrandingRequestModels"
+            :key="i"
+            v-text="item.titleName"
+          />
         </ul>
       </div>
     </div>
@@ -53,15 +54,16 @@
           <pl-svg name="yuyue2" />
         </div>
         <ul :class="$style.left">
-          <li>免费试听, 2小时外教课</li>
-          <li>到店礼精美礼品+外教口语体</li>
-          <li>到店礼精美礼品+外教口语体</li>
-          <li>到店礼精美礼品+外教口语体</li>
+          <li
+            v-for="(item, i) of data.YUYUE.values"
+            :key="i"
+            v-text="item.name"
+          />
         </ul>
       </div>
       <form :class="$style.popForm">
         <div class="fz-26 gray-3">预约后您的私人顾问将会电话联系您</div>
-        <input value="123" type="text" placeholder="请输入预约手机">
+        <input v-model="appointmentMobile" type="text" placeholder="请输入预约手机">
         <div :class="$style.tip">
           <pl-svg name="safe" />
           <span>无强行推销</span>
@@ -78,24 +80,58 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { yuyue } from '../../../apis/appointment'
+import { isPhone } from '../../../assets/js/validate'
 export default {
   name: 'AppointmentGift',
   data () {
     return {
-      showPop: false
+      showPop: false,
+      appointmentMobile: ''
+    }
+  },
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return {}
+      }
     }
   },
   computed: {
-    ...mapGetters(['logoUrl'])
+    ...mapGetters(['logoUrl', 'openId', 'mobile']),
+    YUYUE () {
+      return this.data.YUYUE || {}
+    },
+    PINGXUAN () {
+      return this.data.PINGXUAN || {}
+    },
+    mallBrandingRequestModels () {
+      return this.PINGXUAN.values.length ? this.PINGXUAN.values[0].mallBrandingRequestModels : []
+    }
+  },
+  mounted () {
+    this.appointmentMobile = this.mobile || ''
   },
   methods: {
-    confirm () {
-      this.$toast({
-        type: 'success',
-        message: '预约成功',
-        viceMessage: '专业顾问会尽快联系您的~',
-        duratio: 300000
-      })
+    async confirm () {
+      try {
+        if (!isPhone(this.appointmentMobile)) {
+          return this.$error('请输入正确的手机号')
+        }
+        await yuyue({
+          mobile: this.appointmentMobile || this.mobile || '',
+          openId: this.openId
+        })
+        this.$toast({
+          type: 'success',
+          message: '预约成功',
+          viceMessage: '专业顾问会尽快联系您的~'
+        })
+        this.showPop = false
+      } catch (e) {
+        throw e
+      }
     }
   }
 }
@@ -136,13 +172,14 @@ export default {
         position: relative;
         display: inline-flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: center;
         flex: 1;
         height: 100%;
         padding-left: 20px;
         font-size: 28px;
         color: #AB8F58;
         > p {
+          line-height: 40px;
           width: 380px;
           @include elps();
         }

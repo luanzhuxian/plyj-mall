@@ -21,7 +21,7 @@ import RadioComponent from './radio/Radio.vue'
 import RadioGroupComponent from './radio/Radio-Group.vue'
 import Popup from './Popup.vue'
 import Picker from './picker/Picker.vue'
-import CanvasVideo from './Canvas-Video.vue'
+// import CanvasVideo from './Canvas-Video.vue'
 import { Timeline, TimelineItem } from './timeline'
 import { Indicator } from './indicator'
 export { Toast } from './toast'
@@ -47,8 +47,8 @@ const components = [
   Popup,
   Picker,
   Timeline,
-  TimelineItem,
-  CanvasVideo
+  TimelineItem
+  // CanvasVideo
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {

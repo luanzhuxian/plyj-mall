@@ -4,7 +4,7 @@
     <Banner :data="BANNER" />
     <slot name="88" />
     <HotItem :data="POPULAR" v-if="POPULAR.showStatue === 1" />
-    <appointment-gift />
+    <appointment-gift :data="{ YUYUE, PINGXUAN }" />
     <Best v-if="type === 3 && CLASS.showStatue === 1" :data="CLASS" />
     <BestRecommend
       v-if="RECOMMEND.values && RECOMMEND.values.length"
@@ -62,6 +62,12 @@ export default {
     },
     CLASS () {
       return this.data.CLASS || {}
+    },
+    YUYUE () {
+      return this.data.YUYUE || {}
+    },
+    PINGXUAN () {
+      return this.data.PINGXUAN || {}
     }
   }
 }

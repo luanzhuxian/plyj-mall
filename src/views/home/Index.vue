@@ -159,12 +159,13 @@ export default {
         let modules
         if (type === 1) {
           modules = {
-            'BANNER': null,
-            'MODULE_A': null,
-            'MODULE_B': null,
-            'MODULE_C': null,
-            'MODULE_D': null,
-            'MODULE_E': null
+            BANNER: null,
+            PINGXUAN: null,
+            MODULE_A: null,
+            MODULE_B: null,
+            MODULE_C: null,
+            MODULE_D: null,
+            MODULE_E: null
           }
           const bannerList = result.moduleModels.filter(module => module.moduleType === 1)
           const prodList = result.moduleModels.filter(module => module.moduleType === 2)
@@ -177,6 +178,8 @@ export default {
         }
         if (type === 3) {
           modules = {
+            YUYUE: null,
+            PINGXUAN: null,
             BANNER: null,
             POPULAR: null,
             CLASS: null,
@@ -184,18 +187,24 @@ export default {
           }
           modules.BANNER = moduleModels[0]
           modules.POPULAR = moduleModels[1]
-          modules.CLASS = moduleModels[2]
-          modules.RECOMMEND = moduleModels[3]
+          modules.YUYUE = moduleModels[2]
+          modules.PINGXUAN = moduleModels[3]
+          modules.CLASS = moduleModels[4]
+          modules.RECOMMEND = moduleModels[5]
         }
         if (type === 2) {
           modules = {
+            YUYUE: null,
+            PINGXUAN: null,
             BANNER: null,
             POPULAR: null,
             RECOMMEND: null
           }
           modules.BANNER = moduleModels[0]
           modules.POPULAR = moduleModels[1]
-          modules.RECOMMEND = moduleModels[2]
+          modules.YUYUE = moduleModels[2]
+          modules.PINGXUAN = moduleModels[3]
+          modules.RECOMMEND = moduleModels[4]
         }
         this.modules = modules
         this.loaded = true

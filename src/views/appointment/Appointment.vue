@@ -1,24 +1,20 @@
 <template>
   <div :class="$style.appointmentDetail">
     <div
+      v-if="A"
       :class="$style.top"
-      :style="{ backgroundImage: `url(${'https://img.alicdn.com/tfs/TB15pj3bHY1gK0jSZTEXXXDQVXa-380-320.png'})`}"
+      :style="{ backgroundImage: `url(${A.mediaDetailModelList[0].mediaUrl})`}"
     >
       <div :class="$style.topContent">
         <a :class="$style.callService" href="">
           <pl-svg name="call-service" />
         </a>
         <div :class="$style.top">
-          <img :class="$style.img" src="https://img.alicdn.com/tfs/TB15pj3bHY1gK0jSZTEXXXDQVXa-380-320.png">
-          <div :class="$style.name">
-            吉地堡少儿英语
-          </div>
+          <img :class="$style.img" :src="mallLogo">
+          <div :class="$style.name" v-text="mallName" />
         </div>
         <div :class="$style.bottom">
-          <p :class="$style.desc">
-            吉的堡教育，致力于2-12岁幼儿园及英语培训学校。结合
-            全球最尖端的语言学习工具， 配合最专业的课程规划...
-          </p>
+          <p :class="$style.desc" v-text="mallDesc" />
           <div :class="$style.address">
             <pl-svg name="address4" />
             <span :class="$style.addressContent">陕西省西安市天谷七路新加坡腾飞科汇城</span>
@@ -33,18 +29,19 @@
         [$style.module]: true,
         [$style.a]: true
       }"
+      v-if="B"
     >
-      <div :class="$style.moduleTitle">
+      <div :class="$style.moduleTitle" v-if="B">
         <pl-svg :class="$style.moduleIcon" name="school_show" />
-        <span :class="$style.title">校区展示</span>
+        <span :class="$style.title" v-text="B.titleName" />
         <pl-svg @click="$router.push({ name: 'SchoolShow' })" :class="$style.enter" name="enter" />
       </div>
       <ul :class="$style.contentList">
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
+        <li
+          v-for="(item, i) of B.mediaDetailModelList"
+          :key="i"
+          :style="{ backgroundImage: `url(${item.mediaUrl})` }"
+        />
       </ul>
     </div>
 
@@ -53,18 +50,19 @@
         [$style.module]: true,
         [$style.b]: true
       }"
+      v-if="C"
     >
       <div :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="five_pointed" />
-        <span :class="$style.title">学员风采</span>
+        <span :class="$style.title" v-text="C.titleName" />
         <pl-svg @click="$router.push({ name: 'StudentShow' })" :class="$style.enter" name="enter" />
       </div>
       <ul :class="$style.contentList">
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
-        <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
+        <li
+          v-for="(item, i) of C.mediaDetailModelList"
+          :key="i"
+          :style="{ backgroundImage: `url(${item.mediaUrl})` }"
+        />
       </ul>
     </div>
 
@@ -73,12 +71,13 @@
         [$style.module]: true,
         [$style.c]: true
       }"
+      v-if="D"
     >
       <div :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="video" />
         <span :class="$style.title">宣传视频</span>
       </div>
-      <pl-canvas-video />
+      <pl-video :url="D.mediaDetailModelList[0].mediaUrl" />
     </div>
 
     <div
@@ -86,6 +85,7 @@
         [$style.module]: true,
         [$style.d]: true
       }"
+      v-if="E"
     >
       <div :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="school_intro" />
@@ -98,24 +98,19 @@
         [$style.module]: true,
         [$style.e]: true
       }"
+      v-if="F && F.mediaDetailModelList.length"
     >
       <div :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="aptitude" />
         <span :class="$style.title">相关资质</span>
       </div>
       <ul :class="$style.contentList">
-        <li>
-          <img src="https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg" alt="">
-          <p>资质认证</p>
-        </li>
-        <li>
-          <img src="https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg" alt="">
-        </li>
-        <li>
-          <img src="https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg" alt="">
-        </li>
-        <li>
-          <img src="https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg" alt="">
+        <li
+          v-for="(item, i) of F.mediaDetailModelList"
+          :key="i"
+        >
+          <img v-imger:zizhi :src="item.mediaUrl" alt="">
+          <p v-if="item.mediaTitle" v-text="item.mediaTitle" />
         </li>
         <li />
       </ul>
@@ -124,9 +119,61 @@
 </template>
 
 <script>
+import PlVideo from '../../components/Video.vue'
+import { getData } from '../../apis/appointment'
 export default {
   name: 'AppointmentDetailVue',
+  components: {
+    PlVideo
+  },
+  data () {
+    return {
+      data: {}
+    }
+  },
+  async created () {
+    try {
+      let { result } = await getData()
+      this.data = result
+    } catch (e) {
+      throw e
+    }
+  },
+  computed: {
+    mallName () {
+      return this.data.mallName
+    },
+    mallDesc () {
+      return this.data.mallDesc
+    },
+    mallLogo () {
+      return this.data.mallLogo
+    },
+    mallBrandingRequestModels () {
+      return this.data.mallBrandingRequestModels || []
+    },
+    A () {
+      return this.mallBrandingRequestModels[0] || null
+    },
+    B () {
+      return this.mallBrandingRequestModels[1] || null
+    },
+    C () {
+      return this.mallBrandingRequestModels[2] || null
+    },
+    D () {
+      return this.mallBrandingRequestModels[3] || null
+    },
+    E () {
+      return this.mallBrandingRequestModels[4] || null
+    },
+    F () {
+      return this.mallBrandingRequestModels[5] || null
+    }
+  },
   methods: {
+    getData () {
+    },
     copy (text) {
       this.$copyText(text).then((e) => {
         this.$success('已复制')
@@ -144,7 +191,7 @@ export default {
       height: 706px;
       margin-bottom: 20px;
       background-color: #fff;
-      background-position: center center;
+      background-position: top center;
       background-repeat: no-repeat;
       background-size: auto 578px;
       overflow: hidden;
@@ -275,19 +322,20 @@ export default {
           display: inline-block;
           width: 282px;
           height: max-content;
-          min-width: 282px;
-          margin-top: 0;
+          box-sizing: border-box;
+          margin-top: 10px;
           margin-left: 24px;
           border-radius: 20px;
-          box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+          box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
           &:nth-last-of-type(1) {
             min-width: 1px;
             height: 1px;
           }
           > img {
-            width: 100%;
+            width: 226px;
             height: auto;
-            padding: 28px;
+            margin: 24px;
+            object-fit: cover;
           }
           > p {
             padding: 16px;
