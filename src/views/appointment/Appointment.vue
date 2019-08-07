@@ -37,7 +37,7 @@
       </div>
       <ul :class="$style.contentList">
         <li
-          v-for="(item, i) of B.mediaDetailModelList"
+          v-for="(item, i) of B.mediaDetailModelList.slice(0, 4)"
           :key="i"
           :style="{ backgroundImage: `url(${item.mediaUrl})` }"
         />
@@ -60,6 +60,7 @@
         <li
           v-for="(item, i) of C.mediaDetailModelList"
           :key="i"
+          v-imger:studentShow="item.mediaUrl"
           :style="{ backgroundImage: `url(${item.mediaUrl})` }"
         />
       </ul>
