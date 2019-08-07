@@ -39,6 +39,7 @@
         <li
           v-for="(item, i) of B.mediaDetailModelList.slice(0, 4)"
           :key="i"
+          v-imger:schollShow="item.mediaUrl"
           :style="{ backgroundImage: `url(${item.mediaUrl})` }"
         />
       </ul>
