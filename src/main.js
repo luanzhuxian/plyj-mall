@@ -14,6 +14,7 @@ import animated from 'animate.css'
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
+import './assets/css/quill.css'
 Vue.use(VueLazyload, {
   error: imgError,
   lazyComponent: true

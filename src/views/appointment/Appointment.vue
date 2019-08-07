@@ -89,8 +89,17 @@
     >
       <div :id="typeMap[E.type]" :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="school_intro" />
-        <span :class="$style.title">校区介绍</span>
+        <span :class="$style.title" v-text="E.titleName" />
       </div>
+      <div
+        :class="$style.zizhiContent + ' ql-container ql-editor'"
+        v-html="E.detailContent"
+        :style="{ '--maxHeight': maxHeight }"
+      />
+      <p :class="{ [$style.zizhiSeeMore]: true, [$style.showMore]: isShowMore }" @click="seeMore">
+        {{ isShowMore ? '收起' : '查看更多' }}
+        <pl-svg name="right" color="#ccc" />
+      </p>
     </div>
 
     <div
@@ -129,6 +138,8 @@ export default {
   data () {
     return {
       data: {},
+      maxHeight: 200 / 7.5 + 'vw',
+      isShowMore: false,
       typeMap: {
         '0': 'a',
         '1': 'b',
@@ -202,6 +213,15 @@ export default {
   },
   methods: {
     getData () {
+    },
+    seeMore () {
+      if (this.isShowMore) {
+        this.maxHeight = 200 / 7.5 + 'vw'
+        this.isShowMore = false
+      } else {
+        this.maxHeight = 'max-content'
+        this.isShowMore = true
+      }
     },
     copy () {
       this.$copyText(this.address).then((e) => {
@@ -375,6 +395,28 @@ export default {
           }
         }
       }
+    }
+  }
+  .zizhi-content {
+    max-height: var(--maxHeight);
+    word-break: keep-all;
+    overflow: hidden;
+  }
+  .zizhi-see-more {
+    margin-top: 32px;
+    font-size: 28px;
+    text-align: center;
+    &.show-more {
+      > svg {
+        transform: rotate(-90deg);
+      }
+    }
+    > svg {
+      width: 25px;
+      margin-left: 10px;
+      transform: rotate(90deg);
+      vertical-align: -4px;
+      transition: transform .3s linear;
     }
   }
   .module-title {
