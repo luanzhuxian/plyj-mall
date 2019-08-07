@@ -10,9 +10,11 @@
         <pl-svg name="yuyue2" />
       </div>
       <div :class="$style.left">
-        <template v-for="(item, i) of data.YUYUE.values">
-          <p v-if="i < 2" :key="i" v-text="item.value" />
-        </template>
+        <p
+          v-for="(item, i) of data.YUYUE.values.slice(0, 2)"
+          :key="i"
+          v-text="item.value"
+        />
         <div :class="$style.now">
           <span>立即预约</span>
           <pl-svg name="right" color="#7E6E4D" />
@@ -58,7 +60,7 @@
           <li
             v-for="(item, i) of data.YUYUE.values"
             :key="i"
-            v-text="item.name"
+            v-text="item.value"
           />
         </ul>
       </div>

@@ -96,9 +96,10 @@
         :class="$style.zizhiContent + ' ql-container ql-editor'"
         v-html="E.detailContent"
         :style="{ '--maxHeight': maxHeight }"
+        ref="richText"
       />
       <p :class="{ [$style.zizhiSeeMore]: true, [$style.showMore]: isShowMore }" @click="seeMore">
-        {{ isShowMore ? '收起' : '查看更多' }}
+        <span v-if="richTextMaxHeight > 200">{{ isShowMore ? '收起' : '查看更多' }}</span>
         <pl-svg name="right" color="#ccc" />
       </p>
     </div>
@@ -139,7 +140,8 @@ export default {
   data () {
     return {
       data: {},
-      maxHeight: 200 / 7.5 + 'vw',
+      maxHeight: 'max-content',
+      richTextMaxHeight: 0,
       isShowMore: false,
       typeMap: {
         '0': 'a',
@@ -156,6 +158,10 @@ export default {
       let { result } = await getData()
       localStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
       this.data = result
+      this.$nextTick(() => {
+        this.richTextMaxHeight = this.$refs.richText.offsetHeight
+        this.maxHeight = 200 / 7.5 + 'vw'
+      })
     } catch (e) {
       throw e
     }
@@ -213,14 +219,12 @@ export default {
     }
   },
   methods: {
-    getData () {
-    },
     seeMore () {
       if (this.isShowMore) {
         this.maxHeight = 200 / 7.5 + 'vw'
         this.isShowMore = false
       } else {
-        this.maxHeight = 'max-content'
+        this.maxHeight = this.richTextMaxHeight / 7.5 + 'vw'
         this.isShowMore = true
       }
     },
@@ -402,6 +406,7 @@ export default {
     max-height: var(--maxHeight);
     word-break: keep-all;
     overflow: hidden;
+    transition: max-height .3s linear;
   }
   .zizhi-see-more {
     margin-top: 32px;
