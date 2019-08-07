@@ -16,5 +16,14 @@ export default [
     meta: {
       title: '朋来雅集'
     }
+  },
+  {
+    path: '/appointment/student-show',
+    name: 'StudentShow',
+    component: () => import('../views/appointment/Student-Show.vue'),
+    props: true,
+    meta: {
+      title: '朋来雅集'
+    }
   }
 ]

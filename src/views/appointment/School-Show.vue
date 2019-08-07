@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'AppointmentDetailVue'
+  name: 'SchoolShow'
 }
 </script>
 

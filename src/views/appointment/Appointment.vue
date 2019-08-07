@@ -57,7 +57,7 @@
       <div :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="five_pointed" />
         <span :class="$style.title">学员风采</span>
-        <pl-svg :class="$style.enter" name="enter" />
+        <pl-svg @click="$router.push({ name: 'StudentShow' })" :class="$style.enter" name="enter" />
       </div>
       <ul :class="$style.contentList">
         <li :style="{ backgroundImage: `url(https://img.alicdn.com/bao/uploaded/i3/1573475524/O1CN01Qc7WQK1qg2PwhUWKl_!!0-item_pic.jpg_240x240Q90.jpg)` }" />
