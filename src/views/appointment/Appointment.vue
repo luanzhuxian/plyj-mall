@@ -416,6 +416,8 @@ export default {
             font-size: 28px;
             font-weight: bold;
             border-top: 1px solid #e7e7e7;
+            word-break: break-all;
+            white-space: pre-wrap;
           }
         }
       }
