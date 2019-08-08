@@ -10,11 +10,11 @@
         <pl-svg name="yuyue2" />
       </div>
       <div :class="$style.left">
-        <p
-          v-for="(item, i) of data.YUYUE.values.slice(0, 2)"
-          :key="i"
-          v-text="item.value"
-        />
+        <swiper :options="swiperOptionBanner" :class="$style.swiper">
+          <swiper-slide :class="$style.swiperSlide" v-for="(item, i) of data.YUYUE.values" :key="i">
+            <p v-text="item.value" />
+          </swiper-slide>
+        </swiper>
         <div :class="$style.now">
           <span>立即预约</span>
           <pl-svg name="right" color="#7E6E4D" />
@@ -85,12 +85,28 @@
 import { mapGetters } from 'vuex'
 import { yuyue } from '../../../apis/appointment'
 import { isPhone } from '../../../assets/js/validate'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   name: 'AppointmentGift',
+  components: {
+    swiper,
+    swiperSlide
+  },
   data () {
     return {
       showPop: false,
-      appointmentMobile: ''
+      appointmentMobile: '',
+      swiperOptionBanner: {
+        direction: 'vertical',
+        slidesPerView: 2,
+        slidesPerGroup: 2,
+        autoplay: true,
+        loop: false,
+        pagination: {
+          el: '.banner-pagination',
+          clickable: true
+        }
+      }
     }
   },
   props: {
@@ -199,18 +215,20 @@ export default {
       }
       > .left {
         position: relative;
-        display: inline-flex;
-        flex-direction: column;
-        justify-content: center;
         flex: 1;
-        height: 100%;
+        height: 64px;
         padding-left: 20px;
         font-size: 28px;
         color: #AB8F58;
-        > p {
-          line-height: 40px;
-          width: 380px;
-          @include elps();
+        .swiper {
+          height: 64px !important;
+          .swiper-slide {
+            > p {
+              width: 350px;
+              line-height: 32px;
+              @include elps()
+            }
+          }
         }
         > .now {
           position: absolute;
