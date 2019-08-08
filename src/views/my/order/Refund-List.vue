@@ -329,9 +329,6 @@ export default {
     .buttons {
       margin-top: 24px;
       button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         box-sizing: border-box;
         margin-left: 24px;
         width: 136px;
