@@ -98,8 +98,8 @@
         :style="{ '--maxHeight': maxHeight }"
         ref="richText"
       />
-      <p :class="{ [$style.zizhiSeeMore]: true, [$style.showMore]: isShowMore }" @click="seeMore">
-        <span v-if="richTextMaxHeight > 200">{{ isShowMore ? '收起' : '查看更多' }}</span>
+      <p v-if="richTextMaxHeight > 200" :class="{ [$style.zizhiSeeMore]: true, [$style.showMore]: isShowMore }" @click="seeMore">
+        <span>{{ isShowMore ? '收起' : '查看更多' }}</span>
         <pl-svg name="right" color="#ccc" />
       </p>
     </div>
@@ -109,7 +109,7 @@
         [$style.module]: true,
         [$style.e]: true
       }"
-      v-if="F && F.mediaDetailModelList.length"
+      v-if="F"
     >
       <div :id="typeMap[F.type]" :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="aptitude" />
@@ -205,19 +205,19 @@ export default {
       return this.mallBrandingRequestModels.find(item => item.type === 0) || null
     },
     B () {
-      return this.mallBrandingRequestModels.find(item => item.type === 1) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 1 && item.show === 1 && item.mediaDetailModelList.length) || null
     },
     C () {
-      return this.mallBrandingRequestModels.find(item => item.type === 2) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 2 && item.show === 1 && item.mediaDetailModelList.length) || null
     },
     D () {
-      return this.mallBrandingRequestModels.find(item => item.type === 3) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 3 && item.show === 1 && item.mediaDetailModelList.length) || null
     },
     E () {
-      return this.mallBrandingRequestModels.find(item => item.type === 4) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 4 && item.show === 1 && item.detailContent) || null
     },
     F () {
-      return this.mallBrandingRequestModels.find(item => item.type === 5) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 5 && item.show === 1 && item.mediaDetailModelList.length) || null
     }
   },
   methods: {

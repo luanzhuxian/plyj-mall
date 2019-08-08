@@ -6,11 +6,11 @@
       @click="yuyueNow"
     >
       <pl-svg :class="$style.giftIcon" name="gift" />
-      <div :class="$style.right">
+      <div :class="$style.left">
         <pl-svg name="yuyue2" />
       </div>
-      <div :class="$style.left">
-        <swiper :options="swiperOptionBanner" :class="$style.swiper">
+      <div :class="$style.right">
+        <swiper :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'">
           <swiper-slide :class="$style.swiperSlide" v-for="(item, i) of data.YUYUE.values" :key="i">
             <p v-text="item.value" />
           </swiper-slide>
@@ -129,7 +129,7 @@ export default {
       return this.data.PINGXUAN || {}
     },
     mallBrandingRequestModels () {
-      return this.PINGXUAN.values.length ? this.PINGXUAN.values[0].mallBrandingRequestModels : []
+      return this.PINGXUAN.values.length ? this.PINGXUAN.values[0].mallBrandingRequestModels.filter(item => item.show === 1) : []
     }
   },
   watch: {
@@ -202,7 +202,7 @@ export default {
       padding: 20px 24px;
       background: linear-gradient(90deg, #FEEFD1, #E7D79C);
       border-radius: 20px;
-      > .right {
+      > .left {
         position: relative;
         display: inline-flex;
         align-items: center;
@@ -221,19 +221,18 @@ export default {
           width: 94px;
         }
       }
-      > .left {
+      > .right {
         position: relative;
         flex: 1;
-        height: 64px;
         padding-left: 20px;
         font-size: 28px;
         color: #AB8F58;
         .swiper {
-          height: 64px !important;
+          height: 80px !important;
           .swiper-slide {
             > p {
               width: 350px;
-              line-height: 32px;
+              line-height: 40px;
               @include elps()
             }
           }
