@@ -406,7 +406,7 @@ export default {
           }
           > img {
             width: 226px;
-            height: auto;
+            height: 282px;
             margin: 24px;
             object-fit: cover;
           }
