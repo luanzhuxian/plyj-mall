@@ -66,7 +66,10 @@
       </div>
       <form :class="$style.popForm">
         <div class="fz-26 gray-3">预约后您的私人顾问将会电话联系您</div>
-        <input v-model="appointmentMobile" type="text" placeholder="请输入预约手机">
+        <label>
+          <input v-model="appointmentMobile" type="text" placeholder="请输入预约手机">
+          <pl-svg @click="appointmentMobile = ''" :class="$style.clean" name="close" color="#ccc" />
+        </label>
         <div :class="$style.tip">
           <pl-svg name="safe" />
           <span>无强行推销</span>
@@ -389,17 +392,22 @@ export default {
     }
   }
   .pop-form {
+    position: relative;
     padding: 0 24px 20px;
-    > input {
-      width: 100%;
-      height: 80px;
-      margin-top: 26px;
-      margin-bottom: 20px;
-      padding: 0 20px;
-      border: 1px solid #ccc;
-      font-size: 32px;
-      border-radius: 20px;
-      background-color: #F4F5F9;
+    > label {
+      position: relative;
+      display: block;
+      > input {
+        width: 100%;
+        height: 80px;
+        margin-top: 26px;
+        margin-bottom: 20px;
+        padding: 0 20px;
+        border: 1px solid #ccc;
+        font-size: 32px;
+        border-radius: 20px;
+        background-color: #F4F5F9;
+      }
     }
     > .tip {
       font-size: 24px;
@@ -412,6 +420,14 @@ export default {
       > span {
         margin-right: 15px;
       }
+    }
+    .clean {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
     }
   }
 </style>
