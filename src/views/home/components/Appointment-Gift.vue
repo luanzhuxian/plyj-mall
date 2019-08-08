@@ -68,7 +68,7 @@
         <div class="fz-26 gray-3">预约后您的私人顾问将会电话联系您</div>
         <label>
           <input v-model="appointmentMobile" type="text" placeholder="请输入预约手机">
-          <pl-svg @click="appointmentMobile = ''" :class="$style.clean" name="close" color="#ccc" />
+          <pl-svg v-show="appointmentMobile" @click="appointmentMobile = ''" :class="$style.clean" name="close2" color="#ccc" />
         </label>
         <div :class="$style.tip">
           <pl-svg name="safe" />
