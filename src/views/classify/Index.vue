@@ -238,7 +238,12 @@ export default {
       for (let item of list) {
         // item.status: 0: 规格禁用 1: 规格启用
         const arr = item.productSkuModels.filter(item => item.status === 1)
-        item.price = Math.min(...arr.map(item => Number(item.price))) || 0
+        let priceList = arr.map(item => {
+          if (item.status === 1) {
+            return Number(item.price)
+          }
+        })
+        item.price = Math.min(...priceList) || 0
         if (this.currentClassify.id === '1') {
           item.realRebate = Math.max(...arr.map(item => Number(item.realRebate))) || 0
         }

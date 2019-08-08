@@ -39,7 +39,6 @@ export default {
       show: false,
       message: '',
       viceMessage: '',
-      duration: '',
       timer: 0,
       type: ''
     }
@@ -63,21 +62,26 @@ export default {
     color: #fff;
     text-align: center;
     border-radius: 4px;
+    box-sizing: border-box;
     z-index: 9999;
     svg {
       width: 72px;
       fill: #fff;
     }
     .toast-message {
+      width: max-content;
+      max-width: 100%;
       margin-top: 16px;
       font-size: 32px;
-      max-width: 95vw;
       word-break: break-all;
+      white-space: pre-wrap;
       .toast-vice-message {
+        width: max-content;
+        max-width: 100%;
         margin-top: 4px;
         font-size: 24px;
         word-break: break-all;
-        white-space: nowrap;
+        white-space: pre-wrap;
       }
     }
     .pl-icon {

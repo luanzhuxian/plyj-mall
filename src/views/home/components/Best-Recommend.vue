@@ -182,11 +182,19 @@ export default {
   },
   methods: {
     getMinPrice (skuList) {
-      let priceList = skuList.map(item => item.price)
+      let priceList = skuList.map(item => {
+        if (item.status === 1) {
+          return item.price
+        }
+      })
       return Math.min(...priceList)
     },
     getMinOrinalPrice (skuList) {
-      let priceList = skuList.map(item => item.originalPrice)
+      let priceList = skuList.map(item => {
+        if (item.status === 1) {
+          return item.originalPrice
+        }
+      })
       return Math.min(...priceList)
     },
     getMaxOrinalPrice (skuList) {

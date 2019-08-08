@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.appointmentDetail">
     <div
-      v-if="A"
+      v-if="A && A.mediaDetailModelList.length"
       :class="$style.top"
       :style="{ backgroundImage: `url(${A.mediaDetailModelList[0].mediaUrl})`}"
     >
@@ -72,7 +72,7 @@
         [$style.module]: true,
         [$style.c]: true
       }"
-      v-if="D"
+      v-if="D && D.mediaDetailModelList.length"
     >
       <div :id="typeMap[D.type]" :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="video" />
@@ -153,14 +153,16 @@ export default {
       }
     }
   },
-  async created () {
+  async mounted () {
     try {
       let { result } = await getData()
       localStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
       this.data = result
       this.$nextTick(() => {
-        this.richTextMaxHeight = this.$refs.richText.offsetHeight
-        this.maxHeight = 200 / 7.5 + 'vw'
+        if (this.$refs.richText) {
+          this.richTextMaxHeight = this.$refs.richText.offsetHeight
+          this.maxHeight = 200 / 7.5 + 'vw'
+        }
       })
     } catch (e) {
       throw e

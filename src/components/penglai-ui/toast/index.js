@@ -53,20 +53,41 @@ Vue.prototype.$toast = options => {
   Toast(options)
 }
 Vue.prototype.$error = message => {
-  Toast({
-    type: 'error',
-    message
-  })
+  if (typeof message === 'string') {
+    Toast({
+      type: 'error',
+      message
+    })
+  } else {
+    Toast({
+      type: 'error',
+      ...message
+    })
+  }
 }
 Vue.prototype.$success = message => {
-  Toast({
-    type: 'success',
-    message
-  })
+  if (typeof message === 'string') {
+    Toast({
+      type: 'success',
+      message
+    })
+  } else {
+    Toast({
+      type: 'success',
+      ...message
+    })
+  }
 }
 Vue.prototype.$warning = message => {
-  Toast({
-    type: 'warning',
-    message
-  })
+  if (typeof message === 'string') {
+    Toast({
+      type: 'warning',
+      message
+    })
+  } else {
+    Toast({
+      type: 'warning',
+      ...message
+    })
+  }
 }
