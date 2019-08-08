@@ -35,7 +35,7 @@
           <pl-svg name="right" color="#ccc" />
         </div>
       </div>
-      <div :class="$style.bottom">
+      <div :class="$style.bottom" v-if="mallBrandingRequestModels.length">
         <div :class="$style.title">
           教育特色 :
         </div>
