@@ -162,7 +162,7 @@ export default {
       if (this.$refs.richText) {
         let imgs = this.$refs.richText.querySelectorAll('img')
         for (let img of imgs) {
-          console.log(img.complete)
+          img.style.width = '100%'
           if (!img.complete) {
             await this.onImgLoaded(img)
           }
