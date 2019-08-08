@@ -727,9 +727,6 @@ export default {
     justify-content: flex-end;
     > button {
       margin-left: 20px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
       box-sizing: border-box;
       width: 162px;
       padding: 0;

@@ -327,9 +327,6 @@ export default {
       }
     }
     .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
       margin-top: 24px;
       button {
         display: flex;

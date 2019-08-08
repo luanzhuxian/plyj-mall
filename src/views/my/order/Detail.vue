@@ -1109,9 +1109,6 @@ export default {
     position: relative;
     text-align: right;
     > button {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
       box-sizing: border-box;
       margin-top: 0;
       margin-left: 24px;
@@ -1134,28 +1131,6 @@ export default {
       }
     }
   }
-  // .student-list {
-  //   background-color: #fff;
-  //   padding-right: 24px;
-  //   .student-item {
-  //     padding: 24px 0;
-  //     font-size: 28px;
-  //     line-height: 40px;
-  //     border-bottom: 1px solid #e7e7e7;
-  //     &:nth-last-of-type(1) {
-  //       border-bottom: none;
-  //     }
-  //     > .student-name {
-  //       display: flex;
-  //       justify-content: space-between;
-  //       margin-bottom: 26px;
-  //     }
-  //     > .student-phone {
-  //       display: flex;
-  //       justify-content: space-between;
-  //     }
-  //   }
-  // }
 
   .footer {
     position: fixed;
@@ -1169,9 +1144,6 @@ export default {
 
     > button {
       margin-left: 20px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
       box-sizing: border-box;
       width: 162px;
       padding: 0;
