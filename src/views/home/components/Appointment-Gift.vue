@@ -129,6 +129,11 @@ export default {
       return this.PINGXUAN.values.length ? this.PINGXUAN.values[0].mallBrandingRequestModels : []
     }
   },
+  watch: {
+    showPop (val) {
+      if (!val) this.appointmentMobile = this.mobile || ''
+    }
+  },
   mounted () {
     this.appointmentMobile = this.mobile || ''
   },
