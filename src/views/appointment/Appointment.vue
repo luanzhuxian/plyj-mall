@@ -1,9 +1,9 @@
 <template>
   <div :class="$style.appointmentDetail">
     <div
-      v-if="A && A.mediaDetailModelList.length"
+      v-if="A"
       :class="$style.top"
-      :style="{ backgroundImage: `url(${A.mediaDetailModelList[0].mediaUrl})`}"
+      :style="{ backgroundImage: `url(${A.mediaDetailModelList[0] && A.mediaDetailModelList[0].mediaUrl})`}"
     >
       <div :class="$style.topContent">
         <a :class="$style.callService" :href="`tel:${supportPhone}`">
@@ -158,12 +158,18 @@ export default {
       let { result } = await getData()
       localStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
       this.data = result
-      this.$nextTick(() => {
-        if (this.$refs.richText) {
-          this.richTextMaxHeight = this.$refs.richText.offsetHeight
-          this.maxHeight = 200 / 7.5 + 'vw'
+      await this.$nextTick()
+      if (this.$refs.richText) {
+        let imgs = this.$refs.richText.querySelectorAll('img')
+        for (let img of imgs) {
+          console.log(img.complete)
+          if (!img.complete) {
+            await this.onImgLoaded(img)
+          }
         }
-      })
+        this.richTextMaxHeight = this.$refs.richText.offsetHeight
+        this.maxHeight = 200 / 7.5 + 'vw'
+      }
     } catch (e) {
       throw e
     }
@@ -236,6 +242,16 @@ export default {
       }, function (e) {
         alert('Can not copy')
       })
+    },
+    onImgLoaded (img) {
+      return new Promise((resolve, reject) => {
+        img.onload = function () {
+          resolve(img)
+        }
+        img.onerror = function () {
+          reject(new Error('图片加载错误'))
+        }
+      })
     }
   }
 }
@@ -295,6 +311,7 @@ export default {
         > .desc {
           margin-bottom: 20px;
           font-size: 24px;
+          @include elps-wrap(2);
         }
         > .address {
           display: flex;
@@ -408,7 +425,7 @@ export default {
     max-height: var(--maxHeight);
     word-break: keep-all;
     overflow: hidden;
-    transition: max-height .3s linear;
+    transition: max-height .6s linear;
   }
   .zizhi-see-more {
     margin-top: 32px;

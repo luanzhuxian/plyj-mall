@@ -336,23 +336,23 @@ export default {
       }
     }
   },
-  beforeRouteEnter (to, form, next) {
+  beforeRouteEnter (to, from, next) {
     next(vm => {
       if (!vm.$store.getters.mobile) {
         vm.$confirm('您还没有绑定手机，请先绑定手机')
           .then(() => {
             localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-              name: form.name,
-              params: form.params,
-              query: form.query
+              name: from.name,
+              params: from.params,
+              query: from.query
             }))
-            this.$router.replace({ name: 'BindMobile' })
+            vm.$router.replace({ name: 'BindMobile' })
           })
-          .catch(() => {
+          .catch((e) => {
             vm.$router.replace({
-              name: form.name,
-              params: form.params,
-              query: form.query
+              name: from.name,
+              params: from.params,
+              query: from.query
             })
           })
       }
