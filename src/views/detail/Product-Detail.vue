@@ -404,8 +404,8 @@ export default {
       ctx.fillStyle = '#fff'
       ctx.fillRect(0, 0, 1120, 192)
       ctx.drawImage(arcAvatar, 32, 32, 128, 128)
-      let textWidth = fontStyle(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 300, 1)
-      fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
+      fontStyle(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 800, 1)
+      // fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
 
       try {
         let min = Math.min(img.width, img.height)
