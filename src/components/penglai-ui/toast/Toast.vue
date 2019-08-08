@@ -53,7 +53,7 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-width: 80%;
+    max-width: 90vw;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
@@ -70,12 +70,14 @@ export default {
     }
     .toast-message {
       margin-top: 16px;
-      font-size: 28px;
+      font-size: 32px;
       max-width: 95vw;
       word-break: break-all;
       .toast-vice-message {
         margin-top: 4px;
-        font-size: 18px;
+        font-size: 24px;
+        word-break: break-all;
+        white-space: nowrap;
       }
     }
     .pl-icon {

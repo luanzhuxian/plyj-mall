@@ -140,7 +140,7 @@ export default {
   methods: {
     yuyueNow () {
       if (!this.mobile) {
-        this.$confirm('您还没又绑定手机，请先绑定手机')
+        this.$confirm('您还没绑定手机，请先绑定手机')
           .then(() => {
             localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
               name: this.$route.name,
