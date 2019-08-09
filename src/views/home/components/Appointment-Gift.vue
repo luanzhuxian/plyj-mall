@@ -10,7 +10,7 @@
         <pl-svg name="yuyue2" />
       </div>
       <div :class="$style.right">
-        <swiper :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'">
+        <swiper ref="swiper" :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'">
           <swiper-slide :class="$style.swiperSlide" v-for="(item, i) of data.YUYUE.values" :key="i">
             <p v-text="item.value" />
           </swiper-slide>
@@ -101,9 +101,12 @@ export default {
       appointmentMobile: '',
       swiperOptionBanner: {
         direction: 'vertical',
+        speed: 1000,
         slidesPerView: 2,
         slidesPerGroup: 2,
-        autoplay: true,
+        autoplay: {
+          delay: 2000
+        },
         loop: false,
         pagination: {
           el: '.banner-pagination',
@@ -139,6 +142,12 @@ export default {
   },
   mounted () {
     this.appointmentMobile = this.mobile || ''
+  },
+  activated () {
+    this.$refs.swiper.swiper.autoplay.start()
+  },
+  deactivated () {
+    this.$refs.swiper.swiper.autoplay.stop()
   },
   methods: {
     yuyueNow () {

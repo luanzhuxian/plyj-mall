@@ -3,7 +3,7 @@
     <div
       v-if="A"
       :class="$style.top"
-      :style="{ backgroundImage: `url(${A.mediaDetailModelList[0] && A.mediaDetailModelList[0].mediaUrl})`}"
+      :style="{ backgroundImage: `url(${A.mediaDetailModelList[0] ? A.mediaDetailModelList[0].mediaUrl : 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/ping-xuan.jpg'})`}"
     >
       <div :class="$style.topContent">
         <a :class="$style.callService" :href="`tel:${supportPhone}`">
@@ -76,7 +76,7 @@
     >
       <div :id="typeMap[D.type]" :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="video" />
-        <span :class="$style.title">宣传视频</span>
+        <span :class="$style.title" v-text="D.titleName" />
       </div>
       <pl-video :url="D.mediaDetailModelList[0].mediaUrl" />
     </div>
