@@ -260,8 +260,8 @@ export default {
 <style module lang="scss">
   .appointment-detail {
     .top {
-      height: 706px;
       margin-bottom: 20px;
+      padding-bottom: 40px;
       background-color: #fff;
       background-position: top center;
       background-repeat: no-repeat;
@@ -271,7 +271,6 @@ export default {
     .top-content {
       position: relative;
       width: 702px;
-      height: 290px;
       margin: 367px auto 0;
       padding: 24px 30px;
       box-sizing: border-box;
@@ -300,6 +299,7 @@ export default {
           background-color: #fff;
         }
         > .name {
+          padding-right: 150px;
           font-size: 40px;
           font-weight: bold;
         }
