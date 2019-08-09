@@ -38,7 +38,8 @@ export default {
         'Home',
         'Classify',
         'Yaji',
-        'My'
+        'My',
+        'Appointment'
       ]
     }
   },
