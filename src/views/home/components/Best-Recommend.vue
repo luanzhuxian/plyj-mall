@@ -186,6 +186,7 @@ export default {
         if (item.status === 1) {
           return item.price
         }
+        return Number.MAX_VALUE
       })
       return Math.min(...priceList)
     },
@@ -194,15 +195,26 @@ export default {
         if (item.status === 1) {
           return item.originalPrice
         }
+        return Number.MAX_VALUE
       })
       return Math.min(...priceList)
     },
     getMaxOrinalPrice (skuList) {
-      let priceList = skuList.map(item => item.originalPrice)
+      let priceList = skuList.map(item => {
+        if (item.status === 1) {
+          return item.originalPrice
+        }
+        return Number.MIN_VALUE
+      })
       return Math.max(...priceList)
     },
     getMaxPrice (skuList) {
-      let priceList = skuList.map(item => item.price)
+      let priceList = skuList.map(item => {
+        if (item.status === 1) {
+          return item.price
+        }
+        return Number.MIN_VALUE
+      })
       return Math.max(...priceList)
     },
     seeAll () {
