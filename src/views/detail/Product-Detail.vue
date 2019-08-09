@@ -382,8 +382,8 @@ export default {
         this.$error('图片加载错误')
         return
       }
-      this.showHaibao = true
       if (this.haibao) {
+        this.showHaibao = true
         return
       }
       // 截取头像
@@ -442,6 +442,7 @@ export default {
           ctx.stroke()
         }
         this.haibao = canvas.toDataURL('image/jpeg', 0.7)
+        this.showHaibao = true
       } catch (e) {
         throw e
       }

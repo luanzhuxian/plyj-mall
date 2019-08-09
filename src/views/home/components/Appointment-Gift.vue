@@ -22,7 +22,11 @@
       </div>
     </div>
 
-    <div :class="$style.content" v-if="data.PINGXUAN.showStatue === 1 && data.PINGXUAN && data.PINGXUAN.values.length">
+    <div
+      :class="$style.content"
+      v-if="data.PINGXUAN.showStatue === 1 && data.PINGXUAN && data.PINGXUAN.values.length"
+      @click="clickPingXuan"
+    >
       <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
         <div :class="$style.left">
           <div :class="$style.title" v-text="PINGXUAN.values[0].mallName" />
@@ -164,6 +168,9 @@ export default {
         return
       }
       this.showPop = true
+    },
+    clickPingXuan () {
+      localStorage.removeItem('PINGXUAN')
     },
     jump (item) {
       if (item.type === 1) {
