@@ -2,6 +2,7 @@
   <div :class="$style.banner">
     <swiper
       :options="swiperOptionBanner"
+      v-if="data.values.length"
     >
       <swiperSlide v-for="(item, i) of data.values" :key="i">
         <img :class="$style.img" :src="item.image" :alt="item.name" @click="imgClick(item)">
@@ -23,11 +24,8 @@ export default {
   data () {
     return {
       swiperOptionBanner: {
-        slidesPerView: 'auto',
-        centeredSlides: true,
         autoplay: true,
-        loop: false,
-        spaceBetween: 20,
+        spaceBetween: 40,
         pagination: {
           el: '.banner-pagination',
           clickable: true

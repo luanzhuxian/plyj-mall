@@ -3,13 +3,13 @@
     <div
       v-if="A"
       :class="$style.top"
-      :style="{ backgroundImage: `url(${A.mediaDetailModelList[0] ? A.mediaDetailModelList[0].mediaUrl : 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/ping-xuan.jpg'})`}"
     >
+      <img :src="A.mediaDetailModelList[0] ? A.mediaDetailModelList[0].mediaUrl : 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/ping-xuan.jpg'" alt="">
       <div :class="$style.topContent">
         <a :class="$style.callService" :href="`tel:${supportPhone}`">
           <pl-svg name="call-service" />
         </a>
-        <div :class="$style.top">
+        <div :class="$style.mallName">
           <img :class="$style.img" :src="mallLogo">
           <div :class="$style.name" v-text="mallName" />
         </div>
@@ -261,17 +261,20 @@ export default {
   .appointment-detail {
     .top {
       margin-bottom: 20px;
-      padding-bottom: 40px;
       background-color: #fff;
-      background-position: top center;
-      background-repeat: no-repeat;
-      background-size: auto 578px;
       overflow: hidden;
+      > img {
+        position: absolute;
+        width: 100%;
+        height: 578px;
+        object-fit: cover;
+      }
     }
     .top-content {
       position: relative;
       width: 702px;
-      margin: 367px auto 0;
+      height: auto;
+      margin: 367px auto 40px;
       padding: 24px 30px;
       box-sizing: border-box;
       background-color: #f2b036;
@@ -285,7 +288,7 @@ export default {
           width: 128px;
         }
       }
-      > .top {
+      > .mall-name {
         display: flex;
         align-items: center;
         height: max-content;
@@ -299,6 +302,7 @@ export default {
           background-color: #fff;
         }
         > .name {
+          flex: 1;
           padding-right: 150px;
           font-size: 40px;
           font-weight: bold;
