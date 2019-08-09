@@ -2,6 +2,7 @@
   <div
     v-show="showPopup"
     class="pl-popup"
+    @touchmove.stop.prevent="() => {}"
   >
     <div
       class="pl-popup__mask"
@@ -59,10 +60,6 @@ export default {
     show: {
       handler: function (val) {
         if (val) {
-          this.scrollY = window.scrollY
-          document.body.style.overflow = 'hidden'
-          document.body.style.height = '100vh'
-          document.body.scrollTo(0, this.scrollY)
           // 显示dialog
           this.showPopup = true
           // 显示mask
@@ -71,9 +68,6 @@ export default {
             this.showBox = true
           }, 200)
         } else {
-          document.body.style.overflow = ''
-          document.body.style.height = ''
-          window.scrollTo(0, this.scrollY)
           this.showBox = false
           // 隐藏mask
           setTimeout(() => {

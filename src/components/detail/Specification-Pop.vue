@@ -4,6 +4,7 @@
       :class="$style.specificationsPop"
       v-show="showSpec"
       @click.self.stop="close"
+      @touchmove.stop.prevent="() => {}"
     >
       <transition name="slide">
         <div :class="$style.specBox" v-show="showBox">
@@ -160,15 +161,7 @@ export default {
     visible (val) {
       this.setShow(val)
       if (val) {
-        this.scrollY = window.scrollY
-        document.body.style.overflow = 'hidden'
-        document.body.style.height = '100vh'
-        document.body.scrollTo(0, this.scrollY)
         this.init()
-      } else {
-        document.body.style.overflow = ''
-        document.body.style.height = ''
-        window.scrollTo(0, this.scrollY)
       }
     },
     currentSku: {
