@@ -113,7 +113,7 @@
     >
       <div :id="typeMap[F.type]" :class="$style.moduleTitle">
         <pl-svg :class="$style.moduleIcon" name="aptitude" />
-        <span :class="$style.title">相关资质</span>
+        <span :class="$style.title" v-text="F.titleName" />
       </div>
       <ul :class="$style.contentList">
         <li
