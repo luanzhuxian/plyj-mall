@@ -17,7 +17,8 @@ import filters from './filter'
 import './assets/css/quill.css'
 Vue.use(VueLazyload, {
   error: imgError,
-  lazyComponent: true
+  lazyComponent: true,
+  throttleWait: 150
 })
 Vue.use(animated)
 Vue.use(VueClipboard)
