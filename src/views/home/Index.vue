@@ -62,6 +62,16 @@
         <pl-svg @click="pop = ''" name="close3" color="#fff" />
       </div>
     </transition>
+    <transition name="fade">
+      <div :class="$style.pop" v-show="show820" @click="show820 = false">
+        <img
+          @click="$router.push({ name: 'SignUp' })"
+          src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820-haibao.jpg"
+          alt=""
+        >
+        <pl-svg name="close3" color="#fff" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -81,6 +91,7 @@ export default {
   data () {
     return {
       loaded: false,
+      show820: false,
       type: 0,
       modules: {},
       haibao: '',
@@ -110,6 +121,9 @@ export default {
     } catch (e) {
       throw e
     }
+  },
+  mounted () {
+    this.show820 = true
   },
   computed: {
     ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId']),

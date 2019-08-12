@@ -2,7 +2,7 @@
   <label
     :class="{'pl-form-item': true, border}"
     :style="{
-      marginTop: gapTop / 7.5 + 'vw'
+      '--margin-top': gapTop / 7.5 + 'vw'
     }"
   >
     <div
@@ -66,6 +66,10 @@ export default {
       default: ''
     },
     border: Boolean,
+    borderColor: {
+      type: String,
+      default: '#e7e7e7'
+    },
     // 字段名称
     prop: {
       type: String,
@@ -112,9 +116,13 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
+    margin-top: var(--margin-top);
     background-color: #fff;
     &.border {
       border-bottom: 1px solid #e7e7e7;
+    }
+    &:nth-of-type(1) {
+      margin-top: 0;
     }
     &:nth-last-of-type(1):after {
       display: none;

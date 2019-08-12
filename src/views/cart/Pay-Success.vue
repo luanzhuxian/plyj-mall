@@ -36,13 +36,13 @@
         <img @click="haibao = ''" :src="haibao" alt="">
       </div>
     </transition>
-    <img
+    <!--<img
       v-if="showMoonCake"
       style="width: 100%; display: block; margin-top: 46px;"
       src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/pay-success.jpg" alt=""
       @click="$router.replace({ name: 'SignUp' })"
-    >
-    <you-like v-else :is-my="true" />
+    >-->
+    <you-like :is-my="true" />
   </div>
 </template>
 
@@ -93,10 +93,10 @@ export default {
     ...mapGetters(['mallId', 'serverTime']),
     orderType () {
       return this.$route.query.orderType
-    },
-    showMoonCake () {
-      return this.mallId === '1057573777392603136'
     }
+    // showMoonCake () {
+    //   return this.mallId === '1057573777392603136'
+    // }
   },
   methods: {
     showPop (delay) {
