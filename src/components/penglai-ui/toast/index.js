@@ -2,10 +2,6 @@ import Vue from 'vue'
 import ToastComponent from './Toast.vue'
 
 let ToastConstructor = Vue.extend(ToastComponent)
-ToastConstructor.prototype.close = function () {
-  this.show = false
-  this.$el.addEventListener('animationend', removeDom)
-}
 /**
 * 显示提示框
 * options: { message, duration }
@@ -38,11 +34,6 @@ export const Toast = (options = {}) => {
     }, duration)
   })
   return instance
-}
-
-function removeDom (e) {
-  e.target.parentNode.removeChild(e.target)
-  e.target.removeEventListener('animationend', removeDom)
 }
 
 Vue.prototype.$toast = options => {

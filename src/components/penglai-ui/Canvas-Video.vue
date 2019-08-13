@@ -73,13 +73,13 @@
   </div>
 </template>
 <script>
-import playIcon from './image/play.png'
-import pauseIcon from './image/pause.png'
-import smallPlayIcon from './image/play_s.png'
-import smallPauseIcon from './image/pause_s.png'
-import fullscreenIcon from './image/fullscreen.png'
-import exitfullscreenIcon from './image/exitfullscreen.png'
-import volume from './image/volume.png'
+import playIcon from './assets/image/play.png'
+import pauseIcon from './assets/image/pause.png'
+import smallPlayIcon from './assets/image/play_s.png'
+import smallPauseIcon from './assets/image/pause_s.png'
+import fullscreenIcon from './assets/image/fullscreen.png'
+import exitfullscreenIcon from './assets/image/exitfullscreen.png'
+import volume from './assets/image/volume.png'
 let stopedTimer = 0
 let ctrlTimer = 0
 export default {

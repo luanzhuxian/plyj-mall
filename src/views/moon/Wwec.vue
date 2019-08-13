@@ -70,7 +70,7 @@
           <span>其它</span>
         </label>
       </div>
-      <button :class="$style.confirm">一键领取免费名额</button>
+      <button :class="$style.confirm" @click="getNow">一键领取免费名额</button>
     </div>
 
     <div :class="$style.success">
@@ -94,12 +94,19 @@
         </li>
       </ul>
     </div>
+
+    <call-us />
   </div>
 </template>
 
 <script>
+import CallUs from '../../components/Call-Us.vue'
+import { Loading } from '../../components/penglai-ui'
 export default {
   name: 'Wwec',
+  components: {
+    CallUs
+  },
   data () {
     return {
       labelStyle: {
@@ -107,8 +114,20 @@ export default {
         color: '#666'
       },
       jobs: ['其它'],
-      types: ['其它']
+      types: ['其它'],
+      form: {
+        businessScop: '',
+        contactName: '',
+        enterpriseName: '',
+        mobile: '',
+        openId: '',
+        position: '',
+        status: ''
+      }
     }
+  },
+  mounted () {
+    this.$error('asdgasdg')
   },
   methods: {
     jobChange (e) {
@@ -128,6 +147,15 @@ export default {
         let index = this.types.indexOf(target.value)
         this.types.splice(index, 1)
       }
+    },
+    getNow () {
+      let a = Loading({
+        message: '正在生成您的兑换码请耐心等待',
+        mask: true
+      })
+      setTimeout(() => {
+        a.close()
+      }, 3000)
     }
   }
 }

@@ -1,6 +1,5 @@
-import './lib/transition.scss'
-import './fonts/iconfont.css'
-import './fonts/iconfont.js'
+import './assets/scss/transition.scss'
+import './assets/icon'
 import Button from './Button.vue'
 import Input from './Input.vue'
 import GetCode from './Get-Code.vue'
@@ -24,7 +23,9 @@ import Picker from './picker/Picker.vue'
 // import CanvasVideo from './Canvas-Video.vue'
 import { Timeline, TimelineItem } from './timeline'
 import { Indicator } from './indicator'
+import SvgIcon from 'vue-svgicon'
 export { Toast } from './toast'
+export { Loading } from './loading'
 const components = [
   Button,
   Input,
@@ -52,6 +53,9 @@ const components = [
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {
+  Vue.use(SvgIcon, {
+    tagName: 'svgicon'
+  })
   /* 安装所有组件 */
   for (let c of components) {
     if (!c.install) {

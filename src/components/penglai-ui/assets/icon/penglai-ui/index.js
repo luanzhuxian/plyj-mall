@@ -1,0 +1,12 @@
+/* eslint-disable */
+require('./camera')
+require('./chenggong')
+require('./jinggao')
+require('./jinyong1')
+require('./loading')
+require('./plus')
+require('./shibai')
+require('./subtract')
+require('./warning')
+require('./weixuanzhong1')
+require('./xuanzhong')

@@ -12,7 +12,7 @@
         :key="i"
         @click="clickHandler(item)"
       >
-        <div :class="$style.img" :style="{ backgroundImage: `url(${item.image + '?x-oss-process=style/thum-middle'})` }">
+        <div :class="$style.img" :style="{ backgroundImage: `url(${item.image})` }">
           <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
             体验课
           </div>
@@ -71,7 +71,7 @@
           }"
           @click="clickHandler(item)"
         >
-          <img :class="$style.img" :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
+          <img :class="$style.img" :src="item.image" alt="">
           <div :class="$style.content">
             <p :class="$style.name" v-text="item.goodsInfo.productName" />
             <p :class="$style.desc" v-text="item.goodsInfo.productDesc" />

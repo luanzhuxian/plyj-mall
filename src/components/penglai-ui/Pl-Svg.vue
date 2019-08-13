@@ -2,7 +2,7 @@
   <svgicon
     class="pl-svg"
     :name="theme + '/' + name"
-    :fill="true"
+    :fill="fill"
     :original="true"
     :color="color"
     @click="handleClick"
@@ -10,13 +10,9 @@
 </template>
 
 <script>
-import SvgIcon from 'vue-svgicon'
 import { mapGetters } from 'vuex'
 export default {
   name: 'PlSvg',
-  components: {
-    svgicon: SvgIcon
-  },
   props: {
     name: {
       type: String,
@@ -26,6 +22,10 @@ export default {
     color: {
       type: String,
       default: ''
+    },
+    fill: {
+      type: Boolean,
+      default: true
     }
   },
   data () {

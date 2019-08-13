@@ -50,7 +50,7 @@ export default {
       }
       > .pl-timeline-item-content {
         &:before {
-          background: url("../image/circle-active.png") no-repeat center center;
+          background: url("../assets/image/circle-active.png") no-repeat center center;
           background-size: 100%;
         }
       }
@@ -102,7 +102,7 @@ export default {
       top: 10px;
       width: 14px;
       height: 14px;
-      background: url("../image/circle.png") no-repeat center center;
+      background: url("../assets/image/circle.png") no-repeat center center;
       background-size: 100%;
       z-index: 2;
     }

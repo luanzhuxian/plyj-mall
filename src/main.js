@@ -22,6 +22,9 @@ Vue.use(VueLazyload, {
 })
 Vue.use(animated)
 Vue.use(VueClipboard)
+// Vue.use(SvgIcon, {
+//   tagName: 'svgicon'
+// })
 for (let k of Object.keys(directive)) {
   Vue.directive(k, directive[k])
 }

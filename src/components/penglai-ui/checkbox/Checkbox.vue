@@ -53,9 +53,9 @@
 </template>
 
 <script>
-import checkedIcon from '../image/checked.png'
-import noChecked from '../image/no-checked.png'
-import disabledChecked from '../image/disabled-check.png'
+import checkedIcon from '../assets/image/checked.png'
+import noChecked from '../assets/image/no-checked.png'
+import disabledChecked from '../assets/image/disabled-check.png'
 export default {
   name: 'PlCheckbox',
   data () {

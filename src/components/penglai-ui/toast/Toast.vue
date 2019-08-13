@@ -3,22 +3,26 @@
     enter-active-class="animated fadeIn"
     leave-active-class="animated fadeOut"
     type="animation"
+    @after-leave="closed"
   >
     <div
       class="pl-toast"
       v-show="show"
     >
-      <i
-        v-if="type === 'warning'"
-        class="pl-icon icon-jinggao"
-      />
-      <i
-        v-if="type === 'success'"
-        class="pl-icon icon-chenggong"
-      />
-      <i
+      <svgicon
         v-if="type === 'error'"
-        class="pl-icon icon-shibai"
+        class="pl-toast-icon"
+        name="penglai-ui/shibai"
+      />
+      <svgicon
+        v-if="type === 'success'"
+        class="pl-toast-icon"
+        name="penglai-ui/chenggong"
+      />
+      <svgicon
+        v-if="type === 'warning'"
+        class="pl-toast-icon"
+        name="penglai-ui/jinggao"
       />
       <div class="toast-message">
         <p v-text="message" />
@@ -41,6 +45,14 @@ export default {
       viceMessage: '',
       timer: 0,
       type: ''
+    }
+  },
+  methods: {
+    close () {
+      this.show = false
+    },
+    closed () {
+      document.body.removeChild(this.$el)
     }
   }
 }
@@ -84,8 +96,8 @@ export default {
         white-space: pre-wrap;
       }
     }
-    .pl-icon {
-      font-size: 72px;
+    svg {
+      width: 72px;
     }
   }
 </style>

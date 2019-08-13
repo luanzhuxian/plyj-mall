@@ -19,7 +19,7 @@
         :key="i"
         @click="jump(item)"
       >
-        <img :class="$style.img" :src="item.image + '?x-oss-process=style/thum-small'" v-img-error alt="">
+        <img :class="$style.img" :src="item.image" v-img-error alt="">
         <div :class="$style.content">
           <div :class="$style.proName" v-text="item.name" />
           <Tags size="middle" :tags="item.goodsInfo.labelModels" />
