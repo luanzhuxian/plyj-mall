@@ -3,9 +3,9 @@
     <div :class="$style.top">
       <div :class="$style.count">
         <pl-svg name="laba" color="#fff" />
-        <span>目前已有10家机构提交线上教育商城申请</span>
+        <span>目前已有{{ submitCount }}家机构提交线上教育商城申请</span>
       </div>
-      <div :class="$style.list">
+      <div :class="$style.list" v-if="infoList.length">
         <swiper :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'" ref="swiper">
           <swiper-slide
             :class="$style.swiperSlide"
@@ -183,6 +183,7 @@ export default {
         id: ''
       },
       infoList: [],
+      submitCount: 0,
       rules: {
         contactName: [
           { required: true, message: '请输入联系人姓名' },
@@ -248,6 +249,7 @@ export default {
       try {
         let { result } = await getRegisterInfo()
         this.infoList = result.list
+        this.submitCount = result.submitCount
       } catch (e) {
         throw e
       }
