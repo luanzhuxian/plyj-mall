@@ -62,31 +62,25 @@
         <pl-svg @click="pop = ''" name="close3" color="#fff" />
       </div>
     </transition>
-    <transition name="fade">
-      <div :class="$style.pop" v-show="show820" @click="show820 = false">
-        <img
-          @click="$router.push({ name: 'SignUp' })"
-          src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820-haibao.jpg"
-          alt=""
-        >
-        <pl-svg name="close3" color="#fff" />
-      </div>
-    </transition>
+    <WWEC :show.sync="show820" />
   </div>
 </template>
 
 <script>
 import 'swiper/dist/css/swiper.css'
 import { getTemplate } from '../../apis/home'
+// import { wasGetInfo } from '../../apis/wwec'
 import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
+import WWEC from '../../components/WWEC.vue'
 export default {
   name: 'Home',
   components: {
     TemplateA,
-    TemplateB
+    TemplateB,
+    WWEC
   },
   data () {
     return {
@@ -112,7 +106,9 @@ export default {
           endTime: 1567267199000 // 2019-08-31 23:59:59
         }
       },
-      dataMoonLightBox: {}
+      dataMoonLightBox: {},
+      // 820用户注册次数
+      registerCountFor820: 0
     }
   },
   async created () {
@@ -122,8 +118,10 @@ export default {
       throw e
     }
   },
-  mounted () {
-    this.show820 = true
+  async mounted () {
+    if (this.mallId === '1057573777392603136') {
+      this.show820 = true
+    }
   },
   computed: {
     ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId']),

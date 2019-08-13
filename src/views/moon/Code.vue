@@ -1,25 +1,55 @@
 <template>
   <div :class="$style.code">
     <p :class="$style.title">兑换码</p>
-    <p :class="$style.codeValue">123123</p>
+    <p :class="$style.codeValue" v-text="data.exchangeCode" />
     <p :class="$style.gift">恭喜您,获得精美礼品一份.请您前往指定朋来站点凭兑换码领取小礼品哦~</p>
-    <p :class="$style.address">领取地址：WWEC会场 三层朋来展台</p>
+    <p :class="$style.address">领取地址：{{ data.addressValue }}</p>
     <p :class="$style.tip">礼品数量有限，先到先得哦~</p>
-    <div :class="$style.goBuy">
+    <router-link
+      tag="div"
+      :class="$style.goBuy"
+      :to="{ name: 'Home' }"
+    >
       去逛雅集
-    </div>
-    <div :class="$style.confirm" @click="confirm">
+    </router-link>
+    <div
+      :class="$style.confirm"
+      @click="confirm"
+    >
       确认领取礼品
     </div>
   </div>
 </template>
 
 <script>
+import { getConfirmInfo, confirmGet } from '../../apis/wwec'
 export default {
   name: 'Code',
+  data () {
+    return {
+      data: {}
+    }
+  },
+  async activated () {
+    try {
+      let { result } = await getConfirmInfo()
+      this.data = result
+    } catch (e) {
+      throw e
+    }
+  },
   methods: {
-    confirm () {
-      this.$confirm('确认已成功领取精美礼品啦~')
+    async confirm () {
+      try {
+        await confirmGet({
+          id: this.data.id,
+          status: 2
+        })
+        await this.$confirm('确认已成功领取精美礼品啦~')
+        this.$router.replace({ name: 'GetSuccess' })
+      } catch (e) {
+        throw e
+      }
     }
   }
 }

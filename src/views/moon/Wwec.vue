@@ -1,18 +1,57 @@
 <template>
   <div :class="$style.wwec">
     <div :class="$style.top">
-      123
+      <div :class="$style.count">
+        <pl-svg name="laba" color="#fff" />
+        <span>目前已有10家机构提交线上教育商城申请</span>
+      </div>
+      <div :class="$style.list">
+        <swiper :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'" ref="swiper">
+          <swiper-slide
+            :class="$style.swiperSlide"
+            v-for="(item, i) of infoList"
+            :key="i"
+          >
+            <pl-svg name="hot" color="#fff" />
+            <span :class="$style.companyName" v-text="item" />
+            <span>成功抢购占一个名额</span>
+          </swiper-slide>
+        </swiper>
+      </div>
     </div>
     <div :class="$style.form">
-      <pl-form :label-width="184">
-        <pl-form-item :label-style="labelStyle" :class="$style.formItem" label="姓名" :gap-top="16">
-          <pl-input size="mini" placeholder="请输入联系人真实姓名" />
+      <pl-form
+        :label-width="184"
+        :model="form"
+        ref="form"
+        :rules="rules"
+      >
+        <pl-form-item
+          :label-style="labelStyle"
+          :class="$style.formItem"
+          label="姓名"
+          :gap-top="16"
+          prop="contactName"
+        >
+          <pl-input v-model="form.contactName" size="mini" placeholder="请输入联系人真实姓名" />
         </pl-form-item>
-        <pl-form-item :label-style="labelStyle" :class="$style.formItem" label="手机号" :gap-top="16">
-          <pl-input size="mini" placeholder="请输入联系人手机号" />
+        <pl-form-item
+          :label-style="labelStyle"
+          :class="$style.formItem"
+          label="手机号"
+          :gap-top="16"
+          prop="mobile"
+        >
+          <pl-input v-model="form.mobile" size="mini" placeholder="请输入联系人手机号" />
         </pl-form-item>
-        <pl-form-item :label-style="labelStyle" :class="$style.formItem" label="机构名称" :gap-top="16">
-          <pl-input size="mini" placeholder="请输入机构名称" />
+        <pl-form-item
+          :label-style="labelStyle"
+          :class="$style.formItem"
+          label="机构名称"
+          :gap-top="16"
+          prop="enterpriseName"
+        >
+          <pl-input v-model="form.enterpriseName" size="mini" placeholder="请输入机构名称" />
         </pl-form-item>
       </pl-form>
 
@@ -72,9 +111,11 @@
       </div>
       <button :class="$style.confirm" @click="getNow">一键领取免费名额</button>
     </div>
-
+    <img style="width: 100%;" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820.jpg" alt="">
     <div :class="$style.success">
-      <p>成功案例</p>
+      <p>
+        <pl-svg name="success-example" />
+      </p>
       <ul :class="$style.successList">
         <li>
           <img src="https://img.alicdn.com/tfs/TB15I0OLMHqK1RjSZJnXXbNLpXa-468-644.jpg_320x5000q100.jpg_.webp" alt="">
@@ -102,10 +143,19 @@
 <script>
 import CallUs from '../../components/Call-Us.vue'
 import { Loading } from '../../components/penglai-ui'
+import {
+  getInfo,
+  getRegisterInfo
+} from '../../apis/wwec'
+import { resetForm } from '../../assets/js/util'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { isName, checkLength, isPhone } from '../../assets/js/validate'
 export default {
   name: 'Wwec',
   components: {
-    CallUs
+    CallUs,
+    swiper,
+    swiperSlide
   },
   data () {
     return {
@@ -113,49 +163,135 @@ export default {
         fontWeight: 'normal',
         color: '#666'
       },
-      jobs: ['其它'],
-      types: ['其它'],
+      swiperOptionBanner: {
+        direction: 'vertical',
+        speed: 1000,
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+        autoplay: {
+          delay: 2000
+        },
+        loop: true
+      },
       form: {
-        businessScop: '',
+        businessScope: ['其它'],
         contactName: '',
         enterpriseName: '',
         mobile: '',
-        openId: '',
-        position: '',
-        status: ''
+        position: ['其它'],
+        status: 1,
+        id: ''
+      },
+      infoList: [],
+      rules: {
+        contactName: [
+          { required: true, message: '请输入联系人姓名' },
+          { validator: isName, message: '姓名为2~50个中文或英文字符' }
+        ],
+        mobile: [
+          { required: true, message: '请输入联系人手机号' },
+          { validator: isPhone, message: '手机号格式错误' }
+        ],
+        enterpriseName: [
+          { required: true, message: '请输入机构名称' },
+          { validator: checkLength(50), message: '机构名称不难超过50个字符' }
+        ]
       }
     }
   },
-  mounted () {
-    this.$error('asdgasdg')
+  async activated () {
+    this.$refs.swiper.swiper.autoplay.start()
+    try {
+      this.getInfoList()
+    } catch (e) {
+      throw e
+    }
+  },
+  deactivated () {
+    resetForm(this.form, {
+      businessScope: ['其它'],
+      position: ['其它'],
+      status: 1
+    })
+    this.$refs.swiper.swiper.autoplay.stop()
   },
   methods: {
     jobChange (e) {
       let { target } = e
       if (target.checked) {
-        this.jobs.push(target.value)
+        this.form.position.push(target.value)
       } else {
-        let index = this.jobs.indexOf(target.value)
-        this.jobs.splice(index, 1)
+        if (this.form.position.length === 1) {
+          this.$warning('请至少选择一个职位')
+          target.checked = true
+          return
+        }
+        let index = this.form.position.indexOf(target.value)
+        this.form.position.splice(index, 1)
       }
     },
     typesChange (e) {
       let { target } = e
       if (target.checked) {
-        this.types.push(target.value)
+        this.form.businessScope.push(target.value)
       } else {
-        let index = this.types.indexOf(target.value)
-        this.types.splice(index, 1)
+        if (this.form.businessScope.length === 1) {
+          this.$warning('请至少选择一个经营类型')
+          target.checked = true
+          return
+        }
+        let index = this.form.businessScope.indexOf(target.value)
+        this.form.businessScope.splice(index, 1)
       }
     },
-    getNow () {
+    async getInfoList () {
+      try {
+        let { result } = await getRegisterInfo()
+        this.infoList = result.list
+      } catch (e) {
+        throw e
+      }
+    },
+    async getNow () {
+      if (!this.$refs.form.validate()) {
+        return
+      }
       let a = Loading({
         message: '正在生成您的兑换码请耐心等待',
         mask: true
       })
-      setTimeout(() => {
+      let start = Date.now()
+      let duration = 2000
+      let timeout = 0
+      try {
+        let { result } = await getInfo(this.form)
+        timeout = duration - (Date.now() - start)
+        // Code820
+        if (timeout > 0) {
+          setTimeout(() => {
+            a.close()
+            this.$router.push({
+              name: 'Code820',
+              params: {
+                id: result.id,
+                code: result.exchangeCode
+              }
+            })
+          }, timeout)
+        } else {
+          a.close()
+          this.$router.push({
+            name: 'Code820',
+            params: {
+              id: result.id,
+              code: result.exchangeCode
+            }
+          })
+        }
+      } catch (e) {
         a.close()
-      }, 3000)
+        throw e
+      }
     }
   }
 }
@@ -164,12 +300,64 @@ export default {
 <style module lang="scss">
   .wwec {
     padding-bottom: 140px;
-    background-color: #492560;
+    background-color: #0b1344;
+    font-size: 0;
   }
   .top {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     height: 306px;
     background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/wwec1.png") no-repeat;
     background-size: 100%;
+    > .count {
+      padding: 0 24px;
+      font-size: 24px;
+      color: #fff;
+      line-height: 62px;
+      background-color: rgba(0, 0, 0, .6);
+      > svg {
+        width: 30px;
+        margin-right: 12px;
+        vertical-align: -6px;
+      }
+    }
+    > .list {
+      height: 56px;
+      width: 600px;
+      margin-left: 12px;
+      margin-bottom: 12px;
+      padding: 0 28px;
+      font-size: 24px;
+      color: #fff;
+      background-color: rgba(0, 0, 0, .6);
+      border-radius: 28px;
+      svg {
+        width: 30px;
+        transform: scaleY(1.3);
+        vertical-align: 18px;
+      }
+      .swiper {
+        height: 56px;
+        line-height: 56px;
+      }
+      .swiper-slide {
+        height: 56px;
+      }
+      .company-name {
+        display: inline-block;
+        width: 570px;
+        @include elps();
+        &:before {
+          display: inline-block;
+          content: '|';
+          margin: 0 10px;
+          color: #e7e7e7;
+          font-weight: lighter;
+          vertical-align: 2px;
+        }
+      }
+    }
   }
   .form {
     padding: 48px 46px;
@@ -220,7 +408,8 @@ export default {
     border-radius: 20px;
   }
   .success {
-    margin-top: 80px;
+    padding-top: 80px;
+    background: linear-gradient(180deg, #100f37, #0b1344);
     > p {
       position: relative;
       font-size: 48px;
@@ -228,16 +417,8 @@ export default {
       font-weight: bold;
       text-align: center;
       color: #fff;
-      &:after {
-        position: absolute;
-        bottom: -8px;
-        left: 50%;
-        transform: translateX(-50%);
-        content: '';
-        width: 80px;
-        height: 4px;
-        background-color: #fff;
-
+      > svg {
+        width: 500px;
       }
     }
   }

@@ -26,6 +26,7 @@ export default [
   {
     path: '/820/code',
     name: 'Code820',
+    props: true,
     component: () => import('../views/moon/Code.vue'),
     meta: {
       title: '免费部署线上学校'
