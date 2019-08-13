@@ -5,7 +5,7 @@
         <pl-svg name="laba" color="#fff" />
         <span>目前已有{{ submitCount }}家机构提交线上教育商城申请</span>
       </div>
-      <div :class="$style.list" v-if="infoList.length">
+      <div :class="$style.list" v-show="infoList.length">
         <swiper :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'" ref="swiper">
           <swiper-slide
             :class="$style.swiperSlide"
