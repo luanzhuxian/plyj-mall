@@ -129,7 +129,7 @@
             寄件运单号
           </pl-button>
           <pl-button
-            v-if="orderStatus === 'FINISHED' && item.assessmentStatus === 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)"
+            v-if="isCommentBtnShow(item)"
             type="warning"
             plain
             round
@@ -647,6 +647,11 @@ export default {
     await deleteImage([qrcodeKey])
   },
   methods: {
+    isCommentBtnShow (item) {
+      return this.orderStatus === 'FINISHED' &&
+      item.assessmentStatus === 0 &&
+      ((this.orderType === 'PHYSICAL' && ~[0, 3, 6].indexOf(item.afterSalesStatus)) || (this.orderType !== 'PHYSICAL' && this.redeemCodeModels.some(item => item.statusCode === 1)))
+    },
     isRefundBtnShow (item) {
       return item.supportRefund && Number(item.refundPrice) > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
     },
