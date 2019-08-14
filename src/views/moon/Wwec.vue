@@ -17,7 +17,7 @@
             :key="i + Math.random()"
           >
             <pl-svg name="hot" color="#fff" />
-            <span :class="$style.companyName">{{ item }}成功抢购占一个名额</span>
+            <span :class="$style.companyName">{{ item }}成功抢占一个名额</span>
           </swiper-slide>
         </swiper>
       </div>
@@ -121,20 +121,28 @@
       </p>
       <ul :class="$style.successList">
         <li>
-          <img src="https://img.alicdn.com/tfs/TB15I0OLMHqK1RjSZJnXXbNLpXa-468-644.jpg_320x5000q100.jpg_.webp" alt="">
-          <p>西安有朋来教育科技有限公司</p>
+          <a href="http://mall.youpenglai.com/xhedu">
+            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/xiaohe.jpg" alt="">
+            <p>小荷教育</p>
+          </a>
         </li>
         <li>
-          <img src="https://img.alicdn.com/tfs/TB15I0OLMHqK1RjSZJnXXbNLpXa-468-644.jpg_320x5000q100.jpg_.webp" alt="">
-          <p>西安有朋来教育科技有限公司</p>
+          <a href="http://mall.youpenglai.com/zendo">
+            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/zhentu.jpg" alt="">
+            <p>真途户外</p>
+          </a>
         </li>
         <li>
-          <img src="https://img.alicdn.com/tfs/TB15I0OLMHqK1RjSZJnXXbNLpXa-468-644.jpg_320x5000q100.jpg_.webp" alt="">
-          <p>西安有朋来教育科技有限公司</p>
+          <a href="http://mall.youpenglai.com/stouch">
+            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/xiaotaoqi.jpg" alt="">
+            <p>小淘气</p>
+          </a>
         </li>
         <li>
-          <img src="https://img.alicdn.com/tfs/TB15I0OLMHqK1RjSZJnXXbNLpXa-468-644.jpg_320x5000q100.jpg_.webp" alt="">
-          <p>西安有朋来教育科技有限公司</p>
+          <a href="http://mall.youpenglai.com/demo/home">
+            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/demoxiao.jpg" alt="">
+            <p>demo校</p>
+          </a>
         </li>
       </ul>
     </div>
@@ -417,31 +425,34 @@ export default {
     white-space: nowrap;
     overflow: auto;
     > li {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      width: 202px;
-      height: 250px;
+      display: inline-block;
       margin-left: 20px;
-      box-sizing: border-box;
-      padding: 32px 18px;
       background-color: #fff;
       border-radius: 20px;
       &:nth-last-of-type(1) {
         margin-right: 20px;
       }
-      > p {
+      > a {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        width: 202px;
+        height: 250px;
+        padding: 32px 18px;
+        box-sizing: border-box;
+        color: #333;
+      }
+      p {
         width: 100%;
-        margin-top: 22px;
-        font-size: 24px;
-        height: 62px;
+        font-size: 28px;
+        line-height: 50px;
         text-align: center;
         word-break: break-all;
         white-space: pre-wrap;
-        line-height: 30px;
         @include elps-wrap(2);
       }
-      > img {
+      img {
         width: 102px;
         height: 102px;
         object-fit: cover;
