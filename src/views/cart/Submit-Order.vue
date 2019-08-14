@@ -7,7 +7,7 @@
       :class="$style.address + ' radius-20'"
       v-if="physicalProducts.length > 0"
     >
-      <AddressItem />
+      <AddressItem ref="addAddressItem" />
     </div>
 
     <!-- *************************实体************************* -->
@@ -697,6 +697,9 @@ export default {
       const cartProducts = []
       if (this.physicalProducts.length > 0 && this.addressList <= 0) {
         this.$confirm('您还没有收货地址，请先添加收货地址')
+          .then(() => {
+            this.$refs.addAddressItem.addAddress()
+          })
         return
       }
       for (const item of this.physicalProducts) {
