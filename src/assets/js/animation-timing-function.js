@@ -1,8 +1,8 @@
-/** 返回值为下次滚动到的坐标，而不是下次要滚动的距离
+/** 返回值为下次位移到的坐标，而不是下次要位移的距离
  * t: current time（当前时间） 0
  * b: beginning value（初始值） 0
  * c: change in value（变化量） 100
- * d: duration（持续时间） 10
+ * d: duration（持续时间） 10 (这其实是帧数)
  */
 // 线性匀速运动效果
 export const Linear = function (t, b, c, d) {

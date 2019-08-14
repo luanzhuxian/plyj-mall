@@ -223,11 +223,6 @@ export default {
     }
   },
   deactivated () {
-    resetForm(this.form, {
-      businessScope: '其它',
-      position: '其它',
-      status: 1
-    })
     this.$refs.swiper.swiper.autoplay.stop()
   },
   methods: {
@@ -266,6 +261,11 @@ export default {
         if (timeout > 0) {
           setTimeout(() => {
             a.close()
+            resetForm(this.form, {
+              businessScope: '其它',
+              position: '其它',
+              status: 1
+            })
             this.$router.push({
               name: 'Code820',
               params: {
@@ -276,6 +276,11 @@ export default {
           }, timeout)
         } else {
           a.close()
+          resetForm(this.form, {
+            businessScope: '其它',
+            position: '其它',
+            status: 1
+          })
           this.$router.push({
             name: 'Code820',
             params: {

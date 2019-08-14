@@ -4,19 +4,26 @@
       <pl-svg name="call-us2" />
     </a>
     <transition name="fade">
-      <a href="#" :class="$style.top" v-show="scrollY > 100">
+      <div @click="setCurrent" :class="$style.top" v-show="scrollY > 100">
         <pl-svg name="right" />
-      </a>
+      </div>
     </transition>
   </div>
 </template>
 
 <script>
+import { Quad } from '../assets/js/animation-timing-function'
+const EaseOut = Quad.easeOut
+let t = 0
+let b = 0
+let c = 0
+let d = 60
 export default {
   name: 'CallUs',
   data () {
     return {
-      scrollY: 0
+      scrollY: 0,
+      bscrollY: 0
     }
   },
   activated () {
@@ -30,7 +37,23 @@ export default {
   },
   methods: {
     scrollHandler (e) {
-      this.scrollY = scrollY
+      this.scrollY = window.scrollY
+    },
+    setCurrent () {
+      c = window.scrollY
+      this.toTop()
+    },
+    toTop () {
+      let to = EaseOut(t, b, c, d)
+      t++
+      if (t < d) {
+        window.scrollTo(0, c - to)
+        requestAnimationFrame(this.toTop)
+      } else {
+        window.scrollTo(0, 0)
+        c = 0
+        t = 0
+      }
     }
   }
 }
