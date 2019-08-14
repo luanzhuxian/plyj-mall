@@ -3,7 +3,7 @@
   <transition name="fade">
     <div
       :class="$style.pop"
-      v-show="show && status !== 2"
+      v-show="show"
       @click="close"
     >
       <img

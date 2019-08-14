@@ -172,8 +172,6 @@ export default {
         observer: true, // 修改swiper自己或子元素时，自动初始化swiper
         observeParents: true, // 修改swiper的父元素时，自动初始化swiper
         autoplay: true,
-        disableOnInteraction: false,
-        loop: true,
         stopOnLastSlide: false
       },
       form: {
@@ -207,7 +205,7 @@ export default {
     ...mapGetters(['mobile', 'realName', 'userName'])
   },
   async activated () {
-    // this.$refs.swiper.swiper.autoplay.start()
+    this.$refs.swiper.swiper.autoplay.start()
     this.form.mobile = this.mobile || ''
     this.form.contactName = this.realName || this.userName
     try {
@@ -222,7 +220,7 @@ export default {
       position: '其它',
       status: 1
     })
-    // this.$refs.swiper.swiper.autoplay.stop()
+    this.$refs.swiper.swiper.autoplay.stop()
   },
   methods: {
     jobChange (e) {

@@ -14,7 +14,7 @@
       <swiperSlide v-for="(item, i) of data.values" :key="i">
         <img :class="$style.img" :src="item.image" :alt="item.name" @click="imgClick(item)">
       </swiperSlide>
-      <div v-show="data.values.length > 1" class="banner-pagination" slot="pagination" />
+      <div v-show="data.values.length > 1" class="banner-pagination-home-b" slot="pagination" />
     </swiper>
   </div>
 </template>
@@ -32,10 +32,13 @@ export default {
   data () {
     return {
       swiperOptionBanner: {
-        autoplay: true,
+        autoplay: {
+          disableOnInteraction: false
+        },
+        loop: true,
         spaceBetween: 40,
         pagination: {
-          el: '.banner-pagination',
+          el: '.banner-pagination-home-b',
           clickable: true
         }
       }
@@ -64,6 +67,7 @@ export default {
     async wwec () {
       try {
         let { result } = await wasRegist()
+        result.status = 0
         if (result.status === 1) {
           this.$router.push({ name: 'Code820' })
         } else if (result.status === 0) {
@@ -92,7 +96,7 @@ export default {
   }
 </style>
 <style scoped lang="scss">
-  .banner-pagination {
+  .banner-pagination-home-b {
     position: absolute;
     left: 50%;
     bottom: 16px;
