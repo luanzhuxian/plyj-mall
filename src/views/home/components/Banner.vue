@@ -67,7 +67,6 @@ export default {
     async wwec () {
       try {
         let { result } = await wasRegist()
-        result.status = 0
         if (result.status === 1) {
           this.$router.push({ name: 'Code820' })
         } else if (result.status === 0) {
