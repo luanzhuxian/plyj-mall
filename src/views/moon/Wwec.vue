@@ -179,7 +179,9 @@ export default {
         direction: 'vertical',
         observer: true, // 修改swiper自己或子元素时，自动初始化swiper
         observeParents: true, // 修改swiper的父元素时，自动初始化swiper
-        autoplay: true,
+        autoplay: {
+          delay: 2000
+        },
         stopOnLastSlide: false
       },
       form: {
@@ -336,14 +338,14 @@ export default {
       svg {
         width: 30px;
         transform: scaleY(1.3);
-        vertical-align: 18px;
       }
       .swiper {
         height: 56px;
         line-height: 56px;
       }
       .swiper-slide {
-        height: 56px;
+        display: flex;
+        align-items: center;
       }
       .company-name {
         display: inline-block;

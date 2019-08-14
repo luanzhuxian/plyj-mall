@@ -35,7 +35,6 @@ export default {
         autoplay: {
           disableOnInteraction: false
         },
-        loop: true,
         spaceBetween: 40,
         pagination: {
           el: '.banner-pagination-home-b',

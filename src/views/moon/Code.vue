@@ -18,13 +18,18 @@
     >
       确认领取礼品
     </div>
+    <call-us />
   </div>
 </template>
 
 <script>
 import { getConfirmInfo, confirmGet } from '../../apis/wwec'
+import CallUs from '../../components/Call-Us.vue'
 export default {
   name: 'Code',
+  components: {
+    CallUs
+  },
   data () {
     return {
       data: {}
