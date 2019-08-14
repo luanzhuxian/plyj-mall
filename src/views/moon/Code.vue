@@ -41,11 +41,11 @@ export default {
   methods: {
     async confirm () {
       try {
+        await this.$confirm('您是否确认 已领取精美礼品?')
         await confirmGet({
           id: this.data.id,
           status: 2
         })
-        await this.$confirm('确认已成功领取精美礼品啦~')
         this.$router.replace({ name: 'GetSuccess' })
       } catch (e) {
         throw e

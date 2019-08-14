@@ -6,15 +6,18 @@
         <span>目前已有{{ submitCount }}家机构提交线上教育商城申请</span>
       </div>
       <div :class="$style.list" v-show="infoList.length">
-        <swiper :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'" ref="swiper">
+        <swiper
+          :options="swiperOptionBanner"
+          :class="$style.swiper + ' swiper-no-swiping'"
+          ref="swiper"
+        >
           <swiper-slide
             :class="$style.swiperSlide"
             v-for="(item, i) of infoList"
-            :key="i"
+            :key="i + Math.random()"
           >
             <pl-svg name="hot" color="#fff" />
-            <span :class="$style.companyName" v-text="item" />
-            <span>成功抢购占一个名额</span>
+            <span :class="$style.companyName">{{ item }}成功抢购占一个名额</span>
           </swiper-slide>
         </swiper>
       </div>
@@ -58,54 +61,54 @@
       <p :class="$style.title">职位</p>
       <div :class="$style.types" @change="jobChange">
         <label>
-          <input type="checkbox" value="校长" v-show="false">
+          <input type="radio" name="job" value="校长" v-show="false">
           <span>校长</span>
         </label>
         <label>
-          <input type="checkbox" value="市场老师" v-show="false">
+          <input type="radio" name="job" value="市场老师" v-show="false">
           <span>市场老师</span>
         </label>
         <label>
-          <input type="checkbox" value="咨询顾问" v-show="false">
+          <input type="radio" name="job" value="咨询顾问" v-show="false">
           <span>咨询顾问</span>
         </label>
         <label>
-          <input type="checkbox" value="其它" checked v-show="false">
+          <input type="radio" name="job" value="其它" checked v-show="false">
           <span>其它</span>
         </label>
       </div>
       <p :class="$style.title">经营类型</p>
       <div :class="$style.types" @change="typesChange">
         <label>
-          <input type="checkbox" value="K12教育" v-show="false">
+          <input type="radio" name="types" value="K12教育" v-show="false">
           <span>K12教育</span>
         </label>
         <label>
-          <input type="checkbox" value="语言培训" v-show="false">
+          <input type="radio" name="types" value="语言培训" v-show="false">
           <span>语言培训</span>
         </label>
         <label>
-          <input type="checkbox" value="兴趣特长" v-show="false">
+          <input type="radio" name="types" value="兴趣特长" v-show="false">
           <span>兴趣特长</span>
         </label>
         <label>
-          <input type="checkbox" value="早教幼教" v-show="false">
+          <input type="radio" name="types" value="早教幼教" v-show="false">
           <span>早教幼教</span>
         </label>
         <label>
-          <input type="checkbox" value="职称技能" v-show="false">
+          <input type="radio" name="types" value="职称技能" v-show="false">
           <span>职称技能</span>
         </label>
         <label>
-          <input type="checkbox" value="公务求职" v-show="false">
+          <input type="radio" name="types" value="公务求职" v-show="false">
           <span>公务求职</span>
         </label>
         <label>
-          <input type="checkbox" value="留学考试" v-show="false">
+          <input type="radio" name="types" value="留学考试" v-show="false">
           <span>留学考试</span>
         </label>
         <label>
-          <input type="checkbox" value="其它" checked v-show="false">
+          <input type="radio" name="types" value="其它" checked v-show="false">
           <span>其它</span>
         </label>
       </div>
@@ -150,6 +153,7 @@ import {
 import { resetForm } from '../../assets/js/util'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { isName, checkLength, isPhone } from '../../assets/js/validate'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Wwec',
   components: {
@@ -165,20 +169,19 @@ export default {
       },
       swiperOptionBanner: {
         direction: 'vertical',
-        speed: 1000,
-        slidesPerView: 1,
-        slidesPerGroup: 1,
-        autoplay: {
-          delay: 2000
-        },
-        loop: true
+        observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+        observeParents: true, // 修改swiper的父元素时，自动初始化swiper
+        autoplay: true,
+        disableOnInteraction: false,
+        loop: true,
+        stopOnLastSlide: false
       },
       form: {
-        businessScope: ['其它'],
+        businessScope: '其它',
         contactName: '',
         enterpriseName: '',
         mobile: '',
-        position: ['其它'],
+        position: '其它',
         status: 1,
         id: ''
       },
@@ -200,8 +203,13 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['mobile', 'realName', 'userName'])
+  },
   async activated () {
-    this.$refs.swiper.swiper.autoplay.start()
+    // this.$refs.swiper.swiper.autoplay.start()
+    this.form.mobile = this.mobile || ''
+    this.form.contactName = this.realName || this.userName
     try {
       this.getInfoList()
     } catch (e) {
@@ -210,40 +218,20 @@ export default {
   },
   deactivated () {
     resetForm(this.form, {
-      businessScope: ['其它'],
-      position: ['其它'],
+      businessScope: '其它',
+      position: '其它',
       status: 1
     })
-    this.$refs.swiper.swiper.autoplay.stop()
+    // this.$refs.swiper.swiper.autoplay.stop()
   },
   methods: {
     jobChange (e) {
       let { target } = e
-      if (target.checked) {
-        this.form.position.push(target.value)
-      } else {
-        if (this.form.position.length === 1) {
-          this.$warning('请至少选择一个职位')
-          target.checked = true
-          return
-        }
-        let index = this.form.position.indexOf(target.value)
-        this.form.position.splice(index, 1)
-      }
+      this.form.position = target.value
     },
     typesChange (e) {
       let { target } = e
-      if (target.checked) {
-        this.form.businessScope.push(target.value)
-      } else {
-        if (this.form.businessScope.length === 1) {
-          this.$warning('请至少选择一个经营类型')
-          target.checked = true
-          return
-        }
-        let index = this.form.businessScope.indexOf(target.value)
-        this.form.businessScope.splice(index, 1)
-      }
+      this.form.businessScope = target.value
     },
     async getInfoList () {
       try {

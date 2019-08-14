@@ -37,7 +37,7 @@ export default [
     name: 'GetSuccess',
     component: () => import('../views/moon/Get-Success.vue'),
     meta: {
-      title: '朋来雅集'
+      title: '免费部署线上学校'
     }
   }
 ]

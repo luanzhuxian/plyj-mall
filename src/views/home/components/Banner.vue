@@ -4,6 +4,13 @@
       :options="swiperOptionBanner"
       v-if="data.values.length"
     >
+      <swiperSlide>
+        <img
+          :class="$style.img"
+          src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820banner.jpg"
+          @click="wwec"
+        >
+      </swiperSlide>
       <swiperSlide v-for="(item, i) of data.values" :key="i">
         <img :class="$style.img" :src="item.image" :alt="item.name" @click="imgClick(item)">
       </swiperSlide>
@@ -15,6 +22,7 @@
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
+import { wasRegist } from '../../../apis/wwec'
 export default {
   name: 'Banner',
   components: {
@@ -51,6 +59,20 @@ export default {
         this.$router.push({ name: 'Classify', params: { optionId: item.value || null } })
       } else if (item.type === 2) {
         this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.agentUser ? this.userId : null } })
+      }
+    },
+    async wwec () {
+      try {
+        let { result } = await wasRegist()
+        if (result.status === 1) {
+          this.$router.push({ name: 'Code820' })
+        } else if (result.status === 0) {
+          this.$router.push({ name: 'SignUp' })
+        } else if (result.status === 2) {
+          this.$router.push({ name: 'GetSuccess' })
+        }
+      } catch (e) {
+        throw e
       }
     }
   }

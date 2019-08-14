@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.callUs">
-    <a href="tel:123" :class="$style.call">
+    <a href="tel:18500686005" :class="$style.call">
       <pl-svg name="call-us2" />
     </a>
     <transition name="fade">

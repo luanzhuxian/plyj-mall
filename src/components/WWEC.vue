@@ -46,7 +46,7 @@ export default {
       } else if (this.status === 0) {
         this.$router.push({ name: 'SignUp' })
       } else if (this.status === 2) {
-        this.close()
+        this.$router.push({ name: 'GetSuccess' })
       }
     }
   }
