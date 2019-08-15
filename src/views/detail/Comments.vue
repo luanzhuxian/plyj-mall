@@ -217,9 +217,7 @@ export default {
       this.getList()
     },
     preview (url) {
-      console.log(url)
       this.previewIndex = this.imgs.findIndex(item => item.oSrc === url)
-      console.log(this.previewIndex)
       this.showImageSwipe = true
     },
     // 批量加载图片

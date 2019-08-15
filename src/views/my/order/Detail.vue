@@ -856,7 +856,7 @@ export default {
         .then(e => {
           this.$success('复制成功')
         }, e => {
-          console.log(e)
+          console.error(e)
         })
     },
     // 定时器，实时刷新核销状态，如果有核销的话

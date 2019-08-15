@@ -4,7 +4,7 @@
       :options="swiperOptionBanner"
       v-if="data.values.length"
     >
-      <swiperSlide>
+      <swiperSlide v-if="mallId === '1057573777392603136'">
         <img
           :class="$style.img"
           src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820banner.jpg"
@@ -52,7 +52,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agentUser', 'userId'])
+    ...mapGetters(['agentUser', 'userId', 'mallId'])
   },
   methods: {
     imgClick (item) {

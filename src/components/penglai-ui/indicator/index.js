@@ -6,7 +6,6 @@ const instance = new IndicatorConstructor({
 })
 export class Indicator {
   static open (text) {
-    console.log(text)
     if (instance.open) {
       return
     }

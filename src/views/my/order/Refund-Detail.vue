@@ -566,7 +566,7 @@ export default {
         .then(e => {
           this.$success('复制成功')
         }, e => {
-          console.log(e)
+          console.error(e)
         })
     }
   }
