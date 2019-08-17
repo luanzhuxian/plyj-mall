@@ -147,7 +147,7 @@
       </ul>
     </div>
 
-    <call-us />
+    <call-us tel="18601773363" />
   </div>
 </template>
 

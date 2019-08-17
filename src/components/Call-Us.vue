@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.callUs">
-    <a href="tel:18500686005" :class="$style.call">
+    <a :href="`tel:${tel}`" :class="$style.call">
       <pl-svg name="call-us2" />
     </a>
     <transition name="fade">
@@ -24,6 +24,12 @@ export default {
     return {
       scrollY: 0,
       bscrollY: 0
+    }
+  },
+  props: {
+    tel: {
+      type: String,
+      default: ''
     }
   },
   activated () {
