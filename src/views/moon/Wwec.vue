@@ -114,10 +114,10 @@
       </div>
       <button :class="$style.confirm" @click="getNow">一键领取免费名额</button>
     </div>
-    <img style="width: 100%;" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820.jpg" alt="">
+    <img style="width: 100%;" src="http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820.png" alt="">
     <div :class="$style.success">
       <p>
-        <pl-svg name="success-example" />
+        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/good-example.png" alt="">
       </p>
       <ul :class="$style.successList">
         <li>
@@ -303,8 +303,9 @@ export default {
 <style module lang="scss">
   .wwec {
     padding-bottom: 140px;
-    background-color: #0b1344;
+    background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820-bg.jpg");
     font-size: 0;
+    background-size: 48px;
   }
   .top {
     display: flex;
@@ -363,9 +364,9 @@ export default {
     }
   }
   .form {
-    padding: 48px 46px;
+    padding: 48px 46px 0;
     background-color: #fff;
-    border-radius: 20px;
+    border-radius: 20px 20px 0 0;
     .form-item {
       border: 1px solid #ccc;
       padding-left: 24px;
@@ -412,7 +413,6 @@ export default {
   }
   .success {
     padding-top: 80px;
-    background: linear-gradient(180deg, #100f37, #0b1344);
     > p {
       position: relative;
       font-size: 48px;
@@ -420,8 +420,8 @@ export default {
       font-weight: bold;
       text-align: center;
       color: #fff;
-      > svg {
-        width: 500px;
+      > img {
+        width: 388px;
       }
     }
   }
@@ -432,10 +432,12 @@ export default {
     white-space: nowrap;
     overflow: auto;
     > li {
+      position: relative;
       display: inline-block;
       margin-left: 20px;
-      background-color: #fff;
-      border-radius: 20px;
+      background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/list-bg.png") no-repeat;
+      background-size: 100%;
+      overflow: hidden;
       &:nth-last-of-type(1) {
         margin-right: 20px;
       }
@@ -448,7 +450,7 @@ export default {
         height: 250px;
         padding: 32px 18px;
         box-sizing: border-box;
-        color: #333;
+        color: #285cff;
       }
       p {
         width: 100%;
