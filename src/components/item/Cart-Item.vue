@@ -178,6 +178,7 @@ export default {
           // 直接修改父组件的数据，也可以在父组件中监听change事件，通过接口来刷新数据，但是会导致接口调用频繁
           this.data.cartProductCount = count
           next()
+          this.$emit('countChange', count)
         }
       } catch (err) {
         throw err
