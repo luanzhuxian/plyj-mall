@@ -409,6 +409,10 @@ export default {
 
       try {
         let min = Math.min(img.width, img.height)
+        let strUrl = window.location.href
+        if (this.agentUser && !this.brokerId) {
+          strUrl = strUrl + '/' + this.userId
+        }
         let qrcode = await generateQrcode(300, window.location.href, 0, img, 10, 'canvas')
         ctx.drawImage(img, 0, 0, min, min, 0, 192, 1120, 1120)
         ctx.fillStyle = '#fff'
