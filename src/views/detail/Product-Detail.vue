@@ -249,6 +249,15 @@ export default {
     this.tab = 2
   },
   mounted () {
+    if (this.agentUser && this.brokerId !== this.userId) {
+      // 如果当前用户是helper, 但是链接中的helperId不是他的，或者没携带helperId，那就刷新一下
+      if (!this.brokerId) {
+        location.href = location.href + '/' + this.userId
+      } else {
+        location.href = location.href.replace(this.brokerId, this.userId)
+      }
+      return
+    }
     // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
     // 详情页只做存储，具体判断过程在点击立即购买和加入购物车时判断
     sessionStorage.setItem('shareBrokerId', this.brokerId || '')
