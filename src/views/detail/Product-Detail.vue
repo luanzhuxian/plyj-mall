@@ -252,7 +252,7 @@ export default {
     if (this.agentUser && this.brokerId !== this.userId) {
       // 如果当前用户是helper, 但是链接中的helperId不是他的，或者没携带helperId，那就刷新一下
       if (!this.brokerId) {
-        location.href = location.href + '/' + this.userId
+        location.href = `${location.protocol}//${location.host}/${this.mallDomain}/detail/lesson/${this.productId}/${this.userId}`
       } else {
         location.href = location.href.replace(this.brokerId, this.userId)
       }

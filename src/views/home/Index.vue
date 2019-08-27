@@ -62,7 +62,7 @@
         <pl-svg @click="pop = ''" name="close3" color="#fff" />
       </div>
     </transition>
-    <WWEC :show.sync="show820" />
+    <!--<WWEC :show.sync="show820" />-->
   </div>
 </template>
 
@@ -74,13 +74,13 @@ import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
-import WWEC from '../../components/WWEC.vue'
+// import WWEC from '../../components/WWEC.vue'
 export default {
   name: 'Home',
   components: {
     TemplateA,
-    TemplateB,
-    WWEC
+    TemplateB
+    // WWEC
   },
   data () {
     return {
