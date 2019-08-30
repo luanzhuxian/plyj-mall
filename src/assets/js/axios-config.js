@@ -2,11 +2,11 @@ import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
 import { REFRESH_TOKEN } from '../../store/mutation-type'
-class ReponseError extends Error {
+class ResponseError extends Error {
   constructor (message) {
     super(message)
     this.message = message
-    this.name = 'ReponseError'
+    this.name = 'ResponseError'
   }
 }
 axios.defaults.headers = {
@@ -49,7 +49,7 @@ async function response (response) {
         devMessage: data.devMessage || '',
         message: msg || ''
       }
-      return Promise.reject(new ReponseError(JSON.stringify(err, null, 4)))
+      return Promise.reject(new ResponseError(JSON.stringify(err, null, 4)))
     }
     // 刷新token还没失效
     if (!tokenInvalid) {
@@ -92,7 +92,7 @@ function resError (error) {
     router.push({ name: 'NetError' })
     return
   }
-  return Promise.reject(new ReponseError(JSON.stringify({
+  return Promise.reject(new ResponseError(JSON.stringify({
     message: msg
   }, null, 4)))
 }
