@@ -646,6 +646,7 @@ export default {
     await deleteImage([qrcodeKey])
   },
   methods: {
+    // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
     isCommentBtnShow (item) {
       return this.orderStatus === 'FINISHED' &&
       item.assessmentStatus === 0 &&
@@ -664,7 +665,6 @@ export default {
         let s = String(_data.seconds)
         remanent -= 1000
         if (remanent <= 0) {
-          this.suggestionMap[orderStatus] = ''
           clearInterval(this.timer)
           this.suggestionMap.WAIT_PAY = this.suggestionMap.WAIT_RECEIVE = ''
           this.getDetail()
@@ -713,7 +713,6 @@ export default {
           this.studentInfoModels = studentInfoModels || []
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
-          // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['count']
           }, 0);  // eslint-disable-line
@@ -722,47 +721,45 @@ export default {
             mobile: this.shippingAddress.mobile,
             address: this.shippingAddress.agencyAddress
           } = receiverModel)
-          if (this.orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
-            if (orderStatus !== 'WAIT_PAY') {
-              // 生成核销码二维码
-              // 不使用await
-              generateQrcode(300, orderId, 34, null, null, 'blob')
-                .then(async (blob) => {
-                  try {
-                    let { name, url } = await upload(blob)
-                    qrcodeKey = name
-                    this.qrImg = url
-                  } catch (e) {
-                    this.$error('生成二维码失败')
-                  }
-                })
-                .catch(() => {
+          if (orderType !== 'PHYSICAL' && orderStatus !== 'WAIT_PAY' && redeemCodeModels.length > 0) {
+            // 生成核销码二维码
+            // 不使用await
+            generateQrcode(300, orderId, 34, null, null, 'blob')
+              .then(async (blob) => {
+                try {
+                  let { name, url } = await upload(blob)
+                  qrcodeKey = name
+                  this.qrImg = url
+                } catch (e) {
                   this.$error('生成二维码失败')
-                })
-            }
+                }
+              })
+              .catch(() => {
+                this.$error('生成二维码失败')
+              })
           }
 
-          if (result.orderStatus === 'CLOSED') {
+          if (orderStatus === 'CLOSED') {
             this.suggestionMap['CLOSED'] = this.isAllProductRefund ? '退款完成' : '订单取消'
           } else {
             await setVerificationStatus(orderId)
             this.refreshStatus()
           }
 
-          if (result.orderStatus === 'WAIT_PAY') {
+          if (orderStatus === 'WAIT_PAY') {
             this.setTime(result, 'WAIT_PAY')
           }
-          if (result.orderStatus === 'WAIT_RECEIVE') {
-            if (this.orderType === 'PHYSICAL') {
+          if (orderStatus === 'WAIT_RECEIVE') {
+            if (orderType === 'PHYSICAL') {
               this.setTime(result, 'WAIT_RECEIVE')
             } else {
-              let { validityPeriodStart, validityPeriodEnd } = result.productInfoModel.productDetailModels[0]
+              let { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels[0]
               if (validityPeriodStart) {
                 const start = validityPeriodStart.split(' ')[0]
                 const end = validityPeriodEnd.split(' ')[0]
-                this.suggestionMap.WAIT_RECEIVE = start === end
-                  ? `有效期 ${validityPeriodStart.split(' ')[0]}`
-                  : `有效期 ${validityPeriodStart.split(' ')[0]} 至 ${validityPeriodEnd.split(' ')[0]}`
+                this.suggestionMap.WAIT_RECEIVE = (start === end)
+                  ? `有效期 ${start}`
+                  : `有效期 ${start} 至 ${end}`
               } else {
                 this.suggestionMap.WAIT_RECEIVE = '长期有效'
               }
@@ -864,7 +861,7 @@ export default {
           try {
             let { result } = await getVerificationStatus(this.orderId)
             if (result) {
-              this.getDetail(true)
+              this.getDetail()
             }
           } catch (e) {
             clearInterval(this.timer2)
