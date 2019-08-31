@@ -548,7 +548,6 @@ export default {
       invoiceModelList: [],
       studentInfoModels: [],
       redeemCodeModels: [],
-      operationRecordModel: {},
       orderStatusAlias: '',
       shippingAddress: {
         realName: ' ',
@@ -698,7 +697,6 @@ export default {
             productInfoModel,
             tradingInfoModel,
             invoiceModelList,
-            operationRecordModel,
             studentInfoModels,
             orderStatusAlias,
             redeemCodeModels
@@ -712,7 +710,6 @@ export default {
           this.productInfoModel = productInfoModel
           this.tradingInfoModel = tradingInfoModel
           this.invoiceModelList = invoiceModelList
-          this.operationRecordModel = operationRecordModel
           this.studentInfoModels = studentInfoModels || []
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
