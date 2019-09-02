@@ -462,7 +462,7 @@
 </template>
 
 <script>
-import Moment from 'moment'
+import moment from 'moment'
 import TopText from '../../../components/Top-Text.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import ModuleTitle from '../../../components/Module-Title.vue'
@@ -658,7 +658,7 @@ export default {
     // 倒计时
     countDown (remanent, orderStatus) {
       this.timer = setInterval(() => {
-        let { _data } = Moment.duration(remanent)
+        let { _data } = moment.duration(remanent)
         let d = String(_data.days)
         let h = String(_data.hours)
         let m = String(_data.minutes)
@@ -677,8 +677,8 @@ export default {
     setTime (result, orderStatus) {
       let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
       let duration = orderStatus === 'WAIT_PAY' ? (24 * 60 * 60 * 1000) : (10 * 24 * 60 * 60 * 1000)
-      let now = Moment((result.currentServerTime)).valueOf() // 服务器时间
-      let startTime = Moment(time).valueOf()
+      let now = moment((result.currentServerTime)).valueOf() // 服务器时间
+      let startTime = moment(time).valueOf()
       if (now - startTime < duration) {
         this.countDown(duration + startTime - now - 2000, orderStatus)
       }
@@ -721,31 +721,21 @@ export default {
             mobile: this.shippingAddress.mobile,
             address: this.shippingAddress.agencyAddress
           } = receiverModel)
-          if (orderType !== 'PHYSICAL' && orderStatus !== 'WAIT_PAY' && redeemCodeModels.length > 0) {
-            // 生成核销码二维码
-            // 不使用await
-            generateQrcode(300, orderId, 34, null, null, 'blob')
-              .then(async (blob) => {
-                try {
-                  let { name, url } = await upload(blob)
-                  qrcodeKey = name
-                  this.qrImg = url
-                } catch (e) {
-                  this.$error('生成二维码失败')
-                }
-              })
-              .catch(() => {
-                this.$error('生成二维码失败')
-              })
+          if (orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
+            if (orderStatus !== 'WAIT_PAY') {
+              // 生成核销码二维码
+              // 不使用await
+              this.generateQrcode(orderId)
+            }
+            if (orderStatus !== 'CLOSED') {
+              await setVerificationStatus(orderId)
+              this.updateQrcode()
+            }
           }
 
           if (orderStatus === 'CLOSED') {
             this.suggestionMap['CLOSED'] = this.isAllProductRefund ? '退款完成' : '订单取消'
-          } else {
-            await setVerificationStatus(orderId)
-            this.refreshStatus()
           }
-
           if (orderStatus === 'WAIT_PAY') {
             this.setTime(result, 'WAIT_PAY')
           }
@@ -770,6 +760,21 @@ export default {
           reject(e)
         }
       })
+    },
+    generateQrcode (orderId) {
+      generateQrcode(300, orderId, 34, null, null, 'blob')
+        .then(async (blob) => {
+          try {
+            let { name, url } = await upload(blob)
+            qrcodeKey = name
+            this.qrImg = url
+          } catch (e) {
+            this.$error('生成二维码失败')
+          }
+        })
+        .catch(() => {
+          this.$error('生成二维码失败')
+        })
     },
     async pay () {
       try {
@@ -854,7 +859,7 @@ export default {
         })
     },
     // 定时器，实时刷新核销状态，如果有核销的话
-    refreshStatus () {
+    updateQrcode () {
       clearInterval(this.timer2)
       if (this.redeemCodeModels.some(item => item.statusCode === 0)) {
         this.timer2 = setInterval(async () => {
