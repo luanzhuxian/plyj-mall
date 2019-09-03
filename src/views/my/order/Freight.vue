@@ -105,9 +105,6 @@ export default {
     padding: 20px 24px;
     min-height: 100vh;
   }
-  .orderPro {
-    margin-bottom: 30px;
-  }
   .tip {
     font-size: 24px;
     text-align: center;
@@ -165,9 +162,6 @@ export default {
       color: #999;
       line-height: 22px;
     }
-  }
-  .panel-bottom {
-    padding: 34px 32px 48px;
   }
   .timeline {
     background-color: #fff;
