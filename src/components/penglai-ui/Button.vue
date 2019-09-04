@@ -124,6 +124,18 @@ export default {
         background-color: $--primary-color;
       }
     }
+    /* 红色 */
+    &__danger {
+      background-color: #D2524C;
+      color: #fff;
+      &:active {
+        background-color: $--warning-color-active;
+      }
+      &.plain {
+        color: #D2524C;
+        background-color: transparent;
+        border: 1px solid #D2524C;      }
+    }
     &__text {
       background-color: transparent;
       font-size: 26px;

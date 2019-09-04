@@ -54,7 +54,7 @@ export default [
     }
   },
   {
-    path: '/my/order/refund-list/:status?',
+    path: '/my/orders/refund-list/:status?',
     name: 'RefundList',
     component: () => import('../views/my/order/Refund-List.vue'),
     props: true,
@@ -72,7 +72,7 @@ export default [
     }
   },
   {
-    path: '/my/order/freight/:orderId',
+    path: '/my/orders/freight/:orderId',
     name: 'Freight',
     component: () => import('../views/my/order/Freight.vue'),
     props: true,
@@ -81,12 +81,39 @@ export default [
     }
   },
   {
-    path: '/my/order/complete/:orderId',
+    path: '/my/orders/complete/:orderId',
     name: 'OrderComplete',
     component: () => import('../views/my/order/Order-Complete.vue'),
     props: true,
     meta: {
       title: '交易完成'
+    }
+  },
+  {
+    path: '/my/helper',
+    name: 'HelperManagement',
+    component: () => import('../views/my/helper/Index.vue'),
+    props: true,
+    meta: {
+      title: 'helper管理'
+    }
+  },
+  {
+    path: '/my/helper/list/:status?',
+    name: 'HelperList',
+    component: () => import('../views/my/helper/Helper-List.vue'),
+    props: true,
+    meta: {
+      title: 'helper列表'
+    }
+  },
+  {
+    path: '/my/helper/detail/:id',
+    name: 'HelperDetail',
+    component: () => import('../views/my/helper/Helper-Detail.vue'),
+    props: true,
+    meta: {
+      title: 'helper详情'
     }
   }
 ]
