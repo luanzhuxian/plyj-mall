@@ -64,11 +64,19 @@ export default [
     }
   },
   {
-    path: '/my/rebate/list',
-    name: 'RebateList',
-    component: () => import('../views/my/coffers/Rebate-List.vue'),
+    path: '/my/shop/poster',
+    name: 'ShopPoster',
+    component: () => import('../views/my/shop/Shop-Poster.vue'),
     meta: {
-      title: '润笔明细'
+      title: '店铺海报'
+    }
+  },
+  {
+    path: '/my/shop/qrcode',
+    name: 'ShopQrcode',
+    component: () => import('../views/my/shop/Shop-Qrcode.vue'),
+    meta: {
+      title: '店铺二维码'
     }
   }
 ]

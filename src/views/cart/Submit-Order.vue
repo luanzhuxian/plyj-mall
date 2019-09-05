@@ -17,8 +17,8 @@
     >
       <div :class="$style.orderItemBox">
         <OrderItem
-          v-for="item of physicalProducts"
-          :key="item.skuCode1"
+          v-for="(item, index) of physicalProducts"
+          :key="index"
           :img="item.productImg"
           :name="item.productName"
           :count="item.count"
@@ -90,13 +90,13 @@
     <!-- *************************虚拟************************* -->
     <template v-if="virtualProducts.length > 0">
       <div
-        v-for="item of virtualProducts"
+        v-for="(item, index) of virtualProducts"
         :key="item.skuCode1"
         :class="$style.productBox"
       >
         <div :class="$style.orderItemBox">
           <OrderItem
-            :key="item.skuCode1"
+            :key="index"
             :img="item.productImg"
             :name="item.productName"
             :count="item.count"
@@ -190,13 +190,13 @@
     <!-- *************************课程************************* -->
     <template v-if="lessonList.length > 0">
       <div
-        v-for="item of lessonList"
-        :key="item.skuCode1"
+        v-for="(item, index) of lessonList"
+        :key="index"
         :class="$style.productBox"
       >
         <div :class="$style.orderItemBox">
           <OrderItem
-            :key="item.skuCode1"
+            :key="index"
             :img="item.productImg"
             :name="item.productName"
             :count="item.count"
@@ -389,6 +389,7 @@
         </div>
       </div>
     </pl-popup>
+
     <pl-popup
       :show.sync="showContactPopup"
       :close-on-click-modal="false"
@@ -491,24 +492,6 @@ export default {
       },
       lessonErrorId: '',
       lessonErrorTip: ''
-    }
-  },
-  props: {
-    productId: {
-      type: String,
-      default: ''
-    },
-    count: {
-      type: [Number, String],
-      default: 1
-    },
-    optionCode: {
-      type: String,
-      default: ''
-    },
-    brokerId: {
-      type: String,
-      default: ''
     }
   },
   computed: {

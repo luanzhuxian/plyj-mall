@@ -109,6 +109,23 @@ export function throttle (fn, delay) {
 }
 
 /**
+ * 防抖
+ * @param fn {Function} 需要包装的事件回调
+ * @param delay {Number} 时间间隔的阈值
+ * @returns {Function}
+ */
+export function debounce (fn, delay, ...args) {
+  let timer
+  return function () {
+    let context = this
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn.apply(context, args)
+    }, delay)
+  }
+}
+
+/**
  * 重置表单
  * @param form {Object} 表单
  * @param def {Object} 默认的属性值

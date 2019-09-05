@@ -132,6 +132,21 @@
         <span :class="$style.tipCircle" />
         <span>成为Helper，第一桶金从这里开始>></span>
       </router-link>
+      <!-- helper -->
+      <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow">
+        <router-link :to="{ name: 'HelperManagement' }">
+          <pl-svg name="helper-management" />
+        </router-link>
+        <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
+          <pl-svg name="helper-invatation" />
+        </router-link>
+        <router-link :to="{ name: 'ShopPoster'}">
+          <pl-svg name="helper-poster" />
+        </router-link>
+        <router-link :to="{ name: 'ShopQrcode'}">
+          <pl-svg name="helper-qrcode" />
+        </router-link>
+      </div>
       <you-like :class="$style.recommend" :is-my="true" />
     </div>
     <modal
@@ -210,6 +225,12 @@ export default {
     isApplied () {
       return this.applyStatus === 'AWAIT' ||
         this.applyStatus === 'REJECT'
+    },
+    // 是否有权限看到helper模块
+    isHelperModuleShow () {
+      return this.roleCode === 'ENTERPRISE_ADMIN' ||
+        this.roleCode === 'ADMIN' ||
+        this.roleCode === 'EMPLOYEE'
     }
   },
   async activated () {
@@ -514,6 +535,17 @@ export default {
           line-height: 34px;
         }
       }
+    }
+  }
+
+  // helper
+  .helper {
+    padding: 32px 25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    svg {
+      height: 114px;
     }
   }
   /* 订单 ends */

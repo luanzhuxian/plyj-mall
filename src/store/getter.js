@@ -34,6 +34,7 @@ export default {
   address: state => state.mallInfo.address,
   mallDomain: state => state.mallInfo.mallDomain,
   mallName: state => state.mallInfo.mallName,
+  mallUrl: state => state.mallInfo.mallUrl,
   mallDesc: state => state.mallInfo.mallDesc,
   logoUrl: state => state.mallInfo.logoUrl,
   mallStatus: state => state.mallInfo.status,
