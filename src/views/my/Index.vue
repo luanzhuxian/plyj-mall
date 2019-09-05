@@ -140,10 +140,10 @@
         <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
           <pl-svg name="helper-invatation" />
         </router-link>
-        <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
+        <router-link :to="{ name: 'ShopPoster'}">
           <pl-svg name="helper-poster" />
         </router-link>
-        <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
+        <router-link :to="{ name: 'ShopQrcode'}">
           <pl-svg name="helper-qrcode" />
         </router-link>
       </div>

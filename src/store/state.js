@@ -38,6 +38,7 @@ export default {
     mallDesc: '',
     mallDomain: '',
     mallName: '',
+    mallUrl: '',
     sequenceNbr: '',
     supportPhone: ''
   },
