@@ -60,6 +60,7 @@
         v-if="list.length === 0 && !pending"
       >
         <pl-svg
+          v-if="!noIcon"
           :class="$style.noContentIcon"
           :name="icon"
         />
@@ -129,7 +130,8 @@ export default {
     icon: {
       type: String,
       default: 'no-content'
-    }
+    },
+    noIcon: Boolean
   },
   computed: {
     pullLoading: function () {

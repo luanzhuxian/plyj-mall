@@ -1,7 +1,7 @@
 /* eslint-disable */
 var icon = require('vue-svgicon')
 icon.register({
-  'base-theme/helper-apply-pass': {
+  'base-theme/helper-apply-success': {
     width: 79.684,
     height: 68.088,
     viewBox: '0 0 79.684 68.088',

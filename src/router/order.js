@@ -99,9 +99,18 @@ export default [
     }
   },
   {
-    path: '/my/helper/list/:status?',
+    path: '/my/helper/list',
     name: 'HelperList',
     component: () => import('../views/my/helper/Helper-List.vue'),
+    props: true,
+    meta: {
+      title: 'helper列表'
+    }
+  },
+  {
+    path: '/my/helper/list-apply/:status?',
+    name: 'HelperListApply',
+    component: () => import('../views/my/helper/Helper-List-Apply.vue'),
     props: true,
     meta: {
       title: 'helper列表'

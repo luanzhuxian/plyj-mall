@@ -133,7 +133,7 @@
         <span>成为Helper，第一桶金从这里开始>></span>
       </router-link>
       <!-- helper -->
-      <div :class="[$style.panel, $style.helper]">
+      <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow">
         <router-link :to="{ name: 'HelperManagement' }">
           <pl-svg name="helper-management" />
         </router-link>
@@ -225,6 +225,12 @@ export default {
     isApplied () {
       return this.applyStatus === 'AWAIT' ||
         this.applyStatus === 'REJECT'
+    },
+    // 是否有权限看到helper模块
+    isHelperModuleShow () {
+      return this.roleCode === 'ENTERPRISE_ADMIN' ||
+        this.roleCode === 'ADMIN' ||
+        this.roleCode === 'EMPLOYEE'
     }
   },
   async activated () {
