@@ -71,6 +71,10 @@
       <form :class="$style.popForm">
         <div class="fz-26 gray-3">预约后您的私人顾问将会电话联系您</div>
         <label>
+          <input v-model="appointmentname" type="text" placeholder="请输入预约姓名">
+          <pl-svg v-show="appointmentname" @click="appointmentname = ''" :class="$style.clean" name="close2" color="#ccc" />
+        </label>
+        <label>
           <input v-model="appointmentMobile" type="text" placeholder="请输入预约手机">
           <pl-svg v-show="appointmentMobile" @click="appointmentMobile = ''" :class="$style.clean" name="close2" color="#ccc" />
         </label>
@@ -91,7 +95,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { yuyue } from '../../../apis/appointment'
-import { isPhone } from '../../../assets/js/validate'
+import { isPhone, isName } from '../../../assets/js/validate'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   name: 'AppointmentGift',
@@ -103,6 +107,7 @@ export default {
     return {
       showPop: false,
       appointmentMobile: '',
+      appointmentname: '',
       swiperOptionBanner: {
         direction: 'vertical',
         speed: 1000,
@@ -188,7 +193,11 @@ export default {
         if (!isPhone(this.appointmentMobile)) {
           return this.$error('请输入正确的手机号')
         }
+        if (!isName(this.appointmentname)) {
+          return this.$error('请输入正确的姓名')
+        }
         await yuyue({
+          reservationName: this.appointmentname,
           mobile: this.appointmentMobile || this.mobile || '',
           openId: this.openId
         })
