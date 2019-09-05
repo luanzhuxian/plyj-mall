@@ -11,3 +11,6 @@ export const getHelperDetail = params => axios.get('/apis/v1/systemctl/memberMan
 
 // 修改Helper申请审核状态 status PASS: 通过, REJECT: 驳回
 export const changeHelperApplication = (sequenceNbr, status) => axios.put(`/apis/v1/agent/user/info/audit/${sequenceNbr}/${status}`)
+
+// 获取Helper账号列表
+export const getHelperRoleList = params => axios.get('/apis/v1/systemctl/account/roleUser/list', { params })

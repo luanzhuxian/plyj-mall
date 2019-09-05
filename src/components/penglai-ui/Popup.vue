@@ -2,6 +2,7 @@
   <div
     v-show="showPopup"
     class="pl-popup"
+    :class="{ [`pl-popup__${position}`]: true }"
     @touchmove.stop.prevent="() => {}"
   >
     <div
@@ -45,6 +46,10 @@
 export default {
   name: 'PlPopup',
   props: {
+    position: {
+      type: String,
+      default: 'bottom'
+    },
     title: {
       type: String,
       default: ''
@@ -113,6 +118,20 @@ export default {
   height: 100%;
   z-index: 2002;
 
+  &__bottom {
+    .pl-popup__box {
+      bottom: 0;
+      transform: translateY(100%);
+    }
+  }
+
+  &__top {
+    .pl-popup__box {
+      top: 0;
+      transform: translateY(-100%);
+    }
+  }
+
   &__mask {
     position: absolute;
     width: 100%;
@@ -129,8 +148,6 @@ export default {
   &__box {
     position: absolute;
     left: 0;
-    bottom: 0;
-    transform: translateY(100%);
     width: 100%;
     // max-height: 70%;
     background-color: #fff;

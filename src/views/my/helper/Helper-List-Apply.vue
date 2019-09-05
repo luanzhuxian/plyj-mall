@@ -39,7 +39,7 @@
             <helper-item
               :avatar="item.avatarUrl + '?x-oss-process=style/thum'"
               :name="item.realName"
-              :phone="rebulidMobile(item.mobile)"
+              :phone="item.mobile | formatAccount "
               :option="item.applyTime"
               :id="item.mallUserId"
             >
@@ -147,6 +147,7 @@ export default {
     this.form.ownnerUserId = this.userId
     this.form.auditStatus = this.status
     this.form.realName = ''
+    this.form.current = 1
     this.$refresh()
   },
   methods: {
@@ -186,9 +187,6 @@ export default {
       } catch (error) {
         throw error
       }
-    },
-    rebulidMobile (str) {
-      return str.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
     }
   }
 }
@@ -303,9 +301,9 @@ export default {
     color: #999999;
     &.active {
       color: #000000;
-      &:after {
-        // background-color: #FE7700;
-      }
+      // &:after {
+      //   background-color: #FE7700;
+      // }
     }
   }
 </style>

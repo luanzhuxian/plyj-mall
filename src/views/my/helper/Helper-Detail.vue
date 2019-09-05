@@ -10,7 +10,7 @@
         <img :src="avatarUrl + '?x-oss-process=style/thum'" alt="">
       </div>
       <div :class="$style.name">{{ realName }}</div>
-      <div :class="$style.phone">{{ mobile }}</div>
+      <div :class="$style.phone">{{ mobile | formatAccount }}</div>
       <div :class="$style.option">{{ `所属账号：${ownnerName}(${ownnerRoleName})` }}</div>
     </div>
     <ul :class="$style.middle">
@@ -66,6 +66,11 @@
 import { mapGetters } from 'vuex'
 import { getHelperDetail } from '../../../apis/helper-manager'
 
+function format (str) {
+  if (!str) return ''
+  return str.replace(/^(.{3})(?:\d+)(.{1})$/, '$1**************$2')
+}
+
 export default {
   name: 'HelperDetail',
   props: {
@@ -92,10 +97,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['roleCode', 'roleMap'])
+    ...mapGetters(['roleCode'])
   },
   activated () {
-    console.log(this.roleMap)
     this.getHelperDetail()
   },
   methods: {
@@ -106,10 +110,10 @@ export default {
       }
       const { result } = await getHelperDetail(params)
       this.avatarUrl = result.avatarUrl
-      this.idCard = result.idCard
+      this.idCard = format(result.idCard)
       this.realName = result.realName
       this.nickName = result.nickName
-      this.mobile = this.rebulidMobile(result.mobile)
+      this.mobile = result.mobile
       this.birth = result.birth
       this.age = result.age
       this.address = result.address
@@ -118,10 +122,6 @@ export default {
       this.ownnerRoleName = result.ownnerRoleName
       this.auditStatus = result.auditStatus
       this.operationLogs = result.operationLogs
-      console.log(result)
-    },
-    rebulidMobile (str) {
-      return str.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
     }
   }
 }

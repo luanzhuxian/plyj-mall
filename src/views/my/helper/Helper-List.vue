@@ -1,12 +1,32 @@
 <template>
-  <div :class="$style.helperList" class="helper-list">
-    <header :class="$style.header">
-      <div :class="$style.search">
-        <div :class="$style.left">
-          <pl-svg name="triple-line" />
-          <span>已发展Helper（150）</span>
+  <div :class="$style.helperList" class="helper-list" :style="{ '--padding': !isAdmin ? '390px' : '260px' }">
+    <div :class="$style.dropDown" v-if="!isAdmin">
+      <span @click="isPopupShow = true">
+        {{ `全部（${count}）` }}
+        <pl-svg name="triangle-down" />
+      </span>
+    </div>
+    <header :class="$style.header" :style="{ '--top': !isAdmin ? '176px' : '0' }">
+      <div :class="$style.bar" v-if="!isAdmin">
+        <div :class="$style.searchWrapper">
+          <div :class="$style.inputWrapper">
+            <input
+              v-model.trim="form.realName"
+              type="search"
+              placeholder="请输入helper姓名/手机号"
+              @input="onInput"
+              @search="onSearch"
+            >
+            <pl-svg name="search" />
+          </div>
         </div>
-        <div :class="$style.right">
+      </div>
+      <div :class="$style.barInline" v-else>
+        <div :class="$style.count">
+          <pl-svg name="triple-line" />
+          <span>{{ `已发展Helper（${count}）` }}</span>
+        </div>
+        <div :class="$style.inputWrapper">
           <input
             v-model.trim="form.realName"
             type="search"
@@ -45,7 +65,7 @@
             <helper-item
               :avatar="item.avatarUrl + '?x-oss-process=style/thum'"
               :name="item.realName"
-              :phone="rebulidMobile(item.mobile)"
+              :phone="item.mobile | formatAccount "
               :option="item.lastestLogonTime"
               :id="item.mallUserId"
             >
@@ -57,6 +77,32 @@
         </template>
       </load-more>
     </div>
+    <pl-popup
+      ref="popup"
+      :show.sync="isPopupShow"
+      position="top"
+    >
+      <template>
+        <radio-group-component
+          :class="$style.popupList"
+          v-model="form.ownnerUserId"
+          @change="onPopupClick"
+        >
+          <radio-component :class="$style.popupListItem" :name="userId">
+            全部
+          </radio-component>
+          <radio-component
+            :class="$style.popupListItem"
+            v-for="(item, index) of roleList"
+            :key="index"
+            :name="item.userId"
+          >
+            <span :class="$style.name">{{ item.realName }}</span>
+            <span :class="$style.role">{{ `（${item.roleName}）` }}</span>
+          </radio-component>
+        </radio-group-component>
+      </template>
+    </pl-popup>
   </div>
 </template>
 
@@ -64,7 +110,7 @@
 import LoadMore from '../../../components/Load-More.vue'
 import HelperItem from '../../../components/item/Helper-Item.vue'
 import { mapGetters } from 'vuex'
-import { getHelperList } from '../../../apis/helper-manager'
+import { getHelperList, getHelperRoleList } from '../../../apis/helper-manager'
 import { debounce } from '../../../assets/js/util'
 
 const tabs = [{
@@ -91,6 +137,7 @@ export default {
     return {
       tabs,
       list: [],
+      roleList: [],
       form: {
         realName: '',
         ownnerUserId: '',
@@ -101,7 +148,9 @@ export default {
       },
       getHelperList,
       $refresh: null,
-      loading: false
+      loading: false,
+      isPopupShow: false,
+      count: 0
     }
   },
   computed: {
@@ -118,7 +167,11 @@ export default {
     this.form.ownnerUserId = this.isAdmin ? '' : this.userId
     this.form.period = this.status
     this.form.realName = ''
+    this.form.current = 1
+    this.isPopupShow = false
+    this.count = this.$route.query.count
     this.$refresh()
+    !this.isAdmin && this.getHelperRoleList()
   },
   methods: {
     tabChange (item) {
@@ -138,8 +191,20 @@ export default {
     onInput: debounce(function () {
       this.$refresh()
     }, 200),
-    rebulidMobile (str) {
-      return str.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+    onPopupClick (id) {
+      this.isPopupShow = false
+      if (id) {
+        this.$refresh()
+      }
+      console.log(id)
+    },
+    async getHelperRoleList () {
+      const params = {
+        current: 1,
+        size: 99
+      }
+      const { result } = await getHelperRoleList(params)
+      this.roleList = result.records
     }
   }
 }
@@ -149,22 +214,52 @@ export default {
   .helper-list {
     box-sizing: border-box;
     background: #ffffff;
-    padding-top: 180px;
+    padding-top: var(--padding);
     min-height: 100vh;
   }
-  .header {
+  .drop-down {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 2999;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 88px;
+    line-height: 88px;
+    font-size: 28px;
+    font-family: PingFang SC;
+    font-weight: 600;
+    color: #000000;
+    border-bottom: 2px solid #E7E7E7;
+    svg {
+      height: 24px;
+      path {
+        fill: #333333;
+      }
+    }
   }
-  .search {
-    padding: 28px;
+  .header {
+    position: fixed;
+    top: var(--top);
+    left: 0;
+    right: 0;
+    z-index: 1999;
+    background: #ffffff;
+  }
+  .bar {
+    .search-wrapper {
+      padding: 16px 28px 0;
+    }
+  }
+  .bar-inline {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .left {
+    padding: 28px 28px 0;
+    .count {
       font-size: 28px;
       font-family: PingFang SC;
       font-weight: 600;
@@ -175,30 +270,33 @@ export default {
         margin-right: 10px;
       }
     }
-    .right {
-      box-sizing: border-box;
+    .input-wrapper {
+      width: 362px !important;
+      flex: none;
+    }
+  }
+  .input-wrapper {
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 56px;
+    background: #ffffff;;
+    border: 1px solid #cccccc;
+    border-radius: 110px;
+    input {
       flex: 1;
-      display: flex;
-      align-items: center;
-      padding: 0 24px;
-      width: 362px;
-      height: 56px;
-      background: #ffffff;;
-      border: 1px solid #cccccc;
-      border-radius: 110px;
-      input {
-        flex: 1;
-        font-size: 24px;
-        line-height: 34px;
-        &::-webkit-input-placeholder {
-          color: #cccccc;
-        }
+      font-size: 24px;
+      line-height: 34px;
+      &::-webkit-input-placeholder {
+        color: #cccccc;
       }
-      svg {
-        width: 26px;
-        path {
-          fill: #cccccc;
-        }
+    }
+    svg {
+      width: 26px;
+      path {
+        fill: #cccccc;
       }
     }
   }
@@ -217,6 +315,21 @@ export default {
     background: #F7F7F7;
     border-radius: 8px;
   }
+  .popup-list {
+    padding-top: 88px;
+  }
+  .popup-list-item {
+    padding: 0 28px;
+    height: 84px;
+    line-height: 84px;
+    border-bottom: 2px solid #E7E7E7;
+    font-size: 28px;
+    font-family: Microsoft YaHei;
+    color: #000000;
+    .role {
+      color: #999999;
+    }
+  }
 </style>
 <style lang="scss" scoped>
   /deep/.pl-tab > .pl-tab__pane {
@@ -228,9 +341,9 @@ export default {
     color: #999999;
     &.active {
       color: #000000;
-      &:after {
-        // background-color: #FE7700;
-      }
+      // &:after {
+      //   background-color: #FE7700;
+      // }
     }
   }
 </style>

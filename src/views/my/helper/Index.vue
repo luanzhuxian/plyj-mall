@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.helperManagement">
     <div :class="$style.top">
-      <router-link :class="[$style.panel, $style.left]" :to="{ name: 'HelperList' }">
+      <router-link :class="[$style.panel, $style.left]" :to="{ name: 'HelperList', query: { count } }">
         <div :class="$style.title">
           <span v-if="isAdmin">全部Helper</span>
           <span v-else>我管理的Helper</span>
@@ -19,7 +19,7 @@
         </div>
       </router-link>
       <div :class="[$style.panel, $style.right]">
-        <router-link :class="[$style.panel, $style.left]" :to="{ name: 'HelperList' }">
+        <router-link :class="[$style.panel, $style.left]" :to="{ name: 'HelperList', query: { count } }">
           <div :class="$style.title">今日新增Helper</div>
           <div :class="$style.number" v-text="today" />
         </router-link>
@@ -164,6 +164,11 @@ export default {
       height: 274px;
       background: url("../../../assets/images/my/bg-money.png") no-repeat center center;
       background-size: 100%;
+      .left {
+        > .number::after {
+          content: '位';
+        }
+      }
       .number {
         margin-top: 12px;
         margin-bottom: 44px;;
@@ -173,16 +178,11 @@ export default {
         line-height: 28px;
         color: #F2B036;
         &::after {
-          content: '位';
+          content: '元';
           font-size: 20px;
           line-height: 28px;
           color: #999999;
           margin-left: 8px;
-        }
-        &:nth-last-of-type(1) {
-          &::after {
-            content: '元';
-          }
         }
       }
     }

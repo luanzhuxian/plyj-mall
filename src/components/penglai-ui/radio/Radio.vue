@@ -20,14 +20,14 @@
         name="icon"
       />
     </div>
-    <span
+    <div
       v-if="$slots.default"
       class="radio__label"
       :class="{ ['radio__label--' + labelPosition]: labelPosition, 'radio__icon--disabled': isDisabled }"
       @click="onClickLabel"
     >
       <slot />
-    </span>
+    </div>
   </div>
 </template>
 
@@ -158,6 +158,7 @@ export default {
   }
 
   &__label {
+    flex: 1;
     margin-left: 24px;
     color: #333;
 
