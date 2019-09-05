@@ -311,7 +311,7 @@ export default {
         }
       })
     },
-    // 根据id查找规格id
+    // 算金额
     computeMoney () {
       let total = 0
       for (let item of this.checkedList) {

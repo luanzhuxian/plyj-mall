@@ -214,6 +214,9 @@ export default {
   computed: {
     ...mapGetters(['mobile', 'realName', 'userName'])
   },
+  created () {
+    location.href = 'http://admall.youpenglai.com/h5/register-login'
+  },
   async activated () {
     this.$refs.swiper.swiper.autoplay.start()
     this.form.mobile = this.mobile || ''
