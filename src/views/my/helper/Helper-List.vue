@@ -228,12 +228,16 @@ export default {
       this.$refresh()
     },
     async getHelperRoleList () {
-      const params = {
-        current: 1,
-        size: 999
+      try {
+        const params = {
+          current: 1,
+          size: 999
+        }
+        const { result } = await getHelperRoleList(params)
+        this.roleList = result.records
+      } catch (error) {
+        throw error
       }
-      const { result } = await getHelperRoleList(params)
-      this.roleList = result.records
     }
   }
 }

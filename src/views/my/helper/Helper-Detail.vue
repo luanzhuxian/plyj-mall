@@ -104,24 +104,28 @@ export default {
   },
   methods: {
     async getHelperDetail () {
-      const params = {
-        mallUserId: this.id,
-        roleCode: 'HELPER'
+      try {
+        const params = {
+          mallUserId: this.id,
+          roleCode: 'HELPER'
+        }
+        const { result } = await getHelperDetail(params)
+        this.avatarUrl = result.avatarUrl
+        this.idCard = format(result.idCard)
+        this.realName = result.realName
+        this.nickName = result.nickName
+        this.mobile = result.mobile
+        this.birth = result.birth
+        this.age = result.age
+        this.address = result.address
+        this.createTime = result.createTime
+        this.ownnerName = result.ownnerName
+        this.ownnerRoleName = result.ownnerRoleName
+        this.auditStatus = result.auditStatus
+        this.operationLogs = result.operationLogs
+      } catch (error) {
+        throw error
       }
-      const { result } = await getHelperDetail(params)
-      this.avatarUrl = result.avatarUrl
-      this.idCard = format(result.idCard)
-      this.realName = result.realName
-      this.nickName = result.nickName
-      this.mobile = result.mobile
-      this.birth = result.birth
-      this.age = result.age
-      this.address = result.address
-      this.createTime = result.createTime
-      this.ownnerName = result.ownnerName
-      this.ownnerRoleName = result.ownnerRoleName
-      this.auditStatus = result.auditStatus
-      this.operationLogs = result.operationLogs
     }
   }
 }
@@ -152,6 +156,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 290px;
   }
   .avatar {
     width: 140px;

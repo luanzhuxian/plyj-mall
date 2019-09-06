@@ -629,7 +629,7 @@ export default {
     try {
       this.loaded = false
       await this.getDetail()
-      this.loaded = true
+      // this.loaded = true
     } catch (e) {
       throw e
     }

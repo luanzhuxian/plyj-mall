@@ -13,7 +13,7 @@
           >
             <pl-svg name="helper-apply" />
           </router-link>
-          <div v-if="!agentUser && isApplied" :class="$style.progress">
+          <div v-if="hasApplied" :class="$style.progress">
             <span
               v-if="applyStatus === 'AWAIT'"
               :class="$style.progressLeft"
@@ -37,7 +37,7 @@
     <div :class="$style.content">
       <!-- 金库 -->
       <router-link
-        v-if="agentUser"
+        v-if="isHelper"
         :class="[$style.panel, $style.finance]"
         :to="{ name: 'Coffers' }"
       >
@@ -216,13 +216,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar', 'userName', 'agentUser', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode']),
+    ...mapGetters(['avatar', 'userName', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode']),
+    isHelper () {
+      return this.roleCode === 'HELPER'
+    },
     isApplyBtnShow () {
-      return this.roleCode === 'VISITOR' ||
-        (!this.agentUser && this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT'))
+      return this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT')
     },
     // 是否申请过helper
-    isApplied () {
+    hasApplied () {
       return this.applyStatus === 'AWAIT' ||
         this.applyStatus === 'REJECT'
     },
@@ -537,8 +539,9 @@ export default {
       }
     }
   }
+  /* 订单 ends */
 
-  // helper
+  /* helper starts */
   .helper {
     padding: 32px 25px;
     display: flex;
@@ -548,7 +551,7 @@ export default {
       height: 114px;
     }
   }
-  /* 订单 ends */
+  /* helper ends */
 
   /* tip starts */
   .tip {
@@ -569,6 +572,63 @@ export default {
     margin-right: 20px;
   }
   /* tip ends */
+
+  /* skeleton start */
+  .skeleton {}
+  .skeleton1 {
+    padding: 32px 25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .item {
+      height: 114px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+    }
+    .text {
+      width: 120px;
+      height: 35px;
+    }
+  }
+
+  // .skeleton2 {
+  //   width: 500px;
+  //   height: 37px;
+  //   margin-top: 14px;
+  // }
+  // .skeleton3 {
+  //   margin-top: 30px;
+  //   background-color: #fff;
+  // }
+  // .skeleton4 {
+  //   margin-top: 30px;
+  //   padding: 24px 28px;
+  //   background-color: #fff;
+  // }
+  // .skeleton4-1 {
+  //   width: 364px;
+  //   height: 32px;
+  //   margin-bottom: 8px;
+  // }
+  // .skeleton4-2 {
+  //   width: 214px;
+  //   height: 32px;
+  //   margin-bottom: 20px;
+  //   &:nth-last-of-type(1) {
+  //     margin-bottom: 0;
+  //   }
+  // }
+  .skeAnimation {
+    @include skeAnimation(#eee)
+  }
+  /* skeleton end */
 
   .recommend {
     margin-top: 32px;

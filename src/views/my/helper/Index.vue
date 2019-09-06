@@ -101,12 +101,16 @@ export default {
   },
   methods: {
     async getData () {
-      const { result } = await getHelperData()
-      this.auditModel = result.auditModel || {}
-      this.auditCount = result.auditHelperCount || 0
-      this.count = result.count || 0
-      this.today = result.todayCount || 0
-      this.currentMonth = result.monthRevenue || 0
+      try {
+        const { result } = await getHelperData()
+        this.auditModel = result.auditModel || {}
+        this.auditCount = result.auditHelperCount || 0
+        this.count = result.count || 0
+        this.today = result.todayCount || 0
+        this.currentMonth = result.monthRevenue || 0
+      } catch (error) {
+        throw error
+      }
     },
     rebulidMobile (str) {
       return str.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
