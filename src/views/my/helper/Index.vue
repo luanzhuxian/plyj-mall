@@ -1,17 +1,14 @@
 <template>
   <div :class="$style.helperManagement">
     <div :class="$style.top">
-      <router-link :class="[$style.panel, $style.left]" :to="{ name: 'HelperList', query: { count } }">
+      <router-link :class="[$style.panel, $style.left]" :to="{ name: 'HelperList', query: { total: count } }">
         <div :class="$style.title">
           <span v-if="isAdmin">全部Helper</span>
           <span v-else>我管理的Helper</span>
         </div>
         <div :class="$style.number" v-text="count" />
         <div :class="$style.progress">
-          <div
-            :class="$style.inner"
-            :style="{ '--progress': progress }"
-          />
+          <div :class="$style.inner" :style="{ '--progress': progress }" />
         </div>
         <div :class="$style.tip">
           <span v-if="isAdmin">管理您的Helper</span>
@@ -19,7 +16,7 @@
         </div>
       </router-link>
       <div :class="[$style.panel, $style.right]">
-        <router-link :class="[$style.panel, $style.left]" :to="{ name: 'HelperList', query: { count } }">
+        <router-link :class="[$style.panel, $style.left]" :to="{ name: 'HelperList', params: { status: 'TODAY' }, query: { total: count } }">
           <div :class="$style.title">今日新增Helper</div>
           <div :class="$style.number" v-text="today" />
         </router-link>
@@ -46,11 +43,13 @@
           :phone="rebulidMobile(auditModel.mobile)"
           :option="auditModel.applyTime"
         >
-          <div :class="$style.right" v-if="isAdmin">
-            <div :class="$style.sub">
-              {{ `所属账号：${auditModel.ownnerName}` }}
+          <template>
+            <div :class="$style.right" v-if="isAdmin">
+              <div :class="$style.sub">
+                {{ `所属账号：${auditModel.ownnerName}` }}
+              </div>
             </div>
-          </div>
+          </template>
         </helper-item>
       </router-link>
     </div>
@@ -105,7 +104,7 @@ export default {
       const { result } = await getHelperData()
       this.auditModel = result.auditModel || {}
       this.auditCount = result.auditHelperCount || 0
-      this.count = result.count || 100
+      this.count = result.count || 0
       this.today = result.todayCount || 0
       this.currentMonth = result.monthRevenue || 0
     },
@@ -201,7 +200,7 @@ export default {
     }
     .inner {
       width: var(--progress);
-      height: 10px;
+      height: 9px;
       background: #F2CF36;
       border-radius: 198px;
       transition: width .5s linear;

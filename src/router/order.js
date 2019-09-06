@@ -99,7 +99,7 @@ export default [
     }
   },
   {
-    path: '/my/helper/list',
+    path: '/my/helper/list/:status?',
     name: 'HelperList',
     component: () => import('../views/my/helper/Helper-List.vue'),
     props: true,

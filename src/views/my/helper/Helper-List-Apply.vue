@@ -21,12 +21,13 @@
     </div>
     <div :class="$style.list">
       <load-more
+        class="load-more"
         ref="loadMore"
         :form="form"
         :loading.sync="loading"
         :request-methods="getHelperList"
-        no-content-tip="没有查到您要的信息~"
-        no-icon
+        icon="no-content-sleep"
+        no-content-tip="暂无信息"
         @refresh="onRefresh"
         @more="onRefresh"
       >
@@ -43,15 +44,17 @@
               :option="item.applyTime"
               :id="item.mallUserId"
             >
-              <div :class="$style.right">
-                <div :class="$style.main">
-                  <span v-text="statusMap[item.auditStatus]" />
-                  <pl-svg name="right" />
+              <template>
+                <div :class="$style.right">
+                  <div :class="$style.main">
+                    <span v-text="statusMap[item.auditStatus]" />
+                    <pl-svg name="right" />
+                  </div>
+                  <div :class="$style.sub" v-if="isAdmin">
+                    {{ `所属账号：${item.ownnerName}` }}
+                  </div>
                 </div>
-                <div :class="$style.sub" v-if="isAdmin">
-                  {{ `所属账号：${item.ownnerName}` }}
-                </div>
-              </div>
+              </template>
             </helper-item>
             <div :class="$style.listItemButtons" v-if="item.auditStatus === 'AWAIT'">
               <pl-button
@@ -72,6 +75,11 @@
             <div :class="$style.listItemFooter" v-if="item.auditStatus === 'REJECT'">
               <div :class="$style.reason">{{ `驳回理由：${item.agentWriteBack || '无'}` }}</div>
             </div>
+          </div>
+        </template>
+        <template slot="icon">
+          <div :class="$style.noContent">
+            <pl-svg name="no-content-sleep" />
           </div>
         </template>
       </load-more>
@@ -297,6 +305,11 @@ export default {
       margin-left: 40px;
     }
   }
+  .no-content {
+    svg {
+      width: 150px;
+    }
+  }
 </style>
 <style lang="scss" scoped>
   /deep/.pl-tab > .pl-tab__pane {
@@ -313,4 +326,5 @@ export default {
       // }
     }
   }
+  // /deep/.load-more >
 </style>

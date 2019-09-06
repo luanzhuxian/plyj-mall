@@ -60,10 +60,11 @@
         v-if="list.length === 0 && !pending"
       >
         <pl-svg
-          v-if="!noIcon"
+          v-if="!noIcon && !$slots.icon"
           :class="$style.noContentIcon"
           :name="icon"
         />
+        <slot v-else name="icon" />
         <p
           :class="$style.noContentTip"
           v-text="noContentTip"

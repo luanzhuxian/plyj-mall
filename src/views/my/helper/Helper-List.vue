@@ -2,7 +2,7 @@
   <div :class="$style.helperList" class="helper-list" :style="{ '--padding': isAdmin ? '30.66vw' : '20.2vw' }">
     <div :class="$style.dropDown" v-if="isAdmin">
       <span @click="isPopupShow = true">
-        {{ `全部（${count}）` }}
+        {{ `${owner}（${count}）` }}
         <pl-svg name="triangle-down" />
       </span>
     </div>
@@ -24,7 +24,7 @@
       <div :class="$style.barInline" v-else>
         <div :class="$style.count">
           <pl-svg name="triple-line" />
-          <span>{{ `已发展Helper（${count}）` }}</span>
+          <span>{{ `已发展Helper（${total}）` }}</span>
         </div>
         <div :class="$style.inputWrapper">
           <input
@@ -47,12 +47,13 @@
     </header>
     <div :class="$style.list">
       <load-more
+        class="load-more"
         ref="loadMore"
         :form="form"
         :loading.sync="loading"
         :request-methods="getHelperList"
-        no-content-tip="没有查到您要的信息~"
-        no-icon
+        icon="no-content-sleep"
+        no-content-tip="暂无信息"
         @refresh="onRefresh"
         @more="onRefresh"
       >
@@ -69,10 +70,17 @@
               :option="item.lastestLogonTime"
               :id="item.mallUserId"
             >
-              <a :href="`tel: ${item.mobile}`" @click.stop="()=>{}">
-                <pl-svg :class="$style.icon" name="phone-blue" />
-              </a>
+              <template>
+                <a :href="`tel: ${item.mobile}`" @click.stop="()=>{}">
+                  <pl-svg :class="$style.icon" name="phone-blue" />
+                </a>
+              </template>
             </helper-item>
+          </div>
+        </template>
+        <template slot="icon">
+          <div :class="$style.noContent">
+            <pl-svg name="no-content-sleep" />
           </div>
         </template>
       </load-more>
@@ -89,7 +97,7 @@
           @change="onRadioChange"
         >
           <radio-component :class="$style.popupListItem" :name="''">
-            全部
+            所有Helper
           </radio-component>
           <radio-component
             :class="$style.popupListItem"
@@ -114,6 +122,9 @@ import { getHelperList, getHelperRoleList } from '../../../apis/helper-manager'
 import { debounce } from '../../../assets/js/util'
 
 const tabs = [{
+  name: '全部',
+  id: ''
+}, {
   name: '今日新增',
   id: 'TODAY'
 }, {
@@ -130,7 +141,7 @@ export default {
   props: {
     status: {
       type: String,
-      default: 'TODAY'
+      default: ''
     }
   },
   data () {
@@ -150,7 +161,7 @@ export default {
       $refresh: null,
       loading: false,
       isPopupShow: false,
-      count: 0
+      total: 0
     }
   },
   computed: {
@@ -158,6 +169,20 @@ export default {
     // 是否有权限看到helper模块
     isAdmin () {
       return this.roleCode === 'ENTERPRISE_ADMIN' || this.roleCode === 'ADMIN'
+    },
+    owner () {
+      const { ownnerUserId } = this.form
+      return ownnerUserId === ''
+        ? '所有Helper'
+        : this.roleList.find(item => item.userId === ownnerUserId).realName
+    },
+    count () {
+      const { ownnerUserId } = this.form
+      return !this.isAdmin
+        ? 0
+        : ownnerUserId === ''
+          ? this.$route.query.total
+          : this.roleList.find(item => item.userId === ownnerUserId).helperCount
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -176,14 +201,14 @@ export default {
     this.form.realName = ''
     this.form.current = 1
     this.isPopupShow = false
-    this.count = this.$route.query.count
+    this.total = this.$route.query.total
     this.$refresh()
     this.isAdmin && this.getHelperRoleList()
   },
   methods: {
     tabChange (item) {
       this.$nextTick(() => {
-        this.$router.replace({ name: 'HelperList', params: { status: item.id || 'TODAY' } })
+        this.$router.replace({ name: 'HelperList', params: { status: item.id || '' }, query: { total: this.count } })
         this.$refresh()
       })
     },
@@ -199,14 +224,13 @@ export default {
       this.$refresh()
     }, 200),
     onRadioChange (id) {
-      console.log(id)
       this.isPopupShow = false
       this.$refresh()
     },
     async getHelperRoleList () {
       const params = {
         current: 1,
-        size: 99
+        size: 999
       }
       const { result } = await getHelperRoleList(params)
       this.roleList = result.records
@@ -306,7 +330,7 @@ export default {
     }
   }
   .tab-bar {
-    padding: 0 174px;
+    padding: 0 72px;
   }
   .list {
     padding: 8px 28px;
@@ -333,6 +357,11 @@ export default {
     color: #000000;
     .role {
       color: #999999;
+    }
+  }
+  .no-content {
+    svg {
+      width: 150px;
     }
   }
 </style>
