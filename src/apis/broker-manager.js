@@ -13,6 +13,15 @@ export function agentUserInfoAuditPage ({ current, size }) {
 export const agentUserInfoAudit = () => {
   return axios.get(`/apis/v1/agent/user/info/audit`)
 }
+
+export const getAduitNotice = () => {
+  return axios.get(`/apis/v1/agent/user/info/audit/notice`)
+}
+
+export const updateNoticeStatus = () => {
+  return axios.put(`/apis/v1/agent/user/info/audit/updateNoticeStatus`)
+}
+
 // PUT 修改经纪人审核状态
 export function changeBrokerStatus (id) {
   return axios.put(`/v1/agent/user/info/audit/${id}/PASS`)

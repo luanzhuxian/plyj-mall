@@ -30,16 +30,19 @@
       :to="{ name: 'My' }"
     >
       <pl-svg :name="myActive ? 'my-active' : 'my'" />
+      <div v-if="noticeData && noticeData.noticeStatus === 2" :class="$style.alertMessage" />
     </router-link>
   </nav>
 </template>
 
 <script>
+import { getAduitNotice } from '../apis/broker-manager'
 import { mapGetters } from 'vuex'
 export default {
   name: 'Navbar',
   data () {
     return {
+      noticeData: ''
     }
   },
   computed: {
@@ -56,6 +59,16 @@ export default {
     homeActive: function () {
       return this.$route.matched.some(val => val.name === 'Home')
     }
+  },
+  methods: {
+    async getNotice () {
+      const { result } = await getAduitNotice()
+      this.noticeData = result
+      console.log(this.noticeData)
+    }
+  },
+  async created () {
+    this.getNotice()
   }
 }
 </script>
@@ -84,6 +97,15 @@ export default {
     }
     .cart {
       width: 60px;
+    }
+    .alertMessage{
+      background-color: #D2524C;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      position: absolute;
+      top: 10px;
+      right: 60px;
     }
   }
 </style>
