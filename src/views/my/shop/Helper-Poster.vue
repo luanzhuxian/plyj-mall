@@ -73,6 +73,9 @@ export default {
             this.post = post
           }
         }
+        canImg.onerror = (e) => {
+          console.log(e)
+        }
       }
       userImg.onerror = (e) => {
         console.log(e)
