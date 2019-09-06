@@ -24,6 +24,7 @@
 import { mapGetters } from 'vuex'
 import tab from '../../../components/penglai-ui/Tab'
 import { generateQrcode } from '../../../assets/js/util'
+import { createObjectUrl } from '../../../assets/js/upload-image'
 export default {
   name: 'HelperPoster',
   components: {
@@ -67,8 +68,9 @@ export default {
         ctx.fillText(`${this.mallName}     ${this.userName}`, 150, 80)
         ctx.fillText(`邀请您成为Helper！`, 150, 120)
         ctx.drawImage(qrcode, 70, 540, 160, 160)
-        let post = canvas.toDataURL('image/jpeg', 0.7)
-        this.post = post
+        canvas.toBlob((blob) => {
+          this.post = createObjectUrl(blob)
+        }, 'image/jpeg', 0.7)
       }
     }
   }
