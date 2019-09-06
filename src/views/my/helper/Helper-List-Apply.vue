@@ -70,7 +70,7 @@
               </pl-button>
             </div>
             <div :class="$style.listItemFooter" v-if="item.auditStatus === 'REJECT'">
-              <div :class="$style.reason">{{ `驳回理由：${item.agentWriteBack}` }}</div>
+              <div :class="$style.reason">{{ `驳回理由：${item.agentWriteBack || '无'}` }}</div>
             </div>
           </div>
         </template>
