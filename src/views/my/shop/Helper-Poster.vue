@@ -11,7 +11,7 @@
       </div>
     </div>
     <div v-show="activeId === 2" :class="$style.qoceBox">
-      <div :class="$style.imgBox"><img :src="qrcode" alt=""></div>
+      <div :class="$style.imgBox" ref="imgBox" />
       <div :class="$style.descriptionBox">
         <p>快速申请helper通道，出示二维码给用户</p>
         <pl-svg name="helper-guidelines" />
@@ -53,10 +53,11 @@ export default {
       userImg.src = `${this.avatar}?x-oss-process=image/resize,h_100/circle,r_500/format,png`
       userImg.crossOrigin = ''
       userImg.onload = async () => {
+        console.log(1)
         canImg.onload = async () => {
-          this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper`, 0, '', 10, 'url')
-          let qrCodeImg = new Image()
-          qrCodeImg.src = this.qrcode
+          console.log(2)
+          let qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper`, 0, null, null, 'canvas')
+          this.$refs.imgBox.appendChild(qrcode)
           let canvas = document.createElement('canvas')
           canvas.width = canImg.width
           canvas.height = canImg.height
@@ -67,11 +68,9 @@ export default {
           ctx.font = 'bold 24px Georgia'
           ctx.fillText(`${this.mallName}     ${this.userName}`, 150, 80)
           ctx.fillText(`邀请您成为Helper！`, 150, 120)
-          qrCodeImg.onload = () => {
-            ctx.drawImage(qrCodeImg, 70, 540, 160, 160)
-            let post = canvas.toDataURL('image/jpeg', 0.7)
-            this.post = post
-          }
+          ctx.drawImage(qrcode, 70, 540, 160, 160)
+          let post = canvas.toDataURL('image/jpeg', 0.7)
+          this.post = post
         }
         canImg.onerror = (e) => {
           console.log(e)
@@ -114,8 +113,9 @@ export default {
         margin: 29px auto 64px;
         padding: 38px;
         background-color: #FFFFFF;
-        img{
-          width: 100%;
+        canvas {
+          width: 100% !important;
+          height: auto !important;
         }
       }
       .description-box{
