@@ -6,6 +6,7 @@ import home from './home'
 import yaji from './yaji'
 import detail from './detail'
 import order from './order'
+import helper from './helper'
 import setting from './setting'
 import Cart from './cart'
 import Moon from './820'
@@ -46,6 +47,7 @@ export const router = new Router({
     ...yaji,
     ...detail,
     ...order,
+    ...helper,
     ...setting,
     ...Cart,
     ...Appointment,
