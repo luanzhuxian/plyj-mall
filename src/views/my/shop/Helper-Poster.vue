@@ -70,9 +70,12 @@ export default {
         ctx.font = 'bold 24px Georgia'
         ctx.fillText(`${this.mallName}     ${this.userName}`, 150, 80)
         ctx.fillText(`邀请您成为Helper！`, 150, 120)
+        console.log(3)
         ctx.drawImage(this.$refs.qrcode, 70, 540, 160, 160)
+        console.log(4)
         canvas.toBlob((blob) => {
           this.post = createObjectUrl(blob)
+          console.log(5)
         }, 'image/jpeg', 0.7)
       }
     }
