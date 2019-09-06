@@ -243,6 +243,7 @@ export default {
         Object.assign(this.form, result)
         let str = this.form.name.split('-')
         this.form.name = str[1] || str[0]
+        this.area = str[1] && str[0] ? str[0] : ''
       } catch (e) {
         throw e
       }
