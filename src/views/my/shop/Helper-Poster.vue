@@ -43,7 +43,6 @@ export default {
   },
   created () {
     this.drawPost()
-    console.log(this.avatar)
   },
   methods: {
     async drawPost () {
@@ -74,6 +73,9 @@ export default {
             this.post = post
           }
         }
+      }
+      userImg.onerror = (e) => {
+        console.log(e)
       }
     }
   }
