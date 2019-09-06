@@ -52,32 +52,23 @@ export default {
       let userImg = new Image()
       userImg.src = `${this.avatar}?x-oss-process=image/resize,h_100/circle,r_500/format,png`
       userImg.crossOrigin = ''
-      userImg.onload = async () => {
-        console.log(1)
-        canImg.onload = async () => {
-          console.log(2)
-          let qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper`, 0, null, null, 'canvas')
-          this.$refs.imgBox.appendChild(qrcode)
-          let canvas = document.createElement('canvas')
-          canvas.width = canImg.width
-          canvas.height = canImg.height
-          let ctx = canvas.getContext('2d')
-          ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
-          console.log(userImg)
-          ctx.drawImage(userImg, 48, 48, 74, 74)
-          ctx.font = 'bold 24px Georgia'
-          ctx.fillText(`${this.mallName}     ${this.userName}`, 150, 80)
-          ctx.fillText(`邀请您成为Helper！`, 150, 120)
-          ctx.drawImage(qrcode, 70, 540, 160, 160)
-          let post = canvas.toDataURL('image/jpeg', 0.7)
-          this.post = post
-        }
-        canImg.onerror = (e) => {
-          console.log(e)
-        }
-      }
-      userImg.onerror = (e) => {
-        console.log(e)
+      canImg.onload = async () => {
+        console.log(2)
+        let qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper`, 0, null, null, 'canvas')
+        this.$refs.imgBox.appendChild(qrcode)
+        let canvas = document.createElement('canvas')
+        canvas.width = canImg.width
+        canvas.height = canImg.height
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
+        console.log(userImg)
+        ctx.drawImage(userImg, 48, 48, 74, 74)
+        ctx.font = 'bold 24px Georgia'
+        ctx.fillText(`${this.mallName}     ${this.userName}`, 150, 80)
+        ctx.fillText(`邀请您成为Helper！`, 150, 120)
+        ctx.drawImage(qrcode, 70, 540, 160, 160)
+        let post = canvas.toDataURL('image/jpeg', 0.7)
+        this.post = post
       }
     }
   }

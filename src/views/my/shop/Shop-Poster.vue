@@ -29,6 +29,7 @@ export default {
       canImg.src = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/store-haibao.jpg'
       canImg.crossOrigin = ''
       canImg.onload = async () => {
+        console.log(1)
         let qrcode = await generateQrcode(500, this.mallUrl, 0, '', 10, 'url')
         let qrCodeImg = new Image()
         qrCodeImg.src = qrcode
