@@ -144,7 +144,8 @@ export default {
         idCard: '',
         mobile: '',
         verificationCode: '',
-        auditStatus: ''
+        auditStatus: '',
+        shareUserId: ''
       },
       area: '',
       statusTip: {
@@ -223,6 +224,9 @@ export default {
     isYaji () {
       return this.mallId === '1057573777392603136'
     }
+  },
+  mounted () {
+    this.form.shareUserId = this.$route.query.shareUserId
   },
   activated () {
     this.getHelperInfo()

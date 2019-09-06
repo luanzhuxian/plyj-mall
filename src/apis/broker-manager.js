@@ -1,10 +1,10 @@
 import axios from 'axios'
 // 申请经纪人
-export const AuditCreate = ({ idCard, mobile, name, verificationCode, weChatNumber }) =>
-  axios.post(`/apis/v1/agent/user/info/audit/create`, { idCard, mobile, name, verificationCode, weChatNumber })
+export const AuditCreate = ({ idCard, mobile, name, verificationCode, weChatNumber, shareUserId }) =>
+  axios.post(`/apis/v1/agent/user/info/audit/create`, { idCard, mobile, name, verificationCode, weChatNumber, shareUserId })
 // 经纪人申请被驳回时，调用这个接口重新提交 sequenceNbr 经纪人id
-export const updateAudit = (sequenceNbr, { idCard, mobile, name, verificationCode, weChatNumber }) =>
-  axios.put(`/apis/v1/agent/user/info/audit/${sequenceNbr}`, { idCard, mobile, name, verificationCode, weChatNumber })
+export const updateAudit = (sequenceNbr, { idCard, mobile, name, verificationCode, weChatNumber, shareUserId }) =>
+  axios.put(`/apis/v1/agent/user/info/audit/${sequenceNbr}`, { idCard, mobile, name, verificationCode, weChatNumber, shareUserId })
 // GET 分页查询经纪人信息
 export function agentUserInfoAuditPage ({ current, size }) {
   return axios.get(`/apis/v1/agent/user/info/audit/page?current=${current}&size=${size}`)
