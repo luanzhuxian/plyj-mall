@@ -140,10 +140,17 @@ export default {
       return this.roleCode === 'ENTERPRISE_ADMIN' || this.roleCode === 'ADMIN'
     }
   },
+  beforeRouteEnter (to, from, next) {
+    to.meta.noRefresh = from.name === 'HelperDetail'
+    next()
+  },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
+    if (this.list.length && this.$router.currentRoute.meta.noRefresh) {
+      return
+    }
     this.form.ownnerUserId = this.userId
     this.form.auditStatus = this.status
     this.form.realName = ''

@@ -141,7 +141,7 @@ export default {
       width: 392px;
       height: 268px;
       background: url("../../../assets/images/my/bg-group.png") no-repeat center center;
-      background-size: 100%;
+      background-size: cover;
       .number {
         margin-top: 10px;
         font-size: 76px;
@@ -163,7 +163,7 @@ export default {
       width: 274px;
       height: 274px;
       background: url("../../../assets/images/my/bg-money.png") no-repeat center center;
-      background-size: 100%;
+      background-size: cover;
       .left {
         > .number::after {
           content: '位';

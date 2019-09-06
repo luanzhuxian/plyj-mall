@@ -1,13 +1,13 @@
 <template>
-  <div :class="$style.helperList" class="helper-list" :style="{ '--padding': !isAdmin ? '390px' : '260px' }">
-    <div :class="$style.dropDown" v-if="!isAdmin">
+  <div :class="$style.helperList" class="helper-list" :style="{ '--padding': isAdmin ? '30.66vw' : '20.2vw' }">
+    <div :class="$style.dropDown" v-if="isAdmin">
       <span @click="isPopupShow = true">
         {{ `全部（${count}）` }}
         <pl-svg name="triangle-down" />
       </span>
     </div>
-    <header :class="$style.header" :style="{ '--top': !isAdmin ? '176px' : '0' }">
-      <div :class="$style.bar" v-if="!isAdmin">
+    <header :class="$style.header" :style="{ '--top': isAdmin ? '12vw' : '0' }">
+      <div :class="$style.bar" v-if="isAdmin">
         <div :class="$style.searchWrapper">
           <div :class="$style.inputWrapper">
             <input
@@ -86,9 +86,9 @@
         <radio-group-component
           :class="$style.popupList"
           v-model="form.ownnerUserId"
-          @change="onPopupClick"
+          @change="onRadioChange"
         >
-          <radio-component :class="$style.popupListItem" :name="userId">
+          <radio-component :class="$style.popupListItem" :name="''">
             全部
           </radio-component>
           <radio-component
@@ -160,10 +160,17 @@ export default {
       return this.roleCode === 'ENTERPRISE_ADMIN' || this.roleCode === 'ADMIN'
     }
   },
+  beforeRouteEnter (to, from, next) {
+    to.meta.noRefresh = from.name === 'HelperDetail'
+    next()
+  },
   mounted () {
     this.$refresh = this.$refs.loadMore.refresh
   },
   activated () {
+    if (this.list.length && this.$router.currentRoute.meta.noRefresh) {
+      return
+    }
     this.form.ownnerUserId = this.isAdmin ? '' : this.userId
     this.form.period = this.status
     this.form.realName = ''
@@ -171,7 +178,7 @@ export default {
     this.isPopupShow = false
     this.count = this.$route.query.count
     this.$refresh()
-    !this.isAdmin && this.getHelperRoleList()
+    this.isAdmin && this.getHelperRoleList()
   },
   methods: {
     tabChange (item) {
@@ -191,12 +198,10 @@ export default {
     onInput: debounce(function () {
       this.$refresh()
     }, 200),
-    onPopupClick (id) {
-      this.isPopupShow = false
-      if (id) {
-        this.$refresh()
-      }
+    onRadioChange (id) {
       console.log(id)
+      this.isPopupShow = false
+      this.$refresh()
     },
     async getHelperRoleList () {
       const params = {
