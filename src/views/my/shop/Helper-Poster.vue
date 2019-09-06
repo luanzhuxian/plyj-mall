@@ -11,7 +11,9 @@
       </div>
     </div>
     <div v-show="activeId === 2" :class="$style.qoceBox">
-      <div :class="$style.imgBox" ref="imgBox" />
+      <div :class="$style.imgBox" ref="imgBox">
+        <img :src="qrcode" alt="" ref="qrcode">
+      </div>
       <div :class="$style.descriptionBox">
         <p>快速申请helper通道，出示二维码给用户</p>
         <pl-svg name="helper-guidelines" />
@@ -42,8 +44,11 @@ export default {
   computed: {
     ...mapGetters(['mallName', 'mallUrl', 'avatar', 'userName'])
   },
-  created () {
-    this.drawPost()
+  async mounted () {
+    this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper`, 0, null, null, 'url')
+    this.$refs.qrcode.onload = () => {
+      this.drawPost()
+    }
   },
   methods: {
     async drawPost () {
@@ -55,8 +60,6 @@ export default {
       userImg.crossOrigin = ''
       canImg.onload = async () => {
         console.log(2)
-        let qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper`, 0, null, null, 'canvas')
-        this.$refs.imgBox.appendChild(qrcode)
         let canvas = document.createElement('canvas')
         canvas.width = canImg.width
         canvas.height = canImg.height
@@ -67,7 +70,7 @@ export default {
         ctx.font = 'bold 24px Georgia'
         ctx.fillText(`${this.mallName}     ${this.userName}`, 150, 80)
         ctx.fillText(`邀请您成为Helper！`, 150, 120)
-        ctx.drawImage(qrcode, 70, 540, 160, 160)
+        ctx.drawImage(this.$refs.qrcode, 70, 540, 160, 160)
         canvas.toBlob((blob) => {
           this.post = createObjectUrl(blob)
         }, 'image/jpeg', 0.7)
@@ -106,7 +109,7 @@ export default {
         margin: 29px auto 64px;
         padding: 38px;
         background-color: #FFFFFF;
-        canvas {
+        img {
           width: 100% !important;
           height: auto !important;
         }
