@@ -22,7 +22,7 @@
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
-import { wasRegist } from '../../../apis/wwec'
+// import { wasRegist } from '../../../apis/wwec'
 export default {
   name: 'Banner',
   components: {
@@ -64,18 +64,20 @@ export default {
       }
     },
     async wwec () {
-      try {
-        let { result } = await wasRegist()
-        if (result.status === 1) {
-          this.$router.push({ name: 'Code820' })
-        } else if (result.status === 0) {
-          this.$router.push({ name: 'SignUp' })
-        } else if (result.status === 2) {
-          this.$router.push({ name: 'GetSuccess' })
-        }
-      } catch (e) {
-        throw e
-      }
+      // location.href = 'http://admall.youpenglai.com/h5/register-login'
+      location.href = 'http://192.168.130.33:8083/h5/register-login'
+      // try {
+      //   let { result } = await wasRegist()
+      //   if (result.status === 1) {
+      //     this.$router.push({ name: 'Code820' })
+      //   } else if (result.status === 0) {
+      //     this.$router.push({ name: 'SignUp' })
+      //   } else if (result.status === 2) {
+      //     this.$router.push({ name: 'GetSuccess' })
+      //   }
+      // } catch (e) {
+      //   throw e
+      // }
     }
   }
 }
