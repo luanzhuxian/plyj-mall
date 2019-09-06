@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.helperDetail">
-    <div :class="$style.result">
+    <div :class="$style.result" v-if="isApplicationProgressShow">
       <pl-svg v-if="auditStatus === 'AWAIT'" name="helper-apply-wait" />
       <pl-svg v-if="auditStatus === 'PASS'" name="helper-apply-success" />
       <pl-svg v-if="auditStatus === 'REJECT'" :class="$style.fail" name="helper-apply-fail" />
@@ -39,7 +39,7 @@
         <span :class="$style.right">{{ createTime }}</span>
       </li>
     </ul>
-    <ul :class="$style.bottom" v-if="operationLogs.length">
+    <ul :class="$style.bottom" v-if="isApplicationProgressShow && operationLogs.length">
       <li v-for="(item, i) of operationLogs" :key="i">
         <div>
           <span :class="$style.date">{{ item.createTime }}</span>
@@ -93,13 +93,19 @@ export default {
       ownnerName: '',
       ownnerRoleName: '',
       auditStatus: '',
-      operationLogs: []
+      operationLogs: [],
+      isApplicationProgressShow: false
     }
   },
   computed: {
     ...mapGetters(['roleCode'])
   },
+  beforeRouteEnter (to, from, next) {
+    to.meta.isApplicationProgressShow = from.name === 'HelperListApply'
+    next()
+  },
   activated () {
+    this.isApplicationProgressShow = this.$router.currentRoute.meta.isApplicationProgressShow
     this.getHelperDetail()
   },
   methods: {

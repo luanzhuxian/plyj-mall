@@ -16,7 +16,7 @@
         </div>
       </router-link>
       <div :class="[$style.panel, $style.right]">
-        <router-link :class="[$style.panel, $style.left]" :to="{ name: 'HelperList', params: { status: 'TODAY' }, query: { total: count } }">
+        <router-link :to="{ name: 'HelperList', params: { status: 'TODAY' }, query: { total: count } }">
           <div :class="$style.title">今日新增Helper</div>
           <div :class="$style.number" v-text="today" />
         </router-link>

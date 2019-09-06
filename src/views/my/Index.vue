@@ -220,8 +220,9 @@ export default {
     isHelper () {
       return this.roleCode === 'HELPER'
     },
+    // applyStatus: NOT_APPLY: 未申请 , AWAIT：待审核, PASS：审核通过, REJECT：审核驳回
     isApplyBtnShow () {
-      return this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT')
+      return this.roleCode === 'MEMBERSHIP' && this.applyStatus !== 'AWAIT'
     },
     // 是否申请过helper
     hasApplied () {

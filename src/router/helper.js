@@ -23,7 +23,7 @@ export default [
     component: () => import('../views/my/helper/Helper-List-Apply.vue'),
     props: true,
     meta: {
-      title: 'Helper列表'
+      title: 'Helper审核'
     }
   },
   {

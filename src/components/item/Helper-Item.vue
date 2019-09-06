@@ -41,6 +41,10 @@ export default {
     id: {
       type: [String, Number],
       default: ''
+    },
+    navTo: {
+      type: String,
+      default: 'HelperDetail'
     }
   },
   data () {
@@ -50,7 +54,7 @@ export default {
     toDetailPage () {
       const { id } = this
       if (!id) return
-      this.$router.push({ name: 'HelperDetail', params: { id } })
+      this.$router.push({ name: this.navTo, params: { id } })
     }
   }
 }
