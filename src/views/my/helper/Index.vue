@@ -58,7 +58,7 @@
         type="warning"
         size="large"
         round
-        @click="invite"
+        @click="$router.push({ name: 'HelperPoster' })"
       >
         邀请Helper
       </pl-button>
@@ -108,7 +108,6 @@ export default {
       this.today = result.todayCount || 0
       this.currentMonth = result.monthRevenue || 0
     },
-    invite () {},
     rebulidMobile (str) {
       return str.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
     }
