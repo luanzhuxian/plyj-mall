@@ -203,7 +203,7 @@ export default {
           name: 'Lesson',
           params: {
             productId: id || null,
-            brokerId: this.agentUser ? this.userId : null
+            brokerId: this.userId || null
           }
         }
       }

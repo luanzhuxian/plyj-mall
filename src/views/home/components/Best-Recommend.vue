@@ -224,7 +224,7 @@ export default {
       this.minSee = this.maxSee
     },
     clickHandler (item) {
-      this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.agentUser ? this.userId : null } })
+      this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.userId || null } })
     }
   }
 }

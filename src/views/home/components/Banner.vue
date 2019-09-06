@@ -60,7 +60,7 @@ export default {
       if (item.type === 1) {
         this.$router.push({ name: 'Classify', params: { optionId: item.value || null } })
       } else if (item.type === 2) {
-        this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.agentUser ? this.userId : null } })
+        this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.userId || null } })
       }
     },
     async wwec () {

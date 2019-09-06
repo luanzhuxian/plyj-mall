@@ -158,7 +158,7 @@ export default {
           name: this.routeName,
           params: {
             productId: this.productId,
-            brokerId: this.agentUser ? this.userId : null
+            brokerId: this.userId || null
           }
         })
       }

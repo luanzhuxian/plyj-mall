@@ -120,11 +120,10 @@ export default {
     },
     jump (item) {
       let { type, value } = item
-      let { agentUser, userId } = this
       if (type === 1) {
         this.$router.push({ name: 'Classify', params: { optionId: value || null } })
       } else {
-        this.$router.push({ name: 'Lesson', params: { productId: value, brokerId: agentUser ? userId : null } })
+        this.$router.push({ name: 'Lesson', params: { productId: value, brokerId: this.userId || null } })
       }
     }
   }

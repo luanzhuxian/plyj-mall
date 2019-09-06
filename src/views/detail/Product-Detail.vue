@@ -249,14 +249,17 @@ export default {
     this.tab = 2
   },
   mounted () {
-    if (this.agentUser && this.brokerId !== this.userId) {
-      // 如果当前用户是helper, 但是链接中的helperId不是他的，或者没携带helperId，那就刷新一下
-      if (!this.brokerId) {
-        location.href = `${location.protocol}//${location.host}/${this.mallDomain}/detail/lesson/${this.productId}/${this.userId}`
-      } else {
-        location.href = location.href.replace(this.brokerId, this.userId)
-      }
+    if (!this.brokerId) {
+      // 链接中没有携带brokerId，就刷新一下，带上brokerId
+      // 1.9.0 以后，不管是不是helper，都携带brokerId
+      location.href = `${location.protocol}//${location.host}/${this.mallDomain}/detail/lesson/${this.productId}/${this.userId}`
       return
+    } else {
+      // 如果当前用户是helper, 但是链接中的helperId不是他的，那就刷新一下，把brokerId替换成他自己的
+      if (this.agentUser && this.brokerId !== this.userId) {
+        location.href = location.href.replace(this.brokerId, this.userId)
+        return
+      }
     }
     // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
     // 详情页只做存储，具体判断过程在点击立即购买和加入购物车时判断
@@ -347,7 +350,7 @@ export default {
             productCount: count,
             skuCode: skuCode1,
             skuCode2,
-            agentUser: this.agentUser ? (shareBrokerId || this.userId) : (shareBrokerId || null) // 如果当前用户是经纪人，则覆盖其他经纪人的id
+            agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
           })
           this.$success('已添加到购物车')
           this.showSpecifica = false
@@ -372,7 +375,7 @@ export default {
         count: count,
         skuCode1: skuCode1,
         skuCode2,
-        agentUser: this.agentUser ? (shareBrokerId || this.userId) : (shareBrokerId || null) // 如果当前用户是经纪人，则覆盖其他经纪人的id
+        agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
       this.$router.push({
@@ -418,10 +421,7 @@ export default {
 
       try {
         let min = Math.min(img.width, img.height)
-        let strUrl = window.location.href
-        if (this.agentUser && !this.brokerId) {
-          strUrl = strUrl + '/' + this.userId
-        }
+        // 二维码
         let qrcode = await generateQrcode(300, window.location.href, 0, img, 10, 'canvas')
         ctx.drawImage(img, 0, 0, min, min, 0, 192, 1120, 1120)
         ctx.fillStyle = '#fff'
