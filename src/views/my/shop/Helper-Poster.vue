@@ -26,7 +26,7 @@
 import { mapGetters } from 'vuex'
 import tab from '../../../components/penglai-ui/Tab'
 import { generateQrcode } from '../../../assets/js/util'
-import { createObjectUrl } from '../../../assets/js/upload-image'
+// import { createObjectUrl } from '../../../assets/js/upload-image'
 export default {
   name: 'HelperPoster',
   components: {
@@ -73,11 +73,15 @@ export default {
         console.log(3)
         ctx.drawImage(this.$refs.qrcode, 70, 540, 160, 160)
         console.log(4)
-        canvas.toBlob((blob) => {
-          // this.post = createObjectUrl(blob)
-          console.log(5)
-          console.log(blob)
-        }, 'image/jpeg', 0.7)
+        let post = canvas.toDataURL('image/jpeg', 0.7)
+        this.post = post
+        console.log(5)
+        console.log(post)
+        // canvas.toBlob((blob) => {
+        //   // this.post = createObjectUrl(blob)
+        //   console.log(5)
+        //   console.log(blob)
+        // }, 'image/jpeg', 0.7)
       }
     }
   }
