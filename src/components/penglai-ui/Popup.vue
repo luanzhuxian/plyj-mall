@@ -128,6 +128,7 @@ export default {
   &__top {
     .pl-popup__box {
       top: 0;
+      border-radius: 0 0 20px 20px;
       transform: translateY(-100%);
     }
   }
