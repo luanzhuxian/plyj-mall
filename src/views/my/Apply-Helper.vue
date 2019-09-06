@@ -226,7 +226,6 @@ export default {
     }
   },
   mounted () {
-    this.form.shareUserId = this.$route.query.shareUserId
   },
   activated () {
     this.getHelperInfo()
@@ -244,6 +243,7 @@ export default {
         let str = this.form.name.split('-')
         this.form.name = str[1] || str[0]
         this.area = str[1] && str[0] ? str[0] : ''
+        this.form.shareUserId = this.form.shareUserId || this.$route.query.shareUserId
       } catch (e) {
         throw e
       }
