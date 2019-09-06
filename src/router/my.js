@@ -64,6 +64,14 @@ export default [
     }
   },
   {
+    path: '/my/shop/helper-poster',
+    name: 'HelperPoster',
+    component: () => import('../views/my/shop/Helper-Poster.vue'),
+    meta: {
+      title: 'Helper邀请'
+    }
+  },
+  {
     path: '/my/shop/poster',
     name: 'ShopPoster',
     component: () => import('../views/my/shop/Shop-Poster.vue'),

@@ -137,7 +137,7 @@
         <router-link :to="{ name: 'HelperManagement' }">
           <pl-svg name="helper-management" />
         </router-link>
-        <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
+        <router-link :to="{ name: 'HelperPoster' }">
           <pl-svg name="helper-invatation" />
         </router-link>
         <router-link :to="{ name: 'ShopPoster'}">

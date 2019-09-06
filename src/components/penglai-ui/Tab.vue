@@ -1,10 +1,10 @@
 <template>
-  <div :class="'pl-tab' + ` pl-tab__${size}`">
+  <div :class="['pl-tab' + ` pl-tab__${size}`]">
     <div
       v-for="(item, i) of tabs"
       :key="i"
       class="pl-tab__pane"
-      :class="{ active: item[options.id] === currentId }"
+      :class="{ active: item[options.id] === currentId,'color9': color9 }"
       @click="handleClick(item)"
     >
       {{ item[options.name] }}
@@ -43,6 +43,10 @@ export default {
     count: {
       type: Object,
       default: null
+    },
+    color9: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -71,6 +75,9 @@ export default {
 </script>
 
 <style lang="scss">
+  .color9{
+    color: #999999;
+  }
   .pl-tab {
     display: flex;
     justify-content: space-around;
