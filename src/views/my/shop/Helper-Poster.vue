@@ -74,8 +74,9 @@ export default {
         ctx.drawImage(this.$refs.qrcode, 70, 540, 160, 160)
         console.log(4)
         canvas.toBlob((blob) => {
-          this.post = createObjectUrl(blob)
+          // this.post = createObjectUrl(blob)
           console.log(5)
+          console.log(blob)
         }, 'image/jpeg', 0.7)
       }
     }
