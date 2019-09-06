@@ -2,6 +2,7 @@
   <div :class="$style.shopPost">
     <img :src="post" alt="">
     <p :class="$style.description">请长按海报图片分享或保存到相册</p>
+    <canvas ref="canvas" style="display: none" />
   </div>
 </template>
 
@@ -20,7 +21,7 @@ export default {
   computed: {
     ...mapGetters(['mallName', 'mallUrl'])
   },
-  created () {
+  mounted () {
     this.drawPost()
   },
   methods: {
@@ -32,7 +33,7 @@ export default {
         let qrcode = await generateQrcode(500, this.mallUrl, 0, '', 10, 'url')
         let qrCodeImg = new Image()
         qrCodeImg.src = qrcode
-        let canvas = document.createElement('canvas')
+        let canvas = this.$refs.canvas
         canvas.width = canImg.width
         canvas.height = canImg.height
         let ctx = canvas.getContext('2d')
