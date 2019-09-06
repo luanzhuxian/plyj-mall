@@ -197,12 +197,12 @@ export default {
       height: 10px;
       background: #F9E58E;
       border-radius: 198px;
+      overflow: hidden;
     }
     .inner {
       width: var(--progress);
       height: 9px;
       background: #F2CF36;
-      border-radius: 198px;
       transition: width .5s linear;
     }
     .tip {
