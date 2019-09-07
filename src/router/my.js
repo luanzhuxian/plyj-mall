@@ -86,5 +86,13 @@ export default [
     meta: {
       title: '店铺二维码'
     }
+  },
+  {
+    path: '/my/rebate/list',
+    name: 'RebateList',
+    component: () => import('../views/my/coffers/Rebate-List.vue'),
+    meta: {
+      title: '润笔明细'
+    }
   }
 ]
