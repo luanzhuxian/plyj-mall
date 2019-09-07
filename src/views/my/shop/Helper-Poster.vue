@@ -53,7 +53,7 @@ export default {
   async activated () {
     try {
       let { result } = await getHelperData()
-      if (result.count >= 100) {
+      if (result.count >= 200) {
         this.$alert({
           message: '邀请超过200位helper',
           viceMessage: '将不活跃的helper降级为普通用户\n' + '再进行helper邀请',
