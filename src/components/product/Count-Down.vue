@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.countDown" v-if="data" v-show="show">
+  <div :class="$style.countDown" v-if="data || endtime" v-show="show">
     距开抢 {{ time }}
   </div>
 </template>
@@ -55,6 +55,7 @@ export default {
         this.endtiemstamp = Number(this.endtime) || 0
         this.starttiemstamp = Number(this.starttime) || 0
       }
+      console.log(this.endtiemstamp, this.starttiemstamp)
       if (this.starttiemstamp - this.endtiemstamp < 0) {
         // 启动倒计时
         console.log('启动倒计时')
@@ -64,6 +65,7 @@ export default {
       }
     },
     countdown () {
+      this.setTime()
       let timer = setInterval(() => {
         this.endtiemstamp -= 1000
         if (this.endtiemstamp - this.starttiemstamp <= 0) {
@@ -73,19 +75,22 @@ export default {
           this.data[this.fields.end] = 0
           this.data[this.fields.start] = 0
         }
-        let { _data } = moment.duration(this.endtiemstamp - this.starttiemstamp)
-        let d = String(_data.days)
-        let h = String(_data.hours)
-        let m = String(_data.minutes)
-        let s = String(_data.seconds)
-        if (d !== '0') {
-          this.time = `${d}:${h.padStart(2, '0')}:${m.padStart(2, '0')}:${s.padStart(2, '0')}`
-        } else if (h !== '0') {
-          this.time = `${h.padStart(2, '0')}:${m.padStart(2, '0')}:${s.padStart(2, '0')}`
-        } else if (m !== '0') {
-          this.time = `${m.padStart(2, '0')}:${s.padStart(2, '0')}`
-        }
+        this.setTime()
       }, 1000)
+    },
+    setTime () {
+      let { _data } = moment.duration(this.endtiemstamp - this.starttiemstamp)
+      let d = String(_data.days)
+      let h = String(_data.hours)
+      let m = String(_data.minutes)
+      let s = String(_data.seconds)
+      if (d !== '0') {
+        this.time = `${d}:${h.padStart(2, '0')}:${m.padStart(2, '0')}:${s.padStart(2, '0')}`
+      } else if (h !== '0') {
+        this.time = `${h.padStart(2, '0')}:${m.padStart(2, '0')}:${s.padStart(2, '0')}`
+      } else if (m !== '0') {
+        this.time = `${m.padStart(2, '0')}:${s.padStart(2, '0')}`
+      }
     }
   }
 }

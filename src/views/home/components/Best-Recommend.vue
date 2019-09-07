@@ -12,7 +12,7 @@
         :key="i"
         @click="clickHandler(item)"
       >
-        <count-down :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
+        <count-down v-if="item.shoppingStatus === 1" :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
         <div :class="$style.img" :style="{ backgroundImage: `url(${item.image})` }">
           <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
             体验课
@@ -228,9 +228,7 @@ export default {
       this.minSee = this.maxSee
     },
     clickHandler (item) {
-      if (item.serverTime - item.shoppingTime >= 0) {
-        this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.userId || null } })
-      }
+      this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.userId || null } })
     }
   }
 }

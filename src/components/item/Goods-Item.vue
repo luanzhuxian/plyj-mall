@@ -3,6 +3,7 @@
     :class="$style.goods"
     @click="handleClick"
   >
+    <slot />
     <img
       :class="$style.img"
       v-lazy="img"
@@ -39,16 +40,19 @@
         </span>
       </div>
     </div>
+    <count-down v-if="data.shoppingStatus === 1" :data="data" :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }" />
   </div>
 </template>
 
 <script>
 import Price from '../product/Price.vue'
 import { mapGetters } from 'vuex'
+import CountDown from '../product/Count-Down.vue'
 export default {
   name: 'GoodsItem',
   components: {
-    Price
+    Price,
+    CountDown
   },
   data () {
     return {
@@ -88,6 +92,12 @@ export default {
     rebate: {
       type: [String, Number],
       default: 0
+    },
+    data: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   computed: {
@@ -104,6 +114,7 @@ export default {
 
 <style module lang="scss">
 .goods {
+  position: relative;
   width: 266px;
   margin-bottom: 18px;
   box-shadow: 0 4px 12px 0 rgba(0,0,0,0.05);

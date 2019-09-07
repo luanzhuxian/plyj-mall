@@ -87,15 +87,17 @@
         >
           <template v-slot="{ list }">
             <div :class="$style.productList">
-              <goods-item
-                v-for="(item, index) of prodList"
-                :key="index"
-                :id="item.id"
-                :img="item.productMainImage + '?x-oss-process=style/thum-small'"
-                :title="item.productName"
-                :price="item.price"
-                :rebate="currentClassify.id === '1' ? item.realRebate : ''"
-              />
+              <template v-for="(item, index) of prodList">
+                <goods-item
+                  :key="index"
+                  :id="item.id"
+                  :img="item.productMainImage + '?x-oss-process=style/thum-small'"
+                  :title="item.productName"
+                  :price="item.price"
+                  :data="item"
+                  :rebate="currentClassify.id === '1' ? item.realRebate : ''"
+                />
+              </template>
             </div>
           </template>
         </load-more>

@@ -37,6 +37,7 @@
             :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
             :price="item.productSkuModels.length && item.productSkuModels[0].price"
             :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
+            :data="item"
           />
         </template>
       </load-more>
