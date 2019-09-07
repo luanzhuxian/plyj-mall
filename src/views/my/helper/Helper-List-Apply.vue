@@ -73,7 +73,7 @@
               </pl-button>
             </div>
             <div :class="$style.listItemFooter" v-if="item.auditStatus === 'REJECT'">
-              <div :class="$style.reason">{{ `驳回理由：${item.agentWriteBack || '无'}` }}</div>
+              <div :class="$style.reason">{{ `驳回理由：${item.agentWriteBack}` }}</div>
             </div>
           </div>
         </template>
@@ -91,7 +91,7 @@
 import LoadMore from '../../../components/Load-More.vue'
 import HelperItem from '../../../components/item/Helper-Item.vue'
 import { mapGetters } from 'vuex'
-import { getHelperList, changeHelperApplication } from '../../../apis/helper-manager'
+import { getHelperList, acceptHelperApplication, rejectHelperApplication } from '../../../apis/helper-manager'
 import { debounce } from '../../../assets/js/util'
 
 const statusMap = {
@@ -183,20 +183,27 @@ export default {
     onInput: debounce(function () {
       this.$refresh()
     }, 200),
-    async rejectApplication (id, index) {
+    async acceptApplication (id, index) {
       try {
-        await this.$confirm('确认驳回当前请求？')
-        await changeHelperApplication(id, 'REJECT')
+        await this.$confirm('确认通过当前请求？')
+        await acceptHelperApplication(id)
         this.list.splice(index, 1)
         this.$success('操作成功')
       } catch (error) {
         throw error
       }
     },
-    async acceptApplication (id, index) {
+    async rejectApplication (id, index) {
       try {
-        await this.$confirm('确认通过当前请求？')
-        await changeHelperApplication(id, 'PASS')
+        const val = await this.$propmt({
+          message: '确认驳回当前请求？',
+          placeholder: '请输入驳回原因'
+        })
+        const params = {
+          sequenceNbr: id,
+          agentWriteBack: val
+        }
+        await rejectHelperApplication(params)
         this.list.splice(index, 1)
         this.$success('操作成功')
       } catch (error) {

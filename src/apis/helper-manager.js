@@ -9,8 +9,11 @@ export const getHelperList = params => axios.get('/apis/v1/systemctl/memberManag
 // 获取Helper详情
 export const getHelperDetail = params => axios.get('/apis/v1/systemctl/memberManager/member/detail', { params })
 
-// 修改Helper申请审核状态 status PASS: 通过, REJECT: 驳回
-export const changeHelperApplication = (sequenceNbr, status) => axios.put(`/apis/v1/agent/user/info/audit/${sequenceNbr}/${status}`)
+// 通过Helper申请
+export const acceptHelperApplication = (sequenceNbr) => axios.put(`/apis/v1/agent/user/info/audit/${sequenceNbr}/PASS`)
+
+// 驳回Helper申请
+export const rejectHelperApplication = ({ sequenceNbr, agentWriteBack }) => axios.put(`/apis/v1/agent/user/info/audit/${sequenceNbr}/REJECT?agentWriteBack=${agentWriteBack}`)
 
 // 获取Helper账号列表
 export const getHelperRoleList = params => axios.get('/apis/v1/systemctl/account/roleUser/list', { params })

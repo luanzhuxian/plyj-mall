@@ -241,7 +241,7 @@ export default {
       font-weight: 500;
       background-color: #fff;
       &.message-box-confirm {
-        color: #1890FF;
+        color: #F2B036;
       }
       &.message-box-cancel {
         position: relative;
