@@ -57,7 +57,7 @@ export default {
       let { result } = await getHelperData()
       // 不同helper对应的可邀请helper数量
       let roleCoutMap = {
-        ADMIN: 21000,
+        ADMIN: 200,
         ENTERPRISE_ADMIN: 21000,
         EMPLOYEE: 200
       }
