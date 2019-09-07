@@ -159,7 +159,7 @@ export default {
     if (this.list.length && this.$router.currentRoute.meta.noRefresh) {
       return
     }
-    this.form.ownnerUserId = this.userId
+    this.form.ownnerUserId = this.isAdmin ? '' : this.userId
     this.form.auditStatus = this.status
     this.form.realName = ''
     this.form.current = 1
