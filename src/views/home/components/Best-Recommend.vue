@@ -12,6 +12,7 @@
         :key="i"
         @click="clickHandler(item)"
       >
+        <count-down :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
         <div :class="$style.img" :style="{ backgroundImage: `url(${item.image})` }">
           <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
             体验课
@@ -72,6 +73,7 @@
           @click="clickHandler(item)"
         >
           <img :class="$style.img" :src="item.image" alt="">
+          <count-down :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
           <div :class="$style.content">
             <p :class="$style.name" v-text="item.goodsInfo.productName" />
             <p :class="$style.desc" v-text="item.goodsInfo.productDesc" />
@@ -136,11 +138,13 @@
 
 <script>
 import Tags from './Tags.vue'
+import CountDown from '../../../components/product/Count-Down.vue'
 import { mapGetters } from 'vuex'
 export default {
   name: 'BestRecommend',
   components: {
-    Tags
+    Tags,
+    CountDown
   },
   data () {
     return {
@@ -224,7 +228,9 @@ export default {
       this.minSee = this.maxSee
     },
     clickHandler (item) {
-      this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.userId || null } })
+      if (item.serverTime - item.shoppingTime >= 0) {
+        this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.userId || null } })
+      }
     }
   }
 }
@@ -258,6 +264,7 @@ export default {
     }
   }
   .product {
+    position: relative;
     margin-bottom: 56px;
     border-radius: 20px;
     overflow: hidden;
@@ -348,6 +355,7 @@ export default {
   }
   .waterfall {
     .item {
+      position: revert;
       width: 340px;
       margin-bottom: 22px;
       color: #000;

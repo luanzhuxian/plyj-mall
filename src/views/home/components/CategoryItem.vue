@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import Price from '../../../components/Price.vue'
+import Price from '../../../components/product/Price.vue'
 import { mapGetters } from 'vuex'
 
 export default {

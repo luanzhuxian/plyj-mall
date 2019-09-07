@@ -10,6 +10,7 @@
         :key="i"
         @click="clickHandler(item)"
       >
+        <count-down :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
         <img :class="$style.img" :src="item.image" alt="">
         <span v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'" :class="$style.experience">体验课</span>
         <div :class="$style.itemContent">
@@ -43,8 +44,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import CountDown from '../../../components/product/Count-Down.vue'
 export default {
   name: 'Best',
+  components: {
+    CountDown
+  },
   props: {
     data: {
       type: Object,
@@ -66,7 +71,9 @@ export default {
       return Math.max(...priceList)
     },
     clickHandler (item) {
-      this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.userId || null } })
+      if (item.serverTime - item.shoppingTime >= 0) {
+        this.$router.push({ name: 'Lesson', params: { productId: item.value, brokerId: this.userId || null } })
+      }
     }
   }
 }

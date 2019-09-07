@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Price from '../Price.vue'
+import Price from '../product/Price.vue'
 import { mapGetters } from 'vuex'
 export default {
   name: 'GoodsItem',

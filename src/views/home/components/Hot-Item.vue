@@ -19,6 +19,7 @@
         :key="i"
         @click="jump(item)"
       >
+        <count-down :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
         <img :class="$style.img" :src="item.image" v-img-error alt="">
         <div :class="$style.content">
           <div :class="$style.proName" v-text="item.name" />
@@ -82,10 +83,12 @@
 <script>
 import Tags from './Tags.vue'
 import { mapGetters } from 'vuex'
+import CountDown from '../../../components/product/Count-Down.vue'
 export default {
   name: 'HotItem',
   components: {
-    Tags
+    Tags,
+    CountDown
   },
   props: {
     data: {
@@ -123,7 +126,9 @@ export default {
       if (type === 1) {
         this.$router.push({ name: 'Classify', params: { optionId: value || null } })
       } else {
-        this.$router.push({ name: 'Lesson', params: { productId: value, brokerId: this.userId || null } })
+        if (item.serverTime - item.shoppingTime >= 0) {
+          this.$router.push({ name: 'Lesson', params: { productId: value, brokerId: this.userId || null } })
+        }
       }
     }
   }
