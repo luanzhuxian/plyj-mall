@@ -44,7 +44,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['mallName', 'mallUrl', 'avatar', 'userName', 'userId'])
+    ...mapGetters(['mallName', 'mallUrl', 'avatar', 'userName', 'userId', 'roleCode'])
   },
   async mounted () {
     this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper?shareUserId=${this.userId}`, 0, null, null, 'url')
@@ -55,15 +55,21 @@ export default {
   async activated () {
     try {
       let { result } = await getHelperData()
-      if (result.count >= 200) {
+      // 不同helper对应的可邀请helper数量
+      let roleCoutMap = {
+        ADMIN: 21000,
+        ENTERPRISE_ADMIN: 21000,
+        EMPLOYEE: 200
+      }
+      if (result.count >= roleCoutMap[this.roleCode]) {
         this.$alert({
-          message: '邀请超过200位helper',
+          message: `邀请超过${roleCoutMap[this.roleCode]}位helper`,
           viceMessage: '将不活跃的helper降级为普通用户\n' + '再进行helper邀请',
           confirmText: '朕知道了'
         })
       }
     } catch (e) {
-
+      throw e
     }
   },
   methods: {
