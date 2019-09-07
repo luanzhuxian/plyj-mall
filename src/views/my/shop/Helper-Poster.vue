@@ -26,7 +26,7 @@
 import { mapGetters } from 'vuex'
 import tab from '../../../components/penglai-ui/Tab'
 import { generateQrcode } from '../../../assets/js/util'
-// import { createObjectUrl } from '../../../assets/js/upload-image'
+import { getHelperData } from '../../../apis/helper-manager'
 export default {
   name: 'HelperPoster',
   components: {
@@ -48,6 +48,20 @@ export default {
     this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper?shareUserId=${this.userId}`, 0, null, null, 'url')
     this.$refs.qrcode.onload = () => {
       this.drawPost()
+    }
+  },
+  async activated () {
+    try {
+      let { result } = await getHelperData()
+      if (result.count >= 100) {
+        this.$alert({
+          message: '邀请超过200位helper',
+          viceMessage: '将不活跃的helper降级为普通用户\n' + '再进行helper邀请',
+          confirmText: '朕知道了'
+        })
+      }
+    } catch (e) {
+
     }
   },
   methods: {

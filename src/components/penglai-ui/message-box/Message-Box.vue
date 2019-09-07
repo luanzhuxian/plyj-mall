@@ -189,17 +189,17 @@ export default {
       align-items: center;
       justify-content: center;
       min-height: 100px;
-      padding: 20px 0;
+      padding: 40px 0;
       color: #2E2E2E;
     }
     .vice-message {
       margin-top: 24px;
+      padding: 0 46px;
       font-size: 28px;
       color: #b4b4b4;
     }
     .main-message {
       width: 100%;
-      padding: 0 46px;
       white-space: pre-wrap;
       word-break: break-all;
       font-size: 34px;
@@ -225,7 +225,7 @@ export default {
       font-weight: 500;
       background-color: #fff;
       &.message-box-confirm {
-        color: #FE7700;
+        color: #1890FF;
       }
       &.message-box-cancel {
         position: relative;

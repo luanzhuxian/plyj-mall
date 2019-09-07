@@ -84,7 +84,7 @@
           <pl-svg name="safe" />
           <span>不泄露用户手机号码</span>
         </div>
-        <pl-button size="large" type="warning" @click.prevent="confirm">
+        <pl-button :loading="loading" size="large" type="warning" @click.prevent="confirm">
           确认预约
         </pl-button>
       </form>
@@ -106,6 +106,7 @@ export default {
   data () {
     return {
       showPop: false,
+      loading: false,
       appointmentMobile: '',
       appointmentname: '',
       swiperOptionBanner: {
@@ -146,7 +147,10 @@ export default {
   },
   watch: {
     showPop (val) {
-      if (!val) this.appointmentMobile = this.mobile || ''
+      if (!val) {
+        this.appointmentMobile = this.mobile || ''
+        this.appointmentname = ''
+      }
     }
   },
   mounted () {
@@ -196,6 +200,7 @@ export default {
         if (!isName(this.appointmentname)) {
           return this.$error('请输入正确的姓名')
         }
+        this.loading = true
         await yuyue({
           reservationName: this.appointmentname,
           mobile: this.appointmentMobile || this.mobile || '',
@@ -209,6 +214,8 @@ export default {
         this.showPop = false
       } catch (e) {
         throw e
+      } finally {
+        this.loading = false
       }
     }
   }
