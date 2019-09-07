@@ -64,8 +64,8 @@ export default {
       }
     },
     async wwec () {
-      // location.href = 'http://admall.youpenglai.com/h5/register-login'
-      location.href = 'http://192.168.130.33:8083/h5/register-login'
+      location.href = 'http://admall.youpenglai.com/h5/register-login'
+      // location.href = 'http://192.168.130.33:8083/h5/register-login'
       // try {
       //   let { result } = await wasRegist()
       //   if (result.status === 1) {
