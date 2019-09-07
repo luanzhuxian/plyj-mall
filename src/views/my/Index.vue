@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div :class="$style.content">
+    <div :class="$style.content" v-if="loaded">
       <!-- 金库 -->
       <router-link
         v-if="isHelper"
@@ -149,6 +149,35 @@
       </div>
       <you-like :class="$style.recommend" :is-my="true" />
     </div>
+
+    <div :class="$style.skeleton" v-else>
+      <div :class="[$style.skeleton1, $style.panel]">
+        <div :class="$style.itemSmall" v-for="(item, index) of 5" :key="index">
+          <div :class="[$style.icon, $style.skeAnimation]" />
+          <div :class="[$style.text, $style.skeAnimation]" />
+        </div>
+      </div>
+      <div :class="[$style.skeleton2, $style.panel]">
+        <div :class="$style.itemLarge" v-for="(item, index) of 4" :key="index">
+          <div :class="[$style.icon, $style.skeAnimation]" />
+          <div :class="[$style.text, $style.skeAnimation]" />
+        </div>
+      </div>
+      <div :class="[$style.skeleton3, $style.title]">
+        <div :class="[$style.text, $style.skeAnimation]" />
+      </div>
+      <div :class="$style.skeleton4">
+        <div :class="$style.item" v-for="(item, index) of 4" :key="index">
+          <div :class="[$style.itemImage, $style.skeAnimation]" />
+          <div :class="$style.itemContent">
+            <div :class="[$style.main, $style.skeAnimation]" />
+            <div :class="[$style.sub, $style.skeAnimation]" />
+            <div :class="[$style.text, $style.skeAnimation]" />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <modal
       ref="modal"
       :show.sync="isModalShow"
@@ -196,6 +225,7 @@ export default {
   },
   data () {
     return {
+      loaded: false,
       count: {
         WAIT_PAY: 0,
         WAIT_SHIP: 0,
@@ -213,8 +243,6 @@ export default {
       progress: [],
       applyStatus: 'NOT_APPLY',
       isModalShow: false
-      // isAuditResultsShow: true,
-      // noticeData: ''
     }
   },
   computed: {
@@ -240,15 +268,22 @@ export default {
   },
   async activated () {
     try {
-      this.orderPhysicalorderSummary()
-      this.getProgress()
       if (this.roleCode === 'VISITOR') {
-        await this.$confirm({ message: '为了您的账号安全，请绑定手机号', confirmText: '去绑定', closeOnClickMask: false })
+        await this.$confirm({
+          message: '为了您的账号安全，请绑定手机号',
+          confirmText: '去绑定',
+          closeOnClickMask: false
+        })
         setTimeout(() => {
           this.$router.push({ name: 'BindMobile' })
         }, 1000)
       } else {
-        this.getNewFreight()
+        this.loaded = false
+        await Promise.all([this.orderPhysicalorderSummary(), this.getRecentExpressInfo()])
+        if (this.hasApplied) {
+          this.getProgress()
+        }
+        this.loaded = true
       }
     } catch (e) {
       throw e
@@ -263,7 +298,7 @@ export default {
     this.getNotice()
   },
   methods: {
-    async getNewFreight () {
+    async getRecentExpressInfo () {
       try {
         const { result } = await getNewFreight()
         this.newFreight = result
@@ -607,57 +642,95 @@ export default {
   /* tip ends */
 
   /* skeleton start */
-  .skeleton {}
-  .skeleton1 {
+  .skeleton {
+    position: relative;
+    top: -24px;
+    padding: 0 24px 40px;
+  }
+  .skeleton1,
+  .skeleton2 {
     padding: 32px 25px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    .item {
+    .item-small {
+      height: 95px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      .icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+      .text {
+        width: 70px;
+        height: 30px;
+      }
+    }
+    .item-large {
       height: 114px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-    }
-    .img {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-    }
-    .text {
-      width: 120px;
-      height: 35px;
+      .icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+      }
+      .text {
+        width: 99px;
+        height: 30px;
+      }
     }
   }
-
-  // .skeleton2 {
-  //   width: 500px;
-  //   height: 37px;
-  //   margin-top: 14px;
-  // }
-  // .skeleton3 {
-  //   margin-top: 30px;
-  //   background-color: #fff;
-  // }
-  // .skeleton4 {
-  //   margin-top: 30px;
-  //   padding: 24px 28px;
-  //   background-color: #fff;
-  // }
-  // .skeleton4-1 {
-  //   width: 364px;
-  //   height: 32px;
-  //   margin-bottom: 8px;
-  // }
-  // .skeleton4-2 {
-  //   width: 214px;
-  //   height: 32px;
-  //   margin-bottom: 20px;
-  //   &:nth-last-of-type(1) {
-  //     margin-bottom: 0;
-  //   }
-  // }
+  .skeleton3 {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+    .text {
+      width: 182px;
+      height: 42px;
+    }
+  }
+  .skeleton4 {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+    .item {
+      margin-bottom: 22px;
+      background-color: #fff;
+      border-radius: 20px;
+      width: 332px;
+      overflow: hidden;
+    }
+    .item-image {
+      height: 332px;
+      width: 332px;
+      object-fit: cover;
+    }
+    .item-content {
+      padding: 16px 14px 20px;
+    }
+    .main {
+      width: 90%;
+      height: 25px;
+    }
+    .sub {
+      margin-top: 20px;
+      width: 60%;
+      height: 25px;
+    }
+    .text {
+      margin-top: 16px;
+      width: 30%;
+      height: 25px;
+    }
+  }
   .skeAnimation {
     @include skeAnimation(#eee)
   }

@@ -16,11 +16,11 @@
         </div>
       </router-link>
       <div :class="[$style.panel, $style.right]">
-        <router-link :to="{ name: 'HelperList', params: { status: 'TODAY' }, query: { total: count } }">
+        <router-link :class="$style.today" :to="{ name: 'HelperList', params: { status: 'TODAY' }, query: { total: count } }">
           <div :class="$style.title">今日新增Helper</div>
           <div :class="$style.number" v-text="today" />
         </router-link>
-        <div>
+        <div :class="$style.yesterday">
           <div :class="$style.title">月收益金额</div>
           <div :class="$style.number" v-text="currentMonth" />
         </div>
@@ -166,7 +166,7 @@ export default {
       height: 274px;
       background: url("../../../assets/images/my/bg-money.png") no-repeat center center;
       background-size: cover;
-      .left {
+      .today {
         > .number::after {
           content: '位';
         }
