@@ -163,16 +163,6 @@
         :active="0"
       />
     </modal>
-
-    <div :class="$style.auditResults" v-if="isAuditResultsShow">
-      <div :class="$style.shareBg">
-        <div :class="$style.title">审核结果</div>
-        <div :class="$style.content" v-if="noticeData.status === 'PASS'">恭喜你，helper审核已通过！</div>
-        <div :class="$style.content" v-else>helper审核驳回，身份证有误</div>
-        <div :class="$style.button" v-if="noticeData.status === 'PASS'" @click="applyHelperKnow">朕知道了</div>
-        <div :class="$style.button" v-else style="color: #D2524C" @click="applyHelperAgain">重新申请</div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -222,9 +212,9 @@ export default {
       newFreight: [],
       progress: [],
       applyStatus: 'NOT_APPLY',
-      isModalShow: false,
-      isAuditResultsShow: false,
-      noticeData: ''
+      isModalShow: false
+      // isAuditResultsShow: true,
+      // noticeData: ''
     }
   },
   computed: {
@@ -319,23 +309,32 @@ export default {
         throw e
       }
     },
-    applyHelperAgain () {
-      this.isAuditResultsShow = false
-      this.$router.push({ name: 'ApplyHelper' })
-    },
-    async applyHelperKnow () {
-      this.isAuditResultsShow = false
-      await updateNoticeStatus()
-      this.$parent.$children[0].getNotice()
-    },
     async getNotice () {
-      const { result } = await getAduitNotice()
-      this.noticeData = result
-      if (this.noticeData && this.noticeData.noticeStatus === 2) {
-        this.isAuditResultsShow = true
+      const { result: noticeData } = await getAduitNotice()
+      if (noticeData && noticeData.noticeStatus === 2) {
+        if (noticeData.status === 'PASS') {
+          this.$alert({
+            message: '审核结果',
+            viceMessage: '恭喜你，helper审核已通过！',
+            confirmText: '朕知道了',
+            confirmStyle: {
+              fontWeight: 'bold'
+            }
+          })
+        } else if (noticeData.status === 'REJECT') {
+          await this.$alert({
+            message: '审核结果',
+            viceMessage: 'helper审核驳回' + (noticeData.agentWriteBack ? `，${noticeData.agentWriteBack}` : ''),
+            confirmText: '重新申请',
+            confirmStyle: {
+              color: noticeData.status === 'REJECT' ? '#D2524C' : null,
+              fontWeight: 'bold'
+            }
+          })
+          this.$router.push({ name: 'ApplyHelper' })
+        }
         await updateNoticeStatus()
       }
-      console.log(this.noticeData)
     }
   }
 }

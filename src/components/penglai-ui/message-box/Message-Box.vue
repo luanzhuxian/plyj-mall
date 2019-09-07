@@ -44,11 +44,13 @@
               v-if="type === 'confirm' || type === 'propmt'"
               class="message-box-cancel"
               v-text="cancelText"
+              :style="cancelStyle"
             />
             <button
               @click="handleConfirm"
               class="message-box-confirm"
               v-text="confirmText"
+              :style="confirmStyle"
             />
           </div>
         </div>
@@ -82,6 +84,18 @@ export default {
     confirmText: {
       type: String,
       default: ''
+    },
+    confirmStyle: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
+    cancelStyle: {
+      type: Object,
+      default () {
+        return {}
+      }
     },
     message: {
       type: String,
@@ -193,8 +207,9 @@ export default {
       color: #2E2E2E;
     }
     .vice-message {
-      margin-top: 24px;
+      margin-top: 22px;
       padding: 0 46px;
+      line-height: 40px;
       font-size: 28px;
       color: #b4b4b4;
     }
@@ -202,8 +217,9 @@ export default {
       width: 100%;
       white-space: pre-wrap;
       word-break: break-all;
-      font-size: 34px;
-      line-height: 48px;
+      font-size: 32px;
+      line-height: 44px;
+      font-weight: bold;
       color: #000;
       box-sizing: border-box;
     }

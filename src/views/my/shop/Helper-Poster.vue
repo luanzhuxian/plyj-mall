@@ -4,11 +4,11 @@
     <div v-show="activeId === 1" :class="$style.helperGuidelines">
       <div :class="$style.imgBox"><img :src="post" alt=""></div>
       <div :class="$style.descriptionBox">
-        <p>操作指引：</p>
+        <p>推广指引：</p>
         <ol>
-          <li>下载店铺二维码</li>
-          <li>将二维码放置在线下海报、宣传册、易拉宝等宣传资料中；</li>
-          <li>地推中，出示宣传资料，用户微信扫描二维码，即可快速进入机构店铺，查看活动和课程</li>
+          <li>长按海报图片，保存邀请海报到相册；</li>
+          <li>将邀请海报分享到朋友圈或微信好友；</li>
+          <li>用户识别二维码提交helper申请通过，则邀请成功。</li>
         </ol>
       </div>
     </div>
