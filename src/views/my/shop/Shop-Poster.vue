@@ -28,7 +28,6 @@ export default {
       let canImg = new Image()
       canImg.crossOrigin = ''
       canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/store-haibao.jpg?time=${Date.now()}`
-      console.log(canImg)
       canImg.onload = async () => {
         let canvas = document.createElement('canvas')
         canvas.width = canImg.width

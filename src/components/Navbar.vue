@@ -64,7 +64,6 @@ export default {
     async getNotice () {
       const { result } = await getAduitNotice()
       this.noticeData = result
-      console.log(this.noticeData)
     }
   },
   async created () {

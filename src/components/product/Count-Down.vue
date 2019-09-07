@@ -55,10 +55,9 @@ export default {
         this.endtiemstamp = Number(this.endtime) || 0
         this.starttiemstamp = Number(this.starttime) || 0
       }
-      console.log(this.endtiemstamp, this.starttiemstamp)
       if (this.starttiemstamp - this.endtiemstamp < 0) {
         // 启动倒计时
-        console.log('启动倒计时')
+        console.warn('启动倒计时')
         this.countdown()
       } else {
         this.show = false
