@@ -5,9 +5,11 @@
       <div :class="$style.imgBox"><img :src="post" alt=""></div>
       <div :class="$style.descriptionBox">
         <p>操作指引：</p>
-        <p>1.下载店铺二维码</p>
-        <p>2.将二维码放置在线下海报、宣传册、易拉宝等宣传资料中；</p>
-        <p>3.地推中，出示宣传资料，用户微信扫描二维码，即可快速</p>
+        <ol>
+          <li>下载店铺二维码</li>
+          <li>将二维码放置在线下海报、宣传册、易拉宝等宣传资料中；</li>
+          <li>地推中，出示宣传资料，用户微信扫描二维码，即可快速进入机构店铺，查看活动和课程</li>
+        </ol>
       </div>
     </div>
     <div v-show="activeId === 2" :class="$style.qoceBox">
@@ -125,15 +127,18 @@ export default {
           height: auto !important;
         }
       }
-      .description-box{
-        >p{
-          text-align: center;
-          color: #999999;
-          font-size: 24px;
-          line-height: 40px;
-        }
-        >svg{
-          margin-top: 140px;
+    }
+  }
+  .description-box {
+    color: #999999;
+    font-size: 24px;
+    line-height: 40px;
+    ol {
+      counter-reset: num;
+      > li {
+        &:before {
+          counter-increment: num;
+          content: counter(num) '. ';
         }
       }
     }
