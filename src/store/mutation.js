@@ -73,6 +73,9 @@ export default {
   [type.GET_CART_COUNT] (state, payload) {
     state.cartCount = payload
   },
+  [type.Get_ADUIT_NOTICE] (state, payload) {
+    state.aduitNotice = payload
+  },
   [type.STUDENTS] (state, payload) {
     state.students = payload
   }

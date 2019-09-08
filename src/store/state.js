@@ -5,6 +5,10 @@ const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress'))
 export default {
   theme: 'base-theme',
   cartCount: 0,
+  aduitNotice: {
+    noticeStatus: '',
+    status: ''
+  },
   userInfo: {
     isAgentUser: false,
     applyBalance: 0,

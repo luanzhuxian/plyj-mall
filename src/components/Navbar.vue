@@ -30,23 +30,18 @@
       :to="{ name: 'My' }"
     >
       <pl-svg :name="myActive ? 'my-active' : 'my'" />
-      <div v-if="noticeData && noticeData.noticeStatus === 2" :class="$style.alertMessage" />
+      <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
     </router-link>
   </nav>
 </template>
 
 <script>
-import { getAduitNotice } from '../apis/broker-manager'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import { Get_ADUIT_NOTICE } from '../store/mutation-type'
 export default {
   name: 'Navbar',
-  data () {
-    return {
-      noticeData: ''
-    }
-  },
   computed: {
-    ...mapGetters(['agentUser', 'isAdmin']),
+    ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus']),
     myActive: function () {
       return this.$route.matched.some(val => val.name === 'My')
     },
@@ -61,14 +56,12 @@ export default {
     }
   },
   methods: {
-    async getNotice () {
-      const { result } = await getAduitNotice()
-      this.noticeData = result
-      console.log(this.noticeData)
-    }
+    ...mapActions({
+      getAuditNotice: Get_ADUIT_NOTICE
+    })
   },
-  async created () {
-    this.getNotice()
+  async mounted () {
+    this.getAuditNotice()
   }
 }
 </script>

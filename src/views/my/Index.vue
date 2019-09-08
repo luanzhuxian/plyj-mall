@@ -203,7 +203,8 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { orderPhysicalorderSummary, getHelperApplicationProgress } from '../../apis/order-manager'
 import { getNewFreight } from '../../apis/my'
 import { getAduitNotice, updateNoticeStatus } from '../../apis/broker-manager'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
 
 const orderStatusMapCamel = {
   new: 'NEW',
@@ -298,6 +299,9 @@ export default {
     this.getNotice()
   },
   methods: {
+    ...mapActions({
+      getAuditNotice: Get_ADUIT_NOTICE
+    }),
     async getRecentExpressInfo () {
       try {
         const { result } = await getNewFreight()
@@ -369,6 +373,7 @@ export default {
           this.$router.push({ name: 'ApplyHelper' })
         }
         await updateNoticeStatus()
+        this.getAuditNotice()
       }
     }
   }

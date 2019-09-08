@@ -14,6 +14,9 @@ import {
   getList
 } from '../apis/student'
 import {
+  getAduitNotice
+} from '../apis/broker-manager'
+import {
   DelayExec
 } from '../assets/js/util'
 import Qs from 'qs'
@@ -150,6 +153,17 @@ export default {
       try {
         const { result } = await getCartCount()
         commit(type.GET_CART_COUNT, result)
+        resolve()
+      } catch (e) {
+        reject(e)
+      }
+    })
+  },
+  [type.Get_ADUIT_NOTICE]: ({ commit }) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { result } = await getAduitNotice()
+        commit(type.Get_ADUIT_NOTICE, result)
         resolve()
       } catch (e) {
         reject(e)

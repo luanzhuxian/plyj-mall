@@ -40,5 +40,7 @@ export default {
   mallStatus: state => state.mallInfo.status,
   supportPhone: state => state.mallInfo.supportPhone,
   mallId: state => state.mallInfo.sequenceNbr,
-  cartCount: state => state.cartCount
+  cartCount: state => state.cartCount,
+  noticeStatus: state => state.aduitNotice.noticeStatus,
+  aduitStatus: state => state.aduitNotice.status
 }
