@@ -170,31 +170,10 @@ export default {
       try {
         const { result } = await getCartList()
         this.resetState()
-        const disabledList = []
-        for (let item of result) {
-          // 如果商品已下架或当前规格商品数量不足，禁用
-          const currentSku = item.skuModels.find(sku => {
-            return sku.skuCode1 === item.cartSkuCode && sku.skuCode2 === item.cartSkuCode2
-          })
-          if (currentSku) {
-            item.disabled = currentSku.stock < item.cartProductCount || item.productStatus !== 2 || item.serverTime - item.shoppingTimeLong < 0
-          } else {
-            item.disabled = false
-          }
-          if (item.disabled) {
-            disabledList.push(item)
-          }
-        }
-        // 将禁用的挪到最后
-        for (let item of disabledList) {
-          result.splice(result.indexOf(item), 1)
-          result.push(item)
-        }
-        this.products = result
+        this.setDisabled(result)
         this.total = result.length
         this.currentPro = this.products[0] || {}
-        this.isManage = false
-        this.checkedList = []
+        this.setDisabledToEnd()
       } catch (e) {
         throw e
       } finally {
@@ -210,10 +189,36 @@ export default {
         this.currentSku.count = data.cartProductCount
       }
       this.showSpecifica = true
-      this.$nextTick(() => {
-        this.$nextTick(() => {
+    },
+    setDisabled (products) {
+      // const disabledList = []
+      for (let item of products) {
+        // 如果商品已下架或当前规格商品数量不足，禁用
+        const currentSku = item.skuModels.find(sku => {
+          return sku.skuCode1 === item.cartSkuCode && sku.skuCode2 === item.cartSkuCode2
         })
-      })
+        if (currentSku) {
+          let disabled = currentSku.stock < item.cartProductCount || item.productStatus !== 2 || item.serverTime - item.shoppingTimeLong < 0
+          if (this.isManage) {
+            item.tempDisabled = disabled
+            item.disabled = false
+          } else {
+            item.disabled = disabled
+          }
+        } else {
+          item.disabled = false
+        }
+      }
+      this.products = JSON.parse(JSON.stringify(products))
+    },
+    // 将禁用项挪到最后
+    setDisabledToEnd () {
+      let disabledList = this.products.filter(item => item.disabled)
+      // 将禁用的挪到最后
+      for (let item of disabledList) {
+        this.products.splice(this.products.indexOf(item), 1)
+        this.products.push(item)
+      }
     },
     // 改变规格
     async specChanged (option, revert) {
@@ -242,6 +247,7 @@ export default {
           this.$set(this.products, this.products.indexOf(this.currentPro), this.currentPro)
           this.computeMoney()
           this.isDouble(option)
+          this.setDisabled(this.products)
         } else {
           // 修改失败，回滚选框中的值
           revert()
@@ -256,8 +262,10 @@ export default {
     },
     selectedChange (selected) {
       if (!this.isManage) {
-        this.checkedAll = selected.length === this.products.filter(item => !item.disabled).length
+        this.checkedAll = selected.length === this.products.filter(item => !item.disabled).length && selected.length > 0
         this.computeMoney()
+      } else {
+        this.checkedAll = selected.length === this.products.length && selected.length > 0
       }
     },
     // 管理
@@ -274,8 +282,10 @@ export default {
           delete item.tempDisabled
         }
       }
+      this.setDisabledToEnd()
     },
     checkAll (val) {
+      console.log(val)
       this.checkedAll = val
       this.$refs.checkboxGroup.changeAll(val)
     },

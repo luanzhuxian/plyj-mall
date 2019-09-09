@@ -36,7 +36,7 @@
           </div>
           <pl-svg :class="$style.arrow" name="right" color="#ccc" />
         </div>
-        <div :class="$style.priceCount" v-if="!overflowStock && !notStart">
+        <div :class="$style.priceCount" v-if="!overflowStock">
           <i :class="$style.price + ' rmb'" v-text="currentSkuModel.price" />
           <!--<div :class="$style.count">
             <button
@@ -180,7 +180,7 @@ export default {
       this.$emit('change')
     },
     skuClick (e) {
-      if (this.disabled || this.notStart) {
+      if (this.disabled) {
         return
       }
       this.$emit('skuClick', e)

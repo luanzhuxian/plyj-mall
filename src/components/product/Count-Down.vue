@@ -128,7 +128,7 @@ export default {
     box-sizing: border-box;
     word-break: break-all;
     text-align: center;
-    > time {
+    > .time {
       display: flex;
       > i {
         display: inline-block;
@@ -180,6 +180,9 @@ export default {
           border-radius: 4px;
           font-size: 22px;
         }
+        > em {
+          line-height: 36px;
+        }
       }
       span {
         margin-right: 12px;
@@ -196,6 +199,9 @@ export default {
           line-height: 28px;
           border-radius: 4px;
           font-size: 20px;
+        }
+        > em {
+          line-height: 28px;
         }
       }
       span {
@@ -222,6 +228,9 @@ export default {
           width: 28px;
           line-height: 28px;
           font-size: 22px;
+        }
+        > em {
+          line-height: 28px;
         }
       }
     }

@@ -20,7 +20,7 @@
         @click="jump(item)"
       >
         <div :class="$style.img">
-          <count-down :class="$style.countDown" size="small" :data="item" :fields="{ end: 'shoppingTime' }" />
+          <count-down v-if="item.goodsInfo.shoppingStatus === 1" :class="$style.countDown" size="small" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
           <img :src="item.image" v-img-error alt="">
         </div>
         <div :class="$style.content">
