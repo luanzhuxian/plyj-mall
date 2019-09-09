@@ -63,11 +63,11 @@ export default {
   },
   methods: {
     getMinPrice (skuList) {
-      let priceList = skuList.map(item => item.price)
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
       return Math.min(...priceList)
     },
     getMaxPrice (skuList) {
-      let priceList = skuList.map(item => item.price)
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
       return Math.max(...priceList)
     },
     clickHandler (item) {

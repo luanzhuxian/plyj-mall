@@ -682,6 +682,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     position: relative;
     background-color: #fff;
     color: #D2524C;
+    padding: 0;
     opacity: 1;
   }
 </style>

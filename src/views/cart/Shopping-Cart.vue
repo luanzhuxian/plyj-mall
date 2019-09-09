@@ -32,6 +32,7 @@
                 :disabled="isManage"
                 @countChange="computeMoney"
                 @skuClick="skuClick(data)"
+                @change="getList"
               />
             </template>
           </pl-checkbox>
@@ -175,7 +176,11 @@ export default {
           const currentSku = item.skuModels.find(sku => {
             return sku.skuCode1 === item.cartSkuCode && sku.skuCode2 === item.cartSkuCode2
           })
-          item.disabled = currentSku ? (currentSku.stock < item.cartProductCount || item.productStatus !== 2) : true
+          if (currentSku) {
+            item.disabled = currentSku.stock < item.cartProductCount || item.productStatus !== 2 || item.serverTime - item.shoppingTimeLong < 0
+          } else {
+            item.disabled = false
+          }
           if (item.disabled) {
             disabledList.push(item)
           }
