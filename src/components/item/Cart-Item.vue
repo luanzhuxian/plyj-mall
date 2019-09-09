@@ -17,7 +17,7 @@
       </span>
 
       <template v-else-if="!allDisabled && currentSkuModel.id">
-        <div v-if="!notStart" :class="{ [$style.currentSku]: true, [$style.disabled]: disabled }" @click.stop="skuClick">
+        <div :class="{ [$style.currentSku]: true, [$style.disabled]: disabled }" @click.stop="skuClick">
           <div v-if="currentSkuModel">
             <span v-text="currentSkuModel.skuCode1Name" />
             <template v-if="currentSkuModel.skuCode2Name">
@@ -177,7 +177,7 @@ export default {
       this.$emit('change')
     },
     skuClick (e) {
-      if (this.disabled) {
+      if (this.disabled || this.notStart) {
         return
       }
       this.$emit('skuClick', e)

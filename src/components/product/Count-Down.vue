@@ -106,8 +106,8 @@ export default {
     line-height: 40px;
     font-size: 20px;
     color: #fff;
-    background-color: #000;
-    opacity: .6;
+    background-color: rgba(0, 0, 0, .6);
     box-sizing: border-box;
+    word-break: break-all;
   }
 </style>
