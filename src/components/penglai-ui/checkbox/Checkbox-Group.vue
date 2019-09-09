@@ -32,7 +32,9 @@ export default {
   methods: {
     change (checked, data) {
       if (checked) {
-        this.group.push(data)
+        if (!this.group.includes(data)) {
+          this.group.push(data)
+        }
       } else {
         this.group.splice(this.group.indexOf(data), 1)
       }

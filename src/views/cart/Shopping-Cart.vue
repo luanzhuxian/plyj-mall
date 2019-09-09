@@ -193,6 +193,8 @@ export default {
         this.products = result
         this.total = result.length
         this.currentPro = this.products[0] || {}
+        this.isManage = false
+        this.checkedList = []
       } catch (e) {
         throw e
       } finally {
@@ -286,7 +288,11 @@ export default {
       try {
         this.removing = true
         await deleteCartProducts(ids)
-        this.checkedList.splice(0, 500)
+        // for (let id of ids) {
+        //   let finded = this.products.findIndex(item => item.id === id)
+        //   this.products.splice(finded, 1)
+        // }
+        this.checkedList = []
         this.getList()
       } catch (e) {
         throw e
