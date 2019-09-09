@@ -12,6 +12,7 @@
         >
       </swiperSlide>
       <swiperSlide v-for="(item, i) of data.values" :key="i">
+        <count-down v-if="item.shoppingStatus === 1" :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
         <img :class="$style.img" :src="item.image" :alt="item.name" @click="imgClick(item)">
       </swiperSlide>
       <div v-show="data.values.length > 1" class="banner-pagination-home-b" slot="pagination" />
@@ -23,11 +24,13 @@
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
 // import { wasRegist } from '../../../apis/wwec'
+import CountDown from '../../../components/product/Count-Down.vue'
 export default {
   name: 'Banner',
   components: {
     swiper,
-    swiperSlide
+    swiperSlide,
+    CountDown
   },
   data () {
     return {

@@ -44,16 +44,19 @@
         :original-price="originalPrice"
       />
     </div>
+    <count-down v-if="data.shoppingStatus === 1" :data="data" :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }" />
   </div>
 </template>
 
 <script>
-import Price from '../Price.vue'
+import Price from '../product/Price.vue'
 import { mapGetters } from 'vuex'
+import CountDown from '../product/Count-Down.vue'
 export default {
   name: 'LessonItem',
   components: {
-    Price
+    Price,
+    CountDown
   },
   data () {
     return {
@@ -98,7 +101,13 @@ export default {
       type: String,
       default: 'large'
     },
-    border: Boolean
+    border: Boolean,
+    data: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    }
   },
   computed: {
     ...mapGetters(['userId', 'agentUser'])

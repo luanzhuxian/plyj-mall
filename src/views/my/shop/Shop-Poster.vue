@@ -26,20 +26,18 @@ export default {
   methods: {
     async drawPost () {
       let canImg = new Image()
-      canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/store-haibao.jpg?time=${Date.now()}`
       canImg.crossOrigin = ''
+      canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/store-haibao.jpg?time=${Date.now()}`
       canImg.onload = async () => {
-        let qrcode = await generateQrcode(500, this.mallUrl, 0, null, null, 'url')
-        let qrCodeImg = new Image()
-        qrCodeImg.src = qrcode
         let canvas = document.createElement('canvas')
         canvas.width = canImg.width
         canvas.height = canImg.height
         let ctx = canvas.getContext('2d')
         ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
-        ctx.font = 'bold 84px Georgia'
-        ctx.textAlign = 'center'
         ctx.fillText(this.mallName, 500, 150)
+        let qrcode = await generateQrcode(500, this.mallUrl, 0, null, null, 'url')
+        let qrCodeImg = new Image()
+        qrCodeImg.src = qrcode
         qrCodeImg.onload = () => {
           ctx.drawImage(qrCodeImg, 663, 1147, 200, 200)
           let post = canvas.toDataURL('image/jpeg', 0.7)

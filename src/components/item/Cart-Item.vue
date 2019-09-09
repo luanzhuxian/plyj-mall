@@ -12,13 +12,12 @@
 
     <div :class="$style.cartItemContent">
       <div :class="$style.productName" v-text="data.productName" />
-
       <span :class="$style.unshelve" v-if="noSold">
         该商品已失效
       </span>
 
       <template v-else-if="!allDisabled && currentSkuModel.id">
-        <div :class="{ [$style.currentSku]: true, [$style.disabled]: disabled }" @click.stop="skuClick">
+        <div v-if="!notStart" :class="{ [$style.currentSku]: true, [$style.disabled]: disabled }" @click.stop="skuClick">
           <div v-if="currentSkuModel">
             <span v-text="currentSkuModel.skuCode1Name" />
             <template v-if="currentSkuModel.skuCode2Name">
@@ -27,7 +26,14 @@
           </div>
           <pl-svg :class="$style.arrow" name="right" color="#ccc" />
         </div>
-        <div :class="$style.priceCount" v-if="!overflowStock">
+        <CountDown
+          v-if="notStart"
+          :class="$style.countDown"
+          :data="data"
+          :fields="{ start: 'serverTime', end: 'shoppingTimeLong'}"
+          @done="countDownFinished"
+        />
+        <div :class="$style.priceCount" v-if="!overflowStock && !notStart">
           <i :class="$style.price + ' rmb'" v-text="currentSkuModel.price" />
           <!--<div :class="$style.count">
             <button
@@ -84,10 +90,12 @@
 import { updateCartProductCount } from '../../apis/shopping-cart'
 import Count from '../Count.vue'
 import { mapGetters } from 'vuex'
+import CountDown from '../../components/product/Count-Down.vue'
 export default {
   name: 'CartItem',
   components: {
-    Count
+    Count,
+    CountDown
   },
   data () {
     return {
@@ -127,6 +135,10 @@ export default {
     noSold () {
       return this.data.productStatus === 1 || this.data.productStatus === 0
     },
+    // 为开始开抢
+    notStart () {
+      return this.data.serverTime - this.data.shoppingTimeLong < 0 && this.data.shoppingStatus === 1
+    },
     currentSkuModel () {
       return this.data.skuModels.find(item => {
         return item.skuCode1 === this.data.cartSkuCode && item.skuCode2 === this.data.cartSkuCode2
@@ -160,6 +172,9 @@ export default {
           brokerId: this.userId || null
         }
       })
+    },
+    countDownFinished () {
+      this.$emit('change')
     },
     skuClick (e) {
       if (this.disabled) {
@@ -222,7 +237,18 @@ export default {
     color: #999;
     margin-bottom: 56px;
   }
+  .count-down {
+    position: relative;
+    right: 0;
+    top: 0;
+    margin: 10px 0;
+    padding: 0;
+    background: none;
+    color: #D2524C;
+    opacity: 1;
+  }
   .currentSku{
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: space-between;

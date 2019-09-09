@@ -12,6 +12,7 @@
         :key="i"
         @click="clickHandler(item)"
       >
+        <count-down v-if="item.shoppingStatus === 1" :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
         <div :class="$style.img" :style="{ backgroundImage: `url(${item.image})` }">
           <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
             体验课
@@ -72,6 +73,7 @@
           @click="clickHandler(item)"
         >
           <img :class="$style.img" :src="item.image" alt="">
+          <count-down :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
           <div :class="$style.content">
             <p :class="$style.name" v-text="item.goodsInfo.productName" />
             <p :class="$style.desc" v-text="item.goodsInfo.productDesc" />
@@ -136,11 +138,13 @@
 
 <script>
 import Tags from './Tags.vue'
+import CountDown from '../../../components/product/Count-Down.vue'
 import { mapGetters } from 'vuex'
 export default {
   name: 'BestRecommend',
   components: {
-    Tags
+    Tags,
+    CountDown
   },
   data () {
     return {
@@ -182,39 +186,19 @@ export default {
   },
   methods: {
     getMinPrice (skuList) {
-      let priceList = skuList.map(item => {
-        if (item.status === 1) {
-          return item.price
-        }
-        return Number.MAX_VALUE
-      })
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
       return Math.min(...priceList)
     },
     getMinOrinalPrice (skuList) {
-      let priceList = skuList.map(item => {
-        if (item.status === 1) {
-          return item.originalPrice
-        }
-        return Number.MAX_VALUE
-      })
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
       return Math.min(...priceList)
     },
     getMaxOrinalPrice (skuList) {
-      let priceList = skuList.map(item => {
-        if (item.status === 1) {
-          return item.originalPrice
-        }
-        return Number.MIN_VALUE
-      })
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
       return Math.max(...priceList)
     },
     getMaxPrice (skuList) {
-      let priceList = skuList.map(item => {
-        if (item.status === 1) {
-          return item.price
-        }
-        return Number.MIN_VALUE
-      })
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
       return Math.max(...priceList)
     },
     seeAll () {
@@ -258,6 +242,7 @@ export default {
     }
   }
   .product {
+    position: relative;
     margin-bottom: 56px;
     border-radius: 20px;
     overflow: hidden;
@@ -348,6 +333,7 @@ export default {
   }
   .waterfall {
     .item {
+      position: revert;
       width: 340px;
       margin-bottom: 22px;
       color: #000;

@@ -24,7 +24,7 @@
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(2)"
-        :disabled="loading || allDisabled"
+        :disabled="loading || allDisabled || disableConfrim"
       >
         {{ confirmText }}
       </button>
@@ -114,7 +114,9 @@ export default {
     limiting: {
       type: Number,
       default: 0
-    }
+    },
+    disableConfrim: Boolean,
+    disableAddCart: Boolean
   },
   computed: {
     ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId', 'cartCount']),

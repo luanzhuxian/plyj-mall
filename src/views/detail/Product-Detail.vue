@@ -12,6 +12,7 @@
       />
       <DetailInfoBox :loading="loading">
         <info-header :detail="detail" />
+        <count-down @done="countFinished" :class="$style.countDown" v-if="detail.shoppingStatus === 1" :starttime="detail.serverTime" :endtime="detail.shoppingTimeLong" />
         <DetailTitle v-text="detail.productName" />
         <DetailDesc v-text="detail.productDesc" />
         <Tags :tags="detail.labelModels" />
@@ -75,6 +76,7 @@
       :current-sku.sync="currentModel"
       :product-status="detail.productStatus"
       :confirm-text="confirmText"
+      :disable-confrim="confirmText === '暂未开售'"
       :limiting="limiting"
     />
     <specification-pop
@@ -97,7 +99,7 @@
           </button>
           <button
             :class="$style.buy"
-            :disabled="adding || noStock"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku)"
           >
             {{ confirmText }}
@@ -138,7 +140,7 @@ import Tags from '../../components/detail/Tags.vue'
 import UsefulLife from '../../components/detail/Useful-Life.vue'
 import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
-import Price from '../../components/Price.vue'
+import Price from '../../components/product/Price.vue'
 import Field from '../../components/detail/Field.vue'
 import { getProductDetail } from '../../apis/product'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
@@ -150,6 +152,7 @@ import youLike from './../home/components/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
 import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
+import CountDown from '../../components/product/Count-Down.vue'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
@@ -169,7 +172,8 @@ export default {
     Comments,
     UsefulLife,
     InfoHeader,
-    Instructions
+    Instructions,
+    CountDown
   },
   data () {
     return {
@@ -221,6 +225,9 @@ export default {
       let textMap = {
         FORMAL_CLASS: '立即学习',
         EXPERIENCE_CLASS: '立即报名'
+      }
+      if (this.detail.serverTime - this.detail.shoppingTimeLong < 0) {
+        return '暂未开售'
       }
       return textMap[this.productType] || '立即购买'
     }
@@ -472,6 +479,10 @@ export default {
           reject(new Error('图片加载错误'))
         }
       })
+    },
+    countFinished () {
+      this.$set(this.detail, 'serverTime', '')
+      this.$set(this.detail, 'shoppingTimeLong', '')
     }
   }
 }
@@ -552,6 +563,9 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     }
     .buy {
       background-color: $--primary-color;
+      &:disabled {
+        color: #fea455;
+      }
     }
   }
   .detailOrComment {
@@ -663,5 +677,12 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
         color: #fff;
       }
     }
+  }
+  .count-down {
+    position: relative;
+    background-color: #fff;
+    color: #D2524C;
+    padding: 0;
+    opacity: 1;
   }
 </style>
