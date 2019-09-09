@@ -10,8 +10,11 @@
         :key="i"
         @click="clickHandler(item)"
       >
-        <count-down v-if="item.shoppingStatus === 1" :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
-        <img :class="$style.img" :src="item.image" alt="">
+        <div :class="$style.img">
+          <count-down :class="$style.countDown" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+          <img :src="item.image" alt="">
+        </div>
+
         <span v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'" :class="$style.experience">体验课</span>
         <div :class="$style.itemContent">
           <p :class="$style.proName" v-text="item.goodsInfo.productName" />
@@ -105,9 +108,18 @@ export default {
     overflow: hidden;
     background-color: #fff;
     .img {
-      width: 340px;
-      height: 228px;
-      object-fit: cover;
+      position: relative;
+      > img {
+        width: 340px;
+        height: 228px;
+        object-fit: cover;
+      }
+      > .countDown {
+        width: 100%;
+        bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
     }
   }
   .experience {

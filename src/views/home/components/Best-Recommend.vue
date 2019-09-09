@@ -12,11 +12,14 @@
         :key="i"
         @click="clickHandler(item)"
       >
-        <count-down v-if="item.shoppingStatus === 1" :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
         <div :class="$style.img" :style="{ backgroundImage: `url(${item.image})` }">
-          <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
-            体验课
+          <div :class="$style.typeBox">
+            <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
+              体验课
+            </div>
+            <count-down :class="$style.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
           </div>
+
           <div :class="$style.howManyBuy">
             <pl-svg name="hot" />
             <span v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
@@ -72,8 +75,10 @@
           }"
           @click="clickHandler(item)"
         >
-          <img :class="$style.img" :src="item.image" alt="">
-          <count-down :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
+          <div :class="$style.topImg">
+            <img :src="item.image" alt="">
+            <count-down :class="$style.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+          </div>
           <div :class="$style.content">
             <p :class="$style.name" v-text="item.goodsInfo.productName" />
             <p :class="$style.desc" v-text="item.goodsInfo.productDesc" />
@@ -104,7 +109,10 @@
           }"
           @click="clickHandler(item)"
         >
-          <img :class="$style.img" :src="item.image" alt="">
+          <div :class="$style.topImg">
+            <img :src="item.image" alt="">
+            <count-down :class="$stlye.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+          </div>
           <div :class="$style.content">
             <p :class="$style.name" v-text="item.goodsInfo.productName" />
             <p :class="$style.desc" v-text="item.goodsInfo.productDesc" />
@@ -257,13 +265,22 @@ export default {
       background-repeat: no-repeat;
       background-position: center center;
       background-size: cover;
-      .type {
-        padding: 6px 24px;
-        margin: 20px 0 0 20px;
-        font-size: 28px;
-        color: #fff;
-        background-color: #F2B036;
-        border-radius: 10px;
+      > .type-box {
+        width: 100%;
+        padding: 18px 24px;
+        display: flex;
+        justify-content: space-between;
+        box-sizing: border-box;
+        > div {
+          position: relative;
+        }
+        > .type {
+          padding: 6px 24px;
+          font-size: 28px;
+          color: #fff;
+          background-color: #F2B036;
+          border-radius: 10px;
+        }
       }
       .how-many-buy {
         position: absolute;
@@ -340,18 +357,28 @@ export default {
       border-radius: 20px;
       overflow: hidden;
       background-color: #fff;
+      .count-down {
+        bottom: 0;
+        width: 100%;
+      }
       &.long {
         color: red;
-        .img {
-          width: 340px;
-          height: 454px;
-          object-fit: cover;
+        .top-img {
+          position: relative;
+          img {
+            width: 340px;
+            height: 454px;
+            object-fit: cover;
+          }
         }
       }
-      .img {
-        width: 340px;
-        height: 340px;
-        object-fit: cover;
+      .top-img {
+        position: relative;
+        img {
+          width: 340px;
+          height: 340px;
+          object-fit: cover;
+        }
       }
       .content {
         padding: 16px;

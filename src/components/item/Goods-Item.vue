@@ -4,11 +4,14 @@
     @click="handleClick"
   >
     <slot />
-    <img
-      :class="$style.img"
-      v-lazy="img"
-      :key="img"
-    >
+    <div :class="$style.top">
+      <img
+        :class="$style.img"
+        v-lazy="img"
+        :key="img"
+      >
+      <count-down :class="$style.countDown" v-if="data.shoppingStatus === 1" :data="data" :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }" />
+    </div>
     <div :class="$style.bottom">
       <div
         v-text="title"
@@ -40,7 +43,6 @@
         </span>
       </div>
     </div>
-    <count-down v-if="data.shoppingStatus === 1" :data="data" :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }" />
   </div>
 </template>
 
@@ -125,6 +127,9 @@ export default {
     width: 100%;
     height: 266px;
   }
+  .top {
+    position: relative;
+  }
 }
 .bottom {
   box-sizing: border-box;
@@ -177,4 +182,10 @@ export default {
   color: #666666;
   line-height: 22px;
 }
+  .count-down {
+    width: 100% !important;
+    bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 </style>

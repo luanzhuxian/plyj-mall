@@ -19,8 +19,10 @@
         :key="i"
         @click="jump(item)"
       >
-        <count-down :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
-        <img :class="$style.img" :src="item.image" v-img-error alt="">
+        <div :class="$style.img">
+          <count-down :class="$style.countDown" size="small" :data="item" :fields="{ end: 'shoppingTime' }" />
+          <img :src="item.image" v-img-error alt="">
+        </div>
         <div :class="$style.content">
           <div :class="$style.proName" v-text="item.name" />
           <Tags size="middle" :tags="item.goodsInfo.labelModels" />
@@ -51,7 +53,10 @@
           :key="i"
           @click="jump(item)"
         >
-          <img :class="$style.img" :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
+          <div :class="$style.img">
+            <count-down :class="$style.countDown2" size="small" :data="item" :fields="{ end: 'shoppingTime' }" />
+            <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
+          </div>
           <div :class="$style.content">
             <div :class="$style.proName" v-text="item.name" />
             <tags size="small" :tags="item.goodsInfo.labelModels.slice(0, 2)" />
@@ -126,9 +131,7 @@ export default {
       if (type === 1) {
         this.$router.push({ name: 'Classify', params: { optionId: value || null } })
       } else {
-        if (item.serverTime - item.shoppingTime >= 0) {
-          this.$router.push({ name: 'Lesson', params: { productId: value, brokerId: this.userId || null } })
-        }
+        this.$router.push({ name: 'Lesson', params: { productId: value, brokerId: this.userId || null } })
       }
     }
   }
@@ -183,9 +186,12 @@ export default {
     overflow: hidden;
     width: 340px;
     .img {
-      width: 340px;
-      height: 340px;
-      object-fit: cover;
+      position: relative;
+      > img {
+        width: 340px;
+        height: 340px;
+        object-fit: cover;
+      }
     }
     .content {
       padding: 16px;
@@ -231,8 +237,12 @@ export default {
       width: 100%;
       .img {
         width: 100%;
-        height: 296px;
-        object-fit: cover;
+        position: relative;
+        > img {
+          width: 100%;
+          height: 296px;
+          object-fit: cover;
+        }
       }
       .content {
         .pro-name {
@@ -257,6 +267,16 @@ export default {
     background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/img/product-item.png") no-repeat center center;
     background-size: 115%;
     border-radius: 20px;
+  }
+  .count-down {
+    top: 16px;
+    left: 20px;
+  }
+  .count-down2 {
+    width: 100%;
+    bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
   @keyframes bgc-move {
     0% { background-position: 150% 0 }

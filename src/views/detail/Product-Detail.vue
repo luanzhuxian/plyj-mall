@@ -12,7 +12,7 @@
       />
       <DetailInfoBox :loading="loading">
         <info-header :detail="detail" />
-        <count-down @done="countFinished" :class="$style.countDown" v-if="detail.shoppingStatus === 1" :starttime="detail.serverTime" :endtime="detail.shoppingTimeLong" />
+        <count-down size="large" @done="countFinished" :class="$style.countDown" v-if="detail.shoppingStatus === 1" :starttime="detail.serverTime" :endtime="detail.shoppingTimeLong" />
         <DetailTitle v-text="detail.productName" />
         <DetailDesc v-text="detail.productDesc" />
         <Tags :tags="detail.labelModels" />
@@ -679,10 +679,9 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     }
   }
   .count-down {
-    position: relative;
-    background-color: #fff;
-    color: #D2524C;
-    padding: 0;
-    opacity: 1;
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    width: 100%;
   }
 </style>

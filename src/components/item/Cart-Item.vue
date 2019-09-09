@@ -1,6 +1,9 @@
 <template>
   <div
-    :class="$style.cartItem"
+    :class="{
+      [$style.cartItem]: true,
+      [$style.notStart]: notStart
+    }"
     v-if="data"
   >
     <img
@@ -9,7 +12,14 @@
       alt=""
       @click="goDetail"
     >
-
+    <CountDown
+      v-if="notStart"
+      :class="$style.countDown"
+      :data="data"
+      size="cart"
+      :fields="{ end: 'shoppingTimeLong'}"
+      @done="countDownFinished"
+    />
     <div :class="$style.cartItemContent">
       <div :class="$style.productName" v-text="data.productName" />
       <span :class="$style.unshelve" v-if="noSold">
@@ -26,13 +36,6 @@
           </div>
           <pl-svg :class="$style.arrow" name="right" color="#ccc" />
         </div>
-        <CountDown
-          v-if="notStart"
-          :class="$style.countDown"
-          :data="data"
-          :fields="{ start: 'serverTime', end: 'shoppingTimeLong'}"
-          @done="countDownFinished"
-        />
         <div :class="$style.priceCount" v-if="!overflowStock && !notStart">
           <i :class="$style.price + ' rmb'" v-text="currentSkuModel.price" />
           <!--<div :class="$style.count">
@@ -207,11 +210,15 @@ export default {
 
 <style module lang="scss">
   .cartItem {
+    position: relative;
     display: flex;
     flex: 1;
     padding: 22px 20px;
     border-radius: $--radius1;
     background-color: #fff;
+    &.not-start {
+      padding-top: 70px;
+    }
   }
   .cartItemImage {
     width: 164px;
@@ -238,14 +245,7 @@ export default {
     margin-bottom: 56px;
   }
   .count-down {
-    position: relative;
-    right: 0;
-    top: 0;
-    margin: 10px 0;
-    padding: 0;
-    background: none;
-    color: #D2524C;
-    opacity: 1;
+    top: 20px;
   }
   .currentSku{
     position: relative;
