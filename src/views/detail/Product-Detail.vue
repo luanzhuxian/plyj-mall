@@ -249,7 +249,7 @@ export default {
     this.tab = 2
   },
   mounted () {
-    if (!this.brokerId) {
+    if (!this.brokerId && this.userId) {
       // 链接中没有携带brokerId，就刷新一下，带上brokerId
       // 1.9.0 以后，不管是不是helper，都携带brokerId
       location.href = `${location.protocol}//${location.host}/${this.mallDomain}/detail/lesson/${this.productId}/${this.userId}`
