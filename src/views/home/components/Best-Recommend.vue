@@ -186,39 +186,19 @@ export default {
   },
   methods: {
     getMinPrice (skuList) {
-      let priceList = skuList.map(item => {
-        if (item.status === 1) {
-          return item.price
-        }
-        return Number.MAX_VALUE
-      })
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
       return Math.min(...priceList)
     },
     getMinOrinalPrice (skuList) {
-      let priceList = skuList.map(item => {
-        if (item.status === 1) {
-          return item.originalPrice
-        }
-        return Number.MAX_VALUE
-      })
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
       return Math.min(...priceList)
     },
     getMaxOrinalPrice (skuList) {
-      let priceList = skuList.map(item => {
-        if (item.status === 1) {
-          return item.originalPrice
-        }
-        return Number.MIN_VALUE
-      })
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
       return Math.max(...priceList)
     },
     getMaxPrice (skuList) {
-      let priceList = skuList.map(item => {
-        if (item.status === 1) {
-          return item.price
-        }
-        return Number.MIN_VALUE
-      })
+      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
       return Math.max(...priceList)
     },
     seeAll () {
