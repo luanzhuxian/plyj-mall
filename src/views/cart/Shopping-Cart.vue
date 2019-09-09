@@ -183,7 +183,7 @@ export default {
     skuClick (data) {
       this.currentPro = data
       this.currentSku = this.currentPro.skuModels.find(item => {
-        return item.skuCode1 === this.currentPro.cartSkuCode && item.skuCode2 === this.currentPro.cartSkuCode2
+        return item.stock >= data.cartProductCount && data.cartProductCount <= item.minBuyNum && item.skuCode1 === data.cartSkuCode && item.skuCode2 === data.cartSkuCode2
       }) || {}
       if (this.currentSku.id) {
         this.currentSku.count = data.cartProductCount
@@ -355,6 +355,7 @@ export default {
         this.products.splice(this.products.indexOf(currentSkuCount[0]), 1)
         this.checkedList.splice(this.checkedList.indexOf(currentSkuCount[0]), 1)
       }
+      this.total = this.products.length
     }
   },
   beforeRouteEnter (to, from, next) {

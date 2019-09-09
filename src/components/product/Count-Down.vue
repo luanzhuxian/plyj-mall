@@ -10,7 +10,7 @@
     <pl-svg v-if="size === 'large'" name="time4" />
     <span>距开抢</span>
     <div :class="$style.time">
-      <i v-if="Number(d)">{{ d }}</i><em v-if="Number(d)">天</em><i v-if="h" v-text="h" />:<i v-if="m" v-text="m" />:<i v-if="s" v-text="s" />
+      <i v-if="Number(d)">{{ d }}</i><em v-if="Number(d)">天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
     </div>
   </div>
 </template>
@@ -120,14 +120,16 @@ export default {
     display: flex;
     align-items: center;
     position: absolute;
-    width: max-content;
     border-radius: 5px;
     font-size: 20px;
     color: #fff;
     background-color: rgba(0, 0, 0, .7);
     box-sizing: border-box;
-    word-break: break-all;
     text-align: center;
+    > span {
+      word-break: keep-all;
+      width: max-content;
+    }
     > .time {
       display: flex;
       > i {
@@ -167,15 +169,18 @@ export default {
         margin-right: 12px;
         font-size: 30px;
       }
+      em {
+        line-height: 35px;
+      }
     }
     &.small {
       padding: 10px 8px;
-      font-size: 22px;
+      font-size: 24px;
       height: 52px;
       > .time {
         > i {
           width: 34px;
-          margin: 0 4px;
+          margin: 0 8px;
           line-height: 36px;
           border-radius: 4px;
           font-size: 22px;
@@ -190,7 +195,7 @@ export default {
     }
     &.mini {
       padding: 10px 12px;
-      font-size: 18px;
+      font-size: 20px;
       height: 44px;
       .time {
         > i {
@@ -205,7 +210,7 @@ export default {
         }
       }
       span {
-        margin-right: 14px;
+        margin-right: 2px;
       }
     }
     &.cart {

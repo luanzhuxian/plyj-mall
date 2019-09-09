@@ -77,7 +77,7 @@
         >
           <div :class="$style.topImg">
             <img :src="item.image" alt="">
-            <count-down :class="$style.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+            <count-down :class="$style.countDown2" size="mini" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
           </div>
           <div :class="$style.content">
             <p :class="$style.name" v-text="item.goodsInfo.productName" />
@@ -111,7 +111,7 @@
         >
           <div :class="$style.topImg">
             <img :src="item.image" alt="">
-            <count-down :class="$stlye.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+            <count-down :class="$stlye.countDown2" size="mini" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
           </div>
           <div :class="$style.content">
             <p :class="$style.name" v-text="item.goodsInfo.productName" />
@@ -357,9 +357,12 @@ export default {
       border-radius: 20px;
       overflow: hidden;
       background-color: #fff;
-      .count-down {
-        bottom: 0;
+      .count-down2 {
+        display: flex;
         width: 100%;
+        bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
       }
       &.long {
         color: red;

@@ -183,7 +183,8 @@ export default {
   line-height: 22px;
 }
   .count-down {
-    width: 100% !important;
+    display: flex;
+    width: 100%;
     bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;

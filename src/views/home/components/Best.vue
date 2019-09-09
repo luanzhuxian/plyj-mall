@@ -11,7 +11,7 @@
         @click="clickHandler(item)"
       >
         <div :class="$style.img">
-          <count-down :class="$style.countDown" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+          <count-down :class="$style.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
           <img :src="item.image" alt="">
         </div>
 
@@ -115,6 +115,7 @@ export default {
         object-fit: cover;
       }
       > .countDown {
+        display: flex;
         width: 100%;
         bottom: 0;
         border-bottom-left-radius: 0;
