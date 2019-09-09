@@ -13,7 +13,7 @@
           >
             <pl-svg name="helper-apply" />
           </router-link>
-          <div v-if="hasApplied" :class="$style.progress">
+          <div v-if="isProgressBtnShow" :class="$style.progress">
             <span
               v-if="applyStatus === 'AWAIT'"
               :class="$style.progressLeft"
@@ -255,9 +255,9 @@ export default {
     isApplyBtnShow () {
       return this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT')
     },
-    // 是否申请过helper
-    hasApplied () {
-      return (this.applyStatus === 'AWAIT' || this.applyStatus === 'REJECT') && this.roleCode === 'MEMBERSHIP'
+    // 是否可查询helper申请进度
+    isProgressBtnShow () {
+      return this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'AWAIT' || this.applyStatus === 'REJECT')
     },
     // 是否有权限看到helper模块
     isHelperModuleShow () {
@@ -281,9 +281,6 @@ export default {
         this.loaded = false
         await Promise.all([this.orderPhysicalorderSummary(), this.getRecentExpressInfo()])
         this.getProgress()
-        // if (this.hasApplied) {
-        //   this.getProgress()
-        // }
         this.loaded = true
       }
     } catch (e) {
@@ -328,7 +325,9 @@ export default {
       try {
         const { result } = await getHelperApplicationProgress()
         this.applyStatus = (result && result.status) ? result.status : 'NOT_APPLY'
+        // 没有申请过helper
         if (!result) return
+        // 申请过helper且正在审核或驳回
         if (result.status === 'AWAIT') {
           this.progress = [{
             text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
@@ -420,12 +419,12 @@ export default {
     flex-direction: column;
     justify-content: center;
     .main {
+      font-weight: bold;
       margin-bottom: 8px;
-      padding-bottom: 20px;
       font-size: 42px;
       font-weight: bold;
       color: #fff;
-      line-height: 52px;
+      line-height: 58px;
     }
     .sub {
       display: flex;
