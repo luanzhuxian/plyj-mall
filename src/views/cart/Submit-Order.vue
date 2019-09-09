@@ -510,12 +510,6 @@ export default {
     },
     isCart () {
       return this.$route.query.isCart === 'YES'
-    },
-    // 课程的总数量
-    formalClassCount () {
-      return this.getTotal(this.lessonList, (total, item) => {
-        return total + item.count
-      })
     }
   },
   watch: {
@@ -576,14 +570,6 @@ export default {
   },
   methods: {
     ...mapActions([STUDENTS]),
-    // 计算商品总数
-    getTotal (list, fn) {
-      let total = 0
-      for (let item of list) {
-        total = fn(total, item)
-      }
-      return total
-    },
     // 获取当前课程选择的学员数量
     getStudentCountByProId (proId) {
       let currentStudents = this.CHECKED_STUDENT[proId]
@@ -1130,6 +1116,7 @@ export default {
   .add-contact {
     padding: 40px 20px;
     .add-contact-top {
+      margin-bottom: 20px;
       font-size: 40px;
       color: #000;
     }

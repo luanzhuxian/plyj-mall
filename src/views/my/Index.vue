@@ -257,8 +257,7 @@ export default {
     },
     // 是否申请过helper
     hasApplied () {
-      return this.applyStatus === 'AWAIT' ||
-        this.applyStatus === 'REJECT'
+      return (this.applyStatus === 'AWAIT' || this.applyStatus === 'REJECT') && this.roleCode === 'MEMBERSHIP'
     },
     // 是否有权限看到helper模块
     isHelperModuleShow () {
@@ -281,9 +280,10 @@ export default {
       } else {
         this.loaded = false
         await Promise.all([this.orderPhysicalorderSummary(), this.getRecentExpressInfo()])
-        if (this.hasApplied) {
-          this.getProgress()
-        }
+        this.getProgress()
+        // if (this.hasApplied) {
+        //   this.getProgress()
+        // }
         this.loaded = true
       }
     } catch (e) {
@@ -420,14 +420,12 @@ export default {
     flex-direction: column;
     justify-content: center;
     .main {
+      margin-bottom: 8px;
+      padding-bottom: 20px;
       font-size: 42px;
       font-weight: bold;
-      margin-bottom: 8px;
-      padding-bottom: 20rpx;
-      font-size: 42rpx;
-      font-weight: bold;
       color: #fff;
-      line-height: 52rpx;
+      line-height: 52px;
     }
     .sub {
       display: flex;
