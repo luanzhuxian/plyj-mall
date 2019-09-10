@@ -214,9 +214,6 @@ export default {
   computed: {
     ...mapGetters(['mobile', 'realName', 'userName'])
   },
-  created () {
-    location.href = 'http://admall.youpenglai.com/h5/register-login'
-  },
   async activated () {
     this.$refs.swiper.swiper.autoplay.start()
     this.form.mobile = this.mobile || ''
@@ -299,6 +296,9 @@ export default {
         throw e
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    location.href = 'http://admall.youpenglai.com/h5/register-login'
   }
 }
 </script>
