@@ -58,7 +58,7 @@
               :class="$style.remark"
               type="text"
               placeholder="选填"
-              v-model="remark"
+              v-model="physicalRemark"
             >
           </div>
         </div>
@@ -468,7 +468,8 @@ export default {
       virtualProducts: [],
       lessonList: [],
       needStudentList: [],
-      remark: '', // 物理订单备注
+      remark: '', // 单商品备注
+      physicalRemark: '', // 物理订单备注
       invioceType: 1,
       INVOICE_MODEL: {},
       CHECKED_STUDENT: {},
@@ -680,11 +681,11 @@ export default {
           productType: 'PHYSICAL_GOODS',
           count,
           agentUser,
-          message: this.remark
+          message: this.physicalRemark || this.remark
         })
       }
       for (const item of this.virtualProducts) {
-        const { productId, skuCode1, skuCode2, count, agentUser, remark, needStudentInfo } = item
+        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo } = item
         const currentStudent = this.CHECKED_STUDENT[skuCode1]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
         cartProducts.push({
@@ -699,7 +700,7 @@ export default {
         })
       }
       for (const item of this.lessonList) {
-        const { productId, skuCode1, skuCode2, count, agentUser, remark, needStudentInfo } = item
+        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo } = item
         const currentStudent = this.CHECKED_STUDENT[skuCode1]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
         cartProducts.push({

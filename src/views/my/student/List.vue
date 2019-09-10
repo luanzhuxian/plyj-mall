@@ -126,7 +126,7 @@ export default {
       localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
       let { name, params, query } = JSON.parse(localStorage.getItem('SELECT_STUDENT_FROM')) || {}
       if (name) {
-        this.$router.push({
+        this.$router.replace({
           name,
           params,
           query
