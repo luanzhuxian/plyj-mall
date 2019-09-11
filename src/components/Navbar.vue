@@ -40,6 +40,17 @@ import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../store/mutation-type'
 export default {
   name: 'Navbar',
+  data () {
+    return {
+      showNavbar: [
+        'Home',
+        'My',
+        'ShoppingCart',
+        'Classify',
+        'WhatsHelper'
+      ]
+    }
+  },
   computed: {
     ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus']),
     myActive: function () {
@@ -60,8 +71,19 @@ export default {
       getAuditNotice: Get_ADUIT_NOTICE
     })
   },
+  watch: {
+    $route (to) {
+      if (this.showNavbar.includes(to.name)) {
+        setTimeout(() => {
+          this.getAuditNotice()
+        }, 1000)
+      }
+    }
+  },
   async mounted () {
-    this.getAuditNotice()
+    setTimeout(() => {
+      this.getAuditNotice()
+    }, 5000)
   }
 }
 </script>
