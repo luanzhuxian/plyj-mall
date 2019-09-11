@@ -21,7 +21,6 @@
           [$style.codeListBox]: true,
           [$style.collapse]: collapseQrCode
         }"
-        @click="() => { isArrowShow ? collapseQrCode = !collapseQrCode : '' }"
       >
         <h2 :class="$style.title">
           核销码
@@ -31,20 +30,26 @@
           :class="{ [$style.collapse]: collapseQrCode }"
           name="right"
           color="#999"
+          @click="() => { isArrowShow ? collapseQrCode = !collapseQrCode : '' }"
         />
         <ul :class="$style.codeList">
           <template v-for="(item, i) of redeemCodeModels">
             <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }" :key="i" v-show="collapseQrCode ? i === 0 : true">
-              <div :class="$style.codeBox">
-                <code :class="$style.codeValue">
-                  {{ item.redeemCode | separator(' ', 4) }}
-                </code>
-                <span :class="$style.codeStatus" v-text="item.status" />
+              <div>
+                <div :class="$style.codeBox">
+                  <code :class="$style.codeValue">
+                    {{ item.redeemCode | separator(' ', 4) }}
+                  </code>
+                  <span :class="$style.codeStatus" v-text="item.status" />
+                </div>
+                <div :class="$style.whoUse" v-show="!collapseQrCode && item.name">
+                  <pl-svg name="name-card" :color="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
+                  <span :class="{ [$style.name]: true }" v-text="item.name" />
+                  <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
+                </div>
               </div>
-              <div :class="$style.whoUse" v-show="!collapseQrCode && item.name">
-                <pl-svg name="name-card" :color="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
-                <span :class="{ [$style.name]: true }" v-text="item.name" />
-                <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
+              <div :class="$style.shareCode" v-if="item.statusCode === 0">
+                <div :class="$style.shareButton" @click="drawPost(item)">分享</div>
               </div>
             </li>
           </template>
@@ -429,6 +434,14 @@
       :slots="pickerColumns"
       @confirm="(selected) => { cancelOrder(selected[0]) }"
     />
+
+    <div :class="$style.shareImgBox" v-if="postShow">
+      <img :src="post" alt="">
+      <div :class="$style.description">
+        <p>长安保存分享给好友</p>
+        <pl-svg name="close3" color="#fff" width="80" @click="postShow = false" />
+      </div>
+    </div>
   </div>
 
   <div
@@ -570,7 +583,10 @@ export default {
       collepseActiveNames: [],
       suggestionMap,
       invoiceMap,
-      qrImg: ''
+      qrImg: '',
+      // 海报
+      post: '',
+      postShow: false
     }
   },
   computed: {
@@ -646,6 +662,68 @@ export default {
     await deleteImage([qrcodeKey])
   },
   methods: {
+    async drawPost (item) {
+      this.postShow = true
+      console.log(item)
+      console.log(this.productInfoModel.productDetailModels[0])
+      let canImg = new Image()
+      canImg.crossOrigin = ''
+      canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`
+      let qrcode = await generateQrcode(300, `${item.redeemCode}`, 0, null, null, 'url')
+      let qrCodeImg = new Image()
+      qrCodeImg.crossOrigin = ''
+      qrCodeImg.src = qrcode
+      let productImg = new Image()
+      productImg.crossOrigin = ''
+      productImg.src = `${this.productInfoModel.productDetailModels[0].productImg}?time=${Date.now()}&x-oss-process=style/thum`
+      const start = this.productInfoModel.productDetailModels[0].validityPeriodStart.split(' ')[0]
+      const end = this.productInfoModel.productDetailModels[0].validityPeriodEnd.split(' ')[0]
+      canImg.onload = async () => {
+        let canvas = document.createElement('canvas')
+        canvas.width = canImg.width
+        canvas.height = canImg.height
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
+        ctx.font = 'bold 42px Microsoft YaHei'
+        ctx.fillStyle = '#666'
+        ctx.fillText(`使用有效期至 ${start} 至 ${end}`, 65, 210)
+        ctx.font = 'bold 78px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        ctx.textAlign = 'center'
+        ctx.fillText(`${item.redeemCode}`, 526, 880)
+        ctx.font = '42px Microsoft YaHei'
+        ctx.fillStyle = '#666'
+        ctx.textAlign = 'left'
+        ctx.fillText(`学员姓名：`, 265, 990)
+        ctx.font = '600 42px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        ctx.fillText(`${item.name}`, 475, 990)
+        ctx.font = '42px Microsoft YaHei'
+        ctx.fillStyle = '#666'
+        ctx.textAlign = 'left'
+        ctx.fillText(`学员电话：`, 265, 1070)
+        ctx.font = '600 42px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        ctx.fillText(`${item.mobile}`, 475, 1070)
+        ctx.font = '33px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        ctx.fillText(`${this.productInfoModel.productDetailModels[0].productName}`, 330, 1250)
+        ctx.font = '33px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        ctx.textAlign = 'right'
+        ctx.fillText(`￥${this.productInfoModel.productDetailModels[0].price}`, 990, 1250)
+        ctx.fillStyle = '#999'
+        ctx.fillText(`x${this.productInfoModel.productDetailModels[0].count}`, 990, 1300)
+        let skuText = this.productInfoModel.productDetailModels[0].skuCode2Name ? this.productInfoModel.productDetailModels[0].skuCode1Name + this.productInfoModel.productDetailModels[0].skuCode2Name : this.productInfoModel.productDetailModels[0].skuCode1Name
+        ctx.textAlign = 'left'
+        ctx.fillStyle = '#999'
+        ctx.fillText(`${skuText}`, 330, 1400)
+        ctx.drawImage(qrCodeImg, 330, 350, 400, 400)
+        ctx.drawImage(productImg, 60, 1215, 248, 248)
+        let post = canvas.toDataURL('image/jpeg', 0.7)
+        this.post = post
+      }
+    },
     // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
     isCommentBtnShow (item) {
       return this.orderStatus === 'FINISHED' &&
@@ -882,6 +960,27 @@ export default {
   .order-detail {
     padding: 28px 24px 140px;
   }
+  .shareImgBox{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:rgba(0,0,0,0.65);
+    img{
+      display: block;
+      margin: 72px auto 34px;
+    }
+    .description{
+      font-size:32px;
+      font-weight:400;
+      color: #FFFFFF;
+      text-align: center;
+      svg{
+        margin-top: 56px;
+      }
+    }
+  }
   .top {
     position: relative;
     margin-bottom: 28px;
@@ -910,8 +1009,8 @@ export default {
     .codeListBox {
       position: relative;
       display: flex;
-      width: 504px;
       padding: 12px 20px;
+      padding-right: 60px;
       background-color: #f7f7f7;
       overflow: hidden;
       &.collapse {
@@ -933,9 +1032,24 @@ export default {
       flex: 1;
       margin-top: -2px;
       .codeItem {
+        display: flex;
         margin-bottom: 8px;
         padding-bottom: 8px;
         border-bottom: 1px solid #e7e7e7;
+        .share-code{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-left: 20px;
+          .share-button{
+            color: #FFFFFF;
+            font-size:24px;
+            font-weight:400;
+            padding: 2px 10px;
+            background:#FE7700;
+            border-radius:4px;
+          }
+        }
         &:nth-last-of-type(1) {
           border-bottom: none;
           margin: 0;
