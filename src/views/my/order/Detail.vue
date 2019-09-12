@@ -727,10 +727,12 @@ export default {
         ctx.fillText(`￥${this.productInfoModel.productDetailModels[0].price}`, 990, 1250)
         ctx.fillStyle = '#999'
         ctx.fillText(`x${this.productInfoModel.productDetailModels[0].count}`, 990, 1300)
+        ctx.fillStyle = '#f9f9f9'
+        ctx.fillRect(330, 1340, 600, 60)
         let skuText = this.productInfoModel.productDetailModels[0].skuCode2Name ? this.productInfoModel.productDetailModels[0].skuCode1Name + this.productInfoModel.productDetailModels[0].skuCode2Name : this.productInfoModel.productDetailModels[0].skuCode1Name
         ctx.textAlign = 'left'
         ctx.fillStyle = '#999'
-        ctx.fillText(`${skuText}`, 330, 1400)
+        ctx.fillText(`${skuText}`, 350, 1380)
         if (!item.name) {
           ctx.fillStyle = '#fff'
           ctx.fillRect(210, 920, 700, 200)
