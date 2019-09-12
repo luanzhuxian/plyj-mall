@@ -731,6 +731,10 @@ export default {
         ctx.textAlign = 'left'
         ctx.fillStyle = '#999'
         ctx.fillText(`${skuText}`, 330, 1400)
+        if (!item.name) {
+          ctx.fillStyle = '#fff'
+          ctx.fillRect(210, 920, 700, 200)
+        }
         ctx.drawImage(qrCodeImg, 330, 350, 400, 400)
         ctx.drawImage(productImg, 60, 1215, 248, 248)
         let post = canvas.toDataURL('image/jpeg', 0.7)
@@ -981,7 +985,7 @@ export default {
     bottom: 0;
     background:rgba(0,0,0,0.65);
     .img-box{
-      padding: 72px 24px 34px 24px;
+      padding: 72px 96px 34px 96px;
       img{
         width: 100%;
       }
@@ -992,7 +996,7 @@ export default {
       color: #FFFFFF;
       text-align: center;
       svg{
-        margin-top: 56px;
+        margin-top: 26px;
       }
     }
   }
