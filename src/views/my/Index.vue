@@ -52,13 +52,13 @@
           <p>今日润笔（元）</p>
           <p v-text="currentBalance || '0.00'" />
         </div>
-        <pl-svg :class="$style.myRight" name="my-right" />
+        <pl-icon :class="$style.myRight" name="icon-arrow-right" size="18" color="#ccc" />
       </router-link>
       <!-- 我的订单 -->
       <div :class="$style.panel">
         <div :class="$style.orderStatus">
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
-            <pl-svg name="wait-pay" />
+            <pl-icon name="icon-wait-pay" width="84" height="108" type="svg" />
             <span
               :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_PAY > 99 }"
               v-if="count.WAIT_PAY"
@@ -66,7 +66,7 @@
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
-            <pl-svg name="wait-ship" />
+            <pl-icon name="icon-wait-ship" width="84" height="108" type="svg" />
             <span
               :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_SHIP > 99 }"
               v-if="count.WAIT_SHIP"
@@ -74,7 +74,7 @@
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
-            <pl-svg name="wait-receive" />
+            <pl-icon name="icon-wait-receive" width="84" height="108" type="svg" />
             <span
               :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_RECEIVE > 99 }"
               v-if="count.WAIT_RECEIVE"
@@ -82,7 +82,7 @@
             />
           </router-link>
           <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
-            <pl-svg name="after-sale" />
+            <pl-icon name="icon-after-sale" width="100" height="108" type="svg" />
             <span
               :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.AFTER_SALE > 99 }"
               v-if="count.AFTER_SALE"
@@ -90,10 +90,10 @@
             />
           </router-link>
           <div :class="$style.segmentation">
-            <pl-svg name="my-segmentation" />
+            <img src="../../assets/images/my/my-segmentation.png" alt="">
           </div>
           <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
-            <pl-svg name="my-order-list" />
+            <pl-icon name="icon-my-order-list" width="90" height="100" type="svg" />
           </router-link>
         </div>
         <div v-if="newFreight.length > 0" :class="$style.newLogistics">
@@ -135,16 +135,16 @@
       <!-- helper -->
       <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow">
         <router-link :to="{ name: 'HelperManagement' }">
-          <pl-svg name="helper-management" />
+          <pl-icon name="icon-helper-management" type="svg" width="120" />
         </router-link>
         <router-link :to="{ name: 'HelperPoster' }">
-          <pl-svg name="helper-invatation" />
+          <pl-icon name="icon-helper-invatation" type="svg" width="120" />
         </router-link>
         <router-link :to="{ name: 'ShopPoster'}">
-          <pl-svg name="helper-poster" />
+          <pl-icon name="icon-helper-poster" type="svg" width="96" />
         </router-link>
         <router-link :to="{ name: 'ShopQrcode'}">
-          <pl-svg name="helper-qrcode" />
+          <pl-icon name="icon-helper-qrcode" type="svg" width="120" />
         </router-link>
       </div>
       <you-like :class="$style.recommend" :is-my="true" />
@@ -501,7 +501,10 @@ export default {
     align-items: center;
     padding: 28px 28px 32px 40px;
     background-color: #fff;
-    > div {
+    .my-right {
+      width: 18px;
+    }
+    > div:not(.my-right) {
       flex: 1;
       display: inline-flex;
       flex-direction: column;
@@ -515,10 +518,6 @@ export default {
           font-size: 46px;
         }
       }
-    }
-    > svg{
-      width: 18px;
-      height: 26px;
     }
   }
   // .withdraw-tip {
@@ -574,7 +573,11 @@ export default {
     }
     .segmentation {
       position: absolute;
-      right: 160px;
+      right: 130px;
+      > img {
+        height: 90px;
+      }
+
     }
   }
 

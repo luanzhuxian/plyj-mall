@@ -1,29 +1,30 @@
 <template>
-  <div :class="$style.plIcon" @click="handleClick">
-    <i
-      v-if="type === 'icon'"
-      :class="'iconfont ' + name"
-      :style="{
-        color: color,
-        fontSize: size / 7.5 + 'vw'
-      }"
-    />
-    <svg
-      v-if="type === 'svg'"
-      class="iconfont"
-      aria-hidden="true"
-      :style="{
-        fill: fill,
-        width: width / 7.5 + 'vw',
-        height: height / 7.5 + 'vw'
-      }"
-    >
-      <use :xlink:href="'#'+ name" />
-    </svg>
-  </div>
+  <i
+    v-if="type === 'icon'"
+    :class="$style.plIcon + ' iconfont ' + name"
+    :style="{
+      color: color,
+      fontSize: size / 7.5 + 'vw'
+    }"
+    @click="handleClick"
+  />
+  <svg
+    v-else-if="type === 'svg'"
+    :class="$style.plIcon + ' ' + $style.svg"
+    aria-hidden="true"
+    :style="{
+      '--fill': fill,
+      '--width': width === 'auto' ? width : width / 7.5 + 'vw',
+      '--height': height === 'auto' ? height : height / 7.5 + 'vw'
+    }"
+    @click="handleClick"
+  >
+    <use :xlink:href="'#'+ name" />
+  </svg>
 </template>
 
 <script>
+/* eslint-disable */
 export default {
   name: 'PlIcon',
   props: {
@@ -40,8 +41,8 @@ export default {
     },
     // svg 时使用的填充颜色
     fill: {
-      type: Boolean,
-      default: true
+      type: String,
+      default: ''
     },
     // 图标类型 icon 或 svg
     type: {
@@ -50,17 +51,17 @@ export default {
     },
     // 宽 （svg时有用）
     width: {
-      type: Number,
-      default: 30
+      type: [Number, String],
+      default: 'auto'
     },
     // 高（svg时有用）
     height: {
-      type: Number,
-      default: 30
+      type: [Number, String],
+      default: 'auto'
     },
     // 字体大小（icon时有用）
     size: {
-      type: Number,
+      type: [Number, String],
       default: 20
     }
   },
@@ -88,5 +89,14 @@ export default {
   .pl-icon {
     display: inline-block;
     font-size: 16px;
+    &.svg {
+      width: var(--width);
+      height: var(--height);
+      fill: var(--fill);
+      > use {
+        width: 100% !important;
+        height: 100% !important;
+      }
+    }
   }
 </style>

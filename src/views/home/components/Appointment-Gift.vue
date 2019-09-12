@@ -5,9 +5,9 @@
       :class="$style.appointmentGift"
       @click="yuyueNow"
     >
-      <pl-svg :class="$style.giftIcon" name="gift" />
+      <pl-icon :class="$style.giftIcon" name="icon-gift" type="svg" width="70" height="50" />
       <div :class="$style.left">
-        <pl-svg name="yuyue2" />
+        <pl-icon name="icon-yuyue1" type="svg" width="94" height="50" />
       </div>
       <div :class="$style.right">
         <swiper ref="swiper" :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'">
@@ -17,7 +17,7 @@
         </swiper>
         <div :class="$style.now">
           <span>立即预约</span>
-          <pl-svg name="right" color="#7E6E4D" />
+          <pl-icon name="icon-arrow-right" :size="25" color="#7E6E4D" />
         </div>
       </div>
     </div>
@@ -36,7 +36,7 @@
           <img :src="logoUrl" alt="">
         </div>
         <div :class="$style.right">
-          <pl-svg name="right" color="#ccc" />
+          <pl-icon name="icon-arrow-right" :size="30" color="#ccc" />
         </div>
       </div>
       <div :class="$style.bottom" v-if="mallBrandingRequestModels.length">
@@ -58,9 +58,9 @@
 
     <pl-popup :show.sync="showPop" title="在线预约">
       <div :class="$style.popContent">
-        <pl-svg :class="$style.giftIcon" name="gift" />
+        <pl-icon :class="$style.giftIcon" name="icon-gift" type="svg" width="70" height="50" />
         <div :class="$style.right">
-          <pl-svg name="yuyue2" />
+          <pl-icon name="icon-yuyue1" type="svg" width="94" height="50" />
         </div>
         <ul :class="$style.left">
           <li
@@ -74,16 +74,16 @@
         <div class="fz-26 gray-3">预约后您的私人顾问将会电话联系您</div>
         <label>
           <input v-model="appointmentname" type="text" placeholder="请输入预约姓名">
-          <pl-svg v-show="appointmentname" @click="appointmentname = ''" :class="$style.clean" name="close2" color="#ccc" />
+          <pl-icon v-show="appointmentname" @click="appointmentname = ''" :class="$style.clean" name="icon-close1" color="#ccc" size="30" />
         </label>
         <label>
           <input v-model="appointmentMobile" type="text" placeholder="请输入预约手机">
-          <pl-svg v-show="appointmentMobile" @click="appointmentMobile = ''" :class="$style.clean" name="close2" color="#ccc" />
+          <pl-icon v-show="appointmentMobile" @click="appointmentMobile = ''" :class="$style.clean" name="icon-close1" color="#ccc" size="30" />
         </label>
         <div :class="$style.tip">
-          <pl-svg name="safe" />
+          <pl-icon name="icon-safe" type="svg" width="25" height="25" />
           <span>无强行推销</span>
-          <pl-svg name="safe" />
+          <pl-icon name="icon-safe" type="svg" width="25" height="25" />
           <span>不泄露用户手机号码</span>
         </div>
         <pl-button :loading="loading" size="large" type="warning" @click.prevent="confirm">
@@ -251,9 +251,6 @@ export default {
           height: 100%;
           background: linear-gradient(180deg, #F3D488, #EAB665);
         }
-        > svg {
-          width: 94px;
-        }
       }
       > .right {
         position: relative;
@@ -278,11 +275,6 @@ export default {
           transform: translateY(-50%);
           font-size: 24px;
           color: #7e6e4d;
-          > svg {
-            width: 25px;
-            margin-left: 10px;
-            vertical-align: -4px;
-          }
         }
       }
     }
@@ -320,9 +312,6 @@ export default {
         > .right {
           display: inline-flex;
           align-items: center;
-          > svg {
-            width: 30px;
-          }
         }
       }
       > .bottom {
@@ -356,7 +345,6 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    width: 80px;
   }
   .pop-title {
     margin-top: 10px;
@@ -388,9 +376,6 @@ export default {
         width: 2px;
         height: 100%;
         background: linear-gradient(180deg, #F3D488, #EAB665);
-      }
-      > svg {
-        width: 94px;
       }
     }
     > .left {
@@ -446,7 +431,6 @@ export default {
       font-size: 24px;
       margin-bottom: 44px;
       > svg {
-        width: 20px;
         margin-right: 15px;
         vertical-align: -2px;
       }
@@ -459,8 +443,6 @@ export default {
       right: 20px;
       top: 50%;
       transform: translateY(-50%);
-      width: 30px;
-      height: 30px;
     }
   }
 </style>
