@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.plIcon">
+  <div :class="$style.plIcon" @click="handleClick">
     <i
       v-if="type === 'icon'"
       :class="'iconfont ' + name"

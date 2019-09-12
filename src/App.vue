@@ -37,7 +37,6 @@ export default {
       shareRoutes: [
         'Home',
         'Classify',
-        'Yaji',
         'My',
         'Appointment'
       ]
