@@ -475,6 +475,7 @@
 </template>
 
 <script>
+import filter from '../../../filter/index'
 import moment from 'moment'
 import TopText from '../../../components/Top-Text.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
@@ -690,7 +691,7 @@ export default {
         ctx.font = 'bold 78px Microsoft YaHei'
         ctx.fillStyle = '#333'
         ctx.textAlign = 'center'
-        ctx.fillText(`${item.redeemCode}`, 526, 880)
+        ctx.fillText(`${filter.separator(item.redeemCode, ' ', 4)}`, 526, 880)
         ctx.font = '42px Microsoft YaHei'
         ctx.fillStyle = '#666'
         ctx.textAlign = 'left'
