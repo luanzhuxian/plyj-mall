@@ -438,7 +438,7 @@
     <div :class="$style.shareImgBox" v-if="postShow">
       <img :src="post" alt="">
       <div :class="$style.description">
-        <p>长安保存分享给好友</p>
+        <p>长按保存分享给好友</p>
         <pl-svg name="close3" color="#fff" width="80" @click="postShow = false" />
       </div>
     </div>
@@ -652,6 +652,8 @@ export default {
     }
   },
   async deactivated () {
+    this.post = ''
+    this.postShow = false
     this.collepseActiveNames = []
     this.logisticsInfoModel = null
     this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY = ''
@@ -663,6 +665,36 @@ export default {
     await deleteImage([qrcodeKey])
   },
   methods: {
+    createText (ctx, x, y, text, lineHeight, width, lineNumber) {
+      // 填充商品名称
+      let charArr = []
+      let strArr = []
+      let txtWidth = 0
+      let lineCount = 0 // 文字行数
+      let ellipsisWidth = ctx.measureText('...').width
+      for (let i = 0; i < text.length; i++) {
+        let char = text[i]
+        charArr.push(char)
+        txtWidth += ctx.measureText(char).width
+        if (lineCount === lineNumber - 1 && txtWidth + ellipsisWidth >= width) {
+          // 最后一行的文字
+          charArr.push('...')
+          strArr.push(charArr.join(''))
+          break
+        }
+        // 文本换行
+        if (txtWidth >= width || i === text.length - 1) {
+          lineCount++
+          strArr.push(charArr.join(''))
+          txtWidth = 0
+          charArr = []
+        }
+      }
+      for (let [i, str] of strArr.entries()) {
+        ctx.fillText(str, x, y + lineHeight * i)
+      }
+      return ctx.measureText(strArr[0]).width
+    },
     async drawPost (item) {
       this.postShow = true
       console.log(item)
@@ -687,7 +719,13 @@ export default {
         ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
         ctx.font = 'bold 42px Microsoft YaHei'
         ctx.fillStyle = '#666'
-        ctx.fillText(`使用有效期至 ${start} 至 ${end}`, 65, 210)
+        if (!start && !end) {
+          ctx.fillText(`使用有效期 长期有效`, 65, 210)
+        } else if (start === end) {
+          ctx.fillText(`使用有效期至 ${start}`, 65, 210)
+        } else {
+          ctx.fillText(`使用有效期至 ${start} 至 ${end}`, 65, 210)
+        }
         ctx.font = 'bold 78px Microsoft YaHei'
         ctx.fillStyle = '#333'
         ctx.textAlign = 'center'
@@ -708,7 +746,8 @@ export default {
         ctx.fillText(`${item.mobile}`, 475, 1070)
         ctx.font = '33px Microsoft YaHei'
         ctx.fillStyle = '#333'
-        ctx.fillText(`${this.productInfoModel.productDetailModels[0].productName}`, 330, 1250)
+        this.createText(ctx, 330, 1250, '贺卡史可法哈斯达克警方和卡死了东海防空客户看手机电话费立刻解开了是的', 50, 500, 2)
+        // ctx.fillText(`${this.productInfoModel.productDetailModels[0].productName}`, 330, 1250)
         ctx.font = '33px Microsoft YaHei'
         ctx.fillStyle = '#333'
         ctx.textAlign = 'right'
