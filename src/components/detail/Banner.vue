@@ -17,6 +17,7 @@
           v-if="img.indexOf('video/') > -1"
           :src="img + '?x-oss-process=video/snapshot,t_5000,m_fast'"
           ref="img"
+          :class="$style.bannerImg"
         >
         <img
           v-else
