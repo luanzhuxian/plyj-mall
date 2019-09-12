@@ -436,7 +436,9 @@
     />
 
     <div :class="$style.shareImgBox" v-if="postShow">
-      <img :src="post" alt="">
+      <div :class="$style.imgBox">
+        <img :src="post" alt="">
+      </div>
       <div :class="$style.description">
         <p>长按保存分享给好友</p>
         <pl-svg name="close3" color="#fff" width="80" @click="postShow = false" />
@@ -978,9 +980,11 @@ export default {
     right: 0;
     bottom: 0;
     background:rgba(0,0,0,0.65);
-    img{
-      display: block;
-      margin: 72px auto 34px;
+    .img-box{
+      padding: 72px 24px 34px 24px;
+      img{
+        width: 100%;
+      }
     }
     .description{
       font-size:32px;
