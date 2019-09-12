@@ -58,6 +58,19 @@
         v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
         :content="detail.useDesc"
       />
+      <!-- 品宣入口 -->
+      <div v-if="showBranding" :class="$style.pingxuan" @click="$router.push({ name: 'Appointment' })">
+        <div :class="$style.pingxuanLeft">
+          <div :class="$style.mallName" v-text="mallName" />
+          <div :class="$style.mallDesc" v-text="mallDesc" />
+        </div>
+        <div :class="$style.pingxuanMiddle">
+          <img :src="logoUrl" alt="">
+        </div>
+        <div :class="$style.pingxuanRight">
+          <pl-icon name="icon-arrow-right" color="#ccc" :size="20" />
+        </div>
+      </div>
     </template>
 
     <SoldOut v-else />
@@ -208,7 +221,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile']),
+    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
     noStock () {
       return this.productSkuModels.every(item => item.stock < item.minBuyNum)
     },
@@ -230,6 +243,9 @@ export default {
         return '暂未开售'
       }
       return textMap[this.productType] || '立即购买'
+    },
+    showBranding () {
+      return !!this.detail.showBranding
     }
   },
   watch: {
@@ -683,5 +699,45 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     left: 0;
     transform: translateY(-100%);
     width: 100%;
+  }
+  .pingxuan {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    padding: 24px;
+    background-color: #fff;
+    .pingxuan-left {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding-right: 96px;
+    }
+    .mall-name {
+      font-size: 36px;
+      font-weight: bold;
+      line-height: 50px;
+    }
+    .mall-desc {
+      margin-top: 16px;
+      font-size: 24px;
+      color: #999;
+      line-height: 35px;
+      @include elps-wrap(2);
+    }
+    .pingxuan-middle {
+      margin-right: 40px;
+      display: flex;
+      flex-direction: column;
+      > img {
+        width: 128px;
+        height: 128px;
+        object-fit: cover;
+        border-radius: 64px;
+      }
+    }
+    .pingxuan-right {
+      display: flex;
+      flex-direction: column;
+    }
   }
 </style>

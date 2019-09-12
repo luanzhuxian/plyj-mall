@@ -15,6 +15,7 @@ import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
 import './assets/css/quill.css'
+import PlIcon from './components/Pl-Icon.vue'
 Vue.use(VueLazyload, {
   error: imgError,
   lazyComponent: true,
@@ -22,6 +23,7 @@ Vue.use(VueLazyload, {
 })
 Vue.use(animated)
 Vue.use(VueClipboard)
+Vue.component('pl-icon', PlIcon)
 // Vue.use(SvgIcon, {
 //   tagName: 'svgicon'
 // })

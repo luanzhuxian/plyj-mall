@@ -13,17 +13,43 @@
         v-for="(img, index) of banners"
         :key="index"
       >
-        <!-- 加了Key以后。图片可动态切换 -->
         <img
+          v-if="img.indexOf('video/') > -1"
+          :src="img + '?x-oss-process=video/snapshot,t_5000,m_fast'"
+          ref="img"
+        >
+        <img
+          v-else
           :class="$style.bannerImg"
-          alt=""
           :src="img"
           ref="img"
         >
+        <pl-svg v-if="img.indexOf('video/') > -1" @click="play(img)" :class="$style.playBtn" name="play" color="#fff" />
       </swiperSlide>
     </swiper>
     <div :class="'swiper-pagination ' + $style.pagination" />
     <slot />
+    <transition name="fade">
+      <div
+        v-show="isPlay"
+        :class="$style.videoBox"
+      >
+        <video
+          :src="url"
+          ref="video"
+          crossorigin="anonymous"
+          @loadeddata="loadeddata"
+          @canplay="canplay"
+          @ended="ended"
+          x5-video-player-type="h5-page"
+          playsinline
+          preload
+          controls
+          :class="{ [$style.playVideo]: isPlay }"
+        />
+        <pl-svg @click="close" :class="$style.close" name="close" color="#bbb" />
+      </div>
+    </transition>
   </div>
 
   <div
@@ -59,7 +85,9 @@ export default {
         pagination: {
           el: '.swiper-pagination'
         }
-      }
+      },
+      isPlay: false,
+      url: ''
     }
   },
   computed: {
@@ -75,6 +103,21 @@ export default {
   methods: {
     slideChange () {
       this.$emit('slideChange', this.$refs.img, this.swiper.activeIndex)
+    },
+    async play (url) {
+      this.url = url
+      this.isPlay = true
+      await this.$nextTick()
+      this.$refs.video.play()
+    },
+    loadeddata () {},
+    canplay () {},
+    ended () {
+      this.isPlay = false
+    },
+    close () {
+      this.$refs.video.pause()
+      this.isPlay = false
     }
   }
 }
@@ -108,6 +151,37 @@ export default {
   .skeleton {
     height: 750px;
     @include skeAnimation(#eee)
+  }
+  .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+  }
+  .videoBox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 9999;
+    > .play-video {
+      width: 100%;
+      background-color: #000;
+    }
+    > .close {
+      position: absolute;
+      right: 30px;
+      top: 30px;
+      width: 30px;
+      padding: 20px;
+    }
   }
 </style>
 <style lang="scss">
