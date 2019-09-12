@@ -476,6 +476,7 @@
 
 <script>
 import filter from '../../../filter/index'
+import { createText } from '../../../assets/js/validate'
 import moment from 'moment'
 import TopText from '../../../components/Top-Text.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
@@ -665,36 +666,6 @@ export default {
     await deleteImage([qrcodeKey])
   },
   methods: {
-    createText (ctx, x, y, text, lineHeight, width, lineNumber) {
-      // 填充商品名称
-      let charArr = []
-      let strArr = []
-      let txtWidth = 0
-      let lineCount = 0 // 文字行数
-      let ellipsisWidth = ctx.measureText('...').width
-      for (let i = 0; i < text.length; i++) {
-        let char = text[i]
-        charArr.push(char)
-        txtWidth += ctx.measureText(char).width
-        if (lineCount === lineNumber - 1 && txtWidth + ellipsisWidth >= width) {
-          // 最后一行的文字
-          charArr.push('...')
-          strArr.push(charArr.join(''))
-          break
-        }
-        // 文本换行
-        if (txtWidth >= width || i === text.length - 1) {
-          lineCount++
-          strArr.push(charArr.join(''))
-          txtWidth = 0
-          charArr = []
-        }
-      }
-      for (let [i, str] of strArr.entries()) {
-        ctx.fillText(str, x, y + lineHeight * i)
-      }
-      return ctx.measureText(strArr[0]).width
-    },
     async drawPost (item) {
       this.postShow = true
       console.log(item)
@@ -746,7 +717,7 @@ export default {
         ctx.fillText(`${item.mobile}`, 475, 1070)
         ctx.font = '33px Microsoft YaHei'
         ctx.fillStyle = '#333'
-        this.createText(ctx, 330, 1250, '贺卡史可法哈斯达克警方和卡死了东海防空客户看手机电话费立刻解开了是的', 50, 500, 2)
+        createText(ctx, 330, 1250, `${this.productInfoModel.productDetailModels[0].productName}`, 50, 500, 2)
         // ctx.fillText(`${this.productInfoModel.productDetailModels[0].productName}`, 330, 1250)
         ctx.font = '33px Microsoft YaHei'
         ctx.fillStyle = '#333'
