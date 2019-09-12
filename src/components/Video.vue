@@ -20,7 +20,13 @@
         controls
         :class="{ [$style.playVideo]: isPlay }"
       />
-      <pl-svg @click="close" :class="$style.close" name="close" color="#bbb" />
+      <pl-icon
+        :class="$style.close"
+        name="icon-close"
+        color="#bbb"
+        :size="30"
+        @click="close"
+      />
     </div>
   </div>
 </template>
@@ -97,7 +103,6 @@ export default {
       position: absolute;
       right: 30px;
       top: 30px;
-      width: 30px;
       padding: 20px;
     }
   }

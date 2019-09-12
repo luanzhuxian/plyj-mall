@@ -120,6 +120,9 @@ export default {
       this.$refs.video.pause()
       this.isPlay = false
     }
+  },
+  deactivated () {
+    this.isPlay = false
   }
 }
 </script>
