@@ -43,26 +43,26 @@
       @click="$router.replace({ name: 'SignUp' })"
     >-->
     <!-- 820 -->
-    <WWEC :show.sync="show820" />
+    <!--<WWEC :show.sync="show820" />-->
     <you-like :is-my="true" />
   </div>
 </template>
 
 <script>
 import youLike from './../home/components/YouLike.vue'
-import WWEC from './../../components/WWEC.vue'
+// import WWEC from './../../components/WWEC.vue'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 export default {
   name: 'PaySuccess',
   components: {
-    youLike,
-    WWEC
+    youLike
+    // WWEC
   },
   data () {
     return {
       haibao: '',
-      show820: false,
+      // show820: false,
       data88: {
         '1530139721': {
           haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
@@ -93,9 +93,9 @@ export default {
   },
   activated () {
     this.showPop(500)
-    if (this.mallId === '1057573777392603136') {
-      this.show820 = true
-    }
+    // if (this.mallId === '1057573777392603136') {
+    //   this.show820 = true
+    // }
   },
   computed: {
     ...mapGetters(['mallId', 'serverTime']),

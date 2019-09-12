@@ -85,7 +85,7 @@ export default {
   data () {
     return {
       loaded: false,
-      show820: false,
+      // show820: false,
       type: 0,
       modules: {},
       haibao: '',
@@ -119,9 +119,9 @@ export default {
     }
   },
   async mounted () {
-    if (this.mallId === '1057573777392603136') {
-      this.show820 = true
-    }
+    // if (this.mallId === '1057573777392603136') {
+    //   this.show820 = true
+    // }
   },
   computed: {
     ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId']),
