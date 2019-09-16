@@ -672,76 +672,83 @@ export default {
       this.postShow = true
       const start = this.productInfoModel.productDetailModels[0].validityPeriodStart.split(' ')[0]
       const end = this.productInfoModel.productDetailModels[0].validityPeriodEnd.split(' ')[0]
-      let canImg = new Image()
-      canImg.crossOrigin = ''
-      canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`
       let qrcode = await generateQrcode(300, `${item.redeemCode}`, 0, null, null, 'url')
-      let qrCodeImg = new Image()
-      qrCodeImg.crossOrigin = ''
-      qrCodeImg.src = qrcode
-      let productImg = new Image()
-      productImg.crossOrigin = ''
-      productImg.src = `${this.productInfoModel.productDetailModels[0].productImg}?time=${Date.now()}&x-oss-process=style/thum`
-      productImg.onload = () => {
-        canImg.onload = async () => {
-          let canvas = document.createElement('canvas')
-          canvas.width = canImg.width
-          canvas.height = canImg.height
-          let ctx = canvas.getContext('2d')
-          ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
-          ctx.font = 'bold 42px Microsoft YaHei'
-          ctx.fillStyle = '#666'
-          if (!start && !end) {
-            ctx.fillText(`使用有效期 长期有效`, 65, 210)
-          } else if (start === end) {
-            ctx.fillText(`使用有效期至 ${start}`, 65, 210)
-          } else {
-            ctx.fillText(`使用有效期至 ${start} 至 ${end}`, 65, 210)
+      let mulitImg = [
+        `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`,
+        `${qrcode}`,
+        `${this.productInfoModel.productDetailModels[0].productImg}?time=${Date.now()}&x-oss-process=style/thum`
+      ]
+      let promiseAll = []; let img = []; let imgTotal = mulitImg.length
+      for (let i = 0; i < imgTotal; i++) {
+        promiseAll[i] = new Promise((resolve, reject) => {
+          img[i] = new Image()
+          img[i].crossOrigin = ''
+          img[i].src = mulitImg[i]
+          img[i].onload = function () {
+            // 第i张加载完成
+            resolve(img[i])
           }
-          ctx.font = 'bold 78px Microsoft YaHei'
-          ctx.fillStyle = '#333'
-          ctx.textAlign = 'center'
-          ctx.fillText(`${filter.separator(item.redeemCode, ' ', 4)}`, 526, 880)
-          ctx.font = '42px Microsoft YaHei'
-          ctx.fillStyle = '#666'
-          ctx.textAlign = 'left'
-          ctx.fillText(`学员姓名：`, 265, 990)
-          ctx.font = '600 42px Microsoft YaHei'
-          ctx.fillStyle = '#333'
-          ctx.fillText(`${item.name}`, 475, 990)
-          ctx.font = '42px Microsoft YaHei'
-          ctx.fillStyle = '#666'
-          ctx.textAlign = 'left'
-          ctx.fillText(`学员电话：`, 265, 1070)
-          ctx.font = '600 42px Microsoft YaHei'
-          ctx.fillStyle = '#333'
-          ctx.fillText(`${item.mobile}`, 475, 1070)
-          ctx.font = '33px Microsoft YaHei'
-          ctx.fillStyle = '#333'
-          createText(ctx, 330, 1250, `${this.productInfoModel.productDetailModels[0].productName}`, 50, 500, 2)
-          // ctx.fillText(`${this.productInfoModel.productDetailModels[0].productName}`, 330, 1250)
-          ctx.font = '33px Microsoft YaHei'
-          ctx.fillStyle = '#333'
-          ctx.textAlign = 'right'
-          ctx.fillText(`￥${this.productInfoModel.productDetailModels[0].price}`, 990, 1250)
-          ctx.fillStyle = '#999'
-          ctx.fillText(`x${this.productInfoModel.productDetailModels[0].count}`, 990, 1300)
-          ctx.fillStyle = '#f9f9f9'
-          ctx.fillRect(330, 1340, 600, 60)
-          let skuText = this.productInfoModel.productDetailModels[0].skuCode2Name ? this.productInfoModel.productDetailModels[0].skuCode1Name + this.productInfoModel.productDetailModels[0].skuCode2Name : this.productInfoModel.productDetailModels[0].skuCode1Name
-          ctx.textAlign = 'left'
-          ctx.fillStyle = '#999'
-          ctx.fillText(`${skuText}`, 350, 1380)
-          if (!item.name) {
-            ctx.fillStyle = '#fff'
-            ctx.fillRect(210, 920, 700, 200)
-          }
-          ctx.drawImage(qrCodeImg, 330, 350, 400, 400)
-          ctx.drawImage(productImg, 60, 1215, 248, 248)
-          let post = canvas.toDataURL('image/jpeg', 0.7)
-          this.post = post
-        }
+        })
       }
+      Promise.all(promiseAll).then((img) => {
+        // 全部加载完成
+        let canvas = document.createElement('canvas')
+        canvas.width = img[0].width
+        canvas.height = img[0].height
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(img[0], 0, 0, canvas.width, canvas.height)
+        ctx.font = 'bold 42px Microsoft YaHei'
+        ctx.fillStyle = '#666'
+        if (!start && !end) {
+          ctx.fillText(`使用有效期 长期有效`, 65, 210)
+        } else if (start === end) {
+          ctx.fillText(`使用有效期至 ${start}`, 65, 210)
+        } else {
+          ctx.fillText(`使用有效期至 ${start} 至 ${end}`, 65, 210)
+        }
+        ctx.font = 'bold 78px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        ctx.textAlign = 'center'
+        ctx.fillText(`${filter.separator(item.redeemCode, ' ', 4)}`, 526, 880)
+        ctx.font = '42px Microsoft YaHei'
+        ctx.fillStyle = '#666'
+        ctx.textAlign = 'left'
+        ctx.fillText(`学员姓名：`, 265, 990)
+        ctx.font = '600 42px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        ctx.fillText(`${item.name}`, 475, 990)
+        ctx.font = '42px Microsoft YaHei'
+        ctx.fillStyle = '#666'
+        ctx.textAlign = 'left'
+        ctx.fillText(`学员电话：`, 265, 1070)
+        ctx.font = '600 42px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        ctx.fillText(`${item.mobile}`, 475, 1070)
+        ctx.font = '33px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        createText(ctx, 330, 1250, `${this.productInfoModel.productDetailModels[0].productName}`, 50, 500, 2)
+        // ctx.fillText(`${this.productInfoModel.productDetailModels[0].productName}`, 330, 1250)
+        ctx.font = '33px Microsoft YaHei'
+        ctx.fillStyle = '#333'
+        ctx.textAlign = 'right'
+        ctx.fillText(`￥${this.productInfoModel.productDetailModels[0].price}`, 990, 1250)
+        ctx.fillStyle = '#999'
+        ctx.fillText(`x${this.productInfoModel.productDetailModels[0].count}`, 990, 1300)
+        ctx.fillStyle = '#f9f9f9'
+        ctx.fillRect(330, 1340, 600, 60)
+        let skuText = this.productInfoModel.productDetailModels[0].skuCode2Name ? this.productInfoModel.productDetailModels[0].skuCode1Name + this.productInfoModel.productDetailModels[0].skuCode2Name : this.productInfoModel.productDetailModels[0].skuCode1Name
+        ctx.textAlign = 'left'
+        ctx.fillStyle = '#999'
+        ctx.fillText(`${skuText}`, 350, 1380)
+        if (!item.name) {
+          ctx.fillStyle = '#fff'
+          ctx.fillRect(210, 920, 700, 200)
+        }
+        ctx.drawImage(img[1], 330, 350, 400, 400)
+        ctx.drawImage(img[2], 60, 1215, 248, 248)
+        let post = canvas.toDataURL('image/jpeg', 0.7)
+        this.post = post
+      })
     },
     // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
     isCommentBtnShow (item) {
@@ -987,7 +994,7 @@ export default {
     bottom: 0;
     background:rgba(0,0,0,0.65);
     .img-box{
-      padding: 22% 96px 34px 96px;
+      padding: 15% 96px 34px 96px;
       img{
         width: 100%;
       }
