@@ -704,7 +704,7 @@ export default {
         } else if (start === end) {
           ctx.fillText(`使用有效期至 ${start}`, 65, 210)
         } else {
-          ctx.fillText(`使用有效期至 ${start} 至 ${end}`, 65, 210)
+          ctx.fillText(`使用有效期 ${start} 至 ${end}`, 65, 210)
         }
         ctx.font = 'bold 78px Microsoft YaHei'
         ctx.fillStyle = '#333'
