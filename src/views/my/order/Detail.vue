@@ -987,7 +987,7 @@ export default {
     bottom: 0;
     background:rgba(0,0,0,0.65);
     .img-box{
-      padding: 30% 96px 34px 96px;
+      padding: 20% 96px 34px 96px;
       img{
         width: 100%;
       }
