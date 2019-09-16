@@ -212,19 +212,19 @@ export default {
       return this.mallBrandingRequestModels.find(item => item.type === 0) || null
     },
     B () {
-      return this.mallBrandingRequestModels.find(item => item.type === 1 && item.show === 1 && item.mediaDetailModelList.length && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 1 && item.show === 1 && item.titleName) || null
     },
     C () {
-      return this.mallBrandingRequestModels.find(item => item.type === 2 && item.show === 1 && item.mediaDetailModelList.length && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 2 && item.show === 1 && item.titleName) || null
     },
     D () {
-      return this.mallBrandingRequestModels.find(item => item.type === 3 && item.show === 1 && item.mediaDetailModelList.length && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 3 && item.show === 1 && item.titleName) || null
     },
     E () {
-      return this.mallBrandingRequestModels.find(item => item.type === 4 && item.show === 1 && item.detailContent && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 4 && item.show === 1 && item.titleName) || null
     },
     F () {
-      return this.mallBrandingRequestModels.find(item => item.type === 5 && item.show === 1 && item.mediaDetailModelList.length && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 5 && item.show === 1 && item.titleName) || null
     }
   },
   methods: {
