@@ -552,6 +552,7 @@ export default {
   },
   data () {
     return {
+      pageHeight: 0,
       loaded: false,
       collapseQrCode: true,
       orderType: '',
@@ -653,6 +654,8 @@ export default {
     } catch (e) {
       throw e
     }
+    this.pageHeight = document.documentElement.clientHeight
+    console.log(this.pageHeight)
   },
   async deactivated () {
     this.post = ''
@@ -993,8 +996,12 @@ export default {
     right: 0;
     bottom: 0;
     background:rgba(0,0,0,0.65);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     .img-box{
-      padding: 15% 96px 34px 96px;
+      width: 80%;
       img{
         width: 100%;
       }
