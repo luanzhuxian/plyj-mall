@@ -5,4 +5,4 @@ import axios from 'axios'
  * @returns {Promise<AxiosResponse<T>>}
  */
 export const yuyue = data => axios.post('/apis/v1/base/reservation', data)
-export const getData = data => axios.get('/apis/v1/brand/branding/query')
+export const getData = showStatus => axios.get(`/apis/v1/brand/branding/query?showStatus=${showStatus}`)

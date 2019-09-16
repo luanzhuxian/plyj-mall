@@ -27,7 +27,7 @@
       v-if="data.PINGXUAN.showStatue === 1 && data.PINGXUAN && data.PINGXUAN.values.length"
       @click="clickPingXuan"
     >
-      <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
+      <div :class="$style.top" @click="$router.push({ name: 'Appointment', query: { showStatus: 'NOT_ALL' } })">
         <div :class="$style.left">
           <div :class="$style.title" v-text="PINGXUAN.values[0].mallName" />
           <div :class="$style.desc" v-text="PINGXUAN.values[0].mallDesc" />

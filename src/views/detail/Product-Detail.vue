@@ -59,7 +59,7 @@
         :content="detail.useDesc"
       />
       <!-- 品宣入口 -->
-      <div v-if="showBranding" :class="$style.pingxuan" @click="$router.push({ name: 'Appointment' })">
+      <div v-if="showBranding" :class="$style.pingxuan" @click="$router.push({ name: 'Appointment', query: { showStatus: 'ALL' } })">
         <div :class="$style.pingxuanLeft">
           <div :class="$style.mallName" v-text="mallName" />
           <div :class="$style.mallDesc" v-text="mallDesc" />

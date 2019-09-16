@@ -155,7 +155,8 @@ export default {
   },
   async mounted () {
     try {
-      let { result } = await getData()
+      let showStatus = this.$route.query.showStatus
+      let { result } = await getData(showStatus)
       localStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
       this.data = result
       await this.$nextTick()
@@ -211,19 +212,19 @@ export default {
       return this.mallBrandingRequestModels.find(item => item.type === 0) || null
     },
     B () {
-      return this.mallBrandingRequestModels.find(item => item.type === 1 && item.show === 1 && item.mediaDetailModelList.length) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 1 && item.show === 1 && item.mediaDetailModelList.length && item.titleName) || null
     },
     C () {
-      return this.mallBrandingRequestModels.find(item => item.type === 2 && item.show === 1 && item.mediaDetailModelList.length) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 2 && item.show === 1 && item.mediaDetailModelList.length && item.titleName) || null
     },
     D () {
-      return this.mallBrandingRequestModels.find(item => item.type === 3 && item.show === 1 && item.mediaDetailModelList.length) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 3 && item.show === 1 && item.mediaDetailModelList.length && item.titleName) || null
     },
     E () {
-      return this.mallBrandingRequestModels.find(item => item.type === 4 && item.show === 1 && item.detailContent) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 4 && item.show === 1 && item.detailContent && item.titleName) || null
     },
     F () {
-      return this.mallBrandingRequestModels.find(item => item.type === 5 && item.show === 1 && item.mediaDetailModelList.length) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 5 && item.show === 1 && item.mediaDetailModelList.length && item.titleName) || null
     }
   },
   methods: {
