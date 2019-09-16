@@ -245,7 +245,7 @@ export default {
       return textMap[this.productType] || '立即购买'
     },
     showBranding () {
-      return !!this.detail.showBranding
+      return this.detail.showBranding === 1
     }
   },
   watch: {

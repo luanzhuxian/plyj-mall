@@ -44,12 +44,14 @@
           教育特色 :
         </div>
         <ul :class="$style.tags">
-          <li
-            v-for="(item, i) of mallBrandingRequestModels"
-            :key="i"
-            v-text="item.titleName"
-            @click="jump(item)"
-          />
+          <template v-for="(item, i) of mallBrandingRequestModels">
+            <li
+              v-if="item.titleName"
+              :key="i"
+              v-text="item.titleName"
+              @click="jump(item)"
+            />
+          </template>
         </ul>
       </div>
     </div>
