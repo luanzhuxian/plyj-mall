@@ -7,11 +7,11 @@
         <div :class="$style.sub">
           <span :class="$style.level" v-text="roleName" />
           <router-link
-            v-if="isApplyBtnShow"
+            v-if="!isApplyBtnShow"
             :class="$style.applyBtn"
             :to="{ name: 'ApplyHelper' }"
           >
-            <pl-svg name="helper-apply" />
+            <pl-icon type="svg" name="icon-helper-apply" width="158" height="44" />
           </router-link>
           <div v-if="isProgressBtnShow" :class="$style.progress">
             <span
@@ -29,7 +29,7 @@
       </div>
       <div :class="$style.setting">
         <router-link v-if="!isAdmin" :to="{ name: 'Setting' }">
-          <pl-svg name="setting-white" />
+          <pl-icon name="icon-setting-purple" color="#fff" size="42" font-weight="lighter" />
         </router-link>
       </div>
     </div>
@@ -58,7 +58,7 @@
       <div :class="$style.panel">
         <div :class="$style.orderStatus">
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
-            <pl-icon name="icon-wait-pay" width="84" height="108" type="svg" />
+            <pl-icon name="icon-wait-pay" width="72" height="90" type="svg" />
             <span
               :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_PAY > 99 }"
               v-if="count.WAIT_PAY"
@@ -66,7 +66,7 @@
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
-            <pl-icon name="icon-wait-ship" width="84" height="108" type="svg" />
+            <pl-icon name="icon-wait-ship" width="72" height="90" type="svg" />
             <span
               :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_SHIP > 99 }"
               v-if="count.WAIT_SHIP"
@@ -74,7 +74,7 @@
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
-            <pl-icon name="icon-wait-receive" width="84" height="108" type="svg" />
+            <pl-icon name="icon-wait-receive" width="72" height="90" type="svg" />
             <span
               :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_RECEIVE > 99 }"
               v-if="count.WAIT_RECEIVE"
@@ -82,7 +82,7 @@
             />
           </router-link>
           <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
-            <pl-icon name="icon-after-sale" width="100" height="108" type="svg" />
+            <pl-icon name="icon-after-sale" width="85" height="90" type="svg" />
             <span
               :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.AFTER_SALE > 99 }"
               v-if="count.AFTER_SALE"
@@ -93,7 +93,7 @@
             <img src="../../assets/images/my/my-segmentation.png" alt="">
           </div>
           <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
-            <pl-icon name="icon-my-order-list" width="90" height="100" type="svg" />
+            <pl-icon name="icon-my-order-list" width="74" height="90" type="svg" />
           </router-link>
         </div>
         <div v-if="newFreight.length > 0" :class="$style.newLogistics">
@@ -135,16 +135,16 @@
       <!-- helper -->
       <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow">
         <router-link :to="{ name: 'HelperManagement' }">
-          <pl-icon name="icon-helper-management" type="svg" width="120" />
+          <pl-icon name="icon-helper-management" type="svg" width="120" height="115" />
         </router-link>
         <router-link :to="{ name: 'HelperPoster' }">
-          <pl-icon name="icon-helper-invatation" type="svg" width="120" />
+          <pl-icon name="icon-helper-invatation" type="svg" width="120" height="115" />
         </router-link>
         <router-link :to="{ name: 'ShopPoster'}">
-          <pl-icon name="icon-helper-poster" type="svg" width="96" />
+          <pl-icon name="icon-helper-poster" type="svg" width="120" height="115" />
         </router-link>
         <router-link :to="{ name: 'ShopQrcode'}">
-          <pl-icon name="icon-helper-qrcode" type="svg" width="120" />
+          <pl-icon name="icon-helper-qrcode" type="svg" width="120" height="115" />
         </router-link>
       </div>
       <you-like :class="$style.recommend" :is-my="true" />
@@ -454,9 +454,6 @@ export default {
       margin-right: -16px;
       height: 44px;
       line-height: 44px;
-      svg {
-        width: 158px;
-      }
     }
     .progress {
       display: flex;
@@ -489,9 +486,6 @@ export default {
     position: absolute;
     top: 36px;
     right: 32px;
-    svg {
-      width: 42px;
-    }
   }
   /* 头部 ends */
 
@@ -549,12 +543,13 @@ export default {
       display: inline-flex;
       justify-content: center;
       position: absolute;
-      top: -14px;
-      right: -28px;
+      top: -8px;
+      right: -32px;
       width: 50px;
       height: 50px;
-      line-height: 48px;
+      line-height: 46px;
       font-size: 28px;
+      text-align: center;
       transform: scale(.5);
       transform-origin: 0 0;
       color: #fff;
@@ -562,8 +557,9 @@ export default {
       background-color: #F2B036;
       background-size: 100%;
       border-radius: 50%;
+      border: 2px solid #fff;
       &.badge-after-sale {
-        right: -10px;
+        right: -20px;
       }
       &.oval {
         padding: 0 10px;

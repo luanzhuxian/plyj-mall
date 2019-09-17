@@ -4,13 +4,14 @@
     :class="$style.plIcon + ' iconfont ' + name"
     :style="{
       color: color,
-      fontSize: size / 7.5 + 'vw'
+      fontSize: size / 7.5 + 'vw',
+      fontWeight: fontWeight
     }"
     @click="handleClick"
   />
   <svg
     v-else-if="type === 'svg'"
-    :class="$style.plIcon + ' ' + $style.svg"
+    :class="$style.plIcon + ' ' + $style.svg + ' iconfont'"
     aria-hidden="true"
     :style="{
       '--fill': fill,
@@ -42,7 +43,7 @@ export default {
     // svg 时使用的填充颜色
     fill: {
       type: String,
-      default: ''
+      default: 'red'
     },
     // 图标类型 icon 或 svg
     type: {
@@ -63,21 +64,13 @@ export default {
     size: {
       type: [Number, String],
       default: 20
+    },
+    fontWeight: {
+      type: String,
+      default: 'normal'
     }
-  },
-  data () {
-    return {
-    }
-  },
-  created () {
-  },
-  computed: {
-  },
-  watch: {
   },
   methods: {
-    setTheme () {
-    },
     handleClick (e) {
       this.$emit('click', e)
     }
@@ -90,13 +83,11 @@ export default {
     display: inline-block;
     font-size: 16px;
     &.svg {
-      width: var(--width);
+      display: inline-flex;
       height: var(--height);
+      width: var(--width);
       fill: var(--fill);
-      > use {
-        width: 100% !important;
-        height: 100% !important;
-      }
     }
   }
+
 </style>
