@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="loaded"
-    :class="$style.orderDetail"
-  >
+  <div v-if="loaded" :class="$style.orderDetail">
     <div :class="$style.top">
       <top-text
         :title="orderStatusAlias"
