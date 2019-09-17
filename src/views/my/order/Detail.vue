@@ -107,7 +107,7 @@
                 productName: item.productName,
                 skuCode1Name: item.skuCode1Name,
                 skuCode2Name: item.skuCode2Name,
-                count: orderType === 'PHYSICAL' ? item.count : usefulCodeCount
+                count: orderType === 'PHYSICAL' ? item.count : usefulCodeNumber
               }
              })"
           >
@@ -296,7 +296,7 @@
     </div>
 
     <!-- 发票信息 -->
-    <div v-if="orderType === 'PHYSICAL'" :class="[$style.panel, $style.invoice]">
+    <div v-if="isInvoiceModuleShow" :class="[$style.panel, $style.invoice]">
       <collapse v-model="collepseActiveNames">
         <template v-if="invoiceModelList && invoiceModelList.length">
           <collapse-item>
@@ -621,28 +621,33 @@ export default {
     isDeleteBtnShow () {
       return this.productInfoModel.productDetailModels.every(product => [0, 2, 3, 6].includes(product.afterSalesStatus))
     },
+    // invoiceType: 0:不支持开发票 1:支持开发票
+    isInvoiceModuleShow () {
+      return this.productInfoModel.productDetailModels.some(product => product.invoiceType === 1)
+    },
     // 是否可以申请售后
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) &&
       this.productInfoModel.actuallyAmount > 0 &&
-      (this.orderType === 'PHYSICAL' || this.usefulCodeCount > 0)
+      (this.orderType === 'PHYSICAL' || this.usefulCodeNumber > 0)
     },
     // 是否可以申请发票，invoiceStatus： 1:'已申请' 3:'已开票' 7:'不支持' 8:'可申请'
     canApplyInvoice () {
-      return this.orderType === 'PHYSICAL' &&
-        this.orderStatus !== 'WAIT_PAY' &&
+      return this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
         this.productInfoModel.productsTotalAmount - this.productInfoModel.couponDeduction > 0 &&
-        this.productInfoModel.productDetailModels.some(item => {
-          return item.price > 0 && item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
+        this.productInfoModel.productDetailModels.some(product => {
+          return product.price > 0 &&
+            product.invoiceType === 1 &&
+            product.invoiceStatus === 8 &&
+            ~[0, 3, 6].indexOf(product.afterSalesStatus)
         })
     },
-    // 核销码状: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
-    // 核销码全部过期或核销
+    // 核销码全部过期或核销，statusCode: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
     isAllCodeUseless () {
       return this.redeemCodeModels.every(item => item.statusCode === 1 || item.statusCode === 3 || item.statusCode === 4)
     },
-    usefulCodeCount () {
+    usefulCodeNumber () {
       return this.redeemCodeModels.filter(item => item.statusCode === 0).length
     },
     isArrowShow () {
