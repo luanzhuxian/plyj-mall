@@ -310,7 +310,7 @@
       </pl-button>
     </div>
 
-    <div v-if="physicalProducts.length > 0 && amount > 0" :class="$style.itemSelector" @click.capture="selectInvoice">
+    <div v-if="totalAmount > 0" :class="$style.itemSelector" @click.capture="selectInvoice">
       <pl-fields
         size="middle"
         text="发票"
@@ -383,10 +383,7 @@
           <button @click="noNeed">
             不需要
           </button>
-          <button
-            @click="need"
-            v-if="physicalProducts.length > 0"
-          >
+          <button @click="need">
             纸质发票
           </button>
         </div>
