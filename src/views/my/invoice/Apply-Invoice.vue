@@ -131,7 +131,7 @@
 
       <ul :class="$style.selectList">
         <li
-          v-for="(pro, i) of physicalProducts"
+          v-for="(pro, i) of products"
           :key="i"
           v-show="pro.returnStatus === 0 || pro.returnStatus === 3 || pro.returnStatus === ''"
         >
@@ -221,8 +221,9 @@ export default {
     mobile () {
       return this.selectedAddress.mobile
     },
-    physicalProducts () {
-      return this.applyInvoice.physicalProducts || []
+    products () {
+      let { virtualProducts, physicalProducts, lessonList } = this.APPLY_INVOICE
+      return [...physicalProducts, ...virtualProducts, ...lessonList]
     },
     orderId () {
       return this.$route.query.orderId || ''
@@ -241,8 +242,8 @@ export default {
       this.$destroy()
       return
     }
-    console.log(APPLY_INVOICE)
     let { virtualProducts, physicalProducts, lessonList } = APPLY_INVOICE
+    this.APPLY_INVOICE = APPLY_INVOICE
     this.checkedList = [...physicalProducts, ...virtualProducts, ...lessonList]
     this.applyInvoice = APPLY_INVOICE
     try {
