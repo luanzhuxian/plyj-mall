@@ -310,7 +310,7 @@
       </pl-button>
     </div>
 
-    <div v-if="totalAmount > 0" :class="$style.itemSelector" @click.capture="selectInvoice">
+    <div v-if="totalAmount > 0 && showInvoiceSelector" :class="$style.itemSelector" @click.capture="selectInvoice">
       <pl-fields
         size="middle"
         text="发票"
@@ -461,6 +461,7 @@ export default {
       showContactPopup: false,
       submiting: false,
       loading: false,
+      showInvoiceSelector: false, // 是否显示选择发票
       freight: 0,
       totalAmount: 0,
       amount: 0,
@@ -658,6 +659,7 @@ export default {
         this.lessonList = [...formalClass, ...experienceClass]
         this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 1)]
         this.loading = false
+        this.showInvoiceSelector = [...physicalProducts, ...virtualProducts, ...formalClass, ...experienceClass].some(item => item.showInvoice === 1)
       } catch (e) {
         throw e
       }
