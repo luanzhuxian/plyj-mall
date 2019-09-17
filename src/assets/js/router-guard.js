@@ -22,7 +22,7 @@ export const beforeResolve = function (to, from, next) {
   next()
   // }
   if (to.name === 'Home') {
-    document.title = localStorage.getItem('mallName')
+    document.title = localStorage.getItem('mallName') || ''
   } else {
     document.title = to.meta.title
   }
