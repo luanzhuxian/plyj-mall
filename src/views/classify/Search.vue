@@ -8,6 +8,7 @@
           type="search"
           placeholder="你想要的应有尽有"
           @search="search(searchContent)"
+          ref="input"
         >
       </div>
       <button @click="cancel">
@@ -127,6 +128,7 @@ export default {
   activated () {
     this.getHotKeyword()
     this.getHistory()
+    this.$refs.input.focus()
   },
   methods: {
     async search (keyword) {
@@ -176,6 +178,11 @@ export default {
       this.prodList = list
       this.getHistory()
     }
+  },
+  beforeRouteLeave (to, from, next) {
+    this.seached = false
+    this.searchContent = ''
+    next()
   }
 }
 </script>

@@ -51,13 +51,13 @@
         <div>
           <span
             :class="$style.tip"
-            v-if="productType !== 0 && productType === 1"
+            v-if="allowInvoice"
           >
             支持开具发票
           </span>
           <span
             :class="$style.tip"
-            v-if="productType !== 0 && productType === 2"
+            v-else
           >
             不支持开具发票
           </span>
@@ -136,6 +136,10 @@ export default {
     },
     // 商品类型（1:实体, 2:虚拟）
     productType: {
+      type: Number,
+      default: 0
+    },
+    allowInvoice: {
       type: Number,
       default: 0
     },

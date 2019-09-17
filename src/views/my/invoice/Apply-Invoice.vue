@@ -241,7 +241,9 @@ export default {
       this.$destroy()
       return
     }
-    this.checkedList = [...APPLY_INVOICE.physicalProducts]
+    console.log(APPLY_INVOICE)
+    let { virtualProducts, physicalProducts, lessonList } = APPLY_INVOICE
+    this.checkedList = [...physicalProducts, ...virtualProducts, ...lessonList]
     this.applyInvoice = APPLY_INVOICE
     try {
       this.getInvoiceList()

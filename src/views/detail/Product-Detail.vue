@@ -12,7 +12,14 @@
       />
       <DetailInfoBox :loading="loading">
         <info-header :detail="detail" />
-        <count-down size="large" @done="countFinished" :class="$style.countDown" v-if="detail.shoppingStatus === 1" :starttime="detail.serverTime" :endtime="detail.shoppingTimeLong" />
+        <count-down
+          size="large"
+          @done="countFinished"
+          :class="$style.countDown"
+          v-if="detail.shoppingStatus === 1"
+          :starttime="detail.serverTime"
+          :endtime="detail.shoppingTimeLong"
+        />
         <DetailTitle v-text="detail.productName" />
         <DetailDesc v-text="detail.productDesc" />
         <Tags :tags="detail.labelModels" />

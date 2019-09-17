@@ -27,6 +27,7 @@
           :support-refund="item.supportRefund"
           :gap="32"
           :product-type="1"
+          :allow-invoice="item.showInvoice"
           border
         />
       </div>
@@ -106,6 +107,7 @@
             is-submit
             :gap="32"
             :product-type="2"
+            :allow-invoice="item.showInvoice"
             border
           />
         </div>
@@ -206,6 +208,7 @@
             is-submit
             :gap="32"
             :product-type="2"
+            :allow-invoice="item.showInvoice"
             border
           />
         </div>
@@ -307,7 +310,7 @@
       </pl-button>
     </div>
 
-    <div v-if="physicalProducts.length > 0 && amount > 0" :class="$style.itemSelector" @click="selectInvoice">
+    <div v-if="physicalProducts.length > 0 && amount > 0" :class="$style.itemSelector" @click.capture="selectInvoice">
       <pl-fields
         size="middle"
         text="发票"
@@ -828,7 +831,9 @@ export default {
     // 需要发票
     need () {
       const applyInvoice = {
-        physicalProducts: this.physicalProducts.filter(item => item.price !== 0)
+        physicalProducts: this.physicalProducts.filter(item => item.price !== 0 && item.showInvoice === 1),
+        virtualProducts: this.virtualProducts.filter(item => item.price !== 0 && item.showInvoice === 1),
+        lessonList: this.lessonList.filter(item => item.price !== 0 && item.showInvoice === 1)
       }
       localStorage.setItem('APPLY_INVOICE', JSON.stringify(applyInvoice))
       localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
