@@ -14,7 +14,14 @@
           <div :class="$style.name" v-text="mallName" />
         </div>
         <div :class="$style.bottom">
-          <p :class="$style.desc" v-text="mallDesc" />
+          <p
+            :class="{
+              [$style.desc]: true,
+              [$style.coolapse]: !seeMoreDesc
+            }"
+            v-text="mallDesc"
+            @click="seeMoreDesc = !seeMoreDesc"
+          />
           <div :class="$style.address">
             <pl-svg name="address4" />
             <span :class="$style.addressContent" v-text="address" />
@@ -139,6 +146,7 @@ export default {
   },
   data () {
     return {
+      seeMoreDesc: false,
       data: {},
       maxHeight: 'max-content',
       richTextMaxHeight: 0,
@@ -314,9 +322,12 @@ export default {
         padding-left: 16px;
         border-left: 1px solid #000;
         > .desc {
+          position: relative;
           margin-bottom: 20px;
           font-size: 24px;
-          @include elps-wrap(2);
+          &.coolapse {
+            @include elps-wrap(2);
+          }
         }
         > .address {
           display: flex;
