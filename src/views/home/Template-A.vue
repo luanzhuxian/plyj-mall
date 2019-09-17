@@ -24,7 +24,7 @@
       </swiper-slide>
       <div class="home-banner-pagination" slot="pagination" />
     </swiper>
-    <slot name="88" />
+    <!--<slot name="88" />-->
     <div :class="$style.gift" v-if="data['MODULE_A'].values.length">
       <div :class="$style.head">
         <div :class="$style.title">

@@ -2,7 +2,7 @@
   <div :class="$style.home">
     <TemplateA :data="modules" v-if="type === 1">
       <!-- 月光宝盒项目 -->
-      <router-link
+      <!--<router-link
         slot="88"
         v-if="mallId === '1057573777392603136'"
         :to="{ name: 'MoonCake' }"
@@ -11,19 +11,19 @@
           :class="$style.img88"
           src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
         >
-      </router-link>
+      </router-link>-->
       <!-- 88无现金日 -->
-      <img
+      <!--<img
         slot="88"
         v-if="show88"
         :class="$style.img88"
         :src="data88[mallId].gif" alt=""
         @click="showHaibao"
-      >
+      >-->
     </TemplateA>
     <TemplateB :data="modules" v-else-if="type === 2 || type === 3" :type="type">
       <!-- 月光宝盒项目 -->
-      <router-link
+      <!--<router-link
         slot="88"
         v-if="mallId === '1057573777392603136'"
         :to="{ name: 'MoonCake' }"
@@ -32,15 +32,15 @@
           :class="$style.img88"
           src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
         >
-      </router-link>
+      </router-link>-->
       <!-- 88无现金日 -->
-      <img
+      <!--<img
         slot="88"
         v-if="show88"
         :class="$style.img88"
         :src="data88[mallId].gif" alt=""
         @click="showHaibao"
-      >
+      >-->
     </TemplateB>
     <div :class="$style.skeleton" v-else>
       <div :class="$style.skeletonA" />
@@ -51,7 +51,7 @@
       <div :class="$style.skeletonB" />
     </div>
 
-    <transition name="fade">
+    <!--<transition name="fade">
       <div :class="$style.haibao" v-if="haibao">
         <img @click="haibao = ''" :src="haibao" alt="">
       </div>
@@ -61,7 +61,7 @@
         <img :src="pop" alt="">
         <pl-svg @click="pop = ''" name="close3" color="#fff" />
       </div>
-    </transition>
+    </transition>-->
     <!--<WWEC :show.sync="show820" />-->
   </div>
 </template>
@@ -73,7 +73,7 @@ import { getTemplate } from '../../apis/home'
 import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
 import { mapGetters } from 'vuex'
-import moment from 'moment'
+// import moment from 'moment'
 // import WWEC from '../../components/WWEC.vue'
 export default {
   name: 'Home',
@@ -88,24 +88,24 @@ export default {
       // show820: false,
       type: 0,
       modules: {},
-      haibao: '',
-      pop: '',
-      data88: {
-        '1110736772377198592': {
-          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
-          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif',
-          startTime: 1564588800000, // 2019-08-01 00:00:00
-          endTime: 1568563199000 // 2019-09-15 23:59:59
-        },
-        '1120991459349135360': {
-          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
-          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif',
-          startTime: 1564588800000, // 2019-08-01 00:00:00
-          endTime: 1567267199000 // 2019-08-31 23:59:59
-        }
-      },
+      // haibao: '',
+      // pop: '',
+      // data88: {
+      //   '1110736772377198592': {
+      //     haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
+      //     pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
+      //     gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif',
+      //     startTime: 1564588800000, // 2019-08-01 00:00:00
+      //     endTime: 1568563199000 // 2019-09-15 23:59:59
+      //   },
+      //   '1120991459349135360': {
+      //     haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
+      //     pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
+      //     gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif',
+      //     startTime: 1564588800000, // 2019-08-01 00:00:00
+      //     endTime: 1567267199000 // 2019-08-31 23:59:59
+      //   }
+      // },
       dataMoonLightBox: {},
       // 820用户注册次数
       registerCountFor820: 0
@@ -124,48 +124,56 @@ export default {
     // }
   },
   computed: {
-    ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId']),
-    serverTimestump () {
-      return moment(this.serverTime).valueOf()
-    },
-    cur88Data () {
-      return this.data88[this.mallId] || {}
-    },
-    curStartTime () {
-      return this.cur88Data.startTime || 0
-    },
-    curEndTime () {
-      return this.cur88Data.endTime || 0
-    },
-    show88 () {
-      let { serverTimestump, curStartTime, curEndTime } = this
-      return Boolean(curStartTime && serverTimestump >= curStartTime && serverTimestump <= curEndTime)
-    }
+    ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId'])
+    // serverTimestump () {
+    //   return moment(this.serverTime).valueOf()
+    // },
+    // cur88Data () {
+    //   return this.data88[this.mallId] || {}
+    // },
+    // curStartTime () {
+    //   return this.cur88Data.startTime || 0
+    // },
+    // curEndTime () {
+    //   return this.cur88Data.endTime || 0
+    // }
+    // show88 () {
+    //   let { serverTimestump, curStartTime, curEndTime } = this
+    //   return Boolean(curStartTime && serverTimestump >= curStartTime && serverTimestump <= curEndTime)
+    // }
   },
   watch: {
-    show88: {
-      handler (val) {
-        if (val) {
-          this.showPop(500)
-        }
-      },
-      immediate: true
-    }
+    // show88: {
+    //   handler (val) {
+    //     if (val) {
+    //       this.showPop(500)
+    //     }
+    //   },
+    //   immediate: true
+    // }
   },
   methods: {
-    showPop (delay) {
-      if (this.data88[this.mallId]) {
-        setTimeout(() => {
-          this.pop = this.data88[this.mallId].pop
-        }, delay)
-      }
-    },
-    showHaibao () {
-      this.haibao = this.data88[this.mallId].haibao
-    },
+    // showPop (delay) {
+    //   if (this.data88[this.mallId]) {
+    //     setTimeout(() => {
+    //       this.pop = this.data88[this.mallId].pop
+    //     }, delay)
+    //   }
+    // },
+    // showHaibao () {
+    //   this.haibao = this.data88[this.mallId].haibao
+    // },
     async getTemplate () {
       try {
         const { result } = await getTemplate()
+        if (!result) {
+          this.noFinish = true
+          this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+            .finally(() => {
+              this.$router.replace({ name: 'Classify' })
+            })
+          return
+        }
         const { moduleModels } = result
         let { type } = result
         let modules
@@ -225,6 +233,16 @@ export default {
         throw e
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.noFinish) {
+        vm.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+          .finally(() => {
+            vm.$router.replace({ name: 'Classify' })
+          })
+      }
+    })
   }
 }
 </script>
@@ -254,7 +272,7 @@ export default {
     }
   }
 
-  .pop, .haibao {
+  /*.pop, .haibao {
     position: fixed;
     top: 0;
     left: 0;
@@ -289,5 +307,5 @@ export default {
     padding-bottom: 24px;
     padding-top: 16px;
     background-color: #f4f5f9;
-  }
+  }*/
 </style>
