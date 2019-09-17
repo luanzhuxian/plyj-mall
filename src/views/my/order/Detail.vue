@@ -65,9 +65,9 @@
     <div :class="$style.panel" v-if="hasExpressInfo">
       <express-item
         :order-id="orderId"
-        :express-name="logisticsInfoModel && logisticsInfoModel.courierCompany"
-        :express-number="logisticsInfoModel && logisticsInfoModel.courierNo"
-        :express-status="logisticsInfoModel && logisticsInfoModel.logisticTrackModels.length ? logisticsInfoModel.logisticTrackModels[logisticsInfoModel.logisticTrackModels.length-1].content : ''"
+        :express-name="logisticsInfoModel.courierCompany"
+        :express-number="logisticsInfoModel.courierNo"
+        :express-status="logisticsInfoModel.logisticTrackModels.length ? logisticsInfoModel.logisticTrackModels[logisticsInfoModel.logisticTrackModels.length-1].content : ''"
         :img="productInfoModel.productDetailModels[0].productImg"
       />
     </div>
@@ -87,6 +87,8 @@
           :count="item.count"
           :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
           :product-id="item.productId"
+          :support-refund="item.supportRefund"
+          :allow-invoice="item.invoiceType"
           route-name="Lesson"
         />
         <div :class="$style.buttons">
@@ -277,12 +279,12 @@
         <pl-list
           v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle && hasExpressInfo"
           title="配送方式："
-          :content="logisticsInfoModel && logisticsInfoModel.courierCompany"
+          :content="logisticsInfoModel.courierCompany"
         />
         <pl-list
           v-if="orderStatus !== 'WAIT_PAY' && !isClosedByCancle && hasExpressInfo"
           title="发货时间："
-          :content="logisticsInfoModel && logisticsInfoModel.shipTime"
+          :content="logisticsInfoModel.shipTime"
         />
       </div>
       <div :class="$style.infoBottom" v-if="message">
@@ -316,7 +318,7 @@
           </collapse-item>
         </template>
         <template v-else>
-          <collapse-item name="1" disabled>
+          <collapse-item disabled>
             <template slot="title">
               <div>
                 <span :class="$style.invoiceTitle">发票信息：</span>
@@ -609,16 +611,15 @@ export default {
     // isClosedByRefund () {
     //   return this.orderStatus === 'CLOSED' && this.tradingInfoModel.payTime && this.isAllProductRefund
     // },
+    hasExpressInfo () {
+      return this.orderType === 'PHYSICAL' && this.logisticsInfoModel && this.logisticsInfoModel.courierNo
+    },
     isAllProductRefund () {
       return this.productInfoModel.productDetailModels.every(product => product.afterSalesStatus === 2)
     },
+    // 是否显示删除按钮，只要有一个商品在售后状态则不显示删除按钮
     isDeleteBtnShow () {
-      // 只要有一个商品在售后状态则不显示删除按钮
       return this.productInfoModel.productDetailModels.every(product => [0, 2, 3, 6].includes(product.afterSalesStatus))
-    },
-    hasExpressInfo () {
-      return this.orderType === 'PHYSICAL' && this.logisticsInfoModel && this.logisticsInfoModel.courierNo
-      // (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED' || this.isClosedByRefund)
     },
     // 是否可以申请售后
     canApplyRefund () {
@@ -626,7 +627,7 @@ export default {
       this.productInfoModel.actuallyAmount > 0 &&
       (this.orderType === 'PHYSICAL' || this.usefulCodeCount > 0)
     },
-    // 是否可以申请发票，invoiceStatus： 8:'可申请' 1:'已申请' 3:'已开票' 7:'不支持'
+    // 是否可以申请发票，invoiceStatus： 1:'已申请' 3:'已开票' 7:'不支持' 8:'可申请'
     canApplyInvoice () {
       return this.orderType === 'PHYSICAL' &&
         this.orderStatus !== 'WAIT_PAY' &&
@@ -635,11 +636,6 @@ export default {
         this.productInfoModel.productDetailModels.some(item => {
           return item.price > 0 && item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
         })
-    },
-    noInvoiceProList () {
-      return this.productInfoModel.productDetailModels.filter(item => {
-        return item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
-      })
     },
     // 核销码状: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
     // 核销码全部过期或核销
@@ -944,7 +940,9 @@ export default {
     },
     // 申请发票
     applyInvoice () {
-      const physicalProducts = this.noInvoiceProList.filter(item => item.price > 0)
+      const physicalProducts = this.productInfoModel.productDetailModels.filter(item => {
+        return item.price > 0 && item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
+      })
       localStorage.setItem('APPLY_INVOICE', JSON.stringify({ physicalProducts }))
       localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
         name: this.$route.name,

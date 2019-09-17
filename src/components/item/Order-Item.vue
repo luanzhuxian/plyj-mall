@@ -51,24 +51,17 @@
         <div>
           <span
             :class="$style.tip"
-            v-if="allowInvoice"
-          >
-            支持开具发票
-          </span>
-          <span
-            :class="$style.tip"
-            v-else
-          >
-            不支持开具发票
-          </span>
-          <span
-            :class="$style.tip"
             v-if="supportRefund === 0"
           >
             暂不支持退换货
           </span>
+          <span
+            :class="$style.tip"
+            v-if="allowInvoice === 0"
+          >
+            不支持线上发票
+          </span>
         </div>
-
         <span
           v-if="status"
           :class="$style.status"
@@ -139,15 +132,15 @@ export default {
       type: Number,
       default: 0
     },
-    allowInvoice: {
-      type: Number,
-      default: 0
-    },
-    hidePrice: Boolean,
     supportRefund: {
       type: Number,
       default: -1
-    }
+    },
+    allowInvoice: {
+      type: Number,
+      default: -1
+    },
+    hidePrice: Boolean
   },
   computed: {
     ...mapGetters(['userId', 'agentUser'])
@@ -237,6 +230,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding-left: 8px;
       > .status {
         color: #F2B036;
         font-size: 24px;
@@ -244,6 +238,9 @@ export default {
       .tip {
         font-size: 22px;
         color: #999;
+        &:nth-of-type(1) {
+          margin-right: 10px;
+        }
       }
     }
     &.medium {
