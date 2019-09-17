@@ -830,11 +830,11 @@ export default {
     },
     // 需要发票
     need () {
-      const applyInvoice = {
-        physicalProducts: this.physicalProducts.filter(item => item.price !== 0 && item.showInvoice === 1),
-        virtualProducts: this.virtualProducts.filter(item => item.price !== 0 && item.showInvoice === 1),
-        lessonList: this.lessonList.filter(item => item.price !== 0 && item.showInvoice === 1)
-      }
+      const applyInvoice = [
+        ...this.physicalProducts.filter(item => item.price !== 0 && item.showInvoice === 1),
+        ...this.virtualProducts.filter(item => item.price !== 0 && item.showInvoice === 1),
+        ...this.lessonList.filter(item => item.price !== 0 && item.showInvoice === 1)
+      ]
       localStorage.setItem('APPLY_INVOICE', JSON.stringify(applyInvoice))
       localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
         name: this.$route.name,

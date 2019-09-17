@@ -131,7 +131,7 @@
 
       <ul :class="$style.selectList">
         <li
-          v-for="(pro, i) of products"
+          v-for="(pro, i) of applyInvoice"
           :key="i"
           v-show="pro.returnStatus === 0 || pro.returnStatus === 3 || pro.returnStatus === ''"
         >
@@ -176,6 +176,7 @@
       <div :class="$style.invioceIntroContent">
         <p><strong>第一条：</strong>发票金额不含优惠券和其余优惠支付部分。 </p>
         <p><strong>第二条：</strong>第三方卖家销售的商品／服务的发票由卖家自行出具、提供，发票类型和内容由卖家根据实际商品、服务情况决定。 </p>
+        <p><strong>第三条：</strong>实体商品发票将会与商品同时邮寄，虚拟、课程自提商品发票到店自取，单商品仅支持一次开票服务，请确保填写开票信息真实有效</p>
       </div>
     </pl-popup>
   </div>
@@ -197,7 +198,7 @@ export default {
   data () {
     return {
       showInvioceIntro: false,
-      applyInvoice: {}, // 待开票商品
+      applyInvoice: [], // 待开票商品
       checkedList: [],
       invoiceList: [], // 已添加的发票信息列表
       type: 1,
@@ -221,10 +222,6 @@ export default {
     mobile () {
       return this.selectedAddress.mobile
     },
-    products () {
-      let { virtualProducts, physicalProducts, lessonList } = this.APPLY_INVOICE
-      return [...physicalProducts, ...virtualProducts, ...lessonList]
-    },
     orderId () {
       return this.$route.query.orderId || ''
     },
@@ -242,9 +239,7 @@ export default {
       this.$destroy()
       return
     }
-    let { virtualProducts, physicalProducts, lessonList } = APPLY_INVOICE
-    this.APPLY_INVOICE = APPLY_INVOICE
-    this.checkedList = [...physicalProducts, ...virtualProducts, ...lessonList]
+    this.checkedList = [...APPLY_INVOICE]
     this.applyInvoice = APPLY_INVOICE
     try {
       this.getInvoiceList()

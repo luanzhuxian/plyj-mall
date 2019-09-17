@@ -943,7 +943,7 @@ export default {
       const physicalProducts = this.productInfoModel.productDetailModels.filter(item => {
         return item.price > 0 && item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
       })
-      localStorage.setItem('APPLY_INVOICE', JSON.stringify({ physicalProducts }))
+      localStorage.setItem('APPLY_INVOICE', JSON.stringify([ ...physicalProducts ]))
       localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
         name: this.$route.name,
         params: this.$route.params,
