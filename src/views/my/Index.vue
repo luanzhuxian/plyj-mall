@@ -7,7 +7,7 @@
         <div :class="$style.sub">
           <span :class="$style.level" v-text="roleName" />
           <router-link
-            v-if="!isApplyBtnShow"
+            v-if="isApplyBtnShow"
             :class="$style.applyBtn"
             :to="{ name: 'ApplyHelper' }"
           >
