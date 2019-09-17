@@ -21,7 +21,11 @@ export const beforeResolve = function (to, from, next) {
   // } else {
   next()
   // }
-  document.title = to.meta.title
+  if (to.name === 'Home') {
+    document.title = localStorage.getItem('mallName')
+  } else {
+    document.title = to.meta.title
+  }
 }
 export const afterEach = function (to, from) {
 }
