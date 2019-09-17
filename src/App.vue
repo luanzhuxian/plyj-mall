@@ -65,6 +65,7 @@ export default {
   async created () {
     try {
       await this.getMallInfo()
+      document.title = this.mallName
       if (this.token) {
         await this.getUserInfo()
       } else {
