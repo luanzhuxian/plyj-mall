@@ -5,31 +5,28 @@
       tag="div"
       :to="{ name: 'Home' }"
     >
-      <pl-svg :name="homeActive ? 'find-active' : 'find'" />
+      <pl-icon type="svg" :name="homeActive ? 'icon-find-active' : 'icon-find'" width="68" />
     </router-link>
     <router-link
       :class="$style.route"
       tag="div"
       :to="{ name: 'Classify' }"
     >
-      <pl-svg :name="classifyActive ? 'classify-active' : 'classify'" />
+      <pl-icon type="svg" :name="classifyActive ? 'icon-classify-active' : 'icon-classify'" width="68" />
     </router-link>
     <router-link
       :class="$style.route"
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
-      <pl-svg
-        :class="$style.cart"
-        :name="yajiActive ? 'cart-active' : 'cart'"
-      />
+      <pl-icon type="svg" :name="yajiActive ? 'icon-cart1' : 'icon-cart'" width="68" />
     </router-link>
     <router-link
       :class="$style.route"
       tag="div"
       :to="{ name: 'My' }"
     >
-      <pl-svg :name="myActive ? 'my-active' : 'my'" />
+      <pl-icon type="svg" :name="myActive ? 'icon-my-active' : 'icon-my1'" width="68" />
       <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
     </router-link>
   </nav>
@@ -106,12 +103,6 @@ export default {
     justify-content: center;
     height: 88px;
     font-size: 20px;
-    svg {
-      width: 40px;
-    }
-    .cart {
-      width: 60px;
-    }
     .alertMessage{
       background-color: #D2524C;
       width: 10px;
