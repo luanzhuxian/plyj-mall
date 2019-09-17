@@ -34,7 +34,11 @@
         />
         <ul :class="$style.codeList">
           <template v-for="(item, i) of redeemCodeModels">
-            <li :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }" :key="i" v-show="collapseQrCode ? i === 0 : true">
+            <li
+              v-show="collapseQrCode ? i === 0 : true"
+              :class="{ [$style.codeItem]: true, [$style.used]: item.statusCode !== 0 }"
+              :key="i"
+            >
               <div>
                 <div :class="$style.codeBox">
                   <code :class="$style.codeValue">
@@ -49,7 +53,7 @@
                 </div>
               </div>
               <div :class="$style.shareCode" v-if="item.statusCode === 0">
-                <div :class="$style.shareButton" @click="drawPost(item)">分享</div>
+                <div :class="$style.shareButton" @click="drawPoster(item)">分享</div>
               </div>
             </li>
           </template>
@@ -57,6 +61,7 @@
       </div>
     </div>
 
+    <!-- 物流信息 -->
     <div :class="$style.panel" v-if="hasExpressInfo">
       <express-item
         :order-id="orderId"
@@ -67,6 +72,7 @@
       />
     </div>
 
+    <!-- 订单信息 -->
     <div :class="$style.panel">
       <div
         :class="$style.orderInfo"
@@ -194,6 +200,7 @@
       </div>
     </div>
 
+    <!-- 收货人信息 -->
     <div :class="$style.panel">
       <address-item
         v-if="shippingAddress.agencyAddress"
@@ -203,6 +210,7 @@
       />
     </div>
 
+    <!-- 学员信息 -->
     <!-- <div :class="$style.panelPadding" v-if="studentInfoModels.length > 0">
       <pl-fields
         size="middle"
@@ -229,6 +237,7 @@
       </pl-fields>
     </div> -->
 
+    <!-- 联系人信息 -->
     <div :class="[$style.panel, $style.contact]" v-if="!shippingAddress.agencyAddress">
       <pl-fields
         size="middle"
@@ -244,6 +253,7 @@
       </pl-fields>
     </div>
 
+    <!-- 交易信息 -->
     <div :class="[$style.panel, $style.otherInfo]">
       <div :class="$style.infoTop">
         <pl-list
@@ -283,10 +293,8 @@
       </div>
     </div>
 
-    <div
-      v-if="orderType === 'PHYSICAL'"
-      :class="[$style.panel, $style.invoice]"
-    >
+    <!-- 发票信息 -->
+    <div v-if="orderType === 'PHYSICAL'" :class="[$style.panel, $style.invoice]">
       <collapse v-model="collepseActiveNames">
         <template v-if="invoiceModelList && invoiceModelList.length">
           <collapse-item>
@@ -308,10 +316,7 @@
           </collapse-item>
         </template>
         <template v-else>
-          <collapse-item
-            name="1"
-            disabled
-          >
+          <collapse-item name="1" disabled>
             <template slot="title">
               <div>
                 <span :class="$style.invoiceTitle">发票信息：</span>
@@ -323,6 +328,7 @@
       </collapse>
     </div>
 
+    <!-- footer -->
     <div
       ref="footer"
       class="footer"
@@ -386,10 +392,16 @@
         去付款
       </pl-button>
     </div>
-    <pl-popup
-      ref="contact"
-      :show.sync="isPopupShow"
-    >
+
+    <!-- picker -->
+    <pl-picker
+      :show.sync="isPickerShow"
+      :slots="pickerColumns"
+      @confirm="(selected) => { cancelOrder(selected[0]) }"
+    />
+
+    <!-- 联系我们底部弹窗 -->
+    <pl-popup ref="contact" :show.sync="isPopupShow">
       <template name="title">
         <div :class="$style.popupTitle">
           <pl-svg
@@ -429,27 +441,21 @@
         </div>
       </template>
     </pl-popup>
-    <pl-picker
-      :show.sync="isPickerShow"
-      :slots="pickerColumns"
-      @confirm="(selected) => { cancelOrder(selected[0]) }"
-    />
 
-    <div :class="$style.shareImgBox" v-if="postShow">
+    <!-- 分享核销码弹窗 -->
+    <div :class="$style.shareImgBox" v-if="isPosterShow">
       <div :class="$style.imgBox">
-        <img :src="post" alt="">
+        <img :src="poster" alt="">
       </div>
       <div :class="$style.description">
         <p>长按保存分享给好友</p>
-        <pl-svg name="close3" color="#fff" width="80" @click="postShow = false" />
+        <pl-svg name="close3" color="#fff" width="80" @click="isPosterShow = false" />
       </div>
     </div>
   </div>
 
-  <div
-    v-else
-    :class="$style.skeleton"
-  >
+  <!-- 骨架屏 -->
+  <div v-else :class="$style.skeleton">
     <div :class="[$style.skeleton1, $style.skeAnimation]" />
     <div :class="[$style.skeleton2, $style.skeAnimation]" />
     <div :class="$style.skeleton3">
@@ -477,8 +483,7 @@
 </template>
 
 <script>
-import filter from '../../../filter/index'
-import { createText } from '../../../assets/js/validate'
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 import TopText from '../../../components/Top-Text.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
@@ -489,7 +494,6 @@ import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
-import { upload, deleteImage } from '../../../assets/js/upload-image'
 import {
   getOrderDetail,
   getAwaitPayInfo,
@@ -501,7 +505,9 @@ import {
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { generateQrcode } from '../../../assets/js/util'
-import { mapGetters } from 'vuex'
+import { upload, deleteImage } from '../../../assets/js/upload-image'
+import { createText } from '../../../assets/js/validate'
+import filter from '../../../filter/index'
 
 function updateLocalStorage (key, value) {
   const arr = JSON.parse(localStorage.getItem(key) || '[]')
@@ -528,6 +534,7 @@ const invoiceMap = {
     fields: 'tin'
   }
 }
+
 // 上传到服务器的二维码，离开页面后要删除
 let qrcodeKey = ''
 
@@ -552,9 +559,7 @@ export default {
   },
   data () {
     return {
-      pageHeight: 0,
       loaded: false,
-      collapseQrCode: true,
       orderType: '',
       orderStatus: '',
       message: '',
@@ -588,10 +593,12 @@ export default {
       collepseActiveNames: [],
       suggestionMap,
       invoiceMap,
+      // 核销码
+      collapseQrCode: true,
       qrImg: '',
       // 海报
-      post: '',
-      postShow: false
+      isPosterShow: false,
+      poster: ''
     }
   },
   computed: {
@@ -654,25 +661,32 @@ export default {
     } catch (e) {
       throw e
     }
-    this.pageHeight = document.documentElement.clientHeight
-    console.log(this.pageHeight)
   },
   async deactivated () {
-    this.post = ''
-    this.postShow = false
-    this.collepseActiveNames = []
-    this.logisticsInfoModel = null
     this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY = ''
     this.collapseQrCode = true
     this.isPopupShow = false
     this.isPickerShow = false
+    this.isPosterShow = false
+    this.poster = ''
+    this.logisticsInfoModel = null
+    this.collepseActiveNames = []
     clearInterval(this.timer)
     clearInterval(this.timer2)
     await deleteImage([qrcodeKey])
   },
   methods: {
-    async drawPost (item) {
-      this.postShow = true
+    // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
+    isCommentBtnShow (item) {
+      return this.orderStatus === 'FINISHED' &&
+      item.assessmentStatus === 0 &&
+      ((this.orderType === 'PHYSICAL' && ~[0, 3, 6].indexOf(item.afterSalesStatus)) || (this.orderType !== 'PHYSICAL' && this.redeemCodeModels.some(item => item.statusCode === 1)))
+    },
+    isRefundBtnShow (item) {
+      return item.supportRefund && Number(item.refundPrice) > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
+    },
+    async drawPoster (item) {
+      this.isPosterShow = true
       const start = this.productInfoModel.productDetailModels[0].validityPeriodStart.split(' ')[0]
       const end = this.productInfoModel.productDetailModels[0].validityPeriodEnd.split(' ')[0]
       let qrcode = await generateQrcode(300, `${item.redeemCode}`, 0, null, null, 'url')
@@ -749,18 +763,23 @@ export default {
         }
         ctx.drawImage(img[1], 330, 350, 400, 400)
         ctx.drawImage(img[2], 60, 1215, 248, 248)
-        let post = canvas.toDataURL('image/jpeg', 0.7)
-        this.post = post
+        this.poster = canvas.toDataURL('image/jpeg', 0.7)
       })
     },
-    // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
-    isCommentBtnShow (item) {
-      return this.orderStatus === 'FINISHED' &&
-      item.assessmentStatus === 0 &&
-      ((this.orderType === 'PHYSICAL' && ~[0, 3, 6].indexOf(item.afterSalesStatus)) || (this.orderType !== 'PHYSICAL' && this.redeemCodeModels.some(item => item.statusCode === 1)))
-    },
-    isRefundBtnShow (item) {
-      return item.supportRefund && Number(item.refundPrice) > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
+    generateQrcode (orderId) {
+      generateQrcode(300, orderId, 34, null, null, 'blob')
+        .then(async (blob) => {
+          try {
+            let { name, url } = await upload(blob)
+            qrcodeKey = name
+            this.qrImg = url
+          } catch (e) {
+            this.$error('生成二维码失败')
+          }
+        })
+        .catch(() => {
+          this.$error('生成二维码失败')
+        })
     },
     // 倒计时
     countDown (remanent, orderStatus) {
@@ -868,21 +887,6 @@ export default {
         }
       })
     },
-    generateQrcode (orderId) {
-      generateQrcode(300, orderId, 34, null, null, 'blob')
-        .then(async (blob) => {
-          try {
-            let { name, url } = await upload(blob)
-            qrcodeKey = name
-            this.qrImg = url
-          } catch (e) {
-            this.$error('生成二维码失败')
-          }
-        })
-        .catch(() => {
-          this.$error('生成二维码失败')
-        })
-    },
     async pay () {
       try {
         const { orderId } = this
@@ -989,39 +993,21 @@ export default {
   .order-detail {
     padding: 28px 24px 140px;
   }
-  .shareImgBox{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:rgba(0,0,0,0.65);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    .img-box{
-      width: 80%;
-      img{
-        width: 100%;
-      }
-    }
-    .description{
-      font-size:32px;
-      font-weight:400;
-      color: #FFFFFF;
-      text-align: center;
-      svg{
-        margin-top: 26px;
-      }
-    }
-  }
+
   .top {
     position: relative;
     margin-bottom: 28px;
     padding: 0 16px;
   }
-  .qrcodeBox {
+
+  .panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: $--radius1;
+    overflow: hidden;
+  }
+
+    .qrcode-box {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1041,7 +1027,7 @@ export default {
       font-size: 24px;
       color: #999;
     }
-    .codeListBox {
+    .code-list-box {
       position: relative;
       display: flex;
       padding: 12px 20px;
@@ -1063,10 +1049,10 @@ export default {
         }
       }
     }
-    .codeList {
+    .code-list {
       flex: 1;
       margin-top: -2px;
-      .codeItem {
+      .code-item {
         display: flex;
         margin-bottom: 8px;
         padding-bottom: 8px;
@@ -1105,7 +1091,7 @@ export default {
         }
       }
     }
-    .codeBox {
+    .code-box {
       .code-value {
         font-size: 32px;
       }
@@ -1131,80 +1117,9 @@ export default {
         }
       }
     }
-
-  }
-  .panel {
-    margin-bottom: 20px;
-    background-color: #fff;
-    border-radius: $--radius1;
-    overflow: hidden;
   }
 
-  .other-info {
-    position: relative;
-    line-height: 34px;
-    font-size: 24px;
-    .info-top {
-      padding: 24px;
-      border-bottom: 1px solid #F0F0F0;
-      > div {
-        margin-bottom: 20px;
-        &:nth-last-of-type(1) {
-          margin-bottom: 0;
-        }
-      }
-    }
-    .info-bottom {
-      padding: 24px;
-      &:nth-last-of-type(1) {
-        margin-bottom: 0;
-      }
-    }
-  }
-  .invoice {
-    padding: 24px;
-    .invoice-title {
-      color: #666666;
-    }
-    .item {
-      font-size: 24px;
-      font-family: Helvetica;
-      font-weight: 400;
-      line-height: 28px;
-      color: #333333;
-      border-bottom: 1px solid #F0F0F0;
-      padding: 24px 0 14px;
-      &:nth-of-type(1) {
-        padding-top: 0;
-      }
-      &:nth-last-of-type(1) {
-        border-bottom: none;
-        padding-bottom: 0;
-      }
-      > div {
-        padding-bottom: 8px;
-      }
-    }
-    .type {
-      display: inline-block;
-      width: 74px;
-      height: 32px;
-      line-height: 32px;
-      background: #FDEFD6;
-      border-radius: 4px;
-      font-size: 24px;
-      color: #FE7700;
-      text-align: center;
-      margin-right: 12px;
-    }
-    .name {
-      font-size: 28px;
-      font-family: PingFangSC-Medium;
-      font-weight: bold;
-      color: #2E2E2E;
-      line-height: 40px;
-    }
-  }
+  /** 订单信息 start **/
   .order-info {
     position: relative;
     display: flex;
@@ -1273,7 +1188,9 @@ export default {
       padding: 0 25px;
     }
   }
+  /** 订单信息 end **/
 
+  /** 联系人 **/
   .contact {
     padding-left: 24px;
     .contact-detail {
@@ -1282,6 +1199,73 @@ export default {
         margin-right: 24px;
         font-weight: 500;
       }
+    }
+  }
+  /** 交易信息 **/
+  .other-info {
+    position: relative;
+    line-height: 34px;
+    font-size: 24px;
+    .info-top {
+      padding: 24px;
+      border-bottom: 1px solid #F0F0F0;
+      > div {
+        margin-bottom: 20px;
+        &:nth-last-of-type(1) {
+          margin-bottom: 0;
+        }
+      }
+    }
+    .info-bottom {
+      padding: 24px;
+      &:nth-last-of-type(1) {
+        margin-bottom: 0;
+      }
+    }
+  }
+  /** 发票信息 **/
+  .invoice {
+    padding: 24px;
+    .invoice-title {
+      color: #666666;
+    }
+    .item {
+      font-size: 24px;
+      font-family: Helvetica;
+      font-weight: 400;
+      line-height: 28px;
+      color: #333333;
+      border-bottom: 1px solid #F0F0F0;
+      padding: 24px 0 14px;
+      &:nth-of-type(1) {
+        padding-top: 0;
+      }
+      &:nth-last-of-type(1) {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      > div {
+        padding-bottom: 8px;
+      }
+    }
+    .type {
+      display: inline-block;
+      width: 74px;
+      height: 32px;
+      line-height: 32px;
+      background: #FDEFD6;
+      border-radius: 4px;
+      font-size: 24px;
+      color: #FE7700;
+      text-align: center;
+      margin-right: 12px;
+    }
+    .name {
+      font-size: 28px;
+      font-family: PingFangSC-Medium;
+      font-weight: bold;
+      color: #2E2E2E;
+      line-height: 40px;
     }
   }
 
@@ -1347,6 +1331,35 @@ export default {
   .popup-address-right-icon {
     width: 39px;
     margin-left: 40px
+  }
+
+  /** 分享核销码弹窗 **/
+  .share-img-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:rgba(0, 0, 0, 0.65);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .img-box {
+      width: 80%;
+      img {
+        width: 100%;
+      }
+    }
+    .description {
+      font-size:32px;
+      font-weight:400;
+      color: #FFFFFF;
+      text-align: center;
+      svg {
+        margin-top: 26px;
+      }
+    }
   }
 
   /** skeleton start **/

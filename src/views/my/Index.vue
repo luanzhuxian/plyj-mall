@@ -266,6 +266,10 @@ export default {
         this.roleCode === 'EMPLOYEE'
     }
   },
+  created () {
+    this.getRecentExpressInfo()
+    this.getNotice()
+  },
   async activated () {
     try {
       if (this.roleCode === 'VISITOR') {
@@ -278,8 +282,8 @@ export default {
           this.$router.push({ name: 'BindMobile' })
         }, 1000)
       } else {
-        this.loaded = false
-        await Promise.all([this.orderPhysicalorderSummary(), this.getRecentExpressInfo()])
+        // await Promise.all([this.orderPhysicalorderSummary(), this.getRecentExpressInfo()])
+        await this.orderPhysicalorderSummary()
         this.getProgress()
         this.loaded = true
       }
@@ -289,24 +293,13 @@ export default {
   },
   deactivated () {
     this.isModalShow = false
-    this.progress = []
-    this.newFreight = []
-  },
-  created () {
-    this.getNotice()
+    // this.progress = []
+    // this.newFreight = []
   },
   methods: {
     ...mapActions({
       getAuditNotice: Get_ADUIT_NOTICE
     }),
-    async getRecentExpressInfo () {
-      try {
-        const { result } = await getNewFreight()
-        this.newFreight = result
-      } catch (e) {
-        throw e
-      }
-    },
     // 获取各个状态订单数量
     async orderPhysicalorderSummary () {
       try {
@@ -316,6 +309,15 @@ export default {
             this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
           }
         }
+      } catch (e) {
+        throw e
+      }
+    },
+    // 获取物流信息
+    async getRecentExpressInfo () {
+      try {
+        const { result } = await getNewFreight()
+        this.newFreight = result
       } catch (e) {
         throw e
       }
