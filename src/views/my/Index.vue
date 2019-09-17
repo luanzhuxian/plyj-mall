@@ -267,8 +267,13 @@ export default {
     }
   },
   created () {
-    this.getRecentExpressInfo()
-    this.getNotice()
+    if (this.roleCode === 'VISITOR') {
+      this.loaded = true
+    } else {
+      this.loaded = false
+      this.getRecentExpressInfo()
+      this.getNotice()
+    }
   },
   async activated () {
     try {
