@@ -278,6 +278,7 @@ export default {
   async activated () {
     try {
       if (this.roleCode === 'VISITOR') {
+        this.loaded = true
         await this.$confirm({
           message: '为了您的账号安全，请绑定手机号',
           confirmText: '去绑定',
