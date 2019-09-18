@@ -4,8 +4,9 @@
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 32 32"
-        width="42"
-        height="42"
+        width="32"
+        height="32"
+        class="loading-svg"
         style="display: block;"
         fill="#fff"
       >
@@ -60,11 +61,14 @@ export default {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 150px;
       height: 100px;
-      padding: 10px 16px;
+      padding: 20px 16px;
       border-radius: 10px;
       background-color: rgba(0, 0, 0, .5);
+      > .loading-svg {
+        width: 50px;
+        height: 50px;
+      }
     }
     .pl-indicator-loading-text {
       margin-top: 10px;
