@@ -68,7 +68,7 @@ export default {
     }
     .pl-indicator-loading-text {
       margin-top: 10px;
-      font-size: 22px;
+      font-size: 28px;
       color: #fff;
     }
   }
