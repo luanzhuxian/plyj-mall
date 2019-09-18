@@ -599,10 +599,6 @@ export default {
       }
     },
     selectInvoice () {
-      if (!this.selectedAddress.realName) {
-        this.$warning('请先选择收货地址')
-        return
-      }
       this.showPopup = true
     },
     selectStudent (pro) {
