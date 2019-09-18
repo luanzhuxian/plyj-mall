@@ -125,17 +125,17 @@ export default {
       // 移动速度是手指滑动速度的2/3
       this.translateY += y * 2 / 3
       /*
-         * 规律：
-         * 位移每减少一个this.translateY，active就增加1
-         * this.activeOffsetTop / 2 表示，离活动区域过当前项 1/2 高度时就选中
-         **/
+      * 规律：
+      * 位移每减少一个this.translateY，active就增加1
+      * this.activeOffsetTop / 2 表示，离活动区域过当前项 1/2 高度时就选中
+      **/
       this.active = Number.parseInt((activeOffsetTop - this.translateY + activeOffsetTop / 2) / activeOffsetTop)
     },
     /*
-      * 计算手指滑动的速度
-      * endY 滑动结束时的坐标
-      * return 每15ms运动过的距离（px）,大约为 1 帧
-      * */
+    * 计算手指滑动的速度
+    * endY 滑动结束时的坐标
+    * return 每15ms运动过的距离（px）,大约为 1 帧
+    * */
     speed (endY) {
       let t = Date.now() - startTime
       let s = endY - startYBase
@@ -156,10 +156,10 @@ export default {
         requestAnimationFrame(this.inertia)
       } else {
         /*
-           * 惯性运动结束
-           * 规律：
-           * active 每递增1，就减少一个 activeOffsetTop
-           * */
+        * 惯性运动结束
+        * 规律：
+        * active 每递增1，就减少一个 activeOffsetTop
+        * */
         this.trasition = true
         if (this.active < 0) {
           this.active = 0

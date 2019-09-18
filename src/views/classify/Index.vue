@@ -175,6 +175,17 @@ export default {
     this.findDefault()
   },
   methods: {
+    findDefault () {
+      if (this.classifyList.length > 1) {
+        let finded = this.classifyList.find(item => item.id === this.optionId)
+        if (finded) {
+          this.classifyClick(finded)
+        } else {
+          finded = this.classifyList.find(item => item.id === '')
+          this.classifyClick(finded)
+        }
+      }
+    },
     classifyClick (classify) {
       if (this.loading || classify === this.currentClassify) return
       if (classify && (classify.id === '1')) {
@@ -223,17 +234,6 @@ export default {
         this.findDefault()
       } catch (e) {
         throw e
-      }
-    },
-    findDefault () {
-      if (this.classifyList.length > 1) {
-        let finded = this.classifyList.find(item => item.id === this.optionId)
-        if (finded) {
-          this.classifyClick(finded)
-        } else {
-          finded = this.classifyList.find(item => item.id === '')
-          this.classifyClick(finded)
-        }
       }
     },
     refreshHandler (list) {
