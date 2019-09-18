@@ -630,13 +630,19 @@ export default {
     },
     // 是否可以申请发票，invoiceStatus： 1:'已申请' 3:'已开票' 7:'不支持' 8:'可申请'
     canApplyInvoice () {
-      return this.orderStatus !== 'WAIT_PAY' &&
-        this.orderStatus !== 'CLOSED' &&
-        this.productInfoModel.productsTotalAmount - this.productInfoModel.couponDeduction > 0 &&
-        this.productInfoModel.productDetailModels.some(product => {
+      let {
+        productsTotalAmount,
+        couponDeduction,
+        productDetailModels
+      } = this.productInfoModel
+      let orderStatus = this.orderStatus
+      return orderStatus !== 'WAIT_PAY' &&
+        orderStatus !== 'CLOSED' &&
+        productsTotalAmount - couponDeduction > 0 &&
+        productDetailModels.some(product => {
           return product.price > 0 &&
             product.invoiceType === 1 &&
-            product.invoiceStatus === 8 &&
+            (product.invoiceStatus === 8 || product.showInvioce === 1) &&
             ~[0, 3, 6].indexOf(product.afterSalesStatus)
         })
     },
