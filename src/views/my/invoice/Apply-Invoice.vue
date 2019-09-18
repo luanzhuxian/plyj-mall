@@ -225,6 +225,9 @@ export default {
     orderId () {
       return this.$route.query.orderId || ''
     },
+    orderType () {
+      return this.$route.query.orderType || ''
+    },
     receiveMobile () {
       return this.$route.query.receiveMobile || ''
     },
@@ -274,12 +277,12 @@ export default {
     getCurrentInvoice () {
       return this.invoiceList.find(item => item.id === this.currentInvoice)
     },
-    selectChange (e, pro) {
+    selectChange (e, prod) {
       const checked = e.target.checked
       if (checked) {
-        this.checkedList.push(pro)
+        this.checkedList.push(prod)
       } else {
-        this.checkedList.splice(this.checkedList.indexOf(pro), 1)
+        this.checkedList.splice(this.checkedList.indexOf(prod), 1)
       }
     },
     addInfo () {
@@ -326,12 +329,13 @@ export default {
           })
         }
       }
-      for (let pro of this.checkedList) {
-        invoiceAmount += Number(pro.amount) * 100
+
+      for (let prod of this.checkedList) {
+        invoiceAmount += Number(prod.amount) * 100
         orderDetails.push({
-          productId: pro.productId,
-          skuCode1: pro.skuCode1,
-          skuCode2: pro.skuCode2
+          productId: prod.productId,
+          skuCode1: prod.skuCode1,
+          skuCode2: prod.skuCode2
         })
       }
       invoiceModel.orderDetails = orderDetails
@@ -352,7 +356,8 @@ export default {
             invoiceType: this.type,
             invoiceTitle: this.type === 1 ? this.receiveName : this.form.firmName,
             tin: this.type === 2 ? this.form.tin : '',
-            orderDetails: orderDetailsTemp
+            orderDetails: orderDetailsTemp,
+            logisticStatus: this.orderType === 'PHYSICAL' ? 0 : 1
           })
         } catch (e) {
           throw e

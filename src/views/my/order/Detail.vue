@@ -956,6 +956,7 @@ export default {
         name: 'ApplyInvoice',
         query: {
           orderId: this.orderId,
+          orderType: this.orderType,
           receiveMobile: mobile,
           receiveName: name
         }
