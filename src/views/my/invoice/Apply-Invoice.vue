@@ -262,7 +262,11 @@ export default {
       try {
         const { result } = await getInvoiceList(this.userId)
         this.invoiceList = result
-        this.currentInvoice = this.$route.query.id || this.currentInvoice || result[0].id
+        if (result[0]) {
+          this.currentInvoice = this.$route.query.id || this.currentInvoice || result[0].id
+        } else {
+          this.currentInvoice = this.$route.query.id || this.currentInvoice
+        }
       } catch (e) {
         throw e
       }
@@ -297,8 +301,8 @@ export default {
       if (this.type === 1) {
         invoiceModel = {
           invoiceType: 1,
-          invoiceTitle: this.realName,
-          receiverMobile: this.mobile,
+          invoiceTitle: this.realName || this.receiveName,
+          receiverMobile: this.mobile || this.receiveMobile,
           userAddressId: this.selectedAddress.sequenceNbr
         }
       } else {

@@ -599,6 +599,10 @@ export default {
       }
     },
     selectInvoice () {
+      if (!this.physicalProducts.length && !this.contactInfoModel.name) {
+        this.$warning('请先填写联系人信息')
+        return
+      }
       this.showPopup = true
     },
     selectStudent (pro) {
@@ -836,7 +840,17 @@ export default {
         params: this.$route.params,
         query: this.$route.query
       }))
-      this.$router.push({ name: 'ApplyInvoice' })
+      if (this.contactInfoModel.mobile) {
+        this.$router.push({
+          name: 'ApplyInvoice',
+          query: {
+            receiveMobile: this.contactInfoModel.mobile,
+            receiveName: this.contactInfoModel.name
+          }
+        })
+      } else {
+        this.$router.push({ name: 'ApplyInvoice' })
+      }
       this.invioceType = 2
       this.showPopup = false
     }
