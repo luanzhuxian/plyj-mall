@@ -296,7 +296,6 @@ export default {
       > .top {
         display: flex;
         justify-content: space-between;
-        padding-bottom: 24px;
         > .left {
           > .title {
             font-size: 36px;
@@ -328,6 +327,7 @@ export default {
       }
       > .bottom {
         display: flex;
+        margin-top: 24px;
         font-size: 24px;
         overflow: hidden;
         border-top: 1px solid #e7e7e7;
