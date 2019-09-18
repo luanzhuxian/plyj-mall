@@ -70,6 +70,7 @@ import {
   getDetail,
   wouldINeedOpenDefault
 } from '../../../apis/student'
+import { mapGetters } from 'vuex'
 export default {
   name: 'AddStudent',
   components: {
@@ -103,6 +104,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['mobile']),
     canSelect () {
       return this.$route.query.select === 'YES'
     },
@@ -215,6 +217,29 @@ export default {
       localStorage.removeItem('SELECT_STUDENT_FROM')
     }
     next()
+  },
+  beforeRouteEnter (to, from, next) {
+    next(async vm => {
+      if (!vm.mobile) {
+        try {
+          await vm.$confirm('请先绑定手机')
+          localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+            name: vm.$route.name,
+            params: vm.$route.params,
+            query: vm.$route.query
+          }))
+          vm.$router.replace({
+            name: 'BindMobile'
+          })
+        } catch (e) {
+          vm.$router.push({
+            name: from.name,
+            query: from.query,
+            params: from.params
+          })
+        }
+      }
+    })
   }
 }
 </script>

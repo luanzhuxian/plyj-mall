@@ -864,6 +864,7 @@ export default {
       localStorage.removeItem('CONFIRM_LIST')
       localStorage.removeItem('APPLY_INVOICE')
       localStorage.removeItem('CHECKED_STUDENT')
+      localStorage.removeItem('CONTACT_INFO_MODEL')
       this.remark = ''
       this.physicalProducts = []
       this.virtualProducts = []
@@ -871,6 +872,7 @@ export default {
       this.INVOICE_MODEL = {}
       this.CHECKED_STUDENT = {}
       resetForm(this.contactInfoModel)
+      resetForm(this.contactInfoForm)
     }
     next()
   }
