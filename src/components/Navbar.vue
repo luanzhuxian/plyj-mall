@@ -19,7 +19,7 @@
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
-      <pl-icon type="svg" :name="yajiActive ? 'icon-cart1' : 'icon-cart'" width="68" />
+      <pl-icon type="svg" :name="yajiActive ? 'icon-cart-active' : 'icon-cart'" width="68" />
     </router-link>
     <router-link
       :class="$style.route"
