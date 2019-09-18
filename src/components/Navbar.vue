@@ -104,7 +104,6 @@ export default {
     display: inline-flex;
     flex-direction: column;
     justify-content: center;
-    width: 40px;
     height: 88px;
     font-size: 20px;
     svg {

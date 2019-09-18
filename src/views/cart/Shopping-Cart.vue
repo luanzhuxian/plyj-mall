@@ -285,7 +285,6 @@ export default {
       this.setDisabledToEnd()
     },
     checkAll (val) {
-      console.log(val)
       this.checkedAll = val
       this.$refs.checkboxGroup.changeAll(val)
     },
