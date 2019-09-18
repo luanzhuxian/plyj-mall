@@ -357,7 +357,7 @@ export default {
             invoiceTitle: this.type === 1 ? this.receiveName : this.form.firmName,
             tin: this.type === 2 ? this.form.tin : '',
             orderDetails: orderDetailsTemp,
-            logisticStatus: this.orderType === 'PHYSICAL' ? 0 : 1
+            ...(this.orderType ? { logisticStatus: this.orderType === 'PHYSICAL' ? 0 : 1 } : null)
           })
         } catch (e) {
           throw e
