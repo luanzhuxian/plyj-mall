@@ -3,7 +3,7 @@
     <div :class="$style.top">
       <img :src="avatar" alt="头像">
       <div :class="$style.basicInfo">
-        <span :class="$style.main" v-text="`${userName}离开教室得到了咖啡碱撒离开对方`" />
+        <span :class="$style.main" v-text="userName" />
         <div :class="$style.sub">
           <span :class="$style.level" v-text="roleName" />
           <router-link
