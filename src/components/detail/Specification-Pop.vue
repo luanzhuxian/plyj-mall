@@ -29,7 +29,7 @@
                 </p>
               </div>
             </div>
-            <div :class="$style.skuBox">
+            <div :class="$style.skuBox" @touchmove.stop="() => {}">
               <!-- 规格1 -->
               <div :class="$style.color" v-if="skuAttrList && skuAttrList.length">
                 <div v-text="skuAttrList[0].productAttributeName" />
