@@ -943,7 +943,7 @@ export default {
     // 申请发票
     applyInvoice () {
       const physicalProducts = this.productInfoModel.productDetailModels.filter(item => {
-        return item.price > 0 && item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
+        return item.price > 0 && item.invoiceType === 1 && item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
       })
       sessionStorage.setItem('APPLY_INVOICE', JSON.stringify([ ...physicalProducts ]))
       sessionStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
