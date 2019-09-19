@@ -352,7 +352,7 @@ export default {
       if (!this.mobile) {
         this.$confirm('您还没有绑定手机，请先绑定手机')
           .then(() => {
-            localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
               name: this.$route.name,
               params: this.$route.params,
               query: this.$route.query
@@ -400,7 +400,7 @@ export default {
       const { skuCode1, count, skuCode2 } = selected
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId')
-      localStorage.setItem('CONFIRM_LIST', JSON.stringify([{
+      sessionStorage.setItem('CONFIRM_LIST', JSON.stringify([{
         productId: this.productId,
         count: count,
         skuCode1: skuCode1,

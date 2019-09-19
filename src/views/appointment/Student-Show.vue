@@ -22,11 +22,11 @@ export default {
     }
   },
   async mounted () {
-    let data = JSON.parse(localStorage.getItem('PINGXUAN'))
+    let data = JSON.parse(sessionStorage.getItem('PINGXUAN'))
     if (!data) {
       try {
         let { result } = await getData()
-        localStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
+        sessionStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
         this.data = result.mallBrandingRequestModels.find(item => item.type === 2)
       } catch (e) {
         throw e

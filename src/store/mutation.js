@@ -13,7 +13,7 @@ export default {
   },
   [type.GET_MALL_INFO] (state, payload) {
     copyFields(state.mallInfo, payload)
-    localStorage.setItem('mallName', payload.mallName)
+    sessionStorage.setItem('mallName', payload.mallName)
     // 缓存10周
     Cookies.set('mallId', payload.sequenceNbr, {
       expires: CalcCookieTime(6048000)

@@ -223,7 +223,7 @@ export default {
       if (!vm.mobile) {
         try {
           await vm.$confirm('请先绑定手机')
-          localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+          sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
             name: vm.$route.name,
             params: vm.$route.params,
             query: vm.$route.query

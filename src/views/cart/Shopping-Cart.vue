@@ -323,7 +323,7 @@ export default {
           agentUser
         })
       }
-      localStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
+      sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
       this.$router.push({
         name: 'SubmitOrder',
         query: {
@@ -362,7 +362,7 @@ export default {
       if (!vm.$store.getters.mobile) {
         vm.$confirm('您还没有绑定手机，请先绑定手机')
           .then(() => {
-            localStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
               name: from.name,
               params: from.params,
               query: from.query

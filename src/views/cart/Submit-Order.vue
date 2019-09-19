@@ -582,11 +582,11 @@ export default {
     },
     // 修改数量
     async countChange (count, pro, next) {
-      let CONFIRM_LIST = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
+      let CONFIRM_LIST = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
       let thisPro = CONFIRM_LIST.find(item => item.productId === pro.productId)
       let thisStudents = this.CHECKED_STUDENT[pro.skuCode1]
       thisPro.count = count
-      localStorage.setItem('CONFIRM_LIST', JSON.stringify(CONFIRM_LIST))
+      sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(CONFIRM_LIST))
       try {
         await this.getProductDetail(true)
         next()
@@ -632,7 +632,7 @@ export default {
       }
     },
     async getProductDetail (flag) {
-      const proList = JSON.parse(localStorage.getItem('CONFIRM_LIST'))
+      const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
       if (!proList) {
         return this.$router.replace({ name: 'Home' })
       }
@@ -803,7 +803,7 @@ export default {
           this.submiting = false
           this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount }, query: { orderType } })
           localStorage.removeItem('INVOICE_MODEL')
-          localStorage.removeItem('CONFIRM_LIST')
+          sessionStorage.removeItem('CONFIRM_LIST')
           resolve()
         } catch (e) {
           // 支付失败
@@ -817,7 +817,7 @@ export default {
             this.$router.replace({ name: 'OrderDetail', params: { orderId } })
           }
           localStorage.removeItem('INVOICE_MODEL')
-          localStorage.removeItem('CONFIRM_LIST')
+          sessionStorage.removeItem('CONFIRM_LIST')
           reject(e)
         }
       })
@@ -834,8 +834,8 @@ export default {
         ...this.virtualProducts.filter(item => item.price !== 0 && item.showInvoice === 1),
         ...this.lessonList.filter(item => item.price !== 0 && item.showInvoice === 1)
       ]
-      localStorage.setItem('APPLY_INVOICE', JSON.stringify(applyInvoice))
-      localStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
+      sessionStorage.setItem('APPLY_INVOICE', JSON.stringify(applyInvoice))
+      sessionStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
         name: this.$route.name,
         params: this.$route.params,
         query: this.$route.query
@@ -861,8 +861,8 @@ export default {
       to.name !== 'AddAddress' &&
       to.name !== 'StudentList') {
       localStorage.removeItem('INVOICE_MODEL')
-      localStorage.removeItem('CONFIRM_LIST')
-      localStorage.removeItem('APPLY_INVOICE')
+      sessionStorage.removeItem('CONFIRM_LIST')
+      sessionStorage.removeItem('APPLY_INVOICE')
       localStorage.removeItem('CHECKED_STUDENT')
       localStorage.removeItem('CONTACT_INFO_MODEL')
       this.remark = ''

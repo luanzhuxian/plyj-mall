@@ -179,7 +179,7 @@ export default {
         } else {
           this.loading = true
           await bindMobile(this.bindForm)
-          let { name, params, query } = JSON.parse(localStorage.getItem('BIND_MOBILE_FROM')) || {}
+          let { name, params, query } = JSON.parse(sessionStorage.getItem('BIND_MOBILE_FROM')) || {}
           if (name) {
             await this.$store.dispatch(REFRESH_TOKEN)
             this.$router.replace({
@@ -202,7 +202,7 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    localStorage.removeItem('BIND_MOBILE_FROM')
+    sessionStorage.removeItem('BIND_MOBILE_FROM')
     next()
   }
 }

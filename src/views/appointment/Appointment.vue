@@ -165,7 +165,7 @@ export default {
     try {
       let showStatus = this.$route.query.showStatus
       let { result } = await getData(showStatus)
-      localStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
+      sessionStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
       this.data = result
       await this.$nextTick()
       if (this.$refs.richText) {
