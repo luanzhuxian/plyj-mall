@@ -43,7 +43,7 @@ export default {
     // svg 时使用的填充颜色
     fill: {
       type: String,
-      default: 'red'
+      default: ''
     },
     // 图标类型 icon 或 svg
     type: {

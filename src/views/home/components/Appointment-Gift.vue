@@ -7,7 +7,7 @@
     >
       <pl-icon :class="$style.giftIcon" name="icon-gift" type="svg" width="70" height="50" />
       <div :class="$style.left">
-        <pl-icon name="icon-yuyue1" type="svg" width="94" height="50" />
+        <pl-icon name="icon-yuyueli" type="svg" width="94" height="50" />
       </div>
       <div :class="$style.right">
         <swiper ref="swiper" :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'">
@@ -60,7 +60,7 @@
       <div :class="$style.popContent">
         <pl-icon :class="$style.giftIcon" name="icon-gift" type="svg" width="70" height="50" />
         <div :class="$style.right">
-          <pl-icon name="icon-yuyue1" type="svg" width="94" height="50" />
+          <pl-icon name="icon-yuyueli" type="svg" width="94" height="50" />
         </div>
         <ul :class="$style.left">
           <li
