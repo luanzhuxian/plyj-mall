@@ -34,6 +34,8 @@ export default {
         canvas.height = canImg.height
         let ctx = canvas.getContext('2d')
         ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
+        ctx.font = 'bold 84px Georgia'
+        ctx.textAlign = 'center'
         ctx.fillText(this.mallName, 500, 150)
         let qrcode = await generateQrcode(500, this.mallUrl, 0, null, null, 'url')
         let qrCodeImg = new Image()
