@@ -161,7 +161,7 @@ export default {
       }
     }
   },
-  async mounted () {
+  async activated () {
     try {
       let showStatus = this.$route.query.showStatus
       let { result } = await getData(showStatus)
@@ -182,8 +182,6 @@ export default {
     } catch (e) {
       throw e
     }
-  },
-  async activated () {
     let hash = this.$route.hash
     if (hash) {
       hash = hash.replace('#', '')
