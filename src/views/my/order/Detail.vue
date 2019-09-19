@@ -632,8 +632,8 @@ export default {
     canApplyInvoice () {
       return this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
-        this.productsTotalAmount - this.couponDeduction > 0 &&
-        this.productDetailModels.some(product => {
+        this.productInfoModel.productsTotalAmount - this.productInfoModel.couponDeduction > 0 &&
+        this.productInfoModel.productDetailModels.some(product => {
           return product.price > 0 &&
             product.invoiceType === 1 &&
             product.invoiceStatus === 8 &&
