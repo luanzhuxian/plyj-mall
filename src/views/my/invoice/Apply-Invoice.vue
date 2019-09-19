@@ -131,27 +131,27 @@
 
       <ul :class="$style.selectList">
         <li
-          v-for="(pro, i) of applyInvoice"
+          v-for="(prod, i) of applyInvoice"
           :key="i"
-          v-show="pro.returnStatus === 0 || pro.returnStatus === 3 || pro.returnStatus === ''"
+          v-show="prod.returnStatus === 0 || prod.returnStatus === 3 || prod.returnStatus === 6 || prod.returnStatus === ''"
         >
           <label>
             <input
               v-show="false"
               type="checkbox"
-              :checked="isSelected(pro)"
-              @change="e => { selectChange(e, pro) }"
+              :checked="isSelected(prod)"
+              @change="e => { selectChange(e, prod) }"
             >
             <img
               :class="$style.proImg"
-              :src="pro.productImg"
+              :src="prod.productImg"
               v-img-error
               alt=""
             >
             <pl-svg
               :class="$style.selectIcon"
               name="success"
-              :color="isSelected(pro) ? '#F2B036' : '#ccc'"
+              :color="isSelected(prod) ? '#F2B036' : '#ccc'"
             />
           </label>
         </li>
@@ -255,7 +255,7 @@ export default {
       return this.checkedList.some(item => {
         return item.skuCode1 === pro.skuCode1 &&
           item.skuCode2 === pro.skuCode2 &&
-          (item.returnStatus === 0 || item.returnStatus === 3 || pro.returnStatus === '')
+          (item.returnStatus === 0 || item.returnStatus === 3 || pro.returnStatus === 6 || pro.returnStatus === '')
       })
     },
     change (type) {
