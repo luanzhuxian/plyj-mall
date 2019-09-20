@@ -207,7 +207,7 @@ export default {
             item.disabled = disabled
           }
         } else {
-          item.disabled = false
+          item.disabled = true
         }
       }
       this.products = JSON.parse(JSON.stringify(products))
