@@ -14,7 +14,7 @@
         :product-id="item.id"
         :product-name="item.productName"
         :product-desc="item.productDesc"
-        :price="item.productSkuModels.length && item.productSkuModels[0].price"
+        :price="minPrice(item)"
         :origin-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
       />
     </div>
@@ -67,6 +67,16 @@ export default {
         }).catch(e => {
           throw e
         })
+    },
+    minPrice (item) {
+      let priceList = item.productSkuModels.map(item => item.price).sort((a, b) => a - b)
+      let min = priceList[0]
+      let len = priceList.length
+      let i = 0
+      for (; i < len; i++) {
+        if (priceList[i] !== 0) return priceList[i]
+      }
+      return min
     }
   }
 }
