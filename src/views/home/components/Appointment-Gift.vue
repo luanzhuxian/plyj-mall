@@ -159,10 +159,14 @@ export default {
     this.appointmentMobile = this.mobile || ''
   },
   activated () {
-    this.$refs.swiper.swiper.autoplay.start()
+    if (this.$refs.swiper) {
+      this.$refs.swiper.swiper.autoplay.start()
+    }
   },
   deactivated () {
-    this.$refs.swiper.swiper.autoplay.stop()
+    if (this.$refs.swiper) {
+      this.$refs.swiper.swiper.autoplay.stop()
+    }
   },
   methods: {
     yuyueNow () {
