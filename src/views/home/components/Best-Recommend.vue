@@ -111,7 +111,7 @@
         >
           <div :class="$style.topImg">
             <img :src="item.image" alt="">
-            <count-down :class="$stlye.countDown2" size="mini" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+            <count-down :class="$style.countDown2" size="mini" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
           </div>
           <div :class="$style.content">
             <p :class="$style.name" v-text="item.goodsInfo.productName" />

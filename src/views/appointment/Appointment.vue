@@ -17,14 +17,22 @@
           <p
             :class="{
               [$style.desc]: true,
-              [$style.coolapse]: !seeMoreDesc
+              [$style.collapse]: !seeMoreDesc
             }"
-            v-text="mallDesc"
             @click="seeMoreDesc = !seeMoreDesc"
-          />
+          >
+            {{ mallDesc }}
+          </p>
           <div :class="$style.address">
             <pl-svg name="address4" />
-            <span :class="$style.addressContent" v-text="address" />
+            <span
+              :class="{
+                [$style.addressContent]: true,
+                [$style.collapse]: !seeMoreAddress
+              }"
+              v-text="address"
+              @click="seeMoreAddress = !seeMoreAddress"
+            />
             <button :class="$style.copyAddress" @click="copy">复制</button>
           </div>
         </div>
@@ -147,6 +155,7 @@ export default {
   data () {
     return {
       seeMoreDesc: false,
+      seeMoreAddress: false,
       data: {},
       maxHeight: 'max-content',
       richTextMaxHeight: 0,
@@ -323,7 +332,7 @@ export default {
           position: relative;
           margin-bottom: 20px;
           font-size: 24px;
-          &.coolapse {
+          &.collapse {
             @include elps-wrap(2);
           }
         }
@@ -340,7 +349,9 @@ export default {
           > .address-content {
             width: 452px;
             font-size: 24px;
-            @include elps()
+            &.collapse {
+              @include elps();
+            }
           }
           > .copy-address {
             width: 100px;
