@@ -163,7 +163,11 @@ export default {
     el.addEventListener('touchmove', this.touchMove)
     el.addEventListener('touchend', this.touchend, { passive: true })
     if (!this.scrollHandler) {
-      this.bindScroll()
+      // 延迟绑定滚动事件
+      // 因为如果其它页面如果滚动过一段距离，当路由切换的时候，会从新滚动到0的位置，会触发一次滚动事件
+      setTimeout(() => {
+        this.bindScroll()
+      }, 200)
     }
   },
   methods: {
