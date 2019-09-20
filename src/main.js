@@ -52,8 +52,24 @@ router.onError(onError)
 /* 处理所有组件抛出的错误 */
 Vue.config.errorHandler = async function (err, vm, info) {
   try {
-    let error = JSON.parse(err.message)
-    vm.$error(error.message)
+    if (err.name === 'ResponseError') {
+      // 响应出错
+      let error = JSON.parse(err.message)
+      vm.$error(error.message)
+    } else {
+      // 其它出错
+      // console.error(JSON.stringify({
+      //   errorType: err.name,
+      //   info,
+      //   route: vm.$route.fullPath,
+      //   message: err.message,
+      //   el: {
+      //     tag: vm.$el.tagName,
+      //     innerHTML: vm.$el.innerHTML,
+      //     class: vm.$el.className
+      //   }
+      // }, null, 4))
+    }
     console.error(err)
   } catch (e) {
     if (err.name !== 'MessageBoxCancel') {

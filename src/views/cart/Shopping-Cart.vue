@@ -88,6 +88,7 @@
       :sku-list="skuModels"
       :product-image="productImg"
       :sku="currentSku"
+      :limiting="currentPro.purchaseQuantity"
     >
       <template v-slot:footer="{ currentSku, revert }">
         <pl-button
