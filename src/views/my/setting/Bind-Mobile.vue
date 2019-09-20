@@ -100,7 +100,8 @@
 import TopText from '../../../components/Top-Text.vue'
 import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
-import { LOG_OUT, LOGIN, USER_INFO } from '../../../store/mutation-type'
+import { LOGIN, USER_INFO } from '../../../store/mutation-type'
+import Cookies from 'js-cookie'
 export default {
   name: 'BindMobile',
   components: {
@@ -207,7 +208,9 @@ export default {
     async refreshLogin () {
       console.warn('logging back in...')
       const DISPATCH = this.$store.dispatch
-      await this.$store.commit(LOG_OUT)
+      Cookies.remove('mallId')
+      Cookies.remove('refresh_token')
+      Cookies.remove('token')
       await DISPATCH(LOGIN)
       await DISPATCH(USER_INFO)
       console.warn('login was finished!!')
