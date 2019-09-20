@@ -136,7 +136,7 @@
     <pl-picker
       :show.sync="isPickerShow"
       :slots="pickerColumns"
-      @confirm="(selected) => { this.resolve(selected[0]) }"
+      @confirm="(selected) => { resolve(selected[0]) }"
       @close="reject(false)"
     />
   </div>
@@ -348,6 +348,7 @@ export default {
         this.$success('确认收货成功')
         if (orderStatus === 'ALL_ORDER') {
           item.status = 'FINISHED'
+          item.statusText = '已完成'
         } else {
           this.orderList.splice(index, 1)
         }
@@ -368,6 +369,7 @@ export default {
         this.$success('交易关闭')
         if (orderStatus === 'ALL_ORDER') {
           item.status = 'CLOSED'
+          item.statusText = '已关闭'
         } else {
           this.orderList.splice(index, 1)
         }
