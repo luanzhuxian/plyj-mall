@@ -100,7 +100,7 @@
 import TopText from '../../../components/Top-Text.vue'
 import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
-import { REFRESH_TOKEN } from '../../../store/mutation-type'
+import { LOG_OUT, LOGIN, USER_INFO } from '../../../store/mutation-type'
 export default {
   name: 'BindMobile',
   components: {
@@ -181,7 +181,9 @@ export default {
           await bindMobile(this.bindForm)
           let { name, params, query } = JSON.parse(sessionStorage.getItem('BIND_MOBILE_FROM')) || {}
           if (name) {
-            await this.$store.dispatch(REFRESH_TOKEN)
+            // await this.$store.dispatch(REFRESH_TOKEN)
+            await this.refreshLogin()
+            console.warn('jump...')
             this.$router.replace({
               name,
               params,
@@ -192,13 +194,23 @@ export default {
             return
           }
         }
-        await this.$store.dispatch(REFRESH_TOKEN)
+        // await this.$store.dispatch(REFRESH_TOKEN)
+        await this.refreshLogin()
+        console.warn('jump...')
         this.loading = false
         this.$router.replace({ name: 'My' })
       } catch (e) {
         this.loading = false
         throw e
       }
+    },
+    async refreshLogin () {
+      console.warn('logging back in...')
+      const DISPATCH = this.$store.dispatch
+      await this.$store.commit(LOG_OUT)
+      await DISPATCH(LOGIN)
+      await DISPATCH(USER_INFO)
+      console.warn('login was finished!!')
     }
   },
   beforeRouteLeave (to, from, next) {

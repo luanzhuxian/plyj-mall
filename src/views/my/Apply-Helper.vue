@@ -2,6 +2,7 @@
   <div
     class="apply-helper"
     :class="$style.applyHelper"
+    v-if="visible"
   >
     <TopText
       :title="form.auditStatus ? statusTitle[form.auditStatus]: '自购省钱，分享赚钱'"
@@ -139,6 +140,7 @@ export default {
     return {
       loading: false,
       showPicker: false,
+      visible: false,
       form: {
         name: '',
         idCard: '',
@@ -205,7 +207,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['smstype', 'isAdmin', 'mobile', 'mallId']),
+    ...mapGetters(['smstype', 'isAdmin', 'mobile', 'mallId', 'roleCode']),
     isNameValid () {
       return hasValue(this.form.name) && isName(this.form.name)
     },
@@ -277,14 +279,24 @@ export default {
         }
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.mobile || vm.roleCode !== 'MEMBERSHIP') {
+        if (from.name) {
+          vm.$router.replace({
+            name: from.name,
+            query: from.query,
+            params: from.params
+          })
+        } else {
+          vm.$router.replace({ name: 'My' })
+        }
+      } else {
+        vm.visible = true
+      }
+    })
   }
-  // beforeRouteEnter (to, from, next) {
-  //   next(vm => {
-  //     if (vm.agentUser || vm.isAdmin) {
-  //       vm.$router.replace({ name: 'My' })
-  //     }
-  //   })
-  // }
 }
 </script>
 
