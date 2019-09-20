@@ -162,17 +162,26 @@ export default {
     ...mapGetters(['agentUser'])
   },
   created () {
-    this.form = this.classifyFormTemplate
-    this.getCategoryTree()
   },
-  mounted () {
+  async mounted () {
+    this.form = this.classifyFormTemplate
+    await this.$nextTick()
+    this.$refresh = this.$refs.loadMore.refresh
+  },
+  async activated () {
     // 去掉prop传参 refs调用
     // this.$refs.loadMore.setForm(this.form)
     // this.$refs.loadMore.setMethods(getProduct)
-    this.$refresh = this.$refs.loadMore.refresh
-  },
-  activated () {
-    this.findDefault()
+    if (this.classifyList.length > 1) {
+      // 有分类且有默认值才设置默认分类
+      if (this.optionId) {
+        this.findDefault()
+      }
+    } else {
+      // 没有分类列表时请求列表，然后设置默认值
+      await this.getCategoryTree()
+      this.findDefault()
+    }
   },
   methods: {
     findDefault () {
@@ -231,7 +240,6 @@ export default {
             id: '1'
           })
         }
-        this.findDefault()
       } catch (e) {
         throw e
       }
