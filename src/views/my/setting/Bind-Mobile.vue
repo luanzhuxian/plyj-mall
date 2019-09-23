@@ -101,7 +101,7 @@ import TopText from '../../../components/Top-Text.vue'
 import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import { LOGIN, USER_INFO } from '../../../store/mutation-type'
-// import { REFRESH_TOKEN } from '../../../store/mutation-type'
+import { resetForm } from '../../../assets/js/util'
 import Cookies from 'js-cookie'
 export default {
   name: 'BindMobile',
@@ -148,8 +148,9 @@ export default {
     this.updateForm.oldMobile = this.mobile || ''
   },
   deactivated () {
-    for (let k of Object.keys(this.bindForm)) { this.bindForm[k] = '' }
-    for (let k of Object.keys(this.updateForm)) { this.updateForm[k] = '' }
+    // 重置表单
+    resetForm(this.bindForm)
+    resetForm(this.updateForm)
     this.step = 1
   },
   methods: {
@@ -185,7 +186,6 @@ export default {
           if (name) {
             // await this.$store.dispatch(REFRESH_TOKEN)
             await this.refreshLogin()
-            console.warn('jump...')
             this.$router.replace({
               name,
               params,
@@ -198,7 +198,6 @@ export default {
         }
         // await this.$store.dispatch(REFRESH_TOKEN)
         await this.refreshLogin()
-        console.warn('jump...')
         this.loading = false
         this.$router.replace({ name: 'My' })
       } catch (e) {
@@ -209,7 +208,6 @@ export default {
     async refreshLogin () {
       console.warn('logging back in...')
       const DISPATCH = this.$store.dispatch
-      // Cookies.remove('mallId')
       Cookies.remove('refresh_token')
       Cookies.remove('token')
       await DISPATCH(LOGIN)

@@ -20,9 +20,11 @@ export default {
     localStorage.setItem('mallId', payload.sequenceNbr)
     // 缓存10周
     Cookies.set('mallId', payload.sequenceNbr, {
+      path: `/apis`,
       expires: CalcCookieTime(6048000)
     })
     Cookies.set('agencyCode', payload.agencyCode, {
+      path: `/apis`,
       expires: CalcCookieTime(6048000)
     })
   },
@@ -33,9 +35,11 @@ export default {
     state.token = payload.token
     state.refresh_token = payload.refresh_token
     Cookies.set('token', payload.token, {
+      path: `/apis`,
       expires: CalcCookieTime(payload.expire)
     })
     Cookies.set('refresh_token', payload.refresh_token, {
+      path: `/apis`,
       expires: CalcCookieTime(payload.refresh_token_expire)
     })
   },
