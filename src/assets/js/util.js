@@ -274,3 +274,11 @@ export function cutArcImage (img) {
   ctx.drawImage(centerCanvas, 0, 0, w, h, 0, 0, w, h)
   return canvas
 }
+
+export function setTimeoutSync (duration) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, duration)
+  })
+}

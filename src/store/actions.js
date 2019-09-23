@@ -161,16 +161,21 @@ export default {
       }
     })
   },
-  [type.Get_ADUIT_NOTICE]: ({ commit }) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const { result } = await getAduitNotice()
-        commit(type.Get_ADUIT_NOTICE, result)
-        resolve()
-      } catch (e) {
-        reject(e)
-      }
-    })
+  [type.Get_ADUIT_NOTICE]: async ({ commit }) => {
+    try {
+      const { result } = await getAduitNotice()
+      commit(type.Get_ADUIT_NOTICE, result)
+    } catch (e) {
+      throw e
+    }
+    // return new Promise(async (resolve, reject) => {
+    //   try {
+    //
+    //     resolve()
+    //   } catch (e) {
+    //     reject(e)
+    //   }
+    // })
   },
   [type.STUDENTS]: async ({ commit }, params) => {
     try {

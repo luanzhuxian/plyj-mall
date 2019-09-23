@@ -65,8 +65,10 @@ export default {
   async created () {
     try {
       await this.getMallInfo()
-      document.title = this.mallName
-      if (this.token) {
+      let mallId = localStorage.getItem('mallId')
+      let lastMallId = localStorage.getItem('lastMallId')
+      // 如果以及登录，且商城没切换，就不用重新登录
+      if (this.token && mallId === lastMallId) {
         await this.getUserInfo()
       } else {
         await this.login()

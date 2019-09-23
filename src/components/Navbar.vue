@@ -35,6 +35,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../store/mutation-type'
+import { setTimeoutSync } from '../assets/js/util'
 export default {
   name: 'Navbar',
   data () {
@@ -69,18 +70,24 @@ export default {
     })
   },
   watch: {
-    $route (to) {
+    async $route (to) {
       if (this.showNavbar.includes(to.name)) {
-        setTimeout(() => {
-          this.getAuditNotice()
-        }, 1000)
+        await setTimeoutSync(1000)
+        try {
+          await this.getAuditNotice()
+        } catch (e) {
+          throw e
+        }
       }
     }
   },
   async mounted () {
-    setTimeout(() => {
-      this.getAuditNotice()
-    }, 5000)
+    await setTimeoutSync(5000)
+    try {
+      await this.getAuditNotice()
+    } catch (e) {
+      throw e
+    }
   }
 }
 </script>
