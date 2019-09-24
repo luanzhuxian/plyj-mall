@@ -84,7 +84,8 @@
             slot="suffix"
             name="warning"
             color="#FE7700"
-            style="width: 36px; margin: 0 36px;"
+            style="width: 45px; margin: 0 36px;"
+            @click="showInvioceNum = true"
           />
         </pl-form-item>
       </pl-form>
@@ -179,6 +180,23 @@
         <p><strong>第三条：</strong>实体商品发票将会与商品同时邮寄，虚拟、课程自提商品发票到店自取，单商品仅支持一次开票服务，请确保填写开票信息真实有效</p>
       </div>
     </pl-popup>
+
+    <pl-popup :show.sync="showInvioceNum">
+      <h2
+        :class="$style.invioceIntroTitle"
+        slot="title"
+      >
+        发票税号说明
+      </h2>
+      <div :class="$style.invioceIntroContent">
+        <h3>1. 什么是纳税人识别号/统一社会信用代码？</h3>
+        <p> 纳税人识别号，通常简称为“税号”，就是税务登记证上的号，每个企业的识别号都是唯一的，相当于税务局颁发给企业的“身份证”号。统一社会信用代码，是一组长度为 18 位的用于法人和其他组织身份识别的代码。统一社会信用代码由国家标准委发布。 2015 年 10 月 1 日起，国家启动将企业依次申请的工商营业执照、组织机构代码证和税务登记证三证合为一证，并将三证号码合并为统一社会信用代码。目前大部分企业均已完成合并，另有少部分企业其纳税人识别号仍然有效。请注意此公告并不适用于政府机构及事业单位中的非企业单位，因此，如贵单位属于这种类型，可无需填写纳税人识别号 l 统一社会信用代码，谨慎起见，请您与贵单位财务部门联系确认。 </p>
+        <h3>2. 为什么要填写纳税人识别号/统一社会信用代码？ </h3>
+        <p>根据国家税务总局 2017 年 16 号公告，从 7 月 1 日起企业（包括公司、非公司制企业法人、企业分支机构、个人独资企业、合伙企业和其他企业）索取票面带有“购买方纳税人识别号”栏目的发票时，应向销售方提供纳税人识别号或统一社会信用代码。因此，当您选择开具企业抬头增值税普通发票时，请根据提示准确填写贵单位号码，以免影响您的发票报报销。 </p>
+        <h3>3. 如何获取/知晓纳税人识别号/统一社会信用代码？ </h3>
+        <p> 您可向贵单位的财务部门索取；另外也可以根据单位名称在国家企业信用信息公示系统 <a href="https://www.gsxt.gov.cnlindex.html">（https://www.gsxt.gov.cnlindex.html）</a>查询统一社会信用代码。</p>
+      </div>
+    </pl-popup>
   </div>
 </template>
 
@@ -198,6 +216,7 @@ export default {
   data () {
     return {
       showInvioceIntro: false,
+      showInvioceNum: false,
       applyInvoice: [], // 待开票商品
       checkedList: [],
       invoiceList: [], // 已添加的发票信息列表
