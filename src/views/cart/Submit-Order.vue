@@ -317,7 +317,7 @@
         icon="invoice"
         :icon-gap="12"
         show-right-icon
-        :right-text="invioceType === 1 ? '不需要' : '纸质发票'"
+        :right-text="invioceType === 0 ? '不需要' : '纸质发票'"
         left-text-weight="bold"
       />
     </div>
@@ -471,7 +471,7 @@ export default {
       needStudentList: [],
       remark: '', // 单商品备注
       physicalRemark: '', // 物理订单备注
-      invioceType: 1,
+      invioceType: 0,
       INVOICE_MODEL: {},
       CHECKED_STUDENT: {},
       rules: {
@@ -551,7 +551,7 @@ export default {
         }
         sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
       }
-      this.invioceType = this.INVOICE_MODEL ? 2 : 1
+      this.invioceType = this.INVOICE_MODEL ? 1 : 0
       this.lessonErrorId = ''
 
       // 联系人信息
@@ -823,7 +823,7 @@ export default {
       })
     },
     noNeed () {
-      this.invioceType = 1
+      this.invioceType = 0
       this.showPopup = false
       sessionStorage.removeItem('INVOICE_MODEL')
     },
@@ -851,7 +851,6 @@ export default {
       } else {
         this.$router.push({ name: 'ApplyInvoice' })
       }
-      this.invioceType = 2
       this.showPopup = false
     }
   },
