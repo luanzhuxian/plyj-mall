@@ -384,7 +384,7 @@ export default {
           this.loading = false
         }
       } else {
-        localStorage.setItem('INVOICE_MODEL', JSON.stringify(invoiceModel))
+        sessionStorage.setItem('INVOICE_MODEL', JSON.stringify(invoiceModel))
       }
 
       const APPLY_INVOICE_FROM = JSON.parse(sessionStorage.getItem('APPLY_INVOICE_FROM')) || {}

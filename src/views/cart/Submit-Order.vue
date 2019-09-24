@@ -146,7 +146,7 @@
                 <span v-text="lessonErrorTip" />
               </div>
               <div>
-                <span v-if="CHECKED_STUDENT[item.skuCode1]">已选{{ CHECKED_STUDENT[item.skuCode1].length }}人</span>
+                <span v-if="CHECKED_STUDENT[item.skuCode1 + item.skuCode2]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
                 <span v-else>已选0人</span>
                 <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
               </div>
@@ -247,7 +247,7 @@
                 <span v-text="lessonErrorTip" />
               </div>
               <div>
-                <span v-if="CHECKED_STUDENT[item.skuCode1]">已选{{ CHECKED_STUDENT[item.skuCode1].length }}人</span>
+                <span v-if="CHECKED_STUDENT[item.skuCode1]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
                 <span v-else>已选0人</span>
                 <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
               </div>
@@ -332,12 +332,12 @@
         text="学员信息"
         icon="name-card"
         :icon-gap="12"
-        :right-text="`已选${getStudentCountByProId(needStudentList[0].skuCode1)}人`"
+        :right-text="`已选${getStudentCountByProId(needStudentList[0].skuCode1 + needStudentList[0].skuCode2)}人`"
         show-right-icon
         left-text-weight="bold"
       >
-        <ul :class="$style.studentList" v-show="CHECKED_STUDENT[needStudentList[0].skuCode1] && CHECKED_STUDENT[needStudentList[0].skuCode1].length > 0">
-          <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[needStudentList[0].skuCode1]" :key="i">
+        <ul :class="$style.studentList" v-show="CHECKED_STUDENT[needStudentList[0].skuCode1 + needStudentList[0].skuCode2] && CHECKED_STUDENT[needStudentList[0].skuCode1 + needStudentList[0].skuCode2].length > 0">
+          <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[needStudentList[0].skuCode1 + needStudentList[0].skuCode2]" :key="i">
             <p :class="$style.studentName">
               <span>姓名</span>
               <span v-text="item.stuName" />
@@ -522,7 +522,7 @@ export default {
           this.INVOICE_MODEL.userAddressId = val.sequenceNbr
           this.INVOICE_MODEL.receiverMobile = val.mobile
           this.INVOICE_MODEL.invoiceTitle = val.realName
-          localStorage.setItem('INVOICE_MODEL', JSON.stringify(this.INVOICE_MODEL))
+          sessionStorage.setItem('INVOICE_MODEL', JSON.stringify(this.INVOICE_MODEL))
         }
       },
       deep: true
@@ -537,8 +537,8 @@ export default {
   async activated () {
     try {
       await this.getProductDetail()
-      this.INVOICE_MODEL = JSON.parse(localStorage.getItem('INVOICE_MODEL')) || null
-      this.CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+      this.INVOICE_MODEL = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || null
+      this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
       // 已有学生信息的商品skuCode1
       let hasStudent = Object.keys(this.CHECKED_STUDENT)
       let students = await this[STUDENTS]()
@@ -546,10 +546,10 @@ export default {
       if (def) { // 如果有默认学员
         for (let item of this.needStudentList) {
           if (hasStudent.indexOf(item.skuCode1) === -1) { // 如果当前商品没有选择学生
-            this.$set(this.CHECKED_STUDENT, item.skuCode1, [def])
+            this.$set(this.CHECKED_STUDENT, item.skuCode1 + item.skuCode2, [def])
           }
         }
-        localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
+        sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
       }
       this.invioceType = this.INVOICE_MODEL ? 2 : 1
       this.lessonErrorId = ''
@@ -584,7 +584,7 @@ export default {
     async countChange (count, pro, next) {
       let CONFIRM_LIST = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
       let thisPro = CONFIRM_LIST.find(item => item.productId === pro.productId)
-      let thisStudents = this.CHECKED_STUDENT[pro.skuCode1]
+      let thisStudents = this.CHECKED_STUDENT[pro.skuCode1 + pro.skuCode2]
       thisPro.count = count
       sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(CONFIRM_LIST))
       try {
@@ -592,7 +592,7 @@ export default {
         next()
         if (thisStudents && count < thisStudents.length) {
           thisStudents.pop()
-          localStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
+          sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
         }
       } catch (e) {
         throw e
@@ -606,7 +606,7 @@ export default {
       this.showPopup = true
     },
     selectStudent (pro) {
-      localStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
+      sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
         name: this.$route.name,
         query: this.$route.query,
         params: this.$route.params
@@ -615,7 +615,7 @@ export default {
         name: 'StudentList',
         query: {
           select: 'YES',
-          sku: pro.skuCode1,
+          sku: pro.skuCode1 + pro.skuCode2,
           count: pro.count
         }
       })
@@ -688,7 +688,7 @@ export default {
       }
       for (const item of this.virtualProducts) {
         const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo } = item
-        const currentStudent = this.CHECKED_STUDENT[skuCode1]
+        const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
         cartProducts.push({
           productId,
@@ -698,19 +698,19 @@ export default {
           count,
           agentUser,
           message: remark,
-          studentIds: needStudentInfo ? this.CHECKED_STUDENT[skuCode1].map(item => item.id) : null
+          studentIds: needStudentInfo ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null
         })
       }
       for (const item of this.lessonList) {
         const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo } = item
-        const currentStudent = this.CHECKED_STUDENT[skuCode1]
+        const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
         cartProducts.push({
           productId,
           skuCode1,
           skuCode2,
           productType: item.type,
-          studentIds: needStudentInfo ? this.CHECKED_STUDENT[skuCode1].map(item => item.id) : null,
+          studentIds: needStudentInfo ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null,
           count,
           agentUser,
           message: remark
@@ -802,7 +802,7 @@ export default {
           }
           this.submiting = false
           this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount }, query: { orderType } })
-          localStorage.removeItem('INVOICE_MODEL')
+          sessionStorage.removeItem('INVOICE_MODEL')
           sessionStorage.removeItem('CONFIRM_LIST')
           resolve()
         } catch (e) {
@@ -816,7 +816,7 @@ export default {
             // 只有一种商品时，直接进入详情页
             this.$router.replace({ name: 'OrderDetail', params: { orderId } })
           }
-          localStorage.removeItem('INVOICE_MODEL')
+          sessionStorage.removeItem('INVOICE_MODEL')
           sessionStorage.removeItem('CONFIRM_LIST')
           reject(e)
         }
@@ -825,7 +825,7 @@ export default {
     noNeed () {
       this.invioceType = 1
       this.showPopup = false
-      localStorage.removeItem('INVOICE_MODEL')
+      sessionStorage.removeItem('INVOICE_MODEL')
     },
     // 需要发票
     need () {
@@ -860,7 +860,7 @@ export default {
       to.name !== 'Address' &&
       to.name !== 'AddAddress' &&
       to.name !== 'StudentList') {
-      localStorage.removeItem('INVOICE_MODEL')
+      sessionStorage.removeItem('INVOICE_MODEL')
       sessionStorage.removeItem('CONFIRM_LIST')
       sessionStorage.removeItem('APPLY_INVOICE')
       localStorage.removeItem('CHECKED_STUDENT')

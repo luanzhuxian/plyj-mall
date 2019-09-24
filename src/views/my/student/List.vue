@@ -85,7 +85,7 @@ export default {
   },
   async activated () {
     await this.getList()
-    this.CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || null
+    this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || null
     this.setDefaultChecked(this.list)
   },
   deactivated () {
@@ -116,15 +116,15 @@ export default {
     },
     addNew () {
       if (this.canSelect) {
-        localStorage.setItem('CHECKED_STUDENT', JSON.stringify({ [this.proId]: this.checked }))
+        sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify({ [this.proId]: this.checked }))
       }
       this.$router.push({ name: 'AddStudent', query: this.$route.query })
     },
     confirmSelect () {
-      let checked = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+      let checked = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
       checked[this.proId] = this.checked
-      localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
-      let { name, params, query } = JSON.parse(localStorage.getItem('SELECT_STUDENT_FROM')) || {}
+      sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
+      let { name, params, query } = JSON.parse(sessionStorage.getItem('SELECT_STUDENT_FROM')) || {}
       if (name) {
         this.$router.replace({
           name,
@@ -174,7 +174,7 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     if (to.name !== 'EditStudent' && to.name !== 'AddStudent') {
-      localStorage.removeItem('SELECT_STUDENT_FROM')
+      sessionStorage.removeItem('SELECT_STUDENT_FROM')
     }
     next()
   }

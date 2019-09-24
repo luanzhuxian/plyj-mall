@@ -150,7 +150,7 @@ export default {
             result = res
           }
           if (this.canSelect) {
-            let checkedData = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+            let checkedData = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
             let checked = checkedData[this.proId] || []
             let finded = checked.find(item => item.id === result.id)
             if (finded) { // 编辑的是已选择的项
@@ -171,7 +171,7 @@ export default {
               // 编辑的不是选中的，且选中的数量等于最大选中数量，则替换最后一个
               checked.splice(-1, 1, result)
             }
-            localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
+            sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
           }
           this.$router.replace({
             name: 'StudentList',
@@ -197,13 +197,13 @@ export default {
             name: 'StudentList',
             query: this.$route.query
           })
-          let checkedData = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+          let checkedData = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
           if (checkedData[this.proId]) {
             let find = checkedData[this.proId].find(item => item.id === this.id)
             if (find) {
               let index = checkedData[this.proId].indexOf(find)
               checkedData[this.proId].splice(index, 1)
-              localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
+              sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
             }
           }
         }
@@ -214,7 +214,7 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     if (to.name !== 'StudentList') {
-      localStorage.removeItem('SELECT_STUDENT_FROM')
+      sessionStorage.removeItem('SELECT_STUDENT_FROM')
     }
     next()
   },
