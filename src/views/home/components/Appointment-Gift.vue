@@ -1,7 +1,6 @@
 <template>
   <div :class="$style.appointment">
     <div
-      v-if="data.YUYUE.showStatue === 1 && data.YUYUE && data.YUYUE.values.length"
       :class="$style.appointmentGift"
       @click="yuyueNow"
     >
@@ -97,7 +96,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { yuyue } from '../../../apis/appointment'
-import { isName } from '../../../assets/js/validate'
+import { isPhone, isName } from '../../../assets/js/validate'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   name: 'AppointmentGift',
@@ -170,18 +169,6 @@ export default {
   },
   methods: {
     yuyueNow () {
-      if (!this.mobile) {
-        this.$confirm('您还没绑定手机，请先绑定手机')
-          .then(() => {
-            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-              name: this.$route.name,
-              params: this.$route.params,
-              query: this.$route.query
-            }))
-            this.$router.push({ name: 'BindMobile' })
-          })
-        return
-      }
       this.showPop = true
     },
     clickPingXuan () {
@@ -200,9 +187,9 @@ export default {
     },
     async confirm () {
       try {
-        // if (!isPhone(this.appointmentMobile)) {
-        //   return this.$error('请输入正确的手机号')
-        // }
+        if (!isPhone(this.appointmentMobile)) {
+          return this.$error('请输入正确的手机号')
+        }
         if (!isName(this.appointmentname)) {
           return this.$error('请输入正确的姓名')
         }
