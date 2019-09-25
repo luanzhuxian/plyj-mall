@@ -200,9 +200,9 @@ export default {
     },
     async confirm () {
       try {
-        if (!isPhone(this.appointmentMobile)) {
-          return this.$error('请输入正确的手机号')
-        }
+        // if (!isPhone(this.appointmentMobile)) {
+        //   return this.$error('请输入正确的手机号')
+        // }
         if (!isName(this.appointmentname)) {
           return this.$error('请输入正确的姓名')
         }
