@@ -3,7 +3,7 @@
     <div :class="$style.title">
       使用须知
     </div>
-    <div :class="$style.content" v-text="content" />
+    <div :class="$style.content" v-html="lineBreak(content)" />
   </div>
 </template>
 
@@ -14,6 +14,12 @@ export default {
     content: {
       type: String,
       default: ''
+    }
+  },
+  methods: {
+    // 换行
+    lineBreak (value) {
+      return value.replace(/\n/g, '<br>')
     }
   }
 }
@@ -33,9 +39,11 @@ export default {
     border-bottom: 1px solid #e7e7e7;
   }
   .content {
+    width: 100%;
     padding: 40px 0 48px 0;
     font-size: 28px;
     line-height: 45px;
+    word-break: break-all;
     color: #666;
   }
 </style>
