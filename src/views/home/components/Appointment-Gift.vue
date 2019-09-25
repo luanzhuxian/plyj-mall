@@ -97,7 +97,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { yuyue } from '../../../apis/appointment'
-import { isPhone, isName } from '../../../assets/js/validate'
+import { isName } from '../../../assets/js/validate'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   name: 'AppointmentGift',
