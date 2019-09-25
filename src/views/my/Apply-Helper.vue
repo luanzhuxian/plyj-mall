@@ -352,7 +352,6 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      this.showInvioceIntro = false
       if (!vm.mobile || vm.roleCode !== 'MEMBERSHIP') {
         if (from.name) {
           vm.$router.replace({
