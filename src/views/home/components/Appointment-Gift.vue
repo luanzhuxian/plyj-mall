@@ -1,6 +1,7 @@
 <template>
   <div :class="$style.appointment">
     <div
+      v-if="data.YUYUE.showStatue === 1 && data.YUYUE && data.YUYUE.values.length"
       :class="$style.appointmentGift"
       @click="yuyueNow"
     >
