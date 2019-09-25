@@ -300,7 +300,7 @@ export default {
     this.getHelperInfo()
     this.form.mobile = this.mobile
   },
-  beforeDestroy () {
+  deactivated () {
     this.showInvioceIntro = false
   },
   methods: {
