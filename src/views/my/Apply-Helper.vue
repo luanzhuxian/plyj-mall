@@ -111,7 +111,7 @@
       <p>3.审核通过后，即可拥有Helper的权益；</p>
     </div>
     <div class="agree">
-      提交即代表您已阅读并同意 <a @click.prevent="showInvioceIntro = true">《helper产品购买协议》</a>
+      提交即代表您已阅读并同意 <a @click.prevent="showInvioceIntro = true">《Helper产品购买协议》</a>
     </div>
     <pl-picker
       :show.sync="showPicker"
@@ -123,7 +123,7 @@
         class="invioceIntroTitle"
         slot="title"
       >
-        Helper产品分销协议
+        Helper产品购买协议
       </h2>
       <div class="invioceIntroContent">
         <h3>一、声明与承诺</h3>
