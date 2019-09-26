@@ -65,7 +65,7 @@
                 :key="item.sequenceNbr"
               >
                 <div :class="$style.money">
-                  <span class="fz-32">微信零钱</span>
+                  <span class="fz-32">提现金额</span>
                   <span class="fz-32 bold">{{ item.price }}元</span>
                 </div>
                 <div :class="$style.dateStatus">

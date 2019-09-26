@@ -75,7 +75,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .color9{
+  .color9 {
     color: #999999;
   }
   .pl-tab {
