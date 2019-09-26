@@ -427,7 +427,7 @@
               @click="doCopy"
             />
           </div>
-          <a :href="`tel: ${supportPhone}`">
+          <a v-if="servicePhoneModels.length === 1" :href="`tel: ${servicePhoneModels[0].contactWay}`">
             <pl-button
               size="larger"
               background-color="#387AF6"
@@ -437,6 +437,17 @@
               立即拨打
             </pl-button>
           </a>
+          <pl-button
+            v-else
+            size="larger"
+            background-color="#387AF6"
+            prefix-icon="mobile-blue"
+            round
+            data-i="123"
+            @click="showContact = true; isPopupShow = false;"
+          >
+            立即拨打
+          </pl-button>
         </div>
       </template>
     </pl-popup>
@@ -451,6 +462,7 @@
         <pl-svg name="close3" color="#fff" width="80" @click="isPosterShow = false" />
       </div>
     </div>
+    <Contact :show.sync="showContact" />
   </div>
 
   <!-- 骨架屏 -->
@@ -485,6 +497,7 @@
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import TopText from '../../../components/Top-Text.vue'
+import Contact from '../../../components/Contact.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import ModuleTitle from '../../../components/Module-Title.vue'
 import ExpressItem from '../../../components/item/Express-Item.vue'
@@ -548,7 +561,8 @@ export default {
     OrderItemSkeleton,
     AddressItemSkeleton,
     Collapse,
-    CollapseItem
+    CollapseItem,
+    Contact
   },
   props: {
     orderId: {
@@ -559,6 +573,7 @@ export default {
   data () {
     return {
       loaded: false,
+      showContact: false,
       orderType: '',
       orderStatus: '',
       message: '',
@@ -601,7 +616,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['address', 'supportPhone']),
+    ...mapGetters(['address', 'servicePhoneModels']),
     isClosedByCancle () {
       return this.orderStatus === 'CLOSED' && !this.tradingInfoModel.payTime
     },

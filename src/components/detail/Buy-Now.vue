@@ -4,7 +4,10 @@
       <router-link :class="$style.link" :to="{ name: 'Home' }">
         <pl-svg name="home" />
       </router-link>
-      <a :class="$style.link + ' ' + $style.callUs" :href="'tel:' + supportPhone">
+      <a v-if="servicePhoneModels.length === 1" :class="$style.link + ' ' + $style.callUs" :href="'tel:' + servicePhoneModels[0].contactWay">
+        <pl-svg name="call-us" />
+      </a>
+      <a v-else :class="$style.link + ' ' + $style.callUs" @click="showContact = true">
         <pl-svg name="call-us" />
       </a>
       <router-link :class="$style.link + ' ' + $style.toCart" :to="{ name: 'ShoppingCart' }">
@@ -48,6 +51,8 @@
         </pl-button>
       </template>
     </specification-pop>
+
+    <Contact :show.sync="showContact" />
   </div>
 </template>
 
@@ -56,17 +61,20 @@ import { mapGetters, mapActions } from 'vuex'
 import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
+import Contact from '../../components/Contact.vue'
 export default {
   name: 'BuyNow',
   components: {
-    SpecificationPop
+    SpecificationPop,
+    Contact
   },
   data () {
     return {
       showSpecifica: false, // 显示规格弹框
       clickAddToCart: false,
       clickBuyNow: false,
-      loading: false
+      loading: false,
+      showContact: false
     }
   },
   props: {
@@ -119,7 +127,7 @@ export default {
     disableAddCart: Boolean
   },
   computed: {
-    ...mapGetters(['supportPhone', 'mallDomain', 'mobile', 'agentUser', 'userId', 'cartCount']),
+    ...mapGetters(['servicePhoneModels', 'mallDomain', 'mobile', 'agentUser', 'userId', 'cartCount']),
     // 所有规格禁用状态
     allDisabled () {
       return this.skuList.every(item => item.stock < item.minBuyNum) || this.productStatus !== 2

@@ -44,7 +44,7 @@ export default {
     mallName: '',
     mallUrl: '',
     sequenceNbr: '',
-    supportPhone: ''
+    servicePhoneModels: []
   },
   token,
   openId: '',

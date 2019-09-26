@@ -6,7 +6,10 @@
     >
       <img :src="A.mediaDetailModelList[0] ? A.mediaDetailModelList[0].mediaUrl : 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/ping-xuan.jpg'" alt="">
       <div :class="$style.topContent">
-        <a :class="$style.callService" :href="`tel:${supportPhone}`">
+        <a v-if="servicePhoneModels.length === 1" :class="$style.callService" :href="`tel:${servicePhoneModels[0].contactWay}`">
+          <pl-svg name="call-service" />
+        </a>
+        <a v-else :class="$style.callService" @click="showContact = true">
           <pl-svg name="call-service" />
         </a>
         <div :class="$style.mallName">
@@ -141,21 +144,26 @@
         <li />
       </ul>
     </div>
+    <Contact :show.sync="showContact" />
   </div>
 </template>
 
 <script>
 import PlVideo from '../../components/Video.vue'
+import Contact from '../../components/Contact.vue'
 import { getData } from '../../apis/appointment'
+import { mapGetters } from 'vuex'
 export default {
   name: 'AppointmentDetailVue',
   components: {
-    PlVideo
+    PlVideo,
+    Contact
   },
   data () {
     return {
       seeMoreDesc: false,
       seeMoreAddress: false,
+      showContact: false,
       data: {},
       maxHeight: 'max-content',
       richTextMaxHeight: 0,
@@ -205,6 +213,7 @@ export default {
     document.documentElement.style.scrollBehavior = ''
   },
   computed: {
+    ...mapGetters(['servicePhoneModels']),
     mallName () {
       return this.data.mallName
     },
