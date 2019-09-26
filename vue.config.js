@@ -47,8 +47,8 @@ module.exports = {
     proxy: {
       // 37测试 34开发 王恩74 李宾哲132 赵伟116 牛昌昌92 张涛77 任钊64
       '/apis': {
-        target: 'http://mall.youpenglai.com'
-        // target: 'http://192.168.130.74'
+        // target: 'http://mall.youpenglai.com'
+        target: 'http://192.168.130.64'
       }
     }
   },
