@@ -148,6 +148,20 @@
         </router-link>
       </div>
       <you-like :class="$style.recommend" :is-my="true" />
+      <modal
+        ref="modal"
+        :show.sync="isModalShow"
+        title="Helper认证审核进度"
+        title-align="left"
+        hide-footer
+        close-on-click-overlay
+      >
+        <Progress
+          :class="$style.progressModal"
+          :steps="progress"
+          :active="0"
+        />
+      </modal>
     </div>
 
     <div :class="$style.skeleton" v-else>
@@ -177,21 +191,6 @@
         </div>
       </div>
     </div>
-
-    <modal
-      ref="modal"
-      :show.sync="isModalShow"
-      title="Helper认证审核进度"
-      title-align="left"
-      hide-footer
-      close-on-click-overlay
-    >
-      <Progress
-        :class="$style.progressModal"
-        :steps="progress"
-        :active="0"
-      />
-    </modal>
   </div>
 </template>
 
@@ -287,7 +286,7 @@ export default {
           this.$router.push({ name: 'BindMobile' })
         }, 1000)
       } else {
-        // await Promise.all([this.orderPhysicalorderSummary(), this.getRecentExpressInfo()])
+        // 下面方法在此钩子函数调用，因为返回此页面时需要刷新数据
         await this.orderPhysicalorderSummary()
         this.getProgress()
         this.loaded = true
@@ -652,6 +651,63 @@ export default {
   }
   /* tip ends */
 
+  .recommend {
+    margin-top: 32px;
+    padding: 0 !important;
+  }
+
+  .progress-modal {
+    box-sizing: border-box;
+    padding-top: 40px;
+    height: 600px;
+  }
+
+  // .audit-results {
+  //   position: fixed;
+  //   top: 0;
+  //   left: 0;
+  //   right: 0;
+  //   bottom: 0;
+  //   background:rgba(0,0,0,0.65);
+  //   z-index: 111;
+  //   .share-bg {
+  //     width:490px;
+  //     display: flex;
+  //     flex-direction: column;
+  //     background:rgba(255, 255, 255, 1);
+  //     opacity:1;
+  //     border-radius: 20px;
+  //     margin: 220px auto;
+  //     > div {
+  //       display: inline-flex;
+  //       justify-content: center;
+  //     }
+  //     .title {
+  //       margin-top: 50px;
+  //       font-size: 32px;
+  //       font-weight: 600;
+  //       line-height: 44px;
+  //       color: #333333;
+  //     }
+  //     .content {
+  //       margin-top: 50px;
+  //       font-size: 28px;
+  //       font-weight: 400;
+  //       line-height: 40px;
+  //       color: #999999;
+  //     }
+  //     .button {
+  //       height: 88px;
+  //       align-items: center;
+  //       border-top: 1px solid #E7E7E7;
+  //       font-size: 32px;
+  //       font-weight: 500;
+  //       line-height: 44px;
+  //       color: #1890FF;
+  //     }
+  //   }
+  // }
+
   /* skeleton start */
   .skeleton {
     position: relative;
@@ -746,61 +802,4 @@ export default {
     @include skeAnimation(#eee)
   }
   /* skeleton end */
-
-  .recommend {
-    margin-top: 32px;
-    padding: 0 !important;
-  }
-
-  .progress-modal {
-    box-sizing: border-box;
-    padding-top: 40px;
-    height: 600px;
-  }
-
-  .audit-results{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:rgba(0,0,0,0.65);
-    z-index: 111;
-    .share-bg{
-      width:490px;
-      display: flex;
-      flex-direction: column;
-      background:rgba(255,255,255,1);
-      opacity:1;
-      border-radius:20px;
-      margin: 220px auto;
-      >div{
-        display: inline-flex;
-        justify-content: center;
-      }
-      .title{
-        margin-top: 50px;
-        font-size:32px;
-        font-weight:600;
-        line-height:44px;
-        color:#333333;
-      }
-      .content{
-        margin-top: 50px;
-        font-size:28px;
-        font-weight:400;
-        line-height:40px;
-        color:#999999;
-      }
-      .button{
-        height:88px;
-        align-items: center;
-        border-top: 1px solid #E7E7E7;
-        font-size:32px;
-        font-weight:500;
-        line-height:44px;
-        color:#1890FF;
-      }
-    }
-  }
 </style>
