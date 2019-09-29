@@ -6,6 +6,7 @@
         <span :class="$style.main" v-text="userName" />
         <div :class="$style.sub">
           <span :class="$style.level" v-text="roleName" />
+          <span v-if="isHelperModuleShow && lockStatus === 0" :class="$style.lockStatus">已禁用</span>
           <router-link
             v-if="isApplyBtnShow"
             :class="$style.applyBtn"
@@ -133,7 +134,7 @@
         <span>成为Helper，第一桶金从这里开始>></span>
       </router-link>
       <!-- helper -->
-      <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow">
+      <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow && lockStatus">
         <router-link :to="{ name: 'HelperManagement' }">
           <pl-icon name="icon-helper-management" type="svg" width="120" height="115" />
         </router-link>
@@ -246,7 +247,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar', 'userName', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode']),
+    ...mapGetters(['avatar', 'userName', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode', 'lockStatus']),
     isHelper () {
       return this.roleCode === 'HELPER'
     },
@@ -447,6 +448,17 @@ export default {
         content: 'Lv';
         margin-right: 8px;
       }
+    }
+    .lock-status{
+      display: inline-flex;
+      font-size: 20px;
+      font-weight: bolder;
+      color: #FFF;
+      line-height:28px;
+      margin-left: 10px;
+      background-color: #D1D1D1;
+      padding: 4px 20px;
+      border-radius:22px;
     }
     .apply-btn {
       margin-left: 32px;

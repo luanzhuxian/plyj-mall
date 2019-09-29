@@ -19,6 +19,7 @@ export default {
   realName: state => state.userInfo.realName,
   agentUser: state => state.userInfo.isAgentUser, // helper
   isAdmin: state => state.userInfo.roleCode === 'ENTERPRISE_ADMIN', // 企业管理员
+  lockStatus: state => state.userInfo.lockStatus, // 启用状态
   mobile: state => state.userInfo.mobile,
   serverTime: state => state.userInfo.serverTime,
   openId: state => state.openId,
