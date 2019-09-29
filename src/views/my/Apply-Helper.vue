@@ -394,14 +394,15 @@ export default {
 </style>
 <style lang="scss">
   .apply-helper {
+    height: 93vh;
     .pl-get-code {
       border-left: 2px solid #E7E7E7;
     }
   }
   .agree{
-    position: fixed;
+    position: absolute;
     text-align: center;
-    bottom: 40px;
+    bottom: 0;
     font-size: 24px;
     color: #999;
     width: 90vw;
