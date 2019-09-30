@@ -27,6 +27,8 @@
           prefix-icon="name"
           size="middle"
           @click="showPicker = true"
+          @focus="agreeIsShow = false"
+          @blur="agreeIsShow = true"
         />
       </pl-form-item>
       <pl-form-item
@@ -39,6 +41,8 @@
           v-model="form.name"
           prefix-icon="name"
           size="middle"
+          @focus="agreeIsShow = false"
+          @blur="agreeIsShow = true"
         />
       </pl-form-item>
       <pl-form-item
@@ -51,6 +55,8 @@
           prefix-icon="id-card"
           v-model="form.idCard"
           size="middle"
+          @focus="agreeIsShow = false"
+          @blur="agreeIsShow = true"
         />
       </pl-form-item>
       <pl-form-item
@@ -63,6 +69,8 @@
           prefix-icon="mobile"
           v-model="form.mobile"
           size="middle"
+          @focus="agreeIsShow = false"
+          @blur="agreeIsShow = true"
         />
       </pl-form-item>
       <pl-form-item
@@ -75,6 +83,8 @@
           prefix-icon="code"
           v-model="form.verificationCode"
           size="middle"
+          @focus="agreeIsShow = false"
+          @blur="agreeIsShow = true"
         />
         <template v-slot:suffix>
           <get-code
@@ -110,7 +120,7 @@
       <p>2.提交认证后，需商家审核，审核时间为1-3个工作日；</p>
       <p>3.审核通过后，即可拥有Helper的权益；</p>
     </div>
-    <div class="agree">
+    <div class="agree" v-show="agreeIsShow">
       提交即代表您已阅读并同意 <a @click.prevent="showInvioceIntro = true">《Helper产品购买协议》</a>
     </div>
     <pl-picker
@@ -204,6 +214,7 @@ export default {
   },
   data () {
     return {
+      agreeIsShow: true,
       showInvioceIntro: false,
       loading: false,
       showPicker: false,
@@ -304,6 +315,9 @@ export default {
     this.showInvioceIntro = false
   },
   methods: {
+    aa () {
+      alert(1)
+    },
     async getHelperInfo () {
       try {
         let { result } = await agentUserInfoAudit()
@@ -352,19 +366,20 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      if (!vm.mobile || vm.roleCode !== 'MEMBERSHIP') {
-        if (from.name) {
-          vm.$router.replace({
-            name: from.name,
-            query: from.query,
-            params: from.params
-          })
-        } else {
-          vm.$router.replace({ name: 'My' })
-        }
-      } else {
-        vm.visible = true
-      }
+      // if (!vm.mobile || vm.roleCode !== 'MEMBERSHIP') {
+      //   if (from.name) {
+      //     vm.$router.replace({
+      //       name: from.name,
+      //       query: from.query,
+      //       params: from.params
+      //     })
+      //   } else {
+      //     vm.$router.replace({ name: 'My' })
+      //   }
+      // } else {
+      //   vm.visible = true
+      // }
+      vm.visible = true
     })
   }
 }
