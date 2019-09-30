@@ -21,6 +21,7 @@ export default {
     openId: '',
     rejectBalance: 0,
     roleCode: '',
+    lockStatus: '',
     status: null,
     successBalance: 0,
     userId: '',
