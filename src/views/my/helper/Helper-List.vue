@@ -97,7 +97,7 @@
           @change="onRadioChange"
         >
           <radio-component :class="$style.popupListItem" :name="''">
-            所有Helper
+            所有关联账号
           </radio-component>
           <radio-component
             :class="$style.popupListItem"
@@ -173,7 +173,7 @@ export default {
     owner () {
       const { ownnerUserId } = this.form
       return ownnerUserId === ''
-        ? '所有Helper'
+        ? '所有关联账号'
         : this.roleList.find(item => item.userId === ownnerUserId).realName
     },
     count () {
