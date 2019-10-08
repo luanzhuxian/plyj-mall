@@ -135,7 +135,7 @@
       </router-link>
       <!-- helper -->
       <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow && lockStatus">
-        <router-link :to="{ name: 'HelperManagement' }">
+        <router-link to="" @click.native="toHelperManagement">
           <pl-icon name="icon-helper-management" type="svg" width="120" height="115" />
         </router-link>
         <router-link :to="{ name: 'HelperPoster' }">
@@ -298,8 +298,6 @@ export default {
   },
   deactivated () {
     this.isModalShow = false
-    // this.progress = []
-    // this.newFreight = []
   },
   methods: {
     ...mapActions({
@@ -381,6 +379,9 @@ export default {
         await updateNoticeStatus()
         this.getAuditNotice()
       }
+    },
+    toHelperManagement () {
+      console.log(window.location)
     }
   }
 }

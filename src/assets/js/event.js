@@ -1,9 +1,4 @@
-export function on (
-  target,
-  event,
-  handler,
-  passive = false
-) {
+export function on (target, event, handler, passive = false) {
   target.addEventListener(
     event,
     handler,
