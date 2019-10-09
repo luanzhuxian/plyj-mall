@@ -49,6 +49,7 @@ export default {
     return new Promise(async (resolve, reject) => {
       let search = Qs.parse(location.search.substring(1))
       let appId = state.mallInfo.appid
+      let component_appid = '1'
       try {
         if (search.code) {
           // 微信

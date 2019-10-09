@@ -279,21 +279,26 @@ export default {
     this.tab = 2
   },
   mounted () {
-    if (!this.brokerId && this.userId) {
-      // 链接中没有携带brokerId，就刷新一下，带上brokerId
-      // 1.9.0 以后，不管是不是helper，都携带brokerId
-      location.href = `${location.protocol}//${location.host}/${this.mallDomain}/detail/lesson/${this.productId}/${this.userId}`
-      return
+    // 其他人的分享id
+    let otherShareId = sessionStorage.getItem('shareBrokerId') || ''
+    let { brokerId, userId } = this
+    // 本地没有分享id
+    if (!otherShareId) {
+      if (brokerId && brokerId !== userId) {
+        // 携带有他人分享id时，先把他人的id保存起来，然后再替换成当前用户的id
+        // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
+        sessionStorage.setItem('shareBrokerId', brokerId || '')
+        location.href = location.href.replace(brokerId, userId)
+      } else {
+        sessionStorage.setItem('shareBrokerId', userId || '')
+      }
     } else {
-      // 如果当前用户是helper, 但是链接中的helperId不是他的，那就刷新一下，把brokerId替换成他自己的
-      if (this.agentUser && this.brokerId !== this.userId) {
-        location.href = location.href.replace(this.brokerId, this.userId)
-        return
+      // 这种情况一般不会发生
+      if (brokerId !== otherShareId && brokerId !== userId) {
+        sessionStorage.setItem('shareBrokerId', brokerId || '')
+        location.href = location.href.replace(brokerId, userId)
       }
     }
-    // 进入页面后，存储brokerId，只要页面不关闭，这期间，购买的任何营销商品都算作helper的分享
-    // 详情页只做存储，具体判断过程在点击立即购买和加入购物车时判断
-    sessionStorage.setItem('shareBrokerId', this.brokerId || '')
   },
   methods: {
     ...mapActions({
