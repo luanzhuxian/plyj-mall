@@ -49,7 +49,14 @@ export default {
     return new Promise(async (resolve, reject) => {
       let search = Qs.parse(location.search.substring(1))
       let appId = state.mallInfo.appid
-      let component_appid = '1'
+      let componentAppid = state.mallInfo.componentAppid
+      let appSecret = state.mallInfo.appSecret
+      let openIdUrl = ''
+      if (appSecret) {
+        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+      } else {
+        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=SCOPE&state=STATE&component_appid=${componentAppid}#wechat_redirect`
+      }
       try {
         if (search.code) {
           // 微信
@@ -57,14 +64,10 @@ export default {
           commit(type.SET_OPENID, { mallDomain: state.mallInfo.mallDomain, openId: result.OPEN_ID })
           resolve()
         } else {
-          // `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
-          let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=SCOPE&state=STATE&component_appid=${component_appid}#wechat_redirect`
           window.location.replace(openIdUrl)
         }
       } catch (e) {
         if (e.message.indexOf('code') > -1) { // 如果code无效重新登录
-          let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=SCOPE&state=STATE&component_appid=${component_appid}#wechat_redirect`
-          // let openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${location.href.split('?')[0]}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
           window.location.replace(openIdUrl)
         } else {
           reject(e)

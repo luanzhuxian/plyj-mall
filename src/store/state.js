@@ -38,6 +38,7 @@ export default {
   },
   mallInfo: {
     appid: '',
+    componentAppid: '',
     address: '',
     logoUrl: '',
     mallDesc: '',
@@ -45,7 +46,8 @@ export default {
     mallName: '',
     mallUrl: '',
     sequenceNbr: '',
-    servicePhoneModels: []
+    servicePhoneModels: [],
+    appSecret: false // 是否是老方法授权的
   },
   token,
   openId: '',
