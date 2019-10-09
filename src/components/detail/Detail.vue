@@ -31,29 +31,11 @@ export default {
     }
   },
   created () {
-    this.matchedHtml()
+    this.afterHtml = this.content
   },
   watch: {
     content () {
-      this.matchedHtml()
-    }
-  },
-  methods: {
-    matchedHtml () {
-      // let str = this.content
-      // let matched = str.match(/src="\S+"/g) || []
-      // for (let src of matched) {
-      //   str = str.replace(src, `data-${src}`)
-      // }
       this.afterHtml = this.content
-      this.$nextTick(() => {
-        this.$nextTick(() => {
-          let imgList = this.$refs.detail.querySelectorAll('img')
-          for (let img of imgList) {
-            img.parentNode.style.fontSize = 0
-          }
-        })
-      })
     }
   }
 }
@@ -77,6 +59,11 @@ export default {
     img {
       width: 670px !important;
       height: auto !important;
+    }
+    > p, > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
   }
 </style>
