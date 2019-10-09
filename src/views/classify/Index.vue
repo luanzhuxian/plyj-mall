@@ -44,16 +44,20 @@
           >
         </div>
         <template v-if="currentClassify.childs && currentClassify.childs.length">
-          <div :class="$style.classifyList2">
-            <classify-item
+          <sub-classify
+            :children="currentClassify.childs"
+            @click="subClassifyClick"
+          />
+          <!--<div :class="$style.classifyList2">
+            &lt;!&ndash;<classify-item
               v-for="item of currentClassify.childs"
               :key="item.id"
               :cid="item.id"
               :img="item.categoryPic + '?x-oss-process=style/thum-small'"
               :text="item.categoryName"
               @click="subClassifyClick"
-            />
-          </div>
+            />&ndash;&gt;
+          </div>-->
         </template>
         <div
           :class="$style.title"
@@ -108,7 +112,7 @@
 
 <script>
 import GoodsItem from '../../components/item/Goods-Item.vue'
-import ClassifyItem from '../../components/item/Classify-Item.vue'
+import SubClassify from '../../components/item/Sub-Classify.vue'
 import LoadMore from '../../components/Load-More.vue'
 import { getCategoryTree, getProduct } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
@@ -118,7 +122,7 @@ export default {
   name: 'Classify',
   components: {
     GoodsItem,
-    ClassifyItem,
+    SubClassify,
     LoadMore
   },
   props: {
@@ -348,12 +352,6 @@ export default {
   .classifyText {
     line-height: 36px;
   }
-}
-.classify-list2 {
-  display: flex;
-  flex-wrap: wrap;
-  padding-top: 32px;
-  border-bottom: 1px solid #F0F0F0;
 }
 .content {
   margin-left: 160px;
