@@ -633,7 +633,7 @@ export default {
     },
     async getProductDetail (flag) {
       const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-      if (!proList) {
+      if (!proList || !proList.length) {
         return this.$router.replace({ name: 'Home' })
       }
       if (!flag) this.loading = true

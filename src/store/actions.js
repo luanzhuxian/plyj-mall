@@ -46,6 +46,8 @@ export default {
   },
   // 获取openid并登录
   [type.GET_OPENID]: ({ commit, dispatch, state }) => {
+    // 登录次数，如果登录失败超过三次，停止登录
+    let loginCount = Number(localStorage.getItem('loginCount') || 0)
     return new Promise(async (resolve, reject) => {
       let search = Qs.parse(location.search.substring(1))
       let appId = state.mallInfo.appid
@@ -55,7 +57,7 @@ export default {
       if (appSecret) {
         openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
       } else {
-        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=SCOPE&state=STATE&component_appid=${componentAppid}#wechat_redirect`
+        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${componentAppid}#wechat_redirect`
       }
       try {
         if (search.code) {
@@ -68,6 +70,11 @@ export default {
         }
       } catch (e) {
         if (e.message.indexOf('code') > -1) { // 如果code无效重新登录
+          if (loginCount >= 2) {
+            alert('微信登录失败')
+            return
+          }
+          localStorage.setItem('loginCount', ++loginCount)
           window.location.replace(openIdUrl)
         } else {
           reject(e)
