@@ -116,19 +116,6 @@ export default {
     }
   },
   async activated () {
-    let { result } = await wouldINeedOpenDefault()
-    this.form.defaultStatus = result ? 0 : 1
-    if (this.id) {
-      this.form.id = this.id
-      try {
-        let { result } = await getDetail(this.id)
-        this.form.stuName = result.stuName
-        this.form.stuMobile = result.stuMobile
-        this.form.defaultStatus = result.defaultStatus
-      } catch (e) {
-        throw e
-      }
-    }
   },
   deactivated () {
     resetForm(this.form)
@@ -237,6 +224,20 @@ export default {
             query: from.query,
             params: from.params
           })
+        }
+      } else {
+        let { result } = await wouldINeedOpenDefault()
+        vm.form.defaultStatus = result ? 0 : 1
+        if (vm.id) {
+          vm.form.id = vm.id
+          try {
+            let { result } = await getDetail(vm.id)
+            vm.form.stuName = result.stuName
+            vm.form.stuMobile = result.stuMobile
+            vm.form.defaultStatus = result.defaultStatus
+          } catch (e) {
+            throw e
+          }
         }
       }
     })
