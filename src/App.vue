@@ -6,6 +6,9 @@
 
     <navbar v-if="showNavbar.indexOf(routeName) > -1" />
     <QuickNavbar v-else />
+
+    <div id="demo-player" style="width: 100vw; height: 300px" />
+    <div id="ppt" style="width: 100vw; height: 300px" />
   </div>
 </template>
 
@@ -15,6 +18,8 @@ import QuickNavbar from './components/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
 import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
+// import crypto from 'crypto-js'
+import qs from 'qs'
 export default {
   components: {
     Navbar,
@@ -79,6 +84,37 @@ export default {
     } catch (e) {
       throw e
     }
+  },
+  mounted () {
+    let t = Date.now()
+    let data = {
+      appId: 'fgpe9p5979',
+      channelId: '393112',
+      timestamp: t
+    }
+    console.log(qs.stringify(data))
+    var liveSdk = new window.PolyvLiveSdk({
+      channelId: '393112',
+      sign: '9DC859F0251761015E0D8179E610BAE1', // 频道验证签名
+      timestamp: 1570712118205, // 毫秒级时间戳
+      appId: 'fgpe9p5979', // polyv 后台的appId
+      user: {
+        userId: 'ea0c93b91e',
+        userName: 'polyv-test'
+      }
+    })
+    // 监听频道信息并初始化播放器
+    liveSdk.on(window.PolyvLiveSdk.EVENTS.CHANNEL_DATA_INIT, (event, data) => {
+      console.log(event)
+      console.log(data)
+      liveSdk.setupPlayer({
+        pptEl: '#ppt',
+        el: '#demo-player',
+        type: 'auto',
+        autoplay: true,
+        audioMode: true
+      })
+    })
   },
   methods: {
     ...mapMutations({
