@@ -22,8 +22,8 @@
             />
             <span
               :class="$style.progressRight"
-              @click="isModalShow = true"
               v-text="'查看进度'"
+              @click="isModalShow = true"
             />
           </div>
         </div>
@@ -135,7 +135,7 @@
       </router-link>
       <!-- helper -->
       <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow && lockStatus">
-        <router-link to="" @click.native="toHelperManagement">
+        <router-link to="" @click.native="toHelperManagementPage">
           <pl-icon name="icon-helper-management" type="svg" width="120" height="115" />
         </router-link>
         <router-link :to="{ name: 'HelperPoster' }">
@@ -198,7 +198,7 @@
 <script>
 import youLike from './../home/components/YouLike.vue'
 import Modal from '../../components/penglai-ui/Modal.vue'
-import Progress from './components/Progress.vue'
+import Progress from '../../components/Progress.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { orderPhysicalorderSummary, getHelperApplicationProgress } from '../../apis/order-manager'
 import { getNewFreight } from '../../apis/my'
@@ -380,8 +380,29 @@ export default {
         this.getAuditNotice()
       }
     },
-    toHelperManagement () {
-      console.log(window.location)
+    toHelperManagementPage () {
+      const PROD = 'mall.youpenglai.com'
+      const DEV = 'dev.xijun.youpenglai.com'
+      const QA = 'qa.xijun.youpenglai.com'
+      const LOCAL = 'localhost'
+      let destination
+      switch (window.location.hostname) {
+        case PROD:
+          destination = 'http://admall.youpenglai.com/h5/home'
+          break
+        case DEV:
+          destination = 'http://192.168.130.33:8083/h5/home'
+          break
+        case QA:
+          destination = 'http://192.168.130.35:8082/h5/home'
+          break
+        case LOCAL:
+          destination = 'http://localhost:5000/h5/home'
+          break
+        // default:
+        //   break
+      }
+      window.location.href = destination
     }
   }
 }
