@@ -291,13 +291,13 @@ export default {
         // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
         sessionStorage.setItem('shareBrokerId', brokerId || '')
         location.href = selfUrl
-      } else if (brokerId === userId) {
+      } else if (brokerId && brokerId === userId) {
         sessionStorage.setItem('shareBrokerId', userId || '')
-      } else {
+      } else if (!brokerId && userId) {
         location.href = selfUrl
       }
     } else {
-      if (!brokerId) {
+      if (!brokerId && userId) {
         location.href = selfUrl
         return
       }
