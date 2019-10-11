@@ -281,22 +281,29 @@ export default {
   mounted () {
     // 其他人的分享id
     let otherShareId = sessionStorage.getItem('shareBrokerId') || ''
-    let { brokerId, userId } = this
-    // 本地没有分享id
+    let { brokerId, userId, mallDomain, productId } = this
+    let { protocol, host } = location
+    let selfUrl = `${protocol}//${host}/${mallDomain}/detail/lesson/${productId}/${userId}`
+    // 本地没有分享id，设置本地分享id，设置的本地分享id可以是他人的，也可以是自己的
     if (!otherShareId) {
       if (brokerId && brokerId !== userId) {
         // 携带有他人分享id时，先把他人的id保存起来，然后再替换成当前用户的id
         // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
         sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.href = location.href.replace(brokerId, userId)
-      } else {
+        location.href = selfUrl
+      } else if (brokerId === userId) {
         sessionStorage.setItem('shareBrokerId', userId || '')
+      } else {
+        location.href = selfUrl
       }
     } else {
-      // 这种情况一般不会发生
-      if (brokerId !== otherShareId && brokerId !== userId) {
+      if (!brokerId) {
+        location.href = selfUrl
+        return
+      }
+      if (brokerId !== userId) {
         sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.href = location.href.replace(brokerId, userId)
+        location.href = selfUrl
       }
     }
   },
