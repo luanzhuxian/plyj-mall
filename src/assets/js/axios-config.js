@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from 'axios'
 import { router } from '../../router'
 import store from '../../store'
@@ -33,6 +34,11 @@ function reqError (error) {
 async function response (response) {
   const data = response.data
   const config = response.config
+  return data
+  if (data.code === 200) {
+    console.log(data)
+    return data
+  }
   if (data.status !== 200) {
     let msg = data.message
     let loginInvalid = msg.indexOf('登录信息失效') >= 0
