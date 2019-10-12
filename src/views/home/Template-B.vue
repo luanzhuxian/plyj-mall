@@ -5,11 +5,10 @@
     <!--<slot name="88" />-->
     <HotItem :data="POPULAR" v-if="POPULAR.showStatue === 1" />
     <appointment-gift :data="{ YUYUE, PINGXUAN }" />
-    <Best v-if="type === 3 && CLASS.showStatue === 1" :data="CLASS" />
+    <Best v-if="CLASS.showStatue === 1" :data="CLASS" />
     <BestRecommend
       v-if="RECOMMEND.values && RECOMMEND.values.length"
       :data="RECOMMEND"
-      :type="type"
     />
   </div>
 </template>
@@ -45,7 +44,7 @@ export default {
     },
     type: {
       type: Number,
-      default: 2
+      default: 0
     }
   },
   computed: {

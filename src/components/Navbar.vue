@@ -17,6 +17,13 @@
     <router-link
       :class="$style.route"
       tag="div"
+      :to="{ name: 'Classify' }"
+    >
+      <img src="../assets/images/d12-tabbar.png" style="padding-bottom: 10px;">
+    </router-link>
+    <router-link
+      :class="$style.route"
+      tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
       <pl-icon type="svg" :name="yajiActive ? 'icon-cart-active' : 'icon-cart'" width="68" />

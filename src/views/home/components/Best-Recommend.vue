@@ -5,7 +5,7 @@
       <span v-text="data.moduleName" />
       <span>-</span>
     </div>
-    <template v-if="styleType === 2">
+    <template>
       <div
         :class="$style.product"
         v-for="(item, i) of data.values"
@@ -61,7 +61,7 @@
       </div>
     </template>
     <!-- 瀑布流 -->
-    <div v-if="styleType === 1" :class="$style.waterfallBox">
+    <!-- <div v-if="styleType === 1" :class="$style.waterfallBox">
       <ul
         :class="$style.waterfall"
         v-if="listLeft.length"
@@ -133,11 +133,11 @@
           </div>
         </li>
       </ul>
-    </div>
-    <button :class="$style.seeAll" v-if="maxSee > localValue.length" @click="seeAll">
+    </div> -->
+    <!-- <button :class="$style.seeAll" v-if="maxSee > localValue.length" @click="seeAll">
       <span>查看全部</span>
       <pl-svg name="right" color="#272536" />
-    </button>
+    </button> -->
     <footer :class="$style.footer">
       — 技术支持 朋来科技 —
     </footer>
@@ -168,10 +168,6 @@ export default {
           values: []
         }
       }
-    },
-    type: {
-      type: Number,
-      default: 2
     }
   },
   computed: {
@@ -343,94 +339,94 @@ export default {
       border-radius: 8px;
     }
   }
-  .waterfall-box {
-    display: grid;
-    grid-template-columns: 340px 340px;
-    grid-gap: 22px;
-  }
-  .waterfall {
-    .item {
-      position: revert;
-      width: 340px;
-      margin-bottom: 22px;
-      color: #000;
-      border-radius: 20px;
-      overflow: hidden;
-      background-color: #fff;
-      .count-down2 {
-        display: flex;
-        width: 100%;
-        bottom: 0;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-      }
-      &.long {
-        color: red;
-        .top-img {
-          position: relative;
-          img {
-            width: 340px;
-            height: 454px;
-            object-fit: cover;
-          }
-        }
-      }
-      .top-img {
-        position: relative;
-        img {
-          width: 340px;
-          height: 340px;
-          object-fit: cover;
-        }
-      }
-      .content {
-        padding: 16px;
-        .name {
-          margin-bottom: 6px;
-          line-height: 31px;
-          font-size: 24px;
-          color: #000;
-        }
-        .desc {
-          line-height: 24px;
-          font-size: 20px;
-          color: #999;
-        }
-        .bottom {
-          display: flex;
-          align-items: flex-end;
-          margin-top: 20px;
-          line-height: 38px;
-          .price {
-            font-size: 32px;
-            color: #fe7700;
-            &:before {
-              content: '¥';
-              font-size: 20px;
-            }
-          }
-          .many {
-            font-size: 20px;
-            color: #999;
-          }
-        }
-      }
-    }
-  }
-  .see-all {
-    width: 100%;
-    height: 100px;
-    margin-bottom: 36px;
-    font-size: 26px;
-    color: #000;
-    border-radius: 20px;
-    background-color: #FEF7F4;
-    > svg {
-      width: 26px;
-      margin-left: 10px;
-      vertical-align: -4px;
-    }
-  }
+  // .waterfall-box {
+  //   display: grid;
+  //   grid-template-columns: 340px 340px;
+  //   grid-gap: 22px;
+  // }
+  // .waterfall {
+  //   .item {
+  //     position: revert;
+  //     width: 340px;
+  //     margin-bottom: 22px;
+  //     color: #000;
+  //     border-radius: 20px;
+  //     overflow: hidden;
+  //     background-color: #fff;
+  //     .count-down2 {
+  //       display: flex;
+  //       width: 100%;
+  //       bottom: 0;
+  //       border-bottom-left-radius: 0;
+  //       border-bottom-right-radius: 0;
+  //     }
+  //     &.long {
+  //       color: red;
+  //       .top-img {
+  //         position: relative;
+  //         img {
+  //           width: 340px;
+  //           height: 454px;
+  //           object-fit: cover;
+  //         }
+  //       }
+  //     }
+  //     .top-img {
+  //       position: relative;
+  //       img {
+  //         width: 340px;
+  //         height: 340px;
+  //         object-fit: cover;
+  //       }
+  //     }
+  //     .content {
+  //       padding: 16px;
+  //       .name {
+  //         margin-bottom: 6px;
+  //         line-height: 31px;
+  //         font-size: 24px;
+  //         color: #000;
+  //       }
+  //       .desc {
+  //         line-height: 24px;
+  //         font-size: 20px;
+  //         color: #999;
+  //       }
+  //       .bottom {
+  //         display: flex;
+  //         align-items: flex-end;
+  //         margin-top: 20px;
+  //         line-height: 38px;
+  //         .price {
+  //           font-size: 32px;
+  //           color: #fe7700;
+  //           &:before {
+  //             content: '¥';
+  //             font-size: 20px;
+  //           }
+  //         }
+  //         .many {
+  //           font-size: 20px;
+  //           color: #999;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+  // .see-all {
+  //   width: 100%;
+  //   height: 100px;
+  //   margin-bottom: 36px;
+  //   font-size: 26px;
+  //   color: #000;
+  //   border-radius: 20px;
+  //   background-color: #FEF7F4;
+  //   > svg {
+  //     width: 26px;
+  //     margin-left: 10px;
+  //     vertical-align: -4px;
+  //   }
+  // }
   .footer {
     padding-bottom: 50px;
     font-size: 26px;
