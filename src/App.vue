@@ -31,7 +31,8 @@ export default {
         'My',
         'ShoppingCart',
         'Classify',
-        'WhatsHelper'
+        'WhatsHelper',
+        'Activity'
       ],
       // 允许分享和复制链接的页面
       shareRoutes: [
@@ -57,10 +58,10 @@ export default {
     }
   },
   computed: {
-    routeName: function () {
+    ...mapGetters(['userId', 'openId', 'appId', 'token', 'mallName', 'mallDesc', 'logoUrl']),
+    routeName () {
       return this.$route.name
-    },
-    ...mapGetters(['userId', 'openId', 'appId', 'token', 'mallName', 'mallDesc', 'logoUrl'])
+    }
   },
   async created () {
     try {

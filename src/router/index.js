@@ -11,6 +11,8 @@ import Cart from './cart'
 import Appointment from './appointment'
 import NotFound from '../views/404.vue'
 import Live from './live'
+import Activity from './activity'
+
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
 export const routes = [
@@ -49,7 +51,8 @@ export const router = new Router({
     ...setting,
     ...Cart,
     ...Appointment,
-    ...Live
+    ...Live,
+    ...Activity
   ],
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }

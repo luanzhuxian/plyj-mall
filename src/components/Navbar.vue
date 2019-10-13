@@ -17,7 +17,7 @@
     <router-link
       :class="$style.route"
       tag="div"
-      :to="{ name: 'Classify' }"
+      :to="{ name: 'Activity' }"
     >
       <img src="../assets/images/d12-tabbar.png" style="padding-bottom: 10px;">
     </router-link>

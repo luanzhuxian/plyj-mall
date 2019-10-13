@@ -30,7 +30,7 @@
             </template>
             <template v-else-if="item.goodsInfo.salesVolume >= 10">
               <span>
-                {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人{{ item.goodsInfo.productType === 'FORMAL_CLASS' ? '学习' : '报名' }}
+                {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
               </span>
             </template>
           </div>
@@ -47,14 +47,8 @@
                 ¥{{ getMaxOrinalPrice(item.goodsInfo.productSkuModels) }}
               </del>
             </div>
-            <button v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
-              立即报名
-            </button>
-            <button v-else-if="item.goodsInfo.productType === 'FORMAL_CLASS'">
-              立即学习
-            </button>
-            <button v-else>
-              立即购买
+            <button>
+              {{ `立即${productTypeMap[item.goodsInfo.productType]}` }}
             </button>
           </div>
         </div>
@@ -154,12 +148,6 @@ export default {
     Tags,
     CountDown
   },
-  data () {
-    return {
-      // 最小查看数量
-      minSee: 10
-    }
-  },
   props: {
     data: {
       type: Object,
@@ -167,6 +155,18 @@ export default {
         return {
           values: []
         }
+      }
+    }
+  },
+  data () {
+    return {
+      // 最小查看数量
+      minSee: 10,
+      productTypeMap: {
+        'PHYSICAL_GOODS': '购买',
+        'VIRTUAL_GOODS': '购买',
+        'FORMAL_CLASS': '学习',
+        'EXPERIENCE_CLASS': '报名'
       }
     }
   },

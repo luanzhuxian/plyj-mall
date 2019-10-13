@@ -32,11 +32,11 @@
               </template>
               <template v-else-if="item.goodsInfo.salesVolume >= 10">
                 <span :class="$style.howManyBuy">
-                  {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人报名
+                  {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
                 </span>
               </template>
             </div>
-            <button> {{ item.goodsInfo.productType === 'FORMAL_CLASS' ? '立即学习' : '立即报名' }}</button>
+            <button>{{ `立即${productTypeMap[item.goodsInfo.productType]}` }}</button>
           </div>
         </div>
       </li>
@@ -58,6 +58,16 @@ export default {
       type: Object,
       default () {
         return {}
+      }
+    }
+  },
+  data () {
+    return {
+      productTypeMap: {
+        'PHYSICAL_GOODS': '购买',
+        'VIRTUAL_GOODS': '购买',
+        'FORMAL_CLASS': '学习',
+        'EXPERIENCE_CLASS': '报名'
       }
     }
   },

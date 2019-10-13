@@ -21,7 +21,11 @@
         @click="showHaibao"
       >-->
     <!-- </TemplateA> -->
-    <TemplateB :data="modules" v-if="type === 3 || type === 4" :type="type">
+    <TemplateB
+      :data="modules"
+      v-if="type === 3 || type === 4"
+      :type="type"
+    >
       <!-- 月光宝盒项目 -->
       <!--<router-link
         slot="88"
