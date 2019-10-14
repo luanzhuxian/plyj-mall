@@ -74,7 +74,7 @@ export default {
       let len = priceList.length
       let i = 0
       for (; i < len; i++) {
-        if (priceList[i] !== 0) return priceList[i]
+        if (Number(priceList[i]) !== 0) return priceList[i]
       }
       return min
     }
