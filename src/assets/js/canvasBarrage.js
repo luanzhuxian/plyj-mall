@@ -1,3 +1,4 @@
+/* eslint-disable */
 export class CanvasBarrage {
   constructor (canvas, player, options) {
     if (!canvas || !player) {
@@ -10,6 +11,7 @@ export class CanvasBarrage {
     this.canvas = canvas
     this.player = player
     this.context = canvas.getContext('2d')
+    this.video = player.player.video
     const defaults = {
       opacity: 100,
       fontSize: 24,
@@ -52,7 +54,15 @@ export class CanvasBarrage {
     })
   }
   draw () {
-    let { store, time } = this
+    let { store, time, player, context, canvas } = this
+    // video.src = player.player.video.src
+    // video.crossorign = ''
+    // console.log(video)
+    // video.onloadeddata = () => {
+    //   console.log(video.src)
+    //   // context.drawImage(player.player.video, 0, 0, canvas.width, canvas.height)
+    // }
+    // context.drawImage(player.player.video, 0, 0, canvas.width, canvas.height)
     for (let key of Object.keys(store)) {
       let barrage = store[key]
       if (barrage && !barrage.disabled && time >= barrage.time) {
@@ -79,7 +89,6 @@ export class CanvasBarrage {
     let { player, context, canvas, isPause } = this
     this.time = player.currentTime
     context.clearRect(0, 0, canvas.width, canvas.height)
-    console.log(1)
     this.draw()
     if (isPause === false) {
       requestAnimationFrame(this.render.bind(this))
@@ -177,7 +186,6 @@ class Barrage {
     } else {
       context.fillStyle = this.color
     }
-    // 濉壊
     context.fillText(this.value, this.x, this.y)
   }
 }

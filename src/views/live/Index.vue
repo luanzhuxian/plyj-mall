@@ -1,7 +1,13 @@
 <template>
   <div :class="$style.liveRoom">
-    <div ref="demoPlayer" id="player" :class="$style.playerBox">
-      <div :class="$style.myController">
+    <div
+      :class="{
+        [$style.playerWrap]: true,
+        [$style.fullscreen]: isFullscreen,
+        [$style.isPlaying]: isPlaying
+      }"
+    >
+      <!--<div v-show="true" :class="$style.myController">
         <div :class="$style.playBtn">
           <pl-icon v-if="paused" name="icon-bofang" size="30" color="#fff" @click="togglePlay" />
           <pl-icon v-else name="icon-paush" size="30" color="#fff" @click="togglePlay" />
@@ -46,16 +52,79 @@
               弹
             </span>
           </label>
-          <div :class="$style.fullscreen">
+          <div :class="$style.fullscreen" @click="fullscreen">
             <pl-icon name="icon-quanpingxianshi" size="25" color="#fff" />
             <pl-icon name="icon-icon-quanpingsuoxiao" size="25" color="#fff" />
           </div>
         </div>
-      </div>
-
+      </div>-->
+      <!--<div v-show="isFullscreen" :class="{
+        [$style.myController]: true,
+        [$style.myControllerFullscreen]: true
+      }"
+      >
+        <div :class="$style.playBtn">
+          <pl-icon v-if="paused" name="icon-bofang" size="30" color="#fff" @click="togglePlay" />
+          <pl-icon v-else name="icon-paush" size="30" color="#fff" @click="togglePlay" />
+        </div>
+        <div :class="$style.controllerRight">
+          <div :class="$style.lines">
+            <span @click="showLineList = !showLineList">线路 <i :class="$style.current" v-text="currentLine + 1" /></span>
+            <transition name="fade">
+              <ul v-show="showLineList" :class="$style.linesList">
+                <li v-for="i of lines" :key="i" @click="selectLine(i - 1)">
+                  <span>线路 <i :class="$style.current" v-text="i" /></span>
+                </li>
+              </ul>
+            </transition>
+          </div>
+          <div :class="$style.sound">
+            <pl-icon v-show="soundValue === 0" name="icon-yinliang-guan" size="30" color="#fff" />
+            <pl-icon v-show="soundValue > 50" name="icon-yinliang-gao" size="30" color="#fff" />
+            <pl-icon v-show="soundValue > 0 && soundValue <= 50" name="icon-yinliang-di" size="30" color="#fff" />
+            <div :class="$style.soundValue">
+              <vue-slider v-model="soundValue" dot-size="40" height="20vw" width="1vw" direction="btt" />
+            </div>
+          </div>
+          <label
+            :class="{
+              [$style.plSwitch]: true,
+              [$style.on]: showBarrage
+            }"
+          >
+            <input
+              type="checkbox"
+              v-show="false"
+              v-model="showBarrage"
+            >
+            <span
+              :class="{
+                [$style.plSwitchInner]: true,
+                [$style.plSwitchOn]: showBarrage,
+                [$style.plSwitchOff]: !showBarrage
+              }"
+            >
+              弹
+            </span>
+          </label>
+          <div :class="$style.fullscreen" @click="fullscreen">
+            <pl-icon name="icon-quanpingxianshi" size="25" color="#fff" />
+            <pl-icon name="icon-icon-quanpingsuoxiao" size="25" color="#fff" />
+          </div>
+        </div>
+      </div>-->
+      <!-- 用于播放视频和弹幕 -->
       <canvas ref="buttle" :class="$style.buttleCanvas" :width="videoWidth" :height="videoHeight" />
+      <div
+        ref="playerBox"
+        id="player"
+        :class="{
+          [$style.playerBox]: true
+        }"
+      />
     </div>
-    <!--<canvas width="750" height="400" ref="canvas" />-->
+    <!--<div id="player" v-show="false" />-->
+    <!--<div id="player" />-->
     <div :class="$style.chatRoom">
       <ul>
         <li>
@@ -77,6 +146,10 @@
           <!--<pl-button @click="play">播放</pl-button>-->
         </li>
       </ul>
+    </div>
+    <div style="position: relative;">
+      <video controls preload width="600" height="300" x5-video-player-type="h5-page" src="http://cdn.tencent.neigou.com/Public/Home/mobileAsset/images/tencent2018/video5.mp4" />
+      <div style="position: absolute; top: 0; font-size: 10vw; color: #fff;">覆盖video</div>
     </div>
   </div>
 </template>
@@ -105,9 +178,12 @@ export default {
       message: '',
       videoWidth: 0,
       videoHeight: 0,
+      src: '',
       paused: true,
       showLineList: false,
       showBarrage: true,
+      isFullscreen: false,
+      isPlaying: false,
       soundValue: 0,
       lines: 1, // 线路数量
       currentLine: 0 // 当前线路
@@ -123,9 +199,14 @@ export default {
   },
   watch: {
     soundValue (val) {
-      console.log(val)
       this.liveSdk.player.setVolume(val / 100)
     }
+  },
+  activated () {
+    // setTimeout(() => {
+    //   confirm('领红包！')
+    //   this.$confirm('领红包！')
+    // }, 8000)
   },
   async mounted () {
     this.initPlayerSdk()
@@ -182,18 +263,37 @@ export default {
         liveSdk.setupPlayer({
           el: '#player',
           type: 'live',
-          controller: false, // 是否显示控制栏
-          pptNav: false // 是否显示ppt控制控件
+          forceH5: true,
+          x5: true,
+          hasControl: true,
+          x5FullPage: true,
+          controller: true, // 是否显示控制栏
+          pptNav: false, // 是否显示ppt控制控件
+          pptNavBottom: 0 // 是否显示ppt控制控件
         })
 
         /* 视频数据已加载，可以播放了 */
         liveSdk.player.on("loadedmetadata", async e => {
           let video = liveSdk.player.player.video
+          // console.log(video)
+          // let videoStmp = video.cloneNode(true)
+          // videoStmp.controls = true
+          // document.body.appendChild(video)
+          // video.style.display = 'none'
+          // video.setAttribute('x5-video-player-type', 'h5-page')
+          // video.setAttribute('controls', '')
+          // video.setAttribute('preload', '')
+          // video.setAttribute('loop', 'loop')
+          // video.setAttribute('x5-video-player-fullscreen', true)
+          // video.setAttribute('x5-playsinline', '')
+          // video.setAttribute('webkit-playsinline', '')
           let { videoWidth, videoHeight } = video
           if (videoWidth && videoHeight) {
             this.videoWidth = videoWidth
             this.videoHeight = videoHeight
           }
+          console.log(video.src)
+          this.src = video.src
           this.currentLine = liveSdk.player.line
           this.lines = liveSdk.player.lines
         });
@@ -202,6 +302,15 @@ export default {
           this.currentLine = line
           this.showLineList = false
         });
+        liveSdk.player.on('playing', () => {
+          this.isPlaying = true
+        })
+        liveSdk.player.on('pause',  () => {
+          this.isPlaying = false
+        })
+        liveSdk.player.on('ended',  () => {
+          this.isPlaying = false
+        })
         /* 初始化弹幕 */
         barrage = new CanvasBarrage(this.$refs.buttle, liveSdk.player)
       })
@@ -229,6 +338,34 @@ export default {
         value: this.message,
         time: this.liveSdk.player.currentTime
       })
+    },
+    fullscreen () {
+      console.dir(this.$refs.playerBox)
+      this.isFullscreen = !this.isFullscreen
+      let element = document.documentElement;
+      if (!this.isFullScreen) {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        }
+        this.isFullScreen = true
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        this.isFullScreen = false
+      }
     }
   }
 }
@@ -238,26 +375,36 @@ export default {
   .live-room {
     height: 100vh;
   }
-  .player-box {
+  .player-wrap {
     position: relative;
     width: 100vw !important;
-    height: 500px !important;
-    overflow: hidden;
-    &.full-screen {
-      height: 100vw;
-      width: 100vh;
+    height: calc(100vw * 3 / 4) !important;
+    &.fullscreen {
+      position: fixed;
+      z-index: 9998;
     }
     &:hover .my-controller {
       transform: translateY(0);
     }
+    &.isPlaying {
+      > .player-box {
+        z-index: -1;
+      }
+    }
+  }
+  .player-box {
+    position: relative;
+    width: 100vw !important;
+    height: calc(100vw * 3 / 4) !important;
+    overflow: hidden;
   }
   .buttle-canvas {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 50%;
     width: 100%;
-    height: 100%;
-    z-index: 2;
+    transform: translateY(-50%);
+    z-index: 1;
   }
   .my-controller {
     position: absolute;
@@ -269,7 +416,7 @@ export default {
     height: 50px;
     padding: 0 20px;
     background-color: rgba(0, 0, 0, .7);
-    z-index: 100;
+    z-index: 100 !important;
     box-sizing: border-box;
     transition: transform .2s linear;
     /*transform: translateY(100%);*/
@@ -278,6 +425,13 @@ export default {
       > i {
         color: #fff;
       }
+    }
+    &.my-controller-fullscreen {
+      flex-direction: column;
+      height: 100vh;
+      width: 50px;
+      padding: 20px 0;
+      transform: rotate(90deg);
     }
     > .controller-right {
       display: inline-flex;
@@ -342,12 +496,45 @@ export default {
   /* 横屏 */
   @media all and (orientation : landscape) {
     background-color: #000;
+    .player-wrap {
+      &.fullscreen {
+        width: 100vw !important;
+        height: 100vh !important;
+        > .player-box {
+          /*position: absolute;*/
+          width: 100vw !important;
+          height: 100vh !important;
+        }
+      }
+    }
   }
   /* 竖屏 */
   @media all and (orientation : portrait){
-    .live-room {
-      background-color: red;
+    .player-wrap {
+      &.fullscreen {
+        /* 锁定方向情况下竖屏 */
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: red;
+        > .player-box {
+          /*position: absolute;*/
+          width: 100vh !important;
+          height: 100vw !important;
+          /*top: 0;*/
+          transform-origin: 0 0;
+          transform: translate(100vw, 0vw) rotate(90deg);
+        }
+      }
     }
+    /*.player-box {
+      &.fullscreen {
+        !* 竖屏下的全屏 (针对部分手机锁定方向的情况) *!
+        height: 100vw !important;
+        width: 100vh !important;
+        transform: rotate(90deg);
+        transform-origin: 50% 50%;
+      }
+    }*/
   }
 
   .pl-switch {
