@@ -148,7 +148,8 @@
       </ul>
     </div>
     <div style="position: relative;">
-      <video controls preload width="600" height="300" x5-video-player-type="h5-page" src="http://cdn.tencent.neigou.com/Public/Home/mobileAsset/images/tencent2018/video5.mp4" />
+      <video ref="video" controls preload width="600" height="300" x5-video-player-type="h5-page" src="http://cdn.tencent.neigou.com/Public/Home/mobileAsset/images/tencent2018/video5.mp4" />
+      <!--<video ref="video" controls preload width="600" height="300" x5-video-player-type="h5-page" />-->
       <div style="position: absolute; top: 0; font-size: 10vw; color: #fff;">覆盖video</div>
     </div>
   </div>
@@ -262,25 +263,28 @@ export default {
       liveSdk.on(window.PolyvLiveSdk.EVENTS.CHANNEL_DATA_INIT, (event, data) => {
         liveSdk.setupPlayer({
           el: '#player',
-          type: 'live',
-          forceH5: true,
-          x5: true,
-          hasControl: true,
-          x5FullPage: true,
-          controller: true, // 是否显示控制栏
-          pptNav: false, // 是否显示ppt控制控件
-          pptNavBottom: 0 // 是否显示ppt控制控件
+          type: 'live'
         })
 
         /* 视频数据已加载，可以播放了 */
         liveSdk.player.on("loadedmetadata", async e => {
           let video = liveSdk.player.player.video
+          let p = video.parentNode
+          let newVideo = video.cloneNode(true)
+          console.log(video.videoTracks)
+          // p.removeChild(video)
+          // p.appendChild(newVideo)
+          liveSdk.player.player.video = newVideo
+          video = liveSdk.player.player.video
           // console.log(video)
           // let videoStmp = video.cloneNode(true)
           // videoStmp.controls = true
           // document.body.appendChild(video)
           // video.style.display = 'none'
-          // video.setAttribute('x5-video-player-type', 'h5-page')
+          // setInterval(() => {
+          //   console.log(1)
+          //   video.setAttribute('x5-video-player-type', 'h5-page')
+          // }, 2000)
           // video.setAttribute('controls', '')
           // video.setAttribute('preload', '')
           // video.setAttribute('loop', 'loop')
