@@ -96,9 +96,25 @@ export default [
     }
   },
   {
+    path: '/my/welfare/couponCenter',
+    name: 'CouponCenter',
+    component: () => import('../views/my/welfare/Coupon-Center.vue'),
+    meta: {
+      title: '领券中心'
+    }
+  },
+  {
+    path: '/my/welfare/historyCoupon',
+    name: 'HistoryCoupon',
+    component: () => import('../views/my/welfare/History-Coupon.vue'),
+    meta: {
+      title: '优惠劵历史记录'
+    }
+  },
+  {
     path: '/my/welfare/coupon',
     name: 'MyCoupon',
-    component: () => import('../views/my/welfare/coupon.vue'),
+    component: () => import('../views/my/welfare/Coupon.vue'),
     meta: {
       title: '我的卡券'
     }
@@ -106,7 +122,7 @@ export default [
   {
     path: '/my/welfare/present',
     name: 'MyPresent',
-    component: () => import('../views/my/welfare/present.vue'),
+    component: () => import('../views/my/welfare/Present.vue'),
     meta: {
       title: '我的礼品'
     }

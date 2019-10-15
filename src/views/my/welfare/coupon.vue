@@ -3,67 +3,131 @@
     <div :class="$style.walfareTip" v-if="hasPackages">
       <!--TODO.闹铃的icon图-->
       <pl-icon name="icon-alarm" color="#fff" size="18" type="icon" />
-      <span>您有一个新人有礼优惠大礼包，还未领取哦！<b /></span>
+      <span>
+        您有一个新人有礼优惠大礼包，还未领取哦！
+        <pl-icon name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
+      </span>
     </div>
     <div :class="$style.coupons">
       <div :class="$style.couponsHeader">
-        <div :class="$style.couponsInfo">
-          <pl-icon name="icon-coupon1" width="40" height="40" type="svg" />
-          <span>优惠卷</span>
-          <b>({{ couponsNumber }}张)</b>
+        <div>
+          <b>可用优惠卷</b>
+          <span>  ({{ couponsNumber }}张)</span>
         </div>
-        <button>管理</button>
+        <button @click="isManagementState = !isManagementState">管理</button>
       </div>
       <div :class="$style.couponsView">
-        <div v-if="coupons.length !== 0">
-          <div :class="$style.couponItem" v-for="couponItem in coupons" :key="couponItem.id">
-            <div :class="$style.coupon">
-              <div :class="$style.couponDetail">
-                <div>
-                  <div>满减券</div>
-                  <div>
-                    {{ couponItem.price }}
-                    <b>元</b>
-                  </div>
-                  <div>
-                    <h5>{{ couponItem.intensity }}</h5>
-                    <span>双十二优惠劵</span>
-                  </div>
-                </div>
-                <div>
-                  <span>有效期：<b>{{ couponItem.timeline }}</b></span>
-                </div>
-              </div>
-              <div :class="$style.goToUse">
-                <h5>去使用</h5>
-                <b>></b>
-              </div>
-            </div>
-            <div :class="$style.couponInstructions" ng-if="displayCouponInstructions">
-              <span>1-</span>
-            </div>
+        <load-more
+          :request-methods="getMyCouponList"
+          :form="form"
+          @refresh="refreshHandler"
+          @more="refreshHandler"
+          ref="loadMore"
+          no-content-tip="暂无优惠券"
+          icon="icon-coupon"
+        >
+          <template>
+            <CouponItem
+              v-for="item in couponList"
+              :key="item.id"
+              :id="item.id"
+              :name="item.name"
+              :amount="item.amount"
+              :full="item.useLimitAmount"
+              :subtract="item.amount"
+              :instruction="item.brief"
+              @receiveCoupon="receiveCoupon(item.id)"
+            />
+          </template>
+        </load-more>
+        <div v-if="couponList.length !== 0">
+          <div v-if="!isManagementState">
+            <CouponItem
+              v-for="item in couponList"
+              :key="item.id"
+              :id="item.id"
+              :name="item.name"
+              :amount="item.amount"
+              :full="item.useLimitAmount"
+              :subtract="item.amount"
+              :instruction="item.brief"
+              @receiveCoupon="receiveCoupon(item.id)"
+            />
+          </div>
+          <div v-if="isManagementState">
+            <pl-checkbox-group
+              v-model="checkedList"
+              ref="checkboxGroup"
+              @change="selectedChange"
+            >
+              <pl-checkbox
+                v-for="(item, i) of products"
+                :key="i"
+                :data="item"
+                :gap-column="24"
+                border
+              >
+                <template v-slot:suffix="{ data }">
+                  <CartItem
+                    :data="data"
+                    :disabled="isManage"
+                    @countChange="computeMoney"
+                    @skuClick="skuClick(data)"
+                    @change="getList"
+                  />
+                </template>
+              </pl-checkbox>
+            </pl-checkbox-group>
           </div>
         </div>
-        <div v-if="coupons.length === 0" />
+        <div v-if="couponList.length === 0">
+          <!--TODO.没有一张优惠卷-->
+        </div>
       </div>
-
+    </div>
+    <div :class="$style.footer">
+      <router-link :to="{ name: 'HistoryCoupon'}">
+        优惠劵历史记录
+      </router-link>
+      <router-link :to="{ name: 'CouponCenter'}">
+        领更多好券
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
+import { getMyCouponList } from '../../../apis/my'
 
 export default {
-  name: 'Comment',
+  name: 'MyCoupon',
   data () {
     return {
       hasPackages: true, // TODO.默认false
+      isManagementState: false,
       couponsNumber: 0,
-      coupons: [],
-      displayCouponInstructions: false
+      couponList: [],
+      checkedList: [],
+      deleteCouponList: [],
+      getMyCouponList,
+      form: {
+        current: 1,
+        size: 10
+      }
     }
   },
-  methods: {}
+  mounted () {
+    if (this.$refs.loadMore) this.$refs.loadMore.refresh()
+  },
+  methods: {
+    selectedChange () {
+
+    },
+    refreshHandler (list) {
+      this.checkedList = this.formatCouponList(list)
+    }
+
+  }
 }
 </script>
 
@@ -88,15 +152,58 @@ export default {
       font-weight: 400;
       line-height: 36px;
       position: relative;
+
       b {
-        width: 6px;
-        height: 6px;
-        border-top: 1px solid #999;
-        border-right: 1px solid #999;
-        transform: rotate(45deg);
-        position: absolute;
-        right: 0px;
+        font-family: cursive;
       }
+    }
+  }
+
+  .coupons {
+    margin-left: 10px;
+    margin-right: 10px;
+
+    .coupons-header {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 44px;
+      color: #333;
+      margin: 40px 0;
+
+      div {
+        float: left;
+      }
+
+      button {
+        float: right;
+      }
+
+      button:after {
+        clear: both;
+      }
+    }
+  }
+
+  .footer {
+    position: fixed;
+    height: 96px;
+    line-height: 96px;
+    text-align: center;
+    width: 100%;
+    background: #FE7700;
+    left: 0;
+    bottom: 0;
+    display: flex;
+
+    :first-child {
+      background: #F2B036;
+    }
+
+    a {
+      font-size: 32px;
+      font-weight: 400;
+      color: #fff;
+      flex: 1;
     }
   }
 </style>

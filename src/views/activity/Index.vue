@@ -47,12 +47,12 @@ export default {
         const { moduleModels } = result
         let { type } = result
         let modules
-        if (type === 3 || type === 4) {
+        if (type === 3) {
           modules = {
-            YUYUE: null,
-            PINGXUAN: null,
             BANNER: null,
             POPULAR: null,
+            YUYUE: null,
+            PINGXUAN: null,
             CLASS: null,
             RECOMMEND: null
           }
@@ -62,6 +62,24 @@ export default {
           modules.PINGXUAN = moduleModels[3]
           modules.CLASS = moduleModels[4]
           modules.RECOMMEND = moduleModels[5]
+        }
+        if (type === 4) {
+          modules = {
+            BANNER: null,
+            ADV: null,
+            POPULAR: null,
+            YUYUE: null,
+            PINGXUAN: null,
+            CLASS: null,
+            RECOMMEND: null
+          }
+          modules.BANNER = moduleModels[0]
+          modules.ADV = moduleModels[1]
+          modules.POPULAR = moduleModels[2]
+          modules.YUYUE = moduleModels[3]
+          modules.PINGXUAN = moduleModels[4]
+          modules.CLASS = moduleModels[5]
+          modules.RECOMMEND = moduleModels[6]
         }
         this.modules = modules
         this.loaded = true

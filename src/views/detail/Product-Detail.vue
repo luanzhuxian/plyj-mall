@@ -61,11 +61,11 @@
       <Field
         v-if="productType === 'PHYSICAL_GOODS'"
         label="优惠券"
+        can-click
         :label-width="120"
+        @click="showCoupon = true"
       >
-        <span style="color: #FE7700;">
-          123
-        </span>
+        <span style="color: #FE7700;" v-text="couponText" />
       </Field>
 
       <div :class="$style.detailOrComment">
@@ -165,6 +165,7 @@
     <div :class="$style.buttomTip" v-if="!loading && noStock">
       该商品已全部售罄，请选择其它商品购买
     </div>
+    <!-- 海报弹框 -->
     <transition name="fade">
       <div :class="$style.saveHaibao" v-if="showHaibao">
         <div :class="$style.saveHaibaoContent">
@@ -176,6 +177,31 @@
         </div>
       </div>
     </transition>
+
+    <!-- 优惠券弹框 -->
+    <pl-popup
+      :show.sync="showCoupon"
+      title="领取优惠券"
+      title-align="left"
+    >
+      <div :class="$style.coupon">
+        <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
+        <div :class="$style.couponList">
+          <template v-for="(item, i) of couponList">
+            <CouponItem
+              :key="i"
+              :name="item.couponName"
+              :amount="item.amount"
+              :full="item.useLimitAmount"
+              :subtract="item.amount"
+              :instruction="item.brief"
+              :use-end-time="item.useEndTime"
+              :use-start-time="item.useStartTime"
+            />
+          </template>
+        </div>
+      </div>
+    </pl-popup>
   </div>
 </template>
 
@@ -193,7 +219,7 @@ import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
 import Price from '../../components/product/Price.vue'
 import Field from '../../components/detail/Field.vue'
-import { getProductDetail } from '../../apis/product'
+import { getProductDetail, getCouponInDetail } from '../../apis/product'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
@@ -204,6 +230,7 @@ import SoldOut from './Sold-Out.vue'
 import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
+import CouponItem from '../../components/item/Coupon-Item.vue'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
@@ -224,15 +251,18 @@ export default {
     UsefulLife,
     InfoHeader,
     Instructions,
-    CountDown
+    CountDown,
+    CouponItem
   },
   data () {
     return {
       banners: [],
+      couponList: [],
       productStatus: 2,
       detail: {},
       productSkuModels: [],
       showSpecifica: false,
+      showCoupon: false,
       currentModel: {}, // 当前选中的规格
       commentForm: {
         current: 1,
@@ -284,6 +314,13 @@ export default {
     },
     showBranding () {
       return this.detail.showBranding === 1
+    },
+    couponText () {
+      let text = ''
+      this.couponList.map((item, index) => {
+        return text += `满${item.useLimitAmount}减¥${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
+      })
+      return text
     }
   },
   watch: {
@@ -295,9 +332,10 @@ export default {
       this.getDetail()
     }
   },
-  activated () {
+  async activated () {
     try {
-      this.getDetail()
+      await this.getDetail()
+      await this.getCouponList()
     } catch (e) {
       throw e
     }
@@ -309,7 +347,7 @@ export default {
     this.showHaibao = false
     this.tab = 2
   },
-  mounted () {
+  async mounted () {
     // 其他人的分享id
     let otherShareId = sessionStorage.getItem('shareBrokerId') || ''
     let { brokerId, userId, mallDomain, productId } = this
@@ -377,16 +415,15 @@ export default {
         this.loading = false
       }
     },
-    // async slideChange (imgs, index) {
-    //   if (this.imgels.length < imgs.length) {
-    //     for (let i of imgs) {
-    //       i.crossOrigin = ''
-    //       this.imgels.push(i.cloneNode(true))
-    //     }
-    //   }
-    //   this.haibaoImg = this.imgels[0]
-    //   // this.haibao = ''
-    // },
+    // 获取优惠券
+    async getCouponList () {
+      try {
+        let { result } = await getCouponInDetail()
+        this.couponList = result
+      } catch (e) {
+        throw e
+      }
+    },
     resetState () {
       this.currentModel = {}
       this.banners.splice(0, 1000000)
@@ -788,6 +825,12 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     .pingxuan-right {
       display: flex;
       flex-direction: column;
+    }
+  }
+  .coupon {
+    padding: 0 24px;
+    > .coupon-list {
+      margin-top: 48px;
     }
   }
 </style>
