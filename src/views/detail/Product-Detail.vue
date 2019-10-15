@@ -192,6 +192,8 @@
               :key="i"
               :name="item.couponName"
               :amount="item.amount"
+              :full="item.useLimitAmount"
+              :subtract="item.amount"
             />
           </template>
         </div>

@@ -2,11 +2,11 @@
   <div :class="$style.couponItem">
     <div :class="$style.couponItemRight">
       <div :class="$style.rightTop">
-        <div :class="$style.couponType" v-text="name" />
+        <div :class="$style.couponType">满减券</div>
         <div :class="$style.couponPrice" v-text="amount" />
         <div :class="$style.couponDesc">
-          <div>满50000减5000</div>
-          <div>双十二优惠券</div>
+          <div>满{{ full }}减 {{ subtract }}</div>
+          <div v-text="name" />
         </div>
       </div>
       <div :class="$style.lifeTime">
@@ -101,7 +101,7 @@ export default {
       top: 50%;
       content: '';
       width: 678px;
-      height: 96%;
+      height: 95%;
       border: 2px solid #fff;
       transform: translate(-50%, -50%);
       box-sizing: border-box;
