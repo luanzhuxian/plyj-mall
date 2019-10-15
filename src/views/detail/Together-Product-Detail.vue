@@ -10,6 +10,22 @@
         :type="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' ? 'lesson' : 'product'"
         :banners="banners"
       />
+      <div :class="$style.together">
+        <together-count-down
+          @done="countFinished"
+          activity-text="距活动开始仅剩"
+          :starttime="detail.serverTime"
+          v-if="detail.activityProductModel"
+          :endtime="detail.activityProductModel.activityStartTime"
+        />
+        <div v-if="false" :class="$style.desc">活动商品数量122件，成团最多瓜分1000元</div>
+        <div :class="$style.desc">
+          <div :class="$style.progress">
+            <div :class="$style.percent" :style="{width: '50%'}" />
+          </div>
+          <div>500人</div>
+        </div>
+      </div>
       <DetailInfoBox :loading="loading">
         <info-header :detail="detail" />
         <count-down
@@ -155,10 +171,10 @@ import DetailInfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
 import DetailDesc from '../../components/detail/Desc.vue'
 import DetailInfo from '../../components/detail/Detail.vue'
-import BuyNow from '../../components/detail/Buy-Now.vue'
+import BuyNow from '../../components/detail/Together-Buy-Now.vue'
 import Tags from '../../components/detail/Tags.vue'
 import UsefulLife from '../../components/detail/Useful-Life.vue'
-import InfoHeader from '../../components/detail/Info-Header.vue'
+import InfoHeader from '../../components/detail/Together-Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
 import Price from '../../components/product/Price.vue'
 import Field from '../../components/detail/Field.vue'
@@ -173,6 +189,7 @@ import SoldOut from './Sold-Out.vue'
 import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
+import TogetherCountDown from '../../components/product/Together-Count-Down.vue'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
@@ -193,7 +210,8 @@ export default {
     UsefulLife,
     InfoHeader,
     Instructions,
-    CountDown
+    CountDown,
+    TogetherCountDown
   },
   data () {
     return {
@@ -249,7 +267,7 @@ export default {
       if (this.detail.serverTime - this.detail.shoppingTimeLong < 0) {
         return '暂未开售'
       }
-      return textMap[this.productType] || '立即购买'
+      return '我要参团'
     },
     showBranding () {
       return this.detail.showBranding === 1
@@ -580,6 +598,33 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
 </script>
 
 <style module lang="scss">
+  .together{
+    height: 100px;
+    background: black;
+    padding-left: 118px;
+    .desc{
+      display: flex;
+      color: #ffffff;
+      align-items: center;
+      font-size: 20px;
+      height: 34px;
+      margin-top: 2px;
+      .progress{
+        width: 480px;
+        height: 10px;
+        background: rgba(255, 255, 255, .5);
+        border-radius: 206px;
+        display: flex;
+        align-items: center;
+        margin-right: 16px;
+        .percent{
+          height: 10px;
+          background: #ffffff;
+          border-radius: 206px;
+        }
+      }
+    }
+  }
   .lesson {
     padding-bottom: 120px;
   }

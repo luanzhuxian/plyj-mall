@@ -535,6 +535,7 @@ export default {
     }
   },
   async activated () {
+    console.log(this.$route.query.activeProduct)
     try {
       await this.getProductDetail()
       this.INVOICE_MODEL = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || null
@@ -640,6 +641,7 @@ export default {
       try {
         // 获取订单详细数据
         const { result } = await confirmCart({
+          activeProduct: this.$route.query.activeProduct,
           cartProducts: proList,
           addressSeq: this.selectedAddress.sequenceNbr
         })

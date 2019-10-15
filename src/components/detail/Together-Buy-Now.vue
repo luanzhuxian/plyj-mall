@@ -19,10 +19,11 @@
     <div :class="$style.buttons">
       <button
         :class="$style.addToCart"
-        @click="clickHandler(1)"
+        @click="clickHandler(2)"
         :disabled="loading || allDisabled"
       >
-        加入购物车
+        单独购买
+        <div :class="$style.btnText">¥59.90起</div>
       </button>
       <button
         :class="$style.buyNowBtn"
@@ -30,6 +31,7 @@
         :disabled="loading || allDisabled || disableConfrim"
       >
         {{ confirmText }}
+        <div :class="$style.text">¥59.90起</div>
       </button>
     </div>
     <specification-pop
@@ -101,7 +103,7 @@ export default {
     },
     confirmText: {
       type: String,
-      default: '立即购买'
+      default: '我要参团'
     },
     // 购买的规格
     currentSku: {
@@ -184,7 +186,7 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: false
+          activeProduct: true
         }
       })
     },
@@ -327,7 +329,7 @@ export default {
     width: 220px;
     height: 80px;
     color: #fff;
-    font-size: 30px;
+    font-size: 26px;
     &:disabled {
       color: rgba(255, 255, 255, .4);
     }
@@ -339,5 +341,20 @@ export default {
   .buyNowBtn {
     border-radius: 0 10px 10px 0;
     background-color: $--primary-color;
+  }
+  .btn-text{
+    margin: 4px auto 0;
+    width: 100px;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+    background: #ffffff;
+    border-radius: 304px;
+    font-size: 20px;
+    line-height: 28px;
+    color: #FE7700;
+  }
+  .text{
+    margin-top: 4px;
   }
 </style>

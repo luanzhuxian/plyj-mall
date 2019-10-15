@@ -2,7 +2,7 @@ export default [
   {
     path: '/detail/lesson/:productId/:brokerId?',
     name: 'Lesson',
-    component: () => import('../views/detail/Product-Detail.vue'),
+    component: () => import('../views/detail/Together-Product-Detail.vue'),
     props: true,
     meta: {
       title: '商品详情'
