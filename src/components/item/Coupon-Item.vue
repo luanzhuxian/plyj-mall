@@ -1,14 +1,13 @@
 <template>
   <div :class="$style.couponItem">
     <div :class="$style.wrap">
-      <div :class="$style.sawtooth" :style="{ backgroundImage: `url(${sawtoothImg})` }" />
       <div :class="$style.main">
         <div :class="$style.couponItemLeft">
           <div :class="$style.leftTop">
             <div :class="$style.couponType">满减券</div>
             <div :class="$style.couponPrice" v-text="amount" />
             <div :class="$style.couponDesc">
-              <div>满{{ full }}减 {{ subtract }}</div>
+              <div>满{{ full }}减{{ subtract }}</div>
               <div v-text="name" />
             </div>
           </div>
@@ -28,6 +27,7 @@
             领取
           </div>
           <pl-icon name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
+          <div :class="$style.sawtooth" :style="{ backgroundImage: `url(${sawtoothImg})` }" />
         </div>
       </div>
     </div>
@@ -111,26 +111,17 @@ export default {
     flex-direction: column;
     margin-bottom: 32px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .16);
+    overflow: hidden;
     > .wrap {
       position: relative;
-      padding: 12px;
-      background: linear-gradient(90deg, #ffc9a2 75.75%, #ec6251 75.75%);
+      /*padding: 12px;*/
+      /*background: linear-gradient(90deg, #ffc9a2 75.75%, #ec6251 75.75%);*/
       > .main {
         width: 100%;
         height: max-content;
         display: flex;
-        border: 2px solid #fff;
+        /*border: 2px solid #fff;*/
         box-sizing: border-box;
-      }
-      > .sawtooth {
-        position: absolute;
-        left: 520px;
-        top: 0;
-        content: '';
-        width: 6px;
-        height: 100%;
-        background-repeat: repeat-y;
-        background-size: 100%;
       }
     }
   }
@@ -231,6 +222,17 @@ export default {
       color: #fff;
       font-weight: bold;
       text-shadow: 0 1px 1px rgba(0, 0, 0, 0.30);
+    }
+    > .sawtooth {
+      position: absolute;
+      left: -5px;
+      top: 50%;
+      content: '';
+      width: 6px;
+      height: 100%;
+      transform: translateY(-50%);
+      background-repeat: repeat-y;
+      background-size: 100%;
     }
   }
   .instruction {
