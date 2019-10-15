@@ -165,6 +165,7 @@
     <div :class="$style.buttomTip" v-if="!loading && noStock">
       该商品已全部售罄，请选择其它商品购买
     </div>
+    <!-- 海报弹框 -->
     <transition name="fade">
       <div :class="$style.saveHaibao" v-if="showHaibao">
         <div :class="$style.saveHaibaoContent">
@@ -176,6 +177,22 @@
         </div>
       </div>
     </transition>
+
+    <!-- 优惠券弹框 -->
+    <pl-popup
+      :show.sync="showCoupon"
+      title="领取优惠券"
+      title-align="left"
+    >
+      <div :class="$style.coupon">
+        <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
+        <div :class="$style.couponList">
+          <CouponItem />
+          <CouponItem />
+          <CouponItem />
+        </div>
+      </div>
+    </pl-popup>
   </div>
 </template>
 
@@ -204,6 +221,7 @@ import SoldOut from './Sold-Out.vue'
 import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
+import CouponItem from '../../components/item/Coupon-Item.vue'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
@@ -224,7 +242,8 @@ export default {
     UsefulLife,
     InfoHeader,
     Instructions,
-    CountDown
+    CountDown,
+    CouponItem
   },
   data () {
     return {
@@ -233,6 +252,7 @@ export default {
       detail: {},
       productSkuModels: [],
       showSpecifica: false,
+      showCoupon: true,
       currentModel: {}, // 当前选中的规格
       commentForm: {
         current: 1,
@@ -788,6 +808,12 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     .pingxuan-right {
       display: flex;
       flex-direction: column;
+    }
+  }
+  .coupon {
+    padding: 0 28px;
+    > .coupon-list {
+      margin-top: 48px;
     }
   }
 </style>
