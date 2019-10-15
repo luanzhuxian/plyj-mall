@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.couponItem">
+  <div :class="[$style.couponItem, status ? $style.unavailable : '']">
     <div :class="$style.wrap">
       <div :class="$style.main">
         <div :class="$style.couponItemLeft">
@@ -18,7 +18,10 @@
             </div>
           </div>
         </div>
-        <div :class="$style.couponItemRight">
+        <div
+          :class="$style.couponItemRight"
+          @click.stop="receiveCoupon"
+        >
           <div :class="$style.getNow">
             立即
             <br>
@@ -32,6 +35,7 @@
     <transition name="fade">
       <div v-if="instruction && showInstruction" :class="$style.instruction" v-text="instruction" />
     </transition>
+    <div :class="$style.unavailableDesc" v-if="status" v-text="status" />
   </div>
 </template>
 
@@ -46,6 +50,10 @@ export default {
     }
   },
   props: {
+    status: {
+      type: String,
+      default: ''
+    },
     id: {
       type: String,
       default: ''
@@ -105,12 +113,35 @@ export default {
       cvs.toBlob(blob => {
         this.sawtoothImg = createObjectUrl(blob)
       }, 'image/jpeg', 0.7)
+    },
+    receiveCoupon (e) {
+      this.$emit('receiveCoupon', e)
     }
   }
 }
 </script>
 
 <style module lang="scss">
+  .unavailable {
+    filter: grayscale(100%);
+  }
+
+  .unavailableDesc {
+    width: 240px;
+    height: 80px;
+    color: #FFF;
+    background-color: #4D000000;
+    border: 6px solid #fff;
+    border-radius: 12px;
+    transform: rotate(-10deg);
+    font-size: 44px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 80px;
+    position: absolute;
+    top: 54px;
+    right: 52px;
+  }
   .coupon-item {
     position: relative;
     display: flex;
