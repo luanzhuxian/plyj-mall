@@ -2,7 +2,7 @@
   <div :class="$style.homeTemplateB">
     <Search placeholder="搜索商品" />
     <Banner :data="BANNER" />
-    <Adv v-if="Adv.showStatue === 1" :data="Adv" />
+    <Adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
     <HotItem v-if="POPULAR.showStatue === 1" :data="POPULAR" />
     <appointment-gift :data="{ YUYUE, PINGXUAN }" />
     <Best v-if="CLASS.showStatue === 1" :data="CLASS" />

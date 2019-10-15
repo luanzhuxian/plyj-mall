@@ -60,9 +60,9 @@ export default {
 
 <style module lang="scss">
   .adv {
-    margin-top: 41px;
-    padding: 0 32px;
+    padding: 41px 32px 0;
     height: 324px;
+    background-color: #F4F5F9;
     img {
       width: 100%;
       height: 100%;
