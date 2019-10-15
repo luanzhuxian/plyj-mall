@@ -91,7 +91,15 @@ export default {
       loaded: false,
       // show820: false,
       type: 0,
-      modules: {},
+      modules: {
+        BANNER: null,
+        Adv: null,
+        POPULAR: null,
+        YUYUE: null,
+        PINGXUAN: null,
+        CLASS: null,
+        RECOMMEND: null
+      },
       // haibao: '',
       // pop: '',
       // data88: {
@@ -169,7 +177,7 @@ export default {
     // },
     async getTemplate () {
       try {
-        const { result } = await getTemplate()
+        const { result } = await getTemplate({ type: 1 })
         if (!result) {
           this.noFinish = true
           this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
@@ -180,7 +188,6 @@ export default {
         }
         const { moduleModels } = result
         let { type } = result
-        let modules
         // if (type === 1) {
         //   modules = {
         //     BANNER: null,
@@ -200,37 +207,23 @@ export default {
         //   modules['MODULE_C'] = prodList[1]
         //   modules['MODULE_E'] = prodList[2]
         // }
-        if (type === 3 || type === 4) {
-          modules = {
-            YUYUE: null,
-            PINGXUAN: null,
-            BANNER: null,
-            POPULAR: null,
-            CLASS: null,
-            RECOMMEND: null
-          }
-          modules.BANNER = moduleModels[0]
-          modules.POPULAR = moduleModels[1]
-          modules.YUYUE = moduleModels[2]
-          modules.PINGXUAN = moduleModels[3]
-          modules.CLASS = moduleModels[4]
-          modules.RECOMMEND = moduleModels[5]
+        if (type === 3) {
+          this.modules.BANNER = moduleModels[0]
+          this.modules.POPULAR = moduleModels[1]
+          this.modules.YUYUE = moduleModels[2]
+          this.modules.PINGXUAN = moduleModels[3]
+          this.modules.CLASS = moduleModels[4]
+          this.modules.RECOMMEND = moduleModels[5]
         }
-        // if (type === 2) {
-        //   modules = {
-        //     YUYUE: null,
-        //     PINGXUAN: null,
-        //     BANNER: null,
-        //     POPULAR: null,
-        //     RECOMMEND: null
-        //   }
-        //   modules.BANNER = moduleModels[0]
-        //   modules.POPULAR = moduleModels[1]
-        //   modules.YUYUE = moduleModels[2]
-        //   modules.PINGXUAN = moduleModels[3]
-        //   modules.RECOMMEND = moduleModels[4]
-        // }
-        this.modules = modules
+        if (type === 4) {
+          this.modules.BANNER = moduleModels[0]
+          this.modules.Adv = moduleModels[1]
+          this.modules.POPULAR = moduleModels[2]
+          this.modules.YUYUE = moduleModels[3]
+          this.modules.PINGXUAN = moduleModels[4]
+          this.modules.CLASS = moduleModels[5]
+          this.modules.RECOMMEND = moduleModels[6]
+        }
         this.loaded = true
         this.type = type
       } catch (e) {

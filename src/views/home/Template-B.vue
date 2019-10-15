@@ -2,7 +2,8 @@
   <div :class="$style.homeTemplateB">
     <Search placeholder="搜索商品" />
     <Banner :data="BANNER" />
-    <HotItem :data="POPULAR" v-if="POPULAR.showStatue === 1" />
+    <Adv v-if="Adv.showStatue === 1" :data="Adv" />
+    <HotItem v-if="POPULAR.showStatue === 1" :data="POPULAR" />
     <appointment-gift :data="{ YUYUE, PINGXUAN }" />
     <Best v-if="CLASS.showStatue === 1" :data="CLASS" />
     <BestRecommend
@@ -15,6 +16,7 @@
 <script>
 import Search from './components/Search.vue'
 import Banner from './components/Banner.vue'
+import Adv from './components/Adv.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
@@ -24,6 +26,7 @@ export default {
   name: 'HomeTemplateB',
   components: {
     Banner,
+    Adv,
     Search,
     HotItem,
     Best,
@@ -51,6 +54,9 @@ export default {
     ...mapState(['data88']),
     BANNER () {
       return this.data.BANNER || {}
+    },
+    Adv () {
+      return this.data.Adv || {}
     },
     POPULAR () {
       return this.data.POPULAR || { values: [] }
