@@ -50,7 +50,7 @@ module.exports = {
         // target: 'http://mall.youpenglai.com'
         target: 'http://192.168.130.74'
       },
-      '/live': {
+      '/live/': {
         // target: 'http://mall.youpenglai.com'
         target: 'http://api.polyv.net'
       }
