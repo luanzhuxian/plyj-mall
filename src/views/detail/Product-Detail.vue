@@ -821,7 +821,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     }
   }
   .coupon {
-    padding: 0 28px;
+    padding: 0 24px;
     > .coupon-list {
       margin-top: 48px;
     }

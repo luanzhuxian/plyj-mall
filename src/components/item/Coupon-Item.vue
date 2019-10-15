@@ -7,7 +7,7 @@
             <div :class="$style.couponType">满减券</div>
             <div :class="$style.couponPrice" v-text="amount" />
             <div :class="$style.couponDesc">
-              <div>满{{ full }}减{{ subtract }}</div>
+              <div>满{{ full }}减 {{ subtract }}</div>
               <div v-text="name" />
             </div>
           </div>
@@ -111,16 +111,16 @@ export default {
     flex-direction: column;
     margin-bottom: 32px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .16);
-    overflow: hidden;
     > .wrap {
       position: relative;
-      /*padding: 12px;*/
-      /*background: linear-gradient(90deg, #ffc9a2 75.75%, #ec6251 75.75%);*/
+      padding: 12px;
+      background: linear-gradient(90deg, #ffc9a2 75.75%, #ec6251 75.75%);
+      overflow: hidden;
       > .main {
         width: 100%;
         height: max-content;
         display: flex;
-        /*border: 2px solid #fff;*/
+        border: 2px solid #fff;
         box-sizing: border-box;
       }
     }
@@ -129,7 +129,7 @@ export default {
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 74px 0 36px 44px;
+    padding: 62px 0 24px 32px;
     background-color: #ffc9a2;
   }
   .left-top {
@@ -229,7 +229,7 @@ export default {
       top: 50%;
       content: '';
       width: 6px;
-      height: 100%;
+      height: 120%;
       transform: translateY(-50%);
       background-repeat: repeat-y;
       background-size: 100%;
