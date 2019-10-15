@@ -6,12 +6,16 @@
         <pl-svg name="haibao" />
         <p>分享海报</p>
       </div>
+      <!-- 商品banner -->
       <DetailBanner
         :type="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' ? 'lesson' : 'product'"
         :banners="banners"
       />
+      <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
+        <!-- 加个 润笔 购买数量，关注人数 登信息 -->
         <info-header :detail="detail" />
+        <!-- 开售倒计时 -->
         <count-down
           size="large"
           @done="countFinished"
@@ -20,9 +24,13 @@
           :starttime="detail.serverTime"
           :endtime="detail.shoppingTimeLong"
         />
+        <!-- 商品名称 -->
         <DetailTitle v-text="detail.productName" />
+        <!-- 商品描述 -->
         <DetailDesc v-text="detail.productDesc" />
+        <!-- 商品标签 -->
         <Tags :tags="detail.labelModels" />
+        <!-- 使用期限 -->
         <useful-life
           v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
           :start="detail.validityPeriodStart"
@@ -30,9 +38,16 @@
         />
       </DetailInfoBox>
 
-      <Field v-if="productType === 'PHYSICAL_GOODS'" label="发货" content="普通快递" />
+      <Field
+        v-if="productType === 'PHYSICAL_GOODS'"
+        label="发货"
+        :label-width="120"
+        content="普通快递"
+      />
+
       <Field
         label="选择"
+        :label-width="120"
         :can-click="!noStock && detail.productStatus === 2"
         @click="showSpecifica = true"
       >
@@ -41,6 +56,16 @@
         </template>
         <template v-if="currentModel.skuCode2Name">，<i v-text="currentModel.skuCode2Name" /></template>”
         <span v-if="!currentModel.id">请选择规格</span>
+      </Field>
+
+      <Field
+        v-if="productType === 'PHYSICAL_GOODS'"
+        label="优惠券"
+        :label-width="120"
+      >
+        <span style="color: #FE7700;">
+          123
+        </span>
       </Field>
 
       <div :class="$style.detailOrComment">
@@ -61,10 +86,13 @@
           />
         </div>
       </div>
+
+      <!-- 使用说明 -->
       <Instructions
         v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
         :content="detail.useDesc"
       />
+
       <!-- 品宣入口 -->
       <div v-if="showBranding" :class="$style.pingxuan" @click="$router.push({ name: 'Appointment', query: { showStatus: 'ALL' } })">
         <div :class="$style.pingxuanLeft">
@@ -80,12 +108,14 @@
       </div>
     </template>
 
+    <!-- 售罄 -->
     <SoldOut v-else />
-
+    <!-- 猜你喜欢 -->
     <div style="background-color: #f4f5f9;">
       <you-like :product-id="productId" :is-my="true" />
     </div>
 
+    <!--底部购买按钮  -->
     <buy-now
       type="warning"
       ref="buyNow"
@@ -99,6 +129,7 @@
       :disable-confrim="confirmText === '暂未开售'"
       :limiting="limiting"
     />
+    <!-- 规格弹框 -->
     <specification-pop
       :default-count="defaultCount"
       :sku-list="detail.productSkuModels"

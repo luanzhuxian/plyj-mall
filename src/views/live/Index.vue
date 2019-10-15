@@ -263,7 +263,7 @@ export default {
       liveSdk.on(window.PolyvLiveSdk.EVENTS.CHANNEL_DATA_INIT, (event, data) => {
         liveSdk.setupPlayer({
           el: '#player',
-          type: 'live'
+          type: 'auto'
         })
 
         /* 视频数据已加载，可以播放了 */
@@ -392,7 +392,7 @@ export default {
     }
     &.isPlaying {
       > .player-box {
-        z-index: -1;
+        /*z-index: -1;*/
       }
     }
   }

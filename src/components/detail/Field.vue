@@ -1,12 +1,19 @@
 <template>
   <div :class="$style.fieldBox" @click="clickHandler">
-    <div :class="$style.label" v-text="label" />
+    <div
+      :class="$style.label"
+      v-text="label"
+      :style="{
+        width: labelWidth ? labelWidth / 7.5 + 'vw' : 'max-content',
+        textAlign: labelAlign
+      }"
+    />
     <div v-if="content" :class="$style.fieldContent" v-text="content" />
     <div v-else :class="$style.fieldContent">
       <slot />
     </div>
     <div v-if="canClick" :class="$style.canClick">
-      <pl-svg name="right" color="#ccc" />
+      <pl-icon name="icon-arrow-right" color="#ccc" />
     </div>
   </div>
 </template>
@@ -23,7 +30,15 @@ export default {
       type: String,
       default: ''
     },
-    canClick: Boolean
+    canClick: Boolean,
+    labelWidth: {
+      type: Number,
+      default: 0
+    },
+    labelAlign: {
+      type: String,
+      default: 'left'
+    }
   },
   methods: {
     clickHandler (e) {
@@ -39,26 +54,24 @@ export default {
   .field-box {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     height: 88px;
     margin-top: 20px;
     padding: 0 24px;
     background-color: #fff;
   }
   .label {
-    width: max-content;
-    margin-right: 40px;
     font-size: 28px;
     color: #999;
   }
-  .fieldContent {
+  .field-content {
     flex: 1;
     font-size: 28px;
     color: #000;
     @include elps();
   }
-  .canClick {
-    svg {
-      width: 18px;
-    }
+  .can-click {
+    width: 20px;
+    text-align: center;
   }
 </style>
