@@ -2,8 +2,8 @@
   <div :class="$style.couponItem">
     <div :class="$style.couponItemRight">
       <div :class="$style.rightTop">
-        <div :class="$style.couponType">满减券</div>
-        <div :class="$style.couponPrice">20</div>
+        <div :class="$style.couponType" v-text="name" />
+        <div :class="$style.couponPrice" v-text="amount" />
         <div :class="$style.couponDesc">
           <div>满50000减5000</div>
           <div>双十二优惠券</div>
@@ -37,6 +37,31 @@ export default {
       sawtoothImg: ''
     }
   },
+  props: {
+    id: {
+      type: String,
+      default: ''
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    // 优惠总金额
+    amount: {
+      type: Number,
+      default: 1
+    },
+    // 满多少
+    full: {
+      type: Number,
+      default: 1
+    },
+    // 减多少
+    subtract: {
+      type: Number,
+      default: 1
+    }
+  },
   created () {
     this.sawtooth()
   },
@@ -68,7 +93,6 @@ export default {
   .coupon-item {
     position: relative;
     display: flex;
-    height: 244px;
     margin-bottom: 32px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .16);
     &:after {
@@ -77,7 +101,7 @@ export default {
       top: 50%;
       content: '';
       width: 678px;
-      height: 220px;
+      height: 96%;
       border: 2px solid #fff;
       transform: translate(-50%, -50%);
       box-sizing: border-box;
@@ -87,7 +111,7 @@ export default {
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 62px 0 76px 44px;
+    padding: 74px 0 36px 44px;
     background-color: #ffc9a2;
   }
   .right-top {
@@ -118,6 +142,7 @@ export default {
   .coupon-type {
     width: 34px;
     padding: 6px 0;
+    writing-mode: sideways-rl;
     line-height: 24px;
     text-align: center;
     font-size: 22px;

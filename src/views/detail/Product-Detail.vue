@@ -187,9 +187,13 @@
       <div :class="$style.coupon">
         <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
         <div :class="$style.couponList">
-          <CouponItem />
-          <CouponItem />
-          <CouponItem />
+          <template v-for="(item, i) of couponList">
+            <CouponItem
+              :key="i"
+              :name="item.couponName"
+              :amount="item.amount"
+            />
+          </template>
         </div>
       </div>
     </pl-popup>
@@ -210,7 +214,7 @@ import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
 import Price from '../../components/product/Price.vue'
 import Field from '../../components/detail/Field.vue'
-import { getProductDetail } from '../../apis/product'
+import { getProductDetail, getCouponInDetail } from '../../apis/product'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
@@ -248,6 +252,7 @@ export default {
   data () {
     return {
       banners: [],
+      couponList: [],
       productStatus: 2,
       detail: {},
       productSkuModels: [],
@@ -315,9 +320,10 @@ export default {
       this.getDetail()
     }
   },
-  activated () {
+  async activated () {
     try {
-      this.getDetail()
+      await this.getDetail()
+      await this.getCouponList()
     } catch (e) {
       throw e
     }
@@ -329,7 +335,7 @@ export default {
     this.showHaibao = false
     this.tab = 2
   },
-  mounted () {
+  async mounted () {
     // 其他人的分享id
     let otherShareId = sessionStorage.getItem('shareBrokerId') || ''
     let { brokerId, userId, mallDomain, productId } = this
@@ -397,16 +403,15 @@ export default {
         this.loading = false
       }
     },
-    // async slideChange (imgs, index) {
-    //   if (this.imgels.length < imgs.length) {
-    //     for (let i of imgs) {
-    //       i.crossOrigin = ''
-    //       this.imgels.push(i.cloneNode(true))
-    //     }
-    //   }
-    //   this.haibaoImg = this.imgels[0]
-    //   // this.haibao = ''
-    // },
+    // 获取优惠券
+    async getCouponList () {
+      try {
+        let { result } = await getCouponInDetail()
+        this.couponList = result
+      } catch (e) {
+        throw e
+      }
+    },
     resetState () {
       this.currentModel = {}
       this.banners.splice(0, 1000000)
