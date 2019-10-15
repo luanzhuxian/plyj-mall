@@ -44,6 +44,7 @@ export default {
     font-size: 28px;
     line-height: 45px;
     word-break: break-all;
+    white-space: pre-wrap;
     color: #666;
   }
 </style>

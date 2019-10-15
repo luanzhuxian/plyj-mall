@@ -1,30 +1,39 @@
 <template>
   <div :class="$style.couponItem">
-    <div :class="$style.couponItemRight">
-      <div :class="$style.rightTop">
-        <div :class="$style.couponType">满减券</div>
-        <div :class="$style.couponPrice" v-text="amount" />
-        <div :class="$style.couponDesc">
-          <div>满{{ full }}减 {{ subtract }}</div>
-          <div v-text="name" />
+    <div :class="$style.wrap">
+      <div :class="$style.sawtooth" :style="{ backgroundImage: `url(${sawtoothImg})` }" />
+      <div :class="$style.main">
+        <div :class="$style.couponItemLeft">
+          <div :class="$style.leftTop">
+            <div :class="$style.couponType">满减券</div>
+            <div :class="$style.couponPrice" v-text="amount" />
+            <div :class="$style.couponDesc">
+              <div>满{{ full }}减 {{ subtract }}</div>
+              <div v-text="name" />
+            </div>
+          </div>
+          <div :class="$style.lifeTime">
+            <div>有效期：<i>2019.4.15-2019.4.30</i></div>
+            <div v-show="instruction" @click="showInstruction = !showInstruction">
+              使用说明 <pl-icon :class="{ [$style.showInstruction]: showInstruction }" name="icon-arrow-down" color="#EC6251" size="10" />
+            </div>
+          </div>
+        </div>
+        <div
+          :class="$style.couponItemRight"
+        >
+          <div :class="$style.getNow">
+            立即
+            <br>
+            领取
+          </div>
+          <pl-icon name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
         </div>
       </div>
-      <div :class="$style.lifeTime">
-        <div>有效期：<i>2019.4.15-2019.4.30</i></div>
-        <div>使用说明 <pl-icon name="icon-arrow-down" color="#EC6251" size="10" /></div>
-      </div>
     </div>
-    <div
-      :class="$style.couponItemLeft"
-    >
-      <div :class="$style.getNow">
-        立即
-        <br>
-        领取
-      </div>
-      <pl-icon name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
-      <div :class="$style.sawtooth" :style="{ backgroundImage: `url(${sawtoothImg})` }" />
-    </div>
+    <transition name="fade">
+      <div v-if="instruction && showInstruction" :class="$style.instruction" v-text="instruction" />
+    </transition>
   </div>
 </template>
 
@@ -34,7 +43,8 @@ export default {
   name: 'CouponItem',
   data () {
     return {
-      sawtoothImg: ''
+      sawtoothImg: '',
+      showInstruction: false
     }
   },
   props: {
@@ -60,6 +70,11 @@ export default {
     subtract: {
       type: Number,
       default: 1
+    },
+    // 说明
+    instruction: {
+      type: String,
+      default: ''
     }
   },
   created () {
@@ -93,28 +108,40 @@ export default {
   .coupon-item {
     position: relative;
     display: flex;
+    flex-direction: column;
     margin-bottom: 32px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .16);
-    &:after {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      content: '';
-      width: 678px;
-      height: 95%;
-      border: 2px solid #fff;
-      transform: translate(-50%, -50%);
-      box-sizing: border-box;
+    > .wrap {
+      position: relative;
+      padding: 12px;
+      background: linear-gradient(90deg, #ffc9a2 75.75%, #ec6251 75.75%);
+      > .main {
+        width: 100%;
+        height: max-content;
+        display: flex;
+        border: 2px solid #fff;
+        box-sizing: border-box;
+      }
+      > .sawtooth {
+        position: absolute;
+        left: 520px;
+        top: 0;
+        content: '';
+        width: 6px;
+        height: 100%;
+        background-repeat: repeat-y;
+        background-size: 100%;
+      }
     }
   }
-  .coupon-item-right {
+  .coupon-item-left {
     display: flex;
     flex-direction: column;
     flex: 1;
     padding: 74px 0 36px 44px;
     background-color: #ffc9a2;
   }
-  .right-top {
+  .left-top {
     display: flex;
     align-items: center;
   }
@@ -180,12 +207,19 @@ export default {
         background-color: #fff;
         border-radius: 14px;
         > i {
+          width: 18px;
+          line-height: 18px;
           vertical-align: 2px;
+          transform: rotate(0);
+          transition: transform .2s linear;
+          &.showInstruction {
+            transform: rotate(-180deg);
+          }
         }
       }
     }
   }
-  .coupon-item-left {
+  .coupon-item-right {
     position: relative;
     display: flex;
     justify-content: center;
@@ -198,15 +232,12 @@ export default {
       font-weight: bold;
       text-shadow: 0 1px 1px rgba(0, 0, 0, 0.30);
     }
-    > .sawtooth {
-      position: absolute;
-      left: 0;
-      top: 0;
-      content: '';
-      width: 6px;
-      height: 100%;
-      background-repeat: repeat-y;
-      background-size: 100%;
-    }
+  }
+  .instruction {
+    padding: 20px 24px;
+    word-break: break-all;
+    white-space: pre-line;
+    font-size: 24px;
+    color: #666;
   }
 </style>

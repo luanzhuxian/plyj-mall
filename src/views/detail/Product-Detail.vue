@@ -61,7 +61,9 @@
       <Field
         v-if="productType === 'PHYSICAL_GOODS'"
         label="优惠券"
+        can-click
         :label-width="120"
+        @click="showCoupon = true"
       >
         <span style="color: #FE7700;">
           123
@@ -194,6 +196,7 @@
               :amount="item.amount"
               :full="item.useLimitAmount"
               :subtract="item.amount"
+              :instruction="item.brief"
             />
           </template>
         </div>
@@ -259,7 +262,7 @@ export default {
       detail: {},
       productSkuModels: [],
       showSpecifica: false,
-      showCoupon: true,
+      showCoupon: false,
       currentModel: {}, // 当前选中的规格
       commentForm: {
         current: 1,
