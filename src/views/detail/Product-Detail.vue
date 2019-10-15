@@ -65,9 +65,7 @@
         :label-width="120"
         @click="showCoupon = true"
       >
-        <span style="color: #FE7700;">
-          123
-        </span>
+        <span style="color: #FE7700;" v-text="couponText" />
       </Field>
 
       <div :class="$style.detailOrComment">
@@ -197,6 +195,8 @@
               :full="item.useLimitAmount"
               :subtract="item.amount"
               :instruction="item.brief"
+              :use-end-time="item.useEndTime"
+              :use-start-time="item.useStartTime"
             />
           </template>
         </div>
@@ -314,6 +314,13 @@ export default {
     },
     showBranding () {
       return this.detail.showBranding === 1
+    },
+    couponText () {
+      let text = ''
+      this.couponList.map((item, index) => {
+        return text += `满${item.useLimitAmount}减¥${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
+      })
+      return text
     }
   },
   watch: {

@@ -12,15 +12,13 @@
             </div>
           </div>
           <div :class="$style.lifeTime">
-            <div>有效期：<i>2019.4.15-2019.4.30</i></div>
+            <div>有效期：<i>{{ useStartTime | dateFormat('YYYY-MM-DD') }}~{{ useEndTime | dateFormat('YYYY-MM-DD') }}</i></div>
             <div v-show="instruction" @click="showInstruction = !showInstruction">
               使用说明 <pl-icon :class="{ [$style.showInstruction]: showInstruction }" name="icon-arrow-down" color="#EC6251" size="10" />
             </div>
           </div>
         </div>
-        <div
-          :class="$style.couponItemRight"
-        >
+        <div :class="$style.couponItemRight">
           <div :class="$style.getNow">
             立即
             <br>
@@ -73,6 +71,14 @@ export default {
     },
     // 说明
     instruction: {
+      type: String,
+      default: ''
+    },
+    useStartTime: {
+      type: String,
+      default: ''
+    },
+    useEndTime: {
       type: String,
       default: ''
     }
