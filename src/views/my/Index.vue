@@ -125,6 +125,26 @@
           </swiper>
         </div>
       </div>
+      <!-- 优惠劵 -->
+      <div :class="$style.panel">
+        <div :class="$style.welfare">
+          <router-link :to="{ name: 'MyCoupon'}" :class="$style.welfareItem">
+            <div>
+              <h5>我的卡券</h5>
+              <span>福利多多帮你省钱</span>
+            </div>
+            <pl-icon name="icon-coupon" width="72" height="72" type="svg" />
+          </router-link>
+          <div :class="$style.segmentation" />
+          <router-link :to="{ name: 'MyPresent'}" :class="$style.welfareItem">
+            <div>
+              <h5>我的礼品</h5>
+              <span>到店核销领礼品</span>
+            </div>
+            <pl-icon name="icon-present" width="72" height="72" type="svg" />
+          </router-link>
+        </div>
+      </div>
       <router-link
         v-if="isApplyBtnShow"
         :class="[$style.panel, $style.tip]"
@@ -652,6 +672,57 @@ export default {
     }
   }
   /* 订单 ends */
+
+  /* 我的优惠券 + 我的礼品 start */
+  .welfare {
+    display: flex;
+    height: 138px;
+    position: relative;
+
+    .segmentation {
+      width: 2px;
+      height: 86px;
+      background: rgba(238, 238, 238, 1);
+      opacity: 1;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+
+    .welfare-item {
+      flex: 1;
+      margin: 28px 20px;
+      clear: both;
+      div {
+        float: left;
+        h5 {
+          height:44px;
+          font-size:32px;
+          font-weight:bold;
+          line-height:44px;
+          color:#333;
+        }
+
+        span {
+          height:34px;
+          font-size:24px;
+          font-weight:400;
+          line-height:34px;
+          color:#999;
+          opacity:1;
+        }
+      }
+
+      svg {
+        float: right;
+      }
+    }
+  }
+
+  /* 我的优惠券 + 我的礼品 end */
 
   /* helper starts */
   .helper {

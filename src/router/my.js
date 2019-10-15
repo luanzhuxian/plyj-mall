@@ -94,5 +94,21 @@ export default [
     meta: {
       title: '润笔明细'
     }
+  },
+  {
+    path: '/my/welfare/coupon',
+    name: 'MyCoupon',
+    component: () => import('../views/my/welfare/coupon.vue'),
+    meta: {
+      title: '我的卡券'
+    }
+  },
+  {
+    path: '/my/welfare/present',
+    name: 'MyPresent',
+    component: () => import('../views/my/welfare/present.vue'),
+    meta: {
+      title: '我的礼品'
+    }
   }
 ]
