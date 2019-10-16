@@ -1,5 +1,4 @@
 
-
 <template>
   <div>
     <div class="tab-box">
@@ -144,38 +143,38 @@
 </template>
 
 <script>
-  import { generateQrcode } from '../../../assets/js/util'
-  export default {
-    name: 'HelperPoster',
-    data () {
-      return {
-        qrcode: '',
-        tabs: [{ name: '未兑换', id: 1 }, { name: '已兑换', id: 2 }, { name: '已过期', id: 3 }],
-        activeId: 1,
-        isEdit: false,
-        isCodeShow: false
-      }
+import { generateQrcode } from '../../../assets/js/util'
+export default {
+  name: 'HelperPoster',
+  data () {
+    return {
+      qrcode: '',
+      tabs: [{ name: '未兑换', id: 1 }, { name: '已兑换', id: 2 }, { name: '已过期', id: 3 }],
+      activeId: 1,
+      isEdit: false,
+      isCodeShow: false
+    }
+  },
+  computed: {
+  },
+  async mounted () {
+    this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper?shareUserId=${'adasds'}`, 0, null, null, 'url')
+  },
+  async activated () {
+  },
+  methods: {
+    handleClick (item) {
+      this.activeId = item.id
     },
-    computed: {
+    async edit () {
+      await this.$confirm({ html: `<p>兑换成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
+      this.isEdit = !this.isEdit
     },
-    async mounted () {
-      this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper?shareUserId=${'adasds'}`, 0, null, null, 'url')
-    },
-    async activated () {
-    },
-    methods: {
-      handleClick (item) {
-        this.activeId = item.id
-      },
-      async edit () {
-        await this.$confirm({ html: `<p>兑换成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
-        this.isEdit = !this.isEdit
-      },
-      codeShow () {
-        this.isCodeShow = false
-      }
+    codeShow () {
+      this.isCodeShow = false
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
