@@ -60,7 +60,7 @@
               <div class="content-box">
                 <div content="content-detail">
                   <p class="detail-name color3">{{ item.giftName }}</p>
-                  <p class="detail-coupon color-E16">砍价活动礼品兑换券</p>
+                  <p class="detail-coupon color-E16">{{ item.brief }}</p>
                 </div>
                 <div class="content-button">
                   <pl-button round="round" background-color="#EB5C20" @click="checkCode(item)">立即兑换</pl-button>
@@ -95,8 +95,8 @@
             <div class="content-detail-box">
               <div class="content-box">
                 <div content="content-detail">
-                  <p class="detail-name color-c">CHERRY机械键盘</p>
-                  <p class="detail-coupon color-c">砍价活动礼品兑换券</p>
+                  <p class="detail-name color-c">{{ item.giftName }}</p>
+                  <p class="detail-coupon color-c">{{ item.brief }}</p>
                 </div>
                 <div class="content-button">
                   <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
@@ -131,8 +131,8 @@
             <div class="content-detail-box">
               <div class="content-box">
                 <div content="content-detail">
-                  <p class="detail-name color-c">CHERRY机械键盘</p>
-                  <p class="detail-coupon color-c">砍价活动礼品兑换券</p>
+                  <p class="detail-name color-c">{{ item.giftName }}</p>
+                  <p class="detail-coupon color-c">{{ item.brief }}</p>
                 </div>
                 <div class="content-button">
                   <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
@@ -154,7 +154,7 @@
 
 <script>
 import { generateQrcode } from '../../../assets/js/util'
-import { getCityListByParentId, deleteGift } from '../../../apis/my-coupon'
+import { getCityListByParentId, deleteGift, getGiftDetailById } from '../../../apis/my-coupon'
 export default {
   name: 'HelperPoster',
   data () {
@@ -167,7 +167,8 @@ export default {
       isCodeShow: false,
       data0: [],
       data1: [],
-      data99: []
+      data99: [],
+      timer: ''
     }
   },
   computed: {
@@ -179,6 +180,9 @@ export default {
     this.getList()
   },
   async activated () {
+  },
+  deactivated () {
+    clearInterval(this.timer)
   },
   methods: {
     async deleteCode () {
@@ -217,6 +221,16 @@ export default {
       this.isCodeShow = true
       this.activeItem = item
       this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper?shareUserId=${item.redeemCode}`, 0, null, null, 'url')
+      this.checkCodeComplete(item.id)
+    },
+    async checkCodeComplete (id) {
+      this.timer = setInterval(async () => {
+        const { result: res } = await getGiftDetailById({ id: id })
+        if (res.status) {
+          clearInterval(this.timer)
+          this.getList()
+        }
+      }, 3000)
     },
     async getList () {
       const { result: res } = await getCityListByParentId({ status: this.activeId })

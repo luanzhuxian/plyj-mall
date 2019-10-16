@@ -20,8 +20,7 @@ const externals =
       'vue-awesome-swiper': 'VueAwesomeSwiper',
       'ali-oss': 'OSS',
       'compressorjs': 'Compressor',
-      'js-cookie': 'Cookies',
-      'socket.io-client': 'io'
+      'js-cookie': 'Cookies'
     }
     : {}
 module.exports = {
