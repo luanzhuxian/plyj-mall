@@ -8,7 +8,9 @@
     "build:dev": "vue-cli-service build --model dev",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "svg": "vsvg -s ./src/assets/svg -t ./src/assets/fonts/svg",
+    "svg:ui": "vsvg -s ./src/components/penglai-ui/assets/svg -t ./src/components/penglai-ui/assets/icon"
   },
   "dependencies": {
     "ali-oss": "^6.1.1",

@@ -95,11 +95,27 @@
           </template>
         </div>
         <div v-if="tab === 2" :class="$style.couponList">
-          <div :class="$style.canUse">
+          <div :class="$style.tabTitle">
             可用优惠券（20张）
           </div>
           <div>
             <CouponItem />
+          </div>
+        </div>
+        <div v-if="tab === 3" :class="$style.productList">
+          <div :class="$style.tabTitle">
+            可用优惠券（20张）
+          </div>
+          <div :class="$style.product">
+            <img src="https://img.alicdn.com/tfs/TB1ScSpiNv1gK0jSZFFXXb0sXXa-1130-500.jpg_q100.jpg_.webp" alt="">
+            <div :class="$style.left">
+              <div :class="$style.name">1</div>
+              <div :class="$style.price">2</div>
+              <div :class="$style.count">3</div>
+            </div>
+            <div :class="$style.vieFor">
+              <pl-icon name="icon-vie-for" color="#fff" size="40" />
+            </div>
           </div>
         </div>
       </div>
@@ -188,35 +204,38 @@ export default {
   activated () {
   },
   async mounted () {
-    let { channelId, appId, channeUserId } = this
-    let player = polyvLivePlayer({
-      wrap: "#player",
-      width:'100%',
-      height:'100%',
-      uid:channeUserId,
-      isAutoChange:true,
-      vid :channelId,
-      x5: false,
-      hasControl: true,
-      x5FullPage: true,
-      forceH5: true,
-      useH5Page: true
-    });
-    let timer = setInterval(() => {
-      let video = document.querySelector('#player video')
-      if (video) {
-        // video.setAttribute('x5-video-player-fullscreen', true)
-        // video.setAttribute('x5-video-player-type', 'h5-page')
-        video.addEventListener("x5videoenterfullscreen", function() {
-          video.style.width = window.screen.width + 'px'
-          video.style.height = window.screen.height + 'px'
-        }, false)
-        clearInterval(timer)
-      }
-    }, 500)
+    this.initPlayer()
     this.initSocket()
   },
   methods: {
+    initPlayer () {
+      let { channelId, appId, channeUserId } = this
+      let player = polyvLivePlayer({
+        wrap: "#player",
+        width:'100%',
+        height:'100%',
+        uid:channeUserId,
+        isAutoChange:true,
+        vid :channelId,
+        x5: false,
+        hasControl: true,
+        x5FullPage: true,
+        forceH5: true,
+        useH5Page: true
+      });
+      let timer = setInterval(() => {
+        let video = document.querySelector('#player video')
+        if (video) {
+          // video.setAttribute('x5-video-player-fullscreen', true)
+          // video.setAttribute('x5-video-player-type', 'h5-page')
+          video.addEventListener("x5videoenterfullscreen", function() {
+            video.style.width = window.screen.width + 'px'
+            video.style.height = window.screen.height + 'px'
+          }, false)
+          clearInterval(timer)
+        }
+      }, 500)
+    },
     /* 连接聊天服务器 */
     initSocket () {
       let { userName, userId, openId, avatar, channelId } = this
@@ -540,10 +559,63 @@ export default {
 
   .coupon-list {
     padding: 22px 24px 0 24px;
-    > .can-use {
-      margin-bottom: 32px;
-      font-size: 32px;
-      line-height: 44px;
+  }
+  .product-list {
+    padding: 22px 24px 0 24px;
+  }
+  .tab-title {
+    margin-bottom: 32px;
+    font-size: 32px;
+    line-height: 44px;
+  }
+  .product {
+    position: relative;
+    display: flex;
+    height: 262px;
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-sizing: border-box;
+    > .vie-for {
+      position: absolute;
+      bottom: 20px;
+      right: 16px;
+      width: 72px;
+      height: 72px;
+      line-height: 72px;
+      text-align: center;
+      background-color: #fe7700;
+      border-radius: 36px;
+    }
+    > img {
+      width: 314px;
+      height: 208px;
+      margin-right: 20px;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+    > .left {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+      > .name {
+        line-height: 38px;
+        font-size: 28px;
+        @include elps-wrap(2);
+      }
+      > .price {
+        margin-top: 28px;
+        font-size: 36px;
+        line-height: 50px;
+        color: #fe7700;
+        font-weight: bold;
+      }
+      > .count {
+        margin-top: 4px;
+        font-size: 24px;
+        color: #999;
+        line-height: 34px;
+      }
     }
   }
 
