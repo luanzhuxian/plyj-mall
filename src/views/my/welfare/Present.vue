@@ -22,14 +22,14 @@
             礼品兑换
           </p>
           <p class="code-date">
-            使用有效期至 2019-10-10  22:00:00
+            使用有效期至 {{ activeItem.useEndTime }}
           </p>
         </div>
         <div class="code-box-content">
           <div class="code-img">
             <img :src="qrcode" alt="">
           </div>
-          <p class="code-num">5239 5174 1521</p>
+          <p class="code-num">{{ activeItem.redeemCode.slice(0 ,2) }} {{ activeItem.redeemCode.slice(2) | separator(' ', 4) }}</p>
           <p class="code-description">请出示给维码给机构人员</p>
         </div>
         <div class="code-save">长按图片保存分享给好友</div>
@@ -38,29 +38,35 @@
         </div>
       </div>
     </div>
-    <div class="item-box" v-show="activeId === 1">
-      <div class="empty" v-if="false">
+    <div class="delete-button" v-if="isEdit">
+      <pl-button @click="deleteCode" size="squarelarge" background-color="#FE7700">删除</pl-button>
+    </div>
+    <div class="item-box" v-show="activeId === 0">
+      <div class="empty" v-if="!data0.length">
         <pl-icon name="icon-zanwulipin" type="svg" width="240" height="240" />
         <span>暂无优惠卷</span>
       </div>
-      <div class="items" v-else>
+      <div class="items" v-else v-for="(item,index) of data0" :key="index">
         <div class="delete-box" v-if="isEdit">
-          <pl-icon name="icon-xuanzhong" color="#FE7700" size="28" />
+          <pl-icon @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" color="#FE7700" size="28" />
+          <pl-icon @click="choose(item)" v-else name="icon-success1" color="#ccc" size="28" />
         </div>
         <div class="item">
           <div class="item-content">
             <div class="content-img-box">
-              <img src="../../../assets/images/order-complete-bg.png" alt="">
+              <img :src="item.giftImage" alt="">
             </div>
             <div class="content-detail-box">
-              <div content="content-detail">
-                <p class="detail-name color3">CHERRY机械键盘</p>
-                <p class="detail-coupon color-E16">砍价活动礼品兑换券</p>
-                <p class="detail-date color-c">有效期:2019.4.15-2019.4.30</p>
+              <div class="content-box">
+                <div content="content-detail">
+                  <p class="detail-name color3">{{ item.giftName }}</p>
+                  <p class="detail-coupon color-E16">砍价活动礼品兑换券</p>
+                </div>
+                <div class="content-button">
+                  <pl-button round="round" background-color="#EB5C20" @click="checkCode(item)">立即兑换</pl-button>
+                </div>
               </div>
-              <div class="content-button">
-                <pl-button round="round" background-color="#EB5C20">立即兑换</pl-button>
-              </div>
+              <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
             </div>
           </div>
           <div class="item-description">
@@ -71,12 +77,12 @@
         </div>
       </div>
     </div>
-    <div class="item-box" v-show="activeId === 2">
-      <div class="empty">
+    <div class="item-box" v-show="activeId === 1">
+      <div class="empty" v-if="!data99.length">
         <pl-icon name="icon-zanwulipin" type="svg" width="240" height="240" />
         <span>暂无优惠卷</span>
       </div>
-      <div class="items">
+      <div class="items" v-else>
         <div class="delete-box" v-if="isEdit">
           <pl-icon name="icon-xuanzhong" color="#FE7700" size="28" />
         </div>
@@ -87,14 +93,16 @@
               <img src="../../../assets/images/order-complete-bg.png" alt="">
             </div>
             <div class="content-detail-box">
-              <div content="content-detail">
-                <p class="detail-name color-c">CHERRY机械键盘</p>
-                <p class="detail-coupon color-c">砍价活动礼品兑换券</p>
-                <p class="detail-date color-c">有效期:2019.4.15-2019.4.30</p>
+              <div class="content-box">
+                <div content="content-detail">
+                  <p class="detail-name color-c">CHERRY机械键盘</p>
+                  <p class="detail-coupon color-c">砍价活动礼品兑换券</p>
+                </div>
+                <div class="content-button">
+                  <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
+                </div>
               </div>
-              <div class="content-button">
-                <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
-              </div>
+              <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
             </div>
           </div>
           <div class="item-description">
@@ -105,12 +113,12 @@
         </div>
       </div>
     </div>
-    <div class="item-box" v-show="activeId === 3">
-      <div class="empty">
+    <div class="item-box" v-show="activeId === 99">
+      <div class="empty" v-if="!data1.length">
         <pl-icon name="icon-zanwulipin" type="svg" width="240" height="240" />
         <span>暂无优惠卷</span>
       </div>
-      <div class="items">
+      <div class="items" v-else>
         <div class="delete-box" v-if="isEdit">
           <pl-icon name="icon-xuanzhong" color="#FE7700" size="28" />
         </div>
@@ -121,14 +129,16 @@
               <img src="../../../assets/images/order-complete-bg.png" alt="">
             </div>
             <div class="content-detail-box">
-              <div content="content-detail">
-                <p class="detail-name color-c">CHERRY机械键盘</p>
-                <p class="detail-coupon color-c">砍价活动礼品兑换券</p>
-                <p class="detail-date color-c">有效期:2019.4.15-2019.4.30</p>
+              <div class="content-box">
+                <div content="content-detail">
+                  <p class="detail-name color-c">CHERRY机械键盘</p>
+                  <p class="detail-coupon color-c">砍价活动礼品兑换券</p>
+                </div>
+                <div class="content-button">
+                  <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
+                </div>
               </div>
-              <div class="content-button">
-                <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
-              </div>
+              <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
             </div>
           </div>
           <div class="item-description">
@@ -144,30 +154,103 @@
 
 <script>
 import { generateQrcode } from '../../../assets/js/util'
+import { getCityListByParentId, deleteGift } from '../../../apis/my-coupon'
 export default {
   name: 'HelperPoster',
   data () {
     return {
+      activeItem: {},
       qrcode: '',
-      tabs: [{ name: '未兑换', id: 1 }, { name: '已兑换', id: 2 }, { name: '已过期', id: 3 }],
-      activeId: 1,
+      tabs: [{ name: '未兑换', id: 0 }, { name: '已兑换', id: 1 }, { name: '已过期', id: 99 }],
+      activeId: 0,
       isEdit: false,
-      isCodeShow: false
+      isCodeShow: false,
+      data0: [],
+      data1: [],
+      data99: []
     }
   },
   computed: {
   },
+  created () {
+    this.getList()
+  },
   async mounted () {
-    this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper?shareUserId=${'adasds'}`, 0, null, null, 'url')
+    this.getList()
   },
   async activated () {
   },
   methods: {
+    async deleteCode () {
+      const array = []
+      let data = []
+      if (this.activeId === 0) {
+        data = this.data0
+      }
+      if (this.activeId === 1) {
+        data = this.data1
+      }
+      if (this.activeId === 99) {
+        data = this.data99
+      }
+      for (const item of data) {
+        if (item.isSelect) {
+          array.push(item.id)
+        }
+      }
+      if (!array.length) {
+        this.$warning('请选择删除的礼品')
+      }
+      try {
+        await deleteGift(array)
+        this.$success('删除成功')
+        this.getList()
+        this.isEdit = false
+      } catch (e) {
+        throw e
+      }
+    },
+    choose (item) {
+      item.isSelect = !item.isSelect
+    },
+    async checkCode (item) {
+      this.isCodeShow = true
+      this.activeItem = item
+      this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper?shareUserId=${item.redeemCode}`, 0, null, null, 'url')
+    },
+    async getList () {
+      const { result: res } = await getCityListByParentId({ status: this.activeId })
+      const records = res.records
+      for (const item of records) {
+        item.isSelect = false
+      }
+      if (this.activeId === 0) {
+        this.data0 = records
+      }
+      if (this.activeId === 1) {
+        this.data1 = records
+      }
+      if (this.activeId === 99) {
+        this.data99 = records
+      }
+    },
     handleClick (item) {
       this.activeId = item.id
+      this.getList()
     },
     async edit () {
-      await this.$confirm({ html: `<p>兑换成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
+      let data = []
+      if (this.activeId === 0) {
+        data = this.data0
+      }
+      if (this.activeId === 1) {
+        data = this.data1
+      }
+      if (this.activeId === 99) {
+        data = this.data99
+      }
+      if (!data.length) return
+      // await this.$confirm({ html: `<p>兑换成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
       this.isEdit = !this.isEdit
     },
     codeShow () {
@@ -192,6 +275,11 @@ export default {
   }
   .color-c {
     color: #CCCCCC;
+  }
+  .delete-button{
+    width: 100vw;
+    position: fixed;
+    bottom: 0;
   }
   .code-mongolian{
     position: fixed;
@@ -383,25 +471,28 @@ export default {
           height: 10px;
           border-radius: 20px 20px 0 0;
           background-color: #f4f5f9;
-          /*background-color: #e60000;*/
         }
         .content-detail-box{
           display: flex;
+          flex-direction: column;
           flex: 1;
-          justify-content: space-between;
           padding: 18px 20px 10px 24px;
+          .content-box{
+            display: flex;
+            justify-content: space-between;
+          }
           .detail-name{
             font-size: 24px;
             line-height: 34px;
           }
           .detail-coupon{
+            width: 200px;
             margin-top: 10px;
             font-size: 22px;
             line-height: 32px;
           }
           .detail-date{
-            position: absolute;
-            bottom: 20px;
+            margin-top: 15px;
             font-size: 20px;
             line-height: 24px;
           }
