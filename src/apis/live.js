@@ -1,7 +1,8 @@
 /* eslint-disable */
-import axios from 'axios'
-import { router } from '../router'
-const Instance = axios.create()
+import Axios from 'axios'
+const Instance = Axios.create({
+  timeout: 15000
+})
 class ResponseError extends Error {
   constructor (message) {
     super(message)
@@ -9,11 +10,10 @@ class ResponseError extends Error {
     this.name = 'ResponseError'
   }
 }
-Instance.defaults.timeout = 15000
 // 添加请求拦截器
-// Instance.interceptors.request.use(request, reqError)
+Instance.interceptors.request.use(request, reqError)
 // 添加响应拦截器
-// Instance.interceptors.response.use(response, resError)
+Instance.interceptors.response.use(response, resError)
 
 /**
  * 通过HTTP接口在聊天室发送消息
@@ -51,21 +51,28 @@ export const sendCustomMessage = (channelId, data) => {
 }
 /**
  * 从我们服务器获取去签名
- * @param str {String} 要签名的字符串
+ * @param data {Object} 要签名的字符串
+ * roomId { Integer } 房间号
+ * signMsg { String } 加密消息
  * @returns {Promise<AxiosResponse<T>>}
  */
-export const sign = str => Instance.post(`/live/v1/mall/live/sign`, { str })
+export const sign = data => Instance.post(`/apis/v1/mall/live/room/sign`, data)
 
-function request () {
-
+function request (config) {
+  return config
 }
-function reqError () {
-
+function reqError (error) {
+  return Promise.reject(error)
 }
 function response (response) {
   const data = response.data
-  const config = response.config
-  return data
+  if (data.code === 200 || data.status === 200) {
+    if (data.hasOwnProperty('result')) {
+      return data.result
+    }
+    return data
+  }
+  return Promise.reject(new ResponseError(data.message))
 }
 function resError (error) {
   console.log(error)
@@ -80,12 +87,9 @@ function resError (error) {
     msg = '服务器正在开小差~( ˶‾᷄࿀‾᷅˵ )'
   }
   if (msg.indexOf('Network Error') > -1) {
-    router.push({ name: 'NetError' })
-    return
+    msg = '网络连接失败'
   }
-  return Promise.reject(new ResponseError(JSON.stringify({
-    message: msg
-  }, null, 4)))
+  return Promise.reject(new ResponseError(msg))
 }
 
 // 生成formData数据
