@@ -184,7 +184,7 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: false
+          activeProduct: 1
         }
       })
     },
