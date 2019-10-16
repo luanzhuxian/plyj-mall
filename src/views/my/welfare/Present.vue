@@ -79,7 +79,7 @@
     </div>
     <div class="item-box" v-show="activeId === 1">
       <div class="empty" v-if="!data99.length">
-        <pl-icon name="icon-zanwulipin" type="svg" width="240" height="240" />
+        <pl-icon name="icon-youhuiquan1" type="svg" width="240" height="240" />
         <span>暂无优惠卷</span>
       </div>
       <div class="items" v-else>
