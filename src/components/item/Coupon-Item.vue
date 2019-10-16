@@ -20,12 +20,23 @@
         </div>
         <div
           :class="$style.couponItemRight"
-          @click.stop="receiveCoupon"
+          @click.stop="couponClick"
         >
           <div :class="$style.getNow">
-            立即
+            <span v-if="!isAvailableStatus">
+              立即
+              <br>
+              领取
+            </span>
+            <span v-if="isAvailableStatus">
+              去
+              <br>
+              使
+              <br>
+              用
+            </span>
             <br>
-            领取
+            <span :class="$style.receiveCount">{{ receiveCount? `(${receiveCount}次)`: '' }}</span>
           </div>
           <pl-icon name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
           <div :class="$style.sawtooth" :style="{ backgroundImage: `url(${sawtoothImg})` }" />
@@ -89,6 +100,14 @@ export default {
     useEndTime: {
       type: String,
       default: ''
+    },
+    isAvailableStatus: {
+      type: Boolean,
+      default: false
+    },
+    receiveCount: {
+      type: Number,
+      default: 0
     }
   },
   created () {
@@ -114,8 +133,14 @@ export default {
         this.sawtoothImg = createObjectUrl(blob)
       }, 'image/jpeg', 0.7)
     },
-    receiveCoupon (e) {
-      this.$emit('receiveCoupon', e)
+    couponClick (e) {
+      if (this.isAvailableStatus) {
+        this.$router.push({
+          path: '/Classify'
+        })
+      } else {
+        this.$emit('couponClick', e)
+      }
     }
   }
 }
@@ -148,6 +173,7 @@ export default {
     flex-direction: column;
     margin-bottom: 32px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .16);
+    width: 100%;
     > .wrap {
       position: relative;
       padding: 12px;
@@ -254,11 +280,18 @@ export default {
     align-items: center;
     width: 154px;
     background-color: #EC6251;
+    padding-right: 10px;
     > .get-now {
       font-size: 32px;
       color: #fff;
       font-weight: bold;
       text-shadow: 0 1px 1px rgba(0, 0, 0, 0.30);
+      position: relative;
+      .receive-count {
+        position: absolute;
+        font-weight: normal;
+        width: 150px;
+      }
     }
     > .sawtooth {
       position: absolute;

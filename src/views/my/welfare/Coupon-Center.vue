@@ -16,9 +16,12 @@
           @more="refreshHandler"
           ref="loadMore"
           no-content-tip="暂无优惠券"
-          icon="icon-coupon"
+          no-icon
         >
           <template>
+            <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
+              <pl-icon name="icon-coupon1" width="240" height="240" type="svg" />
+            </div>
             <CouponItem
               v-for="item in couponList"
               :key="item.id"
@@ -28,7 +31,11 @@
               :full="item.useLimitAmount"
               :subtract="item.amount"
               :instruction="item.brief"
-              @receiveCoupon="receiveCoupon(item.id)"
+              :use-start-time="item.useStartTime"
+              :use-end-time="item.useEndTime"
+              :status="item.canReceive?'':'已领取'"
+              :receive-count="item.count"
+              @couponClick="couponClick(item.id)"
             />
           </template>
         </load-more>
@@ -45,7 +52,7 @@
 <script>
 import CouponItem from '../../../components/item/Coupon-Item.vue'
 import LoadMore from '../../../components/Load-More.vue'
-import { getAvailableCouponList, receiveCoupon } from '../../../apis/my'
+import { getAvailableCouponList, receiveCoupon } from '../../../apis/my-coupon'
 
 export default {
   name: 'CouponCenter',
@@ -63,19 +70,14 @@ export default {
       getAvailableCouponList
     }
   },
-  created () {
-    this.form.userId = this.userId
-    try {
-      this.getAvailableCouponList()
-    } catch (e) {
-      throw e
-    }
-  },
   mounted () {
     if (this.$refs.loadMore) this.$refs.loadMore.refresh()
   },
+  activated () {
+    this.$refs.loadMore.refresh()
+  },
   methods: {
-    async receiveCoupon (id) {
+    async couponClick (id) {
       try {
         const { result, message } = await receiveCoupon(id)
         if (result) {
@@ -129,8 +131,14 @@ export default {
     }
 
     .coupon-view {
-      padding-right: 24px;
       margin-bottom: 100px;
+      .no-coupon-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 400px;
+        margin-bottom: -200px;
+      }
     }
   }
 
