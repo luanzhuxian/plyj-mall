@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 /**
  * 学员信息新增
  * @param data {Object} {defaultStatus, stuMobile, stuName}

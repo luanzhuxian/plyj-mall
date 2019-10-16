@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 /*
 * 获取购物车列表
 * */

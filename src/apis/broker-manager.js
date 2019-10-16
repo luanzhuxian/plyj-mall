@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 // 申请经纪人
 export const AuditCreate = ({ idCard, mobile, name, verificationCode, weChatNumber, shareUserId }) =>
   axios.post(`/apis/v1/agent/user/info/audit/create`, { idCard, mobile, name, verificationCode, weChatNumber, shareUserId })

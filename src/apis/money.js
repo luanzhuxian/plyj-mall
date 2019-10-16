@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 // 分页查询提现记录
 export function getWithdrawDeposit ({ current, size, userName, createTime }) {
   return axios.get(`/apis/v1/agent/user/withdraw/deposit/page?current=${current}&size=${size}&userName=${userName}&createTime=${createTime}`)

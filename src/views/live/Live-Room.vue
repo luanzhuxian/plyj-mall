@@ -38,16 +38,19 @@
         </div>
       </div>
 
-      <div :class="$style.chatRecords" ref="chatRecords">
-        <div
-          v-for="(item, i) of chatRecords"
-          :key="i"
-          :class="{
-            [$style.message]: true
-          }"
-        >
-          <span :class="$style.userName" v-text="item.name + '：'" />
-          <span :class="$style.message" v-text="item.message" />
+      <div :class="$style.chatWrap" ref="chatRecords">
+        <div :class="$style.chatRecords">
+          <div
+            v-for="(item, i) of chatRecords"
+            :key="i"
+            :class="{
+              [$style.messageWrap]: true,
+              [$style.customMessage]: item.type === 1
+            }"
+          >
+            <span :class="$style.userName" v-text="item.name + '：'" />
+            <span :class="$style.message" v-text="item.message" />
+          </div>
         </div>
       </div>
 
@@ -68,6 +71,11 @@
   import VueSlider from 'vue-slider-component'
   import 'vue-slider-component/theme/default.css'
   import { CanvasBarrage } from '../../assets/js/canvasBarrage'
+  import { mapGetters } from 'vuex'
+  import {
+    sendMessage,
+    sendCustomMessage
+  } from '../../apis/live'
   let barrage = null
   export default {
     name: 'Live',
@@ -81,14 +89,17 @@
         userId: 'ea0c93b91e',
         tab: 1,
         message: '',
+        maxRecords: 500, // 最大缓存的聊天记录条数
         chatRecords: [
           {
             message: '9q28375289736',
-            name: '客家话1'
+            name: '客家话1',
+            type: 1
           },
           {
             message: 'asdg ',
-            name: '客家话2'
+            name: '客家话2',
+            type: 2
           },
           {
             message: 'asdghsdfh打三分和',
@@ -102,6 +113,7 @@
       }
     },
     computed: {
+      ...mapGetters(['userName', 'avatar'])
     },
     watch: {
       soundValue (val) {
@@ -123,7 +135,7 @@
         hasControl: true,
         x5FullPage: true,
         forceH5: true,
-        df: true
+        useH5Page: true
       });
       let timer = setInterval(() => {
         let video = document.querySelector('#player video')
@@ -141,14 +153,39 @@
       }, 500)
     },
     methods: {
-      messageConfirm () {
+      async messageConfirm () {
+        let box = this.$refs.chatRecords
+        let scrollHeight = box.scrollHeight
+        let { channelId, appId, userId, avatar, userName, message } = this
+        let timestamp = Date.now()
+        let signStr = `4cd6afe4d5d6498a8e92e062eb34af46appId${appId}channelId${channelId}msg${message}nickName${userName}pic${avatar}timestamp${timestamp}4cd6afe4d5d6498a8e92e062eb34af46`
+        let sign = crypto.MD5(signStr).toString().toUpperCase()
+        let messageConfig = {
+          appId,
+          timestamp,
+          channelId,
+          msg: message,
+          pic: avatar,
+          nickName: userName,
+          sign
+          // adminIndex
+          // actor
+          // freeReview
+        }
+        try {
+          let { data } = await sendMessage(messageConfig)
+          console.log(data)
+        } catch (e) {
+          console.log(e)
+        }
+        if (this.chatRecords.length > this.maxRecords) {
+          this.chatRecords.shift()
+        }
         this.chatRecords.push({
           name: '客家话',
           message: this.message
         })
         this.message = ''
-        let box = this.$refs.chatRecords
-        let scrollHeight = box.scrollHeight
         box.scrollBy(0, scrollHeight)
       },
       // 自定义消息 ( 屏幕中间 )
@@ -316,15 +353,34 @@
       }
     }
   }
-  .chat-records {
+  .chat-wrap {
     flex: 1;
+    overflow: auto;
+  }
+  .chat-records {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    justify-content: flex-end;
     padding: 12px 16px;
-    overflow: scroll;
-    > .message {
+    box-sizing: border-box;
+    > .message-wrap {
       display: flex;
       margin-top: 30px;
       line-height: 36px;
       font-size: 26px;
+      &.custom-message {
+        padding: 0 8px;
+        line-height: 48px;
+        background-color: #FCE6B7;
+        border-radius: 4px;
+        > .user-name {
+          color: #896437;
+        }
+        > .message {
+          color: #FE7700;
+        }
+      }
       > .user-name {
         width: max-content;
         color: #999;

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import axios from 'axios'
+import { axios } from './axios'
 import { router } from '../../router'
 import store from '../../store'
 import { REFRESH_TOKEN } from '../../store/mutation-type'
@@ -10,10 +10,6 @@ class ResponseError extends Error {
     this.name = 'ResponseError'
   }
 }
-axios.defaults.headers = {
-  'Content-Type': 'application/json;charset=UTF-8'
-}
-axios.defaults.timeout = 15000
 // 添加请求拦截器
 axios.interceptors.request.use(request, reqError)
 // 添加响应拦截器
@@ -63,7 +59,7 @@ async function response (response) {
         await store.dispatch(REFRESH_TOKEN)
         let config = response.config
         let { method, data, headers, url } = config
-        const res = await axios({
+        const res = await instance({
           method,
           data,
           url,

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 // 获取商品详情
 export const getProductDetail = goodsId => axios.get(`/apis/v1/product/detail/${goodsId}?source=1`)
 // 创建分享连接
