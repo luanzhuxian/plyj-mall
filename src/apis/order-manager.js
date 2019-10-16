@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 // 微信用户-提交订单
 // export function physicalorderWechat (openId, data) {
 //   return axios.post(`/apis/v1/order/physicalorder/wechat?openId=${openId}`, data)

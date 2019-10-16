@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 
 export const getProduct = ({ categoryId, subCategoryId, current, size }) =>
   axios.get(`/apis/v1/product/public/productPageByCategoryWithOutHidden?categoryId=${categoryId}&subCategoryId=${subCategoryId}&current=${current}&size=${size}`)
