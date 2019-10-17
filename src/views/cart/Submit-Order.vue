@@ -79,7 +79,7 @@
           </div>
         </div>
 
-        <div :class="$style.infoItem" v-if="coupon.amount" @click="showCoupon = true">
+        <div :class="$style.infoItem" v-if="coupon.amount && !isCart" @click="showCoupon = true">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">优惠券</span>
             <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
@@ -186,7 +186,7 @@
             </div>
           </div>
 
-          <div :class="$style.infoItem" v-if="coupon.amount" @click="showCoupon = true">
+          <div :class="$style.infoItem" v-if="coupon.amount && !isCart" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
               <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
@@ -295,7 +295,7 @@
             </div>
           </div>
 
-          <div :class="$style.infoItem" v-if="coupon.amount" @click="showCoupon = true">
+          <div :class="$style.infoItem" v-if="coupon.amount && !isCart" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
               <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
@@ -331,11 +331,23 @@
       </pl-button>
     </div>
 
+    <div v-if="totalAmount > 0 && showInvoiceSelector" :class="$style.itemSelector" @click.capture="showCoupon = true">
+      <pl-fields
+        size="middle"
+        text="优惠"
+        icon="icon-coupon1"
+        :icon-gap="12"
+        show-right-icon
+        :right-text="'-¥' + coupon.amount"
+        left-text-weight="bold"
+      />
+    </div>
+
     <div v-if="totalAmount > 0 && showInvoiceSelector" :class="$style.itemSelector" @click.capture="selectInvoice">
       <pl-fields
         size="middle"
         text="发票"
-        icon="invoice"
+        icon="icon-invoice"
         :icon-gap="12"
         show-right-icon
         :right-text="invioceType === 0 ? '不需要' : '纸质发票'"
@@ -351,7 +363,7 @@
       <pl-fields
         size="middle"
         text="学员信息"
-        icon="name-card"
+        icon="icon-name-card"
         :icon-gap="12"
         :right-text="`已选${getStudentCountByProId(needStudentList[0].skuCode1 + needStudentList[0].skuCode2)}人`"
         show-right-icon
@@ -371,12 +383,11 @@
         </ul>
       </pl-fields>
     </div>
-
     <div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click.capture="chooseContact">
       <pl-fields
         size="middle"
         text="联系人信息"
-        icon="contact"
+        icon="icon-contact"
         :icon-gap="12"
         :right-text="contactInfoModel.name && contactInfoModel.mobile ? '已选择' : `未选择`"
         show-right-icon
