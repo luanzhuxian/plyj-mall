@@ -36,7 +36,7 @@
               用
             </span>
             <br>
-            <span :class="$style.receiveCount">{{ receiveCount? `(${receiveCount}次)`: '' }}</span>
+            <span :class="$style.receiveCount">{{ receiveCount ? `(${receiveCount}次)` : '' }}</span>
           </div>
           <pl-icon name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
           <div :class="$style.sawtooth" :style="{ backgroundImage: `url(${sawtoothImg})` }" />
@@ -120,8 +120,6 @@ export default {
       cvs.width = 37
       cvs.height = 31
       let ctx = cvs.getContext('2d')
-      ctx.fillStyle = '#ffc9a2'
-      ctx.fillRect(0, 0, 37, 31)
       ctx.beginPath()
       ctx.moveTo(0, 16)
       ctx.lineTo(37, 0)
@@ -131,7 +129,7 @@ export default {
       ctx.fill()
       cvs.toBlob(blob => {
         this.sawtoothImg = createObjectUrl(blob)
-      }, 'image/jpeg', 0.7)
+      })
     },
     couponClick (e) {
       if (this.isAvailableStatus) {
