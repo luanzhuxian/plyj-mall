@@ -3,19 +3,22 @@
     <div v-if="detail.preActivity === 1">
       <div class="price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
       <div class="pro-info">
-        <div class="original">现价：108</div>
-        <div>30人已购买</div>
+        <div class="original">现价：<i v-text="minPrice" />
+          <template v-if="minPrice !== maxPrice">
+            ~ <i v-text="maxPrice" />
+          </template></div>
+        <div>{{ detail.salesVolume }}人已购买</div>
       </div>
     </div>
     <div v-if="detail.preActivity === 2">
       <div class="price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
-      <div class="original">原价：<del>108</del></div>
+      <div class="original">原价：<del v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" /></div>
     </div>
     <div class="join" v-if="detail.preActivity === 2">
       <ul>
         <li class="avatar" v-for="k in detail.activityProductModel.userImageList" :key="k"><img src="../../../assets/images/shipped.png"></li>
       </ul>
-      205人和你一起参与
+      {{ detail.activityProductModel.joinCount }}人和你一起参与
     </div>
   </div>
 </template>
@@ -27,6 +30,26 @@ export default {
     detail: {
       type: Object,
       default: null
+    }
+  },
+  computed: {
+    skuList () {
+      return this.detail.productSkuModels || []
+    },
+    priceList () {
+      return this.skuList.map(item => item.price) || []
+    },
+    originalPriceList () {
+      return this.skuList.map(item => item.originalPrice) || []
+    },
+    maxPrice () {
+      return Math.max(...this.priceList)
+    },
+    minPrice () {
+      return Math.min(...this.priceList)
+    },
+    maxOriginalPrice () {
+      return Math.max(...this.originalPriceList)
     }
   }
 }

@@ -3,8 +3,8 @@
     <div>
       <div class="price">定金 <span>{{ detail.activityProductModel.price }}</span> 抵 <span>20</span></div>
       <div class="pro-info">
-        <div class="original">原价：108</div>
-        <div>30人已购买</div>
+        <div class="original">原价：<del v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" /></div>
+        <div>{{ detail.salesVolume }}人已购买</div>
       </div>
     </div>
   </div>
@@ -17,6 +17,26 @@ export default {
     detail: {
       type: Object,
       default: null
+    }
+  },
+  computed: {
+    skuList () {
+      return this.detail.productSkuModels || []
+    },
+    priceList () {
+      return this.skuList.map(item => item.price) || []
+    },
+    originalPriceList () {
+      return this.skuList.map(item => item.originalPrice) || []
+    },
+    maxPrice () {
+      return Math.max(...this.priceList)
+    },
+    minPrice () {
+      return Math.min(...this.priceList)
+    },
+    maxOriginalPrice () {
+      return Math.max(...this.originalPriceList)
     }
   }
 }

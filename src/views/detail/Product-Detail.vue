@@ -24,9 +24,9 @@
         <!-- 团购信息 -->
         <TogetherPrice :detail="detail" v-if="detail.activeProduct === 2" />
         <!-- 秒杀信息 -->
-        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 3" />
+        <SecondPrice :detail="detail" v-if="detail.activeProduct === 3" />
         <!-- 预购信息 -->
-        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 4" />
+        <BookingPrice :detail="detail" v-if="detail.activeProduct === 4" />
         <!-- 开售倒计时 -->
         <count-down
           size="large"
@@ -143,6 +143,7 @@
       :disable-confrim="confirmText === '暂未开售'"
       :limiting="limiting"
       :active-product="detail.activeProduct"
+      :activity-product-model="detail.activityProductModel"
     />
 
     <!-- 规格弹框 -->
@@ -252,11 +253,15 @@ import SecondBar from './second/Second-Bar'
 import BookingBar from './booking/Booking-Bar'
 import TogetherRule from './together/Together-Rule'
 import TogetherPrice from './together/Together-Price'
+import SecondPrice from './second/Second-Price'
+import BookingPrice from './booking/Booking-Price'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
   components: {
     TogetherPrice,
+    SecondPrice,
+    BookingPrice,
     TogetherRule,
     TogetherBar,
     SecondBar,

@@ -16,8 +16,57 @@
         <pl-svg name="cart2" />
       </router-link>
     </div>
+    <!-- 团购商品下单 -->
+    <div :class="$style.buttons" v-if="activeProduct === 2">
+      <button
+        :class="$style.addToCart"
+        @click="clickHandler(2)"
+        :disabled="loading || allDisabled"
+      >
+        单独购买
+        <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+      </button>
+      <button
+        :class="$style.buyNowBtn"
+        @click="clickHandler(3)"
+        :disabled="loading || allDisabled || disableConfrim"
+      >
+        我要参团
+        <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
+      </button>
+    </div>
+    <!-- 秒杀商品下单 -->
+    <div :class="$style.buttons" v-else-if="activeProduct === 3">
+      <button
+        :class="$style.addToCart"
+        @click="clickHandler(2)"
+        :disabled="loading || allDisabled"
+      >
+        原价购买
+        <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+      </button>
+      <button
+        :class="$style.buyNowBtn"
+        @click="clickHandler(3)"
+        :disabled="loading || allDisabled || disableConfrim"
+      >
+        立即秒杀
+        <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
+      </button>
+    </div>
+    <!-- 预购商品下单 -->
+    <div :class="$style.button" v-else-if="activeProduct === 4">
+      <button
+        :class="$style.preBtn"
+        @click="clickHandler(3)"
+        :disabled="loading || allDisabled"
+      >
+        定金购买
+        <div :class="$style.btnText">¥ {{ activityProductModel.price }}</div>
+      </button>
+    </div>
     <!-- 正常商品下单 -->
-    <div :class="$style.buttons" v-if="activeProduct === 1">
+    <div :class="$style.buttons" v-else>
       <button
         :class="$style.addToCart"
         @click="clickHandler(1)"
@@ -31,55 +80,6 @@
         :disabled="loading || allDisabled || disableConfrim"
       >
         {{ confirmText }}
-      </button>
-    </div>
-    <!-- 团购商品下单 -->
-    <div :class="$style.buttons" v-if="activeProduct === 2">
-      <button
-        :class="$style.addToCart"
-        @click="clickHandler(2)"
-        :disabled="loading || allDisabled"
-      >
-        单独购买
-        <div :class="$style.btnText">¥59.90起</div>
-      </button>
-      <button
-        :class="$style.buyNowBtn"
-        @click="clickHandler(3)"
-        :disabled="loading || allDisabled || disableConfrim"
-      >
-        我要参团
-        <div :class="$style.text">¥59.90起</div>
-      </button>
-    </div>
-    <!-- 秒杀商品下单 -->
-    <div :class="$style.buttons" v-if="activeProduct === 3">
-      <button
-        :class="$style.addToCart"
-        @click="clickHandler(2)"
-        :disabled="loading || allDisabled"
-      >
-        原价购买
-        <div :class="$style.btnText">¥59.90起</div>
-      </button>
-      <button
-        :class="$style.buyNowBtn"
-        @click="clickHandler(3)"
-        :disabled="loading || allDisabled || disableConfrim"
-      >
-        立即秒杀
-        <div :class="$style.text">¥59.90起</div>
-      </button>
-    </div>
-    <!-- 预购商品下单 -->
-    <div :class="$style.button" v-if="activeProduct === 4">
-      <button
-        :class="$style.preBtn"
-        @click="clickHandler(3)"
-        :disabled="loading || allDisabled"
-      >
-        定金购买
-        <div :class="$style.btnText">¥59.90</div>
       </button>
     </div>
     <specification-pop
@@ -179,6 +179,10 @@ export default {
     activeProduct: {
       type: Number,
       default: 1
+    },
+    activityProductModel: {
+      type: Object,
+      default: null
     }
   },
   computed: {

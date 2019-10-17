@@ -7,3 +7,5 @@ export const createBrokerShare = productId => axios.post(`/apis/v1/agent/user/sh
 export const getCouponInDetail = () => axios.get('/apis/v1/coupon/list/productDetail')
 // C 端领取当前商品优惠券
 export const receiveCoupon = (couponId) => axios.post(`/apis/v1/coupon/receive?couponId=${couponId}`)
+// C 端秒杀列表
+export const secondActivityPage = params => axios.get('/apis/v1/seckill/activity/page', { params })
