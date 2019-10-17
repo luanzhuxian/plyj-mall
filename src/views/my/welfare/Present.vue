@@ -60,7 +60,7 @@
               <div class="content-box">
                 <div content="content-detail">
                   <p class="detail-name color3">{{ item.giftName }}</p>
-                  <p class="detail-coupon color-E16">{{ item.brief }}</p>
+                  <p class="detail-coupon color-E16">{{ item.giftBrief }}</p>
                 </div>
                 <div class="content-button">
                   <pl-button round="round" background-color="#EB5C20" @click="checkCode(item)">立即兑换</pl-button>
@@ -96,7 +96,7 @@
               <div class="content-box">
                 <div content="content-detail">
                   <p class="detail-name color-c">{{ item.giftName }}</p>
-                  <p class="detail-coupon color-c">{{ item.brief }}</p>
+                  <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
                 </div>
                 <div class="content-button">
                   <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
@@ -132,7 +132,7 @@
               <div class="content-box">
                 <div content="content-detail">
                   <p class="detail-name color-c">{{ item.giftName }}</p>
-                  <p class="detail-coupon color-c">{{ item.brief }}</p>
+                  <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
                 </div>
                 <div class="content-button">
                   <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
