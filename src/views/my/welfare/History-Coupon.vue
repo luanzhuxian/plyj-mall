@@ -29,7 +29,7 @@
               <CouponItem
                 :class="$style.moveCoupon"
                 :id="item.id"
-                :name="item.name"
+                :name="item.couponName"
                 :amount="item.amount"
                 :full="item.useLimitAmount"
                 :subtract="item.amount"
@@ -71,7 +71,7 @@
               <CouponItem
                 :class="$style.moveCoupon"
                 :id="item.id"
-                :name="item.name"
+                :name="item.couponName"
                 :amount="item.amount"
                 :full="item.useLimitAmount"
                 :subtract="item.amount"

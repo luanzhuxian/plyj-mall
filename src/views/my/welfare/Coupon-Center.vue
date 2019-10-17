@@ -26,7 +26,7 @@
               v-for="item in couponList"
               :key="item.id"
               :id="item.id"
-              :name="item.name"
+              :name="item.couponName"
               :amount="item.amount"
               :full="item.useLimitAmount"
               :subtract="item.amount"
