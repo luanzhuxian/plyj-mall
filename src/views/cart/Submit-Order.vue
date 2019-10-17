@@ -496,8 +496,7 @@ import {
   confirmCart,
   submitOrder
 } from '../../apis/shopping-cart'
-import { getCouponOfMax } from '../../apis/my-coupon'
-import { getCouponInDetail } from '../../apis/product'
+import { getCouponOfMax, getCouponByPrice } from '../../apis/my-coupon'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { mapGetters, mapActions } from 'vuex'
 import { STUDENTS } from '../../store/mutation-type'
@@ -706,7 +705,7 @@ export default {
     // 获取优惠券
     async getCouponList () {
       try {
-        let { result } = await getCouponInDetail()
+        let { result } = await getCouponByPrice(this.amount)
         this.couponList = result
       } catch (e) {
         throw e
