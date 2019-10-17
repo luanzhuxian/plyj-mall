@@ -79,6 +79,13 @@
           </div>
         </div>
 
+        <div :class="$style.infoItem" v-if="coupon.amount" @click="showCoupon = true">
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">优惠券</span>
+            <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
+          </div>
+        </div>
+
         <div :class="$style.infoItem">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">商品金额</span>
@@ -176,6 +183,13 @@
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
               </div>
+            </div>
+          </div>
+
+          <div :class="$style.infoItem" v-if="coupon.amount" @click="showCoupon = true">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">优惠券</span>
+              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
             </div>
           </div>
 
@@ -278,6 +292,13 @@
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
               </div>
+            </div>
+          </div>
+
+          <div :class="$style.infoItem" v-if="coupon.amount" @click="showCoupon = true">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">优惠券</span>
+              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
             </div>
           </div>
 
@@ -412,6 +433,35 @@
         </pl-button>
       </div>
     </pl-popup>
+
+    <!-- 优惠券弹框 -->
+    <pl-popup
+      :show.sync="showCoupon"
+      title="领取优惠券"
+      title-align="left"
+    >
+      <div :class="$style.coupon">
+        <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
+        <div :class="$style.couponList">
+          <template v-for="(item, i) of couponList">
+            <CouponItem
+              :key="i"
+              :name="item.couponName"
+              :amount="item.amount"
+              :full="item.useLimitAmount"
+              :subtract="item.amount"
+              :instruction="item.brief"
+              :use-end-time="item.useEndTime"
+              :use-start-time="item.useStartTime"
+              :receive-count="item.count"
+              :can-go-classify="false"
+              is-available-status
+              @couponClick="couponClick(item)"
+            />
+          </template>
+        </div>
+      </div>
+    </pl-popup>
   </div>
 
   <div
@@ -438,12 +488,15 @@ import {
   confirmCart,
   submitOrder
 } from '../../apis/shopping-cart'
+import { getCouponOfMax } from '../../apis/my-coupon'
+import { getCouponInDetail } from '../../apis/product'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { mapGetters, mapActions } from 'vuex'
 import { STUDENTS } from '../../store/mutation-type'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Count from '../../components/Count.vue'
+import CouponItem from '../../components/item/Coupon-Item.vue'
 import { checkLength, isPhone } from '../../assets/js/validate'
 import { resetForm } from '../../assets/js/util'
 export default {
@@ -453,7 +506,8 @@ export default {
     OrderItem,
     OrderItemSkeleton,
     AddressItemSkeleton,
-    Count
+    Count,
+    CouponItem
   },
   data () {
     return {
@@ -461,10 +515,13 @@ export default {
       showContactPopup: false,
       submiting: false,
       loading: false,
+      showCoupon: false,
       showInvoiceSelector: false, // 是否显示选择发票
       freight: 0,
       totalAmount: 0,
       amount: 0,
+      coupon: {}, // 优惠券信息
+      couponList: [], // 优惠券信息
       physicalProducts: [],
       virtualProducts: [],
       lessonList: [],
@@ -535,7 +592,6 @@ export default {
     }
   },
   async activated () {
-    console.log(this.$route.query.activeProduct)
     try {
       await this.getProductDetail()
       this.INVOICE_MODEL = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || null
@@ -564,6 +620,7 @@ export default {
         this.contactInfoModel.name = this.realName || this.userName
         this.contactInfoModel.mobile = this.mobile
       }
+      await this.getCouponList()
     } catch (e) {
       this.$router.go(-1)
       throw e
@@ -632,7 +689,22 @@ export default {
         localStorage.setItem('CONTACT_INFO_MODEL', JSON.stringify(this.contactInfoModel))
       }
     },
-    async getProductDetail (flag) {
+    // 选择优惠券
+    async couponClick (item) {
+      this.coupon = item
+      this.showCoupon = false
+      await this.getProductDetail(true, item)
+    },
+    // 获取优惠券
+    async getCouponList () {
+      try {
+        let { result } = await getCouponInDetail()
+        this.couponList = result
+      } catch (e) {
+        throw e
+      }
+    },
+    async getProductDetail (flag, coupon) {
       const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
       if (!proList || !proList.length) {
         return this.$router.replace({ name: 'Home' })
@@ -640,11 +712,18 @@ export default {
       if (!flag) this.loading = true
       try {
         // 获取订单详细数据
+        if (!coupon) {
+          // 获取优惠券信息
+          const { result } = await getCouponOfMax()
+          coupon = result
+        }
         const { result } = await confirmCart({
           activeProduct: this.$route.query.activeProduct,
           cartProducts: proList,
+          userCouponId: coupon.id || '',
           addressSeq: this.selectedAddress.sequenceNbr
         })
+        this.coupon = coupon
         const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
         // 为每个虚拟订单都添加备注字段
         for (const p of physicalProducts) {
@@ -1147,6 +1226,12 @@ export default {
       span {
         color: #999 !important;
       }
+    }
+  }
+  .coupon {
+    padding: 0 24px;
+    > .coupon-list {
+      margin-top: 48px;
     }
   }
   @keyframes bordrFlicker {

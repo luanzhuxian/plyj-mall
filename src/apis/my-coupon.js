@@ -30,3 +30,7 @@ export const getMyCouponList = ({ current, size, status }) => axios.get(`/apis/v
  * @returns {Promise<AxiosResponse<T>>}
  */
 export const deleteCouponList = (data) => axios.put('/apis/v1/coupon/me/delete', data)
+/**
+ * 获取最大优惠价格优惠券
+ * */
+export const getCouponOfMax = () => axios.get('/apis/v1/coupon/me/maxPrice')

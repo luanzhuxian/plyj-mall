@@ -328,7 +328,8 @@ export default {
       this.$router.push({
         name: 'SubmitOrder',
         query: {
-          isCart: 'YES'
+          isCart: 'YES',
+          activeProduct: 1
         }
       })
     },

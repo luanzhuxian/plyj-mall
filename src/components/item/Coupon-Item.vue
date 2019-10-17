@@ -36,7 +36,7 @@
               用
             </span>
             <br>
-            <span :class="$style.receiveCount">{{ receiveCount ? `(${receiveCount}次)` : '' }}</span>
+            <span v-if="!isAvailableStatus" :class="$style.receiveCount">{{ receiveCount ? `(${receiveCount}次)` : '' }}</span>
           </div>
           <pl-icon name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
           <div :class="$style.sawtooth" :style="{ backgroundImage: `url(${sawtoothImg})` }" />
@@ -101,10 +101,14 @@ export default {
       type: String,
       default: ''
     },
-    isAvailableStatus: {
+    // 是否使用
+    isAvailableStatus: Boolean,
+    // 是否点击去分类
+    canGoClassify: {
       type: Boolean,
-      default: false
+      default: true
     },
+    // 领取次数
     receiveCount: {
       type: Number,
       default: 0
@@ -132,7 +136,7 @@ export default {
       })
     },
     couponClick (e) {
-      if (this.isAvailableStatus) {
+      if (this.isAvailableStatus && this.canGoClassify) {
         this.$router.push({
           path: '/Classify'
         })

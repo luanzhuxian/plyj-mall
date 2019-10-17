@@ -427,7 +427,6 @@ export default {
       try {
         await receiveCoupon(id)
         this.$success('领取成功')
-        this.showCoupon = false
         await this.getCouponList()
       } catch (e) {
         throw e
