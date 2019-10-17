@@ -11,10 +11,22 @@
         :type="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' ? 'lesson' : 'product'"
         :banners="banners"
       />
+      <!-- 团购倒计时条 -->
+      <TogetherBar :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity !== 0" />
+      <!-- 秒杀倒计时条 -->
+      <SecondBar :detail="detail" v-if="detail.activeProduct === 3 && detail.preActivity !== 0" />
+      <!-- 预购倒计时条 -->
+      <BookingBar :detail="detail" v-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
       <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
         <!-- 加个 润笔 购买数量，关注人数 登信息 -->
-        <info-header :detail="detail" />
+        <info-header :detail="detail" v-if="detail.activeProduct === 1" />
+        <!-- 团购信息 -->
+        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 2" />
+        <!-- 秒杀信息 -->
+        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 3" />
+        <!-- 预购信息 -->
+        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 4" />
         <!-- 开售倒计时 -->
         <count-down
           size="large"
@@ -67,6 +79,8 @@
       >
         <span style="color: #FE7700;" v-text="couponText" />
       </Field>
+
+      <TogetherRule v-if="detail.activeProduct === 2" />
 
       <div :class="$style.detailOrComment">
         <div :class="$style.tabs">
@@ -128,7 +142,9 @@
       :confirm-text="confirmText"
       :disable-confrim="confirmText === '暂未开售'"
       :limiting="limiting"
+      :active-product="detail.activeProduct"
     />
+
     <!-- 规格弹框 -->
     <specification-pop
       :default-count="defaultCount"
@@ -231,10 +247,20 @@ import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/uti
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
 import CouponItem from '../../components/item/Coupon-Item.vue'
+import TogetherBar from "./together/Together-Bar"
+import SecondBar from "./second/Second-Bar"
+import BookingBar from "./booking/Booking-Bar"
+import TogetherRule from "./together/Together-Rule"
+import TogetherPrice from "./together/Together-Price";
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
   components: {
+    TogetherPrice,
+    TogetherRule,
+    TogetherBar,
+    SecondBar,
+    BookingBar,
     DetailBanner,
     DetailTitle,
     DetailDesc,
