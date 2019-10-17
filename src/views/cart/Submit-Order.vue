@@ -78,7 +78,6 @@
             </div>
           </div>
         </div>
-
         <div :class="$style.infoItem" v-if="coupon.amount && !isCart" @click="showCoupon = true">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">优惠券</span>
@@ -185,7 +184,6 @@
               </div>
             </div>
           </div>
-
           <div :class="$style.infoItem" v-if="coupon.amount && !isCart" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
@@ -294,7 +292,6 @@
               </div>
             </div>
           </div>
-
           <div :class="$style.infoItem" v-if="coupon.amount && !isCart" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
@@ -331,7 +328,7 @@
       </pl-button>
     </div>
 
-    <div v-if="totalAmount > 0 && showInvoiceSelector" :class="$style.itemSelector" @click.capture="showCoupon = true">
+    <div v-if="coupon.amount" :class="$style.itemSelector" @click.capture="showCoupon = true">
       <pl-fields
         size="middle"
         text="优惠"
@@ -725,7 +722,7 @@ export default {
         // 获取订单详细数据
         if (!coupon) {
           // 获取优惠券信息
-          const { result } = await getCouponOfMax()
+          const { result } = await getCouponOfMax(this.$route.query.amount || 0)
           coupon = result
         }
         const { result } = await confirmCart({

@@ -236,7 +236,8 @@ import UsefulLife from '../../components/detail/Useful-Life.vue'
 import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
 import Field from '../../components/detail/Field.vue'
-import { getProductDetail, getCouponInDetail, receiveCoupon } from '../../apis/product'
+import { getProductDetail, getCouponInDetail } from '../../apis/product'
+import { receiveCoupon } from '../../apis/my-coupon'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
@@ -530,7 +531,9 @@ export default {
       this.$router.push({
         name: 'SubmitOrder',
         query: {
-          isCart: 'NO'
+          isCart: 'NO',
+          activeProduct: this.detail.activeProduct,
+          amount: selected.price
         }
       })
     },

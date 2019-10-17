@@ -243,7 +243,8 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: this.activeType
+          activeProduct: this.activeType,
+          amount: options.price
         }
       })
     },

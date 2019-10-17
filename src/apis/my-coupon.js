@@ -18,8 +18,7 @@ export const getAvailableCouponList = ({ current, size }) => axios.get(`/apis/v1
  * 领取优惠券(系统发放的优惠券
  * @returns {Promise<AxiosResponse<T>>}
  */
-export const receiveCoupon = (couponId) => axios.post(`/apis/v1/coupon/receive?couponId=${couponId}`)
-
+export const receiveCoupon = (couponId, useLimitAmount) => axios.post(`/apis/v1/coupon/receive?couponId=${couponId}`)
 /**
  * 获取已领取优惠券列表
  * @returns {Promise<AxiosResponse<T>>}
@@ -33,4 +32,8 @@ export const deleteCouponList = (data) => axios.put('/apis/v1/coupon/me/delete',
 /**
  * 获取最大优惠价格优惠券
  * */
-export const getCouponOfMax = () => axios.get('/apis/v1/coupon/me/maxPrice')
+export const getCouponOfMax = useLimitAmount => axios.get(`/apis/v1/coupon/me/maxPrice?useLimitAmount=${useLimitAmount}`)
+/**
+ * 根据商品价格获取合适的优惠券
+ * */
+export const getCouponByPrice = useLimitAmount => axios.get(`/v1/coupon/me/list/price?useLimitAmount${useLimitAmount}`)
