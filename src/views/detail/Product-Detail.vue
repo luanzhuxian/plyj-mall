@@ -247,11 +247,11 @@ import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/uti
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
 import CouponItem from '../../components/item/Coupon-Item.vue'
-import TogetherBar from "./together/Together-Bar"
-import SecondBar from "./second/Second-Bar"
-import BookingBar from "./booking/Booking-Bar"
-import TogetherRule from "./together/Together-Rule"
-import TogetherPrice from "./together/Together-Price";
+import TogetherBar from './together/Together-Bar'
+import SecondBar from './second/Second-Bar'
+import BookingBar from './booking/Booking-Bar'
+import TogetherRule from './together/Together-Rule'
+import TogetherPrice from './together/Together-Price'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
