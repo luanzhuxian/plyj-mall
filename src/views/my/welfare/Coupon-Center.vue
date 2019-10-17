@@ -132,6 +132,7 @@ export default {
 
     .coupon-view {
       margin-bottom: 100px;
+      padding-right: 24px;
       .no-coupon-icon {
         display: flex;
         flex-direction: column;

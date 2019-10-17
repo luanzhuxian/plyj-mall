@@ -197,6 +197,7 @@
               :instruction="item.brief"
               :use-end-time="item.useEndTime"
               :use-start-time="item.useStartTime"
+              @couponClick="couponClick(item.id)"
             />
           </template>
         </div>
@@ -219,7 +220,7 @@ import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
 import Price from '../../components/product/Price.vue'
 import Field from '../../components/detail/Field.vue'
-import { getProductDetail, getCouponInDetail } from '../../apis/product'
+import { getProductDetail, getCouponInDetail, receiveCoupon} from '../../apis/product'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
@@ -423,6 +424,20 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    async couponClick(id) {
+        try {
+            const {result, message} = await receiveCoupon(id)
+            if (result) {
+                this.$success('领取成功')
+                this.showCoupon = false
+                await this.getCouponList()
+            } else {
+                this.$error(message)
+            }
+        } catch (e) {
+            throw e
+        }
     },
     resetState () {
       this.currentModel = {}

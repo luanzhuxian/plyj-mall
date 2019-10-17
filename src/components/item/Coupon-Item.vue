@@ -280,7 +280,6 @@ export default {
     align-items: center;
     width: 154px;
     background-color: #EC6251;
-    padding-right: 10px;
     > .get-now {
       font-size: 32px;
       color: #fff;

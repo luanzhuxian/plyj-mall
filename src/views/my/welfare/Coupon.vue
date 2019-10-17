@@ -178,15 +178,12 @@ export default {
   }
 
   .coupons {
-    margin-left: 10px;
-    margin-right: 10px;
-
     .coupons-header {
       font-size: 32px;
       font-weight: 800;
       line-height: 44px;
       color: #333;
-      margin: 40px 0;
+      margin: 40px 10px;
 
       div {
         float: left;
@@ -216,6 +213,8 @@ export default {
       .coupons-view-item {
         overflow: hidden;
         position: relative;
+        padding-right: 24px;
+        padding-left: 24px;
 
         > span {
           position: absolute;

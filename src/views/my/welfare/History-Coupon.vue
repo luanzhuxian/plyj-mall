@@ -227,10 +227,8 @@ export default {
    }
 
     .coupons-view {
-      width: 100%;
-      padding-top: 80px;
-      margin: auto 10px 100px 10px;
-      padding-bottom: 100px;
+      margin-bottom: 100px;
+      padding: 80px 24px 100px;
       position: relative;
 
       .no-coupon-icon {

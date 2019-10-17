@@ -5,3 +5,5 @@ export const getProductDetail = goodsId => axios.get(`/apis/v1/product/detail/${
 export const createBrokerShare = productId => axios.post(`/apis/v1/agent/user/share/record/create`, { productId })
 // C 端用户进入商品详情优惠券列表
 export const getCouponInDetail = () => axios.get('/apis/v1/coupon/list/productDetail')
+// C 端领取当前商品优惠券
+export const receiveCoupon = (couponId) => axios.post(`/apis/v1/coupon/receive?couponId=${couponId}`)
