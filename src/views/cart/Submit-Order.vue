@@ -813,7 +813,9 @@ export default {
         addressSeq: this.physicalProducts.length > 0 ? this.selectedAddress.sequenceNbr : '',
         cartProducts,
         cartSource: this.isCart,
-        invoiceModel: this.INVOICE_MODEL
+        invoiceModel: this.INVOICE_MODEL,
+        activeProduct: this.isCart ? 1 : this.$route.query.activeProduct,
+        userCouponId: this.coupon.id || ''
       }
       if (this.physicalProducts.length === 0) {
         // 没有实体商品时，必须有联系人信息
