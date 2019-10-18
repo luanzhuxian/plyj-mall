@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <div class="top">
-      <div>秒杀专场</div>
+      <div class="second-list" />
       <div class="line" />
       <div @click="getSecondList(2)">
         <div class="status" :class="status === 2 ? 'current' : ''">已开抢</div>
@@ -19,7 +19,7 @@
       </div>
     </div>
     <ul class="list">
-      <li v-for="(item, k) in secondList" :key="k" @click="jumpToDetail(item.id)">
+      <li v-for="(item, k) in secondList" :key="k" @click="jumpToDetail(item.productId)">
         <div class="img">
           <img :src="item.productImage">
           <div class="count-down">
@@ -129,6 +129,12 @@ export default {
         color: #E0030C;
       }
     }
+  }
+  .second-list{
+    background: url("../../assets/images/second/second_list.svg") no-repeat;
+    background-size: 100% 100%;
+    width: 68px;
+    height: 73px;
   }
   .list{
     padding: 156px 24px 24px;

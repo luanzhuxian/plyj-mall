@@ -5,30 +5,37 @@
         <div :class="$style.secondPrice">
           {{ detail.activityProductModel.price }}
         </div>
-        <del class="">108.00</del>
+        <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
       </div>
-      <div class="">活动限量10件</div>
+      <div :class="$style.desc">活动限量{{ detail.activityProductModel.stock }}件</div>
     </div>
     <div :class="$style.productInfo" v-if="detail.preActivity === 2">
       <div :class="$style.price">
         <div :class="$style.secondPrice">
           {{ detail.activityProductModel.price }}
         </div>
-        <del class="">108.00</del>
-        <div class="">已抢20</div>
+        <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
+        <div :class="$style.number">已抢 {{ detail.activityProductModel.number }}</div>
       </div>
       <div :class="$style.desc">
         <div :class="$style.progress">
           <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.joinCount) * 100 + '%' }" />
         </div>
-        <div>{{ detail.activityProductModel.joinCount || 0 }}人</div>
+        <div>共 {{ detail.activityProductModel.joinCount || 0 }} 件</div>
       </div>
     </div>
-    <together-count-down
+    <count-down
       @done="countFinished"
-      activity-text="距活动开始仅剩"
+      activity-text="距离结束"
       :starttime="detail.serverTime"
-      v-if="detail.activityProductModel"
+      v-if="detail.activityProductModel && detail.preActivity === 2"
+      :endtime="detail.activityProductModel.activityEndTime"
+    />
+    <count-down
+      @done="countFinished"
+      activity-text="距离开始"
+      :starttime="detail.serverTime"
+      v-if="detail.activityProductModel && detail.preActivity === 1"
       :endtime="detail.activityProductModel.activityStartTime"
     />
   </div>
@@ -36,10 +43,10 @@
 
 <script>
 /* eslint-disable */
-import TogetherCountDown from '../../../components/product/Together-Count-Down.vue'
+import CountDown from '../../../components/product/Second-Count-Down.vue'
 export default {
   components: {
-    TogetherCountDown
+    CountDown
   },
   data () {
     return {
@@ -49,6 +56,26 @@ export default {
     detail: {
       type: Object,
       default: null
+    }
+  },
+  computed: {
+    skuList () {
+      return this.detail.productSkuModels || []
+    },
+    priceList () {
+      return this.skuList.map(item => item.price) || []
+    },
+    originalPriceList () {
+      return this.skuList.map(item => item.originalPrice) || []
+    },
+    maxPrice () {
+      return Math.max(...this.priceList)
+    },
+    minPrice () {
+      return Math.min(...this.priceList)
+    },
+    maxOriginalPrice () {
+      return Math.max(...this.originalPriceList)
     }
   },
   methods: {
@@ -64,7 +91,37 @@ export default {
   .together{
     height: 120px;
     background: #FF3323;
-    padding-left: 118px;
+    padding-left: 24px;
+    display: flex;
+    justify-content: space-between;
+    .price{
+      display: flex;
+      align-items: baseline;
+      .second-price{
+        font-size: 52px;
+        color: #ffffff;
+        display: flex;
+        align-items: baseline;
+        &:before{
+          content: '¥';
+          font-size: 24px;
+        }
+      }
+      .original{
+        font-size: 26px;
+        color: #FFD9CE;
+        margin-left: 20px;
+        &:before{
+          content: '¥';
+          font-size: 26px;
+        }
+      }
+    }
+    .number{
+      color: #EEEEEE;
+      font-size: 26px;
+      margin-left: 20px;
+    }
     .desc{
       display: flex;
       color: #ffffff;
@@ -73,7 +130,7 @@ export default {
       height: 34px;
       margin-top: 2px;
       .progress{
-        width: 480px;
+        width: 356px;
         height: 10px;
         background: rgba(255, 255, 255, .5);
         border-radius: 206px;
