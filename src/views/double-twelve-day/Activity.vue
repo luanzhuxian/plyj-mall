@@ -7,7 +7,9 @@
           <span>千家机构携手双十二</span>
           <span>----------</span>
         </div>
-        <img src="../../assets/images/double-twelve-day/double-twelve-header.png" alt="">
+        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/double-twelve-header.png"
+             alt=""
+        >
       </div>
       <div :class="$style.separator">
         ********** <span>双十二疯狂同学会总数据</span> **********
@@ -51,6 +53,9 @@
           </div>
         </transition-group>
       </div>
+      <!-- 底部装饰 -->
+      <div :class="$style.redFrame" />
+      <div :class="$style.dashLine" />
     </div>
     <div :class="$style.userDataView">
       <div :class="$style.dataView">
@@ -193,7 +198,7 @@ export default {
       let ctx = canvas.getContext('2d')
 
       // 绘制海报背景图片
-      let posterBg = '../../assets/images/double-twelve-day/double_twelve_day_bg.png'
+      let posterBg = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/help-me-up.png'
       ctx.drawImage(posterBg, 32, 32, 128, 128)
 
       //  绘制机构LOGO
@@ -316,7 +321,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
   }
 
   .activity-view {
-    background: url("../../assets/images/double-twelve-day/double_twelve_day_bg.png") no-repeat scroll;
+    background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/double_twelve_day_bg.png") no-repeat scroll;
     background-size: cover;
     width: 100vw;
     height: 101vh;
@@ -324,14 +329,13 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
 
     .activity-data-view {
       width: 671px;
-      height: 972px;
-      background: url("../../assets/images/double-twelve-day/data_bg.png") no-repeat bottom;
-      background-size: auto 100%;
+      height: 950px;
       position: absolute;
       z-index: 20;
       top: 30px;
       left: 50%;
       transform: translateX(-50%);
+      background: linear-gradient(180deg, rgba(253, 250, 243, 1) 0%, rgba(253, 250, 243, 1) 94%, rgba(230, 84, 87, 1) 100%);
 
       .header-view {
         width: 97%;
@@ -457,6 +461,26 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
             }
           }
         }
+      }
+
+      .red-frame {
+        width: 682px;
+        height: 30px;
+        background: rgba(160, 34, 37, 1);
+        border-radius: 10px;
+        position: absolute;
+        bottom: 15px;
+        z-index: -1;
+      }
+
+      .dash-line {
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/data_bg.png") no-repeat center;
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 671px;
+        height: 30px;
       }
     }
 
