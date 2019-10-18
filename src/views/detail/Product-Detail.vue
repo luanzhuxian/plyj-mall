@@ -143,7 +143,7 @@
       :disable-confrim="confirmText === '暂未开售'"
       :limiting="limiting"
       :active-product="detail.activeProduct"
-      :activity-product-model="detail.activityProductModel"
+      :activity-product-model="detail.activityProductModel || null"
     />
 
     <!-- 规格弹框 -->
