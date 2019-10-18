@@ -3,6 +3,12 @@
     <Search placeholder="搜索商品" />
     <Banner :data="BANNER" />
     <Adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
+    <div v-if="type === 4" :class="$style.broadcast">
+      <Broadcast />
+    </div>
+    <div v-if="type === 4" :class="$style.activity">
+      <Activity />
+    </div>
     <HotItem v-if="POPULAR.showStatue === 1" :data="POPULAR" />
     <appointment-gift :data="{ YUYUE, PINGXUAN }" />
     <Best v-if="CLASS.showStatue === 1" :data="CLASS" />
@@ -14,6 +20,7 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex'
 import Search from './components/Search.vue'
 import Banner from './components/Banner.vue'
 import Adv from './components/Adv.vue'
@@ -21,7 +28,8 @@ import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
 import AppointmentGift from './components/Appointment-Gift.vue'
-import { mapGetters, mapState } from 'vuex'
+import Broadcast from '../activity/components/Broadcast.vue'
+import Activity from '../activity/components/Activity.vue'
 export default {
   name: 'HomeTemplateB',
   components: {
@@ -31,7 +39,9 @@ export default {
     HotItem,
     Best,
     BestRecommend,
-    AppointmentGift
+    AppointmentGift,
+    Broadcast,
+    Activity
   },
   data () {
     return {
@@ -81,5 +91,10 @@ export default {
   .home-Template-b {
     background-color: #EDEDED;
     font-size: 0;
+    .broadcast,
+    .activity {
+      padding: 20px 24px 0;
+      background-color: #F4F5F9;
+    }
   }
 </style>

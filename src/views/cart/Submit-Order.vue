@@ -328,7 +328,7 @@
       </pl-button>
     </div>
 
-    <div v-if="coupon.amount" :class="$style.itemSelector" @click.capture="showCoupon = true">
+    <div v-if="coupon.amount && isCart" :class="$style.itemSelector" @click.capture="showCoupon = true">
       <pl-fields
         size="middle"
         text="优惠"

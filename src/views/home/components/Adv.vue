@@ -60,8 +60,8 @@ export default {
 
 <style module lang="scss">
   .adv {
-    padding: 41px 32px 0;
-    height: 324px;
+    padding: 20px 24px 0;
+    height: 200px;
     background-color: #F4F5F9;
     img {
       width: 100%;

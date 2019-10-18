@@ -1,19 +1,29 @@
 <template>
   <div :class="$style.activity">
-    123
+    <div :class="$style.background">
+      <!-- <div :class="$style.wrapper"> -->
+      <div :class="$style.container">
+        <div :class="$style.btnTop" />
+        <TemplateFengqiang
+          :data="modules"
+          :type="type"
+        />
+      </div>
+      <!-- </div> -->
+    </div>
   </div>
 </template>
 
 <script>
+// import Search from './components/Search.vue'
 // import { mapGetters } from 'vuex'
 // import moment from 'moment'
-// import 'swiper/dist/css/swiper.css'
 import { getTemplate } from '../../apis/home'
-// import TemplateA from './Template-A.vue'
+import TemplateFengqiang from './Template-Fengqiang.vue'
 export default {
   name: 'Activity',
   components: {
-    // TemplateA
+    TemplateFengqiang
   },
   data () {
     return {
@@ -103,6 +113,24 @@ export default {
 </script>
 <style module lang="scss">
   .activity {
-    padding-bottom: 88px;
+    position: relative;
+    background: #C5010B;
+    .background {
+      min-height: 900px;
+      background: url("../../assets/images/activity/activity-bg.png") no-repeat center top;
+      background-size: 100% auto;
+    }
+    .container {
+      padding: 320px 24px 24px;
+    }
+    .btn-top {
+      width: 520px;
+      height: 78px;
+      background: url("../../assets/images/activity/button-top.png") no-repeat center center;
+      background-size: 100% auto;
+      border-radius: 70px;
+      box-shadow: 18px 6px 25px #800F0F;
+      margin: 0 auto 28px;
+    }
   }
 </style>
