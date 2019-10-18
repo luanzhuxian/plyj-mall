@@ -11,7 +11,7 @@
     <div :class="$style.coupons">
       <div :class="$style.couponsHeader">
         <div>
-          <b>可用优惠卷</b>
+          <b>可用优惠券</b>
           <span>  ({{ couponTotal }}张)</span>
         </div>
         <button @click="isManagementState = !isManagementState">管理</button>
