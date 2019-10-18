@@ -10,6 +10,8 @@ import setting from './setting'
 import Cart from './cart'
 import Appointment from './appointment'
 import NotFound from '../views/404.vue'
+import DoubleTwelveDay from './double-twelve-day'
+
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
 export const routes = [
@@ -47,7 +49,8 @@ export const router = new Router({
     ...order,
     ...setting,
     ...Cart,
-    ...Appointment
+    ...Appointment,
+    ...DoubleTwelveDay
   ],
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }
