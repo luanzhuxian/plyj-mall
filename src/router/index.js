@@ -12,6 +12,8 @@ import Appointment from './appointment'
 import NotFound from '../views/404.vue'
 import Live from './live'
 import Activity from './activity'
+import Newcomers from './newcomers'
+import InviteNewcomers from './invitenewcomers'
 
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
@@ -52,7 +54,9 @@ export const router = new Router({
     ...Cart,
     ...Appointment,
     ...Live,
-    ...Activity
+    ...Activity,
+    ...Newcomers,
+    ...InviteNewcomers
   ],
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }
