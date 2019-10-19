@@ -55,7 +55,7 @@
               </div>
               <div :class="$style.data">
                 <span>总助力数：</span>
-                <span>{{ entDetail.numberOfBoosts || 0 }}次</span>
+                <span>{{ entDetail.assistingNumber || 0 }}次</span>
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@
             v-else
           >
           <div :class="$style.count">
-            x {{ entDetail.numberOfBoosts }}
+            x {{ entDetail.assistingNumber }}
           </div>
         </div>
       </div>
@@ -126,7 +126,11 @@
     <transition name="fade">
       <div :class="$style.share" v-if="showShare">
         <img :src="haiBao || 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/help-me-up.png'" alt="">
-        <pl-icon name="icon-error" size="48" color="#fff" @click="showShare = false" />
+        <template v-if="!haiBaoLoading">
+          <p>长按图片保存分享给好友</p>
+          <pl-icon name="icon-error" size="48" color="#fff" @click="showShare = false" />
+        </template>
+        <pl-icon class="rotate" v-else name="icon-btn-loading" size="48" color="#fff" @click="showShare = false" />
       </div>
     </transition>
   </div>
@@ -158,7 +162,8 @@ export default {
       appointmentMobile: '',
       reservationName: '',
       reservationMobile: '',
-      haiBao: ''
+      haiBao: '',
+      haiBaoLoading: false
     }
   },
   computed: {
@@ -222,6 +227,7 @@ export default {
       if (this.haiBao) {
         return
       }
+      this.haiBaoLoading = true
       let codeCanvas
       let cvs
       let ctx
@@ -281,7 +287,11 @@ export default {
         createText(ctx, 200, 438, userName, 34)
         this.haiBao = cvs.toDataURL()
       } catch (e) {
+        this.$error('生成海报失败')
+        this.showShare = false
         throw e
+      } finally {
+        this.haiBaoLoading = false
       }
     },
     async loadImage (src) {
