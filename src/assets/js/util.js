@@ -186,7 +186,6 @@ export function suffixPx (value) {
  * @returns {Promise<*>}
  */
 export async function generateQrcode (size, text, padding = 0, img, centerPadding = 0, type) {
-  console.log(size, text)
   const imageSize = 80 // 中心图片的宽高
   const devicePixelRatio = window.devicePixelRatio
   let canvas

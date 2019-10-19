@@ -3,7 +3,7 @@
     <div :class="$style.topBox">
       <div :class="$style.title">
         <div>
-          ------------ 千家机构携手双十二 ------------
+          --------- 千家机构携手双十二 ---------
         </div>
         <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/double-twelve-header-1571393161453.png" alt="">
       </div>
@@ -55,7 +55,7 @@
               </div>
               <div :class="$style.data">
                 <span>总助力数：</span>
-                <span>{{ entDetail.assistingNumber || 0 }}次</span>
+                <span>{{ entDetail.numberOfBoosts || 0 }}次</span>
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@
             v-else
           >
           <div :class="$style.count">
-            x {{ entDetail.assistingNumber }}
+            x {{ entDetail.numberOfBoosts }}
           </div>
         </div>
       </div>
@@ -297,7 +297,7 @@ export default {
     async loadImage (src) {
       let img = new Image()
       img.crossOrigin = ''
-      img.src = src
+      img.src = src + '?time=' + Date.now()
       return new Promise((resolve, reject) => {
         img.onload = function () {
           resolve(img)
@@ -623,7 +623,12 @@ export default {
       width: 602px;
     }
     > i {
-      margin-top: 20px;
+      margin-top: 48px;
+    }
+    > p {
+      margin-top: 32px;
+      color: #fff;
+      font-size: 32px;
     }
   }
 </style>
