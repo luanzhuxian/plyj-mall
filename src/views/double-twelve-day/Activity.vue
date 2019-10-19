@@ -114,7 +114,7 @@
       <div :class="$style.success" v-show="showSuccess">
         <div :class="$style.successContent">
           <p>预约成功</p>
-          <p>您已成功预约吉的堡教育集团</p>
+          <p>您已成功预约{{ mallName }}</p>
           <p>携手双十二疯狂同学学会</p>
           <div @click="share">帮我助力</div>
           <pl-icon name="icon-error" size="48" color="#fff" @click="showSuccess = false" />
