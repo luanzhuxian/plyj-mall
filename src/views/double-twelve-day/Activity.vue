@@ -55,7 +55,7 @@
               </div>
               <div :class="$style.data">
                 <span>总助力数：</span>
-                <span>{{ entDetail.numberOfBoosts || 0 }}次</span>
+                <span>{{ entDetail.assistingNumber || 0 }}次</span>
               </div>
             </div>
           </div>
