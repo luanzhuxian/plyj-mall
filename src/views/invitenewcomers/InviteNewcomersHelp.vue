@@ -187,7 +187,7 @@ export default {
         }
       })
 
-      let { data: { result: claimerInfo } } = await getActivityStatisiticData(this.activityId)
+      let { result: claimerInfo } = await getActivityStatisiticData(this.activityId)
       this.totalClaimers = claimerInfo.claimerNum
     },
 

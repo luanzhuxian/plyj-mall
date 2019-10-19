@@ -121,7 +121,6 @@ export default {
     },
 
     async needRegisterNew () {
-      console.log('>>>>>', this.userId, this.mobile)
       if (!this.userId) {
         await this.$alert({
           confirmText: '去注册',
