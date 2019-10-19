@@ -241,7 +241,8 @@
       <pl-fields
         size="middle"
         text="联系人信息"
-        icon="contact"
+        icon="icon-contact"
+        :icon-width="40"
         :icon-gap="12"
         left-text-weight="bold"
       >

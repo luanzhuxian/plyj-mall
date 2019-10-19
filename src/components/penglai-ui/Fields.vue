@@ -5,23 +5,29 @@
       @click="handleClick"
     >
       <div class="pl-fields_text">
-        <pl-svg
-          :color="iconColor"
+        <pl-icon
+          :fill="iconColor"
           v-if="icon && iconPosition === 'left'"
-          class="pl-fields_icon"
           :name="icon"
+          type="svg"
+          :width="iconWidth"
+          :height="iconHeight"
+          class="pl-fields_icon"
           :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
         />
         <span
           v-text="text"
           :style="{ fontWeight: leftTextWeight }"
         />
-        <pl-svg
-          :color="iconColor"
+        <pl-icon
+          :fill="iconColor"
           v-if="icon && iconPosition === 'right'"
-          class="pl-fields_icon"
           :name="icon"
-          :style="{ paddingLeft: iconGap / 7.5 + 'vw'}"
+          type="svg"
+          :width="iconWidth"
+          :height="iconHeight"
+          class="pl-fields_icon"
+          :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
         />
       </div>
       <div class="pl-fields_right" @click.stop="fieldsRightClick">
@@ -31,7 +37,21 @@
           v-text="rightText"
           :style="{ fontWeight: rightTextWeight }"
         />
-        <pl-svg
+        <pl-icon
+          :fill="iconColor"
+          v-if="route || showRightIcon"
+          :name="rightIcon"
+          width="20"
+          height="20"
+          type="svg"
+          :class="{
+            'pl-fields_right_icon': true,
+            'is-collapse': canCollapse && collapse,
+            'no-collapse': canCollapse && !collapse
+          }"
+          :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
+        />
+        <!--<pl-svg
           v-if="route || showRightIcon"
           :class="{
             'pl-fields_right_icon': true,
@@ -39,7 +59,7 @@
             'no-collapse': canCollapse && !collapse
           }"
           :name="rightIcon"
-        />
+        />-->
       </div>
     </div>
 
@@ -97,7 +117,7 @@ export default {
     },
     rightIcon: {
       type: String,
-      default: 'right'
+      default: 'icon-arrow-right'
     },
     showRightIcon: Boolean,
     route: {
@@ -111,7 +131,15 @@ export default {
       default: 'large'
     },
     // 支持展开slot
-    canCollapse: Boolean
+    canCollapse: Boolean,
+    iconWidth: {
+      type: Number,
+      default: 50
+    },
+    iconHeight: {
+      type: Number,
+      default: 50
+    }
   },
   computed: {
     hasSlot () {
@@ -169,9 +197,9 @@ export default {
     flex: 1;
   }
   .pl-fields_icon {
-    width: 34px;
-    height: 34px;
-    vertical-align: -7px;
+    /*width: 34px;*/
+    /*height: 34px;*/
+    vertical-align: -14px;
   }
   .pl-fields_right {
     margin-right: 30px;
@@ -182,7 +210,6 @@ export default {
       color: #999;
     }
     .pl-fields_right_icon {
-      width: 22px;
       margin-top: 2px;
       margin-left: 10px;
       fill: #ccc;

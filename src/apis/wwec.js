@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 // 提交用户注册信息
 export const getInfo = data =>
   axios.post('/apis/v1/base/baseIntentionUser/collectinfo', data)

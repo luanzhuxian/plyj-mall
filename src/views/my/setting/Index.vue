@@ -27,19 +27,23 @@
     <div :class="$style.set">
       <pl-fields
         text="我的地址"
-        :icon="`my-address`"
+        icon="icon-my-address"
         :icon-gap="24"
+        :icon-width="40"
+        color="#387af6"
         :route="{ name: 'Address' }"
       />
       <pl-fields
         text="我的发票"
-        :icon="`my-invoice`"
+        icon="icon-my-invoice"
+        :icon-width="40"
         :icon-gap="24"
         :route="{ name: 'Invoice' }"
       />
       <pl-fields
         text="学员管理"
-        icon="student-manage"
+        icon="icon-student-manage"
+        :icon-width="40"
         :icon-gap="24"
         :route="{ name: 'StudentList' }"
       />

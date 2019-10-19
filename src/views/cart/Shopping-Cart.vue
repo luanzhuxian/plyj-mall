@@ -315,7 +315,7 @@ export default {
       let confirmList = []
       if (this.checkedList.length === 0) return
       for (let pro of this.checkedList) {
-        const { cartProductCount, cartProductId, cartSkuCode, cartSkuCode2, agentUser } = pro
+        const { cartProductCount, cartProductId, cartSkuCode, cartSkuCode2, agentUser, price } = pro
         confirmList.push({
           productId: cartProductId,
           skuCode1: cartSkuCode,
@@ -328,7 +328,9 @@ export default {
       this.$router.push({
         name: 'SubmitOrder',
         query: {
-          isCart: 'YES'
+          isCart: 'YES',
+          activeProduct: 1,
+          amount: this.summation
         }
       })
     },

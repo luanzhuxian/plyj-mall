@@ -16,7 +16,57 @@
         <pl-svg name="cart2" />
       </router-link>
     </div>
-    <div :class="$style.buttons">
+    <!-- 团购商品下单 -->
+    <div :class="$style.buttons" v-if="activeProduct === 2">
+      <button
+        :class="$style.addToCart"
+        @click="clickHandler(2)"
+        :disabled="loading || allDisabled"
+      >
+        单独购买
+        <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+      </button>
+      <button
+        :class="$style.buyNowBtn"
+        @click="clickHandler(3)"
+        :disabled="loading || allDisabled || disableConfrim"
+      >
+        我要参团
+        <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
+      </button>
+    </div>
+    <!-- 秒杀商品下单 -->
+    <div :class="$style.buttons" v-else-if="activeProduct === 3">
+      <button
+        :class="$style.addToCart"
+        @click="clickHandler(2)"
+        :disabled="loading || allDisabled"
+      >
+        原价购买
+        <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+      </button>
+      <button
+        :class="$style.buyNowBtn"
+        @click="clickHandler(3)"
+        :disabled="loading || allDisabled || disableConfrim"
+      >
+        立即秒杀
+        <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
+      </button>
+    </div>
+    <!-- 预购商品下单 -->
+    <div :class="$style.button" v-else-if="activeProduct === 4">
+      <button
+        :class="$style.preBtn"
+        @click="clickHandler(3)"
+        :disabled="loading || allDisabled"
+      >
+        定金购买
+        <div :class="$style.btnText">¥ {{ activityProductModel.price }}</div>
+      </button>
+    </div>
+    <!-- 正常商品下单 -->
+    <div :class="$style.buttons" v-else>
       <button
         :class="$style.addToCart"
         @click="clickHandler(1)"
@@ -74,7 +124,8 @@ export default {
       clickAddToCart: false,
       clickBuyNow: false,
       loading: false,
-      showContact: false
+      showContact: false,
+      activeType: 1
     }
   },
   props: {
@@ -124,7 +175,15 @@ export default {
       default: 0
     },
     disableConfrim: Boolean,
-    disableAddCart: Boolean
+    disableAddCart: Boolean,
+    activeProduct: {
+      type: Number,
+      default: 1
+    },
+    activityProductModel: {
+      type: Object,
+      default: null
+    }
   },
   computed: {
     ...mapGetters(['servicePhoneModels', 'mallDomain', 'mobile', 'agentUser', 'userId', 'cartCount']),
@@ -184,7 +243,8 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: false
+          activeProduct: this.activeType,
+          amount: options.price
         }
       })
     },
@@ -199,6 +259,13 @@ export default {
       if (type === 2) {
         this.clickBuyNow = true
         this.clickAddToCart = false
+        this.activeType = 1
+      }
+      // 立即购买按钮
+      if (type === 3) {
+        this.clickBuyNow = true
+        this.clickAddToCart = false
+        this.activeType = this.activeProduct
       }
       this.showSpecifica = true
     },
@@ -332,6 +399,18 @@ export default {
       color: rgba(255, 255, 255, .4);
     }
   }
+  .preBtn{
+    width: 440px;
+    height: 80px;
+    margin-right: 16px;
+    color: #fff;
+    font-size: 30px;
+    background: #FE7700;
+    border-radius: 10px;
+    &:disabled {
+      color: rgba(255, 255, 255, .4);
+    }
+  }
   .addToCart {
     border-radius: 10px 0 0 10px;
     background-color: $--warning-color;
@@ -339,5 +418,17 @@ export default {
   .buyNowBtn {
     border-radius: 0 10px 10px 0;
     background-color: $--primary-color;
+  }
+  .btn-text{
+    margin: 4px auto 0;
+    width: 100px;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+    background: #ffffff;
+    border-radius: 304px;
+    font-size: 20px;
+    line-height: 28px;
+    color: #FE7700;
   }
 </style>

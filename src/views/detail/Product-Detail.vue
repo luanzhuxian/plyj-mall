@@ -2,7 +2,7 @@
   <div :class="$style.lesson">
     <template v-if="productStatus !== 0">
       <!-- 海报按钮 -->
-      <div :class="$style.haibao" @click="createHaibao">
+      <div :class="$style.haibao" @click="createHaibao(detail.activeProduct)">
         <pl-svg name="haibao" />
         <p>分享海报</p>
       </div>
@@ -11,10 +11,22 @@
         :type="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' ? 'lesson' : 'product'"
         :banners="banners"
       />
+      <!-- 团购倒计时条 -->
+      <TogetherBar :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity !== 0" />
+      <!-- 秒杀倒计时条 -->
+      <SecondBar :detail="detail" v-if="detail.activeProduct === 3 && detail.preActivity !== 0" />
+      <!-- 预购倒计时条 -->
+      <BookingBar :detail="detail" v-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
       <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
         <!-- 加个 润笔 购买数量，关注人数 登信息 -->
-        <info-header :detail="detail" />
+        <info-header :detail="detail" v-if="detail.activeProduct === 1" />
+        <!-- 团购信息 -->
+        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 2" />
+        <!-- 秒杀信息 -->
+        <SecondPrice :detail="detail" v-if="detail.activeProduct === 3" />
+        <!-- 预购信息 -->
+        <BookingPrice :detail="detail" v-if="detail.activeProduct === 4" />
         <!-- 开售倒计时 -->
         <count-down
           size="large"
@@ -25,7 +37,7 @@
           :endtime="detail.shoppingTimeLong"
         />
         <!-- 商品名称 -->
-        <DetailTitle v-text="detail.productName" />
+        <DetailTitle :active-product="detail.activeProduct" :activity-tag="detail.activityProductModel.activityTag" :product-name="detail.productName" />
         <!-- 商品描述 -->
         <DetailDesc v-text="detail.productDesc" />
         <!-- 商品标签 -->
@@ -67,6 +79,8 @@
       >
         <span style="color: #FE7700;" v-text="couponText" />
       </Field>
+
+      <TogetherRule v-if="detail.activeProduct === 2" />
 
       <div :class="$style.detailOrComment">
         <div :class="$style.tabs">
@@ -128,7 +142,10 @@
       :confirm-text="confirmText"
       :disable-confrim="confirmText === '暂未开售'"
       :limiting="limiting"
+      :active-product="detail.activeProduct"
+      :activity-product-model="detail.activityProductModel || null"
     />
+
     <!-- 规格弹框 -->
     <specification-pop
       :default-count="defaultCount"
@@ -170,7 +187,10 @@
       <div :class="$style.saveHaibao" v-if="showHaibao">
         <div :class="$style.saveHaibaoContent">
           <img :src="haibao" alt="">
-          <div :class="$style.saveButton">
+          <div :class="$style.saveButton" v-if="detail.activeProduct === 1">
+            长按识别或保存二维码，分享给朋友吧！
+          </div>
+          <div :class="$style.saveButton1" v-else>
             长按识别或保存二维码，分享给朋友吧！
           </div>
           <pl-svg name="close3" color="#fff" @click="showHaibao = false;" />
@@ -197,6 +217,8 @@
               :instruction="item.brief"
               :use-end-time="item.useEndTime"
               :use-start-time="item.useStartTime"
+              :receive-count="item.count"
+              @couponClick="couponClick(item.id)"
             />
           </template>
         </div>
@@ -206,7 +228,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import DetailBanner from '../../components/detail/Banner.vue'
 import DetailInfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
@@ -217,9 +238,9 @@ import Tags from '../../components/detail/Tags.vue'
 import UsefulLife from '../../components/detail/Useful-Life.vue'
 import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
-import Price from '../../components/product/Price.vue'
 import Field from '../../components/detail/Field.vue'
 import { getProductDetail, getCouponInDetail } from '../../apis/product'
+import { receiveCoupon } from '../../apis/my-coupon'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
@@ -231,15 +252,28 @@ import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/uti
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
 import CouponItem from '../../components/item/Coupon-Item.vue'
+import TogetherBar from './together/Together-Bar'
+import SecondBar from './second/Second-Bar'
+import BookingBar from './booking/Booking-Bar'
+import TogetherRule from './together/Together-Rule'
+import TogetherPrice from './together/Together-Price'
+import SecondPrice from './second/Second-Price'
+import BookingPrice from './booking/Booking-Price'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
   components: {
+    TogetherPrice,
+    SecondPrice,
+    BookingPrice,
+    TogetherRule,
+    TogetherBar,
+    SecondBar,
+    BookingBar,
     DetailBanner,
     DetailTitle,
     DetailDesc,
     DetailInfo,
-    Price,
     Field,
     Tags,
     BuyNow,
@@ -318,7 +352,7 @@ export default {
     couponText () {
       let text = ''
       this.couponList.map((item, index) => {
-        return text += `满${item.useLimitAmount}减¥${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
+        text += `满${item.useLimitAmount}减¥${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
       })
       return text
     }
@@ -424,6 +458,15 @@ export default {
         throw e
       }
     },
+    async couponClick (id) {
+      try {
+        await receiveCoupon(id)
+        this.$success('领取成功')
+        await this.getCouponList()
+      } catch (e) {
+        throw e
+      }
+    },
     resetState () {
       this.currentModel = {}
       this.banners.splice(0, 1000000)
@@ -491,11 +534,13 @@ export default {
       this.$router.push({
         name: 'SubmitOrder',
         query: {
-          isCart: 'NO'
+          isCart: 'NO',
+          activeProduct: this.detail.activeProduct,
+          amount: selected.price
         }
       })
     },
-    async createHaibao () {
+    async createHaibao (type) {
       if (this.loading) {
         return
       }
@@ -516,53 +561,118 @@ export default {
         lodedAvatar = await this.loadImage(avatar)
       }
       const arcAvatar = cutArcImage(lodedAvatar)
+      const allImgs = [
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/poster3.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/poster2.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/poster1.png'),
+        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/dikou-1571393161453.png'),
+        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/original_price-1571393161453.png'),
+        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/second_price-1571393161453.png'),
+        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/tuan_price-1571393161453.png'),
+        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/yuan-1571393161453.png'),
+        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/yujiao-1571393161453.png')
+      ]
+      const res = await Promise.all(allImgs)
+      const tuanBg = res[0]
+      const miaoBg = res[1]
+      const yugouBg = res[2]
+      const dikou = res[3]
+      const original_price = res[4]
+      const second_price = res[5]
+      const tuan_price = res[6]
+      const yuan = res[7]
+      const yujiao = res[8]
       // 截取中间部分
       img = cutImageCenter(img)
       let canvas = document.createElement('canvas')
       canvas.width = 1120
       canvas.height = 1720
       let ctx = canvas.getContext('2d')
-      // 绘制头部
-      ctx.fillStyle = '#fff'
-      ctx.fillRect(0, 0, 1120, 192)
-      ctx.drawImage(arcAvatar, 32, 32, 128, 128)
-      fontStyle(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 800, 1)
-      // fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
-
+      if (type === 1) {
+        // 绘制头部
+        ctx.fillStyle = '#fff'
+        ctx.fillRect(0, 0, 1120, 192)
+        ctx.drawImage(arcAvatar, 32, 32, 128, 128)
+        fontStyle(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 800, 1)
+        // fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
+      }
+      if (type === 2) {
+        ctx.drawImage(tuanBg, 0, 0, 1120, 192)
+      }
+      if (type === 3) {
+        ctx.drawImage(miaoBg, 0, 0, 1120, 192)
+      }
+      if (type === 4) {
+        ctx.drawImage(yugouBg, 0, 0, 1120, 192)
+      }
       try {
         let min = Math.min(img.width, img.height)
         // 二维码
-        let qrcode = await generateQrcode(300, window.location.href, 0, img, 10, 'canvas')
+        let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'canvas')
         ctx.drawImage(img, 0, 0, min, min, 0, 192, 1120, 1120)
-        ctx.fillStyle = '#fff'
+        if (type === 1) {
+          ctx.fillStyle = '#fff'
+        } else {
+          ctx.fillStyle = '#FA4D2F'
+        }
         ctx.fillRect(0, 1312, 1120, 408)
         ctx.drawImage(qrcode, 750, 1352, 320, 320)
         // 填充商品名称
         let str = this.detail.productName
-        fontStyle(ctx, '56px Microsoft YaHei UI', '#000', 'top')(ctx, 48, 1352, str, 80, 620, 2)
-        // 填充价钱
+        fontStyle(ctx, '56px Microsoft YaHei UI', type === 1 ? '#000' : '#fff', 'top')(ctx, 48, 1352, str, 80, 620, 2)
         let priceList = this.detail.productSkuModels.map(item => item.price)
         let originalPriceList = this.detail.productSkuModels.map(item => item.originalPrice)
         let price = Math.min(...priceList)
         let originalPrice = Math.max(...originalPriceList)
-        ctx.fillStyle = '#FE7700'
-        ctx.fillText('¥', 48, 1564 + (76 - 56) / 2)
-        fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1544 + (104 - 88) / 2, String(price), 104)
-        // 绘制原价
-        if (originalPrice) {
-          let priceWidth = ctx.measureText(price).width
-          ctx.fillStyle = '#999'
-          ctx.font = '56px Microsoft YaHei UI'
-          ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1564 + (80 - 56) / 2)
-          let originalPriceWidth = ctx.measureText(`¥${originalPrice}`).width
-          ctx.save()
-          // 设置删除线
-          ctx.strokeStyle = '#999'
-          ctx.beginPath()
-          ctx.lineWidth = '4'
-          ctx.moveTo(96 + priceWidth + 44, 1564 + (80 - 56) / 2 + 80 / 3)
-          ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1564 + (80 - 56) / 2 + 80 / 3)
-          ctx.stroke()
+        if (type === 1) {
+          // 填充价钱
+          ctx.fillStyle = '#FE7700'
+          ctx.fillText('¥', 48, 1564 + (76 - 56) / 2)
+          fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1544 + (104 - 88) / 2, String(price), 104)
+          // 绘制原价
+          if (originalPrice) {
+            let priceWidth = ctx.measureText(price).width
+            ctx.fillStyle = '#999'
+            ctx.font = '56px Microsoft YaHei UI'
+            ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1564 + (80 - 56) / 2)
+            let originalPriceWidth = ctx.measureText(`¥${originalPrice}`).width
+            ctx.save()
+            // 设置删除线
+            ctx.strokeStyle = '#999'
+            ctx.beginPath()
+            ctx.lineWidth = '4'
+            ctx.moveTo(96 + priceWidth + 44, 1564 + (80 - 56) / 2 + 80 / 3)
+            ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1564 + (80 - 56) / 2 + 80 / 3)
+            ctx.stroke()
+          }
+        } else if (type === 2) {
+          ctx.drawImage(tuan_price, 48, 1464, 440, 122)
+          ctx.fillStyle = '#fff'
+          ctx.font = '112px Microsoft YaHei UI'
+          ctx.fillText(this.detail.activityProductModel.price, 380, 1454)
+          ctx.drawImage(yuan, 460, 1464, 68, 68)
+          ctx.drawImage(original_price, 48, 1584, 220, 78)
+          ctx.fillText(price, 300, 1564)
+          ctx.drawImage(yuan, 400, 1584, 68, 68)
+        } else if (type === 3) {
+          ctx.drawImage(second_price, 48, 1464, 440, 122)
+          ctx.fillStyle = '#fff'
+          ctx.font = '112px Microsoft YaHei UI'
+          ctx.textAlign = 'center'
+          ctx.fillText(this.detail.activityProductModel.price, 380, 1454)
+          ctx.drawImage(yuan, 460, 1474, 68, 68)
+          ctx.drawImage(original_price, 48, 1584, 220, 78)
+          ctx.fillText(price, 300, 1564)
+          ctx.drawImage(yuan, 400, 1584, 68, 68)
+        } else if (type === 4) {
+          ctx.drawImage(yujiao, 48, 1464, 440, 56)
+          ctx.fillStyle = '#fff'
+          ctx.font = '112px Microsoft YaHei UI'
+          ctx.fillText(this.detail.activityProductModel.price, 380, 1454)
+          ctx.drawImage(yuan, 460, 1474, 68, 68)
+          ctx.drawImage(dikou, 48, 1584, 220, 78)
+          ctx.fillText(price, 300, 1564)
+          ctx.drawImage(yuan, 400, 1584, 68, 68)
         }
         this.haibao = canvas.toDataURL('image/jpeg', 0.7)
         this.showHaibao = true
@@ -643,7 +753,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
   for (let [i, str] of strArr.entries()) {
     ctx.fillText(str, x, y + lineHeight * i)
   }
-  return  ctx.measureText(strArr[0]).width
+  return ctx.measureText(strArr[0]).width
 }
 </script>
 
@@ -766,6 +876,15 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
         font-size: 28px;
         color: #666;
         background-color: #FBFBFB;
+      }
+      > .saveButton1{
+        width: 560px;
+        margin-top: -4px;
+        text-align: center;
+        line-height: 66px;
+        font-size: 28px;
+        color: #FA4D2F;
+        background-color: #FEDB63;
       }
       > img {
         width: 560px;
