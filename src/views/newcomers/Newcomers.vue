@@ -43,6 +43,7 @@
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
+import share from '../../assets/js/wechat/wechat-share'
 import GiftTicket from './GiftTicket'
 import { getNewcomersDetail, claimCoupons } from '../../apis/newcomers'
 
@@ -88,6 +89,7 @@ export default {
 
   async created () {
     await this.getNewcomersDetail()
+    this.share()
   },
 
   async activated () {
@@ -95,6 +97,16 @@ export default {
   },
 
   methods: {
+    // 初始化分享数据
+    share () {
+      share({
+        appId: this.appId,
+        title: '新人有礼优惠多多',
+        desc: '快来成为新会员，即可领取优惠大礼包1份',
+        link: window.location.href,
+        imgUrl: this.logoUrl
+      })
+    },
     async getNewcomersDetail () {
       let { result } = await getNewcomersDetail(this.$route.params.activityId)
 
