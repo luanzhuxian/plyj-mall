@@ -1,10 +1,25 @@
 <template>
-  <div :class="$style.templateFengqiang">
+  <div :class="$style.templateBaofa">
+    <Coupon
+      v-if="COUPON.values && COUPON.values.length"
+      :data="COUPON"
+      :type="type"
+    />
     <!-- 直播-->
     <Broadcast
       v-if="$attrs.live && $attrs.live.statue === 1"
       :class="$style.broadcast"
       v-bind="$attrs"
+    />
+    <Maisong
+      v-if="MAI_SONG.values && MAI_SONG.values.length"
+      :data="MAI_SONG"
+      :type="type"
+    />
+    <Miaosha
+      v-if="MIAO_SHA.values && MIAO_SHA.values.length"
+      :data="MIAO_SHA"
+      :type="type"
     />
     <!-- 活动 -->
     <div :class="$style.moduleActivity">
@@ -17,27 +32,10 @@
       v-if="PIN_TUAN.values && PIN_TUAN.values.length"
       :data="PIN_TUAN"
     />
-    <Maisong
-      v-if="MAI_SONG.values && MAI_SONG.values.length"
-      :data="MAI_SONG"
-      :type="type"
-    />
-    <Coupon
-      v-if="COUPON.values && COUPON.values.length"
-      :data="COUPON"
-    />
-    <Yugou
-      v-if="YU_GOU.values && YU_GOU.values.length"
-      :data="YU_GOU"
-    />
     <Fengqiang
       v-if="FENG_QIANG.values && FENG_QIANG.values.length"
       :data="FENG_QIANG"
       :type="type"
-    />
-    <BestRecommend
-      v-if="RECOMMEND.values && RECOMMEND.values.length"
-      :data="RECOMMEND"
     />
   </div>
 </template>
@@ -47,9 +45,8 @@ import Broadcast from './components/Broadcast.vue'
 import Pintuan from './components/Pintuan.vue'
 import Coupon from './components/Coupon.vue'
 import Maisong from './components/Maisong.vue'
-import Yugou from './components/Yugou.vue'
 import Fengqiang from './components/Fengqiang.vue'
-import BestRecommend from './components/Best-Recommend.vue'
+import Miaosha from './components/Miaosha.vue'
 
 export default {
   name: 'HomeTemplateB',
@@ -58,9 +55,8 @@ export default {
     Pintuan,
     Coupon,
     Maisong,
-    Yugou,
     Fengqiang,
-    BestRecommend
+    Miaosha
   },
   data () {
     return {}
@@ -78,33 +74,27 @@ export default {
     }
   },
   computed: {
+    COUPON () {
+      return this.data.COUPON || {}
+    },
+    MAI_SONG () {
+      return this.data.MAI_SONG || {}
+    },
     MIAO_SHA () {
       return this.data.MIAO_SHA || {}
     },
     PIN_TUAN () {
       return this.data.PIN_TUAN || { values: [] }
     },
-    MAI_SONG () {
-      return this.data.MAI_SONG || {}
-    },
-    COUPON () {
-      return this.data.COUPON || {}
-    },
-    YU_GOU () {
-      return this.data.YU_GOU || {}
-    },
     FENG_QIANG () {
       return this.data.FENG_QIANG || {}
-    },
-    RECOMMEND () {
-      return this.data.RECOMMEND || { values: [] }
     }
   }
 }
 </script>
 
 <style module lang="scss">
-  .template-fengqiang {
+  .template-baofa {
     .broadcast {
       margin: 0 24px 16px;
     }
