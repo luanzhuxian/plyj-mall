@@ -331,7 +331,7 @@ export default {
       }
     }
     > button {
-      margin-top: 22px;
+      // margin-top: 22px;
       padding: 12px 26px;
       font-size: 32px;
       color: #fff;

@@ -1,40 +1,66 @@
 <template>
   <div :class="$style.activity">
     <div :class="$style.background">
-      <!-- <div :class="$style.wrapper"> -->
       <div :class="$style.container">
         <div :class="$style.btnTop" />
         <TemplateFengqiang
+          v-if="type === 5"
           :data="modules"
           :type="type"
+          :live="liveInfo"
+        />
+        <TemplateBaofa
+          v-if="type === 6"
+          :data="modules"
+          :type="type"
+          :live="liveInfo"
+        />
+        <TemplateFanchang
+          v-if="type === 7"
+          :data="modules"
+          :type="type"
+          :live="liveInfo"
         />
       </div>
-      <!-- </div> -->
     </div>
   </div>
 </template>
 
 <script>
-// import Search from './components/Search.vue'
 // import { mapGetters } from 'vuex'
 // import moment from 'moment'
-import { getTemplate } from '../../apis/home'
+// import Search from './components/Search.vue'
 import TemplateFengqiang from './Template-Fengqiang.vue'
+import TemplateBaofa from './Template-Baofa.vue'
+import TemplateFanchang from './Template-Fanchang.vue'
+import { getCurrentTemplate, getLiveInfo } from '../../apis/home'
+
 export default {
   name: 'Activity',
   components: {
-    TemplateFengqiang
+    TemplateFengqiang,
+    TemplateBaofa,
+    TemplateFanchang
   },
   data () {
     return {
-      loaded: false,
       type: 0,
-      modules: {}
+      modules: {
+        COUPON: null,
+        MAI_SONG: null,
+        PIN_TUAN: null,
+        YU_GOU: null,
+        MIAO_SHA: null,
+        FENG_QIANG: null,
+        RECOMMEND: null
+      },
+      liveInfo: {}
     }
   },
   async created () {
     try {
-      // await this.getTemplate()
+      await this.getTemplate()
+      await this.getLiveInfo()
     } catch (e) {
       throw e
     }
@@ -45,83 +71,65 @@ export default {
   methods: {
     async getTemplate () {
       try {
-        const { result } = await getTemplate()
+        const { result } = await getCurrentTemplate({ type: 2 })
         if (!result) {
-          this.noFinish = true
           this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
             .finally(() => {
               this.$router.replace({ name: 'Classify' })
             })
           return
         }
-        const { moduleModels } = result
-        let { type } = result
-        let modules
-        if (type === 3) {
-          modules = {
-            BANNER: null,
-            POPULAR: null,
-            YUYUE: null,
-            PINGXUAN: null,
-            CLASS: null,
-            RECOMMEND: null
-          }
-          modules.BANNER = moduleModels[0]
-          modules.POPULAR = moduleModels[1]
-          modules.YUYUE = moduleModels[2]
-          modules.PINGXUAN = moduleModels[3]
-          modules.CLASS = moduleModels[4]
-          modules.RECOMMEND = moduleModels[5]
-        }
-        if (type === 4) {
-          modules = {
-            BANNER: null,
-            ADV: null,
-            POPULAR: null,
-            YUYUE: null,
-            PINGXUAN: null,
-            CLASS: null,
-            RECOMMEND: null
-          }
-          modules.BANNER = moduleModels[0]
-          modules.ADV = moduleModels[1]
-          modules.POPULAR = moduleModels[2]
-          modules.YUYUE = moduleModels[3]
-          modules.PINGXUAN = moduleModels[4]
-          modules.CLASS = moduleModels[5]
-          modules.RECOMMEND = moduleModels[6]
-        }
-        this.modules = modules
-        this.loaded = true
+        let { type, moduleModels } = result
         this.type = type
+        if (type === 5) {
+          this.modules.MIAO_SHA = moduleModels[0]
+          this.modules.PIN_TUAN = moduleModels[1]
+          this.modules.MAI_SONG = moduleModels[2]
+          this.modules.COUPON = moduleModels[3]
+          this.modules.YU_GOU = moduleModels[4]
+          this.modules.FENG_QIANG = moduleModels[5]
+          this.modules.RECOMMEND = moduleModels[6]
+        }
+        if (type === 6) {
+          this.modules.COUPON = moduleModels[0]
+          this.modules.MAI_SONG = moduleModels[1]
+          this.modules.MIAO_SHA = moduleModels[2]
+          this.modules.PIN_TUAN = moduleModels[3]
+          this.modules.FENG_QIANG = moduleModels[4]
+        }
+        if (type === 7) {
+          this.modules.MAI_SONG = moduleModels[0]
+          this.modules.MIAO_SHA = moduleModels[1]
+          this.modules.PIN_TUAN = moduleModels[2]
+          this.modules.FENG_QIANG = moduleModels[3]
+          this.modules.RECOMMEND = moduleModels[4]
+        }
       } catch (e) {
         throw e
       }
+    },
+    async getLiveInfo () {
+      try {
+        const { result } = await getLiveInfo()
+        this.liveInfo = result || {}
+      } catch (error) {
+        throw error
+      }
     }
   }
-  // beforeRouteEnter (to, from, next) {
-  //   next(vm => {
-  //     if (vm.noFinish) {
-  //       vm.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
-  //         .finally(() => {
-  //           vm.$router.replace({ name: 'Classify' })
-  //         })
-  //     }
-  //   })
-  // }
 }
 </script>
 <style module lang="scss">
   .activity {
     position: relative;
-    background: #C5010B;
+    background: #E90000;
+    min-height: 100vh;
     .background {
-      min-height: 900px;
       background: url("../../assets/images/activity/activity-bg.png") no-repeat center top;
       background-size: 100% auto;
     }
     .container {
-      padding: 320px 24px 24px;
+      padding: 320px 24px 176px;
     }
     .btn-top {
       width: 520px;
