@@ -37,7 +37,7 @@
           :endtime="detail.shoppingTimeLong"
         />
         <!-- 商品名称 -->
-        <DetailTitle :active-product="detail.activeProduct" :activity-tag="detail.activityProductModel.activityTag" :product-name="detail.productName" />
+        <DetailTitle :active-product="detail.activeProduct" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
         <!-- 商品描述 -->
         <DetailDesc v-text="detail.productDesc" />
         <!-- 商品标签 -->

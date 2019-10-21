@@ -180,12 +180,12 @@ export default {
     disableConfrim: Boolean,
     disableAddCart: Boolean,
     activeProduct: {
-      type: Number,
+      type: [Number, String],
       default: 1
     },
     preActivity: {
-      type: Number,
-      default: 1
+      type: [Number, String],
+      default: 0
     },
     activityProductModel: {
       type: Object,
