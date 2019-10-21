@@ -57,6 +57,12 @@ export const sendCustomMessage = (channelId, data) => {
  * @returns {Promise<AxiosResponse<T>>}
  */
 export const sign = data => Instance.post(`/apis/v1/mall/live/room/sign`, data)
+/**
+ * 获取直播活动全部信息
+ * @param id
+ * @return {Promise<AxiosResponse<T>>}
+ */
+export const getActiveCompleteInfo = (id = '') => Instance.get(`/apis/v1/mall/live/activity/current/complete?id=${id}`)
 
 function request (config) {
   return config
