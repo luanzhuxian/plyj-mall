@@ -130,7 +130,7 @@
           <p>长按图片保存分享给好友</p>
           <pl-icon name="icon-error" size="48" color="#fff" @click="showShare = false" />
         </template>
-        <pl-icon class="rotate" v-else name="icon-btn-loading" size="48" color="#fff" @click="showShare = false" />
+        <pl-icon class="rotate" v-else name="icon-btn-loading" size="48" color="#fff" />
       </div>
     </transition>
   </div>

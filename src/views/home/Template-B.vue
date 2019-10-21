@@ -2,6 +2,11 @@
   <div :class="$style.homeTemplateB">
     <Search placeholder="搜索商品" />
     <Banner :data="BANNER" />
+    <img
+      :class="$style.shuang12"
+      src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/double-twelve-header-1571393161453.png.png" alt=""
+      @click="$router.push({ name: 'DoubleTwelveDay' })"
+    >
     <!--<slot name="88" />-->
     <HotItem :data="POPULAR" v-if="POPULAR.showStatue === 1" />
     <appointment-gift :data="{ YUYUE, PINGXUAN }" />
@@ -77,5 +82,10 @@ export default {
   .home-Template-b {
     background-color: #EDEDED;
     font-size: 0;
+  }
+  .shuang12 {
+    display: block;
+    width: 704px;
+    margin: 20px auto;
   }
 </style>
