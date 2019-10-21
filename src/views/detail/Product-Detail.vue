@@ -381,6 +381,7 @@ export default {
     this.haibao = ''
     this.showHaibao = false
     this.tab = 2
+    this.showCoupon = false
   },
   async mounted () {
     // 其他人的分享id
