@@ -26,7 +26,7 @@
           }"
           @click="tab = 2"
         >
-          优惠券<i>(24)</i>
+          优惠券<i>({{ couponList.length }})</i>
         </div>
         <div
           :class="{
@@ -35,7 +35,7 @@
           }"
           @click="tab = 3"
         >
-          商品<i>(24)</i>
+          商品<i>({{ productList.length }})</i>
         </div>
       </div>
 
