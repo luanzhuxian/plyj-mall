@@ -137,7 +137,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import { generateQrcode, cutArcImage, createText, drawRoundRect } from '../../assets/js/util'
 import {
   userHelp,
@@ -145,7 +144,6 @@ import {
   getEntDetail
 } from '../../apis/double-twelve-day'
 import { mapGetters } from 'vuex'
-const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'DoubleTwelveDayActivity',
   data () {
