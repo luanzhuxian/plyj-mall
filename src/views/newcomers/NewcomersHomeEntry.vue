@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+import { mapGetters } from 'vuex'
 import Overlay from '../invitenewcomers/components/Overlay'
 import { getCurrentActivity } from '../../apis/newcomers'
 
@@ -27,8 +29,17 @@ export default {
   },
   data () {
     return {
-      showSelf: false,
-      activityInfo: {}
+      activityInfo: { status: 0 }
+    }
+  },
+
+  computed: {
+    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    isActivityStoped () {
+      return moment(this.activityInfo.activityEndTime).isBefore(moment()) || this.activityInfo.status === 0
+    },
+    showSelf () {
+      return (!this.isActivityStoped) && (this.userId !== '')
     }
   },
 

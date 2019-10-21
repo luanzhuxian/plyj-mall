@@ -62,18 +62,6 @@ export default {
     isNewUser () {
       return this.userId === ''
     },
-    inviteDescription () {
-      if (this.canOpenGiftPackage) {
-        return '已经成功邀请3个好友助力, 立即开豪礼'
-      }
-
-      return `还差${3 - this.totalHelpers % 3}个好友助力，即可开豪礼`
-    },
-
-    canOpenGiftPackage () {
-      return this.totalHelpers > 0 && this.totalHelpers % 3 === 0
-    },
-
     isActivityStarted () {
       let startTime = moment(this.activityInfo.activityStartTime)
       return moment().isSameOrAfter(startTime)
