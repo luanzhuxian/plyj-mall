@@ -29,7 +29,7 @@
           <i v-text="entDetail.totalAssisting || 0" />次
         </div>
       </div>
-      <div :class="$style.helpMe" @click="share">帮我助力</div>
+      <div :class="$style.helpMe" @click="share">帮我上榜</div>
       <!-- 分隔线 -->
       <div :class="$style.lineBetween" />
       <!-- 轴 -->
@@ -116,7 +116,7 @@
           <p>预约成功</p>
           <p>您已成功预约{{ mallName }}</p>
           <p>携手双十二疯狂同学学会</p>
-          <div @click="share">帮我助力</div>
+          <div @click="share">帮我上榜</div>
           <pl-icon name="icon-error" size="48" color="#fff" @click="showSuccess = false" />
         </div>
       </div>
