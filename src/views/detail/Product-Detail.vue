@@ -144,6 +144,7 @@
       :limiting="limiting"
       :active-product="detail.activeProduct"
       :activity-product-model="detail.activityProductModel || null"
+      :pre-activity="detail.preActivity"
     />
 
     <!-- 规格弹框 -->
