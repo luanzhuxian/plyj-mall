@@ -7,6 +7,7 @@
         [$style.playerBox]: true
       }"
     />
+    <!-- 聊天 -->
     <div :class="$style.chatRoom">
       <div :class="$style.tabs">
         <div
@@ -25,7 +26,7 @@
           }"
           @click="tab = 2"
         >
-          优惠券<i>(24)</i>
+          优惠券<i>({{ couponList.length }})</i>
         </div>
         <div
           :class="{
@@ -34,7 +35,7 @@
           }"
           @click="tab = 3"
         >
-          商品<i>(24)</i>
+          商品<i>({{ productList.length }})</i>
         </div>
       </div>
 
@@ -96,24 +97,38 @@
         </div>
         <div v-if="tab === 2" :class="$style.couponList">
           <div :class="$style.tabTitle">
-            可用优惠券（20张）
+            可用优惠券（{{ couponList.length }}张）
           </div>
           <div>
-            <CouponItem />
+            <CouponItem
+              v-for="(item, i) of couponList"
+              :key="i"
+              :id="item.couponId"
+              :use-end-time="item.useEndTime"
+              :use-start-time="item.useStartTime"
+              :full="item.limitNum"
+              :subtract="item.grantNum"
+              :instruction="item.couponName"
+              @couponClick="couponClick(item.couponId)"
+            />
           </div>
         </div>
         <div v-if="tab === 3" :class="$style.productList">
           <div :class="$style.tabTitle">
-            可用优惠券（20张）
+            精选商品（{{ productList.length }}件）
           </div>
-          <div :class="$style.product">
-            <img src="https://img.alicdn.com/tfs/TB1ScSpiNv1gK0jSZFFXXb0sXXa-1130-500.jpg_q100.jpg_.webp" alt="">
+          <div
+            v-for="(item, i) of productList"
+            :key="i"
+            :class="$style.product"
+          >
+            <img :src="item.productMainImage" alt="">
             <div :class="$style.left">
-              <div :class="$style.name">1</div>
-              <div :class="$style.price">2</div>
-              <div :class="$style.count">3</div>
+              <div :class="$style.name" v-text="item.productName" />
+              <div :class="$style.price" v-text="item.price" />
+              <!--<div :class="$style.count">3</div>-->
             </div>
-            <div :class="$style.vieFor">
+            <div :class="$style.vieFor" @click="$router.push({ name: 'Lesson', params: { productId: item.id, brokerId, userId } })">
               <pl-icon name="icon-vie-for" color="#fff" size="40" />
             </div>
           </div>
@@ -124,6 +139,7 @@
         <form :class="$style.inputBox" @submit.prevent="messageConfirm">
           <!--<pl-icon name="icon-biaoqing" size="42" color="#a8a8a8" @click="showEmoticon = !showEmoticon" />-->
           <input v-model="message" placeholder=" 进来了说点什么呗~" type="text">
+          <button :class="$style.sendBtn">发送</button>
         </form>
         <div :class="$style.sendFlower" @click="sendFlower">
           <pl-icon name="icon-flower" size="37" color="#F9DD54" />
@@ -157,8 +173,12 @@ import CouponItem from '../../components/item/Coupon-Item.vue'
 import {
   sendMessage,
   sendCustomMessage,
+  getActiveCompleteInfo,
   sign
 } from '../../apis/live'
+import {
+  receiveCoupon
+} from '../../apis/my-coupon'
 import io from 'socket.io-client'
 export default {
   name: 'Live',
@@ -189,7 +209,10 @@ export default {
        *   self: { Boolean },  是否是自己发送的
        * }
        */
-      chatRecords: []
+      chatRecords: [],
+      couponList: [],
+      productList: []
+
       // emoticon
     }
   },
@@ -206,6 +229,7 @@ export default {
   async mounted () {
     this.initPlayer()
     this.initSocket()
+    this.getDetail()
   },
   methods: {
     initPlayer () {
@@ -228,9 +252,10 @@ export default {
         if (video) {
           // video.setAttribute('x5-video-player-fullscreen', true)
           // video.setAttribute('x5-video-player-type', 'h5-page')
-          video.addEventListener("x5videoenterfullscreen", function() {
-            video.style.width = window.screen.width + 'px'
-            video.style.height = window.screen.height + 'px'
+          video.addEventListener("x5videoenterfullscreen", function(e) {
+            console.log('x5videoenterfullscreen')
+            // video.style.width = window.screen.width + 'px'
+            // video.style.height = window.screen.height + 'px'
           }, false)
           clearInterval(timer)
         }
@@ -277,11 +302,11 @@ export default {
           case 'SPEAK':
             if (this.userName !== user.nick) {
               let message =  mData.values.join(',')
-              let emo = /\[.+\]/.exec(message)
-              console.log(message)
-              for (let e of emo) {
-                console.log(e)
-              }
+              // let emo = /\[.+\]/.exec(message)
+              // console.log(message)
+              // for (let e of emo) {
+              //   console.log(e)
+              // }
               this.chatRecords.push({
                 message,
                 name: user.nick,
@@ -303,6 +328,7 @@ export default {
       }
     },
     async sendMessage (message) {
+      console.log(message)
       try {
         let { channelId, appId, userId, avatar, userName } = this
         let timestamp = Date.now()
@@ -310,6 +336,7 @@ export default {
           signMsg: `appId${appId}channelId${channelId}msg${message}nickName${userName}pic${avatar}timestamp${timestamp}`,
           roomId: channelId
         })
+        console.log(result)
         let messageConfig = {
           appId,
           timestamp,
@@ -339,7 +366,6 @@ export default {
         loading: true,
         self: true
       }
-      this.message = ''
       try {
         this.chatRecords.push(o)
         this.scrollBottom()
@@ -354,6 +380,7 @@ export default {
         if (this.chatRecords.length > this.maxRecords) {
           this.chatRecords.shift()
         }
+        this.message = ''
       }
     },
     /* 重新发送 */
@@ -390,6 +417,52 @@ export default {
       let scrollHeight = box.scrollHeight
       await this.$nextTick()
       box.scrollBy(0, scrollHeight)
+    },
+    async getDetail () {
+      try {
+        let data = await getActiveCompleteInfo()
+        if (data) {
+          this.couponList = data.couponList
+          this.productList = data.productList
+        }
+      } catch (e) {
+
+      }
+    },
+    async couponClick (id) {
+      try {
+        await receiveCoupon(id)
+        this.$success('领取成功')
+      } catch (e) {
+        throw e
+      }
+    },
+    fullScreen () {
+      let isFullScreen = false
+      let element = document.documentElement;
+      if (!isFullScreen) {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        }
+        isFullScreen = true
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        isFullScreen = false
+      }
     }
   }
 }
@@ -527,11 +600,12 @@ export default {
     }
   }
   .input-box {
+    position: relative;
     display: inline-flex;
     align-items: center;
     width: 606px;
     height: 74px;
-    padding: 0 16px;
+    padding: 0 140px 0 16px;
     line-height: 74px;
     background-color: #f7f7f7;
     border: 1px solid #EEEEEE;
@@ -545,6 +619,20 @@ export default {
       line-height: 36px;
       background-color: transparent;
     }
+  }
+
+  .send-btn {
+    position: absolute;
+    top: -1;
+    right: 0;
+    width: 124px;
+    line-height: 76px;
+    text-align: center;
+    color: #fff;
+    font-size: 28px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #F2B036;
   }
 
   .send-flower {
@@ -572,6 +660,7 @@ export default {
     position: relative;
     display: flex;
     height: 262px;
+    margin-bottom: 20px;
     padding: 16px;
     background-color: #fff;
     border-radius: 20px;

@@ -259,7 +259,7 @@
                 <span v-text="lessonErrorTip" />
               </div>
               <div>
-                <span v-if="CHECKED_STUDENT[item.skuCode1]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
+                <span v-if="CHECKED_STUDENT[item.skuCode1 + item.skuCode2]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
                 <span v-else>已选0人</span>
                 <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
               </div>

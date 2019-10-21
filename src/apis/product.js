@@ -8,4 +8,8 @@ export const getCouponInDetail = () => axios.get('/apis/v1/coupon/list/productDe
 // C 端领取当前商品优惠券
 export const receiveCoupon = (couponId) => axios.post(`/apis/v1/coupon/receive?couponId=${couponId}`)
 // C 端秒杀列表
-export const secondActivityPage = params => axios.get('/apis/v1/seckill/activity/page', { params })
+export const secondActivityPage = params => axios.get('/apis/v1/seckill/activity/queryList', { params })
+// C 端拼团列表
+export const tuanActivityPage = params => axios.get('/apis/v1/group/buy/queryList', { params })
+// C 端预购列表
+export const bookActivityPage = params => axios.get('/apis/v1/pre/buy/queryList', { params })

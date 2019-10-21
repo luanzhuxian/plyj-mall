@@ -185,6 +185,10 @@
             v-text="productInfoModel.freight || 0"
           />
         </p>
+        <p v-if="activityData.amount > 0">
+          <span v-text="activityData.couponName" />
+          <span v-text="'-¥' + (activityData.amount || 0)" />
+        </p>
       </div>
 
       <div :class="$style.amount">
@@ -586,6 +590,7 @@ export default {
       invoiceModelList: [],
       studentInfoModels: [],
       redeemCodeModels: [],
+      activityData: {},
       orderStatusAlias: '',
       shippingAddress: {
         realName: ' ',
@@ -839,7 +844,8 @@ export default {
             invoiceModelList,
             studentInfoModels,
             orderStatusAlias,
-            redeemCodeModels
+            redeemCodeModels,
+            activityData
           } = result
           this.detail = result
           this.orderStatus = orderStatus
@@ -853,6 +859,7 @@ export default {
           this.studentInfoModels = studentInfoModels || []
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
+          this.activityData = activityData || {}
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['count']
           }, 0);  // eslint-disable-line

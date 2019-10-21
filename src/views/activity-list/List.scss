@@ -1,0 +1,231 @@
+.bg{
+  min-height: 100vh;
+  &.tuan-bg{
+    background: #FBA461 url("../../assets/images/activiy-list/tuan_bg.jpg") top center no-repeat;
+  }
+  &.book-bg{
+    background: #D53797 url("../../assets/images/activiy-list/book_bg.jpg") top center no-repeat;
+  }
+  &.second-bg{
+    background: #E0030C url("../../assets/images/activiy-list/second_bg.jpg") top center no-repeat;
+  }
+  .main{
+    padding: 286px 24px 48px;
+    .list{
+      border-radius: 20px;
+      padding: 20px 20px 48px;
+      margin-bottom: 48px;
+      &.tuan-ing{
+        background: #F3252F;
+      }
+      &.tuan-coming{
+        background: #F3BD93;
+      }
+      &.second-ing{
+        background: #E46503;
+      }
+      &.second-coming{
+        background: #F03E47;
+      }
+      &.book-ing{
+        background: #EA68B7;
+      }
+      &.book-coming{
+        background: #EA8BC4;
+      }
+      .head{
+        display: flex;
+        justify-content: center;
+      }
+      .item{
+        display: flex;
+        padding: 16px;
+        background: #ffffff;
+        border-radius: 12px;
+        margin-top: 20px;
+        &.book-item{
+          flex-direction: column;
+          .book-ing-title{
+            width: 144px;
+            text-align: center;
+            height: 34px;
+            line-height: 34px;
+            background: #FF6767;
+            border-radius: 4px;
+            color: #fff;
+            font-size:24px;
+            margin-bottom: 16px;
+          }
+          .book-ing-content{
+            display: flex;
+          }
+        }
+        .img{
+          width: 280px;
+          height: 188px;
+          margin-right: 16px;
+          position: relative;
+          img{
+            width: 280px;
+            height: 188px;
+            border-radius: 12px;
+          }
+          &.book-img{
+            width: 264px;
+            height: 176px;
+            margin-right: 20px;
+            img{
+              width: 264px;
+              height: 176px;
+              border-radius: 12px;
+            }
+          }
+          .count-down{
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 52px;
+            background: rgba(0, 0, 0, .65);
+            border-radius: 0 0 12px 12px;
+          }
+        }
+        .title{
+          width: 330px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 28px;
+          font-weight: bold;
+          &.book-title{
+            width: 336px;
+            height: 76px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 28px;
+            font-weight: bold;
+          }
+        }
+        .tips{
+          font-size: 28px;
+          color: #EA618E;
+          line-height: 36px;
+          margin-top: 4px;
+          &.book-tips{
+            font-size: 24px;
+            margin-top: 18px;
+          }
+        }
+        .tuan-tips{
+          margin-top: 8px;
+          background: #FF6767;
+          height: 38px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 2px 0 10px;
+          font-size: 24px;
+          color: #fff;
+          border-radius: 4px;
+          width: 226px;
+          span{
+            width: 120px;
+            text-align: center;
+            height: 34px;
+            line-height: 34px;
+            background: #FFFF00;
+            color: #BF6A6A;
+            border-radius: 4px;
+            margin-left: 10px;
+          }
+        }
+        .tuan-join{
+          display: flex;
+          font-size: 24px;
+          color: #999;
+          margin-top: 20px;
+        }
+        .progress{
+          width: 272px;
+          height: 14px;
+          background: #FFD2D2;
+          border-radius: 206px;
+          margin-top: 12px;
+          .inner{
+            background: #F55959;
+            height: 14px;
+            border-radius: 206px;
+          }
+        }
+        .remain{
+          width: 272px;
+          font-size: 20px;
+          color: #FE3C5E;
+          line-height: 40px;
+          text-align: right;
+        }
+        .focus{
+          font-size: 20px;
+          color: #FE3C5E;
+          line-height: 40px;
+        }
+        .book-bottom{
+          font-size: 28px;
+          font-weight: bold;
+          line-height: 36px;
+          color: #EA618E;
+          margin-top: 8px;
+        }
+        .bottom{
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          .price-bar{
+            display: flex;
+            align-items: center;
+            .price{
+              font-size: 36px;
+              font-weight: bold;
+              color: #FE3C5E;
+              margin-left: 10px;
+              &:before {
+                content: '¥';
+                font-size: 24px;
+              }
+            }
+            .original{
+              font-size: 20px;
+              color: #999999;
+              del{
+                &:before {
+                  content: '¥';
+                }
+              }
+            }
+          }
+          .view-btn{
+            width: 82px;
+            text-align: center;
+            height: 38px;
+            line-height: 38px;
+            color: #ffffff;
+            font-size: 24px;
+            background: linear-gradient(231deg,rgba(238,144,111,1) 0%,rgba(233,70,115,1) 100%);
+            border-radius: 260px;
+          }
+          .miao-btn{
+            margin-top: -10px;
+            width: 72px;
+            height: 72px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(231deg,rgba(238,144,111,1) 0%,rgba(233,70,115,1) 100%);
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+}

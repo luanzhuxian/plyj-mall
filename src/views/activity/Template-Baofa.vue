@@ -1,22 +1,22 @@
 <template>
   <div :class="$style.templateBaofa">
-    <Coupon
+    <coupon
       v-if="COUPON.values && COUPON.values.length"
       :data="COUPON"
       :type="type"
     />
     <!-- 直播-->
-    <Broadcast
+    <broadcast
       v-if="$attrs.live && $attrs.live.statue === 1"
       :class="$style.broadcast"
       v-bind="$attrs"
     />
-    <Maisong
+    <maisong
       v-if="MAI_SONG.values && MAI_SONG.values.length"
       :data="MAI_SONG"
       :type="type"
     />
-    <Miaosha
+    <miaosha
       v-if="MIAO_SHA.values && MIAO_SHA.values.length"
       :data="MIAO_SHA"
       :type="type"
@@ -28,11 +28,11 @@
       <!-- <div v-if="true" :class="[$style.road, $style.large]" />
       <div v-if="true" :class="[$style.invitation, $style.large]" /> -->
     </div>
-    <Pintuan
+    <pintuan
       v-if="PIN_TUAN.values && PIN_TUAN.values.length"
       :data="PIN_TUAN"
     />
-    <Fengqiang
+    <fengqiang
       v-if="FENG_QIANG.values && FENG_QIANG.values.length"
       :data="FENG_QIANG"
       :type="type"

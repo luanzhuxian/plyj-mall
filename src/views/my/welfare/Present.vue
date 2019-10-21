@@ -232,6 +232,8 @@ export default {
         if (res.status) {
           clearInterval(this.timer)
           this.getList()
+          await this.$confirm({ html: `<p>兑换成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
+          this.$router.push({ name: 'Classify' })
         }
       }, 3000)
     },
@@ -267,7 +269,6 @@ export default {
         data = this.data99
       }
       if (!data.length) return
-      // await this.$confirm({ html: `<p>兑换成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
       this.isEdit = !this.isEdit
     },
     codeShow () {

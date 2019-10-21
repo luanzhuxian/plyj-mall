@@ -29,7 +29,10 @@
                 <span :class="$style.price">
                   {{ item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price') }}
                 </span>
-                <span :class="$style.pay">
+                <span :class="$style.pay" v-if="item.goodsInfo.salesVolume < 10">
+                  {{ item.goodsInfo.pageviews }}人关注
+                </span>
+                <span :class="$style.pay" v-else>
                   {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}` }}人付款
                 </span>
                 <div :class="$style.btnHighlight">
@@ -220,7 +223,6 @@ export default {
             justify-content: space-between;
             align-items: flex-end;
             font-size: 22px;
-            // line-height: 52px;
             color: #999999;
             @include elps();
             svg {
@@ -261,17 +263,6 @@ export default {
             }
           }
         }
-        // .icon-fengqiangjia,
-        // .icon-fanchangjia {
-        //   margin-right: 8px;
-        //   font-size: 24px;
-        //   color: #FE3C5E;
-        // }
-        // .icon-mashangqiang,
-        // .icon-lijigoumai {
-        //   font-size: 34px;
-        //   color: #ffffff;
-        // }
       }
     }
   }

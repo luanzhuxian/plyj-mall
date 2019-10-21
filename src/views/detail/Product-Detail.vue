@@ -37,7 +37,7 @@
           :endtime="detail.shoppingTimeLong"
         />
         <!-- 商品名称 -->
-        <DetailTitle :active-product="detail.activeProduct" :activity-tag="detail.activityProductModel.activityTag" :product-name="detail.productName" />
+        <DetailTitle :active-product="detail.activeProduct" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
         <!-- 商品描述 -->
         <DetailDesc v-text="detail.productDesc" />
         <!-- 商品标签 -->
@@ -71,7 +71,7 @@
       </Field>
 
       <Field
-        v-if="productType === 'PHYSICAL_GOODS'"
+        v-if="couponList.length"
         label="优惠券"
         can-click
         :label-width="120"
@@ -144,6 +144,7 @@
       :limiting="limiting"
       :active-product="detail.activeProduct"
       :activity-product-model="detail.activityProductModel || null"
+      :pre-activity="detail.preActivity"
     />
 
     <!-- 规格弹框 -->
@@ -380,6 +381,7 @@ export default {
     this.haibao = ''
     this.showHaibao = false
     this.tab = 2
+    this.showCoupon = false
   },
   async mounted () {
     // 其他人的分享id
@@ -393,20 +395,20 @@ export default {
         // 携带有他人分享id时，先把他人的id保存起来，然后再替换成当前用户的id
         // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
         sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.href = selfUrl
+        location.replace(selfUrl)
       } else if (brokerId === userId) {
         sessionStorage.setItem('shareBrokerId', userId || '')
       } else {
-        location.href = selfUrl
+        location.replace(selfUrl)
       }
     } else {
       if (!brokerId) {
-        location.href = selfUrl
+        location.replace(selfUrl)
         return
       }
       if (brokerId !== userId) {
         sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.href = selfUrl
+        location.replace(selfUrl)
       }
     }
   },

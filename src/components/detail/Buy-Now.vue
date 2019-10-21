@@ -17,7 +17,7 @@
       </router-link>
     </div>
     <!-- 团购商品下单 -->
-    <div :class="$style.buttons" v-if="activeProduct === 2">
+    <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
       <button
         :class="$style.addToCart"
         @click="clickHandler(2)"
@@ -36,7 +36,7 @@
       </button>
     </div>
     <!-- 秒杀商品下单 -->
-    <div :class="$style.buttons" v-else-if="activeProduct === 3">
+    <div :class="$style.buttons" v-else-if="activeProduct === 3 && preActivity === 2">
       <button
         :class="$style.addToCart"
         @click="clickHandler(2)"
@@ -55,7 +55,7 @@
       </button>
     </div>
     <!-- 预购商品下单 -->
-    <div :class="$style.button" v-else-if="activeProduct === 4">
+    <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2">
       <button
         :class="$style.preBtn"
         @click="clickHandler(3)"
@@ -89,6 +89,9 @@
       :sku-attr-list="skuAttrList"
       :sku="currentSku"
       :limiting="limiting"
+      :active-product="activeProduct"
+      :pre-activity="preActivity"
+      :activity-product-model="activityProductModel"
     >
       <template v-slot:footer="{ currentSku }">
         <pl-button
@@ -177,8 +180,12 @@ export default {
     disableConfrim: Boolean,
     disableAddCart: Boolean,
     activeProduct: {
-      type: Number,
+      type: [Number, String],
       default: 1
+    },
+    preActivity: {
+      type: [Number, String],
+      default: 0
     },
     activityProductModel: {
       type: Object,
