@@ -96,7 +96,8 @@ export default {
       // 领取人列表
       showList: [],
       // 总领取数
-      totalClaimers: 0
+      totalClaimers: 0,
+      isShared: false
     }
   },
 
@@ -141,8 +142,6 @@ export default {
 
   async activated () {
     await this.init()
-  },
-  async mounted () {
     this.share()
   },
 
@@ -165,7 +164,7 @@ export default {
       if (this.isActivityStarted) {
         requests.push((() => this.getMyFriends())())
         requests.push((() => this.getOrdersShow())())
-        requests.push((() => this.testClaimGift())())
+        // requests.push((() => this.testClaimGift())())
       }
 
       if (requests.length) {
