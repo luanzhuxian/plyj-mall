@@ -10,26 +10,26 @@
       <p :class="$style.dataTitle"><span>**********</span> <i>双十二疯狂同学会总数据</i> <span>**********</span></p>
 
       <div :class="$style.moduelData">
-        <div :class="$style.dataName">活动预约</div>
+        <div :class="$style.dataName">全国活动预约</div>
         <div :class="$style.value">
           <i v-text="entDetail.totalReservation || 0" />人
         </div>
       </div>
 
       <div :class="$style.moduelData">
-        <div :class="$style.dataName">参与机构</div>
+        <div :class="$style.dataName">全国参与机构</div>
         <div :class="$style.value">
           <i v-text="entDetail.participatingInstitutions || 0" />家
         </div>
       </div>
 
       <div :class="$style.moduelData">
-        <div :class="$style.dataName">总助力榜</div>
+        <div :class="$style.dataName">全国助力总榜</div>
         <div :class="$style.value">
           <i v-text="entDetail.totalAssisting || 0" />次
         </div>
       </div>
-      <div :class="$style.helpMe" @click="share">帮我上榜</div>
+      <div v-if="cacheInfo" :class="$style.helpMe" @click="share">帮我上榜</div>
       <!-- 分隔线 -->
       <div :class="$style.lineBetween" />
       <!-- 轴 -->
@@ -43,46 +43,52 @@
             <div :class="$style.contentBox">
               <div :class="$style.contentTop">
                 <img :class="$style.logo" :src="logoUrl" alt="">
-                <pl-icon name="icon-your-data" color="#565776" size="48" />
+                <pl-icon v-if="cacheInfo" name="icon-your-data" color="#565776" size="48" />
+                <span :class="$style.mallName" v-else>{{ mallName }}</span>
               </div>
-              <div :class="$style.data">
-                <span>全国排名：</span>
-                <span>第{{ entDetail.ranking || 0 }}位</span>
-              </div>
-              <div :class="$style.data">
-                <span>活动预约：</span>
-                <span>{{ entDetail.numberOfReservations || 0 }}人</span>
-              </div>
-              <div :class="$style.data">
-                <span>总助力数：</span>
-                <span>{{ entDetail.assistingNumber || 0 }}次</span>
-              </div>
+              <template v-if="cacheInfo">
+                <div :class="$style.data">
+                  <span>全国排名：</span>
+                  <span>第{{ entDetail.ranking || 0 }}位</span>
+                </div>
+                <div :class="$style.data">
+                  <span>活动预约：</span>
+                  <span>{{ entDetail.numberOfReservations || 0 }}人</span>
+                </div>
+                <div :class="$style.data">
+                  <span>总助力数：</span>
+                  <span>{{ entDetail.assistingNumber || 0 }}次</span>
+                </div>
+              </template>
+              <div v-else :class="$style.mallTip">未参加双12活动</div>
             </div>
           </div>
         </div>
-        <img
-          :class="$style.subscribe"
-          v-if="!entDetail.alreadyReserved"
-          src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/%E7%AB%8B%E5%8D%B3%E9%A2%84%E7%BA%A6.png"
-          alt=""
-          @click="showPop = true"
-        >
-        <div :class="$style.subscribe + ' ' + $style.twoIcon" v-if="entDetail.alreadyReserved">
+        <template v-if="cacheInfo">
           <img
-            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/help1.png"
+            :class="$style.subscribe"
+            v-if="!entDetail.alreadyReserved"
+            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/%E7%AB%8B%E5%8D%B3%E9%A2%84%E7%BA%A6.png"
             alt=""
-            v-if="entDetail.numberOfBoosts < 3"
-            @click="userHelp"
+            @click="showPop = true"
           >
-          <img
-            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/help2.png"
-            alt=""
-            v-else
-          >
-          <div :class="$style.count">
-            x {{ entDetail.numberOfBoosts }}
+          <div :class="$style.subscribe + ' ' + $style.twoIcon" v-if="entDetail.alreadyReserved">
+            <img
+              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/help1.png"
+              alt=""
+              v-if="entDetail.numberOfBoosts < 3"
+              @click="userHelp"
+            >
+            <img
+              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/help2.png"
+              alt=""
+              v-else
+            >
+            <div :class="$style.count">
+              x {{ entDetail.numberOfBoosts }}
+            </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
 
@@ -165,7 +171,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['logoUrl', 'openId', 'mobile', 'realeName', 'mallName', 'avatar', 'userName'])
+    ...mapGetters(['logoUrl', 'openId', 'mobile', 'realeName', 'mallName', 'avatar', 'userName']),
+    cacheInfo () {
+      return this.entDetail.cacheInfo
+    }
   },
   async activated () {
     this.reservationMobile = this.mobile || ''
@@ -176,8 +185,6 @@ export default {
     } catch (e) {
       throw e
     }
-  },
-  watch: {
   },
   methods: {
     async userHelp () {
@@ -235,7 +242,7 @@ export default {
       let mallNameStartX // 商城名称开始横坐标
       let mallName = this.mallName // 商城名称开始横坐标
       let avatar = this.avatar
-      let userName = this.userName.substring(0, 3) + '.. 最爱雅集 邀您助力'
+      let userName = this.userName
       try {
         codeCanvas = await generateQrcode(300, location.href, 0, null, 0, 'canvas')
         cvs = document.createElement('canvas')
@@ -267,22 +274,44 @@ export default {
         mallNameStartX = (cvs.width - 44 - 20 - mallNameWidth) / 2
         ctx.drawImage(logo, mallNameStartX, 212, 44, 44)
         createText(ctx, mallNameStartX + 44 + 20, 218, mallName, 50)
-        /* 绘制用户姓名 */
-        // 先绘制矩形
-        drawRoundRect(ctx, 120, 416, 384, 64, 12, '#FF9810', '#FF9810')
+        /* ********** 绘制用户姓名 ********** */
+        // 绘制用户姓名，先计算出用户姓名截取以后的宽度，之后用
+        ctx.font = '24px bold'
+        ctx.fillStyle = '#fff'
+        ctx.textBaseline = 'top'
+        let nameWidth = createText(ctx, 200, 438, userName, 34, 120, 1)
+        let textWidth = ctx.measureText('最爱雅集 邀您助力').width + 12 // 12是这句话与名字的间距
+        /**
+         * 绘制矩形，绘制到中心位置，所以要根据头像和文字的宽度
+         * 24 左右padding
+         * 44 头像宽度
+         */
+        let rectWidth = 24 * 2 + 44 + nameWidth + textWidth
+        /**
+         * 矩形坐标
+         * 10 解决图片偏心
+         * @type {number}
+         */
+        let rectX = (606 - rectWidth) / 2 + 10
+        drawRoundRect(ctx, rectX, 416, rectWidth, 64, 12, '#FF9810', '#FF9810')
         // 绘制头像
         if (avatar) {
           avatar = await this.loadImage(avatar)
           avatar = await cutArcImage(avatar)
-          ctx.drawImage(avatar, 144, 426, 44, 44)
+          ctx.drawImage(avatar, rectX + 24, 426, 44, 44)
         } else {
-          drawRoundRect(ctx, 144, 426, 44, 44, 22, '#fff', '#fff')
+          drawRoundRect(ctx, rectX + 24, 426, 44, 44, 22, '#fff', '#fff')
         }
-        // 绘制用户姓名
         ctx.font = '24px bold'
         ctx.fillStyle = '#fff'
         ctx.textBaseline = 'top'
-        createText(ctx, 200, 438, userName, 34)
+        nameWidth = createText(ctx, rectX + 24 + 44 + 12, 438, userName, 34, 120, 1)
+        nameWidth = createText(ctx, rectX + 24 + 44 + 12 + nameWidth, 438, '最爱雅集 邀您助力', 34)
+        // 绘制用户姓名
+        // ctx.font = '24px bold'
+        // ctx.fillStyle = '#fff'
+        // ctx.textBaseline = 'top'
+        // createText(ctx, 200, 438, userName, 34)
         this.haiBao = cvs.toDataURL()
       } catch (e) {
         this.$error('生成海报失败')
@@ -454,23 +483,27 @@ export default {
     border-radius: 20px;
     box-sizing: border-box;
     > div {
-      width: 462px;
+      flex: 4;
+      /*width: 462px;*/
       height: 292px;
       background-color: #cdabaa;
       border-radius: 10px;
       > div {
+        width: 98%;
         height: 274px;
         background-color: #9C5156;
         border-radius: 10px;
       }
     }
     .subscribe {
-      position: absolute;
-      right: 12px;
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
       width: 78px;
       background: none;
       &.two-icon {
-        display: flex;
+        flex: 1;
+        margin-left: 0;
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -492,7 +525,8 @@ export default {
     }
   }
   .content-box {
-    width: 452px;
+    /*width: 452px;*/
+    width: 98%;
     height: 276px;
     padding: 16px;
     background-color: #FCECDF;
@@ -506,6 +540,12 @@ export default {
       color: #565776;
       font-weight: bold;
     }
+    .mall-tip {
+      text-align: center;
+      font-size: 26px;
+      line-height: 160px;
+      color: #999;
+    }
   }
   .logo {
     width: 68px;
@@ -515,6 +555,10 @@ export default {
     display: flex;
     align-items: center;
     > i {
+      margin-left: 12px;
+    }
+    > span {
+      font-size: 26px;
       margin-left: 12px;
     }
   }
