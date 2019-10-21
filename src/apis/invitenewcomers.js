@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 
 export const helpFriend = (activityId, friendId) => axios.put(`/apis/v1/invitingEvents/${activityId}/help/${friendId}`)
 

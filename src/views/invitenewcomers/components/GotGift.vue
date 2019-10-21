@@ -16,12 +16,12 @@
             <div class="coupon" v-if="type === 'coupon'">
               <div class="coupon-inner">
                 <div class="sub-ticket">
-                  <!-- <span class="desc">去使用</span>
-                  <pl-icon type="svg" name="icon-right" color="white" width="14" height="14" /> -->
+                  <span class="desc">满减券</span>
+                  <!-- <pl-icon type="svg" name="icon-right" color="white" width="14" height="14" /> -->
                 </div>
                 <div class="content-box">
                   <div class="coupon-info">
-                    <span class="ticket-label">满减券</span>
+                    <!-- <span class="ticket-label">满减券</span> -->
                     <span class="denomination">
                       {{ couponInfo.amount }}
                       <span class="yuan">元</span>

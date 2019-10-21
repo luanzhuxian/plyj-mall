@@ -1,11 +1,11 @@
 <template>
   <div class="gift-ticket" :class="{ stoped }">
     <div class="sub-ticket">
-      <!-- <span class="desc">立即领取</span> -->
+      <span class="desc">满减券</span>
     </div>
     <div class="content-box">
       <div class="coupon-info">
-        <span class="ticket-label">满减券</span>
+        <!-- <span class="ticket-label">满减券</span> -->
         <span class="denomination">
           {{ couponAmount }}
           <span class="yuan">元</span>
@@ -104,8 +104,8 @@ export default {
 
     .desc {
       display: inline-block;
-      width: 70px;
-      height: 78px;
+      width: 32px;
+      height: 114px;
       font-size: 32px;
       font-weight: bold;
       line-height: 36px;

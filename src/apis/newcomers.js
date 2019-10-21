@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 
 export const getNewcomersDetail = (id) => axios.get(`/apis/v1/newcomerActivitys/${id}`)
 
