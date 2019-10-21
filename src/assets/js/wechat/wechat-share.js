@@ -3,14 +3,14 @@ import { getJSApi } from '../../../apis/base-api'
 import { DelayExec } from '../../../assets/js/util'
 const WX = window.wx
 let delay = new DelayExec(100)
-export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
+export default async function share ({ appId, title, desc, imgUrl, link, willHide, success }) {
   await delay.exec() // 延迟执行，节流执行频率，使频率不能高于每秒10次
   let jsApi = await getJSApi(appId) // 每次分享时，获取js-api
   const config = getConfig(jsApi.result, appId, link)
   WX.config(config)
   return new Promise((resolve, reject) => {
     WX.ready(function () {
-      setWechatShare(title, desc, imgUrl, link, willHide)
+      setWechatShare(title, desc, imgUrl, link, willHide, success)
       resolve('wechat config: ok!')
     })
     WX.error(function (res) {
@@ -19,7 +19,7 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
   })
 }
 
-function setWechatShare (title, desc, imgUrl, link, willHide = []) {
+function setWechatShare (title, desc, imgUrl, link, willHide = [], successCb) {
   // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
   WX.hideMenuItems({
     menuList: [
@@ -45,7 +45,11 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
     imgUrl, // 分享图标
     success: () => {
-      console.warn('配置”分享到朋友圈“成功！')
+      if (typeof successCb === 'function') {
+        successCb()
+      } else {
+        console.warn('配置”分享到朋友圈“成功！')
+      }
     }
   })
   // 分享给朋友
@@ -55,7 +59,11 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
     imgUrl, // 分享图标
     success: () => {
-      console.warn('配置”分享到朋友“成功！')
+      if (typeof successCb === 'function') {
+        successCb()
+      } else {
+        console.warn('配置”分享到朋友“成功！')
+      }
     }
   })
 }

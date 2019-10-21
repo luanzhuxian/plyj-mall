@@ -37,6 +37,7 @@
         <p v-html="activityBrief" />
       </div>
     </pl-popup>
+    <newcomers-home-entry />
   </div>
 </template>
 

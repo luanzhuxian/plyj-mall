@@ -10,3 +10,5 @@ export const claimCoupons = (activityId, couponIds) => axios.post(`/apis/v1/coup
     entityClassName: 'MallNewcomerActivityEntity'
   }
 })
+
+export const getCurrentActivity = () => axios.get(`/apis/v1/newcomerActivitys/currActiviy`)

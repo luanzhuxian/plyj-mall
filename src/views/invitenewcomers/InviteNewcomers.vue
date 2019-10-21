@@ -59,7 +59,7 @@ import ShareLayer from './components/ShareLayer'
 import youLike from './../home/components/YouLike.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
-import { getActivityInfo, getHelpers, canClaimGift, claimGiftOrCoupon, getClaimGiftList, getActivityStatisiticData } from '../../apis/invitenewcomers'
+import { getActivityInfo, getHelpers, canClaimGift, claimGiftOrCoupon, getClaimGiftList, getActivityStatisiticData, inviterStatisitic } from '../../apis/invitenewcomers'
 
 export default {
   name: 'InviteNewcomers',
@@ -86,7 +86,6 @@ export default {
         // gift info
       },
 
-      inviteUserInfo: null,
       activityInfo: {},
 
       canClaimGift: false,
@@ -96,8 +95,7 @@ export default {
       // 领取人列表
       showList: [],
       // 总领取数
-      totalClaimers: 0,
-      isShared: false
+      totalClaimers: 0
     }
   },
 
@@ -108,15 +106,16 @@ export default {
     },
 
     inviteDescription () {
+      let invitedPeopleNumber = this.activityInfo.invitedPeopleNumber
       if (this.canOpenGiftPackage) {
-        return '已经成功邀请3个好友助力, 立即开豪礼'
+        return `已经成功邀请${invitedPeopleNumber}个好友助力, 立即开豪礼`
       }
 
-      return `还差${3 - this.totalHelpers % 3}个好友助力，即可开豪礼`
+      return `还差${invitedPeopleNumber - this.totalHelpers % invitedPeopleNumber}个好友助力，即可开豪礼`
     },
 
     canOpenGiftPackage () {
-      return this.totalHelpers > 0 && this.totalHelpers % 3 === 0
+      return this.totalHelpers > 0 && this.totalHelpers % this.activityInfo.invitedPeopleNumber === 0
     },
 
     isActivityStarted () {
@@ -136,7 +135,6 @@ export default {
   },
 
   created () {
-    this.inviteUserId = this.$route.params.userId
     this.activityId = this.$route.params.activityId
   },
 
@@ -153,7 +151,10 @@ export default {
         title: '请好友一起翻礼品',
         desc: '快来帮我助力一起领取大礼哦。',
         link: `${window.location.protocol}//${window.location.host}${window.location.pathname}/help/${this.userId}`,
-        imgUrl: this.logoUrl
+        imgUrl: this.logoUrl,
+        success: () => {
+          inviterStatisitic(this.activityInfo)
+        }
       })
     },
 
@@ -250,6 +251,7 @@ export default {
       if (!this.userId) {
         return
       }
+
       let { status, result } = await getHelpers(this.activityId, this.userId)
       if (status !== 200) {
         return

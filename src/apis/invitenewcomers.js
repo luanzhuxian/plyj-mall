@@ -18,3 +18,7 @@ export const getClaimGiftList = (activityId) => axios.get(`/apis/v1/invitingEven
 export const getUserInfo = (userId) => axios.post(`/apis/v1/mallActivitys/${userId}/info`)
 
 export const getActivityStatisiticData = (activityId) => axios.get(`/apis/v1/invitingEventsGift/${activityId}/statGiftData`)
+
+export const getCurrentActivity = () => axios.get('/apis/v1/invitingEvents/currActiviy/baseInfo')
+
+export const inviterStatisitic = (activityId) => axios.put(`/apis/v1/mallActivitys/${activityId}/inviter/stat`)

@@ -295,5 +295,14 @@ export default {
       font-size: 28px;
     }
   }
+
+  .btn-close {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    border: 1px solid white;
+    border-radius: 50%;
+  }
 }
 </style>
