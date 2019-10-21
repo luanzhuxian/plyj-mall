@@ -71,7 +71,6 @@
       </Field>
 
       <Field
-        v-if="productType === 'PHYSICAL_GOODS'"
         label="优惠券"
         can-click
         :label-width="120"
