@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import Banner from './components/Banner.vue'
 import Adv from './components/Adv.vue'
@@ -67,7 +67,6 @@ export default {
   },
   computed: {
     ...mapGetters(['mallId']),
-    ...mapState(['data88']),
     BANNER () {
       return this.data.BANNER || {}
     },
