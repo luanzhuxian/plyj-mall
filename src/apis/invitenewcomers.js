@@ -22,3 +22,5 @@ export const getActivityStatisiticData = (activityId) => axios.get(`/apis/v1/inv
 export const getCurrentActivity = () => axios.get('/apis/v1/invitingEvents/currActiviy/baseInfo')
 
 export const inviterStatisitic = (activityId) => axios.put(`/apis/v1/mallActivitys/${activityId}/inviter/stat`)
+
+export const registerStatisitic = (activityId) => axios.post(`/apis/v1/mallActivitys/${activityId}/register/stat`)

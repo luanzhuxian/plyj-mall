@@ -12,3 +12,5 @@ export const claimCoupons = (activityId, couponIds) => axios.post(`/apis/v1/coup
 })
 
 export const getCurrentActivity = () => axios.get(`/apis/v1/newcomerActivitys/currActiviy`)
+
+export const registerStatisitic = (activityId) => axios.post(`/apis/v1/mallActivitys/${activityId}/register/stat`)
