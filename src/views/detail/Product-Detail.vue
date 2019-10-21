@@ -71,6 +71,7 @@
       </Field>
 
       <Field
+        v-if="couponList.length"
         label="优惠券"
         can-click
         :label-width="120"
