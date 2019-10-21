@@ -22,9 +22,10 @@
       >-->
     <!-- </TemplateA> -->
     <TemplateB
-      :data="modules"
       v-if="type === 3 || type === 4"
       :type="type"
+      :data="modules"
+      :live="liveInfo"
     >
       <!-- 月光宝盒项目 -->
       <!--<router-link
@@ -72,7 +73,7 @@
 
 <script>
 import 'swiper/dist/css/swiper.css'
-import { getTemplate } from '../../apis/home'
+import { getTemplate, getLiveInfo } from '../../apis/home'
 // import { wasGetInfo } from '../../apis/wwec'
 // import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
@@ -120,7 +121,8 @@ export default {
       // },
       dataMoonLightBox: {},
       // 820用户注册次数
-      registerCountFor820: 0
+      registerCountFor820: 0,
+      liveInfo: {}
     }
   },
   async created () {
@@ -177,7 +179,7 @@ export default {
     // },
     async getTemplate () {
       try {
-        const { result } = await getTemplate({ type: 1 })
+        const [{ result }, { result: live }] = await Promise.all([getTemplate({ type: 1 }), getLiveInfo()])
         if (!result) {
           this.noFinish = true
           this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
@@ -224,6 +226,7 @@ export default {
           this.modules.CLASS = moduleModels[5]
           this.modules.RECOMMEND = moduleModels[6]
         }
+        this.liveInfo = live || {}
         this.loaded = true
         this.type = type
       } catch (e) {

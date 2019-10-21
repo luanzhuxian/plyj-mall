@@ -6,12 +6,12 @@
   >
     <div :class="$style.moduleWrapper">
       <div :class="$style.imgWrapper">
-        <img src="../../../assets/images/activity/prod-default.png" alt="">
+        <img :src="live.coverImg + '?x-oss-process=style/thum-small'">
         <pl-icon name="icon-play-btn" type="svg" />
       </div>
       <div :class="$style.info">
         <div :class="$style.main">
-          张三三老师带您体验课适合1-6年级
+          {{ live.name }}
         </div>
         <div :class="$style.time">
           <div :class="$style.timeLeft">
@@ -19,7 +19,7 @@
             预告
           </div>
           <div :class="$style.timeRight">
-            21:59:59后开始
+            {{ `${getDate(live.liveStartTime, 'HH:mm:ss')}后开始` }}
           </div>
         </div>
       </div>
@@ -28,18 +28,27 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'Broadcast',
   props: {
-    data: {
+    live: {
       type: Object,
-      default: null
+      default () {
+        return {}
+      }
     }
   },
   data () {
     return {}
   },
-  methods: {}
+  methods: {
+    getDate (val, format) {
+      if (!val) return
+      return moment(val).format(format)
+    }
+  }
 }
 </script>
 
@@ -56,6 +65,7 @@ export default {
       margin-right: 16px;
       width: 256px;
       height: 172px;
+      border-radius: 16px;
       overflow: hidden;
       img {
         width: 100%;
@@ -93,13 +103,12 @@ export default {
       align-items: center;
       text-align: center;
       height: 48px;
-      line-height: 44px;
+      line-height: 48px;
       border: 2px solid #EC6BA4;
       border-radius: 176px;
       overflow: hidden;
       &-left {
         width: 114px;
-        height: 100%;
         font-size: 26px;
         color: #FFF;
         background: linear-gradient(90deg, rgba(237, 133, 93, 1) 0%, rgba(236, 107, 164, 1) 100%);

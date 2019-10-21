@@ -393,20 +393,20 @@ export default {
         // 携带有他人分享id时，先把他人的id保存起来，然后再替换成当前用户的id
         // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
         sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.href = selfUrl
+        location.replace(selfUrl)
       } else if (brokerId === userId) {
         sessionStorage.setItem('shareBrokerId', userId || '')
       } else {
-        location.href = selfUrl
+        location.replace(selfUrl)
       }
     } else {
       if (!brokerId) {
-        location.href = selfUrl
+        location.replace(selfUrl)
         return
       }
       if (brokerId !== userId) {
         sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.href = selfUrl
+        location.replace(selfUrl)
       }
     }
   },

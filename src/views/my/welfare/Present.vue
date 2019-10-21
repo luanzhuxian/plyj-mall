@@ -43,8 +43,8 @@
     </div>
     <div class="item-box" v-show="activeId === 0">
       <div class="empty" v-if="!data0.length">
-        <pl-icon name="icon-zanwulipin" type="svg" width="240" height="240" />
-        <span>暂无优惠卷</span>
+        <pl-icon name="icon-youhuiquan1" type="svg" width="240" height="240" />
+        <span>暂无礼品券</span>
       </div>
       <div class="items" v-else v-for="(item,index) of data0" :key="index">
         <div class="delete-box" v-if="isEdit">
@@ -78,13 +78,14 @@
       </div>
     </div>
     <div class="item-box" v-show="activeId === 1">
-      <div class="empty" v-if="!data99.length">
+      <div class="empty" v-if="!data1.length">
         <pl-icon name="icon-youhuiquan1" type="svg" width="240" height="240" />
-        <span>暂无优惠卷</span>
+        <span>暂无礼品券</span>
       </div>
-      <div class="items" v-else>
+      <div class="items" v-else v-for="(item,index) of data1" :key="index">
         <div class="delete-box" v-if="isEdit">
-          <pl-icon name="icon-xuanzhong" color="#FE7700" size="28" />
+          <pl-icon @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" color="#FE7700" size="28" />
+          <pl-icon @click="choose(item)" v-else name="icon-success1" color="#ccc" size="28" />
         </div>
         <div class="item">
           <div class="item-content">
@@ -114,13 +115,14 @@
       </div>
     </div>
     <div class="item-box" v-show="activeId === 99">
-      <div class="empty" v-if="!data1.length">
-        <pl-icon name="icon-zanwulipin" type="svg" width="240" height="240" />
-        <span>暂无优惠卷</span>
+      <div class="empty" v-if="!data99.length">
+        <pl-icon name="icon-youhuiquan1" type="svg" width="240" height="240" />
+        <span>暂无礼品券</span>
       </div>
-      <div class="items" v-else>
+      <div class="items" v-else v-for="(item,index) of data99" :key="index">
         <div class="delete-box" v-if="isEdit">
-          <pl-icon name="icon-xuanzhong" color="#FE7700" size="28" />
+          <pl-icon @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" color="#FE7700" size="28" />
+          <pl-icon @click="choose(item)" v-else name="icon-success1" color="#ccc" size="28" />
         </div>
         <div class="item">
           <div class="item-content">
@@ -180,6 +182,7 @@ export default {
     this.getList()
   },
   async activated () {
+    this.activeId = 0 // 打开'我的礼品'页面后，默认进入第一个Tab
   },
   deactivated () {
     clearInterval(this.timer)
@@ -229,6 +232,8 @@ export default {
         if (res.status) {
           clearInterval(this.timer)
           this.getList()
+          await this.$confirm({ html: `<p>兑换成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
+          this.$router.push({ name: 'Classify' })
         }
       }, 3000)
     },
@@ -264,11 +269,19 @@ export default {
         data = this.data99
       }
       if (!data.length) return
-      // await this.$confirm({ html: `<p>兑换成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
       this.isEdit = !this.isEdit
     },
     codeShow () {
       this.isCodeShow = false
+    }
+  },
+  watch: {
+    activeId (newVal, oldVal) {
+      /* 切换Tab时，1- 取消可编辑状态； 2- 取消所离开Tab优惠券的选中状态 */
+      this.isEdit = false
+      for (const item of this[`data${oldVal}`]) {
+        item.isSelect = false
+      }
     }
   }
 }

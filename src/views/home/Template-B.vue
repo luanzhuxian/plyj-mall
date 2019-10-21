@@ -3,8 +3,8 @@
     <Search placeholder="搜索商品" />
     <Banner :data="BANNER" />
     <Adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
-    <div v-if="type === 4" :class="$style.broadcast">
-      <Broadcast />
+    <div v-if="type === 4 && $attrs.live && $attrs.live.statue === 1" :class="$style.broadcast">
+      <Broadcast v-bind="$attrs" />
     </div>
     <div v-if="type === 4" :class="$style.activity">
       <Activity />
@@ -43,20 +43,26 @@ export default {
     Broadcast,
     Activity
   },
-  data () {
-    return {
-    }
-  },
   props: {
+    type: {
+      type: Number,
+      default: 0
+    },
     data: {
       type: Object,
       default () {
         return {}
       }
-    },
-    type: {
-      type: Number,
-      default: 0
+    }
+    // live: {
+    //   type: Object,
+    //   default () {
+    //     return {}
+    //   }
+    // }
+  },
+  data () {
+    return {
     }
   },
   computed: {
