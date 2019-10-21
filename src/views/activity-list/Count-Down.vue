@@ -6,9 +6,9 @@
     v-if="data || endtime"
     v-show="show"
   >
-    <span>{{ activityText }}</span>
+    <span :class="Number(d) ? $style.textD : $style.text">{{ activityText }}</span>
     <div :class="$style.time">
-      <i v-if="Number(d)">{{ d }}</i><em v-if="Number(d)">天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
+      <i v-if="Number(d)" :class="Number(d) ? $style.d : ''">{{ d }}</i><em v-if="Number(d)">天</em><i v-if="h" v-text="h" :class="Number(d) ? $style.d : ''" /><em>:</em><i v-if="m" v-text="m" :class="Number(d) ? $style.d : ''" /><em>:</em><i v-if="s" v-text="s" :class="Number(d) ? $style.d : ''" />
     </div>
   </div>
 </template>
@@ -97,7 +97,7 @@ export default {
     },
     setTime () {
       let { _data } = moment.duration(this.endtiemstamp - this.starttiemstamp)
-      this.d = String(_data.days)
+      this.d = String(_data.days).padStart(2, '0')
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')
@@ -117,22 +117,33 @@ export default {
   .count-down {
     display: flex;
     align-items: center;
-    padding-top: 16px;
-    font-size: 26px;
-    color: #fff;
+    font-size: 24px;
+    color: rgba(255, 255, 255, .9);
+    padding: 8px 0 0 16px;
+    .text{
+      font-size: 24px;
+      width: 72px;
+      margin-right: 12px;
+    }
+    .text-d{
+      font-size: 24px;
+      width: 72px;
+    }
     .time {
-      margin-left: 16px;
       display: flex;
+      align-items: center;
       i {
-        display: inline-block;
         text-align: center;
-        width: 44px;
-        height: 40px;
-        line-height: 40px;
-        background: #fff;
-        border-radius: 8px;
-        color: #E95338;
+        width: 34px;
+        height: 36px;
+        line-height: 36px;
+        background: rgba(174, 174, 174, .64);
+        border-radius: 4px;
+        color: rgba(255, 255, 255, .9);
         margin: 0 8px;
+        &.d{
+          margin: 0 2px;
+        }
       }
     }
   }
