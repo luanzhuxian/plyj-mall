@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.templateFengqiang">
     <!-- 直播-->
-    <Broadcast
+    <broadcast
       v-if="$attrs.live && $attrs.live.statue === 1"
       :class="$style.broadcast"
       v-bind="$attrs"
@@ -13,29 +13,33 @@
       <!-- <div v-if="true" :class="[$style.road, $style.large]" />
       <div v-if="true" :class="[$style.invitation, $style.large]" /> -->
     </div>
-    <Pintuan
+    <miaosha-small
+      v-if="MIAO_SHA.values && MIAO_SHA.values.length && MIAO_SHA.values[0].goodsInfo"
+      :data="MIAO_SHA"
+    />
+    <pintuan
       v-if="PIN_TUAN.values && PIN_TUAN.values.length"
       :data="PIN_TUAN"
     />
-    <Maisong
+    <maisong
       v-if="MAI_SONG.values && MAI_SONG.values.length"
       :data="MAI_SONG"
       :type="type"
     />
-    <Coupon
+    <coupon
       v-if="COUPON.values && COUPON.values.length"
       :data="COUPON"
     />
-    <Yugou
+    <yugou
       v-if="YU_GOU.values && YU_GOU.values.length"
       :data="YU_GOU"
     />
-    <Fengqiang
+    <fengqiang
       v-if="FENG_QIANG.values && FENG_QIANG.values.length"
       :data="FENG_QIANG"
       :type="type"
     />
-    <BestRecommend
+    <best-recommend
       v-if="RECOMMEND.values && RECOMMEND.values.length"
       :data="RECOMMEND"
     />
@@ -50,6 +54,7 @@ import Maisong from './components/Maisong.vue'
 import Yugou from './components/Yugou.vue'
 import Fengqiang from './components/Fengqiang.vue'
 import BestRecommend from './components/Best-Recommend.vue'
+import MiaoshaSmall from './components/Miaosha-Small.vue'
 
 export default {
   name: 'HomeTemplateB',
@@ -60,7 +65,8 @@ export default {
     Maisong,
     Yugou,
     Fengqiang,
-    BestRecommend
+    BestRecommend,
+    MiaoshaSmall
   },
   data () {
     return {}

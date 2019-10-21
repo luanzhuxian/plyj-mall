@@ -56,12 +56,7 @@ export default {
     }
   },
   data () {
-    return {
-      map: {
-        '5': 'url(../../../assets/images/activity/bg-gift-1.png)',
-        '7': 'url(../../../assets/images/activity/bg-gift-2.png)'
-      }
-    }
+    return {}
   },
   methods: {}
 }
@@ -169,6 +164,7 @@ export default {
       img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
       }
       .info {
         padding: 16px 26px 30px;
