@@ -30,9 +30,7 @@ export default {
   .search {
     display: flex;
     align-items: center;
-    // box-sizing: border-box;
     padding: 12px 24px;
-    // height: 110px;
     z-index: 9;
   }
   .search-box {

@@ -2,7 +2,10 @@
   <router-link :class="$style.coupon" tag="div" :to="{ name: '' }">
     <div :class="$style.background">
       <div :class="$style.btnMiddle" v-if="type !== 6" />
-      <div :class="$style.title">
+      <div :class="$style.title" v-if="data.otherValue > 0">
+        {{ `- ${data.otherValue}人已领券 快来领取 -` }}
+      </div>
+      <div :class="$style.title" v-else>
         - 快来领取 -
       </div>
       <ul :class="$style.list" v-if="data.values.length">
@@ -31,9 +34,11 @@
 </template>
 
 <script>
-import moment from 'moment'
+import mixin from '../mixin.js'
+
 export default {
   name: 'Coupon',
+  mixins: [mixin],
   props: {
     data: {
       type: Object,
@@ -48,12 +53,6 @@ export default {
   },
   data () {
     return {}
-  },
-  methods: {
-    getDate (val, format) {
-      if (!val) return
-      return moment(val).format(format)
-    }
   }
 }
 </script>
