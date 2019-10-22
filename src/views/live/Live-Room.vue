@@ -228,17 +228,19 @@ export default {
     }
   },
   async activated () {
-    try {
-      if (this.roleCode === 'VISITOR') {
+    if (this.roleCode === 'VISITOR') {
+      try {
         await this.$confirm({
           message: '为了您的账号安全，请绑定手机号',
           confirmText: '去绑定',
           closeOnClickMask: false
         })
+      } catch (e) {
+
+      } finally {
+        this.$router.push({ name: 'BindMobile' })
       }
-    } catch (e) {
-    } finally {
-      this.$router.push({ name: 'BindMobile' })
+
     }
   },
   async mounted () {
