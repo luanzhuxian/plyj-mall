@@ -75,6 +75,7 @@
         can-click
         :label-width="120"
         @click="showCoupon = true"
+        v-if="detail.preActivity !== 2"
       >
         <span style="color: #FE7700;" v-text="couponText" />
       </Field>

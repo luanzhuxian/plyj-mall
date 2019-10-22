@@ -7,7 +7,7 @@
           <template v-if="minPrice !== maxPrice">
             ~ <i v-text="maxPrice" />
           </template></div>
-        <div>{{ detail.salesVolume }}人已购买</div>
+        <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
       </div>
     </div>
     <div v-if="detail.preActivity === 2">
@@ -91,6 +91,9 @@ export default {
           content: '¥';
         }
       }
+    }
+    .buy-num{
+      font-size: 26px;
     }
     .join{
       display: flex;

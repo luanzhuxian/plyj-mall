@@ -4,7 +4,7 @@
       <div class="price"><span>{{ detail.activityProductModel.price }}</span></div>
       <div class="pro-info">
         <div class="original">原价：<del v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" /></div>
-        <div>{{ detail.salesVolume }}人已购买</div>
+        <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
       </div>
     </div>
   </div>
@@ -67,17 +67,21 @@ export default {
     }
     .original{
       display: flex;
-      font-size: 24px;
+      font-size: 26px;
       color: #999999;
       margin-right: 32px;
       .text{
         margin-right: 10px;
+        font-size: 24px;
       }
       del {
         &:before {
           content: '¥';
         }
       }
+    }
+    .buy-num{
+      font-size: 26px;
     }
     .join{
       display: flex;
