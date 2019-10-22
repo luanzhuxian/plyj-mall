@@ -3,8 +3,8 @@
     <div class="main">
       <div class="list tuan-ing">
         <div class="head">
-          <pl-icon name="icon-ing_icon" color="#fff" type="svg" width="52" height="52" />
-          <pl-icon name="icon-ing_text" color="#fff" type="svg" width="160" height="52" />
+          <pl-icon name="icon-ing_icon" color="#fff" size="52" />
+          <pl-icon name="icon-ing_text" color="#fff" size="52" />
         </div>
         <div class="item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">
@@ -34,8 +34,8 @@
       </div>
       <div class="list tuan-coming">
         <div class="head">
-          <pl-icon name="icon-coming_icon" color="#fff" type="svg" width="52" height="52" />
-          <pl-icon name="icon-coming_text" color="#fff" type="svg" width="150" height="52" />
+          <pl-icon name="icon-coming_icon" color="#fff" size="52" />
+          <pl-icon name="icon-coming_text" color="#fff" size="52" />
         </div>
         <div class="item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">
@@ -50,7 +50,7 @@
           <div>
             <div class="title">{{ item.productName }}</div>
             <div class="tuan-tips">成团瓜分<span>{{ item.prizePool }}元</span></div>
-            <div class="tuan-join">已有{{ item.number }}人参团</div>
+            <div class="tuan-join"><!-- 已有{{ item.number }}人参团 --></div>
             <div class="bottom">
               <div class="price-bar">
                 <pl-icon name="icon-tuangoujia" type="svg" width="100" height="50" />

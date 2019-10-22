@@ -11,7 +11,7 @@
           v-if="detail.activityProductModel"
           :endtime="detail.activityProductModel.activityStartTime"
         />
-        <div :class="$style.desc">活动商品数量{{ detail.activityProductModel.stock }}件，成团最多瓜分1000元</div>
+        <div :class="$style.desc">活动商品数量{{ detail.activityProductModel.stock }}件，成团最多瓜分{{ detail.activityProductModel.prizePool }}元</div>
       </div>
     </div>
     <div v-if="detail.preActivity === 2" :class="$style.nowTogether">

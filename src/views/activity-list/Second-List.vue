@@ -3,12 +3,12 @@
     <div class="main">
       <div class="list second-ing">
         <div class="head">
-          <pl-icon name="icon-ing_icon" color="#fff" type="svg" width="52" height="52" />
-          <pl-icon name="icon-ing_text" color="#fff" type="svg" width="160" height="52" />
+          <pl-icon name="icon-ing_icon" color="#fff" size="52" />
+          <pl-icon name="icon-ing_text" color="#fff" size="52" />
         </div>
         <div class="item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">
-            <img :src="item.productMainImage">
+            <img :src="item.productMainImage" object-fit="cover">
             <div class="count-down">
               <count-down
                 activity-text="距结束"
@@ -18,7 +18,7 @@
           </div>
           <div>
             <div class="title">{{ item.productName }}</div>
-            <div class="tips">限量秒杀，下单仅24.5</div>
+            <div class="tips">限量秒杀，下单仅{{ item.price }}</div>
             <div class="progress">
               <div class="inner" :style="{width: '50%'}" />
             </div>
@@ -37,8 +37,8 @@
       </div>
       <div class="list second-coming">
         <div class="head">
-          <pl-icon name="icon-coming_icon" color="#fff" type="svg" width="52" height="52" />
-          <pl-icon name="icon-coming_text" color="#fff" type="svg" width="150" height="52" />
+          <pl-icon name="icon-coming_icon" color="#fff" size="52" />
+          <pl-icon name="icon-coming_text" color="#fff" size="52" />
         </div>
         <div class="item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">
@@ -52,7 +52,7 @@
           </div>
           <div>
             <div class="title">{{ item.productName }}</div>
-            <div class="tips">限量秒杀，下单仅24.5</div>
+            <div class="tips">限量秒杀，下单仅{{ item.price }}</div>
             <div class="progress">
               <div class="inner" :style="{width: '80%'}" />
             </div>

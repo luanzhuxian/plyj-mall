@@ -3,8 +3,8 @@
     <div class="main">
       <div class="list book-ing">
         <div class="head">
-          <pl-icon name="icon-ing_icon" color="#fff" type="svg" width="52" height="52" />
-          <pl-icon name="icon-ing_text" color="#fff" type="svg" width="160" height="52" />
+          <pl-icon name="icon-ing_icon" color="#fff" size="52" />
+          <pl-icon name="icon-ing_text" color="#fff" size="52" />
         </div>
         <div class="item book-item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="book-ing-title">预购提前享</div>
@@ -22,8 +22,8 @@
       </div>
       <div class="list book-coming">
         <div class="head">
-          <pl-icon name="icon-coming_icon" color="#fff" type="svg" width="52" height="52" />
-          <pl-icon name="icon-coming_text" color="#fff" type="svg" width="150" height="52" />
+          <pl-icon name="icon-coming_icon" color="#fff" size="52" />
+          <pl-icon name="icon-coming_text" color="#fff" size="52" />
         </div>
         <div class="item book-item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
           <count-down

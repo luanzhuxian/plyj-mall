@@ -69,6 +69,7 @@
             width: 280px;
             height: 188px;
             border-radius: 12px;
+            object-fit: cover;
           }
           &.book-img{
             width: 264px;
@@ -78,6 +79,7 @@
               width: 264px;
               height: 176px;
               border-radius: 12px;
+              object-fit: cover
             }
           }
           .count-down{
@@ -145,6 +147,8 @@
           font-size: 24px;
           color: #999;
           margin-top: 20px;
+          height: 36px;
+          line-height: 36px;
         }
         .progress{
           width: 272px;
