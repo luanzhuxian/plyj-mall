@@ -127,7 +127,7 @@ export default {
           this.$warning('您没有选中任何优惠券')
           return
         }
-        await this.$confirm(`确定删除将这${length}张优惠券删除？`)
+        await this.$confirm(`确定删除这${length}张优惠券？`)
         const { result, message } = await deleteCouponList(deleteList)
         if (result) {
           this.$success('删除成功')
