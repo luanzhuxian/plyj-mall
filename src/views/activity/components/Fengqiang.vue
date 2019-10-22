@@ -1,13 +1,15 @@
 <template>
-  <router-link :class="$style.fengqiang" tag="div" :to="{ name: '' }">
-    <div
-      :class="{
-        [$style.background]: true,
-        [$style.bg1]: type === 5,
-        [$style.bg2]: type === 6,
-        [$style.bg3]: type === 7
-      }"
-    >
+  <router-link
+    :class="{
+      [$style.fengqiang]: true,
+      [$style.bg1]: type === 5,
+      [$style.bg2]: type === 6,
+      [$style.bg3]: type === 7
+    }"
+    tag="div"
+    :to="{ name: '' }"
+  >
+    <div :class="$style.background">
       <div :class="$style.wrapper">
         <ul :class="$style.list" v-if="data.values.length">
           <li
@@ -46,13 +48,8 @@
                 <span :class="$style.price">
                   {{ item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price') }}
                 </span>
-                <div :class="$style.middle">
-                  <div :class="$style.middleMain">
-                    双十二狂欢
-                  </div>
-                  <span :class="$style.middleSub">
-                    领券价
-                  </span>
+                <div :class="$style.tag" v-if="$attrs.coupon && $attrs.coupon.useLimitAmount && $attrs.coupon.amount">
+                  {{ `满${$attrs.coupon.useLimitAmount}减${$attrs.coupon.amount}` }}
                 </div>
                 <div :class="$style.btn">
                   马上抢！
@@ -67,8 +64,11 @@
 </template>
 
 <script>
+import mixin from '../mixin.js'
+
 export default {
   name: 'Fengqiang',
+  mixins: [mixin],
   props: {
     data: {
       type: Object,
@@ -83,14 +83,6 @@ export default {
   },
   data () {
     return {}
-  },
-  methods: {
-    getPrice (list) {
-      return (key) => {
-        let arr = list.map(item => item[key])
-        return key === 'originalPrice' ? Math.max(...arr) : Math.min(...arr)
-      }
-    }
   }
 }
 </script>
@@ -101,13 +93,18 @@ export default {
     background: linear-gradient(180deg, rgba(242, 183, 164, 1) 0%, rgba(228, 89, 83, 1) 12%, rgba(228, 87, 80, 1) 100%);
     border-radius: 20px;
     overflow: hidden;
-    .background {
-      &.bg-1 {
-        background: url("../../../assets/images/activity/bg-qiang-1.png") no-repeat center top;
-        background-size: 100% auto;
-      }
-      &.bg-2 {
-        background: url("../../../assets/images/activity/bg-qiang-2.png") no-repeat center top;
+    &.bg-1 > .background {
+      background: url("../../../assets/images/activity/bg-qiang-1.jpg") no-repeat center top;
+      background-size: 100% auto;
+    }
+    &.bg-3 > .background {
+      background: url("../../../assets/images/activity/bg-qiang-3.jpg") no-repeat center top;
+      background-size: 100% auto;
+    }
+    &.bg-2 {
+      background: #FF0B00 !important;
+      .background {
+        background: url("../../../assets/images/activity/bg-qiang-2.jpg") no-repeat center top;
         background-size: 100% auto;
         .wrapper {
           padding-top: 188px;
@@ -127,62 +124,49 @@ export default {
             line-height: 92px;
             background-color: #FE3C5E;
             .price {
-              margin-right: 24px !important;
+              margin: 0 !important;
               padding: 0 16px;
-              font-size: 64px !important;
+              font-size: 44px !important;
               font-family: San Francisco Display !important;
               font-weight: bold !important;
               color: #FFFF00 !important;
               &::before {
                 content: '￥';
-                font-size: 40px;
+                font-size: 22px;
                 font-family: Microsoft YaHei;
                 font-weight: bold;
               }
             }
-            .middle {
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              align-items: center;
-              padding: 12px 0;
+            .tag {
+              padding: 0 8px;
+              height: 40px;
+              line-height: 40px;
+              background: #D5193A;
+              border-radius: 4px;
+              font-size: 28px;
+              font-family: Microsoft YaHei;
               color: #FFFFFF;
-              &-main {
-                margin-bottom: 8px;
-                line-height: 1;
-                font-size: 26px;
-                font-family: Microsoft YaHei;
-                font-weight: bold;
-              }
-              &-sub {
-                padding: 0 12px;
-                height: 32px;
-                line-height: 32px;
-                background: #D5193A;
-                border-radius: 20px;
-                font-size: 22px;
-                font-family: Microsoft YaHei;
-                font-weight: 400;
-                text-align: center;
-              }
             }
             .btn {
               margin-left: auto;
-              width: 160px;
+              padding-left: 40px;
+              width: 180px;
               height: 92px;
               line-height: 92px;
-              background-color: #FFFF00;
               color: #FE3C5E;
               font-size: 32px;
               font-weight: bold;
               text-align: center;
+              background: linear-gradient(135deg, transparent 32px, #FFFF00 0) top left,
+                          linear-gradient(-135deg, transparent 0px, #FFFF00 0) top right,
+                          linear-gradient(-45deg, transparent 0px, #FFFF00 0) bottom right,
+                          linear-gradient(45deg, transparent 32px, #FFFF00 0) bottom left;
+              background-size: 50% 50%;
+              background-repeat: no-repeat;
+              overflow: hidden;
             }
           }
         }
-      }
-      &.bg-3 {
-        background: url("../../../assets/images/activity/bg-qiang-3.png") no-repeat center top;
-        background-size: 100% auto;
       }
     }
     .wrapper {

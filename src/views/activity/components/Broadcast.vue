@@ -13,13 +13,24 @@
         <div :class="$style.main">
           {{ live.name }}
         </div>
-        <div :class="$style.time">
+        <div
+          :class="{
+            [$style.time]: true,
+            [$style.active]: live.statue === 1,
+          }"
+        >
           <div :class="$style.timeLeft">
             <pl-icon name="icon-clock" color="#fff" size="26" />
-            预告
+            <span v-if="live.statue === 2 && live.hasNotice">预告</span>
+            <span v-if="live.statue === 1">直播中</span>
           </div>
           <div :class="$style.timeRight">
-            {{ `${getDate(live.liveStartTime, 'HH:mm:ss')}后开始` }}
+            <span v-if="live.statue === 2 && live.hasNotice">
+              {{ `${getDate(live.liveStartTime, 'HH:mm:ss')}后开始` }}
+            </span>
+            <span v-if="live.statue === 1">
+              {{ `${live.visitTimes}人观看` }}
+            </span>
           </div>
         </div>
       </div>
@@ -28,10 +39,11 @@
 </template>
 
 <script>
-import moment from 'moment'
+import mixin from '../mixin.js'
 
 export default {
   name: 'Broadcast',
+  mixins: [mixin],
   props: {
     live: {
       type: Object,
@@ -42,12 +54,6 @@ export default {
   },
   data () {
     return {}
-  },
-  methods: {
-    getDate (val, format) {
-      if (!val) return
-      return moment(val).format(format)
-    }
   }
 }
 </script>
@@ -107,6 +113,15 @@ export default {
       border: 2px solid #EC6BA4;
       border-radius: 176px;
       overflow: hidden;
+      &.active {
+        border: 2px solid #EFB835;
+        .time-left {
+          background: linear-gradient(90deg, rgba(243, 190, 65, 1) 0%, rgba(239, 184, 53, 1) 100%);
+        }
+        .time-right {
+          color: #EFB835;
+        }
+      }
       &-left {
         width: 114px;
         font-size: 26px;

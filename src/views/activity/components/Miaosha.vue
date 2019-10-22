@@ -14,12 +14,14 @@
           }"
           @click.stop="miaoshaIndex = 0"
         >
-          <div :class="$style.wrapper">
+          <div :class="$style.wrapper" v-if="data.values[0].range && data.values[0].range.length">
             <div :class="$style.status">
-              <span>已开抢</span>
+              <span>
+                {{ getTimeStatus(data.values[0].range) }}
+              </span>
             </div>
             <div :class="$style.time">
-              {{ data.values[0].range && data.values[0].range[0] ? getDate(data.values[0].range[0], 'HH:mm') : '00:00' }}
+              {{ getDate(data.values[0].range[0], 'HH:mm') }}
             </div>
           </div>
         </li>
@@ -32,12 +34,12 @@
           }"
           @click.stop="miaoshaIndex = 1"
         >
-          <div :class="$style.wrapper">
+          <div :class="$style.wrapper" v-if="data.values[1].range && data.values[1].range.length">
             <div :class="$style.status">
-              进行中
+              {{ getTimeStatus(data.values[1].range) }}
             </div>
             <div :class="$style.time">
-              {{ data.values[1].range && data.values[1].range[0] ? getDate(data.values[1].range[0], 'HH:mm') : '00:00' }}
+              {{ getDate(data.values[1].range[0], 'HH:mm') }}
             </div>
           </div>
         </li>
@@ -50,12 +52,12 @@
           }"
           @click.stop="miaoshaIndex = 2"
         >
-          <div :class="$style.wrapper">
+          <div :class="$style.wrapper" v-if="data.values[2].range && data.values[2].range.length">
             <div :class="$style.status">
-              即将开抢
+              {{ getTimeStatus(data.values[2].range) }}
             </div>
             <div :class="$style.time">
-              {{ data.values[2].range && data.values[2].range[0] ? getDate(data.values[2].range[0], 'HH:mm') : '00:00' }}
+              {{ getDate(data.values[2].range[0], 'HH:mm') }}
             </div>
           </div>
         </li>
@@ -99,18 +101,34 @@
                 <div :class="$style.progress">
                   <div :class="$style.progressInner" :style="{ width: `${(Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) / Number(prod.activityInfo.number)) * 100}%` }" />
                 </div>
-                <div :class="$style.saled" v-if="prod.activityInfo.activityStock > 0 && Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) >= 10">
-                  {{ `已抢${Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)}件` }}
-                </div>
-                <div :class="$style.saled" v-if="prod.activityInfo.activityStock > 0 && Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) < 10">
+                <div :class="$style.saled" v-if="prod.activityInfo.status === 0">
                   {{ `${prod.pageviews}人已关注` }}
                 </div>
-                <div :class="$style.saled" v-if="prod.activityInfo.activityStock === 0" style="color: #999999;">
+                <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock > 0">
+                  {{ `已抢${Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)}件` }}
+                </div>
+                <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock === 0" style="color: #999999;">
                   已抢完
                 </div>
               </div>
-              <div :class="$style.subRight">
-                <pl-icon name="icon-qiang" type="svg" />
+              <div
+                :class="{
+                  [$style.subRight]: true,
+                  [$style.disabled]: prod.activityInfo.status !== 1
+                }"
+              >
+                <pl-icon
+                  v-if="~[0, 1].indexOf(prod.activityInfo.status)"
+                  :class="$style.qiang"
+                  name="icon-qiang"
+                  type="svg"
+                />
+                <pl-icon
+                  v-else
+                  :class="$style.jieshu"
+                  name="icon-jieshu"
+                  type="svg"
+                />
               </div>
             </div>
           </div>
@@ -121,10 +139,11 @@
 </template>
 
 <script>
-import moment from 'moment'
+import mixin from '../mixin.js'
 
 export default {
   name: 'Miaosha',
+  mixins: [mixin],
   props: {
     data: {
       type: Object,
@@ -135,23 +154,15 @@ export default {
     type: {
       type: Number,
       default: 0
+    },
+    timestamp: {
+      type: [String, Number],
+      default: ''
     }
   },
   data () {
     return {
       miaoshaIndex: 0
-    }
-  },
-  methods: {
-    getPrice (list) {
-      return (key) => {
-        let arr = list.map(item => item[key])
-        return key === 'originalPrice' ? Math.max(...arr) : Math.min(...arr)
-      }
-    },
-    getDate (val, format) {
-      if (!val) return
-      return moment(val).format(format)
     }
   }
 }
@@ -389,8 +400,15 @@ export default {
             border-radius: 50%;
             overflow: hidden;
             color: #ffffff;
-            svg {
+            &.disabled {
+              background: linear-gradient(231deg, rgba(204, 204, 204, 1) 0%, rgba(153, 153, 153, 1) 100%);
+            }
+            .qiang {
               width: 38px;
+            }
+            .jieshu {
+              width: 48px;
+              height: 22px;
             }
           }
         }

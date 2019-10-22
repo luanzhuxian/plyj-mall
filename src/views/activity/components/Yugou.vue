@@ -42,26 +42,25 @@
 </template>
 
 <script>
+import mixin from '../mixin.js'
+
 export default {
   name: 'Yugou',
+  mixins: [mixin],
   props: {
     data: {
       type: Object,
       default () {
         return { values: [] }
       }
+    },
+    timestamp: {
+      type: [String, Number],
+      default: ''
     }
   },
   data () {
     return {}
-  },
-  methods: {
-    getPrice (list) {
-      return (key) => {
-        let arr = list.map(item => item[key])
-        return key === 'originalPrice' ? Math.max(...arr) : Math.min(...arr)
-      }
-    }
   }
 }
 </script>
@@ -73,7 +72,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     .background {
-      background: url("../../../assets/images/activity/bg-yugou.png") no-repeat center top;
+      background: url("../../../assets/images/activity/bg-yugou.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     .wrapper {
@@ -122,7 +121,8 @@ export default {
           align-items: center;
           text-align: center;
           margin-bottom: 14px;
-          width: 214px;
+          // width: 214px;
+          width: max-content;
           height: 34px;
           line-height: 34px;
           border: 2px solid #EC6BA4;
@@ -136,6 +136,9 @@ export default {
             overflow: hidden;
           }
           &-right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 120px;
             font-size: 24px;
             font-family: San Francisco Display;
