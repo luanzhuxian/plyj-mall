@@ -173,6 +173,7 @@ import CouponItem from '../../components/item/Coupon-Item.vue'
 import {
   sendMessage,
   sendCustomMessage,
+  getRoomStatus,
   getActiveCompleteInfo,
   sign
 } from '../../apis/live'
@@ -189,9 +190,9 @@ export default {
   data () {
     return {
       showEmoticon: false,
-      channelId: '393112',
-      appId: 'fgpe9p5979',
-      channeUserId: 'ea0c93b91e',
+      channelId: '',
+      appId: '',
+      channeUserId: '',
       tab: 1,
       message: '',
       maxRecords: 400, // 最大缓存的聊天记录条数
@@ -227,9 +228,19 @@ export default {
   activated () {
   },
   async mounted () {
-    this.initPlayer()
-    this.initSocket()
-    this.getDetail()
+    try {
+      let data = await getRoomStatus()
+      let { roomId, appId, appUserId } = data
+      this.channelId = roomId
+      this.appId = appId
+      this.channeUserId = appUserId
+      this.initPlayer()
+      this.initSocket()
+      this.getDetail()
+    } catch (e) {
+      this.$error(e.message)
+      throw e
+    }
   },
   methods: {
     initPlayer () {

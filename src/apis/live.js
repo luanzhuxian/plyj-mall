@@ -63,6 +63,10 @@ export const sign = data => Instance.post(`/apis/v1/mall/live/room/sign`, data)
  * @return {Promise<AxiosResponse<T>>}
  */
 export const getActiveCompleteInfo = (id = '') => Instance.get(`/apis/v1/mall/live/activity/current/complete?id=${id}`)
+/**
+ * 获取直播信息
+ */
+export const getRoomStatus = () => Instance.get(`/apis/v1/mall/live/room/statue`)
 
 function request (config) {
   return config
@@ -81,7 +85,6 @@ function response (response) {
   return Promise.reject(new ResponseError(data.message))
 }
 function resError (error) {
-  console.log(error)
   let msg = error.message
   if (msg.indexOf('timeout') > -1) {
     msg = '请求超时◔̯◔'
