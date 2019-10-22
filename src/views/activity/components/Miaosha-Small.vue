@@ -34,18 +34,34 @@
                   <div :class="$style.progress">
                     <div :class="$style.progressInner" :style="{ width: `${(Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock) / Number(data.values[0].goodsInfo.activityInfo.number)) * 100}%` }" />
                   </div>
-                  <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.activityStock > 0 && Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock) >= 10">
-                    {{ `已抢${Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock)}件` }}
-                  </div>
-                  <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.activityStock > 0 && Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock) < 10">
+                  <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status === 0">
                     {{ `${data.values[0].goodsInfo.pageviews}人已关注` }}
                   </div>
-                  <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.activityStock === 0" style="color: #999999;">
+                  <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status > 0 && data.values[0].goodsInfo.activityInfo.activityStock > 0">
+                    {{ `已抢${Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock)}件` }}
+                  </div>
+                  <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status > 0 && data.values[0].goodsInfo.activityInfo.activityStock === 0" style="color: #999999;">
                     已抢完
                   </div>
                 </div>
-                <div :class="$style.subRight">
-                  <pl-icon name="icon-qiang" type="svg" />
+                <div
+                  :class="{
+                    [$style.subRight]: true,
+                    [$style.disabled]: data.values[0].goodsInfo.activityInfo.status !== 1
+                  }"
+                >
+                  <pl-icon
+                    v-if="~[0, 1].indexOf(data.values[0].goodsInfo.activityInfo.status)"
+                    :class="$style.qiang"
+                    name="icon-qiang"
+                    type="svg"
+                  />
+                  <pl-icon
+                    v-else
+                    :class="$style.jieshu"
+                    name="icon-jieshu"
+                    type="svg"
+                  />
                 </div>
               </div>
             </div>
@@ -57,8 +73,11 @@
 </template>
 
 <script>
+import mixin from '../mixin.js'
+
 export default {
   name: 'Miaosha',
+  mixins: [mixin],
   props: {
     data: {
       type: Object,
@@ -69,18 +88,14 @@ export default {
     type: {
       type: Number,
       default: 0
+    },
+    timestamp: {
+      type: [String, Number],
+      default: ''
     }
   },
   data () {
     return {}
-  },
-  methods: {
-    getPrice (list) {
-      return (key) => {
-        let arr = list.map(item => item[key])
-        return key === 'originalPrice' ? Math.max(...arr) : Math.min(...arr)
-      }
-    }
   }
 }
 </script>
@@ -92,7 +107,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     .background {
-      background: url("../../../assets/images/activity/bg-miaosha.png") no-repeat center top;
+      background: url("../../../assets/images/activity/bg-miaosha.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     .wrapper {
@@ -249,8 +264,15 @@ export default {
             border-radius: 50%;
             overflow: hidden;
             color: #ffffff;
-            svg {
+            &.disabled {
+              background: linear-gradient(231deg, rgba(204, 204, 204, 1) 0%, rgba(153, 153, 153, 1) 100%);
+            }
+            .qiang {
               width: 38px;
+            }
+            .jieshu {
+              width: 48px;
+              height: 22px;
             }
           }
         }

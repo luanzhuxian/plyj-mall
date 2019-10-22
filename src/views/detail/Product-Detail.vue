@@ -7,10 +7,7 @@
         <p>分享海报</p>
       </div>
       <!-- 商品banner -->
-      <DetailBanner
-        :type="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' ? 'lesson' : 'product'"
-        :banners="banners"
-      />
+      <DetailBanner :banners="banners" />
       <!-- 团购倒计时条 -->
       <TogetherBar :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity !== 0" />
       <!-- 秒杀倒计时条 -->

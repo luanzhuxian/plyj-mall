@@ -69,6 +69,9 @@
         />
       </div>
     </div>
+    <div v-if="activeProduct === 3" :class="$style.activeTag">限时秒杀</div>
+    <div v-if="activeProduct === 2" :class="$style.activeTag">团购</div>
+    <div v-if="activeProduct === 4" :class="$style.activeTag">预购</div>
   </div>
 </template>
 
@@ -111,6 +114,10 @@ export default {
       type: [String, Number],
       default: 0
     },
+    activeProduct: {
+      type: [String, Number],
+      default: 1
+    },
     productId: {
       type: String,
       default: ''
@@ -145,7 +152,12 @@ export default {
   computed: {
     ...mapGetters(['userId', 'agentUser'])
   },
+  created () {
+  },
   watch: {
+    activeProduct (val) {
+      console.log(val)
+    }
   },
   methods: {
     handleClick (e) {
@@ -245,7 +257,7 @@ export default {
     }
     &.medium {
       > img {
-        width: 164px;
+        width: 244px;
         height: 164px;
       }
       .right {
@@ -259,7 +271,7 @@ export default {
     }
     &.small {
       > img {
-        width: 140px;
+        width: 208px;
         height: 140px;
       }
       .right {
@@ -271,5 +283,14 @@ export default {
         }
       }
     }
+  }
+  .active-tag {
+    position: absolute;
+    padding: 0 8px;
+    line-height: 30px;
+    text-align: center;
+    color: #FF3323;
+    font-size: 22px;
+    background-color: #EFE0C3;
   }
 </style>

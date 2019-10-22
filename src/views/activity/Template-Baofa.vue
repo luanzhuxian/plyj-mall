@@ -7,7 +7,7 @@
     />
     <!-- 直播-->
     <broadcast
-      v-if="$attrs.live && $attrs.live.statue === 1"
+      v-if="$attrs.live && ($attrs.live.statue === 1 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
       :class="$style.broadcast"
       v-bind="$attrs"
     />
@@ -20,6 +20,7 @@
       v-if="MIAO_SHA.values && MIAO_SHA.values.length"
       :data="MIAO_SHA"
       :type="type"
+      v-bind="$attrs"
     />
     <!-- 活动 -->
     <div :class="$style.moduleActivity">
@@ -31,11 +32,13 @@
     <pintuan
       v-if="PIN_TUAN.values && PIN_TUAN.values.length"
       :data="PIN_TUAN"
+      v-bind="$attrs"
     />
     <fengqiang
       v-if="FENG_QIANG.values && FENG_QIANG.values.length"
       :data="FENG_QIANG"
       :type="type"
+      :coupon="coupon"
     />
   </div>
 </template>
@@ -47,6 +50,7 @@ import Coupon from './components/Coupon.vue'
 import Maisong from './components/Maisong.vue'
 import Fengqiang from './components/Fengqiang.vue'
 import Miaosha from './components/Miaosha.vue'
+import { getMaxCoupon } from '../../apis/home'
 
 export default {
   name: 'HomeTemplateB',
@@ -58,9 +62,6 @@ export default {
     Fengqiang,
     Miaosha
   },
-  data () {
-    return {}
-  },
   props: {
     data: {
       type: Object,
@@ -71,6 +72,11 @@ export default {
     type: {
       type: Number,
       default: 0
+    }
+  },
+  data () {
+    return {
+      coupon: {}
     }
   },
   computed: {
@@ -89,6 +95,10 @@ export default {
     FENG_QIANG () {
       return this.data.FENG_QIANG || {}
     }
+  },
+  async created () {
+    const { result } = await getMaxCoupon()
+    this.coupon = result
   }
 }
 </script>

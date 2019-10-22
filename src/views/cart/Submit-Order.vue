@@ -27,6 +27,7 @@
           :support-refund="item.supportRefund"
           :gap="32"
           :product-type="1"
+          :active-product="activeProduct"
           :allow-invoice="item.showInvoice"
           border
         />
@@ -113,6 +114,7 @@
             is-submit
             :gap="32"
             :product-type="2"
+            :active-product="activeProduct"
             :allow-invoice="item.showInvoice"
             border
           />
@@ -220,6 +222,7 @@
             is-submit
             :gap="32"
             :product-type="2"
+            :active-product="activeProduct"
             :allow-invoice="item.showInvoice"
             border
           />
@@ -538,6 +541,7 @@ export default {
       invioceType: 0,
       INVOICE_MODEL: {},
       CHECKED_STUDENT: {},
+      activeProduct: 1,
       rules: {
         name: [
           { required: true, message: '请输入联系人姓名' },
@@ -599,6 +603,7 @@ export default {
     }
   },
   async activated () {
+    this.activeProduct = Number(this.$route.query.activeProduct) || 1
     try {
       await this.getProductDetail()
       this.INVOICE_MODEL = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || null
@@ -725,7 +730,7 @@ export default {
           coupon = result
         }
         const { result } = await confirmCart({
-          activeProduct: this.$route.query.activeProduct,
+          activeProduct: this.activeProduct,
           activityId: this.$route.query.activityId,
           cartProducts: proList,
           userCouponId: coupon.id || '',
@@ -811,7 +816,7 @@ export default {
         cartProducts,
         cartSource: this.isCart,
         invoiceModel: this.INVOICE_MODEL,
-        activeProduct: this.isCart ? 1 : this.$route.query.activeProduct,
+        activeProduct: this.isCart ? 1 : this.activeProduct,
         userCouponId: this.coupon.id || ''
       }
       if (this.physicalProducts.length === 0) {
@@ -953,7 +958,7 @@ export default {
       sessionStorage.removeItem('INVOICE_MODEL')
       sessionStorage.removeItem('CONFIRM_LIST')
       sessionStorage.removeItem('APPLY_INVOICE')
-      localStorage.removeItem('CHECKED_STUDENT')
+      sessionStorage.removeItem('CHECKED_STUDENT')
       localStorage.removeItem('CONTACT_INFO_MODEL')
       this.remark = ''
       this.physicalProducts = []

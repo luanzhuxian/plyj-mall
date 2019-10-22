@@ -9,18 +9,21 @@
           :data="modules"
           :type="type"
           :live="liveInfo"
+          :timestamp="timestamp"
         />
         <TemplateBaofa
           v-if="type === 6"
           :data="modules"
           :type="type"
           :live="liveInfo"
+          :timestamp="timestamp"
         />
         <TemplateFanchang
           v-if="type === 7"
           :data="modules"
           :type="type"
           :live="liveInfo"
+          :timestamp="timestamp"
         />
       </div>
     </div>
@@ -56,7 +59,8 @@ export default {
         FENG_QIANG: null,
         RECOMMEND: null
       },
-      liveInfo: {}
+      liveInfo: {},
+      timestamp: ''
     }
   },
   async created () {
@@ -81,8 +85,9 @@ export default {
             })
           return
         }
-        let { type, moduleModels } = result
+        let { type, moduleModels, currentTime } = result
         this.type = type
+        this.timestamp = currentTime || Date.now()
         if (type === 5) {
           this.modules.MIAO_SHA = moduleModels[0]
           this.modules.PIN_TUAN = moduleModels[1]
@@ -98,6 +103,12 @@ export default {
           this.modules.MIAO_SHA = moduleModels[2]
           this.modules.PIN_TUAN = moduleModels[3]
           this.modules.FENG_QIANG = moduleModels[4]
+          this.modules.MIAO_SHA.values.forEach((item, index) => {
+            if (!item.goodsInfo || !Array.isArray(item.goodsInfo)) {
+              item.goodsInfo = []
+            }
+            this.$set(item, 'range', item.valueName.split(','))
+          })
         }
         if (type === 7) {
           this.modules.MAI_SONG = moduleModels[0]

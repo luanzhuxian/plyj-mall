@@ -22,7 +22,7 @@
         <number :value="+timeSplit[7]" />
       </div>
       <div class="countdown-panel" v-else>
-        <span class="status-stop">活动时间已截止</span>
+        <span class="status-stop">活动时间已结束</span>
       </div>
       <!-- 邀请文案 -->
       <div class="activity-invite-title" v-html="inviteTitle">
@@ -117,12 +117,16 @@ export default {
         // [{avatar: String}]
         return []
       }
+    },
+    isStoped: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       STATUS,
-      countdown: (DAY + MIN + 59) * 1000,
+      countdown: 0,
       countdownTimer: null,
       countdownStatus: ['距离开始', '距离结束', '距离结束']
     }
@@ -134,6 +138,9 @@ export default {
     },
 
     status () {
+      if (this.isStoped) {
+        return STATUS.END
+      }
       let now = moment()
       if (now.isBefore(moment(this.startTime))) {
         return STATUS.READY
@@ -149,6 +156,11 @@ export default {
   watch: {
     startTime () {
       this.startCountdown()
+    },
+    countdown (newVal, oldVal) {
+      if (newVal === 0 && oldVal !== 0) {
+        this.emitCountdownStop()
+      }
     }
   },
 
@@ -163,6 +175,10 @@ export default {
   methods: {
     emitOp () {
       this.$emit('notify')
+    },
+
+    emitCountdownStop () {
+      this.$emit('countdownstop')
     },
 
     startCountdown () {
@@ -270,8 +286,10 @@ export default {
         margin-right: 16px;
         width: 68px;
         height: 82px;
+        line-height: 38px;
         color: #a56113;
         font-size: 34px;
+        font-family: HYLiLiangHeiJ;
       }
 
       .status-stop {
@@ -279,6 +297,7 @@ export default {
         color: #a56113;
         font-size: 60px;
         font-weight: 400;
+        font-family: HYLiLiangHeiJ;
       }
     }
   }
@@ -289,6 +308,7 @@ export default {
     color: white;
     text-align: center;
     font-size: 56px;
+    font-family: HYLingXinJ;
     .gift {
       color: #f6f4b4;
     }

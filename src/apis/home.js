@@ -9,3 +9,5 @@ export const getProduct = (data) => axios({ method: 'post', url: '/apis/v1/produ
 export const getCurrentTemplate = params => axios.get('/apis/v1/mall/template/current', { params })
 // 查直播信息
 export const getLiveInfo = () => axios.get('/apis/v1/mall/live/activity/current/simplified')
+// 查询最大额度优惠券信息
+export const getMaxCoupon = () => axios.get('/apis/v1/coupon/getMostPreferential')

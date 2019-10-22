@@ -35,11 +35,14 @@ export default {
 
   computed: {
     ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    isNewUser () {
+      return this.userId === ''
+    },
     isActivityStoped () {
       return moment(this.activityInfo.activityEndTime).isBefore(moment()) || this.activityInfo.status === 0
     },
     showSelf () {
-      return (!this.isActivityStoped) && (this.userId !== '')
+      return (!this.isActivityStoped) && this.isNewUser()
     }
   },
 

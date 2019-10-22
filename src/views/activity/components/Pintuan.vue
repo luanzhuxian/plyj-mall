@@ -43,15 +43,36 @@
               <div :class="$style.sub">
                 <div :class="$style.subLeft">
                   <div :class="$style.subLeftMain">
-                    {{ `已有${(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.number) || 0}人参与` }}
+                    <span v-if="item.goodsInfo.activityInfo.status === 0">
+                      {{ `${item.goodsInfo.pageviews}人已关注` }}
+                    </span>
+                    <span v-else>
+                      {{ `已有${(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.number) || 0}人参与` }}
+                    </span>
                   </div>
                   <div :class="$style.subLeftSub">
                     <pl-icon name="icon-tuangoujia" type="svg" />
                     <span :class="$style.price">{{ item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice }}</span>
                   </div>
                 </div>
-                <div :class="$style.subRight">
-                  <pl-icon name="icon-qiang" type="svg" />
+                <div
+                  :class="{
+                    [$style.subRight]: true,
+                    [$style.disabled]: item.goodsInfo.activityInfo.status !== 1
+                  }"
+                >
+                  <pl-icon
+                    name="icon-qiang"
+                    type="svg"
+                    :class="$style.qiang"
+                    v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                  />
+                  <pl-icon
+                    name="icon-jieshu"
+                    type="svg"
+                    :class="$style.finish"
+                    v-else
+                  />
                 </div>
               </div>
             </div>
@@ -71,12 +92,15 @@ export default {
       default () {
         return { values: [] }
       }
+    },
+    timestamp: {
+      type: [String, Number],
+      default: ''
     }
   },
   data () {
     return {}
-  },
-  methods: {}
+  }
 }
 </script>
 
@@ -160,7 +184,7 @@ export default {
             &-right {
               width: 72px;
               height: 72px;
-               svg {
+               .qiang {
                 width: 40px;
               }
             }
@@ -198,7 +222,7 @@ export default {
             &-right {
               width: 58px;
               height: 58px;
-              svg {
+              .qiang {
                 width: 32px;
               }
             }
@@ -294,6 +318,7 @@ export default {
           width: 0;
           &-main {
             font-weight: bold;
+            height: 36px;
             line-height: 36px;
             color: #999999;
             @include elps();
@@ -326,6 +351,12 @@ export default {
           border-radius: 50%;
           overflow: hidden;
           color: #ffffff;
+          &.disabled {
+            background: linear-gradient(231deg, rgba(204, 204, 204, 1) 0%, rgba(153, 153, 153, 1) 100%);
+          }
+          .finish {
+            width: 40px;
+          }
         }
       }
     }
