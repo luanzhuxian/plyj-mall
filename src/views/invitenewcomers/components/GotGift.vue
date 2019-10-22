@@ -50,8 +50,8 @@
             </div>
           </div>
           <p class="description" v-if="type === 'coupon'">
-            满减券已自动存入现金卡包中<br>
-            您可在现金卡包中查看
+            满减券已自动存入我的卡券中<br>
+            您可在我的卡券中查看
           </p>
           <p class="description" v-if="type === 'gift'">
             奖品已自动存入我的礼品中<br>
