@@ -121,6 +121,7 @@
             v-for="(item, i) of productList"
             :key="i"
             :class="$style.product"
+            @click="$router.push({ name: 'Lesson', params: { productId: item.id, brokerId, userId } })"
           >
             <img :src="item.productMainImage" alt="">
             <div :class="$style.left">
@@ -128,7 +129,7 @@
               <div :class="$style.price" v-text="item.price" />
               <!--<div :class="$style.count">3</div>-->
             </div>
-            <div :class="$style.vieFor" @click="$router.push({ name: 'Lesson', params: { productId: item.id, brokerId, userId } })">
+            <div :class="$style.vieFor">
               <pl-icon name="icon-vie-for" color="#fff" size="40" />
             </div>
           </div>
@@ -264,7 +265,7 @@ export default {
           // video.setAttribute('x5-video-player-fullscreen', true)
           // video.setAttribute('x5-video-player-type', 'h5-page')
           video.addEventListener("x5videoenterfullscreen", function(e) {
-            console.log('x5videoenterfullscreen')
+            // console.log('x5videoenterfullscreen')
             // video.style.width = window.screen.width + 'px'
             // video.style.height = window.screen.height + 'px'
           }, false)
@@ -299,7 +300,6 @@ export default {
     onMessage (data) {
       let mData = JSON.parse(data)
       if (mData && mData.EVENT) {
-        console.log(mData)
         let user = mData.user
         switch (mData.EVENT) {
           case 'LOGIN':
@@ -339,7 +339,6 @@ export default {
       }
     },
     async sendMessage (message) {
-      console.log(message)
       try {
         let { channelId, appId, userId, avatar, userName } = this
         let timestamp = Date.now()
@@ -347,7 +346,6 @@ export default {
           signMsg: `appId${appId}channelId${channelId}msg${message}nickName${userName}pic${avatar}timestamp${timestamp}`,
           roomId: channelId
         })
-        console.log(result)
         let messageConfig = {
           appId,
           timestamp,
