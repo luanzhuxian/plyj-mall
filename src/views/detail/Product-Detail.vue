@@ -71,12 +71,11 @@
       </Field>
 
       <Field
-        v-if="couponList.length"
+        v-if="couponList.length && detail.preActivity !== 2"
         label="优惠券"
         can-click
         :label-width="120"
         @click="showCoupon = true"
-        v-if="detail.preActivity !== 2"
       >
         <span style="color: #FE7700;" v-text="couponText" />
       </Field>
