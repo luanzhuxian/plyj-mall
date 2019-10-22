@@ -89,6 +89,7 @@
       :sku-attr-list="skuAttrList"
       :sku="currentSku"
       :limiting="limiting"
+      v-if="preActivity && activeProduct"
       :active-product="activeProduct"
       :pre-activity="preActivity"
       :activity-product-model="activityProductModel"
@@ -181,11 +182,11 @@ export default {
     disableAddCart: Boolean,
     activeProduct: {
       type: [Number, String],
-      default: 1
+      default: ''
     },
     preActivity: {
       type: [Number, String],
-      default: 0
+      default: ''
     },
     activityProductModel: {
       type: Object,
@@ -210,6 +211,7 @@ export default {
     this.reset()
   },
   mounted () {
+    console.log('ssssss' + this.activeProduct)
     this.getCartCount()
   },
   methods: {
@@ -251,6 +253,7 @@ export default {
         query: {
           isCart: 'NO',
           activeProduct: this.activeType,
+          activityId: this.activeProduct === 1 ? '' : this.activityProductModel.activityId,
           amount: options.price
         }
       })

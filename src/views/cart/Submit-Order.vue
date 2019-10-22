@@ -726,6 +726,7 @@ export default {
         }
         const { result } = await confirmCart({
           activeProduct: this.$route.query.activeProduct,
+          activityId: this.$route.query.activityId,
           cartProducts: proList,
           userCouponId: coupon.id || '',
           addressSeq: this.selectedAddress.sequenceNbr
