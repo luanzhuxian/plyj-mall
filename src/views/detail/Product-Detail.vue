@@ -153,6 +153,9 @@
       :visible.sync="showSpecifica"
       :sku.sync="currentModel"
       :limiting="limiting"
+      :active-product="detail.activeProduct"
+      :activity-product-model="detail.activityProductModel || null"
+      :pre-activity="detail.preActivity"
     >
       <template v-slot:footer="{ currentSku }">
         <div :class="$style.buttons">
@@ -535,6 +538,7 @@ export default {
         query: {
           isCart: 'NO',
           activeProduct: this.detail.activeProduct,
+          activityId: this.detail.activeProduct === 1 ? '' : this.detail.activityProductModel.activityId,
           amount: selected.price
         }
       })

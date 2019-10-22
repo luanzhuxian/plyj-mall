@@ -65,6 +65,7 @@
             <div :class="$style.count">
               <div>
                 <span>购买数量</span>
+                <span v-if="activeProduct === 3 && preActivity === 2 && activityProductModel.activityLimit === 1" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ activityProductModel.activityLimitNumber }}件)</span>
                 <span v-if="limiting" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ limiting }}件)</span>
               </div>
               <div :class="$style.countCtr">
@@ -81,7 +82,7 @@
                   +
                 </button>
                 <p :class="$style.residue">
-                  库存<i v-text="residue" />件
+                  库存<i v-text="(activeProduct !== 1 && preActivity === 2) ? activityProductModel.stock : residue" />件
                 </p>
               </div>
             </div>
@@ -141,11 +142,11 @@ export default {
     },
     activeProduct: {
       type: [Number, String],
-      default: 1
+      default: ''
     },
     preActivity: {
       type: [Number, String],
-      default: 0
+      default: ''
     },
     activityProductModel: {
       type: Object,
@@ -186,6 +187,9 @@ export default {
       },
       deep: true
     }
+  },
+  created () {
+    console.log('====' + this.activeProduct)
   },
   computed: {
     currentDisabled () {
