@@ -9,6 +9,7 @@
         invite-description="你也可以参与活动拿豪礼大奖哦！"
         :invite-button-text="inviteButtonText"
         :is-stoped="isActivityStoped"
+        @countdownstop="init"
         @notify="onNotify"
       />
     </div>
@@ -34,9 +35,7 @@
         <h3>2.活动对象</h3>
         <p>所有会员</p>
         <h3>3.活动说明</h3>
-        <p>在活动有效期内，成功邀请3位好友绑定手机号注册成为店铺的会员，即可获得翻好礼的机会1次；
-          有机会获得大额满减券；领取成功后，将自动存入到会员的现金卡包中
-        </p>
+        <p v-html="activityBrief" />
       </div>
     </pl-popup>
     <help-success
@@ -107,6 +106,9 @@ export default {
         return '参与更多精彩活动'
       }
       return '助好友，得豪礼'
+    },
+    activityBrief () {
+      return (this.activityInfo.activityBrief || '').replace(/\n/g, '<br>')
     }
   },
 
@@ -116,22 +118,7 @@ export default {
   },
 
   async activated () {
-    let requests = []
-
-    requests.push((() => this.getInviteUserInfo())())
-
-    await this.getActivityInfo()
-    if (this.isActivityStarted) {
-      requests.push((() => this.getOrdersShow())())
-    }
-
-    // this.share()
-    if (requests.length) {
-      await Promise.all(requests)
-    }
-
-    // 新用户注册返回后，继续后续的助力操作
-    this.helpMyFriend(true)
+    await this.init()
   },
 
   methods: {
@@ -146,6 +133,24 @@ export default {
     //     imgUrl: ''
     //   })
     // },
+    async init () {
+      let requests = []
+
+      requests.push((() => this.getInviteUserInfo())())
+
+      await this.getActivityInfo()
+      if (this.isActivityStarted) {
+        requests.push((() => this.getOrdersShow())())
+      }
+
+      // this.share()
+      if (requests.length) {
+        await Promise.all(requests)
+      }
+
+      // 新用户注册返回后，继续后续的助力操作
+      this.helpMyFriend(true)
+    },
 
     gotoInviteNew () {
       this.$router.push({ name: 'InviteNewcomers', params: { activityId: this.activityId } })

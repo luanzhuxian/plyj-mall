@@ -126,7 +126,7 @@ export default {
   data () {
     return {
       STATUS,
-      countdown: (DAY + MIN + 59) * 1000,
+      countdown: 0,
       countdownTimer: null,
       countdownStatus: ['距离开始', '距离结束', '距离结束']
     }
@@ -156,6 +156,11 @@ export default {
   watch: {
     startTime () {
       this.startCountdown()
+    },
+    countdown (newVal, oldVal) {
+      if (newVal === 0 && oldVal !== 0) {
+        this.emitCountdownStop()
+      }
     }
   },
 
@@ -170,6 +175,10 @@ export default {
   methods: {
     emitOp () {
       this.$emit('notify')
+    },
+
+    emitCountdownStop () {
+      this.$emit('countdownstop')
     },
 
     startCountdown () {

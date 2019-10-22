@@ -9,6 +9,7 @@
         :invite-description="inviteDescription"
         :invite-button-text="inviteButtonText"
         :is-stoped="isActivityStoped"
+        @countdownstop="init"
         @notify="onNotify"
       />
     </div>
