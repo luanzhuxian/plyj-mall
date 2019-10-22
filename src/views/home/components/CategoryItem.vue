@@ -149,7 +149,7 @@ export default {
       width: 332px;
       margin-bottom: 22px;
       img {
-        height: 332px;
+        height: 221px;
         width: 332px;
         object-fit: cover;
         border-radius: $--radius1 $--radius1 0 0;
@@ -175,7 +175,7 @@ export default {
       width: 220px;
       img {
         width: 220px;
-        height: 220px;
+        height: 146px;
       }
       .name {
         margin-top: 10px;
@@ -188,7 +188,7 @@ export default {
       width: 196px;
       img {
         width: 196px;
-        height: 196px;
+        height: 130px;
       }
       .name {
         width: 180px;

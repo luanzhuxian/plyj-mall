@@ -1,25 +1,23 @@
 # plyj-mall
 
-## Project setup
+## 安装依赖
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 用于本地启动
 ```
-npm run serve
+npm run start
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Compiles and minifies for development
+### 用户开发环境的编译
 ```
 npm run build:dev
 ```
 
+### 用户生产环境的编译
+```
+npm run build
+```
 ### Run your tests
 ```
 npm run test
