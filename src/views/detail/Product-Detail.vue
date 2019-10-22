@@ -19,11 +19,11 @@
         <!-- 加个 润笔 购买数量，关注人数 登信息 -->
         <info-header :detail="detail" v-if="detail.activeProduct === 1" />
         <!-- 团购信息 -->
-        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 2" />
+        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity !== 0" />
         <!-- 秒杀信息 -->
-        <SecondPrice :detail="detail" v-if="detail.activeProduct === 3" />
+        <SecondPrice :detail="detail" v-if="detail.activeProduct === 3 && detail.preActivity !== 0" />
         <!-- 预购信息 -->
-        <BookingPrice :detail="detail" v-if="detail.activeProduct === 4" />
+        <BookingPrice :detail="detail" v-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
         <!-- 开售倒计时 -->
         <count-down
           size="large"
@@ -163,11 +163,13 @@
             :class="$style.add"
             :disabled="adding || noStock"
             @click="addToCart(currentSku)"
+            v-if="detail.activeProduct === 1"
           >
             加入购物车
           </button>
           <button
             :class="$style.buy"
+            :style="{width: detail.activeProduct !== 1 ? '100%' : ''}"
             :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku)"
           >
