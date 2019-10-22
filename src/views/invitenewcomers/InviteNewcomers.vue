@@ -153,7 +153,7 @@ export default {
         link: `${window.location.protocol}//${window.location.host}${window.location.pathname}/help/${this.userId}`,
         imgUrl: this.logoUrl,
         success: () => {
-          inviterStatisitic(this.activityInfo)
+          inviterStatisitic(this.activityId)
         }
       })
     },
