@@ -3,9 +3,7 @@
     v-if="banners.length > 0"
     :class="{
       'detail-banner': true,
-      [$style.detailBanner]: true,
-      [$style.lesson]: type === 'lesson',
-      [$style.product]: type === 'product'
+      [$style.detailBanner]: true
     }"
   >
     <swiper ref="swiper" :options="swiperOption" @slideChange="slideChange">
@@ -73,10 +71,6 @@ export default {
       default: function () {
         return []
       }
-    },
-    type: {
-      type: String,
-      default: 'product'
     }
   },
   data () {
@@ -131,26 +125,16 @@ export default {
   .detail-banner {
     position: relative;
     font-size: 0;
-    &.lesson {
+    height: 502px;
+    .banner-img {
+      width: 750px;
       height: 502px;
-      .banner-img {
-        width: 750px;
-        height: 502px;
-        object-fit: cover;
-      }
-    }
-    &.product {
-      height: 750px;
-      .banner-img {
-        width: 750px;
-        height: 750px;
-        object-fit: cover;
-      }
+      object-fit: cover;
     }
   }
   .pagination {
     width: 100%;
-    bottom: 94px;
+    bottom: 20px;
   }
   .skeleton {
     height: 750px;

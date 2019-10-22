@@ -96,7 +96,7 @@ export default {
     display: flex;
     justify-content: center;
     margin-bottom: 32px;
-    img{
+    img {
       width: 256px;
       height: 40px;
     }
