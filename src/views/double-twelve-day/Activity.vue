@@ -150,6 +150,7 @@ import {
   getEntDetail
 } from '../../apis/double-twelve-day'
 import { mapGetters } from 'vuex'
+import share from '../../assets/js/wechat/wechat-share'
 export default {
   name: 'DoubleTwelveDayActivity',
   data () {
@@ -171,7 +172,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['logoUrl', 'openId', 'mobile', 'realeName', 'mallName', 'avatar', 'userName']),
+    ...mapGetters(['logoUrl', 'openId', 'mobile', 'realeName', 'mallName', 'avatar', 'userName', 'appId']),
     cacheInfo () {
       return this.entDetail.cacheInfo
     }
@@ -185,6 +186,15 @@ export default {
     } catch (e) {
       throw e
     }
+  },
+  mounted () {
+    share({
+      appId: this.appId,
+      title: this.mallName,
+      desc: `${this.userName} 邀您帮我上榜`,
+      link: window.location.href,
+      imgUrl: this.logoUrl
+    })
   },
   methods: {
     async userHelp () {

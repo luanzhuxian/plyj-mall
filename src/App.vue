@@ -44,7 +44,7 @@ export default {
   },
   watch: {
     $route (route) {
-      if (!/^\/detail/.test(route.path)) {
+      if (!/^(\/detail|\/double)/.test(route.path)) {
         // 如果不是商品详情页面，采用其他分享策略
         let willHide = []
         if (this.shareRoutes.indexOf(route.name) === -1) {
