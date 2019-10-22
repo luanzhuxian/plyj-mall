@@ -37,6 +37,7 @@
         <p v-html="activityBrief" />
       </div>
     </pl-popup>
+    <newcomers-home-entry />
   </div>
 </template>
 
@@ -45,7 +46,7 @@ import moment from 'moment'
 import { mapGetters } from 'vuex'
 import share from '../../assets/js/wechat/wechat-share'
 import GiftTicket from './GiftTicket'
-import { getNewcomersDetail, claimCoupons } from '../../apis/newcomers'
+import { getNewcomersDetail, claimCoupons, registerStatisitic } from '../../apis/newcomers'
 
 export default {
   name: 'Newcomers',
@@ -202,6 +203,7 @@ export default {
       if (status !== 200) {
         // TODO: add code here
       }
+      await registerStatisitic(this.$$route.params.activityId)
     }
   }
 }

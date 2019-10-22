@@ -19,7 +19,7 @@
       tag="div"
       :to="{ name: 'Activity' }"
     >
-      <img src="../assets/images/d12-tabbar.png" style="padding-bottom: 10px;">
+      <img :class="$style.icon" src="../assets/images/d12-tabbar.png">
     </router-link>
     <router-link
       :class="$style.route"
@@ -111,22 +111,27 @@ export default {
   background-color: #fff;
   z-index: 2;
 }
-  .route {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 88px;
-    font-size: 20px;
-    .alertMessage{
-      background-color: #D2524C;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      position: absolute;
-      top: 10px;
-      right: 60px;
-    }
+.route {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 88px;
+  font-size: 20px;
+  .alertMessage{
+    background-color: #D2524C;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    right: 60px;
   }
+}
+.icon {
+  margin-bottom: 10px;
+  width: 72px;
+  // height: 72px;
+}
 </style>
 <style>
   .router-link-active {

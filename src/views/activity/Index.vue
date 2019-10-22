@@ -1,6 +1,7 @@
 <template>
   <div :class="$style.activity">
     <div :class="$style.background">
+      <search placeholder="搜索商品" />
       <div :class="$style.container">
         <div :class="$style.btnTop" />
         <TemplateFengqiang
@@ -29,7 +30,7 @@
 <script>
 // import { mapGetters } from 'vuex'
 // import moment from 'moment'
-// import Search from './components/Search.vue'
+import Search from './components/Search.vue'
 import TemplateFengqiang from './Template-Fengqiang.vue'
 import TemplateBaofa from './Template-Baofa.vue'
 import TemplateFanchang from './Template-Fanchang.vue'
@@ -38,6 +39,7 @@ import { getCurrentTemplate, getLiveInfo } from '../../apis/home'
 export default {
   name: 'Activity',
   components: {
+    Search,
     TemplateFengqiang,
     TemplateBaofa,
     TemplateFanchang
@@ -129,7 +131,7 @@ export default {
       background-size: 100% auto;
     }
     .container {
-      padding: 320px 24px 176px;
+      padding: 236px 24px 176px;
     }
     .btn-top {
       width: 520px;

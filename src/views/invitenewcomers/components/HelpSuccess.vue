@@ -5,6 +5,7 @@
         <div class="help-success">
           <div class="title">助力成功</div>
           <p class="description">
+            您已获得新人礼包 ，请在我的卡包中查看<br>
             感谢你的好友助力，您也可发起邀新有礼活动<br>
             领取豪礼大奖哦！
           </p>
@@ -13,6 +14,11 @@
               我也来翻豪礼
             </div>
           </div>
+        </div>
+        <div style="text-align: center;">
+          <span class="btn-close" @click="close">
+            <pl-icon type="icon" name="icon-close" color="white" />
+          </span>
         </div>
       </div>
     </overlay>
@@ -81,6 +87,15 @@ export default {
         font-size: 26px;
       }
     }
+
+    .btn-close {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    border: 1px solid white;
+    border-radius: 50%;
+  }
   }
 }
 </style>

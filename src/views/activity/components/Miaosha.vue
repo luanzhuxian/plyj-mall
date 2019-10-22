@@ -3,9 +3,9 @@
     <div :class="$style.wrapper" v-if="data.values.length">
       <ul :class="$style.timeList">
         <div>
-          <!-- <i class="iconfont icon-miaoshazhuanchang" /> -->
+          <pl-icon name="icon-miaoshazhuanchang" type="svg" />
         </div>
-        <span :class="$style.border" v-if="data.values[0]" />
+        <!-- <span :class="$style.border" v-if="data.values[0]" /> -->
         <li
           v-if="data.values[0]"
           :class="{
@@ -59,6 +59,9 @@
             </div>
           </div>
         </li>
+        <div :class="$style.btn">
+          <span>进入专场</span>
+        </div>
       </ul>
       <ul :class="$style.list">
         <li
@@ -80,8 +83,8 @@
               {{ prod.productName }}
             </div>
             <div :class="$style.current">
-              <!-- <i class="iconfont icon-miaoshajia" /> -->
-              <span class="price">
+              <pl-icon name="icon-miaoshajia" type="svg" />
+              <span :class="$style.price">
                 {{ prod.activityInfo && prod.activityInfo.activityPrice }}
               </span>
             </div>
@@ -94,20 +97,20 @@
                   </span>
                 </div>
                 <div :class="$style.progress">
-                  <div :class="$style.progressInner" :style="{ width: '50%' }" />
+                  <div :class="$style.progressInner" :style="{ width: `${(Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) / Number(prod.activityInfo.number)) * 100}%` }" />
                 </div>
-                <div :class="$style.saled" v-if="Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) > 0">
+                <div :class="$style.saled" v-if="prod.activityInfo.activityStock > 0 && Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) >= 10">
                   {{ `已抢${Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)}件` }}
                 </div>
-                <div :class="$style.saled" v-if="false">
-                  100人已关注
+                <div :class="$style.saled" v-if="prod.activityInfo.activityStock > 0 && Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) < 10">
+                  {{ `${prod.pageviews}人已关注` }}
                 </div>
-                <div :class="$style.saled" v-if="Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) === 0" style="color: #999999;">
+                <div :class="$style.saled" v-if="prod.activityInfo.activityStock === 0" style="color: #999999;">
                   已抢完
                 </div>
               </div>
               <div :class="$style.subRight">
-                <!-- <i class="iconfont icon-qiang" /> -->
+                <pl-icon name="icon-qiang" type="svg" />
               </div>
             </div>
           </div>
@@ -118,6 +121,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'Miaosha',
   props: {
@@ -143,6 +148,10 @@ export default {
         let arr = list.map(item => item[key])
         return key === 'originalPrice' ? Math.max(...arr) : Math.min(...arr)
       }
+    },
+    getDate (val, format) {
+      if (!val) return
+      return moment(val).format(format)
     }
   }
 }
@@ -150,26 +159,41 @@ export default {
 
 <style module lang="scss">
   .miaosha {
-    margin-top: 32px;
-    // background: linear-gradient(180deg, #F2BAA7 0%, #E45750 12%, #E45750 100%);
+    margin-top: 22px;
     border-radius: 20px;
     overflow: hidden;
-    .wrapper {
-      // padding: 140px 20px 48px;
-    }
     .time-list {
       padding: 32px 0;
       display: flex;
       justify-content: space-around;
       align-items: center;
-      i {
-        font-size: 80px;
+      svg {
+        width: 78px;
+        height: 80px;
         color: #FFFFFF;
       }
       .border {
         width: 2px;
         height: 26px;
         background: #FFFFFF;
+      }
+      .btn {
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        width: 40px;
+        height: 106px;
+        background: #C40B13;
+        border: 2px solid #FFF;
+        border-radius: 234px;
+        > span {
+          font-size: 20px;
+          font-weight: bold;
+          line-height: 22px;
+          color: #FFF;
+        }
       }
       &-item {
         display: flex;
@@ -212,7 +236,6 @@ export default {
     }
     .list {
       position: relative;
-      // padding: 70px 10px 15px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -303,8 +326,10 @@ export default {
               font-weight: bold;
             }
           }
-          .icon-miaoshajia {
-            font-size: 24px;
+          svg {
+            width: 60px;
+            height: 26px;
+            padding-bottom: 6px;
           }
         }
         .sub {
@@ -336,6 +361,7 @@ export default {
               }
             }
             .progress {
+              margin-bottom: 4px;
               width: 244px;
               height: 14px;
               background: #FFD2D2;
@@ -363,6 +389,9 @@ export default {
             border-radius: 50%;
             overflow: hidden;
             color: #ffffff;
+            svg {
+              width: 38px;
+            }
           }
         }
       }

@@ -3,7 +3,7 @@
     <div :class="$style.background">
       <div :class="$style.btnMiddle" v-if="type !== 6" />
       <div :class="$style.title">
-        - 123人已领券 快来领取 -
+        - 快来领取 -
       </div>
       <ul :class="$style.list" v-if="data.values.length">
         <li

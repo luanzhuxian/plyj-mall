@@ -71,6 +71,7 @@
       </Field>
 
       <Field
+        v-if="couponList.length"
         label="优惠券"
         can-click
         :label-width="120"
@@ -381,6 +382,7 @@ export default {
     this.haibao = ''
     this.showHaibao = false
     this.tab = 2
+    this.showCoupon = false
   },
   async mounted () {
     // 其他人的分享id

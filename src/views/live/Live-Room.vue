@@ -139,6 +139,7 @@
         <form :class="$style.inputBox" @submit.prevent="messageConfirm">
           <!--<pl-icon name="icon-biaoqing" size="42" color="#a8a8a8" @click="showEmoticon = !showEmoticon" />-->
           <input v-model="message" placeholder=" 进来了说点什么呗~" type="text">
+          <button :class="$style.sendBtn">发送</button>
         </form>
         <div :class="$style.sendFlower" @click="sendFlower">
           <pl-icon name="icon-flower" size="37" color="#F9DD54" />
@@ -371,7 +372,6 @@ export default {
         await this.sendMessage(this.message)
         o.success = true
       } catch (e) {
-        console.log(e)
         // 配置发送失败
         o.success = false
       } finally {
@@ -380,6 +380,7 @@ export default {
         if (this.chatRecords.length > this.maxRecords) {
           this.chatRecords.shift()
         }
+        this.message = ''
       }
     },
     /* 重新发送 */
@@ -599,11 +600,12 @@ export default {
     }
   }
   .input-box {
+    position: relative;
     display: inline-flex;
     align-items: center;
     width: 606px;
     height: 74px;
-    padding: 0 16px;
+    padding: 0 140px 0 16px;
     line-height: 74px;
     background-color: #f7f7f7;
     border: 1px solid #EEEEEE;
@@ -617,6 +619,20 @@ export default {
       line-height: 36px;
       background-color: transparent;
     }
+  }
+
+  .send-btn {
+    position: absolute;
+    top: -1;
+    right: 0;
+    width: 124px;
+    line-height: 76px;
+    text-align: center;
+    color: #fff;
+    font-size: 28px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #F2B036;
   }
 
   .send-flower {

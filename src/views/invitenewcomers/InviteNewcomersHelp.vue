@@ -52,7 +52,7 @@ import ShowOrders from './components/ShowOrders'
 import HelpSuccess from './components/HelpSuccess'
 import youLike from './../home/components/YouLike.vue'
 import { mapGetters } from 'vuex'
-import { getActivityInfo, helpFriend, getClaimGiftList, getUserInfo, getActivityStatisiticData } from '../../apis/invitenewcomers'
+import { getActivityInfo, helpFriend, getClaimGiftList, getUserInfo, getActivityStatisiticData, registerStatisitic } from '../../apis/invitenewcomers'
 
 export default {
   name: 'InviteNewcomers',
@@ -219,6 +219,7 @@ export default {
         // 如果之前是助力状态，直接进行助力
         // TODO: 错误处理
         await helpFriend(this.activityId, this.inviteUserId)
+        await registerStatisitic(this.activityId)
         this.isShowHelperSuccess = true
         return
       }
@@ -294,6 +295,15 @@ export default {
       margin-bottom: 60px;
       font-size: 28px;
     }
+  }
+
+  .btn-close {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    border: 1px solid white;
+    border-radius: 50%;
   }
 }
 </style>
