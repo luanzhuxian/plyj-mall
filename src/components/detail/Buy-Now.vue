@@ -211,7 +211,6 @@ export default {
     this.reset()
   },
   mounted () {
-    console.log('ssssss' + this.activeProduct)
     this.getCartCount()
   },
   methods: {

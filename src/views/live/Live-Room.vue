@@ -108,6 +108,7 @@
               :use-start-time="item.useStartTime"
               :full="item.limitNum"
               :subtract="item.grantNum"
+              :status="item.status"
               :instruction="item.couponName"
               @couponClick="couponClick(item.couponId)"
             />
@@ -219,14 +220,26 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userName', 'avatar', 'userId', 'opendId'])
+    ...mapGetters(['userName', 'avatar', 'userId', 'opendId', 'roleCode'])
   },
   watch: {
     soundValue (val) {
       this.liveSdk.player.setVolume(val / 100)
     }
   },
-  activated () {
+  async activated () {
+    try {
+      if (this.roleCode === 'VISITOR') {
+        await this.$confirm({
+          message: '为了您的账号安全，请绑定手机号',
+          confirmText: '去绑定',
+          closeOnClickMask: false
+        })
+      }
+    } catch (e) {
+    } finally {
+      this.$router.push({ name: 'BindMobile' })
+    }
   },
   async mounted () {
     try {

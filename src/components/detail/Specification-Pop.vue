@@ -101,7 +101,6 @@
 </template>
 
 <script>
-/* eslint-disabled */
 export default {
   name: 'SpecificationPop',
   props: {
@@ -189,7 +188,6 @@ export default {
     }
   },
   created () {
-    console.log('====' + this.activeProduct)
   },
   computed: {
     currentDisabled () {
