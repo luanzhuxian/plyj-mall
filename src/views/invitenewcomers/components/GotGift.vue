@@ -4,14 +4,6 @@
       <div class="center-box">
         <div class="got-success">
           <div class="title">恭喜您获得</div>
-          <p class="description" v-if="type === 'coupon'">
-            满减券已自动存入您的现金卡包中<br>
-            您可在现金卡包中查看
-          </p>
-          <p class="description" v-if="type === 'gift'">
-            奖品已自动存入您的我的礼品中<br>
-            您可在我的礼品中查看
-          </p>
           <div class="gift-box">
             <div class="coupon" v-if="type === 'coupon'">
               <div class="coupon-inner">
@@ -52,11 +44,19 @@
                   有效期：{{ giftValidDate }}
                 </p>
               </div>
-              <div class="btn-use-gift">
-                <!-- 立即兑换 -->
-              </div>
+              <!-- <div class="btn-use-gift">
+                立即兑换
+              </div> -->
             </div>
           </div>
+          <p class="description" v-if="type === 'coupon'">
+            满减券已自动存入您的现金卡包中<br>
+            您可在现金卡包中查看
+          </p>
+          <p class="description" v-if="type === 'gift'">
+            奖品已自动存入我的礼品中<br>
+            您可在我的礼品中查看
+          </p>
           <div style="text-align: center">
             <div class="btn-do" @click="getMore()">
               继续开豪礼
@@ -157,14 +157,14 @@ export default {
       }
 
       .description {
-        margin-bottom: 32px;
+        margin-bottom: 40px;
         font-size: 20px;
         color: white;
         text-align: center;
       }
 
       .gift-box {
-        margin-bottom: 48px;
+        margin-bottom: 20px;
         .coupon {
           width: 100%;
           height: 204px;
