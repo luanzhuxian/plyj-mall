@@ -6,7 +6,7 @@
   >
     <div :class="$style.moduleWrapper">
       <div :class="$style.imgWrapper">
-        <img :src="live.coverImg + '?x-oss-process=style/thum-small'">
+        <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">
         <pl-icon name="icon-play-btn" type="svg" />
       </div>
       <div :class="$style.info">
@@ -20,14 +20,19 @@
           }"
         >
           <div :class="$style.timeLeft">
-            <pl-icon name="icon-clock" color="#fff" size="26" />
+            <pl-icon name="icon-clock" color="#fff" size="26" v-if="live.statue === 2 && live.hasNotice" />
             <span v-if="live.statue === 2 && live.hasNotice">预告</span>
             <span v-if="live.statue === 1">直播中</span>
           </div>
           <div :class="$style.timeRight">
-            <span v-if="live.statue === 2 && live.hasNotice">
-              {{ `${getDate(live.liveStartTime, 'HH:mm:ss')}后开始` }}
-            </span>
+            <count-down
+              v-if="live.statue === 2 && live.hasNotice"
+              :timestamp="ts"
+              :current-timestamp="timestamp"
+              :color="color"
+              size="mini"
+              text-after="后开始"
+            />
             <span v-if="live.statue === 1">
               {{ `${live.visitTimes}人观看` }}
             </span>
@@ -39,21 +44,40 @@
 </template>
 
 <script>
+import moment from 'moment'
 import mixin from '../mixin.js'
+import CountDown from './Count-Down.vue'
 
 export default {
   name: 'Broadcast',
   mixins: [mixin],
+  components: {
+    CountDown
+  },
   props: {
     live: {
       type: Object,
       default () {
         return {}
       }
+    },
+    timestamp: {
+      type: [String, Number],
+      default: ''
     }
   },
   data () {
-    return {}
+    return {
+      ts: '',
+      color: ''
+    }
+  },
+  created () {
+    const { liveStartTime, hasNotice } = this.live
+    if (hasNotice && liveStartTime) {
+      this.ts = moment(liveStartTime).valueOf()
+    }
+    this.color = hasNotice ? '#EC6BA4' : '#EFB835'
   }
 }
 </script>
@@ -131,6 +155,9 @@ export default {
       }
       &-right {
         flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         font-size: 26px;
         font-weight: bold;
         color: #DB4D7D;

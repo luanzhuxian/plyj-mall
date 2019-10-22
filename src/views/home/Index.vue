@@ -68,23 +68,30 @@
       </div>
     </transition>-->
     <!--<WWEC :show.sync="show820" />-->
+    <invite-newcomers-home-entry />
+    <newcomers-home-entry />
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
 import { getTemplate, getLiveInfo } from '../../apis/home'
 // import { wasGetInfo } from '../../apis/wwec'
+// import moment from 'moment'
 // import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
-import { mapGetters } from 'vuex'
-// import moment from 'moment'
+import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
+import NewcomersHomeEntry from '../newcomers/NewcomersHomeEntry.vue'
 // import WWEC from '../../components/WWEC.vue'
+
 export default {
   name: 'Home',
   components: {
     // TemplateA,
-    TemplateB
+    TemplateB,
+    InviteNewcomersHomeEntry,
+    NewcomersHomeEntry
     // WWEC
   },
   data () {

@@ -74,10 +74,14 @@
           <div :class="$style.imgWrapper">
             <img :src="prod.productMainImage + '?x-oss-process=style/thum-small'">
             <div :class="$style.countDown">
-              <span :class="$style.text">距开始</span>
-              <span :class="$style.num">23</span>:
-              <span :class="$style.num">59</span>:
-              <span :class="$style.num">59</span>
+              <span :class="$style.text" v-if="prod.activityInfo.status === 0">距开始</span>
+              <span :class="$style.text" v-if="prod.activityInfo.status === 1">距结束</span>
+              <span :class="$style.text" v-if="prod.activityInfo.status === 2">已结束</span>
+              <count-down
+                v-if="~[0, 1].indexOf(prod.activityInfo.status)"
+                :timestamp="getTime(prod.activityInfo)"
+                :current-timestamp="timestamp"
+              />
             </div>
           </div>
           <div :class="$style.info">
@@ -140,10 +144,14 @@
 
 <script>
 import mixin from '../mixin.js'
+import CountDown from './Count-Down.vue'
 
 export default {
   name: 'Miaosha',
   mixins: [mixin],
+  components: {
+    CountDown
+  },
   props: {
     data: {
       type: Object,
@@ -286,16 +294,16 @@ export default {
           .text {
             margin-right: 10px;
           }
-          .num {
-            box-sizing: border-box;
-            margin: 0 5px;
-            padding: 4px;
-            height: 36px;
-            line-height: 32px;
-            background: #555;
-            border-radius: 4px;
-            opacity: 1;
-          }
+          // .num {
+          //   box-sizing: border-box;
+          //   margin: 0 5px;
+          //   padding: 4px;
+          //   height: 36px;
+          //   line-height: 32px;
+          //   background: #555;
+          //   border-radius: 4px;
+          //   opacity: 1;
+          // }
         }
         img {
           width: 100%;
