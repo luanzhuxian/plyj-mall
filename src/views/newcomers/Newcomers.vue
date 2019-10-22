@@ -203,7 +203,7 @@ export default {
       if (status !== 200) {
         // TODO: add code here
       }
-      await registerStatisitic(this.$$route.params.activityId)
+      await registerStatisitic(this.$route.params.activityId)
     }
   }
 }
