@@ -957,7 +957,7 @@ export default {
       sessionStorage.removeItem('INVOICE_MODEL')
       sessionStorage.removeItem('CONFIRM_LIST')
       sessionStorage.removeItem('APPLY_INVOICE')
-      localStorage.removeItem('CHECKED_STUDENT')
+      sessionStorage.removeItem('CHECKED_STUDENT')
       localStorage.removeItem('CONTACT_INFO_MODEL')
       this.remark = ''
       this.physicalProducts = []
