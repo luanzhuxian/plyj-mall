@@ -22,7 +22,7 @@
         <number :value="+timeSplit[7]" />
       </div>
       <div class="countdown-panel" v-else>
-        <span class="status-stop">活动时间已截止</span>
+        <span class="status-stop">活动时间已结束</span>
       </div>
       <!-- 邀请文案 -->
       <div class="activity-invite-title" v-html="inviteTitle">
@@ -117,6 +117,10 @@ export default {
         // [{avatar: String}]
         return []
       }
+    },
+    isStoped: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -134,6 +138,9 @@ export default {
     },
 
     status () {
+      if (this.isStoped) {
+        return STATUS.END
+      }
       let now = moment()
       if (now.isBefore(moment(this.startTime))) {
         return STATUS.READY

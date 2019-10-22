@@ -7,7 +7,8 @@
         :invite-from="inviteUserInfo"
         invite-title="小手一点帮我助力"
         invite-description="你也可以参与活动拿豪礼大奖哦！"
-        invite-button-text="助好友，得豪礼"
+        :invite-button-text="inviteButtonText"
+        :is-stoped="isActivityStoped"
         @notify="onNotify"
       />
     </div>
@@ -92,14 +93,20 @@ export default {
       let endTime = moment(this.activityInfo.activityEndTime)
       return endTime.isBefore(new Date())
     },
+    isActivityStoped () {
+      return this.activityInfo.status === 0
+    },
     startTime () {
       return moment(this.activityInfo.activityStartTime).format('YYYY-MM-DD HH:mm:ss')
     },
     endTime () {
       return moment(this.activityInfo.activityEndTime).format('YYYY-MM-DD HH:mm:ss')
     },
-    status () {
-      return 0
+    inviteButtonText () {
+      if (this.isActivityEnd || this.isActivityStoped) {
+        return '参与更多精彩活动'
+      }
+      return '助好友，得豪礼'
     }
   },
 

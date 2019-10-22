@@ -7,7 +7,8 @@
         :friends="helpers"
         :invite-title="inviteTitle"
         :invite-description="inviteDescription"
-        :invite-button-text="canOpenGiftPackage ? '开豪礼' : '邀请好友'"
+        :invite-button-text="inviteButtonText"
+        :is-stoped="isActivityStoped"
         @notify="onNotify"
       />
     </div>
@@ -32,10 +33,7 @@
         <h3>2.活动对象</h3>
         <p>所有会员</p>
         <h3>3.活动说明</h3>
-        <p>
-          在活动有效期内，成功邀请3位好友绑定手机号注册成为店铺的会员，即可获得翻好礼的机会1次；
-          有机会获得大额满减券；领取成功后，将自动存入到会员的现金卡包中
-        </p>
+        <p v-html="activityBrief" />
       </div>
     </pl-popup>
     <got-gift
@@ -86,7 +84,7 @@ export default {
         // gift info
       },
 
-      activityInfo: {},
+      activityInfo: { status: 0 },
 
       canClaimGift: false,
 
@@ -118,6 +116,19 @@ export default {
       return this.totalHelpers > 0 && this.totalHelpers % this.activityInfo.invitedPeopleNumber === 0
     },
 
+    inviteButtonText () {
+      if (!this.isActivityStarted) {
+        return '活动暂未开始，敬请期待'
+      }
+      if (this.isActivityEnd || this.isActivityStoped) {
+        return '参与更多精彩活动'
+      }
+      if (this.canOpenGiftPackage) {
+        return '开豪礼'
+      }
+      return '邀请好友'
+    },
+
     isActivityStarted () {
       let startTime = moment(this.activityInfo.activityStartTime)
       return moment().isSameOrAfter(startTime)
@@ -126,11 +137,17 @@ export default {
       let endTime = moment(this.activityInfo.activityEndTime)
       return endTime.isBefore(moment())
     },
+    isActivityStoped () {
+      return this.activityInfo.status === 0
+    },
     startTime () {
       return moment(this.activityInfo.activityStartTime).format('YYYY-MM-DD HH:mm:ss')
     },
     endTime () {
       return moment(this.activityInfo.activityEndTime).format('YYYY-MM-DD HH:mm:ss')
+    },
+    activityBrief () {
+      return (this.activityInfo.activityBrief || '').replace(/\n/g, '<br>')
     }
   },
 
