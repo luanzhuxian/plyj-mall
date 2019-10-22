@@ -67,6 +67,7 @@ export default {
         margin-bottom: 20px;
         font-size: 60px;
         text-align: center;
+        font-family: HYLingXinJ;
       }
 
       .description {

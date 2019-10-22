@@ -76,7 +76,7 @@ export default {
       isShowGotGift: false,
       isShowShareLayer: false,
 
-      inviteTitle: '邀请好友，赢<span style="style: #f6f4b4">豪礼</span>大奖',
+      inviteTitle: '邀请好友，赢<span style="font-family: HYLingXinJ; color: #f6f4b4;">豪礼</span>大奖',
 
       activityId: 0,
 
@@ -300,6 +300,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "./fonts/hyfonts-subset.css";
 .invitenewcomers {
   padding-top: 32px;
 

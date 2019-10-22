@@ -270,8 +270,10 @@ export default {
         margin-right: 16px;
         width: 68px;
         height: 82px;
+        line-height: 38px;
         color: #a56113;
         font-size: 34px;
+        font-family: HYLiLiangHeiJ;
       }
 
       .status-stop {
@@ -279,6 +281,7 @@ export default {
         color: #a56113;
         font-size: 60px;
         font-weight: 400;
+        font-family: HYLiLiangHeiJ;
       }
     }
   }
@@ -289,6 +292,7 @@ export default {
     color: white;
     text-align: center;
     font-size: 56px;
+    font-family: HYLingXinJ;
     .gift {
       color: #f6f4b4;
     }
