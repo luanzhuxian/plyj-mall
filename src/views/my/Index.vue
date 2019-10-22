@@ -128,7 +128,7 @@
       <!-- 优惠劵 -->
       <div :class="$style.panel">
         <div :class="$style.welfare">
-          <router-link :to="{ name: 'CouponCenter'}" :class="$style.welfareItem">
+          <router-link :to="{ name: 'MyCoupon'}" :class="$style.welfareItem">
             <div>
               <h5>我的卡券</h5>
               <span>福利多多帮你省钱</span>
