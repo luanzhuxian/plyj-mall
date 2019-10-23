@@ -684,7 +684,6 @@ export default {
     },
     // 根据购买总价获取合适的优惠券
     async getCouponByAmount (proList = []) {
-      console.log(proList)
       // 获取优惠券信息
       let amount = proList.map(item => item.price * item.count).reduce((total, price) => {
         return total + price

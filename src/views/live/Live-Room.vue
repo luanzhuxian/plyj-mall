@@ -172,6 +172,7 @@ import 'vue-slider-component/theme/default.css'
 import { mapGetters } from 'vuex'
 // import emoticon from '../../../static/json/emoticon'
 import CouponItem from '../../components/item/Coupon-Item.vue'
+import share from '../../assets/js/wechat/wechat-share'
 import {
   sendMessage,
   sendCustomMessage,
@@ -220,7 +221,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userName', 'avatar', 'userId', 'opendId', 'roleCode'])
+    ...mapGetters(['userName', 'avatar', 'userId', 'opendId', 'roleCode', 'appId'])
   },
   watch: {
     soundValue (val) {
@@ -448,6 +449,13 @@ export default {
         if (data) {
           this.couponList = data.couponList
           this.productList = data.productList
+          share({
+            appId: this.appId,
+            title: data.name,
+            desc: data.liveStartTime + '开始直播，快来围观哦~',
+            link: window.location.href,
+            imgUrl: data.coverImg + '?x-oss-process=style/thum'
+          })
         }
       } catch (e) {
 

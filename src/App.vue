@@ -34,18 +34,25 @@ export default {
         'WhatsHelper',
         'Activity'
       ],
-      // 允许分享和复制链接的页面
+      // 允许分享和复制链接的页面 (除了这个和自定义分享，其他页面隐藏分享和复制链接)
       shareRoutes: [
         'Home',
         'Classify',
         'My',
         'Appointment'
+      ],
+      // 需要自定义分享的页面（分享配置在页面组件内实现）
+      customShare: [
+        'Lesson',
+        'LiveRoom',
+        'InviteNewcomers',
+        'Newcomers'
       ]
     }
   },
   watch: {
     $route (route) {
-      if (!/^\/detail/.test(route.path)) {
+      if (!this.customShare.includes(route.name)) {
         // 如果不是商品详情页面，采用其他分享策略
         let willHide = []
         if (this.shareRoutes.indexOf(route.name) === -1) {
