@@ -63,9 +63,6 @@ export default {
       type: Number,
       default: 0
     }
-  },
-  data () {
-    return {}
   }
 }
 </script>

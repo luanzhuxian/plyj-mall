@@ -109,9 +109,10 @@ export default {
       return this.$attrs.invitingEvent && ~[0, 2].indexOf(this.$attrs.invitingEvent.status)
     }
   },
-  async created () {
-    const { result } = await getMaxCoupon()
-    this.coupon = result
+  created () {
+    getMaxCoupon().then(({ result }) => {
+      this.coupon = result
+    })
   }
 }
 </script>

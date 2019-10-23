@@ -9,7 +9,7 @@
         <ul :class="$style.list" v-if="data.values.length">
           <li
             :class="$style.listItem"
-            @click="$router.push({ name: 'Lesson', params: { productId: data.values[0].goodsInfo.id, brokerId: userId || null } })"
+            @click.stop="$router.push({ name: 'Lesson', params: { productId: data.values[0].goodsInfo.id, brokerId: userId || null } })"
           >
             <div :class="$style.imgWrapper">
               <img :src="data.values[0].goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">

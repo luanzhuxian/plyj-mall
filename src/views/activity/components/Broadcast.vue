@@ -2,7 +2,7 @@
   <router-link
     :class="$style.broadcast"
     tag="div"
-    :to="{ name: 'Live' }"
+    :to="{ name: 'LiveRoom' }"
   >
     <div :class="$style.moduleWrapper">
       <div :class="$style.imgWrapper">
