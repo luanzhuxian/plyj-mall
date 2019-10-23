@@ -3,7 +3,7 @@
     <Search placeholder="搜索商品" />
     <Banner :data="BANNER" />
     <Adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
-    <div v-if="type === 4 && $attrs.live && $attrs.live.statue === 1" :class="$style.broadcast">
+    <div v-if="type === 4 && $attrs.live && ($attrs.live.statue === 4 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))" :class="$style.broadcast">
       <Broadcast v-bind="$attrs" />
     </div>
     <div v-if="type === 4" :class="$style.activity">

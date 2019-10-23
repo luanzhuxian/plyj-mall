@@ -20,7 +20,7 @@
           >
             <div :class="$style.imgWrapper">
               <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
-              <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo.preActivity !== 0">
+              <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.preActivity !== 0">
                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
@@ -47,7 +47,7 @@
               <div :class="$style.sub">
                 <div :class="$style.subLeft">
                   <div :class="$style.subLeftMain">
-                    <span v-if="item.goodsInfo.activityInfo.status === 0">
+                    <span v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
                       {{ `${item.goodsInfo.pageviews}人已关注` }}
                     </span>
                     <span v-else>
@@ -62,14 +62,14 @@
                 <div
                   :class="{
                     [$style.subRight]: true,
-                    [$style.disabled]: item.goodsInfo.activityInfo.status !== 1
+                    [$style.disabled]: item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status !== 1
                   }"
                 >
                   <pl-icon
                     name="icon-qiang"
                     type="svg"
                     :class="$style.qiang"
-                    v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                    v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
                   />
                   <pl-icon
                     name="icon-jieshu"

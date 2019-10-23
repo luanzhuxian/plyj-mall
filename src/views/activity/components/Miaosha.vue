@@ -79,9 +79,9 @@
           <div :class="$style.imgWrapper">
             <img :src="prod.productMainImage + '?x-oss-process=style/thum-small'">
             <div :class="$style.countDown">
-              <span :class="$style.text" v-if="prod.activityInfo.status === 0">距开始</span>
-              <span :class="$style.text" v-if="prod.activityInfo.status === 1">距结束</span>
-              <span :class="$style.text" v-if="prod.activityInfo.status === 2">已结束</span>
+              <span :class="$style.text" v-if="prod.activityInfo && prod.activityInfo.status === 0">距开始</span>
+              <span :class="$style.text" v-if="prod.activityInfo && prod.activityInfo.status === 1">距结束</span>
+              <span :class="$style.text" v-if="prod.activityInfo && prod.activityInfo.status === 2">已结束</span>
               <count-down
                 v-if="~[0, 1].indexOf(prod.activityInfo.status)"
                 :timestamp="getTime(prod.activityInfo)"
@@ -107,23 +107,23 @@
                     {{ prod.productSkuModels && prod.productSkuModels.length && getPrice(prod.productSkuModels)('price') }}
                   </span>
                 </div>
-                <div :class="$style.progress">
+                <div :class="$style.progress" v-if="prod.activityInfo">
                   <div :class="$style.progressInner" :style="{ width: `${(Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) / Number(prod.activityInfo.number)) * 100}%` }" />
                 </div>
-                <div :class="$style.saled" v-if="prod.activityInfo.status === 0">
+                <div :class="$style.saled" v-if="prod.activityInfo && prod.activityInfo.status === 0">
                   {{ `${prod.pageviews}人已关注` }}
                 </div>
-                <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock > 0">
+                <div :class="$style.saled" v-if="prod.activityInfo && prod.activityInfo.status > 0 && prod.activityInfo.activityStock > 0">
                   {{ `已抢${Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)}件` }}
                 </div>
-                <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock === 0" style="color: #999999;">
+                <div :class="$style.saled" v-if="prod.activityInfo && prod.activityInfo.status > 0 && prod.activityInfo.activityStock === 0" style="color: #999999;">
                   已抢完
                 </div>
               </div>
               <div
                 :class="{
                   [$style.subRight]: true,
-                  [$style.disabled]: prod.activityInfo.status !== 1
+                  [$style.disabled]: prod.activityInfo && prod.activityInfo.status !== 1
                 }"
               >
                 <pl-icon

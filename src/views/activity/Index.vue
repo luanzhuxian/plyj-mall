@@ -13,7 +13,7 @@
           :data="modules"
           :type="type"
           :live="liveInfo"
-          :inviting-event="invitingEvent"
+          :has-inviting-event="hasInvitingEvent"
           :timestamp="timestamp"
         />
         <TemplateBaofa
@@ -21,7 +21,7 @@
           :data="modules"
           :type="type"
           :live="liveInfo"
-          :inviting-event="invitingEvent"
+          :has-inviting-event="hasInvitingEvent"
           :timestamp="timestamp"
         />
         <TemplateFanchang
@@ -66,7 +66,7 @@ export default {
         RECOMMEND: null
       },
       liveInfo: {},
-      invitingEvent: {},
+      hasInvitingEvent: false,
       timestamp: ''
     }
   },
@@ -77,7 +77,7 @@ export default {
         this.liveInfo = result || {}
       })
       getInvitingEvent().then(({ result }) => {
-        this.invitingEvent = result || {}
+        this.hasInvitingEvent = result && [0, 2].includes(result.status)
       })
     } catch (e) {
       throw e
@@ -91,7 +91,8 @@ export default {
       try {
         const { result } = await getCurrentTemplate({ type: 2 })
         if (!result) {
-          this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+          this.noFinish = true
+          this.$alert('双十二主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
             .finally(() => {
               this.$router.replace({ name: 'Classify' })
             })
@@ -133,6 +134,16 @@ export default {
         throw e
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.noFinish) {
+        vm.$alert('双十二主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+          .finally(() => {
+            vm.$router.replace({ name: 'Classify' })
+          })
+      }
+    })
   }
 }
 </script>

@@ -16,16 +16,16 @@
             @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, brokerId: userId || null } })"
           >
             <div :class="$style.time">
-              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 0">
+              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
                 距开始
               </div>
-              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 1">
+              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 1">
                 距结束
               </div>
-              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 2">
+              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 2">
                 已结束
               </div>
-              <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
+              <div :class="$style.timeRight" v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
                 <count-down
                   :timestamp="getTime(item.goodsInfo.activityInfo)"
                   :current-timestamp="timestamp"
