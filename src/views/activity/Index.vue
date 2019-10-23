@@ -150,11 +150,12 @@ export default {
 <style module lang="scss">
   .activity {
     position: relative;
-    background: #E90000;
-    min-height: 100vh;
+    background: rgba(251, 0, 0, 1);
+    // min-height: 100vh;
     .background {
       background: url("../../assets/images/activity/activity-bg.png") no-repeat center top;
       background-size: 100% auto;
+      min-height: 100vh;
     }
     .container {
       padding: 236px 24px 176px;
