@@ -26,6 +26,7 @@
       :type="type"
       :data="modules"
       :live="liveInfo"
+      :inviting-event="invitingEvent"
     >
       <!-- 月光宝盒项目 -->
       <!--<router-link
@@ -76,7 +77,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
-import { getTemplate, getLiveInfo } from '../../apis/home'
+import { getTemplate, getLiveInfo, getInvitingEvent } from '../../apis/home'
 // import { wasGetInfo } from '../../apis/wwec'
 // import moment from 'moment'
 // import TemplateA from './Template-A.vue'
@@ -129,12 +130,14 @@ export default {
       dataMoonLightBox: {},
       // 820用户注册次数
       registerCountFor820: 0,
-      liveInfo: {}
+      liveInfo: {},
+      invitingEvent: {},
+      timestamp: ''
     }
   },
   async created () {
     try {
-      await this.getTemplate()
+      this.getTemplate()
     } catch (e) {
       throw e
     }
@@ -186,7 +189,7 @@ export default {
     // },
     async getTemplate () {
       try {
-        const [{ result }, { result: live }] = await Promise.all([getTemplate({ type: 1 }), getLiveInfo()])
+        const [{ result }, { result: live }, { result: invitingEvent }] = await Promise.all([getTemplate({ type: 1 }), getLiveInfo(), getInvitingEvent()])
         if (!result) {
           this.noFinish = true
           this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
@@ -195,8 +198,7 @@ export default {
             })
           return
         }
-        const { moduleModels } = result
-        let { type } = result
+        let { type, currentTime, moduleModels } = result
         // if (type === 1) {
         //   modules = {
         //     BANNER: null,
@@ -233,9 +235,11 @@ export default {
           this.modules.CLASS = moduleModels[5]
           this.modules.RECOMMEND = moduleModels[6]
         }
-        this.liveInfo = live || {}
-        this.loaded = true
         this.type = type
+        this.timestamp = currentTime || Date.now()
+        this.liveInfo = live || {}
+        this.invitingEvent = invitingEvent || {}
+        this.loaded = true
       } catch (e) {
         throw e
       }

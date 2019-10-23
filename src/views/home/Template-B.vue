@@ -7,7 +7,7 @@
       <Broadcast v-bind="$attrs" />
     </div>
     <div v-if="type === 4" :class="$style.activity">
-      <Activity />
+      <Activity v-bind="$attrs" />
     </div>
     <HotItem v-if="POPULAR.showStatue === 1" :data="POPULAR" />
     <appointment-gift :data="{ YUYUE, PINGXUAN }" />

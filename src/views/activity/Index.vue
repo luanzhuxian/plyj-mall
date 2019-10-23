@@ -9,6 +9,7 @@
           :data="modules"
           :type="type"
           :live="liveInfo"
+          :inviting-event="invitingEvent"
           :timestamp="timestamp"
         />
         <TemplateBaofa
@@ -16,6 +17,7 @@
           :data="modules"
           :type="type"
           :live="liveInfo"
+          :inviting-event="invitingEvent"
           :timestamp="timestamp"
         />
         <TemplateFanchang
@@ -37,7 +39,7 @@ import Search from './components/Search.vue'
 import TemplateFengqiang from './Template-Fengqiang.vue'
 import TemplateBaofa from './Template-Baofa.vue'
 import TemplateFanchang from './Template-Fanchang.vue'
-import { getCurrentTemplate, getLiveInfo } from '../../apis/home'
+import { getCurrentTemplate, getLiveInfo, getInvitingEvent } from '../../apis/home'
 
 export default {
   name: 'Activity',
@@ -60,13 +62,19 @@ export default {
         RECOMMEND: null
       },
       liveInfo: {},
+      invitingEvent: {},
       timestamp: ''
     }
   },
   async created () {
     try {
-      await this.getTemplate()
-      await this.getLiveInfo()
+      this.getTemplate()
+      getLiveInfo().then(({ result }) => {
+        this.liveInfo = result || {}
+      })
+      getInvitingEvent().then(({ result }) => {
+        this.invitingEvent = result || {}
+      })
     } catch (e) {
       throw e
     }
@@ -85,7 +93,7 @@ export default {
             })
           return
         }
-        let { type, moduleModels, currentTime } = result
+        let { type, currentTime, moduleModels } = result
         this.type = type
         this.timestamp = currentTime || Date.now()
         if (type === 5) {
@@ -119,14 +127,6 @@ export default {
         }
       } catch (e) {
         throw e
-      }
-    },
-    async getLiveInfo () {
-      try {
-        const { result } = await getLiveInfo()
-        this.liveInfo = result || {}
-      } catch (error) {
-        throw error
       }
     }
   }
