@@ -2,7 +2,7 @@
   <div :class="$style.templateFengqiang">
     <!-- 直播-->
     <broadcast
-      v-if="$attrs.live && ($attrs.live.statue === 1 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
+      v-if="$attrs.live && ($attrs.live.statue === 4 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
       :class="$style.broadcast"
       v-bind="$attrs"
     />
@@ -94,7 +94,8 @@ export default {
     type: {
       type: Number,
       default: 0
-    }
+    },
+    hasInvitingEvent: Boolean
   },
   computed: {
     MIAO_SHA () {
@@ -117,9 +118,6 @@ export default {
     },
     RECOMMEND () {
       return this.data.RECOMMEND || { values: [] }
-    },
-    hasInvitingEvent () {
-      return this.$attrs.invitingEvent && ~[0, 2].indexOf(this.$attrs.invitingEvent.status)
     }
   }
 }

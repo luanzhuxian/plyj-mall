@@ -820,8 +820,10 @@ export default {
       }, 1000)
     },
     setTime (result, orderStatus) {
+      let activeProduct = result.activeProduct
+      let waitPayTime = activeProduct === 1 ? 24 * 60 * 60 * 1000 : 5 * 60 * 1000
       let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
-      let duration = orderStatus === 'WAIT_PAY' ? (24 * 60 * 60 * 1000) : (10 * 24 * 60 * 60 * 1000)
+      let duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
       let now = moment((result.currentServerTime)).valueOf() // 服务器时间
       let startTime = moment(time).valueOf()
       if (now - startTime < duration) {

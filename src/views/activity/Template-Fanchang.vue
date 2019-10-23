@@ -2,7 +2,7 @@
   <div :class="$style.templateFanchang">
     <!-- 直播-->
     <broadcast
-      v-if="$attrs.live && ($attrs.live.statue === 1 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
+      v-if="$attrs.live && ($attrs.live.statue === 4 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
       :class="$style.broadcast"
       v-bind="$attrs"
     />

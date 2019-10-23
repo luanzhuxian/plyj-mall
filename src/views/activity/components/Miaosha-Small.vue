@@ -187,6 +187,7 @@ export default {
         }
         .info {
           flex: 1;
+          width: 0;
           display: flex;
           justify-content: center;
           flex-direction: column;

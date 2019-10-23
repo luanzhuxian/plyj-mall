@@ -16,13 +16,13 @@
         <div
           :class="{
             [$style.time]: true,
-            [$style.active]: live.statue === 1,
+            [$style.active]: live.statue === 4,
           }"
         >
           <div :class="$style.timeLeft">
             <pl-icon name="icon-clock" color="#fff" size="26" v-if="live.statue === 2 && live.hasNotice" />
             <span v-if="live.statue === 2 && live.hasNotice">预告</span>
-            <span v-if="live.statue === 1">直播中</span>
+            <span v-if="live.statue === 4">直播中</span>
           </div>
           <div :class="$style.timeRight">
             <count-down
@@ -33,7 +33,7 @@
               size="mini"
               text-after="后开始"
             />
-            <span v-if="live.statue === 1">
+            <span v-if="live.statue === 4">
               {{ `${live.visitTimes}人观看` }}
             </span>
           </div>

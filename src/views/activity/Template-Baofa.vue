@@ -7,7 +7,7 @@
     />
     <!-- 直播-->
     <broadcast
-      v-if="$attrs.live && ($attrs.live.statue === 1 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
+      v-if="$attrs.live && ($attrs.live.statue === 4 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
       :class="$style.broadcast"
       v-bind="$attrs"
     />
@@ -82,7 +82,8 @@ export default {
     type: {
       type: Number,
       default: 0
-    }
+    },
+    hasInvitingEvent: Boolean
   },
   data () {
     return {
@@ -104,9 +105,6 @@ export default {
     },
     FENG_QIANG () {
       return this.data.FENG_QIANG || {}
-    },
-    hasInvitingEvent () {
-      return this.$attrs.invitingEvent && ~[0, 2].indexOf(this.$attrs.invitingEvent.status)
     }
   },
   created () {
