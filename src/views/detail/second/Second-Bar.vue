@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.together">
+  <div :class="$style.together" v-if="detail">
     <div :class="$style.productInfo" v-if="detail.preActivity === 1">
       <div :class="$style.price">
         <div :class="$style.secondPrice">
@@ -33,15 +33,13 @@
     <count-down
       @done="countFinished"
       activity-text="距离结束"
-      :starttime="detail.serverTime"
-      v-if="detail.activityProductModel && detail.preActivity === 2"
+      v-if="detail.preActivity === 2"
       :endtime="detail.activityProductModel.activityEndTime"
     />
     <count-down
       @done="countFinished"
       activity-text="距离开始"
-      :starttime="detail.serverTime"
-      v-if="detail.activityProductModel && detail.preActivity === 1"
+      v-if="detail.preActivity === 1"
       :endtime="detail.activityProductModel.activityStartTime"
     />
   </div>
