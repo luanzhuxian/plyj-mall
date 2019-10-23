@@ -1,12 +1,12 @@
 <template>
-  <router-link :class="$style.pintuan" tag="div" :to="{ name: '' }">
+  <div :class="$style.pintuan">
     <div :class="$style.background">
       <div :class="$style.wrapper">
         <div :class="$style.navBar">
-          <div :class="$style.navLink">
+          <router-link :class="$style.navLink" tag="div" :to="{ name: 'TuanList' }">
             <span>查看更多</span>
             <pl-icon name="icon-arrow-right" size="20" />
-          </div>
+          </router-link>
         </div>
         <ul :class="$style.list" v-if="data.values.length">
           <li
@@ -16,6 +16,7 @@
             ]"
             v-for="(item, i) of data.values"
             :key="i"
+            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, brokerId: userId || null } })"
           >
             <div :class="$style.imgWrapper">
               <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
@@ -83,12 +84,13 @@
         </ul>
       </div>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Pintuan',
@@ -110,6 +112,9 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    ...mapGetters(['userId'])
   }
 }
 </script>

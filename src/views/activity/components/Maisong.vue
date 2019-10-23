@@ -1,5 +1,14 @@
 <template>
-  <router-link :class="$style.maisong" tag="div" :to="{ name: '' }">
+  <router-link
+    :class="$style.maisong"
+    tag="div"
+    :to="{
+      name: 'Classify',
+      params: {
+        optionId: ''
+      }
+    }"
+  >
     <div
       :class="{
         [$style.background]: true,

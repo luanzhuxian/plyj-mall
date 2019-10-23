@@ -3,7 +3,11 @@
     <div :class="$style.background">
       <search placeholder="搜索商品" />
       <div :class="$style.container">
-        <div :class="$style.btnTop" />
+        <router-link
+          :class="$style.btnTop"
+          tag="div"
+          :to="{ name: 'MyCoupon' }"
+        />
         <TemplateFengqiang
           v-if="type === 5"
           :data="modules"

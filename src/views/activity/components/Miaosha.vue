@@ -1,9 +1,13 @@
 <template>
-  <router-link :class="$style.miaosha" tag="div" :to="{ name: '' }">
+  <div :class="$style.miaosha">
     <div :class="$style.wrapper" v-if="data.values.length">
       <ul :class="$style.timeList">
         <div>
-          <pl-icon name="icon-miaoshazhuanchang" type="svg" />
+          <pl-icon
+            name="icon-miaoshazhuanchang"
+            type="svg"
+            @click="$router.push({ name: 'SecondList' })"
+          />
         </div>
         <!-- <span :class="$style.border" v-if="data.values[0]" /> -->
         <li
@@ -61,7 +65,7 @@
             </div>
           </div>
         </li>
-        <div :class="$style.btn">
+        <div :class="$style.btn" @click="$router.push({ name: 'SecondList' })">
           <span>进入专场</span>
         </div>
       </ul>
@@ -70,6 +74,7 @@
           :class="$style.listItem"
           v-for="(prod, i) of data.values[miaoshaIndex].goodsInfo"
           :key="i"
+          @click="$router.push({ name: 'Lesson', params: { productId: prod.id, brokerId: userId || null } })"
         >
           <div :class="$style.imgWrapper">
             <img :src="prod.productMainImage + '?x-oss-process=style/thum-small'">
@@ -139,12 +144,13 @@
         </li>
       </ul>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Miaosha',
@@ -172,6 +178,9 @@ export default {
     return {
       miaoshaIndex: 0
     }
+  },
+  computed: {
+    ...mapGetters(['userId'])
   }
 }
 </script>

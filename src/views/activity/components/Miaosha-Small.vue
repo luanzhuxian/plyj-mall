@@ -1,9 +1,16 @@
 <template>
-  <router-link :class="$style.miaosha" tag="div" :to="{ name: '' }">
+  <router-link
+    :class="$style.miaosha"
+    tag="div"
+    :to="{ name: 'SecondList' }"
+  >
     <div :class="$style.background">
       <div :class="$style.wrapper">
         <ul :class="$style.list" v-if="data.values.length">
-          <li :class="$style.listItem">
+          <li
+            :class="$style.listItem"
+            @click="$router.push({ name: 'Lesson', params: { productId: data.values[0].goodsInfo.id, brokerId: userId || null } })"
+          >
             <div :class="$style.imgWrapper">
               <img :src="data.values[0].goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
               <div :class="$style.countDown">
@@ -79,6 +86,7 @@
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Miaosha',
@@ -104,6 +112,9 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    ...mapGetters(['userId'])
   }
 }
 </script>

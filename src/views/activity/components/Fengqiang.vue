@@ -1,13 +1,11 @@
 <template>
-  <router-link
+  <div
     :class="{
       [$style.fengqiang]: true,
       [$style.bg1]: type === 5,
       [$style.bg2]: type === 6,
       [$style.bg3]: type === 7
     }"
-    tag="div"
-    :to="{ name: '' }"
   >
     <div :class="$style.background">
       <div :class="$style.wrapper">
@@ -20,6 +18,7 @@
             }"
             v-for="(item, i) of data.values"
             :key="i"
+            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, brokerId: userId || null } })"
           >
             <div :class="$style.imgWrapper">
               <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
@@ -60,11 +59,12 @@
         </ul>
       </div>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
 import mixin from '../mixin.js'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Fengqiang',
@@ -83,6 +83,9 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    ...mapGetters(['userId'])
   }
 }
 </script>
