@@ -258,6 +258,7 @@ export default {
     },
     async clickHandler (type) {
       if (!this.hasBind()) return
+      // type 等于1、2 时表示正常购买
       // 加入购物车按钮
       if (type === 1) {
         this.clickAddToCart = true

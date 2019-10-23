@@ -168,10 +168,8 @@ import { mapGetters } from 'vuex'
 import CouponItem from '../../components/item/Coupon-Item.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import {
-  sendMessage,
   getRoomStatus,
   getActiveCompleteInfo,
-  sign
 } from '../../apis/live'
 import {
   receiveCoupon
@@ -291,7 +289,8 @@ export default {
       socket.on('connect', function () {
         console.warn('chantroom connect success!')
       })
-      socket.on('disconnect', function () {
+      socket.on('disconnect', function (e) {
+        console.error(e)
         console.error('chantroom connect error!')
       })
       socket.on('message', this.onMessage)
@@ -538,7 +537,9 @@ export default {
       line-height: 36px;
       font-size: 26px;
       &.self-message {
-        direction: rtl;
+        > .user-name {
+          color: #e84655;
+        }
       }
       &.custom-message {
         padding: 0 8px;
