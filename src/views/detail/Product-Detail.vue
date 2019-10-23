@@ -524,7 +524,7 @@ export default {
         return
       }
       this.currentModel = selected
-      const { skuCode1, count, skuCode2 } = selected
+      const { skuCode1, count, skuCode2, price } = selected
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId')
       sessionStorage.setItem('CONFIRM_LIST', JSON.stringify([{
@@ -532,6 +532,7 @@ export default {
         count: count,
         skuCode1: skuCode1,
         skuCode2,
+        price,
         agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
@@ -540,8 +541,7 @@ export default {
         query: {
           isCart: 'NO',
           activeProduct: this.detail.activeProduct,
-          activityId: this.detail.activeProduct === 1 ? '' : this.detail.activityProductModel.activityId,
-          amount: selected.price
+          activityId: this.detail.activeProduct === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
     },

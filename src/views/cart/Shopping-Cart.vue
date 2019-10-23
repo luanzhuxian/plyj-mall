@@ -315,12 +315,14 @@ export default {
       let confirmList = []
       if (this.checkedList.length === 0) return
       for (let pro of this.checkedList) {
-        const { cartProductCount, cartProductId, cartSkuCode, cartSkuCode2, agentUser, price } = pro
+        const { cartProductCount, cartProductId, cartSkuCode, cartSkuCode2, agentUser } = pro
+        let sku = pro.skuModels.find(item => item.skuCode1 === pro.cartSkuCode && item.skuCode2 === pro.cartSkuCode2)
         confirmList.push({
           productId: cartProductId,
           skuCode1: cartSkuCode,
           skuCode2: cartSkuCode2,
           count: cartProductCount,
+          price: sku.price,
           agentUser
         })
       }
@@ -329,8 +331,7 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'YES',
-          activeProduct: 1,
-          amount: this.summation
+          activeProduct: 1
         }
       })
     },
