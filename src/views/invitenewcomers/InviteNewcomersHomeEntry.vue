@@ -63,10 +63,16 @@ export default {
       return this.userId === ''
     },
     isActivityStarted () {
+      if (this.activityInfo === null) {
+        return false
+      }
       let startTime = moment(this.activityInfo.activityStartTime)
       return moment().isSameOrAfter(startTime)
     },
     isActivityEnd () {
+      if (this.activityInfo === null) {
+        return true
+      }
       let endTime = moment(this.activityInfo.activityEndTime)
       return endTime.isBefore(moment())
     }
@@ -80,11 +86,14 @@ export default {
   methods: {
     async getCurrentActivity () {
       let { result } = await getCurrentActivity()
-      this.activityInfo = result
+      this.activityInfo = result || null
     },
     // 获取助力人列表
     async getMyFriends () {
       if (!this.userId) {
+        return
+      }
+      if (this.activityInfo === null) {
         return
       }
       let { status, result } = await getHelpers(this.activityInfo.id, this.userId)
@@ -99,7 +108,7 @@ export default {
       })
 
       this.totalHelpers = result.length
-      this.showSelf = this.activityInfo.invitedPeopleNumber === this.totalHelpers && (!this.isActivityEnd)
+      this.showSelf = this.activityInfo.invitedPeopleNumber === this.totalHelpers && this.isActivityStarted && (!this.isActivityEnd)
     },
 
     close () {
