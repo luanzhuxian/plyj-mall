@@ -19,13 +19,16 @@
           >
             <div :class="$style.imgWrapper">
               <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
-              <div :class="$style.countDown">
-                <span :class="$style.text">距开始</span>
-                <!-- <span>进行中</span>
-                    <span>距结束</span> -->
-                <span :class="$style.num">23</span>:
-                <span :class="$style.num">59</span>:
-                <span :class="$style.num">59</span>
+              <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo.preActivity !== 0">
+                <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
+                <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
+                <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
+                <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 3">已结束</span>
+                <count-down
+                  v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                  :timestamp="getTime(item.goodsInfo.activityInfo)"
+                  :current-timestamp="timestamp"
+                />
               </div>
             </div>
             <div :class="$style.info">
@@ -84,8 +87,15 @@
 </template>
 
 <script>
+import mixin from '../mixin.js'
+import CountDown from './Count-Down.vue'
+
 export default {
   name: 'Pintuan',
+  mixins: [mixin],
+  components: {
+    CountDown
+  },
   props: {
     data: {
       type: Object,
@@ -255,16 +265,16 @@ export default {
         .text {
           margin-right: 10px;
         }
-        .num {
-          box-sizing: border-box;
-          margin: 0 5px;
-          padding: 4px;
-          height: 36px;
-          line-height: 32px;
-          background: #555;
-          border-radius: 4px;
-          opacity: 1;
-        }
+        // .num {
+        //   box-sizing: border-box;
+        //   margin: 0 5px;
+        //   padding: 4px;
+        //   height: 36px;
+        //   line-height: 32px;
+        //   background: #555;
+        //   border-radius: 4px;
+        //   opacity: 1;
+        // }
       }
       .info {
         flex: 1;

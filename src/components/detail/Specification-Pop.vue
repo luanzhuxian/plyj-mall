@@ -82,7 +82,7 @@
                   +
                 </button>
                 <p :class="$style.residue">
-                  库存<i v-text="(activeProduct !== 1 && preActivity === 2) ? activityProductModel.stock : residue" />件
+                  库存<i v-text="residue" />件
                 </p>
               </div>
             </div>
@@ -101,7 +101,6 @@
 </template>
 
 <script>
-/* eslint-disabled */
 export default {
   name: 'SpecificationPop',
   props: {
@@ -189,7 +188,6 @@ export default {
     }
   },
   created () {
-    console.log('====' + this.activeProduct)
   },
   computed: {
     currentDisabled () {

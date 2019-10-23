@@ -1,6 +1,6 @@
 <template>
   <div class="newcomers-home-entry">
-    <overlay v-if="showSelf == true">
+    <overlay v-if="showSelf">
       <div class="center-box">
         <img src="../../assets/images/newcomers/newcomers-home.png">
         <div style="margin-top: 80px; text-align: center;">
@@ -51,7 +51,7 @@ export default {
       return moment().isBefore(moment(this.activityInfo.isActivityStartTime))
     },
     showSelf () {
-      return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser()
+      return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser
     }
   },
 

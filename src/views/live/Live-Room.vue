@@ -162,18 +162,12 @@
 </template>
 
 <script>
-/* eslint-disable */
-// import crypto from 'crypto-js'
-// import axios from 'axios'
-// import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/default.css'
-// import { CanvasBarrage } from '../../assets/js/canvasBarrage'
 import { mapGetters } from 'vuex'
-// import emoticon from '../../../static/json/emoticon'
 import CouponItem from '../../components/item/Coupon-Item.vue'
+import share from '../../assets/js/wechat/wechat-share'
 import {
   sendMessage,
-  sendCustomMessage,
   getRoomStatus,
   getActiveCompleteInfo,
   sign
@@ -192,7 +186,7 @@ export default {
     return {
       showEmoticon: false,
       channelId: '',
-      appId: '',
+      liveAppId: '',
       channeUserId: '',
       tab: 1,
       message: '',
@@ -219,21 +213,34 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userName', 'avatar', 'userId', 'opendId'])
+    ...mapGetters(['userName', 'avatar', 'userId', 'opendId', 'roleCode', 'appId'])
   },
   watch: {
     soundValue (val) {
       this.liveSdk.player.setVolume(val / 100)
     }
   },
-  activated () {
+  async activated () {
+    if (this.roleCode === 'VISITOR') {
+      try {
+        await this.$confirm({
+          message: '为了您的账号安全，请绑定手机号',
+          confirmText: '去绑定',
+          closeOnClickMask: false
+        })
+      } catch (e) {
+
+      } finally {
+        this.$router.push({ name: 'BindMobile' })
+      }
+    }
   },
   async mounted () {
     try {
       let data = await getRoomStatus()
       let { roomId, appId, appUserId } = data
       this.channelId = roomId
-      this.appId = appId
+      this.liveAppId = appId
       this.channeUserId = appUserId
       this.initPlayer()
       this.initSocket()
@@ -245,26 +252,26 @@ export default {
   },
   methods: {
     initPlayer () {
-      let { channelId, appId, channeUserId } = this
-      let player = polyvLivePlayer({
-        wrap: "#player",
-        width:'100%',
-        height:'100%',
-        uid:channeUserId,
-        isAutoChange:true,
-        vid :channelId,
+      let { channelId, channeUserId } = this
+      window.polyvLivePlayer({
+        wrap: '#player',
+        width: '100%',
+        height: '100%',
+        uid: channeUserId,
+        isAutoChange: true,
+        vid: channelId,
         x5: false,
         hasControl: true,
         x5FullPage: true,
         forceH5: true,
         useH5Page: true
-      });
+      })
       let timer = setInterval(() => {
         let video = document.querySelector('#player video')
         if (video) {
           // video.setAttribute('x5-video-player-fullscreen', true)
           // video.setAttribute('x5-video-player-type', 'h5-page')
-          video.addEventListener("x5videoenterfullscreen", function(e) {
+          video.addEventListener('x5videoenterfullscreen', function (e) {
             // console.log('x5videoenterfullscreen')
             // video.style.width = window.screen.width + 'px'
             // video.style.height = window.screen.height + 'px'
@@ -278,15 +285,15 @@ export default {
       let { userName, userId, openId, avatar, channelId } = this
       let socket = io.connect('https://chat.polyv.net', {
         // query: 'token=' + chatToken, // 文档上说，暂时为空
-        transports : ['websocket']
+        transports: ['websocket']
       })
-      socket.on('connect', function() {
+      socket.on('connect', function () {
         console.warn('chantroom connect success!')
       })
-      socket.on('disconnect', function() {
+      socket.on('disconnect', function () {
         console.error('chantroom connect error!')
       })
-      socket.on('message' , this.onMessage)
+      socket.on('message', this.onMessage)
       /* 登录到聊天服务器 */
       socket.emit('message', JSON.stringify({
         EVENT: 'LOGIN',
@@ -312,7 +319,7 @@ export default {
             break
           case 'SPEAK':
             if (this.userName !== user.nick) {
-              let message =  mData.values.join(',')
+              let message = mData.values.join(',')
               // let emo = /\[.+\]/.exec(message)
               // console.log(message)
               // for (let e of emo) {
@@ -340,14 +347,14 @@ export default {
     },
     async sendMessage (message) {
       try {
-        let { channelId, appId, userId, avatar, userName } = this
+        let { channelId, liveAppId, avatar, userName } = this
         let timestamp = Date.now()
         let result = await sign({
-          signMsg: `appId${appId}channelId${channelId}msg${message}nickName${userName}pic${avatar}timestamp${timestamp}`,
+          signMsg: `appId${liveAppId}channelId${channelId}msg${message}nickName${userName}pic${avatar}timestamp${timestamp}`,
           roomId: channelId
         })
         let messageConfig = {
-          appId,
+          appId: liveAppId,
           timestamp,
           channelId,
           msg: message,
@@ -412,8 +419,8 @@ export default {
       let { channelId, userName } = this
       this.socket.emit('message', JSON.stringify({
         EVENT: 'FLOWERS',
-        roomId: channelId,// 当前房间号
-        nick: userName,// 送花人昵称
+        roomId: channelId, // 当前房间号
+        nick: userName, // 送花人昵称
         uimg: '' // 送花人头像，为新增的属性，可不传
       }))
     },
@@ -433,6 +440,13 @@ export default {
         if (data) {
           this.couponList = data.couponList
           this.productList = data.productList
+          share({
+            appId: this.appId,
+            title: data.name,
+            desc: data.liveStartTime + ' 开始直播，快来围观哦~',
+            link: window.location.href,
+            imgUrl: data.coverImg + '?x-oss-process=style/thum'
+          })
         }
       } catch (e) {
 
@@ -448,27 +462,27 @@ export default {
     },
     fullScreen () {
       let isFullScreen = false
-      let element = document.documentElement;
+      let element = document.documentElement
       if (!isFullScreen) {
         if (element.requestFullscreen) {
-          element.requestFullscreen();
+          element.requestFullscreen()
         } else if (element.msRequestFullscreen) {
-          element.msRequestFullscreen();
+          element.msRequestFullscreen()
         } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
+          element.mozRequestFullScreen()
         } else if (element.webkitRequestFullscreen) {
-          element.webkitRequestFullscreen();
+          element.webkitRequestFullscreen()
         }
         isFullScreen = true
       } else {
         if (document.exitFullscreen) {
-          document.exitFullscreen();
+          document.exitFullscreen()
         } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
+          document.msExitFullscreen()
         } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
+          document.mozCancelFullScreen()
         } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
+          document.webkitExitFullscreen()
         }
         isFullScreen = false
       }

@@ -1,7 +1,11 @@
 <template>
   <div :class="$style.activity">
     <div :class="$style.wrapper">
-      <router-link :class="$style.item" tag="div" :to="{ name: '' }">
+      <router-link
+        :class="$style.item"
+        tag="div"
+        :to="{ name: 'RoadLearning' }"
+      >
         <div :class="$style.itemLeft">
           <div :class="$style.main">
             学霸之路
@@ -15,7 +19,12 @@
           <use xlink:href="#icon-calendar" />
         </svg> -->
       </router-link>
-      <router-link :class="$style.item" tag="div" :to="{ name: '' }">
+      <router-link
+        v-if="hasInvitingEvent"
+        :class="$style.item"
+        tag="div"
+        :to="{ name: '' }"
+      >
         <div :class="$style.itemLeft">
           <div :class="$style.main">
             邀新有礼
@@ -37,17 +46,21 @@
 export default {
   name: 'Activity',
   props: {
-    data: {
+    invitingEvent: {
       type: Object,
       default () {
-        return { values: [] }
+        return {}
       }
     }
   },
   data () {
     return {}
   },
-  methods: {}
+  computed: {
+    hasInvitingEvent () {
+      return this.invitingEvent && ~[0, 2].indexOf(this.invitingEvent.status)
+    }
+  }
 }
 </script>
 

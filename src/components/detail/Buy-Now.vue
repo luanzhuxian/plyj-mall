@@ -89,7 +89,6 @@
       :sku-attr-list="skuAttrList"
       :sku="currentSku"
       :limiting="limiting"
-      v-if="preActivity && activeProduct"
       :active-product="activeProduct"
       :pre-activity="preActivity"
       :activity-product-model="activityProductModel"
@@ -211,7 +210,6 @@ export default {
     this.reset()
   },
   mounted () {
-    console.log('ssssss' + this.activeProduct)
     this.getCartCount()
   },
   methods: {
@@ -237,7 +235,7 @@ export default {
     },
     // 跳转至提交订单页面
     async submit (options) {
-      const { count, skuCode1, skuCode2 = '' } = options
+      const { count, skuCode1, skuCode2 = '', price } = options
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
       sessionStorage.setItem('CONFIRM_LIST', JSON.stringify([{
@@ -245,6 +243,7 @@ export default {
         count: count,
         skuCode1: skuCode1,
         skuCode2,
+        price,
         agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
@@ -253,8 +252,7 @@ export default {
         query: {
           isCart: 'NO',
           activeProduct: this.activeType,
-          activityId: this.activeProduct === 1 ? '' : this.activityProductModel.activityId,
-          amount: options.price
+          activityId: this.activeProduct === 1 ? '' : this.activityProductModel.activityId
         }
       })
     },

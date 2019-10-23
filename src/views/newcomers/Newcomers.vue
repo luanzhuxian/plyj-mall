@@ -3,7 +3,7 @@
     <img class="banner" src="../../assets/images/newcomers/banner@2x.png">
     <div class="title-bar">
       <i class="icon-gift" />
-      优惠大礼包
+      优惠大礼包1
       <span class="rule" @click="isShowRule = true"><span>活动规则</span><pl-icon name="icon-double-arrow" height="24" width="13" /></span>
     </div>
     <div class="gift-list">

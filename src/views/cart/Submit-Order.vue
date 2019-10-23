@@ -604,18 +604,25 @@ export default {
   },
   async activated () {
     this.activeProduct = Number(this.$route.query.activeProduct) || 1
+    let selectedStudents // 已选择的学员的key
+    let students // 已有学员列表
+    let defStudent // 默认学员
     try {
+      // 获取商品详情
       await this.getProductDetail()
+      // 选择的发票信息（如果有的话）
       this.INVOICE_MODEL = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || null
+      // 选择的学员信息（如果有的话）
       this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-      // 已有学生信息的商品skuCode1
-      let hasStudent = Object.keys(this.CHECKED_STUDENT)
-      let students = await this[STUDENTS]()
-      let def = students.find(item => item.defaultStatus === 1)
-      if (def) { // 如果有默认学员
+      // 每个商品选择的学员信息是一个数组，为了保证这个数组正确的与商品对应起来，CHECKED_STUDENT对象的key都是商品的规格id组成
+      selectedStudents = Object.keys(this.CHECKED_STUDENT)
+      students = await this[STUDENTS]()
+      defStudent = students.find(item => item.defaultStatus === 1)
+      // 如果有默认学员，则缓存默认学员，并自动显示
+      if (defStudent) {
         for (let item of this.needStudentList) {
-          if (hasStudent.indexOf(item.skuCode1) === -1) { // 如果当前商品没有选择学生
-            this.$set(this.CHECKED_STUDENT, item.skuCode1 + item.skuCode2, [def])
+          if (selectedStudents.indexOf(item.skuCode1) === -1) { // 如果当前商品没有选择学生
+            this.$set(this.CHECKED_STUDENT, item.skuCode1 + item.skuCode2, [defStudent])
           }
         }
         sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
@@ -675,6 +682,16 @@ export default {
       }
       this.showPopup = true
     },
+    // 根据购买总价获取合适的优惠券
+    async getCouponByAmount (proList = []) {
+      // 获取优惠券信息
+      let amount = proList.map(item => item.price * item.count).reduce((total, price) => {
+        return total + price
+      })
+      const { result } = await getCouponOfMax(amount || 0)
+      this.coupon = result
+      return result
+    },
     selectStudent (pro) {
       sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
         name: this.$route.name,
@@ -716,19 +733,15 @@ export default {
         throw e
       }
     },
-    async getProductDetail (flag, coupon) {
+    async getProductDetail (flag) {
       const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
+      let coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
       if (!proList || !proList.length) {
         return this.$router.replace({ name: 'Home' })
       }
       if (!flag) this.loading = true
       try {
         // 获取订单详细数据
-        if (!coupon) {
-          // 获取优惠券信息
-          const { result } = await getCouponOfMax(this.$route.query.amount || 0)
-          coupon = result
-        }
         const { result } = await confirmCart({
           activeProduct: this.activeProduct,
           activityId: this.$route.query.activityId,
@@ -736,7 +749,6 @@ export default {
           userCouponId: coupon.id || '',
           addressSeq: this.selectedAddress.sequenceNbr
         })
-        this.coupon = coupon
         const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
         // 为每个虚拟订单都添加备注字段
         for (const p of physicalProducts) {

@@ -11,11 +11,22 @@
         <ul :class="$style.list" v-if="data.values.length">
           <li :class="$style.listItem" v-for="(item, i) of data.values" :key="i">
             <div :class="$style.time">
-              <div :class="$style.timeLeft">
+              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 0">
+                距开始
+              </div>
+              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 1">
                 距结束
               </div>
-              <div :class="$style.timeRight">
-                24:59:56
+              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 2">
+                已结束
+              </div>
+              <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
+                <count-down
+                  :timestamp="getTime(item.goodsInfo.activityInfo)"
+                  :current-timestamp="timestamp"
+                  color="#DB4D7D"
+                  size="mini"
+                />
               </div>
             </div>
             <div :class="$style.listItemWrapper">
@@ -43,10 +54,14 @@
 
 <script>
 import mixin from '../mixin.js'
+import CountDown from './Count-Down.vue'
 
 export default {
   name: 'Yugou',
   mixins: [mixin],
+  components: {
+    CountDown
+  },
   props: {
     data: {
       type: Object,
@@ -121,7 +136,6 @@ export default {
           align-items: center;
           text-align: center;
           margin-bottom: 14px;
-          // width: 214px;
           width: max-content;
           height: 34px;
           line-height: 34px;

@@ -14,6 +14,7 @@ import Live from './live'
 import Activity from './activity'
 import Newcomers from './newcomers'
 import InviteNewcomers from './invitenewcomers'
+import roadlearning from './roadlearning'
 
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
@@ -56,7 +57,8 @@ export const router = new Router({
     ...Live,
     ...Activity,
     ...Newcomers,
-    ...InviteNewcomers
+    ...InviteNewcomers,
+    ...roadlearning
   ],
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }

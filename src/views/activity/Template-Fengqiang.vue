@@ -8,8 +8,18 @@
     />
     <!-- 活动 -->
     <div :class="$style.moduleActivity">
-      <div v-if="true" :class="[$style.road, $style.small]" />
-      <div v-if="true" :class="[$style.invitation, $style.small]" />
+      <router-link
+        v-if="true"
+        :class="[$style.road, $style.small]"
+        tag="div"
+        :to="{ name: 'RoadLearning' }"
+      />
+      <router-link
+        v-if="hasInvitingEvent"
+        :class="[$style.invitation, $style.small]"
+        tag="div"
+        :to="{ name: '' }"
+      />
       <!-- <div v-if="true" :class="[$style.road, $style.large]" />
       <div v-if="true" :class="[$style.invitation, $style.large]" /> -->
     </div>
@@ -107,6 +117,9 @@ export default {
     },
     RECOMMEND () {
       return this.data.RECOMMEND || { values: [] }
+    },
+    hasInvitingEvent () {
+      return this.$attrs.invitingEvent && ~[0, 2].indexOf(this.$attrs.invitingEvent.status)
     }
   }
 }
