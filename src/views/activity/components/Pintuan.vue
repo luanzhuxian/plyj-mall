@@ -20,7 +20,7 @@
           >
             <div :class="$style.imgWrapper">
               <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
-              <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.preActivity !== 0">
+              <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
@@ -176,6 +176,8 @@ export default {
           height: 188px;
         }
         .info {
+          flex: 1;
+          width: 0;
           .sub {
             &-left {
               &-main {

@@ -141,6 +141,7 @@ export default {
           }
           .sub {
             padding: 0 26px;
+            width: 95%;
             height: 52px;
             line-height: 52px;
             font-size: 36px;
