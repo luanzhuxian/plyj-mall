@@ -108,7 +108,6 @@
               :use-start-time="item.useStartTime"
               :full="item.limitNum"
               :subtract="item.grantNum"
-              :status="item.status"
               :instruction="item.couponName"
               @couponClick="couponClick(item.couponId)"
             />
@@ -444,7 +443,7 @@ export default {
           share({
             appId: this.appId,
             title: data.name,
-            desc: data.liveStartTime + '开始直播，快来围观哦~',
+            desc: data.liveStartTime + ' 开始直播，快来围观哦~',
             link: window.location.href,
             imgUrl: data.coverImg + '?x-oss-process=style/thum'
           })
