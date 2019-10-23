@@ -9,7 +9,7 @@
           activity-text="距活动开始仅剩"
           :endtime="detail.activityProductModel.activityStartTime"
         />
-        <div :class="$style.desc">预交定金翻2倍，最低200元可得商品</div>
+        <div :class="$style.desc">预交定金翻{{ detail.activityProductModel.multipleNumber }}倍，最低{{ detail.activityProductModel.depositTotal / detail.activityProductModel.multipleNumber }}元可得商品</div>
       </div>
     </div>
     <div v-if="detail.preActivity === 2" :class="$style.nowTogether">

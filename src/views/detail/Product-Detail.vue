@@ -158,20 +158,66 @@
       :pre-activity="detail.preActivity"
     >
       <template v-slot:footer="{ currentSku }">
-        <div :class="$style.buttons">
+        <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
+          <button
+            :class="$style.add"
+            :disabled="adding || noStock"
+            @click="buyNow(currentSku, 1)"
+          >
+            单独购买
+            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+          </button>
+          <button
+            :class="$style.buy"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            @click="buyNow(currentSku, 2)"
+          >
+            我要参团
+            <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+          </button>
+        </div>
+        <!-- 秒杀商品下单 -->
+        <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
+          <button
+            :class="$style.add"
+            :disabled="adding || noStock"
+            @click="buyNow(currentSku, 1)"
+          >
+            原价购买
+            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+          </button>
+          <button
+            :class="$style.buy"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            @click="buyNow(currentSku, 3)"
+          >
+            立即秒杀
+            <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+          </button>
+        </div>
+        <!-- 预购商品下单 -->
+        <div :class="$style.button" v-else-if="detail.activeProduct === 4 && detail.preActivity === 2">
+          <button
+            :class="$style.preBtn"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            @click="buyNow(currentSku, 4)"
+          >
+            定金购买
+            <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
+          </button>
+        </div>
+        <div :class="$style.buttons" v-else>
           <button
             :class="$style.add"
             :disabled="adding || noStock"
             @click="addToCart(currentSku)"
-            v-if="detail.activeProduct === 1"
           >
             加入购物车
           </button>
           <button
             :class="$style.buy"
-            :style="{width: detail.activeProduct !== 1 ? '100%' : ''}"
             :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
-            @click="buyNow(currentSku)"
+            @click="buyNow(currentSku, 1)"
           >
             {{ confirmText }}
           </button>
@@ -519,7 +565,7 @@ export default {
         }
       })
     },
-    buyNow (selected) {
+    buyNow (selected, activeType) {
       if (!this.hasBind()) {
         return
       }
@@ -540,7 +586,7 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: this.detail.activeProduct,
+          activeProduct: activeType,
           activityId: this.detail.activeProduct === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
@@ -776,7 +822,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     justify-content: space-between;
     > button {
       width: 340px;
-      line-height: 80px;
+      line-height: 40px;
       color: #fff;
       font-size: 30px;
       border-radius: $--radius2;
@@ -789,6 +835,38 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
       &:disabled {
         color: #fea455;
       }
+    }
+    .add, .buy {
+      height: 80px;
+      color: #fff;
+      font-size: 30px;
+      &:disabled {
+        color: rgba(255, 255, 255, .4);
+      }
+    }
+    .preBtn{
+      width: 440px;
+      height: 80px;
+      margin-right: 16px;
+      color: #fff;
+      font-size: 30px;
+      background: #FE7700;
+      border-radius: 10px;
+      &:disabled {
+        color: rgba(255, 255, 255, .4);
+      }
+    }
+    .btn-text{
+      margin: 4px auto 0;
+      width: 100px;
+      text-align: center;
+      height: 28px;
+      line-height: 28px;
+      background: #ffffff;
+      border-radius: 304px;
+      font-size: 20px;
+      line-height: 28px;
+      color: #FE7700;
     }
   }
   .detailOrComment {
