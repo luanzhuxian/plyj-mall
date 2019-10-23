@@ -89,7 +89,6 @@
       :sku-attr-list="skuAttrList"
       :sku="currentSku"
       :limiting="limiting"
-      v-if="preActivity && activeProduct"
       :active-product="activeProduct"
       :pre-activity="preActivity"
       :activity-product-model="activityProductModel"
