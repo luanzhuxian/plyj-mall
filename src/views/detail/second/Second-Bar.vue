@@ -5,7 +5,10 @@
         <div :class="$style.secondPrice">
           {{ detail.activityProductModel.price }}
         </div>
-        <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
+        <del :class="$style.original" v-text="minPrice" />
+        <template v-if="minPrice !== maxPrice">
+          ~ <del :class="$style.original" v-text="maxPrice" />
+        </template>
       </div>
       <div :class="$style.desc">活动限量{{ detail.activityProductModel.stock }}件</div>
     </div>
@@ -14,14 +17,17 @@
         <div :class="$style.secondPrice">
           {{ detail.activityProductModel.price }}
         </div>
-        <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
+        <del :class="$style.original" v-text="minPrice" />
+        <template v-if="minPrice !== maxPrice">
+          ~ <del :class="$style.original" v-text="maxPrice" />
+        </template>
         <div :class="$style.number">已抢 {{ detail.activityProductModel.number }}</div>
       </div>
       <div :class="$style.desc">
         <div :class="$style.progress">
-          <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.joinCount) * 100 + '%' }" />
+          <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
         </div>
-        <div>共 {{ detail.activityProductModel.joinCount || 0 }} 件</div>
+        <div>共 {{ detail.activityProductModel.stock || 0 }} 件</div>
       </div>
     </div>
     <count-down

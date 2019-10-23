@@ -27,9 +27,9 @@
         />
         <div :class="$style.desc">
           <div :class="$style.progress">
-            <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.joinCount) * 100 + '%' }" />
+            <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
           </div>
-          <div>{{ detail.activityProductModel.joinCount || 0 }}人</div>
+          <div>{{ detail.activityProductModel.stock || 0 }}人</div>
         </div>
       </div>
     </div>

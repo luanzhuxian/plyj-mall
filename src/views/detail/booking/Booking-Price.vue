@@ -3,7 +3,10 @@
     <div>
       <div class="price">定金 <span>{{ detail.activityProductModel.price }}</span> 抵 <span>{{ detail.activityProductModel.depositTotal }}</span></div>
       <div class="pro-info">
-        <div class="original">原价：<del v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" /></div>
+        <div class="original">原价：<i v-text="minPrice" />
+          <template v-if="minPrice !== maxPrice">
+            ~ <i v-text="maxPrice" />
+          </template></div>
         <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
       </div>
     </div>
