@@ -48,7 +48,7 @@ export default {
       if (this.activityInfo === null) {
         return false
       }
-      return moment().isBefore(moment(this.activityInfo.isActivityStartTime))
+      return moment().isAfter(moment(this.activityInfo.isActivityStartTime))
     },
     showSelf () {
       return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser

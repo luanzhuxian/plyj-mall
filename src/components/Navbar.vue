@@ -19,7 +19,7 @@
       tag="div"
       :to="{ name: 'Activity' }"
     >
-      <img :class="$style.icon" src="../assets/images/d12-tabbar.png">
+      <img :class="$style.icon" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png">
     </router-link>
     <router-link
       :class="$style.route"

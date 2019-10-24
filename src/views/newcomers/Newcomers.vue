@@ -202,6 +202,7 @@ export default {
       let { status } = await claimCoupons(this.$route.params.activityId, (this.activityInfo.couponModels || []).map(m => m.id))
       if (status !== 200) {
         // TODO: add code here
+        return
       }
       await registerStatisitic(this.$route.params.activityId)
     }

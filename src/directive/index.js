@@ -1,4 +1,4 @@
-import img from '../assets/images/img_error.png'
+let img = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png'
 let IMGERLIST = {}
 let id = 0
 export default {
