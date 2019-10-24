@@ -12,6 +12,19 @@
     background: #E0030C url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activiy-list/second_bg.jpg") top center no-repeat;
     background-size: 100% auto;
   }
+  .rule{
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    width: 154px;
+    height: 52px;
+    background: rgba(0, 0, 0, .4);
+    border-radius: 200px;
+    font-size: 28px;
+    text-align: center;
+    line-height: 52px;
+    color: #fff;
+  }
   .main{
     padding: 286px 24px 48px;
     .list{

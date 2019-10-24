@@ -171,7 +171,7 @@ import {
   getActiveCompleteInfo,
 } from '../../apis/live'
 import {
-  receiveCoupon
+  receiveCouponForLive
 } from '../../apis/my-coupon'
 import io from 'socket.io-client'
 export default {
@@ -438,7 +438,7 @@ export default {
     },
     async couponClick (id) {
       try {
-        await receiveCoupon({
+        await receiveCouponForLive({
           couponId: id,
           activityId: this.activeId,
           entityClassName: 'MallLiveActivityEntity'

@@ -1,5 +1,6 @@
 <template>
   <div class="bg book-bg">
+    <div class="rule" @click="showRule = true">活动规则</div>
     <div class="main">
       <div class="list book-ing" v-if="ingList.length > 0">
         <div class="head">
@@ -14,7 +15,7 @@
             </div>
             <div>
               <div class="title book-title">{{ item.productName }}</div>
-              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multiple === 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
+              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multiplt === 1">抵￥{{ item.price * item.multipltNumber }}</span></div>
               <div class="book-bottom">双十二价位：{{ item.productPrice }}元</div>
             </div>
           </div>
@@ -36,13 +37,18 @@
             </div>
             <div>
               <div class="title book-title">{{ item.productName }}</div>
-              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multiple === 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
+              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multiplt === 1">抵￥{{ item.price * item.multipltNumber }}</span></div>
               <div class="book-bottom">双十二价位：{{ item.productPrice }}元</div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <pl-popup :show.sync="showRule" title="活动细则"
+              @close="showRule = false"
+    >
+      <div>sfsf</div>
+    </pl-popup>
   </div>
 </template>
 
@@ -57,7 +63,8 @@ export default {
   data () {
     return {
       ingList: [],
-      comingList: []
+      comingList: [],
+      showRule: false
     }
   },
   created () {

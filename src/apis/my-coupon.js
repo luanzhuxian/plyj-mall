@@ -24,6 +24,15 @@ export const getAvailableCouponList = ({ current, size }) => axios.get(`/apis/v1
  */
 export const receiveCoupon = params => axios.post(`/apis/v1/coupon/receive`, null, { params })
 /**
+ * 直播中领取优惠券
+ * @param params
+ * @param {string} params.couponId
+ * @param {string} params.activityId - 观看直播时传，直播的活动id
+ * @param {string} params.entityClassName - 标记，如：MallLiveActivityEntity 直播时领取的
+ * @return {*}
+ */
+export const receiveCouponForLive = params => axios.post(`/apis/v1/coupon/live/activity/receive`, null, { params })
+/**
  * 获取已领取优惠券列表
  * @returns {Promise<AxiosResponse<T>>}
  */

@@ -42,8 +42,8 @@
         <!-- 使用期限 -->
         <useful-life
           v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
-          :start="detail.validityPeriodStart"
-          :end="detail.validityPeriodEnd"
+          :start="detail.activeProduct === 4 ? detail.activityProductModel.useStartTime : detail.validityPeriodStart"
+          :end="detail.activeProduct === 4 ? detail.activityProductModel.useEndTime : detail.validityPeriodEnd"
         />
       </DetailInfoBox>
 
@@ -77,7 +77,7 @@
         <span style="color: #FE7700;" v-text="couponText" />
       </Field>
 
-      <TogetherRule v-if="detail.activeProduct === 2" />
+      <TogetherRule v-if="detail.activeProduct === 2 || detail.activeProduct === 4" :active-product="detail.activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
 
       <div :class="$style.detailOrComment">
         <div :class="$style.tabs">

@@ -3,7 +3,7 @@
     <div :class="$style.title">
       活动规则
     </div>
-    <ul :class="$style.rule">
+    <ul :class="$style.rule" v-if="activeProduct === 2">
       <li>
         <div :class="$style.step1" />
         <div :class="$style.text">选择需要 的拼团活动</div>
@@ -16,26 +16,49 @@
       <li :class="$style.line" />
       <li>
         <div :class="$style.step3" />
-        <div :class="$style.text">等待好友 参团支付</div>
+        <div :class="$style.text">达到人数 拼团成功</div>
       </li>
       <li :class="$style.line" />
       <li>
         <div :class="$style.step4" />
-        <div :class="$style.text">达到人数 拼团成功</div>
+        <div :class="$style.text">线下瓜分 奖池</div>
       </li>
     </ul>
-    <ul :class="$style.content">
-      <li>1. 任何人均可参团，每个人开团数和参团数不得超过最高设定；</li>
-      <li>2. 选择参团科目（每个团只能选择一个科目），填写报名基本信息；</li>
-      <li>3. 提交报名信息，完成线上支付预定名额；</li>
-      <li>4. 活动分享给好友，邀请好友加入你的团，一起赢优惠。</li>
+    <ul :class="$style.rule" v-if="activeProduct === 4">
+      <li>
+        <div :class="$style.step1" />
+        <div :class="$style.text">选择需要 的拼团活动</div>
+      </li>
+      <li :class="$style.line" />
+      <li>
+        <div :class="$style.step2" />
+        <div :class="$style.text">支付定金</div>
+      </li>
+      <li :class="$style.line" />
+      <li>
+        <div :class="$style.step4" />
+        <div :class="$style.text">线下核销 付尾款</div>
+      </li>
     </ul>
+    <div :class="$style.content">
+      {{ activityBrief }}
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'TogetherRule'
+  name: 'TogetherRule',
+  props: {
+    activeProduct: {
+      type: [String, Number],
+      default: ''
+    },
+    activityBrief: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>
 
@@ -104,7 +127,7 @@ export default {
   }
   .content {
     width: 100%;
-    padding: 40px 0 48px 0;
+    padding: 40px 0 48px;
     font-size: 28px;
     line-height: 45px;
     word-break: break-all;

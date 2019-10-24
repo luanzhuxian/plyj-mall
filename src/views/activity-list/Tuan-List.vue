@@ -1,5 +1,6 @@
 <template>
   <div class="bg tuan-bg">
+    <div class="rule" @click="showRule = true">活动规则</div>
     <div class="main">
       <div class="list tuan-ing" v-if="ingList.length > 0">
         <div class="head">
@@ -62,6 +63,11 @@
         </div>
       </div>
     </div>
+    <pl-popup :show.sync="showRule" title="活动细则"
+              @close="showRule = false"
+    >
+      <div>sfsf</div>
+    </pl-popup>
   </div>
 </template>
 
@@ -76,7 +82,8 @@ export default {
   data () {
     return {
       ingList: [],
-      comingList: []
+      comingList: [],
+      showRule: false
     }
   },
   created () {
