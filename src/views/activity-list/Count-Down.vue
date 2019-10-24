@@ -3,7 +3,6 @@
     :class="{
       [$style.countDown]: true,
     }"
-    v-if="data || endtime"
     v-show="show"
   >
     <span :class="Number(d) ? $style.textD : $style.text">{{ activityText }}</span>
@@ -71,8 +70,9 @@ export default {
       if (this.data) {
         this.endtiemstamp = Number(this.data[this.fields.end]) || 0
       } else {
-        this.endtiemstamp = Number(new Date(this.endtime).getTime()) || 0
+        this.endtiemstamp = Number(moment(this.endtime).valueOf()) || 0
       }
+      // console.log('开始时间' + this.starttiemstamp + '结束时间' + this.endtiemstamp)
       if (this.starttiemstamp - this.endtiemstamp < 0) {
         // 启动倒计时
         console.warn('启动倒计时')

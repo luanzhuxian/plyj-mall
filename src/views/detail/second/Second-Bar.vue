@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.together">
+  <div :class="$style.together" v-if="detail">
     <div :class="$style.productInfo" v-if="detail.preActivity === 1">
       <div :class="$style.price">
         <div :class="$style.secondPrice">
@@ -19,23 +19,21 @@
       </div>
       <div :class="$style.desc">
         <div :class="$style.progress">
-          <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.joinCount) * 100 + '%' }" />
+          <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
         </div>
-        <div>共 {{ detail.activityProductModel.joinCount || 0 }} 件</div>
+        <div>共 {{ detail.activityProductModel.stock || 0 }} 件</div>
       </div>
     </div>
     <count-down
       @done="countFinished"
       activity-text="距离结束"
-      :starttime="detail.serverTime"
-      v-if="detail.activityProductModel && detail.preActivity === 2"
+      v-if="detail.preActivity === 2"
       :endtime="detail.activityProductModel.activityEndTime"
     />
     <count-down
       @done="countFinished"
       activity-text="距离开始"
-      :starttime="detail.serverTime"
-      v-if="detail.activityProductModel && detail.preActivity === 1"
+      v-if="detail.preActivity === 1"
       :endtime="detail.activityProductModel.activityStartTime"
     />
   </div>
@@ -82,6 +80,7 @@ export default {
     countFinished () {
       this.$set(this.detail, 'serverTime', '')
       this.$set(this.detail, 'shoppingTimeLong', '')
+      this.$parent.getDetail()
     }
   }
 }

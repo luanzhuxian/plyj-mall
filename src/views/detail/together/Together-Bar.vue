@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.together">
+  <div :class="$style.together" v-if="detail">
     <div v-if="detail.preActivity === 1" :class="$style.preTogether">
       <div :class="$style.preText" />
       <div :class="$style.line" />
@@ -7,8 +7,6 @@
         <together-count-down
           @done="countFinished"
           activity-text="距活动开始仅剩"
-          :starttime="detail.serverTime"
-          v-if="detail.activityProductModel"
           :endtime="detail.activityProductModel.activityStartTime"
         />
         <div :class="$style.desc">活动商品数量{{ detail.activityProductModel.stock }}件，成团最多瓜分{{ detail.activityProductModel.prizePool }}元</div>
@@ -21,15 +19,13 @@
         <together-count-down
           @done="countFinished"
           activity-text="距活动结束仅剩"
-          :starttime="detail.serverTime"
-          v-if="detail.activityProductModel"
           :endtime="detail.activityProductModel.activityEndTime"
         />
         <div :class="$style.desc">
           <div :class="$style.progress">
-            <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.joinCount) * 100 + '%' }" />
+            <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
           </div>
-          <div>{{ detail.activityProductModel.joinCount || 0 }}人</div>
+          <div>{{ detail.activityProductModel.stock || 0 }}人</div>
         </div>
       </div>
     </div>
@@ -57,6 +53,7 @@ export default {
     countFinished () {
       this.$set(this.detail, 'serverTime', '')
       this.$set(this.detail, 'shoppingTimeLong', '')
+      this.$parent.getDetail()
     }
   }
 }
@@ -72,7 +69,7 @@ export default {
       align-items: center;
       padding: 0 20px;
       .pre-text{
-        background: url("../../../assets/images/tuan/pre_text.svg") no-repeat;
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_text.png") no-repeat;
         background-size: 100% 100%;
         width: 64px;
         height: 80px;

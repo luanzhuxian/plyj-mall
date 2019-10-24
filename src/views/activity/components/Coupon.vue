@@ -1,5 +1,5 @@
 <template>
-  <router-link :class="$style.coupon" tag="div" :to="{ name: '' }">
+  <router-link :class="$style.coupon" tag="div" :to="{ name: 'MyCoupon' }">
     <div :class="$style.background">
       <div :class="$style.btnMiddle" v-if="type !== 6" />
       <div :class="$style.title" v-if="data.otherValue > 0">
@@ -22,7 +22,7 @@
             <div :class="$style.price">
               ￥ <span :class="$style.number">{{ item.goodsInfo.amount }}</span>
             </div>
-            <div>{{ item.goodsInfo.couponName }}</div>
+            <div>{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
             <div :class="$style.date">
               {{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}
             </div>
@@ -50,9 +50,6 @@ export default {
       type: Number,
       default: 0
     }
-  },
-  data () {
-    return {}
   }
 }
 </script>
@@ -64,14 +61,14 @@ export default {
      .btn-middle {
       width: 520px;
       height: 78px;
-      background: url("../../../assets/images/activity/button-middle.png") no-repeat center center;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-middle.png") no-repeat center center;
       background-size: 100% auto;
       border-radius: 70px;
       margin: 0 auto;
     }
     .background {
       margin: 0 -24px 24px;
-      background: url("../../../assets/images/activity/color-bar.png") no-repeat center bottom;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/color-bar.png") no-repeat center bottom;
       background-size: 100% auto;
       box-shadow: 0 20px 20px #8A0108;
     }
@@ -93,7 +90,7 @@ export default {
         color: #FFF;
         &.large {
           width: 346px;
-          background: url("../../../assets/images/activity/bg-coupon-large.png") no-repeat center center;
+          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-coupon-large.png") no-repeat center center;
           background-size: 100% 100%;
           .number {
             font-size: 40px;
@@ -102,7 +99,7 @@ export default {
         }
         &.small {
           width: 220px;
-          background: url("../../../assets/images/activity/bg-coupon.png") no-repeat center center;
+          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-coupon.png") no-repeat center center;
           background-size: 100% 100%;
         }
         &-wrapper {

@@ -1,13 +1,11 @@
 <template>
-  <router-link
+  <div
     :class="{
       [$style.fengqiang]: true,
       [$style.bg1]: type === 5,
       [$style.bg2]: type === 6,
       [$style.bg3]: type === 7
     }"
-    tag="div"
-    :to="{ name: '' }"
   >
     <div :class="$style.background">
       <div :class="$style.wrapper">
@@ -20,6 +18,7 @@
             }"
             v-for="(item, i) of data.values"
             :key="i"
+            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, brokerId: userId || null } })"
           >
             <div :class="$style.imgWrapper">
               <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
@@ -60,11 +59,12 @@
         </ul>
       </div>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
 import mixin from '../mixin.js'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Fengqiang',
@@ -83,6 +83,9 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    ...mapGetters(['userId'])
   }
 }
 </script>
@@ -94,17 +97,17 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     &.bg-1 > .background {
-      background: url("../../../assets/images/activity/bg-qiang-1.jpg") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-qiang-1.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     &.bg-3 > .background {
-      background: url("../../../assets/images/activity/bg-qiang-3.jpg") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-qiang-3.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     &.bg-2 {
       background: #FF0B00 !important;
       .background {
-        background: url("../../../assets/images/activity/bg-qiang-2.jpg") no-repeat center top;
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-qiang-2.jpg") no-repeat center top;
         background-size: 100% auto;
         .wrapper {
           padding-top: 188px;
@@ -161,7 +164,7 @@ export default {
                           linear-gradient(-135deg, transparent 0px, #FFFF00 0) top right,
                           linear-gradient(-45deg, transparent 0px, #FFFF00 0) bottom right,
                           linear-gradient(45deg, transparent 32px, #FFFF00 0) bottom left;
-              background-size: 50% 50%;
+              background-size: 51% 51%;
               background-repeat: no-repeat;
               overflow: hidden;
             }

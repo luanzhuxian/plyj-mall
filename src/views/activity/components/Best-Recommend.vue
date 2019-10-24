@@ -121,7 +121,7 @@ export default {
   .btn-bottom {
     width: 520px;
     height: 78px;
-    background: url("../../../assets/images/activity/button-bottom.png") no-repeat center center;
+    background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-bottom.png") no-repeat center center;
     background-size: 100% auto;
     border-radius: 70px;
     margin: 48px auto 32px;

@@ -16,9 +16,9 @@
     </div>
     <div class="join" v-if="detail.preActivity === 2">
       <ul>
-        <li class="avatar" v-for="k in detail.activityProductModel.userImageList" :key="k"><img src="../../../assets/images/shipped.png"></li>
+        <li class="avatar" v-for="(item, k) in detail.activityProductModel.userImageList" :key="k"><img :src="item.headImgURL"></li>
       </ul>
-      {{ detail.activityProductModel.joinCount }}人和你一起参与
+      <div v-if="detail.activityProductModel.number > 0">{{ detail.activityProductModel.number }}人和你一起参与</div>
     </div>
   </div>
 </template>
@@ -99,7 +99,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 360px;
+      max-width: 360px;
       font-size: 26px;
       color: #999999;
       ul{

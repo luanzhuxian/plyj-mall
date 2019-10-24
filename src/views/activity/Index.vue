@@ -3,13 +3,18 @@
     <div :class="$style.background">
       <search placeholder="搜索商品" />
       <div :class="$style.container">
-        <div :class="$style.btnTop" />
+        <router-link
+          :class="$style.btnTop"
+          tag="div"
+          :to="{ name: 'MyCoupon' }"
+        />
         <TemplateFengqiang
           v-if="type === 5"
           :data="modules"
           :type="type"
           :live="liveInfo"
           :inviting-event="invitingEvent"
+          :jx-event="jxEvent"
           :timestamp="timestamp"
         />
         <TemplateBaofa
@@ -18,6 +23,7 @@
           :type="type"
           :live="liveInfo"
           :inviting-event="invitingEvent"
+          :jx-event="jxEvent"
           :timestamp="timestamp"
         />
         <TemplateFanchang
@@ -39,7 +45,8 @@ import Search from './components/Search.vue'
 import TemplateFengqiang from './Template-Fengqiang.vue'
 import TemplateBaofa from './Template-Baofa.vue'
 import TemplateFanchang from './Template-Fanchang.vue'
-import { getCurrentTemplate, getLiveInfo, getInvitingEvent } from '../../apis/home'
+import { getCurrentTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
+import { getCurrentActivity } from '../../apis/invitenewcomers'
 
 export default {
   name: 'Activity',
@@ -61,8 +68,9 @@ export default {
         FENG_QIANG: null,
         RECOMMEND: null
       },
-      liveInfo: {},
-      invitingEvent: {},
+      liveInfo: {}, // 直播
+      invitingEvent: {}, // 邀新有礼
+      jxEvent: {}, // 见学之路
       timestamp: ''
     }
   },
@@ -72,8 +80,11 @@ export default {
       getLiveInfo().then(({ result }) => {
         this.liveInfo = result || {}
       })
-      getInvitingEvent().then(({ result }) => {
+      getCurrentActivity().then(({ result }) => {
         this.invitingEvent = result || {}
+      })
+      getJianxueInfo().then(({ result }) => {
+        this.jxEvent = result || {}
       })
     } catch (e) {
       throw e
@@ -87,7 +98,8 @@ export default {
       try {
         const { result } = await getCurrentTemplate({ type: 2 })
         if (!result) {
-          this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+          this.noFinish = true
+          this.$alert('双十二主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
             .finally(() => {
               this.$router.replace({ name: 'Classify' })
             })
@@ -129,17 +141,28 @@ export default {
         throw e
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.noFinish) {
+        vm.$alert('双十二主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+          .finally(() => {
+            vm.$router.replace({ name: 'Classify' })
+          })
+      }
+    })
   }
 }
 </script>
 <style module lang="scss">
   .activity {
     position: relative;
-    background: #E90000;
-    min-height: 100vh;
+    background: rgba(251, 0, 0, 1);
+    // min-height: 100vh;
     .background {
-      background: url("../../assets/images/activity/activity-bg.png") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/activity-bg.png") no-repeat center top;
       background-size: 100% auto;
+      min-height: 100vh;
     }
     .container {
       padding: 236px 24px 176px;
@@ -147,7 +170,7 @@ export default {
     .btn-top {
       width: 520px;
       height: 78px;
-      background: url("../../assets/images/activity/button-top.png") no-repeat center center;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-top.png") no-repeat center center;
       background-size: 100% auto;
       border-radius: 70px;
       box-shadow: 18px 6px 25px #800F0F;

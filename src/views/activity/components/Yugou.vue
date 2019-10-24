@@ -1,26 +1,31 @@
 <template>
-  <router-link :class="$style.yugou" tag="div" :to="{ name: '' }">
+  <div :class="$style.yugou">
     <div :class="$style.background">
       <div :class="$style.wrapper">
         <div :class="$style.navBar">
-          <div :class="$style.navLink">
+          <router-link :class="$style.navLink" tag="div" :to="{ name: 'BookList' }">
             <span>查看更多</span>
             <pl-icon name="icon-arrow-right" size="20" />
-          </div>
+          </router-link>
         </div>
         <ul :class="$style.list" v-if="data.values.length">
-          <li :class="$style.listItem" v-for="(item, i) of data.values" :key="i">
+          <li
+            :class="$style.listItem"
+            v-for="(item, i) of data.values"
+            :key="i"
+            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, brokerId: userId || null } })"
+          >
             <div :class="$style.time">
-              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 0">
+              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
                 距开始
               </div>
-              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 1">
+              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 1">
                 距结束
               </div>
-              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 2">
+              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 2">
                 已结束
               </div>
-              <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
+              <div :class="$style.timeRight" v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
                 <count-down
                   :timestamp="getTime(item.goodsInfo.activityInfo)"
                   :current-timestamp="timestamp"
@@ -49,12 +54,13 @@
         </ul>
       </div>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Yugou',
@@ -76,6 +82,9 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    ...mapGetters(['userId'])
   }
 }
 </script>
@@ -87,7 +96,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     .background {
-      background: url("../../../assets/images/activity/bg-yugou.jpg") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-yugou.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     .wrapper {

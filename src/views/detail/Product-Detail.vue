@@ -29,7 +29,7 @@
           size="large"
           @done="countFinished"
           :class="$style.countDown"
-          v-if="detail.shoppingStatus === 1"
+          v-if="detail.shoppingStatus === 1 && detail.activeProduct === 1"
           :starttime="detail.serverTime"
           :endtime="detail.shoppingTimeLong"
         />
@@ -158,20 +158,66 @@
       :pre-activity="detail.preActivity"
     >
       <template v-slot:footer="{ currentSku }">
-        <div :class="$style.buttons">
+        <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
+          <button
+            :class="$style.add"
+            :disabled="adding || noStock"
+            @click="buyNow(currentSku, 1)"
+          >
+            单独购买
+            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+          </button>
+          <button
+            :class="$style.buy"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            @click="buyNow(currentSku, 2)"
+          >
+            我要参团
+            <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+          </button>
+        </div>
+        <!-- 秒杀商品下单 -->
+        <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
+          <button
+            :class="$style.add"
+            :disabled="adding || noStock"
+            @click="buyNow(currentSku, 1)"
+          >
+            原价购买
+            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+          </button>
+          <button
+            :class="$style.buy"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            @click="buyNow(currentSku, 3)"
+          >
+            立即秒杀
+            <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+          </button>
+        </div>
+        <!-- 预购商品下单 -->
+        <div :class="$style.button" v-else-if="detail.activeProduct === 4 && detail.preActivity === 2">
+          <button
+            :class="$style.preBtn"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            @click="buyNow(currentSku, 4)"
+          >
+            定金购买
+            <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
+          </button>
+        </div>
+        <div :class="$style.buttons" v-else>
           <button
             :class="$style.add"
             :disabled="adding || noStock"
             @click="addToCart(currentSku)"
-            v-if="detail.activeProduct === 1"
           >
             加入购物车
           </button>
           <button
             :class="$style.buy"
-            :style="{width: detail.activeProduct !== 1 ? '100%' : ''}"
             :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
-            @click="buyNow(currentSku)"
+            @click="buyNow(currentSku, 1)"
           >
             {{ confirmText }}
           </button>
@@ -464,7 +510,7 @@ export default {
     },
     async couponClick (id) {
       try {
-        await receiveCoupon(id)
+        await receiveCoupon({ couponId: id })
         this.$success('领取成功')
         await this.getCouponList()
       } catch (e) {
@@ -519,7 +565,7 @@ export default {
         }
       })
     },
-    buyNow (selected) {
+    buyNow (selected, activeType) {
       if (!this.hasBind()) {
         return
       }
@@ -540,7 +586,7 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: this.detail.activeProduct,
+          activeProduct: activeType,
           activityId: this.detail.activeProduct === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
@@ -567,15 +613,15 @@ export default {
       }
       const arcAvatar = cutArcImage(lodedAvatar)
       const allImgs = [
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/poster3.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/poster2.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/poster1.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/dikou-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/original_price-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/second_price-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/tuan_price-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/yuan-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/yujiao-1571393161453.png')
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster3.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster1.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/original_price-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/second_price-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/tuan_price-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao-1571393161453.png')
       ]
       const res = await Promise.all(allImgs)
       const tuanBg = res[0]
@@ -651,33 +697,38 @@ export default {
             ctx.stroke()
           }
         } else if (type === 2) {
+          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
+          let originalPriceWidth = ctx.measureText(`¥${price}`).width
           ctx.drawImage(tuan_price, 48, 1464, 440, 122)
-          ctx.fillStyle = '#fff'
-          ctx.font = '112px Microsoft YaHei UI'
-          ctx.fillText(this.detail.activityProductModel.price, 380, 1454)
-          ctx.drawImage(yuan, 460, 1464, 68, 68)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
+          ctx.drawImage(yuan, 450 + priceWidth, 1464, 68, 68)
           ctx.drawImage(original_price, 48, 1584, 220, 78)
-          ctx.fillText(price, 300, 1564)
-          ctx.drawImage(yuan, 400, 1584, 68, 68)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(price, 260, 1564)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
         } else if (type === 3) {
+          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
+          let originalPriceWidth = ctx.measureText(`¥${price}`).width
           ctx.drawImage(second_price, 48, 1464, 440, 122)
-          ctx.fillStyle = '#fff'
-          ctx.font = '112px Microsoft YaHei UI'
-          ctx.textAlign = 'center'
-          ctx.fillText(this.detail.activityProductModel.price, 380, 1454)
-          ctx.drawImage(yuan, 460, 1474, 68, 68)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
+          ctx.drawImage(yuan, 450 + priceWidth, 1474, 68, 68)
           ctx.drawImage(original_price, 48, 1584, 220, 78)
-          ctx.fillText(price, 300, 1564)
-          ctx.drawImage(yuan, 400, 1584, 68, 68)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(price, 260, 1564)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
         } else if (type === 4) {
-          ctx.drawImage(yujiao, 48, 1464, 440, 56)
-          ctx.fillStyle = '#fff'
-          ctx.font = '112px Microsoft YaHei UI'
-          ctx.fillText(this.detail.activityProductModel.price, 380, 1454)
-          ctx.drawImage(yuan, 460, 1474, 68, 68)
+          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
+          let originalPriceWidth = ctx.measureText(`¥${price}`).width
+          ctx.drawImage(yujiao, 48, 1464, 316, 116)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(this.detail.activityProductModel.price, 300, 1454)
+          ctx.drawImage(yuan, 350 + priceWidth, 1474, 68, 68)
           ctx.drawImage(dikou, 48, 1584, 220, 78)
-          ctx.fillText(price, 300, 1564)
-          ctx.drawImage(yuan, 400, 1584, 68, 68)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(price, 280, 1564)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
         }
         this.haibao = canvas.toDataURL('image/jpeg', 0.7)
         this.showHaibao = true
@@ -771,7 +822,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     justify-content: space-between;
     > button {
       width: 340px;
-      line-height: 80px;
+      line-height: 40px;
       color: #fff;
       font-size: 30px;
       border-radius: $--radius2;
@@ -784,6 +835,38 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
       &:disabled {
         color: #fea455;
       }
+    }
+    .add, .buy {
+      height: 80px;
+      color: #fff;
+      font-size: 30px;
+      &:disabled {
+        color: rgba(255, 255, 255, .4);
+      }
+    }
+    .btn-text{
+      margin: 4px auto 0;
+      width: 100px;
+      text-align: center;
+      height: 28px;
+      line-height: 28px;
+      background: #ffffff;
+      border-radius: 304px;
+      font-size: 20px;
+      line-height: 28px;
+      color: #FE7700;
+    }
+  }
+  .preBtn{
+    width: 100%;
+    height: 80px;
+    margin-right: 16px;
+    color: #fff;
+    font-size: 30px;
+    background: #FE7700;
+    border-radius: 10px;
+    &:disabled {
+      color: rgba(255, 255, 255, .4);
     }
   }
   .detailOrComment {

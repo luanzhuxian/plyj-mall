@@ -1,7 +1,7 @@
 <template>
   <div class="bg tuan-bg">
     <div class="main">
-      <div class="list tuan-ing">
+      <div class="list tuan-ing" v-if="ingList.length > 0">
         <div class="head">
           <pl-icon name="icon-ing_icon" color="#fff" size="52" />
           <pl-icon name="icon-ing_text" color="#fff" size="52" />
@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-      <div class="list tuan-coming">
+      <div class="list tuan-coming" v-if="comingList.length > 0">
         <div class="head">
           <pl-icon name="icon-coming_icon" color="#fff" size="52" />
           <pl-icon name="icon-coming_text" color="#fff" size="52" />

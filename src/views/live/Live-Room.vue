@@ -162,15 +162,13 @@
 </template>
 
 <script>
-import 'vue-slider-component/theme/default.css'
+/* eslint-disable */
 import { mapGetters } from 'vuex'
 import CouponItem from '../../components/item/Coupon-Item.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import {
-  sendMessage,
   getRoomStatus,
   getActiveCompleteInfo,
-  sign
 } from '../../apis/live'
 import {
   receiveCoupon
@@ -231,6 +229,8 @@ export default {
       } catch (e) {
 
       } finally {
+        let { name, params, query } = this.$route
+        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({ name, query, params }))
         this.$router.push({ name: 'BindMobile' })
       }
     }
@@ -290,7 +290,8 @@ export default {
       socket.on('connect', function () {
         console.warn('chantroom connect success!')
       })
-      socket.on('disconnect', function () {
+      socket.on('disconnect', function (e) {
+        console.error(e)
         console.error('chantroom connect error!')
       })
       socket.on('message', this.onMessage)
@@ -320,11 +321,6 @@ export default {
           case 'SPEAK':
             if (this.userName !== user.nick) {
               let message = mData.values.join(',')
-              // let emo = /\[.+\]/.exec(message)
-              // console.log(message)
-              // for (let e of emo) {
-              //   console.log(e)
-              // }
               this.chatRecords.push({
                 message,
                 name: user.nick,
@@ -345,28 +341,15 @@ export default {
         this.scrollBottom()
       }
     },
+    /* 聊天发送消息 */
     async sendMessage (message) {
       try {
-        let { channelId, liveAppId, avatar, userName } = this
-        let timestamp = Date.now()
-        let result = await sign({
-          signMsg: `appId${liveAppId}channelId${channelId}msg${message}nickName${userName}pic${avatar}timestamp${timestamp}`,
+        let { channelId } = this
+        this.socket.emit('message', JSON.stringify({
+          EVENT: 'SPEAK',
+          values: [message], // 发言内容
           roomId: channelId
-        })
-        let messageConfig = {
-          appId: liveAppId,
-          timestamp,
-          channelId,
-          msg: message,
-          pic: avatar,
-          nickName: userName,
-          sign: result
-          // adminIndex
-          // actor
-          // freeReview
-        }
-        let data = await sendMessage(messageConfig)
-        return data
+        }))
       } catch (e) {
         throw e
       }
@@ -440,6 +423,7 @@ export default {
         if (data) {
           this.couponList = data.couponList
           this.productList = data.productList
+          this.activeId = data.id
           share({
             appId: this.appId,
             title: data.name,
@@ -454,7 +438,11 @@ export default {
     },
     async couponClick (id) {
       try {
-        await receiveCoupon(id)
+        await receiveCoupon({
+          couponId: id,
+          activityId: this.activeId,
+          entityClassName: 'MallLiveActivityEntity'
+        })
         this.$success('领取成功')
       } catch (e) {
         throw e
@@ -555,7 +543,9 @@ export default {
       line-height: 36px;
       font-size: 26px;
       &.self-message {
-        direction: rtl;
+        > .user-name {
+          color: #e84655;
+        }
       }
       &.custom-message {
         padding: 0 8px;

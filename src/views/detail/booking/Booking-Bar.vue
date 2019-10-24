@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.together">
+  <div :class="$style.together" v-if="detail">
     <div v-if="detail.preActivity === 1" :class="$style.preTogether">
       <div :class="$style.preText" />
       <div :class="$style.line" />
@@ -7,11 +7,9 @@
         <together-count-down
           @done="countFinished"
           activity-text="距活动开始仅剩"
-          :starttime="detail.serverTime"
-          v-if="detail.activityProductModel"
           :endtime="detail.activityProductModel.activityStartTime"
         />
-        <div :class="$style.desc">预交定金翻2倍，最低200元可得商品</div>
+        <div :class="$style.desc">预交定金翻{{ detail.activityProductModel.multipleNumber }}倍，最低{{ detail.activityProductModel.depositTotal / detail.activityProductModel.multipleNumber }}元可得商品</div>
       </div>
     </div>
     <div v-if="detail.preActivity === 2" :class="$style.nowTogether">
@@ -21,15 +19,13 @@
         <together-count-down
           @done="countFinished"
           activity-text="距活动结束仅剩"
-          :starttime="detail.serverTime"
-          v-if="detail.activityProductModel"
           :endtime="detail.activityProductModel.activityEndTime"
         />
         <div :class="$style.desc">
           <div :class="$style.progress">
-            <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.joinCount) * 100 + '%' }" />
+            <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
           </div>
-          <div>{{ detail.activityProductModel.joinCount || 0 }}人</div>
+          <div>{{ detail.activityProductModel.stock || 0 }}人</div>
         </div>
       </div>
     </div>
@@ -57,6 +53,7 @@
       countFinished () {
         this.$set(this.detail, 'serverTime', '')
         this.$set(this.detail, 'shoppingTimeLong', '')
+        this.$parent.getDetail()
       }
     }
   }
@@ -65,28 +62,28 @@
 <style module lang="scss">
   .together{
     .pre-together{
-      background: url("../../../assets/images/pre/pre_bg.png") no-repeat;
+      background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_bg.png") no-repeat;
       background-size: 100% 100%;
       height: 100px;
       display: flex;
       align-items: center;
       padding: 0 20px;
       .pre-text{
-        background: url("../../../assets/images/pre/pre_text.svg") no-repeat;
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_text.png") no-repeat;
         background-size: 100% 100%;
         width: 64px;
         height: 80px;
       }
     }
     .now-together{
-      background: url("../../../assets/images/pre/pre_bg.png") no-repeat;
+      background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_bg.png") no-repeat;
       background-size: 100% 100%;
       height: 100px;
       display: flex;
       align-items: center;
       padding: 0 20px;
       .now-text{
-        background: url("../../../assets/images/pre/pre_text.svg") no-repeat;
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_text.png") no-repeat;
         background-size: 100% 100%;
         width: 64px;
         height: 80px;

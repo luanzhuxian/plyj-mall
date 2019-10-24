@@ -1,5 +1,14 @@
 <template>
-  <router-link :class="$style.maisong" tag="div" :to="{ name: '' }">
+  <router-link
+    :class="$style.maisong"
+    tag="div"
+    :to="{
+      name: 'Classify',
+      params: {
+        optionId: ''
+      }
+    }"
+  >
     <div
       :class="{
         [$style.background]: true,
@@ -54,9 +63,6 @@ export default {
       type: Number,
       default: 0
     }
-  },
-  data () {
-    return {}
   }
 }
 </script>
@@ -69,11 +75,11 @@ export default {
     overflow: hidden;
     .background {
       &.bg-1 {
-        background: url("../../../assets/images/activity/bg-gift-1.jpg") no-repeat center top;
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-gift-1.jpg") no-repeat center top;
         background-size: 100% auto;
       }
       &.bg-2 {
-        background: url("../../../assets/images/activity/bg-gift-2.jpg") no-repeat center top;
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-gift-2.jpg") no-repeat center top;
         background-size: 100% auto;
       }
     }
@@ -135,6 +141,7 @@ export default {
           }
           .sub {
             padding: 0 26px;
+            width: 95%;
             height: 52px;
             line-height: 52px;
             font-size: 36px;

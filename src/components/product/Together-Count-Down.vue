@@ -3,12 +3,11 @@
     :class="{
       [$style.countDown]: true,
     }"
-    v-if="data || endtime"
     v-show="show"
   >
     <span>{{ activityText }}</span>
     <div :class="$style.time">
-      <i v-if="Number(d)">{{ d }}</i><em v-if="Number(d)">天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
+      <i>{{ d }}</i><em>天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
     </div>
   </div>
 </template>
@@ -61,6 +60,12 @@ export default {
       s: 0
     }
   },
+  watch: {
+    endtime (val) {
+      this.endtime = val
+      this.init()
+    }
+  },
   mounted () {
     this.init()
   },
@@ -71,7 +76,7 @@ export default {
       if (this.data) {
         this.endtiemstamp = Number(this.data[this.fields.end]) || 0
       } else {
-        this.endtiemstamp = Number(new Date(this.endtime).getTime()) || 0
+        this.endtiemstamp = Number(moment(this.endtime).valueOf()) || 0
       }
       if (this.starttiemstamp - this.endtiemstamp < 0) {
         // 启动倒计时
@@ -97,7 +102,7 @@ export default {
     },
     setTime () {
       let { _data } = moment.duration(this.endtiemstamp - this.starttiemstamp)
-      this.d = String(_data.days)
+      this.d = String(_data.days).padStart(2, '0')
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')

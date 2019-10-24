@@ -92,6 +92,7 @@
       :active-product="activeProduct"
       :pre-activity="preActivity"
       :activity-product-model="activityProductModel"
+      :active-type="activeType"
     >
       <template v-slot:footer="{ currentSku }">
         <pl-button
@@ -258,6 +259,7 @@ export default {
     },
     async clickHandler (type) {
       if (!this.hasBind()) return
+      // type 等于1、2 时表示正常购买
       // 加入购物车按钮
       if (type === 1) {
         this.clickAddToCart = true

@@ -1,9 +1,16 @@
 <template>
-  <router-link :class="$style.miaosha" tag="div" :to="{ name: '' }">
+  <router-link
+    :class="$style.miaosha"
+    tag="div"
+    :to="{ name: 'SecondList' }"
+  >
     <div :class="$style.background">
       <div :class="$style.wrapper">
         <ul :class="$style.list" v-if="data.values.length">
-          <li :class="$style.listItem">
+          <li
+            :class="$style.listItem"
+            @click.stop="$router.push({ name: 'Lesson', params: { productId: data.values[0].goodsInfo.id, brokerId: userId || null } })"
+          >
             <div :class="$style.imgWrapper">
               <img :src="data.values[0].goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
               <div :class="$style.countDown">
@@ -79,6 +86,7 @@
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Miaosha',
@@ -104,6 +112,9 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    ...mapGetters(['userId'])
   }
 }
 </script>
@@ -115,7 +126,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     .background {
-      background: url("../../../assets/images/activity/bg-miaosha.jpg") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-miaosha.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     .wrapper {
@@ -176,6 +187,7 @@ export default {
         }
         .info {
           flex: 1;
+          width: 0;
           display: flex;
           justify-content: center;
           flex-direction: column;

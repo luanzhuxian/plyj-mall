@@ -343,7 +343,10 @@
       />
     </div>
 
-    <div v-if="totalAmount > 0 && showInvoiceSelector" :class="$style.itemSelector" @click.capture="selectInvoice">
+    <div
+      v-if="totalAmount > 0 && showInvoiceSelector && activeProduct === 1"
+      :class="$style.itemSelector" @click.capture="selectInvoice"
+    >
       <pl-fields
         size="middle"
         text="发票"
@@ -541,7 +544,6 @@ export default {
       invioceType: 0,
       INVOICE_MODEL: {},
       CHECKED_STUDENT: {},
-      activeProduct: 1,
       rules: {
         name: [
           { required: true, message: '请输入联系人姓名' },
@@ -580,6 +582,9 @@ export default {
     },
     isCart () {
       return this.$route.query.isCart === 'YES'
+    },
+    activeProduct () {
+      return Number(this.$route.query.activeProduct) || 1
     }
   },
   watch: {
@@ -603,7 +608,6 @@ export default {
     }
   },
   async activated () {
-    this.activeProduct = Number(this.$route.query.activeProduct) || 1
     let selectedStudents // 已选择的学员的key
     let students // 已有学员列表
     let defStudent // 默认学员
@@ -621,7 +625,7 @@ export default {
       // 如果有默认学员，则缓存默认学员，并自动显示
       if (defStudent) {
         for (let item of this.needStudentList) {
-          if (selectedStudents.indexOf(item.skuCode1) === -1) { // 如果当前商品没有选择学生
+          if (selectedStudents.indexOf(item.skuCode1 + item.skuCode2) === -1) { // 如果当前商品没有选择学生
             this.$set(this.CHECKED_STUDENT, item.skuCode1 + item.skuCode2, [defStudent])
           }
         }

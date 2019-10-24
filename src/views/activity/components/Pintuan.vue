@@ -1,12 +1,12 @@
 <template>
-  <router-link :class="$style.pintuan" tag="div" :to="{ name: '' }">
+  <div :class="$style.pintuan">
     <div :class="$style.background">
       <div :class="$style.wrapper">
         <div :class="$style.navBar">
-          <div :class="$style.navLink">
+          <router-link :class="$style.navLink" tag="div" :to="{ name: 'TuanList' }">
             <span>查看更多</span>
             <pl-icon name="icon-arrow-right" size="20" />
-          </div>
+          </router-link>
         </div>
         <ul :class="$style.list" v-if="data.values.length">
           <li
@@ -16,10 +16,11 @@
             ]"
             v-for="(item, i) of data.values"
             :key="i"
+            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, brokerId: userId || null } })"
           >
             <div :class="$style.imgWrapper">
               <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
-              <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo.preActivity !== 0">
+              <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
@@ -46,7 +47,7 @@
               <div :class="$style.sub">
                 <div :class="$style.subLeft">
                   <div :class="$style.subLeftMain">
-                    <span v-if="item.goodsInfo.activityInfo.status === 0">
+                    <span v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
                       {{ `${item.goodsInfo.pageviews}人已关注` }}
                     </span>
                     <span v-else>
@@ -61,14 +62,14 @@
                 <div
                   :class="{
                     [$style.subRight]: true,
-                    [$style.disabled]: item.goodsInfo.activityInfo.status !== 1
+                    [$style.disabled]: item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status !== 1
                   }"
                 >
                   <pl-icon
                     name="icon-qiang"
                     type="svg"
                     :class="$style.qiang"
-                    v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                    v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
                   />
                   <pl-icon
                     name="icon-jieshu"
@@ -83,12 +84,13 @@
         </ul>
       </div>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Pintuan',
@@ -110,6 +112,9 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    ...mapGetters(['userId'])
   }
 }
 </script>
@@ -121,7 +126,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     .background {
-      background: url("../../../assets/images/activity/bg-pintuan.jpg") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-pintuan.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     .wrapper {
@@ -171,6 +176,8 @@ export default {
           height: 188px;
         }
         .info {
+          flex: 1;
+          width: 0;
           .sub {
             &-left {
               &-main {

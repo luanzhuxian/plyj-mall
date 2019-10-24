@@ -102,7 +102,7 @@ export default {
         width: 48px;
         height: 48px;
         margin-right: 28px;
-        background-image: url('../../../assets/images/invitenewcomers/gift@2x.png');
+        background-image: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/gift@2x.png');
         background-size: 100%;
       }
 

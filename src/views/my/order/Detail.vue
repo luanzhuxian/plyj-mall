@@ -185,9 +185,9 @@
             v-text="productInfoModel.freight || 0"
           />
         </p>
-        <p v-if="activityData.amount > 0">
-          <span v-text="activityData.couponName" />
-          <span v-text="'-¥' + (activityData.amount || 0)" />
+        <p v-if="productInfoModel.totalCouponAmount > 0">
+          <span>优惠</span>
+          <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
         </p>
       </div>
 
@@ -710,7 +710,7 @@ export default {
       const end = this.productInfoModel.productDetailModels[0].validityPeriodEnd.split(' ')[0]
       let qrcode = await generateQrcode(300, `${item.redeemCode}`, 0, null, null, 'url')
       let mulitImg = [
-        `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`,
+        `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`,
         `${qrcode}`,
         `${this.productInfoModel.productDetailModels[0].productImg}?time=${Date.now()}&x-oss-process=style/thum`
       ]
@@ -816,12 +816,16 @@ export default {
           return
         }
         if (orderStatus === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
-        if (orderStatus === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        if (orderStatus === 'WAIT_RECEIVE') {
+          this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        }
       }, 1000)
     },
     setTime (result, orderStatus) {
+      let activeProduct = result.activeProduct
+      let waitPayTime = activeProduct === 1 ? 24 * 60 * 60 * 1000 : 5 * 60 * 1000
       let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
-      let duration = orderStatus === 'WAIT_PAY' ? (24 * 60 * 60 * 1000) : (10 * 24 * 60 * 60 * 1000)
+      let duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
       let now = moment((result.currentServerTime)).valueOf() // 服务器时间
       let startTime = moment(time).valueOf()
       if (now - startTime < duration) {
@@ -845,7 +849,8 @@ export default {
             studentInfoModels,
             orderStatusAlias,
             redeemCodeModels,
-            activityData
+            activityData,
+            activeProduct
           } = result
           this.detail = result
           this.orderStatus = orderStatus
@@ -860,6 +865,7 @@ export default {
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
           this.activityData = activityData || {}
+          this.activeProduct = activeProduct || 1
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['count']
           }, 0);  // eslint-disable-line
@@ -868,6 +874,9 @@ export default {
             mobile: this.shippingAddress.mobile,
             address: this.shippingAddress.agencyAddress
           } = receiverModel)
+          this.productInfoModel.totalCouponAmount = productInfoModel.productDetailModels.reduce((total, current) => {
+            return total + current['couponAmount']
+          }, 0)
           if (orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
             if (orderStatus !== 'WAIT_PAY') {
               // 生成核销码二维码
@@ -891,9 +900,16 @@ export default {
               this.setTime(result, 'WAIT_RECEIVE')
             } else {
               let { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels[0]
-              if (validityPeriodStart) {
-                const start = validityPeriodStart.split(' ')[0]
-                const end = validityPeriodEnd.split(' ')[0]
+              let { useStartTime, useEndTime } = activityData
+              if (activeProduct === 4) {
+                const start = moment(useStartTime).format('YYYY-MM-DD')
+                const end = moment(useEndTime).format('YYYY-MM-DD')
+                this.suggestionMap.WAIT_RECEIVE = (start === end)
+                  ? `有效期 ${start}`
+                  : `有效期 ${start} 至 ${end}`
+              } else if (validityPeriodStart) {
+                const start = moment(validityPeriodStart).format('YYYY-MM-DD')
+                const end = moment(validityPeriodEnd).format('YYYY-MM-DD')
                 this.suggestionMap.WAIT_RECEIVE = (start === end)
                   ? `有效期 ${start}`
                   : `有效期 ${start} 至 ${end}`

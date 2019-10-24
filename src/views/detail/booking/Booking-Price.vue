@@ -1,9 +1,9 @@
 <template>
   <div class="tuan">
     <div>
-      <div class="price">定金 <span>{{ detail.activityProductModel.price }}</span> 抵 <span>{{ detail.activityProductModel.depositTotal }}</span></div>
+      <div class="price">定金 <span>{{ detail.activityProductModel.price }}</span> <div class="deposit" v-if="detail.activityProductModel.multiple === 1">抵 <span>{{ detail.activityProductModel.depositTotal }}</span></div></div>
       <div class="pro-info">
-        <div class="original">原价：<del v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" /></div>
+        <div class="original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice">原价：<del :class="$style.original" v-text="maxOriginalPrice" /></div>
         <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
       </div>
     </div>
@@ -53,6 +53,11 @@ export default {
       margin-bottom: 4px;
       color: #FE7700;
       font-size: 30px;
+      display: flex;
+      align-items: center;
+      .deposit{
+        margin-left: 10px;
+      }
       span {
         font-size: 48px;
         &:before {
