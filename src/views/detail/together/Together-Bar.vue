@@ -53,6 +53,7 @@ export default {
     countFinished () {
       this.$set(this.detail, 'serverTime', '')
       this.$set(this.detail, 'shoppingTimeLong', '')
+      this.$parent.getDetail()
     }
   }
 }
