@@ -97,17 +97,17 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     &.bg-1 > .background {
-      background: url("../../../assets/images/activity/bg-qiang-1.jpg") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-qiang-1.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     &.bg-3 > .background {
-      background: url("../../../assets/images/activity/bg-qiang-3.jpg") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-qiang-3.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     &.bg-2 {
       background: #FF0B00 !important;
       .background {
-        background: url("../../../assets/images/activity/bg-qiang-2.jpg") no-repeat center top;
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-qiang-2.jpg") no-repeat center top;
         background-size: 100% auto;
         .wrapper {
           padding-top: 188px;

@@ -75,11 +75,11 @@ export default {
     overflow: hidden;
     .background {
       &.bg-1 {
-        background: url("../../../assets/images/activity/bg-gift-1.jpg") no-repeat center top;
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-gift-1.jpg") no-repeat center top;
         background-size: 100% auto;
       }
       &.bg-2 {
-        background: url("../../../assets/images/activity/bg-gift-2.jpg") no-repeat center top;
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-gift-2.jpg") no-repeat center top;
         background-size: 100% auto;
       }
     }

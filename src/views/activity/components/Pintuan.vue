@@ -126,7 +126,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     .background {
-      background: url("../../../assets/images/activity/bg-pintuan.jpg") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-pintuan.jpg") no-repeat center top;
       background-size: 100% auto;
     }
     .wrapper {

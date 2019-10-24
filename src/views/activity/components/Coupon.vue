@@ -61,14 +61,14 @@ export default {
      .btn-middle {
       width: 520px;
       height: 78px;
-      background: url("../../../assets/images/activity/button-middle.png") no-repeat center center;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-middle.png") no-repeat center center;
       background-size: 100% auto;
       border-radius: 70px;
       margin: 0 auto;
     }
     .background {
       margin: 0 -24px 24px;
-      background: url("../../../assets/images/activity/color-bar.png") no-repeat center bottom;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/color-bar.png") no-repeat center bottom;
       background-size: 100% auto;
       box-shadow: 0 20px 20px #8A0108;
     }
@@ -90,7 +90,7 @@ export default {
         color: #FFF;
         &.large {
           width: 346px;
-          background: url("../../../assets/images/activity/bg-coupon-large.png") no-repeat center center;
+          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-coupon-large.png") no-repeat center center;
           background-size: 100% 100%;
           .number {
             font-size: 40px;
@@ -99,7 +99,7 @@ export default {
         }
         &.small {
           width: 220px;
-          background: url("../../../assets/images/activity/bg-coupon.png") no-repeat center center;
+          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-coupon.png") no-repeat center center;
           background-size: 100% 100%;
         }
         &-wrapper {

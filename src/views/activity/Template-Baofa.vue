@@ -23,21 +23,31 @@
       v-bind="$attrs"
     />
     <!-- 活动 -->
-    <div :class="$style.moduleActivity">
+    <div :class="$style.moduleActivity" v-if="hasInvitingEvent || hasJxEvent">
       <router-link
-        v-if="true"
+        v-if="hasInvitingEvent && hasJxEvent"
         :class="[$style.road, $style.small]"
         tag="div"
         :to="{ name: 'RoadLearning' }"
       />
       <router-link
-        v-if="invitingEvent && ~[0, 2].indexOf(invitingEvent.status)"
+        v-if="hasInvitingEvent && hasJxEvent"
         :class="[$style.invitation, $style.small]"
         tag="div"
         :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
       />
-      <!-- <div v-if="true" :class="[$style.road, $style.large]" />
-      <div v-if="true" :class="[$style.invitation, $style.large]" /> -->
+      <router-link
+        v-if="!hasInvitingEvent && hasJxEvent"
+        :class="[$style.road, $style.large]"
+        tag="div"
+        :to="{ name: 'RoadLearning' }"
+      />
+      <router-link
+        v-if="hasInvitingEvent && !hasJxEvent"
+        :class="[$style.invitation, $style.large]"
+        tag="div"
+        :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
+      />
     </div>
     <pintuan
       v-if="PIN_TUAN.values && PIN_TUAN.values.length"
@@ -88,6 +98,12 @@ export default {
       default () {
         return {}
       }
+    },
+    jxEvent: {
+      type: Object,
+      default () {
+        return {}
+      }
     }
   },
   data () {
@@ -110,6 +126,12 @@ export default {
     },
     FENG_QIANG () {
       return this.data.FENG_QIANG || {}
+    },
+    hasInvitingEvent () {
+      return this.invitingEvent && ~[0, 2].indexOf(this.invitingEvent.status)
+    },
+    hasJxEvent () {
+      return this.jxEvent && ~[0, 2].indexOf(this.jxEvent.status)
     }
   },
   created () {
@@ -135,11 +157,11 @@ export default {
         width: 340px;
         height: 176px;
         &.road {
-          background: url("../../assets/images/activity/road-small.png") no-repeat center center;
+          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-small.png") no-repeat center center;
           background-size: 100% auto;
         }
         &.invitation {
-          background: url("../../assets/images/activity/invitation-small.png") no-repeat center center;
+          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small.png") no-repeat center center;
           background-size: 100% auto;
         }
       }
@@ -147,11 +169,11 @@ export default {
         width: 100%;
         height: 176px;
         &.road {
-          background: url("../../assets/images/activity/road-large.png") no-repeat center center;
+          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-large.png") no-repeat center center;
           background-size: 100% auto;
         }
         &.invitation {
-          background: url("../../assets/images/activity/invitation-large.png") no-repeat center center;
+          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large.png") no-repeat center center;
           background-size: 100% auto;
         }
       }

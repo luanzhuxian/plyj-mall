@@ -27,6 +27,7 @@
       :data="modules"
       :live="liveInfo"
       :inviting-event="invitingEvent"
+      :jx-event="jxEvent"
     >
       <!-- 月光宝盒项目 -->
       <!--<router-link
@@ -77,7 +78,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
-import { getTemplate, getLiveInfo } from '../../apis/home'
+import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
 import { getCurrentActivity } from '../../apis/invitenewcomers'
 // import { wasGetInfo } from '../../apis/wwec'
 // import moment from 'moment'
@@ -133,12 +134,17 @@ export default {
       registerCountFor820: 0,
       liveInfo: {},
       invitingEvent: {},
+      jxEvent: {},
       timestamp: ''
     }
   },
   async created () {
     try {
       this.getTemplate()
+      const [{ result: live }, { result: invitingEvent }, { result: jxEvent }] = await Promise.all([getLiveInfo(), getCurrentActivity(), getJianxueInfo()])
+      this.liveInfo = live || {}
+      this.invitingEvent = invitingEvent || {}
+      this.jxEvent = jxEvent || {}
     } catch (e) {
       throw e
     }
@@ -190,7 +196,7 @@ export default {
     // },
     async getTemplate () {
       try {
-        const [{ result }, { result: live }, { result: invitingEvent }] = await Promise.all([getTemplate({ type: 1 }), getLiveInfo(), getCurrentActivity()])
+        const { result } = await getTemplate({ type: 1 })
         if (!result) {
           this.noFinish = true
           this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
@@ -238,8 +244,6 @@ export default {
         }
         this.type = type
         this.timestamp = currentTime || Date.now()
-        this.liveInfo = live || {}
-        this.invitingEvent = invitingEvent || {}
         this.loaded = true
       } catch (e) {
         throw e
