@@ -164,7 +164,7 @@ export default {
                           linear-gradient(-135deg, transparent 0px, #FFFF00 0) top right,
                           linear-gradient(-45deg, transparent 0px, #FFFF00 0) bottom right,
                           linear-gradient(45deg, transparent 32px, #FFFF00 0) bottom left;
-              background-size: 50% 50%;
+              background-size: 51% 51%;
               background-repeat: no-repeat;
               overflow: hidden;
             }
