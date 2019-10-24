@@ -625,7 +625,7 @@ export default {
       // 如果有默认学员，则缓存默认学员，并自动显示
       if (defStudent) {
         for (let item of this.needStudentList) {
-          if (selectedStudents.indexOf(item.skuCode1) === -1) { // 如果当前商品没有选择学生
+          if (selectedStudents.indexOf(item.skuCode1 + item.skuCode2) === -1) { // 如果当前商品没有选择学生
             this.$set(this.CHECKED_STUDENT, item.skuCode1 + item.skuCode2, [defStudent])
           }
         }
