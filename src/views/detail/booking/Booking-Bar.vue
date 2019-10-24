@@ -62,28 +62,28 @@
 <style module lang="scss">
   .together{
     .pre-together{
-      background: url("../../../assets/images/pre/pre_bg.png") no-repeat;
+      background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_bg.png") no-repeat;
       background-size: 100% 100%;
       height: 100px;
       display: flex;
       align-items: center;
       padding: 0 20px;
       .pre-text{
-        background: url("../../../assets/images/pre/pre_text.svg") no-repeat;
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_text.png") no-repeat;
         background-size: 100% 100%;
         width: 64px;
         height: 80px;
       }
     }
     .now-together{
-      background: url("../../../assets/images/pre/pre_bg.png") no-repeat;
+      background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_bg.png") no-repeat;
       background-size: 100% 100%;
       height: 100px;
       display: flex;
       align-items: center;
       padding: 0 20px;
       .now-text{
-        background: url("../../../assets/images/pre/pre_text.svg") no-repeat;
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_text.png") no-repeat;
         background-size: 100% 100%;
         width: 64px;
         height: 80px;

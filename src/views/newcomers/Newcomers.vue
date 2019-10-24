@@ -1,6 +1,6 @@
 <template>
   <div class="newcomers">
-    <img class="banner" src="../../assets/images/newcomers/banner@2x.png">
+    <img class="banner" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/newcomers/banner%402x.png">
     <div class="title-bar">
       <i class="icon-gift" />
       优惠大礼包1
@@ -244,7 +244,7 @@ export default {
     margin-right: 16px;
     width: 40px;
     height: 40px;
-    background-image: url('../../assets/images/newcomers/gift@2x.png');
+    background-image: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/newcomers/gift@2x.png');
     background-size: 100%;
   }
 

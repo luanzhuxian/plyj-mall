@@ -91,7 +91,7 @@
             />
           </router-link>
           <div :class="$style.segmentation">
-            <img src="../../assets/images/my/my-segmentation.png" alt="">
+            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/my-segmentation.png" alt="">
           </div>
           <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
             <pl-icon name="icon-my-order-list" width="74" height="90" type="svg" />

@@ -271,7 +271,7 @@ export default {
       margin: 0 auto;
       width: 654px;
       height: 126px;
-      background-image: url('../../../assets/images/invitenewcomers/countdown-panel@2x.png');
+      background-image: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/countdown-panel@2x.png');
       background-size: 100%;
 
       .clock-split {

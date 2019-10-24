@@ -2,7 +2,7 @@
   <div class="newcomers-home-entry">
     <overlay v-if="showSelf">
       <div class="center-box">
-        <img src="../../assets/images/newcomers/newcomers-home.png">
+        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/newcomers/newcomers-home.png">
         <div style="margin-top: 80px; text-align: center;">
           <span class="btn-goto-get" @click="gotoGet">快去领取</span>
         </div>

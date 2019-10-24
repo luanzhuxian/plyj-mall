@@ -63,16 +63,14 @@
                   <p class="detail-coupon color-E16">{{ item.giftBrief }}</p>
                 </div>
                 <div class="content-button">
-                  <pl-button round="round" background-color="#EB5C20" @click="checkCode(item)">立即兑换</pl-button>
+                  <pl-button round="round" background-color="#EEEEEE" @click="checkCode(item)">立即兑换</pl-button>
                 </div>
               </div>
               <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
             </div>
           </div>
           <div class="item-description">
-            <p class="color6">1.2i按时递交阿斯利康觉得爱上邓丽君阿三</p>
-            <p class="color6">1.2i按时递交阿斯利康觉得爱上邓丽君阿三</p>
-            <p class="color6">1.2i按时递交阿斯利康觉得爱上邓丽君阿三</p>
+            <p class="color6" v-for="desc in instructions" :key="desc" v-text="desc" />
           </div>
         </div>
       </div>
@@ -100,16 +98,14 @@
                   <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
                 </div>
                 <div class="content-button">
-                  <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
+                  <pl-button :disabled="true" round="round" background-color="#EEEEEE">立即兑换</pl-button>
                 </div>
               </div>
               <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
             </div>
           </div>
           <div class="item-description">
-            <p class="color-c">1.2i按时递交阿斯利康觉得爱上邓丽君阿三</p>
-            <p class="color-c">1.2i按时递交阿斯利康觉得爱上邓丽君阿三</p>
-            <p class="color-c">1.2i按时递交阿斯利康觉得爱上邓丽君阿三</p>
+            <p class="color6" v-for="desc in instructions" :key="desc" v-text="desc" />
           </div>
         </div>
       </div>
@@ -137,16 +133,14 @@
                   <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
                 </div>
                 <div class="content-button">
-                  <pl-button :disabled="true" round="round" background-color="#EB5C20">立即兑换</pl-button>
+                  <pl-button :disabled="true" round="round" background-color="#EEEEEE">立即兑换</pl-button>
                 </div>
               </div>
               <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
             </div>
           </div>
           <div class="item-description">
-            <p class="color-c">1.2i按时递交阿斯利康觉得爱上邓丽君阿三</p>
-            <p class="color-c">1.2i按时递交阿斯利康觉得爱上邓丽君阿三</p>
-            <p class="color-c">1.2i按时递交阿斯利康觉得爱上邓丽君阿三</p>
+            <p class="color6" v-for="desc in instructions" :key="desc" v-text="desc" />
           </div>
         </div>
       </div>
@@ -170,7 +164,13 @@ export default {
       data0: [],
       data1: [],
       data99: [],
-      timer: ''
+      timer: '',
+      instructions: [
+        '1.仅支持线下到店进行礼品兑换，兑换时请出示二维码;',
+        '2.仅支持兑换有效期内进行礼品兑换，逾期未兑换，请与客服联系；',
+        '3.我的礼品仅支持兑换礼品，不支持折算现金；',
+        '4.请联系客服，到指定门店领取礼品；'
+      ]
     }
   },
   computed: {

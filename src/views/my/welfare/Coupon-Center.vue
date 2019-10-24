@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :class="$style.banner">
-      <img src="../../../assets/images/my/receive-coupon-banner.jpg">
+      <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/receive-coupon-banner.jpg">
     </div>
     <div :class="$style.couponList">
       <div :class="$style.couponHeader">
@@ -79,7 +79,9 @@ export default {
   methods: {
     async couponClick (id) {
       try {
-        const { result, message } = await receiveCoupon(id)
+        const { result, message } = await receiveCoupon({
+          couponId: id
+        })
         if (result) {
           this.$success('领取成功')
           this.$refs.loadMore.refresh()

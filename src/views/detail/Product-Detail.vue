@@ -613,15 +613,15 @@ export default {
       }
       const arcAvatar = cutArcImage(lodedAvatar)
       const allImgs = [
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/poster3.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/poster2.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/poster1.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/dikou-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/original_price-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/second_price-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/tuan_price-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/yuan-1571393161453.png'),
-        this.loadImage('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/yujiao-1571393161453.png')
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster3.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster1.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/original_price-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/second_price-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/tuan_price-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao-1571393161453.png')
       ]
       const res = await Promise.all(allImgs)
       const tuanBg = res[0]

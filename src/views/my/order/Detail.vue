@@ -185,9 +185,9 @@
             v-text="productInfoModel.freight || 0"
           />
         </p>
-        <p v-if="activityData.amount > 0">
-          <span v-text="activityData.couponName" />
-          <span v-text="'-¥' + (activityData.amount || 0)" />
+        <p v-if="productInfoModel.totalCouponAmount > 0">
+          <span>优惠</span>
+          <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
         </p>
       </div>
 
@@ -710,7 +710,7 @@ export default {
       const end = this.productInfoModel.productDetailModels[0].validityPeriodEnd.split(' ')[0]
       let qrcode = await generateQrcode(300, `${item.redeemCode}`, 0, null, null, 'url')
       let mulitImg = [
-        `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`,
+        `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`,
         `${qrcode}`,
         `${this.productInfoModel.productDetailModels[0].productImg}?time=${Date.now()}&x-oss-process=style/thum`
       ]
@@ -874,6 +874,9 @@ export default {
             mobile: this.shippingAddress.mobile,
             address: this.shippingAddress.agencyAddress
           } = receiverModel)
+          this.productInfoModel.totalCouponAmount = productInfoModel.productDetailModels.reduce((total, current) => {
+            return total + current['couponAmount']
+          }, 0)
           if (orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
             if (orderStatus !== 'WAIT_PAY') {
               // 生成核销码二维码
