@@ -5,7 +5,9 @@
     }"
     v-show="show"
   >
-    <span :class="$style.text"><img src="../../assets/images/second/time.svg">{{ activityText }}</span>
+    <span :class="$style.text">
+      <img src="../../assets/images/second/time.svg">{{ activityText }}
+    </span>
     <div :class="$style.time">
       <i>{{ d }}</i><em>天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
     </div>
