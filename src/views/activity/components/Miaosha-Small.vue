@@ -21,6 +21,7 @@
                   v-if="~[0, 1].indexOf(data.values[0].goodsInfo.activityInfo.status)"
                   :timestamp="getTime(data.values[0].goodsInfo.activityInfo)"
                   :current-timestamp="timestamp"
+                  @done="() => data.values[0].goodsInfo.activityInfo.status += 1"
                 />
               </div>
             </div>

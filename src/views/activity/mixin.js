@@ -33,6 +33,13 @@ export default {
         ts = endTs
       }
       return ts
+    },
+    reset (item) {
+      if (item.goodsInfo.activityInfo.status === 0) {
+        item.goodsInfo.activityInfo.status = 1
+      } else if (item.goodsInfo.activityInfo.status === 1) {
+        item.goodsInfo.activityInfo.status = 3
+      }
     }
   }
 }

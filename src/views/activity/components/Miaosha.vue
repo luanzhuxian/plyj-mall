@@ -86,6 +86,7 @@
                 v-if="~[0, 1].indexOf(prod.activityInfo.status)"
                 :timestamp="getTime(prod.activityInfo)"
                 :current-timestamp="timestamp"
+                @done="() => prod.activityInfo.status += 1"
               />
             </div>
           </div>

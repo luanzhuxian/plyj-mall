@@ -83,7 +83,7 @@ export default {
       align-items: center;
       padding: 0 20px;
       .now-text{
-        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/tuan/now_text.svg") no-repeat;
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/tuan/now_text.png") no-repeat;
         background-size: 100% 100%;
         width: 64px;
         height: 80px;
