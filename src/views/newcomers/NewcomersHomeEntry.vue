@@ -62,7 +62,6 @@ export default {
   methods: {
     async getCurrentActivity () {
       let { result } = await getCurrentActivity()
-      console.log(result)
       this.activityInfo = result || null
     },
     gotoGet () {
