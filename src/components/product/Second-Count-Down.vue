@@ -62,6 +62,7 @@ export default {
   },
   mounted () {
     this.init()
+    console.log(this.endTime)
   },
   methods: {
     async init () {
