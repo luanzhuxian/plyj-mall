@@ -22,7 +22,7 @@
             <div :class="$style.price">
               ￥ <span :class="$style.number">{{ item.goodsInfo.amount }}</span>
             </div>
-            <div>{{ item.goodsInfo.couponName }}</div>
+            <div>{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
             <div :class="$style.date">
               {{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}
             </div>
