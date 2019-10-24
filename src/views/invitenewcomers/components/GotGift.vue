@@ -143,7 +143,7 @@ export default {
       width: 506px;
       padding-top: 40px;
       margin-bottom: 64px;
-      background-image: url("../../../assets/images/invitenewcomers/got-success@2x.png");
+      background-image: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/got-success@2x.png");
       background-color: rgba(250,77,47,1);
       background-repeat: no-repeat;
       background-size: 100%;
@@ -170,7 +170,7 @@ export default {
           width: 100%;
           height: 204px;
           margin: 0 auto;
-          background-image: url("../../../assets/images/invitenewcomers/coupon-bg.svg");
+          background-image: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/coupon-bg.png");
           background-size: 100% 100%;
 
           .coupon-inner {
@@ -278,7 +278,7 @@ export default {
           width: 474px;
           height: 96px;
           margin: 0 auto;
-          background-image: url("../../../assets/images/invitenewcomers/gift-bg.svg");
+          background-image: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/gift-bg.png");
           background-size: 100%;
 
           .gift-img {

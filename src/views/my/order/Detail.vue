@@ -710,7 +710,7 @@ export default {
       const end = this.productInfoModel.productDetailModels[0].validityPeriodEnd.split(' ')[0]
       let qrcode = await generateQrcode(300, `${item.redeemCode}`, 0, null, null, 'url')
       let mulitImg = [
-        `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`,
+        `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`,
         `${qrcode}`,
         `${this.productInfoModel.productDetailModels[0].productImg}?time=${Date.now()}&x-oss-process=style/thum`
       ]

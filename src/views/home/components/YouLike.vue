@@ -1,7 +1,7 @@
 <template>
   <div v-if="likeProduct.length > 0" :class="$style.like">
     <div v-if="isMy" :class="$style.titleMy">
-      <img src="@/assets/images/my/youLike.png">
+      <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/youLike.png">
     </div>
     <div v-else :class="$style.title">
       猜你喜欢

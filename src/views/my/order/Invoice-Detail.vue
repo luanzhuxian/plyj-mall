@@ -199,7 +199,7 @@ export default {
       text-align: center;
       font-size: 28px;
       color: #666;
-      background: #fff url("../../../assets/images/my/fapiao.png") no-repeat center center;
+      background: #fff url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/fapiao.png") no-repeat center center;
       background-size: auto 100%;
     }
   }
