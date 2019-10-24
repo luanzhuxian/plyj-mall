@@ -3,7 +3,7 @@
     <img class="banner" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/newcomers/banner%402x.png">
     <div class="title-bar">
       <i class="icon-gift" />
-      优惠大礼包1
+      优惠大礼包
       <span class="rule" @click="isShowRule = true"><span>活动规则</span><pl-icon name="icon-double-arrow" height="24" width="13" /></span>
     </div>
     <div class="gift-list">
