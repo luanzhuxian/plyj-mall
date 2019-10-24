@@ -53,6 +53,7 @@ import HelpSuccess from './components/HelpSuccess'
 import youLike from './../home/components/YouLike.vue'
 import { mapGetters } from 'vuex'
 import { getActivityInfo, helpFriend, getClaimGiftList, getUserInfo, getActivityStatisiticData, registerStatisitic } from '../../apis/invitenewcomers'
+import { getCurrentActivity, claimCoupons } from '../../apis/newcomers'
 
 export default {
   name: 'InviteNewcomers',
@@ -232,6 +233,7 @@ export default {
         // TODO: 错误处理
         await helpFriend(this.activityId, this.inviteUserId)
         await registerStatisitic(this.activityId)
+        await this.doClaimAll()
         this.isShowHelperSuccess = true
         return
       }
@@ -266,6 +268,20 @@ export default {
 
         // 跳转到邀新有礼
         this.gotoInviteNew()
+      }
+    },
+    async doClaimAll () {
+      let { result: newComersActivity } = await getCurrentActivity()
+      if (!newComersActivity) {
+        return
+      }
+      // 活动已经终止或结束，不能领取
+      if (moment(newComersActivity.activityEndTime).isBefore(moment()) || newComersActivity.status === 0) {
+        return
+      }
+      let { status } = await claimCoupons(newComersActivity.activityId, (newComersActivity.couponModels || []).map(m => m.id))
+      if (status !== 200) {
+        // TODO: add code here
       }
     }
   }
