@@ -7,7 +7,7 @@
   >
     <span :class="$style.text"><img src="../../assets/images/second/time.svg">{{ activityText }}</span>
     <div :class="$style.time">
-      <i v-if="Number(d)">{{ d }}</i><em v-if="Number(d)">天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
+      <i>{{ d }}</i><em>天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
     </div>
   </div>
 </template>
@@ -62,13 +62,12 @@ export default {
   },
   watch: {
     endtime (val) {
-      console.log('watch秒杀倒计时' + val)
       this.endtime = val
+      this.init()
     }
   },
   mounted () {
     this.init()
-    console.log(this.endtime)
   },
   methods: {
     async init () {
@@ -103,7 +102,7 @@ export default {
     },
     setTime () {
       let { _data } = moment.duration(this.endtiemstamp - this.starttiemstamp)
-      this.d = String(_data.days)
+      this.d = String(_data.days).padStart(2, '0')
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')
