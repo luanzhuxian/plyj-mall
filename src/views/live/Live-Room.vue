@@ -422,6 +422,7 @@ export default {
         if (data) {
           this.couponList = data.couponList
           this.productList = data.productList
+          this.activeId = data.id
           share({
             appId: this.appId,
             title: data.name,
@@ -436,7 +437,11 @@ export default {
     },
     async couponClick (id) {
       try {
-        await receiveCoupon(id)
+        await receiveCoupon({
+          couponId: id,
+          activityId: this.activeId,
+          entityClassName: 'MallLiveActivityEntity'
+        })
         this.$success('领取成功')
       } catch (e) {
         throw e
