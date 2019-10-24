@@ -185,9 +185,9 @@
             v-text="productInfoModel.freight || 0"
           />
         </p>
-        <p v-if="activityData.amount > 0">
-          <span v-text="activityData.couponName" />
-          <span v-text="'-¥' + (activityData.amount || 0)" />
+        <p v-if="productInfoModel.totalCouponAmount > 0">
+          <span>优惠</span>
+          <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
         </p>
       </div>
 
@@ -874,6 +874,9 @@ export default {
             mobile: this.shippingAddress.mobile,
             address: this.shippingAddress.agencyAddress
           } = receiverModel)
+          this.productInfoModel.totalCouponAmount = productInfoModel.productDetailModels.reduce((total, current) => {
+            return total + current['couponAmount']
+          }, 0)
           if (orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
             if (orderStatus !== 'WAIT_PAY') {
               // 生成核销码二维码

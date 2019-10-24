@@ -79,7 +79,9 @@ export default {
   methods: {
     async couponClick (id) {
       try {
-        const { result, message } = await receiveCoupon(id)
+        const { result, message } = await receiveCoupon({
+          couponId: id
+        })
         if (result) {
           this.$success('领取成功')
           this.$refs.loadMore.refresh()

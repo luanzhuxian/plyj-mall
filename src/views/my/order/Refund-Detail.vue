@@ -113,7 +113,7 @@
           v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT_WAIT_RETURN'"
           :class="$style.tips"
         >
-          运费不可退，如有疑问，请联系商家协商
+          运费不可退，优惠{{ refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.couponAmount || 0 }}元不可退，如有疑问，请联系商家协商
         </div>
         <div
           v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
@@ -477,6 +477,7 @@ export default {
           refundMobile: refundDetail.refundMobile,
           refundAddress: refundDetail.refundAddress,
           actualRefund: refundDetail.actualRefund,
+          mallOrderProductRModel: refundDetail.mallOrderProductRModel,
           shouldRefund: refundDetail.shouldRefund,
           productId: refundDetail.productId,
           productPic: refundDetail.productPic,
