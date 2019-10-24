@@ -21,6 +21,8 @@
       <i class="point small" />
     </div>
     <div class="content">
+      <div class="bg-complete" v-if="checkInDetail.totalCheckInNum === 10" />
+      <div class="bg-uncomplete" v-if="checkInDetail.totalCheckInNum < 10" />
       <div class="content-time">
         <div v-if="!activeStart">开始倒计时：</div>
         <div v-else>结束倒计时：</div>
@@ -347,6 +349,20 @@ export default {
       margin: 20px;
       background: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/eggBg.png');
       background-size: 100% 100%;
+      .bg-uncomplete{
+        width: 710px;
+        height: 416px;
+        position: absolute;
+        background: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/eggBgUncomplete.png') no-repeat center 138px;
+        background-size: 100% 37%;
+      }
+      .bg-complete{
+        width: 710px;
+        height: 416px;
+        position: absolute;
+        background: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/eggBgComplete.png') no-repeat center 138px;
+        background-size: 100% 37%;
+      }
       .content-time{
         height: 80px;
         display: flex;
@@ -413,7 +429,7 @@ export default {
         }
         .step5{
           top: 140px;
-          left: 75px;
+          left: 73px;
         }
         .step6{
           top: 175px;
