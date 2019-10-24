@@ -29,7 +29,7 @@
           size="large"
           @done="countFinished"
           :class="$style.countDown"
-          v-if="detail.shoppingStatus === 1"
+          v-if="detail.shoppingStatus === 1 && detail.activeProduct === 1"
           :starttime="detail.serverTime"
           :endtime="detail.shoppingTimeLong"
         />

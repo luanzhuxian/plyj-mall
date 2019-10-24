@@ -3,7 +3,6 @@
     :class="{
       [$style.countDown]: true,
     }"
-    v-if="data || endtime"
     v-show="show"
   >
     <span :class="Number(d) ? $style.textD : $style.text">{{ activityText }}</span>
@@ -62,6 +61,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.endtime)
     this.init()
   },
   methods: {

@@ -1,7 +1,7 @@
 <template>
   <div class="bg book-bg">
     <div class="main">
-      <div class="list book-ing">
+      <div class="list book-ing" v-if="ingList.length > 0">
         <div class="head">
           <pl-icon name="icon-ing_icon" color="#fff" size="52" />
           <pl-icon name="icon-ing_text" color="#fff" size="52" />
@@ -14,13 +14,13 @@
             </div>
             <div>
               <div class="title book-title">{{ item.productName }}</div>
-              <div class="tips book-tips">预交定金￥{{ item.price }}抵￥{{ item.price }}</div>
+              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multiple === 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
               <div class="book-bottom">双十二价位：{{ item.productPrice }}元</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="list book-coming">
+      <div class="list book-coming" v-if="comingList.length > 0">
         <div class="head">
           <pl-icon name="icon-coming_icon" color="#fff" size="52" />
           <pl-icon name="icon-coming_text" color="#fff" size="52" />
@@ -36,8 +36,8 @@
             </div>
             <div>
               <div class="title book-title">{{ item.productName }}</div>
-              <div class="tips book-tips">预交定金￥100抵￥200</div>
-              <div class="book-bottom">双十二价位：2000元</div>
+              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multiple === 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
+              <div class="book-bottom">双十二价位：{{ item.productPrice }}元</div>
             </div>
           </div>
         </div>

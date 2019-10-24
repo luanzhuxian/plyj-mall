@@ -1,7 +1,7 @@
 <template>
   <div class="bg second-bg">
     <div class="main">
-      <div class="list second-ing">
+      <div class="list second-ing" v-if="ingList.length > 0">
         <div class="head">
           <pl-icon name="icon-ing_icon" color="#fff" size="52" />
           <pl-icon name="icon-ing_text" color="#fff" size="52" />
@@ -12,13 +12,13 @@
             <div class="count-down">
               <count-down
                 activity-text="距结束"
-                :endtime="item.activityStartTime"
+                :endtime="item.activityEndTime"
               />
             </div>
           </div>
           <div>
             <div class="title">{{ item.productName }}</div>
-            <div class="tips">限量秒杀，下单仅{{ item.price }}</div>
+            <div class="tips">限量秒杀，下单仅{{ item.price }}元</div>
             <div class="progress">
               <div class="inner" :style="{width: '50%'}" />
             </div>
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div class="list second-coming">
+      <div class="list second-coming" v-if="comingList.length > 0">
         <div class="head">
           <pl-icon name="icon-coming_icon" color="#fff" size="52" />
           <pl-icon name="icon-coming_text" color="#fff" size="52" />
@@ -52,7 +52,7 @@
           </div>
           <div>
             <div class="title">{{ item.productName }}</div>
-            <div class="tips">限量秒杀，下单仅{{ item.price }}</div>
+            <div class="tips">限量秒杀，下单仅{{ item.price }}元</div>
             <div class="progress">
               <div class="inner" :style="{width: '80%'}" />
             </div>

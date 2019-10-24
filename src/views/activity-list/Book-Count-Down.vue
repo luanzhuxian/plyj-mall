@@ -3,7 +3,6 @@
     :class="{
       [$style.countDown]: true, [Number(d) ? $style.d : '']: true
     }"
-    v-if="data || endtime"
     v-show="show"
   >
     <span :class="$style.text">{{ activityText }}</span>

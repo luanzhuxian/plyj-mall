@@ -2,12 +2,15 @@
   min-height: 100vh;
   &.tuan-bg{
     background: #FBA461 url("../../assets/images/activiy-list/tuan_bg.jpg") top center no-repeat;
+    background-size: 100% auto;
   }
   &.book-bg{
     background: #D53797 url("../../assets/images/activiy-list/book_bg.jpg") top center no-repeat;
+    background-size: 100% auto;
   }
   &.second-bg{
     background: #E0030C url("../../assets/images/activiy-list/second_bg.jpg") top center no-repeat;
+    background-size: 100% auto;
   }
   .main{
     padding: 286px 24px 48px;

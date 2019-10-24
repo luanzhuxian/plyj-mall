@@ -3,7 +3,6 @@
     :class="{
       [$style.countDown]: true,
     }"
-    v-if="data || endtime"
     v-show="show"
   >
     <span :class="$style.text"><img src="../../assets/images/second/time.svg">{{ activityText }}</span>
