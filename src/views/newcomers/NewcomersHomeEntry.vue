@@ -29,7 +29,8 @@ export default {
   },
   data () {
     return {
-      activityInfo: { status: 0 }
+      activityInfo: { status: 0 },
+      isShowSelf: true
     }
   },
 
@@ -48,10 +49,11 @@ export default {
       if (this.activityInfo === null) {
         return false
       }
-      return moment().isAfter(moment(this.activityInfo.isActivityStartTime))
+      return moment().isAfter(moment(this.activityInfo.activityStartTime))
     },
     showSelf () {
-      return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser
+      console.log('>>>>>', this.isActivityStart, (!this.isActivityStoped), this.isNewUser)
+      return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf
     }
   },
 
@@ -69,7 +71,7 @@ export default {
     },
 
     close () {
-      this.showSelf = false
+      this.isShowSelf = false
     }
   }
 }

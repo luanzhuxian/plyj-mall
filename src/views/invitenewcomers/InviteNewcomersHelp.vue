@@ -283,6 +283,7 @@ export default {
       if (status !== 200) {
         // TODO: add code here
       }
+      await registerStatisitic(newComersActivity.id)
     }
   }
 }
