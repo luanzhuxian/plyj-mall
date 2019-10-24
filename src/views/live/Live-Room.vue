@@ -163,7 +163,6 @@
 
 <script>
 /* eslint-disable */
-import 'vue-slider-component/theme/default.css'
 import { mapGetters } from 'vuex'
 import CouponItem from '../../components/item/Coupon-Item.vue'
 import share from '../../assets/js/wechat/wechat-share'
