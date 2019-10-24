@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.video">
     <img :class="$style.cover" :src="`${url}?x-oss-process=video/snapshot,t_10000,m_fast`" alt="">
-    <img :class="$style.play" src="../assets/images/play.png" alt="" @click="play">
+    <img :class="$style.play" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/play.png" alt="" @click="play">
     <div
       v-if="isPlay"
       :class="$style.videoBox"

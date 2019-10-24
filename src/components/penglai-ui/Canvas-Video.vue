@@ -73,13 +73,13 @@
   </div>
 </template>
 <script>
-import playIcon from './assets/image/play.png'
 import pauseIcon from './assets/image/pause.png'
 import smallPlayIcon from './assets/image/play_s.png'
 import smallPauseIcon from './assets/image/pause_s.png'
 import fullscreenIcon from './assets/image/fullscreen.png'
 import exitfullscreenIcon from './assets/image/exitfullscreen.png'
 import volume from './assets/image/volume.png'
+const playIcon = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/play.png'
 let stopedTimer = 0
 let ctrlTimer = 0
 export default {

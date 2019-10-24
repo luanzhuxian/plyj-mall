@@ -77,25 +77,25 @@ export default {
         margin-top: 37px;
       }
       .step1{
-        background: url("../../../assets/images/tuan/step1.svg");
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/tuan/step1.png");
         background-size: 100% 100%;
         width: 74px;
         height: 74px;
       }
       .step2{
-        background: url("../../../assets/images/tuan/step2.svg");
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/tuan/step2.png");
         background-size: 100% 100%;
         width: 74px;
         height: 74px;
       }
       .step3{
-        background: url("../../../assets/images/tuan/step3.svg");
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/tuan/step3.png");
         background-size: 100% 100%;
         width: 74px;
         height: 74px;
       }
       .step4{
-        background: url("../../../assets/images/tuan/step4.svg");
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/tuan/step4.svg");
         background-size: 100% 100%;
         width: 74px;
         height: 74px;
