@@ -233,8 +233,8 @@ export default {
         // TODO: 错误处理
         await helpFriend(this.activityId, this.inviteUserId)
         await registerStatisitic(this.activityId)
-        await this.doClaimAll()
         this.isShowHelperSuccess = true
+        await this.doClaimAll()
         return
       }
 
