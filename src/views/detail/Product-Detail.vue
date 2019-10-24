@@ -510,7 +510,7 @@ export default {
     },
     async couponClick (id) {
       try {
-        await receiveCoupon(id)
+        await receiveCoupon({ couponId: id })
         this.$success('领取成功')
         await this.getCouponList()
       } catch (e) {
