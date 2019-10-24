@@ -61,7 +61,7 @@ export default {
     }
   },
   mounted () {
-    // console.log(this.endtime)
+    console.log(this.endtime)
     this.init()
   },
   methods: {

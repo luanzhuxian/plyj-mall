@@ -60,9 +60,15 @@ export default {
       s: 0
     }
   },
+  watch: {
+    endtime (val) {
+      console.log('watch秒杀倒计时' + val)
+      this.endtime = val
+    }
+  },
   mounted () {
     this.init()
-    console.log(this.endTime)
+    console.log(this.endtime)
   },
   methods: {
     async init () {

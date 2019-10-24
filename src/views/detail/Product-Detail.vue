@@ -844,18 +844,6 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
         color: rgba(255, 255, 255, .4);
       }
     }
-    .preBtn{
-      width: 440px;
-      height: 80px;
-      margin-right: 16px;
-      color: #fff;
-      font-size: 30px;
-      background: #FE7700;
-      border-radius: 10px;
-      &:disabled {
-        color: rgba(255, 255, 255, .4);
-      }
-    }
     .btn-text{
       margin: 4px auto 0;
       width: 100px;
@@ -867,6 +855,18 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
       font-size: 20px;
       line-height: 28px;
       color: #FE7700;
+    }
+  }
+  .preBtn{
+    width: 100%;
+    height: 80px;
+    margin-right: 16px;
+    color: #fff;
+    font-size: 30px;
+    background: #FE7700;
+    border-radius: 10px;
+    &:disabled {
+      color: rgba(255, 255, 255, .4);
     }
   }
   .detailOrComment {
