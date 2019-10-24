@@ -71,7 +71,7 @@ export default {
       if (this.data) {
         this.endtiemstamp = Number(this.data[this.fields.end]) || 0
       } else {
-        this.endtiemstamp = Number(new Date(this.endtime).getTime()) || 0
+        this.endtiemstamp = Number(moment(this.endtime).valueOf()) || 0
       }
       if (this.starttiemstamp - this.endtiemstamp < 0) {
         // 启动倒计时
