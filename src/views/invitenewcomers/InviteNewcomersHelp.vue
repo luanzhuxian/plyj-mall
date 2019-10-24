@@ -279,7 +279,7 @@ export default {
       if (moment(newComersActivity.activityEndTime).isBefore(moment()) || newComersActivity.status === 0) {
         return
       }
-      let { status } = await claimCoupons(newComersActivity.activityId, (newComersActivity.couponModels || []).map(m => m.id))
+      let { status } = await claimCoupons(newComersActivity.id, (newComersActivity.couponModels || []).map(m => m.id))
       if (status !== 200) {
         // TODO: add code here
       }
