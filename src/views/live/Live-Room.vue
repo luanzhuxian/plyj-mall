@@ -230,6 +230,8 @@ export default {
       } catch (e) {
 
       } finally {
+        let { name, params, query } = this.$route
+        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({ name, query, params }))
         this.$router.push({ name: 'BindMobile' })
       }
     }
