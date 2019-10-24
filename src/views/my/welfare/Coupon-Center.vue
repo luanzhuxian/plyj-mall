@@ -84,7 +84,10 @@ export default {
         })
         if (result) {
           this.$success('领取成功')
-          this.$refs.loadMore.refresh()
+          // 只刷新所领取卡券信息
+          let oldCouponIndex = this.couponList.findIndex(item => item.id === id)
+          this.couponList.splice(oldCouponIndex, 1)
+          this.couponList.splice(oldCouponIndex, 0, result)
         } else {
           this.$error(message)
         }
