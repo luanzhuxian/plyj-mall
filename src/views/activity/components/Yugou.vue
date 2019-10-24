@@ -31,6 +31,7 @@
                   :current-timestamp="timestamp"
                   color="#DB4D7D"
                   size="mini"
+                  @done="() => item.goodsInfo.activityInfo.status += 1"
                 />
               </div>
             </div>

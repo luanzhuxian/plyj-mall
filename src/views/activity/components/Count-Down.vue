@@ -71,11 +71,20 @@ export default {
       m: 0,
       s: 0,
       start: 0,
-      end: 0
+      end: 0,
+      timer: null
+    }
+  },
+  watch: {
+    timestamp (val, old) {
+      this.reset()
     }
   },
   mounted () {
     this.init()
+  },
+  destroyed () {
+    clearInterval(this.timer)
   },
   methods: {
     async init () {
@@ -92,13 +101,27 @@ export default {
         this.countdown()
       }
     },
+    async reset () {
+      let { result } = await getServerTime()
+      this.cts = Number(result)
+      if (this.cts && this.timestamp) {
+        this.start = Math.min(this.cts, this.timestamp)
+        this.end = Math.max(this.cts, this.timestamp)
+        this.show = true
+        this.countdown()
+      }
+    },
     countdown () {
       this.setTime(this.end - this.start)
-      let timer = setInterval(() => {
+      if (this.timer) {
+        clearInterval(this.timer)
+      }
+      this.timer = setInterval(() => {
         this.end -= 1000
-        if (this.end - this.start === 0) {
-          clearInterval(timer)
-          this.show = false
+        if (this.end - this.start <= 0) {
+          // clearInterval(timer)
+          // this.show = false
+          this.clear()
           this.$emit('done', true)
         }
         this.setTime(this.end - this.start)
@@ -110,6 +133,15 @@ export default {
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')
+    },
+    clear () {
+      clearInterval(this.timer)
+      this.timer = null
+      this.show = false
+      this.d = ''
+      this.h = ''
+      this.m = ''
+      this.s = ''
     }
   }
 }
