@@ -19,7 +19,7 @@
       <div class="code-box">
         <div class="code-box-title">
           <p class="code-title">
-            礼品兑换
+            礼品核销
           </p>
           <p class="code-date">
             使用有效期至 {{ activeItem.useEndTime }}
@@ -30,7 +30,7 @@
             <img :src="qrcode" alt="">
           </div>
           <p class="code-num">{{ activeItem.redeemCode.slice(0 ,2) }} {{ activeItem.redeemCode.slice(2) | separator(' ', 4) }}</p>
-          <p class="code-description">请出示给维码给机构人员</p>
+          <p class="code-description">请出示核销码给机构人员</p>
         </div>
         <div class="code-save">长按图片保存分享给好友</div>
         <div class="code-close">
