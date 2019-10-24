@@ -13,7 +13,8 @@
           :data="modules"
           :type="type"
           :live="liveInfo"
-          :has-inviting-event="hasInvitingEvent"
+          :inviting-event="invitingEvent"
+          :inviting-id="invitingId"
           :timestamp="timestamp"
         />
         <TemplateBaofa
@@ -21,7 +22,7 @@
           :data="modules"
           :type="type"
           :live="liveInfo"
-          :has-inviting-event="hasInvitingEvent"
+          :inviting-event="invitingEvent"
           :timestamp="timestamp"
         />
         <TemplateFanchang
@@ -43,7 +44,8 @@ import Search from './components/Search.vue'
 import TemplateFengqiang from './Template-Fengqiang.vue'
 import TemplateBaofa from './Template-Baofa.vue'
 import TemplateFanchang from './Template-Fanchang.vue'
-import { getCurrentTemplate, getLiveInfo, getInvitingEvent } from '../../apis/home'
+import { getCurrentTemplate, getLiveInfo } from '../../apis/home'
+import { getCurrentActivity } from '../../apis/invitenewcomers'
 
 export default {
   name: 'Activity',
@@ -66,7 +68,7 @@ export default {
         RECOMMEND: null
       },
       liveInfo: {},
-      hasInvitingEvent: false,
+      invitingEvent: {},
       timestamp: ''
     }
   },
@@ -76,8 +78,8 @@ export default {
       getLiveInfo().then(({ result }) => {
         this.liveInfo = result || {}
       })
-      getInvitingEvent().then(({ result }) => {
-        this.hasInvitingEvent = result && [0, 2].includes(result.status)
+      getCurrentActivity().then(({ result }) => {
+        this.invitingEvent = result || {}
       })
     } catch (e) {
       throw e

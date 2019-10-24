@@ -15,15 +15,12 @@
           </div>
         </div>
         <pl-icon name="icon-calendar" type="svg" width="72" height="72" />
-        <!-- <svg :class="$style.icon" aria-hidden="true">
-          <use xlink:href="#icon-calendar" />
-        </svg> -->
       </router-link>
       <router-link
         v-if="hasInvitingEvent"
         :class="$style.item"
         tag="div"
-        :to="{ name: '' }"
+        :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
       >
         <div :class="$style.itemLeft">
           <div :class="$style.main">
@@ -34,9 +31,6 @@
           </div>
         </div>
         <pl-icon name="icon-present" type="svg" width="72" height="72" />
-        <!-- <svg :class="$style.icon" aria-hidden="true">
-          <use xlink:href="#icon-present" />
-        </svg> -->
       </router-link>
     </div>
   </div>

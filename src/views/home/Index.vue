@@ -77,7 +77,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
-import { getTemplate, getLiveInfo, getInvitingEvent } from '../../apis/home'
+import { getTemplate, getLiveInfo } from '../../apis/home'
+import { getCurrentActivity } from '../../apis/invitenewcomers'
 // import { wasGetInfo } from '../../apis/wwec'
 // import moment from 'moment'
 // import TemplateA from './Template-A.vue'
@@ -189,7 +190,7 @@ export default {
     // },
     async getTemplate () {
       try {
-        const [{ result }, { result: live }, { result: invitingEvent }] = await Promise.all([getTemplate({ type: 1 }), getLiveInfo(), getInvitingEvent()])
+        const [{ result }, { result: live }, { result: invitingEvent }] = await Promise.all([getTemplate({ type: 1 }), getLiveInfo(), getCurrentActivity()])
         if (!result) {
           this.noFinish = true
           this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')

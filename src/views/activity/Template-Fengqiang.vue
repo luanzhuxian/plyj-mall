@@ -15,10 +15,10 @@
         :to="{ name: 'RoadLearning' }"
       />
       <router-link
-        v-if="hasInvitingEvent"
+        v-if="invitingEvent && ~[0, 2].indexOf(invitingEvent.status)"
         :class="[$style.invitation, $style.small]"
         tag="div"
-        :to="{ name: '' }"
+        :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
       />
       <!-- <div v-if="true" :class="[$style.road, $style.large]" />
       <div v-if="true" :class="[$style.invitation, $style.large]" /> -->
@@ -95,7 +95,12 @@ export default {
       type: Number,
       default: 0
     },
-    hasInvitingEvent: Boolean
+    invitingEvent: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
   },
   computed: {
     MIAO_SHA () {
