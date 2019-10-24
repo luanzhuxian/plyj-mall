@@ -5,10 +5,7 @@
         <div :class="$style.secondPrice">
           {{ detail.activityProductModel.price }}
         </div>
-        <del :class="$style.original" v-text="minPrice" />
-        <template v-if="minPrice !== maxPrice">
-          ~ <del :class="$style.original" v-text="maxPrice" />
-        </template>
+        <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
       </div>
       <div :class="$style.desc">活动限量{{ detail.activityProductModel.stock }}件</div>
     </div>
@@ -17,10 +14,7 @@
         <div :class="$style.secondPrice">
           {{ detail.activityProductModel.price }}
         </div>
-        <del :class="$style.original" v-text="minPrice" />
-        <template v-if="minPrice !== maxPrice">
-          ~ <del :class="$style.original" v-text="maxPrice" />
-        </template>
+        <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
         <div :class="$style.number">已抢 {{ detail.activityProductModel.number }}</div>
       </div>
       <div :class="$style.desc">

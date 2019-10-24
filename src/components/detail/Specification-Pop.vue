@@ -18,10 +18,10 @@
                 alt=""
               >
               <div :class="$style.baseInfoRight">
-                <p :class="$style.price" v-text="activityProductModel.price" v-if="activeProduct !== 1 && preActivity === 2" />
-                <p :class="$style.price" v-text="currentSku.price" v-else />
+                <p :class="$style.price" v-text="currentSku.price" v-if="activeType === 1 || (activeProduct !== 1 && preActivity !== 2)" />
+                <p :class="$style.price" v-text="activityProductModel.price" v-if="activeType !== 1 && activeProduct !== 1 && preActivity === 2" />
                 <p :class="$style.original" v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice">
-                  原价：<del class="rmb" v-text="currentSku.price" v-if="activeProduct !== 1 && preActivity === 2" /> <del class="rmb" v-else v-text="currentSku.originalPrice" />
+                  原价：<del class="rmb" v-text="currentSku.originalPrice" v-if="activeProduct !== 1 && preActivity === 2" /> <del class="rmb" v-else v-text="currentSku.originalPrice" />
                 </p>
                 <p :class="$style.repertory" v-if="currentSku.skuCode1Name">
                   已选：
@@ -150,6 +150,10 @@ export default {
     activityProductModel: {
       type: Object,
       default: null
+    },
+    activeType: {
+      type: [Number, String],
+      default: ''
     }
   },
   data () {

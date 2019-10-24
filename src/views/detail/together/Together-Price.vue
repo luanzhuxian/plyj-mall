@@ -12,10 +12,7 @@
     </div>
     <div v-if="detail.preActivity === 2">
       <div class="price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
-      <div class="original">原价：<i v-text="minPrice" />
-        <template v-if="minPrice !== maxPrice">
-          ~ <i v-text="maxPrice" />
-        </template></div>
+      <div class="original">原价：<del v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" /></div>
     </div>
     <div class="join" v-if="detail.preActivity === 2">
       <ul>

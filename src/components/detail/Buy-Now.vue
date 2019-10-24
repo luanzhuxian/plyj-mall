@@ -92,6 +92,7 @@
       :active-product="activeProduct"
       :pre-activity="preActivity"
       :activity-product-model="activityProductModel"
+      :active-type="activeType"
     >
       <template v-slot:footer="{ currentSku }">
         <pl-button
