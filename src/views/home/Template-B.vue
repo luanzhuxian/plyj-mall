@@ -54,12 +54,6 @@ export default {
         return {}
       }
     }
-    // live: {
-    //   type: Object,
-    //   default () {
-    //     return {}
-    //   }
-    // }
   },
   data () {
     return {
