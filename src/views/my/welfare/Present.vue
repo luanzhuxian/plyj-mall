@@ -89,7 +89,7 @@
           <div class="item-content">
             <pl-icon class="stamp" name="icon-yiduihuan" type="svg" width="200" height="200" />
             <div class="content-img-box">
-              <img src="../../../assets/images/order-complete-bg.png" alt="">
+              <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/order-complete-bg.png" alt="">
             </div>
             <div class="content-detail-box">
               <div class="content-box">
@@ -124,7 +124,7 @@
           <div class="item-content">
             <pl-icon class="stamp" name="icon-yiguoqi" type="svg" width="200" height="200" />
             <div class="content-img-box">
-              <img src="../../../assets/images/order-complete-bg.png" alt="">
+              <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/order-complete-bg.png" alt="">
             </div>
             <div class="content-detail-box">
               <div class="content-box">

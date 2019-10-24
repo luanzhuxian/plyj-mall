@@ -3,7 +3,7 @@
     <div class="top">
       <div class="title-box">
         <div class="title-left"><pl-icon name="icon-left" color="#fff" size="32" /></div>
-        <img src="../../assets/images/road-learning/icon-road-learning-title.png">
+        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/icon-road-learning-title.png">
         <div class="title-right" @click="showRule = true">
           活动规则
         </div>
@@ -90,7 +90,7 @@
         <p class="prize-box-description">您可在我的礼品中查看</p>
         <div class="item-content">
           <div class="content-img-box">
-            <img src="../../assets/images/road-learning/goldenEgg.png" alt="">
+            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/goldenEgg.png" alt="">
           </div>
           <div class="content-detail-box">
             <div class="content-box">
@@ -153,7 +153,7 @@ export default {
     background:linear-gradient(180deg,rgba(246,4,49,1) 0%,rgba(246,70,79,1) 35%,rgba(253,98,78,1) 100%);
     .top{
       height: 598px;
-      background: url('../../assets/images/road-learning/goldenEgg.png') no-repeat center 80px;;
+      background: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/goldenEgg.png') no-repeat center 80px;;
       background-size: 72% 90%;
       .title-box{
         display: flex;
@@ -241,7 +241,7 @@ export default {
       width: 710px;
       height: 516px;
       margin: 20px;
-      background: url('../../assets/images/road-learning/eggBg.png');
+      background: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/eggBg.png');
       background-size: 100% 100%;
       .content-time{
         height: 80px;

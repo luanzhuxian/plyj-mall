@@ -65,7 +65,7 @@ export default {
     height: 264px;
     padding: 32px 0 88px;
     overflow: hidden;
-    background-image: url('../../../assets/images/order-complete-bg.png');
+    background-image: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/order-complete-bg.png');
     background-size: 100% 100%;
     background-position: center center;
     background-repeat: no-repeat;

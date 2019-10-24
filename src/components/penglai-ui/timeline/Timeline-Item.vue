@@ -65,16 +65,6 @@ export default {
         &:after {
           display: none;
         }
-        /*&:before {*/
-          /*left: 11px;*/
-          /*width: 42px;*/
-          /*height: 42px;*/
-          /*border-radius: 21px;*/
-          /*background: #fff url("../../../assets/images/shipped.png") no-repeat center center;*/
-          /*background-size: 50%;*/
-          /*border: 1px solid #D8D8D8;*/
-          /*box-sizing: border-box;*/
-        /*}*/
       }
     }
   }

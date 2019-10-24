@@ -6,7 +6,7 @@
     v-show="show"
   >
     <span :class="$style.text">
-      <img src="../../assets/images/second/time.svg">{{ activityText }}
+      <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/time.png">{{ activityText }}
     </span>
     <div :class="$style.time">
       <i>{{ d }}</i><em>天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
@@ -122,7 +122,7 @@ export default {
 
 <style module lang="scss">
   .count-down {
-    background: url("../../assets/images/second/count_down.svg") no-repeat;
+    background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/count_down.png") no-repeat;
     background-size: 100% 100%;
     width: 234px;
     height: 120px;
