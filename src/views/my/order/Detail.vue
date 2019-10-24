@@ -816,7 +816,9 @@ export default {
           return
         }
         if (orderStatus === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
-        if (orderStatus === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        if (orderStatus === 'WAIT_RECEIVE') {
+          this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        }
       }, 1000)
     },
     setTime (result, orderStatus) {
@@ -847,7 +849,8 @@ export default {
             studentInfoModels,
             orderStatusAlias,
             redeemCodeModels,
-            activityData
+            activityData,
+            activeProduct
           } = result
           this.detail = result
           this.orderStatus = orderStatus
@@ -862,6 +865,7 @@ export default {
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
           this.activityData = activityData || {}
+          this.activeProduct = activeProduct || 1
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['count']
           }, 0);  // eslint-disable-line
@@ -893,9 +897,16 @@ export default {
               this.setTime(result, 'WAIT_RECEIVE')
             } else {
               let { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels[0]
-              if (validityPeriodStart) {
-                const start = validityPeriodStart.split(' ')[0]
-                const end = validityPeriodEnd.split(' ')[0]
+              let { useStartTime, useEndTime } = activityData
+              if (activeProduct === 4) {
+                const start = moment(useStartTime).format('YYYY-MM-DD')
+                const end = moment(useEndTime).format('YYYY-MM-DD')
+                this.suggestionMap.WAIT_RECEIVE = (start === end)
+                  ? `有效期 ${start}`
+                  : `有效期 ${start} 至 ${end}`
+              } else if (validityPeriodStart) {
+                const start = moment(validityPeriodStart).format('YYYY-MM-DD')
+                const end = moment(validityPeriodEnd).format('YYYY-MM-DD')
                 this.suggestionMap.WAIT_RECEIVE = (start === end)
                   ? `有效期 ${start}`
                   : `有效期 ${start} 至 ${end}`
