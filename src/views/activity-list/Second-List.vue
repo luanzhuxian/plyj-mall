@@ -29,7 +29,7 @@
                 <div class="price">{{ item.price }}</div>
               </div>
               <div class="miao-btn">
-                <pl-icon name="icon-qiang" color="#fff" type="svg" width="37" height="37" />
+                <pl-icon name="icon-second" color="#fff" type="svg" width="37" height="37" />
               </div>
             </div>
           </div>
