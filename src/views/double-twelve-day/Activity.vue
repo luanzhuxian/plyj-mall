@@ -5,7 +5,7 @@
         <div>
           --------- 千家机构携手双十二 ---------
         </div>
-        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/double-twelve-header-1571393161453.png" alt="">
+        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png" alt="">
       </div>
       <p :class="$style.dataTitle"><span>**********</span> <i>双十二疯狂同学会总数据</i> <span>**********</span></p>
 
@@ -68,19 +68,19 @@
           <img
             :class="$style.subscribe"
             v-if="!entDetail.alreadyReserved"
-            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/%E7%AB%8B%E5%8D%B3%E9%A2%84%E7%BA%A6.png"
+            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/%E7%AB%8B%E5%8D%B3%E9%A2%84%E7%BA%A6.png"
             alt=""
             @click="showPop = true"
           >
           <div :class="$style.subscribe + ' ' + $style.twoIcon" v-if="entDetail.alreadyReserved">
             <img
-              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/help1.png"
+              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help1.png"
               alt=""
               v-if="entDetail.numberOfBoosts < 3"
               @click="userHelp"
             >
             <img
-              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/help2.png"
+              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help2.png"
               alt=""
               v-else
             >
@@ -131,7 +131,7 @@
     <!-- 预约成功 -->
     <transition name="fade">
       <div :class="$style.share" v-if="showShare">
-        <img :src="haiBao || 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/help-me-up.png'" alt="">
+        <img :src="haiBao || 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help-me-up.png'" alt="">
         <template v-if="!haiBaoLoading">
           <p>长按图片保存分享给好友</p>
           <pl-icon name="icon-error" size="48" color="#fff" @click="showShare = false" />
@@ -259,7 +259,7 @@ export default {
         cvs.width = 606
         cvs.height = 766
         ctx = cvs.getContext('2d')
-        bg = await this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/help-me-up.png')
+        bg = await this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help-me-up.png')
         ctx.drawImage(bg, 0, 0, cvs.width, cvs.height)
         logo = await this.loadImage(this.logoUrl)
         ctx.drawImage(codeCanvas, 223, 518, 184, 184)
@@ -351,7 +351,7 @@ export default {
 <style module lang="scss">
   .activity-view {
     padding-top: 20px;
-    background: #ff4e5a url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/double_twelve_day_bg.png") no-repeat fixed;
+    background: #ff4e5a url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double_twelve_day_bg.png") no-repeat fixed;
     background-size: 100% 100%;
   }
   .top-box{
@@ -526,7 +526,7 @@ export default {
         font-size: 26px;
         color: #fff;
         text-align: center;
-        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/num-bg.png") no-repeat center center;
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/num-bg.png") no-repeat center center;
         background-size: 90%;
       }
       > img {

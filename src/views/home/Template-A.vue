@@ -26,7 +26,7 @@
     </swiper>
     <img
       :class="$style.shuang12"
-      src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/20191018/double-twelve-header-1571393161453.png.png" alt=""
+      src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png.png" alt=""
       @click="$router.push({ name: 'DoubleTwelveDay' })"
     >
     <div :class="$style.gift" v-if="data['MODULE_A'].values.length">
