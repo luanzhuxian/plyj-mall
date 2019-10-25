@@ -165,9 +165,27 @@
       </div>
 
       <div :class="$style.productPrice">
-        <p>
-          <span>{{ activeProductStatus[activeProduct] || '商品' }}金额</span>
+        <p v-if="activityData.tailAount">
+          <span>待付尾款</span>
           <span
+            class="rmb"
+            v-text="activityData.tailAount || 0"
+          />
+        </p>
+        <p>
+          <span>
+            {{ activeProductStatus[activeProduct] || '商品' }}
+            <i v-if="activeProduct !==4">金额</i>
+            <i v-if="activeProduct === 4" class="gray-3">(不退，翻{{ activityData.multipleNumber }}倍)</i>
+          </span>
+
+          <span
+            v-if="activeProduct = 4"
+            class="rmb"
+            v-text="activityData.price || 0"
+          />
+          <span
+            v-else
             class="rmb"
             v-text="productInfoModel.productsTotalAmount || 0"
           />
@@ -624,7 +642,7 @@ export default {
       activeProductStatus: {
         2: '团购',
         3: '限时秒杀',
-        4: '预购'
+        4: '定金'
       }
     }
   },
