@@ -180,7 +180,7 @@
           </span>
 
           <span
-            v-if="activeProduct === 4"
+            v-if="activeProduct !== 1"
             class="rmb"
             v-text="activityData.price || 0"
           />
