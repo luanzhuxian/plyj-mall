@@ -91,7 +91,7 @@
       </h2>
       <div class="invioceIntroContent">
         <h3>1.活动时间</h3>
-        <p>2019-05-20 10:00:00 至 2019-06-20 12:00:00
+        <p>{{ activeDetail.activityStartTime }} 至 {{ activeDetail.activityEndTime }}
         </p>
         <h3>1.活动对象</h3>
         <p>所有会员
@@ -179,6 +179,11 @@ export default {
     async getDetail () {
       let distanceTime
       const { result: res } = await getRoadLearningDetail()
+      if (!res) {
+        this.$router.back()
+        this.$warning('暂无活动')
+        return
+      }
       this.activeDetail = res
       if (new Date().getTime() < new Date(this.activeDetail.activityStartTime).getTime()) {
         this.activeStart = false
