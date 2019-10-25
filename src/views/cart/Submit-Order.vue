@@ -589,6 +589,9 @@ export default {
     },
     activeProduct () {
       return Number(this.$route.query.activeProduct) || 1
+    },
+    activityId () {
+      return Number(this.$route.query.activityId) || ''
     }
   },
   watch: {
@@ -673,7 +676,7 @@ export default {
         // 获取订单详细数据
         const { result } = await confirmCart({
           activeProduct: this.activeProduct,
-          activityId: this.$route.query.activityId,
+          activityId: this.activityId,
           cartProducts: proList,
           userCouponId: coupon.id || '',
           addressSeq: this.selectedAddress.sequenceNbr
@@ -842,6 +845,7 @@ export default {
         cartSource: this.isCart,
         invoiceModel: this.INVOICE_MODEL,
         activeProduct: this.isCart ? 1 : this.activeProduct,
+        activityId: this.activityId,
         userCouponId: this.coupon.id || ''
       }
       if (this.physicalProducts.length === 0) {
