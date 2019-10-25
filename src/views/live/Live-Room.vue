@@ -106,8 +106,8 @@
               :id="item.couponId"
               :use-end-time="item.useEndTime"
               :use-start-time="item.useStartTime"
-              :full="item.limitNum"
-              :subtract="item.grantNum"
+              :full="item.useLimitAmount"
+              :subtract="item.amount"
               :instruction="item.couponName"
               @couponClick="couponClick(item.couponId)"
             />
