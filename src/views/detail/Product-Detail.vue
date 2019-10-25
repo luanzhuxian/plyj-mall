@@ -162,7 +162,7 @@
         <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || noStock"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             单独购买
@@ -170,7 +170,6 @@
           </button>
           <button
             :class="$style.buy"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 2)"
           >
             我要参团
@@ -181,7 +180,7 @@
         <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || noStock"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             原价购买
@@ -189,7 +188,6 @@
           </button>
           <button
             :class="$style.buy"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 3)"
           >
             立即秒杀
@@ -200,7 +198,6 @@
         <div :class="$style.button" v-else-if="detail.activeProduct === 4 && detail.preActivity === 2">
           <button
             :class="$style.preBtn"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 4)"
           >
             定金购买
