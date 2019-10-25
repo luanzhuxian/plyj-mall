@@ -588,7 +588,7 @@ export default {
         query: {
           isCart: 'NO',
           activeProduct: activeType,
-          activityId: this.detail.activeProduct === 1 ? '' : this.detail.activityProductModel.activityId
+          activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
     },

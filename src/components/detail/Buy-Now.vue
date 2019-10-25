@@ -253,7 +253,7 @@ export default {
         query: {
           isCart: 'NO',
           activeProduct: this.activeType,
-          activityId: this.activeProduct === 1 ? '' : this.activityProductModel.activityId
+          activityId: this.activeType === 1 ? '' : this.activityProductModel.activityId
         }
       })
     },
