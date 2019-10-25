@@ -58,7 +58,7 @@
         label="选择"
         :label-width="120"
         :can-click="!noStock && detail.productStatus === 2"
-        @click="showSpecifica = true"
+        @click="showSpecifica = true; activeType = 1"
       >
         <template v-if="currentModel.skuCode1Name">
           已选择：“<span v-text="currentModel.skuCode1Name" />
@@ -156,6 +156,7 @@
       :active-product="detail.activeProduct"
       :activity-product-model="detail.activityProductModel || null"
       :pre-activity="detail.preActivity"
+      :active-type="activeType"
     >
       <template v-slot:footer="{ currentSku }">
         <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
