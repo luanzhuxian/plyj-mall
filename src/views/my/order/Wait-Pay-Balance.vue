@@ -47,6 +47,10 @@
                 <span :class="$style.bold">定金：</span>
                 <span :class="$style.price">{{ item.price }}</span>
               </div>
+              <div :class="$style.priceWrapper">
+                <span :class="$style.bold">待付尾款：</span>
+                <span :class="$style.price">{{ item.prePayOrderPrice }}</span>
+              </div>
               <div :class="$style.buttons">
                 <div :class="$style.time">
                   <span v-show="!item.pastDue && item.isStart">剩余尾款支付时间：</span>
