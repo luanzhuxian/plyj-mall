@@ -178,7 +178,7 @@ export default {
         return
       }
 
-      if (restore) {
+      if (restore && this.userId) {
         let state = this.restoryState()
         if (state) {
           await this.doClaimAll()

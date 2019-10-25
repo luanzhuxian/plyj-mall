@@ -32,6 +32,7 @@
               :color="color"
               size="mini"
               text-after="后开始"
+              @done="live.statue = 4"
             />
             <span v-if="live.statue === 4">
               {{ `${live.visitTimes}人观看` }}

@@ -100,17 +100,19 @@
             可用优惠券（{{ couponList.length }}张）
           </div>
           <div>
-            <CouponItem
-              v-for="(item, i) of couponList"
-              :key="i"
-              :id="item.couponId"
-              :use-end-time="item.useEndTime"
-              :use-start-time="item.useStartTime"
-              :full="item.limitNum"
-              :subtract="item.grantNum"
-              :instruction="item.couponName"
-              @couponClick="couponClick(item.couponId)"
-            />
+            <template v-for="(item, i) of couponList">
+              <CouponItem
+                :key="i"
+                :id="item.couponId"
+                :use-end-time="item.useEndTime"
+                :use-start-time="item.useStartTime"
+                :full="item.useLimitAmount"
+                :subtract="item.amount"
+                :instruction="item.couponName"
+                @couponClick="couponClick(item.couponId)"
+                v-if="item.show"
+              />
+            </template>
           </div>
         </div>
         <div v-if="tab === 3" :class="$style.productList">
@@ -126,7 +128,9 @@
             <img :src="item.productMainImage" alt="">
             <div :class="$style.left">
               <div :class="$style.name" v-text="item.productName" />
-              <div :class="$style.price" v-text="item.price" />
+              <div :class="$style.price">
+                ￥{{ item.price }}元
+              </div>
               <!--<div :class="$style.count">3</div>-->
             </div>
             <div :class="$style.vieFor">
@@ -174,6 +178,7 @@ import {
   receiveCouponForLive
 } from '../../apis/my-coupon'
 import io from 'socket.io-client'
+import moment from 'moment'
 export default {
   name: 'Live',
   components: {
@@ -188,6 +193,7 @@ export default {
       channeUserId: '',
       tab: 1,
       message: '',
+      liveStartTime: Date.now(),
       maxRecords: 400, // 最大缓存的聊天记录条数
       /**
        * 聊天信息记录
@@ -253,7 +259,7 @@ export default {
   methods: {
     initPlayer () {
       let { channelId, channeUserId } = this
-      window.polyvLivePlayer({
+      let p = window.polyvLivePlayer({
         wrap: '#player',
         width: '100%',
         height: '100%',
@@ -266,6 +272,7 @@ export default {
         forceH5: true,
         useH5Page: true
       })
+      console.log(p)
       let timer = setInterval(() => {
         let video = document.querySelector('#player video')
         if (video) {
@@ -421,9 +428,7 @@ export default {
       try {
         let data = await getActiveCompleteInfo()
         if (data) {
-          this.couponList = data.couponList
-          this.productList = data.productList
-          this.activeId = data.id
+          this.liveStartTime = moment(data.liveStartTime).valueOf()
           share({
             appId: this.appId,
             title: data.name,
@@ -431,6 +436,24 @@ export default {
             link: window.location.href,
             imgUrl: data.coverImg + '?x-oss-process=style/thum'
           })
+          for (let coupon of data.couponList) {
+            coupon.show = false
+          }
+          let timer = setInterval(() => {
+            // 如果已经全部都显示了，停止定时器
+            if (!data.couponList.some(item => !item.show)) {
+              clearInterval(timer)
+            }
+            for (let coupon of data.couponList) {
+              if (coupon.show) {
+                continue
+              }
+              coupon.show = this.canShowCoupon(coupon.afterMinuteShow)
+            }
+            this.couponList = data.couponList.filter(item => item.show)
+          }, 2000)
+          this.productList = data.productList
+          this.activeId = data.id
         }
       } catch (e) {
 
@@ -447,6 +470,12 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    // 判断优惠券是否到了显示时间
+    canShowCoupon (afterMinuteShow) {
+      let ms = afterMinuteShow * 60 * 1000
+      let startTime = this.liveStartTime
+      return Date.now() - startTime >= ms
     },
     fullScreen () {
       let isFullScreen = false

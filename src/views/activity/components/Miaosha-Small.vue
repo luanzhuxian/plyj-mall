@@ -21,6 +21,7 @@
                   v-if="~[0, 1].indexOf(data.values[0].goodsInfo.activityInfo.status)"
                   :timestamp="getTime(data.values[0].goodsInfo.activityInfo)"
                   :current-timestamp="timestamp"
+                  @done="() => data.values[0].goodsInfo.activityInfo.status += 1"
                 />
               </div>
             </div>
@@ -43,7 +44,7 @@
                     </span>
                   </div>
                   <div :class="$style.progress">
-                    <div :class="$style.progressInner" :style="{ width: `${(Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock) / Number(data.values[0].goodsInfo.activityInfo.number)) * 100}%` }" />
+                    <div :class="$style.progressInner" :style="{ width: `${(Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock)) / Number(data.values[0].goodsInfo.activityInfo.number) * 100}%` }" />
                   </div>
                   <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status === 0">
                     {{ `${data.values[0].goodsInfo.pageviews}人已关注` }}

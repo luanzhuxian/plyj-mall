@@ -79,7 +79,7 @@
             </div>
           </div>
         </div>
-        <div :class="$style.infoItem" v-if="coupon.amount && !isCart" @click="showCoupon = true">
+        <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">优惠券</span>
             <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
@@ -186,7 +186,7 @@
               </div>
             </div>
           </div>
-          <div :class="$style.infoItem" v-if="coupon.amount && !isCart" @click="showCoupon = true">
+          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
               <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
@@ -295,7 +295,7 @@
               </div>
             </div>
           </div>
-          <div :class="$style.infoItem" v-if="coupon.amount && !isCart" @click="showCoupon = true">
+          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
               <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
@@ -331,7 +331,11 @@
       </pl-button>
     </div>
 
-    <div v-if="coupon.amount && isCart" :class="$style.itemSelector" @click.capture="showCoupon = true">
+    <div
+      v-if="coupon.amount && isCart && activeProduct === 1"
+      :class="$style.itemSelector"
+      @click.capture="showCoupon = true"
+    >
       <pl-fields
         size="middle"
         text="优惠"
@@ -585,6 +589,9 @@ export default {
     },
     activeProduct () {
       return Number(this.$route.query.activeProduct) || 1
+    },
+    activityId () {
+      return Number(this.$route.query.activityId) || ''
     }
   },
   watch: {
@@ -643,7 +650,9 @@ export default {
         this.contactInfoModel.name = this.realName || this.userName
         this.contactInfoModel.mobile = this.mobile
       }
-      await this.getCouponList()
+      if (this.activeProduct === 1) {
+        await this.getCouponList()
+      }
     } catch (e) {
       this.$router.go(-1)
       throw e
@@ -653,6 +662,46 @@ export default {
   },
   methods: {
     ...mapActions([STUDENTS]),
+    async getProductDetail (flag) {
+      const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
+      let coupon = {}
+      if (this.activeProduct === 1) {
+        coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
+      }
+      if (!proList || !proList.length) {
+        return this.$router.replace({ name: 'Home' })
+      }
+      if (!flag) this.loading = true
+      try {
+        // 获取订单详细数据
+        const { result } = await confirmCart({
+          activeProduct: this.activeProduct,
+          activityId: this.activityId,
+          cartProducts: proList,
+          userCouponId: coupon.id || '',
+          addressSeq: this.selectedAddress.sequenceNbr
+        })
+        const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
+        // 为每个虚拟订单都添加备注字段
+        for (const p of physicalProducts) {
+          p.remark = ''
+        }
+        formalClass.map(item => { item.type = 'FORMAL_CLASS' })
+        experienceClass.map(item => { item.type = 'EXPERIENCE_CLASS' })
+        virtualProducts.map(item => { item.type = 'VIRTUAL_GOODS' })
+        this.amount = amount
+        this.totalAmount = totalAmount
+        this.freight = Number(freight)
+        this.physicalProducts = physicalProducts
+        this.virtualProducts = virtualProducts
+        this.lessonList = [...formalClass, ...experienceClass]
+        this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 1)]
+        this.loading = false
+        this.showInvoiceSelector = [...physicalProducts, ...virtualProducts, ...formalClass, ...experienceClass].some(item => item.showInvoice === 1)
+      } catch (e) {
+        throw e
+      }
+    },
     // 获取当前课程选择的学员数量
     getStudentCountByProId (proId) {
       let currentStudents = this.CHECKED_STUDENT[proId]
@@ -737,43 +786,6 @@ export default {
         throw e
       }
     },
-    async getProductDetail (flag) {
-      const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-      let coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
-      if (!proList || !proList.length) {
-        return this.$router.replace({ name: 'Home' })
-      }
-      if (!flag) this.loading = true
-      try {
-        // 获取订单详细数据
-        const { result } = await confirmCart({
-          activeProduct: this.activeProduct,
-          activityId: this.$route.query.activityId,
-          cartProducts: proList,
-          userCouponId: coupon.id || '',
-          addressSeq: this.selectedAddress.sequenceNbr
-        })
-        const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
-        // 为每个虚拟订单都添加备注字段
-        for (const p of physicalProducts) {
-          p.remark = ''
-        }
-        formalClass.map(item => { item.type = 'FORMAL_CLASS' })
-        experienceClass.map(item => { item.type = 'EXPERIENCE_CLASS' })
-        virtualProducts.map(item => { item.type = 'VIRTUAL_GOODS' })
-        this.amount = amount
-        this.totalAmount = totalAmount
-        this.freight = Number(freight)
-        this.physicalProducts = physicalProducts
-        this.virtualProducts = virtualProducts
-        this.lessonList = [...formalClass, ...experienceClass]
-        this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 1)]
-        this.loading = false
-        this.showInvoiceSelector = [...physicalProducts, ...virtualProducts, ...formalClass, ...experienceClass].some(item => item.showInvoice === 1)
-      } catch (e) {
-        throw e
-      }
-    },
     // 提交订单
     async submitOrder () {
       const cartProducts = []
@@ -833,6 +845,7 @@ export default {
         cartSource: this.isCart,
         invoiceModel: this.INVOICE_MODEL,
         activeProduct: this.isCart ? 1 : this.activeProduct,
+        activityId: this.activityId,
         userCouponId: this.coupon.id || ''
       }
       if (this.physicalProducts.length === 0) {

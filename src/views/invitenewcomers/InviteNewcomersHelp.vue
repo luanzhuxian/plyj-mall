@@ -228,7 +228,7 @@ export default {
     async helpMyFriend (isRestore) {
       let helpState = this.restoreHelpState()
       // 开始助力
-      if (helpState === 'true') {
+      if (helpState === 'true' && this.userId) {
         // 如果之前是助力状态，直接进行助力
         // TODO: 错误处理
         await helpFriend(this.activityId, this.inviteUserId)

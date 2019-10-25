@@ -5,6 +5,7 @@
         v-if="hasJxEvent"
         :class="{
           [$style.item]: true,
+          [$style.small]: hasJxEvent && hasInvitingEvent,
           [$style.large]: hasJxEvent && !hasInvitingEvent
         }"
         tag="div"
@@ -18,9 +19,9 @@
             <span>
               惊喜大奖等你来拿
             </span>
-            <span :class="$style.label">
+            <span :class="$style.label" v-if="hasJxEvent && !hasInvitingEvent">
               点击进入
-              <pl-icon name="icon-arrow-right" size="16" v-if="hasJxEvent && !hasInvitingEvent" />
+              <pl-icon name="icon-arrow-right" size="16" />
             </span>
           </div>
         </div>
@@ -30,6 +31,7 @@
         v-if="hasInvitingEvent"
         :class="{
           [$style.item]: true,
+          [$style.small]: hasJxEvent && hasInvitingEvent,
           [$style.large]: !hasJxEvent && hasInvitingEvent
         }"
         tag="div"
@@ -43,9 +45,9 @@
             <span>
               多种优惠不打烊
             </span>
-            <span :class="$style.label">
+            <span :class="$style.label" v-if="!hasJxEvent && hasInvitingEvent">
               点击进入
-              <pl-icon name="icon-arrow-right" size="16" v-if="!hasJxEvent && hasInvitingEvent" />
+              <pl-icon name="icon-arrow-right" size="16" />
             </span>
           </div>
         </div>
@@ -139,26 +141,34 @@ export default {
           height: 110px;
         }
       }
+      &.small {
+        .item-left {
+          .main {
+            font-size: 32px;
+            line-height: 44px;
+          }
+          .sub {
+            font-size: 24px;
+            line-height: 34px;
+          }
+        }
+        svg {
+          width: 72px;
+          height: 72px;
+        }
+      }
     }
     .item-left {
       flex: 1;
       width: 0;
       .main {
-        font-size: 32px;
         font-weight: bold;
-        line-height: 44px;
         color: #333333;
         margin-bottom: 4px;
       }
       .sub {
-        font-size: 24px;
-        line-height: 34px;
         color: #999999;
       }
-    }
-    svg {
-      width: 72px;
-      height: 72px;
     }
   }
 </style>

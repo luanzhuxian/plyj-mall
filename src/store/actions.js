@@ -49,7 +49,7 @@ export default {
     // 登录次数，如果登录失败超过三次，停止登录
     let loginCount = Number(localStorage.getItem('loginCount') || 0)
     return new Promise(async (resolve, reject) => {
-      let search = Qs.parse(location.search.substring(1))
+      let search = Qs.parse(location.search.substring(1)) || {}
       let appId = state.mallInfo.appid
       let componentAppid = state.mallInfo.componentAppid
       let appSecret = state.mallInfo.appSecret
