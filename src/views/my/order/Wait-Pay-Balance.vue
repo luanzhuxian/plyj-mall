@@ -84,15 +84,9 @@
 </template>
 
 <script>
-/* eslint-disable */
 import OrderItem from '../../../components/item/Order-Item.vue'
 import LoadMore from '../../../components/Load-More.vue'
 import {
-  getOrderList,
-  getAwaitPayInfo,
-  confirmReceipt,
-  cancelOrder,
-  deleteOrder,
   waitPayBalance
 } from '../../../apis/order-manager'
 import moment from 'moment'
@@ -178,18 +172,7 @@ export default {
       for (let t of this.timerList) {
         clearInterval(t)
       }
-    },
-    setTime (result, orderStatus) {
-      let activeProduct = result.activeProduct
-      let waitPayTime = activeProduct === 1 || activeProduct === 5 ? 24 * 60 * 60 * 1000 : 5 * 60 * 1000
-      let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
-      let duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
-      let now = moment((result.currentServerTime)).valueOf() // 服务器时间
-      let startTime = moment(time).valueOf()
-      if (now - startTime < duration) {
-        this.countDown(duration + startTime - now - 2000, orderStatus)
-      }
-    },
+    }
   }
 }
 </script>
