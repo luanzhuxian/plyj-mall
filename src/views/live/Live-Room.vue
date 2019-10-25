@@ -273,7 +273,6 @@ export default {
         forceH5: true,
         useH5Page: true
       })
-      console.log(p)
       let timer = setInterval(() => {
         let video = document.querySelector('#player video')
         if (video) {

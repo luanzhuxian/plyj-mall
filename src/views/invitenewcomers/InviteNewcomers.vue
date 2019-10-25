@@ -230,7 +230,7 @@ export default {
           })
           this.bindMobile()
         } catch (e) {
-          console.log(e)
+          throw e
         }
 
         return

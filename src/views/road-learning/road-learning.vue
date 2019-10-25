@@ -230,8 +230,7 @@ export default {
       this.checkInDetail = res
     },
     async checkIn () {
-      const { result: res } = await getCheckIn(this.activeDetail.id)
-      console.log(res)
+      await getCheckIn(this.activeDetail.id)
       this.getCheckInDetail()
     },
     async claimGift () {

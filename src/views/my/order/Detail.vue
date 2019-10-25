@@ -879,7 +879,6 @@ export default {
             activityData,
             activeProduct
           } = result
-          console.log(activeProduct)
           this.detail = result
           this.orderStatus = orderStatus
           this.orderType = orderType
@@ -894,7 +893,6 @@ export default {
           this.orderStatusAlias = orderStatusAlias
           this.activityData = activityData || {}
           this.activeProduct = activeProduct || 1
-          console.log(this.activeProduct)
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['count']
           }, 0);  // eslint-disable-line
