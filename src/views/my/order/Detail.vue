@@ -86,6 +86,7 @@
           :product-id="item.productId"
           :support-refund="item.supportRefund"
           :allow-invoice="item.invoiceType"
+          :active-product="activeProduct"
           route-name="Lesson"
         />
         <div :class="$style.buttons">
@@ -165,7 +166,7 @@
 
       <div :class="$style.productPrice">
         <p>
-          <span>商品金额</span>
+          <span>{{ activeProductStatus[activeProduct] || '商品' }}金额</span>
           <span
             class="rmb"
             v-text="productInfoModel.productsTotalAmount || 0"
@@ -591,6 +592,7 @@ export default {
       studentInfoModels: [],
       redeemCodeModels: [],
       activityData: {},
+      activeProduct: 1,
       orderStatusAlias: '',
       shippingAddress: {
         realName: ' ',
@@ -618,7 +620,12 @@ export default {
       qrImg: '',
       // 海报
       isPosterShow: false,
-      poster: ''
+      poster: '',
+      activeProductStatus: {
+        2: '团购',
+        3: '限时秒杀',
+        4: '预购'
+      }
     }
   },
   computed: {
@@ -647,6 +654,7 @@ export default {
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) &&
       this.productInfoModel.actuallyAmount > 0 &&
+      !this.activeProductStatus[this.activeProduct] &&
       (this.orderType === 'PHYSICAL' || this.usefulCodeNumber > 0)
     },
     // 是否可以申请发票，invoiceStatus： 1:'已申请' 3:'已开票' 7:'不支持' 8:'可申请'
@@ -654,6 +662,7 @@ export default {
       return this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
         this.productInfoModel.actuallyAmount > 0 &&
+        !this.activeProductStatus[this.activeProduct] &&
         this.productInfoModel.productDetailModels.some(product => {
           return product.price > 0 &&
             product.invoiceType === 1 &&
@@ -874,9 +883,13 @@ export default {
             mobile: this.shippingAddress.mobile,
             address: this.shippingAddress.agencyAddress
           } = receiverModel)
-          this.productInfoModel.totalCouponAmount = productInfoModel.productDetailModels.reduce((total, current) => {
+          // 优惠金额保留两位小数
+          let totalCouponAmount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['couponAmount']
           }, 0)
+          totalCouponAmount = totalCouponAmount.toString().indexOf('.') === -1 ? totalCouponAmount : totalCouponAmount.toFixed(2)
+          this.productInfoModel.totalCouponAmount = totalCouponAmount
+
           if (orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
             if (orderStatus !== 'WAIT_PAY') {
               // 生成核销码二维码
