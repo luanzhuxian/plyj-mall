@@ -74,7 +74,7 @@
       </div>
       <div class="btn-box">
         <div class="btn disabel" v-if="!activeStart && !activeEnd">活动未开始</div>
-        <div class="btn active" @click="checkIn()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday">立即签到</div>
+        <div class="btn active" @click="checkIn()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10">立即签到</div>
         <div class="btn disabel" v-if="activeStart && activeEnd">活动已结束</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0" @click="claimGift()">点击抽大奖</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
