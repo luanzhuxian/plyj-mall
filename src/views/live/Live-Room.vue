@@ -260,10 +260,11 @@ export default {
   methods: {
     initPlayer () {
       let { channelId, channeUserId } = this
-      let p = window.polyvLivePlayer({
+      let p = polyvObject('#player').livePlayer({
         wrap: '#player',
         width: '100%',
         height: '100%',
+        autoplay: true,
         uid: channeUserId,
         isAutoChange: true,
         vid: channelId,
