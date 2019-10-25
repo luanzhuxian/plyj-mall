@@ -128,7 +128,9 @@
             <img :src="item.productMainImage" alt="">
             <div :class="$style.left">
               <div :class="$style.name" v-text="item.productName" />
-              <div :class="$style.price" v-text="item.price" />
+              <div :class="$style.price">
+                ￥{{ item.price }}元
+              </div>
               <!--<div :class="$style.count">3</div>-->
             </div>
             <div :class="$style.vieFor">
