@@ -104,3 +104,11 @@ export const getHelperApplicationProgress = () => axios.get(`/apis/v1/agent/user
 // 获取是否核销
 export const getVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpafter?orderId=${orderId}`)
 export const setVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpbefore?orderId=${orderId}`)
+/**
+ * 获取待付尾款订单列表
+ * @param params
+ * @property {number} params.current
+ * @property {number} params.size
+ * @return {*}
+ */
+export const waitPayBalance = params => axios.get(`/apis/v1/order/current/user/pre/page`, { params })

@@ -74,7 +74,7 @@
       </div>
       <div class="btn-box">
         <div class="btn disabel" v-if="!activeStart && !activeEnd">活动未开始</div>
-        <div class="btn active" @click="checkIn()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday">立即签到</div>
+        <div class="btn active" @click="checkIn()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10">立即签到</div>
         <div class="btn disabel" v-if="activeStart && activeEnd">活动已结束</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0" @click="claimGift()">点击抽大奖</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
@@ -91,7 +91,7 @@
       </h2>
       <div class="invioceIntroContent">
         <h3>1.活动时间</h3>
-        <p>2019-05-20 10:00:00 至 2019-06-20 12:00:00
+        <p>{{ activeDetail.activityStartTime }} 至 {{ activeDetail.activityEndTime }}
         </p>
         <h3>1.活动对象</h3>
         <p>所有会员
@@ -179,6 +179,11 @@ export default {
     async getDetail () {
       let distanceTime
       const { result: res } = await getRoadLearningDetail()
+      if (!res) {
+        this.$router.back()
+        this.$warning('暂无活动')
+        return
+      }
       this.activeDetail = res
       if (new Date().getTime() < new Date(this.activeDetail.activityStartTime).getTime()) {
         this.activeStart = false

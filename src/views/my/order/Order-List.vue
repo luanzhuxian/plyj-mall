@@ -172,15 +172,6 @@ const tabs = [{
   id: 'FINISHED'
 }]
 
-const refundStatusMap = {
-  '1': '退款中',
-  '2': '退款成功',
-  '3': '退款驳回',
-  '4': '退款中', //  退换货-已退货
-  '5': '待退货', //  退换货-待退货
-  '9': '退款中'
-}
-
 export default {
   name: 'OrderList',
   components: {
@@ -215,7 +206,14 @@ export default {
           textAlign: 'center'
         }
       ],
-      refundStatusMap
+      refundStatusMap: {
+        '1': '退款中',
+        '2': '退款成功',
+        '3': '退款驳回',
+        '4': '退款中', //  退换货-已退货
+        '5': '待退货', //  退换货-待退货
+        '9': '退款中'
+      }
     }
   },
   computed: {
