@@ -359,7 +359,8 @@ export default {
       adding: false,
       haibao: '',
       tab: 2,
-      imgels: []
+      imgels: [],
+      activeType: 1
     }
   },
   props: {

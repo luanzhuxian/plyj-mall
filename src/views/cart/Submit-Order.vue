@@ -591,7 +591,7 @@ export default {
       return Number(this.$route.query.activeProduct) || 1
     },
     activityId () {
-      return Number(this.$route.query.activityId) || ''
+      return this.$route.query.activityId || ''
     }
   },
   watch: {
