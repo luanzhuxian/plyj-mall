@@ -27,6 +27,7 @@
           :support-refund="item.supportRefund"
           :gap="32"
           :product-type="1"
+          :active-product="activeProduct"
           :allow-invoice="item.showInvoice"
           border
         />
@@ -78,6 +79,12 @@
             </div>
           </div>
         </div>
+        <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">优惠券</span>
+            <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
+          </div>
+        </div>
 
         <div :class="$style.infoItem">
           <div :class="$style.freightType">
@@ -107,6 +114,7 @@
             is-submit
             :gap="32"
             :product-type="2"
+            :active-product="activeProduct"
             :allow-invoice="item.showInvoice"
             border
           />
@@ -178,6 +186,12 @@
               </div>
             </div>
           </div>
+          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">优惠券</span>
+              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
+            </div>
+          </div>
 
           <div :class="$style.infoItem">
             <div :class="$style.freightType">
@@ -208,6 +222,7 @@
             is-submit
             :gap="32"
             :product-type="2"
+            :active-product="activeProduct"
             :allow-invoice="item.showInvoice"
             border
           />
@@ -247,7 +262,7 @@
                 <span v-text="lessonErrorTip" />
               </div>
               <div>
-                <span v-if="CHECKED_STUDENT[item.skuCode1]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
+                <span v-if="CHECKED_STUDENT[item.skuCode1 + item.skuCode2]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
                 <span v-else>已选0人</span>
                 <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
               </div>
@@ -280,6 +295,12 @@
               </div>
             </div>
           </div>
+          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">优惠券</span>
+              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
+            </div>
+          </div>
 
           <div :class="$style.infoItem">
             <div :class="$style.freightType">
@@ -310,11 +331,30 @@
       </pl-button>
     </div>
 
-    <div v-if="totalAmount > 0 && showInvoiceSelector" :class="$style.itemSelector" @click.capture="selectInvoice">
+    <div
+      v-if="coupon.amount && isCart && activeProduct === 1"
+      :class="$style.itemSelector"
+      @click.capture="showCoupon = true"
+    >
+      <pl-fields
+        size="middle"
+        text="优惠"
+        icon="icon-coupon1"
+        :icon-gap="12"
+        show-right-icon
+        :right-text="'-¥' + coupon.amount"
+        left-text-weight="bold"
+      />
+    </div>
+
+    <div
+      v-if="totalAmount > 0 && showInvoiceSelector && activeProduct === 1"
+      :class="$style.itemSelector" @click.capture="selectInvoice"
+    >
       <pl-fields
         size="middle"
         text="发票"
-        icon="invoice"
+        icon="icon-invoice"
         :icon-gap="12"
         show-right-icon
         :right-text="invioceType === 0 ? '不需要' : '纸质发票'"
@@ -330,7 +370,7 @@
       <pl-fields
         size="middle"
         text="学员信息"
-        icon="name-card"
+        icon="icon-name-card"
         :icon-gap="12"
         :right-text="`已选${getStudentCountByProId(needStudentList[0].skuCode1 + needStudentList[0].skuCode2)}人`"
         show-right-icon
@@ -350,12 +390,11 @@
         </ul>
       </pl-fields>
     </div>
-
     <div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click.capture="chooseContact">
       <pl-fields
         size="middle"
         text="联系人信息"
-        icon="contact"
+        icon="icon-contact"
         :icon-gap="12"
         :right-text="contactInfoModel.name && contactInfoModel.mobile ? '已选择' : `未选择`"
         show-right-icon
@@ -412,6 +451,35 @@
         </pl-button>
       </div>
     </pl-popup>
+
+    <!-- 优惠券弹框 -->
+    <pl-popup
+      :show.sync="showCoupon"
+      title="领取优惠券"
+      title-align="left"
+    >
+      <div :class="$style.coupon">
+        <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
+        <div :class="$style.couponList">
+          <template v-for="(item, i) of couponList">
+            <CouponItem
+              :key="i"
+              :name="item.couponName"
+              :amount="item.amount"
+              :full="item.useLimitAmount"
+              :subtract="item.amount"
+              :instruction="item.brief"
+              :use-end-time="item.useEndTime"
+              :use-start-time="item.useStartTime"
+              :receive-count="item.count"
+              :can-go-classify="false"
+              is-available-status
+              @couponClick="couponClick(item)"
+            />
+          </template>
+        </div>
+      </div>
+    </pl-popup>
   </div>
 
   <div
@@ -438,12 +506,14 @@ import {
   confirmCart,
   submitOrder
 } from '../../apis/shopping-cart'
+import { getCouponOfMax, getCouponByPrice } from '../../apis/my-coupon'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { mapGetters, mapActions } from 'vuex'
 import { STUDENTS } from '../../store/mutation-type'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Count from '../../components/Count.vue'
+import CouponItem from '../../components/item/Coupon-Item.vue'
 import { checkLength, isPhone } from '../../assets/js/validate'
 import { resetForm } from '../../assets/js/util'
 export default {
@@ -453,7 +523,8 @@ export default {
     OrderItem,
     OrderItemSkeleton,
     AddressItemSkeleton,
-    Count
+    Count,
+    CouponItem
   },
   data () {
     return {
@@ -461,10 +532,13 @@ export default {
       showContactPopup: false,
       submiting: false,
       loading: false,
+      showCoupon: false,
       showInvoiceSelector: false, // 是否显示选择发票
       freight: 0,
       totalAmount: 0,
       amount: 0,
+      coupon: {}, // 优惠券信息
+      couponList: [], // 优惠券信息
       physicalProducts: [],
       virtualProducts: [],
       lessonList: [],
@@ -512,6 +586,12 @@ export default {
     },
     isCart () {
       return this.$route.query.isCart === 'YES'
+    },
+    activeProduct () {
+      return Number(this.$route.query.activeProduct) || 1
+    },
+    activityId () {
+      return this.$route.query.activityId || ''
     }
   },
   watch: {
@@ -535,18 +615,25 @@ export default {
     }
   },
   async activated () {
+    let selectedStudents // 已选择的学员的key
+    let students // 已有学员列表
+    let defStudent // 默认学员
     try {
+      // 获取商品详情
       await this.getProductDetail()
+      // 选择的发票信息（如果有的话）
       this.INVOICE_MODEL = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || null
+      // 选择的学员信息（如果有的话）
       this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-      // 已有学生信息的商品skuCode1
-      let hasStudent = Object.keys(this.CHECKED_STUDENT)
-      let students = await this[STUDENTS]()
-      let def = students.find(item => item.defaultStatus === 1)
-      if (def) { // 如果有默认学员
+      // 每个商品选择的学员信息是一个数组，为了保证这个数组正确的与商品对应起来，CHECKED_STUDENT对象的key都是商品的规格id组成
+      selectedStudents = Object.keys(this.CHECKED_STUDENT)
+      students = await this[STUDENTS]()
+      defStudent = students.find(item => item.defaultStatus === 1)
+      // 如果有默认学员，则缓存默认学员，并自动显示
+      if (defStudent) {
         for (let item of this.needStudentList) {
-          if (hasStudent.indexOf(item.skuCode1) === -1) { // 如果当前商品没有选择学生
-            this.$set(this.CHECKED_STUDENT, item.skuCode1 + item.skuCode2, [def])
+          if (selectedStudents.indexOf(item.skuCode1 + item.skuCode2) === -1) { // 如果当前商品没有选择学生
+            this.$set(this.CHECKED_STUDENT, item.skuCode1 + item.skuCode2, [defStudent])
           }
         }
         sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.CHECKED_STUDENT))
@@ -563,6 +650,9 @@ export default {
         this.contactInfoModel.name = this.realName || this.userName
         this.contactInfoModel.mobile = this.mobile
       }
+      if (this.activeProduct === 1) {
+        await this.getCouponList()
+      }
     } catch (e) {
       this.$router.go(-1)
       throw e
@@ -572,6 +662,46 @@ export default {
   },
   methods: {
     ...mapActions([STUDENTS]),
+    async getProductDetail (flag) {
+      const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
+      let coupon = {}
+      if (this.activeProduct === 1) {
+        coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
+      }
+      if (!proList || !proList.length) {
+        return this.$router.replace({ name: 'Home' })
+      }
+      if (!flag) this.loading = true
+      try {
+        // 获取订单详细数据
+        const { result } = await confirmCart({
+          activeProduct: this.activeProduct,
+          activityId: this.activityId,
+          cartProducts: proList,
+          userCouponId: coupon.id || '',
+          addressSeq: this.selectedAddress.sequenceNbr
+        })
+        const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
+        // 为每个虚拟订单都添加备注字段
+        for (const p of physicalProducts) {
+          p.remark = ''
+        }
+        formalClass.map(item => { item.type = 'FORMAL_CLASS' })
+        experienceClass.map(item => { item.type = 'EXPERIENCE_CLASS' })
+        virtualProducts.map(item => { item.type = 'VIRTUAL_GOODS' })
+        this.amount = amount
+        this.totalAmount = totalAmount
+        this.freight = Number(freight)
+        this.physicalProducts = physicalProducts
+        this.virtualProducts = virtualProducts
+        this.lessonList = [...formalClass, ...experienceClass]
+        this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 1)]
+        this.loading = false
+        this.showInvoiceSelector = [...physicalProducts, ...virtualProducts, ...formalClass, ...experienceClass].some(item => item.showInvoice === 1)
+      } catch (e) {
+        throw e
+      }
+    },
     // 获取当前课程选择的学员数量
     getStudentCountByProId (proId) {
       let currentStudents = this.CHECKED_STUDENT[proId]
@@ -605,6 +735,16 @@ export default {
       }
       this.showPopup = true
     },
+    // 根据购买总价获取合适的优惠券
+    async getCouponByAmount (proList = []) {
+      // 获取优惠券信息
+      let amount = proList.map(item => item.price * item.count).reduce((total, price) => {
+        return total + price
+      })
+      const { result } = await getCouponOfMax(amount || 0)
+      this.coupon = result
+      return result
+    },
     selectStudent (pro) {
       sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
         name: this.$route.name,
@@ -631,35 +771,17 @@ export default {
         localStorage.setItem('CONTACT_INFO_MODEL', JSON.stringify(this.contactInfoModel))
       }
     },
-    async getProductDetail (flag) {
-      const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-      if (!proList || !proList.length) {
-        return this.$router.replace({ name: 'Home' })
-      }
-      if (!flag) this.loading = true
+    // 选择优惠券
+    async couponClick (item) {
+      this.coupon = item
+      this.showCoupon = false
+      await this.getProductDetail(true, item)
+    },
+    // 获取优惠券
+    async getCouponList () {
       try {
-        // 获取订单详细数据
-        const { result } = await confirmCart({
-          cartProducts: proList,
-          addressSeq: this.selectedAddress.sequenceNbr
-        })
-        const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
-        // 为每个虚拟订单都添加备注字段
-        for (const p of physicalProducts) {
-          p.remark = ''
-        }
-        formalClass.map(item => { item.type = 'FORMAL_CLASS' })
-        experienceClass.map(item => { item.type = 'EXPERIENCE_CLASS' })
-        virtualProducts.map(item => { item.type = 'VIRTUAL_GOODS' })
-        this.amount = amount
-        this.totalAmount = totalAmount
-        this.freight = Number(freight)
-        this.physicalProducts = physicalProducts
-        this.virtualProducts = virtualProducts
-        this.lessonList = [...formalClass, ...experienceClass]
-        this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 1)]
-        this.loading = false
-        this.showInvoiceSelector = [...physicalProducts, ...virtualProducts, ...formalClass, ...experienceClass].some(item => item.showInvoice === 1)
+        let { result } = await getCouponByPrice(this.amount)
+        this.couponList = result
       } catch (e) {
         throw e
       }
@@ -721,7 +843,10 @@ export default {
         addressSeq: this.physicalProducts.length > 0 ? this.selectedAddress.sequenceNbr : '',
         cartProducts,
         cartSource: this.isCart,
-        invoiceModel: this.INVOICE_MODEL
+        invoiceModel: this.INVOICE_MODEL,
+        activeProduct: this.isCart ? 1 : this.activeProduct,
+        activityId: this.activityId,
+        userCouponId: this.coupon.id || ''
       }
       if (this.physicalProducts.length === 0) {
         // 没有实体商品时，必须有联系人信息
@@ -862,7 +987,7 @@ export default {
       sessionStorage.removeItem('INVOICE_MODEL')
       sessionStorage.removeItem('CONFIRM_LIST')
       sessionStorage.removeItem('APPLY_INVOICE')
-      localStorage.removeItem('CHECKED_STUDENT')
+      sessionStorage.removeItem('CHECKED_STUDENT')
       localStorage.removeItem('CONTACT_INFO_MODEL')
       this.remark = ''
       this.physicalProducts = []
@@ -1145,6 +1270,12 @@ export default {
       span {
         color: #999 !important;
       }
+    }
+  }
+  .coupon {
+    padding: 0 24px;
+    > .coupon-list {
+      margin-top: 48px;
     }
   }
   @keyframes bordrFlicker {

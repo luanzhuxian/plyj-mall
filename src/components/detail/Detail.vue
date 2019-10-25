@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import imgError from '../../assets/images/img_error.png'
+const imgError = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png'
 export default {
   name: 'DetailInfo',
   data () {

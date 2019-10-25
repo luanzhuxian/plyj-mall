@@ -34,7 +34,7 @@ export default {
   line-height: 150vw;
   font-size: 30px;
   text-align: center;
-  background: url("../assets/images/404.png") no-repeat center center;
+  background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/404.png") no-repeat center center;
   background-size: 50vw auto;
 }
 </style>

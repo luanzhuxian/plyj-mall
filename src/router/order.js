@@ -9,6 +9,15 @@ export default [
     }
   },
   {
+    path: '/my/order/balance',
+    name: 'WaitPayBalance',
+    component: () => import('../views/my/order/Wait-Pay-Balance.vue'),
+    props: true,
+    meta: {
+      title: '待付尾款订单'
+    }
+  },
+  {
     path: '/my/orders/detail/:orderId',
     name: 'OrderDetail',
     component: () => import('../views/my/order/Detail.vue'),

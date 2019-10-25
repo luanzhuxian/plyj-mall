@@ -6,7 +6,6 @@ import './assets/js/axios-config'
 import 'moment/locale/zh-cn'
 import './assets/scss/index.scss'
 import './assets/fonts/svg/index'
-import imgError from './assets/images/img_error.png'
 import directive from './directive'
 import { beforeResolve, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
@@ -17,7 +16,7 @@ import filters from './filter'
 import './assets/css/quill.css'
 import PlIcon from './components/Pl-Icon.vue'
 Vue.use(VueLazyload, {
-  error: imgError,
+  error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
   lazyComponent: true,
   throttleWait: 150
 })

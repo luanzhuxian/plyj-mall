@@ -1,12 +1,9 @@
-let fs = require('fs')
-let path = require('path')
+const MODEL = process.argv[process.argv.indexOf('--model') + 1]
+const NODE_ENV = process.env.NODE_ENV
 /* ********************************************* 环境 *************************************** */
-console.log('------------------------- ' + process.env.NODE_ENV + ' -------------------------')
-let argv = process.argv
-let model = argv[argv.indexOf('--model') + 1]
+console.log('------------------------- ' + NODE_ENV + ' -------------------------')
 /* ********************************************* 模式 *************************************** */
-console.log('------------------------- model: ' + model + ' -------------------------')
-
+console.log('------------------------- model: ' + MODEL + ' -------------------------')
 const externals =
   // 生产环境或者开发模式，使用CDN库依赖
   process.env.NODE_ENV === 'production'
@@ -27,7 +24,7 @@ module.exports = {
   pages: {
     index: {
       entry: 'src/main.js',
-      template: process.env.NODE_ENV === 'development' ? 'public-dev/local.html' : model === 'dev' ? 'public-dev/index-dev.html' : 'public/index.html',
+      template: MODEL === 'local' ? 'public-dev/local.html' : MODEL === 'development' ? 'public-dev/index-dev.html' : 'public/index.html',
       filename: 'index.html'
     }
   },
@@ -48,7 +45,11 @@ module.exports = {
       // 37测试 34开发 王恩74 李宾哲132 赵伟116 牛昌昌92 张涛77 任钊64
       '/apis': {
         // target: 'http://mall.youpenglai.com'
-        target: 'http://192.168.130.136'
+        target: 'http://192.168.130.64'
+      },
+      '/live/': {
+        // target: 'http://mall.youpenglai.com'
+        target: 'http://api.polyv.net'
       }
     }
   },

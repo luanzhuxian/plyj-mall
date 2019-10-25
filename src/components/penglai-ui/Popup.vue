@@ -17,6 +17,9 @@
       <div
         v-if="title"
         class="pl-popup__title"
+        :style="{
+          textAlign: titleAlign
+        }"
       >
         {{ title }}
       </div>
@@ -53,6 +56,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    titleAlign: {
+      type: String,
+      default: 'center'
     },
     hideCloseIcon: Boolean,
     show: Boolean,
@@ -163,10 +170,9 @@ export default {
 
   &__title {
     box-sizing: border-box;
-    padding: 28px 0;
+    padding: 28px;
     font-size: 30px;
     color: #333;
-    text-align: center;
   }
 
   &__content {

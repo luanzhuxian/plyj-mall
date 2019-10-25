@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.home">
-    <TemplateA :data="modules" v-if="type === 1">
-      <!-- 月光宝盒项目 -->
-      <!--<router-link
+    <!-- <TemplateA :data="modules" v-if="type === 1"> -->
+    <!-- 月光宝盒项目 -->
+    <!--<router-link
         slot="88"
         v-if="mallId === '1057573777392603136'"
         :to="{ name: 'MoonCake' }"
@@ -12,16 +12,23 @@
           src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/entry.png" alt=""
         >
       </router-link>-->
-      <!-- 88无现金日 -->
-      <!--<img
+    <!-- 88无现金日 -->
+    <!--<img
         slot="88"
         v-if="show88"
         :class="$style.img88"
         :src="data88[mallId].gif" alt=""
         @click="showHaibao"
       >-->
-    </TemplateA>
-    <TemplateB :data="modules" v-else-if="type === 2 || type === 3" :type="type">
+    <!-- </TemplateA> -->
+    <TemplateB
+      v-if="type === 3 || type === 4"
+      :type="type"
+      :data="modules"
+      :live="liveInfo"
+      :inviting-event="invitingEvent"
+      :jx-event="jxEvent"
+    >
       <!-- 月光宝盒项目 -->
       <!--<router-link
         slot="88"
@@ -63,23 +70,31 @@
       </div>
     </transition>-->
     <!--<WWEC :show.sync="show820" />-->
+    <invite-newcomers-home-entry />
+    <newcomers-home-entry />
   </div>
 </template>
 
 <script>
-import 'swiper/dist/css/swiper.css'
-import { getTemplate } from '../../apis/home'
-// import { wasGetInfo } from '../../apis/wwec'
-import TemplateA from './Template-A.vue'
-import TemplateB from './Template-B.vue'
 import { mapGetters } from 'vuex'
+import 'swiper/dist/css/swiper.css'
+import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
+import { getCurrentActivity } from '../../apis/invitenewcomers'
+// import { wasGetInfo } from '../../apis/wwec'
 // import moment from 'moment'
+// import TemplateA from './Template-A.vue'
+import TemplateB from './Template-B.vue'
+import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
+import NewcomersHomeEntry from '../newcomers/NewcomersHomeEntry.vue'
 // import WWEC from '../../components/WWEC.vue'
+
 export default {
   name: 'Home',
   components: {
-    TemplateA,
-    TemplateB
+    // TemplateA,
+    TemplateB,
+    InviteNewcomersHomeEntry,
+    NewcomersHomeEntry
     // WWEC
   },
   data () {
@@ -87,7 +102,15 @@ export default {
       loaded: false,
       // show820: false,
       type: 0,
-      modules: {},
+      modules: {
+        BANNER: null,
+        Adv: null,
+        POPULAR: null,
+        YUYUE: null,
+        PINGXUAN: null,
+        CLASS: null,
+        RECOMMEND: null
+      },
       // haibao: '',
       // pop: '',
       // data88: {
@@ -108,12 +131,20 @@ export default {
       // },
       dataMoonLightBox: {},
       // 820用户注册次数
-      registerCountFor820: 0
+      registerCountFor820: 0,
+      liveInfo: {},
+      invitingEvent: {},
+      jxEvent: {},
+      timestamp: ''
     }
   },
   async created () {
     try {
-      await this.getTemplate()
+      this.getTemplate()
+      const [{ result: live }, { result: invitingEvent }, { result: jxEvent }] = await Promise.all([getLiveInfo(), getCurrentActivity(), getJianxueInfo()])
+      this.liveInfo = live || {}
+      this.invitingEvent = invitingEvent || {}
+      this.jxEvent = jxEvent || {}
     } catch (e) {
       throw e
     }
@@ -165,7 +196,7 @@ export default {
     // },
     async getTemplate () {
       try {
-        const { result } = await getTemplate()
+        const { result } = await getTemplate({ type: 1 })
         if (!result) {
           this.noFinish = true
           this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
@@ -174,61 +205,46 @@ export default {
             })
           return
         }
-        const { moduleModels } = result
-        let { type } = result
-        let modules
-        if (type === 1) {
-          modules = {
-            BANNER: null,
-            PINGXUAN: null,
-            MODULE_A: null,
-            MODULE_B: null,
-            MODULE_C: null,
-            MODULE_D: null,
-            MODULE_E: null
-          }
-          const bannerList = result.moduleModels.filter(module => module.moduleType === 1)
-          const prodList = result.moduleModels.filter(module => module.moduleType === 2)
-          modules['BANNER'] = bannerList[0]
-          modules['MODULE_B'] = bannerList[1]
-          modules['MODULE_D'] = bannerList[2]
-          modules['MODULE_A'] = prodList[0]
-          modules['MODULE_C'] = prodList[1]
-          modules['MODULE_E'] = prodList[2]
-        }
+        let { type, currentTime, moduleModels } = result
+        // if (type === 1) {
+        //   modules = {
+        //     BANNER: null,
+        //     PINGXUAN: null,
+        //     MODULE_A: null,
+        //     MODULE_B: null,
+        //     MODULE_C: null,
+        //     MODULE_D: null,
+        //     MODULE_E: null
+        //   }
+        //   const bannerList = result.moduleModels.filter(module => module.moduleType === 1)
+        //   const prodList = result.moduleModels.filter(module => module.moduleType === 2)
+        //   modules['BANNER'] = bannerList[0]
+        //   modules['MODULE_B'] = bannerList[1]
+        //   modules['MODULE_D'] = bannerList[2]
+        //   modules['MODULE_A'] = prodList[0]
+        //   modules['MODULE_C'] = prodList[1]
+        //   modules['MODULE_E'] = prodList[2]
+        // }
         if (type === 3) {
-          modules = {
-            YUYUE: null,
-            PINGXUAN: null,
-            BANNER: null,
-            POPULAR: null,
-            CLASS: null,
-            RECOMMEND: null
-          }
-          modules.BANNER = moduleModels[0]
-          modules.POPULAR = moduleModels[1]
-          modules.YUYUE = moduleModels[2]
-          modules.PINGXUAN = moduleModels[3]
-          modules.CLASS = moduleModels[4]
-          modules.RECOMMEND = moduleModels[5]
+          this.modules.BANNER = moduleModels[0]
+          this.modules.POPULAR = moduleModels[1]
+          this.modules.YUYUE = moduleModels[2]
+          this.modules.PINGXUAN = moduleModels[3]
+          this.modules.CLASS = moduleModels[4]
+          this.modules.RECOMMEND = moduleModels[5]
         }
-        if (type === 2) {
-          modules = {
-            YUYUE: null,
-            PINGXUAN: null,
-            BANNER: null,
-            POPULAR: null,
-            RECOMMEND: null
-          }
-          modules.BANNER = moduleModels[0]
-          modules.POPULAR = moduleModels[1]
-          modules.YUYUE = moduleModels[2]
-          modules.PINGXUAN = moduleModels[3]
-          modules.RECOMMEND = moduleModels[4]
+        if (type === 4) {
+          this.modules.BANNER = moduleModels[0]
+          this.modules.Adv = moduleModels[1]
+          this.modules.POPULAR = moduleModels[2]
+          this.modules.YUYUE = moduleModels[3]
+          this.modules.PINGXUAN = moduleModels[4]
+          this.modules.CLASS = moduleModels[5]
+          this.modules.RECOMMEND = moduleModels[6]
         }
-        this.modules = modules
-        this.loaded = true
         this.type = type
+        this.timestamp = currentTime || Date.now()
+        this.loaded = true
       } catch (e) {
         throw e
       }

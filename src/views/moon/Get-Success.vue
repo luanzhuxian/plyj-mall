@@ -21,7 +21,7 @@
       <p class="mb-28">即可免费获得专属线上教育商城</p>
       <p>我们将在15个工作日内与您联系</p>
       <p class="mb-48">全程提供专属商城部署、商城装修等服务</p>
-      <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/qingfeng.png" alt="">
+      <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/qingfeng.png" alt="">
       <p>长按识别二维码</p>
       <p>可联系雅集小书童-清风</p>
     </div>

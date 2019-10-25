@@ -219,6 +219,21 @@ export default {
         border-radius: 40px;
       }
     }
+    &__squarelarge {
+      width: 100%;
+      height: 80px;
+      font-size: 28px;
+      text-align: center;
+      .pl-button__prefix-icon, .pl-button__loading {
+        width: 35px;
+        margin-right: 5px;
+        fill: currentColor;
+        vertical-align: -7px;
+      }
+      &.round {
+        border-radius: 40px;
+      }
+    }
     /* huge */
     &__huge {
       width: 100%;

@@ -11,6 +11,11 @@ import Cart from './cart'
 import Appointment from './appointment'
 import NotFound from '../views/404.vue'
 import DoubleTwelveDay from './double-twelve-day'
+import Live from './live'
+import Activity from './activity'
+import Newcomers from './newcomers'
+import InviteNewcomers from './invitenewcomers'
+import roadlearning from './roadlearning'
 
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
@@ -50,7 +55,12 @@ export const router = new Router({
     ...setting,
     ...Cart,
     ...Appointment,
-    ...DoubleTwelveDay
+    ...DoubleTwelveDay,
+    ...Live,
+    ...Activity,
+    ...Newcomers,
+    ...InviteNewcomers,
+    ...roadlearning
   ],
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }

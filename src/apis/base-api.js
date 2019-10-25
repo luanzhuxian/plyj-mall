@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 /*
  * 发送验证码
  * smstype AGENCY_MOBILE_REGISTER | AGENCY_MOBILE_UPDATE | AGENCY_MOBILE_PASSWD_REST

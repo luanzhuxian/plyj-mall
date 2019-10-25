@@ -18,9 +18,10 @@
                 alt=""
               >
               <div :class="$style.baseInfoRight">
-                <p :class="$style.price" v-text="currentSku.price" />
+                <p :class="$style.price" v-text="currentSku.price" v-if="activeType === 1 || (activeProduct !== 1 && preActivity !== 2)" />
+                <p :class="$style.price" v-text="activityProductModel.price" v-if="activeType !== 1 && activeProduct !== 1 && preActivity === 2" />
                 <p :class="$style.original" v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice">
-                  原价：<del class="rmb" v-text="currentSku.originalPrice" />
+                  原价：<del class="rmb" v-text="currentSku.originalPrice" v-if="activeProduct !== 1 && preActivity === 2" /> <del class="rmb" v-else v-text="currentSku.originalPrice" />
                 </p>
                 <p :class="$style.repertory" v-if="currentSku.skuCode1Name">
                   已选：
@@ -64,7 +65,8 @@
             <div :class="$style.count">
               <div>
                 <span>购买数量</span>
-                <span v-if="limiting" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ limiting }}件)</span>
+                <span v-if="activeType !== 1 && preActivity === 2 && activityProductModel.activityLimit === 1" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ activityProductModel.activityLimitNumber }}件)</span>
+                <span v-if="limiting && activeType === 1" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ limiting }}件)</span>
               </div>
               <div :class="$style.countCtr">
                 <button :disabled="count <= min || currentDisabled" @click.stop="minus">
@@ -99,7 +101,6 @@
 </template>
 
 <script>
-/* eslint-disabled */
 export default {
   name: 'SpecificationPop',
   props: {
@@ -137,6 +138,22 @@ export default {
     limiting: {
       type: Number,
       default: 0
+    },
+    activeProduct: {
+      type: [Number, String],
+      default: ''
+    },
+    preActivity: {
+      type: [Number, String],
+      default: ''
+    },
+    activityProductModel: {
+      type: Object,
+      default: null
+    },
+    activeType: {
+      type: [Number, String],
+      default: ''
     }
   },
   data () {
@@ -173,6 +190,8 @@ export default {
       },
       deep: true
     }
+  },
+  created () {
   },
   computed: {
     currentDisabled () {

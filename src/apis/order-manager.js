@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 // 微信用户-提交订单
 // export function physicalorderWechat (openId, data) {
 //   return axios.post(`/apis/v1/order/physicalorder/wechat?openId=${openId}`, data)
@@ -104,3 +104,11 @@ export const getHelperApplicationProgress = () => axios.get(`/apis/v1/agent/user
 // 获取是否核销
 export const getVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpafter?orderId=${orderId}`)
 export const setVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpbefore?orderId=${orderId}`)
+/**
+ * 获取待付尾款订单列表
+ * @param params
+ * @property {number} params.current
+ * @property {number} params.size
+ * @return {*}
+ */
+export const waitPayBalance = params => axios.get(`/apis/v1/order/current/user/pre/page`, { params })

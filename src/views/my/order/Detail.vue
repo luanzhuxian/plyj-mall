@@ -86,6 +86,7 @@
           :product-id="item.productId"
           :support-refund="item.supportRefund"
           :allow-invoice="item.invoiceType"
+          :active-product="activeProduct"
           route-name="Lesson"
         />
         <div :class="$style.buttons">
@@ -164,9 +165,27 @@
       </div>
 
       <div :class="$style.productPrice">
-        <p>
-          <span>商品金额</span>
+        <p v-if="activityData.tailAount">
+          <span>待付尾款</span>
           <span
+            class="rmb"
+            v-text="activityData.tailAount || 0"
+          />
+        </p>
+        <p>
+          <span>
+            {{ activeProductStatus[activeProduct] || '商品' }}
+            <i v-if="activeProduct !==4">金额</i>
+            <i v-if="activeProduct === 4" class="gray-3">(不退，翻{{ activityData.multipleNumber }}倍)</i>
+          </span>
+
+          <span
+            v-if="activeProduct !== 1"
+            class="rmb"
+            v-text="activityData.price || 0"
+          />
+          <span
+            v-else
             class="rmb"
             v-text="productInfoModel.productsTotalAmount || 0"
           />
@@ -184,6 +203,10 @@
             class="rmb"
             v-text="productInfoModel.freight || 0"
           />
+        </p>
+        <p v-if="productInfoModel.totalCouponAmount > 0">
+          <span>优惠</span>
+          <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
         </p>
       </div>
 
@@ -241,7 +264,8 @@
       <pl-fields
         size="middle"
         text="联系人信息"
-        icon="contact"
+        icon="icon-contact"
+        :icon-width="40"
         :icon-gap="12"
         left-text-weight="bold"
       >
@@ -585,6 +609,8 @@ export default {
       invoiceModelList: [],
       studentInfoModels: [],
       redeemCodeModels: [],
+      activityData: {},
+      activeProduct: 1,
       orderStatusAlias: '',
       shippingAddress: {
         realName: ' ',
@@ -612,7 +638,12 @@ export default {
       qrImg: '',
       // 海报
       isPosterShow: false,
-      poster: ''
+      poster: '',
+      activeProductStatus: {
+        2: '团购',
+        3: '限时秒杀',
+        4: '定金'
+      }
     }
   },
   computed: {
@@ -641,13 +672,15 @@ export default {
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) &&
       this.productInfoModel.actuallyAmount > 0 &&
+      !this.activeProductStatus[this.activeProduct] &&
       (this.orderType === 'PHYSICAL' || this.usefulCodeNumber > 0)
     },
     // 是否可以申请发票，invoiceStatus： 1:'已申请' 3:'已开票' 7:'不支持' 8:'可申请'
     canApplyInvoice () {
       return this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
-        this.productInfoModel.productsTotalAmount - this.productInfoModel.couponDeduction > 0 &&
+        this.productInfoModel.actuallyAmount > 0 &&
+        !this.activeProductStatus[this.activeProduct] &&
         this.productInfoModel.productDetailModels.some(product => {
           return product.price > 0 &&
             product.invoiceType === 1 &&
@@ -704,7 +737,7 @@ export default {
       const end = this.productInfoModel.productDetailModels[0].validityPeriodEnd.split(' ')[0]
       let qrcode = await generateQrcode(300, `${item.redeemCode}`, 0, null, null, 'url')
       let mulitImg = [
-        `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/C%E7%AB%AF/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`,
+        `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${Date.now()}`,
         `${qrcode}`,
         `${this.productInfoModel.productDetailModels[0].productImg}?time=${Date.now()}&x-oss-process=style/thum`
       ]
@@ -810,12 +843,16 @@ export default {
           return
         }
         if (orderStatus === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
-        if (orderStatus === 'WAIT_RECEIVE') this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        if (orderStatus === 'WAIT_RECEIVE') {
+          this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        }
       }, 1000)
     },
     setTime (result, orderStatus) {
+      let activeProduct = result.activeProduct
+      let waitPayTime = activeProduct === 1 || activeProduct === 5 ? 24 * 60 * 60 * 1000 : 5 * 60 * 1000
       let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
-      let duration = orderStatus === 'WAIT_PAY' ? (24 * 60 * 60 * 1000) : (10 * 24 * 60 * 60 * 1000)
+      let duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
       let now = moment((result.currentServerTime)).valueOf() // 服务器时间
       let startTime = moment(time).valueOf()
       if (now - startTime < duration) {
@@ -838,7 +875,9 @@ export default {
             invoiceModelList,
             studentInfoModels,
             orderStatusAlias,
-            redeemCodeModels
+            redeemCodeModels,
+            activityData,
+            activeProduct
           } = result
           this.detail = result
           this.orderStatus = orderStatus
@@ -852,6 +891,8 @@ export default {
           this.studentInfoModels = studentInfoModels || []
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
+          this.activityData = activityData || {}
+          this.activeProduct = activeProduct || 1
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['count']
           }, 0);  // eslint-disable-line
@@ -860,6 +901,13 @@ export default {
             mobile: this.shippingAddress.mobile,
             address: this.shippingAddress.agencyAddress
           } = receiverModel)
+          // 优惠金额保留两位小数
+          let totalCouponAmount = productInfoModel.productDetailModels.reduce((total, current) => {
+            return total + current['couponAmount']
+          }, 0)
+          totalCouponAmount = totalCouponAmount.toString().indexOf('.') === -1 ? totalCouponAmount : totalCouponAmount.toFixed(2)
+          this.productInfoModel.totalCouponAmount = totalCouponAmount
+
           if (orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
             if (orderStatus !== 'WAIT_PAY') {
               // 生成核销码二维码
@@ -883,9 +931,16 @@ export default {
               this.setTime(result, 'WAIT_RECEIVE')
             } else {
               let { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels[0]
-              if (validityPeriodStart) {
-                const start = validityPeriodStart.split(' ')[0]
-                const end = validityPeriodEnd.split(' ')[0]
+              let { useStartTime, useEndTime } = activityData
+              if (activeProduct === 4) {
+                const start = moment(useStartTime).format('YYYY-MM-DD')
+                const end = moment(useEndTime).format('YYYY-MM-DD')
+                this.suggestionMap.WAIT_RECEIVE = (start === end)
+                  ? `有效期 ${start}`
+                  : `有效期 ${start} 至 ${end}`
+              } else if (validityPeriodStart) {
+                const start = moment(validityPeriodStart).format('YYYY-MM-DD')
+                const end = moment(validityPeriodEnd).format('YYYY-MM-DD')
                 this.suggestionMap.WAIT_RECEIVE = (start === end)
                   ? `有效期 ${start}`
                   : `有效期 ${start} 至 ${end}`
@@ -958,7 +1013,9 @@ export default {
     // 申请发票
     applyInvoice () {
       const physicalProducts = this.productInfoModel.productDetailModels.filter(item => {
-        return item.price > 0 && item.invoiceType === 1 && item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
+        return item.price > 0 &&
+          item.invoiceType === 1 &&
+          item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
       })
       sessionStorage.setItem('APPLY_INVOICE', JSON.stringify([ ...physicalProducts ]))
       sessionStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({

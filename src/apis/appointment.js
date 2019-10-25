@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 /**
  * 预约
  * @param data {Object} { mobile, openId }

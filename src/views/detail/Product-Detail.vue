@@ -2,39 +2,63 @@
   <div :class="$style.lesson">
     <template v-if="productStatus !== 0">
       <!-- 海报按钮 -->
-      <div :class="$style.haibao" @click="createHaibao">
+      <div :class="$style.haibao" @click="createHaibao(detail.activeProduct)">
         <pl-svg name="haibao" />
         <p>分享海报</p>
       </div>
-      <DetailBanner
-        :type="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' ? 'lesson' : 'product'"
-        :banners="banners"
-      />
+      <!-- 商品banner -->
+      <DetailBanner :banners="banners" />
+      <!-- 团购倒计时条 -->
+      <TogetherBar :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity !== 0" />
+      <!-- 秒杀倒计时条 -->
+      <SecondBar :detail="detail" v-if="detail.activeProduct === 3 && detail.preActivity !== 0" />
+      <!-- 预购倒计时条 -->
+      <BookingBar :detail="detail" v-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
+      <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
-        <info-header :detail="detail" />
+        <!-- 加个 润笔 购买数量，关注人数 登信息 -->
+        <info-header :detail="detail" v-if="detail.activeProduct === 1" />
+        <!-- 团购信息 -->
+        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity !== 0" />
+        <!-- 秒杀信息 -->
+        <SecondPrice :detail="detail" v-if="detail.activeProduct === 3 && detail.preActivity !== 0" />
+        <!-- 预购信息 -->
+        <BookingPrice :detail="detail" v-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
+        <!-- 开售倒计时 -->
         <count-down
           size="large"
           @done="countFinished"
           :class="$style.countDown"
-          v-if="detail.shoppingStatus === 1"
+          v-if="detail.shoppingStatus === 1 && detail.activeProduct === 1"
           :starttime="detail.serverTime"
           :endtime="detail.shoppingTimeLong"
         />
-        <DetailTitle v-text="detail.productName" />
+        <!-- 商品名称 -->
+        <DetailTitle :active-product="detail.activeProduct" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
+        <!-- 商品描述 -->
         <DetailDesc v-text="detail.productDesc" />
+        <!-- 商品标签 -->
         <Tags :tags="detail.labelModels" />
+        <!-- 使用期限 -->
         <useful-life
           v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
-          :start="detail.validityPeriodStart"
-          :end="detail.validityPeriodEnd"
+          :start="detail.activeProduct === 4 ? detail.activityProductModel.useStartTime : detail.validityPeriodStart"
+          :end="detail.activeProduct === 4 ? detail.activityProductModel.useEndTime : detail.validityPeriodEnd"
         />
       </DetailInfoBox>
 
-      <Field v-if="productType === 'PHYSICAL_GOODS'" label="发货" content="普通快递" />
+      <Field
+        v-if="productType === 'PHYSICAL_GOODS'"
+        label="发货"
+        :label-width="120"
+        content="普通快递"
+      />
+
       <Field
         label="选择"
+        :label-width="120"
         :can-click="!noStock && detail.productStatus === 2"
-        @click="showSpecifica = true"
+        @click="showSpecifica = true; activeType = 1"
       >
         <template v-if="currentModel.skuCode1Name">
           已选择：“<span v-text="currentModel.skuCode1Name" />
@@ -42,6 +66,18 @@
         <template v-if="currentModel.skuCode2Name">，<i v-text="currentModel.skuCode2Name" /></template>”
         <span v-if="!currentModel.id">请选择规格</span>
       </Field>
+
+      <Field
+        v-if="couponList.length && detail.preActivity !== 2"
+        label="优惠券"
+        can-click
+        :label-width="120"
+        @click="showCoupon = true"
+      >
+        <span style="color: #FE7700;" v-text="couponText" />
+      </Field>
+
+      <TogetherRule v-if="detail.activeProduct === 2 || detail.activeProduct === 4" :active-product="detail.activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
 
       <div :class="$style.detailOrComment">
         <div :class="$style.tabs">
@@ -61,10 +97,13 @@
           />
         </div>
       </div>
+
+      <!-- 使用说明 -->
       <Instructions
         v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
         :content="detail.useDesc"
       />
+
       <!-- 品宣入口 -->
       <div v-if="showBranding" :class="$style.pingxuan" @click="$router.push({ name: 'Appointment', query: { showStatus: 'ALL' } })">
         <div :class="$style.pingxuanLeft">
@@ -80,12 +119,14 @@
       </div>
     </template>
 
+    <!-- 售罄 -->
     <SoldOut v-else />
-
+    <!-- 猜你喜欢 -->
     <div style="background-color: #f4f5f9;">
       <you-like :product-id="productId" :is-my="true" />
     </div>
 
+    <!--底部购买按钮  -->
     <buy-now
       type="warning"
       ref="buyNow"
@@ -98,7 +139,12 @@
       :confirm-text="confirmText"
       :disable-confrim="confirmText === '暂未开售'"
       :limiting="limiting"
+      :active-product="detail.activeProduct"
+      :activity-product-model="detail.activityProductModel || null"
+      :pre-activity="detail.preActivity"
     />
+
+    <!-- 规格弹框 -->
     <specification-pop
       :default-count="defaultCount"
       :sku-list="detail.productSkuModels"
@@ -107,9 +153,58 @@
       :visible.sync="showSpecifica"
       :sku.sync="currentModel"
       :limiting="limiting"
+      :active-product="detail.activeProduct"
+      :activity-product-model="detail.activityProductModel || null"
+      :pre-activity="detail.preActivity"
+      :active-type="activeType"
     >
       <template v-slot:footer="{ currentSku }">
-        <div :class="$style.buttons">
+        <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
+          <button
+            :class="$style.add"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            @click="buyNow(currentSku, 1)"
+          >
+            单独购买
+            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+          </button>
+          <button
+            :class="$style.buy"
+            @click="buyNow(currentSku, 2)"
+          >
+            我要参团
+            <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+          </button>
+        </div>
+        <!-- 秒杀商品下单 -->
+        <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
+          <button
+            :class="$style.add"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            @click="buyNow(currentSku, 1)"
+          >
+            原价购买
+            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+          </button>
+          <button
+            :class="$style.buy"
+            @click="buyNow(currentSku, 3)"
+          >
+            立即秒杀
+            <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+          </button>
+        </div>
+        <!-- 预购商品下单 -->
+        <div :class="$style.button" v-else-if="detail.activeProduct === 4 && detail.preActivity === 2">
+          <button
+            :class="$style.preBtn"
+            @click="buyNow(currentSku, 4)"
+          >
+            定金购买
+            <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
+          </button>
+        </div>
+        <div :class="$style.buttons" v-else>
           <button
             :class="$style.add"
             :disabled="adding || noStock"
@@ -120,7 +215,7 @@
           <button
             :class="$style.buy"
             :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
-            @click="buyNow(currentSku)"
+            @click="buyNow(currentSku, 1)"
           >
             {{ confirmText }}
           </button>
@@ -134,22 +229,52 @@
     <div :class="$style.buttomTip" v-if="!loading && noStock">
       该商品已全部售罄，请选择其它商品购买
     </div>
+    <!-- 海报弹框 -->
     <transition name="fade">
       <div :class="$style.saveHaibao" v-if="showHaibao">
         <div :class="$style.saveHaibaoContent">
           <img :src="haibao" alt="">
-          <div :class="$style.saveButton">
+          <div :class="$style.saveButton" v-if="detail.activeProduct === 1">
+            长按识别或保存二维码，分享给朋友吧！
+          </div>
+          <div :class="$style.saveButton1" v-else>
             长按识别或保存二维码，分享给朋友吧！
           </div>
           <pl-svg name="close3" color="#fff" @click="showHaibao = false;" />
         </div>
       </div>
     </transition>
+
+    <!-- 优惠券弹框 -->
+    <pl-popup
+      :show.sync="showCoupon"
+      title="领取优惠券"
+      title-align="left"
+    >
+      <div :class="$style.coupon">
+        <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
+        <div :class="$style.couponList">
+          <template v-for="(item, i) of couponList">
+            <CouponItem
+              :key="i"
+              :name="item.couponName"
+              :amount="item.amount"
+              :full="item.useLimitAmount"
+              :subtract="item.amount"
+              :instruction="item.brief"
+              :use-end-time="item.useEndTime"
+              :use-start-time="item.useStartTime"
+              :receive-count="item.count"
+              @couponClick="couponClick(item.id)"
+            />
+          </template>
+        </div>
+      </div>
+    </pl-popup>
   </div>
 </template>
 
 <script>
-/* eslint-disable */
 import DetailBanner from '../../components/detail/Banner.vue'
 import DetailInfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
@@ -160,9 +285,9 @@ import Tags from '../../components/detail/Tags.vue'
 import UsefulLife from '../../components/detail/Useful-Life.vue'
 import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
-import Price from '../../components/product/Price.vue'
 import Field from '../../components/detail/Field.vue'
-import { getProductDetail } from '../../apis/product'
+import { getProductDetail, getCouponInDetail } from '../../apis/product'
+import { receiveCoupon } from '../../apis/my-coupon'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
@@ -173,15 +298,29 @@ import SoldOut from './Sold-Out.vue'
 import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
+import CouponItem from '../../components/item/Coupon-Item.vue'
+import TogetherBar from './together/Together-Bar'
+import SecondBar from './second/Second-Bar'
+import BookingBar from './booking/Booking-Bar'
+import TogetherRule from './together/Together-Rule'
+import TogetherPrice from './together/Together-Price'
+import SecondPrice from './second/Second-Price'
+import BookingPrice from './booking/Booking-Price'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
   name: 'Lesson',
   components: {
+    TogetherPrice,
+    SecondPrice,
+    BookingPrice,
+    TogetherRule,
+    TogetherBar,
+    SecondBar,
+    BookingBar,
     DetailBanner,
     DetailTitle,
     DetailDesc,
     DetailInfo,
-    Price,
     Field,
     Tags,
     BuyNow,
@@ -193,15 +332,18 @@ export default {
     UsefulLife,
     InfoHeader,
     Instructions,
-    CountDown
+    CountDown,
+    CouponItem
   },
   data () {
     return {
       banners: [],
+      couponList: [],
       productStatus: 2,
       detail: {},
       productSkuModels: [],
       showSpecifica: false,
+      showCoupon: false,
       currentModel: {}, // 当前选中的规格
       commentForm: {
         current: 1,
@@ -214,7 +356,8 @@ export default {
       adding: false,
       haibao: '',
       tab: 2,
-      imgels: []
+      imgels: [],
+      activeType: 1
     }
   },
   props: {
@@ -253,6 +396,13 @@ export default {
     },
     showBranding () {
       return this.detail.showBranding === 1
+    },
+    couponText () {
+      let text = ''
+      this.couponList.map((item, index) => {
+        text += `满${item.useLimitAmount}减¥${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
+      })
+      return text
     }
   },
   watch: {
@@ -264,9 +414,10 @@ export default {
       this.getDetail()
     }
   },
-  activated () {
+  async activated () {
     try {
-      this.getDetail()
+      await this.getDetail()
+      await this.getCouponList()
     } catch (e) {
       throw e
     }
@@ -277,8 +428,9 @@ export default {
     this.haibao = ''
     this.showHaibao = false
     this.tab = 2
+    this.showCoupon = false
   },
-  mounted () {
+  async mounted () {
     // 其他人的分享id
     let otherShareId = sessionStorage.getItem('shareBrokerId') || ''
     let { brokerId, userId, mallDomain, productId } = this
@@ -290,20 +442,20 @@ export default {
         // 携带有他人分享id时，先把他人的id保存起来，然后再替换成当前用户的id
         // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
         sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.href = selfUrl
-      } else if (brokerId && brokerId === userId) {
+        location.replace(selfUrl)
+      } else if (brokerId === userId) {
         sessionStorage.setItem('shareBrokerId', userId || '')
-      } else if (!brokerId && userId) {
-        location.href = selfUrl
+      } else {
+        location.replace(selfUrl)
       }
     } else {
-      if (!brokerId && userId) {
-        location.href = selfUrl
+      if (!brokerId) {
+        location.replace(selfUrl)
         return
       }
       if (brokerId !== userId) {
         sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.href = selfUrl
+        location.replace(selfUrl)
       }
     }
   },
@@ -346,16 +498,24 @@ export default {
         this.loading = false
       }
     },
-    // async slideChange (imgs, index) {
-    //   if (this.imgels.length < imgs.length) {
-    //     for (let i of imgs) {
-    //       i.crossOrigin = ''
-    //       this.imgels.push(i.cloneNode(true))
-    //     }
-    //   }
-    //   this.haibaoImg = this.imgels[0]
-    //   // this.haibao = ''
-    // },
+    // 获取优惠券
+    async getCouponList () {
+      try {
+        let { result } = await getCouponInDetail()
+        this.couponList = result
+      } catch (e) {
+        throw e
+      }
+    },
+    async couponClick (id) {
+      try {
+        await receiveCoupon({ couponId: id })
+        this.$success('领取成功')
+        await this.getCouponList()
+      } catch (e) {
+        throw e
+      }
+    },
     resetState () {
       this.currentModel = {}
       this.banners.splice(0, 1000000)
@@ -404,12 +564,12 @@ export default {
         }
       })
     },
-    buyNow (selected) {
+    buyNow (selected, activeType) {
       if (!this.hasBind()) {
         return
       }
       this.currentModel = selected
-      const { skuCode1, count, skuCode2 } = selected
+      const { skuCode1, count, skuCode2, price } = selected
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId')
       sessionStorage.setItem('CONFIRM_LIST', JSON.stringify([{
@@ -417,17 +577,20 @@ export default {
         count: count,
         skuCode1: skuCode1,
         skuCode2,
+        price,
         agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
       this.$router.push({
         name: 'SubmitOrder',
         query: {
-          isCart: 'NO'
+          isCart: 'NO',
+          activeProduct: activeType,
+          activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
     },
-    async createHaibao () {
+    async createHaibao (type) {
       if (this.loading) {
         return
       }
@@ -448,53 +611,123 @@ export default {
         lodedAvatar = await this.loadImage(avatar)
       }
       const arcAvatar = cutArcImage(lodedAvatar)
+      const allImgs = [
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster3.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster1.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/original_price-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/second_price-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/tuan_price-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan-1571393161453.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao-1571393161453.png')
+      ]
+      const res = await Promise.all(allImgs)
+      const tuanBg = res[0]
+      const miaoBg = res[1]
+      const yugouBg = res[2]
+      const dikou = res[3]
+      const original_price = res[4]
+      const second_price = res[5]
+      const tuan_price = res[6]
+      const yuan = res[7]
+      const yujiao = res[8]
       // 截取中间部分
       img = cutImageCenter(img)
       let canvas = document.createElement('canvas')
       canvas.width = 1120
       canvas.height = 1720
       let ctx = canvas.getContext('2d')
-      // 绘制头部
-      ctx.fillStyle = '#fff'
-      ctx.fillRect(0, 0, 1120, 192)
-      ctx.drawImage(arcAvatar, 32, 32, 128, 128)
-      fontStyle(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 800, 1)
-      // fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
-
+      if (type === 1) {
+        // 绘制头部
+        ctx.fillStyle = '#fff'
+        ctx.fillRect(0, 0, 1120, 192)
+        ctx.drawImage(arcAvatar, 32, 32, 128, 128)
+        fontStyle(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 800, 1)
+        // fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
+      }
+      if (type === 2) {
+        ctx.drawImage(tuanBg, 0, 0, 1120, 192)
+      }
+      if (type === 3) {
+        ctx.drawImage(miaoBg, 0, 0, 1120, 192)
+      }
+      if (type === 4) {
+        ctx.drawImage(yugouBg, 0, 0, 1120, 192)
+      }
       try {
         let min = Math.min(img.width, img.height)
         // 二维码
-        let qrcode = await generateQrcode(300, window.location.href, 0, img, 10, 'canvas')
+        let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'canvas')
         ctx.drawImage(img, 0, 0, min, min, 0, 192, 1120, 1120)
-        ctx.fillStyle = '#fff'
+        if (type === 1) {
+          ctx.fillStyle = '#fff'
+        } else {
+          ctx.fillStyle = '#FA4D2F'
+        }
         ctx.fillRect(0, 1312, 1120, 408)
         ctx.drawImage(qrcode, 750, 1352, 320, 320)
         // 填充商品名称
         let str = this.detail.productName
-        fontStyle(ctx, '56px Microsoft YaHei UI', '#000', 'top')(ctx, 48, 1352, str, 80, 620, 2)
-        // 填充价钱
+        fontStyle(ctx, '56px Microsoft YaHei UI', type === 1 ? '#000' : '#fff', 'top')(ctx, 48, 1352, str, 80, 620, 2)
         let priceList = this.detail.productSkuModels.map(item => item.price)
         let originalPriceList = this.detail.productSkuModels.map(item => item.originalPrice)
         let price = Math.min(...priceList)
         let originalPrice = Math.max(...originalPriceList)
-        ctx.fillStyle = '#FE7700'
-        ctx.fillText('¥', 48, 1564 + (76 - 56) / 2)
-        fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1544 + (104 - 88) / 2, String(price), 104)
-        // 绘制原价
-        if (originalPrice) {
-          let priceWidth = ctx.measureText(price).width
-          ctx.fillStyle = '#999'
-          ctx.font = '56px Microsoft YaHei UI'
-          ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1564 + (80 - 56) / 2)
-          let originalPriceWidth = ctx.measureText(`¥${originalPrice}`).width
-          ctx.save()
-          // 设置删除线
-          ctx.strokeStyle = '#999'
-          ctx.beginPath()
-          ctx.lineWidth = '4'
-          ctx.moveTo(96 + priceWidth + 44, 1564 + (80 - 56) / 2 + 80 / 3)
-          ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1564 + (80 - 56) / 2 + 80 / 3)
-          ctx.stroke()
+        if (type === 1) {
+          // 填充价钱
+          ctx.fillStyle = '#FE7700'
+          ctx.fillText('¥', 48, 1564 + (76 - 56) / 2)
+          fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1544 + (104 - 88) / 2, String(price), 104)
+          // 绘制原价
+          if (originalPrice) {
+            let priceWidth = ctx.measureText(price).width
+            ctx.fillStyle = '#999'
+            ctx.font = '56px Microsoft YaHei UI'
+            ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1564 + (80 - 56) / 2)
+            let originalPriceWidth = ctx.measureText(`¥${originalPrice}`).width
+            ctx.save()
+            // 设置删除线
+            ctx.strokeStyle = '#999'
+            ctx.beginPath()
+            ctx.lineWidth = '4'
+            ctx.moveTo(96 + priceWidth + 44, 1564 + (80 - 56) / 2 + 80 / 3)
+            ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1564 + (80 - 56) / 2 + 80 / 3)
+            ctx.stroke()
+          }
+        } else if (type === 2) {
+          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
+          let originalPriceWidth = ctx.measureText(`¥${price}`).width
+          ctx.drawImage(tuan_price, 48, 1464, 440, 122)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
+          ctx.drawImage(yuan, 450 + priceWidth, 1464, 68, 68)
+          ctx.drawImage(original_price, 48, 1584, 220, 78)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(price, 260, 1564)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
+        } else if (type === 3) {
+          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
+          let originalPriceWidth = ctx.measureText(`¥${price}`).width
+          ctx.drawImage(second_price, 48, 1464, 440, 122)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
+          ctx.drawImage(yuan, 450 + priceWidth, 1474, 68, 68)
+          ctx.drawImage(original_price, 48, 1584, 220, 78)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(price, 260, 1564)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
+        } else if (type === 4) {
+          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
+          let originalPriceWidth = ctx.measureText(`¥${price}`).width
+          ctx.drawImage(yujiao, 48, 1464, 316, 116)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(this.detail.activityProductModel.price, 300, 1454)
+          ctx.drawImage(yuan, 350 + priceWidth, 1474, 68, 68)
+          ctx.drawImage(dikou, 48, 1584, 220, 78)
+          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          ctx.fillText(price, 280, 1564)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
         }
         this.haibao = canvas.toDataURL('image/jpeg', 0.7)
         this.showHaibao = true
@@ -575,7 +808,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
   for (let [i, str] of strArr.entries()) {
     ctx.fillText(str, x, y + lineHeight * i)
   }
-  return  ctx.measureText(strArr[0]).width
+  return ctx.measureText(strArr[0]).width
 }
 </script>
 
@@ -588,7 +821,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     justify-content: space-between;
     > button {
       width: 340px;
-      line-height: 80px;
+      line-height: 40px;
       color: #fff;
       font-size: 30px;
       border-radius: $--radius2;
@@ -601,6 +834,38 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
       &:disabled {
         color: #fea455;
       }
+    }
+    .add, .buy {
+      height: 80px;
+      color: #fff;
+      font-size: 30px;
+      &:disabled {
+        color: rgba(255, 255, 255, .4);
+      }
+    }
+    .btn-text{
+      margin: 4px auto 0;
+      width: 100px;
+      text-align: center;
+      height: 28px;
+      line-height: 28px;
+      background: #ffffff;
+      border-radius: 304px;
+      font-size: 20px;
+      line-height: 28px;
+      color: #FE7700;
+    }
+  }
+  .preBtn{
+    width: 100%;
+    height: 80px;
+    margin-right: 16px;
+    color: #fff;
+    font-size: 30px;
+    background: #FE7700;
+    border-radius: 10px;
+    &:disabled {
+      color: rgba(255, 255, 255, .4);
     }
   }
   .detailOrComment {
@@ -699,6 +964,15 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
         color: #666;
         background-color: #FBFBFB;
       }
+      > .saveButton1{
+        width: 560px;
+        margin-top: -4px;
+        text-align: center;
+        line-height: 66px;
+        font-size: 28px;
+        color: #FA4D2F;
+        background-color: #FEDB63;
+      }
       > img {
         width: 560px;
         object-fit: cover;
@@ -757,6 +1031,12 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     .pingxuan-right {
       display: flex;
       flex-direction: column;
+    }
+  }
+  .coupon {
+    padding: 0 24px;
+    > .coupon-list {
+      margin-top: 48px;
     }
   }
 </style>

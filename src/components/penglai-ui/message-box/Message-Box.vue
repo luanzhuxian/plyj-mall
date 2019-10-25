@@ -20,6 +20,11 @@
               v-if="icon"
               :name="icon"
             />-->
+
+            <div
+              class="main-message"
+              v-html="html"
+            />
             <p
               class="main-message"
               v-text="message"
@@ -96,6 +101,10 @@ export default {
       default () {
         return {}
       }
+    },
+    html: {
+      type: String,
+      default: ''
     },
     message: {
       type: String,

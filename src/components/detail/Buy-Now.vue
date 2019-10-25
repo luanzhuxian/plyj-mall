@@ -16,7 +16,57 @@
         <pl-svg name="cart2" />
       </router-link>
     </div>
-    <div :class="$style.buttons">
+    <!-- 团购商品下单 -->
+    <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
+      <button
+        :class="$style.addToCart"
+        @click="clickHandler(2)"
+        :disabled="loading || allDisabled || disableConfrim"
+      >
+        单独购买
+        <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+      </button>
+      <button
+        :class="$style.buyNowBtn"
+        @click="clickHandler(3)"
+        :disabled="loading"
+      >
+        我要参团
+        <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
+      </button>
+    </div>
+    <!-- 秒杀商品下单 -->
+    <div :class="$style.buttons" v-else-if="activeProduct === 3 && preActivity === 2">
+      <button
+        :class="$style.addToCart"
+        @click="clickHandler(2)"
+        :disabled="loading || allDisabled || disableConfrim"
+      >
+        原价购买
+        <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+      </button>
+      <button
+        :class="$style.buyNowBtn"
+        @click="clickHandler(3)"
+        :disabled="loading"
+      >
+        立即秒杀
+        <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
+      </button>
+    </div>
+    <!-- 预购商品下单 -->
+    <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2">
+      <button
+        :class="$style.preBtn"
+        @click="clickHandler(3)"
+        :disabled="loading"
+      >
+        定金购买
+        <div :class="$style.btnText">¥ {{ activityProductModel.price }}</div>
+      </button>
+    </div>
+    <!-- 正常商品下单 -->
+    <div :class="$style.buttons" v-else>
       <button
         :class="$style.addToCart"
         @click="clickHandler(1)"
@@ -39,6 +89,10 @@
       :sku-attr-list="skuAttrList"
       :sku="currentSku"
       :limiting="limiting"
+      :active-product="activeProduct"
+      :pre-activity="preActivity"
+      :activity-product-model="activityProductModel"
+      :active-type="activeType"
     >
       <template v-slot:footer="{ currentSku }">
         <pl-button
@@ -74,7 +128,8 @@ export default {
       clickAddToCart: false,
       clickBuyNow: false,
       loading: false,
-      showContact: false
+      showContact: false,
+      activeType: 1
     }
   },
   props: {
@@ -124,7 +179,19 @@ export default {
       default: 0
     },
     disableConfrim: Boolean,
-    disableAddCart: Boolean
+    disableAddCart: Boolean,
+    activeProduct: {
+      type: [Number, String],
+      default: ''
+    },
+    preActivity: {
+      type: [Number, String],
+      default: ''
+    },
+    activityProductModel: {
+      type: Object,
+      default: null
+    }
   },
   computed: {
     ...mapGetters(['servicePhoneModels', 'mallDomain', 'mobile', 'agentUser', 'userId', 'cartCount']),
@@ -169,7 +236,7 @@ export default {
     },
     // 跳转至提交订单页面
     async submit (options) {
-      const { count, skuCode1, skuCode2 = '' } = options
+      const { count, skuCode1, skuCode2 = '', price } = options
       // helper分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
       sessionStorage.setItem('CONFIRM_LIST', JSON.stringify([{
@@ -177,18 +244,22 @@ export default {
         count: count,
         skuCode1: skuCode1,
         skuCode2,
+        price,
         agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
       this.$router.push({
         name: 'SubmitOrder',
         query: {
-          isCart: 'NO'
+          isCart: 'NO',
+          activeProduct: this.activeType,
+          activityId: this.activeType === 1 ? '' : this.activityProductModel.activityId
         }
       })
     },
     async clickHandler (type) {
       if (!this.hasBind()) return
+      // type 等于1、2 时表示正常购买
       // 加入购物车按钮
       if (type === 1) {
         this.clickAddToCart = true
@@ -198,6 +269,13 @@ export default {
       if (type === 2) {
         this.clickBuyNow = true
         this.clickAddToCart = false
+        this.activeType = 1
+      }
+      // 立即购买按钮
+      if (type === 3) {
+        this.clickBuyNow = true
+        this.clickAddToCart = false
+        this.activeType = this.activeProduct
       }
       this.showSpecifica = true
     },
@@ -331,6 +409,18 @@ export default {
       color: rgba(255, 255, 255, .4);
     }
   }
+  .preBtn{
+    width: 440px;
+    height: 80px;
+    margin-right: 16px;
+    color: #fff;
+    font-size: 30px;
+    background: #FE7700;
+    border-radius: 10px;
+    &:disabled {
+      color: rgba(255, 255, 255, .4);
+    }
+  }
   .addToCart {
     border-radius: 10px 0 0 10px;
     background-color: $--warning-color;
@@ -338,5 +428,17 @@ export default {
   .buyNowBtn {
     border-radius: 0 10px 10px 0;
     background-color: $--primary-color;
+  }
+  .btn-text{
+    margin: 4px auto 0;
+    width: 100px;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+    background: #ffffff;
+    border-radius: 304px;
+    font-size: 20px;
+    line-height: 28px;
+    color: #FE7700;
   }
 </style>

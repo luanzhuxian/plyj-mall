@@ -124,8 +124,8 @@ export default {
   .img {
     object-fit: cover;
     border-radius: $--radius2 $--radius2 0 0;
-    width: 100%;
-    height: 266px;
+    width: 266px;
+    height: 178px;
   }
   .top {
     position: relative;
