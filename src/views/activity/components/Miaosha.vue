@@ -109,7 +109,7 @@
                   </span>
                 </div>
                 <div :class="$style.progress" v-if="prod.activityInfo">
-                  <div :class="$style.progressInner" :style="{ width: `${(Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock) / Number(prod.activityInfo.number)) * 100}%` }" />
+                  <div :class="$style.progressInner" :style="{ width: `${(Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)) / Number(prod.activityInfo.number) * 100}%` }" />
                 </div>
                 <div :class="$style.saled" v-if="prod.activityInfo && prod.activityInfo.status === 0">
                   {{ `${prod.pageviews}人已关注` }}
