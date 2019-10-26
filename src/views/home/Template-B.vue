@@ -2,6 +2,12 @@
   <div :class="$style.homeTemplateB">
     <Search placeholder="搜索商品" />
     <Banner :data="BANNER" />
+    <img
+      :class="$style.shuang12"
+      src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png.png" alt=""
+      @click="$router.push({ name: 'DoubleTwelveDay' })"
+    >
+    <!--<slot name="88" />-->
     <Adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
     <div v-if="type === 4 && $attrs.live && ($attrs.live.statue === 4 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))" :class="$style.broadcast">
       <Broadcast v-bind="$attrs" />
@@ -95,5 +101,10 @@ export default {
       padding: 20px 24px 0;
       background-color: #F4F5F9;
     }
+  }
+  .shuang12 {
+    display: block;
+    width: 704px;
+    margin: 20px auto;
   }
 </style>

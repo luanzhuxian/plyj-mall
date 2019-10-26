@@ -10,10 +10,11 @@
         </div>
         <ul :class="$style.list" v-if="data.values.length">
           <li
-            :class="[
-              $style.listItem,
-              data.values.length % 2 === 0 ? $style.small : $style.large
-            ]"
+            :class="{
+              [$style.listItem]: true,
+              [$style.large]: i === 0 || data.values.length % 2 === 0,
+              [$style.small]: i !== 0 && data.values.length % 2 === 1
+            }"
             v-for="(item, i) of data.values"
             :key="i"
             @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, brokerId: userId || null } })"

@@ -1,6 +1,6 @@
 <template>
   <div class="bg book-bg">
-    <div class="rule" @click="showRule = true">活动规则</div>
+    <!-- <div class="rule" @click="showRule = true">活动规则</div> -->
     <div class="main">
       <div class="list book-ing" v-if="ingList.length > 0">
         <div class="head">

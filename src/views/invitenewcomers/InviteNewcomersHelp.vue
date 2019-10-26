@@ -256,7 +256,6 @@ export default {
 
           this.bindMobile()
         } catch (e) {
-          console.log('canceled', e.message)
         }
       } else {
         // 不是新用户

@@ -69,10 +69,10 @@ export default {
       align-items: center;
       padding: 0 20px;
       .pre-text{
-        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/pre_text.png") no-repeat;
+        background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/tuan/pre_text.png") no-repeat;
         background-size: 100% 100%;
         width: 64px;
-        height: 80px;
+        height: 66px;
       }
     }
     .now-together{
@@ -86,7 +86,7 @@ export default {
         background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/tuan/now_text.png") no-repeat;
         background-size: 100% 100%;
         width: 64px;
-        height: 80px;
+        height: 66px;
       }
     }
     .line{

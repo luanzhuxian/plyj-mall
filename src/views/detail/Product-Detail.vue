@@ -58,7 +58,7 @@
         label="选择"
         :label-width="120"
         :can-click="!noStock && detail.productStatus === 2"
-        @click="showSpecifica = true"
+        @click="showSpecifica = true; activeType = 1"
       >
         <template v-if="currentModel.skuCode1Name">
           已选择：“<span v-text="currentModel.skuCode1Name" />
@@ -156,12 +156,13 @@
       :active-product="detail.activeProduct"
       :activity-product-model="detail.activityProductModel || null"
       :pre-activity="detail.preActivity"
+      :active-type="activeType"
     >
       <template v-slot:footer="{ currentSku }">
         <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || noStock"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             单独购买
@@ -169,7 +170,6 @@
           </button>
           <button
             :class="$style.buy"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 2)"
           >
             我要参团
@@ -180,7 +180,7 @@
         <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || noStock"
+            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             原价购买
@@ -188,7 +188,6 @@
           </button>
           <button
             :class="$style.buy"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 3)"
           >
             立即秒杀
@@ -199,7 +198,6 @@
         <div :class="$style.button" v-else-if="detail.activeProduct === 4 && detail.preActivity === 2">
           <button
             :class="$style.preBtn"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 4)"
           >
             定金购买
@@ -358,7 +356,8 @@ export default {
       adding: false,
       haibao: '',
       tab: 2,
-      imgels: []
+      imgels: [],
+      activeType: 1
     }
   },
   props: {
@@ -587,7 +586,7 @@ export default {
         query: {
           isCart: 'NO',
           activeProduct: activeType,
-          activityId: this.detail.activeProduct === 1 ? '' : this.detail.activityProductModel.activityId
+          activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
     },

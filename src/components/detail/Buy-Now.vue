@@ -21,7 +21,7 @@
       <button
         :class="$style.addToCart"
         @click="clickHandler(2)"
-        :disabled="loading || allDisabled"
+        :disabled="loading || allDisabled || disableConfrim"
       >
         单独购买
         <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
@@ -29,7 +29,7 @@
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
-        :disabled="loading || allDisabled || disableConfrim"
+        :disabled="loading"
       >
         我要参团
         <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
@@ -40,7 +40,7 @@
       <button
         :class="$style.addToCart"
         @click="clickHandler(2)"
-        :disabled="loading || allDisabled"
+        :disabled="loading || allDisabled || disableConfrim"
       >
         原价购买
         <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
@@ -48,7 +48,7 @@
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
-        :disabled="loading || allDisabled || disableConfrim"
+        :disabled="loading"
       >
         立即秒杀
         <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
@@ -59,7 +59,7 @@
       <button
         :class="$style.preBtn"
         @click="clickHandler(3)"
-        :disabled="loading || allDisabled"
+        :disabled="loading"
       >
         定金购买
         <div :class="$style.btnText">¥ {{ activityProductModel.price }}</div>
@@ -253,7 +253,7 @@ export default {
         query: {
           isCart: 'NO',
           activeProduct: this.activeType,
-          activityId: this.activeProduct === 1 ? '' : this.activityProductModel.activityId
+          activityId: this.activeType === 1 ? '' : this.activityProductModel.activityId
         }
       })
     },

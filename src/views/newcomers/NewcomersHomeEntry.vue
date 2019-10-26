@@ -52,7 +52,6 @@ export default {
       return moment().isAfter(moment(this.activityInfo.activityStartTime))
     },
     showSelf () {
-      console.log('>>>>>', this.isActivityStart, (!this.isActivityStoped), this.isNewUser)
       return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf
     }
   },

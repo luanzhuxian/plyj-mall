@@ -55,39 +55,44 @@
         </div>
         <pl-icon :class="$style.myRight" name="icon-arrow-right" size="18" color="#ccc" />
       </router-link>
+
+      <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">
+        <pl-icon name="icon-dingdan" size="28" /> 待付尾款订单 <i>{{ count.prePayOrder }}</i> <pl-icon name="icon-arrow-right" size="24" />
+      </div>
+
       <!-- 我的订单 -->
       <div :class="$style.panel">
         <div :class="$style.orderStatus">
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
             <pl-icon name="icon-wait-pay" width="72" height="90" type="svg" />
             <span
-              :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_PAY > 99 }"
-              v-if="count.WAIT_PAY"
-              v-text="count.WAIT_PAY > 99 ? '99+' : count.WAIT_PAY"
+              :class="{ [$style.badge]: true, [$style.oval]: count.waitPayment > 99 }"
+              v-if="count.waitPayment"
+              v-text="count.waitPayment > 99 ? '99+' : count.waitPayment"
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
             <pl-icon name="icon-wait-ship" width="72" height="90" type="svg" />
             <span
-              :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_SHIP > 99 }"
-              v-if="count.WAIT_SHIP"
-              v-text="count.WAIT_SHIP > 99 ? '99+' : count.WAIT_SHIP"
+              :class="{ [$style.badge]: true, [$style.oval]: count.waitDelivery > 99 }"
+              v-if="count.waitDelivery"
+              v-text="count.waitDelivery > 99 ? '99+' : count.waitDelivery"
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
             <pl-icon name="icon-wait-receive" width="72" height="90" type="svg" />
             <span
-              :class="{ [$style.badge]: true, [$style.oval]: count.WAIT_RECEIVE > 99 }"
-              v-if="count.WAIT_RECEIVE"
-              v-text="count.WAIT_RECEIVE > 99 ? '99+' : count.WAIT_RECEIVE"
+              :class="{ [$style.badge]: true, [$style.oval]: count.waitCollect > 99 }"
+              v-if="count.waitCollect"
+              v-text="count.waitCollect > 99 ? '99+' : count.waitCollect"
             />
           </router-link>
           <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
             <pl-icon name="icon-after-sale" width="85" height="90" type="svg" />
             <span
-              :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.AFTER_SALE > 99 }"
-              v-if="count.AFTER_SALE"
-              v-text="count.AFTER_SALE > 99 ? '99+' : count.AFTER_SALE"
+              :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.afterSale > 99 }"
+              v-if="count.afterSale"
+              v-text="count.afterSale > 99 ? '99+' : count.afterSale"
             />
           </router-link>
           <div :class="$style.segmentation">
@@ -226,14 +231,14 @@ import { getAduitNotice, updateNoticeStatus } from '../../apis/broker-manager'
 import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
 
-const orderStatusMapCamel = {
-  new: 'NEW',
-  waitPayment: 'WAIT_PAY',
-  waitDelivery: 'WAIT_SHIP',
-  waitCollect: 'WAIT_RECEIVE',
-  comment: 'FINISHED',
-  afterSale: 'AFTER_SALE'
-}
+// const orderStatusMapCamel = {
+//   new: 'NEW',
+//   waitPayment: 'WAIT_PAY',
+//   waitDelivery: 'WAIT_SHIP',
+//   waitCollect: 'WAIT_RECEIVE',
+//   comment: 'FINISHED',
+//   afterSale: 'AFTER_SALE'
+// }
 
 export default {
   name: 'My',
@@ -247,13 +252,7 @@ export default {
   data () {
     return {
       loaded: false,
-      count: {
-        WAIT_PAY: 0,
-        WAIT_SHIP: 0,
-        WAIT_RECEIVE: 0,
-        FINISHED: 0,
-        AFTER_SALE: 0
-      },
+      count: { },
       swiperOption: {
         direction: 'vertical',
         autoHeight: true,
@@ -327,11 +326,7 @@ export default {
     async orderPhysicalorderSummary () {
       try {
         const { result } = await orderPhysicalorderSummary(this.userId)
-        for (let key of Object.keys(result)) {
-          if (orderStatusMapCamel.hasOwnProperty(key)) {
-            this.count[orderStatusMapCamel[key]] = result[key] > 99 ? '99+' : result[key]
-          }
-        }
+        this.count = result
       } catch (e) {
         throw e
       }
@@ -902,6 +897,17 @@ export default {
       width: 30%;
       height: 25px;
     }
+  }
+  .wait-pay {
+    width: max-content;
+    margin: 54px auto 32px;
+    padding: 0 32px;
+    line-height: 64px;
+    font-size: 26px;
+    color: #fff;
+    background-color: #DC3B3B;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
   }
   .skeAnimation {
     @include skeAnimation(#eee)

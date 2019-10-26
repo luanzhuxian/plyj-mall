@@ -282,3 +282,63 @@ export function setTimeoutSync (duration) {
     }, duration)
   })
 }
+
+/**
+ * 绘制文本
+ * @param ctx {CanvasRenderingContext2D} 2d context
+ * @param x {Number} 文本开始的x坐标
+ * @param y {Number} 文本开始的y坐标
+ * @param width {Number} 每行文本的最大宽度
+ * @param text {String} 文本
+ * @param lineHeight {Number} 行高
+ * @param lineNumber {Number} 行数（超过行数时，以...结尾）
+ */
+export function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
+  // 填充商品名称
+  let charArr = []
+  let strArr = []
+  let txtWidth = 0
+  let lineCount = 0 // 文字行数
+  let ellipsisWidth = ctx.measureText('...').width
+  for (let i = 0; i < text.length; i++) {
+    let char = text[i]
+    charArr.push(char)
+    txtWidth += ctx.measureText(char).width
+    if (lineCount === lineNumber - 1 && txtWidth + ellipsisWidth >= width) {
+      // 最后一行的文字
+      charArr.push('...')
+      strArr.push(charArr.join(''))
+      break
+    }
+    // 文本换行
+    if (txtWidth >= width || i === text.length - 1) {
+      lineCount++
+      strArr.push(charArr.join(''))
+      txtWidth = 0
+      charArr = []
+    }
+  }
+  for (let [i, str] of strArr.entries()) {
+    ctx.fillText(str, x, y + lineHeight * i)
+  }
+  return ctx.measureText(strArr[0]).width
+}
+
+/**
+ * 绘制圆角矩形
+ */
+export function drawRoundRect (ctx, x, y, width, height, radius, strokeStyle, fillStyle) {
+  ctx.beginPath()
+  ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2)
+  ctx.lineTo(width - radius + x, y)
+  ctx.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2)
+  ctx.lineTo(width + x, height + y - radius)
+  ctx.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2)
+  ctx.lineTo(radius + x, height + y)
+  ctx.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI)
+  ctx.closePath()
+  ctx.strokeStyle = strokeStyle
+  ctx.fillStyle = fillStyle
+  ctx.stroke()
+  ctx.fill()
+}

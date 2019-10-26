@@ -89,7 +89,7 @@
           <div class="item-content">
             <pl-icon class="stamp" name="icon-yiduihuan" type="svg" width="200" height="200" />
             <div class="content-img-box">
-              <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/order-complete-bg.png" alt="">
+              <img :src="item.giftImage" alt="">
             </div>
             <div class="content-detail-box">
               <div class="content-box">
@@ -124,7 +124,7 @@
           <div class="item-content">
             <pl-icon class="stamp" name="icon-yiguoqi" type="svg" width="200" height="200" />
             <div class="content-img-box">
-              <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/order-complete-bg.png" alt="">
+              <img :src="item.giftImage" alt="">
             </div>
             <div class="content-detail-box">
               <div class="content-box">
@@ -232,7 +232,7 @@ export default {
         if (res.status) {
           clearInterval(this.timer)
           this.getList()
-          await this.$confirm({ html: `<p>兑换成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
+          await this.$confirm({ html: `<p>核销成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
           this.$router.push({ name: 'Classify' })
         }
       }, 3000)
