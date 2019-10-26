@@ -2,7 +2,7 @@
   <div class="got-gift">
     <overlay>
       <div class="center-box">
-        <div class="got-success">
+        <div class="got-success" v-if="success">
           <div class="title">恭喜您获得</div>
           <div class="gift-box">
             <div class="coupon" v-if="type === 'coupon'">
@@ -63,6 +63,21 @@
             </div>
           </div>
         </div>
+        <div class="got-success" v-else>
+          <div class="title">很遗憾未中奖</div>
+          <p class="description">
+            奖品已派送完<br>
+            感谢您参与活动
+          </p>
+          <div class="fail-btn-group">
+            <div class="btn-backhome" @click="$router.push({ name: 'Activity' })">
+              返回主会场
+            </div>
+            <div class="btn-iknown" @click="close">
+              朕知道了
+            </div>
+          </div>
+        </div>
         <div style="text-align: center;">
           <span class="btn-close" @click="close">
             <pl-icon type="icon" name="icon-close" color="white" />
@@ -88,6 +103,10 @@ export default {
     type: {
       type: String,
       default: 'coupon'
+    },
+    success: {
+      type: Boolean,
+      default: false
     },
     couponInfo: {
       type: Object,
@@ -344,6 +363,36 @@ export default {
         border-radius: 276px;
         color: #a56113;
         font-size: 26px;
+      }
+
+      .fail-btn-group {
+        text-align: center;
+        padding-bottom: 40px;
+      }
+      .btn-backhome {
+        width: 346px;
+        height: 74px;
+        line-height: 74px;
+        margin: 16px auto;
+        background: rgba(254,205,76,1);
+        border: 1px solid rgba(255,224,157,1);
+        border-radius: 276px;
+        font-size: 26px;
+        font-weight: bold;
+        color: #a56113;
+      }
+
+      .btn-iknown {
+        width: 346px;
+        height: 74px;
+        line-height: 74px;
+        margin: 0 auto;
+        background: rgba(253,123,99,1);
+        border: 1px solid rgba(253,157,140,1);
+        border-radius: 276px;
+        font-size: 26px;
+        font-weight: bold;
+        color: white;
       }
     }
   }

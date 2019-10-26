@@ -41,6 +41,7 @@
       v-if="isShowGotGift"
       @close="getMore()"
       @more="getMore()"
+      :success="isGotGiftSuccess"
       :type="giftInfo.type"
       :coupon-info="giftInfo.couponInfo"
       :gift-info="giftInfo.giftInfo"
@@ -74,6 +75,7 @@ export default {
       isShowRule: false,
       isShowGotGift: false,
       isShowShareLayer: false,
+      isGotGiftSuccess: false,
 
       inviteTitle: '邀请好友，赢<span style="font-family: HYLingXinJ; color: #f6f4b4;">豪礼</span>大奖',
 
@@ -302,7 +304,13 @@ export default {
 
     async getGift () {
       // TODO: 用户是否需要注册或登录
-      let { result: { mallCouponEntity, mallInvitingEventsGiftEntity } } = await claimGiftOrCoupon(this.activityId, this.userId)
+      let { result } = await claimGiftOrCoupon(this.activityId, this.userId)
+      if (!result) {
+        this.isGotGiftSuccess = false
+        return
+      }
+      this.isGotGiftSuccess = true
+      let { mallCouponEntity, mallInvitingEventsGiftEntity } = result
       let type = mallCouponEntity ? 'coupon' : 'gift'
       this.giftInfo.type = type
       this.giftInfo.giftInfo = mallInvitingEventsGiftEntity || {}
