@@ -203,13 +203,16 @@ export default {
         return
       }
       this.activeDetail = result
-      if (new Date().getTime() < new Date(this.activeDetail.activityStartTime).getTime()) {
+      let now = Date.now()
+      let start = moment(this.activeDetail.activityStartTime).valueOf()
+      let end = moment(this.activeDetail.activityEndTime).valueOf()
+      if (new Date().getTime() < start) {
         this.activeStart = false
-        distanceTime = new Date(this.activeDetail.activityStartTime) - new Date().getTime()
+        distanceTime = start - now
       } else {
         this.activeStart = true
-        distanceTime = new Date(this.activeDetail.activityEndTime) - new Date().getTime()
-        if (new Date(this.activeDetail.activityEndTime) < new Date().getTime()) {
+        distanceTime = end - now
+        if (end < now) {
           this.activeEnd = true
         }
       }
