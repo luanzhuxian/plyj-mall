@@ -70,7 +70,7 @@ function setWechatShare (title, desc, imgUrl, link, willHide = [], successCb) {
 /* 生成微信分享配置对象 */
 function getConfig (jsapi, appId, link) {
   let nonceStr = randomString()
-  let timestamp = Number.parseInt(new Date().getTime() / 1000)
+  let timestamp = Number.parseInt(Date.now() / 1000)
   let sign = `jsapi_ticket=${jsapi}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${link}`
   let signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
   return {

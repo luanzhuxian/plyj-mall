@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.liveRoom">
+  <div :class="$style.liveRoom" ref="liveRoom">
     <div
       ref="playerBox"
       id="player"
@@ -144,7 +144,12 @@
       <div v-if="tab === 1" :class="$style.sendMessage">
         <form :class="$style.inputBox" @submit.prevent="messageConfirm">
           <!--<pl-icon name="icon-biaoqing" size="42" color="#a8a8a8" @click="showEmoticon = !showEmoticon" />-->
-          <input v-model="message" placeholder=" 进来了说点什么呗~" type="text">
+          <input
+            v-model="message"
+            placeholder=" 进来了说点什么呗~"
+            type="text"
+            @blur="messageBoxBlur"
+          >
           <button :class="$style.sendBtn">发送</button>
         </form>
         <div :class="$style.sendFlower" @click="sendFlower">
@@ -477,6 +482,9 @@ export default {
       let ms = afterMinuteShow * 60 * 1000
       let startTime = this.liveStartTime
       return Date.now() - startTime >= ms
+    },
+    messageBoxBlur (e) {
+      window.scrollTo(0, 0)
     },
     fullScreen () {
       let isFullScreen = false
