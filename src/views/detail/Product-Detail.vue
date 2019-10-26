@@ -669,7 +669,8 @@ export default {
         ctx.drawImage(qrcode, 750, 1352, 320, 320)
         // 填充商品名称
         let str = this.detail.productName
-        fontStyle(ctx, '56px Microsoft YaHei UI', type === 1 ? '#000' : '#fff', 'top')(ctx, 48, 1352, str, 80, 620, 2)
+        let line = type === 1 ? 2 : 1
+        fontStyle(ctx, '56px Microsoft YaHei UI', type === 1 ? '#000' : '#fff', 'top')(ctx, 48, 1352, str, 80, 620, line)
         let priceList = this.detail.productSkuModels.map(item => item.price)
         let originalPriceList = this.detail.productSkuModels.map(item => item.originalPrice)
         let price = Math.min(...priceList)
