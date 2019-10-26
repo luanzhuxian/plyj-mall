@@ -23,10 +23,13 @@
     <div class="content">
       <div class="bg-complete" v-if="checkInDetail.totalCheckInNum === 10" />
       <div class="bg-uncomplete" v-if="checkInDetail.totalCheckInNum < 10" />
-      <div class="content-time">
+      <div class="content-time" v-if="activeDetail.status">
         <div v-if="!activeStart">开始倒计时：</div>
         <div v-else>结束倒计时：</div>
         <span>{{ distanceDateTime[0] }}</span>&nbsp;天&nbsp;<span>{{ distanceDateTime[1] }}</span><div class="time-padding">:</div><span>{{ distanceDateTime[2] }}</span><div class="time-padding">:</div><span>{{ distanceDateTime[3] }}</span>
+      </div>
+      <div class="content-time" v-else>
+        <div>该活动已经结束</div>
       </div>
       <div class="content-step-box">
         <div class="step step1" :class="{'step-big':checkInDetail.totalCheckInNum >= 1}">
@@ -73,13 +76,13 @@
         </div>
       </div>
       <div class="btn-box">
-        <div class="btn disabel" v-if="!activeStart && !activeEnd">活动未开始</div>
-        <div class="btn active" @click="checkIn()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10">立即签到</div>
-        <div class="btn disabel" v-if="activeStart && activeEnd">活动已结束</div>
-        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0" @click="claimGift()">点击抽大奖</div>
+        <div class="btn disabel" v-if="!activeStart && !activeEnd && activeDetail.status">活动未开始</div>
+        <div class="btn active" @click="checkIn()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status">立即签到</div>
+        <div class="btn disabel" v-if="activeStart && activeEnd || !activeDetail.status && checkInDetail.claimStatus !== 1">活动已结束</div>
+        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0" @click="claimGift() && activeDetail.status">点击抽大奖</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
-        <div class="btn disabel" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 2">很遗憾没有中奖</div>
-        <div class="btn already" v-if="checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum !== 10">今日已签到</div>
+        <div class="btn disabel" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 2 && activeDetail.status">很遗憾没有中奖</div>
+        <div class="btn already" v-if="checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum !== 10 && activeDetail.status">今日已签到</div>
       </div>
     </div>
     <pl-popup :show.sync="showRule">
@@ -115,7 +118,7 @@
             <div class="content-box">
               <div content="content-detail">
                 <p class="detail-name">{{ claimGiftDetail.giftName }}</p>
-                <p class="detail-coupon">砍价活动礼品兑换券</p>
+                <p class="detail-coupon">{{ claimGiftDetail.giftBrief }}</p>
               </div>
             </div>
             <p class="detail-date color-c">有效期:{{ claimGiftDetail.useStartTime.split(' ')[0] }}-{{ claimGiftDetail.useEndTime.split(' ')[0] }}</p>
