@@ -51,13 +51,13 @@
         <div>
           <span
             :class="$style.tip"
-            v-if="supportRefund === 0"
+            v-if="supportRefund === 0 || notSupportActiveProductStatus.indexOf(activeProduct) !== -1"
           >
             暂不支持退换货
           </span>
           <span
             :class="$style.tip"
-            v-if="allowInvoice === 0"
+            v-if="allowInvoice === 0 || notSupportActiveProductStatus.indexOf(activeProduct) !== -1"
           >
             不支持线上发票
           </span>
@@ -81,7 +81,8 @@ export default {
   name: 'OrderItem',
   data () {
     return {
-      loading: false
+      loading: false,
+      notSupportActiveProductStatus: [2, 3, 4] // 2团购 3限时秒杀 4预购 这三种状态的商品 --> 暂不支持退换货 + 不支持线上发票
     }
   },
   props: {
