@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { axios } from '../assets/js/axios'
 
 /**
  * 新增机构信息
