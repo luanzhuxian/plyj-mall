@@ -52,11 +52,13 @@
               </div>
               <div :class="$style.buttons">
                 <div :class="$style.time">
-                  <span v-show="!item.pastDue && item.isStart">剩余尾款支付时间：</span>
-                  <span v-show="item.d !== '00'">{{ item.d }}天</span>
-                  <span v-show="item.h !== '00'">{{ item.h }}时</span>
-                  <span v-show="item.m !== '00'">{{ item.m }}分</span>
-                  <span>{{ item.s }}秒</span>
+                  <template v-if="item.isStart">
+                    <span v-show="!item.pastDue">剩余尾款支付时间：</span>
+                    <span v-show="item.d !== '00'">{{ item.d }}天</span>
+                    <span v-show="item.h !== '00'">{{ item.h }}时</span>
+                    <span v-show="item.m !== '00'">{{ item.m }}分</span>
+                    <span>{{ item.s }}秒</span>
+                  </template>
                   <span v-if="!item.isStart">
                     未开始支付
                   </span>
@@ -123,7 +125,7 @@ export default {
   },
   methods: {
     onRefresh (list, total) {
-      this.clearInterval()
+      clearTimeout(this.timer)
       for (let item of list) {
         item.d = '00'
         item.h = '00'
@@ -146,32 +148,26 @@ export default {
       this.orderList = list
     },
     countDown (remanent, item) {
-      let timer = setInterval(() => {
-        let { _data } = moment.duration(remanent)
-        let d = String(_data.days)
-        let h = String(_data.hours)
-        let m = String(_data.minutes)
-        let s = String(_data.seconds)
-        remanent -= 1000
-        if (remanent <= 0) {
-          clearInterval(timer)
-          item.pastDue = true
-          this.$forceUpdate()
-          return
-        }
-        item.d = d.padStart(2, '0')
-        item.h = h.padStart(2, '0')
-        item.m = m.padStart(2, '0')
-        item.s = s.padStart(2, '0')
-        console.log(d, h, m, s)
+      let { _data } = moment.duration(remanent)
+      let d = String(_data.days)
+      let h = String(_data.hours)
+      let m = String(_data.minutes)
+      let s = String(_data.seconds)
+      remanent -= 1000
+      if (remanent <= 0) {
+        item.pastDue = true
         this.$forceUpdate()
-      }, 1000)
-      this.timerList.push(timer)
-    },
-    clearInterval () {
-      for (let t of this.timerList) {
-        clearInterval(t)
+        return
       }
+      item.d = d.padStart(2, '0')
+      item.h = h.padStart(2, '0')
+      item.m = m.padStart(2, '0')
+      item.s = s.padStart(2, '0')
+      this.$forceUpdate()
+      this.timer = setTimeout(() => {
+        this.countDown(remanent, item)
+      }, 1000)
+      // this.timerList.push(timer)
     }
   }
 }
