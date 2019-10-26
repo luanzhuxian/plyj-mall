@@ -585,6 +585,9 @@ export default {
           color: #e84655;
         }
       }
+      &.gift {
+        position: relative;
+      }
       &.custom-message {
         padding: 0 8px;
         line-height: 48px;

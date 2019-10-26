@@ -13,7 +13,7 @@
       >
         <div :class="$style.itemLeft">
           <div :class="$style.main">
-            学霸之路
+            见学之旅
           </div>
           <div :class="$style.sub">
             <span>
@@ -27,7 +27,7 @@
         </div>
         <pl-icon name="icon-calendar" type="svg" />
       </router-link>
-      <router-link
+      <div
         v-if="hasInvitingEvent"
         :class="{
           [$style.item]: true,
@@ -35,7 +35,7 @@
           [$style.large]: !hasJxEvent && hasInvitingEvent
         }"
         tag="div"
-        :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
+        @click="go(invitingEvent.id)"
       >
         <div :class="$style.itemLeft">
           <div :class="$style.main">
@@ -52,12 +52,13 @@
           </div>
         </div>
         <pl-icon name="icon-present" type="svg" />
-      </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Activity',
   props: {
@@ -78,11 +79,17 @@ export default {
     return {}
   },
   computed: {
+    ...mapGetters(['mallUrl']),
     hasInvitingEvent () {
       return this.invitingEvent && ~[0, 2].indexOf(this.invitingEvent.status)
     },
     hasJxEvent () {
       return this.jxEvent && ~[0, 2].indexOf(this.jxEvent.status)
+    }
+  },
+  methods: {
+    go (id) {
+      location.href = `${this.mallUrl}/invitenewcomers/${id}`
     }
   }
 }
