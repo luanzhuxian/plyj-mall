@@ -7,12 +7,26 @@
         <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
       </div>
     </div>
+    <div class="priceRight" v-if="agentUser && (minRebate || maxRebate)">
+      <p class="fz-22 gray-1">
+        <span class="returnRunbi">
+          润笔
+        </span>
+        <i v-if="minRebate" class="rmb" v-text="minRebate" />
+        <i v-if="minRebate && maxRebate && minRebate !== maxRebate">~</i>
+        <i v-if="maxRebate && minRebate !== maxRebate" v-text="maxRebate" />
+      </p>
+      <p class="fz-22 gray-3">
+        分享下单即可获得润笔
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
-  name: 'TogetherPrice',
+  name: 'BookingPrice',
   props: {
     detail: {
       type: Object,
@@ -20,6 +34,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['agentUser']),
     skuList () {
       return this.detail.productSkuModels || []
     },
@@ -37,6 +52,24 @@ export default {
     },
     maxOriginalPrice () {
       return Math.max(...this.originalPriceList)
+    },
+    rebateList () {
+      return this.skuList.filter(item => Number(item.realRebate) !== 0).map(item => item.realRebate) || []
+    },
+    maxRebate () {
+      return this.rebateList.length ? Math.max(...this.rebateList) : 0
+    },
+    minRebate () {
+      return this.rebateList.length ? Math.min(...this.rebateList) : 0
+    },
+    productStatus () {
+      return this.detail.productStatus
+    },
+    salesVolume () {
+      return this.detail.salesVolume
+    },
+    pageviews () {
+      return this.detail.pageviews
     }
   }
 }
@@ -86,6 +119,28 @@ export default {
     }
     .buy-num{
       font-size: 24px;
+    }
+    .priceRight {
+      flex: 1;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-top: 5px;
+      > p {
+        margin-top: 6px;
+      }
+      .returnRunbi {
+        display: inline-block;
+        width: 60px;
+        height: 28px;
+        line-height: 28px;
+        margin-right: 10px;
+        text-align: center;
+        color: #fff;
+        font-size: 18px;
+        background-color: #FE7700;
+        border-radius: 13px;
+      }
     }
   }
 </style>

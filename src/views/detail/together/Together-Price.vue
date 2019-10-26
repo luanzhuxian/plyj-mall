@@ -14,16 +14,32 @@
       <div class="price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
       <div class="original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice">原价：<del v-text="maxOriginalPrice" /></div>
     </div>
-    <div class="join" v-if="detail.preActivity === 2">
-      <ul>
-        <li class="avatar" v-for="(item, k) in detail.activityProductModel.userImageList" :key="k"><img :src="item.headImgURL"></li>
-      </ul>
-      <div v-if="detail.activityProductModel.number > 0">{{ detail.activityProductModel.number }}人和你一起参与</div>
+    <div>
+      <div class="join" v-if="detail.preActivity === 2">
+        <ul>
+          <li class="avatar" v-for="(item, k) in detail.activityProductModel.userImageList" :key="k"><img :src="item.headImgURL"></li>
+        </ul>
+        <div v-if="detail.activityProductModel.number > 0">{{ detail.activityProductModel.number }}人和你一起参与</div>
+      </div>
+      <div class="priceRight" v-if="agentUser && (minRebate || maxRebate)">
+        <p class="fz-22 gray-1">
+          <span class="returnRunbi">
+            润笔
+          </span>
+          <i v-if="minRebate" class="rmb" v-text="minRebate" />
+          <i v-if="minRebate && maxRebate && minRebate !== maxRebate">~</i>
+          <i v-if="maxRebate && minRebate !== maxRebate" v-text="maxRebate" />
+        </p>
+        <p class="fz-22 gray-3">
+          分享下单即可获得润笔
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'TogetherPrice',
   props: {
@@ -33,6 +49,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['agentUser']),
     skuList () {
       return this.detail.productSkuModels || []
     },
@@ -50,6 +67,24 @@ export default {
     },
     maxOriginalPrice () {
       return Math.max(...this.originalPriceList)
+    },
+    rebateList () {
+      return this.skuList.filter(item => Number(item.realRebate) !== 0).map(item => item.realRebate) || []
+    },
+    maxRebate () {
+      return this.rebateList.length ? Math.max(...this.rebateList) : 0
+    },
+    minRebate () {
+      return this.rebateList.length ? Math.min(...this.rebateList) : 0
+    },
+    productStatus () {
+      return this.detail.productStatus
+    },
+    salesVolume () {
+      return this.detail.salesVolume
+    },
+    pageviews () {
+      return this.detail.pageviews
     }
   }
 }
@@ -114,6 +149,28 @@ export default {
             height: 48px;
           }
         }
+      }
+    }
+    .priceRight {
+      flex: 1;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-top: 5px;
+      > p {
+        margin-top: 6px;
+      }
+      .returnRunbi {
+        display: inline-block;
+        width: 60px;
+        height: 28px;
+        line-height: 28px;
+        margin-right: 10px;
+        text-align: center;
+        color: #fff;
+        font-size: 18px;
+        background-color: #FE7700;
+        border-radius: 13px;
       }
     }
   }
