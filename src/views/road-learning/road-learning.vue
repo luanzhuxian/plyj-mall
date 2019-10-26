@@ -26,7 +26,7 @@
       <div class="content-time" v-if="activeDetail.status">
         <div v-if="!activeStart">开始倒计时：</div>
         <div v-else>结束倒计时：</div>
-        <span>{{ distanceDateTime[0] }}</span>&nbsp;天&nbsp;<span>{{ distanceDateTime[1] }}</span><div class="time-padding">:</div><span>{{ distanceDateTime[2] }}</span><div class="time-padding">:</div><span>{{ distanceDateTime[3] }}</span>
+        <span>{{ dd }}</span>&nbsp;天&nbsp;<span>{{ hh }}</span><div class="time-padding">:</div><span>{{ mm }}</span><div class="time-padding">:</div><span>{{ ss }}</span>
       </div>
       <div class="content-time" v-else>
         <div>该活动已经结束</div>
@@ -154,6 +154,7 @@
 <script>
 import { getIDRoadLearningDetail, getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift } from '../../apis/road-learning'
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
   name: 'RoadLearning',
   data () {
@@ -167,8 +168,10 @@ export default {
       activeDetail: {},
       checkInDetail: {},
       claimGiftDetail: {},
-      distanceTime: {},
-      distanceDateTime: ''
+      dd: '',
+      hh: '',
+      mm: '',
+      ss: ''
     }
   },
   props: {
@@ -200,44 +203,38 @@ export default {
         return
       }
       this.activeDetail = result
-      if (new Date().getTime() < new Date(this.activeDetail.activityStartTime).getTime()) {
+      let now = Date.now()
+      let start = moment(this.activeDetail.activityStartTime).valueOf()
+      let end = moment(this.activeDetail.activityEndTime).valueOf()
+      if (now < start) {
         this.activeStart = false
-        distanceTime = new Date(this.activeDetail.activityStartTime) - new Date().getTime()
+        distanceTime = start - now
       } else {
         this.activeStart = true
-        distanceTime = new Date(this.activeDetail.activityEndTime) - new Date().getTime()
-        if (new Date(this.activeDetail.activityEndTime) < new Date().getTime()) {
+        distanceTime = end - now
+        if (end < now) {
           this.activeEnd = true
         }
       }
-      this.distanceTime.dd = parseInt(distanceTime / 1000 / 60 / 60 / 24)
-      this.distanceTime.hh = parseInt(distanceTime / 1000 / 60 / 60 % 24)
-      this.distanceTime.mm = parseInt(distanceTime / 1000 / 60 % 60)
-      this.distanceTime.ss = parseInt(distanceTime / 1000 % 60)
-      this.countdown(this.distanceTime)
+      this.countdown(distanceTime)
     },
     countdown (datetime) {
-      if ((datetime.dd + datetime.hh + datetime.mm + datetime.ss) < 0) {
-        this.distanceDateTime = ['00', '00', '00', '00']
-        return
-      }
+      if (datetime < 0) return
       this.timer = setInterval(() => {
-        if (!datetime.dd && !datetime.hh && !datetime.mm && !datetime.ss) return clearInterval(this.timer)
-        if (datetime.ss < 1) {
-          datetime.ss = 60
-          if (datetime.mm < 1) {
-            datetime.mm = 60
-            if (datetime.hh < 1) {
-              datetime.hh = 60
-              datetime.dd--
-            }
-            datetime.hh--
-          }
-          datetime.mm--
+        let { _data } = moment.duration(datetime)
+        let d = String(_data.days)
+        let h = String(_data.hours)
+        let m = String(_data.minutes)
+        let s = String(_data.seconds)
+        datetime -= 1000
+        if (datetime <= 0) {
+          clearInterval(this.timer)
+          this.getDetail()
         }
-        datetime.ss--
-        let distanceDateTime = `${datetime.dd < 10 ? `0${datetime.dd}` : datetime.dd}-${datetime.hh < 10 ? `0${datetime.hh}` : datetime.hh}-${datetime.mm < 10 ? `0${datetime.mm}` : datetime.mm}-${datetime.ss < 10 ? `0${datetime.ss}` : datetime.ss}`
-        this.distanceDateTime = distanceDateTime.split('-')
+        this.dd = d.padStart(2, '0')
+        this.hh = h.padStart(2, '0')
+        this.mm = m.padStart(2, '0')
+        this.ss = s.padStart(2, '0')
       }, 1000)
     },
     async getCheckInDetail () {

@@ -214,7 +214,7 @@
           </button>
           <button
             :class="$style.buy"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            :disabled="adding || noStock || confirmText === '暂未开售'"
             @click="buyNow(currentSku, 1)"
           >
             {{ confirmText }}
