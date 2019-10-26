@@ -53,7 +53,7 @@
               </div>
               <div :class="$style.buttons">
                 <div :class="$style.time">
-                  <template v-if="item.isStart">
+                  <template v-if="item.isStart && !item.pastDue">
                     <span v-show="!item.pastDue">剩余尾款支付时间：</span>
                     <span v-show="item.d !== '00'">{{ item.d }}天</span>
                     <span v-show="item.h !== '00'">{{ item.h }}时</span>
