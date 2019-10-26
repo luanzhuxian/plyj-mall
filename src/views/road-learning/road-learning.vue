@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import { getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift } from '../../apis/road-learning'
+import { getIDRoadLearningDetail, getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift } from '../../apis/road-learning'
 import { mapGetters } from 'vuex'
 export default {
   name: 'RoadLearning',
@@ -168,6 +168,12 @@ export default {
       distanceDateTime: ''
     }
   },
+  props: {
+    id: {
+      type: String,
+      default: ''
+    }
+  },
   computed: {
     ...mapGetters(['avatar'])
   },
@@ -177,14 +183,20 @@ export default {
   },
   methods: {
     async getDetail () {
-      let distanceTime
-      const { result: res } = await getRoadLearningDetail()
-      if (!res) {
+      let distanceTime, result
+      if (this.id) {
+        const { result: res } = await getIDRoadLearningDetail(this.id)
+        result = res
+      } else {
+        const { result: res } = await getRoadLearningDetail()
+        result = res
+      }
+      if (!result) {
         this.$router.back()
         this.$warning('暂无活动')
         return
       }
-      this.activeDetail = res
+      this.activeDetail = result
       if (new Date().getTime() < new Date(this.activeDetail.activityStartTime).getTime()) {
         this.activeStart = false
         distanceTime = new Date(this.activeDetail.activityStartTime) - new Date().getTime()
