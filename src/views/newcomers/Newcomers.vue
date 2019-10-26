@@ -37,7 +37,6 @@
         <p v-html="activityBrief" />
       </div>
     </pl-popup>
-    <newcomers-home-entry />
   </div>
 </template>
 
@@ -46,7 +45,7 @@ import moment from 'moment'
 import { mapGetters } from 'vuex'
 import share from '../../assets/js/wechat/wechat-share'
 import GiftTicket from './GiftTicket'
-import { getNewcomersDetail, claimCoupons, registerStatisitic } from '../../apis/newcomers'
+import { getNewcomersDetail } from '../../apis/newcomers'
 
 export default {
   name: 'Newcomers',
@@ -63,6 +62,9 @@ export default {
 
   computed: {
     ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    isNewUser () {
+      return !this.userId
+    },
     isActivityStoped () {
       return moment(this.activityInfo.activityEndTime).isBefore(moment()) || this.activityInfo.status === 0
     },
@@ -72,6 +74,9 @@ export default {
       }
       if (moment(this.activityInfo.activityEndTime).isBefore(moment())) {
         return '该活动已结束，不能领用礼包'
+      }
+      if (!this.isNewUser) {
+        return '您已成功领取礼包'
       }
       return '一键领取'
     },
@@ -89,11 +94,11 @@ export default {
   },
 
   async created () {
-    await this.getNewcomersDetail()
-    this.share()
   },
 
   async activated () {
+    await this.getNewcomersDetail()
+    this.share()
     await this.tryClaim(true)
   },
 
@@ -173,6 +178,9 @@ export default {
     },
 
     async tryClaim (restore) {
+      if (!this.isNewUser) {
+        return
+      }
       if (this.isActivityStoped) {
         await this.gameOver()
         return
@@ -199,12 +207,12 @@ export default {
     },
 
     async doClaimAll () {
-      let { status } = await claimCoupons(this.$route.params.activityId, (this.activityInfo.couponModels || []).map(m => m.id))
-      if (status !== 200) {
-        // TODO: add code here
-        return
-      }
-      await registerStatisitic(this.$route.params.activityId)
+      // let { status } = await claimCoupons(this.$route.params.activityId, (this.activityInfo.couponModels || []).map(m => m.id))
+      // if (status !== 200) {
+      //   // TODO: add code here
+      //   return
+      // }
+      // await registerStatisitic(this.$route.params.activityId)
     }
   }
 }
