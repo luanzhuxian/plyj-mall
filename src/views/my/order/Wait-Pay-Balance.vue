@@ -36,13 +36,13 @@
               :name="item.productName"
               :option="item.skuName2 ? `${item.skuName},${item.skuName2}` : item.skuName"
               :count="item.count"
-              :price="item.price"
+              :price="item.productPrice"
               :status="refundStatusMap[item.afterSalesStatus]"
               border
             />
             <div :class="$style.listItemBottom">
               <div :class="$style.priceWrapper">
-                <span :class="$style.totalCount">共1件商品</span>
+                <span :class="$style.totalCount">共{{ item.count }}件商品</span>
                 <span :class="$style.bold">定金：</span>
                 <span :class="$style.price">{{ item.price }}</span>
               </div>
