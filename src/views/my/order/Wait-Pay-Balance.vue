@@ -11,12 +11,11 @@
         @more="onRefresh"
       >
         <template>
-          <router-link
+          <div
             :class="$style.listItem"
             tag="div"
             v-for="(item, i) of orderList"
             :key="i"
-            :to="{ name: 'OrderDetail', params: { orderId: item.orderId } }"
           >
             <div>
               <div :class="$style.listItemLeft">
@@ -54,10 +53,10 @@
               <div :class="$style.buttons">
                 <div :class="$style.time">
                   <span v-show="!item.pastDue && item.isStart">剩余尾款支付时间：</span>
-                  <span v-show="item.d">{{ item.d }}天</span>
-                  <span v-show="item.h">{{ item.h }}时</span>
-                  <span v-show="item.m">{{ item.m }}分</span>
-                  <span v-show="item.d">{{ item.s }}秒</span>
+                  <span v-show="item.d !== '00'">{{ item.d }}天</span>
+                  <span v-show="item.h !== '00'">{{ item.h }}时</span>
+                  <span v-show="item.m !== '00'">{{ item.m }}分</span>
+                  <span>{{ item.s }}秒</span>
                   <span v-if="!item.isStart">
                     未开始支付
                   </span>
@@ -70,13 +69,13 @@
                   type="warning"
                   round
                   :disabled="!item.isStart"
-                  @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"
+                  @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
                 >
                   去使用
                 </pl-button>
               </div>
             </div>
-          </router-link>
+          </div>
         </template>
       </load-more>
     </div>
@@ -126,10 +125,10 @@ export default {
     onRefresh (list, total) {
       this.clearInterval()
       for (let item of list) {
-        item.d = 0
-        item.h = 0
-        item.m = 0
-        item.s = 0
+        item.d = '00'
+        item.h = '00'
+        item.m = '00'
+        item.s = '00'
         item.pastDue = false
         let {
           userEndTime,
@@ -160,10 +159,11 @@ export default {
           this.$forceUpdate()
           return
         }
-        item.d = d
-        item.h = h
-        item.m = m
-        item.s = s
+        item.d = d.padStart(2, '0')
+        item.h = h.padStart(2, '0')
+        item.m = m.padStart(2, '0')
+        item.s = s.padStart(2, '0')
+        console.log(d, h, m, s)
         this.$forceUpdate()
       }, 1000)
       this.timerList.push(timer)
