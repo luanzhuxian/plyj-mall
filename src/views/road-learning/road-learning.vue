@@ -26,7 +26,7 @@
       <div class="content-time" v-if="activeDetail.status">
         <div v-if="!activeStart">开始倒计时：</div>
         <div v-else>结束倒计时：</div>
-        <span>{{ distanceDateTime[0] }}</span>&nbsp;天&nbsp;<span>{{ distanceDateTime[1] }}</span><div class="time-padding">:</div><span>{{ distanceDateTime[2] }}</span><div class="time-padding">:</div><span>{{ distanceDateTime[3] }}</span>
+        <span>{{ dd }}</span>&nbsp;天&nbsp;<span>{{ hh }}</span><div class="time-padding">:</div><span>{{ mm }}</span><div class="time-padding">:</div><span>{{ ss }}</span>
       </div>
       <div class="content-time" v-else>
         <div>该活动已经结束</div>
@@ -168,7 +168,10 @@ export default {
       activeDetail: {},
       checkInDetail: {},
       claimGiftDetail: {},
-      distanceDateTime: ''
+      dd: '',
+      hh: '',
+      mm: '',
+      ss: ''
     }
   },
   props: {
@@ -225,8 +228,10 @@ export default {
           clearInterval(this.timer)
           this.getDetail()
         }
-        let distanceDateTime = `${d.padStart(2, '0')}-${h.padStart(2, '0')}-${m.padStart(2, '0')}-${s.padStart(2, '0')}`
-        this.distanceDateTime = distanceDateTime.split('-')
+        this.dd = d.padStart(2, '0')
+        this.hh = h.padStart(2, '0')
+        this.mm = m.padStart(2, '0')
+        this.ss = s.padStart(2, '0')
       }, 1000)
     },
     async getCheckInDetail () {
