@@ -174,13 +174,13 @@
         </p>
         <p>
           <span>
-            {{ activeProductStatus[activeProduct] || '商品' }}
-            <i v-if="activeProduct !==4">金额</i>
+            {{ activeProductStatus[activeProduct] || '商品' }}<i v-if="activeProduct !==4">金额</i>
             <i v-if="activeProduct === 4" class="gray-3">(不退，翻{{ activityData.multipleNumber }}倍)</i>
           </span>
 
+          <!--  预购 / 秒杀 / 团购 三种订单，显示活动价格activityData.price，其他显示正常productInfoModel.productsTotalAmount  -->
           <span
-            v-if="activeProduct !== 1"
+            v-if="activeProductStatus[activeProduct]"
             class="rmb"
             v-text="activityData.price || 0"
           />
@@ -610,7 +610,7 @@ export default {
       studentInfoModels: [],
       redeemCodeModels: [],
       activityData: {},
-      activeProduct: 1,
+      activeProduct: 1, // 1普通订单，2团购订单，3秒杀订单，4.预购订单， 5优惠卷订单
       orderStatusAlias: '',
       shippingAddress: {
         realName: ' ',
