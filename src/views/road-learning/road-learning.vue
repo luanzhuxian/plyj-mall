@@ -206,7 +206,7 @@ export default {
       let now = Date.now()
       let start = moment(this.activeDetail.activityStartTime).valueOf()
       let end = moment(this.activeDetail.activityEndTime).valueOf()
-      if (new Date().getTime() < start) {
+      if (now < start) {
         this.activeStart = false
         distanceTime = start - now
       } else {
