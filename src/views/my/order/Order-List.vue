@@ -57,6 +57,7 @@
               :count="product.purchaseQuantity"
               :price="product.unitPrice"
               :status="refundStatusMap[product.afterSalesStatus]"
+              :active-product="item.activeProduct"
               border
             />
             <div :class="$style.listItemBottom">
