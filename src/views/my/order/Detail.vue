@@ -541,7 +541,6 @@ import {
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { generateQrcode } from '../../../assets/js/util'
-import { upload, deleteImage } from '../../../assets/js/upload-image'
 import { createText } from '../../../assets/js/validate'
 import filter from '../../../filter/index'
 
@@ -570,9 +569,6 @@ const invoiceMap = {
     fields: 'tin'
   }
 }
-
-// 上传到服务器的二维码，离开页面后要删除
-let qrcodeKey = ''
 
 export default {
   name: 'OrderDetail',
@@ -719,7 +715,6 @@ export default {
     this.collepseActiveNames = []
     clearInterval(this.timer)
     clearInterval(this.timer2)
-    await deleteImage([qrcodeKey])
   },
   methods: {
     // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
@@ -813,15 +808,9 @@ export default {
       })
     },
     generateQrcode (orderId) {
-      generateQrcode(300, orderId, 34, null, null, 'blob')
-        .then(async (blob) => {
-          try {
-            let { name, url } = await upload(blob)
-            qrcodeKey = name
-            this.qrImg = url
-          } catch (e) {
-            this.$error('生成二维码失败')
-          }
+      generateQrcode(300, orderId, 34, null, null, 'url')
+        .then(async (base64) => {
+          this.qrImg = base64
         })
         .catch(() => {
           this.$error('生成二维码失败')
