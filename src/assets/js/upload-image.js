@@ -84,7 +84,16 @@ export async function upload (file) {
   }
   let client = await getClient()
   const key = `img/${randomString()}.${ext}`
-  return client.put(key, file)
+  return new Promise((resolve, reject) => {
+    client.put(key, file)
+      .then(res => {
+        res.url = 'https://mallcdn.youpenglai.com/' + res.name
+        resolve(res)
+      })
+      .catch(e => {
+        reject(e)
+      })
+  })
 }
 function compressImage (file) {
   /* eslint-disable */

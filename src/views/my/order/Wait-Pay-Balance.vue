@@ -11,12 +11,11 @@
         @more="onRefresh"
       >
         <template>
-          <router-link
+          <div
             :class="$style.listItem"
             tag="div"
             v-for="(item, i) of orderList"
             :key="i"
-            :to="{ name: 'OrderDetail', params: { orderId: item.orderId } }"
           >
             <div>
               <div :class="$style.listItemLeft">
@@ -37,23 +36,29 @@
               :name="item.productName"
               :option="item.skuName2 ? `${item.skuName},${item.skuName2}` : item.skuName"
               :count="item.count"
-              :price="item.price"
+              :price="item.productPrice"
               :status="refundStatusMap[item.afterSalesStatus]"
               border
             />
             <div :class="$style.listItemBottom">
               <div :class="$style.priceWrapper">
-                <span :class="$style.totalCount">共1件商品</span>
+                <span :class="$style.totalCount">共{{ item.count }}件商品</span>
                 <span :class="$style.bold">定金：</span>
                 <span :class="$style.price">{{ item.price }}</span>
               </div>
+              <div :class="$style.priceWrapper">
+                <span :class="$style.bold">待付尾款：</span>
+                <span :class="$style.price">{{ item.prePayOrderPrice }}</span>
+              </div>
               <div :class="$style.buttons">
                 <div :class="$style.time">
-                  <span v-show="!item.pastDue && item.isStart">剩余尾款支付时间：</span>
-                  <span v-show="item.d">{{ item.d }}天</span>
-                  <span v-show="item.h">{{ item.h }}时</span>
-                  <span v-show="item.m">{{ item.m }}分</span>
-                  <span v-show="item.d">{{ item.s }}秒</span>
+                  <template v-if="item.isStart">
+                    <span v-show="!item.pastDue">剩余尾款支付时间：</span>
+                    <span v-show="item.d !== '00'">{{ item.d }}天</span>
+                    <span v-show="item.h !== '00'">{{ item.h }}时</span>
+                    <span v-show="item.m !== '00'">{{ item.m }}分</span>
+                    <span>{{ item.s }}秒</span>
+                  </template>
                   <span v-if="!item.isStart">
                     未开始支付
                   </span>
@@ -66,13 +71,13 @@
                   type="warning"
                   round
                   :disabled="!item.isStart"
-                  @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"
+                  @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
                 >
                   去使用
                 </pl-button>
               </div>
             </div>
-          </router-link>
+          </div>
         </template>
       </load-more>
     </div>
@@ -80,15 +85,9 @@
 </template>
 
 <script>
-/* eslint-disable */
 import OrderItem from '../../../components/item/Order-Item.vue'
 import LoadMore from '../../../components/Load-More.vue'
 import {
-  getOrderList,
-  getAwaitPayInfo,
-  confirmReceipt,
-  cancelOrder,
-  deleteOrder,
   waitPayBalance
 } from '../../../apis/order-manager'
 import moment from 'moment'
@@ -126,12 +125,12 @@ export default {
   },
   methods: {
     onRefresh (list, total) {
-      this.clearInterval()
+      clearTimeout(this.timer)
       for (let item of list) {
-        item.d = 0
-        item.h = 0
-        item.m = 0
-        item.s = 0
+        item.d = '00'
+        item.h = '00'
+        item.m = '00'
+        item.s = '00'
         item.pastDue = false
         let {
           userEndTime,
@@ -149,43 +148,27 @@ export default {
       this.orderList = list
     },
     countDown (remanent, item) {
-      let timer = setInterval(() => {
-        let { _data } = moment.duration(remanent)
-        let d = String(_data.days)
-        let h = String(_data.hours)
-        let m = String(_data.minutes)
-        let s = String(_data.seconds)
-        remanent -= 1000
-        if (remanent <= 0) {
-          clearInterval(timer)
-          item.pastDue = true
-          this.$forceUpdate()
-          return
-        }
-        item.d = d
-        item.h = h
-        item.m = m
-        item.s = s
+      let { _data } = moment.duration(remanent)
+      let d = String(_data.days)
+      let h = String(_data.hours)
+      let m = String(_data.minutes)
+      let s = String(_data.seconds)
+      remanent -= 1000
+      if (remanent <= 0) {
+        item.pastDue = true
         this.$forceUpdate()
+        return
+      }
+      item.d = d.padStart(2, '0')
+      item.h = h.padStart(2, '0')
+      item.m = m.padStart(2, '0')
+      item.s = s.padStart(2, '0')
+      this.$forceUpdate()
+      this.timer = setTimeout(() => {
+        this.countDown(remanent, item)
       }, 1000)
-      this.timerList.push(timer)
-    },
-    clearInterval () {
-      for (let t of this.timerList) {
-        clearInterval(t)
-      }
-    },
-    setTime (result, orderStatus) {
-      let activeProduct = result.activeProduct
-      let waitPayTime = activeProduct === 1 || activeProduct === 5 ? 24 * 60 * 60 * 1000 : 5 * 60 * 1000
-      let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
-      let duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
-      let now = moment((result.currentServerTime)).valueOf() // 服务器时间
-      let startTime = moment(time).valueOf()
-      if (now - startTime < duration) {
-        this.countDown(duration + startTime - now - 2000, orderStatus)
-      }
-    },
+      // this.timerList.push(timer)
+    }
   }
 }
 </script>

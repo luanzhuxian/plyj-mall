@@ -53,7 +53,7 @@ import HelpSuccess from './components/HelpSuccess'
 import youLike from './../home/components/YouLike.vue'
 import { mapGetters } from 'vuex'
 import { getActivityInfo, helpFriend, getClaimGiftList, getUserInfo, getActivityStatisiticData, registerStatisitic } from '../../apis/invitenewcomers'
-import { getCurrentActivity, claimCoupons } from '../../apis/newcomers'
+// import { getCurrentActivity } from '../../apis/newcomers'
 
 export default {
   name: 'InviteNewcomers',
@@ -193,7 +193,7 @@ export default {
       let { result } = await getClaimGiftList(this.activityId)
       this.showList = (result || []).slice(0, 3).map((item) => {
         return {
-          name: item.userName,
+          name: item.userName || item.nickName,
           avatar: item.headImgUrl,
           inviteNum: item.helperNum,
           giftInfo: item.name
@@ -256,7 +256,6 @@ export default {
 
           this.bindMobile()
         } catch (e) {
-          console.log('canceled', e.message)
         }
       } else {
         // 不是新用户
@@ -271,19 +270,19 @@ export default {
       }
     },
     async doClaimAll () {
-      let { result: newComersActivity } = await getCurrentActivity()
-      if (!newComersActivity) {
-        return
-      }
-      // 活动已经终止或结束，不能领取
-      if (moment(newComersActivity.activityEndTime).isBefore(moment()) || newComersActivity.status === 0) {
-        return
-      }
-      let { status } = await claimCoupons(newComersActivity.id, (newComersActivity.couponModels || []).map(m => m.id))
-      if (status !== 200) {
-        // TODO: add code here
-      }
-      await registerStatisitic(newComersActivity.id)
+      // let { result: newComersActivity } = await getCurrentActivity()
+      // if (!newComersActivity) {
+      //   return
+      // }
+      // // 活动已经终止或结束，不能领取
+      // if (moment(newComersActivity.activityEndTime).isBefore(moment()) || newComersActivity.status === 0) {
+      //   return
+      // }
+      // let { status } = await claimCoupons(newComersActivity.id, (newComersActivity.couponModels || []).map(m => m.id))
+      // if (status !== 200) {
+      //   // TODO: add code here
+      // }
+      // await registerStatisitic(newComersActivity.id)
     }
   }
 }

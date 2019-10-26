@@ -260,10 +260,11 @@ export default {
   methods: {
     initPlayer () {
       let { channelId, channeUserId } = this
-      let p = window.polyvLivePlayer({
+      let p = polyvObject('#player').livePlayer({
         wrap: '#player',
         width: '100%',
         height: '100%',
+        autoplay: true,
         uid: channeUserId,
         isAutoChange: true,
         vid: channelId,
@@ -273,7 +274,6 @@ export default {
         forceH5: true,
         useH5Page: true
       })
-      console.log(p)
       let timer = setInterval(() => {
         let video = document.querySelector('#player video')
         if (video) {

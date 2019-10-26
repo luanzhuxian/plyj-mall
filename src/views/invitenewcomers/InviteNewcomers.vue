@@ -230,7 +230,7 @@ export default {
           })
           this.bindMobile()
         } catch (e) {
-          console.log(e)
+          throw e
         }
 
         return
@@ -289,7 +289,7 @@ export default {
       let { result } = await getClaimGiftList(this.activityId)
       this.showList = (result || []).slice(0, 3).map((item) => {
         return {
-          name: item.userName,
+          name: item.userName || item.nickName,
           avatar: item.headImgUrl,
           inviteNum: item.helperNum,
           giftInfo: item.name
