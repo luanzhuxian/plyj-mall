@@ -16,6 +16,7 @@
             tag="div"
             v-for="(item, i) of orderList"
             :key="i"
+            @click.capture="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
           >
             <div>
               <div :class="$style.listItemLeft">
@@ -71,7 +72,6 @@
                   type="warning"
                   round
                   :disabled="!item.isStart"
-                  @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
                 >
                   去使用
                 </pl-button>
