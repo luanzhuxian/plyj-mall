@@ -431,33 +431,7 @@ export default {
     this.showCoupon = false
   },
   async mounted () {
-    // 其他人的分享id
-    let otherShareId = sessionStorage.getItem('shareBrokerId') || ''
-    let { brokerId, userId, mallDomain, productId } = this
-    let { protocol, host } = location
-    let selfUrl = `${protocol}//${host}/${mallDomain}/detail/lesson/${productId}/${userId}`
-    // 本地没有分享id，设置本地分享id，设置的本地分享id可以是他人的，也可以是自己的
-    if (!otherShareId) {
-      if (brokerId && brokerId !== userId) {
-        // 携带有他人分享id时，先把他人的id保存起来，然后再替换成当前用户的id
-        // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
-        sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.replace(selfUrl)
-      } else if (brokerId === userId) {
-        sessionStorage.setItem('shareBrokerId', userId || '')
-      } else {
-        location.replace(selfUrl)
-      }
-    } else {
-      if (!brokerId) {
-        location.replace(selfUrl)
-        return
-      }
-      if (brokerId !== userId) {
-        sessionStorage.setItem('shareBrokerId', brokerId || '')
-        location.replace(selfUrl)
-      }
-    }
+    this.changeBrokerId()
   },
   methods: {
     ...mapActions({
@@ -752,6 +726,36 @@ export default {
     countFinished () {
       this.$set(this.detail, 'serverTime', '')
       this.$set(this.detail, 'shoppingTimeLong', '')
+    },
+    // 改变当前链接中的分享id
+    changeBrokerId () {
+      // 其他人的分享id
+      let otherShareId = sessionStorage.getItem('shareBrokerId') || ''
+      let { brokerId, userId, mallDomain, productId } = this
+      let { protocol, host } = location
+      let selfUrl = `${protocol}//${host}/${mallDomain}/detail/lesson/${productId}/${userId}`
+      // 本地没有分享id，设置本地分享id，设置的本地分享id可以是他人的，也可以是自己的
+      if (!otherShareId) {
+        if (brokerId && brokerId !== userId) {
+          // 携带有他人分享id时，先把他人的id保存起来，然后再替换成当前用户的id
+          // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
+          sessionStorage.setItem('shareBrokerId', brokerId || '')
+          location.href = selfUrl
+        } else if (brokerId && brokerId === userId) {
+          sessionStorage.setItem('shareBrokerId', userId || '')
+        } else if (!brokerId && userId) {
+          location.href = selfUrl
+        }
+      } else {
+        if (!brokerId && userId) {
+          location.href = selfUrl
+          return
+        }
+        if (brokerId !== userId) {
+          sessionStorage.setItem('shareBrokerId', brokerId || '')
+          location.href = selfUrl
+        }
+      }
     }
   }
 }
