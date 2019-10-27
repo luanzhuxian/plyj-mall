@@ -442,23 +442,27 @@ export default {
             link: window.location.href,
             imgUrl: data.coverImg + '?x-oss-process=style/thum'
           })
+          data.couponList = data.couponList || []
           for (let coupon of data.couponList) {
             coupon.show = false
           }
-          let timer = setInterval(() => {
-            // 如果已经全部都显示了，停止定时器
-            if (!data.couponList.some(item => !item.show)) {
-              clearInterval(timer)
-            }
-            for (let coupon of data.couponList) {
-              if (coupon.show) {
-                continue
+          if (data.couponList.length) {
+            let timer = setInterval(() => {
+              // 如果已经全部都显示了，停止定时器
+              if (!data.couponList.some(item => !item.show)) {
+                clearInterval(timer)
               }
-              coupon.show = this.canShowCoupon(coupon.afterMinuteShow)
-            }
-            this.couponList = data.couponList.filter(item => item.show)
-          }, 2000)
-          this.productList = data.productList
+              for (let coupon of data.couponList) {
+                if (coupon.show) {
+                  continue
+                }
+                coupon.show = this.canShowCoupon(coupon.afterMinuteShow)
+              }
+              this.couponList = data.couponList.filter(item => item.show)
+            }, 2000)
+          }
+
+          this.productList = data.productList || []
           this.activeId = data.id
         }
       } catch (e) {
