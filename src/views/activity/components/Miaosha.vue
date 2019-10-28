@@ -296,24 +296,13 @@ export default {
             bottom: 0;
             font-size: 24px;
             line-height: 36px;
-            background: rgba(0, 0, 0, 1);
-            opacity: 0.65;
+            background: rgba(0, 0, 0, 0.65);
             color: #FFF;
             padding: 8px 0;
           }
           .text {
             margin-right: 10px;
           }
-          // .num {
-          //   box-sizing: border-box;
-          //   margin: 0 5px;
-          //   padding: 4px;
-          //   height: 36px;
-          //   line-height: 32px;
-          //   background: #555;
-          //   border-radius: 4px;
-          //   opacity: 1;
-          // }
         }
         img {
           width: 100%;

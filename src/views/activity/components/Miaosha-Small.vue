@@ -162,8 +162,7 @@ export default {
             bottom: 0;
             font-size: 24px;
             line-height: 36px;
-            background: rgba(0, 0, 0, 1);
-            opacity: 0.65;
+            background: rgba(0, 0, 0, 0.65);
             color: #FFF;
             padding: 8px 0;
           }

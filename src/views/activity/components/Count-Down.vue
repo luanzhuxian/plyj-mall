@@ -163,13 +163,9 @@ export default {
       > i {
         display: inline-block;
         text-align: center;
-        background-color: rgba(255, 255, 255, .4);
       }
     }
     &.small {
-      // padding: 10px 12px;
-      // font-size: 20px;
-      // height: 44px;
       .time {
         > i {
           box-sizing: border-box;
@@ -178,9 +174,8 @@ export default {
           width: 40px;
           height: 35px;
           line-height: 30px;
-          background: #555;
+          background: rgba(174, 174, 174, 0.64);
           border-radius: 4px;
-          opacity: 1;
         }
       }
     }

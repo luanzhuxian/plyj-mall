@@ -247,10 +247,10 @@ export default {
   }
   .product {
     position: relative;
-    margin-bottom: 56px;
+    margin-bottom: 20px;
+    background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
-    background-color: #fff;
     .img {
       position: relative;
       display: flex;

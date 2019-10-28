@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.home">
-    <!-- <TemplateA :data="modules" v-if="type === 1"> -->
+    <TemplateA :data="modules" v-if="type === 1">
     <!-- 月光宝盒项目 -->
     <!--<router-link
         slot="88"
@@ -20,9 +20,9 @@
         :src="data88[mallId].gif" alt=""
         @click="showHaibao"
       >-->
-    <!-- </TemplateA> -->
+    </TemplateA>
     <TemplateB
-      v-if="type === 3 || type === 4"
+      v-if="~[2, 3, 4].indexOf(type)"
       :type="type"
       :data="modules"
       :live="liveInfo"
@@ -82,7 +82,7 @@ import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
 import { getCurrentActivity } from '../../apis/invitenewcomers'
 // import { wasGetInfo } from '../../apis/wwec'
 // import moment from 'moment'
-// import TemplateA from './Template-A.vue'
+import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
 import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../newcomers/NewcomersHomeEntry.vue'
@@ -91,7 +91,7 @@ import NewcomersHomeEntry from '../newcomers/NewcomersHomeEntry.vue'
 export default {
   name: 'Home',
   components: {
-    // TemplateA,
+    TemplateA,
     TemplateB,
     InviteNewcomersHomeEntry,
     NewcomersHomeEntry
@@ -109,7 +109,12 @@ export default {
         YUYUE: null,
         PINGXUAN: null,
         CLASS: null,
-        RECOMMEND: null
+        RECOMMEND: null,
+        MODULE_A: null,
+        MODULE_B: null,
+        MODULE_C: null,
+        MODULE_D: null,
+        MODULE_E: null
       },
       // haibao: '',
       // pop: '',
@@ -206,25 +211,23 @@ export default {
           return
         }
         let { type, currentTime, moduleModels } = result
-        // if (type === 1) {
-        //   modules = {
-        //     BANNER: null,
-        //     PINGXUAN: null,
-        //     MODULE_A: null,
-        //     MODULE_B: null,
-        //     MODULE_C: null,
-        //     MODULE_D: null,
-        //     MODULE_E: null
-        //   }
-        //   const bannerList = result.moduleModels.filter(module => module.moduleType === 1)
-        //   const prodList = result.moduleModels.filter(module => module.moduleType === 2)
-        //   modules['BANNER'] = bannerList[0]
-        //   modules['MODULE_B'] = bannerList[1]
-        //   modules['MODULE_D'] = bannerList[2]
-        //   modules['MODULE_A'] = prodList[0]
-        //   modules['MODULE_C'] = prodList[1]
-        //   modules['MODULE_E'] = prodList[2]
-        // }
+        if (type === 1) {
+          const bannerList = moduleModels.filter(module => module.moduleType === 1)
+          const prodList = moduleModels.filter(module => module.moduleType === 2)
+          this.modules.BANNER = bannerList[0]
+          this.modules.MODULE_B = bannerList[1]
+          this.modules.MODULE_D = bannerList[2]
+          this.modules.MODULE_A = prodList[0]
+          this.modules.MODULE_C = prodList[1]
+          this.modules.MODULE_E = prodList[2]
+        }
+        if (type === 2) {
+          this.modules.BANNER = moduleModels[0]
+          this.modules.POPULAR = moduleModels[1]
+          this.modules.YUYUE = moduleModels[2]
+          this.modules.PINGXUAN = moduleModels[3]
+          this.modules.RECOMMEND = moduleModels[4]
+        }
         if (type === 3) {
           this.modules.BANNER = moduleModels[0]
           this.modules.POPULAR = moduleModels[1]

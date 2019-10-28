@@ -128,9 +128,13 @@ export default {
   }
   .product {
     position: relative;
+    margin-bottom: 20px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
+    &:nth-last-of-type(1) {
+      margin-bottom: 0;
+    }
     .img {
       position: relative;
       display: flex;
