@@ -199,7 +199,7 @@ export default {
   async created () {
     await this.getDetail()
     this.getCheckInDetail()
-    let qrcode = await generateQrcode(500, `${this.mallUrl}/road-learning/${this.id ? this.id : ''}`, 0, null, null, 'url')
+    let qrcode = await generateQrcode(500, `${this.mallUrl}/road-learning/${this.id ? this.id : ''}`, 100, null, null, 'url')
     this.qrcode = new Image()
     this.qrcode.src = qrcode
   },
@@ -263,14 +263,14 @@ export default {
       this.posterShow = true
       let canImg = new Image()
       canImg.crossOrigin = ''
-      canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning-poster.jpg?time=${Date.now()}`
+      canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning/jianxue${this.checkInDetail.totalCheckInNum}.jpg?time=${Date.now()}`
       canImg.onload = async () => {
         let canvas = document.createElement('canvas')
         canvas.width = canImg.width
         canvas.height = canImg.height
         let ctx = canvas.getContext('2d')
         ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
-        ctx.drawImage(this.qrcode, 16, 968, 92, 92)
+        ctx.drawImage(this.qrcode, 20, 1200, 150, 150)
         let post = canvas.toDataURL('image/jpeg', 0.7)
         this.post = post
       }
