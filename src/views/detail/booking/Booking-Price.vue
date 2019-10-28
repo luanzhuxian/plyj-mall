@@ -7,7 +7,7 @@
         <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
       </div>
     </div>
-    <div class="priceRight" v-if="agentUser && (minRebate || maxRebate)">
+    <div class="priceRight" v-if="agentUser && (minRebate || maxRebate) && detail.preActivity === 1">
       <p class="fz-22 gray-1">
         <span class="returnRunbi">
           润笔

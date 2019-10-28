@@ -1,6 +1,6 @@
 <template>
-  <div class="tuan">
-    <div v-if="detail.preActivity === 1">
+  <div class="tuan" v-if="detail.preActivity === 1">
+    <div>
       <div class="price"><span><i v-text="minPrice" />
         <template v-if="minPrice !== maxPrice">
           ~ <i v-text="maxPrice" />

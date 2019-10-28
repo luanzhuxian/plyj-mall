@@ -34,7 +34,7 @@
           :endtime="detail.shoppingTimeLong"
         />
         <!-- 商品名称 -->
-        <DetailTitle :active-product="detail.activeProduct" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
+        <DetailTitle :active-product="detail.activeProduct" :pre-activity="detail.preActivity" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
         <!-- 商品描述 -->
         <DetailDesc v-text="detail.productDesc" />
         <!-- 商品标签 -->
@@ -823,10 +823,12 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
   }
   .buttons {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     > button {
       width: 340px;
-      line-height: 40px;
+      line-height: 34px;
+      padding: 6px 0;
       color: #fff;
       font-size: 30px;
       border-radius: $--radius2;

@@ -401,6 +401,10 @@ export default {
     padding-right: 16px;
   }
   .addToCart, .buyNowBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 220px;
     height: 80px;
     color: #fff;

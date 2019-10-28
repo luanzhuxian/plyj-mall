@@ -1,6 +1,6 @@
 <template>
   <h2 :class="$style.detailTitle">
-    <div v-if="activeProduct === 3" :class="$style.secondLabel">{{ activityTag }}</div> {{ productName }}
+    <div v-if="activeProduct === 3 && preActivity !== 0" :class="$style.secondLabel">{{ activityTag }}</div> {{ productName }}
   </h2>
 </template>
 
@@ -9,6 +9,10 @@ export default {
   name: 'DetailTitle',
   props: {
     activeProduct: {
+      type: Number,
+      default: 0
+    },
+    preActivity: {
       type: Number,
       default: 0
     },
