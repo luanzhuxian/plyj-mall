@@ -650,9 +650,6 @@ export default {
         this.contactInfoModel.name = this.realName || this.userName
         this.contactInfoModel.mobile = this.mobile
       }
-      if (this.activeProduct === 1) {
-        await this.getCouponList()
-      }
     } catch (e) {
       this.$router.go(-1)
       throw e
@@ -742,6 +739,9 @@ export default {
         return total + price
       })
       const { result } = await getCouponOfMax(amount || 0)
+      if (this.activeProduct === 1) {
+        await this.getCouponList(amount)
+      }
       this.coupon = result
       return result
     },
@@ -778,9 +778,9 @@ export default {
       await this.getProductDetail(true, item)
     },
     // 获取优惠券
-    async getCouponList () {
+    async getCouponList (amount) {
       try {
-        let { result } = await getCouponByPrice(this.amount)
+        let { result } = await getCouponByPrice(amount)
         this.couponList = result
       } catch (e) {
         throw e
