@@ -264,6 +264,10 @@ export default {
       let canImg = new Image()
       canImg.crossOrigin = ''
       canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning/jianxue${this.checkInDetail.totalCheckInNum}.jpg?time=${Date.now()}`
+      console.log(canImg)
+      canImg.onerror = (e) => {
+        console.log(e)
+      }
       canImg.onload = async () => {
         let canvas = document.createElement('canvas')
         canvas.width = canImg.width
