@@ -40,9 +40,7 @@
         <div :class="$style.text">线下核销 付尾款</div>
       </li>
     </ul>
-    <div :class="$style.content">
-      {{ activityBrief }}
-    </div>
+    <div :class="$style.content" v-html="activityBrief" />
   </div>
 </template>
 

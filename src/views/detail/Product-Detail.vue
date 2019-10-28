@@ -77,7 +77,7 @@
         <span style="color: #FE7700;" v-text="couponText" />
       </Field>
 
-      <TogetherRule v-if="detail.activeProduct === 2 || detail.activeProduct === 4" :active-product="detail.activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
+      <TogetherRule v-if="(detail.activeProduct === 2 || detail.activeProduct === 4) && detail.preActivity !== 0" :active-product="detail.activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
 
       <div :class="$style.detailOrComment">
         <div :class="$style.tabs">
