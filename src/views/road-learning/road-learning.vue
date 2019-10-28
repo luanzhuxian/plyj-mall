@@ -259,7 +259,7 @@ export default {
     },
     async checkIn () {
       await getCheckIn(this.activeDetail.id)
-      this.getCheckInDetail()
+      await this.getCheckInDetail()
       this.posterShow = true
       let canImg = new Image()
       canImg.crossOrigin = ''
