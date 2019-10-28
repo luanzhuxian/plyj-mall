@@ -15,6 +15,7 @@
       <pl-icon type="svg" :name="classifyActive ? 'icon-classify-active' : 'icon-classify'" width="68" />
     </router-link>
     <router-link
+      v-if="$attrs['is-nav-btn-show']"
       :class="$style.route"
       tag="div"
       :to="{ name: 'Activity' }"

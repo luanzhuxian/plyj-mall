@@ -13,3 +13,5 @@ export const getLiveInfo = () => axios.get('/apis/v1/mall/live/activity/current/
 export const getMaxCoupon = () => axios.get('/apis/v1/coupon/getMostPreferential')
 // 见学之路活动信息
 export const getJianxueInfo = () => axios.get('/apis/v1/mallCheckIn/currActivity/baseInfo')
+
+export const getDblTwelveLock = () => axios.get(`/apis/v1/mall/doublet/twelve/lock`)
