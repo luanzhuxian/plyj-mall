@@ -148,10 +148,20 @@
         <pl-icon @click="unWinningShow = false" name="icon-error" color="#fff" size="40" />
       </div>
     </div>
+    <div class="winning-prize poster" v-if="posterShow">
+      <div class="prize-box poster-box">
+        <img :src="post" alt="">
+        <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
+      </div>
+      <div class="winning-prize-close">
+        <pl-icon @click="posterShow = false" name="icon-error" color="#fff" size="40" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { generateQrcode } from '../../assets/js/util'
 import { getIDRoadLearningDetail, getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift } from '../../apis/road-learning'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
@@ -163,6 +173,7 @@ export default {
       showRule: false,
       winningShow: false,
       unWinningShow: false,
+      posterShow: false,
       activeStart: false,
       activeEnd: false,
       activeDetail: {},
@@ -171,7 +182,9 @@ export default {
       dd: '',
       hh: '',
       mm: '',
-      ss: ''
+      ss: '',
+      qrcode: '',
+      post: ''
     }
   },
   props: {
@@ -181,11 +194,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar'])
+    ...mapGetters(['avatar', 'mallUrl'])
   },
   async created () {
     await this.getDetail()
     this.getCheckInDetail()
+    let qrcode = await generateQrcode(500, `${this.mallUrl}/road-learning/${this.id ? this.id : ''}`, 0, null, null, 'url')
+    this.qrcode = new Image()
+    this.qrcode.src = qrcode
   },
   methods: {
     async getDetail () {
@@ -244,6 +260,20 @@ export default {
     async checkIn () {
       await getCheckIn(this.activeDetail.id)
       this.getCheckInDetail()
+      this.posterShow = true
+      let canImg = new Image()
+      canImg.crossOrigin = ''
+      canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning-poster.jpg?time=${Date.now()}`
+      canImg.onload = async () => {
+        let canvas = document.createElement('canvas')
+        canvas.width = canImg.width
+        canvas.height = canImg.height
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
+        ctx.drawImage(this.qrcode, 16, 968, 92, 92)
+        let post = canvas.toDataURL('image/jpeg', 0.7)
+        this.post = post
+      }
     },
     async claimGift () {
       const { result: res } = await claimGift(this.activeDetail.id)
@@ -549,6 +579,25 @@ export default {
       color:#EEEEEE;
       letter-spacing:2px;
       opacity: 0.8;
+    }
+  }
+  .poster{
+    padding: 40px 60px 0 60px;
+    .poster-box{
+      padding: 0;
+      background: none;
+      border: none;
+      img{
+        width: 100%;
+      }
+      .press-save{
+        padding: 14px 0;
+        text-align: center;
+        background: #FEDB63;
+        color: #FA4D2F;
+        font-size: 28px;
+        font-weight: 400;
+      }
     }
   }
   .item-content{
