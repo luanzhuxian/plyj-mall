@@ -612,7 +612,13 @@ export default {
       canvas.width = 1120
       canvas.height = 1720
       let ctx = canvas.getContext('2d')
-      if (type === 1) {
+      if (type === 2 && this.detail.preActivity === 2) {
+        ctx.drawImage(tuanBg, 0, 0, 1120, 192)
+      } else if (type === 3 && this.detail.preActivity === 2) {
+        ctx.drawImage(miaoBg, 0, 0, 1120, 192)
+      } else if (type === 4 && this.detail.preActivity === 2) {
+        ctx.drawImage(yugouBg, 0, 0, 1120, 192)
+      } else {
         // 绘制头部
         ctx.fillStyle = '#fff'
         ctx.fillRect(0, 0, 1120, 192)
@@ -620,36 +626,60 @@ export default {
         fontStyle(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 800, 1)
         // fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
       }
-      if (type === 2) {
-        ctx.drawImage(tuanBg, 0, 0, 1120, 192)
-      }
-      if (type === 3) {
-        ctx.drawImage(miaoBg, 0, 0, 1120, 192)
-      }
-      if (type === 4) {
-        ctx.drawImage(yugouBg, 0, 0, 1120, 192)
-      }
       try {
         let min = Math.min(img.width, img.height)
         // 二维码
         let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'canvas')
         ctx.drawImage(img, 0, 0, min, min, 0, 192, 1120, 1120)
-        if (type === 1) {
-          ctx.fillStyle = '#fff'
-        } else {
+        if (type !== 1 && this.detail.preActivity === 2) {
           ctx.fillStyle = '#FA4D2F'
+        } else {
+          ctx.fillStyle = '#fff'
         }
         ctx.fillRect(0, 1312, 1120, 408)
         ctx.drawImage(qrcode, 750, 1352, 320, 320)
         // 填充商品名称
         let str = this.detail.productName
-        let line = type === 1 ? 2 : 1
-        fontStyle(ctx, '56px Microsoft YaHei UI', type === 1 ? '#000' : '#fff', 'top')(ctx, 48, 1352, str, 80, 620, line)
+        let line = (type !== 1 && this.detail.preActivity === 2) ? 1 : 2
+        fontStyle(ctx, '56px Microsoft YaHei UI', (type !== 1 && this.detail.preActivity === 2) ? '#fff' : '#000', 'top')(ctx, 48, 1352, str, 80, 620, line)
         let priceList = this.detail.productSkuModels.map(item => item.price)
         let originalPriceList = this.detail.productSkuModels.map(item => item.originalPrice)
         let price = Math.min(...priceList)
         let originalPrice = Math.max(...originalPriceList)
-        if (type === 1) {
+        if (type === 2 && this.detail.preActivity === 2) {
+          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
+          let originalPriceWidth = ctx.measureText(`¥${price}`).width
+          ctx.drawImage(tuan_price, 48, 1464, 440, 122)
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
+          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
+          ctx.drawImage(yuan, 450 + priceWidth, 1464, 68, 68)
+          ctx.drawImage(original_price, 48, 1584, 220, 78)
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
+          ctx.fillText(price, 260, 1564)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
+        } else if (type === 3 && this.detail.preActivity === 2) {
+          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
+          let originalPriceWidth = ctx.measureText(`¥${price}`).width
+          ctx.drawImage(second_price, 48, 1464, 440, 122)
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
+          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
+          ctx.drawImage(yuan, 450 + priceWidth, 1474, 68, 68)
+          ctx.drawImage(original_price, 48, 1584, 220, 78)
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
+          ctx.fillText(price, 260, 1564)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
+        } else if (type === 4 && this.detail.preActivity === 2) {
+          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
+          let originalPriceWidth = ctx.measureText(`¥${price}`).width
+          ctx.drawImage(yujiao, 48, 1464, 316, 116)
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
+          ctx.fillText(this.detail.activityProductModel.price, 300, 1454)
+          ctx.drawImage(yuan, 360 + priceWidth, 1474, 68, 68)
+          ctx.drawImage(dikou, 48, 1584, 220, 78)
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
+          ctx.fillText(price, 280, 1564)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
+        } else {
           // 填充价钱
           ctx.fillStyle = '#FE7700'
           ctx.fillText('¥', 48, 1564 + (76 - 56) / 2)
@@ -670,39 +700,6 @@ export default {
             ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1564 + (80 - 56) / 2 + 80 / 3)
             ctx.stroke()
           }
-        } else if (type === 2) {
-          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
-          let originalPriceWidth = ctx.measureText(`¥${price}`).width
-          ctx.drawImage(tuan_price, 48, 1464, 440, 122)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
-          ctx.drawImage(yuan, 450 + priceWidth, 1464, 68, 68)
-          ctx.drawImage(original_price, 48, 1584, 220, 78)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(price, 260, 1564)
-          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
-        } else if (type === 3) {
-          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
-          let originalPriceWidth = ctx.measureText(`¥${price}`).width
-          ctx.drawImage(second_price, 48, 1464, 440, 122)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
-          ctx.drawImage(yuan, 450 + priceWidth, 1474, 68, 68)
-          ctx.drawImage(original_price, 48, 1584, 220, 78)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(price, 260, 1564)
-          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
-        } else if (type === 4) {
-          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
-          let originalPriceWidth = ctx.measureText(`¥${price}`).width
-          ctx.drawImage(yujiao, 48, 1464, 316, 116)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(this.detail.activityProductModel.price, 300, 1454)
-          ctx.drawImage(yuan, 360 + priceWidth, 1474, 68, 68)
-          ctx.drawImage(dikou, 48, 1584, 220, 78)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(price, 280, 1564)
-          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
         }
         this.haibao = canvas.toDataURL('image/jpeg', 0.7)
         this.showHaibao = true
