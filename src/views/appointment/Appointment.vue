@@ -180,7 +180,7 @@ export default {
   },
   async activated () {
     try {
-      let showStatus = this.$route.query.showStatus
+      let showStatus = this.$route.query.showStatus || ''
       let { result } = await getData(showStatus)
       sessionStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
       this.data = result
