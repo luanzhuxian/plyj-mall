@@ -275,6 +275,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import DetailBanner from '../../components/detail/Banner.vue'
 import DetailInfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
@@ -607,10 +608,10 @@ export default {
       const yuan = res[7]
       const yujiao = res[8]
       // 截取中间部分
-      img = cutImageCenter(img)
+      img = cutImageCenter(img, 750 / 500)
       let canvas = document.createElement('canvas')
       canvas.width = 1120
-      canvas.height = 1720
+      canvas.height = 1346
       let ctx = canvas.getContext('2d')
       if (type === 2 && this.detail.preActivity === 2) {
         ctx.drawImage(tuanBg, 0, 0, 1120, 192)
@@ -627,21 +628,21 @@ export default {
         // fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
       }
       try {
-        let min = Math.min(img.width, img.height)
         // 二维码
         let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'canvas')
-        ctx.drawImage(img, 0, 0, min, min, 0, 192, 1120, 1120)
+        // 商品图片
+        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 192, 1120, 746)
         if (type !== 1 && this.detail.preActivity === 2) {
           ctx.fillStyle = '#FA4D2F'
         } else {
           ctx.fillStyle = '#fff'
         }
-        ctx.fillRect(0, 1312, 1120, 408)
-        ctx.drawImage(qrcode, 750, 1352, 320, 320)
+        ctx.fillRect(0, 938, 1120, 408)
+        ctx.drawImage(qrcode, 750, 978, 320, 320)
         // 填充商品名称
         let str = this.detail.productName
         let line = (type !== 1 && this.detail.preActivity === 2) ? 1 : 2
-        fontStyle(ctx, '56px Microsoft YaHei UI', (type !== 1 && this.detail.preActivity === 2) ? '#fff' : '#000', 'top')(ctx, 48, 1352, str, 80, 620, line)
+        fontStyle(ctx, '56px Microsoft YaHei UI', (type !== 1 && this.detail.preActivity === 2) ? '#fff' : '#000', 'top')(ctx, 48, 978, str, 80, 620, line)
         let priceList = this.detail.productSkuModels.map(item => item.price)
         let originalPriceList = this.detail.productSkuModels.map(item => item.originalPrice)
         let price = Math.min(...priceList)
@@ -649,55 +650,55 @@ export default {
         if (type === 2 && this.detail.preActivity === 2) {
           let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
           let originalPriceWidth = ctx.measureText(`¥${price}`).width
-          ctx.drawImage(tuan_price, 48, 1464, 440, 122)
+          ctx.drawImage(tuan_price, 48, 1090, 440, 122)
           fontStyle(ctx, '112px Arial', '#fff', 'top')
           ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
-          ctx.drawImage(yuan, 450 + priceWidth, 1464, 68, 68)
-          ctx.drawImage(original_price, 48, 1584, 220, 78)
+          ctx.drawImage(yuan, 450 + priceWidth, 1090, 68, 68)
+          ctx.drawImage(original_price, 48, 1210, 220, 78)
           fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(price, 260, 1564)
-          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
+          ctx.fillText(price, 260, 1190)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1210, 68, 68)
         } else if (type === 3 && this.detail.preActivity === 2) {
           let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
           let originalPriceWidth = ctx.measureText(`¥${price}`).width
-          ctx.drawImage(second_price, 48, 1464, 440, 122)
+          ctx.drawImage(second_price, 48, 1090, 440, 122)
           fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
-          ctx.drawImage(yuan, 450 + priceWidth, 1474, 68, 68)
-          ctx.drawImage(original_price, 48, 1584, 220, 78)
+          ctx.fillText(this.detail.activityProductModel.price, 350, 1080)
+          ctx.drawImage(yuan, 450 + priceWidth, 1100, 68, 68)
+          ctx.drawImage(original_price, 48, 1210, 220, 78)
           fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(price, 260, 1564)
-          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
+          ctx.fillText(price, 260, 1190)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1210, 68, 68)
         } else if (type === 4 && this.detail.preActivity === 2) {
           let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
           let originalPriceWidth = ctx.measureText(`¥${price}`).width
-          ctx.drawImage(yujiao, 48, 1464, 316, 116)
+          ctx.drawImage(yujiao, 48, 1090, 316, 116)
           fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(this.detail.activityProductModel.price, 300, 1454)
-          ctx.drawImage(yuan, 360 + priceWidth, 1474, 68, 68)
-          ctx.drawImage(dikou, 48, 1584, 220, 78)
+          ctx.fillText(this.detail.activityProductModel.price, 300, 1080)
+          ctx.drawImage(yuan, 360 + priceWidth, 1100, 68, 68)
+          ctx.drawImage(dikou, 48, 1210, 220, 78)
           fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(price, 280, 1564)
-          ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
+          ctx.fillText(price, 280, 1190)
+          ctx.drawImage(yuan, 350 + originalPriceWidth, 1210, 68, 68)
         } else {
           // 填充价钱
           ctx.fillStyle = '#FE7700'
-          ctx.fillText('¥', 48, 1564 + (76 - 56) / 2)
-          fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1544 + (104 - 88) / 2, String(price), 104)
+          ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
+          fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1170 + (104 - 88) / 2, String(price), 104)
           // 绘制原价
           if (originalPrice) {
             let priceWidth = ctx.measureText(price).width
             ctx.fillStyle = '#999'
             ctx.font = '56px Microsoft YaHei UI'
-            ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1564 + (80 - 56) / 2)
+            ctx.fillText(`¥${originalPrice}`, 96 + priceWidth + 44, 1190 + (80 - 56) / 2)
             let originalPriceWidth = ctx.measureText(`¥${originalPrice}`).width
             ctx.save()
             // 设置删除线
             ctx.strokeStyle = '#999'
             ctx.beginPath()
             ctx.lineWidth = '4'
-            ctx.moveTo(96 + priceWidth + 44, 1564 + (80 - 56) / 2 + 80 / 3)
-            ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1564 + (80 - 56) / 2 + 80 / 3)
+            ctx.moveTo(96 + priceWidth + 44, 1190 + (80 - 56) / 2 + 80 / 3)
+            ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1190 + (80 - 56) / 2 + 80 / 3)
             ctx.stroke()
           }
         }

@@ -241,20 +241,40 @@ export async function generateQrcode (size, text, padding = 0, img, centerPaddin
 /**
  * 截取图片中间部分
  * @param img {HTMLElement} 要截取的图片
+ * @param ratio {Number} 裁剪图片的长宽比 默认是1:1
  * @returns {HTMLElement} 返回canvas对象
  */
-export function cutImageCenter (img) {
+export function cutImageCenter (img, ratio = 1) {
   const canvas = document.createElement('canvas')
   let w = img.naturalWidth
   let h = img.naturalHeight
-  let min = Math.min(w, h)
-  canvas.width = min
-  canvas.height = min
-  const ctx = canvas.getContext('2d')
-  if (w >= h) {
-    ctx.drawImage(img, (w - h) / 2, 0, h, h, 0, 0, h, h)
+  // 说明图片高度有可能不够
+  if (w / h >= ratio) {
+    canvas.width = h * ratio
+    canvas.height = h
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(img,
+      (w - canvas.width) / 2,
+      0,
+      canvas.width,
+      canvas.height,
+      0,
+      0,
+      canvas.width,
+      canvas.height)
   } else {
-    ctx.drawImage(img, 0, (h - w) / 2, w, w, 0, 0, w, w)
+    canvas.width = w
+    canvas.height = w / ratio
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(img,
+      0,
+      (h - canvas.height) / 2,
+      canvas.width,
+      canvas.height,
+      0,
+      0,
+      canvas.width,
+      canvas.height)
   }
   return canvas
 }
