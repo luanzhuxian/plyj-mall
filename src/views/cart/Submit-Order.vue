@@ -72,7 +72,7 @@
               <span>剩余{{ physicalProducts[0].stock }}件</span>
               <Count
                 :min="physicalProducts[0].minBuyNum"
-                :max="physicalProducts[0].stock"
+                :max="item.purchaseQuantity || item.stock"
                 :count="physicalProducts[0].count"
                 @change="(count, next) => { countChange(count, physicalProducts[0], next) }"
               />
@@ -179,7 +179,7 @@
                 <span>剩余{{ item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
-                  :max="item.stock"
+                  :max="item.purchaseQuantity || item.stock"
                   :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
@@ -288,7 +288,7 @@
                 <span>剩余{{ item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
-                  :max="item.stock"
+                  :max="item.purchaseQuantity || item.stock"
                   :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />

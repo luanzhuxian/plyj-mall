@@ -118,8 +118,9 @@ export default {
       height: 36px;
       z-index: 2;
       vertical-align: -5px;
+      font-weight: bold;
       &:disabled {
-        opacity: 0.5;
+        opacity: 0.3;
       }
       &:before {
         position: absolute;
