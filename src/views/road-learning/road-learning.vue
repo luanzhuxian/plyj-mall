@@ -34,42 +34,43 @@
       <div class="content-step-box">
         <div class="step step1" :class="{'step-big':checkInDetail.totalCheckInNum >= 1}">
           <span v-if="checkInDetail.totalCheckInNum < 1">1</span>
-          <pl-icon v-else name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (1)" name="icon-jiaoya" color="#FFF" size="30" />
         </div>
         <div class="step step2" :class="{'step-big':checkInDetail.totalCheckInNum >= 2}">
           <span v-if="checkInDetail.totalCheckInNum < 2">2</span>
-          <pl-icon v-else name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (2)" name="icon-jiaoya" color="#FFF" size="30" />
         </div>
         <div class="step step3" :class="{'step-big':checkInDetail.totalCheckInNum >= 3}">
           <span v-if="checkInDetail.totalCheckInNum < 3">3</span>
-          <pl-icon v-else name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (3)" name="icon-jiaoya" color="#FFF" size="30" />
         </div>
         <div class="step step4" :class="{'step-big':checkInDetail.totalCheckInNum >= 4}">
           <span v-if="checkInDetail.totalCheckInNum < 4">4</span>
-          <pl-icon v-else name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (4)" name="icon-jiaoya" color="#FFF" size="30" />
         </div>
         <div class="step step5" :class="{'step-big':checkInDetail.totalCheckInNum >= 5}">
           <span v-if="checkInDetail.totalCheckInNum < 5">5</span>
-          <pl-icon v-else name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (5)" name="icon-jiaoya" color="#FFF" size="30" />
         </div>
         <div class="step step6" :class="{'step-big':checkInDetail.totalCheckInNum >= 6}">
           <span v-if="checkInDetail.totalCheckInNum < 6">6</span>
-          <pl-icon v-else name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (6)" name="icon-jiaoya" color="#FFF" size="30" />
         </div>
         <div class="step step7" :class="{'step-big':checkInDetail.totalCheckInNum >= 7}">
           <span v-if="checkInDetail.totalCheckInNum < 7">7</span>
-          <pl-icon v-else name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (7)" name="icon-jiaoya" color="#FFF" size="30" />
         </div>
         <div class="step step8" :class="{'step-big':checkInDetail.totalCheckInNum >= 8}">
           <span v-if="checkInDetail.totalCheckInNum < 8">8</span>
-          <pl-icon v-else name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (8)" name="icon-jiaoya" color="#FFF" size="30" />
         </div>
         <div class="step step9" :class="{'step-big':checkInDetail.totalCheckInNum >= 9}">
           <span v-if="checkInDetail.totalCheckInNum < 9">9</span>
-          <pl-icon v-else name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (9)" name="icon-jiaoya" color="#FFF" size="30" />
         </div>
         <div class="step step10" :class="{'step-big':checkInDetail.totalCheckInNum >= 10}">
-          <pl-icon v-if="checkInDetail.totalCheckInNum === 10" name="icon-liwu" color="#FFF" size="30" />
+          <pl-icon v-if="checkInDetail.totalCheckInNum < 10" name="icon-liwu" color="#FFF" size="30" />
+          <pl-icon v-else @click="drawPoster (10)" name="icon-liwu" color="#FFF" size="30" />
         </div>
         <div class="statistics" v-if="activeStart">
           已有 <span>{{ checkInDetail.checkInUserNum }}人</span>参与活动 <span>&nbsp;|&nbsp;</span> <div v-if="checkInDetail.totalCheckInNum < 10">还差 <span>{{ 10 - checkInDetail.totalCheckInNum }}次</span>签到，可冲击大奖</div> <div v-if="checkInDetail.totalCheckInNum === 10">恭喜你 已完成<span>10次</span>签到</div>
@@ -272,11 +273,11 @@ export default {
         this.unWinningShow = true
       }
     },
-    async drawPoster () {
+    async drawPoster (index) {
       this.posterShow = true
       let canImg = new Image()
       canImg.crossOrigin = ''
-      canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning/jianxue${this.checkInDetail.totalCheckInNum}.jpg?time=${Date.now()}`
+      canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning/jianxue${index || this.checkInDetail.totalCheckInNum}.jpg?time=${Date.now()}`
       canImg.onload = async () => {
         let canvas = document.createElement('canvas')
         canvas.width = canImg.width
