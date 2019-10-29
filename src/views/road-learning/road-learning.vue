@@ -153,7 +153,7 @@
         <img :src="post" alt="">
         <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
       </div>
-      <div class="winning-prize-close">
+      <div class="winning-prize-close poster-close">
         <pl-icon @click="posterShow = false" name="icon-error" color="#fff" size="40" />
       </div>
     </div>
@@ -260,24 +260,7 @@ export default {
     async checkIn () {
       await getCheckIn(this.activeDetail.id)
       await this.getCheckInDetail()
-      this.posterShow = true
-      let canImg = new Image()
-      canImg.crossOrigin = ''
-      canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning/jianxue${this.checkInDetail.totalCheckInNum}.jpg?time=${Date.now()}`
-      console.log(canImg)
-      canImg.onerror = (e) => {
-        console.log(e)
-      }
-      canImg.onload = async () => {
-        let canvas = document.createElement('canvas')
-        canvas.width = canImg.width
-        canvas.height = canImg.height
-        let ctx = canvas.getContext('2d')
-        ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
-        ctx.drawImage(this.qrcode, 20, 1200, 150, 150)
-        let post = canvas.toDataURL('image/jpeg', 0.7)
-        this.post = post
-      }
+      this.drawPoster()
     },
     async claimGift () {
       const { result: res } = await claimGift(this.activeDetail.id)
@@ -287,6 +270,22 @@ export default {
         this.winningShow = true
       } else if (this.checkInDetail.claimStatus === 2) {
         this.unWinningShow = true
+      }
+    },
+    async drawPoster () {
+      this.posterShow = true
+      let canImg = new Image()
+      canImg.crossOrigin = ''
+      canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning/jianxue${this.checkInDetail.totalCheckInNum}.jpg?time=${Date.now()}`
+      canImg.onload = async () => {
+        let canvas = document.createElement('canvas')
+        canvas.width = canImg.width
+        canvas.height = canImg.height
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
+        ctx.drawImage(this.qrcode, 20, 1200, 150, 150)
+        let post = canvas.toDataURL('image/jpeg', 0.7)
+        this.post = post
       }
     }
   },
@@ -300,7 +299,7 @@ export default {
   .road-learning{
     height: 100vh;
     width: 100vw;
-    background:linear-gradient(180deg,rgba(246,4,49,1) 0%,rgba(246,70,79,1) 35%,rgba(253,98,78,1) 100%);
+    background:linear-gradient(180deg,rgba(246,4,49,1) 0%,rgba(246,70,79,1) 35%,rgba(253,98,78,1) 120%);
     .top{
       height: 598px;
       background: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/goldenEgg.png') no-repeat center 80px;;
@@ -586,7 +585,7 @@ export default {
     }
   }
   .poster{
-    padding: 40px 60px 0 60px;
+    padding: 40px 80px 0 80px;
     .poster-box{
       padding: 0;
       background: none;
@@ -602,6 +601,9 @@ export default {
         font-size: 28px;
         font-weight: 400;
       }
+    }
+    .poster-close{
+      margin-top: 20px;
     }
   }
   .item-content{
