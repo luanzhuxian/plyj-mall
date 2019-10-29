@@ -184,6 +184,8 @@ export default {
           await bindMobile(this.bindForm)
           let { name, params, query } = JSON.parse(sessionStorage.getItem('BIND_MOBILE_FROM')) || {}
           if (name) {
+            // 新用户助力标识
+            sessionStorage.setItem('INVITE_NEW_USER', 'true')
             // await this.$store.dispatch(REFRESH_TOKEN)
             await this.refreshLogin()
             this.$router.replace({

@@ -119,6 +119,10 @@ export default {
   },
 
   async activated () {
+    if (this.userId === this.$route.params.userId) {
+      this.$router.push({ name: 'InviteNewcomers', params: { activityId: this.$route.params.activityId } })
+      return
+    }
     await this.init()
   },
 
@@ -150,7 +154,8 @@ export default {
       }
 
       // 新用户注册返回后，继续后续的助力操作
-      this.helpMyFriend(true)
+      // this.helpMyFriend(true)
+      this.helpMyFriend()
     },
 
     gotoInviteNew () {
@@ -165,7 +170,8 @@ export default {
         this.showGameOver()
       }
 
-      this.helpMyFriend(false)
+      // this.helpMyFriend(false)
+      this.helpMyFriend()
     },
 
     // 获取活动的信息
@@ -204,13 +210,8 @@ export default {
       this.totalClaimers = claimerInfo.claimerNum
     },
 
-    saveHelpState () {
-      sessionStorage.setItem('INVITE_NEW_USER', 'true')
-    },
-
     restoreHelpState () {
       let state = sessionStorage.getItem('INVITE_NEW_USER')
-
       sessionStorage.removeItem('INVITE_NEW_USER')
       return state
     },
@@ -238,13 +239,12 @@ export default {
         return
       }
 
-      if (isRestore) {
-        return
-      }
+      // if (isRestore) {
+      //   return
+      // }
 
       if (this.isNewUser) {
         // 新用户，先注册（绑定手机）
-        this.saveHelpState()
         // 跳转到绑定手机页面，手机绑定完成之后返回继续操作
         try {
           await this.$confirm({
@@ -260,7 +260,7 @@ export default {
       } else {
         // 不是新用户
         await this.$alert({
-          message: '感谢你帮我助力哦~ 邀你一起参与翻豪礼',
+          message: '老用户无法参加助力活动~ 邀你一起参与翻豪礼',
           viceMessage: '您可以直接发起活动，邀请好友助力帮你翻豪礼',
           confirmText: '我也想翻豪礼'
         })
