@@ -674,33 +674,33 @@ export default {
           let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
           let originalPriceWidth = ctx.measureText(`¥${price}`).width
           ctx.drawImage(tuan_price, 48, 1464, 440, 122)
-          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
           ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
           ctx.drawImage(yuan, 450 + priceWidth, 1464, 68, 68)
           ctx.drawImage(original_price, 48, 1584, 220, 78)
-          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
           ctx.fillText(price, 260, 1564)
           ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
         } else if (type === 3) {
           let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
           let originalPriceWidth = ctx.measureText(`¥${price}`).width
           ctx.drawImage(second_price, 48, 1464, 440, 122)
-          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
           ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
           ctx.drawImage(yuan, 450 + priceWidth, 1474, 68, 68)
           ctx.drawImage(original_price, 48, 1584, 220, 78)
-          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
           ctx.fillText(price, 260, 1564)
           ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
         } else if (type === 4) {
           let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
           let originalPriceWidth = ctx.measureText(`¥${price}`).width
           ctx.drawImage(yujiao, 48, 1464, 316, 116)
-          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
           ctx.fillText(this.detail.activityProductModel.price, 300, 1454)
-          ctx.drawImage(yuan, 350 + priceWidth, 1474, 68, 68)
+          ctx.drawImage(yuan, 360 + priceWidth, 1474, 68, 68)
           ctx.drawImage(dikou, 48, 1584, 220, 78)
-          fontStyle(ctx, '112px Microsoft YaHei UI', '#fff', 'top')
+          fontStyle(ctx, '112px Arial', '#fff', 'top')
           ctx.fillText(price, 280, 1564)
           ctx.drawImage(yuan, 350 + originalPriceWidth, 1584, 68, 68)
         }

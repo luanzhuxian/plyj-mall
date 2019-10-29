@@ -13,8 +13,8 @@ export default {
       default: 0
     },
     preActivity: {
-      type: Number,
-      default: 0
+      type: [Number, String],
+      default: ''
     },
     productName: {
       type: String,
