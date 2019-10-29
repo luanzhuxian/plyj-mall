@@ -10,7 +10,12 @@
         v-lazy="img"
         :key="img"
       >
-      <count-down :class="$style.countDown" v-if="data.shoppingStatus === 1" :data="data" :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }" />
+      <count-down
+        v-if="data.shoppingStatus === 1 && activityProduct === 1"
+        :class="$style.countDown"
+        :data="data"
+        :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }"
+      />
     </div>
     <div :class="$style.bottom">
       <div
@@ -100,6 +105,10 @@ export default {
       default: function () {
         return {}
       }
+    },
+    activityProduct: {
+      type: Number,
+      default: 1
     }
   },
   computed: {

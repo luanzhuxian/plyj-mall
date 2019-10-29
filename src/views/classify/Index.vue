@@ -99,6 +99,7 @@
                   :title="item.productName"
                   :price="item.price"
                   :data="item"
+                  :activity-product="item.activityProduct"
                   :rebate="currentClassify.id === '1' ? item.realRebate : ''"
                 />
               </template>
