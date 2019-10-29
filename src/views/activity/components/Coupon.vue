@@ -56,9 +56,10 @@ export default {
 
 <style module lang="scss">
   .coupon {
-      margin-top: 32px;
-      margin-bottom: 42px;
-     .btn-middle {
+    margin-top: 32px;
+    margin-bottom: 42px;
+
+    .btn-middle {
       width: 520px;
       height: 78px;
       background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-middle.png") no-repeat center center;
@@ -66,12 +67,14 @@ export default {
       border-radius: 70px;
       margin: 0 auto;
     }
+
     .background {
       margin: 0 -24px 24px;
       background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/color-bar.png") no-repeat center bottom;
       background-size: 100% auto;
       box-shadow: 0 20px 20px #8A0108;
     }
+
     .title {
       padding: 12px 0 32px;
       font-size: 28px;
@@ -79,41 +82,50 @@ export default {
       color: #FFF;
       text-align: center;
     }
+
     .list {
       display: flex;
       justify-content: space-around;
       align-items: center;
       padding-bottom: 30px;
+
       &-item {
         height: 140px;
         font-size: 20px;
         color: #FFF;
+
         &.large {
           width: 346px;
           background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-coupon-large.png") no-repeat center center;
           background-size: 100% 100%;
+
           .number {
             font-size: 40px;
             margin-right: 6px;
           }
         }
+
         &.small {
           width: 220px;
           background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/bg-coupon.png") no-repeat center center;
           background-size: 100% 100%;
         }
+
         &-wrapper {
           padding: 12px 10px 20px;
         }
+
         .price {
           font-size: 24px;
           margin-right: 6px;
         }
+
         .number {
           font-size: 32px;
           font-family: San Francisco Display;
           font-weight: bold;
         }
+
         .date {
           margin-top: 4px;
           font-family: San Francisco Display;

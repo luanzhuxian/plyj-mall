@@ -44,7 +44,8 @@
                   {{ item.goodsInfo.productName }}
                 </div>
                 <div :class="$style.sub1">
-                  {{ `预交定金￥${item.goodsInfo && item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.price}抵￥${item.goodsInfo && item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice}` }}
+                  <span v-if="item.goodsInfo && item.goodsInfo.activityInfo">{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
+                  <span v-if="item.goodsInfo && item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
                 </div>
                 <div :class="$style.sub2">
                   {{ `双十二价位：${item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price')}元` }}
@@ -197,6 +198,7 @@ export default {
         }
         .sub-1 {
           margin-bottom: 8px;
+          height: 36px;
           font-size: 24px;
           font-family: San Francisco Display;
           color: #EA618E;
