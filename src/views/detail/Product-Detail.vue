@@ -652,7 +652,7 @@ export default {
           let originalPriceWidth = ctx.measureText(`¥${price}`).width
           ctx.drawImage(tuan_price, 48, 1090, 440, 122)
           fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(this.detail.activityProductModel.price, 350, 1454)
+          ctx.fillText(this.detail.activityProductModel.price, 350, 1080)
           ctx.drawImage(yuan, 450 + priceWidth, 1090, 68, 68)
           ctx.drawImage(original_price, 48, 1210, 220, 78)
           fontStyle(ctx, '112px Arial', '#fff', 'top')
