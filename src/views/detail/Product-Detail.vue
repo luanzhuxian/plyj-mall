@@ -358,7 +358,8 @@ export default {
       haibao: '',
       tab: 2,
       imgels: [],
-      activeType: 1
+      activeType: 1,
+      qrcode: ''
     }
   },
   props: {
@@ -404,6 +405,21 @@ export default {
         text += `满${item.useLimitAmount}减¥${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
       })
       return text
+    },
+    minPrice () {
+      if (this.detail.productSkuModels) {
+        return Math.min(...this.detail.productSkuModels.map(item => item.price))
+      }
+    },
+    maxPrice () {
+      if (this.detail.productSkuModels) {
+        return Math.max(...this.detail.productSkuModels.map(item => item.price))
+      }
+    },
+    maxOriginalPrice () {
+      if (this.detail.productSkuModels) {
+        return Math.max(...this.detail.productSkuModels.map(item => item.originalPrice))
+      }
     }
   },
   watch: {
@@ -466,8 +482,12 @@ export default {
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
         this.haibaoImg = await this.loadImage(result.productMainImage)
-        // this.imgels = []
+        // let img = await this.loadImage(result.productMainImage)
+        // img = cutImageCenter(img)
+        // let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'url')
+        // this.qrcode = qrcode
       } catch (e) {
+        console.log(e)
         throw e
       } finally {
         this.loading = false
@@ -578,6 +598,8 @@ export default {
         this.showHaibao = true
         return
       }
+      // let res = await this.$refs.html2canvas.toCanvas()
+      // console.log(res)
       // 截取头像
       let lodedAvatar
       try {
@@ -590,12 +612,12 @@ export default {
         this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster3.png'),
         this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png'),
         this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster1.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou-1571393161453.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/original_price-1571393161453.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/second_price-1571393161453.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/tuan_price-1571393161453.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan-1571393161453.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao-1571393161453.png')
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuanjia.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/miaoshajia.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/tuangoujia.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan.png'),
+        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao.png')
       ]
       const res = await Promise.all(allImgs)
       const tuanBg = res[0]
@@ -642,45 +664,51 @@ export default {
         // 填充商品名称
         let str = this.detail.productName
         let line = (type !== 1 && this.detail.preActivity === 2) ? 1 : 2
+        let price = this.minPrice
+        let originalPrice = this.maxOriginalPrice
+        let activePrice = this.detail.activityProductModel.price
         fontStyle(ctx, '56px Microsoft YaHei UI', (type !== 1 && this.detail.preActivity === 2) ? '#fff' : '#000', 'top')(ctx, 48, 978, str, 80, 620, line)
-        let priceList = this.detail.productSkuModels.map(item => item.price)
-        let originalPriceList = this.detail.productSkuModels.map(item => item.originalPrice)
-        let price = Math.min(...priceList)
-        let originalPrice = Math.max(...originalPriceList)
         if (type === 2 && this.detail.preActivity === 2) {
-          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
-          let originalPriceWidth = ctx.measureText(`¥${price}`).width
-          ctx.drawImage(tuan_price, 48, 1090, 440, 122)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(this.detail.activityProductModel.price, 350, 1080)
-          ctx.drawImage(yuan, 450 + priceWidth, 1090, 68, 68)
-          ctx.drawImage(original_price, 48, 1210, 220, 78)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(price, 260, 1190)
-          ctx.drawImage(yuan, 350 + originalPriceWidth, 1210, 68, 68)
+          // 团购
+          let original = this.maxOriginalPrice || this.maxPrice
+          ctx.drawImage(tuan_price, 48, 1090, 240, 104)
+          fontStyle(ctx, 'bolder 88px Arial', '#F9E687', 'top')
+          let priceWidth = ctx.measureText(activePrice).width
+          ctx.fillText(activePrice, 48 + 240 + 10, 1105)
+          ctx.drawImage(yuan, 48 + 240 + priceWidth + 10, 1090, 72, 104)
+
+          ctx.drawImage(original_price, 48, 1210, 134, 96)
+          fontStyle(ctx, 'bolder 88px Arial', '#fff', 'top')
+          ctx.fillText(this.maxPrice, 48 + 144 + 10, 1220)
+          let originalPriceWidth = ctx.measureText(original).width
+          ctx.drawImage(yuan, 48 + 144 + 10 + originalPriceWidth + 10, 1210, 66, 96)
         } else if (type === 3 && this.detail.preActivity === 2) {
-          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
-          let originalPriceWidth = ctx.measureText(`¥${price}`).width
-          ctx.drawImage(second_price, 48, 1090, 440, 122)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(this.detail.activityProductModel.price, 350, 1080)
-          ctx.drawImage(yuan, 450 + priceWidth, 1100, 68, 68)
-          ctx.drawImage(original_price, 48, 1210, 220, 78)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(price, 260, 1190)
-          ctx.drawImage(yuan, 350 + originalPriceWidth, 1210, 68, 68)
+          // 秒杀
+          ctx.drawImage(second_price, 48, 1090, 240, 104)
+          fontStyle(ctx, 'bolder 88px Arial', '#F9E687', 'top')
+          let priceWidth = ctx.measureText(activePrice).width
+          ctx.fillText(activePrice, 48 + 240 + 10, 1105)
+          ctx.drawImage(yuan, 48 + priceWidth + 240 + 10, 1090, 72, 104)
+
+          ctx.drawImage(original_price, 48, 1210, 134, 96)
+          fontStyle(ctx, 'bolder 88px Arial', '#fff', 'top')
+          ctx.fillText(this.maxPrice, 48 + 144 + 10, 1220)
+          let originalPriceWidth = ctx.measureText(this.maxPrice).width
+          ctx.drawImage(yuan, 48 + 144 + 10 + originalPriceWidth + 10, 1210, 66, 96)
         } else if (type === 4 && this.detail.preActivity === 2) {
-          price = this.detail.activityProductModel.depositTotal
-          let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
-          let originalPriceWidth = ctx.measureText(`¥${price}`).width
-          ctx.drawImage(yujiao, 48, 1090, 316, 116)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(this.detail.activityProductModel.price, 300, 1080)
-          ctx.drawImage(yuan, 360 + priceWidth, 1100, 68, 68)
-          ctx.drawImage(dikou, 48, 1210, 220, 78)
-          fontStyle(ctx, '112px Arial', '#fff', 'top')
-          ctx.fillText(price, 280, 1190)
-          ctx.drawImage(yuan, 350 + originalPriceWidth, 1210, 68, 68)
+          // 预购
+          ctx.drawImage(yujiao, 48, 1090, 144, 104)
+          fontStyle(ctx, 'bolder 88px Arial', '#F9E687', 'top')
+          let priceWidth = ctx.measureText(activePrice).width
+          ctx.fillText(activePrice, 48 + 144 + 10, 1105)
+          ctx.drawImage(yuan, 48 + priceWidth + 144 + 10, 1090, 72, 104)
+
+          ctx.drawImage(dikou, 48, 1210, 134, 96)
+          fontStyle(ctx, 'bolder 88px Arial', '#fff', 'top')
+          let depositTotal = this.detail.activityProductModel.depositTotal
+          let depositTotalPriceWidth = ctx.measureText(depositTotal).width
+          ctx.fillText(depositTotal, 48 + 144 + 10, 1220)
+          ctx.drawImage(yuan, 48 + 144 + 10 + depositTotalPriceWidth + 10, 1210, 66, 96)
         } else {
           // 填充价钱
           ctx.fillStyle = '#FE7700'
@@ -1043,6 +1071,106 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     padding: 0 24px;
     > .coupon-list {
       margin-top: 48px;
+    }
+  }
+
+  .haibao-canvas {
+    width: 560px;
+    height: 673px;
+    .haibao-top {
+      display: flex;
+      align-items: center;
+      height: 96px;
+      padding: 0 16px;
+      text-align: center;
+      background-color: #fff;
+      &.active-product {
+        background-color: #fa4d2f;
+        justify-content: center;
+      }
+      > img {
+        height: 80px;
+      }
+      .avatar {
+        width: 64px;
+        height: 64px;
+        margin-right: 16px;
+        object-fit: cover;
+      }
+      .nickName {
+        font-size: 24px;
+        color: #000;
+      }
+    }
+    .product-main-image {
+      > img {
+        width: 560px;
+        height: 373px;
+        object-fit: cover;
+      }
+    }
+    .hai-bao-bottom {
+      display: flex;
+      justify-content: space-between;
+      height: 204px;
+      padding: 20px 24px;
+      background-color: #fff;
+      box-sizing: border-box;
+      &.active-product {
+        background-color: #FA4D2F;
+        .pro-name {
+          height: 40px;
+          color: #fff;
+          @include elps();
+        }
+      }
+    }
+    .bottom-left {
+      width: 310px;
+      > .pro-name {
+        width: 310px;
+        height: 80px;
+        line-height: 40px;
+        margin-bottom: 10px;
+        font-size: 28px;
+        color: #000;
+      }
+      > .haibao-price {
+        > span {
+          margin-right: 20px;
+          font-size: 44px;
+          color: #ef7700;
+        }
+        > del {
+          font-size: 28px;
+          color: #999;
+        }
+      }
+      > .yujiao, .dikou {
+        display: flex;
+        align-items: center;
+        img {
+          height: 56px;
+        }
+        > span {
+          margin: 0 5px;
+          font-size: 44px;
+          color: #F9E687;
+          font-weight: bold;
+        }
+      }
+      .dikou {
+        img {
+          height: 52px;
+        }
+        > span {
+          color: #fff;
+        }
+      }
+    }
+    .qrcode {
+      width: 160px;
+      height: 160px;
     }
   }
 </style>

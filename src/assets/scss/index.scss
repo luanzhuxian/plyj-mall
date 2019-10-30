@@ -117,6 +117,12 @@
     content: '¥'
   }
 }
+.small-rmb {
+  &:before {
+    content: '¥';
+    font-size: 0.6em;
+  }
+}
 .partition {
   position: relative;
   overflow: visible !important;
