@@ -64,14 +64,15 @@ export default {
       s: 0
     }
   },
+
+  activated () {
+    this.init()
+  },
   deactivated () {
     clearInterval(this.timer)
   },
   beforeDestroy () {
     clearInterval(this.timer)
-  },
-  mounted () {
-    this.init()
   },
   methods: {
     async init () {
