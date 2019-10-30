@@ -18,7 +18,8 @@ const externals =
       'ali-oss': 'OSS',
       'compressorjs': 'Compressor',
       'js-cookie': 'Cookies',
-      'html2canvas': 'html2canvas'
+      'vue-lazyload': 'VueLazyload',
+      'qs': 'Qs'
     }
     : {}
 module.exports = {
