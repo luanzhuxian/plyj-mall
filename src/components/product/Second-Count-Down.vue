@@ -52,6 +52,7 @@ export default {
   },
   data () {
     return {
+      timer: '',
       time: '',
       show: false,
       endtiemstamp: 0,
@@ -64,6 +65,7 @@ export default {
   },
   watch: {
     endtime (val) {
+      clearInterval(this.timer)
       this.endtime = val
       this.init()
     }
@@ -91,10 +93,10 @@ export default {
     },
     countdown () {
       this.setTime()
-      let timer = setInterval(() => {
+      this.timer = setInterval(() => {
         this.endtiemstamp -= 1000
         if (this.endtiemstamp - this.starttiemstamp <= 0) {
-          clearInterval(timer)
+          clearInterval(this.timer)
           this.show = false
           this.$emit('done', true)
           this.data[this.fields.start] = 0

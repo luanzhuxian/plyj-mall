@@ -53,7 +53,6 @@ export default {
   },
   data () {
     return {
-      timer: '',
       time: '',
       show: false,
       endtiemstamp: 0,
@@ -64,15 +63,8 @@ export default {
       s: 0
     }
   },
-
-  activated () {
+  mounted () {
     this.init()
-  },
-  deactivated () {
-    clearInterval(this.timer)
-  },
-  beforeDestroy () {
-    clearInterval(this.timer)
   },
   methods: {
     async init () {
@@ -94,10 +86,10 @@ export default {
     },
     countdown () {
       this.setTime()
-      this.timer = setInterval(() => {
+      let timer = setInterval(() => {
         this.endtiemstamp -= 1000
         if (this.endtiemstamp - this.starttiemstamp <= 0) {
-          clearInterval(this.timer)
+          clearInterval(timer)
           this.show = false
           this.$emit('done', true)
           this.data[this.fields.start] = 0
