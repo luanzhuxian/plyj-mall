@@ -89,8 +89,8 @@
 </template>
 
 <script>
-import TopText from '../../../components/Top-Text.vue'
-import CitySelector from '../../../components/City-Selector.vue'
+import TopText from '../../../components/common/Top-Text.vue'
+import CitySelector from '../../../components/common/City-Selector.vue'
 import {
   createAddress,
   updateAddress,

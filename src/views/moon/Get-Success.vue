@@ -29,7 +29,7 @@
   </div>
 </template>
 <script>
-import CallUs from '../../components/Call-Us.vue'
+import CallUs from '../../components/common/Call-Us.vue'
 export default {
   name: 'GetSuccess',
   components: {

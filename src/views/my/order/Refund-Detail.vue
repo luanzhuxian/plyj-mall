@@ -353,8 +353,8 @@
 </template>
 
 <script>
-import TopText from '../../../components/Top-Text.vue'
-import ModuleTitle from '../../../components/Module-Title.vue'
+import TopText from '../../../components/common/Top-Text.vue'
+import ModuleTitle from '../../../components/common/Module-Title.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'

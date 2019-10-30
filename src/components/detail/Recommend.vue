@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ModuleTitle from '../../components/Module-Title.vue'
+import ModuleTitle from '../common/Module-Title.vue'
 import LessonItem from '../item/Lesson-Item.vue'
 export default {
   name: 'Recommend',

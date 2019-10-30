@@ -137,7 +137,7 @@
 <script>
 import moment from 'moment'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import TopText from '../../components/Top-Text.vue'
+import TopText from '../../components/common/Top-Text.vue'
 import CategoryItem from './components/CategoryItem.vue'
 import YouLike from './components/YouLike.vue'
 import { mapGetters, mapState } from 'vuex'

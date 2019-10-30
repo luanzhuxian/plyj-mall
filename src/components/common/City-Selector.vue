@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { getCityListByParentId } from '../apis/address'
+import { getCityListByParentId } from '../../apis/address'
 export default {
   name: 'CitySelector',
   data () {

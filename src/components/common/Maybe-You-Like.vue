@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import { getYouLikeData } from '../apis/base-api'
+import { getYouLikeData } from '../../apis/base-api'
 import ModuleTitle from './Module-Title.vue'
-import LessonItem from './item/Lesson-Item.vue'
+import LessonItem from '../item/Lesson-Item.vue'
 import { mapGetters } from 'vuex'
-import { DelayExec } from '../assets/js/util'
+import { DelayExec } from '../../assets/js/util'
 let delay = new DelayExec(1000)
 export default {
   name: 'MaybeYouLike',

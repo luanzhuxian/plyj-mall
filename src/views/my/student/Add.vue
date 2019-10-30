@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import TopText from '../../../components/Top-Text.vue'
+import TopText from '../../../components/common/Top-Text.vue'
 import { isPhone, isName } from '../../../assets/js/validate'
 import { resetForm } from '../../../assets/js/util'
 import {

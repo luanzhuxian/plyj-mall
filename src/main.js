@@ -14,7 +14,7 @@ import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
 import './assets/css/quill.css'
-import PlIcon from './components/Pl-Icon.vue'
+import PlIcon from './components/common/Pl-Icon.vue'
 Vue.use(VueLazyload, {
   error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
   lazyComponent: true,

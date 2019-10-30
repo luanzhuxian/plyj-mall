@@ -94,7 +94,7 @@ import {
   deleteHistoryKeyword
 } from '../../apis/search'
 import LessonItem from '../../components/item/Lesson-Item.vue'
-import LoadMore from '../../components/Load-More.vue'
+import LoadMore from '../../components/common/Load-More.vue'
 import { mapGetters } from 'vuex'
 
 export default {

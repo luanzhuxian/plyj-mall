@@ -223,7 +223,7 @@
 <script>
 import youLike from './../home/components/YouLike.vue'
 import Modal from '../../components/penglai-ui/Modal.vue'
-import Progress from '../../components/Progress.vue'
+import Progress from '../../components/common/Progress.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { orderPhysicalorderSummary, getHelperApplicationProgress } from '../../apis/order-manager'
 import { getNewFreight } from '../../apis/my'

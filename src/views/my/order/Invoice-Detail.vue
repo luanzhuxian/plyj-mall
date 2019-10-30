@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import TopText from '../../../components/Top-Text.vue'
+import TopText from '../../../components/common/Top-Text.vue'
 import { getOrderDetail, invoiceDetail } from '../../../apis/order-manager'
 export default {
   name: 'InvoiceDetail',

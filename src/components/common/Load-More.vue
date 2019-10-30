@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { throttle } from '../assets/js/util'
+import { throttle } from '../../assets/js/util'
 export default {
   name: 'LoadMore',
   data () {

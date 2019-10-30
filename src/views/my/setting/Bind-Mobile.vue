@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import TopText from '../../../components/Top-Text.vue'
+import TopText from '../../../components/common/Top-Text.vue'
 import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import { LOGIN, USER_INFO } from '../../../store/mutation-type'

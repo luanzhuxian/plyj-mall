@@ -520,10 +520,10 @@
 <script>
 import { mapGetters } from 'vuex'
 import moment from 'moment'
-import TopText from '../../../components/Top-Text.vue'
-import Contact from '../../../components/Contact.vue'
+import TopText from '../../../components/common/Top-Text.vue'
+import Contact from '../../../components/common/Contact.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
-import ModuleTitle from '../../../components/Module-Title.vue'
+import ModuleTitle from '../../../components/common/Module-Title.vue'
 import ExpressItem from '../../../components/item/Express-Item.vue'
 import AddressItem from '../../../components/item/Address-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'

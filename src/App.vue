@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
-import QuickNavbar from './components/Quick-Navbar.vue'
+import Navbar from './components/common/Navbar.vue'
+import QuickNavbar from './components/common/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
 import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'

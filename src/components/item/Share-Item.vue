@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import Grade from '../Grade'
+import Grade from '../common/Grade'
 import Price from '../product/Price.vue'
 import { mapGetters } from 'vuex'
 export default {

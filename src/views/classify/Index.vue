@@ -114,7 +114,7 @@
 <script>
 import GoodsItem from '../../components/item/Goods-Item.vue'
 import SubClassify from '../../components/item/Sub-Classify.vue'
-import LoadMore from '../../components/Load-More.vue'
+import LoadMore from '../../components/common/Load-More.vue'
 import { getCategoryTree, getProduct } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
 import { mapGetters } from 'vuex'

@@ -24,7 +24,7 @@
 
 <script>
 import { getConfirmInfo, confirmGet } from '../../apis/wwec'
-import CallUs from '../../components/Call-Us.vue'
+import CallUs from '../../components/common/Call-Us.vue'
 export default {
   name: 'Code',
   components: {

@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import Grade from '../../components/Grade.vue'
+import Grade from '../../components/common/Grade.vue'
 import { getComments } from '../../apis/comment'
 import { resetForm } from '../../assets/js/util'
 import ImageSwiper from '../../components/detail/Image-Swiper.vue'

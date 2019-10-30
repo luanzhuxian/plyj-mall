@@ -55,8 +55,8 @@
 </template>
 
 <script>
-import TopText from '../../../components/Top-Text.vue'
-import Grade from '../../../components/Grade.vue'
+import TopText from '../../../components/common/Top-Text.vue'
+import Grade from '../../../components/common/Grade.vue'
 import { submitComment } from '../../../apis/comment'
 import { resetForm } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'

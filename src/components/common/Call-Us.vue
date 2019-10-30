@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { Quad } from '../assets/js/animation-timing-function'
+import { Quad } from '../../assets/js/animation-timing-function'
 const EaseOut = Quad.easeOut
 let t = 0
 let b = 0

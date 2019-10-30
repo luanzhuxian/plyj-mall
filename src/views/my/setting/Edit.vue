@@ -40,7 +40,7 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import { SET_AVATAR, SET_USERNAME } from '../../../store/mutation-type'
-import imageCrop from '../../../components/Image-Crop'
+import imageCrop from '../../../components/common/Image-Crop'
 import { upload } from '../../../assets/js/upload-image'
 import { userInfoSettings } from '../../../apis/base-api'
 export default {

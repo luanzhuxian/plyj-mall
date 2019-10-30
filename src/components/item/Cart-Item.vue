@@ -91,7 +91,7 @@
 
 <script>
 import { updateCartProductCount } from '../../apis/shopping-cart'
-import Count from '../Count.vue'
+import Count from '../common/Count.vue'
 import { mapGetters } from 'vuex'
 import CountDown from '../../components/product/Count-Down.vue'
 export default {

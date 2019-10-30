@@ -145,7 +145,7 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-import LoadMore from '../../../components/Load-More.vue'
+import LoadMore from '../../../components/common/Load-More.vue'
 import {
   getOrderList,
   getAwaitPayInfo,

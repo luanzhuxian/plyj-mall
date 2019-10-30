@@ -42,8 +42,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { Get_ADUIT_NOTICE } from '../store/mutation-type'
-import { setTimeoutSync } from '../assets/js/util'
+import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
+import { setTimeoutSync } from '../../assets/js/util'
 export default {
   name: 'Navbar',
   data () {

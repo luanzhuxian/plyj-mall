@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import Grade from '../../components/Grade.vue'
+import Grade from '../../components/common/Grade.vue'
 export default {
   name: 'CommentDetail',
   components: {

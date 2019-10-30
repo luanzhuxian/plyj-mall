@@ -32,7 +32,7 @@
 
 <script>
 import InvoiceItem from '../../../components/item/Invoice-Item.vue'
-import NoContent from '../../../components/No-Content.vue'
+import NoContent from '../../../components/common/No-Content.vue'
 import { getInvoiceList } from '../../../apis/invoice'
 import { mapGetters } from 'vuex'
 export default {

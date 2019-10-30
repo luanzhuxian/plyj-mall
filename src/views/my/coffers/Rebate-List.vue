@@ -91,7 +91,7 @@
 <script>
 import { getBrokerageList } from '../../../apis/money'
 import { mapGetters } from 'vuex'
-import LoadMore from '../../../components/Load-More.vue'
+import LoadMore from '../../../components/common/Load-More.vue'
 export default {
   name: 'RebateListVue',
   components: {

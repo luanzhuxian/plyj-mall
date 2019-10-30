@@ -149,8 +149,8 @@
 </template>
 
 <script>
-import PlVideo from '../../components/Video.vue'
-import Contact from '../../components/Contact.vue'
+import PlVideo from '../../components/common/Video.vue'
+import Contact from '../../components/common/Contact.vue'
 import { getData } from '../../apis/appointment'
 import { mapGetters } from 'vuex'
 export default {

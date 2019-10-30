@@ -17,7 +17,8 @@ const externals =
       'vue-awesome-swiper': 'VueAwesomeSwiper',
       'ali-oss': 'OSS',
       'compressorjs': 'Compressor',
-      'js-cookie': 'Cookies'
+      'js-cookie': 'Cookies',
+      'html2canvas': 'html2canvas'
     }
     : {}
 module.exports = {
