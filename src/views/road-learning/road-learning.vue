@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="user-info">
-        <img :src="avatar"><span>每日坚持签到累计达10次 即可抽大奖！</span>
+        <img :src="avatar"><span>每日坚持签到 累计达10次即可抽大奖！</span>
       </div>
     </div>
     <div class="learning-step">
