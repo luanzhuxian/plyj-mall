@@ -2,8 +2,9 @@
   <div :class="$style.lesson">
     <template v-if="productStatus !== 0">
       <!-- 海报按钮 -->
-      <div :class="$style.haibao" @click="createHaibao(detail.activeProduct)">
-        <pl-svg name="haibao" />
+      <div :class="$style.haibao">
+        <pl-svg v-if="creating" name="btn-loading" color="#fff" class="rotate" @click="showHaibao = false;" />
+        <pl-svg v-else name="haibao" @click="createHaibao(detail.activeProduct)" />
         <p>分享海报</p>
       </div>
       <!-- 商品banner -->
@@ -355,6 +356,7 @@ export default {
       showHaibao: false,
       loading: false,
       adding: false,
+      creating: false,
       haibao: '',
       tab: 2,
       imgels: [],
@@ -598,6 +600,7 @@ export default {
         this.showHaibao = true
         return
       }
+      this.creating = true
       // let res = await this.$refs.html2canvas.toCanvas()
       // console.log(res)
       // 截取头像
@@ -735,6 +738,8 @@ export default {
         this.showHaibao = true
       } catch (e) {
         throw e
+      } finally {
+        this.creating = false
       }
     },
     loadImage (src) {
