@@ -690,13 +690,14 @@ export default {
           ctx.drawImage(second_price, 48, 1090, 240, 104)
           fontStyle(ctx, 'bolder 88px Arial', '#F9E687', 'hanging')
           let priceWidth = ctx.measureText(activePrice).width
+          let original = this.maxOriginalPrice || this.maxPrice
           ctx.fillText(activePrice, 48 + 240 + 10, 1105)
           ctx.drawImage(yuan, 48 + priceWidth + 240 + 10, 1090, 72, 104)
 
           ctx.drawImage(original_price, 48, 1210, 134, 96)
           fontStyle(ctx, 'bolder 88px Arial', '#fff', 'hanging')
-          ctx.fillText(this.maxPrice, 48 + 144 + 10, 1220)
-          let originalPriceWidth = ctx.measureText(this.maxPrice).width
+          ctx.fillText(original, 48 + 144 + 10, 1220)
+          let originalPriceWidth = ctx.measureText(original).width
           ctx.drawImage(yuan, 48 + 144 + 10 + originalPriceWidth + 10, 1210, 66, 96)
         } else if (type === 4 && this.detail.preActivity === 2) {
           // 预购
