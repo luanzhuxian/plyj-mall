@@ -65,7 +65,6 @@ export default {
   },
   watch: {
     endtime (val) {
-      clearInterval(this.timer)
       this.endtime = val
       this.init()
     }
@@ -93,6 +92,7 @@ export default {
       }
     },
     countdown () {
+      clearInterval(this.timer)
       this.setTime()
       this.timer = setInterval(() => {
         this.endtiemstamp -= 1000

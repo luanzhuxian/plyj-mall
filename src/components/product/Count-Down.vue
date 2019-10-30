@@ -54,6 +54,7 @@ export default {
   data () {
     return {
       time: '',
+      timer: '',
       show: false,
       endtiemstamp: 0,
       starttiemstamp: 0,
@@ -85,11 +86,12 @@ export default {
       }
     },
     countdown () {
+      clearInterval(this.timer)
       this.setTime()
-      let timer = setInterval(() => {
+      this.timer = setInterval(() => {
         this.endtiemstamp -= 1000
         if (this.endtiemstamp - this.starttiemstamp <= 0) {
-          clearInterval(timer)
+          clearInterval(this.timer)
           this.show = false
           this.$emit('done', true)
           this.data[this.fields.start] = 0

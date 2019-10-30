@@ -16,7 +16,7 @@
 import moment from 'moment'
 import { getServerTime } from '../../apis/base-api'
 export default {
-  name: 'CountDown',
+  name: 'TogetherCountDown',
   props: {
     activityText: {
       type: [Number, String],
@@ -50,6 +50,7 @@ export default {
   },
   data () {
     return {
+      timer: '',
       time: '',
       show: false,
       endtiemstamp: 0,
@@ -88,11 +89,12 @@ export default {
       }
     },
     countdown () {
+      clearInterval(this.timer)
       this.setTime()
-      let timer = setInterval(() => {
+      this.timer = setInterval(() => {
         this.endtiemstamp -= 1000
         if (this.endtiemstamp - this.starttiemstamp <= 0) {
-          clearInterval(timer)
+          clearInterval(this.timer)
           this.show = false
           this.$emit('done', true)
           this.data[this.fields.start] = 0
