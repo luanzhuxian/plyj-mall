@@ -38,9 +38,8 @@
               <div :class="$style.sub">
                 <div :class="$style.subLeft">
                   <div :class="$style.original">
-                    原价:
-                    <span :class="$style.price">
-                      {{ data.values[0].goodsInfo.productSkuModels && data.values[0].goodsInfo.productSkuModels.length && getPrice(data.values[0].goodsInfo.productSkuModels)('price') }}
+                    <span v-if="data.values[0].goodsInfo.productSkuModels && data.values[0].goodsInfo.productSkuModels.length && getPrice(data.values[0].goodsInfo.productSkuModels)('originalPrice')">
+                      原价:<span :class="$style.price">{{ getPrice(data.values[0].goodsInfo.productSkuModels)('originalPrice') }}</span>
                     </span>
                   </div>
                   <div :class="$style.progress">
@@ -240,6 +239,7 @@ export default {
               display: flex;
               align-items: flex-end;
               margin-bottom: 14px;
+              height: 32px;
               font-size: 20px;
               color: #999999;
               @include elps();
