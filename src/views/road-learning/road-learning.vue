@@ -97,13 +97,15 @@
         <h3>1.活动时间</h3>
         <p>{{ activeDetail.activityStartTime }} 至 {{ activeDetail.activityEndTime }}
         </p>
-        <h3>1.活动对象</h3>
+        <h3>2.活动对象</h3>
         <p>所有会员
         </p>
-        <h3>1.活动说明</h3>
-        <p>
-          在活动有效期内，成功邀请3位好友绑定手机号注册成为店铺的会员，即可获得翻好礼的机会1次；有机会获得大额满减券；领取成功后，将自动存入到会员的现金卡包中
-        </p>
+        <h3>3.活动说明</h3>
+        <div class="rule-explain" v-if="activeDetail.activityBrief">
+          <p v-for="(item,index) of activeDetail.activityBrief.split('\n')" :key="index">
+            {{ item }}
+          </p>
+        </div>
       </div>
     </pl-popup>
     <div class="winning-prize" v-if="winningShow">
@@ -546,6 +548,12 @@ export default {
       margin-bottom: 52px;
       font-size: 28px;
       line-height: 38px;
+    }
+    .rule-explain{
+      margin-bottom: 52px;
+      >p{
+        margin-bottom: 1px;
+      }
     }
   }
   .winning-prize{
