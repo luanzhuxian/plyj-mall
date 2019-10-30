@@ -21,7 +21,7 @@
             <div class="title">{{ item.productName }}</div>
             <div class="tips">限量秒杀，下单仅{{ item.price }}元</div>
             <div class="progress">
-              <div class="inner" :style="{width: '50%'}" />
+              <div class="inner" :style="{width: `${(Number(item.number) - Number(item.stock)) / Number(item.number) * 100}%`}" />
             </div>
             <div class="remain">剩余 {{ item.stock }} 件</div>
             <div class="bottom">
@@ -55,9 +55,9 @@
             <div class="title">{{ item.productName }}</div>
             <div class="tips">限量秒杀，下单仅{{ item.price }}元</div>
             <div class="progress">
-              <div class="inner" :style="{width: '80%'}" />
+              <div class="inner" :style="{width: `${(Number(item.number) - Number(item.stock)) / Number(item.number) * 100}%`}" />
             </div>
-            <div class="focus">{{ item.price }} 人已关注</div>
+            <div class="focus">{{ item.pageViews }} 人已关注</div>
             <div class="bottom">
               <div class="price-bar">
                 <pl-icon name="icon-miaoshajia" type="svg" width="100" height="50" />
@@ -69,8 +69,10 @@
         </div>
       </div>
     </div>
-    <pl-popup :show.sync="showRule" title="活动细则"
-              @close="showRule = false"
+    <pl-popup
+      :show.sync="showRule"
+      title="活动细则"
+      @close="showRule = false"
     >
       <div>sfsf</div>
     </pl-popup>
