@@ -1,8 +1,20 @@
 <template>
   <div class="tuan">
     <div>
-      <div class="price">定金 <span>{{ detail.activityProductModel.price }}</span> <div class="deposit" v-if="detail.activityProductModel.multiplt === 1">抵 <span>{{ detail.activityProductModel.depositTotal }}</span></div></div>
+      <div class="price">
+        定&nbsp;<span>{{ detail.activityProductModel.price }}</span>
+        <div class="deposit" v-if="detail.activityProductModel.multiplt === 1">
+          抵&nbsp;<span>{{ detail.activityProductModel.depositTotal }}</span>
+        </div>
+      </div>
       <div class="pro-info">
+        <div class="current-price">
+          现价：
+          <i class="rmb" v-text="minPrice" />
+          <template v-if="minPrice !== maxPrice">
+            ~ <i v-text="maxPrice" />
+          </template>
+        </div>
         <div class="original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice">原价：<del v-text="maxOriginalPrice" /></div>
         <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
       </div>
@@ -103,7 +115,7 @@ export default {
       display: flex;
       color: #999999;
     }
-    .original{
+    .original, .current-price {
       display: flex;
       font-size: 24px;
       color: #999999;

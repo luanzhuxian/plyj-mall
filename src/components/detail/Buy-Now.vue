@@ -437,12 +437,10 @@ export default {
     margin: 4px auto 0;
     width: 100px;
     text-align: center;
-    height: 28px;
     line-height: 28px;
     background: #ffffff;
     border-radius: 304px;
     font-size: 20px;
-    line-height: 28px;
     color: #FE7700;
   }
 </style>

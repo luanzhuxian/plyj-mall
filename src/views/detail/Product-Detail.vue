@@ -670,6 +670,7 @@ export default {
           ctx.fillText(price, 260, 1190)
           ctx.drawImage(yuan, 350 + originalPriceWidth, 1210, 68, 68)
         } else if (type === 4 && this.detail.preActivity === 2) {
+          price = this.detail.activityProductModel.depositTotal
           let priceWidth = ctx.measureText(`¥${this.detail.activityProductModel.price}`).width
           let originalPriceWidth = ctx.measureText(`¥${price}`).width
           ctx.drawImage(yujiao, 48, 1090, 316, 116)
