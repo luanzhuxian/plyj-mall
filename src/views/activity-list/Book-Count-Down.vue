@@ -96,7 +96,7 @@ export default {
     },
     setTime () {
       let { _data } = moment.duration(this.endtiemstamp - this.starttiemstamp)
-      this.d = String(_data.days).padStart(2, '0')
+      this.d = Math.floor(moment.duration(this.endtiemstamp - this.starttiemstamp).asDays())
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')
@@ -118,26 +118,30 @@ export default {
     align-items: center;
     font-size: 24px;
     width: 222px;
-    &.d{
-      width: 278px;
-    }
     height: 34px;
     background: #FF6767;
+    border: 2px solid #FF6767;
     border-radius: 4px;
     color: #fff;
     margin-bottom: 16px;
+    &.d{
+      width: 278px;
+    }
     .text{
       font-size: 24px;
       width: 72px;
+      line-height: 34px;
       margin-left: 12px;
       margin-right: 8px;
     }
     .time {
-      background: #fff;
+      flex: 1;
       display: flex;
       align-items: center;
-      color: #FF6767;
       padding: 0 10px;
+      line-height: 34px;
+      color: #FF6767;
+      background: #fff;
       i {
         color: #FF6767;
         margin: 0 2px;

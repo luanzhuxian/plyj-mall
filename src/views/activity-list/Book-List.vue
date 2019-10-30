@@ -8,14 +8,17 @@
           <pl-icon name="icon-ing_text" color="#fff" size="52" />
         </div>
         <div class="item book-item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
-          <div class="book-ing-title">预购提前享</div>
+          <count-down
+            activity-text="距结束"
+            :endtime="item.activityEndTime"
+          />
           <div class="book-ing-content">
             <div class="img book-img">
               <img :src="item.productMainImage">
             </div>
             <div>
               <div class="title book-title">{{ item.productName }}</div>
-              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multiplt === 1">抵￥{{ item.price * item.multipltNumber }}</span></div>
+              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
               <div class="book-bottom">双十二价位：{{ item.productPrice }}元</div>
             </div>
           </div>
@@ -37,15 +40,17 @@
             </div>
             <div>
               <div class="title book-title">{{ item.productName }}</div>
-              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multiplt === 1">抵￥{{ item.price * item.multipltNumber }}</span></div>
+              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
               <div class="book-bottom">双十二价位：{{ item.productPrice }}元</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <pl-popup :show.sync="showRule" title="活动细则"
-              @close="showRule = false"
+    <pl-popup
+      :show.sync="showRule"
+      title="活动细则"
+      @close="showRule = false"
     >
       <div>sfsf</div>
     </pl-popup>
