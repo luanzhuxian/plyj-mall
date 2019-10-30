@@ -76,6 +76,7 @@ export default {
   methods: {
     async init () {
       let { result: serverTiem } = await getServerTime()
+      // console.log(moment(Date.now(Number(serverTiem))).format('YYYY-MM-DD HH:mm:ss'))
       this.starttiemstamp = Number(serverTiem)
       if (this.data) {
         this.endtiemstamp = Number(this.data[this.fields.end]) || 0
@@ -105,8 +106,9 @@ export default {
       }, 1000)
     },
     setTime () {
-      let { _data } = moment.duration(this.endtiemstamp - this.starttiemstamp)
-      this.d = String(_data.days).padStart(2, '0')
+      let dateTime = this.endtiemstamp - this.starttiemstamp
+      let { _data } = moment.duration(dateTime)
+      this.d = String(_data.days + moment().daysInMonth() * _data.months).padStart(2, '0')
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')
