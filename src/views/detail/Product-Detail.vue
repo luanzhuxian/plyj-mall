@@ -18,7 +18,7 @@
       <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
         <!-- 加个 润笔 购买数量，关注人数 登信息 -->
-        <info-header :detail="detail" v-if="detail.activeProduct === 1" />
+        <info-header :detail="detail" v-if="detail.activeProduct === 1 || detail.preActivity !== 2" />
         <!-- 团购信息 -->
         <TogetherPrice :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity !== 0" />
         <!-- 秒杀信息 -->
