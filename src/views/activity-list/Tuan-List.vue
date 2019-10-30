@@ -63,8 +63,10 @@
         </div>
       </div>
     </div>
-    <pl-popup :show.sync="showRule" title="活动细则"
-              @close="showRule = false"
+    <pl-popup
+      :show.sync="showRule"
+      title="活动细则"
+      @close="showRule = false"
     >
       <div>sfsf</div>
     </pl-popup>

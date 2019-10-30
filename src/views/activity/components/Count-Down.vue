@@ -83,7 +83,7 @@ export default {
   mounted () {
     this.init()
   },
-  destroyed () {
+  beforeDestroy () {
     clearInterval(this.timer)
   },
   methods: {
@@ -129,7 +129,7 @@ export default {
     },
     setTime (duration) {
       let { _data } = moment.duration(duration)
-      this.d = String(_data.days)
+      this.d = Math.floor(moment.duration(duration).asDays())
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')

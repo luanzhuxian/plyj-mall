@@ -97,7 +97,7 @@ export default {
     },
     setTime () {
       let { _data } = moment.duration(this.endtiemstamp - this.starttiemstamp)
-      this.d = String(_data.days).padStart(2, '0')
+      this.d = Math.floor(moment.duration(this.endtiemstamp - this.starttiemstamp).asDays())
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')
