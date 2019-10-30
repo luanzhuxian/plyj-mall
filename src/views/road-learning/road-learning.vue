@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="user-info">
-        <img :src="avatar"><span>每日坚持签到累计达10次即可抽大奖！</span>
+        <img :src="avatar"><span>每日坚持签到累计达10次 即可抽大奖！</span>
       </div>
     </div>
     <div class="learning-step">
@@ -197,9 +197,28 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar', 'mallUrl'])
+    ...mapGetters(['avatar', 'mallUrl', 'userId'])
   },
   async created () {
+    if (!this.userId) {
+      try {
+        await this.$alert({
+          message: '新用户无法参加见学之旅，请先绑定手机号',
+          confirmText: '去绑定手机号码'
+        })
+        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+          name: this.$route.name,
+          params: { id: this.id }
+        }))
+        this.$router.push({ name: 'BindMobile' })
+      } catch (e) {
+        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+          name: this.$route.name,
+          params: { id: this.id }
+        }))
+        this.$router.push({ name: 'BindMobile' })
+      }
+    }
     await this.getDetail()
     this.getCheckInDetail()
     let qrcode = await generateQrcode(500, `${this.mallUrl}/road-learning/${this.id ? this.id : ''}`, 100, null, null, 'url')
