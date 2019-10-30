@@ -72,7 +72,7 @@
               <span>剩余{{ physicalProducts[0].stock }}件</span>
               <Count
                 :min="physicalProducts[0].minBuyNum"
-                :max="item.purchaseQuantity || item.stock"
+                :max="physicalProducts[0].purchaseQuantity || physicalProducts[0].stock"
                 :count="physicalProducts[0].count"
                 @change="(count, next) => { countChange(count, physicalProducts[0], next) }"
               />
