@@ -136,6 +136,7 @@ export default {
     }
     .time {
       flex: 1;
+      width: 0;
       display: flex;
       align-items: center;
       padding: 0 10px;
