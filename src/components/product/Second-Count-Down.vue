@@ -18,7 +18,7 @@
 import moment from 'moment'
 import { getServerTime } from '../../apis/base-api'
 export default {
-  name: 'CountDown',
+  name: 'SecondCountDown',
   props: {
     activityText: {
       type: [Number, String],
