@@ -144,11 +144,11 @@ export default {
           display: flex;
         }
         .time {
-          display: flex;
+          display: inline-flex;
           align-items: center;
           text-align: center;
           margin-bottom: 14px;
-          width: max-content;
+          // width: max-content;
           height: 34px;
           line-height: 34px;
           border: 2px solid #EC6BA4;
