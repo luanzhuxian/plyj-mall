@@ -157,10 +157,9 @@ export default {
 <style module lang="scss">
   .activity {
     position: relative;
-    background: rgba(251, 0, 0, 1);
-    // min-height: 100vh;
+    background: rgba(195, 1, 10, 1);
     .background {
-      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/activity-bg.png") no-repeat center top;
+      background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/admall/2.0.0/main-bg.jpg") no-repeat center top;
       background-size: 100% auto;
       min-height: 100vh;
     }

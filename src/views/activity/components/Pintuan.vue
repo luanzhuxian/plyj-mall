@@ -124,7 +124,8 @@ export default {
 <style module lang="scss">
   .pintuan {
     margin-top: 32px;
-    background: linear-gradient(180deg, #F2BAA7 0%, #D95F02 12%, #E48F4C 100%);
+    // background: linear-gradient(180deg, #F2BAA7 0%, #D95F02 12%, #E48F4C 100%);
+    background: #e48f4c;
     border-radius: 20px;
     overflow: hidden;
     .background {

@@ -94,7 +94,8 @@ export default {
 <style module lang="scss">
   .yugou {
     margin-top: 32px;
-    background: linear-gradient(180deg, rgba(255, 114, 199, 1) 0%, rgba(213, 97, 167, 1) 12%, rgba(213, 55, 151, 1) 100%);
+    // background: linear-gradient(180deg, rgba(255, 114, 199, 1) 0%, rgba(213, 97, 167, 1) 12%, rgba(213, 55, 151, 1) 100%);
+    background: #d53796;
     border-radius: 20px;
     overflow: hidden;
     .background {
