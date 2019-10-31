@@ -505,7 +505,8 @@ import AddressItem from '../../components/item/Address-Item.vue'
 import OrderItem from '../../components/item/Order-Item.vue'
 import {
   confirmCart,
-  submitOrder
+  submitOrder,
+  submitOrderPay
 } from '../../apis/shopping-cart'
 import { getCouponOfMax, getCouponByPrice } from '../../apis/my-coupon'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
@@ -516,7 +517,7 @@ import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Count from '../../components/common/Count.vue'
 import CouponItem from '../../components/item/Coupon-Item.vue'
 import { checkLength, isPhone } from '../../assets/js/validate'
-import { resetForm } from '../../assets/js/util'
+import { resetForm, setTimeoutSync } from '../../assets/js/util'
 export default {
   name: 'SubmitOrder',
   components: {
@@ -528,6 +529,7 @@ export default {
     CouponItem
   },
   data () {
+    this.requestPayDataCount = 0
     return {
       showPopup: false,
       showContactPopup: false,
@@ -801,6 +803,49 @@ export default {
         throw e
       }
     },
+    /**
+     * 判断是否选择了学生
+     * @param needStudent {Boolean} 是否需要学员
+     * @param currentStudent {Array} 已选学生列表
+     * @param skuCode1 {string} 规格1的id，作为每个单独商品学员数据存储的key
+     * @param count {Number} 商品数量，用来判断学生数量
+     */
+    hasStudents (needStudent, currentStudent, skuCode1, count) {
+      if (needStudent && !currentStudent) {
+        if (this.isCart) {
+          this.lessonErrorId = skuCode1
+          this.$nextTick(() => {
+            let errorEl = document.querySelector('.' + this.$style.lessonError)
+            errorEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'nearest'
+            })
+            this.lessonErrorTip = '请选择学员信息'
+          })
+        }
+        this.$error('请选择学员信息')
+        return false
+      }
+      if (needStudent && currentStudent && currentStudent.length < count) {
+        if (this.isCart) {
+          this.lessonErrorId = skuCode1
+          this.$nextTick(() => {
+            let errorEl = document.querySelector('.' + this.$style.lessonError)
+            errorEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'nearest'
+            })
+            this.lessonErrorTip = `请选择${count}名学员信息`
+          })
+        }
+        this.$error(`请选择${count}名学员信息`)
+        return false
+      }
+      return true
+    },
+
     // 提交订单
     async submitOrder () {
       const cartProducts = []
@@ -873,57 +918,42 @@ export default {
       }
       try {
         this.submiting = true
-        const { result } = await submitOrder(data)
-        await this.pay(result, result.orderLists[0], result.orderLists.length)
+        const { result: orderSn } = await submitOrder(data)
+        await this.requestPayData(orderSn)
       } catch (e) {
         if (e.message !== '取消支付') {
           throw e
         }
       } finally {
+        this.requestPayDataCount = 0
         this.submiting = false
       }
     },
-    /**
-     * 判断是否选择了学生
-     * @param needStudent {Boolean} 是否需要学员
-     * @param currentStudent {Array} 已选学生列表
-     * @param skuCode1 {string} 规格1的id，作为每个单独商品学员数据存储的key
-     * @param count {Number} 商品数量，用来判断学生数量
-     */
-    hasStudents (needStudent, currentStudent, skuCode1, count) {
-      if (needStudent && !currentStudent) {
-        if (this.isCart) {
-          this.lessonErrorId = skuCode1
-          this.$nextTick(() => {
-            let errorEl = document.querySelector('.' + this.$style.lessonError)
-            errorEl.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-              inline: 'nearest'
-            })
-            this.lessonErrorTip = '请选择学员信息'
-          })
-        }
-        this.$error('请选择学员信息')
-        return false
+    async requestPayData (orderSn) {
+      // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
+      // 下次请求的开始时间 =  500ms + 当前请求时间
+      if (this.requestPayDataCount >= 20) {
+        this.requestPayDataCount = 0
+        this.submiting = false
+        this.$error('支付失败')
+        return
       }
-      if (needStudent && currentStudent && currentStudent.length < count) {
-        if (this.isCart) {
-          this.lessonErrorId = skuCode1
-          this.$nextTick(() => {
-            let errorEl = document.querySelector('.' + this.$style.lessonError)
-            errorEl.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center',
-              inline: 'nearest'
-            })
-            this.lessonErrorTip = `请选择${count}名学员信息`
-          })
+      await setTimeoutSync(500)
+      try {
+        // 如果没有拿到请求数据，再次尝试发起请求
+        // 如果有，则发起支付
+        let { result: payData } = await submitOrderPay(orderSn)
+        if (!payData) {
+          this.requestPayDataCount++
+          await this.requestPayData(orderSn)
+        } else {
+          await this.pay(payData, payData.orderLists[0], payData.orderLists.length)
         }
-        this.$error(`请选择${count}名学员信息`)
-        return false
+      } catch (e) {
+        this.requestPayDataCount = 0
+        this.submiting = false
+        this.$error(e.message)
       }
-      return true
     },
     /**
      * 支付
@@ -961,6 +991,8 @@ export default {
           sessionStorage.removeItem('INVOICE_MODEL')
           sessionStorage.removeItem('CONFIRM_LIST')
           reject(e)
+        } finally {
+          this.submiting = false
         }
       })
     },
