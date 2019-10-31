@@ -1,5 +1,5 @@
 <template>
-  <router-link :class="$style.coupon" tag="div" :to="{ name: 'MyCoupon' }">
+  <router-link :class="$style.coupon" tag="div" :to="{ name: 'CouponCenter' }">
     <div :class="$style.background">
       <div :class="$style.btnMiddle" v-if="type !== 6" />
       <div :class="$style.title" v-if="data.otherValue > 0">
