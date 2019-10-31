@@ -613,7 +613,7 @@ export default {
     }
   }
   .poster{
-    padding: 40px 80px 0 80px;
+    padding: 20px 110px 0 110px;
     .poster-box{
       padding: 0;
       background: none;
