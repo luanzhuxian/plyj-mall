@@ -682,7 +682,7 @@ export default {
 
           ctx.drawImage(original_price, 48, 1210, 134, 96)
           fontStyle(ctx, 'bolder 88px Arial', '#fff', 'hanging')
-          ctx.fillText(this.maxPrice, 48 + 144 + 10, 1220)
+          ctx.fillText(original, 48 + 144 + 10, 1220)
           let originalPriceWidth = ctx.measureText(original).width
           ctx.drawImage(yuan, 48 + 144 + 10 + originalPriceWidth + 10, 1210, 66, 96)
         } else if (type === 3 && this.detail.preActivity === 2) {
