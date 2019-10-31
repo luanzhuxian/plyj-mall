@@ -23,7 +23,7 @@
         @click="clickHandler(2)"
         :disabled="loading || allDisabled || disableConfrim"
       >
-        单独购买
+        <span>单独购买</span>
         <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
       </button>
       <button
@@ -31,7 +31,7 @@
         @click="clickHandler(3)"
         :disabled="loading"
       >
-        我要参团
+        <span>我要参团</span>
         <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
       </button>
     </div>
@@ -42,16 +42,16 @@
         @click="clickHandler(2)"
         :disabled="loading || allDisabled || disableConfrim"
       >
-        原价购买
-        <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+        <span>原价购买</span>
+        <span :class="$style.btnText">¥ {{ currentSku.price }}</span>
       </button>
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
         :disabled="loading"
       >
-        立即秒杀
-        <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
+        <span>立即秒杀</span>
+        <span :class="$style.text">¥ {{ activityProductModel.price }}</span>
       </button>
     </div>
     <!-- 预购商品下单 -->
@@ -71,15 +71,17 @@
         :class="$style.addToCart"
         @click="clickHandler(1)"
         :disabled="loading || allDisabled"
+        :style="{'line-height': 80 / 7.5 + 'vw'}"
       >
-        加入购物车
+        <span>加入购物车</span>
       </button>
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(2)"
         :disabled="loading || allDisabled || disableConfrim"
+        :style="{'line-height': 80 / 7.5 + 'vw'}"
       >
-        {{ confirmText }}
+        <span>{{ confirmText }}</span>
       </button>
     </div>
     <specification-pop
@@ -401,7 +403,7 @@ export default {
     padding-right: 16px;
   }
   .addToCart, .buyNowBtn {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -411,6 +413,9 @@ export default {
     font-size: 30px;
     &:disabled {
       color: rgba(255, 255, 255, .4);
+    }
+    > span {
+      display: inline-block;
     }
   }
   .preBtn{

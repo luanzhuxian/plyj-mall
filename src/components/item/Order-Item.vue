@@ -257,6 +257,7 @@ export default {
       }
     }
     &.medium {
+      position: relative;
       > img {
         width: 244px;
         height: 164px;
@@ -271,6 +272,7 @@ export default {
       }
     }
     &.small {
+      position: relative;
       > img {
         width: 208px;
         height: 140px;
@@ -287,6 +289,8 @@ export default {
   }
   .active-tag {
     position: absolute;
+    left: 0;
+    top: 0;
     padding: 0 8px;
     line-height: 30px;
     text-align: center;
