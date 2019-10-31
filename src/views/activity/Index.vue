@@ -12,25 +12,18 @@
           v-if="type === 5"
           :data="modules"
           :type="type"
-          :live="liveInfo"
-          :inviting-event="invitingEvent"
-          :jx-event="jxEvent"
           :timestamp="timestamp"
         />
         <TemplateBaofa
           v-if="type === 6"
           :data="modules"
           :type="type"
-          :live="liveInfo"
-          :inviting-event="invitingEvent"
-          :jx-event="jxEvent"
           :timestamp="timestamp"
         />
         <TemplateFanchang
           v-if="type === 7"
           :data="modules"
           :type="type"
-          :live="liveInfo"
           :timestamp="timestamp"
         />
       </div>
@@ -39,8 +32,6 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
-// import moment from 'moment'
 import Search from './components/Search.vue'
 import TemplateFengqiang from './Template-Fengqiang.vue'
 import TemplateBaofa from './Template-Baofa.vue'
@@ -55,6 +46,11 @@ export default {
     TemplateFengqiang,
     TemplateBaofa,
     TemplateFanchang
+  },
+  provide () {
+    return {
+      parent: this
+    }
   },
   data () {
     return {
@@ -71,7 +67,7 @@ export default {
       liveInfo: {}, // 直播
       invitingEvent: {}, // 邀新有礼
       jxEvent: {}, // 见学之路
-      timestamp: ''
+      timestamp: '' // 服务器时间
     }
   },
   async created () {
@@ -89,9 +85,6 @@ export default {
     } catch (e) {
       throw e
     }
-  },
-  computed: {
-    // ...mapGetters(['mallId'])
   },
   methods: {
     async getTemplate () {

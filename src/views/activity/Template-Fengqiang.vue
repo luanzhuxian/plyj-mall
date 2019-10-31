@@ -2,9 +2,8 @@
   <div :class="$style.templateFengqiang">
     <!-- 直播-->
     <broadcast
-      v-if="$attrs.live && ($attrs.live.statue === 4 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
+      v-if="parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))"
       :class="$style.broadcast"
-      v-bind="$attrs"
     />
     <!-- 活动 -->
     <div :class="$style.moduleActivity" v-if="hasInvitingEvent || hasJxEvent">
@@ -81,6 +80,7 @@ import MiaoshaSmall from './components/Miaosha-Small.vue'
 
 export default {
   name: 'HomeTemplateB',
+  inject: ['parent'],
   components: {
     Broadcast,
     Pintuan,
@@ -104,18 +104,6 @@ export default {
     type: {
       type: Number,
       default: 0
-    },
-    invitingEvent: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    jxEvent: {
-      type: Object,
-      default () {
-        return {}
-      }
     }
   },
   computed: {
@@ -140,11 +128,17 @@ export default {
     RECOMMEND () {
       return this.data.RECOMMEND || { values: [] }
     },
+    invitingEvent () {
+      return (this.parent && this.parent.invitingEvent) || {}
+    },
+    jxEvent () {
+      return (this.parent && this.parent.jxEvent) || {}
+    },
     hasInvitingEvent () {
-      return this.invitingEvent && ~[0, 2].indexOf(this.invitingEvent.status)
+      return ~[0, 2].indexOf(this.invitingEvent.status)
     },
     hasJxEvent () {
-      return this.jxEvent && ~[0, 2].indexOf(this.jxEvent.status)
+      return ~[0, 2].indexOf(this.jxEvent.status)
     }
   }
 }

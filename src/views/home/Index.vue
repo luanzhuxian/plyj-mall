@@ -25,9 +25,6 @@
       v-if="~[2, 3, 4].indexOf(type)"
       :type="type"
       :data="modules"
-      :live="liveInfo"
-      :inviting-event="invitingEvent"
-      :jx-event="jxEvent"
     >
       <!-- 月光宝盒项目 -->
       <!--<router-link
@@ -97,6 +94,11 @@ export default {
     NewcomersHomeEntry
     // WWEC
   },
+  provide () {
+    return {
+      parent: this
+    }
+  },
   data () {
     return {
       loaded: false,
@@ -137,10 +139,10 @@ export default {
       dataMoonLightBox: {},
       // 820用户注册次数
       registerCountFor820: 0,
-      liveInfo: {},
-      invitingEvent: {},
-      jxEvent: {},
-      timestamp: ''
+      liveInfo: {}, // 直播
+      invitingEvent: {}, // 邀新有礼
+      jxEvent: {}, // 见学之路
+      timestamp: '' // 服务器时间
     }
   },
   async created () {

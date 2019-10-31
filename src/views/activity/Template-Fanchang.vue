@@ -2,9 +2,8 @@
   <div :class="$style.templateFanchang">
     <!-- 直播-->
     <broadcast
-      v-if="$attrs.live && ($attrs.live.statue === 4 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
+      v-if="parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))"
       :class="$style.broadcast"
-      v-bind="$attrs"
     />
     <maisong
       v-if="MAI_SONG.values && MAI_SONG.values.length"
@@ -43,6 +42,7 @@ import MiaoshaSmall from './components/Miaosha-Small.vue'
 
 export default {
   name: 'HomeTemplateB',
+  inject: ['parent'],
   components: {
     Broadcast,
     Pintuan,
