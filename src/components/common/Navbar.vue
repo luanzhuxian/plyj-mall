@@ -44,10 +44,11 @@
 import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
 import { setTimeoutSync } from '../../assets/js/util'
-import { getCurrentTemplate } from '../../apis/home'
-
 export default {
   name: 'Navbar',
+  props: {
+    isNavBtnShow: Boolean
+  },
   data () {
     return {
       showNavbar: [
@@ -56,8 +57,7 @@ export default {
         'ShoppingCart',
         'Classify',
         'WhatsHelper'
-      ],
-      isNavBtnShow: false
+      ]
     }
   },
   computed: {
@@ -86,12 +86,6 @@ export default {
         }
       }
     }
-  },
-  created () {
-    // 是否显示双十二主会场tab入口
-    getCurrentTemplate({ type: 2 }).then(({ result }) => {
-      this.isNavBtnShow = !!result
-    })
   },
   async mounted () {
     await setTimeoutSync(5000)
