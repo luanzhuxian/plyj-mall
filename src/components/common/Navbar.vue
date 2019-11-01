@@ -91,6 +91,8 @@ export default {
     // 是否显示双十二主会场tab入口
     getCurrentTemplate({ type: 2 }).then(({ result }) => {
       this.isNavBtnShow = !!result
+      this.$forceUpdate()
+      console.log(result, this.isNavBtnShow)
     })
   },
   async mounted () {
