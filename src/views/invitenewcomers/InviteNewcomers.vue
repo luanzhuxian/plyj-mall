@@ -159,8 +159,8 @@ export default {
   },
 
   async activated () {
-    await this.init()
     this.share()
+    await this.init()
   },
 
   methods: {

@@ -97,8 +97,8 @@ export default {
   },
 
   async activated () {
-    await this.getNewcomersDetail()
     this.share()
+    await this.getNewcomersDetail()
     await this.tryClaim(true)
   },
 
