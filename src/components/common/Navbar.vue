@@ -15,7 +15,7 @@
       <pl-icon type="svg" :name="classifyActive ? 'icon-classify-active' : 'icon-classify'" width="68" />
     </router-link>
     <router-link
-      v-if="$attrs['is-nav-btn-show']"
+      v-if="isNavBtnShow"
       :class="$style.route"
       tag="div"
       :to="{ name: 'Activity' }"
@@ -44,6 +44,8 @@
 import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
 import { setTimeoutSync } from '../../assets/js/util'
+import { getCurrentTemplate } from '../../apis/home'
+
 export default {
   name: 'Navbar',
   data () {
@@ -54,7 +56,8 @@ export default {
         'ShoppingCart',
         'Classify',
         'WhatsHelper'
-      ]
+      ],
+      isNavBtnShow: false
     }
   },
   computed: {
@@ -72,11 +75,6 @@ export default {
       return this.$route.matched.some(val => val.name === 'Home')
     }
   },
-  methods: {
-    ...mapActions({
-      getAuditNotice: Get_ADUIT_NOTICE
-    })
-  },
   watch: {
     async $route (to) {
       if (this.showNavbar.includes(to.name)) {
@@ -89,6 +87,12 @@ export default {
       }
     }
   },
+  created () {
+    // 是否显示双十二主会场tab入口
+    getCurrentTemplate({ type: 2 }).then(({ result }) => {
+      this.isNavBtnShow = !!result
+    })
+  },
   async mounted () {
     await setTimeoutSync(5000)
     try {
@@ -96,6 +100,11 @@ export default {
     } catch (e) {
       throw e
     }
+  },
+  methods: {
+    ...mapActions({
+      getAuditNotice: Get_ADUIT_NOTICE
+    })
   }
 }
 </script>
