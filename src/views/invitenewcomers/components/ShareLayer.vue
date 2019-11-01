@@ -1,9 +1,9 @@
 <template>
   <div class="share-layer">
     <overlay>
-      <div class="btn-share-circle">
+      <!-- <div class="btn-share-circle">
         <pl-icon type="svg" name="icon-three-dot" height="40" width="40" />
-      </div>
+      </div> -->
       <div class="guide-line">
         <div>
           <i class="circle en" />
@@ -56,10 +56,10 @@ export default {
 
   .guide-line {
     position: fixed;
-    top: 132px;
-    right: 54px;
-    width: 188px;
-    height: 307px;
+    top: 12px;
+    right: 58px;
+    width: 185px;
+    height: 430px;
     border-right: 1px dashed white;
     border-bottom: 1px dashed white;
 

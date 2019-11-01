@@ -35,8 +35,9 @@
           [$style.large]: !hasJxEvent && hasInvitingEvent
         }"
         tag="div"
-        @click="go(invitingEvent.id)"
+        :to="{ name: 'InviteNewcomers', params: { activityId: '1189072602236780544' } }"
       >
+        <!-- @click="go(invitingEvent.id)" -->
         <div :class="$style.itemLeft">
           <div :class="$style.main">
             邀新有礼
