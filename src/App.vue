@@ -4,7 +4,7 @@
       <router-view v-if="logined" />
     </keep-alive>
 
-    <navbar v-if="showNavbar.indexOf(routeName) > -1" :is-nav-btn-show="isNavBtnShow" />
+    <navbar v-if="showNavbar.indexOf(routeName) > -1" />
     <QuickNavbar v-else />
   </div>
 </template>
@@ -15,7 +15,6 @@ import QuickNavbar from './components/common/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
 import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
-import { getCurrentTemplate } from './apis/home'
 
 export default {
   components: {
@@ -50,8 +49,13 @@ export default {
         'LiveRoom',
         'InviteNewcomers',
         'Newcomers'
-      ],
-      isNavBtnShow: false
+      ]
+    }
+  },
+  computed: {
+    ...mapGetters(['userId', 'openId', 'appId', 'token', 'mallName', 'mallDesc', 'logoUrl']),
+    routeName () {
+      return this.$route.name
     }
   },
   watch: {
@@ -68,18 +72,8 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapGetters(['userId', 'openId', 'appId', 'token', 'mallName', 'mallDesc', 'logoUrl']),
-    routeName () {
-      return this.$route.name
-    }
-  },
   async created () {
     try {
-      // 是否显示双十二主会场tab入口
-      getCurrentTemplate({ type: 2 }).then(({ result }) => {
-        this.isNavBtnShow = !!result
-      })
       await this.getMallInfo()
       let mallId = localStorage.getItem('mallId')
       let lastMallId = localStorage.getItem('lastMallId')
@@ -96,8 +90,7 @@ export default {
       throw e
     }
   },
-  async mounted () {
-  },
+  async mounted () {},
   methods: {
     ...mapMutations({
       setTheme: SET_THEME

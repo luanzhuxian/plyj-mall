@@ -61,30 +61,23 @@
 import { mapGetters } from 'vuex'
 export default {
   name: 'Activity',
-  props: {
-    invitingEvent: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    jxEvent: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
-  },
+  inject: ['parent'],
   data () {
     return {}
   },
   computed: {
     ...mapGetters(['mallUrl']),
+    invitingEvent () {
+      return (this.parent && this.parent.invitingEvent) || {}
+    },
+    jxEvent () {
+      return (this.parent && this.parent.jxEvent) || {}
+    },
     hasInvitingEvent () {
-      return this.invitingEvent && ~[0, 2].indexOf(this.invitingEvent.status)
+      return ~[0, 2].indexOf(this.invitingEvent.status)
     },
     hasJxEvent () {
-      return this.jxEvent && ~[0, 2].indexOf(this.jxEvent.status)
+      return ~[0, 2].indexOf(this.jxEvent.status)
     }
   },
   methods: {

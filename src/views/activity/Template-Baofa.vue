@@ -7,9 +7,8 @@
     />
     <!-- 直播-->
     <broadcast
-      v-if="$attrs.live && ($attrs.live.statue === 4 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))"
+      v-if="parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))"
       :class="$style.broadcast"
-      v-bind="$attrs"
     />
     <maisong
       v-if="MAI_SONG.values && MAI_SONG.values.length"
@@ -74,6 +73,7 @@ import { getMaxCoupon } from '../../apis/home'
 
 export default {
   name: 'HomeTemplateB',
+  inject: ['parent'],
   components: {
     Broadcast,
     Pintuan,
@@ -92,18 +92,6 @@ export default {
     type: {
       type: Number,
       default: 0
-    },
-    invitingEvent: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    jxEvent: {
-      type: Object,
-      default () {
-        return {}
-      }
     }
   },
   data () {
@@ -127,11 +115,17 @@ export default {
     FENG_QIANG () {
       return this.data.FENG_QIANG || {}
     },
+    invitingEvent () {
+      return (this.parent && this.parent.invitingEvent) || {}
+    },
+    jxEvent () {
+      return (this.parent && this.parent.jxEvent) || {}
+    },
     hasInvitingEvent () {
-      return this.invitingEvent && ~[0, 2].indexOf(this.invitingEvent.status)
+      return ~[0, 2].indexOf(this.invitingEvent.status)
     },
     hasJxEvent () {
-      return this.jxEvent && ~[0, 2].indexOf(this.jxEvent.status)
+      return ~[0, 2].indexOf(this.jxEvent.status)
     }
   },
   created () {

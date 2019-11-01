@@ -92,8 +92,8 @@ export default {
     background-color: #fff;
     border-radius: 20px 20px 0 0;
     .img {
-      width: 702px;
-      height: 468px;
+      width: 100%;
+      height: 470px;
       border-radius: 20px;
     }
   }

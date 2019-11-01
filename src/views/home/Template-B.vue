@@ -10,11 +10,13 @@
     </div>
     <!--<slot name="88" />-->
     <Adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
-    <div v-if="type === 4 && $attrs.live && ($attrs.live.statue === 4 || ($attrs.live.statue === 2 && $attrs.live.hasNotice))" :class="$style.broadcast">
-      <Broadcast v-bind="$attrs" />
+    <div
+      v-if="type === 4 && parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))" :class="$style.broadcast"
+    >
+      <Broadcast />
     </div>
     <div v-if="type === 4" :class="$style.activity">
-      <Activity v-bind="$attrs" />
+      <Activity />
     </div>
     <HotItem v-if="POPULAR.showStatue === 1" :data="POPULAR" />
     <appointment-gift :data="{ YUYUE, PINGXUAN }" />
@@ -36,9 +38,11 @@ import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
 import AppointmentGift from './components/Appointment-Gift.vue'
 import Broadcast from '../activity/components/Broadcast.vue'
-import Activity from '../activity/components/Activity.vue'
+import Activity from './components/Activity.vue'
+
 export default {
   name: 'HomeTemplateB',
+  inject: ['parent'],
   components: {
     Banner,
     Adv,

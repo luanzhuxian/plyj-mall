@@ -51,26 +51,23 @@ import CountDown from './Count-Down.vue'
 
 export default {
   name: 'Broadcast',
+  inject: ['parent'],
   mixins: [mixin],
   components: {
     CountDown
-  },
-  props: {
-    live: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    timestamp: {
-      type: [String, Number],
-      default: ''
-    }
   },
   data () {
     return {
       ts: '',
       color: ''
+    }
+  },
+  computed: {
+    live () {
+      return this.parent.liveInfo || {}
+    },
+    timestamp () {
+      return this.parent.timestamp || Date.now()
     }
   },
   created () {

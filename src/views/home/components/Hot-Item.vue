@@ -189,7 +189,7 @@ export default {
       position: relative;
       > img {
         width: 340px;
-        height: 340px;
+        height: 228px;
         object-fit: cover;
       }
     }
@@ -240,7 +240,7 @@ export default {
         position: relative;
         > img {
           width: 100%;
-          height: 296px;
+          height: 470px;
           object-fit: cover;
         }
       }
