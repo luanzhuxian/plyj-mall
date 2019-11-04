@@ -118,7 +118,7 @@ export default {
     }
   },
   async activated () {
-    if (this.userId === this.$route.params.userId) {
+    if (this.userId === this.inviteUserId) {
       this.$router.push({ name: 'InviteNewcomers', params: { activityId: this.$route.params.activityId } })
       return
     }

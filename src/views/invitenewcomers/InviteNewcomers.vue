@@ -166,7 +166,7 @@ export default {
         name: 'InviteNewcomersHelper',
         params: {
           activityId: this.activityId,
-          userId: shareUserId
+          inviteUserId: shareUserId
         }
       })
       return
