@@ -276,55 +276,64 @@ export default {
       if (!this.userId) {
         return
       }
-
-      let { status, result } = await getHelpers(this.activityId, this.userId)
-      if (status !== 200) {
-        return
+      try {
+        let { result } = await getHelpers(this.activityId, this.userId)
+        this.helpers = result.map((h) => {
+          return {
+            avatar: h.headImgUrl,
+            nickName: h.nickName
+          }
+        })
+        this.totalHelpers = result.length
+      } catch (e) {
+        throw e
       }
-      this.helpers = result.map((h) => {
-        return {
-          avatar: h.headImgUrl,
-          nickName: h.nickName
-        }
-      })
-
-      this.totalHelpers = result.length
     },
 
     // 获取晒单数据
     async getOrdersShow () {
-      let { result } = await getClaimGiftList(this.activityId)
-      this.showList = (result || []).slice(0, 3).map((item) => {
-        return {
-          name: item.userName || item.nickName,
-          avatar: item.headImgUrl,
-          inviteNum: item.helperNum,
-          giftInfo: item.name
-        }
-      })
-
-      let { result: claimerInfo } = await getActivityStatisiticData(this.activityId)
-      this.totalClaimers = claimerInfo.claimerNum
+      try {
+        let { result } = await getClaimGiftList(this.activityId)
+        this.showList = (result || []).slice(0, 3).map((item) => {
+          return {
+            name: item.userName || item.nickName,
+            avatar: item.headImgUrl,
+            inviteNum: item.helperNum,
+            giftInfo: item.name
+          }
+        })
+        let { result: claimerInfo } = await getActivityStatisiticData(this.activityId)
+        this.totalClaimers = claimerInfo.claimerNum
+      } catch (e) {
+        throw e
+      }
     },
 
     async getGift () {
-      // TODO: 用户是否需要注册或登录
-      let { result } = await claimGiftOrCoupon(this.activityId, this.userId)
-      if (!result) {
-        this.isGotGiftSuccess = false
-        return
+      try {
+        let { result } = await claimGiftOrCoupon(this.activityId, this.userId)
+        if (!result) {
+          this.isGotGiftSuccess = false
+          return
+        }
+        this.isGotGiftSuccess = true
+        let { mallCouponEntity, mallInvitingEventsGiftEntity } = result
+        let type = mallCouponEntity ? 'coupon' : 'gift'
+        this.giftInfo.type = type
+        this.giftInfo.giftInfo = mallInvitingEventsGiftEntity || {}
+        this.giftInfo.couponInfo = mallCouponEntity || {}
+      } catch (e) {
+        throw e
       }
-      this.isGotGiftSuccess = true
-      let { mallCouponEntity, mallInvitingEventsGiftEntity } = result
-      let type = mallCouponEntity ? 'coupon' : 'gift'
-      this.giftInfo.type = type
-      this.giftInfo.giftInfo = mallInvitingEventsGiftEntity || {}
-      this.giftInfo.couponInfo = mallCouponEntity || {}
     },
 
     async testClaimGift () {
-      let { result } = await canClaimGift(this.activityId)
-      this.canClaimGift = result
+      try {
+        let { result } = await canClaimGift(this.activityId)
+        this.canClaimGift = result
+      } catch (e) {
+        throw e
+      }
     }
   }
 }
