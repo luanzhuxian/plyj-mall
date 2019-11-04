@@ -88,12 +88,8 @@ export default {
   },
   methods: {
     async init () {
-      if (this.currentTimestamp) {
-        this.cts = this.currentTimestamp || Date.now()
-      } else {
-        let { result } = await getServerTime()
-        this.cts = Number(result)
-      }
+      let { result } = await getServerTime()
+      this.cts = Number(result)
       if (this.cts && this.timestamp) {
         this.start = Math.min(this.cts, this.timestamp)
         this.end = Math.max(this.cts, this.timestamp)
