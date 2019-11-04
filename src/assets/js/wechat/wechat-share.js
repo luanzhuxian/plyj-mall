@@ -6,7 +6,7 @@ let delay = new DelayExec(100)
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
   await delay.exec() // 延迟执行，节流执行频率，使频率不能高于每秒10次
   let jsApi = await getJSApi(appId) // 每次分享时，获取js-api
-  const config = getConfig(jsApi.result, appId, link)
+  const config = getConfig(jsApi.result, appId)
   WX.config(config)
   return new Promise((resolve, reject) => {
     WX.ready(function () {
@@ -60,10 +60,10 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
   })
 }
 /* 生成微信分享配置对象 */
-function getConfig (jsapi, appId, link) {
+function getConfig (jsapi, appId) {
   let nonceStr = randomString()
   let timestamp = Number.parseInt(Date.now() / 1000)
-  let sign = `jsapi_ticket=${jsapi}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${link}`
+  let sign = `jsapi_ticket=${jsapi}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${location.href}`
   let signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
   return {
     debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。

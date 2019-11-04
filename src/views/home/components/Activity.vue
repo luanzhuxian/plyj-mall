@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     go (id) {
-      location.href = `${this.mallUrl}/invitenewcomers/${id}`
+      this.$router.push({ name: 'InviteNewcomers', params: { activityId: id } })
     }
   }
 }

@@ -52,7 +52,7 @@ import ShowOrders from './components/ShowOrders'
 import HelpSuccess from './components/HelpSuccess'
 import youLike from './../home/components/YouLike.vue'
 import { mapGetters } from 'vuex'
-import { getActivityInfo, helpFriend, getClaimGiftList, getUserInfo, getActivityStatisiticData, registerStatisitic } from '../../apis/invitenewcomers'
+import { getActivityInfo, helpFriend, getClaimGiftList, getUserInfo, getActivityStatisiticData, registerStatisitic, inviterStatisitic } from '../../apis/invitenewcomers'
 
 export default {
   name: 'InviteNewcomers',
@@ -119,9 +119,10 @@ export default {
   },
   async activated () {
     if (this.userId === this.inviteUserId) {
-      this.$router.push({ name: 'InviteNewcomers', params: { activityId: this.$route.params.activityId } })
+      this.$router.push({ name: 'InviteNewcomers', params: { activityId: this.activityId } })
       return
     }
+    inviterStatisitic(this.activityId, this.inviteUserId)
     await this.init()
   },
 

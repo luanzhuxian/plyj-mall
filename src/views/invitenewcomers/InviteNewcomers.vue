@@ -159,20 +159,21 @@ export default {
   },
   async activated () {
     // 存在userId时，说明时通过分享链接点进来的，要跳转至助力页面
-    let shareUserId = this.$route.query.userId
-    if (shareUserId) {
-      inviterStatisitic(this.activityId, shareUserId)
-      this.$router.replace({
-        name: 'InviteNewcomersHelper',
-        params: {
-          activityId: this.activityId,
-          inviteUserId: shareUserId
-        }
-      })
-      return
-    }
+    // let shareUserId = this.$route.query.userId
+    // if (shareUserId) {
+    //   inviterStatisitic(this.activityId, shareUserId)
+    //   this.$router.replace({
+    //     name: 'InviteNewcomersHelper',
+    //     params: {
+    //       activityId: this.activityId,
+    //       inviteUserId: shareUserId
+    //     }
+    //   })
+    //   return
+    // }
     await this.init()
-    let shareUrl = `${location.href}?userId=${this.userId}`
+    let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/help/${this.userId}`
+    console.log(shareUrl)
     await share({
       appId: this.appId,
       title: '请好友一起翻礼品',
