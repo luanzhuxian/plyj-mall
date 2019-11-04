@@ -2,7 +2,10 @@
   <div class="road-learning">
     <div class="top">
       <div class="title-box">
-        <div class="title-left" @click="$router.back()"><pl-icon name="icon-left" color="#fff" size="32" /></div>
+        <div class="title-left" @click="$router.replace({name: 'Activity'})">
+          <pl-icon v-if="isShare" name="icon-shouyeshouye" color="#fff" size="40" />
+          <pl-icon v-else name="icon-left" color="#fff" size="32" />
+        </div>
         <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/icon-road-learning-title.png">
         <div class="title-right" @click="showRule = true">
           活动规则
@@ -172,6 +175,7 @@ export default {
   name: 'RoadLearning',
   data () {
     return {
+      isShare: false,
       timer: '',
       showRule: false,
       winningShow: false,
@@ -198,6 +202,13 @@ export default {
   },
   computed: {
     ...mapGetters(['avatar', 'mallUrl', 'userId'])
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => { //  这里的vm指的就是vue实例，可以用来当做this使用
+      if (from.name !== 'Activity') {
+        vm.isShare = true
+      }
+    })
   },
   async created () {
     if (!this.userId) {
