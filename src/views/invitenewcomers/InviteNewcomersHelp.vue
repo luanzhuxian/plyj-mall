@@ -53,7 +53,6 @@ import HelpSuccess from './components/HelpSuccess'
 import youLike from './../home/components/YouLike.vue'
 import { mapGetters } from 'vuex'
 import { getActivityInfo, helpFriend, getClaimGiftList, getUserInfo, getActivityStatisiticData, registerStatisitic } from '../../apis/invitenewcomers'
-// import { getCurrentActivity } from '../../apis/newcomers'
 
 export default {
   name: 'InviteNewcomers',
@@ -67,16 +66,22 @@ export default {
     return {
       isShowRule: false,
       isShowHelperSuccess: false,
-
-      inviteUserId: 0,
-      activityId: 0,
-
       inviteUserInfo: null,
       activityInfo: {},
       // 领取人列表
       showList: [],
       // 总领取数
       totalClaimers: 0
+    }
+  },
+  props: {
+    inviteUserId: {
+      type: String,
+      default: ''
+    },
+    activityId: {
+      type: String,
+      default: ''
     }
   },
 
@@ -112,12 +117,6 @@ export default {
       return (this.activityInfo.activityBrief || '').replace(/\n/g, '<br>')
     }
   },
-
-  created () {
-    this.inviteUserId = this.$route.params.userId
-    this.activityId = this.$route.params.activityId
-  },
-
   async activated () {
     if (this.userId === this.$route.params.userId) {
       this.$router.push({ name: 'InviteNewcomers', params: { activityId: this.$route.params.activityId } })
@@ -127,17 +126,6 @@ export default {
   },
 
   methods: {
-    // 初始化分享数据
-    // share () {
-    //   share({
-    //     appId: this.appId,
-    //     title: '请好友一起翻礼品',
-    //     desc: '快来帮我助力一起领取大礼哦。',
-    //     link: window.location.href,
-    //     // TODO: image url
-    //     imgUrl: ''
-    //   })
-    // },
     async init () {
       let requests = []
 
@@ -163,51 +151,52 @@ export default {
     },
 
     async onNotify () {
-      if (this.isActivityStarted) {
-        this.showReady()
-      }
       if (this.isActivityEnd) {
         this.showGameOver()
       }
-
-      // this.helpMyFriend(false)
       this.helpMyFriend()
     },
 
     // 获取活动的信息
     async getActivityInfo () {
-      let { status, result } = await getActivityInfo(this.activityId)
-      if (status !== 200) {
-        // TODO
-        return
+      try {
+        let { result } = await getActivityInfo(this.activityId)
+        this.activityInfo = result
+      } catch (e) {
+        throw e
       }
-
-      this.activityInfo = result
     },
-
     // 获取邀请助力用户信息
     async getInviteUserInfo () {
-      let { result } = await getUserInfo(this.inviteUserId)
-      this.inviteUserInfo = {
-        name: result.nickName,
-        avatar: result.headImgUrl
+      try {
+        let { result } = await getUserInfo(this.inviteUserId)
+        this.inviteUserInfo = {
+          name: result.nickName,
+          avatar: result.headImgUrl
+        }
+      } catch (e) {
+        throw e
       }
     },
 
     // 获取晒单数据
     async getOrdersShow () {
-      let { result } = await getClaimGiftList(this.activityId)
-      this.showList = (result || []).slice(0, 3).map((item) => {
-        return {
-          name: item.userName || item.nickName,
-          avatar: item.headImgUrl,
-          inviteNum: item.helperNum,
-          giftInfo: item.name
-        }
-      })
+      try {
+        let { result } = await getClaimGiftList(this.activityId)
+        this.showList = (result || []).slice(0, 3).map((item) => {
+          return {
+            name: item.userName || item.nickName,
+            avatar: item.headImgUrl,
+            inviteNum: item.helperNum,
+            giftInfo: item.name
+          }
+        })
 
-      let { result: claimerInfo } = await getActivityStatisiticData(this.activityId)
-      this.totalClaimers = claimerInfo.claimerNum
+        let { result: claimerInfo } = await getActivityStatisiticData(this.activityId)
+        this.totalClaimers = claimerInfo.claimerNum
+      } catch (e) {
+        throw e
+      }
     },
 
     restoreHelpState () {
@@ -235,13 +224,8 @@ export default {
         await helpFriend(this.activityId, this.inviteUserId)
         await registerStatisitic(this.activityId)
         this.isShowHelperSuccess = true
-        await this.doClaimAll()
         return
       }
-
-      // if (isRestore) {
-      //   return
-      // }
 
       if (this.isNewUser) {
         // 新用户，先注册（绑定手机）
@@ -256,6 +240,7 @@ export default {
 
           this.bindMobile()
         } catch (e) {
+          throw e
         }
       } else {
         // 不是新用户
@@ -268,21 +253,6 @@ export default {
         // 跳转到邀新有礼
         this.gotoInviteNew()
       }
-    },
-    async doClaimAll () {
-      // let { result: newComersActivity } = await getCurrentActivity()
-      // if (!newComersActivity) {
-      //   return
-      // }
-      // // 活动已经终止或结束，不能领取
-      // if (moment(newComersActivity.activityEndTime).isBefore(moment()) || newComersActivity.status === 0) {
-      //   return
-      // }
-      // let { status } = await claimCoupons(newComersActivity.id, (newComersActivity.couponModels || []).map(m => m.id))
-      // if (status !== 200) {
-      //   // TODO: add code here
-      // }
-      // await registerStatisitic(newComersActivity.id)
     }
   }
 }

@@ -176,11 +176,9 @@ export default {
     emitOp () {
       this.$emit('notify')
     },
-
     emitCountdownStop () {
       this.$emit('countdownstop')
     },
-
     startCountdown () {
       this.calcCountDown()
 

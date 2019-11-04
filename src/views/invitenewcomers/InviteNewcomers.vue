@@ -79,8 +79,6 @@ export default {
 
       inviteTitle: '邀请好友，赢<span style="font-family: HYLingXinJ; color: #f6f4b4;">豪礼</span>大奖',
 
-      activityId: 0,
-
       giftInfo: {
         type: 'coupon'
         // coupon info
@@ -100,8 +98,14 @@ export default {
     }
   },
 
+  props: {
+    activityId: {
+      type: String,
+      default: ''
+    }
+  },
   computed: {
-    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
     isNewUser () {
       return this.userId === ''
     },
@@ -153,31 +157,32 @@ export default {
       return (this.activityInfo.activityBrief || '').replace(/\n/g, '<br>')
     }
   },
-
-  created () {
-    this.activityId = this.$route.params.activityId
-  },
-
   async activated () {
-    this.share()
+    // 存在userId时，说明时通过分享链接点进来的，要跳转至助力页面
+    let shareUserId = this.$route.query.userId
+    if (shareUserId) {
+      inviterStatisitic(this.activityId, shareUserId)
+      this.$router.replace({
+        name: 'InviteNewcomersHelper',
+        params: {
+          activityId: this.activityId,
+          userId: shareUserId
+        }
+      })
+      return
+    }
     await this.init()
+    let shareUrl = `${location.href}?userId=${this.userId}`
+    await share({
+      appId: this.appId,
+      title: '请好友一起翻礼品',
+      desc: '快来帮我助力一起领取大礼哦。',
+      link: shareUrl,
+      imgUrl: this.logoUrl
+    })
   },
 
   methods: {
-    // 初始化分享数据
-    share () {
-      share({
-        appId: this.appId,
-        title: '请好友一起翻礼品',
-        desc: '快来帮我助力一起领取大礼哦。',
-        link: `${window.location.protocol}//${window.location.host}${window.location.pathname}/help/${this.userId}`,
-        imgUrl: this.logoUrl,
-        success: () => {
-          inviterStatisitic(this.activityId)
-        }
-      })
-    },
-
     async init () {
       let requests = []
 
