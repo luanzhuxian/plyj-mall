@@ -59,7 +59,7 @@ import ShareLayer from './components/ShareLayer'
 import youLike from './../home/components/YouLike.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
-import { getActivityInfo, getHelpers, canClaimGift, claimGiftOrCoupon, getClaimGiftList, getActivityStatisiticData, inviterStatisitic } from '../../apis/invitenewcomers'
+import { getActivityInfo, getHelpers, canClaimGift, claimGiftOrCoupon, getClaimGiftList, getActivityStatisiticData } from '../../apis/invitenewcomers'
 
 export default {
   name: 'InviteNewcomers',
@@ -158,19 +158,6 @@ export default {
     }
   },
   async activated () {
-    // 存在userId时，说明时通过分享链接点进来的，要跳转至助力页面
-    // let shareUserId = this.$route.query.userId
-    // if (shareUserId) {
-    //   inviterStatisitic(this.activityId, shareUserId)
-    //   this.$router.replace({
-    //     name: 'InviteNewcomersHelper',
-    //     params: {
-    //       activityId: this.activityId,
-    //       inviteUserId: shareUserId
-    //     }
-    //   })
-    //   return
-    // }
     await this.init()
     let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/help/${this.userId}`
     console.log(shareUrl)
