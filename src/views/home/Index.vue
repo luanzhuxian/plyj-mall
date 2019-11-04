@@ -78,7 +78,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
-import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
+import { getTemplate, getLiveInfo, getJianxueInfo, getCurrentTemplate } from '../../apis/home'
 import { getCurrentActivity } from '../../apis/invitenewcomers'
 // import { wasGetInfo } from '../../apis/wwec'
 // import moment from 'moment'
@@ -149,6 +149,11 @@ export default {
   },
   async created () {
     try {
+      getCurrentTemplate({ type: 2 }).then(({ result }) => {
+        if (result) {
+          this.$router.push({ name: 'Activity' })
+        }
+      })
       this.getTemplate()
       const [{ result: live }, { result: invitingEvent }, { result: jxEvent }] = await Promise.all([getLiveInfo(), getCurrentActivity(), getJianxueInfo()])
       this.liveInfo = live || {}

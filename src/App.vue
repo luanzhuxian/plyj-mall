@@ -79,9 +79,6 @@ export default {
       // 是否显示双十二主会场tab入口
       getCurrentTemplate({ type: 2 }).then(({ result }) => {
         this.isNavBtnShow = !!result
-        if (result) {
-          this.$router.push({ name: 'Activity' })
-        }
       })
       await this.getMallInfo()
       let mallId = localStorage.getItem('mallId')
