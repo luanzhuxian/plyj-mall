@@ -13,7 +13,7 @@
             :class="$style.listItem"
             v-for="(item, i) of data.values"
             :key="i"
-            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, brokerId: userId || null } })"
+            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
           >
             <div :class="$style.time">
               <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">

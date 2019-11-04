@@ -95,8 +95,7 @@ export default {
   methods: {
     async buyNow () {
       if (this.id) {
-        const { userId } = this
-        this.$router.push({ name: 'Lesson', params: { productId: this.id, brokerId: userId || null } })
+        this.$router.push({ name: 'Lesson', params: { productId: this.id } })
       }
     }
   }

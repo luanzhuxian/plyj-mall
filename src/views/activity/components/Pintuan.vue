@@ -17,7 +17,7 @@
             }"
             v-for="(item, i) of data.values"
             :key="i"
-            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, brokerId: userId || null } })"
+            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
           >
             <div :class="$style.imgWrapper">
               <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">

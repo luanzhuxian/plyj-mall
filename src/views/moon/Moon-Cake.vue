@@ -3,7 +3,7 @@
     <img
       :class="$style.img"
       src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/%E4%B8%93%E9%A2%98%E9%A1%B5.jpg" alt=""
-      @click="$router.push({ name: 'Lesson', params: { productId: '1156515687099793408', brokerId: userId || null } })"
+      @click="$router.push({ name: 'Lesson', params: { productId: '1156515687099793408' } })"
     >
   </div>
 </template>

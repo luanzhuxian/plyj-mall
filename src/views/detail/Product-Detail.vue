@@ -451,6 +451,7 @@ export default {
   },
   async mounted () {
     this.changeBrokerId()
+    sessionStorage.setItem('shareBrokerId', this.brokerId || '')
   },
   methods: {
     ...mapActions({
@@ -476,11 +477,12 @@ export default {
         this.productSkuModels = result.productSkuModels
         this.currentModel = result.productSkuModels.find(item => item.minBuyNum <= item.stock) || result.productSkuModels[0]
         this.currentModel.count = result.productSkuModels[0].minBuyNum
+        let shareUrl = `${this.mallUrl}/detail/lesson/${this.productId}/${this.userId}`
         share({
           appId: this.appId,
           title: result.productName,
           desc: result.productDesc,
-          link: window.location.href,
+          link: shareUrl,
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
         this.haibaoImg = await this.loadImage(result.productMainImage)
@@ -765,28 +767,28 @@ export default {
       // 其他人的分享id
       let otherShareId = sessionStorage.getItem('shareBrokerId') || ''
       let { brokerId, userId, mallDomain, productId } = this
-      let { protocol, host } = location
-      let selfUrl = `${protocol}//${host}/${mallDomain}/detail/lesson/${productId}/${userId}`
+      // let { protocol, host } = location
+      // let selfUrl = `${protocol}//${host}/${mallDomain}/detail/lesson/${productId}/${userId}`
       // 本地没有分享id，设置本地分享id，设置的本地分享id可以是他人的，也可以是自己的
       if (!otherShareId) {
         if (brokerId && brokerId !== userId) {
           // 携带有他人分享id时，先把他人的id保存起来，然后再替换成当前用户的id
           // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
           sessionStorage.setItem('shareBrokerId', brokerId || '')
-          location.href = selfUrl
+          // location.href = selfUrl
         } else if (brokerId && brokerId === userId) {
           sessionStorage.setItem('shareBrokerId', userId || '')
         } else if (!brokerId && userId) {
-          location.href = selfUrl
+          // location.href = selfUrl
         }
       } else {
         if (!brokerId && userId) {
-          location.href = selfUrl
+          // location.href = selfUrl
           return
         }
         if (brokerId !== userId) {
           sessionStorage.setItem('shareBrokerId', brokerId || '')
-          location.href = selfUrl
+          // location.href = selfUrl
         }
       }
     }
