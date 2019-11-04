@@ -271,7 +271,7 @@ export default {
       if (datetime < 0) return
       this.timer = setInterval(() => {
         let { _data } = moment.duration(datetime)
-        let d = String(_data.days + moment().daysInMonth() * _data.months)
+        let d = String(Math.floor(moment.duration(datetime).asDays()))
         let h = String(_data.hours)
         let m = String(_data.minutes)
         let s = String(_data.seconds)
