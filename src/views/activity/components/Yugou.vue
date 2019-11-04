@@ -28,7 +28,6 @@
               <div :class="$style.timeRight" v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
                 <count-down
                   :timestamp="getTime(item.goodsInfo.activityInfo)"
-                  :current-timestamp="timestamp"
                   color="#DB4D7D"
                   size="mini"
                   @done="() => item.goodsInfo.activityInfo.status += 1"
@@ -76,10 +75,6 @@ export default {
       default () {
         return { values: [] }
       }
-    },
-    timestamp: {
-      type: [String, Number],
-      default: ''
     }
   },
   data () {

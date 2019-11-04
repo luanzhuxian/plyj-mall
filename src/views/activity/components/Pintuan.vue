@@ -29,7 +29,6 @@
                 <count-down
                   v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
                   :timestamp="getTime(item.goodsInfo.activityInfo)"
-                  :current-timestamp="timestamp"
                   @done="() => reset(item)"
                 />
               </div>
@@ -106,10 +105,6 @@ export default {
       default () {
         return { values: [] }
       }
-    },
-    timestamp: {
-      type: [String, Number],
-      default: ''
     }
   },
   data () {

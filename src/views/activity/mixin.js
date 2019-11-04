@@ -14,7 +14,7 @@ export default {
     },
     getTimeStatus ([start, end]) {
       let msg = ''
-      const timestamp = this.timestamp
+      const timestamp = this.timestamp || Date.now()
       const startTs = moment(start).valueOf()
       const endTs = moment(end).valueOf()
       if (timestamp < startTs) msg = '未开始'

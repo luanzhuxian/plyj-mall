@@ -1,27 +1,27 @@
 <template>
   <div :class="$style.homeTemplateB">
-    <Search placeholder="搜索商品" />
-    <Banner :data="BANNER" />
+    <search placeholder="搜索商品" />
+    <banner :data="BANNER" />
     <div :class="$style.shuang12">
       <img
-        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png.png" alt=""
+        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png.png"
         @click="$router.push({ name: 'DoubleTwelveDay' })"
       >
     </div>
     <!--<slot name="88" />-->
-    <Adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
+    <adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
     <div
       v-if="type === 4 && parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))" :class="$style.broadcast"
     >
-      <Broadcast />
+      <broadcast />
     </div>
     <div v-if="type === 4" :class="$style.activity">
-      <Activity />
+      <activity />
     </div>
-    <HotItem v-if="POPULAR.showStatue === 1" :data="POPULAR" />
+    <hot-item v-if="POPULAR.showStatue === 1" :data="POPULAR" />
     <appointment-gift :data="{ YUYUE, PINGXUAN }" />
-    <Best v-if="CLASS.showStatue === 1" :data="CLASS" />
-    <BestRecommend
+    <best v-if="CLASS.showStatue === 1" :data="CLASS" />
+    <best-recommend
       v-if="RECOMMEND.values && RECOMMEND.values.length"
       :data="RECOMMEND"
     />

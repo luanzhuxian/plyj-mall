@@ -39,7 +39,7 @@
           <pl-icon name="icon-arrow-right" :size="30" color="#ccc" />
         </div>
       </div>
-      <div :class="$style.bottom" v-if="mallBrandingRequestModels.length">
+      <div :class="$style.bottom" v-if="PINGXUAN.show === 1 && mallBrandingRequestModels.length">
         <div :class="$style.title">
           教育特色 :
         </div>

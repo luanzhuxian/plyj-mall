@@ -8,11 +8,11 @@
     :style="{ color }"
   >
     <span v-if="textBefore">{{ textBefore }}</span>
-    <div :class="$style.time" v-if="Number(d)">
+    <!-- <div :class="$style.time" v-if="Number(d)">
       <i>{{ d }}</i><span>天</span><i v-if="h" v-text="h" /><span v-if="h">时</span>
-    </div>
-    <div :class="$style.time" v-else>
-      <i v-if="h" v-text="h" /><span v-if="h">:</span><i v-if="m" v-text="m" /><span v-if="m">:</span><i v-if="s" v-text="s" />
+    </div> -->
+    <div :class="$style.time">
+      <i v-if="d">{{ d }}</i><span v-if="d">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span v-if="!d">:</span><i v-if="!d" v-text="s" />
     </div>
     <span v-if="textAfter">{{ textAfter }}</span>
   </div>
@@ -26,10 +26,6 @@ export default {
   name: 'CountDown',
   props: {
     timestamp: {
-      type: [Number, String],
-      default: 0
-    },
-    currentTimestamp: {
       type: [Number, String],
       default: 0
     },
@@ -77,7 +73,7 @@ export default {
   },
   watch: {
     timestamp (val, old) {
-      this.reset()
+      this.init()
     }
   },
   mounted () {
@@ -88,16 +84,6 @@ export default {
   },
   methods: {
     async init () {
-      let { result } = await getServerTime()
-      this.cts = Number(result)
-      if (this.cts && this.timestamp) {
-        this.start = Math.min(this.cts, this.timestamp)
-        this.end = Math.max(this.cts, this.timestamp)
-        this.show = true
-        this.countdown()
-      }
-    },
-    async reset () {
       let { result } = await getServerTime()
       this.cts = Number(result)
       if (this.cts && this.timestamp) {

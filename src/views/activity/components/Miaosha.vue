@@ -85,7 +85,6 @@
               <count-down
                 v-if="~[0, 1].indexOf(prod.activityInfo.status)"
                 :timestamp="getTime(prod.activityInfo)"
-                :current-timestamp="timestamp"
                 @done="() => prod.activityInfo.status += 1"
               />
             </div>
@@ -151,6 +150,7 @@
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
 import { mapGetters } from 'vuex'
+import { getServerTime } from '../../../apis/base-api'
 
 export default {
   name: 'Miaosha',
@@ -168,19 +168,20 @@ export default {
     type: {
       type: Number,
       default: 0
-    },
-    timestamp: {
-      type: [String, Number],
-      default: ''
     }
   },
   data () {
     return {
-      miaoshaIndex: 0
+      miaoshaIndex: 0,
+      timestamp: ''
     }
   },
   computed: {
     ...mapGetters(['userId'])
+  },
+  async created () {
+    let { result } = await getServerTime()
+    this.timestamp = Number(result)
   }
 }
 </script>

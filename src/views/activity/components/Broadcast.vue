@@ -28,7 +28,6 @@
             <count-down
               v-if="live.statue === 2 && live.hasNotice"
               :timestamp="ts"
-              :current-timestamp="timestamp"
               :color="color"
               size="mini"
               text-after="后开始"
@@ -65,9 +64,6 @@ export default {
   computed: {
     live () {
       return this.parent.liveInfo || {}
-    },
-    timestamp () {
-      return this.parent.timestamp || Date.now()
     }
   },
   created () {

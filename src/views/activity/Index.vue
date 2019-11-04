@@ -12,19 +12,16 @@
           v-if="type === 5"
           :data="modules"
           :type="type"
-          :timestamp="timestamp"
         />
         <TemplateBaofa
           v-if="type === 6"
           :data="modules"
           :type="type"
-          :timestamp="timestamp"
         />
         <TemplateFanchang
           v-if="type === 7"
           :data="modules"
           :type="type"
-          :timestamp="timestamp"
         />
       </div>
     </div>
@@ -66,8 +63,7 @@ export default {
       },
       liveInfo: {}, // 直播
       invitingEvent: {}, // 邀新有礼
-      jxEvent: {}, // 见学之路
-      timestamp: '' // 服务器时间
+      jxEvent: {} // 见学之路
     }
   },
   async created () {
@@ -98,9 +94,8 @@ export default {
             })
           return
         }
-        let { type, currentTime, moduleModels } = result
+        let { type, moduleModels } = result
         this.type = type
-        this.timestamp = currentTime || Date.now()
         if (type === 5) {
           this.modules.MIAO_SHA = moduleModels[0]
           this.modules.PIN_TUAN = moduleModels[1]
@@ -150,9 +145,9 @@ export default {
 <style module lang="scss">
   .activity {
     position: relative;
-    background: rgba(195, 1, 10, 1);
+    background: #d20001;
     .background {
-      background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/admall/2.0.0/main-bg.jpg") no-repeat center top;
+      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/admall/2.0.0/main-bg.jpg") no-repeat center top;
       background-size: 100% auto;
       min-height: 100vh;
     }

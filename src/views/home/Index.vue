@@ -1,6 +1,9 @@
 <template>
   <div :class="$style.home">
-    <TemplateA :data="modules" v-if="type === 1">
+    <TemplateA
+      v-if="type === 1"
+      :data="modules"
+    >
     <!-- 月光宝盒项目 -->
     <!--<router-link
         slot="88"
@@ -141,8 +144,7 @@ export default {
       registerCountFor820: 0,
       liveInfo: {}, // 直播
       invitingEvent: {}, // 邀新有礼
-      jxEvent: {}, // 见学之路
-      timestamp: '' // 服务器时间
+      jxEvent: {} // 见学之路
     }
   },
   async created () {
@@ -212,7 +214,7 @@ export default {
             })
           return
         }
-        let { type, currentTime, moduleModels } = result
+        let { type, moduleModels } = result
         if (type === 1) {
           const bannerList = moduleModels.filter(module => module.moduleType === 1)
           const prodList = moduleModels.filter(module => module.moduleType === 2)
@@ -248,7 +250,6 @@ export default {
           this.modules.RECOMMEND = moduleModels[6]
         }
         this.type = type
-        this.timestamp = currentTime || Date.now()
         this.loaded = true
       } catch (e) {
         throw e
