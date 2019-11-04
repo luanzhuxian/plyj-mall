@@ -27,7 +27,7 @@
         </div>
         <pl-icon name="icon-calendar" type="svg" />
       </router-link>
-      <div
+      <router-link
         v-if="hasInvitingEvent"
         :class="{
           [$style.item]: true,
@@ -35,7 +35,7 @@
           [$style.large]: !hasJxEvent && hasInvitingEvent
         }"
         tag="div"
-        @click="go(invitingEvent.id)"
+        :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
       >
         <div :class="$style.itemLeft">
           <div :class="$style.main">
@@ -52,13 +52,12 @@
           </div>
         </div>
         <pl-icon name="icon-present" type="svg" />
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
   name: 'Activity',
   inject: ['parent'],
@@ -66,7 +65,6 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['mallUrl']),
     invitingEvent () {
       return (this.parent && this.parent.invitingEvent) || {}
     },
@@ -78,11 +76,6 @@ export default {
     },
     hasJxEvent () {
       return ~[0, 2].indexOf(this.jxEvent.status)
-    }
-  },
-  methods: {
-    go (id) {
-      this.$router.push({ name: 'InviteNewcomers', params: { activityId: id } })
     }
   }
 }
