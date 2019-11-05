@@ -2,22 +2,10 @@
   <div class="invitenewcomers">
     <div class="center">
       <board
-        :start-time="startTime"
-        :end-time="endTime"
-        :friends="helpers"
-        :invite-title="inviteTitle"
-        :invite-description="inviteDescription"
-        :invite-button-text="inviteButtonText"
-        :is-stoped="isActivityStoped"
-        @countdownstop="init"
-        @notify="onNotify"
+        :data="detail"
+        :active-id="activityId"
       />
-    </div>
-    <div class="center" v-if="isActivityStarted && showList.length !== 0">
-      <show-orders
-        :total-show="totalClaimers"
-        :users="showList"
-      />
+      <AcquisitionGifts :activity-id="activityId" />
     </div>
     <you-like :is-my="true" />
     <div class="rule-nav" @click="isShowRule = true">
@@ -37,43 +25,31 @@
         <p v-html="activityBrief" />
       </div>
     </pl-popup>
-    <got-gift
-      v-if="isShowGotGift"
-      @close="getMore()"
-      @more="getMore()"
-      :success="isGotGiftSuccess"
-      :type="giftInfo.type"
-      :coupon-info="giftInfo.couponInfo"
-      :gift-info="giftInfo.giftInfo"
-    />
-    <share-layer v-if="isShowShareLayer" @close="isShowShareLayer = false" />
   </div>
 </template>
 
 <script>
 import moment from 'moment'
 import Board from './components/Board'
-import ShowOrders from './components/ShowOrders'
-import GotGift from './components/GotGift'
-import ShareLayer from './components/ShareLayer'
+import AcquisitionGifts from './components/Acquisition-Gifts.vue'
 import youLike from './../home/components/YouLike.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
-import { getActivityInfo, getHelpers, canClaimGift, claimGiftOrCoupon, getClaimGiftList, getActivityStatisiticData } from '../../apis/invitenewcomers'
+import {
+  getActiveDetail
+} from '../../apis/invitenewcomers'
 
 export default {
   name: 'InviteNewcomers',
   components: {
     Board,
-    ShowOrders,
     youLike,
-    GotGift,
-    ShareLayer
+    AcquisitionGifts
   },
   data () {
     return {
+      currentSystemDate: '',
       isShowRule: false,
-      isShowGotGift: false,
       isShowShareLayer: false,
       isGotGiftSuccess: false,
 
@@ -85,14 +61,10 @@ export default {
         // gift info
       },
 
-      activityInfo: { status: 0 },
+      detail: null,
 
       canClaimGift: false,
 
-      helpers: [],
-      totalHelpers: 0,
-      // 领取人列表
-      showList: [],
       // 总领取数
       totalClaimers: 0
     }
@@ -109,58 +81,29 @@ export default {
     isNewUser () {
       return this.userId === ''
     },
-
-    inviteDescription () {
-      let invitedPeopleNumber = this.activityInfo.invitedPeopleNumber
-      if (this.canOpenGiftPackage) {
-        return `已经成功邀请${invitedPeopleNumber}个好友助力, 立即开豪礼`
-      }
-
-      return `还差${invitedPeopleNumber - this.totalHelpers % invitedPeopleNumber}个好友助力，即可开豪礼`
-    },
-
-    canOpenGiftPackage () {
-      return this.totalHelpers > 0 && this.totalHelpers % this.activityInfo.invitedPeopleNumber === 0
-    },
-
-    inviteButtonText () {
-      if (!this.isActivityStarted) {
-        return '活动暂未开始，敬请期待'
-      }
-      if (this.isActivityEnd || this.isActivityStoped) {
-        return '参与更多精彩活动'
-      }
-      if (this.canOpenGiftPackage) {
-        return '开豪礼'
-      }
-      return '邀请好友'
-    },
-
-    isActivityStarted () {
-      let startTime = moment(this.activityInfo.activityStartTime)
-      return moment().isSameOrAfter(startTime)
-    },
-    isActivityEnd () {
-      let endTime = moment(this.activityInfo.activityEndTime)
-      return endTime.isBefore(moment())
-    },
-    isActivityStoped () {
-      return this.activityInfo.status === 0
-    },
     startTime () {
-      return moment(this.activityInfo.activityStartTime).format('YYYY-MM-DD HH:mm:ss')
+      if (this.detail) {
+        return moment(this.detail.invitingEventsEntity.activityStartTime).format('YYYY-MM-DD HH:mm:ss')
+      }
+      return ''
     },
     endTime () {
-      return moment(this.activityInfo.activityEndTime).format('YYYY-MM-DD HH:mm:ss')
+      if (this.detail) {
+        return moment(this.detail.invitingEventsEntity.activityEndTime).format('YYYY-MM-DD HH:mm:ss')
+      }
+      return ''
     },
     activityBrief () {
-      return (this.activityInfo.activityBrief || '').replace(/\n/g, '<br>')
+      if (this.detail) {
+        return (this.detail.invitingEventsEntity.activityBrief || '').replace(/\n/g, '<br>')
+      }
+      return ''
     }
   },
   async activated () {
     await this.init()
-    let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/help/${this.userId}`
-    console.log(shareUrl)
+    // let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/help/${this.userId}`
+    let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/${this.userId}`
     await share({
       appId: this.appId,
       title: '请好友一起翻礼品',
@@ -169,156 +112,12 @@ export default {
       imgUrl: this.logoUrl
     })
   },
-
   methods: {
     async init () {
-      let requests = []
-
-      await this.getActivityInfo()
-      if (this.isActivityStarted) {
-        requests.push((() => this.getMyFriends())())
-        requests.push((() => this.getOrdersShow())())
-        // requests.push((() => this.testClaimGift())())
-      }
-
-      if (requests.length) {
-        await Promise.all(requests)
-      }
-    },
-
-    async getMore () {
-      await this.init()
-      this.isShowGotGift = false
-    },
-
-    // 显示分享提示
-    doShare () {
-      this.isShowShareLayer = true
-    },
-
-    // 活动结束
-    showGameOver () {
-      this.$alert({
-        message: '活动已经结束啦'
-      })
-    },
-
-    async onNotify () {
-      if (!this.isActivityStarted) {
-        this.$alert({
-          message: '活动还没有开始哦'
-        })
-        return
-      }
-      if (this.isActivityEnd) {
-        this.showGameOver()
-        return
-      }
-
-      if (this.isNewUser) {
-        try {
-          await this.$confirm({
-            viceMessage: '快来注册为会员，邀请好友进行助力返红包',
-            message: '您还没注册会员',
-            confirmText: '注册会员',
-            cancelText: '取消'
-          })
-          this.bindMobile()
-        } catch (e) {
-          throw e
-        }
-
-        return
-      }
-
-      if (this.canOpenGiftPackage) {
-        await this.getGift()
-        this.isShowGotGift = true
-      } else {
-        this.doShare()
-      }
-    },
-
-    bindMobile () {
-      sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-        name: this.$route.name,
-        params: this.$route.params,
-        query: this.$route.query
-      }))
-      this.$router.push({ name: 'BindMobile' })
-    },
-
-    // 获取活动的信息
-    async getActivityInfo () {
-      let { status, result } = await getActivityInfo(this.activityId)
-      if (status !== 200) {
-        // TODO
-        return
-      }
-
-      this.activityInfo = result
-    },
-
-    // 获取助力人列表
-    async getMyFriends () {
-      if (!this.userId) {
-        return
-      }
       try {
-        let { result } = await getHelpers(this.activityId, this.userId)
-        this.helpers = result.map((h) => {
-          return {
-            avatar: h.headImgUrl,
-            nickName: h.nickName
-          }
-        })
-        this.totalHelpers = result.length
-      } catch (e) {
-        throw e
-      }
-    },
-
-    // 获取晒单数据
-    async getOrdersShow () {
-      try {
-        let { result } = await getClaimGiftList(this.activityId)
-        this.showList = (result || []).slice(0, 3).map((item) => {
-          return {
-            name: item.userName || item.nickName,
-            avatar: item.headImgUrl,
-            inviteNum: item.helperNum,
-            giftInfo: item.name
-          }
-        })
-        let { result: claimerInfo } = await getActivityStatisiticData(this.activityId)
-        this.totalClaimers = claimerInfo.claimerNum
-      } catch (e) {
-        throw e
-      }
-    },
-
-    async getGift () {
-      try {
-        let { result } = await claimGiftOrCoupon(this.activityId, this.userId)
-        if (!result) {
-          this.isGotGiftSuccess = false
-          return
-        }
-        this.isGotGiftSuccess = true
-        let { mallCouponEntity, mallInvitingEventsGiftEntity } = result
-        let type = mallCouponEntity ? 'coupon' : 'gift'
-        this.giftInfo.type = type
-        this.giftInfo.giftInfo = mallInvitingEventsGiftEntity || {}
-        this.giftInfo.couponInfo = mallCouponEntity || {}
-      } catch (e) {
-        throw e
-      }
-    },
-
-    async testClaimGift () {
-      try {
-        let { result } = await canClaimGift(this.activityId)
-        this.canClaimGift = result
+        // 获取活动详情
+        const { result } = await getActiveDetail(this.activityId)
+        this.detail = result
       } catch (e) {
         throw e
       }
@@ -330,15 +129,9 @@ export default {
 <style lang="scss" scoped>
 @import "./fonts/hyfonts-subset.css";
 .invitenewcomers {
-  padding-top: 32px;
-
   .center {
-    width: 702px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 32px;
+    padding: 32px 24px;
   }
-
   .rule-nav {
     position: fixed;
     top: 368px;

@@ -1,9 +1,6 @@
 <template>
   <div class="share-layer">
     <overlay>
-      <!-- <div class="btn-share-circle">
-        <pl-icon type="svg" name="icon-three-dot" height="40" width="40" />
-      </div> -->
       <div class="guide-line">
         <div>
           <i class="circle en" />

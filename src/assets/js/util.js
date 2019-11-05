@@ -1,4 +1,5 @@
 // const qrcode = require('../../../static/lib/qrcode/index')
+import moment from 'moment'
 export function createObjectUrl (blob) {
   let url
   if (window.createObjectURL) { // basic
@@ -361,4 +362,32 @@ export function drawRoundRect (ctx, x, y, width, height, radius, strokeStyle, fi
   ctx.fillStyle = fillStyle
   ctx.stroke()
   ctx.fill()
+}
+
+/**
+ * 倒计时
+ * @param duration {number} 倒计时时长, 毫秒值
+ * @param callback {function} 接收倒计时数据
+ */
+export class countdown {
+  timer = 0
+  constructor (duration, callback) {
+    this.duration = duration
+    this.callback = callback
+  }
+  start () {
+    let duration = this.duration
+    let { _data } = moment.duration(duration)
+    this.callback(_data)
+    this.timer = setTimeout(() => {
+      if (duration <= 0) {
+        return
+      }
+      this.duration -= 1000
+      this.start()
+    }, 1000)
+  }
+  stop () {
+    clearTimeout(this.timer)
+  }
 }

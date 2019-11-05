@@ -1,12 +1,64 @@
 <template>
-  <div class="invite-newcomers-board">
-    <div class="who" v-if="inviteFrom !== null">
+  <div :class="$style.inviteNewcomersBoard">
+    <div :class="$style.top">
+      <div :class="$style.timer">
+        <template v-if="status !== 0">
+          <div :class="$style.timerTip" v-text="countdownStatus[status]" />
+          <div :class="$style.timerContent">
+            <div>
+              <span v-for="(dd, i) of d" :key="i" v-text="dd" />
+            </div>
+            <span>天</span>
+            <div>
+              <span v-for="(hh, i) of h" :key="i" v-text="hh" />
+            </div>
+            <span>:</span>
+            <div>
+              <span v-for="(mm, i) of m" :key="i" v-text="mm" />
+            </div>
+            <span>:</span>
+            <div>
+              <span v-for="(ss, i) of s" :key="i" v-text="ss" />
+            </div>
+          </div>
+        </template>
+        <div v-else :class="$style.timeEnd">
+          活动时间已结束
+        </div>
+      </div>
+      <template v-if="friendUserId">
+        <div v-if="friendUserId" :class="$style.inviteFriends">
+          小手一点帮我助力
+        </div>
+        <div :class="$style.shortOf">
+          你也可以参与活动拿豪礼大奖哦！
+        </div>
+      </template>
+      <template v-else>
+        <div :class="$style.inviteFriends">
+          邀请好友，赢豪礼大奖
+        </div>
+        <div v-if="inviteDescription > 0" :class="$style.shortOf">
+          还差<i v-text="inviteDescription" />个好友助力，即可开豪礼
+        </div>
+        <div v-else :class="$style.shortOf">
+          已成功邀请<i v-text="totalHelpers.length" />个好友助力，立即开豪礼
+        </div>
+      </template>
+      <!--<button :class="$style.button" v-if="true" @click="openGift">开豪礼</button>-->
+      <button :class="$style.button" v-if="canOpenGiftPackage" @click="openGift">开豪礼</button>
+      <button :class="$style.button" v-else-if="status === 1">活动暂未开始,尽请期待</button>
+      <button :class="$style.button" v-else-if="status === 2 && friendUserId" @click="help">助好友，得好礼</button>
+      <button :class="$style.button" v-else-if="status === 2" @click="showShare = true">邀请好友</button>
+      <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
+    </div>
+    <!--<div class="who" v-if="inviteFrom !== null">
       <img class="avatar" :src="inviteFrom.avatar">
       <span class="name">{{ inviteFrom.name }}</span>
       <span class="label">邀您助力领豪礼</span>
     </div>
     <div class="main-board">
-      <!-- 倒计时状态 -->
+      &lt;!&ndash; 倒计时状态 &ndash;&gt;
       <div class="countdown-panel" v-if="this.countdown > 0">
         <span class="status-label">{{ countdownStatus[status] }}</span>
         <number :value="+timeSplit[0]" />
@@ -24,9 +76,9 @@
       <div class="countdown-panel" v-else>
         <span class="status-stop">活动时间已结束</span>
       </div>
-      <!-- 邀请文案 -->
+      &lt;!&ndash; 邀请文案 &ndash;&gt;
       <div class="activity-invite-title" v-html="inviteTitle">
-        <!-- 邀请好友，赢<span class="gift">豪礼</span>大奖 -->
+        &lt;!&ndash; 邀请好友，赢<span class="gift">豪礼</span>大奖 &ndash;&gt;
       </div>
       <div class="activity-invite-label">
         {{ inviteDescription }}
@@ -37,344 +89,434 @@
     </div>
     <div class="invite-users" v-if="friends.length > 0">
       <span class="label">助力好友</span>
-      <!-- <img class="avatar" src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1369684156,4277819085&fm=26&gp=0.jpg"> -->
+      &lt;!&ndash; <img class="avatar" src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1369684156,4277819085&fm=26&gp=0.jpg"> &ndash;&gt;
       <span class="user-avatar" v-for="(f, $idx) in friends" :key="$idx">
         <img class="avatar" :src="f.avatar">
         <span class="name">{{ f.nickName }}</span>
       </span>
-    </div>
+    </div>-->
+    <HelperList :helpers="helpers" />
+    <Trophy :gifts="invitingEventsGiftEntities" />
+    <ShareLayer v-show="showShare" @close="showShare = false" />
+    <!--<transition name="fade">
+      <got-gift
+        v-if="isShowGotGift"
+        @close="getMore"
+        @more="getMore"
+        :success="isGotGiftSuccess"
+        :type="giftInfo.type"
+        :coupon-info="giftInfo.couponInfo"
+        :gift-info="giftInfo.giftInfo"
+      />
+    </transition>-->
+    <MessageBox
+      title="恭喜您获得"
+      message="满减券已自动存入您的现金卡包中您可在现金卡包中查看"
+      confirm-text="继续开豪礼"
+      :show.sync="showGotGift"
+    >
+      <div :class="$style.couponList">
+        <div :class="$style.couponItem">
+          <div :class="$style.price">
+            20
+          </div>
+          <div :class="$style.couponPrice">
+            <div :class="$style.desc">
+              满200减50
+            </div>
+            <div :class="$style.name">
+              双12哟回去
+            </div>
+          </div>
+          <div :class="$style.couponType">
+            满减券
+          </div>
+        </div>
+      </div>
+      <div :class="$style.giftList">
+        <div :class="$style.giftItem">
+          <div :class="$style.left">
+            <img src="https://avatars3.githubusercontent.com/u/18663991?v=4&s=120" alt="">
+          </div>
+          <div :class="$style.right">
+            <div :class="$style.name">CHERRY机械键盘</div>
+            <div :class="$style.desc">砍价活动礼品兑换券</div>
+            <div :class="$style.date">有效期：2019.4.15-2019.4.30</div>
+          </div>
+        </div>
+      </div>
+    </MessageBox>
+
+    <MessageBox
+      title="助力成功"
+      message="感谢你的好友助力，您也可发起邀新有礼活动领取豪礼大奖哦！"
+      confirm-text="我也来翻豪礼"
+      :message-width="438"
+      :show.sync="helpeSuccess"
+    />
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 import Number from './Number'
 import moment from 'moment'
-
-const DAY = 24 * 60 * 60
-const HOUR = 3600
-const MIN = 60
-
-function fmtCountDown (count) {
-  let sec = Math.round(count / 1000)
-  let days = Math.floor(sec / DAY)
-  let hours = Math.floor((sec - DAY * days) / HOUR)
-  let min = Math.floor((sec - DAY * days - hours * HOUR) / MIN)
-  let ss = sec % 60
-
-  let fmt = (n) => n > 9 ? '' + n : '0' + n
-  return `${fmt(days)}${fmt(hours)}${fmt(min)}${fmt(ss)}`
-}
-
-const STATUS = {
-  READY: 0,
-  START: 1,
-  END: 2
-}
-
+import { countdown } from '../../../assets/js/util'
+import Trophy from './Trophy'
+import ShareLayer from './ShareLayer.vue'
+import HelperList from './Helper-List.vue'
+import MessageBox from './Message-Box.vue'
+import {
+  openGift,
+  helpFriend,
+  canClaimGift,
+  getHelpers
+} from '../../../apis/invitenewcomers'
+import {
+  mapGetters
+} from 'vuex'
 export default {
   name: 'InviteNewcomersBoard',
   components: {
-    Number
-  },
-  props: {
-    endTime: {
-      type: String,
-      default () {
-        return '2020-01-01 00:00:00'
-      }
-    },
-    startTime: {
-      type: String,
-      default () {
-        return moment().format()
-      }
-    },
-    inviteFrom: {
-      type: Object,
-      default: () => {
-        // return {
-        //   avatar: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1369684156,4277819085&fm=26&gp=0.jpg',
-        //   name: '王小二'
-        // }
-        return null
-      }
-    },
-    inviteTitle: {
-      type: String,
-      default: ''
-    },
-    inviteDescription: {
-      type: String,
-      default: ''
-    },
-    inviteButtonText: {
-      type: String,
-      default: ''
-    },
-    friends: {
-      type: Array,
-      default () {
-        // [{avatar: String}]
-        return []
-      }
-    },
-    isStoped: {
-      type: Boolean,
-      default: false
-    }
+    Number,
+    Trophy,
+    ShareLayer,
+    HelperList,
+    MessageBox
   },
   data () {
     return {
-      STATUS,
-      countdown: 0,
-      countdownTimer: null,
-      countdownStatus: ['距离开始', '距离结束', '距离结束']
+      status: '',
+      showShare: false,
+      // 显示礼物弹框
+      showGotGift: false,
+      // 是否助力成功
+      helpeSuccess: false,
+      // 是否可开豪礼
+      canOpenGiftPackage: false,
+      d: '00',
+      h: '00',
+      m: '00',
+      s: '00',
+      helpers: [],
+      totalHelpers: 0,
+      countdownStatus: ['已经结束', '距离开始', '距离结束'],
+      invitingEventsGiftEntities: []
     }
   },
-
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return null
+      }
+    },
+    activeId: {
+      type: String,
+      default: '',
+      required: true
+    }
+  },
   computed: {
-    timeSplit () {
-      return fmtCountDown(this.countdown).split('')
+    ...mapGetters(['userId']),
+    inviteDescription () {
+      if (this.data) {
+        let invitedPeopleNumber = this.data.invitingEventsEntity.invitedPeopleNumber
+        // if (this.canOpenGiftPackage) {
+        //   return `已经成功邀请${invitedPeopleNumber}个好友助力, 立即开豪礼`
+        // }
+        return invitedPeopleNumber - this.totalHelpers
+      }
+      return 0
     },
-
-    status () {
-      if (this.isStoped) {
-        return STATUS.END
-      }
-      let now = moment()
-      if (now.isBefore(moment(this.startTime))) {
-        return STATUS.READY
-      }
-      if (moment(this.endTime).isBefore(now)) {
-        return STATUS.END
-      }
-
-      return STATUS.START
+    friendUserId () {
+      return this.$route.params.userId
     }
   },
-
   watch: {
-    startTime () {
-      this.startCountdown()
-    },
-    countdown (newVal, oldVal) {
-      if (newVal === 0 && oldVal !== 0) {
-        this.emitCountdownStop()
-      }
+    data: {
+      handler (val) {
+        if (val) {
+          this.init(val)
+        }
+      },
+      immediate: true
     }
   },
-
-  created () {
-    this.startCountdown()
+  deactivated () {
+    if (this.timer) {
+      this.timer.stop()
+    }
   },
-
   beforeDestroy () {
-    this.resetTimer()
+    if (this.timer) {
+      this.timer.stop()
+    }
   },
-
   methods: {
-    emitOp () {
-      this.$emit('notify')
-    },
-    emitCountdownStop () {
-      this.$emit('countdownstop')
-    },
-    startCountdown () {
-      this.calcCountDown()
-
-      if (this.countdown < 0) {
-        this.countdown = 0
+    async init () {
+      if (this.timer) {
+        this.timer.stop()
       }
-      this.resetTimer()
-      this.countdownTimer = setInterval(() => {
-        if (this.countdown - 1000 < 0) {
-          this.countdown = 0
-          clearInterval(this.countdownTimer)
-          return
-        }
-        this.countdown -= 1000
-      }, 1000)
-    },
-
-    calcCountDown () {
-      let endTime = new Date()
-      let now = new Date()
-      if (this.status === STATUS.READY) {
-        endTime = moment(this.startTime)._d
-      } else if (this.status === STATUS.START) {
-        endTime = moment(this.endTime)._d
-      } else if (this.status === STATUS.END) {
-        this.countdown = 0
-        return
+      let {
+        currentSystemDate,
+        activityStatModel,
+        invitingEventsEntity,
+        invitingEventsGiftEntities,
+        mallInvitingEventsCouponEntities
+      } = this.data
+      this.invitingEventsGiftEntities = invitingEventsGiftEntities
+      let now = moment(this.currentSystemDate).valueOf()
+      let {
+        activityEndTime,
+        activityStartTime,
+        status
+      } = invitingEventsEntity
+      activityEndTime = moment(activityEndTime).valueOf()
+      activityStartTime = moment(activityStartTime).valueOf()
+      if (status === 1) {
+        // 未开始
+        this.timer = new countdown(activityStartTime - now, this.setTime)
+        this.timer.start()
+      } else if (status === 2) {
+        // 已开始
+        this.timer = new countdown(activityEndTime - now, this.setTime)
+        this.timer.start()
       }
-
-      this.countdown = endTime.getTime() - now.getTime()
+      this.status = status
+      let { result } = await canClaimGift(this.activeId)
+      this.canOpenGiftPackage = result
+      await this.getHelpers()
     },
-
-    resetTimer () {
-      if (this.countdownTimer) {
-        clearInterval(this.countdownTimer)
+    setTime (data) {
+      let { months, days, hours, minutes, seconds } = data
+      this.d = String(months * moment().daysInMonth() + days).padStart(2, '0')
+      this.h = String(hours).padStart(2, '0')
+      this.m = String(minutes).padStart(2, '0')
+      this.s = String(seconds).padStart(2, '0')
+    },
+    async getHelpers () {
+      try {
+        let { result } = await getHelpers(this.activeId, this.userId)
+        result = result || []
+        this.totalHelpers = result.length
+        this.helpers = result.slice(0, 6)
+      } catch (e) {
+        throw e
       }
-      this.countdownTimer = null
+    },
+    async openGift () {
+      try {
+        this.showGotGift = true
+        await openGift(this.activeId)
+      } catch (e) {
+        throw e
+      }
+    },
+    async help () {
+      try {
+        await helpFriend(this.activeId, this.friendUserId)
+        this.helpeSuccess = true
+      } catch (e) {
+        throw e
+      }
+    },
+    async getMore () {
+      // await this.init()
+      this.isShowGotGift = false
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.invite-newcomers-board {
-  width: 702px;
-  border-radius:20px;
-  box-shadow:0px 6px 20px rgba(135, 0, 0, 0.16);
-  overflow: hidden;
-
-  .who {
+<style lang="scss" module>
+  .invite-newcomers-board {
+    background-color: #FA4D2F;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .top {
+    padding: 32px 24px;
+  }
+  .timer {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
-    height: 96px;
-    background-color: white;
-
-    .avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      margin-left: 24px;
-      margin-right: 16px;
-    }
-
-    .name {
-      font-size: 24px;
-      font-weight: 600;
-      margin-right: 14px;
-    }
-
-    .label {
-      font-size: 24px;
-      font-weight: 400;
-      color: #666;
-    }
+    justify-content: space-between;
+    height: 126px;
+    padding: 0 80px;
+    background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/countdown-panel%402x.png") no-repeat center center;
+    background-size: 100% 100%;
   }
-
-  .main-board {
-    width: 702px;
-    height: 542px;
-    padding-top: 32px;
-    background-color: #fa4d2f;
-
-    .countdown-panel {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      width: 654px;
-      height: 126px;
-      background-image: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/countdown-panel@2x.png');
-      background-size: 100%;
-
-      .clock-split {
-        margin-left: 8px;
-        margin-right: 8px;
-        color: #6b78d7;
-        font-size: 34px;
-      }
-
-      .status-label {
-        display: inline-block;
-        margin-right: 16px;
-        width: 68px;
-        height: 82px;
-        line-height: 38px;
-        color: #a56113;
-        font-size: 34px;
-        font-family: HYLiLiangHeiJ;
-      }
-
-      .status-stop {
-        display: inline-block;
-        color: #a56113;
-        font-size: 60px;
-        font-weight: 400;
-        font-family: HYLiLiangHeiJ;
-      }
-    }
+  .timer-tip {
+    width: 68px;
+    line-height: 41px;
+    color: #A56113;
+    font-size: 34px;
+    font-family: HYLiLiangHeiJ;
   }
-
-  .activity-invite-title {
-    margin-top: 48px;
-    margin-bottom: 24px;
-    color: white;
+  .time-end {
+    flex: 1;
     text-align: center;
-    font-size: 56px;
-    font-family: HYLingXinJ;
-    .gift {
-      color: #f6f4b4;
-    }
+    line-height: 76px;
+    color: #A56113;
+    font-size: 60px;
+    font-family: HYLiLiangHeiJ;
   }
-
-  .activity-invite-label {
-    margin-bottom: 64px;
-    color: white;
-    font-size: 36px;
-    text-align: center;
-  }
-
-  .activity-invite-button {
-    width: 452px;
-    height: 110px;
-    margin: 0 auto;
-    line-height: 110px;
-    background:rgba(254,205,76,1);
-    border:2px solid rgba(255,224,157,1);
-    opacity:1;
-    border-radius:150px;
-    color: #a56113;
-    font-size: 36px;
-    text-align: center;
-  }
-
-  .invite-users {
+  .timer-content {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
-    background-color: white;
-    height: 108px;
-
-    .label {
+    > div {
+      display: inline-flex;
+      justify-content: space-between;
+      width: 76px;
+      > span {
+        width: 36px;
+        font-size: 36px;
+        color: #fff;
+        text-align: center;
+        line-height: 60px;
+        background: linear-gradient(180deg, rgba(44,42,40,1) 0%, rgba(97,93,93,1) 52%, rgba(49,48,49,1) 100%);
+        border-radius: 4px;
+      }
+    }
+    > span {
       display: inline-block;
-      width: 68px;
-      height: 76px;
-      margin-left: 24px;
-      margin-right: 30px;
-      color: #fe7700;
-      font-weight: 400;
-      font-size: 30px;
+      margin: 0 10px;
+      font-size: 34px;
+      line-height: 48px;
+      color: #6B78D7;
+      font-weight: bold;
+      font-family: HYLiLiangHeiJ !important;
     }
-
-    .user-avatar {
+  }
+  .invite-friends {
+    margin: 48px 0 26px 0;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    font-size: 44px;
+  }
+  .short-of {
+    text-align: center;
+    font-size: 36px;
+    color: #fff;
+    > i {
+      color: #F6F4B4;
+    }
+  }
+  .button {
+    display: block;
+    min-width: 425px;
+    margin: 64px auto;
+    line-height: 110px;
+    padding: 0 42px;
+    color: #A56113;
+    font-weight: bold;
+    font-size: 36px;
+    letter-spacing: 3px;
+    background-color: #FECD4C;
+    border-radius: 55px;
+  }
+  .coupon-list {
+    margin-bottom: 48px;
+    > .coupon-item {
       display: flex;
-      justify-content: flex-start;
       align-items: center;
-      margin-right: 24px;
-
-      .avatar {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
-
-      .name {
+      justify-content: space-between;
+      width: 474px;
+      height: 166px;
+      padding: 30px 24px;
+      box-sizing: border-box;
+      background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/coupon-bg.jpg") no-repeat center center;
+      background-size: 474px 100%;
+      > .price {
         display: inline-block;
-        width: 97px;
-        font-size: 24px;
-        font-weight: 400;
-        color: #666;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        position: relative;
+        font-size: 72px;
+        color: #D8574B;
+        font-weight: bold;
+        line-height: 86px;
+        &:after {
+          position: absolute;
+          bottom: 10px;
+          right: -20px;
+          display: inline-block;
+          content: '元';
+          font-size: 18px;
+          width: 30px;
+          height: 30px;
+          line-height: 26px;
+          color: #fff;
+          border: 2px solid #fff;
+          box-sizing: border-box;
+          border-radius: 15px;
+          background-color: #D8574B;
+        }
+      }
+    }
+    .coupon-price {
+      flex: 1;
+      margin-left: 34px;
+      text-align: left;
+      .desc {
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .name {
+        font-size: 20px;
+      }
+    }
+    .coupon-type {
+      width: 26px;
+      padding: 0 18px;
+      font-size: 26px;
+      color: #fff;
+      font-weight: bold;
+    }
+  }
+  .gift-list {
+    margin-bottom: 48px;
+    .gift-item {
+      display: flex;
+      width: 474px;
+      height: 96px;
+      background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/gift-bg.png") no-repeat;
+      background-size: 100% 100%;
+      .left {
+        padding: 6px 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        > img {
+          width: 126px;
+          height: 84px;
+          object-fit: cover;
+        }
+      }
+      .right {
+        flex: 1;
+        text-align: left;
+        padding: 10px 0;
+        margin-left: 18px;
+        > .name {
+          width: 288px;
+          font-size: 18px;
+          line-height: 26px;
+          @include elps();
+        }
+        > .desc {
+          width: 288px;
+          font-size: 16px;
+          line-height: 22px;
+          color: #e1622d;
+          @include elps();
+        }
+        > .date {
+          margin-top: 8px;
+          font-size: 14px;
+          color: #999;
+        }
       }
     }
   }
-}
 </style>
