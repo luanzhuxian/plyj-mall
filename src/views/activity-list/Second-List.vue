@@ -14,6 +14,7 @@
               <count-down
                 activity-text="距结束"
                 :endtime="item.activityEndTime"
+                @done="getList"
               />
             </div>
           </div>
@@ -48,6 +49,7 @@
               <count-down
                 activity-text="距开始"
                 :endtime="item.activityStartTime"
+                @done="getList"
               />
             </div>
           </div>

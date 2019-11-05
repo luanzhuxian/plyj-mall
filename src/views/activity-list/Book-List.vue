@@ -11,6 +11,7 @@
           <count-down
             activity-text="距结束"
             :endtime="item.activityEndTime"
+            @done="getList"
           />
           <div class="book-ing-content">
             <div class="img book-img">
@@ -33,6 +34,7 @@
           <count-down
             activity-text="距开始"
             :endtime="item.activityStartTime"
+            @done="getList"
           />
           <div class="book-ing-content">
             <div class="img book-img">
