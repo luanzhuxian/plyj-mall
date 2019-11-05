@@ -78,7 +78,7 @@
         <span style="color: #FE7700;" v-text="couponText" />
       </Field>
 
-      <TogetherRule v-if="(detail.activeProduct === 2 || detail.activeProduct === 4) && detail.preActivity !== 0" :active-product="detail.activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
+      <TogetherRule v-if="(detail.activeProduct === 2 || detail.activeProduct === 4) && detail.preActivity === 2" :active-product="detail.activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
 
       <div :class="$style.detailOrComment">
         <div :class="$style.tabs">
@@ -766,6 +766,7 @@ export default {
     countFinished () {
       this.$set(this.detail, 'serverTime', '')
       this.$set(this.detail, 'shoppingTimeLong', '')
+      this.$set(this.detail, 'preActivity', 2)
     }
   }
 }
