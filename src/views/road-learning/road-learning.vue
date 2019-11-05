@@ -16,7 +16,7 @@
       </div>
 
       <swiper :options="swiperOption" v-if="obtainGifts.length" class="swiper">
-        <swiper-slide v-for="(item,index) in obtainGifts" :key="index">
+        <swiper-slide v-for="(item,index) in obtainGifts" :key="index" class="swiper-no-swiping">
           <div style="display:flex;flex-direction:row;align-items:center;margin-left:20px;color:#FFFFFF;font-size: 30px">
             <img style="width: 44px;height: 44px;border-radius:50%" :src="item.headImgUrl">
             <div style="margin-left: 6px"><span v-if="item.nickName">{{ formatName(item.nickName) }}</span>中了{{ item.giftName }}</div>
@@ -266,7 +266,8 @@ export default {
         direction: 'vertical',
         autoHeight: true,
         autoplay: true,
-        loop: true
+        loop: true,
+        noSwiping: true
       }
     }
   },
