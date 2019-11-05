@@ -62,10 +62,10 @@ export default {
   },
   watch: {
     $route (route) {
-      if (!this.customShare.includes(route.name)) {
+      if (this.customShare.indexOf(route.name) === -1) {
         // 如果不是商品详情页面，采用其他分享策略
         let willHide = []
-        if (!this.shareRoutes.includes(route.name)) {
+        if (this.shareRoutes.indexOf(route.name) === -1) {
           willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
         }
         if (this.appId) {
