@@ -150,7 +150,7 @@ export default {
   async created () {
     try {
       getCurrentTemplate({ type: 2 }).then(({ result }) => {
-        if (result) {
+        if (result && !this.$router.currentRoute.meta.from) {
           this.$router.push({ name: 'Activity' })
         }
       })
@@ -262,6 +262,7 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
+    to.meta.from = from.name
     next(vm => {
       if (vm.noFinish) {
         vm.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
