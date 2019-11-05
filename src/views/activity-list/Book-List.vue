@@ -83,7 +83,7 @@ export default {
       })
     },
     jumpToDetail (id) {
-      this.$router.push({ name: 'Lesson', params: { productId: id, brokerId: null } })
+      this.$router.push({ name: 'Lesson', params: { productId: id } })
     }
   }
 }

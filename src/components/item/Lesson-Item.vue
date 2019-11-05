@@ -114,8 +114,8 @@ export default {
   },
   methods: {
     async handleClick () {
-      const { userId, id } = this
-      this.$router.push({ name: 'Lesson', params: { productId: id, brokerId: userId || null } })
+      const { id } = this
+      this.$router.push({ name: 'Lesson', params: { productId: id } })
     }
   }
 }

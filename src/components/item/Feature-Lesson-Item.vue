@@ -90,8 +90,8 @@ export default {
   },
   methods: {
     async handleClick () {
-      const { productId, userId } = this
-      this.$router.push({ name: 'Lesson', params: { productId: productId, brokerId: userId || null } })
+      const { productId } = this
+      this.$router.push({ name: 'Lesson', params: { productId: productId } })
     }
   }
 }

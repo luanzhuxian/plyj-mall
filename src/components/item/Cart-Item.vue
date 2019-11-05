@@ -171,8 +171,7 @@ export default {
       this.$router.push({
         name: 'Lesson',
         params: {
-          productId: productId,
-          brokerId: this.userId || null
+          productId: productId
         }
       })
     },

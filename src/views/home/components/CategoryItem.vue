@@ -109,11 +109,11 @@ export default {
   },
   methods: {
     async jump () {
-      const { productId, userId } = this
+      const { productId } = this
       if (this.replace) {
-        this.$router.replace({ name: 'Lesson', params: { productId: productId, brokerId: userId || null } })
+        this.$router.replace({ name: 'Lesson', params: { productId: productId } })
       } else {
-        this.$router.push({ name: 'Lesson', params: { productId: productId, brokerId: userId || null } })
+        this.$router.push({ name: 'Lesson', params: { productId: productId } })
       }
     }
   }

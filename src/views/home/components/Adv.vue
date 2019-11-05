@@ -48,8 +48,7 @@ export default {
         return {
           name: 'Lesson',
           params: {
-            productId: id || null,
-            brokerId: this.userId || null
+            productId: id || null
           }
         }
       }

@@ -124,7 +124,7 @@
             v-for="(item, i) of productList"
             :key="i"
             :class="$style.product"
-            @click="$router.push({ name: 'Lesson', params: { productId: item.id, brokerId, userId } })"
+            @click="$router.push({ name: 'Lesson', params: { productId: item.id } })"
           >
             <img :src="item.productMainImage" alt="">
             <div :class="$style.left">

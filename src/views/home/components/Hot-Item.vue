@@ -131,7 +131,7 @@ export default {
       if (type === 1) {
         this.$router.push({ name: 'Classify', params: { optionId: value || null } })
       } else {
-        this.$router.push({ name: 'Lesson', params: { productId: value, brokerId: this.userId || null } })
+        this.$router.push({ name: 'Lesson', params: { productId: value } })
       }
     }
   }
