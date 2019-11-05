@@ -14,3 +14,6 @@ export const getCheckIn = (id) => axios.put(`/apis/v1/mallCheckIn/${id}/checkIn`
 
 // 签到领取礼物
 export const claimGift = (id) => axios.put(`/apis/v1/mallCheckIn/${id}/claimGift`)
+
+// C端根据ID查询学霸活动
+export const getRoadLearningGifts = ({ id }) => axios.get(`/apis//v1/mallCheckIn/currActivity/gifts`, { params: { id } })

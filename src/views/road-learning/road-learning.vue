@@ -14,6 +14,49 @@
       <div class="user-info">
         <img :src="avatar"><span>每日坚持签到 累计达10次即可抽大奖！</span>
       </div>
+      <div class="ui-base u-p3d">
+        <div class="ball-c" />
+        <!-- 四个组 -->
+        <div class="base u-p3d" v-if="gifts.length === 4">
+          <div class="ball-base u-p3d ball-1"><div class="ball"><img :src="gifts[0].giftImage" alt=""><div>奖品一</div></div></div>
+          <div class="ball-base u-p3d ball-2"><div class="ball"><img :src="gifts[1].giftImage" alt=""><div>奖品二</div></div></div>
+          <div class="ball-base u-p3d ball-3"><div class="ball"><img :src="gifts[2].giftImage" alt=""><div>奖品三</div></div></div>
+          <div class="ball-base u-p3d ball-4"><div class="ball"><img :src="gifts[3].giftImage" alt=""><div>奖品四</div></div></div>
+        </div>
+        <!-- 三个组 -->
+        <div class="base u-p3d" v-if="gifts.length === 3">
+          <div class="ball-base u-p3d ball-5">
+            <div class="ball">
+              <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+            </div>
+          </div>
+          <div class="ball-base u-p3d ball-6">
+            <div class="ball">
+              <img :src="gifts[1].giftImage" alt=""><div>奖品二</div>
+            </div>
+          </div>
+          <div class="ball-base u-p3d ball-7">
+            <div class="ball">
+              <img :src="gifts[2].giftImage" alt=""><div>奖品三</div>
+            </div>
+          </div>
+        </div>
+        <!-- 两个组 -->
+        <div class="base u-p3d" v-if="gifts.length === 2">
+          <div class="ball">
+            <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+          </div>
+          <div class="ball">
+            <img :src="gifts[1].giftImage" alt=""><div>奖品二</div>
+          </div>
+        </div>
+        <!-- 一个组 -->
+        <div class="base u-p3d" v-if="gifts.length === 1">
+          <div class="ball">
+            <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="learning-step">
       <i class="point small" />
@@ -168,7 +211,7 @@
 
 <script>
 import { generateQrcode } from '../../assets/js/util'
-import { getIDRoadLearningDetail, getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift } from '../../apis/road-learning'
+import { getIDRoadLearningDetail, getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift, getRoadLearningGifts } from '../../apis/road-learning'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 export default {
@@ -191,7 +234,8 @@ export default {
       mm: '',
       ss: '',
       qrcode: '',
-      post: ''
+      post: '',
+      gifts: []
     }
   },
   props: {
@@ -232,6 +276,7 @@ export default {
     }
     await this.getDetail()
     this.getCheckInDetail()
+    this.getGifts()
     let qrcode = await generateQrcode(500, `${this.mallUrl}/road-learning/${this.id ? this.id : ''}`, 100, null, null, 'url')
     this.qrcode = new Image()
     this.qrcode.src = qrcode
@@ -266,6 +311,10 @@ export default {
         }
       }
       this.countdown(distanceTime)
+    },
+    async getGifts () {
+      const { result: res } = await getRoadLearningGifts({ id: this.activeDetail.id })
+      this.gifts = res
     },
     countdown (datetime) {
       if (datetime < 0) return
@@ -335,8 +384,8 @@ export default {
     background:linear-gradient(180deg,rgba(246,4,49,1) 0%,rgba(246,70,79,1) 35%,rgba(253,98,78,1) 120%);
     .top{
       height: 598px;
-      background: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/goldenEgg.png') no-repeat center 80px;;
-      background-size: 72% 90%;
+      background: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/goldenEgg.png') no-repeat center 60px;
+      background-size: 72% 70%;
       .title-box{
         display: flex;
         justify-content: space-between;
@@ -768,5 +817,210 @@ export default {
       color: #F94345;
       font-weight: bold;
     }
+  }
+
+  @-webkit-keyframes cir1 {
+    0% {-webkit-transform:rotateY(0deg) rotateZ(0deg);}
+    100% {-webkit-transform:rotateY(-360deg) rotateZ(0deg);}
+  }
+  @keyframes cir1 {
+    0% {transform:rotateY(0deg) rotateZ(0deg);}
+    100% {transform:rotateY(-360deg) rotateZ(0deg);}
+  }
+  @-webkit-keyframes cir2 {
+    0% {-webkit-transform:rotateY(-90deg) rotateZ(0deg);}
+    100% {-webkit-transform:rotateY(-450deg) rotateZ(0deg);}
+  }
+  @keyframes cir2 {
+    0% {transform:rotateY(-90deg) rotateZ(0deg);}
+    100% {transform:rotateY(-450deg) rotateZ(0deg);}
+  }
+  @-webkit-keyframes cir3 {
+    0% {-webkit-transform:rotateY(-180deg) rotateZ(0deg);}
+    100% {-webkit-transform:rotateY(-540deg) rotateZ(0deg);}
+  }
+  @keyframes cir3 {
+    0% {transform:rotateY(-180deg) rotateZ(0deg);}
+    100% {transform:rotateY(-540deg) rotateZ(0deg);}
+  }
+  @-webkit-keyframes cir4 {
+    0% {-webkit-transform:rotateY(-270deg) rotateZ(0deg);}
+    100% {-webkit-transform:rotateY(-630deg) rotateZ(0deg);}
+  }
+  @keyframes cir4 {
+    0% {transform:rotateY(-270deg) rotateZ(0deg);}
+    100% {transform:rotateY(-630deg) rotateZ(0deg);}
+  }
+  /*第二组*/
+  @-webkit-keyframes cir5 {
+    0% {-webkit-transform:rotateY(0deg) rotateZ(0deg);}
+    100% {-webkit-transform:rotateY(-360deg) rotateZ(0deg);}
+  }
+  @keyframes cir5 {
+    0% {transform:rotateY(0deg) rotateZ(0deg);}
+    100% {transform:rotateY(-360deg) rotateZ(0deg);}
+  }
+  @-webkit-keyframes cir6 {
+    0% {-webkit-transform:rotateY(-120deg) rotateZ(0deg);}
+    100% {-webkit-transform:rotateY(-480deg) rotateZ(0deg);}
+  }
+  @keyframes cir6 {
+    0% {transform:rotateY(-120deg) rotateZ(0deg);}
+    100% {transform:rotateY(-480deg) rotateZ(0deg);}
+  }
+  @-webkit-keyframes cir7 {
+    0% {-webkit-transform:rotateY(-240deg) rotateZ(0deg);}
+    100% {-webkit-transform:rotateY(-600deg) rotateZ(0deg);}
+  }
+  @keyframes cir7 {
+    0% {transform:rotateY(-240deg) rotateZ(0deg);}
+    100% {transform:rotateY(-600deg) rotateZ(0deg);}
+  }
+
+  @keyframes cir {
+    0% {transform:rotateX(80deg) rotateY(0deg) rotateZ(0deg);}
+    100% {transform:rotateX(80deg) rotateY(0deg) rotateZ(-360deg);}
+  }
+  @-webkit-keyframes cir {
+    0% {-webkit-transform:rotateX(80deg) rotateY(0deg) rotateZ(0deg);}
+    100% {-webkit-transform:rotateX(80deg) rotateY(0deg) rotateZ(-360deg);}
+  }
+
+  .u-p3d{
+    -webkit-transform-style:preserve-3d !important;
+    transform-style:preserve-3d !important;
+  }
+  .ui-base {position:relative;width:400px;height:0px;margin:20px auto;
+    -webkit-perspective:1000px;
+    -webkit-perspective-origin:50% 0%;
+    perspective:1000px;
+    perspective-origin:50% 0%;
+  }
+  .base{
+    position:relative;
+    left: 20px;
+    width:350px;height:350px;
+    -webkit-transform:rotateX(80deg) rotateY(-10deg);
+    transform:rotateX(80deg) rotateY(-10deg);
+    -webkit-backface-visibility:hidden;
+    backface-visibility:hidden;
+    animation:cir 10s linear 0s infinite;
+  }
+  .ball-base {position:absolute;top:175px;left:-50px;width:225px;height:127px;
+    -webkit-transform-origin:225px 0px;
+    transform-origin:225px 0px;
+  }
+  .ball{
+    width:130px;
+    height:166px;
+    display: flex;
+    flex-direction: column;
+    position:absolute;
+    left:0;
+    top:0;
+    text-align:center;
+    overflow:hidden;
+    -webkit-transition:all 2s ease-out 0ms;
+    transition:all 2s ease-out 0ms;
+    -webkit-transform-origin:50% 50%;
+    transform-origin:50% 50%;
+    border:2px solid rgba(252,237,79,1);
+    box-shadow:0px 8px 20px rgba(0,0,0,0.2);
+    opacity:1;
+    border-radius:12px;
+    img{
+      width: 130px;
+      height: 130px;
+    }
+    >div{
+      height: 36px;
+      background-color: #FFFFFF;
+      color: #DB4C4C;
+      font-size: 20px;
+      line-height: 36px;
+      text-align: center;
+    }
+  }
+  .ball-c {position:absolute;width:512px;height:363px;left:-10%;top:0px;color:#fff;font-size:24px;
+    -webkit-transform-origin:50% 50%;
+    transform-origin:50% 50%;
+    background:url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/egg.png') no-repeat center;
+    background-size: 100% 100%;
+  }
+  .ball {color:#fff;opacity:1;}
+  .ball-1 .ball {
+    transform:rotateY(10deg) rotateZ(10deg);
+    animation:cir1 10s linear 0s infinite;
+    -webkit-transition-delay:1500ms !important;
+    transition-delay:1500ms !important;
+  }
+  .ball-2 .ball {
+    -webkit-animation:cir2 10s linear 0s infinite;
+    animation:cir2 10s linear 0s infinite;
+    -webkit-transition-delay:1100ms !important;
+    transition-delay:1100ms !important;
+  }
+  .ball-3 .ball {
+    -webkit-animation:cir3 10s linear 0s infinite;
+    animation:cir3 10s linear 0s infinite;
+    -webkit-transition-delay:700ms !important;
+    transition-delay:700ms !important;
+  }
+  .ball-4 .ball {
+    -webkit-animation:cir4 10s linear 0s infinite;
+    animation:cir4 10s linear 0s infinite;
+    -webkit-transition-delay:300ms !important;
+    transition-delay:300ms !important;
+  }
+
+  /*第二组*/
+   .ball-5 .ball {
+     -webkit-animation:cir5 10s linear 0s infinite;
+     animation:cir5 10s linear 0s infinite;
+     -webkit-transition-delay:1100ms !important;
+     transition-delay:1100ms !important;
+   }
+  .ball-6 .ball {
+    -webkit-animation:cir6 10s linear 0s infinite;
+    animation:cir6 10s linear 0s infinite;
+    -webkit-transition-delay:700ms !important;
+    transition-delay:700ms !important;
+  }
+  .ball-7 .ball {
+    -webkit-animation:cir7 10s linear 0s infinite;
+    animation:cir7 10s linear 0s infinite;
+    -webkit-transition-delay:300ms !important;
+    transition-delay:300ms !important;
+  }
+
+  .ball-1 {
+    -webkit-transform:rotateX(-90deg) rotateY(0deg) translateX(-50px) translateY(-70px);
+    transform:rotateX(-90deg) rotateY(0deg) translateX(-50px) translateY(-70px);
+  }
+  .ball-2 {
+    -webkit-transform:rotateX(-90deg) rotateY(90deg) translateX(-50px) translateY(-70px);
+    transform:rotateX(-90deg) rotateY(90deg) translateX(-50px) translateY(-70px);
+  }
+  .ball-3 {
+    -webkit-transform:rotateX(-90deg) rotateY(180deg) translateX(-50px) translateY(-70px);
+    transform:rotateX(-90deg) rotateY(180deg) translateX(-50px) translateY(-70px);
+  }
+  .ball-4 {
+    -webkit-transform:rotateX(-90deg) rotateY(270deg) translateX(-50px) translateY(-70px);
+    transform:rotateX(-90deg) rotateY(270deg) translateX(-50px) translateY(-70px);
+  }
+
+/*第二组*/
+  .ball-5 {
+    -webkit-transform:rotateX(-90deg) rotateY(0deg) translateX(-50px) translateY(-70px);
+    transform:rotateX(-90deg) rotateY(0deg) translateX(-50px) translateY(-70px);
+  }
+  .ball-6 {
+    -webkit-transform:rotateX(-90deg) rotateY(120deg) translateX(-50px) translateY(-70px);
+    transform:rotateX(-90deg) rotateY(120deg) translateX(-50px) translateY(-70px);
+  }
+  .ball-7 {
+    -webkit-transform:rotateX(-90deg) rotateY(240deg) translateX(-50px) translateY(-70px);
+    transform:rotateX(-90deg) rotateY(240deg) translateX(-50px) translateY(-70px);
   }
 </style>
