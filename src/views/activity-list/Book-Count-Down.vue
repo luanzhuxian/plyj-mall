@@ -91,7 +91,7 @@ export default {
           clearInterval(this.timer)
           this.show = false
           this.$emit('done', true)
-          this.data[this.fields.start] = 0
+          // this.data[this.fields.start] = 0
         }
         this.setTime()
       }, 1000)

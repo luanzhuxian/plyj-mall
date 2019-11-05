@@ -135,10 +135,10 @@ export default {
       return (this.parent && this.parent.jxEvent) || {}
     },
     hasInvitingEvent () {
-      return ~[0, 2].indexOf(this.invitingEvent.status)
+      return ~[1, 2].indexOf(this.invitingEvent.status)
     },
     hasJxEvent () {
-      return ~[0, 2].indexOf(this.jxEvent.status)
+      return ~[1, 2].indexOf(this.jxEvent.status)
     }
   }
 }

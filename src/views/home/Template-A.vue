@@ -41,7 +41,7 @@
           <category-item
             tag="div"
             size="mini"
-            :img="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'"
+            :img="item.goodsInfo.productMainImage"
             :product-id="item.goodsInfo.id"
             :product-name="item.goodsInfo.productName"
             :price="item.goodsInfo.productSkuModels.length && item.goodsInfo.productSkuModels[0].price"
@@ -77,7 +77,7 @@
             <!-- <category-item
               tag="div"
               size="mini"
-              :img="item.productMainImage + '?x-oss-process=style/thum-small'"
+              :img="item.productMainImage"
               :is-active="item.agentProduct"
               :product-id="item.id"
               :product-name="item.productName"
@@ -88,7 +88,7 @@
             <category-item
               tag="div"
               size="mini"
-              :img="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'"
+              :img="item.goodsInfo.productMainImage"
               :product-id="item.goodsInfo.id"
               :product-name="item.goodsInfo.productName"
               :price="item.goodsInfo.productSkuModels.length && item.goodsInfo.productSkuModels[0].price"
@@ -120,7 +120,7 @@
             <category-item
               tag="div"
               size="mini"
-              :img="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'"
+              :img="item.goodsInfo.productMainImage"
               :product-id="item.goodsInfo.id"
               :product-name="item.goodsInfo.productName"
               :price="item.goodsInfo.productSkuModels.length && item.goodsInfo.productSkuModels[0].price"
@@ -138,7 +138,7 @@
 import moment from 'moment'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import TopText from '../../components/common/Top-Text.vue'
-import CategoryItem from './components/CategoryItem.vue'
+import CategoryItem from './components/Category-Item.vue'
 import YouLike from './components/YouLike.vue'
 import { mapGetters, mapState } from 'vuex'
 

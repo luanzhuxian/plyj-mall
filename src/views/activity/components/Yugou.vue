@@ -36,7 +36,7 @@
             </div>
             <div :class="$style.listItemWrapper">
               <div :class="$style.imgWrapper">
-                <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-small'">
+                <img :src="item.goodsInfo.productMainImage">
               </div>
               <div :class="$style.info">
                 <div :class="$style.main">

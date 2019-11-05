@@ -53,7 +53,7 @@
               v-for="item of currentClassify.childs"
               :key="item.id"
               :cid="item.id"
-              :img="item.categoryPic + '?x-oss-process=style/thum-small'"
+              :img="item.categoryPic"
               :text="item.categoryName"
               @click="subClassifyClick"
             />&ndash;&gt;
@@ -95,7 +95,7 @@
                 <goods-item
                   :key="index"
                   :id="item.id"
-                  :img="item.productMainImage + '?x-oss-process=style/thum-small'"
+                  :img="item.productMainImage"
                   :title="item.productName"
                   :price="item.price"
                   :data="item"

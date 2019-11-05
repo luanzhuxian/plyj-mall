@@ -68,6 +68,7 @@ export default {
     async init () {
       let { result: serverTiem } = await getServerTime()
       this.starttiemstamp = Number(serverTiem)
+      console.log(serverTiem)
       if (this.data) {
         this.endtiemstamp = Number(this.data[this.fields.end]) || 0
       } else {
@@ -76,7 +77,6 @@ export default {
       // console.log('开始时间' + this.starttiemstamp + '结束时间' + this.endtiemstamp)
       if (this.starttiemstamp - this.endtiemstamp < 0) {
         // 启动倒计时
-        console.warn('启动倒计时')
         this.show = true
         this.countdown()
       } else {
@@ -92,7 +92,7 @@ export default {
           clearInterval(this.timer)
           this.show = false
           this.$emit('done', true)
-          this.data[this.fields.start] = 0
+          // this.data[this.fields.start] = 0
         }
         this.setTime()
       }, 1000)

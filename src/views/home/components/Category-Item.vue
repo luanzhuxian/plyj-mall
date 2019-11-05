@@ -43,7 +43,7 @@ import Price from '../../../components/product/Price.vue'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'YouLikeItem',
+  name: 'CategoryItem',
   components: {
     Price
   },

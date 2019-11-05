@@ -7,7 +7,7 @@
       猜你喜欢
     </div>
     <div :class="$style.likeGoodsList">
-      <CategoryItem
+      <category-item
         v-for="(item) in likeProduct"
         :key="item.id"
         :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import CategoryItem from './CategoryItem.vue'
+import CategoryItem from './Category-Item.vue'
 import { getYouLikeData } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 
