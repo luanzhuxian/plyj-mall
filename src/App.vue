@@ -42,7 +42,8 @@ export default {
         'Classify',
         'My',
         'Appointment',
-        'DoubleTwelveDay'
+        'DoubleTwelveDay',
+        'Activity'
       ],
       // 需要自定义分享的页面（分享配置在页面组件内实现）
       customShare: [
@@ -63,6 +64,7 @@ export default {
   watch: {
     $route (route) {
       if (this.customShare.indexOf(route.name) === -1) {
+        console.log('默认分享')
         // 如果不是商品详情页面，采用其他分享策略
         let willHide = []
         if (this.shareRoutes.indexOf(route.name) === -1) {

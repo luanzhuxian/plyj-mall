@@ -482,6 +482,7 @@ export default {
         } else {
           shareUrl = `${this.mallUrl}/detail/lesson/${this.productId}`
         }
+        this.shareUrl = shareUrl
         share({
           appId: this.appId,
           title: result.productName,
@@ -660,7 +661,7 @@ export default {
       }
       try {
         // 二维码
-        let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'canvas')
+        let qrcode = await generateQrcode(300, this.shareUrl, 15, img, 10, 'canvas')
         // 商品图片
         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 192, 1120, 746)
         if (type !== 1 && this.detail.preActivity === 2) {
