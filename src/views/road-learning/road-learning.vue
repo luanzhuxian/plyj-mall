@@ -15,14 +15,19 @@
         <img :src="avatar"><span>每日坚持签到 累计达10次即可抽大奖！</span>
       </div>
 
-      <swiper :options="swiperOption" v-if="obtainGifts.length" class="swiper">
+      <swiper :options="swiperOption" v-if="obtainGifts.length > 1" class="swiper">
         <swiper-slide v-for="(item,index) in obtainGifts" :key="index" class="swiper-no-swiping">
-          <div style="display:flex;flex-direction:row;align-items:center;margin-left:20px;color:#FFFFFF;font-size: 30px">
-            <img style="width: 44px;height: 44px;border-radius:50%" :src="item.headImgUrl">
+          <div class="swiper-box">
+            <img :src="item.headImgUrl">
             <div style="margin-left: 6px"><span v-if="item.nickName">{{ formatName(item.nickName) }}</span>中了{{ item.giftName }}</div>
           </div>
         </swiper-slide>
       </swiper>
+
+      <div v-if="obtainGifts.length === 1" class="swiper1">
+        <img :src="obtainGifts[0].headImgUrl">
+        <div style="margin-left: 6px"><span v-if="obtainGifts[0].nickName">{{ formatName(obtainGifts[0].nickName) }}</span>中了{{ obtainGifts[0].giftName }}</div>
+      </div>
 
       <div class="ui-base u-p3d">
         <div class="ball-c" />
@@ -134,7 +139,7 @@
       </div>
       <div class="btn-box">
         <div class="btn disabel" v-if="!activeStart && !activeEnd && activeDetail.status">活动未开始</div>
-        <div class="btn active" @click="checkIn()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status">立即签到</div>
+        <div class="btn active" @click="checkIn ()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status">立即签到</div>
         <div class="btn disabel" v-if="activeStart && activeEnd || !activeDetail.status && checkInDetail.claimStatus !== 1">活动已结束</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0" @click="claimGift() && activeDetail.status">点击抽大奖</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
@@ -268,7 +273,8 @@ export default {
         autoplay: true,
         loop: true,
         noSwiping: true
-      }
+      },
+      canClick: true
     }
   },
   props: {
@@ -381,9 +387,23 @@ export default {
       this.checkInDetail = res
     },
     async checkIn () {
+      if (!this.doubleClick()) {
+        return
+      }
       await getCheckIn(this.activeDetail.id)
       await this.getCheckInDetail()
       this.drawPoster()
+    },
+    doubleClick () {
+      if (this.canClick) {
+        this.canClick = !this.canClick
+        setTimeout(() => {
+          this.canClick = true
+        }, 2000)
+        return true
+      } else {
+        return false
+      }
     },
     async claimGift () {
       const { result: res } = await claimGift(this.activeDetail.id)
@@ -1085,5 +1105,33 @@ export default {
   .swiper{
     height: 100px;
     position: absolute;
+    .swiper-box{
+      display:flex;
+      flex-direction:row;
+      align-items:center;
+      margin-left:20px;
+      color:#FFFFFF;
+      font-size: 20px;
+      >img {
+        width: 44px;
+        height: 44px;
+        border-radius:50%
+      }
+    }
+  }
+  .swiper1{
+    position:absolute;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    margin-left:20px;
+    margin-top:30px;
+    color:#FFFFFF;
+    font-size: 20px;
+      >img {
+        width: 44px;
+        height: 44px;
+        border-radius:50%
+      }
   }
 </style>
