@@ -236,19 +236,19 @@ export default {
       return this.mallBrandingRequestModels.find(item => item.type === 0) || null
     },
     B () {
-      return this.mallBrandingRequestModels.find(item => item.type === 1 && item.show === 1 && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 1 && item.titleName && item.mediaDetailModelList.length) || null
     },
     C () {
-      return this.mallBrandingRequestModels.find(item => item.type === 2 && item.show === 1 && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 2 && item.titleName && item.mediaDetailModelList.length) || null
     },
     D () {
-      return this.mallBrandingRequestModels.find(item => item.type === 3 && item.show === 1 && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 3 && item.titleName && item.mediaDetailModelList.length) || null
     },
     E () {
-      return this.mallBrandingRequestModels.find(item => item.type === 4 && item.show === 1 && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 4 && item.titleName && item.detailContent) || null
     },
     F () {
-      return this.mallBrandingRequestModels.find(item => item.type === 5 && item.show === 1 && item.titleName) || null
+      return this.mallBrandingRequestModels.find(item => item.type === 5 && item.titleName && item.mediaDetailModelList.length) || null
     }
   },
   methods: {
