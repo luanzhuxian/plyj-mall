@@ -14,6 +14,16 @@
       <div class="user-info">
         <img :src="avatar"><span>每日坚持签到 累计达10次即可抽大奖！</span>
       </div>
+
+      <swiper :options="swiperOption" v-if="obtainGifts.length" class="swiper">
+        <swiper-slide v-for="(item,index) in obtainGifts" :key="index">
+          <div style="display:flex;flex-direction:row;align-items:center;margin-left:20px;color:#FFFFFF;font-size: 30px">
+            <img style="width: 44px;height: 44px;border-radius:50%" :src="item.headImgUrl">
+            <div style="margin-left: 6px"><span v-if="item.nickName">{{ formatName(item.nickName) }}</span>中了{{ item.giftName }}</div>
+          </div>
+        </swiper-slide>
+      </swiper>
+
       <div class="ui-base u-p3d">
         <div class="ball-c" />
         <!-- 四个组 -->
@@ -211,11 +221,16 @@
 
 <script>
 import { generateQrcode } from '../../assets/js/util'
-import { getIDRoadLearningDetail, getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift, getRoadLearningGifts } from '../../apis/road-learning'
+import { getIDRoadLearningDetail, getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift, getRoadLearningGifts, getObtainGiftsList } from '../../apis/road-learning'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 export default {
   name: 'RoadLearning',
+  components: {
+    swiper,
+    swiperSlide
+  },
   data () {
     return {
       isShare: false,
@@ -235,7 +250,24 @@ export default {
       ss: '',
       qrcode: '',
       post: '',
-      gifts: []
+      gifts: [],
+      obtainGifts: [],
+      swiperOption: {
+        effect: 'coverflow',
+        slidesPerView: 2,
+        centeredSlides: false,
+        coverflowEffect: {
+          rotate: 50,
+          stretch: 5,
+          depth: 5,
+          modifier: 1,
+          slideShadows: false
+        },
+        direction: 'vertical',
+        autoHeight: true,
+        autoplay: true,
+        loop: true
+      }
     }
   },
   props: {
@@ -277,6 +309,10 @@ export default {
     await this.getDetail()
     this.getCheckInDetail()
     this.getGifts()
+    this.getObtainGifts()
+    setInterval(() => {
+      this.getObtainGifts()
+    }, 10000)
     let qrcode = await generateQrcode(500, `${this.mallUrl}/road-learning/${this.id ? this.id : ''}`, 100, null, null, 'url')
     this.qrcode = new Image()
     this.qrcode.src = qrcode
@@ -315,6 +351,10 @@ export default {
     async getGifts () {
       const { result: res } = await getRoadLearningGifts({ id: this.activeDetail.id })
       this.gifts = res
+    },
+    async getObtainGifts () {
+      const { result: res } = await getObtainGiftsList(this.activeDetail.id)
+      this.obtainGifts = res.records
     },
     countdown (datetime) {
       if (datetime < 0) return
@@ -369,6 +409,22 @@ export default {
         let post = canvas.toDataURL('image/jpeg', 0.7)
         this.post = post
       }
+    },
+    formatName (name) {
+      let newStr
+      if (name.length === 2) {
+        newStr = name.substr(0, 1) + '*'
+      } else if (name.length > 2) {
+        let char = ''
+        for (let i = 0, len = name.length - 2; i < len; i++) {
+          char += '*'
+        }
+        newStr = name.substr(0, 1) + char + name.substr(-1, 1)
+      } else {
+        newStr = name
+      }
+
+      return newStr
     }
   },
   destroyed () {
@@ -643,6 +699,7 @@ export default {
     left: 0;
     background:rgba(0,0,0,0.65);
     padding: 300px 122px 0 122px;
+    z-index: 1;
     .prize-box{
       padding: 40px 16px;
       background-color: #FA4D2F;
@@ -1022,5 +1079,10 @@ export default {
   .ball-7 {
     -webkit-transform:rotateX(-90deg) rotateY(240deg) translateX(-50px) translateY(-70px);
     transform:rotateX(-90deg) rotateY(240deg) translateX(-50px) translateY(-70px);
+  }
+
+  .swiper{
+    height: 100px;
+    position: absolute;
   }
 </style>
