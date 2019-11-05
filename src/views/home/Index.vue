@@ -78,15 +78,15 @@
 <script>
 import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
-import { getTemplate, getLiveInfo, getJianxueInfo, getCurrentTemplate } from '../../apis/home'
-import { getCurrentActivity } from '../../apis/invitenewcomers'
-// import { wasGetInfo } from '../../apis/wwec'
-// import moment from 'moment'
 import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
 import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../newcomers/NewcomersHomeEntry.vue'
 // import WWEC from '../../components/WWEC.vue'
+import { getTemplate, getLiveInfo, getJianxueInfo, getCurrentTemplate } from '../../apis/home'
+import { getCurrentActivity } from '../../apis/invitenewcomers'
+// import { wasGetInfo } from '../../apis/wwec'
+// import moment from 'moment'
 
 export default {
   name: 'Home',

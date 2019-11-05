@@ -25,6 +25,8 @@
         />
       </div>
     </div>
+    <invite-newcomers-home-entry />
+    <newcomers-home-entry />
   </div>
 </template>
 
@@ -33,6 +35,8 @@ import Search from './components/Search.vue'
 import TemplateFengqiang from './Template-Fengqiang.vue'
 import TemplateBaofa from './Template-Baofa.vue'
 import TemplateFanchang from './Template-Fanchang.vue'
+import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
+import NewcomersHomeEntry from '../newcomers/NewcomersHomeEntry.vue'
 import { getCurrentTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
 import { getCurrentActivity } from '../../apis/invitenewcomers'
 
@@ -42,7 +46,9 @@ export default {
     Search,
     TemplateFengqiang,
     TemplateBaofa,
-    TemplateFanchang
+    TemplateFanchang,
+    InviteNewcomersHomeEntry,
+    NewcomersHomeEntry
   },
   provide () {
     return {
