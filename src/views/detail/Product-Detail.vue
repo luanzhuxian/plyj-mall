@@ -375,7 +375,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
     noStock () {
       return this.productSkuModels.every(item => item.stock < item.minBuyNum)
     },
@@ -450,7 +450,6 @@ export default {
     this.showCoupon = false
   },
   async mounted () {
-    this.changeBrokerId()
     sessionStorage.setItem('shareBrokerId', this.brokerId || '')
   },
   methods: {
@@ -477,7 +476,12 @@ export default {
         this.productSkuModels = result.productSkuModels
         this.currentModel = result.productSkuModels.find(item => item.minBuyNum <= item.stock) || result.productSkuModels[0]
         this.currentModel.count = result.productSkuModels[0].minBuyNum
-        let shareUrl = `${this.mallUrl}/detail/lesson/${this.productId}/${this.userId}`
+        let shareUrl = ''
+        if (this.userId) {
+          shareUrl = `${this.mallUrl}/detail/lesson/${this.productId}/${this.userId}`
+        } else {
+          shareUrl = `${this.mallUrl}/detail/lesson/${this.productId}`
+        }
         share({
           appId: this.appId,
           title: result.productName,
@@ -542,7 +546,7 @@ export default {
       this.currentModel = selected
       this.adding = true
       const { count, skuCode2 = '', skuCode1 } = selected
-      // helper分享时携带的id
+      // 分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId')
       return new Promise(async (resolve, reject) => {
         try {
@@ -569,7 +573,7 @@ export default {
       }
       this.currentModel = selected
       const { skuCode1, count, skuCode2, price } = selected
-      // helper分享时携带的id
+      // 分享时携带的id
       const shareBrokerId = sessionStorage.getItem('shareBrokerId')
       sessionStorage.setItem('CONFIRM_LIST', JSON.stringify([{
         productId: this.productId,
@@ -761,36 +765,6 @@ export default {
     countFinished () {
       this.$set(this.detail, 'serverTime', '')
       this.$set(this.detail, 'shoppingTimeLong', '')
-    },
-    // 改变当前链接中的分享id
-    changeBrokerId () {
-      // 其他人的分享id
-      let otherShareId = sessionStorage.getItem('shareBrokerId') || ''
-      let { brokerId, userId, mallDomain, productId } = this
-      // let { protocol, host } = location
-      // let selfUrl = `${protocol}//${host}/${mallDomain}/detail/lesson/${productId}/${userId}`
-      // 本地没有分享id，设置本地分享id，设置的本地分享id可以是他人的，也可以是自己的
-      if (!otherShareId) {
-        if (brokerId && brokerId !== userId) {
-          // 携带有他人分享id时，先把他人的id保存起来，然后再替换成当前用户的id
-          // 既能保证分享出去的时当前用户，又能保证购买的时他人分享的
-          sessionStorage.setItem('shareBrokerId', brokerId || '')
-          // location.href = selfUrl
-        } else if (brokerId && brokerId === userId) {
-          sessionStorage.setItem('shareBrokerId', userId || '')
-        } else if (!brokerId && userId) {
-          // location.href = selfUrl
-        }
-      } else {
-        if (!brokerId && userId) {
-          // location.href = selfUrl
-          return
-        }
-        if (brokerId !== userId) {
-          sessionStorage.setItem('shareBrokerId', brokerId || '')
-          // location.href = selfUrl
-        }
-      }
     }
   }
 }
