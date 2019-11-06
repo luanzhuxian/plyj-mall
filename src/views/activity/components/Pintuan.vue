@@ -34,15 +34,22 @@
               </div>
             </div>
             <div :class="$style.info">
-              <div :class="$style.main">
+              <div :class="$style.main" style="height:46px">
                 {{ item.goodsInfo.productName }}
               </div>
               <div :class="$style.time">
-                <div :class="$style.timeLeft">
-                  成团瓜分
-                </div>
-                <div :class="$style.timeRight">
-                  {{ `${(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) || 0}元` }}
+                <template v-if="(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) && (item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) != 0">
+                  <div :class="$style.timeLeft">
+                    成团瓜分
+                  </div>
+                  <div :class="$style.timeRight">
+                    {{ `${(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) || 0}元` }}
+                  </div>
+                </template>
+                <div v-else :class="$style.timeLeft" style="width:17.466667vw">
+                  <div>
+                    双十二有礼
+                  </div>
                 </div>
               </div>
               <div :class="$style.sub">

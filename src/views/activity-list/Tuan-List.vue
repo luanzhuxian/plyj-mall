@@ -20,7 +20,10 @@
           </div>
           <div>
             <div class="title">{{ item.productName }}</div>
-            <div class="tuan-tips">成团瓜分<span>{{ item.prizePool }}元</span></div>
+            <template>
+              <div v-if="item.prizePool != 0" class="tuan-tips">成团瓜分<span>{{ item.prizePool }}元</span></div>
+              <div v-else class="tuan-tips" style="width:17.466667vw">双十二有礼</div>
+            </template>
             <div class="tuan-join">已有{{ item.number }}人参团</div>
             <div class="bottom">
               <div class="price-bar">
@@ -52,7 +55,10 @@
           </div>
           <div>
             <div class="title">{{ item.productName }}</div>
-            <div class="tuan-tips">成团瓜分<span>{{ item.prizePool }}元</span></div>
+            <template>
+              <div v-if="item.prizePool != 0" class="tuan-tips">成团瓜分<span>{{ item.prizePool }}元</span></div>
+              <div v-else class="tuan-tips" style="width:17.466667vw">双十二有礼</div>
+            </template>
             <div class="tuan-join"><!-- 已有{{ item.number }}人参团 --></div>
             <div class="bottom">
               <div class="price-bar">

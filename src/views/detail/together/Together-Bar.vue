@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.together" v-if="detail">
-    <div v-if="detail.preActivity === 1" :class="$style.preTogether">
+    <div v-if="detail.preActivity !== 2" :class="$style.preTogether">
       <div :class="$style.preText" />
       <div :class="$style.line" />
       <div>
@@ -9,7 +9,7 @@
           activity-text="距活动开始仅剩"
           :endtime="detail.activityProductModel.activityStartTime"
         />
-        <div :class="$style.desc">活动商品数量{{ detail.activityProductModel.stock }}件，成团最多瓜分{{ detail.activityProductModel.prizePool }}元</div>
+        <div :class="$style.desc">活动商品数量{{ detail.activityProductModel.stock }}件{{ detail.activityProductModel.prizePool == 0 ? '' : '，成团最多瓜分' + detail.activityProductModel.prizePool + '元' }}</div>
       </div>
     </div>
     <div v-if="detail.preActivity === 2" :class="$style.nowTogether">

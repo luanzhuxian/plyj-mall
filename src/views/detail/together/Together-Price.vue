@@ -1,7 +1,7 @@
 <template>
   <div class="tuan">
     <div v-if="detail.preActivity === 1">
-      <div class="price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
+      <div v-if="detail.preActivity === 2" class="price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
       <div class="pro-info">
         <div class="original">现价：<i v-text="minPrice" />
           <template v-if="minPrice !== maxPrice">
