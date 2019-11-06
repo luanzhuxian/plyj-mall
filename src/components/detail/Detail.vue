@@ -33,8 +33,11 @@ export default {
   created () {
     this.afterHtml = this.content
   },
+  activated () {
+    this.afterHtml = this.content
+  },
   watch: {
-    content () {
+    content (val) {
       this.afterHtml = this.content
     }
   }

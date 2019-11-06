@@ -219,9 +219,21 @@ export default {
       }
     }
   },
-  activated () {
+  async activated () {
     if (this.shareUserId) {
-      this.checkNewUser()
+      let IS_NEW_USER = JSON.parse(sessionStorage.getItem('IS_NEW_USER')) || false
+      // 不确定是不是新人时，先判断是否是新人
+      if (!IS_NEW_USER) {
+        this.checkNewUser()
+      } else {
+        // 如果已标记新人，那就自动助力
+        sessionStorage.removeItem('IS_NEW_USER')
+        try {
+          await this.help()
+        } catch (e) {
+          throw e
+        }
+      }
     }
   },
   deactivated () {
@@ -354,6 +366,7 @@ export default {
       // 标记位新人
       if (!this.userId || IS_NEW_USER) {
         sessionStorage.setItem('IS_NEW_USER', 'true')
+        return
       }
       // 不是新人
       if (!IS_NEW_USER) {
@@ -363,7 +376,7 @@ export default {
           useDangersHtml: true,
           confirmText: '我也想翻豪礼'
         })
-          .then(() => {
+          .finally(() => {
             this.IWantToGetAGiftToo()
           })
       }
