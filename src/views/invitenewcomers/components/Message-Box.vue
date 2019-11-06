@@ -2,7 +2,10 @@
   <transition name="fade">
     <div :class="$style.messageBox" v-show="show">
       <div :class="$style.wrap">
-        <div :class="$style.title" v-text="title" />
+        <div v-if="title" :class="$style.title" v-text="title" />
+        <div v-else>
+          <slot name="title" />
+        </div>
         <div
           :class="$style.message"
           v-text="message"

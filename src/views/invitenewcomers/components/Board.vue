@@ -3,12 +3,15 @@
     <div :class="$style.top">
       <div :class="$style.timer">
         <template v-if="status !== 0">
-          <div :class="$style.timerTip" v-text="countdownStatus[status]" />
+          <div :class="$style.timerTip">
+            <pl-icon v-if="status === 2" type="svg" name="icon-julijieshu" width="68" height="82" />
+            <pl-icon v-if="status === 1" type="svg" name="icon-julikaishi" width="68" height="82" />
+          </div>
           <div :class="$style.timerContent">
             <div>
               <span v-for="(dd, i) of d" :key="i" v-text="dd" />
             </div>
-            <span>天</span>
+            <pl-icon style="margin: 0 1.333vw" type="svg" name="icon-tian" width="34" height="34" />
             <div>
               <span v-for="(hh, i) of h" :key="i" v-text="hh" />
             </div>
@@ -28,7 +31,8 @@
       </div>
       <template v-if="friendUserId">
         <div v-if="friendUserId" :class="$style.inviteFriends">
-          小手一点帮我助力
+          <!--小手一点帮我助力-->
+          <pl-icon name="icon-xiaoshouyidianbangwozhuli" fill="#fff" size="56" />
         </div>
         <div :class="$style.shortOf">
           你也可以参与活动拿豪礼大奖哦！
@@ -36,7 +40,7 @@
       </template>
       <template v-else>
         <div :class="$style.inviteFriends">
-          邀请好友，赢豪礼大奖
+          <pl-icon type="svg" name="icon-yinghaoli" width="560" />
         </div>
         <div v-if="inviteDescription > 0" :class="$style.shortOf">
           还差<i v-text="inviteDescription" />个好友助力，即可开豪礼
@@ -63,13 +67,16 @@
     <ShareLayer v-show="showShare" @close="showShare = false" />
     <!-- 开豪礼弹框 -->
     <MessageBox
-      :title="hasGift ? '恭喜您获得' : '领取失败'"
       :message="hasGift ? '满减券已自动存入您的现金卡包中您可在现金卡包中查看' : '很遗憾，礼物与您擦肩而过，再接再厉哦！'"
       confirm-text="继续开豪礼"
       :show.sync="showGotGift"
       @close="giftConfirm"
       @confirm="giftConfirm"
     >
+      <div slot="title">
+        <pl-icon v-if="hasGift" name="icon-gongxininhuode" color="#fff" size="60" />
+        <pl-icon v-else name="icon-ganxiecanyu" color="#fff" size="60" />
+      </div>
       <!-- 优惠券 -->
       <div :class="$style.couponList" v-if="mallCouponEntity">
         <div :class="$style.couponItem">
@@ -157,7 +164,6 @@ export default {
       s: '00',
       helpers: [],
       totalHelpers: 0,
-      countdownStatus: ['已经结束', '距离开始', '距离结束'],
       invitingEventsGiftEntities: [],
       mallInvitingEventsCouponEntities: []
     }
