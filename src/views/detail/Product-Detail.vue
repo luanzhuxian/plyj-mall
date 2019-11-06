@@ -138,7 +138,7 @@
       :current-sku.sync="currentModel"
       :product-status="detail.productStatus"
       :confirm-text="confirmText"
-      :disable-confrim="confirmText === '暂未开售' && detail.activeProduct === 1"
+      :disable-confrim="confirmText === '暂未开售'"
       :limiting="limiting"
       :active-product="detail.activeProduct"
       :activity-product-model="detail.activityProductModel || null"
