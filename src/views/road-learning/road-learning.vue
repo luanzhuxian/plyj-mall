@@ -58,17 +58,23 @@
         </div>
         <!-- 两个组 -->
         <div class="base u-p3d" v-if="gifts.length === 2">
-          <div class="ball">
-            <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+          <div class="ball-base u-p3d ball-1">
+            <div class="ball">
+              <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+            </div>
           </div>
-          <div class="ball">
-            <img :src="gifts[1].giftImage" alt=""><div>奖品二</div>
+          <div class="ball-base u-p3d ball-3">
+            <div class="ball">
+              <img :src="gifts[1].giftImage" alt=""><div>奖品二</div>
+            </div>
           </div>
         </div>
         <!-- 一个组 -->
         <div class="base u-p3d" v-if="gifts.length === 1">
-          <div class="ball">
-            <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+          <div class="ball-base u-p3d ball-1">
+            <div class="ball">
+              <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+            </div>
           </div>
         </div>
       </div>
@@ -293,7 +299,7 @@ export default {
       }
     })
   },
-  async created () {
+  async activated () {
     if (!this.userId) {
       try {
         await this.$alert({
@@ -313,6 +319,8 @@ export default {
         this.$router.push({ name: 'BindMobile' })
       }
     }
+  },
+  async created () {
     await this.getDetail()
     this.getCheckInDetail()
     this.getGifts()
@@ -385,6 +393,13 @@ export default {
     async getCheckInDetail () {
       const { result: res } = await getCheckInDetail(this.activeDetail.id)
       this.checkInDetail = res
+      if (this.checkInDetail.totalCheckInNum === 10 && this.checkInDetail.claimStatus === 1) {
+        await this.$confirm({
+          message: ' 奖品已领取，快去礼品库中看看~~ ',
+          confirmText: '立即查看'
+        })
+        this.$router.push({ name: 'MyPresent' })
+      }
     },
     async checkIn () {
       if (!this.doubleClick()) {
