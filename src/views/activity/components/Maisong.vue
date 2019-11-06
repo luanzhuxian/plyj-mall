@@ -2,12 +2,7 @@
   <router-link
     :class="$style.maisong"
     tag="div"
-    :to="{
-      name: 'Classify',
-      params: {
-        optionId: ''
-      }
-    }"
+    :to="{ name: 'Classify' }"
   >
     <div
       :class="{
