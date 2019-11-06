@@ -328,7 +328,7 @@ export default {
     setInterval(() => {
       this.getObtainGifts()
     }, 10000)
-    let qrcode = await generateQrcode(500, `${this.mallUrl}/road-learning/${this.id ? this.id : ''}`, 100, null, null, 'url')
+    let qrcode = await generateQrcode(500, `${this.mallUrl}/road-learning${this.id ? '/' + this.id : ''}`, 100, null, null, 'url')
     this.qrcode = new Image()
     this.qrcode.src = qrcode
   },
@@ -348,6 +348,7 @@ export default {
         return
       }
       this.activeDetail = result
+      this.id = this.activeDetail.id
       let now = Date.now()
       let start = moment(this.activeDetail.activityStartTime).valueOf()
       let end = moment(this.activeDetail.activityEndTime).valueOf()
