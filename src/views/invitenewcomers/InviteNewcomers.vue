@@ -6,6 +6,7 @@
         :active-id="activityId"
         @gift-is-opened="init"
         @i-want-to-get-gift-too="init"
+        :share-user-id="shareUserId"
       />
       <AcquisitionGifts :activity-id="activityId" />
     </div>
