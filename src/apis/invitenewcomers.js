@@ -47,6 +47,10 @@ export const getUserInfo = (userId) => axios.post(`/apis/v1/mallActivitys/${user
  */
 export const getActivityStatisiticData = (activityId) => axios.get(`/apis/v1/invitingEventsGift/${activityId}/statGiftData`)
 
+/**
+ * 获取活动基础信息
+ * @return {*}
+ */
 export const getCurrentActivity = () => axios.get('/apis/v1/invitingEvents/currActiviy/baseInfo')
 
 export const inviterStatisitic = (activityId, userId) => axios.put(`/apis/v1/mallActivitys/${activityId}/inviter/stat?userId=${userId}`)

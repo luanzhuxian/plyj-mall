@@ -42,106 +42,59 @@
           还差<i v-text="inviteDescription" />个好友助力，即可开豪礼
         </div>
         <div v-else :class="$style.shortOf">
-          已成功邀请<i v-text="totalHelpers.length" />个好友助力，立即开豪礼
+          已成功邀请<i v-text="totalHelpers" />个好友助力，立即开豪礼
         </div>
       </template>
-      <!--<button :class="$style.button" v-if="true" @click="openGift">开豪礼</button>-->
       <button :class="$style.button" v-if="canOpenGiftPackage" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,尽请期待</button>
-      <button :class="$style.button" v-else-if="status === 2 && friendUserId" @click="help">助好友，得好礼</button>
+      <button :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>
+      <button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>
       <button :class="$style.button" v-else-if="status === 2" @click="showShare = true">邀请好友</button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
     </div>
-    <!--<div class="who" v-if="inviteFrom !== null">
-      <img class="avatar" :src="inviteFrom.avatar">
-      <span class="name">{{ inviteFrom.name }}</span>
-      <span class="label">邀您助力领豪礼</span>
-    </div>
-    <div class="main-board">
-      &lt;!&ndash; 倒计时状态 &ndash;&gt;
-      <div class="countdown-panel" v-if="this.countdown > 0">
-        <span class="status-label">{{ countdownStatus[status] }}</span>
-        <number :value="+timeSplit[0]" />
-        <number :value="+timeSplit[1]" />
-        <span class="clock-split">天</span>
-        <number :value="+timeSplit[2]" />
-        <number :value="+timeSplit[3]" />
-        <span class="clock-split">:</span>
-        <number :value="+timeSplit[4]" />
-        <number :value="+timeSplit[5]" />
-        <span class="clock-split">:</span>
-        <number :value="+timeSplit[6]" />
-        <number :value="+timeSplit[7]" />
-      </div>
-      <div class="countdown-panel" v-else>
-        <span class="status-stop">活动时间已结束</span>
-      </div>
-      &lt;!&ndash; 邀请文案 &ndash;&gt;
-      <div class="activity-invite-title" v-html="inviteTitle">
-        &lt;!&ndash; 邀请好友，赢<span class="gift">豪礼</span>大奖 &ndash;&gt;
-      </div>
-      <div class="activity-invite-label">
-        {{ inviteDescription }}
-      </div>
-      <div class="activity-invite-button" @click="emitOp()">
-        {{ inviteButtonText }}
-      </div>
-    </div>
-    <div class="invite-users" v-if="friends.length > 0">
-      <span class="label">助力好友</span>
-      &lt;!&ndash; <img class="avatar" src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1369684156,4277819085&fm=26&gp=0.jpg"> &ndash;&gt;
-      <span class="user-avatar" v-for="(f, $idx) in friends" :key="$idx">
-        <img class="avatar" :src="f.avatar">
-        <span class="name">{{ f.nickName }}</span>
-      </span>
-    </div>-->
+    <!-- 助力过的好友列表 -->
     <HelperList :helpers="helpers" />
-    <Trophy :gifts="invitingEventsGiftEntities" />
+    <!-- 可获得的礼品列表 -->
+    <Trophy
+      :gifts="invitingEventsGiftEntities"
+      :conpons="mallInvitingEventsCouponEntities"
+    />
+    <!-- 分享引导浮层 -->
     <ShareLayer v-show="showShare" @close="showShare = false" />
-    <!--<transition name="fade">
-      <got-gift
-        v-if="isShowGotGift"
-        @close="getMore"
-        @more="getMore"
-        :success="isGotGiftSuccess"
-        :type="giftInfo.type"
-        :coupon-info="giftInfo.couponInfo"
-        :gift-info="giftInfo.giftInfo"
-      />
-    </transition>-->
+    <!-- 开豪礼弹框 -->
     <MessageBox
-      title="恭喜您获得"
-      message="满减券已自动存入您的现金卡包中您可在现金卡包中查看"
+      :title="hasGift ? '恭喜您获得' : '领取失败'"
+      :message="hasGift ? '满减券已自动存入您的现金卡包中您可在现金卡包中查看' : '很遗憾，礼物与您擦肩而过，再接再厉哦！'"
       confirm-text="继续开豪礼"
       :show.sync="showGotGift"
+      @close="giftConfirm"
+      @confirm="giftConfirm"
     >
-      <div :class="$style.couponList">
+      <!-- 优惠券 -->
+      <div :class="$style.couponList" v-if="mallCouponEntity">
         <div :class="$style.couponItem">
-          <div :class="$style.price">
-            20
-          </div>
+          <div :class="$style.price" v-text="mallCouponEntity.amount" />
           <div :class="$style.couponPrice">
             <div :class="$style.desc">
-              满200减50
+              满{{ mallCouponEntity.useLimitAmount }}减{{ mallCouponEntity.amount }}
             </div>
-            <div :class="$style.name">
-              双12哟回去
-            </div>
+            <div :class="$style.name" v-text="mallCouponEntity.couponName" />
           </div>
           <div :class="$style.couponType">
             满减券
           </div>
         </div>
       </div>
-      <div :class="$style.giftList">
+      <!-- 礼品 -->
+      <div :class="$style.giftList" v-if="mallInvitingEventsGiftEntity">
         <div :class="$style.giftItem">
           <div :class="$style.left">
-            <img src="https://avatars3.githubusercontent.com/u/18663991?v=4&s=120" alt="">
+            <img :src="mallInvitingEventsGiftEntity.giftImage" alt="">
           </div>
           <div :class="$style.right">
-            <div :class="$style.name">CHERRY机械键盘</div>
+            <div :class="$style.name" v-text="mallInvitingEventsGiftEntity.giftName" />
             <div :class="$style.desc">砍价活动礼品兑换券</div>
-            <div :class="$style.date">有效期：2019.4.15-2019.4.30</div>
+            <div :class="$style.date">有效期：{{ mallInvitingEventsGiftEntity.useStartTime | dateFormat('YYYY-MM-DD') }}-{{ mallInvitingEventsGiftEntity.useEndTime | dateFormat('YYYY-MM-DD') }}</div>
           </div>
         </div>
       </div>
@@ -153,13 +106,12 @@
       confirm-text="我也来翻豪礼"
       :message-width="438"
       :show.sync="helpeSuccess"
+      @confirm="IWantToGetAGiftToo"
     />
   </div>
 </template>
 
 <script>
-/* eslint-disable */
-import Number from './Number'
 import moment from 'moment'
 import { countdown } from '../../../assets/js/util'
 import Trophy from './Trophy'
@@ -178,7 +130,6 @@ import {
 export default {
   name: 'InviteNewcomersBoard',
   components: {
-    Number,
     Trophy,
     ShareLayer,
     HelperList,
@@ -188,12 +139,18 @@ export default {
     return {
       status: '',
       showShare: false,
+      // 是否已主力
+      hasHelped: false,
       // 显示礼物弹框
       showGotGift: false,
       // 是否助力成功
       helpeSuccess: false,
       // 是否可开豪礼
       canOpenGiftPackage: false,
+      // 开出的优惠券
+      mallCouponEntity: null,
+      // 开始的实体礼品
+      mallInvitingEventsGiftEntity: null,
       d: '00',
       h: '00',
       m: '00',
@@ -201,7 +158,8 @@ export default {
       helpers: [],
       totalHelpers: 0,
       countdownStatus: ['已经结束', '距离开始', '距离结束'],
-      invitingEventsGiftEntities: []
+      invitingEventsGiftEntities: [],
+      mallInvitingEventsCouponEntities: []
     }
   },
   props: {
@@ -219,18 +177,20 @@ export default {
   },
   computed: {
     ...mapGetters(['userId']),
+    // 还差多少个好友
     inviteDescription () {
       if (this.data) {
         let invitedPeopleNumber = this.data.invitingEventsEntity.invitedPeopleNumber
-        // if (this.canOpenGiftPackage) {
-        //   return `已经成功邀请${invitedPeopleNumber}个好友助力, 立即开豪礼`
-        // }
         return invitedPeopleNumber - this.totalHelpers
       }
       return 0
     },
     friendUserId () {
       return this.$route.params.userId
+    },
+    // 是否领到了豪礼
+    hasGift () {
+      return this.mallInvitingEventsGiftEntity || this.mallCouponEntity
     }
   },
   watch: {
@@ -238,9 +198,15 @@ export default {
       handler (val) {
         if (val) {
           this.init(val)
+          this.canClaimGift()
         }
       },
       immediate: true
+    },
+    helpeSuccess (val) {
+      if (!val) {
+
+      }
     }
   },
   deactivated () {
@@ -259,13 +225,12 @@ export default {
         this.timer.stop()
       }
       let {
-        currentSystemDate,
-        activityStatModel,
         invitingEventsEntity,
         invitingEventsGiftEntities,
         mallInvitingEventsCouponEntities
       } = this.data
-      this.invitingEventsGiftEntities = invitingEventsGiftEntities
+      this.invitingEventsGiftEntities = invitingEventsGiftEntities || null
+      this.mallInvitingEventsCouponEntities = mallInvitingEventsCouponEntities || null
       let now = moment(this.currentSystemDate).valueOf()
       let {
         activityEndTime,
@@ -274,6 +239,7 @@ export default {
       } = invitingEventsEntity
       activityEndTime = moment(activityEndTime).valueOf()
       activityStartTime = moment(activityStartTime).valueOf()
+      /* eslint-disable */
       if (status === 1) {
         // 未开始
         this.timer = new countdown(activityStartTime - now, this.setTime)
@@ -284,8 +250,6 @@ export default {
         this.timer.start()
       }
       this.status = status
-      let { result } = await canClaimGift(this.activeId)
-      this.canOpenGiftPackage = result
       await this.getHelpers()
     },
     setTime (data) {
@@ -294,6 +258,11 @@ export default {
       this.h = String(hours).padStart(2, '0')
       this.m = String(minutes).padStart(2, '0')
       this.s = String(seconds).padStart(2, '0')
+    },
+    // 查询是否可以领取豪礼
+    async canClaimGift () {
+      let { result } = await canClaimGift(this.activeId)
+      this.canOpenGiftPackage = result
     },
     async getHelpers () {
       try {
@@ -308,7 +277,13 @@ export default {
     async openGift () {
       try {
         this.showGotGift = true
-        await openGift(this.activeId)
+        let { result } = await openGift(this.activeId)
+        let {
+          mallCouponEntity,
+          mallInvitingEventsGiftEntity
+        } = result
+        this.mallCouponEntity = mallCouponEntity || null
+        this.mallInvitingEventsGiftEntity = mallInvitingEventsGiftEntity || null
       } catch (e) {
         throw e
       }
@@ -317,13 +292,26 @@ export default {
       try {
         await helpFriend(this.activeId, this.friendUserId)
         this.helpeSuccess = true
+        this.hasHelped = true
       } catch (e) {
         throw e
       }
     },
     async getMore () {
       // await this.init()
-      this.isShowGotGift = false
+      // this.isShowGotGift = false
+    },
+    // 确定豪礼弹框
+    giftConfirm () {
+      this.mallCouponEntity = null
+      this.mallInvitingEventsGiftEntity = null
+      this.canClaimGift()
+      this.$emit('gift-is-opened') // 礼物已打开事件，外部需要刷新数据
+    },
+    // 我也想反豪礼
+    IWantToGetAGiftToo () {
+      this.$router.replace({ name: 'InviteNewcomers', params: { activityId: this.activeId } })
+      this.$emit('i-want-to-get-gift-too') // 礼物已打开事件，外部需要刷新数据
     }
   }
 }
@@ -432,24 +420,24 @@ export default {
       > .price {
         display: inline-block;
         position: relative;
-        font-size: 72px;
+        font-size: 42px;
         color: #D8574B;
         font-weight: bold;
         line-height: 86px;
         &:after {
           position: absolute;
-          bottom: 10px;
-          right: -20px;
+          bottom: 20px;
+          right: -16px;
           display: inline-block;
           content: '元';
-          font-size: 18px;
-          width: 30px;
-          height: 30px;
-          line-height: 26px;
+          font-size: 14px;
+          width: 24px;
+          height: 24px;
+          line-height: 20px;
           color: #fff;
           border: 2px solid #fff;
           box-sizing: border-box;
-          border-radius: 15px;
+          border-radius: 12px;
           background-color: #D8574B;
         }
       }
@@ -459,11 +447,11 @@ export default {
       margin-left: 34px;
       text-align: left;
       .desc {
-        font-size: 28px;
+        font-size: 24px;
         font-weight: bold;
       }
       .name {
-        font-size: 20px;
+        font-size: 16px;
       }
     }
     .coupon-type {

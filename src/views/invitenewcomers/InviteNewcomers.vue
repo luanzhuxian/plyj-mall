@@ -4,6 +4,8 @@
       <board
         :data="detail"
         :active-id="activityId"
+        @gift-is-opened="init"
+        @i-want-to-get-gift-too="init"
       />
       <AcquisitionGifts :activity-id="activityId" />
     </div>

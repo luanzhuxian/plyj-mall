@@ -14,10 +14,10 @@
         :key="i"
       >
         <img :class="$style.icon" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/box%402x.png" alt="">
-        <img :class="$style.avatar" :src="item.avatar" alt="">
+        <img :class="$style.avatar" :src="item.headImgUrl" alt="">
         <div :class="$style.itemRight">
-          <p>{{ item.name }}<i>3</i>位好友</p>
-          <p>开出了<i>1000</i>元满减券</p>
+          <p>{{ item.nickName }}邀请了<i v-text="item.helperNum" />位好友</p>
+          <p>开出了<i v-text="item.name" /></p>
         </div>
       </div>
     </div>
@@ -54,14 +54,7 @@ export default {
     async getOrdersShow () {
       try {
         let { result } = await getClaimGiftList(this.activityId)
-        this.showList = (result || []).slice(0, 3).map((item) => {
-          return {
-            name: item.userName || item.nickName,
-            avatar: item.headImgUrl,
-            inviteNum: item.helperNum,
-            giftInfo: item.name
-          }
-        })
+        this.showList = result || []
         let { result: claimerInfo } = await getActivityStatisiticData(this.activityId)
         this.totalClaimers = claimerInfo.claimerNum
       } catch (e) {

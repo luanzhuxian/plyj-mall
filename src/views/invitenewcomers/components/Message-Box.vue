@@ -11,7 +11,7 @@
         <div>
           <slot />
         </div>
-        <button :class="$style.confirmText" v-text="confirmText" />
+        <button :class="$style.confirmText" v-text="confirmText" @click="confirm" />
       </div>
       <pl-icon @click="close" :class="$style.close" name="icon-close1" size="48" color="#fff" />
     </div>
@@ -42,6 +42,11 @@ export default {
   },
   methods: {
     close () {
+      this.$emit('update:show', false)
+      this.$emit('close')
+    },
+    confirm (e) {
+      this.$emit('confirm', e)
       this.$emit('update:show', false)
     }
   }

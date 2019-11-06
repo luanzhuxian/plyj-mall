@@ -29,39 +29,24 @@ import moment from 'moment'
 import Overlay from './components/Overlay'
 import { mapGetters } from 'vuex'
 import { getHelpers, getCurrentActivity } from '../../apis/invitenewcomers'
-
 export default {
   name: 'InviteNewcomersHomeEntry',
   components: {
     Overlay
   },
-
   data () {
     return {
       showSelf: false,
-      isShowGotGift: false,
-      isShowBoard: false,
-
-      inviteTitle: '邀请好友，赢<span style="style: #f6f4b4">豪礼</span>大奖',
-
-      helpers: [],
       totalHelpers: 0,
-
-      activityInfo: {},
-
-      giftInfo: {
-        type: 'coupon'
-        // coupon info
-        // gift info
-      }
+      activityInfo: {}
     }
   },
-
   computed: {
     ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
     isNewUser () {
       return this.userId === ''
     },
+    // 活动是否已开始
     isActivityStarted () {
       if (this.activityInfo === null) {
         return false
@@ -69,6 +54,7 @@ export default {
       let startTime = moment(this.activityInfo.activityStartTime)
       return moment().isSameOrAfter(startTime)
     },
+    // 活动是否已结束
     isActivityEnd () {
       if (this.activityInfo === null) {
         return true
@@ -78,12 +64,20 @@ export default {
     }
   },
 
-  async created () {
-    await this.getCurrentActivity()
-    await this.getMyFriends()
+  async activated () {
+    try {
+      await this.getCurrentActivity()
+      await this.getMyFriends()
+    } catch (e) {
+      throw e
+    }
   },
 
   methods: {
+    /**
+     * 活动信息
+     * @return {Promise<void>}
+     */
     async getCurrentActivity () {
       let { result } = await getCurrentActivity()
       this.activityInfo = result || null
@@ -96,25 +90,17 @@ export default {
       if (this.activityInfo === null) {
         return
       }
-      let { status, result } = await getHelpers(this.activityInfo.id, this.userId)
-      if (status !== 200) {
-        return
+      try {
+        let { result } = await getHelpers(this.activityInfo.id, this.userId)
+        this.totalHelpers = result.length
+        this.showSelf = this.activityInfo.invitedPeopleNumber >= this.totalHelpers && this.isActivityStarted && (!this.isActivityEnd)
+      } catch (e) {
+        throw e
       }
-      this.helpers = result.map((h) => {
-        return {
-          avatar: h.headImgUrl,
-          nickName: h.nickName
-        }
-      })
-
-      this.totalHelpers = result.length
-      this.showSelf = this.activityInfo.invitedPeopleNumber === this.totalHelpers && this.isActivityStarted && (!this.isActivityEnd)
     },
-
     close () {
       this.showSelf = false
     },
-
     openGift () {
       this.$router.push({ name: 'InviteNewcomers', params: { activityId: this.activityInfo.id } })
     }

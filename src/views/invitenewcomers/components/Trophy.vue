@@ -6,9 +6,20 @@
       :key="i"
     >
       <img :src="item.giftImage" alt="">
+
       <div :class="$style.info">
         <span style="margin: 0;" v-text="item.giftName" /><span>:</span><span v-text="item.giftBrief" />
         <i>x{{ item.stock }}</i>
+      </div>
+    </div>
+    <div
+      :class="$style.trophyItem"
+      v-for="(item, i) of conpons"
+      :key="i"
+    >
+      <pl-icon name="icon-youhuiquan2" type="svg" width="60" height="60" />
+      <div :class="$style.info">
+        <span style="margin: 0;" v-text="item.couponName" /><span>:</span><span>满{{ item.useLimitAmount }}减{{ item.amount }}</span>
       </div>
     </div>
   </div>
@@ -19,6 +30,12 @@ export default {
   name: 'Trophy',
   props: {
     gifts: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    conpons: {
       type: Array,
       default () {
         return []
@@ -37,14 +54,20 @@ export default {
     display: flex;
     align-items: center;
     height: 114px;
+    margin-bottom: 20px;
     padding: 0 20px;
     border: 4px solid #eee;
     border-radius: 20px;
+    &:nth-last-of-type(1) {
+      margin-bottom: 0;
+    }
     > img {
       width: 98px;
       height: 98px;
-      margin-right: 20px;
       object-fit: cover;
+    }
+    > svg {
+      margin-right: 20px;
     }
     > .info {
       display: flex;
