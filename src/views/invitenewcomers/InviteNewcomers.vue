@@ -143,7 +143,7 @@ export default {
       }
       await share({
         appId: this.appId,
-        title: '请好友一起翻礼品',
+        title: `${this.userName}邀请你帮他助力`,
         desc: '快来帮我助力一起领取大礼哦。',
         link: shareUrl,
         imgUrl: this.logoUrl,
