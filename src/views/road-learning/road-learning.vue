@@ -144,13 +144,13 @@
         </div>
       </div>
       <div class="btn-box">
-        <div class="btn disabel" v-if="!activeStart && !activeEnd && activeDetail.status">活动未开始</div>
-        <div class="btn active" @click="checkIn ()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status">立即签到</div>
+        <div class="btn disabel" v-if="!activeStart && !activeEnd && activeDetail.status === 1">活动未开始</div>
+        <div class="btn active" @click="checkIn ()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status === 2">立即签到</div>
         <div class="btn disabel" v-if="activeStart && activeEnd || !activeDetail.status && checkInDetail.claimStatus !== 1">活动已结束</div>
-        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0" @click="claimGift() && activeDetail.status">点击抽大奖</div>
+        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0" @click="claimGift() && activeDetail.status === 2">点击抽大奖</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
-        <div class="btn disabel" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 2 && activeDetail.status">很遗憾没有中奖</div>
-        <div class="btn already" v-if="checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum !== 10 && activeDetail.status">今日已签到</div>
+        <div class="btn disabel" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 2 && activeDetail.status === 2">很遗憾没有中奖</div>
+        <div class="btn already" v-if="checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum !== 10 && activeStart && !activeEnd && activeDetail.status === 2">今日已签到</div>
       </div>
     </div>
     <pl-popup :show.sync="showRule">
@@ -373,7 +373,7 @@ export default {
     },
     countdown (datetime) {
       if (datetime < 0) return
-      this.timer = setInterval(() => {
+      this.timer = setInterval(async () => {
         let { _data } = moment.duration(datetime)
         let d = String(Math.floor(moment.duration(datetime).asDays()))
         let h = String(_data.hours)
@@ -382,7 +382,10 @@ export default {
         datetime -= 1000
         if (datetime <= 0) {
           clearInterval(this.timer)
-          this.getDetail()
+          this.obtainGifts = []
+          await this.getDetail()
+          this.getCheckInDetail()
+          this.getGifts()
         }
         this.dd = d.padStart(2, '0')
         this.hh = h.padStart(2, '0')
