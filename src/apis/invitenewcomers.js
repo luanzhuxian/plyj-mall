@@ -53,6 +53,12 @@ export const getActivityStatisiticData = (activityId) => axios.get(`/apis/v1/inv
  */
 export const getCurrentActivity = () => axios.get('/apis/v1/invitingEvents/currActiviy/baseInfo')
 
+/**
+ * 统计分享次数（被点击的分享才算）
+ * @param activityId
+ * @param userId
+ * @return {Promise<*|*>|Promise<*|*>|Promise<AxiosResponse<T>>|IDBRequest<IDBValidKey>|Promise<void>}
+ */
 export const inviterStatisitic = (activityId, userId) => axios.put(`/apis/v1/mallActivitys/${activityId}/inviter/stat?userId=${userId}`)
 
 export const registerStatisitic = (activityId) => axios.post(`/apis/v1/mallActivitys/${activityId}/register/stat`)

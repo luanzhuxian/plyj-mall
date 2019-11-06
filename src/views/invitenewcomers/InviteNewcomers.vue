@@ -49,7 +49,8 @@ import youLike from './../home/components/YouLike.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
 import {
-  getActiveDetail
+  getActiveDetail,
+  inviterStatisitic
 } from '../../apis/invitenewcomers'
 
 export default {
@@ -119,7 +120,9 @@ export default {
     },
     async share () {
       let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/${this.userId}`
+      // 要隐藏的微信选项
       let willHide
+      // 分享id和当前id相等时，不可助力
       if (this.shareUserId && this.userId === this.shareUserId) {
         this.$router.replace({ name: 'InviteNewcomers', params: { activityId: this.activityId } })
         await share({
@@ -131,10 +134,13 @@ export default {
         })
         return
       }
+      // 分享id存在，且和当前id不相等时，统计分享，且此时页面不可被分享
       if (!this.shareUserId) {
         willHide = []
       } else {
+        alert(123)
         willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
+        await inviterStatisitic(this.activityId, this.shareUserId)
       }
       await share({
         appId: this.appId,
