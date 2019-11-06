@@ -138,7 +138,6 @@ export default {
       if (!this.shareUserId) {
         willHide = []
       } else {
-        alert(123)
         willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
         await inviterStatisitic(this.activityId, this.shareUserId)
       }
