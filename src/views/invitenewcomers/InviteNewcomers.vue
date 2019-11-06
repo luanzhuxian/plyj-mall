@@ -129,7 +129,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "./fonts/hyfonts-subset.css";
 .invitenewcomers {
   .center {
     padding: 32px 24px;
