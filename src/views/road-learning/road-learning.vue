@@ -393,6 +393,13 @@ export default {
     async getCheckInDetail () {
       const { result: res } = await getCheckInDetail(this.activeDetail.id)
       this.checkInDetail = res
+      if (this.checkInDetail.totalCheckInNum === 10 && this.checkInDetail.claimStatus === 1) {
+        await this.$confirm({
+          message: ' 奖品已领取，快去礼品库中看看~~ ',
+          confirmText: '立即查看'
+        })
+        this.$router.push({ name: 'MyPresent' })
+      }
     },
     async checkIn () {
       if (!this.doubleClick()) {
