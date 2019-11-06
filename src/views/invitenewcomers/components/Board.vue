@@ -49,7 +49,7 @@
           已成功邀请<i v-text="totalHelpers" />个好友助力，立即开豪礼
         </div>
       </template>
-      <button :class="$style.button" v-if="canOpenGiftPackage" @click="openGift">开豪礼</button>
+      <button :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,尽请期待</button>
       <button :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>
       <button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>
@@ -192,7 +192,7 @@ export default {
       return 0
     },
     friendUserId () {
-      return this.$route.params.userId
+      return this.$route.params.shareUserId
     },
     // 是否领到了豪礼
     hasGift () {
@@ -295,6 +295,29 @@ export default {
       }
     },
     async help () {
+      if (!this.userId) {
+        this.$confirm({
+          message: '注册会员，助力好友',
+          viceMessage: '快来注册为会员<br>帮助好友进行助力翻红包',
+          useDangersHtml: true,
+          confirmText: '注册会员'
+        })
+          .then(() => {
+            let {
+              name,
+              params
+            } = this.$route
+            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+              name,
+              params
+            }))
+            this.$router.push({
+              name: 'BindMobile'
+            })
+          })
+          .catch(() => {})
+        return
+      }
       try {
         await helpFriend(this.activeId, this.friendUserId)
         this.helpeSuccess = true

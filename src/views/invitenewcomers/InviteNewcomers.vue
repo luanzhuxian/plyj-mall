@@ -1,6 +1,6 @@
 <template>
-  <div class="invitenewcomers">
-    <div class="center">
+  <div :class="$style.invitenewcomers">
+    <div v-if="!loading" :class="$style.center">
       <board
         :data="detail"
         :active-id="activityId"
@@ -9,8 +9,19 @@
       />
       <AcquisitionGifts :activity-id="activityId" />
     </div>
+
+    <!-- 骨架屏 -->
+    <div v-if="loading" :class="$style.skeleton">
+      <div :class="$style.skeletonA">
+        <div :class="$style.skeletonB" />
+        <div :class="$style.skeletonC" />
+        <div :class="$style.skeletonD" />
+        <div :class="$style.skeletonE" />
+      </div>
+    </div>
+
     <you-like :is-my="true" />
-    <div class="rule-nav" @click="isShowRule = true">
+    <div :class="$style.ruleNav" @click="isShowRule = true">
       活动规则
     </div>
     <pl-popup
@@ -18,7 +29,7 @@
       title="活动细则"
       @close="isShowRule = false"
     >
-      <div class="rule-content">
+      <div :class="$style.ruleContent">
         <h3>1.活动时间</h3>
         <p>{{ startTime }} 至 {{ endTime }}</p>
         <h3>2.活动对象</h3>
@@ -50,30 +61,18 @@ export default {
   },
   data () {
     return {
-      currentSystemDate: '',
       isShowRule: false,
-      isShowShareLayer: false,
-      isGotGiftSuccess: false,
-
-      inviteTitle: '邀请好友，赢<span style="font-family: HYLingXinJ; color: #f6f4b4;">豪礼</span>大奖',
-
-      giftInfo: {
-        type: 'coupon'
-        // coupon info
-        // gift info
-      },
-
-      detail: null,
-
-      canClaimGift: false,
-
-      // 总领取数
-      totalClaimers: 0
+      loading: false,
+      detail: null
     }
   },
 
   props: {
     activityId: {
+      type: String,
+      default: ''
+    },
+    shareUserId: {
       type: String,
       default: ''
     }
@@ -104,31 +103,53 @@ export default {
   },
   async activated () {
     await this.init()
-    // let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/help/${this.userId}`
-    let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/${this.userId}`
-    await share({
-      appId: this.appId,
-      title: '请好友一起翻礼品',
-      desc: '快来帮我助力一起领取大礼哦。',
-      link: shareUrl,
-      imgUrl: this.logoUrl
-    })
   },
   methods: {
     async init () {
       try {
+        this.loading = true
         // 获取活动详情
         const { result } = await getActiveDetail(this.activityId)
         this.detail = result
+        this.loading = false
+        await this.share()
       } catch (e) {
         throw e
       }
+    },
+    async share () {
+      let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/${this.userId}`
+      let willHide
+      if (this.shareUserId && this.userId === this.shareUserId) {
+        this.$router.replace({ name: 'InviteNewcomers', params: { activityId: this.activityId } })
+        await share({
+          appId: this.appId,
+          title: '请好友一起翻礼品',
+          desc: '快来帮我助力一起领取大礼哦。',
+          link: shareUrl,
+          imgUrl: this.logoUrl
+        })
+        return
+      }
+      if (!this.shareUserId) {
+        willHide = []
+      } else {
+        willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
+      }
+      await share({
+        appId: this.appId,
+        title: '请好友一起翻礼品',
+        desc: '快来帮我助力一起领取大礼哦。',
+        link: shareUrl,
+        imgUrl: this.logoUrl,
+        willHide
+      })
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .invitenewcomers {
   .center {
     padding: 32px 24px;
@@ -159,4 +180,39 @@ export default {
     }
   }
 }
+
+  .skeleton {
+    padding: 32px 24px;
+  }
+  .skeleton-a {
+    padding: 32px 24px;
+    background-color: #fa4d2f;
+    border-radius: 20px;
+  }
+  .skeleton-b {
+    height: 126px;
+    border-radius: 20px;
+    @include skeAnimation(#feca41)
+  }
+  .skeleton-c {
+    width: 448px;
+    height: 56px;
+    margin: 48px auto 0;
+    border-radius: 10px;
+    @include skeAnimation(#eee)
+  }
+  .skeleton-d {
+    width: 540px;
+    height: 50px;
+    margin: 24px auto 0;
+    border-radius: 10px;
+    @include skeAnimation(#eee)
+  }
+  .skeleton-e {
+    width: 452px;
+    height: 110px;
+    margin: 64px auto 0;
+    border-radius: 55px;
+    @include skeAnimation(#feca41)
+  }
 </style>

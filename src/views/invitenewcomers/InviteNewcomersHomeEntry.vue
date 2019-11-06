@@ -93,7 +93,7 @@ export default {
       try {
         let { result } = await getHelpers(this.activityInfo.id, this.userId)
         this.totalHelpers = result.length
-        this.showSelf = this.activityInfo.invitedPeopleNumber >= this.totalHelpers && this.totalHelpers > 0 && this.isActivityStarted && (!this.isActivityEnd)
+        this.showSelf = this.totalHelpers > 0 && this.totalHelpers >= this.activityInfo.invitedPeopleNumber && this.isActivityStarted && (!this.isActivityEnd)
       } catch (e) {
         throw e
       }

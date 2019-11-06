@@ -1,6 +1,6 @@
 export default [
   {
-    path: '/invitenewcomers/:activityId/:userId?',
+    path: '/invitenewcomers/:activityId/:shareUserId?',
     name: 'InviteNewcomers',
     props: true,
     component: () => import('../views/invitenewcomers/InviteNewcomers.vue'),

@@ -20,20 +20,28 @@
               v-if="icon"
               :name="icon"
             />-->
-
-            <div
-              class="main-message"
-              v-html="html"
-            />
-            <p
-              class="main-message"
-              v-text="message"
-            />
-            <p
-              class="vice-message"
-              v-if="viceMessage"
-              v-text="viceMessage"
-            />
+            <template v-if="useDangersHtml">
+              <p
+                class="main-message"
+                v-html="message"
+              />
+              <p
+                class="vice-message"
+                v-if="viceMessage"
+                v-html="viceMessage"
+              />
+            </template>
+            <template v-else>
+              <p
+                class="main-message"
+                v-text="message"
+              />
+              <p
+                class="vice-message"
+                v-if="viceMessage"
+                v-text="viceMessage"
+              />
+            </template>
             <input
               v-if="type === 'propmt'"
               ref="input"
@@ -102,10 +110,8 @@ export default {
         return {}
       }
     },
-    html: {
-      type: String,
-      default: ''
-    },
+    // 渲染html
+    useDangersHtml: Boolean,
     message: {
       type: String,
       default: ''

@@ -6,10 +6,8 @@
       :key="i"
     >
       <img :src="item.giftImage" alt="">
-
       <div :class="$style.info">
-        <span style="margin: 0;" v-text="item.giftName" /><span>:</span><span v-text="item.giftBrief" />
-        <i>x{{ item.stock }}</i>
+        <span v-text="item.giftName" />
       </div>
     </div>
     <div
@@ -64,6 +62,7 @@ export default {
     > img {
       width: 98px;
       height: 98px;
+      margin-right: 16px;
       object-fit: cover;
     }
     > svg {

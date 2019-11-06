@@ -15,9 +15,10 @@ let confirm = (config = {}) => {
   return new Promise((resolve, reject) => {
     document.body.appendChild(Instance.$el)
     Instance.$nextTick(() => {
-      let { cancelText = '取消', confirmText = '确定', message = '', html = '', viceMessage = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle } = config
+      let { cancelText = '取消', confirmText = '确定', message = '', html = '', viceMessage = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle, useDangersHtml = false } = config
       Instance.html = html
       Instance.message = message
+      Instance.useDangersHtml = useDangersHtml
       Instance.viceMessage = viceMessage
       if (typeof config === 'string') {
         Instance.message = config
@@ -43,8 +44,9 @@ let alert = (config = {}) => {
   return new Promise((resolve, reject) => {
     document.body.appendChild(Instance.$el)
     Instance.$nextTick(() => {
-      let { cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, confirmStyle, cancelStyle } = config
+      let { cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, confirmStyle, cancelStyle, useDangersHtml = false } = config
       Instance.message = message
+      Instance.useDangersHtml = useDangersHtml
       Instance.viceMessage = viceMessage
       if (typeof config === 'string') {
         Instance.message = config
@@ -69,8 +71,9 @@ let propmt = (config = {}) => {
   return new Promise((resolve, reject) => {
     document.body.appendChild(Instance.$el)
     Instance.$nextTick(() => {
-      let { cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, placeholder = '请输入', rules = [], value = '' } = config
+      let { cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, placeholder = '请输入', rules = [], value = '', useDangersHtml = false } = config
       Instance.message = message
+      Instance.useDangersHtml = useDangersHtml
       Instance.viceMessage = viceMessage
       Instance.placeholder = placeholder
       Instance.propmtValue = value

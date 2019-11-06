@@ -232,7 +232,11 @@ export default {
         if (res.status) {
           clearInterval(this.timer)
           this.getList()
-          await this.$confirm({ html: `<p>核销成功</p><p>感谢您参与活动</p>`, confirmText: '去逛逛' })
+          await this.$confirm({
+            message: '核销成功',
+            viceMessage: '感谢您参与活动',
+            confirmText: '去逛逛'
+          })
           this.$router.push({ name: 'Classify' })
         }
       }, 3000)
