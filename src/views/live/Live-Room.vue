@@ -10,33 +10,36 @@
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
       <div :class="$style.tabs">
-        <div
-          :class="{
-            [$style.tabItem]: true,
-            [$style.active]: tab === 1
-          }"
-          @click="tab = 1"
-        >
-          聊天
+        <div>
+          <div
+            :class="{
+              [$style.tabItem]: true,
+              [$style.active]: tab === 1
+            }"
+            @click="tab = 1"
+          >
+            聊天
+          </div>
+          <div
+            :class="{
+              [$style.tabItem]: true,
+              [$style.active]: tab === 2
+            }"
+            @click="tab = 2"
+          >
+            优惠券<i>({{ couponList.length }})</i>
+          </div>
+          <div
+            :class="{
+              [$style.tabItem]: true,
+              [$style.active]: tab === 3
+            }"
+            @click="tab = 3"
+          >
+            商品<i>({{ productList.length }})</i>
+          </div>
         </div>
-        <div
-          :class="{
-            [$style.tabItem]: true,
-            [$style.active]: tab === 2
-          }"
-          @click="tab = 2"
-        >
-          优惠券<i>({{ couponList.length }})</i>
-        </div>
-        <div
-          :class="{
-            [$style.tabItem]: true,
-            [$style.active]: tab === 3
-          }"
-          @click="tab = 3"
-        >
-          商品<i>({{ productList.length }})</i>
-        </div>
+        <pl-button @click="share" type="warning" size="mini">分享海报</pl-button>
       </div>
 
       <div :class="$style.chatWrap" ref="chatRecords">
@@ -168,6 +171,34 @@
         </transition>-->
       </div>
     </div>
+
+    <!-- 支付弹框 -->
+    <transition name="fade">
+      <div :class="$style.payWrap" v-if="needPay">
+        <div :class="$style.payBox">
+          <div :class="$style.boxTop">
+            <img :src="detail.coverImg" alt="">
+            <div :class="$style.topRight">
+              <div :class="$style.title" v-text="detail.name" />
+              <div :class="$style.time" v-text=" detail.liveStartTime" />
+              <div :class="$style.price" v-text="detail.paidAmount" />
+              <div :class="$style.liveTip">
+                <p>该直播为付费项目，不支持退换，</p>
+                <p>付费即可观看；一场计费一次，任何事件可观看</p>
+              </div>
+            </div>
+          </div>
+          <div :class="$style.truthPrice">
+            <span>实付金额：</span>
+            <i v-text="detail.paidAmount" />
+          </div>
+          <div :class="$style.buttons">
+            <pl-button size="middle" plain @click="cancelPay">我在想想</pl-button>
+            <pl-button size="middle" type="warning" @click="submitOrder">立即付款</pl-button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -179,12 +210,17 @@ import share from '../../assets/js/wechat/wechat-share'
 import {
   getRoomStatus,
   getActiveCompleteInfo,
+  pay,
+  hasPied,
+  cancelOrder
 } from '../../apis/live'
 import {
   receiveCouponForLive
 } from '../../apis/my-coupon'
 import io from 'socket.io-client'
 import moment from 'moment'
+import wechatPay from '../../assets/js/wechat/wechat-pay'
+const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 export default {
   name: 'Live',
   components: {
@@ -194,6 +230,7 @@ export default {
   data () {
     return {
       showEmoticon: false,
+      needPay: false,
       channelId: '',
       liveAppId: '',
       channeUserId: '',
@@ -217,7 +254,8 @@ export default {
        */
       chatRecords: [],
       couponList: [],
-      productList: []
+      productList: [],
+      detail: {}
 
       // emoticon
     }
@@ -232,31 +270,38 @@ export default {
   },
   async activated () {
     if (this.roleCode === 'VISITOR') {
-      try {
-        await this.$confirm({
-          message: '为了您的账号安全，请绑定手机号',
-          confirmText: '去绑定',
-          closeOnClickMask: false
+      await this.$confirm({
+        message: '为了您的账号安全，请绑定手机号',
+        confirmText: '去绑定',
+        closeOnClickMask: false
+      })
+        .finally(() => {
+          let { name, params, query } = this.$route
+          sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({ name, query, params }))
+          this.$router.push({ name: 'BindMobile' })
         })
-      } catch (e) {
-
-      } finally {
-        let { name, params, query } = this.$route
-        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({ name, query, params }))
-        this.$router.push({ name: 'BindMobile' })
-      }
+      return
     }
-  },
-  async mounted () {
+    let reqs = [getRoomStatus(), this.getDetail()]
     try {
-      let data = await getRoomStatus()
+      let res = await Promise.all(reqs)
+      let data = res[0]
+      let detail = res[1]
       let { roomId, appId, appUserId } = data
       this.channelId = roomId
       this.liveAppId = appId
       this.channeUserId = appUserId
+      // 是否需要支付
+      if (detail.isPay) {
+        let needPay = await hasPied(detail.id)
+        if (!needPay) {
+          // 还没支付
+          this.needPay = !needPay
+          return
+        }
+      }
       this.initPlayer()
       this.initSocket()
-      this.getDetail()
     } catch (e) {
       this.$error(e.message)
       throw e
@@ -420,10 +465,6 @@ export default {
         uimg: '' // 送花人头像，为新增的属性，可不传
       }))
     },
-    // 选择表情
-    selectEmotion (name) {
-      console.log(name)
-    },
     async scrollBottom () {
       let box = this.$refs.chatRecords
       let scrollHeight = box.scrollHeight
@@ -464,9 +505,11 @@ export default {
 
           this.productList = data.productList || []
           this.activeId = data.id
+          this.detail = data
+          return data
         }
       } catch (e) {
-
+        throw e
       }
     },
     async couponClick (id) {
@@ -490,32 +533,58 @@ export default {
     messageBoxBlur (e) {
       window.scrollTo(0, 0)
     },
-    fullScreen () {
-      let isFullScreen = false
-      let element = document.documentElement
-      if (!isFullScreen) {
-        if (element.requestFullscreen) {
-          element.requestFullscreen()
-        } else if (element.msRequestFullscreen) {
-          element.msRequestFullscreen()
-        } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen()
-        } else if (element.webkitRequestFullscreen) {
-          element.webkitRequestFullscreen()
-        }
-        isFullScreen = true
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen()
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen()
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen()
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen()
-        }
-        isFullScreen = false
+    /**
+     * 提交订单
+     */
+    async submitOrder () {
+      try {
+        let res = await pay('1191987152813068288')
+        await this.pay(res)
+      } catch (e) {
+        throw e
       }
+    },
+    cancelPay () {
+      this.$router.push({ name: 'Home' })
+    },
+    share () {
+    },
+    /**
+     * 调起微信支付接口
+     * @param CREDENTIAL {Object} 支付数据
+     * @returns {Promise<*>}
+     */
+    async pay (CREDENTIAL) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          await wechatPay(CREDENTIAL)
+          this.initPlayer()
+          this.initSocket()
+          this.$success('付款成功立即观看')
+          this.needPay = false
+        } catch (e) {
+          this.needPay = false
+          this.$confirm({
+            message: '支付失败',
+            viceMessage: '<p>若要正常观看</p><p>请重新发起支付</p>',
+            confirmText: '重新支付',
+            useDangersHtml: true
+          })
+            .then(() => {
+              this.needPay = true
+            })
+            .catch(() => {
+              this.cancelPay()
+            })
+          await cancelOrder(this.detail.id)
+            .then(res => {
+              reject(e)
+            })
+            .catch(err => {
+              reject(err)
+            })
+        }
+      })
     }
   }
 }
@@ -540,10 +609,15 @@ export default {
   .tabs {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 48px;
     font-size: 26px;
     background-color: #fff;
-    > .tab-item {
+    > div {
+      display: flex;
+      align-items: center;
+    }
+    .tab-item {
       position: relative;
       margin-right: 70px;
       line-height: 68px;
@@ -762,6 +836,84 @@ export default {
         font-size: 24px;
         color: #999;
         line-height: 34px;
+      }
+    }
+  }
+
+  .pay-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2002;
+    background-color: rgba(0, 0, 0, .65);
+  }
+  .pay-box {
+    width: 704px;
+    box-sizing: border-box;
+    margin: 280px auto 0;
+    padding: 22px 24px;
+    background-color: #fff;
+    > .box-top {
+      display: flex;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #e7e7e7;
+      > img {
+        width: 224px;
+        height: 164px;
+        margin-right: 20px;
+        object-fit: cover;
+      }
+      > .top-right {
+        > .title {
+          margin-bottom: 12px;
+          font-size: 22px;
+          line-height: 32px;
+        }
+        > .time {
+          margin-bottom: 10px;
+          line-height: 28px;
+          font-size: 20px;
+          color: #999;
+          &:before {
+            content: '时间：';
+          }
+        }
+        > .price {
+          margin-bottom: 4px;
+          font-size: 24px;
+          color: #000;
+          &:before {
+            content: '¥';
+            font-size: 16px;
+          }
+        }
+        > .live-tip {
+          font-size: 18px;
+          color: #a8a8a8;
+        }
+      }
+    }
+    > .truth-price {
+      margin:  20px 0 28px 0;
+      text-align: right;
+      font-size: 32px;
+      > span {
+        color: #333;
+      }
+      > i {
+        color: #fe7700;
+        &:before {
+          content: '￥';
+          font-size: 20px;
+        }
+      }
+    }
+    > .buttons {
+      text-align: right;
+      > button {
+        margin-left: 20px;
       }
     }
   }

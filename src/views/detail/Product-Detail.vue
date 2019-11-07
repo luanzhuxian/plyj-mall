@@ -297,7 +297,7 @@ import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
 import youLike from './../home/components/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
-import { generateQrcode, cutImageCenter, cutArcImage } from '../../assets/js/util'
+import { generateQrcode, cutImageCenter, cutArcImage, loadImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
 import CouponItem from '../../components/item/Coupon-Item.vue'
@@ -490,8 +490,8 @@ export default {
           link: shareUrl,
           imgUrl: result.productMainImage + '?x-oss-process=style/thum'
         })
-        this.haibaoImg = await this.loadImage(result.productMainImage)
-        // let img = await this.loadImage(result.productMainImage)
+        this.haibaoImg = await loadImage(result.productMainImage)
+        // let img = await loadImage(result.productMainImage)
         // img = cutImageCenter(img)
         // let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'url')
         // this.qrcode = qrcode
@@ -613,21 +613,21 @@ export default {
       // 截取头像
       let lodedAvatar
       try {
-        lodedAvatar = await this.loadImage(this.avatar)
+        lodedAvatar = await loadImage(this.avatar)
       } catch (e) {
-        lodedAvatar = await this.loadImage(avatar)
+        lodedAvatar = await loadImage(avatar)
       }
       const arcAvatar = cutArcImage(lodedAvatar)
       const allImgs = [
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster3.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster1.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuanjia.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/miaoshajia.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/tuangoujia.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan.png'),
-        this.loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao.png')
+        loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster3.png'),
+        loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png'),
+        loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster1.png'),
+        loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou.png'),
+        loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuanjia.png'),
+        loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/miaoshajia.png'),
+        loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/tuangoujia.png'),
+        loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan.png'),
+        loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao.png')
       ]
       const res = await Promise.all(allImgs)
       const tuanBg = res[0]
@@ -749,19 +749,6 @@ export default {
       } finally {
         this.creating = false
       }
-    },
-    loadImage (src) {
-      let img = new Image()
-      img.crossOrigin = 'Anonymous'
-      img.src = src + '?' + Date.now()
-      return new Promise((resolve, reject) => {
-        img.onload = () => {
-          resolve(img)
-        }
-        img.onerror = (e) => {
-          reject(new Error('图片加载错误'))
-        }
-      })
     },
     countFinished () {
       this.$set(this.detail, 'serverTime', '')

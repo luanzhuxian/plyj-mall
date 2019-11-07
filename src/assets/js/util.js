@@ -391,3 +391,22 @@ export class countdown {
     clearTimeout(this.timer)
   }
 }
+
+/**
+ * 加载跨域图片
+ * @param src {string}
+ * @return {Promise<any>}
+ */
+export function loadImage (src) {
+  let img = new Image()
+  img.crossOrigin = 'Anonymous'
+  img.src = src + '?' + Date.now()
+  return new Promise((resolve, reject) => {
+    img.onload = () => {
+      resolve(img)
+    }
+    img.onerror = (e) => {
+      reject(new Error('图片加载错误'))
+    }
+  })
+}

@@ -67,8 +67,30 @@ export const getActiveCompleteInfo = (id = '') => Instance.get(`/apis/v1/mall/li
  * 获取直播信息
  */
 export const getRoomStatus = () => Instance.get(`/apis/v1/mall/live/room/statue`)
+/**
+ * 直播支付
+ * @param liveActivityId {String}
+ * @return {Promise<AxiosResponse<T>>}
+ */
+export const pay = liveActivityId => Instance.post(`/apis/v1/mall/live/order/unifiedOrder?liveActivityId=${liveActivityId}`)
+/**
+ * 是否支付过
+ * @param liveActivityId {String}
+ * @return {Promise<AxiosResponse<T>>}
+ */
+export const hasPied = liveActivityId => Instance.post(`/apis/v1/mall/live/order/customer/payed?liveActivityId=${liveActivityId}`)
+/**
+ * 取消订单
+ * @param liveActivityId {String}
+ * @return {Promise<AxiosResponse<T>>}
+ */
+export const cancelOrder = liveActivityId => Instance.post(`/apis/v1/mall/live/order/cancelOrder?liveActivityId=${liveActivityId}`)
 
 function request (config) {
+  let mallDomain = location.pathname.split('/')[1]
+  config.headers = {
+    openId: localStorage.getItem(`openId_${mallDomain}`) || ''
+  }
   return config
 }
 function reqError (error) {
@@ -76,13 +98,22 @@ function reqError (error) {
 }
 function response (response) {
   const data = response.data
+  const config = response.config
   if (data.code === 200 || data.status === 200) {
     if (data.hasOwnProperty('result')) {
       return data.result
     }
     return data
   }
-  return Promise.reject(new ResponseError(data.message))
+  let err = {
+    method: config.method,
+    url: config.url,
+    data: config.data ? JSON.parse(config.data) : null,
+    params: config.params || null,
+    devMessage: data.devMessage || '',
+    message: data.message || ''
+  }
+  return Promise.reject(new ResponseError(JSON.stringify(err)))
 }
 function resError (error) {
   let msg = error.message
