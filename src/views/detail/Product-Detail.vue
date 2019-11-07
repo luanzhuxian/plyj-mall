@@ -17,14 +17,14 @@
       <BookingBar :detail="detail" v-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
       <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
-        <!-- 加个 润笔 购买数量，关注人数 登信息 -->
-        <info-header :detail="detail" v-if="detail.activeProduct === 1 || (detail.preActivity !== 1 && detail.preActivity !== 2)" />
         <!-- 团购信息 -->
         <TogetherPrice :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity === 2" />
         <!-- 秒杀信息 -->
-        <SecondPrice :detail="detail" v-if="detail.activeProduct === 3 && detail.preActivity !== 0" />
+        <SecondPrice :detail="detail" v-else-if="detail.activeProduct === 3 && detail.preActivity !== 0" />
         <!-- 预购信息 -->
-        <BookingPrice :detail="detail" v-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
+        <BookingPrice :detail="detail" v-else-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
+        <!-- 加个 润笔 购买数量，关注人数 登信息 -->
+        <info-header :detail="detail" v-else />
         <!-- 开售倒计时 -->
         <count-down
           size="large"
