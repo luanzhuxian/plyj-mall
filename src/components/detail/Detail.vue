@@ -1,23 +1,22 @@
 <template>
   <div :class="$style.detailInfo + ' ql-snow'" ref="detail">
     <h3 v-text="title" />
-    <lazy-component>
-      <div
-        :class="$style.content + ' ql-container ql-editor'"
-        v-html="afterHtml"
-      />
-    </lazy-component>
+    <div
+      :class="$style.content + ' ql-container ql-editor'"
+      v-html="afterHtml"
+      ref="wrap"
+      @click="preivew"
+    />
   </div>
 </template>
 
 <script>
-const imgError = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png'
 export default {
   name: 'DetailInfo',
   data () {
     return {
-      imgError,
-      afterHtml: ''
+      afterHtml: '',
+      imgList: []
     }
   },
   props: {
@@ -30,15 +29,37 @@ export default {
       default: ''
     }
   },
-  created () {
-    this.afterHtml = this.content
-  },
-  activated () {
-    this.afterHtml = this.content
+  computed: {
+    detail () {
+      // 解决 BOM &#65279; 幽灵字符
+      return this.content.replace(/\ufeff/g, '') || ''
+    }
   },
   watch: {
-    content (val) {
-      this.afterHtml = this.content
+    detail: {
+      async handler (val) {
+        if (val) {
+          this.afterHtml = val.replace(/<img[^>]+src="([^"]*)"[^>]*>/g, '<img data-src="$1" src=$1?x-oss-process=style/thum-middle>')
+        }
+        await this.$nextTick()
+        this.setPreview()
+      },
+      immediate: true
+    }
+  },
+  methods: {
+    setPreview () {
+      let imgs = Array.from(this.$refs.wrap.querySelectorAll('img'))
+      this.imgList = imgs.map(item => item.dataset['src'])
+    },
+    preivew (e) {
+      e.stopPropagation()
+      if (e.target.tagName === 'IMG') {
+        window.wx.previewImage({
+          current: e.currentTarget.dataset['src'], // 当前显示图片的http链接
+          urls: [...this.imgList] // 需要预览的图片http链接列表
+        })
+      }
     }
   }
 }

@@ -12,7 +12,7 @@
             @click.stop="$router.push({ name: 'Lesson', params: { productId: data.values[0].goodsInfo.id } })"
           >
             <div :class="$style.imgWrapper">
-              <img :src="data.values[0].goodsInfo.productMainImage">
+              <img :src="data.values[0].goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
               <div :class="$style.countDown">
                 <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 0">距开始</span>
                 <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 1">距结束</span>

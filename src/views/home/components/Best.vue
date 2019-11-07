@@ -12,7 +12,7 @@
       >
         <div :class="$style.img">
           <count-down :class="$style.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
-          <img :src="item.image" alt="">
+          <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
         </div>
 
         <span v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'" :class="$style.experience">体验课</span>

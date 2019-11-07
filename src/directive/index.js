@@ -20,9 +20,12 @@ export default {
    */
   imger: {
     inserted: function (el, { value, arg }) {
-      value = value || el.src || ''
       if (!arg) id++
       let currentArg = arg || 'imgerList_' + id
+      // 如果绑定的元素不是img元素，那么就获取改元素下的所有图片元素
+      // 以这些图片的src属性组成列表
+
+      value = value || el.src || ''
       if (IMGERLIST[currentArg]) {
         IMGERLIST[currentArg].push(value)
       } else {

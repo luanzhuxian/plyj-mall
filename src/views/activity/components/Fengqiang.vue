@@ -21,7 +21,7 @@
             @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
           >
             <div :class="$style.imgWrapper">
-              <img :src="item.goodsInfo.productMainImage">
+              <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
             </div>
             <div :class="$style.itemInfo" v-if="type === 5 || type === 7">
               <h4>{{ item.goodsInfo.productName }}</h4>

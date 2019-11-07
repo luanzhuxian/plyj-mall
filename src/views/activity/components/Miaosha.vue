@@ -77,7 +77,7 @@
           @click="$router.push({ name: 'Lesson', params: { productId: prod.id } })"
         >
           <div :class="$style.imgWrapper">
-            <img :src="prod.productMainImage">
+            <img :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">
             <div :class="$style.countDown">
               <span :class="$style.text" v-if="prod.activityInfo && prod.activityInfo.status === 0">距开始</span>
               <span :class="$style.text" v-if="prod.activityInfo && prod.activityInfo.status === 1">距结束</span>

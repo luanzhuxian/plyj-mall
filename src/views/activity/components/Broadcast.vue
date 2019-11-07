@@ -6,7 +6,7 @@
   >
     <div :class="$style.moduleWrapper">
       <div :class="$style.imgWrapper">
-        <img :src="live.hasNotice ? live.noticeImg : live.coverImg">
+        <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
         <pl-icon name="icon-play-btn" type="svg" />
       </div>
       <div :class="$style.info">

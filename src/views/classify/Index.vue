@@ -39,9 +39,7 @@
           :class="$style.banner"
           v-if="currentClassify.id === '1'"
         >
-          <img
-            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/helperBanner.png"
-          >
+          <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/helperBanner.png">
         </div>
         <template v-if="currentClassify.childs && currentClassify.childs.length">
           <sub-classify
@@ -95,7 +93,7 @@
                 <goods-item
                   :key="index"
                   :id="item.id"
-                  :img="item.productMainImage"
+                  :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
                   :title="item.productName"
                   :price="item.price"
                   :data="item"

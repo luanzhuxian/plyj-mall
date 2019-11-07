@@ -177,14 +177,14 @@
       <div :class="$style.payWrap" v-if="needPay">
         <div :class="$style.payBox">
           <div :class="$style.boxTop">
-            <img :src="detail.coverImg" alt="">
+            <img :src="detail.coverImg + '?x-oss-process=style/thum-middle'" alt="">
             <div :class="$style.topRight">
               <div :class="$style.title" v-text="detail.name" />
               <div :class="$style.time" v-text=" detail.liveStartTime" />
               <div :class="$style.price" v-text="detail.paidAmount" />
               <div :class="$style.liveTip">
                 <p>该直播为付费项目，不支持退换，</p>
-                <p>付费即可观看；一场计费一次，任何事件可观看</p>
+                <p>付费即可观看；一场计费一次，任何时间可观看</p>
               </div>
             </div>
           </div>
@@ -311,7 +311,7 @@ export default {
       this.liveAppId = appId
       this.channeUserId = appUserId
       await setComeInConut({
-        paidAmount: detail.paidAmount || 0
+        message: (detail.paidAmount || 0) + '元'
       })
       // 是否需要支付
       if (detail.isPay) {

@@ -9,49 +9,51 @@
           </router-link>
         </div>
         <ul :class="$style.list" v-if="data.values.length">
-          <li
-            :class="$style.listItem"
-            v-for="(item, i) of data.values"
-            :key="i"
-            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
-          >
-            <div :class="$style.time">
-              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
-                距开始
-              </div>
-              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 1">
-                距结束
-              </div>
-              <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 2">
-                已结束
-              </div>
-              <div :class="$style.timeRight" v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
-                <count-down
-                  :timestamp="getTime(item.goodsInfo.activityInfo)"
-                  color="#DB4D7D"
-                  size="mini"
-                  @done="() => item.goodsInfo.activityInfo.status += 1"
-                />
-              </div>
-            </div>
-            <div :class="$style.listItemWrapper">
-              <div :class="$style.imgWrapper">
-                <img :src="item.goodsInfo.productMainImage">
-              </div>
-              <div :class="$style.info">
-                <div :class="$style.main">
-                  {{ item.goodsInfo.productName }}
+          <template v-for="(item, i) of data.values">
+            <li
+              :class="$style.listItem"
+              v-if="item.goodsInfo"
+              :key="i"
+              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
+            >
+              <div :class="$style.time">
+                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
+                  距开始
                 </div>
-                <div :class="$style.sub1">
-                  <span v-if="item.goodsInfo && item.goodsInfo.activityInfo">{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
-                  <span v-if="item.goodsInfo && item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
+                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 1">
+                  距结束
                 </div>
-                <div :class="$style.sub2">
-                  {{ `双十二价位：${item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price')}元` }}
+                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 2">
+                  已结束
+                </div>
+                <div :class="$style.timeRight" v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
+                  <count-down
+                    :timestamp="getTime(item.goodsInfo.activityInfo)"
+                    color="#DB4D7D"
+                    size="mini"
+                    @done="() => item.goodsInfo.activityInfo.status += 1"
+                  />
                 </div>
               </div>
-            </div>
-          </li>
+              <div :class="$style.listItemWrapper">
+                <div :class="$style.imgWrapper">
+                  <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
+                </div>
+                <div :class="$style.info">
+                  <div :class="$style.main">
+                    {{ item.goodsInfo.productName }}
+                  </div>
+                  <div :class="$style.sub1">
+                    <span v-if="item.goodsInfo && item.goodsInfo.activityInfo">{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
+                    <span v-if="item.goodsInfo && item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
+                  </div>
+                  <div :class="$style.sub2">
+                    {{ `双十二价位：${item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price')}元` }}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </template>
         </ul>
       </div>
     </div>

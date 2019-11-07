@@ -27,7 +27,7 @@
             :key="i"
           >
             <div :class="$style.imgWrapper">
-              <img :src="item.image" alt="">
+              <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
             </div>
             <div :class="$style.info">
               <pl-icon name="icon-gift-1" type="svg" v-if="i === 0" />

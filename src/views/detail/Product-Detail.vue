@@ -91,9 +91,9 @@
         </div>
 
         <div>
-          <Comments v-if="tab === 1" :product-id="productId" :show="tab === 1" />
+          <Comments v-show="tab === 1" :product-id="productId" :show="tab === 1" />
           <DetailInfo
-            v-if="tab === 2"
+            v-show="tab === 2"
             :content="detail.detail || '暂无详情'"
           />
         </div>
@@ -425,18 +425,15 @@ export default {
     }
   },
   watch: {
-    productId () {
-      this.showSpecifica = false
-      this.currentModel = {}
-      this.haibao = ''
-      this.tab = 2
-      this.getDetail()
+    productId: {
+      async handler () {
+      },
+      immediate: true
     }
   },
   async activated () {
     try {
-      await this.getDetail()
-      await this.getCouponList()
+      await  this.refresh()
     } catch (e) {
       throw e
     }
@@ -495,8 +492,8 @@ export default {
         // img = cutImageCenter(img)
         // let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'url')
         // this.qrcode = qrcode
+        return result
       } catch (e) {
-        console.log(e)
         throw e
       } finally {
         this.loading = false
@@ -507,6 +504,7 @@ export default {
       try {
         let { result } = await getCouponInDetail()
         this.couponList = result
+        return result
       } catch (e) {
         throw e
       }
@@ -754,7 +752,23 @@ export default {
       this.$set(this.detail, 'serverTime', '')
       this.$set(this.detail, 'shoppingTimeLong', '')
       this.$set(this.detail, 'preActivity', 2)
+    },
+    async refresh () {
+      try {
+        this.showSpecifica = false
+        this.currentModel = {}
+        this.haibao = ''
+        this.tab = 2
+        await this.getDetail()
+        await this.getCouponList()
+      } catch (e) {
+        throw e
+      }
     }
+  },
+  async beforeRouteUpdate (to, from, next) {
+    await next()
+    await this.refresh()
   }
 }
 
