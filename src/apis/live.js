@@ -85,6 +85,14 @@ export const hasPied = liveActivityId => Instance.post(`/apis/v1/mall/live/order
  * @return {Promise<AxiosResponse<T>>}
  */
 export const cancelOrder = liveActivityId => Instance.post(`/apis/v1/mall/live/order/cancelOrder?liveActivityId=${liveActivityId}`)
+/**
+ * 设置用户进入直播间
+ * @param params
+ * @return {Promise<AxiosResponse<T>>}
+ */
+export const setComeInConut = params => Instance.get(`/apis/v1/mall/live/activity/watchLog`, {
+  params
+})
 
 function request (config) {
   let mallDomain = location.pathname.split('/')[1]

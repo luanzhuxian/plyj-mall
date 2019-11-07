@@ -212,7 +212,8 @@ import {
   getActiveCompleteInfo,
   pay,
   hasPied,
-  cancelOrder
+  cancelOrder,
+  setComeInConut
 } from '../../apis/live'
 import {
   receiveCouponForLive
@@ -291,6 +292,9 @@ export default {
       this.channelId = roomId
       this.liveAppId = appId
       this.channeUserId = appUserId
+      await setComeInConut({
+        paidAmount: detail.paidAmount || 0
+      })
       // 是否需要支付
       if (detail.isPay) {
         let needPay = await hasPied(detail.id)
@@ -308,7 +312,7 @@ export default {
     }
   },
   methods: {
-    initPlayer () {
+    async initPlayer () {
       let { channelId, channeUserId } = this
       let p = polyvObject('#player').livePlayer({
         wrap: '#player',
@@ -324,19 +328,19 @@ export default {
         forceH5: true,
         useH5Page: true
       })
-      let timer = setInterval(() => {
-        let video = document.querySelector('#player video')
-        if (video) {
-          // video.setAttribute('x5-video-player-fullscreen', true)
-          // video.setAttribute('x5-video-player-type', 'h5-page')
-          video.addEventListener('x5videoenterfullscreen', function (e) {
-            // console.log('x5videoenterfullscreen')
-            // video.style.width = window.screen.width + 'px'
-            // video.style.height = window.screen.height + 'px'
-          }, false)
-          clearInterval(timer)
-        }
-      }, 500)
+      // let timer = setInterval(() => {
+      //   let video = document.querySelector('#player video')
+      //   if (video) {
+      //     // video.setAttribute('x5-video-player-fullscreen', true)
+      //     // video.setAttribute('x5-video-player-type', 'h5-page')
+      //     video.addEventListener('x5videoenterfullscreen', function (e) {
+      //       // console.log('x5videoenterfullscreen')
+      //       // video.style.width = window.screen.width + 'px'
+      //       // video.style.height = window.screen.height + 'px'
+      //     }, false)
+      //     clearInterval(timer)
+      //   }
+      // }, 500)
     },
     /* 连接聊天服务器 */
     initSocket () {
