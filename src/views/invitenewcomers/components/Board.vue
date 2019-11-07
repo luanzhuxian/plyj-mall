@@ -364,16 +364,14 @@ export default {
         return
       }
       // 不是新人
-      if (!IS_NEW_USER) {
+      if (!IS_NEW_USER && this.userId !== this.shareUserId) {
         this.$alert({
           message: '<p>老用户无法参加助力活动~</p><p>邀您一起参与翻豪礼</p>',
           viceMessage: '<p>您可以直接发起活动，</p><p>邀请好友助力帮你翻豪礼</p>',
           useDangersHtml: true,
           confirmText: '我也想翻豪礼'
         })
-          .finally(() => {
-            this.IWantToGetAGiftToo()
-          })
+        this.IWantToGetAGiftToo()
       }
     }
   }
