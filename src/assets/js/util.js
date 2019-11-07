@@ -186,7 +186,7 @@ export function suffixPx (value) {
  * @param type {string} 生成的类型 canvas: 生成canvas, url 生成base64
  * @returns {Promise<*>}
  */
-export async function generateQrcode (size, text, padding = 0, img, centerPadding = 0, type) {
+export async function generateQrcode (size, text, padding = 0, img, centerPadding = 0, type = 'url') {
   const imageSize = 80 // 中心图片的宽高
   const devicePixelRatio = window.devicePixelRatio
   let canvas

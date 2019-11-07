@@ -199,6 +199,16 @@
         </div>
       </div>
     </transition>
+
+    <transition name="fade">
+      <div :class="$style.poster" v-if="showPoster">
+        <div :class="$style.posterWrap">
+          <img :src="poster" alt="">
+          <div>长按识别或保存二维码，分享给朋友吧！</div>
+          <pl-icon name="icon-close1" size="48" color="#fff" @click="showPoster = false" />
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -221,6 +231,12 @@ import {
 import io from 'socket.io-client'
 import moment from 'moment'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
+import {
+  generateQrcode,
+  cutArcImage,
+  loadImage,
+  createText
+} from '../../assets/js/util'
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 export default {
   name: 'Live',
@@ -232,6 +248,8 @@ export default {
     return {
       showEmoticon: false,
       needPay: false,
+      showPoster: false,
+      poster: '',
       channelId: '',
       liveAppId: '',
       channeUserId: '',
@@ -542,7 +560,7 @@ export default {
      */
     async submitOrder () {
       try {
-        let res = await pay('1191987152813068288')
+        let res = await pay(this.detail.id)
         await this.pay(res)
       } catch (e) {
         throw e
@@ -551,7 +569,61 @@ export default {
     cancelPay () {
       this.$router.push({ name: 'Home' })
     },
-    share () {
+    async share () {
+      if (this.poster) {
+        this.showPoster = true
+        return
+      }
+      // 生成二维码
+      try {
+        let all = [
+          generateQrcode(300, location.href, 0, null, 0, 'canvas'),
+          loadImage(POSTER_BG),
+          loadImage(this.avatar),
+          loadImage(this.detail.coverImg)
+        ]
+        let res = await Promise.all(all)
+        let qrcode = res[0]
+        let bg = res[1]
+        let avatar = res[2]
+        let coverImg = res[3]
+        let canvas = document.createElement('canvas')
+        canvas.width = bg.width
+        canvas.height = bg.height
+        let ctx = canvas.getContext('2d')
+        // 绘制背景
+        ctx.drawImage(bg, 0, 0)
+        // 绘制二维码
+        ctx.drawImage(qrcode, 22, 544, 148, 148)
+        // 绘制头像
+        avatar = cutArcImage(avatar)
+        ctx.drawImage(avatar, 20, 12, 64, 64)
+        // 绘制姓名
+        ctx.font = 'bold 28px Microsoft YaHei UI'
+        ctx.fillStyle = '#fff'
+        ctx.textBaseline = 'hanging'
+        let nameWidth = createText(ctx, 100, 28, this.userName, 34, 350, 1)
+        createText(ctx, 100 + nameWidth + 14, 28, '邀你观看直播', 34, 350, 1)
+        // 绘制封面
+        ctx.drawImage(coverImg, 14, 102, 610, 406)
+        // 绘制直播名称
+        ctx.font = 'bold 32px Microsoft YaHei UI'
+        createText(ctx, 200, 534, this.detail.name, 44, 400, 1)
+        // 绘制直播时间
+        ctx.font = '24px Microsoft YaHei UI'
+        let date = moment(this.detail.liveStartTime).format('YYYY-MM-DD mm:ss') + ' 开始直播'
+        createText(ctx, 258, 598, date, 34)
+        // 绘制价格
+        if (this.detail.paidAmount) {
+          ctx.font = 'bold 44px Microsoft YaHei UI'
+          let price = `仅需 ${this.detail.paidAmount}元`
+          createText(ctx, 200, 644, price, 58)
+        }
+        this.poster = canvas.toDataURL()
+        this.showPoster = true
+      } catch (e) {
+        console.log(e)
+      }
     },
     /**
      * 调起微信支付接口
@@ -920,6 +992,36 @@ export default {
         margin-left: 20px;
       }
     }
+  }
+  .poster {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    z-index: 2003;
+    background-color: rgba(0, 0, 0, .65);
+    font-size: 0;
+     > .poster-wrap {
+       width: 638px;
+       text-align: center;
+       > img {
+         width: 100%;
+       }
+       > div {
+         line-height: 66px;
+         font-size: 28px;
+         color: #fff;
+         text-align: center;
+         background-color: #f27918;
+       }
+       > i {
+         margin-top: 64px;
+       }
+     }
   }
 
   @keyframes rotate {
