@@ -4,9 +4,13 @@
       <search placeholder="搜索商品" />
       <div :class="$style.container">
         <router-link
-          :class="$style.btnTop"
+          :class="{
+            [$style.btnTop]: true,
+            [$style.coupon]: topBtnType === 1,
+            [$style.default]: topBtnType === 2,
+          }"
           tag="div"
-          :to="{ name: 'MyCoupon' }"
+          :to="{ name: topBtnType === 1 ? 'MyCoupon' : '' }"
         />
         <TemplateFengqiang
           v-if="type === 5"
@@ -38,6 +42,7 @@ import TemplateFanchang from './Template-Fanchang.vue'
 import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../newcomers/NewcomersHomeEntry.vue'
 import { getCurrentTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
+import { getMyCouponList } from '../../apis/my-coupon'
 import { getCurrentActivity } from '../../apis/invitenewcomers'
 
 export default {
@@ -69,18 +74,31 @@ export default {
       },
       liveInfo: {}, // 直播
       invitingEvent: {}, // 邀新有礼
-      jxEvent: {} // 见学之路
+      jxEvent: {}, // 见学之路
+      topBtnType: 0 // 0：不显示 1：优惠卷 2：默认
     }
   },
   async created () {
     try {
       this.getTemplate()
+      // 查询可使用优惠卷
+      getMyCouponList({ current: 1, size: 10, status: 0 })
+        .then(({ result }) => {
+          this.topBtnType = result.total ? 1 : 2
+        })
+        .catch(e => {
+          this.topBtnType = 2
+          console.log(e)
+        })
+      // 查询直播
       getLiveInfo().then(({ result }) => {
         this.liveInfo = result || {}
       })
+      // 邀新有礼
       getCurrentActivity().then(({ result }) => {
         this.invitingEvent = result || {}
       })
+      // 见学之路
       getJianxueInfo().then(({ result }) => {
         this.jxEvent = result || {}
       })
@@ -163,11 +181,18 @@ export default {
     .btn-top {
       width: 520px;
       height: 78px;
-      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-top.png") no-repeat center center;
-      background-size: 100% auto;
       border-radius: 70px;
-      box-shadow: 18px 6px 25px #800F0F;
       margin: 0 auto 28px;
+      &.coupon {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-top.png") no-repeat center center;
+        background-size: 100% auto;
+        box-shadow: 18px 6px 25px #800F0F;
+      }
+      &.default {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/Button 4.png") no-repeat center center;
+        background-size: 100% auto;
+        box-shadow: 18px 6px 25px #800F0F;
+      }
     }
   }
 </style>
