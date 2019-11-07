@@ -98,7 +98,7 @@
     </pl-form>
     <pl-button
       v-if="form.auditStatus !== 'AWAIT'"
-      :disabled="form.auditStatus === 'AWAIT' || isBtnDisable"
+      :disabled="form.auditStatus === 'AWAIT'"
       type="warning"
       size="huge"
       :loading="loading"
@@ -297,9 +297,6 @@ export default {
     },
     isCodeValid () {
       return hasValue(this.form.verificationCode) && isCode(this.form.verificationCode)
-    },
-    isBtnDisable () {
-      return !this.isNameValid || !this.isIDValid || !this.isMobileValid || !this.isCodeValid
     },
     isYaji () {
       return this.mallId === '1057573777392603136'

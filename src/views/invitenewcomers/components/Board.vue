@@ -212,11 +212,6 @@ export default {
         }
       },
       immediate: true
-    },
-    helpeSuccess (val) {
-      if (!val) {
-
-      }
     }
   },
   async activated () {
@@ -355,7 +350,7 @@ export default {
       this.$emit('gift-is-opened') // 礼物已打开事件，外部需要刷新数据
       this.getHelpers()
     },
-    // 我也想反豪礼
+    // 我也想反豪礼（重置到分享页面）
     IWantToGetAGiftToo () {
       this.$router.replace({ name: 'InviteNewcomers', params: { activityId: this.activeId } })
       this.$emit('i-want-to-get-gift-too') // 礼物已打开事件，外部需要刷新数据
