@@ -310,17 +310,17 @@ export default {
       this.channelId = roomId
       this.liveAppId = appId
       this.channeUserId = appUserId
-      await setComeInConut({
-        message: (detail.paidAmount || 0) + '元'
-      })
       // 是否需要支付
       if (detail.isPay) {
         let needPay = await hasPied(detail.id)
         if (!needPay) {
           // 还没支付
-          this.needPay = !needPay
+          this.needPay = true
           return
         }
+        await setComeInConut({
+          message: (detail.paidAmount || 0) + '元'
+        })
       }
       this.initPlayer()
       this.initSocket()
