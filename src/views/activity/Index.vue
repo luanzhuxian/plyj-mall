@@ -86,9 +86,9 @@ export default {
         .then(({ result }) => {
           this.topBtnType = result.total ? 1 : 2
         })
-        .catch(e => {
+        .catch(err => {
           this.topBtnType = 2
-          console.log(e)
+          throw err
         })
       // 查询直播
       getLiveInfo().then(({ result }) => {
