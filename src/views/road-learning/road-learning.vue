@@ -280,6 +280,7 @@ export default {
         loop: true,
         noSwiping: true
       },
+      lottering: false,
       canClick: true
     }
   },
@@ -386,6 +387,7 @@ export default {
         if (datetime <= 0) {
           clearInterval(this.timer)
           this.obtainGifts = []
+          this.id = ''
           await this.getDetail()
           this.getCheckInDetail()
           this.getGifts()
@@ -399,6 +401,7 @@ export default {
     async getCheckInDetail () {
       const { result: res } = await getCheckInDetail(this.activeDetail.id)
       this.checkInDetail = res
+      if (this.lottering) return
       if (this.checkInDetail.totalCheckInNum === 10 && this.checkInDetail.claimStatus === 1) {
         await this.$confirm({
           message: ' 奖品已领取，快去礼品库中看看~~ ',
@@ -428,6 +431,7 @@ export default {
     },
     async claimGift () {
       const { result: res } = await claimGift(this.activeDetail.id)
+      this.lottering = true
       await this.getCheckInDetail()
       this.claimGiftDetail = res
       if (this.checkInDetail.claimStatus === 1) {
