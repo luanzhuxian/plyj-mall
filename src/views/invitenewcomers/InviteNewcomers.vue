@@ -139,9 +139,9 @@ export default {
       if (!this.shareUserId) {
         willHide = []
       } else {
+        // 存在分享id时进行统计
         willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
-        // 是别人点进来的
-        await inviterStatisitic(this.activityId, this.shareUserId)
+        inviterStatisitic(this.activityId, this.shareUserId)
       }
       await share({
         appId: this.appId,
