@@ -140,6 +140,7 @@ export default {
         willHide = []
       } else {
         willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
+        // 是别人点进来的
         await inviterStatisitic(this.activityId, this.shareUserId)
       }
       await share({
