@@ -371,18 +371,25 @@ export function drawRoundRect (ctx, x, y, width, height, radius, strokeStyle, fi
  */
 export class countdown {
   timer = 0
+  total = 0
   constructor (duration, callback) {
     this.duration = duration
+    this.total = duration
     this.callback = callback
   }
   start () {
+    // 总时间如果小于等于0，不能启动倒计时
+    if (!this.total || this.total < 0) {
+      return
+    }
     let duration = this.duration
+    if (duration <= 0) {
+      this.callback(null)
+      return
+    }
     let { _data } = moment.duration(duration)
     this.callback(_data)
     this.timer = setTimeout(() => {
-      if (duration <= 0) {
-        return
-      }
       this.duration -= 1000
       this.start()
     }, 1000)

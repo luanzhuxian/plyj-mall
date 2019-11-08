@@ -60,7 +60,11 @@ export const getCurrentActivity = () => axios.get('/apis/v1/invitingEvents/currA
  * @return {Promise<*|*>|Promise<*|*>|Promise<AxiosResponse<T>>|IDBRequest<IDBValidKey>|Promise<void>}
  */
 export const inviterStatisitic = (activityId, userId) => axios.put(`/apis/v1/mallActivitys/${activityId}/inviter/stat?userId=${userId}`)
-
+/**
+ * 新人助力完以后调用
+ * @param activityId
+ * @return {*}
+ */
 export const registerStatisitic = (activityId) => axios.post(`/apis/v1/mallActivitys/${activityId}/register/stat`)
 /**
  * 获取活动详细信息
