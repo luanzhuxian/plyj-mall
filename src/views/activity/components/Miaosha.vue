@@ -69,7 +69,7 @@
           <span>进入专场</span>
         </div>
       </ul>
-      <ul :class="$style.list">
+      <ul :class="$style.list" v-if="data.values[miaoshaIndex] && data.values[miaoshaIndex].goodsInfo.length">
         <li
           :class="$style.listItem"
           v-for="(prod, i) of data.values[miaoshaIndex].goodsInfo"

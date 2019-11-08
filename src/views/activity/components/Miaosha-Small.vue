@@ -8,6 +8,7 @@
       <div :class="$style.wrapper">
         <ul :class="$style.list" v-if="data.values.length">
           <li
+            v-if="data.values[0] && data.values[0].goodsInfo"
             :class="$style.listItem"
             @click.stop="$router.push({ name: 'Lesson', params: { productId: data.values[0].goodsInfo.id } })"
           >

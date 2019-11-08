@@ -9,25 +9,27 @@
         - 快来领取 -
       </div>
       <ul :class="$style.list" v-if="data.values.length">
-        <li
-          :class="{
-            [$style.listItem]: true,
-            [$style.large]: data.values.length < 3,
-            [$style.small]: data.values.length === 3
-          }"
-          v-for="(item, i) of data.values"
-          :key="i"
-        >
-          <div :class="$style.listItemWrapper">
-            <div :class="$style.price">
-              ￥ <span :class="$style.number">{{ item.goodsInfo.amount }}</span>
+        <template v-for="(item, i) of data.values">
+          <li
+            v-if="item.goodsInfo"
+            :class="{
+              [$style.listItem]: true,
+              [$style.large]: data.values.length < 3,
+              [$style.small]: data.values.length === 3
+            }"
+            :key="i"
+          >
+            <div :class="$style.listItemWrapper">
+              <div :class="$style.price">
+                ￥ <span :class="$style.number">{{ item.goodsInfo.amount }}</span>
+              </div>
+              <div>{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
+              <div :class="$style.date">
+                {{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}
+              </div>
             </div>
-            <div>{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
-            <div :class="$style.date">
-              {{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}
-            </div>
-          </div>
-        </li>
+          </li>
+        </template>
       </ul>
     </div>
   </router-link>

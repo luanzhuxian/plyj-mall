@@ -119,7 +119,6 @@ export default {
           return
         }
         let { type, moduleModels } = result
-        this.type = type
         if (type === 5) {
           this.modules.MIAO_SHA = moduleModels[0]
           this.modules.PIN_TUAN = moduleModels[1]
@@ -149,6 +148,7 @@ export default {
           this.modules.FENG_QIANG = moduleModels[3]
           this.modules.RECOMMEND = moduleModels[4]
         }
+        this.type = type
       } catch (e) {
         throw e
       }

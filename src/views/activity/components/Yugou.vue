@@ -11,8 +11,8 @@
         <ul :class="$style.list" v-if="data.values.length">
           <template v-for="(item, i) of data.values">
             <li
-              :class="$style.listItem"
               v-if="item.goodsInfo"
+              :class="$style.listItem"
               :key="i"
               @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
             >

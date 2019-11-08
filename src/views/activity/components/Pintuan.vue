@@ -9,86 +9,89 @@
           </router-link>
         </div>
         <ul :class="$style.list" v-if="data.values.length">
-          <li
-            :class="{
-              [$style.listItem]: true,
-              [$style.large]: i === 0 || data.values.length % 2 === 0,
-              [$style.small]: i !== 0 && data.values.length % 2 === 1
-            }"
-            v-for="(item, i) of data.values"
-            :key="i"
-            @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
-          >
-            <div :class="$style.imgWrapper">
-              <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-              <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
-                <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
-                <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
-                <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
-                <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 3">已结束</span>
-                <count-down
-                  v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
-                  :timestamp="getTime(item.goodsInfo.activityInfo)"
-                  @done="() => reset(item)"
-                />
-              </div>
-            </div>
-            <div :class="$style.info">
-              <div :class="$style.main" style="height:46px">
-                {{ item.goodsInfo.productName }}
-              </div>
-              <div :class="$style.time">
-                <template v-if="(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) && (item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) != 0">
-                  <div :class="$style.timeLeft">
-                    成团瓜分
-                  </div>
-                  <div :class="$style.timeRight">
-                    {{ `${(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) || 0}元` }}
-                  </div>
-                </template>
-                <div v-else :class="$style.timeLeft" style="width:17.466667vw">
-                  <div>
-                    双十二有礼
-                  </div>
-                </div>
-              </div>
-              <div :class="$style.sub">
-                <div :class="$style.subLeft">
-                  <div :class="$style.subLeftMain">
-                    <span v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
-                      {{ `${item.goodsInfo.pageviews}人已关注` }}
-                    </span>
-                    <span v-else>
-                      {{ `已有${(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.number) || 0}人参与` }}
-                    </span>
-                  </div>
-                  <div :class="$style.subLeftSub">
-                    <pl-icon name="icon-tuangoujia" type="svg" />
-                    <span :class="$style.price">{{ item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice }}</span>
-                  </div>
-                </div>
-                <div
-                  :class="{
-                    [$style.subRight]: true,
-                    [$style.disabled]: item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status !== 1
-                  }"
-                >
-                  <pl-icon
-                    name="icon-qiang"
-                    type="svg"
-                    :class="$style.qiang"
-                    v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
-                  />
-                  <pl-icon
-                    name="icon-jieshu"
-                    type="svg"
-                    :class="$style.finish"
-                    v-else
+          <template v-for="(item, i) of data.values">
+            <li
+              v-if="item.goodsInfo"
+              :class="{
+                [$style.listItem]: true,
+                [$style.large]: i === 0 || data.values.length % 2 === 0,
+                [$style.small]: i !== 0 && data.values.length % 2 === 1
+              }"
+
+              :key="i"
+              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
+            >
+              <div :class="$style.imgWrapper">
+                <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
+                <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
+                  <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
+                  <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
+                  <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
+                  <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 3">已结束</span>
+                  <count-down
+                    v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                    :timestamp="getTime(item.goodsInfo.activityInfo)"
+                    @done="() => reset(item)"
                   />
                 </div>
               </div>
-            </div>
-          </li>
+              <div :class="$style.info">
+                <div :class="$style.main" style="height:46px">
+                  {{ item.goodsInfo.productName }}
+                </div>
+                <div :class="$style.time">
+                  <template v-if="(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) && (item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) != 0">
+                    <div :class="$style.timeLeft">
+                      成团瓜分
+                    </div>
+                    <div :class="$style.timeRight">
+                      {{ `${(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.prizePool) || 0}元` }}
+                    </div>
+                  </template>
+                  <div v-else :class="$style.timeLeft" style="width:17.466667vw">
+                    <div>
+                      双十二有礼
+                    </div>
+                  </div>
+                </div>
+                <div :class="$style.sub">
+                  <div :class="$style.subLeft">
+                    <div :class="$style.subLeftMain">
+                      <span v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
+                        {{ `${item.goodsInfo.pageviews}人已关注` }}
+                      </span>
+                      <span v-else>
+                        {{ `已有${(item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.number) || 0}人参与` }}
+                      </span>
+                    </div>
+                    <div :class="$style.subLeftSub">
+                      <pl-icon name="icon-tuangoujia" type="svg" />
+                      <span :class="$style.price">{{ item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice }}</span>
+                    </div>
+                  </div>
+                  <div
+                    :class="{
+                      [$style.subRight]: true,
+                      [$style.disabled]: item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status !== 1
+                    }"
+                  >
+                    <pl-icon
+                      name="icon-qiang"
+                      type="svg"
+                      :class="$style.qiang"
+                      v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                    />
+                    <pl-icon
+                      name="icon-jieshu"
+                      type="svg"
+                      :class="$style.finish"
+                      v-else
+                    />
+                  </div>
+                </div>
+              </div>
+            </li>
+          </template>
         </ul>
       </div>
     </div>
