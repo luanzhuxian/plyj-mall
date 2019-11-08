@@ -242,7 +242,11 @@ export default {
       }, 3000)
     },
     async getList () {
-      const { result: res } = await getCityListByParentId({ status: this.activeId })
+      const { result: res } = await getCityListByParentId({
+        current: 1,
+        size: 100,
+        status: this.activeId
+      })
       const records = res.records
       for (const item of records) {
         item.isSelect = false
