@@ -357,23 +357,26 @@ export default {
       let end = moment(this.activeDetail.activityEndTime).valueOf()
       if (now < start) {
         this.activeStart = false
+        this.activeEnd = false
         distanceTime = start - now
       } else {
         this.activeStart = true
         distanceTime = end - now
         if (end < now) {
           this.activeEnd = true
+        } else {
+          this.activeEnd = false
         }
       }
       this.countdown(distanceTime)
     },
     async getGifts () {
       const { result: res } = await getRoadLearningGifts({ id: this.activeDetail.id })
-      this.gifts = res
+      this.gifts = res.reverse()
     },
     async getObtainGifts () {
       const { result: res } = await getObtainGiftsList(this.activeDetail.id)
-      this.obtainGifts = res.records.reverse()
+      this.obtainGifts = res.records
     },
     countdown (datetime) {
       if (datetime < 0) return
@@ -386,11 +389,14 @@ export default {
         datetime -= 1000
         if (datetime <= 0) {
           clearInterval(this.timer)
-          this.obtainGifts = []
-          this.id = ''
           await this.getDetail()
-          this.getCheckInDetail()
-          this.getGifts()
+          setTimeout(async () => {
+            this.obtainGifts = []
+            this.id = ''
+            await this.getDetail()
+            this.getCheckInDetail()
+            this.getGifts()
+          }, 5000)
         }
         this.dd = d.padStart(2, '0')
         this.hh = h.padStart(2, '0')
