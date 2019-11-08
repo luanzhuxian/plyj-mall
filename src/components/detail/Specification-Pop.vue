@@ -66,7 +66,7 @@
               <div>
                 <span>购买数量</span>
                 <span v-if="activeType !== 1 && preActivity === 2 && activityProductModel.activityLimit === 1" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ activityProductModel.activityLimitNumber }}件)</span>
-                <span v-if="limiting && activeType === 1" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ limiting }}件)</span>
+                <span v-if="limiting" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ limiting }}件)</span>
               </div>
               <div :class="$style.countCtr">
                 <button :disabled="count <= min || currentDisabled" @click.stop="minus">
