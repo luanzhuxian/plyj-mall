@@ -567,7 +567,7 @@ export default {
       }
     },
     cancelPay () {
-      this.$router.push({ name: 'Home' })
+      this.$router.go(-1)
     },
     async share () {
       if (this.poster) {
