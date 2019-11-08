@@ -115,6 +115,14 @@
       :show.sync="helpeSuccess"
       @confirm="IWantToGetAGiftToo"
     />
+
+    <!-- 新人自动领取礼物成功 -->
+    <transition name="fade">
+      <div :class="$style.successHelp" v-show="showNewUserSuccess">
+        <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/invitenewcomers/%E5%8A%A9%E5%8A%9B%2B%E6%96%B0%E4%BA%BA.png" alt="">
+        <button @click="IWantToGetAGiftToo">我也想翻豪礼</button>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -156,6 +164,8 @@ export default {
       canOpenGiftPackage: false,
       // 开出的优惠券
       mallCouponEntity: null,
+      // 新人助力成功
+      showNewUserSuccess: false,
       // 开始的实体礼品
       mallInvitingEventsGiftEntity: null,
       d: '00',
@@ -225,6 +235,7 @@ export default {
         sessionStorage.removeItem('IS_NEW_USER')
         try {
           await this.help()
+          this.showNewUserSuccess = true
         } catch (e) {
           throw e
         }
@@ -354,6 +365,7 @@ export default {
     IWantToGetAGiftToo () {
       this.$router.replace({ name: 'InviteNewcomers', params: { activityId: this.activeId } })
       this.$emit('i-want-to-get-gift-too') // 礼物已打开事件，外部需要刷新数据
+      this.showNewUserSuccess = false
     },
     // 检查是否是新用户
     checkNewUser () {
@@ -566,6 +578,31 @@ export default {
           color: #999;
         }
       }
+    }
+  }
+  .success-help {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .65);
+    z-index: 2004;
+    > img {
+      width: 630px;
+      margin-bottom: 128px;
+    }
+    > button {
+      width: 260px;
+      line-height: 60px;
+      font-size: 30px;
+      color: #fff;
+      background-color: #ff6310;
+      border-radius: 30px;
     }
   }
 </style>
