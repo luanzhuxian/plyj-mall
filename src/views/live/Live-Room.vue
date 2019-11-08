@@ -574,19 +574,26 @@ export default {
         this.showPoster = true
         return
       }
+      let {
+        coverImg,
+        name,
+        liveStartTime,
+        isPay,
+        paidAmount
+      } = this.detail
       // 生成二维码
       try {
         let all = [
           generateQrcode(300, location.href, 0, null, 0, 'canvas'),
           loadImage(POSTER_BG),
           loadImage(this.avatar),
-          loadImage(this.detail.coverImg)
+          loadImage(coverImg)
         ]
         let res = await Promise.all(all)
         let qrcode = res[0]
         let bg = res[1]
         let avatar = res[2]
-        let coverImg = res[3]
+        let coverImgEl = res[3]
         let canvas = document.createElement('canvas')
         canvas.width = bg.width
         canvas.height = bg.height
@@ -605,23 +612,24 @@ export default {
         let nameWidth = createText(ctx, 100, 28, this.userName, 34, 350, 1)
         createText(ctx, 100 + nameWidth + 14, 28, '邀你观看直播', 34, 350, 1)
         // 绘制封面
-        ctx.drawImage(coverImg, 14, 102, 610, 406)
+        ctx.drawImage(coverImgEl, 14, 102, 610, 406)
         // 绘制直播名称
         ctx.font = 'bold 32px Microsoft YaHei UI'
-        createText(ctx, 200, 534, this.detail.name, 44, 400, 1)
+        createText(ctx, 200, 534, name, 44, 400, 1)
         // 绘制直播时间
         ctx.font = '24px Microsoft YaHei UI'
-        let date = moment(this.detail.liveStartTime).format('YYYY-MM-DD mm:ss') + ' 开始直播'
+        let date = moment(liveStartTime).format('YYYY-MM-DD mm:ss') + ' 开始直播'
         createText(ctx, 258, 598, date, 34)
         // 绘制价格
-        if (this.detail.paidAmount) {
+        if (isPay && paidAmount) {
           ctx.font = 'bold 44px Microsoft YaHei UI'
-          let price = `仅需 ${this.detail.paidAmount}元`
+          let price = `仅需 ${paidAmount}元`
           createText(ctx, 200, 644, price, 58)
         }
         this.poster = canvas.toDataURL()
         this.showPoster = true
       } catch (e) {
+        this.$error(e.message)
         console.log(e)
       }
     },
