@@ -4,8 +4,6 @@
       <board
         :data="detail"
         :active-id="activityId"
-        @gift-is-opened="init"
-        @i-want-to-get-gift-too="init"
         :share-user-id="shareUserId"
       />
       <AcquisitionGifts :activity-id="activityId" />
@@ -143,14 +141,15 @@ export default {
         willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
         inviterStatisitic(this.activityId, this.shareUserId)
       }
-      await share({
+      let shareData = {
         appId: this.appId,
         title: `${this.userName}邀请你帮他助力`,
         desc: '快来帮我助力一起领取大礼哦。',
         link: shareUrl,
         imgUrl: this.logoUrl,
         willHide
-      })
+      }
+      await share(shareData)
     }
   }
 }

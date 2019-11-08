@@ -25,6 +25,7 @@ export default {
   data () {
     return {
       logined: false,
+      routeName: '',
       exclude: [
         'ShoppingCart'
       ],
@@ -49,31 +50,33 @@ export default {
       customShare: [
         'Lesson',
         'LiveRoom',
-        'InviteNewcomers',
+        // 'InviteNewcomers',
+        'InviteNewcomersHelp',
         'Newcomers'
       ],
       isNavBtnShow: false
     }
   },
   computed: {
-    ...mapGetters(['userId', 'openId', 'appId', 'token', 'mallName', 'mallDesc', 'logoUrl']),
-    routeName () {
-      return this.$route.name
-    }
+    ...mapGetters(['userId', 'openId', 'appId', 'token', 'mallName', 'mallDesc', 'logoUrl'])
   },
   watch: {
-    $route (route) {
-      if (this.customShare.indexOf(route.name) === -1) {
-        console.log('默认分享')
-        // 如果不是商品详情页面，采用其他分享策略
-        let willHide = []
-        if (this.shareRoutes.indexOf(route.name) === -1) {
-          willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
+    $route: {
+      handler (route) {
+        this.routeName = route.name
+        if (route.name && this.customShare.indexOf(route.name) === -1) {
+          console.log('默认分享')
+          // 如果不是商品详情页面，采用其他分享策略
+          let willHide = []
+          if (this.shareRoutes.indexOf(route.name) === -1) {
+            willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
+          }
+          if (this.appId) {
+            this.share(willHide)
+          }
         }
-        if (this.appId) {
-          this.share(willHide)
-        }
-      }
+      },
+      immediate: true
     }
   },
   async created () {
@@ -93,7 +96,6 @@ export default {
         await this.getUserInfo()
       }
       this.logined = true
-      this.share()
     } catch (e) {
       throw e
     }

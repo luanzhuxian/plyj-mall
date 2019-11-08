@@ -2,19 +2,25 @@ import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
 // import { setTimeoutSync } from '../../../assets/js/util'
 const WX = window.wx
+let timer = 0
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
   // await setTimeoutSync(200)
   let jsApi = await getJSApi(appId) // 每次分享时，获取js-api
-  const config = getConfig(jsApi.result, appId)
-  WX.config(config)
+  clearInterval(timer)
   return new Promise((resolve, reject) => {
-    WX.ready(function () {
-      setWechatShare(title, desc, imgUrl, link, willHide)
-      resolve('wechat config: ok!')
-    })
-    WX.error(function (res) {
-      reject(res)
-    })
+    timer = setTimeout(() => {
+      console.log(location.pathname)
+      console.log(link)
+      const config = getConfig(jsApi.result, appId)
+      WX.config(config)
+      WX.ready(function () {
+        setWechatShare(title, desc, imgUrl, link, willHide)
+        resolve('wechat config: ok!')
+      })
+      WX.error(function (res) {
+        reject(res)
+      })
+    }, 100)
   })
 }
 

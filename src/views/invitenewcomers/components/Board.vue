@@ -137,7 +137,8 @@ import {
   openGift,
   helpFriend,
   canClaimGift,
-  getHelpers
+  getHelpers,
+  registerStatisitic
 } from '../../../apis/invitenewcomers'
 import {
   mapGetters
@@ -197,7 +198,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userId']),
+    ...mapGetters(['userId', 'mallDomain']),
     // 还差多少个好友
     inviteDescription () {
       if (this.data) {
@@ -236,6 +237,7 @@ export default {
         sessionStorage.removeItem('IS_NEW_USER')
         try {
           await this.help()
+          await registerStatisitic(this.activeId)
           this.showNewUserSuccess = true
         } catch (e) {
           throw e
@@ -287,6 +289,10 @@ export default {
       await this.getHelpers()
     },
     setTime (data) {
+      if (!data) {
+        location.reload()
+        return
+      }
       let { months, days, hours, minutes, seconds } = data
       this.d = String(months * moment().daysInMonth() + days).padStart(2, '0')
       this.h = String(hours).padStart(2, '0')
@@ -365,17 +371,19 @@ export default {
       this.mallCouponEntity = null
       this.mallInvitingEventsGiftEntity = null
       this.canClaimGift()
-      this.$emit('gift-is-opened') // 礼物已打开事件，外部需要刷新数据
+      this.$parent.init() // 礼物已打开事件，外部需要刷新数据
       this.getHelpers()
     },
     // 我也想反豪礼（重置到分享页面）
-    IWantToGetAGiftToo () {
-      this.$router.replace({ name: 'InviteNewcomers', params: { activityId: this.activeId } })
-      this.$emit('i-want-to-get-gift-too') // 礼物已打开事件，外部需要刷新数据
-      this.showNewUserSuccess = false
+    async IWantToGetAGiftToo () {
+      location.replace(`/${this.mallDomain}/invitenewcomers/${this.activeId}`)
+      // await this.$nextTick()
+      // this.$parent.init() // 父组件需要刷新数据
+      // this.showNewUserSuccess = false
+
     },
     // 检查是否是新用户
-    checkNewUser () {
+    async checkNewUser () {
       let IS_NEW_USER = JSON.parse(sessionStorage.getItem('IS_NEW_USER')) || false
       // 标记位新人
       if (!this.userId || IS_NEW_USER) {
@@ -384,15 +392,18 @@ export default {
       }
       // 不是新人
       if (!IS_NEW_USER && this.shareUserId && this.userId !== this.shareUserId) {
-        this.$alert({
-          message: '<p>老用户无法参加助力活动~</p><p>邀您一起参与翻豪礼</p>',
-          viceMessage: '<p>您可以直接发起活动，</p><p>邀请好友助力帮你翻豪礼</p>',
-          useDangersHtml: true,
-          confirmText: '我也想翻豪礼'
-        })
-          .finally(() => {
-            this.IWantToGetAGiftToo()
+        try {
+          await this.$alert({
+            message: '<p>老用户无法参加助力活动~</p><p>邀您一起参与翻豪礼</p>',
+            viceMessage: '<p>您可以直接发起活动，</p><p>邀请好友助力帮你翻豪礼</p>',
+            useDangersHtml: true,
+            confirmText: '我也想翻豪礼'
           })
+        } catch (e) {
+
+        } finally {
+          this.IWantToGetAGiftToo()
+        }
       }
     }
   }
