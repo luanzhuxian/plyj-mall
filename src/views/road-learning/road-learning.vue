@@ -2,9 +2,9 @@
   <div class="road-learning">
     <div class="top">
       <div class="title-box">
-        <div class="title-left" @click="$router.replace({name: 'Activity'})">
-          <pl-icon v-if="isShare" name="icon-shouyeshouye" color="#fff" size="40" />
-          <pl-icon v-else name="icon-left" color="#fff" size="32" />
+        <div class="title-left">
+          <pl-icon v-if="isShare" @click="$router.replace({name: 'Activity'})" name="icon-shouyeshouye" color="#fff" size="40" />
+          <pl-icon v-else @click="$router.back()" name="icon-left" color="#fff" size="32" />
         </div>
         <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/icon-road-learning-title.png">
         <div class="title-right" @click="showRule = true">
@@ -33,16 +33,16 @@
         <div class="ball-c" />
         <!-- 四个组 -->
         <div class="base u-p3d" v-if="gifts.length === 4">
-          <div class="ball-base u-p3d ball-1"><div class="ball"><img :src="gifts[0].giftImage" alt=""><div>奖品一</div></div></div>
-          <div class="ball-base u-p3d ball-2"><div class="ball"><img :src="gifts[1].giftImage" alt=""><div>奖品二</div></div></div>
-          <div class="ball-base u-p3d ball-3"><div class="ball"><img :src="gifts[2].giftImage" alt=""><div>奖品三</div></div></div>
-          <div class="ball-base u-p3d ball-4"><div class="ball"><img :src="gifts[3].giftImage" alt=""><div>奖品四</div></div></div>
+          <div class="ball-base u-p3d ball-1"><div class="ball"><img :src="gifts[0].giftImage" alt=""><div>奖品四</div></div></div>
+          <div class="ball-base u-p3d ball-2"><div class="ball"><img :src="gifts[1].giftImage" alt=""><div>奖品三</div></div></div>
+          <div class="ball-base u-p3d ball-3"><div class="ball"><img :src="gifts[2].giftImage" alt=""><div>奖品二</div></div></div>
+          <div class="ball-base u-p3d ball-4"><div class="ball"><img :src="gifts[3].giftImage" alt=""><div>奖品一</div></div></div>
         </div>
         <!-- 三个组 -->
         <div class="base u-p3d" v-if="gifts.length === 3">
           <div class="ball-base u-p3d ball-5">
             <div class="ball">
-              <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+              <img :src="gifts[0].giftImage" alt=""><div>奖品三</div>
             </div>
           </div>
           <div class="ball-base u-p3d ball-6">
@@ -52,7 +52,7 @@
           </div>
           <div class="ball-base u-p3d ball-7">
             <div class="ball">
-              <img :src="gifts[2].giftImage" alt=""><div>奖品三</div>
+              <img :src="gifts[2].giftImage" alt=""><div>奖品一</div>
             </div>
           </div>
         </div>
@@ -60,12 +60,12 @@
         <div class="base u-p3d" v-if="gifts.length === 2">
           <div class="ball-base u-p3d ball-1">
             <div class="ball">
-              <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+              <img :src="gifts[0].giftImage" alt=""><div>奖品二</div>
             </div>
           </div>
           <div class="ball-base u-p3d ball-3">
             <div class="ball">
-              <img :src="gifts[1].giftImage" alt=""><div>奖品二</div>
+              <img :src="gifts[1].giftImage" alt=""><div>奖品一</div>
             </div>
           </div>
         </div>
@@ -296,6 +296,8 @@ export default {
     next(vm => { //  这里的vm指的就是vue实例，可以用来当做this使用
       if (from.name !== 'Activity') {
         vm.isShare = true
+      } else {
+        vm.isShare = false
       }
     })
   },
@@ -370,7 +372,7 @@ export default {
     },
     async getObtainGifts () {
       const { result: res } = await getObtainGiftsList(this.activeDetail.id)
-      this.obtainGifts = res.records
+      this.obtainGifts = res.records.reverse()
     },
     countdown (datetime) {
       if (datetime < 0) return
