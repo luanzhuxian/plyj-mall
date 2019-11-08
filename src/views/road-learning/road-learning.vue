@@ -436,6 +436,9 @@ export default {
       }
     },
     async claimGift () {
+      if (!this.doubleClick()) {
+        return
+      }
       const { result: res } = await claimGift(this.activeDetail.id)
       this.lottering = true
       await this.getCheckInDetail()
