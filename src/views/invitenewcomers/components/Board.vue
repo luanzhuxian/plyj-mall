@@ -49,9 +49,9 @@
           已成功邀请<i v-text="totalHelpers" />个好友助力，立即开豪礼
         </div>
       </template>
-      <button :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
+      <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,尽请期待</button>
-      <button :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>
+      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>
       <button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>
       <button :class="$style.button" v-else-if="status === 2" @click="showShare = true">邀请好友</button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
@@ -168,6 +168,7 @@ export default {
       showNewUserSuccess: false,
       // 开始的实体礼品
       mallInvitingEventsGiftEntity: null,
+      loading: false,
       d: '00',
       h: '00',
       m: '00',
@@ -310,6 +311,7 @@ export default {
     async openGift () {
       try {
         this.showGotGift = true
+        this.loading = true
         let { result } = await openGift(this.activeId)
         let {
           mallCouponEntity,
@@ -319,6 +321,8 @@ export default {
         this.mallInvitingEventsGiftEntity = mallInvitingEventsGiftEntity || null
       } catch (e) {
         throw e
+      } finally {
+        this.loading = false
       }
     },
     async help () {
@@ -346,11 +350,14 @@ export default {
         return
       }
       try {
+        this.loading = true
         await helpFriend(this.activeId, this.friendUserId)
         this.helpeSuccess = true
         this.hasHelped = true
       } catch (e) {
         throw e
+      } finally {
+        false
       }
     },
     // 确定豪礼弹框
@@ -477,6 +484,9 @@ export default {
     letter-spacing: 3px;
     background-color: #FECD4C;
     border-radius: 55px;
+    &:disabled {
+      filter: grayscale(100%);
+    }
   }
   .coupon-list {
     margin-bottom: 48px;
