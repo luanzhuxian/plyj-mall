@@ -363,6 +363,7 @@ export default {
     },
     /* 连接聊天服务器 */
     initSocket () {
+      if (this.socket) return
       let { userName, userId, openId, avatar, channelId } = this
       let socket = io.connect('https://chat.polyv.net', {
         // query: 'token=' + chatToken, // 文档上说，暂时为空
