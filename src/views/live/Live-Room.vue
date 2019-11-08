@@ -237,6 +237,7 @@ import {
   loadImage,
   createText
 } from '../../assets/js/util'
+import { getCurrentTemplate } from '../../apis/home'
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 export default {
   name: 'Live',
@@ -567,7 +568,17 @@ export default {
       }
     },
     cancelPay () {
-      this.$router.go(-1)
+      getCurrentTemplate({ type: 2 })
+        .then(res => {
+          if (res) {
+            this.$router.push({ name: 'Activity' })
+          } else {
+            this.$router.push({ name: 'Home' })
+          }
+        })
+        .catch(() => {
+          this.$router.push({ name: 'Home' })
+        })
     },
     async share () {
       if (this.poster) {
