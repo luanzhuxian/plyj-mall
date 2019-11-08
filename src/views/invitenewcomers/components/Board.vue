@@ -357,7 +357,7 @@ export default {
       } catch (e) {
         throw e
       } finally {
-        false
+        this.loading = true
       }
     },
     // 确定豪礼弹框
