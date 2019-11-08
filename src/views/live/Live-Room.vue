@@ -657,6 +657,9 @@ export default {
           this.initSocket()
           this.$success('付款成功立即观看')
           this.needPay = false
+          await setComeInConut({
+            message: (this.detail.paidAmount || 0) + '元'
+          })
         } catch (e) {
           this.needPay = false
           this.$confirm({
