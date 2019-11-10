@@ -50,8 +50,7 @@ export default {
       customShare: [
         'Lesson',
         'LiveRoom',
-        // 'InviteNewcomers',
-        'InviteNewcomersHelp',
+        'InviteNewcomers',
         'Newcomers'
       ],
       isNavBtnShow: false
