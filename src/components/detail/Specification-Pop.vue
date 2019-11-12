@@ -264,7 +264,13 @@ export default {
         this.skuChange(this.sku.skuCode1, this.sku.skuCode2)
       } else {
         // 没有默认规格，并且默认规格失效
-        let noDisable = this.skuList.find(item => item.stock >= item.minBuyNum)
+        let noDisable = this.skuList.find(item => {
+          if (this.activeType === 1) {
+            return item.stock >= item.minBuyNum
+          } else {
+            return this.activityProductModel && this.activityProductModel.buyCount
+          }
+        })
         if (!noDisable) {
           this.$emit('change', {})
           this.$emit('update:sku', {})
