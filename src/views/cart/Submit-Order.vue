@@ -177,7 +177,6 @@
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
                 <!-- 活动商品的库存需要特殊处理 -->
-                {{ activeProduct !== 1 && preActivity === 2 }}
                 <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
@@ -287,7 +286,6 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
-                {{ activeProduct !== 1 && preActivity === 2 }}
                 <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
