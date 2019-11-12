@@ -66,7 +66,7 @@
               <div>
                 <span>购买数量</span>
                 <!-- 进行中 的 活动商品本身限购 按照活动限购 -->
-                <span v-if="activeType !== 1 && activityProductModel.activityLimit === 1"
+                <span v-if="activeType !== 1 && activityProductModel && activityProductModel.activityLimit === 1"
                       class="fz-20 ml-10"
                       style="color: #B8B8B8; font-weight: normal;"
                 >
@@ -74,7 +74,7 @@
                 </span>
 
                 <!-- 进行中 的 活动商品本身不限购，但商品限购 按照商品限购 -->
-                <span v-else-if="activeType !== 1 && activityProductModel.activityLimit !== 1 && limiting"
+                <span v-else-if="activeType !== 1 && activityProductModel && activityProductModel.activityLimit !== 1 && limiting"
                       class="fz-20 ml-10"
                       style="color: #B8B8B8; font-weight: normal;"
                 >

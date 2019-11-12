@@ -59,7 +59,7 @@
         label="选择"
         :label-width="120"
         :can-click="!noStock && detail.productStatus === 2"
-        @click="showSpecifica = true; activeType = 2"
+        @click="showSpecifica = true; activeType = 1"
       >
         <template v-if="currentModel.skuCode1Name">
           已选择：“<span v-text="currentModel.skuCode1Name" />
