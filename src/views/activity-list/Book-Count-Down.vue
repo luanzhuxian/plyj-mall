@@ -61,8 +61,16 @@ export default {
       s: 0
     }
   },
+  watch: {
+    endtime (val, old) {
+      this.init()
+    }
+  },
   mounted () {
     this.init()
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
   },
   methods: {
     async init () {
@@ -75,7 +83,6 @@ export default {
       }
       if (this.starttiemstamp - this.endtiemstamp < 0) {
         // 启动倒计时
-        console.warn('启动倒计时')
         this.show = true
         this.countdown()
       } else {

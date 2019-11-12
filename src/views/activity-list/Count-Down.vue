@@ -61,14 +61,21 @@ export default {
       s: 0
     }
   },
+  watch: {
+    endtime (val, old) {
+      this.init()
+    }
+  },
   mounted () {
     this.init()
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
   },
   methods: {
     async init () {
       let { result: serverTiem } = await getServerTime()
       this.starttiemstamp = Number(serverTiem)
-      console.log(serverTiem)
       if (this.data) {
         this.endtiemstamp = Number(this.data[this.fields.end]) || 0
       } else {
