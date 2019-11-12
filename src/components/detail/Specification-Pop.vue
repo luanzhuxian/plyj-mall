@@ -349,13 +349,24 @@ export default {
     },
     countChange () {
       if (this.count === '') return
-      if (this.count < this.min) {
-        this.count = this.min
-        this.$warning(`此规格最小购买量为${this.min}`)
-      }
-      if (this.count > this.localCurrentSku.stock) {
-        this.count = this.localCurrentSku.stock
-        this.$warning(`购买的宝贝数超过剩余库存`)
+      if (this.activeType === 1) {
+        if (this.count < this.min) {
+          this.count = this.min
+          this.$warning(`此规格最小购买量为${this.min}`)
+        }
+        if (this.count > this.localCurrentSku.stock) {
+          this.count = this.localCurrentSku.stock
+          this.$warning(`购买的宝贝数超过剩余库存`)
+        }
+      } else {
+        if (this.count < 1) {
+          this.count = 1
+          this.$warning(`此规格最小购买量为1`)
+        }
+        if (this.count > this.activityProductModel.buyCount) {
+          this.count = this.activityProductModel.buyCount
+          this.$warning(`购买的宝贝数超过剩余库存`)
+        }
       }
       this.count = this.localCurrentSku.count = Number.parseInt(this.count)
       this.$emit('change', this.localCurrentSku)

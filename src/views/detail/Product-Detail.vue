@@ -606,7 +606,7 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: this.detail.activeProduct,
+          activeProduct: activeType === 1 ? 1 : this.detail.activeProduct,
           preActivity: this.detail.preActivity,
           activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId
         }
