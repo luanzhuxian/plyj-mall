@@ -877,7 +877,9 @@ export default {
         const { result } = await submitOrder(data)
         await this.pay(result, result.orderLists[0], result.orderLists.length)
       } catch (e) {
-        throw e
+        if (e.message !== '取消支付') {
+          throw e
+        }
       } finally {
         this.submiting = false
       }
