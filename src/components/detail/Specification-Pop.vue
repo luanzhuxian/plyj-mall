@@ -90,7 +90,7 @@
               </div>
               <div :class="$style.countCtr">
                 <button
-                  :disabled="count <= min || (this.activityProductModel && this.activeType !== 1 && this.activityProductModel.buyCount < 1)"
+                  :disabled="(this.activeType === 1 && count <= min) || (this.activityProductModel && this.activeType !== 1 && this.activityProductModel.buyCount < 1)"
                   @click.stop="minus"
                 >
                   -
@@ -101,7 +101,7 @@
                   @input="countChange"
                 >
                 <button
-                  :disabled="count >= localCurrentSku.stock || (this.activityProductModel && this.activeType !== 1 && count >= this.activityProductModel.buyCount)"
+                  :disabled="(this.activeType === 1 && count >= localCurrentSku.stock) || (this.activityProductModel && this.activeType !== 1 && count >= this.activityProductModel.buyCount)"
                   @click.stop="add"
                 >
                   +
