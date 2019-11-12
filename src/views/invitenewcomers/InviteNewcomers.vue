@@ -26,7 +26,7 @@
     <div :class="$style.poster">
       <pl-svg v-if="creating" name="btn-loading" color="#000" class="rotate" @click="createHaibao" />
       <pl-svg v-else name="haibao" @click="createHaibao" />
-      分享海报
+      海报
     </div>
     <pl-popup
       :show="isShowRule"
@@ -202,6 +202,7 @@ export default {
 
 <style lang="scss" module>
 .invitenewcomers {
+  padding-bottom: 90px;
   .center {
     padding: 32px 24px;
   }

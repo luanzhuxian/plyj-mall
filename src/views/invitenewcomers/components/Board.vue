@@ -29,18 +29,24 @@
           活动时间已结束
         </div>
       </div>
-      <template v-if="friendUserId">
+      <!--<template v-if="friendUserId">
         <div v-if="friendUserId" :class="$style.inviteFriends">
-          <!--小手一点帮我助力-->
+          &lt;!&ndash;小手一点帮我助力&ndash;&gt;
           <pl-icon name="icon-xiaoshouyidianbangwozhuli" fill="#fff" size="56" />
         </div>
         <div :class="$style.shortOf">
           你也可以参与活动拿豪礼大奖哦！
         </div>
-      </template>
-      <template v-else>
+      </template>-->
+      <div :class="$style.inviteFriends">
+        <pl-svg name="invite-users" :width="560" />
+      </div>
+      <div :class="$style.shortOf">
+        注册成功，即可开豪礼
+      </div>
+      <!--<template v-else>
         <div :class="$style.inviteFriends">
-          <pl-icon type="svg" name="icon-yinghaoli" width="560" />
+          &lt;!&ndash;<pl-icon type="svg" name="icon-yinghaoli" width="560" />&ndash;&gt;
         </div>
         <div v-if="inviteDescription > 0" :class="$style.shortOf">
           还差<i v-text="inviteDescription" />个好友助力，即可开豪礼
@@ -48,12 +54,15 @@
         <div v-else :class="$style.shortOf">
           已成功邀请<i v-text="totalHelpers" />个好友助力，立即开豪礼
         </div>
-      </template>
+      </template>-->
       <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,尽请期待</button>
       <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>
-      <button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>
-      <button :class="$style.button" v-else-if="status === 2" @click="invite">邀请好友</button>
+      <!--<button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>-->
+      <button :class="$style.button" v-else-if="status === 2" @click="invite">
+        <span>立即注册</span>
+        <i v-if="totalHelpers">+{{ totalHelpers }}</i>
+      </button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
     </div>
     <!-- 助力过的好友列表 -->
