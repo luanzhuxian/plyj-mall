@@ -36,7 +36,7 @@
                 </div>
               </div>
               <div :class="$style.info">
-                <div :class="$style.main" style="height:46px">
+                <div :class="$style.main">
                   {{ item.goodsInfo.productName }}
                 </div>
                 <div :class="$style.time">
