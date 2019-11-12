@@ -59,7 +59,7 @@
         label="选择"
         :label-width="120"
         :can-click="!noStock && detail.productStatus === 2"
-        @click="showSpecifica = true; activeType = 1"
+        @click="showSpecifica = true; activeType = 2"
       >
         <template v-if="currentModel.skuCode1Name">
           已选择：“<span v-text="currentModel.skuCode1Name" />
@@ -227,7 +227,7 @@
     <div :class="$style.buttomTip" v-if="!loading && productStatus === 1">
       该商品已下架
     </div>
-    <div :class="$style.buttomTip" v-if="!loading && noStock">
+    <div :class="$style.buttomTip" v-if="!loading && (noStock && haveActiveStock)">
       该商品已全部售罄，请选择其它商品购买
     </div>
     <!-- 海报弹框 -->
@@ -347,6 +347,7 @@ export default {
       showSpecifica: false,
       showCoupon: false,
       currentModel: {}, // 当前选中的规格
+      activityProductModel:{},//活动信息
       commentForm: {
         current: 1,
         size: 3,
@@ -376,6 +377,11 @@ export default {
   },
   computed: {
     ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    //活动商品数量
+    haveActiveStock(){
+        if(!this.activityProductModel.buyCount) return false;
+        return this.activityProductModel.buyCount === 0
+    },
     noStock () {
       return this.productSkuModels.every(item => item.stock < item.minBuyNum)
     },
@@ -467,6 +473,8 @@ export default {
         this.productStatus = productStatus
         this.commentForm.productId = id
         this.agentProduct = agentProduct
+        //存储活动信息
+        this.activityProductModel = result.activityProductModel
         // 所有图片
         this.banners = mediaInfoIds
         this.detail = result
@@ -589,12 +597,16 @@ export default {
         agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
+      // 判断是否跳转过去显示活动总库存，为 1 显示
+    //   if(activeType !== 1) activeType = this.detail.activeProduct;
+      let activeAllResidue = (this.detail.preActivity === 2 && this.detail.activeProduct !== 1 && activeType !== 1) ? 1 : 0
       this.$router.push({
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
           activeProduct: activeType,
-          activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId
+          activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId,
+          activeAllResidue
         }
       })
     },

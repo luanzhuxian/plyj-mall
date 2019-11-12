@@ -222,7 +222,7 @@ export default {
     },
     // 活动期间总余
     activeAllResidue () {
-      return this.activityProductModel.stock
+      return this.activityProductModel.buyCount
     }
   },
   methods: {
