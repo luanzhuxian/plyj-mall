@@ -74,7 +74,7 @@
       :conpons="mallInvitingEventsCouponEntities"
     />
     <!-- 分享引导浮层 -->
-    <ShareLayer v-show="showShare" @close="showShare = false" />
+    <ShareLayer :activity-id="activeId" v-show="showShare" @close="showShare = false" />
     <!-- 开豪礼弹框 -->
     <MessageBox
       :message="hasGift ? '满减券已自动存入您的现金卡包中您可在现金卡包中查看' : '很遗憾，礼物与您擦肩而过，再接再厉哦！'"
