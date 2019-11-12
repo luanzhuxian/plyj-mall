@@ -72,7 +72,7 @@
               <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? physicalProducts[0].activeStock : physicalProducts[0].stock }}件</span>
               <Count
                 :min="physicalProducts[0].minBuyNum"
-                :max="(activeProduct === 3 && preActivity === 2 && physicalProducts[0].activityLimit) ? physicalProducts[0].activityLimit : (physicalProducts[0].purchaseQuantity || item.stock)"
+                :max="(activeProduct === 3 && preActivity === 2 && physicalProducts[0].activityLimit) ? physicalProducts[0].activityLimit : (physicalProducts[0].purchaseQuantity || physicalProducts[0].stock)"
                 :count="physicalProducts[0].count"
                 @change="(count, next) => { countChange(count, physicalProducts[0], next) }"
               />
