@@ -607,7 +607,7 @@ export default {
         query: {
           isCart: 'NO',
           activeProduct: this.detail.activeProduct,
-          preActived: this.detail.preActivity,
+          preActivity: this.detail.preActivity,
           activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
