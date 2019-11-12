@@ -597,16 +597,13 @@ export default {
         agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
       }]))
       this.showSpecifica = false
-      // 判断是否跳转过去显示活动总库存，为 1 显示
-    //   if(activeType !== 1) activeType = this.detail.activeProduct;
-      let activeAllResidue = (this.detail.preActivity === 2 && this.detail.activeProduct !== 1 && activeType !== 1) ? 1 : 0
       this.$router.push({
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
           activeProduct: activeType,
-          activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId,
-          activeAllResidue
+          preActived: this.detail.preActivity,
+          activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
     },

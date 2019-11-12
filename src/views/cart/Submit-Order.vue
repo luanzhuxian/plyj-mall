@@ -176,10 +176,12 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
-                <span>剩余{{ activeAllResidue === 1 ? item.activeStock : item.stock }}件</span>
+                <!-- 活动商品的库存需要特殊处理 -->
+                <span>剩余{{ activeProduct !== 1 && preActived === 2 ? item.activeStock : item.stock }}件</span>
+                <!-- activeProduct = 3（秒杀商品，需要使用秒杀商品的限购数） -->
                 <Count
                   :min="item.minBuyNum"
-                  :max="item.purchaseQuantity || item.stock"
+                  :max="(activeProduct === 3 && preActived === 2 && item.activityLimit) ? item.activityLimit : (item.purchaseQuantity || item.stock)"
                   :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
@@ -285,10 +287,10 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
-                <span>剩余{{ activeAllResidue === 1 ? item.activeStock : item.stock }}件</span>
+                <span>剩余{{ activeProduct !== 1 && preActived === 2 ? item.activeStock : item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
-                  :max="item.purchaseQuantity || item.stock"
+                  :max="(activeProduct === 3 && preActived === 2 && item.activityLimit) ? item.activityLimit : (item.purchaseQuantity || item.stock)"
                   :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
@@ -587,15 +589,16 @@ export default {
     isCart () {
       return this.$route.query.isCart === 'YES'
     },
+    // 传入的活动类型
     activeProduct () {
       return Number(this.$route.query.activeProduct) || 1
     },
+    // 传入的活动状态 2 为进行中
+    preActived () {
+      return Number(this.$route.query.preActived) || 1
+    },
     activityId () {
       return this.$route.query.activityId || ''
-    },
-    // 活动期间总余
-    activeAllResidue () {
-      return +this.$route.query.activeAllResidue
     }
   },
   watch: {
@@ -696,9 +699,18 @@ export default {
         this.physicalProducts = physicalProducts
         this.virtualProducts = virtualProducts
         this.lessonList = [...formalClass, ...experienceClass]
+        // 是否显示学员选择栏，只要有一个商品允许（item.needStudentInfo === 1）就显示
         this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 1)]
-        this.loading = false
+        // 是否显示发票选择栏，只要有一个商品允许（item.showInvoice === 1）就显示
         this.showInvoiceSelector = [...physicalProducts, ...virtualProducts, ...formalClass, ...experienceClass].some(item => item.showInvoice === 1)
+        this.loading = false
+        // 处理课程和虚拟商品中【预购】商品的使用时间
+        for (let item of this.virtualProducts) {
+          if (this.activeProduct === 4 && this.preActived === 2) {
+            item.validityPeriodStart = item.useStartTime
+            item.validityPeriodEnd = item.useEndTime
+          }
+        }
       } catch (e) {
         throw e
       }
