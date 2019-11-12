@@ -704,7 +704,7 @@ export default {
         this.showInvoiceSelector = [...physicalProducts, ...virtualProducts, ...formalClass, ...experienceClass].some(item => item.showInvoice === 1)
         this.loading = false
         // 处理课程和虚拟商品中【预购】商品的使用时间
-        for (let item of this.virtualProducts) {
+        for (let item of [...this.virtualProducts, ...this.lessonList]) {
           if (this.activeProduct === 4 && this.preActivity === 2) {
             item.validityPeriodStart = item.useStartTime
             item.validityPeriodEnd = item.useEndTime
