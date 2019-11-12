@@ -52,6 +52,7 @@
 
 <script>
 import { createObjectUrl } from '../../assets/js/upload-image'
+import { mapGetters } from 'vuex'
 export default {
   name: 'CouponItem',
   data () {
@@ -117,6 +118,9 @@ export default {
   created () {
     this.sawtooth()
   },
+  computed: {
+    ...mapGetters(['userId'])
+  },
   methods: {
     // 生成锯齿图标
     sawtooth () {
@@ -141,6 +145,25 @@ export default {
           path: '/Classify'
         })
       } else {
+        if (!this.userId) {
+          this.$confirm('请先绑定手机')
+            .then(() => {
+              let {
+                name,
+                params,
+                query
+              } = this.$route
+              sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                name,
+                params,
+                query
+              }))
+              this.$router.push({
+                name: 'BindMobile'
+              })
+            })
+          return
+        }
         this.$emit('couponClick', e)
       }
     }

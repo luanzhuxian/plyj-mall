@@ -69,11 +69,11 @@
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">购买数量</span>
             <div :class="$style.editCount">
-              <span>剩余{{ physicalProducts[0].stock }}件</span>
+              <span>剩余{{ activeAllResidue === 1 ? physicalProducts[0].activeStock : physicalProducts[0].stock }}件</span>
               <Count
                 :min="physicalProducts[0].minBuyNum"
                 :max="physicalProducts[0].purchaseQuantity || physicalProducts[0].stock"
-                :count="physicalProducts[0].count"
+                :count="activeAllResidue === 1 ? physicalProducts[0].activeStock : physicalProducts[0].count"
                 @change="(count, next) => { countChange(count, physicalProducts[0], next) }"
               />
             </div>
@@ -176,11 +176,11 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
-                <span>剩余{{ item.stock }}件</span>
+                <span>剩余{{ activeAllResidue === 1 ? item.activeStock : item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
                   :max="item.purchaseQuantity || item.stock"
-                  :count="item.count"
+                  :count="activeAllResidue === 1 ? item.activeStock : item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
               </div>
@@ -285,11 +285,11 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
-                <span>剩余{{ item.stock }}件</span>
+                <span>剩余{{ activeAllResidue === 1 ? item.activeStock : item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
                   :max="item.purchaseQuantity || item.stock"
-                  :count="item.count"
+                  :count="activeAllResidue === 1 ? item.activeStock : item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
               </div>
@@ -592,6 +592,10 @@ export default {
     },
     activityId () {
       return this.$route.query.activityId || ''
+    },
+    // 活动期间总余
+    activeAllResidue () {
+      return +this.$route.query.activeAllResidue
     }
   },
   watch: {

@@ -82,7 +82,12 @@
                   +
                 </button>
                 <p :class="$style.residue">
-                  库存<i v-text="residue" />件
+                  <template v-if="preActivity == 2 && activeProduct != 1 && activeType != 1">
+                    总库存<i v-text="activeAllResidue" />件
+                  </template>
+                  <template v-else>
+                    库存<i v-text="residue" />件
+                  </template>
                 </p>
               </div>
             </div>
@@ -214,6 +219,10 @@ export default {
     },
     residue () {
       return this.localCurrentSku.stock
+    },
+    // 活动期间总余
+    activeAllResidue () {
+      return this.activityProductModel.stock
     }
   },
   methods: {

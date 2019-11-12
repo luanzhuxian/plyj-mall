@@ -480,12 +480,18 @@ export default {
           shareUrl = `${this.mallUrl}/detail/lesson/${this.productId}`
         }
         this.shareUrl = shareUrl
+        let hide = []
+        if (this.detail.activeProduct !== 1) {
+          // 活动商品隐藏分享到朋友圈
+          hide = ['menuItem:share:timeline']
+        }
         share({
           appId: this.appId,
           title: result.productName,
           desc: result.productDesc,
           link: shareUrl,
-          imgUrl: result.productMainImage + '?x-oss-process=style/thum'
+          imgUrl: result.productMainImage + '?x-oss-process=style/thum',
+          willHide: hide
         })
         this.haibaoImg = await loadImage(result.productMainImage)
         // let img = await loadImage(result.productMainImage)

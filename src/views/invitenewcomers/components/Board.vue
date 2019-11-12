@@ -53,7 +53,7 @@
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,尽请期待</button>
       <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>
       <button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>
-      <button :class="$style.button" v-else-if="status === 2" @click="showShare = true">邀请好友</button>
+      <button :class="$style.button" v-else-if="status === 2" @click="invite">邀请好友</button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
     </div>
     <!-- 助力过的好友列表 -->
@@ -228,14 +228,10 @@ export default {
   },
   async activated () {
     if (this.shareUserId) {
-      let IS_NEW_USER = JSON.parse(sessionStorage.getItem('IS_NEW_USER')) || false
-      // 不确定是不是新人时，先判断是否是新人
-      if (!IS_NEW_USER) {
-        this.checkNewUser()
-      } else {
-        // 如果已标记新人，那就自动助力
-        sessionStorage.removeItem('IS_NEW_USER')
+      let isNewUser = this.isNewUser()
+      if (isNewUser && this.userId && this.friendUserId && this.userId !== this.friendUserId) {
         try {
+          sessionStorage.removeItem('IS_NEW_USER')
           await this.help()
           await registerStatisitic(this.activeId)
           this.showNewUserSuccess = true
@@ -301,10 +297,12 @@ export default {
     },
     // 查询是否可以领取豪礼
     async canClaimGift () {
+      if (!this.userId) return
       let { result } = await canClaimGift(this.activeId)
       this.canOpenGiftPackage = result
     },
     async getHelpers () {
+      if (!this.userId) return
       try {
         let { result } = await getHelpers(this.activeId, this.userId)
         result = result || []
@@ -313,6 +311,14 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    // 邀请好友
+    invite () {
+      if (!this.userId) {
+        this.checkUser('invite')
+        return
+      }
+      this.showShare = true
     },
     async openGift () {
       try {
@@ -333,26 +339,7 @@ export default {
     },
     async help () {
       if (!this.userId) {
-        this.$confirm({
-          message: '注册会员，助力好友',
-          viceMessage: '快来注册为会员<br>帮助好友进行助力翻红包',
-          useDangersHtml: true,
-          confirmText: '注册会员'
-        })
-          .then(() => {
-            let {
-              name,
-              params
-            } = this.$route
-            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-              name,
-              params
-            }))
-            this.$router.push({
-              name: 'BindMobile'
-            })
-          })
-          .catch(() => {})
+        this.checkUser('help')
         return
       }
       try {
@@ -363,7 +350,7 @@ export default {
       } catch (e) {
         throw e
       } finally {
-        this.loading = true
+        this.loading = false
       }
     },
     // 确定豪礼弹框
@@ -377,34 +364,65 @@ export default {
     // 我也想反豪礼（重置到分享页面）
     async IWantToGetAGiftToo () {
       location.replace(`/${this.mallDomain}/invitenewcomers/${this.activeId}`)
-      // await this.$nextTick()
-      // this.$parent.init() // 父组件需要刷新数据
-      // this.showNewUserSuccess = false
-
     },
     // 检查是否是新用户
-    async checkNewUser () {
-      let IS_NEW_USER = JSON.parse(sessionStorage.getItem('IS_NEW_USER')) || false
-      // 标记位新人
-      if (!this.userId || IS_NEW_USER) {
+    isNewUser () {
+      let IS_NEW_USER = JSON.parse(sessionStorage.getItem('IS_NEW_USER'))
+      if (IS_NEW_USER) {
+        return IS_NEW_USER
+      }
+      if (IS_NEW_USER === null && !this.userId) {
         sessionStorage.setItem('IS_NEW_USER', 'true')
-        return
+        return true
       }
       // 不是新人
       if (!IS_NEW_USER && this.shareUserId && this.userId !== this.shareUserId) {
-        try {
-          await this.$alert({
-            message: '<p>老用户无法参加助力活动~</p><p>邀您一起参与翻豪礼</p>',
-            viceMessage: '<p>您可以直接发起活动，</p><p>邀请好友助力帮你翻豪礼</p>',
-            useDangersHtml: true,
-            confirmText: '我也想翻豪礼'
-          })
-        } catch (e) {
-
-        } finally {
+        this.$alert({
+          message: '<p>老用户无法参加助力活动~</p><p>邀您一起参与翻豪礼</p>',
+          viceMessage: '<p>您可以直接发起活动，</p><p>邀请好友助力帮你翻豪礼</p>',
+          useDangersHtml: true,
+          confirmText: '我也想翻豪礼'
+        }).finally(() =>{
           this.IWantToGetAGiftToo()
+        })
+      }
+      return false
+    },
+    /**
+     * 检查用户是否绑定手机
+     * @param type {String} invite or help
+     */
+    checkUser (type) {
+      let message = {
+        invite: {
+          message: '注册会员，赢豪礼大奖',
+          viceMessage: '快来注册为会员<br>邀请好友赢豪礼大奖'
+        },
+        help: {
+          message: '注册会员，助力好友',
+          viceMessage: '快来注册为会员<br>帮助好友进行助力翻红包'
         }
       }
+      this.$confirm({
+        message: message[type].message,
+        viceMessage: message[type].viceMessage,
+        useDangersHtml: true,
+        confirmText: '注册会员'
+      })
+        .then(() => {
+          let {
+            name,
+            params
+          } = this.$route
+          sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+            name,
+            params
+          }))
+          this.$router.push({
+            name: 'BindMobile'
+          })
+        })
+        .catch(() => {})
     }
   }
 }
