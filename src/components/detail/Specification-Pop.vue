@@ -65,8 +65,28 @@
             <div :class="$style.count">
               <div>
                 <span>购买数量</span>
-                <span v-if="activeType !== 1 && preActivity === 2 && activityProductModel.activityLimit === 1" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ activityProductModel.activityLimitNumber }}件)</span>
-                <span v-if="limiting && (activeType === 1 || preActivity !== 2)" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ limiting }}件)</span>
+                <!-- 进行中 的 活动商品本身限购 按照活动限购 -->
+                <span v-if="activeType !== 1 && activityProductModel.activityLimit === 1"
+                      class="fz-20 ml-10"
+                      style="color: #B8B8B8; font-weight: normal;"
+                >
+                  (每账号限购{{ activityProductModel.activityLimitNumber }}件)
+                </span>
+
+                <!-- 进行中 的 活动商品本身不限购，但商品限购 按照商品限购 -->
+                <span v-else-if="activeType !== 1 && activityProductModel.activityLimit !== 1 && limiting"
+                      class="fz-20 ml-10"
+                      style="color: #B8B8B8; font-weight: normal;"
+                >
+                  (每账号限购{{ limiting }}件)
+                </span>
+
+                <!-- 普通商品 本身限购 显示本身限购 -->
+                <span v-else-if="activeType === 1 && limiting"
+                      class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;"
+                >
+                  (每账号限购{{ limiting }}件)
+                </span>
               </div>
               <div :class="$style.countCtr">
                 <button :disabled="count <= min || currentDisabled" @click.stop="minus">
@@ -139,24 +159,23 @@ export default {
         return {}
       }
     },
-    // 限购数量
-    limiting: {
+    limiting: { // 商品本身限购数量
       type: Number,
       default: 0
     },
-    activeProduct: {
+    activeProduct: { // 1普通 2团购 3秒杀 4预购  在选择规格处，只显示作为商品本身的限购数
       type: [Number, String],
       default: ''
     },
-    preActivity: {
+    preActivity: { // 0预热未开始 1预热中 2进行中
       type: [Number, String],
       default: ''
     },
-    activityProductModel: {
+    activityProductModel: { // 活动商品数据
       type: Object,
       default: null
     },
-    activeType: {
+    activeType: { // 为1时包含以下情况： 1普通 2团购/秒杀/预购 非已进行中状态； 其他值： 团购/秒杀/预购 进行中状态
       type: [Number, String],
       default: ''
     }
