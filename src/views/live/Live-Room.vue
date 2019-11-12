@@ -193,7 +193,7 @@
             <i v-text="detail.paidAmount" />
           </div>
           <div :class="$style.buttons">
-            <pl-button size="middle" plain @click="cancelPay">我在想想</pl-button>
+            <pl-button size="middle" plain @click="cancelPay">我再想想</pl-button>
             <pl-button size="middle" type="warning" @click="submitOrder">立即付款</pl-button>
           </div>
         </div>
@@ -622,7 +622,7 @@ export default {
         ctx.fillStyle = '#fff'
         ctx.textBaseline = 'hanging'
         let nameWidth = createText(ctx, 100, 28, this.userName, 34, 350, 1)
-        createText(ctx, 100 + nameWidth + 14, 28, '邀你观看直播', 34, 350, 1)
+        createText(ctx, 100 + nameWidth + 14, 28, '邀您观看直播', 34, 350, 1)
         // 绘制封面
         ctx.drawImage(coverImgEl, 14, 102, 610, 406)
         // 绘制直播名称
@@ -630,7 +630,7 @@ export default {
         createText(ctx, 200, 534, name, 44, 400, 1)
         // 绘制直播时间
         ctx.font = '24px Microsoft YaHei UI'
-        let date = moment(liveStartTime).format('YYYY-MM-DD mm:ss') + ' 开始直播'
+        let date = moment(liveStartTime).format('YYYY-MM-DD HH:mm') + ' 开始直播'
         createText(ctx, 258, 598, date, 34)
         // 绘制价格
         if (isPay && paidAmount) {
