@@ -137,39 +137,38 @@ export default {
 </script>
 
 <style module lang="scss">
-  .template-baofa {
-    .broadcast {
-      margin: 0 24px 16px;
-    }
+  .template-baofa {}
+  .broadcast {
+    margin: 0 24px 16px;
+  }
 
-    // 活动
-    .module-activity {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 32px;
-      .small {
-        width: 340px;
-        height: 176px;
-        &.road {
-          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-small.png") no-repeat center center;
-          background-size: 100% auto;
-        }
-        &.invitation {
-          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small.png") no-repeat center center;
-          background-size: 100% auto;
-        }
+  // 活动
+  .module-activity {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+    .small {
+      width: 340px;
+      height: 176px;
+      &.road {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-small.png") no-repeat center center;
+        background-size: 100% auto;
       }
-      .large {
-        width: 100%;
-        height: 176px;
-        &.road {
-          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-large.png") no-repeat center center;
-          background-size: 100% auto;
-        }
-        &.invitation {
-          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large.png") no-repeat center center;
-          background-size: 100% auto;
-        }
+      &.invitation {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small.png") no-repeat center center;
+        background-size: 100% auto;
+      }
+    }
+    .large {
+      width: 100%;
+      height: 176px;
+      &.road {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-large.png") no-repeat center center;
+        background-size: 100% auto;
+      }
+      &.invitation {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large.png") no-repeat center center;
+        background-size: 100% auto;
       }
     }
   }

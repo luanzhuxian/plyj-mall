@@ -61,10 +61,11 @@
       :data="FENG_QIANG"
       :type="type"
     />
-    <best-recommend
-      v-if="RECOMMEND.values && RECOMMEND.values.length"
-      :data="RECOMMEND"
-    />
+    <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
+      <best-recommend :data="RECOMMEND">
+        <div :class="$style.btnBottom" slot="title" />
+      </best-recommend>
+    </div>
   </div>
 </template>
 
@@ -75,7 +76,7 @@ import Coupon from './components/Coupon.vue'
 import Maisong from './components/Maisong.vue'
 import Yugou from './components/Yugou.vue'
 import Fengqiang from './components/Fengqiang.vue'
-import BestRecommend from './components/Best-Recommend.vue'
+import BestRecommend from '../home/components/Best-Recommend.vue'
 import MiaoshaSmall from './components/Miaosha-Small.vue'
 
 export default {
@@ -145,40 +146,46 @@ export default {
 </script>
 
 <style module lang="scss">
-  .template-fengqiang {
-    .broadcast {
-      margin: 0 24px 16px;
-    }
-
-    // 活动
-    .module-activity {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 32px;
-      .small {
-        width: 340px;
-        height: 176px;
-        &.road {
-          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-small.png") no-repeat center center;
-          background-size: 100% auto;
-        }
-        &.invitation {
-          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small.png") no-repeat center center;
-          background-size: 100% auto;
-        }
+  .template-fengqiang {}
+  .broadcast {
+    margin: 0 24px 16px;
+  }
+  // 活动
+  .module-activity {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+    .small {
+      width: 340px;
+      height: 176px;
+      &.road {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-small.png") no-repeat center center;
+        background-size: 100% auto;
       }
-      .large {
-        width: 100%;
-        height: 176px;
-        &.road {
-          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-large.png") no-repeat center center;
-          background-size: 100% auto;
-        }
-        &.invitation {
-          background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large.png") no-repeat center center;
-          background-size: 100% auto;
-        }
+      &.invitation {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small.png") no-repeat center center;
+        background-size: 100% auto;
       }
     }
+    .large {
+      width: 100%;
+      height: 176px;
+      &.road {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-large.png") no-repeat center center;
+        background-size: 100% auto;
+      }
+      &.invitation {
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large.png") no-repeat center center;
+        background-size: 100% auto;
+      }
+    }
+  }
+  .btn-bottom {
+    width: 520px;
+    height: 78px;
+    background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-bottom.png") no-repeat center center;
+    background-size: 100% auto;
+    border-radius: 70px;
+    margin: 48px auto 32px;
   }
 </style>
