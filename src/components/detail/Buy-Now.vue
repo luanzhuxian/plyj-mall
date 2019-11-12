@@ -29,7 +29,7 @@
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
-        :disabled="loading"
+        :disabled="loading || disableConfrim"
       >
         <span>我要参团</span>
         <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
@@ -48,7 +48,7 @@
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
-        :disabled="loading"
+        :disabled="loading || disableConfrim"
       >
         <span>立即秒杀</span>
         <span :class="$style.text">¥ {{ activityProductModel.price }}</span>
@@ -59,7 +59,7 @@
       <button
         :class="$style.preBtn"
         @click="clickHandler(3)"
-        :disabled="loading"
+        :disabled="loading || disableConfrim"
       >
         定金购买
         <div :class="$style.btnText">¥ {{ activityProductModel.price }}</div>

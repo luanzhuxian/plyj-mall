@@ -138,7 +138,7 @@
       :current-sku.sync="currentModel"
       :product-status="detail.productStatus"
       :confirm-text="confirmText"
-      :disable-confrim="confirmText === '暂未开售'"
+      :disable-confrim="confirmText === '暂未开售' || noStock"
       :limiting="limiting"
       :active-product="detail.activeProduct"
       :activity-product-model="detail.activityProductModel || null"
@@ -227,7 +227,7 @@
     <div :class="$style.buttomTip" v-if="!loading && productStatus === 1">
       该商品已下架
     </div>
-    <div :class="$style.buttomTip" v-if="!loading && (noStock && haveActiveStock)">
+    <div :class="$style.buttomTip" v-if="!loading && noStock">
       该商品已全部售罄，请选择其它商品购买
     </div>
     <!-- 海报弹框 -->
@@ -361,6 +361,7 @@ export default {
       haibao: '',
       tab: 2,
       imgels: [],
+      // 活动类型
       activeType: 1,
       qrcode: ''
     }
@@ -377,13 +378,17 @@ export default {
   },
   computed: {
     ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
-    //活动商品数量
-    haveActiveStock(){
-        if(!this.activityProductModel.buyCount) return false;
-        return this.activityProductModel.buyCount === 0
+    // 活动商品的可购买数量
+    activeStock () {
+        return this.activityProductModel ? this.activityProductModel.buyCount : 0
     },
     noStock () {
-      return this.productSkuModels.every(item => item.stock < item.minBuyNum)
+      if (this.detail.activeProduct !== 1) {
+        return !this.activityProductModel.buyCount
+      }
+      return this.productSkuModels.every(item =>
+        item.stock < item.minBuyNum
+      )
     },
     defaultCount () {
       return this.currentModel.count || 1
