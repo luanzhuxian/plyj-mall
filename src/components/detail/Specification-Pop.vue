@@ -90,7 +90,7 @@
               </div>
               <div :class="$style.countCtr">
                 <button
-                  :disabled="(this.activeType === 1 && count <= min) || (this.activityProductModel && this.activeType !== 1 && this.activityProductModel.buyCount < 1)"
+                  :disabled="(this.activeType === 1 && count <= min) || (this.activityProductModel && this.activeType !== 1 && count <= 1)"
                   @click.stop="minus"
                 >
                   -

@@ -880,6 +880,10 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
       font-size: 30px;
       &:disabled {
         color: rgba(255, 255, 255, .4);
+        .btn-text {
+          background-color: #e7e7e7;
+          color: #ccc;
+        }
       }
     }
     .btn-text{
