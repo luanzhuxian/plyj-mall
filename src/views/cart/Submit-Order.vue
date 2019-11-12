@@ -69,10 +69,10 @@
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">购买数量</span>
             <div :class="$style.editCount">
-              <span>剩余{{ activeAllResidue === 1 ? physicalProducts[0].activeStock : physicalProducts[0].stock }}件</span>
+              <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? physicalProducts[0].activeStock : physicalProducts[0].stock }}件</span>
               <Count
                 :min="physicalProducts[0].minBuyNum"
-                :max="physicalProducts[0].purchaseQuantity || physicalProducts[0].stock"
+                :max="(activeProduct === 3 && preActivity === 2 && physicalProducts[0].activityLimit) ? physicalProducts[0].activityLimit : (physicalProducts[0].purchaseQuantity || item.stock)"
                 :count="physicalProducts[0].count"
                 @change="(count, next) => { countChange(count, physicalProducts[0], next) }"
               />
@@ -177,11 +177,11 @@
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
                 <!-- 活动商品的库存需要特殊处理 -->
-                <span>剩余{{ activeProduct !== 1 && preActived === 2 ? item.activeStock : item.stock }}件</span>
-                <!-- activeProduct = 3（秒杀商品，需要使用秒杀商品的限购数） -->
+                {{ activeProduct !== 1 && preActivity === 2 }}
+                <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
-                  :max="(activeProduct === 3 && preActived === 2 && item.activityLimit) ? item.activityLimit : (item.purchaseQuantity || item.stock)"
+                  :max="(activeProduct === 3 && preActivity === 2 && item.activityLimit) ? item.activityLimit : (item.purchaseQuantity || item.stock)"
                   :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
@@ -287,10 +287,11 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">购买数量</span>
               <div :class="$style.editCount">
-                <span>剩余{{ activeProduct !== 1 && preActived === 2 ? item.activeStock : item.stock }}件</span>
+                {{ activeProduct !== 1 && preActivity === 2 }}
+                <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
-                  :max="(activeProduct === 3 && preActived === 2 && item.activityLimit) ? item.activityLimit : (item.purchaseQuantity || item.stock)"
+                  :max="(activeProduct === 3 && preActivity === 2 && item.activityLimit) ? item.activityLimit : (item.purchaseQuantity || item.stock)"
                   :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
@@ -594,8 +595,8 @@ export default {
       return Number(this.$route.query.activeProduct) || 1
     },
     // 传入的活动状态 2 为进行中
-    preActived () {
-      return Number(this.$route.query.preActived) || 1
+    preActivity () {
+      return Number(this.$route.query.preActivity) || 1
     },
     activityId () {
       return this.$route.query.activityId || ''
@@ -706,7 +707,7 @@ export default {
         this.loading = false
         // 处理课程和虚拟商品中【预购】商品的使用时间
         for (let item of this.virtualProducts) {
-          if (this.activeProduct === 4 && this.preActived === 2) {
+          if (this.activeProduct === 4 && this.preActivity === 2) {
             item.validityPeriodStart = item.useStartTime
             item.validityPeriodEnd = item.useEndTime
           }
