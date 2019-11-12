@@ -73,7 +73,7 @@
               <Count
                 :min="physicalProducts[0].minBuyNum"
                 :max="physicalProducts[0].purchaseQuantity || physicalProducts[0].stock"
-                :count="activeAllResidue === 1 ? physicalProducts[0].activeStock : physicalProducts[0].count"
+                :count="physicalProducts[0].count"
                 @change="(count, next) => { countChange(count, physicalProducts[0], next) }"
               />
             </div>
@@ -180,7 +180,7 @@
                 <Count
                   :min="item.minBuyNum"
                   :max="item.purchaseQuantity || item.stock"
-                  :count="activeAllResidue === 1 ? item.activeStock : item.count"
+                  :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
               </div>
@@ -289,7 +289,7 @@
                 <Count
                   :min="item.minBuyNum"
                   :max="item.purchaseQuantity || item.stock"
-                  :count="activeAllResidue === 1 ? item.activeStock : item.count"
+                  :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
               </div>
