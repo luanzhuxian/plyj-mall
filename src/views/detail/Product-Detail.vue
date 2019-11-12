@@ -415,7 +415,7 @@ export default {
     couponText () {
       let text = ''
       this.couponList.map((item, index) => {
-        text += `满${item.useLimitAmount}减¥${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
+        text += `满${item.useLimitAmount}减${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
       })
       return text
     },
