@@ -426,6 +426,10 @@ export default {
     font-size: 30px;
     &:disabled {
       color: rgba(255, 255, 255, .4);
+      .btn-text {
+        background-color: #e7e7e7;
+        color: #ccc;
+      }
     }
     > span {
       display: inline-block;
@@ -450,6 +454,13 @@ export default {
   .buyNowBtn {
     border-radius: 0 10px 10px 0;
     background-color: $--primary-color;
+    &:disabled {
+      color: rgba(255, 255, 255, .4);
+      .btn-text {
+        background-color: #e7e7e7;
+        color: #ccc;
+      }
+    }
   }
   .btn-text{
     margin: 4px auto 0;

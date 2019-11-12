@@ -163,7 +163,7 @@
         <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || !currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             单独购买
@@ -181,7 +181,7 @@
         <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || !currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             原价购买

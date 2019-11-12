@@ -72,7 +72,7 @@
               <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? physicalProducts[0].activeStock : physicalProducts[0].stock }}件</span>
               <Count
                 :min="physicalProducts[0].minBuyNum"
-                :max="(activeProduct === 3 && preActivity === 2 && physicalProducts[0].activityLimit) ? physicalProducts[0].activityLimit : (physicalProducts[0].purchaseQuantity || physicalProducts[0].stock)"
+                :max="(activeProduct !== 1 && preActivity === 2) ? (physicalProducts[0].activityLimit ? physicalProducts[0].activityLimit : physicalProducts[0].activeStock) : (physicalProducts[0].purchaseQuantity || physicalProducts[0].stock)"
                 :count="physicalProducts[0].count"
                 @change="(count, next) => { countChange(count, physicalProducts[0], next) }"
               />
@@ -180,7 +180,7 @@
                 <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
-                  :max="(activeProduct === 3 && preActivity === 2 && item.activityLimit) ? item.activityLimit : (item.purchaseQuantity || item.stock)"
+                  :max="(activeProduct !== 1 && preActivity === 2) ? (item.activityLimit ? item.activityLimit : item.activeStock) : (item.purchaseQuantity || item.stock)"
                   :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
@@ -289,7 +289,7 @@
                 <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
                 <Count
                   :min="item.minBuyNum"
-                  :max="(activeProduct === 3 && preActivity === 2 && item.activityLimit) ? item.activityLimit : (item.purchaseQuantity || item.stock)"
+                  :max="(activeProduct !== 1 && preActivity === 2) ? (item.activityLimit ? item.activityLimit : item.activeStock) : (item.purchaseQuantity || item.stock)"
                   :count="item.count"
                   @change="(count, next) => { countChange(count, item, next) }"
                 />
