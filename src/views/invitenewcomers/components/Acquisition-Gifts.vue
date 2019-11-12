@@ -16,7 +16,7 @@
         <img :class="$style.icon" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/box%402x.png" alt="">
         <img :class="$style.avatar" :src="item.headImgUrl" alt="">
         <div :class="$style.itemRight">
-          <p>{{ item.nickName }}邀请了<i v-text="item.helperNum" />位好友</p>
+          <p>{{ item.nickName }}注册成功</p>
           <p>开出了<i v-text="item.name" /></p>
         </div>
       </div>

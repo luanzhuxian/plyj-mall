@@ -25,10 +25,11 @@
       :data="FENG_QIANG"
       :type="type"
     />
-    <best-recommend
-      v-if="RECOMMEND.values && RECOMMEND.values.length"
-      :data="RECOMMEND"
-    />
+    <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
+      <best-recommend :data="RECOMMEND">
+        <div :class="$style.btnBottom" slot="title" />
+      </best-recommend>
+    </div>
   </div>
 </template>
 
@@ -37,7 +38,7 @@ import Broadcast from './components/Broadcast.vue'
 import Pintuan from './components/Pintuan.vue'
 import Maisong from './components/Maisong.vue'
 import Fengqiang from './components/Fengqiang.vue'
-import BestRecommend from './components/Best-Recommend.vue'
+import BestRecommend from '../home/components/Best-Recommend.vue'
 import MiaoshaSmall from './components/Miaosha-Small.vue'
 
 export default {
@@ -87,9 +88,16 @@ export default {
 </script>
 
 <style module lang="scss">
-  .template-fanchang {
-    .broadcast {
-      margin: 0 24px 16px;
-    }
+  .template-fanchang {}
+  .broadcast {
+    margin: 0 24px 16px;
+  }
+  .btn-bottom {
+    width: 520px;
+    height: 78px;
+    background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-bottom.png") no-repeat center center;
+    background-size: 100% auto;
+    border-radius: 70px;
+    margin: 48px auto 32px;
   }
 </style>

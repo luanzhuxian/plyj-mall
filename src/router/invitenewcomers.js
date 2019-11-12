@@ -1,7 +1,8 @@
 export default [
   {
-    path: '/invitenewcomers/:activityId/:shareUserId?',
+    path: '/yx/:activityId/:shareUserId?',
     name: 'InviteNewcomers',
+    alias: '/invitenewcomers/:activityId/:shareUserId?',
     props: true,
     component: () => import('../views/invitenewcomers/InviteNewcomers.vue'),
     meta: {

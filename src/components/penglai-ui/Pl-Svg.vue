@@ -6,6 +6,10 @@
     :original="true"
     :color="color"
     @click="handleClick"
+    :style="{
+      width: width ? width / 7.5 + 'vw' : '',
+      height: height ? height / 7.5 + 'vw' : ''
+    }"
   />
 </template>
 
@@ -26,6 +30,14 @@ export default {
     fill: {
       type: Boolean,
       default: true
+    },
+    width: {
+      type: Number,
+      default: null
+    },
+    height: {
+      type: Number,
+      default: null
     }
   },
   data () {
@@ -53,6 +65,5 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
 </style>

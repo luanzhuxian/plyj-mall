@@ -4,11 +4,11 @@
       <div class="center-box">
         <div class="box">
           <div class="title">
-            助力成功，快去翻<span class="title-gift">礼品</span>
+            快去翻<span class="title-gift">礼品</span>
           </div>
-          <div class="desc">
+          <!--<div class="desc">
             已经成功邀请<span class="number">{{ totalHelpers }}</span>个好友助力，立即开豪礼
-          </div>
+          </div>-->
           <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/box@2x.png">
           <div>
             <span class="btn-open" @click="openGift">开豪礼<pl-icon type="icon" name="icon-arrow-right" size="34" /></span>
@@ -119,37 +119,24 @@ export default {
 
   .box {
     width: 702px;
-    height: 678px;
+    height: 604px;
     background: rgba(250,77,47,1);
     border-radius: 20px;
     text-align: center;
+    font-size: 0;
 
     .title {
-      margin-bottom: 24px;
+      margin-bottom: 40px;
       padding-top: 40px;
-      height: 56px;;
-      font-size: 56px;
+      font-size: 80px;
       text-align: center;
       color: white;
-
       .title-gift {
         color: #f6f4b4;
       }
     }
-
-    .desc {
-      margin-bottom: 80px;
-      font-size: 38px;
-      color: white;
-      text-align: center;
-      .number {
-        color: #f6f4b4;
-      }
-    }
-
     .btn-open {
       position: relative;
-      top: -26px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -163,6 +150,10 @@ export default {
       border-radius:150px;
       font-size: 44px;
       color: #a56113;
+    }
+    > img {
+      width: 324px;
+      height: 270px;
     }
   }
 

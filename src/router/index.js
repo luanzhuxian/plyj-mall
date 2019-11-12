@@ -16,9 +16,14 @@ import Activity from './activity'
 import Newcomers from './newcomers'
 import InviteNewcomers from './invitenewcomers'
 import roadlearning from './roadlearning'
-
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
+/**
+ * ！！！！！！！！！注意！！！！！！！！！！
+ * 不要使用from作为query的key，因为为了处理微信分享功能，query中的from将会被无条件删除！
+ * 除此之外，还有一下参数不能使用：
+ * isappinstalled
+ */
 export const routes = [
   {
     path: '/',

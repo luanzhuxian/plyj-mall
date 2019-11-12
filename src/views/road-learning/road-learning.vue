@@ -7,8 +7,11 @@
           <pl-icon v-else @click="$router.back()" name="icon-left" color="#fff" size="32" />
         </div>
         <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/icon-road-learning-title.png">
-        <div class="title-right" @click="showRule = true">
+        <div class="title-right rule-btn" @click="showRule = true">
           活动规则
+        </div>
+        <div class="title-right" @click="drawSharePoster ()">
+          分享海报
         </div>
       </div>
       <div class="user-info">
@@ -147,7 +150,7 @@
         <div class="btn disabel" v-if="!activeStart && !activeEnd && activeDetail.status === 1">活动未开始</div>
         <div class="btn active" @click="checkIn ()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status === 2">立即签到</div>
         <div class="btn disabel" v-if="!activeDetail.status && (checkInDetail.claimStatus !== 1)">活动已结束</div>
-        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0" @click="claimGift() && activeDetail.status === 2">点击抽大奖</div>
+        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0 && activeDetail.status === 2" @click="claimGift()">点击抽大奖</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
         <div class="btn disabel" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 2 && activeDetail.status === 2">很遗憾没有中奖</div>
         <div class="btn already" v-if="checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum !== 10 && activeStart && !activeEnd && activeDetail.status === 2">今日已签到</div>
@@ -205,7 +208,6 @@
     <div class="winning-prize" v-if="unWinningShow">
       <div class="prize-box">
         <div class="prize-box-title">很遗憾未中奖</div>
-        <p class="prize-box-description">奖品已派送完</p>
         <p class="prize-box-description">感谢您参与活动</p>
         <div class="prize-btn-box">
           <div class="prize-btn-know" @click="$router.back()">返回主会场</div>
@@ -225,6 +227,16 @@
       </div>
       <div class="winning-prize-close poster-close">
         <pl-icon @click="posterShow = false" name="icon-error" color="#fff" size="40" />
+      </div>
+    </div>
+
+    <div class="winning-prize poster" v-if="sharePosterShow">
+      <div class="prize-box poster-box">
+        <img :src="sharePost" alt="">
+        <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
+      </div>
+      <div class="winning-prize-close poster-close">
+        <pl-icon @click="sharePosterShow = false" name="icon-error" color="#fff" size="40" />
       </div>
     </div>
   </div>
@@ -250,6 +262,7 @@ export default {
       winningShow: false,
       unWinningShow: false,
       posterShow: false,
+      sharePosterShow: false,
       activeStart: false,
       activeEnd: false,
       activeDetail: {},
@@ -261,6 +274,7 @@ export default {
       ss: '',
       qrcode: '',
       post: '',
+      sharePost: '',
       gifts: [],
       obtainGifts: [],
       swiperOption: {
@@ -371,7 +385,7 @@ export default {
       this.countdown(distanceTime)
     },
     async getGifts () {
-      const { result: res } = await getRoadLearningGifts({ id: this.activeDetail.id })
+      const { result: res } = await getRoadLearningGifts({ activityId: this.activeDetail.id })
       this.gifts = res.reverse()
     },
     async getObtainGifts () {
@@ -465,6 +479,22 @@ export default {
         this.post = post
       }
     },
+    async drawSharePoster () {
+      this.sharePosterShow = true
+      let canImg = new Image()
+      canImg.crossOrigin = ''
+      canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/1610999569_9928678801_%E8%A7%81%E5%AD%A6%E4%B9%8B%E6%97%85%E5%88%86%E4%BA%AB%E6%B5%B7%E6%8A%A5-2.jpg?time=${Date.now()}`
+      canImg.onload = async () => {
+        let canvas = document.createElement('canvas')
+        canvas.width = canImg.width
+        canvas.height = canImg.height
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
+        ctx.drawImage(this.qrcode, 270, 1050, 250, 250)
+        let post = canvas.toDataURL('image/jpeg', 0.7)
+        this.sharePost = post
+      }
+    },
     formatName (name) {
       let newStr
       if (name.length === 2) {
@@ -513,14 +543,14 @@ export default {
         img{
           width: 518px;
           height: 78px;
-          margin-top: 64px;
+          margin-top: 70px;
         }
         .title-right{
           width:60px;
           height:60px;
           display: flex;
           align-items: center;
-          margin: 24px 20px;
+          margin: 24px 5px 0 35px;
           padding: 4px;
           text-align: center;
           background:rgba(235,135,126,1);
@@ -530,6 +560,10 @@ export default {
           letter-spacing:2px;
           font-weight:400;
           line-height:24px;
+        }
+        .rule-btn {
+          position: absolute;
+          right: 80px;
         }
       }
       .user-info{

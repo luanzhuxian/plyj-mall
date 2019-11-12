@@ -1,12 +1,13 @@
 <template>
   <div :class="$style.bestRecommend">
-    <div :class="$style.title">
+    <div :class="$style.title" v-if="!$slots.title">
       <span>-</span>
       <span v-text="data.moduleName" />
       <span>-</span>
     </div>
-    <template>
-      <div
+    <slot name="title" v-else />
+    <ul>
+      <li
         :class="$style.product"
         v-for="(item, i) of data.values"
         :key="i"
@@ -52,8 +53,8 @@
             </button>
           </div>
         </div>
-      </div>
-    </template>
+      </li>
+    </ul>
     <!-- 瀑布流 -->
     <!-- <div v-if="styleType === 1" :class="$style.waterfallBox">
       <ul
@@ -132,16 +133,14 @@
       <span>查看全部</span>
       <pl-svg name="right" color="#272536" />
     </button> -->
-    <footer :class="$style.footer">
-      — 技术支持 朋来科技 —
-    </footer>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Tags from './Tags.vue'
 import CountDown from '../../../components/product/Count-Down.vue'
-import { mapGetters } from 'vuex'
+
 export default {
   name: 'BestRecommend',
   components: {
@@ -172,18 +171,18 @@ export default {
   },
   computed: {
     ...mapGetters(['agentUser', 'userId']),
-    listLeft () {
-      return this.localValue.filter((item, i) => i % 2 === 0)
-    },
-    listRight () {
-      return this.localValue.filter((item, i) => (i + 1) % 2 === 0)
-    },
-    localValue () {
-      return this.data.values.slice(0, this.minSee)
-    },
-    maxSee () {
-      return this.data.values.length
-    },
+    // listLeft () {
+    //   return this.localValue.filter((item, i) => i % 2 === 0)
+    // },
+    // listRight () {
+    //   return this.localValue.filter((item, i) => (i + 1) % 2 === 0)
+    // },
+    // localValue () {
+    //   return this.data.values.slice(0, this.minSee)
+    // },
+    // maxSee () {
+    //   return this.data.values.length
+    // },
     styleType () {
       return this.data.styleType || -1
     }
@@ -205,12 +204,12 @@ export default {
       let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
       return Math.max(...priceList)
     },
-    seeAll () {
-      // if (this.minSee < this.maxSee) {
-      //   this.minSee++
-      // }
-      this.minSee = this.maxSee
-    },
+    // seeAll () {
+    //   // if (this.minSee < this.maxSee) {
+    //   //   this.minSee++
+    //   // }
+    //   this.minSee = this.maxSee
+    // },
     clickHandler (item) {
       this.$router.push({ name: 'Lesson', params: { productId: item.value } })
     }
@@ -219,11 +218,7 @@ export default {
 </script>
 
 <style module lang="scss">
-  .best-recommend {
-    padding: 0 24px;
-    color: #000;
-    background: linear-gradient(180deg, #DFE4F3, #ECEAF7);
-  }
+  .best-recommend {}
   .title {
     position: relative;
     text-align: center;
@@ -251,6 +246,9 @@ export default {
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
+    &:nth-last-of-type(1) {
+      margin-bottom: 0;
+    }
     .img {
       position: relative;
       display: flex;
@@ -331,7 +329,6 @@ export default {
       }
     }
     > button {
-      // margin-top: 22px;
       padding: 12px 26px;
       font-size: 32px;
       color: #fff;
@@ -427,10 +424,4 @@ export default {
   //     vertical-align: -4px;
   //   }
   // }
-  .footer {
-    padding-bottom: 50px;
-    font-size: 26px;
-    color: #999;
-    text-align: center;
-  }
 </style>

@@ -56,6 +56,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
       let error = JSON.parse(err.message)
       vm.$error(error.message)
     } else {
+      vm.$error(err.message)
       // 其它出错
       // console.error(JSON.stringify({
       //   errorType: err.name,

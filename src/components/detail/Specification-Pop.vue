@@ -19,7 +19,7 @@
               >
               <div :class="$style.baseInfoRight">
                 <p :class="$style.price" v-text="currentSku.price" v-if="activeType === 1 || (activeProduct !== 1 && preActivity !== 2)" />
-                <p :class="$style.price" v-text="activityProductModel.price" v-if="activeType !== 1 && activeProduct !== 1 && preActivity === 2" />
+                <p v-if="activeType !== 1 && activeProduct !== 1 && preActivity === 2 && activityProductModel" :class="$style.price" v-text="activityProductModel.price" />
                 <p :class="$style.original" v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice">
                   原价：<del class="rmb" v-text="currentSku.originalPrice" v-if="activeProduct !== 1 && preActivity === 2" /> <del class="rmb" v-else v-text="currentSku.originalPrice" />
                 </p>
@@ -65,24 +65,54 @@
             <div :class="$style.count">
               <div>
                 <span>购买数量</span>
-                <span v-if="activeType !== 1 && preActivity === 2 && activityProductModel.activityLimit === 1" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ activityProductModel.activityLimitNumber }}件)</span>
-                <span v-if="limiting && (activeType === 1 || preActivity !== 2)" class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;">(每账号限购{{ limiting }}件)</span>
+                <!-- 进行中 的 活动商品本身限购 按照活动限购 -->
+                <span v-if="activeType !== 1 && activityProductModel && activityProductModel.activityLimit === 1"
+                      class="fz-20 ml-10"
+                      style="color: #B8B8B8; font-weight: normal;"
+                >
+                  (每账号限购{{ activityProductModel.activityLimitNumber }}件)
+                </span>
+
+                <!-- 进行中 的 活动商品本身不限购，但商品限购 按照商品限购 -->
+                <span v-else-if="activeType !== 1 && activityProductModel && activityProductModel.activityLimit !== 1 && limiting"
+                      class="fz-20 ml-10"
+                      style="color: #B8B8B8; font-weight: normal;"
+                >
+                  (每账号限购{{ limiting }}件)
+                </span>
+
+                <!-- 普通商品 本身限购 显示本身限购 -->
+                <span v-else-if="activeType === 1 && limiting"
+                      class="fz-20 ml-10" style="color: #B8B8B8; font-weight: normal;"
+                >
+                  (每账号限购{{ limiting }}件)
+                </span>
               </div>
               <div :class="$style.countCtr">
-                <button :disabled="count <= min || currentDisabled" @click.stop="minus">
+                <button
+                  :disabled="(this.activeType === 1 && count <= min) || (this.activityProductModel && this.activeType !== 1 && count <= 1)"
+                  @click.stop="minus"
+                >
                   -
                 </button>
                 <input
                   v-model.number="count"
                   type="number"
                   @input="countChange"
-                  :disabled="currentDisabled"
                 >
-                <button :disabled="count >= localCurrentSku.stock || currentDisabled" @click.stop="add">
+                <button
+                  :disabled="(this.activeType === 1 && count >= localCurrentSku.stock) || (this.activityProductModel && this.activeType !== 1 && count >= this.activityProductModel.buyCount)"
+                  @click.stop="add"
+                >
                   +
                 </button>
                 <p :class="$style.residue">
-                  库存<i v-text="residue" />件
+                  <template v-if="preActivity === 2 && activeProduct !== 1 && activeType !== 1">
+                    总库存<i v-text="activeAllResidue" />件
+                  </template>
+                  <template v-else>
+                    库存<i v-text="residue" />件
+                  </template>
                 </p>
               </div>
             </div>
@@ -134,26 +164,30 @@ export default {
         return {}
       }
     },
-    // 限购数量
-    limiting: {
+    limiting: { // 商品本身限购数量
       type: Number,
       default: 0
     },
-    activeProduct: {
+    activeProduct: { // 1普通 2团购 3秒杀 4预购  在选择规格处，只显示作为商品本身的限购数
       type: [Number, String],
       default: ''
     },
-    preActivity: {
+    preActivity: { // 0预热未开始 1预热中 2进行中
       type: [Number, String],
       default: ''
     },
-    activityProductModel: {
+    activityProductModel: { // 活动商品数据
       type: Object,
       default: null
     },
-    activeType: {
+    /**
+     * 标记点击了哪个按钮，如：单独购买 or 我要参团
+     * 1 按正常商品购买
+     * 其他 按活动商品购买
+     */
+    activeType: { // 为1时包含以下情况： 1普通 2团购/秒杀/预购 非已进行中状态； 其他值： 团购/秒杀/预购 进行中状态
       type: [Number, String],
-      default: ''
+      default: 1
     }
   },
   data () {
@@ -194,9 +228,6 @@ export default {
   created () {
   },
   computed: {
-    currentDisabled () {
-      return false
-    },
     currentSku () {
       let current = this.skuList.find(item => {
         return item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2
@@ -214,6 +245,10 @@ export default {
     },
     residue () {
       return this.localCurrentSku.stock
+    },
+    // 活动期间总余
+    activeAllResidue () {
+      return this.activityProductModel ? this.activityProductModel.buyCount : 0
     }
   },
   methods: {
@@ -229,7 +264,13 @@ export default {
         this.skuChange(this.sku.skuCode1, this.sku.skuCode2)
       } else {
         // 没有默认规格，并且默认规格失效
-        let noDisable = this.skuList.find(item => item.stock >= item.minBuyNum)
+        let noDisable = this.skuList.find(item => {
+          if (this.activeType === 1) {
+            return item.stock >= item.minBuyNum
+          } else {
+            return this.activityProductModel && this.activityProductModel.buyCount
+          }
+        })
         if (!noDisable) {
           this.$emit('change', {})
           this.$emit('update:sku', {})
@@ -253,14 +294,21 @@ export default {
     },
     sku1IsAllDisabled (skuCode1) {
       let sku1list = this.skuList.filter(item => item.skuCode1 === skuCode1)
-      return sku1list.every(item => item.stock < item.minBuyNum)
+      return sku1list.every(item => {
+        if (this.activeType === 1) {
+          return item.stock < item.minBuyNum
+        } else {
+          return this.activityProductModel && this.activityProductModel.buyCount < 1
+        }
+      })
     },
     skuChange (skuCode1, skuCode2) {
       this.currentSku1 = skuCode1
       skuCode2 = skuCode2 || this.currentSku2 || ''
       let skuCode2List = this.skuList.filter(item => item.skuCode1 === skuCode1)
       for (let item of skuCode2List) {
-        if (item.stock < item.minBuyNum) {
+        // 普通商品才开启禁用
+        if (item.stock < item.minBuyNum && this.activeType === 1) {
           this.$set(item, 'disabled', true)
         } else {
           this.$set(item, 'disabled', false)
@@ -301,13 +349,24 @@ export default {
     },
     countChange () {
       if (this.count === '') return
-      if (this.count < this.min) {
-        this.count = this.min
-        this.$warning(`此规格最小购买量为${this.min}`)
-      }
-      if (this.count > this.localCurrentSku.stock) {
-        this.count = this.localCurrentSku.stock
-        this.$warning(`购买的宝贝数超过剩余库存`)
+      if (this.activeType === 1) {
+        if (this.count < this.min) {
+          this.count = this.min
+          this.$warning(`此规格最小购买量为${this.min}`)
+        }
+        if (this.count > this.localCurrentSku.stock) {
+          this.count = this.localCurrentSku.stock
+          this.$warning(`购买的宝贝数超过剩余库存`)
+        }
+      } else {
+        if (this.count < 1) {
+          this.count = 1
+          this.$warning(`此规格最小购买量为1`)
+        }
+        if (this.count > this.activityProductModel.buyCount) {
+          this.count = this.activityProductModel.buyCount
+          this.$warning(`购买的宝贝数超过剩余库存`)
+        }
       }
       this.count = this.localCurrentSku.count = Number.parseInt(this.count)
       this.$emit('change', this.localCurrentSku)

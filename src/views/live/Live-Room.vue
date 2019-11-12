@@ -505,7 +505,7 @@ export default {
             title: data.name,
             desc: data.liveStartTime + ' 开始直播，快来围观哦~',
             link: window.location.href,
-            imgUrl: data.coverImg + '?x-oss-process=style/thum'
+            imgUrl: data.coverImg
           })
           data.couponList = data.couponList || []
           for (let coupon of data.couponList) {

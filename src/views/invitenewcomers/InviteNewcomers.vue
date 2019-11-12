@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.invitenewcomers">
-    <div v-if="!loading" :class="$style.center">
+    <div v-show="!loading" :class="$style.center">
       <board
         :data="detail"
         :active-id="activityId"
@@ -10,7 +10,7 @@
     </div>
 
     <!-- 骨架屏 -->
-    <div v-if="loading" :class="$style.skeleton">
+    <div v-show="loading" :class="$style.skeleton">
       <div :class="$style.skeletonA">
         <div :class="$style.skeletonB" />
         <div :class="$style.skeletonC" />
@@ -20,9 +20,14 @@
     </div>
 
     <you-like :is-my="true" />
-    <div :class="$style.ruleNav" @click="isShowRule = true">
+    <!--<div :class="$style.ruleNav" @click="isShowRule = true">
       活动规则
-    </div>
+    </div>-->
+    <!--<div :class="$style.poster">
+      <pl-svg v-if="creating" name="btn-loading" color="#000" class="rotate" @click="createHaibao" />
+      <pl-svg v-else name="haibao" @click="createHaibao" />
+      海报
+    </div>-->
     <pl-popup
       :show="isShowRule"
       title="活动细则"
@@ -37,6 +42,13 @@
         <p v-html="activityBrief" />
       </div>
     </pl-popup>
+
+    <transition name="fade">
+      <div :class="$style.posterWrap" v-if="showHaibao" @click="showHaibao = false">
+        <img :src="this.poster" alt="">
+        <pl-svg name="close3" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -51,7 +63,7 @@ import {
   getActiveDetail,
   inviterStatisitic
 } from '../../apis/invitenewcomers'
-
+import { loadImage, generateQrcode, createText, drawRoundRect } from '../../assets/js/util'
 export default {
   name: 'InviteNewcomers',
   components: {
@@ -63,7 +75,10 @@ export default {
     return {
       isShowRule: false,
       loading: false,
-      detail: null
+      detail: null,
+      creating: false,
+      showHaibao: false,
+      poster: ''
     }
   },
 
@@ -78,7 +93,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    ...mapGetters(['appId', 'mallUrl', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
     isNewUser () {
       return this.userId === ''
     },
@@ -104,6 +119,8 @@ export default {
   async activated () {
     await this.init()
   },
+  mounted () {
+  },
   methods: {
     async init () {
       try {
@@ -111,45 +128,71 @@ export default {
         // 获取活动详情
         const { result } = await getActiveDetail(this.activityId)
         this.detail = result
+        if (this.shareUserId && this.userId === this.shareUserId) {
+          location.replace(`/${this.mallDomain}/yx/${this.activityId}`)
+          return
+        }
+        this.share(this.shareUserId)
         this.loading = false
-        await this.share()
       } catch (e) {
         throw e
       }
     },
-    async share () {
-      let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/${this.userId}`
-      // 要隐藏的微信选项
-      let willHide
-      // 分享id和当前id相等时，不可助力
-      if (this.shareUserId && this.userId === this.shareUserId) {
-        this.$router.replace({ name: 'InviteNewcomers', params: { activityId: this.activityId } })
+    async share (shareUserId) {
+      let willHide = ['menuItem:share:timeline']
+      if (shareUserId || !this.userId) {
+        willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
+        inviterStatisitic(this.activityId, shareUserId)
+      }
+      let shareUrl = `${this.mallUrl}/yx/${this.activityId}/${this.userId}`
+      try {
         await share({
           appId: this.appId,
-          title: '请好友一起翻礼品',
+          title: `${this.userName}邀请你帮他助力`,
           desc: '快来帮我助力一起领取大礼哦。',
           link: shareUrl,
-          imgUrl: this.logoUrl
+          imgUrl: this.logoUrl,
+          willHide
         })
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    async createHaibao () {
+      if (this.poster) {
+        this.showHaibao = true
         return
       }
-      // 分享id存在，且和当前id不相等时，统计分享，且此时页面不可被分享
-      if (!this.shareUserId) {
-        willHide = []
-      } else {
-        // 存在分享id时进行统计
-        willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
-        inviterStatisitic(this.activityId, this.shareUserId)
+      try {
+        this.creating = true
+        let img = await loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/%E9%82%80%E6%96%B0%E6%9C%89%E7%A4%BC%E5%88%86%E4%BA%AB%E6%B5%B7%E6%8A%A5%E5%88%87%E5%9B%BE%402x.jpg')
+        let cvs = document.createElement('canvas')
+        let ctx = null
+        let shareUrl = `${this.mallUrl}/yx/${this.activityId}/${this.userId}`
+        let qrcode = await generateQrcode(300, shareUrl, 0, null, 0, 'canvas')
+        let endTime = '活动结束时间 ' + moment(this.detail.invitingEventsEntity.activityEndTime).format('YYYY年MM月DD日 hh:mm:ss')
+        cvs.width = 654
+        cvs.height = 1162
+        ctx = cvs.getContext('2d')
+        ctx.font = '24px Microsoft YaHei UI'
+        let textWIdth = ctx.measureText(endTime).width
+        let rectWidth = textWIdth + 28
+        let rectX = (654 - rectWidth) / 2
+        ctx.drawImage(img, 0, 0, 654, 1162)
+        ctx.drawImage(qrcode, 230, 900, 194, 194)
+        ctx.save()
+        drawRoundRect(ctx, rectX, 316, rectWidth, 44, 22, '#fd806a', '#fd806a')
+        ctx.restore()
+        ctx.fillStyle = '#d1ee10'
+        ctx.baseline = 'hanging'
+        createText(ctx, rectX + 14, 348, endTime, 44)
+        this.poster = cvs.toDataURL('image/jpeg')
+        this.showHaibao = true
+      } catch (e) {
+        this.$error(e.message)
+      } finally {
+        this.creating = false
       }
-      let shareData = {
-        appId: this.appId,
-        title: `${this.userName}邀请你帮他助力`,
-        desc: '快来帮我助力一起领取大礼哦。',
-        link: shareUrl,
-        imgUrl: this.logoUrl,
-        willHide
-      }
-      await share(shareData)
     }
   }
 }
@@ -157,21 +200,34 @@ export default {
 
 <style lang="scss" module>
 .invitenewcomers {
+  padding-bottom: 90px;
   .center {
     padding: 32px 24px;
   }
-  .rule-nav {
+  .rule-nav, .poster {
     position: fixed;
     top: 368px;
     right: 0;
-    width: 120px;
-    height: 50px;
+    padding: 0 14px;
+    height: 48px;
     line-height: 50px;
     background: linear-gradient(90deg,rgba(255,229,115,1) 0%,rgba(255,188,45,1) 100%);
     border-radius: 48px 0px 0px 48px;
     font-size: 24px;
     font-weight: 400;
+    color: #000;
     text-align: center;
+    > svg {
+      width: 24px;
+      height: 24px;
+      vertical-align: -4px;
+      > path {
+        fill: #000;
+      }
+    }
+  }
+  .rule-nav {
+    top: 436px;
   }
 
   .rule-content {
@@ -220,5 +276,23 @@ export default {
     margin: 64px auto 0;
     border-radius: 55px;
     @include skeAnimation(#feca41)
+  }
+  .poster-wrap {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .65);
+    z-index: 2005;
+    > svg {
+      width: 40px;
+      height: 40px;
+      margin-top: 20px;
+    }
   }
 </style>

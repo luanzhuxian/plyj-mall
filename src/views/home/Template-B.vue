@@ -21,10 +21,12 @@
     <hot-item v-if="POPULAR.showStatue === 1" :data="POPULAR" />
     <appointment-gift :data="{ YUYUE, PINGXUAN }" />
     <best v-if="CLASS.showStatue === 1" :data="CLASS" />
-    <best-recommend
-      v-if="RECOMMEND.values && RECOMMEND.values.length"
-      :data="RECOMMEND"
-    />
+    <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
+      <best-recommend :data="RECOMMEND" />
+      <footer :class="$style.footer">
+        — 技术支持 朋来科技 —
+      </footer>
+    </div>
   </div>
 </template>
 
@@ -101,11 +103,22 @@ export default {
   .home-Template-b {
     background-color: #EDEDED;
     font-size: 0;
-    .broadcast,
-    .activity {
-      padding: 20px 24px 0;
-      background-color: #F4F5F9;
-    }
+  }
+  .broadcast,
+  .activity {
+    padding: 20px 24px 0;
+    background-color: #F4F5F9;
+  }
+  .recommend {
+    padding: 0 24px;
+    color: #000;
+    background: linear-gradient(180deg, #DFE4F3, #ECEAF7);
+  }
+  .footer {
+    padding:  56px 0 48px;
+    font-size: 26px;
+    color: #999;
+    text-align: center;
   }
   .shuang12 {
     padding: 20px 24px 0;

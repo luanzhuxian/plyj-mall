@@ -59,7 +59,7 @@
         label="选择"
         :label-width="120"
         :can-click="!noStock && detail.productStatus === 2"
-        @click="showSpecifica = true; activeType = 1"
+        @click="showSpecifica = true;"
       >
         <template v-if="currentModel.skuCode1Name">
           已选择：“<span v-text="currentModel.skuCode1Name" />
@@ -138,7 +138,7 @@
       :current-sku.sync="currentModel"
       :product-status="detail.productStatus"
       :confirm-text="confirmText"
-      :disable-confrim="confirmText === '暂未开售'"
+      :disable-confrim="confirmText === '暂未开售' || noStock"
       :limiting="limiting"
       :active-product="detail.activeProduct"
       :activity-product-model="detail.activityProductModel || null"
@@ -157,13 +157,13 @@
       :active-product="detail.activeProduct"
       :activity-product-model="detail.activityProductModel || null"
       :pre-activity="detail.preActivity"
-      :active-type="activeType"
+      :active-type="detail.activeProduct"
     >
       <template v-slot:footer="{ currentSku }">
         <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             单独购买
@@ -181,7 +181,7 @@
         <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             原价购买
@@ -347,6 +347,7 @@ export default {
       showSpecifica: false,
       showCoupon: false,
       currentModel: {}, // 当前选中的规格
+      activityProductModel:{},//活动信息
       commentForm: {
         current: 1,
         size: 3,
@@ -360,6 +361,7 @@ export default {
       haibao: '',
       tab: 2,
       imgels: [],
+      // 活动类型
       activeType: 1,
       qrcode: ''
     }
@@ -376,8 +378,17 @@ export default {
   },
   computed: {
     ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    // 活动商品的可购买数量
+    activeStock () {
+        return this.activityProductModel ? this.activityProductModel.buyCount : 0
+    },
     noStock () {
-      return this.productSkuModels.every(item => item.stock < item.minBuyNum)
+      if (this.detail.activeProduct !== 1) {
+        return !this.activityProductModel.buyCount
+      }
+      return this.productSkuModels.every(item =>
+        item.stock < item.minBuyNum
+      )
     },
     defaultCount () {
       return this.currentModel.count || 1
@@ -404,7 +415,7 @@ export default {
     couponText () {
       let text = ''
       this.couponList.map((item, index) => {
-        text += `满${item.useLimitAmount}减¥${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
+        text += `满${item.useLimitAmount}减${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
       })
       return text
     },
@@ -467,6 +478,8 @@ export default {
         this.productStatus = productStatus
         this.commentForm.productId = id
         this.agentProduct = agentProduct
+        //存储活动信息
+        this.activityProductModel = result.activityProductModel
         // 所有图片
         this.banners = mediaInfoIds
         this.detail = result
@@ -480,12 +493,18 @@ export default {
           shareUrl = `${this.mallUrl}/detail/lesson/${this.productId}`
         }
         this.shareUrl = shareUrl
+        let hide = []
+        if (this.detail.activeProduct !== 1) {
+          // 活动商品隐藏分享到朋友圈
+          hide = ['menuItem:share:timeline']
+        }
         share({
           appId: this.appId,
           title: result.productName,
           desc: result.productDesc,
           link: shareUrl,
-          imgUrl: result.productMainImage + '?x-oss-process=style/thum'
+          imgUrl: result.productMainImage,
+          willHide: hide
         })
         this.haibaoImg = await loadImage(result.productMainImage)
         // let img = await loadImage(result.productMainImage)
@@ -587,7 +606,8 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: activeType,
+          activeProduct: activeType === 1 ? 1 : this.detail.activeProduct,
+          preActivity: this.detail.preActivity,
           activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
@@ -860,6 +880,10 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
       font-size: 30px;
       &:disabled {
         color: rgba(255, 255, 255, .4);
+        .btn-text {
+          background-color: #e7e7e7;
+          color: #ccc;
+        }
       }
     }
     .btn-text{
@@ -871,7 +895,6 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
       background: #ffffff;
       border-radius: 304px;
       font-size: 20px;
-      line-height: 28px;
       color: #FE7700;
     }
   }
