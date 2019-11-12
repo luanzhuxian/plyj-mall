@@ -131,6 +131,11 @@ export default {
       clickBuyNow: false,
       loading: false,
       showContact: false,
+      /**
+       * 标记点击了哪个按钮，如：单独购买或者活动中购买
+       * 1 按正常商品购买
+       * 其他 按活动商品购买
+       */
       activeType: 1
     }
   },
@@ -202,6 +207,13 @@ export default {
       return this.skuList.every(item => item.stock < item.minBuyNum) || this.productStatus !== 2
     }
   },
+  watch: {
+    showSpecifica (val) {
+      if (!val) {
+        this.activeType = this.activeProduct
+      }
+    }
+  },
   async activated () {
     try {
       await this.getCartCount()
@@ -268,13 +280,13 @@ export default {
         this.clickAddToCart = true
         this.clickBuyNow = false
       }
-      // 立即购买按钮
+      // 单独购买or原价购买or加入购物车按钮
       if (type === 2) {
         this.clickBuyNow = true
         this.clickAddToCart = false
         this.activeType = 1
       }
-      // 立即购买按钮
+      // 立即购买按钮or定金购买
       if (type === 3) {
         this.clickBuyNow = true
         this.clickAddToCart = false

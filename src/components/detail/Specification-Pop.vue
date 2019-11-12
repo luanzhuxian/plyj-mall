@@ -19,7 +19,7 @@
               >
               <div :class="$style.baseInfoRight">
                 <p :class="$style.price" v-text="currentSku.price" v-if="activeType === 1 || (activeProduct !== 1 && preActivity !== 2)" />
-                <p :class="$style.price" v-text="activityProductModel.price" v-if="activeType !== 1 && activeProduct !== 1 && preActivity === 2" />
+                <p v-if="activeType !== 1 && activeProduct !== 1 && preActivity === 2 && activityProductModel" :class="$style.price" v-text="activityProductModel.price" />
                 <p :class="$style.original" v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice">
                   原价：<del class="rmb" v-text="currentSku.originalPrice" v-if="activeProduct !== 1 && preActivity === 2" /> <del class="rmb" v-else v-text="currentSku.originalPrice" />
                 </p>
@@ -89,20 +89,25 @@
                 </span>
               </div>
               <div :class="$style.countCtr">
-                <button :disabled="count <= min || currentDisabled" @click.stop="minus">
+                <button
+                  :disabled="count <= min || (this.activityProductModel && this.activeType !== 1 && this.activityProductModel.buyCount < 1)"
+                  @click.stop="minus"
+                >
                   -
                 </button>
                 <input
                   v-model.number="count"
                   type="number"
                   @input="countChange"
-                  :disabled="currentDisabled"
                 >
-                <button :disabled="count >= localCurrentSku.stock || currentDisabled" @click.stop="add">
+                <button
+                  :disabled="count >= localCurrentSku.stock || (this.activityProductModel && this.activeType !== 1 && count >= this.activityProductModel.buyCount)"
+                  @click.stop="add"
+                >
                   +
                 </button>
                 <p :class="$style.residue">
-                  <template v-if="preActivity == 2 && activeProduct != 1 && activeType != 1">
+                  <template v-if="preActivity === 2 && activeProduct !== 1 && activeType !== 1">
                     总库存<i v-text="activeAllResidue" />件
                   </template>
                   <template v-else>
@@ -175,9 +180,14 @@ export default {
       type: Object,
       default: null
     },
+    /**
+     * 标记点击了哪个按钮，如：单独购买 or 我要参团
+     * 1 按正常商品购买
+     * 其他 按活动商品购买
+     */
     activeType: { // 为1时包含以下情况： 1普通 2团购/秒杀/预购 非已进行中状态； 其他值： 团购/秒杀/预购 进行中状态
       type: [Number, String],
-      default: ''
+      default: 1
     }
   },
   data () {
@@ -218,9 +228,6 @@ export default {
   created () {
   },
   computed: {
-    currentDisabled () {
-      return false
-    },
     currentSku () {
       let current = this.skuList.find(item => {
         return item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2
@@ -241,7 +248,7 @@ export default {
     },
     // 活动期间总余
     activeAllResidue () {
-      return this.activityProductModel.buyCount
+      return this.activityProductModel ? this.activityProductModel.buyCount : 0
     }
   },
   methods: {
@@ -281,14 +288,21 @@ export default {
     },
     sku1IsAllDisabled (skuCode1) {
       let sku1list = this.skuList.filter(item => item.skuCode1 === skuCode1)
-      return sku1list.every(item => item.stock < item.minBuyNum)
+      return sku1list.every(item => {
+        if (this.activeType === 1) {
+          return item.stock < item.minBuyNum
+        } else {
+          return this.activityProductModel && this.activityProductModel.buyCount < 1
+        }
+      })
     },
     skuChange (skuCode1, skuCode2) {
       this.currentSku1 = skuCode1
       skuCode2 = skuCode2 || this.currentSku2 || ''
       let skuCode2List = this.skuList.filter(item => item.skuCode1 === skuCode1)
       for (let item of skuCode2List) {
-        if (item.stock < item.minBuyNum) {
+        // 普通商品才开启禁用
+        if (item.stock < item.minBuyNum && this.activeType === 1) {
           this.$set(item, 'disabled', true)
         } else {
           this.$set(item, 'disabled', false)
