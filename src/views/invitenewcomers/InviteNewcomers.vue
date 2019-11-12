@@ -118,7 +118,6 @@ export default {
   },
   async activated () {
     await this.init()
-    this.share(this.shareUserId)
   },
   mounted () {
   },
@@ -130,23 +129,22 @@ export default {
         const { result } = await getActiveDetail(this.activityId)
         this.detail = result
         if (this.shareUserId && this.userId === this.shareUserId) {
-          location.replace(`/${this.mallDomain}/invitenewcomers/${this.activityId}`)
+          location.replace(`/${this.mallDomain}/yx/${this.activityId}`)
           return
         }
+        this.share(this.shareUserId)
         this.loading = false
       } catch (e) {
         throw e
       }
     },
     async share (shareUserId) {
-      let willHide
-      if (!shareUserId && this.userId) {
-        willHide = ['menuItem:share:timeline']
-      } else {
+      let willHide = ['menuItem:share:timeline']
+      if (shareUserId || !this.userId) {
         willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
         inviterStatisitic(this.activityId, shareUserId)
       }
-      let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/${this.userId}`
+      let shareUrl = `${this.mallUrl}/yx/${this.activityId}/${this.userId}`
       try {
         await share({
           appId: this.appId,
@@ -170,7 +168,7 @@ export default {
         let img = await loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/%E9%82%80%E6%96%B0%E6%9C%89%E7%A4%BC%E5%88%86%E4%BA%AB%E6%B5%B7%E6%8A%A5%E5%88%87%E5%9B%BE%402x.jpg')
         let cvs = document.createElement('canvas')
         let ctx = null
-        let shareUrl = `${this.mallUrl}/invitenewcomers/${this.activityId}/${this.userId}`
+        let shareUrl = `${this.mallUrl}/yx/${this.activityId}/${this.userId}`
         let qrcode = await generateQrcode(300, shareUrl, 0, null, 0, 'canvas')
         let endTime = '活动结束时间 ' + moment(this.detail.invitingEventsEntity.activityEndTime).format('YYYY年MM月DD日 hh:mm:ss')
         cvs.width = 654

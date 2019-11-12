@@ -1,11 +1,11 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 import qs from 'qs'
 const WX = window.wx
 let timer = 0
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
-  let jsApi = await getJsApi(appId) // 每次分享时，获取js-api
+  let { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
   clearInterval(timer)
   return new Promise((resolve, reject) => {
     timer = setTimeout(() => {
@@ -55,16 +55,16 @@ function disposeUrl () {
  * @param appId {string}
  * @return {Promise<*|string>}
  */
-async function getJsApi (appId) {
-  let jsApi = Cookies.get('jsApi') || ''
-  if (!jsApi) {
-    jsApi = await getJSApi(appId) // 每次分享时，获取js-api
-    Cookies.set('jsApi', jsApi.result, {
-      expires: new Date(Date.now() + 1800000) //  jsapi 缓存30分钟
-    })
-  }
-  return jsApi
-}
+// async function getJsApi (appId) {
+//   let jsApi = Cookies.get('jsApi') || ''
+//   if (!jsApi) {
+//     jsApi = await getJSApi(appId) // 每次分享时，获取js-api
+//     Cookies.set('jsApi', jsApi.result, {
+//       expires: new Date(Date.now() + 1800000) //  jsapi 缓存30分钟
+//     })
+//   }
+//   return jsApi
+// }
 
 /**
  * 生成微信分享
@@ -98,7 +98,7 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
   WX.updateTimelineShareData({
     title: `${title} ${desc}`, // 分享标题
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-    imgUrl, // 分享图标
+    imgUrl: imgUrl + '?x-oss-process=style/thum', // 分享图标
     success: () => {
       console.warn('配置”分享到朋友圈“成功！')
     }
@@ -108,7 +108,7 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
     title, // 分享标题
     desc, // 分享描述
     link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-    imgUrl, // 分享图标
+    imgUrl: imgUrl + '?x-oss-process=style/thum', // 分享图标
     success: () => {
       console.warn('配置”分享到朋友“成功！')
     }

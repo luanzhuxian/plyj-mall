@@ -3,7 +3,7 @@
     <div
       :class="$style.trophyItem"
       v-for="(item, i) of gifts"
-      :key="i"
+      :key="'i' + i"
     >
       <img :src="item.giftImage" alt="">
       <div :class="$style.info">

@@ -163,7 +163,7 @@
         <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            :disabled="adding || !currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             单独购买
@@ -181,7 +181,7 @@
         <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
           <button
             :class="$style.add"
-            :disabled="adding || noStock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            :disabled="adding || !currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             原价购买
@@ -503,7 +503,7 @@ export default {
           title: result.productName,
           desc: result.productDesc,
           link: shareUrl,
-          imgUrl: result.productMainImage + '?x-oss-process=style/thum',
+          imgUrl: result.productMainImage,
           willHide: hide
         })
         this.haibaoImg = await loadImage(result.productMainImage)
@@ -891,7 +891,6 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
       background: #ffffff;
       border-radius: 304px;
       font-size: 20px;
-      line-height: 28px;
       color: #FE7700;
     }
   }

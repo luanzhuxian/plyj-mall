@@ -29,24 +29,18 @@
           活动时间已结束
         </div>
       </div>
-      <!--<template v-if="friendUserId">
+      <template v-if="friendUserId">
         <div v-if="friendUserId" :class="$style.inviteFriends">
-          &lt;!&ndash;小手一点帮我助力&ndash;&gt;
+          <!--小手一点帮我助力-->
           <pl-icon name="icon-xiaoshouyidianbangwozhuli" fill="#fff" size="56" />
         </div>
         <div :class="$style.shortOf">
           你也可以参与活动拿豪礼大奖哦！
         </div>
-      </template>-->
-      <div :class="$style.inviteFriends">
-        <pl-svg name="invite-users" :width="560" />
-      </div>
-      <div :class="$style.shortOf">
-        注册成功，即可开豪礼
-      </div>
-      <!--<template v-else>
+      </template>
+      <template v-else>
         <div :class="$style.inviteFriends">
-          &lt;!&ndash;<pl-icon type="svg" name="icon-yinghaoli" width="560" />&ndash;&gt;
+          <pl-icon type="svg" name="icon-yinghaoli" width="560" />
         </div>
         <div v-if="inviteDescription > 0" :class="$style.shortOf">
           还差<i v-text="inviteDescription" />个好友助力，即可开豪礼
@@ -54,16 +48,12 @@
         <div v-else :class="$style.shortOf">
           已成功邀请<i v-text="totalHelpers" />个好友助力，立即开豪礼
         </div>
-      </template>-->
+      </template>
       <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
-      <button :class="$style.button" v-else-if="status === 1">活动暂未开始,尽请期待</button>
-      <!--<button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>-->
-      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">立即注册</button>
-      <!--<button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>-->
-      <button :class="$style.button" v-else-if="status === 2" @click="invite">
-        <span>立即注册</span>
-        <i v-if="totalHelpers">+{{ totalHelpers }}</i>
-      </button>
+      <button :class="$style.button" v-else-if="status === 1">活动暂未开始,敬请期待</button>
+      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>
+      <button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>
+      <button :class="$style.button" v-else-if="status === 2" @click="invite">邀请好友</button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
     </div>
     <!-- 助力过的好友列表 -->
@@ -74,7 +64,7 @@
       :conpons="mallInvitingEventsCouponEntities"
     />
     <!-- 分享引导浮层 -->
-    <ShareLayer :activity-id="activeId" v-show="showShare" @close="showShare = false" />
+    <ShareLayer v-show="showShare" @close="showShare = false" />
     <!-- 开豪礼弹框 -->
     <MessageBox
       :message="hasGift ? '满减券已自动存入您的现金卡包中您可在现金卡包中查看' : '很遗憾，礼物与您擦肩而过，再接再厉哦！'"
@@ -373,7 +363,7 @@ export default {
     },
     // 我也想反豪礼（重置到分享页面）
     async IWantToGetAGiftToo () {
-      location.replace(`/${this.mallDomain}/invitenewcomers/${this.activeId}`)
+      location.replace(`/${this.mallDomain}/yx/${this.activeId}`)
     },
     // 检查是否是新用户
     isNewUser () {

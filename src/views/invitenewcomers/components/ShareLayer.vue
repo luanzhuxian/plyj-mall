@@ -1,16 +1,19 @@
 <template>
   <div class="share-layer">
     <overlay>
-      <!--<div class="guide-line">
+      <div class="guide-line">
         <div>
           <i class="circle en" />
           <i class="circle ws" />
         </div>
-      </div>-->
+      </div>
       <div class="content">
-        <div class="title">复制链接，立即注册</div>
-        <p class="desc" v-text="url" />
-        <div class="btn-known" @click="close">复制</div>
+        <div class="title">点击右上角图标</div>
+        <p class="desc">
+          分享活动给好友，邀请好友注册成为会员<br>
+          一起参与领红包活动！
+        </p>
+        <div class="btn-known" @click="close">知道了</div>
       </div>
     </overlay>
   </div>
@@ -18,32 +21,15 @@
 
 <script>
 import Overlay from './Overlay'
-import { mapGetters } from 'vuex'
+
 export default {
   name: 'ShareLayer',
   components: {
     Overlay
   },
-  computed: {
-    ...mapGetters(['userId', 'mallUrl']),
-    url () {
-      return `${this.mallUrl}/invitenewcomers/${this.activityId}/${this.userId}`
-    }
-  },
-  props: {
-    activityId: {
-      type: String,
-      default: ''
-    }
-  },
+
   methods: {
     close () {
-      this.$copyText(this.url)
-        .then(e => {
-          this.$success('复制成功')
-        }, e => {
-          console.error(e)
-        })
       this.$emit('close')
     }
   }
@@ -113,8 +99,7 @@ export default {
     }
 
     .desc {
-      padding: 0 20px;
-      font-size: 24px;
+      font-size: 28px;
       margin-bottom: 48px;
     }
 
