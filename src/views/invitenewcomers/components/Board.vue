@@ -57,7 +57,8 @@
       </template>-->
       <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,尽请期待</button>
-      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>
+      <!--<button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>-->
+      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">立即注册</button>
       <!--<button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>-->
       <button :class="$style.button" v-else-if="status === 2" @click="invite">
         <span>立即注册</span>

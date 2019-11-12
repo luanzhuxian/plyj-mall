@@ -20,14 +20,14 @@
     </div>
 
     <you-like :is-my="true" />
-    <div :class="$style.ruleNav" @click="isShowRule = true">
+    <!--<div :class="$style.ruleNav" @click="isShowRule = true">
       活动规则
-    </div>
-    <div :class="$style.poster">
+    </div>-->
+    <!--<div :class="$style.poster">
       <pl-svg v-if="creating" name="btn-loading" color="#000" class="rotate" @click="createHaibao" />
       <pl-svg v-else name="haibao" @click="createHaibao" />
       海报
-    </div>
+    </div>-->
     <pl-popup
       :show="isShowRule"
       title="活动细则"
