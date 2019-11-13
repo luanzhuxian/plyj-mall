@@ -32,7 +32,8 @@
       <template v-if="friendUserId">
         <div v-if="friendUserId" :class="$style.inviteFriends">
           <!--小手一点帮我助力-->
-          <pl-icon name="icon-xiaoshouyidianbangwozhuli" fill="#fff" size="56" />
+          <pl-svg name="invite-users" :width="560" />
+          <!--<pl-icon name="icon-xiaoshouyidianbangwozhuli" fill="#fff" size="56" />-->
         </div>
         <div :class="$style.shortOf">
           你也可以参与活动拿豪礼大奖哦！
@@ -40,10 +41,11 @@
       </template>
       <template v-else>
         <div :class="$style.inviteFriends">
-          <pl-icon type="svg" name="icon-yinghaoli" width="560" />
+          <pl-svg name="invite-users" :width="560" />
+          <!--<pl-icon type="svg" name="icon-yinghaoli" width="560" />-->
         </div>
         <div v-if="inviteDescription > 0" :class="$style.shortOf">
-          还差<i v-text="inviteDescription" />个好友助力，即可开豪礼
+          已有<i v-text="inviteDescription" />个好友注册
         </div>
         <div v-else :class="$style.shortOf">
           已成功邀请<i v-text="totalHelpers" />个好友助力，立即开豪礼
@@ -51,13 +53,13 @@
       </template>
       <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,敬请期待</button>
-      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">助好友，得好礼</button>
-      <button :class="$style.button" v-else-if="status === 2 && friendUserId">助力成功</button>
-      <button :class="$style.button" v-else-if="status === 2" @click="invite">邀请好友</button>
+      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">立即注册，得豪礼</button>
+      <button :class="$style.button" v-else-if="status === 2 && friendUserId">注册成功</button>
+      <button :class="$style.button" v-else-if="status === 2" @click="invite">立即开奖</button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
     </div>
     <!-- 助力过的好友列表 -->
-    <HelperList :helpers="helpers" />
+    <!--<HelperList :helpers="helpers" />-->
     <!-- 可获得的礼品列表 -->
     <Trophy
       :gifts="invitingEventsGiftEntities"
@@ -108,8 +110,8 @@
     </MessageBox>
 
     <MessageBox
-      title="助力成功"
-      message="感谢你的好友助力，您也可发起邀新有礼活动领取豪礼大奖哦！"
+      title="领取成功"
+      message="恭喜您获得新人优惠大礼包"
       confirm-text="我也来翻豪礼"
       :message-width="438"
       :show.sync="helpeSuccess"
@@ -131,7 +133,7 @@ import moment from 'moment'
 import { countdown } from '../../../assets/js/util'
 import Trophy from './Trophy'
 import ShareLayer from './ShareLayer.vue'
-import HelperList from './Helper-List.vue'
+// import HelperList from './Helper-List.vue'
 import MessageBox from './Message-Box.vue'
 import {
   openGift,
@@ -148,7 +150,7 @@ export default {
   components: {
     Trophy,
     ShareLayer,
-    HelperList,
+    // HelperList,
     MessageBox
   },
   data () {
@@ -234,7 +236,8 @@ export default {
           sessionStorage.removeItem('IS_NEW_USER')
           await this.help()
           await registerStatisitic(this.activeId)
-          this.showNewUserSuccess = true
+          this.helpeSuccess = true
+          // this.showNewUserSuccess = true
         } catch (e) {
           throw e
         }
@@ -318,7 +321,8 @@ export default {
         this.checkUser('invite')
         return
       }
-      this.showShare = true
+      this.$emit('open')
+      // this.showShare = true
     },
     async openGift () {
       try {
@@ -378,8 +382,7 @@ export default {
       // 不是新人
       if (!IS_NEW_USER && this.shareUserId && this.userId !== this.shareUserId) {
         this.$alert({
-          message: '<p>老用户无法参加助力活动~</p><p>邀您一起参与翻豪礼</p>',
-          viceMessage: '<p>您可以直接发起活动，</p><p>邀请好友助力帮你翻豪礼</p>',
+          message: '<p>老用户无法参加活动~</p>',
           useDangersHtml: true,
           confirmText: '我也想翻豪礼'
         }).finally(() =>{
@@ -396,11 +399,11 @@ export default {
       let message = {
         invite: {
           message: '注册会员，赢豪礼大奖',
-          viceMessage: '快来注册为会员<br>邀请好友赢豪礼大奖'
+          viceMessage: '快来注册为会员'
         },
         help: {
           message: '注册会员，助力好友',
-          viceMessage: '快来注册为会员<br>帮助好友进行助力翻红包'
+          viceMessage: '快来注册为会员'
         }
       }
       this.$confirm({

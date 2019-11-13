@@ -6,7 +6,7 @@ export default [
     props: true,
     component: () => import('../views/invitenewcomers/InviteNewcomers.vue'),
     meta: {
-      title: '双十二疯狂助力'
+      title: '赢取豪礼'
     }
   }
 ]

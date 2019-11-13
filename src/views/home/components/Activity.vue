@@ -39,7 +39,7 @@
       >
         <div :class="$style.itemLeft">
           <div :class="$style.main">
-            邀新有礼
+            赢取豪礼
           </div>
           <div :class="$style.sub">
             <span>

@@ -5,6 +5,7 @@
         :data="detail"
         :active-id="activityId"
         :share-user-id="shareUserId"
+        @open="createHaibao"
       />
       <AcquisitionGifts :activity-id="activityId" />
     </div>
@@ -148,8 +149,8 @@ export default {
       try {
         await share({
           appId: this.appId,
-          title: `${this.userName}邀请你帮他助力`,
-          desc: '快来帮我助力一起领取大礼哦。',
+          title: `${this.userName}已领取豪礼`,
+          desc: '快来参加活动，一起领取豪礼！',
           link: shareUrl,
           imgUrl: this.logoUrl,
           willHide

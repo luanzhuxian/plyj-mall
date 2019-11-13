@@ -22,7 +22,7 @@ export const beforeResolve = function (to, from, next) {
   next()
   // }
   if (to.name === 'Home') {
-    document.title = sessionStorage.getItem('mallName') || ''
+    document.title = sessionStorage.getItem('mallName') || to.meta.title
   } else {
     document.title = to.meta.title
   }
