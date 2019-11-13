@@ -148,9 +148,15 @@
       </div>
       <div class="btn-box">
         <div class="btn disabel" v-if="!activeStart && !activeEnd && activeDetail.status === 1">活动未开始</div>
-        <div class="btn active" @click="checkIn ()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status === 2">立即签到</div>
+        <div class="btn active" @click="checkIn ()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status === 2">
+          <pl-icon v-if="loadingShow" class="rotate loading" name="icon-btn-loading" color="#fff" size="40" />
+          立即签到
+        </div>
         <div class="btn disabel" v-if="!activeDetail.status && (checkInDetail.claimStatus !== 1)">活动已结束</div>
-        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0 && activeDetail.status === 2" @click="claimGift()">点击抽大奖</div>
+        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0 && activeDetail.status === 2" @click="claimGift()">
+          <pl-icon v-if="loadingShow" class="rotate loading" name="icon-btn-loading" color="#fff" size="40" />
+          点击抽大奖
+        </div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
         <div class="btn disabel" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 2 && activeDetail.status === 2">很遗憾没有中奖</div>
         <div class="btn already" v-if="checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum !== 10 && activeStart && !activeEnd && activeDetail.status === 2">今日已签到</div>
@@ -295,7 +301,8 @@ export default {
         noSwiping: true
       },
       lottering: false,
-      canClick: true
+      canClick: true,
+      loadingShow: false
     }
   },
   props: {
@@ -434,8 +441,14 @@ export default {
       if (!this.doubleClick()) {
         return
       }
-      await getCheckIn(this.activeDetail.id)
+      this.loadingShow = true
+      try {
+        await getCheckIn(this.activeDetail.id)
+      } catch (e) {
+        throw e
+      }
       await this.getCheckInDetail()
+      this.loadingShow = false
       this.drawPoster()
     },
     doubleClick () {
@@ -453,9 +466,11 @@ export default {
       if (!this.doubleClick()) {
         return
       }
+      this.loadingShow = true
       const { result: res } = await claimGift(this.activeDetail.id)
       this.lottering = true
       await this.getCheckInDetail()
+      this.loadingShow = false
       this.claimGiftDetail = res
       if (this.checkInDetail.claimStatus === 1) {
         this.winningShow = true
@@ -514,6 +529,7 @@ export default {
   },
   destroyed () {
     clearInterval(this.timer)
+    this.loadingShow = false
   }
 }
 </script>
@@ -737,6 +753,9 @@ export default {
           padding: 24px 0;
           border-radius:20px;
           font-size: 36px;
+          .loading{
+            margin-right: 10px;
+          }
         }
         .disabel{
           color: #EEEEEE;
