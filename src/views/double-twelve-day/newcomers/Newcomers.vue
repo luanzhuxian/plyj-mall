@@ -268,6 +268,7 @@ export default {
     position: fixed;
     bottom: 0;
     height: 96px;
+    z-index: 1;
     line-height: 96px;
     width: 100%;
     background-color: #f2b036;
