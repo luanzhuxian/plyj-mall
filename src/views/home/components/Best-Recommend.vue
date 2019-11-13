@@ -7,53 +7,62 @@
     </div>
     <slot name="title" v-else />
     <ul>
-      <li
-        :class="$style.product"
-        v-for="(item, i) of data.values"
-        :key="i"
-        @click="clickHandler(item)"
-      >
-        <div :class="$style.img" :style="{ backgroundImage: `url(${item.image})` }">
-          <div :class="$style.typeBox">
-            <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
-              体验课
+      <template v-for="(item, i) of data.values">
+        <li
+          v-if="item.goodsInfo"
+          :class="$style.product"
+          :key="i"
+          @click="clickHandler(item)"
+        >
+          <div :class="$style.img" :style="{ backgroundImage: `url(${item.goodsInfo.productMainImage})` }">
+            <div :class="$style.typeBox">
+              <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
+                体验课
+              </div>
+              <count-down
+                v-if="item.goodsInfo.shoppingStatus === 1"
+                :class="$style.countDown"
+                size="small"
+                :data="item.goodsInfo"
+                :fields="{ end: 'shoppingTimeLong' }"
+              />
             </div>
-            <count-down :class="$style.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+
+            <div :class="$style.howManyBuy">
+              <pl-svg name="hot" />
+              <span v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+              <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                <span>
+                  {{ item.goodsInfo.pageviews }}人关注
+                </span>
+              </template>
+              <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                <span>
+                  {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
+                </span>
+              </template>
+            </div>
           </div>
 
-          <div :class="$style.howManyBuy">
-            <pl-svg name="hot" />
-            <span v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
-            <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
-              <span>
-                {{ item.goodsInfo.pageviews }}人关注
-              </span>
-            </template>
-            <template v-else-if="item.goodsInfo.salesVolume >= 10">
-              <span>
-                {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
-              </span>
-            </template>
-          </div>
-        </div>
-
-        <div :class="$style.content">
-          <div :class="$style.name" v-text="item.goodsInfo.productName" />
-          <Tags size="middle" :tags="item.goodsInfo.labelModels" />
-          <div :class="$style.bottom">
-            <div :class="$style.priceBox">
-              <span>¥</span>
-              <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
-              <del>
-                ¥{{ getMaxOrinalPrice(item.goodsInfo.productSkuModels) }}
-              </del>
+          <div :class="$style.content">
+            <div :class="$style.name" v-text="item.goodsInfo.productName" />
+            <Tags size="middle" :tags="item.goodsInfo.labelModels" />
+            <div :class="$style.bottom">
+              <div :class="$style.priceBox">
+                <span>¥</span>
+                <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+                <del>
+                  ¥{{ getMaxOrinalPrice(item.goodsInfo.productSkuModels) }}
+                </del>
+              </div>
+              <button>
+                {{ `立即${productTypeMap[item.goodsInfo.productType]}` }}
+              </button>
             </div>
-            <button>
-              {{ `立即${productTypeMap[item.goodsInfo.productType]}` }}
-            </button>
           </div>
-        </div>
-      </li>
+        </li>
+      </template>
+
     </ul>
     <!-- 瀑布流 -->
     <!-- <div v-if="styleType === 1" :class="$style.waterfallBox">
@@ -189,18 +198,22 @@ export default {
   },
   methods: {
     getMinPrice (skuList) {
+      if (!skuList) return
       let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
       return Math.min(...priceList)
     },
     getMinOrinalPrice (skuList) {
+      if (!skuList) return
       let priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
       return Math.min(...priceList)
     },
     getMaxOrinalPrice (skuList) {
+      if (!skuList) return
       let priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
       return Math.max(...priceList)
     },
     getMaxPrice (skuList) {
+      if (!skuList) return
       let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
       return Math.max(...priceList)
     },
