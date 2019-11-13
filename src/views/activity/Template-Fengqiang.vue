@@ -163,7 +163,7 @@ export default {
         background-size: 100% auto;
       }
       &.invitation {
-        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small.png?v=2") no-repeat center center;
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small-v2.png") no-repeat center center;
         background-size: 100% auto;
       }
     }
@@ -175,7 +175,7 @@ export default {
         background-size: 100% auto;
       }
       &.invitation {
-        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large.png?v=2") no-repeat center center;
+        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large-v2.png") no-repeat center center;
         background-size: 100% auto;
       }
     }

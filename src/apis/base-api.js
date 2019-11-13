@@ -55,3 +55,8 @@ export const collectUserInfo = data =>
   axios.post('/apis/v1/base/baseIntentionUser/collectinfo', data)
 // 获取服务器时间
 export const getServerTime = () => axios.post('/apis/v1/order/current/date')
+/**
+ * 错误日志记录
+ * @return {*}
+ */
+export const errorlog = (data) => axios.post('/apis/v1/log/web/error', data)

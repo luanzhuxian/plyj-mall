@@ -15,6 +15,7 @@ import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
 import './assets/css/quill.css'
 import PlIcon from './components/common/Pl-Icon.vue'
+import { errorlog } from './apis/base-api'
 Vue.use(VueLazyload, {
   error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
   lazyComponent: true,
@@ -56,18 +57,22 @@ Vue.config.errorHandler = async function (err, vm, info) {
       let error = JSON.parse(err.message)
       vm.$error(error.message)
     } else {
-      // 其它出错
-      // console.error(JSON.stringify({
-      //   errorType: err.name,
-      //   info,
-      //   route: vm.$route.fullPath,
-      //   message: err.message,
-      //   el: {
-      //     tag: vm.$el.tagName,
-      //     innerHTML: vm.$el.innerHTML,
-      //     class: vm.$el.className
-      //   }
-      // }, null, 4))
+      errorlog({
+        info,
+        message: err.message,
+        url: location.href,
+        userId: vm.$store.getters.userId,
+        mallId: vm.$store.getters.mallId,
+        vm: {
+          name: vm.$options.name || '',
+          class: Array.from(vm.$el.classList || []).join(';'),
+          id: vm.$el.id || '',
+          parent: {
+            class: Array.from(vm.$parent.$el.classList || []).join(';'),
+            id: vm.$parent.$el.id || '',
+          }
+        }
+      })
     }
     console.error(err)
   } catch (e) {

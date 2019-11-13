@@ -402,7 +402,7 @@ export default {
           viceMessage: '快来注册为会员'
         },
         help: {
-          message: '注册会员，助力好友',
+          message: '注册会员，赢豪礼大奖',
           viceMessage: '快来注册为会员'
         }
       }
