@@ -44,11 +44,11 @@
           <pl-svg name="invite-users" :width="560" />
           <!--<pl-icon type="svg" name="icon-yinghaoli" width="560" />-->
         </div>
-        <div v-if="inviteDescription > 0" :class="$style.shortOf">
-          已有<i v-text="inviteDescription" />个好友注册
-        </div>
-        <div v-else :class="$style.shortOf">
-          已成功邀请<i v-text="totalHelpers" />个好友助力，立即开豪礼
+        <!--<div v-if="inviteDescription > 0" :class="$style.shortOf">
+          还差<i v-text="inviteDescription" />个好友注册
+        </div>-->
+        <div v-if="totalHelpers" :class="$style.shortOf">
+          已成功注册<i v-text="totalHelpers" />个好友，立即开豪礼
         </div>
       </template>
       <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
