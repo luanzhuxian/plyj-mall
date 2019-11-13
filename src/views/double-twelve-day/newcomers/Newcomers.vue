@@ -165,7 +165,7 @@ export default {
       return this.$alert({
         confirmText: '朕知道了',
         viceMessage: '优惠券大礼包您已经领取成功，新注册会员仅可领取一次',
-        message: '请勿重复领取'
+        message: '领取成功'
       })
     },
 
@@ -260,7 +260,7 @@ export default {
   .gift-list {
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 48px;
+    margin-bottom: 110px;
     width: 702px;
   }
 

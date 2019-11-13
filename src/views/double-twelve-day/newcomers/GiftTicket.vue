@@ -80,7 +80,7 @@ export default {
 .gift-ticket {
   position: relative;
   width: 678px;
-  height: 220px;
+//   height: 220px;
   padding: 12px;
   margin-bottom: 20px;
   background-color: #ffc9a2;
@@ -96,8 +96,10 @@ export default {
     top: 0;
     right: 0;
     width:154px;
-    height:244px;
-    line-height: 244px;
+    height:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #ec6251;
     color: white;
     text-align: center;
@@ -135,9 +137,7 @@ export default {
   .content-box {
     position: relative;
     z-index: 1;
-    height: 172px;
-    padding-left: 32px;
-    padding-top: 48px;
+    padding: 62px 0 24px 32px;
     border: 1px solid white;
 
     .ticket-label {
@@ -153,10 +153,10 @@ export default {
     }
 
     .denomination {
-      font-size: 92px;
-      font-weight: bold;
-      color: #d8574b;
-
+        line-height: 82px;
+        font-size: 70px;
+        color: #D8574B;
+        font-weight: bold;
       .yuan {
         position: relative;
         left: -40px;
@@ -178,12 +178,14 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 24px;
+      padding-right: 79px;
     }
 
     .coupon-desc {
       font-size: 38px;
       font-weight: bold;
+      word-break: break-word;
     }
 
     .coupon-name {
