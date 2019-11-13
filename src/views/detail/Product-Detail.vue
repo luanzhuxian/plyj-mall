@@ -383,7 +383,7 @@ export default {
         return this.activityProductModel ? this.activityProductModel.buyCount : 0
     },
     noStock () {
-      if (this.detail.activeProduct !== 1) {
+      if (this.detail.activeProduct !== 1 && this.detail.preActivity === 2) {
         return !this.activityProductModel.buyCount
       }
       return this.productSkuModels.every(item =>
