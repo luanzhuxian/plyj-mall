@@ -43,9 +43,9 @@
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-import share from '../../assets/js/wechat/wechat-share'
+import share from '../../../assets/js/wechat/wechat-share'
 import GiftTicket from './GiftTicket'
-import { getNewcomersDetail } from '../../apis/newcomers'
+import { getNewcomersDetail } from '../../../apis/newcomers'
 
 export default {
   name: 'Newcomers',

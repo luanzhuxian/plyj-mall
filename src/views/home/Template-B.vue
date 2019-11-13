@@ -8,7 +8,6 @@
         @click="$router.push({ name: 'DoubleTwelveDay' })"
       >
     </div>
-    <!--<slot name="88" />-->
     <adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
     <div
       v-if="type === 4 && parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))" :class="$style.broadcast"

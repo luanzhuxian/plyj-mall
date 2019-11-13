@@ -2,7 +2,7 @@ export default [
   {
     path: '/moon/cake',
     name: 'MoonCake',
-    component: () => import('../views/moon/Moon-Cake.vue'),
+    component: () => import('../views/wwec/Moon-Cake.vue'),
     meta: {
       title: '朋来雅集'
     }
@@ -10,7 +10,7 @@ export default [
   {
     path: '/moon/sign-up',
     name: 'SignUp',
-    component: () => import('../views/moon/Wwec.vue'),
+    component: () => import('../views/wwec/Wwec.vue'),
     meta: {
       title: '免费部署线上学校'
     }
@@ -19,7 +19,7 @@ export default [
     path: '/820/code',
     name: 'Code820',
     props: true,
-    component: () => import('../views/moon/Code.vue'),
+    component: () => import('../views/wwec/Code.vue'),
     meta: {
       title: '免费部署线上学校'
     }
@@ -27,7 +27,7 @@ export default [
   {
     path: '/820/get-success',
     name: 'GetSuccess',
-    component: () => import('../views/moon/Get-Success.vue'),
+    component: () => import('../views/wwec/Get-Success.vue'),
     meta: {
       title: '免费部署线上学校'
     }

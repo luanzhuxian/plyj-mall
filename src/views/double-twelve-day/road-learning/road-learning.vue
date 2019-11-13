@@ -243,8 +243,8 @@
 </template>
 
 <script>
-import { generateQrcode } from '../../assets/js/util'
-import { getIDRoadLearningDetail, getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift, getRoadLearningGifts, getObtainGiftsList } from '../../apis/road-learning'
+import { generateQrcode } from '../../../assets/js/util'
+import { getIDRoadLearningDetail, getRoadLearningDetail, getCheckInDetail, getCheckIn, claimGift, getRoadLearningGifts, getObtainGiftsList } from '../../../apis/road-learning'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
