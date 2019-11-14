@@ -282,18 +282,19 @@ export default {
     position: fixed;
     left: 0;
     top: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
+    padding: 20px 110px 0 110px;
     background-color: rgba(0, 0, 0, .65);
     z-index: 2005;
+    img{
+      width: 100%;
+    }
     > svg {
+      display: block;
       width: 40px;
       height: 40px;
-      margin-top: 20px;
+      margin: 20px auto 0;
     }
   }
 </style>
