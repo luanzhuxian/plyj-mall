@@ -63,7 +63,7 @@
                   <p class="detail-coupon color-E16">{{ item.giftBrief }}</p>
                 </div>
                 <div class="content-button">
-                  <pl-button round="round" background-color="#EEEEEE" @click="checkCode(item)">立即兑换</pl-button>
+                  <pl-button round="round" type="warning" @click="checkCode(item)">立即兑换</pl-button>
                 </div>
               </div>
               <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
