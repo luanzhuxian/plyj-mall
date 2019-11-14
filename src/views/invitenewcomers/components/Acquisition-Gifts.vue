@@ -13,7 +13,7 @@
         v-for="(item, i) of showList"
         :key="i"
       >
-        <img :class="$style.icon" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/box%402x.png" alt="">
+        <pl-svg name="gift2" :width="50" />
         <img :class="$style.avatar" :src="item.headImgUrl" alt="">
         <div :class="$style.itemRight">
           <p>{{ item.nickName }}注册成功</p>
