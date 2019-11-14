@@ -139,14 +139,13 @@
           margin-top: 8px;
           background: #FF6767;
           height: 38px;
-          display: flex;
+          display: inline-flex;
           align-items: center;
           justify-content: space-between;
           padding: 0 2px 0 10px;
           font-size: 24px;
           color: #fff;
           border-radius: 4px;
-          width: 226px;
           span{
             width: 120px;
             text-align: center;

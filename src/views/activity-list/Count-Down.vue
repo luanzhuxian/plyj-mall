@@ -132,7 +132,7 @@ export default {
     .text{
       font-size: 24px;
       width: 72px;
-      margin-right: 12px;
+      /*margin-right: 12px;*/
     }
     .text-d{
       font-size: 24px;
