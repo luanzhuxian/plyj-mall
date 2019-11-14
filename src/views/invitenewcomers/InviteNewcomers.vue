@@ -82,7 +82,6 @@ export default {
       poster: ''
     }
   },
-
   props: {
     activityId: {
       type: String,
@@ -120,7 +119,15 @@ export default {
   async activated () {
     await this.init()
   },
-  mounted () {
+  mounted () {},
+  beforeRouteEnter (to, from, next) {
+    const isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    console.log('isIOS', isIOS, location.pathname.includes('/yx/'))
+    if (isIOS && !location.pathname.includes('/yx/')) {
+      location.assign(`/pljs${to.fullPath}`)
+    } else {
+      next()
+    }
   },
   methods: {
     async init () {
