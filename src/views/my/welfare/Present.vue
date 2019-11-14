@@ -223,7 +223,7 @@ export default {
     async checkCode (item) {
       this.isCodeShow = true
       this.activeItem = item
-      this.qrcode = await generateQrcode(500, `${this.mallUrl}/my/apply-helper?shareUserId=${item.redeemCode}`, 0, null, null, 'url')
+      this.qrcode = await generateQrcode(500, `${item.redeemCode}`, 0, null, null, 'url')
       this.checkCodeComplete(item.id)
     },
     async checkCodeComplete (id) {
