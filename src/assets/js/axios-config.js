@@ -86,7 +86,8 @@ function resError (error) {
     msg = '服务器正在开小差~( ˶‾᷄࿀‾᷅˵ )'
   }
   if (msg.indexOf('Network Error') > -1) {
-    router.push({ name: 'NetError' })
+    msg = '网络不给力'
+    // router.push({ name: 'NetError' })
     return
   }
   return Promise.reject(new ResponseError(JSON.stringify({
