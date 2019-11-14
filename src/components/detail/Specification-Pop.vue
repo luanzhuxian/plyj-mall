@@ -21,7 +21,7 @@
                 <p
                   :class="$style.price"
                   v-text="currentSku.price"
-                  v-if="activeProduct !== 1 || preActivity !== 2"
+                  v-if="activeProduct === 1 || preActivity !== 2"
                 />
                 <p
                   v-if="activeProduct !== 1 && preActivity === 2 && activityProductModel"
