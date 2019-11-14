@@ -667,17 +667,16 @@ export default {
   },
   methods: {
     ...mapActions([STUDENTS]),
-    async getProductDetail (flag) {
-      const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-      let coupon = {}
-      if (this.activeProduct === 1) {
-        coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
-      }
-      if (!proList || !proList.length) {
-        return this.$router.replace({ name: 'Home' })
-      }
-      if (!flag) this.loading = true
+    async getProductDetail (flag, coupon = {}) {
       try {
+        const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
+        if (this.activeProduct === 1 && !coupon.id) {
+          coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
+        }
+        if (!proList || !proList.length) {
+          return this.$router.replace({ name: 'Home' })
+        }
+        if (!flag) this.loading = true
         // 获取订单详细数据
         const { result } = await confirmCart({
           activeProduct: this.activeProduct,
