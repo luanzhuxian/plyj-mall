@@ -102,6 +102,7 @@ import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-ap
 import { mapGetters } from 'vuex'
 import { LOGIN, USER_INFO } from '../../../store/mutation-type'
 import { resetForm } from '../../../assets/js/util'
+import { isPhone } from '../../../assets/js/validate'
 import Cookies from 'js-cookie'
 export default {
   name: 'BindMobile',
@@ -123,7 +124,10 @@ export default {
       },
       rules: {
         verifyCode: [{ required: true, message: '请输入验证码' }],
-        mobile: [{ required: true, message: '请输入手机号' }]
+        mobile: [
+          { required: true, message: '请输入手机号' },
+          { validator: isPhone, message: '手机号格式错误' }
+        ]
       },
       step: 1
     }
