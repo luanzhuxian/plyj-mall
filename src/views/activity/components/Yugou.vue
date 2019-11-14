@@ -43,12 +43,12 @@
                   <div :class="$style.main">
                     {{ item.goodsInfo.productName }}
                   </div>
+                  <div :class="$style.sub2">
+                    {{ `预售到手价：${item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price')}元` }}
+                  </div>
                   <div :class="$style.sub1">
                     <span v-if="item.goodsInfo && item.goodsInfo.activityInfo">{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
                     <span v-if="item.goodsInfo && item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
-                  </div>
-                  <div :class="$style.sub2">
-                    {{ `双十二价位：${item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price')}元` }}
                   </div>
                 </div>
               </div>
@@ -200,14 +200,15 @@ export default {
           font-size: 24px;
           font-family: San Francisco Display;
           color: #EA618E;
+          font-weight: bold;
           letter-spacing: 1.2px;
           @include elps();
         }
         .sub-2 {
-          font-size: 28px;
+          font-size: 24px;
           font-family: Microsoft YaHei;
-          font-weight: bold;
-          color: #EA618E;
+        //   font-weight: bold;
+          color: #999;
           @include elps();
         }
       }

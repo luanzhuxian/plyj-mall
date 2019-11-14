@@ -128,7 +128,7 @@ export default {
   .count-down {
     background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/count_down.png") no-repeat;
     background-size: 100% 100%;
-    width: 234px;
+    width: 264px;
     height: 120px;
     font-size: 26px;
     display: flex;
@@ -137,7 +137,7 @@ export default {
     justify-content: center;
     .text{
       color: #FF3323;
-      margin-right: 6px;
+      margin-right: 16px;
       margin-bottom: 10px;
       font-weight: bold;
       font-size: 28px;
@@ -152,6 +152,7 @@ export default {
     .time {
       display: flex;
       color: #ffffff;
+      margin-right: 16px;
       i {
         display: inline-block;
         text-align: center;
@@ -162,6 +163,9 @@ export default {
         color: #E95338;
         margin: 0 6px;
         font-size: 24px;
+      }
+      i:nth-last-of-type(1){
+          margin-right: 0;
       }
     }
   }
