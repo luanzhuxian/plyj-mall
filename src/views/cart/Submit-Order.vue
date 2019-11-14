@@ -667,6 +667,11 @@ export default {
   },
   methods: {
     ...mapActions([STUDENTS]),
+    /**
+     * 活动商品详情以及支付价格
+     * @param flag {boolean} 标记是第一次进入页面调用，还是刷新调用，刷新true, 否则false, 如果为true，则不会显示骨架屏
+     * @param coupon {object} 当前使用的优惠券
+     */
     async getProductDetail (flag, coupon = {}) {
       try {
         const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
