@@ -122,9 +122,11 @@ export default {
   mounted () {},
   beforeRouteEnter (to, from, next) {
     const isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-    console.log('isIOS', isIOS, location.pathname.includes('/yx/'))
+    console.log('isIOS', isIOS, !location.pathname.includes('/yx/'))
+    const { pathname } = location
+    const mallUrl = pathname.split('/')[1]
     if (isIOS && !location.pathname.includes('/yx/')) {
-      location.assign(`/pljs${to.fullPath}`)
+      location.assign(`/${mallUrl}${to.fullPath}`)
     } else {
       next()
     }

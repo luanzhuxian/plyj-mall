@@ -5,7 +5,6 @@ import qs from 'qs'
 const WX = window.wx
 let timer = 0
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
-  console.log('share', appId, title, desc, imgUrl, link)
   let { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
   clearInterval(timer)
   return new Promise((resolve, reject) => {
@@ -27,7 +26,6 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
  * @return {string}
  */
 function disposeUrl () {
-  console.log('disposeUrl', location.href)
   let href = location.href
   let query = href.split('?')[1]
   let { protocol, host, pathname } = location
