@@ -857,12 +857,16 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     align-items: center;
     justify-content: space-between;
     > button {
+      flex: 1;
       width: 340px;
       line-height: 34px;
       padding: 6px 0;
       color: #fff;
       font-size: 30px;
       border-radius: $--radius2;
+      &:nth-last-of-type(1) {
+        margin-left: 20px;
+      }
     }
     .add {
       background-color: $--warning-color;
