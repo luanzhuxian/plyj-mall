@@ -1,6 +1,5 @@
 <template>
   <div :class="$style.activity">
-    <div style="font-size: 50px;">测试缓存测试缓存测试缓存</div>
     <div :class="$style.background">
       <search placeholder="搜索商品" />
       <div :class="$style.container">
