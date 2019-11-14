@@ -63,7 +63,7 @@
                   <p class="detail-coupon color-E16">{{ item.giftBrief }}</p>
                 </div>
                 <div class="content-button">
-                  <pl-button round="round" type="warning" @click="checkCode(item)">立即兑换</pl-button>
+                  <pl-button round="round" background-color="#EB5C20" @click="checkCode(item)">立即兑换</pl-button>
                 </div>
               </div>
               <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
@@ -227,6 +227,7 @@ export default {
       this.checkCodeComplete(item.id)
     },
     async checkCodeComplete (id) {
+      clearInterval(this.timer)
       this.timer = setInterval(async () => {
         const { result: res } = await getGiftDetailById({ id: id })
         if (res.status) {
