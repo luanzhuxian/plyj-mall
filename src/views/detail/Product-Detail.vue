@@ -789,6 +789,14 @@ export default {
   async beforeRouteUpdate (to, from, next) {
     await next()
     await this.refresh()
+  },
+  beforeRouteEnter (to, from, next) {
+    const isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    if (isIOS && !location.pathname.includes('/detail/lesson/')) {
+      location.assign(`/pljs${to.fullPath}`)
+    } else {
+      next()
+    }
   }
 }
 
