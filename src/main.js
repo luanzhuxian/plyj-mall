@@ -7,7 +7,7 @@ import 'moment/locale/zh-cn'
 import './assets/scss/index.scss'
 import './assets/fonts/svg/index'
 import directive from './directive'
-import { beforeResolve, onError } from './assets/js/router-guard'
+import { beforeResolve, beforeEach, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
 import animated from 'animate.css'
 import VueLazyload from 'vue-lazyload'
@@ -48,6 +48,7 @@ new Vue({
 })
 
 router.beforeResolve(beforeResolve)
+router.beforeEach(beforeEach)
 router.onError(onError)
 /* 处理所有组件抛出的错误 */
 Vue.config.errorHandler = async function (err, vm, info) {

@@ -11,6 +11,9 @@ import { router } from '../../router'
 //   'RebateList'
 // ]
 export const beforeEach = function (to, from, next) {
+  // const list = ['']
+  console.log('beforeEach', location.href)
+  next()
 }
 export const beforeResolve = function (to, from, next) {
   // console.log(store.getters.agentUser)

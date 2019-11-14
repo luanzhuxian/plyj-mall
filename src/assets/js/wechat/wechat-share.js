@@ -5,6 +5,7 @@ import qs from 'qs'
 const WX = window.wx
 let timer = 0
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
+  console.log('share', appId, title, desc, imgUrl, link)
   let { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
   clearInterval(timer)
   return new Promise((resolve, reject) => {
@@ -26,6 +27,7 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
  * @return {string}
  */
 function disposeUrl () {
+  console.log('disposeUrl', location.href)
   let href = location.href
   let query = href.split('?')[1]
   let { protocol, host, pathname } = location
@@ -124,6 +126,7 @@ function getConfig (jsapi, appId) {
   let nonceStr = randomString()
   let timestamp = Number.parseInt(Date.now() / 1000)
   let url = disposeUrl()
+  console.log('url', url)
   let sign = `jsapi_ticket=${jsapi}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${url}`
   let signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
   return {
