@@ -161,14 +161,14 @@
     >
       <template v-slot:footer="{ currentSku }">
         <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
-          <button
+          <!--<button
             :class="$style.add"
             :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             单独购买
             <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-          </button>
+          </button>-->
           <button
             :class="$style.buy"
             @click="buyNow(currentSku, 2)"
@@ -179,14 +179,14 @@
         </div>
         <!-- 秒杀商品下单 -->
         <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
-          <button
+          <!--<button
             :class="$style.add"
             :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             原价购买
             <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-          </button>
+          </button>-->
           <button
             :class="$style.buy"
             @click="buyNow(currentSku, 3)"
@@ -362,7 +362,6 @@ export default {
       tab: 2,
       imgels: [],
       // 活动类型
-      activeType: 1,
       qrcode: ''
     }
   },
@@ -585,7 +584,7 @@ export default {
         }
       })
     },
-    buyNow (selected, activeType) {
+    buyNow (selected) {
       if (!this.hasBind()) {
         return
       }
@@ -606,9 +605,9 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: activeType === 1 ? 1 : this.detail.activeProduct,
+          activeProduct: this.detail.activeProduct,
           preActivity: this.detail.preActivity,
-          activityId: activeType === 1 ? '' : this.detail.activityProductModel.activityId
+          activityId: this.detail.activeProduct === 1 ? '' : this.detail.activityProductModel.activityId
         }
       })
     },

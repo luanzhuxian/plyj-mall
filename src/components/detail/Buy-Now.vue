@@ -18,14 +18,14 @@
     </div>
     <!-- 团购商品下单 -->
     <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
-      <button
+      <!--<button
         :class="$style.addToCart"
         @click="clickHandler(2)"
         :disabled="loading || allDisabled || disableConfrim"
       >
         <span>单独购买</span>
         <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-      </button>
+      </button>-->
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
@@ -37,14 +37,14 @@
     </div>
     <!-- 秒杀商品下单 -->
     <div :class="$style.buttons" v-else-if="activeProduct === 3 && preActivity === 2">
-      <button
+      <!--<button
         :class="$style.addToCart"
         @click="clickHandler(2)"
         :disabled="loading || allDisabled || disableConfrim"
       >
         <span>原价购买</span>
         <span :class="$style.btnText">¥ {{ currentSku.price }}</span>
-      </button>
+      </button>-->
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
@@ -55,9 +55,9 @@
       </button>
     </div>
     <!-- 预购商品下单 -->
-    <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2">
+    <div :class="$style.buttons" v-else-if="activeProduct === 4 && preActivity === 2">
       <button
-        :class="$style.preBtn"
+        :class="$style.buyNowBtn"
         @click="clickHandler(3)"
         :disabled="loading || disableConfrim"
       >
@@ -94,7 +94,6 @@
       :active-product="activeProduct"
       :pre-activity="preActivity"
       :activity-product-model="activityProductModel"
-      :active-type="activeType"
     >
       <template v-slot:footer="{ currentSku }">
         <pl-button
@@ -130,13 +129,13 @@ export default {
       clickAddToCart: false,
       clickBuyNow: false,
       loading: false,
-      showContact: false,
+      showContact: false
       /**
        * 标记点击了哪个按钮，如：单独购买或者活动中购买
        * 1 按正常商品购买
        * 其他 按活动商品购买
        */
-      activeType: 1
+      // activeType: 1
     }
   },
   props: {
@@ -189,11 +188,11 @@ export default {
     disableAddCart: Boolean,
     activeProduct: {
       type: [Number, String],
-      default: ''
+      default: 1
     },
     preActivity: {
       type: [Number, String],
-      default: ''
+      default: 0
     },
     activityProductModel: {
       type: Object,
@@ -207,13 +206,13 @@ export default {
       return this.skuList.every(item => item.stock < item.minBuyNum) || this.productStatus !== 2
     }
   },
-  watch: {
-    showSpecifica (val) {
-      if (!val) {
-        this.activeType = this.activeProduct
-      }
-    }
-  },
+  // watch: {
+  //   showSpecifica (val) {
+  //     if (!val) {
+  //       this.activeType = this.activeProduct
+  //     }
+  //   }
+  // },
   async activated () {
     try {
       await this.getCartCount()
@@ -236,6 +235,7 @@ export default {
     },
     // 选中规格
     async confirm (options) {
+      console.log(options)
       try {
         await this.$nextTick()
         if (this.clickAddToCart) {
@@ -266,9 +266,9 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: this.activeType,
+          activeProduct: this.activeProduct,
           preActivity: this.preActivity,
-          activityId: this.activeType === 1 ? '' : this.activityProductModel.activityId
+          activityId: this.activeProduct === 1 ? '' : this.activityProductModel.activityId
         }
       })
     },
@@ -280,17 +280,16 @@ export default {
         this.clickAddToCart = true
         this.clickBuyNow = false
       }
-      // 单独购买or原价购买or加入购物车按钮
+      // 正常购买
       if (type === 2) {
         this.clickBuyNow = true
         this.clickAddToCart = false
-        this.activeType = 1
       }
       // 立即购买按钮or定金购买
       if (type === 3) {
         this.clickBuyNow = true
         this.clickAddToCart = false
-        this.activeType = this.activeProduct
+        // this.activeType = this.activeProduct
       }
       this.showSpecifica = true
     },
@@ -412,8 +411,14 @@ export default {
     }
   }
   .buttons {
-    display: inline-flex;
-    padding-right: 16px;
+    flex: 1;
+    display: flex;
+    margin: 0 16px;
+    border-radius: 10px;
+    overflow: hidden;
+    > button {
+      flex: 1;
+    }
   }
   .addToCart, .buyNowBtn {
     display: inline-flex;
@@ -435,7 +440,7 @@ export default {
       display: inline-block;
     }
   }
-  .preBtn{
+  /*.preBtn{
     width: 440px;
     height: 80px;
     margin-right: 16px;
@@ -446,13 +451,11 @@ export default {
     &:disabled {
       color: rgba(255, 255, 255, .4);
     }
-  }
+  }*/
   .addToCart {
-    border-radius: 10px 0 0 10px;
     background-color: $--warning-color;
   }
   .buyNowBtn {
-    border-radius: 0 10px 10px 0;
     background-color: $--primary-color;
     &:disabled {
       color: rgba(255, 255, 255, .4);
