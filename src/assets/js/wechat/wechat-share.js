@@ -124,6 +124,7 @@ function getConfig (jsapi, appId) {
   let nonceStr = randomString()
   let timestamp = Number.parseInt(Date.now() / 1000)
   let url = disposeUrl()
+  console.log('url', url)
   let sign = `jsapi_ticket=${jsapi}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${url}`
   let signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
   return {

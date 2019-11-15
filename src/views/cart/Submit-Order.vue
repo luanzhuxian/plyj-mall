@@ -224,6 +224,7 @@
             :gap="32"
             :product-type="2"
             :active-product="activeProduct"
+            :pre-active="preActivity"
             :allow-invoice="item.showInvoice"
             border
           />
@@ -667,20 +668,24 @@ export default {
   },
   methods: {
     ...mapActions([STUDENTS]),
-    async getProductDetail (flag) {
-      const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-      let coupon = {}
-      if (this.activeProduct === 1) {
-        coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
-      }
-      if (!proList || !proList.length) {
-        return this.$router.replace({ name: 'Home' })
-      }
-      if (!flag) this.loading = true
+    /**
+     * 活动商品详情以及支付价格
+     * @param flag {boolean} 标记是第一次进入页面调用，还是刷新调用，刷新true, 否则false, 如果为true，则不会显示骨架屏
+     * @param coupon {object} 当前使用的优惠券
+     */
+    async getProductDetail (flag, coupon = {}) {
       try {
+        const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
+        if (this.activeProduct === 1 && !coupon.id) {
+          coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
+        }
+        if (!proList || !proList.length) {
+          return this.$router.replace({ name: 'Home' })
+        }
+        if (!flag) this.loading = true
         // 获取订单详细数据
         const { result } = await confirmCart({
-          activeProduct: this.activeProduct,
+          activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
           activityId: this.activityId,
           cartProducts: proList,
           userCouponId: coupon.id || '',

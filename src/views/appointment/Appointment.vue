@@ -58,7 +58,7 @@
           v-for="(item, i) of B.mediaDetailModelList.slice(0, 4)"
           :key="i"
           v-imger:schollShow="item.mediaUrl"
-          :style="{ backgroundImage: `url(${item.mediaUrl})` }"
+          :style="{ backgroundImage: `url(${item.mediaUrl}?x-oss-process=style/thum-small)` }"
         />
       </ul>
     </div>
@@ -80,7 +80,7 @@
           v-for="(item, i) of C.mediaDetailModelList.slice(0, 4)"
           :key="i"
           v-imger:studentShow="item.mediaUrl"
-          :style="{ backgroundImage: `url(${item.mediaUrl})` }"
+          :style="{ backgroundImage: `url(${item.mediaUrl}?x-oss-process=style/thum-small)` }"
         />
       </ul>
     </div>
@@ -138,7 +138,7 @@
           v-for="(item, i) of F.mediaDetailModelList"
           :key="i"
         >
-          <img v-imger:zizhi :src="item.mediaUrl" alt="">
+          <img v-imger:zizhi="item.mediaUrl" :src="item.mediaUrl + '?x-oss-process=style/thum-small'" alt="">
           <p v-if="item.mediaTitle" v-text="item.mediaTitle" />
         </li>
         <li />

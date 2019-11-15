@@ -5,7 +5,7 @@
       <span :class="$style.title" v-text="data.titleName" />
     </div>
     <p v-for="(item, i) of data.mediaDetailModelList" :key="i">
-      <img v-imger:schoolShow :src="item.mediaUrl" alt="">
+      <img v-imger:schoolShow="item.mediaUrl" :src="item.mediaUrl + '?x-oss-process=style/thum-middle'" alt="">
     </p>
   </div>
 </template>

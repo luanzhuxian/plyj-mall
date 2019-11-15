@@ -82,7 +82,6 @@ export default {
       poster: ''
     }
   },
-
   props: {
     activityId: {
       type: String,
@@ -120,7 +119,17 @@ export default {
   async activated () {
     await this.init()
   },
-  mounted () {
+  mounted () {},
+  beforeRouteEnter (to, from, next) {
+    const isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    console.log('isIOS', isIOS, location.pathname)
+    // const { pathname } = location
+    // const mallUrl = pathname.split('/')[1]
+    // if (isIOS && !location.pathname.includes('/yx/')) {
+    //   location.assign(`/${mallUrl}${to.fullPath}`)
+    // } else {
+    next()
+    // }
   },
   methods: {
     async init () {
@@ -166,6 +175,9 @@ export default {
       }
       try {
         this.creating = true
+        let userImg = new Image()
+        userImg.crossOrigin = ''
+        userImg.src = `${this.avatar}?x-oss-process=image/resize,h_100/circle,r_500/format,png&time=${Date.now()}`
         let img = await loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/%E9%82%80%E6%96%B0%E6%9C%89%E7%A4%BC%E5%88%86%E4%BA%AB%E6%B5%B7%E6%8A%A5%E5%88%87%E5%9B%BE%402x.jpg')
         let cvs = document.createElement('canvas')
         let ctx = null
@@ -180,12 +192,20 @@ export default {
         let rectWidth = textWIdth + 28
         let rectX = (654 - rectWidth) / 2
         ctx.drawImage(img, 0, 0, 654, 1162)
-        ctx.drawImage(qrcode, 230, 900, 194, 194)
+        ctx.drawImage(qrcode, 250, 940, 150, 150)
+        ctx.drawImage(userImg, 80, 793, 52, 52)
+        ctx.font = 'bold 34px Microsoft YaHei '
+        ctx.fillText(`${this.userName}`, 145, 833)
+        ctx.fillStyle = '#A3260F'
+        let nameWidth = ctx.measureText(this.userName).width
+        console.log(nameWidth)
+        ctx.fillText(`与您分享精彩活动`, `${154 + nameWidth}`, 833)
         ctx.save()
         drawRoundRect(ctx, rectX, 316, rectWidth, 44, 22, '#fd806a', '#fd806a')
         ctx.restore()
         ctx.fillStyle = '#d1ee10'
         ctx.baseline = 'hanging'
+        ctx.font = '24px Microsoft YaHei UI'
         createText(ctx, rectX + 14, 348, endTime, 44)
         this.poster = cvs.toDataURL('image/jpeg')
         this.showHaibao = true

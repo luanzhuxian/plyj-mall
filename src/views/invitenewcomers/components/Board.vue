@@ -47,15 +47,16 @@
         <!--<div v-if="inviteDescription > 0" :class="$style.shortOf">
           还差<i v-text="inviteDescription" />个好友注册
         </div>-->
-        <div v-if="totalHelpers" :class="$style.shortOf">
+        <div v-if="hasShare" :class="$style.shortOf">
           已成功注册<i v-text="totalHelpers" />个好友，立即开豪礼
         </div>
       </template>
       <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,敬请期待</button>
       <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">立即注册，得豪礼</button>
-      <button :class="$style.button" v-else-if="status === 2 && friendUserId">注册成功</button>
-      <button :class="$style.button" v-else-if="status === 2" @click="invite">参与活动</button>
+      <!--<button :class="$style.button" v-else-if="status === 2 && friendUserId">注册成功</button>-->
+      <button :class="$style.button" v-else-if="status === 2 && !hasShare" @click="invite">参与活动</button>
+      <button :class="$style.button" v-else-if="status === 2" @click="invite">立即开奖</button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
     </div>
     <!-- 助力过的好友列表 -->
@@ -155,6 +156,7 @@ export default {
   },
   data () {
     return {
+      // 活动状态
       status: '',
       showShare: false,
       // 是否已主力
@@ -171,6 +173,7 @@ export default {
       showNewUserSuccess: false,
       // 开始的实体礼品
       mallInvitingEventsGiftEntity: null,
+      hasShare: false,
       loading: false,
       d: '00',
       h: '00',
@@ -321,6 +324,7 @@ export default {
         this.checkUser('invite')
         return
       }
+      this.hasShare = true
       this.$emit('open')
       // this.showShare = true
     },
