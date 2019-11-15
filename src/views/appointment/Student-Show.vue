@@ -6,7 +6,7 @@
     </div>
     <ul :class="$style.studentList">
       <li v-for="(item, i) of data.mediaDetailModelList" :key="i">
-        <img v-imger:studentShow :src="item.mediaUrl" alt="">
+        <img v-imger:studentShow="item.mediaUrl" :src="item.mediaUrl + '?x-oss-process=style/thum-mini'" alt="">
       </li>
     </ul>
   </div>
