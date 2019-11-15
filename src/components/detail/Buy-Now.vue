@@ -22,7 +22,7 @@
       <button
         v-if="activeStock <= 0"
         :class="$style.addToCart"
-        :disabled="loading || allDisabled || disableConfrim"
+        :disabled="loading || allDisabled || disableConfirm"
         @click="clickHandler(2)"
       >
         单独购买
@@ -31,7 +31,7 @@
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
-        :disabled="loading || disableConfrim || activeStock <= 0"
+        :disabled="loading || disableConfirm || activeStock <= 0"
       >
         <span>{{ activeStock > 0 ? '我要参团' : '已售罄' }}</span>
         <div v-if="activeStock > 0" :class="$style.text">¥ {{ activityProductModel.price }}</div>
@@ -43,7 +43,7 @@
       <button
         v-if="activeStock <= 0"
         :class="$style.addToCart"
-        :disabled="loading || allDisabled || disableConfrim"
+        :disabled="loading || allDisabled || disableConfirm"
         @click="clickHandler(2)"
       >
         原价购买
@@ -52,7 +52,7 @@
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
-        :disabled="loading || disableConfrim || activeStock <= 0"
+        :disabled="loading || disableConfirm || activeStock <= 0"
       >
         <span>{{ activeStock > 0 ? '立即秒杀' : '已售罄' }}</span>
         <span v-if="activeStock > 0" :class="$style.text">¥ {{ activityProductModel.price }}</span>
@@ -63,7 +63,7 @@
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
-        :disabled="loading || disableConfrim"
+        :disabled="loading || disableConfirm"
       >
         定金购买
         <div :class="$style.btnText">¥ {{ activityProductModel.price }}</div>
@@ -74,7 +74,7 @@
       <button
         :class="$style.addToCart"
         @click="clickHandler(1)"
-        :disabled="loading || allDisabled"
+        :disabled="loading || allDisabled || disableConfirm"
         :style="{'line-height': 80 / 7.5 + 'vw'}"
       >
         <span>加入购物车</span>
@@ -82,7 +82,7 @@
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(2)"
-        :disabled="loading || allDisabled || disableConfrim"
+        :disabled="loading || allDisabled || disableConfirm"
         :style="{'line-height': 80 / 7.5 + 'vw'}"
       >
         <span>{{ confirmText }}</span>
@@ -188,8 +188,8 @@ export default {
       type: Number,
       default: 0
     },
-    disableConfrim: Boolean,
-    disableAddCart: Boolean,
+    disableConfirm: Boolean,
+    x: Boolean,
     activeProduct: {
       type: [Number, String],
       default: 1

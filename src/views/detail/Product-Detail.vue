@@ -138,7 +138,8 @@
       :current-sku.sync="currentModel"
       :product-status="detail.productStatus"
       :confirm-text="confirmText"
-      :disable-confrim="confirmText === '暂未开售' || noStock"
+      :disable-confirm="confirmText === '暂未开售' || noStock || loading"
+      :disable-add-cart="loading"
       :limiting="limiting"
       :active-product="activeProduct"
       :activity-product-model="detail.activityProductModel || null"
@@ -164,7 +165,7 @@
           <button
             v-if="showNormalBuy"
             :class="$style.add"
-            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
             @click="buyNow(currentSku, 1)"
           >
             单独购买
@@ -172,7 +173,7 @@
           </button>
           <button
             :class="$style.buy"
-            :disabled="activeStock <= 0"
+            :disabled="activeStock <= 0 || loading"
             @click="buyNow(currentSku)"
           >
             {{ activeStock > 0 ? '我要参团' : '已售罄' }}
@@ -185,7 +186,7 @@
           <button
             v-if="showNormalBuy"
             :class="$style.add"
-            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
+            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
             @click="buyNow(currentSku, 1)"
           >
             原价购买
@@ -193,7 +194,7 @@
           </button>
           <button
             :class="$style.buy"
-            :disabled="activeStock <= 0"
+            :disabled="activeStock <= 0 || loading"
             @click="buyNow(currentSku)"
           >
             {{ activeStock > 0 ? '立即秒杀' : '已售罄' }}
@@ -214,14 +215,14 @@
         <div :class="$style.buttons" v-else>
           <button
             :class="$style.add"
-            :disabled="adding || noStock"
+            :disabled="adding || noStock || loading"
             @click="addToCart(currentSku)"
           >
             加入购物车
           </button>
           <button
             :class="$style.buy"
-            :disabled="adding || noStock || confirmText === '暂未开售'"
+            :disabled="adding || noStock || confirmText === '暂未开售' || loading"
             @click="buyNow(currentSku, 1)"
           >
             {{ confirmText }}
@@ -836,8 +837,12 @@ export default {
     }
   },
   async beforeRouteUpdate (to, from, next) {
-    await next()
-    await this.refresh()
+    try {
+      await next()
+      await this.refresh()
+    } catch (e) {
+      throw e
+    }
   }
 }
 

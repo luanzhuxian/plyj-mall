@@ -58,6 +58,7 @@
               :price="product.unitPrice"
               :status="refundStatusMap[product.afterSalesStatus]"
               :active-product="item.activeProduct"
+              :pre-active="item.activeProduct !== 1 ? 2 : ''"
               border
             />
             <div :class="$style.listItemBottom">

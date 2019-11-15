@@ -102,7 +102,7 @@
                   @input="countChange"
                 >
                 <button
-                  :disabled="(activeType && count >= localCurrentSku.stock) || (activeType !== 1 && count >= activityProductModel.buyCount)"
+                  :disabled="(activeType === 1 && count >= localCurrentSku.stock) || (activeType !== 1 && activityProductModel && count >= activityProductModel.buyCount)"
                   @click.stop="add"
                 >
                   +
