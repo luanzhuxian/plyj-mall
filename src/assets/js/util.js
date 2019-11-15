@@ -407,7 +407,7 @@ export class countdown {
 export function loadImage (src) {
   let img = new Image()
   img.crossOrigin = 'Anonymous'
-  img.src = src + '?' + Date.now()
+  img.src = src + '?t=' + Date.now()
   return new Promise((resolve, reject) => {
     img.onload = () => {
       resolve(img)

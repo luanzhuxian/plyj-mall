@@ -5,7 +5,8 @@ import {
   getUserInfo,
   login,
   refreshToken,
-  getCartCount
+  getCartCount,
+  userInfoSettings
 } from '../apis/base-api'
 import {
   getAddress
@@ -17,8 +18,10 @@ import {
   getAduitNotice
 } from '../apis/broker-manager'
 import {
-  DelayExec
+  DelayExec,
+  loadImage
 } from '../assets/js/util'
+import { upload } from '../assets/js/upload-image'
 import Qs from 'qs'
 let delay = new DelayExec(500)
 export default {
@@ -102,6 +105,22 @@ export default {
       }
     })
   },
+  // 转存微信头像到ali-oss，以便提高生成海报的速度
+  [type.SAVE_WX_AVATAR]: async ({ commit }, url) => {
+    let img = await loadImage(url)
+    let cvs = document.createElement('canvas')
+    cvs.width = img.width
+    cvs.heigt = img.height
+    let ctx = cvs.getContext('2d')
+    ctx.drawImage(img, 0, 0)
+    cvs.toBlob(async blob => {
+      let res = await upload(blob)
+      userInfoSettings({ headImgUrl: res.url })
+        .then(() => {
+          commit(type.SET_AVATAR, res.url)
+        })
+    }, 'image/jpeg')
+  },
   [type.USER_INFO]: ({ commit, dispatch, getters }) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -109,6 +128,10 @@ export default {
         commit(type.USER_INFO, result)
         await dispatch(type.ADDRESS_LIST)
         localStorage.setItem('refresh_count', 0)
+        // 如果用户头像是微信那边的，那就转存至ali-oss
+        if (result.img.indexOf('qlogo') > -1) {
+          dispatch(type.SAVE_WX_AVATAR, result.img)
+        }
         resolve(result)
       } catch (e) {
         /*
