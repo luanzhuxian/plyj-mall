@@ -224,6 +224,7 @@
             :gap="32"
             :product-type="2"
             :active-product="activeProduct"
+            :pre-active="preActivity"
             :allow-invoice="item.showInvoice"
             border
           />
