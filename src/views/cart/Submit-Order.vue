@@ -27,6 +27,7 @@
           :support-refund="item.supportRefund"
           :gap="32"
           :product-type="1"
+          :pre-active="preActivity"
           :active-product="activeProduct"
           :allow-invoice="item.showInvoice"
           border
@@ -116,6 +117,7 @@
             :product-type="2"
             :active-product="activeProduct"
             :allow-invoice="item.showInvoice"
+            :pre-active="preActivity"
             border
           />
         </div>

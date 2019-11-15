@@ -33,8 +33,8 @@
         @click="clickHandler(3)"
         :disabled="loading || disableConfrim || activeStock <= 0"
       >
-        <span>{{ activeStock > 0 ? '我要参团' : '团购商品已售罄' }}</span>
-        <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
+        <span>{{ activeStock > 0 ? '我要参团' : '已售罄' }}</span>
+        <div v-if="activeStock > 0" :class="$style.text">¥ {{ activityProductModel.price }}</div>
       </button>
     </div>
     <!-- 秒杀商品下单 -->
@@ -54,8 +54,8 @@
         @click="clickHandler(3)"
         :disabled="loading || disableConfrim || activeStock <= 0"
       >
-        <span>{{ activeStock > 0 ? '立即秒杀' : '秒杀商品已售罄' }}</span>
-        <span :class="$style.text">¥ {{ activityProductModel.price }}</span>
+        <span>{{ activeStock > 0 ? '立即秒杀' : '已售罄' }}</span>
+        <span v-if="activeStock > 0" :class="$style.text">¥ {{ activityProductModel.price }}</span>
       </button>
     </div>
     <!-- 预购商品下单 -->

@@ -175,8 +175,8 @@
             :disabled="activeStock <= 0"
             @click="buyNow(currentSku)"
           >
-            {{ activeStock > 0 ? '我要参团' : '团购商品已售罄' }}
-            <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+            {{ activeStock > 0 ? '我要参团' : '已售罄' }}
+            <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
           </button>
         </div>
         <!-- 秒杀商品下单 -->
@@ -196,8 +196,8 @@
             :disabled="activeStock <= 0"
             @click="buyNow(currentSku)"
           >
-            {{ activeStock > 0 ? '立即秒杀' : '秒杀商品已售罄' }}
-            <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+            {{ activeStock > 0 ? '立即秒杀' : '已售罄' }}
+            <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
           </button>
         </div>
         <!-- 预购商品下单 -->
