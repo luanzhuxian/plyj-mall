@@ -440,6 +440,11 @@ export default {
       display: inline-block;
     }
   }
+  .buyNowBtn:disabled{
+      color: white !important;
+      background: #ccc;
+      border-color: #ccc;
+  }
   /*.preBtn{
     width: 440px;
     height: 80px;
