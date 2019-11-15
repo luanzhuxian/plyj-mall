@@ -4,25 +4,25 @@
       <!-- 海报按钮 -->
       <div :class="$style.haibao">
         <pl-svg v-if="creating" name="btn-loading" color="#fff" class="rotate" @click="showHaibao = false;" />
-        <pl-svg v-else name="haibao" @click="createHaibao(detail.activeProduct)" />
+        <pl-svg v-else name="haibao" @click="createHaibao(activeProduct)" />
         <p>分享海报</p>
       </div>
       <!-- 商品banner -->
       <DetailBanner :banners="banners" />
       <!-- 团购倒计时条 -->
-      <TogetherBar :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity !== 0" />
+      <TogetherBar :detail="detail" v-if="activeProduct === 2 && preActivity !== 0" />
       <!-- 秒杀倒计时条 -->
-      <SecondBar :detail="detail" v-if="detail.activeProduct === 3 && detail.preActivity !== 0" />
+      <SecondBar :detail="detail" v-if="activeProduct === 3 && preActivity !== 0" />
       <!-- 预购倒计时条 -->
-      <BookingBar :detail="detail" v-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
+      <BookingBar :detail="detail" v-if="activeProduct === 4 && preActivity !== 0" />
       <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
         <!-- 团购信息 -->
-        <TogetherPrice :detail="detail" v-if="detail.activeProduct === 2 && detail.preActivity === 2" />
+        <TogetherPrice :detail="detail" v-if="activeProduct === 2 && preActivity === 2" />
         <!-- 秒杀信息 -->
-        <SecondPrice :detail="detail" v-else-if="detail.activeProduct === 3 && detail.preActivity !== 0" />
+        <SecondPrice :detail="detail" v-else-if="activeProduct === 3 && preActivity !== 0" />
         <!-- 预购信息 -->
-        <BookingPrice :detail="detail" v-else-if="detail.activeProduct === 4 && detail.preActivity !== 0" />
+        <BookingPrice :detail="detail" v-else-if="activeProduct === 4 && preActivity !== 0" />
         <!-- 加个 润笔 购买数量，关注人数 登信息 -->
         <info-header :detail="detail" v-else />
         <!-- 开售倒计时 -->
@@ -30,12 +30,12 @@
           size="large"
           @done="countFinished"
           :class="$style.countDown"
-          v-if="detail.shoppingStatus === 1 && detail.activeProduct === 1"
+          v-if="detail.shoppingStatus === 1 && activeProduct === 1"
           :starttime="detail.serverTime"
           :endtime="detail.shoppingTimeLong"
         />
         <!-- 商品名称 -->
-        <DetailTitle :active-product="detail.activeProduct" :pre-activity="detail.preActivity" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
+        <DetailTitle :active-product="activeProduct" :pre-activity="preActivity" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
         <!-- 商品描述 -->
         <DetailDesc v-text="detail.productDesc" />
         <!-- 商品标签 -->
@@ -43,8 +43,8 @@
         <!-- 使用期限 -->
         <useful-life
           v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
-          :start="detail.activeProduct === 4 ? detail.activityProductModel.useStartTime : detail.validityPeriodStart"
-          :end="detail.activeProduct === 4 ? detail.activityProductModel.useEndTime : detail.validityPeriodEnd"
+          :start="activeProduct === 4 ? detail.activityProductModel.useStartTime : detail.validityPeriodStart"
+          :end="activeProduct === 4 ? detail.activityProductModel.useEndTime : detail.validityPeriodEnd"
         />
       </DetailInfoBox>
 
@@ -69,7 +69,7 @@
       </Field>
 
       <Field
-        v-if="couponList.length && detail.preActivity !== 2"
+        v-if="couponList.length && preActivity !== 2"
         label="优惠券"
         can-click
         :label-width="120"
@@ -78,7 +78,7 @@
         <span style="color: #FE7700;" v-text="couponText" />
       </Field>
 
-      <TogetherRule v-if="(detail.activeProduct === 2 || detail.activeProduct === 4) && detail.preActivity === 2" :active-product="detail.activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
+      <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
 
       <div :class="$style.detailOrComment">
         <div :class="$style.tabs">
@@ -140,9 +140,9 @@
       :confirm-text="confirmText"
       :disable-confrim="confirmText === '暂未开售' || noStock"
       :limiting="limiting"
-      :active-product="detail.activeProduct"
+      :active-product="activeProduct"
       :activity-product-model="detail.activityProductModel || null"
-      :pre-activity="detail.preActivity"
+      :pre-activity="preActivity"
     />
 
     <!-- 规格弹框 -->
@@ -154,54 +154,60 @@
       :visible.sync="showSpecifica"
       :sku.sync="currentModel"
       :limiting="limiting"
-      :active-product="detail.activeProduct"
+      :active-product="activeProduct"
       :activity-product-model="detail.activityProductModel || null"
-      :pre-activity="detail.preActivity"
-      :active-type="detail.activeProduct"
+      :pre-activity="preActivity"
     >
       <template v-slot:footer="{ currentSku }">
-        <div :class="$style.buttons" v-if="detail.activeProduct === 2 && detail.preActivity === 2">
-          <!--<button
+        <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
+          <!-- 活动商品库存不足时，显示该按钮 -->
+          <button
+            v-if="showNormalBuy"
             :class="$style.add"
             :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             单独购买
             <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-          </button>-->
+          </button>
           <button
             :class="$style.buy"
-            @click="buyNow(currentSku, 2)"
+            :disabled="activeStock <= 0"
+            @click="buyNow(currentSku)"
           >
-            我要参团
+            {{ activeStock > 0 ? '我要参团' : '团购商品已售罄' }}
             <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
           </button>
         </div>
         <!-- 秒杀商品下单 -->
-        <div :class="$style.buttons" v-else-if="detail.activeProduct === 3 && detail.preActivity === 2">
-          <!--<button
+        <div :class="$style.buttons" v-else-if="activeProduct === 3 && preActivity === 2">
+          <!-- 活动商品库存不足时，显示该按钮 -->
+          <button
+            v-if="showNormalBuy"
             :class="$style.add"
             :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0)"
             @click="buyNow(currentSku, 1)"
           >
             原价购买
             <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-          </button>-->
+          </button>
           <button
             :class="$style.buy"
-            @click="buyNow(currentSku, 3)"
+            :disabled="activeStock <= 0"
+            @click="buyNow(currentSku)"
           >
-            立即秒杀
+            {{ activeStock > 0 ? '立即秒杀' : '秒杀商品已售罄' }}
             <div :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
           </button>
         </div>
         <!-- 预购商品下单 -->
-        <div :class="$style.button" v-else-if="detail.activeProduct === 4 && detail.preActivity === 2">
+        <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2">
           <button
             :class="$style.preBtn"
-            @click="buyNow(currentSku, 4)"
+            :disabled="activeStock <= 0"
+            @click="buyNow(currentSku)"
           >
-            定金购买
+            {{ activeStock > 0 ? '定金购买' : '已售罄' }}
             <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
           </button>
         </div>
@@ -235,7 +241,7 @@
       <div :class="$style.saveHaibao" v-if="showHaibao">
         <div :class="$style.saveHaibaoContent">
           <img :src="haibao" alt="">
-          <div :class="$style.saveButton" v-if="detail.activeProduct === 1">
+          <div :class="$style.saveButton" v-if="activeProduct === 1">
             长按识别或保存二维码，分享给朋友吧！
           </div>
           <div :class="$style.saveButton1" v-else>
@@ -381,13 +387,51 @@ export default {
     activeStock () {
         return this.activityProductModel ? this.activityProductModel.buyCount : 0
     },
+    /**
+     * 活动类型
+     * 1 正常商品
+     * 2 团购
+     * 3 秒杀
+     * 4 预购
+     */
+    activeProduct () {
+      return this.detail.activeProduct || 1
+    },
+    /**
+     * 活动进行状态
+     * '' 正常商品
+     * 0 未开始
+     * 1 预热中
+     * 2 已结束
+     */
+    preActivity () {
+      return this.detail.preActivity || 0
+    },
+    /**
+     * 是否显示正常购买的按钮，活动数量不足时，显示
+     * 正常情况下，它的值等于活动类型
+     * 但是当活动商品库存不足时，团购和秒杀需要开放正常购买通道
+     */
+    showNormalBuy () {
+      return this.activeStock <= 0
+    },
+    /**
+     * 判断是否还有库存
+     *
+     * 其它活动商品的库存同意用
+     */
     noStock () {
-      if (this.detail.activeProduct !== 1 && this.detail.preActivity === 2) {
-        return !this.activityProductModel.buyCount
+      // 如果时预购的商品，根据当前活动库存来判断
+      if (this.activeProduct === 4) {
+        return !this.activeStock
       }
-      return this.productSkuModels.every(item =>
-        item.stock < item.minBuyNum
-      )
+      // 除了预购商品，其它活动商品不判断是否售罄，如果售罄了，就以正常购买途径是否还有库存为准
+      if (this.activeProduct === 1 || this.activeStock <= 0) {
+        return this.productSkuModels.every(item =>
+          item.stock < item.minBuyNum
+        )
+      }
+      return false
     },
     defaultCount () {
       return this.currentModel.count || 1
@@ -584,7 +628,12 @@ export default {
         }
       })
     },
-    buyNow (selected) {
+    /**
+     * 购买
+     * @param selected {object} 选择的规格
+     * @param buyWay {number} 购买方式 1：正常购买 其它：活动购买
+     */
+    buyNow (selected, buyWay) {
       if (!this.hasBind()) {
         return
       }
@@ -605,9 +654,9 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: this.detail.activeProduct,
-          preActivity: this.detail.preActivity,
-          activityId: this.detail.activeProduct === 1 ? '' : this.detail.activityProductModel.activityId
+          activeProduct: buyWay === 1 ? 1 : this.activeProduct,
+          preActivity: (buyWay === 1 || this.activeProduct === 1) ? null : this.preActivity,
+          activityId: (this.activeProduct === 1 || buyWay === 1) ? null : this.detail.activityProductModel.activityId
         }
       })
     },
@@ -662,11 +711,11 @@ export default {
       canvas.width = 1120
       canvas.height = 1346
       let ctx = canvas.getContext('2d')
-      if (type === 2 && this.detail.preActivity === 2) {
+      if (type === 2 && this.preActivity === 2) {
         ctx.drawImage(tuanBg, 0, 0, 1120, 192)
-      } else if (type === 3 && this.detail.preActivity === 2) {
+      } else if (type === 3 && this.preActivity === 2) {
         ctx.drawImage(miaoBg, 0, 0, 1120, 192)
-      } else if (type === 4 && this.detail.preActivity === 2) {
+      } else if (type === 4 && this.preActivity === 2) {
         ctx.drawImage(yugouBg, 0, 0, 1120, 192)
       } else {
         // 绘制头部
@@ -681,7 +730,7 @@ export default {
         let qrcode = await generateQrcode(300, this.shareUrl, 15, img, 10, 'canvas')
         // 商品图片
         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 192, 1120, 746)
-        if (type !== 1 && this.detail.preActivity === 2) {
+        if (type !== 1 && this.preActivity === 2) {
           ctx.fillStyle = '#FA4D2F'
         } else {
           ctx.fillStyle = '#fff'
@@ -690,12 +739,12 @@ export default {
         ctx.drawImage(qrcode, 750, 978, 320, 320)
         // 填充商品名称
         let str = this.detail.productName
-        let line = (type !== 1 && this.detail.preActivity === 2) ? 1 : 2
+        let line = (type !== 1 && this.preActivity === 2) ? 1 : 2
         let price = this.minPrice
         let originalPrice = this.maxOriginalPrice
         let activePrice = this.detail.activityProductModel.price
-        fontStyle(ctx, '56px Microsoft YaHei UI', (type !== 1 && this.detail.preActivity === 2) ? '#fff' : '#000', 'top')(ctx, 48, 978, str, 80, 620, line)
-        if (type === 2 && this.detail.preActivity === 2) {
+        fontStyle(ctx, '56px Microsoft YaHei UI', (type !== 1 && this.preActivity === 2) ? '#fff' : '#000', 'top')(ctx, 48, 978, str, 80, 620, line)
+        if (type === 2 && this.preActivity === 2) {
           // 团购
           let original = this.maxOriginalPrice || this.maxPrice
           ctx.drawImage(tuan_price, 48, 1090, 240, 104)
@@ -709,7 +758,7 @@ export default {
           ctx.fillText(original, 48 + 144 + 10, 1220)
           let originalPriceWidth = ctx.measureText(original).width
           ctx.drawImage(yuan, 48 + 144 + 10 + originalPriceWidth + 10, 1210, 66, 96)
-        } else if (type === 3 && this.detail.preActivity === 2) {
+        } else if (type === 3 && this.preActivity === 2) {
           // 秒杀
           ctx.drawImage(second_price, 48, 1090, 240, 104)
           fontStyle(ctx, 'bolder 88px Arial', '#F9E687', 'hanging')
@@ -723,7 +772,7 @@ export default {
           ctx.fillText(original, 48 + 144 + 10, 1220)
           let originalPriceWidth = ctx.measureText(original).width
           ctx.drawImage(yuan, 48 + 144 + 10 + originalPriceWidth + 10, 1210, 66, 96)
-        } else if (type === 4 && this.detail.preActivity === 2) {
+        } else if (type === 4 && this.preActivity === 2) {
           // 预购
           ctx.drawImage(yujiao, 48, 1090, 144, 104)
           fontStyle(ctx, 'bolder 88px Arial', '#F9E687', 'hanging')
@@ -768,9 +817,10 @@ export default {
       }
     },
     countFinished () {
-      this.$set(this.detail, 'serverTime', '')
-      this.$set(this.detail, 'shoppingTimeLong', '')
-      this.$set(this.detail, 'preActivity', 2)
+      // this.$set(this.detail, 'serverTime', '')
+      // this.$set(this.detail, 'shoppingTimeLong', '')
+      // this.$set(this.detail, 'preActivity', 2)
+      location.reload()
     },
     async refresh () {
       try {
@@ -870,6 +920,13 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     }
     .add {
       background-color: $--warning-color;
+      &:disabled {
+        color: rgba(255, 255, 255, .4);
+        .btn-text {
+          background-color: #e7e7e7;
+          color: #ccc;
+        }
+      }
     }
     .buy {
       background-color: $--primary-color;

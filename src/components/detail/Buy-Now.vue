@@ -18,39 +18,43 @@
     </div>
     <!-- 团购商品下单 -->
     <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
-      <!--<button
+      <!-- 活动商品库存不足时，显示该按钮 -->
+      <button
+        v-if="activeStock <= 0"
         :class="$style.addToCart"
-        @click="clickHandler(2)"
         :disabled="loading || allDisabled || disableConfrim"
+        @click="clickHandler(2)"
       >
-        <span>单独购买</span>
+        单独购买
         <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-      </button>-->
+      </button>
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
-        :disabled="loading || disableConfrim"
+        :disabled="loading || disableConfrim || activeStock <= 0"
       >
-        <span>我要参团</span>
+        <span>{{ activeStock > 0 ? '我要参团' : '团购商品已售罄' }}</span>
         <div :class="$style.text">¥ {{ activityProductModel.price }}</div>
       </button>
     </div>
     <!-- 秒杀商品下单 -->
     <div :class="$style.buttons" v-else-if="activeProduct === 3 && preActivity === 2">
-      <!--<button
+      <!-- 活动商品库存不足时，显示该按钮 -->
+      <button
+        v-if="activeStock <= 0"
         :class="$style.addToCart"
-        @click="clickHandler(2)"
         :disabled="loading || allDisabled || disableConfrim"
+        @click="clickHandler(2)"
       >
-        <span>原价购买</span>
-        <span :class="$style.btnText">¥ {{ currentSku.price }}</span>
-      </button>-->
+        原价购买
+        <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+      </button>
       <button
         :class="$style.buyNowBtn"
         @click="clickHandler(3)"
-        :disabled="loading || disableConfrim"
+        :disabled="loading || disableConfrim || activeStock <= 0"
       >
-        <span>立即秒杀</span>
+        <span>{{ activeStock > 0 ? '立即秒杀' : '秒杀商品已售罄' }}</span>
         <span :class="$style.text">¥ {{ activityProductModel.price }}</span>
       </button>
     </div>
@@ -129,13 +133,13 @@ export default {
       clickAddToCart: false,
       clickBuyNow: false,
       loading: false,
-      showContact: false
+      showContact: false,
       /**
-       * 标记点击了哪个按钮，如：单独购买或者活动中购买
-       * 1 按正常商品购买
-       * 其他 按活动商品购买
+       * 购买方式
+       * 2 按正常商品购买
+       * 3 按活动商品购买
        */
-      // activeType: 1
+      buyWay: 2
     }
   },
   props: {
@@ -204,15 +208,11 @@ export default {
     // 所有规格禁用状态
     allDisabled () {
       return this.skuList.every(item => item.stock < item.minBuyNum) || this.productStatus !== 2
+    },
+    activeStock () {
+      return this.activityProductModel ? this.activityProductModel.buyCount : 0
     }
   },
-  // watch: {
-  //   showSpecifica (val) {
-  //     if (!val) {
-  //       this.activeType = this.activeProduct
-  //     }
-  //   }
-  // },
   async activated () {
     try {
       await this.getCartCount()
@@ -235,7 +235,6 @@ export default {
     },
     // 选中规格
     async confirm (options) {
-      console.log(options)
       try {
         await this.$nextTick()
         if (this.clickAddToCart) {
@@ -266,9 +265,9 @@ export default {
         name: 'SubmitOrder',
         query: {
           isCart: 'NO',
-          activeProduct: this.activeProduct,
-          preActivity: this.preActivity,
-          activityId: this.activeProduct === 1 ? '' : this.activityProductModel.activityId
+          activeProduct: this.buyWay === 2 ? 1 : this.activeProduct,
+          preActivity: this.buyWay === 3 ? this.preActivity : '',
+          activityId: this.buyWay === 3 ? this.activityProductModel.activityId : ''
         }
       })
     },
@@ -284,12 +283,13 @@ export default {
       if (type === 2) {
         this.clickBuyNow = true
         this.clickAddToCart = false
+        this.buyWay = 2
       }
       // 立即购买按钮or定金购买
       if (type === 3) {
         this.clickBuyNow = true
         this.clickAddToCart = false
-        // this.activeType = this.activeProduct
+        this.buyWay = 3
       }
       this.showSpecifica = true
     },
