@@ -684,7 +684,7 @@ export default {
         if (!flag) this.loading = true
         // 获取订单详细数据
         const { result } = await confirmCart({
-          activeProduct: this.preActivity === 2 ? this.activeProduct : '',
+          activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
           activityId: this.activityId,
           cartProducts: proList,
           userCouponId: coupon.id || '',
