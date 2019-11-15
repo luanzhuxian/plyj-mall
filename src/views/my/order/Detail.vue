@@ -87,6 +87,7 @@
           :support-refund="item.supportRefund"
           :allow-invoice="item.invoiceType"
           :active-product="activeProduct"
+          :pre-active="2"
           route-name="Lesson"
         />
         <div :class="$style.buttons">

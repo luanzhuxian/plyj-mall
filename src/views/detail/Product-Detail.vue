@@ -422,11 +422,11 @@ export default {
      */
     noStock () {
       // 如果时预购的商品，根据当前活动库存来判断
-      if (this.activeProduct === 4) {
+      if (this.activeProduct === 4 && this.preActivity === 2) {
         return !this.activeStock
       }
       // 除了预购商品，其它活动商品不判断是否售罄，如果售罄了，就以正常购买途径是否还有库存为准
-      if (this.activeProduct === 1 || this.activeStock <= 0) {
+      if (this.activeProduct === 1 || this.activeStock <= 0 || this.preActivity !== 2) {
         return this.productSkuModels.every(item =>
           item.stock < item.minBuyNum
         )
