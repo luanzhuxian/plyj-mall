@@ -176,7 +176,7 @@
         <p>
           <span>
             {{ activeProductStatus[activeProduct] || '商品' }}<i v-if="activeProduct !==4">金额</i>
-            <i v-if="activeProduct === 4" class="gray-3">(不退，翻{{ activityData.multipleNumber }}倍)</i>
+            <span v-if="activeProduct === 4" class="gray-3">(不退<i v-if="activityData.multiple">，翻{{ activityData.multipleNumber }}倍</i>)</span>
           </span>
 
           <!--  预购 / 秒杀 / 团购 三种订单，显示活动价格activityData.price，其他显示正常productInfoModel.productsTotalAmount  -->
