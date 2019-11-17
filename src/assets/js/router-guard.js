@@ -10,29 +10,29 @@ import { router } from '../../router'
 //   'AccumulatedRebate',
 //   'RebateList'
 // ]
-const isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-const map = {
-  InviteNewcomers: '/yx/',
-  Newcomers: '/newcomers/',
-  LiveRoom: '/lived/room',
-  Lesson: '/detail/lesson/'
-}
+// const isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+// const map = {
+//   InviteNewcomers: '/yx/',
+//   Newcomers: '/newcomers/',
+//   LiveRoom: '/lived/room',
+//   Lesson: '/detail/lesson/'
+// }
 
 export const beforeEach = function (to, from, next) {
   console.log('beforeEach', location.pathname, to)
-  if (!isIOS) return next()
-  if (!~Object.keys(map).indexOf(to.name)) return next()
-  const { pathname } = location
-  const mallUrl = pathname.split('/')[1]
-  for (let [key, val] of Object.entries(map)) {
-    if (to.name !== key) continue
-    if (!pathname.includes(val)) {
-      location.assign(`/${mallUrl}${to.fullPath}`)
-    } else {
-      next()
-    }
-    break
-  }
+  // if (!isIOS) return next()
+  // if (!~Object.keys(map).indexOf(to.name)) return next()
+  // const { pathname } = location
+  // const mallUrl = pathname.split('/')[1]
+  // for (let [key, val] of Object.entries(map)) {
+  //   if (to.name !== key) continue
+  //   if (!pathname.includes(val)) {
+  //     location.assign(`/${mallUrl}${to.fullPath}`)
+  //   } else {
+  next()
+  //   }
+  //   break
+  // }
 }
 export const beforeResolve = function (to, from, next) {
   // console.log(store.getters.agentUser)
