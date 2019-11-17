@@ -959,7 +959,7 @@ export default {
       } catch (e) {
         this.requestPayDataCount = 0
         this.submiting = false
-        this.$error(e.message)
+        throw e
       }
     },
     /**
