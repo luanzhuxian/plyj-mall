@@ -16,7 +16,7 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
     })
     WX.error(function (res) {
       reject(res)
-      location.reload()
+      // location.reload()
     })
   })
 }
