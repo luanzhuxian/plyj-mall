@@ -148,7 +148,10 @@ export default {
       width: 0;
       display: flex;
       align-items: center;
-      padding: 0 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      // padding: 0 10px;
       line-height: 34px;
       color: #FF6767;
       background: #fff;
