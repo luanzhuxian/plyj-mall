@@ -183,7 +183,7 @@
           <span
             v-if="activeProductStatus[activeProduct]"
             class="rmb"
-            v-text="activityData.price || 0"
+            v-text="activityData.reachAmount || 0"
           />
           <span
             v-else
