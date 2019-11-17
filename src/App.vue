@@ -73,7 +73,8 @@ export default {
             // 遇到IOS就刷新一次
             sessionStorage.setItem('refreshCount', '1')
             let newUrl = disposeUrl()
-            location.replace(newUrl)
+            // location.replace(newUrl)
+            console.log(newUrl)
             return
           }
         }
