@@ -120,17 +120,6 @@ export default {
     await this.init()
   },
   mounted () {},
-  beforeRouteEnter (to, from, next) {
-    const isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-    console.log('isIOS', isIOS, location.pathname)
-    // const { pathname } = location
-    // const mallUrl = pathname.split('/')[1]
-    // if (isIOS && !location.pathname.includes('/yx/')) {
-    //   location.assign(`/${mallUrl}${to.fullPath}`)
-    // } else {
-    next()
-    // }
-  },
   methods: {
     async init () {
       try {

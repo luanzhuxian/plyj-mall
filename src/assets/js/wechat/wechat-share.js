@@ -1,54 +1,53 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
 // import Cookies from 'js-cookie'
-import qs from 'qs'
+// import qs from 'qs'
 const WX = window.wx
-let timer = 0
+// let timer = 0
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
   let { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
-  clearInterval(timer)
+  // clearInterval(timer)
   return new Promise((resolve, reject) => {
-    timer = setTimeout(() => {
-      const config = getConfig(jsApi, appId)
-      WX.config(config)
-      WX.ready(function () {
-        setWechatShare(title, desc, imgUrl, link, willHide)
-        resolve('wechat config: ok!')
-      })
-      WX.error(function (res) {
-        reject(res)
-      })
-    }, 100)
+    const config = getConfig(jsApi, appId)
+    WX.config(config)
+    WX.ready(function () {
+      setWechatShare(title, desc, imgUrl, link, willHide)
+      resolve('wechat config: ok!')
+    })
+    WX.error(function (res) {
+      reject(res)
+      location.reload()
+    })
   })
 }
 /**
  * 处理url，删除微信加的参数
  * @return {string}
  */
-function disposeUrl () {
-  let href = location.href
-  let query = href.split('?')[1]
-  let { protocol, host, pathname } = location
-  let newUrl = ''
-  let hasWeixin = false
-  query = qs.parse(query)
-  if (query.hasOwnProperty('from') || query.hasOwnProperty('isappinstalled')) {
-    delete query.isappinstalled
-    delete query.from
-    hasWeixin = true
-  }
-  query = qs.stringify(query)
-  if (query) {
-    newUrl = `${protocol}//${host}${pathname}?${query}`
-  } else {
-    newUrl = `${protocol}//${host}${pathname}`
-  }
-  // 如果微信加了自己参数，重新设置浏览器历史记录
-  if (hasWeixin) {
-    history.replaceState({}, document.title, newUrl)
-  }
-  return newUrl
-}
+// function disposeUrl () {
+//   let href = location.href
+//   let query = href.split('?')[1]
+//   let { protocol, host, pathname } = location
+//   let newUrl = ''
+//   let hasWeixin = false
+//   query = qs.parse(query)
+//   if (query.hasOwnProperty('from') || query.hasOwnProperty('isappinstalled')) {
+//     delete query.isappinstalled
+//     delete query.from
+//     hasWeixin = true
+//   }
+//   query = qs.stringify(query)
+//   if (query) {
+//     newUrl = `${protocol}//${host}${pathname}?${query}`
+//   } else {
+//     newUrl = `${protocol}//${host}${pathname}`
+//   }
+//   // 如果微信加了自己参数，重新设置浏览器历史记录
+//   if (hasWeixin) {
+//     history.replaceState({}, document.title, newUrl)
+//   }
+//   return newUrl
+// }
 
 /**
  * 获取jsapis
@@ -123,8 +122,9 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
 function getConfig (jsapi, appId) {
   let nonceStr = randomString()
   let timestamp = Number.parseInt(Date.now() / 1000)
-  let url = disposeUrl()
-  console.log('url', url)
+  let url = location.href
+  // let url = disposeUrl()
+  // console.log('url', url)
   let sign = `jsapi_ticket=${jsapi}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${url}`
   let signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
   return {

@@ -16,6 +16,7 @@ import { mapMutations, mapActions, mapGetters } from 'vuex'
 import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
 import { getCurrentTemplate } from './apis/home'
+import qs from 'qs'
 
 export default {
   components: {
@@ -64,6 +65,18 @@ export default {
     $route: {
       handler (route) {
         this.routeName = route.name
+        if (this.customShare.indexOf(route.name) > -1) {
+          // 自定义分享
+          let isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+          let refreshCount = sessionStorage.getItem('refreshCount')
+          if (isIOS && !refreshCount) {
+            // 遇到IOS就刷新一次
+            sessionStorage.setItem('refreshCount', '1')
+            let newUrl = disposeUrl()
+            location.replace(newUrl)
+            return
+          }
+        }
         if (route.name && this.customShare.indexOf(route.name) === -1) {
           console.log('默认分享')
           // 如果不是商品详情页面，采用其他分享策略
@@ -121,6 +134,34 @@ export default {
       })
     }
   }
+}
+/**
+ * 处理url，删除微信加的参数
+ * @return {string}
+ */
+function disposeUrl () {
+  let href = location.href
+  let query = href.split('?')[1]
+  let { protocol, host, pathname } = location
+  let newUrl = ''
+  // let hasWeixin = false
+  query = qs.parse(query)
+  if (query.hasOwnProperty('from') || query.hasOwnProperty('isappinstalled')) {
+    delete query.isappinstalled
+    delete query.from
+    // hasWeixin = true
+  }
+  query = qs.stringify(query)
+  if (query) {
+    newUrl = `${protocol}//${host}${pathname}?${query}`
+  } else {
+    newUrl = `${protocol}//${host}${pathname}`
+  }
+  // 如果微信加了自己参数，重新设置浏览器历史记录
+  // if (hasWeixin) {
+  //   history.replaceState({}, document.title, newUrl)
+  // }
+  return newUrl
 }
 </script>
 <style module lang="scss">
