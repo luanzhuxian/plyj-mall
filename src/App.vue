@@ -66,18 +66,10 @@ export default {
     $route: {
       handler (route) {
         this.routeName = route.name
-        // if (this.customShare.indexOf(route.name) > -1) {
-        // 自定义分享
-        // let refreshCount = sessionStorage.getItem('refreshCount')
         if (isIOS() && route.name && !window.initialUrl) {
-          // 遇到IOS就刷新一次
-          // sessionStorage.setItem('refreshCount', '1')
           window.initialUrl = disposeUrl()
-          // location.replace(newUrl)
           console.log('url', window.initialUrl)
-          // return
         }
-        // }
         if (route.name && this.customShare.indexOf(route.name) === -1) {
           console.log('默认分享')
           // 如果不是商品详情页面，采用其他分享策略

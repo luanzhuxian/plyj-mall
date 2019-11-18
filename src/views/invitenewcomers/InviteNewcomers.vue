@@ -144,7 +144,6 @@ export default {
         inviterStatisitic(this.activityId, shareUserId)
       }
       let shareUrl = `${this.mallUrl}/yx/${this.activityId}/${this.userId}`
-      console.log('willHide', willHide)
       try {
         await share({
           appId: this.appId,
@@ -188,7 +187,6 @@ export default {
         ctx.fillText(`${this.userName}`, 145, 833)
         ctx.fillStyle = '#A3260F'
         let nameWidth = ctx.measureText(this.userName).width
-        console.log(nameWidth)
         ctx.fillText(`与您分享精彩活动`, `${154 + nameWidth}`, 833)
         ctx.save()
         drawRoundRect(ctx, rectX, 316, rectWidth, 44, 22, '#fd806a', '#fd806a')
