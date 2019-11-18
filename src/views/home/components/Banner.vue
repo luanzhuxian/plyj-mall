@@ -1,16 +1,17 @@
 <template>
   <div :class="$style.banner">
     <swiper
-      :options="swiperOptionBanner"
       v-if="data.values.length"
+      :class="$style.container"
+      :options="swiperOptionBanner"
     >
-      <swiperSlide v-if="mallId === '1057573777392603136'">
+      <!-- <swiperSlide v-if="mallId === '1057573777392603136'">
         <img
           :class="$style.img"
           src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820banner.jpg"
           @click="wwec"
         >
-      </swiperSlide>
+      </swiperSlide> -->
       <swiperSlide v-for="(item, i) of data.values" :key="i">
         <count-down v-if="item.shoppingStatus === 1" :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
         <img :class="$style.img" :src="item.image" :alt="item.name" @click="imgClick(item)">
@@ -91,10 +92,13 @@ export default {
     padding: 24px 24px 32px 24px;
     background-color: #fff;
     border-radius: 20px 20px 0 0;
+    .container {
+      border-radius: 20px;
+      overflow: hidden;
+    }
     .img {
       width: 100%;
       height: 470px;
-      border-radius: 20px;
     }
   }
 </style>
@@ -112,9 +116,6 @@ export default {
     background-color: rgba(0, 0, 0, .3);
     border-radius: 9px;
     z-index: 1;
-    /deep/.swiper-slide {
-      border-radius: 10px;
-    }
     /deep/.swiper-pagination-bullet {
       width: 10px !important;
       height: 10px !important;
