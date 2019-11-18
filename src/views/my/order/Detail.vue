@@ -882,6 +882,10 @@ export default {
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
           this.activityData = activityData || {}
+          if (this.activeProductStatus[this.activeProduct]) {
+            let count = this.productInfoModel.productDetailModels[0].count || 0
+            this.activityData.reachAmount = this.activityData.price * count
+          }
           this.activeProduct = activeProduct || 1
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['count']
