@@ -1,9 +1,11 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
+import { isIOS } from '../util'
 // import Cookies from 'js-cookie'
 // import qs from 'qs'
 const WX = window.wx
 // let timer = 0
+
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
   let { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
   // clearInterval(timer)
@@ -122,9 +124,8 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
 function getConfig (jsapi, appId) {
   let nonceStr = randomString()
   let timestamp = Number.parseInt(Date.now() / 1000)
-  let url = location.href
+  let url = (isIOS() && window.initialUrl) ? window.initialUrl : location.href
   // let url = disposeUrl()
-  // console.log('url', url)
   let sign = `jsapi_ticket=${jsapi}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${url}`
   let signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
   return {

@@ -16,6 +16,7 @@ import { mapMutations, mapActions, mapGetters } from 'vuex'
 import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
 import { getCurrentTemplate } from './apis/home'
+import { isIOS } from './assets/js/util'
 import qs from 'qs'
 
 export default {
@@ -65,19 +66,18 @@ export default {
     $route: {
       handler (route) {
         this.routeName = route.name
-        if (this.customShare.indexOf(route.name) > -1) {
-          // 自定义分享
-          let isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-          let refreshCount = sessionStorage.getItem('refreshCount')
-          if (isIOS && !refreshCount) {
-            // 遇到IOS就刷新一次
-            sessionStorage.setItem('refreshCount', '1')
-            let newUrl = disposeUrl()
-            // location.replace(newUrl)
-            console.log(newUrl)
-            return
-          }
+        // if (this.customShare.indexOf(route.name) > -1) {
+        // 自定义分享
+        // let refreshCount = sessionStorage.getItem('refreshCount')
+        if (isIOS() && !window.initialUrl) {
+          // 遇到IOS就刷新一次
+          // sessionStorage.setItem('refreshCount', '1')
+          window.initialUrl = disposeUrl()
+          // location.replace(newUrl)
+          console.log('url', window.initialUrl)
+          // return
         }
+        // }
         if (route.name && this.customShare.indexOf(route.name) === -1) {
           console.log('默认分享')
           // 如果不是商品详情页面，采用其他分享策略

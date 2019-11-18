@@ -176,6 +176,11 @@ export function suffixPx (value) {
   value = String(value)
   return isNumber(value) ? `${value}px` : value
 }
+
+export function isIOS () {
+  return !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+}
+
 /**
  * 生成商品二维码
  * @param size {number} 二维码尺寸，必填
