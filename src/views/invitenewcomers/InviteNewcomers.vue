@@ -144,6 +144,7 @@ export default {
         inviterStatisitic(this.activityId, shareUserId)
       }
       let shareUrl = `${this.mallUrl}/yx/${this.activityId}/${this.userId}`
+      console.log('willHide', willHide)
       try {
         await share({
           appId: this.appId,
