@@ -1,6 +1,6 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
-import { isIOS } from '../util'
+// import { isIOS } from '../util'
 // import Cookies from 'js-cookie'
 // import qs from 'qs'
 const WX = window.wx
@@ -78,24 +78,23 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
 function setWechatShare (title, desc, imgUrl, link, willHide = []) {
   console.log('willHide', willHide)
   // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
-  const menuList = [
-    'menuItem:editTag',
-    'menuItem:delete',
-    'menuItem:originPage',
-    'menuItem:readMode',
-    'menuItem:openWithQQBrowser',
-    'menuItem:share:email',
-    'menuItem:openWithSafari',
-    'menuItem:share:qq',
-    'menuItem:share:facebook',
-    'menuItem:share:QZone',
-    'menuItem:share:weiboApp',
-    // 'menuItem:share:appMessage', // 发送给朋友
-    // 'menuItem:share:timeline', // 分享到朋友圈
-    ...willHide // 以上是默认隐藏的按钮
-  ]
   WX.hideMenuItems({
-    menuList
+    menuList: [
+      'menuItem:editTag',
+      'menuItem:delete',
+      'menuItem:originPage',
+      'menuItem:readMode',
+      'menuItem:openWithQQBrowser',
+      'menuItem:share:email',
+      'menuItem:openWithSafari',
+      'menuItem:share:qq',
+      'menuItem:share:facebook',
+      'menuItem:share:QZone',
+      'menuItem:share:weiboApp',
+      // 'menuItem:share:appMessage', // 发送给朋友
+      // 'menuItem:share:timeline', // 分享到朋友圈
+      ...willHide // 以上是默认隐藏的按钮
+    ]
   })
   // 分享到朋友圈
   WX.updateTimelineShareData({
@@ -126,7 +125,8 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
 function getConfig (jsapi, appId) {
   let nonceStr = randomString()
   let timestamp = Number.parseInt(Date.now() / 1000)
-  let url = (isIOS() && window.initialUrl) ? window.initialUrl : location.href
+  // let url = (isIOS() && window.initialUrl) ? window.initialUrl : location.href
+  let url = location.href
   console.log('url', url)
   // let url = disposeUrl()
   let sign = `jsapi_ticket=${jsapi}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${url}`
