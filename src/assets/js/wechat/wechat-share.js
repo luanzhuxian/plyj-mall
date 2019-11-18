@@ -95,24 +95,28 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
     ]
   })
   // 分享到朋友圈
-  WX.updateTimelineShareData({
-    title: `${title} ${desc}`, // 分享标题
-    link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-    imgUrl: imgUrl + '?x-oss-process=style/thum', // 分享图标
-    success: () => {
-      console.warn('配置”分享到朋友圈“成功！')
-    }
-  })
+  if (!~[willHide].indexOf('menuItem:share:timeline')) {
+    WX.updateTimelineShareData({
+      title: `${title} ${desc}`, // 分享标题
+      link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+      imgUrl: imgUrl + '?x-oss-process=style/thum', // 分享图标
+      success: () => {
+        console.warn('配置”分享到朋友圈“成功！')
+      }
+    })
+  }
   // 分享给朋友
-  WX.updateAppMessageShareData({
-    title, // 分享标题
-    desc, // 分享描述
-    link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-    imgUrl: imgUrl + '?x-oss-process=style/thum', // 分享图标
-    success: () => {
-      console.warn('配置”分享到朋友“成功！')
-    }
-  })
+  if (!~[willHide].indexOf('menuItem:share:appMessage')) {
+    WX.updateAppMessageShareData({
+      title, // 分享标题
+      desc, // 分享描述
+      link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+      imgUrl: imgUrl + '?x-oss-process=style/thum', // 分享图标
+      success: () => {
+        console.warn('配置”分享到朋友“成功！')
+      }
+    })
+  }
 }
 /**
  * 生成微信分享配置对象
