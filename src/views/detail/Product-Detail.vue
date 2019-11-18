@@ -59,10 +59,11 @@
         content="普通快递"
       />
 
+      <!-- 正常商品 按照 商品本身的规格显示; 活动商品 按照 活动中的商品显示，已下架也需显示规格 -->
       <Field
         label="选择"
         :label-width="120"
-        :can-click="!noStock && detail.productStatus === 2"
+        :can-click="!noStock && (activeProduct === 1 && detail.productStatus === 2 || activeProduct !== 1)"
         @click="showSpecifica = true;"
       >
         <template v-if="currentModel.skuCode1Name">
