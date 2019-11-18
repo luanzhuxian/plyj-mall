@@ -29,7 +29,7 @@ export const beforeEach = function (to, from, next) {
   //   if (!pathname.includes(val)) {
   //     location.assign(`/${mallUrl}${to.fullPath}`)
   //   } else {
-  //     next()
+  next()
   //   }
   //   break
   // }
