@@ -110,7 +110,7 @@ export default {
     let img = await loadImage(url)
     let cvs = document.createElement('canvas')
     cvs.width = img.width
-    cvs.heigt = img.height
+    cvs.heigt = img.width
     let ctx = cvs.getContext('2d')
     ctx.drawImage(img, 0, 0)
     cvs.toBlob(async blob => {
