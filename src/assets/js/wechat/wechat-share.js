@@ -95,7 +95,7 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
     ]
   })
   // 分享到朋友圈
-  if (!~[willHide].indexOf('menuItem:share:timeline')) {
+  if (!~willHide.indexOf('menuItem:share:timeline')) {
     WX.updateTimelineShareData({
       title: `${title} ${desc}`, // 分享标题
       link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -106,7 +106,7 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
     })
   }
   // 分享给朋友
-  if (!~[willHide].indexOf('menuItem:share:appMessage')) {
+  if (!~willHide.indexOf('menuItem:share:appMessage')) {
     WX.updateAppMessageShareData({
       title, // 分享标题
       desc, // 分享描述
