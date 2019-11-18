@@ -68,7 +68,6 @@ export default {
         this.routeName = route.name
         if (isIOS() && route.name && !window.initialUrl) {
           window.initialUrl = disposeUrl()
-          console.log('url', window.initialUrl)
         }
         if (route.name && this.customShare.indexOf(route.name) === -1) {
           console.log('默认分享')
