@@ -69,7 +69,7 @@ export default {
         // if (this.customShare.indexOf(route.name) > -1) {
         // 自定义分享
         // let refreshCount = sessionStorage.getItem('refreshCount')
-        if (isIOS() && !window.initialUrl) {
+        if (isIOS() && route.name && !window.initialUrl) {
           // 遇到IOS就刷新一次
           // sessionStorage.setItem('refreshCount', '1')
           window.initialUrl = disposeUrl()

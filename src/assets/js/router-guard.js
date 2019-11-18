@@ -50,7 +50,7 @@ export const beforeResolve = function (to, from, next) {
   }
 }
 export const afterEach = function (to, from) {
-  // console.log('afterEach', location.pathname, to)
+  console.log('afterEach', to)
 }
 // 路由导航出错时的回调
 export const onError = function (err) {
