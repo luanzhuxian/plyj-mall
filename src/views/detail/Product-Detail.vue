@@ -1,6 +1,10 @@
 <template>
   <div :class="$style.lesson">
-    <template v-if="productStatus !== 0">
+    <!-- activeProduct - 1-正常商品 2-团购 3-秒杀 4-团购 -->
+    <!-- productStatus - 0：已删除 1：下架 2：上架  3：草稿箱 -->
+
+    <!-- 正常商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
+    <template v-if="activeProduct === 1 && productStatus !== 0 || activeProduct !== 1">
       <!-- 海报按钮 -->
       <div :class="$style.haibao">
         <pl-svg v-if="creating" name="btn-loading" color="#fff" class="rotate" @click="showHaibao = false;" />
@@ -231,7 +235,8 @@
       </template>
     </specification-pop>
 
-    <div :class="$style.buttomTip" v-if="!loading && productStatus === 1">
+    <!-- 正常商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
+    <div :class="$style.buttomTip" v-if="!loading && activeProduct === 1 && productStatus === 1">
       该商品已下架
     </div>
     <div :class="$style.buttomTip" v-if="!loading && noStock">
