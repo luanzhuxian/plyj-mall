@@ -73,9 +73,9 @@ export default {
           console.log('默认分享')
           // 如果不是商品详情页面，采用其他分享策略
           let willHide = []
-          if (this.shareRoutes.indexOf(route.name) === -1) {
-            willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
-          }
+          // if (this.shareRoutes.indexOf(route.name) === -1) {
+          //   willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
+          // }
           if (this.appId) {
             this.share(willHide)
           }

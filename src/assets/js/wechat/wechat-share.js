@@ -1,6 +1,6 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
-// import { isIOS } from '../util'
+import { isIOS } from '../util'
 // import Cookies from 'js-cookie'
 // import qs from 'qs'
 const WX = window.wx
@@ -17,7 +17,6 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
       resolve('wechat config: ok!')
     })
     WX.error(function (res) {
-      console.log('error', res)
       reject(res)
     })
   })
@@ -76,7 +75,6 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
  * @param willHide
  */
 function setWechatShare (title, desc, imgUrl, link, willHide = []) {
-  console.log('willHide', willHide)
   // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
   WX.hideMenuItems({
     menuList: [
@@ -125,9 +123,8 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
 function getConfig (jsapi, appId) {
   let nonceStr = randomString()
   let timestamp = Number.parseInt(Date.now() / 1000)
-  // let url = (isIOS() && window.initialUrl) ? window.initialUrl : location.href
-  let url = location.href
-  console.log('url', url)
+  let url = (isIOS() && window.initialUrl) ? window.initialUrl : location.href
+  // let url = location.href
   // let url = disposeUrl()
   let sign = `jsapi_ticket=${jsapi}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${url}`
   let signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
