@@ -46,7 +46,11 @@
 
           <div :class="$style.content">
             <div :class="$style.name" v-text="item.goodsInfo.productName" />
-            <Tags size="middle" :tags="item.goodsInfo.labelModels" />
+            <Tags
+              :class="$style.tags"
+              size="middle"
+              :tags="item.goodsInfo.labelModels"
+            />
             <div :class="$style.bottom">
               <div :class="$style.priceBox">
                 <span>¥</span>
@@ -146,7 +150,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import Tags from './Tags.vue'
 import CountDown from '../../../components/product/Count-Down.vue'
 
@@ -179,7 +182,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agentUser', 'userId']),
     // listLeft () {
     //   return this.localValue.filter((item, i) => i % 2 === 0)
     // },
@@ -312,12 +314,15 @@ export default {
   .content {
     padding: 16px;
     .name {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-size: 32px;
       line-height: 42px;
       font-weight: bold;
       color: #000;
       @include elps-wrap(2);
+    }
+    .tags {
+      margin-bottom: 20px;
     }
   }
   .bottom {

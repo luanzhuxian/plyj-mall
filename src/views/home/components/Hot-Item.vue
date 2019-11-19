@@ -97,8 +97,8 @@
 
 <script>
 import Tags from './Tags.vue'
-import { mapGetters } from 'vuex'
 import CountDown from '../../../components/product/Count-Down.vue'
+
 export default {
   name: 'HotItem',
   components: {
@@ -124,8 +124,7 @@ export default {
     },
     moduleName () {
       return this.data.moduleName
-    },
-    ...mapGetters(['agentUser', 'userId'])
+    }
   },
   methods: {
     getMinPrice (skuList) {

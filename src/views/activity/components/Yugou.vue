@@ -14,7 +14,7 @@
               v-if="item.goodsInfo"
               :class="$style.listItem"
               :key="i"
-              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
+              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, currentProductStatus: 4} })"
             >
               <div :class="$style.time">
                 <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
@@ -63,7 +63,6 @@
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'Yugou',
@@ -81,9 +80,6 @@ export default {
   },
   data () {
     return {}
-  },
-  computed: {
-    ...mapGetters(['userId'])
   }
 }
 </script>

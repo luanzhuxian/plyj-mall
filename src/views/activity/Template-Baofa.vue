@@ -18,8 +18,6 @@
     <miaosha
       v-if="MIAO_SHA.values && MIAO_SHA.values.length"
       :data="MIAO_SHA"
-      :type="type"
-      v-bind="$attrs"
     />
     <!-- 活动 -->
     <div :class="$style.moduleActivity" v-if="hasInvitingEvent || hasJxEvent">
@@ -51,13 +49,11 @@
     <pintuan
       v-if="PIN_TUAN.values && PIN_TUAN.values.length"
       :data="PIN_TUAN"
-      v-bind="$attrs"
     />
     <fengqiang
       v-if="FENG_QIANG.values && FENG_QIANG.values.length"
       :data="FENG_QIANG"
       :type="type"
-      :coupon="coupon"
     />
   </div>
 </template>
@@ -69,7 +65,6 @@ import Coupon from './components/Coupon.vue'
 import Maisong from './components/Maisong.vue'
 import Fengqiang from './components/Fengqiang.vue'
 import Miaosha from './components/Miaosha.vue'
-import { getMaxCoupon } from '../../apis/home'
 
 export default {
   name: 'HomeTemplateB',
@@ -95,9 +90,7 @@ export default {
     }
   },
   data () {
-    return {
-      coupon: {}
-    }
+    return {}
   },
   computed: {
     COUPON () {
@@ -110,7 +103,7 @@ export default {
       return this.data.MIAO_SHA || {}
     },
     PIN_TUAN () {
-      return this.data.PIN_TUAN || { values: [] }
+      return this.data.PIN_TUAN || {}
     },
     FENG_QIANG () {
       return this.data.FENG_QIANG || {}
@@ -127,11 +120,6 @@ export default {
     hasJxEvent () {
       return ~[1, 2].indexOf(this.jxEvent.status)
     }
-  },
-  created () {
-    getMaxCoupon().then(({ result }) => {
-      this.coupon = result
-    })
   }
 }
 </script>

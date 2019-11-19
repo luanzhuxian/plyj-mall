@@ -23,7 +23,6 @@
 <script>
 import CategoryItem from './Category-Item.vue'
 import { getYouLikeData } from '../../../apis/base-api'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'YouLike',
@@ -44,9 +43,6 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  computed: {
-    ...mapGetters(['userId'])
   },
   watch: {
     productId () {

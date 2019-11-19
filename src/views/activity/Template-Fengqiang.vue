@@ -35,12 +35,10 @@
     <miaosha-small
       v-if="MIAO_SHA.values && MIAO_SHA.values.length && MIAO_SHA.values[0].goodsInfo"
       :data="MIAO_SHA"
-      v-bind="$attrs"
     />
     <pintuan
       v-if="PIN_TUAN.values && PIN_TUAN.values.length"
       :data="PIN_TUAN"
-      v-bind="$attrs"
     />
     <maisong
       v-if="MAI_SONG.values && MAI_SONG.values.length"
@@ -50,11 +48,11 @@
     <coupon
       v-if="COUPON.values && COUPON.values.length"
       :data="COUPON"
+      :type="type"
     />
     <yugou
       v-if="YU_GOU.values && YU_GOU.values.length"
       :data="YU_GOU"
-      v-bind="$attrs"
     />
     <fengqiang
       v-if="FENG_QIANG.values && FENG_QIANG.values.length"
@@ -112,7 +110,7 @@ export default {
       return this.data.MIAO_SHA || {}
     },
     PIN_TUAN () {
-      return this.data.PIN_TUAN || { values: [] }
+      return this.data.PIN_TUAN || {}
     },
     MAI_SONG () {
       return this.data.MAI_SONG || {}
@@ -127,7 +125,7 @@ export default {
       return this.data.FENG_QIANG || {}
     },
     RECOMMEND () {
-      return this.data.RECOMMEND || { values: [] }
+      return this.data.RECOMMEND || {}
     },
     invitingEvent () {
       return (this.parent && this.parent.invitingEvent) || {}

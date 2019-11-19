@@ -1,7 +1,7 @@
 <template>
   <router-link :class="$style.coupon" tag="div" :to="{ name: 'CouponCenter' }">
     <div :class="$style.background">
-      <div :class="$style.btnMiddle" v-if="type !== 6" />
+      <div :class="$style.btnMiddle" v-if="type === 5" />
       <div :class="$style.title" v-if="data.otherValue > 0">
         {{ `- ${data.otherValue}人已领券 快来领取 -` }}
       </div>
@@ -67,7 +67,7 @@ export default {
       background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-middle.png") no-repeat center center;
       background-size: 100% auto;
       border-radius: 70px;
-      margin: 0 auto;
+      margin: 48px auto 0;
     }
 
     .background {

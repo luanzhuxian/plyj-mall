@@ -19,7 +19,7 @@
               }"
 
               :key="i"
-              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
+              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, currentProductStatus: 2 } })"
             >
               <div :class="$style.imgWrapper">
                 <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
@@ -101,7 +101,6 @@
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'Pintuan',
@@ -119,9 +118,6 @@ export default {
   },
   data () {
     return {}
-  },
-  computed: {
-    ...mapGetters(['userId'])
   }
 }
 </script>

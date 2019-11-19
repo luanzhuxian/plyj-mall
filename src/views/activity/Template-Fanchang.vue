@@ -13,12 +13,10 @@
     <miaosha-small
       v-if="MIAO_SHA.values && MIAO_SHA.values.length && MIAO_SHA.values[0].goodsInfo"
       :data="MIAO_SHA"
-      v-bind="$attrs"
     />
     <pintuan
       v-if="PIN_TUAN.values && PIN_TUAN.values.length"
       :data="PIN_TUAN"
-      v-bind="$attrs"
     />
     <fengqiang
       v-if="FENG_QIANG.values && FENG_QIANG.values.length"
@@ -75,13 +73,13 @@ export default {
       return this.data.MIAO_SHA || {}
     },
     PIN_TUAN () {
-      return this.data.PIN_TUAN || { values: [] }
+      return this.data.PIN_TUAN || {}
     },
     FENG_QIANG () {
       return this.data.FENG_QIANG || {}
     },
     RECOMMEND () {
-      return this.data.RECOMMEND || { values: [] }
+      return this.data.RECOMMEND || {}
     }
   }
 }
