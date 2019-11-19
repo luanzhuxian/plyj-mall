@@ -149,8 +149,6 @@
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
-import { mapGetters } from 'vuex'
-import { getServerTime } from '../../../apis/base-api'
 
 export default {
   name: 'Miaosha',
@@ -164,24 +162,12 @@ export default {
       default () {
         return { values: [] }
       }
-    },
-    type: {
-      type: Number,
-      default: 0
     }
   },
   data () {
     return {
-      miaoshaIndex: 0,
-      timestamp: ''
+      miaoshaIndex: 0
     }
-  },
-  computed: {
-    ...mapGetters(['userId'])
-  },
-  async created () {
-    let { result } = await getServerTime()
-    this.timestamp = Number(result)
   }
 }
 </script>

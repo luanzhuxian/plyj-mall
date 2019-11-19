@@ -48,8 +48,8 @@
                   <span :class="$style.price">
                     {{ item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price') }}
                   </span>
-                  <div :class="$style.tag" v-if="$attrs.coupon && $attrs.coupon.useLimitAmount && $attrs.coupon.amount">
-                    {{ `满${$attrs.coupon.useLimitAmount}减${$attrs.coupon.amount}` }}
+                  <div :class="$style.tag" v-if="coupon && coupon.useLimitAmount && coupon.amount">
+                    {{ `满${coupon.useLimitAmount}减${coupon.amount}` }}
                   </div>
                   <div :class="$style.btn">
                     马上抢！
@@ -66,7 +66,7 @@
 
 <script>
 import mixin from '../mixin.js'
-import { mapGetters } from 'vuex'
+import { getMaxCoupon } from '../../../apis/home'
 
 export default {
   name: 'Fengqiang',
@@ -84,10 +84,14 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      coupon: {}
+    }
   },
-  computed: {
-    ...mapGetters(['userId'])
+  created () {
+    getMaxCoupon().then(({ result }) => {
+      this.coupon = result
+    })
   }
 }
 </script>

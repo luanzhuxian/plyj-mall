@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
   name: 'Adv',
   props: {
@@ -29,9 +28,6 @@ export default {
   },
   data () {
     return {}
-  },
-  computed: {
-    ...mapGetters(['userId'])
   },
   methods: {
     getRouteLink ({ type, value }) {

@@ -146,7 +146,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import Tags from './Tags.vue'
 import CountDown from '../../../components/product/Count-Down.vue'
 
@@ -179,7 +178,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agentUser', 'userId']),
     // listLeft () {
     //   return this.localValue.filter((item, i) => i % 2 === 0)
     // },

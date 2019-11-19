@@ -40,7 +40,6 @@
 
 <script>
 import Price from '../../../components/product/Price.vue'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'CategoryItem',
@@ -103,9 +102,6 @@ export default {
     return {
       labelColor: ['#E83B27', '#92B1E5', '#F3BE41', '#60C684']
     }
-  },
-  computed: {
-    ...mapGetters(['userId', 'agentUser'])
   },
   methods: {
     async jump () {

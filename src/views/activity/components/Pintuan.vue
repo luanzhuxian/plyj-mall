@@ -101,7 +101,6 @@
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'Pintuan',
@@ -119,9 +118,6 @@ export default {
   },
   data () {
     return {}
-  },
-  computed: {
-    ...mapGetters(['userId'])
   }
 }
 </script>

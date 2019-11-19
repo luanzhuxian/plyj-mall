@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import CountDown from '../../../components/product/Count-Down.vue'
+
 export default {
   name: 'Best',
   components: {
@@ -73,9 +73,6 @@ export default {
         'EXPERIENCE_CLASS': '报名'
       }
     }
-  },
-  computed: {
-    ...mapGetters(['agentUser', 'userId'])
   },
   methods: {
     getMinPrice (skuList) {

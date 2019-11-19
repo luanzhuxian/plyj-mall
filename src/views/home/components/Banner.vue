@@ -23,7 +23,6 @@
 
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import { mapGetters } from 'vuex'
 // import { wasRegist } from '../../../apis/wwec'
 import CountDown from '../../../components/product/Count-Down.vue'
 export default {
@@ -54,9 +53,6 @@ export default {
         return { values: [] }
       }
     }
-  },
-  computed: {
-    ...mapGetters(['agentUser', 'userId', 'mallId'])
   },
   methods: {
     imgClick (item) {
