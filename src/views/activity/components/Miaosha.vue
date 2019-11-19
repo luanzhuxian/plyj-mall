@@ -74,7 +74,7 @@
           :class="$style.listItem"
           v-for="(prod, i) of data.values[miaoshaIndex].goodsInfo"
           :key="i"
-          @click="$router.push({ name: 'Lesson', params: { productId: prod.id } })"
+          @click="$router.push({ name: 'Lesson', params: { productId: prod.id, currentProductStatus: 3 } })"
         >
           <div :class="$style.imgWrapper">
             <img :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">

@@ -107,7 +107,7 @@ export default {
       })
     },
     jumpToDetail (id) {
-      this.$router.push({ name: 'Lesson', params: { productId: id } })
+      this.$router.push({ name: 'Lesson', params: { productId: id, currentProductStatus: 2 } })
     }
   }
 }

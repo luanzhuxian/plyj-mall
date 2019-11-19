@@ -19,7 +19,7 @@
               }"
 
               :key="i"
-              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
+              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, currentProductStatus: 2 } })"
             >
               <div :class="$style.imgWrapper">
                 <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">

@@ -10,7 +10,7 @@
           <li
             v-if="data.values[0] && data.values[0].goodsInfo"
             :class="$style.listItem"
-            @click.stop="$router.push({ name: 'Lesson', params: { productId: data.values[0].goodsInfo.id } })"
+            @click.stop="$router.push({ name: 'Lesson', params: { productId: data.values[0].goodsInfo.id, currentProductStatus: 3 } })"
           >
             <div :class="$style.imgWrapper">
               <img :src="data.values[0].goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">

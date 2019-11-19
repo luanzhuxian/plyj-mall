@@ -14,7 +14,7 @@
               v-if="item.goodsInfo"
               :class="$style.listItem"
               :key="i"
-              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id } })"
+              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, currentProductStatus: 4} })"
             >
               <div :class="$style.time">
                 <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">

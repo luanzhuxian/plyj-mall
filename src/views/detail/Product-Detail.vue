@@ -386,6 +386,10 @@ export default {
     brokerId: {
       type: String,
       default: ''
+    },
+    currentProductStatus: { // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去
+      type: Number,
+      default: 1
     }
   },
   computed: {
@@ -518,7 +522,7 @@ export default {
       try {
         this.loading = true
         this.resetState() // 重置一些状态
-        let { result } = await getProductDetail(this.productId)
+        let { result } = await getProductDetail(this.productId, this.currentProductStatus)
         let { id, agentProduct, mediaInfoIds, productStatus } = result
         if (!result) {
           this.$error('该商品异常')
