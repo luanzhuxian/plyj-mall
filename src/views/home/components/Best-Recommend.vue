@@ -233,15 +233,14 @@ export default {
 </script>
 
 <style module lang="scss">
-  .best-recommend {}
   .title {
     position: relative;
     text-align: center;
-    line-height: 114px;
     font-size: 36px;
     font-weight: bolder;
     color: #F2B036;
     letter-spacing: 14px;
+    padding: 40px 0 34px;
     span {
       display: inline-block;
       &:nth-last-of-type(1) {
@@ -257,7 +256,7 @@ export default {
   }
   .product {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
@@ -312,7 +311,12 @@ export default {
     }
   }
   .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     padding: 16px;
+    box-sizing: border-box;
+    height: 250px;
     .name {
       margin-bottom: 10px;
       font-size: 32px;
@@ -329,6 +333,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: auto;
     .priceBox {
       > span {
         color: #fe7700;

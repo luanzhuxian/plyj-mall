@@ -52,7 +52,7 @@ export default {
       type: 0,
       modules: {
         BANNER: null,
-        Adv: null,
+        ADV: null,
         POPULAR: null,
         YUYUE: null,
         PINGXUAN: null,
@@ -131,7 +131,7 @@ export default {
         }
         if (type === 4) {
           this.modules.BANNER = moduleModels[0]
-          this.modules.Adv = moduleModels[1]
+          this.modules.ADV = moduleModels[1]
           this.modules.POPULAR = moduleModels[2]
           this.modules.YUYUE = moduleModels[3]
           this.modules.PINGXUAN = moduleModels[4]
