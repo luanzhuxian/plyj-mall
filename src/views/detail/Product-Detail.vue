@@ -518,11 +518,13 @@ export default {
     ...mapActions({
       getCartCount: GET_CART_COUNT
     }),
-    async getDetail () {
+    async getDetail (currentProductStatus) {
       try {
         this.loading = true
         this.resetState() // 重置一些状态
-        let { result } = await getProductDetail(this.productId, this.currentProductStatus)
+        // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
+        currentProductStatus = currentProductStatus? currentProductStatus : this.currentProductStatus
+        let { result } = await getProductDetail(this.productId, currentProductStatus)
         let { id, agentProduct, mediaInfoIds, productStatus } = result
         if (!result) {
           this.$error('该商品异常')

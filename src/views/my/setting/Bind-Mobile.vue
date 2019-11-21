@@ -103,7 +103,7 @@ import { mapGetters } from 'vuex'
 import { LOGIN, USER_INFO } from '../../../store/mutation-type'
 import { resetForm } from '../../../assets/js/util'
 import { isPhone } from '../../../assets/js/validate'
-import Cookies from 'js-cookie'
+import Cookie from '../../../assets/js/storage-cookie'
 export default {
   name: 'BindMobile',
   components: {
@@ -214,8 +214,8 @@ export default {
     async refreshLogin () {
       console.warn('logging back in...')
       const DISPATCH = this.$store.dispatch
-      Cookies.remove('refresh_token')
-      Cookies.remove('token')
+      Cookie.remove('refresh_token')
+      Cookie.remove('token')
       await DISPATCH(LOGIN)
       await DISPATCH(USER_INFO)
       console.warn('login was finished!!')

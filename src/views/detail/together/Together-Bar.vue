@@ -53,7 +53,7 @@ export default {
     countFinished () {
       this.$set(this.detail, 'serverTime', '')
       this.$set(this.detail, 'shoppingTimeLong', '')
-      this.$parent.getDetail()
+      this.$parent.getDetail(1) // 当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
     }
   }
 }

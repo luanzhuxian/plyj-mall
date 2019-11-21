@@ -8,7 +8,7 @@
         @click="$router.push({ name: 'DoubleTwelveDay' })"
       >
     </div>
-    <adv v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
+    <adv v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
     <div
       v-if="type === 4 && parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))" :class="$style.broadcast"
     >
@@ -76,17 +76,17 @@ export default {
     BANNER () {
       return this.data.BANNER || {}
     },
-    Adv () {
-      return this.data.Adv || {}
+    ADV () {
+      return this.data.ADV || {}
     },
     POPULAR () {
-      return this.data.POPULAR || { values: [] }
-    },
-    RECOMMEND () {
-      return this.data.RECOMMEND || { values: [] }
+      return this.data.POPULAR || {}
     },
     CLASS () {
       return this.data.CLASS || {}
+    },
+    RECOMMEND () {
+      return this.data.RECOMMEND || {}
     },
     YUYUE () {
       return this.data.YUYUE || {}

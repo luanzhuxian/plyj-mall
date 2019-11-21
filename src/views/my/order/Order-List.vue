@@ -190,6 +190,7 @@ export default {
     return {
       tabs,
       orderList: [],
+      total: 0, // 记录订单总数
       form: {
         current: 1,
         size: 10,
@@ -305,13 +306,14 @@ export default {
         this.reject = reject
       })
     },
-    onRefresh (list) {
+    onRefresh (list, total) {
       const counter = (array) => (key) => array.reduce((acc, current) => acc + (key ? current[key] : current), 0)
       for (let item of list) {
         item.totalCount = counter(item.products)('purchaseQuantity')
         item.isDeleteBtnShow = !item.products.some(product => ![0, 2, 3, 6].includes(product.afterSalesStatus)) // 只要有一个商品在售后状态则不显示删除按钮
       }
       this.orderList = list
+      this.total = total
     },
     async pay (orderId, orderType) {
       this.payloading = true
@@ -383,6 +385,23 @@ export default {
         await this.$confirm('是否删除当前订单？ 删除后不可找回')
         await deleteOrder(orderId)
         this.orderList.splice(index, 1)
+
+        --this.total
+        if (this.total > this.orderList.length) { // 若实际订单总数大于当前页面订单总数时，去请求数据
+          let { result } = await this.getOrderList(this.form)
+          let currentLastOrder = result.records[result.records.length - 1]
+          if (currentLastOrder) { // 因删除过订单后offsetHeight不足初始获取的值，无法在加载更多，将删除留下的空位填充用currentPage的最后一个数据
+            const counter = (array) => (key) => array.reduce((acc, current) => acc + (key ? current[key] : current), 0)
+            currentLastOrder.totalCount = counter(item.products)('purchaseQuantity')
+            currentLastOrder.isDeleteBtnShow = !item.products.some(product => ![0, 2, 3, 6].includes(product.afterSalesStatus)) // 只要有一个商品在售后状态则不显示删除按钮
+            this.orderList.push(currentLastOrder)
+          }
+        }
+
+        if (this.orderList.length === 3) { // 删除到当前页面不足三个订单时，手动刷新订单列表
+          this.form.current = 1
+          this.$refresh()
+        }
         this.$forceUpdate()
         this.$success('删除成功')
       } catch (e) {

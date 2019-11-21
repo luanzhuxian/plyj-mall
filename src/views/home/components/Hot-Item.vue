@@ -32,7 +32,11 @@
           </div>
           <div :class="$style.content">
             <div :class="$style.proName" v-text="item.name" />
-            <Tags size="middle" :tags="item.goodsInfo.labelModels" />
+            <tags
+              :class="$style.tags"
+              size="middle"
+              :tags="item.goodsInfo.labelModels"
+            />
             <div :class="$style.proPrice">
               <div :class="$style.price">
                 <span>¥</span>
@@ -68,7 +72,11 @@
             </div>
             <div :class="$style.content">
               <div :class="$style.proName" v-text="item.name" />
-              <tags size="small" :tags="item.goodsInfo.labelModels.slice(0, 2)" />
+              <tags
+                :class="$style.tags"
+                size="small"
+                :tags="item.goodsInfo.labelModels.slice(0, 2)"
+              />
               <div :class="$style.proPrice">
                 <div :class="$style.price">
                   <span>¥</span>
@@ -203,18 +211,24 @@ export default {
       }
     }
     .content {
+      box-sizing: border-box;
+      height: 202px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       padding: 16px;
-      margin-bottom: 6px;
       .pro-name {
-        height: 72px;
         margin-bottom: 8px;
         font-size: 28px;
         font-weight: bold;
         line-height: 36px;
         @include elps-wrap(2);
       }
+      .tags {
+        margin-bottom: 16px;
+      }
       .pro-price {
-        margin-top: 16px;
+        margin-top: auto;
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
@@ -254,10 +268,11 @@ export default {
         }
       }
       .content {
+        height: auto;
         .pro-name {
-          margin-bottom: 12px;
+          margin-bottom: 14px;
           height: 36px;
-          @include elps();
+          -webkit-line-clamp: 1;
         }
       }
       .how-many-pay {

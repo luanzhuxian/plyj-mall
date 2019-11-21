@@ -1,5 +1,5 @@
 import * as type from './mutation-type'
-import Cookies from 'js-cookie'
+import Cookie from '../assets/js/storage-cookie'
 import { copyFields } from '../assets/js/util'
 const CalcCookieTime = expire => {
   // 本地cookie较服务器提前一小时过期
@@ -15,16 +15,12 @@ export default {
     copyFields(state.mallInfo, payload)
     sessionStorage.setItem('mallName', payload.mallName)
     // 存储上一个商城的id
-    localStorage.setItem('lastMallId', localStorage.getItem('mallId'))
-    // 登录的当前商城的id
-    localStorage.setItem('mallId', payload.sequenceNbr)
+    localStorage.setItem('lastMallId', Cookie.get('mallId'))
     // 缓存10周
-    Cookies.set('mallId', payload.sequenceNbr, {
-      path: `/apis`,
+    Cookie.set('mallId', payload.sequenceNbr, {
       expires: CalcCookieTime(6048000)
     })
-    Cookies.set('agencyCode', payload.agencyCode, {
-      path: `/apis`,
+    Cookie.set('agencyCode', payload.agencyCode, {
       expires: CalcCookieTime(6048000)
     })
   },
@@ -34,12 +30,10 @@ export default {
   [type.SET_TOKEN] (state, payload) {
     state.token = payload.token
     state.refresh_token = payload.refresh_token
-    Cookies.set('token', payload.token, {
-      path: `/apis`,
+    Cookie.set('token', payload.token, {
       expires: CalcCookieTime(payload.expire)
     })
-    Cookies.set('refresh_token', payload.refresh_token, {
-      path: `/apis`,
+    Cookie.set('refresh_token', payload.refresh_token, {
       expires: CalcCookieTime(payload.refresh_token_expire)
     })
   },
@@ -68,9 +62,9 @@ export default {
     localStorage.setItem('selectedAddress', JSON.stringify(payload))
   },
   [type.LOG_OUT] () {
-    Cookies.remove('mallId')
-    Cookies.remove('refresh_token')
-    Cookies.remove('token')
+    Cookie.remove('mallId')
+    Cookie.remove('refresh_token')
+    Cookie.remove('token')
     window.location.reload()
   },
   [type.SET_AVATAR] (state, payload) {

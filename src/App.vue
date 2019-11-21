@@ -18,7 +18,7 @@ import share from './assets/js/wechat/wechat-share'
 import { getCurrentTemplate } from './apis/home'
 import { isIOS } from './assets/js/util'
 import qs from 'qs'
-
+import Cookie from './assets/js/storage-cookie'
 export default {
   components: {
     Navbar,
@@ -91,7 +91,7 @@ export default {
         this.isNavBtnShow = !!result
       })
       await this.getMallInfo()
-      let mallId = localStorage.getItem('mallId')
+      let mallId = Cookie.get('mallId')
       let lastMallId = localStorage.getItem('lastMallId')
       // 如果以及登录，且商城没切换，就不用重新登录
       if (this.token && mallId === lastMallId) {
