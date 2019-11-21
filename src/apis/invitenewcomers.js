@@ -71,7 +71,7 @@ export const registerStatisitic = (activityId) => axios.post(`/apis/v1/mallActiv
  * @param activityId {string}
  * @return {*}
  */
-export const getActiveDetail = (activityId) => axios.get(`/apis/v1/invitingEvents/${activityId}`)
+export const getActiveDetail = (activityId) => axios.get(`/apis/v1/invitingEvents/info/${activityId}`)
 /**
  * 开豪礼
  * @param activityId {string}
