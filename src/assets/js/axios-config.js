@@ -35,7 +35,7 @@ async function response (response) {
     let loginInvalid = msg.indexOf('登录信息失效') >= 0
     let tokenInvalid = msg.indexOf('Token失效') >= 0
     if (msg.indexOf('运行时') > -1) {
-      msg = '服务器正在怀疑人生~( ˶‾᷄࿀‾᷅˵ )'
+      msg = '蓬莱岛人太多啦~( ˶‾᷄࿀‾᷅˵ )'
     }
     if (!loginInvalid && !tokenInvalid) {
       let err = {
@@ -80,10 +80,10 @@ function resError (error) {
     msg = '请求超时◔̯◔'
   }
   if (msg.indexOf('40') > -1) {
-    msg = '请求未找到'
+    msg = '您似乎在蓬莱岛迷路了'
   }
   if (msg.indexOf('50') > -1) {
-    msg = '服务器正在开小差~( ˶‾᷄࿀‾᷅˵ )'
+    msg = '蓬莱岛消失在了迷雾中~( ˶‾᷄࿀‾᷅˵ )'
   }
   if (msg.indexOf('Network Error') > -1) {
     msg = '网络不给力'
