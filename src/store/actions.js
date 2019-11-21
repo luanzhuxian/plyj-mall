@@ -160,7 +160,7 @@ export default {
   },
   [type.REFRESH_TOKEN]: ({ commit, state, dispatch }) => {
     return new Promise(async (resolve, reject) => {
-      let refreshCount = sessionStorage.getItem('refresh_count') || 0
+      let refreshCount = Number(sessionStorage.getItem('refresh_count') || 0)
       sessionStorage.setItem('refresh_count', (refreshCount + 1))
       // refresh_token 连续刷三次以上时，说明存在异常，退出重新登录
       if (Number(refreshCount) > 3) {
