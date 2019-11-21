@@ -1,6 +1,6 @@
-import Cookies from 'js-cookie'
-const token = Cookies.get('token') || ''
-const refresh_token = Cookies.get('refresh_token') || ''
+import Cookie from '../assets/js/storage-cookie'
+const token = Cookie.get('token')
+const refresh_token = Cookie.get('refresh_token') || ''
 const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress'))
 export default {
   theme: 'base-theme',

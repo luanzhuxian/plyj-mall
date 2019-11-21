@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { axios } from './axios'
-import { router } from '../../router'
 import store from '../../store'
 import { REFRESH_TOKEN } from '../../store/mutation-type'
+import Cookie from '../../assets/js/storage-cookie'
 class ResponseError extends Error {
   constructor (message) {
     super(message)
@@ -17,9 +17,11 @@ axios.interceptors.response.use(response, resError)
 
 function request (config) {
   let mallDomain = location.pathname.split('/')[1]
-  config.headers = {
-    openId: localStorage.getItem(`openId_${mallDomain}`) || ''
-  }
+  config.headers.openId = localStorage.getItem(`openId_${mallDomain}`) || ''
+  config.headers.mallId = Cookie.get('mallId')
+  config.headers.agencyCode = Cookie.get('agencyCode')
+  config.headers.token = Cookie.get('token')
+  config.headers.refresh_token = Cookie.get('refresh_token')
   return config
 }
 
@@ -54,7 +56,7 @@ async function response (response) {
         await store.dispatch(REFRESH_TOKEN)
         let config = response.config
         let { method, data, headers, url } = config
-        const res = await instance({
+        const res = await axios({
           method,
           data,
           url,

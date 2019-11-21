@@ -1,7 +1,6 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
 import { isIOS } from '../util'
-// import Cookies from 'js-cookie'
 // import qs from 'qs'
 const WX = window.wx
 // let timer = 0
@@ -48,22 +47,6 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
 //     history.replaceState({}, document.title, newUrl)
 //   }
 //   return newUrl
-// }
-
-/**
- * 获取jsapis
- * @param appId {string}
- * @return {Promise<*|string>}
- */
-// async function getJsApi (appId) {
-//   let jsApi = Cookies.get('jsApi') || ''
-//   if (!jsApi) {
-//     jsApi = await getJSApi(appId) // 每次分享时，获取js-api
-//     Cookies.set('jsApi', jsApi.result, {
-//       expires: new Date(Date.now() + 1800000) //  jsapi 缓存30分钟
-//     })
-//   }
-//   return jsApi
 // }
 
 /**
