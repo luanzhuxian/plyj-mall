@@ -1,5 +1,6 @@
 /* eslint-disable */
 import Axios from 'axios'
+import Cookie from '../assets/js/storage-cookie'
 const Instance = Axios.create({
   timeout: 15000
 })
@@ -96,9 +97,11 @@ export const setComeInConut = params => Instance.get(`/apis/v1/mall/live/activit
 
 function request (config) {
   let mallDomain = location.pathname.split('/')[1]
-  config.headers = {
-    openId: localStorage.getItem(`openId_${mallDomain}`) || ''
-  }
+  config.headers.openId = localStorage.getItem(`openId_${mallDomain}`) || ''
+  config.headers.mallId = Cookie.get('mallId')
+  config.headers.agencyCode = Cookie.get('agencyCode')
+  config.headers.token = Cookie.get('token')
+  config.headers.refresh_token = Cookie.get('refresh_token')
   return config
 }
 function reqError (error) {
@@ -129,13 +132,15 @@ function resError (error) {
     msg = '请求超时◔̯◔'
   }
   if (msg.indexOf('40') > -1) {
-    msg = '请求未找到'
+    msg = '您似乎在蓬莱岛迷路了'
   }
   if (msg.indexOf('50') > -1) {
-    msg = '服务器正在开小差~( ˶‾᷄࿀‾᷅˵ )'
+    msg = '蓬莱岛消失在了迷雾中~( ˶‾᷄࿀‾᷅˵ )'
   }
   if (msg.indexOf('Network Error') > -1) {
-    msg = '网络连接失败'
+    msg = '网络不给力'
+    // router.push({ name: 'NetError' })
+    return
   }
   return Promise.reject(new ResponseError(msg))
 }
