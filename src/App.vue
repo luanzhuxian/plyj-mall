@@ -86,10 +86,6 @@ export default {
   },
   async created () {
     try {
-      // 是否显示双十二主会场tab入口
-      getCurrentTemplate({ type: 2 }).then(({ result }) => {
-        this.isNavBtnShow = !!result
-      })
       await this.getMallInfo()
       let mallId = Cookie.get('mallId')
       let lastMallId = localStorage.getItem('lastMallId')
@@ -101,6 +97,10 @@ export default {
         await this.getUserInfo()
       }
       this.logined = true
+      // 是否显示双十二主会场tab入口
+      await getCurrentTemplate({ type: 2 }).then(({ result }) => {
+        this.isNavBtnShow = !!result
+      })
     } catch (e) {
       throw e
     }
