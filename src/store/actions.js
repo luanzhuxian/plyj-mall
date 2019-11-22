@@ -22,6 +22,7 @@ import {
   loadImage
 } from '../assets/js/util'
 import { upload } from '../assets/js/upload-image'
+import Cookie from '../assets/js/storage-cookie'
 import Qs from 'qs'
 let delay = new DelayExec(500)
 export default {
@@ -161,6 +162,7 @@ export default {
   [type.REFRESH_TOKEN]: ({ commit, state, dispatch }) => {
     return new Promise(async (resolve, reject) => {
       let refreshCount = Number(sessionStorage.getItem('refresh_count') || 0)
+      let refresh_token = Cookie.get('refresh_token')
       sessionStorage.setItem('refresh_count', (refreshCount + 1))
       // refresh_token 连续刷三次以上时，说明存在异常，退出重新登录
       if (Number(refreshCount) > 3) {
@@ -169,9 +171,9 @@ export default {
         return
       }
       try {
-        if (state.refresh_token) {
+        if (refresh_token) {
           await delay.exec()
-          let { result } = await refreshToken(state.refresh_token)
+          let { result } = await refreshToken(refresh_token)
           commit(type.SET_TOKEN, result)
           await dispatch(type.USER_INFO)
           sessionStorage.setItem('refresh_count', 0)

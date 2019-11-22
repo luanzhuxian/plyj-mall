@@ -42,7 +42,7 @@ async function response (response) {
     if (!loginInvalid && !tokenInvalid) {
       let err = {
         method: config.method,
-        url: response.config.url,
+        url: config.url,
         data: config.data ? JSON.parse(config.data) : null,
         params: config.params || null,
         devMessage: data.devMessage || '',

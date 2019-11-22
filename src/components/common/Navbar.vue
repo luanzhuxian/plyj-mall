@@ -76,23 +76,18 @@ export default {
     }
   },
   watch: {
-    async $route (to) {
-      if (this.showNavbar.includes(to.name)) {
-        await setTimeoutSync(1000)
-        try {
-          await this.getAuditNotice()
-        } catch (e) {
-          throw e
+    $route: {
+      async handler (to) {
+        if (this.showNavbar.includes(to.name)) {
+          await setTimeoutSync(1000)
+          try {
+            await this.getAuditNotice()
+          } catch (e) {
+            throw e
+          }
         }
-      }
-    }
-  },
-  async mounted () {
-    await setTimeoutSync(5000)
-    try {
-      await this.getAuditNotice()
-    } catch (e) {
-      throw e
+      },
+      immediate: true
     }
   },
   methods: {

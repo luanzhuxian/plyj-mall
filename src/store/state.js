@@ -1,6 +1,3 @@
-import Cookie from '../assets/js/storage-cookie'
-const token = Cookie.get('token')
-const refresh_token = Cookie.get('refresh_token') || ''
 const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress'))
 export default {
   theme: 'base-theme',
@@ -49,9 +46,7 @@ export default {
     servicePhoneModels: [],
     appSecret: false // 是否是老方法授权的
   },
-  token,
   openId: '',
-  refresh_token,
   addressList: [],
   students: [],
   selectedAddress: selectedAddress, // 选中的地址

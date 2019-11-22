@@ -60,7 +60,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userId', 'openId', 'appId', 'token', 'mallName', 'mallDesc', 'logoUrl'])
+    ...mapGetters(['userId', 'openId', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
   },
   watch: {
     $route: {
@@ -88,9 +88,10 @@ export default {
     try {
       await this.getMallInfo()
       let mallId = Cookie.get('mallId')
+      let token = Cookie.get('token')
       let lastMallId = localStorage.getItem('lastMallId')
       // 如果以及登录，且商城没切换，就不用重新登录
-      if (this.token && mallId === lastMallId) {
+      if (token && mallId === lastMallId) {
         await this.getUserInfo()
       } else {
         await this.login()
@@ -98,7 +99,7 @@ export default {
       }
       this.logined = true
       // 是否显示双十二主会场tab入口
-      await getCurrentTemplate({ type: 2 }).then(({ result }) => {
+      getCurrentTemplate({ type: 2 }).then(({ result }) => {
         this.isNavBtnShow = !!result
       })
     } catch (e) {

@@ -161,7 +161,7 @@ export default {
   },
   watch: {
     activeProduct (val) {
-      console.log(val)
+      // console.log(val)
     }
   },
   methods: {

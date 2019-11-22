@@ -28,8 +28,6 @@ export default {
     copyFields(state.userInfo, payload)
   },
   [type.SET_TOKEN] (state, payload) {
-    state.token = payload.token
-    state.refresh_token = payload.refresh_token
     Cookie.set('token', payload.token, {
       expires: CalcCookieTime(payload.expire)
     })

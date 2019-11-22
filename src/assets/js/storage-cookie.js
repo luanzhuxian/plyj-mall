@@ -11,7 +11,6 @@ export default {
    * @property config.path {string} 允许携带的路径
    */
   set (key, value, config) {
-    console.log(key, value, config)
     localStorage.setItem(key, JSON.stringify({
       value,
       expires: config.expires || 0
