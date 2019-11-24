@@ -458,7 +458,7 @@ export default {
         FORMAL_CLASS: '立即学习',
         EXPERIENCE_CLASS: '立即报名'
       }
-      if (this.detail.serverTime - this.detail.shoppingTimeLong < 0) {
+      if (this.detail.serverTime - this.detail.shoppingTimeLong < 0 && (this.activeProduct === 1 || this.preActivity !== 2)) {
         return '暂未开售'
       }
       return textMap[this.productType] || '立即购买'
