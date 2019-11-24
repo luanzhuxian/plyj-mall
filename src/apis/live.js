@@ -142,7 +142,9 @@ function resError (error) {
     // router.push({ name: 'NetError' })
     return
   }
-  return Promise.reject(new ResponseError(msg))
+  return Promise.reject(new ResponseError(JSON.stringify({
+    message: msg
+  }, null, 4)))
 }
 
 // 生成formData数据
