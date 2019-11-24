@@ -64,7 +64,7 @@ import {
   getActiveDetail,
   inviterStatisitic
 } from '../../apis/invitenewcomers'
-import { loadImage, generateQrcode, createText, drawRoundRect } from '../../assets/js/util'
+import { loadImage, generateQrcode, createText, drawRoundRect, cutArcImage } from '../../assets/js/util'
 export default {
   name: 'InviteNewcomers',
   components: {
@@ -164,9 +164,8 @@ export default {
       }
       try {
         this.creating = true
-        let userImg = new Image()
-        userImg.crossOrigin = ''
-        userImg.src = `${this.avatar}?x-oss-process=image/resize,h_100/circle,r_500/format,png&time=${Date.now()}`
+        let userImg = await loadImage(this.avatar)
+        userImg = await cutArcImage(userImg)
         let img = await loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/%E9%82%80%E6%96%B0%E6%9C%89%E7%A4%BC%E5%88%86%E4%BA%AB%E6%B5%B7%E6%8A%A5%E5%88%87%E5%9B%BE%402x.jpg')
         let cvs = document.createElement('canvas')
         let ctx = null

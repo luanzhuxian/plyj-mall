@@ -407,7 +407,7 @@ export class countdown {
 /**
  * 加载跨域图片
  * @param src {string}
- * @return {Promise<any>}
+ * @return {Promise<HTMLImageElement>}
  */
 export function loadImage (src) {
   let img = new Image()
