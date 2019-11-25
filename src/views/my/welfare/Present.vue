@@ -232,7 +232,7 @@ export default {
         const { result: res } = await getGiftDetailById({ id: id })
         if (res.status) {
           clearInterval(this.timer)
-          this.getList()
+          await this.getList()
           await this.$confirm({
             message: '核销成功',
             viceMessage: '感谢您参与活动',
@@ -243,28 +243,36 @@ export default {
       }, 3000)
     },
     async getList () {
-      const { result: res } = await getCityListByParentId({
-        current: 1,
-        size: 100,
-        status: this.activeId
-      })
-      const records = res.records
-      for (const item of records) {
-        item.isSelect = false
-      }
-      if (this.activeId === 0) {
-        this.data0 = records
-      }
-      if (this.activeId === 1) {
-        this.data1 = records
-      }
-      if (this.activeId === 99) {
-        this.data99 = records
+      try {
+        const { result: res } = await getCityListByParentId({
+          current: 1,
+          size: 100,
+          status: this.activeId
+        })
+        const records = res.records
+        for (const item of records) {
+          item.isSelect = false
+        }
+        if (this.activeId === 0) {
+          this.data0 = records
+        }
+        if (this.activeId === 1) {
+          this.data1 = records
+        }
+        if (this.activeId === 99) {
+          this.data99 = records
+        }
+      } catch (e) {
+        throw e
       }
     },
-    handleClick (item) {
-      this.activeId = item.id
-      this.getList()
+    async handleClick (item) {
+      try {
+        this.activeId = item.id
+        await this.getList()
+      } catch (e) {
+        throw e
+      }
     },
     async edit () {
       let data = []
