@@ -3,6 +3,10 @@
   <head>
     <script>
       (function () {
+        if (location.protocol !== 'https:') {
+          location.replace(location.href.replace('http://', 'https://'))
+          return
+        }
         var devicePixelRatio = window.devicePixelRatio
         var initialScale = 1 / devicePixelRatio
         var maximumScale = 1 / devicePixelRatio
