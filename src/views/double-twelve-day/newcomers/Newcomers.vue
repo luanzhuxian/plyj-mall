@@ -97,9 +97,13 @@ export default {
   },
 
   async activated () {
-    this.share()
-    await this.getNewcomersDetail()
-    await this.tryClaim(true)
+    try {
+      await this.getNewcomersDetail()
+      await this.tryClaim(true)
+      this.share()
+    } catch (e) {
+      throw e
+    }
   },
 
   methods: {
@@ -114,9 +118,12 @@ export default {
       })
     },
     async getNewcomersDetail () {
-      let { result } = await getNewcomersDetail(this.$route.params.activityId)
-
-      this.activityInfo = result
+      try {
+        let { result } = await getNewcomersDetail(this.$route.params.activityId)
+        this.activityInfo = result
+      } catch (e) {
+        throw e
+      }
     },
     // 绑定手机
     bindMobile () {
@@ -139,18 +146,22 @@ export default {
     },
 
     async needRegisterNew () {
-      if (!this.userId) {
-        await this.$alert({
-          confirmText: '去注册',
-          message: '新注册会员可领取',
-          viceMessage: '优惠券大礼包已发送到您的卡包,请在有效期内使用'
-        })
+      try {
+        if (!this.userId) {
+          await this.$alert({
+            confirmText: '去注册',
+            message: '新注册会员可领取',
+            viceMessage: '优惠券大礼包已发送到您的卡包,请在有效期内使用'
+          })
 
-        this.saveState()
-        this.bindMobile()
-        return true
+          this.saveState()
+          this.bindMobile()
+          return true
+        }
+        return false
+      } catch (e) {
+        throw e
       }
-      return false
     },
 
     async reciveSuccess () {
@@ -178,31 +189,34 @@ export default {
     },
 
     async tryClaim (restore) {
-      if (!this.isNewUser) {
-        return
-      }
-      if (this.isActivityStoped) {
-        await this.gameOver()
-        return
-      }
-
-      if (restore && this.userId) {
-        let state = this.restoryState()
-        if (state) {
-          await this.doClaimAll()
+      try {
+        if (!this.isNewUser) {
           return
         }
-      }
+        if (this.isActivityStoped) {
+          await this.gameOver()
+          return
+        }
 
-      let need = await this.needRegisterNew()
-      if (!need) {
-        // this.reClaimed()
-        await this.$alert({
-          confirmText: '朕知道了',
-          viceMessage: '本活动仅限新注册用户参与',
-          message: '感谢您参与'
-        })
-        // TODO: 导向邀新？
+        if (restore && this.userId) {
+          let state = this.restoryState()
+          if (state) {
+            await this.doClaimAll()
+            return
+          }
+        }
+
+        let need = await this.needRegisterNew()
+        if (!need) {
+          // this.reClaimed()
+          await this.$alert({
+            confirmText: '朕知道了',
+            viceMessage: '本活动仅限新注册用户参与',
+            message: '感谢您参与'
+          })
+        }
+      } catch (e) {
+        throw e
       }
     },
 

@@ -57,13 +57,21 @@ export default {
   },
 
   async created () {
-    await this.getCurrentActivity()
+    try {
+      await this.getCurrentActivity()
+    } catch (e) {
+      throw e
+    }
   },
 
   methods: {
     async getCurrentActivity () {
-      let { result } = await getCurrentActivity()
-      this.activityInfo = result || null
+      try {
+        let { result } = await getCurrentActivity()
+        this.activityInfo = result || null
+      } catch (e) {
+        throw e
+      }
     },
     gotoGet () {
       this.$router.push({ name: 'Newcomers', params: { activityId: this.activityInfo.id } })
