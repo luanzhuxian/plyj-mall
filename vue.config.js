@@ -18,7 +18,8 @@ const externals =
       'ali-oss': 'OSS',
       'compressorjs': 'Compressor',
       'vue-lazyload': 'VueLazyload',
-      'qs': 'Qs'
+      'qs': 'Qs',
+      'vue-clipboard2': 'VueClipboard'
     }
     : {}
 module.exports = {
