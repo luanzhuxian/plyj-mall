@@ -1,5 +1,6 @@
 const MODEL = process.argv[process.argv.indexOf('--model') + 1]
 const NODE_ENV = process.env.NODE_ENV
+const VERSION = process.env.npm_package_version
 /* ********************************************* 环境 *************************************** */
 console.log('------------------------- ' + NODE_ENV + ' -------------------------')
 /* ********************************************* 模式 *************************************** */
@@ -31,8 +32,8 @@ module.exports = {
     }
   },
 
-  assetsDir: 'static',
-  outputDir: 'mall',
+  assetsDir: `${VERSION}/static`,
+  outputDir: `mall`,
 
   devServer: {
     host: '0.0.0.0',
