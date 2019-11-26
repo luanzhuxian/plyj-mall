@@ -74,7 +74,7 @@
       <button
         :class="$style.addToCart"
         @click="clickHandler(1)"
-        :disabled="loading || allDisabled || disableConfirm"
+        :disabled="loading || allDisabled"
         :style="{'line-height': 80 / 7.5 + 'vw'}"
       >
         <span>加入购物车</span>

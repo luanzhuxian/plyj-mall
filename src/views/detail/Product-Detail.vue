@@ -63,7 +63,7 @@
       <Field
         label="选择"
         :label-width="120"
-        :can-click="!noStock && (activeProduct === 1 && detail.productStatus === 2 || activeProduct !== 1)"
+        :can-click="!noStock && !isDown"
         @click="showSpecifica = true;"
       >
         <template v-if="currentModel.skuCode1Name">
@@ -236,8 +236,8 @@
       </template>
     </specification-pop>
 
-    <!-- 正常商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
-    <div :class="$style.buttomTip" v-if="!loading && activeProduct === 1 && productStatus === 1">
+    <!-- 正常商品 或 未开始的活动商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
+    <div :class="$style.buttomTip" v-if="!loading && isDown && activeProduct === 1">
       该商品已下架
     </div>
     <div :class="$style.buttomTip" v-if="!loading && noStock">
@@ -487,6 +487,10 @@ export default {
       if (this.detail.productSkuModels) {
         return Math.max(...this.detail.productSkuModels.map(item => item.originalPrice))
       }
+    },
+    // 是否下架
+    isDown () {
+      return (this.activeProduct === 1 || this.preActivity !== 2) && (this.productStatus === 1 || this.productStatus === 0)
     }
   },
   watch: {
