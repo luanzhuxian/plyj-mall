@@ -4,8 +4,11 @@
       <div class="price">
         定&nbsp;<span>{{ detail.activityProductModel.price }}</span>
         <div class="deposit" v-if="detail.activityProductModel.multiplt === 1">
-          到手价&nbsp;<span>{{ detail.activityProductModel.lowestPrice + detail.activityProductModel.price }}</span>
+          抵&nbsp;<span>{{ detail.activityProductModel.depositTotal }}</span>
         </div>
+      </div>
+      <div class="current-price" style="margin-bottom: 4px;">
+        预售到手价&nbsp;<span>{{ detail.activityProductModel.lowestPrice + detail.activityProductModel.price }}</span>
       </div>
       <div class="pro-info">
         <div class="current-price">

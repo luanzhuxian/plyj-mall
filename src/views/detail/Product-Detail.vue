@@ -47,8 +47,8 @@
         <!-- 使用期限 -->
         <useful-life
           v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
-          :start="activeProduct === 4 ? detail.activityProductModel.useStartTime : detail.validityPeriodStart"
-          :end="activeProduct === 4 ? detail.activityProductModel.useEndTime : detail.validityPeriodEnd"
+          :start="(activeProduct === 4 && preActivity === 2) ? detail.activityProductModel.useStartTime : detail.validityPeriodStart"
+          :end="(activeProduct === 4 && preActivity === 2) ? detail.activityProductModel.useEndTime : detail.validityPeriodEnd"
         />
       </DetailInfoBox>
 
