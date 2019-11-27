@@ -29,7 +29,8 @@ export default {
       logined: false,
       routeName: '',
       exclude: [
-        'ShoppingCart'
+        'ShoppingCart',
+        'LiveRoom'
       ],
       showNavbar: [
         'Home',

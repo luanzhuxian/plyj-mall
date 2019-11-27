@@ -240,7 +240,7 @@ import {
 import { getCurrentTemplate } from '../../apis/home'
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 export default {
-  name: 'Live',
+  name: 'LiveRoom',
   components: {
     // VueSlider,
     CouponItem
@@ -288,7 +288,7 @@ export default {
       this.liveSdk.player.setVolume(val / 100)
     }
   },
-  async activated () {
+  async created () {
     if (this.roleCode === 'VISITOR') {
       await this.$confirm({
         message: '为了您的账号安全，请绑定手机号',
