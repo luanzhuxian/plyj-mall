@@ -32,7 +32,7 @@ module.exports = {
     }
   },
 
-  assetsDir: `${VERSION}/static`,
+  assetsDir: MODEL === 'development' ? 'static' : `${VERSION}/static`,
   outputDir: `mall`,
 
   devServer: {
