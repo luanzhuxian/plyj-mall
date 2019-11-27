@@ -58,12 +58,17 @@ Vue.config.errorHandler = async function (err, vm, info) {
       let error = JSON.parse(err.message)
       vm.$error(error.message)
     } else {
+      if (err.message === 'cancel' || err.message === '取消支付') {
+        return
+      }
       errorlog({
         info,
         message: err.message,
         url: location.href,
         userId: vm.$store.getters.userId,
+        openId: vm.$store.getters.openId,
         mallId: vm.$store.getters.mallId,
+        userAgent: navigator.userAgent,
         vm: {
           name: vm.$options.name || '',
           class: Array.from(vm.$el.classList || []).join(';'),
