@@ -19,8 +19,8 @@
             </div>
             <div>
               <div class="title book-title">{{ item.productName }}</div>
-              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
-              <div class="book-bottom">双十二价位：{{ item.productPrice }}元</div>
+              <div class="tips book-tips">预售到手价：{{ getTotalPrice(item) }}元</div>
+              <div class="book-bottom">预交定金￥{{ item.price }} <span v-if="item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
             </div>
           </div>
         </div>
@@ -42,8 +42,8 @@
             </div>
             <div>
               <div class="title book-title">{{ item.productName }}</div>
-              <div class="tips book-tips">预交定金￥{{ item.price }} <span v-if="item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
-              <div class="book-bottom">双十二价位：{{ item.productPrice }}元</div>
+              <div class="tips book-tips">预售到手价：{{ getTotalPrice(item) }}元</div>
+              <div class="book-bottom">预交定金￥{{ item.price }} <span v-if="item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
             </div>
           </div>
         </div>
@@ -62,6 +62,23 @@
 <script>
 import { bookActivityPage } from '../../apis/product'
 import CountDown from './Book-Count-Down'
+function sub (arg1, arg2) {
+  var r1, r2, m, n
+  try {
+    r1 = arg1.toString().split('.')[1].length
+  } catch (e) {
+    r1 = 0
+  }
+  try {
+    r2 = arg2.toString().split('.')[1].length
+  } catch (e) {
+    r2 = 0
+  }
+  m = Math.pow(10, Math.max(r1, r2))
+  n = (r1 >= r2) ? r1 : r2
+  return ((arg1 * m - arg2 * m) / m).toFixed(n)
+}
+
 export default {
   name: 'List',
   components: {
@@ -86,6 +103,19 @@ export default {
     },
     jumpToDetail (id) {
       this.$router.push({ name: 'Lesson', params: { productId: id, currentProductStatus: 4 } })
+    },
+    getTotalPrice (item) {
+      const { productPrice, price, multipleNumber = 1 } = item
+      const activityPrice = price * multipleNumber
+      if (multipleNumber === 1) {
+        return productPrice
+      }
+      if (activityPrice >= productPrice) {
+        return price
+      }
+      if (activityPrice < productPrice) {
+        return sub(productPrice, price * (multipleNumber - 1))
+      }
     }
   }
 }

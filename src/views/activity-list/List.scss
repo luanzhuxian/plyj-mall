@@ -131,8 +131,9 @@
           line-height: 36px;
           margin-top: 4px;
           &.book-tips{
-            font-size: 24px;
             margin-top: 18px;
+            font-size: 24px;
+            color: #999999;
           }
         }
         .tuan-tips{
@@ -190,11 +191,11 @@
           line-height: 40px;
         }
         .book-bottom{
-          font-size: 28px;
+          font-size: 24px;
           font-weight: bold;
           line-height: 36px;
           color: #EA618E;
-          margin-top: 8px;
+          margin-top: 12px;
         }
         .bottom{
           display: flex;
