@@ -43,12 +43,12 @@
                   <div :class="$style.main">
                     {{ item.goodsInfo.productName }}
                   </div>
-                  <div :class="$style.sub2">
-                    {{ `预售到手价：${item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price')}元` }}
+                  <div :class="$style.sub1" v-if="item.goodsInfo && item.goodsInfo.activityInfo">
+                    {{ `预售到手价：${getTotalPrice(item)}元` }}
                   </div>
-                  <div :class="$style.sub1">
-                    <span v-if="item.goodsInfo && item.goodsInfo.activityInfo">{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
-                    <span v-if="item.goodsInfo && item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
+                  <div :class="$style.sub2" v-if="item.goodsInfo && item.goodsInfo.activityInfo">
+                    <span>{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
+                    <span v-if="item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
                   </div>
                 </div>
               </div>
@@ -63,6 +63,23 @@
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
+
+function sub (arg1, arg2) {
+  var r1, r2, m, n
+  try {
+    r1 = arg1.toString().split('.')[1].length
+  } catch (e) {
+    r1 = 0
+  }
+  try {
+    r2 = arg2.toString().split('.')[1].length
+  } catch (e) {
+    r2 = 0
+  }
+  m = Math.pow(10, Math.max(r1, r2))
+  n = (r1 >= r2) ? r1 : r2
+  return ((arg1 * m - arg2 * m) / m).toFixed(n)
+}
 
 export default {
   name: 'Yugou',
@@ -80,6 +97,17 @@ export default {
   },
   data () {
     return {}
+  },
+  methods: {
+    getTotalPrice (item) {
+      if (!item.goodsInfo || !item.goodsInfo.productSkuModels || !item.goodsInfo.productSkuModels.length) return
+      const prodPrice = this.getPrice(item.goodsInfo.productSkuModels)('price')
+      if (item.goodsInfo.activityInfo.activityPrice >= prodPrice) {
+        return item.goodsInfo.activityInfo.price
+      } else {
+        return sub(prodPrice, sub(item.goodsInfo.activityInfo.activityPrice, item.goodsInfo.activityInfo.price))
+      }
+    }
   }
 }
 </script>
@@ -87,7 +115,6 @@ export default {
 <style module lang="scss">
   .yugou {
     margin-top: 32px;
-    // background: linear-gradient(180deg, rgba(255, 114, 199, 1) 0%, rgba(213, 97, 167, 1) 12%, rgba(213, 55, 151, 1) 100%);
     background: #d53796;
     border-radius: 20px;
     overflow: hidden;
@@ -191,20 +218,19 @@ export default {
           text-align: justify;
         }
         .sub-1 {
-          margin-bottom: 8px;
-          height: 36px;
+          margin-bottom: 12px;
+          line-height: 36px;
           font-size: 24px;
-          font-family: San Francisco Display;
-          color: #EA618E;
-          font-weight: bold;
-          letter-spacing: 1.2px;
+          font-family: Microsoft YaHei;
+          color: #999999;
           @include elps();
         }
         .sub-2 {
+          line-height: 36px;
           font-size: 24px;
-          font-family: Microsoft YaHei;
-        //   font-weight: bold;
-          color: #999;
+          font-family: San Francisco Display;
+          font-weight: bold;
+          color: #EA618E;
           @include elps();
         }
       }
