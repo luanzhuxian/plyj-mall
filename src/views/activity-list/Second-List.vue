@@ -25,6 +25,7 @@
               <div class="inner" :style="{width: `${(Number(item.number) - Number(item.stock)) / Number(item.number) * 100}%`}" />
             </div>
             <div class="remain">剩余 {{ item.stock }} 件</div>
+            <div class="original">原价 <del class="rmb">{{ item.productMaxOriginPrice }}</del></div>
             <div class="bottom">
               <div class="price-bar">
                 <pl-icon name="icon-miaoshajia" type="svg" width="100" height="50" />
