@@ -3,8 +3,15 @@
   <head>
     <script>
       (function () {
-        if (location.protocol !== 'https:') {
-          location.replace(location.href.replace('http://', 'https://'))
+        // 尝试清除微信缓存
+        let cleanCache = Date.now()
+        let search = location.search
+        if (search.indexOf('cleanCache') === -1) {
+          if (!search) {
+            location.replace(location.href + '?cleanCache=' + cleanCache)
+          } else {
+            location.replace(location.href + '&cleanCache=' + cleanCache)
+          }
           return
         }
         var devicePixelRatio = window.devicePixelRatio
