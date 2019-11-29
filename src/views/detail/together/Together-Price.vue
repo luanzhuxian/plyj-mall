@@ -1,29 +1,36 @@
 <template>
-  <div class="tuan">
+  <div :class="$style.tuan">
     <div v-if="detail.preActivity === 1">
-      <div v-if="detail.preActivity === 2" class="price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
-      <div class="pro-info">
-        <div class="original">现价：<i v-text="minPrice" />
+      <div v-if="detail.preActivity === 2" :class="$style.price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
+      <div :class="$style.proInfo">
+        <div :class="$style.original">现价：<i v-text="minPrice" />
           <template v-if="minPrice !== maxPrice">
             ~ <i v-text="maxPrice" />
           </template></div>
-        <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
+        <div :class="$style.buyNum">{{ detail.salesVolume }}人已购买</div>
       </div>
     </div>
     <div v-if="detail.preActivity === 2">
-      <div class="price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
-      <div class="original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice">原价：<del v-text="maxOriginalPrice" /></div>
+      <div :class="$style.price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
+      <div :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice">原价：<del v-text="maxOriginalPrice" /></div>
     </div>
     <div>
-      <div class="join" v-if="detail.preActivity === 2">
-        <ul>
-          <li class="avatar" v-for="(item, k) in detail.activityProductModel.userImageList" :key="k"><img :src="item.headImgURL"></li>
+      <!-- 团购用户头像 -->
+      <div :class="$style.join" v-if="detail.preActivity === 2">
+        <ul :class="$style.avatarList">
+          <li
+            :class="$style.avatar"
+            v-for="(item, k) in detail.activityProductModel.userImageList.slice(-4)"
+            :key="k"
+          >
+            <img :src="item.headImgURL">
+          </li>
         </ul>
         <div v-if="detail.activityProductModel.number > 0">{{ detail.activityProductModel.number }}人和你一起参与</div>
       </div>
-      <div class="priceRight" v-if="agentUser && (minRebate || maxRebate) && detail.preActivity !== 2">
+      <div :class="$style.priceRight" v-if="agentUser && (minRebate || maxRebate) && detail.preActivity !== 2">
         <p class="fz-22 gray-1">
-          <span class="returnRunbi">
+          <span :class="$style.returnRunbi">
             润笔
           </span>
           <i v-if="minRebate" class="rmb" v-text="minRebate" />
@@ -90,7 +97,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
   .tuan{
     display: flex;
     align-items: flex-start;
@@ -137,14 +144,14 @@ export default {
       max-width: 360px;
       font-size: 26px;
       color: #999999;
-      ul{
+      .avatarList {
         display: flex;
         align-items: center;
-        .avatar{
-          width: 48px;
+        margin-right: 30px;
+        .avatar {
+          width: 30px;
           height: 48px;
-          margin-left: -18px;
-          img{
+          img {
             width: 48px;
             height: 48px;
             border-radius: 50%;
