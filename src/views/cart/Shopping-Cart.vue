@@ -38,6 +38,16 @@
           </pl-checkbox>
         </pl-checkbox-group>
       </div>
+
+      <!-- 领取优惠券或凑单 -->
+      <div :class="$style.coupon">
+        <span>已满2000元已减200,还差200元可再减100元</span>
+        <span :class="$style.scrapingUp">
+          去凑单
+          <pl-svg name="right" />
+        </span>
+      </div>
+
       <!-- 结算或删除 -->
       <div :class="$style.settlement">
         <pl-checkbox :checked="checkedAll" @change="checkAll" border>
@@ -455,6 +465,27 @@ export default {
     &:disabled {
       color: #ccc;
       border-color: #cfcfcf;
+    }
+  }
+  .coupon {
+    position: fixed;
+    left: 0;
+    bottom: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 66px;
+    padding: 0 44px;
+    box-sizing: border-box;
+    font-size: 24px;
+    background-color: #FFE1C7;
+    .scrapingUp {
+      color: #FE7700;
+      svg {
+        width: 20px;
+        fill: #FE7700;
+      }
     }
   }
 </style>
