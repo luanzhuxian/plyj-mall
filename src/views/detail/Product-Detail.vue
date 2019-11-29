@@ -52,6 +52,12 @@
         />
       </DetailInfoBox>
 
+      <!-- 选择优惠券 -->
+      <counpon-field
+        :coupon-list="couponList"
+        v-if="couponList.length && preActivity !== 2"
+      />
+
       <Field
         v-if="productType === 'PHYSICAL_GOODS'"
         label="发货"
@@ -71,16 +77,6 @@
         </template>
         <template v-if="currentModel.skuCode2Name">，<i v-text="currentModel.skuCode2Name" /></template>”
         <span v-if="!currentModel.id">请选择规格</span>
-      </Field>
-
-      <Field
-        v-if="couponList.length && preActivity !== 2"
-        label="优惠券"
-        can-click
-        :label-width="120"
-        @click="showCoupon = true"
-      >
-        <span style="color: #FE7700;" v-text="couponText" />
       </Field>
 
       <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
@@ -258,33 +254,6 @@
         </div>
       </div>
     </transition>
-
-    <!-- 优惠券弹框 -->
-    <pl-popup
-      :show.sync="showCoupon"
-      title="领取优惠券"
-      title-align="left"
-    >
-      <div :class="$style.coupon">
-        <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
-        <div :class="$style.couponList">
-          <template v-for="(item, i) of couponList">
-            <CouponItem
-              :key="i"
-              :name="item.couponName"
-              :amount="item.amount"
-              :full="item.useLimitAmount"
-              :subtract="item.amount"
-              :instruction="item.brief"
-              :use-end-time="item.useEndTime"
-              :use-start-time="item.useStartTime"
-              :receive-count="item.count"
-              @couponClick="couponClick(item.id)"
-            />
-          </template>
-        </div>
-      </div>
-    </pl-popup>
   </div>
 </template>
 
@@ -301,8 +270,8 @@ import UsefulLife from '../../components/detail/Useful-Life.vue'
 import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
 import Field from '../../components/detail/Field.vue'
+import CounponField from './components/Counpon-Field.vue'
 import { getProductDetail, getCouponInDetail } from '../../apis/product'
-import { receiveCoupon } from '../../apis/my-coupon'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
@@ -313,7 +282,6 @@ import SoldOut from './Sold-Out.vue'
 import { generateQrcode, cutImageCenter, cutArcImage, loadImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
-import CouponItem from '../../components/item/Coupon-Item.vue'
 import TogetherBar from './together/Together-Bar'
 import SecondBar from './second/Second-Bar'
 import BookingBar from './booking/Booking-Bar'
@@ -337,6 +305,7 @@ export default {
     DetailDesc,
     DetailInfo,
     Field,
+    CounponField,
     Tags,
     BuyNow,
     DetailInfoBox,
@@ -347,8 +316,7 @@ export default {
     UsefulLife,
     InfoHeader,
     Instructions,
-    CountDown,
-    CouponItem
+    CountDown
   },
   data () {
     return {
@@ -358,7 +326,6 @@ export default {
       detail: {},
       productSkuModels: [],
       showSpecifica: false,
-      showCoupon: false,
       currentModel: {}, // 当前选中的规格
       activityProductModel:{},//活动信息
       commentForm: {
@@ -466,13 +433,6 @@ export default {
     showBranding () {
       return this.detail.showBranding === 1
     },
-    couponText () {
-      let text = ''
-      this.couponList.map((item, index) => {
-        text += `满${item.useLimitAmount}减${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
-      })
-      return text
-    },
     minPrice () {
       if (this.detail.productSkuModels) {
         return Math.min(...this.detail.productSkuModels.map(item => item.price))
@@ -513,7 +473,6 @@ export default {
     this.haibao = ''
     this.showHaibao = false
     this.tab = 2
-    this.showCoupon = false
   },
   async mounted () {
     sessionStorage.setItem('shareBrokerId', this.brokerId || '')
@@ -584,15 +543,6 @@ export default {
         let { result } = await getCouponInDetail()
         this.couponList = result
         return result
-      } catch (e) {
-        throw e
-      }
-    },
-    async couponClick (id) {
-      try {
-        await receiveCoupon({ couponId: id })
-        this.$success('领取成功')
-        await this.getCouponList()
       } catch (e) {
         throw e
       }
@@ -1154,12 +1104,6 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     .pingxuan-right {
       display: flex;
       flex-direction: column;
-    }
-  }
-  .coupon {
-    padding: 0 24px;
-    > .coupon-list {
-      margin-top: 48px;
     }
   }
 
