@@ -57,12 +57,8 @@ export default {
       let appId = state.mallInfo.appid
       let componentAppid = state.mallInfo.componentAppid
       let appSecret = state.mallInfo.appSecret
-      let openIdUrl = ''
-      if (appSecret) {
-        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
-      } else {
-        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${window.location.href}&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${componentAppid}#wechat_redirect`
-      }
+      // let openIdUrl = ''
+      // let href = ''
       try {
         if (search.code) {
           // 微信
@@ -70,16 +66,27 @@ export default {
           commit(type.SET_OPENID, { mallDomain: state.mallInfo.mallDomain, openId: result.OPEN_ID })
           resolve()
         } else {
-          window.location.replace(openIdUrl)
+          // href = `${location.protocol}//${location.host}${location.pathname}`
+          // if (appSecret) {
+          //   openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${href}?${Qs.stringify(search)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+          // } else {
+          //   openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${href}?${Qs.stringify(search)}&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${componentAppid}#wechat_redirect`
+          // }
+          location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
         }
       } catch (e) {
         if (e.message.indexOf('code') > -1) { // 如果code无效重新登录
-          if (loginCount >= 2) {
-            alert('微信登录失败')
+          delete search.code
+          // href = `${location.protocol}//${location.host}${location.pathname}?${Qs.stringify(search)}`
+          if (loginCount >= 5) {
+            const res = confirm('微信登录失败，是否重试？')
+            if (res) {
+              window.location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
+            }
+            localStorage.setItem('loginCount', 0)
             return
           }
           localStorage.setItem('loginCount', ++loginCount)
-          window.location.replace(openIdUrl)
         } else {
           reject(e)
         }
@@ -92,6 +99,19 @@ export default {
         let loginInfo = null
         // 通过openid登录
         if (state.openId) {
+          // 尝试清除微信缓存
+          // 必须放在微信登录之后，否则会影响微信登录
+          // 且有code时不用刷新
+          let cleanCache = Date.now()
+          let search = location.search
+          if (search.indexOf('cleanCache') === -1 && search.indexOf('code') > -1) {
+            if (!search) {
+              location.replace(location.href + '?cleanCache=' + cleanCache)
+            } else {
+              location.replace(location.href + '&cleanCache=' + cleanCache)
+            }
+            return
+          }
           loginInfo = await login(state.openId)
         } else {
           // openid有问题时重新获取openid
@@ -224,4 +244,14 @@ export default {
       throw e
     }
   }
+}
+function getWeixinURL (appSecret, appId, componentAppid, search) {
+  let openIdUrl = ''
+  let href = `${location.protocol}//${location.host}${location.pathname}`
+  if (appSecret) {
+    openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${href}?${Qs.stringify(search)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+  } else {
+    openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${href}?${Qs.stringify(search)}&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${componentAppid}#wechat_redirect`
+  }
+  return openIdUrl
 }

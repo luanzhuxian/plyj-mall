@@ -75,10 +75,9 @@
       </pl-form-item>
       <pl-form-item
         prop="verificationCode"
-        v-if="!form.auditStatus || (form.auditStatus === 'REJECT')"
+        v-if="form.auditStatus !== 'AWAIT' && form.auditStatus !== 'PASS'"
       >
         <pl-input
-          :disabled="form.auditStatus === 'AWAIT'"
           placeholder="请输入验证码"
           prefix-icon="code"
           v-model="form.verificationCode"
@@ -97,8 +96,7 @@
       </pl-form-item>
     </pl-form>
     <pl-button
-      v-if="form.auditStatus !== 'AWAIT'"
-      :disabled="form.auditStatus === 'AWAIT'"
+      v-if="form.auditStatus !== 'AWAIT' && form.auditStatus !== 'PASS'"
       type="warning"
       size="huge"
       :loading="loading"
@@ -348,12 +346,15 @@ export default {
             await AuditCreate(this.form)
           }
           await this.$store.dispatch(REFRESH_TOKEN)
-          this.$success('已成功提交认证 请耐心等待审核')
           this.$refs.getCode.finishCountDown()
-          setTimeout(() => {
-            this.loading = false
-            this.$router.replace({ name: 'My' })
-          }, 2000)
+          this.$alert({
+            message: '提交成功',
+            viceMessage: '已成功提交认证 请耐心等待审核'
+          })
+            .finally(() => {
+              this.loading = false
+              this.$router.replace({ name: 'My' })
+            })
         } catch (e) {
           this.loading = false
           throw e

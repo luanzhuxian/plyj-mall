@@ -97,15 +97,35 @@ export default {
       showRule: false
     }
   },
-  created () {
-    this.getList()
+  async activated () {
+    try {
+      await this.getList()
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
-    getList () {
-      secondActivityPage().then(res => {
-        this.ingList = res.result[1]
-        this.comingList = res.result[0]
-      })
+    async getList () {
+      try {
+        let { result } = await secondActivityPage()
+        result = Array.from(result)
+        if (result.every(item => item.length)) {
+          this.$alert({
+            message: '暂无数据',
+            viceMessage: '逛逛主会场吧~',
+            confirmText: '再逛逛'
+          })
+            .finally(() => {
+              this.$router.go(-1)
+            })
+          return
+        }
+        this.ingList = result[1]
+        this.comingList = result[0]
+        return result
+      } catch (e) {
+        throw e
+      }
     },
     jumpToDetail (id) {
       this.$router.push({ name: 'Lesson', params: { productId: id, currentProductStatus: 3 } })

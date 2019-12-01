@@ -373,9 +373,7 @@ export default {
             }))
             vm.$router.replace({ name: 'BindMobile' })
           })
-          .catch((e) => {
-            console.warn('取消了绑定手机弹框')
-          })
+          .catch(() => {})
       }
     })
   }

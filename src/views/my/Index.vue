@@ -307,8 +307,7 @@ export default {
         }, 1000)
       } else {
         // 下面方法在此钩子函数调用，因为返回此页面时需要刷新数据
-        await this.orderPhysicalorderSummary()
-        this.getProgress()
+        await Promise.all([this.orderPhysicalorderSummary(), this.getProgress()])
         this.loaded = true
       }
     } catch (e) {

@@ -43,13 +43,13 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
-import { setTimeoutSync } from '../../assets/js/util'
 export default {
   name: 'Navbar',
   props: {
     isNavBtnShow: Boolean
   },
   data () {
+    this.timer = 0
     return {
       showNavbar: [
         'Home',
@@ -78,13 +78,11 @@ export default {
   watch: {
     $route: {
       async handler (to) {
+        clearTimeout(this.timer)
         if (this.showNavbar.includes(to.name)) {
-          await setTimeoutSync(1000)
-          try {
-            await this.getAuditNotice()
-          } catch (e) {
-            throw e
-          }
+          this.timer = setTimeout(() => {
+            this.getAuditNotice()
+          }, 2000)
         }
       },
       immediate: true
