@@ -63,7 +63,6 @@ export default {
     Cookie.remove('mallId')
     Cookie.remove('refresh_token')
     Cookie.remove('token')
-    window.location.reload()
   },
   [type.SET_AVATAR] (state, payload) {
     state.userInfo.img = payload

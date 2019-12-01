@@ -24,6 +24,7 @@ import {
 import { upload } from '../assets/js/upload-image'
 import Cookie from '../assets/js/storage-cookie'
 import Qs from 'qs'
+import MessageBox from '../components/penglai-ui/message-box'
 let delay = new DelayExec(500)
 export default {
   /* 获取商城信息 */
@@ -49,49 +50,32 @@ export default {
     })
   },
   // 获取openid并登录
-  [type.GET_OPENID]: ({ commit, dispatch, state }) => {
-    // 登录次数，如果登录失败超过三次，停止登录
-    let loginCount = Number(localStorage.getItem('loginCount') || 0)
-    return new Promise(async (resolve, reject) => {
-      let search = Qs.parse(location.search.substring(1)) || {}
-      let appId = state.mallInfo.appid
-      let componentAppid = state.mallInfo.componentAppid
-      let appSecret = state.mallInfo.appSecret
-      // let openIdUrl = ''
-      // let href = ''
-      try {
-        if (search.code) {
-          // 微信
-          const { result } = await getOpenId(appId, search.code)
-          commit(type.SET_OPENID, { mallDomain: state.mallInfo.mallDomain, openId: result.OPEN_ID })
-          resolve()
-        } else {
-          // href = `${location.protocol}//${location.host}${location.pathname}`
-          // if (appSecret) {
-          //   openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${href}?${Qs.stringify(search)}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
-          // } else {
-          //   openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${href}?${Qs.stringify(search)}&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${componentAppid}#wechat_redirect`
-          // }
-          location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
-        }
-      } catch (e) {
-        if (e.message.indexOf('code') > -1) { // 如果code无效重新登录
-          delete search.code
-          // href = `${location.protocol}//${location.host}${location.pathname}?${Qs.stringify(search)}`
-          if (loginCount >= 5) {
-            const res = confirm('微信登录失败，是否重试？')
-            if (res) {
-              window.location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
-            }
-            localStorage.setItem('loginCount', 0)
-            return
-          }
-          localStorage.setItem('loginCount', ++loginCount)
-        } else {
-          reject(e)
-        }
+  [type.GET_OPENID]: async ({ commit, dispatch, state }) => {
+    let search = Qs.parse(location.search.substring(1)) || {}
+    let appId = state.mallInfo.appid
+    let componentAppid = state.mallInfo.componentAppid
+    let appSecret = state.mallInfo.appSecret
+    try {
+      if (search.code) {
+        // 微信
+        const { result } = await getOpenId(appId, search.code)
+        commit(type.SET_OPENID, { mallDomain: state.mallInfo.mallDomain, openId: result.OPEN_ID })
+        return result
+      } else {
+        location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
       }
-    })
+    } catch (e) {
+      if (e.message.indexOf('code') > -1) {
+        MessageBox.confirm('微信登录失败，是否重试？')
+          .then(() => {
+            delete search.code
+            location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
+          })
+          .catch(() => {})
+      } else {
+        throw e
+      }
+    }
   },
   [type.LOGIN]: ({ commit, dispatch, state }) => {
     return new Promise(async (resolve, reject) => {
@@ -104,7 +88,7 @@ export default {
           // 且有code时不用刷新
           let cleanCache = Date.now()
           let search = location.search
-          if (search.indexOf('cleanCache') === -1 && search.indexOf('code') > -1) {
+          if (search.indexOf('cleanCache') === -1) {
             if (!search) {
               location.replace(location.href + '?cleanCache=' + cleanCache)
             } else {
@@ -115,13 +99,11 @@ export default {
           loginInfo = await login(state.openId)
         } else {
           // openid有问题时重新获取openid
-          dispatch(type.GET_OPENID)
-          return
+          await dispatch(type.GET_OPENID)
         }
         commit(type.SET_TOKEN, loginInfo.result)
         resolve(loginInfo)
       } catch (e) {
-        dispatch(type.GET_OPENID)
         reject(e)
       }
     })
@@ -188,6 +170,7 @@ export default {
       if (Number(refreshCount) > 3) {
         sessionStorage.setItem('refresh_count', 0)
         commit(type.LOG_OUT)
+        await dispatch(type.LOGIN)
         return
       }
       try {
@@ -199,11 +182,13 @@ export default {
           sessionStorage.setItem('refresh_count', 0)
         } else {
           commit(type.LOG_OUT)
+          await dispatch(type.LOGIN)
         }
         resolve()
       } catch (e) {
         // refresh_token失效
         commit(type.LOG_OUT)
+        await dispatch(type.LOGIN)
         reject(e)
       }
     })
