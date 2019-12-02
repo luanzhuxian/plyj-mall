@@ -42,5 +42,7 @@ export default {
   mallId: state => state.mallInfo.sequenceNbr,
   cartCount: state => state.cartCount,
   noticeStatus: state => state.aduitNotice.noticeStatus,
-  aduitStatus: state => state.aduitNotice.status
+  aduitStatus: state => state.aduitNotice.status,
+  isActivityAuth: state => state.isActivityAuth,
+  skinId: state => state.skinId
 }

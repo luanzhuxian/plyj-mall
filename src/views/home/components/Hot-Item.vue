@@ -1,11 +1,8 @@
 <template>
   <div :class="$style.hotItem">
-    <div :class="$style.top">
+    <slot name="title" v-if="$slots.title" />
+    <div :class="$style.top" v-else>
       <span :class="$style.title" v-text="moduleName" />
-      <!--<p :class="$style.more">
-        <span>查看更多</span>
-        <pl-svg name="right" color="#ccc" />
-      </p>-->
     </div>
 
     <div :class="$style.proBox">
@@ -157,12 +154,11 @@ export default {
 
 <style module lang="scss">
   .hot-item {
-    padding: 34px 24px 24px 24px;
-    background-color: #F4F5F9;
     .top {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      margin-bottom: 20px;
       .title {
         position: relative;
         font-size: 36px;
@@ -183,19 +179,10 @@ export default {
           animation: bgc-move 2s ease infinite;
         }
       }
-      .more {
-        font-size: 24px;
-        color: #999;
-        > svg {
-          width: 20px;
-          margin-left: 6px;
-          vertical-align: -2px;
-        }
-      }
     }
   }
   .pro-box {
-    margin-top: 20px;
+    // margin-top: 20px;
   }
   .pro-item {
     background-color: #fff;

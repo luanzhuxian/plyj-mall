@@ -97,5 +97,7 @@ export default {
   refundTypeMap: {
     '1': '仅退款',
     '2': '退款退货'
-  }
+  },
+  isActivityAuth: false, // 是否开通活动权限
+  skinId: null // 皮肤id
 }

@@ -41,7 +41,7 @@ import TemplateBaofa from './Template-Baofa.vue'
 import TemplateFanchang from './Template-Fanchang.vue'
 import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
-import { getCurrentTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
+import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
 import { getMyCouponList } from '../../apis/my-coupon'
 import { getCurrentActivity } from '../../apis/invitenewcomers'
 
@@ -109,7 +109,7 @@ export default {
   methods: {
     async getTemplate () {
       try {
-        const { result } = await getCurrentTemplate({ type: 2 })
+        const { result } = await getTemplate({ type: 2 })
         if (!result) {
           this.noFinish = true
           this.$alert('双十二主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')

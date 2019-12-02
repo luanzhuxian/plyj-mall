@@ -1,21 +1,59 @@
 <template>
-  <nav :class="$style.navbar">
+  <nav
+    :class="{
+      [$style.navbar]: true,
+      [$style.skinXmas]: skinId === 1,
+      [$style.skinNewYear]: skinId === 2
+    }"
+  >
     <router-link
       :class="$style.route"
       tag="div"
       :to="{ name: 'Home' }"
     >
-      <pl-icon type="svg" :name="homeActive ? 'icon-find-active' : 'icon-find'" width="68" />
+      <pl-icon
+        v-if="skinId === 0"
+        type="svg"
+        :name="homeActive ? 'icon-find-active' : 'icon-find'"
+        width="68"
+      />
+      <template v-if="~[1, 2].indexOf(skinId)">
+        <template v-if="skinId === 1">
+          <img src="../../views/home/skin/xmas/btn-home-selected.png" v-if="homeActive">
+          <img src="../../views/home/skin/xmas/btn-home.png" v-else>
+        </template>
+        <template v-if="skinId === 2">
+          <img src="../../views/home/skin/new-year/btn-home-selected.png" v-if="homeActive">
+          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-home.png" v-else>
+        </template>
+        <div :class="$style.tabName">首页</div>
+      </template>
     </router-link>
     <router-link
       :class="$style.route"
       tag="div"
       :to="{ name: 'Classify' }"
     >
-      <pl-icon type="svg" :name="classifyActive ? 'icon-classify-active' : 'icon-classify'" width="68" />
+      <pl-icon
+        v-if="skinId === 0"
+        type="svg"
+        :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
+        width="68"
+      />
+      <template v-if="~[1, 2].indexOf(skinId)">
+        <template v-if="skinId === 1">
+          <img src="../../views/home/skin/xmas/btn-classify-selected.png" v-if="classifyActive">
+          <img src="../../views/home/skin/xmas/btn-classify.png" v-else>
+        </template>
+        <template v-if="skinId === 2">
+          <img src="../../views/home/skin/new-year/btn-classify-selected.png" v-if="classifyActive">
+          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-classify.png" v-else>
+        </template>
+        <div :class="$style.tabName">分类</div>
+      </template>
     </router-link>
     <router-link
-      v-if="isNavBtnShow"
+      v-if="isActivityAuth"
       :class="$style.route"
       tag="div"
       :to="{ name: 'Activity' }"
@@ -27,14 +65,46 @@
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
-      <pl-icon type="svg" :name="yajiActive ? 'icon-cart-active' : 'icon-cart'" width="68" />
+      <pl-icon
+        v-if="skinId === 0"
+        type="svg"
+        :name="yajiActive ? 'icon-cart-active' : 'icon-cart'"
+        width="68"
+      />
+      <template v-if="~[1, 2].indexOf(skinId)">
+        <template v-if="skinId === 1">
+          <img src="../../views/home/skin/xmas/btn-shopping-chart-selected.png" v-if="yajiActive">
+          <img src="../../views/home/skin/xmas/btn-shopping-chart.png" v-else>
+        </template>
+        <template v-if="skinId === 2">
+          <img src="../../views/home/skin/new-year/btn-shopping-chart-selected.png" v-if="yajiActive">
+          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-shopping-chart.png" v-else>
+        </template>
+        <div :class="$style.tabName">购物车</div>
+      </template>
     </router-link>
     <router-link
       :class="$style.route"
       tag="div"
       :to="{ name: 'My' }"
     >
-      <pl-icon type="svg" :name="myActive ? 'icon-my-active' : 'icon-my1'" width="68" />
+      <pl-icon
+        v-if="skinId === 0"
+        type="svg"
+        :name="myActive ? 'icon-my-active' : 'icon-my1'"
+        width="68"
+      />
+      <template v-if="~[1, 2].indexOf(skinId)">
+        <template v-if="skinId === 1">
+          <img src="../../views/home/skin/xmas/btn-my-selected.png" v-if="myActive">
+          <img src="../../views/home/skin/xmas/btn-my.png" v-else>
+        </template>
+        <template v-if="skinId === 2">
+          <img src="../../views/home/skin/new-year/btn-my-selected.png" v-if="myActive">
+          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-my.png" v-else>
+        </template>
+        <div :class="$style.tabName">我的</div>
+      </template>
       <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
     </router-link>
   </nav>
@@ -45,9 +115,6 @@ import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
 export default {
   name: 'Navbar',
-  props: {
-    isNavBtnShow: Boolean
-  },
   data () {
     this.timer = 0
     return {
@@ -61,18 +128,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus']),
-    myActive: function () {
-      return this.$route.matched.some(val => val.name === 'My')
-    },
-    yajiActive: function () {
-      return this.$route.path.indexOf('cart') > -1
+    ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus', 'isActivityAuth', 'skinId']),
+    homeActive: function () {
+      return this.$route.matched.some(val => val.name === 'Home')
     },
     classifyActive: function () {
       return this.$route.matched.some(val => val.name === 'Classify')
     },
-    homeActive: function () {
-      return this.$route.matched.some(val => val.name === 'Home')
+    yajiActive: function () {
+      return this.$route.path.indexOf('cart') > -1
+    },
+    myActive: function () {
+      return this.$route.matched.some(val => val.name === 'My')
     }
   },
   watch: {
@@ -112,8 +179,8 @@ export default {
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
-  height: 88px;
   font-size: 20px;
+  height: 88px;
   .alertMessage{
     background-color: #D2524C;
     width: 10px;
@@ -128,6 +195,48 @@ export default {
   margin-bottom: 10px;
   width: 72px;
   // height: 72px;
+}
+
+/* 皮肤 */
+.skin-xmas,
+.skin-new-year {
+  height: 119px !important;
+  bottom: -1px !important;
+  overflow: hidden;
+  .route {
+    box-sizing: border-box;
+    justify-content: flex-end !important;
+    height: 119px !important;
+    padding-bottom: 12px;
+  }
+  .tab-name {
+    margin-top: 7px;
+    line-height: 18px;
+    font-size: 18px;
+    font-family: Adobe Heiti Std;
+    color: #242424;
+    text-align: center;
+  }
+}
+.skin-xmas {
+  background: url("../../views/home/skin/xmas/tabbar-bg.png") no-repeat center;
+  background-size: 100%;
+}
+.skin-new-year {
+  background: url("../../views/home/skin/new-year/tabbar-bg.png") no-repeat center;
+  background-size: 100%;
+  .route {
+    width: 95px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .tab {
+    width: 79px
+  }
+  .tab-name {
+    font-size: 26px;
+  }
 }
 </style>
 <style>

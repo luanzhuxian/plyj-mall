@@ -1,6 +1,7 @@
 <template>
   <div :class="$style.best">
-    <div :class="$style.top">
+    <slot name="title" v-if="$slots.title" />
+    <div :class="$style.top" v-else>
       <span :class="$style.title" v-text="data.moduleName" />
     </div>
     <ul :class="$style.proList">
@@ -91,14 +92,11 @@ export default {
 </script>
 
 <style module lang="scss">
-  .best {
-    padding: 24px;
-    background-color: #f4f5f9;
-  }
   .top {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    margin-bottom: 20px;
     .title {
       position: relative;
       font-size: 36px;
@@ -109,7 +107,7 @@ export default {
     display: grid;
     grid-template-columns: 340px 340px;
     grid-gap: 22px;
-    margin-top: 20px;
+    // margin-top: 20px;
   }
   .pro-item {
     position: relative;
