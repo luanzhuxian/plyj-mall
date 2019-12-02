@@ -33,8 +33,9 @@
               :instruction="item.brief"
               :use-start-time="item.useStartTime"
               :use-end-time="item.useEndTime"
-              :status="item.canReceive?'':'已领取'"
               :receive-count="item.count"
+              :coupon-type="item.couponType"
+              :is-over-max="!item.canReceive"
               @couponClick="couponClick(item.id)"
             />
           </template>
@@ -95,14 +96,8 @@ export default {
         throw e
       }
     },
-    formatCouponList (list) {
-      list.map(item => {
-        item.status = item.canReceive ? '' : '已领取'
-      })
-      return list
-    },
     refreshHandler (list) {
-      this.couponList = this.formatCouponList(list)
+      this.couponList = list
     }
   }
 }

@@ -113,6 +113,8 @@
                 :subtract="item.amount"
                 :amount="item.amount"
                 :instruction="item.couponName"
+                :coupon-type="item.couponType"
+                :is-over-max="!item.canReceive"
                 @couponClick="couponClick(item.couponId)"
                 v-if="item.show"
               />

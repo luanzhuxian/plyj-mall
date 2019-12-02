@@ -478,7 +478,9 @@
               :receive-count="item.count"
               :can-go-classify="false"
               is-available-status
+              :is-over-max="!item.canReceive"
               @couponClick="couponClick(item)"
+              :coupon-type="item.couponType"
             />
           </template>
         </div>

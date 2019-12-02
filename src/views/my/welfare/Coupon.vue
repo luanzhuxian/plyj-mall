@@ -9,11 +9,8 @@
       </span>
     </div>
     <div :class="$style.coupons">
-      <div :class="$style.couponsHeader">
-        <div>
-          <b>可用优惠券</b>
-          <span>  ({{ couponTotal }}张)</span>
-        </div>
+      <div :class="$style.tabMenu">
+        <tab :tabs="menuArray" :active-id.sync="activeMenuId" :color9="true" />
         <button @click="isManagementState = !isManagementState">管理</button>
       </div>
       <div :class="$style.couponsView">
@@ -48,6 +45,7 @@
                 :use-start-time="item.useStartTime"
                 :use-end-time="item.useEndTime"
                 :is-available-status="true"
+                :coupon-type="item.couponType"
               />
             </div>
           </template>
@@ -60,7 +58,7 @@
           优惠劵历史记录
         </router-link>
         <router-link :to="{ name: 'CouponCenter'}">
-          领更多好券
+          福利中心 领好券
         </router-link>
       </div>
       <button v-if="isManagementState" @click="deleteCoupon">删除</button>
@@ -69,6 +67,7 @@
 </template>
 
 <script>
+import tab from '../../../components/penglai-ui/Tab'
 import CouponItem from '../../../components/item/Coupon-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
 import { getMyCouponList, deleteCouponList } from '../../../apis/my-coupon'
@@ -77,11 +76,14 @@ export default {
   name: 'MyCoupon',
   components: {
     CouponItem,
-    LoadMore
+    LoadMore,
+    tab
   },
   data () {
     return {
       hasPackages: false, // TODO.暂时去除
+      menuArray: [{ name: '全部', id: '' }, { name: '满减券', id: 1 }, { name: '品类券', id: 2 }],
+      activeMenuId: '',
       isManagementState: false,
       couponList: [],
       couponTotal: 0,
@@ -89,7 +91,8 @@ export default {
       form: {
         current: 1,
         size: 10,
-        status: 0
+        status: 0,
+        couponType: ''
       }
     }
   },
@@ -144,6 +147,11 @@ export default {
   watch: {
     isManagementState: function (val) {
       if (val) this.couponList = this.formatCouponList(this.couponList)
+    },
+    activeMenuId (val) {
+      this.isManagementState = false
+      this.form.couponType = val
+      this.$refs.loadMore.refresh()
     }
   }
 }
@@ -178,29 +186,22 @@ export default {
   }
 
   .coupons {
-    .coupons-header {
-      font-size: 32px;
-      font-weight: 800;
-      line-height: 44px;
-      color: #333;
-      margin: 40px 10px;
-
-      div {
-        float: left;
-      }
+    .tab-menu {
+      display: flex;
+      background-color: #fff;
+      padding-right: 24px;
 
       button {
-        float: right;
-      }
-
-      button:after {
-        clear: both;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 44px;
+        color: #333;
+        margin-left: auto;
       }
     }
-
     .coupons-view {
       width: 100%;
-      padding-top: 80px;
+      padding-top: 16px;
       margin-bottom: 100px;
       .no-coupon-icon {
         display: flex;

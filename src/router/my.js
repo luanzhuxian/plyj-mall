@@ -104,6 +104,15 @@ export default [
     }
   },
   {
+    path: '/my/welfare/couponActivity/:couponType?/:couponId?',
+    name: 'CouponActivity',
+    props: true,
+    component: () => import('../views/my/welfare/Coupon-Activity.vue'),
+    meta: {
+      title: '满减活动'
+    }
+  },
+  {
     path: '/my/welfare/historyCoupon',
     name: 'HistoryCoupon',
     component: () => import('../views/my/welfare/History-Coupon.vue'),

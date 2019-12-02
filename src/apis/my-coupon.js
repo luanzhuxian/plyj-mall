@@ -36,7 +36,7 @@ export const receiveCouponForLive = params => axios.post(`/apis/v1/coupon/live/a
  * 获取已领取优惠券列表
  * @returns {Promise<AxiosResponse<T>>}
  */
-export const getMyCouponList = ({ current, size, status }) => axios.get(`/apis/v1/coupon/me/list?current=${current}&size=${size}&status=${status}`)
+export const getMyCouponList = ({ current, size, status, couponType = '' }) => axios.get(`/apis/v1/coupon/me/list?current=${current}&size=${size}&status=${status}&couponType=${couponType}`)
 /**
  * 删除优惠券
  * @returns {Promise<AxiosResponse<T>>}

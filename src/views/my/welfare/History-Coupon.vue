@@ -36,6 +36,7 @@
                 :instruction="item.brief"
                 :use-start-time="item.useStartTime"
                 :use-end-time="item.useEndTime"
+                :coupon-type="item.couponType"
                 status="已使用"
               />
             </div>
@@ -43,7 +44,7 @@
         </load-more>
         <button v-if="usedCouponList.length === 0" :class="$style.receiveMore">
           <router-link :to="{ name: 'CouponCenter'}">
-            领更多好券
+            福利中心 领好券
           </router-link>
         </button>
       </div>
@@ -78,6 +79,7 @@
                 :instruction="item.brief"
                 :use-start-time="item.useStartTime"
                 :use-end-time="item.useEndTime"
+                :coupon-type="item.couponType"
                 status="已过期"
               />
             </div>
