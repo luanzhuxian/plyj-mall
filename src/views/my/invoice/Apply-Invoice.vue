@@ -4,8 +4,7 @@
       <div :class="$style.top">
         <pl-svg
           :class="$style.warning"
-          name="warning2"
-          color="#1890FF"
+          name="icon-warning2"
         />
         <p v-text="type === 1 ? '自营产品订单完成后24小时内开具，点击“我的订单”查看。' : '发票将会与商品同时邮寄，单商品仅支持一次开票服务，请确保填写开票信息真实有效。'" />
       </div>
@@ -82,7 +81,7 @@
           />
           <pl-svg
             slot="suffix"
-            name="warning"
+            name="icon-warning"
             color="#FE7700"
             style="width: 45px; margin: 0 36px;"
             @click="showInvioceNum = true"
@@ -111,15 +110,14 @@
           </pl-radio>
         </pl-form-item>
       </pl-form>
-
       <button
         :class="$style.addInvoice"
-        v-if="invoiceList.length > 0 && type === 2"
         @click="addInfo"
+        v-if="invoiceList.length > 0 && type === 2"
       >
         <pl-svg
-          name="add"
-          color="#bfbfbf"
+          name="icon-add"
+          fill="#bfbfbf"
         />
         <span>添加信息</span>
       </button>
@@ -151,14 +149,13 @@
             >
             <pl-svg
               :class="$style.selectIcon"
-              name="success"
-              :color="isSelected(prod) ? '#F2B036' : '#ccc'"
+              name="icon-success"
+              :fill="isSelected(prod) ? '#F2B036' : '#ccc'"
             />
           </label>
         </li>
       </ul>
     </div>
-
     <pl-button
       type="warning"
       size="huge"

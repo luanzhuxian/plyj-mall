@@ -22,7 +22,7 @@
       >
         <pl-svg
           :class="$style.doubleArrow"
-          name="double-arrow"
+          name="icon-double-arrow"
         />
         <div :class="$style.tip">
           <p v-text="showBar ? '收起' : '快速'" />
@@ -36,14 +36,14 @@
         active-class="active"
         :to="{name: 'Home'}"
       >
-        <pl-svg name="find" />
+        <pl-svg name="icon-find" />
       </router-link>
       <router-link
         tag="li"
         active-class="active"
         :to="{name: 'Classify'}"
       >
-        <pl-svg name="classify" />
+        <pl-svg name="icon-classify" />
       </router-link>
       <router-link
         tag="li"
@@ -52,7 +52,7 @@
       >
         <pl-svg
           :class="$style.cart"
-          name="cart"
+          name="icon-cart"
         />
       </router-link>
       <router-link
@@ -60,7 +60,7 @@
         active-class="active"
         :to="{name: 'My'}"
       >
-        <pl-svg name="my" />
+        <pl-svg name="icon-my" />
       </router-link>
     </ul>
   </div>
@@ -125,7 +125,8 @@ export default {
       width: 44px;
     }
     .cart {
-      width: 64px !important;
+      width: 72px !important;
+      height: 76px;
     }
   }
   .on-off {

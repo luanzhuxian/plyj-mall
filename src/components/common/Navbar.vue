@@ -5,14 +5,14 @@
       tag="div"
       :to="{ name: 'Home' }"
     >
-      <pl-icon type="svg" :name="homeActive ? 'icon-find-active' : 'icon-find'" width="68" />
+      <pl-svg :name="homeActive ? 'icon-find-active' : 'icon-find'" width="44" height="68" />
     </router-link>
     <router-link
       :class="$style.route"
       tag="div"
       :to="{ name: 'Classify' }"
     >
-      <pl-icon type="svg" :name="classifyActive ? 'icon-classify-active' : 'icon-classify'" width="68" />
+      <pl-svg :name="classifyActive ? 'icon-classify-active' : 'icon-classify'" width="44" height="67" />
     </router-link>
     <router-link
       v-if="isNavBtnShow"
@@ -27,14 +27,14 @@
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
-      <pl-icon type="svg" :name="yajiActive ? 'icon-cart-active' : 'icon-cart'" width="68" />
+      <pl-svg :name="yajiActive ? 'icon-cart-active' : 'icon-cart'" width="60" height="72" />
     </router-link>
     <router-link
       :class="$style.route"
       tag="div"
       :to="{ name: 'My' }"
     >
-      <pl-icon type="svg" :name="myActive ? 'icon-my-active' : 'icon-my1'" width="68" />
+      <pl-svg :name="myActive ? 'icon-my-active' : 'icon-my'" width="44" height="72" />
       <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
     </router-link>
   </nav>

@@ -15,6 +15,7 @@ import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
 import './assets/css/quill.css'
 import PlIcon from './components/common/Pl-Icon.vue'
+import PlSvg from './components/common/Pl-Svg.vue'
 import { errorlog } from './apis/base-api'
 Vue.use(VueLazyload, {
   error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
@@ -24,6 +25,7 @@ Vue.use(VueLazyload, {
 Vue.use(animated)
 Vue.use(VueClipboard)
 Vue.component('pl-icon', PlIcon)
+Vue.component('pl-svg', PlSvg)
 // Vue.use(SvgIcon, {
 //   tagName: 'svgicon'
 // })
