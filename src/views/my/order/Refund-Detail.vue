@@ -303,7 +303,7 @@
             <pl-button
               size="larger"
               background-color="#387AF6"
-              prefix-icon="mobile-blue"
+              prefix-icon="icon-mobile-blue"
               round
             >
               立即拨打

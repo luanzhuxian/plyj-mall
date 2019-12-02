@@ -46,7 +46,7 @@
       @refresh="refreshHandler"
       @more="more"
       no-content-tip="暂无提现记录"
-      icon="no-content2"
+      icon="icon-no-content2"
     >
       <template>
         <ul :class="$style.monthList">

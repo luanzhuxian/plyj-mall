@@ -6,7 +6,7 @@
       ref="loadMore"
       @more="more"
       @refresh="refreshHandler"
-      icon="no-content2"
+      icon="icon-no-content2"
     >
       <template>
         <ul class="mt-40">

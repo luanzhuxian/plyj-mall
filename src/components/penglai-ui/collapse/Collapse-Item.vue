@@ -34,6 +34,8 @@
         v-if="!$slots['icon-right'] && !disabled"
         class="pl-collapse-item__icon--right"
         :name="iconRight.name"
+        width="24"
+        height="24"
         fill="#CCC"
       />
       <slot

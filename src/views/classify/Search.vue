@@ -22,7 +22,7 @@
         v-show="seached"
         :form="form"
         :request-methods="searchProduct"
-        icon="no-search"
+        icon="icon-no-search"
         no-content-tip="抱歉，没有相关商品"
         @refresh="refreshHandler"
         @more="refreshHandler"

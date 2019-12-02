@@ -10,7 +10,7 @@
     <NoContent
       v-else
       text="暂无发票信息记录"
-      icon="no-content2"
+      icon="icon-no-content2"
     />
     <router-link
       tag="div"

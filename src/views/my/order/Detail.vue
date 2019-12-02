@@ -237,7 +237,7 @@
       <pl-fields
         size="middle"
         text="学员信息"
-        icon="name-card"
+        icon="icon-name-card"
         :icon-gap="12"
         can-collapse
         show-right-icon
@@ -466,7 +466,7 @@
             v-else
             size="larger"
             background-color="#387AF6"
-            prefix-icon="mobile-blue"
+            prefix-icon="icon-mobile-blue"
             round
             data-i="123"
             @click="showContact = true; isPopupShow = false;"

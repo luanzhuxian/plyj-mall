@@ -130,7 +130,7 @@
         text="发票内容"
         :icon-width="40"
         right-text-weight="bold"
-        icon="icon-warning1"
+        icon="icon-warning2"
         icon-position="right"
         icon-color="#999"
         :right-text="content"
