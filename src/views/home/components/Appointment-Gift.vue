@@ -5,9 +5,9 @@
       :class="$style.appointmentGift"
       @click="yuyueNow"
     >
-      <pl-icon :class="$style.giftIcon" name="icon-gift" type="svg" width="70" height="50" />
+      <pl-svg :class="$style.giftIcon" name="icon-gift" width="70" height="50" />
       <div :class="$style.left">
-        <pl-icon name="icon-yuyueli" type="svg" width="94" height="50" />
+        <pl-svg name="icon-yuyueli" width="94" height="50" />
       </div>
       <div :class="$style.right">
         <swiper ref="swiper" :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'">
@@ -17,7 +17,7 @@
         </swiper>
         <div :class="$style.now">
           <span>立即预约</span>
-          <pl-icon name="icon-arrow-right" :size="25" color="#7E6E4D" />
+          <pl-svg name="icon-arrow-right" width="25" height="20" fill="#7E6E4D" />
         </div>
       </div>
     </div>
@@ -36,7 +36,7 @@
           <img :src="logoUrl" alt="">
         </div>
         <div :class="$style.right">
-          <pl-icon name="icon-arrow-right" :size="30" color="#ccc" />
+          <pl-svg name="icon-arrow-right" :height="30" fill="#ccc" />
         </div>
       </div>
       <div :class="$style.bottom" v-if="PINGXUAN.show === 1 && mallBrandingRequestModels.length">
@@ -58,9 +58,9 @@
 
     <pl-popup :show.sync="showPop" title="在线预约">
       <div :class="$style.popContent">
-        <pl-icon :class="$style.giftIcon" name="icon-gift" type="svg" width="70" height="50" />
+        <pl-svg :class="$style.giftIcon" name="icon-gift" width="70" height="50" />
         <div :class="$style.right">
-          <pl-icon name="icon-yuyueli" type="svg" width="94" height="50" />
+          <pl-svg name="icon-yuyueli" width="94" height="50" />
         </div>
         <ul :class="$style.left">
           <li
@@ -74,16 +74,16 @@
         <div class="fz-26 gray-3">预约后您的私人顾问将会电话联系您</div>
         <label>
           <input v-model="appointmentname" type="text" placeholder="请输入预约姓名">
-          <pl-icon v-show="appointmentname" @click="appointmentname = ''" :class="$style.clean" name="icon-close1" color="#ccc" size="30" />
+          <pl-svg v-show="appointmentname" @click="appointmentname = ''" :class="$style.clean" name="icon-close1" fill="#ccc" height="30" />
         </label>
         <label>
           <input v-model="appointmentMobile" type="text" placeholder="请输入预约手机">
-          <pl-icon v-show="appointmentMobile" @click="appointmentMobile = ''" :class="$style.clean" name="icon-close1" color="#ccc" size="30" />
+          <pl-svg v-show="appointmentMobile" @click="appointmentMobile = ''" :class="$style.clean" name="icon-close1" fill="#ccc" height="30" />
         </label>
         <div :class="$style.tip">
-          <pl-icon name="icon-safe" type="svg" width="25" height="25" />
+          <pl-svg name="icon-safe" width="25" height="25" />
           <span>无强行推销</span>
-          <pl-icon name="icon-safe" type="svg" width="25" height="25" />
+          <pl-svg name="icon-safe" width="25" height="25" />
           <span>不泄露用户手机号码</span>
         </div>
         <pl-button :loading="loading" size="large" type="warning" @click.prevent="confirm">
@@ -352,9 +352,6 @@ export default {
     align-items: center;
     padding: 32px 64px;
     background-color: #feefd1;
-    .gift-icon {
-      width: 100px;
-    }
     > .right {
       position: relative;
       display: inline-flex;
