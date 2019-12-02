@@ -6,6 +6,7 @@
       width: width ? width / 7.5 + 'vw' : null,
       height: height ? height / 7.5 + 'vw' : null,
     }"
+    @click="clickHandler"
   >
     <use :xlink:href="'#' + name" />
   </svg>
@@ -61,7 +62,7 @@ export default {
     }
   },
   methods: {
-    handleClick (e) {
+    clickHandler (e) {
       this.$emit('click', e)
     }
   }
