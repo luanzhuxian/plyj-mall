@@ -219,8 +219,6 @@ export default {
 
 <style module lang="scss">
   .appointment {
-    padding: 20px 24px;
-    background-color: #f4f5f9;
     > .appointment-gift {
       position: relative;
       display: flex;

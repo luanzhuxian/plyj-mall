@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.bestRecommend">
-    <div :class="$style.title" v-if="!$slots.title">
+    <slot name="title" v-if="$slots.title" />
+    <div :class="$style.title" v-else>
       <span>-</span>
       <span v-text="data.moduleName" />
       <span>-</span>
     </div>
-    <slot name="title" v-else />
     <ul>
       <template v-for="(item, i) of data.values">
         <li

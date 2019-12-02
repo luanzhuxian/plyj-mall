@@ -32,7 +32,7 @@
           <div :class="$style.getNow">
             <!-- 根据是否可以去使用，目前只有我的卡券+提交订单显示'去使用'， 其他显示'立即领取' -->
             <span v-if="!isAvailableStatus">
-              <!-- 应当是能够显示立即领取的地方，都可能达到领取上线 -->
+              <!-- 应当是能够显示立即领取的地方，都可能达到领取上限 -->
               <span v-if="!isOverMax">
                 立即
                 <br>
@@ -42,7 +42,7 @@
                 <span>
                   已达到
                   <br>
-                  领用上线
+                  领用上限
                 </span>
               </span>
             </span>
@@ -56,7 +56,7 @@
             <br>
             <!--TODO.当前不显用次数 <span v-if="!isAvailableStatus" :class="$style.receiveCount">{{ receiveCount ? `(${receiveCount}次)` : '' }}</span>-->
           </div>
-          <pl-icon v-if="!isOverMax" name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
+          <pl-icon v-if="isAvailableStatus || (!isAvailableStatus && !isOverMax)" name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
         </div>
       </div>
     </div>
@@ -88,6 +88,10 @@ export default {
       default: ''
     },
     id: {
+      type: String,
+      default: ''
+    },
+    couponId: { // 优惠券本身的Id
       type: String,
       default: ''
     },
@@ -158,6 +162,7 @@ export default {
           name: 'CouponActivity',
           params: { id: this.id, couponType: this.couponType },
           query: {
+            couponId: this.couponId,
             name: this.couponName,
             amount: this.amount,
             useLimitAmount: this.full,
@@ -216,6 +221,7 @@ export default {
     > .wrap {
       position: absolute;
       top: 20px;
+      width: 100%;
       overflow: hidden;
       > .main {
         width: 100%;
@@ -230,7 +236,7 @@ export default {
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 62px 0 24px 32px;
+    padding: 48px 0 24px 32px;
   }
   .left-top {
     display: flex;
@@ -304,6 +310,7 @@ export default {
     justify-content: center;
     align-items: center;
     width: 154px;
+    margin-top: -48px;
     > .get-now {
       font-size: 32px;
       color: #fff;

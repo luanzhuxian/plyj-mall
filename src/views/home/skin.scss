@@ -1,0 +1,150 @@
+.skin-xmas {
+  background-color: #C81819 !important;
+  .container {
+    padding-top: 58px;
+    background: url("./skin/xmas/top.png") no-repeat center top !important;
+    background-size: 100% auto !important;
+  }
+  .search {
+    &::before {
+      position: absolute;
+      top: -10px;
+      left: 6px;
+      content: '';
+      width: 80px;
+      height: 96px;
+      background: url("./skin/xmas/hat.png") no-repeat center;
+      background-size: 100%;
+      z-index: 999;
+    }
+  }
+  .footer {
+    position: relative;
+    color: #FFFFFF !important;
+    &::before {
+      position: absolute;
+      bottom: 10px;
+      left: 80px;
+      content: '';
+      width: 60px;
+      height: 80px;
+      background: url("./skin/xmas/decoration.png") no-repeat center;
+      background-size: 100%;
+    }
+    &::after {
+      position: absolute;
+      bottom: 20px;
+      right: 80px;
+      content: '';
+      width: 44px;
+      height: 70px;
+      background: url("./skin/xmas/decoration.png") no-repeat center;
+      background-size: 100%;
+    }
+  }
+  .title-bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 -24px;
+    height: 126px;
+    background: url("./skin/xmas/title-bg.png") no-repeat center;
+    background-size: 100%;
+    .title {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 270px;
+      height: 66px;
+      background: #23814D;
+      border: 3px solid #FFFFFF;
+      border-radius: 26px;
+      font-size: 36px;
+      font-family: Adobe Heiti Std;
+      color: #FFFFFF;
+      &::before {
+        position: absolute;
+        left: -33px;
+        bottom: -6px;
+        content: '';
+        width: 80px;
+        height: 96px;
+        background: url("./skin/xmas/hat.png") no-repeat center;
+        background-size: 100%;
+      }
+    }
+  }
+}
+
+.skin-new-year {
+  background-color: #AE1A10 !important;
+  .container {
+    padding-top: 52px;
+    background: url("./skin/new-year/top.png") no-repeat center top !important;
+    background-size: 100% auto !important;
+  }
+  .search {
+    padding: 0 92px;
+  }
+  .footer {
+    color: #FFFFFF !important;
+    background: url("./skin/new-year/bottom-bg.png") no-repeat center !important;
+    background-size: 100% !important;  
+  }
+  .title-bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 -24px;
+    height: 126px;
+    background: url("./skin/new-year/title-bg.png") no-repeat center;
+    background-size: 100%;
+    .character-bg {
+      position: relative;
+      top: 4px;
+      width: 78px;
+      height: 80px;
+      background: url("./skin/new-year/character-bg.png") no-repeat center;
+      background-size: 100%;
+      margin: 0 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 42px;
+      font-family: FZQKBYSJW;
+      color: #C1181F;
+    }
+  }
+}
+
+/*  common */
+.banner {
+  padding: 0 24px 0 24px !important;
+  background: transparent !important;
+}
+.adv {
+  background: transparent !important;
+}
+.broadcast,
+.activity {
+  background: transparent !important;
+}
+.hot-item {
+  padding-top: 0 !important;
+  background: transparent !important;
+}
+.appointment {
+  padding-bottom: 0 !important;
+  background: transparent !important;
+}
+.best {
+  padding: 0 24px !important;
+  background: transparent !important;
+}
+.recommend {
+  background: transparent !important;
+}
+.shuang12 {
+  background: transparent !important;
+}

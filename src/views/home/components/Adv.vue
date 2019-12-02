@@ -55,9 +55,7 @@ export default {
 
 <style module lang="scss">
   .adv {
-    padding: 20px 24px 0;
     height: 200px;
-    background-color: #F4F5F9;
     img {
       width: 100%;
       height: 100%;

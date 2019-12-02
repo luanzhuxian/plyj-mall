@@ -25,6 +25,7 @@
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 // import { wasRegist } from '../../../apis/wwec'
 import CountDown from '../../../components/product/Count-Down.vue'
+
 export default {
   name: 'Banner',
   components: {
@@ -85,9 +86,6 @@ export default {
 
 <style module lang="scss">
   .banner {
-    padding: 24px 24px 32px 24px;
-    background-color: #fff;
-    border-radius: 20px 20px 0 0;
     .container {
       border-radius: 20px;
       overflow: hidden;

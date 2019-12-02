@@ -17,6 +17,7 @@ import {
 import {
   getAduitNotice
 } from '../apis/broker-manager'
+import { getTemplate } from '../apis/home'
 import {
   DelayExec,
   loadImage
@@ -212,6 +213,22 @@ export default {
       const { result } = await getList(params)
       commit(type.STUDENTS, result.records)
       return result.records
+    } catch (e) {
+      throw e
+    }
+  },
+  [type.CHECK_ACTIVITY_AUTH]: async ({ commit }, params) => {
+    try {
+      const { result } = await getTemplate({ type: 2 })
+      commit(type.CHECK_ACTIVITY_AUTH, !!result)
+    } catch (e) {
+      throw e
+    }
+  },
+  [type.GET_SKIN_ID]: async ({ commit }, params) => {
+    try {
+      const { result } = await getTemplate({ type: 1 })
+      commit(type.GET_SKIN_ID, result.skinStatus)
     } catch (e) {
       throw e
     }

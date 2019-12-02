@@ -78,5 +78,11 @@ export default {
   },
   [type.STUDENTS] (state, payload) {
     state.students = payload
+  },
+  [type.CHECK_ACTIVITY_AUTH] (state, payload) {
+    state.isActivityAuth = payload
+  },
+  [type.GET_SKIN_ID] (state, payload) {
+    state.skinId = payload || 0
   }
 }

@@ -4,7 +4,7 @@
       <router-view v-if="logined" />
     </keep-alive>
 
-    <navbar v-if="showNavbar.indexOf(routeName) > -1" :is-nav-btn-show="isNavBtnShow" />
+    <navbar v-if="showNavbar.indexOf(routeName) > -1" />
     <QuickNavbar v-else />
   </div>
 </template>
@@ -13,9 +13,8 @@
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN } from './store/mutation-type'
+import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN, CHECK_ACTIVITY_AUTH, GET_SKIN_ID } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
-import { getCurrentTemplate } from './apis/home'
 import { isIOS } from './assets/js/util'
 import qs from 'qs'
 import Cookie from './assets/js/storage-cookie'
@@ -56,8 +55,7 @@ export default {
         'LiveRoom',
         'InviteNewcomers',
         'Newcomers'
-      ],
-      isNavBtnShow: false
+      ]
     }
   },
   computed: {
@@ -99,22 +97,10 @@ export default {
         await this.getUserInfo()
       }
       this.logined = true
-      // 是否显示双十二主会场tab入口
-      getCurrentTemplate({ type: 2 }).then(({ result }) => {
-        this.isNavBtnShow = !!result
-      })
-      // 尝试清除微信缓存
-      // 必须放在微信登录之后，否则会影响微信登录
-      // 且有code时不用刷新
-      // let cleanCache = Date.now()
-      // let search = location.search
-      // if (search.indexOf('cleanCache') === -1) {
-      //   if (!search) {
-      //     location.replace(location.href + '?cleanCache=' + cleanCache)
-      //   } else {
-      //     location.replace(location.href + '&cleanCache=' + cleanCache)
-      //   }
-      // }
+      // 是否开通活动权限
+      this.checkActivityAuth()
+      // 获取皮肤id
+      this.getSkinId()
     } catch (e) {
       throw e
     }
@@ -127,7 +113,9 @@ export default {
     ...mapActions({
       getUserInfo: USER_INFO,
       getMallInfo: GET_MALL_INFO,
-      login: LOGIN
+      login: LOGIN,
+      checkActivityAuth: CHECK_ACTIVITY_AUTH,
+      getSkinId: GET_SKIN_ID
     }),
     share (willHide = []) {
       share({

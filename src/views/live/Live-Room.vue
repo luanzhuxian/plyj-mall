@@ -238,7 +238,6 @@ import {
   loadImage,
   createText
 } from '../../assets/js/util'
-import { getCurrentTemplate } from '../../apis/home'
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 export default {
   name: 'LiveRoom',
@@ -282,7 +281,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userName', 'avatar', 'userId', 'opendId', 'roleCode', 'appId'])
+    ...mapGetters(['userName', 'avatar', 'userId', 'opendId', 'roleCode', 'appId', 'isActivityAuth'])
   },
   watch: {
     soundValue (val) {
@@ -570,17 +569,11 @@ export default {
       }
     },
     cancelPay () {
-      getCurrentTemplate({ type: 2 })
-        .then(res => {
-          if (res) {
-            this.$router.push({ name: 'Activity' })
-          } else {
-            this.$router.push({ name: 'Home' })
-          }
-        })
-        .catch(() => {
-          this.$router.push({ name: 'Home' })
-        })
+      if (this.isActivityAuth) {
+        this.$router.push({ name: 'Activity' })
+      } else {
+        this.$router.push({ name: 'Home' })
+      }
     },
     async share () {
       if (this.poster) {

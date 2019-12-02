@@ -7,6 +7,7 @@
     <TemplateB
       v-if="~[2, 3, 4].indexOf(type)"
       :type="type"
+      :skin-id="skinId"
       :data="modules"
     />
     <div :class="$style.skeleton" v-else>
@@ -29,7 +30,7 @@ import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
 import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
-import { getTemplate, getLiveInfo, getJianxueInfo, getCurrentTemplate } from '../../apis/home'
+import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
 import { getCurrentActivity } from '../../apis/invitenewcomers'
 
 export default {
@@ -50,6 +51,7 @@ export default {
     return {
       loaded: false,
       type: 0,
+      skinId: 0,
       modules: {
         BANNER: null,
         ADV: null,
@@ -74,11 +76,6 @@ export default {
   },
   async created () {
     try {
-      getCurrentTemplate({ type: 2 }).then(({ result }) => {
-        if (result && !this.$router.currentRoute.meta.from) {
-          this.$router.push({ name: 'Activity' })
-        }
-      })
       this.getTemplate()
       const [{ result: live }, { result: invitingEvent }, { result: jxEvent }] = await Promise.all([getLiveInfo(), getCurrentActivity(), getJianxueInfo()])
       this.liveInfo = live || {}
@@ -89,7 +86,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId'])
+    ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth'])
+  },
+  watch: {
+    isActivityAuth: {
+      handler (val) {
+        if (val === true && !this.$router.currentRoute.meta.from) {
+          this.$router.push({ name: 'Activity' })
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
     async getTemplate () {
@@ -103,7 +110,7 @@ export default {
             })
           return
         }
-        let { type, moduleModels } = result
+        let { type, skinStatus, moduleModels } = result
         if (type === 1) {
           const bannerList = moduleModels.filter(module => module.moduleType === 1)
           const prodList = moduleModels.filter(module => module.moduleType === 2)
@@ -139,6 +146,7 @@ export default {
           this.modules.RECOMMEND = moduleModels[6]
         }
         this.type = type
+        this.skinId = skinStatus
         this.loaded = true
       } catch (e) {
         throw e

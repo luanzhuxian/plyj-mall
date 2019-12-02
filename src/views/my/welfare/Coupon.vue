@@ -46,6 +46,7 @@
                 :use-end-time="item.useEndTime"
                 :is-available-status="true"
                 :coupon-type="item.couponType"
+                :coupon-id="item.coupon"
               />
             </div>
           </template>
