@@ -49,7 +49,7 @@
       height: 96px;
       background: url("./skin/xmas/hat.png") no-repeat center;
       background-size: 100%;
-      z-index: 999;
+      z-index: 1;
     }
   }
   .footer {
@@ -106,6 +106,7 @@
         height: 96px;
         background: url("./skin/xmas/hat.png") no-repeat center;
         background-size: 100%;
+        z-index: 1;
       }
     }
   }
