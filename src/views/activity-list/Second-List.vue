@@ -108,8 +108,7 @@ export default {
     async getList () {
       try {
         let { result } = await secondActivityPage()
-        result = Array.from(result)
-        if (result.every(item => item.length)) {
+        if (!result[0].length && !result[1].length) {
           this.$alert({
             message: '暂无数据',
             viceMessage: '逛逛主会场吧~',
