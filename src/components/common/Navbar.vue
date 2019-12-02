@@ -186,6 +186,7 @@ export default {
   width: 100%;
   background-color: #fff;
   z-index: 2;
+  overflow: hidden;
 }
 .route {
   display: inline-flex;
@@ -212,8 +213,6 @@ export default {
 /* 皮肤 */
 .skin-xmas,
 .skin-new-year {
-  bottom: -1px !important;
-  overflow: hidden;
   .route {
     box-sizing: border-box;
     justify-content: flex-end !important;
