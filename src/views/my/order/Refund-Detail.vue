@@ -21,7 +21,7 @@
       >
         <pl-svg
           :class="$style.expressIcon"
-          name="express"
+          name="icon-express"
         />
         <div :class="$style.right">
           <div
@@ -37,7 +37,7 @@
       <div :class="$style.expressItem">
         <pl-svg
           :class="$style.expressIcon"
-          name="express-receive"
+          name="icon-express-receive"
         />
         <div :class="$style.right">
           <div :class="$style.main">
@@ -277,7 +277,7 @@
         <div :class="$style.popupTitle">
           <pl-svg
             :class="$style.popupTitleIcon"
-            name="rows"
+            name="icon-rows"
           />
           <span>联系我们</span>
         </div>
@@ -287,7 +287,7 @@
           <div :class="$style.popupAddress">
             <pl-svg
               :class="$style.popupAddressLeftIcon"
-              name="address-blue"
+              name="icon-address-blue"
             />
             <span
               :class="$style.popupAddressText"
@@ -295,7 +295,7 @@
             />
             <pl-svg
               :class="$style.popupAddressRightIcon"
-              name="copy"
+              name="icon-copy"
               @click="doCopy"
             />
           </div>
@@ -601,6 +601,7 @@ export default {
     }
     .express-icon {
       width: 64px;
+      height: 64px;
     }
     .right {
       flex: 1;

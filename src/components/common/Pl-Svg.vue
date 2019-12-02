@@ -3,8 +3,8 @@
     class="pl-svg"
     aria-hidden="true"
     :style="{
-      width: width ? width / 7.5 + 'vw' : null,
-      height: height ? height / 7.5 + 'vw' : null,
+      '--width': truthWidth,
+      '--height': truthHeight,
     }"
     @click="clickHandler"
   >
@@ -40,7 +40,27 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['theme'])
+    ...mapGetters(['theme']),
+    truthWidth () {
+      if (this.width) {
+        return this.width / 7.5 + 'vw'
+      }
+      // 如果没设置宽，默认宽等于高
+      if (this.height) {
+        return this.height / 7.5 + 'vw'
+      }
+      return 'auto'
+    },
+    truthHeight () {
+      if (this.height) {
+        return this.height / 7.5 + 'vw'
+      }
+      // 如果没设置高，默认高等于宽
+      if (this.width) {
+        return this.width / 7.5 + 'vw'
+      }
+      return 'auto'
+    }
   },
   watch: {
     fill: {
@@ -71,5 +91,7 @@ export default {
 
 <style lang="scss">
   .pl-svg {
+    width: var(--width);
+    height: var(--height);
   }
 </style>

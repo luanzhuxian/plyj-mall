@@ -6,7 +6,7 @@
   >
     <pl-svg
       :class="$style.address3"
-      name="address3"
+      name="icon-address3"
     />
     <div :class="$style.right">
       <div :class="$style.name">
@@ -26,8 +26,8 @@
     <pl-svg
       v-if="!notLink"
       :class="$style.rightIcon"
-      name="right"
-      color="#cdcdcd"
+      name="icon-right"
+      fill="#cdcdcd"
     />
   </div>
   <div
@@ -40,8 +40,8 @@
   >
     <span>点击这里，添加一个新地址</span>
     <pl-svg
-      name="add"
-      color="#fff"
+      name="icon-add"
+      fill="#fff"
     />
   </div>
 </template>

@@ -152,13 +152,13 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">学员信息</span>
               <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.skuCode1">
-                <pl-svg name="warning" color="#F24724" />
+                <pl-svg name="icon-warning" fill="#F24724" height="36" width="36" />
                 <span v-text="lessonErrorTip" />
               </div>
               <div>
                 <span v-if="CHECKED_STUDENT[item.skuCode1 + item.skuCode2]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
                 <span v-else>已选0人</span>
-                <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
+                <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
               </div>
             </div>
           </div>
@@ -262,13 +262,13 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">学员信息</span>
               <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.skuCode1">
-                <pl-svg name="warning" color="#F24724" />
+                <pl-svg name="icon-warning" fill="#F24724" height="36" width="36" />
                 <span v-text="lessonErrorTip" />
               </div>
               <div>
                 <span v-if="CHECKED_STUDENT[item.skuCode1 + item.skuCode2]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
                 <span v-else>已选0人</span>
-                <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
+                <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
               </div>
             </div>
           </div>

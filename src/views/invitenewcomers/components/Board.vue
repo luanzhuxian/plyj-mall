@@ -32,7 +32,7 @@
       <template v-if="friendUserId">
         <div v-if="friendUserId" :class="$style.inviteFriends">
           <!--小手一点帮我助力-->
-          <pl-svg name="invite-users" :width="560" />
+          <pl-svg name="icon-invite-users" :width="560" />
           <!--<pl-icon name="icon-xiaoshouyidianbangwozhuli" fill="#fff" size="56" />-->
         </div>
         <div :class="$style.shortOf">
@@ -41,7 +41,7 @@
       </template>
       <template v-else>
         <div :class="$style.inviteFriends">
-          <pl-svg name="invite-users" :width="560" />
+          <pl-svg name="icon-invite-users" :width="560" />
           <!--<pl-icon type="svg" name="icon-yinghaoli" width="560" />-->
         </div>
         <!--<div v-if="inviteDescription > 0" :class="$style.shortOf">

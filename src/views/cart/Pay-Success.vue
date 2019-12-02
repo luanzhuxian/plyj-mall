@@ -3,7 +3,7 @@
     <div :class="$style.top">
       <pl-svg
         :class="$style.icon"
-        :name="orderType === 'FORMAL_CLASS' ? 'signup-success' : 'pay-success'"
+        :name="orderType === 'FORMAL_CLASS' ? 'icon-signup-success' : 'icon-pay-success'"
       />
       <p :class="$style.tip1">
         <span v-if="orderType === 'FORMAL_CLASS'">报名/学习成功</span>
@@ -146,6 +146,7 @@ export default {
 }
 .icon {
   width: 148px;
+  height: 148px;
 }
 .tip1 {
   margin-top: 20px;

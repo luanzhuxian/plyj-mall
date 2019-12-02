@@ -35,8 +35,8 @@
         <pl-svg
           :class="$style.warningIcon"
           slot="suffix"
-          name="warning"
-          color="#FE7700"
+          name="icon-warning"
+          fill="#FE7700"
           @click.prevent="showInvioceIntro = true"
         />
       </pl-form-item>

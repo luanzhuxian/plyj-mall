@@ -20,7 +20,7 @@
         <a :href="`tel: ${courierCompanyMobile}`">
           <pl-svg
             :class="$style.icon"
-            name="service"
+            name="icon-service"
           />
           <div :class="$style.iconText">
             物流客服
@@ -155,6 +155,7 @@ export default {
     }
     .icon {
       width: 35px;
+      height: 35px;
       margin-bottom: 6px;
     }
     .icon-text {

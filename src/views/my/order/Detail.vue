@@ -6,7 +6,6 @@
         :tip="suggestionMap[orderStatus]"
       />
     </div>
-
     <!-- 核销码 -->
     <div
       :class="$style.qrcodeBox"
@@ -25,8 +24,8 @@
         <pl-svg
           v-if="isArrowShow"
           :class="{ [$style.collapse]: collapseQrCode }"
-          name="right"
-          color="#999"
+          name="icon-right"
+          fill="#999"
           @click="() => { isArrowShow ? collapseQrCode = !collapseQrCode : '' }"
         />
         <ul :class="$style.codeList">
@@ -44,7 +43,7 @@
                   <span :class="$style.codeStatus" v-text="item.status" />
                 </div>
                 <div :class="$style.whoUse" v-show="!collapseQrCode && item.name">
-                  <pl-svg name="name-card" :color="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
+                  <pl-svg name="icon-name-card" :fill="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
                   <span :class="{ [$style.name]: true }" v-text="item.name" />
                   <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
                 </div>
@@ -430,7 +429,8 @@
         <div :class="$style.popupTitle">
           <pl-svg
             :class="$style.popupTitleIcon"
-            name="rows"
+            name="icon-rows"
+            height="40"
           />
           <span>联系我们</span>
         </div>
@@ -440,7 +440,7 @@
           <div :class="$style.popupAddress">
             <pl-svg
               :class="$style.popupAddressLeftIcon"
-              name="address-blue"
+              name="icon-address-blue"
             />
             <span
               :class="$style.popupAddressText"
@@ -448,7 +448,7 @@
             />
             <pl-svg
               :class="$style.popupAddressRightIcon"
-              name="copy"
+              name="icon-copy"
               @click="doCopy"
             />
           </div>
@@ -456,7 +456,7 @@
             <pl-button
               size="larger"
               background-color="#387AF6"
-              prefix-icon="mobile-blue"
+              prefix-icon="icon-mobile-blue"
               round
             >
               立即拨打
@@ -483,8 +483,8 @@
         <img :src="poster" alt="">
       </div>
       <div :class="$style.description">
-        <p>长按保存分享给好友</p>
-        <pl-svg name="close3" color="#fff" :width="50" @click="isPosterShow = false" />
+        <p class="mt-22">长按保存分享给好友</p>
+        <pl-svg name="icon-close3" color="#fff" width="50" height="50" @click="isPosterShow = false" />
       </div>
     </div>
     <Contact :show.sync="showContact" />
@@ -1109,6 +1109,7 @@ export default {
         top: 20px;
         right: 20px;
         width: 22px;
+        height: 22px;
         transform: rotate(-90deg);
         transition: transform .2s linear;
         &.collapse {
@@ -1173,6 +1174,7 @@ export default {
       line-height: 34px;
       > svg {
         width: 34px;
+        height: 34px;
         margin-right: 8px;
         vertical-align: -4px;
       }

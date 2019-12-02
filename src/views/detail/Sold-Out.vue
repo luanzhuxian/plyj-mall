@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.soldOut">
-    <pl-svg name="sold-out" />
+    <pl-svg name="icon-sold-out" />
     <p>抱歉，该商品已删除</p>
     <pl-button
       plain
@@ -28,6 +28,7 @@ export default {
     height: 500px;
     svg {
       width: 442px;
+      height: 442px;
     }
     P {
       font-size: 32px;

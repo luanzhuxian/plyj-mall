@@ -29,7 +29,7 @@
             </div>
 
             <div :class="$style.howManyBuy">
-              <pl-svg name="hot" />
+              <pl-svg name="icon-hot" height="28" />
               <span v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
               <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
                 <span>

@@ -32,8 +32,8 @@
           </div>
           <pl-svg
             :class="$style.itemRight"
-            name="right"
-            color="#DEDEDE"
+            name="icon-right"
+            fill="#DEDEDE"
           />
         </router-link>
 
@@ -56,8 +56,8 @@
           </div>
           <pl-svg
             :class="$style.itemRight"
-            name="right"
-            color="#DEDEDE"
+            name="icon-right"
+            fill="#DEDEDE"
           />
         </router-link>
       </div>

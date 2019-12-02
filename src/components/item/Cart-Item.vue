@@ -34,7 +34,7 @@
               ,<span v-text="currentSkuModel.skuCode2Name" />
             </template>
           </div>
-          <pl-svg :class="$style.arrow" name="right" color="#ccc" />
+          <pl-svg :class="$style.arrow" name="icon-right" fill="#ccc" />
         </div>
         <div :class="$style.priceCount" v-if="!overflowStock">
           <i :class="$style.price + ' rmb'" v-text="currentSkuModel.price" />

@@ -23,8 +23,8 @@
     >
       <span>点击这里，添加一个发票信息</span>
       <pl-svg
-        name="add"
-        color="#fff"
+        name="icon-add"
+        fill="#fff"
       />
     </router-link>
   </div>

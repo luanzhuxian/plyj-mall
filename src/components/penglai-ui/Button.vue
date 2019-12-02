@@ -16,7 +16,7 @@
       <pl-svg
         v-if="loading"
         class="pl-button__loading"
-        name="btn-loading"
+        name="icon-btn-loading"
       />
       <pl-svg
         class="pl-button__prefix-icon"
@@ -169,6 +169,7 @@ export default {
       }
       .pl-button__prefix-icon, .pl-button__loading {
         width: 20px;
+        height: 20px;
         vertical-align: -1px;
         fill: currentColor;
       }
@@ -184,6 +185,7 @@ export default {
       }
       .pl-button__prefix-icon, .pl-button__loading {
         width: 24px;
+        height: 24px;
         vertical-align: -1px;
         fill: currentColor;
       }
@@ -199,6 +201,7 @@ export default {
       }
       .pl-button__prefix-icon, .pl-button__loading {
         width: 26px;
+        height: 26px;
         fill: currentColor;
       }
     }
@@ -211,6 +214,7 @@ export default {
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
+        height: 35px;
         margin-right: 5px;
         fill: currentColor;
         vertical-align: -7px;
@@ -226,6 +230,7 @@ export default {
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
+        height: 35px;
         margin-right: 5px;
         fill: currentColor;
         vertical-align: -7px;
@@ -243,6 +248,7 @@ export default {
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
+        height: 35px;
         margin-right: 5px;
         vertical-align: -5px;
         fill: currentColor;
@@ -257,6 +263,7 @@ export default {
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
+        height: 35px;
         margin-right: 5px;
         fill: currentColor;
         vertical-align: -7px;

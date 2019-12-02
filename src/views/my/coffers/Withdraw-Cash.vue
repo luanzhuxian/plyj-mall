@@ -2,7 +2,7 @@
   <div :class="$style.withdrawDeposit">
     <div :class="$style.wrap + ' bg-white radius-20'">
       <div :class="$style.way">
-        <pl-svg name="my-wechat" />
+        <pl-svg name="icon-my-wechat" />
         <div>
           <p class="fz-30">
             提现通过【红包】发放

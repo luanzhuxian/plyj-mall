@@ -130,7 +130,7 @@ export default {
     },
     icon: {
       type: String,
-      default: 'no-content'
+      default: 'icon-no-content'
     },
     noIcon: Boolean
   },
@@ -388,6 +388,7 @@ export default {
   }
   .noContentIcon {
     width: 80%;
+    height: 200px;
   }
   .noContentTip {
     margin-top: 20px;

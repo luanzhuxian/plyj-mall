@@ -8,7 +8,7 @@
     >
       <transition name="slide">
         <div :class="$style.specBox" v-show="showBox">
-          <pl-svg :class="$style.close" name="close2" color="#ccc" @click.stop="close" />
+          <pl-svg :class="$style.close" name="icon-close2" fill="#ccc" @click.stop="close" />
           <div>
             <div :class="$style.baseInfo" v-if="currentSku">
               <img

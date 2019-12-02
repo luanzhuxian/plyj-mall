@@ -2,7 +2,7 @@
   <div :class="$style.search">
     <div :class="$style.searchBar">
       <div :class="$style.searchBox">
-        <pl-svg name="search" />
+        <pl-svg name="icon-search" />
         <input
           v-model.trim="searchContent"
           type="search"
@@ -70,7 +70,7 @@
         <span>历史搜索</span>
         <pl-svg
           @click="deleteHistory"
-          name="delete"
+          name="icon-delete"
         />
       </div>
       <ul :class="$style.keyWordList">

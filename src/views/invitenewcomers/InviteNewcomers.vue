@@ -47,7 +47,7 @@
     <transition name="fade">
       <div :class="$style.posterWrap" v-if="showHaibao" @click="showHaibao = false">
         <img :src="this.poster" alt="">
-        <pl-svg name="close3" />
+        <pl-svg name="icon-close3" />
       </div>
     </transition>
   </div>

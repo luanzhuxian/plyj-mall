@@ -7,7 +7,7 @@
       <div :class="$style.text">
         <pl-svg
           :class="$style.icon"
-          name="success"
+          name="icon-success"
         />
         <span>交易完成</span>
       </div>

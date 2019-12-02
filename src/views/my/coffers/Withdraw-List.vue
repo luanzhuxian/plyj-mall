@@ -11,7 +11,7 @@
         />
         <pl-svg
           :class="$style.triangle"
-          name="triangle"
+          name="icon-triangle"
         />
       </p>
       <transition name="fade">

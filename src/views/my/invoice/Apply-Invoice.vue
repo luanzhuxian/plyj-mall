@@ -82,7 +82,7 @@
           <pl-svg
             slot="suffix"
             name="icon-warning"
-            color="#FE7700"
+            fill="#FE7700"
             style="width: 45px; margin: 0 36px;"
             @click="showInvioceNum = true"
           />

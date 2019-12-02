@@ -46,7 +46,7 @@
         @click="addNew"
       >
         <span v-text="canSelect ? '新增学员' : '点击这里，新增一个学员信息'" />
-        <pl-svg name="add-bold" :color="!canSelect ? '#fff' : '#F2B036'" />
+        <pl-svg name="icon-add-bold" :fill="!canSelect ? '#fff' : '#F2B036'" />
       </button>
       <button v-if="canSelect" @click="confirmSelect" :class="$style.confirmBtn">
         <span>确定</span>

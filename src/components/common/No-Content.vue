@@ -22,7 +22,7 @@ export default {
     * */
     icon: {
       type: String,
-      default: 'no-content'
+      default: 'icon-no-content'
     }
   }
 }

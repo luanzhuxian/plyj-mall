@@ -13,7 +13,7 @@
       <pl-svg
         v-if="icon && checked"
         :name="icon"
-        color="#FFF"
+        fill="#FFF"
       />
       <slot
         v-else
@@ -53,7 +53,7 @@ export default {
     },
     icon: {
       type: String,
-      default: 'check'
+      default: 'icon-check'
     },
     iconSize: {
       type: Number,

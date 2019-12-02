@@ -13,14 +13,14 @@
         <div class="remove-btn">
           <pl-svg
             class="remove-btn--close iconfont icon-qingchu"
-            name="close"
+            name="icon-close"
             @click="removeImg(i)"
           />
         </div>
       </li>
       <li v-if="images.length < count || !count">
         <label class="upload-img-box">
-          <pl-svg name="camera" />
+          <pl-svg name="icon-camera" />
           <span>上传凭证</span>
           <span v-if="count > 0">（最多{{ count }}张）</span>
           <input

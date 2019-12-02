@@ -7,8 +7,8 @@
     <template v-if="activeProduct === 1 && productStatus !== 0 || activeProduct !== 1">
       <!-- 海报按钮 -->
       <div :class="$style.haibao">
-        <pl-svg v-if="creating" name="btn-loading" color="#fff" class="rotate" @click="showHaibao = false;" />
-        <pl-svg v-else name="haibao" @click="createHaibao(activeProduct)" />
+        <pl-svg v-if="creating" name="icon-btn-loading" height="35" fill="#fff" class="rotate" @click="showHaibao = false;" />
+        <pl-svg v-else name="icon-haibao" height="35" @click="createHaibao(activeProduct)" />
         <p>分享海报</p>
       </div>
       <!-- 商品banner -->
@@ -250,7 +250,7 @@
           <div :class="$style.saveButton1" v-else>
             长按识别或保存二维码，分享给朋友吧！
           </div>
-          <pl-svg name="close3" color="#fff" @click="showHaibao = false;" />
+          <pl-svg name="icon-close3" color="#fff" @click="showHaibao = false;" />
         </div>
       </div>
     </transition>

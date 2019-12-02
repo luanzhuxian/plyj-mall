@@ -72,7 +72,7 @@
           layout="column"
           layout-align="center center"
         >
-          <pl-svg name="my-rotate" />
+          <pl-svg name="icon-my-rotate" />
         </div>
         <div
           class="submit"
@@ -893,6 +893,7 @@ export default {
   .rotate{
     svg{
       width: 40px;
+      height: 40px;
     }
   }
   .ctrl{

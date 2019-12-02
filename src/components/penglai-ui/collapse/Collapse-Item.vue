@@ -34,7 +34,7 @@
         v-if="!$slots['icon-right'] && !disabled"
         class="pl-collapse-item__icon--right"
         :name="iconRight.name"
-        color="#CCC"
+        fill="#CCC"
       />
       <slot
         v-else
@@ -66,7 +66,7 @@ export default {
       type: Object,
       default () {
         return {
-          name: 'right',
+          name: 'icon-right',
           color: '#CCC'
         }
       }
