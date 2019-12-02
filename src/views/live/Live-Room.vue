@@ -57,9 +57,9 @@
               <span :class="$style.userName" v-text="item.name + '：'" />
               <div :class="$style.message">
                 <span v-text="item.message" />
-                <pl-icon v-if="item.loading" :class="$style.messageLoading" name="icon-btn-loading" color="#999" size="24" font-weight="bolder" @click="repeatSend(item, i)" />
+                <pl-svg v-if="item.loading" :class="$style.messageLoading" name="icon-btn-loading" fill="#999" width="24" font-weight="bolder" @click="repeatSend(item, i)" />
                 <span v-if="!item.success && !item.loading" :class="$style.error">
-                  <pl-icon name="icon-warning2" color="red" size="24" font-weight="bolder" @click="repeatSend(item, i)" />
+                  <pl-svg name="icon-warning" fill="red" width="24" @click="repeatSend(item, i)" />
                   <i :class="$style.faild" @click="repeatSend(item, i)">发送失败</i>
                 </span>
               </div>
@@ -76,9 +76,9 @@
               <span :class="$style.userName" v-text="item.name" />&nbsp;
               <div :class="$style.message">
                 <span v-text="item.message" />
-                <pl-icon v-if="item.loading" :class="$style.messageLoading" name="icon-btn-loading" color="#999" size="16" font-weight="bolder" @click="repeatSend(item, i)" />
+                <pl-svg v-if="item.loading" :class="$style.messageLoading" name="icon-btn-loading" fill="#999" width="16" @click="repeatSend(item, i)" />
                 <span v-if="!item.success && !item.loading" :class="$style.error">
-                  <pl-icon name="icon-warning2" color="red" size="24" font-weight="bolder" @click="repeatSend(item, i)" />
+                  <pl-svg name="icon-warning" fill="red" width="24" @click="repeatSend(item, i)" />
                   <i :class="$style.faild" @click="repeatSend(item, i)">发送失败</i>
                 </span>
               </div>
@@ -94,7 +94,7 @@
             >
               <span :class="$style.userName" v-text="item.name" />
               <span>&nbsp;赠送给老师&nbsp;</span>
-              <pl-icon v-if="item.giftType === 'flower'" name="icon-meiguihua" type="svg" width="36" height="36" />
+              <pl-svg v-if="item.giftType === 'flower'" name="icon-meiguihua" width="36" height="36" />
             </div>
           </template>
         </div>
@@ -140,7 +140,7 @@
               <!--<div :class="$style.count">3</div>-->
             </div>
             <div :class="$style.vieFor">
-              <pl-icon name="icon-vie-for" color="#fff" size="40" />
+              <pl-svg name="icon-vie-for" fill="#fff" width="40" />
             </div>
           </div>
         </div>
@@ -148,7 +148,6 @@
 
       <div v-if="tab === 1" :class="$style.sendMessage">
         <form :class="$style.inputBox" @submit.prevent="messageConfirm">
-          <!--<pl-icon name="icon-biaoqing" size="42" color="#a8a8a8" @click="showEmoticon = !showEmoticon" />-->
           <input
             v-model="message"
             placeholder=" 进来了说点什么呗~"
@@ -158,7 +157,7 @@
           <button :class="$style.sendBtn">发送</button>
         </form>
         <div :class="$style.sendFlower" @click="sendFlower">
-          <pl-icon name="icon-flower" size="37" color="#F9DD54" />
+          <pl-svg name="icon-flower" width="37" />
         </div>
 
         <!--<transition name="fade">
@@ -207,7 +206,7 @@
         <div :class="$style.posterWrap">
           <img :src="poster" alt="">
           <div>长按识别或保存二维码，分享给朋友吧！</div>
-          <pl-icon name="icon-close1" size="48" color="#fff" @click="showPoster = false" />
+          <pl-svg name="icon-close3" width="48" fill="#fff" @click="showPoster = false" />
         </div>
       </div>
     </transition>
@@ -596,6 +595,7 @@ export default {
         paidAmount
       } = this.detail
       // 生成二维码
+      console.log(coverImg)
       try {
         let all = [
           generateQrcode(300, location.href, 0, null, 0, 'canvas'),
@@ -869,6 +869,9 @@ export default {
   }
 
   .send-flower {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 72px;
     height: 72px;
     line-height: 72px;
