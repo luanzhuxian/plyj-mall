@@ -7,7 +7,10 @@
     }"
   >
     <router-link
-      :class="$style.route"
+      :class="{
+        [$style.route]: true,
+        [$style.active]: homeActive
+      }"
       tag="div"
       :to="{ name: 'Home' }"
     >
@@ -30,7 +33,10 @@
       </template>
     </router-link>
     <router-link
-      :class="$style.route"
+      :class="{
+        [$style.route]: true,
+        [$style.active]: classifyActive
+      }"
       tag="div"
       :to="{ name: 'Classify' }"
     >
@@ -61,7 +67,10 @@
       <img :class="$style.icon" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png">
     </router-link>
     <router-link
-      :class="$style.route"
+      :class="{
+        [$style.route]: true,
+        [$style.active]: yajiActive
+      }"
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
@@ -84,7 +93,10 @@
       </template>
     </router-link>
     <router-link
-      :class="$style.route"
+      :class="{
+        [$style.route]: true,
+        [$style.active]: myActive
+      }"
       tag="div"
       :to="{ name: 'My' }"
     >
@@ -200,22 +212,26 @@ export default {
 /* 皮肤 */
 .skin-xmas,
 .skin-new-year {
-  height: 119px !important;
   bottom: -1px !important;
   overflow: hidden;
   .route {
     box-sizing: border-box;
     justify-content: flex-end !important;
-    height: 119px !important;
-    padding-bottom: 12px;
+    padding-bottom: 4px;
+    &.active > .tab-name {
+      color: #C81819;
+    }
   }
   .tab-name {
-    margin-top: 7px;
+    margin-top: 1px;
     line-height: 18px;
     font-size: 18px;
     font-family: Adobe Heiti Std;
     color: #242424;
     text-align: center;
+  }
+  .icon {
+    margin-bottom: 0 !important;
   }
 }
 .skin-xmas {
@@ -226,16 +242,13 @@ export default {
   background: url("../../views/home/skin/new-year/tabbar-bg.png") no-repeat center;
   background-size: 100%;
   .route {
-    width: 95px;
+    width: 74px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   .tab {
-    width: 79px
-  }
-  .tab-name {
-    font-size: 26px;
+    width: 61px
   }
 }
 </style>
