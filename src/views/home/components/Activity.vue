@@ -21,11 +21,12 @@
             </span>
             <span :class="$style.label" v-if="hasJxEvent && !hasInvitingEvent">
               点击进入
-              <pl-icon name="icon-arrow-right" size="16" />
+              <pl-svg name="icon-my-right" width="20" fill="#fff" />
             </span>
           </div>
         </div>
-        <pl-icon name="icon-calendar" type="svg" />
+        <pl-svg v-if="hasJxEvent && hasInvitingEvent" name="icon-calendar" width="72" height="72" />
+        <pl-svg v-if="!hasJxEvent && hasInvitingEvent" name="icon-calendar" width="100" height="100" />
       </router-link>
       <router-link
         v-if="hasInvitingEvent"
@@ -45,13 +46,14 @@
             <span>
               多种优惠不打烊
             </span>
-            <span :class="$style.label" v-if="!hasJxEvent && hasInvitingEvent">
+            <div :class="$style.label" v-if="!hasJxEvent && hasInvitingEvent">
               点击进入
-              <pl-icon name="icon-arrow-right" size="16" />
-            </span>
+              <pl-svg name="icon-my-right" width="20" fill="#fff" />
+            </div>
           </div>
         </div>
-        <pl-icon name="icon-present" type="svg" />
+        <pl-svg v-if="hasJxEvent && hasInvitingEvent" name="icon-present" :width="72" height="72" />
+        <pl-svg v-if="!hasJxEvent && hasInvitingEvent" name="icon-present" :width="100" height="100" />
       </router-link>
     </div>
   </div>
@@ -114,7 +116,7 @@ export default {
           }
           .label {
             display: inline-flex;
-            align-content: center;
+            align-items: center;
             margin-left: 18px;
             padding: 0 6px;
             height: 36px;
@@ -123,15 +125,12 @@ export default {
             text-align: center;
             font-size: 22px;
             color: #FFF;
-            i {
+            svg {
               margin-left: 8px;
               color: #FFF;
+              vertical-align: -4px;
             }
           }
-        }
-        svg {
-          width: 110px;
-          height: 110px;
         }
       }
       &.small {
@@ -144,10 +143,6 @@ export default {
             font-size: 24px;
             line-height: 34px;
           }
-        }
-        svg {
-          width: 72px;
-          height: 72px;
         }
       }
     }

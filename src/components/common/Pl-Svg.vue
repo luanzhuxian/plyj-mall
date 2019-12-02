@@ -64,18 +64,20 @@ export default {
   },
   watch: {
     fill: {
-      handler (val) {
+      async handler (val) {
         if (val) {
-          const svg = document.querySelector('#' + this.name)
-          const fills = svg.querySelectorAll('[fill]')
-          const colors = svg.querySelectorAll('[color]')
-          svg.setAttribute('fill', val)
-          for (const fill of fills) {
-            fill.setAttribute('fill', val)
-          }
-          for (const color of colors) {
-            color.setAttribute('color', val)
-          }
+          setTimeout(() => {
+            const svg = document.querySelector('#' + this.name)
+            const fills = svg.querySelectorAll('[fill]')
+            const colors = svg.querySelectorAll('[color]')
+            svg.setAttribute('fill', val)
+            for (const fill of fills) {
+              fill.setAttribute('fill', val)
+            }
+            for (const color of colors) {
+              color.setAttribute('color', val)
+            }
+          }, 100)
         }
       },
       immediate: true

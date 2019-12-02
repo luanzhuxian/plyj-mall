@@ -3,8 +3,8 @@
     <div class="top">
       <div class="title-box">
         <div class="title-left">
-          <pl-icon v-if="isShare" @click="$router.replace({name: 'Activity'})" name="icon-shouyeshouye" color="#fff" size="40" />
-          <pl-icon v-else @click="$router.back()" name="icon-left" color="#fff" size="32" />
+          <pl-svg v-if="isShare" @click="$router.replace({name: 'Activity'})" name="icon-shouye" fill="#fff" width="40" />
+          <pl-svg v-else @click="$router.back()" name="icon-left" fill="#fff" width="32" />
         </div>
         <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/icon-road-learning-title.png">
         <div class="title-right rule-btn" @click="showRule = true">
@@ -104,43 +104,43 @@
       <div class="content-step-box">
         <div class="step step1" :class="{'step-big':checkInDetail.totalCheckInNum >= 1}">
           <span v-if="checkInDetail.totalCheckInNum < 1">1</span>
-          <pl-icon v-else @click="drawPoster (1)" name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-svg v-else @click="drawPoster (1)" name="icon-jiaoya" fill="#FFF" width="30" />
         </div>
         <div class="step step2" :class="{'step-big':checkInDetail.totalCheckInNum >= 2}">
           <span v-if="checkInDetail.totalCheckInNum < 2">2</span>
-          <pl-icon v-else @click="drawPoster (2)" name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-svg v-else @click="drawPoster (2)" name="icon-jiaoya" fill="#FFF" width="30" />
         </div>
         <div class="step step3" :class="{'step-big':checkInDetail.totalCheckInNum >= 3}">
           <span v-if="checkInDetail.totalCheckInNum < 3">3</span>
-          <pl-icon v-else @click="drawPoster (3)" name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-svg v-else @click="drawPoster (3)" name="icon-jiaoya" fill="#FFF" width="30" />
         </div>
         <div class="step step4" :class="{'step-big':checkInDetail.totalCheckInNum >= 4}">
           <span v-if="checkInDetail.totalCheckInNum < 4">4</span>
-          <pl-icon v-else @click="drawPoster (4)" name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-svg v-else @click="drawPoster (4)" name="icon-jiaoya" fill="#FFF" width="30" />
         </div>
         <div class="step step5" :class="{'step-big':checkInDetail.totalCheckInNum >= 5}">
           <span v-if="checkInDetail.totalCheckInNum < 5">5</span>
-          <pl-icon v-else @click="drawPoster (5)" name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-svg v-else @click="drawPoster (5)" name="icon-jiaoya" fill="#FFF" width="30" />
         </div>
         <div class="step step6" :class="{'step-big':checkInDetail.totalCheckInNum >= 6}">
           <span v-if="checkInDetail.totalCheckInNum < 6">6</span>
-          <pl-icon v-else @click="drawPoster (6)" name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-svg v-else @click="drawPoster (6)" name="icon-jiaoya" fill="#FFF" width="30" />
         </div>
         <div class="step step7" :class="{'step-big':checkInDetail.totalCheckInNum >= 7}">
           <span v-if="checkInDetail.totalCheckInNum < 7">7</span>
-          <pl-icon v-else @click="drawPoster (7)" name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-svg v-else @click="drawPoster (7)" name="icon-jiaoya" fill="#FFF" width="30" />
         </div>
         <div class="step step8" :class="{'step-big':checkInDetail.totalCheckInNum >= 8}">
           <span v-if="checkInDetail.totalCheckInNum < 8">8</span>
-          <pl-icon v-else @click="drawPoster (8)" name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-svg v-else @click="drawPoster (8)" name="icon-jiaoya" fill="#FFF" width="30" />
         </div>
         <div class="step step9" :class="{'step-big':checkInDetail.totalCheckInNum >= 9}">
           <span v-if="checkInDetail.totalCheckInNum < 9">9</span>
-          <pl-icon v-else @click="drawPoster (9)" name="icon-jiaoya" color="#FFF" size="30" />
+          <pl-svg v-else @click="drawPoster (9)" name="icon-jiaoya" fill="#FFF" width="30" />
         </div>
         <div class="step step10" :class="{'step-big':checkInDetail.totalCheckInNum >= 10}">
-          <pl-icon v-if="checkInDetail.totalCheckInNum < 10" name="icon-liwu" color="#FFF" size="30" />
-          <pl-icon v-else @click="drawPoster (10)" name="icon-liwu" color="#FFF" size="30" />
+          <pl-svg v-if="checkInDetail.totalCheckInNum < 10" name="icon-liwu" fill="#FFF" width="30" />
+          <pl-svg v-else @click="drawPoster (10)" name="icon-liwu" fill="#FFF" width="30" />
         </div>
         <div class="statistics" v-if="activeStart">
           已有 <span>{{ checkInDetail.checkInUserNum }}人</span>参与活动 <span>&nbsp;|&nbsp;</span> <div v-if="checkInDetail.totalCheckInNum < 10">还差 <span>{{ 10 - checkInDetail.totalCheckInNum }}次</span>签到，可冲击大奖</div> <div v-if="checkInDetail.totalCheckInNum === 10">恭喜你 已完成<span>10次</span>签到</div>
@@ -149,12 +149,12 @@
       <div class="btn-box">
         <div class="btn disabel" v-if="!activeStart && !activeEnd && activeDetail.status === 1">活动未开始</div>
         <div class="btn active" @click="checkIn ()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status === 2">
-          <pl-icon v-if="loadingShow" class="rotate loading" name="icon-btn-loading" color="#fff" size="40" />
+          <pl-svg v-show="loadingShow" class="rotate loading" name="icon-btn-loading" fill="#fff" width="40" />
           立即签到
         </div>
         <div class="btn disabel" v-if="!activeDetail.status && (checkInDetail.claimStatus !== 1)">活动已结束</div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0 && activeDetail.status === 2" @click="claimGift()">
-          <pl-icon v-if="loadingShow" class="rotate loading" name="icon-btn-loading" color="#fff" size="40" />
+          <pl-svg v-show="loadingShow" class="rotate loading" name="icon-btn-loading" fill="#fff" width="40" />
           点击抽大奖
         </div>
         <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
@@ -208,7 +208,7 @@
         </div>
       </div>
       <div class="winning-prize-close">
-        <pl-icon @click="winningShow = false" name="icon-error" color="#fff" size="40" />
+        <pl-svg @click="winningShow = false" name="icon-close3" fill="#fff" width="40" />
       </div>
     </div>
     <div class="winning-prize" v-if="unWinningShow">
@@ -223,7 +223,7 @@
         </div>
       </div>
       <div class="winning-prize-close">
-        <pl-icon @click="unWinningShow = false" name="icon-error" color="#fff" size="40" />
+        <pl-svg @click="unWinningShow = false" name="icon-close3" fill="#fff" width="40" />
       </div>
     </div>
     <div class="winning-prize poster" v-if="posterShow">
@@ -232,7 +232,7 @@
         <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
       </div>
       <div class="winning-prize-close poster-close">
-        <pl-icon @click="posterShow = false" name="icon-error" color="#fff" size="40" />
+        <pl-svg @click="posterShow = false" name="icon-close3" fill="#fff" width="40" />
       </div>
     </div>
 
@@ -242,7 +242,7 @@
         <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
       </div>
       <div class="winning-prize-close poster-close">
-        <pl-icon @click="sharePosterShow = false" name="icon-error" color="#fff" size="40" />
+        <pl-svg @click="sharePosterShow = false" name="icon-close3" fill="#fff" width="40" />
       </div>
     </div>
   </div>
