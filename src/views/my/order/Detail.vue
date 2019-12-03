@@ -484,7 +484,7 @@
       </div>
       <div :class="$style.description">
         <p class="mt-22">长按保存分享给好友</p>
-        <pl-svg name="icon-close3" color="#fff" width="50" height="50" @click="isPosterShow = false" />
+        <pl-svg name="icon-close3" fill="#fff" width="50" height="50" @click="isPosterShow = false" />
       </div>
     </div>
     <Contact :show.sync="showContact" />

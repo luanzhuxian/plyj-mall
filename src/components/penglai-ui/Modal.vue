@@ -18,7 +18,7 @@
         v-if="!hideCloseButton"
         class="pl-modal__close-btn"
         name="icon-close2"
-        color="#ccc"
+        fill="#ccc"
         @click="onClose"
       />
       <div

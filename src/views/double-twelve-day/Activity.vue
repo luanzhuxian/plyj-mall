@@ -123,7 +123,7 @@
           <p>您已成功预约{{ mallName }}</p>
           <p>携手双十二疯狂同学学会</p>
           <div @click="share">帮我上榜</div>
-          <pl-svg name="icon-close3" size="48" color="#fff" @click="showSuccess = false" />
+          <pl-svg name="icon-close3" size="48" fill="#fff" @click="showSuccess = false" />
         </div>
       </div>
     </transition>

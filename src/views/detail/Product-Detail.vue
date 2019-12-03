@@ -251,7 +251,7 @@
           <div :class="$style.saveButton1" v-else>
             长按识别或保存二维码，分享给朋友吧！
           </div>
-          <pl-svg name="icon-close3" color="#fff" @click="showHaibao = false;" />
+          <pl-svg name="icon-close3" fill="#fff" @click="showHaibao = false;" />
         </div>
       </div>
     </transition>

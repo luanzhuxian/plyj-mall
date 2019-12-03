@@ -53,7 +53,7 @@
           <p>今日润笔（元）</p>
           <p v-text="currentBalance || '0.00'" />
         </div>
-        <pl-svg :class="$style.myRight" name="icon-arrow-right" size="18" color="#ccc" />
+        <pl-svg :class="$style.myRight" name="icon-arrow-right" size="18" fill="#ccc" />
       </router-link>
 
       <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">

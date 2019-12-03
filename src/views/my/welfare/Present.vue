@@ -112,7 +112,7 @@
     </div>
     <div class="item-box" v-show="activeId === 99">
       <div class="empty" v-if="!data99.length">
-        <pl-svg name="icon-youhuiquan" type="svg" width="240" height="240" />
+        <pl-svg name="icon-youhuiquan" width="240" height="240" />
         <span>暂无礼品券</span>
       </div>
       <div class="items" v-else v-for="(item,index) of data99" :key="index">

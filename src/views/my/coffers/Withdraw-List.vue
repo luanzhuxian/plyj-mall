@@ -11,6 +11,7 @@
         />
         <pl-svg
           :class="$style.triangle"
+          fill="#f2b036"
           name="icon-triangle"
         />
       </p>

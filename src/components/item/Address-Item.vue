@@ -7,6 +7,7 @@
     <pl-svg
       :class="$style.address3"
       name="icon-address3"
+      fill="#f2b036"
     />
     <div :class="$style.right">
       <div :class="$style.name">
