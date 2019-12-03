@@ -71,7 +71,7 @@
     <!-- 不可使用的状态，文字描述 -->
     <div :class="$style.unavailableDesc" v-if="status" v-text="status" />
     <div v-if="isClaimed" :class="$style.claimed">
-      <pl-svg name="icon-claimed" width="500" />
+      <pl-svg name="icon-claimed" width="200" />
     </div>
   </div>
 </template>
@@ -199,9 +199,11 @@ export default {
             })
           return
         }
-        await this.$emit('couponClick', e)
-        if (!this.isOverMax) {
-          this.isClaimed = true
+        if (!this.status) {
+          await this.$emit('couponClick', e)
+          if (!this.isOverMax) {
+            this.isClaimed = true
+          }
         }
       }
     }
@@ -384,7 +386,7 @@ export default {
   /*已领取*/
   .claimed{
     position: absolute;
-    left: 200px;
-    top: -30px;
+    left: 350px;
+    top: -50px;
   }
 </style>

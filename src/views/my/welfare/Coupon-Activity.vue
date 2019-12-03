@@ -195,6 +195,6 @@ export default {
   }
 
   .product-list {
-    margin-top: 420px;
+    margin-top: 450px;
   }
 </style>

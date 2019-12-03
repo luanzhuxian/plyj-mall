@@ -80,10 +80,14 @@
             </div>
           </div>
         </div>
-        <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
+        <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1 || isNotChoose" @click="showCoupon = true">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">优惠券</span>
-            <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-svg name="icon-right" fill="#ccc" width="22" /></span>
+            <span :class="$style.subtotalPrice">
+              <span v-if="!isNotChoose">-¥{{ coupon.amount }}</span>
+              <span v-else :class="$style.textGrey">不参加优惠</span>
+              <pl-svg name="icon-right" fill="#373737" width="22" />
+            </span>
           </div>
         </div>
 
@@ -189,10 +193,14 @@
               </div>
             </div>
           </div>
-          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
+          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1 || isNotChoose" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
-              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-svg name="icon-right" fill="#ccc" width="22" /></span>
+              <span :class="$style.subtotalPrice">
+                <span v-if="!isNotChoose">-¥{{ coupon.amount }}</span>
+                <span v-else :class="$style.textGrey">不参加优惠</span>
+                <pl-svg name="icon-right" fill="#373737" width="22" />
+              </span>
             </div>
           </div>
 
@@ -299,10 +307,14 @@
               </div>
             </div>
           </div>
-          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
+          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1 || isNotChoose" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
-              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-svg name="icon-right" fill="#ccc" width="22" /></span>
+              <span :class="$style.subtotalPrice">
+                <span v-if="!isNotChoose">-¥{{ coupon.amount }}</span>
+                <span v-else :class="$style.textGrey">不参加优惠</span>
+                <pl-svg name="icon-right" fill="#373737" width="22" />
+              </span>
             </div>
           </div>
 
@@ -466,23 +478,25 @@
         <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
         <div :class="$style.couponList">
           <template v-for="(item, i) of couponList">
-            <CouponItem
-              :key="i"
-              :name="item.couponName"
-              :amount="item.amount"
-              :full="item.useLimitAmount"
-              :subtract="item.amount"
-              :instruction="item.brief"
-              :use-end-time="item.useEndTime"
-              :use-start-time="item.useStartTime"
-              :receive-count="item.count"
-              :can-go-classify="false"
-              is-available-status
-              :is-over-max="!item.canReceive"
-              @couponClick="couponClick(item)"
-              :coupon-type="item.couponType"
-            />
+            <div :key="i" :class="$style.couponItem" @click="couponClick(item)">
+              <div :class="$style.button">省{{ item.amount }}</div>
+              <div :class="$style.full">满{{ item.useLimitAmount }}减{{ item.amount }}</div>
+              <span :class="$style.timeDesc">{{ item.timeDesc }}</span>
+              <span :class="$style.recommend" v-if="recommendCouponId === item.id">推荐使用</span>
+              <div :class="$style.amount">-{{ item.amount }}</div>
+              <span :class="$style.choices">
+                <pl-svg v-if="item.id === coupon.id" name="icon-xuanzhong" width="40" />
+                <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+              </span>
+            </div>
           </template>
+          <div :class="$style.couponItem" @click="couponClick({}, true)">
+            <div :class="$style.notChooseCoupon">不参加优惠</div>
+            <span :class="$style.choices">
+              <pl-svg v-if="isNotChoose" name="icon-xuanzhong" width="40" />
+              <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+            </span>
+          </div>
         </div>
       </div>
     </pl-popup>
@@ -508,6 +522,7 @@
 <script>
 import AddressItem from '../../components/item/Address-Item.vue'
 import OrderItem from '../../components/item/Order-Item.vue'
+import moment from 'moment'
 import {
   confirmCart,
   submitOrder,
@@ -520,9 +535,9 @@ import { STUDENTS } from '../../store/mutation-type'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Count from '../../components/common/Count.vue'
-import CouponItem from '../../components/item/Coupon-Item.vue'
 import { checkLength, isPhone } from '../../assets/js/validate'
 import { resetForm, setTimeoutSync } from '../../assets/js/util'
+import { getServerTime } from '../../apis/base-api'
 export default {
   name: 'SubmitOrder',
   components: {
@@ -530,8 +545,7 @@ export default {
     OrderItem,
     OrderItemSkeleton,
     AddressItemSkeleton,
-    Count,
-    CouponItem
+    Count
   },
   data () {
     this.requestPayDataCount = 0
@@ -575,7 +589,10 @@ export default {
         mobile: ''
       },
       lessonErrorId: '',
-      lessonErrorTip: ''
+      lessonErrorTip: '',
+      recommendCouponId: '', // 推荐使用的优惠券Id
+      serverTime: '', // 服务器时间
+      isNotChoose: false // 默认选中一个优惠券
     }
   },
   computed: {
@@ -632,6 +649,9 @@ export default {
     let students // 已有学员列表
     let defStudent // 默认学员
     try {
+      // 获取服务器时间
+      let { result: serverTime } = await getServerTime()
+      this.serverTime = Number(serverTime)
       // 获取商品详情
       await this.getProductDetail()
       // 选择的发票信息（如果有的话）
@@ -680,8 +700,9 @@ export default {
     async getProductDetail (flag, coupon = {}) {
       try {
         const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-        if (this.activeProduct === 1 && !coupon.id) {
+        if (this.activeProduct === 1 && !coupon.id && !this.isNotChoose) {
           coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
+          this.recommendCouponId = coupon.id
         }
         if (!proList || !proList.length) {
           return this.$router.replace({ name: 'Home' })
@@ -798,16 +819,24 @@ export default {
       }
     },
     // 选择优惠券
-    async couponClick (item) {
+    async couponClick (item, isNotChoose) {
       this.coupon = item
       this.showCoupon = false
+      this.isNotChoose = isNotChoose
       await this.getProductDetail(true, item)
     },
     // 获取优惠券
     async getCouponList (amount) {
       try {
         let { result } = await getCouponByPrice(amount)
-        this.couponList = result
+        let serverTime = this.serverTime
+        this.couponList = result.map(item => {
+          let duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+          let day = Math.floor(moment.duration(duration).asDays())
+          item.timeDesc = ''
+          if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${day}天后过期`
+          return item
+        })
       } catch (e) {
         throw e
       }
@@ -1334,7 +1363,73 @@ export default {
     padding: 0 24px;
     > .coupon-list {
       margin-top: 48px;
+      padding-bottom: 40px;
+
+      .coupon-item {
+        height: 72px;
+        line-height: 72px;
+        position: relative;
+        overflow: hidden;
+        font-size: 24px;
+
+        .button {
+          display: inline-block;
+          width: 120px;
+          height: 40px;
+          border: 2px solid #F2B036;
+          border-radius: 8px;
+          line-height: 40px;
+          color: #F2B036;
+          text-align: center;
+          margin-top: 10px;
+          float: left;
+        }
+
+        .full {
+          display: inline-block;
+          font-size: 28px;
+          color: #373737;
+          float: left;
+          margin-left: 20px;
+        }
+
+        .time-desc {
+          display: inline-block;
+          color: #B5B5B5;
+          float: left;
+          margin-left: 28px;
+        }
+        .recommend {
+          color:#FE0D0D;
+          margin-left: 24px;
+        }
+        .amount {
+          display: inline-block;
+          color: #373737;
+          position: absolute;
+          right: 80px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .choices {
+          position: absolute;
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          >svg {
+            vertical-align: middle;
+          }
+        }
+        .not-choose-coupon{
+          font-size:28px;
+          line-height: 72px;
+          color:#C1C1C1;
+        }
+      }
     }
+  }
+  .text-grey {
+    color:#C1C1C1!important;
   }
   @keyframes bordrFlicker {
     0% { border-color: #F24724 }

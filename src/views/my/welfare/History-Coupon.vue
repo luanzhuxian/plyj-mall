@@ -23,7 +23,7 @@
                  @click="selectedChange(item.id)"
             >
               <span v-if="isManagementState">
-                <pl-svg v-if="!item.checked" name="icon-weixuanzhong" fill="#FFCCCCCC" width="40" />
+                <pl-svg v-if="!item.checked" name="icon-weixuanzhong1" width="40" />
                 <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
               </span>
               <CouponItem

@@ -221,8 +221,14 @@ export default {
     flex: 1;
     margin-top: 24px;
     margin-left: 32px;
+    overflow: hidden;
+    padding-right: 24px;
 
     h1 {
+      width: 100%;
+      overflow: hidden;
+      word-break: keep-all;
+      text-overflow: ellipsis;
       font-size: 28px;
       color: #373737;
     }
