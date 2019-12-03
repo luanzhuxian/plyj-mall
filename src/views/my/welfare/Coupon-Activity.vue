@@ -17,16 +17,18 @@
       <div :class="$style.sort">
         <div @click="sort('isByComprehensive')">
           <span :class="{ [$style.changeColor]: isByComprehensive }">综合</span>
-          <pl-icon :name="isByComprehensiveDown? 'icon-triangle-down': 'icon-triangle'"
-                   color="#747474"
-                   size="30"
+          <pl-svg
+            :name="isByComprehensiveDown? 'icon-triangle-down': 'icon-triangle'"
+            fill="#747474"
+            width="30"
           />
         </div>
         <div @click="sort('isBySaleCount')">
           <span :class="{ [$style.changeColor]: isBySaleCount }">销量</span>
-          <pl-icon :name="isBySaleCountDown? 'icon-triangle-down': 'icon-triangle'"
-                   color="#747474"
-                   size="30"
+          <pl-svg
+            :name="isBySaleCountDown? 'icon-triangle-down': 'icon-triangle'"
+            fill="#747474"
+            width="30"
           />
         </div>
       </div>

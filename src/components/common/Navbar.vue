@@ -38,7 +38,7 @@
         v-if="skinId === 0"
         :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
         width="44"
-        height="67"
+        height="68"
       />
       <template v-if="~[1, 2].indexOf(skinId)">
         <template v-if="skinId === 1">
@@ -67,6 +67,7 @@
     >
       <pl-svg
         v-if="skinId === 0"
+        type="svg"
         :name="yajiActive ? 'icon-cart-active' : 'icon-cart'"
         width="60"
         height="72"
@@ -90,9 +91,10 @@
     >
       <pl-svg
         v-if="skinId === 0"
+        type="svg"
         :name="myActive ? 'icon-my-active' : 'icon-my'"
         width="44"
-        height="72"
+        height="74"
       />
       <template v-if="~[1, 2].indexOf(skinId)">
         <template v-if="skinId === 1">
