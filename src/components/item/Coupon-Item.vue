@@ -24,7 +24,7 @@
               <pl-svg
                 :class="{ [$style.showInstruction]: showInstruction }"
                 name="icon-arrow-down"
-                color="#FFF"
+                fill="#FFF"
                 width="10"
               />
             </div>
@@ -301,10 +301,10 @@ export default {
         background-color: #F9B20F;
         border-radius: 14px;
         padding: 3px 2px;
-        > i {
+        > svg {
           width: 18px;
           line-height: 18px;
-          vertical-align: 2px;
+          vertical-align: middle;
           transform: rotate(0);
           transition: transform .2s linear;
           &.showInstruction {

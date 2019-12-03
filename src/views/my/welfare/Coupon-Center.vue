@@ -137,7 +137,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 400px;
+        margin-top: 300px;
         margin-bottom: -200px;
       }
     }
