@@ -67,7 +67,7 @@
 import LoadMore from '../../../components/common/Load-More.vue'
 import CouponItem from '../../../components/item/Coupon-Item.vue'
 import CouponGoodItem from '../../../components/item/Coupon-Good-Item.vue'
-import { getProductList } from '../../../apis/my-coupon'
+import { getProductList, getCouponDetail } from '../../../apis/my-coupon'
 
 export default {
   name: 'CouponActivity',
@@ -78,6 +78,7 @@ export default {
   },
   data () {
     return {
+      couponId: '',
       couponInfo: {
         id: '',
         name: '',
@@ -108,20 +109,27 @@ export default {
   created () {
   },
   async activated () {
-    this.couponInfo.id = this.$route.params.id
-    this.couponInfo.type = Number(this.$route.params.couponType)
-    this.couponInfo.name = this.$route.query.name
-    this.couponInfo.amount = Number(this.$route.query.amount)
-    this.couponInfo.useLimitAmount = Number(this.$route.query.useLimitAmount)
-    this.couponInfo.useStartTime = this.$route.query.useStartTime
-    this.couponInfo.useEndTime = this.$route.query.useEndTime
-    this.couponInfo.instruction = this.$route.query.instruction
-    this.couponInfo.couponId = this.$route.query.couponId
-
-    this.form.couponType = this.couponInfo.type
-    this.form.couponId = this.couponInfo.couponId
-
-    this.$refs.loadMore.refresh()
+    try {
+      this.couponId = this.$route.params.couponId
+      let { result } = await getCouponDetail(this.couponId)
+      // 设置优惠券的详情
+      this.couponInfo.id = result.id
+      this.couponInfo.name = result.couponName
+      this.couponInfo.type = result.couponType
+      this.couponInfo.amount = result.amount
+      this.couponInfo.useLimitAmount = result.useLimitAmount
+      this.couponInfo.useStartTime = result.useStartTime
+      this.couponInfo.useEndTime = result.useEndTime
+      this.couponInfo.instruction = result.brief
+      // 设置查询当前优惠券下的商品列表参数
+      this.form.current = 1
+      this.form.couponType = result.couponType
+      this.form.couponId = this.couponId
+      // 获取商品详情
+      this.$refs.loadMore.refresh()
+    } catch (e) {
+      throw (e)
+    }
   },
   methods: {
     sort (keyword) { // 排序

@@ -168,16 +168,7 @@ export default {
         // 去使用，进入可使用此优惠券的商品列表中
         this.$router.push({
           name: 'CouponActivity',
-          params: { id: this.id, couponType: this.couponType },
-          query: {
-            couponId: this.couponId,
-            name: this.name,
-            amount: this.amount,
-            useLimitAmount: this.full,
-            useStartTime: this.useStartTime,
-            useEndTime: this.useEndTime,
-            instruction: this.instruction
-          }
+          params: { couponId: this.couponId }
         })
       } else {
         if (!this.userId) {

@@ -104,7 +104,7 @@ export default [
     }
   },
   {
-    path: '/my/welfare/couponActivity/:couponType?/:id?',
+    path: '/my/welfare/couponActivity/:couponId',
     name: 'CouponActivity',
     props: true,
     component: () => import('../views/my/welfare/Coupon-Activity.vue'),

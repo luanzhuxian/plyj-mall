@@ -54,3 +54,8 @@ export const getCouponByPrice = useLimitAmount => axios.get(`/apis/v1/coupon/me/
  * 根据优惠券详情获取商品列表
  * */
 export const getProductList = ({ current, size, couponType, couponId, sortComplex, isDESC }) => axios.get(`/apis/v1/coupon/product/list?current=${current}&size=${size}&couponType=${couponType}&couponId=${couponId}&${(sortComplex ? 'sortComplex=' : 'sortSalesVolume=') + (isDESC ? 'DESC' : 'ASC')}`)
+
+/**
+ * 根据优惠券Id详情获取优惠券详情
+ * */
+export const getCouponDetail = id => axios.get(`/apis/v1/coupon/selectById/${id}`)
