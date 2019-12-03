@@ -85,7 +85,7 @@
             <span :class="$style.itemLabel">优惠券</span>
             <span :class="$style.subtotalPrice">
               <span v-if="!isNotChoose">-¥{{ coupon.amount }}</span>
-              <span v-else :class="$style.textGrey">不参加优惠</span>
+              <span v-else>{{ couponList.length }}张可用</span>
               <pl-svg name="icon-right" fill="#373737" width="22" />
             </span>
           </div>
@@ -198,7 +198,7 @@
               <span :class="$style.itemLabel">优惠券</span>
               <span :class="$style.subtotalPrice">
                 <span v-if="!isNotChoose">-¥{{ coupon.amount }}</span>
-                <span v-else :class="$style.textGrey">不参加优惠</span>
+                <span v-else>{{ couponList.length }}张可用</span>
                 <pl-svg name="icon-right" fill="#373737" width="22" />
               </span>
             </div>
@@ -312,7 +312,7 @@
               <span :class="$style.itemLabel">优惠券</span>
               <span :class="$style.subtotalPrice">
                 <span v-if="!isNotChoose">-¥{{ coupon.amount }}</span>
-                <span v-else :class="$style.textGrey">不参加优惠</span>
+                <span v-else>{{ couponList.length }}张可用</span>
                 <pl-svg name="icon-right" fill="#373737" width="22" />
               </span>
             </div>
@@ -689,6 +689,7 @@ export default {
     }
   },
   deactivated () {
+    this.isNotChoose = false
   },
   methods: {
     ...mapActions([STUDENTS]),
@@ -1171,6 +1172,9 @@ export default {
   .subtotalPrice {
     font-size: 24px;
     color: #000;
+    > svg {
+      vertical-align: middle;
+    }
   }
   .address {
     margin-bottom: 28px;
@@ -1427,9 +1431,6 @@ export default {
         }
       }
     }
-  }
-  .text-grey {
-    color:#C1C1C1!important;
   }
   @keyframes bordrFlicker {
     0% { border-color: #F24724 }
