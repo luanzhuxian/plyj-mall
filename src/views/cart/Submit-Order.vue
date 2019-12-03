@@ -355,7 +355,7 @@
       <pl-fields
         size="middle"
         text="优惠"
-        icon="icon-coupon1"
+        icon="icon-coupon"
         :icon-gap="12"
         show-right-icon
         :right-text="'-¥' + coupon.amount"

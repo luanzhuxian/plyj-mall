@@ -18,29 +18,32 @@
         <div @click="sort('isByComprehensive')">
           <span :class="{ [$style.changeColor]: isByComprehensive }">综合</span>
           <pl-svg
+            class="ml-10"
             :name="isByComprehensiveDown? 'icon-triangle-down': 'icon-triangle'"
             fill="#747474"
-            width="30"
+            width="20"
           />
         </div>
         <div @click="sort('isBySaleCount')">
           <span :class="{ [$style.changeColor]: isBySaleCount }">销量</span>
           <pl-svg
+            class="ml-10"
             :name="isBySaleCountDown? 'icon-triangle-down': 'icon-triangle'"
             fill="#747474"
-            width="30"
+            width="20"
           />
         </div>
       </div>
     </div>
     <div :class="$style.productList">
-      <LoadMore :request-methods="getProductList"
-                :form="form"
-                @refresh="refreshHandler"
-                @more="refreshHandler"
-                ref="loadMore"
-                no-content-tip="此优惠券下还没有商品"
-                no-icon
+      <LoadMore
+        :request-methods="getProductList"
+        :form="form"
+        @refresh="refreshHandler"
+        @more="refreshHandler"
+        ref="loadMore"
+        no-content-tip="此优惠券下还没有商品"
+        no-icon
       >
         <template v-for="(item, index) of productList">
           <!-- 商品图片 商品名称 新春特价 价格 付款人数 加入购物车 -->

@@ -13,3 +13,8 @@ export const secondActivityPage = params => axios.get('/apis/v1/seckill/activity
 export const tuanActivityPage = params => axios.get('/apis/v1/group/buy/queryList', { params })
 // C 端预购列表
 export const bookActivityPage = params => axios.get('/apis/v1/pre/buy/queryList', { params })
+/**
+ * 活动当前用户可用优惠券列表（可用包括已领和未领）
+ * @return {Promise<Object>}
+ */
+export const getCouponList = () => axios.get('/apis/v1/coupon/normal/list')

@@ -33,7 +33,6 @@
         <div v-if="friendUserId" :class="$style.inviteFriends">
           <!--小手一点帮我助力-->
           <pl-svg name="icon-invite-users" :width="560" />
-          <!--<pl-icon name="icon-xiaoshouyidianbangwozhuli" fill="#fff" size="56" />-->
         </div>
         <div :class="$style.shortOf">
           你也可以参与活动拿豪礼大奖哦！
@@ -42,7 +41,6 @@
       <template v-else>
         <div :class="$style.inviteFriends">
           <pl-svg name="icon-invite-users" :width="560" />
-          <!--<pl-icon type="svg" name="icon-yinghaoli" width="560" />-->
         </div>
         <!--<div v-if="inviteDescription > 0" :class="$style.shortOf">
           还差<i v-text="inviteDescription" />个好友注册
@@ -54,7 +52,6 @@
       <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,敬请期待</button>
       <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">立即注册，得豪礼</button>
-      <!--<button :class="$style.button" v-else-if="status === 2 && friendUserId">注册成功</button>-->
       <button :class="$style.button" v-else-if="status === 2 && !hasShare" @click="invite">参与活动</button>
       <button :class="$style.button" v-else-if="status === 2" @click="invite">立即开奖</button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
