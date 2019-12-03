@@ -35,6 +35,7 @@
               :use-end-time="item.useEndTime"
               :use-start-time="item.useStartTime"
               :receive-count="item.count"
+              :coupon-type="item.couponType"
               @couponClick="couponClick(item.id)"
             />
           </template>

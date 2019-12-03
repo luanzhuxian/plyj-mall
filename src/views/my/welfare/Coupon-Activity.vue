@@ -105,7 +105,7 @@ export default {
   async activated () {
     this.couponInfo.id = this.$route.params.id
     this.couponInfo.type = Number(this.$route.params.couponType)
-    this.couponInfo.name = this.$route.query.couponName
+    this.couponInfo.name = this.$route.query.name
     this.couponInfo.amount = Number(this.$route.query.amount)
     this.couponInfo.useLimitAmount = Number(this.$route.query.useLimitAmount)
     this.couponInfo.useStartTime = this.$route.query.useStartTime

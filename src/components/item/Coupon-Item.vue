@@ -82,6 +82,10 @@ export default {
       isClaimed: false // 是否在当前页面可领取，只支持前端页面的显示
     }
   },
+  deactivated () {
+    this.showInstruction = false
+    this.isClaimed = false
+  },
   props: {
     status: {
       type: String,
@@ -163,7 +167,7 @@ export default {
           params: { id: this.id, couponType: this.couponType },
           query: {
             couponId: this.couponId,
-            name: this.couponName,
+            name: this.name,
             amount: this.amount,
             useLimitAmount: this.full,
             useStartTime: this.useStartTime,

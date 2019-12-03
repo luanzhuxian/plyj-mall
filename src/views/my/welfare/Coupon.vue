@@ -103,6 +103,10 @@ export default {
   activated () {
     this.$refs.loadMore.refresh()
   },
+  deactivated () {
+    this.activeMenuId = ''
+    this.isManagementState = false
+  },
   methods: {
     formatCouponList (list) {
       list.map(item => {
