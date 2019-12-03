@@ -16,7 +16,7 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="usedCouponList.length === 0">
-              <pl-svg name="icon-coupon2" width="240" height="240" />
+              <pl-svg name="icon-newCouponIcon" width="400" />
             </div>
             <div v-for="item in usedCouponList" :key="item.id"
                  :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
@@ -59,15 +59,15 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="overduedCouponList.length === 0">
-              <pl-svg name="icon-coupon2" width="240" height="240" />
+              <pl-svg name="icon-newCouponIcon" width="400" />
             </div>
             <div v-for="item in overduedCouponList" :key="item.id"
                  :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
                  @click="selectedChange(item.id)"
             >
               <span v-if="isManagementState">
-                <pl-svg v-if="!item.checked" name="icon-weixuanzhong" fill="#FFCCCCCC" width="40" />
-                <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" height="40" />
+                <pl-svg v-if="!item.checked" name="icon-weixuanzhong1" width="40" />
+                <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
               </span>
               <CouponItem
                 :class="$style.moveCoupon"
@@ -207,7 +207,14 @@ export default {
           status: 99
         }
       }
+      this.isManagementState = false
       this.refreshList()
+    },
+    isManagementState (val) {
+      if (val) {
+        let listName = this.activeMenuId === 1 ? 'usedCouponList' : 'overduedCouponList'
+        this[listName] = this.formatCouponList(this[listName])
+      }
     }
   }
 }
@@ -264,7 +271,7 @@ export default {
       }
 
       .receive-more{
-        width:172px;
+        width:250px;
         height:60px;
         line-height:60px;
         text-align: center;

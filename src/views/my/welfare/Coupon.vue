@@ -23,7 +23,7 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
-              <pl-svg name="icon-coupon1" width="240" height="240" />
+              <pl-svg name="icon-newCouponIcon" width="400" />
             </div>
             <div v-for="item in couponList" :key="item.id"
                  :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
