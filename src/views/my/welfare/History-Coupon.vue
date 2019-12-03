@@ -16,15 +16,15 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="usedCouponList.length === 0">
-              <pl-icon name="icon-coupon1" width="240" height="240" type="svg" />
+              <pl-svg name="icon-coupon2" width="240" height="240" />
             </div>
             <div v-for="item in usedCouponList" :key="item.id"
                  :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
                  @click="selectedChange(item.id)"
             >
               <span v-if="isManagementState">
-                <pl-icon v-if="!item.checked" name="icon-weixuanzhong" color="#FFCCCCCC" size="40" type="icon" />
-                <pl-icon v-if="item.checked" name="icon-xuanzhong" width="40" height="40" type="svg" />
+                <pl-svg v-if="!item.checked" name="icon-weixuanzhong" fill="#FFCCCCCC" width="40" />
+                <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
               </span>
               <CouponItem
                 :class="$style.moveCoupon"
@@ -59,15 +59,15 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="overduedCouponList.length === 0">
-              <pl-icon name="icon-coupon1" width="240" height="240" type="svg" />
+              <pl-svg name="icon-coupon2" width="240" height="240" />
             </div>
             <div v-for="item in overduedCouponList" :key="item.id"
                  :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
                  @click="selectedChange(item.id)"
             >
               <span v-if="isManagementState">
-                <pl-icon v-if="!item.checked" name="icon-weixuanzhong" color="#FFCCCCCC" size="40" type="icon" />
-                <pl-icon v-if="item.checked" name="icon-xuanzhong" width="40" height="40" type="svg" />
+                <pl-svg v-if="!item.checked" name="icon-weixuanzhong" fill="#FFCCCCCC" width="40" />
+                <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" height="40" />
               </span>
               <CouponItem
                 :class="$style.moveCoupon"

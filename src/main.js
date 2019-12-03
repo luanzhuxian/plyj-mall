@@ -5,7 +5,6 @@ import store from './store/index'
 import './assets/js/axios-config'
 import 'moment/locale/zh-cn'
 import './assets/scss/index.scss'
-import './assets/fonts/svg/index'
 import directive from './directive'
 import { beforeEach, beforeResolve, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
@@ -14,7 +13,6 @@ import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
 import './assets/css/quill.css'
-import PlIcon from './components/common/Pl-Icon.vue'
 import PlSvg from './components/common/Pl-Svg.vue'
 import { errorlog } from './apis/base-api'
 Vue.use(VueLazyload, {
@@ -24,7 +22,6 @@ Vue.use(VueLazyload, {
 })
 Vue.use(animated)
 Vue.use(VueClipboard)
-Vue.component('pl-icon', PlIcon)
 Vue.component('pl-svg', PlSvg)
 // Vue.use(SvgIcon, {
 //   tagName: 'svgicon'

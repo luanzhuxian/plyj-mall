@@ -11,12 +11,12 @@
           </div>-->
           <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/box@2x.png">
           <div>
-            <span class="btn-open" @click="openGift">开豪礼<pl-icon type="icon" name="icon-arrow-right" size="34" /></span>
+            <span class="btn-open" @click="openGift">开豪礼<pl-svg name="icon-right" fill="#ccc" width="34" /></span>
           </div>
         </div>
         <div style="margin-top: 64px; text-align: center;">
           <span class="btn-close" @click="close">
-            <pl-icon type="icon" name="icon-close" color="white" />
+            <pl-svg name="icon-close" fill="white" width="48" />
           </span>
         </div>
       </div>

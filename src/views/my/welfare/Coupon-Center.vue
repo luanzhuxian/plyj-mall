@@ -5,7 +5,7 @@
     </div>
     <div :class="$style.couponList">
       <div :class="$style.couponHeader">
-        <pl-icon name="icon-coupon1" width="40" height="33" type="svg" />
+        <pl-svg name="icon-coupon2" width="40" height="33" />
         <span>优惠券</span>
       </div>
       <div :class="$style.couponView">
@@ -20,7 +20,7 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
-              <pl-icon name="icon-coupon1" width="240" height="240" type="svg" />
+              <pl-svg name="icon-coupon2" width="240" height="240" />
             </div>
             <CouponItem
               v-for="item in couponList"

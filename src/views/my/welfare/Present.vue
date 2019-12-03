@@ -34,7 +34,7 @@
         </div>
         <div class="code-save">长按图片保存分享给好友</div>
         <div class="code-close">
-          <pl-icon @click="codeShow" name="icon-error" size="50" color="ffffff" />
+          <pl-svg @click="codeShow" name="icon-close3" width="50" fill="ffffff" />
         </div>
       </div>
     </div>
@@ -43,13 +43,13 @@
     </div>
     <div class="item-box" v-show="activeId === 0">
       <div class="empty" v-if="!data0.length">
-        <pl-icon name="icon-youhuiquan1" type="svg" width="240" height="240" />
+        <pl-svg name="icon-youhuiquan" width="240" height="240" />
         <span>暂无礼品券</span>
       </div>
       <div class="items" v-else v-for="(item,index) of data0" :key="index">
         <div class="delete-box" v-if="isEdit">
-          <pl-icon @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" color="#FE7700" size="28" />
-          <pl-icon @click="choose(item)" v-else name="icon-success1" color="#ccc" size="28" />
+          <pl-svg @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" fill="#FE7700" width="28" />
+          <pl-svg @click="choose(item)" v-else name="icon-chenggong" fill="#ccc" width="28" />
         </div>
         <div class="item">
           <div class="item-content">
@@ -77,17 +77,17 @@
     </div>
     <div class="item-box" v-show="activeId === 1">
       <div class="empty" v-if="!data1.length">
-        <pl-icon name="icon-youhuiquan1" type="svg" width="240" height="240" />
+        <pl-svg name="icon-youhuiquan" width="240" height="240" />
         <span>暂无礼品券</span>
       </div>
       <div class="items" v-else v-for="(item,index) of data1" :key="index">
         <div class="delete-box" v-if="isEdit">
-          <pl-icon @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" color="#FE7700" size="28" />
-          <pl-icon @click="choose(item)" v-else name="icon-success1" color="#ccc" size="28" />
+          <pl-svg @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" fill="#FE7700" width="28" />
+          <pl-svg @click="choose(item)" v-else name="icon-chenggong" fill="#ccc" width="28" />
         </div>
         <div class="item">
           <div class="item-content">
-            <pl-icon class="stamp" name="icon-yiduihuan" type="svg" width="200" height="200" />
+            <pl-svg class="stamp" name="icon-yiduihuan" width="200" height="200" />
             <div class="content-img-box">
               <img :src="item.giftImage" alt="">
             </div>
@@ -112,17 +112,17 @@
     </div>
     <div class="item-box" v-show="activeId === 99">
       <div class="empty" v-if="!data99.length">
-        <pl-icon name="icon-youhuiquan1" type="svg" width="240" height="240" />
+        <pl-svg name="icon-youhuiquan" type="svg" width="240" height="240" />
         <span>暂无礼品券</span>
       </div>
       <div class="items" v-else v-for="(item,index) of data99" :key="index">
         <div class="delete-box" v-if="isEdit">
-          <pl-icon @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" color="#FE7700" size="28" />
-          <pl-icon @click="choose(item)" v-else name="icon-success1" color="#ccc" size="28" />
+          <pl-svg @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" fill="#FE7700" width="28" />
+          <pl-svg @click="choose(item)" v-else name="icon-chenggong" fill="#ccc" width="28" />
         </div>
         <div class="item">
           <div class="item-content">
-            <pl-icon class="stamp" name="icon-yiguoqi" type="svg" width="200" height="200" />
+            <pl-svg class="stamp" name="icon-yiguoqi" width="200" height="200" />
             <div class="content-img-box">
               <img :src="item.giftImage" alt="">
             </div>

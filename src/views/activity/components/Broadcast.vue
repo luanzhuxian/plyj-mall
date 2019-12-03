@@ -7,7 +7,7 @@
     <div :class="$style.moduleWrapper">
       <div :class="$style.imgWrapper">
         <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
-        <pl-icon name="icon-play-btn" type="svg" />
+        <pl-svg name="icon-play" width="60" />
       </div>
       <div :class="$style.info">
         <div :class="$style.main">
@@ -20,7 +20,7 @@
           }"
         >
           <div :class="$style.timeLeft">
-            <pl-icon name="icon-clock" color="#fff" size="26" v-if="live.statue === 2 && live.hasNotice" />
+            <pl-svg name="icon-clock" fill="#fff" width="26" v-if="live.statue === 2 && live.hasNotice" />
             <span v-if="live.statue === 2 && live.hasNotice">预告</span>
             <span v-if="live.statue === 4">直播中</span>
           </div>
@@ -101,8 +101,6 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 60px;
-        height: 60px;
       }
     }
     .info {

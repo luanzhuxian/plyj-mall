@@ -4,8 +4,8 @@
     <div class="main">
       <div class="list book-ing" v-if="ingList.length > 0">
         <div class="head">
-          <pl-icon name="icon-ing_icon" color="#fff" size="52" />
-          <pl-icon name="icon-ing_text" color="#fff" size="52" />
+          <pl-svg name="icon-ing_icon" fill="#fff" width="52" />
+          <pl-svg name="icon-ing_text" fill="#fff" width="52" />
         </div>
         <div class="item book-item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
           <count-down
@@ -27,8 +27,8 @@
       </div>
       <div class="list book-coming" v-if="comingList.length > 0">
         <div class="head">
-          <pl-icon name="icon-coming_icon" color="#fff" size="52" />
-          <pl-icon name="icon-coming_text" color="#fff" size="52" />
+          <pl-svg name="icon-coming_icon" fill="#fff" width="52" />
+          <pl-svg name="icon-coming_text" fill="#fff" width="52" />
         </div>
         <div class="item book-item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
           <count-down

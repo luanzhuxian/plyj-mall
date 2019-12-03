@@ -12,7 +12,7 @@
         >
         <div class="remove-btn">
           <pl-svg
-            class="remove-btn--close iconfont icon-qingchu"
+            class="remove-btn--close"
             name="icon-close"
             @click="removeImg(i)"
           />

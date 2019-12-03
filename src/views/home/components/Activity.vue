@@ -21,7 +21,7 @@
             </span>
             <span :class="$style.label" v-if="hasJxEvent && !hasInvitingEvent">
               点击进入
-              <pl-svg name="icon-my-right" width="20" fill="#fff" />
+              <pl-svg name="icon-right" width="20" fill="#fff" />
             </span>
           </div>
         </div>
@@ -48,7 +48,7 @@
             </span>
             <div :class="$style.label" v-if="!hasJxEvent && hasInvitingEvent">
               点击进入
-              <pl-svg name="icon-my-right" width="20" fill="#fff" />
+              <pl-svg name="icon-right" width="20" fill="#fff" />
             </div>
           </div>
         </div>

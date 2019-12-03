@@ -5,7 +5,7 @@
         <div :class="$style.navBar">
           <router-link :class="$style.navLink" tag="div" :to="{ name: 'TuanList' }">
             <span>查看更多</span>
-            <pl-icon name="icon-arrow-right" size="20" />
+            <pl-svg name="icon-right" fill="#ccc" width="20" />
           </router-link>
         </div>
         <ul :class="$style.list" v-if="data.values.length">
@@ -65,7 +65,7 @@
                       </span>
                     </div>
                     <div :class="$style.subLeftSub">
-                      <pl-icon name="icon-tuangoujia" type="svg" />
+                      <pl-svg name="icon-tuangoujia" width="80" height="40" />
                       <span :class="$style.price">{{ item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.activityPrice }}</span>
                     </div>
                   </div>
@@ -75,17 +75,15 @@
                       [$style.disabled]: item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status !== 1
                     }"
                   >
-                    <pl-icon
-                      name="icon-qiang"
-                      type="svg"
-                      :class="$style.qiang"
+                    <pl-svg
+                      name="icon-vie-for"
+                      width="40"
                       v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
                     />
-                    <pl-icon
-                      name="icon-jieshu"
-                      type="svg"
-                      :class="$style.finish"
+                    <pl-svg
                       v-else
+                      name="icon-jieshu"
+                      width="40"
                     />
                   </div>
                 </div>
@@ -205,9 +203,6 @@ export default {
             &-right {
               width: 72px;
               height: 72px;
-               .qiang {
-                width: 40px;
-              }
             }
           }
         }
@@ -363,9 +358,6 @@ export default {
           color: #ffffff;
           &.disabled {
             background: linear-gradient(231deg, rgba(204, 204, 204, 1) 0%, rgba(153, 153, 153, 1) 100%);
-          }
-          .finish {
-            width: 40px;
           }
         }
       }

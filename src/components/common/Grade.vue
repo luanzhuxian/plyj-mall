@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.grade + ' ' + $style[size]">
     <div :class="$style.stars">
-      <pl-icon
+      <pl-svg
         v-for="i of 5"
         :key="i"
         name="icon-star"
         :class="{ [$style.selected]: grade >= i, [$style.star]: true }"
-        :color="grade >= i ? '#f2b036' : '#fcefd7'"
-        :size="iconSize"
+        :fill="grade >= i ? '#f2b036' : '#fcefd7'"
+        :width="iconSize"
         @click="handleClick(i)"
       />
     </div>

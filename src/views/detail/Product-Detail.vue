@@ -116,7 +116,7 @@
           <img :src="logoUrl" alt="">
         </div>
         <div :class="$style.pingxuanRight">
-          <pl-icon name="icon-arrow-right" color="#ccc" :size="20" />
+          <pl-svg name="icon-right" fill="#ccc" width="20" height="25" />
         </div>
       </div>
     </template>

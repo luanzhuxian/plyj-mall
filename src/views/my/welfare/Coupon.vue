@@ -1,11 +1,10 @@
 <template>
   <div>
     <div :class="$style.walfareTip" v-if="hasPackages">
-      <!--TODO.闹铃的icon图-->
-      <pl-icon name="icon-alarm" color="#fff" size="18" type="icon" />
+      <pl-svg name="icon-alarm" fill="#fff" width="18" />
       <span>
         您有一个新人有礼优惠大礼包，还未领取哦！
-        <pl-icon name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
+        <pl-svg name="icon-right" fill="#fff" width="16" />
       </span>
     </div>
     <div :class="$style.coupons">
@@ -24,15 +23,15 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
-              <pl-icon name="icon-coupon1" width="240" height="240" type="svg" />
+              <pl-svg name="icon-coupon1" width="240" height="240" />
             </div>
             <div v-for="item in couponList" :key="item.id"
                  :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
                  @click="selectedChange(item.id)"
             >
               <span v-if="isManagementState">
-                <pl-icon v-if="!item.checked" name="icon-weixuanzhong" color="#FFCCCCCC" size="40" type="icon" />
-                <pl-icon v-if="item.checked" name="icon-xuanzhong" width="40" height="40" type="svg" />
+                <pl-svg v-if="!item.checked" name="icon-weixuanzhong" fill="#FFCCCCCC" width="40" />
+                <pl-svg v-if="item.checked" name="icon-xuanzhong" fill="40" width="40" />
               </span>
               <CouponItem
                 :class="$style.moveCoupon"
@@ -164,30 +163,16 @@ export default {
 
 <style module lang="scss">
   .walfare-tip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 64px;
-    line-height: 64px;
-    text-align: center;
     margin: 10px 50px;
-    background: #F67070;
-    box-shadow: 0px 10px 20px #000;
-    opacity: 1;
+    color: #fff;
+    font-size: 26px;
+    background-color: #F67070;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .2);
     border-radius: 258px;
-
-    i {
-      color: #fff;
-    }
-
-    span {
-      color: #fff;
-      font-size: 26px;
-      font-weight: 400;
-      line-height: 36px;
-      position: relative;
-
-      b {
-        font-family: cursive;
-      }
-    }
   }
 
   .coupons {

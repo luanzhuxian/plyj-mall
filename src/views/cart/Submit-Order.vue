@@ -83,7 +83,7 @@
         <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">优惠券</span>
-            <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-svg name="icon-my-right" fill="#ccc" width="22" /></span>
+            <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-svg name="icon-right" fill="#ccc" width="22" /></span>
           </div>
         </div>
 
@@ -192,7 +192,7 @@
           <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
-              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-svg name="icon-my-right" fill="#ccc" width="22" /></span>
+              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-svg name="icon-right" fill="#ccc" width="22" /></span>
             </div>
           </div>
 
@@ -302,7 +302,7 @@
           <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
-              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-svg name="icon-my-right" fill="#ccc" width="22" /></span>
+              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-svg name="icon-right" fill="#ccc" width="22" /></span>
             </div>
           </div>
 

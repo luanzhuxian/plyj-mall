@@ -4,14 +4,14 @@
       <div :class="$style.timer">
         <template v-if="status !== 0">
           <div :class="$style.timerTip">
-            <pl-icon v-if="status === 2" type="svg" name="icon-julijieshu" width="68" height="82" />
-            <pl-icon v-if="status === 1" type="svg" name="icon-julikaishi" width="68" height="82" />
+            <pl-svg v-if="status === 2" name="icon-julijieshu" width="68" height="82" />
+            <pl-svg v-if="status === 1" name="icon-julikaishi" width="68" height="82" />
           </div>
           <div :class="$style.timerContent">
             <div>
               <span v-for="(dd, i) of d" :key="i" v-text="dd" />
             </div>
-            <pl-icon style="margin: 0 1.333vw" type="svg" name="icon-tian" width="34" height="34" />
+            <pl-svg style="margin: 0 1.333vw" name="icon-tian" width="34" height="34" />
             <div>
               <span v-for="(hh, i) of h" :key="i" v-text="hh" />
             </div>
@@ -77,8 +77,8 @@
       @confirm="giftConfirm"
     >
       <div slot="title">
-        <pl-icon v-if="hasGift" name="icon-gongxininhuode" color="#fff" size="60" />
-        <pl-icon v-else name="icon-ganxiecanyu" color="#fff" size="60" />
+        <pl-svg v-if="hasGift" name="icon-gongxininhuode" fill="#fff" width="60" />
+        <pl-svg v-else name="icon-ganxiecanyu" fill="#fff" width="60" />
       </div>
       <!-- 优惠券 -->
       <div :class="$style.couponList" v-if="mallCouponEntity">

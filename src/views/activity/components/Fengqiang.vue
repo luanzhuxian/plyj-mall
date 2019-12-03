@@ -27,7 +27,7 @@
               <div :class="$style.itemInfo" v-if="type === 5 || type === 7">
                 <h4>{{ item.goodsInfo.productName }}</h4>
                 <div :class="$style.infoText">
-                  <pl-icon name="icon-fengqiangjia" type="svg" />
+                  <pl-svg name="icon-fengqiangjia" width="78" height="34" />
                   <span :class="$style.price">
                     {{ item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price') }}
                   </span>
@@ -38,7 +38,7 @@
                     {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}` }}人付款
                   </span>
                   <div :class="$style.btnHighlight">
-                    <pl-icon name="icon-mashangqiang" type="svg" />
+                    <pl-svg name="icon-mashangqiang" width="118" height="46" />
                   </div>
                 </div>
               </div>
@@ -219,9 +219,7 @@ export default {
             color: #999999;
             @include elps();
             svg {
-              width: 78px;
               min-width: 78px;
-              height: 34px;
               padding-bottom: 4px;
             }
             .price {
@@ -249,10 +247,6 @@ export default {
               background: linear-gradient(225deg, rgba(238, 144, 111, 1) 0%, rgba(233, 70, 115, 1) 100%);
               border-radius: 8px;
               padding: 8px 22px;
-              svg {
-                width: 118px;
-                height: 46px;
-              }
             }
           }
         }

@@ -15,7 +15,7 @@
       v-for="(item, i) of conpons"
       :key="i"
     >
-      <pl-icon name="icon-youhuiquan2" type="svg" width="60" height="60" />
+      <pl-svg name="icon-youhuiquanj" width="60" height="60" />
       <div :class="$style.info">
         <span style="margin: 0;" v-text="item.couponName" /><span>:</span><span>满{{ item.useLimitAmount }}减{{ item.amount }}</span>
       </div>
