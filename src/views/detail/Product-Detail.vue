@@ -150,6 +150,7 @@
     <!-- 规格弹框 -->
     <specification-pop
       :default-count="defaultCount"
+      :product-id="productId"
       :sku-list="detail.productSkuModels"
       :sku-attr-list="detail.productAttributes"
       :product-image="detail.productMainImage"

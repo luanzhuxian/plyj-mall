@@ -133,6 +133,7 @@
 </template>
 
 <script>
+import { getCurrentLimit } from '../../apis/product'
 export default {
   name: 'SpecificationPop',
   props: {
@@ -181,6 +182,10 @@ export default {
     activityProductModel: { // 活动商品数据
       type: Object,
       default: null
+    },
+    productId: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -189,6 +194,7 @@ export default {
       showSpec: false,
       count: 1,
       min: 1,
+      limit: 0, // 可买数量
       localCurrentSku: {},
       skuCode2List: [],
       currentSku1: '',
@@ -209,11 +215,15 @@ export default {
       }
     },
     currentSku: {
-      handler (val) {
+      async handler (val) {
         if (!val.id) return
         this.localCurrentSku = val
         this.$emit('change', val)
         this.$emit('update:sku', val)
+        // 当前商品限购的时候，检查可买数量
+        if (this.limiting) {
+          await getCurrentLimit(this.productId)
+        }
       },
       deep: true
     }

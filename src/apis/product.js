@@ -18,3 +18,8 @@ export const bookActivityPage = params => axios.get('/apis/v1/pre/buy/queryList'
  * @return {Promise<Object>}
  */
 export const getCouponList = () => axios.get('/apis/v1/coupon/normal/list')
+/**
+ * 获取当前用户的可买数量
+ * @return {Promise<Number>}
+ */
+export const getCurrentLimit = productId => axios.get(`/apis/v1/product/purchaseLimitNumber/${productId}`)

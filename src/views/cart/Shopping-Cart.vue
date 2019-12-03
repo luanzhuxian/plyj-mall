@@ -66,7 +66,7 @@
         <span :class="$style.scrapingUp">
           <i
             v-if="nextCoupon"
-            @click="$router.push({ name: 'Home' })"
+            @click="$router.push({ name: 'CouponActivity', params: { couponId: nextCoupon.id } })"
           >
             去凑单
           </i>
