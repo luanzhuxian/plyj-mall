@@ -4,7 +4,9 @@
       [$style.homeTemplateB]: true,
       [$style.noSkin]: skinId === 0,
       [$style.skinXmas]: skinId === 1,
-      [$style.skinNewYear]: skinId === 2
+      [$style.skinYuanDan]: skinId === 2,
+      [$style.skinNewYear]: skinId === 3,
+      [$style.skinXiaoNian]: skinId === 4
     }"
   >
     <div :class="$style.container">
@@ -28,10 +30,17 @@
                 {{ POPULAR.moduleName }}
               </div>
             </div>
-            <div :class="$style.titleBg" v-if="skinId === 2">
+            <div :class="$style.titleBg" v-if="~[2, 3].indexOf(skinId)">
               <span :class="$style.characterBg" v-for="(item, index) of POPULAR.moduleName.split('')" :key="index">
                 {{ item }}
               </span>
+            </div>
+            <div :class="$style.titleWrapper" v-if="skinId === 4">
+              <div :class="$style.titleBg">
+                <span :class="$style.characterBg">
+                  {{ POPULAR.moduleName }}
+                </span>
+              </div>
             </div>
           </template>
         </hot-item>
@@ -46,10 +55,17 @@
                 {{ CLASS.moduleName }}
               </div>
             </div>
-            <div :class="$style.titleBg" v-if="skinId === 2">
+            <div :class="$style.titleBg" v-if="~[2, 3].indexOf(skinId)">
               <span :class="$style.characterBg" v-for="(item, index) of CLASS.moduleName.split('')" :key="index">
                 {{ item }}
               </span>
+            </div>
+            <div :class="$style.titleWrapper" v-if="skinId === 4">
+              <div :class="$style.titleBg">
+                <span :class="$style.characterBg">
+                  {{ CLASS.moduleName }}
+                </span>
+              </div>
             </div>
           </template>
         </best>
@@ -63,17 +79,24 @@
                 {{ RECOMMEND.moduleName }}
               </div>
             </div>
-            <div :class="$style.titleBg" v-if="skinId === 2">
+            <div :class="$style.titleBg" v-if="~[2, 3].indexOf(skinId)">
               <span :class="$style.characterBg" v-for="(item, index) of RECOMMEND.moduleName.split('')" :key="index">
                 {{ item }}
               </span>
             </div>
+            <div :class="$style.titleWrapper" v-if="skinId === 4">
+              <div :class="$style.titleBg">
+                <span :class="$style.characterBg">
+                  {{ RECOMMEND.moduleName }}
+                </span>
+              </div>
+            </div>
           </template>
         </best-recommend>
-        <footer :class="$style.footer">
-          — 技术支持 朋来科技 —
-        </footer>
       </div>
+      <footer :class="$style.footer">
+        — 技术支持 朋来科技 —
+      </footer>
     </div>
   </div>
 </template>
@@ -194,13 +217,16 @@ export default {
   .recommend {
     padding: 0 24px;
     color: #000;
-    background: linear-gradient(180deg, #DFE4F3, #ECEAF7);
+    background: #EAE9F7;
   }
   .footer {
-    padding:  48px 0 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 140px;
     font-size: 26px;
     color: #999;
-    text-align: center;
+    background: #EAE9F7;
   }
   .shuang12 {
     padding: 20px 24px 0;

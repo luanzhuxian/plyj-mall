@@ -3,7 +3,9 @@
     :class="{
       [$style.navbar]: true,
       [$style.skinXmas]: skinId === 1,
-      [$style.skinNewYear]: skinId === 2
+      [$style.skinYuanDan]: skinId === 2,
+      [$style.skinNewYear]: skinId === 3,
+      [$style.skinXiaoNian]: skinId === 4
     }"
   >
     <router-link
@@ -20,14 +22,22 @@
         :name="homeActive ? 'icon-find-active' : 'icon-find'"
         width="68"
       />
-      <template v-if="~[1, 2].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <template v-if="skinId === 1">
           <img src="../../views/home/skin/xmas/btn-home-selected.png" v-if="homeActive">
           <img src="../../views/home/skin/xmas/btn-home.png" v-else>
         </template>
         <template v-if="skinId === 2">
+          <img src="../../views/home/skin/yuan-dan/btn-home-selected.png" v-if="homeActive">
+          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-home.png" v-else>
+        </template>
+        <template v-if="skinId === 3">
           <img src="../../views/home/skin/new-year/btn-home-selected.png" v-if="homeActive">
           <img :class="$style.tab" src="../../views/home/skin/new-year/btn-home.png" v-else>
+        </template>
+        <template v-if="skinId === 4">
+          <img src="../../views/home/skin/xiao-nian/btn-home-selected.png" v-if="homeActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-home.png" v-else>
         </template>
         <div :class="$style.tabName">首页</div>
       </template>
@@ -46,14 +56,22 @@
         :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
         width="68"
       />
-      <template v-if="~[1, 2].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <template v-if="skinId === 1">
           <img src="../../views/home/skin/xmas/btn-classify-selected.png" v-if="classifyActive">
           <img src="../../views/home/skin/xmas/btn-classify.png" v-else>
         </template>
         <template v-if="skinId === 2">
+          <img src="../../views/home/skin/yuan-dan/btn-classify-selected.png" v-if="classifyActive">
+          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-classify.png" v-else>
+        </template>
+        <template v-if="skinId === 3">
           <img src="../../views/home/skin/new-year/btn-classify-selected.png" v-if="classifyActive">
           <img :class="$style.tab" src="../../views/home/skin/new-year/btn-classify.png" v-else>
+        </template>
+        <template v-if="skinId === 4">
+          <img src="../../views/home/skin/xiao-nian/btn-classify-selected.png" v-if="classifyActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-classify.png" v-else>
         </template>
         <div :class="$style.tabName">分类</div>
       </template>
@@ -80,14 +98,22 @@
         :name="yajiActive ? 'icon-cart-active' : 'icon-cart'"
         width="68"
       />
-      <template v-if="~[1, 2].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <template v-if="skinId === 1">
           <img src="../../views/home/skin/xmas/btn-shopping-chart-selected.png" v-if="yajiActive">
           <img src="../../views/home/skin/xmas/btn-shopping-chart.png" v-else>
         </template>
         <template v-if="skinId === 2">
-          <img src="../../views/home/skin/new-year/btn-shopping-chart-selected.png" v-if="yajiActive">
-          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-shopping-chart.png" v-else>
+          <img src="../../views/home/skin/yuan-dan/btn-shopping-chart-selected.png" v-if="yajiActive">
+          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-shopping-chart.png" v-else>
+        </template>
+        <template v-if="skinId === 3">
+          <img src="../../views/home/skin/xiao-nian/btn-shopping-chart-selected.png" v-if="yajiActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-shopping-chart.png" v-else>
+        </template>
+        <template v-if="skinId === 4">
+          <img src="../../views/home/skin/xiao-nian/btn-shopping-chart-selected.png" v-if="yajiActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-shopping-chart.png" v-else>
         </template>
         <div :class="$style.tabName">购物车</div>
       </template>
@@ -106,14 +132,22 @@
         :name="myActive ? 'icon-my-active' : 'icon-my1'"
         width="68"
       />
-      <template v-if="~[1, 2].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <template v-if="skinId === 1">
           <img src="../../views/home/skin/xmas/btn-my-selected.png" v-if="myActive">
           <img src="../../views/home/skin/xmas/btn-my.png" v-else>
         </template>
-        <template v-if="skinId === 2">
-          <img src="../../views/home/skin/new-year/btn-my-selected.png" v-if="myActive">
-          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-my.png" v-else>
+        <template v-if="skinId === 3">
+          <img src="../../views/home/skin/yuan-dan/btn-my-selected.png" v-if="myActive">
+          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-my.png" v-else>
+        </template>
+        <template v-if="skinId === 3">
+          <img src="../../views/home/skin/xiao-nian/btn-my-selected.png" v-if="myActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-my.png" v-else>
+        </template>
+        <template v-if="skinId === 4">
+          <img src="../../views/home/skin/xiao-nian/btn-my-selected.png" v-if="myActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-my.png" v-else>
         </template>
         <div :class="$style.tabName">我的</div>
       </template>
@@ -212,7 +246,9 @@ export default {
 
 /* 皮肤 */
 .skin-xmas,
-.skin-new-year {
+.skin-yuan-dan,
+.skin-new-year,
+.skin-xiao-nian {
   .route {
     box-sizing: border-box;
     justify-content: flex-end !important;

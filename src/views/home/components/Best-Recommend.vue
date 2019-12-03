@@ -66,7 +66,6 @@
           </div>
         </li>
       </template>
-
     </ul>
     <!-- 瀑布流 -->
     <!-- <div v-if="styleType === 1" :class="$style.waterfallBox">
@@ -256,7 +255,7 @@ export default {
   }
   .product {
     position: relative;
-    margin-bottom: 50px;
+    margin-bottom: 28px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
