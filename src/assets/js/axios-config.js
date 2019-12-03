@@ -35,11 +35,11 @@ async function response (response) {
   if (data.status !== 200) {
     let msg = data.message
     let loginInvalid = msg.indexOf('登录信息失效') >= 0
-    let tokenInvalid = msg.indexOf('Token失效') >= 0
     if (msg.indexOf('运行时') > -1) {
       msg = '蓬莱岛人太多啦~( ˶‾᷄࿀‾᷅˵ )'
     }
-    if (!loginInvalid && !tokenInvalid) {
+    // 非登录失效的错误
+    if (!loginInvalid) {
       let err = {
         method: config.method,
         url: config.url,
@@ -50,27 +50,21 @@ async function response (response) {
       }
       return Promise.reject(new ResponseError(JSON.stringify(err, null, 4)))
     }
-    // 刷新token还没失效
-    if (!tokenInvalid) {
-      try {
-        await store.dispatch(REFRESH_TOKEN)
-        let config = response.config
-        let { method, data, headers, url } = config
-        const res = await axios({
-          method,
-          data,
-          url,
-          headers: {
-            openId: headers.openId
-          }
-        })
-        return res
-      } catch (e) {
-        return Promise.reject(e)
-      }
-    } else {
+    // 重新登录
+    try {
       await store.dispatch(LOGIN)
-      return
+      let { method, data, headers, url } = config
+      const res = await axios({
+        method,
+        data,
+        url,
+        headers: {
+          openId: headers.openId
+        }
+      })
+      return res
+    } catch (e) {
+      return Promise.reject(e)
     }
   }
   return data

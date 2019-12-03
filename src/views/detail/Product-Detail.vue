@@ -34,7 +34,7 @@
           size="large"
           @done="countFinished"
           :class="$style.countDown"
-          v-if="detail.shoppingStatus === 1 && activeProduct === 1"
+          v-if="detail.shoppingStatus === 1 && (activeProduct === 1 || !preActivity)"
           :starttime="detail.serverTime"
           :endtime="detail.shoppingTimeLong"
         />

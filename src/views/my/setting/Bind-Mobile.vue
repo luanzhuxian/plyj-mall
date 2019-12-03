@@ -186,39 +186,35 @@ export default {
         } else {
           this.loading = true
           await bindMobile(this.bindForm)
+          this.$success('绑定手机号成功！')
           let { name, params, query } = JSON.parse(sessionStorage.getItem('BIND_MOBILE_FROM')) || {}
           if (name) {
             // 新用户助力标识
             sessionStorage.setItem('INVITE_NEW_USER', 'true')
-            // await this.$store.dispatch(REFRESH_TOKEN)
             await this.refreshLogin()
-            this.$router.replace({
+            await this.$router.replace({
               name,
               params,
               query
             })
             this.$refs.getCode.finishCountDown()
-            this.$success('绑定手机号成功！')
             return
           }
         }
-        // await this.$store.dispatch(REFRESH_TOKEN)
         await this.refreshLogin()
         this.loading = false
-        this.$router.replace({ name: 'My' })
+        await this.$router.replace({ name: 'My' })
       } catch (e) {
         this.loading = false
         throw e
       }
     },
     async refreshLogin () {
-      console.warn('logging back in...')
       const DISPATCH = this.$store.dispatch
       Cookie.remove('refresh_token')
       Cookie.remove('token')
       await DISPATCH(LOGIN)
       await DISPATCH(USER_INFO)
-      console.warn('login was finished!!')
     }
   },
   beforeRouteLeave (to, from, next) {

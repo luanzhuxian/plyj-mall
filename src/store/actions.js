@@ -83,19 +83,6 @@ export default {
         let loginInfo = null
         // 通过openid登录
         if (state.openId) {
-          // 尝试清除微信缓存
-          // 必须放在微信登录之后，否则会影响微信登录
-          // 且有code时不用刷新
-          let cleanCache = Date.now()
-          let search = location.search
-          if (search.indexOf('cleanCache') === -1) {
-            if (!search) {
-              location.replace(location.href + '?cleanCache=' + cleanCache)
-            } else {
-              location.replace(location.href + '&cleanCache=' + cleanCache)
-            }
-            return
-          }
           loginInfo = await login(state.openId)
         } else {
           // openid有问题时重新获取openid
