@@ -600,6 +600,7 @@ export default {
      * 购买
      * @param selected {object} 选择的规格
      * @param buyWay {number} 购买方式 1：正常购买 其它：活动购买
+     * @param limiting {number} 总限购数量
      * @param limit {number} 可买数量
      */
     buyNow (selected, buyWay, limiting, limit) {

@@ -234,7 +234,12 @@ export default {
     handleClick () {
       this.$emit('click', this)
     },
-    // 选中规格
+    /**
+     * 购买
+     * @param options {object} 选择的规格
+     * @param limiting {number} 总限购数量
+     * @param limit {number} 可买数量
+     */
     async confirm (options, limiting, limit) {
       try {
         await this.$nextTick()
