@@ -80,12 +80,31 @@
             </div>
           </div>
         </div>
-        <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1 || isNotChoose" @click="showCoupon = true">
+        <div
+          :class="$style.infoItem"
+          v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
+          @click="showCoupon = true"
+        >
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">优惠券</span>
             <span :class="$style.subtotalPrice">
-              <span v-if="!isNotChoose">-¥{{ coupon.amount }}</span>
+              <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
               <span v-else>{{ couponList.length }}张可用</span>
+              <pl-svg name="icon-right" fill="#373737" width="22" />
+            </span>
+          </div>
+        </div>
+        <!--TODO.Echo 等待接口-->
+        <div
+          :class="$style.infoItem"
+          v-if="false && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+          @click="showRedEnvelopePopup = true"
+        >
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">奖学金（红包）</span>
+            <span :class="$style.subtotalPrice">
+              <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
+              <span v-else>有可用</span>
               <pl-svg name="icon-right" fill="#373737" width="22" />
             </span>
           </div>
@@ -193,12 +212,31 @@
               </div>
             </div>
           </div>
-          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1 || isNotChoose" @click="showCoupon = true">
+          <div
+            :class="$style.infoItem"
+            v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
+            @click="showCoupon = true"
+          >
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
               <span :class="$style.subtotalPrice">
-                <span v-if="!isNotChoose">-¥{{ coupon.amount }}</span>
+                <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
                 <span v-else>{{ couponList.length }}张可用</span>
+                <pl-svg name="icon-right" fill="#373737" width="22" />
+              </span>
+            </div>
+          </div>
+          <!--TODO.Echo 等待接口-->
+          <div
+            :class="$style.infoItem"
+            v-if="false && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+            @click="showRedEnvelopePopup = true"
+          >
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">奖学金（红包）</span>
+              <span :class="$style.subtotalPrice">
+                <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
+                <span v-else>有可用</span>
                 <pl-svg name="icon-right" fill="#373737" width="22" />
               </span>
             </div>
@@ -307,12 +345,31 @@
               </div>
             </div>
           </div>
-          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1 || isNotChoose" @click="showCoupon = true">
+          <div
+            :class="$style.infoItem"
+            v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
+            @click="showCoupon = true"
+          >
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">优惠券</span>
               <span :class="$style.subtotalPrice">
-                <span v-if="!isNotChoose">-¥{{ coupon.amount }}</span>
+                <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
                 <span v-else>{{ couponList.length }}张可用</span>
+                <pl-svg name="icon-right" fill="#373737" width="22" />
+              </span>
+            </div>
+          </div>
+          <!--TODO.Echo 等待接口-->
+          <div
+            :class="$style.infoItem"
+            v-if="false && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+            @click="showRedEnvelopePopup = true"
+          >
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">奖学金（红包）</span>
+              <span :class="$style.subtotalPrice">
+                <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
+                <span v-else>有可用</span>
                 <pl-svg name="icon-right" fill="#373737" width="22" />
               </span>
             </div>
@@ -358,7 +415,24 @@
         icon="icon-coupon"
         :icon-gap="12"
         show-right-icon
-        :right-text="'-¥' + coupon.amount"
+        :right-text="isNotChooseCoupon ? couponList.length +'张可用' : '-¥' + coupon.amount "
+        left-text-weight="bold"
+      />
+    </div>
+
+    <!--TODO.Echo 等待接口-->
+    <div
+      v-if="false && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && isCart && activeProduct === 1"
+      :class="$style.itemSelector"
+      @click.capture="showRedEnvelopePopup = true"
+    >
+      <pl-fields
+        size="middle"
+        text="奖学金（红包）"
+        icon="icon-coupon"
+        :icon-gap="12"
+        show-right-icon
+        :right-text="isNotChooseRedEnvelope ? '有可用' : '-¥' + currentRedEnvelope.amount "
         left-text-weight="bold"
       />
     </div>
@@ -493,7 +567,41 @@
           <div :class="$style.couponItem" @click="couponClick({}, true)">
             <div :class="$style.notChooseCoupon">不参加优惠</div>
             <span :class="$style.choices">
-              <pl-svg v-if="isNotChoose" name="icon-xuanzhong" width="40" />
+              <pl-svg v-if="isNotChooseCoupon" name="icon-xuanzhong" width="40" />
+              <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </pl-popup>
+
+    <!-- 红包弹框 -->
+    <pl-popup
+      :show.sync="showRedEnvelopePopup"
+      title="奖学金（红包）"
+      title-align="left"
+    >
+      <div :class="$style.redEnvelope">
+        <p class="fz-28 gray-3">仅支持选择一个奖学金进行抵扣</p>
+        <div :class="$style.redEnvelopeList">
+          <template v-for="(item, i) of redEnvelopeList">
+            <div :key="i" :class="$style.redEnvelopeItem" @click="redEnvelopeClick(item, false)">
+              <span>
+                <pl-svg name="icon-RedEnvelope" width="40" />
+              </span>
+              <span :class="$style.count">￥{{ item.amount }}</span>
+              <span v-if="item.amount > totalAmount + currentRedEnvelope.amount || 0" :class="$style.isOver">使用后超出抵用金额不返还</span>
+              <span :class="$style.isOver">使用后超出抵用金额不返还</span>
+              <span :class="$style.choices">
+                <pl-svg v-if="item.id === currentRedEnvelope.id" name="icon-xuanzhong" width="40" />
+                <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+              </span>
+            </div>
+          </template>
+          <div :class="$style.redEnvelopeItem" @click="redEnvelopeClick({}, true)">
+            <span :class="$style.notChooseRedEnvelope">不使用</span>
+            <span :class="$style.choices">
+              <pl-svg v-if="isNotChooseRedEnvelope" name="icon-xuanzhong" width="40" />
               <pl-svg v-else name="icon-weixuanzhong1" width="40" />
             </span>
           </div>
@@ -528,7 +636,7 @@ import {
   submitOrder,
   submitOrderPay
 } from '../../apis/shopping-cart'
-import { getCouponOfMax, getCouponByPrice } from '../../apis/my-coupon'
+import { getCouponOfMax, getCouponByPrice, getRedEnvelopeListByPrice } from '../../apis/my-coupon'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { mapGetters, mapActions } from 'vuex'
 import { STUDENTS } from '../../store/mutation-type'
@@ -592,7 +700,11 @@ export default {
       lessonErrorTip: '',
       recommendCouponId: '', // 推荐使用的优惠券Id
       serverTime: '', // 服务器时间
-      isNotChoose: false // 默认选中一个优惠券
+      isNotChooseCoupon: false, // 是否选择'不参与优惠'
+      showRedEnvelopePopup: false,
+      redEnvelopeList: [], // 红包列表
+      isNotChooseRedEnvelope: true, // 是否选择'不使用'红包, 默认选择不使用红包
+      currentRedEnvelope: {} // 当前选中的红包
     }
   },
   computed: {
@@ -689,7 +801,9 @@ export default {
     }
   },
   deactivated () {
-    this.isNotChoose = false
+    this.isNotChooseCoupon = false
+    this.isNotChooseRedEnvelope = true
+    this.redEnvelopeList = []
   },
   methods: {
     ...mapActions([STUDENTS]),
@@ -698,12 +812,16 @@ export default {
      * @param flag {boolean} 标记是第一次进入页面调用，还是刷新调用，刷新true, 否则false, 如果为true，则不会显示骨架屏
      * @param coupon {object} 当前使用的优惠券
      */
-    async getProductDetail (flag, coupon = {}) {
+    async getProductDetail (flag, coupon = {}, redEnvelope = {}) {
       try {
         const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-        if (this.activeProduct === 1 && !coupon.id && !this.isNotChoose) {
+        if (this.activeProduct === 1 && !coupon.id && !this.isNotChooseCoupon) {
           coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
           this.recommendCouponId = coupon.id
+        }
+        // TODO.Echo 等待接口
+        if (this.activeProduct === 1 && !redEnvelope.id) {
+          redEnvelope = await this.getRedEnvelopeByAmount(proList) // 获取红包列表
         }
         if (!proList || !proList.length) {
           return this.$router.replace({ name: 'Home' })
@@ -715,6 +833,7 @@ export default {
           activityId: this.activityId,
           cartProducts: proList,
           userCouponId: coupon.id || '',
+          // userRedEnvelopeId: redEnvelope.id || '', // TODO.Echo 等待接口-
           addressSeq: this.selectedAddress.sequenceNbr
         })
         const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
@@ -820,11 +939,11 @@ export default {
       }
     },
     // 选择优惠券
-    async couponClick (item, isNotChoose) {
+    async couponClick (item, isNotChooseCoupon) {
       this.coupon = item
       this.showCoupon = false
-      this.isNotChoose = isNotChoose
-      await this.getProductDetail(true, item)
+      this.isNotChooseCoupon = isNotChooseCoupon
+      await this.getProductDetail(true, item, this.currentRedEnvelope)
     },
     // 获取优惠券
     async getCouponList (amount) {
@@ -841,6 +960,42 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    // 根据购买总价获取合适的红包
+    async getRedEnvelopeByAmount (proList = []) {
+      // 获取优惠券信息
+      let amount = proList.map(item => item.price * item.count).reduce((total, price) => {
+        return total + price
+      })
+      // 只有普通商品支持使用红包
+      if (this.activeProduct === 1) {
+        await this.getRedEnvelopeList(amount)
+      }
+      this.currentRedEnvelope = {}
+      return {}
+    },
+    // 获取红包列表
+    async getRedEnvelopeList (amount) {
+      try {
+        let { result } = await getRedEnvelopeListByPrice(amount)
+        let serverTime = this.serverTime
+        this.redEnvelopeList = result.map(item => {
+          let duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+          let day = Math.floor(moment.duration(duration).asDays())
+          item.timeDesc = ''
+          if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${day}天后过期`
+          return item
+        })
+      } catch (e) {
+        throw e
+      }
+    },
+    // 选择红包
+    async redEnvelopeClick (item, isNotChooseRedEnvelope) {
+      this.currentRedEnvelope = item
+      this.showRedEnvelopePopup = false
+      this.isNotChooseRedEnvelope = isNotChooseRedEnvelope
+      await this.getProductDetail(true, this.coupon, item)
     },
     /**
      * 判断是否选择了学生
@@ -1432,6 +1587,45 @@ export default {
       }
     }
   }
+
+  .red-envelope {
+    padding: 0 24px;
+    >.red-envelope-list {
+      margin-top: 20px;
+      padding-bottom: 40px;
+      .red-envelope-item {
+        height: 60px;
+        line-height: 60px;
+        position: relative;
+
+        .count {
+          margin-left: 24px;
+          font-size:32px;
+          color:#373737;
+        }
+        .is-over {
+          margin-left: 20px;
+          font-size:24px;
+          color:#999999;
+        }
+        .choices {
+          position: absolute;
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .not-choose-red-envelope {
+          font-size:28px;
+          line-height: 72px;
+          color:#C1C1C1;
+        }
+      }
+      svg {
+        vertical-align: text-bottom;
+      }
+    }
+  }
+
   @keyframes bordrFlicker {
     0% { border-color: #F24724 }
     50% { border-color: transparent }

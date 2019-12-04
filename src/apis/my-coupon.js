@@ -59,3 +59,8 @@ export const getProductList = ({ current, size, couponType, couponId, sortComple
  * 根据优惠券Id详情获取优惠券详情
  * */
 export const getCouponDetail = id => axios.get(`/apis/v1/coupon/selectById/${id}`)
+/**
+ * 根据商品价格获取合适的红包
+ * */
+// TODO.Echo 等待接口
+export const getRedEnvelopeListByPrice = useLimitAmount => axios.get(`/apis/v1/coupon/me/list/price?useLimitAmount=${useLimitAmount}`)

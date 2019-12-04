@@ -208,6 +208,11 @@
           <span>优惠</span>
           <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
         </p>
+        <!-- TODO.Echo 等待接口 -->
+        <p v-if="false && productInfoModel.totalCouponAmount > 0">
+          <span>奖学金（红包）</span>
+          <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
+        </p>
       </div>
 
       <div :class="$style.amount">
