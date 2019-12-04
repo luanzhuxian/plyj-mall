@@ -124,6 +124,8 @@
               name="footer"
               :currentSku="localCurrentSku"
               :revert="revert"
+              :limit="limit"
+              :limiting="(activeType === 3 && activityProductModel && activityProductModel.activityLimit === 1) ? activityProductModel.activityLimitNumber : limiting"
             />
           </div>
         </div>
@@ -222,7 +224,8 @@ export default {
         this.$emit('update:sku', val)
         // 当前商品限购的时候，检查可买数量
         if (this.limiting) {
-          await getCurrentLimit(this.productId)
+          const { result: limit } = await getCurrentLimit(this.productId, this.activeProduct)
+          this.limit = limit
         }
       },
       deep: true

@@ -97,14 +97,15 @@
       :limiting="limiting"
       :active-product="activeProduct"
       :pre-activity="preActivity"
+      :product-id="productId"
       :activity-product-model="activityProductModel"
     >
-      <template v-slot:footer="{ currentSku }">
+      <template v-slot:footer="{ currentSku, limiting, limit }">
         <pl-button
           type="warning"
           size="large"
           :loading="loading"
-          @click="confirm(currentSku)"
+          @click="confirm(currentSku, limiting, limit)"
         >
           确定
         </pl-button>
@@ -234,13 +235,22 @@ export default {
       this.$emit('click', this)
     },
     // 选中规格
-    async confirm (options) {
+    async confirm (options, limiting, limit) {
       try {
         await this.$nextTick()
         if (this.clickAddToCart) {
           await this.addToCart(options)
         }
         if (this.clickBuyNow) {
+          if (limiting && options.count > limit) {
+            if (limiting === limit) {
+              return this.$warning(`您至多购买${limit}件`)
+            }
+            if (limiting - limit === limiting) {
+              return this.$warning(`您已购买${limiting}件，已达购买上限`)
+            }
+            return this.$warning(`您已购买${limiting - limit}件，您还可以购买${limit}件`)
+          }
           this.submit(options)
         }
       } catch (e) {

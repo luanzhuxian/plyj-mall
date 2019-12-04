@@ -20,6 +20,8 @@ export const bookActivityPage = params => axios.get('/apis/v1/pre/buy/queryList'
 export const getCouponList = () => axios.get('/apis/v1/coupon/normal/list')
 /**
  * 获取当前用户的可买数量
+ * @param productId {string}
+ * @param activityproduct {string}
  * @return {Promise<Number>}
  */
-export const getCurrentLimit = productId => axios.get(`/apis/v1/product/purchaseLimitNumber/${productId}`)
+export const getCurrentLimit = (productId, activityproduct) => axios.get(`/apis/v1/product/purchaseLimitNumber/${productId}?activityproduct=${activityproduct}`)

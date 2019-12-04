@@ -161,14 +161,14 @@
       :activity-product-model="detail.activityProductModel || null"
       :pre-activity="preActivity"
     >
-      <template v-slot:footer="{ currentSku }">
+      <template v-slot:footer="{ currentSku, limiting, limit }">
         <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
           <!-- 活动商品库存不足时，显示该按钮 -->
           <button
             v-if="showNormalBuy"
             :class="$style.add"
             :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
-            @click="buyNow(currentSku, 1)"
+            @click="buyNow(currentSku, 1, limiting, limit)"
           >
             单独购买
             <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
@@ -176,7 +176,7 @@
           <button
             :class="$style.buy"
             :disabled="activeStock <= 0 || loading"
-            @click="buyNow(currentSku)"
+            @click="buyNow(currentSku, -1, limiting, limit)"
           >
             {{ activeStock > 0 ? '我要参团' : '已售罄' }}
             <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
@@ -189,7 +189,7 @@
             v-if="showNormalBuy"
             :class="$style.add"
             :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
-            @click="buyNow(currentSku, 1)"
+            @click="buyNow(currentSku, 1, limiting, limit)"
           >
             原价购买
             <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
@@ -197,7 +197,7 @@
           <button
             :class="$style.buy"
             :disabled="activeStock <= 0 || loading"
-            @click="buyNow(currentSku)"
+            @click="buyNow(currentSku, -1, limiting, limit)"
           >
             {{ activeStock > 0 ? '立即秒杀' : '已售罄' }}
             <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
@@ -208,7 +208,7 @@
           <button
             :class="$style.preBtn"
             :disabled="activeStock <= 0"
-            @click="buyNow(currentSku)"
+            @click="buyNow(currentSku, -1, limiting, limit)"
           >
             {{ activeStock > 0 ? '定金购买' : '已售罄' }}
             <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
@@ -225,7 +225,7 @@
           <button
             :class="$style.buy"
             :disabled="adding || noStock || confirmText === '暂未开售' || loading"
-            @click="buyNow(currentSku, 1)"
+            @click="buyNow(currentSku, 1, limiting, limit)"
           >
             {{ confirmText }}
           </button>
@@ -600,10 +600,20 @@ export default {
      * 购买
      * @param selected {object} 选择的规格
      * @param buyWay {number} 购买方式 1：正常购买 其它：活动购买
+     * @param limit {number} 可买数量
      */
-    buyNow (selected, buyWay) {
+    buyNow (selected, buyWay, limiting, limit) {
       if (!this.hasBind()) {
         return
+      }
+      if (limiting && selected.count > limit) {
+        if (limiting === limit) {
+          return this.$warning(`您至多购买${limit}件`)
+        }
+        if (limiting - limit === limiting) {
+          return this.$warning(`您已购买${limiting}件，已达购买上限`)
+        }
+        return this.$warning(`您已购买${limiting - limit}件，您还可以购买${limit}件`)
       }
       this.currentModel = selected
       const { skuCode1, count, skuCode2, price } = selected
