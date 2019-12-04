@@ -10,6 +10,7 @@
         :use-start-time="couponInfo.useStartTime"
         :use-end-time="couponInfo.useEndTime"
         :coupon-type="couponInfo.type"
+        @couponClick="couponClick(couponId)"
       />
       <div :class="$style.counterTitle">
         限时优惠，满{{ couponInfo.useLimitAmount }}减{{ couponInfo.amount }}，可选择以下商品凑单购买
@@ -67,7 +68,7 @@
 import LoadMore from '../../../components/common/Load-More.vue'
 import CouponItem from '../../../components/item/Coupon-Item.vue'
 import CouponGoodItem from '../../../components/item/Coupon-Good-Item.vue'
-import { getProductList, getCouponDetail } from '../../../apis/my-coupon'
+import { getProductList, getCouponDetail, receiveCoupon } from '../../../apis/my-coupon'
 
 export default {
   name: 'CouponActivity',
@@ -132,6 +133,16 @@ export default {
     }
   },
   methods: {
+    async couponClick (id) {
+      try {
+        await receiveCoupon({
+          couponId: id
+        })
+        this.$success('领取成功')
+      } catch (e) {
+        throw e
+      }
+    },
     sort (keyword) { // 排序
       if (keyword === 'isByComprehensive') {
         this.isByComprehensiveDown = this.isByComprehensive ? !this.isByComprehensiveDown : true
