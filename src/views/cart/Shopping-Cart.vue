@@ -138,14 +138,15 @@
       :sku-list="skuModels"
       :product-image="productImg"
       :sku="currentSku"
+      :product-id="currentPro.cartProductId"
       :limiting="currentPro.purchaseQuantity"
     >
-      <template v-slot:footer="{ currentSku, revert }">
+      <template v-slot:footer="{ currentSku, revert, limiting, limit }">
         <pl-button
           type="warning"
           size="large"
           :loading="updating"
-          @click="specChanged(currentSku, revert)"
+          @click="specChanged(currentSku, revert, limiting, limit)"
         >
           确定
         </pl-button>
@@ -155,7 +156,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import CartItem from '../../components/item/Cart-Item.vue'
 import NoContent from '../../components/common/No-Content.vue'
 import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
@@ -334,7 +334,16 @@ export default {
       }
     },
     // 改变规格
-    async specChanged (option, revert) {
+    async specChanged (option, revert, limiting, limit) {
+      if (limiting && option.count > limit) {
+        if (limiting === limit) {
+          return this.$warning(`您至多购买${limit}件`)
+        }
+        if (limiting - limit === limiting) {
+          return this.$warning(`您已购买${limiting}件，已达购买上限`)
+        }
+        return this.$warning(`您已购买${limiting - limit}件，您还可以购买${limit}件`)
+      }
       try {
         // 请求修改
         this.updating = true

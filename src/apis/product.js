@@ -24,4 +24,4 @@ export const getCouponList = () => axios.get('/apis/v1/coupon/normal/list')
  * @param activityproduct {string}
  * @return {Promise<Number>}
  */
-export const getCurrentLimit = (productId, activityproduct) => axios.get(`/apis/v1/product/purchaseLimitNumber/${productId}?activityproduct=${activityproduct}`)
+export const getCurrentLimit = (productId, activityproduct = 1) => axios.get(`/apis/v1/product/purchaseLimitNumber/${productId}?activityproduct=${activityproduct}`)

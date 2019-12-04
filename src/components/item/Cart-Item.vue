@@ -90,7 +90,9 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { updateCartProductCount } from '../../apis/shopping-cart'
+import { getCurrentLimit } from '../../apis/product'
 import Count from '../common/Count.vue'
 import { mapGetters } from 'vuex'
 import CountDown from '../../components/product/Count-Down.vue'
@@ -163,7 +165,16 @@ export default {
       }
     }
   },
-  watch: {
+  async created () {
+    this.limiting = this.data.purchaseQuantity
+    try {
+      if (this.limiting) {
+        const { result: limit } = await getCurrentLimit(this.data.cartProductId)
+        this.limit = limit
+      }
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
     async goDetail () {
@@ -184,7 +195,32 @@ export default {
       }
       this.$emit('skuClick', e)
     },
+    /**
+     * 改变数量
+     * @param count {string} 当前数值
+     * @param next {function} 修改成功时调用，改变当前显示，否则按钮会一直处于禁用状态
+     * @param callback {function<Boolean>} 用于终止数值的改变, true 正常; false 发生意外，终止修改数量
+     * @return {Promise<void>}
+     */
     async countChange (count, next) {
+      const limiting = this.limiting
+      const limit = this.limit
+      if (limiting && count > this.data.cartProductCount) {
+        try {
+          if (limiting && count > limit) {
+            next(true)
+            if (limiting === limit) {
+              return this.$warning(`您至多购买${limit}件`)
+            }
+            if (limiting - limit === limiting) {
+              return this.$warning(`您已购买${limiting}件，已达购买上限`)
+            }
+            return this.$warning(`您已购买${limiting - limit}件，您还可以购买${limit}件`)
+          }
+        } catch (e) {
+          throw e
+        }
+      }
       this.loading = true
       try {
         const { result } = await updateCartProductCount({
@@ -194,10 +230,11 @@ export default {
         if (result) {
           // 直接修改父组件的数据，也可以在父组件中监听change事件，通过接口来刷新数据，但是会导致接口调用频繁
           this.data.cartProductCount = count
-          next()
+          next(false)
           this.$emit('countChange', count)
         }
       } catch (err) {
+        next(err)
         throw err
       } finally {
         this.loading = false

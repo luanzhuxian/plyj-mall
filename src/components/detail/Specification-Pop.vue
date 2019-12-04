@@ -184,10 +184,6 @@ export default {
     activityProductModel: { // 活动商品数据
       type: Object,
       default: null
-    },
-    productId: {
-      type: String,
-      default: ''
     }
   },
   data () {
@@ -224,7 +220,7 @@ export default {
         this.$emit('update:sku', val)
         // 当前商品限购的时候，检查可买数量
         if (this.limiting) {
-          const { result: limit } = await getCurrentLimit(this.productId, this.activeProduct)
+          const { result: limit } = await getCurrentLimit(val.productId, this.activeProduct)
           this.limit = limit
         }
       },

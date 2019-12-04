@@ -97,7 +97,6 @@
       :limiting="limiting"
       :active-product="activeProduct"
       :pre-activity="preActivity"
-      :product-id="productId"
       :activity-product-model="activityProductModel"
     >
       <template v-slot:footer="{ currentSku, limiting, limit }">
