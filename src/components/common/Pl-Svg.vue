@@ -71,10 +71,14 @@ export default {
     }
   },
   deactivated () {
-    this.svgParent.removeChild(this.tempSvg)
+    if (this.svgParent) {
+      this.svgParent.removeChild(this.tempSvg)
+    }
   },
   beforeDestroy () {
-    this.svgParent.removeChild(this.tempSvg)
+    if (this.svgParent) {
+      this.svgParent.removeChild(this.tempSvg)
+    }
     this.tempSvg = null
   },
   watch: {
@@ -92,22 +96,26 @@ export default {
           this.tempName += `${this.name}_${uid}`
           setTimeout(() => {
             const svg = document.querySelector('#' + this.name)
-            const tempSvg = svg.cloneNode(true)
-            if (!this.svgParent) {
-              this.svgParent = svg.parentNode
+            try {
+              const tempSvg = svg.cloneNode(true)
+              if (!this.svgParent) {
+                this.svgParent = svg.parentNode
+              }
+              this.svgParent.appendChild(tempSvg)
+              const fills = tempSvg.querySelectorAll('[fill]')
+              const colors = tempSvg.querySelectorAll('[color]')
+              tempSvg.setAttribute('id', this.tempName)
+              tempSvg.setAttribute('fill', val)
+              for (const fill of fills) {
+                fill.setAttribute('fill', val)
+              }
+              for (const color of colors) {
+                color.setAttribute('color', val)
+              }
+              this.tempSvg = tempSvg
+            } catch (e) {
+              console.error('svg ' + this.name + ' 不存在')
             }
-            this.svgParent.appendChild(tempSvg)
-            const fills = tempSvg.querySelectorAll('[fill]')
-            const colors = tempSvg.querySelectorAll('[color]')
-            tempSvg.setAttribute('id', this.tempName)
-            tempSvg.setAttribute('fill', val)
-            for (const fill of fills) {
-              fill.setAttribute('fill', val)
-            }
-            for (const color of colors) {
-              color.setAttribute('color', val)
-            }
-            this.tempSvg = tempSvg
           }, 100)
         }
       },

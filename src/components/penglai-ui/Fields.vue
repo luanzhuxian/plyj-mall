@@ -116,7 +116,7 @@ export default {
     },
     rightIcon: {
       type: String,
-      default: 'icon-arrow-right'
+      default: 'icon-right'
     },
     showRightIcon: Boolean,
     route: {
