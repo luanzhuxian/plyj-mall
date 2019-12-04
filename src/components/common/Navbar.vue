@@ -108,8 +108,8 @@
           <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-shopping-chart.png" v-else>
         </template>
         <template v-if="skinId === 3">
-          <img src="../../views/home/skin/xiao-nian/btn-shopping-chart-selected.png" v-if="yajiActive">
-          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-shopping-chart.png" v-else>
+          <img src="../../views/home/skin/new-year/btn-shopping-chart-selected.png" v-if="yajiActive">
+          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-shopping-chart.png" v-else>
         </template>
         <template v-if="skinId === 4">
           <img src="../../views/home/skin/xiao-nian/btn-shopping-chart-selected.png" v-if="yajiActive">
@@ -137,13 +137,13 @@
           <img src="../../views/home/skin/xmas/btn-my-selected.png" v-if="myActive">
           <img src="../../views/home/skin/xmas/btn-my.png" v-else>
         </template>
-        <template v-if="skinId === 3">
+        <template v-if="skinId === 2">
           <img src="../../views/home/skin/yuan-dan/btn-my-selected.png" v-if="myActive">
           <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-my.png" v-else>
         </template>
         <template v-if="skinId === 3">
-          <img src="../../views/home/skin/xiao-nian/btn-my-selected.png" v-if="myActive">
-          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-my.png" v-else>
+          <img src="../../views/home/skin/new-year/btn-my-selected.png" v-if="myActive">
+          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-my.png" v-else>
         </template>
         <template v-if="skinId === 4">
           <img src="../../views/home/skin/xiao-nian/btn-my-selected.png" v-if="myActive">

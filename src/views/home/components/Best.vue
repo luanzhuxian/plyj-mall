@@ -1,9 +1,5 @@
 <template>
   <div :class="$style.best">
-    <slot name="title" v-if="$slots.title" />
-    <div :class="$style.top" v-else>
-      <span :class="$style.title" v-text="data.moduleName" />
-    </div>
     <ul :class="$style.proList">
       <template v-for="(item, i) of data.values">
         <li
@@ -92,17 +88,6 @@ export default {
 </script>
 
 <style module lang="scss">
-  .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 20px;
-    .title {
-      position: relative;
-      font-size: 36px;
-      font-weight: bold;
-    }
-  }
   .pro-list {
     display: grid;
     grid-template-columns: 340px 340px;
