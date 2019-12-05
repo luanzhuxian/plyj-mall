@@ -16,7 +16,7 @@
       tag="div"
       :to="{ name: 'Home' }"
     >
-      <pl-icon
+      <pl-svg
         v-if="skinId === 0"
         :name="homeActive ? 'icon-find-active' : 'icon-find'"
         width="44"
@@ -50,7 +50,7 @@
       tag="div"
       :to="{ name: 'Classify' }"
     >
-      <pl-icon
+      <pl-svg
         v-if="skinId === 0"
         :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
         width="60"
@@ -92,7 +92,7 @@
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
-      <pl-icon
+      <pl-svg
         v-if="skinId === 0"
         :name="yajiActive ? 'icon-cart-active' : 'icon-cart'"
         width="60"
@@ -126,9 +126,9 @@
       tag="div"
       :to="{ name: 'My' }"
     >
-      <pl-icon
+      <pl-svg
         v-if="skinId === 0"
-        :name="myActive ? 'icon-my-active' : 'icon-my1'"
+        :name="myActive ? 'icon-my-active' : 'icon-my'"
         width="44"
         height="74"
       />
