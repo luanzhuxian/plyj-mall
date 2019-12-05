@@ -36,6 +36,7 @@
               :use-start-time="item.useStartTime"
               :receive-count="item.count"
               :coupon-type="item.couponType"
+              :is-claimed="!!item.isClaimed"
               @couponClick="couponClick(item.id)"
             />
           </template>
@@ -83,9 +84,13 @@ export default {
     },
     async couponClick (id) {
       try {
-        await receiveCoupon({ couponId: id })
+        const { result } = await receiveCoupon({ couponId: id })
+        result.isClaimed = true
+        // 只刷新所领取卡券信息
+        let oldCouponIndex = this.couponList.findIndex(item => item.id === id)
+        this.couponList.splice(oldCouponIndex, 1)
+        this.couponList.splice(oldCouponIndex, 0, result)
         this.$success('领取成功')
-        await this.getCouponList()
       } catch (e) {
         throw e
       }

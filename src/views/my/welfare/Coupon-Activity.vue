@@ -10,6 +10,7 @@
         :use-start-time="couponInfo.useStartTime"
         :use-end-time="couponInfo.useEndTime"
         :coupon-type="couponInfo.type"
+        :is-claimed="couponInfo.isClaimed"
         @couponClick="couponClick(couponId)"
       />
       <div :class="$style.counterTitle">
@@ -88,7 +89,8 @@ export default {
         useLimitAmount: 0,
         useStartTime: '',
         useEndTime: '',
-        instruction: ''
+        instruction: '',
+        isClaimed: false
       },
       form: {
         current: 1,
@@ -122,6 +124,7 @@ export default {
       this.couponInfo.useStartTime = result.useStartTime
       this.couponInfo.useEndTime = result.useEndTime
       this.couponInfo.instruction = result.brief
+      this.couponInfo.isClaimed = false
       // 设置查询当前优惠券下的商品列表参数
       this.form.current = 1
       this.form.couponType = result.couponType
@@ -139,6 +142,7 @@ export default {
           couponId: id
         })
         this.$success('领取成功')
+        this.couponInfo.isClaimed = true
       } catch (e) {
         throw e
       }

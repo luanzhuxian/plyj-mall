@@ -115,6 +115,7 @@
                 :instruction="item.couponName"
                 :coupon-type="item.couponType"
                 :is-over-max="!item.canReceive"
+                :is-claimed="receiveCouponIdList.indexOf(item.couponId) !== -1"
                 @couponClick="couponClick(item.couponId)"
                 v-if="item.show"
               />
@@ -275,8 +276,8 @@ export default {
       chatRecords: [],
       couponList: [],
       productList: [],
-      detail: {}
-
+      detail: {},
+      receiveCouponIdList: [] // 已领取的优惠券id列表
       // emoticon
     }
   },
@@ -289,6 +290,7 @@ export default {
     }
   },
   async created () {
+    this.receiveCouponIdList = []
     if (this.roleCode === 'VISITOR') {
       await this.$confirm({
         message: '为了您的账号安全，请绑定手机号',
@@ -544,6 +546,7 @@ export default {
           entityClassName: 'MallLiveActivityEntity'
         })
         this.$success('领取成功')
+        this.receiveCouponIdList.push(id)
       } catch (e) {
         throw e
       }

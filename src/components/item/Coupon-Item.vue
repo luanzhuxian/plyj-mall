@@ -82,13 +82,11 @@ export default {
   name: 'CouponItem',
   data () {
     return {
-      showInstruction: false,
-      isClaimed: false // 是否在当前页面可领取，只支持前端页面的显示
+      showInstruction: false
     }
   },
   deactivated () {
     this.showInstruction = false
-    this.isClaimed = false
   },
   props: {
     status: {
@@ -157,6 +155,11 @@ export default {
       /* activityLimit 0 不限制 1-限制; quantityLimit 可以领取的张数; count 已经领取的次数 */
       type: Boolean,
       default: false
+    },
+    // 是否在当前页面可领取，只支持前端页面的显示
+    isClaimed: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -192,9 +195,6 @@ export default {
         }
         if (!this.status) {
           await this.$emit('couponClick', e)
-          if (!this.isOverMax) {
-            this.isClaimed = true
-          }
         }
       }
     }
