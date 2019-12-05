@@ -612,6 +612,7 @@ export default {
     box-sizing: border-box;
     font-size: 24px;
     background-color: #FFE1C7;
+    z-index: 2;
     .scrapingUp {
       display: inline-flex;
       align-items: center;
