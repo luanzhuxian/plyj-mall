@@ -47,16 +47,16 @@
           </span>
           <span v-if="nextCoupon && appropriateCoupon">, </span>
           <span v-if="nextCoupon">
-            还差{{ (nextCoupon.useLimitAmount * 100 - summation * 100) / 100 }}元,立减{{ nextCoupon.amount }}元
+            还差{{ ((nextCoupon.useLimitAmount * 1000000 - summation * 1000000) / 1000000).toFixed(2) }}元立减{{ nextCoupon.amount }}元
           </span>
         </span>
-        <!-- 满减券（未领取） -->
-        <span v-else-if="minFullCutConpon && !minHadFullCutConpon">
-          全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元,领券立享优惠
+        <!-- 满减券，存在较大金额（未领取） -->
+        <span v-else-if="maxFullCutConpon && !maxHadFullCutConpon">
+          全场满{{ maxFullCutConpon.useLimitAmount }}元减{{ maxFullCutConpon.amount }}元,领券立享优惠
         </span>
         <!-- 满减券（已领取） -->
-        <span v-else-if="minHadFullCutConpon">
-          全场满{{ minHadFullCutConpon.useLimitAmount }}元减{{ minHadFullCutConpon.amount }}元
+        <span v-else-if="maxHadFullCutConpon">
+          全场满{{ maxHadFullCutConpon.useLimitAmount }}元减{{ maxHadFullCutConpon.amount }}元
         </span>
         <!-- 品类券（已领取） -->
         <span v-else-if="hadCategoryCouponList.length">
@@ -74,7 +74,7 @@
             去凑单
           </i>
           <i
-            v-else-if="minHadFullCutConpon || minHadCategoryConpon"
+            v-else-if="maxHadFullCutConpon || maxHadCategoryConpon"
             @click="$router.push({ name: 'Home' })"
           >
             再逛逛
@@ -107,8 +107,8 @@
           </span>
           <span v-show="!isManage" class="fz-24">
             合计：
-            <i v-if="appropriateCoupon" :class="$style.summation + ' rmb'" v-text="(summation * 100 - appropriateCoupon.amount * 100) / 100" />
-            <i v-else :class="$style.summation + ' rmb'" v-text="summation" />
+            <i v-if="appropriateCoupon" :class="$style.summation + ' rmb'" v-text="((summation * 1000000 - appropriateCoupon.amount * 1000000) / 1000000).toFixed(2)" />
+            <i v-else :class="$style.summation + ' rmb'" v-text="summation.toFixed(2)" />
           </span>
           <button
             :class="$style.settlementBtn"
@@ -197,10 +197,10 @@ export default {
       hadFullCutCouponList: [], // 全部已领满减券
       categoryCouponList: [], // 全部可领品类券
       hadCategoryCouponList: [], // 全部已领品类券
-      minFullCutConpon: null, // 当前最小金额的满减券（未领取）
-      minHadFullCutConpon: null, // 当前最小金额的满减券（已领取）
-      minCategoryConpon: null, // 当前最小金额的品类券（未领取）
-      minHadCategoryConpon: null, // 当前最小金额的品类券（已领取）
+      maxFullCutConpon: null, // 当前最大金额的满减券（可包含未领取）
+      maxHadFullCutConpon: null, // 当前最大金额的满减券（全部为已领取）
+      maxCategoryConpon: null, // 当前最大金额的品类券（可包含未领取）
+      maxHadCategoryConpon: null, // 当前最小金额的品类券（全部为已领取）
       appropriateCoupon: null, // 合适的优惠券
       nextCoupon: null, // 下一级优惠券
       summation: 0 // 合计
@@ -288,10 +288,10 @@ export default {
           }
         }
         // 券中最大的金额
-        this.minFullCutConpon = this.fullCutCouponList[0] || null
-        this.minHadFullCutConpon = this.hadFullCutCouponList[0] || null
-        this.minCategoryConpon = this.categoryCouponList[0] || null
-        this.minHadCategoryConpon = this.hadCategoryCouponList[0] || null
+        this.maxFullCutConpon = this.fullCutCouponList.slice(-1)[0] || null
+        this.maxHadFullCutConpon = this.hadFullCutCouponList[0] || null
+        this.maxCategoryConpon = this.categoryCouponList.slice(-1)[0] || null
+        this.maxHadCategoryConpon = this.hadCategoryCouponList[0] || null
       } catch (e) {
         throw e
       }
