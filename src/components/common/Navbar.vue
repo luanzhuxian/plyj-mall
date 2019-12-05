@@ -23,11 +23,9 @@
         width="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <template v-if="skinId === 1">
-          <img src="../../views/home/skin/xmas/btn-home-selected.png" v-if="homeActive">
-          <img src="../../views/home/skin/xmas/btn-home.png" v-else>
-        </template>
-        <template v-if="skinId === 2">
+        <img :src="skinMap[skinId].homeActive" v-if="homeActive">
+        <img :src="skinMap[skinId].home" v-else>
+        <!-- <template v-if="skinId === 2">
           <img src="../../views/home/skin/yuan-dan/btn-home-selected.png" v-if="homeActive">
           <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-home.png" v-else>
         </template>
@@ -38,7 +36,7 @@
         <template v-if="skinId === 4">
           <img src="../../views/home/skin/xiao-nian/btn-home-selected.png" v-if="homeActive">
           <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-home.png" v-else>
-        </template>
+        </template> -->
         <div :class="$style.tabName">首页</div>
       </template>
     </router-link>
@@ -57,22 +55,8 @@
         width="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <template v-if="skinId === 1">
-          <img src="../../views/home/skin/xmas/btn-classify-selected.png" v-if="classifyActive">
-          <img src="../../views/home/skin/xmas/btn-classify.png" v-else>
-        </template>
-        <template v-if="skinId === 2">
-          <img src="../../views/home/skin/yuan-dan/btn-classify-selected.png" v-if="classifyActive">
-          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-classify.png" v-else>
-        </template>
-        <template v-if="skinId === 3">
-          <img src="../../views/home/skin/new-year/btn-classify-selected.png" v-if="classifyActive">
-          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-classify.png" v-else>
-        </template>
-        <template v-if="skinId === 4">
-          <img src="../../views/home/skin/xiao-nian/btn-classify-selected.png" v-if="classifyActive">
-          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-classify.png" v-else>
-        </template>
+        <img :src="skinMap[skinId].classifyActive" v-if="classifyActive">
+        <img :src="skinMap[skinId].classify" v-else>
         <div :class="$style.tabName">分类</div>
       </template>
     </router-link>
@@ -87,7 +71,7 @@
     <router-link
       :class="{
         [$style.route]: true,
-        [$style.active]: yajiActive
+        [$style.active]: shoppingChartActive
       }"
       tag="div"
       :to="{ name: 'ShoppingCart' }"
@@ -95,26 +79,12 @@
       <pl-icon
         v-if="skinId === 0"
         type="svg"
-        :name="yajiActive ? 'icon-cart-active' : 'icon-cart'"
+        :name="shoppingChartActive ? 'icon-cart-active' : 'icon-cart'"
         width="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <template v-if="skinId === 1">
-          <img src="../../views/home/skin/xmas/btn-shopping-chart-selected.png" v-if="yajiActive">
-          <img src="../../views/home/skin/xmas/btn-shopping-chart.png" v-else>
-        </template>
-        <template v-if="skinId === 2">
-          <img src="../../views/home/skin/yuan-dan/btn-shopping-chart-selected.png" v-if="yajiActive">
-          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-shopping-chart.png" v-else>
-        </template>
-        <template v-if="skinId === 3">
-          <img src="../../views/home/skin/new-year/btn-shopping-chart-selected.png" v-if="yajiActive">
-          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-shopping-chart.png" v-else>
-        </template>
-        <template v-if="skinId === 4">
-          <img src="../../views/home/skin/xiao-nian/btn-shopping-chart-selected.png" v-if="yajiActive">
-          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-shopping-chart.png" v-else>
-        </template>
+        <img :src="skinMap[skinId].shoppingChartActive" v-if="shoppingChartActive">
+        <img :src="skinMap[skinId].shoppingChart" v-else>
         <div :class="$style.tabName">购物车</div>
       </template>
     </router-link>
@@ -133,22 +103,8 @@
         width="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <template v-if="skinId === 1">
-          <img src="../../views/home/skin/xmas/btn-my-selected.png" v-if="myActive">
-          <img src="../../views/home/skin/xmas/btn-my.png" v-else>
-        </template>
-        <template v-if="skinId === 2">
-          <img src="../../views/home/skin/yuan-dan/btn-my-selected.png" v-if="myActive">
-          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-my.png" v-else>
-        </template>
-        <template v-if="skinId === 3">
-          <img src="../../views/home/skin/new-year/btn-my-selected.png" v-if="myActive">
-          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-my.png" v-else>
-        </template>
-        <template v-if="skinId === 4">
-          <img src="../../views/home/skin/xiao-nian/btn-my-selected.png" v-if="myActive">
-          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-my.png" v-else>
-        </template>
+        <img :src="skinMap[skinId].myActive" v-if="myActive">
+        <img :src="skinMap[skinId].my" v-else>
         <div :class="$style.tabName">我的</div>
       </template>
       <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
@@ -159,6 +115,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
+
 export default {
   name: 'Navbar',
   data () {
@@ -170,7 +127,49 @@ export default {
         'ShoppingCart',
         'Classify',
         'WhatsHelper'
-      ]
+      ],
+      skinMap: {
+        '1': {
+          home: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/239b454f-454c-4ca5-93e7-a51bbd65a85a.png',
+          homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/ca59969d-77ed-48a0-964b-46ebc21401e1.png',
+          classify: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/b7e2cc35-63a7-4e84-8b35-7d487ccff31f.png',
+          classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/8821569b-35de-4a65-8e2d-60017edb6f1c.png',
+          shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/e476c8f8-8b5c-4772-9afc-67e68e678cda.png',
+          shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/665c6191-c62d-4ede-a10b-8cbfab239240.png',
+          my: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/b036f6b9-0b78-424b-b1f1-94a240d5c1ff.png',
+          myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/f1d79dbd-1756-449f-ae9a-d5ba092459ce.png'
+        },
+        '2': {
+          home: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/d164934f-0da6-49e2-a5bb-f057abab1831.png',
+          homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/d2275816-8002-4ada-bb49-495e7202ed76.png',
+          classify: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/ddd9128a-9193-4df4-ad5f-74d8ed2a0a0c.png',
+          classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/c349a743-3c97-4b20-a1c4-e981701d171b.png',
+          shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/d164934f-0da6-49e2-a5bb-f057abab1831.png',
+          shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/d2275816-8002-4ada-bb49-495e7202ed76.png',
+          my: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/2f0c5143-0ee6-4e07-b57e-287506b503d2.png',
+          myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/f6b46a80-9624-467a-a46f-d92716e55789.png'
+        },
+        '3': {
+          home: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/ed448ad5-d03d-445c-92dd-26e47a345d0f.png',
+          homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/ca40f2d6-03c8-43e2-ac61-1a3d8cb312dd.png',
+          classify: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/524bb459-1629-476a-87a5-2c87c4e88629.png',
+          classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/12c032c0-a345-47e4-950f-8e750314492f.png',
+          shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/ec9ab607-450c-4b0a-8fc8-a8f48ef18ea2.png',
+          shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/f62c7aea-7a94-4810-8e50-71af4b64747a.png',
+          my: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/12d8a7da-d145-4394-876f-3452e6111818.png',
+          myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/5506a573-d1de-4388-ae48-5f616865bfbe.png'
+        },
+        '4': {
+          home: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/3e58990a-96cb-48e7-b15a-3e8bd67f99a2.png',
+          homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/c178fd8c-719c-45fa-959d-d777ebf3c078.png',
+          classify: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/6b66e983-d482-40eb-b433-a2894fe66b91.png',
+          classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/8e40ee0f-405e-408d-bef6-8296b51fe68a.png',
+          shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/0438bffd-91cb-4ad4-a21e-3782efe44134.png',
+          shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/06e0330a-0e6d-40da-a95f-806079c95117.png',
+          my: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/e0351d5d-ebde-4606-bfb3-5bd95e8cdbf6.png',
+          myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/38c15651-1a75-4fd5-8f8e-d90017260bff.png'
+        }
+      }
     }
   },
   computed: {
@@ -181,7 +180,7 @@ export default {
     classifyActive: function () {
       return this.$route.matched.some(val => val.name === 'Classify')
     },
-    yajiActive: function () {
+    shoppingChartActive: function () {
       return this.$route.path.indexOf('cart') > -1
     },
     myActive: function () {
@@ -219,7 +218,7 @@ export default {
   align-items: center;
   width: 100%;
   background-color: #fff;
-  z-index: 2;
+  z-index: 9;
   overflow: hidden;
 }
 .route {
@@ -270,21 +269,12 @@ export default {
   }
 }
 .skin-xmas {
-  background: url("../../views/home/skin/xmas/tabbar-bg.png") no-repeat center;
+  background: url("https://mallcdn.youpenglai.com/static/admall/skin/xmas/83295b48-251d-40a0-9e07-e3fb9eb95138.png") no-repeat center;
   background-size: 100%;
 }
 .skin-new-year {
-  background: url("../../views/home/skin/new-year/tabbar-bg.png") no-repeat center;
+  background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/00b470fc-1ba0-4c3a-a039-177d6564eb0e.png") no-repeat center;
   background-size: 100%;
-  .route {
-    width: 74px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .tab {
-    width: 61px
-  }
 }
 </style>
 <style>
