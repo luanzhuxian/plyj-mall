@@ -51,7 +51,7 @@
       </template>
       <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,敬请期待</button>
-      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">立即注册，得豪礼</button>
+      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped && !userId" @click="help">立即注册，得豪礼</button>
       <button :class="$style.button" v-else-if="status === 2 && !hasShare" @click="invite">参与活动</button>
       <button :class="$style.button" v-else-if="status === 2" @click="invite">立即开奖</button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
@@ -172,6 +172,7 @@ export default {
       mallInvitingEventsGiftEntity: null,
       hasShare: false,
       loading: false,
+      friendUserId: '',
       d: '00',
       h: '00',
       m: '00',
@@ -200,7 +201,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userId', 'mallDomain']),
+    ...mapGetters(['userId', 'mallUrl']),
     // 还差多少个好友
     inviteDescription () {
       if (this.data) {
@@ -208,9 +209,6 @@ export default {
         return invitedPeopleNumber - this.totalHelpers
       }
       return 0
-    },
-    friendUserId () {
-      return this.$route.params.shareUserId
     },
     // 是否领到了豪礼
     hasGift () {
@@ -226,21 +224,27 @@ export default {
         }
       },
       immediate: true
+    },
+    shareUserId: {
+      async handler (val) {
+      },
+      immediate: true
     }
   },
   async activated () {
-    if (this.shareUserId) {
-      let isNewUser = this.isNewUser()
-      if (isNewUser && this.userId && this.friendUserId && this.userId !== this.friendUserId) {
-        try {
-          sessionStorage.removeItem('IS_NEW_USER')
-          await this.help()
-          await registerStatisitic(this.activeId)
-          this.helpeSuccess = true
-          // this.showNewUserSuccess = true
-        } catch (e) {
-          throw e
-        }
+    // 朋友(分享者)的id
+    this.friendUserId = this.shareUserId || sessionStorage.getItem('INVITE_NEW_USERS_SHAERID') || ''
+    // 如果是新人，且有userId,（说明是刚注册的）,且有朋友的id（说明邀新成功)，调用registerStatisitic
+    let isNewUser = this.isNewUser()
+    if (isNewUser && this.userId && this.userId !== this.friendUserId) {
+      try {
+        sessionStorage.removeItem('IS_NEW_USER')
+        await Promise.all([this.help(), registerStatisitic(this.activeId)])
+        sessionStorage.removeItem('INVITE_NEW_USERS_SHAERID')
+        this.helpeSuccess = true
+        // this.showNewUserSuccess = true
+      } catch (e) {
+        throw e
       }
     }
   },
@@ -368,14 +372,16 @@ export default {
     },
     // 我也想反豪礼（重置到分享页面）
     async IWantToGetAGiftToo () {
-      location.replace(`/${this.mallDomain}/yx/${this.activeId}`)
+      location.replace(`${this.mallUrl}/yx/${this.activeId}`)
     },
     // 检查是否是新用户
     isNewUser () {
+      // 已经标记为新用户了
       let IS_NEW_USER = JSON.parse(sessionStorage.getItem('IS_NEW_USER'))
       if (IS_NEW_USER) {
-        return IS_NEW_USER
+        return true
       }
+      // 还没标记，但确实是新用户
       if (IS_NEW_USER === null && !this.userId) {
         sessionStorage.setItem('IS_NEW_USER', 'true')
         return true
@@ -387,6 +393,7 @@ export default {
           useDangersHtml: true,
           confirmText: '我也想翻豪礼'
         }).finally(() =>{
+          sessionStorage.removeItem('INVITE_NEW_USERS_SHAERID')
           this.IWantToGetAGiftToo()
         })
       }
