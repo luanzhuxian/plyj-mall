@@ -217,7 +217,7 @@
           <button
             :class="$style.add"
             :disabled="adding || noStock || loading"
-            @click="addToCart(currentSku)"
+            @click="addToCart(currentSku, limiting, limit)"
           >
             加入购物车
           </button>
@@ -567,8 +567,12 @@ export default {
       }
       return true
     },
-    addToCart (selected) {
+    addToCart (selected, limiting, limit) {
       if (!this.hasBind()) {
+        return
+      }
+
+      if (!this.checkLimit(selected, limiting, limit)) {
         return
       }
       this.currentModel = selected
@@ -606,14 +610,8 @@ export default {
       if (!this.hasBind()) {
         return
       }
-      if (limiting && selected.count > limit) {
-        if (limiting === limit) {
-          return this.$warning(`您至多购买${limit}件`)
-        }
-        if (limiting - limit === limiting) {
-          return this.$warning(`您已购买${limiting}件，已达购买上限`)
-        }
-        return this.$warning(`您已购买${limiting - limit}件，您还可以购买${limit}件`)
+      if (!this.checkLimit(selected, limiting, limit)) {
+        return
       }
       this.currentModel = selected
       const { skuCode1, count, skuCode2, price } = selected
@@ -637,6 +635,22 @@ export default {
           activityId: (this.activeProduct === 1 || buyWay === 1) ? null : this.detail.activityProductModel.activityId
         }
       })
+    },
+    // 检查限购
+    checkLimit (sku, limiting, limit) {
+      if (limiting && sku.count > limit) {
+        if (limiting === limit) {
+          this.$warning(`您至多购买${limit}件`)
+          return false
+        }
+        if (limiting - limit === limiting) {
+          this.$warning(`您已购买${limiting}件，已达购买上限`)
+          return false
+        }
+        this.$warning(`您已购买${limiting - limit}件，您还可以购买${limit}件`)
+        return false
+      }
+      return true
     },
     async createHaibao (type) {
       if (this.loading) {
