@@ -41,15 +41,18 @@
 
       <!-- 领取优惠券或凑单 -->
       <div :class="$style.coupon" v-if="couponList.length">
-        <span v-if="nextCoupon">
-          还差{{ (nextCoupon.useLimitAmount * 100 - summation * 100) / 100 }}元，立减{{ nextCoupon.amount }}元
-        </span>
-        <span v-else-if="appropriateCoupon">
-          已满{{ appropriateCoupon.useLimitAmount }}元，已减{{ appropriateCoupon.amount }}元
+        <span v-if="nextCoupon || appropriateCoupon">
+          <span v-if="appropriateCoupon">
+            已满{{ appropriateCoupon.useLimitAmount }}元减{{ appropriateCoupon.amount }}元
+          </span>
+          <span v-if="nextCoupon && appropriateCoupon">, </span>
+          <span v-if="nextCoupon">
+            还差{{ (nextCoupon.useLimitAmount * 100 - summation * 100) / 100 }}元,立减{{ nextCoupon.amount }}元
+          </span>
         </span>
         <!-- 满减券（未领取） -->
         <span v-else-if="minFullCutConpon && !minHadFullCutConpon">
-          全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元，领券立享优惠
+          全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元,领券立享优惠
         </span>
         <!-- 满减券（已领取） -->
         <span v-else-if="minHadFullCutConpon">
@@ -57,7 +60,7 @@
         </span>
         <!-- 品类券（已领取） -->
         <span v-else-if="hadCategoryCouponList.length">
-          已领用{{ hadCouponList.length }} 张优惠券，结算时立享优惠
+          已领用{{ hadCouponList.length }} 张优惠券,结算时立享优惠
         </span>
         <span v-else>
           领券立享优惠
