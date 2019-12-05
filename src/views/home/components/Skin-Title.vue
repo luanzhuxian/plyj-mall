@@ -49,7 +49,7 @@ export default {
     justify-content: center;
     align-items: center;
     height: 126px;
-    background: url("../skin/xmas/title-bg.png") no-repeat center;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/xmas/298790c8-dd14-40a0-b1b6-e80995652dc5.png") no-repeat center;
     background-size: 100%;
     .title {
       position: relative;
@@ -71,7 +71,7 @@ export default {
         content: '';
         width: 80px;
         height: 96px;
-        background: url("../skin/xmas/hat.png") no-repeat center;
+        background: url("https://mallcdn.youpenglai.com/static/admall/skin/xmas/7393611f-65e9-4aa7-ad55-5dedc1241183.png") no-repeat center;
         background-size: 100%;
         z-index: 1;
       }
@@ -84,7 +84,7 @@ export default {
     box-sizing: border-box;
     margin-bottom: 6px;
     height: 160px;
-    background: url("../skin/yuan-dan/title-bg.png") no-repeat center bottom;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/08048559-9ce4-404c-a2dc-48d5af1c06ed.png") no-repeat center bottom;
     background-size: 618px auto;
     .character-bg {
       box-sizing: border-box;
@@ -116,14 +116,14 @@ export default {
     justify-content: center;
     align-items: center;
     height: 126px;
-    background: url("../skin/new-year/title-bg.png") no-repeat center;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/82d14077-5842-4214-9ad4-b77f3a23818c.png") no-repeat center;
     background-size: 100%;
     .character-bg {
       position: relative;
       top: 4px;
       width: 78px;
       height: 80px;
-      background: url("../skin/new-year/character-bg.png") no-repeat center;
+      background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/bc5fc36f-7f23-4be7-85cb-d7db6e410a4a.png") no-repeat center;
       background-size: 100%;
       margin: 0 4px;
       display: flex;
@@ -144,7 +144,7 @@ export default {
     justify-content: center;
     align-items: center;
     height: 128px;
-    background: url("../skin/xiao-nian/title-bg.png") no-repeat center;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/b1f87881-c0f6-444c-9ab4-778d784d1dda.png") no-repeat center;
     background-size: 100%;
     .character-bg {
       position: relative;

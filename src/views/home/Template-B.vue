@@ -55,10 +55,10 @@
           :skin-id="skinId"
         />
         <best-recommend :data="RECOMMEND" />
-        <footer :class="$style.footer">
-          — 技术支持 朋来科技 —
-        </footer>
       </div>
+      <footer :class="$style.footer">
+        — 技术支持 朋来科技 —
+      </footer>
     </div>
   </div></template>
 
