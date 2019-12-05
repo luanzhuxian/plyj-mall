@@ -193,16 +193,14 @@ export default {
         // 调用微信支付api
         await wechatPay(result)
         if (orderType === 'PHYSICAL') {
-          this.form.orderStatus = 'WAIT_SHIP'
-          this.tabChange({
-            name: '待发货',
-            id: 'WAIT_SHIP'
+          await this.$router.push({
+            name: 'Orders',
+            status: 'WAIT_SHIP'
           })
         } else {
-          this.form.orderStatus = 'WAIT_RECEIVE'
-          this.tabChange({
-            name: '待收货',
-            id: 'WAIT_RECEIVE'
+          await this.$router.push({
+            name: 'Orders',
+            status: 'WAIT_SHIP'
           })
         }
       } catch (e) {

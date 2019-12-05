@@ -770,7 +770,7 @@ export default {
           ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
           fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1170 + (104 - 88) / 2, String(price), 104)
           // 绘制原价
-          if (originalPrice) {
+          if (originalPrice && originalPrice !== price) {
             let priceWidth = ctx.measureText(price).width
             ctx.fillStyle = '#999'
             ctx.font = '56px Microsoft YaHei UI'
