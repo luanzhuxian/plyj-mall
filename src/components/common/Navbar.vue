@@ -8,6 +8,7 @@
       [$style.skinXiaoNian]: skinId === 4
     }"
   >
+    <!-- 首页 -->
     <router-link
       :class="{
         [$style.route]: true,
@@ -23,23 +24,11 @@
         height="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :src="skinMap[skinId].homeActive" v-if="homeActive">
-        <img :src="skinMap[skinId].home" v-else>
-        <!-- <template v-if="skinId === 2">
-          <img src="../../views/home/skin/yuan-dan/btn-home-selected.png" v-if="homeActive">
-          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-home.png" v-else>
-        </template>
-        <template v-if="skinId === 3">
-          <img src="../../views/home/skin/new-year/btn-home-selected.png" v-if="homeActive">
-          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-home.png" v-else>
-        </template>
-        <template v-if="skinId === 4">
-          <img src="../../views/home/skin/xiao-nian/btn-home-selected.png" v-if="homeActive">
-          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-home.png" v-else>
-        </template> -->
+        <img :src="homeActive ? skinMap[skinId].homeActive : skinMap[skinId].home">
         <div :class="$style.tabName">首页</div>
       </template>
     </router-link>
+    <!-- 分类 -->
     <router-link
       :class="{
         [$style.route]: true,
@@ -55,11 +44,11 @@
         height="72"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :src="skinMap[skinId].classifyActive" v-if="classifyActive">
-        <img :src="skinMap[skinId].classify" v-else>
+        <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
         <div :class="$style.tabName">分类</div>
       </template>
     </router-link>
+    <!-- 活动 -->
     <router-link
       v-if="isActivityAuth"
       :class="$style.route"
@@ -68,6 +57,7 @@
     >
       <img :class="$style.icon" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png">
     </router-link>
+    <!-- 购物车 -->
     <router-link
       :class="{
         [$style.route]: true,
@@ -83,11 +73,11 @@
         :name="shoppingChartActive ? 'icon-cart-active' : 'icon-cart'"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :src="skinMap[skinId].shoppingChartActive" v-if="shoppingChartActive">
-        <img :src="skinMap[skinId].shoppingChart" v-else>
+        <img :src="shoppingChartActive ? skinMap[skinId].shoppingChartActive : skinMap[skinId].shoppingChart">
         <div :class="$style.tabName">购物车</div>
       </template>
     </router-link>
+    <!-- 我的 -->
     <router-link
       :class="{
         [$style.route]: true,
@@ -103,8 +93,7 @@
         height="74"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :src="skinMap[skinId].myActive" v-if="myActive">
-        <img :src="skinMap[skinId].my" v-else>
+        <img :src="myActive ? skinMap[skinId].myActive : skinMap[skinId].my">
         <div :class="$style.tabName">我的</div>
       </template>
       <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
