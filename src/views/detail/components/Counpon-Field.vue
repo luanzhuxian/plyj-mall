@@ -90,7 +90,7 @@ export default {
         let oldCouponIndex = this.couponList.findIndex(item => item.id === id)
         this.couponList.splice(oldCouponIndex, 1)
         this.couponList.splice(oldCouponIndex, 0, result)
-        this.$success('领取成功')
+        this.$success('领取成功，请在我的卡券中查看')
       } catch (e) {
         throw e
       }
