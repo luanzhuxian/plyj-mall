@@ -1,8 +1,43 @@
+/*  common */
+.skin-common {
+  .banner {
+    padding: 0 24px 0 24px !important;
+    background: transparent !important;
+  }
+  .adv {
+    background: transparent !important;
+  }
+  .broadcast,
+  .activity {
+    background: transparent !important;
+  }
+  .hot-item {
+    padding-top: 0 !important;
+    background: transparent !important;
+  }
+  .appointment {
+    padding-bottom: 0 !important;
+    background: transparent !important;
+  }
+  .best {
+    padding: 0 24px !important;
+    background: transparent !important;
+  }
+  .recommend {
+    background: transparent !important;
+  }
+  .shuang12 {
+    background: transparent !important;
+  }
+}
+
+// 圣诞皮肤
 .skin-xmas {
+  @extend .skin-common;
   background-color: #C81819 !important;
   .container {
     padding-top: 58px;
-    background: url("./skin/xmas/top.png") no-repeat center top !important;
+    background: url("./skin/xmas/top-bg.png") no-repeat center top !important;
     background-size: 100% auto !important;
   }
   .search {
@@ -15,12 +50,14 @@
       height: 96px;
       background: url("./skin/xmas/hat.png") no-repeat center;
       background-size: 100%;
-      z-index: 999;
+      z-index: 1;
     }
   }
   .footer {
     position: relative;
+    height: 120px !important;
     color: #FFFFFF !important;
+    background: transparent !important;
     &::before {
       position: absolute;
       bottom: 10px;
@@ -42,109 +79,70 @@
       background-size: 100%;
     }
   }
-  .title-bg {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .skin-title {
     margin: 0 -24px;
-    height: 126px;
-    background: url("./skin/xmas/title-bg.png") no-repeat center;
-    background-size: 100%;
-    .title {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 270px;
-      height: 66px;
-      background: #23814D;
-      border: 3px solid #FFFFFF;
-      border-radius: 26px;
-      font-size: 36px;
-      font-family: Adobe Heiti Std;
-      color: #FFFFFF;
-      &::before {
-        position: absolute;
-        left: -33px;
-        bottom: -6px;
-        content: '';
-        width: 80px;
-        height: 96px;
-        background: url("./skin/xmas/hat.png") no-repeat center;
-        background-size: 100%;
-      }
-    }
   }
 }
 
+// 新年皮肤
 .skin-new-year {
+  @extend .skin-common;
   background-color: #AE1A10 !important;
   .container {
     padding-top: 52px;
-    background: url("./skin/new-year/top.png") no-repeat center top !important;
+    background: url("./skin/new-year/top-bg.png") no-repeat center top !important;
     background-size: 100% auto !important;
   }
   .search {
-    padding: 0 92px;
+    padding: 0 92px !important;
   }
   .footer {
+    height: 150px !important;
     color: #FFFFFF !important;
     background: url("./skin/new-year/bottom-bg.png") no-repeat center !important;
-    background-size: 100% !important;  
+    background-size: 100% !important;
   }
-  .title-bg {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .skin-title {
     margin: 0 -24px;
-    height: 126px;
-    background: url("./skin/new-year/title-bg.png") no-repeat center;
-    background-size: 100%;
-    .character-bg {
-      position: relative;
-      top: 4px;
-      width: 78px;
-      height: 80px;
-      background: url("./skin/new-year/character-bg.png") no-repeat center;
-      background-size: 100%;
-      margin: 0 4px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 42px;
-      font-family: FZQKBYSJW;
-      color: #C1181F;
-    }
   }
 }
 
-/*  common */
-.banner {
-  padding: 0 24px 0 24px !important;
-  background: transparent !important;
+// 元旦皮肤
+.skin-yuan-dan {
+  @extend .skin-common;
+  background-color: #E4D1A3 !important;
+  .container {
+    padding-top: 52px;
+    background: url("./skin/yuan-dan/top-bg.png") no-repeat center top !important;
+    background-size: 100% auto !important;
+  }
+  .search {
+    padding: 0 92px !important;
+  }
+  .footer {
+    height: 300px !important;
+    color: #F2E2BA !important;
+    background: url("./skin/yuan-dan/bottom-bg.png") no-repeat center !important;
+    background-size: 100% !important;
+  }
 }
-.adv {
-  background: transparent !important;
+
+// 小年皮肤
+.skin-xiao-nian {
+  @extend .skin-common;
+  background-color: #FF8401 !important;
+  .container {
+    padding-top: 90px;
+    background: url("./skin/xiao-nian/top-bg.png") no-repeat center top !important;
+    background-size: 100% auto !important;
+  }
+  .search {
+    padding: 0 92px !important;
+  }
+  .footer {
+    height: 90px !important;
+    color: #F2E2BA !important;
+    background: #FF8401 !important;
+  }
 }
-.broadcast,
-.activity {
-  background: transparent !important;
-}
-.hot-item {
-  padding-top: 0 !important;
-  background: transparent !important;
-}
-.appointment {
-  padding-bottom: 0 !important;
-  background: transparent !important;
-}
-.best {
-  padding: 0 24px !important;
-  background: transparent !important;
-}
-.recommend {
-  background: transparent !important;
-}
-.shuang12 {
-  background: transparent !important;
-}
+

@@ -1,10 +1,5 @@
 <template>
   <div :class="$style.hotItem">
-    <slot name="title" v-if="$slots.title" />
-    <div :class="$style.top" v-else>
-      <span :class="$style.title" v-text="moduleName" />
-    </div>
-
     <div :class="$style.proBox">
       <template v-for="(item, i) of first">
         <div
@@ -153,37 +148,7 @@ export default {
 </script>
 
 <style module lang="scss">
-  .hot-item {
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 20px;
-      .title {
-        position: relative;
-        font-size: 36px;
-        font-weight: bold;
-        &:after {
-          position: absolute;
-          right: -36px;
-          content: 'HOT';
-          width: 44px;
-          line-height: 24px;
-          text-align: center;
-          font-size: 14px;
-          color: #fff;
-          font-weight: normal;
-          background: linear-gradient(60deg, #FE7700 35%, rgba(255, 255, 255, .5), #FE7700 75%);
-          background-size: 200%;
-          border-radius: 12px;
-          animation: bgc-move 2s ease infinite;
-        }
-      }
-    }
-  }
-  .pro-box {
-    // margin-top: 20px;
-  }
+  .hot-item {}
   .pro-item {
     background-color: #fff;
     border-radius: 20px;
@@ -289,9 +254,5 @@ export default {
     bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-  }
-  @keyframes bgc-move {
-    0% { background-position: 150% 0 }
-    100% { background-position: -50% 0 }
   }
 </style>

@@ -3,51 +3,75 @@
     :class="{
       [$style.navbar]: true,
       [$style.skinXmas]: skinId === 1,
-      [$style.skinNewYear]: skinId === 2
+      [$style.skinYuanDan]: skinId === 2,
+      [$style.skinNewYear]: skinId === 3,
+      [$style.skinXiaoNian]: skinId === 4
     }"
   >
     <router-link
-      :class="$style.route"
+      :class="{
+        [$style.route]: true,
+        [$style.active]: homeActive
+      }"
       tag="div"
       :to="{ name: 'Home' }"
     >
-      <pl-svg
+      <pl-icon
         v-if="skinId === 0"
         :name="homeActive ? 'icon-find-active' : 'icon-find'"
         width="44"
         height="68"
       />
-      <template v-if="~[1, 2].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <template v-if="skinId === 1">
           <img src="../../views/home/skin/xmas/btn-home-selected.png" v-if="homeActive">
           <img src="../../views/home/skin/xmas/btn-home.png" v-else>
         </template>
         <template v-if="skinId === 2">
+          <img src="../../views/home/skin/yuan-dan/btn-home-selected.png" v-if="homeActive">
+          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-home.png" v-else>
+        </template>
+        <template v-if="skinId === 3">
           <img src="../../views/home/skin/new-year/btn-home-selected.png" v-if="homeActive">
           <img :class="$style.tab" src="../../views/home/skin/new-year/btn-home.png" v-else>
+        </template>
+        <template v-if="skinId === 4">
+          <img src="../../views/home/skin/xiao-nian/btn-home-selected.png" v-if="homeActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-home.png" v-else>
         </template>
         <div :class="$style.tabName">首页</div>
       </template>
     </router-link>
     <router-link
-      :class="$style.route"
+      :class="{
+        [$style.route]: true,
+        [$style.active]: classifyActive
+      }"
       tag="div"
       :to="{ name: 'Classify' }"
     >
-      <pl-svg
+      <pl-icon
         v-if="skinId === 0"
         :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
-        width="44"
-        height="68"
+        width="60"
+        height="72"
       />
-      <template v-if="~[1, 2].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <template v-if="skinId === 1">
           <img src="../../views/home/skin/xmas/btn-classify-selected.png" v-if="classifyActive">
           <img src="../../views/home/skin/xmas/btn-classify.png" v-else>
         </template>
         <template v-if="skinId === 2">
+          <img src="../../views/home/skin/yuan-dan/btn-classify-selected.png" v-if="classifyActive">
+          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-classify.png" v-else>
+        </template>
+        <template v-if="skinId === 3">
           <img src="../../views/home/skin/new-year/btn-classify-selected.png" v-if="classifyActive">
           <img :class="$style.tab" src="../../views/home/skin/new-year/btn-classify.png" v-else>
+        </template>
+        <template v-if="skinId === 4">
+          <img src="../../views/home/skin/xiao-nian/btn-classify-selected.png" v-if="classifyActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-classify.png" v-else>
         </template>
         <div :class="$style.tabName">分类</div>
       </template>
@@ -61,49 +85,69 @@
       <img :class="$style.icon" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png">
     </router-link>
     <router-link
-      :class="$style.route"
+      :class="{
+        [$style.route]: true,
+        [$style.active]: yajiActive
+      }"
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
-      <pl-svg
+      <pl-icon
         v-if="skinId === 0"
-        type="svg"
         :name="yajiActive ? 'icon-cart-active' : 'icon-cart'"
         width="60"
         height="72"
       />
-      <template v-if="~[1, 2].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <template v-if="skinId === 1">
           <img src="../../views/home/skin/xmas/btn-shopping-chart-selected.png" v-if="yajiActive">
           <img src="../../views/home/skin/xmas/btn-shopping-chart.png" v-else>
         </template>
         <template v-if="skinId === 2">
+          <img src="../../views/home/skin/yuan-dan/btn-shopping-chart-selected.png" v-if="yajiActive">
+          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-shopping-chart.png" v-else>
+        </template>
+        <template v-if="skinId === 3">
           <img src="../../views/home/skin/new-year/btn-shopping-chart-selected.png" v-if="yajiActive">
           <img :class="$style.tab" src="../../views/home/skin/new-year/btn-shopping-chart.png" v-else>
+        </template>
+        <template v-if="skinId === 4">
+          <img src="../../views/home/skin/xiao-nian/btn-shopping-chart-selected.png" v-if="yajiActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-shopping-chart.png" v-else>
         </template>
         <div :class="$style.tabName">购物车</div>
       </template>
     </router-link>
     <router-link
-      :class="$style.route"
+      :class="{
+        [$style.route]: true,
+        [$style.active]: myActive
+      }"
       tag="div"
       :to="{ name: 'My' }"
     >
-      <pl-svg
+      <pl-icon
         v-if="skinId === 0"
-        type="svg"
-        :name="myActive ? 'icon-my-active' : 'icon-my'"
+        :name="myActive ? 'icon-my-active' : 'icon-my1'"
         width="44"
         height="74"
       />
-      <template v-if="~[1, 2].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <template v-if="skinId === 1">
           <img src="../../views/home/skin/xmas/btn-my-selected.png" v-if="myActive">
           <img src="../../views/home/skin/xmas/btn-my.png" v-else>
         </template>
         <template v-if="skinId === 2">
+          <img src="../../views/home/skin/yuan-dan/btn-my-selected.png" v-if="myActive">
+          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-my.png" v-else>
+        </template>
+        <template v-if="skinId === 3">
           <img src="../../views/home/skin/new-year/btn-my-selected.png" v-if="myActive">
           <img :class="$style.tab" src="../../views/home/skin/new-year/btn-my.png" v-else>
+        </template>
+        <template v-if="skinId === 4">
+          <img src="../../views/home/skin/xiao-nian/btn-my-selected.png" v-if="myActive">
+          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-my.png" v-else>
         </template>
         <div :class="$style.tabName">我的</div>
       </template>
@@ -176,6 +220,7 @@ export default {
   width: 100%;
   background-color: #fff;
   z-index: 2;
+  overflow: hidden;
 }
 .route {
   display: inline-flex;
@@ -201,23 +246,27 @@ export default {
 
 /* 皮肤 */
 .skin-xmas,
-.skin-new-year {
-  height: 119px !important;
-  bottom: -1px !important;
-  overflow: hidden;
+.skin-yuan-dan,
+.skin-new-year,
+.skin-xiao-nian {
   .route {
     box-sizing: border-box;
     justify-content: flex-end !important;
-    height: 119px !important;
-    padding-bottom: 12px;
+    padding-bottom: 4px;
+    &.active > .tab-name {
+      color: #C81819;
+    }
   }
   .tab-name {
-    margin-top: 7px;
+    margin-top: 1px;
     line-height: 18px;
     font-size: 18px;
     font-family: Adobe Heiti Std;
     color: #242424;
     text-align: center;
+  }
+  .icon {
+    margin-bottom: 0 !important;
   }
 }
 .skin-xmas {
@@ -228,16 +277,13 @@ export default {
   background: url("../../views/home/skin/new-year/tabbar-bg.png") no-repeat center;
   background-size: 100%;
   .route {
-    width: 95px;
+    width: 74px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   .tab {
-    width: 79px
-  }
-  .tab-name {
-    font-size: 26px;
+    width: 61px
   }
 }
 </style>

@@ -1,11 +1,5 @@
 <template>
   <div :class="$style.bestRecommend">
-    <slot name="title" v-if="$slots.title" />
-    <div :class="$style.title" v-else>
-      <span>-</span>
-      <span v-text="data.moduleName" />
-      <span>-</span>
-    </div>
     <ul>
       <template v-for="(item, i) of data.values">
         <li
@@ -66,7 +60,6 @@
           </div>
         </li>
       </template>
-
     </ul>
     <!-- 瀑布流 -->
     <!-- <div v-if="styleType === 1" :class="$style.waterfallBox">
@@ -233,30 +226,9 @@ export default {
 </script>
 
 <style module lang="scss">
-  .title {
-    position: relative;
-    text-align: center;
-    font-size: 36px;
-    font-weight: bolder;
-    color: #F2B036;
-    letter-spacing: 14px;
-    padding: 40px 0 34px;
-    span {
-      display: inline-block;
-      &:nth-last-of-type(1) {
-        transform: scaleX(2);
-        margin-left: 18px;
-      }
-      &:nth-of-type(1) {
-        margin-right: 18px;
-        transform: scaleX(2);
-        transform-origin: 0;
-      }
-    }
-  }
   .product {
     position: relative;
-    margin-bottom: 50px;
+    margin-bottom: 28px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;

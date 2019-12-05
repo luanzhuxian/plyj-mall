@@ -101,6 +101,18 @@ export default {
       this.checkActivityAuth()
       // 获取皮肤id
       this.getSkinId()
+      // 尝试清除微信缓存
+      // 必须放在微信登录之后，否则会影响微信登录
+      // 且有code时不用刷新
+      // let cleanCache = Date.now()
+      // let search = location.search
+      // if (search.indexOf('cleanCache') === -1) {
+      //   if (!search) {
+      //     location.replace(location.href + '?cleanCache=' + cleanCache)
+      //   } else {
+      //     location.replace(location.href + '&cleanCache=' + cleanCache)
+      //   }
+      // }
     } catch (e) {
       throw e
     }
