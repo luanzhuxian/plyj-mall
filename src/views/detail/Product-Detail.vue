@@ -7,8 +7,8 @@
     <template v-if="activeProduct === 1 && productStatus !== 0 || activeProduct !== 1">
       <!-- 海报按钮 -->
       <div :class="$style.haibao">
-        <pl-svg v-if="creating" name="icon-btn-loading" height="35" fill="#fff" class="rotate" @click="showHaibao = false;" />
-        <pl-svg v-else name="icon-haibao" height="35" @click="createHaibao(activeProduct)" />
+        <pl-svg :key="1" v-if="creating" name="icon-btn-loading" height="35" fill="#fff" class="rotate" />
+        <pl-svg :key="2" v-else name="icon-haibao" height="35" @click="createHaibao(activeProduct)" />
         <p>分享海报</p>
       </div>
       <!-- 商品banner -->

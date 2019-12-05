@@ -4,8 +4,8 @@
     <div class="main">
       <div class="list tuan-ing" v-if="ingList.length > 0">
         <div class="head">
-          <pl-svg name="icon-ing_icon" fill="#fff" width="52" />
-          <pl-svg name="icon-ing_text" fill="#fff" width="52" />
+          <pl-svg name="icon-ing_icon" width="52" />
+          <pl-svg name="icon-ing_text" width="180" height="52" />
         </div>
         <div class="item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">

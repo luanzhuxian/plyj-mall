@@ -4,8 +4,8 @@
     <div class="main">
       <div class="list second-ing" v-if="ingList.length > 0">
         <div class="head">
-          <pl-svg name="icon-ing_icon" fill="#fff" width="52" />
-          <pl-svg name="icon-ing_text" fill="#fff" width="52" />
+          <pl-svg name="icon-ing_icon" width="52" />
+          <pl-svg name="icon-ing_text" width="180" height="52" />
         </div>
         <div class="item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">
@@ -25,7 +25,7 @@
               <div class="inner" :style="{width: `${(Number(item.number) - Number(item.stock)) / Number(item.number) * 100}%`}" />
             </div>
             <div class="remain">剩余 {{ item.stock }} 件</div>
-            <div class="original">原价 <del class="rmb">{{ item.productMaxOriginPrice }}</del></div>
+            <div v-if="item.productMaxOriginPrice" class="original">原价 <del class="rmb">{{ item.productMaxOriginPrice }}</del></div>
             <div class="bottom">
               <div class="price-bar">
                 <pl-svg name="icon-miaoshajia" width="100" height="50" />

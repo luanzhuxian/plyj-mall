@@ -61,8 +61,9 @@
       >
         <pl-svg
           v-if="!noIcon && !$slots.icon"
-          :class="$style.noContentIcon"
           :name="icon"
+          width="300"
+          height="200"
         />
         <slot v-else name="icon" />
         <p
@@ -385,10 +386,6 @@ export default {
     flex-direction: column;
     align-items: center;
     margin-top: 200px;
-  }
-  .noContentIcon {
-    width: 80%;
-    height: 200px;
   }
   .noContentTip {
     margin-top: 20px;

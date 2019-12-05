@@ -7,7 +7,7 @@
     <pl-svg
       :class="$style.address3"
       name="icon-address3"
-      fill="#f2b036"
+      :key="1"
     />
     <div :class="$style.right">
       <div :class="$style.name">
@@ -29,6 +29,8 @@
       :class="$style.rightIcon"
       name="icon-right"
       fill="#cdcdcd"
+      width="24"
+      :key="2"
     />
   </div>
   <div
@@ -43,6 +45,7 @@
     <pl-svg
       name="icon-add"
       fill="#fff"
+      :key="3"
     />
   </div>
 </template>
