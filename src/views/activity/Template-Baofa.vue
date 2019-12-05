@@ -125,7 +125,6 @@ export default {
 </script>
 
 <style module lang="scss">
-  .template-baofa {}
   .broadcast {
     margin: 0 24px 16px;
   }

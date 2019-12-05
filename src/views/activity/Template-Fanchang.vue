@@ -86,7 +86,6 @@ export default {
 </script>
 
 <style module lang="scss">
-  .template-fanchang {}
   .broadcast {
     margin: 0 24px 16px;
   }
