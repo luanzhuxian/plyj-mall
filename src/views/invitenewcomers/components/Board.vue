@@ -32,7 +32,7 @@
       <template v-if="friendUserId">
         <div v-if="friendUserId" :class="$style.inviteFriends">
           <!--小手一点帮我助力-->
-          <pl-svg name="icon-invite-users" :width="560" />
+          <pl-svg name="icon-invite-users" :width="560" height="70" />
         </div>
         <div :class="$style.shortOf">
           你也可以参与活动拿豪礼大奖哦！
@@ -40,7 +40,7 @@
       </template>
       <template v-else>
         <div :class="$style.inviteFriends">
-          <pl-svg name="icon-invite-users" :width="560" />
+          <pl-svg name="icon-invite-users" :width="560" height="70" />
         </div>
         <!--<div v-if="inviteDescription > 0" :class="$style.shortOf">
           还差<i v-text="inviteDescription" />个好友注册
