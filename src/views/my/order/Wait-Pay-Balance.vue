@@ -195,12 +195,16 @@ export default {
         if (orderType === 'PHYSICAL') {
           await this.$router.push({
             name: 'Orders',
-            status: 'WAIT_SHIP'
+            params: {
+              status: 'WAIT_SHIP'
+            }
           })
         } else {
           await this.$router.push({
             name: 'Orders',
-            status: 'WAIT_SHIP'
+            params: {
+              status: 'WAIT_RECEIVE'
+            }
           })
         }
       } catch (e) {
