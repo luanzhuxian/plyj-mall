@@ -14,7 +14,7 @@
   >
     <span>
       <pl-svg
-        v-if="loading"
+        v-show="loading"
         class="pl-button__loading"
         name="icon-btn-loading"
       />
@@ -186,7 +186,7 @@ export default {
       .pl-button__prefix-icon, .pl-button__loading {
         width: 24px;
         height: 24px;
-        vertical-align: -1px;
+        vertical-align: -3px;
         fill: currentColor;
       }
     }

@@ -16,7 +16,7 @@
             tag="div"
             v-for="(item, i) of orderList"
             :key="i"
-            @click.capture="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
+            @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
           >
             <div>
               <div :class="$style.listItemLeft">
@@ -68,12 +68,22 @@
                   </span>
                 </div>
                 <pl-button
-                  v-if="!item.pastDue"
+                  v-if="!item.pastDue && item.status !== 'WAIT_PAY'"
                   type="warning"
                   round
                   :disabled="!item.isStart"
                 >
                   去使用
+                </pl-button>
+                <pl-button
+                  v-if="!item.pastDue && item.status === 'WAIT_PAY'"
+                  type="warning"
+                  round
+                  :disabled="!item.isStart"
+                  :loading="payloading && item.orderId === currentPayId"
+                  @click.stop="balancePayment(item)"
+                >
+                  去付尾款
                 </pl-button>
               </div>
             </div>
@@ -85,11 +95,14 @@
 </template>
 
 <script>
+/* eslint-disable */
 import OrderItem from '../../../components/item/Order-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
 import {
-  waitPayBalance
+  waitPayBalance,
+  getWaitPayInfo
 } from '../../../apis/order-manager'
+import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import moment from 'moment'
 export default {
   components: {
@@ -102,6 +115,8 @@ export default {
       orderList: [],
       waitPayBalance,
       loading: false,
+      currentPayId: '',
+      payloading: false,
       form: {
         current: 1,
         size: 10
@@ -167,7 +182,34 @@ export default {
       this.timer = setTimeout(() => {
         this.countDown(remanent, item)
       }, 1000)
-      // this.timerList.push(timer)
+    },
+    // 去付尾款
+    async balancePayment (item) {
+      this.currentPayId = item.orderId
+      this.payloading = true
+      const orderType = item.orderType
+      try {
+        const { result } = await getWaitPayInfo(item.orderId)
+        // 调用微信支付api
+        await wechatPay(result)
+        if (orderType === 'PHYSICAL') {
+          this.form.orderStatus = 'WAIT_SHIP'
+          this.tabChange({
+            name: '待发货',
+            id: 'WAIT_SHIP'
+          })
+        } else {
+          this.form.orderStatus = 'WAIT_RECEIVE'
+          this.tabChange({
+            name: '待收货',
+            id: 'WAIT_RECEIVE'
+          })
+        }
+      } catch (e) {
+        throw e
+      } finally {
+        this.payloading = false
+      }
     }
   }
 }
@@ -233,10 +275,7 @@ export default {
     .buttons {
       margin-top: 24px;
       > button {
-        box-sizing: border-box;
         margin-left: 24px;
-        width: 136px;
-        padding: 0;
       }
     }
   }

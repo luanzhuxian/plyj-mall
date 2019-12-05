@@ -20,14 +20,21 @@ export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, p
             } else if (res.err_msg.indexOf('cancel') > -1) {
               reject(new Error('取消支付'))
             } else if (res.err_msg.indexOf('fail') > -1) {
-              reject(new Error('支付失败: ' + res.err_msg))
+              reject(new ResponseError(JSON.stringify({ message: '支付失败: ' + res.err_msg })))
             }
           })
       } else {
-        reject(new Error('请使用微信浏览器支付'))
+        reject(new ResponseError(JSON.stringify({ message: '请使用微信浏览器支付' })))
       }
     } catch (e) {
-      reject(new Error('支付发生错误'))
+      reject(new ResponseError(JSON.stringify({ message: '支付发生错误' })))
     }
   })
+}
+class ResponseError extends Error {
+  constructor (message) {
+    super(message)
+    this.message = message
+    this.name = 'ResponseError'
+  }
 }

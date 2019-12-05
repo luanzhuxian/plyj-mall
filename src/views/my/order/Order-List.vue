@@ -90,6 +90,16 @@
                   去付款
                 </pl-button>
                 <pl-button
+                  v-if="item.status === 'WAIT_PAY_REPAYMENT'"
+                  type="warning"
+                  round
+                  :loading="payloading && currentPayId === item.id"
+                  :disabled="payloading && currentPayId === item.id"
+                  @click="balancePayment(item.id, item.orderType)"
+                >
+                  去付尾款
+                </pl-button>
+                <pl-button
                   v-if="(item.status === 'FINISHED' || item.status === 'CLOSED') && item.isDeleteBtnShow"
                   round
                   plain
@@ -152,7 +162,8 @@ import {
   getAwaitPayInfo,
   confirmReceipt,
   cancelOrder,
-  deleteOrder
+  deleteOrder,
+  getWaitPayInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { mapGetters } from 'vuex'
@@ -341,6 +352,33 @@ export default {
         this.payloading = false
       }
     },
+    // 去付尾款
+    async balancePayment (orderId, orderType) {
+      this.currentPayId = orderId
+      this.payloading = true
+      try {
+        const { result } = await getWaitPayInfo(orderId)
+        // 调用微信支付api
+        await wechatPay(result)
+        if (orderType === 'PHYSICAL') {
+          this.form.orderStatus = 'WAIT_SHIP'
+          this.tabChange({
+            name: '待发货',
+            id: 'WAIT_SHIP'
+          })
+        } else {
+          this.form.orderStatus = 'WAIT_RECEIVE'
+          this.tabChange({
+            name: '待收货',
+            id: 'WAIT_RECEIVE'
+          })
+        }
+      } catch (e) {
+        throw e
+      } finally {
+        this.payloading = false
+      }
+    },
     async confirmReceipt (item, index) {
       const orderId = item.id
       const { orderStatus } = this.form
@@ -492,12 +530,6 @@ export default {
     }
     .buttons {
       margin-top: 24px;
-      > button {
-        box-sizing: border-box;
-        margin-left: 24px;
-        width: 136px;
-        padding: 0;
-      }
     }
   }
   .list-item-left {
