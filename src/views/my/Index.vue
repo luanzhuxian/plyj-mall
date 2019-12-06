@@ -56,9 +56,9 @@
         <pl-icon :class="$style.myRight" name="icon-arrow-right" size="18" color="#ccc" />
       </router-link>
 
-      <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">
+      <!-- <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">
         <pl-icon name="icon-dingdan" size="28" /> 待付尾款订单 <i>{{ count.prePayOrder }}</i> <pl-icon name="icon-arrow-right" size="24" />
-      </div>
+      </div> -->
 
       <!-- 我的订单 -->
       <div :class="$style.panel">
