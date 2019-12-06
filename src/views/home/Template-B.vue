@@ -19,7 +19,7 @@
         >
       </div>
       <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
-      <broadcast :class="$style.broadcast" v-if="isLiveShow" />
+      <live :class="$style.live" v-if="isLiveShow" />
       <activity :class="$style.activity" v-if="type === 4" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
@@ -31,7 +31,8 @@
         />
         <hot-item :data="POPULAR" />
       </div>
-      <appointment-gift :class="$style.appointment" :data="{ YUYUE, PINGXUAN }" />
+      <appointment :class="$style.appointment" :data="YUYUE" />
+      <propagate :class="$style.propagate" :data="PINGXUAN" />
       <div :class="$style.best" v-if="CLASS.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
         <skin-title
@@ -69,8 +70,9 @@ import Adv from './components/Adv.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
-import AppointmentGift from './components/Appointment-Gift.vue'
-import Broadcast from '../activity/components/Broadcast.vue'
+import Appointment from './components/Appointment.vue'
+import Propagate from './components/Propagate.vue'
+import Live from '../activity/components/Live.vue'
 import Activity from './components/Activity.vue'
 import SkinTitle from './components/Skin-Title.vue'
 
@@ -84,8 +86,9 @@ export default {
     HotItem,
     Best,
     BestRecommend,
-    AppointmentGift,
-    Broadcast,
+    Appointment,
+    Propagate,
+    Live,
     Activity,
     SkinTitle
   },
@@ -152,21 +155,12 @@ export default {
     padding: 0 20px;
   }
   .banner {
-    padding: 24px 24px 32px 24px;
+    padding: 24px 24px 32px;
     background-color: #fff;
     border-radius: 20px 20px 0 0;
   }
-  .adv {
-    padding: 20px 24px 0;
-    background-color: #F4F5F9;
-  }
-  .broadcast,
-  .activity {
-    padding: 20px 24px 0;
-    background-color: #F4F5F9;
-  }
   .hot-item {
-    padding: 34px 24px 24px 24px;
+    padding: 34px 24px 0;
     background-color: #F4F5F9;
     .title {
       display: flex;
@@ -197,10 +191,6 @@ export default {
       0% { background-position: 150% 0 }
       100% { background-position: -50% 0 }
     }
-  }
-  .appointment {
-    padding: 20px 24px;
-    background-color: #f4f5f9;
   }
   .best {
     padding: 24px;
@@ -249,6 +239,17 @@ export default {
     font-size: 26px;
     color: #999;
     background: #EAE9F7;
+  }
+  .adv,
+  .live,
+  .activity {
+    padding: 20px 24px 0;
+    background-color: #F4F5F9;
+  }
+  .appointment,
+  .propagate {
+    padding: 24px 24px 0;
+    background-color: #F4F5F9;
   }
   .shuang12 {
     padding: 20px 24px 0;

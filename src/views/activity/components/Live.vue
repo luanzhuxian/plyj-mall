@@ -1,6 +1,6 @@
 <template>
   <router-link
-    :class="$style.broadcast"
+    :class="$style.live"
     tag="div"
     :to="{ name: 'LiveRoom' }"
   >
@@ -49,7 +49,7 @@ import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
 
 export default {
-  name: 'Broadcast',
+  name: 'Live',
   inject: ['parent'],
   mixins: [mixin],
   components: {
@@ -77,7 +77,7 @@ export default {
 </script>
 
 <style module lang="scss">
-  .broadcast {
+  .live {
     .module-wrapper {
       display: flex;
       padding: 24px;

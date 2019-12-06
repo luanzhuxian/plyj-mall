@@ -1,9 +1,9 @@
 <template>
   <div :class="$style.templateFengqiang">
     <!-- 直播-->
-    <broadcast
+    <live
       v-if="parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))"
-      :class="$style.broadcast"
+      :class="$style.live"
     />
     <!-- 活动 -->
     <div :class="$style.moduleActivity" v-if="hasInvitingEvent || hasJxEvent">
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import Broadcast from './components/Broadcast.vue'
+import Live from './components/Live.vue'
 import Pintuan from './components/Pintuan.vue'
 import Coupon from './components/Coupon.vue'
 import Maisong from './components/Maisong.vue'
@@ -81,7 +81,7 @@ export default {
   name: 'HomeTemplateB',
   inject: ['parent'],
   components: {
-    Broadcast,
+    Live,
     Pintuan,
     Coupon,
     Maisong,
@@ -144,7 +144,7 @@ export default {
 </script>
 
 <style module lang="scss">
-  .broadcast {
+  .live {
     margin: 0 24px 16px;
   }
   // 活动

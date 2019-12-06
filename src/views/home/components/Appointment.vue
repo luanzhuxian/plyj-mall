@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.appointment">
     <div
-      v-if="data.YUYUE.showStatue === 1 && data.YUYUE && data.YUYUE.values.length"
-      :class="$style.appointmentGift"
+      v-if="data.showStatue === 1 && data.values.length"
+      :class="$style.content"
       @click="yuyueNow"
     >
       <pl-svg :class="$style.giftIcon" name="icon-gift" width="70" height="50" />
@@ -11,7 +11,7 @@
       </div>
       <div :class="$style.right">
         <swiper ref="swiper" :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'">
-          <swiper-slide :class="$style.swiperSlide" v-for="(item, i) of data.YUYUE.values" :key="i">
+          <swiper-slide :class="$style.swiperSlide" v-for="(item, i) of data.values" :key="i">
             <p v-text="item.value" />
           </swiper-slide>
         </swiper>
@@ -19,40 +19,6 @@
           <span>立即预约</span>
           <pl-svg name="icon-right" width="25" height="20" fill="#7E6E4D" />
         </div>
-      </div>
-    </div>
-
-    <div
-      :class="$style.content"
-      v-if="data.PINGXUAN.showStatue === 1 && data.PINGXUAN && data.PINGXUAN.values.length"
-      @click="clickPingXuan"
-    >
-      <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
-        <div :class="$style.left">
-          <div :class="$style.title" v-text="PINGXUAN.values[0].mallName" />
-          <div :class="$style.desc" v-text="PINGXUAN.values[0].mallDesc" />
-        </div>
-        <div :class="$style.center">
-          <img :src="logoUrl" alt="">
-        </div>
-        <div :class="$style.right">
-          <pl-svg name="icon-right" :height="30" fill="#ccc" />
-        </div>
-      </div>
-      <div :class="$style.bottom" v-if="PINGXUAN.show === 1 && mallBrandingRequestModels.length">
-        <div :class="$style.title">
-          教育特色 :
-        </div>
-        <ul :class="$style.tags">
-          <template v-for="(item, i) of mallBrandingRequestModels">
-            <li
-              v-if="item.titleName"
-              :key="i"
-              v-text="item.titleName"
-              @click="jump(item)"
-            />
-          </template>
-        </ul>
       </div>
     </div>
 
@@ -64,7 +30,7 @@
         </div>
         <ul :class="$style.left">
           <li
-            v-for="(item, i) of data.YUYUE.values"
+            v-for="(item, i) of data.values"
             :key="i"
             v-text="item.value"
           />
@@ -137,16 +103,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['logoUrl', 'openId', 'mobile']),
-    YUYUE () {
-      return this.data.YUYUE || {}
-    },
-    PINGXUAN () {
-      return this.data.PINGXUAN || {}
-    },
-    mallBrandingRequestModels () {
-      return this.PINGXUAN.values.length ? this.PINGXUAN.values[0].mallBrandingRequestModels.filter(item => item.show === 1) : []
-    }
+    ...mapGetters(['openId', 'mobile'])
   },
   watch: {
     showPop (val) {
@@ -172,20 +129,6 @@ export default {
   methods: {
     yuyueNow () {
       this.showPop = true
-    },
-    clickPingXuan () {
-      sessionStorage.removeItem('PINGXUAN')
-    },
-    jump (item) {
-      if (item.type === 1) {
-        this.$router.push({ name: 'SchoolShow' })
-        return
-      }
-      if (item.type === 2) {
-        this.$router.push({ name: 'StudentShow' })
-        return
-      }
-      this.$router.push({ name: 'Appointment', hash: `#${item.type}` })
     },
     async confirm () {
       try {
@@ -219,7 +162,7 @@ export default {
 
 <style module lang="scss">
   .appointment {
-    > .appointment-gift {
+    > .content {
       position: relative;
       display: flex;
       align-items: center;
@@ -266,68 +209,6 @@ export default {
           transform: translateY(-50%);
           font-size: 24px;
           color: #7e6e4d;
-        }
-      }
-    }
-    > .content {
-      display: flex;
-      flex-direction: column;
-      margin-top: 28px;
-      padding: 24px;
-      background-color: #fff;
-      border-radius: 20px;
-      > .top {
-        display: flex;
-        justify-content: space-between;
-        > .left {
-          > .title {
-            font-size: 36px;
-            font-weight: bold;
-          }
-          > .desc {
-            width: 418px;
-            margin-top: 16px;
-            font-size: 24px;
-            color: #999;
-            @include elps-wrap(2);
-          }
-        }
-        > .center {
-          > img {
-            width: 128px !important;
-            height: 128px !important;
-            object-fit: cover;
-            border-radius: 64px;
-          }
-        }
-        > .right {
-          display: inline-flex;
-          align-items: center;
-        }
-      }
-      > .bottom {
-        display: flex;
-        margin-top: 24px;
-        font-size: 24px;
-        overflow: hidden;
-        border-top: 1px solid #e7e7e7;
-        .title {
-          margin-top: 24px;
-          color: #666;
-        }
-        .tags {
-          display: flex;
-          flex-wrap: wrap;
-          flex: 1;
-          color: #999;
-          > li {
-            margin-left: 16px;
-            margin-top: 16px;
-            padding: 0 20px;
-            line-height: 50px;
-            background-color: #F2F4F5;
-            border-radius: 25px;
-          }
         }
       }
     }

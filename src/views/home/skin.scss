@@ -1,32 +1,18 @@
 /*  common */
 .skin-common {
-  .banner {
-    padding: 0 24px 0 24px !important;
-    background: transparent !important;
-  }
-  .adv {
-    background: transparent !important;
-  }
-  .broadcast,
-  .activity {
-    background: transparent !important;
-  }
-  .hot-item {
-    padding-top: 0 !important;
-    background: transparent !important;
-  }
-  .appointment {
-    padding-bottom: 0 !important;
-    background: transparent !important;
-  }
+  .banner,
+  .hot-item,
   .best {
     padding: 0 24px !important;
     background: transparent !important;
   }
+  .shuang12,
+  .adv,
+  .live,
+  .activity,
+  .appointment,
+  .propagate,
   .recommend {
-    background: transparent !important;
-  }
-  .shuang12 {
     background: transparent !important;
   }
 }
