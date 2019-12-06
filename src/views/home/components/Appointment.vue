@@ -7,7 +7,7 @@
     >
       <pl-svg :class="$style.giftIcon" name="icon-gift" width="70" height="50" />
       <div :class="$style.left">
-        <pl-svg name="icon-yuyueli" width="94" height="50" />
+        <pl-svg name="icon-yuyue2" width="94" height="50" />
       </div>
       <div :class="$style.right">
         <swiper ref="swiper" :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'">
