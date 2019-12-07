@@ -134,19 +134,25 @@
       <div :class="$style.panel">
         <div :class="$style.welfare">
           <router-link :to="{ name: 'MyCoupon'}" :class="$style.welfareItem">
+            <pl-svg name="icon-coupon" width="72" height="72" />
             <div>
               <h5>我的卡券</h5>
               <span>福利多多帮你省钱</span>
             </div>
-            <pl-svg name="icon-coupon" width="72" height="72" />
           </router-link>
-          <div :class="$style.segmentation" />
           <router-link :to="{ name: 'MyPresent'}" :class="$style.welfareItem">
+            <pl-svg name="icon-present" width="72" height="72" type="svg" />
             <div>
               <h5>我的礼品</h5>
               <span>到店核销领礼品</span>
             </div>
+          </router-link>
+          <router-link :to="{ name: 'MyBurse'}" :class="$style.welfareItem">
             <pl-svg name="icon-present" width="72" height="72" type="svg" />
+            <div>
+              <h5>我的奖学金</h5>
+              <span>和优惠券叠加使用</span>
+            </div>
           </router-link>
         </div>
       </div>
@@ -670,7 +676,7 @@ export default {
   /* 我的优惠券 + 我的礼品 start */
   .welfare {
     display: flex;
-    height: 138px;
+    // height: 138px;
     position: relative;
 
     .segmentation {
@@ -690,6 +696,7 @@ export default {
       flex: 1;
       margin: 28px 20px;
       clear: both;
+      text-align: center;
       div {
         float: left;
         h5 {
@@ -710,9 +717,6 @@ export default {
         }
       }
 
-      svg {
-        float: right;
-      }
     }
   }
 
