@@ -23,7 +23,6 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
-              <pl-svg name="icon-coupon2" width="240" height="240" />
               <pl-svg name="icon-newCouponIcon" width="400" />
             </div>
             <div v-for="item in couponList" :key="item.id"
@@ -241,6 +240,8 @@ export default {
 
     button {
       color: #fff;
+      width: 100%;
+      height: 100%;
     }
 
     .link {
