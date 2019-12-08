@@ -415,9 +415,19 @@
         round
         :loading="payloading && currentPayId === orderId"
         :disabled="payloading"
-        @click="pay"
+        @click="pay(1)"
       >
         去付款
+      </pl-button>
+      <pl-button
+        v-if="orderStatus === 'WAIT_PAY_REPAYMENT'"
+        type="warning"
+        round
+        :loading="payloading && currentPayId === orderId"
+        :disabled="payloading"
+        @click="pay(2)"
+      >
+        去付尾款
       </pl-button>
     </div>
 
@@ -543,7 +553,8 @@ import {
   cancelOrder,
   deleteOrder,
   getVerificationStatus,
-  setVerificationStatus
+  setVerificationStatus,
+  getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { generateQrcode } from '../../../assets/js/util'
@@ -954,12 +965,24 @@ export default {
         }
       })
     },
-    async pay () {
+    /**
+     * 支付
+     * @param type {number} 1: 普通支付 2: 付尾款
+     * @return {Promise<void>}
+     */
+    async pay (type) {
       try {
         const { orderId } = this
+        let result = null
         this.currentPayId = orderId
         this.payloading = true
-        const { result } = await getAwaitPayInfo(orderId)
+        if (type === 1) {
+          const { result: waitPayInfo } = await getAwaitPayInfo(orderId)
+          result = waitPayInfo
+        } else if (type === 2) {
+          const { result: balanceInfo } = await getWaitPayBalanceInfo(orderId)
+          result = balanceInfo
+        }
         // 调用微信支付api
         await wechatPay(result)
         updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'pay' })

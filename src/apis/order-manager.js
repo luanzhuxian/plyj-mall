@@ -114,4 +114,4 @@ export const waitPayBalance = params => axios.get(`/apis/v1/order/current/user/p
  * @param orderSn {string}
  * @return {*}
  */
-export const getWaitPayInfo = orderSn => axios.post(`/apis/v1/order/preOrderSecondaryPayment/${orderSn}`)
+export const getWaitPayBalanceInfo = orderSn => axios.post(`/apis/v1/order/preOrderSecondaryPayment/${orderSn}`)

@@ -100,7 +100,7 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
 import {
   waitPayBalance,
-  getWaitPayInfo
+  getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import moment from 'moment'
@@ -189,7 +189,7 @@ export default {
       this.payloading = true
       const orderType = item.orderType
       try {
-        const { result } = await getWaitPayInfo(item.orderId)
+        const { result } = await getWaitPayBalanceInfo(item.orderId)
         // 调用微信支付api
         await wechatPay(result)
         if (orderType === 'PHYSICAL') {

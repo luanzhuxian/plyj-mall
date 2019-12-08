@@ -163,7 +163,7 @@ import {
   confirmReceipt,
   cancelOrder,
   deleteOrder,
-  getWaitPayInfo
+  getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { mapGetters } from 'vuex'
@@ -357,7 +357,7 @@ export default {
       this.currentPayId = orderId
       this.payloading = true
       try {
-        const { result } = await getWaitPayInfo(orderId)
+        const { result } = await getWaitPayBalanceInfo(orderId)
         // 调用微信支付api
         await wechatPay(result)
         if (orderType === 'PHYSICAL') {
