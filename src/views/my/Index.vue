@@ -693,12 +693,13 @@ export default {
     }
 
     .welfare-item {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
       flex: 1;
       margin: 28px 20px;
-      clear: both;
-      text-align: center;
       div {
-        float: left;
+        text-align: center;
         h5 {
           height:44px;
           font-size:32px;
@@ -706,7 +707,6 @@ export default {
           line-height:44px;
           color:#333;
         }
-
         span {
           height:34px;
           font-size:24px;
