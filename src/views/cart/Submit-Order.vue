@@ -405,7 +405,7 @@
     </div>
 
     <div
-      v-if="coupon.amount && isCart && activeProduct === 1"
+      v-if="(coupon.amount || isNotChooseCoupon) && isCart && activeProduct === 1"
       :class="$style.itemSelector"
       @click.capture="showCoupon = true"
     >
