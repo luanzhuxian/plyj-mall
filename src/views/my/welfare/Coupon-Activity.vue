@@ -106,37 +106,44 @@ export default {
       isBySaleCount: false, // 是否按照销量排序
       isBySaleCountDown: true, // 是否按照销量排序从大到小
       getProductList,
-      productList: [] // 商品列表
+      productList: [], // 商品列表
+      isReload: true // 是否重新加载商品列表页
     }
   },
   computed: {},
   created () {
   },
-  async activated () {
-    try {
-      this.couponId = this.$route.params.couponId
-      let { result } = await getCouponDetail(this.couponId)
-      // 设置优惠券的详情
-      this.couponInfo.id = result.id
-      this.couponInfo.name = result.couponName
-      this.couponInfo.type = result.couponType
-      this.couponInfo.amount = result.amount
-      this.couponInfo.useLimitAmount = result.useLimitAmount
-      this.couponInfo.useStartTime = result.useStartTime
-      this.couponInfo.useEndTime = result.useEndTime
-      this.couponInfo.instruction = result.brief
-      this.couponInfo.isClaimed = false
-      // 设置查询当前优惠券下的商品列表参数
-      this.form.current = 1
-      this.form.couponType = result.couponType
-      this.form.couponId = this.couponId
-      // 获取商品详情
-      this.$refs.loadMore.refresh()
-    } catch (e) {
-      throw (e)
-    }
+  beforeRouteEnter (to, from, next) {
+    next(vm => { //  这里的vm指的就是vue实例，可以用来当做this使用
+      vm.isReload = from.name !== 'Lesson'
+      vm.initialize()
+    })
   },
   methods: {
+    async initialize () {
+      try {
+        this.couponId = this.$route.params.couponId
+        let { result } = await getCouponDetail(this.couponId)
+        // 设置优惠券的详情
+        this.couponInfo.id = result.id
+        this.couponInfo.name = result.couponName
+        this.couponInfo.type = result.couponType
+        this.couponInfo.amount = result.amount
+        this.couponInfo.useLimitAmount = result.useLimitAmount
+        this.couponInfo.useStartTime = result.useStartTime
+        this.couponInfo.useEndTime = result.useEndTime
+        this.couponInfo.instruction = result.brief
+        this.couponInfo.isClaimed = false
+        // 设置查询当前优惠券下的商品列表参数
+        this.form.current = 1
+        this.form.couponType = result.couponType
+        this.form.couponId = this.couponId
+        // 获取商品详情
+        if (this.isReload) this.$refs.loadMore.refresh()
+      } catch (e) {
+        throw (e)
+      }
+    },
     async couponClick (id) {
       if (this.isCouponLoading) return
       try {

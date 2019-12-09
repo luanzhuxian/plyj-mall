@@ -228,6 +228,7 @@ export default {
       width: 100%;
       overflow: hidden;
       word-break: keep-all;
+      white-space : nowrap;
       text-overflow: ellipsis;
       font-size: 28px;
       color: #373737;
