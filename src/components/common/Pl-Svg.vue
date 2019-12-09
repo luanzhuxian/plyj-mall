@@ -1,6 +1,6 @@
 <template>
   <svg
-    class="pl-svg"
+    :class="$style.plSvg"
     aria-hidden="true"
     :style="{
       '--width': truthWidth,
@@ -98,12 +98,9 @@ export default {
             const svg = document.querySelector('#' + this.name)
             try {
               const tempSvg = svg.cloneNode(true)
-              if (!this.svgParent) {
-                this.svgParent = svg.parentNode
-              }
-              this.svgParent.appendChild(tempSvg)
               const fills = tempSvg.querySelectorAll('[fill]')
               const colors = tempSvg.querySelectorAll('[color]')
+              svg.parentNode.appendChild(tempSvg)
               tempSvg.setAttribute('id', this.tempName)
               tempSvg.setAttribute('fill', val)
               for (const fill of fills) {
@@ -111,6 +108,9 @@ export default {
               }
               for (const color of colors) {
                 color.setAttribute('color', val)
+              }
+              if (!this.svgParent) {
+                this.svgParent = svg.parentNode
               }
               this.tempSvg = tempSvg
             } catch (e) {
@@ -130,7 +130,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style module lang="scss">
   .pl-svg {
     width: var(--width);
     height: var(--height);
