@@ -275,6 +275,7 @@ export default {
        */
       chatRecords: [],
       couponList: [],
+      isCouponLoading: false, // 增加节流阀
       productList: [],
       detail: {},
       receiveCouponIdList: [] // 已领取的优惠券id列表
@@ -539,12 +540,15 @@ export default {
       }
     },
     async couponClick (id) {
+      if (this.isCouponLoading) return
       try {
+        this.isCouponLoading = true
         await receiveCouponForLive({
           couponId: id,
           activityId: this.activeId,
           entityClassName: 'MallLiveActivityEntity'
         })
+        this.isCouponLoading = false
         this.$success('领取成功')
         this.receiveCouponIdList.push(id)
       } catch (e) {

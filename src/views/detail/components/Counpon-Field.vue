@@ -58,7 +58,8 @@ export default {
   },
   data () {
     return {
-      showCoupon: false
+      showCoupon: false,
+      isCouponLoading: false // 增加节流阀
     }
   },
   computed: {
@@ -83,8 +84,11 @@ export default {
       this.showCoupon = true
     },
     async couponClick (id) {
+      if (this.isCouponLoading) return
       try {
+        this.isCouponLoading = true
         const { result } = await receiveCoupon({ couponId: id })
+        this.isCouponLoading = false
         result.isClaimed = true
         // 只刷新所领取卡券信息
         let oldCouponIndex = this.couponList.findIndex(item => item.id === id)

@@ -92,6 +92,7 @@ export default {
         instruction: '',
         isClaimed: false
       },
+      isCouponLoading: false, // 增加节流阀
       form: {
         current: 1,
         size: 10,
@@ -137,10 +138,13 @@ export default {
   },
   methods: {
     async couponClick (id) {
+      if (this.isCouponLoading) return
       try {
+        this.isCouponLoading = true
         await receiveCoupon({
           couponId: id
         })
+        this.isCouponLoading = false
         this.$success('领取成功')
         this.couponInfo.isClaimed = true
       } catch (e) {
