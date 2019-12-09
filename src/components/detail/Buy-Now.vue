@@ -2,7 +2,7 @@
   <div :class="$style.buyNow">
     <div :class="$style.phone">
       <router-link :class="$style.link" :to="{ name: 'Home' }">
-        <pl-svg name="icon-home" width="38" height="72" />
+        <pl-svg name="icon-home" width="38" height="70" />
       </router-link>
       <a v-if="servicePhoneModels.length === 1" :class="$style.link" :href="'tel:' + servicePhoneModels[0].contactWay">
         <pl-svg name="icon-call-us" width="80" height="72" />

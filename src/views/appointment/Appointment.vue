@@ -395,14 +395,15 @@ export default {
       }
     }
     &.b > .content-list {
-      display: grid;
-      grid-template-columns: 340px 340px;
+      display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      grid-row-gap: 22px;
+      margin-bottom: -22px;
       overflow: auto;
       > li {
         width: 340px;
         height: 340px;
+        margin-bottom: 22px;
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center center;

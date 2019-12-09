@@ -234,14 +234,15 @@ export default {
   .buttons {
     position: fixed;
     bottom: 40px;
-    display: grid;
-    grid-template-columns: 340px 340px;
-    grid-gap: 22px;
+    display: flex;
+    justify-content: space-between;
+    width: 702px;
     &.can-select {
       display: block;
       width: 702px;
     }
     > button {
+      width: 340px;
       height: 108px;
       font-size: 32px;
       font-weight: bold;

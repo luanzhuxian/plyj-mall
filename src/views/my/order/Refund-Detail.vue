@@ -701,13 +701,15 @@ export default {
       margin-top: 4px;
     }
     .img-list {
-      display: grid;
-      grid-template-columns: 144px 144px 144px;
-      grid-gap: 14px;
+      display: inline-flex;
+      flex-wrap: wrap;
+      font-size: 0;
       padding-bottom: 20px;
       > img {
         width: 144px;
         height: 144px;
+        margin-right: 14px;
+        margin-bottom: 14px;
         object-fit: cover;
       }
     }
