@@ -28,7 +28,7 @@
 import moment from 'moment'
 import Overlay from './components/Overlay'
 import { mapGetters } from 'vuex'
-import { getHelpers, getCurrentActivity } from '../../apis/invitenewcomers'
+import { getHelpers, getCurrentActivity, canClaimGift } from '../../apis/invitenewcomers'
 export default {
   name: 'InviteNewcomersHomeEntry',
   components: {
@@ -91,9 +91,10 @@ export default {
         return
       }
       try {
-        let { result } = await getHelpers(this.activityInfo.id, this.userId)
-        this.totalHelpers = result.length
-        this.showSelf = this.totalHelpers > 0 && this.totalHelpers >= this.activityInfo.invitedPeopleNumber && this.isActivityStarted && (!this.isActivityEnd)
+        let { result: helpers } = await getHelpers(this.activityInfo.id, this.userId)
+        this.totalHelpers = helpers.length
+        let { result: can } = await canClaimGift(this.activeId)
+        this.showSelf = can
       } catch (e) {
         throw e
       }
