@@ -29,8 +29,8 @@
       </div>
       <div class="list book-coming" v-if="comingList.length > 0">
         <div class="head">
-          <pl-svg name="icon-coming_icon" fill="#fff" width="52" />
-          <pl-svg name="icon-coming_text" fill="#fff" width="52" />
+          <pl-svg name="icon-coming_icon" width="52" />
+          <pl-svg name="icon-coming_text" width="135" height="52" />
         </div>
         <div class="item book-item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
           <count-down
