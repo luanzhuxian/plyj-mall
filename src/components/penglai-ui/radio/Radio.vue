@@ -7,7 +7,7 @@
     <div
       class="radio__icon"
       :class="{ ['radio__icon--' + shape]: shape, 'radio__icon--disabled': isDisabled, 'radio__icon--checked': checked, 'radio__icon--border': border }"
-      :style="{ fontSize: suffixPx(iconSize) }"
+      :style="{ fontSize: iconSize / 7.5 + 'vw' }"
       @click="onClickIcon"
     >
       <pl-svg
@@ -33,7 +33,6 @@
 
 <script>
 import { ChildrenMixin } from '../../../mixins/relation'
-import { suffixPx } from '../../../assets/js/util'
 
 export default {
   name: 'RadioComponent',
@@ -77,7 +76,6 @@ export default {
   },
   data () {
     return {
-      suffixPx
     }
   },
   computed: {
