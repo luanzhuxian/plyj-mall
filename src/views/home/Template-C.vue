@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      [$style.homeTemplateB]: true,
+      [$style.homeTemplateC]: true,
       [$style.noSkin]: skinId === 0,
       [$style.skinXmas]: skinId === 1,
       [$style.skinYuanDan]: skinId === 2,
@@ -11,16 +11,9 @@
   >
     <div :class="$style.container">
       <search :class="$style.search" placeholder="搜索商品" />
-      <banner :class="$style.banner" :data="BANNER" />
-      <div :class="$style.shuang12">
-        <img
-          src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png.png"
-          @click="$router.push({ name: 'DoubleTwelveDay' })"
-        >
-      </div>
-      <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
+      <propagate :class="$style.propagate" :data="PINGXUAN" />
       <live :class="$style.live" v-if="isLiveShow" />
-      <activity :class="$style.activity" v-if="type === 4" />
+      <appointment :class="$style.appointment" :data="YUYUE" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
         <skin-title
@@ -31,8 +24,6 @@
         />
         <hot-item :data="POPULAR" />
       </div>
-      <appointment :class="$style.appointment" :data="YUYUE" />
-      <propagate :class="$style.propagate" :data="PINGXUAN" />
       <div :class="$style.best" v-if="CLASS.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
         <skin-title
@@ -65,23 +56,18 @@
 
 <script>
 import Search from './components/Search.vue'
-import Banner from './components/Banner.vue'
-import Adv from './components/Adv.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
 import Appointment from './components/Appointment.vue'
-import Propagate from './components/Propagate-Small.vue'
+import Propagate from './components/Propagate.vue'
 import Live from '../activity/components/Live.vue'
-import Activity from './components/Activity.vue'
 import SkinTitle from './components/Skin-Title.vue'
 
 export default {
-  name: 'HomeTemplateB',
+  name: 'HomeTemplateC',
   inject: ['parent'],
   components: {
-    Banner,
-    Adv,
     Search,
     HotItem,
     Best,
@@ -89,7 +75,6 @@ export default {
     Appointment,
     Propagate,
     Live,
-    Activity,
     SkinTitle
   },
   props: {
@@ -113,12 +98,6 @@ export default {
     }
   },
   computed: {
-    BANNER () {
-      return this.data.BANNER || {}
-    },
-    ADV () {
-      return this.data.ADV || {}
-    },
     POPULAR () {
       return this.data.POPULAR || {}
     },
@@ -134,9 +113,11 @@ export default {
     PINGXUAN () {
       return this.data.PINGXUAN || {}
     },
+    TEACHERS () {
+      return this.data.TEACHERS || {}
+    },
     isLiveShow () {
-      return this.type === 4 &&
-      this.parent.liveInfo &&
+      return this.parent.liveInfo &&
       (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
     }
   }
@@ -146,7 +127,7 @@ export default {
 <style module lang="scss">
   @import "./skin.scss";
 
-  .home-Template-b {
+  .home-Template-c {
     background-color: #EDEDED;
     font-size: 0;
   }
@@ -154,14 +135,9 @@ export default {
     position: relative;
     padding: 0 20px;
   }
-  .banner {
-    padding: 24px 24px 32px;
-    background-color: #fff;
-    border-radius: 20px 20px 0 0;
-  }
   .hot-item {
     padding: 34px 24px 0;
-    background-color: #F4F5F9;
+    // background-color: #EDEDED;
     .title {
       display: flex;
       justify-content: space-between;
@@ -194,7 +170,7 @@ export default {
   }
   .best {
     padding: 24px;
-    background-color: #f4f5f9;
+    // background-color: #EDEDED;
     .title {
       display: flex;
       justify-content: space-between;
@@ -208,7 +184,7 @@ export default {
   .recommend {
     padding: 0 24px;
     color: #000;
-    background: #EAE9F7;
+    // background: #EDEDED;
     .title {
       position: relative;
       text-align: center;
@@ -238,25 +214,16 @@ export default {
     height: 140px;
     font-size: 26px;
     color: #999;
-    background: #EAE9F7;
+    // background: #EDEDED;
   }
-  .adv,
   .live,
   .activity {
     padding: 20px 24px 0;
-    background-color: #F4F5F9;
+    // background-color: #EDEDED;
   }
   .appointment,
   .propagate {
     padding: 24px 24px 0;
-    background-color: #F4F5F9;
-  }
-  .shuang12 {
-    padding: 20px 24px 0;
-    background-color: #F4F5F9;
-    img {
-      display: block;
-      width: 100%;
-    }
+    // background-color: #EDEDED;
   }
 </style>

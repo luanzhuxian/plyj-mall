@@ -1,26 +1,27 @@
 <template>
   <div :class="$style.propagate">
-    <div
-      :class="$style.content"
-      v-if="data.showStatue === 1 && data.values.length"
-      @click="clickPingXuan"
-    >
+    <div :class="$style.content">
       <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
-        <div :class="$style.left">
-          <div :class="$style.title" v-text="data.values[0].mallName" />
-          <div :class="$style.desc" v-text="data.values[0].mallDesc" />
-        </div>
-        <div :class="$style.center">
-          <img :src="logoUrl" alt="">
-        </div>
-        <div :class="$style.right">
-          <pl-svg name="icon-right" :height="30" fill="#ccc" />
+        <img :src="data.otherValue" :alt="data.values[0].mallName">
+        <div :class="$style.name">
+          <span>{{ data.values[0].mallName }}</span>
+          <div :class="$style.right">
+            <pl-svg name="icon-right" :height="30" fill="#fff" />
+          </div>
         </div>
       </div>
-      <div :class="$style.bottom" v-if="data.show === 1 && mallBrandingRequestModels.length">
-        <div :class="$style.title">
-          教育特色 :
+      <div :class="$style.middle" @click="$router.push({ name: 'Appointment' })">
+        <div :class="$style.logo">
+          <img :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'">
+          <!-- <img :src="logoUrl" alt=""> -->
         </div>
+        <div :class="$style.intro" v-if="data.values[0].mallDesc">
+          {{ data.values[0].mallDesc }}
+        </div>
+      </div>
+
+      <div :class="$style.bottom" v-if="data.show === 1 && mallBrandingRequestModels.length">
+        <label>教育特色：</label>
         <ul :class="$style.tags">
           <template v-for="(item, i) of mallBrandingRequestModels">
             <li
@@ -59,9 +60,9 @@ export default {
     }
   },
   methods: {
-    clickPingXuan () {
-      sessionStorage.removeItem('PINGXUAN')
-    },
+    // clickPingXuan () {
+    //   sessionStorage.removeItem('PINGXUAN')
+    // },
     jump (item) {
       if (item.type === 1) {
         this.$router.push({ name: 'SchoolShow' })
@@ -79,51 +80,78 @@ export default {
 
 <style module lang="scss">
   .propagate {
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
     > .content {
-      display: flex;
-      flex-direction: column;
-      padding: 24px;
+      // display: flex;
+      // flex-direction: column;
+      // padding: 24px;
       background-color: #fff;
       border-radius: 20px;
+      overflow: hidden;
       > .top {
-        display: flex;
-        justify-content: space-between;
-        > .left {
-          > .title {
-            font-size: 36px;
-            font-weight: bold;
-          }
-          > .desc {
-            width: 418px;
-            margin-top: 16px;
-            font-size: 24px;
-            color: #999;
-            @include elps-wrap(2);
-          }
-        }
-        > .center {
-          > img {
-            width: 128px !important;
-            height: 128px !important;
-            object-fit: cover;
-            border-radius: 64px;
-          }
-        }
-        > .right {
-          display: inline-flex;
+        position: relative;
+        height: 370px;
+        overflow: hidden;
+        .name {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          display: flex;
           align-items: center;
+          padding: 0 24px 0 194px;
+          line-height: 48px;
+          font-size: 32px;
+          font-family: MicrosoftYaHei-Bold;
+          font-weight: bold;
+          color: #FFFFFF;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+          span {
+            flex: 1;
+            width: 0;
+            @include elps();
+          }
+        }
+      }
+      > .middle {
+        position: relative;
+        height: 80px;
+        padding: 12px 24px 0 194px;
+        .intro {
+          font-size: 24px;
+          line-height: 36px;
+          color: #999999;
+          @include elps();
+        }
+        .logo {
+          position: absolute;
+          left: 50px;
+          top: 0;
+          right: 0;
+          transform: translateY(-55%);
+          box-sizing: border-box;
+          width: 120px;
+          height: 120px;
+          background: #EDEDED;
+          border: 1px solid #F2D04A;
+          border-radius: 50%;
+          overflow: hidden;
         }
       }
       > .bottom {
+        padding: 24px 30px 30px;
+        margin-bottom: -16px;
         display: flex;
-        margin-top: 24px;
+        justify-content: space-between;
+        align-items: flex-start;
         font-size: 24px;
-        overflow: hidden;
-        border-top: 1px solid #e7e7e7;
-        .title {
-          margin-top: 24px;
-          color: #666;
-        }
+        line-height: 36px;
+        color: #666666;
+        border-top: 2px solid #D8D8D8;
         .tags {
           display: flex;
           flex-wrap: wrap;
@@ -131,7 +159,7 @@ export default {
           color: #999;
           > li {
             margin-left: 16px;
-            margin-top: 16px;
+            margin-bottom: 16px;
             padding: 0 20px;
             line-height: 50px;
             background-color: #F2F4F5;
