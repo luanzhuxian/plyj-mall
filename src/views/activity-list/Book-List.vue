@@ -20,7 +20,9 @@
             <div>
               <div class="title book-title">{{ item.productName }}</div>
               <div class="tips book-tips">预售到手价：{{ getTotalPrice(item) }}元</div>
-              <div class="book-bottom">预交定金￥{{ item.price }} <span v-if="item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
+              <div class="book-bottom">
+                <span>预交定金￥{{ item.price }}</span>
+                <span v-if="item.multiple > 1 && item.multiple">抵￥{{ item.price * item.multipleNumber }}</span></div>
             </div>
           </div>
         </div>
@@ -43,7 +45,9 @@
             <div>
               <div class="title book-title">{{ item.productName }}</div>
               <div class="tips book-tips">预售到手价：{{ getTotalPrice(item) }}元</div>
-              <div class="book-bottom">预交定金￥{{ item.price }} <span v-if="item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span></div>
+              <div class="book-bottom">
+                <span>预交定金￥{{ item.price }}</span>
+                <span v-if="item.multiple > 1 && item.multiple">抵￥{{ item.price * item.multipleNumber }}</span></div>
             </div>
           </div>
         </div>
