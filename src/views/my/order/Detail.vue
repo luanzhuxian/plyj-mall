@@ -837,7 +837,7 @@ export default {
     countDown (remanent, orderStatus) {
       this.timer = setInterval(() => {
         let { _data } = moment.duration(remanent)
-        let d = String(Math.floor(moment.duration(remanent).asDays()))
+        let d = String(_data.months * moment().daysInMonth() + _data.days)
         let h = String(_data.hours)
         let m = String(_data.minutes)
         let s = String(_data.seconds)
@@ -933,8 +933,8 @@ export default {
           if (orderStatus === 'CLOSED') {
             this.suggestionMap['CLOSED'] = this.isAllProductRefund ? '退款完成' : '订单取消'
           }
-          if (orderStatus === 'WAIT_PAY') {
-            this.setTime(result, 'WAIT_PAY')
+          if (orderStatus === 'WAIT_PAY' || orderStatus === 'WAIT_PAY_REPAYMENT') {
+            this.setTime(result, orderStatus)
           }
           if (orderStatus === 'WAIT_RECEIVE') {
             if (orderType === 'PHYSICAL') {

@@ -180,6 +180,12 @@ export default {
       height: 50px;
       font-size: 24px;
       border-radius: 10px;
+      &:nth-of-type(n + 1) {
+        margin-right: 10px;
+      }
+      &:nth-last-of-type(1) {
+        margin-right: 0;
+      }
       &.round {
         border-radius: 25px;
       }
@@ -196,6 +202,12 @@ export default {
       line-height: 60px;
       font-size: 28px;
       border-radius: 12px;
+      &:nth-of-type(n + 1) {
+        margin-right: 10px;
+      }
+      &:nth-last-of-type(1) {
+        margin-right: 0;
+      }
       &.round {
         border-radius: 31px;
       }

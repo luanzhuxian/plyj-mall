@@ -68,6 +68,7 @@ Vue.config.errorHandler = async function (err, vm, info) {
         openId: vm.$store.getters.openId,
         mallId: vm.$store.getters.mallId,
         userAgent: navigator.userAgent,
+        project: 'mall',
         vm: {
           name: vm.$options.name || '',
           class: Array.from(vm.$el.classList || []).join(';'),
