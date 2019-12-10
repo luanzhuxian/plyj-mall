@@ -1,6 +1,12 @@
 // 我的奖学金
 import { axios } from '../assets/js/axios'
 
+// 主页弹窗奖学金列表
+export const getDelayBurseList = () => axios.get('/apis/v1/scholarship/waitReveive')
+
+// 主页弹窗瓜分奖学金
+export const dispatchBurse = data => axios.post('/apis/v1/scholarship/reveive', data)
+
 // 奖学金管理
 export const getBurseMes = () => axios.get('/apis/v1/scholarship/manager')
 

@@ -148,7 +148,7 @@
             </div>
           </router-link>
           <router-link :to="{ name: 'MyBurse'}" :class="$style.welfareItem">
-            <pl-svg name="icon-present" width="72" height="72" type="svg" />
+            <img src="https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png" alt="">
             <div>
               <h5>我的奖学金</h5>
               <span>和优惠券叠加使用</span>
@@ -698,6 +698,10 @@ export default {
       align-items: center;
       flex: 1;
       margin: 28px 20px;
+      img {
+        width: 130px;
+        height: 72px;
+      }
       div {
         text-align: center;
         h5 {

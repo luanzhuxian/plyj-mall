@@ -19,6 +19,11 @@
       <li>+{{ item.amount }}</li>
       <li><span v-if="isWatch" @click.stop="$router.push({name:'MyBurseDetail',params:{id:item.id}})">去查看</span></li>
     </ul>
+    <!--已使用，已过期图标-->
+    <template v-if="hasStatusImg">
+      <pl-svg v-if="useStatus === 2" name="icon-burse-use" width="186" height="186" type="svg" />
+      <pl-svg v-if="useStatus === 3" name="icon-burse-expire" width="186" height="186" type="svg" />
+    </template>
   </div>
 </template>
 
@@ -39,6 +44,16 @@ export default {
       default () {
         return {}
       }
+    },
+    // 是否显示已使用，已过期图标
+    hasStatusImg: {
+      type: Boolean,
+      default: false
+    },
+    // 使用状态  0：待领取；1：待使用； 2：已使用； 3：已过期 ； 4：已失效； 5：已删除  ;
+    useStatus: {
+      type: Number,
+      default: 0
     }
   },
   methods: {
@@ -56,6 +71,8 @@ export default {
   .burse-item {
     display: flex;
     justify-content: space-between;
+    position: relative;
+    overflow: hidden;
     background: #FFFFFF;
     padding: 46px 26px;
     border-radius: 20px;
@@ -156,6 +173,12 @@ export default {
           background:#FE7700;
         }
       }
+    }
+    > svg {
+      position: absolute;
+      top: -50px;
+      right: 124px;
+      transform: rotate(-35deg);
     }
   }
 </style>

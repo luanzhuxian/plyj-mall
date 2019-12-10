@@ -26,6 +26,8 @@
     </div>
     <invite-newcomers-home-entry />
     <newcomers-home-entry />
+    <!--瓜分奖学金-->
+    <split-burse />
   </div>
 </template>
 
@@ -37,6 +39,7 @@ import TemplateB from './Template-B.vue'
 import TemplateC from './Template-C.vue'
 import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
+import SplitBurse from './../../components/common/Split-Burse.vue'
 import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
 import { getCurrentActivity } from '../../apis/invitenewcomers'
 
@@ -47,7 +50,8 @@ export default {
     TemplateB,
     TemplateC,
     InviteNewcomersHomeEntry,
-    NewcomersHomeEntry
+    NewcomersHomeEntry,
+    SplitBurse
     // WWEC
   },
   provide () {

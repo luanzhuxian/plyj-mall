@@ -11,16 +11,14 @@
 
     <div :class="$style.content">
 
-      <div>已使用奖学金￥1000元</div>
-
       <!--已使用-->
       <div v-show="active === 'useBurse'">
-        <BurList :status="useStatus" :is-edit="useEdit" ref="useBurse" />
+        <BurList :status="useStatus" :use-status="2" :has-status-img="true" :is-edit="useEdit" ref="useBurse" />
       </div>
 
       <!--已过期-->
       <div v-show="active === 'expireBurse'">
-        <BurList :status="expireStatus" :is-edit="expireEdit" ref="expireBurse" />
+        <BurList :status="expireStatus" :use-status="3" :has-status-img="true" :is-edit="expireEdit" ref="expireBurse" />
       </div>
 
     </div>

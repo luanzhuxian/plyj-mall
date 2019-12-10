@@ -10,7 +10,7 @@
       :no-icon="true"
     >
       <!-- <img style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt=""> -->
-      <burse-item @select="select" :is-edit="isEdit" is-watch :item="item" v-for="(item,index) in burseList" :key="index" />
+      <burse-item @select="select" :use-status="useStatus" :has-status-img="hasStatusImg" :is-edit="isEdit" is-watch :item="item" v-for="(item,index) in burseList" :key="index" />
     </load-more>
     <div :class="$style.btn">
       <span v-if="isEdit" @click="deletes">删除</span>
@@ -37,6 +37,16 @@ export default {
     status: {
       type: Number,
       required: true
+    },
+    // 是否显示已使用，已过期图标
+    hasStatusImg: {
+      type: Boolean,
+      default: false
+    },
+    // 使用状态  0：待领取；1：待使用； 2：已使用； 3：已过期 ； 4：已失效； 5：已删除  ;
+    useStatus: {
+      type: Number,
+      default: 0
     }
   },
   data () {
