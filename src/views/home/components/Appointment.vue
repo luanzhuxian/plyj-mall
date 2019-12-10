@@ -1,23 +1,38 @@
 <template>
-  <div :class="$style.appointment">
+  <div
+    class="appointment"
+    :class="{
+      [$style.appointment]: true,
+      [$style.style2]: styleType === 2
+    }"
+    :style="{
+      '--height': (slidesPerView * 40 / 7.5) + 'vw'
+    }"
+  >
     <div
       v-if="data.showStatue === 1 && data.values.length"
       :class="$style.content"
       @click="yuyueNow"
     >
-      <pl-svg :class="$style.giftIcon" name="icon-gift" width="70" height="50" />
+      <pl-svg
+        v-if="styleType === 1"
+        :class="$style.giftIcon"
+        name="icon-gift"
+        width="70"
+        height="50"
+      />
       <div :class="$style.left">
         <pl-svg name="icon-yuyue2" width="94" height="50" />
       </div>
       <div :class="$style.right">
-        <swiper ref="swiper" :options="swiperOptionBanner" :class="$style.swiper + ' swiper-no-swiping'">
+        <swiper ref="swiper" :options="swiperOption" :class="$style.swiper + ' swiper-no-swiping'">
           <swiper-slide :class="$style.swiperSlide" v-for="(item, i) of data.values" :key="i">
             <p v-text="item.value" />
           </swiper-slide>
         </swiper>
         <div :class="$style.now">
           <span>立即预约</span>
-          <pl-svg name="icon-right" width="25" height="20" fill="#7E6E4D" />
+          <pl-svg name="icon-right" width="25" height="25" />
         </div>
       </div>
     </div>
@@ -67,7 +82,7 @@ import { isPhone, isName } from '../../../assets/js/validate'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
 export default {
-  name: 'AppointmentGift',
+  name: 'Appointment',
   components: {
     swiper,
     swiperSlide
@@ -78,19 +93,15 @@ export default {
       loading: false,
       appointmentMobile: '',
       appointmentname: '',
-      swiperOptionBanner: {
+      swiperOption: {
         direction: 'vertical',
-        speed: 1000,
-        slidesPerView: 2,
-        slidesPerGroup: 2,
         autoplay: {
           delay: 2000
         },
-        loop: false,
-        pagination: {
-          el: '.banner-pagination',
-          clickable: true
-        }
+        speed: 1000,
+        slidesPerView: this.slidesPerView,
+        slidesPerGroup: 1,
+        loop: this.data.values.filter(item => item && item.value).length > this.slidesPerView
       }
     }
   },
@@ -100,6 +111,14 @@ export default {
       default () {
         return {}
       }
+    },
+    slidesPerView: {
+      type: Number,
+      default: 1
+    },
+    styleType: {
+      type: Number,
+      default: 1
     }
   },
   computed: {
@@ -166,58 +185,88 @@ export default {
       position: relative;
       display: flex;
       align-items: center;
-      height: 76px;
       padding: 20px 24px;
       background: linear-gradient(90deg, #FEEFD1, #E7D79C);
       border-radius: 20px;
-      > .left {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        width: 94px;
-        height: 34px;
-        padding-right: 20px;
-        &:after {
-          position: absolute;
-          right: 0;
-          content: '';
-          width: 2px;
-          height: 100%;
-          background: linear-gradient(180deg, #F3D488, #EAB665);
+      overflow: hidden;
+    }
+    .left {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: 94px;
+      height: 34px;
+      padding-right: 20px;
+      &:after {
+        position: absolute;
+        right: 0;
+        content: '';
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(180deg, #F3D488, #EAB665);
+      }
+    }
+    .right {
+      position: relative;
+      flex: 1;
+      padding-left: 20px;
+      font-size: 28px;
+      color: #AB8F58;
+    }
+    .swiper {
+      // height: 80px !important;
+      .swiper-slide {
+        > p {
+          width: 350px;
+          line-height: 40px;
+          @include elps()
         }
       }
-      > .right {
-        position: relative;
-        flex: 1;
-        padding-left: 20px;
-        font-size: 28px;
-        color: #AB8F58;
-        .swiper {
-          height: 80px !important;
-          .swiper-slide {
-            > p {
-              width: 350px;
-              line-height: 40px;
-              @include elps()
-            }
-          }
+    }
+    .now {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      font-size: 24px;
+      line-height: 25px;
+      color: #7e6e4d;
+      svg {
+        margin-left: 5px;
+        fill: #7e6e4d;
+        // vertical-align: middle;
+      }
+    }
+    .gift-icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &.style2 {
+      .content {
+        padding: 36px 24px;
+        background: linear-gradient(180deg, rgba(250, 133, 57, 1) 0%, rgba(246, 77, 27, 1) 100%);
+      }
+      .left {
+        &:after {
+          background: #FFF;
         }
-        > .now {
-          position: absolute;
-          top: 50%;
-          right: 0;
-          transform: translateY(-50%);
-          font-size: 24px;
-          color: #7e6e4d;
+      }
+      .right {
+        color: #FFF;
+      }
+      .now {
+        color: #FFD4BA;
+        svg {
+          fill: #FFD4BA !important;
         }
       }
     }
   }
-  .gift-icon {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
+
+  // 弹窗
   .pop-title {
     margin-top: 10px;
     line-height: 80px;
@@ -314,4 +363,11 @@ export default {
       transform: translateY(-50%);
     }
   }
+</style>
+<style lang="scss">
+.appointment {
+  /deep/ .swiper-wrapper {
+    height: var(--height);
+  }
+}
 </style>

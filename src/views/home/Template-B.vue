@@ -31,8 +31,15 @@
         />
         <hot-item :data="POPULAR" />
       </div>
-      <appointment :class="$style.appointment" :data="YUYUE" />
-      <propagate :class="$style.propagate" :data="PINGXUAN" />
+      <appointment
+        :class="$style.appointment"
+        :data="YUYUE"
+        :slides-per-view="2"
+      />
+      <propagate
+        :class="$style.propagate"
+        :data="PINGXUAN"
+      />
       <div :class="$style.best" v-if="CLASS.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
         <skin-title
@@ -65,6 +72,7 @@
 
 <script>
 import Search from './components/Search.vue'
+import Live from '../activity/components/Live.vue'
 import Banner from './components/Banner.vue'
 import Adv from './components/Adv.vue'
 import HotItem from './components/Hot-Item.vue'
@@ -72,7 +80,6 @@ import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
-import Live from '../activity/components/Live.vue'
 import Activity from './components/Activity.vue'
 import SkinTitle from './components/Skin-Title.vue'
 
@@ -80,15 +87,15 @@ export default {
   name: 'HomeTemplateB',
   inject: ['parent'],
   components: {
+    Search,
+    Live,
     Banner,
     Adv,
-    Search,
     HotItem,
     Best,
     BestRecommend,
     Appointment,
     Propagate,
-    Live,
     Activity,
     SkinTitle
   },
@@ -146,7 +153,7 @@ export default {
 <style module lang="scss">
   @import "./skin.scss";
 
-  .home-Template-b {
+  .home-template-b {
     background-color: #EDEDED;
     font-size: 0;
   }

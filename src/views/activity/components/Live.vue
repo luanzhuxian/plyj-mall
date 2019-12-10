@@ -7,33 +7,32 @@
     <div :class="$style.moduleWrapper">
       <div :class="$style.imgWrapper">
         <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
+        <div :class="$style.label" v-if="isNoticeShow">
+          预告
+        </div>
         <pl-svg name="icon-play" width="60" />
       </div>
       <div :class="$style.info">
-        <div :class="$style.main">
+        <div :class="$style.top">
           {{ live.name }}
         </div>
-        <div
-          :class="{
-            [$style.time]: true,
-            [$style.active]: live.statue === 4,
-          }"
-        >
-          <div :class="$style.timeLeft">
-            <pl-svg name="icon-clock" fill="#fff" width="26" v-if="live.statue === 2 && live.hasNotice" />
-            <span v-if="live.statue === 2 && live.hasNotice">预告</span>
-            <span v-if="live.statue === 4">直播中</span>
+        <div :class="$style.bottom">
+          <div :class="$style.bottomLeft">
+            <pl-svg name="icon-clock" fill="#fff" width="26" />
+            <!-- <span v-if="live.statue === 2 && live.hasNotice">预告</span>
+            <span v-if="live.statue === 4">直播中</span> -->
           </div>
-          <div :class="$style.timeRight">
+          <div :class="$style.bottomRight">
+            <span v-if="isNoticeShow">距开始</span>
+            <span v-if="live.statue === 4" :class="$style.highlight">正在直播中</span>
             <count-down
-              v-if="live.statue === 2 && live.hasNotice"
+              v-if="isNoticeShow"
               :timestamp="ts"
-              :color="color"
+              color="#333"
               size="mini"
-              text-after="后开始"
               @done="live.statue = 4"
             />
-            <span v-if="live.statue === 4">
+            <span v-if="live.statue === 4" :class="$style.highlight">
               {{ `${live.visitTimes}人观看` }}
             </span>
           </div>
@@ -57,13 +56,16 @@ export default {
   },
   data () {
     return {
-      ts: '',
-      color: ''
+      ts: ''
+      // color: ''
     }
   },
   computed: {
     live () {
       return this.parent.liveInfo || {}
+    },
+    isNoticeShow () {
+      return this.live.statue === 2 && this.live.hasNotice
     }
   },
   created () {
@@ -71,7 +73,7 @@ export default {
     if (hasNotice && liveStartTime) {
       this.ts = moment(liveStartTime).valueOf()
     }
-    this.color = hasNotice ? '#EC6BA4' : '#EFB835'
+    // this.color = hasNotice ? '#EC6BA4' : '#EFB835'
   }
 }
 </script>
@@ -80,17 +82,14 @@ export default {
   .live {
     .module-wrapper {
       display: flex;
-      padding: 24px;
       background-color: #FFF;
-      border-radius: 20px;
+      border-radius: 40px 20px 20px 20px;
+      overflow: hidden;
     }
     .img-wrapper {
       position: relative;
-      margin-right: 16px;
       width: 256px;
       height: 172px;
-      border-radius: 16px;
-      overflow: hidden;
       img {
         width: 100%;
         height: 100%;
@@ -103,46 +102,61 @@ export default {
         transform: translate(-50%, -50%);
       }
     }
+    .label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 130px;
+      height: 48px;
+      line-height: 48px;
+      background: #FB7D55;
+      border-radius: 0 0px 40px 0px;
+      font-size: 24px;
+      font-family: Microsoft YaHei;
+      color: #FFFFFF;
+      text-align: center;
+    }
     .info {
       flex: 1;
       width: 0;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       flex-direction: column;
+      padding: 14px 24px 14px 14px;
     }
-    .main {
-      margin-bottom: 24px;
+    .top {
       height: 76px;
       font-size: 28px;
+      font-family: Microsoft YaHei;
       font-weight: bold;
       line-height: 36px;
       color: #333333;
-      @include elps-wrap(2);
       text-align: justify;
+      @include elps-wrap(2);
     }
-    .time {
+    .bottom {
       display: flex;
-      align-items: center;
-      text-align: center;
-      height: 48px;
-      line-height: 48px;
-      border: 2px solid #EC6BA4;
-      border-radius: 176px;
+      height: 40px;
+      border: 2px solid #FF9800;
+      border-radius: 20px;
       overflow: hidden;
-      &.active {
-        border: 2px solid #EFB835;
-        .time-left {
-          background: linear-gradient(90deg, rgba(243, 190, 65, 1) 0%, rgba(239, 184, 53, 1) 100%);
-        }
-        .time-right {
-          color: #EFB835;
-        }
-      }
+      // &.active {
+      //   border: 2px solid #EFB835;
+      //   .time-left {
+      //     background: linear-gradient(90deg, rgba(243, 190, 65, 1) 0%, rgba(239, 184, 53, 1) 100%);
+      //   }
+      //   .time-right {
+      //     color: #EFB835;
+      //   }
+      // }
       &-left {
-        width: 114px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
         font-size: 26px;
         color: #FFF;
-        background: linear-gradient(90deg, rgba(237, 133, 93, 1) 0%, rgba(236, 107, 164, 1) 100%);
+        background: linear-gradient(360deg, rgba(247, 91, 35, 1) 0%, rgba(250, 133, 57, 1) 100%);
         overflow: hidden;
       }
       &-right {
@@ -150,13 +164,18 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 26px;
-        font-weight: bold;
-        color: #DB4D7D;
-      }
-      i {
-        margin-right: 6px;
+        font-size: 24px;
+        font-family: MicrosoftYaHei;
+        color: #333333;
+        padding: 0 12px;
+        span {
+          margin-right: 10px;
+        }
       }
     }
-  }
+    .highlight {
+      color: #fe7b21;
+      font-weight: bold;
+    }
+}
 </style>
