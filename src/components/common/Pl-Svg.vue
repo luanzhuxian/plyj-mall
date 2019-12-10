@@ -1,12 +1,12 @@
 <template>
   <svg
-    :class="$style.plSvg"
+    class="pl-svg"
     aria-hidden="true"
-    :style="{
-      '--width': truthWidth,
-      '--height': truthHeight,
-    }"
     @click="clickHandler"
+    :style="{
+      width: truthWidth,
+      height: truthHeight
+    }"
   >
     <use :xlink:href="'#' + (tempName || name)" />
   </svg>
@@ -52,7 +52,7 @@ export default {
       if (this.height) {
         return this.height / 7.5 + 'vw'
       }
-      return 'auto'
+      return null
     },
     truthHeight () {
       if (this.height) {
@@ -62,7 +62,7 @@ export default {
       if (this.width) {
         return this.width / 7.5 + 'vw'
       }
-      return 'auto'
+      return null
     }
   },
   activated () {
@@ -132,7 +132,5 @@ export default {
 
 <style module lang="scss">
   .pl-svg {
-    width: var(--width);
-    height: var(--height);
   }
 </style>
