@@ -93,7 +93,7 @@ export default {
       try {
         let { result: helpers } = await getHelpers(this.activityInfo.id, this.userId)
         this.totalHelpers = helpers.length
-        let { result: can } = await canClaimGift(this.activeId)
+        let { result: can } = await canClaimGift(this.activityInfo.id)
         this.showSelf = can
       } catch (e) {
         throw e
