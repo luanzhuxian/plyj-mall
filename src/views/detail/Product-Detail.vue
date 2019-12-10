@@ -415,6 +415,9 @@ export default {
       return this.currentModel.count || 1
     },
     limiting () {
+      if (this.activeProduct !== 1 && this.preActivity === 2) {
+        return this.activityProductModel.activityLimit ? this.activityProductModel.activityLimitNumber : 0
+      }
       return this.detail.purchaseLimit ? (this.detail.purchaseQuantity) : 0
     },
     productType () {
@@ -540,7 +543,7 @@ export default {
     // 获取优惠券
     async getCouponList () {
       try {
-        let { result } = await getCouponInDetail()
+        let { result } = await getCouponInDetail(this.productId)
         this.couponList = result
         return result
       } catch (e) {
