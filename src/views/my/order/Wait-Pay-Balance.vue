@@ -57,7 +57,7 @@
                     <span v-show="!item.pastDue">剩余尾款支付时间：</span>
                     <span v-show="item.d !== '00'">{{ item.d }}天</span>
                     <span v-show="item.h !== '00'">{{ item.h }}时</span>
-                    <span v-show="item.m !== '00'">{{ item.m }}分</span>
+                    <span>{{ item.m }}分</span>
                     <span>{{ item.s }}秒</span>
                   </template>
                   <span v-if="!item.isStart">
@@ -103,6 +103,7 @@ import {
   getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
+import { Countdown } from '../../../assets/js/util'
 import moment from 'moment'
 export default {
   components: {
@@ -141,7 +142,7 @@ export default {
   methods: {
     onRefresh (list, total) {
       clearTimeout(this.timer)
-      for (let item of list) {
+      for (let [i, item] of list.entries()) {
         item.d = '00'
         item.h = '00'
         item.m = '00'
@@ -152,36 +153,35 @@ export default {
           userStartTime,
           currentTime
         } = item
+        // 是否开始付尾款
         item.isStart = moment(currentTime).valueOf() - moment(userStartTime).valueOf() >= 0
         if (item.isStart) {
           // 可以开始支付了，倒计时支付
           let now = moment(currentTime).valueOf()
           let duration = moment(userEndTime).valueOf() - now
-          this.countDown(duration - 2000, item)
+          this.countDown(duration - 2000, i, item)
         }
       }
       this.orderList = list
     },
-    countDown (remanent, item) {
-      let { _data } = moment.duration(remanent)
-      let d = String(Math.floor(moment.duration(remanent).asDays()))
-      let h = String(_data.hours)
-      let m = String(_data.minutes)
-      let s = String(_data.seconds)
-      remanent -= 1000
-      if (remanent <= 0) {
-        item.pastDue = true
-        this.$forceUpdate()
-        return
-      }
-      item.d = d.padStart(2, '0')
-      item.h = h.padStart(2, '0')
-      item.m = m.padStart(2, '0')
-      item.s = s.padStart(2, '0')
-      this.$forceUpdate()
-      this.timer = setTimeout(() => {
-        this.countDown(remanent, item)
-      }, 1000)
+    countDown (duration, index, item) {
+      const countdownInstance = new Countdown(duration, data => {
+        if (!data) {
+          // 倒计时结束，刷新数据
+          this.$refs.loadMore.refresh()
+          return
+        }
+        let d = String(data.months * moment().daysInMonth() + data.days)
+        let h = String(data.hours)
+        let m = String(data.minutes)
+        let s = String(data.seconds)
+        item.d = d.padStart(2, '0')
+        item.h = h.padStart(2, '0')
+        item.m = m.padStart(2, '0')
+        item.s = s.padStart(2, '0')
+        this.$set(this.orderList, index, item)
+      })
+      countdownInstance.start()
     },
     // 去付尾款
     async balancePayment (item) {

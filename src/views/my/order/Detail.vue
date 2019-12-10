@@ -430,10 +430,10 @@
         type="warning"
         round
         :loading="payloading && currentPayId === orderId"
-        :disabled="payloading"
+        :disabled="payloading || this.finalPaymentIsEnded || !this.finalPaymentIsStarted"
         @click="pay(2)"
       >
-        去付尾款
+        {{ this.finalPaymentIsEnded ? '已过期' : this.finalPaymentIsStarted ? '去付尾款' : '未开始付尾款' }}
       </pl-button>
     </div>
 
@@ -563,7 +563,7 @@ import {
   getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
-import { generateQrcode } from '../../../assets/js/util'
+import { generateQrcode, Countdown } from '../../../assets/js/util'
 import { createText } from '../../../assets/js/validate'
 import filter from '../../../filter/index'
 
@@ -578,7 +578,8 @@ const suggestionMap = {
   WAIT_SHIP: '请耐心等待商家发货…',
   WAIT_RECEIVE: '',
   FINISHED: '本次交易已完成，期待下次光临',
-  CLOSED: '订单取消'
+  CLOSED: '订单取消',
+  WAIT_PAY_REPAYMENT: ''
 }
 const invoiceMap = {
   '1': {
@@ -617,6 +618,8 @@ export default {
     return {
       loaded: false,
       showContact: false,
+      finalPaymentIsStarted: false, // 预购商品是否已到付尾款时间
+      finalPaymentIsEnded: false, // 预购商品付尾款时间已过
       orderType: '',
       orderStatus: '',
       message: '',
@@ -840,38 +843,6 @@ export default {
           this.$error('生成二维码失败')
         })
     },
-    // 倒计时
-    countDown (remanent, orderStatus) {
-      this.timer = setInterval(() => {
-        let { _data } = moment.duration(remanent)
-        let d = String(_data.months * moment().daysInMonth() + _data.days)
-        let h = String(_data.hours)
-        let m = String(_data.minutes)
-        let s = String(_data.seconds)
-        remanent -= 1000
-        if (remanent <= 0) {
-          clearInterval(this.timer)
-          this.suggestionMap.WAIT_PAY = this.suggestionMap.WAIT_RECEIVE = ''
-          this.getDetail()
-          return
-        }
-        if (orderStatus === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
-        if (orderStatus === 'WAIT_RECEIVE') {
-          this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
-        }
-      }, 1000)
-    },
-    setTime (result, orderStatus) {
-      let activeProduct = result.activeProduct
-      let waitPayTime = activeProduct === 1 || activeProduct === 5 ? 24 * 60 * 60 * 1000 : 5 * 60 * 1000
-      let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
-      let duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
-      let now = moment((result.currentServerTime)).valueOf() // 服务器时间
-      let startTime = moment(time).valueOf()
-      if (now - startTime < duration) {
-        this.countDown(duration + startTime - now - 2000, orderStatus)
-      }
-    },
     getDetail () {
       return new Promise(async (resolve, reject) => {
         try {
@@ -978,6 +949,65 @@ export default {
           reject(e)
         }
       })
+    },
+    // 倒计时
+    countDown (remanent, orderStatus) {
+      if (this.countdownInstance) {
+        this.countdownInstance.stop()
+      }
+      const countdownInstance = new Countdown(remanent, data => {
+        if (!data) {
+          this.suggestionMap.WAIT_PAY = this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY_REPAYMENT = ''
+          this.getDetail()
+          return
+        }
+        let d = String(data.months * moment().daysInMonth() + data.days)
+        let h = String(data.hours)
+        let m = String(data.minutes)
+        let s = String(data.seconds)
+        if (orderStatus === 'WAIT_PAY') {
+          this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
+          return
+        }
+        if (orderStatus === 'WAIT_PAY_REPAYMENT') {
+          this.suggestionMap.WAIT_PAY_REPAYMENT = `剩余尾款支付时间：${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒`
+          return
+        }
+        if (orderStatus === 'WAIT_RECEIVE') {
+          this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        }
+      })
+      countdownInstance.start()
+      this.countdownInstance = countdownInstance
+    },
+    setTime (result, orderStatus) {
+      let activeProduct = result.activeProduct
+      let waitPayTime = 0
+      let now = Number(result.currentServerTime) // 服务器时间
+      if (activeProduct === 1 || activeProduct === 5) {
+        waitPayTime = 24 * 60 * 60 * 1000
+      } else if (activeProduct === 4) {
+        // 预购
+        let useStartTime = moment((result.activityData.useStartTime)).valueOf()
+        let useEndTime = moment((result.activityData.useEndTime)).valueOf()
+        this.finalPaymentIsStarted = now - useStartTime >= 0
+        this.finalPaymentIsEnded = now - useEndTime >= 0
+        if (this.finalPaymentIsStarted && !this.finalPaymentIsEnded) {
+          waitPayTime = useEndTime - now
+        }
+      } else {
+        waitPayTime = 5 * 60 * 1000
+      }
+      let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
+      let duration = (orderStatus === 'WAIT_PAY' || orderStatus === 'WAIT_PAY_REPAYMENT') ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
+      if (activeProduct === 4) {
+        this.countDown(duration, orderStatus)
+        return
+      }
+      let startTime = moment(time).valueOf()
+      if (now - startTime < duration) {
+        this.countDown(duration + startTime - now - 2000, orderStatus)
+      }
     },
     /**
      * 支付

@@ -128,7 +128,7 @@
 
 <script>
 import moment from 'moment'
-import { countdown } from '../../../assets/js/util'
+import { Countdown } from '../../../assets/js/util'
 import Trophy from './Trophy'
 import ShareLayer from './ShareLayer.vue'
 // import HelperList from './Helper-List.vue'
@@ -281,11 +281,11 @@ export default {
       /* eslint-disable */
       if (status === 1) {
         // 未开始
-        this.timer = new countdown(activityStartTime - now, this.setTime)
+        this.timer = new Countdown(activityStartTime - now, this.setTime)
         this.timer.start()
       } else if (status === 2) {
         // 已开始
-        this.timer = new countdown(activityEndTime - now, this.setTime)
+        this.timer = new Countdown(activityEndTime - now, this.setTime)
         this.timer.start()
       }
       this.status = status

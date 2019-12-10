@@ -362,7 +362,7 @@ export function drawRoundRect (ctx, x, y, width, height, radius, strokeStyle, fi
  * @param duration {number} 倒计时时长, 毫秒值
  * @param callback {function} 接收倒计时数据
  */
-export class countdown {
+export class Countdown {
   timer = 0
   total = 0
   constructor (duration, callback) {
@@ -389,6 +389,7 @@ export class countdown {
   }
   stop () {
     clearTimeout(this.timer)
+    this.callback = null
   }
 }
 

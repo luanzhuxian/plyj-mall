@@ -89,15 +89,22 @@
                 >
                   去付款
                 </pl-button>
+                <span v-if="item.activeProduct === 4 && item.isStart && !item.pastDue" class="fz-24 gray-3 mr-10">
+                  <span v-show="!item.pastDue">剩余尾款支付时间：</span>
+                  <span v-show="item.d !== '00'">{{ item.d }}天</span>
+                  <span v-show="item.h !== '00'">{{ item.h }}时</span>
+                  <span>{{ item.m }}分</span>
+                  <span>{{ item.s }}秒</span>
+                </span>
                 <pl-button
                   v-if="item.status === 'WAIT_PAY_REPAYMENT'"
                   type="warning"
                   round
                   :loading="payloading && currentPayId === item.id"
-                  :disabled="payloading && currentPayId === item.id"
+                  :disabled="payloading && currentPayId === item.id || !item.isStart"
                   @click="balancePayment(item.id, item.orderType)"
                 >
-                  去付尾款
+                  {{ item.pastDue ? '已过期' : item.isStart ? '去付尾款' : '未开始付尾款' }}
                 </pl-button>
                 <pl-button
                   v-if="(item.status === 'FINISHED' || item.status === 'CLOSED') && item.isDeleteBtnShow"
@@ -167,7 +174,8 @@ import {
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { mapGetters } from 'vuex'
-
+import moment from 'moment'
+import { Countdown } from '../../../assets/js/util'
 const tabs = [{
   name: '全部',
   id: 'ALL_ORDER'
@@ -201,6 +209,7 @@ export default {
     return {
       tabs,
       orderList: [],
+      countdownInstances: [], // 倒计时实例列表
       total: 0, // 记录订单总数
       form: {
         current: 1,
@@ -303,6 +312,8 @@ export default {
     this.form.orderStatus = this.status
     this.$refresh()
   },
+  deactivated () {
+  },
   methods: {
     tabChange (item) {
       this.$nextTick(() => {
@@ -318,13 +329,53 @@ export default {
       })
     },
     onRefresh (list, total) {
+      this.clearCountdown()
       const counter = (array) => (key) => array.reduce((acc, current) => acc + (key ? current[key] : current), 0)
-      for (let item of list) {
+      for (let [i, item] of list.entries()) {
         item.totalCount = counter(item.products)('purchaseQuantity')
         item.isDeleteBtnShow = !item.products.some(product => ![0, 2, 3, 6].includes(product.afterSalesStatus)) // 只要有一个商品在售后状态则不显示删除按钮
+        if (item.status === 'WAIT_PAY_REPAYMENT') {
+          // 是否开始付尾款
+          let now = Number(item.currentServerTime)
+          let useStartTime = moment(item.useStartTime).valueOf()
+          let useEndTime = moment(item.useEndTime).valueOf()
+          item.isStart = now - useStartTime >= 0
+          item.pastDue = now - useEndTime >= 0
+          if (item.isStart && !item.pastDue) {
+            this.countDown(useEndTime - now, i, item)
+          }
+        }
       }
       this.orderList = list
       this.total = total
+    },
+    // 开始倒计时
+    countDown (duration, index, item) {
+      const countdownInstance = new Countdown(duration, data => {
+        if (!data) {
+          // 倒计时结束，刷新数据
+          this.$refs.loadMore.refresh()
+          return
+        }
+        let d = String(data.months * moment().daysInMonth() + data.days)
+        let h = String(data.hours)
+        let m = String(data.minutes)
+        let s = String(data.seconds)
+        item.d = d.padStart(2, '0')
+        item.h = h.padStart(2, '0')
+        item.m = m.padStart(2, '0')
+        item.s = s.padStart(2, '0')
+        this.$set(this.orderList, index, item)
+      })
+      countdownInstance.start()
+      this.countdownInstances.push(countdownInstance)
+    },
+    // 停止所有定时器
+    clearCountdown () {
+      for (let countdownInstances of this.countdownInstances) {
+        countdownInstances.stop()
+      }
+      this.countdownInstances = []
     },
     async pay (orderId, orderType) {
       this.payloading = true
