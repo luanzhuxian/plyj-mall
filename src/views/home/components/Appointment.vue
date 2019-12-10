@@ -22,7 +22,7 @@
         height="50"
       />
       <div :class="$style.left">
-        <pl-svg :name="styleType === 1 ? 'icon-yuyue2' : 'icon-yuyueli-white'" width="94" height="50" />
+        <pl-svg name="icon-yuyue2" width="94" height="50" :fill="styleType === 1 ? '' : '#FFF'" />
       </div>
       <div :class="$style.right">
         <swiper ref="swiper" :options="swiperOption" :class="$style.swiper + ' swiper-no-swiping'">
