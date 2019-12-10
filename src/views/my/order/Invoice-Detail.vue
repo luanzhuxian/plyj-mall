@@ -8,13 +8,13 @@
       <a :href="`tel:${$store.getters.supportPhone}`">
         <pl-svg
           :class="$style.callMe"
-          name="phone2"
+          name="icon-phone2"
         />
       </a>
     </div>
 
     <div :class="$style.addressInfo + ' mt-28 radius-20 bg-white'">
-      <pl-svg name="address3" />
+      <pl-svg name="icon-address3" />
       <div :class="$style.right + ' fz-24 gray-2'">
         <div :class="$style.name">
           收货人：<i v-text="InvoiceDetail.recvName" />&nbsp;<i

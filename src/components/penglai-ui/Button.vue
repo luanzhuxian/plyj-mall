@@ -14,9 +14,9 @@
   >
     <span>
       <pl-svg
-        v-if="loading"
+        v-show="loading"
         class="pl-button__loading"
-        name="btn-loading"
+        name="icon-btn-loading"
       />
       <pl-svg
         class="pl-button__prefix-icon"
@@ -129,7 +129,7 @@ export default {
       background-color: #D2524C;
       color: #fff;
       &:active {
-        background-color: D2524C;
+        background-color: #D2524C;
       }
       &.plain {
         color: #D2524C;
@@ -169,6 +169,7 @@ export default {
       }
       .pl-button__prefix-icon, .pl-button__loading {
         width: 20px;
+        height: 20px;
         vertical-align: -1px;
         fill: currentColor;
       }
@@ -179,12 +180,19 @@ export default {
       height: 50px;
       font-size: 24px;
       border-radius: 10px;
+      &:nth-of-type(n + 1) {
+        margin-right: 10px;
+      }
+      &:nth-last-of-type(1) {
+        margin-right: 0;
+      }
       &.round {
         border-radius: 25px;
       }
       .pl-button__prefix-icon, .pl-button__loading {
         width: 24px;
-        vertical-align: -1px;
+        height: 24px;
+        vertical-align: -3px;
         fill: currentColor;
       }
     }
@@ -194,11 +202,18 @@ export default {
       line-height: 60px;
       font-size: 28px;
       border-radius: 12px;
+      &:nth-of-type(n + 1) {
+        margin-right: 10px;
+      }
+      &:nth-last-of-type(1) {
+        margin-right: 0;
+      }
       &.round {
         border-radius: 31px;
       }
       .pl-button__prefix-icon, .pl-button__loading {
         width: 26px;
+        height: 26px;
         fill: currentColor;
       }
     }
@@ -211,6 +226,7 @@ export default {
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
+        height: 35px;
         margin-right: 5px;
         fill: currentColor;
         vertical-align: -7px;
@@ -226,6 +242,7 @@ export default {
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
+        height: 35px;
         margin-right: 5px;
         fill: currentColor;
         vertical-align: -7px;
@@ -243,6 +260,7 @@ export default {
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
+        height: 35px;
         margin-right: 5px;
         vertical-align: -5px;
         fill: currentColor;
@@ -257,6 +275,7 @@ export default {
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
         width: 35px;
+        height: 35px;
         margin-right: 5px;
         fill: currentColor;
         vertical-align: -7px;

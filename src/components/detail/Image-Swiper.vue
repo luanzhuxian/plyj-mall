@@ -7,7 +7,7 @@
           {{ currentIndex + 1 }}/{{ total }}
         </div>
         <button class="pswp__button--close" title="close" @click="close">
-          <pl-svg name="close" color="#fff" />
+          <pl-svg name="icon-close" fill="#fff" height="30" />
         </button>
       </div>
       <div class="pswp__container">

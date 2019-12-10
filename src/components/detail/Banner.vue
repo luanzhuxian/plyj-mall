@@ -23,7 +23,7 @@
           :src="img"
           ref="img"
         >
-        <pl-svg v-if="img.indexOf('video/') > -1" @click="play(img)" :class="$style.playBtn" name="play" color="#fff" />
+        <pl-svg v-if="img.indexOf('video/') > -1" @click="play(img)" :class="$style.playBtn" name="icon-play" fill="#fff" />
       </swiperSlide>
     </swiper>
     <div :class="'swiper-pagination ' + $style.pagination" />
@@ -46,7 +46,7 @@
           controls
           :class="{ [$style.playVideo]: isPlay }"
         />
-        <pl-svg @click="close" :class="$style.close" name="close" color="#bbb" />
+        <pl-svg @click="close" :class="$style.close" name="icon-close" fill="#bbb" />
       </div>
     </transition>
   </div>

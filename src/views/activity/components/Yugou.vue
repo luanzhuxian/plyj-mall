@@ -5,7 +5,7 @@
         <div :class="$style.navBar">
           <router-link :class="$style.navLink" tag="div" :to="{ name: 'BookList' }">
             <span>查看更多</span>
-            <pl-icon name="icon-arrow-right" size="20" />
+            <pl-svg name="icon-right" width="20" fill="#ccc" />
           </router-link>
         </div>
         <ul :class="$style.list" v-if="data.values.length">

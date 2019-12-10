@@ -17,8 +17,8 @@
       <pl-svg
         v-if="!hideCloseButton"
         class="pl-modal__close-btn"
-        name="close2"
-        color="#ccc"
+        name="icon-close2"
+        fill="#ccc"
         @click="onClose"
       />
       <div

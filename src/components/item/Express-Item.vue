@@ -4,7 +4,7 @@
     @click="handleClick"
   >
     <pl-svg
-      name="express"
+      name="icon-express"
       :class="$style.icon"
     />
     <div :class="$style.right + ' fz-28'">
@@ -19,8 +19,9 @@
     </div>
     <pl-svg
       :class="$style.rightIcon"
-      name="right"
-      color="#CCC"
+      height="24"
+      name="icon-right"
+      fill="#CCC"
     />
   </div>
 </template>

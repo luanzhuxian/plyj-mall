@@ -10,7 +10,7 @@
     <NoContent
       v-else
       text="暂无发票信息记录"
-      icon="no-content2"
+      icon="icon-no-content2"
     />
     <router-link
       tag="div"
@@ -23,8 +23,8 @@
     >
       <span>点击这里，添加一个发票信息</span>
       <pl-svg
-        name="add"
-        color="#fff"
+        name="icon-add"
+        fill="#fff"
       />
     </router-link>
   </div>

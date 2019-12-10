@@ -16,7 +16,7 @@
         </div>
         <button :class="$style.confirmText" v-text="confirmText" @click="confirm" />
       </div>
-      <pl-icon @click="close" :class="$style.close" name="icon-close1" size="48" color="#fff" />
+      <pl-svg @click="close" :class="$style.close" name="icon-close2" width="48" fill="#fff" />
     </div>
   </transition>
 </template>

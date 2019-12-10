@@ -38,6 +38,57 @@
           </pl-checkbox>
         </pl-checkbox-group>
       </div>
+
+      <!-- 领取优惠券或凑单 -->
+      <div :class="$style.coupon" v-if="couponList.length">
+        <span v-if="nextCoupon || appropriateCoupon">
+          <span v-if="appropriateCoupon">
+            已满{{ appropriateCoupon.useLimitAmount }}元减{{ appropriateCoupon.amount }}元
+          </span>
+          <span v-if="nextCoupon && appropriateCoupon">, </span>
+          <span v-if="nextCoupon">
+            还差{{ ((nextCoupon.useLimitAmount * 1000000 - summation * 1000000) / 1000000).toFixed(2) }}元立减{{ nextCoupon.amount }}元
+          </span>
+        </span>
+        <!-- 满减券，存在较大金额（未领取） -->
+        <span v-else-if="maxFullCutConpon && !maxHadFullCutConpon">
+          全场满{{ maxFullCutConpon.useLimitAmount }}元减{{ maxFullCutConpon.amount }}元,领券立享优惠
+        </span>
+        <!-- 满减券（已领取） -->
+        <span v-else-if="maxHadFullCutConpon">
+          全场满{{ maxHadFullCutConpon.useLimitAmount }}元减{{ maxHadFullCutConpon.amount }}元
+        </span>
+        <!-- 品类券（已领取） -->
+        <span v-else-if="hadCategoryCouponList.length">
+          已领用{{ hadCouponList.length }} 张优惠券,结算时立享优惠
+        </span>
+        <span v-else>
+          领券立享优惠
+        </span>
+
+        <span :class="$style.scrapingUp">
+          <i
+            v-if="nextCoupon"
+            @click="$router.push({ name: 'CouponActivity', params: { couponId: nextCoupon.id } })"
+          >
+            去凑单
+          </i>
+          <i
+            v-else-if="maxHadFullCutConpon || maxHadCategoryConpon"
+            @click="$router.push({ name: 'Home' })"
+          >
+            再逛逛
+          </i>
+          <i
+            v-else
+            @click="$router.push({ name: 'CouponCenter' })"
+          >
+            去领券
+          </i>
+          <pl-svg name="icon-right" fill="#FE7700" width="20" height="22" />
+        </span>
+      </div>
+
       <!-- 结算或删除 -->
       <div :class="$style.settlement">
         <pl-checkbox :checked="checkedAll" @change="checkAll" border>
@@ -50,12 +101,14 @@
         </pl-checkbox>
 
         <div :class="$style.control">
-          <span v-show="!isManage" class="fz-22 gray-3">
-            不含运费
+          <span v-show="!isManage" class="fz-22 gray-3" :class="$style.discounts">
+            <i>不含运费</i>
+            <i style="color: #FE7700;" v-if="appropriateCoupon">已减：¥{{ appropriateCoupon.amount }}</i>
           </span>
           <span v-show="!isManage" class="fz-24">
             合计：
-            <i :class="$style.summation + ' rmb'" v-text="summation" />
+            <i v-if="appropriateCoupon" :class="$style.summation + ' rmb'" v-text="((summation * 1000000 - appropriateCoupon.amount * 1000000) / 1000000).toFixed(2)" />
+            <i v-else :class="$style.summation + ' rmb'" v-text="summation.toFixed(2)" />
           </span>
           <button
             :class="$style.settlementBtn"
@@ -88,14 +141,15 @@
       :sku-list="skuModels"
       :product-image="productImg"
       :sku="currentSku"
+      :product-id="currentPro.cartProductId"
       :limiting="currentPro.purchaseQuantity"
     >
-      <template v-slot:footer="{ currentSku, revert }">
+      <template v-slot:footer="{ currentSku, revert, limiting, limit }">
         <pl-button
           type="warning"
           size="large"
           :loading="updating"
-          @click="specChanged(currentSku, revert)"
+          @click="specChanged(currentSku, revert, limiting, limit)"
         >
           确定
         </pl-button>
@@ -105,7 +159,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import CartItem from '../../components/item/Cart-Item.vue'
 import NoContent from '../../components/common/No-Content.vue'
 import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
@@ -115,6 +168,8 @@ import {
   deleteCartProducts,
   updateCartProductSku
 } from '../../apis/shopping-cart'
+import { getCouponList } from '../../apis/product'
+import { mapGetters } from 'vuex'
 export default {
   name: 'ShoppingCart',
   components: {
@@ -136,10 +191,23 @@ export default {
       showSpecifica: false,
       currentPro: {},
       currentSku: {},
+      couponList: [], // 可领取优惠券列表
+      hadCouponList: [], // 已领取的优惠券列表
+      fullCutCouponList: [], // 全部可领满减券
+      hadFullCutCouponList: [], // 全部已领满减券
+      categoryCouponList: [], // 全部可领品类券
+      hadCategoryCouponList: [], // 全部已领品类券
+      maxFullCutConpon: null, // 当前最大金额的满减券（可包含未领取）
+      maxHadFullCutConpon: null, // 当前最大金额的满减券（全部为已领取）
+      maxCategoryConpon: null, // 当前最大金额的品类券（可包含未领取）
+      maxHadCategoryConpon: null, // 当前最小金额的品类券（全部为已领取）
+      appropriateCoupon: null, // 合适的优惠券
+      nextCoupon: null, // 下一级优惠券
       summation: 0 // 合计
     }
   },
   computed: {
+    ...mapGetters(['roleCode']),
     productAttributes () {
       return this.currentPro.productAttributes || []
     },
@@ -153,9 +221,10 @@ export default {
       return this.currentPro.productImg || ''
     }
   },
-  created () {
+  async created () {
     try {
-      this.getList()
+      await this.getList()
+      await this.getCouponList()
     } catch (e) {
       throw e
     }
@@ -179,6 +248,52 @@ export default {
         throw e
       } finally {
         this.loading = false
+      }
+    },
+    async getCouponList () {
+      try {
+        let { result } = await getCouponList()
+        result = result || []
+        // 按优惠金额从小到大排序
+        result = result.sort((a, b) => a.useLimitAmount - b.useLimitAmount)
+        this.couponList = []
+        this.hadCouponList = []
+        this.fullCutCouponList = []
+        this.categoryCouponList = []
+        for (const item of result) {
+          if (!item.canReceive) continue
+          if (item.receiveLimit === 1 && this.roleCode !== 'MEMBERSHIP') continue
+          if (item.receiveLimit === 2 && this.roleCode !== 'HELPER') continue
+          // 可领取的券
+          this.couponList.push(item)
+          // 以领取的券
+          if (item.count > 0) {
+            this.hadCouponList.push(item)
+          }
+          // 满减券
+          if (item.couponType === 1) {
+            this.fullCutCouponList.push(item)
+            // 已领满减券
+            if (item.count > 0) {
+              this.hadFullCutCouponList.push(item)
+            }
+          }
+          // 品类券
+          if (item.couponType === 2) {
+            this.categoryCouponList.push(item)
+            // 已领品类券
+            if (item.count > 0) {
+              this.hadCategoryCouponList.push(item)
+            }
+          }
+        }
+        // 券中最大的金额
+        this.maxFullCutConpon = this.fullCutCouponList.slice(-1)[0] || null
+        this.maxHadFullCutConpon = this.hadFullCutCouponList[0] || null
+        this.maxCategoryConpon = this.categoryCouponList.slice(-1)[0] || null
+        this.maxHadCategoryConpon = this.hadCategoryCouponList[0] || null
+      } catch (e) {
+        throw e
       }
     },
     skuClick (data) {
@@ -222,7 +337,16 @@ export default {
       }
     },
     // 改变规格
-    async specChanged (option, revert) {
+    async specChanged (option, revert, limiting, limit) {
+      if (limiting && option.count > limit) {
+        if (limiting === limit) {
+          return this.$warning(`您至多购买${limit}件`)
+        }
+        if (limiting - limit === limiting) {
+          return this.$warning(`您已购买${limiting}件，已达购买上限`)
+        }
+        return this.$warning(`您已购买${limiting - limit}件，您还可以购买${limit}件`)
+      }
       try {
         // 请求修改
         this.updating = true
@@ -298,10 +422,6 @@ export default {
       try {
         this.removing = true
         await deleteCartProducts(ids)
-        // for (let id of ids) {
-        //   let finded = this.products.findIndex(item => item.id === id)
-        //   this.products.splice(finded, 1)
-        // }
         this.checkedList = []
         this.getList()
       } catch (e) {
@@ -347,6 +467,22 @@ export default {
         total += currentSku.price * 100 * count
       }
       this.summation = total / 100
+      this.setCoupon()
+    },
+    // 计算优惠券
+    setCoupon () {
+      const summation = this.summation
+      if (summation) {
+        // 找出合适的优惠券，并选出减免力度最大的那一个
+        this.appropriateCoupon = this.fullCutCouponList
+          .filter(item => item.useLimitAmount <= summation)
+          .sort((a, b) => a.amount - b.amount)
+          .slice(-1)[0] || null
+        this.nextCoupon = this.fullCutCouponList.find(item => item.useLimitAmount > summation) || null
+      } else {
+        this.appropriateCoupon = null
+        this.nextCoupon = null
+      }
     },
     // 判断当前规格是否已经存在于购物车中，如果存在，删之
     isDouble (options) {
@@ -426,6 +562,12 @@ export default {
     display: inline-flex;
     align-items: center;
     line-height: 50px;
+    .discounts {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 30px;
+    }
     > span {
       margin-right: 12px;
     }
@@ -455,6 +597,29 @@ export default {
     &:disabled {
       color: #ccc;
       border-color: #cfcfcf;
+    }
+  }
+  .coupon {
+    position: fixed;
+    left: 0;
+    bottom: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 66px;
+    padding: 0 44px;
+    box-sizing: border-box;
+    font-size: 24px;
+    background-color: #FFE1C7;
+    z-index: 2;
+    .scrapingUp {
+      display: inline-flex;
+      align-items: center;
+      color: #FE7700;
+      > i {
+        margin-right: 14px;
+      }
     }
   }
 </style>

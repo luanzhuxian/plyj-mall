@@ -62,21 +62,24 @@
         v-if="!disabled && align !== 'right' && type.indexOf('password') === -1"
         v-show="value"
         class="pl-input_clear"
-        name="close2"
+        fill="#ccc"
+        name="icon-close2"
         @click="clear"
       />
       <pl-svg
         v-if="type === 'password' && passwordType === 'password'"
         v-show="value"
         class="pl-input_clear"
-        name="hidden-key"
+        name="icon-hidden-key"
+        fill="#ccc"
         @click="passwordType = 'show-password'"
       />
       <pl-svg
         v-if="type === 'password' && passwordType === 'show-password'"
         v-show="value"
         class="pl-input_clear"
-        name="show-key"
+        name="icon-show-key"
+        fill="#ccc"
         @click="passwordType = 'password'"
       />
     </div>
@@ -297,11 +300,8 @@ export default {
       }
       .pl-input_clear {
         width: 40px;
+        height: 40px;
         padding-right: 20px;
-        fill: #ccc;
-        path {
-          fill: #ccc;
-        }
       }
     }
     .pl-input_prefixicon, .pl-input_suffixicon {

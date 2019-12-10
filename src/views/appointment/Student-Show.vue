@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.studentShow">
     <div :class="$style.moduleTitle">
-      <pl-svg :class="$style.moduleIcon" name="five_pointed" />
+      <pl-svg :class="$style.moduleIcon" name="icon-five_pointed" height="36" />
       <span :class="$style.title" v-text="data.titleName" />
     </div>
     <ul :class="$style.studentList">
@@ -48,11 +48,12 @@ export default {
     background-color: #fff;
   }
   .student-list {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    grid-template-columns: 220px 220px 220px;
-    grid-template-rows: repeat(auto-fill, 220px);
-    grid-row-gap: 22px;
+    li {
+      margin-bottom: 22px;
+    }
     img {
       width: 220px;
       height: 220px;

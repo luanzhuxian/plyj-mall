@@ -1,11 +1,17 @@
 <template>
   <div :class="$style.home">
-    <TemplateA
+    <!-- <TemplateA
       v-if="type === 1"
       :data="modules"
-    />
+    /> -->
     <TemplateB
-      v-if="~[2, 3, 4].indexOf(type)"
+      v-if="~[3, 4].indexOf(type)"
+      :type="type"
+      :skin-id="skinId"
+      :data="modules"
+    />
+    <TemplateC
+      v-if="type === -1"
       :type="type"
       :skin-id="skinId"
       :data="modules"
@@ -26,8 +32,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
-import TemplateA from './Template-A.vue'
+// import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
+import TemplateC from './Template-C.vue'
 import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
 import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
@@ -36,8 +43,9 @@ import { getCurrentActivity } from '../../apis/invitenewcomers'
 export default {
   name: 'Home',
   components: {
-    TemplateA,
+    // TemplateA,
     TemplateB,
+    TemplateC,
     InviteNewcomersHomeEntry,
     NewcomersHomeEntry
     // WWEC
@@ -59,12 +67,12 @@ export default {
         YUYUE: null,
         PINGXUAN: null,
         CLASS: null,
-        RECOMMEND: null,
-        MODULE_A: null,
-        MODULE_B: null,
-        MODULE_C: null,
-        MODULE_D: null,
-        MODULE_E: null
+        RECOMMEND: null
+        // MODULE_A: null,
+        // MODULE_B: null,
+        // MODULE_C: null,
+        // MODULE_D: null,
+        // MODULE_E: null
       },
       dataMoonLightBox: {},
       // 820用户注册次数
@@ -111,23 +119,23 @@ export default {
           return
         }
         let { type, skinStatus, moduleModels } = result
-        if (type === 1) {
-          const bannerList = moduleModels.filter(module => module.moduleType === 1)
-          const prodList = moduleModels.filter(module => module.moduleType === 2)
-          this.modules.BANNER = bannerList[0]
-          this.modules.MODULE_B = bannerList[1]
-          this.modules.MODULE_D = bannerList[2]
-          this.modules.MODULE_A = prodList[0]
-          this.modules.MODULE_C = prodList[1]
-          this.modules.MODULE_E = prodList[2]
-        }
-        if (type === 2) {
-          this.modules.BANNER = moduleModels[0]
-          this.modules.POPULAR = moduleModels[1]
-          this.modules.YUYUE = moduleModels[2]
-          this.modules.PINGXUAN = moduleModels[3]
-          this.modules.RECOMMEND = moduleModels[4]
-        }
+        // if (type === 1) {
+        //   const bannerList = moduleModels.filter(module => module.moduleType === 1)
+        //   const prodList = moduleModels.filter(module => module.moduleType === 2)
+        //   this.modules.BANNER = bannerList[0]
+        //   this.modules.MODULE_B = bannerList[1]
+        //   this.modules.MODULE_D = bannerList[2]
+        //   this.modules.MODULE_A = prodList[0]
+        //   this.modules.MODULE_C = prodList[1]
+        //   this.modules.MODULE_E = prodList[2]
+        // }
+        // if (type === 2) {
+        //   this.modules.BANNER = moduleModels[0]
+        //   this.modules.POPULAR = moduleModels[1]
+        //   this.modules.YUYUE = moduleModels[2]
+        //   this.modules.PINGXUAN = moduleModels[3]
+        //   this.modules.RECOMMEND = moduleModels[4]
+        // }
         if (type === 3) {
           this.modules.BANNER = moduleModels[0]
           this.modules.POPULAR = moduleModels[1]
@@ -144,6 +152,14 @@ export default {
           this.modules.PINGXUAN = moduleModels[4]
           this.modules.CLASS = moduleModels[5]
           this.modules.RECOMMEND = moduleModels[6]
+        }
+        if (type === -1) {
+          this.modules.PINGXUAN = moduleModels[0]
+          this.modules.YUYUE = moduleModels[1]
+          this.modules.POPULAR = moduleModels[2]
+          this.modules.TEACHERS = moduleModels[3]
+          this.modules.CLASS = moduleModels[4]
+          this.modules.RECOMMEND = moduleModels[5]
         }
         this.type = type
         this.skinId = skinStatus

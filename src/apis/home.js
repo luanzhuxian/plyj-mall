@@ -12,6 +12,5 @@ export const getMaxCoupon = () => axios.get('/apis/v1/coupon/getMostPreferential
 // 见学之路活动信息
 export const getJianxueInfo = () => axios.get('/apis/v1/mallCheckIn/currActivity/baseInfo')
 
-export const getDblTwelveLock = () => axios.get(`/apis/v1/mall/doublet/twelve/lock`)
 // 主会场是否装修
 export const checkActivityAuth = () => axios.get(`/apis/v1/judgment/isUpTemplate`)

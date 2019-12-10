@@ -5,7 +5,7 @@
   >
     <span v-text="label" />
     <pl-svg
-      name="go-down"
+      name="icon-go-down"
       :class="{ 'pl-selector-open': showSelect }"
     />
     <transition name="fade">

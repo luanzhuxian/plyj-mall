@@ -53,17 +53,11 @@
 </template>
 
 <script>
-import checkedIcon from '../assets/image/checked.png'
-import noChecked from '../assets/image/no-checked.png'
-import disabledChecked from '../assets/image/disabled-check.png'
 export default {
   name: 'PlCheckbox',
   data () {
     return {
-      localChecked: false,
-      checkedIcon,
-      noChecked,
-      disabledChecked
+      localChecked: false
     }
   },
   model: {

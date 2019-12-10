@@ -11,7 +11,8 @@
         />
         <pl-svg
           :class="$style.triangle"
-          name="triangle"
+          fill="#f2b036"
+          name="icon-triangle"
         />
       </p>
       <transition name="fade">
@@ -46,7 +47,7 @@
       @refresh="refreshHandler"
       @more="more"
       no-content-tip="暂无提现记录"
-      icon="no-content2"
+      icon="icon-no-content2"
     >
       <template>
         <ul :class="$style.monthList">
@@ -234,7 +235,11 @@ export default {
       }
     }
     .onOff {
+      height: 72px;
       transition: color .3s linear;
+      > svg {
+        height: 28px;
+      }
     }
     .triangle {
       width: 16px;
@@ -259,9 +264,6 @@ export default {
     background-color: #fff;
   }
   .selectItemList {
-    display: grid;
-    grid-template-columns: 210px 210px 210px;
-    grid-gap: 20px;
     justify-content: center;
     justify-items: center;
     padding: 30px 0;
@@ -270,10 +272,16 @@ export default {
     background-color: #fff;
   }
   .selectItem {
-    width: 100%;
+    display: inline-block;
+    width: 28%;
     line-height: 64px;
     border-radius: $--radius2;
     background: #f5f5f5;
+    margin-top: 10px;
+    margin-left: 10px;
+    &:nth-of-type(3n-2) {
+      margin-left: 0;
+    }
     &.selected {
       background-color: #FFF7E6;
       color: $--primary-color;
