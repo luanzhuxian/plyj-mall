@@ -319,23 +319,24 @@ export default {
       @include elps-wrap(3);
     }
     .imgs {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 162px);
-      grid-template-rows: repeat(auto-fill, 162px);
-      grid-gap: 10px;
-      margin-top: 20px;
+      display: flex;
+      margin-top: 10px;
       overflow: hidden;
+      flex-wrap: wrap;
       img {
         width: 162px;
         height: 162px;
         border-radius: 0;
         object-fit: cover;
         background-color: #ccc;
+        margin-top: 10px;
+        margin-left: 10px;
         &:nth-last-of-type(1), &:nth-of-type(3n) {
           border-bottom-right-radius: 20px;
           border-top-right-radius: 20px;
         }
         &:nth-of-type(3n-2) {
+          margin-left: 0;
           border-top-left-radius: 20px;
           border-bottom-left-radius: 20px;
         }
