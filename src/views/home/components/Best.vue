@@ -92,7 +92,6 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin-top: 20px;
     margin-bottom: -20px;
   }
   .pro-item {

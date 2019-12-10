@@ -2,7 +2,6 @@
   <div
     :class="{
       [$style.homeTemplateC]: true,
-      [$style.noSkin]: skinId === 0,
       [$style.skinXmas]: skinId === 1,
       [$style.skinYuanDan]: skinId === 2,
       [$style.skinNewYear]: skinId === 3,

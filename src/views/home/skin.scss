@@ -70,6 +70,26 @@
   }
 }
 
+// 元旦皮肤
+.skin-yuan-dan {
+  @extend .skin-common;
+  background-color: #E4D1A3 !important;
+  .container {
+    padding-top: 52px;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/84792abd-69ab-4de4-9e3f-0b00c3123e9c.png") no-repeat center top !important;
+    background-size: 100% auto !important;
+  }
+  .search {
+    padding: 0 92px !important;
+  }
+  .footer {
+    height: 300px !important;
+    color: #F2E2BA !important;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/cbfbc6a1-6e57-4cf8-82d9-54bb17d600ba.png") no-repeat center !important;
+    background-size: 100% !important;
+  }
+}
+
 // 新年皮肤
 .skin-new-year {
   @extend .skin-common;
@@ -90,26 +110,6 @@
   }
   .skin-title {
     margin: 0 -24px;
-  }
-}
-
-// 元旦皮肤
-.skin-yuan-dan {
-  @extend .skin-common;
-  background-color: #E4D1A3 !important;
-  .container {
-    padding-top: 52px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/84792abd-69ab-4de4-9e3f-0b00c3123e9c.png") no-repeat center top !important;
-    background-size: 100% auto !important;
-  }
-  .search {
-    padding: 0 92px !important;
-  }
-  .footer {
-    height: 300px !important;
-    color: #F2E2BA !important;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/cbfbc6a1-6e57-4cf8-82d9-54bb17d600ba.png") no-repeat center !important;
-    background-size: 100% !important;
   }
 }
 
