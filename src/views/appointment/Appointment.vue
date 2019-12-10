@@ -113,7 +113,7 @@
       <div
         :class="$style.zizhiContent + ' ql-container ql-editor'"
         v-html="E.detailContent"
-        :style="{ '--maxHeight': maxHeight }"
+        :style="{ 'max-height': maxHeight }"
         ref="richText"
       />
       <p v-if="richTextMaxHeight > 200" :class="{ [$style.zizhiSeeMore]: true, [$style.showMore]: isShowMore }" @click="seeMore">
@@ -459,7 +459,6 @@ export default {
     }
   }
   .zizhi-content {
-    max-height: var(--maxHeight);
     word-break: keep-all;
     overflow: hidden;
     transition: max-height .6s linear;

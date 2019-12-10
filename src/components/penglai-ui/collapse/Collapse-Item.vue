@@ -45,7 +45,7 @@
     </div>
     <div
       class="pl-collapse-item__wrapper"
-      :style="{ '--contentHeight': `${contentHeight}px` }"
+      :style="{ height: `${contentHeight}px` }"
     >
       <div
         ref="content"
@@ -174,7 +174,6 @@ export default {
   }
   &__wrapper {
     transform: translate3d(0, 0, 0);
-    height: var(--contentHeight);
     overflow: hidden;
     transition: height .3s ease-in-out;
   }

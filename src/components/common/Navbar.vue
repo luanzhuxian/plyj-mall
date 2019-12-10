@@ -266,8 +266,8 @@ export default {
   background-size: 100%;
 }
 </style>
-<style>
+<style lang="scss">
   .router-link-active {
-    color: var(--warning-color);
+    color: $--warning-color;
   }
 </style>

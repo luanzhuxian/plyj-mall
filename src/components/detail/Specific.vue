@@ -65,13 +65,13 @@ export default {
     > div:nth-of-type(2) {
       line-height: 50px;
       font-size: 32px;
-      color: var(--primary-color);
+      color: $--primary-color;
     }
   }
   .no-group {
     span {
       font-size: 32px;
-      color: var(--primary-color);
+      color: $--primary-color;
     }
   }
 </style>

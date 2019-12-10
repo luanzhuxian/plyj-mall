@@ -165,7 +165,7 @@
       </div>
 
       <div :class="$style.productPrice">
-        <p v-if="activityData.tailAount">
+        <p v-if="activeProduct === 4">
           <span>待付尾款</span>
           <span
             class="rmb"
@@ -220,7 +220,14 @@
         <span class="fz-30">
           总价：
         </span>
+        <!-- 预购商品总价 = 定金 + 尾款 -->
         <span
+          v-if="activeProduct === 4"
+          :class="$style.totalMoney + ' fz-30 rmb'"
+          v-text="activityData.tailAount + activityData.reachAmount"
+        />
+        <span
+          v-else
           :class="$style.totalMoney + ' fz-30 rmb'"
           v-text="productInfoModel.actuallyAmount || 0"
         />
@@ -414,7 +421,6 @@
         type="warning"
         round
         :loading="payloading && currentPayId === orderId"
-        :disabled="payloading"
         @click="pay(1)"
       >
         去付款
@@ -623,6 +629,7 @@ export default {
       studentInfoModels: [],
       redeemCodeModels: [],
       activityData: {},
+      isStart: false, // 如果时预购商品，单表是否已到付尾款时间，true 已到 false 未到
       activeProduct: 1, // 1普通订单，2团购订单，3秒杀订单，4.预购订单， 5优惠卷订单
       orderStatusAlias: '',
       shippingAddress: {
@@ -902,6 +909,7 @@ export default {
             let count = this.productInfoModel.productDetailModels[0].count || 0
             this.activityData.reachAmount = this.activityData.price * count
           }
+          // this.isStart = this.activeProduct === 4 && moment(currentTime).valueOf() - moment(activityData.userStartTime).valueOf() >= 0
           this.activeProduct = activeProduct || 1
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['count']

@@ -6,7 +6,7 @@
         :class="$style.searchBox"
         :to="{ name: 'Search' }"
       >
-        <pl-svg name="icon-search" />
+        <pl-svg name="icon-search" width="30" />
         <input
           type="text"
           placeholder="你想要的应有尽有"

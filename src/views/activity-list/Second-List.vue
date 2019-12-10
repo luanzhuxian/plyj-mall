@@ -4,8 +4,8 @@
     <div class="main">
       <div class="list second-ing" v-if="ingList.length > 0">
         <div class="head">
-          <pl-svg name="icon-ing_icon" width="52" />
-          <pl-svg name="icon-ing_text" width="180" height="52" />
+          <pl-svg :key="1" name="icon-ing_icon" width="52" />
+          <pl-svg :key="2" name="icon-ing_text" width="180" height="52" />
         </div>
         <div class="item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">
@@ -40,8 +40,8 @@
       </div>
       <div class="list second-coming" v-if="comingList.length > 0">
         <div class="head">
-          <pl-svg name="icon-coming_icon" fill="#fff" width="52" />
-          <pl-svg name="icon-coming_text" fill="#fff" width="52" />
+          <pl-svg :key="3" name="icon-coming_icon" width="54" />
+          <pl-svg :key="4" name="icon-coming_text" width="140" height="52" />
         </div>
         <div class="item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">

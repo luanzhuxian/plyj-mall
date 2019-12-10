@@ -129,7 +129,7 @@ export default {
       background-color: #D2524C;
       color: #fff;
       &:active {
-        background-color: D2524C;
+        background-color: #D2524C;
       }
       &.plain {
         color: #D2524C;
