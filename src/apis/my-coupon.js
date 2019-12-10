@@ -62,5 +62,4 @@ export const getCouponDetail = id => axios.get(`/apis/v1/coupon/selectById/${id}
 /**
  * 根据商品价格获取合适的红包
  * */
-// TODO.Echo 等待接口
-export const getRedEnvelopeListByPrice = params => axios.post('/apis/v1/coupon/me/list/price', params)
+export const getRedEnvelopeListByPrice = _ => axios.get('/apis/v1/scholarship/buyScholarshipList')

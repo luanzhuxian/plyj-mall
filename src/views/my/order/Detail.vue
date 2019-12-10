@@ -208,10 +208,10 @@
           <span>优惠</span>
           <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
         </p>
-        <!-- TODO.Echo 等待接口 -->
-        <p v-if="false && productInfoModel.totalCouponAmount > 0">
+        <!--TODO.Echo 等待接口-->
+        <p v-if="false && productInfoModel.totalScholarshipAmount > 0">
           <span>奖学金（红包）</span>
-          <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
+          <span v-text="'-¥' + (productInfoModel.totalScholarshipAmount || 0)" />
         </p>
       </div>
 
@@ -925,6 +925,12 @@ export default {
           }, 0)
           totalCouponAmount = totalCouponAmount.toString().indexOf('.') === -1 ? totalCouponAmount : totalCouponAmount.toFixed(2)
           this.productInfoModel.totalCouponAmount = totalCouponAmount
+          // 红包保留两位小数
+          let totalScholarshipAmount = productInfoModel.productDetailModels.reduce((total, current) => {
+            return total + current['scholarshipAmount']
+          }, 0)
+          totalScholarshipAmount = totalScholarshipAmount.toString().indexOf('.') === -1 ? totalScholarshipAmount : totalScholarshipAmount.toFixed(2)
+          this.productInfoModel.totalScholarshipAmount = totalScholarshipAmount
 
           if (orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
             if (orderStatus !== 'WAIT_PAY') {

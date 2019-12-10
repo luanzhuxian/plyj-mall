@@ -94,17 +94,17 @@
             </span>
           </div>
         </div>
-        <!--TODO.Echo 等待接口-->
         <div
           :class="$style.infoItem"
-          v-if="false && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
-          @click="showRedEnvelopePopup = true"
+          v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && !isCart && activeProduct === 1"
+          @click="showRedEnvelopePopupClick"
         >
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">奖学金（红包）</span>
             <span :class="$style.subtotalPrice">
               <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
-              <span v-else>有可用</span>
+              <span v-else-if="redEnvelopeList.length">有可用</span>
+              <span v-else>无可用</span>
               <pl-svg name="icon-right" fill="#373737" width="22" />
             </span>
           </div>
@@ -226,17 +226,17 @@
               </span>
             </div>
           </div>
-          <!--TODO.Echo 等待接口-->
           <div
             :class="$style.infoItem"
-            v-if="false && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
-            @click="showRedEnvelopePopup = true"
+            v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && !isCart && activeProduct === 1"
+            @click="showRedEnvelopePopupClick"
           >
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">奖学金（红包）</span>
               <span :class="$style.subtotalPrice">
                 <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
-                <span v-else>有可用</span>
+                <span v-else-if="redEnvelopeList.length">有可用</span>
+                <span v-else>无可用</span>
                 <pl-svg name="icon-right" fill="#373737" width="22" />
               </span>
             </div>
@@ -359,17 +359,17 @@
               </span>
             </div>
           </div>
-          <!--TODO.Echo 等待接口-->
           <div
             :class="$style.infoItem"
-            v-if="false && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
-            @click="showRedEnvelopePopup = true"
+            v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && !isCart && activeProduct === 1"
+            @click="showRedEnvelopePopupClick"
           >
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">奖学金（红包）</span>
               <span :class="$style.subtotalPrice">
                 <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
-                <span v-else>有可用</span>
+                <span v-else-if="redEnvelopeList.length">有可用</span>
+                <span v-else>无可用</span>
                 <pl-svg name="icon-right" fill="#373737" width="22" />
               </span>
             </div>
@@ -420,19 +420,18 @@
       />
     </div>
 
-    <!--TODO.Echo 等待接口-->
     <div
-      v-if="false && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && isCart && activeProduct === 1"
+      v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && isCart && activeProduct === 1"
       :class="$style.itemSelector"
-      @click.capture="showRedEnvelopePopup = true"
+      @click.capture="showRedEnvelopePopupClick"
     >
       <pl-fields
         size="middle"
         text="奖学金（红包）"
-        icon="icon-coupon"
+        icon="icon-RedEnvelope"
         :icon-gap="12"
         show-right-icon
-        :right-text="isNotChooseRedEnvelope ? '有可用' : '-¥' + currentRedEnvelope.amount "
+        :right-text="isNotChooseRedEnvelope ? redEnvelopeList.length? '有可用':'无可用' : '-¥' + currentRedEnvelope.amount "
         left-text-weight="bold"
       />
     </div>
@@ -590,8 +589,7 @@
                 <pl-svg name="icon-RedEnvelope" width="40" />
               </span>
               <span :class="$style.count">￥{{ item.amount }}</span>
-              <span v-if="item.amount > totalAmount + currentRedEnvelope.amount || 0" :class="$style.isOver">使用后超出抵用金额不返还</span>
-              <span :class="$style.isOver">使用后超出抵用金额不返还</span>
+              <span v-if="item.amount > (totalAmount + (currentRedEnvelope.amount || 0))" :class="$style.isOver">使用后超出抵用金额不返还</span>
               <span :class="$style.choices">
                 <pl-svg v-if="item.id === currentRedEnvelope.id" name="icon-xuanzhong" width="40" />
                 <pl-svg v-else name="icon-weixuanzhong1" width="40" />
@@ -819,9 +817,8 @@ export default {
           coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
           this.recommendCouponId = coupon.id
         }
-        // TODO.Echo 等待接口
         if (this.activeProduct === 1 && !redEnvelope.id) {
-          // redEnvelope = await this.getRedEnvelopeByAmount(proList) // 获取红包列表
+          redEnvelope = await this.getRedEnvelopeByAmount(proList) // 获取红包列表
         }
         if (!proList || !proList.length) {
           return this.$router.replace({ name: 'Home' })
@@ -833,7 +830,7 @@ export default {
           activityId: this.activityId,
           cartProducts: proList,
           userCouponId: coupon.id || '',
-          // userRedEnvelopeId: redEnvelope.id || '', // TODO.Echo 等待接口-
+          scholarshipId: redEnvelope.id || '',
           addressSeq: this.selectedAddress.sequenceNbr
         })
         const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
@@ -914,6 +911,11 @@ export default {
         await this.getCouponList(amount, productIds)
       }
       this.coupon = result
+      // 当前选择的优惠券不支持使用奖学金时，置空选择的奖学金
+      if (this.coupon.scholarship === 0) {
+        this.currentRedEnvelope = {}
+        this.isNotChooseRedEnvelope = true
+      }
       return result
     },
     selectStudent (pro) {
@@ -947,6 +949,11 @@ export default {
       this.coupon = item
       this.showCoupon = false
       this.isNotChooseCoupon = isNotChooseCoupon
+      // 当前选择的优惠券不支持使用奖学金时，置空选择的奖学金
+      if (this.coupon.scholarship === 0) {
+        this.currentRedEnvelope = {}
+        this.isNotChooseRedEnvelope = true
+      }
       await this.getProductDetail(true, item, this.currentRedEnvelope)
     },
     // 获取优惠券
@@ -967,6 +974,17 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    // 是否显示红包选择框
+    showRedEnvelopePopupClick () {
+      if (!this.redEnvelopeList.length) {
+        return this.$warning('无可用奖学金')
+      }
+      // 可否与奖学金混合使用 scholarship 0-不使用 1-可使用
+      if (this.coupon.scholarship === 0) {
+        return this.$warning('该优惠券不支持与奖学金叠加使用')
+      }
+      this.showRedEnvelopePopup = true
     },
     // 根据购买总价获取合适的红包
     async getRedEnvelopeByAmount (proList = []) {
@@ -1107,7 +1125,8 @@ export default {
         invoiceModel: this.INVOICE_MODEL,
         activeProduct: this.isCart ? 1 : this.activeProduct,
         activityId: this.activityId,
-        userCouponId: this.coupon.id || ''
+        userCouponId: this.coupon.id || '',
+        scholarshipId: this.currentRedEnvelope.id || ''
       }
       if (this.physicalProducts.length === 0) {
         // 没有实体商品时，必须有联系人信息

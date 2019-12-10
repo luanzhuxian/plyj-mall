@@ -113,10 +113,10 @@
           v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT_WAIT_RETURN'"
           :class="$style.tips"
         >
-          运费不可退，
+          <span>运费不可退，</span>
           <span v-if="refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.couponAmount">优惠{{ refundDetail.mallOrderProductRModel.couponAmount }}元不可退，</span>
-          <!-- TODO.Echo 等待接口 -->
-          <span v-if="false && refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.couponAmount">红包{{ refundDetail.mallOrderProductRModel.couponAmount }}元不可退，</span>
+          <!--TODO.Echo 等待接口-->
+          <span v-if="false && refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.scholarship">红包{{ refundDetail.mallOrderProductRModel.scholarship }}元不可退，</span>
           如有疑问，请联系商家协商
         </div>
         <div
