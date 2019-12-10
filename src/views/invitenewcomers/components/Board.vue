@@ -303,7 +303,7 @@ export default {
     },
     // 查询是否可以领取豪礼
     async canClaimGift () {
-      if (!this.userId) return
+      if (!this.userId || !this.activeId) return
       let { result } = await canClaimGift(this.activeId)
       this.canOpenGiftPackage = result
     },
