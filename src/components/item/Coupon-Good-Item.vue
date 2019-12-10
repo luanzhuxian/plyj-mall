@@ -97,10 +97,6 @@ export default {
       type: String,
       default: ''
     },
-    price: {
-      type: [String, Number],
-      default: ''
-    },
     originalPrice: {
       type: [String, Number],
       default: ''
@@ -134,6 +130,10 @@ export default {
     },
     limiting () {
       return this.detail.purchaseLimit ? (this.detail.purchaseQuantity) : 0
+    },
+    price () {
+      let priceList = this.detail.productSkuModels.map(item => item.price)
+      return Math.min.apply(Math, priceList)
     }
   },
   methods: {

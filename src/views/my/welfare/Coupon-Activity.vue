@@ -54,7 +54,6 @@
             :id="item.id"
             :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
             :title="item.productName"
-            :price="item.productSkuModels.length && item.productSkuModels[0].price"
             :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
             :sales-volume="item.salesVolume"
             :detail="item"

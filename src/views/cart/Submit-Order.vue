@@ -821,7 +821,7 @@ export default {
         }
         // TODO.Echo 等待接口
         if (this.activeProduct === 1 && !redEnvelope.id) {
-          redEnvelope = await this.getRedEnvelopeByAmount(proList) // 获取红包列表
+          // redEnvelope = await this.getRedEnvelopeByAmount(proList) // 获取红包列表
         }
         if (!proList || !proList.length) {
           return this.$router.replace({ name: 'Home' })
@@ -905,9 +905,13 @@ export default {
       let amount = proList.map(item => item.price * item.count).reduce((total, price) => {
         return total + price
       })
-      const { result } = await getCouponOfMax(amount || 0)
+      let productIds = proList.map(item => item.productId)
+      const { result } = await getCouponOfMax({
+        useLimitAmount: amount || 0,
+        productIds: productIds
+      })
       if (this.activeProduct === 1) {
-        await this.getCouponList(amount)
+        await this.getCouponList(amount, productIds)
       }
       this.coupon = result
       return result
@@ -946,9 +950,12 @@ export default {
       await this.getProductDetail(true, item, this.currentRedEnvelope)
     },
     // 获取优惠券
-    async getCouponList (amount) {
+    async getCouponList (amount, productIds) {
       try {
-        let { result } = await getCouponByPrice(amount)
+        let { result } = await getCouponByPrice({
+          useLimitAmount: amount || 0,
+          productIds: productIds
+        })
         let serverTime = this.serverTime
         this.couponList = result.map(item => {
           let duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()

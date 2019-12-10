@@ -45,11 +45,11 @@ export const deleteCouponList = (data) => axios.put('/apis/v1/coupon/me/delete',
 /**
  * 获取最大优惠价格优惠券
  * */
-export const getCouponOfMax = useLimitAmount => axios.get(`/apis/v1/coupon/me/maxPrice?useLimitAmount=${useLimitAmount}`)
+export const getCouponOfMax = params => axios.post('/apis/v1/coupon/me/maxPrice', params)
 /**
  * 根据商品价格获取合适的优惠券
  * */
-export const getCouponByPrice = useLimitAmount => axios.get(`/apis/v1/coupon/me/list/price?useLimitAmount=${useLimitAmount}`)
+export const getCouponByPrice = params => axios.post('/apis/v1/coupon/me/list/price', params)
 /**
  * 根据优惠券详情获取商品列表
  * */
@@ -63,4 +63,4 @@ export const getCouponDetail = id => axios.get(`/apis/v1/coupon/selectById/${id}
  * 根据商品价格获取合适的红包
  * */
 // TODO.Echo 等待接口
-export const getRedEnvelopeListByPrice = useLimitAmount => axios.get(`/apis/v1/coupon/me/list/price?useLimitAmount=${useLimitAmount}`)
+export const getRedEnvelopeListByPrice = params => axios.post('/apis/v1/coupon/me/list/price', params)
