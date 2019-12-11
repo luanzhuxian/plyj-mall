@@ -548,11 +548,12 @@ export default {
           activityId: this.activeId,
           entityClassName: 'MallLiveActivityEntity'
         })
-        this.isCouponLoading = false
         this.$success('领取成功')
         this.receiveCouponIdList.push(id)
       } catch (e) {
         throw e
+      } finally {
+        this.isCouponLoading = false
       }
     },
     // 判断优惠券是否到了显示时间

@@ -88,7 +88,6 @@ export default {
       try {
         this.isCouponLoading = true
         const { result } = await receiveCoupon({ couponId: id })
-        this.isCouponLoading = false
         result.isClaimed = true
         // 只刷新所领取卡券信息
         let oldCouponIndex = this.couponList.findIndex(item => item.id === id)
@@ -97,6 +96,8 @@ export default {
         this.$success('领取成功，请在我的卡券中查看')
       } catch (e) {
         throw e
+      } finally {
+        this.isCouponLoading = false
       }
     }
   }

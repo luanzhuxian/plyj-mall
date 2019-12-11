@@ -132,7 +132,7 @@ export default {
         this.couponInfo.useStartTime = result.useStartTime
         this.couponInfo.useEndTime = result.useEndTime
         this.couponInfo.instruction = result.brief
-        this.couponInfo.isClaimed = false
+        this.couponInfo.isClaimed = result.claimed
         // 设置查询当前优惠券下的商品列表参数
         this.form.current = 1
         this.form.couponType = result.couponType
@@ -145,16 +145,18 @@ export default {
     },
     async couponClick (id) {
       if (this.isCouponLoading) return
+      if (this.couponInfo.isClaimed) return this.$warning('已领取')
       try {
         this.isCouponLoading = true
         await receiveCoupon({
           couponId: id
         })
-        this.isCouponLoading = false
         this.$success('领取成功')
         this.couponInfo.isClaimed = true
       } catch (e) {
         throw e
+      } finally {
+        this.isCouponLoading = false
       }
     },
     sort (keyword) { // 排序
