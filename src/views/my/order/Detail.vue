@@ -978,7 +978,8 @@ export default {
           return
         }
         if (orderStatus === 'WAIT_PAY_REPAYMENT') {
-          this.suggestionMap.WAIT_PAY_REPAYMENT = `剩余尾款支付时间：${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒`
+          const tip = this.finalPaymentIsStarted ? '剩余尾款支付时间' : '距离开始支付时间'
+          this.suggestionMap.WAIT_PAY_REPAYMENT = `${tip}：${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒`
           return
         }
         if (orderStatus === 'WAIT_RECEIVE') {
@@ -995,11 +996,15 @@ export default {
       if (activeProduct === 1 || activeProduct === 5) {
         waitPayTime = 24 * 60 * 60 * 1000
       } else if (activeProduct === 4) {
-        // 预购
+        // 预购倒计时逻辑
         let useStartTime = moment((result.activityData.useStartTime)).valueOf()
         let useEndTime = moment((result.activityData.useEndTime)).valueOf()
-        this.finalPaymentIsStarted = now - useStartTime >= 0
-        this.finalPaymentIsEnded = now - useEndTime >= 0
+        this.finalPaymentIsStarted = now - useStartTime >= 0 // 是否开始
+        this.finalPaymentIsEnded = now - useEndTime >= 0 // 是否过期
+        // 未开始支付
+        if (!this.finalPaymentIsStarted) {
+          waitPayTime = useStartTime - now
+        }
         if (this.finalPaymentIsStarted && !this.finalPaymentIsEnded) {
           waitPayTime = useEndTime - now
         }
@@ -1008,6 +1013,7 @@ export default {
       }
       let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
       let duration = (orderStatus === 'WAIT_PAY' || orderStatus === 'WAIT_PAY_REPAYMENT') ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
+      console.log(duration)
       if (activeProduct === 4) {
         this.countDown(duration, orderStatus)
         return

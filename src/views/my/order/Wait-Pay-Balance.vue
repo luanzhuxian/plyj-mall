@@ -16,6 +16,7 @@
             tag="div"
             v-for="(item, i) of orderList"
             :key="i"
+            @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
           >
             <div>
               <div :class="$style.listItemLeft">
@@ -52,8 +53,9 @@
               </div>
               <div :class="$style.buttons">
                 <div :class="$style.time">
-                  <template v-if="item.isStart && !item.pastDue">
-                    <span v-show="!item.pastDue">剩余尾款支付时间：</span>
+                  <template v-if="!item.pastDue">
+                    <span v-show="item.isStart">剩余尾款支付时间：</span>
+                    <span v-show="!item.isStart">距离开始支付时间：</span>
                     <span v-show="item.d !== '00'">{{ item.d }}天</span>
                     <span v-show="item.h !== '00'">{{ item.h }}时</span>
                     <span>{{ item.m }}分</span>
@@ -71,7 +73,7 @@
                   type="warning"
                   round
                   :disabled="!item.isStart"
-                  @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
+                  @click.stop="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
                 >
                   去使用
                 </pl-button>
@@ -83,7 +85,7 @@
                   :loading="payloading && item.orderId === currentPayId"
                   @click.stop="balancePayment(item)"
                 >
-                  {{ item.pastDue ? '已过期' : this.isStart ? '去付尾款' : '未开始支付' }}
+                  {{ item.pastDue ? '已过期' : item.isStart ? '去付尾款' : '未开始支付' }}
                 </pl-button>
               </div>
             </div>
@@ -105,6 +107,7 @@ import {
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { Countdown } from '../../../assets/js/util'
 import moment from 'moment'
+const countdownInstanceList = []
 export default {
   components: {
     OrderItem,
@@ -139,6 +142,13 @@ export default {
   activated () {
     this.$refresh()
   },
+  deactivated () {
+    countdownInstanceList.map(item => {
+      if ('stop' in item) {
+        item.stop()
+      }
+    })
+  },
   methods: {
     onRefresh (list, total) {
       clearTimeout(this.timer)
@@ -153,14 +163,20 @@ export default {
           userStartTime,
           currentTime
         } = item
+        const NOW = Number(currentTime)
+        const UserStartTime = moment(userStartTime).valueOf()
+        const UserEndTime = moment(userEndTime).valueOf()
+
         // 是否开始付尾款
-        item.isStart = Number(currentTime) - moment(userStartTime).valueOf() >= 0
-        item.pastDue = Number(currentTime) - moment(userEndTime).valueOf() >= 0
-        if (item.isStart && !item.pastDue) {
+        item.isStart = NOW - UserStartTime >= 0
+        item.pastDue = NOW - UserEndTime >= 0
+        // 未开始支付
+        if (!item.isStart) {
           // 可以开始支付了，倒计时支付
-          let now = moment(currentTime).valueOf()
-          let duration = moment(userEndTime).valueOf() - now
-          this.countDown(duration - 2000, i, item)
+          this.countDown(UserStartTime - NOW, i, item)
+        } else if (!item.pastDue) {
+          // 可以开始支付了，倒计时支付
+          this.countDown(UserEndTime - NOW, i, item)
         }
       }
       this.orderList = list
@@ -183,6 +199,7 @@ export default {
         this.$set(this.orderList, index, item)
       })
       countdownInstance.start()
+      countdownInstanceList.push(countdownInstance)
     },
     // 去付尾款
     async balancePayment (item) {
