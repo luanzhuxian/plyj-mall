@@ -101,7 +101,7 @@ export default {
   > .burse-title {
     display: flex;
     justify-content: space-between;
-    background: url(https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/1575270325759.png) no-repeat;
+    background: url(https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/1575270325759.png) 0/cover no-repeat;
     border-radius: 20px;
     padding: 34px;
     > ul {

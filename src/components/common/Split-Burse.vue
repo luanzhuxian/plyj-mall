@@ -36,7 +36,7 @@
       <!--关闭-->
       <div :class="$style.burseClose" @click="show = false">
         <span>
-          <pl-svg name="icon-close" fill="white" width="48" />
+          <pl-svg @click="sharePosterShow = false" name="icon-close3" fill="#fff" width="40" />
         </span>
       </div>
     </div>
@@ -203,9 +203,7 @@ export default {
         width: 100%;
         > span {
           display: inline-block;
-          border: 1px solid #fff;
-          border-radius: 40px;
-          overflow: hidden;
+          padding: 0 10px;
         }
       }
     }
