@@ -3,9 +3,11 @@
     <div :class="$style.wrapper" v-if="data.values.length">
       <ul :class="$style.timeList">
         <div>
-          <pl-icon
+          <pl-svg
             name="icon-miaoshazhuanchang"
-            type="svg"
+            width="78"
+            height="80"
+            fill="#fff"
             @click="$router.push({ name: 'SecondList' })"
           />
         </div>
@@ -99,7 +101,7 @@
                 {{ prod.productName }}
               </div>
               <div :class="$style.current">
-                <pl-icon name="icon-miaoshajia" type="svg" />
+                <pl-svg name="icon-miaoshajia" width="60" height="26" />
                 <span :class="$style.price">
                   {{ prod.activityInfo && prod.activityInfo.activityPrice }}
                 </span>
@@ -130,17 +132,16 @@
                     [$style.disabled]: prod.activityInfo && prod.activityInfo.status !== 1
                   }"
                 >
-                  <pl-icon
+                  <pl-svg
                     v-if="~[0, 1].indexOf(prod.activityInfo.status)"
-                    :class="$style.qiang"
-                    name="icon-qiang"
-                    type="svg"
+                    width="38"
+                    name="icon-vie-for"
                   />
-                  <pl-icon
+                  <pl-svg
                     v-else
-                    :class="$style.jieshu"
+                    width="48"
+                    height="22"
                     name="icon-jieshu"
-                    type="svg"
                   />
                 </div>
               </div>
@@ -188,11 +189,6 @@ export default {
       display: flex;
       justify-content: space-around;
       align-items: center;
-      svg {
-        width: 78px;
-        height: 80px;
-        color: #FFFFFF;
-      }
       .border {
         width: 2px;
         height: 26px;
@@ -338,8 +334,6 @@ export default {
             }
           }
           svg {
-            width: 60px;
-            height: 26px;
             padding-bottom: 6px;
           }
         }
@@ -403,13 +397,6 @@ export default {
             color: #ffffff;
             &.disabled {
               background: linear-gradient(231deg, rgba(204, 204, 204, 1) 0%, rgba(153, 153, 153, 1) 100%);
-            }
-            .qiang {
-              width: 38px;
-            }
-            .jieshu {
-              width: 48px;
-              height: 22px;
             }
           }
         }

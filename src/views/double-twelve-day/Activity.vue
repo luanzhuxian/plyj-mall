@@ -43,7 +43,7 @@
             <div :class="$style.contentBox">
               <div :class="$style.contentTop">
                 <img :class="$style.logo" :src="logoUrl" alt="">
-                <pl-icon v-if="cacheInfo" name="icon-your-data" color="#565776" size="48" />
+                <pl-svg v-if="cacheInfo" name="icon-jigoushuju" fill="#565776" width="48" />
                 <span :class="$style.mallName" v-else>{{ mallName }}</span>
               </div>
               <template v-if="cacheInfo">
@@ -97,16 +97,16 @@
         <div class="fz-26 gray-3">预约后您的私人顾问将会电话联系您</div>
         <label>
           <input v-model="reservationName" type="text" placeholder="请输入预约姓名">
-          <pl-icon v-show="reservationName" @click="reservationName = ''" :class="$style.clean" name="icon-close1" color="#ccc" size="30" />
+          <pl-svg v-show="reservationName" @click="reservationName = ''" :class="$style.clean" name="icon-close2" fill="#ccc" width="30" />
         </label>
         <label>
           <input v-model="reservationMobile" type="text" placeholder="请输入预约手机">
-          <pl-icon v-show="reservationMobile" @click="reservationMobile = ''" :class="$style.clean" name="icon-close1" color="#ccc" size="30" />
+          <pl-svg v-show="reservationMobile" @click="reservationMobile = ''" :class="$style.clean" name="icon-close2" fill="#ccc" width="30" />
         </label>
         <div :class="$style.tip">
-          <pl-icon name="icon-safe" type="svg" width="25" height="25" />
+          <pl-svg name="icon-safe" width="25" height="25" />
           <span>无强行推销</span>
-          <pl-icon name="icon-safe" type="svg" width="25" height="25" />
+          <pl-svg name="icon-safe" width="25" height="25" />
           <span>不泄露用户手机号码</span>
         </div>
         <pl-button :loading="loading" size="large" type="warning" @click.prevent="subscribe">
@@ -123,7 +123,7 @@
           <p>您已成功预约{{ mallName }}</p>
           <p>携手双十二疯狂同学学会</p>
           <div @click="share">帮我上榜</div>
-          <pl-icon name="icon-error" size="48" color="#fff" @click="showSuccess = false" />
+          <pl-svg name="icon-close3" size="48" fill="#fff" @click="showSuccess = false" />
         </div>
       </div>
     </transition>
@@ -134,9 +134,9 @@
         <img :src="haiBao || 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help-me-up.png'" alt="">
         <template v-if="!haiBaoLoading">
           <p>长按图片保存分享给好友</p>
-          <pl-icon name="icon-error" size="48" color="#fff" @click="showShare = false" />
+          <pl-svg name="icon-close3" width="48" fill="#fff" @click="showShare = false" />
         </template>
-        <pl-icon class="rotate" v-else name="icon-btn-loading" size="48" color="#fff" />
+        <pl-svg class="rotate" v-else name="icon-btn-loading" width="48" fill="#fff" />
       </div>
     </transition>
   </div>

@@ -36,7 +36,7 @@ export const receiveCouponForLive = params => axios.post(`/apis/v1/coupon/live/a
  * 获取已领取优惠券列表
  * @returns {Promise<AxiosResponse<T>>}
  */
-export const getMyCouponList = ({ current, size, status }) => axios.get(`/apis/v1/coupon/me/list?current=${current}&size=${size}&status=${status}`)
+export const getMyCouponList = ({ current, size, status, couponType = '' }) => axios.get(`/apis/v1/coupon/me/list?current=${current}&size=${size}&status=${status}&couponType=${couponType}`)
 /**
  * 删除优惠券
  * @returns {Promise<AxiosResponse<T>>}
@@ -45,8 +45,21 @@ export const deleteCouponList = (data) => axios.put('/apis/v1/coupon/me/delete',
 /**
  * 获取最大优惠价格优惠券
  * */
-export const getCouponOfMax = useLimitAmount => axios.get(`/apis/v1/coupon/me/maxPrice?useLimitAmount=${useLimitAmount}`)
+export const getCouponOfMax = params => axios.post('/apis/v1/coupon/me/maxPrice', params)
 /**
  * 根据商品价格获取合适的优惠券
  * */
-export const getCouponByPrice = useLimitAmount => axios.get(`/apis/v1/coupon/me/list/price?useLimitAmount=${useLimitAmount}`)
+export const getCouponByPrice = params => axios.post('/apis/v1/coupon/me/list/price', params)
+/**
+ * 根据优惠券详情获取商品列表
+ * */
+export const getProductList = ({ current, size, couponType, couponId, sortComplex, isDESC }) => axios.get(`/apis/v1/coupon/product/list?current=${current}&size=${size}&couponType=${couponType}&couponId=${couponId}&${(sortComplex ? 'sortComplex=' : 'sortSalesVolume=') + (isDESC ? 'DESC' : 'ASC')}`)
+
+/**
+ * 根据优惠券Id详情获取优惠券详情
+ * */
+export const getCouponDetail = id => axios.get(`/apis/v1/coupon/selectById/${id}`)
+/**
+ * 根据商品价格获取合适的红包
+ * */
+export const getRedEnvelopeListByPrice = _ => axios.get('/apis/v1/scholarship/buyScholarshipList')

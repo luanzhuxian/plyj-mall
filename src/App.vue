@@ -170,6 +170,4 @@ function disposeUrl () {
   return newUrl
 }
 </script>
-<style module lang="scss">
-  @import "assets/scss/theme/base.scss";
-</style>
+<style module lang="scss"></style>

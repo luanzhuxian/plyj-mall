@@ -4,14 +4,14 @@
       <div :class="$style.timer">
         <template v-if="status !== 0">
           <div :class="$style.timerTip">
-            <pl-icon v-if="status === 2" type="svg" name="icon-julijieshu" width="68" height="82" />
-            <pl-icon v-if="status === 1" type="svg" name="icon-julikaishi" width="68" height="82" />
+            <pl-svg v-if="status === 2" name="icon-julijieshu" width="68" height="82" />
+            <pl-svg v-if="status === 1" name="icon-julikaishi" width="68" height="82" />
           </div>
           <div :class="$style.timerContent">
             <div>
               <span v-for="(dd, i) of d" :key="i" v-text="dd" />
             </div>
-            <pl-icon style="margin: 0 1.333vw" type="svg" name="icon-tian" width="34" height="34" />
+            <pl-svg style="margin: 0 1.333vw" name="icon-tian" width="34" height="34" />
             <div>
               <span v-for="(hh, i) of h" :key="i" v-text="hh" />
             </div>
@@ -32,8 +32,7 @@
       <template v-if="friendUserId">
         <div v-if="friendUserId" :class="$style.inviteFriends">
           <!--小手一点帮我助力-->
-          <pl-svg name="invite-users" :width="560" />
-          <!--<pl-icon name="icon-xiaoshouyidianbangwozhuli" fill="#fff" size="56" />-->
+          <pl-svg name="icon-invite-users" :width="560" height="70" />
         </div>
         <div :class="$style.shortOf">
           你也可以参与活动拿豪礼大奖哦！
@@ -41,8 +40,7 @@
       </template>
       <template v-else>
         <div :class="$style.inviteFriends">
-          <pl-svg name="invite-users" :width="560" />
-          <!--<pl-icon type="svg" name="icon-yinghaoli" width="560" />-->
+          <pl-svg name="icon-invite-users" :width="560" height="70" />
         </div>
         <!--<div v-if="inviteDescription > 0" :class="$style.shortOf">
           还差<i v-text="inviteDescription" />个好友注册
@@ -53,8 +51,7 @@
       </template>
       <button :disabled="loading" :class="$style.button" v-if="canOpenGiftPackage && !friendUserId" @click="openGift">开豪礼</button>
       <button :class="$style.button" v-else-if="status === 1">活动暂未开始,敬请期待</button>
-      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped" @click="help">立即注册，得豪礼</button>
-      <!--<button :class="$style.button" v-else-if="status === 2 && friendUserId">注册成功</button>-->
+      <button :disabled="loading" :class="$style.button" v-else-if="status === 2 && friendUserId && !hasHelped && !userId" @click="help">立即注册，得豪礼</button>
       <button :class="$style.button" v-else-if="status === 2 && !hasShare" @click="invite">参与活动</button>
       <button :class="$style.button" v-else-if="status === 2" @click="invite">立即开奖</button>
       <button :class="$style.button" v-else-if="status === 0">参与更多精彩活动</button>
@@ -77,8 +74,8 @@
       @confirm="giftConfirm"
     >
       <div slot="title">
-        <pl-icon v-if="hasGift" name="icon-gongxininhuode" color="#fff" size="60" />
-        <pl-icon v-else name="icon-ganxiecanyu" color="#fff" size="60" />
+        <pl-svg v-if="hasGift" name="icon-gongxininhuode" fill="#fff" width="60" />
+        <pl-svg v-else name="icon-ganxiecanyu" fill="#fff" width="60" />
       </div>
       <!-- 优惠券 -->
       <div :class="$style.couponList" v-if="mallCouponEntity">
@@ -131,7 +128,7 @@
 
 <script>
 import moment from 'moment'
-import { countdown } from '../../../assets/js/util'
+import { Countdown } from '../../../assets/js/util'
 import Trophy from './Trophy'
 import ShareLayer from './ShareLayer.vue'
 // import HelperList from './Helper-List.vue'
@@ -175,6 +172,7 @@ export default {
       mallInvitingEventsGiftEntity: null,
       hasShare: false,
       loading: false,
+      friendUserId: '',
       d: '00',
       h: '00',
       m: '00',
@@ -203,7 +201,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userId', 'mallDomain']),
+    ...mapGetters(['userId', 'mallUrl']),
     // 还差多少个好友
     inviteDescription () {
       if (this.data) {
@@ -211,9 +209,6 @@ export default {
         return invitedPeopleNumber - this.totalHelpers
       }
       return 0
-    },
-    friendUserId () {
-      return this.$route.params.shareUserId
     },
     // 是否领到了豪礼
     hasGift () {
@@ -229,21 +224,27 @@ export default {
         }
       },
       immediate: true
+    },
+    shareUserId: {
+      async handler (val) {
+      },
+      immediate: true
     }
   },
   async activated () {
-    if (this.shareUserId) {
-      let isNewUser = this.isNewUser()
-      if (isNewUser && this.userId && this.friendUserId && this.userId !== this.friendUserId) {
-        try {
-          sessionStorage.removeItem('IS_NEW_USER')
-          await this.help()
-          await registerStatisitic(this.activeId)
-          this.helpeSuccess = true
-          // this.showNewUserSuccess = true
-        } catch (e) {
-          throw e
-        }
+    // 朋友(分享者)的id
+    this.friendUserId = this.shareUserId || sessionStorage.getItem('INVITE_NEW_USERS_SHAERID') || ''
+    // 如果是新人，且有userId,（说明是刚注册的）,且有朋友的id（说明邀新成功)，调用registerStatisitic
+    let isNewUser = this.isNewUser()
+    if (isNewUser && this.userId && this.userId !== this.friendUserId) {
+      try {
+        sessionStorage.removeItem('IS_NEW_USER')
+        await Promise.all([this.help(), registerStatisitic(this.activeId)])
+        sessionStorage.removeItem('INVITE_NEW_USERS_SHAERID')
+        this.helpeSuccess = true
+        // this.showNewUserSuccess = true
+      } catch (e) {
+        throw e
       }
     }
   },
@@ -280,11 +281,11 @@ export default {
       /* eslint-disable */
       if (status === 1) {
         // 未开始
-        this.timer = new countdown(activityStartTime - now, this.setTime)
+        this.timer = new Countdown(activityStartTime - now, this.setTime)
         this.timer.start()
       } else if (status === 2) {
         // 已开始
-        this.timer = new countdown(activityEndTime - now, this.setTime)
+        this.timer = new Countdown(activityEndTime - now, this.setTime)
         this.timer.start()
       }
       this.status = status
@@ -371,14 +372,16 @@ export default {
     },
     // 我也想反豪礼（重置到分享页面）
     async IWantToGetAGiftToo () {
-      location.replace(`/${this.mallDomain}/yx/${this.activeId}`)
+      location.replace(`${this.mallUrl}/yx/${this.activeId}`)
     },
     // 检查是否是新用户
     isNewUser () {
+      // 已经标记为新用户了
       let IS_NEW_USER = JSON.parse(sessionStorage.getItem('IS_NEW_USER'))
       if (IS_NEW_USER) {
-        return IS_NEW_USER
+        return true
       }
+      // 还没标记，但确实是新用户
       if (IS_NEW_USER === null && !this.userId) {
         sessionStorage.setItem('IS_NEW_USER', 'true')
         return true
@@ -390,6 +393,7 @@ export default {
           useDangersHtml: true,
           confirmText: '我也想翻豪礼'
         }).finally(() =>{
+          sessionStorage.removeItem('INVITE_NEW_USERS_SHAERID')
           this.IWantToGetAGiftToo()
         })
       }

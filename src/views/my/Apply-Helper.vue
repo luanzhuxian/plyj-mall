@@ -24,7 +24,7 @@
           :disabled="true"
           placeholder="请选择您的君区"
           v-model="area"
-          prefix-icon="name"
+          prefix-icon="icon-name"
           size="middle"
           @click="showPicker = true"
           @focus="agreeIsShow = false"
@@ -39,7 +39,7 @@
           :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
           placeholder="请输入您的真实姓名"
           v-model="form.name"
-          prefix-icon="name"
+          prefix-icon="icon-name"
           size="middle"
           @focus="agreeIsShow = false"
           @blur="agreeIsShow = true"
@@ -52,7 +52,7 @@
         <pl-input
           :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
           placeholder="请输入您的身份证号"
-          prefix-icon="id-card"
+          prefix-icon="icon-id-card"
           v-model="form.idCard"
           size="middle"
           @focus="agreeIsShow = false"
@@ -66,7 +66,7 @@
         <pl-input
           :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS' || Boolean(mobile)"
           placeholder="请输入您的手机号"
-          prefix-icon="mobile"
+          prefix-icon="icon-mobile"
           v-model="form.mobile"
           size="middle"
           @focus="agreeIsShow = false"
@@ -79,7 +79,7 @@
       >
         <pl-input
           placeholder="请输入验证码"
-          prefix-icon="code"
+          prefix-icon="icon-code"
           v-model="form.verificationCode"
           size="middle"
           @focus="agreeIsShow = false"

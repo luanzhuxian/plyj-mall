@@ -1,5 +1,4 @@
 import './assets/scss/transition.scss'
-import './assets/icon'
 import Button from './Button.vue'
 import Input from './Input.vue'
 import GetCode from './Get-Code.vue'
@@ -11,7 +10,7 @@ import List from './List.vue'
 import UploadImg from './Upload-Img.vue'
 import Fields from './Fields.vue'
 import Switch from './Switch.vue'
-import PlSvg from './Pl-Svg.vue'
+import PlSvg from '../common/Pl-Svg.vue'
 import MessageBox from './message-box'
 import Selector from './Selector.vue'
 import Checkbox from './checkbox/Checkbox.vue'
@@ -23,7 +22,7 @@ import Picker from './picker/Picker.vue'
 // import CanvasVideo from './Canvas-Video.vue'
 import { Timeline, TimelineItem } from './timeline'
 import { Indicator } from './indicator'
-import SvgIcon from 'vue-svgicon'
+// import SvgIcon from 'vue-svgicon'
 export { Toast } from './toast'
 export { Loading } from './loading'
 const components = [
@@ -53,9 +52,9 @@ const components = [
 ]
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {
-  Vue.use(SvgIcon, {
-    tagName: 'svgicon'
-  })
+  // Vue.use(SvgIcon, {
+  //   tagName: 'svgicon'
+  // })
   /* 安装所有组件 */
   for (let c of components) {
     if (!c.install) {

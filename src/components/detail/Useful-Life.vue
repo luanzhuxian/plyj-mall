@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.usefulLife">
     <div :class="$style.title">
-      <pl-svg name="date" />
+      <pl-svg name="icon-date" height="28" />
       <span>有效期：</span>
     </div>
     <div v-if="start" :class="$style.date">

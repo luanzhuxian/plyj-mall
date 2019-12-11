@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.schoolShow">
     <div :class="$style.moduleTitle">
-      <pl-svg :class="$style.moduleIcon" name="school_show" />
+      <pl-svg :class="$style.moduleIcon" name="icon-school_show" height="36" />
       <span :class="$style.title" v-text="data.titleName" />
     </div>
     <p v-for="(item, i) of data.mediaDetailModelList" :key="i">

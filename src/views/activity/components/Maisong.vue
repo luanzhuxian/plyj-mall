@@ -30,9 +30,9 @@
               <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
             </div>
             <div :class="$style.info">
-              <pl-icon name="icon-gift-1" type="svg" v-if="i === 0" />
-              <pl-icon name="icon-gift-2" type="svg" v-if="i === 1" />
-              <pl-icon name="icon-gift-3" type="svg" v-if="i === 2" />
+              <pl-svg name="icon-gift-1" v-if="i === 0" />
+              <pl-svg name="icon-gift-2" v-if="i === 1" />
+              <pl-svg name="icon-gift-3" v-if="i === 2" />
               <div :class="$style.sub">
                 {{ item.name }}
               </div>

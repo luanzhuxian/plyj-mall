@@ -154,6 +154,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     width: 340px;
+    margin-bottom: 20px;
     .img {
       position: relative;
       > img {
@@ -233,13 +234,15 @@ export default {
     }
   }
   .other {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
     margin-top: 22px;
-    grid-template-columns: 340px 340px;
-    grid-gap: 22px;
+    margin-bottom: -20px;
+    justify-content: space-between;
   }
   .pro {
     width: 340px;
+    margin-bottom: 20px;
     background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/product-item.png") no-repeat center center;
     background-size: 115%;
     border-radius: 20px;

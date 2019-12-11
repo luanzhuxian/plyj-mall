@@ -288,7 +288,7 @@ export default {
       }
     }
     .status {
-      color: var(--primary-color);
+      color: $--primary-color;
       font-size: 24px;
       line-height: 34px;
     }

@@ -7,7 +7,7 @@
 
     <div :class="$style.myAssets + ' bg-white radius-20 mt-28'">
       <div :class="$style.title">
-        <pl-svg name="my-assets" />我的资产
+        <pl-svg name="icon-my-assets" />我的资产
       </div>
       <div>
         <div :class="$style.withdrawals">
@@ -44,7 +44,7 @@
       <div class="radius-20 bg-white">
         <div>
           <div :class="$style.title">
-            <pl-svg name="my-rebate" />累计润笔
+            <pl-svg name="icon-my-rebate" />累计润笔
           </div>
           <div :class="$style.middle">
             <p class="fz-44 bold">
@@ -67,10 +67,10 @@
       <div class="radius-20 bg-white">
         <div :class="$style.detail">
           <div :class="$style.title">
-            <pl-svg name="my-withdrawals" />提现明细
+            <pl-svg name="icon-my-withdrawals" />提现明细
           </div>
           <div :class="'fz-22 gray-2 ' + $style.middle">
-            <pl-svg name="my-withdrawals2" />
+            <pl-svg name="icon-my-withdrawals2" />
             看看你<br>转走了多少财富
           </div>
           <router-link
@@ -86,10 +86,10 @@
       <div class="radius-20 bg-white">
         <div :class="$style.detail">
           <div :class="$style.title">
-            <pl-svg name="my-rebate-detail2" />润笔明细
+            <pl-svg name="icon-my-rebate-detail2" />润笔明细
           </div>
           <div :class="'fz-22 gray-2 ' + $style.middle">
-            <pl-svg name="my-rebate-detail1" />
+            <pl-svg name="icon-my-rebate-detail1" />
             解锁赚钱新姿势
           </div>
           <router-link
@@ -104,7 +104,7 @@
 
       <div class="radius-20 bg-white">
         <div :class="$style.seeMore">
-          <pl-svg name="my-more" />
+          <pl-svg name="icon-my-more" />
           <p>更多功能</p>
           <p class="fz-20 gray-3">
             敬请期待

@@ -9,20 +9,26 @@
       class="pl-toast"
       v-show="show"
     >
-      <svgicon
+      <pl-svg
         v-if="type === 'error'"
         class="pl-toast-icon"
-        name="penglai-ui/shibai"
+        name="icon-shibai"
+        fill="#fff"
+        width="72"
       />
-      <svgicon
+      <pl-svg
         v-if="type === 'success'"
         class="pl-toast-icon"
-        name="penglai-ui/chenggong"
+        name="icon-chenggong"
+        fill="#fff"
+        width="72"
       />
-      <svgicon
+      <pl-svg
         v-if="type === 'warning'"
         class="pl-toast-icon"
-        name="penglai-ui/jinggao"
+        name="icon-warning"
+        fill="#fff"
+        width="72"
       />
       <div class="toast-message">
         <p v-text="message" />
@@ -76,10 +82,6 @@ export default {
     border-radius: 4px;
     box-sizing: border-box;
     z-index: 9999;
-    svg {
-      width: 72px;
-      fill: #fff;
-    }
     .toast-message {
       width: max-content;
       max-width: 100%;
@@ -95,9 +97,6 @@ export default {
         word-break: break-all;
         white-space: pre-wrap;
       }
-    }
-    svg {
-      width: 72px;
     }
   }
 </style>

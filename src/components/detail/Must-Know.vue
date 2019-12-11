@@ -78,7 +78,7 @@ export default {
           vertical-align: 6px;
           margin-right: 10px;
           border-radius: 5px;
-          background-color: var(--primary-color);
+          background-color: $--primary-color;
         }
       }
     }

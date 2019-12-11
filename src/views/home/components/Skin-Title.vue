@@ -19,7 +19,9 @@
     </div>
     <div :class="$style.titleWrapper" v-if="skinId === 4">
       <div :class="$style.titleBg">
-        <span :class="$style.characterBg" v-text="data" />
+        <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
+          {{ item }}
+        </span>
       </div>
     </div>
   </div>
@@ -147,13 +149,13 @@ export default {
     background: url("https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/b1f87881-c0f6-444c-9ab4-778d784d1dda.png") no-repeat center;
     background-size: 100%;
     .character-bg {
-      position: relative;
-      top: -6px;
-      left: 4px;
       font-size: 56px;
+      width: 72px;
+      height: 85px;
       font-family: FZQingKeBenYueSongS-R-GB;
       color: #BB181C;
-      letter-spacing: 16px;
+      text-align: center;
+      letter-spacing: 8px;
     }
   }
 }

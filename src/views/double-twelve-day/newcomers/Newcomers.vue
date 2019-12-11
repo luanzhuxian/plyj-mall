@@ -4,7 +4,7 @@
     <div class="title-bar">
       <i class="icon-gift" />
       优惠大礼包
-      <span class="rule" @click="isShowRule = true"><span>活动规则</span><pl-icon name="icon-double-arrow" height="24" width="13" /></span>
+      <span class="rule" @click="isShowRule = true"><span>活动规则</span><pl-svg name="icon-double-arrow" height="24" width="13" /></span>
     </div>
     <div class="gift-list">
       <gift-ticket

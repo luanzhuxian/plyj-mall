@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.applicableTime + ' radius-20'">
     <div>
-      <pl-svg name="time3" />
+      <pl-svg name="icon-time3" />
       <span>使用时间</span>
     </div>
     <div v-text="time" />
@@ -34,6 +34,7 @@ export default {
         color: #666;
         svg {
           width: 32px;
+          height: 32px;
           margin-right: 8px;
           vertical-align: -4px;
         }
