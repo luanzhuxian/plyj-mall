@@ -2,6 +2,7 @@
   <div :class="$style.tuan">
     <div v-if="detail.preActivity === 1">
       <div v-if="detail.preActivity === 2" :class="$style.price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
+      <div v-else-if="detail.preActivity === 1" :class="$style.price">拼团价： <span v-text="hidePrice(detail.activityProductModel.price)" /></div>
       <div :class="$style.proInfo">
         <div :class="$style.original">现价：<i v-text="minPrice" />
           <template v-if="minPrice !== maxPrice">
@@ -11,7 +12,7 @@
       </div>
     </div>
     <div v-if="detail.preActivity === 2">
-      <div :class="$style.price">拼团价： <span>{{ detail.activityProductModel.price }}</span></div>
+      <div :class="$style.price">拼团价： <span v-text="detail.activityProductModel.price" /></div>
       <div :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice">原价：<del v-text="maxOriginalPrice" /></div>
     </div>
     <div>
@@ -92,6 +93,19 @@ export default {
     },
     pageviews () {
       return this.detail.pageviews
+    }
+  },
+  methods: {
+    // 替换价格整数位第2位为 ‘?’
+    hidePrice (price) {
+      let integer = String(price).split('.')[0]
+      const decimals = String(price).split('.')[1]
+      if (integer.length <= 1) {
+        return `${integer}.${decimals}`
+      }
+      integer = integer.split('')
+      integer.splice(1, 1, '?')
+      return `${integer.join('')}.${decimals}`
     }
   }
 }
