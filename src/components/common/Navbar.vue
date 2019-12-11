@@ -23,8 +23,8 @@
         width="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :src="skinMap[skinId].homeActive" v-if="homeActive">
-        <img :src="skinMap[skinId].home" v-else>
+        <img :class="$style.tab" :src="skinMap[skinId].homeActive" v-if="homeActive">
+        <img :class="$style.tab" :src="skinMap[skinId].home" v-else>
         <!-- <template v-if="skinId === 2">
           <img src="../../views/home/skin/yuan-dan/btn-home-selected.png" v-if="homeActive">
           <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-home.png" v-else>
@@ -55,8 +55,8 @@
         width="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :src="skinMap[skinId].classifyActive" v-if="classifyActive">
-        <img :src="skinMap[skinId].classify" v-else>
+        <img :class="$style.tab" :src="skinMap[skinId].classifyActive" v-if="classifyActive">
+        <img :class="$style.tab" :src="skinMap[skinId].classify" v-else>
         <div :class="$style.tabName">分类</div>
       </template>
     </router-link>
@@ -66,7 +66,7 @@
       tag="div"
       :to="{ name: 'Activity' }"
     >
-      <img :class="$style.icon" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png">
+      <img :class="$style.mainTab" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png">
     </router-link>
     <router-link
       :class="{
@@ -83,8 +83,8 @@
         width="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :src="skinMap[skinId].shoppingChartActive" v-if="shoppingChartActive">
-        <img :src="skinMap[skinId].shoppingChart" v-else>
+        <img :class="$style.tab" :src="skinMap[skinId].shoppingChartActive" v-if="shoppingChartActive">
+        <img :class="$style.tab" :src="skinMap[skinId].shoppingChart" v-else>
         <div :class="$style.tabName">购物车</div>
       </template>
     </router-link>
@@ -103,8 +103,8 @@
         width="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :src="skinMap[skinId].myActive" v-if="myActive">
-        <img :src="skinMap[skinId].my" v-else>
+        <img :class="$style.tab" :src="skinMap[skinId].myActive" v-if="myActive">
+        <img :class="$style.tab" :src="skinMap[skinId].my" v-else>
         <div :class="$style.tabName">我的</div>
       </template>
       <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
@@ -237,10 +237,9 @@ export default {
     right: 60px;
   }
 }
-.icon {
+.main-tab {
   margin-bottom: 10px;
   width: 72px;
-  // height: 72px;
 }
 
 /* 皮肤 */
@@ -264,8 +263,11 @@ export default {
     color: #242424;
     text-align: center;
   }
-  .icon {
+  .main-tab {
     margin-bottom: 0 !important;
+  }
+  .tab {
+    height: 62px;
   }
 }
 .skin-xmas {
