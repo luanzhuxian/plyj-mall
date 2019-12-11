@@ -96,7 +96,7 @@
         </div>
         <div
           :class="$style.infoItem"
-          v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && !isCart && activeProduct === 1"
+          v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
           @click="showRedEnvelopePopupClick"
         >
           <div :class="$style.freightType">
@@ -228,7 +228,7 @@
           </div>
           <div
             :class="$style.infoItem"
-            v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && !isCart && activeProduct === 1"
+            v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
             @click="showRedEnvelopePopupClick"
           >
             <div :class="$style.freightType">
@@ -361,7 +361,7 @@
           </div>
           <div
             :class="$style.infoItem"
-            v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && !isCart && activeProduct === 1"
+            v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
             @click="showRedEnvelopePopupClick"
           >
             <div :class="$style.freightType">
@@ -421,7 +421,7 @@
     </div>
 
     <div
-      v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && isCart && activeProduct === 1"
+      v-if="(currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && isCart && activeProduct === 1"
       :class="$style.itemSelector"
       @click.capture="showRedEnvelopePopupClick"
     >
@@ -431,7 +431,7 @@
         icon="icon-RedEnvelope"
         :icon-gap="12"
         show-right-icon
-        :right-text="isNotChooseRedEnvelope ? redEnvelopeList.length? '有可用':'无可用' : '-¥' + currentRedEnvelope.amount "
+        :right-text="isNotChooseRedEnvelope ? '有可用' : '-¥' + currentRedEnvelope.amount"
         left-text-weight="bold"
       />
     </div>
@@ -589,7 +589,7 @@
                 <pl-svg name="icon-RedEnvelope" width="40" />
               </span>
               <span :class="$style.count">￥{{ item.amount }}</span>
-              <span v-if="item.amount > (totalAmount + (currentRedEnvelope.amount || 0))" :class="$style.isOver">使用后超出抵用金额不返还</span>
+              <span v-if="item.amount > (totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0))" :class="$style.isOver">使用后超出抵用金额不返还</span>
               <span :class="$style.choices">
                 <pl-svg v-if="item.id === currentRedEnvelope.id" name="icon-xuanzhong" width="40" />
                 <pl-svg v-else name="icon-weixuanzhong1" width="40" />

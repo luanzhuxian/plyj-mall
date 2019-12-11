@@ -217,8 +217,7 @@
           <span>优惠</span>
           <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
         </p>
-        <!--TODO.Echo 等待接口-->
-        <p v-if="false && productInfoModel.totalScholarshipAmount > 0">
+        <p v-if="productInfoModel.totalScholarshipAmount > 0">
           <span>奖学金（红包）</span>
           <span v-text="'-¥' + (productInfoModel.totalScholarshipAmount || 0)" />
         </p>
@@ -907,7 +906,7 @@ export default {
           this.productInfoModel.totalCouponAmount = totalCouponAmount
           // 红包保留两位小数
           let totalScholarshipAmount = productInfoModel.productDetailModels.reduce((total, current) => {
-            return total + current['scholarshipAmount']
+            return total + current['scholarShipAmount']
           }, 0)
           totalScholarshipAmount = totalScholarshipAmount.toString().indexOf('.') === -1 ? totalScholarshipAmount : totalScholarshipAmount.toFixed(2)
           this.productInfoModel.totalScholarshipAmount = totalScholarshipAmount
