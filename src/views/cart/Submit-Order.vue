@@ -113,7 +113,7 @@
         <div :class="$style.infoItem">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">商品金额</span>
-            <span :class="$style.subtotalPrice + ' rmb'">{{ amount }}</span>
+            <span :class="$style.subtotalPrice + ' rmb'">{{ physicalAmount }}</span>
           </div>
         </div>
       </div>
@@ -664,7 +664,7 @@ export default {
       showInvoiceSelector: false, // 是否显示选择发票
       freight: 0,
       totalAmount: 0,
-      amount: 0,
+      physicalAmount: 0,
       coupon: {}, // 优惠券信息
       couponList: [], // 优惠券信息
       physicalProducts: [],
@@ -841,7 +841,7 @@ export default {
         formalClass.map(item => { item.type = 'FORMAL_CLASS' })
         experienceClass.map(item => { item.type = 'EXPERIENCE_CLASS' })
         virtualProducts.map(item => { item.type = 'VIRTUAL_GOODS' })
-        this.amount = amount
+        this.physicalAmount = amount
         this.totalAmount = totalAmount
         this.freight = Number(freight)
         this.physicalProducts = physicalProducts

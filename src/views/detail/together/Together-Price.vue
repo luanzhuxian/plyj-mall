@@ -98,14 +98,15 @@ export default {
   methods: {
     // 替换价格整数位第2位为 ‘?’
     hidePrice (price) {
-      let integer = String(price).split('.')[0]
-      const decimals = String(price).split('.')[1]
+      let priceArr = String(price).split('.')
+      let integer = priceArr[0]
+      const decimals = priceArr[1] ? `.${priceArr[1]}` : ''
       if (integer.length <= 1) {
-        return `${integer}.${decimals}`
+        return `${integer}${decimals}`
       }
       integer = integer.split('')
       integer.splice(1, 1, '?')
-      return `${integer.join('')}.${decimals}`
+      return `${integer.join('')}${decimals}`
     }
   }
 }

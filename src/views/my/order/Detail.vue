@@ -1013,7 +1013,6 @@ export default {
       }
       let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
       let duration = (orderStatus === 'WAIT_PAY' || orderStatus === 'WAIT_PAY_REPAYMENT') ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
-      console.log(duration)
       if (activeProduct === 4) {
         this.countDown(duration, orderStatus)
         return
