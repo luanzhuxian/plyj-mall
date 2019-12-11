@@ -2,7 +2,7 @@
   <div :class="$style.search">
     <div :class="$style.searchBar">
       <div :class="$style.searchBox">
-        <pl-svg name="search" />
+        <pl-svg name="icon-search" width="30" />
         <input
           v-model.trim="searchContent"
           type="search"
@@ -22,7 +22,7 @@
         v-show="seached"
         :form="form"
         :request-methods="searchProduct"
-        icon="no-search"
+        icon="icon-no-search"
         no-content-tip="抱歉，没有相关商品"
         @refresh="refreshHandler"
         @more="refreshHandler"
@@ -70,7 +70,8 @@
         <span>历史搜索</span>
         <pl-svg
           @click="deleteHistory"
-          name="delete"
+          name="icon-delete"
+          width="25"
         />
       </div>
       <ul :class="$style.keyWordList">

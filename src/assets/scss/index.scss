@@ -1,5 +1,4 @@
 @import "./reset";
-@import "theme/base";
 @import "transition";
 //@import "chat-room";
 
@@ -88,28 +87,28 @@
 }
 /* 字体灰色系 */
 .gray-0 {
-  color: var(--font-color_gray0);
+  color: $--font-color_gray0;
 }
 .gray-1 {
-  color: var(--font-color_gray1);
+  color: $--font-color_gray1;
 }
 .gray-2 {
-  color: var(--font-color_gray2);
+  color: $--font-color_gray2;
 }
 .gray-3 {
-  color: var(--font-color_gray3);
+  color: $--font-color_gray3;
 }
 .gray-4 {
-  color: var(--font-color_gray4);
+  color: $--font-color_gray4;
 }
 .gray-5 {
-  color: var(--font-color_gray5);
+  color: $--font-color_gray5;
 }
 .gray-6 {
-  color: var(--font-color_gray6);
+  color: $--font-color_gray6;
 }
 .primary-color {
-  color: var(--primary-color);
+  color: $--primary-color;
 }
 
 .rmb {

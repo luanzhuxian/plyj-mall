@@ -2,7 +2,7 @@
   <div :class="$style.withdrawCashSuccess">
     <pl-svg
       :class="$style.icon"
-      name="withdraw-success"
+      name="icon-withdraw-success"
     />
     <p :class="$style.tip1">
       请求已提交
@@ -47,6 +47,7 @@ export default {
 
   .icon {
     width: 142px;
+    height: 142px;
   }
 
   .tip1 {

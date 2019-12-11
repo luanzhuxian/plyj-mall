@@ -34,7 +34,9 @@
         v-if="!$slots['icon-right'] && !disabled"
         class="pl-collapse-item__icon--right"
         :name="iconRight.name"
-        color="#CCC"
+        width="24"
+        height="24"
+        fill="#CCC"
       />
       <slot
         v-else
@@ -43,7 +45,7 @@
     </div>
     <div
       class="pl-collapse-item__wrapper"
-      :style="{ '--contentHeight': `${contentHeight}px` }"
+      :style="{ height: `${contentHeight}px` }"
     >
       <div
         ref="content"
@@ -66,7 +68,7 @@ export default {
       type: Object,
       default () {
         return {
-          name: 'right',
+          name: 'icon-right',
           color: '#CCC'
         }
       }
@@ -172,7 +174,6 @@ export default {
   }
   &__wrapper {
     transform: translate3d(0, 0, 0);
-    height: var(--contentHeight);
     overflow: hidden;
     transition: height .3s ease-in-out;
   }

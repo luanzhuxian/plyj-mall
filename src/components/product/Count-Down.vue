@@ -7,7 +7,7 @@
     v-if="data || endtime"
     v-show="show"
   >
-    <pl-svg v-if="size === 'large'" name="time4" />
+    <pl-svg v-if="size === 'large'" name="icon-time4" height="36" />
     <span>距开抢</span>
     <div :class="$style.time">
       <i v-if="Number(d)">{{ d }}</i><em v-if="Number(d)">天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />

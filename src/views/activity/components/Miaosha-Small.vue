@@ -30,7 +30,7 @@
                 {{ data.values[0].goodsInfo.productName }}
               </div>
               <div :class="$style.current">
-                <pl-icon name="icon-miaoshajia" type="svg" />
+                <pl-svg name="icon-miaoshajia" width="60" height="26" />
                 <span :class="$style.price">
                   {{ data.values[0].goodsInfo.activityInfo && data.values[0].goodsInfo.activityInfo.activityPrice }}
                 </span>
@@ -61,17 +61,17 @@
                     [$style.disabled]: data.values[0].goodsInfo.activityInfo.status !== 1
                   }"
                 >
-                  <pl-icon
+                  <pl-svg
                     v-if="~[0, 1].indexOf(data.values[0].goodsInfo.activityInfo.status)"
-                    :class="$style.qiang"
-                    name="icon-qiang"
-                    type="svg"
+                    name="icon-vie-for"
+                    width="38"
                   />
-                  <pl-icon
+                  <pl-svg
                     v-else
                     :class="$style.jieshu"
                     name="icon-jieshu"
-                    type="svg"
+                    width="48"
+                    height="22"
                   />
                 </div>
               </div>
@@ -209,8 +209,6 @@ export default {
             }
           }
           svg {
-            width: 60px;
-            height: 26px;
             padding-bottom: 6px;
           }
         }
@@ -274,13 +272,6 @@ export default {
             color: #ffffff;
             &.disabled {
               background: linear-gradient(231deg, rgba(204, 204, 204, 1) 0%, rgba(153, 153, 153, 1) 100%);
-            }
-            .qiang {
-              width: 38px;
-            }
-            .jieshu {
-              width: 48px;
-              height: 22px;
             }
           }
         }

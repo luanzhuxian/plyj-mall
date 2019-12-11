@@ -1,32 +1,18 @@
 /*  common */
 .skin-common {
-  .banner {
-    padding: 0 24px 0 24px !important;
-    background: transparent !important;
-  }
-  .adv {
-    background: transparent !important;
-  }
-  .broadcast,
-  .activity {
-    background: transparent !important;
-  }
-  .hot-item {
-    padding-top: 0 !important;
-    background: transparent !important;
-  }
-  .appointment {
-    padding-bottom: 0 !important;
-    background: transparent !important;
-  }
+  .banner,
+  .hot-item,
   .best {
     padding: 0 24px !important;
     background: transparent !important;
   }
+  .shuang12,
+  .adv,
+  .live,
+  .activity,
+  .appointment,
+  .propagate,
   .recommend {
-    background: transparent !important;
-  }
-  .shuang12 {
     background: transparent !important;
   }
 }
@@ -84,29 +70,6 @@
   }
 }
 
-// 新年皮肤
-.skin-new-year {
-  @extend .skin-common;
-  background-color: #AE1A10 !important;
-  .container {
-    padding-top: 52px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/32724153-3431-4331-9589-b3018075aed6.png") no-repeat center top !important;
-    background-size: 100% auto !important;
-  }
-  .search {
-    padding: 0 92px !important;
-  }
-  .footer {
-    height: 150px !important;
-    color: #FFFFFF !important;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/9c269eae-f95d-4651-9e37-1efbba2a3534.png") no-repeat center !important;
-    background-size: 100% !important;  
-  }
-  .skin-title {
-    margin: 0 -24px;
-  }
-}
-
 // 元旦皮肤
 .skin-yuan-dan {
   @extend .skin-common;
@@ -123,7 +86,30 @@
     height: 300px !important;
     color: #F2E2BA !important;
     background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/cbfbc6a1-6e57-4cf8-82d9-54bb17d600ba.png") no-repeat center !important;
-    background-size: 100% !important;  
+    background-size: 100% !important;
+  }
+}
+
+// 新年皮肤
+.skin-new-year {
+  @extend .skin-common;
+  background-color: #AE1A10 !important;
+  .container {
+    padding-top: 52px;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/32724153-3431-4331-9589-b3018075aed6.png") no-repeat center top !important;
+    background-size: 100% auto !important;
+  }
+  .search {
+    padding: 0 92px !important;
+  }
+  .footer {
+    height: 150px !important;
+    color: #FFFFFF !important;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/9c269eae-f95d-4651-9e37-1efbba2a3534.png") no-repeat center !important;
+    background-size: 100% !important;
+  }
+  .skin-title {
+    margin: 0 -24px;
   }
 }
 

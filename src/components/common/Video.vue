@@ -20,11 +20,11 @@
         controls
         :class="{ [$style.playVideo]: isPlay }"
       />
-      <pl-icon
+      <pl-svg
         :class="$style.close"
         name="icon-close"
-        color="#bbb"
-        :size="30"
+        fill="#bbb"
+        :height="30"
         @click="close"
       />
     </div>

@@ -47,7 +47,7 @@
     <transition name="fade">
       <div :class="$style.posterWrap" v-if="showHaibao" @click="showHaibao = false">
         <img :src="this.poster" alt="">
-        <pl-svg name="close3" />
+        <pl-svg name="icon-close3" />
       </div>
     </transition>
   </div>
@@ -117,9 +117,12 @@ export default {
     }
   },
   async activated () {
+    // 暂存分享者的id, 而不是自己的id
+    if (this.shareUserId && this.userId !== this.shareUserId) {
+      sessionStorage.setItem('INVITE_NEW_USERS_SHAERID', this.shareUserId)
+    }
     await this.init()
   },
-  mounted () {},
   methods: {
     async init () {
       try {
@@ -127,10 +130,12 @@ export default {
         // 获取活动详情
         const { result } = await getActiveDetail(this.activityId)
         this.detail = result
+        // 如果分享id和自己的id相等，则刷新一次，以提高分享配置的成功率
         if (this.shareUserId && this.userId === this.shareUserId) {
           location.replace(`/${this.mallDomain}/yx/${this.activityId}`)
           return
         }
+        // 配置微信分享
         this.share(this.shareUserId)
         this.loading = false
       } catch (e) {
@@ -139,6 +144,7 @@ export default {
     },
     async share (shareUserId) {
       let willHide = ['menuItem:share:timeline']
+      // 如果已经存在分享id，此时页面不允许分享
       if (shareUserId || !this.userId) {
         willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
         inviterStatisitic(this.activityId, shareUserId)

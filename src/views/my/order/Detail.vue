@@ -6,7 +6,6 @@
         :tip="suggestionMap[orderStatus]"
       />
     </div>
-
     <!-- 核销码 -->
     <div
       :class="$style.qrcodeBox"
@@ -25,8 +24,8 @@
         <pl-svg
           v-if="isArrowShow"
           :class="{ [$style.collapse]: collapseQrCode }"
-          name="right"
-          color="#999"
+          name="icon-right"
+          fill="#999"
           @click="() => { isArrowShow ? collapseQrCode = !collapseQrCode : '' }"
         />
         <ul :class="$style.codeList">
@@ -44,7 +43,7 @@
                   <span :class="$style.codeStatus" v-text="item.status" />
                 </div>
                 <div :class="$style.whoUse" v-show="!collapseQrCode && item.name">
-                  <pl-svg name="name-card" :color="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
+                  <pl-svg name="icon-name-card" :fill="item.statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
                   <span :class="{ [$style.name]: true }" v-text="item.name" />
                   <span :class="{ [$style.phone]: true }" v-text="item.mobile" />
                 </div>
@@ -166,31 +165,40 @@
       </div>
 
       <div :class="$style.productPrice">
-        <p v-if="activityData.tailAount">
-          <span>待付尾款</span>
+        <!-- 正常商品价格 -->
+        <p v-if="activeProduct === 1">
+          <span>商品金额</span>
           <span
-            class="rmb"
-            v-text="activityData.tailAount || 0"
-          />
-        </p>
-        <p>
-          <span>
-            {{ activeProductStatus[activeProduct] || '商品' }}<i v-if="activeProduct !==4">金额</i>
-            <span v-if="activeProduct === 4" class="gray-3">(不退<i v-if="activityData.multiple">，翻{{ activityData.multipleNumber }}倍</i>)</span>
-          </span>
-
-          <!--  预购 / 秒杀 / 团购 三种订单，显示活动价格activityData.price，其他显示正常productInfoModel.productsTotalAmount  -->
-          <span
-            v-if="activeProductStatus[activeProduct]"
-            class="rmb"
-            v-text="activityData.reachAmount || 0"
-          />
-          <span
-            v-else
             class="rmb"
             v-text="productInfoModel.productsTotalAmount || 0"
           />
         </p>
+        <!-- 预购商品价格 -->
+        <template v-else-if="activeProduct === 4">
+          <p>
+            <span>待付尾款</span>
+            <span
+              class="rmb"
+              v-text="activityData.tailAount || 0"
+            />
+          </p>
+          <p>
+            <span>定金(不退<i v-if="activityData.multiple">，翻{{ activityData.multipleNumber }}倍</i>)</span>
+            <span
+              class="rmb"
+              v-text="activityData.price || 0"
+            />
+          </p>
+        </template>
+        <!-- 其他活动商品（秒杀，团购） -->
+        <p v-else>
+          <span v-text="activeProductStatus[activeProduct]" />
+          <span
+            class="rmb"
+            v-text="productInfoModel.activityProductAmount || 0"
+          />
+        </p>
+
         <p v-if="productInfoModel.couponDeduction > 0">
           <span>优惠券</span>
           <span
@@ -209,6 +217,11 @@
           <span>优惠</span>
           <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
         </p>
+        <!--TODO.Echo 等待接口-->
+        <p v-if="false && productInfoModel.totalScholarshipAmount > 0">
+          <span>奖学金（红包）</span>
+          <span v-text="'-¥' + (productInfoModel.totalScholarshipAmount || 0)" />
+        </p>
       </div>
 
       <div :class="$style.amount">
@@ -216,9 +229,16 @@
         <span class="fz-30">
           总价：
         </span>
+        <!-- 预购商品总价 = 定金 + 尾款 -->
         <span
+          v-if="activeProduct === 4"
           :class="$style.totalMoney + ' fz-30 rmb'"
-          v-text="productInfoModel.actuallyAmount || 0"
+          v-text="activityData.tailAount + activityData.reachAmount"
+        />
+        <span
+          v-else
+          :class="$style.totalMoney + ' fz-30 rmb'"
+          v-text="productInfoModel.amount || 0"
         />
       </div>
     </div>
@@ -238,7 +258,7 @@
       <pl-fields
         size="middle"
         text="学员信息"
-        icon="name-card"
+        icon="icon-name-card"
         :icon-gap="12"
         can-collapse
         show-right-icon
@@ -410,10 +430,19 @@
         type="warning"
         round
         :loading="payloading && currentPayId === orderId"
-        :disabled="payloading"
-        @click="pay"
+        @click="pay(1)"
       >
         去付款
+      </pl-button>
+      <pl-button
+        v-if="orderStatus === 'WAIT_PAY_REPAYMENT'"
+        type="warning"
+        round
+        :loading="payloading && currentPayId === orderId"
+        :disabled="payloading || this.finalPaymentIsEnded || !this.finalPaymentIsStarted"
+        @click="pay(2)"
+      >
+        {{ this.finalPaymentIsEnded ? '已过期' : this.finalPaymentIsStarted ? '去付尾款' : '未开始付尾款' }}
       </pl-button>
     </div>
 
@@ -430,7 +459,8 @@
         <div :class="$style.popupTitle">
           <pl-svg
             :class="$style.popupTitleIcon"
-            name="rows"
+            name="icon-rows"
+            height="40"
           />
           <span>联系我们</span>
         </div>
@@ -440,7 +470,7 @@
           <div :class="$style.popupAddress">
             <pl-svg
               :class="$style.popupAddressLeftIcon"
-              name="address-blue"
+              name="icon-address-blue"
             />
             <span
               :class="$style.popupAddressText"
@@ -448,7 +478,7 @@
             />
             <pl-svg
               :class="$style.popupAddressRightIcon"
-              name="copy"
+              name="icon-copy"
               @click="doCopy"
             />
           </div>
@@ -456,7 +486,7 @@
             <pl-button
               size="larger"
               background-color="#387AF6"
-              prefix-icon="mobile-blue"
+              prefix-icon="icon-mobile-blue"
               round
             >
               立即拨打
@@ -466,7 +496,7 @@
             v-else
             size="larger"
             background-color="#387AF6"
-            prefix-icon="mobile-blue"
+            prefix-icon="icon-mobile-blue"
             round
             data-i="123"
             @click="showContact = true; isPopupShow = false;"
@@ -483,8 +513,8 @@
         <img :src="poster" alt="">
       </div>
       <div :class="$style.description">
-        <p>长按保存分享给好友</p>
-        <pl-svg name="close3" color="#fff" :width="50" @click="isPosterShow = false" />
+        <p class="mt-22">长按保存分享给好友</p>
+        <pl-svg name="icon-close3" fill="#fff" width="50" height="50" @click="isPosterShow = false" />
       </div>
     </div>
     <Contact :show.sync="showContact" />
@@ -538,10 +568,11 @@ import {
   cancelOrder,
   deleteOrder,
   getVerificationStatus,
-  setVerificationStatus
+  setVerificationStatus,
+  getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
-import { generateQrcode } from '../../../assets/js/util'
+import { generateQrcode, Countdown } from '../../../assets/js/util'
 import { createText } from '../../../assets/js/validate'
 import filter from '../../../filter/index'
 
@@ -556,7 +587,8 @@ const suggestionMap = {
   WAIT_SHIP: '请耐心等待商家发货…',
   WAIT_RECEIVE: '',
   FINISHED: '本次交易已完成，期待下次光临',
-  CLOSED: '订单取消'
+  CLOSED: '订单取消',
+  WAIT_PAY_REPAYMENT: ''
 }
 const invoiceMap = {
   '1': {
@@ -595,6 +627,8 @@ export default {
     return {
       loaded: false,
       showContact: false,
+      finalPaymentIsStarted: false, // 预购商品是否已到付尾款时间
+      finalPaymentIsEnded: false, // 预购商品付尾款时间已过
       orderType: '',
       orderStatus: '',
       message: '',
@@ -607,6 +641,7 @@ export default {
       studentInfoModels: [],
       redeemCodeModels: [],
       activityData: {},
+      isStart: false, // 如果时预购商品，单表是否已到付尾款时间，true 已到 false 未到
       activeProduct: 1, // 1普通订单，2团购订单，3秒杀订单，4.预购订单， 5优惠卷订单
       orderStatusAlias: '',
       shippingAddress: {
@@ -637,7 +672,7 @@ export default {
       isPosterShow: false,
       poster: '',
       activeProductStatus: {
-        2: '团购',
+        2: '团购金额',
         3: '限时秒杀',
         4: '定金'
       }
@@ -669,7 +704,7 @@ export default {
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) &&
       this.productInfoModel.actuallyAmount > 0 &&
-      !this.activeProductStatus[this.activeProduct] &&
+      this.activeProduct === 1 &&
       (this.orderType === 'PHYSICAL' || this.usefulCodeNumber > 0)
     },
     // 是否可以申请发票，invoiceStatus： 1:'已申请' 3:'已开票' 7:'不支持' 8:'可申请'
@@ -677,7 +712,7 @@ export default {
       return this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
         this.productInfoModel.actuallyAmount > 0 &&
-        !this.activeProductStatus[this.activeProduct] &&
+        this.activeProduct === 1 &&
         this.productInfoModel.productDetailModels.some(product => {
           return product.price > 0 &&
             product.invoiceType === 1 &&
@@ -817,38 +852,6 @@ export default {
           this.$error('生成二维码失败')
         })
     },
-    // 倒计时
-    countDown (remanent, orderStatus) {
-      this.timer = setInterval(() => {
-        let { _data } = moment.duration(remanent)
-        let d = String(Math.floor(moment.duration(remanent).asDays()))
-        let h = String(_data.hours)
-        let m = String(_data.minutes)
-        let s = String(_data.seconds)
-        remanent -= 1000
-        if (remanent <= 0) {
-          clearInterval(this.timer)
-          this.suggestionMap.WAIT_PAY = this.suggestionMap.WAIT_RECEIVE = ''
-          this.getDetail()
-          return
-        }
-        if (orderStatus === 'WAIT_PAY') this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
-        if (orderStatus === 'WAIT_RECEIVE') {
-          this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
-        }
-      }, 1000)
-    },
-    setTime (result, orderStatus) {
-      let activeProduct = result.activeProduct
-      let waitPayTime = activeProduct === 1 || activeProduct === 5 ? 24 * 60 * 60 * 1000 : 5 * 60 * 1000
-      let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
-      let duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
-      let now = moment((result.currentServerTime)).valueOf() // 服务器时间
-      let startTime = moment(time).valueOf()
-      if (now - startTime < duration) {
-        this.countDown(duration + startTime - now - 2000, orderStatus)
-      }
-    },
     getDetail () {
       return new Promise(async (resolve, reject) => {
         try {
@@ -882,10 +885,11 @@ export default {
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
           this.activityData = activityData || {}
-          if (this.activeProductStatus[this.activeProduct]) {
+          if (this.activeProduct === 4) {
             let count = this.productInfoModel.productDetailModels[0].count || 0
             this.activityData.reachAmount = this.activityData.price * count
           }
+          // this.isStart = this.activeProduct === 4 && moment(currentTime).valueOf() - moment(activityData.userStartTime).valueOf() >= 0
           this.activeProduct = activeProduct || 1
           this.productInfoModel.totalCount = productInfoModel.productDetailModels.reduce((total, current) => {
             return total + current['count']
@@ -901,6 +905,12 @@ export default {
           }, 0)
           totalCouponAmount = totalCouponAmount.toString().indexOf('.') === -1 ? totalCouponAmount : totalCouponAmount.toFixed(2)
           this.productInfoModel.totalCouponAmount = totalCouponAmount
+          // 红包保留两位小数
+          let totalScholarshipAmount = productInfoModel.productDetailModels.reduce((total, current) => {
+            return total + current['scholarshipAmount']
+          }, 0)
+          totalScholarshipAmount = totalScholarshipAmount.toString().indexOf('.') === -1 ? totalScholarshipAmount : totalScholarshipAmount.toFixed(2)
+          this.productInfoModel.totalScholarshipAmount = totalScholarshipAmount
 
           if (orderType !== 'PHYSICAL' && redeemCodeModels.length > 0) {
             if (orderStatus !== 'WAIT_PAY') {
@@ -917,8 +927,8 @@ export default {
           if (orderStatus === 'CLOSED') {
             this.suggestionMap['CLOSED'] = this.isAllProductRefund ? '退款完成' : '订单取消'
           }
-          if (orderStatus === 'WAIT_PAY') {
-            this.setTime(result, 'WAIT_PAY')
+          if (orderStatus === 'WAIT_PAY' || orderStatus === 'WAIT_PAY_REPAYMENT') {
+            this.setTime(result, orderStatus)
           }
           if (orderStatus === 'WAIT_RECEIVE') {
             if (orderType === 'PHYSICAL') {
@@ -949,12 +959,83 @@ export default {
         }
       })
     },
-    async pay () {
+    // 倒计时
+    countDown (remanent, orderStatus) {
+      if (this.countdownInstance) {
+        this.countdownInstance.stop()
+      }
+      const countdownInstance = new Countdown(remanent, data => {
+        if (!data) {
+          this.suggestionMap.WAIT_PAY = this.suggestionMap.WAIT_RECEIVE = this.suggestionMap.WAIT_PAY_REPAYMENT = ''
+          this.getDetail()
+          return
+        }
+        let d = String(data.months * moment().daysInMonth() + data.days)
+        let h = String(data.hours)
+        let m = String(data.minutes)
+        let s = String(data.seconds)
+        if (orderStatus === 'WAIT_PAY') {
+          this.suggestionMap.WAIT_PAY = `还剩${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒 订单自动关闭`
+          return
+        }
+        if (orderStatus === 'WAIT_PAY_REPAYMENT') {
+          this.suggestionMap.WAIT_PAY_REPAYMENT = `剩余尾款支付时间：${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒`
+          return
+        }
+        if (orderStatus === 'WAIT_RECEIVE') {
+          this.suggestionMap.WAIT_RECEIVE = `还剩${d}天${h.padStart(2, '0')}时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒后自动收货`
+        }
+      })
+      countdownInstance.start()
+      this.countdownInstance = countdownInstance
+    },
+    setTime (result, orderStatus) {
+      let activeProduct = result.activeProduct
+      let waitPayTime = 0
+      let now = Number(result.currentServerTime) // 服务器时间
+      if (activeProduct === 1 || activeProduct === 5) {
+        waitPayTime = 24 * 60 * 60 * 1000
+      } else if (activeProduct === 4) {
+        // 预购
+        let useStartTime = moment((result.activityData.useStartTime)).valueOf()
+        let useEndTime = moment((result.activityData.useEndTime)).valueOf()
+        this.finalPaymentIsStarted = now - useStartTime >= 0
+        this.finalPaymentIsEnded = now - useEndTime >= 0
+        if (this.finalPaymentIsStarted && !this.finalPaymentIsEnded) {
+          waitPayTime = useEndTime - now
+        }
+      } else {
+        waitPayTime = 5 * 60 * 1000
+      }
+      let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
+      let duration = (orderStatus === 'WAIT_PAY' || orderStatus === 'WAIT_PAY_REPAYMENT') ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
+      if (activeProduct === 4) {
+        this.countDown(duration, orderStatus)
+        return
+      }
+      let startTime = moment(time).valueOf()
+      if (now - startTime < duration) {
+        this.countDown(duration + startTime - now - 2000, orderStatus)
+      }
+    },
+    /**
+     * 支付
+     * @param type {number} 1: 普通支付 2: 付尾款
+     * @return {Promise<void>}
+     */
+    async pay (type) {
       try {
         const { orderId } = this
+        let result = null
         this.currentPayId = orderId
         this.payloading = true
-        const { result } = await getAwaitPayInfo(orderId)
+        if (type === 1) {
+          const { result: waitPayInfo } = await getAwaitPayInfo(orderId)
+          result = waitPayInfo
+        } else if (type === 2) {
+          const { result: balanceInfo } = await getWaitPayBalanceInfo(orderId)
+          result = balanceInfo
+        }
         // 调用微信支付api
         await wechatPay(result)
         updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'pay' })
@@ -1109,6 +1190,7 @@ export default {
         top: 20px;
         right: 20px;
         width: 22px;
+        height: 22px;
         transform: rotate(-90deg);
         transition: transform .2s linear;
         &.collapse {
@@ -1173,6 +1255,7 @@ export default {
       line-height: 34px;
       > svg {
         width: 34px;
+        height: 34px;
         margin-right: 8px;
         vertical-align: -4px;
       }

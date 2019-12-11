@@ -13,7 +13,7 @@
       <slot />
     </div>
     <div v-if="canClick" :class="$style.canClick">
-      <pl-icon name="icon-arrow-right" color="#ccc" />
+      <pl-svg name="icon-right" fill="#ccc" width="20" />
     </div>
   </div>
 </template>

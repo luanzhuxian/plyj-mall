@@ -89,16 +89,17 @@ export default {
 
 <style module lang="scss">
   .pro-list {
-    display: grid;
-    grid-template-columns: 340px 340px;
-    grid-gap: 22px;
-    // margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: -20px;
   }
   .pro-item {
     position: relative;
     width: 340px;
     border-radius: 20px;
     overflow: hidden;
+    margin-bottom: 20px;
     background-color: #fff;
     .img {
       position: relative;

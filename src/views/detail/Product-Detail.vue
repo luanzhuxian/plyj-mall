@@ -7,8 +7,8 @@
     <template v-if="activeProduct === 1 && productStatus !== 0 || activeProduct !== 1">
       <!-- 海报按钮 -->
       <div :class="$style.haibao">
-        <pl-svg v-if="creating" name="btn-loading" color="#fff" class="rotate" @click="showHaibao = false;" />
-        <pl-svg v-else name="haibao" @click="createHaibao(activeProduct)" />
+        <pl-svg :key="1" v-if="creating" name="icon-btn-loading" height="35" fill="#fff" class="rotate" />
+        <pl-svg :key="2" v-else name="icon-haibao" height="35" @click="createHaibao(activeProduct)" />
         <p>分享海报</p>
       </div>
       <!-- 商品banner -->
@@ -21,8 +21,8 @@
       <BookingBar :detail="detail" v-if="activeProduct === 4 && preActivity !== 0" />
       <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
-        <!-- 团购信息 -->
-        <TogetherPrice :detail="detail" v-if="activeProduct === 2 && preActivity === 2" />
+        <!-- 团购信息: 活动进行中，或者，活动预热中且需要隐藏价格，才需要显示这个组件，组件内部会根据活动状态进行显示 -->
+        <TogetherPrice :detail="detail" v-if="activeProduct === 2 && (preActivity === 2 || (preActivity === 1 && !detail.activityProductModel.hidePrice))" />
         <!-- 秒杀信息 -->
         <SecondPrice :detail="detail" v-else-if="activeProduct === 3 && preActivity !== 0" />
         <!-- 预购信息 -->
@@ -52,6 +52,12 @@
         />
       </DetailInfoBox>
 
+      <!-- 选择优惠券 -->
+      <counpon-field
+        :coupon-list="couponList"
+        v-if="couponList.length && preActivity !== 2"
+      />
+
       <Field
         v-if="productType === 'PHYSICAL_GOODS'"
         label="发货"
@@ -71,16 +77,6 @@
         </template>
         <template v-if="currentModel.skuCode2Name">，<i v-text="currentModel.skuCode2Name" /></template>”
         <span v-if="!currentModel.id">请选择规格</span>
-      </Field>
-
-      <Field
-        v-if="couponList.length && preActivity !== 2"
-        label="优惠券"
-        can-click
-        :label-width="120"
-        @click="showCoupon = true"
-      >
-        <span style="color: #FE7700;" v-text="couponText" />
       </Field>
 
       <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
@@ -120,7 +116,7 @@
           <img :src="logoUrl" alt="">
         </div>
         <div :class="$style.pingxuanRight">
-          <pl-icon name="icon-arrow-right" color="#ccc" :size="20" />
+          <pl-svg name="icon-right" fill="#ccc" width="20" height="25" />
         </div>
       </div>
     </template>
@@ -164,14 +160,14 @@
       :activity-product-model="detail.activityProductModel || null"
       :pre-activity="preActivity"
     >
-      <template v-slot:footer="{ currentSku }">
+      <template v-slot:footer="{ currentSku, limiting, limit }">
         <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
           <!-- 活动商品库存不足时，显示该按钮 -->
           <button
             v-if="showNormalBuy"
             :class="$style.add"
             :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
-            @click="buyNow(currentSku, 1)"
+            @click="buyNow(currentSku, 1, limiting, limit)"
           >
             单独购买
             <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
@@ -179,7 +175,7 @@
           <button
             :class="$style.buy"
             :disabled="activeStock <= 0 || loading"
-            @click="buyNow(currentSku)"
+            @click="buyNow(currentSku, -1, limiting, limit)"
           >
             {{ activeStock > 0 ? '我要参团' : '已售罄' }}
             <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
@@ -192,7 +188,7 @@
             v-if="showNormalBuy"
             :class="$style.add"
             :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
-            @click="buyNow(currentSku, 1)"
+            @click="buyNow(currentSku, 1, limiting, limit)"
           >
             原价购买
             <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
@@ -200,7 +196,7 @@
           <button
             :class="$style.buy"
             :disabled="activeStock <= 0 || loading"
-            @click="buyNow(currentSku)"
+            @click="buyNow(currentSku, -1, limiting, limit)"
           >
             {{ activeStock > 0 ? '立即秒杀' : '已售罄' }}
             <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
@@ -211,7 +207,7 @@
           <button
             :class="$style.preBtn"
             :disabled="activeStock <= 0"
-            @click="buyNow(currentSku)"
+            @click="buyNow(currentSku, -1, limiting, limit)"
           >
             {{ activeStock > 0 ? '定金购买' : '已售罄' }}
             <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
@@ -221,14 +217,14 @@
           <button
             :class="$style.add"
             :disabled="adding || noStock || loading"
-            @click="addToCart(currentSku)"
+            @click="addToCart(currentSku, limiting, limit)"
           >
             加入购物车
           </button>
           <button
             :class="$style.buy"
             :disabled="adding || noStock || confirmText === '暂未开售' || loading"
-            @click="buyNow(currentSku, 1)"
+            @click="buyNow(currentSku, 1, limiting, limit)"
           >
             {{ confirmText }}
           </button>
@@ -254,37 +250,10 @@
           <div :class="$style.saveButton1" v-else>
             长按识别或保存二维码，分享给朋友吧！
           </div>
-          <pl-svg name="close3" color="#fff" @click="showHaibao = false;" />
+          <pl-svg name="icon-close3" fill="#fff" @click="showHaibao = false;" />
         </div>
       </div>
     </transition>
-
-    <!-- 优惠券弹框 -->
-    <pl-popup
-      :show.sync="showCoupon"
-      title="领取优惠券"
-      title-align="left"
-    >
-      <div :class="$style.coupon">
-        <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
-        <div :class="$style.couponList">
-          <template v-for="(item, i) of couponList">
-            <CouponItem
-              :key="i"
-              :name="item.couponName"
-              :amount="item.amount"
-              :full="item.useLimitAmount"
-              :subtract="item.amount"
-              :instruction="item.brief"
-              :use-end-time="item.useEndTime"
-              :use-start-time="item.useStartTime"
-              :receive-count="item.count"
-              @couponClick="couponClick(item.id)"
-            />
-          </template>
-        </div>
-      </div>
-    </pl-popup>
   </div>
 </template>
 
@@ -301,8 +270,8 @@ import UsefulLife from '../../components/detail/Useful-Life.vue'
 import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
 import Field from '../../components/detail/Field.vue'
+import CounponField from './components/Counpon-Field.vue'
 import { getProductDetail, getCouponInDetail } from '../../apis/product'
-import { receiveCoupon } from '../../apis/my-coupon'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
@@ -313,7 +282,6 @@ import SoldOut from './Sold-Out.vue'
 import { generateQrcode, cutImageCenter, cutArcImage, loadImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
-import CouponItem from '../../components/item/Coupon-Item.vue'
 import TogetherBar from './together/Together-Bar'
 import SecondBar from './second/Second-Bar'
 import BookingBar from './booking/Booking-Bar'
@@ -337,6 +305,7 @@ export default {
     DetailDesc,
     DetailInfo,
     Field,
+    CounponField,
     Tags,
     BuyNow,
     DetailInfoBox,
@@ -347,8 +316,7 @@ export default {
     UsefulLife,
     InfoHeader,
     Instructions,
-    CountDown,
-    CouponItem
+    CountDown
   },
   data () {
     return {
@@ -358,7 +326,6 @@ export default {
       detail: {},
       productSkuModels: [],
       showSpecifica: false,
-      showCoupon: false,
       currentModel: {}, // 当前选中的规格
       activityProductModel:{},//活动信息
       commentForm: {
@@ -413,7 +380,7 @@ export default {
      * '' 正常商品
      * 0 未开始
      * 1 预热中
-     * 2 已结束
+     * 2 进行中
      */
     preActivity () {
       return this.detail.preActivity || 0
@@ -448,6 +415,9 @@ export default {
       return this.currentModel.count || 1
     },
     limiting () {
+      if (this.activeProduct !== 1 && this.preActivity === 2) {
+        return this.activityProductModel.activityLimit ? this.activityProductModel.activityLimitNumber : 0
+      }
       return this.detail.purchaseLimit ? (this.detail.purchaseQuantity) : 0
     },
     productType () {
@@ -465,13 +435,6 @@ export default {
     },
     showBranding () {
       return this.detail.showBranding === 1
-    },
-    couponText () {
-      let text = ''
-      this.couponList.map((item, index) => {
-        text += `满${item.useLimitAmount}减${item.amount}${index === this.couponList.length - 1 ? '' : '、'}`
-      })
-      return text
     },
     minPrice () {
       if (this.detail.productSkuModels) {
@@ -513,7 +476,6 @@ export default {
     this.haibao = ''
     this.showHaibao = false
     this.tab = 2
-    this.showCoupon = false
   },
   async mounted () {
     sessionStorage.setItem('shareBrokerId', this.brokerId || '')
@@ -581,18 +543,9 @@ export default {
     // 获取优惠券
     async getCouponList () {
       try {
-        let { result } = await getCouponInDetail()
+        let { result } = await getCouponInDetail(this.productId)
         this.couponList = result
         return result
-      } catch (e) {
-        throw e
-      }
-    },
-    async couponClick (id) {
-      try {
-        await receiveCoupon({ couponId: id })
-        this.$success('领取成功')
-        await this.getCouponList()
       } catch (e) {
         throw e
       }
@@ -617,8 +570,12 @@ export default {
       }
       return true
     },
-    addToCart (selected) {
+    addToCart (selected, limiting, limit) {
       if (!this.hasBind()) {
+        return
+      }
+
+      if (!this.checkLimit(selected, limiting, limit)) {
         return
       }
       this.currentModel = selected
@@ -649,9 +606,14 @@ export default {
      * 购买
      * @param selected {object} 选择的规格
      * @param buyWay {number} 购买方式 1：正常购买 其它：活动购买
+     * @param limiting {number} 总限购数量
+     * @param limit {number} 可买数量
      */
-    buyNow (selected, buyWay) {
+    buyNow (selected, buyWay, limiting, limit) {
       if (!this.hasBind()) {
+        return
+      }
+      if (!this.checkLimit(selected, limiting, limit)) {
         return
       }
       this.currentModel = selected
@@ -676,6 +638,22 @@ export default {
           activityId: (this.activeProduct === 1 || buyWay === 1) ? null : this.detail.activityProductModel.activityId
         }
       })
+    },
+    // 检查限购
+    checkLimit (sku, limiting, limit) {
+      if (limiting && sku.count > limit) {
+        if (limiting === limit) {
+          this.$warning(`您至多购买${limit}件`)
+          return false
+        }
+        if (limiting - limit === limiting) {
+          this.$warning(`您已购买${limiting}件，已达购买上限`)
+          return false
+        }
+        this.$warning(`您已购买${limiting - limit}件，您还可以购买${limit}件`)
+        return false
+      }
+      return true
     },
     async createHaibao (type) {
       if (this.loading) {
@@ -809,7 +787,7 @@ export default {
           ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
           fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1170 + (104 - 88) / 2, String(price), 104)
           // 绘制原价
-          if (originalPrice) {
+          if (originalPrice && originalPrice !== price) {
             let priceWidth = ctx.measureText(price).width
             ctx.fillStyle = '#999'
             ctx.font = '56px Microsoft YaHei UI'
@@ -1154,12 +1132,6 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     .pingxuan-right {
       display: flex;
       flex-direction: column;
-    }
-  }
-  .coupon {
-    padding: 0 24px;
-    > .coupon-list {
-      margin-top: 48px;
     }
   }
 

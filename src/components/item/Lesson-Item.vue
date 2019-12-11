@@ -123,7 +123,8 @@ export default {
 
 <style module lang="scss">
 .lesson {
-  display: grid;
+  display: flex;
+  justify-content: space-between;
   &.border {
     position: relative;
     border-bottom: 1px solid #f7f7f7;
@@ -134,13 +135,17 @@ export default {
     }
   }
   &.large {
-    grid-template-columns: 320px auto;
+    .img {
+      width: 320px;
+    }
     &.border {
       padding-bottom: 28px;
     }
   }
   &.small {
-    grid-template-columns: 242px auto;
+    .img {
+      width: 242px;
+    }
     &.border {
       padding-bottom: 24px;
     }

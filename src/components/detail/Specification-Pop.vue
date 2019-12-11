@@ -8,7 +8,7 @@
     >
       <transition name="slide">
         <div :class="$style.specBox" v-show="showBox">
-          <pl-svg :class="$style.close" name="close2" color="#ccc" @click.stop="close" />
+          <pl-svg :class="$style.close" name="icon-close2" width="30" fill="#ccc" @click.stop="close" />
           <div>
             <div :class="$style.baseInfo" v-if="currentSku">
               <img
@@ -119,11 +119,13 @@
               </div>
             </div>
           </div>
-          <div :class="$style.footer" v-if="localCurrentSku.id">
+          <div :class="$style.footer" v-if="localCurrentSku.id" @click.capture="slotClickHandler">
             <slot
               name="footer"
               :currentSku="localCurrentSku"
               :revert="revert"
+              :limit="limit"
+              :limiting="(activeType === 3 && activityProductModel && activityProductModel.activityLimit === 1) ? activityProductModel.activityLimitNumber : limiting"
             />
           </div>
         </div>
@@ -133,6 +135,7 @@
 </template>
 
 <script>
+import { getCurrentLimit } from '../../apis/product'
 export default {
   name: 'SpecificationPop',
   props: {
@@ -189,6 +192,7 @@ export default {
       showSpec: false,
       count: 1,
       min: 1,
+      limit: 0, // 可买数量
       localCurrentSku: {},
       skuCode2List: [],
       currentSku1: '',
@@ -209,11 +213,16 @@ export default {
       }
     },
     currentSku: {
-      handler (val) {
+      async handler (val) {
         if (!val.id) return
         this.localCurrentSku = val
         this.$emit('change', val)
         this.$emit('update:sku', val)
+        // 当前商品限购的时候，检查可买数量
+        if (this.limiting) {
+          const { result: limit } = await getCurrentLimit(val.productId, this.activeProduct)
+          this.limit = limit
+        }
       },
       deep: true
     }
@@ -400,6 +409,16 @@ export default {
         this.localCurrentSku = this.sku
         this.count = this.sku.count
       }
+    },
+    // 点击购买或者加入购物车时，更新当前可买数量
+    async slotClickHandler () {
+      setTimeout(async () => {
+        // 当前商品限购的时候，检查可买数量
+        if (this.limiting) {
+          const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeProduct)
+          this.limit = limit
+        }
+      }, 1500)
     }
   }
 }

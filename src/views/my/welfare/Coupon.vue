@@ -1,19 +1,15 @@
 <template>
   <div>
     <div :class="$style.walfareTip" v-if="hasPackages">
-      <!--TODO.闹铃的icon图-->
-      <pl-icon name="icon-alarm" color="#fff" size="18" type="icon" />
+      <pl-svg name="icon-alarm" fill="#fff" width="18" />
       <span>
         您有一个新人有礼优惠大礼包，还未领取哦！
-        <pl-icon name="icon-arrow-right" color="#fff" size="16" font-weight="bolder" />
+        <pl-svg name="icon-right" fill="#fff" width="16" />
       </span>
     </div>
     <div :class="$style.coupons">
-      <div :class="$style.couponsHeader">
-        <div>
-          <b>可用优惠券</b>
-          <span>  ({{ couponTotal }}张)</span>
-        </div>
+      <div :class="$style.tabMenu">
+        <tab :tabs="menuArray" :active-id.sync="activeMenuId" :color9="true" />
         <button @click="isManagementState = !isManagementState">管理</button>
       </div>
       <div :class="$style.couponsView">
@@ -27,15 +23,15 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
-              <pl-icon name="icon-coupon1" width="240" height="240" type="svg" />
+              <pl-svg name="icon-newCouponIcon" width="400" />
             </div>
             <div v-for="item in couponList" :key="item.id"
                  :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
                  @click="selectedChange(item.id)"
             >
               <span v-if="isManagementState">
-                <pl-icon v-if="!item.checked" name="icon-weixuanzhong" color="#FFCCCCCC" size="40" type="icon" />
-                <pl-icon v-if="item.checked" name="icon-xuanzhong" width="40" height="40" type="svg" />
+                <pl-svg v-if="!item.checked" name="icon-weixuanzhong1" width="40" />
+                <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
               </span>
               <CouponItem
                 :class="$style.moveCoupon"
@@ -48,6 +44,8 @@
                 :use-start-time="item.useStartTime"
                 :use-end-time="item.useEndTime"
                 :is-available-status="true"
+                :coupon-type="item.couponType"
+                :coupon-id="item.coupon"
               />
             </div>
           </template>
@@ -60,7 +58,7 @@
           优惠劵历史记录
         </router-link>
         <router-link :to="{ name: 'CouponCenter'}">
-          领更多好券
+          福利中心 领好券
         </router-link>
       </div>
       <button v-if="isManagementState" @click="deleteCoupon">删除</button>
@@ -69,6 +67,7 @@
 </template>
 
 <script>
+import tab from '../../../components/penglai-ui/Tab'
 import CouponItem from '../../../components/item/Coupon-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
 import { getMyCouponList, deleteCouponList } from '../../../apis/my-coupon'
@@ -77,11 +76,14 @@ export default {
   name: 'MyCoupon',
   components: {
     CouponItem,
-    LoadMore
+    LoadMore,
+    tab
   },
   data () {
     return {
       hasPackages: false, // TODO.暂时去除
+      menuArray: [{ name: '全部', id: '' }, { name: '满减券', id: 1 }, { name: '品类券', id: 2 }],
+      activeMenuId: '',
       isManagementState: false,
       couponList: [],
       couponTotal: 0,
@@ -89,7 +91,8 @@ export default {
       form: {
         current: 1,
         size: 10,
-        status: 0
+        status: 0,
+        couponType: ''
       }
     }
   },
@@ -98,6 +101,10 @@ export default {
   },
   activated () {
     this.$refs.loadMore.refresh()
+  },
+  deactivated () {
+    this.activeMenuId = ''
+    this.isManagementState = false
   },
   methods: {
     formatCouponList (list) {
@@ -144,6 +151,11 @@ export default {
   watch: {
     isManagementState: function (val) {
       if (val) this.couponList = this.formatCouponList(this.couponList)
+    },
+    activeMenuId (val) {
+      this.isManagementState = false
+      this.form.couponType = val
+      this.$refs.loadMore.refresh()
     }
   }
 }
@@ -151,62 +163,41 @@ export default {
 
 <style module lang="scss">
   .walfare-tip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 64px;
-    line-height: 64px;
-    text-align: center;
     margin: 10px 50px;
-    background: #F67070;
-    box-shadow: 0px 10px 20px #000;
-    opacity: 1;
+    color: #fff;
+    font-size: 26px;
+    background-color: #F67070;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .2);
     border-radius: 258px;
-
-    i {
-      color: #fff;
-    }
-
-    span {
-      color: #fff;
-      font-size: 26px;
-      font-weight: 400;
-      line-height: 36px;
-      position: relative;
-
-      b {
-        font-family: cursive;
-      }
-    }
   }
 
   .coupons {
-    .coupons-header {
-      font-size: 32px;
-      font-weight: 800;
-      line-height: 44px;
-      color: #333;
-      margin: 40px 10px;
-
-      div {
-        float: left;
-      }
+    .tab-menu {
+      display: flex;
+      background-color: #fff;
+      padding-right: 24px;
 
       button {
-        float: right;
-      }
-
-      button:after {
-        clear: both;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 44px;
+        color: #333;
+        margin-left: auto;
       }
     }
-
     .coupons-view {
       width: 100%;
-      padding-top: 80px;
+      padding-top: 16px;
       margin-bottom: 100px;
       .no-coupon-icon {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 400px;
+        margin-top: 300px;
         margin-bottom: -200px;
       }
 
@@ -249,6 +240,8 @@ export default {
 
     button {
       color: #fff;
+      width: 100%;
+      height: 100%;
     }
 
     .link {

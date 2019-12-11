@@ -12,7 +12,7 @@
     >
       <pl-form-item border>
         <pl-input
-          prefix-icon="mobile"
+          prefix-icon="icon-mobile"
           type="number"
           :disabled="!!mobile && (step === 1)"
           v-model="bindForm.mobile"
@@ -22,7 +22,7 @@
 
       <pl-form-item>
         <pl-input
-          prefix-icon="code"
+          prefix-icon="icon-code"
           v-model="bindForm.verifyCode"
           placeholder="请输入验证码"
         />
@@ -49,7 +49,7 @@
         prop="mobile"
       >
         <pl-input
-          prefix-icon="mobile"
+          prefix-icon="icon-mobile"
           type="number"
           v-model="updateForm.mobile"
           placeholder="请输入您的新手机号"
@@ -58,7 +58,7 @@
 
       <pl-form-item prop="verifyCode">
         <pl-input
-          prefix-icon="code"
+          prefix-icon="icon-code"
           v-model="updateForm.verifyCode"
           placeholder="请输入验证码"
         />

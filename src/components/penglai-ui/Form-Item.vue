@@ -2,7 +2,7 @@
   <label
     :class="{'pl-form-item': true, border}"
     :style="{
-      '--margin-top': gapTop / 7.5 + 'vw'
+      'margin-top': gapTop / 7.5 + 'vw'
     }"
   >
     <div
@@ -16,7 +16,7 @@
       class="pl-form-item_label"
       v-text="label"
       :style="{
-        '--label-width': currentLableWidth,
+        width: currentLableWidth,
         ...labelStyle
       }"
     />
@@ -116,20 +116,18 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-    margin-top: var(--margin-top);
     background-color: #fff;
     &.border {
       border-bottom: 1px solid #e7e7e7;
     }
     &:nth-of-type(1) {
-      margin-top: 0;
+      margin-top: 0 !important;
     }
     &:nth-last-of-type(1):after {
       display: none;
     }
     .pl-form-item_label {
       display: inline-block;
-      width: var(--label-width);
       font-size: 28px;
       font-weight: bold;
     }

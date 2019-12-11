@@ -37,8 +37,8 @@
       >
         <pl-svg
           class="pl-popup__close"
-          name="close2"
-          color="#ccc"
+          name="icon-close2"
+          fill="#ccc"
         />
       </div>
     </div>
