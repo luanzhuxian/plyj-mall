@@ -258,7 +258,7 @@ export default {
   data () {
     return {
       loaded: false,
-      count: { },
+      count: {},
       swiperOption: {
         direction: 'vertical',
         autoHeight: true,
@@ -332,6 +332,9 @@ export default {
       try {
         const { result } = await orderPhysicalorderSummary(this.userId)
         this.count = result
+        if (result.prePayOrder && result.prePayOrder > 99) {
+          result.prePayOrder = '99+'
+        }
       } catch (e) {
         throw e
       }
@@ -904,17 +907,32 @@ export default {
     }
   }
   .wait-pay {
+    display: flex;
+    align-items: center;
     width: max-content;
     margin: 54px auto 32px;
     padding: 0 32px;
     line-height: 64px;
     font-size: 26px;
     color: #fff;
-    background-color: #DC3B3B;
+    background-color: #F86156;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
     border-radius: 32px;
     > svg {
       vertical-align: -4px;
+    }
+    > i {
+      display: inline-block;
+      width: 42px;
+      height: 42px;
+      margin: 0 15px 0 32px;
+      text-align: center;
+      line-height: 42px;
+      font-size: 20px;
+      color: #DC3B3B;
+      font-weight: bold;
+      background-color: #fff;
+      border-radius: 50%;
     }
   }
   .skeAnimation {

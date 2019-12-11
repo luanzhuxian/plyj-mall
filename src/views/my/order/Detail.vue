@@ -165,31 +165,40 @@
       </div>
 
       <div :class="$style.productPrice">
-        <p v-if="activeProduct === 4">
-          <span>待付尾款</span>
+        <!-- 正常商品价格 -->
+        <p v-if="activeProduct === 1">
+          <span>商品金额</span>
           <span
-            class="rmb"
-            v-text="activityData.tailAount || 0"
-          />
-        </p>
-        <p>
-          <span>
-            {{ activeProductStatus[activeProduct] || '商品' }}<i v-if="activeProduct !==4">金额</i>
-            <span v-if="activeProduct === 4" class="gray-3">(不退<i v-if="activityData.multiple">，翻{{ activityData.multipleNumber }}倍</i>)</span>
-          </span>
-
-          <!--  预购 / 秒杀 / 团购 三种订单，显示活动价格activityData.price，其他显示正常productInfoModel.productsTotalAmount  -->
-          <span
-            v-if="activeProductStatus[activeProduct]"
-            class="rmb"
-            v-text="activityData.reachAmount || 0"
-          />
-          <span
-            v-else
             class="rmb"
             v-text="productInfoModel.productsTotalAmount || 0"
           />
         </p>
+        <!-- 预购商品价格 -->
+        <template v-else-if="activeProduct === 4">
+          <p>
+            <span>待付尾款</span>
+            <span
+              class="rmb"
+              v-text="activityData.tailAount || 0"
+            />
+          </p>
+          <p>
+            <span>定金(不退<i v-if="activityData.multiple">，翻{{ activityData.multipleNumber }}倍</i>)</span>
+            <span
+              class="rmb"
+              v-text="activityData.price || 0"
+            />
+          </p>
+        </template>
+        <!-- 其他活动商品（秒杀，团购） -->
+        <p v-else>
+          <span v-text="activeProductStatus[activeProduct]" />
+          <span
+            class="rmb"
+            v-text="productInfoModel.activityProductAmount || 0"
+          />
+        </p>
+
         <p v-if="productInfoModel.couponDeduction > 0">
           <span>优惠券</span>
           <span
@@ -229,7 +238,7 @@
         <span
           v-else
           :class="$style.totalMoney + ' fz-30 rmb'"
-          v-text="productInfoModel.actuallyAmount || 0"
+          v-text="productInfoModel.amount || 0"
         />
       </div>
     </div>
@@ -663,7 +672,7 @@ export default {
       isPosterShow: false,
       poster: '',
       activeProductStatus: {
-        2: '团购',
+        2: '团购金额',
         3: '限时秒杀',
         4: '定金'
       }
@@ -695,7 +704,7 @@ export default {
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) &&
       this.productInfoModel.actuallyAmount > 0 &&
-      !this.activeProductStatus[this.activeProduct] &&
+      this.activeProduct === 1 &&
       (this.orderType === 'PHYSICAL' || this.usefulCodeNumber > 0)
     },
     // 是否可以申请发票，invoiceStatus： 1:'已申请' 3:'已开票' 7:'不支持' 8:'可申请'
@@ -703,7 +712,7 @@ export default {
       return this.orderStatus !== 'WAIT_PAY' &&
         this.orderStatus !== 'CLOSED' &&
         this.productInfoModel.actuallyAmount > 0 &&
-        !this.activeProductStatus[this.activeProduct] &&
+        this.activeProduct === 1 &&
         this.productInfoModel.productDetailModels.some(product => {
           return product.price > 0 &&
             product.invoiceType === 1 &&
@@ -876,7 +885,7 @@ export default {
           this.redeemCodeModels = redeemCodeModels || []
           this.orderStatusAlias = orderStatusAlias
           this.activityData = activityData || {}
-          if (this.activeProductStatus[this.activeProduct]) {
+          if (this.activeProduct === 4) {
             let count = this.productInfoModel.productDetailModels[0].count || 0
             this.activityData.reachAmount = this.activityData.price * count
           }
