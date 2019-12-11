@@ -380,7 +380,7 @@ export default {
      * '' 正常商品
      * 0 未开始
      * 1 预热中
-     * 2 已结束
+     * 2 进行中
      */
     preActivity () {
       return this.detail.preActivity || 0
