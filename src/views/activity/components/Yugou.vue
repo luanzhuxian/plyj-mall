@@ -48,7 +48,7 @@
                   </div>
                   <div :class="$style.sub2" v-if="item.goodsInfo && item.goodsInfo.activityInfo">
                     <span>{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
-                    <span v-if="item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
+                    <span v-if="item.goodsInfo.activityInfo.multiple && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
                   </div>
                 </div>
               </div>
