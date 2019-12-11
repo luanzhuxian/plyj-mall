@@ -16,7 +16,6 @@
             tag="div"
             v-for="(item, i) of orderList"
             :key="i"
-            @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
           >
             <div>
               <div :class="$style.listItemLeft">
@@ -60,30 +59,31 @@
                     <span>{{ item.m }}分</span>
                     <span>{{ item.s }}秒</span>
                   </template>
-                  <span v-if="!item.isStart">
+                  <!--<span v-if="!item.isStart">
                     未开始支付
                   </span>
                   <span v-if="item.pastDue">
                     已过期
-                  </span>
+                  </span>-->
                 </div>
                 <pl-button
                   v-if="!item.pastDue && item.status !== 'WAIT_PAY'"
                   type="warning"
                   round
                   :disabled="!item.isStart"
+                  @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
                 >
                   去使用
                 </pl-button>
                 <pl-button
-                  v-if="!item.pastDue && item.status === 'WAIT_PAY'"
+                  v-if="item.status === 'WAIT_PAY'"
                   type="warning"
                   round
-                  :disabled="!item.isStart"
+                  :disabled="!item.isStart || item.pastDue"
                   :loading="payloading && item.orderId === currentPayId"
                   @click.stop="balancePayment(item)"
                 >
-                  去付尾款
+                  {{ item.pastDue ? '已过期' : this.isStart ? '去付尾款' : '未开始支付' }}
                 </pl-button>
               </div>
             </div>
@@ -154,8 +154,9 @@ export default {
           currentTime
         } = item
         // 是否开始付尾款
-        item.isStart = moment(currentTime).valueOf() - moment(userStartTime).valueOf() >= 0
-        if (item.isStart) {
+        item.isStart = Number(currentTime) - moment(userStartTime).valueOf() >= 0
+        item.pastDue = Number(currentTime) - moment(userEndTime).valueOf() >= 0
+        if (item.isStart && !item.pastDue) {
           // 可以开始支付了，倒计时支付
           let now = moment(currentTime).valueOf()
           let duration = moment(userEndTime).valueOf() - now

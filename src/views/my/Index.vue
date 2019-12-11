@@ -676,9 +676,7 @@ export default {
   /* 我的优惠券 + 我的礼品 start */
   .welfare {
     display: flex;
-    height: 138px;
     position: relative;
-
     .segmentation {
       width: 2px;
       height: 86px;
@@ -698,20 +696,21 @@ export default {
       align-items: center;
       flex: 1;
       margin: 28px 20px;
-      img {
+      > img {
         width: 130px;
         height: 72px;
       }
-      div {
+      > div {
+        margin-top: 20px;
         text-align: center;
-        h5 {
+        > h5 {
           height:44px;
           font-size:32px;
           font-weight:bold;
           line-height:44px;
           color:#333;
         }
-        span {
+        > span {
           height:34px;
           font-size:24px;
           font-weight:400;
@@ -725,14 +724,13 @@ export default {
   }
 
   /* 我的优惠券 + 我的礼品 end */
-
   /* helper starts */
   .helper {
     padding: 32px 25px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    svg {
+    > svg {
       height: 114px;
     }
   }
