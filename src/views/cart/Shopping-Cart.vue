@@ -261,9 +261,7 @@ export default {
         this.fullCutCouponList = []
         this.categoryCouponList = []
         for (const item of result) {
-          if (!item.canReceive) continue
-          if (item.receiveLimit === 1 && this.roleCode !== 'MEMBERSHIP') continue
-          if (item.receiveLimit === 2 && this.roleCode !== 'HELPER') continue
+          if ((item.receiveLimit === 1 && this.roleCode !== 'MEMBERSHIP') || (item.receiveLimit === 2 && this.roleCode !== 'HELPER')) continue
           // 可领取的券
           this.couponList.push(item)
           // 以领取的券
