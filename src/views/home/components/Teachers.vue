@@ -87,15 +87,17 @@ export default {
     box-sizing: border-box;
     padding: 14px 10px;
     background: #FFF;
-    color: rgba(123, 123, 123, 1);
-    height: 180px;
+    color: #7B7B7B;
+    height: 164px;
   }
   .main {
-    height: 54px;
+    color: #333;
     line-height: 26px;
-    @include elps-wrap(2);
+    font-weight: bold;
+    @include elps();
   }
   .intro {
+    margin-top: 10px;
     @include elps-wrap(3);
   }
 }
