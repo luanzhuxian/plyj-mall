@@ -979,7 +979,7 @@ export default {
         }
         if (orderStatus === 'WAIT_PAY_REPAYMENT') {
           const tip = this.finalPaymentIsStarted ? '剩余尾款支付时间' : '距离开始支付时间'
-          this.suggestionMap.WAIT_PAY_REPAYMENT = `${tip}：${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒`
+          this.suggestionMap.WAIT_PAY_REPAYMENT = `${tip}：${d.padStart(2, '0')}天${h.padStart(2, '0')}小时${m.padStart(2, '0')}分${s.padStart(2, '0')}秒`
           return
         }
         if (orderStatus === 'WAIT_RECEIVE') {

@@ -89,8 +89,9 @@
                 >
                   去付款
                 </pl-button>
-                <span v-if="item.activeProduct === 4 && item.isStart && !item.pastDue" class="fz-24 gray-3 mr-10">
-                  <span v-show="!item.pastDue">剩余尾款支付时间：</span>
+                <span v-if="item.activeProduct === 4 && !item.pastDue" class="fz-24 gray-3 mr-10">
+                  <span v-show="item.isStart">剩余尾款支付时间：</span>
+                  <span v-show="!item.isStart">距离开始支付时间：</span>
                   <span v-show="item.d !== '00'">{{ item.d }}天</span>
                   <span v-show="item.h !== '00'">{{ item.h }}时</span>
                   <span>{{ item.m }}分</span>
@@ -341,7 +342,11 @@ export default {
           let useEndTime = moment(item.useEndTime).valueOf()
           item.isStart = now - useStartTime >= 0
           item.pastDue = now - useEndTime >= 0
-          if (item.isStart && !item.pastDue) {
+          if (!item.isStart) {
+            // 可以开始支付了，倒计时支付
+            this.countDown(useStartTime - now, i, item)
+          } else if (!item.pastDue) {
+            // 可以开始支付了，倒计时支付
             this.countDown(useEndTime - now, i, item)
           }
         }
