@@ -102,7 +102,7 @@
                   type="warning"
                   round
                   :loading="payloading && currentPayId === item.id"
-                  :disabled="payloading && currentPayId === item.id || !item.isStart"
+                  :disabled="payloading && currentPayId === item.id || !item.isStart || item.pastDue"
                   @click="balancePayment(item.id, item.orderType)"
                 >
                   {{ item.pastDue ? '已过期' : item.isStart ? '去付尾款' : '未开始付尾款' }}

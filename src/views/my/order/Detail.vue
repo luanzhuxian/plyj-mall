@@ -934,14 +934,7 @@ export default {
               this.setTime(result, 'WAIT_RECEIVE')
             } else {
               let { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels[0]
-              let { useStartTime, useEndTime } = activityData
-              if (activeProduct === 4) {
-                const start = moment(useStartTime).format('YYYY-MM-DD')
-                const end = moment(useEndTime).format('YYYY-MM-DD')
-                this.suggestionMap.WAIT_RECEIVE = (start === end)
-                  ? `有效期 ${start}`
-                  : `有效期 ${start} 至 ${end}`
-              } else if (validityPeriodStart) {
+              if (validityPeriodStart) {
                 const start = moment(validityPeriodStart).format('YYYY-MM-DD')
                 const end = moment(validityPeriodEnd).format('YYYY-MM-DD')
                 this.suggestionMap.WAIT_RECEIVE = (start === end)
