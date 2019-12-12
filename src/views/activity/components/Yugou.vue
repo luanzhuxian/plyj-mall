@@ -17,14 +17,10 @@
               @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, currentProductStatus: 4} })"
             >
               <div :class="$style.time">
-                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 0">
-                  距开始
-                </div>
-                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 1">
-                  距结束
-                </div>
-                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 2">
-                  已结束
+                <div :class="$style.timeLeft">
+                  <span v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
+                  <span v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
+                  <span v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
                 </div>
                 <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
                   <count-down
@@ -43,10 +39,10 @@
                   <div :class="$style.main">
                     {{ item.goodsInfo.productName }}
                   </div>
-                  <div :class="$style.sub1" v-if="item.goodsInfo.activityInfo">
+                  <div :class="$style.sub1">
                     {{ `预售到手价：${getTotalPrice(item)}元` }}
                   </div>
-                  <div :class="$style.sub2" v-if="item.goodsInfo.activityInfo">
+                  <div :class="$style.sub2">
                     <span>{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
                     <span v-if="item.goodsInfo.activityInfo.multiple && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
                   </div>
@@ -63,23 +59,6 @@
 <script>
 import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
-
-function sub (arg1, arg2) {
-  var r1, r2, m, n
-  try {
-    r1 = arg1.toString().split('.')[1].length
-  } catch (e) {
-    r1 = 0
-  }
-  try {
-    r2 = arg2.toString().split('.')[1].length
-  } catch (e) {
-    r2 = 0
-  }
-  m = Math.pow(10, Math.max(r1, r2))
-  n = (r1 >= r2) ? r1 : r2
-  return ((arg1 * m - arg2 * m) / m).toFixed(n)
-}
 
 export default {
   name: 'Yugou',
@@ -105,7 +84,7 @@ export default {
       if (item.goodsInfo.activityInfo.activityPrice >= prodPrice) {
         return item.goodsInfo.activityInfo.price
       } else {
-        return sub(prodPrice, sub(item.goodsInfo.activityInfo.activityPrice, item.goodsInfo.activityInfo.price))
+        return this.sub(prodPrice, this.sub(item.goodsInfo.activityInfo.activityPrice, item.goodsInfo.activityInfo.price))
       }
     }
   }
@@ -168,9 +147,8 @@ export default {
           align-items: center;
           text-align: center;
           margin-bottom: 14px;
-          // width: max-content;
           height: 34px;
-          line-height: 34px;
+          line-height: 35px;
           border: 2px solid #EC6BA4;
           border-radius: 4px;
           overflow: hidden;
