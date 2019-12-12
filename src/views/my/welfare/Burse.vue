@@ -123,6 +123,7 @@ export default {
         background: #FFFFFF;
         text-align: center;
         height:40px;
+        line-height: 40px;
         width: 182px;
       }
     }
@@ -181,7 +182,7 @@ export default {
     color: #FFFFFF;
     text-align: center;
     z-index: 9;
-    padding: 15px 0;
+    padding: 28px 0;
   }
 
 }
