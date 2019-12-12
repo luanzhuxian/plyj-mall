@@ -89,7 +89,7 @@
                 >
                   去付款
                 </pl-button>
-                <span v-if="item.activeProduct === 4 && !item.pastDue" class="fz-24 gray-3 mr-10">
+                <span v-if="item.activeProduct === 4 && !item.pastDue && item.status === 'WAIT_PAY_REPAYMENT'" class="fz-24 gray-3 mr-10">
                   <span v-show="item.isStart">剩余尾款支付时间：</span>
                   <span v-show="!item.isStart">距离开始支付时间：</span>
                   <span v-show="item.d !== '00'">{{ item.d }}天</span>

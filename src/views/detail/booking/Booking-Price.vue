@@ -2,7 +2,7 @@
   <div class="tuan">
     <div>
       <div class="price">
-        定&nbsp;<span>{{ detail.activityProductModel.price }}</span>
+        定金&nbsp;<span>{{ detail.activityProductModel.price }}</span>
         <div class="deposit" v-if="detail.activityProductModel.multiplt === 1">
           抵&nbsp;<span>{{ detail.activityProductModel.depositTotal }}</span>
         </div>
@@ -103,6 +103,7 @@ export default {
       font-size: 30px;
       display: flex;
       align-items: center;
+      font-weight: 500;
       .deposit{
         margin-left: 10px;
       }

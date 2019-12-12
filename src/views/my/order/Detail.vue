@@ -995,7 +995,7 @@ export default {
       let now = Number(result.currentServerTime) // 服务器时间
       if (activeProduct === 1 || activeProduct === 5) {
         waitPayTime = 24 * 60 * 60 * 1000
-      } else if (activeProduct === 4) {
+      } else if (activeProduct === 4 && orderStatus === 'WAIT_PAY_REPAYMENT') {
         // 预购倒计时逻辑
         let useStartTime = moment((result.activityData.useStartTime)).valueOf()
         let useEndTime = moment((result.activityData.useEndTime)).valueOf()
