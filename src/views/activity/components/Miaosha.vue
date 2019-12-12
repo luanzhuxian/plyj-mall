@@ -11,7 +11,6 @@
             @click="$router.push({ name: 'SecondList' })"
           />
         </div>
-        <!-- <span :class="$style.border" v-if="data.values[0]" /> -->
         <li
           v-if="data.values[0]"
           :class="{
@@ -77,76 +76,78 @@
           v-if="item.goodsInfo.length"
           v-show="index === miaoshaIndex"
         >
-          <li
-            :class="$style.listItem"
-            v-for="(prod, i) of item.goodsInfo"
-            :key="i"
-            @click="$router.push({ name: 'Lesson', params: { productId: prod.id, currentProductStatus: 3 } })"
-          >
-            <div :class="$style.imgWrapper">
-              <img :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">
-              <div :class="$style.countDown">
-                <span :class="$style.text" v-if="prod.activityInfo && prod.activityInfo.status === 0">距开始</span>
-                <span :class="$style.text" v-if="prod.activityInfo && prod.activityInfo.status === 1">距结束</span>
-                <span :class="$style.text" v-if="prod.activityInfo && prod.activityInfo.status === 2">已结束</span>
-                <count-down
-                  v-if="~[0, 1].indexOf(prod.activityInfo.status)"
-                  :timestamp="getTime(prod.activityInfo)"
-                  @done="() => prod.activityInfo.status += 1"
-                />
-              </div>
-            </div>
-            <div :class="$style.info">
-              <div :class="$style.main">
-                {{ prod.productName }}
-              </div>
-              <div :class="$style.current">
-                <pl-svg name="icon-miaoshajia" width="60" height="26" />
-                <span :class="$style.price">
-                  {{ prod.activityInfo && prod.activityInfo.activityPrice }}
-                </span>
-              </div>
-              <div :class="$style.sub">
-                <div :class="$style.subLeft">
-                  <div :class="$style.original">
-                    <span v-if="prod.productSkuModels && prod.productSkuModels.length && getPrice(prod.productSkuModels)('originalPrice')">
-                      原价:<span :class="$style.price">{{ getPrice(prod.productSkuModels)('originalPrice') }}</span>
-                    </span>
-                  </div>
-                  <div :class="$style.progress" v-if="prod.activityInfo">
-                    <div :class="$style.progressInner" :style="{ width: `${(Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)) / Number(prod.activityInfo.number) * 100}%` }" />
-                  </div>
-                  <div :class="$style.saled" v-if="prod.activityInfo && prod.activityInfo.status === 0">
-                    {{ `${prod.pageviews}人已关注` }}
-                  </div>
-                  <div :class="$style.saled" v-if="prod.activityInfo && prod.activityInfo.status > 0 && prod.activityInfo.activityStock > 0">
-                    {{ `已抢${Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)}件` }}
-                  </div>
-                  <div :class="$style.saled" v-if="prod.activityInfo && prod.activityInfo.status > 0 && prod.activityInfo.activityStock === 0" style="color: #999999;">
-                    已抢完
-                  </div>
-                </div>
-                <div
-                  :class="{
-                    [$style.subRight]: true,
-                    [$style.disabled]: prod.activityInfo && prod.activityInfo.status !== 1
-                  }"
-                >
-                  <pl-svg
+          <template v-for="(prod, i) of item.goodsInfo">
+            <li
+              :class="$style.listItem"
+              v-if="prod.activityInfo"
+              :key="i"
+              @click="$router.push({ name: 'Lesson', params: { productId: prod.id, currentProductStatus: 3 } })"
+            >
+              <div :class="$style.imgWrapper">
+                <img :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">
+                <div :class="$style.countDown">
+                  <span :class="$style.text" v-if="prod.activityInfo.status === 0">距开始</span>
+                  <span :class="$style.text" v-if="prod.activityInfo.status === 1">距结束</span>
+                  <span :class="$style.text" v-if="prod.activityInfo.status === 2">已结束</span>
+                  <count-down
                     v-if="~[0, 1].indexOf(prod.activityInfo.status)"
-                    width="38"
-                    name="icon-vie-for"
-                  />
-                  <pl-svg
-                    v-else
-                    width="48"
-                    height="22"
-                    name="icon-jieshu"
+                    :timestamp="getTime(prod.activityInfo)"
+                    @done="() => prod.activityInfo.status += 1"
                   />
                 </div>
               </div>
-            </div>
-          </li>
+              <div :class="$style.info">
+                <div :class="$style.main">
+                  {{ prod.productName }}
+                </div>
+                <div :class="$style.current">
+                  <pl-svg name="icon-miaoshajia" width="60" height="26" />
+                  <span :class="$style.price">
+                    {{ prod.activityInfo.activityPrice }}
+                  </span>
+                </div>
+                <div :class="$style.sub">
+                  <div :class="$style.subLeft">
+                    <div :class="$style.original">
+                      <span v-if="prod.productSkuModels && prod.productSkuModels.length && getPrice(prod.productSkuModels)('originalPrice')">
+                        原价:<span :class="$style.price">{{ getPrice(prod.productSkuModels)('originalPrice') }}</span>
+                      </span>
+                    </div>
+                    <div :class="$style.progress">
+                      <div :class="$style.progressInner" :style="{ width: `${(Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)) / Number(prod.activityInfo.number) * 100}%` }" />
+                    </div>
+                    <div :class="$style.saled" v-if="prod.activityInfo.status === 0">
+                      {{ `${prod.pageviews}人已关注` }}
+                    </div>
+                    <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock > 0">
+                      {{ `已抢${Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)}件` }}
+                    </div>
+                    <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock === 0" style="color: #999999;">
+                      已抢完
+                    </div>
+                  </div>
+                  <div
+                    :class="{
+                      [$style.subRight]: true,
+                      [$style.disabled]: prod.activityInfo.status !== 1
+                    }"
+                  >
+                    <pl-svg
+                      v-if="~[0, 1].indexOf(prod.activityInfo.status)"
+                      width="38"
+                      name="icon-vie-for"
+                    />
+                    <pl-svg
+                      v-else
+                      width="48"
+                      height="22"
+                      name="icon-jieshu"
+                    />
+                  </div>
+                </div>
+              </div>
+            </li>
+          </template>
         </ul>
       </div>
     </div>

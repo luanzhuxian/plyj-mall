@@ -8,7 +8,7 @@
       <div :class="$style.wrapper">
         <ul :class="$style.list" v-if="data.values.length">
           <li
-            v-if="data.values[0] && data.values[0].goodsInfo"
+            v-if="data.values[0].goodsInfo && data.values[0].goodsInfo.activityInfo"
             :class="$style.listItem"
             @click.stop="$router.push({ name: 'Lesson', params: { productId: data.values[0].goodsInfo.id, currentProductStatus: 3 } })"
           >
@@ -32,7 +32,7 @@
               <div :class="$style.current">
                 <pl-svg name="icon-miaoshajia" width="60" height="26" />
                 <span :class="$style.price">
-                  {{ data.values[0].goodsInfo.activityInfo && data.values[0].goodsInfo.activityInfo.activityPrice }}
+                  {{ data.values[0].goodsInfo.activityInfo.activityPrice }}
                 </span>
               </div>
               <div :class="$style.sub">

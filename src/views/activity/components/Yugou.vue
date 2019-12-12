@@ -11,22 +11,22 @@
         <ul :class="$style.list" v-if="data.values.length">
           <template v-for="(item, i) of data.values">
             <li
-              v-if="item.goodsInfo"
+              v-if="item.goodsInfo && item.goodsInfo.activityInfo"
               :class="$style.listItem"
               :key="i"
               @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, currentProductStatus: 4} })"
             >
               <div :class="$style.time">
-                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 0">
+                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 0">
                   距开始
                 </div>
-                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 1">
+                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 1">
                   距结束
                 </div>
-                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo && item.goodsInfo.activityInfo.status === 2">
+                <div :class="$style.timeLeft" v-if="item.goodsInfo.activityInfo.status === 2">
                   已结束
                 </div>
-                <div :class="$style.timeRight" v-if="item.goodsInfo.activityInfo && ~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
+                <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
                   <count-down
                     :timestamp="getTime(item.goodsInfo.activityInfo)"
                     color="#DB4D7D"
@@ -43,10 +43,10 @@
                   <div :class="$style.main">
                     {{ item.goodsInfo.productName }}
                   </div>
-                  <div :class="$style.sub1" v-if="item.goodsInfo && item.goodsInfo.activityInfo">
+                  <div :class="$style.sub1" v-if="item.goodsInfo.activityInfo">
                     {{ `预售到手价：${getTotalPrice(item)}元` }}
                   </div>
-                  <div :class="$style.sub2" v-if="item.goodsInfo && item.goodsInfo.activityInfo">
+                  <div :class="$style.sub2" v-if="item.goodsInfo.activityInfo">
                     <span>{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
                     <span v-if="item.goodsInfo.activityInfo.multiple && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
                   </div>

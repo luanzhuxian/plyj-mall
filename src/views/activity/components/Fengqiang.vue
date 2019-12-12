@@ -28,8 +28,8 @@
                 <h4>{{ item.goodsInfo.productName }}</h4>
                 <div :class="$style.infoText">
                   <pl-svg name="icon-fengqiangjia" width="78" height="34" />
-                  <span :class="$style.price">
-                    {{ item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price') }}
+                  <span :class="$style.price" v-if="item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length">
+                    {{ getPrice(item.goodsInfo.productSkuModels)('price') }}
                   </span>
                   <span :class="$style.pay" v-if="item.goodsInfo.salesVolume < 10">
                     {{ item.goodsInfo.pageviews }}人关注
@@ -45,8 +45,8 @@
               <div :class="$style.itemInfo" v-if="type === 6">
                 <h4>{{ item.goodsInfo.productName }}</h4>
                 <div :class="$style.infoText">
-                  <span :class="$style.price">
-                    {{ item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length && getPrice(item.goodsInfo.productSkuModels)('price') }}
+                  <span :class="$style.price" v-if="item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length">
+                    {{ getPrice(item.goodsInfo.productSkuModels)('price') }}
                   </span>
                   <div :class="$style.tag" v-if="coupon && coupon.useLimitAmount && coupon.amount">
                     {{ `满${coupon.useLimitAmount}减${coupon.amount}` }}
