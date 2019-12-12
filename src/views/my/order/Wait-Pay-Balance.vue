@@ -28,9 +28,7 @@
                   :content="item.orderId"
                 />
               </div>
-              <p :class="$style.status">
-                待使用
-              </p>
+              <p :class="$style.status" v-text="item.statusText" />
             </div>
             <order-item
               :img="item.productMainImage + '?x-oss-process=style/thum'"
@@ -143,6 +141,7 @@ export default {
     this.$refresh()
   },
   deactivated () {
+    // 停止所有定时器
     countdownInstanceList.map(item => {
       if ('stop' in item) {
         item.stop()
@@ -151,7 +150,12 @@ export default {
   },
   methods: {
     onRefresh (list, total) {
-      clearTimeout(this.timer)
+      // 停止所有定时器
+      countdownInstanceList.map(item => {
+        if ('stop' in item) {
+          item.stop()
+        }
+      })
       for (let [i, item] of list.entries()) {
         item.d = '00'
         item.h = '00'
