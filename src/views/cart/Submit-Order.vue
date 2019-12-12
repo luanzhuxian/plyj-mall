@@ -556,7 +556,6 @@
               <div :class="$style.full">满{{ item.useLimitAmount }}减{{ item.amount }}</div>
               <span :class="$style.timeDesc">{{ item.timeDesc }}</span>
               <span :class="$style.recommend" v-if="recommendCouponId === item.id">推荐使用</span>
-              <div :class="$style.amount">-{{ item.amount }}</div>
               <span :class="$style.choices">
                 <pl-svg v-if="item.id === coupon.id" name="icon-xuanzhong" width="40" />
                 <pl-svg v-else name="icon-weixuanzhong1" width="40" />
@@ -1582,19 +1581,11 @@ export default {
           display: inline-block;
           color: #B5B5B5;
           float: left;
-          margin-left: 28px;
+          margin-left: 20px;
         }
         .recommend {
           color:#FE0D0D;
-          margin-left: 24px;
-        }
-        .amount {
-          display: inline-block;
-          color: #373737;
-          position: absolute;
-          right: 80px;
-          top: 50%;
-          transform: translateY(-50%);
+          margin-left: 20px;
         }
         .choices {
           position: absolute;
