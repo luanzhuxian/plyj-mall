@@ -73,11 +73,8 @@ export default {
       isCouponLoading: false // 增加节流阀
     }
   },
-  mounted () {
-    if (this.$refs.loadMore) this.$refs.loadMore.refresh()
-  },
   activated () {
-    this.$refs.loadMore.refresh()
+    if (this.$refs.loadMore) this.$refs.loadMore.refresh()
   },
   methods: {
     async couponClick (id) {
