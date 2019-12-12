@@ -24,9 +24,8 @@
       :type="type"
     />
     <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
-      <best-recommend :data="RECOMMEND">
-        <div :class="$style.btnBottom" slot="title" />
-      </best-recommend>
+      <div :class="$style.btnBottom" />
+      <best-recommend :data="RECOMMEND" />
     </div>
   </div>
 </template>
