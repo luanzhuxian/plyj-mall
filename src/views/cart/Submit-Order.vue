@@ -901,13 +901,19 @@ export default {
       let amount = proList.map(item => item.price * item.count).reduce((total, price) => {
         return total + price
       })
-      let productIds = proList.map(item => item.productId)
       const { result } = await getCouponOfMax({
-        useLimitAmount: amount || 0,
-        productIds: productIds
+        activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+        activityId: this.activityId,
+        cartProducts: proList,
+        addressSeq: this.selectedAddress.sequenceNbr
       })
       if (this.activeProduct === 1) {
-        await this.getCouponList(amount, productIds)
+        await this.getCouponList(amount, {
+          activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+          activityId: this.activityId,
+          cartProducts: proList,
+          addressSeq: this.selectedAddress.sequenceNbr
+        })
       }
       this.coupon = result
       // 当前选择的优惠券不支持使用奖学金时，置空选择的奖学金
@@ -956,12 +962,9 @@ export default {
       await this.getProductDetail(true, item, this.currentRedEnvelope)
     },
     // 获取优惠券
-    async getCouponList (amount, productIds) {
+    async getCouponList (amount, data) {
       try {
-        let { result } = await getCouponByPrice({
-          useLimitAmount: amount || 0,
-          productIds: productIds
-        })
+        let { result } = await getCouponByPrice(data)
         let serverTime = this.serverTime
         this.couponList = result.map(item => {
           let duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
