@@ -47,7 +47,7 @@
               <div class="tips book-tips">预售到手价：{{ getTotalPrice(item) }}元</div>
               <div class="book-bottom">
                 <span>预交定金￥{{ item.price }}</span>
-                <span v-if="item.multiple > 1 && item.multiple">抵￥{{ item.price * item.multipleNumber }}</span>
+                <span v-if="item.multiple && item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span>
               </div>
             </div>
           </div>
