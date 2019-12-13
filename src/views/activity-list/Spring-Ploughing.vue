@@ -146,7 +146,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import SpringPloughingProItem from './components/Spring-Ploughing-Pro-Item.vue'
 import SpringPloughingGiftItem from './components/Spring-Ploughing-Gift-Item.vue'
 import { mapGetters } from 'vuex'
@@ -195,7 +194,7 @@ export default {
       cvs.width = 638
       cvs.height = 1134
       ctx.fillStyle = '#397432'
-      ctx.fillRect(0 , 0, 638, 88);
+      ctx.fillRect(0, 0, 638, 88)
       ctx.drawImage(AVATAR, 20, 12, 64, 64)
       ctx.font = '24px Microsoft YaHei UI'
       ctx.fillStyle = '#fff'

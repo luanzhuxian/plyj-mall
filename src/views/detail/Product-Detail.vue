@@ -44,11 +44,11 @@
         <DetailDesc v-text="detail.productDesc" />
         <!-- 商品标签 -->
         <Tags :tags="detail.labelModels" />
-        <!-- 使用期限 -->
+        <!-- 使用期限(注意：预购商品取 activityProductModel.validityPeriodStar，表示预购核销时间) -->
         <useful-life
           v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
-          :start="(activeProduct === 4 && preActivity === 2) ? detail.activityProductModel.useStartTime : detail.validityPeriodStart"
-          :end="(activeProduct === 4 && preActivity === 2) ? detail.activityProductModel.useEndTime : detail.validityPeriodEnd"
+          :start="(activeProduct === 4 && preActivity === 2) ? detail.activityProductModel.validityPeriodStart : detail.validityPeriodStart"
+          :end="(activeProduct === 4 && preActivity === 2) ? detail.activityProductModel.validityPeriodEnd : detail.validityPeriodEnd"
         />
       </DetailInfoBox>
 
