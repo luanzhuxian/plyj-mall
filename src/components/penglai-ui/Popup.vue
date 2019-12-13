@@ -39,6 +39,7 @@
           class="pl-popup__close"
           name="icon-close2"
           fill="#ccc"
+          width="36"
         />
       </div>
     </div>
