@@ -711,7 +711,7 @@ export default {
     canApplyRefund () {
       return (this.orderStatus === 'WAIT_SHIP' || this.orderStatus === 'WAIT_RECEIVE' || (this.orderStatus === 'FINISHED' && this.orderType === 'PHYSICAL')) &&
       this.productInfoModel.actuallyAmount > 0 &&
-      this.activeProduct === 1 &&
+        ~[1, 5].indexOf(this.activeProduct) &&
       (this.orderType === 'PHYSICAL' || this.usefulCodeNumber > 0)
     },
     // 是否可以申请发票，invoiceStatus： 1:'已申请' 3:'已开票' 7:'不支持' 8:'可申请'
