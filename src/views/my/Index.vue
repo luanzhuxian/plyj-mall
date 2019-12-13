@@ -137,21 +137,28 @@
             <pl-svg name="icon-coupon" width="72" height="72" />
             <div>
               <h5>我的卡券</h5>
-              <span>福利多多帮你省钱</span>
+              <!-- <span>福利多多帮你省钱</span> -->
             </div>
           </router-link>
           <router-link :to="{ name: 'MyPresent'}" :class="$style.welfareItem">
             <pl-svg name="icon-present" width="72" height="72" type="svg" />
             <div>
               <h5>我的礼品</h5>
-              <span>到店核销领礼品</span>
+              <!-- <span>到店核销领礼品</span> -->
             </div>
           </router-link>
           <router-link :to="{ name: 'MyBurse'}" :class="$style.welfareItem">
             <img src="https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png" alt="">
             <div>
               <h5>我的奖学金</h5>
-              <span>和优惠券叠加使用</span>
+              <!-- <span>和优惠券叠加使用</span> -->
+            </div>
+          </router-link>
+          <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
+            <pl-svg name="icon-live-library" width="72" height="72" type="svg" />
+            <div>
+              <h5>我的视频库</h5>
+              <!-- <span>到店核销领礼品</span> -->
             </div>
           </router-link>
         </div>
@@ -707,19 +714,18 @@ export default {
         margin-top: 20px;
         text-align: center;
         > h5 {
-          height:44px;
-          font-size:32px;
-          font-weight:bold;
-          line-height:44px;
-          color:#333;
+          height: 44px;
+          font-size: 24px;
+          line-height: 44px;
+          color: #333;
         }
         > span {
-          height:34px;
-          font-size:24px;
-          font-weight:400;
-          line-height:34px;
-          color:#999;
-          opacity:1;
+          height: 34px;
+          font-size: 24px;
+          font-weight: 400;
+          line-height: 34px;
+          color: #999;
+          opacity: 1;
         }
       }
 

@@ -1,12 +1,19 @@
 <template>
   <div :class="$style.liveRoom" ref="liveRoom">
+    <!--在线直播-->
     <div
+      v-if="videoLiveMes.type === 'live'"
       ref="playerBox"
       id="player"
       :class="{
         [$style.playerBox]: true
       }"
     />
+    <!--视频直播-->
+    <div v-if="videoLiveMes.type === 'video'" :class="$style.playBackBox">
+      <div class="plv-live-cutOff" v-if="videoLiveMes.flag" />
+      <video v-else controls x5-video-player-type="h5-page" ref="livePlayBack" :src="videoLiveMes.url" />
+    </div>
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
       <div :class="$style.tabs">
@@ -141,7 +148,7 @@
               <!--<div :class="$style.count">3</div>-->
             </div>
             <div :class="$style.vieFor">
-              <pl-svg name="icon-vie-for" fill="#fff" width="40" />
+              <pl-svg name="icon-vie-for" fill="#fff" width="40" height="70" />
             </div>
           </div>
         </div>
@@ -225,7 +232,8 @@ import {
   pay,
   hasPied,
   cancelOrder,
-  setComeInConut
+  setComeInConut,
+  getVideoMesById
 } from '../../apis/live'
 import {
   receiveCouponForLive
@@ -278,7 +286,16 @@ export default {
       isCouponLoading: false, // 增加节流阀
       productList: [],
       detail: {},
-      receiveCouponIdList: [] // 已领取的优惠券id列表
+      receiveCouponIdList: [], // 已领取的优惠券id列表
+      //视频直播信息
+      videoLiveMes: {
+        type:'live', // 直播类型 live video
+        url:'', // 视频直播 url
+        videoLibId: '',
+        liveStartLongTime: '', // 直播开始时间
+        serviceLongTime: '', // 服务器时间
+        flag: true, //直播结束,却省图
+      }
       // emoticon
     }
   },
@@ -334,22 +351,60 @@ export default {
     }
   },
   methods: {
+    // 视频直播情况下获取视频信息
+    async getVideoMesById () {
+        try {
+            let mes = await getVideoMesById(this.videoLiveMes.videoLibId)
+            if (mes) {
+                this.videoLiveMes.url = mes.url
+            }
+        } catch (e) { throw e }
+    },
+    // 播放开始跳转到固定时间,且隐藏控件
+    controlVideo () {
+        try {
+            let section = this.videoLiveMes.serviceLongTime - this.videoLiveMes.liveStartLongTime;
+            // 已开播多少秒
+            let startTime = parseInt(section / 1000);
+            // 直播时间还未结束
+            if (section > 0) {
+                this.videoLiveMes.flag = false;
+                this.$refs.livePlayBack.addEventListener('play', _ => {//播放开始执行的函数
+                    let vid = this.$refs.livePlayBack
+                    vid.controls = false
+                    vid.currentTime = startTime
+                });
+            } else {
+                this.videoLiveMes.flag = true;
+            }
+            //监听错误
+            this.$refs.livePlayBack.addEventListener("error", _ => {
+                this.videoLiveMes.flag = true;
+                this.$refs.livePlayBack.src = ''
+            });
+        } catch (e) { throw e}
+    },
     async initPlayer () {
-      let { channelId, channeUserId } = this
-      let p = polyvObject('#player').livePlayer({
-        wrap: '#player',
-        width: '100%',
-        height: '100%',
-        autoplay: true,
-        uid: channeUserId,
-        isAutoChange: true,
-        vid: channelId,
-        x5: false,
-        hasControl: true,
-        x5FullPage: true,
-        forceH5: true,
-        useH5Page: true
-      })
+      // 默认在线直播
+      if (this.videoLiveMes.type && this.videoLiveMes.type === 'live') {
+        let { channelId, channeUserId } = this
+        let p = polyvObject('#player').livePlayer({
+            wrap: '#player',
+            width: '100%',
+            height: '100%',
+            autoplay: true,
+            uid: channeUserId,
+            isAutoChange: true,
+            vid: channelId,
+            x5: false,
+            hasControl: true,
+            x5FullPage: true,
+            forceH5: true,
+            useH5Page: true
+        })
+      } else {
+        this.controlVideo();
+      }
       // let timer = setInterval(() => {
       //   let video = document.querySelector('#player video')
       //   if (video) {
@@ -502,6 +557,13 @@ export default {
       try {
         let data = await getActiveCompleteInfo()
         if (data) {
+          if(data.liveType) {
+            this.videoLiveMes.type = data.liveType
+            this.videoLiveMes.videoLibId = data.videoLibId
+            this.videoLiveMes.liveStartLongTime = Number(data.liveStartLongTime)
+            this.videoLiveMes.serviceLongTime = Number(data.serviceLongTime)
+            await this.getVideoMesById()
+          }
           this.liveStartTime = moment(data.liveStartTime).valueOf()
           share({
             appId: this.appId,
@@ -695,6 +757,19 @@ export default {
 <style module lang="scss">
   .live-room {
     height: 100vh;
+    > .play-back-box {
+      width: 100%;
+      height: 442px;
+      > video {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+      }
+      > div {
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
   .player-box {
     position: relative;
@@ -1031,7 +1106,7 @@ export default {
     justify-content: center;
     width: 100%;
     height: 100%;
-    z-index: 2003;
+    z-index: 99999;
     background-color: rgba(0, 0, 0, .65);
     font-size: 0;
      > .poster-wrap {
