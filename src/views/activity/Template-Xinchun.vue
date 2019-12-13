@@ -12,6 +12,8 @@
           </div>
           <pl-svg name="icon-jinru" width="116" />
         </div>
+        <!-- 活动-->
+        <activity :class="$style.activity" />
         <!-- 直播-->
         <div :class="$style.live" v-if="isLiveShow">
           <live />
@@ -20,18 +22,19 @@
         <div :class="$style.propagate" v-if="PIN_XUAN && PIN_XUAN.showStatue === 1">
           <propagate :data="PIN_XUAN" />
         </div>
+        <!-- 领券 -->
         <div :class="$style.propagate" v-if="COUPON.values && COUPON.values.length">
-          <coupon
-            :data="COUPON"
-            :type="type"
-          />
+          <coupon :data="COUPON" />
         </div>
+        <!-- 拼团 -->
         <div :class="$style.pintuan" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
           <pintuan :data="PIN_TUAN" />
         </div>
+        <!-- 预购 -->
         <div :class="$style.yugou" v-if="YU_GOU.values && YU_GOU.values.length">
           <yugou :data="YU_GOU" />
         </div>
+        <!-- 疯抢 -->
         <div :class="$style.fengqiang" v-if="FENG_QIANG.values && FENG_QIANG.values.length">
           <div :class="$style.title">
             — 新春优惠感恩大回馈 —
@@ -55,6 +58,7 @@
 
 <script>
 import Live from './xin-chun/Live.vue'
+import Activity from './xin-chun/Activity.vue'
 import Propagate from './xin-chun/Propagate.vue'
 import Coupon from './xin-chun/Coupon.vue'
 import Pintuan from './xin-chun/Pintuan.vue'
@@ -62,10 +66,11 @@ import Yugou from './xin-chun/Yugou.vue'
 import BestRecommend from '../home/components/Best-Recommend.vue'
 
 export default {
-  name: 'HomeTemplateB',
+  name: 'TemplateXinchun',
   inject: ['parent'],
   components: {
     Live,
+    Activity,
     Propagate,
     Coupon,
     Pintuan,
@@ -163,6 +168,7 @@ export default {
   padding: 54px 24px 0;
 }
 
+.activity,
 .propagate,
 .coupon {
   padding: 32px 24px 0;
