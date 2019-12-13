@@ -190,6 +190,14 @@
             />
           </p>
         </template>
+        <!-- 使用优惠券价格 -->
+        <p v-if="activeProduct === 5">
+          <span>商品金额</span>
+          <span
+            class="rmb"
+            v-text="productInfoModel.productsTotalAmount || 0"
+          />
+        </p>
         <!-- 其他活动商品（秒杀，团购） -->
         <p v-else>
           <span v-text="activeProductStatus[activeProduct]" />
