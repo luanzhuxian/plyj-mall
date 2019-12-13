@@ -1,20 +1,5 @@
 // const qrcode = require('../../../static/lib/qrcode/index')
 import moment from 'moment'
-export function createObjectUrl (blob) {
-  let url
-  if (window.createObjectURL) { // basic
-    url = window.createObjectURL(blob)
-  } else if (window.URL) { // mozilla(firefox)
-    url = window.URL.createObjectURL(blob)
-  } else if (window.webkitURL) { // webkit or chrome
-    url = window.webkitURL.createObjectURL(blob)
-  }
-  return url
-}
-export function revokeObjectURL (URL) {
-  window.URL.revokeObjectURL(URL)
-}
-
 /**
  * 大小数字
  * @param n {number} 要转换的数字
@@ -51,19 +36,6 @@ export class DelayExec {
       }, this.time)
     })
   }
-}
-
-export function setSession (key, data) {
-  sessionStorage.setItem(key, JSON.stringify(data))
-}
-export function getSession (key) {
-  return JSON.parse(sessionStorage.getItem(key) || '{}')
-}
-export function setLocalStorage (key, data) {
-  localStorage.setItem(key, JSON.stringify(data))
-}
-export function getLocalStorage (key) {
-  return JSON.parse(localStorage.getItem(key) || '{}')
 }
 /*
 * template: 字段模板
@@ -410,4 +382,14 @@ export function loadImage (src) {
       reject(new Error('图片加载错误'))
     }
   })
+}
+
+export const promise = {
+  timeout (ms) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, ms)
+    })
+  }
 }
