@@ -96,7 +96,7 @@
         </div>
         <div
           :class="$style.infoItem"
-          v-if="(totalAmount- (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+          v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
           @click="showRedEnvelopePopupClick"
         >
           <div :class="$style.freightType">
@@ -228,7 +228,7 @@
           </div>
           <div
             :class="$style.infoItem"
-            v-if="(totalAmount- (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
             @click="showRedEnvelopePopupClick"
           >
             <div :class="$style.freightType">
@@ -361,7 +361,7 @@
           </div>
           <div
             :class="$style.infoItem"
-            v-if="(totalAmount- (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
             @click="showRedEnvelopePopupClick"
           >
             <div :class="$style.freightType">
@@ -421,7 +421,7 @@
     </div>
 
     <div
-      v-if="(totalAmount- (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && isCart && activeProduct === 1"
+      v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && isCart && activeProduct === 1"
       :class="$style.itemSelector"
       @click.capture="showRedEnvelopePopupClick"
     >
