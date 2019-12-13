@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.propagate">
-    <div :class="$style.content">
+    <div :class="$style.content" @click="clickPingXuan">
       <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
         <img :src="data.otherValue" :alt="data.values[0].mallName">
         <div :class="$style.name">
@@ -60,9 +60,9 @@ export default {
     }
   },
   methods: {
-    // clickPingXuan () {
-    //   sessionStorage.removeItem('PINGXUAN')
-    // },
+    clickPingXuan () {
+      sessionStorage.removeItem('PIN_XUAN')
+    },
     jump (item) {
       if (item.type === 1) {
         this.$router.push({ name: 'SchoolShow' })

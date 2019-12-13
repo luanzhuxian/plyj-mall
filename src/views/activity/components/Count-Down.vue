@@ -8,11 +8,8 @@
     :style="{ color }"
   >
     <span v-if="textBefore">{{ textBefore }}</span>
-    <!-- <div :class="$style.time" v-if="Number(d)">
-      <i>{{ d }}</i><span>天</span><i v-if="h" v-text="h" /><span v-if="h">时</span>
-    </div> -->
     <div :class="$style.time">
-      <i v-if="d">{{ d }}</i><span v-if="d">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span v-if="!d">:</span><i v-if="!d" v-text="s" />
+      <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span v-if="isSecondsShow || !isDayShow">:</span><i v-if="isSecondsShow || !isDayShow" v-text="s" />
     </div>
     <span v-if="textAfter">{{ textAfter }}</span>
   </div>
@@ -45,6 +42,10 @@ export default {
       type: String,
       default: '#FFF'
     },
+    format: {
+      type: String,
+      default: 'HH:mm:ss'
+    },
     fields: {
       type: [Number, String],
       default: ''
@@ -69,6 +70,14 @@ export default {
       start: 0,
       end: 0,
       timer: null
+    }
+  },
+  computed: {
+    isSecondsShow () {
+      return this.format.includes('ss')
+    },
+    isDayShow () {
+      return this.d && this.d !== '00'
     }
   },
   watch: {
@@ -111,7 +120,7 @@ export default {
     },
     setTime (duration) {
       let { _data } = moment.duration(duration)
-      this.d = Math.floor(moment.duration(duration).asDays())
+      this.d = String(Math.floor(moment.duration(duration).asDays())).padStart(2, '0')
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')
@@ -149,9 +158,11 @@ export default {
     }
     &.small {
       .time {
+        > span {
+          padding: 0 5px;
+        }
         > i {
           box-sizing: border-box;
-          margin: 0 5px;
           padding: 4px;
           width: 40px;
           height: 35px;

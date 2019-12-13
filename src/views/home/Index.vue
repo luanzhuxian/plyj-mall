@@ -68,8 +68,8 @@ export default {
         BANNER: null,
         ADV: null,
         POPULAR: null,
-        YUYUE: null,
-        PINGXUAN: null,
+        YU_YUE: null,
+        PIN_XUAN: null,
         CLASS: null,
         RECOMMEND: null
         // MODULE_A: null,
@@ -136,15 +136,15 @@ export default {
         // if (type === 2) {
         //   this.modules.BANNER = moduleModels[0]
         //   this.modules.POPULAR = moduleModels[1]
-        //   this.modules.YUYUE = moduleModels[2]
-        //   this.modules.PINGXUAN = moduleModels[3]
+        //   this.modules.YU_YUE = moduleModels[2]
+        //   this.modules.PIN_XUAN = moduleModels[3]
         //   this.modules.RECOMMEND = moduleModels[4]
         // }
         if (type === 3) {
           this.modules.BANNER = moduleModels[0]
           this.modules.POPULAR = moduleModels[1]
-          this.modules.YUYUE = moduleModels[2]
-          this.modules.PINGXUAN = moduleModels[3]
+          this.modules.YU_YUE = moduleModels[2]
+          this.modules.PIN_XUAN = moduleModels[3]
           this.modules.CLASS = moduleModels[4]
           this.modules.RECOMMEND = moduleModels[5]
         }
@@ -152,14 +152,14 @@ export default {
           this.modules.BANNER = moduleModels[0]
           this.modules.ADV = moduleModels[1]
           this.modules.POPULAR = moduleModels[2]
-          this.modules.YUYUE = moduleModels[3]
-          this.modules.PINGXUAN = moduleModels[4]
+          this.modules.YU_YUE = moduleModels[3]
+          this.modules.PIN_XUAN = moduleModels[4]
           this.modules.CLASS = moduleModels[5]
           this.modules.RECOMMEND = moduleModels[6]
         }
         if (type === -1) {
-          this.modules.PINGXUAN = moduleModels[0]
-          this.modules.YUYUE = moduleModels[1]
+          this.modules.PIN_XUAN = moduleModels[0]
+          this.modules.YU_YUE = moduleModels[1]
           this.modules.POPULAR = moduleModels[2]
           this.modules.TEACHERS = moduleModels[3]
           this.modules.CLASS = moduleModels[4]

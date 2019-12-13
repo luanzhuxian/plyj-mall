@@ -14,13 +14,14 @@
           >
             <div :class="$style.imgWrapper">
               <img :src="data.values[0].goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-              <div :class="$style.countDown">
+              <div :class="$style.countDownWrapper">
                 <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 0">距开始</span>
                 <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 1">距结束</span>
                 <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 2">已结束</span>
                 <count-down
                   v-if="~[0, 1].indexOf(data.values[0].goodsInfo.activityInfo.status)"
                   :timestamp="getTime(data.values[0].goodsInfo.activityInfo)"
+                  format="HH:mm"
                   @done="() => data.values[0].goodsInfo.activityInfo.status += 1"
                 />
               </div>
@@ -139,7 +140,7 @@ export default {
           margin-right: 16px;
           width: 280px;
           height: 188px;
-          .count-down {
+          .count-down-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -156,16 +157,6 @@ export default {
           .text {
             margin-right: 10px;
           }
-          // .num {
-          //   box-sizing: border-box;
-          //   margin: 0 5px;
-          //   padding: 4px;
-          //   height: 36px;
-          //   line-height: 32px;
-          //   background: #555;
-          //   border-radius: 4px;
-          //   opacity: 1;
-          // }
         }
         img {
           width: 100%;

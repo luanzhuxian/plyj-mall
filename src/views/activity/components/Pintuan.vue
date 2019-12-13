@@ -22,7 +22,7 @@
             >
               <div :class="$style.imgWrapper">
                 <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-                <div :class="$style.countDown" v-if="item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
+                <div :class="$style.countDownWrapper" v-if="item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
                   <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
                   <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
                   <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
@@ -30,6 +30,7 @@
                   <count-down
                     v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
                     :timestamp="getTime(item.goodsInfo.activityInfo)"
+                    format="HH:mm"
                     @done="() => reset(item)"
                   />
                 </div>
@@ -39,18 +40,14 @@
                   {{ item.goodsInfo.productName }}
                 </div>
                 <div :class="$style.time">
-                  <template v-if="item.goodsInfo.activityInfo.prizePool && item.goodsInfo.activityInfo.prizePool != 0">
-                    <div :class="$style.timeLeft">
+                  <div :class="$style.timeLeft">
+                    <span v-if="item.goodsInfo.activityInfo.prizePool">
                       成团瓜分
-                    </div>
-                    <div :class="$style.timeRight">
-                      {{ `${item.goodsInfo.activityInfo.prizePool || 0}元` }}
-                    </div>
-                  </template>
-                  <div v-else :class="$style.timeLeft" style="width:17.466667vw">
-                    <div>
-                      双十二有礼
-                    </div>
+                    </span>
+                    <span v-else>双十二有礼</span>
+                  </div>
+                  <div :class="$style.timeRight" v-if="item.goodsInfo.activityInfo.prizePool">
+                    {{ `${item.goodsInfo.activityInfo.prizePool || 0}元` }}
                   </div>
                 </div>
                 <div :class="$style.sub">
@@ -122,7 +119,6 @@ export default {
 <style module lang="scss">
   .pintuan {
     margin-top: 32px;
-    // background: linear-gradient(180deg, #F2BAA7 0%, #D95F02 12%, #E48F4C 100%);
     background: #e48f4c;
     border-radius: 20px;
     overflow: hidden;
@@ -252,7 +248,7 @@ export default {
           height: 100%;
           object-fit: cover;
         }
-        .count-down {
+        .count-down-wrapper {
           display: flex;
           justify-content: center;
           align-items: center;
@@ -292,12 +288,13 @@ export default {
         margin-bottom: 18px;
         width: fit-content;
         height: 34px;
-        line-height: 34px;
+        line-height: 35px;
         border: 2px solid #EC6BA4;
         border-radius: 4px;
         @include elps();
         &-left {
-          width: 116px;
+          padding: 6px;
+          min-width: 105px;
           font-size: 24px;
           color: #FFF;
           background: #FF6767;
@@ -305,13 +302,12 @@ export default {
         }
         &-right {
           flex: 1;
-          // width: 0;
-          @include elps();
           padding: 0 10px;
           font-size: 24px;
           font-family: San Francisco Display;
           background: #FFFF00;
           color: #DB4D7D;
+          @include elps();
         }
       }
       .sub {

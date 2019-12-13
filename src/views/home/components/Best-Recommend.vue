@@ -21,9 +21,8 @@
                 :fields="{ end: 'shoppingTimeLong' }"
               />
             </div>
-
             <div :class="$style.howManyBuy">
-              <pl-svg name="icon-hot" height="28" />
+              <pl-svg name="icon-hot" height="40" fill="#FFF" />
               <span v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
               <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
                 <span>
@@ -37,7 +36,6 @@
               </template>
             </div>
           </div>
-
           <div :class="$style.content">
             <div :class="$style.name" v-text="item.goodsInfo.productName" />
             <Tags
@@ -46,7 +44,8 @@
               :tags="item.goodsInfo.labelModels"
             />
             <div :class="$style.bottom">
-              <div :class="$style.priceBox">
+              <slot name="price" :price="getMinPrice(item.goodsInfo.productSkuModels)" v-if="$scopedSlots.price" />
+              <div :class="$style.priceBox" v-else>
                 <span>¥</span>
                 <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
                 <del>
@@ -263,6 +262,8 @@ export default {
         }
       }
       .how-many-buy {
+        display: flex;
+        align-items: center;
         position: absolute;
         bottom: 0;
         width: 100%;

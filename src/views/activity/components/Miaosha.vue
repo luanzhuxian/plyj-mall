@@ -92,6 +92,7 @@
                   <count-down
                     v-if="~[0, 1].indexOf(prod.activityInfo.status)"
                     :timestamp="getTime(prod.activityInfo)"
+                    format="HH:mm"
                     @done="() => prod.activityInfo.status += 1"
                   />
                 </div>

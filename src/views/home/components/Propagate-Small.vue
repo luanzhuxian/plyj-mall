@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     clickPingXuan () {
-      sessionStorage.removeItem('PINGXUAN')
+      sessionStorage.removeItem('PIN_XUAN')
     },
     jump (item) {
       if (item.type === 1) {

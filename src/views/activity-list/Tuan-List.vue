@@ -40,7 +40,7 @@
       <div class="list tuan-coming" v-if="comingList.length > 0">
         <div class="head">
           <pl-svg name="icon-coming_icon" fill="#fff" width="52" />
-          <pl-svg name="icon-coming_text" fill="#fff" width="52" />
+          <pl-svg name="icon-coming_text" fill="#fff" width="180" height="52" />
         </div>
         <div class="item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">

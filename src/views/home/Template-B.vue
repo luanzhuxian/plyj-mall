@@ -32,12 +32,12 @@
       </div>
       <appointment
         :class="$style.appointment"
-        :data="YUYUE"
+        :data="YU_YUE"
         :slides-per-view="2"
       />
       <propagate
         :class="$style.propagate"
-        :data="PINGXUAN"
+        :data="PIN_XUAN"
       />
       <div :class="$style.best" v-if="CLASS.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
@@ -134,11 +134,11 @@ export default {
     RECOMMEND () {
       return this.data.RECOMMEND || {}
     },
-    YUYUE () {
-      return this.data.YUYUE || {}
+    YU_YUE () {
+      return this.data.YU_YUE || {}
     },
-    PINGXUAN () {
-      return this.data.PINGXUAN || {}
+    PIN_XUAN () {
+      return this.data.PIN_XUAN || {}
     },
     isLiveShow () {
       return this.type === 4 &&

@@ -27,6 +27,7 @@
                     :timestamp="getTime(item.goodsInfo.activityInfo)"
                     color="#DB4D7D"
                     size="mini"
+                    format="HH:mm"
                     @done="() => item.goodsInfo.activityInfo.status += 1"
                   />
                 </div>
@@ -163,7 +164,7 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 120px;
+            width: 160px;
             font-size: 24px;
             font-family: San Francisco Display;
             color: #DB4D7D;

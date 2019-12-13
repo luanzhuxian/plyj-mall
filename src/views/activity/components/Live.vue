@@ -19,18 +19,17 @@
         <div :class="$style.bottom">
           <div :class="$style.bottomLeft">
             <pl-svg name="icon-clock" fill="#fff" width="26" />
-            <!-- <span v-if="live.statue === 2 && live.hasNotice">预告</span>
-            <span v-if="live.statue === 4">直播中</span> -->
           </div>
           <div :class="$style.bottomRight">
             <span v-if="isNoticeShow">距开始</span>
             <span v-if="live.statue === 4" :class="$style.highlight">正在直播中</span>
+            <span v-if="live.statue === 0" :class="$style.highlight">已结束</span>
             <count-down
               v-if="isNoticeShow"
               :timestamp="ts"
               color="#333"
               size="mini"
-              @done="live.statue = 4"
+              @done="done"
             />
             <span v-if="live.statue === 4" :class="$style.highlight">
               {{ `${live.visitTimes}人观看` }}
@@ -57,7 +56,6 @@ export default {
   data () {
     return {
       ts: ''
-      // color: ''
     }
   },
   computed: {
@@ -73,7 +71,16 @@ export default {
     if (hasNotice && liveStartTime) {
       this.ts = moment(liveStartTime).valueOf()
     }
-    // this.color = hasNotice ? '#EC6BA4' : '#EFB835'
+  },
+  methods: {
+    done () {
+      if (this.live.statue === 2) {
+        this.live.statue = 4
+      }
+      if (this.live.statue === 4) {
+        this.live.statue = 0
+      }
+    }
   }
 }
 </script>
@@ -168,7 +175,7 @@ export default {
         font-family: MicrosoftYaHei;
         color: #333333;
         padding: 0 12px;
-        span {
+        > span {
           margin-right: 10px;
         }
       }
