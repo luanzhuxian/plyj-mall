@@ -37,7 +37,7 @@
               :coupon-type="item.couponType"
               :is-over-max="!item.canReceive"
               :is-claimed="!!item.isClaimed"
-              @couponClick="couponClick(item.id)"
+              @couponClick="couponClick(item)"
             />
           </template>
         </load-more>
@@ -77,8 +77,13 @@ export default {
     if (this.$refs.loadMore) this.$refs.loadMore.refresh()
   },
   methods: {
-    async couponClick (id) {
+    async couponClick (item) {
       if (this.isCouponLoading) return
+      let id = item.id
+      if (!id) { // TODO.Echo无Id时弹框提示，并打印当前优惠券信息
+        console.log(item)
+        return this.$warning('请刷新页面')
+      }
       try {
         this.isCouponLoading = true
         const { result } = await receiveCoupon({
