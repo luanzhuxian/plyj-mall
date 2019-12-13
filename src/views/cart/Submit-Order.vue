@@ -1629,6 +1629,7 @@ export default {
           color:#999999;
         }
         .choices {
+          line-height: 0;
           position: absolute;
           right: 20px;
           top: 50%;
