@@ -19,7 +19,7 @@
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-import Overlay from '../../invitenewcomers/components/Overlay'
+import Overlay from '../invitenewcomers/components/Overlay'
 import { getCurrentActivity } from '../../../apis/newcomers'
 
 export default {

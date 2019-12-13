@@ -128,7 +128,7 @@
 
 <script>
 import moment from 'moment'
-import { Countdown } from '../../../assets/js/util'
+import { Countdown } from '../../../../assets/js/util'
 import Trophy from './Trophy'
 import ShareLayer from './ShareLayer.vue'
 // import HelperList from './Helper-List.vue'
@@ -139,7 +139,7 @@ import {
   canClaimGift,
   getHelpers,
   registerStatisitic
-} from '../../../apis/invitenewcomers'
+} from '../../../../apis/invitenewcomers'
 import {
   mapGetters
 } from 'vuex'

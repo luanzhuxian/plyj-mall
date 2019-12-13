@@ -28,7 +28,7 @@
 import {
   getActivityStatisiticData,
   getClaimGiftList
-} from '../../../apis/invitenewcomers'
+} from '../../../../apis/invitenewcomers'
 export default {
   name: 'AcquisitionGifts',
   data () {
