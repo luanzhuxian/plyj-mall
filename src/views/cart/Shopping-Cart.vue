@@ -67,18 +67,21 @@
         </span>
 
         <span :class="$style.scrapingUp">
+          <!-- 选中了商品，且匹配到券 -->
           <i
             v-if="nextCoupon"
             @click="$router.push({ name: 'CouponActivity', params: { couponId: nextCoupon.id } })"
           >
             去凑单
           </i>
+          <!-- 自己有满减券 -->
           <i
-            v-else-if="maxHadFullCutConpon || maxHadCategoryConpon"
+            v-else-if="maxHadFullCutConpon"
             @click="$router.push({ name: 'Home' })"
           >
             再逛逛
           </i>
+          <!-- 自己没满减券 -->
           <i
             v-else
             @click="$router.push({ name: 'CouponCenter' })"
