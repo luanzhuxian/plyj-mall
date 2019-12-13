@@ -30,5 +30,13 @@ export default [
     meta: {
       title: '预购'
     }
+  },
+  {
+    path: '/spring-ploughing',
+    name: 'SpringPloughing',
+    component: () => import('../views/activity-list/Spring-Ploughing.vue'),
+    meta: {
+      title: '春耘计划'
+    }
   }
 ]

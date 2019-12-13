@@ -38,7 +38,8 @@ export default {
         'Classify',
         'WhatsHelper',
         'Activity',
-        'InviteNewcomers'
+        'InviteNewcomers',
+        'SpringPloughing'
       ],
       // 允许分享和复制链接的页面 (除了这个和自定义分享，其他页面隐藏分享和复制链接)
       shareRoutes: [
