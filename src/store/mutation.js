@@ -80,7 +80,8 @@ export default {
     state.students = payload
   },
   [type.CHECK_ACTIVITY_AUTH] (state, payload) {
-    state.isActivityAuth = payload
+    state.activity.isActivityAuth = !!payload
+    state.activity.id = (payload && payload.type) || 0
   },
   [type.GET_SKIN_ID] (state, payload) {
     state.skinId = payload || 0

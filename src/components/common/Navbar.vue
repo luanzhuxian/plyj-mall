@@ -55,7 +55,16 @@
       tag="div"
       :to="{ name: 'Activity' }"
     >
-      <img :class="$style.icon" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png">
+      <img
+        v-if="~[5, 6, 7].indexOf(activityId)"
+        :class="$style.iconD12"
+        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png"
+      >
+      <img
+        v-if="activityId === 8"
+        :class="$style.iconXinchun"
+        src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/93a9ebf6-5266-4f78-9a2b-f2cb11e2ad14.png"
+      >
     </router-link>
     <!-- 购物车 -->
     <router-link
@@ -162,7 +171,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus', 'isActivityAuth', 'skinId']),
+    ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus', 'isActivityAuth', 'activityId', 'skinId']),
     homeActive: function () {
       return this.$route.matched.some(val => val.name === 'Home')
     },
@@ -226,10 +235,12 @@ export default {
     right: 60px;
   }
 }
-.icon {
+.icon-d12 {
   margin-bottom: 10px;
   width: 72px;
-  // height: 72px;
+}
+.icon-xinchun {
+  width: 95px;
 }
 
 /* 皮肤 */

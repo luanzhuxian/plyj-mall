@@ -220,7 +220,7 @@ export default {
   [type.CHECK_ACTIVITY_AUTH]: async ({ commit }, params) => {
     try {
       const { result } = await getTemplate({ type: 2 })
-      commit(type.CHECK_ACTIVITY_AUTH, !!result)
+      commit(type.CHECK_ACTIVITY_AUTH, result)
     } catch (e) {
       throw e
     }

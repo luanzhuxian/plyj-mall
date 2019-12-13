@@ -2,7 +2,11 @@
   <div :class="$style.templateXinchun">
     <div :class="$style.background">
       <div :class="$style.container">
-        <div :class="$style.btnTop" v-if="parent.topBtnType === 1">
+        <div
+          v-if="parent.topBtnType === 1"
+          :class="$style.btnTop"
+          @click="$router.push({ name: 'MyCoupon' })"
+        >
           <div :class="$style.btnTopBg">
             您有优惠券可使用！
           </div>

@@ -98,6 +98,10 @@ export default {
     '1': '仅退款',
     '2': '退款退货'
   },
-  isActivityAuth: false, // 是否开通活动权限
+  // 主会场信息
+  activity: {
+    isActivityAuth: false, // 是否开通活动权限
+    id: 0
+  },
   skinId: null // 皮肤id
 }

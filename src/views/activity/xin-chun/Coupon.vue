@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.coupon">
+  <router-link :class="$style.coupon" tag="div" :to="{ name: 'CouponCenter' }">
     <div :class="$style.bg">
       <div :class="$style.couponTitle">
         购物先领券 就要划算
@@ -44,7 +44,7 @@
         </template>
       </ul>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>

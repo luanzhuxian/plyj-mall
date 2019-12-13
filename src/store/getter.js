@@ -43,6 +43,7 @@ export default {
   cartCount: state => state.cartCount,
   noticeStatus: state => state.aduitNotice.noticeStatus,
   aduitStatus: state => state.aduitNotice.status,
-  isActivityAuth: state => state.isActivityAuth,
+  isActivityAuth: state => state.activity.isActivityAuth,
+  activityId: state => state.activity.id,
   skinId: state => state.skinId
 }
