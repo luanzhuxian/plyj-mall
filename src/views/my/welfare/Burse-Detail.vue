@@ -12,14 +12,19 @@
 
     <div>使用关联订单</div>
 
-    <div>
+    <div :class="$style.orderList" v-for="(item,index) in detail.list" :key="index">
       <div>
-        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575361333262&di=81376fedbaf7e235d47cc807f0196905&imgtype=0&src=http%3A%2F%2Fimg.11665.com%2Fimg01_p%2Fi1%2FT1y1CLFypeXXXXXXXX_%2521%25210-item_pic.jpg" alt="">
+        <div>订单编号：{{ item.id }}</div>
+        <div @click="$router.push({name:'OrderDetail',params:{orderId:item.id}})">去查看</div>
       </div>
-      <div>
-        <div>订单编号：956684864</div>
-        <div>2019.11.11  11:43:12购买时使用</div>
-        <div><span>-￥0.15</span><span>去看看</span></div>
+      <div v-for="it in item.products" :key="it.productId">
+        <div>
+          <img :src="it.productImg" alt="">
+        </div>
+        <div>
+          <div>{{ it.productName }}</div>
+          <div>{{ item.payTime }} 购买时使用</div>
+        </div>
       </div>
     </div>
 
@@ -32,7 +37,9 @@ export default {
   name: 'MyBurseDetail',
   data () {
     return {
-      detail: {},
+      detail: {
+        list: []
+      },
       burseStatus: ['待领取', '待使用', '已使用', '已过期', '已失效', '已删除']// 奖学金状态 0：待领取；1：待使用； 2：已使用； 3：已过期 ； 4：已失效； 5：已删除
     }
   },
@@ -81,48 +88,60 @@ export default {
       font-weight: 400;
     }
 
-    > div:nth-of-type(2) {
+    > .order-list {
       display: flex;
       justify-content: space-between;
-      padding: 46px 26px;
+      flex-wrap: wrap;
+      padding: 26px;
       box-sizing: border-box;
       background: #FFFFFF;
+      margin-bottom: 20px;
       > div:nth-of-type(1) {
-        width: 20%;
-        > img {
-          width: 164px;
-          height: 164px;
+        display:flex;
+        font-size: 24px;
+        width: 100%;
+        margin-bottom: 26px;
+        justify-content: space-between;
+        > div:nth-of-type(2) {
+          color: #FFFFFF;
+          background: #FE7700;
+          border-radius:20px;
+          line-height: 34px;
+          width:122px;
+          text-align: center;
         }
       }
-      > div:nth-of-type(2) {
+      > div:nth-of-type(n+2) {
         display: flex;
-        flex-wrap: wrap;
-        align-content: space-around;
-        width: calc( 100% - 184px);
-        font-size: 24px;
-        font-weight: 400;
-        > div {
-          width: 100%;
-        }
-        > div:nth-of-type(2) {
-          font-size:20px;
-          color: #999999;
-          font-weight: 400;
-        }
-        > div:nth-of-type(3) {
-          display: flex;
-          justify-content: space-between;
-          > span:nth-of-type(2) {
-            font-size:20px;
-            display: inline-block;
-            width: 122px;
-            border-radius: 20px;
-            text-align: center;
-            color: #FFFFFF;
-            line-height: 34px;
-            background:#FE7700;
+        margin-bottom: 12px;
+        > div:nth-of-type(1) {
+          width: 200px;
+          > img {
+            width: 200px;
+            height: 136px;
           }
         }
+        > div:nth-of-type(2) {
+          display: flex;
+          flex-wrap: wrap;
+          align-content: flex-start;
+          margin-left: 26px;
+          width: calc( 100% - 226px);
+          font-size: 24px;
+          font-weight: 400;
+          > div {
+            width: 100%;
+          }
+          > div:nth-of-type(2) {
+            margin-top: 8px;
+            font-size:20px;
+            color: #999999;
+            font-weight: 400;
+          }
+        }
+      }
+      > div:nth-last-of-type(1) {
+        margin-bottom: 0;
       }
     }
 

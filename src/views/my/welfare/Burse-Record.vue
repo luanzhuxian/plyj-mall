@@ -43,6 +43,10 @@ export default {
       expireStatus: 3
     }
   },
+  async activated () {
+    await this.$nextTick()
+    this.$refs[this.active].$refresh()
+  },
   methods: {
     async checkActive (active, deactiveEdit) {
       this.active = active
@@ -97,11 +101,11 @@ export default {
     }
     > .content {
       padding: 24px;
+      margin-bottom: 45px;
       box-sizing: border-box;
       > div:nth-of-type(1) {
         font-size: 24px;
         font-weight: 400;
-        margin-left: 18px;
       }
     }
   }

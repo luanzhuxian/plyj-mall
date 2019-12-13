@@ -76,13 +76,11 @@ export default {
       let { status, result } = await getBurseMes({})
       if (status === 200) {
         this.burseMes = result
+        await this.$nextTick()
+        this.$refresh = this.$refs.loadMore.refresh
+        this.$refresh()
       }
     } catch (e) { throw e }
-  },
-  async mounted () {
-    await this.$nextTick()
-    this.$refresh = this.$refs.loadMore.refresh
-    this.$refresh()
   },
   methods: {
     refreshList (list) {
