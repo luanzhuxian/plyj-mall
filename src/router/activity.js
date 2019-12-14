@@ -38,5 +38,21 @@ export default [
     meta: {
       title: '春耘计划'
     }
+  },
+  {
+    path: '/spring-group',
+    name: 'SpringGroup',
+    component: () => import('../views/activity-list/Spring-Group.vue'),
+    meta: {
+      title: '新春团购'
+    }
+  },
+  {
+    path: '/spring-book',
+    name: 'SpringBook',
+    component: () => import('../views/activity-list/Spring-Book.vue'),
+    meta: {
+      title: '新春预购'
+    }
   }
 ]

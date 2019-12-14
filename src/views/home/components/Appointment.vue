@@ -37,9 +37,10 @@
       </div>
     </div>
 
+    <!-- 弹窗 -->
     <pl-popup :show.sync="showPop" title="在线预约">
       <div :class="$style.popContent">
-        <pl-svg :class="$style.giftIcon" name="icon-gift" width="140" height="100" />
+        <pl-svg :class="$style.giftIcon" name="icon-gift" width="120" height="85" />
         <div :class="$style.popLeft">
           <pl-svg name="icon-yuyue2" width="112" height="31" />
         </div>
@@ -274,9 +275,10 @@ export default {
   .pop-content {
     position: relative;
     display: flex;
-    margin-bottom: 26px;
     align-items: center;
+    margin-bottom: 26px;
     padding: 32px 64px;
+    min-height: 60px;
     background-color: #feefd1;
     > .pop-left {
       position: relative;

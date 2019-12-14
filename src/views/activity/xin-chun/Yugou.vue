@@ -2,7 +2,7 @@
   <div :class="$style.yugou">
     <div :class="$style.yugouTop">
       <div :class="$style.yugouTopSide" />
-      <router-link :class="$style.yugouTopContent" tag="div" :to="{ name: 'BookList' }">
+      <router-link :class="$style.yugouTopContent" tag="div" :to="{ name: 'SpringBook' }">
         <h3>预购享翻倍</h3>
         <p v-if="data.otherValue">
           {{ `${data.otherValue}人参与 查看更多>` }}

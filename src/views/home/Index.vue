@@ -11,7 +11,7 @@
       :data="modules"
     />
     <TemplateC
-      v-if="type === -1"
+      v-else-if="type === -1"
       :type="type"
       :skin-id="skinId"
       :data="modules"

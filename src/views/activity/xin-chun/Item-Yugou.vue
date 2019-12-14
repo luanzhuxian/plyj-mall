@@ -1,5 +1,9 @@
 <template>
-  <li :class="$style.item" class="item">
+  <li
+    class="item"
+    :class="$style.item"
+    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id, currentProductStatus: 4} })"
+  >
     <div :class="$style.time">
       <div :class="$style.timeLeft">
         <span v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>

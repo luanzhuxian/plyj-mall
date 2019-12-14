@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.chunyun" class="chunyun">
-    <div :class="$style.chunyunBg">
+    <router-link :class="$style.chunyunBg" tag="div" :to="{ name: 'SpringPloughing' }">
       <div :class="$style.countDownWrapper">
         <span>{{ true ? '距活动开始：' : '距活动结束：' }}</span>
         <count-down
@@ -11,7 +11,7 @@
           @done="data.statue = 4"
         />
       </div>
-    </div>
+    </router-link>
     <!-- <ul :class="$style.chunyunList" v-if="data.values.length"> -->
     <ul :class="$style.chunyunList">
       <li :class="$style.chunyunListItem">

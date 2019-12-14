@@ -1,5 +1,10 @@
 <template>
-  <div :class="$style.live" class="live">
+  <router-link
+    class="live"
+    :class="$style.live"
+    tag="div"
+    :to="{ name: 'LiveRoom' }"
+  >
     <div :class="$style.cover">
       <span :class="$style.status" v-if="isNoticeShow">距开始</span>
       <span :class="$style.status" v-if="live.statue === 4">正在直播中</span>
@@ -27,7 +32,7 @@
         <span :class="$style.name" v-text="live.name" />
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -100,6 +105,7 @@ export default {
       width: 525px;
       height: 86px;
       color: #FFF;
+      font-size: 28px;
       z-index: 1;
       .status {
         margin-right: 10px;

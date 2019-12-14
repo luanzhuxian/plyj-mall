@@ -194,9 +194,12 @@ export default {
 
   .live,
   .activity,
-  .appointment,
-  .propagate {
+  .appointment {
     padding: 24px 24px 0;
+  }
+
+  .propagate {
+    padding: 10px 24px 0;
   }
 
   .footer {

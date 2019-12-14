@@ -1,5 +1,9 @@
 <template>
-  <li :class="$style.item" class="item">
+  <li
+    class="item"
+    :class="$style.item"
+    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id, currentProductStatus: 2 } })"
+  >
     <div :class="$style.label">
       众志成团
     </div>

@@ -2,7 +2,7 @@
   <div :class="$style.pintuan">
     <div :class="$style.pintuanTop">
       <div :class="$style.pintuanTopSide" />
-      <router-link :class="$style.pintuanTopContent" tag="div" :to="{ name: 'TuanList' }">
+      <router-link :class="$style.pintuanTopContent" tag="div" :to="{ name: 'SpringGroup' }">
         <h3>新春团购大联欢</h3>
         <p v-if="data.otherValue">
           {{ `还有${data.otherValue}个团 点击查看>` }}
