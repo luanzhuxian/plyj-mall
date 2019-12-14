@@ -87,7 +87,7 @@
 
 <script>
 import mixin from '../mixin.js'
-import CountDown from './Count-Down.vue'
+import CountDown from '../components/Count-Down.vue'
 
 export default {
   name: 'Miaosha',

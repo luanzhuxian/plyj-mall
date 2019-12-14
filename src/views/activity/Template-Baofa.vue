@@ -60,11 +60,11 @@
 
 <script>
 import Live from './components/Live.vue'
-import Pintuan from './components/Pintuan.vue'
-import Coupon from './components/Coupon.vue'
-import Maisong from './components/Maisong.vue'
-import Fengqiang from './components/Fengqiang.vue'
-import Miaosha from './components/Miaosha.vue'
+import Pintuan from './double-12/Pintuan.vue'
+import Coupon from './double-12/Coupon.vue'
+import Maisong from './double-12/Maisong.vue'
+import Fengqiang from './double-12/Fengqiang.vue'
+import Miaosha from './double-12/Miaosha.vue'
 
 export default {
   name: 'HomeTemplateB',

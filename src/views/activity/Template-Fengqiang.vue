@@ -69,13 +69,13 @@
 
 <script>
 import Live from './components/Live.vue'
-import Pintuan from './components/Pintuan.vue'
-import Coupon from './components/Coupon.vue'
-import Maisong from './components/Maisong.vue'
-import Yugou from './components/Yugou.vue'
-import Fengqiang from './components/Fengqiang.vue'
+import Pintuan from './double-12/Pintuan.vue'
+import Coupon from './double-12/Coupon.vue'
+import Maisong from './double-12/Maisong.vue'
+import Yugou from './double-12/Yugou.vue'
+import Fengqiang from './double-12/Fengqiang.vue'
+import MiaoshaSmall from './double-12/Miaosha-Small.vue'
 import BestRecommend from '../home/components/Best-Recommend.vue'
-import MiaoshaSmall from './components/Miaosha-Small.vue'
 
 export default {
   name: 'HomeTemplateB',
@@ -87,8 +87,8 @@ export default {
     Maisong,
     Yugou,
     Fengqiang,
-    BestRecommend,
-    MiaoshaSmall
+    MiaoshaSmall,
+    BestRecommend
   },
   data () {
     return {}
