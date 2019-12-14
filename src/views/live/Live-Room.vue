@@ -152,6 +152,8 @@
             </div>
           </div>
         </div>
+        <!--支持回看-->
+        <div :class="$style.playBack" @click="playBackWarn" v-if="videoLiveMes.type && videoLiveMes.type === 'video'">该商品支持回看</div>
       </div>
 
       <div v-if="tab === 1" :class="$style.sendMessage">
@@ -287,15 +289,16 @@ export default {
       productList: [],
       detail: {},
       receiveCouponIdList: [], // 已领取的优惠券id列表
-      //视频直播信息
+      // 视频直播信息
       videoLiveMes: {
-        type:'live', // 直播类型 live video
-        url:'', // 视频直播 url
+        type: 'live', // 直播类型 live video
+        url: '', // 视频直播 url
         videoLibId: '',
         liveStartLongTime: '', // 直播开始时间
         serviceLongTime: '', // 服务器时间
-        flag: true, //直播结束,却省图
-      }
+        flag: true // 直播结束,却省图
+      },
+      videoLiveTimer: null// 视频直播开播计时器
       // emoticon
     }
   },
@@ -339,10 +342,11 @@ export default {
           this.needPay = true
           return
         }
-        await setComeInConut({
-          message: (detail.paidAmount || 0) + '元'
-        })
       }
+      await setComeInConut({
+        id: detail.id,
+        message: (detail.paidAmount || 0) + '元'
+      })
       this.initPlayer()
       this.initSocket()
     } catch (e) {
@@ -351,59 +355,85 @@ export default {
     }
   },
   methods: {
+    // 回放提醒
+    async playBackWarn () {
+      try {
+        let htmlStr = "<div style='padding: 0 30px;'>该视频支持回看，直播结束后可在【我的】-【我的视频库】中查看</div>"
+        await this.$confirm({
+          useDangersHtml: true,
+          message: htmlStr,
+          cancelText: '立即查看',
+          confirmText: '知道了',
+          cancelStyle: 'color:#FE7700',
+          confirmStyle: 'color:#A8A8A8'
+        })
+      } catch (e) {
+        this.$router.push({ name: 'LiveLibrary' })
+      }
+    },
     // 视频直播情况下获取视频信息
     async getVideoMesById () {
-        try {
-            let mes = await getVideoMesById(this.videoLiveMes.videoLibId)
-            if (mes) {
-                this.videoLiveMes.url = mes.url
-            }
-        } catch (e) { throw e }
+      try {
+        let mes = await getVideoMesById(this.videoLiveMes.videoLibId)
+        if (mes) {
+          this.videoLiveMes.url = mes.url
+        }
+      } catch (e) { throw e }
     },
     // 播放开始跳转到固定时间,且隐藏控件
-    controlVideo () {
-        try {
-            let section = this.videoLiveMes.serviceLongTime - this.videoLiveMes.liveStartLongTime;
-            // 已开播多少秒
-            let startTime = parseInt(section / 1000);
-            // 直播时间还未结束
-            if (section > 0) {
-                this.videoLiveMes.flag = false;
-                this.$refs.livePlayBack.addEventListener('play', _ => {//播放开始执行的函数
-                    let vid = this.$refs.livePlayBack
-                    vid.controls = false
-                    vid.currentTime = startTime
-                });
-            } else {
-                this.videoLiveMes.flag = true;
-            }
-            //监听错误
-            this.$refs.livePlayBack.addEventListener("error", _ => {
-                this.videoLiveMes.flag = true;
-                this.$refs.livePlayBack.src = ''
-            });
-        } catch (e) { throw e}
+    async controlVideo () {
+      try {
+        let section = this.videoLiveMes.serviceLongTime - this.videoLiveMes.liveStartLongTime
+        // 已开播多少秒
+        let startTime = parseInt(section / 1000)
+        // 直播还有半个小时内开播，自动刷新
+        let time = 30 * 60
+        clearInterval(this.videoLiveTimer)
+        if (startTime >= -time && startTime < 0) {
+          let times = 10 - startTime
+          this.videoLiveTimer = setTimeout(_ => {
+            location.reload();
+          }, times * 1000)
+        }
+        // 直播时间还未结束
+        if (section > 0) {
+          this.videoLiveMes.flag = false
+          await this.$nextTick()
+          let vid = this.$refs.livePlayBack
+          vid.addEventListener('play', _ => { // 播放开始执行的函数
+            vid.controls = false
+            vid.currentTime = startTime
+          })
+          // 监听错误
+          vid.addEventListener('error', _ => {
+            vid.src = ''
+            this.videoLiveMes.flag = true
+          })
+        } else {
+          this.videoLiveMes.flag = true
+        }
+      } catch (e) { throw e }
     },
     async initPlayer () {
       // 默认在线直播
       if (this.videoLiveMes.type && this.videoLiveMes.type === 'live') {
         let { channelId, channeUserId } = this
         let p = polyvObject('#player').livePlayer({
-            wrap: '#player',
-            width: '100%',
-            height: '100%',
-            autoplay: true,
-            uid: channeUserId,
-            isAutoChange: true,
-            vid: channelId,
-            x5: false,
-            hasControl: true,
-            x5FullPage: true,
-            forceH5: true,
-            useH5Page: true
+          wrap: '#player',
+          width: '100%',
+          height: '100%',
+          autoplay: true,
+          uid: channeUserId,
+          isAutoChange: true,
+          vid: channelId,
+          x5: false,
+          hasControl: true,
+          x5FullPage: true,
+          forceH5: true,
+          useH5Page: true
         })
       } else {
-        this.controlVideo();
+        this.controlVideo()
       }
       // let timer = setInterval(() => {
       //   let video = document.querySelector('#player video')
@@ -557,7 +587,7 @@ export default {
       try {
         let data = await getActiveCompleteInfo()
         if (data) {
-          if(data.liveType) {
+          if (data.liveType) {
             this.videoLiveMes.type = data.liveType
             this.videoLiveMes.videoLibId = data.videoLibId
             this.videoLiveMes.liveStartLongTime = Number(data.liveStartLongTime)
@@ -750,6 +780,9 @@ export default {
         }
       })
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.videoLiveTimer)
   }
 }
 </script>
@@ -822,6 +855,19 @@ export default {
   .chat-wrap {
     flex: 1;
     overflow: auto;
+    position: relative;
+    > .play-back {
+      width: 194px;
+      font-size: 24px;
+      color: #fff;
+      background: #F2B036;
+      text-align: center;
+      line-height: 44px;
+      position: absolute;
+      top: 24px;
+      right: 48px;
+      border-radius:8px;
+    }
   }
   .chat-records {
     display: flex;

@@ -97,6 +97,7 @@ export default {
       }
       > div:nth-of-type(2) {
         padding: 18px 0;
+        color: #5A5A5A;
       }
     }
     > .content {

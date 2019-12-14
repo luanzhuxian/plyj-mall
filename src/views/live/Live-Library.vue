@@ -27,15 +27,22 @@
             <div :class="$style.videoItem">
               <div>
                 <div>支持回放</div>
-                <img src="http://img4.imgtn.bdimg.com/it/u=2229864841,4232235061&fm=26&gp=0.jpg" alt="">
+                <img :src="item.coverImg" alt="">
               </div>
               <div>
                 <div>
-                  <div>赵老师的直播时间</div>
+                  <div>{{ item.videoName }}</div>
                   <div>直播时间：{{ item.createTime }}</div>
                 </div>
                 <div>
-                  <div><span>已付费：</span><span>￥0.00</span></div>
+                  <div>
+                    <template v-if="item.description && Number(item.description.split('元')[0]) === 0">
+                      <span>免费</span>
+                    </template>
+                    <template v-else>
+                      <span>已付费：</span><span>￥ {{ item.description }}</span>
+                    </template>
+                  </div>
                   <div @click="$router.push({name:'LivePlayBack',params:{id:item.id}})">再次观看</div>
                 </div>
               </div>
@@ -43,6 +50,10 @@
           </template>
         </pl-checkbox>
       </pl-checkbox-group>
+      <!--缺省-->
+      <div v-if="videoList.length === 0" :class="$style.hasNoMes">
+        暂无观看记录
+      </div>
     </div>
     <!--尾部-->
     <footer v-if="isEdit">
@@ -147,6 +158,11 @@ export default {
     > .video-content {
       box-sizing: border-box;
       padding: 0 24px 24px 24px;
+      > .has-no-mes {
+        text-align: center;
+        margin-top: calc( 50vh - 170px);
+        font-size: 30px;
+      }
     }
 
     .check-box {
@@ -193,6 +209,7 @@ export default {
       > div:nth-of-type(2) {
         display: flex;
         flex-wrap: wrap;
+        width: 100%;
         align-content: space-between;
         > div:nth-of-type(1) {
           width: 100%;
