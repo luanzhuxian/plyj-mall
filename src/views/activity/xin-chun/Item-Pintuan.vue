@@ -43,7 +43,7 @@
         </div>
       </div>
       <div :class="$style.sub2">
-        <pl-svg name="icon-tuangoujia" fill="#FF4B00" width="80" height="26" />
+        <pl-svg name="icon-tuangoujia" fill="#FF4B00" width="80" height="40" />
         <span :class="$style.sub2Price">{{ data.goodsInfo.activityInfo.activityPrice }}</span>
       </div>
     </div>
@@ -206,9 +206,6 @@ export default {
           font-family: Microsoft YaHei;
           font-weight: bold;
         }
-      }
-      svg {
-        margin-bottom: 6px;
       }
     }
   }

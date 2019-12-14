@@ -30,6 +30,11 @@
         <div :class="$style.pintuan" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
           <pintuan :data="PIN_TUAN" />
         </div>
+        <!-- 春耘 -->
+        <!-- <div :class="$style.chunyun" v-if="CHUN_YUN.values && CHUN_YUN.values.length"> -->
+        <div :class="$style.chunyun">
+          <chunyun :data="CHUN_YUN" />
+        </div>
         <!-- 预购 -->
         <div :class="$style.yugou" v-if="YU_GOU.values && YU_GOU.values.length">
           <yugou :data="YU_GOU" />
@@ -42,7 +47,7 @@
           <best-recommend :data="FENG_QIANG">
             <template v-slot:price="{ price }">
               <div :class="$style.priceWrapper">
-                <pl-svg name="icon-fengqiangjia" width="80" height="26" fill="#FE3C5E" />
+                <pl-svg name="icon-fengqiangjia" width="80" height="44" fill="#FE3C5E" />
                 <span :class="$style.price" v-text="price" />
               </div>
             </template>
@@ -61,6 +66,7 @@ import Live from './xin-chun/Live.vue'
 import Activity from './xin-chun/Activity.vue'
 import Propagate from './xin-chun/Propagate.vue'
 import Coupon from './xin-chun/Coupon.vue'
+import Chunyun from './xin-chun/Chunyun.vue'
 import Pintuan from './xin-chun/Pintuan.vue'
 import Yugou from './xin-chun/Yugou.vue'
 import BestRecommend from '../home/components/Best-Recommend.vue'
@@ -73,6 +79,7 @@ export default {
     Activity,
     Propagate,
     Coupon,
+    Chunyun,
     Pintuan,
     Yugou,
     BestRecommend
@@ -174,6 +181,10 @@ export default {
   padding: 32px 24px 0;
 }
 
+.chunyun {
+  padding: 48px 0 0;
+}
+
 .pintuan,
 .yugou {
   padding: 32px 0 0;
@@ -208,9 +219,6 @@ export default {
       content: '¥';
       font-size: 22px;
     }
-  }
-  svg {
-    margin-bottom: 8px;
   }
 }
 

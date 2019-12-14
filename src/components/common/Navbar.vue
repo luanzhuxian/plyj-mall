@@ -240,7 +240,7 @@ export default {
   width: 72px;
 }
 .icon-xinchun {
-  width: 95px;
+  width: 105px;
 }
 
 /* 皮肤 */

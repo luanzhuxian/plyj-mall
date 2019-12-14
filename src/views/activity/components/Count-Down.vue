@@ -163,6 +163,7 @@ export default {
     }
     &.small {
       font-size: 24px;
+      line-height: 36px;
       &.bg {
         .time {
           > span {
@@ -177,11 +178,29 @@ export default {
         }
       }
     }
-    &.mideum {
-      font-size: 32px;
+    &.middle {
+      font-size: 28px;
+      line-height: 40px;
       .time {
         > span {
           padding: 0 8px;
+          color: var(--background);
+        }
+        > i {
+          width: 40px;
+          height: 40px;
+          background: var(--background);
+          border-radius: 6px;
+        }
+      }
+    }
+    &.mideum {
+      font-size: 32px;
+      line-height: 46px;
+      .time {
+        > span {
+          padding: 0 8px;
+          color: var(--background);
         }
         > i {
           width: 46px;

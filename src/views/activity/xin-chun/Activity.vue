@@ -18,15 +18,11 @@
         <div :class="$style.sub">
           翻开记忆的味道
         </div>
-        <div :class="$style.main">
-          我心中的年味
-        </div>
+        <pl-svg name="icon-lao-dai-xin" width="264" height="54" />
         <div :class="$style.btn">
           立即参加
         </div>
       </div>
-      <!-- <pl-svg v-if="hasJxEvent && hasInvitingEvent" name="icon-calendar" width="72" height="72" />
-      <pl-svg v-if="!hasJxEvent && hasInvitingEvent" name="icon-calendar" width="100" height="100" /> -->
     </router-link>
 
     <router-link
@@ -47,9 +43,7 @@
         <div :class="$style.sub">
           快来领取
         </div>
-        <div :class="$style.main">
-          我心中的年味
-        </div>
+        <pl-svg name="icon-lao-dai-xin" width="264" height="54" />
         <div :class="$style.btn">
           立即查看
         </div>
@@ -156,41 +150,35 @@ export default {
       .info {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
         align-items: center;
       }
-
-      .main {
-        margin-top: 8px;
-        font-size: 44px;
-        font-family: MStiffHei PRC;
-        font-weight: 800;
-        color: rgba(255,100,14,1);
-      }
       .sub {
+        margin-bottom: 8px;
         font-size: 24px;
         font-family: PingFang SC;
         color: #B48A64;
       }
       .btn {
+        position: relative;
         margin-top: 28px;
         width: 232px;
+        height: 60px;
         line-height: 60px;
+        text-align: center;
         background: linear-gradient(180deg, #FB873A 0%, #F64C1B 100%);
         border-radius: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         font-size: 28px;
-        font-family: PingFang SC;
         font-weight: bold;
         color: #FFFFFF;
         &:after {
-          margin-left: 8px;
+          position: absolute;
+          top: 50%;
+          right: 30px;
+          transform: translateY(-50%);
           content: '';
           width: 0;
           height: 0;
-          border-width: 8px;
+          border-width: 10px;
           border-color: transparent transparent transparent #FFFFFF;
           border-style: solid;
           border-radius: 4px;
