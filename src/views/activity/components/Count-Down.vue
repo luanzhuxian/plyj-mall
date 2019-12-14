@@ -194,7 +194,7 @@ export default {
         }
       }
     }
-    &.mideum {
+    &.medium {
       font-size: 32px;
       line-height: 46px;
       .time {

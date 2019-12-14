@@ -163,8 +163,6 @@ export default {
         max-width: fit-content;
         height: 90px;
         line-height: 90px;
-        font-size: 36px;
-        font-family: San Francisco Display;
         background: #DEF3CA;
         color: #195231;
         font-size: 44px;

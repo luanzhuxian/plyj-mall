@@ -7,7 +7,7 @@
       <count-down
         v-if="isNoticeShow"
         :timestamp="ts"
-        size="mideum"
+        size="medium"
         color="#FF4B00"
         background="#FFF"
         @done="done"
