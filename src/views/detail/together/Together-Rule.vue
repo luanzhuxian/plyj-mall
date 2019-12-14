@@ -21,7 +21,7 @@
       <li :class="$style.line" />
       <li>
         <div :class="$style.step4" />
-        <div :class="$style.text">线下瓜分 奖池</div>
+        <div :class="$style.text">线上瓜分 奖池</div>
       </li>
     </ul>
     <ul :class="$style.rule" v-if="activeProduct === 4">
@@ -37,7 +37,7 @@
       <li :class="$style.line" />
       <li>
         <div :class="$style.step4" />
-        <div :class="$style.text">线下核销 付尾款</div>
+        <div :class="$style.text">线下/线上核销 付尾款</div>
       </li>
     </ul>
     <div :class="$style.content" v-html="activityBrief" />

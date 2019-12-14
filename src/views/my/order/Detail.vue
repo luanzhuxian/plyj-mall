@@ -1009,15 +1009,15 @@ export default {
         if (this.finalPaymentIsStarted && !this.finalPaymentIsEnded) {
           waitPayTime = useEndTime - now
         }
+        // 使用计算出的待付尾款时间启动倒计时
+        this.countDown(waitPayTime, orderStatus)
+        return
       } else {
         waitPayTime = 5 * 60 * 1000
       }
+      // 开始时间，如果是待付款，取订单创建时间，如果是其他状态（待发货），取发货时间
       let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
-      let duration = (orderStatus === 'WAIT_PAY' || orderStatus === 'WAIT_PAY_REPAYMENT') ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
-      if (activeProduct === 4) {
-        this.countDown(duration, orderStatus)
-        return
-      }
+      let duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
       let startTime = moment(time).valueOf()
       if (now - startTime < duration) {
         this.countDown(duration + startTime - now - 2000, orderStatus)
