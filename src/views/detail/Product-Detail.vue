@@ -574,10 +574,6 @@ export default {
       if (!this.hasBind()) {
         return
       }
-
-      if (!this.checkLimit(selected, limiting, limit)) {
-        return
-      }
       this.currentModel = selected
       this.adding = true
       const { count, skuCode2 = '', skuCode1 } = selected

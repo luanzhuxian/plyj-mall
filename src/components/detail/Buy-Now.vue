@@ -243,9 +243,6 @@ export default {
       try {
         await this.$nextTick()
         if (this.clickAddToCart) {
-          if (!this.checkLimit(options, limiting, limit)) {
-            return
-          }
           await this.addToCart(options)
         }
         if (this.clickBuyNow) {
