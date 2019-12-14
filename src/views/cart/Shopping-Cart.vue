@@ -51,12 +51,12 @@
           </span>
         </span>
         <!-- 满减券，存在较大金额（未领取） -->
-        <span v-else-if="maxFullCutConpon && !maxHadFullCutConpon">
-          全场满{{ maxFullCutConpon.useLimitAmount }}元减{{ maxFullCutConpon.amount }}元,领券立享优惠
+        <span v-else-if="minFullCutConpon && !minHadFullCutConpon">
+          全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元,领券立享优惠
         </span>
         <!-- 满减券（已领取） -->
-        <span v-else-if="maxHadFullCutConpon">
-          全场满{{ maxHadFullCutConpon.useLimitAmount }}元减{{ maxHadFullCutConpon.amount }}元
+        <span v-else-if="minHadFullCutConpon">
+          全场满{{ minHadFullCutConpon.useLimitAmount }}元减{{ minHadFullCutConpon.amount }}元
         </span>
         <!-- 品类券（已领取） -->
         <span v-else-if="hadCategoryCouponList.length">
@@ -76,7 +76,7 @@
           </i>
           <!-- 自己有满减券 -->
           <i
-            v-else-if="maxHadFullCutConpon"
+            v-else-if="minHadFullCutConpon"
             @click="$router.push({ name: 'Home' })"
           >
             再逛逛
@@ -200,10 +200,10 @@ export default {
       hadFullCutCouponList: [], // 全部已领满减券
       categoryCouponList: [], // 全部可领品类券
       hadCategoryCouponList: [], // 全部已领品类券
-      maxFullCutConpon: null, // 当前最大金额的满减券（可包含未领取）
-      maxHadFullCutConpon: null, // 当前最大金额的满减券（全部为已领取）
-      maxCategoryConpon: null, // 当前最大金额的品类券（可包含未领取）
-      maxHadCategoryConpon: null, // 当前最小金额的品类券（全部为已领取）
+      minFullCutConpon: null, // 当前最小金额的满减券（可包含未领取）
+      minHadFullCutConpon: null, // 当前最小金额的满减券（全部为已领取）
+      minCategoryConpon: null, // 当前最小金额的品类券（可包含未领取）
+      minHadCategoryConpon: null, // 当前最小金额的品类券（全部为已领取）
       appropriateCoupon: null, // 合适的优惠券
       nextCoupon: null, // 下一级优惠券
       summation: 0 // 合计
@@ -288,11 +288,11 @@ export default {
             }
           }
         }
-        // 券中最大的金额
-        this.maxFullCutConpon = this.fullCutCouponList.slice(-1)[0] || null
-        this.maxHadFullCutConpon = this.hadFullCutCouponList[0] || null
-        this.maxCategoryConpon = this.categoryCouponList.slice(-1)[0] || null
-        this.maxHadCategoryConpon = this.hadCategoryCouponList[0] || null
+        // 券中最小的金额
+        this.minFullCutConpon = this.fullCutCouponList[0] || null
+        this.minHadFullCutConpon = this.hadFullCutCouponList[0] || null
+        this.minCategoryConpon = this.categoryCouponList[0] || null
+        this.minHadCategoryConpon = this.hadCategoryCouponList[0] || null
       } catch (e) {
         throw e
       }
