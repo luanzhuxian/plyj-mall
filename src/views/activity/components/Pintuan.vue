@@ -31,6 +31,7 @@
                     v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
                     :timestamp="getTime(item.goodsInfo.activityInfo)"
                     format="HH:mm"
+                    background="rgba(174, 174, 174, 0.64)"
                     @done="() => reset(item)"
                   />
                 </div>

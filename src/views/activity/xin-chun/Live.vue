@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.live">
+  <div :class="$style.live" class="live">
     <div :class="$style.cover">
       <span :class="$style.status" v-if="isNoticeShow">距开始</span>
       <span :class="$style.status" v-if="live.statue === 4">正在直播中</span>
@@ -7,7 +7,9 @@
       <count-down
         v-if="isNoticeShow"
         :timestamp="ts"
+        size="mideum"
         color="#FF4B00"
+        background="#FFF"
         @done="done"
       />
       <span v-if="live.statue === 4">
@@ -157,32 +159,17 @@ export default {
       transform: translate(-50%, -50%);
       font-size: 64px;
     }
-    /deep/ .count-down {
-      .time {
-        span {
-          padding: 0 8px;
-          font-size: 24px;
-          font-family: Microsoft YaHei;
-          font-weight: bold;
-          line-height: 48px;
-          color: #FFF;
-        }
-        > i {
-          display: inline-block;
-          box-sizing: border-box;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 0;
-          width: 46;
-          height: 46px;
-          background: #FFF;
-          border-radius: 10px;
-          font-size: 32px;
-          font-family: San Francisco Display;
-          font-weight: bold;
-        }
-      }
-    }
   }
+</style>
+<style lang="scss" scoped>
+.live {
+  /deep/ .count-down > .time > span {
+    padding: 0 8px;
+    font-size: 24px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    line-height: 48px;
+    color: #FFF;
+  }
+}
 </style>

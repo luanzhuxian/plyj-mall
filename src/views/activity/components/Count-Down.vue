@@ -1,14 +1,14 @@
 <template>
   <div
     v-show="show"
-    :class="{
-      [$style.countDown]: true,
-      [$style[size]]: true
+    :class="['count-down', size, (!!background ? 'bg' : '')]"
+    :style="{
+      color,
+      '--background': background
     }"
-    :style="{ color }"
   >
     <span v-if="textBefore">{{ textBefore }}</span>
-    <div :class="$style.time">
+    <div class="time">
       <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span v-if="isSecondsShow || !isDayShow">:</span><i v-if="isSecondsShow || !isDayShow" v-text="s" />
     </div>
     <span v-if="textAfter">{{ textAfter }}</span>
@@ -45,6 +45,10 @@ export default {
     format: {
       type: String,
       default: 'HH:mm:ss'
+    },
+    background: {
+      type: String,
+      default: ''
     },
     fields: {
       type: [Number, String],
@@ -138,7 +142,7 @@ export default {
 }
 </script>
 
-<style module lang="scss">
+<style lang="scss" scoped>
   .count-down {
     box-sizing: border-box;
     display: flex;
@@ -152,23 +156,39 @@ export default {
     > .time {
       display: flex;
       > i {
+        box-sizing: border-box;
         display: inline-block;
         text-align: center;
       }
     }
     &.small {
+      font-size: 24px;
+      &.bg {
+        .time {
+          > span {
+            padding: 0 5px;
+          }
+          > i {
+            width: 40px;
+            height: 36px;
+            background: var(--background);
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+    &.mideum {
+      font-size: 32px;
       .time {
         > span {
-          padding: 0 5px;
+          padding: 0 8px;
         }
         > i {
-          box-sizing: border-box;
-          padding: 4px;
-          width: 40px;
-          height: 35px;
-          line-height: 30px;
-          background: rgba(174, 174, 174, 0.64);
-          border-radius: 4px;
+          width: 46px;
+          height: 46px;
+          background: var(--background);
+          border-radius: 10px;
+          font-weight: bold;
         }
       }
     }

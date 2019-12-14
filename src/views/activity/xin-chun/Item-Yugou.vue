@@ -1,5 +1,5 @@
 <template>
-  <li :class="$style.item">
+  <li :class="$style.item" class="item">
     <div :class="$style.time">
       <div :class="$style.timeLeft">
         <span v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>
@@ -92,9 +92,6 @@ export default {
       font-family: Microsoft YaHei;
       font-weight: bold;
       @include elps();
-      /deep/ .count-down {
-        font-size: 26px;
-      }
     }
     .info {
       flex: 1;
@@ -141,4 +138,11 @@ export default {
       object-fit: cover;
     }
   }
+</style>
+<style lang="scss" scoped>
+.item {
+  /deep/ .count-down {
+    font-size: 26px;
+  }
+}
 </style>

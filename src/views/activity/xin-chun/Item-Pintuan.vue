@@ -1,5 +1,5 @@
 <template>
-  <li :class="$style.item">
+  <li :class="$style.item" class="item">
     <div :class="$style.label">
       众志成团
     </div>
@@ -131,9 +131,6 @@ export default {
       font-family: San Francisco Display;
       font-weight: bold;
       @include elps();
-      /deep/ .count-down {
-        font-size: 26px;
-      }
     }
     .img-wrapper {
       width: 300px;
@@ -215,4 +212,11 @@ export default {
       }
     }
   }
+</style>
+<style lang="scss" scoped>
+.item {
+  /deep/ .count-down {
+    font-size: 26px;
+  }
+}
 </style>
