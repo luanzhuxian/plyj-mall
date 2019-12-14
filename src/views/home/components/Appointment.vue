@@ -39,11 +39,11 @@
 
     <pl-popup :show.sync="showPop" title="在线预约">
       <div :class="$style.popContent">
-        <pl-svg :class="$style.giftIcon" name="icon-gift" width="70" height="50" />
-        <div :class="$style.right">
-          <pl-svg name="icon-yuyueli" width="94" height="50" />
+        <pl-svg :class="$style.giftIcon" name="icon-gift" width="140" height="100" />
+        <div :class="$style.popLeft">
+          <pl-svg name="icon-yuyue2" width="112" height="31" />
         </div>
-        <ul :class="$style.left">
+        <ul :class="$style.popRight">
           <li
             v-for="(item, i) of data.values"
             :key="i"
@@ -214,7 +214,6 @@ export default {
       color: #AB8F58;
     }
     .swiper {
-      // height: 80px !important;
       .swiper-slide {
         > p {
           width: 350px;
@@ -279,7 +278,7 @@ export default {
     align-items: center;
     padding: 32px 64px;
     background-color: #feefd1;
-    > .right {
+    > .pop-left {
       position: relative;
       display: inline-flex;
       align-items: center;
@@ -295,21 +294,24 @@ export default {
         background: linear-gradient(180deg, #F3D488, #EAB665);
       }
     }
-    > .left {
+    > .pop-right {
       position: relative;
       display: inline-flex;
       flex-direction: column;
       justify-content: space-between;
       flex: 1;
+      width: 0;
       height: 100%;
       padding-left: 20px;
       font-size: 28px;
       color: #AB8F58;
+      @include elps();
       > li {
         position: relative;
         display: flex;
         align-items: center;
         margin-bottom: 12px;
+        @include elps();
         &:nth-last-of-type(1) {
           margin-bottom: 0;
         }
