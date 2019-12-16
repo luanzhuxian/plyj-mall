@@ -1,40 +1,43 @@
 <template>
-  <div :class="$style.activity" v-if="hasJxEvent || hasInvitingEvent">
+  <div :class="$style.activity">
     <router-link
-      v-if="hasJxEvent"
       :class="{
         [$style.item]: true,
-        [$style.left]: true,
-        [$style.small]: hasJxEvent && hasInvitingEvent,
-        [$style.large]: hasJxEvent && !hasInvitingEvent
+        [$style.left]: false,
+        [$style.small]: false,
+        [$style.large]: true
+      }"
+      :style="{
+        background,
+        boxShadow
       }"
       tag="div"
-      :to="{ name: 'RoadLearning' }"
+      :to="{ name: 'NewYearActivity' }"
     >
-      <div :class="$style.imgWrapper">
-        <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/9ef6c14b-4943-4295-8bdb-a3b16f76ca03.png" alt="">
-      </div>
       <div :class="$style.info">
         <div :class="$style.sub">
           翻开记忆的味道
         </div>
-        <pl-svg name="icon-lao-dai-xin" width="264" height="54" />
+        <pl-svg name="icon-nianwei" width="264" height="54" />
         <div :class="$style.btn">
           立即参加
         </div>
       </div>
+      <div :class="$style.imgWrapper">
+        <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/9ef6c14b-4943-4295-8bdb-a3b16f76ca03.png" alt="">
+      </div>
     </router-link>
 
     <router-link
-      v-if="hasInvitingEvent"
+      v-if="false"
       :class="{
         [$style.item]: true,
-        [$style.right]: true,
-        [$style.small]: hasJxEvent && hasInvitingEvent,
-        [$style.large]: !hasJxEvent && hasInvitingEvent
+        [$style.right]: false,
+        [$style.small]: false,
+        [$style.large]: false
       }"
       tag="div"
-      :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
+      :to="{ name: '' }"
     >
       <div :class="$style.imgWrapper">
         <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/2545d06c-3ae5-431b-926e-0feb36572222.png" alt="">
@@ -56,23 +59,33 @@
 export default {
   name: 'Activity',
   inject: ['parent'],
+  props: {
+    background: {
+      type: String,
+      default: '#FFF'
+    },
+    boxShadow: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {}
-  },
-  computed: {
-    invitingEvent () {
-      return (this.parent && this.parent.invitingEvent) || {}
-    },
-    jxEvent () {
-      return (this.parent && this.parent.jxEvent) || {}
-    },
-    hasInvitingEvent () {
-      return !~[1, 2].indexOf(this.invitingEvent.status)
-    },
-    hasJxEvent () {
-      return !~[1, 2].indexOf(this.jxEvent.status)
-    }
   }
+  // computed: {
+  //   invitingEvent () {
+  //     return (this.parent && this.parent.invitingEvent) || {}
+  //   },
+  //   jxEvent () {
+  //     return (this.parent && this.parent.jxEvent) || {}
+  //   },
+  //   hasInvitingEvent () {
+  //     return !~[1, 2].indexOf(this.invitingEvent.status)
+  //   },
+  //   hasJxEvent () {
+  //     return !~[1, 2].indexOf(this.jxEvent.status)
+  //   }
+  // }
 }
 </script>
 
@@ -88,41 +101,60 @@ export default {
   }
   .item {
     box-sizing: border-box;
-    background: #FFFAE6;
-    box-shadow: 0px 8px 12px rgba(121, 30, 5, 0.2);
     border-radius: 20px;
-    // &.large {
-    //   border: none !important;
-    //   .item-left {
-    //     .main {
-    //       font-size: 42px;
-    //       line-height: 58px;
-    //     }
-    //     .sub {
-    //       display: flex;
-    //       align-items: center;
-    //       font-size: 30px;
-    //       line-height: 40px;
-    //     }
-    //     .label {
-    //       display: inline-flex;
-    //       align-items: center;
-    //       margin-left: 18px;
-    //       padding: 0 6px;
-    //       height: 36px;
-    //       line-height: 36px;
-    //       background: #F2B036;
-    //       text-align: center;
-    //       font-size: 22px;
-    //       color: #FFF;
-    //       svg {
-    //         margin-left: 8px;
-    //         color: #FFF;
-    //         vertical-align: -4px;
-    //       }
-    //     }
-    //   }
-    // }
+    &.large {
+      &.item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px 70px 40px 45px;
+        width: 100%;
+        height: 268px;
+      }
+      .img-wrapper {
+        width: 176px;
+        height: 176px;
+        overflow: hidden;
+      }
+      .info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .sub {
+        margin-bottom: 8px;
+        font-size: 24px;
+        font-family: PingFang SC;
+        color: #B48A64;
+      }
+      .btn {
+        position: relative;
+        margin-top: 28px;
+        width: 232px;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        background: linear-gradient(180deg, #FB873A 0%, #F64C1B 100%);
+        border-radius: 16px;
+        font-size: 28px;
+        font-weight: bold;
+        color: #FFFFFF;
+        &:after {
+          position: absolute;
+          top: 50%;
+          right: 30px;
+          transform: translateY(-50%);
+          content: '';
+          width: 0;
+          height: 0;
+          border-width: 10px;
+          border-color: transparent transparent transparent #FFFFFF;
+          border-style: solid;
+          border-radius: 4px;
+        }
+      }
+    }
+
     &.small {
       &.left {
         .img-wrapper {

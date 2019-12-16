@@ -12,35 +12,35 @@
           </div>
           <pl-svg name="icon-jinru" width="116" />
         </div>
-        <!-- 活动-->
-        <activity :class="$style.activity" />
         <!-- 直播-->
-        <div :class="$style.live" v-if="isLiveShow">
+        <div :class="[$style.live, $style.module]" v-if="isLiveShow">
           <live />
         </div>
+        <!-- 活动-->
+        <activity :class="[$style.activity, $style.module]" background="#FFFAE6" box-shadow="0px 8px 12px rgba(121, 30, 5, 0.2)" />
         <!-- 品宣 -->
-        <div :class="$style.propagate" v-if="PIN_XUAN && PIN_XUAN.showStatue === 1">
+        <div :class="[$style.propagate, $style.module]" v-if="PIN_XUAN && PIN_XUAN.showStatue === 1">
           <propagate :data="PIN_XUAN" />
         </div>
         <!-- 领券 -->
-        <div :class="$style.propagate" v-if="COUPON.values && COUPON.values.length">
+        <div :class="[$style.coupon, $style.module]" v-if="COUPON.values && COUPON.values.length">
           <coupon :data="COUPON" />
         </div>
         <!-- 春耘 -->
-        <!-- <div :class="$style.chunyun" v-if="CHUN_YUN.values && CHUN_YUN.values.length"> -->
-        <div :class="$style.chunyun">
+        <!-- <div :class="[$style.chunyun, $style.module]" v-if="CHUN_YUN.values && CHUN_YUN.values.length"> -->
+        <div :class="[$style.chunyun, $style.module]">
           <chunyun :data="CHUN_YUN" />
         </div>
         <!-- 拼团 -->
-        <div :class="$style.pintuan" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
+        <div :class="[$style.pintuan, $style.module]" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
           <pintuan :data="PIN_TUAN" />
         </div>
         <!-- 预购 -->
-        <div :class="$style.yugou" v-if="YU_GOU.values && YU_GOU.values.length">
+        <div :class="[$style.yugou, $style.module]" v-if="YU_GOU.values && YU_GOU.values.length">
           <yugou :data="YU_GOU" />
         </div>
         <!-- 疯抢 -->
-        <div :class="$style.fengqiang" v-if="FENG_QIANG.values && FENG_QIANG.values.length">
+        <div :class="[$style.fengqiang, $style.module]" v-if="FENG_QIANG.values && FENG_QIANG.values.length">
           <div :class="$style.title">
             — 新春优惠感恩大回馈 —
           </div>
@@ -141,6 +141,11 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   padding: 700px 0 88px;
+  > .module {
+    &:nth-of-type(1) {
+      padding-top: 0 !important;
+    }
+  }
 }
 
 .btn-top {

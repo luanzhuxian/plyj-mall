@@ -11,7 +11,7 @@
       <div :class="$style.springBookContent">
         <div :class="$style.current" v-if="listCurrent.length">
           <div :class="$style.title">
-            正在进行中
+            <span>正在进行中</span>
           </div>
           <ul :class="$style.springBookList">
             <template v-for="(item, i) of listCurrent">
@@ -26,7 +26,7 @@
 
         <div :class="$style.preview" v-if="listPreview.length">
           <div :class="$style.title">
-            即将开始
+            <span>即将开始</span>
           </div>
           <ul :class="$style.springBookList">
             <template v-for="(item, i) of listPreview">
@@ -163,12 +163,29 @@ export default {
     margin: 32px 0;
   }
   .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 32px 0;
     font-size: 36px;
     font-weight: bold;
-    line-height: 50px;
     color: #FFFFFF;
     text-align: center;
+    &:before,
+    &:after {
+      display: inline-block;
+      content: '';
+      width: 54px;
+      height: 50px;
+      background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/1d46c9d5-bae7-4f3f-9cff-ac1bad805880.png") no-repeat center;
+      background-size: 100%;
+    }
+    &:after {
+      transform: rotate(180deg);
+    }
+    >span {
+      margin: 0 32px;
+    }
   }
 }
 </style>

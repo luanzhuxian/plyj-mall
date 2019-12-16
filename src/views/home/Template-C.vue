@@ -12,6 +12,7 @@
       <search :class="$style.search" placeholder="搜索商品" />
       <propagate :class="$style.propagate" :data="PIN_XUAN" />
       <live :class="$style.live" v-if="isLiveShow" />
+      <activity :class="$style.activity" />
       <appointment :class="$style.appointment" :data="YU_YUE" :style-type="2" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
@@ -62,6 +63,7 @@
 <script>
 import Search from './components/Search.vue'
 import Live from '../activity/components/Live.vue'
+import Activity from '../activity/xin-chun/Activity.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
@@ -76,6 +78,7 @@ export default {
   components: {
     Search,
     Live,
+    Activity,
     HotItem,
     Best,
     BestRecommend,
