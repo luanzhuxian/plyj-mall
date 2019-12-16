@@ -29,26 +29,24 @@ import MessageBox from '../components/penglai-ui/message-box'
 let delay = new DelayExec(500)
 export default {
   /* 获取商城信息 */
-  [type.GET_MALL_INFO]: ({ commit, dispatch }) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        // 商城名称
-        let mallDomain = window.location.pathname.split('/')[1] || ''
-        const { result } = await getMallInfo(mallDomain)
-        commit(type.GET_MALL_INFO, result)
-        // 获取本地缓存openId
-        let openId = localStorage.getItem(`openId_${mallDomain}`) || ''
-        // 如果openId不存在，获取一下openId
-        if (!openId) {
-          await dispatch(type.GET_OPENID)
-        } else {
-          commit(type.SET_OPENID, { mallDomain, openId })
-        }
-        resolve(result)
-      } catch (e) {
-        reject(e)
+  [type.GET_MALL_INFO]: async ({ commit, dispatch }) => {
+    try {
+      // 商城名称
+      let mallDomain = window.location.pathname.split('/')[1] || ''
+      const { result } = await getMallInfo(mallDomain)
+      commit(type.GET_MALL_INFO, result)
+      // 获取本地缓存openId
+      let openId = localStorage.getItem(`openId_${mallDomain}`) || ''
+      // 如果openId不存在，获取一下openId
+      if (!openId) {
+        await dispatch(type.GET_OPENID)
+      } else {
+        commit(type.SET_OPENID, { mallDomain, openId })
       }
-    })
+      return result
+    } catch (e) {
+      throw e
+    }
   },
   // 获取openid并登录
   [type.GET_OPENID]: async ({ commit, dispatch, state }) => {
@@ -78,23 +76,21 @@ export default {
       }
     }
   },
-  [type.LOGIN]: ({ commit, dispatch, state }) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let loginInfo = null
-        // 通过openid登录
-        if (state.openId) {
-          loginInfo = await login(state.openId)
-        } else {
-          // openid有问题时重新获取openid
-          await dispatch(type.GET_OPENID)
-        }
-        commit(type.SET_TOKEN, loginInfo.result)
-        resolve(loginInfo)
-      } catch (e) {
-        reject(e)
+  [type.LOGIN]: async ({ commit, dispatch, state }) => {
+    try {
+      let loginInfo = null
+      // 通过openid登录
+      if (state.openId) {
+        loginInfo = await login(state.openId)
+      } else {
+        // openid有问题时重新获取openid
+        await dispatch(type.GET_OPENID)
       }
-    })
+      commit(type.SET_TOKEN, loginInfo.result)
+      return loginInfo
+    } catch (e) {
+      throw e
+    }
   },
   // 转存微信头像到ali-oss，以便提高生成海报的速度
   [type.SAVE_WX_AVATAR]: async ({ commit }, url) => {

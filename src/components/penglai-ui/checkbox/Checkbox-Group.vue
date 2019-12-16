@@ -25,8 +25,11 @@ export default {
     }
   },
   watch: {
-    group (val) {
-      this.$emit('change', val)
+    group: {
+      handler (val) {
+        this.$emit('change', val)
+      },
+      deep: true
     }
   },
   methods: {

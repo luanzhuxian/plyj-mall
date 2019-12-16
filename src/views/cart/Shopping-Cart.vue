@@ -51,13 +51,16 @@
           </span>
         </span>
         <!-- 满减券，存在较大金额（未领取） -->
-        <span v-else-if="minFullCutConpon && !minHadFullCutConpon">
+        <!--<span v-else-if="minFullCutConpon && !minHadFullCutConpon">
+          全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元,领券立享优惠
+        </span>-->
+        <span v-else-if="minFullCutConpon">
           全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元,领券立享优惠
         </span>
         <!-- 满减券（已领取） -->
-        <span v-else-if="minHadFullCutConpon">
+        <!--<span v-else-if="minHadFullCutConpon">
           全场满{{ minHadFullCutConpon.useLimitAmount }}元减{{ minHadFullCutConpon.amount }}元
-        </span>
+        </span>-->
         <!-- 品类券（已领取） -->
         <span v-else-if="hadCategoryCouponList.length">
           已领用{{ hadCouponList.length }} 张优惠券,结算时立享优惠
@@ -76,7 +79,7 @@
           </i>
           <!-- 自己有满减券 -->
           <i
-            v-else-if="minHadFullCutConpon"
+            v-else-if="minFullCutConpon.count"
             @click="$router.push({ name: 'Home' })"
           >
             再逛逛
@@ -290,9 +293,9 @@ export default {
         }
         // 券中最小的金额
         this.minFullCutConpon = this.fullCutCouponList[0] || null
-        this.minHadFullCutConpon = this.hadFullCutCouponList[0] || null
+        // this.minHadFullCutConpon = this.hadFullCutCouponList[0] || null
         this.minCategoryConpon = this.categoryCouponList[0] || null
-        this.minHadCategoryConpon = this.hadCategoryCouponList[0] || null
+        // this.minHadCategoryConpon = this.hadCategoryCouponList[0] || null
       } catch (e) {
         throw e
       }
@@ -371,9 +374,14 @@ export default {
           }
           this.showSpecifica = false
           this.$set(this.products, this.products.indexOf(this.currentPro), this.currentPro)
+          const checkedIndex = this.checkedList.findIndex(item => {
+            return item.cartSkuCode === this.currentPro.cartSkuCode && item.cartSkuCode2 === this.currentPro.cartSkuCode2
+          })
+          this.checkedList.splice(checkedIndex, 1, this.currentPro)
           this.computeMoney()
           this.isDouble(option)
           this.setDisabled(this.products)
+          this.setCoupon()
         } else {
           // 修改失败，回滚选框中的值
           revert()

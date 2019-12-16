@@ -171,7 +171,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus', 'isActivityAuth', 'activityId', 'skinId']),
+    ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus', 'isActivityAuth', 'activityId', 'skinId', 'userId']),
     homeActive: function () {
       return this.$route.matched.some(val => val.name === 'Home')
     },
@@ -190,9 +190,11 @@ export default {
       async handler (to) {
         clearTimeout(this.timer)
         if (this.showNavbar.includes(to.name)) {
-          this.timer = setTimeout(() => {
-            this.getAuditNotice()
-          }, 2000)
+          if (this.userId) {
+            this.timer = setTimeout(() => {
+              this.getAuditNotice()
+            }, 2000)
+          }
         }
       },
       immediate: true
