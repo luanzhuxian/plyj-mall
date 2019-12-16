@@ -38,9 +38,10 @@
             <h3>
               已有<span>122</span>人积攒我心中的年味
             </h3>
-            <div>
-              距活动结束仅剩<span>122</span>天<span>24</span>：<span>59</span>：<span>59</span>
+            <div v-if="!activityIsOver">
+              距活动{{ activityIsStart? '结束' : '开始' }}仅剩<span>{{ dd }}</span>天<span>{{ hh }}</span>：<span>{{ mm }}</span>：<span>{{ ss }}</span>
             </div>
+            <div v-else>活动已结束</div>
           </div>
         </div>
         <!-- 参与活动 -->
@@ -448,7 +449,7 @@
         <div class="footer">
           <div class="btns">
             <button class="iKnow">朕知道了</button>
-            <button @click="$router.back()">返回主会场</button>
+            <button @click="backMainActivityCenter">返回主会场</button>
           </div>
         </div>
       </div>
@@ -463,7 +464,9 @@
 // import { getNewYearActivityDetail } from '../../../apis/new-year-activity'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { generateQrcode, drawRoundRect, cutArcImage, createText } from '../../../assets/js/util'
+import { getServerTime } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'NewYearActivity',
@@ -473,6 +476,9 @@ export default {
   },
   data () {
     return {
+      isShare: false, // 是否为分享页面
+      activityIsStart: false, // 当前活动是否开始
+      activityIsOver: false, // 活动是否已结束
       presentList: [
         {
           headImgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
@@ -593,10 +599,15 @@ export default {
       qrcode: '', // 当前活动的二维码
       sharePoster: '', // 分享海报
       isShowNewYearPoster: false, // 显示年味海报
-      newYearPoster: '' // 年味海报
+      newYearPoster: '', // 年味海报
+      dd: '', // 倒计时天数
+      hh: '', // 倒计时小时数
+      mm: '', // 倒计时分钟数
+      ss: '' // 倒计时描述
     }
   },
   props: {
+    // 活动id
     id: {
       type: String,
       default: ''
@@ -605,18 +616,79 @@ export default {
   computed: {
     ...mapGetters(['avatar', 'mallUrl', 'userId'])
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (from.name !== 'Activity') {
+        vm.isShare = true
+      } else {
+        vm.isShare = false
+      }
+    })
+  },
   async activated () {
+    // 是否绑定手机,未绑定手机,去绑定手机
+    if (!this.userId) {
+      try {
+        await this.$alert({
+          message: '新用户无法参加我心中的年味，请先绑定手机号',
+          confirmText: '去绑定手机号码'
+        })
+        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+          name: this.$route.name,
+          params: { id: this.id }
+        }))
+        this.$router.push({ name: 'BindMobile' })
+      } catch (e) {
+        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+          name: this.$route.name,
+          params: { id: this.id }
+        }))
+        this.$router.push({ name: 'BindMobile' })
+      }
+    }
+    // 是否能参与当前活动,不能参与返回主会场
+    this.checkActivity()
+    // 初始化页面
     this.init()
   },
-  async created () {
-  },
   methods: {
+    // 检查当前用户是否可参与当前活动
+    async checkActivity () {
+      try {
+        // await getNewYearActivityDetail()
+        this.canNotJoinCurrentActivity()
+      } catch (e) {
+        this.canNotJoinCurrentActivity()
+        throw e
+      }
+    },
+    // 初始化页面
     async init () {
       // await getNewYearActivityDetail()
       let qrcode = await generateQrcode(500, `${this.mallUrl}/new-year-activity${this.id ? '/' + this.id : ''}`, 100, null, null, 'url')
       this.qrcode = new Image()
       this.qrcode.src = qrcode
+
+      // 启动倒计时
+      let distanceTime
+      let { result: serverTime } = await getServerTime()
+      let now = moment(serverTime).valueOf()
+      let start = moment(this.activeDetail.activityStartTime).valueOf()
+      let end = moment(this.activeDetail.activityEndTime).valueOf()
+      if (now < start) { // 活动未开始
+        this.activityIsStart = false
+        now = start - now
+      } else if (end > now) { // 活动未结束
+        this.activityIsStart = true
+        distanceTime = end - now
+      } else if (now > end) { // 活动未结束
+        this.activityIsOver = true
+      } else {
+        this.canNotJoinCurrentActivity()
+      }
+      this.countdown(distanceTime)
     },
+    // 生成活动分享海报
     async showPoster () { // 显示分享海报
       try {
         if (this.sharePoster) {
@@ -639,11 +711,13 @@ export default {
         throw e
       }
     },
+    // 切换展示的奖品列表
     clickPrensentType (type) {
       this.presentListType = type
       this.showMyPresentListMore = false
       this.showSunPresentListMore = false
     },
+    // 获得年味
     async getMyNewYearCard () {
       try {
         this.isShowNewYearPoster = false
@@ -652,6 +726,7 @@ export default {
         throw e
       }
     },
+    // 生成年味海报
     async drawNewYearCardPoster (imgUrl, desc) { // 生成年味海报
       try {
         let bgImg = await this.loadImage(imgUrl)
@@ -692,6 +767,7 @@ export default {
         throw e
       }
     },
+    // 加载图片
     async loadImage (src) {
       let img = new Image()
       img.crossOrigin = ''
@@ -704,6 +780,39 @@ export default {
           reject(e)
         }
       })
+    },
+    // 无法参与活动，返回主会场
+    async canNotJoinCurrentActivity () {
+      await setTimeout(() => {
+        this.$warning('您无法参与活动，返回主会场，更多活动等您开启')
+        this.backMainActivityCenter()
+      }, 5000)
+    },
+    // 返回主会场
+    backMainActivityCenter () {
+      this.$router.replace({ name: 'Activity' })
+    },
+    // 倒计时
+    countdown (datetime) {
+      if (datetime < 0) return
+      this.timer = setInterval(async () => {
+        let { _data } = moment.duration(datetime)
+        let d = String(Math.floor(moment.duration(datetime).asDays()))
+        let h = String(_data.hours)
+        let m = String(_data.minutes)
+        let s = String(_data.seconds)
+        datetime -= 1000
+        if (datetime <= 0) {
+          clearInterval(this.timer)
+          setTimeout(async () => { // 倒计时结束, 重新渲染页面
+            this.init()
+          }, 5000)
+        }
+        this.dd = d.padStart(2, '0')
+        this.hh = h.padStart(2, '0')
+        this.mm = m.padStart(2, '0')
+        this.ss = s.padStart(2, '0')
+      }, 1000)
     }
   }
 }
