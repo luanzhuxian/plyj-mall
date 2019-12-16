@@ -53,7 +53,7 @@
                 <span>12人已集齐年味</span>
                 <span>可参与抽奖获得年味大奖</span>
               </p>
-              <button>获得我的年味</button>
+              <button @click="getMyNewYearCard">获得我的年味</button>
               <button v-if="false">立即抽奖</button>
             </div>
           </div>
@@ -265,12 +265,205 @@
         <span>获得的压岁钱将自动存入我的奖学金中 。</span>
       </div>
     </pl-popup>
+
+    <!-- 显示分享海报 -->
+    <div class="winning-prize poster" v-if="isShowSharePoster">
+      <div class="prize-box poster-box">
+        <img :src="sharePoster" alt="">
+        <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
+      </div>
+      <div class="winning-prize-close poster-close">
+        <pl-svg @click="isShowSharePoster = false" name="icon-close3" fill="#fff" width="40" />
+      </div>
+    </div>
+
+    <!-- 显示年味海报 -->
+    <div class="winning-prize poster" v-if="isShowNewYearPoster">
+      <div class="prize-box poster-box">
+        <img :src="newYearPoster" alt="">
+        <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
+      </div>
+      <div class="winning-prize-close poster-close">
+        <pl-svg @click="isShowNewYearPoster = false" name="icon-close3" fill="#fff" width="40" />
+      </div>
+    </div>
+
+    <!-- 中阶梯奖品弹框 -->
+    <div class="bg-gray" v-if="false">
+      <div class="present-box">
+        <div class="top">
+          恭喜您积攒6个年味
+          <p class="has-underline">获得优惠券</p>
+        </div>
+        <div class="detail">
+          <div class="coupon" v-if="false">
+            <img
+              v-if="false"
+              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/category-coupon.png" alt=""
+            >
+            <img v-else src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/full-coupon.png"
+                 alt=""
+            >
+            <div class="wrap">
+              <div class="left">
+                <div class="coupon-price">
+                  5000
+                </div>
+                <div class="desc">
+                  <p>满5000减1000</p>
+                  <p>双十二优惠券</p>
+                </div>
+                <p class="expiration">有效期 2019.4.15-2019.4.19</p>
+              </div>
+              <div class="right">
+                立即<br>领取
+              </div>
+            </div>
+          </div>
+          <div class="product" v-if="false">
+            <img
+              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png"
+              alt=""
+            >
+            <div class="product-detail">
+              <h3>CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘</h3>
+              <h4>有效期：2019.4.15-2019.4.30</h4>
+              <p>价值1000元的机械键盘一个</p>
+            </div>
+          </div>
+          <div class="scholarship">
+            <img
+              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f3f449e6-43f1-4ddc-a68b-9a0a536a88e5.png"
+              alt=""
+            >
+            <span>99999元</span>
+          </div>
+        </div>
+        <div class="info">
+          <p>优惠券已经自动存入您的我的卡包</p>
+          <p>您可在我的卡包中查看</p>
+        </div>
+        <div class="footer">
+          <button class="accept">开心收下</button>
+        </div>
+      </div>
+      <div class="close">
+        <pl-svg name="icon-close3" fill="#fff" width="40" />
+      </div>
+    </div>
+    <!-- 错过阶梯奖品弹框 -->
+    <div class="bg-gray" v-if="false">
+      <div class="present-box">
+        <div class="top">
+          很遗憾 您与奖品擦肩而过
+          <p>新年喜临门 感谢您的参与</p>
+        </div>
+        <div class="detail">
+          <div class="no-present">
+            <img
+              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png"
+              alt=""
+            >
+          </div>
+        </div>
+        <div class="info">
+          <p>您再获得6个年味即可参与抽奖</p>
+        </div>
+        <div class="footer">
+          <button class="iKnow">朕知道了</button>
+        </div>
+      </div>
+      <div class="close">
+        <pl-svg name="icon-close3" fill="#fff" width="40" />
+      </div>
+    </div>
+    <!-- 中年味大奖前提示 -->
+    <div class="bg-gray" v-if="false">
+      <div class="grand-present-tip-box">
+        <div class="top">
+          <p>恭喜你已集齐我心中的年味</p>
+          <p>请抽出我心中的年味大礼</p>
+        </div>
+        <div class="detail">
+          <img
+            class="gift"
+            src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/ac9e7b86-69d4-4356-9ba7-c233e711056d.png"
+            alt=""
+          >
+          <img class="light"
+               src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/1565326e-6f2a-42f7-9303-c8ad3221f92b.png"
+               alt=""
+          >
+        </div>
+        <div class="footer">
+          <button>立即抽奖</button>
+        </div>
+      </div>
+      <div class="close">
+        <pl-svg name="icon-close3" fill="#fff" width="40" />
+      </div>
+    </div>
+    <!-- 中年味大奖弹框 -->
+    <div class="bg-gray" v-if="false">
+      <div class="grand-present-box">
+        <img
+          src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/6d5c54f0-e972-4fd2-b28b-021a12c78e39.png"
+          alt=""
+        >
+        <div class="top">恭喜你获得年味大礼</div>
+        <div class="bottom">
+          <div class="detail">
+            <img
+              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png"
+              alt=""
+            >
+            <h3>CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘</h3>
+            <h4>价值1000元的机械键盘一个</h4>
+            <p>有效期：2019.4.15-2019.4.30</p>
+          </div>
+          <div class="footer">
+            <button>开心收下</button>
+          </div>
+        </div>
+      </div>
+      <div class="close">
+        <pl-svg name="icon-close3" fill="#fff" width="40" />
+      </div>
+    </div>
+    <!-- 错过年味大奖前弹框 -->
+    <div class="bg-gray" v-if="false">
+      <div class="present-box">
+        <div class="top">
+          很遗憾 您与奖品擦肩而过
+          <p>新年喜临门 感谢您的参与</p>
+        </div>
+        <div class="detail">
+          <div class="no-present">
+            <img
+              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png"
+              alt=""
+            >
+          </div>
+        </div>
+        <div class="footer">
+          <div class="btns">
+            <button class="iKnow">朕知道了</button>
+            <button @click="$router.back()">返回主会场</button>
+          </div>
+        </div>
+      </div>
+      <div class="close">
+        <pl-svg name="icon-close3" fill="#fff" width="40" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { getNewYearActivityDetail } from '../../../apis/new-year-activity'
+// import { getNewYearActivityDetail } from '../../../apis/new-year-activity'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { generateQrcode, drawRoundRect, cutArcImage, createText } from '../../../assets/js/util'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'NewYearActivity',
@@ -286,6 +479,9 @@ export default {
         },
         {
           headImgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/invitation-large.png'
+        },
+        {
+          headImgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
         }
       ],
       swiperOption: {
@@ -303,7 +499,7 @@ export default {
         observer: true,
         observeParents: true
       },
-      isShowPoster: false, // 是否显示分享海报
+      isShowSharePoster: false, // 是否显示分享海报
       isShowRule: false, // 是否显示活动规则
       signInIconList: [
         { name: '灶', desc: '送灶上天', isSignIn: true },
@@ -393,7 +589,11 @@ export default {
           giftImg: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
         }
       ], // 好礼晒单列表
-      showMyPresentListMore: false
+      showMyPresentListMore: false,
+      qrcode: '', // 当前活动的二维码
+      sharePoster: '', // 分享海报
+      isShowNewYearPoster: false, // 显示年味海报
+      newYearPoster: '' // 年味海报
     }
   },
   props: {
@@ -403,18 +603,38 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['avatar', 'mallUrl', 'userId'])
   },
   async activated () {
+    this.init()
   },
   async created () {
   },
   methods: {
     async init () {
-      await getNewYearActivityDetail()
+      // await getNewYearActivityDetail()
+      let qrcode = await generateQrcode(500, `${this.mallUrl}/new-year-activity${this.id ? '/' + this.id : ''}`, 100, null, null, 'url')
+      this.qrcode = new Image()
+      this.qrcode.src = qrcode
     },
-    showPoster () {
+    async showPoster () { // 显示分享海报
       try {
-        this.isShowPoster = true
+        if (this.sharePoster) {
+          this.isShowSharePoster = true
+          return
+        }
+        let bgImgUrl = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/160d4ff6-7691-4d29-9239-0b0730454007.png'
+        let bgImg = await this.loadImage(bgImgUrl)
+        let canvas = document.createElement('canvas')
+        canvas.width = bgImg.width
+        canvas.height = bgImg.height
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
+        drawRoundRect(ctx, canvas.width / 2 - 100, canvas.height / 2 + 200, 200, 200, 2, '#FE613F', '#FE613F')
+        ctx.drawImage(this.qrcode, canvas.width / 2 - 100, canvas.height / 2 + 200, 200, 200)
+        let sharePoster = canvas.toDataURL('image/jpeg', 0.7)
+        this.sharePoster = sharePoster
+        this.isShowSharePoster = true
       } catch (e) {
         throw e
       }
@@ -423,6 +643,67 @@ export default {
       this.presentListType = type
       this.showMyPresentListMore = false
       this.showSunPresentListMore = false
+    },
+    async getMyNewYearCard () {
+      try {
+        this.isShowNewYearPoster = false
+        this.drawNewYearCardPoster('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/09dcc537-3c0b-4f04-8771-930aaaebdb08.png', '杀猪割年肉')
+      } catch (e) {
+        throw e
+      }
+    },
+    async drawNewYearCardPoster (imgUrl, desc) { // 生成年味海报
+      try {
+        let bgImg = await this.loadImage(imgUrl)
+        let canvas = document.createElement('canvas')
+        canvas.width = bgImg.width
+        canvas.height = bgImg.height
+        let ctx = canvas.getContext('2d')
+        // 绘制背景
+        ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
+        // 绘制头像
+        let default_avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
+        let avatar = this.avatar || default_avatar
+        avatar = await this.loadImage(avatar)
+        avatar = await cutArcImage(avatar)
+        drawRoundRect(ctx, 50, 810, 60, 60, 30, '#FE613F', '#FE613F')
+        ctx.drawImage(avatar, 50, 810, 60, 60)
+        // 绘制年味描述
+        ctx.font = '20px bold'
+        ctx.fillStyle = '#000'
+        ctx.textBaseline = 'hanging'
+        createText(ctx, 118, 820, desc, 34, 138, 1)
+        createText(ctx, 118, 850, '我心中的年味', 34, 138, 1)
+
+        // 绘制二维码
+        drawRoundRect(ctx, 242, 800, 80, 80, 2, '#FE613F', '#FFF')
+        ctx.drawImage(this.qrcode, 242, 800, 80, 80)
+
+        // 绘制二维码旁的文字
+        ctx.font = '20px bold'
+        ctx.fillStyle = '#000'
+        ctx.textBaseline = 'hanging'
+        createText(ctx, 332, 800, '长按识别保存图片分享给好友，一起参与活动', 24, 136, 3)
+
+        let sharePoster = canvas.toDataURL('image/jpeg', 0.7)
+        this.newYearPoster = sharePoster
+        this.isShowNewYearPoster = true
+      } catch (e) {
+        throw e
+      }
+    },
+    async loadImage (src) {
+      let img = new Image()
+      img.crossOrigin = ''
+      img.src = src + '?time=' + Date.now()
+      return new Promise((resolve, reject) => {
+        img.onload = function () {
+          resolve(img)
+        }
+        img.onerror = function (e) {
+          reject(e)
+        }
+      })
     }
   }
 }
@@ -433,6 +714,7 @@ export default {
     width: 100vw;
     background-color: #c40e1a;
     padding-bottom: 60px;
+    position: relative;
 
     .activity-detail {
       min-height: 580px;
@@ -913,6 +1195,478 @@ export default {
       span {
         display: block;
         font-size: 28px;
+      }
+    }
+  }
+
+  /* 海报样式 */
+  .winning-prize {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.65);
+    padding: 300px 122px 0 122px;
+    z-index: 1;
+
+    .prize-box {
+      padding: 40px 16px;
+      background-color: #FA4D2F;
+      border-radius: 20px;
+
+      .prize-box-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        font-size: 60px;
+        font-weight: 400;
+        line-height: 38px;
+        color: #FFFFFF;
+      }
+    }
+
+    .winning-prize-close {
+      margin-top: 64px;
+      text-align: center;
+    }
+
+    .prize-box-description {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 30px;
+      color: #EEEEEE;
+      letter-spacing: 2px;
+      opacity: 0.8;
+    }
+  }
+
+  .poster {
+    padding: 50px 110px 0 110px;
+
+    .poster-box {
+      padding: 0;
+      background: none;
+      border: none;
+
+      img {
+        width: 100%;
+      }
+
+      .press-save {
+        padding: 14px 0;
+        text-align: center;
+        background: #FEDB63;
+        color: #FA4D2F;
+        font-size: 28px;
+        font-weight: 400;
+      }
+    }
+
+    .poster-close {
+      margin-top: 20px;
+    }
+  }
+
+  .bg-gray {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.65);
+
+    /* 关闭按钮 */
+    .close {
+      margin-top: 900px;
+      text-align: center;
+    }
+  }
+
+  /* 中奖弹框样式 */
+  .present-box {
+    position: fixed;
+    top: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FFF;
+    width: 540px;
+    padding-bottom: 20px;
+    border-radius: 10px;
+
+    .top {
+      padding-top: 60px;
+      height: 170px;
+      text-align: center;
+      background: url("https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/29b608e1-4954-4676-aa03-7f4c322d52c9.png") center top no-repeat;
+      background-size: cover;
+      font-size: 40px;
+      color: #FFDCB3;
+
+      p {
+        position: relative;
+        padding-top: 10px;
+        font-size: 30px;
+        line-height: 40px;
+
+        &.has-underline {
+          &:after, &:before {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-30%);
+            content: '';
+            width: 74px;
+            height: 0px;
+            border: 1px solid #FFDCB3;
+          }
+
+          &:before {
+            left: 100px;
+          }
+
+          &:after {
+            right: 100px;
+          }
+        }
+      }
+    }
+
+    .detail {
+      margin: 20px 0;
+
+      /* 优惠券样式 */
+      .coupon {
+        padding: 0 20px;
+        position: relative;
+
+        img {
+          width: 500px;
+        }
+
+        .wrap {
+          position: absolute;
+          top: 0;
+          width: 100%;
+          height: 100%;
+
+          .left {
+            padding: 34px 0 0 50px;
+
+            .coupon-price {
+              display: inline-block;
+              font-size: 55px;
+              color: #ED2E50;
+
+              &:before {
+                content: '￥';
+                font-size: 17px;
+                transform: translateX(-10px);
+              }
+            }
+
+            .desc {
+              display: inline-block;
+              margin-left: 30px;
+            }
+
+            .expiration {
+              margin-top: 10px;
+            }
+          }
+
+          .right {
+            font-size: 24px;
+            line-height: 28px;
+            color: #FFF;
+            position: absolute;
+            right: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
+      }
+
+      /* 礼品样式 */
+      .product {
+        margin: 0 20px;
+        display: flex;
+        box-sizing: border-box;
+        border: 1px solid #F01516;
+
+        img {
+          width: 180px;
+          height: 120px;
+          object-fit: cover;
+          vertical-align: middle;
+        }
+
+        .product-detail {
+          padding: 12px 0 0 20px;
+          height: 120px;
+          box-sizing: border-box;
+          flex: 1;
+          background-color: #FFE9E9;
+
+          h3 {
+            font-size: 24px;
+            color: #373737;
+            font-weight: 400;
+            width: 240px;
+            overflow: hidden;
+            word-break: keep-all;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+
+          h4 {
+            font-size: 14px;
+            font-weight: 400;
+            color: #373737;
+            margin: 10px 0;
+          }
+
+          p {
+            font-size: 14px;
+            color: #F01516;
+          }
+        }
+      }
+
+      /* 奖学金样式 */
+      .scholarship {
+        text-align: center;
+        position: relative;
+
+        span {
+          position: absolute;
+          bottom: 40px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 20px;
+          color: #FFDCB3;
+        }
+      }
+
+      /* 错过奖品 */
+      .no-present {
+        text-align: center;
+
+        img {
+          width: 170px;
+        }
+      }
+    }
+
+    .info {
+      text-align: center;
+      font-size: 20px;
+      line-height: 26px;
+      color: #A8A8A8;
+      padding-bottom: 20px;
+    }
+
+    .footer {
+      border-top: 1px solid #E7E7E7;
+      padding-top: 20px;
+      text-align: center;
+      font-size: 30px;
+      text-align: center;
+
+      .accept {
+        width: 326px;
+        height: 52px;
+        background: linear-gradient(180deg, #F5651A 0%, #F01B15 100%);
+        box-shadow: 0px 3px 6px #F01C15;
+        border-radius: 50px;
+        line-height: 52px;
+        color: #FFDCB3;
+      }
+
+      .iKnow {
+        color: #F01516;
+      }
+
+      .btns {
+        font-size: 30px;
+        color: #A8A8A8;
+        display: flex;
+
+        button {
+          flex: 1;
+          position: relative;
+        }
+
+        .iKnow:after {
+          position: absolute;
+          right: 0;
+          top: -7px;
+          content: '';
+          width: 0px;
+          height: 57px;
+          border: 1px solid #E7E7E7;
+        }
+      }
+    }
+  }
+
+  /* 中年味大奖开奖前 */
+  .grand-present-tip-box {
+    position: fixed;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: transparent;
+    position: relative;
+    text-align: center;
+
+    .top {
+      font-size: 40px;
+      line-height: 56px;
+      color: #FFDCB3;
+    }
+
+    .detail {
+      .gift {
+        margin-left: 30px;
+      }
+
+      .light {
+        position: absolute;
+        left: 50%;
+        margin-left: -35%;
+        top: 20px;
+        z-index: -1;
+        animation: rotateAndScale 3s linear infinite;
+      }
+    }
+
+    .footer {
+      padding-top: 60px;
+      text-align: center;
+
+      button {
+        width: 326px;
+        height: 52px;
+        background: linear-gradient(180deg, #F5651A 0%, #F01B15 100%);
+        box-shadow: 0px 3px 6px #F01C15;
+        border-radius: 50px;
+        font-size: 30px;
+        line-height: 52px;
+        color: #FFDCB3;
+      }
+    }
+  }
+
+  @keyframes rotateAndScale {
+    0% {
+      transformtransform: scale(1.3, 1.3) rotate(0deg);
+      transform-origin: center;
+      opacity: 0.2
+    }
+    50% {
+      transform: scale(1, 1) rotate(180deg);
+      transform-origin: center;
+      opacity: 1
+    }
+    98% {
+      transform: scale(2, 2) rotate(360deg);
+      transform-origin: center;
+      opacity: 0
+    }
+    100% {
+      transform: scale(2, 2) rotate(360deg);
+      transform-origin: center;
+      opacity: 0
+    }
+  }
+
+  /* 中年味大奖 */
+  .grand-present-box {
+    position: fixed;
+    top: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    > img {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: -120px;
+      z-index: -1;
+    }
+
+    .top {
+      background-color: #FFF;
+      width: 400px;
+      height: 70px;
+      line-height: 70px;
+      margin: 0 auto;
+      border-radius:20px 20px 0 0;
+      text-align: center;
+      font-size:30px;
+      color:#F01516;
+    }
+
+    .bottom {
+      background:#FFF;
+      box-shadow:0px 3px 5px #FF0000;
+      border-radius:42px;
+      padding: 10px 10px 20px 10px;
+      width: 500px;
+      .detail {
+        text-align: center;
+        border-radius:30px;
+        padding: 60px 0;
+        background: #F01516 url("https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/83e5925d-2d8a-4dd8-b009-755f3b2823d1.png") bottom no-repeat;
+        background-size: contain;
+        > img{
+          width: 260px;
+          height: 150px;
+          object-fit: cover;
+        }
+        h3 {
+          padding-top: 20px;
+          margin: 0 auto;
+          color: #FFF;
+          font-weight: 400;
+          width: 400px;
+          overflow: hidden;
+          word-break: keep-all;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          font-size:30px;
+          line-height:40px;
+        }
+        h4 {
+          padding: 10px 0;
+          font-size:20px;
+          font-weight:400;
+          line-height:26px;
+          color:#FFDCB3;
+        }
+        p {
+          font-size:20px;
+          color:#FFF;
+        }
+      }
+
+      .footer {
+        padding-top: 30px;
+        text-align: center;
+
+        button {
+          width: 326px;
+          height: 52px;
+          background: linear-gradient(180deg, #F5651A 0%, #F01B15 100%);
+          box-shadow: 0px 3px 6px #F01C15;
+          border-radius: 50px;
+          font-size: 30px;
+          line-height: 52px;
+          color: #FFDCB3;
+        }
       }
     }
   }
