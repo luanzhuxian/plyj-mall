@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.livePlayBack">
     <div :class="$style.videoBox">
-      <video autoplay muted controls="controls" width="100%" :src="videoMes.url" />
+      <video preload controls x5-video-player-type="h5-page" width="100%" :src="videoMes.url" />
       <div>商品</div>
     </div>
     <div :class="$style.productList">

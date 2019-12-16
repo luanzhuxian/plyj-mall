@@ -12,7 +12,7 @@
     <!--视频直播-->
     <div v-if="videoLiveMes.type === 'video'" :class="$style.playBackBox">
       <div class="plv-live-cutOff" v-if="videoLiveMes.flag" />
-      <video v-else controls x5-video-player-type="h5-page" ref="livePlayBack" :src="videoLiveMes.url" />
+      <video v-else preload controls x5-video-player-type="h5-page" ref="livePlayBack" :src="videoLiveMes.url" />
     </div>
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
@@ -153,7 +153,7 @@
           </div>
         </div>
         <!--支持回看-->
-        <div :class="$style.playBack" @click="playBackWarn" v-if="videoLiveMes.type && videoLiveMes.type === 'video'">该商品支持回看</div>
+        <div :class="$style.playBack" @click="playBackWarn" v-if="videoLiveMes.type && videoLiveMes.type === 'video'">该视频支持回看</div>
       </div>
 
       <div v-if="tab === 1" :class="$style.sendMessage">
