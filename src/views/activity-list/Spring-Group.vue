@@ -78,7 +78,7 @@ export default {
           for (let item of result[key]) {
             let obj = {
               goodsInfo: {
-                id: item.id,
+                id: item.productId,
                 pageviews: item.pageViews,
                 productMainImage: item.productMainImage,
                 productName: item.productName,
@@ -114,7 +114,7 @@ export default {
   &-wrapper {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 32px);
+    min-height: calc(100vh - 32px);
   }
   &-top {
     &-side {
