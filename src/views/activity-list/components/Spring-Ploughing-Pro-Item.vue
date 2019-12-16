@@ -1,19 +1,27 @@
 <template>
   <!-- 春耘计划商品组件 -->
   <div :class="$style.springPloughingProItem">
-    <img src="https://img.alicdn.com/imgextra/https://gw.alicdn.com/imgextra/i4/407916093/O1CN01krGUZs1usdo1MPyqc_!!407916093-0-pixelsss.jpg_430x430q90.jpg" alt="">
+    <img :src="data.goodsImage" alt="">
     <div :class="$style.right">
-      <p :class="$style.name">少儿英语三节名师特色少儿英语三节名师特色</p>
-      <p :class="$style.limit">每人仅可购买1件</p>
-      <p :class="$style.price">折后价：￥600</p>
-      <p :class="$style.originalPrice">原价：￥1000</p>
+      <p :class="$style.name" v-text="data.goodsName" />
+      <p :class="$style.limit">数量 x1</p>
+      <p :class="$style.price">折后价：￥{{ data.amount }}</p>
+      <p :class="$style.originalPrice">原价：￥{{ data.originPrice }}</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SpringPloughingProItem'
+  name: 'SpringPloughingProItem',
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  }
 }
 </script>
 

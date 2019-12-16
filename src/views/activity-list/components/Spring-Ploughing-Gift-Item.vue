@@ -1,17 +1,25 @@
 <template>
   <!-- 春耘计划礼品组件 -->
   <div :class="$style.springPloughingGiftItem">
-    <img src="https://img.alicdn.com/imgextra/https://gw.alicdn.com/imgextra/i4/407916093/O1CN01krGUZs1usdo1MPyqc_!!407916093-0-pixelsss.jpg_430x430q90.jpg" alt="">
+    <img :src="data.giftImage" alt="">
     <div :class="$style.right">
-      <p :class="$style.name">小姐姐 x1</p>
-      <p :class="$style.desc">每人仅可购买1件</p>
+      <p :class="$style.name" v-text="data.giftName" />
+      <p :class="$style.desc" v-text="data.giftBrief" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SpringPloughingGiftItem'
+  name: 'SpringPloughingGiftItem',
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  }
 }
 </script>
 

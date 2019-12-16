@@ -1125,7 +1125,7 @@ export default {
         cartProducts,
         cartSource: this.isCart,
         invoiceModel: this.INVOICE_MODEL,
-        activeProduct: this.isCart ? 1 : this.activeProduct,
+        activeProduct: this.activeProduct || 1,
         activityId: this.activityId,
         userCouponId: this.coupon.id || '',
         scholarshipId: this.currentRedEnvelope.id || ''

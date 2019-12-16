@@ -15,14 +15,16 @@
       <div :class="$style.topRight" @click="showRules = true">活动规则</div>
     </div>
 
-    <div :class="$style.content">
-      <div :class="$style.groupName">
-        新春开学季度第一弹
-      </div>
+    <div
+      :class="$style.content"
+      v-for="(item, i) of list"
+      :key="i"
+    >
+      <div :class="$style.groupName" v-text="item.activityName" />
       <div :class="$style.discount">
-        <span>组合打包6折起</span>
+        <span>组合打包{{ item.discount }}折起</span>
         <span>|</span>
-        <span>1222人已购</span>
+        <span>{{ item.purchaseQuantity }}人已购</span>
       </div>
       <div :class="$style.endCountdown">
         <span>距活动结束: </span>
@@ -35,89 +37,25 @@
         <span :class="$style.val">59</span>
       </div>
       <div :class="$style.proList">
-        <SpringPloughingProItem />
-        <SpringPloughingProItem />
-        <SpringPloughingProItem />
-        <SpringPloughingProItem />
+        <SpringPloughingProItem
+          v-for="(pro, j) of item.products"
+          :key="i + '-' + j"
+          :data="pro"
+        />
       </div>
       <div :class="$style.giftList">
         <div :class="$style.title">
           更享更多伴手礼
         </div>
-        <SpringPloughingGiftItem />
-        <SpringPloughingGiftItem />
+        <SpringPloughingGiftItem
+          v-for="(gift, k) of item.gifts"
+          :key="i + '-' + k"
+          :data="gift"
+        />
       </div>
-      <button :class="$style.buy">
-        点击购买 组合到手3000元
+      <button :class="$style.buy" @click="buy(item)">
+        点击购买 组合到手<i v-text="getGroupAmount(item.products)" />元
       </button>
-      <div :class="$style.corner + ' ' + $style.topLeft" />
-      <div :class="$style.corner + ' ' + $style.topRight" />
-      <div :class="$style.corner + ' ' + $style.bottomLeft" />
-      <div :class="$style.corner + ' ' + $style.bottomRight" />
-    </div>
-
-    <div :class="$style.content">
-      <div :class="$style.groupName">
-        新春开学季度第二弹
-      </div>
-      <div :class="$style.discount">
-        <span>组合打包6折起</span>
-        <span>|</span>
-        <span>1222人已购</span>
-      </div>
-      <div :class="$style.endCountdown">
-        <span>距活动结束: </span>
-        <span :class="$style.val">02</span>
-        <span :class="$style.unit">天</span>
-        <span :class="$style.val">23</span>
-        <span :class="$style.unit">:</span>
-        <span :class="$style.val">59</span>
-        <span :class="$style.unit">:</span>
-        <span :class="$style.val">59</span>
-      </div>
-      <div :class="$style.proList">
-        <SpringPloughingProItem />
-        <SpringPloughingProItem />
-        <SpringPloughingProItem />
-        <SpringPloughingProItem />
-        <button :class="$style.buy + ' ' + $style.notStart">
-          暂未开启，敬请期待
-        </button>
-      </div>
-      <div :class="$style.corner + ' ' + $style.topLeft" />
-      <div :class="$style.corner + ' ' + $style.topRight" />
-      <div :class="$style.corner + ' ' + $style.bottomLeft" />
-      <div :class="$style.corner + ' ' + $style.bottomRight" />
-    </div>
-
-    <div :class="$style.content">
-      <div :class="$style.groupName">
-        新春开学季度第三弹
-      </div>
-      <div :class="$style.discount">
-        <span>组合打包6折起</span>
-        <span>|</span>
-        <span>1222人已购</span>
-      </div>
-      <div :class="$style.endCountdown">
-        <span>距活动结束: </span>
-        <span :class="$style.val">02</span>
-        <span :class="$style.unit">天</span>
-        <span :class="$style.val">23</span>
-        <span :class="$style.unit">:</span>
-        <span :class="$style.val">59</span>
-        <span :class="$style.unit">:</span>
-        <span :class="$style.val">59</span>
-      </div>
-      <div :class="$style.proList">
-        <SpringPloughingProItem />
-        <SpringPloughingProItem />
-        <SpringPloughingProItem />
-        <SpringPloughingProItem />
-        <button :class="$style.buy + ' ' + $style.ended">
-          活动已结束
-        </button>
-      </div>
       <div :class="$style.corner + ' ' + $style.topLeft" />
       <div :class="$style.corner + ' ' + $style.topRight" />
       <div :class="$style.corner + ' ' + $style.bottomLeft" />
@@ -155,6 +93,7 @@ import {
   cutArcImage,
   loadImage
 } from '../../assets/js/util'
+import { getSpringCombination } from '../../apis/product'
 const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/4b676734-b0c9-4aca-942d-ce62e481ebcf.jpeg'
 export default {
   name: 'SpringPloughing',
@@ -167,13 +106,55 @@ export default {
       showRules: false,
       showPoster: false,
       poster: '',
-      creating: false
+      creating: false,
+      list: []
     }
   },
   computed: {
     ...mapGetters(['avatar', 'userName'])
   },
+  async activated () {
+    try {
+      await this.getSpringCombination()
+    } catch (e) {
+      throw e
+    }
+  },
   methods: {
+    async getSpringCombination () {
+      try {
+        const { result } = await getSpringCombination({ current: 1, size: 60 })
+        this.list = result.records
+      } catch (e) {
+        throw e
+      }
+    },
+    async buy (data) {
+      const confirmList = []
+      for (let pro of data.products) {
+        confirmList.push({
+          productId: pro.goodsId,
+          skuCode1: pro.sku1,
+          skuCode2: pro.sku2,
+          count: 1,
+          price: pro.amount,
+          agentUser: ''
+        })
+      }
+      sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
+      await this.$router.push({
+        name: 'SubmitOrder',
+        query: {
+          isCart: 'YES',
+          activeProduct: 5,
+          preActivity: 2,
+          activityId: data.activityId
+        }
+      })
+    },
+    getGroupAmount (products) {
+      return products.map(pro => pro.amount).reduce((total, num) => (total * 1000 + num * 1000) / 1000)
+    },
     async createPoster () {
       if (this.creating) {
         return
@@ -323,8 +304,9 @@ export default {
 
   .buy {
     display: block;
-    width: 440px;
+    min-width: 400px;
     margin: 48px auto 36px;
+    padding: 0 20px;
     line-height: 78px;
     font-size: 32px;
     color: #184b28;

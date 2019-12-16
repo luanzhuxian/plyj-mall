@@ -25,3 +25,10 @@ export const getCouponList = () => axios.get('/apis/v1/coupon/normal/list')
  * @return {Promise<Number>}
  */
 export const getCurrentLimit = (productId, activityproduct = 1) => axios.get(`/apis/v1/product/purchaseLimitNumber/${productId}?activityproduct=${activityproduct}`)
+/**
+ * 获取春耘计划组合商品
+ * @param productId
+ * @param activityproduct
+ * @return {*}
+ */
+export const getSpringCombination = params => axios.get(`/apis/v1/combination/home/page`, { params })
