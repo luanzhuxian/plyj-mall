@@ -107,7 +107,7 @@ export default {
   methods: {
     async getList () {
       try {
-        let { result } = await bookActivityPage()
+        let { result } = await bookActivityPage({ type: '2019_01' })
         if (!result[0].length && !result[1].length) {
           this.$alert({
             message: '暂无数据',

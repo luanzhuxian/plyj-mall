@@ -39,7 +39,7 @@
       </div>
       <div class="list tuan-coming" v-if="comingList.length > 0">
         <div class="head">
-          <pl-svg name="icon-coming_icon" fill="#fff" width="52" />
+          <pl-svg name="icon-coming_icon" width="52" />
           <pl-svg name="icon-coming_text" fill="#fff" width="180" height="52" />
         </div>
         <div class="item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
@@ -106,7 +106,7 @@ export default {
   methods: {
     async getList () {
       try {
-        let { result } = await tuanActivityPage()
+        let { result } = await tuanActivityPage({ type: '2019_01' })
         if (!result[0].length && !result[1].length) {
           this.$alert({
             message: '暂无数据',

@@ -15,7 +15,7 @@
         {{ `${data.goodsInfo.activityInfo.number}人参团` }}
       </span>
     </div>
-    <div :class="$style.countDownWrapper" v-if="data.goodsInfo.activityInfo.preActivity && data.goodsInfo.activityInfo.preActivity !== 0">
+    <div :class="$style.countDownWrapper">
       <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>
       <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束：</span>
       <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已成功</span>

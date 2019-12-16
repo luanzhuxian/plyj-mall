@@ -9,31 +9,31 @@
         </div>
       </div>
       <div :class="$style.springBookContent">
-        <div :class="$style.current">
+        <div :class="$style.current" v-if="listCurrent.length">
           <div :class="$style.title">
             正在进行中
           </div>
-          <ul :class="$style.springBookList" v-if="listCurrent.length">
+          <ul :class="$style.springBookList">
             <template v-for="(item, i) of listCurrent">
               <item
-                v-if="item.goodsInfo && item.goodsInfo.activityInfo"
                 :data="item"
                 :key="i"
+                @done="getData"
               />
             </template>
           </ul>
         </div>
 
-        <div :class="$style.preview">
+        <div :class="$style.preview" v-if="listPreview.length">
           <div :class="$style.title">
             即将开始
           </div>
-          <ul :class="$style.springBookList" v-if="listPreview.length">
+          <ul :class="$style.springBookList">
             <template v-for="(item, i) of listPreview">
               <item
-                v-if="item.goodsInfo && item.goodsInfo.activityInfo"
                 :data="item"
                 :key="i"
+                @done="getData"
               />
             </template>
           </ul>
@@ -63,7 +63,7 @@ export default {
   methods: {
     async getData () {
       try {
-        let { result } = await bookActivityPage()
+        let { result } = await bookActivityPage({ type: '2019_02' })
         if (!result[0].length && !result[1].length) {
           this.$alert({
             message: '暂无数据',
@@ -74,8 +74,28 @@ export default {
           })
           return
         }
-        this.listPreview = result[1]
-        this.listCurrent = result[0]
+        for (let key of Object.keys(result)) {
+          for (let item of result[key]) {
+            let obj = {
+              goodsInfo: {
+                id: item.id,
+                productMainImage: item.productMainImage,
+                productName: item.productName,
+                activityInfo: {
+                  status: item.status,
+                  multiple: item.multiple,
+                  price: item.price,
+                  activityPrice: item.multiple ? item.price * item.multipleNumber : item.price,
+                  activityStartTime: item.activityStartTime,
+                  activityEndTime: item.activityEndTime
+                }
+              }
+            }
+            Object.assign(item, obj)
+          }
+        }
+        this.listPreview = result[0]
+        this.listCurrent = result[1]
         return result
       } catch (e) {
         throw e
@@ -143,7 +163,7 @@ export default {
     margin: 32px 0;
   }
   .title {
-    margin-top: 32px;
+    padding: 32px 0;
     font-size: 36px;
     font-weight: bold;
     line-height: 50px;

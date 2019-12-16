@@ -26,14 +26,14 @@
         <div :class="$style.propagate" v-if="COUPON.values && COUPON.values.length">
           <coupon :data="COUPON" />
         </div>
-        <!-- 拼团 -->
-        <div :class="$style.pintuan" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
-          <pintuan :data="PIN_TUAN" />
-        </div>
         <!-- 春耘 -->
         <!-- <div :class="$style.chunyun" v-if="CHUN_YUN.values && CHUN_YUN.values.length"> -->
         <div :class="$style.chunyun">
           <chunyun :data="CHUN_YUN" />
+        </div>
+        <!-- 拼团 -->
+        <div :class="$style.pintuan" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
+          <pintuan :data="PIN_TUAN" />
         </div>
         <!-- 预购 -->
         <div :class="$style.yugou" v-if="YU_GOU.values && YU_GOU.values.length">

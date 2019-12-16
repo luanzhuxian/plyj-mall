@@ -2,7 +2,7 @@
   <li
     class="item"
     :class="$style.item"
-    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id, currentProductStatus: 4} })"
+    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id, currentProductStatus: 4 } })"
   >
     <div :class="$style.time">
       <div :class="$style.timeLeft">
@@ -58,13 +58,14 @@ export default {
     return {}
   },
   methods: {
-    getTotalPrice (item) {
-      if (!item.goodsInfo || !item.goodsInfo.productSkuModels || !item.goodsInfo.productSkuModels.length) return false
-      const prodPrice = this.getPrice(item.goodsInfo.productSkuModels)('price')
-      if (item.goodsInfo.activityInfo.activityPrice >= prodPrice) {
-        return item.goodsInfo.activityInfo.price
+    getTotalPrice (data) {
+      if (!data.goodsInfo) return false
+      if (data.goodsInfo.productSkuModels && !data.goodsInfo.productSkuModels.length) return false
+      const prodPrice = data.goodsInfo.productSkuModels ? this.getPrice(data.goodsInfo.productSkuModels)('price') : data.productPrice
+      if (data.goodsInfo.activityInfo.activityPrice >= prodPrice) {
+        return data.goodsInfo.activityInfo.price
       } else {
-        return this.sub(prodPrice, this.sub(item.goodsInfo.activityInfo.activityPrice, item.goodsInfo.activityInfo.price))
+        return this.sub(prodPrice, this.sub(data.goodsInfo.activityInfo.activityPrice, data.goodsInfo.activityInfo.price))
       }
     }
   }

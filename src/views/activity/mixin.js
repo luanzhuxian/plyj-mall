@@ -40,9 +40,10 @@ export default {
       } else if (item.goodsInfo.activityInfo.status === 1) {
         item.goodsInfo.activityInfo.status = 3
       }
+      this.$emit('done')
     },
     sub (arg1, arg2) {
-      var r1, r2, m, n
+      let r1, r2, m, n
       try {
         r1 = arg1.toString().split('.')[1].length
       } catch (e) {
