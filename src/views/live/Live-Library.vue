@@ -32,7 +32,7 @@
               <div>
                 <div>
                   <div>{{ item.videoName }}</div>
-                  <div>直播时间：{{ item.createTime }}</div>
+                  <div>直播时间：{{ item.startTime }}</div>
                 </div>
                 <div>
                   <div>
