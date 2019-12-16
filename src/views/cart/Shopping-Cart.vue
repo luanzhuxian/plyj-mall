@@ -263,13 +263,15 @@ export default {
         let { result } = await getCouponList()
         result = result || []
         // 按优惠金额从小到大排序
-        result = result.sort((a, b) => a.useLimitAmount - b.useLimitAmount)
+        result = result.sort((a, b) => {
+          return a.useLimitAmount === b.useLimitAmount ? a.amount - b.amount : a.useLimitAmount - b.useLimitAmount
+        })
         this.couponList = []
         this.hadCouponList = []
         this.fullCutCouponList = []
         this.categoryCouponList = []
         for (const item of result) {
-          if ((item.receiveLimit === 1 && this.roleCode !== 'MEMBERSHIP') || (item.receiveLimit === 2 && this.roleCode !== 'HELPER')) continue
+          if ((item.receiveLimit === 2 && this.roleCode !== 'MEMBERSHIP') || (item.receiveLimit === 1 && this.roleCode !== 'HELPER')) continue
           // 可领取的券
           this.couponList.push(item)
           // 以领取的券
@@ -473,6 +475,7 @@ export default {
     // 算金额
     computeMoney () {
       let total = 0
+      console.log(this.checkedList)
       for (let item of this.checkedList) {
         const skuCode1 = item.cartSkuCode
         const skuCode2 = item.cartSkuCode2

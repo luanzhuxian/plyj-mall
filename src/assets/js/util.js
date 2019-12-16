@@ -355,8 +355,11 @@ export class Countdown {
     let { _data } = moment.duration(duration)
     this.callback(_data)
     this.timer = setTimeout(() => {
-      this.duration -= 1000
+      const LOCK_SCREEN_TIME = Number(localStorage.getItem('LOCK_SCREEN_TIME')) || 0
+      this.duration -= (1000 + LOCK_SCREEN_TIME)
       this.start()
+      // TODO 注意：清除后，可能导致其它定时器实例会获取不到
+      localStorage.removeItem('LOCK_SCREEN_TIME')
     }, 1000)
   }
   stop () {

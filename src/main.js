@@ -87,3 +87,13 @@ Vue.config.errorHandler = async function (err, vm, info) {
     }
   }
 }
+/* 监听锁屏，记录锁屏时间 */
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden) {
+    // 锁屏
+    localStorage.setItem('LOCK_SCREEN_TIME', String(Date.now()))
+  } else {
+    const LOCK_SCREEN_TIME = Number(localStorage.getItem('LOCK_SCREEN_TIME')) || Date.now()
+    localStorage.setItem('LOCK_SCREEN_TIME', (Date.now() - LOCK_SCREEN_TIME))
+  }
+})
