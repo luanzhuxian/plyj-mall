@@ -13,7 +13,7 @@
       ref="checkbox"
       type="checkbox"
       :checked="checked || localChecked"
-      :disabled="data && data.disabled || disabled"
+      :disabled="disabled"
       @change="handleChange"
     >
     <slot name="prefix" />
@@ -24,21 +24,21 @@
       <span
         :class="{
           'pl-checkbox-inner': true,
-          'checked': checked || localChecked,
+          'checked': checked || (data && data.checked),
           border
         }"
       >
         <span
-          v-if="data && data.disabled || disabled"
+          v-if="data && disabled"
           class="pl-checkbox__inner disabled"
         />
         <template v-else>
           <span
-            v-show="checked || localChecked"
+            v-show="checked || (data && data.checked)"
             class="pl-checkbox__inner checked"
           />
           <span
-            v-show="!checked && !localChecked"
+            v-show="!(checked || (data && data.checked))"
             class="pl-checkbox__inner"
           />
         </template>
@@ -65,19 +65,25 @@ export default {
     event: 'change'
   },
   props: {
-    /*
-    * 绑定的值
-    * 如果绑定了值，则认为有一组待选的值，使用checkbox-group监听整体变化
-    * */
+    /**
+     * 绑定的值
+     * 一般用于checkbox-group，将作为已选数据中的一个值
+     * 如果绑定了值，则认为有一组待选的值，使用checkbox-group监听整体变化
+     */
     data: {
       type: [Object, String, Number],
       default: function () {
         return null
       }
     },
+    // 单独使用时绑定的值
     checked: Boolean,
+    // 是否禁用
     disabled: Boolean,
+    // 是否以行内元素显示
     inline: Boolean,
+    // 半选效果（暂时没有设计）
+    indeterminate: Boolean,
     // 纵向间隙
     gapColumn: {
       type: Number,
@@ -100,52 +106,62 @@ export default {
     },
     /*
     * 数据
-    * 可添加属性disabled来规定禁用的项
     * 可添加属性checked来规定默认选中的项
+    * 如果数据时对象且不是数组，且有checked属性，则更加当前的checkd数据来判断选中状态
     * */
     data: {
       handler (val) {
-        if (val) {
-          if (val.checked) {
-            this.selected()
-          }
+        if (val && typeof val === 'object' && !Array.isArray(val) && val.hasOwnProperty('checked')) {
+          this.$emit('change', val.checked, val)
+          this.$emit('update:checked', val.checked)
+          this.changed(val.checked)
         }
       },
+      deep: true,
       immediate: true // 立即改变，此处不应该深度监听
     }
   },
+  computed: {
+  },
   methods: {
     handleChange (e) {
-      this.localChecked = e.currentTarget.checked
-      if (this.localChecked) {
-        this.selected()
-      } else {
-        this.cancel()
-      }
+      const checked = e.currentTarget.checked
+      this.changed(checked)
+      this.$emit('change', checked, this.data)
+      this.$emit('update:checked', checked)
     },
-    // 选中
-    selected () {
-      if (this.$parent.change) {
-        this.$parent.change(true, this.data)
+    changed (checked) {
+      if (typeof this.$parent.change === 'function') {
+        this.$parent.change(checked, this.data)
       }
-      this.localChecked = true
-      // 调用回调，可使状态回到未选择
-      this.$emit('change', true, this.data)
-      if (this.data && this.data.hasOwnProperty('checked')) {
-        this.data.checked = true
-      }
-    },
-    // 取消选中
-    cancel () {
-      if (this.$parent.change) {
-        this.$parent.change(false, this.data)
-      }
-      this.localChecked = false
-      this.$emit('change', false, this.data)
-      if (this.data && this.data.hasOwnProperty('checked')) {
-        this.data.checked = false
+      if (this.data && typeof this.data === 'object' && !Array.isArray(this.data)) {
+        this.data.checked = checked
+        this.$set(this.data, 'checked', checked)
       }
     }
+    // 选中方法
+    // selected () {
+    //   if (typeof this.$parent.change === 'function') {
+    //     this.$parent.change(true, this.data)
+    //   }
+    //   // this.localChecked = true
+    //   // 调用回调，可使状态回到未选择
+    //   // this.$emit('change', true, this.data)
+    //   if (this.data && this.data.hasOwnProperty('checked')) {
+    //     this.data.checked = true
+    //   }
+    // },
+    // 取消选中方法
+    // cancel () {
+    //   if (this.$parent.change) {
+    //     this.$parent.change(false, this.data)
+    //   }
+    //   this.localChecked = false
+    //   this.$emit('change', false, this.data)
+    //   if (this.data && this.data.hasOwnProperty('checked')) {
+    //     this.data.checked = false
+    //   }
+    // }
   }
 }
 </script>

@@ -25,6 +25,7 @@
             :data="item"
             :gap-column="24"
             border
+            :disabled="item.disabled"
           >
             <template v-slot:suffix="{ data }">
               <CartItem
@@ -43,7 +44,7 @@
       <div :class="$style.coupon" v-if="couponList.length">
         <span v-if="nextCoupon || appropriateCoupon">
           <span v-if="appropriateCoupon">
-            已满{{ appropriateCoupon.useLimitAmount }}元减{{ appropriateCoupon.amount }}元
+            已满{{ appropriateCoupon.useLimitAmount }}元,{{ appropriateCoupon.count ? '减' : '领券可减' }}{{ appropriateCoupon.amount }}元
           </span>
           <span v-if="nextCoupon && appropriateCoupon">, </span>
           <span v-if="nextCoupon">
@@ -55,7 +56,7 @@
           全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元,领券立享优惠
         </span>-->
         <span v-else-if="minFullCutConpon">
-          全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元,领券立享优惠
+          全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元 <i v-if="!minFullCutConpon.count">,领券立享优惠</i>
         </span>
         <!-- 满减券（已领取） -->
         <!--<span v-else-if="minHadFullCutConpon">
@@ -77,19 +78,19 @@
           >
             去凑单
           </i>
-          <!-- 自己有满减券 -->
-          <i
-            v-else-if="minFullCutConpon.count"
-            @click="$router.push({ name: 'Home' })"
-          >
-            再逛逛
-          </i>
           <!-- 自己没满减券 -->
           <i
-            v-else
+            v-else-if="(minFullCutConpon && !minFullCutConpon.count) || appropriateCoupon && !appropriateCoupon.count"
             @click="$router.push({ name: 'CouponCenter' })"
           >
             去领券
+          </i>
+          <!-- 自己有满减券 -->
+          <i
+            v-else
+            @click="$router.push({ name: 'Home' })"
+          >
+            再逛逛
           </i>
           <pl-svg name="icon-right" fill="#FE7700" width="20" height="22" />
         </span>
@@ -256,6 +257,7 @@ export default {
         this.loading = false
       }
     },
+    // 获取优惠券列表
     async getCouponList () {
       try {
         let { result } = await getCouponList()
@@ -300,6 +302,7 @@ export default {
         throw e
       }
     },
+    // 单击规格
     skuClick (data) {
       this.currentPro = data
       this.currentSku = this.currentPro.skuModels.find(item => {
@@ -310,8 +313,8 @@ export default {
       }
       this.showSpecifica = true
     },
+    // 设置禁用效果
     setDisabled (products) {
-      // const disabledList = []
       for (let item of products) {
         // 如果商品已下架或当前规格商品数量不足，禁用
         const currentSku = item.skuModels.find(sku => {
@@ -329,7 +332,7 @@ export default {
           item.disabled = true
         }
       }
-      this.products = JSON.parse(JSON.stringify(products))
+      this.products = products
     },
     // 将禁用项挪到最后
     setDisabledToEnd () {
@@ -374,10 +377,6 @@ export default {
           }
           this.showSpecifica = false
           this.$set(this.products, this.products.indexOf(this.currentPro), this.currentPro)
-          const checkedIndex = this.checkedList.findIndex(item => {
-            return item.cartSkuCode === this.currentPro.cartSkuCode && item.cartSkuCode2 === this.currentPro.cartSkuCode2
-          })
-          this.checkedList.splice(checkedIndex, 1, this.currentPro)
           this.computeMoney()
           this.isDouble(option)
           this.setDisabled(this.products)
