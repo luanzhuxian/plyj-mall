@@ -119,7 +119,7 @@
                 :full="item.useLimitAmount"
                 :subtract="item.amount"
                 :amount="item.amount"
-                :instruction="item.couponName"
+                :instruction="item.brief"
                 :coupon-type="item.couponType"
                 :is-over-max="!item.canReceive"
                 :is-claimed="receiveCouponIdList.indexOf(item.couponId) !== -1"
