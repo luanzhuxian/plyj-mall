@@ -111,6 +111,7 @@ export default {
     * */
     data: {
       handler (val) {
+        // TODO 需要优化
         if (val && typeof val === 'object' && !Array.isArray(val) && val.hasOwnProperty('checked')) {
           this.$emit('change', val.checked, val)
           this.$emit('update:checked', val.checked)

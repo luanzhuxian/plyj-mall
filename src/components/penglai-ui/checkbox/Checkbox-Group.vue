@@ -39,7 +39,8 @@ export default {
           this.group.push(data)
         }
       } else {
-        this.group.splice(this.group.indexOf(data), 1)
+        const index = this.group.indexOf(data)
+        if (index !== -1) this.group.splice(index, 1)
       }
     },
     changeAll (flage) {

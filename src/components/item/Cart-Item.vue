@@ -90,7 +90,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import { updateCartProductCount } from '../../apis/shopping-cart'
 import { getCurrentLimit } from '../../apis/product'
 import Count from '../common/Count.vue'
