@@ -80,7 +80,7 @@
           </i>
           <!-- 自己没满减券 -->
           <i
-            v-else-if="(minFullCutConpon && !minFullCutConpon.count) || appropriateCoupon && !appropriateCoupon.count"
+            v-else-if="(!appropriateCoupon && minFullCutConpon && !minFullCutConpon.count) || (appropriateCoupon && !appropriateCoupon.count)"
             @click="$router.push({ name: 'CouponCenter' })"
           >
             去领券
@@ -305,12 +305,19 @@ export default {
     // 单击规格
     skuClick (data) {
       this.currentPro = data
-      this.currentSku = this.currentPro.skuModels.find(item => {
-        return item.stock >= data.cartProductCount && data.cartProductCount <= item.minBuyNum && item.skuCode1 === data.cartSkuCode && item.skuCode2 === data.cartSkuCode2
+      /**
+       * 找出合适的规格作为规格弹框组件的默认选中规格
+       * 需满足以下条件
+       * 1. 规格的库存必须大于当前购物车加入的数量
+       * 2. 当前购物车加入的数量必须大于等于规格的最小购买量
+       */
+      const currentSku = data.skuModels.find(item => {
+        return item.stock >= data.cartProductCount && data.cartProductCount >= item.minBuyNum && item.skuCode1 === data.cartSkuCode && item.skuCode2 === data.cartSkuCode2
       }) || {}
-      if (this.currentSku.id) {
-        this.currentSku.count = data.cartProductCount
+      if (currentSku.id) {
+        currentSku.count = data.cartProductCount
       }
+      this.currentSku = currentSku
       this.showSpecifica = true
     },
     // 设置禁用效果
