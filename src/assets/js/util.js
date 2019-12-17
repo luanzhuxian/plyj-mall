@@ -362,17 +362,9 @@ export class Countdown {
       return
     }
     const { _data } = moment.duration(duration)
-    // 获取锁屏时间，获取后900ms清除，防止重复获取，同时能最大可能的让更多倒计时实例都能获取到该值
-    const LOCK_SCREEN_TIME = Number(localStorage.getItem('LOCK_SCREEN_TIME')) || 0
-    // 900ms后，清除锁屏时间，锁屏时间已保存至 LOCK_SCREEN_TIME
-    if (LOCK_SCREEN_TIME) {
-      setTimeout(() => {
-        localStorage.removeItem('LOCK_SCREEN_TIME')
-      }, 900)
-    }
     this.callback(_data)
     this.timer = setTimeout(() => {
-      this.duration -= (1000 + LOCK_SCREEN_TIME)
+      this.duration -= 1000
       this.start()
     }, 1000)
   }
