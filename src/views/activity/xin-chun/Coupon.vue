@@ -27,8 +27,8 @@
             </div>
             <div :class="$style.middle">
               <b :class="$style.main">
-                <span v-if="true">满减券</span>
-                <span v-if="false">品类券</span>
+                <span v-if="item.goodsInfo.couponType === 1">满减券</span>
+                <span v-if="item.goodsInfo.couponType === 2">品类券</span>
               </b>
               <p :class="$style.sub">
                 {{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}

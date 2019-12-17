@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.templateXinchun">
     <div :class="$style.background">
-      <div :class="$style.container">
+      <div :class="$style.container" v-if="allLoaded">
         <div
           v-if="parent.topBtnType === 1"
           :class="$style.btnTop"
           @click="$router.push({ name: 'MyCoupon' })"
         >
-          <div :class="$style.btnTopBg">
+          <div :class="$style.btnTopBg" v-if="xinchunCouponTotal">
             您有优惠券可使用！
           </div>
           <pl-svg name="icon-jinru" width="116" />
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Live from './xin-chun/Live.vue'
 import Activity from './xin-chun/Activity.vue'
 import Propagate from './xin-chun/Propagate.vue'
@@ -100,6 +101,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['xinchunCouponTotal']),
     PIN_XUAN () {
       return this.data.PIN_XUAN || {}
     },
@@ -121,6 +123,9 @@ export default {
     isLiveShow () {
       return this.parent.liveInfo &&
       (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
+    },
+    allLoaded () {
+      return this.$parent.allLoaded
     }
   }
 }

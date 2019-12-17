@@ -8,7 +8,7 @@
     <div :class="$style.d12" v-if="~[5, 6, 7].indexOf(type)">
       <div :class="$style.background">
         <search placeholder="搜索商品" />
-        <div :class="$style.container">
+        <div :class="$style.container" v-if="allLoaded">
           <router-link
             :class="{
               [$style.btnTop]: true,
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import TemplateFengqiang from './Template-Fengqiang.vue'
 import TemplateBaofa from './Template-Baofa.vue'
@@ -49,9 +50,9 @@ import TemplateFanchang from './Template-Fanchang.vue'
 import TemplateXinchun from './Template-Xinchun.vue'
 import InviteNewcomersHomeEntry from '../double-twelve-day/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
-import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
-import { getMyCouponList } from '../../apis/my-coupon'
-import { getCurrentActivity } from '../../apis/invitenewcomers'
+// import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
+// import { getMyCouponList } from '../../apis/my-coupon'
+// import { getCurrentActivity } from '../../apis/invitenewcomers'
 
 export default {
   name: 'Activity',
@@ -80,39 +81,70 @@ export default {
         MIAO_SHA: null,
         FENG_QIANG: null,
         RECOMMEND: null
+      }
+      // liveInfo: {}, // 直播
+      // invitingEvent: {}, // 邀新有礼
+      // jxEvent: {}, // 见学之路
+      // topBtnType: 0 // 0：不显示 1：优惠卷 2：默认
+    }
+  },
+  computed: {
+    ...mapGetters(['activityData', 'activityId', 'liveInfo', 'd12CouponTotal', 'xinchunCouponTotal', 'invitingEvent', 'jxEvent', 'nwEvent']),
+    topBtnType () {
+      if (this.d12CouponTotal === null) return false
+      return this.d12CouponTotal ? 1 : 2
+    },
+    allLoaded () {
+      let result
+      if ([5, 6, 7].includes(this.activityId)) {
+        result = (this.liveInfo !== null && !!this.liveInfo) &&
+        (this.d12CouponTotal !== null && !!this.d12CouponTotal) &&
+        (this.invitingEvent !== null && !!this.invitingEvent) &&
+        (this.jxEvent !== null && !!this.jxEvent)
+      }
+      if (this.activityId === 8) {
+        result = (this.liveInfo !== null && !!this.liveInfo) &&
+        (this.XinchunCouponTLotal !== null && !!this.XinchunCouponTotal) &&
+        (this.nwEvent !== null && !!this.nwEvent)
+      }
+      return result
+    }
+  },
+  watch: {
+    activityId: {
+      handler (id) {
+        if (!id && id !== 0) return
+        this.getTemplate()
       },
-      liveInfo: {}, // 直播
-      invitingEvent: {}, // 邀新有礼
-      jxEvent: {}, // 见学之路
-      topBtnType: 0 // 0：不显示 1：优惠卷 2：默认
+      immediate: true
     }
   },
   async created () {
     try {
-      const type = await this.getTemplate()
-      // 查询直播
-      getLiveInfo().then(({ result }) => {
-        this.liveInfo = result || {}
-      })
-      // 查询可使用优惠卷
-      getMyCouponList({ current: 1, size: 10, status: 0 })
-        .then(({ result }) => {
-          this.topBtnType = result.total ? 1 : 2
-        })
-        .catch(err => {
-          this.topBtnType = 2
-          throw err
-        })
-      if (type && ~[5, 6, 7].indexOf(type)) {
-        // 邀新有礼
-        getCurrentActivity().then(({ result }) => {
-          this.invitingEvent = result || {}
-        })
-        // 见学之路
-        getJianxueInfo().then(({ result }) => {
-          this.jxEvent = result || {}
-        })
-      }
+      // const type = await this.getTemplate()
+      // // 查询直播
+      // getLiveInfo().then(({ result }) => {
+      //   this.liveInfo = result || {}
+      // })
+      // // 查询可使用优惠卷
+      // getMyCouponList({ current: 1, size: 10, status: 0 })
+      //   .then(({ result }) => {
+      //     this.topBtnType = result.total ? 1 : 2
+      //   })
+      //   .catch(err => {
+      //     this.topBtnType = 2
+      //     throw err
+      //   })
+      // if (type && ~[5, 6, 7].indexOf(type)) {
+      //   // 邀新有礼
+      //   getCurrentActivity().then(({ result }) => {
+      //     this.invitingEvent = result || {}
+      //   })
+      //   // 见学之路
+      //   getJianxueInfo().then(({ result }) => {
+      //     this.jxEvent = result || {}
+      //   })
+      // }
     } catch (e) {
       throw e
     }
@@ -120,8 +152,9 @@ export default {
   methods: {
     async getTemplate () {
       try {
-        const { result } = await getTemplate({ type: 2 })
-        if (!result) {
+        const { activityId } = this
+        // const { result } = await getTemplate({ type: 2 })
+        if (activityId === 0) {
           this.noFinish = true
           this.$alert('主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
             .finally(() => {
@@ -129,7 +162,7 @@ export default {
             })
           return false
         }
-        let { type, moduleModels } = result
+        let { type, moduleModels } = this.activityData
         if (type === 5) {
           this.modules.MIAO_SHA = moduleModels[0]
           this.modules.PIN_TUAN = moduleModels[1]
@@ -168,7 +201,6 @@ export default {
           this.modules.FENG_QIANG = moduleModels[5]
         }
         this.type = type
-        return type
       } catch (e) {
         throw e
       }

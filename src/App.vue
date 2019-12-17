@@ -13,11 +13,15 @@
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN, CHECK_ACTIVITY_AUTH, GET_SKIN_ID } from './store/mutation-type'
+import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN, GET_ACTIVITY_DATA, GET_SKIN_ID, SET_LIVE_INFO, SET_COUPON_INFO, SET_INVITING_EVENT, SET_JX_EVENT, SET_NW_EVENT } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
 import { isIOS } from './assets/js/util'
-import qs from 'qs'
 import Cookie from './assets/js/storage-cookie'
+import qs from 'qs'
+import { getLiveInfo, getJianxueInfo, getNianweiInfo } from './apis/home'
+import { getMyCouponList } from './apis/my-coupon'
+import { getCurrentActivity } from './apis/invitenewcomers'
+
 export default {
   components: {
     Navbar,
@@ -98,10 +102,7 @@ export default {
         await this.getUserInfo()
       }
       this.logined = true
-      // 是否开通活动权限
-      this.checkActivityAuth()
-      // 获取皮肤id
-      this.getSkinId()
+      this.getEntryData()
       // 尝试清除微信缓存
       // 必须放在微信登录之后，否则会影响微信登录
       // 且有code时不用刷新
@@ -121,13 +122,18 @@ export default {
   async mounted () {},
   methods: {
     ...mapMutations({
-      setTheme: SET_THEME
+      setTheme: SET_THEME,
+      setLiveInfo: SET_LIVE_INFO,
+      setCouponInfo: SET_COUPON_INFO,
+      setInvitingEvent: SET_INVITING_EVENT,
+      setJxEvent: SET_JX_EVENT,
+      setNwEvent: SET_NW_EVENT
     }),
     ...mapActions({
       getUserInfo: USER_INFO,
       getMallInfo: GET_MALL_INFO,
       login: LOGIN,
-      checkActivityAuth: CHECK_ACTIVITY_AUTH,
+      getActivityData: GET_ACTIVITY_DATA,
       getSkinId: GET_SKIN_ID
     }),
     share (willHide = []) {
@@ -139,6 +145,30 @@ export default {
         imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
         willHide
       })
+    },
+    // 获取首页、主会场页所需数据
+    async getEntryData () {
+      try {
+        // 获取皮肤id
+        this.getSkinId()
+        this.getActivityData()
+        // if (activityId && activityId !== 0) {
+        //   if (~[5, 6, 7].indexOf(activityId)) {
+        const [{ result: liveInfo }, { result: couponInfo }, { result: invitingEvent }, { result: jxEvent }, { result: nwEvent }] = await Promise.all([getLiveInfo(), getMyCouponList({ current: 1, size: 10, status: 0 }), getCurrentActivity(), getJianxueInfo(), getNianweiInfo()])
+        this.setLiveInfo(liveInfo)
+        this.setCouponInfo(couponInfo)
+        this.setInvitingEvent(invitingEvent)
+        this.setJxEvent(jxEvent)
+        this.setNwEvent(nwEvent)
+        // }
+        // if (activityId === 8) {
+        // const [{ result }] = await Promise.all([getCurrentActivity()])
+        // console.log(result)
+        // }
+        // }
+      } catch (error) {
+        throw error
+      }
     }
   }
 }

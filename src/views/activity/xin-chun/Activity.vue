@@ -12,7 +12,7 @@
         boxShadow
       }"
       tag="div"
-      :to="{ name: 'NewYearActivity' }"
+      :to="{ name: 'NewYearActivity', params: { id: nwEvent.id } }"
     >
       <div :class="$style.info">
         <div :class="$style.sub">
@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Activity',
   inject: ['parent'],
@@ -71,6 +73,9 @@ export default {
   },
   data () {
     return {}
+  },
+  computed: {
+    ...mapGetters(['nwEvent'])
   }
   // computed: {
   //   invitingEvent () {

@@ -99,9 +99,12 @@ export default {
     '2': '退款退货'
   },
   // 主会场信息
-  activity: {
-    isActivityAuth: false, // 是否开通活动权限
-    id: 0
-  },
-  skinId: null // 皮肤id
+  activityData: {},
+  skinId: null, // 皮肤id
+  liveInfo: null, // 直播
+  d12CouponTotal: null, // 已领双十二优惠卷
+  xinchunCouponTotal: null, // 已领新春优惠卷
+  invitingEvent: null, // 邀新有礼
+  jxEvent: null, // 见学之路
+  nwEvent: null // 新春年味
 }

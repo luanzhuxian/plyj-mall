@@ -89,6 +89,9 @@ export default {
     line-height: 70px;
     font-size: 28px;
     color: #96E3A9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   &-list {
     padding: 0 32px 48px;

@@ -79,11 +79,25 @@ export default {
   [type.STUDENTS] (state, payload) {
     state.students = payload
   },
-  [type.CHECK_ACTIVITY_AUTH] (state, payload) {
-    state.activity.isActivityAuth = !!payload
-    state.activity.id = (payload && payload.type) || 0
+  [type.GET_ACTIVITY_DATA] (state, payload) {
+    state.activityData = payload
   },
   [type.GET_SKIN_ID] (state, payload) {
     state.skinId = payload || 0
+  },
+  [type.SET_LIVE_INFO] (state, payload) {
+    state.liveInfo = payload || {}
+  },
+  [type.SET_COUPON_INFO] (state, payload) {
+    state.couponInfo = payload || {}
+  },
+  [type.SET_INVITING_EVENT] (state, payload) {
+    state.invitingEvent = payload || {}
+  },
+  [type.SET_JX_EVENT] (state, payload) {
+    state.jxEvent = payload || {}
+  },
+  [type.SET_NW_EVENT] (state, payload) {
+    state.nwEvent = payload && payload.length ? payload[0] : {}
   }
 }

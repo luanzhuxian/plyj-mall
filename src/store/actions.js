@@ -213,10 +213,12 @@ export default {
       throw e
     }
   },
-  [type.CHECK_ACTIVITY_AUTH]: async ({ commit }, params) => {
+  [type.GET_ACTIVITY_DATA]: async ({ commit }, params) => {
     try {
-      const { result } = await getTemplate({ type: 2 })
-      commit(type.CHECK_ACTIVITY_AUTH, result)
+      let { result } = await getTemplate({ type: 2 })
+      result = result || (result = { type: 0 })
+      commit(type.GET_ACTIVITY_DATA, result)
+      return result.type
     } catch (e) {
       throw e
     }
@@ -226,6 +228,7 @@ export default {
       const { result } = await getTemplate({ type: 1 })
       commit(type.GET_SKIN_ID, result.skinStatus)
     } catch (e) {
+      commit(type.GET_SKIN_ID, 0)
       throw e
     }
   }
