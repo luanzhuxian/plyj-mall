@@ -152,27 +152,24 @@ export default {
         // 获取皮肤id
         this.getSkinId()
         this.getActivityData()
-        //   if (~[5, 6, 7].indexOf(activityId)) {
-        const [{ result: liveInfo }, { result: couponInfo }, { result: invitingEvent }, { result: jxEvent }, { result: nwEvent }] = await Promise.all([getLiveInfo(), getMyCouponList({ current: 1, size: 10, status: 0 }), getCurrentActivity(), getJianxueInfo(), getNianweiInfo()])
-        this.setLiveInfo(liveInfo)
-        this.setCouponInfo(couponInfo)
-        this.setInvitingEvent(invitingEvent)
-        this.setJxEvent(jxEvent)
-        this.setNwEvent(nwEvent)
-        // }
-        // if (activityId === 8) {
-        // const [{ result }] = await Promise.all([getCurrentActivity()])
-        // console.log(result)
-        // }
+        // const [{ result: liveInfo }, { result: couponInfo }, { result: invitingEvent }, { result: jxEvent }, { result: nwEvent }] = await Promise.all([getLiveInfo(), getMyCouponList({ current: 1, size: 10, status: 0 }), getCurrentActivity(), getJianxueInfo(), getNianweiInfo()])
+        // this.setLiveInfo(liveInfo)
+        // this.setCouponInfo(couponInfo)
+        // this.setInvitingEvent(invitingEvent)
+        // this.setJxEvent(jxEvent)
+        // this.setNwEvent(nwEvent)
+        getLiveInfo().then(({ result }) => this.setLiveInfo(result)).catch(e => this.setLiveInfo({}))
+        getCurrentActivity().then(({ result }) => this.setInvitingEvent(result)).catch(e => this.setInvitingEvent({}))
+        getJianxueInfo().then(({ result }) => this.setJxEvent(result)).catch(e => this.setJxEvent({}))
+        getNianweiInfo().then(({ result }) => this.setNwEvent(result)).catch(e => this.setNwEvent({}))
+        getMyCouponList({ current: 1, size: 10, status: 0 }).then(({ result }) => this.setCouponInfo(result)).catch(e => this.setCouponInfo({}))
       } catch (error) {
-        this.setLiveInfo({})
-        this.setCouponInfo({})
-        this.setInvitingEvent({})
-        this.setJxEvent({})
-        this.setNwEvent({})
+        // this.setLiveInfo({})
+        // this.setCouponInfo({})
+        // this.setInvitingEvent({})
+        // this.setJxEvent({})
+        // this.setNwEvent({})
         throw error
-      } finally {
-
       }
     }
   }

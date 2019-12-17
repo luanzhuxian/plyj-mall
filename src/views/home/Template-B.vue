@@ -19,7 +19,8 @@
       </div>
       <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
       <live :class="$style.live" v-if="isLiveShow" />
-      <activity :class="$style.activity" v-if="type === 4" />
+      <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
+      <d12-activity :class="$style.activity" v-if="type === 4" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
         <skin-title
@@ -70,8 +71,11 @@
   </div></template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import Live from '../activity/components/Live.vue'
+import Activity from '../activity/xin-chun/Activity.vue'
+import D12Activity from './components/Activity.vue'
 import Banner from './components/Banner.vue'
 import Adv from './components/Adv.vue'
 import HotItem from './components/Hot-Item.vue'
@@ -79,7 +83,6 @@ import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
-import Activity from './components/Activity.vue'
 import SkinTitle from './components/Skin-Title.vue'
 
 export default {
@@ -88,6 +91,8 @@ export default {
   components: {
     Search,
     Live,
+    Activity,
+    D12Activity,
     Banner,
     Adv,
     HotItem,
@@ -95,7 +100,6 @@ export default {
     BestRecommend,
     Appointment,
     Propagate,
-    Activity,
     SkinTitle
   },
   props: {
@@ -115,10 +119,10 @@ export default {
     }
   },
   data () {
-    return {
-    }
+    return {}
   },
   computed: {
+    ...mapGetters(['nwEvent']),
     BANNER () {
       return this.data.BANNER || {}
     },
@@ -144,6 +148,9 @@ export default {
       return this.type === 4 &&
       this.parent.liveInfo &&
       (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
+    },
+    isNwEventShow () {
+      return this.nwEvent && this.nwEvent.permissionStatus
     }
   }
 }

@@ -1,8 +1,5 @@
 <template>
   <div :class="$style.activity">
-    <!-- {{ 'xinchunCouponTLotal' + xinchunCouponTLotal }}
-    {{ 'nwEvent' + nwEvent }}
-    {{ 'liveInfo' + liveInfo }} -->
     <template-xinchun
       v-if="type === 8"
       :data="modules"
@@ -93,16 +90,18 @@ export default {
     },
     allLoaded () {
       let result
+      // 双十二
       if ([5, 6, 7].includes(this.activityId)) {
         result = (this.liveInfo !== null && !!this.liveInfo) &&
         (this.invitingEvent !== null && !!this.invitingEvent) &&
         (this.jxEvent !== null && !!this.jxEvent) &&
         this.d12CouponTotal !== null
       }
+      // 新春
       if (this.activityId === 8) {
         result = (this.liveInfo !== null && !!this.liveInfo) &&
         (this.nwEvent !== null && !!this.nwEvent) &&
-        this.xinchunCouponTLotal !== null
+        this.xinchunCouponTotal !== null
       }
       return result
     }

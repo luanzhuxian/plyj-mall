@@ -13,6 +13,7 @@
       <propagate :class="$style.propagate" :data="PIN_XUAN" />
       <live :class="$style.live" v-if="isLiveShow" />
       <activity :class="$style.activity" v-if="isNwEventShow" />
+      <d12-activity :class="$style.activity" />
       <appointment :class="$style.appointment" :data="YU_YUE" :style-type="2" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
@@ -65,6 +66,7 @@ import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import Live from '../activity/components/Live.vue'
 import Activity from '../activity/xin-chun/Activity.vue'
+import D12Activity from './components/Activity.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
@@ -80,6 +82,7 @@ export default {
     Search,
     Live,
     Activity,
+    D12Activity,
     HotItem,
     Best,
     BestRecommend,
