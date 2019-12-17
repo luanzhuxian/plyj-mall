@@ -46,7 +46,7 @@
             商品<i>({{ productList.length }})</i>
           </div>
         </div>
-        <pl-button @click="share" type="warning" size="mini">分享海报</pl-button>
+        <pl-button style="padding:0 24px" @click="share" type="warning" size="small">分享海报</pl-button>
       </div>
 
       <div :class="$style.chatWrap" ref="chatRecords">
@@ -152,8 +152,6 @@
             </div>
           </div>
         </div>
-        <!--支持回看-->
-        <div :class="$style.playBack" @click="playBackWarn" v-if="videoLiveMes.type && videoLiveMes.type === 'video'">该视频支持回看</div>
       </div>
 
       <div v-if="tab === 1" :class="$style.sendMessage">
@@ -353,6 +351,8 @@ export default {
       this.$error(e.message)
       throw e
     }
+    //回看提醒
+    this.playBackWarn()
   },
   methods: {
     // 回放提醒
@@ -403,6 +403,9 @@ export default {
           vid.addEventListener('play', _ => { // 播放开始执行的函数
             vid.controls = false
             vid.currentTime = startTime
+          })
+          vid.addEventListener('pause', _ => { // 播放开始执行的函数
+            vid.controls = true
           })
           // 监听错误
           vid.addEventListener('error', _ => {
@@ -820,7 +823,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 48px;
+    padding: 0 24px;
     font-size: 26px;
     background-color: #fff;
     > div {
@@ -856,18 +859,6 @@ export default {
     flex: 1;
     overflow: auto;
     position: relative;
-    > .play-back {
-      width: 194px;
-      font-size: 24px;
-      color: #fff;
-      background: #F2B036;
-      text-align: center;
-      line-height: 44px;
-      position: absolute;
-      top: 24px;
-      right: 48px;
-      border-radius:8px;
-    }
   }
   .chat-records {
     display: flex;
