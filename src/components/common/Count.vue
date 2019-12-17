@@ -64,7 +64,7 @@ export default {
       this.emitChange(temp)
     },
     valueChange (e) {
-      let val = Number.parseInt(e.target.value)
+      let val = Number.parseInt(e.currentTarget.value)
       if (val && (val <= this.max && val >= this.min)) {
         this.emitChange(val)
       } else {

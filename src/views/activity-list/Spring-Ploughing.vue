@@ -51,7 +51,7 @@
           :data="pro"
         />
       </div>
-      <div :class="$style.giftList">
+      <div :class="$style.giftList" v-if="item.gifts.length">
         <div :class="$style.title">
           更享更多伴手礼
         </div>
@@ -155,7 +155,6 @@ export default {
       try {
         const { result } = await getSpringCombination({ current: 1, size: 60 })
         result.records.sort((a, b) => {
-          console.log(moment(b.activityStartTime).valueOf() - moment(a.activityStartTime).valueOf())
           return moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf()
         })
         for (let item of result.records) {
@@ -181,11 +180,9 @@ export default {
           }
         }
         this.list = result.records
-        console.log(this.list.slice(-1)[0].activityEndTime)
         const lastEndTime = moment(this.list.slice(-1)[0].activityEndTime).valueOf()
         const lastStartTime = moment(this.list[0].activityStartTime).valueOf()
         const now = Date.now()
-        console.log(lastEndTime)
         this.allEnd.wasStarted = now - lastStartTime >= 0
         this.allEnd.wasEnded = now - lastEndTime >= 0
         // 未开始倒计时(距离开始)
@@ -298,7 +295,7 @@ export default {
     position: relative;
     height: 674px;
     padding-top: 20px;
-    background: #f9dfbe url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/7abb300e-640c-4a22-a540-2c837bf9401d.png") no-repeat center 20px;
+    background: #f9dfbe url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/b1da64a1-dbf6-48a2-bd17-ed0bd357c1d1.png") no-repeat center 20px;
     background-size: 100%;
     > .top-right {
       position: absolute;
@@ -369,7 +366,7 @@ export default {
     }
   }
   .global-end-countdown {
-    margin-top: 288px;
+    margin-top: 292px;
     background: none;
     > .val {
       background-color: #ffd6a7;
