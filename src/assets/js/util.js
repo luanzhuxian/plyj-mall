@@ -330,18 +330,25 @@ export function drawRoundRect (ctx, x, y, width, height, radius, strokeStyle, fi
 }
 
 /**
- * 倒计时
- * @param duration {number} 倒计时时长, 毫秒值
- * @param callback {function} 接收倒计时数据
+ * 倒计时类
+ * 每次使用，必须new一个实例
+ * @class
  */
 export class Countdown {
   timer = 0
   total = 0
+  /**
+   * 倒计时构造函数
+   * @constructor
+   * @param duration {number} 倒计时时长, 毫秒值
+   * @param callback {function} 接收倒计时数据
+   */
   constructor (duration, callback) {
     this.duration = duration
     this.total = duration
     this.callback = callback
   }
+  // 启动
   start () {
     // 总时间如果小于等于0，不能启动倒计时
     if (!this.total || this.total < 0) {
@@ -349,19 +356,26 @@ export class Countdown {
     }
     let duration = this.duration
     if (duration <= 0) {
+      // 如果回调接收到null，说明倒计时已结束，需要在外部做出相应的逻辑处理
       this.callback(null)
       return
     }
-    let { _data } = moment.duration(duration)
+    const { _data } = moment.duration(duration)
+    // 获取锁屏时间，获取后900ms清除，防止重复获取，同时能最大可能的让更多倒计时实例都能获取到该值
+    const LOCK_SCREEN_TIME = Number(localStorage.getItem('LOCK_SCREEN_TIME')) || 0
+    // 900ms后，清除锁屏时间，锁屏时间已保存至 LOCK_SCREEN_TIME
+    if (LOCK_SCREEN_TIME) {
+      setTimeout(() => {
+        localStorage.removeItem('LOCK_SCREEN_TIME')
+      }, 900)
+    }
     this.callback(_data)
     this.timer = setTimeout(() => {
-      const LOCK_SCREEN_TIME = Number(localStorage.getItem('LOCK_SCREEN_TIME')) || 0
       this.duration -= (1000 + LOCK_SCREEN_TIME)
       this.start()
-      // TODO 注意：清除后，可能导致其它定时器实例会获取不到
-      localStorage.removeItem('LOCK_SCREEN_TIME')
     }, 1000)
   }
+  // 手动停止
   stop () {
     clearTimeout(this.timer)
     this.callback = null
