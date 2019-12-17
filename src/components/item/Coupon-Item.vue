@@ -10,8 +10,8 @@
       <div :class="$style.main">
         <div :class="$style.couponItemLeft">
           <div :class="$style.leftTop">
-            <div :class="$style.couponPrice" v-text="amount" />
-            <div :class="$style.couponDesc">
+            <div :class="[$style.couponPrice, amount > 999 ? $style.middle: '', amount > 9999 ? $style.large: '']" v-text="amount" />
+            <div :class="[$style.couponDesc, amount > 999 ? $style.middle: '']">
               <div>满{{ full }}减 {{ subtract }}</div>
               <div v-text="name" />
             </div>
@@ -249,6 +249,16 @@ export default {
     font-size: 70px;
     color: #ED2E50;
 
+    &.middle {
+      font-size: 50px;
+      line-height: 50px;
+    }
+
+    &.large {
+      font-size: 40px;
+      line-height: 40px;
+    }
+
     &:before {
       display: inline-block;
       content: '￥';
@@ -271,6 +281,18 @@ export default {
       &:nth-of-type(2) {
         font-size: 22px;
         line-height: 30px;
+      }
+    }
+    &.middle {
+      > div {
+        &:nth-of-type(1) {
+          font-size: 24px;
+          line-height: 32px;
+        }
+        &:nth-of-type(2) {
+          font-size: 20px;
+          line-height: 22px;
+        }
       }
     }
   }
