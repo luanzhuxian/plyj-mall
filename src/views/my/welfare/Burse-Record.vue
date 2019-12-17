@@ -13,12 +13,12 @@
 
       <!--已使用-->
       <div v-show="active === 'useBurse'">
-        <BurList :status="useStatus" :use-status="2" :has-status-img="true" :is-edit="useEdit" ref="useBurse" />
+        <BurseList :status="useStatus" :use-status="2" :has-status-img="true" :is-edit="useEdit" ref="useBurse" />
       </div>
 
       <!--已过期-->
       <div v-show="active === 'expireBurse'">
-        <BurList :status="expireStatus" :use-status="3" :has-status-img="true" :is-edit="expireEdit" ref="expireBurse" />
+        <BurseList :status="expireStatus" :use-status="3" :has-status-img="true" :is-edit="expireEdit" ref="expireBurse" />
       </div>
 
     </div>
@@ -27,12 +27,12 @@
 </template>
 
 <script>
-import BurList from './components/Burse-List.vue'
+import BurseList from './components/Burse-List.vue'
 
 export default {
   name: 'MyBurseRecord',
   components: {
-    BurList
+    BurseList
   },
   data () {
     return {
