@@ -95,7 +95,9 @@ document.addEventListener('visibilitychange', () => {
     // 锁屏
     localStorage.setItem('LOCK_SCREEN_TIME', String(Date.now()))
   } else {
-    const LOCK_SCREEN_TIME = Number(localStorage.getItem('LOCK_SCREEN_TIME')) || Date.now()
-    localStorage.setItem('LOCK_SCREEN_TIME', (Date.now() - LOCK_SCREEN_TIME))
+    const LOCK_SCREEN_TIME = Number(localStorage.getItem('LOCK_SCREEN_TIME'))
+    if (LOCK_SCREEN_TIME) {
+      localStorage.setItem('LOCK_SCREEN_TIME', (Date.now() - LOCK_SCREEN_TIME))
+    }
   }
 })

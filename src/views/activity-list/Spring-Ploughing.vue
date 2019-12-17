@@ -27,14 +27,15 @@
         <span>{{ item.purchaseQuantity }}人已购</span>
       </div>
       <div :class="$style.endCountdown">
-        <span>距活动结束: </span>
-        <span :class="$style.val">02</span>
+        <span v-if="item.wasStarted">距活动结束: </span>
+        <span v-else>距活动开始: </span>
+        <span :class="$style.val" v-text="item.d" />
         <span :class="$style.unit">天</span>
-        <span :class="$style.val">23</span>
+        <span :class="$style.val" v-text="item.h" />
         <span :class="$style.unit">:</span>
-        <span :class="$style.val">59</span>
+        <span :class="$style.val" v-text="item.m" />
         <span :class="$style.unit">:</span>
-        <span :class="$style.val">59</span>
+        <span :class="$style.val" v-text="item.s" />
       </div>
       <div :class="$style.proList">
         <SpringPloughingProItem
@@ -91,9 +92,11 @@ import {
   generateQrcode,
   createText,
   cutArcImage,
-  loadImage
+  loadImage,
+  Countdown
 } from '../../assets/js/util'
 import { getSpringCombination } from '../../apis/product'
+import moment from 'moment'
 const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/4b676734-b0c9-4aca-942d-ce62e481ebcf.jpeg'
 export default {
   name: 'SpringPloughing',
@@ -107,7 +110,9 @@ export default {
       showPoster: false,
       poster: '',
       creating: false,
-      list: []
+      list: [],
+      // 倒计时实例列表
+      countInstaceList: []
     }
   },
   computed: {
@@ -120,14 +125,64 @@ export default {
       throw e
     }
   },
+  deactivated () {
+    this.countInstaceList.map(item => item.stop())
+    this.countInstaceList = []
+  },
   methods: {
     async getSpringCombination () {
       try {
         const { result } = await getSpringCombination({ current: 1, size: 60 })
+        for (let item of result.records) {
+          // 添加倒计时相关字段
+          item.d = '' // 天
+          item.h = '' // 时
+          item.m = '' // 分
+          item.s = '' // 秒
+          const activityStartTime = moment(item.activityStartTime).valueOf()
+          const activityEndTime = moment(item.activityEndTime).valueOf()
+          const now = Date.now()
+          // 是否开始
+          item.wasStarted = now - activityStartTime >= 0
+          // 是否结束
+          item.wasEnded = now - activityEndTime >= 0
+          // 未开始倒计时(距离开始)
+          if (!item.wasStarted) {
+            this.setCountdownTime(item, activityStartTime - now)
+          }
+          // 开始倒计时(距离结束)
+          if (item.wasStarted && !item.wasEnded) {
+            this.setCountdownTime(item, activityEndTime - now)
+          }
+        }
         this.list = result.records
       } catch (e) {
         throw e
       }
+    },
+    /**
+     * 设置到计时时间
+     * @param data {object} 每组数据
+     * @param duration {number} 倒计时时长
+     */
+    setCountdownTime (data, duration) {
+      const countdown = new Countdown(duration, async countdownData => {
+        if (!countdownData) {
+          // 倒计时结束，刷新数据
+          await this.getSpringCombination()
+          return
+        }
+        let d = String(countdownData.months * moment().daysInMonth() + countdownData.days)
+        let h = String(countdownData.hours)
+        let m = String(countdownData.minutes)
+        let s = String(countdownData.seconds)
+        data.d = d.padStart(2, '0')
+        data.h = h.padStart(2, '0')
+        data.m = m.padStart(2, '0')
+        data.s = s.padStart(2, '0')
+      })
+      this.countInstaceList.push(countdown)
+      countdown.start()
     },
     async buy (data) {
       const confirmList = []

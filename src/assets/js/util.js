@@ -339,6 +339,7 @@ export class Countdown {
   total = 0
   /**
    * 倒计时构造函数
+   * 退出页面时，需求要停止每个定时器实例
    * @constructor
    * @param duration {number} 倒计时时长, 毫秒值
    * @param callback {function} 接收倒计时数据
