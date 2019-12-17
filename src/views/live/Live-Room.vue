@@ -12,7 +12,7 @@
     <!--视频直播-->
     <div v-if="videoLiveMes.type === 'video'" :class="$style.playBackBox">
       <div class="plv-live-cutOff" v-if="videoLiveMes.flag" />
-      <video v-else preload controls x5-video-player-type="h5-page" ref="livePlayBack" :src="videoLiveMes.url" />
+      <video v-else x5-playsinline="" playsinline="" webkit-playsinline="" preload controls x5-video-player-type="h5-page" ref="livePlayBack" :src="videoLiveMes.url" />
     </div>
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
@@ -281,7 +281,7 @@ export default {
        *   self: { Boolean },  是否是自己发送的
        * }
        */
-      chatRecords: [],
+      chatRecords: [{ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true }],
       couponList: [],
       isCouponLoading: false, // 增加节流阀
       productList: [],
@@ -351,26 +351,8 @@ export default {
       this.$error(e.message)
       throw e
     }
-    //回看提醒
-    this.playBackWarn()
   },
   methods: {
-    // 回放提醒
-    async playBackWarn () {
-      try {
-        let htmlStr = "<div style='padding: 0 30px;'>该视频支持回看，直播结束后可在【我的】-【我的视频库】中查看</div>"
-        await this.$confirm({
-          useDangersHtml: true,
-          message: htmlStr,
-          cancelText: '立即查看',
-          confirmText: '知道了',
-          cancelStyle: 'color:#FE7700',
-          confirmStyle: 'color:#A8A8A8'
-        })
-      } catch (e) {
-        this.$router.push({ name: 'LiveLibrary' })
-      }
-    },
     // 视频直播情况下获取视频信息
     async getVideoMesById () {
       try {
@@ -392,7 +374,7 @@ export default {
         if (startTime >= -time && startTime < 0) {
           let times = 10 - startTime
           this.videoLiveTimer = setTimeout(_ => {
-            location.reload();
+            location.reload()
           }, times * 1000)
         }
         // 直播时间还未结束
@@ -401,12 +383,31 @@ export default {
           await this.$nextTick()
           let vid = this.$refs.livePlayBack
           vid.addEventListener('play', _ => { // 播放开始执行的函数
-            vid.controls = false
+            // var agent = (navigator.userAgent || navigator.vendor || window.opera)
+            // if (agent != null) {
+            //   let agentName = agent.toLowerCase()
+            //   alert(/android/i.test(agentName))
+            //   alert(agent)
+            //   if (/android/i.test(agentName)) {
+            //     vid.controls = false
+            //   }
+            //   // ios
+            //   else {
+            //     vid.controls = true
+            //   }
+            // }
             vid.currentTime = startTime
+            vid.controls = false
           })
-          vid.addEventListener('pause', _ => { // 播放开始执行的函数
-            vid.controls = true
-          })
+          //   // 安卓
+          //   vid.addEventListener('x5videoexitfullscreen', function () {
+          //     vid.controls = true
+          //     vid.play()
+          //   })
+          //   // ios 支持的事件
+          //   vid.addEventListener('webkitendfullscreen', function () {
+          //     vid.play()
+          //   })
           // 监听错误
           vid.addEventListener('error', _ => {
             vid.src = ''
