@@ -12,7 +12,7 @@
       <search :class="$style.search" placeholder="搜索商品" />
       <propagate :class="$style.propagate" :data="PIN_XUAN" />
       <live :class="$style.live" v-if="isLiveShow" />
-      <activity :class="$style.activity" />
+      <activity :class="$style.activity" v-if="isNwEventShow" />
       <appointment :class="$style.appointment" :data="YU_YUE" :style-type="2" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
@@ -61,6 +61,7 @@
   </div></template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import Live from '../activity/components/Live.vue'
 import Activity from '../activity/xin-chun/Activity.vue'
@@ -108,6 +109,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['nwEvent']),
     PIN_XUAN () {
       return this.data.PIN_XUAN || {}
     },
@@ -129,6 +131,9 @@ export default {
     isLiveShow () {
       return this.parent.liveInfo &&
       (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
+    },
+    isNwEventShow () {
+      return this.nwEvent && this.nwEvent.permissionStatus
     }
   }
 }

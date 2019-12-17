@@ -152,9 +152,8 @@ export default {
         // 获取皮肤id
         this.getSkinId()
         this.getActivityData()
-        // if (activityId && activityId !== 0) {
         //   if (~[5, 6, 7].indexOf(activityId)) {
-        const [{ result: liveInfo }, { result: couponInfo }, { result: invitingEvent }, { result: jxEvent }, { result: nwEvent }] = await Promise.all([getLiveInfo(), getMyCouponList({ current: 1, size: 10, status: 0 }), getCurrentActivity(), getJianxueInfo(), getNianweiInfo()])
+        const [{ result: liveInfo }, { result: couponInfo }, { result: invitingEvent }, { result: jxEvent }, { result: nwEvent }] = await Promise.all([getLiveInfo(), getMyCouponList({ name: 1, size: 10, status: 0 }), getCurrentActivity(), getJianxueInfo(), getNianweiInfo()])
         this.setLiveInfo(liveInfo)
         this.setCouponInfo(couponInfo)
         this.setInvitingEvent(invitingEvent)
@@ -165,9 +164,15 @@ export default {
         // const [{ result }] = await Promise.all([getCurrentActivity()])
         // console.log(result)
         // }
-        // }
       } catch (error) {
+        this.setLiveInfo({})
+        this.setCouponInfo({})
+        this.setInvitingEvent({})
+        this.setJxEvent({})
+        this.setNwEvent({})
         throw error
+      } finally {
+
       }
     }
   }

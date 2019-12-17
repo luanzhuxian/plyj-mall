@@ -17,7 +17,12 @@
           <live />
         </div>
         <!-- 活动-->
-        <activity :class="[$style.activity, $style.module]" background="#FFFAE6" box-shadow="0px 8px 12px rgba(121, 30, 5, 0.2)" />
+        <activity
+          v-if="isNwEventShow"
+          :class="[$style.activity, $style.module]"
+          background="#FFFAE6"
+          box-shadow="0px 8px 12px rgba(121, 30, 5, 0.2)"
+        />
         <!-- 品宣 -->
         <div :class="[$style.propagate, $style.module]" v-if="PIN_XUAN && PIN_XUAN.showStatue === 1">
           <propagate :data="PIN_XUAN" />
@@ -101,7 +106,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['xinchunCouponTotal']),
+    ...mapGetters(['xinchunCouponTotal', 'nwEvent']),
     PIN_XUAN () {
       return this.data.PIN_XUAN || {}
     },
@@ -124,6 +129,9 @@ export default {
       return this.parent.liveInfo &&
       (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
     },
+    isNwEventShow () {
+      return this.nwEvent && this.nwEvent.permissionStatus
+    },
     allLoaded () {
       return this.$parent.allLoaded
     }
@@ -136,6 +144,7 @@ export default {
   background-color: #F2D04A;
 }
 .background {
+  position: relative;
   background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/45a22a0e-5560-43a6-b783-485287939361.png") no-repeat center top;
   background-size: 100% auto;
   min-height: 100vh;

@@ -89,7 +89,8 @@ export default {
     state.liveInfo = payload || {}
   },
   [type.SET_COUPON_INFO] (state, payload) {
-    state.couponInfo = payload || {}
+    state.d12CouponTotal = (payload && payload.total) || 0
+    state.xinchunCouponTotal = (payload && payload.total) || 0
   },
   [type.SET_INVITING_EVENT] (state, payload) {
     state.invitingEvent = payload || {}
