@@ -361,8 +361,11 @@ export class Countdown {
       this.callback(null)
       return
     }
-    const { _data } = moment.duration(duration)
-    this.callback(_data)
+    const { _data: data } = moment.duration(duration)
+    data.days = data.years * 365 + data.months * moment().daysInMonth() + data.days
+    delete data.years
+    delete data.months
+    this.callback(data)
     this.timer = setTimeout(() => {
       this.duration -= 1000
       this.start()

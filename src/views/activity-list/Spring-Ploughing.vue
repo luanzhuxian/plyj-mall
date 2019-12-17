@@ -2,14 +2,18 @@
   <div :class="$style.springPloughing">
     <div :class="$style.countdown">
       <div :class="$style.globalEndCountdown">
-        <span>距活动结束: </span>
-        <span :class="$style.val + ' ' + $style.day">02</span>
-        <span :class="$style.unit">天</span>
-        <span :class="$style.val">23</span>
-        <span :class="$style.unit">:</span>
-        <span :class="$style.val">59</span>
-        <span :class="$style.unit">:</span>
-        <span :class="$style.val">59</span>
+        <template v-if="!allEnd.wasEnded">
+          <span v-if="allEnd.wasStarted">距活动结束: </span>
+          <span v-else>距活动开始: </span>
+          <span :class="$style.val + ' ' + $style.day" v-text="allEnd.d" />
+          <span :class="$style.unit">天</span>
+          <span :class="$style.val" v-text="allEnd.h" />
+          <span :class="$style.unit">:</span>
+          <span :class="$style.val" v-text="allEnd.m" />
+          <span :class="$style.unit">:</span>
+          <span :class="$style.val" v-text="allEnd.s" />
+        </template>
+        <span v-else>已结束</span>
       </div>
       <div :class="$style.topRight" @click="createPoster">活动海报</div>
       <div :class="$style.topRight" @click="showRules = true">活动规则</div>
@@ -27,15 +31,18 @@
         <span>{{ item.purchaseQuantity }}人已购</span>
       </div>
       <div :class="$style.endCountdown">
-        <span v-if="item.wasStarted">距活动结束: </span>
-        <span v-else>距活动开始: </span>
-        <span :class="$style.val" v-text="item.d" />
-        <span :class="$style.unit">天</span>
-        <span :class="$style.val" v-text="item.h" />
-        <span :class="$style.unit">:</span>
-        <span :class="$style.val" v-text="item.m" />
-        <span :class="$style.unit">:</span>
-        <span :class="$style.val" v-text="item.s" />
+        <template v-if="!item.wasEnded">
+          <span v-if="item.wasStarted">距活动结束: </span>
+          <span v-else>距活动开始: </span>
+          <span :class="$style.val" v-text="item.d" />
+          <span :class="$style.unit">天</span>
+          <span :class="$style.val" v-text="item.h" />
+          <span :class="$style.unit">:</span>
+          <span :class="$style.val" v-text="item.m" />
+          <span :class="$style.unit">:</span>
+          <span :class="$style.val" v-text="item.s" />
+        </template>
+        <span v-else>已结束</span>
       </div>
       <div :class="$style.proList">
         <SpringPloughingProItem
@@ -54,8 +61,14 @@
           :data="gift"
         />
       </div>
-      <button :class="$style.buy" @click="buy(item)">
+      <button v-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
         点击购买 组合到手<i v-text="getGroupAmount(item.products)" />元
+      </button>
+      <button v-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
+        暂未开启，敬请期待
+      </button>
+      <button v-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
+        暂未开启，敬请期待
       </button>
       <div :class="$style.corner + ' ' + $style.topLeft" />
       <div :class="$style.corner + ' ' + $style.topRight" />
@@ -112,7 +125,15 @@ export default {
       creating: false,
       list: [],
       // 倒计时实例列表
-      countInstaceList: []
+      countInstaceList: [],
+      allEnd: {
+        d: '',
+        h: '',
+        m: '',
+        s: '',
+        wasStarted: false,
+        wasEnded: false
+      } // 全部结束
     }
   },
   computed: {
@@ -133,6 +154,10 @@ export default {
     async getSpringCombination () {
       try {
         const { result } = await getSpringCombination({ current: 1, size: 60 })
+        result.records.sort((a, b) => {
+          console.log(moment(b.activityStartTime).valueOf() - moment(a.activityStartTime).valueOf())
+          return moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf()
+        })
         for (let item of result.records) {
           // 添加倒计时相关字段
           item.d = '' // 天
@@ -156,6 +181,21 @@ export default {
           }
         }
         this.list = result.records
+        console.log(this.list.slice(-1)[0].activityEndTime)
+        const lastEndTime = moment(this.list.slice(-1)[0].activityEndTime).valueOf()
+        const lastStartTime = moment(this.list[0].activityStartTime).valueOf()
+        const now = Date.now()
+        console.log(lastEndTime)
+        this.allEnd.wasStarted = now - lastStartTime >= 0
+        this.allEnd.wasEnded = now - lastEndTime >= 0
+        // 未开始倒计时(距离开始)
+        if (!this.allEnd.wasStarted) {
+          this.setCountdownTime(this.allEnd, lastStartTime - now)
+        }
+        // 开始倒计时(距离结束)
+        if (this.allEnd.wasStarted && !this.allEnd.wasEnded) {
+          this.setCountdownTime(this.allEnd, lastEndTime - now)
+        }
       } catch (e) {
         throw e
       }
@@ -172,7 +212,7 @@ export default {
           await this.getSpringCombination()
           return
         }
-        let d = String(countdownData.months * moment().daysInMonth() + countdownData.days)
+        let d = String(countdownData.days)
         let h = String(countdownData.hours)
         let m = String(countdownData.minutes)
         let s = String(countdownData.seconds)
@@ -371,6 +411,7 @@ export default {
     box-shadow: 0 6px 12px rgba(132, 0 ,0, 0.16);
     &.not-start {
       font-weight: normal;
+      color: #A6482F;
     }
     &.ended {
       color: #184B28;

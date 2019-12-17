@@ -970,7 +970,7 @@ export default {
           this.getDetail()
           return
         }
-        let d = String(data.months * moment().daysInMonth() + data.days)
+        let d = String(data.days)
         let h = String(data.hours)
         let m = String(data.minutes)
         let s = String(data.seconds)

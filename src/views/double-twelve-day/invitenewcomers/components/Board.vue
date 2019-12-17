@@ -296,8 +296,8 @@ export default {
         location.reload()
         return
       }
-      let { months, days, hours, minutes, seconds } = data
-      this.d = String(months * moment().daysInMonth() + days).padStart(2, '0')
+      let { days, hours, minutes, seconds } = data
+      this.d = String(days).padStart(2, '0')
       this.h = String(hours).padStart(2, '0')
       this.m = String(minutes).padStart(2, '0')
       this.s = String(seconds).padStart(2, '0')
