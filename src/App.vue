@@ -18,8 +18,7 @@ import share from './assets/js/wechat/wechat-share'
 import { isIOS } from './assets/js/util'
 import Cookie from './assets/js/storage-cookie'
 import qs from 'qs'
-import { getLiveInfo, getJianxueInfo, getNianweiInfo } from './apis/home'
-import { getMyCouponList } from './apis/my-coupon'
+import { getLiveInfo, getJianxueInfo, getNianweiInfo, getMyCouponInfo } from './apis/home'
 import { getCurrentActivity } from './apis/invitenewcomers'
 
 export default {
@@ -162,7 +161,7 @@ export default {
         getCurrentActivity().then(({ result }) => this.setInvitingEvent(result)).catch(e => this.setInvitingEvent({}))
         getJianxueInfo().then(({ result }) => this.setJxEvent(result)).catch(e => this.setJxEvent({}))
         getNianweiInfo().then(({ result }) => this.setNwEvent(result)).catch(e => this.setNwEvent({}))
-        getMyCouponList({ current: 1, size: 10, status: 0 }).then(({ result }) => this.setCouponInfo(result)).catch(e => this.setCouponInfo({}))
+        getMyCouponInfo().then(({ result }) => this.setCouponInfo(result)).catch(e => this.setCouponInfo({}))
       } catch (error) {
         // this.setLiveInfo({})
         // this.setCouponInfo({})

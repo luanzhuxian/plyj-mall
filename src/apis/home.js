@@ -13,6 +13,8 @@ export const getMaxCoupon = () => axios.get('/apis/v1/coupon/getMostPreferential
 export const getJianxueInfo = () => axios.get('/apis/v1/mallCheckIn/currActivity/baseInfo')
 // 新春年味活动信息
 export const getNianweiInfo = () => axios.get('/apis/v1/signinActivity/customer/may_join_activity')
+// 查询双十二、新春用户已领优惠券数
+export const getMyCouponInfo = () => axios.get('/apis/v1/coupon/me/count')
 
 // 主会场是否装修
 // export const checkActivityAuth = () => axios.get(`/apis/v1/judgment/isUpTemplate`)

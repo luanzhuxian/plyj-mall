@@ -62,7 +62,6 @@
   </div></template>
 
 <script>
-import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import Live from '../activity/components/Live.vue'
 import Activity from '../activity/xin-chun/Activity.vue'
@@ -112,7 +111,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['nwEvent']),
     PIN_XUAN () {
       return this.data.PIN_XUAN || {}
     },
@@ -136,7 +134,7 @@ export default {
       (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
     },
     isNwEventShow () {
-      return this.nwEvent && this.nwEvent.permissionStatus
+      return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
     }
   }
 }
