@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.chunyun">
+  <router-link :class="$style.chunyun" tag="div" :to="{ name: 'SpringPloughing' }">
     <div :class="$style.chunyunBg">
       <div :class="$style.countDownWrapper">
         <span v-if="data.values[0].status === 0">距活动开始：</span>
@@ -113,7 +113,7 @@
         </swiper>
       </template>
     </ul>
-  </div>
+  </router-link>
 </template>
 
 <script>
