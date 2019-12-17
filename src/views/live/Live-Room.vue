@@ -281,7 +281,7 @@ export default {
        *   self: { Boolean },  是否是自己发送的
        * }
        */
-      chatRecords: [{ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true }],
+      chatRecords: [],
       couponList: [],
       isCouponLoading: false, // 增加节流阀
       productList: [],
