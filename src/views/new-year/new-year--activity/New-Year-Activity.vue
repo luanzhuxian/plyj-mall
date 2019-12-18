@@ -387,7 +387,7 @@
           </div>
         </div>
         <div class="info">
-          <p>您再获得{{ activeDetail.nextPresentNumber - activeDetail.signedInNumber }}个年味即可参与抽奖</p>
+          <p>您再获得{{ activeDetail.nextPresentIndex - activeDetail.signedInNumber }}个年味即可参与抽奖</p>
         </div>
         <div class="footer">
           <button class="iKnow" @click="isShowPresentPopup = false">朕知道了</button>
@@ -672,7 +672,6 @@ export default {
     },
     // 获取年味大奖列表
     async getSignInIconList () {
-      this.myPresentList.length = 0
       try {
         let { result } = await getSignInIconList(this.id)
         let {
@@ -745,7 +744,7 @@ export default {
           signedInNumber: currentIndex, // 已经签到的个数
           differenceNumber: notes.length - currentIndex, // 还差多少个年味即可抽年味大奖
           nextPresentIndex, // 还差多少个年味即可参与抽奖
-          currentReceivePresentNote: this.currentSignIn.index,
+          currentReceivePresentNote: this.previousPresentIsReceive ? notes[currentIndex - 1].index : this.currentSignIn.index,
           activity_member: activity_member[userScope]
         }
 
@@ -929,14 +928,18 @@ export default {
         let m = String(_data.minutes)
         let s = String(_data.seconds)
         datetime -= 1000
+        // 跨天更新当前签到信息
+        if (this.dd !== d) {
+          this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
+          let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
+          this.currentSignIn = currentIndex > 0 ? this.signInIconList[currentIndex] : {}
+        }
         if (datetime <= 0) {
           clearInterval(this.timer)
           setTimeout(async () => { // 倒计时结束, 重新渲染页面
             this.init()
           }, 5000)
         }
-        // 跨越天需要刷新页面
-        if (this.dd !== d) this.init()
         this.dd = d.padStart(2, '0')
         this.hh = h.padStart(2, '0')
         this.mm = m.padStart(2, '0')
