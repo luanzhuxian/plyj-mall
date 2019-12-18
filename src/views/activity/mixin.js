@@ -22,10 +22,11 @@ export default {
       if (timestamp >= endTs) msg = '已结束'
       return msg
     },
-    getTime ({ activityStartTime, activityEndTime, status }) {
+    getTime (item) {
       // 0: 未开始 1: 进行中
-      const startTs = moment(activityStartTime).valueOf()
-      const endTs = moment(activityEndTime).valueOf()
+      const startTs = moment(item.activityStartTime || item.startTime).valueOf()
+      const endTs = moment(item.activityEndTime || item.endTime).valueOf()
+      const status = item.status
       let ts
       if (status === 0) {
         ts = startTs

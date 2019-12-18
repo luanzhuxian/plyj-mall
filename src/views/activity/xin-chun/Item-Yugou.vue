@@ -1,5 +1,5 @@
 <template>
-  <li
+  <div
     class="item"
     :class="$style.item"
     @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id, currentProductStatus: 4 } })"
@@ -24,7 +24,7 @@
       </div>
       <div :class="$style.sub1">
         <span>{{ `预交定金￥${data.goodsInfo.activityInfo.price}` }}</span>
-        <span v-if="data.goodsInfo.activityInfo.multiple && data.goodsInfo.activityInfo.activityPrice">{{ `抵￥${data.goodsInfo.activityInfo.activityPrice}` }}</span>
+        <span v-if="data.goodsInfo.activityInfo.multiple && data.goodsInfo.activityInfo.multipleNumber > 1 && data.goodsInfo.activityInfo.activityPrice">{{ `抵￥${data.goodsInfo.activityInfo.activityPrice}` }}</span>
       </div>
       <div :class="$style.sub2">
         {{ `预售到手价：${getTotalPrice(data)}元` }}
@@ -33,7 +33,7 @@
     <div :class="$style.imgWrapper">
       <img :src="data.goodsInfo.productMainImage">
     </div>
-  </li>
+  </div>
 </template>
 
 <script>

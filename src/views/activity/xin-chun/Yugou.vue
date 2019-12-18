@@ -4,7 +4,7 @@
       <div :class="$style.yugouTopSide" />
       <router-link :class="$style.yugouTopContent" tag="div" :to="{ name: 'SpringBook' }">
         <h3>预购享翻倍</h3>
-        <p v-if="data.otherValue">
+        <p v-if="Number(data.otherValue)">
           {{ `${data.otherValue}人参与 查看更多>` }}
         </p>
         <p v-else>

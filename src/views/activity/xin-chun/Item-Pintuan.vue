@@ -1,5 +1,5 @@
 <template>
-  <li
+  <div
     class="item"
     :class="$style.item"
     @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id, currentProductStatus: 2 } })"
@@ -51,7 +51,7 @@
         <span :class="$style.sub2Price">{{ data.goodsInfo.activityInfo.activityPrice }}</span>
       </div>
     </div>
-  </li>
+  </div>
 </template>
 
 <script>
