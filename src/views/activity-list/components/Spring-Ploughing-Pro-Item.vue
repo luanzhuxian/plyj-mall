@@ -42,8 +42,10 @@ export default {
     }
   }
   .right {
+    flex: 1;
     display: inline-flex;
     flex-direction: column;
+    margin-left: 16px;
     padding: 8px 0;
   }
   .name {

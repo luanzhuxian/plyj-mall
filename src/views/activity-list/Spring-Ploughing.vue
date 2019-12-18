@@ -20,60 +20,67 @@
     </div>
 
     <div
-      :class="$style.content"
-      v-for="(item, i) of list"
-      :key="i"
+      :class="$style.activity"
+      v-for="(activity, a) of list"
+      :key="a"
     >
-      <div :class="$style.groupName" v-text="item.activityName" />
-      <div :class="$style.discount">
-        <span>组合打包{{ item.discount }}折起</span>
-        <span>|</span>
-        <span>{{ item.purchaseQuantity }}人已购</span>
-      </div>
-      <div :class="$style.endCountdown">
-        <template v-if="!item.wasEnded">
-          <span v-if="item.wasStarted">距活动结束: </span>
-          <span v-else>距活动开始: </span>
-          <span :class="$style.val" v-text="item.d" />
-          <span :class="$style.unit">天</span>
-          <span :class="$style.val" v-text="item.h" />
-          <span :class="$style.unit">:</span>
-          <span :class="$style.val" v-text="item.m" />
-          <span :class="$style.unit">:</span>
-          <span :class="$style.val" v-text="item.s" />
-        </template>
-        <span v-else>已结束</span>
-      </div>
-      <div :class="$style.proList">
-        <SpringPloughingProItem
-          v-for="(pro, j) of item.products"
-          :key="i + '-' + j"
-          :data="pro"
-        />
-      </div>
-      <div :class="$style.giftList" v-if="item.gifts.length">
-        <div :class="$style.title">
-          更享更多伴手礼
+      <div :class="$style.activityName" v-text="activity.activityName" />
+      <div
+        :class="$style.content"
+        v-for="(item, i) of activity.models"
+        :key="a + '-' + i"
+      >
+        <div :class="$style.groupName" v-text="item.activityName" />
+        <div :class="$style.discount">
+          <span>组合打包{{ item.discount }}折起</span>
+          <span>|</span>
+          <span>{{ item.purchaseQuantity }}人已购</span>
         </div>
-        <SpringPloughingGiftItem
-          v-for="(gift, k) of item.gifts"
-          :key="i + '-' + k"
-          :data="gift"
-        />
+        <div :class="$style.endCountdown">
+          <template v-if="!item.wasEnded">
+            <span v-if="item.wasStarted">距活动结束: </span>
+            <span v-else>距活动开始: </span>
+            <span :class="$style.val" v-text="item.d" />
+            <span :class="$style.unit">天</span>
+            <span :class="$style.val" v-text="item.h" />
+            <span :class="$style.unit">:</span>
+            <span :class="$style.val" v-text="item.m" />
+            <span :class="$style.unit">:</span>
+            <span :class="$style.val" v-text="item.s" />
+          </template>
+          <span v-else>已结束</span>
+        </div>
+        <div :class="$style.proList">
+          <SpringPloughingProItem
+            v-for="(pro, j) of item.products"
+            :key="a + '-' + i + '-' + j"
+            :data="pro"
+          />
+        </div>
+        <div :class="$style.giftList" v-if="item.gifts.length">
+          <div :class="$style.title">
+            更享更多伴手礼
+          </div>
+          <SpringPloughingGiftItem
+            v-for="(gift, k) of item.gifts"
+            :key="a + '-' + i + '-' + k"
+            :data="gift"
+          />
+        </div>
+        <button v-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
+          点击购买 组合到手<i v-text="getGroupAmount(item.products)" />元
+        </button>
+        <button v-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
+          暂未开启，敬请期待
+        </button>
+        <button v-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
+          暂未开启，敬请期待
+        </button>
+        <div :class="$style.corner + ' ' + $style.topLeft" />
+        <div :class="$style.corner + ' ' + $style.topRight" />
+        <div :class="$style.corner + ' ' + $style.bottomLeft" />
+        <div :class="$style.corner + ' ' + $style.bottomRight" />
       </div>
-      <button v-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
-        点击购买 组合到手<i v-text="getGroupAmount(item.products)" />元
-      </button>
-      <button v-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
-        暂未开启，敬请期待
-      </button>
-      <button v-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
-        暂未开启，敬请期待
-      </button>
-      <div :class="$style.corner + ' ' + $style.topLeft" />
-      <div :class="$style.corner + ' ' + $style.topRight" />
-      <div :class="$style.corner + ' ' + $style.bottomLeft" />
-      <div :class="$style.corner + ' ' + $style.bottomRight" />
     </div>
 
     <pl-popup
@@ -154,29 +161,33 @@ export default {
     async getSpringCombination () {
       try {
         const { result } = await getSpringCombination({ current: 1, size: 60 })
-        result.records.sort((a, b) => {
-          return moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf()
-        })
-        for (let item of result.records) {
-          // 添加倒计时相关字段
-          item.d = '' // 天
-          item.h = '' // 时
-          item.m = '' // 分
-          item.s = '' // 秒
-          const activityStartTime = moment(item.activityStartTime).valueOf()
-          const activityEndTime = moment(item.activityEndTime).valueOf()
-          const now = Date.now()
-          // 是否开始
-          item.wasStarted = now - activityStartTime >= 0
-          // 是否结束
-          item.wasEnded = now - activityEndTime >= 0
-          // 未开始倒计时(距离开始)
-          if (!item.wasStarted) {
-            this.setCountdownTime(item, activityStartTime - now)
-          }
-          // 开始倒计时(距离结束)
-          if (item.wasStarted && !item.wasEnded) {
-            this.setCountdownTime(item, activityEndTime - now)
+        console.log(result)
+        for (const activity of result.records) {
+          console.log(1)
+          activity.models.sort((a, b) => {
+            return moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf()
+          })
+          for (const group of activity.models) {
+            // 添加倒计时相关字段
+            group.d = '' // 天
+            group.h = '' // 时
+            group.m = '' // 分
+            group.s = '' // 秒
+            const activityStartTime = moment(group.activityStartTime).valueOf()
+            const activityEndTime = moment(group.activityEndTime).valueOf()
+            const now = Date.now()
+            // 是否开始
+            group.wasStarted = now - activityStartTime >= 0
+            // 是否结束
+            group.wasEnded = now - activityEndTime >= 0
+            // 未开始倒计时(距离开始)
+            if (!group.wasStarted) {
+              this.setCountdownTime(group, activityStartTime - now)
+            }
+            // 开始倒计时(距离结束)
+            if (group.wasStarted && !group.wasEnded) {
+              this.setCountdownTime(group, activityEndTime - now)
+            }
           }
         }
         this.list = result.records
@@ -185,7 +196,7 @@ export default {
         const now = Date.now()
         this.allEnd.wasStarted = now - lastStartTime >= 0
         this.allEnd.wasEnded = now - lastEndTime >= 0
-        // 未开始倒计时(距离开始)
+        // // 未开始倒计时(距离开始)
         if (!this.allEnd.wasStarted) {
           this.setCountdownTime(this.allEnd, lastStartTime - now)
         }
@@ -322,16 +333,49 @@ export default {
     box-shadow: 0 0 0 2px #A3D816 inset;
     box-sizing: border-box;
   }
+  .activity-name {
+    position: relative;
+    width: max-content;
+    margin: 26px auto 32px;
+    font-size: 36px;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    &:before {
+      content: '';
+      position: absolute;
+      left: -86px;
+      top: 50%;
+      width: 54px;
+      height: 42px;
+      transform: rotate(180deg) translateY(50%);
+      background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png") no-repeat center center;
+      background-size: 100%;
+    }
+    &:after {
+      content: '';
+      position: absolute;
+      right: -86px;
+      top: 50%;
+      width: 54px;
+      height: 42px;
+      transform: translateY(-50%);
+      background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png") no-repeat center center;
+      background-size: 100%;
+    }
+  }
   .group-name {
-    width: 458px;
+    max-width: 458px;
     margin: 16px auto;
+    padding: 16px 100px;
     font-size: 28px;
+    line-height: 36px;
     color: #dcfd8c;
     text-align: center;
-    line-height: 68px;
     font-weight: bold;
     background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/e009100a-579a-4369-8238-db258fb2d91b.png") no-repeat center center;
     background-size: 100% 100%;
+    background-clip: border-box;
   }
   .discount {
     margin-bottom: 20px;
