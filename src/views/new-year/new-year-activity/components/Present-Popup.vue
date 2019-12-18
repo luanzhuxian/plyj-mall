@@ -86,10 +86,10 @@
           <img class="light" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/1565326e-6f2a-42f7-9303-c8ad3221f92b.png">
         </div>
         <div class="footer">
-          <button @click="close">立即抽奖</button>
+          <button @click="close(true)">立即抽奖</button>
         </div>
       </div>
-      <div class="close">
+      <div class="close small">
         <pl-svg name="icon-close3" fill="#fff" width="40" @click="close" />
       </div>
     </div>
@@ -152,16 +152,10 @@ export default {
       default: false
     },
     presentStage: { // 显示奖品弹框类型
-      type: Boolean,
-      default: false
+      type: Number,
+      default: 1
     },
     activeDetail: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    hasOtherOption: {
       type: Object,
       default () {
         return {}
@@ -191,9 +185,9 @@ export default {
     }
   },
   methods: {
-    close () {
+    close (hasOtherOption) {
       this.$emit('update:show', false)
-      if (this.hasOtherOption) this.$emit('close')
+      if (hasOtherOption) this.$emit('close')
     },
     backMainActivityCenter () {
       this.$router.replace({ name: 'Activity' })
@@ -215,8 +209,11 @@ export default {
 
    /* 关闭按钮 */
     .close {
-      margin-top: 900px;
+      margin-top: 920px;
       text-align: center;
+      &.small {
+        margin-top: 250px;
+      }
     }
   }
 

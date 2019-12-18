@@ -305,7 +305,7 @@ export default {
       mm: '', // 倒计时分钟数
       ss: '', // 倒计时描述
       presentListType: 1, //  1- 好礼晒单 2-我的奖品
-      presentStage: '', // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
+      presentStage: 1, // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
       swiperOption: {
         direction: 'horizontal',
         effect: 'coverflow',
@@ -478,7 +478,9 @@ export default {
           }
         }
 
-        let currentIndex = notes.findIndex(item => item.index === nextSigninNote)
+        let currentSigninNote = currentSignin ? nextSigninNote - 1 : nextSigninNote
+        currentSigninNote = currentSigninNote > notes.length ? notes.length : currentSigninNote
+        let currentIndex = notes.findIndex(item => item.index === currentSigninNote)
 
         this.currentSignIn = notes[currentIndex]
         this.currentSignIn.isLastIcon = currentIndex === notes.length - 1
@@ -488,7 +490,7 @@ export default {
         this.isGrandPrsentSignIn = this.currentSignIn.isLastIcon ? this.currentSignIn.awardType !== '' : false
 
         // 最后一个节点已签到，但未领取年味大奖, 弹框提示领取最终奖品
-        if (this.currentSignIn.isLastIcon && !this.isGrandPrsentSignIn) {
+        if (this.currentSignIn.isLastIcon && this.currentSignIn.hasSignin && !this.isGrandPrsentSignIn) {
           this.isShowPresentPopup = true
           this.presentStage = 0
         }
@@ -563,6 +565,7 @@ export default {
         this.activeDetail.completeNumber = this.currentSignIn.isLastIcon ? this.activeDetail.completeNumber++ : this.activeDetail.completeNumber
         this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
         this.activeDetail.signedInNumber++
+        this.currentSignIn.awardType = ''
         // 统计签到人数
         this.activeDetail.signinNumber = this.activeDetail.nextSigninNote === 1 ? this.activeDetail.signinNumber++ : this.activeDetail.signinNumber
         // 显示海报
@@ -574,7 +577,7 @@ export default {
     // 领取奖品
     async receivePresent () {
       try {
-        if (!this.currentSignIn.hasAward || this.currentSignIn.awardType !== '') return
+        if ((!this.currentSignIn.hasAward || this.currentSignIn.awardType !== '') && this.previousPresentIsReceive) return
         let { result } = await receivePresent(this.id, this.activeDetail.currentReceivePresentNote)
         /* 显示中奖信息弹框 */
         this.isShowPresentPopup = true
@@ -589,9 +592,10 @@ export default {
         let deviation = this.previousPresentIsReceive ? 1 : -1
         let currentIndex = this.signInIconList.findIndex(item => item.index === this.currentSignIn.index)
         this.signInIconList[currentIndex + deviation].hasSignin = true
-        this.signInIconList[currentIndex + deviation].awardImg = result.hasAward
+        this.signInIconList[currentIndex + deviation].awardImg = result.awardImg
         this.signInIconList[currentIndex + deviation].awardType = result.awardType
         this.signInIconList[currentIndex + deviation].isGrandPrsent = this.isGrandPrsentSignIn
+        this.currentSignIn.awardType = result.awardType
         this.previousPresentIsReceive = true
         if (this.isGrandPrsentSignIn) result.isGrandPrsent = true
         this.myPresentList.push(result)
@@ -719,7 +723,8 @@ export default {
         if (this.dd !== '' && this.dd !== d) {
           this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
           let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
-          this.currentSignIn = currentIndex > 0 ? this.signInIconList[currentIndex] : {}
+          currentIndex = currentIndex < 0 ? this.currentSignIn.index : currentIndex
+          this.currentSignIn = this.currentSignIn.hasSignin ? this.signInIconList[currentIndex] : this.currentSignIn
           this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
         }
         if (datetime <= 0) {
@@ -906,7 +911,7 @@ export default {
               border-radius: 10px;
               text-align: center;
               &.disabled {
-                filter: grayscale(50%);
+                filter: grayscale(100%);
               }
             }
 
@@ -953,6 +958,7 @@ export default {
 
                   img {
                     width: 90px;
+                    height: 90px;
                     object-fit: cover;
 
                     &.not-sign {
@@ -993,6 +999,7 @@ export default {
 
                   > img {
                     width: 90px;
+                    height: 90px;
                     object-fit: cover;
                   }
 
@@ -1162,6 +1169,7 @@ export default {
             position: relative;
             img {
               width: 80px;
+              height: 100px;
               object-fit: cover;
             }
             i {
