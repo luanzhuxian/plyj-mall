@@ -4,11 +4,6 @@
     <div class="activity-detail">
       <div class="top">
         <!-- 礼品展示 -->
-        <div v-if="presentList.length === 1" class="one-swiper">
-          <img
-            src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png"
-          >
-        </div>
         <swiper :options="swiperOption" v-if="presentList.length > 1" class="swiper">
           <swiper-slide v-for="(item,index) in presentList" :key="index" class="swiper-no-swiping">
             <div class="swiper-box">
@@ -32,8 +27,7 @@
         <div class="count-down">
           <div class="desc">
             <h3>
-              <!--TODO-->
-              已有<span>122</span>人积攒我心中的年味
+              已有<span>{{ activeDetail.signinNumber }}</span>人积攒我心中的年味
             </h3>
             <div v-if="!activityIsOver">
               距活动{{ activityIsStart? '结束' : '开始' }}仅剩<span>{{ dd }}</span>天<span>{{ hh }}</span>：<span>{{ mm }}</span>：<span>{{ ss }}</span>
@@ -44,34 +38,43 @@
         <!-- 参与活动 -->
         <div class="join-activity">
           <div class="control-top">
-            <button v-if="activityIsOver" disabled>活动已结束</button>
             <button v-if="!activityIsOver && !activityIsStart">活动未开始</button>
-            <button v-if="!activityIsOver && activityIsStart && !hasParticipate" @click="hasParticipate = true">立即参加活动
-            </button>
-            <div class="desc-control" v-if="hasParticipate || activeDetail.nextSigninNote !== 1">
-              <p>
-                <!--ToDO-->
-                <span>12人已集齐年味</span>
-                <span>可参与抽奖获得年味大奖</span>
-              </p>
-              <!-- 上个节点的礼品未领取优先显示立即抽奖 -->
-              <!-- 当前节点为可签到节点, 并未签到 -->
-              <button
-                v-if="currentSignIn.name && !currentSignIn.hasSignin && previousPresentIsReceive"
-                :disabled="!currentSignIn.hasAward"
-                @click="getMyNewYearCard"
-              >
-                获得我的年味
-              </button>
-              <!-- 当前节点已签到,并且当前节点有奖品 -->
-              <button
-                v-if="currentSignIn.hasSigni && currentSignIn.hasAward && !previousPresentIsReceive"
-                :disabled="isGrandPrsentSignIn"
-                @click="receivePresent"
-              >
-                立即抽奖
-              </button>
+            <button v-else-if="!activityIsOver && activityIsStart && !hasParticipate" @click="hasParticipate = true">立即参加活动</button>
+            <div class="desc-control" v-else-if="!activityIsOver && activityIsStart && hasParticipate">
+              <!-- 获得我的年味，显示条件: 上一个年味礼品已被领取 + 当前图标为年味图标 + 当前图标未签到/已签到但是没有礼品 -->
+              <template v-if="previousPresentIsReceive && currentSignIn.name && (!currentSignIn.hasSignin || (currentSignIn.hasSignin && !currentSignIn.hasAward))">
+                <p class="no-padding">
+                  <span>今日可获得{{ currentSignIn.hasSignin? 0 : 1 }}个年味</span>
+                  <span>还差{{ activeDetail.differenceNumber }}个年味即可参与年味大礼的抽奖</span>
+                </p>
+                <!-- 当前节点为已签到，灰化 -->
+                <button
+                  :class="{disabled: currentSignIn.hasSignin }"
+                  :disabled="currentSignIn.hasSignin"
+                  @click="getMyNewYearCard"
+                >
+                  获得我的年味
+                </button>
+              </template>
+              <!-- 立即领奖，显示条件: 上一个节点的礼品未领取 或者 当前节点已签到 + 当前节点有礼品 -->
+              <template v-if="(currentSignIn.hasSignin && currentSignIn.hasAward) || !previousPresentIsReceive">
+                <p>
+                  <span>{{ activeDetail.completeNumber }}人已集齐年味</span>
+                  <span>可参与抽奖获得年味大奖</span>
+                </p>
+                <!-- 当前礼品已领取，按钮灰化 -->
+                <button
+                  :disabled="currentSignIn.awardType !== ''"
+                  :class="{disabled: currentSignIn.awardType !== '' }"
+                  @click="receivePresent"
+                >
+                  立即抽奖
+                </button>
+              </template>
             </div>
+            <!-- 活动已结束，但上一个年味的礼品未领取 -->
+            <button v-else-if="activityIsOver && (!previousPresentIsReceive || isGrandPrsentSignIn)" @click="receivePresent">立即抽奖</button>
+            <button v-else>活动已结束</button>
           </div>
           <div class="sign-in-icon-bottom">
             <div class="sign-in-icon-item" v-for="(item, index) in signInIconList" :key="index">
@@ -93,13 +96,28 @@
                 <p :class="{'not-sign': !item.hasSignin}">{{ item.name }}</p>
               </div>
               <div v-else class="prensent-icon-item">
-                <!-- 已抽奖,但是-->
-                <div v-if="item.hasSignin && (item.awardType === 0)">
+                <!-- 未抽奖前普通奖品展示-->
+                <div v-if="!item.hasSignin && !item.isGrandPrsent">
+                  <span>
+                    <pl-svg name="icon-welfare" width="60" fill="#ffe3c8" />
+                  </span>
+                  <p class="not-sign">礼品</p>
+                </div>
+                <!-- 未抽奖前年味大奖奖品展示-->
+                <div v-if="!item.hasSignin && item.isGrandPrsent">
                   <img
-                    :src="item.awardImg"
+                    src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/65044768-ee0c-4987-907b-b69e71cb067c.png"
                     alt=""
                   >
-                  <p>已获得</p>
+                  <p :class="{'not-sign': !item.hasSignin}">年味大奖</p>
+                </div>
+                <!-- 已抽奖,但是未抽中-->
+                <div v-if="item.hasSignin && (item.awardType === 0)">
+                  <img
+                    src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png"
+                    alt=""
+                  >
+                  <p>未中奖</p>
                 </div>
                 <!-- 奖品为礼品-->
                 <div v-if="item.hasSignin && (item.awardType === 1)">
@@ -125,21 +143,6 @@
                   >
                   <p>已获得</p>
                 </div>
-                <!-- 未获得礼品-->
-                <div v-if="!item.hasSignin && !item.isGrandPrsent">
-                  <span>
-                    <pl-svg name="icon-welfare" width="60" fill="#ffe3c8" />
-                  </span>
-                  <p class="not-sign">礼品</p>
-                </div>
-                <!-- 最后年味大奖-->
-                <div v-if="!item.hasSignin && item.isGrandPrsent">
-                  <img
-                    src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/65044768-ee0c-4987-907b-b69e71cb067c.png"
-                    alt=""
-                  >
-                  <p :class="{'not-sign': !item.hasSignin}">年味大奖</p>
-                </div>
               </div>
               <div v-if="(index !== signInIconList.length -1) && ((index + 1) % 5 !== 0)" class="underline" />
             </div>
@@ -163,8 +166,7 @@
       <div class="bottom">
         <div class="sun-present" v-if="presentListType === 1">
           <div class="statistics">
-            <!--TODO-->
-            已有<span>0人</span>获得年味奖品
+            已有<span>{{ sunPresentListTotal }}人</span>获得年味奖品
           </div>
           <div class="no-sun-present" v-if="sunPresentList.length === 0">
             <img
@@ -225,28 +227,26 @@
               <div class="my-present-item" v-if="index < 3 || showMyPresentListMore" :key="index">
                 <!-- 礼品展示 -->
                 <span>
-                  <img v-if="item.giftType === 1"
+                  <!-- 礼品 -->
+                  <img v-if="item.awardType === 1" :src="item.awardImg" alt="">
+                  <!-- 奖学金 -->
+                  <img v-else-if="item.awardType === 2"
                        src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png"
                        alt=""
                   >
-                  <img v-else-if="item.giftType === 2"
+                  <!-- 全场满减券/品类券 -->
+                  <img v-else-if="item.awardType === 3 || item.awardType === 4"
                        src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png"
                        alt=""
                   >
-                  <img v-else :src="item.giftImg" alt="">
                   <i :class="{'grand-prize': item.isGrandPrize}">
                     年味大奖
                   </i>
                 </span>
                 <!-- 礼品描述 -->
                 <h3>
-                  <p>奖品 【{{ item.presentName }}】</p>
-                  <p class="orange">
-                    <span v-if="item.giftType === 1">满{{ 1000 }}减{{ 23213 }}</span>
-                    <span v-else-if="item.giftType === 2">￥{{ 23 }}元</span>
-                    <span v-else>产品介绍</span>
-                  </p>
-                  <p>有效期2020.3.19~2020.3.19</p>
+                  <p>奖品 【{{ awardTypeDesc[item.awardType] }}】 </p>
+                  <p class="orange">{{ item.awardName }}</p>
                 </h3>
               </div>
             </template>
@@ -313,13 +313,30 @@
     <div class="bg-gray" v-if="isShowPresentPopup && !currentSignIn.isLastIcon && presentStage === 1">
       <div class="present-box">
         <div class="top">
-          恭喜您积攒6个年味
-          <p class="has-underline">获得优惠券</p>
+          恭喜您积攒{{ activeDetail.signedInNumber }}个年味
+          <p class="has-underline">获得{{ awardTypeDesc[currentPresentDetail.awardType] }}</p>
         </div>
         <div class="detail">
-          <div class="coupon" v-if="false">
+          <div class="product" v-if="currentPresentDetail.awardType === 1">
             <img
-              v-if="false"
+              :src="currentPresentDetail.awardImg"
+              alt=""
+            >
+            <div class="product-detail">
+              <h3>{{ currentPresentDetail.awardName }}</h3>
+              <h4>有效期：{{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</h4>
+            </div>
+          </div>
+          <div class="scholarship" v-if="currentPresentDetail.awardType === 2">
+            <img
+              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f3f449e6-43f1-4ddc-a68b-9a0a536a88e5.png"
+              alt=""
+            >
+            <span>{{ currentPresentDetail.awardName }}</span>
+          </div>
+          <div class="coupon" v-if="currentPresentDetail.awardType === 3 || currentPresentDetail.awardType === 4">
+            <img
+              v-if="currentPresentDetail.awardType === 4"
               src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/category-coupon.png" alt=""
             >
             <img v-else src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/full-coupon.png"
@@ -328,48 +345,30 @@
             <div class="wrap">
               <div class="left">
                 <div class="coupon-price">
-                  5000
+                  {{ currentPresentDetail.price }}
                 </div>
                 <div class="desc">
-                  <p>满5000减1000</p>
-                  <p>双十二优惠券</p>
+                  <p>{{ currentPresentDetail.awardName }}</p>
+                  <p>{{ awardTypeDesc[currentPresentDetail.awardType] }}</p>
                 </div>
-                <p class="expiration">有效期 2019.4.15-2019.4.19</p>
+                <p class="expiration">有效期 {{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</p>
               </div>
               <div class="right">
                 立即<br>领取
               </div>
             </div>
           </div>
-          <div class="product" v-if="false">
-            <img
-              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png"
-              alt=""
-            >
-            <div class="product-detail">
-              <h3>CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘</h3>
-              <h4>有效期：2019.4.15-2019.4.30</h4>
-              <p>价值1000元的机械键盘一个</p>
-            </div>
-          </div>
-          <div class="scholarship">
-            <img
-              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f3f449e6-43f1-4ddc-a68b-9a0a536a88e5.png"
-              alt=""
-            >
-            <span>99999元</span>
-          </div>
         </div>
         <div class="info">
-          <p>优惠券已经自动存入您的我的卡包</p>
-          <p>您可在我的卡包中查看</p>
+          <p>{{ awardTypeDesc[currentPresentDetail.awardType] }}已经自动存入您的{{ awardPackage[currentPresentDetail.awardType] }}</p>
+          <p>您可在{{ awardPackage[currentPresentDetail.awardType] }}中查看</p>
         </div>
         <div class="footer">
-          <button class="accept">开心收下</button>
+          <button class="accept" @click="isShowPresentPopup = false">开心收下</button>
         </div>
       </div>
       <div class="close">
-        <pl-svg name="icon-close3" fill="#fff" width="40" />
+        <pl-svg name="icon-close3" fill="#fff" width="40" @click="isShowPresentPopup = false" />
       </div>
     </div>
     <!-- 错过阶梯奖品弹框 -->
@@ -388,14 +387,14 @@
           </div>
         </div>
         <div class="info">
-          <p>您再获得6个年味即可参与抽奖</p>
+          <p>您再获得{{ activeDetail.nextPresentNumber - activeDetail.signedInNumber }}个年味即可参与抽奖</p>
         </div>
         <div class="footer">
-          <button class="iKnow">朕知道了</button>
+          <button class="iKnow" @click="isShowPresentPopup = false">朕知道了</button>
         </div>
       </div>
       <div class="close">
-        <pl-svg name="icon-close3" fill="#fff" width="40" />
+        <pl-svg name="icon-close3" fill="#fff" width="40" @click="isShowPresentPopup = false" />
       </div>
     </div>
     <!-- 中年味大奖前提示 -->
@@ -417,11 +416,11 @@
           >
         </div>
         <div class="footer">
-          <button>立即抽奖</button>
+          <button @click="receivePresent">立即抽奖</button>
         </div>
       </div>
       <div class="close">
-        <pl-svg name="icon-close3" fill="#fff" width="40" />
+        <pl-svg name="icon-close3" fill="#fff" width="40" @click="isShowPresentPopup = false" />
       </div>
     </div>
     <!-- 中年味大奖弹框 -->
@@ -435,20 +434,19 @@
         <div class="bottom">
           <div class="detail">
             <img
-              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png"
+              :src="currentPresentDetail.awardImg"
               alt=""
             >
-            <h3>CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘CHERRY机械键盘</h3>
-            <h4>价值1000元的机械键盘一个</h4>
-            <p>有效期：2019.4.15-2019.4.30</p>
+            <h3>{{ currentPresentDetail.awardName }}</h3>
+            <p>有效期：{{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</p>
           </div>
           <div class="footer">
-            <button>开心收下</button>
+            <button @click="isShowPresentPopup = false">开心收下</button>
           </div>
         </div>
       </div>
       <div class="close">
-        <pl-svg name="icon-close3" fill="#fff" width="40" />
+        <pl-svg name="icon-close3" fill="#fff" width="40" @click="isShowPresentPopup = false" />
       </div>
     </div>
     <!-- 错过年味大奖弹框 -->
@@ -468,13 +466,13 @@
         </div>
         <div class="footer">
           <div class="btns">
-            <button class="iKnow">朕知道了</button>
+            <button class="iKnow" @click="isShowPresentPopup = false">朕知道了</button>
             <button @click="backMainActivityCenter">返回主会场</button>
           </div>
         </div>
       </div>
       <div class="close">
-        <pl-svg name="icon-close3" fill="#fff" width="40" />
+        <pl-svg name="icon-close3" fill="#fff" width="40" @click="isShowPresentPopup = false" />
       </div>
     </div>
   </div>
@@ -486,7 +484,9 @@ import {
   getPresentList,
   getSignInIconList,
   checkInCurrentNewYearIcon,
-  receivePresent
+  receivePresent,
+  checkIsParticipateableActivity,
+  statisticsViews
 } from '../../../apis/new-year-activity'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { generateQrcode, drawRoundRect, cutArcImage, createText } from '../../../assets/js/util'
@@ -540,6 +540,7 @@ export default {
       currentPresentDetail: {}, // 当前获得奖品的信息
       presentListType: 1, //  1- 好礼晒单 2-我的奖品
       sunPresentList: [], // 好礼晒单列表
+      sunPresentListTotal: 0,
       showSunPresentListMore: false,
       myPresentList: [], // 我的礼品列表
       showMyPresentListMore: false,
@@ -552,14 +553,26 @@ export default {
       mm: '', // 倒计时分钟数
       ss: '', // 倒计时描述
       presentStage: '', // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
-      isShowPresentPopup: false // 是否显示终奖提示
+      isShowPresentPopup: false, // 是否显示终奖提示
+      awardTypeDesc: {
+        '1': '礼品',
+        '2': '奖学金',
+        '3': '全场满减券',
+        '4': '品类券'
+      },
+      awardPackage: {
+        '1': '我的礼品',
+        '2': '我的奖学金',
+        '3': '我的卡券',
+        '4': '我的卡券'
+      }
     }
   },
   props: {
     // 活动id
     id: {
       type: String,
-      default: '1206802375080275968' // ToDO.一会儿删除
+      default: ''
     }
   },
   computed: {
@@ -595,17 +608,20 @@ export default {
         this.$router.push({ name: 'BindMobile' })
       }
     }
+    await statisticsViews(this.id)
     // 是否能参与当前活动,不能参与返回主会场
     this.checkActivity()
-    // 初始化页面
-    this.init()
   },
   methods: {
     // 检查当前用户是否可参与当前活动
     async checkActivity () {
       try {
-        // await getNewYearActivityDetail()
-        // this.canNotJoinCurrentActivity()
+        let { result } = await checkIsParticipateableActivity(this.id)
+        if (!result) { // 若当前用户无法参与当前活动直接跳到主会场
+          this.canNotJoinCurrentActivity()
+        }
+        // 初始化页面
+        this.init()
       } catch (e) {
         throw e
       }
@@ -624,7 +640,8 @@ export default {
     async getObtainedSunPresentList () {
       try {
         let { result } = await getObtainedSunPresentList(this.id, 1, 50)
-        this.sunPresentList = result
+        this.sunPresentListTotal = result.receiveUserNumber
+        this.sunPresentList = result.flauntAwardsModels
       } catch (e) {
         throw e
       }
@@ -633,12 +650,17 @@ export default {
     async getPresentList () {
       try {
         let { result } = await getPresentList(this.id)
-        // 年味大奖列表awardType只为1，其他类型不可作为年味大奖
+        // 年味大奖列表awardType只为1(礼品)，其他类型不可作为年味大奖
         this.presentList = result.map(item => {
           item.awardImg = item.show ? item.awardImg : 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
           item.awardName = item.show ? item.awardName : '****'
           return item
         })
+        // 轮播图至少有三个才能旋转
+        if (this.presentList.length === 1) {
+          this.presentList.push(this.presentList[0])
+          this.presentList.push(this.presentList[0])
+        }
         // 轮播图至少有三个才能旋转
         if (this.presentList.length === 2) {
           this.presentList.push(this.presentList[0])
@@ -661,7 +683,9 @@ export default {
           activityEndTime,
           activityRule,
           currentSignin,
-          nextSigninNote
+          nextSigninNote,
+          signinNumber,
+          completeNumber
         } = result
         let presentList = []
         for (let i = 0; i < notes.length; i++) {
@@ -676,58 +700,37 @@ export default {
               hasAward: item.hasAward,
               awardImg: item.awardImg,
               awardType: item.awardType,
-              isGrandPrsent: i === notes.length - 1
+              isGrandPrize: i === notes.length - 1
             })
           }
-          // 只要存在一个签到,即表示已经参与活动
-          if (item.hasSignin) this.hasParticipate = true
           // item.awardType > 0,说明为当前已经的抽中奖品
           if (item.awardType) {
             this.myPresentList.push({
               awardImg: item.awardImg,
-              awardType: item.awardType
+              awardType: item.awardType,
+              awardName: item.awardName,
+              isGrandPrize: i === notes.length - 1
             })
           }
         }
 
-        // 获取当前签到信息
-        for (let i = 0; i < notes.length; i++) {
-          let item = notes[i]
-          /* 当前要签到的节点
-            第一个节点未签到,当前节点为第一个节点
-            一定是前一个节点签到,当前未签到
-             最后一个节点,未签到当前节点为最后一个节点;最后一个节点已签到,当前节点为空 */
-          this.previousPresentIsReceive = true
-          this.isGrandPrsentSignIn = false
-          if (i === 0 && !item.hasSignin) {
-            this.currentSignIn = item
-            break
-          } else if (i !== notes.length - 1 && !item.hasSignin && notes[i - 1].hasSignin) {
-            this.currentSignIn = item
-            this.previousPresentIsReceive = notes[i - 1].awardType !== ''
-            break
-          } else if (i === notes.length - 1) {
-            this.currentSignIn = item
-            this.currentSignIn.isLastIcon = true
-            // 最后一个节点,礼品有图片信息,说明最终大奖已被抽取
-            this.previousPresentIsReceive = notes[i - 1].awardType !== ''
-            // 最后一个节点,礼品有奖品类型,说明最终大奖已被抽取
-            this.isGrandPrsentSignIn = item.awardType !== ''
-            break
-          }
-        }
+        let currentIndex = notes.findIndex(item => item.index === nextSigninNote)
 
-        // 将奖品信息添加到签到数组中
-        for (let i = presentList.length - 1; i > -1; i--) {
-          let item = presentList[i]
-          notes.splice(item.presentIndex + 1, 0, item)
-        }
+        this.isGrandPrsentSignIn = false
+        this.currentSignIn = notes[currentIndex - 1]
+        this.currentSignIn.isLastIcon = currentIndex === notes.length - 1
+        // 上一个节点无礼品 或者 有礼品且awardType !== ''表示礼品已经被领取
+        this.previousPresentIsReceive = currentIndex ? (notes[currentIndex - 1].hasAward && notes[currentIndex - 1].awardType !== '') || !notes[currentIndex - 1].hasAward : true
+        // 大奖是否被领取，是-最后一个年味，且awardType !== ''
+        this.isGrandPrsentSignIn = this.currentSignIn.isLastIcon ? this.currentSignIn.awardType !== '' : false
 
         // 最后一个节点已签到，但未领取年味大奖, 弹框提示领取最终奖品
         if (this.currentSignIn.isLastIcon && !this.isGrandPrsentSignIn) {
           this.isShowPresentPopup = true
           this.presentStage = 0
         }
+
+        let nextPresentIndex = notes.findIndex((item, index) => item.hasAward && index > currentIndex)
 
         // 活动信息
         this.activeDetail = {
@@ -737,8 +740,23 @@ export default {
           activityRule, // 活动细则
           currentSignin, // 今日是否已签到
           nextSigninNote, // 下一个要签到的节点
+          signinNumber, // 积攒我心中的年味的人数
+          completeNumber, // 集齐年味的人数
+          signedInNumber: currentIndex, // 已经签到的个数
+          differenceNumber: notes.length - currentIndex, // 还差多少个年味即可抽年味大奖
+          nextPresentIndex, // 还差多少个年味即可参与抽奖
+          currentReceivePresentNote: this.currentSignIn.index,
           activity_member: activity_member[userScope]
         }
+
+        // 将奖品信息添加到签到数组中
+        for (let i = presentList.length - 1; i > -1; i--) {
+          let item = presentList[i]
+          notes.splice(item.presentIndex + 1, 0, item)
+        }
+
+        // 只要存在一个签到,即表示已经参与活动
+        if (this.activeDetail.nextSigninNote !== 1) this.hasParticipate = true
 
         this.signInIconList = notes
 
@@ -748,7 +766,7 @@ export default {
         let now = serverTime
         let start = moment(this.activeDetail.activityStartTime).valueOf()
         let end = moment(this.activeDetail.activityEndTime).valueOf()
-        if (now < start) { // 活动未开始
+        if (start > now) { // 活动未开始
           this.activityIsStart = false
           distanceTime = start - now
         } else if (end > now) { // 活动未结束
@@ -797,23 +815,29 @@ export default {
     async getMyNewYearCard () {
       try {
         if (this.currentSignIn.hasSignin) return
-        await checkInCurrentNewYearIcon()
+        await checkInCurrentNewYearIcon(this.id, this.activeDetail.nextSigninNote)
+        // 修改相应的参数，不刷新页面
         this.currentSignIn.hasSignin = true
-        this.drawNewYearCardPoster(this.currentSignIn.posterUrl, this.currentSignIn.name, this.currentSignIn.hasSignin)
         let currentIndex = this.signInIconList.findIndex(item => item.index === this.currentSignIn.index)
         this.signInIconList[currentIndex].hasSignin = true
+        // 显示海报
+        this.drawNewYearCardPoster(this.currentSignIn.posterUrl, this.currentSignIn.name, this.currentSignIn.hasSignin)
       } catch (e) {
         throw e
       }
     },
-    // 获得年味
+    // 领取奖品
     async receivePresent () {
       try {
-        if (!this.currentSignIn.hasAward) return
+        if (!this.currentSignIn.hasAward || this.currentSignIn.awardType !== '') return
+        let { result } = await receivePresent(this.id, this.activeDetail.currentReceivePresentNote)
         this.isShowPresentPopup = true
-        this.presentStage = 1 // TODO.或者为2
-        this.currentPresentDetail = {}
-        await receivePresent()
+        // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
+        this.presentStage = result.awardType ? 1 : 2
+        result.formatStartTime = moment(result.startTime).format('YYYY-MM-DD')
+        result.formatEndTime = moment(result.endTime).format('YYYY-MM-DD')
+        result.price = result.awardType === 3 || result.awardType === 4 ? result.awardName.split('减')[1] : 0
+        this.currentPresentDetail = result
       } catch (e) {
         throw e
       }
@@ -911,6 +935,8 @@ export default {
             this.init()
           }, 5000)
         }
+        // 跨越天需要刷新页面
+        if (this.dd !== d) this.init()
         this.dd = d.padStart(2, '0')
         this.hh = h.padStart(2, '0')
         this.mm = m.padStart(2, '0')
@@ -940,19 +966,6 @@ export default {
         position: relative;
         padding-top: 160px;
 
-        .one-swiper {
-          position: absolute;
-          top: 200px;
-          left: 50%;
-          transform: translateX(-50%);
-
-          > img {
-            width: 244px;
-            object-fit: cover;
-            cursor: pointer;
-          }
-        }
-
         .swiper {
           width: 80vw;
           position: absolute;
@@ -970,14 +983,14 @@ export default {
               > img {
                 width: 240px;
                 object-fit: cover;
-                height: 250px;
+                height: 200px;
                 &.no-desc {
                   height: 100%;
                 }
               }
 
               > p {
-                margin-top: 10px;
+                margin-top: 6px;
                 text-align: center;
                 color: #FFF;
                 font-size: 24px;
@@ -1067,7 +1080,7 @@ export default {
                 background-color: #FE461F;
                 color: #FFF;
                 margin: 0 2px;
-                padding: 0 3px;
+                padding: 0 2px;
                 min-width: 32px;
                 height: 36px;
               }
@@ -1097,16 +1110,23 @@ export default {
               background: rgba(254, 70, 31, 1);
               border-radius: 10px;
               text-align: center;
+              &.disabled {
+                filter: grayscale(50%);
+              }
             }
 
             > .desc-control {
               display: flex;
               flex-direction: row;
               justify-content: space-around;
+              padding: 0 24px;
 
               p {
                 display: inline-block;
                 padding-right: 150px;
+                &.no-padding {
+                  padding-right: 20px;
+                }
 
                 span {
                   display: block;
@@ -1123,7 +1143,7 @@ export default {
           }
 
           .sign-in-icon-bottom {
-            padding: 0 20px;
+            padding: 20px;
 
             .sign-in-icon-item {
               padding: 10px 0;
@@ -1137,11 +1157,11 @@ export default {
                   text-align: center;
 
                   img {
-                    width: 80px;
+                    width: 90px;
                     object-fit: cover;
 
                     &.not-sign {
-                      width: 70px;
+                      width: 90px;
                     }
                   }
 
@@ -1151,7 +1171,7 @@ export default {
                     top: 50%;
                     transform: translateX(-50%) translateY(-50%);
                     color: #FFE3C8;
-                    font-size: 28px;
+                    font-size: 42px;
 
                     &.not-sign {
                       color: #FFFFFF;
@@ -1177,7 +1197,7 @@ export default {
                   text-align: center;
 
                   > img {
-                    width: 100px;
+                    width: 90px;
                     object-fit: cover;
                   }
 
@@ -1192,9 +1212,8 @@ export default {
                   }
 
                   > span {
-                    width: 80px;
-                    height: 80px;
-                    margin: 0 8px;
+                    width: 90px;
+                    height: 90px;
                     border-radius: 50%;
                     background-color: #FD461F;
                     position: relative;
@@ -1375,11 +1394,6 @@ export default {
             line-height:40px;
             color:#333;
             margin-left: 70px;
-
-            p:last-child {
-              font-size:24px;
-              color:#999;
-            }
 
             .orange {
               color: #FA4D2F;
@@ -1626,7 +1640,7 @@ export default {
           background-color: #FFE9E9;
 
           h3 {
-            font-size: 24px;
+            font-size: 32px;
             color: #373737;
             font-weight: 400;
             width: 240px;
@@ -1634,18 +1648,14 @@ export default {
             word-break: keep-all;
             white-space: nowrap;
             text-overflow: ellipsis;
+            margin-bottom: 20px;
           }
 
           h4 {
-            font-size: 14px;
+            font-size: 20px;
             font-weight: 400;
             color: #373737;
             margin: 10px 0;
-          }
-
-          p {
-            font-size: 14px;
-            color: #F01516;
           }
         }
       }
