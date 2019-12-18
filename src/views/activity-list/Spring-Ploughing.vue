@@ -90,7 +90,7 @@
 
     <transition name="fade">
       <div v-if="showPoster" :class="$style.poster">
-        <img :src="poster" alt="">
+        <img :src="poster" alt="" style="width: 80%;">
         <pl-svg name="icon-close3" width="36" @click="showPoster = false" />
       </div>
     </transition>

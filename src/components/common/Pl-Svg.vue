@@ -67,7 +67,7 @@ export default {
     }
   },
   activated () {
-    if (this.clonedSvg) {
+    if (this.svgParent) {
       this.svgParent.appendChild(this.clonedSvg)
     }
   },
