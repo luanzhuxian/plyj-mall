@@ -76,8 +76,7 @@ export default {
     done () {
       if (this.live.statue === 2) {
         this.live.statue = 4
-      }
-      if (this.live.statue === 4) {
+      } else if (this.live.statue === 4) {
         this.live.statue = 0
       }
     }
