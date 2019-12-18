@@ -333,7 +333,7 @@ export default {
     // 活动id
     id: {
       type: String,
-      default: '1207183225756172288'
+      default: ''
     }
   },
   computed: {
@@ -716,7 +716,7 @@ export default {
         let s = String(_data.seconds)
         datetime -= 1000
         // 跨天更新当前签到信息
-        if (this.dd !== d) {
+        if (this.dd !== '' && this.dd !== d) {
           this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
           let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
           this.currentSignIn = currentIndex > 0 ? this.signInIconList[currentIndex] : {}
@@ -785,6 +785,10 @@ export default {
                 text-align: center;
                 color: #FFF;
                 font-size: 24px;
+                width: 200px;
+                word-break: keep-all;
+                white-space: nowrap;
+                text-overflow: ellipsis;
               }
             }
           }

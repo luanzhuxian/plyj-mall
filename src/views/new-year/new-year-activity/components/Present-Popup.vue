@@ -325,7 +325,7 @@ export default {
 
       /* 礼品样式 */
       .product {
-        margin: 0 20px;
+        margin: 0 15px;
         display: flex;
         box-sizing: border-box;
         border: 1px solid #F01516;
@@ -338,7 +338,7 @@ export default {
         }
 
         .product-detail {
-          padding: 12px 0 0 20px;
+          padding: 12px 0 0 10px;
           height: 120px;
           box-sizing: border-box;
           flex: 1;
