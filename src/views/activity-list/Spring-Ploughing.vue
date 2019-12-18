@@ -295,7 +295,7 @@ export default {
     position: relative;
     height: 674px;
     padding-top: 20px;
-    background: #f9dfbe url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/b1da64a1-dbf6-48a2-bd17-ed0bd357c1d1.png") no-repeat center 20px;
+    background: #f9dfbe url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png") no-repeat center 20px;
     background-size: 100%;
     > .top-right {
       position: absolute;
