@@ -239,7 +239,7 @@
                        src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png"
                        alt=""
                   >
-                  <i :class="{'grand-prize': item.isGrandPrize}">
+                  <i :class="{'grand-prize': item.isGrandPrsent}">
                     年味大奖
                   </i>
                 </span>
@@ -500,6 +500,7 @@ let activity_member = {
   '2': '普通会员',
   '3': '商家指定用户'
 }
+let default_present_img = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
 
 export default {
   name: 'NewYearActivity',
@@ -512,10 +513,33 @@ export default {
       isShare: false, // 是否为分享页面
       activityIsStart: false, // 当前活动是否开始
       activityIsOver: false, // 活动是否已结束
-      hasParticipate: false, // 已有签到
+      hasParticipate: false, // 是否已经参与活动
+      isShowSharePoster: false, // 是否显示分享海报
+      isShowRule: false, // 是否显示活动规则
+      isShowPresentPopup: false, // 是否显示中奖提示
+      previousPresentIsReceive: true, // 上一个节点的礼品是否已领取
+      isGrandPrsentSignIn: false, // 是否已经抽奖最终大奖
+      showSunPresentListMore: false, // 是否显示所有好友晒单列表
+      showMyPresentListMore: false, // 是否显示所有我的奖品
+      isShowNewYearPoster: false, // 是否显示年味海报
       timer: '',
       activeDetail: {},
       presentList: [],
+      signInIconList: [], // 签到图标表
+      currentSignIn: {}, // 当前要签到节点
+      currentPresentDetail: {}, // 当前获得奖品的信息
+      sunPresentList: [], // 好礼晒单列表
+      sunPresentListTotal: 0,
+      myPresentList: [], // 我的礼品列表
+      qrcode: '', // 当前活动的二维码
+      sharePoster: '', // 分享海报
+      newYearPoster: '', // 年味海报
+      dd: '', // 倒计时天数
+      hh: '', // 倒计时小时数
+      mm: '', // 倒计时分钟数
+      ss: '', // 倒计时描述
+      presentListType: 1, //  1- 好礼晒单 2-我的奖品
+      presentStage: '', // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
       swiperOption: {
         direction: 'horizontal',
         effect: 'coverflow',
@@ -531,29 +555,6 @@ export default {
         observer: true,
         observeParents: true
       },
-      isShowSharePoster: false, // 是否显示分享海报
-      isShowRule: false, // 是否显示活动规则
-      signInIconList: [], // 签到图标表
-      currentSignIn: {}, // 当前要签到节点
-      previousPresentIsReceive: true, // 上一个节点的礼品是否已领取
-      isGrandPrsentSignIn: false, // 是否已经抽奖最终大奖
-      currentPresentDetail: {}, // 当前获得奖品的信息
-      presentListType: 1, //  1- 好礼晒单 2-我的奖品
-      sunPresentList: [], // 好礼晒单列表
-      sunPresentListTotal: 0,
-      showSunPresentListMore: false,
-      myPresentList: [], // 我的礼品列表
-      showMyPresentListMore: false,
-      qrcode: '', // 当前活动的二维码
-      sharePoster: '', // 分享海报
-      isShowNewYearPoster: false, // 显示年味海报
-      newYearPoster: '', // 年味海报
-      dd: '', // 倒计时天数
-      hh: '', // 倒计时小时数
-      mm: '', // 倒计时分钟数
-      ss: '', // 倒计时描述
-      presentStage: '', // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
-      isShowPresentPopup: false, // 是否显示终奖提示
       awardTypeDesc: {
         '1': '礼品',
         '2': '奖学金',
@@ -572,7 +573,7 @@ export default {
     // 活动id
     id: {
       type: String,
-      default: ''
+      default: '1207183225756172288'
     }
   },
   computed: {
@@ -608,7 +609,7 @@ export default {
         this.$router.push({ name: 'BindMobile' })
       }
     }
-    await statisticsViews(this.id)
+    await statisticsViews(this.id) // 统计访问量
     // 是否能参与当前活动,不能参与返回主会场
     this.checkActivity()
   },
@@ -619,6 +620,7 @@ export default {
         let { result } = await checkIsParticipateableActivity(this.id)
         if (!result) { // 若当前用户无法参与当前活动直接跳到主会场
           this.canNotJoinCurrentActivity()
+          return
         }
         // 初始化页面
         this.init()
@@ -652,7 +654,7 @@ export default {
         let { result } = await getPresentList(this.id)
         // 年味大奖列表awardType只为1(礼品)，其他类型不可作为年味大奖
         this.presentList = result.map(item => {
-          item.awardImg = item.show ? item.awardImg : 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
+          item.awardImg = item.show ? item.awardImg : default_present_img
           item.awardName = item.show ? item.awardName : '****'
           return item
         })
@@ -686,6 +688,9 @@ export default {
           signinNumber,
           completeNumber
         } = result
+
+        // 获取节点是否有奖品 + 获取已领取的奖品
+        this.myPresentList.length = 0
         let presentList = []
         for (let i = 0; i < notes.length; i++) {
           let item = notes[i]
@@ -699,7 +704,7 @@ export default {
               hasAward: item.hasAward,
               awardImg: item.awardImg,
               awardType: item.awardType,
-              isGrandPrize: i === notes.length - 1
+              isGrandPrsent: i === notes.length - 1
             })
           }
           // item.awardType > 0,说明为当前已经的抽中奖品
@@ -708,15 +713,14 @@ export default {
               awardImg: item.awardImg,
               awardType: item.awardType,
               awardName: item.awardName,
-              isGrandPrize: i === notes.length - 1
+              isGrandPrsent: i === notes.length - 1
             })
           }
         }
 
         let currentIndex = notes.findIndex(item => item.index === nextSigninNote)
 
-        this.isGrandPrsentSignIn = false
-        this.currentSignIn = notes[currentIndex - 1]
+        this.currentSignIn = notes[currentIndex]
         this.currentSignIn.isLastIcon = currentIndex === notes.length - 1
         // 上一个节点无礼品 或者 有礼品且awardType !== ''表示礼品已经被领取
         this.previousPresentIsReceive = currentIndex ? (notes[currentIndex - 1].hasAward && notes[currentIndex - 1].awardType !== '') || !notes[currentIndex - 1].hasAward : true
@@ -744,7 +748,7 @@ export default {
           signedInNumber: currentIndex, // 已经签到的个数
           differenceNumber: notes.length - currentIndex, // 还差多少个年味即可抽年味大奖
           nextPresentIndex, // 还差多少个年味即可参与抽奖
-          currentReceivePresentNote: this.previousPresentIsReceive ? notes[currentIndex - 1].index : this.currentSignIn.index,
+          currentReceivePresentNote: this.previousPresentIsReceive ? this.currentSignIn.index : notes[currentIndex - 1].index,
           activity_member: activity_member[userScope]
         }
 
@@ -760,23 +764,77 @@ export default {
         this.signInIconList = notes
 
         // 启动倒计时
-        let distanceTime
-        let { result: serverTime } = await getServerTime()
-        let now = serverTime
-        let start = moment(this.activeDetail.activityStartTime).valueOf()
-        let end = moment(this.activeDetail.activityEndTime).valueOf()
-        if (start > now) { // 活动未开始
-          this.activityIsStart = false
-          distanceTime = start - now
-        } else if (end > now) { // 活动未结束
-          this.activityIsStart = true
-          distanceTime = end - now
-        } else if (now > end) { // 活动未结束
-          this.activityIsOver = true
-        } else {
-          this.canNotJoinCurrentActivity()
+        {
+          let distanceTime
+          let { result: serverTime } = await getServerTime()
+          let now = serverTime
+          let start = moment(this.activeDetail.activityStartTime).valueOf()
+          let end = moment(this.activeDetail.activityEndTime).valueOf()
+          if (start > now) { // 活动未开始
+            this.activityIsStart = false
+            distanceTime = start - now
+          } else if (end > now) { // 活动未结束
+            this.activityIsStart = true
+            distanceTime = end - now
+          } else if (now > end) { // 活动未结束
+            this.activityIsOver = true
+          } else {
+            this.canNotJoinCurrentActivity()
+          }
+          this.countdown(distanceTime)
         }
-        this.countdown(distanceTime)
+      } catch (e) {
+        throw e
+      }
+    },
+    // 获得年味
+    async getMyNewYearCard () {
+      try {
+        if (this.currentSignIn.hasSignin) return
+        await checkInCurrentNewYearIcon(this.id, this.activeDetail.nextSigninNote)
+
+        /* ********修改相应的参数，不刷新页面******** */
+        this.currentSignIn.hasSignin = true
+        let currentIndex = this.signInIconList.findIndex(item => item.index === this.currentSignIn.index)
+        this.signInIconList[currentIndex].hasSignin = true
+        this.activeDetail.currentSignin = true
+        let nextIcon = this.signInIconList.find(item => item.index > this.activeDetail.nextSigninNote)
+        this.activeDetail.nextSigninNote = nextIcon ? nextIcon.index : ''
+        this.activeDetail.completeNumber = this.currentSignIn.isLastIcon ? this.activeDetail.completeNumber++ : this.activeDetail.completeNumber
+        this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
+        this.activeDetail.signedInNumber++
+        // 统计签到人数
+        this.activeDetail.signinNumber = this.activeDetail.nextSigninNote === 1 ? this.activeDetail.signinNumber++ : this.activeDetail.signinNumber
+        // 显示海报
+        this.drawNewYearCardPoster(this.currentSignIn.posterUrl, this.currentSignIn.name, this.currentSignIn.hasSignin)
+      } catch (e) {
+        throw e
+      }
+    },
+    // 领取奖品
+    async receivePresent () {
+      try {
+        if (!this.currentSignIn.hasAward || this.currentSignIn.awardType !== '') return
+        let { result } = await receivePresent(this.id, this.activeDetail.currentReceivePresentNote)
+        /* 显示中奖信息弹框 */
+        this.isShowPresentPopup = true
+        this.presentStage = result.awardType ? 1 : 2 // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
+        /* 初始化获奖信息 */
+        result.formatStartTime = moment(result.startTime).format('YYYY-MM-DD')
+        result.formatEndTime = moment(result.endTime).format('YYYY-MM-DD')
+        result.price = result.awardType === 3 || result.awardType === 4 ? result.awardName.split('减')[1] : 0
+        this.currentPresentDetail = result
+        /* ********修改相应的参数，不刷新页面******** */
+        this.isGrandPrsentSignIn = this.currentSignIn.isLastIcon ? this.currentSignIn.awardType !== '' : false
+        let deviation = this.previousPresentIsReceive ? 1 : -1
+        let currentIndex = this.signInIconList.findIndex(item => item.index === this.currentSignIn.index)
+        this.signInIconList[currentIndex + deviation].hasSignin = true
+        this.signInIconList[currentIndex + deviation].awardImg = result.hasAward
+        this.signInIconList[currentIndex + deviation].awardType = result.awardType
+        this.signInIconList[currentIndex + deviation].isGrandPrsent = this.isGrandPrsentSignIn
+        this.previousPresentIsReceive = true
+        if (this.isGrandPrsentSignIn) result.isGrandPrsent = true
+        this.myPresentList.push(result)
       } catch (e) {
         throw e
       }
@@ -800,43 +858,6 @@ export default {
         let sharePoster = canvas.toDataURL('image/jpeg', 0.7)
         this.sharePoster = sharePoster
         this.isShowSharePoster = true
-      } catch (e) {
-        throw e
-      }
-    },
-    // 切换展示的奖品列表
-    clickPrensentType (type) {
-      this.presentListType = type
-      this.showMyPresentListMore = false
-      this.showSunPresentListMore = false
-    },
-    // 获得年味
-    async getMyNewYearCard () {
-      try {
-        if (this.currentSignIn.hasSignin) return
-        await checkInCurrentNewYearIcon(this.id, this.activeDetail.nextSigninNote)
-        // 修改相应的参数，不刷新页面
-        this.currentSignIn.hasSignin = true
-        let currentIndex = this.signInIconList.findIndex(item => item.index === this.currentSignIn.index)
-        this.signInIconList[currentIndex].hasSignin = true
-        // 显示海报
-        this.drawNewYearCardPoster(this.currentSignIn.posterUrl, this.currentSignIn.name, this.currentSignIn.hasSignin)
-      } catch (e) {
-        throw e
-      }
-    },
-    // 领取奖品
-    async receivePresent () {
-      try {
-        if (!this.currentSignIn.hasAward || this.currentSignIn.awardType !== '') return
-        let { result } = await receivePresent(this.id, this.activeDetail.currentReceivePresentNote)
-        this.isShowPresentPopup = true
-        // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
-        this.presentStage = result.awardType ? 1 : 2
-        result.formatStartTime = moment(result.startTime).format('YYYY-MM-DD')
-        result.formatEndTime = moment(result.endTime).format('YYYY-MM-DD')
-        result.price = result.awardType === 3 || result.awardType === 4 ? result.awardName.split('减')[1] : 0
-        this.currentPresentDetail = result
       } catch (e) {
         throw e
       }
@@ -900,10 +921,16 @@ export default {
     },
     // 无法参与活动，返回主会场
     async canNotJoinCurrentActivity () {
+      this.$warning('您无法参与活动，返回主会场，更多活动等您开启')
       await setTimeout(() => {
-        this.$warning('您无法参与活动，返回主会场，更多活动等您开启')
         this.backMainActivityCenter()
       }, 3000)
+    },
+    // 切换展示的奖品列表
+    clickPrensentType (type) {
+      this.presentListType = type
+      this.showMyPresentListMore = false
+      this.showSunPresentListMore = false
     },
     // 隐藏年味海报
     hiddenNewYearCardPoster () {
@@ -933,6 +960,7 @@ export default {
           this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
           let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
           this.currentSignIn = currentIndex > 0 ? this.signInIconList[currentIndex] : {}
+          this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
         }
         if (datetime <= 0) {
           clearInterval(this.timer)
