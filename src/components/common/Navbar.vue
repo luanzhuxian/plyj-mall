@@ -63,7 +63,7 @@
       <img
         v-if="activityId === 8"
         :class="$style.iconXinchun"
-        src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/93a9ebf6-5266-4f78-9a2b-f2cb11e2ad14.png"
+        src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/87033906-c3d9-412f-b504-e9f777f334d4.png"
       >
     </router-link>
     <!-- 购物车 -->
