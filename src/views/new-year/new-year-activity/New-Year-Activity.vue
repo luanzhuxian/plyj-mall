@@ -82,15 +82,8 @@
                    @click="drawNewYearCardPoster(item.posterUrl, item.materialDesc, item.hasSignin)"
               >
                 <div class="icon">
-                  <img v-if="item.hasSignin"
-                       src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/46322250-3be6-4c39-99fd-2b07fbde4915.png"
-                       alt=""
-                  >
-                  <img v-else
-                       class="not-sign"
-                       src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/30a904a8-a0ae-4154-895e-1f9aefd9a6bf.png"
-                       alt=""
-                  >
+                  <img v-if="item.hasSignin" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/46322250-3be6-4c39-99fd-2b07fbde4915.png">
+                  <img v-else class="not-sign" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/30a904a8-a0ae-4154-895e-1f9aefd9a6bf.png">
                   <span class="not-sign">{{ item.materialDesc }}</span>
                 </div>
                 <p :class="{'not-sign': !item.hasSignin}">{{ item.name }}</p>
@@ -105,42 +98,27 @@
                 </div>
                 <!-- 未抽奖前年味大奖奖品展示-->
                 <div v-if="!item.hasSignin && item.isGrandPrsent">
-                  <img
-                    src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/65044768-ee0c-4987-907b-b69e71cb067c.png"
-                    alt=""
-                  >
+                  <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/65044768-ee0c-4987-907b-b69e71cb067c.png">
                   <p :class="{'not-sign': !item.hasSignin}">年味大奖</p>
                 </div>
                 <!-- 已抽奖,但是未抽中-->
                 <div v-if="item.hasSignin && (item.awardType === 0)">
-                  <img
-                    src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png"
-                    alt=""
-                  >
+                  <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png">
                   <p>未中奖</p>
                 </div>
                 <!-- 奖品为礼品-->
                 <div v-if="item.hasSignin && (item.awardType === 1)">
-                  <img
-                    :src="item.awardImg"
-                    alt=""
-                  >
+                  <img :src="item.awardImg">
                   <p>已获得</p>
                 </div>
                 <!-- 奖品为奖学金-->
                 <div v-if="item.hasSignin && (item.awardType === 2)">
-                  <img
-                    src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png"
-                    alt=""
-                  >
+                  <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
                   <p>已获得</p>
                 </div>
                 <!-- 奖品为优惠券-->
                 <div v-if="item.hasSignin && (item.awardType === 3 || item.awardType === 4)">
-                  <img
-                    src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png"
-                    alt=""
-                  >
+                  <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
                   <p>已获得</p>
                 </div>
               </div>
@@ -169,37 +147,23 @@
             已有<span>{{ sunPresentListTotal }}人</span>获得年味奖品
           </div>
           <div class="no-sun-present" v-if="sunPresentList.length === 0">
-            <img
-              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/53a110f2-9d45-4f60-95d8-99bf75e4b1c3.png"
-              alt=""
-            >
+            <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/53a110f2-9d45-4f60-95d8-99bf75e4b1c3.png">
           </div>
           <template v-else>
             <template v-for="(item, index) in sunPresentList">
               <div class="sun-present-item" v-if="index < 3 || showSunPresentListMore" :key="index">
                 <!-- 礼品展示 -->
                 <!-- 奖学金 -->
-                <img v-if="item.awardType === 2"
-                     src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png"
-                     alt=""
-                >
+                <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
                 <!-- 优惠券 -->
-                <img v-else-if="item.awardType === 3 || item.awardType === 4"
-                     src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png"
-                     alt=""
-                >
-                <img v-else
-                     src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png"
-                     alt=""
-                >
+                <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
+                <img v-else src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png">
                 <!-- 头像-->
-                <img class="avatar" :src="item.userImg" alt="">
+                <img class="avatar" :src="item.userImg">
                 <!-- 礼品描述 -->
                 <h3>
                   <p>{{ item.userName }}积攒了<span class="orange">{{ item.signinNum }}</span>个年味</p>
-                  <p>
-                    开启礼品 获得{{ item.awardName }}
-                  </p>
+                  <p> 开启礼品 获得{{ item.awardName }} </p>
                 </h3>
               </div>
             </template>
@@ -217,10 +181,7 @@
             我获得<span>{{ myPresentList.length }}个</span>年味奖品
           </div>
           <div class="no-sun-present" v-if="myPresentList.length === 0">
-            <img
-              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/53a110f2-9d45-4f60-95d8-99bf75e4b1c3.png"
-              alt=""
-            >
+            <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/53a110f2-9d45-4f60-95d8-99bf75e4b1c3.png">
           </div>
           <template v-else>
             <template v-for="(item, index) in myPresentList">
@@ -228,20 +189,12 @@
                 <!-- 礼品展示 -->
                 <span>
                   <!-- 礼品 -->
-                  <img v-if="item.awardType === 1" :src="item.awardImg" alt="">
+                  <img v-if="item.awardType === 1" :src="item.awardImg">
                   <!-- 奖学金 -->
-                  <img v-else-if="item.awardType === 2"
-                       src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png"
-                       alt=""
-                  >
+                  <img v-else-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
                   <!-- 全场满减券/品类券 -->
-                  <img v-else-if="item.awardType === 3 || item.awardType === 4"
-                       src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png"
-                       alt=""
-                  >
-                  <i :class="{'grand-prize': item.isGrandPrsent}">
-                    年味大奖
-                  </i>
+                  <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
+                  <i :class="{'grand-prize': item.isGrandPrsent}"> 年味大奖</i>
                 </span>
                 <!-- 礼品描述 -->
                 <h3>
@@ -290,7 +243,7 @@
     <!-- 显示分享海报 -->
     <div class="winning-prize poster" v-if="isShowSharePoster">
       <div class="prize-box poster-box">
-        <img :src="sharePoster" alt="">
+        <img :src="sharePoster">
         <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
       </div>
       <div class="winning-prize-close poster-close">
@@ -301,7 +254,7 @@
     <!-- 显示年味海报 -->
     <div class="winning-prize poster" v-if="isShowNewYearPoster">
       <div class="prize-box poster-box">
-        <img :src="newYearPoster" alt="">
+        <img :src="newYearPoster">
         <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
       </div>
       <div class="winning-prize-close poster-close">
@@ -318,30 +271,19 @@
         </div>
         <div class="detail">
           <div class="product" v-if="currentPresentDetail.awardType === 1">
-            <img
-              :src="currentPresentDetail.awardImg"
-              alt=""
-            >
+            <img :src="currentPresentDetail.awardImg">
             <div class="product-detail">
               <h3>{{ currentPresentDetail.awardName }}</h3>
               <h4>有效期：{{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</h4>
             </div>
           </div>
           <div class="scholarship" v-if="currentPresentDetail.awardType === 2">
-            <img
-              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f3f449e6-43f1-4ddc-a68b-9a0a536a88e5.png"
-              alt=""
-            >
+            <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f3f449e6-43f1-4ddc-a68b-9a0a536a88e5.png">
             <span>{{ currentPresentDetail.awardName }}</span>
           </div>
           <div class="coupon" v-if="currentPresentDetail.awardType === 3 || currentPresentDetail.awardType === 4">
-            <img
-              v-if="currentPresentDetail.awardType === 4"
-              src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/category-coupon.png" alt=""
-            >
-            <img v-else src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/full-coupon.png"
-                 alt=""
-            >
+            <img v-if="currentPresentDetail.awardType === 4" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/category-coupon.png">
+            <img v-else src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/full-coupon.png">
             <div class="wrap">
               <div class="left">
                 <div class="coupon-price">
@@ -380,10 +322,7 @@
         </div>
         <div class="detail">
           <div class="no-present">
-            <img
-              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png"
-              alt=""
-            >
+            <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png">
           </div>
         </div>
         <div class="info">
@@ -405,15 +344,8 @@
           <p>请抽出我心中的年味大礼</p>
         </div>
         <div class="detail">
-          <img
-            class="gift"
-            src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/ac9e7b86-69d4-4356-9ba7-c233e711056d.png"
-            alt=""
-          >
-          <img class="light"
-               src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/1565326e-6f2a-42f7-9303-c8ad3221f92b.png"
-               alt=""
-          >
+          <img class="gift" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/ac9e7b86-69d4-4356-9ba7-c233e711056d.png">
+          <img class="light" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/1565326e-6f2a-42f7-9303-c8ad3221f92b.png">
         </div>
         <div class="footer">
           <button @click="receivePresent">立即抽奖</button>
@@ -426,17 +358,11 @@
     <!-- 中年味大奖弹框 -->
     <div class="bg-gray" v-if="isShowPresentPopup && currentSignIn.isLastIcon && presentStage === 1">
       <div class="grand-present-box">
-        <img
-          src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/6d5c54f0-e972-4fd2-b28b-021a12c78e39.png"
-          alt=""
-        >
+        <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/6d5c54f0-e972-4fd2-b28b-021a12c78e39.png">
         <div class="top">恭喜你获得年味大礼</div>
         <div class="bottom">
           <div class="detail">
-            <img
-              :src="currentPresentDetail.awardImg"
-              alt=""
-            >
+            <img :src="currentPresentDetail.awardImg">
             <h3>{{ currentPresentDetail.awardName }}</h3>
             <p>有效期：{{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</p>
           </div>
@@ -458,10 +384,7 @@
         </div>
         <div class="detail">
           <div class="no-present">
-            <img
-              src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png"
-              alt=""
-            >
+            <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png">
           </div>
         </div>
         <div class="footer">
