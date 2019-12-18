@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.propagate">
+  <router-link :class="$style.propagate" tag="div" :to="{ name: 'Appointment' }">
     <div :class="$style.label">
       <span>了解我们</span>
     </div>
@@ -17,7 +17,7 @@
         :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'"
       >
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>

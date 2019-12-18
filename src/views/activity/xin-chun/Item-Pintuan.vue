@@ -40,7 +40,7 @@
           <span v-if="data.goodsInfo.activityInfo.prizePool">
             成团瓜分
           </span>
-          <span v-else>双十二有礼</span>
+          <span v-else>新春有礼</span>
         </div>
         <div :class="$style.sub1Right" v-if="data.goodsInfo.activityInfo.prizePool">
           {{ `${data.goodsInfo.activityInfo.prizePool}元` }}
