@@ -903,7 +903,7 @@ export default {
       await setTimeout(() => {
         this.$warning('您无法参与活动，返回主会场，更多活动等您开启')
         this.backMainActivityCenter()
-      }, 5000)
+      }, 3000)
     },
     // 隐藏年味海报
     hiddenNewYearCardPoster () {
