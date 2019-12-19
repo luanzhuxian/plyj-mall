@@ -6,6 +6,7 @@
         <span v-if="data.values[0].status === 1">距活动结束：</span>
         <span v-if="data.values[0].status === 2">活动已结束</span>
         <count-down
+          v-if="~[0, 1].indexOf(data.values[0].status)"
           :timestamp="getTime(data.values[0])"
           size="middle"
           color="#184B28"

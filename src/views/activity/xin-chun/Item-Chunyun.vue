@@ -11,6 +11,7 @@
       <span v-if="data.status === 1">距结束：</span>
       <span v-if="data.status === 2">已结束</span>
       <count-down
+        v-if="~[0, 1].indexOf(data.status)"
         :timestamp="getTime(data)"
         color="#184B28"
         background="#92F4C7"
@@ -27,10 +28,13 @@
           {{ `${data.salesVolume}人已买` }}
         </span>
       </div>
-      <div :class="$style.current" @click="submitOrder(data)">
-        <span v-if="size !== 'small'">点击购买 </span>
+      <div :class="$style.current" v-if="data.status === 0" @click="$router.push({ name: 'SpringPloughing' })">
+        {{ `组合价：￥${data.discountTotalPrice}` }}
+      </div>
+      <div :class="$style.current" v-else-if="data.status === 1" @click="submitOrder(data)">
         {{ `组合到手${data.discountTotalPrice}元` }}
       </div>
+      <div :class="$style.current" v-else>已结束</div>
     </div>
     <div :class="[$style.cornner, $style.topLeft]" />
     <div :class="[$style.cornner, $style.topRight]" />
@@ -67,7 +71,7 @@ export default {
   },
   methods: {
     async submitOrder (item) {
-      if (!item.productModelList || !item.productModelList.length) return false
+      if (this.size !== 'small') { if (!item.productModelList || !item.productModelList.length) return false }
       const confirmList = []
       for (let prod of item.productModelList) {
         confirmList.push({
