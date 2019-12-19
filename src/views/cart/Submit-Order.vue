@@ -828,6 +828,13 @@ export default {
         this.contactInfoModel.name = this.realName || this.userName
         this.contactInfoModel.mobile = this.mobile
       }
+
+      // 还原之前选择的优惠券信息
+      let coupon = JSON.parse(sessionStorage.getItem('COUPON_INFO')) || null
+      if (coupon) await this.couponClick(coupon.detail, coupon.isNotUse)
+      // 还原之前选择的红包信息
+      let scholarship = JSON.parse(sessionStorage.getItem('SCHOLARSHIP_INFO')) || null
+      if (scholarship) await this.redEnvelopeClick(scholarship.detail, scholarship.isNotUse)
     } catch (e) {
       this.$router.go(-1)
       throw e
@@ -996,6 +1003,14 @@ export default {
         this.currentRedEnvelope = {}
         this.isNotChooseRedEnvelope = true
       }
+      sessionStorage.setItem('COUPON_INFO', JSON.stringify({
+        isNotUse: this.isNotChooseCoupon,
+        detail: this.coupon
+      }))
+      sessionStorage.setItem('SCHOLARSHIP_INFO', JSON.stringify({
+        isNotUse: this.isNotChooseRedEnvelope,
+        detail: this.currentRedEnvelope
+      }))
       await this.getProductDetail(true, item, this.currentRedEnvelope)
     },
     // 获取优惠券
@@ -1059,6 +1074,14 @@ export default {
       this.currentRedEnvelope = item
       this.showRedEnvelopePopup = false
       this.isNotChooseRedEnvelope = isNotChooseRedEnvelope
+      sessionStorage.setItem('COUPON_INFO', JSON.stringify({
+        isNotUse: this.isNotChooseCoupon,
+        detail: this.coupon
+      }))
+      sessionStorage.setItem('SCHOLARSHIP_INFO', JSON.stringify({
+        isNotUse: this.isNotChooseRedEnvelope,
+        detail: this.currentRedEnvelope
+      }))
       await this.getProductDetail(true, this.coupon, item)
     },
     /**
@@ -1296,6 +1319,8 @@ export default {
       sessionStorage.removeItem('CONFIRM_LIST')
       sessionStorage.removeItem('APPLY_INVOICE')
       sessionStorage.removeItem('CHECKED_STUDENT')
+      sessionStorage.removeItem('COUPON_INFO')
+      sessionStorage.removeItem('SCHOLARSHIP_INFO')
       localStorage.removeItem('CONTACT_INFO_MODEL')
       this.remark = ''
       this.physicalProducts = []
