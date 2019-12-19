@@ -92,7 +92,7 @@
         <div :class="$style.infoItem">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">商品金额</span>
-            <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+            <span :class="$style.subtotalPrice + ' rmb'">{{ physicalAmount }}</span>
           </div>
         </div>
 
