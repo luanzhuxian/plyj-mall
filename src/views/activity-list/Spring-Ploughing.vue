@@ -196,7 +196,7 @@ export default {
           }
         }
         this.list = result.records
-        const lastEndTime = moment(this.list.slice(-1)[0].activityEndTime).valueOf()
+        const lastEndTime = moment(this.list[0].activityEndTime).valueOf()
         const lastStartTime = moment(this.list[0].activityStartTime).valueOf()
         const now = Date.now()
         this.allEnd.wasStarted = now - lastStartTime >= 0
