@@ -161,9 +161,14 @@ export default {
     async getSpringCombination () {
       try {
         const { result } = await getSpringCombination({ current: 1, size: 60 })
-        console.log(result)
+        if (!result.total) {
+          this.$confirm('暂无活动')
+            .finally(() => {
+              this.$router.go(-1)
+            })
+          return
+        }
         for (const activity of result.records) {
-          console.log(1)
           activity.models.sort((a, b) => {
             return moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf()
           })

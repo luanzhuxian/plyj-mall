@@ -5,7 +5,8 @@
     <div :class="$style.right">
       <p :class="$style.name" v-text="data.goodsName" />
       <p :class="$style.limit">
-        {{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}
+        数量：{{ data.count }}
+        <!--{{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}-->
       </p>
       <p :class="$style.price">折后价：￥{{ data.amount }}</p>
       <p :class="$style.originalPrice">原价：￥{{ data.originPrice }}</p>
