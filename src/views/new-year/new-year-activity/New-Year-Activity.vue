@@ -252,6 +252,7 @@ import {
 } from '../../../apis/new-year-activity'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { generateQrcode, drawRoundRect, cutArcImage, createText, Countdown } from '../../../assets/js/util'
+import share from '../../../assets/js/wechat/wechat-share'
 import { getServerTime } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
@@ -343,7 +344,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar', 'mallUrl', 'userId'])
+    ...mapGetters(['appId', 'logoUrl', 'avatar', 'mallUrl', 'userId'])
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
@@ -402,9 +403,20 @@ export default {
         }
         // 初始化页面
         await this.init()
+        this.share()
       } catch (e) {
         throw e
       }
+    },
+    // 初始化分享数据
+    share () {
+      share({
+        appId: this.appId,
+        title: '我心中的年味',
+        desc: '快来成为新会员，参与我心中的年味，领取大奖', // TODO
+        link: window.location.href,
+        imgUrl: this.logoUrl
+      })
     },
     // 初始化页面
     async init () {
@@ -578,6 +590,7 @@ export default {
     // 获得年味
     async getMyNewYearCard () {
       try {
+        console.log(this.currentSignIn) // todo
         if (this.currentSignIn.hasSignin) return
         await checkInCurrentNewYearIcon(this.id, this.activeDetail.nextSigninNote)
 
@@ -594,6 +607,7 @@ export default {
         this.activeDetail.differenceNumber -= 1
         // 统计签到人数
         this.activeDetail.signinNumber = this.activeDetail.nextSigninNote === 1 ? this.activeDetail.signinNumber += 1 : this.activeDetail.signinNumber
+        console.log(this.currentSignIn) // todo
         // 显示海报
         this.drawNewYearCardPoster(this.currentSignIn.posterUrl, this.currentSignIn.name, this.currentSignIn.hasSignin)
       } catch (e) {
