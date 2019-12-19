@@ -23,7 +23,7 @@
           :name="item.productName"
           :count="item.count"
           :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-          :price="item.price"
+          :price="activeProduct === 5 ? item.originPrice : item.price"
           :support-refund="item.supportRefund"
           :gap="32"
           :product-type="1"
@@ -143,7 +143,7 @@
             :name="item.productName"
             :count="item.count"
             :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-            :price="item.price"
+            :price="activeProduct === 5 ? item.originPrice : item.price"
             :support-refund="item.supportRefund"
             is-submit
             :gap="32"
@@ -283,7 +283,7 @@
             :name="item.productName"
             :count="item.count"
             :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-            :price="item.price"
+            :price="activeProduct === 5 ? item.originPrice : item.price"
             :support-refund="item.supportRefund"
             is-submit
             :gap="32"
