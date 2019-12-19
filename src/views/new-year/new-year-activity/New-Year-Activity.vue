@@ -31,7 +31,7 @@
               已有<span>{{ activeDetail.signinNumber }}</span>人积攒我心中的年味
             </h3>
             <div v-if="!activityIsOver">
-              距活动{{ activityIsStart? '结束' : '开始' }}仅剩<span>{{ dd }}</span>天<span>{{ hh }}</span>：<span>{{ mm }}</span>：<span>{{ ss }}</span>
+              距活动{{ activityIsStart? '结束' : '开始' }}仅剩<span>{{ time.d }}</span>天<span>{{ time.h }}</span>：<span>{{ time.m }}</span>：<span>{{ time.s }}</span>
             </div>
             <div v-else>活动已结束</div>
           </div>
@@ -69,7 +69,7 @@
                   :class="{disabled: currentSignIn.awardType !== '' }"
                   @click="receivePresent"
                 >
-                  立即抽奖
+                  {{ currentSignIn.isLastIcon ? '立即抽奖' : '领取奖品' }}
                 </button>
               </template>
             </div>
@@ -249,7 +249,7 @@ import {
   statisticsViews
 } from '../../../apis/new-year-activity'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import { generateQrcode, drawRoundRect, cutArcImage, createText } from '../../../assets/js/util'
+import { generateQrcode, drawRoundRect, cutArcImage, createText, Countdown } from '../../../assets/js/util'
 import { getServerTime } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
@@ -264,7 +264,7 @@ let activity_member = {
   '3': '商家指定用户'
 }
 let default_present_img = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
-
+let countdownInstanceList = []
 export default {
   name: 'NewYearActivity',
   components: {
@@ -288,7 +288,6 @@ export default {
       showSunPresentListMore: false, // 是否显示所有好友晒单列表
       showMyPresentListMore: false, // 是否显示所有我的奖品
       isShowNewYearPoster: false, // 是否显示年味海报
-      timer: '',
       activeDetail: {},
       presentList: [],
       signInIconList: [], // 签到图标表
@@ -300,12 +299,15 @@ export default {
       qrcode: '', // 当前活动的二维码
       sharePoster: '', // 分享海报
       newYearPoster: '', // 年味海报
-      dd: '', // 倒计时天数
-      hh: '', // 倒计时小时数
-      mm: '', // 倒计时分钟数
-      ss: '', // 倒计时描述
+      time: { // 倒计时
+        d: '',
+        h: '',
+        m: '',
+        s: ''
+      },
       presentListType: 1, //  1- 好礼晒单 2-我的奖品
       presentStage: 1, // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
+      isPosterLoading: false, // 海报是否在加载中
       swiperOption: {
         direction: 'horizontal',
         effect: 'coverflow',
@@ -369,9 +371,21 @@ export default {
         this.$router.push({ name: 'BindMobile' })
       }
     }
-    await statisticsViews(this.id) // 统计访问量
-    // 是否能参与当前活动,不能参与返回主会场
-    this.checkActivity()
+    try {
+      await statisticsViews(this.id) // 统计访问量
+      // 是否能参与当前活动,不能参与返回主会场
+      await this.checkActivity()
+    } catch (e) {
+      throw e
+    }
+  },
+  deactivated () {
+    // 停止所有定时器
+    countdownInstanceList.map(item => {
+      if ('stop' in item) {
+        item.stop()
+      }
+    })
   },
   methods: {
     // 检查当前用户是否可参与当前活动
@@ -383,20 +397,30 @@ export default {
           return
         }
         // 初始化页面
-        this.init()
+        await this.init()
       } catch (e) {
         throw e
       }
     },
     // 初始化页面
     async init () {
-      this.getObtainedSunPresentList()
-      this.getPresentList()
-      this.getSignInIconList()
-      // 生成当前活动的二维码
-      let qrcode = await generateQrcode(500, `${this.mallUrl}/new-year-activity${this.id ? '/' + this.id : ''}`, 100, null, null, 'url')
-      this.qrcode = new Image()
-      this.qrcode.src = qrcode
+      try {
+        // 停止所有定时器
+        countdownInstanceList.map(item => {
+          if ('stop' in item) {
+            item.stop()
+          }
+        })
+        await this.getObtainedSunPresentList()
+        await this.getPresentList()
+        await this.getSignInIconList()
+        // 生成当前活动的二维码
+        let qrcode = await generateQrcode(500, `${this.mallUrl}/new-year-activity${this.id ? '/' + this.id : ''}`, 100, null, null, 'url')
+        this.qrcode = new Image()
+        this.qrcode.src = qrcode
+      } catch (e) {
+        throw e
+      }
     },
     // 获取好友晒单奖品列表
     async getObtainedSunPresentList () {
@@ -527,23 +551,21 @@ export default {
 
         // 启动倒计时
         {
-          let distanceTime
           let { result: serverTime } = await getServerTime()
           let now = serverTime
           let start = moment(this.activeDetail.activityStartTime).valueOf()
           let end = moment(this.activeDetail.activityEndTime).valueOf()
           if (start > now) { // 活动未开始
             this.activityIsStart = false
-            distanceTime = start - now
+            this.countdown(start - now)
           } else if (end > now) { // 活动未结束
             this.activityIsStart = true
-            distanceTime = end - now
+            this.countdown(end - now)
           } else if (now > end) { // 活动未结束
             this.activityIsOver = true
           } else {
             this.canNotJoinCurrentActivity()
           }
-          this.countdown(distanceTime)
         }
       } catch (e) {
         throw e
@@ -557,15 +579,15 @@ export default {
 
         /* ********修改相应的参数，不刷新页面******** */
         this.currentSignIn.hasSignin = true
+        this.currentSignIn.awardType = ''
         let currentIndex = this.signInIconList.findIndex(item => item.index === this.currentSignIn.index)
         this.signInIconList[currentIndex].hasSignin = true
         this.activeDetail.currentSignin = true
-        let nextIcon = this.signInIconList.find(item => item.index > this.activeDetail.nextSigninNote)
-        this.activeDetail.nextSigninNote = nextIcon ? nextIcon.index : ''
+        this.activeDetail.nextSigninNote++
         this.activeDetail.completeNumber = this.currentSignIn.isLastIcon ? this.activeDetail.completeNumber++ : this.activeDetail.completeNumber
         this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
         this.activeDetail.signedInNumber++
-        this.currentSignIn.awardType = ''
+        this.activeDetail.differenceNumber--
         // 统计签到人数
         this.activeDetail.signinNumber = this.activeDetail.nextSigninNote === 1 ? this.activeDetail.signinNumber++ : this.activeDetail.signinNumber
         // 显示海报
@@ -588,6 +610,7 @@ export default {
         result.price = result.awardType === 3 || result.awardType === 4 ? result.awardName.split('减')[1] : 0
         this.currentPresentDetail = result
         /* ********修改相应的参数，不刷新页面******** */
+        this.currentSignIn.awardType = result.awardType
         this.isGrandPrsentSignIn = this.currentSignIn.isLastIcon ? this.currentSignIn.awardType !== '' : false
         let deviation = this.previousPresentIsReceive ? 1 : -1
         let currentIndex = this.signInIconList.findIndex(item => item.index === this.currentSignIn.index)
@@ -595,7 +618,7 @@ export default {
         this.signInIconList[currentIndex + deviation].awardImg = result.awardImg
         this.signInIconList[currentIndex + deviation].awardType = result.awardType
         this.signInIconList[currentIndex + deviation].isGrandPrsent = this.isGrandPrsentSignIn
-        this.currentSignIn.awardType = result.awardType
+        this.activeDetail.nextPresentIndex = this.signInIconList.findIndex((item, index) => item.hasAward && index > this.currentSignIn.index)
         this.previousPresentIsReceive = true
         if (this.isGrandPrsentSignIn) result.isGrandPrsent = true
         this.myPresentList.push(result)
@@ -606,10 +629,12 @@ export default {
     // 生成活动分享海报
     async showPoster () { // 显示分享海报
       try {
+        if (this.isPosterLoading) return
         if (this.sharePoster) {
           this.isShowSharePoster = true
           return
         }
+        this.isPosterLoading = true
         let bgImgUrl = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/160d4ff6-7691-4d29-9239-0b0730454007.png'
         let bgImg = await this.loadImage(bgImgUrl)
         let canvas = document.createElement('canvas')
@@ -622,6 +647,7 @@ export default {
         let sharePoster = canvas.toDataURL('image/jpeg', 0.7)
         this.sharePoster = sharePoster
         this.isShowSharePoster = true
+        this.isPosterLoading = false
       } catch (e) {
         throw e
       }
@@ -629,7 +655,9 @@ export default {
     // 生成年味海报
     async drawNewYearCardPoster (imgUrl, desc, isSignIN) { // 生成年味海报
       if (!isSignIN) return
+      if (this.isPosterLoading) return
       try {
+        this.isPosterLoading = true
         this.isShowNewYearPoster = false
         let bgImg = await this.loadImage(imgUrl)
         let canvas = document.createElement('canvas')
@@ -665,6 +693,7 @@ export default {
         let sharePoster = canvas.toDataURL('image/jpeg', 0.7)
         this.newYearPoster = sharePoster
         this.isShowNewYearPoster = true
+        this.isPosterLoading = false
       } catch (e) {
         throw e
       }
@@ -712,36 +741,32 @@ export default {
     // 倒计时
     countdown (datetime) {
       if (datetime < 0) return
-      this.timer = setInterval(async () => {
-        let { _data } = moment.duration(datetime)
-        let d = String(Math.floor(moment.duration(datetime).asDays()))
-        let h = String(_data.hours)
-        let m = String(_data.minutes)
-        let s = String(_data.seconds)
-        datetime -= 1000
+      const countdownInstance = new Countdown(datetime, data => {
+        if (!data) {
+          // 倒计时结束，刷新数据
+          this.init()
+          return
+        }
+        let d = String(data.days)
+        let h = String(data.hours)
+        let m = String(data.minutes)
+        let s = String(data.seconds)
         // 跨天更新当前签到信息
-        if (this.dd !== '' && this.dd !== d) {
+        if (this.time.d !== '' && this.time.d !== d) {
           this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
           let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
           currentIndex = currentIndex < 0 ? this.currentSignIn.index : currentIndex
           this.currentSignIn = this.currentSignIn.hasSignin ? this.signInIconList[currentIndex] : this.currentSignIn
           this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
         }
-        if (datetime <= 0) {
-          clearInterval(this.timer)
-          setTimeout(async () => { // 倒计时结束, 重新渲染页面
-            this.init()
-          }, 5000)
-        }
-        this.dd = d.padStart(2, '0')
-        this.hh = h.padStart(2, '0')
-        this.mm = m.padStart(2, '0')
-        this.ss = s.padStart(2, '0')
-      }, 1000)
+        this.time.d = d.padStart(2, '0')
+        this.time.h = h.padStart(2, '0')
+        this.time.m = m.padStart(2, '0')
+        this.time.s = s.padStart(2, '0')
+      })
+      countdownInstance.start()
+      countdownInstanceList.push(countdownInstance)
     }
-  },
-  destroyed () {
-    clearInterval(this.timer)
   }
 }
 </script>
