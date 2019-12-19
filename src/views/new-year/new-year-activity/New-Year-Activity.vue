@@ -503,7 +503,7 @@ export default {
         }
 
         let currentSigninNote = currentSignin ? nextSigninNote - 1 : nextSigninNote
-        currentSigninNote = currentSigninNote > notes.length ? notes.length : currentSigninNote
+        currentSigninNote = nextSigninNote === '' ? notes.length : currentSigninNote
         let currentIndex = notes.findIndex(item => item.index === currentSigninNote)
 
         this.currentSignIn = notes[currentIndex]
@@ -584,12 +584,12 @@ export default {
         this.signInIconList[currentIndex].hasSignin = true
         this.activeDetail.currentSignin = true
         this.activeDetail.nextSigninNote++
-        this.activeDetail.completeNumber = this.currentSignIn.isLastIcon ? this.activeDetail.completeNumber++ : this.activeDetail.completeNumber
+        this.activeDetail.completeNumber = this.currentSignIn.isLastIcon ? this.activeDetail.completeNumber += 1 : this.activeDetail.completeNumber
         this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
-        this.activeDetail.signedInNumber++
-        this.activeDetail.differenceNumber--
+        this.activeDetail.signedInNumber += 1
+        this.activeDetail.differenceNumber -= 1
         // 统计签到人数
-        this.activeDetail.signinNumber = this.activeDetail.nextSigninNote === 1 ? this.activeDetail.signinNumber++ : this.activeDetail.signinNumber
+        this.activeDetail.signinNumber = this.activeDetail.nextSigninNote === 1 ? this.activeDetail.signinNumber += 1 : this.activeDetail.signinNumber
         // 显示海报
         this.drawNewYearCardPoster(this.currentSignIn.posterUrl, this.currentSignIn.name, this.currentSignIn.hasSignin)
       } catch (e) {

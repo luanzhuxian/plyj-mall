@@ -185,7 +185,7 @@ export default {
     }
   },
   methods: {
-    close (hasOtherOption) {
+    close (_, hasOtherOption) {
       this.$emit('update:show', false)
       if (hasOtherOption) this.$emit('close')
     },
