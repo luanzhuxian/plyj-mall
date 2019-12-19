@@ -221,6 +221,10 @@
             v-text="productInfoModel.freight || 0"
           />
         </p>
+        <p v-if="activeProduct === 5">
+          <span>春耘减免</span>
+          <span v-text="'-¥' + (activityData.combinationSpecialPrice || 0)" />
+        </p>
         <p v-if="productInfoModel.totalCouponAmount > 0">
           <span>优惠</span>
           <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
