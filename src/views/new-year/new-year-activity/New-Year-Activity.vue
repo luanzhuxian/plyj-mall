@@ -217,8 +217,6 @@
       </div>
     </div>
 
-    <Loading :show.sync="isLoading" />
-
     <!-- 活动规则 -->
     <ActivityRule :show.sync="isShowRule" :active-detail="activeDetail" />
 
@@ -259,7 +257,6 @@ import moment from 'moment'
 import SharePoster from './components/Share-Poster.vue'
 import PresentPopup from './components/Present-Popup.vue'
 import ActivityRule from './components/Activity-Rule.vue'
-import Loading from './components/Loading.vue'
 
 let activity_member = {
   '0': '所有注册用户',
@@ -276,8 +273,7 @@ export default {
     swiperSlide,
     SharePoster,
     PresentPopup,
-    ActivityRule,
-    Loading
+    ActivityRule
   },
   data () {
     return {
