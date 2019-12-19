@@ -376,6 +376,9 @@ export default {
         this.$router.push({ name: 'BindMobile' })
       }
     }
+    if (!this.id) {
+      this.canNotJoinCurrentActivity()
+    }
     try {
       await statisticsViews(this.id) // 统计访问量
       // 是否能参与当前活动,不能参与返回主会场
@@ -414,7 +417,7 @@ export default {
         appId: this.appId,
         title: '我心中的年味',
         desc: '翻开记忆中的味道，探寻我心中的年味，赢取年味大礼，快来参与吧！',
-        link: window.location.href,
+        link: `${this.mallUrl}/new-year-activity${this.id ? '/' + this.id : ''}`,
         imgUrl: this.logoUrl
       })
     },
