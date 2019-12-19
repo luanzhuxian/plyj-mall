@@ -54,8 +54,7 @@
                   :disabled="currentSignIn.hasSignin"
                   @click="getMyNewYearCard"
                 >
-                  <!--todo-->
-                  获得我的年味 {{ currentSignIn.hasSignin }}
+                  获得我的年味
                 </button>
               </template>
               <!-- 立即领奖，显示条件: 上一个节点的礼品未领取 或者 当前节点已签到 + 当前节点有礼品 -->
@@ -591,13 +590,7 @@ export default {
     // 获得年味
     async getMyNewYearCard () {
       try {
-        console.log(this.currentSignIn.hasSignin) // todo
-        if (this.currentSignIn.hasSignin) {
-          console.log('无法下行') // todo
-          return
-        } else {
-          console.log('怎么走了') // todo
-        }
+        if (this.currentSignIn.hasSignin) return
         await checkInCurrentNewYearIcon(this.id, this.activeDetail.nextSigninNote)
 
         /* ********修改相应的参数，不刷新页面******** */
@@ -613,7 +606,6 @@ export default {
         this.activeDetail.differenceNumber -= 1
         // 统计签到人数
         this.activeDetail.signinNumber = this.activeDetail.nextSigninNote === 1 ? this.activeDetail.signinNumber += 1 : this.activeDetail.signinNumber
-        console.log(this.currentSignIn) // todo
         // 显示海报
         this.drawNewYearCardPoster(this.currentSignIn.posterUrl, this.currentSignIn.name, this.currentSignIn.hasSignin)
       } catch (e) {
@@ -779,6 +771,8 @@ export default {
         let s = String(data.seconds)
         // 跨天更新当前签到信息
         if (this.time.d !== '' && this.time.d !== d) {
+          console.log('this.time.d' + this.time.d) // todo
+          console.log('d' + d)
           this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
           let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
           currentIndex = currentIndex < 0 ? this.currentSignIn.index : currentIndex
