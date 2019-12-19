@@ -178,7 +178,7 @@
           <div :class="$style.infoItem" v-if="activeProduct === 5 && detail.discount !== 10">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">春耘折扣</span>
-              <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (item.originPrice * 1000 - item.price * 1000) / 1000 }}</span>
+              <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (item.originPrice * 1000 - item.price * 1000) * item.count / 1000 }}</span>
             </div>
           </div>
 
@@ -318,7 +318,7 @@
           <div :class="$style.infoItem" v-if="activeProduct === 5 && detail.discount !== 10">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">春耘折扣</span>
-              <span :class="$style.itemContent">{{ detail.discount }}折  -¥{{ (item.originPrice * 1000 - item.price * 1000) / 1000 }}</span>
+              <span :class="$style.itemContent">{{ detail.discount }}折  -¥{{ (item.originPrice * 1000 - item.price * 1000) * item.count / 1000 }}</span>
             </div>
           </div>
 
@@ -760,13 +760,13 @@ export default {
     // 实体商品原价总和
     physicalProductOriginalPrice () {
       if (this.activeProduct === 5) {
-        return this.physicalProducts.map(item => item.originPrice).reduce((total, num) => total + num)
+        return this.physicalProducts.map(item => item.originPrice * item.count).reduce((total, num) => total + num)
       }
       return 0
     },
     // 实体商品现价总和
     physicalProductPrice () {
-      return this.physicalProducts.map(item => item.price).reduce((total, num) => total + num)
+      return this.physicalProducts.map(item => item.price * item.count).reduce((total, num) => total + num)
     }
   },
   watch: {
