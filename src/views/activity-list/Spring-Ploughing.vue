@@ -244,7 +244,7 @@ export default {
           productId: pro.goodsId,
           skuCode1: pro.sku1,
           skuCode2: pro.sku2,
-          count: 1,
+          count: pro.count,
           price: pro.amount,
           agentUser: ''
         })

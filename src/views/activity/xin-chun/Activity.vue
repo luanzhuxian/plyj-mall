@@ -98,11 +98,11 @@ export default {
   .activity {
     display: flex;
     justify-content: space-between;
-  }
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
   .item {
     box-sizing: border-box;
