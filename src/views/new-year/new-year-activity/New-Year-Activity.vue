@@ -267,7 +267,7 @@ let activity_member = {
   '2': '普通会员',
   '3': '商家指定用户'
 }
-let default_present_img = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
+let default_present_img = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/6d5c54f0-e972-4fd2-b28b-021a12c78e39.png'
 let countdownInstanceList = []
 export default {
   name: 'NewYearActivity',
@@ -550,8 +550,8 @@ export default {
           nextSigninNote, // 下一个要签到的节点
           signinNumber, // 积攒我心中的年味的人数
           completeNumber, // 集齐年味的人数
-          signedInNumber: currentIndex, // 已经签到的个数
-          differenceNumber: notes.length - currentIndex, // 还差多少个年味即可抽年味大奖
+          signedInNumber: this.currentSignIn.hasSignin ? currentIndex + 1 : currentIndex, // 已经签到的个数
+          differenceNumber: this.currentSignIn.hasSignin ? notes.length - currentIndex - 1 : notes.length - currentIndex, // 还差多少个年味即可抽年味大奖
           nextPresentIndex, // 还差多少个年味即可参与抽奖
           currentReceivePresentNote: this.previousPresentIsReceive ? this.currentSignIn.index : notes[currentIndex - 1].index,
           activity_member: activity_member[userScope]
@@ -821,6 +821,7 @@ export default {
               height: 250px;
               overflow: hidden;
               border-radius: 20px;
+              position: relative;
 
               > img {
                 width: 240px;
@@ -828,6 +829,11 @@ export default {
                 height: 200px;
                 &.no-desc {
                   height: 100%;
+                  position: absolute;
+                  left: 50%;
+                  bottom: 0;
+                  transform: translateX(-50%) scale(0.7);
+                  object-fit: contain;
                 }
               }
 
