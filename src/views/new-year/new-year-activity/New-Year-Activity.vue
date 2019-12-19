@@ -769,8 +769,8 @@ export default {
         let h = String(data.hours)
         let m = String(data.minutes)
         let s = String(data.seconds)
-        // 跨天更新当前签到信息
-        if (this.time.d !== '' && Number(this.time.d) !== Number(d)) {
+        // 活动进行中，跨天更新当前签到信息
+        if (!this.activityIsOver && this.activityIsStart && this.time.d !== '' && Number(this.time.d) !== Number(d)) {
           this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
           let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
           currentIndex = currentIndex < 0 ? this.currentSignIn.index : currentIndex
