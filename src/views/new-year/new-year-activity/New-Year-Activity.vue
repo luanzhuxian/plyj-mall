@@ -1003,7 +1003,7 @@ export default {
                     top: 50%;
                     transform: translateX(-50%) translateY(-50%);
                     color: #FFE3C8;
-                    font-size: 42px;
+                    font-size: 36px;
 
                     &.not-sign {
                       color: #FFFFFF;
