@@ -954,7 +954,7 @@ export default {
               border-radius: 10px;
               text-align: center;
               &.disabled {
-                filter: grayscale(100%);
+                background: rgba(254, 70, 31, 0.5);
               }
             }
 
