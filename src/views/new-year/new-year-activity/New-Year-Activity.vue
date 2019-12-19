@@ -80,7 +80,7 @@
           <div class="sign-in-icon-bottom">
             <div class="sign-in-icon-item" v-for="(item, index) in signInIconList" :key="index">
               <div v-if="!item.isPresent" class="icon-item"
-                   @click="drawNewYearCardPoster(item.posterUrl, item.materialDesc, item.hasSignin)"
+                   @click="drawNewYearCardPoster(item.posterUrl, item.name, item.hasSignin)"
               >
                 <div class="icon">
                   <img v-if="item.hasSignin" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/46322250-3be6-4c39-99fd-2b07fbde4915.png">
