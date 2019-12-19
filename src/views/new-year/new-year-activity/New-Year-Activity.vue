@@ -974,7 +974,7 @@ export default {
           }
 
           .sign-in-icon-bottom {
-            padding: 20px;
+            padding: 20px 30px;
 
             .sign-in-icon-item {
               padding: 10px 0;
@@ -1015,6 +1015,7 @@ export default {
                   color: #F60000;
                   font-size: 24px;
                   line-height: 40px;
+                  text-align: center;
                   &.not-sign {
                     color: #373737;
                   }
