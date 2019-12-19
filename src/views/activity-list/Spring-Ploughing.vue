@@ -261,7 +261,11 @@ export default {
       })
     },
     getGroupAmount (products) {
-      return products.map(pro => pro.amount).reduce((total, num) => (total * 1000 + num * 1000) / 1000)
+      const amountList = products.map(pro => pro.amount)
+      if (amountList.length) {
+        return products.map(pro => pro.amount).reduce((total, num) => (total * 1000 + num * 1000) / 1000)
+      }
+      return 0
     },
     async createPoster () {
       if (this.creating) {
@@ -289,7 +293,7 @@ export default {
       ctx.fillStyle = '#fff'
       ctx.textBaseline = 'hanging'
       createText(ctx, 100, 32, this.userName + ' 邀你一起春耘计划', 34, 510, 1)
-      ctx.drawImage(BG, 0, 88)
+      ctx.drawImage(BG, 0, 88, 638, 1046)
       const QR = await generateQrcode(200, location.href, 0, null, 0, 'canvas')
       ctx.drawImage(QR, 216, 826, 204, 204)
       this.poster = cvs.toDataURL('image/jpeg', 0.9)
