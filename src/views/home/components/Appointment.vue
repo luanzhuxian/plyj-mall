@@ -215,6 +215,7 @@ export default {
       color: #AB8F58;
     }
     .swiper {
+      height: var(--height) !important;
       .swiper-slide {
         > p {
           width: 350px;
