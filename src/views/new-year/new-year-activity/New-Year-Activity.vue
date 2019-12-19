@@ -413,7 +413,7 @@ export default {
       share({
         appId: this.appId,
         title: '我心中的年味',
-        desc: '快来成为新会员，参与我心中的年味，领取大奖', // todo
+        desc: '翻开记忆中的味道，探寻我心中的年味，赢取年味大礼，快来参与吧！',
         link: window.location.href,
         imgUrl: this.logoUrl
       })
@@ -770,9 +770,7 @@ export default {
         let m = String(data.minutes)
         let s = String(data.seconds)
         // 跨天更新当前签到信息
-        if (this.time.d !== '' && this.time.d !== d) {
-          console.log('this.time.d' + this.time.d) // todo
-          console.log('d' + d)
+        if (this.time.d !== '' && Number(this.time.d) !== Number(d)) {
           this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
           let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
           currentIndex = currentIndex < 0 ? this.currentSignIn.index : currentIndex
