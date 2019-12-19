@@ -173,16 +173,9 @@ export default {
       ]
     }
   },
-  computed: {
-  },
-  created () {
-    this.getList()
-  },
-  async mounted () {
-    this.getList()
-  },
   async activated () {
     this.activeId = 0 // 打开'我的礼品'页面后，默认进入第一个Tab
+    this.getList()
   },
   deactivated () {
     clearInterval(this.timer)
@@ -320,6 +313,9 @@ export default {
   .color-c {
     color: #CCCCCC;
   }
+  img {
+    object-fit: cover;
+  }
   .delete-button{
     width: 100vw;
     position: fixed;
@@ -327,6 +323,7 @@ export default {
     height: 96px;
     line-height: 96px;
     background-color: #FE7700;
+    z-index: 1;
   }
   .code-mongolian{
     position: fixed;
@@ -545,6 +542,7 @@ export default {
           }
           .content-button{
             margin-top: 20px;
+            min-width: 160px;
           }
         }
       }
