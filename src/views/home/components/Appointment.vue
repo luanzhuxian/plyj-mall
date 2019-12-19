@@ -1,6 +1,5 @@
 <template>
   <div
-    class="appointment"
     :class="{
       [$style.appointment]: true,
       [$style.style2]: styleType === 2
@@ -367,11 +366,4 @@ export default {
       transform: translateY(-50%);
     }
   }
-</style>
-<style lang="scss">
-.appointment {
-  /deep/ .swiper-wrapper {
-    height: var(--height);
-  }
-}
 </style>
