@@ -217,6 +217,8 @@
       </div>
     </div>
 
+    <Loading :show.sync="isLoading" />
+
     <!-- 活动规则 -->
     <ActivityRule :show.sync="isShowRule" :active-detail="activeDetail" />
 
@@ -256,6 +258,7 @@ import moment from 'moment'
 import SharePoster from './components/Share-Poster.vue'
 import PresentPopup from './components/Present-Popup.vue'
 import ActivityRule from './components/Activity-Rule.vue'
+import Loading from './components/Loading.vue'
 
 let activity_member = {
   '0': '所有注册用户',
@@ -272,7 +275,8 @@ export default {
     swiperSlide,
     SharePoster,
     PresentPopup,
-    ActivityRule
+    ActivityRule,
+    Loading
   },
   data () {
     return {
@@ -288,6 +292,7 @@ export default {
       showSunPresentListMore: false, // 是否显示所有好友晒单列表
       showMyPresentListMore: false, // 是否显示所有我的奖品
       isShowNewYearPoster: false, // 是否显示年味海报
+      isLoading: false, // 海报是否在加载中
       activeDetail: {},
       presentList: [],
       signInIconList: [], // 签到图标表
@@ -307,7 +312,6 @@ export default {
       },
       presentListType: 1, //  1- 好礼晒单 2-我的奖品
       presentStage: 1, // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
-      isPosterLoading: false, // 海报是否在加载中
       swiperOption: {
         direction: 'horizontal',
         effect: 'coverflow',
@@ -629,12 +633,12 @@ export default {
     // 生成活动分享海报
     async showPoster () { // 显示分享海报
       try {
-        if (this.isPosterLoading) return
+        if (this.isLoading) return
         if (this.sharePoster) {
           this.isShowSharePoster = true
           return
         }
-        this.isPosterLoading = true
+        this.isLoading = true
         let bgImgUrl = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/160d4ff6-7691-4d29-9239-0b0730454007.png'
         let bgImg = await this.loadImage(bgImgUrl)
         let canvas = document.createElement('canvas')
@@ -647,17 +651,18 @@ export default {
         let sharePoster = canvas.toDataURL('image/jpeg', 0.7)
         this.sharePoster = sharePoster
         this.isShowSharePoster = true
-        this.isPosterLoading = false
       } catch (e) {
         throw e
+      } finally {
+        this.isLoading = false
       }
     },
     // 生成年味海报
     async drawNewYearCardPoster (imgUrl, desc, isSignIN) { // 生成年味海报
       if (!isSignIN) return
-      if (this.isPosterLoading) return
+      if (this.isLoading) return
       try {
-        this.isPosterLoading = true
+        this.isLoading = true
         this.isShowNewYearPoster = false
         let bgImg = await this.loadImage(imgUrl)
         let canvas = document.createElement('canvas')
@@ -693,9 +698,10 @@ export default {
         let sharePoster = canvas.toDataURL('image/jpeg', 0.7)
         this.newYearPoster = sharePoster
         this.isShowNewYearPoster = true
-        this.isPosterLoading = false
       } catch (e) {
         throw e
+      } finally {
+        this.isLoading = false
       }
     },
     // 加载图片
