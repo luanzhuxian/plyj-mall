@@ -462,7 +462,7 @@ export default {
     padding: 0 24px;
     .items{
       display: flex;
-      width: 2000px;
+      width: 100%;
     }
     .delete-box{
       display: flex;
