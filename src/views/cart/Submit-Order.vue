@@ -89,6 +89,13 @@
           </div>
         </div>
 
+        <div :class="$style.infoItem">
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">商品金额</span>
+            <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+          </div>
+        </div>
+
         <div
           :class="$style.infoItem"
           v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
@@ -117,13 +124,6 @@
               <span v-else>无可用</span>
               <pl-svg name="icon-right" fill="#373737" width="22" />
             </span>
-          </div>
-        </div>
-
-        <div :class="$style.infoItem">
-          <div :class="$style.freightType">
-            <span :class="$style.itemLabel">商品金额</span>
-            <span :class="$style.subtotalPrice + ' rmb'">{{ physicalAmount }}</span>
           </div>
         </div>
       </div>
@@ -229,6 +229,12 @@
               </div>
             </div>
           </div>
+          <div :class="$style.infoItem">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">商品金额</span>
+              <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+            </div>
+          </div>
           <div
             :class="$style.infoItem"
             v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
@@ -256,13 +262,6 @@
                 <span v-else>无可用</span>
                 <pl-svg name="icon-right" fill="#373737" width="22" />
               </span>
-            </div>
-          </div>
-
-          <div :class="$style.infoItem">
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">商品金额</span>
-              <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
             </div>
           </div>
         </div>
@@ -369,6 +368,12 @@
               </div>
             </div>
           </div>
+          <div :class="$style.infoItem">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">商品金额</span>
+              <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+            </div>
+          </div>
           <div
             :class="$style.infoItem"
             v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
@@ -396,13 +401,6 @@
                 <span v-else>无可用</span>
                 <pl-svg name="icon-right" fill="#373737" width="22" />
               </span>
-            </div>
-          </div>
-
-          <div :class="$style.infoItem">
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">商品金额</span>
-              <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
             </div>
           </div>
         </div>
