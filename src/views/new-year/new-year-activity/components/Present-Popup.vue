@@ -185,9 +185,9 @@ export default {
     }
   },
   methods: {
-    close (_, hasOtherOption) {
+    close (hasOtherOption) {
       this.$emit('update:show', false)
-      if (hasOtherOption) this.$emit('close')
+      if (hasOtherOption === true) this.$emit('close')
     },
     backMainActivityCenter () {
       this.$router.replace({ name: 'Activity' })
