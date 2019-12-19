@@ -161,7 +161,7 @@ export default {
     async getSpringCombination () {
       try {
         const { result } = await getSpringCombination({ current: 1, size: 60 })
-        if (!result.total) {
+        if (!result.records.length) {
           this.$confirm('暂无活动')
             .finally(() => {
               this.$router.go(-1)
