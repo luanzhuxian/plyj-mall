@@ -78,8 +78,7 @@ export default {
   },
   methods: {
     async submitOrder (item) {
-      if (!item.stock) return false
-      if (item.status === 0) this.$router.push({ name: 'SpringPloughing' })
+      if (item.status === 0 || !item.stock) this.$router.push({ name: 'SpringPloughing' })
       if (item.status === 1) {
         const confirmList = []
         for (let prod of item.productModelList) {

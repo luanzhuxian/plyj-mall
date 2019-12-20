@@ -130,6 +130,7 @@
 
     <!--底部购买按钮  -->
     <buy-now
+      v-if="currentProductStatus !== 5"
       type="warning"
       ref="buyNow"
       :image="detail.productMainImage"
@@ -160,7 +161,7 @@
       :activity-product-model="detail.activityProductModel || null"
       :pre-activity="preActivity"
     >
-      <template v-slot:footer="{ currentSku, limiting, limit }">
+      <template v-slot:footer="{ currentSku, limiting, limit }" v-if="currentProductStatus !== 5">
         <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
           <!-- 活动商品库存不足时，显示该按钮 -->
           <button
@@ -361,8 +362,9 @@ export default {
     activeStock () {
         return this.activityProductModel ? this.activityProductModel.buyCount : 0
     },
-    currentProductStatus(){// 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去
-      return (this.$route.query && this.$route.query.currentProductStatus) || 1
+    // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去
+    currentProductStatus(){
+      return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
     },
     /**
      * 活动类型
