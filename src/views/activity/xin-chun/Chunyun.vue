@@ -47,10 +47,10 @@
                   {{ prod.productName }}
                 </div>
                 <div :class="$style.origin">
-                  {{ `原价：￥${prod.originPrice}` }}
+                  {{ `原价：￥${(prod.originPrice * 1000 * prod.count) / 1000}` }}
                 </div>
                 <div :class="$style.current">
-                  {{ `组合价：￥${prod.price}` }}
+                  {{ `组合价：￥${(prod.price * 1000 * prod.count) / 1000}` }}
                 </div>
               </div>
             </router-link>

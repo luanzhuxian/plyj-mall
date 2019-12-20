@@ -78,7 +78,7 @@ export default {
           productId: prod.productId,
           skuCode1: prod.skuCode1,
           skuCode2: prod.skuCode2,
-          count: 1,
+          count: prod.count,
           price: prod.price,
           agentUser: ''
         })
