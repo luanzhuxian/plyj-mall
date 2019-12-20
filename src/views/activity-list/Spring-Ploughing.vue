@@ -67,13 +67,16 @@
             :data="gift"
           />
         </div>
-        <button v-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
+        <button v-if="!item.stock" :class="$style.buy">
+          太火爆了，都被抢空了
+        </button>
+        <button v-else-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
           点击购买 组合到手<i v-text="getGroupAmount(item.products)" />元
         </button>
-        <button v-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
+        <button v-else-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
           暂未开启，敬请期待
         </button>
-        <button v-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
+        <button v-else-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
           暂未开启，敬请期待
         </button>
         <div :class="$style.corner + ' ' + $style.topLeft" />
