@@ -197,7 +197,7 @@ export default {
   .good-item {
     position: relative;
     width: 100%;
-    height: 220px;
+    height: 240px;
     margin-bottom: 18px;
     background-color: #FFF;
     box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
@@ -219,7 +219,7 @@ export default {
   .good-right {
     position: relative;
     flex: 1;
-    margin-top: 24px;
+    margin-top: 20px;
     margin-left: 32px;
     overflow: hidden;
     padding-right: 24px;
