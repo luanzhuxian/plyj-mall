@@ -159,7 +159,7 @@
                 <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
                 <!-- 优惠券 -->
                 <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
-                <img v-else src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png">
+                <img v-else class="small" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png">
                 <!-- 头像-->
                 <img class="avatar" :src="item.userImg">
                 <!-- 礼品描述 -->
@@ -1178,6 +1178,10 @@ export default {
           > img {
             width: 80px;
             object-fit: contain;
+
+            &.small {
+              width: 60px;
+            }
 
             &.avatar {
               width: 100px;
