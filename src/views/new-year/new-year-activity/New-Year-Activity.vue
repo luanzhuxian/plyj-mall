@@ -154,8 +154,13 @@
             <template v-for="(item, index) in sunPresentList">
               <div class="sun-present-item" v-if="index < 3 || showSunPresentListMore" :key="index">
                 <!-- 礼品展示 -->
+                <!--年味大奖-->
+                <span v-if="item.awardType === 1 && item.flauntAward === 2" class="grand-present">
+                  <img class="small" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/6d5c54f0-e972-4fd2-b28b-021a12c78e39.png">
+                  <i> 年味大奖</i>
+                </span>
                 <!-- 奖学金 -->
-                <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
+                <img v-else-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
                 <!-- 优惠券 -->
                 <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
                 <img v-else class="small" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png">
@@ -1171,13 +1176,34 @@ export default {
           margin: 15px 30px;
           border-bottom:1px solid #C9C9C9;
           padding-bottom: 15px;
-
-          > img {
+          .grand-present {
+            position: relative;
+            display: inline-block;
+            img {
+              width: 200px;
+            }
+            i {
+              padding: 0 8px;
+              display: block;
+              position: absolute;
+              top: 0;
+              left: 50%;
+              background:#FEC252;
+              border-radius:20px;
+              height:30px;
+              line-height: 30px;
+              width:80px;
+              font-size:20px;
+              color:#FE4923;
+            }
+          }
+          img {
             width: 80px;
             object-fit: contain;
 
             &.small {
               width: 60px;
+              margin:0 10px;
             }
 
             &.avatar {
@@ -1220,7 +1246,7 @@ export default {
             img {
               width: 80px;
               height: 100px;
-              object-fit: cover;
+              object-fit: contain;
             }
             i {
               display: none;
