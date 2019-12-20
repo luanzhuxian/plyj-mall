@@ -631,7 +631,9 @@ export default {
         this.activeDetail.nextPresentIndex = this.signInIconList.findIndex((item, index) => item.hasAward && index > this.currentSignIn.index)
         this.previousPresentIsReceive = true
         if (this.isGrandPrsentSignIn) result.isGrandPrsent = true
-        this.myPresentList.push(result)
+        if (result.awardType) {
+          this.myPresentList.push(result)
+        }
       } catch (e) {
         throw e
       }
