@@ -162,7 +162,10 @@ export default {
       try {
         const { result } = await getSpringCombination({ current: 1, size: 60 })
         if (!result.records.length) {
-          this.$confirm('暂无活动')
+          this.$confirm({
+            message: '您无法参与活动',
+            viceMessage: '返回主会场，更多活动等您开启'
+          })
             .finally(() => {
               this.$router.go(-1)
             })
