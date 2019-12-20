@@ -111,7 +111,8 @@ export default {
           this.checked.push(data)
         }
       } else {
-        this.checked.splice(this.checked.indexOf(data), 1)
+        let index = this.checked.indexOf(data)
+        if (index !== -1) this.checked.splice(index, 1)
       }
     },
     addNew () {
