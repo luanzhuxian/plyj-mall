@@ -14,7 +14,7 @@
               v-if="item.goodsInfo && item.goodsInfo.activityInfo"
               :class="$style.listItem"
               :key="i"
-              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id, currentProductStatus: 4} })"
+              @click="$router.push({ name: 'Lesson', params: { productId: item.goodsInfo.id}, query: { currentProductStatus: 4 } })"
             >
               <div :class="$style.time">
                 <div :class="$style.timeLeft">

@@ -353,10 +353,6 @@ export default {
     brokerId: {
       type: String,
       default: ''
-    },
-    currentProductStatus: { // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去
-      type: Number,
-      default: 1
     }
   },
   computed: {
@@ -364,6 +360,9 @@ export default {
     // 活动商品的可购买数量
     activeStock () {
         return this.activityProductModel ? this.activityProductModel.buyCount : 0
+    },
+    currentProductStatus(){// 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去
+      return (this.$route.query && this.$route.query.currentProductStatus) || 1
     },
     /**
      * 活动类型

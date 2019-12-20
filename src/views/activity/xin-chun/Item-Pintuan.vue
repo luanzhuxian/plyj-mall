@@ -2,7 +2,7 @@
   <div
     class="item"
     :class="$style.item"
-    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id, currentProductStatus: 2 } })"
+    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 2 } })"
   >
     <div :class="$style.label">
       众志成团

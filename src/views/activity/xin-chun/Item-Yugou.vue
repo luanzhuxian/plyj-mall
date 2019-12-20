@@ -2,7 +2,7 @@
   <div
     class="item"
     :class="$style.item"
-    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id, currentProductStatus: 4 } })"
+    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsInfo.id } , query: { currentProductStatus: 4 }})"
   >
     <div :class="$style.time">
       <div :class="$style.timeLeft">

@@ -37,7 +37,7 @@
               :class="$style.chunyunListProdWrapper"
               class="chunyun-list-prod-wrapper"
               tag="li"
-              :to="{ name: 'Lesson', params: { productId: prod.productId, currentProductStatus: 1 } }"
+              :to="{ name: 'Lesson', params: { productId: prod.productId, query: { currentProductStatus: 1 } } }"
             >
               <div :class="$style.chunyunListProd">
                 <div :class="$style.imgWrapper">

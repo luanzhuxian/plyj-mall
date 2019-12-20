@@ -81,7 +81,7 @@
               :class="$style.listItem"
               v-if="prod.activityInfo"
               :key="i"
-              @click="$router.push({ name: 'Lesson', params: { productId: prod.id, currentProductStatus: 3 } })"
+              @click="$router.push({ name: 'Lesson', params: { productId: prod.id }, query: { currentProductStatus: 3 } })"
             >
               <div :class="$style.imgWrapper">
                 <img :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">
