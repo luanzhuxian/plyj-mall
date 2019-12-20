@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.springPloughing">
     <div :class="$style.countdown">
-      <div :class="$style.globalEndCountdown">
+      <div :class="$style.globalEndCountdown" v-if="allEnd.s">
         <template v-if="!allEnd.wasEnded">
           <span v-if="allEnd.wasStarted">距活动结束: </span>
           <span v-else>距活动开始: </span>
@@ -425,7 +425,7 @@ export default {
     }
   }
   .global-end-countdown {
-    margin-top: 292px;
+    margin-top: 286px;
     background: none;
     > .val {
       background-color: #ffd6a7;

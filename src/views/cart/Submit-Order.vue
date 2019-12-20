@@ -1247,34 +1247,31 @@ export default {
       if (this.lessonList.length > 0 && this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
         orderType = 'FORMAL_CLASS'
       }
-      return new Promise(async (resolve, reject) => {
-        try {
-          if (CREDENTIAL.appId) {
-            await wechatPay(CREDENTIAL)
-          }
-          this.submiting = false
-          this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount }, query: { orderType } })
-          sessionStorage.removeItem('INVOICE_MODEL')
-          sessionStorage.removeItem('CONFIRM_LIST')
-          resolve()
-        } catch (e) {
-          // 支付失败
-          let vLen = this.virtualProducts.length
-          let pLen = this.physicalProducts.length
-          this.submiting = false
-          if (vLen > 1 || (pLen > 1 && vLen > 0)) {
-            this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
-          } else {
-            // 只有一种商品时，直接进入详情页
-            this.$router.replace({ name: 'OrderDetail', params: { orderId } })
-          }
-          sessionStorage.removeItem('INVOICE_MODEL')
-          sessionStorage.removeItem('CONFIRM_LIST')
-          reject(e)
-        } finally {
-          this.submiting = false
+      try {
+        if (CREDENTIAL.appId) {
+          await wechatPay(CREDENTIAL)
         }
-      })
+        this.submiting = false
+        this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount }, query: { orderType, productType: this.productType } })
+        sessionStorage.removeItem('INVOICE_MODEL')
+        sessionStorage.removeItem('CONFIRM_LIST')
+      } catch (e) {
+        // 支付失败
+        let vLen = this.virtualProducts.length
+        let pLen = this.physicalProducts.length
+        this.submiting = false
+        if (vLen > 1 || (pLen > 1 && vLen > 0)) {
+          this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+        } else {
+          // 只有一种商品时，直接进入详情页
+          this.$router.replace({ name: 'OrderDetail', params: { orderId } })
+        }
+        sessionStorage.removeItem('INVOICE_MODEL')
+        sessionStorage.removeItem('CONFIRM_LIST')
+        throw e
+      } finally {
+        this.submiting = false
+      }
     },
     noNeed () {
       this.invioceType = 0

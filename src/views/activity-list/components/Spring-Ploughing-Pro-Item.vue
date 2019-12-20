@@ -1,11 +1,22 @@
 <template>
   <!-- 春耘计划商品组件 -->
-  <div :class="$style.springPloughingProItem">
+  <div
+    :class="$style.springPloughingProItem"
+    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsId }, query: { currentProductStatus: 5 } })"
+  >
     <img :src="data.goodsImage" alt="">
     <div :class="$style.right">
       <p :class="$style.name" v-text="data.goodsName" />
-      <p :class="$style.limit">
+      <!--<p :class="$style.limit">
         数量：{{ data.count }}
+        &lt;!&ndash;{{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}&ndash;&gt;
+      </p>-->
+      <p :class="$style.sku">
+        <span v-text="data.sku1Name" />
+        <template v-if="data.sku2Name">
+          <span>, {{ data.sku2Name }}</span>
+        </template>
+        <!--数量：{{ data.count }}-->
         <!--{{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}-->
       </p>
       <p :class="$style.price">折后价：￥{{ data.amount }}</p>
@@ -50,7 +61,7 @@ export default {
     padding: 8px 0;
   }
   .name {
-    width: 300px;
+    width: 256px;
     margin-bottom: 8px;
     font-size: 28px;
     color: #fff;
@@ -60,6 +71,16 @@ export default {
     margin-bottom: 20px;
     font-size: 24px;
     color: #88DE9E;
+  }
+  .sku {
+    width: 256px;
+    margin: 8px 0 20px 0;
+    padding: 0 20px;
+    font-size: 24px;
+    line-height: 40px;
+    color: #74B06E;
+    background-color: #17560F;
+    @include elps();
   }
   .price {
     margin-bottom: 4px;

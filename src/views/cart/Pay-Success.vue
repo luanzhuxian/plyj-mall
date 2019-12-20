@@ -101,10 +101,10 @@ export default {
     ...mapGetters(['mallId', 'serverTime']),
     orderType () {
       return this.$route.query.orderType
+    },
+    productType () {
+      return this.$route.query.productType
     }
-    // showMoonCake () {
-    //   return this.mallId === '1057573777392603136'
-    // }
   },
   methods: {
     showPop (delay) {
