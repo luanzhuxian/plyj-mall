@@ -149,7 +149,6 @@ export default {
     async getTemplate () {
       try {
         const { activityId } = this
-        // const { result } = await getTemplate({ type: 2 })
         if (activityId === 0) {
           this.noFinish = true
           this.$alert('主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')

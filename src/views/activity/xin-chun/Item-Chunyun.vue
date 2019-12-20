@@ -28,13 +28,20 @@
           {{ `${data.salesVolume}人已买` }}
         </span>
       </div>
-      <div :class="$style.current" v-if="data.status === 0" @click="$router.push({ name: 'SpringPloughing' })">
-        {{ `组合价：￥${data.discountTotalPrice}` }}
+      <div :class="$style.current" @click="submitOrder(data)">
+        <template v-if="data.status === 2">
+          已结束
+        </template>
+        <template v-else>
+          <template v-if="data.stock">
+            <span v-if="data.status === 0">{{ `组合价：￥${data.discountTotalPrice}` }}</span>
+            <span v-if="data.status === 1">{{ `组合到手${data.discountTotalPrice}元` }}</span>
+          </template>
+          <template v-else>
+            太火爆，已抢空
+          </template>
+        </template>
       </div>
-      <div :class="$style.current" v-else-if="data.status === 1" @click="submitOrder(data)">
-        {{ `组合到手${data.discountTotalPrice}元` }}
-      </div>
-      <div :class="$style.current" v-else>已结束</div>
     </div>
     <div :class="[$style.cornner, $style.topLeft]" />
     <div :class="[$style.cornner, $style.topRight]" />
@@ -71,28 +78,31 @@ export default {
   },
   methods: {
     async submitOrder (item) {
-      if (this.size !== 'small') { if (!item.productModelList || !item.productModelList.length) return false }
-      const confirmList = []
-      for (let prod of item.productModelList) {
-        confirmList.push({
-          productId: prod.productId,
-          skuCode1: prod.skuCode1,
-          skuCode2: prod.skuCode2,
-          count: prod.count,
-          price: prod.price,
-          agentUser: ''
+      if (!item.stock) return false
+      if (item.status === 0) this.$router.push({ name: 'SpringPloughing' })
+      if (item.status === 1) {
+        const confirmList = []
+        for (let prod of item.productModelList) {
+          confirmList.push({
+            productId: prod.productId,
+            skuCode1: prod.skuCode1,
+            skuCode2: prod.skuCode2,
+            count: prod.count,
+            price: prod.price,
+            agentUser: ''
+          })
+        }
+        sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
+        await this.$router.push({
+          name: 'SubmitOrder',
+          query: {
+            isCart: 'YES',
+            activeProduct: 5,
+            preActivity: 2,
+            activityId: item.id
+          }
         })
       }
-      sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
-      await this.$router.push({
-        name: 'SubmitOrder',
-        query: {
-          isCart: 'YES',
-          activeProduct: 5,
-          preActivity: 2,
-          activityId: item.id
-        }
-      })
     }
   }
 }
