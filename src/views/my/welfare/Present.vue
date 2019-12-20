@@ -174,8 +174,12 @@ export default {
     }
   },
   async activated () {
-    this.activeId = 0 // 打开'我的礼品'页面后，默认进入第一个Tab
-    this.getList()
+    try {
+      this.activeId = 0 // 打开'我的礼品'页面后，默认进入第一个Tab
+      this.getList()
+    } catch (e) {
+      throw e
+    }
   },
   deactivated () {
     clearInterval(this.timer)
