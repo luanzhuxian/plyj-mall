@@ -37,7 +37,7 @@
                 {{ `(有效期至${getDate(item.goodsInfo.useEndTime, 'YYYY.MM.DD')})` }}
               </p>
             </div>
-            <div :class="$style.right">
+            <div :class="$style.right" @click.stop="getCoupon(item)">
               免费领取
             </div>
           </li>
@@ -49,6 +49,9 @@
 
 <script>
 import moment from 'moment'
+import { receiveCoupon } from '../../../apis/my-coupon'
+
+let isClickable = false
 
 export default {
   name: 'Coupon',
@@ -67,6 +70,20 @@ export default {
     getDate (val, format) {
       if (!val) return
       return moment(val).format(format)
+    },
+    async getCoupon ({ goodsInfo = {} }) {
+      const { id } = goodsInfo
+      if (isClickable) return
+      if (!id) return
+      isClickable = true
+      try {
+        await receiveCoupon({ couponId: id })
+        this.$success('领取成功！')
+      } catch (e) {
+        throw e
+      } finally {
+        setTimeout(() => (isClickable = false), 500)
+      }
     }
   }
 }

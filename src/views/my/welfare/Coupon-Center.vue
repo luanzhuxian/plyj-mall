@@ -81,7 +81,6 @@ export default {
       if (this.isCouponLoading) return
       let id = item.id
       if (!id) { // TODO.Echo无Id时弹框提示，并打印当前优惠券信息
-        console.log(item)
         return this.$warning('请刷新页面')
       }
       try {

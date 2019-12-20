@@ -14,6 +14,9 @@
           @done="data.values[0].status += 1"
         />
       </div>
+      <p :class="$style.link">
+        查看计划礼包 >
+      </p>
     </router-link>
     <ul
       v-if="data.values.length && data.values[0].combinationDetailList && data.values[0].combinationDetailList.length"
@@ -156,6 +159,15 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+    .link {
+      position: absolute;
+      top: 390px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 26px;
+      font-family: Microsoft YaHei;
+      color: #184B28;
     }
   }
   &-list {
