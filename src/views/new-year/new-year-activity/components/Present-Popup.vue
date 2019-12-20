@@ -42,8 +42,8 @@
               </div>
             </div>
             <div class="info">
-              <p>{{ awardTypeDesc[currentPresentDetail.awardType] }}已经自动存入您的{{ awardPackage[currentPresentDetail.awardType] }}</p>
-              <p>您可在{{ awardPackage[currentPresentDetail.awardType] }}中查看</p>
+              <p>{{ awardTypeDesc[currentPresentDetail.awardType] }}已经自动存入您的“{{ awardPackage[currentPresentDetail.awardType] }}”</p>
+              <p>您可在“{{ awardPackage[currentPresentDetail.awardType] }}”中查看</p>
             </div>
             <div class="footer">
               <button class="accept" @click="close">开心收下</button>
