@@ -653,7 +653,7 @@ export default {
       redeemCodeModels: [],
       activityData: {},
       isStart: false, // 如果时预购商品，单表是否已到付尾款时间，true 已到 false 未到
-      activeProduct: 1, // 1普通订单，2团购订单，3秒杀订单，4.预购订单， 5优惠卷订单
+      activeProduct: 1, // 1普通订单，2团购订单，3秒杀订单，4.预购订单， 5春耘订单
       orderStatusAlias: '',
       shippingAddress: {
         realName: ' ',
@@ -1071,7 +1071,8 @@ export default {
     },
     async cancelOrder (reason) {
       try {
-        await this.$confirm('订单一旦取消，将无法恢复，确认要取消订单？')
+        const isCombinedOrder = this.activeProduct === 5
+        await this.$confirm(isCombinedOrder ? '是否取消该订单，取消后春耘组合订单将同步取消？' : '订单一旦取消，将无法恢复 确认要取消订单？')
         await cancelOrder(this.orderId, reason)
         this.$success('交易关闭')
         this.getDetail()

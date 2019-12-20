@@ -275,7 +275,12 @@ export default {
           if (this.status === 'ALL_ORDER') {
             order.status = 'CLOSED'
           } else if (this.status === 'WAIT_PAY') {
-            this.orderList.splice(index, 1)
+            const isCombinedOrder = order.activeProduct === 5
+            if (isCombinedOrder) {
+              this.$refresh()
+            } else {
+              this.orderList.splice(index, 1)
+            }
           }
         }
       }
@@ -458,16 +463,23 @@ export default {
     async cancelOrder (item, index) {
       const orderId = item.id
       const { orderStatus } = this.form
+      // 5-代表春耘订单
+      const isCombinedOrder = item.activeProduct === 5
       try {
         const reason = await this.showPicker()
-        await this.$confirm('订单一旦取消，将无法恢复 确认要取消订单？')
+        await this.$confirm(isCombinedOrder ? '是否取消该订单，取消后春耘组合订单将同步取消？' : '订单一旦取消，将无法恢复 确认要取消订单？')
         await cancelOrder(orderId, reason)
         this.$success('交易关闭')
         if (orderStatus === 'ALL_ORDER') {
           item.status = 'CLOSED'
           item.statusText = '已关闭'
         } else {
-          this.orderList.splice(index, 1)
+          // 取消组合订单中的所有相关订单，干脆直接刷新页面
+          if (isCombinedOrder) {
+            this.$refresh()
+          } else {
+            this.orderList.splice(index, 1)
+          }
         }
       } catch (e) {
         throw e
