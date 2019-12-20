@@ -216,8 +216,9 @@ export default {
   [type.GET_ACTIVITY_DATA]: async ({ commit }, params) => {
     try {
       let { result } = await getTemplate({ type: 2 })
-      result = result || (result = { type: 0 })
+      result = result || { type: 0 } // 没有装修主会场, 将模板id置0
       commit(type.GET_ACTIVITY_DATA, result)
+      commit(type.SET_CURRENT_TIME, result.currentTime || Date.now())
       return result.type
     } catch (e) {
       throw e

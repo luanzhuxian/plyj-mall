@@ -100,5 +100,8 @@ export default {
   },
   [type.SET_NW_EVENT] (state, payload) {
     state.nwEvent = payload && payload.length ? payload[0] : {}
+  },
+  [type.SET_CURRENT_TIME] (state, payload) {
+    state.currentTime = payload
   }
 }

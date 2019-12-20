@@ -16,8 +16,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 import { getServerTime } from '../../../apis/base-api'
+
+let currentTime
 
 export default {
   name: 'CountDown',
@@ -66,17 +69,16 @@ export default {
   data () {
     return {
       show: false,
-      cts: 0,
+      duration: 0,
       d: 0,
       h: 0,
       m: 0,
       s: 0,
-      start: 0,
-      end: 0,
       timer: null
     }
   },
   computed: {
+    ...mapGetters(['currentTime']),
     isSecondsShow () {
       return this.format.includes('ss')
     },
@@ -97,29 +99,29 @@ export default {
   },
   methods: {
     async init () {
-      let { result } = await getServerTime()
-      this.cts = Number(result)
-      if (this.cts && this.timestamp) {
-        this.start = Math.min(this.cts, this.timestamp)
-        this.end = Math.max(this.cts, this.timestamp)
+      currentTime = Number(this.currentTime)
+      if (!currentTime || Math.abs(Date.now() - Number(currentTime)) > 1000) {
+        let { result } = await getServerTime()
+        currentTime = Number(result)
+      }
+      if (currentTime && this.timestamp) {
+        this.duration = Math.abs(this.timestamp - currentTime)
         this.show = true
         this.countdown()
       }
     },
     countdown () {
-      this.setTime(this.end - this.start)
+      this.setTime(this.duration)
       if (this.timer) {
         clearInterval(this.timer)
       }
       this.timer = setInterval(() => {
-        this.end -= 1000
-        if (this.end - this.start <= 0) {
-          // clearInterval(timer)
-          // this.show = false
+        this.duration -= 1000
+        if (this.duration <= 0) {
           this.clear()
           this.$emit('done', true)
         }
-        this.setTime(this.end - this.start)
+        this.setTime(this.duration)
       }, 1000)
     },
     setTime (duration) {

@@ -52,5 +52,6 @@ export default {
   xinchunCouponTotal: state => state.xinchunCouponTotal,
   invitingEvent: state => state.invitingEvent,
   jxEvent: state => state.jxEvent,
-  nwEvent: state => state.nwEvent
+  nwEvent: state => state.nwEvent,
+  currentTime: state => state.currentTime
 }

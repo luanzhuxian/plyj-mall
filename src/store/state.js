@@ -106,5 +106,6 @@ export default {
   xinchunCouponTotal: null, // 已领新春优惠卷
   invitingEvent: null, // 邀新有礼
   jxEvent: null, // 见学之路
-  nwEvent: null // 新春年味
+  nwEvent: null, // 新春年味
+  currentTime: 0 // 服务器时间
 }
