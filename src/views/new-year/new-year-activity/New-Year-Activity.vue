@@ -40,8 +40,7 @@
         <div class="join-activity">
           <div class="control-top">
             <button v-if="!activityIsOver && !activityIsStart">活动未开始</button>
-            <button v-else-if="!activityIsOver && activityIsStart && !hasParticipate" @click="hasParticipate = true">立即参加活动</button>
-            <div class="desc-control" v-else-if="!activityIsOver && activityIsStart && hasParticipate">
+            <div class="desc-control" v-else-if="!activityIsOver && activityIsStart">
               <!-- 获得我的年味，显示条件: 上一个年味礼品已被领取 + 当前图标为年味图标 + 当前图标未签到/已签到但是没有礼品 -->
               <template v-if="previousPresentIsReceive && currentSignIn.name && (!currentSignIn.hasSignin || (currentSignIn.hasSignin && !currentSignIn.hasAward))">
                 <p class="no-padding">
@@ -280,7 +279,6 @@ export default {
       isShare: false, // 是否为分享页面
       activityIsStart: false, // 当前活动是否开始
       activityIsOver: false, // 活动是否已结束
-      hasParticipate: false, // 是否已经参与活动
       isShowSharePoster: false, // 是否显示分享海报
       isShowRule: false, // 是否显示活动规则
       isShowPresentPopup: false, // 是否显示中奖提示
@@ -558,9 +556,6 @@ export default {
           let item = presentList[i]
           notes.splice(item.presentIndex + 1, 0, item)
         }
-
-        // 只要存在一个签到,即表示已经参与活动
-        if (this.activeDetail.nextSigninNote !== 1) this.hasParticipate = true
 
         this.signInIconList = notes
 
