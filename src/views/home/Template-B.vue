@@ -11,12 +11,6 @@
     <div :class="$style.container">
       <search :class="$style.search" placeholder="搜索商品" />
       <banner :class="$style.banner" :data="BANNER" />
-      <div :class="$style.shuang12">
-        <img
-          src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png.png"
-          @click="$router.push({ name: 'DoubleTwelveDay' })"
-        >
-      </div>
       <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
       <live :class="$style.live" v-if="isLiveShow" />
       <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
@@ -261,13 +255,5 @@ export default {
   .propagate {
     padding: 24px 24px 0;
     background-color: #F4F5F9;
-  }
-  .shuang12 {
-    padding: 20px 24px 0;
-    background-color: #F4F5F9;
-    img {
-      display: block;
-      width: 100%;
-    }
   }
 </style>
