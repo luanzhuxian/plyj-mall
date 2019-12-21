@@ -95,7 +95,7 @@ export default {
   },
   async activated () {
     try {
-      await promise.timeout(3500)
+      await promise.timeout(10000)
       const { result } = await checkGetGift(this.orderId)
       if (result) {
         this.$confirm({
