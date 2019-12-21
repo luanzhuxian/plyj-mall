@@ -380,7 +380,7 @@ export default {
           bottom: 40px;
           left: 50%;
           transform: translateX(-50%);
-          font-size: 20px;
+          font-size: 24px;
           color: #FFDCB3;
         }
       }
