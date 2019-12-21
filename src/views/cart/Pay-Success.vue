@@ -53,6 +53,7 @@ import youLike from './../home/components/YouLike.vue'
 // import WWEC from './../../components/WWEC.vue'
 import { mapGetters } from 'vuex'
 import { checkGetGift } from '../../apis/order-manager'
+import { promise } from '../../assets/js/util'
 // import moment from 'moment'
 export default {
   name: 'PaySuccess',
@@ -94,6 +95,7 @@ export default {
   },
   async activated () {
     try {
+      await promise.timeout(3500)
       const { result } = await checkGetGift(this.orderId)
       if (result) {
         this.$confirm({

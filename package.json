@@ -3,7 +3,7 @@
   "version": "2.1.10",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve --model local",
+    "start": "vue-cli-service serve --model local --s",
     "build": "vue-cli-service build --model production",
     "build:dev": "vue-cli-service build --model development",
     "lint": "vue-cli-service lint",

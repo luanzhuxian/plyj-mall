@@ -999,7 +999,7 @@ export default {
       let waitPayTime = 0
       let now = Number(result.currentServerTime) // 服务器时间
       if (activeProduct === 1 || activeProduct === 0) {
-        waitPayTime = 24 * 60 * 60 * 1000
+        waitPayTime = 24 * 60 * 60 * 1000 // 24小时
       } else if (activeProduct === 4 && orderStatus === 'WAIT_PAY_REPAYMENT') {
         // 预购倒计时逻辑
         let useStartTime = moment((result.activityData.useStartTime)).valueOf()
@@ -1017,14 +1017,14 @@ export default {
         this.countDown(waitPayTime, orderStatus)
         return
       } else {
-        waitPayTime = 5 * 60 * 1000
+        waitPayTime = 5 * 60 * 1000 // 活动商品未付款5分钟
       }
       // 开始时间，如果是待付款，取订单创建时间，如果是其他状态（待发货），取发货时间
       let time = orderStatus === 'WAIT_PAY' ? result.tradingInfoModel.createTime : result.logisticsInfoModel.shipTime
       let duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
       let startTime = moment(time).valueOf()
       if (now - startTime < duration) {
-        this.countDown(duration + startTime - now - 2000, orderStatus)
+        this.countDown(duration + startTime - now + 2000, orderStatus)
       }
     },
     /**
