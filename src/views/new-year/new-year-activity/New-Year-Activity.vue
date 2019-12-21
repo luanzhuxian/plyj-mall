@@ -623,6 +623,15 @@ export default {
         result.formatStartTime = moment(result.startTime).format('YYYY-MM-DD')
         result.formatEndTime = moment(result.endTime).format('YYYY-MM-DD')
         result.price = result.awardType === 3 || result.awardType === 4 ? result.awardName.split('减')[1] : 0
+        if ([3, 4].indexOf(result.awardType) !== -1) {
+          let priceList = (result.awardName).match(/(\d+\.?\d*)/gi)
+          result.price = (priceList && priceList.length > 1 && priceList[1]) || 0
+          result.couponName = `满${priceList[0]}减${result.price}`
+        }
+        if ([2].indexOf(result.awardType) !== -1) {
+          let priceList = (result.awardName).match(/(\d+\.?\d*)/gi)
+          result.price = (priceList && priceList.length && priceList[0]) || 0
+        }
         this.currentPresentDetail = result
         /* ********修改相应的参数，不刷新页面******** */
         this.currentSignIn.awardType = result.awardType
