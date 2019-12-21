@@ -24,11 +24,6 @@
       </swiper-slide>
       <div class="home-banner-pagination" slot="pagination" />
     </swiper>
-    <img
-      :class="$style.shuang12"
-      src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png.png" alt=""
-      @click="$router.push({ name: 'DoubleTwelveDay' })"
-    >
     <div :class="$style.gift" v-if="data['MODULE_A'].values.length">
       <div :class="$style.head">
         <div :class="$style.title">
@@ -316,10 +311,5 @@ export default {
       transform: rotate(45deg);
       border-radius: 4px;
     }
-  }
-  .shuang12 {
-    display: block;
-    width: 704px;
-    margin: 20px auto;
   }
 </style>
