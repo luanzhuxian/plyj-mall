@@ -4,8 +4,8 @@
     <div class="main">
       <div class="list book-ing" v-if="ingList.length > 0">
         <div class="head">
-          <pl-icon name="icon-ing_icon" color="#fff" size="52" />
-          <pl-icon name="icon-ing_text" color="#fff" size="52" />
+          <pl-svg name="icon-ing_icon" width="52" />
+          <pl-svg name="icon-ing_text" width="180" height="52" />
         </div>
         <div class="item book-item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
           <count-down
@@ -22,15 +22,16 @@
               <div class="tips book-tips">预售到手价：{{ getTotalPrice(item) }}元</div>
               <div class="book-bottom">
                 <span>预交定金￥{{ item.price }}</span>
-                <span v-if="item.multipleNumber > 1 && item.multiple">抵￥{{ item.price * item.multipleNumber }}</span></div>
+                <span v-if="item.price && item.multiple && item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="list book-coming" v-if="comingList.length > 0">
         <div class="head">
-          <pl-icon name="icon-coming_icon" color="#fff" size="52" />
-          <pl-icon name="icon-coming_text" color="#fff" size="52" />
+          <pl-svg name="icon-coming_icon" width="52" />
+          <pl-svg name="icon-coming_text" width="135" height="52" />
         </div>
         <div class="item book-item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
           <count-down
@@ -47,7 +48,7 @@
               <div class="tips book-tips">预售到手价：{{ getTotalPrice(item) }}元</div>
               <div class="book-bottom">
                 <span>预交定金￥{{ item.price }}</span>
-                <span v-if="item.multiple && item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span>
+                <span v-if="item.price && item.multiple && item.multipleNumber > 1">抵￥{{ item.price * item.multipleNumber }}</span>
               </div>
             </div>
           </div>
@@ -106,7 +107,7 @@ export default {
   methods: {
     async getList () {
       try {
-        let { result } = await bookActivityPage()
+        let { result } = await bookActivityPage({ type: '2019_01' })
         if (!result[0].length && !result[1].length) {
           this.$alert({
             message: '暂无数据',
@@ -126,7 +127,7 @@ export default {
       }
     },
     jumpToDetail (id) {
-      this.$router.push({ name: 'Lesson', params: { productId: id, currentProductStatus: 4 } })
+      this.$router.push({ name: 'Lesson', params: { productId: id }, query: { currentProductStatus: 4 } })
     },
     getTotalPrice (item) {
       const { productPrice, price, multipleNumber = 1 } = item

@@ -53,7 +53,7 @@
       }"
     >
       <span>点击这里，添加一个新地址</span>
-      <pl-svg name="add" />
+      <pl-svg name="icon-add" fill="#fff" />
     </router-link>
   </div>
 </template>

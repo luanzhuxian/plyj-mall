@@ -64,21 +64,26 @@ export default {
       this.emitChange(temp)
     },
     valueChange (e) {
-      let val = Number.parseInt(e.target.value)
+      let val = Number.parseInt(e.currentTarget.value)
       if (val && (val <= this.max && val >= this.min)) {
         this.emitChange(val)
       } else {
         e.target.value = this.localCount
       }
     },
+    /**
+     * 数值改变事件
+     * @param count {number} 即将改变的值
+     */
     emitChange (count) {
       this.loading = true
-      /*
-        * 触发change事件，在外部调用回调函数后，再改变localCount，并且可以指定localCount
-        * */
-      this.$emit('change', count, (err, number) => {
+      /**
+       * 触发change事件，在外部调用回调函数后，再改变localCount，并且可以指定localCount
+       * 如果err存在，则不改变当前数值
+       */
+      this.$emit('change', count, (err) => {
         if (!err) {
-          this.localCount = number || count
+          this.localCount = count
         }
         this.loading = false
       })

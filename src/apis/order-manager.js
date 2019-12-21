@@ -42,10 +42,7 @@ export function physicalorderShipmentPublic (orderSn) {
 export const getOrderList = ({ current, size, orderStatus }) => axios.get(`/apis/v1/order/current/user/page?current=${current}&size=${size}&orderStatus=${orderStatus}`)
 
 // 查看每种订单的数量
-export function orderPhysicalorderSummary (userId) {
-  // return axios.get(`/apis/v1/order/ordermanager/summary/${userId}`)
-  return axios.get(`/apis/v1/order/current/user`)
-}
+export const orderPhysicalorderSummary = () => axios.get(`/apis/v1/order/current/user`)
 // 订单详情
 export const getOrderDetail = (orderSn) => axios.get(`/apis/v1/order/detail/${orderSn}?source=1`)
 
@@ -112,3 +109,15 @@ export const setVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpb
  * @return {*}
  */
 export const waitPayBalance = params => axios.get(`/apis/v1/order/current/user/pre/page`, { params })
+/**
+ * 获取待付尾款订单支付信息
+ * @param orderSn {string}
+ * @return {*}
+ */
+export const getWaitPayBalanceInfo = orderSn => axios.post(`/apis/v1/order/preOrderSecondaryPayment/${orderSn}`)
+/**
+ * 检查购买后是否领到礼物
+ * @param orderSn
+ * @return {*}
+ */
+export const checkGetGift = orderSn => axios.get(`/apis/v1/order/gift?orderId=${orderSn}`)

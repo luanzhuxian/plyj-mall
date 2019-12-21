@@ -3,7 +3,7 @@
     <div :class="$style.top">
       <pl-svg
         :class="$style.icon"
-        :name="orderType === 'FORMAL_CLASS' ? 'signup-success' : 'pay-success'"
+        :name="orderType === 'FORMAL_CLASS' ? 'icon-signup-success' : 'icon-pay-success'"
       />
       <p :class="$style.tip1">
         <span v-if="orderType === 'FORMAL_CLASS'">报名/学习成功</span>
@@ -31,11 +31,11 @@
         完成，返回首页
       </pl-button>
     </div>
-    <transition name="fade">
+    <!--<transition name="fade">
       <div :class="$style.haibao" v-if="haibao">
         <img @click="haibao = ''" :src="haibao" alt="">
       </div>
-    </transition>
+    </transition>-->
     <!--<img
       v-if="showMoonCake"
       style="width: 100%; display: block; margin-top: 46px;"
@@ -52,7 +52,9 @@
 import youLike from './../home/components/YouLike.vue'
 // import WWEC from './../../components/WWEC.vue'
 import { mapGetters } from 'vuex'
-import moment from 'moment'
+import { checkGetGift } from '../../apis/order-manager'
+import { promise } from '../../assets/js/util'
+// import moment from 'moment'
 export default {
   name: 'PaySuccess',
   components: {
@@ -61,24 +63,25 @@ export default {
   },
   data () {
     return {
-      haibao: '',
+      checkCount: 0
+      // haibao: '',
       // show820: false,
-      data88: {
-        '1530139721': {
-          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
-          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif',
-          startTime: 1564588800000, // 2019-08-01 00:00:00
-          endTime: 1568563199000 // 2019-09-15 23:59:59
-        },
-        '1532969341': {
-          haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
-          pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
-          gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif',
-          startTime: 1564588800000, // 2019-08-01 00:00:00
-          endTime: 1567267199000 // 2019-08-31 23:59:59
-        }
-      }
+      // data88: {
+      //   '1530139721': {
+      //     haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
+      //     pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
+      //     gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif',
+      //     startTime: 1564588800000, // 2019-08-01 00:00:00
+      //     endTime: 1568563199000 // 2019-09-15 23:59:59
+      //   },
+      //   '1532969341': {
+      //     haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
+      //     pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
+      //     gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif',
+      //     startTime: 1564588800000, // 2019-08-01 00:00:00
+      //     endTime: 1567267199000 // 2019-08-31 23:59:59
+      //   }
+      // }
     }
   },
   props: {
@@ -91,8 +94,13 @@ export default {
       default: 1
     }
   },
-  activated () {
-    this.showPop(500)
+  async activated () {
+    try {
+      await this.checkGift()
+    } catch (e) {
+      throw e
+    }
+    // this.showPop(500)
     // if (this.mallId === '1057573777392603136') {
     //   this.show820 = true
     // }
@@ -101,22 +109,46 @@ export default {
     ...mapGetters(['mallId', 'serverTime']),
     orderType () {
       return this.$route.query.orderType
+    },
+    productType () {
+      return this.$route.query.productType
     }
-    // showMoonCake () {
-    //   return this.mallId === '1057573777392603136'
-    // }
   },
   methods: {
-    showPop (delay) {
-      let serverTime = moment(this.serverTime).valueOf()
-      let mallId = this.mallId
-      let data = this.data88[mallId]
-      if (data && data.startTime <= serverTime && data.endTime >= serverTime) {
-        setTimeout(() => {
-          this.haibao = this.data88[mallId].haibao
-        }, delay)
+    async checkGift () {
+      this.checkCount++
+      try {
+        await promise.timeout(1000)
+        const { result } = await checkGetGift(this.orderId)
+        if (result) {
+          this.$confirm({
+            message: '领取礼品成功！',
+            viceMessage: '您已成功领取礼品，请前往“我的礼品”进行查看',
+            confirmText: '立即前往'
+          })
+            .then(async () => {
+              await this.$router.push({ name: 'MyPresent' })
+            })
+            .catch(() => {})
+        } else if (this.checkCount <= 10) {
+          this.checkGift()
+        } else {
+          this.checkCount = 0
+        }
+      } catch (e) {
+        throw e
       }
     }
+    // showPop (delay) {
+    //   let serverTime = moment(this.serverTime).valueOf()
+    //   let mallId = this.mallId
+    //   let data = this.data88[mallId]
+    //   if (data && data.startTime <= serverTime && data.endTime >= serverTime) {
+    //     setTimeout(() => {
+    //       this.haibao = this.data88[mallId].haibao
+    //     }, delay)
+    //   }
+    // }
   },
   beforeRouteEnter (to, from, next) {
     let { orderId } = to.params
@@ -146,6 +178,7 @@ export default {
 }
 .icon {
   width: 148px;
+  height: 148px;
 }
 .tip1 {
   margin-top: 20px;
@@ -163,7 +196,7 @@ export default {
   font-size: 30px;
   color: #387af6;
 }
-.haibao {
+/*.haibao {
   position: fixed;
   top: 0;
   left: 0;
@@ -181,5 +214,5 @@ export default {
     width: 90%;
     justify-items: flex-start !important;
   }
-}
+}*/
 </style>

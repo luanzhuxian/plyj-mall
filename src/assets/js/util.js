@@ -1,20 +1,5 @@
 // const qrcode = require('../../../static/lib/qrcode/index')
 import moment from 'moment'
-export function createObjectUrl (blob) {
-  let url
-  if (window.createObjectURL) { // basic
-    url = window.createObjectURL(blob)
-  } else if (window.URL) { // mozilla(firefox)
-    url = window.URL.createObjectURL(blob)
-  } else if (window.webkitURL) { // webkit or chrome
-    url = window.webkitURL.createObjectURL(blob)
-  }
-  return url
-}
-export function revokeObjectURL (URL) {
-  window.URL.revokeObjectURL(URL)
-}
-
 /**
  * 大小数字
  * @param n {number} 要转换的数字
@@ -51,19 +36,6 @@ export class DelayExec {
       }, this.time)
     })
   }
-}
-
-export function setSession (key, data) {
-  sessionStorage.setItem(key, JSON.stringify(data))
-}
-export function getSession (key) {
-  return JSON.parse(sessionStorage.getItem(key) || '{}')
-}
-export function setLocalStorage (key, data) {
-  localStorage.setItem(key, JSON.stringify(data))
-}
-export function getLocalStorage (key) {
-  return JSON.parse(localStorage.getItem(key) || '{}')
 }
 /*
 * template: 字段模板
@@ -163,18 +135,6 @@ export function isDef (value) {
 export function isObj (x) {
   const type = typeof x
   return x !== null && (type === 'object' || type === 'function')
-}
-
-export function isNumber (value) {
-  return /^\d+$/.test(value)
-}
-
-export function suffixPx (value) {
-  if (!isDef(value)) {
-    return undefined
-  }
-  value = String(value)
-  return isNumber(value) ? `${value}px` : value
 }
 
 export function isIOS () {
@@ -370,18 +330,26 @@ export function drawRoundRect (ctx, x, y, width, height, radius, strokeStyle, fi
 }
 
 /**
- * 倒计时
- * @param duration {number} 倒计时时长, 毫秒值
- * @param callback {function} 接收倒计时数据
+ * 倒计时类
+ * 每次使用，必须new一个实例
+ * @class
  */
-export class countdown {
+export class Countdown {
   timer = 0
   total = 0
+  /**
+   * 倒计时构造函数
+   * 退出页面时，需求要停止每个定时器实例
+   * @constructor
+   * @param duration {number} 倒计时时长, 毫秒值
+   * @param callback {function} 接收倒计时数据
+   */
   constructor (duration, callback) {
     this.duration = duration
     this.total = duration
     this.callback = callback
   }
+  // 启动
   start () {
     // 总时间如果小于等于0，不能启动倒计时
     if (!this.total || this.total < 0) {
@@ -389,18 +357,24 @@ export class countdown {
     }
     let duration = this.duration
     if (duration <= 0) {
+      // 如果回调接收到null，说明倒计时已结束，需要在外部做出相应的逻辑处理
       this.callback(null)
       return
     }
-    let { _data } = moment.duration(duration)
-    this.callback(_data)
+    const { _data: data } = moment.duration(duration)
+    data.days = data.years * 365 + data.months * moment().daysInMonth() + data.days
+    delete data.years
+    delete data.months
+    this.callback(data)
     this.timer = setTimeout(() => {
       this.duration -= 1000
       this.start()
     }, 1000)
   }
+  // 手动停止
   stop () {
     clearTimeout(this.timer)
+    this.callback = null
   }
 }
 
@@ -421,4 +395,14 @@ export function loadImage (src) {
       reject(new Error('图片加载错误'))
     }
   })
+}
+
+export const promise = {
+  timeout (ms) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve()
+      }, ms)
+    })
+  }
 }

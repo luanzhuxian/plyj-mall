@@ -110,7 +110,7 @@ export default {
       width: 230px;
       text-align: center;
       font-size: 30px;
-      color: var(--primary-color);
+      color: $--primary-color;
       text-decoration: underline;
       background: none;
       border: none;

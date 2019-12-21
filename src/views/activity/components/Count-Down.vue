@@ -1,26 +1,26 @@
 <template>
   <div
     v-show="show"
-    :class="{
-      [$style.countDown]: true,
-      [$style[size]]: true
+    :class="['count-down', size, (!!background ? 'bg' : '')]"
+    :style="{
+      color,
+      '--background': background
     }"
-    :style="{ color }"
   >
     <span v-if="textBefore">{{ textBefore }}</span>
-    <!-- <div :class="$style.time" v-if="Number(d)">
-      <i>{{ d }}</i><span>天</span><i v-if="h" v-text="h" /><span v-if="h">时</span>
-    </div> -->
-    <div :class="$style.time">
-      <i v-if="d">{{ d }}</i><span v-if="d">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span v-if="!d">:</span><i v-if="!d" v-text="s" />
+    <div class="time">
+      <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span v-if="isSecondsShow || !isDayShow">:</span><i v-if="isSecondsShow || !isDayShow" v-text="s" />
     </div>
     <span v-if="textAfter">{{ textAfter }}</span>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 import { getServerTime } from '../../../apis/base-api'
+
+let currentTime
 
 export default {
   name: 'CountDown',
@@ -45,6 +45,14 @@ export default {
       type: String,
       default: '#FFF'
     },
+    format: {
+      type: String,
+      default: 'HH:mm:ss'
+    },
+    background: {
+      type: String,
+      default: ''
+    },
     fields: {
       type: [Number, String],
       default: ''
@@ -61,14 +69,21 @@ export default {
   data () {
     return {
       show: false,
-      cts: 0,
+      duration: 0,
       d: 0,
       h: 0,
       m: 0,
       s: 0,
-      start: 0,
-      end: 0,
       timer: null
+    }
+  },
+  computed: {
+    ...mapGetters(['currentTime']),
+    isSecondsShow () {
+      return this.format.includes('ss')
+    },
+    isDayShow () {
+      return this.d && this.d !== '00'
     }
   },
   watch: {
@@ -84,34 +99,34 @@ export default {
   },
   methods: {
     async init () {
-      let { result } = await getServerTime()
-      this.cts = Number(result)
-      if (this.cts && this.timestamp) {
-        this.start = Math.min(this.cts, this.timestamp)
-        this.end = Math.max(this.cts, this.timestamp)
+      currentTime = Number(this.currentTime)
+      if (!currentTime || Math.abs(Date.now() - Number(currentTime)) > 1000) {
+        let { result } = await getServerTime()
+        currentTime = Number(result)
+      }
+      if (currentTime && this.timestamp) {
+        this.duration = Math.abs(this.timestamp - currentTime)
         this.show = true
         this.countdown()
       }
     },
     countdown () {
-      this.setTime(this.end - this.start)
+      this.setTime(this.duration)
       if (this.timer) {
         clearInterval(this.timer)
       }
       this.timer = setInterval(() => {
-        this.end -= 1000
-        if (this.end - this.start <= 0) {
-          // clearInterval(timer)
-          // this.show = false
+        this.duration -= 1000
+        if (this.duration <= 0) {
           this.clear()
           this.$emit('done', true)
         }
-        this.setTime(this.end - this.start)
+        this.setTime(this.duration)
       }, 1000)
     },
     setTime (duration) {
       let { _data } = moment.duration(duration)
-      this.d = Math.floor(moment.duration(duration).asDays())
+      this.d = String(Math.floor(moment.duration(duration).asDays())).padStart(2, '0')
       this.h = String(_data.hours).padStart(2, '0')
       this.m = String(_data.minutes).padStart(2, '0')
       this.s = String(_data.seconds).padStart(2, '0')
@@ -129,7 +144,7 @@ export default {
 }
 </script>
 
-<style module lang="scss">
+<style lang="scss" scoped>
   .count-down {
     box-sizing: border-box;
     display: flex;
@@ -143,21 +158,58 @@ export default {
     > .time {
       display: flex;
       > i {
+        box-sizing: border-box;
         display: inline-block;
         text-align: center;
       }
     }
     &.small {
+      font-size: 24px;
+      line-height: 36px;
+      &.bg {
+        .time {
+          > span {
+            padding: 0 5px;
+          }
+          > i {
+            width: 40px;
+            height: 36px;
+            background: var(--background);
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+    &.middle {
+      font-size: 28px;
+      line-height: 40px;
       .time {
+        > span {
+          padding: 0 8px;
+          color: var(--background);
+        }
         > i {
-          box-sizing: border-box;
-          margin: 0 5px;
-          padding: 4px;
           width: 40px;
-          height: 35px;
-          line-height: 30px;
-          background: rgba(174, 174, 174, 0.64);
-          border-radius: 4px;
+          height: 40px;
+          background: var(--background);
+          border-radius: 6px;
+        }
+      }
+    }
+    &.medium {
+      font-size: 32px;
+      line-height: 46px;
+      .time {
+        > span {
+          padding: 0 8px;
+          color: var(--background);
+        }
+        > i {
+          width: 46px;
+          height: 46px;
+          background: var(--background);
+          border-radius: 10px;
+          font-weight: bold;
         }
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.schoolShow">
     <div :class="$style.moduleTitle">
-      <pl-svg :class="$style.moduleIcon" name="school_show" />
+      <pl-svg :class="$style.moduleIcon" name="icon-school_show" height="36" />
       <span :class="$style.title" v-text="data.titleName" />
     </div>
     <p v-for="(item, i) of data.mediaDetailModelList" :key="i">
@@ -20,11 +20,11 @@ export default {
     }
   },
   async mounted () {
-    let data = JSON.parse(sessionStorage.getItem('PINGXUAN'))
+    let data = JSON.parse(sessionStorage.getItem('PIN_XUAN'))
     if (!data) {
       try {
         let { result } = await getData()
-        sessionStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
+        sessionStorage.setItem('PIN_XUAN', JSON.stringify(result.mallBrandingRequestModels))
         this.data = result.mallBrandingRequestModels.find(item => item.type === 1)
       } catch (e) {
         throw e

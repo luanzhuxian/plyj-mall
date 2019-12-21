@@ -43,6 +43,15 @@ export default {
   cartCount: state => state.cartCount,
   noticeStatus: state => state.aduitNotice.noticeStatus,
   aduitStatus: state => state.aduitNotice.status,
-  isActivityAuth: state => state.isActivityAuth,
-  skinId: state => state.skinId
+  activityData: state => state.activityData,
+  activityId: state => state.activityData.type,
+  isActivityAuth: state => !!state.activityData.type,
+  skinId: state => state.skinId,
+  liveInfo: state => state.liveInfo,
+  d12CouponTotal: state => state.d12CouponTotal,
+  xinchunCouponTotal: state => state.xinchunCouponTotal,
+  invitingEvent: state => state.invitingEvent,
+  jxEvent: state => state.jxEvent,
+  nwEvent: state => state.nwEvent,
+  currentTime: state => state.currentTime
 }

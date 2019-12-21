@@ -23,7 +23,7 @@
           :name="item.productName"
           :count="item.count"
           :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-          :price="item.price"
+          :price="activeProduct === 5 ? item.originPrice : item.price"
           :support-refund="item.supportRefund"
           :gap="32"
           :product-type="1"
@@ -54,6 +54,14 @@
             ¥ {{ freight }}
           </span>
         </div>
+
+        <div :class="$style.infoItem" v-if="isCart && activeProduct === 5 && detail.discount !== 10">
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">春耘折扣</span>
+            <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice * 100000000000000000000 - physicalProductPrice * 100000000000000000000) / 100000000000000000000 }}</span>
+          </div>
+        </div>
+
         <div :class="$style.infoItem" v-if="isCart">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">订单备注</span>
@@ -80,17 +88,42 @@
             </div>
           </div>
         </div>
-        <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
-          <div :class="$style.freightType">
-            <span :class="$style.itemLabel">优惠券</span>
-            <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
-          </div>
-        </div>
 
         <div :class="$style.infoItem">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">商品金额</span>
-            <span :class="$style.subtotalPrice + ' rmb'">{{ amount }}</span>
+            <span :class="$style.subtotalPrice + ' rmb'">{{ physicalAmount }}</span>
+          </div>
+        </div>
+
+        <div
+          :class="$style.infoItem"
+          v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
+          @click="showCoupon = true"
+        >
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">优惠券</span>
+            <span :class="$style.subtotalPrice">
+              <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
+              <span v-else>{{ couponList.length }}张可用</span>
+              <pl-svg name="icon-right" fill="#373737" width="22" />
+            </span>
+          </div>
+        </div>
+
+        <div
+          :class="$style.infoItem"
+          v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+          @click="showRedEnvelopePopupClick"
+        >
+          <div :class="$style.freightType">
+            <span :class="$style.itemLabel">奖学金（红包）</span>
+            <span :class="$style.subtotalPrice">
+              <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
+              <span v-else-if="redEnvelopeList.length">有可用</span>
+              <span v-else>无可用</span>
+              <pl-svg name="icon-right" fill="#373737" width="22" />
+            </span>
           </div>
         </div>
       </div>
@@ -110,7 +143,7 @@
             :name="item.productName"
             :count="item.count"
             :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-            :price="item.price"
+            :price="activeProduct === 5 ? item.originPrice : item.price"
             :support-refund="item.supportRefund"
             is-submit
             :gap="32"
@@ -142,6 +175,13 @@
             </div>
           </div>
 
+          <div :class="$style.infoItem" v-if="activeProduct === 5 && detail.discount !== 10">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">春耘折扣</span>
+              <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (item.originPrice * 1000 - item.price * 1000) * item.count / 1000 }}</span>
+            </div>
+          </div>
+
           <div
             :class="{
               [$style.infoItem]: true,
@@ -152,13 +192,13 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">学员信息</span>
               <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.skuCode1">
-                <pl-svg name="warning" color="#F24724" />
+                <pl-svg name="icon-warning" fill="#F24724" height="36" width="36" />
                 <span v-text="lessonErrorTip" />
               </div>
               <div>
                 <span v-if="CHECKED_STUDENT[item.skuCode1 + item.skuCode2]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
                 <span v-else>已选0人</span>
-                <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
+                <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
               </div>
             </div>
           </div>
@@ -189,17 +229,39 @@
               </div>
             </div>
           </div>
-          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">优惠券</span>
-              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
-            </div>
-          </div>
-
           <div :class="$style.infoItem">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">商品金额</span>
               <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+            </div>
+          </div>
+          <div
+            :class="$style.infoItem"
+            v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
+            @click="showCoupon = true"
+          >
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">优惠券</span>
+              <span :class="$style.subtotalPrice">
+                <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
+                <span v-else>{{ couponList.length }}张可用</span>
+                <pl-svg name="icon-right" fill="#373737" width="22" />
+              </span>
+            </div>
+          </div>
+          <div
+            :class="$style.infoItem"
+            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+            @click="showRedEnvelopePopupClick"
+          >
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">奖学金（红包）</span>
+              <span :class="$style.subtotalPrice">
+                <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
+                <span v-else-if="redEnvelopeList.length">有可用</span>
+                <span v-else>无可用</span>
+                <pl-svg name="icon-right" fill="#373737" width="22" />
+              </span>
             </div>
           </div>
         </div>
@@ -220,7 +282,7 @@
             :name="item.productName"
             :count="item.count"
             :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-            :price="item.price"
+            :price="activeProduct === 5 ? item.originPrice : item.price"
             :support-refund="item.supportRefund"
             is-submit
             :gap="32"
@@ -252,6 +314,13 @@
             </div>
           </div>
 
+          <div :class="$style.infoItem" v-if="activeProduct === 5 && detail.discount !== 10">
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">春耘折扣</span>
+              <span :class="$style.itemContent">{{ detail.discount }}折  -¥{{ (item.originPrice * 1000 - item.price * 1000) * item.count / 1000 }}</span>
+            </div>
+          </div>
+
           <div
             :class="{
               [$style.infoItem]: true,
@@ -262,13 +331,13 @@
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">学员信息</span>
               <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.skuCode1">
-                <pl-svg name="warning" color="#F24724" />
+                <pl-svg name="icon-warning" fill="#F24724" height="36" width="36" />
                 <span v-text="lessonErrorTip" />
               </div>
               <div>
                 <span v-if="CHECKED_STUDENT[item.skuCode1 + item.skuCode2]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
                 <span v-else>已选0人</span>
-                <pl-svg :class="$style.rightArrow" name="right" color="#ccc" />
+                <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
               </div>
             </div>
           </div>
@@ -299,17 +368,39 @@
               </div>
             </div>
           </div>
-          <div :class="$style.infoItem" v-if="coupon.amount && !isCart && activeProduct === 1" @click="showCoupon = true">
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">优惠券</span>
-              <span :class="$style.subtotalPrice">-¥{{ coupon.amount }}  <pl-icon name="icon-arrow-right" color="#ccc" size="22" /></span>
-            </div>
-          </div>
-
           <div :class="$style.infoItem">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">商品金额</span>
               <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+            </div>
+          </div>
+          <div
+            :class="$style.infoItem"
+            v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
+            @click="showCoupon = true"
+          >
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">优惠券</span>
+              <span :class="$style.subtotalPrice">
+                <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
+                <span v-else>{{ couponList.length }}张可用</span>
+                <pl-svg name="icon-right" fill="#373737" width="22" />
+              </span>
+            </div>
+          </div>
+          <div
+            :class="$style.infoItem"
+            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+            @click="showRedEnvelopePopupClick"
+          >
+            <div :class="$style.freightType">
+              <span :class="$style.itemLabel">奖学金（红包）</span>
+              <span :class="$style.subtotalPrice">
+                <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
+                <span v-else-if="redEnvelopeList.length">有可用</span>
+                <span v-else>无可用</span>
+                <pl-svg name="icon-right" fill="#373737" width="22" />
+              </span>
             </div>
           </div>
         </div>
@@ -336,17 +427,33 @@
     </div>
 
     <div
-      v-if="coupon.amount && isCart && activeProduct === 1"
+      v-if="(coupon.amount || isNotChooseCoupon) && isCart && activeProduct === 1"
       :class="$style.itemSelector"
       @click.capture="showCoupon = true"
     >
       <pl-fields
         size="middle"
         text="优惠"
-        icon="icon-coupon1"
+        icon="icon-coupon"
         :icon-gap="12"
         show-right-icon
-        :right-text="'-¥' + coupon.amount"
+        :right-text="isNotChooseCoupon ? couponList.length +'张可用' : '-¥' + coupon.amount "
+        left-text-weight="bold"
+      />
+    </div>
+
+    <div
+      v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && isCart && activeProduct === 1"
+      :class="$style.itemSelector"
+      @click.capture="showRedEnvelopePopupClick"
+    >
+      <pl-fields
+        size="middle"
+        text="奖学金（红包）"
+        icon="icon-RedEnvelope"
+        :icon-gap="12"
+        show-right-icon
+        :right-text="isNotChooseRedEnvelope ? '有可用' : '-¥' + currentRedEnvelope.amount"
         left-text-weight="bold"
       />
     </div>
@@ -466,21 +573,57 @@
         <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
         <div :class="$style.couponList">
           <template v-for="(item, i) of couponList">
-            <CouponItem
-              :key="i"
-              :name="item.couponName"
-              :amount="item.amount"
-              :full="item.useLimitAmount"
-              :subtract="item.amount"
-              :instruction="item.brief"
-              :use-end-time="item.useEndTime"
-              :use-start-time="item.useStartTime"
-              :receive-count="item.count"
-              :can-go-classify="false"
-              is-available-status
-              @couponClick="couponClick(item)"
-            />
+            <div :key="i" :class="$style.couponItem" @click="couponClick(item)">
+              <div :class="$style.button">省{{ item.amount }}</div>
+              <div :class="$style.full">满{{ item.useLimitAmount }}减{{ item.amount }}</div>
+              <span :class="$style.timeDesc">{{ item.timeDesc }}</span>
+              <span :class="$style.recommend" v-if="recommendCouponId === item.id">推荐使用</span>
+              <span :class="$style.choices">
+                <pl-svg v-if="item.id === coupon.id" name="icon-xuanzhong" width="40" />
+                <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+              </span>
+            </div>
           </template>
+          <div :class="$style.couponItem" @click="couponClick({}, true)">
+            <div :class="$style.notChooseCoupon">不参加优惠</div>
+            <span :class="$style.choices">
+              <pl-svg v-if="isNotChooseCoupon" name="icon-xuanzhong" width="40" />
+              <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </pl-popup>
+
+    <!-- 红包弹框 -->
+    <pl-popup
+      :show.sync="showRedEnvelopePopup"
+      title="奖学金（红包）"
+      title-align="left"
+    >
+      <div :class="$style.redEnvelope">
+        <p class="fz-28 gray-3">仅支持选择一个奖学金进行抵扣</p>
+        <div :class="$style.redEnvelopeList">
+          <template v-for="(item, i) of redEnvelopeList">
+            <div :key="i" :class="$style.redEnvelopeItem" @click="redEnvelopeClick(item, false)">
+              <span>
+                <pl-svg name="icon-RedEnvelope" width="40" />
+              </span>
+              <span :class="$style.count">￥{{ item.amount }}</span>
+              <span v-if="item.amount > (totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0))" :class="$style.isOver">使用后超出抵用金额不返还</span>
+              <span :class="$style.choices">
+                <pl-svg v-if="item.id === currentRedEnvelope.id" name="icon-xuanzhong" width="40" />
+                <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+              </span>
+            </div>
+          </template>
+          <div :class="$style.redEnvelopeItem" @click="redEnvelopeClick({}, true)">
+            <span :class="$style.notChooseRedEnvelope">不使用</span>
+            <span :class="$style.choices">
+              <pl-svg v-if="isNotChooseRedEnvelope" name="icon-xuanzhong" width="40" />
+              <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+            </span>
+          </div>
         </div>
       </div>
     </pl-popup>
@@ -506,21 +649,22 @@
 <script>
 import AddressItem from '../../components/item/Address-Item.vue'
 import OrderItem from '../../components/item/Order-Item.vue'
+import moment from 'moment'
 import {
   confirmCart,
   submitOrder,
   submitOrderPay
 } from '../../apis/shopping-cart'
-import { getCouponOfMax, getCouponByPrice } from '../../apis/my-coupon'
+import { getCouponOfMax, getCouponByPrice, getRedEnvelopeListByPrice } from '../../apis/my-coupon'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { mapGetters, mapActions } from 'vuex'
 import { STUDENTS } from '../../store/mutation-type'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import Count from '../../components/common/Count.vue'
-import CouponItem from '../../components/item/Coupon-Item.vue'
 import { checkLength, isPhone } from '../../assets/js/validate'
 import { resetForm, setTimeoutSync } from '../../assets/js/util'
+import { getServerTime } from '../../apis/base-api'
 export default {
   name: 'SubmitOrder',
   components: {
@@ -528,8 +672,7 @@ export default {
     OrderItem,
     OrderItemSkeleton,
     AddressItemSkeleton,
-    Count,
-    CouponItem
+    Count
   },
   data () {
     this.requestPayDataCount = 0
@@ -542,7 +685,7 @@ export default {
       showInvoiceSelector: false, // 是否显示选择发票
       freight: 0,
       totalAmount: 0,
-      amount: 0,
+      physicalAmount: 0,
       coupon: {}, // 优惠券信息
       couponList: [], // 优惠券信息
       physicalProducts: [],
@@ -572,8 +715,16 @@ export default {
         name: '',
         mobile: ''
       },
+      detail: {},
       lessonErrorId: '',
-      lessonErrorTip: ''
+      lessonErrorTip: '',
+      recommendCouponId: '', // 推荐使用的优惠券Id
+      serverTime: '', // 服务器时间
+      isNotChooseCoupon: false, // 是否选择'不参与优惠'
+      showRedEnvelopePopup: false,
+      redEnvelopeList: [], // 红包列表
+      isNotChooseRedEnvelope: true, // 是否选择'不使用'红包, 默认选择不使用红包
+      currentRedEnvelope: {} // 当前选中的红包
     }
   },
   computed: {
@@ -603,6 +754,17 @@ export default {
     },
     activityId () {
       return this.$route.query.activityId || ''
+    },
+    // 实体商品原价总和
+    physicalProductOriginalPrice () {
+      if (this.activeProduct === 5) {
+        return this.physicalProducts.map(item => (item.originPrice * 1000 * item.count) / 1000).reduce((total, num) => total + num)
+      }
+      return 0
+    },
+    // 实体商品现价总和
+    physicalProductPrice () {
+      return this.physicalProducts.map(item => (item.price * 1000 * item.count) / 1000).reduce((total, num) => total + num)
     }
   },
   watch: {
@@ -630,6 +792,9 @@ export default {
     let students // 已有学员列表
     let defStudent // 默认学员
     try {
+      // 获取服务器时间
+      let { result: serverTime } = await getServerTime()
+      this.serverTime = Number(serverTime)
       // 获取商品详情
       await this.getProductDetail()
       // 选择的发票信息（如果有的话）
@@ -661,12 +826,20 @@ export default {
         this.contactInfoModel.name = this.realName || this.userName
         this.contactInfoModel.mobile = this.mobile
       }
+      // 还原之前选择的优惠券信息 + 还原之前选择的红包信息
+      let coupon = JSON.parse(sessionStorage.getItem('COUPON_INFO')) || null
+      let scholarship = JSON.parse(sessionStorage.getItem('SCHOLARSHIP_INFO')) || null
+      if (coupon) await this.couponClick(coupon.detail, coupon.isNotUse)
+      if (scholarship) await this.redEnvelopeClick(scholarship.detail, scholarship.isNotUse)
     } catch (e) {
       this.$router.go(-1)
       throw e
     }
   },
   deactivated () {
+    this.isNotChooseCoupon = false
+    this.isNotChooseRedEnvelope = true
+    this.redEnvelopeList = []
   },
   methods: {
     ...mapActions([STUDENTS]),
@@ -675,11 +848,15 @@ export default {
      * @param flag {boolean} 标记是第一次进入页面调用，还是刷新调用，刷新true, 否则false, 如果为true，则不会显示骨架屏
      * @param coupon {object} 当前使用的优惠券
      */
-    async getProductDetail (flag, coupon = {}) {
+    async getProductDetail (flag, coupon = {}, redEnvelope = {}) {
       try {
         const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-        if (this.activeProduct === 1 && !coupon.id) {
+        if (this.activeProduct === 1 && !coupon.id && !this.isNotChooseCoupon) {
           coupon = await this.getCouponByAmount(proList) // 获取合适的优惠券
+          this.recommendCouponId = coupon.id
+        }
+        if (this.activeProduct === 1 && !redEnvelope.id) {
+          redEnvelope = await this.getRedEnvelopeByAmount(proList) // 获取红包列表
         }
         if (!proList || !proList.length) {
           return this.$router.replace({ name: 'Home' })
@@ -691,6 +868,7 @@ export default {
           activityId: this.activityId,
           cartProducts: proList,
           userCouponId: coupon.id || '',
+          scholarshipId: redEnvelope.id || '',
           addressSeq: this.selectedAddress.sequenceNbr
         })
         const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
@@ -701,7 +879,8 @@ export default {
         formalClass.map(item => { item.type = 'FORMAL_CLASS' })
         experienceClass.map(item => { item.type = 'EXPERIENCE_CLASS' })
         virtualProducts.map(item => { item.type = 'VIRTUAL_GOODS' })
-        this.amount = amount
+        this.detail = result
+        this.physicalAmount = amount
         this.totalAmount = totalAmount
         this.freight = Number(freight)
         this.physicalProducts = physicalProducts
@@ -762,11 +941,26 @@ export default {
       let amount = proList.map(item => item.price * item.count).reduce((total, price) => {
         return total + price
       })
-      const { result } = await getCouponOfMax(amount || 0)
+      const { result } = await getCouponOfMax({
+        activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+        activityId: this.activityId,
+        cartProducts: proList,
+        addressSeq: this.selectedAddress.sequenceNbr
+      })
       if (this.activeProduct === 1) {
-        await this.getCouponList(amount)
+        await this.getCouponList(amount, {
+          activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+          activityId: this.activityId,
+          cartProducts: proList,
+          addressSeq: this.selectedAddress.sequenceNbr
+        })
       }
       this.coupon = result
+      // 当前选择的优惠券不支持使用奖学金时，置空选择的奖学金
+      if (this.coupon.scholarship === 0) {
+        this.currentRedEnvelope = {}
+        this.isNotChooseRedEnvelope = true
+      }
       return result
     },
     selectStudent (pro) {
@@ -796,19 +990,95 @@ export default {
       }
     },
     // 选择优惠券
-    async couponClick (item) {
+    async couponClick (item, isNotChooseCoupon) {
       this.coupon = item
       this.showCoupon = false
-      await this.getProductDetail(true, item)
+      this.isNotChooseCoupon = isNotChooseCoupon
+      // 当前选择的优惠券不支持使用奖学金时，置空选择的奖学金
+      if (this.coupon.scholarship === 0) {
+        this.currentRedEnvelope = {}
+        this.isNotChooseRedEnvelope = true
+      }
+      sessionStorage.setItem('COUPON_INFO', JSON.stringify({
+        isNotUse: this.isNotChooseCoupon,
+        detail: this.coupon
+      }))
+      sessionStorage.setItem('SCHOLARSHIP_INFO', JSON.stringify({
+        isNotUse: this.isNotChooseRedEnvelope,
+        detail: this.currentRedEnvelope
+      }))
+      await this.getProductDetail(true, item, this.currentRedEnvelope)
     },
     // 获取优惠券
-    async getCouponList (amount) {
+    async getCouponList (amount, data) {
       try {
-        let { result } = await getCouponByPrice(amount)
-        this.couponList = result
+        let { result } = await getCouponByPrice(data)
+        let serverTime = this.serverTime
+        this.couponList = result.map(item => {
+          let duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+          let day = Math.floor(moment.duration(duration).asDays())
+          item.timeDesc = ''
+          if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${day}天后过期`
+          return item
+        })
       } catch (e) {
         throw e
       }
+    },
+    // 是否显示红包选择框
+    showRedEnvelopePopupClick () {
+      if (!this.redEnvelopeList.length) {
+        return this.$warning('无可用奖学金')
+      }
+      // 可否与奖学金混合使用 scholarship 0-不使用 1-可使用
+      if (this.coupon.scholarship === 0) {
+        return this.$warning('该优惠券不支持与奖学金叠加使用')
+      }
+      this.showRedEnvelopePopup = true
+    },
+    // 根据购买总价获取合适的红包
+    async getRedEnvelopeByAmount (proList = []) {
+      // 获取优惠券信息
+      let amount = proList.map(item => item.price * item.count).reduce((total, price) => {
+        return total + price
+      })
+      // 只有普通商品支持使用红包
+      if (this.activeProduct === 1) {
+        await this.getRedEnvelopeList(amount)
+      }
+      this.currentRedEnvelope = {}
+      return {}
+    },
+    // 获取红包列表
+    async getRedEnvelopeList (amount) {
+      try {
+        let { result } = await getRedEnvelopeListByPrice(amount)
+        let serverTime = this.serverTime
+        this.redEnvelopeList = result.map(item => {
+          let duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+          let day = Math.floor(moment.duration(duration).asDays())
+          item.timeDesc = ''
+          if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${day}天后过期`
+          return item
+        })
+      } catch (e) {
+        throw e
+      }
+    },
+    // 选择红包
+    async redEnvelopeClick (item, isNotChooseRedEnvelope) {
+      this.currentRedEnvelope = item
+      this.showRedEnvelopePopup = false
+      this.isNotChooseRedEnvelope = isNotChooseRedEnvelope
+      sessionStorage.setItem('COUPON_INFO', JSON.stringify({
+        isNotUse: this.isNotChooseCoupon,
+        detail: this.coupon
+      }))
+      sessionStorage.setItem('SCHOLARSHIP_INFO', JSON.stringify({
+        isNotUse: this.isNotChooseRedEnvelope,
+        detail: this.currentRedEnvelope
+      }))
+      await this.getProductDetail(true, this.coupon, item)
     },
     /**
      * 判断是否选择了学生
@@ -911,9 +1181,10 @@ export default {
         cartProducts,
         cartSource: this.isCart,
         invoiceModel: this.INVOICE_MODEL,
-        activeProduct: this.isCart ? 1 : this.activeProduct,
+        activeProduct: this.activeProduct || 1,
         activityId: this.activityId,
-        userCouponId: this.coupon.id || ''
+        userCouponId: this.coupon.id || '',
+        scholarshipId: this.currentRedEnvelope.id || ''
       }
       if (this.physicalProducts.length === 0) {
         // 没有实体商品时，必须有联系人信息
@@ -974,34 +1245,31 @@ export default {
       if (this.lessonList.length > 0 && this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
         orderType = 'FORMAL_CLASS'
       }
-      return new Promise(async (resolve, reject) => {
-        try {
-          if (CREDENTIAL.appId) {
-            await wechatPay(CREDENTIAL)
-          }
-          this.submiting = false
-          this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount }, query: { orderType } })
-          sessionStorage.removeItem('INVOICE_MODEL')
-          sessionStorage.removeItem('CONFIRM_LIST')
-          resolve()
-        } catch (e) {
-          // 支付失败
-          let vLen = this.virtualProducts.length
-          let pLen = this.physicalProducts.length
-          this.submiting = false
-          if (vLen > 1 || (pLen > 1 && vLen > 0)) {
-            this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
-          } else {
-            // 只有一种商品时，直接进入详情页
-            this.$router.replace({ name: 'OrderDetail', params: { orderId } })
-          }
-          sessionStorage.removeItem('INVOICE_MODEL')
-          sessionStorage.removeItem('CONFIRM_LIST')
-          reject(e)
-        } finally {
-          this.submiting = false
+      try {
+        if (CREDENTIAL.appId) {
+          await wechatPay(CREDENTIAL)
         }
-      })
+        this.submiting = false
+        this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount }, query: { orderType, productType: this.productType } })
+        sessionStorage.removeItem('INVOICE_MODEL')
+        sessionStorage.removeItem('CONFIRM_LIST')
+      } catch (e) {
+        // 支付失败
+        let vLen = this.virtualProducts.length
+        let pLen = this.physicalProducts.length
+        this.submiting = false
+        if (vLen > 1 || (pLen > 1 && vLen > 0)) {
+          this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+        } else {
+          // 只有一种商品时，直接进入详情页
+          this.$router.replace({ name: 'OrderDetail', params: { orderId } })
+        }
+        sessionStorage.removeItem('INVOICE_MODEL')
+        sessionStorage.removeItem('CONFIRM_LIST')
+        throw e
+      } finally {
+        this.submiting = false
+      }
     },
     noNeed () {
       this.invioceType = 0
@@ -1044,6 +1312,8 @@ export default {
       sessionStorage.removeItem('CONFIRM_LIST')
       sessionStorage.removeItem('APPLY_INVOICE')
       sessionStorage.removeItem('CHECKED_STUDENT')
+      sessionStorage.removeItem('COUPON_INFO')
+      sessionStorage.removeItem('SCHOLARSHIP_INFO')
       localStorage.removeItem('CONTACT_INFO_MODEL')
       this.remark = ''
       this.physicalProducts = []
@@ -1140,6 +1410,9 @@ export default {
   .subtotalPrice {
     font-size: 24px;
     color: #000;
+    > svg {
+      vertical-align: middle;
+    }
   }
   .address {
     margin-bottom: 28px;
@@ -1332,8 +1605,103 @@ export default {
     padding: 0 24px;
     > .coupon-list {
       margin-top: 48px;
+      padding-bottom: 40px;
+
+      .coupon-item {
+        height: 72px;
+        line-height: 72px;
+        position: relative;
+        overflow: hidden;
+        font-size: 24px;
+
+        .button {
+          display: inline-block;
+          width: 120px;
+          height: 40px;
+          border: 2px solid #F2B036;
+          border-radius: 8px;
+          line-height: 40px;
+          color: #F2B036;
+          text-align: center;
+          margin-top: 10px;
+          float: left;
+        }
+
+        .full {
+          display: inline-block;
+          font-size: 28px;
+          color: #373737;
+          float: left;
+          margin-left: 20px;
+        }
+
+        .time-desc {
+          display: inline-block;
+          color: #B5B5B5;
+          float: left;
+          margin-left: 20px;
+        }
+        .recommend {
+          color:#FE0D0D;
+          margin-left: 20px;
+        }
+        .choices {
+          position: absolute;
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+          >svg {
+            vertical-align: middle;
+          }
+        }
+        .not-choose-coupon{
+          font-size:28px;
+          line-height: 72px;
+          color:#C1C1C1;
+        }
+      }
     }
   }
+
+  .red-envelope {
+    padding: 0 24px;
+    >.red-envelope-list {
+      margin-top: 20px;
+      padding-bottom: 40px;
+      .red-envelope-item {
+        height: 60px;
+        line-height: 60px;
+        position: relative;
+
+        .count {
+          margin-left: 24px;
+          font-size:32px;
+          color:#373737;
+        }
+        .is-over {
+          margin-left: 20px;
+          font-size:24px;
+          color:#999999;
+        }
+        .choices {
+          line-height: 0;
+          position: absolute;
+          right: 20px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .not-choose-red-envelope {
+          font-size:28px;
+          line-height: 72px;
+          color:#C1C1C1;
+        }
+      }
+      svg {
+        vertical-align: text-bottom;
+      }
+    }
+  }
+
   @keyframes bordrFlicker {
     0% { border-color: #F24724 }
     50% { border-color: transparent }

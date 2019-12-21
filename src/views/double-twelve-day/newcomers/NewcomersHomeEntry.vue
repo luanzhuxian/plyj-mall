@@ -8,7 +8,7 @@
         </div>
         <div style="margin-top: 64px; text-align: center;">
           <span class="btn-close" @click="close">
-            <pl-icon type="icon" name="icon-close" color="white" />
+            <pl-svg name="icon-close" fill="white" />
           </span>
         </div>
       </div>
@@ -19,7 +19,7 @@
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-import Overlay from '../../invitenewcomers/components/Overlay'
+import Overlay from '../invitenewcomers/components/Overlay'
 import { getCurrentActivity } from '../../../apis/newcomers'
 
 export default {

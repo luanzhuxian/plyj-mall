@@ -25,8 +25,11 @@ export default {
     }
   },
   watch: {
-    group (val) {
-      this.$emit('change', val)
+    group: {
+      handler (val) {
+        this.$emit('change', val)
+      },
+      deep: true
     }
   },
   methods: {
@@ -36,19 +39,16 @@ export default {
           this.group.push(data)
         }
       } else {
-        this.group.splice(this.group.indexOf(data), 1)
+        const index = this.group.indexOf(data)
+        if (index !== -1) this.group.splice(index, 1)
       }
     },
     changeAll (flage) {
       let children = this.$children
       for (let c of children) {
         // 有禁用项时，全选时跳过
-        if (c.disabled || c.data.disabled) continue
-        if (flage) {
-          c.selected()
-        } else {
-          c.cancel()
-        }
+        if (c.disabled) continue
+        c.changed(flage)
       }
       this.isCheckAll = flage
     }

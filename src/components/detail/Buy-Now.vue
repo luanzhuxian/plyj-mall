@@ -2,18 +2,18 @@
   <div :class="$style.buyNow">
     <div :class="$style.phone">
       <router-link :class="$style.link" :to="{ name: 'Home' }">
-        <pl-svg name="home" />
+        <pl-svg name="icon-home" width="38" height="70" />
       </router-link>
-      <a v-if="servicePhoneModels.length === 1" :class="$style.link + ' ' + $style.callUs" :href="'tel:' + servicePhoneModels[0].contactWay">
-        <pl-svg name="call-us" />
+      <a v-if="servicePhoneModels.length === 1" :class="$style.link" :href="'tel:' + servicePhoneModels[0].contactWay">
+        <pl-svg name="icon-call-us" width="80" height="72" />
       </a>
       <a v-else :class="$style.link + ' ' + $style.callUs" @click="showContact = true">
-        <pl-svg name="call-us" />
+        <pl-svg name="icon-call-us" width="80" height="72" />
       </a>
       <router-link :class="$style.link + ' ' + $style.toCart" :to="{ name: 'ShoppingCart' }">
         <i v-if="cartCount > 99" :class="$style.cartCount">99+</i>
         <i v-else-if="cartCount > 0" :class="$style.cartCount" v-text="cartCount" />
-        <pl-svg name="cart2" />
+        <pl-svg name="icon-cart2" width="80" height="72" />
       </router-link>
     </div>
     <!-- 团购商品下单 -->
@@ -99,12 +99,12 @@
       :pre-activity="preActivity"
       :activity-product-model="activityProductModel"
     >
-      <template v-slot:footer="{ currentSku }">
+      <template v-slot:footer="{ currentSku, limiting, limit }">
         <pl-button
           type="warning"
           size="large"
           :loading="loading"
-          @click="confirm(currentSku)"
+          @click="confirm(currentSku, limiting, limit)"
         >
           确定
         </pl-button>
@@ -233,19 +233,43 @@ export default {
     handleClick () {
       this.$emit('click', this)
     },
-    // 选中规格
-    async confirm (options) {
+    /**
+     * 购买
+     * @param options {object} 选择的规格
+     * @param limiting {number} 总限购数量
+     * @param limit {number} 可买数量
+     */
+    async confirm (options, limiting, limit) {
       try {
         await this.$nextTick()
         if (this.clickAddToCart) {
           await this.addToCart(options)
         }
         if (this.clickBuyNow) {
+          if (!this.checkLimit(options, limiting, limit)) {
+            return
+          }
           this.submit(options)
         }
       } catch (e) {
         throw e
       }
+    },
+    // 检查限购
+    checkLimit (sku, limiting, limit) {
+      if (limiting && sku.count > limit) {
+        if (limiting === limit) {
+          this.$warning(`您至多购买${limit}件`)
+          return false
+        }
+        if (limiting - limit === limiting) {
+          this.$warning(`您已购买${limiting}件，已达购买上限`)
+          return false
+        }
+        this.$warning(`您已购买${limiting - limit}件，您还可以购买${limit}件`)
+        return false
+      }
+      return true
     },
     // 跳转至提交订单页面
     async submit (options) {
@@ -368,30 +392,6 @@ export default {
       > .link {
         position: relative;
         flex: 1;
-        &.callUs > svg {
-          width: 77px !important;
-        }
-        /*&:nth-of-type(1):after {
-          position: absolute;
-          content: '';
-          top: 50%;
-          right: 0;
-          width: 1px;
-          height: 50%;
-          transform: translateY(-50%);
-          background-color: #e7e7e7;
-        }*/
-        &.toCart {
-          position: relative;
-          svg {
-            width: 78px;
-          }
-        }
-        svg {
-          width: 40px;
-          color: $--font-color_gray2;
-          fill: $--font-color_gray2 !important;
-        }
         .cartCount {
           position: absolute;
           right: -6px;

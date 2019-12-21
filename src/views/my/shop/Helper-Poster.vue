@@ -16,9 +16,9 @@
       <div :class="$style.imgBox" ref="imgBox">
         <img :src="qrcode" alt="" ref="qrcode">
       </div>
-      <div :class="$style.descriptionBox">
+      <div :class="$style.qrcodeTip">
         <p>快速申请helper通道，出示二维码给用户</p>
-        <pl-svg name="helper-guidelines" />
+        <pl-svg class="mt-40" name="icon-helper-guidelines" height="187" />
       </div>
     </div>
   </div>
@@ -112,7 +112,7 @@ export default {
       }
       .description-box{
         margin-top: 40px;
-        >p{
+        > p {
           color: #999999;
           font-size: 24px;
           line-height: 40px;
@@ -121,6 +121,7 @@ export default {
     }
     .qoce-box{
       padding: 72px 68px 40px;
+      text-align: center;
       .img-box{
         box-sizing: border-box;
         width: 526px;
@@ -131,6 +132,15 @@ export default {
         img {
           width: 100% !important;
           height: auto !important;
+        }
+      }
+      .qrcodeTip {
+        > p {
+          font-size: 24px;
+          color: #999;
+        }
+        > svg {
+          width: 100%;
         }
       }
     }

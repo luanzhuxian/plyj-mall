@@ -1,49 +1,56 @@
 <template>
   <div :class="$style.activity">
-    <div :class="$style.background">
-      <search placeholder="搜索商品" />
-      <div :class="$style.container">
-        <router-link
-          :class="{
-            [$style.btnTop]: true,
-            [$style.coupon]: topBtnType === 1,
-            [$style.default]: topBtnType === 2,
-          }"
-          tag="div"
-          :to="{ name: topBtnType === 1 ? 'MyCoupon' : '' }"
-        />
-        <TemplateFengqiang
-          v-if="type === 5"
-          :data="modules"
-          :type="type"
-        />
-        <TemplateBaofa
-          v-if="type === 6"
-          :data="modules"
-          :type="type"
-        />
-        <TemplateFanchang
-          v-if="type === 7"
-          :data="modules"
-          :type="type"
-        />
+    <template-xinchun
+      v-if="type === 8"
+      :data="modules"
+      :type="type"
+    />
+    <div :class="$style.d12" v-if="~[5, 6, 7].indexOf(type)">
+      <div :class="$style.background">
+        <search placeholder="搜索商品" />
+        <div :class="$style.container" v-if="allLoaded">
+          <router-link
+            :class="{
+              [$style.btnTop]: true,
+              [$style.coupon]: topBtnType === 1,
+              [$style.default]: topBtnType === 2,
+            }"
+            tag="div"
+            :to="{ name: topBtnType === 1 ? 'MyCoupon' : '' }"
+          />
+          <template-fengqiang
+            v-if="type === 5"
+            :data="modules"
+            :type="type"
+          />
+          <template-baofa
+            v-if="type === 6"
+            :data="modules"
+            :type="type"
+          />
+          <template-fanchang
+            v-if="type === 7"
+            :data="modules"
+            :type="type"
+          />
+        </div>
       </div>
+      <invite-newcomers-home-entry />
+      <newcomers-home-entry />
     </div>
-    <invite-newcomers-home-entry />
-    <newcomers-home-entry />
+    <pl-svg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import TemplateFengqiang from './Template-Fengqiang.vue'
 import TemplateBaofa from './Template-Baofa.vue'
 import TemplateFanchang from './Template-Fanchang.vue'
-import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
+import TemplateXinchun from './Template-Xinchun.vue'
+import InviteNewcomersHomeEntry from '../double-twelve-day/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
-import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
-import { getMyCouponList } from '../../apis/my-coupon'
-import { getCurrentActivity } from '../../apis/invitenewcomers'
 
 export default {
   name: 'Activity',
@@ -52,6 +59,7 @@ export default {
     TemplateFengqiang,
     TemplateBaofa,
     TemplateFanchang,
+    TemplateXinchun,
     InviteNewcomersHomeEntry,
     NewcomersHomeEntry
   },
@@ -71,37 +79,68 @@ export default {
         MIAO_SHA: null,
         FENG_QIANG: null,
         RECOMMEND: null
+      }
+    }
+  },
+  computed: {
+    ...mapGetters(['activityData', 'activityId', 'liveInfo', 'd12CouponTotal', 'xinchunCouponTotal', 'invitingEvent', 'jxEvent', 'nwEvent']),
+    topBtnType () {
+      if (this.d12CouponTotal === null) return false
+      return this.d12CouponTotal ? 1 : 2
+    },
+    allLoaded () {
+      let result
+      // 双十二
+      if ([5, 6, 7].includes(this.activityId)) {
+        result = (this.liveInfo !== null && !!this.liveInfo) &&
+        (this.invitingEvent !== null && !!this.invitingEvent) &&
+        (this.jxEvent !== null && !!this.jxEvent) &&
+        this.d12CouponTotal !== null
+      }
+      // 新春
+      if (this.activityId === 8) {
+        result = (this.liveInfo !== null && !!this.liveInfo) &&
+        (this.nwEvent !== null && !!this.nwEvent) &&
+        this.xinchunCouponTotal !== null
+      }
+      return result
+    }
+  },
+  watch: {
+    activityId: {
+      handler (id) {
+        if (!id && id !== 0) return
+        this.getTemplate()
       },
-      liveInfo: {}, // 直播
-      invitingEvent: {}, // 邀新有礼
-      jxEvent: {}, // 见学之路
-      topBtnType: 0 // 0：不显示 1：优惠卷 2：默认
+      immediate: true
     }
   },
   async created () {
     try {
-      this.getTemplate()
-      // 查询可使用优惠卷
-      getMyCouponList({ current: 1, size: 10, status: 0 })
-        .then(({ result }) => {
-          this.topBtnType = result.total ? 1 : 2
-        })
-        .catch(err => {
-          this.topBtnType = 2
-          throw err
-        })
-      // 查询直播
-      getLiveInfo().then(({ result }) => {
-        this.liveInfo = result || {}
-      })
-      // 邀新有礼
-      getCurrentActivity().then(({ result }) => {
-        this.invitingEvent = result || {}
-      })
-      // 见学之路
-      getJianxueInfo().then(({ result }) => {
-        this.jxEvent = result || {}
-      })
+      // const type = await this.getTemplate()
+      // // 查询直播
+      // getLiveInfo().then(({ result }) => {
+      //   this.liveInfo = result || {}
+      // })
+      // // 查询可使用优惠卷
+      // getMyCouponList({ current: 1, size: 10, status: 0 })
+      //   .then(({ result }) => {
+      //     this.topBtnType = result.total ? 1 : 2
+      //   })
+      //   .catch(err => {
+      //     this.topBtnType = 2
+      //     throw err
+      //   })
+      // if (type && ~[5, 6, 7].indexOf(type)) {
+      //   // 邀新有礼
+      //   getCurrentActivity().then(({ result }) => {
+      //     this.invitingEvent = result || {}
+      //   })
+      //   // 见学之路
+      //   getJianxueInfo().then(({ result }) => {
+      //     this.jxEvent = result || {}
+      //   })
+      // }
     } catch (e) {
       throw e
     }
@@ -109,16 +148,16 @@ export default {
   methods: {
     async getTemplate () {
       try {
-        const { result } = await getTemplate({ type: 2 })
-        if (!result) {
+        const { activityId } = this
+        if (activityId === 0) {
           this.noFinish = true
-          this.$alert('双十二主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+          this.$alert('主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
             .finally(() => {
               this.$router.replace({ name: 'Classify' })
             })
-          return
+          return false
         }
-        let { type, moduleModels } = result
+        let { type, moduleModels } = this.activityData
         if (type === 5) {
           this.modules.MIAO_SHA = moduleModels[0]
           this.modules.PIN_TUAN = moduleModels[1]
@@ -148,6 +187,14 @@ export default {
           this.modules.FENG_QIANG = moduleModels[3]
           this.modules.RECOMMEND = moduleModels[4]
         }
+        if (type === 8) {
+          this.modules.PIN_XUAN = moduleModels[0]
+          this.modules.COUPON = moduleModels[1]
+          this.modules.CHUN_YUN = moduleModels[2]
+          this.modules.PIN_TUAN = moduleModels[3]
+          this.modules.YU_GOU = moduleModels[4]
+          this.modules.FENG_QIANG = moduleModels[5]
+        }
         this.type = type
       } catch (e) {
         throw e
@@ -157,7 +204,7 @@ export default {
   beforeRouteEnter (to, from, next) {
     next(vm => {
       if (vm.noFinish) {
-        vm.$alert('双十二主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+        vm.$alert('主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
           .finally(() => {
             vm.$router.replace({ name: 'Classify' })
           })
@@ -168,6 +215,25 @@ export default {
 </script>
 <style module lang="scss">
   .activity {
+    position: relative;
+  }
+  .loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    animation: rotate 1.2s linear infinite;
+    z-index: 999;
+  }
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg) translate(-50%, -50%);
+    }
+    to {
+      transform: rotate(359deg) translate(-50%, -50%);
+    }
+  }
+  .d12 {
     position: relative;
     background: #d20001;
     .background {

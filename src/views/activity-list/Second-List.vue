@@ -4,8 +4,8 @@
     <div class="main">
       <div class="list second-ing" v-if="ingList.length > 0">
         <div class="head">
-          <pl-icon name="icon-ing_icon" color="#fff" size="52" />
-          <pl-icon name="icon-ing_text" color="#fff" size="52" />
+          <pl-svg :key="1" name="icon-ing_icon" width="52" />
+          <pl-svg :key="2" name="icon-ing_text" width="180" height="52" />
         </div>
         <div class="item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">
@@ -25,14 +25,14 @@
               <div class="inner" :style="{width: `${(Number(item.number) - Number(item.stock)) / Number(item.number) * 100}%`}" />
             </div>
             <div class="remain">剩余 {{ item.stock }} 件</div>
-            <div class="original">原价 <del class="rmb">{{ item.productMaxOriginPrice }}</del></div>
+            <div v-if="item.productMaxOriginPrice" class="original">原价 <del class="rmb">{{ item.productMaxOriginPrice }}</del></div>
             <div class="bottom">
               <div class="price-bar">
-                <pl-icon name="icon-miaoshajia" type="svg" width="100" height="50" />
+                <pl-svg name="icon-miaoshajia" width="100" height="50" />
                 <div class="price">{{ item.price }}</div>
               </div>
               <div class="miao-btn">
-                <pl-icon name="icon-second" color="#fff" type="svg" width="37" height="37" />
+                <pl-svg name="icon-second" width="37" />
               </div>
             </div>
           </div>
@@ -40,8 +40,8 @@
       </div>
       <div class="list second-coming" v-if="comingList.length > 0">
         <div class="head">
-          <pl-icon name="icon-coming_icon" color="#fff" size="52" />
-          <pl-icon name="icon-coming_text" color="#fff" size="52" />
+          <pl-svg :key="3" name="icon-coming_icon" width="54" />
+          <pl-svg :key="4" name="icon-coming_text" width="140" height="52" />
         </div>
         <div class="item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
           <div class="img">
@@ -63,7 +63,7 @@
             <div class="focus">{{ item.pageViews }} 人已关注</div>
             <div class="bottom">
               <div class="price-bar">
-                <pl-icon name="icon-miaoshajia" type="svg" width="100" height="50" />
+                <pl-svg name="icon-miaoshajia" width="100" height="50" />
                 <div class="price">{{ item.price }}</div>
               </div>
               <div class="view-btn">查看</div>
@@ -127,7 +127,7 @@ export default {
       }
     },
     jumpToDetail (id) {
-      this.$router.push({ name: 'Lesson', params: { productId: id, currentProductStatus: 3 } })
+      this.$router.push({ name: 'Lesson', params: { productId: id }, query: { currentProductStatus: 3 } })
     }
   }
 }

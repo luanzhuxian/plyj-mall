@@ -1,9 +1,9 @@
 <template>
   <div :class="$style.templateFanchang">
     <!-- 直播-->
-    <broadcast
+    <live
       v-if="parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))"
-      :class="$style.broadcast"
+      :class="$style.live"
     />
     <maisong
       v-if="MAI_SONG.values && MAI_SONG.values.length"
@@ -31,23 +31,23 @@
 </template>
 
 <script>
-import Broadcast from './components/Broadcast.vue'
-import Pintuan from './components/Pintuan.vue'
-import Maisong from './components/Maisong.vue'
-import Fengqiang from './components/Fengqiang.vue'
+import Live from './components/Live.vue'
+import Pintuan from './double-12/Pintuan.vue'
+import Maisong from './double-12/Maisong.vue'
+import Fengqiang from './double-12/Fengqiang.vue'
+import MiaoshaSmall from './double-12/Miaosha-Small.vue'
 import BestRecommend from '../home/components/Best-Recommend.vue'
-import MiaoshaSmall from './components/Miaosha-Small.vue'
 
 export default {
   name: 'HomeTemplateB',
   inject: ['parent'],
   components: {
-    Broadcast,
+    Live,
     Pintuan,
     Maisong,
     Fengqiang,
-    BestRecommend,
-    MiaoshaSmall
+    MiaoshaSmall,
+    BestRecommend
   },
   data () {
     return {}
@@ -85,8 +85,7 @@ export default {
 </script>
 
 <style module lang="scss">
-  .template-fanchang {}
-  .broadcast {
+  .live {
     margin: 0 24px 16px;
   }
   .btn-bottom {

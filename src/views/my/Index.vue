@@ -12,7 +12,7 @@
             :class="$style.applyBtn"
             :to="{ name: 'ApplyHelper' }"
           >
-            <pl-icon type="svg" name="icon-helper-apply" width="158" height="44" />
+            <pl-svg name="icon-helper-apply" width="158" height="44" />
           </router-link>
           <div v-if="isProgressBtnShow" :class="$style.progress">
             <span
@@ -30,7 +30,7 @@
       </div>
       <div :class="$style.setting">
         <router-link v-if="!isAdmin" :to="{ name: 'Setting' }">
-          <pl-icon name="icon-setting-purple" color="#fff" size="42" font-weight="lighter" />
+          <pl-svg name="icon-setting-white" color="#fff" width="42" fill="#fff" />
         </router-link>
       </div>
     </div>
@@ -53,18 +53,18 @@
           <p>今日润笔（元）</p>
           <p v-text="currentBalance || '0.00'" />
         </div>
-        <pl-icon :class="$style.myRight" name="icon-arrow-right" size="18" color="#ccc" />
+        <pl-svg :class="$style.myRight" name="icon-right" size="18" fill="#ccc" />
       </router-link>
 
-      <!-- <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">
-        <pl-icon name="icon-dingdan" size="28" /> 待付尾款订单 <i>{{ count.prePayOrder }}</i> <pl-icon name="icon-arrow-right" size="24" />
-      </div> -->
+      <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">
+        <pl-svg name="icon-dingdan" width="28" height="28" fill="#fff" /> 待付尾款订单 <i>{{ count.prePayOrder }}</i> <pl-svg name="icon-right" fill="#fff" width="24" />
+      </div>
 
       <!-- 我的订单 -->
       <div :class="$style.panel">
         <div :class="$style.orderStatus">
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
-            <pl-icon name="icon-wait-pay" width="72" height="90" type="svg" />
+            <pl-svg name="icon-wait-pay" width="72" height="90" />
             <span
               :class="{ [$style.badge]: true, [$style.oval]: count.waitPayment > 99 }"
               v-if="count.waitPayment"
@@ -72,7 +72,7 @@
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
-            <pl-icon name="icon-wait-ship" width="72" height="90" type="svg" />
+            <pl-svg name="icon-wait-ship" width="72" height="90" />
             <span
               :class="{ [$style.badge]: true, [$style.oval]: count.waitDelivery > 99 }"
               v-if="count.waitDelivery"
@@ -80,7 +80,7 @@
             />
           </router-link>
           <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
-            <pl-icon name="icon-wait-receive" width="72" height="90" type="svg" />
+            <pl-svg name="icon-wait-receive" width="72" height="88" />
             <span
               :class="{ [$style.badge]: true, [$style.oval]: count.waitCollect > 99 }"
               v-if="count.waitCollect"
@@ -88,7 +88,7 @@
             />
           </router-link>
           <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
-            <pl-icon name="icon-after-sale" width="85" height="90" type="svg" />
+            <pl-svg name="icon-after-sale" width="108" height="88" />
             <span
               :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.afterSale > 99 }"
               v-if="count.afterSale"
@@ -99,7 +99,7 @@
             <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/my-segmentation.png" alt="">
           </div>
           <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
-            <pl-icon name="icon-my-order-list" width="74" height="90" type="svg" />
+            <pl-svg name="icon-my-order-list" width="96" height="90" />
           </router-link>
         </div>
         <div v-if="newFreight.length > 0" :class="$style.newLogistics">
@@ -134,19 +134,32 @@
       <div :class="$style.panel">
         <div :class="$style.welfare">
           <router-link :to="{ name: 'MyCoupon'}" :class="$style.welfareItem">
+            <pl-svg name="icon-coupon" width="72" height="72" />
             <div>
               <h5>我的卡券</h5>
-              <span>福利多多帮你省钱</span>
+              <!-- <span>福利多多帮你省钱</span> -->
             </div>
-            <pl-icon name="icon-coupon" width="72" height="72" type="svg" />
           </router-link>
-          <div :class="$style.segmentation" />
           <router-link :to="{ name: 'MyPresent'}" :class="$style.welfareItem">
+            <pl-svg name="icon-present" width="72" height="72" type="svg" />
             <div>
               <h5>我的礼品</h5>
-              <span>到店核销领礼品</span>
+              <!-- <span>到店核销领礼品</span> -->
             </div>
-            <pl-icon name="icon-present" width="72" height="72" type="svg" />
+          </router-link>
+          <router-link :to="{ name: 'MyBurse'}" :class="$style.welfareItem">
+            <img src="https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png" alt="">
+            <div>
+              <h5>我的奖学金</h5>
+              <!-- <span>和优惠券叠加使用</span> -->
+            </div>
+          </router-link>
+          <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
+            <pl-svg name="icon-live-library" width="72" height="72" type="svg" />
+            <div>
+              <h5>我的视频库</h5>
+              <!-- <span>到店核销领礼品</span> -->
+            </div>
           </router-link>
         </div>
       </div>
@@ -161,16 +174,16 @@
       <!-- helper -->
       <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow && lockStatus">
         <router-link to="" @click.native="toHelperManagementPage">
-          <pl-icon name="icon-helper-management" type="svg" width="120" height="115" />
+          <pl-svg name="icon-helper-management" width="120" height="115" />
         </router-link>
         <router-link :to="{ name: 'HelperPoster' }">
-          <pl-icon name="icon-helper-invatation" type="svg" width="120" height="115" />
+          <pl-svg name="icon-helper-invatation" width="120" height="115" />
         </router-link>
         <router-link :to="{ name: 'ShopPoster'}">
-          <pl-icon name="icon-helper-poster" type="svg" width="120" height="115" />
+          <pl-svg name="icon-helper-poster" width="120" height="115" />
         </router-link>
         <router-link :to="{ name: 'ShopQrcode'}">
-          <pl-icon name="icon-helper-qrcode" type="svg" width="120" height="115" />
+          <pl-svg name="icon-helper-qrcode" width="120" height="115" />
         </router-link>
       </div>
       <you-like :class="$style.recommend" :is-my="true" />
@@ -252,7 +265,7 @@ export default {
   data () {
     return {
       loaded: false,
-      count: { },
+      count: {},
       swiperOption: {
         direction: 'vertical',
         autoHeight: true,
@@ -326,6 +339,9 @@ export default {
       try {
         const { result } = await orderPhysicalorderSummary(this.userId)
         this.count = result
+        if (result.prePayOrder && result.prePayOrder > 99) {
+          result.prePayOrder = '99+'
+        }
       } catch (e) {
         throw e
       }
@@ -670,9 +686,7 @@ export default {
   /* 我的优惠券 + 我的礼品 start */
   .welfare {
     display: flex;
-    height: 138px;
     position: relative;
-
     .segmentation {
       width: 2px;
       height: 86px;
@@ -687,44 +701,45 @@ export default {
     }
 
     .welfare-item {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
       flex: 1;
       margin: 28px 20px;
-      clear: both;
-      div {
-        float: left;
-        h5 {
-          height:44px;
-          font-size:32px;
-          font-weight:bold;
-          line-height:44px;
-          color:#333;
+      > img {
+        width: 130px;
+        height: 72px;
+      }
+      > div {
+        margin-top: 20px;
+        text-align: center;
+        > h5 {
+          height: 44px;
+          font-size: 24px;
+          line-height: 44px;
+          color: #333;
         }
-
-        span {
-          height:34px;
-          font-size:24px;
-          font-weight:400;
-          line-height:34px;
-          color:#999;
-          opacity:1;
+        > span {
+          height: 34px;
+          font-size: 24px;
+          font-weight: 400;
+          line-height: 34px;
+          color: #999;
+          opacity: 1;
         }
       }
 
-      svg {
-        float: right;
-      }
     }
   }
 
   /* 我的优惠券 + 我的礼品 end */
-
   /* helper starts */
   .helper {
     padding: 32px 25px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    svg {
+    > svg {
       height: 114px;
     }
   }
@@ -898,15 +913,33 @@ export default {
     }
   }
   .wait-pay {
+    display: flex;
+    align-items: center;
     width: max-content;
     margin: 54px auto 32px;
     padding: 0 32px;
     line-height: 64px;
     font-size: 26px;
     color: #fff;
-    background-color: #DC3B3B;
+    background-color: #F86156;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
     border-radius: 32px;
+    > svg {
+      vertical-align: -4px;
+    }
+    > i {
+      display: inline-block;
+      width: 42px;
+      height: 42px;
+      margin: 0 15px 0 32px;
+      text-align: center;
+      line-height: 42px;
+      font-size: 20px;
+      color: #DC3B3B;
+      font-weight: bold;
+      background-color: #fff;
+      border-radius: 50%;
+    }
   }
   .skeAnimation {
     @include skeAnimation(#eee)

@@ -21,7 +21,7 @@
       >
         <pl-svg
           :class="$style.expressIcon"
-          name="express"
+          name="icon-express"
         />
         <div :class="$style.right">
           <div
@@ -37,7 +37,7 @@
       <div :class="$style.expressItem">
         <pl-svg
           :class="$style.expressIcon"
-          name="express-receive"
+          name="icon-express-receive"
         />
         <div :class="$style.right">
           <div :class="$style.main">
@@ -113,13 +113,16 @@
           v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT_WAIT_RETURN'"
           :class="$style.tips"
         >
-          运费不可退，优惠{{ refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.couponAmount || 0 }}元不可退，如有疑问，请联系商家协商
+          <span>运费不可退，</span>
+          <span v-if="refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.couponAmount">优惠{{ refundDetail.mallOrderProductRModel.couponAmount }}元不可退，</span>
+          <span v-if="refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.scholarShipAmount">红包(奖学金){{ refundDetail.mallOrderProductRModel.scholarShipAmount }}元不可退，</span>
+          如有疑问，请联系商家协商
         </div>
         <div
           v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
           :class="$style.tips"
         >
-          <div>退款返还您的实际付款金额，优惠劵将不予退回</div>
+          <div>退款返还您的实际付款金额，优惠劵、红包(奖学金)将不予退回</div>
           <div>退款到帐时间，请查看您的付款账户</div>
         </div>
       </div>
@@ -277,7 +280,7 @@
         <div :class="$style.popupTitle">
           <pl-svg
             :class="$style.popupTitleIcon"
-            name="rows"
+            name="icon-rows"
           />
           <span>联系我们</span>
         </div>
@@ -287,7 +290,7 @@
           <div :class="$style.popupAddress">
             <pl-svg
               :class="$style.popupAddressLeftIcon"
-              name="address-blue"
+              name="icon-address-blue"
             />
             <span
               :class="$style.popupAddressText"
@@ -295,7 +298,7 @@
             />
             <pl-svg
               :class="$style.popupAddressRightIcon"
-              name="copy"
+              name="icon-copy"
               @click="doCopy"
             />
           </div>
@@ -303,7 +306,7 @@
             <pl-button
               size="larger"
               background-color="#387AF6"
-              prefix-icon="mobile-blue"
+              prefix-icon="icon-mobile-blue"
               round
             >
               立即拨打
@@ -601,6 +604,7 @@ export default {
     }
     .express-icon {
       width: 64px;
+      height: 64px;
     }
     .right {
       flex: 1;
@@ -696,13 +700,15 @@ export default {
       margin-top: 4px;
     }
     .img-list {
-      display: grid;
-      grid-template-columns: 144px 144px 144px;
-      grid-gap: 14px;
+      display: inline-flex;
+      flex-wrap: wrap;
+      font-size: 0;
       padding-bottom: 20px;
       > img {
         width: 144px;
         height: 144px;
+        margin-right: 14px;
+        margin-bottom: 14px;
         object-fit: cover;
       }
     }

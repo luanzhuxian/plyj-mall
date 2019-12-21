@@ -1,10 +1,14 @@
 const MODEL = process.argv[process.argv.indexOf('--model') + 1]
 const NODE_ENV = process.env.NODE_ENV
 const VERSION = process.env.npm_package_version
+const SERVER = process.argv[process.argv.indexOf('--s') + 1]
+
 /* ********************************************* 环境 *************************************** */
 console.log('------------------------- ' + NODE_ENV + ' -------------------------')
 /* ********************************************* 模式 *************************************** */
 console.log('------------------------- model: ' + MODEL + ' -------------------------')
+/* ********************************************* 服务 *************************************** */
+console.log('------------------------- server: ' + SERVER + ' -------------------------')
 const externals =
   // 生产环境或者开发模式，使用CDN库依赖
   process.env.NODE_ENV === 'production'
@@ -48,7 +52,7 @@ module.exports = {
       // 37测试 34开发 王恩74 李宾哲132 赵伟116 牛昌昌92 张涛77 任钊64
       '/apis': {
         // target: 'http://mall.youpenglai.com'
-        target: 'http://192.168.130.77'
+        target: `http://192.168.130.${SERVER || 171}`
       },
       '/live/': {
         // target: 'http://mall.youpenglai.com'

@@ -13,11 +13,14 @@
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN, CHECK_ACTIVITY_AUTH, GET_SKIN_ID } from './store/mutation-type'
+import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN, GET_ACTIVITY_DATA, GET_SKIN_ID, SET_LIVE_INFO, SET_COUPON_INFO, SET_INVITING_EVENT, SET_JX_EVENT, SET_NW_EVENT } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
 import { isIOS } from './assets/js/util'
-import qs from 'qs'
 import Cookie from './assets/js/storage-cookie'
+import qs from 'qs'
+import { getLiveInfo, getJianxueInfo, getNianweiInfo, getMyCouponInfo } from './apis/home'
+import { getCurrentActivity } from './apis/invitenewcomers'
+
 export default {
   components: {
     Navbar,
@@ -38,7 +41,8 @@ export default {
         'Classify',
         'WhatsHelper',
         'Activity',
-        'InviteNewcomers'
+        'InviteNewcomers',
+        'SpringPloughing'
       ],
       // 允许分享和复制链接的页面 (除了这个和自定义分享，其他页面隐藏分享和复制链接)
       shareRoutes: [
@@ -97,10 +101,7 @@ export default {
         await this.getUserInfo()
       }
       this.logined = true
-      // 是否开通活动权限
-      this.checkActivityAuth()
-      // 获取皮肤id
-      this.getSkinId()
+      this.getEntryData()
       // 尝试清除微信缓存
       // 必须放在微信登录之后，否则会影响微信登录
       // 且有code时不用刷新
@@ -120,13 +121,18 @@ export default {
   async mounted () {},
   methods: {
     ...mapMutations({
-      setTheme: SET_THEME
+      setTheme: SET_THEME,
+      setLiveInfo: SET_LIVE_INFO,
+      setCouponInfo: SET_COUPON_INFO,
+      setInvitingEvent: SET_INVITING_EVENT,
+      setJxEvent: SET_JX_EVENT,
+      setNwEvent: SET_NW_EVENT
     }),
     ...mapActions({
       getUserInfo: USER_INFO,
       getMallInfo: GET_MALL_INFO,
       login: LOGIN,
-      checkActivityAuth: CHECK_ACTIVITY_AUTH,
+      getActivityData: GET_ACTIVITY_DATA,
       getSkinId: GET_SKIN_ID
     }),
     share (willHide = []) {
@@ -138,6 +144,21 @@ export default {
         imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
         willHide
       })
+    },
+    // 获取首页、主会场页所需数据
+    async getEntryData () {
+      try {
+        // 获取皮肤id
+        this.getSkinId()
+        this.getActivityData()
+        getLiveInfo().then(({ result }) => this.setLiveInfo(result)).catch(e => this.setLiveInfo({}))
+        getCurrentActivity().then(({ result }) => this.setInvitingEvent(result)).catch(e => this.setInvitingEvent({}))
+        getJianxueInfo().then(({ result }) => this.setJxEvent(result)).catch(e => this.setJxEvent({}))
+        getNianweiInfo().then(({ result }) => this.setNwEvent(result)).catch(e => this.setNwEvent({}))
+        getMyCouponInfo().then(({ result }) => this.setCouponInfo(result)).catch(e => this.setCouponInfo({}))
+      } catch (error) {
+        throw error
+      }
     }
   }
 }
@@ -170,6 +191,4 @@ function disposeUrl () {
   return newUrl
 }
 </script>
-<style module lang="scss">
-  @import "assets/scss/theme/base.scss";
-</style>
+<style module lang="scss"></style>

@@ -79,10 +79,29 @@ export default {
   [type.STUDENTS] (state, payload) {
     state.students = payload
   },
-  [type.CHECK_ACTIVITY_AUTH] (state, payload) {
-    state.isActivityAuth = payload
+  [type.GET_ACTIVITY_DATA] (state, payload) {
+    state.activityData = payload
   },
   [type.GET_SKIN_ID] (state, payload) {
     state.skinId = payload || 0
+  },
+  [type.SET_LIVE_INFO] (state, payload) {
+    state.liveInfo = payload || {}
+  },
+  [type.SET_COUPON_INFO] (state, payload) {
+    state.d12CouponTotal = payload.doubleTwelveCount || 0
+    state.xinchunCouponTotal = payload.newYearCount || 0
+  },
+  [type.SET_INVITING_EVENT] (state, payload) {
+    state.invitingEvent = payload || {}
+  },
+  [type.SET_JX_EVENT] (state, payload) {
+    state.jxEvent = payload || {}
+  },
+  [type.SET_NW_EVENT] (state, payload) {
+    state.nwEvent = payload && payload.length ? payload[0] : {}
+  },
+  [type.SET_CURRENT_TIME] (state, payload) {
+    state.currentTime = payload
   }
 }

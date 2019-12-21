@@ -46,7 +46,7 @@
         @click="addNew"
       >
         <span v-text="canSelect ? '新增学员' : '点击这里，新增一个学员信息'" />
-        <pl-svg name="add-bold" :color="!canSelect ? '#fff' : '#F2B036'" />
+        <pl-svg name="icon-add-bold" :fill="!canSelect ? '#fff' : '#F2B036'" width="30" />
       </button>
       <button v-if="canSelect" @click="confirmSelect" :class="$style.confirmBtn">
         <span>确定</span>
@@ -111,7 +111,8 @@ export default {
           this.checked.push(data)
         }
       } else {
-        this.checked.splice(this.checked.indexOf(data), 1)
+        let index = this.checked.indexOf(data)
+        if (index !== -1) this.checked.splice(index, 1)
       }
     },
     addNew () {
@@ -234,14 +235,15 @@ export default {
   .buttons {
     position: fixed;
     bottom: 40px;
-    display: grid;
-    grid-template-columns: 340px 340px;
-    grid-gap: 22px;
+    display: flex;
+    justify-content: space-between;
+    width: 702px;
     &.can-select {
       display: block;
       width: 702px;
     }
     > button {
+      width: 340px;
       height: 108px;
       font-size: 32px;
       font-weight: bold;

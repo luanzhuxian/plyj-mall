@@ -104,6 +104,15 @@ export default [
     }
   },
   {
+    path: '/my/welfare/couponActivity/:couponId',
+    name: 'CouponActivity',
+    props: true,
+    component: () => import('../views/my/welfare/Coupon-Activity.vue'),
+    meta: {
+      title: '满减活动'
+    }
+  },
+  {
     path: '/my/welfare/historyCoupon',
     name: 'HistoryCoupon',
     component: () => import('../views/my/welfare/History-Coupon.vue'),
@@ -125,6 +134,30 @@ export default [
     component: () => import('../views/my/welfare/Present.vue'),
     meta: {
       title: '我的礼品'
+    }
+  },
+  {
+    path: '/my/welfare/burse',
+    name: 'MyBurse',
+    component: () => import('../views/my/welfare/Burse.vue'),
+    meta: {
+      title: '我的奖学金'
+    }
+  },
+  {
+    path: '/my/welfare/burseRecord',
+    name: 'MyBurseRecord',
+    component: () => import('../views/my/welfare/Burse-Record.vue'),
+    meta: {
+      title: '我的奖学金使用记录'
+    }
+  },
+  {
+    path: '/my/welfare/burseDetail/:id',
+    name: 'MyBurseDetail',
+    component: () => import('../views/my/welfare/Burse-Detail.vue'),
+    meta: {
+      title: '我的奖学金详情'
     }
   }
 ]

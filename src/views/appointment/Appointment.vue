@@ -7,10 +7,10 @@
       <img :src="A.mediaDetailModelList[0] ? A.mediaDetailModelList[0].mediaUrl : 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/ping-xuan.jpg'" alt="">
       <div :class="$style.topContent">
         <a v-if="servicePhoneModels.length === 1" :class="$style.callService" :href="`tel:${servicePhoneModels[0].contactWay}`">
-          <pl-svg name="call-service" />
+          <pl-svg name="icon-call-service" />
         </a>
         <a v-else :class="$style.callService" @click="showContact = true">
-          <pl-svg name="call-service" />
+          <pl-svg name="icon-call-service" />
         </a>
         <div :class="$style.mallName">
           <img :class="$style.img" :src="mallLogo">
@@ -27,7 +27,7 @@
             {{ mallDesc }}
           </p>
           <div :class="$style.address">
-            <pl-svg name="address4" />
+            <pl-svg name="icon-address4" width="34" height="34" />
             <span
               :class="{
                 [$style.addressContent]: true,
@@ -49,9 +49,9 @@
       v-if="B"
     >
       <div :id="typeMap[B.type]" :class="$style.moduleTitle" v-if="B">
-        <pl-svg :class="$style.moduleIcon" name="school_show" />
+        <pl-svg :class="$style.moduleIcon" name="icon-school_show" height="36" />
         <span :class="$style.title" v-text="B.titleName" />
-        <pl-svg @click="$router.push({ name: 'SchoolShow' })" :class="$style.enter" name="enter" />
+        <pl-svg @click="$router.push({ name: 'SchoolShow' })" :class="$style.enter" name="icon-enter" height="30" />
       </div>
       <ul :class="$style.contentList">
         <li
@@ -71,9 +71,9 @@
       v-if="C"
     >
       <div :id="typeMap[C.type]" :class="$style.moduleTitle">
-        <pl-svg :class="$style.moduleIcon" name="five_pointed" />
+        <pl-svg :class="$style.moduleIcon" name="icon-five_pointed" height="36" />
         <span :class="$style.title" v-text="C.titleName" />
-        <pl-svg @click="$router.push({ name: 'StudentShow' })" :class="$style.enter" name="enter" />
+        <pl-svg @click="$router.push({ name: 'StudentShow' })" :class="$style.enter" name="icon-enter" height="30" />
       </div>
       <ul :class="$style.contentList">
         <li
@@ -93,7 +93,7 @@
       v-if="D && D.mediaDetailModelList.length"
     >
       <div :id="typeMap[D.type]" :class="$style.moduleTitle">
-        <pl-svg :class="$style.moduleIcon" name="video" />
+        <pl-svg :class="$style.moduleIcon" name="icon-video" height="36" />
         <span :class="$style.title" v-text="D.titleName" />
       </div>
       <pl-video :url="D.mediaDetailModelList[0].mediaUrl" />
@@ -107,18 +107,18 @@
       v-if="E"
     >
       <div :id="typeMap[E.type]" :class="$style.moduleTitle">
-        <pl-svg :class="$style.moduleIcon" name="school_intro" />
+        <pl-svg :class="$style.moduleIcon" name="icon-school_intro" height="36" />
         <span :class="$style.title" v-text="E.titleName" />
       </div>
       <div
         :class="$style.zizhiContent + ' ql-container ql-editor'"
         v-html="E.detailContent"
-        :style="{ '--maxHeight': maxHeight }"
+        :style="{ 'max-height': maxHeight }"
         ref="richText"
       />
       <p v-if="richTextMaxHeight > 200" :class="{ [$style.zizhiSeeMore]: true, [$style.showMore]: isShowMore }" @click="seeMore">
         <span>{{ isShowMore ? '收起' : '查看更多' }}</span>
-        <pl-svg name="right" color="#ccc" />
+        <pl-svg name="icon-right" fill="#ccc" />
       </p>
     </div>
 
@@ -130,7 +130,7 @@
       v-if="F"
     >
       <div :id="typeMap[F.type]" :class="$style.moduleTitle">
-        <pl-svg :class="$style.moduleIcon" name="aptitude" />
+        <pl-svg :class="$style.moduleIcon" name="icon-aptitude" height="36" />
         <span :class="$style.title" v-text="F.titleName" />
       </div>
       <ul :class="$style.contentList">
@@ -182,7 +182,7 @@ export default {
     try {
       let showStatus = this.$route.query.showStatus || ''
       let { result } = await getData(showStatus)
-      sessionStorage.setItem('PINGXUAN', JSON.stringify(result.mallBrandingRequestModels))
+      sessionStorage.setItem('PIN_XUAN', JSON.stringify(result.mallBrandingRequestModels))
       this.data = result
       await this.$nextTick()
       if (this.$refs.richText) {
@@ -395,14 +395,15 @@ export default {
       }
     }
     &.b > .content-list {
-      display: grid;
-      grid-template-columns: 340px 340px;
+      display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      grid-row-gap: 22px;
+      margin-bottom: -22px;
       overflow: auto;
       > li {
         width: 340px;
         height: 340px;
+        margin-bottom: 22px;
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center center;
@@ -458,7 +459,6 @@ export default {
     }
   }
   .zizhi-content {
-    max-height: var(--maxHeight);
     word-break: keep-all;
     overflow: hidden;
     transition: max-height .6s linear;

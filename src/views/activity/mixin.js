@@ -22,10 +22,11 @@ export default {
       if (timestamp >= endTs) msg = '已结束'
       return msg
     },
-    getTime ({ activityStartTime, activityEndTime, status }) {
+    getTime (item) {
       // 0: 未开始 1: 进行中
-      const startTs = moment(activityStartTime).valueOf()
-      const endTs = moment(activityEndTime).valueOf()
+      const startTs = moment(item.activityStartTime || item.startTime).valueOf()
+      const endTs = moment(item.activityEndTime || item.endTime).valueOf()
+      const status = item.status
       let ts
       if (status === 0) {
         ts = startTs
@@ -40,6 +41,23 @@ export default {
       } else if (item.goodsInfo.activityInfo.status === 1) {
         item.goodsInfo.activityInfo.status = 3
       }
+      this.$emit('done')
+    },
+    sub (arg1, arg2) {
+      let r1, r2, m, n
+      try {
+        r1 = arg1.toString().split('.')[1].length
+      } catch (e) {
+        r1 = 0
+      }
+      try {
+        r2 = arg2.toString().split('.')[1].length
+      } catch (e) {
+        r2 = 0
+      }
+      m = Math.pow(10, Math.max(r1, r2))
+      n = (r1 >= r2) ? r1 : r2
+      return ((arg1 * m - arg2 * m) / m).toFixed(n)
     }
   }
 }

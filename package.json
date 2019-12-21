@@ -3,14 +3,12 @@
   "version": "2.1.10",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve --model local",
+    "start": "vue-cli-service serve --model local --s",
     "build": "vue-cli-service build --model production",
     "build:dev": "vue-cli-service build --model development",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit",
-    "svg": "vsvg -s ./src/assets/svg -t ./src/assets/fonts/svg",
-    "svg:ui": "vsvg -s ./src/components/penglai-ui/assets/svg -t ./src/components/penglai-ui/assets/icon"
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "ali-oss": "^6.2.1",
@@ -41,7 +39,6 @@
     "node-sass": "^4.13.0",
     "postcss-px-to-viewport": "^1.1.1",
     "sass-loader": "^7.3.1",
-    "vue-svgicon": "^3.2.6",
     "vue-template-compiler": "^2.6.10"
   },
   "husky": {

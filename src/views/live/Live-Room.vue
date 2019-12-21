@@ -1,12 +1,19 @@
 <template>
   <div :class="$style.liveRoom" ref="liveRoom">
+    <!--在线直播-->
     <div
+      v-if="videoLiveMes.type === 'live'"
       ref="playerBox"
       id="player"
       :class="{
         [$style.playerBox]: true
       }"
     />
+    <!--视频直播-->
+    <div v-if="videoLiveMes.type === 'video'" :class="$style.playBackBox">
+      <div class="plv-live-cutOff" v-if="videoLiveMes.flag" />
+      <video v-else x5-playsinline="" playsinline="" webkit-playsinline="" preload controls x5-video-player-type="h5-page" ref="livePlayBack" :src="videoLiveMes.url" />
+    </div>
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
       <div :class="$style.tabs">
@@ -39,7 +46,7 @@
             商品<i>({{ productList.length }})</i>
           </div>
         </div>
-        <pl-button @click="share" type="warning" size="mini">分享海报</pl-button>
+        <pl-button style="padding:0 24px" @click="share" type="warning" size="small">分享海报</pl-button>
       </div>
 
       <div :class="$style.chatWrap" ref="chatRecords">
@@ -57,9 +64,9 @@
               <span :class="$style.userName" v-text="item.name + '：'" />
               <div :class="$style.message">
                 <span v-text="item.message" />
-                <pl-icon v-if="item.loading" :class="$style.messageLoading" name="icon-btn-loading" color="#999" size="24" font-weight="bolder" @click="repeatSend(item, i)" />
+                <pl-svg v-if="item.loading" :class="$style.messageLoading" name="icon-btn-loading" fill="#999" width="24" font-weight="bolder" @click="repeatSend(item, i)" />
                 <span v-if="!item.success && !item.loading" :class="$style.error">
-                  <pl-icon name="icon-warning2" color="red" size="24" font-weight="bolder" @click="repeatSend(item, i)" />
+                  <pl-svg name="icon-warning" fill="red" width="24" @click="repeatSend(item, i)" />
                   <i :class="$style.faild" @click="repeatSend(item, i)">发送失败</i>
                 </span>
               </div>
@@ -76,9 +83,9 @@
               <span :class="$style.userName" v-text="item.name" />&nbsp;
               <div :class="$style.message">
                 <span v-text="item.message" />
-                <pl-icon v-if="item.loading" :class="$style.messageLoading" name="icon-btn-loading" color="#999" size="16" font-weight="bolder" @click="repeatSend(item, i)" />
+                <pl-svg v-if="item.loading" :class="$style.messageLoading" name="icon-btn-loading" fill="#999" width="16" @click="repeatSend(item, i)" />
                 <span v-if="!item.success && !item.loading" :class="$style.error">
-                  <pl-icon name="icon-warning2" color="red" size="24" font-weight="bolder" @click="repeatSend(item, i)" />
+                  <pl-svg name="icon-warning" fill="red" width="24" @click="repeatSend(item, i)" />
                   <i :class="$style.faild" @click="repeatSend(item, i)">发送失败</i>
                 </span>
               </div>
@@ -94,7 +101,7 @@
             >
               <span :class="$style.userName" v-text="item.name" />
               <span>&nbsp;赠送给老师&nbsp;</span>
-              <pl-icon v-if="item.giftType === 'flower'" name="icon-meiguihua" type="svg" width="36" height="36" />
+              <pl-svg v-if="item.giftType === 'flower'" name="icon-meiguihua" width="36" height="36" />
             </div>
           </template>
         </div>
@@ -112,7 +119,10 @@
                 :full="item.useLimitAmount"
                 :subtract="item.amount"
                 :amount="item.amount"
-                :instruction="item.couponName"
+                :instruction="item.brief"
+                :coupon-type="item.couponType"
+                :is-over-max="!item.canReceive"
+                :is-claimed="receiveCouponIdList.indexOf(item.couponId) !== -1"
                 @couponClick="couponClick(item.couponId)"
                 v-if="item.show"
               />
@@ -138,7 +148,7 @@
               <!--<div :class="$style.count">3</div>-->
             </div>
             <div :class="$style.vieFor">
-              <pl-icon name="icon-vie-for" color="#fff" size="40" />
+              <pl-svg name="icon-vie-for" fill="#fff" width="40" height="70" />
             </div>
           </div>
         </div>
@@ -146,7 +156,6 @@
 
       <div v-if="tab === 1" :class="$style.sendMessage">
         <form :class="$style.inputBox" @submit.prevent="messageConfirm">
-          <!--<pl-icon name="icon-biaoqing" size="42" color="#a8a8a8" @click="showEmoticon = !showEmoticon" />-->
           <input
             v-model="message"
             placeholder=" 进来了说点什么呗~"
@@ -156,7 +165,7 @@
           <button :class="$style.sendBtn">发送</button>
         </form>
         <div :class="$style.sendFlower" @click="sendFlower">
-          <pl-icon name="icon-flower" size="37" color="#F9DD54" />
+          <pl-svg name="icon-flower" width="37" />
         </div>
 
         <!--<transition name="fade">
@@ -205,7 +214,7 @@
         <div :class="$style.posterWrap">
           <img :src="poster" alt="">
           <div>长按识别或保存二维码，分享给朋友吧！</div>
-          <pl-icon name="icon-close1" size="48" color="#fff" @click="showPoster = false" />
+          <pl-svg name="icon-close3" width="48" fill="#fff" @click="showPoster = false" />
         </div>
       </div>
     </transition>
@@ -223,7 +232,8 @@ import {
   pay,
   hasPied,
   cancelOrder,
-  setComeInConut
+  setComeInConut,
+  getVideoMesById
 } from '../../apis/live'
 import {
   receiveCouponForLive
@@ -273,9 +283,20 @@ export default {
        */
       chatRecords: [],
       couponList: [],
+      isCouponLoading: false, // 增加节流阀
       productList: [],
-      detail: {}
-
+      detail: {},
+      receiveCouponIdList: [], // 已领取的优惠券id列表
+      // 视频直播信息
+      videoLiveMes: {
+        type: 'live', // 直播类型 live video
+        url: '', // 视频直播 url
+        videoLibId: '',
+        liveStartLongTime: '', // 直播开始时间
+        serviceLongTime: '', // 服务器时间
+        flag: true // 直播结束,却省图
+      },
+      videoLiveTimer: null// 视频直播开播计时器
       // emoticon
     }
   },
@@ -288,6 +309,7 @@ export default {
     }
   },
   async created () {
+    this.receiveCouponIdList = []
     if (this.roleCode === 'VISITOR') {
       await this.$confirm({
         message: '为了您的账号安全，请绑定手机号',
@@ -318,10 +340,11 @@ export default {
           this.needPay = true
           return
         }
-        await setComeInConut({
-          message: (detail.paidAmount || 0) + '元'
-        })
       }
+      await setComeInConut({
+        id: detail.id,
+        message: (detail.paidAmount || 0) + '元'
+      })
       this.initPlayer()
       this.initSocket()
     } catch (e) {
@@ -330,22 +353,92 @@ export default {
     }
   },
   methods: {
+    // 视频直播情况下获取视频信息
+    async getVideoMesById () {
+      try {
+        let mes = await getVideoMesById(this.videoLiveMes.videoLibId)
+        if (mes) {
+          this.videoLiveMes.url = mes.url
+        }
+      } catch (e) { throw e }
+    },
+    // 播放开始跳转到固定时间,且隐藏控件
+    async controlVideo () {
+      try {
+        let section = this.videoLiveMes.serviceLongTime - this.videoLiveMes.liveStartLongTime
+        // 已开播多少秒
+        let startTime = parseInt(section / 1000)
+        // 直播还有半个小时内开播，自动刷新
+        let time = 30 * 60
+        clearInterval(this.videoLiveTimer)
+        if (startTime >= -time && startTime < 0) {
+          let times = 10 - startTime
+          this.videoLiveTimer = setTimeout(_ => {
+            location.reload()
+          }, times * 1000)
+        }
+        // 直播时间还未结束
+        if (section > 0) {
+          this.videoLiveMes.flag = false
+          await this.$nextTick()
+          let vid = this.$refs.livePlayBack
+          vid.addEventListener('play', _ => { // 播放开始执行的函数
+            // var agent = (navigator.userAgent || navigator.vendor || window.opera)
+            // if (agent != null) {
+            //   let agentName = agent.toLowerCase()
+            //   alert(/android/i.test(agentName))
+            //   alert(agent)
+            //   if (/android/i.test(agentName)) {
+            //     vid.controls = false
+            //   }
+            //   // ios
+            //   else {
+            //     vid.controls = true
+            //   }
+            // }
+            vid.currentTime = startTime
+            vid.controls = false
+          })
+          //   // 安卓
+          //   vid.addEventListener('x5videoexitfullscreen', function () {
+          //     vid.controls = true
+          //     vid.play()
+          //   })
+          //   // ios 支持的事件
+          //   vid.addEventListener('webkitendfullscreen', function () {
+          //     vid.play()
+          //   })
+          // 监听错误
+          vid.addEventListener('error', _ => {
+            vid.src = ''
+            this.videoLiveMes.flag = true
+          })
+        } else {
+          this.videoLiveMes.flag = true
+        }
+      } catch (e) { throw e }
+    },
     async initPlayer () {
-      let { channelId, channeUserId } = this
-      let p = polyvObject('#player').livePlayer({
-        wrap: '#player',
-        width: '100%',
-        height: '100%',
-        autoplay: true,
-        uid: channeUserId,
-        isAutoChange: true,
-        vid: channelId,
-        x5: false,
-        hasControl: true,
-        x5FullPage: true,
-        forceH5: true,
-        useH5Page: true
-      })
+      // 默认在线直播
+      if (this.videoLiveMes.type && this.videoLiveMes.type === 'live') {
+        let { channelId, channeUserId } = this
+        let p = polyvObject('#player').livePlayer({
+          wrap: '#player',
+          width: '100%',
+          height: '100%',
+          autoplay: true,
+          uid: channeUserId,
+          isAutoChange: true,
+          vid: channelId,
+          x5: false,
+          hasControl: true,
+          x5FullPage: true,
+          forceH5: true,
+          useH5Page: true
+        })
+      } else {
+        this.controlVideo()
+      }
       // let timer = setInterval(() => {
       //   let video = document.querySelector('#player video')
       //   if (video) {
@@ -498,6 +591,14 @@ export default {
       try {
         let data = await getActiveCompleteInfo()
         if (data) {
+          if (data.liveType) {
+            this.videoLiveMes.type = data.liveType
+            this.videoLiveMes.videoLibId = data.videoLibId
+            this.videoLiveMes.liveStartLongTime = Number(data.liveStartLongTime)
+            this.videoLiveMes.serviceLongTime = Number(data.serviceLongTime)
+            this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })
+            await this.getVideoMesById()
+          }
           this.liveStartTime = moment(data.liveStartTime).valueOf()
           share({
             appId: this.appId,
@@ -536,15 +637,20 @@ export default {
       }
     },
     async couponClick (id) {
+      if (this.isCouponLoading) return
       try {
+        this.isCouponLoading = true
         await receiveCouponForLive({
           couponId: id,
           activityId: this.activeId,
           entityClassName: 'MallLiveActivityEntity'
         })
         this.$success('领取成功')
+        this.receiveCouponIdList.push(id)
       } catch (e) {
         throw e
+      } finally {
+        this.isCouponLoading = false
       }
     },
     // 判断优惠券是否到了显示时间
@@ -587,6 +693,7 @@ export default {
         paidAmount
       } = this.detail
       // 生成二维码
+      console.log(coverImg)
       try {
         let all = [
           generateQrcode(300, location.href, 0, null, 0, 'canvas'),
@@ -678,6 +785,9 @@ export default {
         }
       })
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.videoLiveTimer)
   }
 }
 </script>
@@ -685,6 +795,19 @@ export default {
 <style module lang="scss">
   .live-room {
     height: 100vh;
+    > .play-back-box {
+      width: 100%;
+      height: 442px;
+      > video {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+      }
+      > div {
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
   .player-box {
     position: relative;
@@ -702,7 +825,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 48px;
+    padding: 0 24px;
     font-size: 26px;
     background-color: #fff;
     > div {
@@ -737,6 +860,7 @@ export default {
   .chat-wrap {
     flex: 1;
     overflow: auto;
+    position: relative;
   }
   .chat-records {
     display: flex;
@@ -860,6 +984,9 @@ export default {
   }
 
   .send-flower {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 72px;
     height: 72px;
     line-height: 72px;
@@ -1018,7 +1145,7 @@ export default {
     justify-content: center;
     width: 100%;
     height: 100%;
-    z-index: 2003;
+    z-index: 99999;
     background-color: rgba(0, 0, 0, .65);
     font-size: 0;
      > .poster-wrap {

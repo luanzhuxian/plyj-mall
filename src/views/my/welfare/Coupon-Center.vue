@@ -5,7 +5,7 @@
     </div>
     <div :class="$style.couponList">
       <div :class="$style.couponHeader">
-        <pl-icon name="icon-coupon1" width="40" height="33" type="svg" />
+        <pl-svg name="icon-coupon2" width="40" height="33" />
         <span>优惠券</span>
       </div>
       <div :class="$style.couponView">
@@ -20,7 +20,7 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
-              <pl-icon name="icon-coupon1" width="240" height="240" type="svg" />
+              <pl-svg name="icon-newCouponIcon" width="400" />
             </div>
             <CouponItem
               v-for="item in couponList"
@@ -33,9 +33,11 @@
               :instruction="item.brief"
               :use-start-time="item.useStartTime"
               :use-end-time="item.useEndTime"
-              :status="item.canReceive?'':'已领取'"
               :receive-count="item.count"
-              @couponClick="couponClick(item.id)"
+              :coupon-type="item.couponType"
+              :is-over-max="!item.canReceive"
+              :is-claimed="!!item.isClaimed"
+              @couponClick="couponClick(item)"
             />
           </template>
         </load-more>
@@ -67,42 +69,39 @@ export default {
         current: 1,
         size: 10
       },
-      getAvailableCouponList
+      getAvailableCouponList,
+      isCouponLoading: false // 增加节流阀
     }
   },
-  mounted () {
+  activated () {
     if (this.$refs.loadMore) this.$refs.loadMore.refresh()
   },
-  activated () {
-    this.$refs.loadMore.refresh()
-  },
   methods: {
-    async couponClick (id) {
+    async couponClick (item) {
+      if (this.isCouponLoading) return
+      let id = item.id
+      if (!id) { // TODO.Echo无Id时弹框提示，并打印当前优惠券信息
+        return this.$warning('请刷新页面')
+      }
       try {
-        const { result, message } = await receiveCoupon({
+        this.isCouponLoading = true
+        const { result } = await receiveCoupon({
           couponId: id
         })
-        if (result) {
-          this.$success('领取成功')
-          // 只刷新所领取卡券信息
-          let oldCouponIndex = this.couponList.findIndex(item => item.id === id)
-          this.couponList.splice(oldCouponIndex, 1)
-          this.couponList.splice(oldCouponIndex, 0, result)
-        } else {
-          this.$error(message)
-        }
+        result.isClaimed = true
+        // 只刷新所领取卡券信息
+        let oldCouponIndex = this.couponList.findIndex(item => item.id === id)
+        this.couponList.splice(oldCouponIndex, 1)
+        this.couponList.splice(oldCouponIndex, 0, result)
+        this.$success('领取成功')
       } catch (e) {
         throw e
+      } finally {
+        this.isCouponLoading = false
       }
     },
-    formatCouponList (list) {
-      list.map(item => {
-        item.status = item.canReceive ? '' : '已领取'
-      })
-      return list
-    },
     refreshHandler (list) {
-      this.couponList = this.formatCouponList(list)
+      this.couponList = list
     }
   }
 }
@@ -142,7 +141,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 400px;
+        margin-top: 300px;
         margin-bottom: -200px;
       }
     }

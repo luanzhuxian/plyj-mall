@@ -2,7 +2,6 @@
   <div
     :class="{
       [$style.homeTemplateB]: true,
-      [$style.noSkin]: skinId === 0,
       [$style.skinXmas]: skinId === 1,
       [$style.skinYuanDan]: skinId === 2,
       [$style.skinNewYear]: skinId === 3,
@@ -19,8 +18,9 @@
         >
       </div>
       <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
-      <broadcast :class="$style.broadcast" v-if="isLiveShow" />
-      <activity :class="$style.activity" v-if="type === 4" />
+      <live :class="$style.live" v-if="isLiveShow" />
+      <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
+      <d12-activity :class="$style.activity" v-if="type === 4" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
         <skin-title
@@ -31,7 +31,15 @@
         />
         <hot-item :data="POPULAR" />
       </div>
-      <appointment-gift :class="$style.appointment" :data="{ YUYUE, PINGXUAN }" />
+      <appointment
+        :class="$style.appointment"
+        :data="YU_YUE"
+        :slides-per-view="2"
+      />
+      <propagate
+        :class="$style.propagate"
+        :data="PIN_XUAN"
+      />
       <div :class="$style.best" v-if="CLASS.showStatue === 1">
         <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
         <skin-title
@@ -64,29 +72,33 @@
 
 <script>
 import Search from './components/Search.vue'
+import Live from '../activity/components/Live.vue'
+import Activity from '../activity/xin-chun/Activity.vue'
+import D12Activity from './components/Activity.vue'
 import Banner from './components/Banner.vue'
 import Adv from './components/Adv.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
-import AppointmentGift from './components/Appointment-Gift.vue'
-import Broadcast from '../activity/components/Broadcast.vue'
-import Activity from './components/Activity.vue'
+import Appointment from './components/Appointment.vue'
+import Propagate from './components/Propagate-Small.vue'
 import SkinTitle from './components/Skin-Title.vue'
 
 export default {
   name: 'HomeTemplateB',
   inject: ['parent'],
   components: {
+    Search,
+    Live,
+    Activity,
+    D12Activity,
     Banner,
     Adv,
-    Search,
     HotItem,
     Best,
     BestRecommend,
-    AppointmentGift,
-    Broadcast,
-    Activity,
+    Appointment,
+    Propagate,
     SkinTitle
   },
   props: {
@@ -106,8 +118,7 @@ export default {
     }
   },
   data () {
-    return {
-    }
+    return {}
   },
   computed: {
     BANNER () {
@@ -125,16 +136,19 @@ export default {
     RECOMMEND () {
       return this.data.RECOMMEND || {}
     },
-    YUYUE () {
-      return this.data.YUYUE || {}
+    YU_YUE () {
+      return this.data.YU_YUE || {}
     },
-    PINGXUAN () {
-      return this.data.PINGXUAN || {}
+    PIN_XUAN () {
+      return this.data.PIN_XUAN || {}
     },
     isLiveShow () {
       return this.type === 4 &&
       this.parent.liveInfo &&
       (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
+    },
+    isNwEventShow () {
+      return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
     }
   }
 }
@@ -143,7 +157,7 @@ export default {
 <style module lang="scss">
   @import "./skin.scss";
 
-  .home-Template-b {
+  .home-template-b {
     background-color: #EDEDED;
     font-size: 0;
   }
@@ -152,21 +166,12 @@ export default {
     padding: 0 20px;
   }
   .banner {
-    padding: 24px 24px 32px 24px;
+    padding: 24px 24px 32px;
     background-color: #fff;
     border-radius: 20px 20px 0 0;
   }
-  .adv {
-    padding: 20px 24px 0;
-    background-color: #F4F5F9;
-  }
-  .broadcast,
-  .activity {
-    padding: 20px 24px 0;
-    background-color: #F4F5F9;
-  }
   .hot-item {
-    padding: 34px 24px 24px 24px;
+    padding: 34px 24px 0;
     background-color: #F4F5F9;
     .title {
       display: flex;
@@ -197,10 +202,6 @@ export default {
       0% { background-position: 150% 0 }
       100% { background-position: -50% 0 }
     }
-  }
-  .appointment {
-    padding: 20px 24px;
-    background-color: #f4f5f9;
   }
   .best {
     padding: 24px;
@@ -249,6 +250,17 @@ export default {
     font-size: 26px;
     color: #999;
     background: #EAE9F7;
+  }
+  .adv,
+  .live,
+  .activity {
+    padding: 20px 24px 0;
+    background-color: #F4F5F9;
+  }
+  .appointment,
+  .propagate {
+    padding: 24px 24px 0;
+    background-color: #F4F5F9;
   }
   .shuang12 {
     padding: 20px 24px 0;

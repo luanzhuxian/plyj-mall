@@ -1,15 +1,23 @@
 <template>
   <div :class="$style.home">
-    <TemplateA
-      v-if="type === 1"
-      :data="modules"
-    />
-    <TemplateB
-      v-if="~[2, 3, 4].indexOf(type)"
-      :type="type"
-      :skin-id="skinId"
-      :data="modules"
-    />
+    <template v-if="allLoaded">
+      <TemplateB
+        v-if="~[3, 4].indexOf(type)"
+        :type="type"
+        :skin-id="skinId"
+        :data="modules"
+      />
+      <TemplateC
+        v-if="type === -1"
+        :type="type"
+        :skin-id="skinId"
+        :data="modules"
+      />
+      <invite-newcomers-home-entry />
+      <newcomers-home-entry />
+      <!--瓜分奖学金-->
+      <split-burse />
+    </template>
     <div :class="$style.skeleton" v-else>
       <div :class="$style.skeletonA" />
       <div :class="$style.skeletonB" />
@@ -18,28 +26,27 @@
       <div :class="$style.skeletonA" />
       <div :class="$style.skeletonB" />
     </div>
-    <invite-newcomers-home-entry />
-    <newcomers-home-entry />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
-import TemplateA from './Template-A.vue'
 import TemplateB from './Template-B.vue'
-import InviteNewcomersHomeEntry from '../invitenewcomers/InviteNewcomersHomeEntry.vue'
+import TemplateC from './Template-C.vue'
+import InviteNewcomersHomeEntry from '../double-twelve-day/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
-import { getTemplate, getLiveInfo, getJianxueInfo } from '../../apis/home'
-import { getCurrentActivity } from '../../apis/invitenewcomers'
+import SplitBurse from './../../components/common/Split-Burse.vue'
+import { getTemplate } from '../../apis/home'
 
 export default {
   name: 'Home',
   components: {
-    TemplateA,
     TemplateB,
+    TemplateC,
     InviteNewcomersHomeEntry,
-    NewcomersHomeEntry
+    NewcomersHomeEntry,
+    SplitBurse
     // WWEC
   },
   provide () {
@@ -51,42 +58,55 @@ export default {
     return {
       loaded: false,
       type: 0,
-      skinId: 0,
       modules: {
         BANNER: null,
         ADV: null,
         POPULAR: null,
-        YUYUE: null,
-        PINGXUAN: null,
+        YU_YUE: null,
+        PIN_XUAN: null,
         CLASS: null,
-        RECOMMEND: null,
-        MODULE_A: null,
-        MODULE_B: null,
-        MODULE_C: null,
-        MODULE_D: null,
-        MODULE_E: null
+        RECOMMEND: null
+        // MODULE_A: null,
+        // MODULE_B: null,
+        // MODULE_C: null,
+        // MODULE_D: null,
+        // MODULE_E: null
       },
       dataMoonLightBox: {},
       // 820用户注册次数
-      registerCountFor820: 0,
-      liveInfo: {}, // 直播
-      invitingEvent: {}, // 邀新有礼
-      jxEvent: {} // 见学之路
+      registerCountFor820: 0
     }
   },
   async created () {
     try {
       this.getTemplate()
-      const [{ result: live }, { result: invitingEvent }, { result: jxEvent }] = await Promise.all([getLiveInfo(), getCurrentActivity(), getJianxueInfo()])
-      this.liveInfo = live || {}
-      this.invitingEvent = invitingEvent || {}
-      this.jxEvent = jxEvent || {}
     } catch (e) {
       throw e
     }
   },
   computed: {
-    ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth'])
+    ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'liveInfo', 'invitingEvent', 'jxEvent', 'nwEvent']),
+    allLoaded () {
+      let result
+      if (this.type === 3) {
+        result = this.loaded &&
+        [0, 1, 2, 3, 4].includes(this.skinId)
+      }
+      if (this.type === 4) {
+        result = this.loaded &&
+        [0, 1, 2, 3, 4].includes(this.skinId) &&
+        (this.liveInfo !== null && !!this.liveInfo) &&
+        (this.invitingEvent !== null && !!this.invitingEvent) &&
+        (this.jxEvent !== null && !!this.jxEvent)
+      }
+      if (this.type === -1) {
+        result = this.loaded &&
+        [0, 1, 2, 3, 4].includes(this.skinId) &&
+        (this.liveInfo !== null && !!this.liveInfo) &&
+        (this.nwEvent !== null && !!this.nwEvent)
+      }
+      return result
+    }
   },
   watch: {
     isActivityAuth: {
@@ -110,29 +130,12 @@ export default {
             })
           return
         }
-        let { type, skinStatus, moduleModels } = result
-        if (type === 1) {
-          const bannerList = moduleModels.filter(module => module.moduleType === 1)
-          const prodList = moduleModels.filter(module => module.moduleType === 2)
-          this.modules.BANNER = bannerList[0]
-          this.modules.MODULE_B = bannerList[1]
-          this.modules.MODULE_D = bannerList[2]
-          this.modules.MODULE_A = prodList[0]
-          this.modules.MODULE_C = prodList[1]
-          this.modules.MODULE_E = prodList[2]
-        }
-        if (type === 2) {
-          this.modules.BANNER = moduleModels[0]
-          this.modules.POPULAR = moduleModels[1]
-          this.modules.YUYUE = moduleModels[2]
-          this.modules.PINGXUAN = moduleModels[3]
-          this.modules.RECOMMEND = moduleModels[4]
-        }
+        let { type, moduleModels } = result
         if (type === 3) {
           this.modules.BANNER = moduleModels[0]
           this.modules.POPULAR = moduleModels[1]
-          this.modules.YUYUE = moduleModels[2]
-          this.modules.PINGXUAN = moduleModels[3]
+          this.modules.YU_YUE = moduleModels[2]
+          this.modules.PIN_XUAN = moduleModels[3]
           this.modules.CLASS = moduleModels[4]
           this.modules.RECOMMEND = moduleModels[5]
         }
@@ -140,13 +143,21 @@ export default {
           this.modules.BANNER = moduleModels[0]
           this.modules.ADV = moduleModels[1]
           this.modules.POPULAR = moduleModels[2]
-          this.modules.YUYUE = moduleModels[3]
-          this.modules.PINGXUAN = moduleModels[4]
+          this.modules.YU_YUE = moduleModels[3]
+          this.modules.PIN_XUAN = moduleModels[4]
           this.modules.CLASS = moduleModels[5]
           this.modules.RECOMMEND = moduleModels[6]
         }
+        if (type === -1) {
+          this.modules.PIN_XUAN = moduleModels[0]
+          this.modules.YU_YUE = moduleModels[1]
+          this.modules.POPULAR = moduleModels[2]
+          this.modules.TEACHERS = moduleModels[3]
+          this.modules.CLASS = moduleModels[4]
+          this.modules.RECOMMEND = moduleModels[5]
+        }
         this.type = type
-        this.skinId = skinStatus
+        // this.skinId = skinStatus
         this.loaded = true
       } catch (e) {
         throw e
@@ -166,7 +177,7 @@ export default {
   }
 }
 </script>
-<style module lang="scss">
+<style lang="scss" module>
   .home {
     padding-bottom: 88px;
   }

@@ -6,9 +6,9 @@
       :type="type"
     />
     <!-- 直播-->
-    <broadcast
+    <live
       v-if="parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))"
-      :class="$style.broadcast"
+      :class="$style.live"
     />
     <maisong
       v-if="MAI_SONG.values && MAI_SONG.values.length"
@@ -59,18 +59,18 @@
 </template>
 
 <script>
-import Broadcast from './components/Broadcast.vue'
-import Pintuan from './components/Pintuan.vue'
-import Coupon from './components/Coupon.vue'
-import Maisong from './components/Maisong.vue'
-import Fengqiang from './components/Fengqiang.vue'
-import Miaosha from './components/Miaosha.vue'
+import Live from './components/Live.vue'
+import Pintuan from './double-12/Pintuan.vue'
+import Coupon from './double-12/Coupon.vue'
+import Maisong from './double-12/Maisong.vue'
+import Fengqiang from './double-12/Fengqiang.vue'
+import Miaosha from './double-12/Miaosha.vue'
 
 export default {
   name: 'HomeTemplateB',
   inject: ['parent'],
   components: {
-    Broadcast,
+    Live,
     Pintuan,
     Coupon,
     Maisong,
@@ -125,8 +125,7 @@ export default {
 </script>
 
 <style module lang="scss">
-  .template-baofa {}
-  .broadcast {
+  .live {
     margin: 0 24px 16px;
   }
 

@@ -5,11 +5,10 @@
       @click="handleClick"
     >
       <div class="pl-fields_text">
-        <pl-icon
+        <pl-svg
           :fill="iconColor"
           v-if="icon && iconPosition === 'left'"
           :name="icon"
-          type="svg"
           :width="iconWidth"
           :height="iconHeight"
           class="pl-fields_icon"
@@ -19,7 +18,7 @@
           v-text="text"
           :style="{ fontWeight: leftTextWeight }"
         />
-        <pl-icon
+        <pl-svg
           :fill="iconColor"
           v-if="icon && iconPosition === 'right'"
           :name="icon"
@@ -37,7 +36,7 @@
           v-text="rightText"
           :style="{ fontWeight: rightTextWeight }"
         />
-        <pl-icon
+        <pl-svg
           :fill="iconColor"
           v-if="route || showRightIcon"
           :name="rightIcon"
@@ -117,7 +116,7 @@ export default {
     },
     rightIcon: {
       type: String,
-      default: 'icon-arrow-right'
+      default: 'icon-right'
     },
     showRightIcon: Boolean,
     route: {

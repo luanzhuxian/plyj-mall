@@ -98,6 +98,14 @@ export default {
     '1': '仅退款',
     '2': '退款退货'
   },
-  isActivityAuth: false, // 是否开通活动权限
-  skinId: null // 皮肤id
+  // 主会场信息
+  activityData: {},
+  skinId: null, // 皮肤id
+  liveInfo: null, // 直播
+  d12CouponTotal: null, // 已领双十二优惠卷
+  xinchunCouponTotal: null, // 已领新春优惠卷
+  invitingEvent: null, // 邀新有礼
+  jxEvent: null, // 见学之路
+  nwEvent: null, // 新春年味
+  currentTime: 0 // 服务器时间
 }

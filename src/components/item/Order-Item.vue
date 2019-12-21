@@ -70,8 +70,9 @@
       </div>
     </div>
     <div v-if="activeProduct === 3 && preActive === 2" :class="$style.activeTag">限时秒杀</div>
-    <div v-if="activeProduct === 2 && preActive === 2" :class="$style.activeTag">团购</div>
-    <div v-if="activeProduct === 4 && preActive === 2" :class="$style.activeTag">预购</div>
+    <div v-else-if="activeProduct === 2 && preActive === 2" :class="$style.activeTag">团购</div>
+    <div v-else-if="activeProduct === 4 && preActive === 2" :class="$style.activeTag">预购</div>
+    <div v-else-if="activeProduct === 5 && preActive === 2" :class="$style.activeTag">春耘</div>
   </div>
 </template>
 

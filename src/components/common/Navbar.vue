@@ -8,6 +8,7 @@
       [$style.skinXiaoNian]: skinId === 4
     }"
   >
+    <!-- 首页 -->
     <router-link
       :class="{
         [$style.route]: true,
@@ -16,30 +17,18 @@
       tag="div"
       :to="{ name: 'Home' }"
     >
-      <pl-icon
+      <pl-svg
         v-if="skinId === 0"
-        type="svg"
         :name="homeActive ? 'icon-find-active' : 'icon-find'"
-        width="68"
+        width="44"
+        height="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :class="$style.tab" :src="skinMap[skinId].homeActive" v-if="homeActive">
-        <img :class="$style.tab" :src="skinMap[skinId].home" v-else>
-        <!-- <template v-if="skinId === 2">
-          <img src="../../views/home/skin/yuan-dan/btn-home-selected.png" v-if="homeActive">
-          <img :class="$style.tab" src="../../views/home/skin/yuan-dan/btn-home.png" v-else>
-        </template>
-        <template v-if="skinId === 3">
-          <img src="../../views/home/skin/new-year/btn-home-selected.png" v-if="homeActive">
-          <img :class="$style.tab" src="../../views/home/skin/new-year/btn-home.png" v-else>
-        </template>
-        <template v-if="skinId === 4">
-          <img src="../../views/home/skin/xiao-nian/btn-home-selected.png" v-if="homeActive">
-          <img :class="$style.tab" src="../../views/home/skin/xiao-nian/btn-home.png" v-else>
-        </template> -->
+        <img :src="homeActive ? skinMap[skinId].homeActive : skinMap[skinId].home">
         <div :class="$style.tabName">首页</div>
       </template>
     </router-link>
+    <!-- 分类 -->
     <router-link
       :class="{
         [$style.route]: true,
@@ -48,26 +37,36 @@
       tag="div"
       :to="{ name: 'Classify' }"
     >
-      <pl-icon
+      <pl-svg
         v-if="skinId === 0"
-        type="svg"
         :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
-        width="68"
+        width="60"
+        height="72"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :class="$style.tab" :src="skinMap[skinId].classifyActive" v-if="classifyActive">
-        <img :class="$style.tab" :src="skinMap[skinId].classify" v-else>
+        <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
         <div :class="$style.tabName">分类</div>
       </template>
     </router-link>
+    <!-- 活动 -->
     <router-link
       v-if="isActivityAuth"
       :class="$style.route"
       tag="div"
       :to="{ name: 'Activity' }"
     >
-      <img :class="$style.mainTab" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png">
+      <img
+        v-if="~[5, 6, 7].indexOf(activityId)"
+        :class="$style.iconD12"
+        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png"
+      >
+      <img
+        v-if="activityId === 8"
+        :class="$style.iconXinchun"
+        src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/87033906-c3d9-412f-b504-e9f777f334d4.png"
+      >
     </router-link>
+    <!-- 购物车 -->
     <router-link
       :class="{
         [$style.route]: true,
@@ -76,18 +75,18 @@
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
-      <pl-icon
+      <pl-svg
         v-if="skinId === 0"
-        type="svg"
+        width="60"
+        height="72"
         :name="shoppingChartActive ? 'icon-cart-active' : 'icon-cart'"
-        width="68"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :class="$style.tab" :src="skinMap[skinId].shoppingChartActive" v-if="shoppingChartActive">
-        <img :class="$style.tab" :src="skinMap[skinId].shoppingChart" v-else>
+        <img :src="shoppingChartActive ? skinMap[skinId].shoppingChartActive : skinMap[skinId].shoppingChart">
         <div :class="$style.tabName">购物车</div>
       </template>
     </router-link>
+    <!-- 我的 -->
     <router-link
       :class="{
         [$style.route]: true,
@@ -96,15 +95,14 @@
       tag="div"
       :to="{ name: 'My' }"
     >
-      <pl-icon
+      <pl-svg
         v-if="skinId === 0"
-        type="svg"
-        :name="myActive ? 'icon-my-active' : 'icon-my1'"
-        width="68"
+        :name="myActive ? 'icon-my-active' : 'icon-my'"
+        width="44"
+        height="74"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
-        <img :class="$style.tab" :src="skinMap[skinId].myActive" v-if="myActive">
-        <img :class="$style.tab" :src="skinMap[skinId].my" v-else>
+        <img :src="myActive ? skinMap[skinId].myActive : skinMap[skinId].my">
         <div :class="$style.tabName">我的</div>
       </template>
       <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
@@ -173,7 +171,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus', 'isActivityAuth', 'skinId']),
+    ...mapGetters(['agentUser', 'isAdmin', 'noticeStatus', 'isActivityAuth', 'activityId', 'skinId', 'userId']),
     homeActive: function () {
       return this.$route.matched.some(val => val.name === 'Home')
     },
@@ -192,9 +190,11 @@ export default {
       async handler (to) {
         clearTimeout(this.timer)
         if (this.showNavbar.includes(to.name)) {
-          this.timer = setTimeout(() => {
-            this.getAuditNotice()
-          }, 2000)
+          if (this.userId) {
+            this.timer = setTimeout(() => {
+              this.getAuditNotice()
+            }, 2000)
+          }
         }
       },
       immediate: true
@@ -237,9 +237,12 @@ export default {
     right: 60px;
   }
 }
-.main-tab {
+.icon-d12 {
   margin-bottom: 10px;
   width: 72px;
+}
+.icon-xinchun {
+  width: 105px;
 }
 
 /* 皮肤 */
@@ -263,11 +266,8 @@ export default {
     color: #242424;
     text-align: center;
   }
-  .main-tab {
+  .icon {
     margin-bottom: 0 !important;
-  }
-  .tab {
-    height: 62px;
   }
 }
 .skin-xmas {
@@ -279,8 +279,8 @@ export default {
   background-size: 100%;
 }
 </style>
-<style>
+<style lang="scss">
   .router-link-active {
-    color: var(--warning-color);
+    color: $--warning-color;
   }
 </style>

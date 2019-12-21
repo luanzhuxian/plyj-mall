@@ -16,15 +16,15 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="usedCouponList.length === 0">
-              <pl-icon name="icon-coupon1" width="240" height="240" type="svg" />
+              <pl-svg name="icon-newCouponIcon" width="400" />
             </div>
             <div v-for="item in usedCouponList" :key="item.id"
                  :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
                  @click="selectedChange(item.id)"
             >
               <span v-if="isManagementState">
-                <pl-icon v-if="!item.checked" name="icon-weixuanzhong" color="#FFCCCCCC" size="40" type="icon" />
-                <pl-icon v-if="item.checked" name="icon-xuanzhong" width="40" height="40" type="svg" />
+                <pl-svg v-if="!item.checked" name="icon-weixuanzhong1" width="40" />
+                <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
               </span>
               <CouponItem
                 :class="$style.moveCoupon"
@@ -36,6 +36,7 @@
                 :instruction="item.brief"
                 :use-start-time="item.useStartTime"
                 :use-end-time="item.useEndTime"
+                :coupon-type="item.couponType"
                 status="已使用"
               />
             </div>
@@ -43,7 +44,7 @@
         </load-more>
         <button v-if="usedCouponList.length === 0" :class="$style.receiveMore">
           <router-link :to="{ name: 'CouponCenter'}">
-            领更多好券
+            福利中心 领好券
           </router-link>
         </button>
       </div>
@@ -58,15 +59,15 @@
         >
           <template>
             <div name="icon" :class="$style.noCouponIcon" v-if="overduedCouponList.length === 0">
-              <pl-icon name="icon-coupon1" width="240" height="240" type="svg" />
+              <pl-svg name="icon-newCouponIcon" width="400" />
             </div>
             <div v-for="item in overduedCouponList" :key="item.id"
                  :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
                  @click="selectedChange(item.id)"
             >
               <span v-if="isManagementState">
-                <pl-icon v-if="!item.checked" name="icon-weixuanzhong" color="#FFCCCCCC" size="40" type="icon" />
-                <pl-icon v-if="item.checked" name="icon-xuanzhong" width="40" height="40" type="svg" />
+                <pl-svg v-if="!item.checked" name="icon-weixuanzhong1" width="40" />
+                <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
               </span>
               <CouponItem
                 :class="$style.moveCoupon"
@@ -78,6 +79,7 @@
                 :instruction="item.brief"
                 :use-start-time="item.useStartTime"
                 :use-end-time="item.useEndTime"
+                :coupon-type="item.couponType"
                 status="已过期"
               />
             </div>
@@ -205,7 +207,14 @@ export default {
           status: 99
         }
       }
+      this.isManagementState = false
       this.refreshList()
+    },
+    isManagementState (val) {
+      if (val) {
+        let listName = this.activeMenuId === 1 ? 'usedCouponList' : 'overduedCouponList'
+        this[listName] = this.formatCouponList(this[listName])
+      }
     }
   }
 }
@@ -235,7 +244,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 400px;
+        margin-top: 300px;
         margin-bottom: -200px;
       }
 
@@ -262,7 +271,7 @@ export default {
       }
 
       .receive-more{
-        width:172px;
+        width:250px;
         height:60px;
         line-height:60px;
         text-align: center;
@@ -299,6 +308,8 @@ export default {
 
     button {
       color: #fff;
+      width: 100%;
+      height: 100%;
     }
   }
 

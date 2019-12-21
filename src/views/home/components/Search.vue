@@ -5,7 +5,7 @@
       :class="$style.searchBox"
       :to="{ name: 'Search' }"
     >
-      <pl-svg name="search" />
+      <pl-svg name="icon-search" fill="#ccc" width="30" />
       <input
         type="text"
         :placeholder="placeholder"
