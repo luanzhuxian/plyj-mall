@@ -71,7 +71,7 @@
           太火爆了，都被抢空了
         </button>
         <button v-else-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
-          点击购买 组合到手<i v-text="getGroupAmount(item.products)" />元
+          点击购买 组合到手<i v-text="item.amount" />元
         </button>
         <button v-else-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
           暂未开启，敬请期待
@@ -265,13 +265,6 @@ export default {
           activityId: data.activityId
         }
       })
-    },
-    getGroupAmount (products) {
-      const amountList = products.map(pro => pro.amount)
-      if (amountList.length) {
-        return products.map(pro => pro.amount).reduce((total, num) => (total * 1000 + num * 1000) / 1000)
-      }
-      return 0
     },
     async createPoster () {
       if (this.creating) {

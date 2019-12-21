@@ -7,10 +7,9 @@
     <img :src="data.goodsImage" alt="">
     <div :class="$style.right">
       <p :class="$style.name" v-text="data.goodsName" />
-      <!--<p :class="$style.limit">
-        数量：{{ data.count }}
-        &lt;!&ndash;{{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}&ndash;&gt;
-      </p>-->
+      <p :class="$style.limit">
+        x{{ data.count }}
+      </p>
       <p :class="$style.sku">
         <span v-text="data.sku1Name" />
         <template v-if="data.sku2Name">
@@ -54,6 +53,7 @@ export default {
     }
   }
   .right {
+    position: relative;
     flex: 1;
     display: inline-flex;
     flex-direction: column;
@@ -68,9 +68,12 @@ export default {
     @include elps();
   }
   .limit {
+    position: absolute;
+    top: 12px;
+    right: 0;
     margin-bottom: 20px;
     font-size: 24px;
-    color: #88DE9E;
+    color: #74B06E;
   }
   .sku {
     width: 256px;
