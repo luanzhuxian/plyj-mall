@@ -102,7 +102,7 @@ export default {
           confirmText: '立即前往'
         })
           .then(async () => {
-            await this.$router.push({ name: 'MyCoupon' })
+            await this.$router.push({ name: 'MyPresent' })
           })
           .catch(() => {})
       }
