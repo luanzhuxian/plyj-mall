@@ -1,6 +1,6 @@
 {
   "name": "plyj-mall",
-  "version": "2.1.10",
+  "version": "2.2.1",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --model local --s",

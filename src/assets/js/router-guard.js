@@ -34,14 +34,7 @@ export const beforeEach = function (to, from, next) {
   }
 }
 export const beforeResolve = function (to, from, next) {
-  // console.log(store.getters.agentUser)
-  // if (!store.getters.agentUser && notAllowedCoffer.indexOf(to.name) > -1) {
-  //   next({
-  //     path: '/'
-  //   })
-  // } else {
   next()
-  // }
   if (to.name === 'Home') {
     document.title = sessionStorage.getItem('mallName') || to.meta.title
   } else {
