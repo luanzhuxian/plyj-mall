@@ -826,12 +826,10 @@ export default {
         this.contactInfoModel.name = this.realName || this.userName
         this.contactInfoModel.mobile = this.mobile
       }
-
-      // 还原之前选择的优惠券信息
+      // 还原之前选择的优惠券信息 + 还原之前选择的红包信息
       let coupon = JSON.parse(sessionStorage.getItem('COUPON_INFO')) || null
-      if (coupon) await this.couponClick(coupon.detail, coupon.isNotUse)
-      // 还原之前选择的红包信息
       let scholarship = JSON.parse(sessionStorage.getItem('SCHOLARSHIP_INFO')) || null
+      if (coupon) await this.couponClick(coupon.detail, coupon.isNotUse)
       if (scholarship) await this.redEnvelopeClick(scholarship.detail, scholarship.isNotUse)
     } catch (e) {
       this.$router.go(-1)
