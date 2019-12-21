@@ -362,7 +362,7 @@ export class Countdown {
       return
     }
     const { _data: data } = moment.duration(duration)
-    data.days = data.years * 365 + data.months * moment().daysInMonth() + data.days
+    data.days = Math.floor(moment.duration(duration).asDays())
     delete data.years
     delete data.months
     this.callback(data)
