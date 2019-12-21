@@ -63,6 +63,7 @@ export default {
   },
   data () {
     return {
+      checkCount: 0
       // haibao: '',
       // show820: false,
       // data88: {
@@ -95,19 +96,7 @@ export default {
   },
   async activated () {
     try {
-      await promise.timeout(10000)
-      const { result } = await checkGetGift(this.orderId)
-      if (result) {
-        this.$confirm({
-          message: '领取礼品成功！',
-          viceMessage: '您已成功领取礼品，请前往“我的礼品”进行查看',
-          confirmText: '立即前往'
-        })
-          .then(async () => {
-            await this.$router.push({ name: 'MyPresent' })
-          })
-          .catch(() => {})
-      }
+      await this.checkGift()
     } catch (e) {
       throw e
     }
@@ -126,6 +115,30 @@ export default {
     }
   },
   methods: {
+    async checkGift () {
+      this.checkCount++
+      try {
+        await promise.timeout(1000)
+        const { result } = await checkGetGift(this.orderId)
+        if (result) {
+          this.$confirm({
+            message: '领取礼品成功！',
+            viceMessage: '您已成功领取礼品，请前往“我的礼品”进行查看',
+            confirmText: '立即前往'
+          })
+            .then(async () => {
+              await this.$router.push({ name: 'MyPresent' })
+            })
+            .catch(() => {})
+        } else if (this.checkCount <= 10) {
+          this.checkGift()
+        } else {
+          this.checkCount = 0
+        }
+      } catch (e) {
+        throw e
+      }
+    }
     // showPop (delay) {
     //   let serverTime = moment(this.serverTime).valueOf()
     //   let mallId = this.mallId
