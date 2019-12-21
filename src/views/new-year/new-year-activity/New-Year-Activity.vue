@@ -1287,27 +1287,4 @@ export default {
       }
     }
   }
-
-  @keyframes rotateAndScale {
-    0% {
-      transformtransform: scale(1.3, 1.3) rotate(0deg);
-      transform-origin: center;
-      opacity: 0.2
-    }
-    50% {
-      transform: scale(1, 1) rotate(180deg);
-      transform-origin: center;
-      opacity: 1
-    }
-    98% {
-      transform: scale(2, 2) rotate(360deg);
-      transform-origin: center;
-      opacity: 0
-    }
-    100% {
-      transform: scale(2, 2) rotate(360deg);
-      transform-origin: center;
-      opacity: 0
-    }
-  }
 </style>

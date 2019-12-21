@@ -461,16 +461,16 @@ export default {
 
     .detail {
       .gift {
-        margin-left: 30px;
+        width: 400px;
+        margin: 10px auto;
       }
 
       .light {
         position: absolute;
+        transform: translateX(-50%);
         left: 50%;
-        margin-left: -35%;
         top: 20px;
         z-index: -1;
-        animation: rotateAndScale 3s linear infinite;
       }
     }
 
