@@ -58,7 +58,7 @@
         <div :class="$style.infoItem" v-if="isCart && activeProduct === 5 && detail.discount !== 10">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">春耘折扣</span>
-            <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice * 100000000000000000000 - physicalProductPrice * 100000000000000000000) / 100000000000000000000 }}</span>
+            <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice * 100 - physicalProductPrice * 100) / 100 }}</span>
           </div>
         </div>
 
