@@ -58,7 +58,7 @@
         <div :class="$style.infoItem" v-if="isCart && activeProduct === 5 && detail.discount !== 10">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">春耘折扣</span>
-            <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice * 1000 - physicalProductPrice * 1000) / 1000 }}</span>
+            <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice * 100000000000000000000 - physicalProductPrice * 100000000000000000000) / 100000000000000000000 }}</span>
           </div>
         </div>
 
@@ -758,13 +758,13 @@ export default {
     // 实体商品原价总和
     physicalProductOriginalPrice () {
       if (this.activeProduct === 5) {
-        return this.physicalProducts.map(item => item.originPrice * item.count).reduce((total, num) => total + num)
+        return this.physicalProducts.map(item => (item.originPrice * 1000 * item.count) / 1000).reduce((total, num) => total + num)
       }
       return 0
     },
     // 实体商品现价总和
     physicalProductPrice () {
-      return this.physicalProducts.map(item => item.price * item.count).reduce((total, num) => total + num)
+      return this.physicalProducts.map(item => (item.price * 1000 * item.count) / 1000).reduce((total, num) => total + num)
     }
   },
   watch: {
