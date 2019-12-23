@@ -68,7 +68,7 @@ Router.prototype.replace = function replace (location, onResolve, onReject) {
 export const routes = [
   {
     path: '/',
-    redirect: `/home/${Date.now()}`
+    redirect: `/home?noCache=${Date.now()}`
   },
   {
     path: '*',
