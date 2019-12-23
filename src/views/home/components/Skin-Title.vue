@@ -13,16 +13,18 @@
       <div :class="$style.title" v-text="data" />
     </div>
     <div :class="$style.titleBg" v-if="skinId === 2">
-      <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
-        {{ item }}
-      </span>
+      <div :class="[$style.characterWrapper, $style['length' + data.split('').length]]">
+        <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
+          {{ item }}
+        </span>
+      </div>
     </div>
     <div :class="$style.titleBg" v-if="skinId === 3">
       <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
         {{ item }}
       </span>
     </div>
-    <div :class="$style.titleBg" v-if="skinId === 4">
+    <div :class="[$style.titleBg, $style['length' + data.split('').length]]" v-if="skinId === 4">
       <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
         {{ item }}
       </span>
@@ -91,10 +93,21 @@ export default {
     height: 160px;
     background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/08048559-9ce4-404c-a2dc-48d5af1c06ed.png") no-repeat center bottom;
     background-size: 618px auto;
+    .character-wrapper {
+      position: absolute;
+      top: 32px;
+      height: 106px;
+      @for $i from 1 through 4 {
+        &.length-#{$i} {
+          left: 220px + ((4 - $i) * 38);
+        }
+      }
+    }
     .character-bg {
       box-sizing: border-box;
       position: absolute;
-      top: 32px;
+      top: 0;
+      left: 0;
       width: 106px;
       height: 106px;
       line-height: 94px;
@@ -108,7 +121,7 @@ export default {
       @for $i from 1 through 4 {
         $difference : 76px;
         &:nth-of-type(#{$i}) {
-          left: 220px + (($i - 1) * $difference);
+          left: ($i - 1) * $difference;
           z-index: $i;
         }
       }
@@ -147,8 +160,25 @@ export default {
     justify-content: center;
     align-items: center;
     height: 128px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/b1f87881-c0f6-444c-9ab4-778d784d1dda.png") no-repeat center;
-    background-size: 100%;
+    &.length-4 {
+      background: url("https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/b1f87881-c0f6-444c-9ab4-778d784d1dda.png") no-repeat center;
+      background-size: 100%;
+    }
+    &.length-3 {
+      background: url("https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/44ba3816-0824-4486-8c6d-63372b2e968e.png") no-repeat center;
+      background-size: 100%;
+      .character-bg {
+        letter-spacing: -5px;
+      }
+    }
+    &.length-2 {
+      background: url("https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/20e5cb5b-76d6-4986-a6ab-d75ea0b5f6ff.png") no-repeat center;
+      background-size: 100%;
+    }
+    &.length-1 {
+      background: url("https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/12c1b559-9bc0-48b7-92c7-072d29e907f0.png") no-repeat center;
+      background-size: 100%;
+    }
     .character-bg {
       font-size: 56px;
       width: 72px;
