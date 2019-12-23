@@ -31,11 +31,11 @@ const originalPush = Router.prototype.push
 const originalReplace = Router.prototype.replace
 Router.prototype.push = function push (location, onResolve, onReject) {
   if (typeof location === 'object') {
-    if (location.params) {
-      location.params.noCache = Date.now()
+    if (location.query) {
+      location.query.noCache = Date.now()
     } else {
       Object.assign(location, {
-        params: {
+        query: {
           noCache: Date.now()
         }
       })
@@ -107,12 +107,12 @@ const allRoutes = [
   ...NewYear
 ]
 // 为每个路由配置可选参数noCache
-for (let route of allRoutes) {
-  const paths = route.path.split('/')
-  if (!paths[0]) {
-    route.path += '/:noCache?'
-  }
-}
+// for (let route of allRoutes) {
+//   const paths = route.path.split('/')
+//   if (!paths[0]) {
+//     // route.path += '/:noCache?'
+//   }
+// }
 
 export const router = new Router({
   mode: 'history',
