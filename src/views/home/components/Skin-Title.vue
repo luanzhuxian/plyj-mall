@@ -12,17 +12,20 @@
     <div :class="$style.titleBg" v-if="skinId === 1">
       <div :class="$style.title" v-text="data" />
     </div>
-    <div :class="$style.titleBg" v-if="~[2, 3].indexOf(skinId)">
+    <div :class="$style.titleBg" v-if="skinId === 2">
       <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
         {{ item }}
       </span>
     </div>
-    <div :class="$style.titleWrapper" v-if="skinId === 4">
-      <div :class="$style.titleBg">
-        <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
-          {{ item }}
-        </span>
-      </div>
+    <div :class="$style.titleBg" v-if="skinId === 3">
+      <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
+        {{ item }}
+      </span>
+    </div>
+    <div :class="$style.titleBg" v-if="skinId === 4">
+      <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
+        {{ item }}
+      </span>
     </div>
   </div>
 </template>
@@ -138,10 +141,8 @@ export default {
   }
 }
 .skin-xiao-nian {
-  .title-wrapper {
-    padding: 28px 0 16px;
-  }
   .title-bg {
+    margin: 28px 0 16px;
     display: flex;
     justify-content: center;
     align-items: center;
