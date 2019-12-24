@@ -78,9 +78,15 @@
           >
             去凑单
           </i>
-          <!-- 自己没满减券 -->
+          <!--
+            自己没满减券
+            显示条件：
+            1. 没有合适的券，且最小满减券的数量为0 : !appropriateCoupon && minFullCutConpon && !minFullCutConpon.count
+            2. 有合适的券，但是券的数量为0 : appropriateCoupon && !appropriateCoupon.count
+            3. 自己一张券都没有，但是商家有券 hadFullCutCouponList.length && hadCategoryCouponList.length
+          -->
           <i
-            v-else-if="(!appropriateCoupon && minFullCutConpon && !minFullCutConpon.count) || (appropriateCoupon && !appropriateCoupon.count)"
+            v-else-if="(!appropriateCoupon && minFullCutConpon && !minFullCutConpon.count) || (appropriateCoupon && !appropriateCoupon.count) || (hadFullCutCouponList.length && hadCategoryCouponList.length)"
             @click="$router.push({ name: 'CouponCenter' })"
           >
             去领券
@@ -272,6 +278,7 @@ export default {
         this.categoryCouponList = []
         for (const item of result) {
           if ((item.receiveLimit === 2 && this.roleCode !== 'MEMBERSHIP') || (item.receiveLimit === 1 && this.roleCode !== 'HELPER')) continue
+          if (!item.canReceive) continue
           // 可领取的券
           this.couponList.push(item)
           // 以领取的券

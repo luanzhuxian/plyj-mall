@@ -165,7 +165,7 @@ export default {
       try {
         const { result } = await getSpringCombination({ current: 1, size: 60 })
         if (!result.records.length) {
-          this.$confirm({
+          this.$alert({
             message: '您无法参与活动',
             viceMessage: '返回主会场，更多活动等您开启',
             confirmText: '去主会场'
