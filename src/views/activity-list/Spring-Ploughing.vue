@@ -17,6 +17,12 @@
       </div>
       <div :class="$style.topRight" @click="createPoster">活动海报</div>
       <div :class="$style.topRight" @click="showRules = true">活动规则</div>
+      <pl-svg
+        v-if="list.length && list[0].quarterVersion"
+        :name="`icon-${map[list[0].quarterVersion]}`"
+        width="50"
+        height="105"
+      />
     </div>
 
     <div
@@ -136,6 +142,7 @@ export default {
       list: [],
       // 倒计时实例列表
       countInstaceList: [],
+      // 全部结束
       allEnd: {
         d: '',
         h: '',
@@ -143,7 +150,14 @@ export default {
         s: '',
         wasStarted: false,
         wasEnded: false
-      } // 全部结束
+      },
+      map: {
+        '第一季': 'diyiji-adbb7',
+        '第二季': 'dierji-bbdb7',
+        '第三季': 'disanji-b8ae3',
+        '第四季': 'disiji-5d233',
+        '第五季': 'diwuji-af921'
+      }
     }
   },
   computed: {
@@ -331,6 +345,11 @@ export default {
       &:nth-of-type(2) {
         margin-top: 66px;
       }
+    }
+    > svg {
+      position: absolute;
+      top: 175px;
+      right: 95px;
     }
   }
   .content {

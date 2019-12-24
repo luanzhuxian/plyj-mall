@@ -17,6 +17,12 @@
       <p :class="$style.link">
         查看计划礼包 >
       </p>
+      <pl-svg
+        v-if="data.values[0].quarterVersion"
+        :name="`icon-${map[data.values[0].quarterVersion]}`"
+        width="50"
+        height="105"
+      />
     </router-link>
     <ul
       v-if="data.values.length && data.values[0].combinationDetailList && data.values[0].combinationDetailList.length"
@@ -106,6 +112,13 @@ export default {
         '4': 2.25,
         '5': 2.26,
         '6': 2.28
+      },
+      map: {
+        '第一季': 'diyiji-adbb7',
+        '第二季': 'dierji-bbdb7',
+        '第三季': 'disanji-b8ae3',
+        '第四季': 'disiji-5d233',
+        '第五季': 'diwuji-af921'
       }
     }
   },
@@ -113,7 +126,6 @@ export default {
     size () {
       const { data } = this
       let result
-      if (!data.values.length) return
       if (data.values[0].status === 0) {
         if (data.values[0].combinationDetailList.length === 1) result = 'large'
         if (data.values[0].combinationDetailList.length > 1) result = 'medium'
@@ -148,6 +160,11 @@ export default {
     background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png") no-repeat center top;
     background-size: 100% auto;
     height: 682px;
+    > svg {
+      position: absolute;
+      top: 155px;
+      right: 95px;
+    }
     .count-down-wrapper {
       position: absolute;
       top: 293px;
