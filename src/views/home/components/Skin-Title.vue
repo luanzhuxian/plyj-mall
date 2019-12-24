@@ -13,7 +13,10 @@
       <div :class="$style.title" v-text="data" />
     </div>
     <div :class="$style.titleBg" v-if="skinId === 2">
-      <div :class="[$style.characterWrapper, $style['length' + data.split('').length]]">
+      <div
+        :class="$style.characterWrapper"
+        :style="{ '--length': data.split('').length }"
+      >
         <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
           {{ item }}
         </span>
@@ -96,12 +99,8 @@ export default {
     .character-wrapper {
       position: absolute;
       top: 32px;
+      left: calc(220px + ((4 - var(--length)) * 38px));
       height: 106px;
-      @for $i from 1 through 4 {
-        &.length-#{$i} {
-          left: 220px + ((4 - $i) * 38);
-        }
-      }
     }
     .character-bg {
       box-sizing: border-box;
