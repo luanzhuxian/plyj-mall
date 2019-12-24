@@ -475,7 +475,6 @@ export default {
     // 算金额
     computeMoney () {
       let total = 0
-      console.log(this.checkedList)
       for (let item of this.checkedList) {
         const skuCode1 = item.cartSkuCode
         const skuCode2 = item.cartSkuCode2

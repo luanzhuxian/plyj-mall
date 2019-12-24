@@ -167,10 +167,11 @@ export default {
         if (!result.records.length) {
           this.$confirm({
             message: '您无法参与活动',
-            viceMessage: '返回主会场，更多活动等您开启'
+            viceMessage: '返回主会场，更多活动等您开启',
+            confirmText: '去主会场'
           })
             .finally(() => {
-              this.$router.go(-1)
+              this.$router.push({ name: 'Activity' })
             })
           return
         }
