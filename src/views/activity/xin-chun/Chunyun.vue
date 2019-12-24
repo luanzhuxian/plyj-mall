@@ -145,7 +145,7 @@ export default {
   }
   &-bg {
     position: relative;
-    background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/a80d405a-cbac-45d2-bd5f-4f4287a53341.png") no-repeat center top;
+    background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png") no-repeat center top;
     background-size: 100% auto;
     height: 682px;
     .count-down-wrapper {
