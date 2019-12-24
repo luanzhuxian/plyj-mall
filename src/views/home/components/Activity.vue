@@ -26,7 +26,7 @@
           </div>
         </div>
         <pl-svg v-if="hasJxEvent && hasInvitingEvent" name="icon-calendar" width="72" height="72" />
-        <pl-svg v-if="!hasJxEvent && hasInvitingEvent" name="icon-calendar" width="100" height="100" />
+        <pl-svg v-if="hasJxEvent && !hasInvitingEvent" name="icon-calendar" width="100" height="100" />
       </router-link>
       <router-link
         v-if="hasInvitingEvent"
@@ -52,8 +52,8 @@
             </div>
           </div>
         </div>
-        <pl-svg v-if="hasJxEvent && hasInvitingEvent" name="icon-present" :width="72" height="72" />
-        <pl-svg v-if="!hasJxEvent && hasInvitingEvent" name="icon-present" :width="100" height="100" />
+        <pl-svg v-if="hasJxEvent && hasInvitingEvent" name="icon-present" width="72" height="72" />
+        <pl-svg v-if="!hasJxEvent && hasInvitingEvent" name="icon-present" width="100" height="100" />
       </router-link>
     </div>
   </div>
