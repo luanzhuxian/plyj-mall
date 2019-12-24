@@ -37,6 +37,7 @@
       </div>
       <invite-newcomers-home-entry />
       <newcomers-home-entry />
+      <new-year-newcomers-home-entry />
     </div>
     <pl-svg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
   </div>
@@ -51,6 +52,7 @@ import TemplateFanchang from './Template-Fanchang.vue'
 import TemplateXinchun from './Template-Xinchun.vue'
 import InviteNewcomersHomeEntry from '../double-twelve-day/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
+import NewYearNewcomersHomeEntry from '../new-year/newcomers/NewcomersHomeEntry.vue'
 
 export default {
   name: 'Activity',
@@ -61,7 +63,8 @@ export default {
     TemplateFanchang,
     TemplateXinchun,
     InviteNewcomersHomeEntry,
-    NewcomersHomeEntry
+    NewcomersHomeEntry,
+    NewYearNewcomersHomeEntry
   },
   provide () {
     return {

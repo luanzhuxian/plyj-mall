@@ -2,7 +2,7 @@
   <div class="newcomers-home-entry">
     <overlay v-if="showSelf">
       <div class="center-box">
-        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/newcomers/newcomers-home.png">
+        <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/30f05ebd-8657-4a15-bea9-beb43396c022.png">
         <div style="margin-top: 80px; text-align: center;">
           <span class="btn-goto-get" @click="gotoGet">快去领取</span>
         </div>
@@ -19,23 +19,25 @@
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-import Overlay from '../invitenewcomers/components/Overlay'
-import { getCurrentActivity } from '../../../apis/newcomers'
+import Overlay from './components/Overlay'
+import { getServerTime } from '../../../apis/base-api'
+import { getCurrentActivity } from '../../../apis/new-year-activity'
 
 export default {
-  name: 'NewcomersHomeEntry',
+  name: 'NewYearNewcomersHomeEntry',
   components: {
     Overlay
   },
   data () {
     return {
       activityInfo: { status: 0 },
-      isShowSelf: true
+      isShowSelf: true,
+      serverTime: false
     }
   },
 
   computed: {
-    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    ...mapGetters(['userId']),
     isNewUser () {
       return this.userId === ''
     },
@@ -53,12 +55,13 @@ export default {
     },
     showSelf () {
       // packageType 1双十二 + 2新春
-      return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf && this.activityInfo.packageType === '1'
+      return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf && (this.activityInfo.packageType === '2')
     }
   },
 
   async created () {
     try {
+      await this.getServerTime()
       await this.getCurrentActivity()
     } catch (e) {
       throw e
@@ -66,6 +69,14 @@ export default {
   },
 
   methods: {
+    async getServerTime () {
+      try {
+        let { result: serverTiem } = await getServerTime()
+        this.serverTime = serverTiem || null
+      } catch (e) {
+        throw e
+      }
+    },
     async getCurrentActivity () {
       try {
         let { result } = await getCurrentActivity()
@@ -75,7 +86,7 @@ export default {
       }
     },
     gotoGet () {
-      this.$router.push({ name: 'Newcomers', params: { activityId: this.activityInfo.id } })
+      this.$router.push({ name: 'newYearNewcomers', params: { activityId: this.activityInfo.id } })
     },
 
     close () {
