@@ -700,9 +700,9 @@ export default {
         // 绘制机构logo
         if (this.activeDetail.isShowLog) {
           let logoBg = await this.loadImage('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/abcfae1b-54ff-41d1-b973-0b483847cc05.svg')
-          ctx.drawImage(logoBg, 0, 0, 120, 107)
           let logo = await this.loadImage(this.activeDetail.logImgUrl)
           logo = await cutArcImage(logo)
+          ctx.drawImage(logoBg, 0, 0, 120, 107)
           ctx.drawImage(logo, 10, 8, 66, 66)
         }
         // 绘制头像
