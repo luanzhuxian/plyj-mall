@@ -251,7 +251,7 @@ import {
   receivePresent,
   checkIsParticipateableActivity,
   statisticsViews
-} from '../../../apis/new-year-activity'
+} from '../../../apis/new-year'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { generateQrcode, drawRoundRect, cutArcImage, createText, Countdown } from '../../../assets/js/util'
 import share from '../../../assets/js/wechat/wechat-share'
@@ -268,7 +268,7 @@ let activity_member = {
   '2': '普通会员',
   '3': '商家指定用户'
 }
-let default_present_img = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/6d5c54f0-e972-4fd2-b28b-021a12c78e39.png'
+let default_present_img = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
 let countdownInstanceList = []
 export default {
   name: 'NewYearActivity',
@@ -488,7 +488,9 @@ export default {
           currentSignin,
           nextSigninNote,
           signinNumber,
-          completeNumber
+          completeNumber,
+          isShowLog,
+          logImgUrl
         } = result
 
         // 获取节点是否有奖品 + 获取已领取的奖品
@@ -553,7 +555,9 @@ export default {
           differenceNumber: this.currentSignIn.hasSignin ? notes.length - currentIndex - 1 : notes.length - currentIndex, // 还差多少个年味即可抽年味大奖
           nextPresentIndex, // 还差多少个年味即可参与抽奖
           currentReceivePresentNote: this.previousPresentIsReceive ? this.currentSignIn.index : notes[currentIndex - 1].index,
-          activity_member: activity_member[userScope]
+          activity_member: activity_member[userScope],
+          isShowLog, // 是否显示图片Logo 0-不显示，1-显示
+          logImgUrl // Logo图片
         }
 
         // 将奖品信息添加到签到数组中
@@ -693,6 +697,14 @@ export default {
         let ctx = canvas.getContext('2d')
         // 绘制背景
         ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
+        // 绘制机构logo
+        if (this.activeDetail.isShowLog) {
+          let logoBg = await this.loadImage('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/abcfae1b-54ff-41d1-b973-0b483847cc05.svg')
+          ctx.drawImage(logoBg, 0, 0, logoBg.width, logoBg.height)
+          let logo = await this.loadImage(this.activeDetail.logImgUrl)
+          logo = await cutArcImage(logo)
+          ctx.drawImage(logo, 11, 7, 99, 99)
+        }
         // 绘制头像
         let default_avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
         let avatar = this.avatar || default_avatar
@@ -839,7 +851,7 @@ export default {
                   position: absolute;
                   left: 50%;
                   bottom: 0;
-                  transform: translateX(-50%) scale(0.7);
+                  transform: translateX(-50%);
                   object-fit: contain;
                 }
               }

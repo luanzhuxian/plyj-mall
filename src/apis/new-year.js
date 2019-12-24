@@ -1,4 +1,6 @@
 import { axios } from '../assets/js/axios'
+
+/** *******************************************************我心中的年味***************************************************************/
 // 检测当前活动是否可参与
 export const checkIsParticipateableActivity = (id) => axios.get(`/apis/v1/signinActivity/customer/may_share_join_activity/${id}`)
 
