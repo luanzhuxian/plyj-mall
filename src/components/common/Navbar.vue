@@ -22,6 +22,7 @@
         :name="homeActive ? 'icon-find-active' : 'icon-find'"
         width="44"
         height="68"
+        :key="0"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <img :src="homeActive ? skinMap[skinId].homeActive : skinMap[skinId].home">
@@ -42,6 +43,7 @@
         :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
         width="60"
         height="72"
+        :key="1"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
@@ -77,8 +79,9 @@
     >
       <pl-svg
         v-if="skinId === 0"
-        width="60"
-        height="72"
+        width="64"
+        height="76"
+        :key="2"
         :name="shoppingChartActive ? 'icon-cart-active' : 'icon-cart'"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
@@ -100,6 +103,7 @@
         :name="myActive ? 'icon-my-active' : 'icon-my'"
         width="44"
         height="74"
+        :key="3"
       />
       <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
         <img :src="myActive ? skinMap[skinId].myActive : skinMap[skinId].my">

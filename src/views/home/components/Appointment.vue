@@ -55,11 +55,11 @@
         <div class="fz-26 gray-3">预约后您的私人顾问将会电话联系您</div>
         <label>
           <input v-model="appointmentname" type="text" placeholder="请输入预约姓名">
-          <pl-svg v-show="appointmentname" @click="appointmentname = ''" :class="$style.clean" name="icon-close2" fill="#ccc" height="30" />
+          <pl-svg v-show="appointmentname" @click="appointmentname = ''" :class="$style.clean" name="icon-close2" fill="#ccc" width="30" />
         </label>
         <label>
           <input v-model="appointmentMobile" type="text" placeholder="请输入预约手机">
-          <pl-svg v-show="appointmentMobile" @click="appointmentMobile = ''" :class="$style.clean" name="icon-close2" fill="#ccc" height="30" />
+          <pl-svg v-show="appointmentMobile" @click="appointmentMobile = ''" :class="$style.clean" name="icon-close2" fill="#ccc" width="30" />
         </label>
         <div :class="$style.tip">
           <pl-svg name="icon-safe" width="25" height="25" />

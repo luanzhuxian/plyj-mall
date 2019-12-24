@@ -7,15 +7,15 @@
       width: truthWidth,
       height: truthHeight
     }"
+    @hover="hoverHandler"
+    v-if="update"
   >
     <use :xlink:href="'#' + (tempName || name)" />
   </svg>
 </template>
 
 <script>
-/* eslint-disable */
 import { promise } from '../../assets/js/util'
-import { mapGetters } from 'vuex'
 export default {
   name: 'PlSvg',
   props: {
@@ -30,7 +30,7 @@ export default {
     },
     width: {
       type: [Number, String],
-      default: null
+      default: 16
     },
     height: {
       type: [Number, String],
@@ -40,11 +40,14 @@ export default {
   data () {
     return {
       // svg id的副本
-      tempName: ''
+      tempName: '',
+      computedWidth: null,
+      computedHeight: null,
+      update: true,
+      clonedSvg: {}
     }
   },
   computed: {
-    ...mapGetters(['theme']),
     truthWidth () {
       if (this.width) {
         return this.width / 7.5 + 'vw'
@@ -66,21 +69,14 @@ export default {
       return null
     }
   },
-  activated () {
-    if (this.svgParent) {
-      this.svgParent.appendChild(this.clonedSvg)
-    }
+  mounted () {
+    this.clean()
   },
   deactivated () {
-    if (this.svgParent) {
-      this.svgParent.removeChild(this.clonedSvg)
-    }
+    this.clean()
   },
   beforeDestroy () {
-    if (this.svgParent) {
-      this.svgParent.removeChild(this.clonedSvg)
-    }
-    this.clonedSvg = null
+    this.clean()
   },
   watch: {
     fill: {
@@ -88,35 +84,38 @@ export default {
         if (val) this.setFill(val)
       },
       immediate: true
+    },
+    async name (val) {
+      if (this.fill && !this.clonedSvg[`${val}_${this._uid}`]) {
+        this.setFill(this.fill)
+      } else {
+        this.tempName = this.tempName.replace(this.tempName.split('_')[0], val)
+      }
     }
   },
   methods: {
     clickHandler (e) {
       this.$emit('click', e)
     },
+    hoverHandler (e) {
+      this.$emit('hover', e)
+    },
     async setFill (fill) {
       /**
-       * 由于使用的是svg精灵，所以
-       * 要使得fill属性生效，必须保证不存在行内fill属性 或者 修改行内fill属性
-       * 如果直接修改行内属性，会改变全局所有的svg颜色
-       * 所以，先复制一份svg，然后修改这个副本的颜色，使用完之后，再删除这个副本，避免副本越来越多
-       */
-        // _uid可以作为每个组件唯一的标识，用来作为图标副本的id，再合适不过了
+         * 由于使用的是svg精灵，所以
+         * 要使得fill属性生效，必须保证不存在行内fill属性 或者 修改行内fill属性
+         * 如果直接修改行内属性，会改变全局所有的svg颜色
+         * 所以，先复制一份svg，然后修改这个副本的颜色，使用完之后，再删除这个副本，避免副本越来越多
+         */
+      // _uid可以作为每个组件唯一的标识，用来作为图标副本的id，再合适不过了
       const uid = this._uid
+      const svg = document.querySelector('#' + this.name)
       this.tempName = `${this.name}_${uid}`
-      let clonedSvg = null
-      if (this.clonedSvg) {
-        // 图标已被克隆
-        clonedSvg = this.clonedSvg
-      } else {
-        // 图标未被克隆，克隆图标
-        await promise.timeout(100)
-        const svg = document.querySelector('#' + this.name)
-        clonedSvg = svg.cloneNode(true)
-        svg.parentNode.appendChild(clonedSvg)
-        this.svgParent = svg.parentNode
-        this.clonedSvg = clonedSvg
-      }
+      const clonedSvg = this.clonedSvg[this.tempName] || svg.cloneNode(true)
+      await promise.timeout(100)
+      svg.parentNode.appendChild(clonedSvg)
+      this.svgParent = svg.parentNode
+      this.clonedSvg[this.tempName] = clonedSvg
       // 给克隆后的图标填充颜色
       try {
         const fills = clonedSvg.querySelectorAll('[fill]')
@@ -132,6 +131,16 @@ export default {
       } catch (e) {
         console.error('svg ' + this.name + ' 不存在')
       }
+    },
+    clean () {
+      if (this.svgParent) {
+        for (let k of Object.keys(this.clonedSvg)) {
+          try {
+            this.svgParent.appendChild(this.clonedSvg[k])
+          } catch (e) {}
+        }
+      }
+      this.clonedSvg = {}
     }
   }
 }
