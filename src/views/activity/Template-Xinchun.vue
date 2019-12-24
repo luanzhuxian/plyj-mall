@@ -32,7 +32,7 @@
           <coupon :data="COUPON" />
         </div>
         <!-- 春耘 -->
-        <div :class="[$style.chunyun, $style.module]" v-if="CHUN_YUN.values && CHUN_YUN.values.length">
+        <div :class="[$style.chunyun, $style.module]" v-if="!!CHUN_YUN.otherValue && CHUN_YUN.values && CHUN_YUN.values.length">
           <chunyun :data="CHUN_YUN" />
         </div>
         <!-- 拼团 -->
