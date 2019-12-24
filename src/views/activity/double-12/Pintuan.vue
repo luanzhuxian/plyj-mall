@@ -62,7 +62,7 @@
                       </span>
                     </div>
                     <div :class="$style.subLeftSub">
-                      <pl-svg name="icon-tuangoujia" width="80" height="40" />
+                      <pl-svg name="icon-tuangoujia" width="80" height="35" />
                       <span :class="$style.price">{{ item.goodsInfo.activityInfo.activityPrice }}</span>
                     </div>
                   </div>
@@ -73,9 +73,9 @@
                     }"
                   >
                     <pl-svg
+                      v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
                       name="icon-vie-for"
                       width="40"
-                      v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
                     />
                     <pl-svg
                       v-else

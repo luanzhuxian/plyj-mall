@@ -136,14 +136,14 @@
                   >
                     <pl-svg
                       v-if="~[0, 1].indexOf(prod.activityInfo.status)"
-                      width="38"
                       name="icon-vie-for"
+                      width="38"
                     />
                     <pl-svg
                       v-else
+                      name="icon-jieshu"
                       width="48"
                       height="22"
-                      name="icon-jieshu"
                     />
                   </div>
                 </div>

@@ -70,7 +70,6 @@
                   />
                   <pl-svg
                     v-else
-                    :class="$style.jieshu"
                     name="icon-jieshu"
                     width="48"
                     height="22"
