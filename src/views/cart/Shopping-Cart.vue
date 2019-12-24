@@ -86,7 +86,7 @@
             3. 自己一张券都没有，但是商家有券 hadFullCutCouponList.length && hadCategoryCouponList.length
           -->
           <i
-            v-else-if="(!appropriateCoupon && minFullCutConpon && !minFullCutConpon.count) || (appropriateCoupon && !appropriateCoupon.count) || (hadFullCutCouponList.length && hadCategoryCouponList.length)"
+            v-else-if="(!appropriateCoupon && minFullCutConpon && !minFullCutConpon.count) || (appropriateCoupon && !appropriateCoupon.count) || (!hadFullCutCouponList.length && !hadCategoryCouponList.length)"
             @click="$router.push({ name: 'CouponCenter' })"
           >
             去领券
