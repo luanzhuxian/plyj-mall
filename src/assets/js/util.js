@@ -1,5 +1,6 @@
 // const qrcode = require('../../../static/lib/qrcode/index')
 import moment from 'moment'
+import { getServerTime } from '../../apis/base-api'
 /**
  * 大小数字
  * @param n {number} 要转换的数字
@@ -375,6 +376,23 @@ export class Countdown {
   stop () {
     clearTimeout(this.timer)
     this.callback = null
+  }
+  /**
+   * 获取服务器当前时间
+   * 最好再定时器即将开启前获取，如果中途存在其他逻辑，需要考虑这些逻辑的执行时间，防止误差
+   * @param difference {number} 误差，毫秒值
+   * @return {Promise<number>}
+   */
+  static async getServerTime (difference = 0) {
+    try {
+      const now = Date.now()
+      const { result: time } = await getServerTime()
+      const end = Date.now()
+      // 返回的时间加上请求时间
+      return Number(time) + (end - now) + difference
+    } catch (e) {
+      throw e
+    }
   }
 }
 

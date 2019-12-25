@@ -16,7 +16,7 @@
 
 <script>
 import moment from 'moment'
-import { getServerTime } from '../../apis/base-api'
+import { Countdown } from '../../assets/js/util'
 export default {
   name: 'SecondCountDown',
   props: {
@@ -74,8 +74,7 @@ export default {
   },
   methods: {
     async init () {
-      let { result: serverTiem } = await getServerTime()
-      // console.log(moment(Date.now(Number(serverTiem))).format('YYYY-MM-DD HH:mm:ss'))
+      let serverTiem = await Countdown.getServerTime()
       this.starttiemstamp = Number(serverTiem)
       if (this.data) {
         this.endtiemstamp = Number(this.data[this.fields.end]) || 0
@@ -86,39 +85,24 @@ export default {
         // 启动倒计时
         console.warn('启动倒计时')
         this.show = true
-        this.countdown()
+        this.countdown(this.endtiemstamp - this.starttiemstamp)
       } else {
         this.show = false
       }
     },
-    countdown () {
-      clearInterval(this.timer)
-      this.setTime()
-      this.timer = setInterval(() => {
-        this.endtiemstamp -= 1000
-        if (this.endtiemstamp - this.starttiemstamp <= 0) {
-          clearInterval(this.timer)
+    countdown (duration) {
+      this.COUNTDOWN = new Countdown(duration, data => {
+        if (!data) {
           this.show = false
           this.$emit('done', true)
           this.data[this.fields.start] = 0
         }
-        this.setTime()
-      }, 1000)
-    },
-    setTime () {
-      let dateTime = this.endtiemstamp - this.starttiemstamp
-      let { _data } = moment.duration(dateTime)
-      this.d = String(Math.floor(moment.duration(dateTime).asDays())).padStart(2, '0')
-      this.h = String(_data.hours).padStart(2, '0')
-      this.m = String(_data.minutes).padStart(2, '0')
-      this.s = String(_data.seconds).padStart(2, '0')
-      // if (d !== '0') {
-      //   this.time = `${d}天${h.padStart(2, '0')}:${m.padStart(2, '0')}:${s.padStart(2, '0')}`
-      // } else if (h !== '0') {
-      //   this.time = `${h.padStart(2, '0')}:${m.padStart(2, '0')}:${s.padStart(2, '0')}`
-      // } else if (m !== '0') {
-      //   this.time = `${m.padStart(2, '0')}:${s.padStart(2, '0')}`
-      // }
+        this.d = String(data.days).padStart(2, '0')
+        this.h = String(data.hours).padStart(2, '0')
+        this.m = String(data.minutes).padStart(2, '0')
+        this.s = String(data.seconds).padStart(2, '0')
+      })
+      this.COUNTDOWN.start()
     }
   }
 }

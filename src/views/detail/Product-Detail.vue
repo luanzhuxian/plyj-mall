@@ -7,18 +7,20 @@
     <template v-if="activeProduct === 1 && productStatus !== 0 || activeProduct !== 1">
       <!-- 海报按钮 -->
       <div :class="$style.haibao">
-        <pl-svg :key="1" v-if="creating" name="icon-btn-loading" height="35" fill="#fff" class="rotate" />
-        <pl-svg :key="2" v-else name="icon-haibao" height="35" @click="createHaibao(activeProduct)" />
+        <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+        <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createHaibao(activeProduct)" />
         <p>分享海报</p>
       </div>
       <!-- 商品banner -->
       <DetailBanner :banners="banners" />
-      <!-- 团购倒计时条 -->
-      <TogetherBar :detail="detail" v-if="activeProduct === 2 && preActivity !== 0" />
-      <!-- 秒杀倒计时条 -->
-      <SecondBar :detail="detail" v-if="activeProduct === 3 && preActivity !== 0" />
-      <!-- 预购倒计时条 -->
-      <BookingBar :detail="detail" v-if="activeProduct === 4 && preActivity !== 0" />
+      <template v-if="detail.id">
+        <!-- 团购倒计时条 -->
+        <TogetherBar :detail="detail" v-if="activeProduct === 2 && preActivity !== 0" />
+        <!-- 秒杀倒计时条 -->
+        <SecondBar :detail="detail" v-if="activeProduct === 3 && preActivity !== 0" />
+        <!-- 预购倒计时条 -->
+        <BookingBar :detail="detail" v-if="activeProduct === 4 && preActivity !== 0" />
+      </template>
       <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
         <!-- 团购信息: 活动进行中，或者，活动预热中且需要隐藏价格，才需要显示这个组件，组件内部会根据活动状态进行显示 -->
@@ -251,7 +253,7 @@
           <div :class="$style.saveButton1" v-else>
             长按识别或保存二维码，分享给朋友吧！
           </div>
-          <pl-svg name="icon-close3" fill="#fff" @click="showHaibao = false;" />
+          <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />
         </div>
       </div>
     </transition>

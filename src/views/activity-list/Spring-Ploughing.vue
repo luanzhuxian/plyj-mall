@@ -127,6 +127,7 @@ import {
 import { getSpringCombination } from '../../apis/product'
 import moment from 'moment'
 const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/4b676734-b0c9-4aca-942d-ce62e481ebcf.jpeg'
+
 export default {
   name: 'SpringPloughing',
   components: {
@@ -166,6 +167,8 @@ export default {
   async activated () {
     try {
       await this.getSpringCombination()
+      let t = await Countdown.getServerTime()
+      console.log(t)
     } catch (e) {
       throw e
     }
