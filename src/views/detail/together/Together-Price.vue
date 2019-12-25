@@ -28,6 +28,7 @@
           </li>
         </ul>
         <div v-if="detail.activityProductModel.number > 0">{{ detail.activityProductModel.number }}人和你一起参与</div>
+        <div :class="$style.burse" v-if="detail.activityProductModel.prizePool">成团后最高瓜分{{ detail.activityProductModel.prizePool }}元奖学金</div>
       </div>
       <div :class="$style.priceRight" v-if="agentUser && (minRebate || maxRebate) && detail.preActivity !== 2">
         <p class="fz-22 gray-1">
@@ -154,6 +155,7 @@ export default {
     }
     .join{
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       max-width: 360px;
@@ -172,6 +174,13 @@ export default {
             border-radius: 50%;
           }
         }
+      }
+      > .burse {
+        width: 100%;
+        color: #FE7700;
+        text-align: right;
+        font-size:26px;
+        margin-top: 8px;
       }
     }
     .priceRight {

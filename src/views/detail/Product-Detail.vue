@@ -242,6 +242,30 @@
     <div :class="$style.buttomTip" v-if="!loading && noStock">
       该商品已全部售罄，请选择其它商品购买
     </div>
+    <!--团购 且 进行中 显示-->
+    <div
+      v-if="(detail.activityProductModel && activeProduct === 2 && preActivity === 2) && (detail.activityProductModel.percolatorCount || detail.activityProductModel.flag)"
+      :class="$style.togetherWarn"
+    >
+      <!--双十二团购阶梯奖提醒，在 新春 且 团购 且 进行中 且 设置了阶梯 的条件下显示-->
+      <template v-if="detail.activityProductModel.percolatorCount">
+        <ul>
+          <li
+            v-for="(item, index) in detail.activityProductModel.payUserImageList.slice(-3)"
+            :key="index"
+          >
+            <div v-if="index + 1 === detail.activityProductModel.payUserImageList.slice(-3).length">+{{ detail.activityProductModel.percolatorCount }}</div>
+            <img :src="item.headImgURL">
+          </li>
+          <li v-if="!detail.activityProductModel.payUserImageList.length"><div>+{{ detail.activityProductModel.percolatorCount }}</div></li>
+        </ul>
+        <div :class="$style.carveUp">
+          <div>还差{{ detail.activityProductModel.percolatorCount }}人即可瓜分<span>{{ detail.activityProductModel.prize }}元</span>红包</div>
+          <div v-if="detail.activityProductModel.flag">有人未付款，还有机会哟，请稍后刷新尝试</div>
+        </div>
+      </template>
+      <div v-else :class="$style.waitPay">有人未付款，还有机会哟，请稍后刷新尝试</div>
+    </div>
     <!-- 海报弹框 -->
     <transition name="fade">
       <div :class="$style.saveHaibao" v-if="showHaibao">
@@ -257,6 +281,7 @@
         </div>
       </div>
     </transition>
+
   </div>
 </template>
 
@@ -1011,6 +1036,66 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
       content: '';
       border: 14px solid transparent;
       border-top-color: rgba(0, 0, 0, .7);
+    }
+  }
+  .together-warn {
+    display: flex;
+    font-size: 26px;
+    background: #FFE1C7;
+    text-align: center;
+    padding: 10px 32px;
+    position: fixed;
+    bottom: 111px;
+    left: 0;
+    width: 100%;  
+    justify-content: space-between;
+    align-content: center;
+    box-sizing: border-box;
+    > ul {
+      display: flex;
+      align-items: center;
+      margin-right: 30px;
+      > li {
+        width: 30px;
+        height: 48px;
+        position: relative;
+        > img {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+        }
+        > div {
+          width: 48px;
+          line-height: 48px;
+          font-size: 24px;
+          text-align: center;
+          position: absolute;
+          background: black;
+          border-radius: 50%;
+          opacity: 0.5;
+          color: #FFFFFF;
+        }
+      }
+    }
+    > .carve-up {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      text-align: right;
+      > div {
+        width: 100%;
+        > span {
+          color: #ff0000;
+        }
+      } 
+      > div:nth-of-type(2) {
+        color: #999999;
+        font-size: 20px;
+      }
+    }
+    > .wait-pay {
+      width: 100%;
+      text-align: center;
     }
   }
   .haibao {
