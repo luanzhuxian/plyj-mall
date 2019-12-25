@@ -46,11 +46,11 @@ Router.prototype.push = function push (location, onResolve, onReject) {
 }
 Router.prototype.replace = function replace (location, onResolve, onReject) {
   if (typeof location === 'object') {
-    if (location.params) {
-      location.params.noCache = Date.now()
+    if (location.query) {
+      location.query.noCache = Date.now()
     } else {
       Object.assign(location, {
-        params: {
+        query: {
           noCache: Date.now()
         }
       })
