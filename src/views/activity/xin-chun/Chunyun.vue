@@ -160,11 +160,6 @@ export default {
     background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png") no-repeat center top;
     background-size: 100% auto;
     height: 682px;
-    > svg {
-      position: absolute;
-      top: 155px;
-      right: 95px;
-    }
     .count-down-wrapper {
       position: absolute;
       top: 293px;
@@ -189,6 +184,11 @@ export default {
       font-size: 26px;
       font-family: Microsoft YaHei;
       color: #184B28;
+    }
+    > svg {
+      position: absolute;
+      top: 155px;
+      right: 95px;
     }
   }
   &-list {
