@@ -154,7 +154,11 @@ export default {
     async needRegisterNew () {
       try {
         if (!this.userId) {
-          await this.reciveSuccess()
+          await this.$alert({
+            confirmText: '去注册',
+            message: '新注册会员可领取',
+            viceMessage: '优惠券大礼包已发送到您的卡包,请在有效期内使用'
+          })
           this.saveState()
           this.bindMobile()
           return true
@@ -163,14 +167,6 @@ export default {
       } catch (e) {
         throw e
       }
-    },
-    // 获取成功
-    async reciveSuccess () {
-      return this.$alert({
-        confirmText: '朕知道了',
-        viceMessage: '优惠券大礼包已发送到‘我的卡券’，请在有效期内使用',
-        message: '领取成功'
-      })
     },
     async reClaimed () {
       return this.$alert({
