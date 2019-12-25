@@ -22,7 +22,7 @@ export const receivePresent = (id, signinNote) => axios.post(`/apis/v1/signinAct
 // 统计访问量
 export const statisticsViews = (id) => axios.get(`/apis/v1/signinActivity/incrAccess/${id}`)
 
-/* 新人有礼 */
+/** *******************************************************新人有礼***************************************************************/
 
 // 获取当前新人有礼的活动
 export const getCurrentActivity = () => axios.get(`/apis/v1/newcomerActivitys/currActiviy`)
