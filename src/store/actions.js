@@ -17,7 +17,7 @@ import {
 import {
   getAduitNotice
 } from '../apis/broker-manager'
-import { getTemplate } from '../apis/home'
+import { getTemplate, getSkinStatus } from '../apis/home'
 import {
   DelayExec,
   loadImage
@@ -226,8 +226,8 @@ export default {
   },
   [type.GET_SKIN_ID]: async ({ commit }, params) => {
     try {
-      const { result } = await getTemplate({ type: 1 })
-      commit(type.GET_SKIN_ID, result.skinStatus)
+      const { result } = await getSkinStatus({ type: 1 })
+      commit(type.GET_SKIN_ID, result)
     } catch (e) {
       commit(type.GET_SKIN_ID, 0)
       throw e
