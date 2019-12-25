@@ -7,17 +7,18 @@
       <span class="rule" @click="isShowRule = true"><span>活动规则</span><pl-svg name="icon-double-arrow" height="24" width="13" /></span>
     </div>
     <div class="gift-list">
-      <gift-ticket
-        v-for="(coupon, idx) in activityInfo.couponModels"
-        :key="idx"
-        :coupon-name="coupon.couponName"
-        :coupon-amount="coupon.amount"
-        :use-limit="coupon.useLimitAmount"
-        :start-time="coupon.useStartTime"
-        :end-time="coupon.useEndTime"
-        :stopd="isActivityStoped"
-        :status="activityInfo.status == 0 ? 'end' : 'stoped'"
-        @showrule="isShowRule = false"
+      <CouponItem
+        v-for="(item, index) in activityInfo.couponModels"
+        :key="index"
+        :name="item.couponName"
+        :amount="item.amount"
+        :subtract="item.amount"
+        :full="item.useLimitAmount"
+        :use-start-time="item.useStartTime"
+        :use-end-time="item.useEndTime"
+        :status="isActivityStoped ? (activityInfo.status == 0 ? '已结束' : '已停止') : ''"
+        :is-show-receive="false"
+        :coupon-type="item.couponType"
       />
     </div>
     <div class="get-gift" @click="tryClaim(false)">
@@ -44,13 +45,13 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import share from '../../../assets/js/wechat/wechat-share'
-import GiftTicket from './GiftTicket'
+import CouponItem from '../../../components/item/Coupon-Item.vue'
 import { getNewcomersDetail } from '../../../apis/newcomers'
 
 export default {
   name: 'Newcomers',
   components: {
-    GiftTicket
+    CouponItem
   },
   data () {
     return {
