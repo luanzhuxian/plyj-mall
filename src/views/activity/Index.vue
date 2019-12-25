@@ -36,9 +36,11 @@
         </div>
       </div>
       <invite-newcomers-home-entry />
-      <newcomers-home-entry />
-      <new-year-newcomers-home-entry />
     </div>
+    <!-- 双十二-新人有礼 -->
+    <newcomers-home-entry />
+    <!-- 新春开学季-新人有礼 -->
+    <new-year-newcomers-home-entry />
     <pl-svg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
   </div>
 </template>
