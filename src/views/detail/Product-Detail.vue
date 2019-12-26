@@ -254,10 +254,10 @@
             v-for="(item, index) in detail.activityProductModel.payUserImageList.slice(-3)"
             :key="index"
           >
-            <div v-if="index + 1 === detail.activityProductModel.payUserImageList.slice(-3).length">+{{ detail.activityProductModel.percolatorCount }}</div>
             <img :src="item.headImgURL">
           </li>
           <li v-if="!detail.activityProductModel.payUserImageList.length"><div>+{{ detail.activityProductModel.percolatorCount }}</div></li>
+          <li v-if="detail.activityProductModel.payUserImageList.length > 3"><div>...</div></li>
         </ul>
         <div :class="$style.carveUp">
           <div>还差{{ detail.activityProductModel.percolatorCount }}人即可瓜分<span>{{ detail.activityProductModel.prize }}元</span>红包</div>
@@ -1047,7 +1047,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
     position: fixed;
     bottom: 111px;
     left: 0;
-    width: 100%;  
+    width: 100%;
     justify-content: space-between;
     align-content: center;
     box-sizing: border-box;
@@ -1063,6 +1063,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
           width: 48px;
           height: 48px;
           border-radius: 50%;
+          border: 1px solid #FFF;
         }
         > div {
           width: 48px;
@@ -1070,10 +1071,11 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
           font-size: 24px;
           text-align: center;
           position: absolute;
-          background: black;
           border-radius: 50%;
-          opacity: 0.5;
           color: #FFFFFF;
+          opacity: 0.9;
+          background: #FE7700;
+          border: 1px solid #FFF;
         }
       }
     }
@@ -1087,7 +1089,7 @@ function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
         > span {
           color: #ff0000;
         }
-      } 
+      }
       > div:nth-of-type(2) {
         color: #999999;
         font-size: 20px;
