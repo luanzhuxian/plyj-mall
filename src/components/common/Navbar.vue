@@ -163,14 +163,14 @@ export default {
           myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/5506a573-d1de-4388-ae48-5f616865bfbe.png'
         },
         '4': {
-          home: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/3e58990a-96cb-48e7-b15a-3e8bd67f99a2.png',
-          homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/c178fd8c-719c-45fa-959d-d777ebf3c078.png',
-          classify: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/6b66e983-d482-40eb-b433-a2894fe66b91.png',
-          classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/8e40ee0f-405e-408d-bef6-8296b51fe68a.png',
-          shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/0438bffd-91cb-4ad4-a21e-3782efe44134.png',
-          shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/06e0330a-0e6d-40da-a95f-806079c95117.png',
-          my: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/e0351d5d-ebde-4606-bfb3-5bd95e8cdbf6.png',
-          myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/38c15651-1a75-4fd5-8f8e-d90017260bff.png'
+          home: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/59d33c43-0c92-4188-8bd1-7262d3f22e6f.png',
+          homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/78b43fa6-6a94-4d8e-a6cf-3593eb466d2e.png',
+          classify: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/370856d4-8bf8-4c8c-a16b-8b6023adb347.png',
+          classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/c7caf9d7-23e8-4fc7-bf5d-feae82e60c12.png',
+          shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/0ae4ba75-10e9-45ca-8338-009d8079c12f.png',
+          shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/ced7151b-9366-4050-95eb-3b46ef11bbee.png',
+          my: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/e8ed38d7-ca0c-440d-9f17-d67edd4e54ce.png',
+          myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/515a432b-738b-4517-b20b-b0f96d054b09.png'
         },
         '5': {
           home: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/86b85967-0b8e-4949-992c-5cd5f83d8c51.png',
