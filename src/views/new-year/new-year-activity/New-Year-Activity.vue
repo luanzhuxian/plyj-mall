@@ -809,6 +809,8 @@ export default {
         if (!data) {
           // 倒计时结束，刷新数据
           this.init()
+          // 清除时间残留
+          this.time.d = ''
           return
         }
         let d = String(data.days)
