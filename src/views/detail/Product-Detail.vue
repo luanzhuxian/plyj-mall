@@ -15,11 +15,26 @@
       <DetailBanner :banners="banners" />
       <template v-if="detail.id">
         <!-- 团购倒计时条 -->
-        <TogetherBar :detail="detail" v-if="activeProduct === 2 && preActivity !== 0" />
+        <TogetherBar
+          v-if="activeProduct === 2 && preActivity !== 0"
+          :detail="detail"
+          @started="refresh(2)"
+          @ended="refresh(1)"
+        />
         <!-- 秒杀倒计时条 -->
-        <SecondBar :detail="detail" v-if="activeProduct === 3 && preActivity !== 0" />
+        <SecondBar
+          v-if="activeProduct === 3 && preActivity !== 0"
+          :detail="detail"
+          @started="refresh(3)"
+          @ended="refresh(1)"
+        />
         <!-- 预购倒计时条 -->
-        <BookingBar :detail="detail" v-if="activeProduct === 4 && preActivity !== 0" />
+        <BookingBar
+          v-if="activeProduct === 4 && preActivity !== 0"
+          :detail="detail"
+          @started="refresh(4)"
+          @ended="refresh(1)"
+        />
       </template>
       <!-- 商品基本信息 -->
       <DetailInfoBox :loading="loading">
@@ -132,7 +147,7 @@
 
     <!--底部购买按钮  -->
     <buy-now
-      v-if="currentProductStatus !== 5"
+      v-if="productActive !== 5"
       type="warning"
       ref="buyNow"
       :image="detail.productMainImage"
@@ -163,7 +178,7 @@
       :activity-product-model="detail.activityProductModel || null"
       :pre-activity="preActivity"
     >
-      <template v-slot:footer="{ currentSku, limiting, limit }" v-if="currentProductStatus !== 5">
+      <template v-slot:footer="{ currentSku, limiting, limit }" v-if="productActive !== 5">
         <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
           <!-- 活动商品库存不足时，显示该按钮 -->
           <button
@@ -390,7 +405,7 @@ export default {
         return this.activityProductModel ? this.activityProductModel.buyCount : 0
     },
     // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去
-    currentProductStatus(){
+    productActive (){
       return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
     },
     /**
@@ -512,13 +527,14 @@ export default {
     ...mapActions({
       getCartCount: GET_CART_COUNT
     }),
-    async getDetail (currentProductStatus) {
+    //  获取商品详情
+    async getDetail (productActive) {
       try {
         this.loading = true
         this.resetState() // 重置一些状态
         // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
-        currentProductStatus = currentProductStatus? currentProductStatus : this.currentProductStatus
-        let { result } = await getProductDetail(this.productId, currentProductStatus)
+        productActive = productActive ? productActive : this.productActive
+        let { result } = await getProductDetail(this.productId, productActive)
         let { id, agentProduct, mediaInfoIds, productStatus } = result
         if (!result) {
           this.$error('该商品异常')
@@ -582,6 +598,7 @@ export default {
       this.currentModel = {}
       this.banners.splice(0, 1000000)
     },
+    // 判断绑定手机
     hasBind () {
       if (!this.mobile) {
         this.$confirm('您还没有绑定手机，请先绑定手机')
@@ -839,15 +856,16 @@ export default {
       // this.$set(this.detail, 'serverTime', '')
       // this.$set(this.detail, 'shoppingTimeLong', '')
       // this.$set(this.detail, 'preActivity', 2)
-      location.reload()
+      // location.reload()
+      this.refresh()
     },
-    async refresh () {
+    async refresh (productActive) {
       try {
         this.showSpecifica = false
         this.currentModel = {}
         this.haibao = ''
         this.tab = 2
-        await this.getDetail()
+        await this.getDetail(productActive)
         await this.getCouponList()
       } catch (e) {
         throw e

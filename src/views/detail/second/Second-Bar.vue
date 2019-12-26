@@ -25,13 +25,13 @@
       </div>
     </div>
     <count-down
-      @done="countFinished"
+      @done="ended"
       activity-text="距离结束"
       v-if="detail.preActivity === 2"
       :endtime="detail.activityProductModel.activityEndTime"
     />
     <count-down
-      @done="countFinished"
+      @done="started"
       activity-text="距离开始"
       v-if="detail.preActivity === 1"
       :endtime="detail.activityProductModel.activityStartTime"
@@ -77,10 +77,15 @@ export default {
     }
   },
   methods: {
+    started () {
+      this.$emit('started')
+    },
+    ended () {
+      this.$emit('ended')
+    },
     countFinished () {
       this.$set(this.detail, 'serverTime', '')
       this.$set(this.detail, 'shoppingTimeLong', '')
-      this.$parent.getDetail(1) // 当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
     }
   }
 }
