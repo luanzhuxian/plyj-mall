@@ -253,11 +253,12 @@ export default {
   }
 }
 .icon-d12 {
-  margin-bottom: 10px;
-  width: 72px;
+  margin-bottom: 10px !important;
+  width: 72px !important;
 }
 .icon-xinchun {
-  width: 105px;
+  width: 105px !important;
+  height: auto !important;
 }
 
 /* 皮肤 */
@@ -272,6 +273,10 @@ export default {
     padding-bottom: 4px;
     &.active > .tab-name {
       color: #C81819;
+    }
+    img {
+      width: 71px;
+      height: 62px;
     }
   }
   .tab-name {
