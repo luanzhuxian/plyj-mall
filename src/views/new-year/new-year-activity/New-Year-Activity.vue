@@ -79,7 +79,7 @@
           <div class="sign-in-icon-bottom">
             <div class="sign-in-icon-item" v-for="(item, index) in signInIconList" :key="index">
               <div v-if="!item.isPresent" class="icon-item"
-                   @click="drawNewYearCardPoster(item.posterUrl, item.name, item.hasSignin)"
+                   @click="drawNewYearCardPoster(item)"
               >
                 <div class="icon">
                   <img v-if="item.hasSignin" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/46322250-3be6-4c39-99fd-2b07fbde4915.png">
@@ -88,7 +88,7 @@
                 </div>
                 <p :class="{'not-sign': !item.hasSignin}">{{ item.name }}</p>
               </div>
-              <div v-else class="prensent-icon-item">
+              <div v-else class="prensent-icon-item" @click="presentWarning(item)">
                 <!-- 未抽奖前普通奖品展示-->
                 <div v-if="!item.hasSignin && !item.isGrandPrsent">
                   <span>
@@ -293,6 +293,8 @@ export default {
       showMyPresentListMore: false, // 是否显示所有我的奖品
       isShowNewYearPoster: false, // 是否显示年味海报
       isLoading: false, // 海报是否在加载中
+      isGetMyNewYearCard: false, // 是否正在获取年味
+      isReceivePresent: false, // 是否正在领取奖品
       activeDetail: {},
       presentList: [],
       signInIconList: [], // 签到图标表
@@ -580,8 +582,9 @@ export default {
           } else if (end > now) { // 活动未结束
             this.activityIsStart = true
             this.countdown(end - now)
-          } else if (now > end) { // 活动未结束
+          } else if (now > end) { // 活动已结束
             this.activityIsOver = true
+            this.activityIsStart = true
           } else {
             this.canNotJoinCurrentActivity()
           }
@@ -593,7 +596,9 @@ export default {
     // 获得年味
     async getMyNewYearCard () {
       try {
+        if (this.isGetMyNewYearCard) return
         if (this.currentSignIn.hasSignin) return
+        this.isGetMyNewYearCard = true
         await checkInCurrentNewYearIcon(this.id, this.activeDetail.nextSigninNote)
 
         /* ********修改相应的参数，不刷新页面******** */
@@ -609,8 +614,9 @@ export default {
         this.activeDetail.differenceNumber -= 1
         // 统计签到人数
         this.activeDetail.signinNumber = this.activeDetail.nextSigninNote === 1 ? this.activeDetail.signinNumber += 1 : this.activeDetail.signinNumber
+        this.isGetMyNewYearCard = false
         // 显示海报
-        this.drawNewYearCardPoster(this.currentSignIn.posterUrl, this.currentSignIn.name, this.currentSignIn.hasSignin)
+        this.drawNewYearCardPoster(this.currentSignIn)
       } catch (e) {
         throw e
       }
@@ -618,6 +624,8 @@ export default {
     // 领取奖品
     async receivePresent () {
       try {
+        if (this.isReceivePresent) return
+        this.isReceivePresent = true
         if ((!this.currentSignIn.hasAward || this.currentSignIn.awardType !== '') && this.previousPresentIsReceive) return
         let { result } = await receivePresent(this.id, this.activeDetail.currentReceivePresentNote)
         /* 显示中奖信息弹框 */
@@ -652,6 +660,7 @@ export default {
         if (result.awardType) {
           this.myPresentList.push(result)
         }
+        this.isReceivePresent = false
       } catch (e) {
         throw e
       }
@@ -684,8 +693,15 @@ export default {
       }
     },
     // 生成年味海报
-    async drawNewYearCardPoster (imgUrl, desc, isSignIN) { // 生成年味海报
-      if (!isSignIN) return
+    async drawNewYearCardPoster (item) { // 生成年味海报
+      let imgUrl = item.posterUrl
+      let desc = item.name
+      let isSignIN = item.hasSignin
+      if (!isSignIN) {
+        if (!this.activityIsStart) return this.$warning('活动未开始')
+        if (this.activityIsOver) return this.$warning('活动已结束')
+        return this.$warning('今日已获得年味，请明日再来~')
+      }
       if (this.isLoading) return
       try {
         this.isLoading = true
@@ -737,6 +753,14 @@ export default {
       } finally {
         this.isLoading = false
       }
+    },
+    async presentWarning (item) {
+      if (!item.isPresent) return // 只有礼品支持此提示
+      if (item.hasSignin) return // 已领取的奖品不提示
+      if (!this.activityIsStart) return this.$warning('活动未开始')
+      if (this.activityIsOver) return this.$warning('活动已结束')
+      if (item.isGrandPrsent) return this.$warning(`集齐${item.presentIndex + 1}个年味，有机会抽取年味大礼~`)
+      return this.$warning(`获得${item.presentIndex + 1}个年味，即可领取年味礼品~`)
     },
     // 加载图片
     async loadImage (src) {
