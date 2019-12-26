@@ -43,7 +43,8 @@ export default {
         pagination: {
           el: '.banner-pagination-home-b',
           clickable: true
-        }
+        },
+        loop: true
       }
     }
   },

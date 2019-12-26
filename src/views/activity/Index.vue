@@ -120,36 +120,7 @@ export default {
       immediate: true
     }
   },
-  async created () {
-    try {
-      // const type = await this.getTemplate()
-      // // 查询直播
-      // getLiveInfo().then(({ result }) => {
-      //   this.liveInfo = result || {}
-      // })
-      // // 查询可使用优惠卷
-      // getMyCouponList({ current: 1, size: 10, status: 0 })
-      //   .then(({ result }) => {
-      //     this.topBtnType = result.total ? 1 : 2
-      //   })
-      //   .catch(err => {
-      //     this.topBtnType = 2
-      //     throw err
-      //   })
-      // if (type && ~[5, 6, 7].indexOf(type)) {
-      //   // 邀新有礼
-      //   getCurrentActivity().then(({ result }) => {
-      //     this.invitingEvent = result || {}
-      //   })
-      //   // 见学之路
-      //   getJianxueInfo().then(({ result }) => {
-      //     this.jxEvent = result || {}
-      //   })
-      // }
-    } catch (e) {
-      throw e
-    }
-  },
+  async created () {},
   methods: {
     async getTemplate () {
       try {

@@ -5,7 +5,8 @@
       [$style.skinXmas]: skinId === 1,
       [$style.skinYuanDan]: skinId === 2,
       [$style.skinNewYear]: skinId === 3,
-      [$style.skinXiaoNian]: skinId === 4
+      [$style.skinXiaoNian]: skinId === 4,
+      [$style.skinYuanXiao]: skinId === 5
     }"
   >
     <!-- 首页 -->
@@ -24,7 +25,7 @@
         height="68"
         :key="0"
       />
-      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4, 5].indexOf(skinId)">
         <img :src="homeActive ? skinMap[skinId].homeActive : skinMap[skinId].home">
         <div :class="$style.tabName">首页</div>
       </template>
@@ -45,7 +46,7 @@
         height="72"
         :key="1"
       />
-      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4, 5].indexOf(skinId)">
         <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
         <div :class="$style.tabName">分类</div>
       </template>
@@ -84,7 +85,7 @@
         :key="2"
         :name="shoppingChartActive ? 'icon-cart-active' : 'icon-cart'"
       />
-      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4, 5].indexOf(skinId)">
         <img :src="shoppingChartActive ? skinMap[skinId].shoppingChartActive : skinMap[skinId].shoppingChart">
         <div :class="$style.tabName">购物车</div>
       </template>
@@ -105,7 +106,7 @@
         height="74"
         :key="3"
       />
-      <template v-if="~[1, 2, 3, 4].indexOf(skinId)">
+      <template v-if="~[1, 2, 3, 4, 5].indexOf(skinId)">
         <img :src="myActive ? skinMap[skinId].myActive : skinMap[skinId].my">
         <div :class="$style.tabName">我的</div>
       </template>
@@ -170,6 +171,16 @@ export default {
           shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/06e0330a-0e6d-40da-a95f-806079c95117.png',
           my: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/e0351d5d-ebde-4606-bfb3-5bd95e8cdbf6.png',
           myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/38c15651-1a75-4fd5-8f8e-d90017260bff.png'
+        },
+        '5': {
+          home: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/86b85967-0b8e-4949-992c-5cd5f83d8c51.png',
+          homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/93845c73-12ba-4627-acd0-d5dfe29cffc7.png',
+          classify: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/231fb96b-75b0-4957-afed-16069aeae381.png',
+          classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/bf6cfe7c-fb87-4f00-a56f-aed22d8bc0b9.png',
+          shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/6de53dcc-e94d-47ae-a1da-3dbe919b842f.png',
+          shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/a0597aa9-d126-4c7b-8fad-999d52c9dffd.png',
+          my: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/6cee4a1f-4a99-4199-88d1-0746f0597d1d.png',
+          myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/8638a408-644e-4ab6-962a-3338aac2b09a.png'
         }
       }
     }
@@ -253,7 +264,8 @@ export default {
 .skin-xmas,
 .skin-yuan-dan,
 .skin-new-year,
-.skin-xiao-nian {
+.skin-xiao-nian,
+.skin-yuan-xiao {
   .route {
     box-sizing: border-box;
     justify-content: flex-end !important;
@@ -281,6 +293,18 @@ export default {
 .skin-new-year {
   background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/00b470fc-1ba0-4c3a-a039-177d6564eb0e.png") no-repeat center;
   background-size: 100%;
+}
+.skin-yuan-xiao {
+  background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/0172699a-7d24-45ae-8e27-46d0a88dfb39.png") no-repeat center;
+  background-size: 101%;
+  .route {
+    .tab-name {
+      color: #ffffff;
+    }
+    &.active > .tab-name {
+      color: #ffffff;
+    }
+  }
 }
 </style>
 <style lang="scss">

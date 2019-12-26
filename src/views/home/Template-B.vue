@@ -5,7 +5,8 @@
       [$style.skinXmas]: skinId === 1,
       [$style.skinYuanDan]: skinId === 2,
       [$style.skinNewYear]: skinId === 3,
-      [$style.skinXiaoNian]: skinId === 4
+      [$style.skinXiaoNian]: skinId === 4,
+      [$style.skinYuanXiao]: skinId === 5
     }"
   >
     <div :class="$style.container">

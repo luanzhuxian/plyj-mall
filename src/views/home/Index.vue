@@ -92,19 +92,18 @@ export default {
     allLoaded () {
       let result
       if (this.type === 3) {
-        result = this.loaded &&
-        [0, 1, 2, 3, 4].includes(this.skinId)
+        result = this.loaded && this.skinId !== null
       }
       if (this.type === 4) {
         result = this.loaded &&
-        [0, 1, 2, 3, 4].includes(this.skinId) &&
+        this.skinId !== null &&
         (this.liveInfo !== null && !!this.liveInfo) &&
         (this.invitingEvent !== null && !!this.invitingEvent) &&
         (this.jxEvent !== null && !!this.jxEvent)
       }
       if (this.type === -1) {
         result = this.loaded &&
-        [0, 1, 2, 3, 4].includes(this.skinId) &&
+        this.skinId !== null &&
         (this.liveInfo !== null && !!this.liveInfo) &&
         (this.nwEvent !== null && !!this.nwEvent)
       }
