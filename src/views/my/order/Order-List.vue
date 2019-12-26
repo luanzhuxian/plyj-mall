@@ -80,7 +80,7 @@
                   取消订单
                 </pl-button>
                 <pl-button
-                  v-if="item.status === 'WAIT_PAY'"
+                  v-if="item.status === 'WAIT_PAY' && false"
                   type="warning"
                   round
                   :loading="payloading && currentPayId === item.id"

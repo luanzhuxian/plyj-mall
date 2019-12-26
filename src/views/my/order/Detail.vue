@@ -437,7 +437,7 @@
         确认收货
       </pl-button>
       <pl-button
-        v-if="orderStatus === 'WAIT_PAY'"
+        v-if="orderStatus === 'WAIT_PAY' && false"
         type="warning"
         round
         :loading="payloading && currentPayId === orderId"

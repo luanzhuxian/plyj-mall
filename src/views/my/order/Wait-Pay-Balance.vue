@@ -76,7 +76,7 @@
                   去使用
                 </pl-button>
                 <pl-button
-                  v-if="item.status === 'WAIT_PAY'"
+                  v-if="item.status === 'WAIT_PAY' && false"
                   type="warning"
                   round
                   :disabled="!item.isStart || item.pastDue"
