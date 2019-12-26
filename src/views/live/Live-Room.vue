@@ -214,7 +214,7 @@
         <div :class="$style.posterWrap">
           <img :src="poster" alt="">
           <div>长按识别或保存二维码，分享给朋友吧！</div>
-          <pl-svg name="icon-close3" width="48" fill="#fff" @click="showPoster = false" />
+          <pl-svg class="mt-22" name="icon-close3" width="48" fill="#fff" @click="showPoster = false" />
         </div>
       </div>
     </transition>
@@ -693,7 +693,6 @@ export default {
         paidAmount
       } = this.detail
       // 生成二维码
-      console.log(coverImg)
       try {
         let all = [
           generateQrcode(300, location.href, 0, null, 0, 'canvas'),
