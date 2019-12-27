@@ -165,7 +165,7 @@
                 <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
                 <img v-else class="small" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png">
                 <!-- 头像-->
-                <img class="avatar" :src="item.userImg">
+                <img class="avatar" :src="item.userImg" :onerror="default_avatar">
                 <!-- 礼品描述 -->
                 <h3>
                   <p>{{ item.userName }}积攒了<span class="orange">{{ item.signinNum }}</span>个年味</p>
@@ -269,6 +269,7 @@ let activity_member = {
   '3': '商家指定用户'
 }
 let default_present_img = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
+let default_avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 let countdownInstanceList = []
 export default {
   name: 'NewYearActivity',
@@ -334,7 +335,8 @@ export default {
         '2': '奖学金',
         '3': '全场满减券',
         '4': '品类券'
-      }
+      },
+      default_avatar: `this.src="${default_avatar}"`
     }
   },
   props: {
@@ -700,6 +702,7 @@ export default {
       if (!isSignIN) {
         if (!this.activityIsStart) return this.$warning('活动未开始')
         if (this.activityIsOver) return this.$warning('活动已结束')
+        if (!this.currentSignIn.hasSignin) return this.$warning('今日可获得1个年味，请点击获取')
         return this.$warning('今日已获得年味，请明日再来~')
       }
       if (this.isLoading) return
@@ -722,7 +725,6 @@ export default {
           ctx.drawImage(logo, 10, 8, 66, 66)
         }
         // 绘制头像
-        let default_avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
         let avatar = this.avatar || default_avatar
         avatar = await this.loadImage(avatar)
         avatar = await cutArcImage(avatar)
