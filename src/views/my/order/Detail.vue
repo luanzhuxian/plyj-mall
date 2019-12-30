@@ -244,7 +244,7 @@
         <span
           v-if="activeProduct === 4"
           :class="$style.totalMoney + ' fz-30 rmb'"
-          v-text="activityData.tailAount + activityData.reachAmount"
+          v-text="activityData.amount"
         />
         <span
           v-else

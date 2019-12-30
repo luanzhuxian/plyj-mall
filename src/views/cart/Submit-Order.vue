@@ -849,6 +849,7 @@ export default {
      * @param coupon {object} 当前使用的优惠券
      */
     async getProductDetail (flag, coupon = {}, redEnvelope = {}) {
+      if (!flag) this.loading = true
       try {
         const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
         if (this.activeProduct === 1 && !coupon.id && !this.isNotChooseCoupon) {
@@ -861,7 +862,6 @@ export default {
         if (!proList || !proList.length) {
           return this.$router.replace({ name: 'Home' })
         }
-        if (!flag) this.loading = true
         // 获取订单详细数据
         const { result } = await confirmCart({
           activeProduct: this.preActivity === 2 ? this.activeProduct : 1,

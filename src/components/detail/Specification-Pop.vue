@@ -206,7 +206,7 @@ export default {
     this.close()
   },
   watch: {
-    visible (val) {
+    async visible (val) {
       this.setShow(val)
       if (val) {
         this.init()
@@ -220,8 +220,13 @@ export default {
         this.$emit('update:sku', val)
         // 当前商品限购的时候，检查可买数量
         if (this.limiting) {
-          const { result: limit } = await getCurrentLimit(val.productId, this.activeProduct)
-          this.limit = limit
+          try {
+            const { result: limit } = await getCurrentLimit(val.productId, this.activeType)
+            this.limit = limit
+          } catch (e) {
+            this.limit = this.limiting
+            this.$error('商品限购检查错误')
+          }
         }
       },
       deep: true
@@ -252,10 +257,9 @@ export default {
     activeAllResidue () {
       return this.activityProductModel ? this.activityProductModel.buyCount : 0
     },
-
     /**
      * 如果不是活动商品 或者活动未开始，返回1（按正常商品处理）
-     * 如果且活动商品，且不是预购活动，当活动库存不足时返回 1
+     * 如果是活动商品，且不是预购活动，当活动库存不足时返回 1
      */
     activeType () {
       if (this.activeProduct !== 1 && this.preActivity === 2) {
@@ -415,7 +419,7 @@ export default {
       setTimeout(async () => {
         // 当前商品限购的时候，检查可买数量
         if (this.limiting) {
-          const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeProduct)
+          const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeType)
           this.limit = limit
         }
       }, 1500)
