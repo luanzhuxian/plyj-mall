@@ -19,7 +19,7 @@ export default {
    * @param precision {number} 精度(默认为整数)
    */
   toPrecision (val = 0, precision = 0) {
-    return val.toPrecision(precision)
+    return Number(val.toPrecision(precision))
   },
   /**
    * 给字符串添加分隔符
