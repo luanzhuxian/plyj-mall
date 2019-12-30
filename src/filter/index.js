@@ -14,6 +14,14 @@ export default {
     return str.replace(/(.{3})(.{4})(.+)/, '$1****$3')
   },
   /**
+   * 转化浮点数精度
+   * @param val {number} 待转换的数字
+   * @param precision {number} 精度(默认为整数)
+   */
+  toPrecision (val = 0, precision = 0) {
+    return val.toPrecision(precision)
+  },
+  /**
    * 给字符串添加分隔符
    * @param separator
    * @num 多少位字符设一个分隔符
