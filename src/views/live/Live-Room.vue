@@ -222,7 +222,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import { mapGetters } from 'vuex'
 import CouponItem from '../../components/item/Coupon-Item.vue'
 import share from '../../assets/js/wechat/wechat-share'
@@ -399,9 +398,9 @@ export default {
             // }
             // vid.controls = false
             vid.currentTime = startTime
-            vid.removeEventListener('play',playFnc)
+            vid.removeEventListener('play', playFnc)
           }
-          vid.addEventListener('play',playFnc)
+          vid.addEventListener('play', playFnc)
           //   // 安卓
           //   vid.addEventListener('x5videoexitfullscreen', function () {
           //     vid.controls = true
@@ -425,7 +424,7 @@ export default {
       // 默认在线直播
       if (this.videoLiveMes.type && this.videoLiveMes.type === 'live') {
         let { channelId, channeUserId } = this
-        let p = polyvObject('#player').livePlayer({
+        window.polyvObject('#player').livePlayer({
           wrap: '#player',
           width: '100%',
           height: '100%',
