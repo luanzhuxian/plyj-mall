@@ -791,6 +791,7 @@ export default {
     let selectedStudents // 已选择的学员的key
     let students // 已有学员列表
     let defStudent // 默认学员
+    this.loading = true
     try {
       // 获取服务器时间
       let { result: serverTime } = await getServerTime()
@@ -845,11 +846,10 @@ export default {
     ...mapActions([STUDENTS]),
     /**
      * 活动商品详情以及支付价格
-     * @param flag {boolean} 标记是第一次进入页面调用，还是刷新调用，刷新true, 否则false, 如果为true，则不会显示骨架屏
      * @param coupon {object} 当前使用的优惠券
+     * @param redEnvelope {object} 红包列表
      */
-    async getProductDetail (flag, coupon = {}, redEnvelope = {}) {
-      if (!flag) this.loading = true
+    async getProductDetail (coupon = {}, redEnvelope = {}) {
       try {
         const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
         if (this.activeProduct === 1 && !coupon.id && !this.isNotChooseCoupon) {
@@ -918,7 +918,7 @@ export default {
       thisPro.count = count
       sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(CONFIRM_LIST))
       try {
-        await this.getProductDetail(true)
+        await this.getProductDetail()
         next()
         if (thisStudents && count < thisStudents.length) {
           thisStudents.pop()
@@ -1007,7 +1007,7 @@ export default {
         isNotUse: this.isNotChooseRedEnvelope,
         detail: this.currentRedEnvelope
       }))
-      await this.getProductDetail(true, item, this.currentRedEnvelope)
+      await this.getProductDetail(item, this.currentRedEnvelope)
     },
     // 获取优惠券
     async getCouponList (amount, data) {
@@ -1078,7 +1078,7 @@ export default {
         isNotUse: this.isNotChooseRedEnvelope,
         detail: this.currentRedEnvelope
       }))
-      await this.getProductDetail(true, this.coupon, item)
+      await this.getProductDetail(this.coupon, item)
     },
     /**
      * 判断是否选择了学生
