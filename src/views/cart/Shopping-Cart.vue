@@ -42,7 +42,7 @@
 
       <!-- 领取优惠券或凑单 -->
       <div :class="$style.coupon" v-if="couponList.length">
-        <span v-if="nextCoupon || appropriateCoupon">
+        <span v-if="nextCoupon || appropriateCoupon" :class="$style.couponTip">
           <span v-if="appropriateCoupon">
             已满{{ appropriateCoupon.useLimitAmount }}元,{{ appropriateCoupon.count ? '减' : '领券可减' }}{{ appropriateCoupon.amount }}元
           </span>
@@ -630,15 +630,20 @@ export default {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    height: 66px;
-    padding: 0 44px;
+    min-height: 66px;
+    padding: 10px 44px;
     box-sizing: border-box;
     font-size: 24px;
     background-color: #FFE1C7;
     z-index: 2;
+    .couponTip {
+      flex: 1;
+    }
     .scrapingUp {
       display: inline-flex;
       align-items: center;
+      width: 112px;
+      margin-left: 10px;
       color: #FE7700;
       > i {
         margin-right: 14px;
