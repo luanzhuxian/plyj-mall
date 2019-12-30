@@ -30,7 +30,7 @@
         </div>
         <div :class="$style.conFooter">
           <div @click="$router.push({name:'MyBurse'})">查看奖学金</div>
-          <div>个人中心→我的奖学金中查看已获得奖学金</div>
+          <div>请在我的→我的奖学金中查看已获得奖学金</div>
         </div>
       </div>
       <!--关闭-->
