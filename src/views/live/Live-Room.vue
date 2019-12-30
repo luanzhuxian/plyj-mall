@@ -382,7 +382,8 @@ export default {
           this.videoLiveMes.flag = false
           await this.$nextTick()
           let vid = this.$refs.livePlayBack
-          vid.addEventListener('play', _ => { // 播放开始执行的函数
+          // 播放开始执行的函数
+          let playFnc = _ => {
             // var agent = (navigator.userAgent || navigator.vendor || window.opera)
             // if (agent != null) {
             //   let agentName = agent.toLowerCase()
@@ -396,9 +397,11 @@ export default {
             //     vid.controls = true
             //   }
             // }
+            // vid.controls = false
             vid.currentTime = startTime
-            vid.controls = false
-          })
+            vid.removeEventListener('play',playFnc)
+          }
+          vid.addEventListener('play',playFnc)
           //   // 安卓
           //   vid.addEventListener('x5videoexitfullscreen', function () {
           //     vid.controls = true
