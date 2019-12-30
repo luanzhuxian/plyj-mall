@@ -9,7 +9,7 @@
     <!-- 核销码 -->
     <div
       :class="$style.qrcodeBox"
-      v-if="redeemCodeModels.length > 0 && orderStatus !== 'WAIT_PAY'"
+      v-if="redeemCodeModels.length > 0 && orderStatus !== 'WAIT_PAY' && orderStatus !== 'CLOSED'"
     >
       <img :src="qrImg" alt="" v-imger:QR="qrImg" :style="{ opacity: isAllCodeUseless ? 0.4 : 1 }">
       <div
