@@ -11,7 +11,7 @@
         />
         <div :class="$style.desc" v-if="detail.activityProductModel.multiplt === 1">
           预交定金翻{{ detail.activityProductModel.multipltNumber }}倍，
-          最低{{ detail.activityProductModel.lowestPrice + detail.activityProductModel.price | toPrecision(2) }}元可得商品</div>
+          最低{{ (detail.activityProductModel.lowestPrice * 100 + detail.activityProductModel.price * 100) / 100 }}元可得商品</div>
       </div>
     </div>
     <div v-if="detail.preActivity === 2" :class="$style.nowTogether">
