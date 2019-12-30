@@ -30,7 +30,7 @@
       </div>
       <div :class="$style.setting">
         <router-link v-if="!isAdmin" :to="{ name: 'Setting' }">
-          <pl-svg name="icon-setting-white" color="#fff" width="42" fill="#fff" />
+          <pl-svg name="icon-setting-white" width="42" fill="#fff" />
         </router-link>
       </div>
     </div>
