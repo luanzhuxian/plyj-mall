@@ -1,5 +1,9 @@
 <template>
-  <div :class="[$style.item, $style[size]]">
+  <router-link
+    :class="[$style.item, $style[size]]"
+    tag="div"
+    :to="{ name: 'SpringPloughing' }"
+  >
     <div :class="$style.title">
       {{ data.name }}
     </div>
@@ -28,7 +32,7 @@
           {{ `${data.salesVolume}人已买` }}
         </span>
       </div>
-      <div :class="$style.current" @click="submitOrder(data)">
+      <div :class="$style.current" @click.stop="submitOrder(data)">
         <template v-if="data.status === 2">
           已结束
         </template>
@@ -47,7 +51,7 @@
     <div :class="[$style.cornner, $style.topRight]" />
     <div :class="[$style.cornner, $style.bottomRight]" />
     <div :class="[$style.cornner, $style.bottomLeft]" />
-  </div>
+  </router-link>
 </template>
 
 <script>
