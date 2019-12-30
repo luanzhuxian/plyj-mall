@@ -253,8 +253,10 @@ export default {
   }
 }
 .icon-d12 {
-  margin-bottom: 10px !important;
-  width: 72px !important;
+  box-sizing: content-box;
+  padding-bottom: 10px;
+  width: 76px !important;
+  height: auto !important;
 }
 .icon-xinchun {
   width: 105px !important;
@@ -269,8 +271,7 @@ export default {
 .skin-yuan-xiao {
   .route {
     box-sizing: border-box;
-    justify-content: flex-end !important;
-    padding-bottom: 4px;
+    // justify-content: flex-end !important;
     &.active > .tab-name {
       color: #C81819;
     }
@@ -281,6 +282,7 @@ export default {
   }
   .tab-name {
     margin-top: 1px;
+    padding-bottom: 4px;
     line-height: 18px;
     font-size: 18px;
     font-family: Adobe Heiti Std;
