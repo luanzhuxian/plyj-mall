@@ -72,8 +72,8 @@
 
       <!-- 选择优惠券 -->
       <counpon-field
+        v-if="couponList.length && preActivity !== 2 && productActive !== 5"
         :coupon-list="couponList"
-        v-if="couponList.length && preActivity !== 2"
       />
 
       <Field
@@ -405,7 +405,7 @@ export default {
     activeStock () {
         return this.activityProductModel ? this.activityProductModel.buyCount : 0
     },
-    // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去
+    // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入
     productActive (){
       return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
     },
