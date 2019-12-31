@@ -27,7 +27,7 @@
     <ul :class="$style.rule" v-if="activeProduct === 4">
       <li>
         <div :class="$style.step1" />
-        <div :class="$style.text">选择需要 的拼团活动</div>
+        <div :class="$style.text">选择需要 的预购活动</div>
       </li>
       <li :class="$style.line" />
       <li>

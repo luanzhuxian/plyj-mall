@@ -62,10 +62,11 @@
         <!-- 商品标签 -->
         <Tags :tags="detail.labelModels" />
         <!-- 使用期限(注意：预购商品取 activityProductModel.validityPeriodStar，表示预购核销时间) -->
+        <!-- 新春团购或新春预购并且活动进行中 走 activityProductModel (注意：双十二团购无核销时间) -->
         <useful-life
           v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
-          :start="(activeProduct === 4 && preActivity === 2) ? detail.activityProductModel.validityPeriodStart : detail.validityPeriodStart"
-          :end="(activeProduct === 4 && preActivity === 2) ? detail.activityProductModel.validityPeriodEnd : detail.validityPeriodEnd"
+          :start="([2,4].indludes(activeProduct) && preActivity === 2) ? (activeProduct === 2 && detail.activityProductModel.type !== '2019_02' ? detail.validityPeriodStart : detail.activityProductModel.validityPeriodStart) : detail.validityPeriodStart"
+          :end="([2,4].indludes(activeProduct) && preActivity === 2) ? (activeProduct === 2 && detail.activityProductModel.type !== '2019_02' ? detail.validityPeriodEnd : detail.activityProductModel.validityPeriodEnd) : detail.validityPeriodEnd"
         />
       </DetailInfoBox>
 
