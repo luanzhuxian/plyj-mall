@@ -24,7 +24,7 @@
         </div>
       </div>
       <div :class="$style.imgWrapper">
-        <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/9ef6c14b-4943-4295-8bdb-a3b16f76ca03.png" alt="">
+        <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/61795ee4-ca67-49c5-b5c2-d3f8769e98dc.png" alt="">
       </div>
     </router-link>
 

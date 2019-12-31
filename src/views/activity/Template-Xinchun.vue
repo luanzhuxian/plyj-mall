@@ -142,7 +142,7 @@ export default {
 }
 .background {
   position: relative;
-  background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/45a22a0e-5560-43a6-b783-485287939361.png") no-repeat center top;
+  background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/df2dd58e-5cad-42af-9965-19cffcadf064.png") no-repeat center top;
   background-size: 100% auto;
   min-height: 100vh;
 }
