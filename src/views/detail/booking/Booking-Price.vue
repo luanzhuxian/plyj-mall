@@ -8,8 +8,6 @@
         </div>
       </div>
       <div class="current-price" style="margin-bottom: 4px;">
-        <!--预售到手价&nbsp;<span class="rmb">{{ // (detail.activityProductModel.lowestPrice + detail.activityProductModel.price) | toPrecision(2) }}</span>-->
-        <!--预售到手价&nbsp;<span class="rmb">{{ new comput(detail.activityProductModel.lowestPrice).plus(new comput(detail.activityProductModel.price)) }}</span>-->
         预售到手价&nbsp;<span class="rmb">{{ detail.activityProductModel.lowestPrice | floatPlus(detail.activityProductModel.price) }}</span>
       </div>
       <div class="pro-info">
@@ -41,7 +39,6 @@
 </template>
 
 <script>
-import BigNumber from 'bignumber.js'
 import { mapGetters } from 'vuex'
 export default {
   name: 'BookingPrice',
@@ -53,7 +50,6 @@ export default {
   },
   data () {
     return {
-      comput: BigNumber
     }
   },
   computed: {
