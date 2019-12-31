@@ -8,7 +8,14 @@
         </div>
       </div>
       <div class="current-price" style="margin-bottom: 4px;">
-        预售到手价&nbsp;<span class="rmb">{{ detail.activityProductModel.lowestPrice | floatPlus(detail.activityProductModel.price) }}</span>
+        <span>预售到手价</span>&nbsp;
+        <span class="rmb">
+          <template v-if="detail.activityProductModel.lowestPrice">
+            <i v-text="detail.activityProductModel.lowestPrice" />
+            <i>~</i>
+          </template>
+          <i v-text="detail.activityProductModel.highestPrice" />
+        </span>
       </div>
       <div class="pro-info">
         <div class="current-price">
