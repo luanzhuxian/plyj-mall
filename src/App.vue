@@ -32,7 +32,8 @@ export default {
       routeName: '',
       exclude: [
         'ShoppingCart',
-        'LiveRoom'
+        'LiveRoom',
+        'PaySuccess'
       ],
       showNavbar: [
         'Home',

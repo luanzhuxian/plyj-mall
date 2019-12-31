@@ -31,30 +31,15 @@
         完成，返回首页
       </pl-button>
     </div>
-    <!--<transition name="fade">
-      <div :class="$style.haibao" v-if="haibao">
-        <img @click="haibao = ''" :src="haibao" alt="">
-      </div>
-    </transition>-->
-    <!--<img
-      v-if="showMoonCake"
-      style="width: 100%; display: block; margin-top: 46px;"
-      src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/moon-cake/pay-success.jpg" alt=""
-      @click="$router.replace({ name: 'SignUp' })"
-    >-->
-    <!-- 820 -->
-    <!--<WWEC :show.sync="show820" />-->
     <you-like :is-my="true" />
   </div>
 </template>
 
 <script>
 import youLike from './../home/components/YouLike.vue'
-// import WWEC from './../../components/WWEC.vue'
 import { mapGetters } from 'vuex'
 import { checkGetGift } from '../../apis/order-manager'
 import { promise } from '../../assets/js/util'
-// import moment from 'moment'
 export default {
   name: 'PaySuccess',
   components: {
@@ -64,24 +49,6 @@ export default {
   data () {
     return {
       checkCount: 0
-      // haibao: '',
-      // show820: false,
-      // data88: {
-      //   '1530139721': {
-      //     haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_haibao.jpg',
-      //     pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/hansi_pop.jpg',
-      //     gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/han_si_bo.gif',
-      //     startTime: 1564588800000, // 2019-08-01 00:00:00
-      //     endTime: 1568563199000 // 2019-09-15 23:59:59
-      //   },
-      //   '1532969341': {
-      //     haibao: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_haibao.jpg',
-      //     pop: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhide_pop.jpg',
-      //     gif: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/88/zhi_de_shuo.gif',
-      //     startTime: 1564588800000, // 2019-08-01 00:00:00
-      //     endTime: 1567267199000 // 2019-08-31 23:59:59
-      //   }
-      // }
     }
   },
   props: {
@@ -100,10 +67,6 @@ export default {
     } catch (e) {
       throw e
     }
-    // this.showPop(500)
-    // if (this.mallId === '1057573777392603136') {
-    //   this.show820 = true
-    // }
   },
   computed: {
     ...mapGetters(['mallId', 'serverTime']),
@@ -127,7 +90,7 @@ export default {
             confirmText: '立即前往'
           })
             .then(async () => {
-              await this.$router.push({ name: 'MyPresent' })
+              await this.$router.replace({ name: 'MyPresent' })
             })
             .catch(() => {})
         } else if (this.checkCount <= 10) {
@@ -139,16 +102,6 @@ export default {
         throw e
       }
     }
-    // showPop (delay) {
-    //   let serverTime = moment(this.serverTime).valueOf()
-    //   let mallId = this.mallId
-    //   let data = this.data88[mallId]
-    //   if (data && data.startTime <= serverTime && data.endTime >= serverTime) {
-    //     setTimeout(() => {
-    //       this.haibao = this.data88[mallId].haibao
-    //     }, delay)
-    //   }
-    // }
   },
   beforeRouteEnter (to, from, next) {
     let { orderId } = to.params
