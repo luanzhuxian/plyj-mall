@@ -4,7 +4,11 @@
     <!-- productStatus - 0：已删除 1：下架 2：上架  3：草稿箱 -->
 
     <!-- 正常商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
-    <template v-if="activeProduct === 1 && productStatus !== 0 || activeProduct !== 1">
+
+    <!-- 售罄 -->
+    <SoldOut v-if="isDeletedShow" />
+
+    <template v-else>
       <!-- 海报按钮 -->
       <div :class="$style.haibao">
         <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
@@ -137,166 +141,166 @@
           <pl-svg name="icon-right" fill="#ccc" width="20" height="25" />
         </div>
       </div>
+
+      <!--底部购买按钮  -->
+      <buy-now
+        v-if="productActive !== 5"
+        type="warning"
+        ref="buyNow"
+        :image="detail.productMainImage"
+        :product-id="productId"
+        :sku-list="detail.productSkuModels"
+        :sku-attr-list="detail.productAttributes"
+        :current-sku.sync="currentModel"
+        :product-status="detail.productStatus"
+        :confirm-text="confirmText"
+        :disable-confirm="confirmText === '暂未开售' || noStock || loading"
+        :disable-add-cart="loading"
+        :limiting="limiting"
+        :active-product="activeProduct"
+        :activity-product-model="detail.activityProductModel || null"
+        :pre-activity="preActivity"
+      />
+
+      <!-- 规格弹框 -->
+      <specification-pop
+        :default-count="defaultCount"
+        :sku-list="detail.productSkuModels"
+        :sku-attr-list="detail.productAttributes"
+        :product-image="detail.productMainImage"
+        :visible.sync="showSpecifica"
+        :sku.sync="currentModel"
+        :limiting="limiting"
+        :active-product="activeProduct"
+        :activity-product-model="detail.activityProductModel || null"
+        :pre-activity="preActivity"
+      >
+        <template v-slot:footer="{ currentSku, limiting, limit }" v-if="productActive !== 5">
+          <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
+            <!-- 活动商品库存不足时，显示该按钮 -->
+            <button
+              v-if="showNormalBuy"
+              :class="$style.add"
+              :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
+              @click="buyNow(currentSku, 1, limiting, limit)"
+            >
+              单独购买
+              <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+            </button>
+            <button
+              :class="$style.buy"
+              :disabled="activeStock <= 0 || loading"
+              @click="buyNow(currentSku, -1, limiting, limit)"
+            >
+              {{ activeStock > 0 ? '我要参团' : '已售罄' }}
+              <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+            </button>
+          </div>
+          <!-- 秒杀商品下单 -->
+          <div :class="$style.buttons" v-else-if="activeProduct === 3 && preActivity === 2">
+            <!-- 活动商品库存不足时，显示该按钮 -->
+            <button
+              v-if="showNormalBuy"
+              :class="$style.add"
+              :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
+              @click="buyNow(currentSku, 1, limiting, limit)"
+            >
+              原价购买
+              <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+            </button>
+            <button
+              :class="$style.buy"
+              :disabled="activeStock <= 0 || loading"
+              @click="buyNow(currentSku, -1, limiting, limit)"
+            >
+              {{ activeStock > 0 ? '立即秒杀' : '已售罄' }}
+              <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+            </button>
+          </div>
+          <!-- 预购商品下单 -->
+          <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2">
+            <button
+              :class="$style.preBtn"
+              :disabled="activeStock <= 0"
+              @click="buyNow(currentSku, -1, limiting, limit)"
+            >
+              {{ activeStock > 0 ? '定金购买' : '已售罄' }}
+              <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
+            </button>
+          </div>
+          <div :class="$style.buttons" v-else>
+            <button
+              :class="$style.add"
+              :disabled="adding || noStock || loading"
+              @click="addToCart(currentSku, limiting, limit)"
+            >
+              加入购物车
+            </button>
+            <button
+              :class="$style.buy"
+              :disabled="adding || noStock || confirmText === '暂未开售' || loading"
+              @click="buyNow(currentSku, 1, limiting, limit)"
+            >
+              {{ confirmText }}
+            </button>
+          </div>
+        </template>
+      </specification-pop>
+
+      <!-- 海报弹框 -->
+      <transition name="fade">
+        <div :class="$style.saveHaibao" v-if="showHaibao">
+          <div :class="$style.saveHaibaoContent">
+            <img :src="haibao" alt="">
+            <div :class="$style.saveButton" v-if="activeProduct === 1">
+              长按识别或保存二维码，分享给朋友吧！
+            </div>
+            <div :class="$style.saveButton1" v-else>
+              长按识别或保存二维码，分享给朋友吧！
+            </div>
+            <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />
+          </div>
+        </div>
+      </transition>
+
+      <!--团购的提醒， 团购 且 进行中 显示-->
+      <div
+        v-if="(detail.activityProductModel && activeProduct === 2 && preActivity === 2) && (detail.activityProductModel.percolatorCount || detail.activityProductModel.flag)"
+        :class="$style.togetherWarn"
+      >
+        <!--双十二团购阶梯奖提醒，在 新春 且 团购 且 进行中 且 设置了阶梯 的条件下显示-->
+        <template v-if="detail.activityProductModel.percolatorCount">
+          <ul>
+            <li
+              v-for="(item, index) in detail.activityProductModel.payUserImageList.slice(-3)"
+              :key="index"
+            >
+              <img :src="item.headImgURL">
+            </li>
+            <li v-if="!detail.activityProductModel.payUserImageList.length"><div>+{{ detail.activityProductModel.percolatorCount }}</div></li>
+            <li v-if="detail.activityProductModel.payUserImageList.length > 3"><div>...</div></li>
+          </ul>
+          <div :class="$style.carveUp">
+            <div>还差{{ detail.activityProductModel.percolatorCount }}人即可瓜分<span>{{ detail.activityProductModel.prize }}元</span>红包</div>
+            <div v-if="detail.activityProductModel.flag">有人未付款，还有机会哟，请稍后刷新尝试</div>
+          </div>
+        </template>
+        <div v-else :class="$style.waitPay">有人未付款，还有机会哟，请稍后刷新尝试</div>
+      </div>
+
+      <!-- 正常商品 或 未开始的活动商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
+      <div :class="$style.buttomTip" v-if="!loading && isDown && activeProduct === 1 && productActive !== 5">
+        该商品已下架
+      </div>
+      <div :class="$style.buttomTip" v-if="!loading && noStock">
+        该商品已全部售罄，请选择其它商品购买
+      </div>
     </template>
 
-    <!-- 售罄 -->
-    <SoldOut v-else />
     <!-- 猜你喜欢 -->
     <div style="background-color: #f4f5f9;">
       <you-like :product-id="productId" :is-my="true" />
     </div>
-
-    <!--底部购买按钮  -->
-    <buy-now
-      v-if="productActive !== 5"
-      type="warning"
-      ref="buyNow"
-      :image="detail.productMainImage"
-      :product-id="productId"
-      :sku-list="detail.productSkuModels"
-      :sku-attr-list="detail.productAttributes"
-      :current-sku.sync="currentModel"
-      :product-status="detail.productStatus"
-      :confirm-text="confirmText"
-      :disable-confirm="confirmText === '暂未开售' || noStock || loading"
-      :disable-add-cart="loading"
-      :limiting="limiting"
-      :active-product="activeProduct"
-      :activity-product-model="detail.activityProductModel || null"
-      :pre-activity="preActivity"
-    />
-
-    <!-- 规格弹框 -->
-    <specification-pop
-      :default-count="defaultCount"
-      :sku-list="detail.productSkuModels"
-      :sku-attr-list="detail.productAttributes"
-      :product-image="detail.productMainImage"
-      :visible.sync="showSpecifica"
-      :sku.sync="currentModel"
-      :limiting="limiting"
-      :active-product="activeProduct"
-      :activity-product-model="detail.activityProductModel || null"
-      :pre-activity="preActivity"
-    >
-      <template v-slot:footer="{ currentSku, limiting, limit }" v-if="productActive !== 5">
-        <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
-          <!-- 活动商品库存不足时，显示该按钮 -->
-          <button
-            v-if="showNormalBuy"
-            :class="$style.add"
-            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
-            @click="buyNow(currentSku, 1, limiting, limit)"
-          >
-            单独购买
-            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-          </button>
-          <button
-            :class="$style.buy"
-            :disabled="activeStock <= 0 || loading"
-            @click="buyNow(currentSku, -1, limiting, limit)"
-          >
-            {{ activeStock > 0 ? '我要参团' : '已售罄' }}
-            <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
-          </button>
-        </div>
-        <!-- 秒杀商品下单 -->
-        <div :class="$style.buttons" v-else-if="activeProduct === 3 && preActivity === 2">
-          <!-- 活动商品库存不足时，显示该按钮 -->
-          <button
-            v-if="showNormalBuy"
-            :class="$style.add"
-            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
-            @click="buyNow(currentSku, 1, limiting, limit)"
-          >
-            原价购买
-            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-          </button>
-          <button
-            :class="$style.buy"
-            :disabled="activeStock <= 0 || loading"
-            @click="buyNow(currentSku, -1, limiting, limit)"
-          >
-            {{ activeStock > 0 ? '立即秒杀' : '已售罄' }}
-            <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
-          </button>
-        </div>
-        <!-- 预购商品下单 -->
-        <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2">
-          <button
-            :class="$style.preBtn"
-            :disabled="activeStock <= 0"
-            @click="buyNow(currentSku, -1, limiting, limit)"
-          >
-            {{ activeStock > 0 ? '定金购买' : '已售罄' }}
-            <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
-          </button>
-        </div>
-        <div :class="$style.buttons" v-else>
-          <button
-            :class="$style.add"
-            :disabled="adding || noStock || loading"
-            @click="addToCart(currentSku, limiting, limit)"
-          >
-            加入购物车
-          </button>
-          <button
-            :class="$style.buy"
-            :disabled="adding || noStock || confirmText === '暂未开售' || loading"
-            @click="buyNow(currentSku, 1, limiting, limit)"
-          >
-            {{ confirmText }}
-          </button>
-        </div>
-      </template>
-    </specification-pop>
-
-    <!-- 正常商品 或 未开始的活动商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
-    <div :class="$style.buttomTip" v-if="!loading && isDown && activeProduct === 1">
-      该商品已下架
-    </div>
-    <div :class="$style.buttomTip" v-if="!loading && noStock">
-      该商品已全部售罄，请选择其它商品购买
-    </div>
-    <!--团购 且 进行中 显示-->
-    <div
-      v-if="(detail.activityProductModel && activeProduct === 2 && preActivity === 2) && (detail.activityProductModel.percolatorCount || detail.activityProductModel.flag)"
-      :class="$style.togetherWarn"
-    >
-      <!--双十二团购阶梯奖提醒，在 新春 且 团购 且 进行中 且 设置了阶梯 的条件下显示-->
-      <template v-if="detail.activityProductModel.percolatorCount">
-        <ul>
-          <li
-            v-for="(item, index) in detail.activityProductModel.payUserImageList.slice(-3)"
-            :key="index"
-          >
-            <img :src="item.headImgURL">
-          </li>
-          <li v-if="!detail.activityProductModel.payUserImageList.length"><div>+{{ detail.activityProductModel.percolatorCount }}</div></li>
-          <li v-if="detail.activityProductModel.payUserImageList.length > 3"><div>...</div></li>
-        </ul>
-        <div :class="$style.carveUp">
-          <div>还差{{ detail.activityProductModel.percolatorCount }}人即可瓜分<span>{{ detail.activityProductModel.prize }}元</span>红包</div>
-          <div v-if="detail.activityProductModel.flag">有人未付款，还有机会哟，请稍后刷新尝试</div>
-        </div>
-      </template>
-      <div v-else :class="$style.waitPay">有人未付款，还有机会哟，请稍后刷新尝试</div>
-    </div>
-    <!-- 海报弹框 -->
-    <transition name="fade">
-      <div :class="$style.saveHaibao" v-if="showHaibao">
-        <div :class="$style.saveHaibaoContent">
-          <img :src="haibao" alt="">
-          <div :class="$style.saveButton" v-if="activeProduct === 1">
-            长按识别或保存二维码，分享给朋友吧！
-          </div>
-          <div :class="$style.saveButton1" v-else>
-            长按识别或保存二维码，分享给朋友吧！
-          </div>
-          <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />
-        </div>
-      </div>
-    </transition>
 
   </div>
 </template>
@@ -498,6 +502,10 @@ export default {
     // 是否下架
     isDown () {
       return (this.activeProduct === 1 || this.preActivity !== 2) && (this.productStatus === 1 || this.productStatus === 0)
+    },
+    // 是否展示"商品已删除"提醒
+    isDeletedShow () {
+      return this.productActive !== 5 && this.activeProduct === 1 && this.productStatus === 0
     }
   },
   watch: {
