@@ -58,7 +58,7 @@
         <div :class="$style.infoItem" v-if="isCart && activeProduct === 5 && detail.discount !== 10">
           <div :class="$style.freightType">
             <span :class="$style.itemLabel">春耘折扣</span>
-            <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ physicalProductOriginalPrice | floatSub(physicalProductPrice) }}</span>
+            <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}</span>
           </div>
         </div>
 
@@ -178,7 +178,7 @@
           <div :class="$style.infoItem" v-if="activeProduct === 5 && detail.discount !== 10">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">春耘折扣</span>
-              <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ item.originPrice | floatSub(item.price) | floatMulti(2, item.count) }}</span>
+              <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (item.originPrice - item.price) * item.count }}</span>
             </div>
           </div>
 
@@ -317,7 +317,7 @@
           <div :class="$style.infoItem" v-if="activeProduct === 5 && detail.discount !== 10">
             <div :class="$style.freightType">
               <span :class="$style.itemLabel">春耘折扣</span>
-              <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ item.originPrice | floatSub(item.price) | floatMulti(2, item.count) }}</span>
+              <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
 
             </div>
           </div>
