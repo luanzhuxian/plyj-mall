@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :class="$style.banner">
-      <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/receive-coupon-banner.jpg">
+      <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/my/485f13c1-6d89-4b22-8852-ac84f87f498a.png">
     </div>
     <div :class="$style.couponList">
       <div :class="$style.couponHeader">
