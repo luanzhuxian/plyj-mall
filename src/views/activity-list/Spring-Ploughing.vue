@@ -162,7 +162,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar', 'userName'])
+    ...mapGetters(['avatar', 'userName', 'mobile'])
   },
   async activated () {
     try {
@@ -262,6 +262,7 @@ export default {
       countdown.start()
     },
     async buy (data) {
+      if (!this.hasBind()) return
       const confirmList = []
       for (let pro of data.products) {
         confirmList.push({
@@ -283,6 +284,23 @@ export default {
           activityId: data.activityId
         }
       })
+    },
+    // 判断绑定手机
+    hasBind () {
+      if (!this.mobile) {
+        this.$confirm('您还没有绑定手机，请先绑定手机')
+          .then(() => {
+            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+              name: this.$route.name,
+              params: this.$route.params,
+              query: this.$route.query
+            }))
+            this.$router.push({ name: 'BindMobile' })
+          })
+          .catch(() => {})
+        return false
+      }
+      return true
     },
     async createPoster () {
       if (this.creating) {
