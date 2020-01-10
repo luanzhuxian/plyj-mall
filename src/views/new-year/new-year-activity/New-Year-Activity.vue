@@ -867,13 +867,13 @@ export default {
           .swiper-no-swiping {
             .swiper-box {
               background-color: #EE4620;
-              height: 240px;
+              height: 230px;
               overflow: hidden;
               border-radius: 20px;
               position: relative;
               >div{
-                width: 200px;
-                height: 200px;
+                width: 190px;
+                height: 190px;
                 img{
                   width: 100%;
                   height: 100%;
