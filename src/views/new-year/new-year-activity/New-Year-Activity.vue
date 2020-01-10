@@ -892,7 +892,7 @@ export default {
                 text-align: center;
                 color: #FFF;
                 font-size: 24px;
-                width: 200px;
+                width: 190px;
                 word-break: keep-all;
                 white-space: nowrap;
                 text-overflow: ellipsis;
