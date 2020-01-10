@@ -7,7 +7,9 @@
         <swiper :options="swiperOption" v-if="presentList.length > 1" class="swiper">
           <swiper-slide v-for="(item,index) in presentList" :key="index" class="swiper-no-swiping">
             <div class="swiper-box">
-              <img :src="item.awardImg" :class="{ 'no-desc': !item.show }">
+              <div>
+                <img :src="item.awardImg" :class="{ 'no-desc': !item.show }">
+              </div>
               <p v-if="item.show">{{ item.awardName }}</p>
             </div>
           </swiper-slide>
@@ -865,25 +867,26 @@ export default {
           .swiper-no-swiping {
             .swiper-box {
               background-color: #EE4620;
-              height: 250px;
+              height: 240px;
               overflow: hidden;
               border-radius: 20px;
               position: relative;
-
-              > img {
-                width: 240px;
-                object-fit: cover;
+              >div{
+                width: 200px;
                 height: 200px;
-                &.no-desc {
+                img{
+                  width: 100%;
                   height: 100%;
-                  position: absolute;
-                  left: 50%;
-                  bottom: 0;
-                  transform: translateX(-50%);
-                  object-fit: contain;
+                  &.no-desc {
+                    height: 100%;
+                    position: absolute;
+                    left: 50%;
+                    bottom: 0;
+                    transform: translateX(-50%);
+                    object-fit: contain;
+                  }
                 }
               }
-
               > p {
                 margin-top: 6px;
                 text-align: center;
