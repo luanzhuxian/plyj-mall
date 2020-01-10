@@ -117,8 +117,8 @@
         ref="richText"
       />
       <p v-if="richTextMaxHeight > 200" :class="{ [$style.zizhiSeeMore]: true, [$style.showMore]: isShowMore }" @click="seeMore">
+        <pl-svg name="icon-right" fill="#ccc" width="28" />
         <span>{{ isShowMore ? '收起' : '查看更多' }}</span>
-        <pl-svg name="icon-right" fill="#ccc" />
       </p>
     </div>
 
@@ -466,7 +466,10 @@ export default {
   .zizhi-see-more {
     margin-top: 32px;
     font-size: 28px;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     &.show-more {
       > svg {
         transform: rotate(-90deg);
