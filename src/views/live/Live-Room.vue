@@ -1197,3 +1197,8 @@ export default {
     border-radius: 30px !important;
   }
 </style>
+<style>
+  .plv_controls > span:nth-of-type(3) {
+    display: none !important;
+  }
+</style>
