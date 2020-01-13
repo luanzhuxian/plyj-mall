@@ -494,17 +494,18 @@ export default {
               message: '进入了直播间',
               name: user.nick,
               custom: true,
-              success: true
+              success: true,
+              type: 'LOGIN'
             })
             break
           case 'SPEAK':
             if (this.userName !== user.nick) {
               let message = mData.values.join(',')
-              console.log(message)
               this.chatRecords.push({
                 message,
                 name: user.nick,
-                success: true
+                success: true,
+                type: 'SPEAK'
               })
             }
             break
@@ -514,7 +515,8 @@ export default {
               name: mData.nick,
               gift: true,
               giftType: 'flower',
-              success: true
+              success: true,
+              type: 'FLOWERS'
             })
             break
         }
@@ -571,7 +573,7 @@ export default {
       if (this.chatRecords.length >= 300) {
         this.chatRecords.splice(0, 1)
       }
-      localStorage.setItem('LIVE_MESSAGE', JSON.stringify(this.chatRecords))
+      localStorage.setItem('LIVE_MESSAGE', JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
     },
     /* 重新发送 */
     async repeatSend (item, i) {
