@@ -46,7 +46,7 @@
             商品<i>({{ productList.length }})</i>
           </div>
         </div>
-        <pl-button style="padding:0 24px" @click="share" type="warning" size="small">分享海报</pl-button>
+        <pl-button v-if="detail.coverImg" style="padding:0 24px" @click="share" type="warning" size="small">分享海报</pl-button>
       </div>
 
       <div :class="$style.chatWrap" ref="chatRecords">
@@ -161,6 +161,7 @@
             placeholder=" 进来了说点什么呗~"
             type="text"
             @blur="messageBoxBlur"
+            :disabled="!socket"
           >
           <button :class="$style.sendBtn">发送</button>
         </form>
@@ -295,6 +296,7 @@ export default {
         serviceLongTime: '', // 服务器时间
         flag: true // 直播结束,却省图
       },
+      socket: null,
       videoLiveTimer: null// 视频直播开播计时器
       // emoticon
     }
@@ -433,7 +435,7 @@ export default {
           isAutoChange: true,
           vid: channelId,
           x5: false,
-          hasControl: true,
+          hasControl: false,
           x5FullPage: true,
           forceH5: true,
           useH5Page: true
@@ -479,6 +481,7 @@ export default {
         type: 'slice' // 用户类型，可为空,teacher（教师）、assistant（助教）、manager（管理员）、slice（云课堂学员）
       }))
       this.socket = socket
+      this.chatRecords = JSON.parse(localStorage.getItem('LIVE_MESSAGE')) || []
     },
     /* 接收消息 */
     onMessage (data) {
@@ -497,6 +500,7 @@ export default {
           case 'SPEAK':
             if (this.userName !== user.nick) {
               let message = mData.values.join(',')
+              console.log(message)
               this.chatRecords.push({
                 message,
                 name: user.nick,
@@ -514,6 +518,7 @@ export default {
             })
             break
         }
+        this.cacheMessage()
         this.scrollBottom()
       }
     },
@@ -530,6 +535,7 @@ export default {
         throw e
       }
     },
+    // 发送消息
     async messageConfirm () {
       if (!this.message.trim()) {
         return this.$warning('请输入内容')
@@ -546,17 +552,26 @@ export default {
         this.scrollBottom()
         await this.sendMessage(this.message)
         o.success = true
+        o.loading = false
+        this.cacheMessage()
       } catch (e) {
         // 配置发送失败
+        o.loading = false
         o.success = false
       } finally {
-        o.loading = false
         this.$set(this.chatRecords, this.chatRecords.length - 1, o)
         if (this.chatRecords.length > this.maxRecords) {
           this.chatRecords.shift()
         }
         this.message = ''
       }
+    },
+    // 缓存消息
+    cacheMessage () {
+      if (this.chatRecords.length >= 300) {
+        this.chatRecords.splice(0, 1)
+      }
+      localStorage.setItem('LIVE_MESSAGE', JSON.stringify(this.chatRecords))
     },
     /* 重新发送 */
     async repeatSend (item, i) {
@@ -575,6 +590,10 @@ export default {
     },
     // 送花
     sendFlower () {
+      if (this.sended) {
+        this.$warning('送花频率太高了，请稍后')
+        return
+      }
       let { channelId, userName } = this
       this.socket.emit('message', JSON.stringify({
         EVENT: 'FLOWERS',
@@ -582,6 +601,10 @@ export default {
         nick: userName, // 送花人昵称
         uimg: '' // 送花人头像，为新增的属性，可不传
       }))
+      this.sended = true
+      setTimeout(() => {
+        this.sended = false
+      }, 2000)
     },
     async scrollBottom () {
       let box = this.$refs.chatRecords
