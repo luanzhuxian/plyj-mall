@@ -547,7 +547,8 @@ export default {
         message: this.message,
         success: false,
         loading: true,
-        self: true
+        self: true,
+        type: 'SPEAK'
       }
       try {
         this.chatRecords.push(o)
