@@ -233,7 +233,8 @@ import {
   hasPied,
   cancelOrder,
   setComeInConut,
-  getVideoMesById
+  getVideoMesById,
+  setWarmup
 } from '../../apis/live'
 import {
   receiveCouponForLive
@@ -384,34 +385,11 @@ export default {
           await this.$nextTick()
           let vid = this.$refs.livePlayBack
           // 播放开始执行的函数
-          let playFnc = _ => {
-            // var agent = (navigator.userAgent || navigator.vendor || window.opera)
-            // if (agent != null) {
-            //   let agentName = agent.toLowerCase()
-            //   alert(/android/i.test(agentName))
-            //   alert(agent)
-            //   if (/android/i.test(agentName)) {
-            //     vid.controls = false
-            //   }
-            //   // ios
-            //   else {
-            //     vid.controls = true
-            //   }
-            // }
-            // vid.controls = false
+          let playFnc = () => {
             vid.currentTime = startTime
             vid.removeEventListener('play', playFnc)
           }
           vid.addEventListener('play', playFnc)
-          //   // 安卓
-          //   vid.addEventListener('x5videoexitfullscreen', function () {
-          //     vid.controls = true
-          //     vid.play()
-          //   })
-          //   // ios 支持的事件
-          //   vid.addEventListener('webkitendfullscreen', function () {
-          //     vid.play()
-          //   })
           // 监听错误
           vid.addEventListener('error', _ => {
             vid.src = ''
@@ -438,7 +416,13 @@ export default {
           hasControl: false,
           x5FullPage: true,
           forceH5: true,
-          useH5Page: true
+          useH5Page: false
+        })
+        await setWarmup({
+          appId: '',
+          warmUpEnabled: 'Y',
+          channelId,
+          sign: ''
         })
       } else {
         this.controlVideo()
@@ -701,12 +685,20 @@ export default {
         throw e
       }
     },
+    //  取消播放
     cancelPay () {
       if (this.isActivityAuth) {
         this.$router.push({ name: 'Activity' })
       } else {
         this.$router.push({ name: 'Home' })
       }
+    },
+    // 设置封面
+    setcCverImg () {
+      const image = document.createElement('img')
+      image.src = this.detail.coverImg
+      image.classList.add(this.$style.coverImg)
+      this.$refs.playerBox.appendChild(image)
     },
     async share () {
       if (this.poster) {
@@ -839,6 +831,14 @@ export default {
   .player-box {
     position: relative;
     height: 442px !important;
+    > .coverImg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 442px;
+      object-fit: cover;
+    }
     video {
       /*object-position: center top;*/
     }

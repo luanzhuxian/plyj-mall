@@ -101,6 +101,18 @@ export const getLibraryList = () => Instance.get('/apis/v1/mall/live/lib/my_look
 // 根据视频 id 获取视频信息
 export const getVideoMesById = id => Instance.get(`/apis/v1/mall/live/lib/detail/${id}`)
 
+/**
+ * 暖场开关
+ * @param data {Object} 请求参数
+ * @property data.appId
+ * @property data.timestamp
+ * @property data.sign
+ * @property data.channelId
+ * @property data.warmUpEnabled Y or N
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export const setWarmup = data => Instance.post('https://api.polyv.net/live/v3/channel/set-warmup-enabled', data)
+
 function request (config) {
   let mallDomain = location.pathname.split('/')[1]
   config.headers.openId = localStorage.getItem(`openId_${mallDomain}`) || ''
