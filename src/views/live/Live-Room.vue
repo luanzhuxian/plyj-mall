@@ -1065,6 +1065,7 @@ export default {
       display: flex;
       flex-direction: column;
       margin-top: 10px;
+        flex: 1;
       > .name {
         line-height: 38px;
         font-size: 28px;
