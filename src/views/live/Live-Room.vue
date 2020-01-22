@@ -413,7 +413,7 @@ export default {
           isAutoChange: true,
           vid: channelId,
           x5: false,
-          hasControl: false,
+          hasControl: true,
           x5FullPage: true,
           forceH5: true,
           useH5Page: false
