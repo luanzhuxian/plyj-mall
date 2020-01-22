@@ -303,7 +303,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userName', 'avatar', 'userId', 'opendId', 'roleCode', 'appId', 'isActivityAuth'])
+    ...mapGetters(['userName', 'avatar', 'userId', 'opendId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain'])
   },
   watch: {
     soundValue (val) {
@@ -465,7 +465,7 @@ export default {
         type: 'slice' // 用户类型，可为空,teacher（教师）、assistant（助教）、manager（管理员）、slice（云课堂学员）
       }))
       this.socket = socket
-      this.chatRecords = JSON.parse(localStorage.getItem('LIVE_MESSAGE')) || []
+      this.chatRecords = JSON.parse(localStorage.getItem(`LIVE_MESSAGE_${this.mallDomain}`)) || []
     },
     /* 接收消息 */
     onMessage (data) {
@@ -558,7 +558,7 @@ export default {
       if (this.chatRecords.length >= 300) {
         this.chatRecords.splice(0, 1)
       }
-      localStorage.setItem('LIVE_MESSAGE', JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
+      localStorage.setItem(`LIVE_MESSAGE_${this.mallDomain}`, JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
     },
     /* 重新发送 */
     async repeatSend (item, i) {
