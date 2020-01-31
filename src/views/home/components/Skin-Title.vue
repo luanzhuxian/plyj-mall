@@ -7,7 +7,8 @@
       [$style.skinYuanDan]: skinId === 2,
       [$style.skinNewYear]: skinId === 3,
       [$style.skinXiaoNian]: skinId === 4,
-      [$style.skinYuanXiao]: skinId === 5
+      [$style.skinYuanXiao]: skinId === 5,
+      [$style.skinCampaign]: skinId === 99
     }"
   >
     <div :class="$style.titleBg" v-if="skinId === 1">
@@ -37,6 +38,9 @@
       v-if="skinId === 5"
       :class="[$style.titleBg, data.split('').length > 2 ? $style.large : $style.small]"
     >
+      <div :class="$style.title" v-text="data" />
+    </div>
+    <div :class="$style.titleBg" v-if="skinId === 99">
       <div :class="$style.title" v-text="data" />
     </div>
   </div>
@@ -223,6 +227,20 @@ export default {
     font-size: 52px;
     font-family: FZQingKeBenYueSongS-R-GB;
     color: #F75519;
+    letter-spacing: 8px;
+  }
+}
+.skin-campaign {
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 64px;
+    background: linear-gradient(0deg,#0B97FF 0%,#57A1FF 100%);
+    font-size: 36px;
+    font-family: HYLiLiangHeiJ;
+    color: #FFF;
+    text-shadow: 0px 3px 4px rgba(17,17,17,0.41);
     letter-spacing: 8px;
   }
 }
