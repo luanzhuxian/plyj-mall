@@ -120,8 +120,8 @@ export default {
     return {
       swiperOptions: {
         autoplay: true,
-        slidesPerView: 1.2,
-        spaceBetween: 100,
+        slidesPerView: 1.15,
+        spaceBetween: 30,
         loop: true
       },
       line: 2,
