@@ -169,6 +169,9 @@ export default {
       height: 360px;
     }
   }
+  .map > img {
+    width: 100%;
+  }
   .count {
     display: flex;
     justify-content: space-around;
