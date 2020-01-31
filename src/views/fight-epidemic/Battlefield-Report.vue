@@ -80,7 +80,9 @@
               <img :src="item.img" alt="">
               <span>来源：{{ item.from }}</span>
             </div>
-            <div :class="$style.title" v-text="item.desc" />
+            <div :class="$style.title">
+              <p v-text="item.desc" />
+            </div>
           </div>
         </swiperSlide>
       </swiper>
@@ -352,11 +354,16 @@ export default {
       }
     }
     > .title {
+      display: flex;
+      align-items: center;
       padding: 0 26px;
-      line-height: 82px;
-      font-size: 32px;
+      height: 90px;
+      font-size: 24px;
       background-color: #F8FAFF;
-      @include elps();
+      > p {
+        line-height: 40px;
+        @include elps-wrap(2);
+      }
     }
   }
 </style>
