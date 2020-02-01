@@ -152,7 +152,7 @@ export function isIOS () {
  * @param type {string} 生成的类型 canvas: 生成canvas, url 生成base64
  * @returns {Promise<*>}
  */
-export async function generateQrcode (size, text, padding = 0, img, centerPadding = 0, type = 'url') {
+export async function generateQrcode (size, text, padding = 0, img = null, centerPadding = 0, type = 'url') {
   const imageSize = 80 // 中心图片的宽高
   const devicePixelRatio = window.devicePixelRatio
   let canvas
@@ -207,9 +207,9 @@ export async function generateQrcode (size, text, padding = 0, img, centerPaddin
 }
 /**
  * 截取图片中间部分
- * @param img {HTMLElement} 要截取的图片
+ * @param img {HTMLImageElement} 要截取的图片
  * @param ratio {Number} 裁剪图片的长宽比 默认是1:1
- * @returns {HTMLElement} 返回canvas对象
+ * @returns {HTMLCanvasElement} 返回canvas对象
  */
 export function cutImageCenter (img, ratio = 1) {
   const canvas = document.createElement('canvas')
@@ -247,8 +247,8 @@ export function cutImageCenter (img, ratio = 1) {
 }
 /**
  * 把图片截成圆形
- * @param img {HTMLElement} 要截取的图片
- * @returns {HTMLElement} 返回canvas对象
+ * @param img {HTMLImageElement} 要截取的图片
+ * @returns {HTMLCanvasElement} 返回canvas对象
  */
 export function cutArcImage (img) {
   const centerCanvas = cutImageCenter(img)

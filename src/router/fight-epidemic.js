@@ -15,5 +15,14 @@ export default [
     meta: {
       title: '共携手，抗战“疫”'
     }
+  },
+  // 签到首页
+  {
+    path: '/fight-epidemic/sign-in',
+    name: 'EpidemicSignUp',
+    component: () => import('../views/fight-epidemic/Sign-In.vue'),
+    meta: {
+      title: '共携手，抗战“疫”'
+    }
   }
 ]
