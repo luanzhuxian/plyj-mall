@@ -9,15 +9,15 @@
     <div :class="$style.nationwide">#全国疫情#</div>
     <div :class="$style.count" v-if="epidemicData">
       <div>
-        <p v-text="epidemicData.cure" />
+        <p v-text="epidemicData.cure" style="color: #168778;" />
         <p>治愈病例</p>
       </div>
       <div>
-        <p v-text="epidemicData.added" />
+        <p v-text="epidemicData.added" style="color: #3B7DB7;" />
         <p>新增病例</p>
       </div>
       <div>
-        <p v-text="epidemicData.confirmed" />
+        <p v-text="epidemicData.confirmed" style="color: #DD5D32;" />
         <p>确诊病例</p>
       </div>
     </div>
@@ -277,9 +277,9 @@ export default {
       width: 1.6vw;
       height: 1.6vw;
       border-radius: 50%;
-      background-color: $--primary-color;
+      background-color: #3B7DB7;
       background-clip: content-box;
-      border: 1.2vw solid rgba(254, 119, 0, .1);
+      border: 1.2vw solid #DDEDFA;
       z-index: 2;
     }
     > .timeLine {
@@ -288,7 +288,7 @@ export default {
       left: 1.733vw;
       bottom: -5.333vw;
       width: .533vw;
-      background-color: rgba(254, 119, 0, .2);
+      background-color: #DDEDFA;
     }
     > .datetime {
       font-size: 3.733vw;
