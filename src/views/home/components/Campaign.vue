@@ -10,7 +10,7 @@
       <router-link
         :class="$style.campaignListItem"
         tag="li"
-        :to="{ name: '' }"
+        :to="{ name: 'BattlefieldReport' }"
       >
         <div :class="$style.counter">
           {{ `疫情爆发的第${days}天` }}
@@ -20,7 +20,7 @@
       <router-link
         :class="$style.campaignListItem"
         tag="li"
-        :to="{ name: '' }"
+        :to="{ name: 'EpidemicSignUp' }"
       >
         <img src="https://mallcdn.youpenglai.com/static/beat-plague/6ffc3e0e-f3fe-45c2-a16c-ec2de74c3fe7.jpeg" alt="">
       </router-link>
