@@ -277,24 +277,25 @@ export default {
       width: 1.6vw;
       height: 1.6vw;
       border-radius: 50%;
-      background: #00b377;
-      border: 1.2vw solid #e5f7f1;
+      background-color: $--primary-color;
+      background-clip: content-box;
+      border: 1.2vw solid rgba(254, 119, 0, .1);
       z-index: 2;
     }
     > .timeLine {
       position: absolute;
       top: 2vw;
-      left: 1.7333333333333334vw;
-      bottom: -5.33333333vw;
-      width: .5333333333333333vw;
-      background-color: #e5f7f1;
+      left: 1.733vw;
+      bottom: -5.333vw;
+      width: .533vw;
+      background-color: rgba(254, 119, 0, .2);
     }
     > .datetime {
-      font-size: 3.7333333333333334vw;
-      line-height: 3.7333333333333334vw;
+      font-size: 3.733vw;
+      line-height: 3.733vw;
       color: #aaa;
-      margin-bottom: 2.2666666666666666vw;
-      padding-left: 6.666666666666667vw;
+      margin-bottom: 2.266vw;
+      padding-left: 6.666vw;
     }
     > .content {
       width: 80vw;
