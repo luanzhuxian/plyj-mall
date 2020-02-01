@@ -110,6 +110,10 @@ export default {
       // _uid可以作为每个组件唯一的标识，用来作为图标副本的id，再合适不过了
       const uid = this._uid
       const svg = document.querySelector('#' + this.name)
+      if (!svg) {
+        console.error('svg ' + this.name + ' 不存在')
+        return
+      }
       this.tempName = `${this.name}_${uid}`
       const clonedSvg = this.clonedSvg[this.tempName] || svg.cloneNode(true)
       await promise.timeout(100)

@@ -16,8 +16,9 @@
       class="pl-form-item_label"
       v-text="label"
       :style="{
-        width: currentLableWidth,
-        ...labelStyle
+        width: currentLabelWidth,
+        ...parentLabelStyle,
+        ...labelStyle,
       }"
     />
     <div
@@ -41,8 +42,9 @@ export default {
   data () {
     return {
       parentAlign: null,
+      parentLabelStyle: {},
       rule: null,
-      currentLableWidth: 0
+      currentLabelWidth: 0
     }
   },
   props: {
@@ -82,13 +84,12 @@ export default {
     }
   },
   created () {
-    this.parentAlign = this.$parent.align
     if (this.$parent.rules) {
       this.rule = this.$parent.rules[this.prop] || null
     }
   },
   mounted () {
-    this.setLabelWidth()
+    this.init()
   },
   computed: {
     hasPrefix () {
@@ -99,12 +100,14 @@ export default {
     }
   },
   methods: {
-    setLabelWidth () {
-      let parentLabelWidth = Number.parseInt(this.$parent.labelWidth || this.labelWidth)
-      if (parentLabelWidth) {
-        this.currentLableWidth = parentLabelWidth / 7.5 + 'vw'
+    init () {
+      let labelWidth = this.labelWidth === 'max-content' ? Number.parseInt(this.$parent.labelWidth || this.labelWidth) : this.labelWidth
+      this.parentLabelStyle = this.$parent.labelStyle
+      this.parentAlign = this.$parent.align
+      if (labelWidth) {
+        this.currentLabelWidth = labelWidth / 7.5 + 'vw'
       } else {
-        this.currentLableWidth = this.labelWidth / 7.5 + 'vw'
+        this.currentLabelWidth = this.labelWidth / 7.5 + 'vw'
       }
     }
   }
