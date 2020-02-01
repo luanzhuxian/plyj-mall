@@ -14,6 +14,7 @@
       <search :class="$style.search" placeholder="搜索商品" />
       <propagate :class="$style.propagate" :data="PIN_XUAN" />
       <live :class="$style.live" v-if="isLiveShow" />
+      <campaign v-if="skinId === 99" />>
       <activity :class="$style.activity" v-if="isNwEventShow" />
       <d12-activity :class="$style.activity" />
       <appointment :class="$style.appointment" :data="YU_YUE" :style-type="2" />
@@ -75,6 +76,7 @@ import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate.vue'
 import Teachers from './components/Teachers'
 import SkinTitle from './components/Skin-Title.vue'
+import Campaign from './components/Campaign'
 
 export default {
   name: 'HomeTemplateC',
@@ -90,7 +92,8 @@ export default {
     Appointment,
     Propagate,
     Teachers,
-    SkinTitle
+    SkinTitle,
+    Campaign
   },
   props: {
     type: {

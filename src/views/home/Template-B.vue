@@ -15,6 +15,7 @@
       <banner :class="$style.banner" :data="BANNER" />
       <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
       <live :class="$style.live" v-if="isLiveShow" />
+      <campaign v-if="skinId === 99" />>
       <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
       <d12-activity :class="$style.activity" v-if="type === 4" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
@@ -79,6 +80,7 @@ import BestRecommend from './components/Best-Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
 import SkinTitle from './components/Skin-Title.vue'
+import Campaign from './components/Campaign'
 
 export default {
   name: 'HomeTemplateB',
@@ -95,7 +97,8 @@ export default {
     BestRecommend,
     Appointment,
     Propagate,
-    SkinTitle
+    SkinTitle,
+    Campaign
   },
   props: {
     type: {
