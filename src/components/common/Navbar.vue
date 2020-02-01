@@ -19,17 +19,18 @@
       tag="div"
       :to="{ name: 'Home' }"
     >
+
+      <template v-if="isSkinShow">
+        <img :src="homeActive ? skinMap[skinId].homeActive : skinMap[skinId].home">
+        <div :class="$style.tabName">首页</div>
+      </template>
       <pl-svg
-        v-if="skinId === 0"
+        v-else-if="skinId !== null"
         :name="homeActive ? 'icon-find-active' : 'icon-find'"
         width="44"
         height="68"
         :key="0"
       />
-      <template v-if="~[1, 2, 3, 4, 5, 99].indexOf(skinId)">
-        <img :src="homeActive ? skinMap[skinId].homeActive : skinMap[skinId].home">
-        <div :class="$style.tabName">首页</div>
-      </template>
     </router-link>
     <!-- 分类 -->
     <router-link
@@ -40,17 +41,17 @@
       tag="div"
       :to="{ name: 'Classify' }"
     >
+      <template v-if="isSkinShow">
+        <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
+        <div :class="$style.tabName">分类</div>
+      </template>
       <pl-svg
-        v-if="skinId === 0"
+        v-else-if="skinId !== null"
         :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
         width="60"
         height="72"
         :key="1"
       />
-      <template v-if="~[1, 2, 3, 4, 5, 99].indexOf(skinId)">
-        <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
-        <div :class="$style.tabName">分类</div>
-      </template>
     </router-link>
     <!-- 活动 -->
     <router-link
@@ -79,17 +80,17 @@
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
+      <template v-if="isSkinShow">
+        <img :src="shoppingChartActive ? skinMap[skinId].shoppingChartActive : skinMap[skinId].shoppingChart">
+        <div :class="$style.tabName">购物车</div>
+      </template>
       <pl-svg
-        v-if="skinId === 0"
+        v-else-if="skinId !== null"
         width="64"
         height="76"
         :key="2"
         :name="shoppingChartActive ? 'icon-cart-active' : 'icon-cart'"
       />
-      <template v-if="~[1, 2, 3, 4, 5, 99].indexOf(skinId)">
-        <img :src="shoppingChartActive ? skinMap[skinId].shoppingChartActive : skinMap[skinId].shoppingChart">
-        <div :class="$style.tabName">购物车</div>
-      </template>
     </router-link>
     <!-- 我的 -->
     <router-link
@@ -100,17 +101,17 @@
       tag="div"
       :to="{ name: 'My' }"
     >
+      <template v-if="isSkinShow">
+        <img :src="myActive ? skinMap[skinId].myActive : skinMap[skinId].my">
+        <div :class="$style.tabName">我的</div>
+      </template>
       <pl-svg
-        v-if="skinId === 0"
+        v-else-if="skinId !== null"
         :name="myActive ? 'icon-my-active' : 'icon-my'"
         width="44"
         height="74"
         :key="3"
       />
-      <template v-if="~[1, 2, 3, 4, 5, 99].indexOf(skinId)">
-        <img :src="myActive ? skinMap[skinId].myActive : skinMap[skinId].my">
-        <div :class="$style.tabName">我的</div>
-      </template>
       <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
     </router-link>
   </nav>
@@ -209,6 +210,9 @@ export default {
     },
     myActive: function () {
       return this.$route.matched.some(val => val.name === 'My')
+    },
+    isSkinShow () {
+      return ~[1, 2, 3, 4, 5, 99].indexOf(this.skinId)
     }
   },
   watch: {
