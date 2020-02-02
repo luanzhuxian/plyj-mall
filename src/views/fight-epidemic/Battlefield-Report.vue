@@ -9,16 +9,20 @@
     <div :class="$style.nationwide">#全国疫情#</div>
     <div :class="$style.count" v-if="epidemicData">
       <div>
-        <p v-text="epidemicData.cure" style="color: #168778;" />
-        <p>治愈病例</p>
-      </div>
-      <div>
-        <p v-text="epidemicData.added" style="color: #3B7DB7;" />
-        <p>新增病例</p>
-      </div>
-      <div>
         <p v-text="epidemicData.confirmed" style="color: #DD5D32;" />
         <p>确诊病例</p>
+      </div>
+      <div>
+        <p v-text="epidemicData.suspectedCount" style="color: #dda201;" />
+        <p>疑似病例</p>
+      </div>
+      <div>
+        <p v-text="epidemicData.deadCount" style="color: #000;" />
+        <p>死亡病例</p>
+      </div>
+      <div>
+        <p v-text="epidemicData.cure" style="color: #3B7DB7;" />
+        <p>治愈病例</p>
       </div>
     </div>
 
@@ -34,12 +38,12 @@
         >
           <div :class="$style.timeRad" />
           <div :class="$style.timeLine" />
-          <div :class="$style.datetime" v-text="item.datetime" />
+          <div :class="$style.datetime" v-text="item.pubDateStr" />
           <div :class="$style.content">
             <div :class="$style.title" v-text="item.title" />
-            <div :class="$style.detail" v-text="item.desc" />
+            <div :class="$style.detail" v-text="item.summary" />
             <div :class="$style.from">
-              来源：{{ item.from }}
+              来源：{{ item.source }}
             </div>
           </div>
         </div>
