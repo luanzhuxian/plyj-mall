@@ -3,8 +3,8 @@
     <div :class="$style.banner">
       <img src="https://mallcdn.youpenglai.com/static/beat-plague/dd0bb858-2faa-4be3-9eba-5a6edf68687a.png" alt="">
     </div>
-    <div :class="$style.map">
-      <img :src="epidemicMap" alt="">
+    <div :class="$style.map" ref="map">
+      <!--<img :src="epidemicMap" alt="">-->
     </div>
     <div :class="$style.nationwide">#全国疫情#</div>
     <div :class="$style.count" v-if="epidemicData">
@@ -104,6 +104,7 @@ import PlVideo from '../../components/common/Video.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import axios from 'axios'
 import { getReportDetail } from '../../apis/fight-epidemic'
+import China from '../../../static/china.json'
 const request = axios.create({
   responseType: 'json'
 })
@@ -142,24 +143,20 @@ export default {
     }
   },
   async created () {
-    request.get(`https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/data/battlefield-report-data.json?time=${Date.now()}`)
-      .then(res => {
-        const data = res.data
-        let {
-          news,
-          epidemicMap,
-          epidemicData,
-          touched
-        } = data
-        this.news = news
-        this.epidemicMap = epidemicMap
-        this.epidemicData = epidemicData
-        this.touched = touched
-        console.log(data)
-      })
-      .catch(e => {
-        alert(e.message)
-      })
+  },
+  async mounted () {
+    const res = await request.get(`https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/data/battlefield-report-data.json?time=${Date.now()}`)
+    let {
+      news,
+      epidemicMap,
+      epidemicData,
+      touched,
+      dataList
+    } = res.data
+    this.news = news
+    this.epidemicMap = epidemicMap
+    this.epidemicData = epidemicData
+    this.touched = touched
     if (this.id) {
       try {
         const { result } = await getReportDetail(this.id)
@@ -172,6 +169,65 @@ export default {
         throw e
       }
     }
+    const myChart = window.echarts.init(this.$refs.map)
+    const option = { tooltip: {
+      formatter: function (params, ticket, callback) {
+        return params.seriesName + '<br />' + params.name + '：' + params.value
+      }
+    },
+    visualMap: {
+      type: 'piecewise',
+      left: 20,
+      bottom: 80,
+      itemWidth: 50,
+      itemHeight: 30,
+      pieces: [
+        { min: 1000, color: '#70161d' }, // 不指定 max，表示 max 为无限大（Infinity）。
+        { min: 500, max: 1000, color: '#cb2a2f' },
+        { min: 100, max: 499, color: '#e55a4e' },
+        { min: 10, max: 99, color: '#f59e83' },
+        { min: 1, max: 9, color: '#fdebcf' }
+      ],
+      textStyle: {
+        fontSize: 24
+      },
+      show: true
+    },
+    geo: {
+      map: 'china',
+      roam: false,
+      zoom: 1,
+      label: {
+        normal: {
+          show: true,
+          fontSize: 12,
+          color: '#ff8500'
+        }
+      },
+      itemStyle: {
+        normal: {
+          borderColor: 'rgba(0, 0, 0, 0.2)'
+        },
+        emphasis: {
+          areaColor: '#F3B329',
+          shadowOffsetX: 0,
+          shadowOffsetY: 0,
+          shadowBlur: 20,
+          borderWidth: 0,
+          shadowColor: 'rgba(0, 0, 0, 0.5)'
+        }
+      }
+    },
+    series: [
+      {
+        name: '感染人数',
+        type: 'map',
+        geoIndex: 0,
+        data: dataList
+      }
+    ] }
+    window.echarts.registerMap('china', China)
+    myChart.setOption(option)
   }
 }
 </script>
@@ -187,8 +243,12 @@ export default {
       height: 360px;
     }
   }
-  .map > img {
+  /*.map > img {
     width: 100%;
+  }*/
+  .map {
+    width: 750px;
+    height: 428px;
   }
   .count {
     display: flex;
