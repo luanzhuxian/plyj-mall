@@ -12,7 +12,9 @@
     <!--视频直播-->
     <div v-if="videoLiveMes.type === 'video'" :class="$style.playBackBox">
       <div class="plv-live-cutOff" v-if="videoLiveMes.flag" />
-      <video v-else x5-playsinline="" playsinline="" webkit-playsinline="" preload controls x5-video-player-type="h5-page" ref="livePlayBack" :src="videoLiveMes.url" />
+      <video v-else controls style="object-fit: contain;" x5-playsinline webkit-playsinline playsinline preload="metadata" x5-video-player-type="h5-page" ref="livePlayBack">
+        <source :src="videoLiveMes.url" type="video/mp4">
+      </video>
     </div>
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
