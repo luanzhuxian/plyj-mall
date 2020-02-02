@@ -150,7 +150,7 @@ export default {
       return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
     },
     isCampaignShow () {
-      return this.parent.isReportActive && this.parent.isBookActive
+      return this.parent.isReportActive || this.parent.isBookActive
     }
   }
 }
