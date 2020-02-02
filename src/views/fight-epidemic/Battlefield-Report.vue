@@ -46,24 +46,21 @@
       </div>
     </div>
 
-    <div :class="$style.module">
+    <div :class="$style.module" v-if="data.content && data.mediaUrl">
       <div :class="$style.title">
         战役宣誓  与您携手
       </div>
       <div :class="$style.toPatriarch">
         <PlVideo
-          url="http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/img/bJRquiluD-w7kubp13-xLdwHNVY-QUTVF31F-du0Z9OUK-gwXI-1580448044753.mp4"
+          v-if="data.mediaUrl"
+          :url="data.mediaUrl"
           :radius="0"
           :width="750"
           :height="422"
         />
-        <article :style="{ '--line': line }">
+        <article v-if="data.content" :style="{ '--line': line }">
           <p>致家长书：</p>
-          <p>
-            亲爱的家长亲爱的家长亲爱的家战亲爱的家长,
-            亲爱的家长亲爱的家长亲爱的家战亲爱的家长,
-            亲爱的家长亲爱的家长亲爱的家战亲爱的家长
-          </p>
+          <p v-text="data.content" />
         </article>
         <button @click="line = 100" v-show="line !== 100">查看更多</button>
       </div>
@@ -106,6 +103,7 @@
 import PlVideo from '../../components/common/Video.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import axios from 'axios'
+import { getReportDetail } from '../../apis/fight-epidemic'
 const request = axios.create({
   responseType: 'json'
 })
@@ -132,7 +130,15 @@ export default {
       // 感动瞬间
       touched: [],
       // 新闻
-      news: []
+      news: [],
+      // 视频数据
+      data: {}
+    }
+  },
+  props: {
+    id: {
+      type: String,
+      default: ''
     }
   },
   async created () {
@@ -154,6 +160,18 @@ export default {
       .catch(e => {
         alert(e.message)
       })
+    if (this.id) {
+      try {
+        const { result } = await getReportDetail(this.id)
+        const { content, mediaUrl } = result
+        this.data = {
+          content,
+          mediaUrl
+        }
+      } catch (e) {
+        throw e
+      }
+    }
   }
 }
 </script>

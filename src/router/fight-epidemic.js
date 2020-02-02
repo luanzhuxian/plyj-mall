@@ -1,7 +1,8 @@
 export default [
   {
-    path: '/fight-epidemic/battlefield-report',
+    path: '/fight-epidemic/battlefield-report/:id?',
     name: 'BattlefieldReport',
+    props: true,
     component: () => import('../views/fight-epidemic/Battlefield-Report.vue'),
     meta: {
       title: '防疫情报站'
