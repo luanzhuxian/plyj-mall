@@ -8,7 +8,7 @@
         <div :class="$style.content">
           <div :class="{[$style.line]:index + 1 !== list.length,[$style.lineSuccess]:item.status}" />
           <div :class="{[$style.icon]:true,[$style.iconSuccess]:item.status}">
-            <img v-if="item.status" src="https://mallcdn.youpenglai.com/static/beat-plague/03c085e7-ab35-4c75-b01d-b454d4e8b778.png" alt="">
+            <img v-if="item.status" src="https://mallcdn.youpenglai.com/static/beat-plague/73b1df62-f7ad-47fe-9b6c-bdab788f5021.png" alt="">
             <span v-else>{{ item.title }}</span>
           </div>
         </div>
@@ -93,6 +93,8 @@ export default {
                 margin-bottom: 16px;
             }
             > .content {
+                display: flex;
+                justify-content: center;
                 position: relative;
                 width: 100%;
                 text-align: center;
@@ -107,8 +109,8 @@ export default {
                     overflow: hidden;
                     background: #2447BE;
                     > img {
-                        width: 40px;
-                        height: 40px;
+                        width: 65px;
+                        // height: 60px;
                     }
                 }
                 > .line {
