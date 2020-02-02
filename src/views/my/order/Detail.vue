@@ -107,7 +107,7 @@
                 skuCode2Name: item.skuCode2Name,
                 count: orderType === 'PHYSICAL' ? item.count : usefulCodeNumber
               }
-             })"
+            })"
           >
             {{ (item.afterSalesStatus === 3 || item.afterSalesStatus === 6) ? '再次申请' : '申请退款' }}
           </pl-button>

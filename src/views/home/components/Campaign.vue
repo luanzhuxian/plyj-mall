@@ -8,9 +8,10 @@
     </div>
     <ul :class="$style.campaignList">
       <router-link
+        v-if="isReportActive"
         :class="$style.campaignListItem"
         tag="li"
-        :to="{ name: 'BattlefieldReport' }"
+        :to="{ name: 'BattlefieldReport', params: { id: reportId } }"
       >
         <div :class="$style.counter">
           {{ `疫情爆发的第${days}天` }}
@@ -18,9 +19,10 @@
         <img src="https://mallcdn.youpenglai.com/static/beat-plague/0c266184-33b9-42ae-ad56-328353cb8d13.jpeg" alt="">
       </router-link>
       <router-link
+        v-if="isBookActive"
         :class="$style.campaignListItem"
         tag="li"
-        :to="{ name: 'EpidemicSignUp' }"
+        :to="{ name: 'EpidemicSignUp', params: { id: bookId } }"
       >
         <img src="https://mallcdn.youpenglai.com/static/beat-plague/6ffc3e0e-f3fe-45c2-a16c-ec2de74c3fe7.jpeg" alt="">
       </router-link>
@@ -32,9 +34,24 @@
 import moment from 'moment'
 export default {
   name: 'Campaign',
+  inject: ['parent'],
   data () {
     return {
       days: 0
+    }
+  },
+  computed: {
+    isReportActive () {
+      return this.parent.isReportActive
+    },
+    isBookActive () {
+      return this.parent.isBookActive
+    },
+    reportId () {
+      return this.parent.reportId
+    },
+    bookId () {
+      return this.parent.bookId
     }
   },
   created () {

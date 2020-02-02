@@ -40,6 +40,7 @@ import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntr
 import NewYearNewcomersHomeEntry from '../new-year/newcomers/NewcomersHomeEntry.vue'
 import SplitBurse from './../../components/common/Split-Burse.vue'
 import { getTemplate } from '../../apis/home'
+import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
 
 export default {
   name: 'Home',
@@ -68,7 +69,11 @@ export default {
         YU_YUE: null,
         PIN_XUAN: null,
         CLASS: null,
-        RECOMMEND: null
+        RECOMMEND: null,
+        isReportActive: false,
+        isBookActive: false,
+        reportId: '',
+        bookId: ''
         // MODULE_A: null,
         // MODULE_B: null,
         // MODULE_C: null,
@@ -83,6 +88,14 @@ export default {
   async created () {
     try {
       this.getTemplate()
+      getReportActivity().then(({ result }) => {
+        this.isReportActive = result ? !!result.status : false
+        this.reportId = result ? result.id : ''
+      })
+      getBookActivity().then(({ result }) => {
+        this.isBookActive = result ? result.enable : false
+        this.bookId = result ? result.activityId : ''
+      })
     } catch (e) {
       throw e
     }
