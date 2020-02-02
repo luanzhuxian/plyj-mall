@@ -11,43 +11,57 @@ export default {
     return {
       runwayNum: 2,
       runwayList: [],
+      duration: 10, // 移动完毕时长
       runnerMes: [
         {
           img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580536912480&di=9528760983dec6b1ee99ee9a1a6ca0f1&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F03%2F44%2Fb8566b309936.jpg',
-          name: '李***',
+          name: '李111***',
           description: '3244444444444444444444444444啊实打实'
         },
         {
           img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580536912480&di=9528760983dec6b1ee99ee9a1a6ca0f1&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F03%2F44%2Fb8566b309936.jpg',
-          name: '李***',
+          name: '李22***',
           description: '3244444444444444444444444444啊实打实'
         },
         {
           img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580536912480&di=9528760983dec6b1ee99ee9a1a6ca0f1&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F03%2F44%2Fb8566b309936.jpg',
-          name: '李***',
+          name: '李333***',
           description: '3244444444444444444444444444啊实打实'
         },
         {
           img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580536912480&di=9528760983dec6b1ee99ee9a1a6ca0f1&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F03%2F44%2Fb8566b309936.jpg',
-          name: '李***',
+          name: '李444***',
           description: '3244444444444444444444444444啊实打实'
         }
-      ]
+      ],
+      runnerMesCopy: []
     }
   },
   async mounted () {
+    this.runnerMesCopy = JSON.parse(JSON.stringify(this.runnerMes))
     await this.getRunway()
     this.running()
-    setTimeout(_ => {
-      this.runnerMes.push({
-        img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580536912480&di=9528760983dec6b1ee99ee9a1a6ca0f1&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F03%2F44%2Fb8566b309936.jpg',
-        name: '李***',
-        description: '3244444444444444444444444444啊实打实'
-      })
-      this.running()
-    }, 10000)
+    // 拷贝获取的弹幕信息
+    // 不断注入弹幕,
+    this.keepRunning()
+    this.joinRunner()
   },
   methods: {
+    // 作为真实弹幕逻辑，把之前的弹幕信息copy当作新弹幕导入
+    keepRunning () {
+      setTimeout(() => {
+        let runnerMes = JSON.parse(JSON.stringify(this.runnerMesCopy))
+        this.runnerMes.push(...runnerMes)
+        this.keepRunning()
+      }, 15000)
+    },
+    // 加入跑者
+    joinRunner () {
+      setTimeout(() => {
+        this.running()
+        this.joinRunner()
+      }, 10000)
+    },
     // 获得弹幕跑道
     async getRunway () {
       await this.$nextTick()
@@ -55,11 +69,12 @@ export default {
       for (let el of barrageList) {
         this.runwayList.push({
           el,
+          status: true, // 跑道是否允许跑步
           runner: []
         })
       }
     },
-    // 跑者跑步
+    // 准备跑步
     running () {
       // 先跑空赛道
       for (let runway of this.runwayList) {
@@ -70,19 +85,19 @@ export default {
     },
     // 创造跑者
     createRunner (runway, index, runnerMes) {
-      if (!runnerMes.length) return
+      if (!runnerMes.length && !runway.status) return
       let width = runway.el.offsetWidth
       let startPoint = runway.el.offsetLeft + width
-      let duration = 5
+      let duration = this.duration
       let runner = document.createElement('div')
       runner.style.position = 'absolute'
       runner.style.top = '0px'
       runner.style.left = `${startPoint}px`
-      runner.style.background = 'pink'
       let currentRunnerMes = runnerMes.shift()
       runner.innerHTML = `<img src=${currentRunnerMes.img}><div><div>${currentRunnerMes.name} 抗击疫情第三天</div><div>${currentRunnerMes.description}</div></div>`
       runway.el.appendChild(runner)
       runway.runner.push(runner)
+      runway.status = false
       let runnerWidth = runner.offsetWidth
       // 跑者速度
       let speed = (width + runnerWidth) / duration
@@ -107,6 +122,7 @@ export default {
       let time = runnerWidth / speed
       setTimeout(() => {
         if (this.runnerMes.length) {
+          runway.status = true
           this.createRunner(runway, index + 1, this.runnerMes)
         }
       }, time * 1000)
@@ -137,10 +153,10 @@ export default {
                 > div {
                     > div {
                         font-size: 24px;
-                        color: blue;
+                        color: #b3bbfd;
                     }
                     > div:nth-of-type(2) {
-                        color: #FFFFFF;
+                        color: #dde1f9;
                     }
                 }
             }
