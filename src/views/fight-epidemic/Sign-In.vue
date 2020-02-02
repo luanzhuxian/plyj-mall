@@ -2,7 +2,7 @@
   <div :class="$style.container">
     <div :class="$style.head">
       <div>
-        <p>分享海报</p>
+        <p @click="showPoster = true">分享海报</p>
         <p>活动细则</p>
       </div>
     </div>
@@ -55,22 +55,29 @@
       <div :class="$style.award">
         <Award />
       </div>
-
     </div>
     <div :class="$style.footer" />
+    <Poster :show.sync="showPoster" />
   </div>
 </template>
 
 <script>
 import Award from './components/Award'
 import Barrage from './components/Barrage'
+import Poster from './components/Poster.vue'
 import Step from './components/Step'
 export default {
   name: 'SignIn',
   components: {
     Award,
     Barrage,
-    Step
+    Step,
+    Poster
+  },
+  data () {
+    return {
+      showPoster: false
+    }
   }
 }
 </script>
