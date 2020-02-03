@@ -91,7 +91,7 @@
 
     <div :class="$style.module">
       <div :class="$style.title">
-        防役我必须知道的事
+        防疫我必须知道的事
       </div>
       <div :class="$style.imageText">
         <img
