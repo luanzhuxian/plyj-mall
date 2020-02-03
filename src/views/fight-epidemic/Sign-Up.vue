@@ -15,19 +15,22 @@
         :class="$style.form"
         label-width="164"
         align="right"
+        ref="form"
+        :model="form"
+        :rules="rules"
         :label-style="{
           fontWeight: 'normal',
         }"
       >
         <p :class="$style.title">请填写报名信息，携手共同抗击疫情</p>
-        <pl-form-item label="真实姓名">
+        <pl-form-item label="真实姓名" prop="name">
           <pl-input v-model="form.name" placeholder="请输入参与的学员姓名" />
         </pl-form-item>
-        <pl-form-item label="手机号" :gap-top="20">
-          <pl-input v-model="form.mobile" placeholder="请输入家长手机号" />
+        <pl-form-item label="手机号" :gap-top="20" prop="phoneNo" v-if="!mobile">
+          <pl-input v-model="form.phoneNo" placeholder="请输入家长手机号" />
         </pl-form-item>
-        <pl-form-item label="验证码" :gap-top="20">
-          <pl-input v-model="form.code" placeholder="请输入验证码" />
+        <pl-form-item label="验证码" :gap-top="20" prop="verifyCode" v-if="!mobile">
+          <pl-input v-model="form.verifyCode" placeholder="请输入验证码" />
           <template v-slot:suffix>
             <get-code
               :mobile="form.mobile"
@@ -36,7 +39,7 @@
             />
           </template>
         </pl-form-item>
-        <pl-form-item label="年级" :gap-top="20">
+        <pl-form-item label="年级" :gap-top="20" prop="grade" v-if="detail.isGrade">
           <pl-input
             placeholder="请选择所在年级"
             readonly
@@ -45,20 +48,23 @@
             suffix-icon="icon-right"
           />
         </pl-form-item>
-        <pl-form-item label="所在区域" :gap-top="20">
+        <pl-form-item label="所在区域" :gap-top="20" prop="area" v-if="detail.isArea">
           <pl-input
             placeholder="请选择所在地区"
             readonly
-            v-model="form.addressPrefix"
+            v-model="form.area"
             @click="showCitySelector = true"
             @clear="addrClear"
             suffix-icon="icon-right"
           />
         </pl-form-item>
+        <pl-form-item :label="detail.customTitle" :gap-top="20" prop="customTitle" v-if="detail.customTitle">
+          <pl-input :placeholder="`请输入${detail.customTitle}`" v-model="form.customContent" />
+        </pl-form-item>
       </pl-form>
     </main>
 
-    <button :class="$style.sign">立即报名</button>
+    <button :class="$style.sign" @click="signUp">立即报名</button>
 
     <CitySelector
       :show.sync="showCitySelector"
@@ -77,7 +83,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import CitySelector from '../../components/common/City-Selector.vue'
-
+import { signInfo, signUp } from '../../apis/fight-epidemic'
 export default {
   name: 'SignUp',
   components: {
@@ -102,24 +108,83 @@ export default {
         }
       ],
       form: {
-        mobile: '',
-        code: '',
+        activityId: '',
+        phoneNo: '',
+        verifyCode: '',
         name: '',
         grade: '',
-        addressPrefix: ''
+        area: '',
+        customContent: ''
+      },
+      detail: {},
+      rules: {
+        name: [
+          { required: true, message: '请输入姓名' }
+        ]
       }
     }
   },
   computed: {
-    ...mapGetters(['smstype'])
+    ...mapGetters(['smstype', 'mobile'])
+  },
+  props: {
+    id: {
+      type: String,
+      default: ''
+    }
+  },
+  async created () {
+    this.form.activityId = this.id
+    try {
+      await this.getSingInfo()
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
+    async signUp () {
+      if (!this.$refs.form.validate()) {
+        return
+      }
+      try {
+        await signUp(this.form)
+        this.$router.go(-1)
+      } catch (e) {
+        throw e
+      }
+    },
+    async getSingInfo () {
+      try {
+        const { result } = await signInfo(this.id)
+        this.detail = result
+        const rules = {
+          grade: [
+            { required: result.isGrade, message: '请选择年级' }
+          ],
+          area: [
+            { required: result.isArea, message: '请选择区域' }
+          ],
+          customContent: [
+            { required: result.customTitle, message: `请输入${result.customTitle}` }
+          ],
+          phoneNo: [
+            { required: !this.mobile, message: '请输入手机号' }
+          ],
+          verifyCode: [
+            { required: !this.mobile, message: '请输入验证码' }
+          ]
+        }
+        this.rules = Object.assign({}, this.rules, rules)
+      } catch (e) {
+        throw e
+      }
+    },
     selectCity (val) {
       // this.form.province = val[0].code
       // this.form.city = val[1].code
       // this.form.region = val[2] ? val[2].code : ''
       // this.form.town = val[3] ? val[3].code : ''
-      this.form.addressPrefix =
+      this.form.area =
         val[0].name +
         val[1].name +
         (val[2] ? val[2].name : '') +

@@ -11,3 +11,7 @@ export const getReportActivity = () => axios.get('/apis/v1/epidemicInformation')
 
 // 查询该机构的志愿书活动
 export const getBookActivity = () => axios.get('/apis/v1/epidemic/has_epidem_activity')
+// 报名
+export const signUp = data => axios.post('/apis/v1/epidemicActivity/signUp', data)
+// 报名数据
+export const signInfo = activityId => axios.get(`/apis/v1/epidemicActivity/querySignUpInfo/${activityId}`)

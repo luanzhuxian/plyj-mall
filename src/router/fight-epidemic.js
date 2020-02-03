@@ -10,8 +10,9 @@ export default [
   },
   // 报名页面
   {
-    path: '/fight-epidemic/sign-up',
+    path: '/fight-epidemic/sign-up/:id',
     name: 'EpidemicSignUp',
+    props: true,
     component: () => import('../views/fight-epidemic/Sign-Up.vue'),
     meta: {
       title: '共携手，抗战“疫”'
