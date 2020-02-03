@@ -84,6 +84,7 @@
 import { mapGetters } from 'vuex'
 import CitySelector from '../../components/common/City-Selector.vue'
 import { signInfo, signUp } from '../../apis/fight-epidemic'
+import { isPhone } from '../../assets/js/validate'
 export default {
   name: 'SignUp',
   components: {
@@ -168,7 +169,8 @@ export default {
             { required: result.customTitle, message: `请输入${result.customTitle}` }
           ],
           phoneNo: [
-            { required: !this.mobile, message: '请输入手机号' }
+            { required: !this.mobile, message: '请输入手机号' },
+            { validator: isPhone, message: '手机号格式错误' }
           ],
           verifyCode: [
             { required: !this.mobile, message: '请输入验证码' }
