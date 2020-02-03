@@ -42,11 +42,8 @@
           </pl-form-item>
           <pl-form-item label="年级" :gap-top="20" prop="grade" v-if="detail.isGrade">
             <pl-input
-              placeholder="请选择所在年级"
-              readonly
+              placeholder="请输入所在年级"
               v-model="form.grade"
-              @click="showPicker = true"
-              suffix-icon="icon-right"
             />
           </pl-form-item>
           <pl-form-item label="所在区域" :gap-top="20" prop="area" v-if="detail.isArea">
@@ -67,12 +64,6 @@
 
       <button :class="$style.sign" @click="signUp">立即报名</button>
 
-      <CitySelector
-        :show.sync="showCitySelector"
-        @select="selectCity"
-        ref="citySelector"
-      />
-
       <pl-picker
         :show.sync="showPicker"
         :slots="classes"
@@ -84,13 +75,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import CitySelector from '../../components/common/City-Selector.vue'
 import { signInfo, signUp } from '../../apis/fight-epidemic'
 export default {
   name: 'SignUp',
-  components: {
-    CitySelector
-  },
   data () {
     return {
       showCitySelector: false,

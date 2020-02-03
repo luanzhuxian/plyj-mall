@@ -53,7 +53,7 @@ module.exports = {
       '/apis': {
         // target: 'https://mall.youpenglai.com'
         target: `http://192.168.130.${SERVER || 171}`,
-        // target: `http://192.168.255.18`
+        // target: `http://192.168.255.42`
       },
       '/live/': {
         // target: 'http://mall.youpenglai.com'
