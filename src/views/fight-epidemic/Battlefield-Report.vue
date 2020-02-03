@@ -109,6 +109,7 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import axios from 'axios'
 import { getReportDetail } from '../../apis/fight-epidemic'
 import China from '../../../static/china.json'
+import moment from 'moment'
 const request = axios.create({
   responseType: 'json'
 })
@@ -157,6 +158,9 @@ export default {
       touched,
       dataList
     } = res.data
+    news.map(item => {
+      item.pubDateStr = moment(item.pubDate).fromNow()
+    })
     this.news = news
     this.epidemicMap = epidemicMap
     this.epidemicData = epidemicData

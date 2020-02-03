@@ -96,8 +96,8 @@ export default {
   [type.SAVE_WX_AVATAR]: async ({ commit }, url) => {
     let img = await loadImage(url)
     let cvs = document.createElement('canvas')
-    cvs.width = img.width
-    cvs.heigt = img.width
+    cvs.width = img.naturalWidth
+    cvs.heigt = img.naturalHeight
     let ctx = cvs.getContext('2d')
     ctx.drawImage(img, 0, 0)
     cvs.toBlob(async blob => {
