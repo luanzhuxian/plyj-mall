@@ -62,11 +62,13 @@
           :width="750"
           :height="422"
         />
-        <article v-if="data.content" :style="{ '--line': line }">
-          <p>致家长书：</p>
-          <p v-text="data.content" />
-        </article>
-        <button @click="line = 100" v-show="line !== 100">查看更多</button>
+        <template v-if="data.content && data.content.length > 30">
+          <article :style="{ '--line': line }">
+            <p>致家长书：</p>
+            <p v-text="data.content" />
+          </article>
+          <button @click="line = 100" v-show="line !== 100">查看更多</button>
+        </template>
       </div>
     </div>
 
