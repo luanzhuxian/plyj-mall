@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <div :class="$style.module" v-if="data.content && data.mediaUrl">
+    <div :class="$style.module" v-if="data.content || data.mediaUrl">
       <div :class="$style.title">
         战役宣誓  与您携手
       </div>
