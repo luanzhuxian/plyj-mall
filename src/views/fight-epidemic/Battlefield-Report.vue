@@ -26,6 +26,28 @@
       </div>
     </div>
 
+    <div :class="$style.module" v-if="data.content || data.mediaUrl">
+      <div :class="$style.title">
+        战疫宣誓  与您携手
+      </div>
+      <div :class="$style.toPatriarch">
+        <PlVideo
+          v-if="data.mediaUrl"
+          :url="data.mediaUrl"
+          :radius="0"
+          :width="750"
+          :height="422"
+        />
+        <template v-if="data.content && data.content.length > 30">
+          <article :style="{ '--line': line }">
+            <p>致家长书：</p>
+            <p v-text="data.content" />
+          </article>
+          <button @click="line = 100" v-show="line !== 100">查看更多</button>
+        </template>
+      </div>
+    </div>
+
     <div :class="$style.module">
       <div :class="$style.title">
         最新消息
@@ -47,28 +69,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div :class="$style.module" v-if="data.content || data.mediaUrl">
-      <div :class="$style.title">
-        战疫宣誓  与您携手
-      </div>
-      <div :class="$style.toPatriarch">
-        <PlVideo
-          v-if="data.mediaUrl"
-          :url="data.mediaUrl"
-          :radius="0"
-          :width="750"
-          :height="422"
-        />
-        <template v-if="data.content && data.content.length > 30">
-          <article :style="{ '--line': line }">
-            <p>致家长书：</p>
-            <p v-text="data.content" />
-          </article>
-          <button @click="line = 100" v-show="line !== 100">查看更多</button>
-        </template>
       </div>
     </div>
 
@@ -192,8 +192,9 @@ export default {
       itemWidth: 50,
       itemHeight: 30,
       pieces: [
-        { min: 1000, color: '#70161d' }, // 不指定 max，表示 max 为无限大（Infinity）。
-        { min: 500, max: 1000, color: '#cb2a2f' },
+        { min: 5000, color: '#390f0f' }, // 不指定 max，表示 max 为无限大（Infinity）。
+        { min: 1000, max: 4999, color: '#70161d' }, // 不指定 max，表示 max 为无限大（Infinity）。
+        { min: 500, max: 999, color: '#cb2a2f' },
         { min: 100, max: 499, color: '#e55a4e' },
         { min: 10, max: 99, color: '#f59e83' },
         { min: 1, max: 9, color: '#fdebcf' }
