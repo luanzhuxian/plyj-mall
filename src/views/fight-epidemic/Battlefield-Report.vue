@@ -52,7 +52,7 @@
 
     <div :class="$style.module" v-if="data.content || data.mediaUrl">
       <div :class="$style.title">
-        战役宣誓  与您携手
+        战疫宣誓  与您携手
       </div>
       <div :class="$style.toPatriarch">
         <PlVideo
@@ -208,7 +208,7 @@ export default {
       label: {
         normal: {
           show: true,
-          fontSize: 12,
+          fontSize: 14,
           color: '#ff8500'
         }
       },
