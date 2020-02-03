@@ -64,20 +64,30 @@
 
       <button :class="$style.sign" @click="signUp">立即报名</button>
 
-      <pl-picker
+      <CitySelector
+        :show.sync="showCitySelector"
+        @select="selectCity"
+        ref="citySelector"
+      />
+
+      <!--<pl-picker
         :show.sync="showPicker"
         :slots="classes"
         @confirm="classesConfirm"
-      />
+      />-->
     </div>
   </transition>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import CitySelector from '../../components/common/City-Selector.vue'
 import { signInfo, signUp } from '../../apis/fight-epidemic'
 export default {
   name: 'SignUp',
+  components: {
+    CitySelector
+  },
   data () {
     return {
       showCitySelector: false,
