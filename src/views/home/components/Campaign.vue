@@ -22,7 +22,7 @@
         v-if="isBookActive"
         :class="$style.campaignListItem"
         tag="li"
-        :to="{ name: 'EpidemicSignUp', params: { id: bookId } }"
+        :to="{ name: 'EpidemicSignIn', params: { id: bookId } }"
       >
         <img src="https://mallcdn.youpenglai.com/static/beat-plague/6ffc3e0e-f3fe-45c2-a16c-ec2de74c3fe7.jpeg" alt="">
       </router-link>
