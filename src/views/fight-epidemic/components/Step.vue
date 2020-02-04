@@ -26,7 +26,7 @@ export default {
       if (this.list[i].currentDay === 0) {
         this.currentIndex = i
       }
-      if ((this.list[i].currentDay === 0 && this.list[i].currentSign) || (this.list[i].currentDay < 0 && this.list[i].healthValue > 0)) {
+      if ((this.list[i].currentDay === 0 && this.currentSign) || (this.list[i].currentDay < 0 && this.list[i].healthValue > 0)) {
         this.$set(this.list[i], 'status', true)
       } else {
         this.$set(this.list[i], 'status', false)
@@ -43,6 +43,9 @@ export default {
       default () {
         return []
       }
+    },
+    currentSign: {
+      type: Boolean
     }
   },
   data () {

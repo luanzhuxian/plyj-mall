@@ -45,7 +45,7 @@
                 <p>{{ signInInfo.maxContinuitySignDay || 0 }}天</p>
               </div>
               <div>
-                <Step v-if="signInInfo.everyDayInfos.length" :list="signInInfo.everyDayInfos" />
+                <Step v-if="signInInfo.everyDayInfos.length" :list="signInInfo.everyDayInfos" :current-sign="signInInfo.currentSign" />
               </div>
             </div>
           </div>
@@ -148,7 +148,8 @@ export default {
       barrageFlag: false,
       activityId: this.$route.params.id,
       signInInfo: {
-        everyDayInfos: []
+        everyDayInfos: [],
+        currentSign: false
       }, // 我的签到信息
       activityInfo: {
         isShow: 0
