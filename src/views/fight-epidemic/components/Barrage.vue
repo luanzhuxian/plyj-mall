@@ -41,14 +41,14 @@ export default {
       setTimeout(() => {
         this.runnerMes = JSON.parse(JSON.stringify(this.runnerMesCopy))
         this.keepRunning()
-      }, 14000)
+      }, 15000)
     },
     // 加入跑者
     joinRunner () {
       setTimeout(() => {
         this.running()
         this.joinRunner()
-      }, 10000)
+      }, 11000)
     },
     // 获得弹幕跑道
     async getRunway () {
@@ -71,12 +71,12 @@ export default {
       // 先跑空赛道
       for (let runway of this.runwayList) {
         if (!runway.runner.length) {
-          this.createRunner(runway, 0, this.runnerMes)
+          this.createRunner(runway, this.runnerMes)
         }
       }
     },
     // 创造跑者
-    createRunner (runway, index, runnerMes) {
+    createRunner (runway, runnerMes) {
       if (!runnerMes.length || !runway.status) return
       let width = runway.el.offsetWidth
       let startPoint = runway.el.offsetLeft + width
@@ -93,8 +93,9 @@ export default {
       let runnerWidth = runner.offsetWidth
       // 跑者速度
       let speed = (width + runnerWidth) / duration
+      let nowTime = Date.now()
       let keyframes = `
-        @keyframes ani${index}{
+        @keyframes ani${nowTime}{
             form{
                 left:${startPoint}px;
             }
@@ -103,19 +104,23 @@ export default {
             }
         }`
       let head = document.getElementsByTagName('head')[0]
-      head.innerHTML += `<style type='text/css'>${keyframes}</style>`
-      runner.style.animation = `ani${index} ${duration}s linear`
+      head.innerHTML += `<style class='ani-${nowTime}' type='text/css'>${keyframes}</style>`
+      runner.style.animation = `ani${nowTime} ${duration}s linear`
       // 动画结束删除dom
       runner.addEventListener('animationend', () => {
-        runner.remove()
-        runway.runner.shift()
+        try {
+          runner.remove()
+          runway.runner.shift()
+          let styleTag = document.getElementsByClassName(`ani-${nowTime}`)[0]
+          styleTag.remove()
+        } catch (e) { throw e }
       })
       // 完全身体出现时间,叫下一个
       let time = (runnerWidth / speed).toFixed(2)
       setTimeout(() => {
         runway.status = true
         if (this.runnerMes.length) {
-          this.createRunner(runway, index + 1, this.runnerMes)
+          this.createRunner(runway, this.runnerMes)
         }
       }, time * 1000)
     }
