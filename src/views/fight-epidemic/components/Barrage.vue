@@ -41,7 +41,7 @@ export default {
       setTimeout(() => {
         this.runnerMes = JSON.parse(JSON.stringify(this.runnerMesCopy))
         this.keepRunning()
-      }, 15000)
+      }, 11000)
     },
     // 加入跑者
     joinRunner () {
@@ -60,6 +60,10 @@ export default {
           status: true, // 跑道是否允许跑步
           runner: []
         })
+      }
+      // 如果只有一条弹幕信息，关闭其他跑道
+      if (this.runnerMes.length === 1) {
+        this.runwayList[1].status = false
       }
     },
     // 准备跑步
