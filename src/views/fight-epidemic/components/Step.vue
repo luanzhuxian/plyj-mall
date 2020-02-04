@@ -21,19 +21,6 @@
 <script>
 export default {
   name: 'Step',
-  created () {
-    // for (let i in this.list) {
-    //   // 获取今天的节点
-    //   if (this.list[i].currentDay === 0) {
-    //     this.currentIndex = i
-    //   }
-    //   if ((this.list[i].currentDay === 0 && this.currentSign) || (this.list[i].currentDay < 0 && this.list[i].healthValue > 0)) {
-    //     this.$set(this.list[i], 'status', true)
-    //   } else {
-    //     this.$set(this.list[i], 'status', false)
-    //   }
-    // }
-  },
   mounted () {
     this.setPosition()
   },
@@ -56,11 +43,11 @@ export default {
   },
   methods: {
     // 签到zhaungtai
-    signInStatus ({ healthValue, currentDay, currentSign }, index) {
+    signInStatus ({ healthValue, currentDay }, index) {
       // currentDay 大于0是未来，0是今天
       // healthValue 为0是未签到，大于0是签到
       // currentSign 今天是否签到
-      if ((currentDay === 0 && currentSign) || (currentDay < 0 && healthValue > 0)) {
+      if ((currentDay === 0 && this.currentSign) || (currentDay < 0 && healthValue > 0)) {
         return true
       }
       // 获取今天的节点
