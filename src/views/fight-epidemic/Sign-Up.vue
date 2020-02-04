@@ -82,7 +82,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import CitySelector from '../../components/common/City-Selector.vue'
-import { signInfo, signUp } from '../../apis/fight-epidemic'
+import { signInfo, signUp, incrAccess } from '../../apis/fight-epidemic'
 export default {
   name: 'SignUp',
   components: {
@@ -148,6 +148,8 @@ export default {
       }
       try {
         await signUp(this.form)
+        incrAccess(this.id)
+        // 增加访问记录
         this.$router.push({ name: 'EpidemicSignIn', params: { activityId: this.id } })
       } catch (e) {
         throw e
