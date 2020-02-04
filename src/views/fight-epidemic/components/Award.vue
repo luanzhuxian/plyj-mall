@@ -1,6 +1,6 @@
 <template>
   <!--健康值兑换-->
-  <div :class="$style.container">
+  <div v-if="awardList.length" :class="$style.container">
     <div :class="$style.head">
       <h1>健康值兑换奖励</h1>
       <div @click="$router.push({name:'MyPresent'})">
@@ -9,7 +9,6 @@
       </div>
     </div>
     <div
-      v-if="awardList.length"
       :class="{
         [$style.content]:true,
         [$style.single]:awardList.length === 1,
@@ -36,9 +35,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div v-else :class="$style.noContent">
-      暂无奖励数据
     </div>
   </div>
 
@@ -191,11 +187,6 @@ export default {
                     }
                 }
             }
-        }
-        .no-content {
-            padding: 40px 0;
-            font-size: 30px;
-            text-align:center;
         }
     }
     .award-button {
