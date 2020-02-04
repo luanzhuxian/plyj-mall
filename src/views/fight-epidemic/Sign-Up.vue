@@ -49,7 +49,7 @@
           <pl-form-item label="所在区域" :gap-top="20" prop="area" v-if="detail.isArea">
             <pl-input
               placeholder="请选择所在地区"
-              readonly
+              disabled
               v-model="form.area"
               @click="showCitySelector = true"
               @clear="addrClear"
