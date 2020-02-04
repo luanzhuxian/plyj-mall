@@ -159,7 +159,7 @@ export default {
         const { result } = await signInfo(this.id)
         this.detail = result
         if (result.haveSignUp) {
-          return this.$router.replace({ name: 'EpidemicSignIn' })
+          return this.$router.replace({ name: 'EpidemicSignIn', params: { activityId: this.id } })
         }
         this.loading = false
         const rules = {
