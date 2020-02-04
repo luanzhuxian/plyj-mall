@@ -64,7 +64,7 @@
     </div>
     <div :class="$style.footer" />
     <!--海报-->
-    <Poster :show.sync="showPoster" />
+    <Poster :show.sync="showPoster" :has-logo="activityInfo.isShow || 0" />
     <!--活动细则-->
     <Popup :show.sync="showDetail" :hide-close-icon="false">
       <div :class="$style.detail">
@@ -150,7 +150,9 @@ export default {
       signInInfo: {
         everyDayInfos: []
       }, // 我的签到信息
-      activityInfo: {}, // 签到活动信息
+      activityInfo: {
+        isShow: 0
+      }, // 签到活动信息
       giftInfo: [], // 礼品信息
       barrageInfo: [], // 弹幕
       wishList: ['身体健康平安!', '我再家中为武汉加油，向一线展示致敬!', '不给祖国添乱，宅在家中为祖国做贡献!', '家中一切平安，我与大家共同抗击疫情!']

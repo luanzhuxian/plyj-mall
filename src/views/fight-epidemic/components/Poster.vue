@@ -21,7 +21,11 @@ export default {
     }
   },
   props: {
-    show: Boolean
+    show: Boolean,
+    hasLogo: {
+      type: Number,
+      default: 0
+    }
   },
   watch: {
     show (val) {
@@ -74,9 +78,11 @@ export default {
         let AVATAR = await loadImage(this.avatar)
         AVATAR = cutArcImage(AVATAR)
         CTX.drawImage(AVATAR, 48, 350, 80, 80)
-        let LOGO = await loadImage(this.logoUrl)
-        LOGO = cutImageCenter(LOGO, 20)
-        CTX.drawImage(LOGO, 44, 806, 80, 80)
+        if (this.hasLogo) {
+          let LOGO = await loadImage(this.logoUrl)
+          LOGO = cutImageCenter(LOGO, 20)
+          CTX.drawImage(LOGO, 44, 806, 80, 80)
+        }
       } catch (e) {
         this.$error(e.message)
       } finally {
