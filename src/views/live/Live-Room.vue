@@ -14,14 +14,13 @@
       <div class="plv-live-cutOff" v-if="recorded.ended" />
       <video
         v-else
-        controls
-        style="object-fit: contain;"
-        x5-playsinline
+        webkit-playsinline=""
+        playsinline=""
+        x-webkit-airplay="true"
         x5-video-player-type="h5-page"
-        playsinline="true"
-        webkit-playsinline="true"
         ref="livePlayBack"
-        preload="metadata"
+        controls
+        :poster="detail.coverImg"
         :src="recorded.url"
       />
     </div>
@@ -400,7 +399,7 @@ export default {
         this.productList = data.productList || []
         this.activeId = data.id
         this.detail = data
-        if (data.videoLibId && data.liveType === 'live') {
+        if (data.videoLibId && data.videoLibId !== '0' && data.liveType === 'live') {
           this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })
         }
         // 获取录播视频详情
