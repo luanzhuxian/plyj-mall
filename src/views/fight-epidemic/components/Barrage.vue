@@ -104,15 +104,18 @@ export default {
             }
         }`
       let head = document.getElementsByTagName('head')[0]
-      head.append(`<style class='ani-${nowTime}' type='text/css'>${keyframes}</style>`)
+      let styleNode = document.createElement('style')
+      styleNode.type = 'text/css'
+      styleNode.innerHTML = keyframes
+      head.append(styleNode)
+      //   head.innerHTML += `<style class='ani-${nowTime}' type='text/css'>${keyframes}</style>`
       runner.style.animation = `ani${nowTime} ${duration}s linear`
       // 动画结束删除dom
       runner.addEventListener('animationend', () => {
         try {
           runner.remove()
           runway.runner.shift()
-          let styleTag = document.getElementsByClassName(`ani-${nowTime}`)[0]
-          styleTag.remove()
+          styleNode.remove()
         } catch (e) { throw e }
       })
       // 完全身体出现时间,叫下一个
