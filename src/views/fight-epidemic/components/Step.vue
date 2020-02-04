@@ -1,15 +1,15 @@
 <template>
   <div ref="container" :class="$style.container">
     <div :class="$style.scroll">
-      <div :class="$style.item" v-for="(item,index) in list" :key="index">
+      <div ref="node" :class="$style.item" v-for="(item,index) in list" :key="index">
         <div :class="$style.description">
-          {{ item.description }}
+          {{ item.dateString }}
         </div>
         <div :class="$style.content">
           <div :class="{[$style.line]:index + 1 !== list.length,[$style.lineSuccess]:item.status}" />
           <div :class="{[$style.icon]:true,[$style.iconSuccess]:item.status}">
             <img v-if="item.status" src="https://mallcdn.youpenglai.com/static/beat-plague/73b1df62-f7ad-47fe-9b6c-bdab788f5021.png" alt="">
-            <span v-else>{{ item.title }}</span>
+            <span v-else>+{{ item.healthValue }}</span>
           </div>
         </div>
       </div>
@@ -20,58 +20,55 @@
 <script>
 export default {
   name: 'Step',
+  created () {
+    for (let i in this.list) {
+      // 获取今天的节点
+      if (this.list[i].currentDay === 0) {
+        this.currentIndex = i
+      }
+      if ((this.list[i].currentDay === 0 && this.list[i].currentSign) || (this.list[i].currentDay < 0 && this.list[i].healthValue > 0)) {
+        this.$set(this.list[i], 'status', true)
+      } else {
+        this.$set(this.list[i], 'status', false)
+      }
+    }
+  },
   mounted () {
-    this.$refs.container.scrollBy(1000, 0)
+    this.setPosition()
+  },
+  props: {
+    // 进度条列表
+    list: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
   },
   data () {
     return {
-      list: [
-        {
-          status: false, // 是否高亮
-          title: '+1',
-          description: '1.31'
-        },
-        {
-          status: false, // 是否高亮
-          title: '+2',
-          description: '1.31'
-        },
-        {
-          status: false, // 是否高亮
-          title: '+3',
-          description: '1.31'
-        },
-        {
-          status: false, // 是否高亮
-          title: '+4',
-          description: '1.31'
-        },
-        {
-          status: true, // 是否高亮
-          title: '+5',
-          description: '1.31'
-        },
-        {
-          status: true, // 是否高亮
-          title: '+6',
-          description: '1.31'
-        },
-        {
-          status: false, // 是否高亮
-          title: '+7',
-          description: '1.31'
-        },
-        {
-          status: true, // 是否高亮
-          title: '+8',
-          description: '1.31'
-        },
-        {
-          status: false, // 是否高亮
-          title: '+9',
-          description: '1.31'
-        }
-      ]
+      currentIndex: 0
+    }
+  },
+  methods: {
+    // 签到zhaungtai
+    // signInStatus ({ healthValue, currentDay, currentSign }, index) {
+    //   // currentDay 大于0是未来，0是今天
+    //   // healthValue 为0是未签到，大于0是签到
+    //   // currentSign 今天是否签到
+    //   if ((currentDay === 0 && currentSign) || (currentDay < 0 && healthValue > 0)) {
+    //     return true
+    //   }
+    //   // 获取今天的节点
+    //   if (currentDay === 0) {
+    //     this.currentIndex = index
+    //   }
+    //   return false
+    // },
+    // 把今天的定到左边边
+    async setPosition () {
+      let positionX = this.$refs.node[this.currentIndex].offsetLeft
+      this.$refs.container.scrollTo(positionX, 0)
     }
   }
 }
@@ -80,7 +77,8 @@ export default {
 <style module lang='scss'>
 
 .container {
-    overflow: auto;
+    position: relative;
+    overflow-x: auto;
     > .scroll {
         white-space: nowrap;
         > .item {

@@ -7,37 +7,26 @@
 <script>
 export default {
   name: 'Barrage',
+  props: {
+    // 弹幕列表
+    list: {
+      type: Array,
+      default () {
+        return []
+      }
+    }
+  },
   data () {
     return {
       runwayNum: 2,
       runwayList: [],
       duration: 10, // 移动完毕时长
-      runnerMes: [
-        {
-          img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580536912480&di=9528760983dec6b1ee99ee9a1a6ca0f1&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F03%2F44%2Fb8566b309936.jpg',
-          name: '李111***',
-          description: '3244444444444444444444444444啊实打实'
-        },
-        {
-          img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580536912480&di=9528760983dec6b1ee99ee9a1a6ca0f1&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F03%2F44%2Fb8566b309936.jpg',
-          name: '李22***',
-          description: '3244444444444444444444444444啊实打实'
-        },
-        {
-          img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580536912480&di=9528760983dec6b1ee99ee9a1a6ca0f1&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F03%2F44%2Fb8566b309936.jpg',
-          name: '李333***',
-          description: '3244444444444444444444444444啊实打实'
-        },
-        {
-          img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580536912480&di=9528760983dec6b1ee99ee9a1a6ca0f1&imgtype=0&src=http%3A%2F%2Fpic1.cxtuku.com%2F00%2F03%2F44%2Fb8566b309936.jpg',
-          name: '李444***',
-          description: '3244444444444444444444444444啊实打实'
-        }
-      ],
+      runnerMes: [],
       runnerMesCopy: []
     }
   },
   async mounted () {
+    this.runnerMes = this.list
     this.runnerMesCopy = JSON.parse(JSON.stringify(this.runnerMes))
     await this.getRunway()
     this.running()
@@ -50,8 +39,7 @@ export default {
     // 作为真实弹幕逻辑，把之前的弹幕信息copy当作新弹幕导入
     keepRunning () {
       setTimeout(() => {
-        let runnerMes = JSON.parse(JSON.stringify(this.runnerMesCopy))
-        this.runnerMes.push(...runnerMes)
+        this.runnerMes = JSON.parse(JSON.stringify(this.runnerMesCopy))
         this.keepRunning()
       }, 15000)
     },
@@ -85,7 +73,7 @@ export default {
     },
     // 创造跑者
     createRunner (runway, index, runnerMes) {
-      if (!runnerMes.length && !runway.status) return
+      if (!runnerMes.length || !runway.status) return
       let width = runway.el.offsetWidth
       let startPoint = runway.el.offsetLeft + width
       let duration = this.duration
@@ -94,7 +82,7 @@ export default {
       runner.style.top = '0px'
       runner.style.left = `${startPoint}px`
       let currentRunnerMes = runnerMes.shift()
-      runner.innerHTML = `<img src=${currentRunnerMes.img}><div><div>${currentRunnerMes.name} 抗击疫情第三天</div><div>${currentRunnerMes.description}</div></div>`
+      runner.innerHTML = `<img src=${currentRunnerMes.userImg}><div><div>${currentRunnerMes.name} 抗击疫情第${currentRunnerMes.signinDays}天</div><div>${currentRunnerMes.content}</div></div>`
       runway.el.appendChild(runner)
       runway.runner.push(runner)
       runway.status = false
@@ -119,10 +107,10 @@ export default {
         runway.runner.shift()
       })
       // 完全身体出现时间,叫下一个
-      let time = runnerWidth / speed
+      let time = (runnerWidth / speed).toFixed(2)
       setTimeout(() => {
+        runway.status = true
         if (this.runnerMes.length) {
-          runway.status = true
           this.createRunner(runway, index + 1, this.runnerMes)
         }
       }, time * 1000)

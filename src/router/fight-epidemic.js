@@ -20,7 +20,7 @@ export default [
   },
   // 签到首页
   {
-    path: '/fight-epidemic/sign-in',
+    path: '/fight-epidemic/sign-in/:id',
     name: 'EpidemicSignIn',
     component: () => import('../views/fight-epidemic/Sign-In.vue'),
     meta: {
