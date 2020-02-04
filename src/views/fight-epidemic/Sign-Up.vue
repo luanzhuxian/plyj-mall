@@ -133,7 +133,11 @@ export default {
       default: ''
     }
   },
-  async created () {
+  deactivated () {
+    document.body.style.backgroundColor = '#fff'
+  },
+  async activated () {
+    document.body.style.backgroundColor = '#495BFF'
     this.form.activityId = this.id
     try {
       await this.getSingInfo()
@@ -210,7 +214,6 @@ export default {
 <style module lang="scss">
   .sign-up {
     padding-bottom: 150px;
-    background-color: #495BFF;
   }
   .slogn {
     height: 245px;
