@@ -102,12 +102,12 @@
     <!--签到弹窗-->
     <Popup :show.sync="shwoSignIn" :hide-close-icon="true">
       <div :class="$style.signInWish">
-        <div :class="$style.day">{{ signInInfo.maxContinuitySignDay || 0 }}</div>
+        <div :class="$style.day">{{ signInInfo.totalHealthDay || 0 }}</div>
         <div :class="$style.description">
           <div>情系疫情 武汉加油</div>
           <div>
-            <span>连续签到10天</span>
-            <span>可获得28个健康值</span>
+            <span>连续签到{{ signInInfo.maxContinuitySignDay || 0 }}天</span>
+            <span>可获得{{ signInInfo.currentSignHealthValue || 0 }}个健康值</span>
           </div>
         </div>
         <ul>
