@@ -269,7 +269,7 @@ export default {
             }
         }
         > .content {
-            // min-height: calc(100vh - 245px);
+            min-height: calc(100vh - 285px);
             box-sizing: border-box;
             background: #495BFF;
             > .sign-in {
