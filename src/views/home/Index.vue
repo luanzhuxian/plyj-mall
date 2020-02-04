@@ -80,8 +80,8 @@ export default {
       dataMoonLightBox: {},
       // 820用户注册次数
       registerCountFor820: 0,
-      isReportActive: false,
-      isBookActive: false,
+      isReportShow: false,
+      isBookShow: false,
       reportId: '',
       bookId: ''
     }
@@ -89,7 +89,7 @@ export default {
   async created () {
     try {
       getReportActivity().then(({ result }) => {
-        this.isReportActive = result ? !!result.status : false
+        this.isReportShow = result ? !!result.status : false
         this.reportId = result ? result.id : ''
       })
       getBookActivity().then(({ result }) => {
@@ -97,7 +97,7 @@ export default {
         if (enable) {
           startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
         }
-        this.isBookActive = enable ? (Number(systemTime) - Number(startTime) >= 0) : false
+        this.isBookShow = enable ? (Number(systemTime) - Number(startTime) >= 0) : false
         this.bookId = enable ? activityId : ''
       })
       this.getTemplate()

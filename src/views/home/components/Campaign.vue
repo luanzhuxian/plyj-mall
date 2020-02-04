@@ -8,7 +8,7 @@
     </div>
     <ul :class="$style.campaignList">
       <router-link
-        v-if="isReportActive"
+        v-if="isReportShow"
         :class="$style.campaignListItem"
         tag="li"
         :to="{ name: 'BattlefieldReport', params: { id: reportId } }"
@@ -19,7 +19,7 @@
         <img src="https://mallcdn.youpenglai.com/static/beat-plague/0c266184-33b9-42ae-ad56-328353cb8d13.jpeg" alt="">
       </router-link>
       <router-link
-        v-if="isBookActive"
+        v-if="isBookShow"
         :class="$style.campaignListItem"
         tag="li"
         :to="{ name: 'EpidemicSignIn', params: { id: bookId } }"
@@ -41,11 +41,11 @@ export default {
     }
   },
   computed: {
-    isReportActive () {
-      return this.parent.isReportActive
+    isReportShow () {
+      return this.parent.isReportShow
     },
-    isBookActive () {
-      return this.parent.isBookActive
+    isBookShow () {
+      return this.parent.isBookShow
     },
     reportId () {
       return this.parent.reportId
