@@ -34,7 +34,7 @@
             <pl-input v-model="form.verifyCode" placeholder="请输入验证码" />
             <template v-slot:suffix>
               <get-code
-                :mobile="form.mobile"
+                :mobile="form.phoneNo"
                 :smstype="smstype.PUBLIC_USER_INFO"
                 ref="getCode"
               />
