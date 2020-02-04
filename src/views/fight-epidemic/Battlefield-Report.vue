@@ -6,7 +6,9 @@
     <div :class="$style.map" ref="map">
       <!--<img :src="epidemicMap" alt="">-->
     </div>
-    <div :class="$style.nationwide">#全国疫情#</div>
+    <div :class="$style.nationwide">
+      <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/%23%E5%85%A8%E5%9B%BD%E7%96%AB%E6%83%85%23%402x.png" alt="">
+    </div>
     <div :class="$style.count" v-if="epidemicData">
       <div>
         <p v-text="epidemicData.confirmed" style="color: #DD5D32;" />
@@ -283,12 +285,14 @@ export default {
     }
   }
   .nationwide {
-    line-height: 68px;
-    font-size: 40px;
-    font-weight: bolder;
-    color: #fff;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 68px;
     background-color: #3B7DB7;
+    > img {
+      width: 200px;
+    }
   }
   .province {
     line-height: 68px;
@@ -353,11 +357,9 @@ export default {
   .news-item {
     position: relative;
     border-radius: 20px;
-    margin-bottom: 20px;
+    padding-bottom: 22px;
     &:nth-last-of-type(1) {
-      > .timeLine {
-        display: none;
-      }
+      padding-bottom: 0;
     }
     > .timeRad {
       position: absolute;
@@ -375,7 +377,8 @@ export default {
       position: absolute;
       top: 2vw;
       left: 1.733vw;
-      bottom: -5.333vw;
+      /*bottom: -5.333vw;*/
+      bottom: 0;
       width: .533vw;
       background-color: #DDEDFA;
     }
@@ -391,7 +394,6 @@ export default {
       background-color: #f8f8f8;
       border-radius: 1.6vw;
       padding: 4.8vw 3.2vw;
-      margin-bottom: 4.8vw;
       margin-left: 6.666666666666667vw;
       box-sizing: border-box;
       > .title {
@@ -399,6 +401,7 @@ export default {
         font-size: 4.266666666666667vw;
         line-height: 5.6vw;
         font-weight: 700;
+        margin-bottom: 26px;
       }
       > .detail {
         margin-bottom: 20px;
