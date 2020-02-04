@@ -16,9 +16,11 @@
         v-else
         controls
         style="object-fit: contain;"
-        x5-playsinline webkit-playsinline
+        x5-playsinline
         x5-video-player-type="h5-page"
-        playsinline ref="livePlayBack"
+        playsinline="true"
+        webkit-playsinline="true"
+        ref="livePlayBack"
         preload="metadata"
         :src="recorded.url"
       />
@@ -457,9 +459,9 @@ export default {
           vid: channelId,
           x5: false,
           hasControl: true,
-          x5FullPage: true,
+          x5FullPage: false,
           forceH5: true,
-          useH5Page: false
+          useH5Page: true
         })
         await setWarmup({
           appId: '',
