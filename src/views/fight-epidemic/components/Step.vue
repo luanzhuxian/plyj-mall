@@ -6,9 +6,9 @@
           {{ item.dateString }}
         </div>
         <div :class="$style.content">
-          <div :class="{[$style.line]:index + 1 !== list.length,[$style.lineSuccess]:item.status}" />
-          <div :class="{[$style.icon]:true,[$style.iconSuccess]:item.status}">
-            <img v-if="item.status" src="https://mallcdn.youpenglai.com/static/beat-plague/73b1df62-f7ad-47fe-9b6c-bdab788f5021.png" alt="">
+          <div :class="{[$style.line]:index + 1 !== list.length,[$style.lineSuccess]:signInStatus(item,index)}" />
+          <div :class="{[$style.icon]:true,[$style.iconSuccess]:signInStatus(item,index)}">
+            <img v-if="signInStatus(item,index)" src="https://mallcdn.youpenglai.com/static/beat-plague/73b1df62-f7ad-47fe-9b6c-bdab788f5021.png" alt="">
             <span v-else>+{{ item.healthValue }}</span>
           </div>
         </div>
@@ -21,17 +21,17 @@
 export default {
   name: 'Step',
   created () {
-    for (let i in this.list) {
-      // 获取今天的节点
-      if (this.list[i].currentDay === 0) {
-        this.currentIndex = i
-      }
-      if ((this.list[i].currentDay === 0 && this.currentSign) || (this.list[i].currentDay < 0 && this.list[i].healthValue > 0)) {
-        this.$set(this.list[i], 'status', true)
-      } else {
-        this.$set(this.list[i], 'status', false)
-      }
-    }
+    // for (let i in this.list) {
+    //   // 获取今天的节点
+    //   if (this.list[i].currentDay === 0) {
+    //     this.currentIndex = i
+    //   }
+    //   if ((this.list[i].currentDay === 0 && this.currentSign) || (this.list[i].currentDay < 0 && this.list[i].healthValue > 0)) {
+    //     this.$set(this.list[i], 'status', true)
+    //   } else {
+    //     this.$set(this.list[i], 'status', false)
+    //   }
+    // }
   },
   mounted () {
     this.setPosition()
@@ -55,19 +55,19 @@ export default {
   },
   methods: {
     // 签到zhaungtai
-    // signInStatus ({ healthValue, currentDay, currentSign }, index) {
-    //   // currentDay 大于0是未来，0是今天
-    //   // healthValue 为0是未签到，大于0是签到
-    //   // currentSign 今天是否签到
-    //   if ((currentDay === 0 && currentSign) || (currentDay < 0 && healthValue > 0)) {
-    //     return true
-    //   }
-    //   // 获取今天的节点
-    //   if (currentDay === 0) {
-    //     this.currentIndex = index
-    //   }
-    //   return false
-    // },
+    signInStatus ({ healthValue, currentDay, currentSign }, index) {
+      // currentDay 大于0是未来，0是今天
+      // healthValue 为0是未签到，大于0是签到
+      // currentSign 今天是否签到
+      if ((currentDay === 0 && currentSign) || (currentDay < 0 && healthValue > 0)) {
+        return true
+      }
+      // 获取今天的节点
+      if (currentDay === 0) {
+        this.currentIndex = index
+      }
+      return false
+    },
     // 把今天的定到左边边
     async setPosition () {
       let positionX = this.$refs.node[this.currentIndex].offsetLeft
