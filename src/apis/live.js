@@ -98,7 +98,7 @@ export const setComeInConut = params => Instance.get(`/apis/v1/mall/live/activit
 //获取直播观看列表
 export const getLibraryList = () => Instance.get('/apis/v1/mall/live/lib/my_lookback')
 
-// 根据视频 id 获取视频信息
+// 根据直播ID从视频库获取视频详情（仅限录播）
 export const getVideoMesById = id => Instance.get(`/apis/v1/mall/live/lib/detail/${id}`)
 
 /**

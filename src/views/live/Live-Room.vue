@@ -2,7 +2,7 @@
   <div :class="$style.liveRoom" ref="liveRoom">
     <!--在线直播-->
     <div
-      v-if="videoLiveMes.type === 'live'"
+      v-if="detail.liveType === 'live'"
       ref="playerBox"
       id="player"
       :class="{
@@ -10,11 +10,18 @@
       }"
     />
     <!--视频直播-->
-    <div v-if="videoLiveMes.type === 'video'" :class="$style.playBackBox">
-      <div class="plv-live-cutOff" v-if="videoLiveMes.flag" />
-      <video v-else controls style="object-fit: contain;" x5-playsinline webkit-playsinline playsinline ref="livePlayBack">
-        <source :src="videoLiveMes.url" type="video/mp4">
-      </video>
+    <div v-if="detail.liveType === 'video'" :class="$style.playBackBox">
+      <div class="plv-live-cutOff" v-if="recorded.ended" />
+      <video
+        v-else
+        controls
+        style="object-fit: contain;"
+        x5-playsinline webkit-playsinline
+        x5-video-player-type="h5-page"
+        playsinline ref="livePlayBack"
+        preload="metadata"
+        :src="recorded.url"
+      />
     </div>
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
@@ -217,7 +224,7 @@
         <div :class="$style.posterWrap">
           <img :src="poster" alt="">
           <div>长按识别或保存二维码，分享给朋友吧！</div>
-          <pl-svg class="mt-22" name="icon-close3" width="48" fill="#fff" @click="showPoster = false" />
+          <pl-svg class="mt-22" name="icon-close" width="48" fill="#fff" @click="showPoster = false" />
         </div>
       </div>
     </transition>
@@ -268,7 +275,7 @@ export default {
       channeUserId: '',
       tab: 1,
       message: '',
-      livestartedDuration: Date.now(),
+      livestartedDuration: 0, // 直播开始时长
       maxRecords: 400, // 最大缓存的聊天记录条数
       /**
        * 聊天信息记录
@@ -288,20 +295,16 @@ export default {
       couponList: [],
       isCouponLoading: false, // 增加节流阀
       productList: [],
-      detail: {},
+      detail: {
+        liveType: 'live'
+      },
       receiveCouponIdList: [], // 已领取的优惠券id列表
-      // 视频直播信息
-      videoLiveMes: {
-        type: 'live', // 直播类型 live video
-        url: '', // 视频直播 url
-        videoLibId: '',
-        liveStartLongTime: '', // 直播开始时间
-        serviceLongTime: '', // 服务器时间
-        flag: true // 直播结束,却省图
+      // 录播视频信息
+      recorded: {
+        ended: true
       },
       socket: null,
       videoLiveTimer: null// 视频直播开播计时器
-      // emoticon
     }
   },
   computed: {
@@ -357,59 +360,92 @@ export default {
     }
   },
   methods: {
+    async getDetail () {
+      try {
+        let data = await getActiveCompleteInfo()
+        if (!data) {
+          return null
+        }
+        data.liveType = data.liveType || 'live'
+        this.livestartedDuration = data.serviceLongTime - data.liveStartLongTime
+        share({
+          appId: this.appId,
+          title: data.name,
+          desc: data.liveStartTime + ' 开始直播，快来围观哦~',
+          link: window.location.href,
+          imgUrl: data.coverImg
+        })
+        data.couponList = data.couponList || []
+        for (let coupon of data.couponList) {
+          coupon.show = false
+        }
+        if (data.couponList.length) {
+          let timer = setInterval(() => {
+            // 如果已经全部都显示了，停止定时器
+            if (!data.couponList.some(item => !item.show)) {
+              clearInterval(timer)
+            }
+            for (let coupon of data.couponList) {
+              if (coupon.show) {
+                continue
+              }
+              coupon.show = this.canShowCoupon(coupon.afterMinuteShow)
+            }
+            this.couponList = data.couponList.filter(item => item.show)
+          }, 2000)
+        }
+
+        this.productList = data.productList || []
+        this.activeId = data.id
+        this.detail = data
+        if (data.videoLibId && data.liveType === 'live') {
+          this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })
+        }
+        // 获取录播视频详情
+        if (data.liveType === 'video') {
+          await this.getVideoMesById()
+          this.controlVideo()
+        }
+        return data
+      } catch (e) {
+        throw e
+      }
+    },
     // 视频直播情况下获取视频信息
     async getVideoMesById () {
       try {
-        let mes = await getVideoMesById(this.videoLiveMes.videoLibId)
-        if (mes) {
-          this.videoLiveMes.url = mes.url
-        }
-      } catch (e) { throw e }
+        this.recorded = await getVideoMesById(this.detail.videoLibId)
+        this.recorded.ended = true // 默认已经结束
+      } catch (e) {
+        throw e
+      }
     },
     // 播放开始跳转到固定时间,且隐藏控件
     async controlVideo () {
-      const {
-        serviceLongTime,
-        liveStartLongTime
-      } = this.videoLiveMes
-      try {
-        let section = serviceLongTime - liveStartLongTime
-        // 已开播多少秒
-        let startedDuration = parseInt(section / 1000)
-        // 直播开始前半个小时内，自动刷新
-        let time = 30 * 60
-        clearInterval(this.videoLiveTimer)
-        if (startedDuration >= -time && startedDuration < 0) {
-          let times = 10 - startedDuration
-          this.videoLiveTimer = setTimeout(() => {
-            location.reload()
-          }, times * 1000)
-        }
-        // 直播时间还未结束
-        if (section > 0) {
-          this.videoLiveMes.flag = false
-          await this.$nextTick()
-          // let vid = this.$refs.livePlayBack
-          this.$refs.livePlayBack.currentTime = startedDuration
-
-          // 播放开始执行的函数
-          // let playFnc = () => {
-          //   vid.removeEventListener('play', playFnc)
-          // }
-          // vid.addEventListener('play', playFnc)
-          // 监听错误
-          // vid.addEventListener('error', _ => {
-          //   vid.src = ''
-          //   this.videoLiveMes.flag = true
-          // })
-        } else {
-          this.videoLiveMes.flag = true
-        }
-      } catch (e) { throw e }
+      let {
+        liveStartLongTime,
+        liveEndTime,
+        serviceLongTime: now
+      } = this.detail
+      liveEndTime = moment(liveEndTime).valueOf()
+      now = Number(now)
+      // 已开播时长（秒）
+      const startedDuration = parseInt(now - liveStartLongTime)
+      // 已结束时长
+      const endDuration = parseInt(liveEndTime - now)
+      // 直播还未开始的时候，等待直播开始后，刷新页面
+      if (startedDuration < 0) {
+        setTimeout(() => {
+          location.reload()
+        }, -startedDuration)
+      } else {
+        // 直播是否已结束
+        this.recorded.ended = endDuration < 0
+      }
     },
     async initPlayer () {
       // 默认在线直播
-      if (this.videoLiveMes.type && this.videoLiveMes.type === 'live') {
+      if (this.detail.liveType === 'live') {
         let { channelId, channeUserId } = this
         window.polyvObject('#player').livePlayer({
           wrap: '#player',
@@ -431,22 +467,7 @@ export default {
           channelId,
           sign: ''
         })
-      } else {
-        this.controlVideo()
       }
-      // let timer = setInterval(() => {
-      //   let video = document.querySelector('#player video')
-      //   if (video) {
-      //     // video.setAttribute('x5-video-player-fullscreen', true)
-      //     // video.setAttribute('x5-video-player-type', 'h5-page')
-      //     video.addEventListener('x5videoenterfullscreen', function (e) {
-      //       // console.log('x5videoenterfullscreen')
-      //       // video.style.width = window.screen.width + 'px'
-      //       // video.style.height = window.screen.height + 'px'
-      //     }, false)
-      //     clearInterval(timer)
-      //   }
-      // }, 500)
     },
     /* 连接聊天服务器 */
     initSocket () {
@@ -472,7 +493,7 @@ export default {
         type: 'slice' // 用户类型，可为空,teacher（教师）、assistant（助教）、manager（管理员）、slice（云课堂学员）
       }))
       this.socket = socket
-      this.chatRecords = JSON.parse(localStorage.getItem(`LIVE_MESSAGE_${this.mallDomain}`)) || []
+      this.chatRecords = [...(JSON.parse(localStorage.getItem(`LIVE_MESSAGE_${this.mallDomain}`)) || []), ...this.chatRecords]
     },
     /* 接收消息 */
     onMessage (data) {
@@ -606,55 +627,6 @@ export default {
       await this.$nextTick()
       box.scrollBy(0, scrollHeight)
     },
-    async getDetail () {
-      try {
-        let data = await getActiveCompleteInfo()
-        if (data) {
-          if (data.liveType) {
-            this.videoLiveMes.type = data.liveType
-            this.videoLiveMes.videoLibId = data.videoLibId
-            this.videoLiveMes.liveStartLongTime = Number(data.liveStartLongTime)
-            this.videoLiveMes.serviceLongTime = Number(data.serviceLongTime)
-            this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })
-            await this.getVideoMesById()
-          }
-          this.livestartedDuration = moment(data.livestartedDuration).valueOf()
-          share({
-            appId: this.appId,
-            title: data.name,
-            desc: data.livestartedDuration + ' 开始直播，快来围观哦~',
-            link: window.location.href,
-            imgUrl: data.coverImg
-          })
-          data.couponList = data.couponList || []
-          for (let coupon of data.couponList) {
-            coupon.show = false
-          }
-          if (data.couponList.length) {
-            let timer = setInterval(() => {
-              // 如果已经全部都显示了，停止定时器
-              if (!data.couponList.some(item => !item.show)) {
-                clearInterval(timer)
-              }
-              for (let coupon of data.couponList) {
-                if (coupon.show) {
-                  continue
-                }
-                coupon.show = this.canShowCoupon(coupon.afterMinuteShow)
-              }
-              this.couponList = data.couponList.filter(item => item.show)
-            }, 2000)
-          }
-
-          this.productList = data.productList || []
-          this.activeId = data.id
-          this.detail = data
-          return data
-        }
-      } catch (e) {
-        throw e
-      }
-    },
     async couponClick (id) {
       if (this.isCouponLoading) return
       try {
@@ -675,8 +647,7 @@ export default {
     // 判断优惠券是否到了显示时间
     canShowCoupon (afterMinuteShow) {
       let ms = afterMinuteShow * 60 * 1000
-      let startedDuration = this.livestartedDuration
-      return Date.now() - startedDuration >= ms
+      return this.livestartedDuration >= ms
     },
     messageBoxBlur (e) {
       window.scrollTo(0, 0)
@@ -715,7 +686,7 @@ export default {
       let {
         coverImg,
         name,
-        livestartedDuration,
+        liveStartTime,
         isPay,
         paidAmount
       } = this.detail
@@ -756,7 +727,7 @@ export default {
         createText(ctx, 200, 534, name, 44, 400, 1)
         // 绘制直播时间
         ctx.font = '24px Microsoft YaHei UI'
-        let date = moment(livestartedDuration).format('YYYY-MM-DD HH:mm') + ' 开始直播'
+        let date = moment(liveStartTime).format('YYYY-MM-DD HH:mm') + ' 开始直播'
         createText(ctx, 258, 598, date, 34)
         // 绘制价格
         if (isPay && paidAmount) {
