@@ -400,7 +400,7 @@ export default {
         this.productList = data.productList || []
         this.activeId = data.id
         this.detail = data
-        if (data.videoLibId && data.liveType === 'live') {
+        if (data.videoLibId && data.videoLibId !== '0' && data.liveType === 'live') {
           this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })
         }
         // 获取录播视频详情

@@ -377,7 +377,6 @@ export default {
       position: absolute;
       top: 2vw;
       left: 1.733vw;
-      /*bottom: -5.333vw;*/
       bottom: 0;
       width: .533vw;
       background-color: #DDEDFA;
