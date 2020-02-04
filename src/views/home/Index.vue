@@ -93,12 +93,15 @@ export default {
         this.reportId = result ? result.id : ''
       })
       getBookActivity().then(({ result }) => {
-        let { startTime, systemTime, enable, activityId } = result
+        let { startTime, endTime, systemTime, enable, activityId } = result
         if (enable) {
           startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+          endTime = moment(endTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
         }
-        this.isBookShow = enable ? (Number(systemTime) - Number(startTime) >= 0) : false
-        this.bookId = enable ? activityId : ''
+        this.isBookShow = enable
+          ? Number(systemTime) >= Number(startTime) && Number(systemTime) < Number(endTime)
+          : false
+        this.bookId = activityId
       })
       this.getTemplate()
     } catch (e) {
