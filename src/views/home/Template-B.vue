@@ -15,7 +15,7 @@
       <banner :class="$style.banner" :data="BANNER" />
       <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
       <live :class="$style.live" v-if="isLiveShow" />
-      <campaign v-if="isCampaignShow" />>
+      <campaign v-if="isCampaignShow" />
       <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
       <d12-activity :class="$style.activity" v-if="type === 4" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">

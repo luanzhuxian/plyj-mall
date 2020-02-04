@@ -24,7 +24,7 @@
         tag="li"
         :to="{ name: 'EpidemicSignIn', params: { id: bookId } }"
       >
-        <img src="https://mallcdn.youpenglai.com/static/beat-plague/6ffc3e0e-f3fe-45c2-a16c-ec2de74c3fe7.jpeg" alt="">
+        <img src="https://mallcdn.youpenglai.com/static/beat-plague/7b1cde88-0078-41c3-ae4b-a20054fa0402.jpeg" alt="">
       </router-link>
     </ul>
   </div>

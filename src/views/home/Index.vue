@@ -32,6 +32,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 import 'swiper/dist/css/swiper.css'
 import TemplateB from './Template-B.vue'
 import TemplateC from './Template-C.vue'
@@ -69,11 +70,7 @@ export default {
         YU_YUE: null,
         PIN_XUAN: null,
         CLASS: null,
-        RECOMMEND: null,
-        isReportActive: false,
-        isBookActive: false,
-        reportId: '',
-        bookId: ''
+        RECOMMEND: null
         // MODULE_A: null,
         // MODULE_B: null,
         // MODULE_C: null,
@@ -82,20 +79,28 @@ export default {
       },
       dataMoonLightBox: {},
       // 820用户注册次数
-      registerCountFor820: 0
+      registerCountFor820: 0,
+      isReportActive: false,
+      isBookActive: false,
+      reportId: '',
+      bookId: ''
     }
   },
   async created () {
     try {
-      this.getTemplate()
       getReportActivity().then(({ result }) => {
         this.isReportActive = result ? !!result.status : false
         this.reportId = result ? result.id : ''
       })
       getBookActivity().then(({ result }) => {
-        this.isBookActive = result ? result.enable : false
-        this.bookId = result ? result.activityId : ''
+        let { startTime, systemTime, enable, activityId } = result
+        if (enable) {
+          startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+        }
+        this.isBookActive = enable ? (Number(systemTime) - Number(startTime) >= 0) : false
+        this.bookId = enable ? activityId : ''
       })
+      this.getTemplate()
     } catch (e) {
       throw e
     }

@@ -14,7 +14,7 @@
       <search :class="$style.search" placeholder="搜索商品" />
       <propagate :class="$style.propagate" :data="PIN_XUAN" />
       <live :class="$style.live" v-if="isLiveShow" />
-      <campaign v-if="isCampaignShow" />>
+      <campaign v-if="isCampaignShow" />
       <activity :class="$style.activity" v-if="isNwEventShow" />
       <d12-activity :class="$style.activity" />
       <appointment :class="$style.appointment" :data="YU_YUE" :style-type="2" />
