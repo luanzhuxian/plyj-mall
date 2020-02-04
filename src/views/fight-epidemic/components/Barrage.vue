@@ -41,7 +41,7 @@ export default {
       setTimeout(() => {
         this.runnerMes = JSON.parse(JSON.stringify(this.runnerMesCopy))
         this.keepRunning()
-      }, 11000)
+      }, 14000)
     },
     // 加入跑者
     joinRunner () {
