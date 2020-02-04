@@ -104,7 +104,7 @@ export default {
             }
         }`
       let head = document.getElementsByTagName('head')[0]
-      head.innerHTML += `<style class='ani-${nowTime}' type='text/css'>${keyframes}</style>`
+      head.append(`<style class='ani-${nowTime}' type='text/css'>${keyframes}</style>`)
       runner.style.animation = `ani${nowTime} ${duration}s linear`
       // 动画结束删除dom
       runner.addEventListener('animationend', () => {
