@@ -148,7 +148,7 @@ export default {
       }
       try {
         await signUp(this.form)
-        this.$router.go(-1)
+        this.$router.push({ name: 'EpidemicSignIn', params: { activityId: this.id } })
       } catch (e) {
         throw e
       }

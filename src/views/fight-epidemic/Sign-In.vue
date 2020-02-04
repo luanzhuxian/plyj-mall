@@ -158,7 +158,7 @@ export default {
       wishList: ['身体健康平安!', '我再家中为武汉加油，向一线展示致敬!', '不给祖国添乱，宅在家中为祖国做贡献!', '家中一切平安，我与大家共同抗击疫情!']
     }
   },
-  async created () {
+  async activated () {
     try {
       this.getSignInInfo()
       this.getactivityInfo()
