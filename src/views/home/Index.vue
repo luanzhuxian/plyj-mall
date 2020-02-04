@@ -93,12 +93,13 @@ export default {
         this.reportId = result ? result.id : ''
       })
       getBookActivity().then(({ result }) => {
-        let { startTime, endTime, systemTime, enable, activityId } = result
-        if (enable) {
+        let { startTime, endTime, systemTime, status, activityId } = result
+        const isActive = status === 0
+        if (isActive) {
           startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
           endTime = moment(endTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
         }
-        this.isBookShow = enable
+        this.isBookShow = isActive
           ? Number(systemTime) >= Number(startTime) && Number(systemTime) < Number(endTime)
           : false
         this.bookId = activityId
