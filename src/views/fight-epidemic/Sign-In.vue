@@ -73,7 +73,7 @@
           <ul>
             <li>活动时间：{{ activityInfo.startTime }} ~ {{ activityInfo.endTime }}</li>
             <li>活动对象：全部会员</li>
-            <li>活动机构：某机构</li>
+            <!-- <li>活动机构：某机构</li> -->
             <li>活动奖励：获得健康值，可兑换相应礼品</li>
           </ul>
         </div>
