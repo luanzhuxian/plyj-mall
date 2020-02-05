@@ -10,7 +10,7 @@
 <script>
 import { loadImage, cutArcImage, createText, cutImageCenter, generateQrcode } from '../../../assets/js/util'
 import { mapGetters } from 'vuex'
-import moment from 'moment'
+// import moment from 'moment'
 const POSTER_BG = 'https://mallcdn.youpenglai.com/static/beat-plague/10e5dd4e-a4f4-48cf-869d-6f270bfe273f.png'
 export default {
   name: 'Poster',
@@ -22,9 +22,15 @@ export default {
   },
   props: {
     show: Boolean,
-    hasLogo: {
-      type: Number,
-      default: 0
+    posterInfo: {
+      type: Object,
+      default () {
+        return {
+          startTime: '',
+          endTime: '',
+          hasLogo: ''
+        }
+      }
     }
   },
   watch: {
@@ -57,7 +63,7 @@ export default {
         const TEXT1 = `${this.userName} 健康打卡报平安`
         const TEXT2 = '加油中国！加油武汉！'
         const TEXT3 = '共携手 抗战“疫”'
-        const TEXT4 = moment().format('YYYY.MM.DD-HH.mm')
+        const TEXT4 = `${this.posterInfo.startTime} ~ ${this.posterInfo.endTime}`
         const TEXT5 = '长按识别二维码或保存海报，分享给朋友'
         CVS.height = H
         CVS.width = W
@@ -69,7 +75,8 @@ export default {
         createText(CTX, 148, 390, TEXT2, 40, 434, 1)
         CTX.fillStyle = '#000'
         createText(CTX, 144, 806, TEXT3, 40, 280, 1)
-        createText(CTX, 144, 846, TEXT4, 40, 280, 1)
+        CTX.font = '23px Microsoft YaHei'
+        createText(CTX, 144, 846, TEXT4, 40, 320, 1)
         CTX.font = '20px Microsoft YaHei'
         createText(CTX, 44, 902, TEXT5, 28, 400, 1)
 
@@ -78,7 +85,7 @@ export default {
         let AVATAR = await loadImage(this.avatar)
         AVATAR = cutArcImage(AVATAR)
         CTX.drawImage(AVATAR, 48, 350, 80, 80)
-        if (this.hasLogo) {
+        if (this.posterInfo.hasLogo) {
           let LOGO = await loadImage(this.logoUrl)
           LOGO = cutImageCenter(LOGO, 20)
           CTX.drawImage(LOGO, 44, 806, 80, 80)

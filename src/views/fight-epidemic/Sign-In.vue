@@ -64,14 +64,14 @@
     </div>
     <div :class="$style.footer" />
     <!--海报-->
-    <Poster :show.sync="showPoster" :has-logo="activityInfo.isShow || 0" />
+    <Poster :show.sync="showPoster" :poster-info="{'startTime':activityInfo.startTime,'endTime':activityInfo.endTime,'hasLogo':activityInfo.isShow || 0}" />
     <!--活动细则-->
     <Popup :show.sync="showDetail" :hide-close-icon="false">
       <div :class="$style.detail">
         <div :class="$style.title">
           <img src="https://mallcdn.youpenglai.com/static/beat-plague/2ed59881-e182-408e-afff-4e9ee89575fa.png" alt="">
           <ul>
-            <li>活动时间：2019.05.20 ~ 2020.03.20</li>
+            <li>活动时间：{{ activityInfo.startTime }} ~ {{ activityInfo.endTime }}</li>
             <li>活动对象：全部会员</li>
             <li>活动机构：某机构</li>
             <li>活动奖励：获得健康值，可兑换相应礼品</li>
@@ -193,6 +193,8 @@ export default {
     async getactivityInfo () {
       try {
         let { result } = await getactivityInfo(this.activityId)
+        result.startTime = result.startTime.split(' ')[0]
+        result.endTime = result.endTime.split(' ')[0]
         this.activityInfo = result
       } catch (e) { throw e }
     },
