@@ -170,7 +170,7 @@ export default {
         this.loading = false
         const rules = {
           grade: [
-            { required: result.isGrade, message: '请选择年级' }
+            { required: result.isGrade, message: '请输入年级' }
           ],
           area: [
             { required: result.isArea, message: '请选择区域' }
