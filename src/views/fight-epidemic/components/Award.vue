@@ -2,7 +2,7 @@
   <!--健康值兑换-->
   <div v-if="awardList.length" :class="$style.container">
     <div :class="$style.head">
-      <h1>健康值兑换奖励</h1>
+      <div :class="$style.title">健康值兑换奖励</div>
       <div @click="$router.push({name:'MyPresent'})">
         <span>我的奖励</span>
         <pl-svg name="icon-right" fill="#ccc" width="20" />
@@ -99,6 +99,10 @@ export default {
                     font-size: 28px;
                     margin-right: 10px;
                 }
+            }
+            > .title {
+                font-size: 32px;
+                font-weight: bold;
             }
         }
         > .content {
