@@ -106,7 +106,7 @@
         <div :class="$style.description">
           <div>情系疫情 武汉加油</div>
           <div>
-            <span>连续签到{{ signInInfo.maxContinuitySignDay || 0 }}天</span>
+            <span>连续签到{{ signInInfo.currentContinuitySignDay + 1 }}天</span>
             <span>可获得{{ signInInfo.currentSignHealthValue || 0 }}个健康值</span>
           </div>
         </div>
@@ -156,7 +156,7 @@ export default {
       }, // 签到活动信息
       giftInfo: [], // 礼品信息
       barrageInfo: [], // 弹幕
-      wishList: ['我为中国加油!', '我在家中为武汉加油，向一线战士致敬!', '不给祖国添乱，宅在家中为祖国做贡献!', '家中一切平安，我与大家共同抗击疫情!']
+      wishList: ['身体健康平安，我为中国加油!', '我在家中为武汉加油，向一线战士致敬!', '不给祖国添乱，宅在家中为祖国做贡献!', '家中一切平安，我与大家共同抗击疫情!']
     }
   },
   async activated () {
