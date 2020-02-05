@@ -161,7 +161,7 @@ export default {
   },
   async activated () {
     try {
-      this.getSignInInfo()
+      await this.getSignInInfo()
       this.getactivityInfo()
       this.getGiftInfo()
       this.getBarrage()
@@ -183,10 +183,10 @@ export default {
       try {
         let { result } = await getSignInInfo(this.activityId)
         // 是否已经报名
-        this.signInInfo = result
         if (!result.isRegister) {
           this.$router.replace({ name: 'EpidemicSignUp', params: { id: this.activityId } })
         }
+        this.signInInfo = result
       } catch (e) { throw e }
     },
     // 获取签到活动信息
