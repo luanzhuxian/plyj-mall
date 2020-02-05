@@ -79,7 +79,7 @@ export default {
             // flex-basis: 100%;
             > .description {
                 text-align: center;
-                margin-bottom: 16px;
+                margin-bottom: 20px;
             }
             > .content {
                 display: flex;

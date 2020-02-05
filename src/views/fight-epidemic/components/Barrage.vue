@@ -139,7 +139,7 @@ export default {
             position: relative;
             margin: 26px 0;
             height: 92px;
-            overflow: hidden;
+            overflow-x: hidden;
             > div {
                 display: flex;
                 position: absolute;

@@ -270,7 +270,7 @@ export default {
         > .head {
             position: relative;
             height: 245px;
-            background: url(https://mallcdn.youpenglai.com/static/beat-plague/7fc4ca52-a4f7-4a5d-a7ab-b8ed3c383aac.png) no-repeat -1px center;
+            background: url(https://mallcdn.youpenglai.com/static/beat-plague/341c23c9-c269-47eb-bc4d-7e1943f28306.png) no-repeat -1px center;
             background-size: 101%;
             > div {
                 position: absolute;
