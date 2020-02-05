@@ -1,10 +1,11 @@
 <template>
-  <div ref="container" class="barrage-container">
-    <div class="runway" v-for="item in runwayNum" :key="item" />
+  <div ref="container" :class="$style.barrageContainer" v-if="list.length">
+    <div :class="$style.barrageList" ref="wrap" />
   </div>
 </template>
 
 <script>
+import { promise } from '../../../assets/js/util'
 export default {
   name: 'Barrage',
   props: {
@@ -17,158 +18,130 @@ export default {
     }
   },
   data () {
+    this.index = 0 // 子弹位置
+    this.taoValueIndex = 0
+    this.reloadSpeed = Math.random() * 100 + 1801 // 装填速度，装一发，发射一次
     return {
-      runwayNum: 2,
-      runwayList: [],
-      duration: 10, // 移动完毕时长
-      runnerMes: [],
-      runnerMesCopy: []
+      /**
+       * 弹夹，存放单个弹幕对象
+       * {
+       *   name,
+       *   signinDays,
+       *   content,
+       *   userImg,
+       *   speed
+       * }
+       */
+      magazine: []
+    }
+  },
+  computed: {
+    wrap () {
+      return this.$refs.wrap
     }
   },
   async mounted () {
-    this.runnerMes = JSON.parse(JSON.stringify(this.list))
-    this.runnerMesCopy = JSON.parse(JSON.stringify(this.runnerMes))
-    await this.getRunway()
-    this.running()
-    // 拷贝获取的弹幕信息
-    // 不断注入弹幕,
-    this.keepRunning()
-    this.joinRunner()
+    if (this.list.length) {
+      this.fire()
+    }
   },
   methods: {
-    // 作为真实弹幕逻辑，把之前的弹幕信息copy当作新弹幕导入
-    keepRunning () {
-      setTimeout(() => {
-        this.runnerMes = JSON.parse(JSON.stringify(this.list))
-        this.runnerMesCopy = JSON.parse(JSON.stringify(this.runnerMes))
-        this.runnerMes = JSON.parse(JSON.stringify(this.runnerMesCopy))
-        this.keepRunning()
-      }, 15000)
-    },
-    // 加入跑者
-    joinRunner () {
-      setTimeout(() => {
-        this.running()
-        this.joinRunner()
-      }, 11000)
-    },
-    // 获得弹幕跑道
-    async getRunway () {
-      await this.$nextTick()
-      let barrageList = this.$refs.container.getElementsByClassName('runway')
-      for (let el of barrageList) {
-        this.runwayList.push({
-          el,
-          status: true, // 跑道是否允许跑步
-          runner: []
-        })
+    // 开火！
+    async fire () {
+      let info = this.list[this.index]
+      if (!info) {
+        this.index = 0
+        info = this.list[this.index]
       }
-      // 如果只有一条弹幕信息，关闭其他跑道
-      if (this.runnerMes.length === 1) {
-        this.runwayList[1].status = false
-      }
+      this.wrap.appendChild(this.createBullet(info))
+      await promise.timeout(this.reloadSpeed)
+      this.reloadSpeed = Math.random() * 100 + 1801
+      this.index++
+      this.fire()
     },
-    // 准备跑步
-    running () {
-      // 先跑空赛道
-      for (let runway of this.runwayList) {
-        if (!runway.runner.length) {
-          this.createRunner(runway, this.runnerMes)
-        }
-      }
+    // 生产子弹
+    createBullet (info) {
+      const topValue = [0, 100]
+      const $style = this.$style
+      const speed = Number.parseInt(Math.random() * 3 + 6) + 's' // 速度是 3 ~ 6
+      const top = topValue[this.taoValueIndex] / 7.5 + 'vw' // 速度是 3 ~ 6
+      this.taoValueIndex = this.taoValueIndex === 0 ? 1 : 0
+      const itemHtml = `
+      <div
+        class="${$style.item}"
+        style="--speed: ${speed}; --top: ${top};"
+      >
+        <img src="${info.userImg}" alt="">
+        <div class="${$style.right}">
+          <div class="${$style.name}">
+            ${info.name} 抗击疫情第${info.signinDays}天
+          </div>
+          <div class="${$style.slogn}">
+             ${info.content}
+           </div>
+        </div>
+      </div>`
+      let wrap = document.createElement('div')
+      wrap.innerHTML = itemHtml
+      let item = wrap.querySelector('.' + $style.item)
+      item.addEventListener('animationend', this.animationend)
+      return item
     },
-    // 创造跑者
-    createRunner (runway, runnerMes) {
-      if (!runnerMes.length || !runway.status) return
-      let width = runway.el.offsetWidth
-      let startPoint = runway.el.offsetLeft + width
-      let duration = this.duration
-      let runner = document.createElement('div')
-      runner.style.position = 'absolute'
-      runner.style.top = '0px'
-      runner.style.left = `${startPoint}px`
-      let currentRunnerMes = runnerMes.shift()
-      currentRunnerMes.name = currentRunnerMes.name.substring(0, currentRunnerMes.name.length - 1) + '*'
-      runner.innerHTML = `<img src=${currentRunnerMes.userImg}><div><div>${currentRunnerMes.name} 抗击疫情第${currentRunnerMes.signinDays}天</div><div>${currentRunnerMes.content}</div></div>`
-      runway.el.appendChild(runner)
-      runway.runner.push(runner)
-      runway.status = false
-      let runnerWidth = runner.offsetWidth
-      // 跑者速度
-      let speed = (width + runnerWidth) / duration
-      let nowTime = Date.now()
-      let keyframes = `
-        @keyframes ani${nowTime}{
-            form{
-                left:${startPoint}px;
-            }
-            to{
-                left:${(-runnerWidth)}px;
-            }
-        }`
-      let head = document.getElementsByTagName('head')[0]
-      let styleNode = document.createElement('style')
-      styleNode.type = 'text/css'
-      styleNode.innerHTML = keyframes
-      head.append(styleNode)
-      runner.style.animation = `ani${nowTime} ${duration}s linear`
-      // 动画结束删除dom
-      runner.addEventListener('animationend', () => {
-        try {
-          runner.remove()
-          runway.runner.shift()
-          styleNode.remove()
-        } catch (e) { throw e }
-      })
-      // 完全身体出现时间,叫下一个
-      let time = (runnerWidth / speed).toFixed(2)
-      setTimeout(() => {
-        runway.status = true
-        if (this.runnerMes.length) {
-          this.createRunner(runway, this.runnerMes)
-        }
-      }, (time * 1000) + 1500)
+    animationend (e) {
+      this.wrap.removeChild(e.target)
     }
   }
 }
 </script>
 
-<style lang='scss'>
-    .barrage-container {
-        > .runway {
-            position: relative;
-            margin: 26px 0;
-            height: 92px;
-            overflow-x: hidden;
-            > div {
-                display: flex;
-                position: absolute;
-                align-items: center;
-                padding: 12px;
-                box-sizing: border-box;
-                border-radius: 52px;
-                background: rgba(0,0,0,0.2);
-                white-space: nowrap;
-                > img {
-                    margin-right: 10px;
-                    width: 64px;
-                    height: 64px;
-                    border-radius: 50%;
-                }
-                > div {
-                    font-size: 24px;
-                    > div {
-                        color: #b3bbfd;
-                    }
-                    > div:nth-of-type(2) {
-                        margin-top: 6px;
-                        color: #dde1f9;
-                    }
-                }
-            }
+<style module lang='scss'>
+  .barrage-container {
+    padding: 26px 0;
+    box-sizing: border-box;
+  }
+  .barrage-list {
+    position: relative;
+    height: 184px;
+    overflow: hidden;
+    box-sizing: border-box;
+    > .item {
+      position: absolute;
+      right: 0;
+      top: var(--top);
+      display: inline-flex;
+      align-items: center;
+      height: 84px;
+      padding: 0 10px;
+      background-color: rgba(255, 255, 255, .2);
+      border-radius: 42px;
+      transform: translateX(100%);
+      animation: moving var(--speed) linear;
+      > img {
+        width: 64px;
+        height: 64px;
+        border-radius: 32px;
+        object-fit: cover;
+      }
+      > .right {
+        display: inline-flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 64px;
+        margin-left: 10px;
+        > .name {
+          font-size: 24px;
+          color: rgba(255, 255, 255, .6);
         }
-        > .runway:nth-last-of-type(1) {
-            margin-bottom: 0;
+        > .slogn {
+          font-size: 24px;
+          color: #fff;
         }
+      }
     }
+  }
+  @keyframes moving {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-200%); }
+  }
 </style>
