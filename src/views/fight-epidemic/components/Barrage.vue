@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" class="container">
+  <div ref="container" class="barrage-container">
     <div class="runway" v-for="item in runwayNum" :key="item" />
   </div>
 </template>
@@ -110,7 +110,6 @@ export default {
       styleNode.type = 'text/css'
       styleNode.innerHTML = keyframes
       head.append(styleNode)
-      //   head.innerHTML += `<style class='ani-${nowTime}' type='text/css'>${keyframes}</style>`
       runner.style.animation = `ani${nowTime} ${duration}s linear`
       // 动画结束删除dom
       runner.addEventListener('animationend', () => {
@@ -121,7 +120,7 @@ export default {
         } catch (e) { throw e }
       })
       // 完全身体出现时间,叫下一个
-      let time = (runnerWidth / speed).toFixed(2)
+      let time = (runnerWidth / speed).toFixed(2) + 1
       setTimeout(() => {
         runway.status = true
         if (this.runnerMes.length) {
@@ -134,11 +133,12 @@ export default {
 </script>
 
 <style lang='scss'>
-    .container {
+    .barrage-container {
         > .runway {
             position: relative;
             margin: 26px 0;
             height: 84px;
+            overflow: hidden;
             > div {
                 position: absolute;
                 padding: 12px;

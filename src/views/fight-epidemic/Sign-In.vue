@@ -221,7 +221,11 @@ export default {
           content
         })
         if (status === 200) {
-          this.$success('健康打卡成功')
+          if (this.signInInfo.currentContinuitySignDay > 0) {
+            this.$success('今日已打卡，明日再来报平安')
+          } else {
+            this.$success('健康打卡成功')
+          }
           this.shwoSignIn = false
           this.getSignInInfo()
           this.getactivityInfo()
