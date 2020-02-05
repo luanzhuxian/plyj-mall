@@ -39,6 +39,8 @@ export default {
     // 作为真实弹幕逻辑，把之前的弹幕信息copy当作新弹幕导入
     keepRunning () {
       setTimeout(() => {
+        this.runnerMes = this.list
+        this.runnerMesCopy = JSON.parse(JSON.stringify(this.runnerMes))
         this.runnerMes = JSON.parse(JSON.stringify(this.runnerMesCopy))
         this.keepRunning()
       }, 15000)
