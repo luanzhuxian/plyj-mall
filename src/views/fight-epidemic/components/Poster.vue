@@ -28,7 +28,8 @@ export default {
         return {
           startTime: '',
           endTime: '',
-          hasLogo: ''
+          hasLogo: '',
+          logoUrl: ''
         }
       }
     }
@@ -86,7 +87,7 @@ export default {
         AVATAR = cutArcImage(AVATAR)
         CTX.drawImage(AVATAR, 48, 350, 80, 80)
         if (this.posterInfo.hasLogo) {
-          let LOGO = await loadImage(this.logoUrl)
+          let LOGO = await loadImage(this.posterInfo.logoUrl)
           LOGO = cutImageCenter(LOGO, 20)
           CTX.drawImage(LOGO, 44, 806, 80, 80)
         }

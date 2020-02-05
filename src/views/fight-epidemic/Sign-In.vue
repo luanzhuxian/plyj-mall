@@ -64,7 +64,15 @@
     </div>
     <div :class="$style.footer" />
     <!--海报-->
-    <Poster :show.sync="showPoster" :poster-info="{'startTime':activityInfo.startTime,'endTime':activityInfo.endTime,'hasLogo':activityInfo.isShow || 0}" />
+    <Poster
+      :show.sync="showPoster"
+      :poster-info="{
+        'startTime':activityInfo.startTime,
+        'endTime':activityInfo.endTime,
+        'hasLogo':activityInfo.isShow || 0,
+        'logoUrl':activityInfo.logoUrl
+      }"
+    />
     <!--活动细则-->
     <Popup :show.sync="showDetail" :hide-close-icon="false">
       <div :class="$style.detail">
@@ -225,11 +233,7 @@ export default {
           content
         })
         if (status === 200) {
-          if (this.signInInfo.currentContinuitySignDay > 0) {
-            this.$success('今日已打卡，明日再来报平安')
-          } else {
-            this.$success('健康打卡成功')
-          }
+          this.$success('健康打卡成功')
           this.shwoSignIn = false
           this.getSignInInfo()
           this.getactivityInfo()
