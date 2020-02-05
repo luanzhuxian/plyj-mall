@@ -6,7 +6,8 @@
       [$style.skinYuanDan]: skinId === 2,
       [$style.skinNewYear]: skinId === 3,
       [$style.skinXiaoNian]: skinId === 4,
-      [$style.skinYuanXiao]: skinId === 5
+      [$style.skinYuanXiao]: skinId === 5,
+      [$style.skinCampaign]: skinId === 99
     }"
   >
     <div :class="$style.container">
@@ -14,6 +15,7 @@
       <banner :class="$style.banner" :data="BANNER" />
       <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
       <live :class="$style.live" v-if="isLiveShow" />
+      <campaign v-if="isCampaignShow" />
       <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
       <d12-activity :class="$style.activity" v-if="type === 4" />
       <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
@@ -78,6 +80,7 @@ import BestRecommend from './components/Best-Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
 import SkinTitle from './components/Skin-Title.vue'
+import Campaign from './components/Campaign'
 
 export default {
   name: 'HomeTemplateB',
@@ -94,7 +97,8 @@ export default {
     BestRecommend,
     Appointment,
     Propagate,
-    SkinTitle
+    SkinTitle,
+    Campaign
   },
   props: {
     type: {
@@ -144,6 +148,9 @@ export default {
     },
     isNwEventShow () {
       return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
+    },
+    isCampaignShow () {
+      return this.parent.isReportShow || this.parent.isBookShow
     }
   }
 }

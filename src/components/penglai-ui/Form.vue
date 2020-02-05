@@ -22,11 +22,17 @@ export default {
     },
     align: {
       type: String,
-      default: ''
+      default: null
     },
     labelWidth: {
       type: [String, Number],
       default: ''
+    },
+    labelStyle: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   activated () {

@@ -1,6 +1,15 @@
 <template>
   <div :class="$style.video">
-    <img :class="$style.cover" :src="`${url}?x-oss-process=video/snapshot,t_10000,m_fast`" alt="">
+    <img
+      :class="$style.cover"
+      :src="`${url}?x-oss-process=video/snapshot,t_10000,m_fast`"
+      :style="{
+        width: width / 7.5 + 'vw',
+        height: height / 7.5 + 'vw',
+        borderRadius: radius / 7.5 + 'vw'
+      }"
+      alt=""
+    >
     <img :class="$style.play" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/play.png" alt="" @click="play">
     <div
       v-if="isPlay"
@@ -43,6 +52,18 @@ export default {
     url: {
       type: String,
       default: ''
+    },
+    radius: {
+      type: Number,
+      default: 20
+    },
+    width: {
+      type: Number,
+      default: 702
+    },
+    height: {
+      type: Number,
+      default: 356
     }
   },
   methods: {
@@ -71,10 +92,7 @@ export default {
   .video {
     position: relative;
     > .cover {
-      width: 702px;
-      height: 356px;
       object-fit: cover;
-      border-radius: 20px;
     }
     > .play {
       position: absolute;

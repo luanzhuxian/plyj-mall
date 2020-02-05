@@ -6,13 +6,15 @@
       [$style.skinYuanDan]: skinId === 2,
       [$style.skinNewYear]: skinId === 3,
       [$style.skinXiaoNian]: skinId === 4,
-      [$style.skinYuanXiao]: skinId === 5
+      [$style.skinYuanXiao]: skinId === 5,
+      [$style.skinCampaign]: skinId === 99
     }"
   >
     <div :class="$style.container">
       <search :class="$style.search" placeholder="搜索商品" />
       <propagate :class="$style.propagate" :data="PIN_XUAN" />
       <live :class="$style.live" v-if="isLiveShow" />
+      <campaign v-if="isCampaignShow" />
       <activity :class="$style.activity" v-if="isNwEventShow" />
       <d12-activity :class="$style.activity" />
       <appointment :class="$style.appointment" :data="YU_YUE" :style-type="2" />
@@ -74,6 +76,7 @@ import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate.vue'
 import Teachers from './components/Teachers'
 import SkinTitle from './components/Skin-Title.vue'
+import Campaign from './components/Campaign'
 
 export default {
   name: 'HomeTemplateC',
@@ -89,7 +92,8 @@ export default {
     Appointment,
     Propagate,
     Teachers,
-    SkinTitle
+    SkinTitle,
+    Campaign
   },
   props: {
     type: {
@@ -136,6 +140,9 @@ export default {
     },
     isNwEventShow () {
       return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
+    },
+    isCampaignShow () {
+      return this.parent.isReportShow || this.parent.isBookShow
     }
   }
 }

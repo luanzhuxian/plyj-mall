@@ -6,7 +6,8 @@
       [$style.skinYuanDan]: skinId === 2,
       [$style.skinNewYear]: skinId === 3,
       [$style.skinXiaoNian]: skinId === 4,
-      [$style.skinYuanXiao]: skinId === 5
+      [$style.skinYuanXiao]: skinId === 5,
+      [$style.skinCampaign]: skinId === 99
     }"
   >
     <!-- 首页 -->
@@ -18,17 +19,18 @@
       tag="div"
       :to="{ name: 'Home' }"
     >
+
+      <template v-if="isSkinShow">
+        <img :src="homeActive ? skinMap[skinId].homeActive : skinMap[skinId].home">
+        <div :class="$style.tabName">首页</div>
+      </template>
       <pl-svg
-        v-if="skinId === 0"
+        v-else-if="skinId !== null"
         :name="homeActive ? 'icon-find-active' : 'icon-find'"
         width="44"
         height="68"
         :key="0"
       />
-      <template v-if="~[1, 2, 3, 4, 5].indexOf(skinId)">
-        <img :src="homeActive ? skinMap[skinId].homeActive : skinMap[skinId].home">
-        <div :class="$style.tabName">首页</div>
-      </template>
     </router-link>
     <!-- 分类 -->
     <router-link
@@ -39,17 +41,17 @@
       tag="div"
       :to="{ name: 'Classify' }"
     >
+      <template v-if="isSkinShow">
+        <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
+        <div :class="$style.tabName">分类</div>
+      </template>
       <pl-svg
-        v-if="skinId === 0"
+        v-else-if="skinId !== null"
         :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
         width="60"
         height="72"
         :key="1"
       />
-      <template v-if="~[1, 2, 3, 4, 5].indexOf(skinId)">
-        <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
-        <div :class="$style.tabName">分类</div>
-      </template>
     </router-link>
     <!-- 活动 -->
     <router-link
@@ -78,17 +80,17 @@
       tag="div"
       :to="{ name: 'ShoppingCart' }"
     >
+      <template v-if="isSkinShow">
+        <img :src="shoppingChartActive ? skinMap[skinId].shoppingChartActive : skinMap[skinId].shoppingChart">
+        <div :class="$style.tabName">购物车</div>
+      </template>
       <pl-svg
-        v-if="skinId === 0"
+        v-else-if="skinId !== null"
         width="64"
         height="76"
         :key="2"
         :name="shoppingChartActive ? 'icon-cart-active' : 'icon-cart'"
       />
-      <template v-if="~[1, 2, 3, 4, 5].indexOf(skinId)">
-        <img :src="shoppingChartActive ? skinMap[skinId].shoppingChartActive : skinMap[skinId].shoppingChart">
-        <div :class="$style.tabName">购物车</div>
-      </template>
     </router-link>
     <!-- 我的 -->
     <router-link
@@ -99,17 +101,17 @@
       tag="div"
       :to="{ name: 'My' }"
     >
+      <template v-if="isSkinShow">
+        <img :src="myActive ? skinMap[skinId].myActive : skinMap[skinId].my">
+        <div :class="$style.tabName">我的</div>
+      </template>
       <pl-svg
-        v-if="skinId === 0"
+        v-else-if="skinId !== null"
         :name="myActive ? 'icon-my-active' : 'icon-my'"
         width="44"
         height="74"
         :key="3"
       />
-      <template v-if="~[1, 2, 3, 4, 5].indexOf(skinId)">
-        <img :src="myActive ? skinMap[skinId].myActive : skinMap[skinId].my">
-        <div :class="$style.tabName">我的</div>
-      </template>
       <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
     </router-link>
   </nav>
@@ -181,6 +183,16 @@ export default {
           shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/a0597aa9-d126-4c7b-8fad-999d52c9dffd.png',
           my: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/6cee4a1f-4a99-4199-88d1-0746f0597d1d.png',
           myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/8638a408-644e-4ab6-962a-3338aac2b09a.png'
+        },
+        '99': {
+          home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
+          homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
+          classify: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0961a842-6724-45d2-b804-33bf81278b54.png',
+          classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0961a842-6724-45d2-b804-33bf81278b54.png',
+          shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/f3f17e23-c82d-405f-848f-e7ba14b49d43.png',
+          shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/f3f17e23-c82d-405f-848f-e7ba14b49d43.png',
+          my: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/8a291b28-fb88-4292-968b-c1f02de91e03.png',
+          myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/8a291b28-fb88-4292-968b-c1f02de91e03.png'
         }
       }
     }
@@ -198,6 +210,9 @@ export default {
     },
     myActive: function () {
       return this.$route.matched.some(val => val.name === 'My')
+    },
+    isSkinShow () {
+      return ~[1, 2, 3, 4, 5, 99].indexOf(this.skinId)
     }
   },
   watch: {
@@ -268,7 +283,8 @@ export default {
 .skin-yuan-dan,
 .skin-new-year,
 .skin-xiao-nian,
-.skin-yuan-xiao {
+.skin-yuan-xiao,
+.skin-campaign {
   .route {
     box-sizing: border-box;
     // justify-content: flex-end !important;
@@ -310,6 +326,18 @@ export default {
     }
     &.active > .tab-name {
       color: #ffffff;
+    }
+  }
+}
+.skin-campaign {
+  background: url("https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0ab57391-3717-43c2-bc47-549f7b1a94a3.png") no-repeat center;
+  background-size: 100%;
+  .route {
+    .tab-name {
+      color: #ffffff;
+    }
+    &.active > .tab-name {
+      color: #ad0f02;
     }
   }
 }

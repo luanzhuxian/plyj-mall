@@ -148,7 +148,6 @@ export default {
 </script>
 
 <style module lang="scss">
-  .hot-item {}
   .pro-item {
     background-color: #fff;
     border-radius: 20px;

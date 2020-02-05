@@ -10,6 +10,8 @@
       <pl-svg
         :class="{ focus }"
         :name="prefixIcon"
+        fill="#ccc"
+        width="24"
       />
     </div>
     <div
@@ -59,7 +61,7 @@
         }"
       >
       <pl-svg
-        v-if="!disabled && align !== 'right' && type.indexOf('password') === -1"
+        v-if="!disabled && type.indexOf('password') === -1"
         v-show="value"
         class="pl-input_clear"
         fill="#ccc"
@@ -90,6 +92,8 @@
       <pl-svg
         :class="{ focus }"
         :name="suffixIcon"
+        fill="#ccc"
+        width="24"
       />
     </div>
   </div>
@@ -147,7 +151,7 @@ export default {
     },
     align: {
       type: String,
-      default: 'left'
+      default: ''
     },
     disabled: Boolean,
     readonly: Boolean,
@@ -302,10 +306,11 @@ export default {
         width: 40px;
         height: 40px;
         padding-right: 20px;
+        margin-left: 10px;
       }
     }
     .pl-input_prefixicon, .pl-input_suffixicon {
-      margin-right: 27px;
+      margin-right: 10px;
       svg {
         width: 36px;
         height: 36px;
@@ -320,7 +325,7 @@ export default {
       }
     }
     .pl-input_suffixicon {
-      margin-left: 27px;
+      margin-left: 10px;
       margin-right: 0;
     }
   }

@@ -172,7 +172,7 @@ export default {
   }
   .pro {
     width: 340px;
-    height: 413px;
+    height: 420px;
     background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/product-item.png") no-repeat center center;
     background-size: 115%;
     border-radius: 20px;

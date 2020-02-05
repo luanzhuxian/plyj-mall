@@ -32,6 +32,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 import 'swiper/dist/css/swiper.css'
 import TemplateB from './Template-B.vue'
 import TemplateC from './Template-C.vue'
@@ -40,6 +41,7 @@ import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntr
 import NewYearNewcomersHomeEntry from '../new-year/newcomers/NewcomersHomeEntry.vue'
 import SplitBurse from './../../components/common/Split-Burse.vue'
 import { getTemplate } from '../../apis/home'
+import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
 
 export default {
   name: 'Home',
@@ -77,11 +79,31 @@ export default {
       },
       dataMoonLightBox: {},
       // 820用户注册次数
-      registerCountFor820: 0
+      registerCountFor820: 0,
+      isReportShow: false,
+      isBookShow: false,
+      reportId: '',
+      bookId: ''
     }
   },
   async created () {
     try {
+      getReportActivity().then(({ result }) => {
+        this.isReportShow = result ? !!result.status : false
+        this.reportId = result ? result.id : ''
+      })
+      getBookActivity().then(({ result }) => {
+        let { startTime, endTime, systemTime, status, activityId } = result
+        const isActive = status === 0
+        if (isActive) {
+          startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+          endTime = moment(endTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+        }
+        this.isBookShow = isActive
+          ? Number(systemTime) >= Number(startTime) && Number(systemTime) < Number(endTime)
+          : false
+        this.bookId = activityId
+      })
       this.getTemplate()
     } catch (e) {
       throw e
