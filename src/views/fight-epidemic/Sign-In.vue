@@ -379,7 +379,7 @@ export default {
                                 padding-right: 10px;
                                 border-right: 1px solid #6AE1FC;
                                 > p:nth-of-type(2) {
-                                    margin: 10px 0;
+                                    margin: 8px 0;
                                     white-space: nowrap;
                                 }
                             }

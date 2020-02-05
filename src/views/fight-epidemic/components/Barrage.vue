@@ -128,7 +128,7 @@ export default {
         flex-direction: column;
         justify-content: space-between;
         height: 64px;
-        margin-left: 10px;
+        margin: 0 10px;
         > .name {
           font-size: 24px;
           color: rgba(255, 255, 255, .6);
