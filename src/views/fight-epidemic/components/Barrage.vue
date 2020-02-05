@@ -52,8 +52,11 @@ export default {
       if (!info) {
         this.index = 0
         info = this.list[this.index]
+        // 等待全部弹幕都出去以后，再开始下一波
+        await promise.timeout(Number.parseInt(this.magazine.slice(-1)[0].speed) * 1000 - this.reloadSpeed - 1000)
       }
       this.wrap.appendChild(this.createBullet(info))
+      this.magazine[this.index] = info
       await promise.timeout(this.reloadSpeed)
       this.reloadSpeed = Math.random() * 100 + 1801
       this.index++
@@ -63,7 +66,7 @@ export default {
     createBullet (info) {
       const topValue = [0, 100]
       const $style = this.$style
-      const speed = Number.parseInt(Math.random() * 3 + 6) + 's' // 速度是 3 ~ 6
+      const speed = info.speed = Number.parseInt(Math.random() * 3 + 6) + 's' // 速度是 3 ~ 6
       const top = topValue[this.taoValueIndex] / 7.5 + 'vw' // 速度是 3 ~ 6
       this.taoValueIndex = this.taoValueIndex === 0 ? 1 : 0
       const itemHtml = `
