@@ -1,6 +1,8 @@
 <template>
-  <div ref="container" :class="$style.barrageContainer" v-if="list.length">
-    <div :class="$style.barrageList" ref="wrap" />
+  <div ref="container" :class="$style.container">
+    <div :class="$style.wrap" v-if="list.length">
+      <div :class="$style.barrageList" ref="wrap" />
+    </div>
   </div>
 </template>
 
@@ -33,6 +35,20 @@ export default {
        * }
        */
       magazine: []
+    }
+  },
+  watch: {
+    async list (val) {
+      if (val.length === 1) {
+        this.index = 0 // 子弹位置
+        this.taoValueIndex = 0
+        this.reloadSpeed = Math.random() * 100 + 1801 // 装填速度，装一发，发射一次
+        this.magazine = []
+        await this.$nextTick()
+        this.fire()
+      } else if (val.length > 1) {
+        this.index++
+      }
     }
   },
   computed: {
@@ -69,6 +85,7 @@ export default {
       const speed = info.speed = Number.parseInt(Math.random() * 3 + 6) + 's' // 速度是 3 ~ 6
       const top = topValue[this.taoValueIndex] / 7.5 + 'vw' // 速度是 3 ~ 6
       this.taoValueIndex = this.taoValueIndex === 0 ? 1 : 0
+      info.name = this.formatName(info.name)
       const itemHtml = `
       <div
         class="${$style.item}"
@@ -92,14 +109,23 @@ export default {
     },
     animationend (e) {
       this.wrap.removeChild(e.target)
+    },
+    formatName (name) {
+      if (name.length <= 1) {
+        return '*'
+      } else {
+        return `${name[0]}${'*'.repeat(name.length - 1)}`
+      }
     }
   }
 }
 </script>
 
 <style module lang='scss'>
-  .barrage-container {
+  .container {
     padding: 26px 0;
+  }
+  .wrap {
     box-sizing: border-box;
   }
   .barrage-list {
