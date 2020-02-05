@@ -138,7 +138,7 @@ export default {
         > .runway {
             position: relative;
             margin: 26px 0;
-            height: 90px;
+            height: 92px;
             overflow: hidden;
             > div {
                 display: flex;
@@ -161,7 +161,7 @@ export default {
                         color: #b3bbfd;
                     }
                     > div:nth-of-type(2) {
-                        margin-top: 12px;
+                        margin-top: 6px;
                         color: #dde1f9;
                     }
                 }

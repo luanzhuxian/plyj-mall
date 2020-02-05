@@ -161,10 +161,12 @@ export default {
   },
   async activated () {
     try {
-      await this.getSignInInfo()
-      this.getactivityInfo()
-      this.getGiftInfo()
-      this.getBarrage()
+      let flag = await this.getSignInInfo()
+      if (flag) {
+        this.getactivityInfo()
+        this.getGiftInfo()
+        this.getBarrage()
+      }
       // 加载签到的背景图
       let img = new Image()
       img.src = 'https://mallcdn.youpenglai.com/static/beat-plague/201584d4-4031-4262-ab58-5b9026311be5.png'
@@ -185,8 +187,10 @@ export default {
         // 是否已经报名
         if (!result.isRegister) {
           this.$router.replace({ name: 'EpidemicSignUp', params: { id: this.activityId } })
+          return false
         }
         this.signInInfo = result
+        return true
       } catch (e) { throw e }
     },
     // 获取签到活动信息
