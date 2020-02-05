@@ -15,7 +15,7 @@ export default [
     props: true,
     component: () => import('../views/fight-epidemic/Sign-Up.vue'),
     meta: {
-      title: '共携手，抗战“疫”'
+      title: '全民来抗“疫”'
     }
   },
   // 签到首页

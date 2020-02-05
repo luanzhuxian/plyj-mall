@@ -24,9 +24,9 @@
             <p>{{ item.healthValue }}个健康值可兑换</p>
             <div :class="{
                    [$style.awardButton]:true,
-                   [$style.buttonCan]:item.reedemStatus === 0,
-                   [$style.buttonFinish]:item.reedemStatus === 1,
-                   [$style.buttonEnd]:item.reedemStatus === 2,
+                   [$style.awardCan]:item.reedemStatus === 0,
+                   [$style.awardFinish]:item.reedemStatus === 1,
+                   [$style.awardEnd]:item.reedemStatus === 2,
                  }"
                  @click="getAward(item)"
             >
@@ -197,7 +197,7 @@ export default {
         text-align: center;
         color: #FFFFFF;
     }
-    .button-can {
+    .award-can {
         background: #FBA229;
     }
     .award-finish {

@@ -42,7 +42,7 @@
               <div>
                 <p>已连续</p>
                 <p>抗击疫情</p>
-                <p>{{ signInInfo.maxContinuitySignDay || 0 }}天</p>
+                <p>{{ signInInfo.currentContinuitySignDay || 0 }}天</p>
               </div>
               <div>
                 <Step v-if="signInInfo.everyDayInfos.length" :list="signInInfo.everyDayInfos" :current-sign="signInInfo.currentSign" />
@@ -59,7 +59,7 @@
 
       <!--健康值兑换-->
       <div :class="$style.award">
-        <Award @success="getGiftInfo" :award-list="giftInfo" />
+        <Award @success="refreshMessage" :award-list="giftInfo" />
       </div>
     </div>
     <div :class="$style.footer" />
@@ -156,7 +156,7 @@ export default {
       }, // 签到活动信息
       giftInfo: [], // 礼品信息
       barrageInfo: [], // 弹幕
-      wishList: ['身体健康平安!', '我再家中为武汉加油，向一线展示致敬!', '不给祖国添乱，宅在家中为祖国做贡献!', '家中一切平安，我与大家共同抗击疫情!']
+      wishList: ['我为中国加油!', '我在家中为武汉加油，向一线战士致敬!', '不给祖国添乱，宅在家中为祖国做贡献!', '家中一切平安，我与大家共同抗击疫情!']
     }
   },
   async activated () {
@@ -171,6 +171,13 @@ export default {
     } catch (e) { throw e }
   },
   methods: {
+    refreshMessage () {
+      try {
+        this.getSignInInfo()
+        this.getactivityInfo()
+        this.getGiftInfo()
+      } catch (e) { throw e }
+    },
     // 获取我的签到信息
     async getSignInInfo () {
       try {
@@ -209,13 +216,14 @@ export default {
       try {
         let { status } = await signIn({
           activityId: this.activityId,
-          content: '家中一切平安，我与大家共同抗击疫情'
+          content
         })
         if (status === 200) {
           this.$success('健康打卡成功')
           this.shwoSignIn = false
           this.getSignInInfo()
           this.getactivityInfo()
+          this.getBarrage()
         }
       } catch (e) { throw e }
     },
