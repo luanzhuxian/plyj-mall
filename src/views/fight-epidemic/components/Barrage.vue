@@ -167,5 +167,8 @@ export default {
                 }
             }
         }
+        > .runway:nth-last-of-type(1) {
+            margin-bottom: 0;
+        }
     }
 </style>
