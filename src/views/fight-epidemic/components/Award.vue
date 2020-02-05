@@ -62,11 +62,11 @@ export default {
     async getAward ({ activityId, giftId, reedemStatus }) {
       try {
         if (reedemStatus === 1) {
-          this.$warning('该奖励已经兑换完了，请选择其他奖励进行兑换')
+          this.$warning('该奖励您已兑换了哦~')
           return
         }
         if (reedemStatus === 2) {
-          this.$warning('该奖励您已兑换了哦~')
+          this.$warning('该奖励已经兑换完了，请选择其他奖励进行兑换')
           return
         }
         let { result } = await reedemGift({

@@ -88,6 +88,7 @@ export default {
       runner.style.top = '0px'
       runner.style.left = `${startPoint}px`
       let currentRunnerMes = runnerMes.shift()
+      currentRunnerMes.name = currentRunnerMes.name.substring(0, currentRunnerMes.name.length - 1) + '*'
       runner.innerHTML = `<img src=${currentRunnerMes.userImg}><div><div>${currentRunnerMes.name} 抗击疫情第${currentRunnerMes.signinDays}天</div><div>${currentRunnerMes.content}</div></div>`
       runway.el.appendChild(runner)
       runway.runner.push(runner)
@@ -120,13 +121,13 @@ export default {
         } catch (e) { throw e }
       })
       // 完全身体出现时间,叫下一个
-      let time = (runnerWidth / speed).toFixed(2) + 1
+      let time = (runnerWidth / speed).toFixed(2)
       setTimeout(() => {
         runway.status = true
         if (this.runnerMes.length) {
           this.createRunner(runway, this.runnerMes)
         }
-      }, time * 1000)
+      }, (time * 1000) + 1500)
     }
   }
 }
@@ -137,12 +138,14 @@ export default {
         > .runway {
             position: relative;
             margin: 26px 0;
-            height: 84px;
+            height: 90px;
             overflow: hidden;
             > div {
-                position: absolute;
-                padding: 12px;
                 display: flex;
+                position: absolute;
+                align-items: center;
+                padding: 12px;
+                box-sizing: border-box;
                 border-radius: 52px;
                 background: rgba(0,0,0,0.2);
                 white-space: nowrap;
@@ -153,11 +156,12 @@ export default {
                     border-radius: 50%;
                 }
                 > div {
+                    font-size: 24px;
                     > div {
-                        font-size: 24px;
                         color: #b3bbfd;
                     }
                     > div:nth-of-type(2) {
+                        margin-top: 12px;
                         color: #dde1f9;
                     }
                 }
