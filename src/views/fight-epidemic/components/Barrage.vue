@@ -1,13 +1,13 @@
 <template>
-  <div ref="container" :class="$style.container">
+  <div :class="$style.container">
     <div :class="$style.wrap" v-if="list.length">
-      <div :class="$style.barrageList" ref="wrap" />
+      <div :class="$style.barrageList" :style="{ '--state': state }" />
     </div>
   </div>
 </template>
 
 <script>
-import { promise } from '../../../assets/js/util'
+// import { promise } from '../../../assets/js/util'
 export default {
   name: 'Barrage',
   props: {
@@ -34,34 +34,53 @@ export default {
        *   speed
        * }
        */
-      magazine: []
+      magazine: [],
+      items: [],
+      state: 'running'
     }
   },
   watch: {
-    async list (val) {
+    async list (val, old) {
       if (val.length === 1) {
         this.index = 0 // 子弹位置
         this.taoValueIndex = 0
         this.reloadSpeed = Math.random() * 100 + 1801 // 装填速度，装一发，发射一次
         this.magazine = []
-        await this.$nextTick()
-        this.fire()
+        // await this.$nextTick()
+        // this.wrap = document.getElementsByClassName(this.$style.barrageList)[0]
       } else if (val.length > 1) {
         this.index++
       }
     }
   },
   computed: {
-    wrap () {
-      return this.$refs.wrap
-    }
   },
   async mounted () {
-    if (this.list.length) {
+  },
+  activated () {
+    setTimeout(() => {
+      this.wrap = document.getElementsByClassName(this.$style.barrageList)[0]
+      this.state = 'running'
       this.fire()
+    }, 1000)
+  },
+  deactivated () {
+    if (this.wrap) {
+      for (let item of this.items) {
+        try {
+          this.wrap.removeChild(item)
+        } catch (e) {}
+      }
     }
+    clearTimeout(this.t1)
+    clearTimeout(this.t2)
+    clearTimeout(this.t3)
+    this.items = []
+    this.state = 'paused'
   },
   methods: {
+    clean () {
+    },
     // 开火！
     async fire () {
       let info = this.list[this.index]
@@ -69,14 +88,24 @@ export default {
         this.index = 0
         info = this.list[this.index]
         // 等待全部弹幕都出去以后，再开始下一波
-        await promise.timeout(Number.parseInt(this.magazine.slice(-1)[0].speed) * 1000 - this.reloadSpeed - 1000)
+        this.t1 = setTimeout(async () => {
+          this.wrap.appendChild(this.createBullet(info))
+          this.magazine[this.index] = info
+          this.t2 = setTimeout(() => {
+            this.reloadSpeed = Math.random() * 100 + 1801
+            this.index++
+            this.fire()
+          }, this.reloadSpeed)
+        }, Number.parseInt(this.magazine.slice(-1)[0].speed) * 1000 - this.reloadSpeed - 1000)
+      } else {
+        this.wrap.appendChild(this.createBullet(info))
+        this.magazine[this.index] = info
+        this.t3 = setTimeout(() => {
+          this.reloadSpeed = Math.random() * 100 + 1801
+          this.index++
+          this.fire()
+        }, this.reloadSpeed)
       }
-      this.wrap.appendChild(this.createBullet(info))
-      this.magazine[this.index] = info
-      await promise.timeout(this.reloadSpeed)
-      this.reloadSpeed = Math.random() * 100 + 1801
-      this.index++
-      this.fire()
     },
     // 生产子弹
     createBullet (info) {
@@ -105,6 +134,7 @@ export default {
       wrap.innerHTML = itemHtml
       let item = wrap.querySelector('.' + $style.item)
       item.addEventListener('animationend', this.animationend)
+      this.items.push(item)
       return item
     },
     animationend (e) {
@@ -144,6 +174,7 @@ export default {
       background-color: rgba(255, 255, 255, .2);
       border-radius: 42px;
       transform: translateX(100%);
+      animation-play-state: var(--state);
       animation: moving var(--speed) linear;
       > img {
         width: 64px;
