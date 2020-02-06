@@ -21,9 +21,10 @@
         ref="livePlayBack"
         controls
         :poster="detail.coverImg"
-        :src="recorded.url"
-        style="object-fit: contain"
-      />
+        controlslist="nodownload"
+      >
+        <source :src="recorded.url" type="video/mp4" codecs="avc1.42E01E, mp4a.40.2">
+      </video>
     </div>
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
@@ -795,12 +796,16 @@ export default {
   .live-room {
     height: 100vh;
     > .play-back-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
       height: 442px;
       background-color: #000;
       > video {
-        width: 100%;
         height: 100%;
         object-fit: fill;
+        background-color: #000;
       }
       > div {
         width: 100%;
