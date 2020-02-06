@@ -169,7 +169,7 @@
       <div v-if="tab === 1" :class="$style.sendMessage">
         <form :class="$style.inputBox" @submit.prevent="messageConfirm">
           <input
-            v-model="message"
+            v-model.trim="message"
             placeholder=" 进来了说点什么呗~"
             type="text"
             @blur="messageBoxBlur"
@@ -554,9 +554,17 @@ export default {
     },
     // 发送消息
     async messageConfirm () {
+      if (this.hasSended) {
+        this.$warning('消息发送的太频繁了，请稍后再试~')
+        return
+      }
       if (!this.message.trim()) {
         return this.$warning('请输入内容')
       }
+      if (this.message.length > 100) {
+        return this.$warning('字数不得超过100字')
+      }
+      this.hasSended = true // 标记为已发送过消息，下次发送必须3秒以后
       let o = {
         name: this.userName,
         message: this.message,
@@ -582,6 +590,9 @@ export default {
           this.chatRecords.shift()
         }
         this.message = ''
+        setTimeout(() => {
+          this.hasSended = false
+        }, 3000)
       }
     },
     // 缓存消息
