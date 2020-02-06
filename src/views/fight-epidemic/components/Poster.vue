@@ -92,7 +92,7 @@ export default {
         CTX.drawImage(AVATAR, 48, 350, 80, 80)
         if (this.posterInfo.hasLogo) {
           let LOGO = await loadImage(this.posterInfo.logoUrl)
-          LOGO = cutImageCenter(LOGO, 20)
+          LOGO = await cutImageCenter(LOGO)
           CTX.drawImage(LOGO, 44, 806, 80, 80)
         }
       } catch (e) {
