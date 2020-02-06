@@ -66,6 +66,9 @@ export default {
       default: 356
     }
   },
+  deactivated () {
+    this.isPlay = false
+  },
   methods: {
     canplay () {
     },
