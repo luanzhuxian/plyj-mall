@@ -202,9 +202,18 @@ export default {
           this.$router.replace({ name: 'EpidemicSignUp', params: { id: this.id } })
           return false
         }
+        // 活动结束
+        if (result.statue === 3) {
+          this.$router.replace({ name: 'Home' })
+          return false
+        }
         this.signInInfo = result
         return true
-      } catch (e) { throw e }
+      } catch (e) {
+        // 没有找到该活动
+        this.$router.replace({ name: 'Home' })
+        throw e
+      }
     },
     // 获取签到活动信息
     async getactivityInfo () {
@@ -232,16 +241,22 @@ export default {
     // 签到
     async signIn (content) {
       try {
-        let { status } = await signIn({
+        let { status, result: { status: ActivityStatus } } = await signIn({
           activityId: this.id,
           content
         })
         if (status === 200) {
-          this.$success('健康打卡成功')
-          this.shwoSignIn = false
-          this.getSignInInfo()
-          this.getactivityInfo()
-          this.getBarrage()
+          if (ActivityStatus === 1) {
+            this.$success('健康打卡成功')
+            this.shwoSignIn = false
+            this.getSignInInfo()
+            this.getactivityInfo()
+            this.getBarrage()
+          } else {
+            // 活动结束
+            this.$warning('该活动已经结束')
+            this.$router.replace({ name: 'Home' })
+          }
         }
       } catch (e) { throw e }
     },
@@ -256,9 +271,6 @@ export default {
         // 活动 1 未开始 2 正在进行 3 结束
         if (this.signInInfo.statue === 1) {
           this.$warning('活动还未开始')
-          return
-        } else if (this.signInInfo.statue === 1) {
-          this.$warning('活动还已结束')
           return
         }
         this.shwoSignIn = true
