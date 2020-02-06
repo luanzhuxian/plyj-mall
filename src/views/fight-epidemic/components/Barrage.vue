@@ -46,8 +46,6 @@ export default {
         this.taoValueIndex = 0
         this.reloadSpeed = Math.random() * 100 + 1801 // 装填速度，装一发，发射一次
         this.magazine = []
-        // await this.$nextTick()
-        // this.wrap = document.getElementsByClassName(this.$style.barrageList)[0]
       } else if (val.length > 1) {
         this.index++
       }

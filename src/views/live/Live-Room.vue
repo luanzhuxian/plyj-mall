@@ -22,6 +22,7 @@
         controls
         :poster="detail.coverImg"
         :src="recorded.url"
+        style="object-fit: contain"
       />
     </div>
     <!-- 聊天 -->
@@ -794,8 +795,8 @@ export default {
   .live-room {
     height: 100vh;
     > .play-back-box {
-      width: 100%;
       height: 442px;
+      background-color: #000;
       > video {
         width: 100%;
         height: 100%;
