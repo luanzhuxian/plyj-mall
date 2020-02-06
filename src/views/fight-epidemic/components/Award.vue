@@ -107,6 +107,14 @@ export default {
         }
         > .content {
             padding: 30px 24px 40px 24px;
+            > .scroll > div > .info {
+                width: 100%;
+                > p:nth-of-type(1) {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
         }
         > .single {
             > .scroll > div {
