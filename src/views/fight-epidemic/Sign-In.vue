@@ -55,7 +55,7 @@
       </div>
 
       <!--弹幕-->
-      <Barrage v-if="barrageFlag" :list="barrageInfo" />
+      <Barrage :list="barrageInfo" />
 
       <!--健康值兑换-->
       <div :class="$style.award">
@@ -66,6 +66,7 @@
     <!--海报-->
     <Poster
       :show.sync="showPoster"
+      :id="id"
       :poster-info="{
         'startTime':activityInfo.startTime,
         'endTime':activityInfo.endTime,
@@ -153,8 +154,6 @@ export default {
       showPoster: false,
       showDetail: false,
       shwoSignIn: false,
-      barrageFlag: false,
-      activityId: this.$route.params.id,
       signInInfo: {
         everyDayInfos: [],
         currentSign: false
@@ -165,6 +164,12 @@ export default {
       giftInfo: [], // 礼品信息
       barrageInfo: [], // 弹幕
       wishList: ['身体健康平安，我为中国加油!', '我在家中为武汉加油，向一线战士致敬!', '不给祖国添乱，宅在家中为祖国做贡献!', '家中一切平安，我与大家共同抗击疫情!']
+    }
+  },
+  props: {
+    id: {
+      type: String,
+      default: ''
     }
   },
   async activated () {
@@ -191,10 +196,10 @@ export default {
     // 获取我的签到信息
     async getSignInInfo () {
       try {
-        let { result } = await getSignInInfo(this.activityId)
+        let { result } = await getSignInInfo(this.id)
         // 是否已经报名
         if (!result.isRegister) {
-          this.$router.replace({ name: 'EpidemicSignUp', params: { id: this.activityId } })
+          this.$router.replace({ name: 'EpidemicSignUp', params: { id: this.id } })
           return false
         }
         this.signInInfo = result
@@ -204,7 +209,7 @@ export default {
     // 获取签到活动信息
     async getactivityInfo () {
       try {
-        let { result } = await getactivityInfo(this.activityId)
+        let { result } = await getactivityInfo(this.id)
         result.startTime = result.startTime.split(' ')[0]
         result.endTime = result.endTime.split(' ')[0]
         this.activityInfo = result
@@ -213,23 +218,22 @@ export default {
     // 获取兑换礼品信息
     async getGiftInfo () {
       try {
-        let { result } = await getGiftInfo(this.activityId, this.$store.getters.userId)
+        let { result } = await getGiftInfo(this.id, this.$store.getters.userId)
         this.giftInfo = result
       } catch (e) { throw e }
     },
     // 获取弹幕信息
     async getBarrage () {
       try {
-        let { result: { records } } = await getBarrage(this.activityId)
+        let { result: { records } } = await getBarrage(this.id)
         this.barrageInfo = records
-        this.barrageFlag = true
       } catch (e) { throw e }
     },
     // 签到
     async signIn (content) {
       try {
         let { status } = await signIn({
-          activityId: this.activityId,
+          activityId: this.id,
           content
         })
         if (status === 200) {

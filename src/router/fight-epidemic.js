@@ -22,6 +22,7 @@ export default [
   {
     path: '/fight-epidemic/sign-in/:id',
     name: 'EpidemicSignIn',
+    props: true,
     component: () => import('../views/fight-epidemic/Sign-In.vue'),
     meta: {
       title: '共携手，抗战“疫”'
