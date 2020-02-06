@@ -4,7 +4,7 @@ export default [
     name: 'Setting',
     component: () => import('../views/my/setting/Index.vue'),
     meta: {
-      title: '朋来雅集'
+      title: '设置'
     }
   },
   {

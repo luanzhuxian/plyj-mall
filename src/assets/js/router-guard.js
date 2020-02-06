@@ -1,6 +1,6 @@
 import { router } from '../../router'
 import { isIOS } from './util'
-// import store from '../../store'
+import store from '../../store'
 // 小金库相关页面，非helper不能访问
 // const notAllowedCoffer = [
 //   'Coffers',
@@ -38,7 +38,7 @@ export const beforeResolve = function (to, from, next) {
   if (to.name === 'Home') {
     document.title = sessionStorage.getItem('mallName') || to.meta.title
   } else {
-    document.title = to.meta.title
+    document.title = to.meta.title || store.state.mallInfo.mallName
   }
 }
 export const afterEach = function (to, from) {}

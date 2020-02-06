@@ -5,7 +5,7 @@ export default [
     component: () => import('../views/appointment/Appointment.vue'),
     props: true,
     meta: {
-      title: '朋来雅集'
+      title: ''
     }
   },
   {
@@ -14,7 +14,7 @@ export default [
     component: () => import('../views/appointment/School-Show.vue'),
     props: true,
     meta: {
-      title: '朋来雅集'
+      title: ''
     }
   },
   {
@@ -23,7 +23,7 @@ export default [
     component: () => import('../views/appointment/Student-Show.vue'),
     props: true,
     meta: {
-      title: '朋来雅集'
+      title: ''
     }
   }
 ]

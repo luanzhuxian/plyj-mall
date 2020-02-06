@@ -23,7 +23,7 @@ export default [
     component: () => import('../views/detail/Sold-Out.vue'),
     props: true,
     meta: {
-      title: '朋来雅集'
+      title: '商品详情'
     }
   }
 ]
