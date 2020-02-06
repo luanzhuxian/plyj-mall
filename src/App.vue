@@ -52,7 +52,10 @@ export default {
         'My',
         'Appointment',
         'DoubleTwelveDay',
-        'Activity'
+        'Activity',
+
+        'BattlefieldReport',
+        'EpidemicSignIn'
       ],
       // 需要自定义分享的页面（分享配置在页面组件内实现）
       customShare: [
