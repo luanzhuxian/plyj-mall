@@ -146,7 +146,7 @@ export default {
                     width: 316px;
                     > img {
                         width: 100%;
-                        height: 148px;
+                        height: 210px;
                         border-radius: 12px;
                     }
                     > .info {
@@ -179,7 +179,7 @@ export default {
                     margin-right: 24px;
                     > img {
                         width: 100%;
-                        height: 210px;
+                        height: 148px;
                         border-radius: 12px;
                     }
                     > .info {
