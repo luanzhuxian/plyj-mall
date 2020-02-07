@@ -204,6 +204,13 @@ export default {
         }
         // 活动结束
         if (result.statue === 3) {
+          this.$warning('该活动已结束')
+          this.$router.replace({ name: 'Home' })
+          return false
+        }
+        // 活动停止
+        if (result.statue === 4) {
+          this.$warning('该活动已停止')
           this.$router.replace({ name: 'Home' })
           return false
         }
@@ -252,8 +259,12 @@ export default {
             this.getSignInInfo()
             this.getactivityInfo()
             this.getBarrage()
+          } else if (ActivityStatus === 2) {
+          // 活动停止
+            this.$warning('该活动已经结束')
+            this.$router.replace({ name: 'Home' })
           } else {
-            // 活动结束
+          // 活动结束
             this.$warning('该活动已经结束')
             this.$router.replace({ name: 'Home' })
           }
@@ -268,7 +279,7 @@ export default {
           this.$success('今日已打卡，明日再来报平安~')
           return
         }
-        // 活动 1 未开始 2 正在进行 3 结束
+        // 活动 1 未开始 2 正在进行 3 结束 4 停止
         if (this.signInInfo.statue === 1) {
           this.$warning('活动还未开始')
           return
