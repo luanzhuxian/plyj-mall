@@ -68,6 +68,7 @@
             <div
               v-if="!item.gift && !item.custom"
               :key="i"
+              :id="`chat_item_${i}`"
               :class="{
                 [$style.messageWrap]: true,
                 [$style.selfMessage]: item.self
@@ -279,7 +280,7 @@ export default {
       tab: 1,
       message: '',
       livestartedDuration: 0, // 直播开始时长
-      maxRecords: 10, // 最大缓存的聊天记录条数
+      maxRecords: 300, // 最大缓存的聊天记录条数
       /**
        * 聊天信息记录
        * {
@@ -601,9 +602,6 @@ export default {
     },
     // 缓存消息
     cacheMessage () {
-      if (this.chatRecords.length >= 300) {
-        this.chatRecords.splice(0, 1)
-      }
       localStorage.setItem(`LIVE_MESSAGE_${this.mallDomain}`, JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
     },
     /* 重新发送 */
@@ -640,9 +638,14 @@ export default {
       }, 2000)
     },
     async scrollBottom () {
+      await this.$nextTick()
+      // 判断最后一条非自己发送消息是不是可见，如果不可见，则不自动滚动
+      let latestEle = document.getElementById(`chat_item_${this.chatRecords.length - 1}`)
+      if (latestEle && !this.isElementInViewport(latestEle) && !latestEle.classList.contains(this.$style.selfMessage)) {
+        return
+      }
       let box = this.$refs.chatRecords
       let scrollHeight = box.scrollHeight
-      await this.$nextTick()
       box.scrollBy(0, scrollHeight)
     },
     async couponClick (id) {
@@ -799,10 +802,21 @@ export default {
             })
         }
       })
+    },
+    // 判断元素是否在可视区域内
+    isElementInViewport (el) {
+      let rect = el.getBoundingClientRect()
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /* or $(window).height() */
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+      )
     }
   },
   beforeDestroy () {
     clearInterval(this.videoLiveTimer)
+    this.cacheMessage()
   }
 }
 </script>
@@ -888,6 +902,7 @@ export default {
     flex: 1;
     overflow: auto;
     position: relative;
+    padding-bottom: 30px;
   }
   .chat-records {
     display: flex;
