@@ -1221,7 +1221,4 @@ export default {
   }
 </style>
 <style>
-  .plv_controls > span:nth-of-type(3) {
-    display: none !important;
-  }
 </style>
