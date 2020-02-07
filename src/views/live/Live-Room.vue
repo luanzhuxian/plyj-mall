@@ -88,6 +88,7 @@
             <div
               :key="i"
               v-else-if="item.custom"
+              :id="`chat_item_${i}`"
               :class="{
                 [$style.messageWrap]: true,
                 [$style.customMessage]: true
@@ -107,6 +108,7 @@
             <div
               :key="i"
               v-else-if="item.gift"
+              :id="`chat_item_${i}`"
               :class="{
                 [$style.messageWrap]: true,
                 [$style.gift]: true
@@ -481,12 +483,21 @@ export default {
         // query: 'token=' + chatToken, // 文档上说，暂时为空
         transports: ['websocket']
       })
-      socket.on('connect', function () {
+      socket.on('connect', () => {
         console.warn('chantroom connect success!')
       })
       socket.on('disconnect', function (e) {
         console.error(e)
         console.error('chantroom connect error!')
+        this.$confirm({
+          icon: 'icon-close3',
+          message: '聊天室链接错误，请重试'
+        })
+          .then(() => {
+            this.socket = null
+            this.initSocket()
+          })
+          .catch(() => {})
       })
       socket.on('message', this.onMessage)
       /* 登录到聊天服务器 */
@@ -638,6 +649,7 @@ export default {
       }, 2000)
     },
     async scrollBottom () {
+      await this.$nextTick()
       await this.$nextTick()
       // 判断最后一条非自己发送消息是不是可见，如果不可见，则不自动滚动
       let latestEle = document.getElementById(`chat_item_${this.chatRecords.length - 1}`)
