@@ -261,7 +261,7 @@ export default {
             this.getBarrage()
           } else if (ActivityStatus === 2) {
           // 活动停止
-            this.$warning('该活动已经结束')
+            this.$warning('该活动已经停止')
             this.$router.replace({ name: 'Home' })
           } else {
           // 活动结束
