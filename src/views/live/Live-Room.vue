@@ -64,7 +64,7 @@
       <div :class="$style.chatWrap" ref="chatRecords">
         <div v-if="tab === 1" :class="$style.chatRecords">
           <template v-for="(item, i) of chatRecords">
-            <!-- 一半消息 -->
+            <!-- 一般消息 -->
             <div
               v-if="!item.gift && !item.custom"
               :key="i"
@@ -127,7 +127,7 @@
                 :key="i"
                 :id="item.couponId"
                 :use-end-time="item.useEndTime"
-                :use-start-time="item.usestartedDuration"
+                :use-start-time="item.useStartTime"
                 :full="item.useLimitAmount"
                 :subtract="item.amount"
                 :amount="item.amount"
@@ -279,7 +279,7 @@ export default {
       tab: 1,
       message: '',
       livestartedDuration: 0, // 直播开始时长
-      maxRecords: 400, // 最大缓存的聊天记录条数
+      maxRecords: 10, // 最大缓存的聊天记录条数
       /**
        * 聊天信息记录
        * {
@@ -505,7 +505,7 @@ export default {
         let user = mData.user
         switch (mData.EVENT) {
           case 'LOGIN':
-            this.chatRecords.push({
+            this.pushMessage({
               message: '进入了直播间',
               name: user.nick,
               custom: true,
@@ -516,7 +516,7 @@ export default {
           case 'SPEAK':
             if (this.userName !== user.nick) {
               let message = mData.values.join(',')
-              this.chatRecords.push({
+              this.pushMessage({
                 message,
                 name: user.nick,
                 success: true,
@@ -525,7 +525,7 @@ export default {
             }
             break
           case 'FLOWERS':
-            this.chatRecords.push({
+            this.pushMessage({
               message: '',
               name: mData.nick,
               gift: true,
@@ -535,7 +535,6 @@ export default {
             })
             break
         }
-        this.cacheMessage()
         this.scrollBottom()
       }
     },
@@ -574,26 +573,31 @@ export default {
         type: 'SPEAK'
       }
       try {
-        this.chatRecords.push(o)
+        // this.chatRecords.push(o)
+        this.pushMessage(o)
         this.scrollBottom()
         await this.sendMessage(this.message)
         o.success = true
         o.loading = false
-        this.cacheMessage()
       } catch (e) {
         // 配置发送失败
         o.loading = false
         o.success = false
       } finally {
         this.$set(this.chatRecords, this.chatRecords.length - 1, o)
-        if (this.chatRecords.length > this.maxRecords) {
-          this.chatRecords.shift()
-        }
         this.message = ''
         setTimeout(() => {
           this.hasSended = false
         }, 3000)
       }
+    },
+    pushMessage (msg) {
+      const len = this.chatRecords.length
+      const maxRecords = this.maxRecords
+      if (len > maxRecords) {
+        this.chatRecords = this.chatRecords.slice(len - maxRecords)
+      }
+      this.chatRecords.push(msg)
     },
     // 缓存消息
     cacheMessage () {
