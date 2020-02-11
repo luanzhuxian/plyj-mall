@@ -28,7 +28,7 @@
     </div>
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
-      <div :class="$style.tabs">
+      <div :class="$style.tabs" ref="tabs">
         <div>
           <div
             :class="{
@@ -61,8 +61,8 @@
         <pl-button v-if="detail.coverImg" style="padding:0 24px" @click="share" type="warning" size="small">分享海报</pl-button>
       </div>
 
-      <div :class="$style.chatWrap" ref="chatRecords">
-        <div v-if="tab === 1" :class="$style.chatRecords">
+      <div :class="$style.chatWrap" ref="chatWrap">
+        <div v-if="tab === 1" :class="$style.chatRecords" ref="chatRecords">
           <template v-for="(item, i) of chatRecords">
             <!-- 一般消息 -->
             <div
@@ -74,7 +74,7 @@
                 [$style.selfMessage]: item.self
               }"
             >
-              <span :class="$style.userName" v-text="item.name + '：'" />
+              <span :class="$style.userName" v-text="item.name" />
               <div :class="$style.message">
                 <span v-text="item.message" />
                 <pl-svg v-if="item.loading" :class="$style.messageLoading" name="icon-btn-loading" fill="#999" width="24" font-weight="bolder" @click="repeatSend(item, i)" />
@@ -261,7 +261,8 @@ import {
   generateQrcode,
   cutArcImage,
   loadImage,
-  createText
+  createText,
+  throttle
 } from '../../assets/js/util'
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 export default {
@@ -322,6 +323,11 @@ export default {
     }
   },
   async created () {
+    // 缓存消息方法
+    this.cacheMessage = throttle(() => {
+      console.log(1)
+      localStorage.setItem(`LIVE_MESSAGE_${this.mallDomain}`, JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
+    }, 2000)
     this.receiveCouponIdList = []
     if (this.roleCode === 'VISITOR') {
       await this.$confirm({
@@ -610,10 +616,7 @@ export default {
         this.chatRecords = this.chatRecords.slice(len - maxRecords)
       }
       this.chatRecords.push(msg)
-    },
-    // 缓存消息
-    cacheMessage () {
-      localStorage.setItem(`LIVE_MESSAGE_${this.mallDomain}`, JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
+      this.cacheMessage()
     },
     /* 重新发送 */
     async repeatSend (item, i) {
@@ -650,15 +653,16 @@ export default {
     },
     async scrollBottom () {
       await this.$nextTick()
-      await this.$nextTick()
+      // await this.$nextTick()
       // 判断最后一条非自己发送消息是不是可见，如果不可见，则不自动滚动
-      let latestEle = document.getElementById(`chat_item_${this.chatRecords.length - 1}`)
-      if (latestEle && !this.isElementInViewport(latestEle) && !latestEle.classList.contains(this.$style.selfMessage)) {
-        return
-      }
-      let box = this.$refs.chatRecords
-      let scrollHeight = box.scrollHeight
-      box.scrollBy(0, scrollHeight)
+      // let latestEle = document.getElementById(`chat_item_${this.chatRecords.length - 1}`)
+      // if (!this.isElementInViewport(this.$refs.chatRecords)) {
+      //   return
+      // }
+      // this.isElementInViewport(this.$refs.chatRecords)
+      let box = this.$refs.chatWrap
+      // let scrollHeight = box.scrollHeight
+      box.scrollBy(0, box.offsetHeight)
     },
     async couponClick (id) {
       if (this.isCouponLoading) return
@@ -818,17 +822,20 @@ export default {
     // 判断元素是否在可视区域内
     isElementInViewport (el) {
       let rect = el.getBoundingClientRect()
-      return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /* or $(window).height() */
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
-      )
+      // console.log(el.parentNode.offsetHeight, this.$refs.playerBox.offsetHeight, this.$refs.tabs.offsetHeight, rect.height, rect.top)
+      console.log(window.innerHeight)
+      // console.log(Math.abs(rect.height + rect.top))
+      return Math.abs(rect.height + rect.top) > 1600
+      // return (
+      //   rect.top >= 0 &&
+      //   rect.left >= 0 &&
+      //   rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /* or $(window).height() */
+      //   rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+      // )
     }
   },
   beforeDestroy () {
     clearInterval(this.videoLiveTimer)
-    this.cacheMessage()
   }
 }
 </script>
@@ -912,9 +919,9 @@ export default {
   }
   .chat-wrap {
     flex: 1;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
-    padding-bottom: 30px;
   }
   .chat-records {
     display: flex;
@@ -950,13 +957,17 @@ export default {
       }
     }
     .user-name {
-      width: max-content;
       color: #999;
+      &:after {
+        content: ':';
+        margin-right: 10px;
+      }
     }
     .message {
       flex: 1;
+      width: 600px;
       word-break: break-all;
-      white-space: pre-line;
+      white-space: pre-wrap;
       > span {
         &:nth-of-type(1) {
           margin-right: 10px;
