@@ -92,6 +92,6 @@ Vue.config.errorHandler = async function (err, vm, info) {
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
     // 如果页面重新处于可见状态，就刷新
-    location.reload()
+    // location.reload()
   }
 })

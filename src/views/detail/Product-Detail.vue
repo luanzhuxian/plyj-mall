@@ -144,7 +144,7 @@
 
       <!--底部购买按钮  -->
       <buy-now
-        v-if="productActive !== 5"
+        v-if="productActive !== 5 && mchId"
         type="warning"
         ref="buyNow"
         :image="detail.productMainImage"
@@ -175,7 +175,7 @@
         :activity-product-model="detail.activityProductModel || null"
         :pre-activity="preActivity"
       >
-        <template v-slot:footer="{ currentSku, limiting, limit }" v-if="productActive !== 5">
+        <template v-slot:footer="{ currentSku, limiting, limit }" v-if="productActive !== 5 && mchId">
           <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
             <!-- 活动商品库存不足时，显示该按钮 -->
             <button
@@ -289,10 +289,10 @@
       </div>
 
       <!-- 正常商品 或 未开始的活动商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
-      <div :class="$style.buttomTip" v-if="!loading && isDown && activeProduct === 1 && productActive !== 5">
+      <div :class="$style.buttomTip" v-if="!loading && isDown && activeProduct === 1 && productActive !== 5 && mchId">
         该商品已下架
       </div>
-      <div :class="$style.buttomTip" v-if="!loading && noStock">
+      <div :class="$style.buttomTip" v-if="!loading && noStock && mchId">
         该商品已全部售罄，请选择其它商品购买
       </div>
     </template>
@@ -404,7 +404,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+    ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl', 'mchId']),
     // 活动商品的可购买数量
     activeStock () {
         return this.activityProductModel ? this.activityProductModel.buyCount : 0

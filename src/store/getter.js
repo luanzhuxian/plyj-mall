@@ -30,6 +30,7 @@ export default {
   roleName: state => state.roleMap[state.userInfo.roleCode] || '',
 
   appId: state => state.mallInfo.appid,
+  mchId: state => state.mallInfo.mchId,
   address: state => state.mallInfo.address,
   mallDomain: state => state.mallInfo.mallDomain,
   mallName: state => state.mallInfo.mallName,

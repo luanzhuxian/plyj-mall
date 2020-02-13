@@ -41,7 +41,7 @@
       </div>
 
       <!-- 领取优惠券或凑单 -->
-      <div :class="$style.coupon" v-if="couponList.length">
+      <div :class="$style.coupon" v-if="couponList.length && mchId">
         <span v-if="nextCoupon || appropriateCoupon" :class="$style.couponTip">
           <span v-if="appropriateCoupon">
             已满{{ appropriateCoupon.useLimitAmount }}元,{{ appropriateCoupon.count ? '减' : '领券可减' }}{{ appropriateCoupon.amount }}元
@@ -103,7 +103,7 @@
       </div>
 
       <!-- 结算或删除 -->
-      <div :class="$style.settlement">
+      <div :class="$style.settlement" v-if="mchId">
         <pl-checkbox :checked="checkedAll" @change="checkAll" border>
           <span slot="suffix" class="fz-24 gray-2 ml-10">
             全选
@@ -220,7 +220,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['roleCode']),
+    ...mapGetters(['roleCode', 'mchId']),
     productAttributes () {
       return this.currentPro.productAttributes || []
     },

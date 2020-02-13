@@ -315,7 +315,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain'])
+    ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId'])
   },
   watch: {
     soundValue (val) {
@@ -352,6 +352,10 @@ export default {
       this.channeUserId = appUserId
       // 是否需要支付
       if (detail.isPay) {
+        if (!this.mchId) {
+          this.$confirm('商家未开通支付，请联系管理员')
+          return
+        }
         let needPay = await hasPied(detail.id)
         if (!needPay) {
           // 还没支付
@@ -503,8 +507,8 @@ export default {
           message: '聊天室链接错误，请重试'
         })
           .then(() => {
-            // this.socket = null
-            // this.initSocket()
+            this.socket = null
+            this.initSocket()
           })
           .catch(() => {})
       })

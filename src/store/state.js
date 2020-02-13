@@ -44,6 +44,7 @@ export default {
     mallUrl: '',
     sequenceNbr: '',
     servicePhoneModels: [],
+    mchId: '',
     appSecret: false // 是否是老方法授权的
   },
   openId: '',
