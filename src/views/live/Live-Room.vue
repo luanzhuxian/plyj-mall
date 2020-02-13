@@ -62,7 +62,7 @@
       </div>
 
       <div :class="$style.chatWrap" ref="chatWrap">
-        <div v-if="tab === 1" :class="$style.chatRecords" ref="chatRecords">
+        <div v-show="tab === 1" :class="$style.chatRecords" ref="chatRecords">
           <template v-for="(item, i) of chatRecords">
             <!-- 一般消息 -->
             <div
@@ -120,7 +120,7 @@
             </div>
           </template>
         </div>
-        <div v-if="tab === 2" :class="$style.couponList">
+        <div v-show="tab === 2" :class="$style.couponList">
           <div :class="$style.tabTitle">
             可用优惠券（{{ couponList.length }}张）
           </div>
@@ -144,7 +144,7 @@
             </template>
           </div>
         </div>
-        <div v-if="tab === 3" :class="$style.productList">
+        <div v-show="tab === 3" :class="$style.productList">
           <div :class="$style.tabTitle">
             精选商品（{{ productList.length }}件）
           </div>
@@ -283,7 +283,7 @@ export default {
       tab: 1,
       message: '',
       livestartedDuration: 0, // 直播开始时长
-      maxRecords: 300, // 最大缓存的聊天记录条数
+      maxRecords: 200, // 最大缓存的聊天记录条数
       /**
        * 聊天信息记录
        * {
