@@ -248,8 +248,8 @@ import {
   hasPied,
   cancelOrder,
   setComeInConut,
-  getVideoMesById,
-  setWarmup
+  getVideoMesById
+  // setWarmup
 } from '../../apis/live'
 import {
   receiveCouponForLive
@@ -315,7 +315,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['userName', 'avatar', 'userId', 'opendId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain'])
+    ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain'])
   },
   watch: {
     soundValue (val) {
@@ -325,7 +325,6 @@ export default {
   async created () {
     // 缓存消息方法
     this.cacheMessage = throttle(() => {
-      console.log(1)
       localStorage.setItem(`LIVE_MESSAGE_${this.mallDomain}`, JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
     }, 2000)
     this.receiveCouponIdList = []
@@ -473,12 +472,12 @@ export default {
           forceH5: true,
           useH5Page: true
         })
-        await setWarmup({
-          appId: '',
-          warmUpEnabled: 'Y',
-          channelId,
-          sign: ''
-        })
+        // await setWarmup({
+        //   appId: '',
+        //   warmUpEnabled: 'Y',
+        //   channelId,
+        //   sign: ''
+        // })
       }
     },
     /* 连接聊天服务器 */
@@ -500,8 +499,8 @@ export default {
           message: '聊天室链接错误，请重试'
         })
           .then(() => {
-            this.socket = null
-            this.initSocket()
+            // this.socket = null
+            // this.initSocket()
           })
           .catch(() => {})
       })
@@ -592,8 +591,6 @@ export default {
       }
       try {
         // this.chatRecords.push(o)
-        this.pushMessage(o)
-        this.scrollBottom()
         await this.sendMessage(this.message)
         o.success = true
         o.loading = false
@@ -602,6 +599,8 @@ export default {
         o.loading = false
         o.success = false
       } finally {
+        this.pushMessage(o)
+        this.scrollBottom()
         this.$set(this.chatRecords, this.chatRecords.length - 1, o)
         this.message = ''
         setTimeout(() => {
@@ -776,7 +775,6 @@ export default {
         this.showPoster = true
       } catch (e) {
         this.$error(e.message)
-        console.log(e)
       }
     },
     /**
@@ -823,7 +821,7 @@ export default {
     isElementInViewport (el) {
       let rect = el.getBoundingClientRect()
       // console.log(el.parentNode.offsetHeight, this.$refs.playerBox.offsetHeight, this.$refs.tabs.offsetHeight, rect.height, rect.top)
-      console.log(window.innerHeight)
+      // console.log(window.innerHeight)
       // console.log(Math.abs(rect.height + rect.top))
       return Math.abs(rect.height + rect.top) > 1600
       // return (

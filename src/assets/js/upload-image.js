@@ -1,7 +1,7 @@
 import Compressor from 'compressorjs'
 import { getSTS } from '../../apis/base-api'
 const OSS = require('ali-oss')
-const REGION = 'oss-cn-hangzhou'
+const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
 const STSLIFETIME = 600000 // STS有效时间，10分钟
 Compressor.setDefaults({

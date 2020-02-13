@@ -111,3 +111,8 @@ button {
   -webkit-box-shadow:none;
   box-shadow:none;
 }
+
+/* 隐藏保利威视右键菜单 */
+.plv-live-player-rightMenu {
+  display: none !important;
+}
