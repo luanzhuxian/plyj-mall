@@ -425,7 +425,8 @@ export default {
     // 视频直播情况下获取视频信息
     async getVideoMesById () {
       try {
-        this.recorded = await getVideoMesById(this.detail.videoLibId)
+        let recorded = await getVideoMesById(this.detail.videoLibId)
+        this.recorded = recorded || {}
         this.recorded.ended = true // 默认已经结束
       } catch (e) {
         throw e
