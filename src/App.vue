@@ -59,7 +59,8 @@ export default {
       ],
       // 需要自定义分享的页面（分享配置在页面组件内实现）
       customShare: [
-        'Lesson',
+        'Product',
+        'Curriculum',
         'LiveRoom',
         'InviteNewcomers',
         'Newcomers'

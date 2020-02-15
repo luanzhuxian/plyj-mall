@@ -15,7 +15,7 @@ const map = {
   InviteNewcomers: '/yx/',
   Newcomers: '/newcomers/',
   LiveRoom: '/lived/room',
-  Lesson: '/detail/lesson/'
+  Product: '/detail/product/'
 }
 
 export const beforeEach = function (to, from, next) {

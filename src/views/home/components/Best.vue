@@ -81,7 +81,7 @@ export default {
       return Math.max(...priceList)
     },
     clickHandler (item) {
-      this.$router.push({ name: 'Lesson', params: { productId: item.value } })
+      this.$router.push({ name: 'Product', params: { productId: item.value } })
     }
   }
 }

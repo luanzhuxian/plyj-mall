@@ -1,11 +1,20 @@
 export default [
   {
-    path: '/detail/lesson/:productId/:brokerId?',
-    name: 'Lesson',
+    path: '/detail/product/:productId/:brokerId?',
+    name: 'Product',
     component: () => import('../views/detail/Product-Detail.vue'),
     props: true,
     meta: {
       title: '商品详情'
+    }
+  },
+  {
+    path: '/detail/curriculum/:productId/:brokerId?',
+    name: 'Curriculum',
+    component: () => import('../views/detail/Curriculum-Detail.vue'),
+    props: true,
+    meta: {
+      title: '课程详情'
     }
   },
   {

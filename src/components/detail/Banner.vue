@@ -137,7 +137,7 @@ export default {
     bottom: 20px;
   }
   .skeleton {
-    height: 750px;
+    height: 502px;
     @include skeAnimation(#eee)
   }
   .play-btn {

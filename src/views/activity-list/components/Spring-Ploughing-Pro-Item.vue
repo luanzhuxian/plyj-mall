@@ -2,7 +2,7 @@
   <!-- 春耘计划商品组件 -->
   <div
     :class="$style.springPloughingProItem"
-    @click="$router.push({ name: 'Lesson', params: { productId: data.goodsId }, query: { currentProductStatus: 5 } })"
+    @click="$router.push({ name: 'Product', params: { productId: data.goodsId }, query: { currentProductStatus: 5 } })"
   >
     <img :src="data.goodsImage" alt="">
     <div :class="$style.right">

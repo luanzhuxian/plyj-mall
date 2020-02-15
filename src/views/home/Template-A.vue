@@ -199,7 +199,7 @@ export default {
       }
       if (type === 2) {
         return {
-          name: 'Lesson',
+          name: 'Product',
           params: {
             productId: id || null,
             brokerId: this.userId || null

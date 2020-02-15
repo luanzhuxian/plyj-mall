@@ -218,7 +218,7 @@ export default {
     //   this.minSee = this.maxSee
     // },
     clickHandler (item) {
-      this.$router.push({ name: 'Lesson', params: { productId: item.value } })
+      this.$router.push({ name: 'Product', params: { productId: item.value } })
     }
   }
 }
