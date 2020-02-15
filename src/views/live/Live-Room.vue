@@ -471,7 +471,9 @@ export default {
           hasControl: true,
           x5FullPage: false,
           forceH5: true,
-          useH5Page: true
+          useH5Page: true,
+          param1: this.userId,
+          param2: this.userName
         })
         // await setWarmup({
         //   appId: '',
