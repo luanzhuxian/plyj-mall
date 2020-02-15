@@ -54,7 +54,13 @@
         <a :class="$style.link + ' ' + $style.callUs" @click="showContact = true">
           <pl-svg name="icon-call-us" width="80" height="72" />
         </a>
-        <button :class="$style.clickMeBecauseYouAreYoung">立即学习</button>
+        <button
+          :class="{
+            [$style.clickMeBecauseYouAreYoung]: true,
+            [$style.hasStudied]: studied
+          }"
+        >
+          {{ studied ? '观看学习(2次)' : '立即学习' }}</button>
       </div>
     </div>
   </div>
@@ -111,7 +117,8 @@ export default {
       tab: 2,
       imgels: [],
       // 活动类型
-      qrcode: ''
+      qrcode: '',
+      studied: true
     }
   },
   props: {
@@ -295,6 +302,9 @@ export default {
       color: #fff;
       background-color: #FE7700;
       border-radius: 10px;
+      &.has-studied {
+        background-color: #F2B036;
+      }
     }
   }
 </style>
