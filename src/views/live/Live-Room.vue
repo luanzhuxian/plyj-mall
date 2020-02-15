@@ -426,8 +426,9 @@ export default {
     async getVideoMesById () {
       try {
         let recorded = await getVideoMesById(this.detail.videoLibId)
-        this.recorded = recorded || {}
-        this.recorded.ended = true // 默认已经结束
+        recorded = recorded || {}
+        recorded.ended = true
+        this.recorded = recorded // 默认已经结束
       } catch (e) {
         throw e
       }
