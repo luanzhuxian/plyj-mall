@@ -57,5 +57,14 @@
     <script src="https://mallcdn.youpenglai.com/cdn/vue-clipboard/vue-clipboard_v0.3.1.min.js"></script>
     <script src="https://mallcdn.youpenglai.com/cdn/vue-lazyload/1.3.3/vue-lazyload.js"></script>
     <script src="https://mallcdn.youpenglai.com/cdn/echarts/echarts_v4.5.0.min.js"></script>
+    <script>
+      /* 监听锁屏，记录锁屏时间 */
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          // 如果页面重新处于可见状态，就刷新
+          location.reload()
+        }
+      })
+    </script>
   </body>
 </html>

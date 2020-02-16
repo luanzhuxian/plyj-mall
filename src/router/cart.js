@@ -25,6 +25,15 @@ export default [
     meta: {
       title: '支付成功'
     }
+  },
+  {
+    path: '/order/submit/curriculum/:orderId/:orderCount?',
+    name: 'SubmitCurriculum',
+    component: () => import('../views/cart/Submit-Curriculum.vue'),
+    props: true,
+    meta: {
+      title: '确认订单'
+    }
   }
 ]
 // /order/submit/success/1208311982485225472/123
