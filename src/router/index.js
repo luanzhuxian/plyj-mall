@@ -18,6 +18,7 @@ import InviteNewcomers from './invitenewcomers'
 import roadlearning from './roadlearning'
 import NewYear from './new-year.js'
 import FightEpidemic from './fight-epidemic.js'
+import OnlineClassroom from './online-classroom.js'
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
 /**
@@ -106,7 +107,8 @@ const allRoutes = [
   ...InviteNewcomers,
   ...roadlearning,
   ...NewYear,
-  ...FightEpidemic
+  ...FightEpidemic,
+  ...OnlineClassroom
 ]
 // 为每个路由配置可选参数noCache
 // for (let route of allRoutes) {
