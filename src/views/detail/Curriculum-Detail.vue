@@ -2,12 +2,26 @@
   <div :class="$style.curriculum">
     <Banner :banners="banners" />
     <InfoBox>
-      <info-header :detail="detail" />
-      <!-- 商品名称 -->
-      <DetailTitle :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
-      <!-- 商品描述 -->
-      <DetailDesc v-text="detail.productDesc" />
-      <!-- 商品标签 -->
+      <div :class="$style.priceBox">
+        <div :class="$style.price" v-text="detail.priceType ? detail.sellingPrice : 0" />
+        <div :class="$style.original">
+          <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.price">原价：<del v-text="detail.originalPrice" /></div>
+          <div class="ml-30">
+            <span v-if="detail.sale === 0">正在热销中</span>
+            <template v-else-if="detail.sale > 0 && detail.sale < 10">
+              <span v-text="detail.sale" />人关注
+            </template>
+            <template v-else-if="detail.sale >= 10">
+              <span v-text="detail.sale" />人购买
+            </template>
+          </div>
+        </div>
+      </div>
+      <!-- 课程名称 -->
+      <DetailTitle :product-name="detail.courseName" />
+      <!-- 课程描述 -->
+      <DetailDesc v-text="detail.courseBrief" />
+      <!-- 课程标签 -->
       <Tags :tags="detail.labelModels" />
 
       <div :class="$style.field">
@@ -15,9 +29,7 @@
           <pl-svg name="icon-teacher-d2398" width="30" />
           主讲人：
         </div>
-        <div :class="$style.right">
-          王老师
-        </div>
+        <div :class="$style.right" v-text="detail.lecturer" />
       </div>
 
       <div :class="$style.field">
@@ -25,9 +37,7 @@
           <pl-svg name="icon-date" width="30" />
           有效期：
         </div>
-        <div :class="$style.right">
-          长期有效
-        </div>
+        <div :class="$style.right" v-text="detail.validityType ? `购买后${detail.validity}天内学完` : '购买后不限次观看'" />
       </div>
     </InfoBox>
 
@@ -41,7 +51,7 @@
       <div>
         <DetailInfo
           v-show="tab === 2"
-          :content="detail.detail || '暂无详情'"
+          :content="detail.details || '暂无详情'"
         />
       </div>
     </div>
@@ -63,62 +73,42 @@
           {{ studied ? '观看学习(2次)' : '立即学习' }}</button>
       </div>
     </div>
+    <Contact :show.sync="showContact" />
   </div>
 </template>
 
 <script>
 import Banner from '../../components/detail/Banner.vue'
 import InfoBox from '../../components/detail/Info-Box.vue'
-import InfoHeader from '../../components/detail/Info-Header.vue'
 import DetailTitle from '../../components/detail/Title.vue'
 import DetailDesc from '../../components/detail/Desc.vue'
 import DetailInfo from '../../components/detail/Detail.vue'
 import Tags from '../../components/detail/Tags.vue'
-import { getProductDetail } from '../../apis/product'
+import Contact from '../../components/common/Contact.vue'
+import { getCourseDetail } from '../../apis/product'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
-// import { loadImage } from '../../assets/js/util'
 
 export default {
   name: 'CurriculumDetail',
   components: {
     Banner,
     InfoBox,
-    InfoHeader,
     DetailTitle,
     DetailDesc,
     Tags,
-    DetailInfo
+    DetailInfo,
+    Contact
   },
   data () {
     return {
-      banners: [
-        'https://mallcdn.youpenglai.com/video/068q8YI4X-wql4F-1581511274025.mp4',
-        'https://mallcdn.youpenglai.com/static/whats_helper_2.jpg'
-      ],
-      couponList: [],
-      productStatus: 2,
+      banners: [],
       detail: {},
-      productSkuModels: [],
-      showSpecifica: false,
-      currentModel: {}, // 当前选中的规格
-      activityProductModel: {}, // 活动信息
-      commentForm: {
-        current: 1,
-        size: 3,
-        productId: ''
-      },
       agentProduct: false,
-      showHaibao: false,
       loading: false,
-      adding: false,
-      creating: false,
-      haibao: '',
       tab: 2,
-      imgels: [],
-      // 活动类型
-      qrcode: '',
-      studied: true
+      studied: true,
+      showContact: false
     }
   },
   props: {
@@ -132,10 +122,14 @@ export default {
     }
   },
   computed: {
-    productActive () {
-      return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
+    ...mapGetters(['appId']),
+    // 0 全部，1 helper，2 会员，3 部分用户
+    targetGroups () {
+      return this.detail.targetGroups
     },
-    ...mapGetters(['appId'])
+    tagIds () {
+      return this.detail.tagIds
+    }
   },
   async activated () {
     try {
@@ -144,67 +138,43 @@ export default {
       throw e
     }
   },
-  deactivated () {
-    this.showSpecifica = false
-    this.currentModel = {}
-    this.haibao = ''
-    this.showHaibao = false
-    this.tab = 2
-  },
   async mounted () {
     sessionStorage.setItem('shareBrokerId', this.brokerId || '')
   },
   methods: {
     //  获取商品详情
-    async getDetail (productActive) {
+    async getDetail () {
       try {
         this.loading = true
         this.resetState() // 重置一些状态
         // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
-        productActive = productActive || this.productActive
-        let { result } = await getProductDetail(this.productId, productActive)
-        let { id, agentProduct, mediaInfoIds, productStatus } = result
+        let { result } = await getCourseDetail(this.productId)
         if (!result) {
-          this.$error('该商品异常')
+          this.$error('该课程异常')
           this.$router.go(-1)
           return
         }
-        this.productStatus = productStatus
-        this.commentForm.productId = id
-        this.agentProduct = agentProduct
-        // 存储活动信息
-        this.activityProductModel = result.activityProductModel
-        // 所有图片
-        this.banners = mediaInfoIds
+        const {
+          courseImg
+        } = result
+        this.banners = [courseImg]
         this.detail = result
-        this.productSkuModels = result.productSkuModels
-        this.currentModel = result.productSkuModels.find(item => item.minBuyNum <= item.stock) || result.productSkuModels[0]
-        this.currentModel.count = result.productSkuModels[0].minBuyNum
+
+        // 生成分享
         let shareUrl = ''
         if (this.userId) {
-          shareUrl = `${this.mallUrl}/detail/product/${this.productId}/${this.userId}`
+          shareUrl = `${this.mallUrl}/detail/curriculum/${this.productId}/${this.userId}`
         } else {
-          shareUrl = `${this.mallUrl}/detail/product/${this.productId}`
+          shareUrl = `${this.mallUrl}/detail/curriculum/${this.productId}`
         }
         this.shareUrl = shareUrl
-        let hide = []
-        if (this.detail.activeProduct !== 1) {
-          // 活动商品隐藏分享到朋友圈
-          hide = ['menuItem:share:timeline']
-        }
         share({
           appId: this.appId,
           title: result.productName,
           desc: result.productDesc,
           link: shareUrl,
-          imgUrl: result.productMainImage,
-          willHide: hide
+          imgUrl: result.productMainImage
         })
-        // this.haibaoImg = await loadImage(result.productMainImage)
-        // let img = await loadImage(result.productMainImage)
-        // img = cutImageCenter(img)
-        // let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'url')
-        // this.qrcode = qrcode
         return result
       } catch (e) {
         throw e
@@ -213,16 +183,11 @@ export default {
       }
     },
     resetState () {
-      this.currentModel = {}
       this.banners.splice(0, 1000000)
     },
-    async refresh (productActive) {
+    async refresh () {
       try {
-        this.showSpecifica = false
-        this.currentModel = {}
-        this.haibao = ''
-        this.tab = 2
-        await this.getDetail(productActive)
+        await this.getDetail()
       } catch (e) {
         throw e
       }
@@ -234,6 +199,28 @@ export default {
 <style module lang="scss">
   .curriculum {
     padding-bottom: 190px;
+  }
+  .priceBox {
+    > .price {
+      font-size: 46px;
+      color: #FE7700;
+      &:before {
+        content: '¥';
+        font-size: 24px;
+      }
+    }
+    > .original {
+      display: flex;
+      align-items: center;
+      margin-top: 4px;
+      color: #999;
+      font-size: 26px;
+      del {
+        &:before {
+          content: '¥';
+        }
+      }
+    }
   }
   .field {
     display: flex;

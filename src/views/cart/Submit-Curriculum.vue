@@ -73,6 +73,7 @@
 
 <script>
 import { checkLength, isPhone } from '../../assets/js/validate'
+import { getCourseDetail } from '../../apis/product'
 import { mapGetters } from 'vuex'
 export default {
   name: 'SubmitCurriculum',
@@ -99,6 +100,12 @@ export default {
       }
     }
   },
+  props: {
+    productId: {
+      type: String,
+      default: ''
+    }
+  },
   computed: {
     ...mapGetters(['mobile', 'userName'])
   },
@@ -106,8 +113,16 @@ export default {
     // 联系人信息
     let contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
     this.contactInfoModel = contactModel || { name: this.realName || this.userName, mobile: this.mobile }
+    this.getCourseDetail()
   },
   methods: {
+    async getCourseDetail () {
+      try {
+        await getCourseDetail(this.productId)
+      } catch (e) {
+        throw e
+      }
+    },
     chooseContact () {
       this.contactInfoForm = Object.assign({}, this.contactInfoForm, this.contactInfoModel)
       this.showContactPopup = true
