@@ -88,7 +88,7 @@
               <div class="desc">
                 <h5>{{ item.name }}</h5>
                 <span class="time">直播时间： {{ item.liveStartTime }}</span>
-                <span>主讲讲师： {{ item.lecturer }}}</span>
+                <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
                 <div class="price">
                   <template v-if="item.paidAmount">
                     <span>￥</span>{{ item.paidAmount }}
@@ -239,7 +239,7 @@ export default {
       }
       .price {
         position: absolute;
-        top: 12px;
+        top: 10px;
         right: 12px;
         font-size:16px;
         color:#FE7700;

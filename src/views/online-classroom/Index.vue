@@ -33,7 +33,7 @@ export default {
   },
   async activated () {
     try {
-      this.activeTabId = this.tab.filter(item => item.routerName === this.$route.name)[0].id
+      this.activeTabId = this.tabs.filter(item => item.routerName === this.$route.name)[0].id
     } catch (e) {
       throw e
     }
