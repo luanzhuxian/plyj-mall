@@ -95,7 +95,8 @@
                   </template>
                   <template v-else>免费</template>
                 </div>
-                <button @click="$router.push({name:'LivePlayBack',params:{id:item.id}})">看回放</button>
+                <button v-if="item.videoLibId!=='0'" @click="$router.push({name:'LivePlayBack',params:{id: item.videoLibId, activityId: item.id}})">看回放</button>
+                <button v-else class="not-support">不支持回放</button>
               </div>
             </div>
           </template>
@@ -306,11 +307,15 @@ export default {
         right: 12px;
         width:80px;
         height:30px;
-        background:#FE7700;
+        background-color:#FE7700;
         border-radius:4px;
         font-size:16px;
         line-height:30px;
         color:#FFF;
+        &.not-support {
+          width:100px;
+          background-color: rgba(254, 119, 0, 0.3);
+        }
       }
     }
   }

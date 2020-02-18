@@ -4,7 +4,7 @@
       <video preload controls x5-video-player-type="h5-page" width="100%" :src="videoMes.url" />
       <div>商品</div>
     </div>
-    <div :class="$style.productList">
+    <div :class="$style.productList" v-if="productList.length">
       <div :class="$style.tabTitle">
         精选商品（{{ productList.length }}件）
       </div>
@@ -27,24 +27,68 @@
         </div>
       </div>
     </div>
+    <!-- 支付弹框 -->
+    <transition name="fade">
+      <div :class="$style.payWrap" v-if="needPay">
+        <div :class="$style.payBox">
+          <div :class="$style.title">
+            支付提示
+          </div>
+          <div :class="$style.message">
+            该直播视频需支付￥{{ payCount }}后可观看回放，确认要观看吗？
+          </div>
+          <div :class="$style.buttons">
+            <pl-button size="middle" plain @click="cancelPay">我再想想</pl-button>
+            <pl-button size="middle" type="warning" @click="submitOrder">立即付款</pl-button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
-import { getActiveCompleteInfo, getVideoMesById } from '../../apis/live.js'
+import { getActiveCompleteInfo, getVideoMesById, hasPied, pay, cancelOrder } from '../../apis/live.js'
+import wechatPay from '../../assets/js/wechat/wechat-pay'
 export default {
   name: 'LivePlayBack',
   data () {
     return {
+      activityId: '',
+      id: '',
+      needPay: false,
+      payCount: 0,
       productList: [], // 商品列表
       videoMes: {}
     }
   },
-  activated () {
-    this.getVideoMes()
-    this.getDetail()
+  async activated () {
+    try {
+      this.id = this.$route.params.id // 视频id
+      this.activityId = this.$route.params.activityId // 直播活动id
+      if (this.activityId) {
+        // 查看录播前，查看是否需要付款
+        await this.isNeedPay()
+      } else {
+        this.getVideoMes()
+        this.getDetail()
+      }
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
+    async isNeedPay () {
+      this.payCount = await hasPied(this.activityId)
+      if (this.payCount) {
+        // 还没支付
+        this.needPay = true
+      }
+      if (!this.needPay) {
+        this.getVideoMes()
+        this.getDetail()
+      }
+    },
     async getDetail () {
       try {
         let mes = await getActiveCompleteInfo()
@@ -55,11 +99,50 @@ export default {
     },
     async getVideoMes () {
       try {
-        let mes = await getVideoMesById(this.$route.params.id)
+        let mes = await getVideoMesById(this.id)
         if (mes) {
           this.videoMes = mes
         }
       } catch (e) { throw e }
+    },
+    async submitOrder () {
+      try {
+        let res = await pay(this.activityId)
+        await this.pay(res)
+      } catch (e) {
+        throw e
+      }
+    },
+    async pay (CREDENTIAL) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          await wechatPay(CREDENTIAL)
+          this.getDetail()
+          this.getVideoMes()
+          this.$success('付款成功立即观看')
+          this.needPay = false
+        } catch (e) {
+          this.needPay = false
+          this.$confirm({
+            message: '支付失败',
+            viceMessage: '<p>若要正常观看</p><p>请重新发起支付</p>',
+            confirmText: '重新支付',
+            useDangersHtml: true
+          }).then(() => {
+            this.needPay = true
+          }).catch(() => {
+            this.cancelPay()
+          })
+          await cancelOrder(this.cancelOrder).then(res => {
+            reject(e)
+          }).catch(err => {
+            reject(err)
+          })
+        }
+      })
+    },
+    cancelPay () {
+      this.$router.back()
     }
   }
 }
@@ -141,6 +224,41 @@ export default {
             line-height: 34px;
           }
         }
+      }
+    }
+  }
+
+  .pay-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2002;
+    background-color: rgba(0, 0, 0, .65);
+  }
+  .pay-box {
+    width: 500px;
+    box-sizing: border-box;
+    margin: 280px auto 0;
+    padding: 22px 24px;
+    background-color: #fff;
+    text-align: center;
+    .title{
+      padding-bottom: 22px;
+      font-size:28px;
+      font-weight:bold;
+      color:#000;
+    }
+    .message{
+      padding-bottom: 22px;
+      font-size:20px;
+      line-height:26px;
+      color:#999;
+    }
+    > .buttons {
+      > button {
+        margin-left: 20px;
       }
     }
   }
