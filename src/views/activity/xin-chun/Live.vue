@@ -7,7 +7,7 @@
   >
     <div :class="$style.cover">
       <span :class="$style.status" v-if="isNoticeShow">距开始</span>
-      <span :class="$style.status" v-if="live.statue === 4">正在直播中</span>
+      <span :class="$style.status" v-if="live.statue === 4">正在直播</span>
       <span :class="$style.status" v-if="live.statue === 0">已结束</span>
       <count-down
         v-if="isNoticeShow"

@@ -48,6 +48,7 @@ export default {
   isActivityAuth: state => !!state.activityData.type,
   skinId: state => state.skinId,
   liveInfo: state => state.liveInfo,
+  courseInfo: state => state.courseInfo,
   d12CouponTotal: state => state.d12CouponTotal,
   xinchunCouponTotal: state => state.xinchunCouponTotal,
   invitingEvent: state => state.invitingEvent,

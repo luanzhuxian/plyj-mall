@@ -102,6 +102,7 @@ export default {
   activityData: {},
   skinId: null, // 皮肤id
   liveInfo: null, // 直播
+  courseInfo: null, // 线上课程
   d12CouponTotal: null, // 已领双十二优惠卷
   xinchunCouponTotal: null, // 已领新春优惠卷
   invitingEvent: null, // 邀新有礼

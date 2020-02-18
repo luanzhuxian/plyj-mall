@@ -14,6 +14,7 @@
       <search :class="$style.search" placeholder="搜索商品" />
       <propagate :class="$style.propagate" :data="PIN_XUAN" />
       <live :class="$style.live" v-if="isLiveShow" />
+      <online-course :class="$style.course" v-if="isCourseShow" :data="courseInfo" />
       <campaign v-if="isCampaignShow" />
       <activity :class="$style.activity" v-if="isNwEventShow" />
       <d12-activity :class="$style.activity" />
@@ -67,6 +68,7 @@
 <script>
 import Search from './components/Search.vue'
 import Live from '../activity/components/Live.vue'
+import OnlineCourse from './components/Online-Course.vue'
 import Activity from '../activity/xin-chun/Activity.vue'
 import D12Activity from './components/Activity.vue'
 import HotItem from './components/Hot-Item.vue'
@@ -75,7 +77,7 @@ import BestRecommend from './components/Best-Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate.vue'
 import Teachers from './components/Teachers'
-import SkinTitle from './components/Skin-Title.vue'
+import SkinTitle from './skin/Skin-Title.vue'
 import Campaign from './components/Campaign'
 
 export default {
@@ -84,6 +86,7 @@ export default {
   components: {
     Search,
     Live,
+    OnlineCourse,
     Activity,
     D12Activity,
     HotItem,
@@ -143,13 +146,20 @@ export default {
     },
     isCampaignShow () {
       return this.parent.isReportShow || this.parent.isBookShow
+    },
+    isCourseShow () {
+      const { courseInfo } = this.parent
+      return courseInfo && courseInfo.records && courseInfo.records.length
+    },
+    courseInfo () {
+      return this.parent.courseInfo || {}
     }
   }
 }
 </script>
 
 <style module lang="scss">
-  @import "./skin.scss";
+  @import "./skin/skin.scss";
 
   .home-template-c {
     background-color: #EDEDED;
@@ -210,6 +220,11 @@ export default {
   }
 
   .live,
+  .course {
+    margin-top: 24px;
+  }
+
+  // .live,
   .activity,
   .appointment {
     padding: 24px 24px 0;

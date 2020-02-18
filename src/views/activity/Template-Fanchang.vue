@@ -86,7 +86,7 @@ export default {
 
 <style module lang="scss">
   .live {
-    margin: 0 24px 16px;
+    margin: 0 0 16px;
   }
   .btn-bottom {
     width: 520px;

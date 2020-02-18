@@ -15,6 +15,7 @@
       <banner :class="$style.banner" :data="BANNER" />
       <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
       <live :class="$style.live" v-if="isLiveShow" />
+      <online-course :class="$style.course" v-if="isCourseShow" :data="courseInfo" />
       <campaign v-if="isCampaignShow" />
       <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
       <d12-activity :class="$style.activity" v-if="type === 4" />
@@ -70,6 +71,7 @@
 <script>
 import Search from './components/Search.vue'
 import Live from '../activity/components/Live.vue'
+import OnlineCourse from './components/Online-Course.vue'
 import Activity from '../activity/xin-chun/Activity.vue'
 import D12Activity from './components/Activity.vue'
 import Banner from './components/Banner.vue'
@@ -79,7 +81,7 @@ import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
-import SkinTitle from './components/Skin-Title.vue'
+import SkinTitle from './skin/Skin-Title.vue'
 import Campaign from './components/Campaign'
 
 export default {
@@ -88,6 +90,7 @@ export default {
   components: {
     Search,
     Live,
+    OnlineCourse,
     Activity,
     D12Activity,
     Banner,
@@ -151,13 +154,20 @@ export default {
     },
     isCampaignShow () {
       return this.parent.isReportShow || this.parent.isBookShow
+    },
+    isCourseShow () {
+      const { courseInfo } = this.parent
+      return courseInfo && courseInfo.records && courseInfo.records.length
+    },
+    courseInfo () {
+      return this.parent.courseInfo || {}
     }
   }
 }
 </script>
 
 <style module lang="scss">
-  @import "./skin.scss";
+  @import "./skin/skin.scss";
 
   .home-template-b {
     background-color: #EDEDED;
@@ -253,8 +263,14 @@ export default {
     color: #999;
     background: #EAE9F7;
   }
-  .adv,
+
   .live,
+  .course {
+    margin-top: 24px;
+  }
+
+  .adv,
+  // .live,
   .activity {
     padding: 20px 24px 0;
     background-color: #F4F5F9;
