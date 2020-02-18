@@ -12,7 +12,7 @@
       </div>
       <router-link
         :class="$style.onlineCourseHeadRight"
-        :to="{ name: '' }"
+        :to="{ name: 'OnlineClassroom' }"
       >
         查看全部
       </router-link>

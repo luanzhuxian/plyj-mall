@@ -6,10 +6,7 @@
       :type="type"
     />
     <!-- 直播-->
-    <live
-      v-if="parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))"
-      :class="$style.live"
-    />
+    <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
     <maisong
       v-if="MAI_SONG.values && MAI_SONG.values.length"
       :data="MAI_SONG"
@@ -119,6 +116,10 @@ export default {
     },
     hasJxEvent () {
       return ~[1, 2].indexOf(this.jxEvent.status)
+    },
+    isLiveShow () {
+      const { liveInfo } = this.parent
+      return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
     }
   }
 }

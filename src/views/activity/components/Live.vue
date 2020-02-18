@@ -1,9 +1,5 @@
 <template>
-  <router-link
-    :class="$style.liveWrapper"
-    tag="div"
-    :to="{ name: 'LiveRoom' }"
-  >
+  <div :class="$style.liveWrapper">
     <div :class="$style.liveHead">
       <div :class="$style.liveHeadLeft">
         <div :class="$style.liveHeadLeftMain">
@@ -11,16 +7,22 @@
           <span>互动直播</span>
         </div>
         <div :class="$style.liveHeadLeftSub">
-          <span>直播中 10</span>
-          <span>即将开始 10</span>
-          <span>往期直播 10</span>
+          <span>{{ `直播中 ${data.nowCount || 0}` }}</span>
+          <span>{{ `即将开始 ${data.futrueCount || 0}` }}</span>
+          <span>{{ `往期直播 ${data.pastCount || 0}` }}</span>
         </div>
       </div>
-      <div :class="$style.liveHeadRight">
+      <router-link
+        :class="$style.liveHeadRight"
+        :to="{ name: 'InteractiveLive' }"
+      >
         查看全部
-      </div>
+      </router-link>
     </div>
-    <div :class="$style.live">
+    <router-link
+      :class="$style.live"
+      :to="{ name: 'LiveRoom' }"
+    >
       <div :class="$style.imgWrapper">
         <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
         <div :class="$style.label" v-if="isNoticeShow">
@@ -53,8 +55,8 @@
           </div>
         </div>
       </div>
-    </div>
-  </router-link>
+    </router-link>
+  </div>
 </template>
 
 <script>
@@ -64,10 +66,17 @@ import CountDown from './Count-Down.vue'
 
 export default {
   name: 'Live',
-  inject: ['parent'],
   mixins: [mixin],
   components: {
     CountDown
+  },
+  props: {
+    data: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
   },
   data () {
     return {
@@ -76,7 +85,7 @@ export default {
   },
   computed: {
     live () {
-      return this.parent.liveInfo || {}
+      return this.data.liveModel || {}
     },
     isNoticeShow () {
       return this.live.statue === 2 && this.live.hasNotice

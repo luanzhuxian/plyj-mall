@@ -41,7 +41,6 @@ import CountDown from '../components/Count-Down.vue'
 
 export default {
   name: 'Live',
-  inject: ['parent'],
   components: {
     CountDown
   },
@@ -58,7 +57,7 @@ export default {
   },
   computed: {
     live () {
-      return this.parent.liveInfo || {}
+      return this.data.liveModel || {}
     },
     isNoticeShow () {
       return this.live.statue === 2 && this.live.hasNotice

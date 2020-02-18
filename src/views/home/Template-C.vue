@@ -13,8 +13,8 @@
     <div :class="$style.container">
       <search :class="$style.search" placeholder="搜索商品" />
       <propagate :class="$style.propagate" :data="PIN_XUAN" />
-      <live :class="$style.live" v-if="isLiveShow" />
-      <online-course :class="$style.course" v-if="isCourseShow" :data="courseInfo" />
+      <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
+      <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
       <campaign v-if="isCampaignShow" />
       <activity :class="$style.activity" v-if="isNwEventShow" />
       <d12-activity :class="$style.activity" />
@@ -138,21 +138,18 @@ export default {
       return this.data.RECOMMEND || {}
     },
     isLiveShow () {
-      return this.parent.liveInfo &&
-      (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
+      const { liveInfo } = this.parent
+      return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+    },
+    isCourseShow () {
+      const { courseInfo } = this.parent
+      return courseInfo && courseInfo.records && courseInfo.records.length
     },
     isNwEventShow () {
       return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
     },
     isCampaignShow () {
       return this.parent.isReportShow || this.parent.isBookShow
-    },
-    isCourseShow () {
-      const { courseInfo } = this.parent
-      return courseInfo && courseInfo.records && courseInfo.records.length
-    },
-    courseInfo () {
-      return this.parent.courseInfo || {}
     }
   }
 }
