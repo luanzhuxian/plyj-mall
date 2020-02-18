@@ -14,31 +14,26 @@
       </div>
     </div>
     <div class="content">
-      <InteractiveLive v-if="activeTabId === 0" />
-      <OnlineClassroom v-if="activeTabId === 1" />
+      <keep-alive>
+        <router-view />
+      </keep-alive>
     </div>
   </div>
 </template>
 <script>
-import InteractiveLive from './Interactive-Live.vue'
-import OnlineClassroom from './Online-Classroom.vue'
 export default {
   name: 'OnlineClassroomIndex',
-  components: {
-    InteractiveLive,
-    OnlineClassroom
-  },
   data () {
     return {
       activeTabId: 0,
       tabs: [
-        { name: '互动直播', id: 0 },
-        { name: '线上课程', id: 1 }]
+        { name: '互动直播', routerName: 'InteractiveLive', id: 0 },
+        { name: '线上课程', routerName: 'OnlineClassroom', id: 1 }]
     }
   },
   async activated () {
     try {
-      this.activeTabId = this.$route.params.activeTabId || 0
+      this.activeTabId = this.tab.filter(item => item.routerName === this.$route.name)[0].id
     } catch (e) {
       throw e
     }
@@ -47,17 +42,24 @@ export default {
     async handleClick (item) {
       try {
         this.activeTabId = item.id
+        this.$router.replace({ name: item.routerName })
       } catch (e) {
         throw e
       }
     }
-  },
-  watch: {
   }
 }
 </script>
 <style lang="scss" scoped>
+  .tab-box{
+    width: 100vw;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+  }
 .content{
-  padding: 0 10px 20px;
+  margin-top: 64px;
+  padding: 10px 10px 20px;
+  background-color: #FFF;
 }
 </style>
