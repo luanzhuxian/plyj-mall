@@ -27,7 +27,7 @@ export default [
     }
   },
   {
-    path: '/order/submit/curriculum/:orderId/:orderCount?',
+    path: '/order/submit/curriculum/:productId/:count?',
     name: 'SubmitCurriculum',
     component: () => import('../views/cart/Submit-Curriculum.vue'),
     props: true,

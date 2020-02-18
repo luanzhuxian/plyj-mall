@@ -8,11 +8,11 @@
           <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.price">原价：<del v-text="detail.originalPrice" /></div>
           <div class="ml-30">
             <span v-if="detail.sale === 0">正在热销中</span>
-            <template v-else-if="detail.sale > 0 && detail.sale < 10">
+            <!--<template v-else-if="detail.sale > 0 && detail.sale < 10">
               <span v-text="detail.sale" />人关注
-            </template>
-            <template v-else-if="detail.sale >= 10">
-              <span v-text="detail.sale" />人购买
+            </template>-->
+            <template v-else>
+              <span v-text="detail.sale" />人已学
             </template>
           </div>
         </div>
@@ -64,13 +64,12 @@
         <a :class="$style.link + ' ' + $style.callUs" @click="showContact = true">
           <pl-svg name="icon-call-us" width="80" height="72" />
         </a>
-        <button
-          :class="{
-            [$style.clickMeBecauseYouAreYoung]: true,
-            [$style.hasStudied]: studied
-          }"
-        >
-          {{ studied ? '观看学习(2次)' : '立即学习' }}</button>
+        <button v-if="!detail.isBuy" :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung" @click="goSubmit">
+          立即学习
+        </button>
+        <button v-else :class="$style.button + ' ' + $style.hasStudied">
+          观看学习(2次)
+        </button>
       </div>
     </div>
     <Contact :show.sync="showContact" />
@@ -88,7 +87,6 @@ import Contact from '../../components/common/Contact.vue'
 import { getCourseDetail } from '../../apis/product'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
-
 export default {
   name: 'CurriculumDetail',
   components: {
@@ -181,6 +179,9 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    goSubmit () {
+      this.$router.push({ name: 'SubmitCurriculum', params: { productId: this.productId, count: 1 } })
     },
     resetState () {
       this.banners.splice(0, 1000000)
@@ -280,18 +281,20 @@ export default {
         margin-left: 36px;
       }
     }
-    .click-me-because-you-are-young {
+    .button {
       width: 496px;
       margin-left: 40px;
       line-height: 80px;
       font-size: 26px;
       text-align: center;
       color: #fff;
-      background-color: #FE7700;
       border-radius: 10px;
-      &.has-studied {
-        background-color: #F2B036;
-      }
+    }
+    .click-me-because-you-are-young {
+      background-color: #FE7700;
+    }
+    .has-studied {
+      background-color: #F2B036;
     }
   }
 </style>
