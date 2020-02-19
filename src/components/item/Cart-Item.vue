@@ -179,7 +179,7 @@ export default {
     async goDetail () {
       const productId = this.data.cartProductId
       this.$router.push({
-        name: 'Lesson',
+        name: 'Product',
         params: {
           productId: productId
         }

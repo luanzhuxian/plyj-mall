@@ -38,3 +38,10 @@ export const getSpringCombination = params => axios.get(`/apis/v1/combination/ho
  * @returns {Promise<AxiosResponse<Object>>}
  */
 export const getCourseDetail = mallCourseId => axios.get(`/apis/v1/mall/cource/courseInfo/${mallCourseId}`)
+
+/**
+ * 提交订单（获取订单号）
+ * @param data {Object}
+ * @return {*}
+ */
+export const submitOrderAndPay = (courseId, params) => axios.post(`/apis/v1/mall/live/order/create/course/order/${courseId}`, params)

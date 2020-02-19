@@ -87,7 +87,7 @@
           :allow-invoice="item.invoiceType"
           :active-product="activeProduct"
           :pre-active="2"
-          route-name="Lesson"
+          route-name="Product"
         />
         <div :class="$style.buttons">
           <pl-button

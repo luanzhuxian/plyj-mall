@@ -2,13 +2,13 @@
   <div :class="$style.submitCurriculum">
     <div :class="$style.product">
       <div :class="$style.detail">
-        <img src="https://mallcdn.youpenglai.com/static/helperBanner.png" alt="">
+        <img :src="courseDetail.courseImg" alt="">
         <div :class="$style.right">
           <div :class="$style.name">
-            老师打卡萨丁韩国
+            {{ courseDetail.courseName }}
           </div>
           <div :class="$style.price">
-            13000
+            {{ courseDetail.sellingPrice }}
           </div>
           <div :class="$style.tips">
             购买后即可观看视频课程，不支持退款
@@ -17,15 +17,15 @@
         </div>
       </div>
       <div :class="$style.total">
-        总计：<i>130000</i>
+        总计：<i>{{ courseDetail.sellingPrice }}</i>
       </div>
     </div>
     <div :class="$style.bottom">
       <div :class="$style.left">
         <div class="fz-20 gray-2">合计</div>
-        <div class="fz-32">300000</div>
+        <div class="fz-32">{{ courseDetail.sellingPrice }}</div>
       </div>
-      <button :class="$style.button">
+      <button :class="$style.button" :disabled="submiting" @click="submitOrder">
         确认提交
       </button>
     </div>
@@ -72,14 +72,20 @@
 </template>
 
 <script>
-import { checkLength, isPhone } from '../../assets/js/validate'
-import { getCourseDetail } from '../../apis/product'
 import { mapGetters } from 'vuex'
+import { checkLength, isPhone } from '../../assets/js/validate'
+import { getCourseDetail, submitOrderAndPay } from '../../apis/product'
+import { setTimeoutSync } from '../../assets/js/util'
+import wechatPay from '../../assets/js/wechat/wechat-pay'
+
 export default {
   name: 'SubmitCurriculum',
   data () {
+    this.requestPayDataCount = 0
     return {
       showContactPopup: false,
+      submiting: false,
+      courseDetail: {},
       contactInfoForm: {
         name: '',
         mobile: ''
@@ -118,7 +124,9 @@ export default {
   methods: {
     async getCourseDetail () {
       try {
-        await getCourseDetail(this.productId)
+        let { result } = await getCourseDetail(this.productId)
+        result.sellingPrice = result.sellingPrice ? result.sellingPrice : 0
+        this.courseDetail = result
       } catch (e) {
         throw e
       }
@@ -139,6 +147,50 @@ export default {
         name: '',
         mobile: ''
       }
+    },
+    async submitOrder () {
+      if (!this.contactInfoModel.name || !this.contactInfoModel.mobile) {
+        this.$confirm('您还没有添加联系人信息，请先添加联系人信息')
+          .then(() => {
+            this.showContactPopup = true
+          })
+        return
+      }
+      // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
+      // 下次请求的开始时间 =  500ms + 当前请求时间
+      if (this.requestPayDataCount >= 20) {
+        this.requestPayDataCount = 0
+        this.submiting = false
+        this.$error('支付失败')
+        return
+      }
+      await setTimeoutSync(500)
+      try {
+        let { result: payData } = await submitOrderAndPay(this.productId, this.contactInfoModel)
+        if (!payData) { // 如果没有拿到请求数据，再次尝试发起请求
+          this.requestPayDataCount++
+          await this.submitOrder()
+        } else { // 如果有，则发起支付
+          await this.pay(payData)
+        }
+      } catch (e) {
+        this.requestPayDataCount = 0
+        this.submiting = false
+        throw e
+      }
+    },
+    async pay (CREDENTIAL) { // 支付
+      try {
+        if (CREDENTIAL.appId) {
+          await wechatPay(CREDENTIAL)
+          this.$success('支付成功')
+          // 支付成功，去视频库看视频
+          await this.$router.push({ name: 'LiveLibrary' })
+        }
+      } catch (e) {
+        throw e
+      }
+      this.submiting = false
     }
   }
 }

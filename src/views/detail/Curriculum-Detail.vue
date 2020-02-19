@@ -67,8 +67,8 @@
         <button v-if="!detail.isBuy" :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung" @click="goSubmit">
           立即学习
         </button>
-        <button v-else :class="$style.button + ' ' + $style.hasStudied">
-          观看学习(2次)
+        <button v-else :class="$style.button + ' ' + $style.hasStudied" @click="goStudy">
+          观看学习
         </button>
       </div>
     </div>
@@ -179,6 +179,9 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    goStudy () {
+      this.$router.push({ name: 'LivePlayBack', params: { id: this.detail.liveId } })
     },
     goSubmit () {
       this.$router.push({ name: 'SubmitCurriculum', params: { productId: this.productId, count: 1 } })
