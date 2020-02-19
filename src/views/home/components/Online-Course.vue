@@ -20,7 +20,7 @@
     <router-link
       v-if="list.length"
       :class="$style.onlineCourse"
-      :to="{ name: '', params: { id: course.id } }"
+      :to="{ name: 'Curriculum', params: { productId: course.id } }"
     >
       <div :class="$style.imgWrapper">
         <img :src="course.courseImg + '?x-oss-process=style/thum-small'">
