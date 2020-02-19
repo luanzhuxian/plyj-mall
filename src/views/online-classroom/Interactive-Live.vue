@@ -240,7 +240,7 @@ export default {
       }
       .price {
         position: absolute;
-        top: 10px;
+        top: 3px;
         right: 12px;
         font-size:16px;
         color:#FE7700;
