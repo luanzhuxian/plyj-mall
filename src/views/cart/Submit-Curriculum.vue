@@ -115,11 +115,15 @@ export default {
   computed: {
     ...mapGetters(['mobile', 'userName'])
   },
-  created () {
+  async activated () {
     // 联系人信息
     let contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
     this.contactInfoModel = contactModel || { name: this.realName || this.userName, mobile: this.mobile }
-    this.getCourseDetail()
+    try {
+      this.getCourseDetail()
+    } catch (e) {
+      throw e
+    }
   },
   methods: {
     async getCourseDetail () {
