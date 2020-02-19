@@ -175,7 +175,12 @@ export default {
           this.requestPayDataCount++
           await this.submitOrder()
         } else { // 如果有，则发起支付
-          await this.pay(payData)
+          if (payData && payData.appId) { // 返回体中有appId时则为非零元课程,非0元需要调用微信支付
+            await this.pay(payData)
+          } else { // 0元商品无需支付
+            this.$success('支付成功')
+            this.goVideoLibrary()
+          }
         }
       } catch (e) {
         this.requestPayDataCount = 0
@@ -188,13 +193,16 @@ export default {
         if (CREDENTIAL.appId) {
           await wechatPay(CREDENTIAL)
           this.$success('支付成功')
-          // 支付成功，去视频库看视频
-          await this.$router.push({ name: 'LiveLibrary' })
+          this.goVideoLibrary()
         }
       } catch (e) {
         throw e
       }
       this.submiting = false
+    },
+    goVideoLibrary () {
+      // 支付成功，去视频库看视频
+      this.$router.push({ name: 'LiveLibrary' })
     }
   }
 }
