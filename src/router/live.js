@@ -18,9 +18,47 @@ export default [
   {
     path: '/lived/library',
     name: 'LiveLibrary',
-    component: () => import('../views/live/Live-Library.vue'),
+    component: () => import('../views/live/live-library/Index.vue'),
+    redirect: '/lived/library/live',
     meta: {
       title: '视频库'
+    },
+    children: [
+      {
+        path: '/lived/library/live',
+        name: 'MyLive',
+        component: () => import('../views/live/live-library/Live.vue'),
+        meta: {
+          title: '我的直播'
+        }
+      },
+      {
+        path: '/lived/library/courses',
+        name: 'MyCourses',
+        component: () => import('../views/live/live-library/Courses.vue'),
+        redirect: '/lived/library/courses/course-learning/1',
+        meta: {
+          title: '我的课程'
+        },
+        children: [
+          {
+            path: '/lived/library/courses/course-learning/:learnStatus',
+            name: 'CourseLearn',
+            component: () => import('../views/live/live-library/Course-Learning.vue'),
+            meta: {
+              title: '课程学习'
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: '/lived/course-watch/:id',
+    name: 'CourseWatch',
+    component: () => import('../views/live/live-library/Course-Watch.vue'),
+    meta: {
+      title: '观看课程'
     }
   },
   {

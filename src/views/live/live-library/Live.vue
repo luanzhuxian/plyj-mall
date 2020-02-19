@@ -1,13 +1,6 @@
 <template>
   <!--我的视频列表-->
   <div :class="$style.liveLibrary">
-    <!--头部-->
-    <header>
-      <div>
-        我的观看列表({{ videoList.length }})
-      </div>
-      <!-- <div @click="edit">{{ isEdit ? '取消' : '管理' }}</div> -->
-    </header>
     <!--视频列表-->
     <div :class="$style.videoContent">
       <pl-checkbox-group
@@ -68,9 +61,9 @@
     </footer>
   </div>
 </template>
-
+视频库
 <script>
-import { getLibraryList } from '../../apis/live'
+import { getLibraryList } from '../../../apis/live-library'
 export default {
   name: 'LiveLibrary',
   data () {
@@ -85,7 +78,7 @@ export default {
     try {
       let mes = await getLibraryList()
       if (mes) {
-        this.videoList = mes
+        this.videoList = mes.result || []
       }
     } catch (e) { throw e }
   },
@@ -114,17 +107,7 @@ export default {
 <style lang='scss' module scoped>
 
   .live-library {
-
-    > header {
-      display: flex;
-      justify-content: space-between;
-      padding: 24px;
-      font-size: 28px;
-      > div:nth-of-type(1) {
-        font-size:24px;
-      }
-    }
-
+    height: 100%;
     > footer {
       display: flex;
       box-sizing: border-box;
@@ -168,7 +151,7 @@ export default {
     .check-box {
       background: #FFFFFF;
       border-radius:20px;
-      padding: 24px;
+      padding: 12px 0;
       overflow: hidden;
       /deep/ label {
         margin-right: 24px;
