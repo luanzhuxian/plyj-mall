@@ -15,7 +15,7 @@
     </load-more>
     <!--无数据情况-->
     <div v-if="loading" :class="$style.none">
-      <div @click="$router.push({name:'Home'})" :class="$style.goLearning">去学习课程</div>
+      <div @click="$router.push({name:'OnlineClassroom'})" :class="$style.goLearning">去学习课程</div>
     </div>
   </div>
 </template>
@@ -56,14 +56,16 @@ export default {
   },
   watch: {
     '$route.params.learnStatus': {
-      async handler (newVal, oldVal) {
+      async handler (newVal, oldVal, aa) {
         try {
-          this.list = []
-          this.loading = false
-          this.form.current = 1
-          this.form.learnStatus = Number(newVal)
-          await this.$nextTick()
-          this.$refs.loadMore.refresh()
+          if (newVal) {
+            this.list = []
+            this.loading = false
+            this.form.current = 1
+            this.form.learnStatus = Number(newVal)
+            await this.$nextTick()
+            this.$refs.loadMore.refresh()
+          }
         } catch (e) { throw e }
       },
       immediate: true
