@@ -202,7 +202,7 @@ export default {
     },
     goVideoLibrary () {
       // 支付成功，去视频库看视频
-      this.$router.push({ name: 'LiveLibrary' })
+      this.$router.push({ name: 'MyCourses' })
     }
   }
 }

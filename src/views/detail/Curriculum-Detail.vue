@@ -3,10 +3,11 @@
     <Banner :banners="banners" />
     <InfoBox>
       <div :class="$style.priceBox">
-        <div :class="$style.price" v-text="detail.priceType ? detail.sellingPrice : 0" />
+        <div v-if="detail.sellingPrice" :class="$style.price" v-text="detail.sellingPrice" />
+        <div v-else :class="$style.free">免费</div>
         <div :class="$style.original">
-          <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.price">原价：<del v-text="detail.originalPrice" /></div>
-          <div class="ml-30">
+          <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.price" class="mr-30">原价：<del v-text="detail.originalPrice" /></div>
+          <div>
             <span v-if="detail.sale === 0">正在热销中</span>
             <!--<template v-else-if="detail.sale > 0 && detail.sale < 10">
               <span v-text="detail.sale" />人关注
@@ -212,6 +213,10 @@ export default {
         content: '¥';
         font-size: 24px;
       }
+    }
+    .free {
+      font-size: 46px;
+      color: #FE7700;
     }
     > .original {
       display: flex;
