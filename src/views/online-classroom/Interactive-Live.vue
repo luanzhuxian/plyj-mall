@@ -2,7 +2,7 @@
   <div class="interactive-live">
     <div class="now-live" v-show="nowLiveList.length">
       <div class="title">
-        <pl-svg name="icon-live-a8210" width="30" />
+        <pl-svg name="icon-live-a8210" width="36" />
         正在直播
         <span>({{ nowLiveList.length }})</span>
       </div>
@@ -36,7 +36,7 @@
     </div>
     <div class="future-live" v-show="futureLiveList.length">
       <div class="title">
-        <pl-svg name="icon-time-866c0" width="30" />
+        <pl-svg name="icon-time-866c0" width="36" />
         即将开始
         <span>({{ futureLiveList.length }})</span>
       </div>
@@ -70,7 +70,7 @@
     </div>
     <div class="past-live" v-show="pastLiveList.length">
       <div class="title">
-        <pl-svg name="icon-tv-76530" width="30" />
+        <pl-svg name="icon-tv-76530" width="36" />
         往期直播
         <span>({{ pastLiveList.length }})</span>
       </div>
@@ -198,15 +198,16 @@ export default {
   .title {
     height: 30px;
     padding: 10px 0;
-    font-size:16px;
+    margin: 20px 0;
+    font-size:32px;
     font-weight:bold;
     line-height: 30px;
     color:#333;
     > svg {
-      vertical-align: middle;
+      vertical-align: text-top;
     }
     >span {
-      font-size:12px;
+      font-size:24px;
       font-weight:bold;
       color:#999;
     }
@@ -221,17 +222,17 @@ export default {
     }
     .desc {
       position: relative;
-      padding: 10px 12px 16px;
+      padding: 20px 24px 32px;
       background:#F8F8F8;
       border-radius:0px 0px 10px 10px;
       >h5{
         width:160px;
-        font-size:16px;
+        font-size:30px;
         color:#222;
         @include elps-wrap(1);
       }
       >span {
-        font-size:14px;
+        font-size:26px;
         color:#828282;
         &.time {
           display: block;
@@ -242,23 +243,23 @@ export default {
         position: absolute;
         top: 3px;
         right: 12px;
-        font-size:16px;
+        font-size:30px;
         color:#FE7700;
         span {
           font-weight:400;
-          font-size:10px;
+          font-size:20px;
         }
       }
       > button {
         position: absolute;
         bottom: 16px;
         right: 12px;
-        width:80px;
-        height:30px;
+        width:150px;
+        height:60px;
         background:#FE7700;
         border-radius:4px;
-        font-size:16px;
-        line-height:30px;
+        font-size:30px;
+        line-height:60px;
         color:#FFF;
       }
     }
@@ -275,17 +276,17 @@ export default {
     }
     .desc {
       position: relative;
-      padding: 10px 12px 16px;
+      padding: 20px 24px 32px;
       background:#F8F8F8;
       border-radius:0px 0px 10px 10px;
       >h5{
         width:160px;
-        font-size:16px;
+        font-size:24px;
         color:#222;
         @include elps-wrap(1);
       }
       >span {
-        font-size:14px;
+        font-size:22px;
         color:#828282;
         &.time {
           display: block;
@@ -294,26 +295,26 @@ export default {
       }
       .price {
         margin-top: 10px;
-        font-size:16px;
+        font-size:28px;
         color:#FE7700;
         span {
           font-weight:400;
-          font-size:10px;
+          font-size:20px;
         }
       }
       > button {
         position: absolute;
         bottom: 16px;
         right: 12px;
-        width:80px;
-        height:30px;
+        height:60px;
+        padding: 0 15px;
         background-color:#FE7700;
         border-radius:4px;
-        font-size:16px;
-        line-height:30px;
+        font-size:26px;
+        line-height:60px;
         color:#FFF;
         &.not-support {
-          width:100px;
+          padding: 0 10px;
           background-color: rgba(254, 119, 0, 0.3);
         }
       }

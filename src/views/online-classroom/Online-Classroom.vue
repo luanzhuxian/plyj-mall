@@ -169,7 +169,7 @@ export default {
     height: 36px;
     background-color: #FFF;
     z-index: 3;
-    top: 22px;
+    top: 28px;
     right: 0;
   }
   .classify-list {
@@ -180,17 +180,16 @@ export default {
     word-break: keep-all;
     white-space: nowrap;
     li {
-      height: 22px;
-      line-height: 22px;
+      height: 30px;
+      line-height: 30px;
       text-align: center;
       display: inline-block;
       margin: 7px 0;
-      padding: 3px 7px;
-      font-size:16px;
+      padding: 3px 10px;
+      font-size:22px;
       color:#666666;
       &.active {
         background:#FDF5E7;
-        height: 20px;
         border:1px solid #F3AD3C;
         border-radius:64px;
         color:#F3AD3C;
@@ -229,25 +228,25 @@ export default {
       border-radius:0px 0px 10px 10px;
       >h5{
         width:160px;
-        font-size:16px;
+        font-size:24px;
         color:#222;
         @include elps-wrap(1);
       }
       >span {
-        font-size:14px;
+        font-size:22px;
         color:#828282;
       }
       .price {
         font-weight:bold;
         margin-top: 10px;
-        font-size:20px;
+        font-size:32px;
         color:#FE7700;
         span {
           font-weight:400;
-          font-size:10px;
+          font-size:20px;
         }
         .original-price {
-          font-size:10px;
+          font-size:20px;
           color:#999999;
           text-decoration: line-through;
         }
@@ -256,12 +255,12 @@ export default {
         position: absolute;
         bottom: 16px;
         right: 12px;
-        width:80px;
-        height:30px;
+        width:120px;
+        height:48px;
         background:#FE7700;
         border-radius:4px;
-        font-size:16px;
-        line-height:30px;
+        font-size:26px;
+        line-height:48px;
         color:#FFF;
       }
     }
