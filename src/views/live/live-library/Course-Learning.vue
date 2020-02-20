@@ -3,7 +3,7 @@
     <load-more
       ref="loadMore"
       :form="form"
-      :class="$style.notLearn"
+      :class="$style.courseLearning"
       :request-methods="getCourseList"
       @refresh="refreshList"
       @more="refreshList"
@@ -25,7 +25,7 @@ import StudyItem from './components/Study-Item'
 import LoadMore from './../../../components/common/Load-More.vue'
 import { getCourseList } from './../../../apis/live-library'
 export default {
-  name: 'NotLearn',
+  name: 'CourseLearning',
   components: {
     StudyItem,
     LoadMore
@@ -75,12 +75,13 @@ export default {
 </script>
 
 <style module lang='scss'>
-  .not-learn {
-    padding: 28px;
+  .course-learning {
+    padding: 6px 28px;
     box-sizing: border-box;
     background-color: #FFFFFF;
   }
   .none {
+    margin-top: 20px;
     text-align: center;
     > .go-learning {
       display: inline-block;

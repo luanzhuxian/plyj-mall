@@ -43,7 +43,7 @@ export default [
         children: [
           {
             path: '/lived/library/courses/course-learning/:learnStatus',
-            name: 'CourseLearn',
+            name: 'CourseLearning',
             component: () => import('../views/live/live-library/Course-Learning.vue'),
             meta: {
               title: '课程学习'

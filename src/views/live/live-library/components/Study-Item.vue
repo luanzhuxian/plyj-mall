@@ -12,7 +12,7 @@
       </div>
       <div :class="$style.learn">
         <div>
-          <span>已学习：</span><span>{{ item.learnProgress || 0 }}%</span>
+          <span>已学习</span><span>{{ item.learnProgress || 0 }}%</span>
         </div>
         <div v-if="$route.params.learnStatus !== '3'" @click="$router.push({name:'CourseWatch',params:{id:item.courseId},query:{liveId:item.liveId,orderId:item.orderId,progress:item.learnProgress}})">学习课程</div>
       </div>
@@ -57,8 +57,8 @@ export default {
       width: 280px;
       height: 186px;
       position: relative;
-      margin-right: 20px;
-      border-radius: 50px;
+      margin-right: 24px;
+      border-radius: 20px;
       overflow: hidden;
       > img {
         width: 100%;
@@ -80,7 +80,7 @@ export default {
     > .content {
       display: flex;
       flex-wrap: wrap;
-      width: calc(100% - 280px);
+      width: calc(100% - 284px);
       align-content: space-between;
       > .description {
         width: 100%;

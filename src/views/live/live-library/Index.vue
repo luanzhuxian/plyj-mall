@@ -11,9 +11,9 @@
       </div>
     </div>
     <div v-if="$route.name !== 'MyLive'" :class="$style.studyTabs">
-      <div :class="{[$style.focus]:$route.params.learnStatus === '1'}" @click="$router.push({name:'CourseLearn',params:{learnStatus:'1'}})">未学习</div>
-      <div :class="{[$style.focus]:$route.params.learnStatus === '2'}" @click="$router.push({name:'CourseLearn',params:{learnStatus:'2'}})">学习中</div>
-      <div :class="{[$style.focus]:$route.params.learnStatus === '3'}" @click="$router.push({name:'CourseLearn',params:{learnStatus:'3'}})">已学完</div>
+      <div :class="{[$style.focus]:$route.params.learnStatus === '1'}" @click="$router.push({name:'CourseLearning',params:{learnStatus:'1'}})">未学习</div>
+      <div :class="{[$style.focus]:$route.params.learnStatus === '2'}" @click="$router.push({name:'CourseLearning',params:{learnStatus:'2'}})">学习中</div>
+      <div :class="{[$style.focus]:$route.params.learnStatus === '3'}" @click="$router.push({name:'CourseLearning',params:{learnStatus:'3'}})">已学完</div>
     </div>
     <div :class="$style.description">
       <span v-if="$route.name === 'MyLive'">仅可支持查看已观看过的可回放直播</span>
@@ -85,7 +85,7 @@ export default {
         }
       }
       > .description {
-        padding: 20px 28px;
+        padding: 14px 28px;
         box-sizing: border-box;
         font-size: 28px;
         background-color: #FFFFFF;
