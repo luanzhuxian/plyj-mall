@@ -9,9 +9,12 @@
     <li
       :class="$style.tag" v-for="(item, i) of tags"
       :key="i"
-      v-text="item.labelName"
       :style="{ color: color[i] }"
-    />
+    >
+      <template v-if="item && !!item.labelName">
+        {{ item.labelName }}
+      </template>
+    </li>
   </ul>
 </template>
 

@@ -38,7 +38,7 @@
           </div>
           <div :class="$style.content">
             <div :class="$style.name" v-text="item.goodsInfo.productName" />
-            <Tags
+            <tags
               :class="$style.tags"
               size="middle"
               :tags="item.goodsInfo.labelModels"

@@ -67,7 +67,7 @@
               <tags
                 :class="$style.tags"
                 size="small"
-                :tags="item.goodsInfo.labelModels.slice(0, 2)"
+                :tags="i === 0 ? item.goodsInfo.labelModels : item.goodsInfo.labelModels.slice(0, 2)"
               />
               <div :class="$style.proPrice">
                 <div :class="$style.price">
