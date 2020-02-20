@@ -95,7 +95,7 @@
                   </template>
                   <template v-else>免费</template>
                 </div>
-                <button v-if="item.videoLibId!=='0'" @click="$router.push({name:'LivePlayBack',params:{id: item.videoLibId, activityId: item.id}})">看回放</button>
+                <button v-if="item.videoLibId!=='0'" @click="$router.push({name:'LivePlayBack',params:{activityId: item.id, id: item.videoLibId, payCount: item.paidAmount}})">看回放</button>
                 <button v-else class="not-support">不支持回放</button>
               </div>
             </div>

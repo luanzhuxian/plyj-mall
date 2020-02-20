@@ -64,8 +64,9 @@ export default {
   },
   async activated () {
     try {
-      this.id = this.$route.params.id // 视频id
       this.activityId = this.$route.params.activityId // 直播活动id
+      this.payCount = this.$route.params.payCount || 0 // 直播活动价格
+      this.id = this.$route.params.id // 视频id
       if (this.activityId) {
         // 查看录播前，查看是否需要付款
         await this.isNeedPay()
@@ -79,8 +80,9 @@ export default {
   },
   methods: {
     async isNeedPay () {
-      this.payCount = await hasPied(this.activityId)
-      if (this.payCount) {
+      let payCount = await hasPied(this.activityId)
+      // 返回为0-未购买， 其他数值-当时购买的价格
+      if (!payCount && this.payCount) { // 此视频有价格但是未付款时，弹出支付弹框
         // 还没支付
         this.needPay = true
       }
@@ -133,7 +135,7 @@ export default {
           }).catch(() => {
             this.cancelPay()
           })
-          await cancelOrder(this.cancelOrder).then(res => {
+          await cancelOrder(this.activityId).then(res => {
             reject(e)
           }).catch(err => {
             reject(err)
@@ -144,6 +146,11 @@ export default {
     cancelPay () {
       this.$router.back()
     }
+  },
+  deactivated () {
+    this.needPay = false
+    this.productList = []
+    this.videoMes = {}
   }
 }
 </script>
