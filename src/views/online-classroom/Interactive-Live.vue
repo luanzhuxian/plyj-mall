@@ -8,6 +8,7 @@
       </div>
       <div class="content">
         <load-more
+          is-not-show-no-more-tip
           ref="nowLiveLoadMore"
           :form="nowLiveForm"
           :request-methods="requestMethods"
@@ -43,6 +44,7 @@
       <div class="content">
         <load-more
           ref="futureLiveLoadMore"
+          is-not-show-no-more-tip
           :form="futureLiveForm"
           :request-methods="requestMethods"
           :loading.sync="loadingFutureLive"

@@ -50,7 +50,7 @@
         </path>
       </svg>
       <p
-        v-if="allLoaded && list.length > 0"
+        v-if="!isNotShowNoMoreTip && allLoaded && list.length > 0"
         :class="$style.noMore"
       >
         没有更多了~
@@ -133,7 +133,8 @@ export default {
       type: String,
       default: 'icon-no-content'
     },
-    noIcon: Boolean
+    noIcon: Boolean,
+    isNotShowNoMoreTip: Boolean // 不显示‘没有更多了’提示true, 显示false
   },
   computed: {
     pullLoading: function () {
