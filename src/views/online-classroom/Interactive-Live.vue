@@ -23,8 +23,8 @@
                 <span class="time">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</span>
                 <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
                 <div class="price">
-                  <template v-if="item.paidAmount">
-                    <span>￥</span>{{ item.paidAmount }}
+                  <template v-if="item.actuallyPaidAmount">
+                    <span>￥</span>{{ item.actuallyPaidAmount }}
                   </template>
                   <template v-else>免费</template>
                 </div>
@@ -58,8 +58,8 @@
                 <span class="time">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</span>
                 <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
                 <div class="price">
-                  <template v-if="item.paidAmount">
-                    <span>￥</span>{{ item.paidAmount }}
+                  <template v-if="item.actuallyPaidAmount">
+                    <span>￥</span>{{ item.actuallyPaidAmount }}
                   </template>
                   <template v-else>免费</template>
                 </div>
@@ -92,12 +92,12 @@
                 <span class="time">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</span>
                 <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
                 <div class="price">
-                  <template v-if="item.paidAmount">
-                    <span>￥</span>{{ item.paidAmount }}
+                  <template v-if="item.actuallyPaidAmount">
+                    <span>￥</span>{{ item.actuallyPaidAmount }}
                   </template>
                   <template v-else>免费</template>
                 </div>
-                <button v-if="item.videoLibId!=='0'" @click="$router.push({name:'LivePlayBack',params:{activityId: item.id, id: item.videoLibId, payCount: item.paidAmount}})">看回放</button>
+                <button v-if="item.videoLibId!=='0'" @click="$router.push({name:'LivePlayBack',params:{activityId: item.id, id: item.videoLibId, payCount: item.actuallyPaidAmount}})">看回放</button>
                 <button v-else class="not-support">不支持回放</button>
               </div>
             </div>
@@ -166,11 +166,18 @@ export default {
         throw e
       }
     },
+    formatPaidAmount (list) {
+      // 后台返回的paidAmount单位为分，要转换为元
+      list.forEach(item => {
+        item.actuallyPaidAmount = Number(Number(item.paidAmount / 100).toFixed(2))
+      })
+      return list
+    },
     refreshNowLiveHandler (list) {
-      this.nowLiveList = list
+      this.nowLiveList = this.formatPaidAmount(list)
     },
     refreshPastLiveHandler (list) {
-      this.pastLiveList = list
+      this.pastLiveList = this.formatPaidAmount(list)
     },
     refreshFutureLiveHandler (list) {
       let minIndex = 0
@@ -180,7 +187,7 @@ export default {
         minIndex = curTime.isBefore(minTime) ? i : minIndex
       }
       list[minIndex].isMin = true
-      this.futureLiveList = list
+      this.futureLiveList = this.formatPaidAmount(list)
     }
   }
 }
