@@ -31,8 +31,21 @@
           {{ `主讲人：${course.lecturer}` }}
         </div>
         <div :class="$style.bottom">
-          <span :class="$style.bottomPrice" v-text="course.sellingPrice " />
-          <span :class="$style.bottomOrigin" v-text="course.originalPrice" />
+          <span
+            :class="{
+              [$style.bottomPrice]: true,
+              [$style.money]: course.sellingPrice
+            }"
+            v-text="course.sellingPrice || '免费'"
+          />
+          <span
+            :class="{
+              [$style.bottomOrigin]: true,
+              [$style.money]: course.originalPrice
+            }"
+            v-text="course.originalPrice"
+            v-if="course.originalPrice"
+          />
           <div :class="$style.bottomBtn">
             立即学习
           </div>
@@ -165,7 +178,7 @@ export default {
       font-weight: bold;
       line-height: 34px;
       color: #FE7700;
-      &::before {
+      &.money::before {
         content: '￥';
         font-size: 28px;
       }
@@ -176,7 +189,7 @@ export default {
       line-height: 34px;
       color: #999999;
       text-decoration: line-through;
-      &::before {
+      &.money::before {
         content: '￥';
       }
     }
