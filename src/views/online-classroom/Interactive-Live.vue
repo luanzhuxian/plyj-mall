@@ -19,7 +19,7 @@
               <img :src="item.coverImg" alt="">
               <div class="desc">
                 <h5>{{ item.name }}</h5>
-                <span class="time">直播时间： {{ item.liveStartTime }}</span>
+                <span class="time">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</span>
                 <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
                 <div class="price">
                   <template v-if="item.paidAmount">
@@ -53,7 +53,7 @@
               <img :src="item.coverImg" alt="">
               <div class="desc">
                 <h5>{{ item.name }}</h5>
-                <span class="time">直播时间： {{ item.liveStartTime }}</span>
+                <span class="time">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</span>
                 <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
                 <div class="price">
                   <template v-if="item.paidAmount">
@@ -87,7 +87,7 @@
               <img :src="item.coverImg" alt="">
               <div class="desc">
                 <h5>{{ item.name }}</h5>
-                <span class="time">直播时间： {{ item.liveStartTime }}</span>
+                <span class="time">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</span>
                 <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
                 <div class="price">
                   <template v-if="item.paidAmount">
@@ -129,6 +129,7 @@ export default {
   },
   data () {
     return {
+      moment,
       nowLiveForm: {
         current: 1,
         size: 10,
@@ -198,7 +199,7 @@ export default {
   .title {
     height: 30px;
     padding: 10px 0;
-    margin: 20px 0;
+    margin: 32px 0 20px;
     font-size:32px;
     font-weight:bold;
     line-height: 30px;
@@ -217,7 +218,7 @@ export default {
     width: 100%;
     img {
       width: 100%;
-      height: 240px;
+      height: 474px;
       object-fit: cover;
     }
     .desc {
@@ -236,13 +237,13 @@ export default {
         color:#828282;
         &.time {
           display: block;
-          padding: 6px 0;
+          padding: 12px 0 4px;
         }
       }
       .price {
         position: absolute;
         top: 3px;
-        right: 12px;
+        right: 24px;
         font-size:30px;
         color:#FE7700;
         span {
@@ -252,8 +253,8 @@ export default {
       }
       > button {
         position: absolute;
-        bottom: 16px;
-        right: 12px;
+        bottom: 32px;
+        right: 24px;
         width:150px;
         height:60px;
         background:#FE7700;
@@ -271,12 +272,12 @@ export default {
     width: 48%;
     img {
       width: 100%;
-      height: 240px;
+      height: 228px;
       object-fit: cover;
     }
     .desc {
       position: relative;
-      padding: 20px 24px 32px;
+      padding: 20px 24px 20px;
       background:#F8F8F8;
       border-radius:0px 0px 10px 10px;
       >h5{
@@ -305,13 +306,13 @@ export default {
       > button {
         position: absolute;
         bottom: 16px;
-        right: 12px;
-        height:60px;
-        padding: 0 15px;
+        right: 24px;
+        height:48px;
+        padding: 0 24px;
         background-color:#FE7700;
         border-radius:4px;
         font-size:26px;
-        line-height:60px;
+        line-height:48px;
         color:#FFF;
         &.not-support {
           padding: 0 10px;

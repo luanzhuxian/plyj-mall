@@ -160,32 +160,33 @@ export default {
     position: fixed;
     z-index: 9999;
     width: 100%;
-    height: 32px;
+    height: 42px;
     background-color: #FFF;
   }
   .control {
     position: absolute;
-    width: 50px;
-    height: 36px;
-    background-color: #FFF;
     z-index: 3;
-    top: 28px;
+    top: 12px;
     right: 0;
+    width: 50px;
+    height: 42px;
+    padding-top: 12px;
+    background-color: #FFF;
   }
   .classify-list {
     padding-right: 100px;
+    padding-bottom: 10px;
     background-color: #FFF;
     overflow: auto;
     width: calc(100vw - 20px);
     word-break: keep-all;
     white-space: nowrap;
     li {
-      height: 30px;
-      line-height: 30px;
+      height: 42px;
+      line-height: 42px;
       text-align: center;
       display: inline-block;
-      margin: 7px 0;
-      padding: 3px 10px;
+      padding: 0 10px;
       font-size:22px;
       color:#666666;
       &.active {
@@ -209,7 +210,7 @@ export default {
     }
   }
   .course-list {
-    padding-top: 40px;
+    padding-top: 64px;
     height: calc(100vh - 36px);
   }
   .course-item {
@@ -218,16 +219,16 @@ export default {
     width: 48%;
     img {
       width: 100%;
-      height: 240px;
+      height: 228px;
       object-fit: cover;
     }
     .desc {
       position: relative;
-      padding: 10px 12px 16px;
+      padding: 16px 12px;
       background:#F8F8F8;
       border-radius:0px 0px 10px 10px;
       >h5{
-        width:160px;
+        width:96%;
         font-size:24px;
         color:#222;
         @include elps-wrap(1);
@@ -255,7 +256,7 @@ export default {
         position: absolute;
         bottom: 16px;
         right: 12px;
-        width:120px;
+        padding: 0 10px;
         height:48px;
         background:#FE7700;
         border-radius:4px;
