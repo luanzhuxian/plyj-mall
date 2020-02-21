@@ -101,8 +101,12 @@ export default {
     done () {
       if (this.live.statue === 2) {
         this.live.statue = 4
+        this.data.nowCount += 1
+        this.data.futrueCount -= 1
       } else if (this.live.statue === 4) {
         this.live.statue = 0
+        this.data.nowCount -= 1
+        this.data.pastCount += 1
       }
     }
   }
