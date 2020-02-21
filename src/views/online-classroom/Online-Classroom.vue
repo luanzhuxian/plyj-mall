@@ -211,7 +211,7 @@ export default {
   }
   .course-list {
     padding-top: 64px;
-    height: calc(100vh - 36px);
+    min-height: calc(100vh - 36px);
   }
   .course-item {
     margin: 1%;
@@ -254,7 +254,7 @@ export default {
       }
       > button {
         position: absolute;
-        bottom: 16px;
+        bottom: 12px;
         right: 12px;
         padding: 0 10px;
         height:48px;
