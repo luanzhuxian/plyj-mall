@@ -664,8 +664,8 @@ export default {
       // }
       // this.isElementInViewport(this.$refs.chatRecords)
       let box = this.$refs.chatWrap
+      if (box) box.scrollBy(0, box.offsetHeight)
       // let scrollHeight = box.scrollHeight
-      box.scrollBy(0, box.offsetHeight)
     },
     async couponClick (id) {
       if (this.isCouponLoading) return
