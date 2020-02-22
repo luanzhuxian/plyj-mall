@@ -6,6 +6,7 @@
       :request-methods="requestMethods"
       :loading.sync="loading"
       @refresh="refreshNowLiveHandler"
+      icon="icon-no-content-sleep"
     >
       <template>
         <div v-if="nowLive.length">

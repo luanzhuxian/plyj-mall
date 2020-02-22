@@ -45,7 +45,7 @@ export default {
 </script>
 <style lang="scss" module>
   .online-classroom {
-    padding-top: 88px;
+    padding-top: 92px;
     padding-bottom: 120px;
     background-color: #FFF;
   }
