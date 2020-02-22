@@ -137,7 +137,7 @@ export default {
         border: 1px solid #D2524C;      }
     }
     /* 蓝色 */
-    &__primary {
+    /*&__primary {
       background-color: #12B7F5;
       color: #fff;
       &:active {
@@ -147,7 +147,7 @@ export default {
         color: #12B7F5;
         background-color: transparent;
         border: 1px solid #12B7F5;      }
-    }
+    }*/
     &__text {
       background-color: transparent;
       font-size: 26px;

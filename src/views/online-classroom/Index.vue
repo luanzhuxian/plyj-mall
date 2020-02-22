@@ -1,23 +1,23 @@
 <template>
-  <div class="online-classroom">
-    <div class="tab-box">
-      <div class="pl-tab pl-tab__small">
+  <div :class="$style.onlineClassroom">
+    <div :class="$style.tabBox">
+      <pl-tab
+        size="middle"
+        :tabs="tabs"
+        :active-id.sync="activeTabId"
+        @change="tabChange"
+      >
         <div
+          :class="$style.tabPane"
           v-for="(item, i) of tabs"
           :key="i"
-          class="pl-tab__pane color9"
-          :class="{ active: item.id === activeTabId }"
-          @click="handleClick(item)"
-        >
-          {{ item.name }}
-        </div>
-      </div>
+          :slot="'tab-pane-' + i"
+        />
+      </pl-tab>
     </div>
-    <div class="content">
-      <keep-alive>
-        <router-view />
-      </keep-alive>
-    </div>
+    <keep-alive>
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 <script>
@@ -32,34 +32,36 @@ export default {
     }
   },
   async activated () {
-    try {
-      this.activeTabId = this.tabs.filter(item => item.routerName === this.$route.name)[0].id
-    } catch (e) {
-      throw e
-    }
+    this.activeTabId = this.tabs.find(item => item.routerName === this.$route.name).id
   },
   methods: {
-    async handleClick (item) {
-      try {
-        this.activeTabId = item.id
-        this.$router.replace({ name: item.routerName })
-      } catch (e) {
-        throw e
-      }
+    async tabChange (item) {
+      console.log(item)
+      await this.$nextTick()
+      await this.$router.replace({ name: item.routerName })
     }
   }
 }
 </script>
-<style lang="scss" scoped>
-  .tab-box{
-    width: 100vw;
-    position: fixed;
-    z-index: 9999;
-    top: 0;
+<style lang="scss" module>
+  .online-classroom {
+    padding-bottom: 120px;
+    background-color: #FFF;
   }
-.content{
-  margin-top: 64px;
-  padding: 10px 10px 20px;
-  background-color: #FFF;
-}
+  .tab-box {
+    border-bottom: 1px solid #e7e7e7;
+    :global {
+      .pl-tab {
+        justify-content: center;
+      }
+      .pl-tab__pane.active:after {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 8px;
+        border-radius: 4px;
+        background-image: linear-gradient(90deg, #F3AD3C, #F7CF54);
+      }
+    }
+  }
 </style>

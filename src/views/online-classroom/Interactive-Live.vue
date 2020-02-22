@@ -1,114 +1,105 @@
 <template>
-  <div class="interactive-live">
-    <div class="now-live" v-show="nowLiveList.length">
-      <div class="title">
-        <pl-svg name="icon-live-a8210" width="36" />
-        正在直播
-        <span>({{ nowLiveList.length }})</span>
-      </div>
-      <div class="content">
-        <load-more
-          is-not-show-no-more-tip
-          ref="nowLiveLoadMore"
-          :form="nowLiveForm"
-          :request-methods="requestMethods"
-          :loading.sync="loadingNowLive"
-          @refresh="refreshNowLiveHandler"
-        >
-          <template>
-            <div v-for="(item, index) of nowLiveList" :key="index" class="live-item-type1">
+  <div :class="$style.interactiveLive">
+    <load-more
+      ref="LiveLoadMore"
+      :form="form"
+      :request-methods="requestMethods"
+      :loading.sync="loading"
+      @refresh="refreshNowLiveHandler"
+    >
+      <template>
+        <div v-if="nowLive.length">
+          <div :class="$style.title">
+            <pl-svg name="icon-live-a8210" width="36" />
+            正在直播
+            <span>({{ nowLive.length }})</span>
+          </div>
+          <ul :class="$style.nowLiveList">
+            <li v-for="(item, index) of nowLive" :key="index" :class="$style.nowLiveItem">
               <img :src="item.coverImg" alt="">
-              <div class="desc">
-                <h5>{{ item.name }}</h5>
-                <span class="time">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</span>
-                <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
-                <div class="price">
-                  <template v-if="item.actuallyPaidAmount">
-                    <span>￥</span>{{ item.actuallyPaidAmount }}
-                  </template>
-                  <template v-else>免费</template>
+              <div :class="$style.itemBottom">
+                <div :class="$style.desc">
+                  <div :class="$style.liveName" v-text="item.name" />
+                  <div :class="$style.text1">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
+                  <div :class="$style.text1">主讲讲师： {{ item.lecturer }}</div>
                 </div>
-                <button @click="$router.push({ name: 'LiveRoom' })">去看直播</button>
+
+                <div :class="$style.right">
+                  <span v-if="item.actuallyPaidAmount" :class="$style.price" v-text="item.actuallyPaidAmount" />
+                  <span :class="$style.free" v-else>免费</span>
+                  <pl-button type="primary" size="middle" @click="$router.push({ name: 'LiveRoom' })">去看直播</pl-button>
+                </div>
               </div>
-            </div>
-          </template>
-        </load-more>
-      </div>
-    </div>
-    <div class="future-live" v-show="futureLiveList.length">
-      <div class="title">
-        <pl-svg name="icon-time-866c0" width="36" />
-        即将开始
-        <span>({{ futureLiveList.length }})</span>
-      </div>
-      <div class="content">
-        <load-more
-          ref="futureLiveLoadMore"
-          is-not-show-no-more-tip
-          :form="futureLiveForm"
-          :request-methods="requestMethods"
-          :loading.sync="loadingFutureLive"
-          @refresh="refreshFutureLiveHandler"
-        >
-          <template>
-            <div v-for="(item, index) of futureLiveList" :key="index" class="live-item-type1">
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="futureLive.length">
+          <div :class="$style.title">
+            <pl-svg name="icon-time-866c0" width="36" />
+            即将开始
+            <span>({{ futureLive.length }})</span>
+          </div>
+          <ul :class="$style.list">
+            <li v-for="(item, index) of futureLive" :key="index" :class="$style.item">
               <img :src="item.coverImg" alt="">
-              <div class="desc">
-                <h5>{{ item.name }}</h5>
-                <span class="time">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</span>
-                <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
-                <div class="price">
-                  <template v-if="item.actuallyPaidAmount">
-                    <span>￥</span>{{ item.actuallyPaidAmount }}
-                  </template>
-                  <template v-else>免费</template>
+              <div :class="$style.desc">
+                <div :class="$style.liveTitle">{{ item.name }}</div>
+                <div :class="$style.text2">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</div>
+                <div :class="$style.text2">主讲讲师： {{ item.lecturer }}</div>
+                <div :class="$style.bottom">
+                  <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
+                  <span :class="$style.free" v-else>免费</span>
+                  <pl-button
+                    type="primary"
+                    size="middle"
+                    v-if="item.isMin && !nowLiveList.length"
+                    @click="$router.push({ name: 'LiveRoom' })"
+                  >
+                    去看直播
+                  </pl-button>
                 </div>
-                <button v-if="item.isMin && !nowLiveList.length" @click="$router.push({ name: 'LiveRoom' })">去看直播</button>
               </div>
-            </div>
-          </template>
-        </load-more>
-      </div>
-    </div>
-    <div class="past-live" v-show="pastLiveList.length">
-      <div class="title">
-        <pl-svg name="icon-tv-76530" width="36" />
-        往期直播
-        <span>({{ pastLiveList.length }})</span>
-      </div>
-      <div class="content">
-        <load-more
-          ref="pastLiveLoadMore"
-          :form="pastLiveForm"
-          :request-methods="requestMethods"
-          :loading.sync="loadingPastLive"
-          @refresh="refreshPastLiveHandler"
-        >
-          <template>
-            <div v-for="(item, index) of pastLiveList" :key="index" class="live-item-type2">
+            </li>
+          </ul>
+        </div>
+
+        <div v-if="pastLive.length">
+          <div :class="$style.title">
+            <pl-svg name="icon-tv-76530" width="36" />
+            往期直播
+            <span>({{ pastLive.length }})</span>
+          </div>
+          <ul :class="$style.list">
+            <li v-for="(item, index) of pastLive" :key="index" :class="$style.item">
               <img :src="item.coverImg" alt="">
-              <div class="desc">
-                <h5>{{ item.name }}</h5>
-                <span class="time">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</span>
-                <span v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</span>
-                <div class="price">
-                  <template v-if="item.actuallyPaidAmount">
-                    <span>￥</span>{{ item.actuallyPaidAmount }}
-                  </template>
-                  <template v-else>免费</template>
+              <div :class="$style.desc">
+                <div :class="$style.liveTitle">{{ item.name }}</div>
+                <div :class="$style.text2">已结束： {{ moment(item.liveEndTime).format('YYYY-MM-DD HH:mm') }}</div>
+                <div :class="$style.text2">主讲讲师： {{ item.lecturer }}</div>
+                <div :class="$style.bottom">
+                  <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
+                  <span :class="$style.free" v-else>免费</span>
+                  <pl-button
+                    type="warning"
+                    size="middle"
+                    v-if="item.videoLibId !== '0'"
+                    @click="$router.push({ name: 'LivePlayBack', params :{ activityId: item.id, id: item.videoLibId, payCount: item.actuallyPaidAmount } })"
+                  >
+                    看回放
+                  </pl-button>
+                  <pl-button v-else type="primary" size="middle">不支持回放</pl-button>
                 </div>
-                <button v-if="item.videoLibId!=='0'" @click="$router.push({name:'LivePlayBack',params:{activityId: item.id, id: item.videoLibId, payCount: item.actuallyPaidAmount}})">看回放</button>
-                <button v-else class="not-support">不支持回放</button>
               </div>
-            </div>
-          </template>
-        </load-more>
-      </div>
-    </div>
-    <div v-if="!nowLiveList.length && !futureLiveList.length && !pastLiveList.length" class="no-content">
+            </li>
+          </ul>
+        </div>
+      </template>
+    </load-more>
+    <!--<div v-if="!nowLiveList.length && !futureLiveList.length && !pastLiveList.length" class="no-content">
       <pl-svg name="icon-no-content-sleep" width="100px" />
       <div> 暂无直播 </div>
-    </div>
+    </div>-->
   </div>
 </template>
 <script>
@@ -121,212 +112,217 @@ export default {
     LoadMore
   },
   async activated () {
+    this.refresh()
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if (from.name !== 'LivePlayBack') {
-        vm.refresh()
-      }
-    })
-  },
+  // beforeRouteEnter (to, from, next) {
+  //   next(vm => {
+  //     if (from.name !== 'LivePlayBack') {
+  //       vm.refresh()
+  //     }
+  //   })
+  // },
   data () {
     return {
       moment,
-      nowLiveForm: {
+      form: {
         current: 1,
         size: 10,
-        type: 'NOW'
+        type: ''
       },
-      nowLiveList: [],
-      loadingNowLive: false,
-      pastLiveForm: {
-        current: 1,
-        size: 10,
-        type: 'PAST'
-      },
-      pastLiveList: [],
-      loadingPastLive: false,
-      futureLiveForm: {
-        current: 1,
-        size: 10,
-        type: 'FUTURE'
-      },
-      futureLiveList: [],
-      loadingFutureLive: false,
+      // nowLiveForm: {
+      //   current: 1,
+      //   size: 10,
+      //   type: ''
+      // },
+      // nowLiveList: [],
+      // loadingNowLive: false,
+      // pastLiveForm: {
+      //   current: 1,
+      //   size: 10,
+      //   type: 'PAST'
+      // },
+      // pastLiveList: [],
+      // loadingPastLive: false,
+      // futureLiveForm: {
+      //   current: 1,
+      //   size: 10,
+      //   type: 'FUTURE'
+      // },
+      // futureLiveList: [],
+      list: [],
+      loading: false,
       requestMethods: getLiveList
     }
   },
+  computed: {
+    // 正在直播
+    nowLive () {
+      return this.list.filter(item => {
+        const {
+          liveStartTime,
+          liveEndTime
+        } = item
+        const now = Date.now()
+        return now > moment(liveStartTime).valueOf() && now < moment(liveEndTime).valueOf()
+      })
+    },
+    // 即将开始
+    futureLive () {
+      return this.list.filter(item => {
+        const { liveStartTime } = item
+        const now = Date.now()
+        return now < moment(liveStartTime).valueOf()
+      })
+    },
+    // 往期直播
+    pastLive () {
+      return this.list.filter(item => {
+        const { liveEndTime } = item
+        const now = Date.now()
+        return now > moment(liveEndTime).valueOf()
+      })
+    }
+  },
   methods: {
-    refresh () {
+    async refresh () {
       try {
-        this.$refs.nowLiveLoadMore.refresh()
-        this.$refs.futureLiveLoadMore.refresh()
-        this.$refs.pastLiveLoadMore.refresh()
+        await this.$refs.LiveLoadMore.refresh()
       } catch (e) {
         throw e
       }
     },
-    formatPaidAmount (list) {
-      // 后台返回的paidAmount单位为分，要转换为元
-      list.forEach(item => {
-        item.actuallyPaidAmount = Number(Number(item.paidAmount / 100).toFixed(2))
-      })
-      return list
-    },
+    // 列表刷新事件
     refreshNowLiveHandler (list) {
-      this.nowLiveList = this.formatPaidAmount(list)
-    },
-    refreshPastLiveHandler (list) {
-      this.pastLiveList = this.formatPaidAmount(list)
-    },
-    refreshFutureLiveHandler (list) {
-      let minIndex = 0
-      for (let i = 0; i < list.length - 1; i++) {
-        let curTime = moment(list[i].liveStartTime)
-        let minTime = moment(list[minIndex].liveStartTime)
-        minIndex = curTime.isBefore(minTime) ? i : minIndex
-      }
-      list[minIndex].isMin = true
-      this.futureLiveList = this.formatPaidAmount(list)
+      this.list = list
     }
   }
 }
 </script>
-<style lang="scss" scoped>
-  .no-content {
-    height: calc(100vh - 300px);
-    padding-top: 200px;
-    text-align: center;
-    > div{
-      margin-top: 60px;
-      font-size: 40px;
-      letter-spacing: 5px;
-      color: #666;
-    }
+<style lang="scss" module>
+  .interactive-live {
+    padding: 0 20px;
   }
 
   .title {
-    height: 30px;
-    padding: 10px 0;
     margin: 32px 0 20px;
-    font-size:32px;
-    font-weight:bold;
-    line-height: 30px;
-    color:#333;
+    line-height: 42px;
+    font-size: 32px;
+    font-weight: bold;
     > svg {
-      vertical-align: text-top;
+      margin-right: 5px;
+      vertical-align: -6px;
     }
-    >span {
-      font-size:24px;
-      font-weight:bold;
-      color:#999;
+    > span {
+      font-size: 24px;
+      font-weight: bold;
+      color: #999;
     }
   }
 
-  .live-item-type1 {
+  .now-live-list {
+  }
+
+  .now-live-item {
     width: 100%;
-    img {
+    border-radius: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: #F8F8F8;
+    &:nth-last-of-type(1) {
+      margin-bottom: 0;
+    }
+    > img {
       width: 100%;
       height: 474px;
-      object-fit: cover;
     }
     .desc {
-      position: relative;
-      padding: 20px 24px 32px;
-      background:#F8F8F8;
-      border-radius:0px 0px 10px 10px;
-      >h5{
-        width:160px;
-        font-size:30px;
-        color:#222;
-        @include elps-wrap(1);
+      flex: 1;
+      .live-name {
+        width: 490px;
+        margin-bottom: 12px;
+        font-size: 30px;
+        font-weight: bold;
+        @include elps();
       }
-      >span {
-        font-size:26px;
-        color:#828282;
-        &.time {
-          display: block;
-          padding: 12px 0 4px;
+    }
+    .right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      > .price {
+        margin-bottom: 18px;
+        color: #FE7700;
+        font-size: 48px;
+        &:before {
+          content: '¥';
+          font-size: 24px;
         }
       }
-      .price {
-        position: absolute;
-        top: 3px;
-        right: 24px;
-        font-size:30px;
-        color:#FE7700;
-        span {
-          font-weight:400;
-          font-size:20px;
-        }
-      }
-      > button {
-        position: absolute;
-        bottom: 32px;
-        right: 24px;
-        width:150px;
-        height:60px;
-        background:#FE7700;
-        border-radius:4px;
-        font-size:30px;
-        line-height:60px;
-        color:#FFF;
+      > .free {
+        margin-bottom: 32px;
+        color: #FE7700;
+        font-size: 30px;
       }
     }
   }
-
-  .live-item-type2 {
-    margin: 1%;
-    display: inline-block;
-    width: 48%;
-    img {
-      width: 100%;
-      height: 228px;
-      object-fit: cover;
-    }
-    .desc {
-      position: relative;
-      padding: 20px 24px 20px;
-      background:#F8F8F8;
-      border-radius:0px 0px 10px 10px;
-      >h5{
-        width:160px;
-        font-size:24px;
-        color:#222;
-        @include elps-wrap(1);
+  .item-bottom {
+    display: flex;
+    padding: 20px 24px;
+  }
+  .text1 {
+    margin-bottom: 4px;
+    font-size: 26px;
+    color: #828282;
+    vertical-align: middle;
+  }
+  .text2 {
+    font-size: 22px;
+    color: #666;
+  }
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    > .item {
+      width: 340px;
+      overflow: hidden;
+      margin-right: 30px;
+      &:nth-of-type(2n) {
+        margin-right: 0;
       }
-      >span {
-        font-size:22px;
-        color:#828282;
-        &.time {
-          display: block;
-          padding: 6px 0;
-        }
+      > img {
+        width: 100%;
+        height: 228px;
+        object-fit: cover;
+        border-radius: 20px;
+      }
+      .desc {
+        margin-top: 16px;
+      }
+      .live-title {
+        margin-bottom: 4px;
+        font-size: 24px;
+        color: #000;
+        font-weight: bold;
+        @include elps();
+      }
+      .bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 16px;
       }
       .price {
-        margin-top: 10px;
-        font-size:28px;
-        color:#FE7700;
-        span {
-          font-weight:400;
-          font-size:20px;
+        font-size: 32px;
+        color: #FE7700;
+        font-weight: bold;
+        &:before {
+          content: '¥';
+          font-size: 20px;
         }
       }
-      > button {
-        position: absolute;
-        bottom: 16px;
-        right: 24px;
-        height:48px;
-        padding: 0 24px;
-        background-color:#FE7700;
-        border-radius:4px;
-        font-size:26px;
-        line-height:48px;
-        color:#FFF;
-        &.not-support {
-          padding: 0 10px;
-          background-color: rgba(254, 119, 0, 0.3);
-        }
+      .free {
+        font-size: 28px;
+        color: #FE7700;
       }
     }
   }

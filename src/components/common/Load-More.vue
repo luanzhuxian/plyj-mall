@@ -377,7 +377,7 @@ export default {
     }
   }
   .noMore {
-    line-height: 60px;
+    line-height: 90px;
     font-size: 28px;
     color: #999;
     text-align: center;

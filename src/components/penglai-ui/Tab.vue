@@ -92,6 +92,14 @@ export default {
         line-height: 80px;
       }
     }
+    &.pl-tab__middle {
+      font-size: 30px;
+      > div {
+        padding: 0 30px;
+        height: 90px;
+        line-height: 90px;
+      }
+    }
     &.pl-tab__large {
       font-size: 32px;
       > div {
