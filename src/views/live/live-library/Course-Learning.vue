@@ -54,21 +54,21 @@ export default {
       return `暂无${this.learnStatus[this.$route.params.learnStatus - 1]}的课程`
     }
   },
-  watch: {
-    '$route.params.learnStatus': {
-      async handler (newVal, oldVal, aa) {
-        try {
-          if (newVal) {
-            this.list = []
-            this.loading = false
-            this.form.current = 1
-            this.form.learnStatus = Number(newVal)
-            await this.$nextTick()
-            this.$refs.loadMore.refresh()
-          }
-        } catch (e) { throw e }
-      },
-      immediate: true
+  async beforeRouteUpdate (to, from, next) {
+    const palearnStatus = to.params.learnStatus
+    this.list = []
+    this.loading = false
+    this.form.current = 1
+    this.form.learnStatus = Number(palearnStatus)
+    try {
+      await this.$nextTick()
+      await this.$refs.loadMore.refresh()
+    } catch (e) {
+      if (e.name === 'ResponseError') {
+        this.$error(JSON.parse(e.message).message)
+      }
+    } finally {
+      next()
     }
   }
 }
