@@ -15,7 +15,7 @@
             正在直播
             <span>({{ nowLive.length }})</span>
           </div>
-          <ul :class="$style.nowLiveList">
+          <ul>
             <li v-for="(item, index) of nowLive" :key="index" :class="$style.nowLiveItem">
               <img :src="item.coverImg" alt="">
               <div :class="$style.itemBottom">
@@ -97,10 +97,6 @@
         </div>
       </template>
     </load-more>
-    <!--<div v-if="!nowLiveList.length && !futureLiveList.length && !pastLiveList.length" class="no-content">
-      <pl-svg name="icon-no-content-sleep" width="100px" />
-      <div> 暂无直播 </div>
-    </div>-->
   </div>
 </template>
 <script>
@@ -219,10 +215,6 @@ export default {
       color: #999;
     }
   }
-
-  .now-live-list {
-  }
-
   .now-live-item {
     width: 100%;
     border-radius: 20px;

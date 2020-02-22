@@ -1,63 +1,73 @@
 <template>
-  <div class="online-classroom">
-    <div :class="['classify-main', isShowAll ? 'show-all' : '']">
-      <ul class="classify-list">
+  <div :class="$style.onlineClassroom">
+    <div
+      :class="{
+        [$style.classifyMain]: true,
+        [$style.showAll]: isShowAll
+      }"
+    >
+      <ul :class="$style.classifyList">
         <li
           v-for="(item, index) in classifyList"
-          :class="form.category1 ===item.category1 && form.category2===item.category2 ? 'active' : ''"
+          :class="{
+            [$style.active]: form.category1 === item.category1 && form.category2===item.category2
+          }"
           :key="index"
           @click="classifyClick(item)"
         >
           {{ item.categoryName }}
         </li>
-        <li style="width: 60px" v-if="!isShowAll" />
-      </ul>
-      <transition name="fade">
-        <div class="control" v-if="classifyList.length">
+        <li :class="$style.close" v-if="isShowAll">
           <pl-svg
-            v-show="!isShowAll"
-            name="icon-group"
-            width="24"
-            @click="isShowAll = true"
-          />
-          <pl-svg
-            v-show="isShowAll"
             name="icon-close"
-            fill="#ccc"
-            width="20"
+            fill="#fff"
+            width="36"
             @click="isShowAll = false"
           />
+        </li>
+      </ul>
+      <transition name="fade">
+        <div :class="$style.controlWrap" v-if="classifyList.length">
+          <div :class="$style.control">
+            <pl-svg
+              v-show="!isShowAll"
+              name="icon-group"
+              width="24"
+              fill="#484848"
+              @click="isShowAll = true"
+            />
+          </div>
         </div>
       </transition>
     </div>
-    <div class="course-list">
-      <load-more
-        ref="loadMore"
-        :form="form"
-        :request-methods="requestMethods"
-        :loading.sync="loading"
-        @refresh="refreshHandler"
-        no-content-tip="此分类下还没有课程"
-      >
-        <template>
-          <div v-for="(item, index) of courseList" :key="index" class="course-item">
+    <load-more
+      ref="loadMore"
+      :form="form"
+      :request-methods="requestMethods"
+      :loading.sync="loading"
+      @refresh="refreshHandler"
+      no-content-tip="此分类下还没有课程"
+    >
+      <template>
+        <ul :class="$style.courseList">
+          <li v-for="(item, index) of courseList" :key="index" :class="$style.courseItem">
             <img :src="item.courseImg" alt="">
-            <div class="desc">
-              <h5>{{ item.courseName }}</h5>
-              <span>主讲讲师： {{ item.lecturer }}</span>
-              <div class="price">
-                <template v-if="item.priceType === 1">
-                  <span>￥</span>{{ item.sellingPrice }}
-                  <span v-if="item.originalPrice" class="original-price">￥{{ item.originalPrice }}</span>
-                </template>
-                <template v-else>免费</template>
+            <div :class="$style.desc">
+              <div :class="$style.title" v-text="item.courseName" />
+              <div :class="$style.text1">主讲讲师： {{ item.lecturer }}</div>
+              <div :class="$style.bottom">
+                <span v-if="item.priceType === 1">
+                  <span :class="$style.price" v-text="item.sellingPrice" />
+                  <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
+                </span>
+                <span v-else :class="$style.free">免费</span>
+                <pl-button type="primary" size="small" @click="$router.push({name: 'Curriculum', params:{ productId: item.id }})">立即学习</pl-button>
               </div>
-              <button @click="$router.push({name: 'Curriculum', params:{ productId: item.id }})">立即学习</button>
             </div>
-          </div>
-        </template>
-      </load-more>
-    </div>
+          </li>
+        </ul>
+      </template>
+    </load-more>
   </div>
 </template>
 <script>
@@ -155,115 +165,129 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss" module>
+  .online-classroom {
+    padding: 14vw 20px 20px;
+  }
   .classify-main {
     position: fixed;
-    z-index: 9999;
-    width: 100%;
-    height: 42px;
-    background-color: #FFF;
+    top: 91px;
+    left: 0;
+    min-height: 105px;
+    width: 100vw;
+    padding: 0 74px 0 28px;
+    box-sizing: border-box;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    background-color: #fff;
+    z-index: 10;
+  }
+  .control-wrap {
+    position: fixed;
+    top: 114px;
+    right: 0;
+    padding-left: 20px;
+    overflow-y: hidden;
   }
   .control {
-    position: absolute;
-    z-index: 3;
-    top: 12px;
-    right: 0;
-    width: 50px;
-    height: 42px;
-    padding-top: 12px;
+    width: 70px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
     background-color: #FFF;
+    box-shadow: -3px 0 6px rgba(0, 0, 0, .2);
+    > svg {
+      margin-left: 18px;
+    }
   }
   .classify-list {
-    padding-right: 100px;
-    padding-bottom: 10px;
-    background-color: #FFF;
-    overflow: auto;
-    width: calc(100vw - 20px);
-    word-break: keep-all;
-    white-space: nowrap;
-    li {
-      height: 42px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: max-content;
+    padding-right: 90px;
+    padding-top: 26px;
+    background-color: #fff;
+    box-sizing: border-box;
+    > li {
+      display: inline-block;
+      padding: 0 15px;
       line-height: 42px;
       text-align: center;
-      display: inline-block;
-      padding: 0 10px;
-      font-size:22px;
-      color:#666666;
+      font-size: 22px;
+      color: #666666;
       &.active {
-        background:#FDF5E7;
-        border:1px solid #F3AD3C;
-        border-radius:64px;
-        color:#F3AD3C;
+        background: #FDF5E7;
+        border: 1px solid #F3AD3C;
+        border-radius: 22px;
+        color: #F3AD3C;
       }
+    }
+    .close {
+      position: absolute;
+      bottom: -70px;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
   .show-all {
-    position: relative;
-    width: calc(100vw - 20px);
-    padding: 10px 0;
+    padding: 0;
+    height: calc(100vh - 178px);
+    box-shadow: 0 5px 5px rgba(0, 0, 0, .1);
+    background-color: rgba(0, 0, 0, .3);
     .classify-list {
-      word-break: unset;
-      white-space: unset;
+      width: 100%;
+      flex-wrap: wrap;
+      padding-right: 28px;
+      padding-left: 28px;
     }
-    .control{
-      right: -20px;
+    .control {
+      display: none;
     }
   }
   .course-list {
-    padding-top: 64px;
-    min-height: calc(100vh - 36px);
+    display: flex;
   }
   .course-item {
-    margin: 1%;
-    display: inline-block;
-    width: 48%;
-    img {
-      width: 100%;
+    margin-right: 30px;
+    &:nth-of-type(2n) {
+      margin-right: 0;
+    }
+    > img {
+      width: 340px;
       height: 228px;
+      margin-bottom: 16px;
       object-fit: cover;
+      border-radius: 20px;
     }
-    .desc {
-      position: relative;
-      padding: 16px 12px;
-      background:#F8F8F8;
-      border-radius:0px 0px 10px 10px;
-      >h5{
-        width:96%;
-        font-size:24px;
-        color:#222;
-        @include elps-wrap(1);
-      }
-      >span {
-        font-size:22px;
-        color:#828282;
-      }
-      .price {
-        font-weight:bold;
-        margin-top: 10px;
-        font-size:32px;
-        color:#FE7700;
-        span {
-          font-weight:400;
-          font-size:20px;
-        }
-        .original-price {
-          font-size:20px;
-          color:#999999;
-          text-decoration: line-through;
-        }
-      }
-      > button {
-        position: absolute;
-        bottom: 12px;
-        right: 12px;
-        padding: 0 10px;
-        height:48px;
-        background:#FE7700;
-        border-radius:4px;
-        font-size:26px;
-        line-height:48px;
-        color:#FFF;
-      }
+  }
+  .bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 18px;
+    .price {
+      font-size: 32px;
+      color: #FE7700;
     }
+    .original {
+      font-size: 20px;
+      color: #999;
+    }
+    .free {
+      font-size: 28px;
+      color: #FE7700;
+    }
+  }
+  .title {
+    margin-bottom: 4px;
+    font-size: 24px;
+    color: #000;
+    font-weight: bold;
+  }
+  .text1 {
+    font-size: 22px;
+    color: #666;
   }
 </style>
