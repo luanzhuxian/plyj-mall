@@ -45,11 +45,17 @@ export default {
 </script>
 <style lang="scss" module>
   .online-classroom {
+    padding-top: 88px;
     padding-bottom: 120px;
     background-color: #FFF;
   }
   .tab-box {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
     border-bottom: 1px solid #e7e7e7;
+    z-index: 10;
     :global {
       .pl-tab {
         justify-content: center;
