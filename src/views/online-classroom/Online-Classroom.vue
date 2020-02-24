@@ -220,6 +220,8 @@ export default {
       text-align: center;
       font-size: 22px;
       color: #666666;
+      word-break: keep-all;
+      white-space : nowrap;
       &.active {
         background: #FDF5E7;
         border: 1px solid #F3AD3C;
