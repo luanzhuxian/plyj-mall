@@ -5,7 +5,9 @@
       :form="form"
       :request-methods="requestMethods"
       :loading.sync="loading"
-      @refresh="refreshNowLiveHandler"
+      :before-refresh="beforeRefresh"
+      @refresh="refreshed"
+      @more="more"
       icon="icon-no-content-sleep"
     >
       <template>
@@ -136,9 +138,8 @@ export default {
     }
   },
   async activated () {
-    this.type = ['NOW', 'FUTURE', 'PAST'][Symbol.iterator]()
-    this.form.type = this.type.next().value
-    this.refresh()
+    this.init()
+    this.getData()
   },
   computed: {
     // 正在直播
@@ -155,23 +156,45 @@ export default {
     }
   },
   methods: {
-    async refresh () {
+    init () {
+      this.type = ['NOW', 'FUTURE', 'PAST'][Symbol.iterator]()
+      this.form.type = this.type.next().value
+    },
+    async getData () {
       try {
+        await this.$nextTick()
         await this.$refs.LiveLoadMore.refresh()
       } catch (e) {
         throw e
       }
     },
+    // 手动刷新前恢复参数到最初状态
+    async beforeRefresh () {
+      this.init()
+      return true
+    },
     // 列表刷新事件
-    refreshNowLiveHandler (list, total) {
+    refreshed (list, total) {
       this.totals[this.form.type] = total
       this.list[this.form.type] = list
-      // 按顺序请求列表，先请求正在直播的列表，如果正在直播列表加载完毕，就请求下一个列表
+      // // 按顺序请求列表，先请求正在直播的列表，如果正在直播列表加载完毕，就请求下一个列表
       if (list.length === 0) {
         const type = this.type.next().value
         if (type) {
           this.form.type = type
-          this.refresh()
+          this.getData()
+        }
+      }
+    },
+    // 加载更多事件
+    more (oldList, total, newList) {
+      if (newList.length === 0) {
+        const type = this.type.next().value
+        if (type) {
+          this.form.type = type
+          this.getData()
+        } else {
+          this.init()
         }
       }
     }

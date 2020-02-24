@@ -133,6 +133,11 @@ export default {
       type: String,
       default: 'icon-no-content'
     },
+    // 如果函数返回false, 则刷新不会触发，可用来拦截刷新动作
+    beforeRefresh: {
+      type: Function,
+      default: null
+    },
     noIcon: Boolean,
     isNotShowNoMoreTip: Boolean // 不显示‘没有更多了’提示true, 显示false
   },
@@ -231,7 +236,7 @@ export default {
       this.top = 100
       window.scrollTo(0, 0)
     },
-    // 刷新，可以传入一个请求方法，用于替换当前请求方法
+    // 刷新
     async refresh () {
       try {
         await this.$nextTick()
@@ -265,6 +270,11 @@ export default {
         this.pullLoading.style.transition = 'transform linear .5s'
         // 只有在loading完成出现在视野中时，松开才发起请求
         if (this.top > this.minPullDis) {
+          // 刷新
+          if (this.beforeRefresh && !this.beforeRefresh()) {
+            return
+          }
+          await this.$nextTick()
           this.list = await this.getData()
           this.$emit('refresh', this.list, this.total)
         } else {

@@ -36,7 +36,6 @@ export default {
   },
   methods: {
     async tabChange (item) {
-      console.log(item)
       await this.$nextTick()
       await this.$router.replace({ name: item.routerName })
     }

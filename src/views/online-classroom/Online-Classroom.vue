@@ -51,7 +51,7 @@
       <template>
         <ul :class="$style.courseList">
           <li v-for="(item, index) of courseList" :key="index" :class="$style.courseItem">
-            <img :src="item.courseImg" alt="">
+            <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
             <div :class="$style.desc">
               <div :class="$style.title" v-text="item.courseName" />
               <div :class="$style.text1">主讲讲师： {{ item.lecturer }}</div>
@@ -171,6 +171,8 @@ export default {
 <style lang="scss" module>
   .online-classroom {
     padding: 14vw 20px 20px;
+    min-height: 50vh;
+    background-color: #fff;
   }
   .classify-main {
     position: fixed;
@@ -290,9 +292,11 @@ export default {
     font-size: 24px;
     color: #000;
     font-weight: bold;
+    @include elps-wrap(1);
   }
   .text1 {
     font-size: 22px;
     color: #666;
+    @include elps-wrap(1);
   }
 </style>
