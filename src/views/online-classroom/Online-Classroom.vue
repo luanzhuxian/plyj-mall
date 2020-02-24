@@ -255,9 +255,13 @@ export default {
   }
   .course-list {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
   }
   .course-item {
     margin-right: 30px;
+    margin-bottom: 32px;
     &:nth-of-type(2n) {
       margin-right: 0;
     }
@@ -288,6 +292,7 @@ export default {
     }
   }
   .title {
+    width: 340px;
     margin-bottom: 4px;
     font-size: 24px;
     color: #000;
