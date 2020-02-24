@@ -277,8 +277,9 @@ export default {
     flex-wrap: wrap;
     > .item {
       width: 340px;
-      overflow: hidden;
+      margin-bottom: 32px;
       margin-right: 30px;
+      overflow: hidden;
       &:nth-of-type(2n) {
         margin-right: 0;
       }
