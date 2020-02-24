@@ -105,6 +105,9 @@ export default {
       throw e
     }
   },
+  deactivated () {
+    this.isShowAll = false
+  },
   beforeRouteEnter (to, from, next) {
     next(vm => {
       if (from.name !== 'Curriculum') {
@@ -184,7 +187,7 @@ export default {
   }
   .control-wrap {
     position: fixed;
-    top: 114px;
+    top: 117px;
     right: 0;
     padding-left: 20px;
     overflow-y: hidden;

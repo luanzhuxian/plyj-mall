@@ -13,11 +13,11 @@
           <div :class="$style.title">
             <pl-svg name="icon-live-a8210" width="36" />
             正在直播
-            <span>({{ nowLive.length }})</span>
+            <span>({{ totals.NOW }})</span>
           </div>
           <ul>
             <li v-for="(item, index) of nowLive" :key="index" :class="$style.nowLiveItem">
-              <img :src="item.coverImg" alt="">
+              <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
               <div :class="$style.itemBottom">
                 <div :class="$style.desc">
                   <div :class="$style.liveName" v-text="item.name" />
@@ -39,11 +39,11 @@
           <div :class="$style.title">
             <pl-svg name="icon-time-866c0" width="36" />
             即将开始
-            <span>({{ futureLive.length }})</span>
+            <span>({{ totals.FUTURE }})</span>
           </div>
           <ul :class="$style.list">
             <li v-for="(item, index) of futureLive" :key="index" :class="$style.item">
-              <img :src="item.coverImg" alt="">
+              <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
               <div :class="$style.desc">
                 <div :class="$style.liveTitle">{{ item.name }}</div>
                 <div :class="$style.text2">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</div>
@@ -69,11 +69,11 @@
           <div :class="$style.title">
             <pl-svg name="icon-tv-76530" width="36" />
             往期直播
-            <span>({{ pastLive.length }})</span>
+            <span>({{ totals.PAST }})</span>
           </div>
           <ul :class="$style.list">
             <li v-for="(item, index) of pastLive" :key="index" :class="$style.item">
-              <img :src="item.coverImg" alt="">
+              <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
               <div :class="$style.desc">
                 <div :class="$style.liveTitle">{{ item.name }}</div>
                 <div :class="$style.text2">已结束： {{ moment(item.liveEndTime).format('YYYY-MM-DD HH:mm') }}</div>
@@ -108,16 +108,6 @@ export default {
   components: {
     LoadMore
   },
-  async activated () {
-    this.refresh()
-  },
-  // beforeRouteEnter (to, from, next) {
-  //   next(vm => {
-  //     if (from.name !== 'LivePlayBack') {
-  //       vm.refresh()
-  //     }
-  //   })
-  // },
   data () {
     return {
       moment,
@@ -126,58 +116,42 @@ export default {
         size: 10,
         type: ''
       },
-      // nowLiveForm: {
-      //   current: 1,
-      //   size: 10,
-      //   type: ''
-      // },
-      // nowLiveList: [],
-      // loadingNowLive: false,
-      // pastLiveForm: {
-      //   current: 1,
-      //   size: 10,
-      //   type: 'PAST'
-      // },
-      // pastLiveList: [],
-      // loadingPastLive: false,
-      // futureLiveForm: {
-      //   current: 1,
-      //   size: 10,
-      //   type: 'FUTURE'
-      // },
-      // futureLiveList: [],
-      list: [],
+      /**
+       * 所有类型字段的迭代器，['NOW', 'FUTURE', 'PAST'][Symbol.iterator]()
+       * 第一次加载迭代NOW，即正在直播，当正在直播加载完毕以后，自动迭代到FUTURE，依此类推
+       */
+      type: null,
+      list: {
+        NOW: [],
+        PAST: [],
+        FUTURE: []
+      },
+      totals: {
+        NOW: 0,
+        PAST: 0,
+        FUTURE: 0
+      },
       loading: false,
       requestMethods: getLiveList
     }
   },
+  async activated () {
+    this.type = ['NOW', 'FUTURE', 'PAST'][Symbol.iterator]()
+    this.form.type = this.type.next().value
+    this.refresh()
+  },
   computed: {
     // 正在直播
     nowLive () {
-      return this.list.filter(item => {
-        const {
-          liveStartTime,
-          liveEndTime
-        } = item
-        const now = Date.now()
-        return now > moment(liveStartTime).valueOf() && now < moment(liveEndTime).valueOf()
-      })
+      return this.list.NOW
     },
     // 即将开始
     futureLive () {
-      return this.list.filter(item => {
-        const { liveStartTime } = item
-        const now = Date.now()
-        return now < moment(liveStartTime).valueOf()
-      })
+      return this.list.FUTURE
     },
     // 往期直播
     pastLive () {
-      return this.list.filter(item => {
-        const { liveEndTime } = item
-        const now = Date.now()
-        return now > moment(liveEndTime).valueOf()
-      })
+      return this.list.PAST
     }
   },
   methods: {
@@ -189,8 +163,17 @@ export default {
       }
     },
     // 列表刷新事件
-    refreshNowLiveHandler (list) {
-      this.list = list
+    refreshNowLiveHandler (list, total) {
+      this.totals[this.form.type] = total
+      this.list[this.form.type] = list
+      // 按顺序请求列表，先请求正在直播的列表，如果正在直播列表加载完毕，就请求下一个列表
+      if (list.length === 0) {
+        const type = this.type.next().value
+        if (type) {
+          this.form.type = type
+          this.refresh()
+        }
+      }
     }
   }
 }
