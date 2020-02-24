@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.courseWatch">
     <div :class="$style.videoBox">
-      <video ref="video" preload controls x5-video-player-type="h5-page" width="100%" :src="detail.url" />
+      <video ref="video" preload controls width="100%" :src="detail.url" />
     </div>
   </div>
 </template>
