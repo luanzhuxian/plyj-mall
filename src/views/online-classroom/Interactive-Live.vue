@@ -144,15 +144,15 @@ export default {
   computed: {
     // 正在直播
     nowLive () {
-      return this.list.NOW
+      return this.formatPaidAmount(this.list.NOW)
     },
     // 即将开始
     futureLive () {
-      return this.list.FUTURE
+      return this.formatPaidAmount(this.list.FUTURE)
     },
     // 往期直播
     pastLive () {
-      return this.list.PAST
+      return this.formatPaidAmount(this.list.PAST)
     }
   },
   methods: {
@@ -167,6 +167,13 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    formatPaidAmount (list) {
+      // 后台返回的paidAmount单位为分，要转换为元
+      list.forEach(item => {
+        item.actuallyPaidAmount = Number(Number(item.paidAmount / 100).toFixed(2))
+      })
+      return list
     },
     // 手动刷新前恢复参数到最初状态
     async beforeRefresh () {
