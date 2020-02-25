@@ -24,7 +24,7 @@
                 <div :class="$style.desc">
                   <div :class="$style.liveName" v-text="item.name" />
                   <div :class="$style.text1">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
-                  <div :class="$style.text1">主讲讲师： {{ item.lecturer }}</div>
+                  <div :class="$style.text1" v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</div>
                 </div>
 
                 <div :class="$style.right">
@@ -49,7 +49,7 @@
               <div :class="$style.desc">
                 <div :class="$style.liveTitle">{{ item.name }}</div>
                 <div :class="$style.text2">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</div>
-                <div :class="$style.text2">主讲讲师： {{ item.lecturer }}</div>
+                <div :class="$style.text2" v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</div>
                 <div :class="$style.bottom">
                   <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
                   <span :class="$style.free" v-else>免费</span>
@@ -79,7 +79,7 @@
               <div :class="$style.desc">
                 <div :class="$style.liveTitle">{{ item.name }}</div>
                 <div :class="$style.text2">已结束： {{ moment(item.liveEndTime).format('YYYY-MM-DD HH:mm') }}</div>
-                <div :class="$style.text2">主讲讲师： {{ item.lecturer }}</div>
+                <div :class="$style.text2" v-if="item.lecturer">主讲讲师： {{ item.lecturer }}</div>
                 <div :class="$style.bottom">
                   <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
                   <span :class="$style.free" v-else>免费</span>
