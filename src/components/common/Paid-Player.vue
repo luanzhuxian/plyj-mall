@@ -5,7 +5,7 @@
       preload
       controls
       x5-video-player-type="h5-page"
-      :src="src + '?t=' + Date.now()"
+      :src="src"
       playsinline=""
       x-webkit-airplay="true"
       @loadedmetadata="videoLoadedmetadata"
@@ -25,8 +25,8 @@ export default {
   name: 'PaidPlayer',
   data () {
     return {
-      duration: 0,
-      size: 0
+      duration: 0, // 视频总长
+      size: 0 // 视频总大小
     }
   },
   props: {
@@ -54,7 +54,6 @@ export default {
   },
   methods: {
     videoLoadedmetadata (e) {
-      console.log(e)
       this.duration = e.target.duration
     },
     videoProgress (e) {
@@ -64,7 +63,9 @@ export default {
       for (let i = 0; i < timeRanges.length; i++) {
         times.push(timeRanges.end(i) - timeRanges.start(i))
       }
-      console.log(times.reduce((t, a) => t + a))
+      const loadedTime = times.reduce((t, a) => t + a)
+      const loadedSize = Math.round(loadedTime / this.duration * this.size)
+      console.log(loadedSize, loadedTime)
     },
     videoError (e) {
       this.$alert({
@@ -83,6 +84,7 @@ export default {
 .paid-player {
   display: flex;
   align-items: center;
+  height: 422px;
   margin: 0 !important;
   padding: 0 !important;
   justify-content: center;
