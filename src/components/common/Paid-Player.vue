@@ -2,6 +2,7 @@
   <div :class="$style.paidPlayer">
     <pl-svg class="rotate" v-if="checking" name="icon-btn-loading" width="50" fill="#fff" />
     <video
+      ref="video"
       v-if="!checking && type === 'video' && src"
       preload
       controls
@@ -12,7 +13,10 @@
       @loadedmetadata="videoLoadedmetadata"
       @progress="videoProgress"
       @loadeddata="loadeddata"
-      crossorigin="anonymous"
+      @play="playHandler"
+      @playing="playingHandler"
+      @timeupdate="timeupdate"
+      @ended="ended"
     />
   </div>
 </template>
@@ -28,7 +32,7 @@ export default {
     return {
       checking: true, // 是否正在检查视频可用性
       duration: 0, // 视频总长
-      size: 0 // 视频总大小
+      videoSize: 0 // 视频总大小
     }
   },
   props: {
@@ -39,18 +43,34 @@ export default {
     src: {
       type: String,
       default: ''
+    },
+    // 视频大小，如果没传，将尝试获取
+    size: {
+      type: [Number, String],
+      default: ''
+    },
+    currentTime: {
+      type: Number,
+      default: 0
     }
   },
   watch: {
     src: {
       async handler (src) {
         if (src) {
+          if (this.size) {
+            this.size = Number(this.size)
+            this.checking = false
+            this.setCurrentTime()
+            return
+          }
           try {
             const res = await AXIOS.head(this.src)
             this.size = Number(res.headers['content-length']) || 0
             this.checking = false
+            this.setCurrentTime()
           } catch (e) {
-            if (e.message.indexOf('404')) {
+            if (e.message.indexOf('404') > -1) {
               this.$alert('该视频已被删除')
                 .finally(() => {
                   this.$router.go(-1)
@@ -65,14 +85,28 @@ export default {
         }
       },
       immediate: true
+    },
+    currentTime: {
+      handler () {
+        this.setCurrentTime()
+      },
+      immediate: true
     }
   },
   deactivated () {
     this.checking = true
+    this.$emit('update:src', '')
   },
   created () {
   },
   methods: {
+    async setCurrentTime () {
+      await this.$nextTick()
+      const video = this.$refs.video
+      if (video && this.currentTime) {
+        video.currentTime = this.currentTime
+      }
+    },
     videoLoadedmetadata (e) {
       this.duration = e.target.duration
     },
@@ -88,6 +122,21 @@ export default {
       console.log(loadedSize, loadedTime)
     },
     loadeddata (e) {
+      this.$emit('loadeddata', e)
+    },
+    // 在媒体开始播放时触发（不论是初次播放、在暂停后恢复、或是在结束后重新开始）。
+    playingHandler (e) {
+      this.$emit('playing', e)
+    },
+    // 在媒体回放被暂停后再次开始时触发。即，在一次暂停事件后恢复媒体回放
+    playHandler (e) {
+      this.$emit('play', e)
+    },
+    timeupdate (e) {
+      this.$emit('timeupdate', e)
+    },
+    ended (e) {
+      this.$emit('ended', e)
     }
   }
 }

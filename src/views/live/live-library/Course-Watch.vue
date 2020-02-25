@@ -1,18 +1,28 @@
 <template>
   <div :class="$style.courseWatch">
-    <div :class="$style.videoBox">
-      <video ref="video" preload controls width="100%" :src="detail.url" />
-    </div>
+    <PaidPlayer
+      :src.sync="detail.url"
+      @play="videoPlay"
+      @ended="videoEnded"
+      :current-time="currentTime"
+      ref="paidPlayer"
+      :size="detail.fileSize"
+    />
   </div>
 </template>
 
 <script>
 import { getCourseDetail, getPermission, setCourseProgess } from './../../../apis/live-library'
+import PaidPlayer from '../../../components/common/Paid-Player.vue'
 export default {
   name: 'CourseWatch',
+  components: {
+    PaidPlayer
+  },
   data () {
     return {
       duration: 0, // 视频总时长
+      currentTime: 0,
       orderId: '',
       detail: {}
     }
@@ -24,16 +34,12 @@ export default {
       await this.$nextTick()
       // 没看完请求
       if (this.$route.query.progress < 100) {
-        this.watchVideoProcess()
         window.addEventListener('unload', this.updateProgress)
       }
     } catch (e) { throw e }
   },
   deactivated () {
     try {
-      let video = this.$refs.video
-      video.removeEventListener('play', this.videoPlay)
-      video.removeEventListener('ended', this.videoEnded)
       window.removeEventListener('unload', this.updateProgress)
       this.updateProgress()
     } catch (e) { throw e }
@@ -64,19 +70,12 @@ export default {
         await setCourseProgess(this.orderId, progress)
       } catch (e) { throw e }
     },
-    // video控制
-    watchVideoProcess () {
-      let video = this.$refs.video
-      video.addEventListener('play', this.videoPlay)
-      video.addEventListener('ended', this.videoEnded)
-    },
     videoPlay () {
-      let video = this.$refs.video
+      let video = this.$refs.paidPlayer
       this.duration = video.duration
       let progress = this.$route.query.progress
       let playTime = (progress / 100) * this.duration
-      video.currentTime = playTime
-      video.removeEventListener('play', this.videoPlay)
+      this.currentTime = playTime
     },
     async videoEnded () {
       try {
@@ -89,13 +88,5 @@ export default {
 
 <style module lang='scss'>
   .course-watch {
-    .video-box {
-      width: 100%;
-      > video {
-        object-fit:fill;
-        width: 100%;
-        height: 442px;
-      }
-    }
   }
 </style>
