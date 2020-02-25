@@ -1,7 +1,8 @@
 <template>
   <div :class="$style.paidPlayer">
+    <pl-svg class="rotate" v-if="checking" name="icon-btn-loading" width="50" fill="#fff" />
     <video
-      v-if="type === 'video' && src"
+      v-if="!checking && type === 'video' && src"
       preload
       controls
       x5-video-player-type="h5-page"
@@ -11,7 +12,7 @@
       @loadedmetadata="videoLoadedmetadata"
       @progress="videoProgress"
       @loadeddata="loadeddata"
-      @error="videoError"
+      crossorigin="anonymous"
     />
   </div>
 </template>
@@ -19,12 +20,13 @@
 <script>
 import axios from 'axios'
 const AXIOS = axios.create({
-  responseType: 'blob'
+  responseType: 'arraybuffer'
 })
 export default {
   name: 'PaidPlayer',
   data () {
     return {
+      checking: true, // 是否正在检查视频可用性
       duration: 0, // 视频总长
       size: 0 // 视频总大小
     }
@@ -43,12 +45,30 @@ export default {
     src: {
       async handler (src) {
         if (src) {
-          const res = await AXIOS.head(this.src)
-          this.size = Number(res.headers['content-length']) || 0
+          try {
+            const res = await AXIOS.head(this.src)
+            this.size = Number(res.headers['content-length']) || 0
+            this.checking = false
+          } catch (e) {
+            if (e.message.indexOf('404')) {
+              this.$alert('该视频已被删除')
+                .finally(() => {
+                  this.$router.go(-1)
+                })
+            } else {
+              this.$alert('视频加载失败')
+                .finally(() => {
+                  this.$router.go(-1)
+                })
+            }
+          }
         }
       },
       immediate: true
     }
+  },
+  deactivated () {
+    this.checking = true
   },
   created () {
   },
@@ -67,14 +87,7 @@ export default {
       const loadedSize = Math.round(loadedTime / this.duration * this.size)
       console.log(loadedSize, loadedTime)
     },
-    videoError (e) {
-      this.$alert({
-        message: '视频加载失败',
-        viceMessage: e.message
-      })
-    },
     loadeddata (e) {
-      console.log(e)
     }
   }
 }
@@ -88,7 +101,7 @@ export default {
   margin: 0 !important;
   padding: 0 !important;
   justify-content: center;
-  background-color: #000;
+  background-color: #000 !important;
   > video {
     height: 422px;
     background-color: #000;
