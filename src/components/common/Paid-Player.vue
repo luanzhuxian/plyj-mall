@@ -18,6 +18,7 @@
       @timeupdate="timeupdate"
       @ended="ended"
       @pause="pause"
+      @error="error"
     />
   </div>
 </template>
@@ -146,6 +147,9 @@ export default {
     },
     pause (e) {
       this.$emit('pause', e)
+    },
+    error (e) {
+      this.$emit('error', e)
     }
   }
 }

@@ -297,11 +297,12 @@ export default {
     font-size: 24px;
     color: #000;
     font-weight: bold;
-    @include elps-wrap(1);
+    @include elps();
   }
   .text1 {
     font-size: 22px;
     color: #666;
-    @include elps-wrap(1);
+    width: 340px;
+    @include elps();
   }
 </style>

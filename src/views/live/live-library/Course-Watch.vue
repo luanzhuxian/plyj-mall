@@ -5,6 +5,7 @@
       @loadeddata="loadeddata"
       @ended="videoEnded"
       @playing="playing"
+      @error="error"
       :current-time="currentTime"
       ref="paidPlayer"
       :size="detail.fileSize"
@@ -114,6 +115,9 @@ export default {
       try {
         await setCourseProgress(this.orderId, 100)
       } catch (e) { throw e }
+    },
+    error (e) {
+      this.$error('视频已被删除')
     }
   }
 }
