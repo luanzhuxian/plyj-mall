@@ -52,9 +52,9 @@ export default {
     } catch (e) { throw e }
   },
   deactivated () {
-    if (this.progress < 100) {
+    try {
       clearTimeout(this.timer)
-    }
+    } catch (e) { throw e }
   },
   methods: {
     // 获取课程信息
