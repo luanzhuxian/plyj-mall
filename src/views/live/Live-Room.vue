@@ -12,19 +12,13 @@
     <!--视频直播-->
     <div v-if="detail.liveType === 'video'" :class="$style.playBackBox">
       <div class="plv-live-cutOff" v-if="recorded.ended" />
-      <video
+      <PaidPlayer
         v-else
-        webkit-playsinline=""
-        playsinline=""
-        x-webkit-airplay="true"
-        x5-video-player-type="h5-page"
-        ref="livePlayBack"
-        controls
-        :poster="detail.coverImg"
-        controlslist="nodownload"
-      >
-        <source :src="recorded.url" type="video/mp4" codecs="avc1.42E01E, mp4a.40.2">
-      </video>
+        :src="recorded.url"
+        :resource-name="recorded.name"
+        :video-id="recorded.id"
+        :size="recorded.fileSize"
+      />
     </div>
     <!-- 聊天 -->
     <div :class="$style.chatRoom">
@@ -240,6 +234,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import CouponItem from '../../components/item/Coupon-Item.vue'
+import PaidPlayer from '../../components/common/Paid-Player.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import {
   getRoomStatus,
@@ -269,7 +264,8 @@ export default {
   name: 'LiveRoom',
   components: {
     // VueSlider,
-    CouponItem
+    CouponItem,
+    PaidPlayer
   },
   data () {
     return {

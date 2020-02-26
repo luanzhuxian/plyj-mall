@@ -187,6 +187,7 @@ export default {
     },
     error (e) {
       this.$emit('error', e)
+      this.$alert('视频加载错误，请联系机构管理人员')
     }
   }
 }
