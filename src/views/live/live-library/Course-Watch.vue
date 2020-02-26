@@ -47,6 +47,11 @@ export default {
     }
   },
   async activated () {
+    window.addEventListener('beforeunload', e => {
+      (e || window.event).returnValue = 'hh' // Gecko and Trident
+      console.log(123)
+      return 'kk'
+    })
     try {
       await this.getCourseDetail()
     } catch (e) { throw e }

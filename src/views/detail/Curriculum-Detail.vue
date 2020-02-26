@@ -81,7 +81,7 @@
         >
           观看学习
           <i v-if="detail.vodNumber">
-            ({ detail.vodNumber }次)
+            ({{ detail.vodNumber }}次)
           </i>
         </button>
       </div>
