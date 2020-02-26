@@ -4,6 +4,7 @@
       :src.sync="detail.url"
       @loadeddata="loadeddata"
       @ended="videoEnded"
+      @playing="playing"
       :current-time="currentTime"
       ref="paidPlayer"
       :size="detail.fileSize"
@@ -12,7 +13,12 @@
 </template>
 
 <script>
-import { getCourseDetail, getPermission, setCourseProgress } from './../../../apis/live-library'
+import {
+  getCourseDetail,
+  getPermission,
+  setCourseProgress,
+  setStudyCount
+} from './../../../apis/live-library'
 import PaidPlayer from '../../../components/common/Paid-Player.vue'
 export default {
   name: 'CourseWatch',
@@ -25,6 +31,11 @@ export default {
       currentTime: 0,
       orderId: '',
       detail: {}
+    }
+  },
+  computed: {
+    liveId () {
+      return this.$route.query.liveId
     }
   },
   async activated () {
@@ -42,6 +53,7 @@ export default {
     try {
       window.removeEventListener('unload', this.updateProgress)
       this.updateProgress()
+      this.hasSetStudyCount = false
     } catch (e) { throw e }
   },
   methods: {
@@ -55,8 +67,7 @@ export default {
           this.$router.push({ name: 'Curriculum', params: { productId: courseId } })
           return
         }
-        let liveId = this.$route.query.liveId
-        let { result: mes } = await getCourseDetail(liveId)
+        let { result: mes } = await getCourseDetail(this.liveId)
         // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
         this.detail = mes
       } catch (e) { throw e }
@@ -70,12 +81,34 @@ export default {
         await setCourseProgress(this.orderId, progress)
       } catch (e) { throw e }
     },
+    // 统计观看次数
+    async setStudyCount () {
+      if (this.hasSetStudyCount) {
+        // 已经统计过了，不再统计
+        return
+      }
+      try {
+        await setStudyCount(this.liveId)
+        // 标记为已设置过观看次数，再次触发事件，将不统计，只有第一次播放时统计
+        this.hasSetStudyCount = true
+      } catch (e) {
+        throw e
+      }
+    },
     loadeddata (e) {
       const video = e.target
       this.duration = video.duration
       const progress = this.$route.query.progress
       const playTime = (progress / 100) * this.duration
       this.currentTime = playTime
+    },
+    // 开始播放时做一些事，如：统计观看次数
+    async playing () {
+      try {
+        await this.setStudyCount()
+      } catch (e) {
+        throw e
+      }
     },
     async videoEnded () {
       try {

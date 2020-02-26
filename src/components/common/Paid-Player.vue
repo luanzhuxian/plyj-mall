@@ -60,14 +60,14 @@ export default {
       async handler (src) {
         if (src) {
           if (this.size) {
-            this.size = Number(this.size)
+            this.videoSize = Number(this.size)
             this.checking = false
             this.setCurrentTime()
             return
           }
           try {
             const res = await AXIOS.head(this.src)
-            this.size = Number(res.headers['content-length']) || 0
+            this.videoSize = Number(res.headers['content-length']) || 0
             this.checking = false
             this.setCurrentTime()
           } catch (e) {
@@ -124,7 +124,7 @@ export default {
         times.push(timeRanges.end(i) - timeRanges.start(i))
       }
       const loadedTime = times.reduce((t, a) => t + a)
-      const loadedSize = Math.round(loadedTime / this.duration * this.size)
+      const loadedSize = Math.round(loadedTime / this.duration * this.videoSize)
       console.log(loadedSize, loadedTime)
     },
     loadeddata (e) {
