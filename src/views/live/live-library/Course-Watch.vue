@@ -31,18 +31,19 @@ export default {
     return {
       duration: 0, // 视频总时长
       currentTime: 0,
-      orderId: '',
       detail: {}
     }
   },
   computed: {
     liveId () {
       return this.$route.query.liveId
+    },
+    orderId () {
+      return this.$route.query.orderId
     }
   },
   async activated () {
     try {
-      this.orderId = this.$route.query.orderId
       await this.getCourseDetail()
       await this.$nextTick()
       // 没看完请求

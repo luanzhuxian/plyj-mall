@@ -14,7 +14,12 @@
         <div>
           <span>已学习</span><span>{{ item.learnProgress || 0 }}%</span>
         </div>
-        <div v-if="$route.params.learnStatus !== '3'" @click="$router.push({name:'CourseWatch',params:{id:item.courseId},query:{liveId:item.liveId,orderId:item.orderId,progress:item.learnProgress}})">学习课程</div>
+        <div
+          v-if="$route.params.learnStatus !== '3'"
+          @click="$router.push({ name: 'CourseWatch', params: { id: item.courseId }, query: { liveId: item.liveId, orderId: item.orderId, progress: item.learnProgress } })"
+        >
+          学习课程
+        </div>
       </div>
     </div>
   </div>

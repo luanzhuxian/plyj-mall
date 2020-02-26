@@ -74,8 +74,15 @@
         <button v-if="!detail.isBuy" :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung" @click="goSubmit">
           立即学习
         </button>
-        <button v-else :class="$style.button + ' ' + $style.hasStudied" @click="goStudy">
+        <button
+          v-else
+          :class="$style.button + ' ' + $style.hasStudied"
+          @click="$router.push({ name: 'CourseWatch', params: { id: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress } })"
+        >
           观看学习
+          <i v-if="detail.vodNumber">
+            ({ detail.vodNumber }次)
+          </i>
         </button>
       </div>
     </div>
@@ -89,7 +96,7 @@
           <div :class="$style.saveButton">
             长按识别或保存二维码，分享给朋友吧！
           </div>
-          <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />
+          <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false" />
         </div>
       </div>
     </transition>
