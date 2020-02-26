@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { getCourseDetail, getPermission, setCourseProgess } from './../../../apis/live-library'
+import { getCourseDetail, getPermission, setCourseProgress } from './../../../apis/live-library'
 import PaidPlayer from '../../../components/common/Paid-Player.vue'
 export default {
   name: 'CourseWatch',
@@ -67,7 +67,7 @@ export default {
         if (this.duration === 0) return
         let videoTime = this.$refs.paidPlayer.video.currentTime || 0
         let progress = parseInt((videoTime / this.duration) * 100)
-        await setCourseProgess(this.orderId, progress)
+        await setCourseProgress(this.orderId, progress)
       } catch (e) { throw e }
     },
     loadeddata (e) {
@@ -79,7 +79,7 @@ export default {
     },
     async videoEnded () {
       try {
-        await setCourseProgess(this.orderId, 100)
+        await setCourseProgress(this.orderId, 100)
       } catch (e) { throw e }
     }
   }
