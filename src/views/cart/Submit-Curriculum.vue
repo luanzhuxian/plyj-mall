@@ -25,9 +25,15 @@
         <div class="fz-20 gray-2">合计</div>
         <div class="fz-32">{{ courseDetail.sellingPrice }}</div>
       </div>
-      <button :class="$style.button" :disabled="submiting" @click="submitOrder">
+      <pl-button
+        :class="$style.button"
+        :loading="submiting"
+        type="warning"
+        size="large"
+        @click="submitOrder"
+      >
         确认提交
-      </button>
+      </pl-button>
     </div>
 
     <div :class="$style.itemSelector" @click.capture="chooseContact">
@@ -160,6 +166,7 @@ export default {
           })
         return
       }
+      this.submiting = true
       // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
       // 下次请求的开始时间 =  500ms + 当前请求时间
       if (this.requestPayDataCount >= 20) {
@@ -193,12 +200,12 @@ export default {
         if (CREDENTIAL.appId) {
           await wechatPay(CREDENTIAL)
           this.$success('支付成功')
+          this.submiting = false
           this.goVideoLibrary()
         }
       } catch (e) {
         throw e
       }
-      this.submiting = false
     },
     goVideoLibrary () {
       // 支付成功，去视频库看视频
