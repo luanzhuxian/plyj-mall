@@ -26,7 +26,6 @@
 <script>
 import axios from 'axios'
 import { setLivePaidData } from '../../apis/live-library'
-import { throttle } from '../../assets/js/util'
 const AXIOS = axios.create({
   responseType: 'arraybuffer'
 })
@@ -119,7 +118,6 @@ export default {
     }
   },
   created () {
-    this.setLivePaidDataThrottle = throttle(this.setLivePaidData, 2000)
   },
   methods: {
     async setCurrentTime () {
@@ -139,18 +137,17 @@ export default {
       for (let i = 0; i < timeRanges.length; i++) {
         times.push(timeRanges.end(i) - timeRanges.start(i))
       }
-      const loadedTime = times.reduce((t, a) => t + a)
+      const loadedTime = Number.parseInt(times.reduce((t, a) => t + a))
       // 单位为字节
       const loadedSize = Math.round(loadedTime / this.duration * this.videoSize)
-      console.log(loadedSize, loadedTime)
-      this.setLivePaidDataThrottle({
+      this.setLivePaidData({
         watchTime: loadedTime,
         dataFlowSize: loadedSize
       })
     },
     async setLivePaidData ({ watchTime, dataFlowSize }) {
       const data = {
-        'id': '',
+        'id': this.livePaidId || '',
         resourceId: this.resourceId,
         resourceName: this.resourceName,
         videoId: this.videoId,
@@ -158,12 +155,15 @@ export default {
         watchTime,
         dataFlowSize
       }
-      try {
-        const { result } = await setLivePaidData(data)
-        console.log(result)
-      } catch (e) {
-        throw e
-      }
+      clearTimeout(this.reqTimer)
+      this.reqTimer = setTimeout(async () => {
+        try {
+          const { result } = await setLivePaidData(data)
+          if (result) this.livePaidId = result
+        } catch (e) {
+          this.$error(JSON.parse(e.message).message)
+        }
+      }, 2000)
     },
     loadeddata (e) {
       this.$emit('loadeddata', e)
