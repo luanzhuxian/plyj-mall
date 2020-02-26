@@ -47,11 +47,6 @@ export default {
     }
   },
   async activated () {
-    window.addEventListener('beforeunload', e => {
-      (e || window.event).returnValue = 'hh' // Gecko and Trident
-      console.log(123)
-      return 'kk'
-    })
     try {
       await this.getCourseDetail()
     } catch (e) { throw e }
@@ -88,11 +83,15 @@ export default {
           // 依此用于已购买的课程列表显示,课程详情页面的显示
           await Promise.all([setCourseProgress(this.orderId, progress), setStudyTime(this.liveId, videoTime)])
         } catch (e) {
-          throw e
+          if (e.name === 'ResponseError') {
+            this.$error(JSON.parse(e.message).message)
+          } else {
+            this.$error(e.message)
+          }
         } finally {
           this.updateProgress()
         }
-      }, 12e4)
+      }, 1000)
     },
     // 统计观看次数
     async setStudyCount () {
