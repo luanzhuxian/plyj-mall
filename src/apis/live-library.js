@@ -19,3 +19,16 @@ export const setCourseProgress = (orderId, progress) => axios.get('/apis/v1/know
 export const setStudyCount = (videoId) => axios.get(`/apis/v1/mall/cource/addVod/${videoId}`)
 // 统计观看的时间
 export const setStudyTime = (videoId, watchTime) => axios.get(`/apis/v1/mall/cource/addWatchTime/${videoId}?watchTime=${watchTime}`)
+/**
+ * 统计视频播放信息，从而据此计费
+ * @param data
+ * @property data.id {string}
+ * @property data.resourceId {string}
+ * @property data.resourceName {string}
+ * @property data.videoId {string}
+ * @property data.videoTime {number}
+ * @property data.watchTime {number}
+ * @property data.dataFlowSize {number}
+ * @returns {*}
+ */
+export const setLivePaidData = data => axios.post(`/apis/v1/mall/live/cost/recording`, data)

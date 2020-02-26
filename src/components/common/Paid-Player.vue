@@ -7,7 +7,7 @@
       preload
       controls
       x5-video-player-type="h5-page"
-      :src="src"
+      :src="src + '?t=' + Date.now()"
       playsinline=""
       x-webkit-airplay="true"
       @loadedmetadata="videoLoadedmetadata"
@@ -25,6 +25,8 @@
 
 <script>
 import axios from 'axios'
+import { setLivePaidData } from '../../apis/live-library'
+import { throttle } from '../../assets/js/util'
 const AXIOS = axios.create({
   responseType: 'arraybuffer'
 })
@@ -54,6 +56,18 @@ export default {
     currentTime: {
       type: Number,
       default: 0
+    },
+    videoId: {
+      type: String,
+      default: ''
+    },
+    resourceName: {
+      type: String,
+      default: ''
+    },
+    resourceId: {
+      type: String,
+      default: '0'
     }
   },
   watch: {
@@ -105,6 +119,7 @@ export default {
     }
   },
   created () {
+    this.setLivePaidDataThrottle = throttle(this.setLivePaidData, 2000)
   },
   methods: {
     async setCurrentTime () {
@@ -125,8 +140,30 @@ export default {
         times.push(timeRanges.end(i) - timeRanges.start(i))
       }
       const loadedTime = times.reduce((t, a) => t + a)
+      // 单位为字节
       const loadedSize = Math.round(loadedTime / this.duration * this.videoSize)
       console.log(loadedSize, loadedTime)
+      this.setLivePaidDataThrottle({
+        watchTime: loadedTime,
+        dataFlowSize: loadedSize
+      })
+    },
+    async setLivePaidData ({ watchTime, dataFlowSize }) {
+      const data = {
+        'id': '',
+        resourceId: this.resourceId,
+        resourceName: this.resourceName,
+        videoId: this.videoId,
+        videoTime: this.duration,
+        watchTime,
+        dataFlowSize
+      }
+      try {
+        const { result } = await setLivePaidData(data)
+        console.log(result)
+      } catch (e) {
+        throw e
+      }
     },
     loadeddata (e) {
       this.$emit('loadeddata', e)

@@ -6,6 +6,8 @@
       @ended="videoEnded"
       @playing="playing"
       @error="error"
+      :video-id="liveId"
+      :resource-name="detail.name"
       :current-time="currentTime"
       ref="paidPlayer"
       :size="detail.fileSize"
@@ -81,7 +83,7 @@ export default {
           let videoTime = this.$refs.paidPlayer.video.currentTime || 0
           let progress = parseInt((videoTime / this.duration) * 100)
           // 依此用于已购买的课程列表显示,课程详情页面的显示
-          await Promise.all([setCourseProgress(this.orderId, progress), setStudyTime(this.liveId, videoTime)])
+          await Promise.all([setCourseProgress(this.orderId, progress), setStudyTime(this.liveId, Number.parseInt(videoTime))])
         } catch (e) {
           if (e.name === 'ResponseError') {
             this.$error(JSON.parse(e.message).message)
@@ -91,7 +93,7 @@ export default {
         } finally {
           this.updateProgress()
         }
-      }, 1000)
+      }, 12e4)
     },
     // 统计观看次数
     async setStudyCount () {
