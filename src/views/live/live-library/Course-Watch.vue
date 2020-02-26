@@ -18,7 +18,8 @@ import {
   getCourseDetail,
   getPermission,
   setCourseProgress,
-  setStudyCount
+  setStudyCount,
+  setStudyTime
 } from './../../../apis/live-library'
 import PaidPlayer from '../../../components/common/Paid-Player.vue'
 export default {
@@ -79,7 +80,10 @@ export default {
         if (this.duration === 0) return
         let videoTime = this.$refs.paidPlayer.video.currentTime || 0
         let progress = parseInt((videoTime / this.duration) * 100)
+        // 用于已购买的课程列表显示
         await setCourseProgress(this.orderId, progress)
+        // 用于课程详情页面的显示
+        await setStudyTime(this.liveId, videoTime)
       } catch (e) { throw e }
     },
     // 统计观看次数
