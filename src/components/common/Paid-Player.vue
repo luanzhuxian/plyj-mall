@@ -17,6 +17,7 @@
       @playing="playingHandler"
       @timeupdate="timeupdate"
       @ended="ended"
+      @pause="pause"
     />
   </div>
 </template>
@@ -97,6 +98,11 @@ export default {
     this.checking = true
     this.$emit('update:src', '')
   },
+  computed: {
+    video () {
+      return this.$refs.video
+    }
+  },
   created () {
   },
   methods: {
@@ -137,6 +143,9 @@ export default {
     },
     ended (e) {
       this.$emit('ended', e)
+    },
+    pause (e) {
+      this.$emit('pause', e)
     }
   }
 }

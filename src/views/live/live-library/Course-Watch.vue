@@ -2,7 +2,7 @@
   <div :class="$style.courseWatch">
     <PaidPlayer
       :src.sync="detail.url"
-      @play="videoPlay"
+      @loadeddata="loadeddata"
       @ended="videoEnded"
       :current-time="currentTime"
       ref="paidPlayer"
@@ -65,16 +65,16 @@ export default {
     async updateProgress () {
       try {
         if (this.duration === 0) return
-        let videoTime = this.$refs.video.currentTime || 0
+        let videoTime = this.$refs.paidPlayer.video.currentTime || 0
         let progress = parseInt((videoTime / this.duration) * 100)
         await setCourseProgess(this.orderId, progress)
       } catch (e) { throw e }
     },
-    videoPlay () {
-      let video = this.$refs.paidPlayer
+    loadeddata (e) {
+      const video = e.target
       this.duration = video.duration
-      let progress = this.$route.query.progress
-      let playTime = (progress / 100) * this.duration
+      const progress = this.$route.query.progress
+      const playTime = (progress / 100) * this.duration
       this.currentTime = playTime
     },
     async videoEnded () {
