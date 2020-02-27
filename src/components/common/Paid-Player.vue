@@ -7,7 +7,7 @@
       preload
       controls
       x5-video-player-type="h5-page"
-      :src="src + '?t=' + Date.now()"
+      :src="src"
       playsinline=""
       x-webkit-airplay="true"
       @loadedmetadata="videoLoadedmetadata"
@@ -25,7 +25,10 @@
 
 <script>
 import axios from 'axios'
-import { setLivePaidData } from '../../apis/live-library'
+import {
+  setLivePaidData,
+  checkRateOfFlow
+} from '../../apis/live-library'
 const AXIOS = axios.create({
   responseType: 'arraybuffer'
 })
@@ -73,13 +76,21 @@ export default {
     src: {
       async handler (src) {
         if (src) {
-          if (this.size) {
-            this.videoSize = Number(this.size)
-            this.checking = false
-            this.setCurrentTime()
-            return
-          }
           try {
+            const { result } = await checkRateOfFlow()
+            if (!result) {
+              this.$alert({
+                message: '流量已经耗尽',
+                viceMessage: '请联系机构管理人员'
+              })
+              return
+            }
+            if (this.size) {
+              this.videoSize = Number(this.size)
+              this.checking = false
+              this.setCurrentTime()
+              return
+            }
             const res = await AXIOS.head(this.src)
             this.videoSize = Number(res.headers['content-length']) || 0
             this.checking = false
@@ -96,6 +107,7 @@ export default {
                   this.$router.go(-1)
                 })
             }
+            throw e
           }
         }
       },

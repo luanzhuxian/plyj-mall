@@ -283,6 +283,7 @@ export default {
       color: #FE7700;
     }
     .original {
+      margin-left: 12px;
       font-size: 20px;
       color: #999;
     }

@@ -32,3 +32,8 @@ export const setStudyTime = (videoId, watchTime) => axios.get(`/apis/v1/mall/cou
  * @returns {*}
  */
 export const setLivePaidData = data => axios.post(`/apis/v1/mall/live/cost/recording`, data)
+/**
+ * 检查流量是否使用完
+ * @returns {*}
+ */
+export const checkRateOfFlow = () => axios.get('/apis/v1/mall/live/cost/flowData/check')

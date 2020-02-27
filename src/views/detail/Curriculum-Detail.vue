@@ -168,6 +168,9 @@ export default {
       throw e
     }
   },
+  deactivated () {
+    this.showHaibao = false
+  },
   async mounted () {
     sessionStorage.setItem('shareBrokerId', this.brokerId || '')
   },
