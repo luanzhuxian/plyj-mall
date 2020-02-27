@@ -1,8 +1,7 @@
 <template>
   <div :class="$style.livePlayBack">
     <div :class="$style.videoBox">
-      <PaidPlayer :src="videoMes.url" />
-      <!--<video preload controls x5-video-player-type="h5-page" width="100%" :src="videoMes.url" />-->
+      <video preload controls x5-video-player-type="h5-page" width="100%" :src="videoMes.url" />
       <div>商品</div>
     </div>
     <div :class="$style.productList" v-if="productList.length">
@@ -51,12 +50,8 @@
 <script>
 import { getActiveCompleteInfo, getVideoMesById, hasPied, pay, cancelOrder } from '../../apis/live.js'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
-import PaidPlayer from '../../components/common/Paid-Player.vue'
 export default {
   name: 'LivePlayBack',
-  components: {
-    PaidPlayer
-  },
   data () {
     return {
       activityId: '',
