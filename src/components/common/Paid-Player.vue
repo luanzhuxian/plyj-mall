@@ -82,6 +82,8 @@ export default {
               this.$alert({
                 message: '流量已经耗尽',
                 viceMessage: '请联系机构管理人员'
+              }).finally(() => {
+                this.$router.go(-1)
               })
               return
             }
