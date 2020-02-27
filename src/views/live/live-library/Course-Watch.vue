@@ -11,6 +11,7 @@
       :current-time="currentTime"
       ref="paidPlayer"
       :size="detail.fileSize"
+      back-route-name="MyCourses"
     />
   </div>
 </template>
@@ -74,10 +75,15 @@ export default {
           return
         }
         let { result: mes } = await getCourseDetail(this.liveId)
-        // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
-        this.detail = mes || {
-          url: ''
+        if (!mes) {
+          this.$alert('视频加载错误，请联系机构管理人员')
+            .finally(() => {
+              this.$router.replace({ name: 'MyCourses' })
+            })
+          return
         }
+        // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
+        this.detail = mes
       } catch (e) { throw e }
     },
     // 向后台存储播放进度，两分钟更新一次进度

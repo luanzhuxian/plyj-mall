@@ -71,6 +71,11 @@ export default {
       type: String,
       default: '0'
     },
+    // 观看未成功的跳转路由名
+    backRouteName: {
+      type: String,
+      default: ''
+    },
     autoFullScreen: Boolean
   },
   watch: {
@@ -84,6 +89,10 @@ export default {
                 message: '流量已经耗尽',
                 viceMessage: '请联系机构管理人员'
               }).finally(() => {
+                if (this.backRouteName) {
+                  this.$router.replace({ name: this.backRouteName })
+                  return
+                }
                 this.$router.go(-1)
               })
               return
@@ -102,11 +111,19 @@ export default {
             if (e.message.indexOf('404') > -1) {
               this.$alert('该视频已被删除')
                 .finally(() => {
+                  if (this.backRouteName) {
+                    this.$router.replace({ name: this.backRouteName })
+                    return
+                  }
                   this.$router.go(-1)
                 })
             } else {
               this.$alert('视频加载失败')
                 .finally(() => {
+                  if (this.backRouteName) {
+                    this.$router.replace({ name: this.backRouteName })
+                    return
+                  }
                   this.$router.go(-1)
                 })
             }
