@@ -72,7 +72,6 @@ export default {
           return
         }
         let { result: mes } = await getCourseDetail(this.liveId)
-        mes.url = 'https://mallcdn.youpenglai.com/video/F467Aa2D7-rIB-1582787078309.mp4'
         // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
         this.detail = mes
       } catch (e) { throw e }
