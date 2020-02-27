@@ -15,8 +15,10 @@ export const getPermission = courseId => axios.get('/apis/v1/knowledgeCourse/cus
 
 // 设置观看课程进度
 export const setCourseProgress = (orderId, progress) => axios.get('/apis/v1/knowledgeCourse/updateMyVideo', { params: { orderId, progress } })
+
 // 统计学习次数
 export const setStudyCount = (videoId) => axios.get(`/apis/v1/mall/cource/addVod/${videoId}`)
+
 // 统计观看的时间
 export const setStudyTime = (videoId, watchTime) => axios.get(`/apis/v1/mall/cource/addWatchTime/${videoId}?watchTime=${watchTime}`)
 /**
