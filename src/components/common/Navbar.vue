@@ -33,17 +33,25 @@
       />
     </router-link>
     <!-- 分类 -->
-    <router-link
+    <!-- <router-link
       :class="{
         [$style.route]: true,
         [$style.active]: classifyActive
       }"
       tag="div"
       :to="{ name: 'Classify' }"
+    > -->
+    <router-link
+      :class="{
+        [$style.route]: true,
+        [$style.active]: classifyActive
+      }"
+      tag="div"
+      :to="{ name: 'OnlineClassroom' }"
     >
       <template v-if="isSkinShow">
         <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
-        <div :class="$style.tabName">分类</div>
+        <div :class="$style.tabName">学习</div>
       </template>
       <pl-svg
         v-else-if="skinId !== null"
@@ -128,9 +136,9 @@ export default {
     return {
       showNavbar: [
         'Home',
-        'My',
-        'ShoppingCart',
         'Classify',
+        'ShoppingCart',
+        'My',
         'WhatsHelper'
       ],
       skinMap: {
@@ -203,7 +211,7 @@ export default {
       return this.$route.matched.some(val => val.name === 'Home')
     },
     classifyActive: function () {
-      return this.$route.matched.some(val => val.name === 'Classify')
+      return this.$route.matched.some(val => val.name === 'OnlineClassroom')
     },
     shoppingChartActive: function () {
       return this.$route.path.indexOf('cart') > -1
