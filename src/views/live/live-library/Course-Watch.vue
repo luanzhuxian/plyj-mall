@@ -72,7 +72,6 @@ export default {
           return
         }
         let { result: mes } = await getCourseDetail(this.liveId)
-        // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
         this.detail = mes
       } catch (e) { throw e }
     },
@@ -139,5 +138,9 @@ export default {
 
 <style module lang='scss'>
   .course-watch {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    background-color: #000;
   }
 </style>

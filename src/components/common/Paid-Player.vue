@@ -70,7 +70,8 @@ export default {
     resourceId: {
       type: String,
       default: '0'
-    }
+    },
+    autoFullScreen: Boolean
   },
   watch: {
     src: {
@@ -131,8 +132,6 @@ export default {
       return this.$refs.video
     }
   },
-  created () {
-  },
   methods: {
     async setCurrentTime () {
       await this.$nextTick()
@@ -151,7 +150,7 @@ export default {
       for (let i = 0; i < timeRanges.length; i++) {
         times.push(timeRanges.end(i) - timeRanges.start(i))
       }
-      const loadedTime = Number.parseInt(times.reduce((t, a) => t + a))
+      const loadedTime = times.reduce((t, a) => t + a)
       // 单位为字节
       const loadedSize = Math.round(loadedTime / this.duration * this.videoSize)
       this.setLivePaidData({
@@ -202,6 +201,26 @@ export default {
     error (e) {
       this.$emit('error', e)
       this.$alert('视频加载错误，请联系机构管理人员')
+    },
+    async fullScreen () {
+      // 进入全屏
+      const video = this.video
+      if (video.requestFullscreen) {
+        // 最新标准
+        video.requestFullscreen()
+      } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen()
+      } else {
+        // iOS进入全屏
+        video.webkitEnterFullscreen()
+        // 针对iOS监听不到webkitfullscreenchange事件做的兼容，感知退出全屏
+        let timer = setInterval(() => {
+          if (!video.webkitDisplayingFullscreen) {
+            // 退出了全屏
+            clearInterval(timer)
+          }
+        }, 1000)
+      }
     }
   }
 }
@@ -212,6 +231,7 @@ export default {
   display: flex;
   align-items: center;
   height: 422px;
+  max-width: 100vw;
   margin: 0 !important;
   padding: 0 !important;
   justify-content: center;
@@ -219,6 +239,12 @@ export default {
   > video {
     height: 422px;
     background-color: #000;
+    &:fullscreen {
+      transform: rotate(90deg);
+    }
   }
+}
+
+@media screen and (orientation:landscape) {
 }
 </style>
