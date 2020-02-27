@@ -4,7 +4,7 @@
       :src.sync="detail.url"
       @loadeddata="loadeddata"
       @ended="videoEnded"
-      @playing.once="playing"
+      @playing="playing"
       @error="error"
       :video-id="liveId"
       :resource-name="detail.name"
@@ -31,6 +31,7 @@ export default {
   },
   data () {
     return {
+      isStudy: false, // 是否第一次进来点播学习
       duration: 0, // 视频总时长
       currentTime: 0,
       detail: {},
@@ -50,6 +51,7 @@ export default {
   },
   async activated () {
     try {
+      this.isStudy = false
       await this.getCourseDetail()
     } catch (e) { throw e }
   },
@@ -99,6 +101,7 @@ export default {
     async setStudyCount () {
       try {
         await setStudyCount(this.liveId)
+        this.isStudy = true
       } catch (e) { throw e }
     },
     loadeddata (e) {
@@ -111,10 +114,12 @@ export default {
         this.updateProgress()
       }
     },
-    // 开始播放时做一些事，目前只在第一次播放时候触发
+    // 开始播放时做一些事
     async playing () {
       try {
-        await this.setStudyCount()
+        if (!this.isStudy) {
+          await this.setStudyCount()
+        }
       } catch (e) { throw e }
     },
     async videoEnded () {
