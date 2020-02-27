@@ -4,7 +4,7 @@
       :src.sync="detail.url"
       @loadeddata="loadeddata"
       @ended="videoEnded"
-      @playing="playing"
+      @playing.once="playing"
       @error="error"
       :video-id="liveId"
       :resource-name="detail.name"
@@ -95,19 +95,11 @@ export default {
         }
       }, 12e4)
     },
-    // 统计观看次数
+    // 统计观看次数，只有第一次播放时统计
     async setStudyCount () {
-      if (this.hasSetStudyCount) {
-        // 已经统计过了，不再统计
-        return
-      }
       try {
         await setStudyCount(this.liveId)
-        // 标记为已设置过观看次数，再次触发事件，将不统计，只有第一次播放时统计
-        this.hasSetStudyCount = true
-      } catch (e) {
-        throw e
-      }
+      } catch (e) { throw e }
     },
     loadeddata (e) {
       if (this.progress < 100) {
@@ -119,7 +111,7 @@ export default {
         this.updateProgress()
       }
     },
-    // 开始播放时做一些事，如：统计观看次数
+    // 开始播放时做一些事，目前只在第一次播放时候触发
     async playing () {
       try {
         await this.setStudyCount()
