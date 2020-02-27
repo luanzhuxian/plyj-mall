@@ -34,7 +34,9 @@ export default {
       isStudy: false, // 是否第一次进来点播学习
       duration: 0, // 视频总时长
       currentTime: 0,
-      detail: {},
+      detail: {
+        url: ''
+      },
       timer: null
     }
   },
@@ -72,7 +74,10 @@ export default {
           return
         }
         let { result: mes } = await getCourseDetail(this.liveId)
-        this.detail = mes
+        // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
+        this.detail = mes || {
+          url: ''
+        }
       } catch (e) { throw e }
     },
     // 向后台存储播放进度，两分钟更新一次进度
