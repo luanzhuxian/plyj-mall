@@ -241,12 +241,12 @@ export default {
 .paid-player {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 422px;
   width: 100vw;
   max-width: 100vw;
   margin: 0 !important;
   padding: 0 !important;
-  justify-content: center;
   background-color: #000 !important;
   > video {
     height: 422px;

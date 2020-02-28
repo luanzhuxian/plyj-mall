@@ -52,7 +52,12 @@
     >
       <template>
         <ul :class="$style.courseList">
-          <li v-for="(item, index) of courseList" :key="index" :class="$style.courseItem" @click="$router.push({name: 'Curriculum', params:{ productId: item.id }})">
+          <li
+            v-for="(item, index) of courseList"
+            :key="index"
+            :class="$style.courseItem"
+            @click.capture="study(item)"
+          >
             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
             <div :class="$style.desc">
               <div :class="$style.title" v-text="item.courseName" />
@@ -63,7 +68,8 @@
                   <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
                 </span>
                 <span v-else :class="$style.free">免费</span>
-                <pl-button type="primary" size="small">立即学习</pl-button>
+                <pl-button v-if="!item.isBuy" type="primary" size="small">立即学习</pl-button>
+                <pl-button v-else type="warning" size="small">观看学习</pl-button>
               </div>
             </div>
           </li>
@@ -167,6 +173,14 @@ export default {
     },
     refreshHandler (list) {
       this.courseList = list
+    },
+    study (item) {
+      // TODO: 等待接口数据
+      if (item.isBuy) {
+        this.$router.push({ name: 'CourseWatch', params: { id: item.id }, query: { liveId: item.liveId, orderId: item.orderId, progress: item.learnProgress } })
+        return
+      }
+      this.$router.push({ name: 'Curriculum', params: { productId: item.id } })
     }
   }
 }

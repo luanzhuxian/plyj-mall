@@ -53,7 +53,7 @@
               v-for="(item, index) of futureLive"
               :key="index"
               :class="$style.item"
-              @click.capture="$router.push({ name: 'LiveRoom' })"
+              @click.capture="() => { (item.isMin && !nowLiveList.length) ? $router.push({ name: 'LiveRoom' }) : '' }"
             >
               <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
               <div :class="$style.desc">
