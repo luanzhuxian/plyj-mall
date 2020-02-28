@@ -392,7 +392,6 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding-top: 60px;
     background-color: #fff;
     > .content {
       display: flex;
