@@ -1,6 +1,8 @@
 <template>
   <div :class="$style.onlineClassroom">
+    <!--TODO.暂时不显示分类-->
     <div
+      v-if="false"
       :class="{
         [$style.classifyMain]: true,
         [$style.showAll]: isShowAll
@@ -97,9 +99,10 @@ export default {
   },
   async activated () {
     try {
-      if (!this.classifyList.length) { // 有分类且有默认值才设置默认分类
+      // TODO.暂时没有分类
+      /* if (!this.classifyList.length) { // 有分类且有默认值才设置默认分类
         await this.getCategoryTree()
-      }
+      } */
       this.$refresh = this.$refs.loadMore.refresh
     } catch (e) {
       throw e
@@ -170,7 +173,8 @@ export default {
 </script>
 <style lang="scss" module>
   .online-classroom {
-    padding: 14vw 20px 20px;
+    /*padding: 14vw 20px 20px;*/
+    padding: 20px;
     min-height: 50vh;
     background-color: #fff;
   }
