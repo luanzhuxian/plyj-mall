@@ -104,7 +104,6 @@
                   >
                     看回放
                   </pl-button>
-                  <pl-button v-else type="primary" size="middle">不支持回放</pl-button>
                 </div>
               </div>
             </li>
