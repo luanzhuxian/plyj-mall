@@ -52,7 +52,7 @@
     >
       <template>
         <ul :class="$style.courseList">
-          <li v-for="(item, index) of courseList" :key="index" :class="$style.courseItem">
+          <li v-for="(item, index) of courseList" :key="index" :class="$style.courseItem" @click="$router.push({name: 'Curriculum', params:{ productId: item.id }})">
             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
             <div :class="$style.desc">
               <div :class="$style.title" v-text="item.courseName" />
@@ -63,7 +63,7 @@
                   <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
                 </span>
                 <span v-else :class="$style.free">免费</span>
-                <pl-button type="primary" size="small" @click="$router.push({name: 'Curriculum', params:{ productId: item.id }})">立即学习</pl-button>
+                <pl-button type="primary" size="small">立即学习</pl-button>
               </div>
             </div>
           </li>
