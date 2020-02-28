@@ -213,22 +213,21 @@ export default {
   .teachers,
   .best,
   .recommend {
-    padding: 0 24px;
+    padding: 0 20px;
   }
 
   .live,
   .course {
-    margin-top: 24px;
+    margin-top: 20px;
   }
 
-  // .live,
   .activity,
   .appointment {
-    padding: 24px 24px 0;
+    padding: 24px 20px 0;
   }
 
   .propagate {
-    padding: 10px 24px 0;
+    padding: 10px 20px 0;
   }
 
   .footer {
