@@ -5,12 +5,10 @@
       @loadeddata="loadeddata"
       @ended="videoEnded"
       @playing="playing"
-      @error="error"
       :video-id="liveId"
       :resource-name="detail.name"
       :current-time="currentTime"
       ref="paidPlayer"
-      :size="detail.fileSize"
       back-route-name="MyCourses"
     />
   </div>
@@ -140,8 +138,6 @@ export default {
           await Promise.all([setCourseProgress(this.orderId, 100), setStudyTime(this.liveId, Number.parseInt(videoTime))])
         }
       } catch (e) { throw e }
-    },
-    error (e) {
     }
   }
 }

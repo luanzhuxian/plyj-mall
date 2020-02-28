@@ -50,11 +50,6 @@ export default {
       type: String,
       default: ''
     },
-    // 视频大小，如果没传，将尝试获取
-    size: {
-      type: [Number, String],
-      default: ''
-    },
     currentTime: {
       type: Number,
       default: 0
@@ -97,19 +92,16 @@ export default {
               })
               return
             }
-            if (this.size) {
-              this.videoSize = Number(this.size)
-              this.checking = false
-              this.setCurrentTime()
-              return
-            }
             const res = await AXIOS.head(this.src)
             this.videoSize = Number(res.headers['content-length']) || 0
             this.checking = false
             this.setCurrentTime()
           } catch (e) {
             if (e.message.indexOf('404') > -1) {
-              this.$alert('该视频已被删除')
+              this.$alert({
+                message: '视频已被删除',
+                viceMessage: '请联系机构管理人员'
+              })
                 .finally(() => {
                   if (this.backRouteName) {
                     this.$router.replace({ name: this.backRouteName })
@@ -118,7 +110,10 @@ export default {
                   this.$router.go(-1)
                 })
             } else {
-              this.$alert('视频加载失败')
+              this.$alert({
+                message: '视频加载失败',
+                viceMessage: '请联系机构管理人员'
+              })
                 .finally(() => {
                   if (this.backRouteName) {
                     this.$router.replace({ name: this.backRouteName })
@@ -217,7 +212,6 @@ export default {
     },
     error (e) {
       this.$emit('error', e)
-      this.$alert('视频加载错误，请联系机构管理人员')
     },
     async fullScreen () {
       // 进入全屏
