@@ -161,6 +161,7 @@ export default {
         box-sizing: border-box;
         display: inline-block;
         text-align: center;
+        font-family: auto;
       }
     }
     &.small {

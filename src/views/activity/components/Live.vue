@@ -39,7 +39,7 @@
             <pl-svg name="icon-clock" fill="#fff" width="26" />
           </div>
           <div :class="$style.bottomRight">
-            <span v-if="isNoticeShow">距开始</span>
+            <span v-if="isNoticeShow">距开始仅剩</span>
             <span v-if="live.statue === 4" :class="$style.highlight">正在直播</span>
             <span v-if="live.statue === 0" :class="$style.highlight">已结束</span>
             <count-down
@@ -219,7 +219,10 @@ export default {
     @include elps-wrap(2);
   }
   .bottom {
-    display: flex;
+    display: inline-flex;
+    align-self: center;
+    width: max-content;
+    min-width: 300px;
     height: 40px;
     border: 2px solid #FF9800;
     border-radius: 20px;
@@ -234,7 +237,7 @@ export default {
     //   }
     // }
     &-left {
-      display: flex;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
       width: 60px;
@@ -245,9 +248,10 @@ export default {
     }
     &-right {
       flex: 1;
-      display: flex;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
+      padding: 0 12px;
       font-size: 24px;
       font-family: MicrosoftYaHei;
       color: #333333;
