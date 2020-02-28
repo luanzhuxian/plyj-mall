@@ -47,10 +47,10 @@
       <router-link
         tag="li"
         active-class="active"
-        :to="{name: 'Classify'}"
+        :to="{name: 'OnlineClassroom'}"
       >
         <pl-svg
-          name="icon-classify"
+          name="icon-study-30fed"
           width="50"
           height="75"
         />
