@@ -87,7 +87,7 @@
                     type="warning"
                     size="middle"
                     v-if="item.videoLibId !== '0'"
-                    @click="$router.push({ name: 'LivePlayBack', params :{ activityId: item.id, id: item.videoLibId, payCount: item.actuallyPaidAmount } })"
+                    @click="$router.push({ name: 'LivePlayBack', params:{ id: item.videoLibId, activityId: item.id } })"
                   >
                     看回放
                   </pl-button>

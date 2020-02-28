@@ -62,7 +62,7 @@ export default [
     }
   },
   {
-    path: '/lived/play-back/:id',
+    path: '/lived/play-back/:id/:activityId',
     name: 'LivePlayBack',
     component: () => import('../views/live/Live-Play-Back.vue'),
     meta: {

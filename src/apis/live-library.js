@@ -2,7 +2,10 @@
 import { axios } from '../assets/js/axios'
 
 // 获取直播观看列表
-export const getLibraryList = () => axios.get('/apis/v1/mall/live/lib/my_lookback')
+export const getLibraryList = params => axios.get('/apis/v1/mall/live/lib/my_lookback', { params })
+
+// 直播回放是否付过费
+export const hasPied = activityId => axios.get(`/apis/v1/mall/live/lib/lookback/${activityId}`)
 
 // 获取课程列表
 export const getCourseList = params => axios.get('/apis/v1/knowledgeCourse/myVideo', { params })

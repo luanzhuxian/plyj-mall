@@ -48,72 +48,59 @@
 </template>
 
 <script>
-import { getActiveCompleteInfo, getVideoMesById, hasPied, pay, cancelOrder } from '../../apis/live.js'
+import { getActiveCompleteInfo, getVideoMesById, pay, cancelOrder } from '../../apis/live.js'
+import { hasPied } from './../../apis/live-library'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 export default {
   name: 'LivePlayBack',
   data () {
     return {
-      activityId: '',
       id: '',
+      activityId: '',
       needPay: false,
-      payCount: 0,
+      payCount: 0, // 价格
       productList: [], // 商品列表
       videoMes: {}
     }
   },
   async activated () {
     try {
-      this.activityId = this.$route.params.activityId // 直播活动id
-      this.payCount = this.$route.params.payCount || 0 // 直播活动价格
+      this.needPay = false
       this.id = this.$route.params.id // 视频id
-      if (this.activityId) {
-        // 查看录播前，查看是否需要付款
-        await this.isNeedPay()
-      } else {
-        this.getVideoMes()
-        this.getDetail()
-      }
-    } catch (e) {
-      throw e
-    }
-  },
-  methods: {
-    async isNeedPay () {
-      let payCount = await hasPied(this.activityId)
-      // 返回为0-未购买， 其他数值-当时购买的价格
-      if (!payCount && this.payCount) { // 此视频有价格但是未付款时，弹出支付弹框
-        // 还没支付
-        this.needPay = true
-      }
+      this.activityId = this.$route.params.activityId // 活动id
+      this.needPay = await this.isNeedPay()
       if (!this.needPay) {
         this.getVideoMes()
         this.getDetail()
       }
+    } catch (e) { throw e }
+  },
+  methods: {
+    async isNeedPay () {
+      try {
+      // needPay 是否需要付费 1需要  0不需要
+        let { result: { needPay, needPaidAmount } } = await hasPied(this.activityId)
+        this.payCount = needPaidAmount / 100 // 单位分转为元
+        return needPay === 1
+      } catch (e) { throw e }
     },
     async getDetail () {
       try {
-        let mes = await getActiveCompleteInfo()
-        if (mes) {
-          this.productList = mes.productList || []
-        }
+        let { productList } = await getActiveCompleteInfo()
+        this.productList = productList || []
       } catch (e) { throw e }
     },
     async getVideoMes () {
       try {
         let mes = await getVideoMesById(this.id)
-        if (mes) {
-          this.videoMes = mes
-        }
+        this.videoMes = mes
       } catch (e) { throw e }
     },
     async submitOrder () {
       try {
-        let res = await pay(this.activityId)
-        await this.pay(res)
-      } catch (e) {
-        throw e
-      }
+        let mes = await pay(this.activityId)
+        await this.pay(mes)
+      } catch (e) { throw e }
     },
     async pay (CREDENTIAL) {
       return new Promise(async (resolve, reject) => {
