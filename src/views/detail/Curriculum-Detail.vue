@@ -216,9 +216,6 @@ export default {
         this.loading = false
       }
     },
-    goStudy () {
-      this.$router.push({ name: 'LivePlayBack', params: { id: this.detail.liveId } })
-    },
     goSubmit () {
       this.$router.push({ name: 'SubmitCurriculum', params: { productId: this.productId, count: 1 } })
     },

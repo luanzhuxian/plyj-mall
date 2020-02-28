@@ -184,8 +184,8 @@ export default {
     refreshed (list, total) {
       this.totals[this.form.type] = total
       this.list[this.form.type] = list
-      // // 按顺序请求列表，先请求正在直播的列表，如果正在直播列表加载完毕，就请求下一个列表
-      if (list.length === 0) {
+      // 按顺序请求列表，先请求正在直播的列表，如果正在直播列表加载完毕，就请求下一个列表
+      if (list.length < this.form.size) {
         const type = this.type.next().value
         if (type) {
           this.form.type = type
