@@ -18,7 +18,12 @@
             <span>({{ totals.NOW }})</span>
           </div>
           <ul>
-            <li v-for="(item, index) of nowLive" :key="index" :class="$style.nowLiveItem">
+            <li
+              v-for="(item, index) of nowLive"
+              :key="index"
+              :class="$style.nowLiveItem"
+              @click.capture="$router.push({ name: 'LiveRoom' })"
+            >
               <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
               <div :class="$style.itemBottom">
                 <div :class="$style.desc">
@@ -30,7 +35,7 @@
                 <div :class="$style.right">
                   <span v-if="item.actuallyPaidAmount" :class="$style.price" v-text="item.actuallyPaidAmount" />
                   <span :class="$style.free" v-else>免费</span>
-                  <pl-button type="primary" size="middle" @click="$router.push({ name: 'LiveRoom' })">去看直播</pl-button>
+                  <pl-button type="primary" size="middle">去看直播</pl-button>
                 </div>
               </div>
             </li>
@@ -44,7 +49,12 @@
             <span>({{ totals.FUTURE }})</span>
           </div>
           <ul :class="$style.list">
-            <li v-for="(item, index) of futureLive" :key="index" :class="$style.item">
+            <li
+              v-for="(item, index) of futureLive"
+              :key="index"
+              :class="$style.item"
+              @click.capture="$router.push({ name: 'LiveRoom' })"
+            >
               <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
               <div :class="$style.desc">
                 <div :class="$style.liveTitle">{{ item.name }}</div>
@@ -57,7 +67,6 @@
                     type="primary"
                     size="middle"
                     v-if="item.isMin && !nowLiveList.length"
-                    @click="$router.push({ name: 'LiveRoom' })"
                   >
                     去看直播
                   </pl-button>
@@ -74,7 +83,12 @@
             <span>({{ totals.PAST }})</span>
           </div>
           <ul :class="$style.list">
-            <li v-for="(item, index) of pastLive" :key="index" :class="$style.item">
+            <li
+              v-for="(item, index) of pastLive"
+              :key="index"
+              :class="$style.item"
+              @click.capture="() => { item.videoLibId !== '0' ? $router.push({ name: 'LivePlayBack', params:{ id: item.videoLibId, activityId: item.id } }) : '' }"
+            >
               <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
               <div :class="$style.desc">
                 <div :class="$style.liveTitle">{{ item.name }}</div>
@@ -87,7 +101,6 @@
                     type="warning"
                     size="middle"
                     v-if="item.videoLibId !== '0'"
-                    @click="$router.push({ name: 'LivePlayBack', params:{ id: item.videoLibId, activityId: item.id } })"
                   >
                     看回放
                   </pl-button>
