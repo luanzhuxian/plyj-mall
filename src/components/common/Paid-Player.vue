@@ -242,6 +242,7 @@ export default {
   display: flex;
   align-items: center;
   height: 422px;
+  width: 100vw;
   max-width: 100vw;
   margin: 0 !important;
   padding: 0 !important;

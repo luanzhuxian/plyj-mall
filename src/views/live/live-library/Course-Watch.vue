@@ -7,6 +7,7 @@
       @playing="playing"
       :video-id="liveId"
       :resource-name="detail.name"
+      :resource-id="detail.id"
       :current-time="currentTime"
       ref="paidPlayer"
       back-route-name="MyCourses"
