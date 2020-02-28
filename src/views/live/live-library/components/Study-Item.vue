@@ -109,6 +109,11 @@ export default {
           color: #B58A48;
           background: #FFFAE6;
         }
+        > div:nth-of-type(3) {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
       > .learn {
         display: flex;

@@ -9,8 +9,8 @@
       :request-methods="getLibraryList"
       @refresh="refreshList"
       @more="refreshList"
-      no-content-tip="learnTxt"
-      :no-icon="false"
+      no-content-tip="暂无视频可观看"
+      :no-icon="true"
       icon="icon-course-7ffcc"
     >
       <liveItem v-for="(item,index) in list" :key="index" :item="item" />

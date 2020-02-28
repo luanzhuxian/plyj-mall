@@ -2,11 +2,11 @@
   <div :class="$style.liveLibrary">
     <div :class="$style.head">
       <div :class="$style.tabs" @click="$router.push({name:'MyLive'})">
-        <div>我的直播</div>
+        <div :class="{[$style.tabFocus]:$route.name === 'MyLive'}">我的直播</div>
         <div :class="{[$style.line]:true,[$style.lineFocus]:$route.name === 'MyLive'}" />
       </div>
       <div :class="$style.tabs" @click="$router.push({name:'MyCourses'})">
-        <div>我的课程</div>
+        <div :class="{[$style.tabFocus]:$route.name !== 'MyLive'}">我的课程</div>
         <div :class="{[$style.line]:true,[$style.lineFocus]:$route.name !== 'MyLive'}" />
       </div>
     </div>
@@ -16,8 +16,7 @@
       <div :class="{[$style.focus]:$route.params.learnStatus === '3'}" @click="$router.push({name:'CourseLearning',params:{learnStatus:'3'}})">已学完</div>
     </div>
     <div :class="$style.description">
-      <span v-if="$route.name === 'MyLive'">仅可支持查看已观看过的可回放直播</span>
-      <span v-else>仅支持观看已成功购买的线上视频课程</span>
+      <span v-if="$route.name !== 'MyLive'">仅支持观看已成功购买的线上视频课程</span>
     </div>
     <keep-alive>
       <router-view />
@@ -40,7 +39,7 @@ export default {
         display: flex;
         justify-content: center;
         width: 100%;
-        margin-bottom: 1px;
+        border-bottom: 1px solid #e6e6e6;
         font-size: 30px;
         color: #222222;
         background-color: #FFFFFF;
@@ -52,6 +51,9 @@ export default {
           > div:nth-of-type(1) {
             width: 100%;
             text-align: center;
+          }
+          > .tab-focus {
+            color: #F2B036;
           }
           > .line {
             width: 40px;
@@ -82,12 +84,14 @@ export default {
         > .focus {
           border-color: #F3AD3C;
           color: #F3AD3C;
+          background-color: #fcf5ea;
         }
       }
       > .description {
         padding: 14px 28px;
         box-sizing: border-box;
-        font-size: 28px;
+        font-size: 24px;
+        color: #666666;
         background-color: #FFFFFF;
       }
     }
