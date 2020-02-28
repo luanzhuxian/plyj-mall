@@ -51,6 +51,16 @@
       >
         <pl-svg
           name="icon-study-30fed"
+          height="75"
+        />
+      </router-link>
+      <router-link
+        tag="li"
+        active-class="active"
+        :to="{name: 'Classify'}"
+      >
+        <pl-svg
+          name="icon-classify"
           width="50"
           height="75"
         />
