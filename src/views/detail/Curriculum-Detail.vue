@@ -162,7 +162,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'userName', 'avatar']),
+    ...mapGetters(['appId', 'userName', 'avatar', 'mobile']),
     // 0 全部，1 helper，2 会员，3 部分用户
     targetGroups () {
       return this.detail.targetGroups
@@ -227,6 +227,19 @@ export default {
       }
     },
     goSubmit () {
+      if (!this.mobile) {
+        this.$confirm('您还没有绑定手机，请先绑定手机')
+          .then(() => {
+            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+              name: this.$route.name,
+              params: this.$route.params,
+              query: this.$route.query
+            }))
+            this.$router.push({ name: 'BindMobile' })
+          })
+          .catch(() => {})
+        return
+      }
       this.$router.push({ name: 'SubmitCurriculum', params: { productId: this.productId, count: 1 } })
     },
     resetState () {
