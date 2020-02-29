@@ -71,7 +71,12 @@
         <a :class="$style.link + ' ' + $style.callUs" @click="showContact = true">
           <pl-svg name="icon-call-us" width="80" height="72" />
         </a>
-        <button v-if="!detail.isBuy" :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung" @click="goSubmit">
+        <button
+          v-if="!detail.isBuy"
+          :disabled="detail.status === 2"
+          :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung"
+          @click="goSubmit"
+        >
           立即学习
         </button>
         <button
@@ -86,6 +91,11 @@
         </button>
       </div>
     </div>
+
+    <div :class="$style.buttomTip" v-if="detail.status === 2">
+      该视频课程已下架
+    </div>
+
     <Contact :show.sync="showContact" />
 
     <!-- 海报弹框 -->
@@ -416,6 +426,9 @@ export default {
     }
     .click-me-because-you-are-young {
       background-color: #FE7700;
+      &:disabled {
+        background-color: rgba(254, 119, 0, 0.4);
+      }
     }
     .has-studied {
       background-color: #F2B036;
@@ -485,6 +498,28 @@ export default {
         height: 48px;
         color: #fff;
       }
+    }
+  }
+  .buttomTip {
+    position: fixed;
+    bottom: 130px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 725px;
+    line-height: 110px;
+    background-color: rgba(0, 0, 0, .7);
+    border-radius: 4px;
+    font-size: 30px;
+    text-align: center;
+    color: #fff;
+    z-index: 13;
+    &:before {
+      position: absolute;
+      left: 78px;
+      bottom: -28px;
+      content: '';
+      border: 14px solid transparent;
+      border-top-color: rgba(0, 0, 0, .7);
     }
   }
 </style>
