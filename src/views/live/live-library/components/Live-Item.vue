@@ -21,7 +21,7 @@
             <span>已付费：</span><span>￥ {{ item.paidAmount / 100 }}</span>
           </template>
         </div>
-        <div @click="$router.push({ name: 'LivePlayBack', params: { id: item.id, activityId: item.activityId } })">再次观看</div>
+        <div @click="$router.push({ name: 'LivePlayBack', params: { id: item.id, activityId: item.activityId } })">观看回放</div>
       </div>
     </div>
   </div>

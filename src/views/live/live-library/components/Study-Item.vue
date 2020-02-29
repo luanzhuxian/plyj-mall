@@ -75,7 +75,7 @@ export default {
     }
     > .img {
       width: 280px;
-      height: 186px;
+      height: 190px;
       position: relative;
       margin-right: 24px;
       border-radius: 20px;
@@ -135,7 +135,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        margin-top: 5px;
+        margin-top: 4px;
         > div:nth-of-type(1) {
           font-size: 28px;
           color: #F2B036;

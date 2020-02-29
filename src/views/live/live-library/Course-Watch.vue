@@ -36,7 +36,6 @@ export default {
       detail: {
         url: ''
       },
-      times: 0, // 计时器回调时间
       timer: null// 定时器
     }
   },
@@ -82,8 +81,6 @@ export default {
           return
         }
         // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
-        let times = await this.getVideoDuration(mes.url)
-        this.times = times / 10
         this.detail = mes
       } catch (e) { throw e }
     },
@@ -92,10 +89,12 @@ export default {
       if (this.duration === 0) return
       clearTimeout(this.timer)
       // 视频短的取用十分之一播放时长调用
-      let times = this.times > 10e4 ? 10e4 : this.times
+      let times = (this.duration / 10) || 0
+      times = times > 10e4 ? 10e4 : times
       this.timer = setTimeout(async () => {
         try {
           let videoTime = this.$refs.paidPlayer.video.currentTime || 0
+          console.log(this.$refs.paidPlayer.video.currentTime, 'currenttime')
           let progress = parseInt((videoTime / this.duration) * 100)
           // 依此用于已购买的课程列表显示,课程详情页面的显示
           await Promise.all([setCourseProgress(this.orderId, progress), setStudyTime(this.liveId, Number.parseInt(videoTime))])
@@ -106,7 +105,7 @@ export default {
             this.$error(e.message)
           }
         } finally {
-          console.log('update')
+          console.log('update', this.times)
           this.updateProgress()
         }
       }, times * 1000)
@@ -153,15 +152,6 @@ export default {
           await Promise.all([setCourseProgress(this.orderId, 100), setStudyTime(this.liveId, Number.parseInt(videoTime))])
         }
       } catch (e) { throw e }
-    },
-    // 获取 video 播放时长
-    getVideoDuration (url) {
-      let audioElement = new Audio(url)
-      return new Promise((resolve, reject) => {
-        audioElement.addEventListener('loadedmetadata', () => {
-          resolve(audioElement.duration || 100)
-        })
-      })
     }
   }
 }
