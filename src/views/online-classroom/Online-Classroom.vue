@@ -68,7 +68,7 @@
                   <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
                 </span>
                 <span v-else :class="$style.free">免费</span>
-                <pl-button v-if="!item.isBuy" type="primary" size="small">立即学习</pl-button>
+                <pl-button v-if="!item.orderId" type="primary" size="small">立即学习</pl-button>
                 <pl-button v-else type="warning" size="small">观看学习</pl-button>
               </div>
             </div>
@@ -176,7 +176,7 @@ export default {
     },
     study (item) {
       // TODO: 等待接口数据
-      if (item.isBuy) {
+      if (item.orderId) {
         this.$router.push({ name: 'CourseWatch', params: { id: item.id }, query: { liveId: item.liveId, orderId: item.orderId, progress: item.learnProgress } })
         return
       }
