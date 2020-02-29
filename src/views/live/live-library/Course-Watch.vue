@@ -94,7 +94,6 @@ export default {
       this.timer = setTimeout(async () => {
         try {
           let videoTime = this.$refs.paidPlayer.video.currentTime || 0
-          console.log(this.$refs.paidPlayer.video.currentTime, 'currenttime')
           let progress = parseInt((videoTime / this.duration) * 100)
           progress = progress > 100 ? 100 : progress
           // 依此用于已购买的课程列表显示,课程详情页面的显示
@@ -106,7 +105,6 @@ export default {
             this.$error(e.message)
           }
         } finally {
-          console.log('update', times)
           this.updateProgress()
         }
       }, times * 1000)

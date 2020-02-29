@@ -160,8 +160,9 @@ export default {
       const timeRanges = video.buffered
       const times = []
       for (let i = 0; i < timeRanges.length; i++) {
-        times.push(timeRanges.end(i) - timeRanges.start(i))
+        times.push(timeRanges.end(i) - timeRanges.start(i) || 0)
       }
+      if (!times.length) return
       const loadedTime = times.reduce((t, a) => t + a)
       // 单位为字节
       const loadedSize = Math.round(loadedTime / this.duration * this.videoSize)
