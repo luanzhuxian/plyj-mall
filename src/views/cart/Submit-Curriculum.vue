@@ -186,6 +186,7 @@ export default {
             await this.pay(payData)
           } else { // 0元商品无需支付
             this.$success('支付成功')
+            this.submiting = false
             this.goVideoLibrary()
           }
         }
