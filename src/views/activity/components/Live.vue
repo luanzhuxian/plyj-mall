@@ -220,7 +220,6 @@ export default {
   }
   .bottom {
     display: inline-flex;
-    align-self: center;
     width: max-content;
     min-width: 300px;
     height: 40px;
