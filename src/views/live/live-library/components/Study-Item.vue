@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.studyItem">
+  <div :class="$style.studyItem" @click="target">
     <div :class="$style.img">
       <div v-if="item.validityType === 1">{{ item.validity }}天内完成学习</div>
       <img :src="item.courseImg" alt="">
@@ -14,10 +14,7 @@
         <div>
           <span>已学习</span><span>{{ item.learnProgress || 0 }}%</span>
         </div>
-        <div
-          v-if="$route.params.learnStatus !== '3'"
-          @click="$router.push({ name: 'CourseWatch', params: { id: item.courseId }, query: { liveId: item.liveId, orderId: item.orderId, progress: item.learnProgress } })"
-        >
+        <div v-if="$route.params.learnStatus !== '3'">
           学习课程
         </div>
       </div>
@@ -41,6 +38,24 @@ export default {
           learnStatus: '', // 1 未学习 2 学习中 3 学习完
           learnProgress: 0// 进度
         }
+      }
+    }
+  },
+  methods: {
+    target () {
+      let item = this.item
+      if (this.$route.params.learnStatus !== '3') {
+        this.$router.push({
+          name: 'CourseWatch',
+          params: {
+            id: item.courseId
+          },
+          query: {
+            liveId: item.liveId,
+            orderId: item.orderId,
+            progress: item.learnProgress
+          }
+        })
       }
     }
   }
@@ -118,8 +133,9 @@ export default {
       > .learn {
         display: flex;
         justify-content: space-between;
-        width: 100%;
         align-items: center;
+        width: 100%;
+        margin-top: 5px;
         > div:nth-of-type(1) {
           font-size: 28px;
           color: #F2B036;
