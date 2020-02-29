@@ -105,7 +105,7 @@ export default {
             this.$error(e.message)
           }
         } finally {
-          console.log('update', this.times)
+          console.log('update', times)
           this.updateProgress()
         }
       }, times * 1000)
@@ -121,7 +121,7 @@ export default {
       try {
         // 依此用于已购买的课程列表显示,课程详情页面的显示
         let videoTime = this.$refs.paidPlayer.video.currentTime || 1
-        await Promise.all([setCourseProgress(this.orderId, 1), setStudyTime(this.liveId, videoTime)])
+        await Promise.all([setCourseProgress(this.orderId, 1), setStudyTime(this.liveId, Number.parseInt(videoTime))])
       } catch (e) { throw e }
     },
     loadeddata (e) {
