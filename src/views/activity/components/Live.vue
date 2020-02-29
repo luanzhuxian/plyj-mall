@@ -1,23 +1,20 @@
 <template>
   <div :class="$style.liveWrapper">
     <div :class="$style.liveHead">
-      <div :class="$style.liveHeadLeft">
-        <div :class="$style.liveHeadLeftMain">
-          <pl-svg name="icon-live-a8210" width="36" height="40" />
-          <span>互动直播</span>
-        </div>
-        <div :class="$style.liveHeadLeftSub">
-          <span>{{ `直播中 ${data.nowCount || 0}` }}</span>
-          <span>{{ `即将开始 ${data.futrueCount || 0}` }}</span>
-          <span>{{ `往期直播 ${data.pastCount || 0}` }}</span>
-        </div>
-      </div>
+      <pl-svg name="icon-live-a8210" width="36" height="40" />
+      <b>互动直播</b>
       <router-link
-        :class="$style.liveHeadRight"
+        :class="$style.liveHeadMore"
         :to="{ name: 'InteractiveLive' }"
       >
         查看全部
+        <pl-svg name="icon-right" height="20" fill="#cccccc" />
       </router-link>
+    </div>
+    <div :class="$style.liveHeadSub">
+      <span>{{ `直播中 ${data.nowCount || 0}` }}</span>
+      <span>{{ `即将开始 ${data.futrueCount || 0}` }}</span>
+      <span>{{ `往期直播 ${data.pastCount || 0}` }}</span>
     </div>
     <router-link
       :class="$style.live"
@@ -120,25 +117,18 @@ export default {
   }
   .live-head {
     display: flex;
-    align-items: center;
-    margin-bottom: 32px;
-    &-left {
-      flex: 1;
-      width: 0;
-      &-main {
-        display: flex;
-        align-items: end;
-        margin-bottom: 12px;
-        > span {
-          margin-left: 16px;
-          font-size: 32px;
-          font-weight: bold;
-          color: #333333;
-        }
-      }
-      &-sub > span {
+    align-items: end;
+    margin-bottom: 12px;
+    line-height: 46px;
+    > b {
+      margin-left: 16px;
+      font-size: 32px;
+      color: #333333;
+    }
+    &-sub {
+      margin-bottom: 32px;
+      > span {
         font-size: 22px;
-        height: 32px;
         line-height: 32px;
         color: #1592E6;
         margin-left: 10px;
@@ -151,15 +141,15 @@ export default {
         }
       }
     }
-    &-right {
-      width: 144px;
-      height: 46px;
-      line-height: 46px;
-      text-align: center;
-      border: 2px solid #CCCCCC;
-      border-radius: 10px;
+    &-more {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
       font-size: 24px;
-      color: #666666;
+      color: #999999;
+      > svg {
+        margin-left: 4px;
+      }
     }
   }
   .live {

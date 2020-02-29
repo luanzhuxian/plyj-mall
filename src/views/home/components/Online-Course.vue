@@ -1,21 +1,18 @@
 <template>
   <div :class="$style.onlineCourseWrapper">
     <div :class="$style.onlineCourseHead">
-      <div :class="$style.onlineCourseHeadLeft">
-        <div :class="$style.onlineCourseHeadLeftMain">
-          <pl-svg name="icon-tv-76530" width="36" height="40" />
-          <span>线上课程</span>
-        </div>
-        <div :class="$style.onlineCourseHeadLeftSub">
-          {{ `还有${rest}个线上课程，等你来学习` }}
-        </div>
-      </div>
+      <pl-svg name="icon-tv-76530" width="36" height="40" />
+      <b>线上课程</b>
       <router-link
-        :class="$style.onlineCourseHeadRight"
+        :class="$style.onlineCourseHeadMore"
         :to="{ name: 'OnlineClassroom' }"
       >
         查看全部
+        <pl-svg name="icon-right" height="20" fill="#cccccc" />
       </router-link>
+    </div>
+    <div :class="$style.onlineCourseHeadSub">
+      {{ `还有${rest}个线上课程，等你来学习` }}
     </div>
     <router-link
       v-if="list.length"
@@ -91,38 +88,29 @@ export default {
   }
   .online-course-head {
     display: flex;
-    align-items: center;
-    margin-bottom: 32px;
-    &-left {
-      flex: 1;
-      width: 0;
-      &-main {
-        display: flex;
-        align-items: end;
-        margin-bottom: 12px;
-        > span {
-          margin-left: 16px;
-          font-size: 32px;
-          font-weight: bold;
-          color: #333333;
-        }
-      }
-      &-sub {
-        font-size: 22px;
-        height: 32px;
-        line-height: 32px;
-        color: #1592E6;
-      }
+    align-items: end;
+    margin-bottom: 12px;
+    line-height: 46px;
+    > b {
+      margin-left: 16px;
+      font-size: 32px;
+      color: #333333;
     }
-    &-right {
-      width: 144px;
-      height: 46px;
-      line-height: 46px;
-      text-align: center;
-      border: 2px solid #CCCCCC;
-      border-radius: 10px;
+    &-sub {
+      margin-bottom: 32px;
+      font-size: 22px;
+      line-height: 32px;
+      color: #1592E6;
+    }
+    &-more {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
       font-size: 24px;
-      color: #666666;
+      color: #999999;
+      > svg {
+        margin-left: 4px;
+      }
     }
   }
   .online-course {
