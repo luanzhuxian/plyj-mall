@@ -96,6 +96,7 @@ export default {
           let videoTime = this.$refs.paidPlayer.video.currentTime || 0
           console.log(this.$refs.paidPlayer.video.currentTime, 'currenttime')
           let progress = parseInt((videoTime / this.duration) * 100)
+          progress = progress > 100 ? 100 : progress
           // 依此用于已购买的课程列表显示,课程详情页面的显示
           await Promise.all([setCourseProgress(this.orderId, progress), setStudyTime(this.liveId, Number.parseInt(videoTime))])
         } catch (e) {

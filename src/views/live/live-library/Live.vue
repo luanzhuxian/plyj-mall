@@ -5,7 +5,7 @@
     <LoadMore
       ref="loadMore"
       :form="form"
-      :class="$style.courseLearning"
+      :class="$style.live"
       :request-methods="getLibraryList"
       @refresh="refreshList"
       @more="refreshList"
@@ -54,6 +54,8 @@ export default {
 
 <style lang='scss' module scoped>
   .live-library {
-
+    > .live {
+      padding-bottom: 20px;
+    }
   }
 </style>

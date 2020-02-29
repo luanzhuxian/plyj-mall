@@ -72,7 +72,7 @@ export default {
 
 <style module lang='scss'>
   .course-learning {
-    padding: 6px 28px;
+    padding: 6px 28px 20px 28px;
     box-sizing: border-box;
     background-color: #FFFFFF;
   }
