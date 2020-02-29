@@ -79,9 +79,9 @@ export default {
     async isNeedPay () {
       try {
       // needPay 是否需要付费 1需要  0不需要
-        let { result: { needPay, needPaidAmount } } = await hasPied(this.activityId)
+        let { result: { needPay, needPaidAmount, paidAmount } } = await hasPied(this.activityId)
         this.payCount = needPaidAmount / 100 // 单位分转为元
-        return needPay === 1
+        return needPay === 1 && paidAmount === 0
       } catch (e) { throw e }
     },
     async getDetail () {
