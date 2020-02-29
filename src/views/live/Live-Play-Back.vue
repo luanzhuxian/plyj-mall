@@ -38,8 +38,8 @@
             该直播视频需支付￥{{ payCount }}后可观看回放，确认要观看吗？
           </div>
           <div :class="$style.buttons">
-            <pl-button size="middle" plain @click="cancelPay">我再想想</pl-button>
-            <pl-button size="middle" type="warning" @click="submitOrder">立即付款</pl-button>
+            <button :class="$style.cancelBtn" @click="cancelPay">取消</button>
+            <button @click="submitOrder">确定</button>
           </div>
         </div>
       </div>
@@ -232,27 +232,37 @@ export default {
     background-color: rgba(0, 0, 0, .65);
   }
   .pay-box {
-    width: 500px;
+    width: 540px;
     box-sizing: border-box;
     margin: 280px auto 0;
-    padding: 22px 24px;
+    padding-top: 22px;
     background-color: #fff;
     text-align: center;
     .title{
       padding-bottom: 22px;
-      font-size:28px;
+      font-size:34px;
       font-weight:bold;
       color:#000;
     }
     .message{
-      padding-bottom: 22px;
-      font-size:20px;
-      line-height:26px;
+      padding: 0 24px 22px;
+      font-size:28px;
+      line-height:36px;
       color:#999;
     }
     > .buttons {
+      border-top: 2px solid #D3D1D2;
+      display: flex;
       > button {
-        margin-left: 20px;
+        flex: 1;
+        font-size:34px;
+        line-height: 100px;
+        text-align: center;
+        color: #FE7700;
+      }
+      > .cancelBtn {
+        border-right: 2px solid #D3D1D2;
+        color: #666;
       }
     }
   }
