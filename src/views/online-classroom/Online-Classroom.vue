@@ -175,8 +175,13 @@ export default {
       this.courseList = list
     },
     study (item) {
-      // TODO: 等待接口数据
       if (item.orderId) {
+        if (!item.liveId) {
+          return this.$alert({
+            message: '视频已被删除',
+            viceMessage: '请联系机构管理人员'
+          })
+        }
         this.$router.push({ name: 'CourseWatch', params: { id: item.id }, query: { liveId: item.liveId, orderId: item.orderId, progress: item.learnProgress } })
         return
       }
