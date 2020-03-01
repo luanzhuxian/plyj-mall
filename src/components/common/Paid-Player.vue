@@ -173,6 +173,7 @@ export default {
       })
     },
     async setLivePaidData ({ watchTime, dataFlowSize }) {
+      if (!this.videoId) return
       const data = {
         'id': this.livePaidId || '',
         resourceId: this.resourceId,
