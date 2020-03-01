@@ -351,7 +351,9 @@ export default {
       color: #FE7700;
       &:before {
         content: '¥';
+        margin-right: 3px;
         font-size: 24px;
+        vertical-align: 3px;
       }
     }
     .free {
