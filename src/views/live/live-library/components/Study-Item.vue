@@ -6,11 +6,11 @@
     </div>
     <div :class="$style.content">
       <div :class="$style.description">
-        <div>{{ item.courseName }}</div>
-        <div>{{ item.category2Name }}</div>
-        <div>主讲人：{{ item.lecturer }}</div>
+        <div>{{ item.courseName }}123123</div>
+        <div>{{ item.category2Name }}123123</div>
       </div>
       <div :class="$style.learn">
+        <div>主讲人：{{ item.lecturer }}</div>
         <div>
           <span>已学习</span><span>{{ item.learnProgress || 0 }}%</span>
         </div>
@@ -66,7 +66,7 @@ export default {
 
   .study-item {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     width: 100%;
     margin-bottom: 20px;
     background: #FFFFFF;
@@ -75,9 +75,8 @@ export default {
     }
     > .img {
       width: 280px;
-      height: 190px;
+      height: 186px;
       position: relative;
-      margin-right: 24px;
       border-radius: 20px;
       overflow: hidden;
       > img {
@@ -100,14 +99,13 @@ export default {
     > .content {
       display: flex;
       flex-wrap: wrap;
-      width: calc(100% - 284px);
       align-content: space-between;
+      width: calc(100% - 304px);
       > .description {
         width: 100%;
         font-size: 24px;
         color: #666666;
         > div:nth-of-type(1) {
-          margin-bottom: 6px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -124,23 +122,27 @@ export default {
           color: #B58A48;
           background: #FFFAE6;
         }
-        > div:nth-of-type(3) {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
       }
       > .learn {
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
         align-items: center;
         width: 100%;
-        margin-top: 4px;
         > div:nth-of-type(1) {
+          width: 100%;
+          margin-bottom: 4px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 24px;
+          white-space: nowrap;
+          color: #666666;
+        }
+        > div:nth-of-type(2) {
           font-size: 28px;
           color: #F2B036;
         }
-        > div:nth-of-type(2){
+        > div:nth-of-type(3){
           font-size: 26px;
           text-align: center;
           background: #FE7700;

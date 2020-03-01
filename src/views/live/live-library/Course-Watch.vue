@@ -98,8 +98,7 @@ export default {
       times = times > 10e4 ? 10e4 : times
       this.timer = setTimeout(async () => {
         try {
-          console.log(this.$refs.paidPlayer.video, this.$refs.paidPlayer.video.currentTime)
-          let videoTime = this.$refs.paidPlayer.video.currentTime || 0
+          let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
           let progress = parseInt((videoTime / this.duration) * 100)
           progress = progress > 100 ? 100 : progress
           // 依此用于已购买的课程列表显示,课程详情页面的显示
@@ -125,7 +124,7 @@ export default {
     async updateProgressOnce () {
       try {
         // 依此用于已购买的课程列表显示,课程详情页面的显示
-        let videoTime = this.$refs.paidPlayer.video.currentTime || 1
+        let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 1
         await Promise.all([setCourseProgress(this.orderId, 1), setStudyTime(this.liveId, Number.parseInt(videoTime))])
       } catch (e) { throw e }
     },
@@ -152,7 +151,7 @@ export default {
     async videoEnded () {
       try {
         if (this.isStudy) {
-          let videoTime = this.$refs.paidPlayer.video.currentTime || 0
+          let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
           // 依此用于已购买的课程列表显示,课程详情页面的显示
           await Promise.all([setCourseProgress(this.orderId, 100), setStudyTime(this.liveId, Number.parseInt(videoTime))])
         }
