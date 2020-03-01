@@ -6,8 +6,8 @@
     </div>
     <div :class="$style.content">
       <div :class="$style.description">
-        <div>{{ item.courseName }}123123</div>
-        <div>{{ item.category2Name }}123123</div>
+        <div>{{ item.courseName }}</div>
+        <div>{{ item.category2Name }}</div>
       </div>
       <div :class="$style.learn">
         <div>主讲人：{{ item.lecturer }}</div>
