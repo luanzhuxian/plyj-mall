@@ -4,7 +4,7 @@
     <video
       ref="video"
       v-if="!checking && type === 'video' && src"
-      preload
+      preload="metadata"
       controls
       x5-video-player-type="h5-page"
       :src="src"
@@ -19,6 +19,7 @@
       @ended="ended"
       @pause="pause"
       @error="error"
+      :poster="src + '?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast'"
     />
   </div>
 </template>
@@ -213,27 +214,35 @@ export default {
     },
     error (e) {
       this.$emit('error', e)
-    },
-    async fullScreen () {
-      // 进入全屏
-      const video = this.video
-      if (video.requestFullscreen) {
-        // 最新标准
-        video.requestFullscreen()
-      } else if (video.webkitRequestFullscreen) {
-        video.webkitRequestFullscreen()
-      } else {
-        // iOS进入全屏
-        video.webkitEnterFullscreen()
-        // 针对iOS监听不到webkitfullscreenchange事件做的兼容，感知退出全屏
-        let timer = setInterval(() => {
-          if (!video.webkitDisplayingFullscreen) {
-            // 退出了全屏
-            clearInterval(timer)
-          }
-        }, 1000)
-      }
     }
+    // async getPoster () {
+    //   try {
+    //     const { data } = await AXIOS.get(this.src + '?x-oss-process=video/snapshot,t_10000,f_jpg,w_0,h_0,m_fast')
+    //     console.log(data)
+    //   } catch (e) {
+    //     throw e
+    //   }
+    // },
+    // async fullScreen () {
+    //   // 进入全屏
+    //   const video = this.video
+    //   if (video.requestFullscreen) {
+    //     // 最新标准
+    //     video.requestFullscreen()
+    //   } else if (video.webkitRequestFullscreen) {
+    //     video.webkitRequestFullscreen()
+    //   } else {
+    //     // iOS进入全屏
+    //     video.webkitEnterFullscreen()
+    //     // 针对iOS监听不到webkitfullscreenchange事件做的兼容，感知退出全屏
+    //     let timer = setInterval(() => {
+    //       if (!video.webkitDisplayingFullscreen) {
+    //         // 退出了全屏
+    //         clearInterval(timer)
+    //       }
+    //     }, 1000)
+    //   }
+    // }
   }
 }
 </script>
