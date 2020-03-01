@@ -1,6 +1,7 @@
 <template>
   <div :class="$style.courseWatch">
     <PaidPlayer
+      v-if="playerFlag"
       :src.sync="detail.url"
       @loadeddata="loadeddata"
       @ended="videoEnded"
