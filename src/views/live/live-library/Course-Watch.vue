@@ -33,6 +33,7 @@ export default {
       isStudy: false, // 是否第一次进来点播学习
       duration: 0, // 视频总时长
       currentTime: 0,
+      playerFlag: false,
       detail: {
         url: ''
       },
@@ -52,6 +53,7 @@ export default {
   },
   async activated () {
     try {
+      this.playerFlag = true
       this.isStudy = false
       this.currentTime = 0
       await this.getCourseDetail()
@@ -59,6 +61,7 @@ export default {
   },
   deactivated () {
     try {
+      this.playerFlag = false
       clearTimeout(this.timer)
     } catch (e) { throw e }
   },
