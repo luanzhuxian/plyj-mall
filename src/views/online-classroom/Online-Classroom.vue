@@ -304,9 +304,12 @@ export default {
     .price {
       font-size: 32px;
       color: #FE7700;
+      font-weight: bold;
       &:before {
         content: '¥';
+        margin-right: 4px;
         font-size: 20px;
+        vertical-align: 3px;
       }
     }
     .original {

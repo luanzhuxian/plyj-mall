@@ -168,8 +168,8 @@ export default {
       // 单位为字节
       const loadedSize = Math.round(loadedTime / this.duration * this.videoSize)
       this.setLivePaidData({
-        watchTime: loadedTime,
-        dataFlowSize: loadedSize
+        watchTime: Number.parseInt(loadedTime) || 0,
+        dataFlowSize: loadedSize || 0
       })
     },
     async setLivePaidData ({ watchTime, dataFlowSize }) {
