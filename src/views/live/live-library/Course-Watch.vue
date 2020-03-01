@@ -125,9 +125,9 @@ export default {
       } catch (e) { throw e }
     },
     loadeddata (e) {
+      const video = e.target
+      this.duration = video.duration
       if (this.progress < 100) {
-        const video = e.target
-        this.duration = video.duration
         const playTime = (this.progress / 100) * this.duration
         this.currentTime = playTime
         // 更新观看进度
