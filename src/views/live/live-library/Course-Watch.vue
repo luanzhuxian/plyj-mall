@@ -53,6 +53,7 @@ export default {
   async activated () {
     try {
       this.isStudy = false
+      this.currentTime = 0
       await this.getCourseDetail()
     } catch (e) { throw e }
   },
