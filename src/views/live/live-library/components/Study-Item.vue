@@ -53,7 +53,8 @@ export default {
           query: {
             liveId: item.liveId,
             orderId: item.orderId,
-            progress: item.learnProgress
+            progress: item.learnProgress,
+            courseId: item.courseId
           }
         })
       }

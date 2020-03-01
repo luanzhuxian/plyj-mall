@@ -9,6 +9,7 @@
       :video-id="liveId"
       :resource-name="detail.name"
       :current-time="currentTime"
+      :resource-id="courseId"
       ref="paidPlayer"
       back-route-name="MyCourses"
     />
@@ -50,6 +51,9 @@ export default {
     },
     progress () {
       return this.$route.query.progress
+    },
+    courseId () {
+      return this.$route.query.courseId
     }
   },
   async activated () {
