@@ -6,15 +6,16 @@
       [$style.middle]: size === 'middle'
     }"
   >
-    <li
-      :class="$style.tag" v-for="(item, i) of tags"
-      :key="i"
-      :style="{ color: color[i] }"
-    >
-      <template v-if="item && !!item.labelName">
+    <template v-for="(item, i) of tags">
+      <li
+        v-if="item && !!item.labelName"
+        :key="i"
+        :class="$style.tag"
+        :style="{ color: color[i] }"
+      >
         {{ item.labelName }}
-      </template>
-    </li>
+      </li>
+    </template>
   </ul>
 </template>
 
