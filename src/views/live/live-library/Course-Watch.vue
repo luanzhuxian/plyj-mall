@@ -94,6 +94,7 @@ export default {
       times = times > 10e4 ? 10e4 : times
       this.timer = setTimeout(async () => {
         try {
+          console.log(this.$refs.paidPlayer.video, this.$refs.paidPlayer.video.currentTime)
           let videoTime = this.$refs.paidPlayer.video.currentTime || 0
           let progress = parseInt((videoTime / this.duration) * 100)
           progress = progress > 100 ? 100 : progress
