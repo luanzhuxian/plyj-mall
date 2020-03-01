@@ -7,7 +7,7 @@
       preload="metadata"
       controls
       x5-video-player-type="h5-page"
-      :src="src"
+      :src="src + '?q=' + Date.now()"
       playsinline=""
       x-webkit-airplay="true"
       @loadedmetadata="videoLoadedmetadata"
@@ -36,7 +36,11 @@ const AXIOS = axios.create({
 export default {
   name: 'PaidPlayer',
   data () {
+    // this.timeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
     return {
+      timeFragment: [],
+      sizeFragment: [],
+      test: [],
       checking: true, // 是否正在检查视频可用性
       duration: 0, // 视频总长
       videoSize: 0 // 视频总大小
@@ -157,20 +161,22 @@ export default {
       this.duration = e.target.duration
     },
     videoProgress (e) {
+      clearTimeout(this.timer)
       const video = e.target
       const timeRanges = video.buffered
-      const times = []
-      for (let i = 0; i < timeRanges.length; i++) {
-        times.push(timeRanges.end(i) - timeRanges.start(i) || 0)
-      }
-      if (!times.length) return
-      const loadedTime = times.reduce((t, a) => t + a)
-      // 单位为字节
+      if (!timeRanges.length) return
+      let end = timeRanges.end(timeRanges.length - 1)
+      let start = timeRanges.start(timeRanges.length - 1)
+      let loadedTime = end - (this.nextLoadedStart || start)
       const loadedSize = Math.round(loadedTime / this.duration * this.videoSize)
-      this.setLivePaidData({
-        watchTime: Number.parseInt(loadedTime) || 0,
-        dataFlowSize: loadedSize || 0
-      })
+      this.timeFragment.push(loadedTime)
+      this.sizeFragment.push(loadedSize)
+      let totalSize = this.sizeFragment.reduce((t, a) => t + a)
+      // 如果缓存的大小超过2M，就发一次请求。然后清空缓存的片段
+      if (totalSize > 1024 * 1024 * 2) {
+        this.sendFlow()
+      }
+      this.nextLoadedStart = end
     },
     async setLivePaidData ({ watchTime, dataFlowSize }) {
       if (!this.videoId) return
@@ -183,15 +189,21 @@ export default {
         watchTime,
         dataFlowSize
       }
-      clearTimeout(this.reqTimer)
-      this.reqTimer = setTimeout(async () => {
-        try {
-          const { result } = await setLivePaidData(data)
-          if (result) this.livePaidId = result
-        } catch (e) {
-          this.$error(JSON.parse(e.message).message)
-        }
-      }, 2000)
+      try {
+        const { result } = await setLivePaidData(data)
+        if (result) this.livePaidId = result
+      } catch (e) {
+        this.$error(JSON.parse(e.message).message)
+      }
+    },
+    sendFlow () {
+      if (!this.timeFragment.length || !this.sizeFragment.length) return
+      this.setLivePaidData({
+        watchTime: Number.parseInt(this.timeFragment.reduce((t, a) => t + a)) || 0,
+        dataFlowSize: Number.parseInt(this.sizeFragment.reduce((t, a) => t + a)) || 0 || 0
+      })
+      this.timeFragment = []
+      this.sizeFragment = []
     },
     loadeddata (e) {
       this.$emit('loadeddata', e)
@@ -209,9 +221,11 @@ export default {
     },
     ended (e) {
       this.$emit('ended', e)
+      this.sendFlow()
     },
     pause (e) {
       this.$emit('pause', e)
+      this.sendFlow()
     },
     error (e) {
       this.$emit('error', e)
