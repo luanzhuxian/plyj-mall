@@ -46,7 +46,6 @@
             <div :class="$style.bottom">
               <slot name="price" :price="getMinPrice(item.goodsInfo.productSkuModels)" v-if="$scopedSlots.price" />
               <div :class="$style.priceBox" v-else>
-                <span>¥</span>
                 <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
                 <del>
                   ¥{{ getMaxOrinalPrice(item.goodsInfo.productSkuModels) }}
@@ -310,12 +309,13 @@ export default {
     .priceBox {
       > span {
         color: #fe7700;
-        &:nth-of-type(1) {
+        font-size: 48px;
+        font-weight: bold;
+        &:before {
+          content: '¥';
+          margin-right: 3px;
           font-size: 28px;
-        }
-        &:nth-of-type(2) {
-          font-size: 48px;
-          font-weight: bold;
+          vertical-align: 3px;
         }
       }
       > del {

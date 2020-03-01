@@ -31,7 +31,6 @@
             />
             <div :class="$style.proPrice">
               <div :class="$style.price">
-                <span>¥</span>
                 <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
               </div>
               <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
@@ -71,7 +70,6 @@
               />
               <div :class="$style.proPrice">
                 <div :class="$style.price">
-                  <span>¥</span>
                   <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
                 </div>
                 <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
@@ -188,15 +186,14 @@ export default {
           span {
             display: inline-block;
             color: #FE7700;
-            &:nth-of-type(1) {
+            font-size: 40px;
+            line-height: 36px;
+            font-weight: bold;
+            &:before {
+              content: '¥';
+              margin-right: 3px;
               font-size: 24px;
-              line-height: 28px;
-              font-weight: 600;
-            }
-            &:nth-of-type(2) {
-              font-size: 40px;
-              line-height: 36px;
-              font-weight: bold;
+              vertical-align: 3px;
             }
           }
         }
