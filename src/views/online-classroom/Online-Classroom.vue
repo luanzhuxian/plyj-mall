@@ -61,7 +61,7 @@
             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
             <div :class="$style.desc">
               <div :class="$style.title" v-text="item.courseName" />
-              <div :class="$style.text1">主讲讲师： {{ item.lecturer }}</div>
+              <div :class="$style.text1">主讲人： {{ item.lecturer }}</div>
               <div :class="$style.bottom">
                 <span v-if="item.priceType === 1">
                   <span :class="$style.price" v-text="item.sellingPrice" />
