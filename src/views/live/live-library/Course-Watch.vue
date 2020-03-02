@@ -67,7 +67,7 @@ export default {
   deactivated () {
     try {
       this.playerFlag = false
-      clearTimeout(this.timer)
+      window.clearTimeout(this.timer)
     } catch (e) { throw e }
   },
   methods: {
@@ -96,14 +96,15 @@ export default {
     // 向后台存储播放进度，两分钟更新一次进度
     async updateProgress () {
       if (this.duration === 0) return
-      clearTimeout(this.timer)
+      window.clearTimeout(this.timer)
       // 视频短的取用十分之一播放时长调用
       let times = (this.duration / 10) || 0
       times = times > 10e4 ? 10e4 : times
-      this.timer = setTimeout(async () => {
+      this.timer = window.setTimeout(async () => {
         try {
           let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
           let progress = parseInt((videoTime / this.duration) * 100)
+          // 有时会有缓存，这行是必须的
           progress = progress > 100 ? 100 : progress
           // 依此用于已购买的课程列表显示,课程详情页面的显示
           await Promise.all([setCourseProgress(this.orderId, progress), setStudyTime(this.liveId, Number.parseInt(videoTime))])
