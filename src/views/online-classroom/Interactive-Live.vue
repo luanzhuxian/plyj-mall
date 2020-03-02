@@ -273,7 +273,9 @@ export default {
         font-size: 48px;
         &:before {
           content: '¥';
+          margin-right: 4px;
           font-size: 24px;
+          vertical-align: 3px;
         }
       }
       > .free {
@@ -336,7 +338,9 @@ export default {
         font-weight: bold;
         &:before {
           content: '¥';
+          margin-right: 4px;
           font-size: 20px;
+          vertical-align: 3px;
         }
       }
       .free {
