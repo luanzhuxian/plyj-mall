@@ -161,13 +161,12 @@ export default {
       this.duration = e.target.duration
     },
     videoProgress (e) {
-      clearTimeout(this.timer)
       const video = e.target
       const timeRanges = video.buffered
       if (!timeRanges.length) return
       let end = timeRanges.end(timeRanges.length - 1)
-      let start = timeRanges.start(timeRanges.length - 1)
-      let loadedTime = end - (this.nextLoadedStart || start)
+      let start = this.nextLoadedStart > end ? timeRanges.start(timeRanges.length - 1) : this.nextLoadedStart
+      let loadedTime = end - start
       const loadedSize = Math.round(loadedTime / this.duration * this.videoSize)
       this.timeFragment.push(loadedTime)
       this.sizeFragment.push(loadedSize)
