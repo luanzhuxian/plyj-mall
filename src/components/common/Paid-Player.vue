@@ -167,7 +167,7 @@ export default {
       let end = timeRanges.end(timeRanges.length - 1)
       let start = this.nextLoadedStart > end ? timeRanges.start(timeRanges.length - 1) : this.nextLoadedStart
       let loadedTime = end - start
-      const loadedSize = Math.round(loadedTime / this.duration * this.videoSize)
+      const loadedSize = Math.round(loadedTime / this.duration * this.videoSize) || 0
       this.timeFragment.push(loadedTime)
       this.sizeFragment.push(loadedSize)
       let totalSize = this.sizeFragment.reduce((t, a) => t + a)
