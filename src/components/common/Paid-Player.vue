@@ -25,6 +25,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import axios from 'axios'
 import {
   setLivePaidData,
@@ -36,10 +37,10 @@ const AXIOS = axios.create({
 export default {
   name: 'PaidPlayer',
   data () {
-    // this.timeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
+    this.timeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
+    this.sizeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
+    this.nextLoadedStart = 0
     return {
-      timeFragment: [],
-      sizeFragment: [],
       test: [],
       checking: true, // 是否正在检查视频可用性
       duration: 0, // 视频总长
@@ -165,15 +166,17 @@ export default {
       const timeRanges = video.buffered
       if (!timeRanges.length) return
       let end = timeRanges.end(timeRanges.length - 1)
-      let start = this.nextLoadedStart > end ? timeRanges.start(timeRanges.length - 1) : this.nextLoadedStart
+      let start = this.nextLoadedStart > end ? timeRanges.end(timeRanges.length - 1) : this.nextLoadedStart
       let loadedTime = end - start
       const loadedSize = Math.round(loadedTime / this.duration * this.videoSize) || 0
       this.timeFragment.push(loadedTime)
       this.sizeFragment.push(loadedSize)
-      let totalSize = this.sizeFragment.reduce((t, a) => t + a)
-      // 如果缓存的大小超过2M，就发一次请求。然后清空缓存的片段
-      if (totalSize > 1024 * 1024 * 2) {
-        this.sendFlow()
+      if (this.sizeFragment.length) {
+        let totalSize = this.sizeFragment.reduce((t, a) => t + a)
+        // 如果缓存的大小超过2M，就发一次请求。然后清空缓存的片段
+        if (totalSize > 1024 * 1024 * 2) {
+          this.sendFlow()
+        }
       }
       this.nextLoadedStart = end
     },
@@ -199,7 +202,7 @@ export default {
       if (!this.timeFragment.length || !this.sizeFragment.length) return
       this.setLivePaidData({
         watchTime: Number.parseInt(this.timeFragment.reduce((t, a) => t + a)) || 0,
-        dataFlowSize: Number.parseInt(this.sizeFragment.reduce((t, a) => t + a)) || 0 || 0
+        dataFlowSize: Number.parseInt(this.sizeFragment.reduce((t, a) => t + a)) || 0
       })
       this.timeFragment = []
       this.sizeFragment = []
