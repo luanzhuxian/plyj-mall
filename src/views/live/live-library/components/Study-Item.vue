@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.studyItem" @click="target">
+  <div :class="$style.studyItem" @click="target(item)">
     <div :class="$style.img">
       <div v-if="item.validityType === 1">{{ item.validity }}天内完成学习</div>
       <img :src="item.courseImg" alt="">
@@ -42,8 +42,7 @@ export default {
     }
   },
   methods: {
-    target () {
-      let item = this.item
+    target (item) {
       if (this.$route.params.learnStatus !== '3') {
         this.$router.push({
           name: 'CourseWatch',
