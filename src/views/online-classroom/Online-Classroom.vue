@@ -283,7 +283,7 @@ export default {
     justify-content: space-between;
   }
   .course-item {
-    margin-right: 30px;
+    width: calc(50% - 15px);
     margin-bottom: 32px;
     &:nth-of-type(2n) {
       margin-right: 0;

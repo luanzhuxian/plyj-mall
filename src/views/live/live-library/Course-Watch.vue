@@ -35,7 +35,7 @@ export default {
       isStudy: false, // 是否第一次进来点播学习
       duration: 0, // 视频总时长
       currentTime: 0,
-      playerFlag: false,
+      playerFlag: false, // 微信会缓存上个视频 currentTime，每次重新实例化播放组件
       detail: {
         url: ''
       },
