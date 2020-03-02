@@ -6,7 +6,7 @@
     </div>
     <div :class="$style.description">
       <div :class="$style.title">
-        <div>{{ item.videoName }}</div>
+        <div>{{ item.activityName }}</div>
         <div>直播时间：{{ item.startTime }}</div>
       </div>
       <div :class="$style.content">
@@ -36,7 +36,7 @@ export default {
       default () {
         return {
           coverImg: '',
-          videoName: '', // 视频名
+          activityName: '', // 直播名
           startTime: '', // 直播时间
           needPay: 0, // 是否需要付费   1需要  0不需要
           paidAmount: 0, // 已支付金额，单位分， 0 代表用户未付费
