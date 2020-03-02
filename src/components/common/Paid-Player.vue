@@ -199,7 +199,8 @@ export default {
       // }
       if (this.timeFragment.length) {
         let total = this.timeFragment.reduce((a, b) => a + b)
-        if (total > 2) {
+        // 加载的时间片段长度超过6秒就发一次请求，着并不意味着请求频率是1次/6秒
+        if (total > 6) {
           this.sendFlow(total)
         }
       }
