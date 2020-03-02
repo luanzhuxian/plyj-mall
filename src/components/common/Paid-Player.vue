@@ -19,7 +19,6 @@
       @ended="ended"
       @pause="pause"
       @error="error"
-      @seeking="seekedHandler"
       :poster="src + '?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast'"
     />
   </div>
@@ -251,19 +250,12 @@ export default {
     },
     ended (e) {
       this.$emit('ended', e)
-      this.sendFlow()
     },
     pause (e) {
       this.$emit('pause', e)
-      this.sendFlow()
     },
     error (e) {
       this.$emit('error', e)
-    },
-    // 跳转
-    seekedHandler (e) {
-      // console.log(e)
-      // console.log(e.target.buffered)
     }
     // async getPoster () {
     //   try {
