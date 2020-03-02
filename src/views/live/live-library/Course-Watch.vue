@@ -12,6 +12,7 @@
       :resource-id="courseId"
       ref="paidPlayer"
       auto-height
+      :size="detail.fileSize"
       back-route-name="MyCourses"
     />
   </div>
@@ -106,6 +107,7 @@ export default {
         }
         // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
         // mes.url = 'https://mallcdn.youpenglai.com/video/admall-rHwkgTmzg-0s065G4x-BHEUB9ew--1583043470977.mp4'
+        mes.fileSize = Number(mes.fileSize) || 0
         this.detail = mes
       } catch (e) { throw e }
     },

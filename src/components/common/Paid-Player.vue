@@ -4,7 +4,7 @@
     <video
       ref="video"
       v-if="!checking && type === 'video' && src"
-      preload="metadata"
+      preload
       controls
       x5-video-player-type="h5-page"
       :src="src"
@@ -28,14 +28,14 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 import {
   setLivePaidData,
   checkRateOfFlow
 } from '../../apis/live-library'
-const AXIOS = axios.create({
-  responseType: 'arraybuffer'
-})
+// const AXIOS = axios.create({
+//   responseType: 'arraybuffer'
+// })
 export default {
   name: 'PaidPlayer',
   data () {
@@ -45,7 +45,7 @@ export default {
     this.lastLoadedTime = 0
     return {
       test: [],
-      checking: true, // 是否正在检查视频可用性
+      checking: false, // 是否正在检查视频可用性
       duration: 0, // 视频总长
       videoSize: 0 // 视频总大小
     }
@@ -60,6 +60,10 @@ export default {
       default: ''
     },
     currentTime: {
+      type: Number,
+      default: 0
+    },
+    size: {
       type: Number,
       default: 0
     },
@@ -101,38 +105,38 @@ export default {
                 }
                 this.$router.go(-1)
               })
-              return
+              // return
             }
-            const res = await AXIOS.head(this.src)
-            this.videoSize = Number(res.headers['content-length']) || 0
-            this.checking = false
-            this.setCurrentTime()
+            // const res = await AXIOS.head(this.src)
+            // this.videoSize = Number(res.headers['content-length']) || 0
+            // this.checking = false
+            // this.setCurrentTime()
           } catch (e) {
-            if (e.message.indexOf('404') > -1) {
-              this.$alert({
-                message: '视频已被删除',
-                viceMessage: '请联系机构管理人员'
-              })
-                .finally(() => {
-                  if (this.backRouteName) {
-                    this.$router.replace({ name: this.backRouteName })
-                    return
-                  }
-                  this.$router.go(-1)
-                })
-            } else {
-              this.$alert({
-                message: '视频加载失败',
-                viceMessage: '请联系机构管理人员'
-              })
-                .finally(() => {
-                  if (this.backRouteName) {
-                    this.$router.replace({ name: this.backRouteName })
-                    return
-                  }
-                  this.$router.go(-1)
-                })
-            }
+            // if (e.message.indexOf('404') > -1) {
+            //   this.$alert({
+            //     message: '视频已被删除',
+            //     viceMessage: '请联系机构管理人员'
+            //   })
+            //     .finally(() => {
+            //       if (this.backRouteName) {
+            //         this.$router.replace({ name: this.backRouteName })
+            //         return
+            //       }
+            //       this.$router.go(-1)
+            //     })
+            // } else {
+            //   this.$alert({
+            //     message: '视频加载失败',
+            //     viceMessage: '请联系机构管理人员'
+            //   })
+            //     .finally(() => {
+            //       if (this.backRouteName) {
+            //         this.$router.replace({ name: this.backRouteName })
+            //         return
+            //       }
+            //       this.$router.go(-1)
+            //     })
+            // }
             throw e
           }
         }
@@ -206,7 +210,7 @@ export default {
     sendFlow (time) {
       this.setLivePaidData({
         watchTime: Number.parseInt(time),
-        dataFlowSize: Number.parseInt(time / this.duration * this.videoSize) || 0
+        dataFlowSize: Number.parseInt(time / this.duration * this.size) || 0
       })
       this.timeFragment = []
     },
@@ -219,6 +223,7 @@ export default {
     },
     // 在媒体回放被暂停后再次开始时触发。即，在一次暂停事件后恢复媒体回放
     playHandler (e) {
+      this.duration = e.target.duration
       this.$emit('play', e)
     },
     timeupdate (e) {
