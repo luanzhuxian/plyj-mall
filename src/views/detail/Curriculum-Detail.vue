@@ -180,6 +180,7 @@ export default {
   },
   deactivated () {
     this.showHaibao = false
+    this.haibao = ''
   },
   async mounted () {
     sessionStorage.setItem('shareBrokerId', this.brokerId || '')
@@ -309,10 +310,16 @@ export default {
         ctx.fillStyle = '#000'
         // 填充价钱
         createText(ctx, 48, 978, this.detail.courseName, 80, 620, line)
-        ctx.fillStyle = '#FE7700'
-        ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
-        ctx.font = 'bold 88px Microsoft YaHei UI'
-        createText(ctx, 96, 1170 + (104 - 88) / 2, String(price), 104)
+        if (price) {
+          ctx.fillStyle = '#FE7700'
+          ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
+          ctx.font = 'bold 88px Microsoft YaHei UI'
+          createText(ctx, 96, 1170 + (104 - 88) / 2, String(price), 104)
+        } else {
+          ctx.fillStyle = '#FE7700'
+          ctx.font = 'bold 88px Microsoft YaHei UI'
+          createText(ctx, 48, 1190 + (76 - 56) / 2, '免费', 104)
+        }
         // 绘制原价
         if (originalPrice && originalPrice !== price) {
           let priceWidth = ctx.measureText(price).width
