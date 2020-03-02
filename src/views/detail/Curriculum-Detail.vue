@@ -82,7 +82,7 @@
         <button
           v-else
           :class="$style.button + ' ' + $style.hasStudied"
-          @click="$router.push({ name: 'CourseWatch', params: { id: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress } })"
+          @click="$router.push({ name: 'CourseWatch', params: { id: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress, courseId: productId } })"
         >
           观看学习
           <!--<i v-if="detail.vodNumber">
