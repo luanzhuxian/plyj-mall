@@ -7,7 +7,7 @@
       preload="metadata"
       controls
       x5-video-player-type="h5-page"
-      :src="src + '?q=' + Date.now()"
+      :src="src"
       playsinline=""
       x-webkit-airplay="true"
       @loadedmetadata="videoLoadedmetadata"
@@ -39,7 +39,7 @@ export default {
   data () {
     this.timeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
     this.sizeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
-    this.nextLoadedStart = 0
+    this.lastLoadedStart = 0
     return {
       test: [],
       checking: true, // 是否正在检查视频可用性
@@ -164,10 +164,18 @@ export default {
     videoProgress (e) {
       const video = e.target
       const timeRanges = video.buffered
+
       if (!timeRanges.length) return
+      // for (let i = 0; i < timeRanges.length; i++) {
+      //   console.log(timeRanges.end(i) - timeRanges.start(i), i)
+      // }
       let end = timeRanges.end(timeRanges.length - 1)
-      let start = this.nextLoadedStart > end ? timeRanges.end(timeRanges.length - 1) : this.nextLoadedStart
+      let start = timeRanges.start(timeRanges.length - 1)
+
+      start = this.lastLoadedStart > end ? start : this.lastLoadedStart
       let loadedTime = end - start
+      // let loadedTime = end - start > this.video.currentTime ? end - start - this.video.currentTime : end - start
+
       const loadedSize = Math.round(loadedTime / this.duration * this.videoSize) || 0
       this.timeFragment.push(loadedTime)
       this.sizeFragment.push(loadedSize)
@@ -178,7 +186,7 @@ export default {
           this.sendFlow()
         }
       }
-      this.nextLoadedStart = end
+      this.lastLoadedStart = end
     },
     async setLivePaidData ({ watchTime, dataFlowSize }) {
       if (!this.videoId) return
