@@ -25,7 +25,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import axios from 'axios'
 import {
   setLivePaidData,
@@ -172,30 +171,6 @@ export default {
       }
       this.timeFragment.push(loadedTime - this.lastLoadedTime || 0)
       console.log(loadedTime, this.lastLoadedTime, this.timeFragment)
-      // loadedTime -= this.lastLoadedTime
-      // let end = timeRanges.end(timeRanges.length - 1)
-      // let start = timeRanges.start(timeRanges.length - 1)
-      // console.log('lastLoadedEnd:', this.lastLoadedEnd, ' ', 'end:', end, ' ', 'start:', start)
-      /*
-        由于发送给后台的是时间片段，而timeRanges中的时间是一个总片段
-        要正确发送片段，需要 用当前结束(end) - 上一个结束时间（lastLoadedEnd）
-        如果是第一次播放，lastLoadedEnd 为0，此时减去的是当前时间片段的开始时间
-        如果 lastLoadedEnd > end, 说明进行了快退，此时开始时间也使用当前的开始时间
-       */
-      // start = (!this.lastLoadedEnd || this.lastLoadedEnd > end) ? start : this.lastLoadedEnd
-      // let loadedTime = end - start
-      // let loadedTime = end - start > this.video.currentTime ? end - start - this.video.currentTime : end - start
-
-      // const loadedSize = Math.round(loadedTime / this.duration * this.videoSize) || 0
-      // this.timeFragment.push(loadedTime)
-      // this.sizeFragment.push(loadedSize)
-      // if (this.sizeFragment.length) {
-      //   let totalSize = this.sizeFragment.reduce((t, a) => t + a)
-      //   // 如果缓存的大小超过2M，就发一次请求。然后清空缓存的片段
-      //   if (totalSize > 1024 * 1024 * 2) {
-      //     this.sendFlow()
-      //   }
-      // }
       if (this.timeFragment.length) {
         let total = this.timeFragment.reduce((a, b) => a + b)
         // 加载的时间片段长度超过6秒就发一次请求，着并不意味着请求频率是1次/6秒
@@ -224,15 +199,11 @@ export default {
       }
     },
     sendFlow (time) {
-      // if (!this.timeFragment.length || !this.sizeFragment.length) return
       this.setLivePaidData({
-        // watchTime: Number.parseInt(this.timeFragment.reduce((t, a) => t + a)) || 0,
-        // dataFlowSize: Number.parseInt(this.sizeFragment.reduce((t, a) => t + a)) || 0
         watchTime: Number.parseInt(time),
         dataFlowSize: Number.parseInt(time / this.duration * this.videoSize) || 0
       })
       this.timeFragment = []
-      // this.sizeFragment = []
     },
     loadeddata (e) {
       this.$emit('loadeddata', e)
@@ -257,34 +228,6 @@ export default {
     error (e) {
       this.$emit('error', e)
     }
-    // async getPoster () {
-    //   try {
-    //     const { data } = await AXIOS.get(this.src + '?x-oss-process=video/snapshot,t_10000,f_jpg,w_0,h_0,m_fast')
-    //     console.log(data)
-    //   } catch (e) {
-    //     throw e
-    //   }
-    // },
-    // async fullScreen () {
-    //   // 进入全屏
-    //   const video = this.video
-    //   if (video.requestFullscreen) {
-    //     // 最新标准
-    //     video.requestFullscreen()
-    //   } else if (video.webkitRequestFullscreen) {
-    //     video.webkitRequestFullscreen()
-    //   } else {
-    //     // iOS进入全屏
-    //     video.webkitEnterFullscreen()
-    //     // 针对iOS监听不到webkitfullscreenchange事件做的兼容，感知退出全屏
-    //     let timer = setInterval(() => {
-    //       if (!video.webkitDisplayingFullscreen) {
-    //         // 退出了全屏
-    //         clearInterval(timer)
-    //       }
-    //     }, 1000)
-    //   }
-    // }
   }
 }
 </script>
