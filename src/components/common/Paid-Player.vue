@@ -19,6 +19,9 @@
       @ended="ended"
       @pause="pause"
       @error="error"
+      :class="{
+        [$style.autoHeight]: autoHeight
+      }"
       :poster="src + '?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast'"
     />
   </div>
@@ -77,6 +80,8 @@ export default {
       type: String,
       default: ''
     },
+    // 定义视频的高度是否自动
+    autoHeight: Boolean,
     autoFullScreen: Boolean
   },
   watch: {
@@ -237,7 +242,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 422px;
+  min-height: 422px;
   width: 100vw;
   max-width: 100vw;
   margin: 0 !important;
@@ -248,6 +253,10 @@ export default {
     background-color: #000;
     &:fullscreen {
       transform: rotate(90deg);
+    }
+    &.auto-height {
+      width: 100% !important;
+      height: 100% !important;
     }
   }
 }

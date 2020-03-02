@@ -11,6 +11,7 @@
       :current-time="currentTime"
       :resource-id="courseId"
       ref="paidPlayer"
+      auto-height
       back-route-name="MyCourses"
     />
   </div>
