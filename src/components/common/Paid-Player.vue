@@ -19,6 +19,7 @@
       @ended="ended"
       @pause="pause"
       @error="error"
+      @seeking="seekedHandler"
       :poster="src + '?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast'"
     />
   </div>
@@ -38,8 +39,9 @@ export default {
   name: 'PaidPlayer',
   data () {
     this.timeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
-    this.sizeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
-    this.lastLoadedStart = 0
+    // this.sizeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
+    // this.lastLoadedEnd = 0
+    // this.lastLoadedTime = 0
     return {
       test: [],
       checking: true, // 是否正在检查视频可用性
@@ -164,29 +166,44 @@ export default {
     videoProgress (e) {
       const video = e.target
       const timeRanges = video.buffered
-
       if (!timeRanges.length) return
-      // for (let i = 0; i < timeRanges.length; i++) {
-      //   console.log(timeRanges.end(i) - timeRanges.start(i), i)
-      // }
-      let end = timeRanges.end(timeRanges.length - 1)
-      let start = timeRanges.start(timeRanges.length - 1)
-
-      start = this.lastLoadedStart > end ? start : this.lastLoadedStart
-      let loadedTime = end - start
+      let loadedTime = 0
+      for (let i = 0; i < timeRanges.length; i++) {
+        loadedTime += timeRanges.end(i) - timeRanges.start(i)
+      }
+      console.log(loadedTime - this.lastLoadedTime)
+      this.timeFragment.push(loadedTime - this.lastLoadedTime)
+      // loadedTime -= this.lastLoadedTime
+      // let end = timeRanges.end(timeRanges.length - 1)
+      // let start = timeRanges.start(timeRanges.length - 1)
+      // console.log('lastLoadedEnd:', this.lastLoadedEnd, ' ', 'end:', end, ' ', 'start:', start)
+      /*
+        由于发送给后台的是时间片段，而timeRanges中的时间是一个总片段
+        要正确发送片段，需要 用当前结束(end) - 上一个结束时间（lastLoadedEnd）
+        如果是第一次播放，lastLoadedEnd 为0，此时减去的是当前时间片段的开始时间
+        如果 lastLoadedEnd > end, 说明进行了快退，此时开始时间也使用当前的开始时间
+       */
+      // start = (!this.lastLoadedEnd || this.lastLoadedEnd > end) ? start : this.lastLoadedEnd
+      // let loadedTime = end - start
       // let loadedTime = end - start > this.video.currentTime ? end - start - this.video.currentTime : end - start
 
-      const loadedSize = Math.round(loadedTime / this.duration * this.videoSize) || 0
-      this.timeFragment.push(loadedTime)
-      this.sizeFragment.push(loadedSize)
-      if (this.sizeFragment.length) {
-        let totalSize = this.sizeFragment.reduce((t, a) => t + a)
-        // 如果缓存的大小超过2M，就发一次请求。然后清空缓存的片段
-        if (totalSize > 1024 * 1024 * 2) {
-          this.sendFlow()
+      // const loadedSize = Math.round(loadedTime / this.duration * this.videoSize) || 0
+      // this.timeFragment.push(loadedTime)
+      // this.sizeFragment.push(loadedSize)
+      // if (this.sizeFragment.length) {
+      //   let totalSize = this.sizeFragment.reduce((t, a) => t + a)
+      //   // 如果缓存的大小超过2M，就发一次请求。然后清空缓存的片段
+      //   if (totalSize > 1024 * 1024 * 2) {
+      //     this.sendFlow()
+      //   }
+      // }
+      if (this.timeFragment.length) {
+        let total = this.timeFragment.reduce((a, b) => a + b)
+        if (total > 2) {
+          this.sendFlow(total)
         }
       }
-      this.lastLoadedStart = end
+      this.lastLoadedTime = loadedTime
     },
     async setLivePaidData ({ watchTime, dataFlowSize }) {
       if (!this.videoId) return
@@ -206,14 +223,16 @@ export default {
         this.$error(JSON.parse(e.message).message)
       }
     },
-    sendFlow () {
-      if (!this.timeFragment.length || !this.sizeFragment.length) return
+    sendFlow (time) {
+      // if (!this.timeFragment.length || !this.sizeFragment.length) return
       this.setLivePaidData({
-        watchTime: Number.parseInt(this.timeFragment.reduce((t, a) => t + a)) || 0,
-        dataFlowSize: Number.parseInt(this.sizeFragment.reduce((t, a) => t + a)) || 0
+        // watchTime: Number.parseInt(this.timeFragment.reduce((t, a) => t + a)) || 0,
+        // dataFlowSize: Number.parseInt(this.sizeFragment.reduce((t, a) => t + a)) || 0
+        watchTime: Number.parseInt(time),
+        dataFlowSize: Number.parseInt(time / this.duration * this.videoSize) || 0
       })
       this.timeFragment = []
-      this.sizeFragment = []
+      // this.sizeFragment = []
     },
     loadeddata (e) {
       this.$emit('loadeddata', e)
@@ -239,6 +258,11 @@ export default {
     },
     error (e) {
       this.$emit('error', e)
+    },
+    // 跳转
+    seekedHandler (e) {
+      // console.log(e)
+      // console.log(e.target.buffered)
     }
     // async getPoster () {
     //   try {
