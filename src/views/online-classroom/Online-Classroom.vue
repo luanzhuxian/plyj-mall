@@ -175,7 +175,8 @@ export default {
       this.courseList = list
     },
     study (item) {
-      if (item.orderId) {
+      // 还是跳转到详情页
+      /* if (item.orderId) {
         if (!item.liveId) {
           return this.$alert({
             message: '视频已被删除',
@@ -184,7 +185,7 @@ export default {
         }
         this.$router.push({ name: 'CourseWatch', params: { id: item.id }, query: { liveId: item.liveId, orderId: item.orderId, progress: item.learnProgress } })
         return
-      }
+      } */
       this.$router.push({ name: 'Curriculum', params: { productId: item.id } })
     }
   }
