@@ -32,6 +32,20 @@ export default {
     PaidPlayer
   },
   data () {
+    // 发送观看时长
+    let returnStudyTime = (preTime) => {
+      let updateStydyTime = async (currentTime) => {
+        try {
+          if (currentTime > preTime) {
+            let duration = (currentTime - preTime) || 0
+            await setStudyTime(this.liveId, duration)
+          }
+          preTime = currentTime
+        } catch (e) { throw e }
+      }
+      return updateStydyTime
+    }
+    this.setStudyTime = returnStudyTime(0)
     return {
       isStudy: false, // 是否第一次进来点播学习
       duration: 0, // 视频总时长
@@ -91,6 +105,7 @@ export default {
           return
         }
         // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
+        // mes.url = 'https://mallcdn.youpenglai.com/video/admall-rHwkgTmzg-0s065G4x-BHEUB9ew--1583043470977.mp4'
         this.detail = mes
       } catch (e) { throw e }
     },
@@ -108,7 +123,7 @@ export default {
           // 有时会有缓存，这行是必须的
           progress = progress > 100 ? 100 : progress
           // 依此用于已购买的课程列表显示,课程详情页面的显示
-          await Promise.all([setCourseProgress(this.orderId, progress), setStudyTime(this.liveId, Number.parseInt(videoTime))])
+          await Promise.all([setCourseProgress(this.orderId || 1, progress), this.setStudyTime(Number.parseInt(videoTime))])
         } catch (e) {
           if (e.name === 'ResponseError') {
             this.$error(JSON.parse(e.message).message)
@@ -131,7 +146,7 @@ export default {
       try {
         // 依此用于已购买的课程列表显示,课程详情页面的显示
         let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 1
-        await Promise.all([setCourseProgress(this.orderId, 1), setStudyTime(this.liveId, Number.parseInt(videoTime))])
+        await Promise.all([setCourseProgress(this.orderId || 1, 1), this.setStudyTime(Number.parseInt(videoTime))])
       } catch (e) { throw e }
     },
     loadeddata (e) {
@@ -159,7 +174,7 @@ export default {
         if (this.isStudy) {
           let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
           // 依此用于已购买的课程列表显示,课程详情页面的显示
-          await Promise.all([setCourseProgress(this.orderId, 100), setStudyTime(this.liveId, Number.parseInt(videoTime))])
+          await Promise.all([setCourseProgress(this.orderId || 1, 100), this.setStudyTime(Number.parseInt(videoTime))])
         }
       } catch (e) { throw e }
     }
