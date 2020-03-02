@@ -41,7 +41,7 @@ export default {
     this.timeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
     // this.sizeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
     // this.lastLoadedEnd = 0
-    // this.lastLoadedTime = 0
+    this.lastLoadedTime = 0
     return {
       test: [],
       checking: true, // 是否正在检查视频可用性
@@ -171,8 +171,8 @@ export default {
       for (let i = 0; i < timeRanges.length; i++) {
         loadedTime += timeRanges.end(i) - timeRanges.start(i)
       }
-      console.log(loadedTime - this.lastLoadedTime)
-      this.timeFragment.push(loadedTime - this.lastLoadedTime)
+      this.timeFragment.push(loadedTime - this.lastLoadedTime || 0)
+      console.log(loadedTime, this.lastLoadedTime, this.timeFragment)
       // loadedTime -= this.lastLoadedTime
       // let end = timeRanges.end(timeRanges.length - 1)
       // let start = timeRanges.start(timeRanges.length - 1)
