@@ -365,7 +365,7 @@ export default {
     next(vm => {
       // 游客不可申请helper
       if (vm.roleCode === 'VISITOR') {
-        vm.$confirm({
+        vm.$alert({
           message: '请绑定手机号',
           viceMessage: '游客身份不支持申请Helper',
           confirmText: '去绑定',
