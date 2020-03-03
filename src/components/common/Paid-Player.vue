@@ -134,12 +134,14 @@ export default {
     videoProgress (e) {
       const video = e.target
       const timeRanges = video.buffered
+      console.log(timeRanges.length)
       if (!timeRanges.length) return
       let loadedTime = 0
       for (let i = 0; i < timeRanges.length; i++) {
         loadedTime += timeRanges.end(i) - timeRanges.start(i)
       }
       this.timeFragment.push(loadedTime - this.lastLoadedTime || 0)
+      console.log(this.timeFragment.length)
       // console.log(loadedTime, this.lastLoadedTime, this.timeFragment.reduce((a, b) => a + b))
       if (this.timeFragment.length) {
         let total = this.timeFragment.reduce((a, b) => a + b)
