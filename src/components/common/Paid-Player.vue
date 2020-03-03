@@ -157,7 +157,7 @@ export default {
         resourceId: this.resourceId,
         resourceName: this.resourceName,
         videoId: this.videoId,
-        videoTime: Number.parseInt(this.duration),
+        videoTime: this.duration,
         watchTime,
         dataFlowSize
       }
@@ -198,7 +198,7 @@ export default {
     },
     error (e) {
       this.$alert({
-        message: '视频已被删除',
+        message: '视频加载错误',
         viceMessage: '请联系机构管理人员'
       })
         .finally(() => {

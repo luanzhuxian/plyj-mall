@@ -98,7 +98,10 @@ export default {
         }
         let { result: mes } = await getCourseDetail(this.liveId)
         if (!mes) {
-          this.$alert('视频加载错误，请联系机构管理人员')
+          this.$alert({
+            message: '视频加载错误',
+            viceMessage: '请联系机构管理人员'
+          })
             .finally(() => {
               this.$router.replace({ name: 'MyCourses' })
             })
