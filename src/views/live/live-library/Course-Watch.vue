@@ -3,7 +3,6 @@
     <PaidPlayer
       v-if="playerFlag"
       :src.sync="detail.url"
-      @loadeddata="loadeddata"
       @ended="videoEnded"
       @playing="playing"
       :video-id="liveId"
@@ -52,7 +51,7 @@ export default {
       return this.$route.query.orderId
     },
     progress () {
-      return this.$route.query.progress
+      return this.$route.query.progress || 0
     },
     courseId () {
       return this.$route.query.courseId
@@ -95,8 +94,7 @@ export default {
             })
           return
         }
-        // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
-        // mes.url = 'https://mallcdn.youpenglai.com/video/admall-rHwkgTmzg-0s065G4x-BHEUB9ew--1583043470977.mp4'
+        mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
         mes.fileSize = Number(mes.fileSize) || 0
         this.detail = mes
       } catch (e) { throw e }
@@ -131,6 +129,7 @@ export default {
     },
     // 向后台存储观看时长
     updateStudyTime () {
+      if (this.duration === 0) return
       window.clearTimeout(this.setStudyTimer)
       // 视频短的取用十分之一播放时长调用
       let times = (this.duration / 10) || 0
@@ -164,21 +163,19 @@ export default {
         await setCourseProgress(this.orderId || 1, 1)
       } catch (e) { throw e }
     },
-    loadeddata (e) {
-      const video = e.target
-      this.duration = video.duration
-      const playTime = (this.progress / 100) * this.duration
-      this.setStudyTime = this.returnStudyTime(playTime || 0)
-      if (this.progress < 100) {
-        this.currentTime = playTime
-        // 更新观看进度
-        this.updateProgress()
-      }
-    },
     // 开始播放时做一些事
-    async playing () {
+    async playing (e) {
       try {
         if (!this.isStudy) {
+          const video = e.target
+          this.duration = video.duration
+          const playTime = this.progress === 100 ? 0 : ((this.progress / 100) * this.duration)
+          this.setStudyTime = this.returnStudyTime(playTime || 0)
+          if (this.progress < 100) {
+            this.currentTime = playTime
+            // 更新观看进度
+            this.updateProgress()
+          }
           this.isStudy = true
           this.updateStudyTime()
           await this.setStudyCount()
