@@ -13,7 +13,6 @@
       ref="paidPlayer"
       auto-height
       :size="detail.fileSize"
-      back-route-name="MyCourses"
     />
   </div>
 </template>
@@ -55,7 +54,7 @@ export default {
       detail: {
         url: ''
       },
-      timer: null// 定时器
+      timer: null // 定时器
     }
   },
   computed: {

@@ -73,11 +73,6 @@ export default {
       type: String,
       default: '0'
     },
-    // 观看未成功的跳转路由名
-    backRouteName: {
-      type: String,
-      default: ''
-    },
     // 定义视频的高度是否自动
     autoHeight: Boolean,
     autoFullScreen: Boolean
@@ -93,10 +88,6 @@ export default {
                 message: '流量已经耗尽',
                 viceMessage: '请联系机构管理人员'
               }).finally(() => {
-                if (this.backRouteName) {
-                  this.$router.replace({ name: this.backRouteName })
-                  return
-                }
                 this.$router.go(-1)
               })
               return
@@ -211,10 +202,6 @@ export default {
         viceMessage: '请联系机构管理人员'
       })
         .finally(() => {
-          if (this.backRouteName) {
-            this.$router.replace({ name: this.backRouteName })
-            return
-          }
           this.$router.go(-1)
         })
       this.$emit('error', e)
