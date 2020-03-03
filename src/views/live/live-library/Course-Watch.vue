@@ -32,20 +32,6 @@ export default {
     PaidPlayer
   },
   data () {
-    // 发送观看时长
-    let returnStudyTime = (preTime) => {
-      let updateStydyTime = async (currentTime) => {
-        try {
-          if (currentTime > preTime) {
-            let duration = (currentTime - preTime) || 0
-            await setStudyTime(this.liveId, duration)
-          }
-          preTime = currentTime
-        } catch (e) { throw e }
-      }
-      return updateStydyTime
-    }
-    this.setStudyTime = returnStudyTime(0)
     return {
       isStudy: false, // 是否第一次进来点播学习
       duration: 0, // 视频总时长
@@ -54,7 +40,8 @@ export default {
       detail: {
         url: ''
       },
-      timer: null // 定时器
+      setStudyTimer: null,
+      setProgressTimer: null
     }
   },
   computed: {
@@ -82,7 +69,8 @@ export default {
   deactivated () {
     try {
       this.playerFlag = false
-      window.clearTimeout(this.timer)
+      window.clearTimeout(this.setProgressTimer)
+      window.clearTimeout(this.setStudyTimer)
     } catch (e) { throw e }
   },
   methods: {
@@ -113,14 +101,14 @@ export default {
         this.detail = mes
       } catch (e) { throw e }
     },
-    // 向后台存储播放进度，两分钟更新一次进度
+    // 向后台存储播放进度
     async updateProgress () {
       if (this.duration === 0) return
-      window.clearTimeout(this.timer)
+      window.clearTimeout(this.setProgressTimer)
       // 视频短的取用十分之一播放时长调用
       let times = (this.duration / 10) || 0
       times = times > 10e4 ? 10e4 : times
-      this.timer = window.setTimeout(async () => {
+      this.setProgressTimer = window.setTimeout(async () => {
         try {
           let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
           let progress = parseInt((videoTime / this.duration) * 100)
@@ -128,7 +116,7 @@ export default {
           progress = progress > 100 ? 100 : progress
           // 依此用于已购买的课程列表显示,课程详情页面的显示
           if (progress > 0) {
-            await Promise.all([setCourseProgress(this.orderId || 1, progress), this.setStudyTime(Number.parseInt(videoTime))])
+            await setCourseProgress(this.orderId || 1, progress)
           }
         } catch (e) {
           if (e.name === 'ResponseError') {
@@ -141,6 +129,28 @@ export default {
         }
       }, times * 1000)
     },
+    // 向后台存储观看时长
+    updateStudyTime () {
+      window.clearTimeout(this.setStudyTimer)
+      // 视频短的取用十分之一播放时长调用
+      let times = (this.duration / 10) || 0
+      times = times > 10e4 ? 10e4 : times
+      this.setStudyTimer = window.setTimeout(async () => {
+        try {
+          let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
+          // 用于课程详情页面的显示
+          await this.setStudyTime(Number.parseInt(videoTime))
+        } catch (e) {
+          if (e.name === 'ResponseError') {
+            this.$error(JSON.parse(e.message).message)
+          } else {
+            this.$error(e.message)
+          }
+        } finally {
+          this.updateStudyTime()
+        }
+      }, times * 1000)
+    },
     // 统计观看次数，只有第一次播放时统计
     async setStudyCount () {
       try {
@@ -150,16 +160,16 @@ export default {
     // 进来首次播放调用
     async updateProgressOnce () {
       try {
-        // 依此用于已购买的课程列表显示,课程详情页面的显示
-        let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 1
-        await Promise.all([setCourseProgress(this.orderId || 1, 1), setStudyTime(this.liveId, Number.parseInt(videoTime))])
+        // 用于已购买的课程列表显示
+        await setCourseProgress(this.orderId || 1, 1)
       } catch (e) { throw e }
     },
     loadeddata (e) {
       const video = e.target
       this.duration = video.duration
+      const playTime = (this.progress / 100) * this.duration
+      this.setStudyTime = this.returnStudyTime(playTime || 0)
       if (this.progress < 100) {
-        const playTime = (this.progress / 100) * this.duration
         this.currentTime = playTime
         // 更新观看进度
         this.updateProgress()
@@ -170,6 +180,7 @@ export default {
       try {
         if (!this.isStudy) {
           this.isStudy = true
+          this.updateStudyTime()
           await this.setStudyCount()
           await this.updateProgressOnce()
         }
@@ -178,12 +189,26 @@ export default {
     async videoEnded () {
       try {
         if (this.isStudy) {
-          window.clearTimeout(this.timer)
+          window.clearTimeout(this.setProgressTimer)
+          window.clearTimeout(this.setStudyTimer)
           let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
           // 依此用于已购买的课程列表显示,课程详情页面的显示
           await Promise.all([setCourseProgress(this.orderId || 1, 100), this.setStudyTime(Number.parseInt(videoTime))])
         }
       } catch (e) { throw e }
+    },
+    // 发送观看时长
+    returnStudyTime (preTime) {
+      let updateStydyTime = async (currentTime) => {
+        try {
+          if (currentTime > preTime) {
+            let duration = (currentTime - preTime) || 0
+            await setStudyTime(this.liveId, duration)
+          }
+          preTime = currentTime
+        } catch (e) { throw e }
+      }
+      return updateStydyTime
     }
   }
 }
