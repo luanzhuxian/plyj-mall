@@ -22,30 +22,24 @@
       :class="{
         [$style.autoHeight]: autoHeight
       }"
-      :poster="src + '?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast'"
+      :poster="src + '?x-oss-process=video/snapshot,t_2000,f_jpg,w_0,h_0,m_fast'"
     />
   </div>
 </template>
 
 <script>
-// import axios from 'axios'
 import {
   setLivePaidData,
   checkRateOfFlow
 } from '../../apis/live-library'
-// const AXIOS = axios.create({
-//   responseType: 'arraybuffer'
-// })
 export default {
   name: 'PaidPlayer',
   data () {
     this.timeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
-    // this.sizeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
-    // this.lastLoadedEnd = 0
     this.lastLoadedTime = 0
     return {
       test: [],
-      checking: false, // 是否正在检查视频可用性
+      checking: true, // 是否正在检查视频可用性
       duration: 0, // 视频总长
       videoSize: 0 // 视频总大小
     }
@@ -105,39 +99,14 @@ export default {
                 }
                 this.$router.go(-1)
               })
-              // return
+              return
             }
-            // const res = await AXIOS.head(this.src)
-            // this.videoSize = Number(res.headers['content-length']) || 0
-            // this.checking = false
-            // this.setCurrentTime()
+            this.checking = false
           } catch (e) {
-            // if (e.message.indexOf('404') > -1) {
-            //   this.$alert({
-            //     message: '视频已被删除',
-            //     viceMessage: '请联系机构管理人员'
-            //   })
-            //     .finally(() => {
-            //       if (this.backRouteName) {
-            //         this.$router.replace({ name: this.backRouteName })
-            //         return
-            //       }
-            //       this.$router.go(-1)
-            //     })
-            // } else {
-            //   this.$alert({
-            //     message: '视频加载失败',
-            //     viceMessage: '请联系机构管理人员'
-            //   })
-            //     .finally(() => {
-            //       if (this.backRouteName) {
-            //         this.$router.replace({ name: this.backRouteName })
-            //         return
-            //       }
-            //       this.$router.go(-1)
-            //     })
-            // }
-            throw e
+            if (e.name === 'ResponseError') {
+              this.$error(JSON.parse(e.message).message)
+            }
+            console.error(e)
           }
         }
       },
@@ -152,6 +121,7 @@ export default {
   },
   deactivated () {
     this.checking = true
+    this.timeFragment = []
     this.$emit('update:src', '')
   },
   computed: {
@@ -179,7 +149,7 @@ export default {
         loadedTime += timeRanges.end(i) - timeRanges.start(i)
       }
       this.timeFragment.push(loadedTime - this.lastLoadedTime || 0)
-      console.log(loadedTime, this.lastLoadedTime, this.timeFragment)
+      // console.log(loadedTime, this.lastLoadedTime, this.timeFragment.reduce((a, b) => a + b))
       if (this.timeFragment.length) {
         let total = this.timeFragment.reduce((a, b) => a + b)
         // 加载的时间片段长度超过6秒就发一次请求，着并不意味着请求频率是1次/6秒
@@ -196,7 +166,7 @@ export default {
         resourceId: this.resourceId,
         resourceName: this.resourceName,
         videoId: this.videoId,
-        videoTime: this.duration,
+        videoTime: Number.parseInt(this.duration),
         watchTime,
         dataFlowSize
       }
@@ -209,7 +179,7 @@ export default {
     },
     sendFlow (time) {
       this.setLivePaidData({
-        watchTime: Number.parseInt(time),
+        watchTime: Number(time.toFixed(3)),
         dataFlowSize: Number.parseInt(time / this.duration * this.size) || 0
       })
       this.timeFragment = []
@@ -236,6 +206,17 @@ export default {
       this.$emit('pause', e)
     },
     error (e) {
+      this.$alert({
+        message: '视频已被删除',
+        viceMessage: '请联系机构管理人员'
+      })
+        .finally(() => {
+          if (this.backRouteName) {
+            this.$router.replace({ name: this.backRouteName })
+            return
+          }
+          this.$router.go(-1)
+        })
       this.$emit('error', e)
     }
   }
