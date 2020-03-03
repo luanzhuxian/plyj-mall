@@ -303,16 +303,15 @@ export default {
   mounted () {
   },
   activated () {
-    this.getHelperInfo()
-    this.form.mobile = this.mobile
+    if (this.mobile) {
+      this.getHelperInfo()
+      this.form.mobile = this.mobile
+    }
   },
   deactivated () {
     this.showInvioceIntro = false
   },
   methods: {
-    aa () {
-      alert(1)
-    },
     async getHelperInfo () {
       try {
         let { result } = await agentUserInfoAudit()
@@ -364,20 +363,34 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      // if (!vm.mobile || vm.roleCode !== 'MEMBERSHIP') {
-      //   if (from.name) {
-      //     vm.$router.replace({
-      //       name: from.name,
-      //       query: from.query,
-      //       params: from.params
-      //     })
-      //   } else {
-      //     vm.$router.replace({ name: 'My' })
-      //   }
-      // } else {
-      //   vm.visible = true
-      // }
-      vm.visible = true
+      // 游客不可申请helper
+      if (vm.roleCode === 'VISITOR') {
+        vm.$confirm({
+          message: '请绑定手机号',
+          viceMessage: '游客身份不支持申请Helper',
+          confirmText: '去绑定',
+          closeOnClickMask: false
+        }).finally(() => {
+          vm.$router.replace({ name: 'BindMobile' })
+        })
+      } else if (vm.roleCode !== 'MEMBERSHIP') {
+        vm.$alert('仅会员可请Helper')
+          .finally(() => {
+            // 返回上一页或我的页面
+            if (from.name) {
+              vm.$router.replace({
+                name: from.name,
+                query: from.query,
+                params: from.params
+              })
+            } else {
+              // 到了我的页面会弹出绑定手机
+              vm.$router.replace({ name: 'My' })
+            }
+          })
+      } else {
+        vm.visible = true
+      }
     })
   }
 }
