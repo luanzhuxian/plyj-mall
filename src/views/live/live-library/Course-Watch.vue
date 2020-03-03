@@ -51,7 +51,7 @@ export default {
       return this.$route.query.orderId
     },
     progress () {
-      return this.$route.query.progress || 0
+      return Number(this.$route.query.progress) || 0
     },
     courseId () {
       return this.$route.query.courseId
