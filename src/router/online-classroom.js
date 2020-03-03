@@ -5,7 +5,7 @@ export default [
     redirect: '/online-classroom/interactive-live',
     component: () => import('../views/online-classroom/Index.vue'),
     meta: {
-      title: '学习'
+      title: '云课堂'
     },
     children: [
       {
@@ -13,7 +13,7 @@ export default [
         name: 'OnlineClassroom',
         component: () => import('../views/online-classroom/Online-Classroom.vue'),
         meta: {
-          title: '学习' // 线上课程
+          title: '云课堂' // 知识课堂
         }
       },
       {
@@ -21,7 +21,7 @@ export default [
         name: 'InteractiveLive',
         component: () => import('../views/online-classroom/Interactive-Live.vue'),
         meta: {
-          title: '学习' // 互动直播
+          title: '云课堂' // 互动直播
         }
       }
     ]

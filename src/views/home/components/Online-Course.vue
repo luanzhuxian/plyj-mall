@@ -2,7 +2,7 @@
   <div :class="$style.onlineCourseWrapper">
     <div :class="$style.onlineCourseHead">
       <pl-svg name="icon-tv-76530" width="36" height="40" />
-      <b>线上课程</b>
+      <b>知识课堂</b>
       <router-link
         :class="$style.onlineCourseHeadMore"
         :to="{ name: 'OnlineClassroom' }"
@@ -12,7 +12,7 @@
       </router-link>
     </div>
     <div :class="$style.onlineCourseHeadSub">
-      {{ `还有${rest}个线上课程，等你来学习` }}
+      {{ `还有${rest}个知识课堂，等你来学习` }}
     </div>
     <router-link
       v-if="list.length"
