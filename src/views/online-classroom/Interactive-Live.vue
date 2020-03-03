@@ -331,6 +331,7 @@ export default {
         justify-content: space-between;
         align-items: flex-end;
         margin-top: 16px;
+        min-height: 60px;
       }
       .price {
         font-size: 32px;
