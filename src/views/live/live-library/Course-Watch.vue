@@ -190,7 +190,7 @@ export default {
       let updateStydyTime = async (currentTime) => {
         try {
           if (currentTime > preTime) {
-            let duration = (currentTime - preTime) || 0
+            let duration = Number.parseInt(currentTime - preTime) || 0
             await setStudyTime(this.liveId, duration)
           }
           preTime = currentTime
