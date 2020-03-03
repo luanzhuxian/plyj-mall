@@ -93,7 +93,7 @@ export default {
           })
           return
         }
-        mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
+        // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
         mes.fileSize = Number(mes.fileSize) || 0
         this.detail = mes
       } catch (e) { throw e }
@@ -111,7 +111,7 @@ export default {
           let progress = parseInt((videoTime / this.duration) * 100)
           // 有时会有缓存，这行是必须的
           progress = progress > 100 ? 100 : progress
-          // 依此用于已购买的课程列表显示,课程详情页面的显示
+          // 用于已购买的课程列表显示
           if (progress > 0) {
             await setCourseProgress(this.orderId || 1, progress)
           }
