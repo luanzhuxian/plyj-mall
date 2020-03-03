@@ -88,10 +88,9 @@ export default {
           this.$alert({
             message: '视频加载错误',
             viceMessage: '请联系机构管理人员'
+          }).finally(() => {
+            this.$router.replace({ name: 'MyCourses' })
           })
-            .finally(() => {
-              this.$router.replace({ name: 'MyCourses' })
-            })
           return
         }
         mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
@@ -117,11 +116,7 @@ export default {
             await setCourseProgress(this.orderId || 1, progress)
           }
         } catch (e) {
-          if (e.name === 'ResponseError') {
-            this.$error(JSON.parse(e.message).message)
-          } else {
-            this.$error(e.message)
-          }
+          this.error(e)
         } finally {
           this.updateProgress()
         }
@@ -140,27 +135,23 @@ export default {
           // 用于课程详情页面的显示
           await this.setStudyTime(Number.parseInt(videoTime))
         } catch (e) {
-          if (e.name === 'ResponseError') {
-            this.$error(JSON.parse(e.message).message)
-          } else {
-            this.$error(e.message)
-          }
+          this.error(e)
         } finally {
           this.updateStudyTime()
         }
       }, times * 1000)
-    },
-    // 统计观看次数，只有第一次播放时统计
-    async setStudyCount () {
-      try {
-        await setStudyCount(this.liveId)
-      } catch (e) { throw e }
     },
     // 进来首次播放调用
     async updateProgressOnce () {
       try {
         // 用于已购买的课程列表显示
         await setCourseProgress(this.orderId || 1, 1)
+      } catch (e) { throw e }
+    },
+    // 统计观看次数，只有第一次播放时统计
+    async setStudyCount () {
+      try {
+        await setStudyCount(this.liveId)
       } catch (e) { throw e }
     },
     // 开始播放时做一些事
@@ -206,6 +197,13 @@ export default {
         } catch (e) { throw e }
       }
       return updateStydyTime
+    },
+    error (e) {
+      if (e.name === 'ResponseError') {
+        this.$error(JSON.parse(e.message).message)
+      } else {
+        this.$error(e.message)
+      }
     }
   }
 }
