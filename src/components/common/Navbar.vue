@@ -51,7 +51,7 @@
     >
       <template v-if="isSkinShow">
         <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
-        <div :class="$style.tabName">学习</div>
+        <div :class="$style.tabName">云课堂</div>
       </template>
       <pl-svg
         v-else-if="skinId !== null"
