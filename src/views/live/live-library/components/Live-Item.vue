@@ -63,17 +63,19 @@ export default {
 
   .live-item {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     box-sizing: border-box;
     width: 100%;
     padding: 0 24px 24px 24px;
     background: #FFFFFF;
     > .img {
-      height: 164px;
       position: relative;
-      margin-right: 20px;
+      width: 280px;
+      height: 186px;
+      border-radius: 20px;
+      overflow: hidden;
       > img {
-        width: 224px;
+        width: 100%;
         height: 100%;
         vertical-align: top;
       }
@@ -82,18 +84,18 @@ export default {
         top: 0;
         left: 0;
         width: 120px;
-        background: #F2B036;
-        color: #FFFFFF;
+        border-radius: 20px 0px;
         font-size: 22px;
         line-height: 46px;
         text-align: center;
-        border-radius:0px 40px 40px 0px;
+        color: #FFFFFF;
+        background: #F2B036;
       }
     }
     > .description {
       display: flex;
       flex-wrap: wrap;
-      width: 100%;
+      width: calc(100% - 304px);
       align-content: space-between;
       > .title {
         width: 100%;
@@ -114,13 +116,13 @@ export default {
           font-size: 24px;
         }
         > div:nth-of-type(2){
-          font-size: 22px;
+          font-size: 26px;
           text-align: center;
           background: #FE7700;
           color: #FFFFFF;
           width: 140px;
-          line-height: 40px;
-          border-radius:20px;
+          line-height: 48px;
+          border-radius:8px;
         }
       }
     }
