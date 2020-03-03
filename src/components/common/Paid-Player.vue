@@ -144,7 +144,9 @@ export default {
       if (this.timeFragment.length) {
         let total = this.timeFragment.reduce((a, b) => a + b)
         // 加载的时间片段长度超过6秒就发一次请求，着并不意味着请求频率是1次/6秒
-        if (total > 6) {
+        // 如果这次加载的量大于10%，有可能是从缓存中加载的，就不要计费了
+        console.log(total)
+        if (total > 6 && total / this.duration < 0.1) {
           this.sendFlow(total)
         }
       }
