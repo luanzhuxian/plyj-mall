@@ -13,7 +13,7 @@ export default [
         name: 'OnlineClassroom',
         component: () => import('../views/online-classroom/Online-Classroom.vue'),
         meta: {
-          title: '云课堂' // 知识课堂
+          title: '云课堂' // 知识课程
         }
       },
       {

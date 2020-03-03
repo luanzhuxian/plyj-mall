@@ -28,7 +28,7 @@ export default {
       activeTabId: 0,
       tabs: [
         { name: '互动直播', routerName: 'InteractiveLive', id: 0 },
-        { name: '知识课堂', routerName: 'OnlineClassroom', id: 1 }]
+        { name: '知识课程', routerName: 'OnlineClassroom', id: 1 }]
     }
   },
   async activated () {
