@@ -125,7 +125,9 @@ export default {
           // 有时会有缓存，这行是必须的
           progress = progress > 100 ? 100 : progress
           // 依此用于已购买的课程列表显示,课程详情页面的显示
-          await Promise.all([setCourseProgress(this.orderId || 1, progress), this.setStudyTime(Number.parseInt(videoTime))])
+          if (progress > 0) {
+            await Promise.all([setCourseProgress(this.orderId || 1, progress), this.setStudyTime(Number.parseInt(videoTime))])
+          }
         } catch (e) {
           if (e.name === 'ResponseError') {
             this.$error(JSON.parse(e.message).message)
@@ -148,7 +150,7 @@ export default {
       try {
         // 依此用于已购买的课程列表显示,课程详情页面的显示
         let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 1
-        await Promise.all([setCourseProgress(this.orderId || 1, 1), this.setStudyTime(Number.parseInt(videoTime))])
+        await Promise.all([setCourseProgress(this.orderId || 1, 1), setStudyTime(this.liveId, Number.parseInt(videoTime))])
       } catch (e) { throw e }
     },
     loadeddata (e) {
