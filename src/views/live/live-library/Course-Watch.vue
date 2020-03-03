@@ -176,6 +176,7 @@ export default {
     async videoEnded () {
       try {
         if (this.isStudy) {
+          window.clearTimeout(this.timer)
           let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
           // 依此用于已购买的课程列表显示,课程详情页面的显示
           await Promise.all([setCourseProgress(this.orderId || 1, 100), this.setStudyTime(Number.parseInt(videoTime))])
