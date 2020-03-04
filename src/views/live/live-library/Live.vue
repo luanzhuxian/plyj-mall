@@ -52,7 +52,7 @@ export default {
 }
 </script>
 
-<style lang='scss' module scoped>
+<style lang='scss' module >
   .live-library {
     > .live {
       padding-bottom: 20px;

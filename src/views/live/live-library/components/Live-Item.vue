@@ -99,12 +99,16 @@ export default {
       align-content: space-between;
       > .title {
         width: 100%;
-        color: #A8A8A8;
+        color: #666666;
         font-size: 24px;
         > div:nth-of-type(1) {
           margin-bottom: 6px;
-          color: #333333;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           font-size: 32px;
+          font-weight: 800;
+          color: #373737;
         }
       }
       > .content {
