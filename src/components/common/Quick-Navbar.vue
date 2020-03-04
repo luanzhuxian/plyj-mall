@@ -50,7 +50,7 @@
         :to="{name: 'OnlineClassroom'}"
       >
         <pl-svg
-          name="icon-study-30fed"
+          name="icon-icon-onlineClass-552fe"
           height="75"
         />
       </router-link>

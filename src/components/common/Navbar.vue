@@ -55,7 +55,7 @@
       </template>
       <pl-svg
         v-else-if="skinId !== null"
-        :name="classifyActive ? 'icon-study-active-55b02' : 'icon-study-30fed'"
+        :name="classifyActive ? 'icon-icon-onlineClass-active-23c72' : 'icon-icon-onlineClass-552fe'"
         width="60"
         height="72"
         :key="1"
