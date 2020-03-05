@@ -45,6 +45,7 @@
         />
       </router-link>
       <router-link
+        v-if="liveRoomEnable"
         tag="li"
         active-class="active"
         :to="{name: 'OnlineClassroom'}"
@@ -109,7 +110,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['agentUser', 'isAdmin'])
+    ...mapGetters(['agentUser', 'isAdmin', 'liveRoomEnable'])
   }
 }
 </script>

@@ -33,29 +33,29 @@
       />
     </router-link>
     <!-- 分类 -->
-    <!-- <router-link
-      :class="{
-        [$style.route]: true,
-        [$style.active]: classifyActive
-      }"
-      tag="div"
-      :to="{ name: 'Classify' }"
-    > -->
     <router-link
       :class="{
         [$style.route]: true,
         [$style.active]: classifyActive
       }"
       tag="div"
-      :to="{ name: 'OnlineClassroom' }"
+      :to="{ name: 'Classify' }"
     >
+      <!--云课堂-->
+      <!--<router-link
+      :class="{
+        [$style.route]: true,
+        [$style.active]: classifyActive
+      }"
+      tag="div"
+      :to="{ name: 'OnlineClassroom' }"-->
       <template v-if="isSkinShow">
         <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
-        <div :class="$style.tabName">云课堂</div>
+        <div :class="$style.tabName">分类</div>
       </template>
       <pl-svg
         v-else-if="skinId !== null"
-        :name="classifyActive ? 'icon-icon-onlineClass-active-23c72' : 'icon-icon-onlineClass-552fe'"
+        :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
         width="60"
         height="72"
         :key="1"
@@ -211,7 +211,7 @@ export default {
       return this.$route.matched.some(val => val.name === 'Home')
     },
     classifyActive: function () {
-      return this.$route.matched.some(val => val.name === 'OnlineClassroom')
+      return this.$route.matched.some(val => val.name === 'Classify')
     },
     shoppingChartActive: function () {
       return this.$route.path.indexOf('cart') > -1

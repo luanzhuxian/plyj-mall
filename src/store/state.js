@@ -44,7 +44,8 @@ export default {
     mallUrl: '',
     sequenceNbr: '',
     servicePhoneModels: [],
-    appSecret: false // 是否是老方法授权的
+    appSecret: false, // 是否是老方法授权的
+    liveRoomEnable: false // 是否开通云课堂，开通了房间就算
   },
   openId: '',
   addressList: [],

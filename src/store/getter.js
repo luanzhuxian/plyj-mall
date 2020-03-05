@@ -40,6 +40,7 @@ export default {
   // supportPhone: state => state.mallInfo.supportPhone,
   servicePhoneModels: state => state.mallInfo.servicePhoneModels,
   mallId: state => state.mallInfo.sequenceNbr,
+  liveRoomEnable: state => state.mallInfo.liveRoomEnable,
   cartCount: state => state.cartCount,
   noticeStatus: state => state.aduitNotice.noticeStatus,
   aduitStatus: state => state.aduitNotice.status,
