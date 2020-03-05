@@ -7,6 +7,7 @@
       [$style.skinNewYear]: skinId === 3,
       [$style.skinXiaoNian]: skinId === 4,
       [$style.skinYuanXiao]: skinId === 5,
+      [$style.skinWomenDay]: skinId === 6,
       [$style.skinCampaign]: skinId === 99
     }"
   >
@@ -184,6 +185,16 @@ export default {
           my: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/6cee4a1f-4a99-4199-88d1-0746f0597d1d.png',
           myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/8638a408-644e-4ab6-962a-3338aac2b09a.png'
         },
+        '6': {
+          home: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/home.png',
+          homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/home-active.png',
+          classify: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/classify.png',
+          classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/classify-active.png',
+          shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/cart.png',
+          shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/cart-active.png',
+          my: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/my.png',
+          myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/my-active.png'
+        },
         '99': {
           home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
           homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
@@ -284,10 +295,10 @@ export default {
 .skin-new-year,
 .skin-xiao-nian,
 .skin-yuan-xiao,
+.skin-women-day,
 .skin-campaign {
   .route {
     box-sizing: border-box;
-    // justify-content: flex-end !important;
     &.active > .tab-name {
       color: #C81819;
     }
@@ -309,6 +320,7 @@ export default {
     margin-bottom: 0 !important;
   }
 }
+
 .skin-xmas {
   background: url("https://mallcdn.youpenglai.com/static/admall/skin/xmas/83295b48-251d-40a0-9e07-e3fb9eb95138.png") no-repeat center;
   background-size: 100%;
@@ -326,6 +338,17 @@ export default {
     }
     &.active > .tab-name {
       color: #ffffff;
+    }
+  }
+}
+.skin-women-day {
+  .route {
+    .tab-name {
+      margin-top: 0;
+      color: #999999;
+    }
+    &.active > .tab-name {
+      color: #FB908F;
     }
   }
 }

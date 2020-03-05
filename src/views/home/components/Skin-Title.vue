@@ -8,6 +8,7 @@
       [$style.skinNewYear]: skinId === 3,
       [$style.skinXiaoNian]: skinId === 4,
       [$style.skinYuanXiao]: skinId === 5,
+      [$style.skinWomenDay]: skinId === 6,
       [$style.skinCampaign]: skinId === 99
     }"
   >
@@ -43,6 +44,9 @@
     <div :class="$style.titleBg" v-if="skinId === 99">
       <div :class="$style.title" v-text="data" />
     </div>
+    <!-- <div :class="$style.titleBg" v-if="skinId === 99">
+      <div :class="$style.title" v-text="data" />
+    </div> -->
   </div>
 </template>
 <script>
@@ -228,6 +232,27 @@ export default {
     font-family: FZQingKeBenYueSongS-R-GB;
     color: #F75519;
     letter-spacing: 8px;
+  }
+}
+.skin-women-day {
+  .title-bg {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 145px;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/women-day/title.png") no-repeat center bottom;
+    background-size: 570px auto;
+  }
+  .title {
+    margin-bottom: 18px;
+    max-width: 310px;
+    line-height: 68px;
+    text-align: center;
+    font-size: 40px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #FFEEE5;
   }
 }
 .skin-campaign {

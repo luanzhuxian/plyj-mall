@@ -161,6 +161,37 @@
   }
 }
 
+// 妇女节
+.skin-women-day {
+  @extend .skin-common;
+  background-color: #F6DDE0 !important;
+  .container {
+    padding-top: 75px;
+    background: url("https://mallcdn.youpenglai.com/static/admall/skin/women-day/bg.jpg") no-repeat center top !important;
+    background-size: 100% auto !important;
+    .search {
+      margin-bottom: 15px;
+      padding: 0 92px !important;
+      height: 55px !important;
+    }
+    .footer {
+      padding-top: 10px;
+      height: 90px;
+      color: #EA615F;
+      background: transparent;
+    }
+    .teachers,
+    .hot-item,
+    .best,
+    .recommend {
+      background: transparent !important;
+    }
+    .skin-title {
+      margin: 0 -24px 10px;
+    }
+  }
+}
+
 // 共战疫
 .skin-campaign {
   @extend .skin-common;

@@ -7,6 +7,7 @@
       [$style.skinNewYear]: skinId === 3,
       [$style.skinXiaoNian]: skinId === 4,
       [$style.skinYuanXiao]: skinId === 5,
+      [$style.skinWomenDay]: skinId === 6,
       [$style.skinCampaign]: skinId === 99
     }"
   >
@@ -65,7 +66,8 @@
         — 技术支持 朋来科技 —
       </footer>
     </div>
-  </div></template>
+  </div>
+</template>
 
 <script>
 import Search from './components/Search.vue'
