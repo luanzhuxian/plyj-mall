@@ -789,24 +789,28 @@ export default {
     }
   },
   async activated () {
-    let selectedStudents // 已选择的学员的key
-    let students // 已有学员列表
-    let defStudent // 默认学员
+    const {
+      realName,
+      userName,
+      mobile
+    } = this
     this.loading = true
     try {
       // 获取服务器时间
-      let { result: serverTime } = await getServerTime()
-      this.serverTime = Number(serverTime)
+      const { result: serverTime } = await getServerTime()
       // 获取商品详情
       await this.getProductDetail()
+      this.serverTime = Number(serverTime)
       // 选择的发票信息（如果有的话）
       this.INVOICE_MODEL = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || null
       // 选择的学员信息（如果有的话）
       this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
       // 每个商品选择的学员信息是一个数组，为了保证这个数组正确的与商品对应起来，CHECKED_STUDENT对象的key都是商品的规格id组成
-      selectedStudents = Object.keys(this.CHECKED_STUDENT)
-      students = await this[STUDENTS]()
-      defStudent = students.find(item => item.defaultStatus === 1)
+      const selectedStudents = Object.keys(this.CHECKED_STUDENT)
+      // 获取全部学员列表
+      const students = await this[STUDENTS]()
+      // 找到默认学院
+      const defStudent = students.find(item => item.defaultStatus === 1)
       // 如果有默认学员，则缓存默认学员，并自动显示
       if (defStudent) {
         for (let item of this.needStudentList) {
@@ -819,18 +823,18 @@ export default {
       this.invioceType = this.INVOICE_MODEL ? 1 : 0
       this.lessonErrorId = ''
 
-      // 联系人信息
-      let contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
-      if (contactModel) {
-        this.contactInfoModel.name = contactModel.name || this.userName
-        this.contactInfoModel.mobile = contactModel.mobile || this.mobile
-      } else {
-        this.contactInfoModel.name = this.realName || this.userName
-        this.contactInfoModel.mobile = this.mobile
+      // 初始化联系人信息
+      const contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
+      this.contactInfoModel = contactModel ? {
+        name: contactModel.name || userName,
+        mobile: contactModel.mobile || mobile
+      } : {
+        name: realName || userName,
+        mobile: mobile
       }
       // 还原之前选择的优惠券信息 + 还原之前选择的红包信息
-      let coupon = JSON.parse(sessionStorage.getItem('COUPON_INFO')) || null
-      let scholarship = JSON.parse(sessionStorage.getItem('SCHOLARSHIP_INFO')) || null
+      const coupon = JSON.parse(sessionStorage.getItem('COUPON_INFO')) || null
+      const scholarship = JSON.parse(sessionStorage.getItem('SCHOLARSHIP_INFO')) || null
       if (coupon) await this.couponClick(coupon.detail, coupon.isNotUse)
       if (scholarship) await this.redEnvelopeClick(scholarship.detail, scholarship.isNotUse)
     } catch (e) {

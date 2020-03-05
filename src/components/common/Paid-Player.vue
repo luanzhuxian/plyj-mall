@@ -232,8 +232,7 @@ export default {
       transform: rotate(90deg);
     }
     &.auto-height {
-      width: 100% !important;
-      height: 100% !important;
+      height: 100vh !important;
     }
   }
 }
