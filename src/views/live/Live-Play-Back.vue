@@ -234,25 +234,26 @@ export default {
   .pay-box {
     width: 540px;
     box-sizing: border-box;
-    margin: 280px auto 0;
-    padding-top: 22px;
-    background-color: #fff;
+    margin: 30vh auto 0;
+    border-radius: 10px;
+    overflow: hidden;
     text-align: center;
+    background-color: #fff;
     .title{
-      padding-bottom: 22px;
+      padding: 40px 0 12px 0;
       font-size:34px;
       font-weight:bold;
       color:#000;
     }
     .message{
-      padding: 0 24px 22px;
+      padding: 0 24px 40px;
       font-size:28px;
       line-height:36px;
       color:#999;
     }
     > .buttons {
-      border-top: 2px solid #D3D1D2;
       display: flex;
+      border-top: 2px solid #D3D1D2;
       > button {
         flex: 1;
         font-size:34px;

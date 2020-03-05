@@ -74,9 +74,9 @@ export default {
       margin-bottom: 0;
     }
     > .img {
+      position: relative;
       width: 280px;
       height: 186px;
-      position: relative;
       border-radius: 20px;
       overflow: hidden;
       > img {
