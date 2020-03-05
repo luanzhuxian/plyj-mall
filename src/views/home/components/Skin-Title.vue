@@ -41,12 +41,12 @@
     >
       <div :class="$style.title" v-text="data" />
     </div>
+    <div :class="$style.titleBg" v-if="skinId === 6">
+      <div :class="$style.title" v-text="data" />
+    </div>
     <div :class="$style.titleBg" v-if="skinId === 99">
       <div :class="$style.title" v-text="data" />
     </div>
-    <!-- <div :class="$style.titleBg" v-if="skinId === 99">
-      <div :class="$style.title" v-text="data" />
-    </div> -->
   </div>
 </template>
 <script>
