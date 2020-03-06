@@ -64,6 +64,7 @@ export default [
   {
     path: '/lived/play-back/:id/:activityId',
     name: 'LivePlayBack',
+    props: true,
     component: () => import('../views/live/Live-Play-Back.vue'),
     meta: {
       title: '直播回放'

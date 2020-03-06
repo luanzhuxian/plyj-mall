@@ -1,7 +1,13 @@
 <template>
   <div :class="$style.livePlayBack">
     <div :class="$style.videoBox">
-      <video preload controls x5-video-player-type="h5-page" width="100%" :src="videoMes.url" />
+      <PaidPlayer
+        :size="videoMes.fileSize"
+        :src="videoMes.url"
+        :video-id="id"
+        :resource-id="activityId"
+        :resource-name="activityName"
+      />
       <div>商品</div>
     </div>
     <div :class="$style.productList" v-if="productList.length">
@@ -51,23 +57,34 @@
 import { getActiveCompleteInfo, getVideoMesById, pay, cancelOrder } from '../../apis/live.js'
 import { hasPied } from './../../apis/live-library'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
+import PaidPlayer from '../../components/common/Paid-Player.vue'
 export default {
   name: 'LivePlayBack',
+  components: {
+    PaidPlayer
+  },
   data () {
     return {
-      id: '',
-      activityId: '',
+      activityName: '',
       needPay: false,
       payCount: 0, // 价格
       productList: [], // 商品列表
       videoMes: {}
     }
   },
+  props: {
+    activityId: {
+      type: String,
+      default: ''
+    },
+    id: {
+      type: String,
+      default: ''
+    }
+  },
   async activated () {
     try {
       this.needPay = false
-      this.id = this.$route.params.id // 视频id
-      this.activityId = this.$route.params.activityId // 活动id
       this.needPay = await this.isNeedPay()
       if (!this.needPay) {
         this.getVideoMes()
@@ -79,8 +96,9 @@ export default {
     async isNeedPay () {
       try {
       // needPay 是否需要付费 1需要  0不需要
-        let { result: { needPay, needPaidAmount, paidAmount } } = await hasPied(this.activityId)
+        let { result: { needPay, needPaidAmount, paidAmount, activityName } } = await hasPied(this.activityId)
         this.payCount = needPaidAmount / 100 // 单位分转为元
+        this.activityName = activityName
         return needPay === 1 && paidAmount === 0
       } catch (e) { throw e }
     },
