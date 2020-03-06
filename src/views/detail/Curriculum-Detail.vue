@@ -73,7 +73,7 @@
         </a>
         <button
           v-if="!detail.isBuy"
-          :disabled="detail.status == 2"
+          :disabled="detail.status === 2 || loading"
           :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung"
           @click="goSubmit"
         >
@@ -81,6 +81,7 @@
         </button>
         <button
           v-else
+          :disabled="loading"
           :class="$style.button + ' ' + $style.hasStudied"
           @click="$router.push({ name: 'CourseWatch', params: { id: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress, courseId: productId } })"
         >
@@ -198,6 +199,7 @@ export default {
           this.$router.go(-1)
           return
         }
+        this.loading = false
         const {
           courseImg
         } = result
@@ -223,8 +225,6 @@ export default {
         return result
       } catch (e) {
         throw e
-      } finally {
-        this.loading = false
       }
     },
     goSubmit () {
