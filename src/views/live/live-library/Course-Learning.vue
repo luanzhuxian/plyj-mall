@@ -44,12 +44,12 @@ export default {
   },
   async created () {
     try {
-      const palearnStatus = this.$route.params.learnStatus
-      if (palearnStatus) {
+      const learnStatus = this.$route.params.learnStatus
+      if (learnStatus) {
         this.list = []
         this.loading = false
         this.form.current = 1
-        this.form.learnStatus = Number(palearnStatus)
+        this.form.learnStatus = Number(learnStatus)
         await this.$nextTick()
         await this.$refs.loadMore.refresh()
       }
@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     learnTxt () {
-      return `暂无${this.learnStatus[this.$route.params.learnStatus - 1]}的课程`
+      return `暂无${this.learnStatus[(this.$route.params.learnStatus - 1) || 1]}的课程`
     }
   }
 }
