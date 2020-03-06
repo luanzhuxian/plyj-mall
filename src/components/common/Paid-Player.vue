@@ -228,11 +228,9 @@ export default {
   > video {
     height: 422px;
     background-color: #000;
-    &:fullscreen {
-      transform: rotate(90deg);
-    }
     &.auto-height {
-      height: 100vh !important;
+      width: 100vw;
+      height: auto;
     }
   }
 }
