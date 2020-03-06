@@ -54,7 +54,7 @@
         :key="1"
       />
     </router-link>
-    <!-- 活动 -->
+    <!-- 中间的活动button -->
     <router-link
       v-if="isActivityAuth"
       :class="$style.route"
@@ -62,12 +62,12 @@
       :to="{ name: 'Activity' }"
     >
       <img
-        v-if="~[5, 6, 7].indexOf(activityId)"
+        v-if="isD12Show"
         :class="$style.iconD12"
         src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png"
       >
       <img
-        v-if="activityId === 8"
+        v-if="isXinChunShow"
         :class="$style.iconXinchun"
         src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/87033906-c3d9-412f-b504-e9f777f334d4.png"
       >
@@ -223,7 +223,13 @@ export default {
       return this.$route.matched.some(val => val.name === 'My')
     },
     isSkinShow () {
-      return ~[1, 2, 3, 4, 5, 99].indexOf(this.skinId)
+      return ~[1, 2, 3, 4, 5, 6, 99].indexOf(this.skinId)
+    },
+    isD12Show () {
+      return ~[5, 6, 7].indexOf(this.activityId)
+    },
+    isXinChunShow () {
+      return this.activityId === 8
     }
   },
   watch: {

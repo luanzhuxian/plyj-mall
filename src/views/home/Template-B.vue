@@ -81,7 +81,7 @@ import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
-import SkinTitle from './components/Skin-Title.vue'
+import SkinTitle from './skin/Skin-Title.vue'
 import Campaign from './components/Campaign'
 
 export default {
