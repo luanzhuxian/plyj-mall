@@ -85,7 +85,7 @@ export default {
             const { result } = await checkRateOfFlow()
             if (!result) {
               this.$alert({
-                message: '流量已经耗尽',
+                message: '课程暂时无法观看',
                 viceMessage: '请联系机构管理人员'
               }).finally(() => {
                 this.$router.go(-1)
@@ -134,20 +134,20 @@ export default {
     videoProgress (e) {
       const video = e.target
       const timeRanges = video.buffered
-      console.log(timeRanges.length)
       if (!timeRanges.length) return
       let loadedTime = 0
       for (let i = 0; i < timeRanges.length; i++) {
-        loadedTime += timeRanges.end(i) - timeRanges.start(i)
+        const duration = timeRanges.end(i) - timeRanges.start(i)
+        loadedTime += duration
       }
       this.timeFragment.push(loadedTime - this.lastLoadedTime || 0)
-      console.log(this.timeFragment.length)
+      console.log(loadedTime, timeRanges.length, this.timeFragment.length)
       // console.log(loadedTime, this.lastLoadedTime, this.timeFragment.reduce((a, b) => a + b))
       if (this.timeFragment.length) {
         let total = this.timeFragment.reduce((a, b) => a + b)
         // 加载的时间片段长度超过6秒就发一次请求，着并不意味着请求频率是1次/6秒
         // 如果这次加载的量大于10%，有可能是从缓存中加载的，就不要计费了
-        console.log(total)
+        console.log(total, 149)
         if (total > 6) {
           this.sendFlow(total)
         }
