@@ -16,7 +16,7 @@
         <div :class="$style.counter">
           {{ `疫情爆发的第${days}天` }}
         </div>
-        <img src="https://mallcdn.youpenglai.com/static/beat-plague/0c266184-33b9-42ae-ad56-328353cb8d13.jpeg" alt="">
+        <img src="https://mallcdn.youpenglai.com/static/beat-plague/report.png" alt="">
       </router-link>
       <router-link
         v-if="isBookShow"
@@ -24,7 +24,7 @@
         tag="li"
         :to="{ name: 'EpidemicSignIn', params: { id: bookId } }"
       >
-        <img src="https://mallcdn.youpenglai.com/static/beat-plague/7b1cde88-0078-41c3-ae4b-a20054fa0402.jpeg" alt="">
+        <img src="https://mallcdn.youpenglai.com/static/beat-plague/join.png" alt="">
       </router-link>
     </ul>
   </div>
@@ -109,7 +109,7 @@ export default {
         right: 0;
         padding: 0 18px;
         height: 50px;
-        background: #DC0E1D;
+        background: #F76025;
         border-radius: 0px 20px 0px 20px;
         font-size: 30px;
         font-family: Hiragino Sans GB;
