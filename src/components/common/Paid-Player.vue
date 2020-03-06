@@ -29,8 +29,8 @@
 
 <script>
 import {
-  setLivePaidData,
-  checkRateOfFlow
+  setLivePaidData
+  // checkRateOfFlow
 } from '../../apis/live-library'
 export default {
   name: 'PaidPlayer',
@@ -140,13 +140,13 @@ export default {
         const duration = timeRanges.end(i) - timeRanges.start(i)
         loadedTime += duration
       }
-      this.timeFragment.push(loadedTime - this.lastLoadedTime || 0)
-      console.log(loadedTime, timeRanges.length, this.timeFragment.length)
+      this.timeFragment.push(Math.abs(loadedTime - this.lastLoadedTime) || 0)
+      // console.log(loadedTime, timeRanges.length, this.timeFragment.length)
       // console.log(loadedTime, this.lastLoadedTime, this.timeFragment.reduce((a, b) => a + b))
       if (this.timeFragment.length) {
         let total = this.timeFragment.reduce((a, b) => a + b)
         // 加载的时间片段长度超过6秒就发一次请求，着并不意味着请求频率是1次/6秒
-        console.log(total, 149)
+        // console.log(total, 149)
         if (total > 6) {
           this.sendFlow(total)
         }
