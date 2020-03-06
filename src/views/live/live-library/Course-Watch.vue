@@ -48,7 +48,7 @@ export default {
       return this.$route.query.liveId
     },
     orderId () {
-      return this.$route.query.orderId
+      return this.$route.query.orderId || 1
     },
     progress () {
       return Number(this.$route.query.progress) || 0
@@ -113,7 +113,7 @@ export default {
           progress = progress > 100 ? 100 : progress
           // 用于已购买的课程列表显示
           if (progress > 0) {
-            await setCourseProgress(this.orderId || 1, progress)
+            await setCourseProgress(this.orderId, progress)
           }
         } catch (e) {
           this.error(e)
@@ -145,7 +145,7 @@ export default {
     async updateProgressOnce () {
       try {
         // 用于已购买的课程列表显示
-        await setCourseProgress(this.orderId || 1, 1)
+        await setCourseProgress(this.orderId, 1)
       } catch (e) { throw e }
     },
     // 统计观看次数，只有第一次播放时统计
@@ -161,7 +161,7 @@ export default {
           const video = e.target
           this.duration = video.duration
           const playTime = this.progress === 100 ? 0 : ((this.progress / 100) * this.duration)
-          this.setStudyTime = this.returnStudyTime(playTime || 0)
+          this.setStudyTime = this.returnSetStudyTime(playTime || 0)
           if (this.progress < 100) {
             this.currentTime = playTime
             // 更新观看进度
@@ -181,13 +181,24 @@ export default {
           window.clearTimeout(this.setStudyTimer)
           let videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
           // 依此用于已购买的课程列表显示,课程详情页面的显示
-          await Promise.all([setCourseProgress(this.orderId || 1, 100), this.setStudyTime(Number.parseInt(videoTime))])
+          await Promise.all([setCourseProgress(this.orderId, 100), this.setStudyTime(Number.parseInt(videoTime))])
         }
       } catch (e) { throw e }
     },
-    // 发送观看时长
-    returnStudyTime (preTime) {
-      let updateStydyTime = async (currentTime) => {
+    // 设置更新进度
+    returnSetProgress (preProgress) {
+      let setProgress = async (currentProgress) => {
+        try {
+          if (currentProgress > preProgress) {
+            await setCourseProgress(this.orderId, currentProgress)
+          }
+        } catch (e) { throw e }
+      }
+      return setProgress
+    },
+    // 设置观看时长
+    returnSetStudyTime (preTime) {
+      let setStydyTime = async (currentTime) => {
         try {
           if (currentTime > preTime) {
             let duration = Number.parseInt(currentTime - preTime) || 0
@@ -196,7 +207,7 @@ export default {
           preTime = currentTime
         } catch (e) { throw e }
       }
-      return updateStydyTime
+      return setStydyTime
     },
     error (e) {
       if (e.name === 'ResponseError') {
