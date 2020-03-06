@@ -38,6 +38,7 @@ export default {
 <style module lang='scss'>
 
     .live-library {
+      box-sizing: border-box;
       padding-top: 220px;
       min-height: 100vh;
       background-color: #FFFFFF;
