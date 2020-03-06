@@ -44,6 +44,7 @@ export default {
 </script>
 <style lang="scss" module>
   .online-classroom {
+    min-height: calc(100vh - 92px - 120px);
     padding-top: 92px;
     padding-bottom: 120px;
     background-color: #FFF;

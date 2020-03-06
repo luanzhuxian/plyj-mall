@@ -332,7 +332,6 @@ export default {
     width: 340px;
     font-size: 22px;
     color: #666;
-    width: 340px;
     @include elps();
   }
 </style>
