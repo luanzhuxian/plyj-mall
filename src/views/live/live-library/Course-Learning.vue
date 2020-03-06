@@ -34,9 +34,9 @@ export default {
     return {
       list: [],
       loading: false,
-      learnStatus: ['未学习', '学习中', '已学完'],
+      learnStatus: ['未学习', '学习中', '已过期'],
       form: {
-        learnStatus: 1, // 1：未学习  2：学习中  3：已学完
+        learnStatus: 1, // 1：未学习  2：学习中  3：已过期
         current: 1,
         size: 10
       }

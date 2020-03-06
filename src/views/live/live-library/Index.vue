@@ -13,10 +13,11 @@
     <div v-if="$route.name !== 'MyLive'" :class="$style.studyTabs">
       <div :class="{[$style.focus]:$route.params.learnStatus === '1'}" @click="$router.push({name:'CourseLearning',params:{learnStatus:'1'}})">未学习</div>
       <div :class="{[$style.focus]:$route.params.learnStatus === '2'}" @click="$router.push({name:'CourseLearning',params:{learnStatus:'2'}})">学习中</div>
-      <div :class="{[$style.focus]:$route.params.learnStatus === '3'}" @click="$router.push({name:'CourseLearning',params:{learnStatus:'3'}})">已学完</div>
+      <div :class="{[$style.focus]:$route.params.learnStatus === '3'}" @click="$router.push({name:'CourseLearning',params:{learnStatus:'3'}})">已过期</div>
     </div>
     <div :class="$style.description">
-      <span v-if="$route.name !== 'MyLive'">仅支持观看已成功购买的线上视频课程</span>
+      <span v-if="$route.params.learnStatus === '3'">已过期课程不支持观看</span>
+      <span v-else-if="$route.name !== 'MyLive' && $route.params.learnStatus !== '3'">仅支持观看已成功购买的线上视频课程</span>
     </div>
     <keep-alive>
       <router-view />
