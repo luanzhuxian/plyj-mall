@@ -1,17 +1,30 @@
 <template>
   <div :class="$style.liveRoom" ref="liveRoom">
     <!--在线直播-->
-    <div
-      v-if="detail.liveType === 'live'"
-      ref="playerBox"
-      id="player"
-      :class="{
-        [$style.playerBox]: true
-      }"
-    />
+    <div :class="$style.livePlayer">
+      <div
+        v-if="detail.liveType === 'live'"
+        ref="playerBox"
+        id="player"
+        :class="{
+          [$style.playerBox]: true
+        }"
+      />
+      <div :class="$style.playerMask">
+        <img src="https://mallcdn.youpenglai.com/static/mall/2.5.0/live/1.png" alt="">
+        <div :class="$style.timer">
+          <span>直播暂未开始</span>
+        </div>
+      </div>
+    </div>
     <!--视频直播-->
     <div v-if="detail.liveType === 'video'" :class="$style.playBackBox">
-      <div class="plv-live-cutOff" v-if="recorded.ended" />
+      <div :class="$style.playerMask" v-if="recorded.ended">
+        <img src="https://mallcdn.youpenglai.com/static/mall/2.5.0/live/1.png" alt="">
+        <div :class="$style.timer">
+          <span>直播暂未开始</span>
+        </div>
+      </div>
       <PaidPlayer
         v-else
         :src="recorded.url"
@@ -228,6 +241,10 @@
         </div>
       </div>
     </transition>
+
+    <!-- 直播口令 -->
+    <LivePassword ref="livePassword" />
+
   </div>
 </template>
 
@@ -236,6 +253,7 @@ import { mapGetters } from 'vuex'
 import CouponItem from '../../components/item/Coupon-Item.vue'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
 import share from '../../assets/js/wechat/wechat-share'
+import LivePassword from './components/Live-Password' // 直播口令输入
 import {
   getRoomStatus,
   getActiveCompleteInfo,
@@ -264,6 +282,7 @@ export default {
   name: 'LiveRoom',
   components: {
     // VueSlider,
+    LivePassword,
     CouponItem,
     PaidPlayer
   },
@@ -845,7 +864,33 @@ export default {
 <style module lang="scss">
   .live-room {
     height: 100vh;
+    > .live-player {
+      position: relative;
+      > .player-mask {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        > img {
+          width: 101%;
+          height: 80%;
+          vertical-align: top;
+        }
+        > .timer {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 20%;
+          font-size: 36px;
+          font-weight: 600;
+          color: #FFFFFF;
+          background: url('https://mallcdn.youpenglai.com/static/mall/2.5.0/live/组 919@2x.png') top/100% no-repeat;
+        }
+      }
+    }
     > .play-back-box {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1243,6 +1288,9 @@ export default {
 <style lang="scss">
   .plv-live-player-bar {
     height: 80px!important;
+  }
+  .plv-live-cut-off {
+    background: url('https://mallcdn.youpenglai.com/static/mall/2.5.0/live/1.png') top/100% no-repeat;
   }
   .plv_controls {
     height: max-content !important;
