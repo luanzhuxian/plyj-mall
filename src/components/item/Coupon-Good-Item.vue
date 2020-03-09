@@ -142,7 +142,7 @@ export default {
     }),
     async handleClick () { // 商品详情
       this.$router.push({
-        name: 'Lesson',
+        name: 'Product',
         params: { productId: this.id }
       })
     },

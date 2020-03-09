@@ -14,7 +14,8 @@
     <div :class="$style.container">
       <search :class="$style.search" placeholder="搜索商品" />
       <propagate :class="$style.propagate" :data="PIN_XUAN" />
-      <live :class="$style.live" v-if="isLiveShow" />
+      <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
+      <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
       <campaign v-if="isCampaignShow" />
       <activity :class="$style.activity" v-if="isNwEventShow" />
       <d12-activity :class="$style.activity" />
@@ -69,6 +70,7 @@
 <script>
 import Search from './components/Search.vue'
 import Live from '../activity/components/Live.vue'
+import OnlineCourse from './components/Online-Course.vue'
 import Activity from '../activity/xin-chun/Activity.vue'
 import D12Activity from './components/Activity.vue'
 import HotItem from './components/Hot-Item.vue'
@@ -86,6 +88,7 @@ export default {
   components: {
     Search,
     Live,
+    OnlineCourse,
     Activity,
     D12Activity,
     HotItem,
@@ -137,8 +140,12 @@ export default {
       return this.data.RECOMMEND || {}
     },
     isLiveShow () {
-      return this.parent.liveInfo &&
-      (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
+      const { liveInfo } = this.parent
+      return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+    },
+    isCourseShow () {
+      const { courseInfo } = this.parent
+      return courseInfo && courseInfo.records && courseInfo.records.length
     },
     isNwEventShow () {
       return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
@@ -151,7 +158,7 @@ export default {
 </script>
 
 <style module lang="scss">
-  @import "./skin.scss";
+  @import "./skin/skin.scss";
 
   .home-template-c {
     background-color: #EDEDED;
@@ -208,17 +215,21 @@ export default {
   .teachers,
   .best,
   .recommend {
-    padding: 0 24px;
+    padding: 0 20px;
   }
 
   .live,
+  .course {
+    margin-top: 20px;
+  }
+
   .activity,
   .appointment {
-    padding: 24px 24px 0;
+    padding: 24px 20px 0;
   }
 
   .propagate {
-    padding: 10px 24px 0;
+    padding: 10px 20px 0;
   }
 
   .footer {

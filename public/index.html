@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh" manifest="NOTEXIST.manifest">
   <head>
     <script>
       (function () {
@@ -23,13 +23,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name=”x5-orientation” content=”portrait”>
     <meta name=”x5-fullscreen” content=”true”>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
     <title></title>
     <link rel="icon" href="<%= BASE_URL %>favicon.png">
     <link rel="stylesheet" href="https://mallcdn.youpenglai.com/cdn/vue-awesome-swiper/swiper.min.css">
-    <script src="https://mallcdn.youpenglai.com/pl-icons/bbfff940-44ac-11ea-8496-238043f1aa7e.js"></script>
+    <script src="https://mallcdn.youpenglai.com/pl-icons/5285c180-61d4-11ea-8197-d93587ca4162.js"></script>
   </head>
   <body>
     <noscript>
@@ -57,5 +54,14 @@
     <script src="https://mallcdn.youpenglai.com/cdn/vue-clipboard/vue-clipboard_v0.3.1.min.js"></script>
     <script src="https://mallcdn.youpenglai.com/cdn/vue-lazyload/1.3.3/vue-lazyload.js"></script>
     <script src="https://mallcdn.youpenglai.com/cdn/echarts/echarts_v4.5.0.min.js"></script>
+    <script>
+      /* 监听锁屏，记录锁屏时间 */
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          // 如果页面重新处于可见状态，就刷新
+          location.reload()
+        }
+      })
+    </script>
   </body>
 </html>

@@ -22,7 +22,7 @@ export const getCouponList = () => axios.get('/apis/v1/coupon/normal/list')
  * 获取当前用户的可买数量
  * @param productId {string}
  * @param activityproduct {string}
- * @return {Promise<Number>}
+ * @return {Promise<AxiosResponse<T>>}
  */
 export const getCurrentLimit = (productId, activityproduct = 1) => axios.get(`/apis/v1/product/purchaseLimitNumber/${productId}?activityproduct=${activityproduct}`)
 /**
@@ -32,3 +32,16 @@ export const getCurrentLimit = (productId, activityproduct = 1) => axios.get(`/a
  * @return {*}
  */
 export const getSpringCombination = params => axios.get(`/apis/v1/combination/home/page`, { params })
+/**
+ * 获取课程详情
+ * @param mallCourseId {string} 课程id
+ * @returns {Promise<AxiosResponse<Object>>}
+ */
+export const getCourseDetail = mallCourseId => axios.get(`/apis/v1/mall/cource/courseInfo/${mallCourseId}`)
+
+/**
+ * 提交订单（获取订单号）
+ * @param data {Object}
+ * @return {*}
+ */
+export const submitOrderAndPay = (courseId, params) => axios.post(`/apis/v1/mall/live/order/create/course/order/${courseId}`, params)

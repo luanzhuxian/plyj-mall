@@ -42,6 +42,14 @@
       tag="div"
       :to="{ name: 'Classify' }"
     >
+      <!--云课堂-->
+      <!--<router-link
+      :class="{
+        [$style.route]: true,
+        [$style.active]: classifyActive
+      }"
+      tag="div"
+      :to="{ name: 'OnlineClassroom' }"-->
       <template v-if="isSkinShow">
         <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
         <div :class="$style.tabName">分类</div>
@@ -129,9 +137,9 @@ export default {
     return {
       showNavbar: [
         'Home',
-        'My',
-        'ShoppingCart',
         'Classify',
+        'ShoppingCart',
+        'My',
         'WhatsHelper'
       ],
       skinMap: {

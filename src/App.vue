@@ -13,12 +13,13 @@
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN, GET_ACTIVITY_DATA, GET_SKIN_ID, SET_LIVE_INFO, SET_COUPON_INFO, SET_INVITING_EVENT, SET_JX_EVENT, SET_NW_EVENT } from './store/mutation-type'
+import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN, GET_ACTIVITY_DATA, GET_SKIN_ID, SET_LIVE_INFO, SET_COURSE_INFO, SET_COUPON_INFO, SET_INVITING_EVENT, SET_JX_EVENT, SET_NW_EVENT } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
 import { isIOS } from './assets/js/util'
 import Cookie from './assets/js/storage-cookie'
 import qs from 'qs'
 import { getLiveInfo, getJianxueInfo, getNianweiInfo, getMyCouponInfo } from './apis/home'
+import { getCourseInfo } from './apis/online-classroom'
 import { getCurrentActivity } from './apis/invitenewcomers'
 
 export default {
@@ -43,7 +44,9 @@ export default {
         'WhatsHelper',
         'Activity',
         'InviteNewcomers',
-        'SpringPloughing'
+        'SpringPloughing',
+        'OnlineClassroom',
+        'InteractiveLive'
       ],
       // 允许分享和复制链接的页面 (除了这个和自定义分享，其他页面隐藏分享和复制链接)
       shareRoutes: [
@@ -59,7 +62,8 @@ export default {
       ],
       // 需要自定义分享的页面（分享配置在页面组件内实现）
       customShare: [
-        'Lesson',
+        'Product',
+        'Curriculum',
         'LiveRoom',
         'InviteNewcomers',
         'Newcomers'
@@ -127,6 +131,7 @@ export default {
     ...mapMutations({
       setTheme: SET_THEME,
       setLiveInfo: SET_LIVE_INFO,
+      setCourseInfo: SET_COURSE_INFO,
       setCouponInfo: SET_COUPON_INFO,
       setInvitingEvent: SET_INVITING_EVENT,
       setJxEvent: SET_JX_EVENT,
@@ -156,6 +161,7 @@ export default {
         this.getSkinId()
         this.getActivityData()
         getLiveInfo().then(({ result }) => this.setLiveInfo(result)).catch(e => this.setLiveInfo({}))
+        getCourseInfo().then(({ result }) => this.setCourseInfo(result)).catch(e => this.setCourseInfo({}))
         getCurrentActivity().then(({ result }) => this.setInvitingEvent(result)).catch(e => this.setInvitingEvent({}))
         getJianxueInfo().then(({ result }) => this.setJxEvent(result)).catch(e => this.setJxEvent({}))
         getNianweiInfo().then(({ result }) => this.setNwEvent(result)).catch(e => this.setNwEvent({}))

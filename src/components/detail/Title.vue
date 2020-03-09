@@ -1,6 +1,6 @@
 <template>
   <h2 :class="$style.detailTitle">
-    <div v-if="activeProduct === 3 && preActivity !== 0" :class="$style.secondLabel">{{ activityTag }}</div> {{ productName }}
+    <div v-if="activityTag && activeProduct === 3 && preActivity !== 0" :class="$style.secondLabel">{{ activityTag }}</div> {{ productName }}
   </h2>
 </template>
 

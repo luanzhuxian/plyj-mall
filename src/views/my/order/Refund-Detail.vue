@@ -162,7 +162,7 @@
           :count="refundDetail.productCount"
           :option="refundDetail.skuName2 ? `${refundDetail.skuName},${refundDetail.skuName2}` : refundDetail.skuName"
           :product-id="refundDetail.productId"
-          route-name="Lesson"
+          route-name="Product"
         />
       </div>
       <div :class="$style.infoList">

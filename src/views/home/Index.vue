@@ -110,7 +110,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'liveInfo', 'invitingEvent', 'jxEvent', 'nwEvent']),
+    ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'liveInfo', 'courseInfo', 'invitingEvent', 'jxEvent', 'nwEvent']),
     allLoaded () {
       let result
       if (this.type === 3) {

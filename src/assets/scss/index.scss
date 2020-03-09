@@ -29,8 +29,14 @@
 .ml-10 {
   margin-left: 10px;
 }
+.ml-30 {
+  margin-left: 30px;
+}
 .mr-10 {
   margin-right: 10px;
+}
+.mr-30 {
+  margin-right: 30px;
 }
 .radius-20 {
   border-radius: $--radius1;
@@ -145,7 +151,7 @@
   z-index: 9000!important;
 }
 .rotate {
-  animation: rotate 1s linear infinite;
+  animation: rotate 2s linear infinite;
 }
 @keyframes rotate {
   0% { transform: rotate(0) }

@@ -10,6 +10,7 @@
       <swiperSlide
         v-for="(img, index) of banners"
         :key="index"
+        :class="{ 'swiper-no-swiping': banners.length < 2 }"
       >
         <img
           v-if="img.indexOf('video/') > -1"
@@ -26,7 +27,7 @@
         <pl-svg v-if="img.indexOf('video/') > -1" @click="play(img)" :class="$style.playBtn" name="icon-play" fill="#fff" />
       </swiperSlide>
     </swiper>
-    <div :class="'swiper-pagination ' + $style.pagination" />
+    <div v-show="banners.length > 1" :class="'swiper-pagination ' + $style.pagination" />
     <slot />
     <transition name="fade">
       <div
@@ -137,7 +138,7 @@ export default {
     bottom: 20px;
   }
   .skeleton {
-    height: 750px;
+    height: 502px;
     @include skeAnimation(#eee)
   }
   .play-btn {

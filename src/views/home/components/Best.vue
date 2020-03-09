@@ -19,7 +19,6 @@
             <div :class="$style.bottom">
               <div :class="$style.priceBox">
                 <div :class="$style.price">
-                  <span>¥</span>
                   <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
                 </div>
                 <span :class="$style.howManyBuy" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
@@ -81,7 +80,7 @@ export default {
       return Math.max(...priceList)
     },
     clickHandler (item) {
-      this.$router.push({ name: 'Lesson', params: { productId: item.value } })
+      this.$router.push({ name: 'Product', params: { productId: item.value } })
     }
   }
 }
@@ -161,8 +160,11 @@ export default {
       font-size: 32px;
       font-weight: bold;
       color: #fe7700;
-      span:nth-of-type(1) {
+      &:before {
+        content: '¥';
+        margin-right: 3px;
         font-size: 20px;
+        vertical-align: 3px;
       }
     }
     .how-many-buy {

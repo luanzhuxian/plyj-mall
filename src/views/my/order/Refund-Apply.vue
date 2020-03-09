@@ -11,7 +11,7 @@
         :option="productInfo.skuCode2Name ? `${productInfo.skuCode1Name},${productInfo.skuCode2Name}` : productInfo.skuCode1Name"
         :product-id="productInfo.productId"
         hide-price
-        route-name="Lesson"
+        route-name="Product"
       />
     </section>
 

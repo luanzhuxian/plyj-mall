@@ -7,7 +7,7 @@
   >
     <div :class="$style.cover">
       <span :class="$style.status" v-if="isNoticeShow">距开始</span>
-      <span :class="$style.status" v-if="live.statue === 4">正在直播中</span>
+      <span :class="$style.status" v-if="live.statue === 4">正在直播</span>
       <span :class="$style.status" v-if="live.statue === 0">已结束</span>
       <count-down
         v-if="isNoticeShow"
@@ -41,7 +41,6 @@ import CountDown from '../components/Count-Down.vue'
 
 export default {
   name: 'Live',
-  inject: ['parent'],
   components: {
     CountDown
   },
@@ -58,7 +57,7 @@ export default {
   },
   computed: {
     live () {
-      return this.parent.liveInfo || {}
+      return this.data.liveModel || {}
     },
     isNoticeShow () {
       return this.live.statue === 2 && this.live.hasNotice

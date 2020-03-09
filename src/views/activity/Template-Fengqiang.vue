@@ -1,10 +1,7 @@
 <template>
   <div :class="$style.templateFengqiang">
     <!-- 直播-->
-    <live
-      v-if="parent.liveInfo && (parent.liveInfo.statue === 4 || (parent.liveInfo.statue === 2 && parent.liveInfo.hasNotice))"
-      :class="$style.live"
-    />
+    <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
     <!-- 活动 -->
     <div :class="$style.moduleActivity" v-if="hasInvitingEvent || hasJxEvent">
       <router-link
@@ -137,6 +134,10 @@ export default {
     },
     hasJxEvent () {
       return ~[1, 2].indexOf(this.jxEvent.status)
+    },
+    isLiveShow () {
+      const { liveInfo } = this.parent
+      return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
     }
   }
 }
@@ -144,7 +145,7 @@ export default {
 
 <style module lang="scss">
   .live {
-    margin: 0 24px 16px;
+    margin: 0 0 16px;
   }
   // 活动
   .module-activity {

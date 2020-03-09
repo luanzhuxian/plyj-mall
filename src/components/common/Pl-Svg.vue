@@ -126,8 +126,10 @@ export default {
         const colors = clonedSvg.querySelectorAll('[color]')
         clonedSvg.setAttribute('id', this.tempName)
         clonedSvg.setAttribute('fill', fill)
-        for (const fill of fills) {
-          fill.setAttribute('fill', fill)
+        for (const fillEle of fills) {
+          if (fillEle.getAttribute('fill') !== 'none') {
+            fillEle.setAttribute('fill', fill)
+          }
         }
         for (const color of colors) {
           color.setAttribute('color', fill)

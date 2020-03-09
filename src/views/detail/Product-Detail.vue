@@ -306,7 +306,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import DetailBanner from '../../components/detail/Banner.vue'
 import DetailInfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
@@ -339,7 +338,7 @@ import SecondPrice from './second/Second-Price'
 import BookingPrice from './booking/Booking-Price'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
-  name: 'Lesson',
+  name: 'Product',
   components: {
     TogetherPrice,
     SecondPrice,
@@ -375,7 +374,7 @@ export default {
       productSkuModels: [],
       showSpecifica: false,
       currentModel: {}, // 当前选中的规格
-      activityProductModel:{},//活动信息
+      activityProductModel: {}, // 活动信息
       commentForm: {
         current: 1,
         size: 3,
@@ -407,10 +406,10 @@ export default {
     ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl', 'mchId']),
     // 活动商品的可购买数量
     activeStock () {
-        return this.activityProductModel ? this.activityProductModel.buyCount : 0
+      return this.activityProductModel ? this.activityProductModel.buyCount : 0
     },
     // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入
-    productActive (){
+    productActive () {
       return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
     },
     /**
@@ -488,16 +487,19 @@ export default {
       if (this.detail.productSkuModels) {
         return Math.min(...this.detail.productSkuModels.map(item => item.price))
       }
+      return 0
     },
     maxPrice () {
       if (this.detail.productSkuModels) {
         return Math.max(...this.detail.productSkuModels.map(item => item.price))
       }
+      return 0
     },
     maxOriginalPrice () {
       if (this.detail.productSkuModels) {
         return Math.max(...this.detail.productSkuModels.map(item => item.originalPrice))
       }
+      return 0
     },
     // 是否下架
     isDown () {
@@ -517,7 +519,7 @@ export default {
   },
   async activated () {
     try {
-      await  this.refresh()
+      await this.refresh()
     } catch (e) {
       throw e
     }
@@ -542,7 +544,7 @@ export default {
         this.loading = true
         this.resetState() // 重置一些状态
         // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
-        productActive = productActive ? productActive : this.productActive
+        productActive = productActive || this.productActive
         let { result } = await getProductDetail(this.productId, productActive)
         let { id, agentProduct, mediaInfoIds, productStatus } = result
         if (!result) {
@@ -553,7 +555,7 @@ export default {
         this.productStatus = productStatus
         this.commentForm.productId = id
         this.agentProduct = agentProduct
-        //存储活动信息
+        // 存储活动信息
         this.activityProductModel = result.activityProductModel
         // 所有图片
         this.banners = mediaInfoIds
@@ -563,9 +565,9 @@ export default {
         this.currentModel.count = result.productSkuModels[0].minBuyNum
         let shareUrl = ''
         if (this.userId) {
-          shareUrl = `${this.mallUrl}/detail/lesson/${this.productId}/${this.userId}`
+          shareUrl = `${this.mallUrl}/detail/product/${this.productId}/${this.userId}`
         } else {
-          shareUrl = `${this.mallUrl}/detail/lesson/${this.productId}`
+          shareUrl = `${this.mallUrl}/detail/product/${this.productId}`
         }
         this.shareUrl = shareUrl
         let hide = []

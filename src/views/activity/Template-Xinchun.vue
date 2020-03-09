@@ -14,7 +14,7 @@
         </div>
         <!-- 直播-->
         <div :class="[$style.live, $style.module]" v-if="isLiveShow">
-          <live />
+          <live :data="parent.liveInfo" />
         </div>
         <!-- 活动-->
         <activity
@@ -123,8 +123,8 @@ export default {
       return this.data.FENG_QIANG || {}
     },
     isLiveShow () {
-      return this.parent.liveInfo &&
-      (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
+      const { liveInfo } = this.parent
+      return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
     },
     isNwEventShow () {
       return this.parent.nwEvent && this.parent.nwEvent.permissionStatus

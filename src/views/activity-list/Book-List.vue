@@ -127,7 +127,7 @@ export default {
       }
     },
     jumpToDetail (id) {
-      this.$router.push({ name: 'Lesson', params: { productId: id }, query: { currentProductStatus: 4 } })
+      this.$router.push({ name: 'Product', params: { productId: id }, query: { currentProductStatus: 4 } })
     },
     getTotalPrice (item) {
       const { productPrice, price, multipleNumber = 1 } = item

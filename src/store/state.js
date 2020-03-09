@@ -44,6 +44,7 @@ export default {
     mallUrl: '',
     sequenceNbr: '',
     servicePhoneModels: [],
+    liveRoomEnable: false, // 是否开通云课堂，开通了房间就算
     mchId: '',
     appSecret: false // 是否是老方法授权的
   },
@@ -103,6 +104,7 @@ export default {
   activityData: {},
   skinId: null, // 皮肤id
   liveInfo: null, // 直播
+  courseInfo: null, // 线上课程
   d12CouponTotal: null, // 已领双十二优惠卷
   xinchunCouponTotal: null, // 已领新春优惠卷
   invitingEvent: null, // 邀新有礼

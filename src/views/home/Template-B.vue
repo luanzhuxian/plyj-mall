@@ -15,7 +15,8 @@
       <search :class="$style.search" placeholder="搜索商品" />
       <banner :class="$style.banner" :data="BANNER" />
       <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
-      <live :class="$style.live" v-if="isLiveShow" />
+      <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
+      <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
       <campaign v-if="isCampaignShow" />
       <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
       <d12-activity :class="$style.activity" v-if="type === 4" />
@@ -72,6 +73,7 @@
 <script>
 import Search from './components/Search.vue'
 import Live from '../activity/components/Live.vue'
+import OnlineCourse from './components/Online-Course.vue'
 import Activity from '../activity/xin-chun/Activity.vue'
 import D12Activity from './components/Activity.vue'
 import Banner from './components/Banner.vue'
@@ -90,6 +92,7 @@ export default {
   components: {
     Search,
     Live,
+    OnlineCourse,
     Activity,
     D12Activity,
     Banner,
@@ -144,9 +147,12 @@ export default {
       return this.data.PIN_XUAN || {}
     },
     isLiveShow () {
-      return this.type === 4 &&
-      this.parent.liveInfo &&
-      (this.parent.liveInfo.statue === 4 || (this.parent.liveInfo.statue === 2 && this.parent.liveInfo.hasNotice))
+      const { liveInfo } = this.parent
+      return this.type === 4 && liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+    },
+    isCourseShow () {
+      const { courseInfo } = this.parent
+      return courseInfo && courseInfo.records && courseInfo.records.length
     },
     isNwEventShow () {
       return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
@@ -159,7 +165,7 @@ export default {
 </script>
 
 <style module lang="scss">
-  @import "./skin.scss";
+  @import "./skin/skin.scss";
 
   .home-template-b {
     background-color: #EDEDED;
@@ -255,8 +261,14 @@ export default {
     color: #999;
     background: #EAE9F7;
   }
-  .adv,
+
   .live,
+  .course {
+    margin-top: 24px;
+  }
+
+  .adv,
+  // .live,
   .activity {
     padding: 20px 24px 0;
     background-color: #F4F5F9;

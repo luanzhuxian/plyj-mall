@@ -65,10 +65,8 @@ export default {
   methods: {
     async dispatchBurse (row) {
       try {
-        let { status } = await dispatchBurse({ id: row.id, activityId: row.activityId })
-        if (status === 200) {
-          row.status = 1
-        }
+        await dispatchBurse({ id: row.id, activityId: row.activityId })
+        row.status = 1
       } catch (e) { throw e }
     }
   }

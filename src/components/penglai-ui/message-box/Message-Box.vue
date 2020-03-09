@@ -32,11 +32,11 @@
               />
             </template>
             <template v-else>
-              <p
+              <pre
                 class="main-message"
                 v-text="message"
               />
-              <p
+              <pre
                 class="vice-message"
                 v-if="viceMessage"
                 v-text="viceMessage"
@@ -218,7 +218,8 @@ export default {
       align-items: center;
       justify-content: center;
       min-height: 100px;
-      padding: 40px 0;
+      max-width: 80vw;
+      padding: 40px 30px;
       color: #2E2E2E;
     }
     .vice-message {
@@ -229,7 +230,6 @@ export default {
       color: #b4b4b4;
     }
     .main-message {
-      width: 100%;
       white-space: pre-wrap;
       word-break: break-all;
       font-size: 32px;

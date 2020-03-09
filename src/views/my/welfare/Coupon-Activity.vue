@@ -114,7 +114,7 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next(vm => { //  这里的vm指的就是vue实例，可以用来当做this使用
-      vm.isReload = from.name !== 'Lesson'
+      vm.isReload = from.name !== 'Product'
       vm.initialize()
     })
   },
