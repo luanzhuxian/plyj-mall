@@ -323,6 +323,7 @@ export default {
       receiveCouponIdList: [], // 已领取的优惠券id列表
       // 录播视频信息
       recorded: {
+        fileSize: 0,
         ended: true
       },
       socket: null,
@@ -447,6 +448,7 @@ export default {
         let recorded = await getVideoMesById(this.detail.videoLibId)
         recorded = recorded || {}
         recorded.ended = true
+        recorded.fileSize = Number(recorded.fileSize) || 0
         this.recorded = recorded // 默认已经结束
       } catch (e) {
         throw e

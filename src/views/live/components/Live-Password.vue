@@ -9,7 +9,7 @@
           </div>
           <div :class="$style.pass">
             <label>密码登录</label>
-            <pl-input :border="true" :maxlength="4" @change="validatePass" v-model="value" placeholder="请输入四位密码" />
+            <pl-input :border="true" type="number" :maxlength="4" @change="validatePass" v-model.number="value" placeholder="请输入4位密码" />
           </div>
           <div :class="{ [$style.description]: true, [$style.error]: error }">
             <span v-if="error">密码错误请重新输入，</span>
@@ -26,8 +26,15 @@
 </template>
 
 <script>
+import { inputLivePassword } from './../../../apis/live'
 export default {
   name: 'LivePassword',
+  props: {
+    activityId: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       show: false,
@@ -53,18 +60,31 @@ export default {
       this.show = false
     },
     validatePass () {
-      if (this.value.length !== 4) {
+      let reg = /^\d{4}$/
+      if (!reg.test(this.value)) {
         this.error = true
-        return
+        return false
       }
       this.error = false
+      return true
     },
-    submit () {
-      this.validatePass()
-      if (!this.error) {
-        this.$emit('validatePass', this.value)
-        this.show = false
-      }
+    async submit () {
+      try {
+        let validate = this.validatePass()
+        if (validate) {
+          let result = await inputLivePassword({
+            activityId: this.activityId,
+            roomToken: this.value
+          })
+          if (result) {
+            this.$emit('validatePass', this.value)
+            this.show = false
+            this.error = false
+            return
+          }
+          this.error = true
+        }
+      } catch (e) { throw e }
     }
   }
 }
