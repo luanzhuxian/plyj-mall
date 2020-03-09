@@ -163,7 +163,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['appId', 'userName', 'avatar', 'mobile']),
+    ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl']),
     // 0 全部，1 helper，2 会员，3 部分用户
     targetGroups () {
       return this.detail.targetGroups
