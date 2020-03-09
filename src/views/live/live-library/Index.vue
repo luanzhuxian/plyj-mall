@@ -39,7 +39,7 @@ export default {
 
     .live-library {
       box-sizing: border-box;
-      padding-top: 220px;
+      padding-top: 225px;
       min-height: 100vh;
       background-color: #FFFFFF;
       &.my-live {
