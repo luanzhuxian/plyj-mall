@@ -224,10 +224,11 @@ export default {
     }
     .vice-message {
       margin-top: 22px;
-      padding: 0 46px;
-      line-height: 40px;
       font-size: 28px;
+      line-height: 40px;
       color: #b4b4b4;
+      white-space: pre-wrap;
+      word-break: break-all;
     }
     .main-message {
       white-space: pre-wrap;
