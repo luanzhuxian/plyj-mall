@@ -29,8 +29,8 @@
 
 <script>
 import {
-  setLivePaidData
-  // checkRateOfFlow
+  setLivePaidData,
+  checkRateOfFlow
 } from '../../apis/live-library'
 export default {
   name: 'PaidPlayer',
