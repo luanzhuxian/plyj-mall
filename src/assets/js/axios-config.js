@@ -50,13 +50,14 @@ async function response (response) {
       }
       return Promise.reject(new ResponseError(JSON.stringify(err, null, 4)))
     }
-    // 重新登录
+    // 重新登录, 登录完成后尝试上次发起的请求
     try {
       await store.dispatch(LOGIN)
-      let { method, data, headers, url } = config
+      let { method, data, headers, url, params } = config
       const res = await axios({
         method,
         data,
+        params,
         url,
         headers: {
           openId: headers.openId
