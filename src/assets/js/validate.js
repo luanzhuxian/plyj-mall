@@ -113,63 +113,41 @@ export function isDutyNumber (val) {
 
 // 判断身份证号码是否正确
 export function isIdCard (val) {
-  if (typeof val !== 'string' && typeof val !== 'number') {
+  if (!val || !val.trim()) {
     return false
   }
-  if (typeof val === 'number') {
-    val = '' + val
+  val = val.toString().trim()
+  const reg = /^[1-9]\d{5}[1-9]\d{3}((0[1-9])|(1[0-2]))((0[1-9])|([1-2]\d)|(3[0-1]))((\d{4})|(\d{3}[Xx]))$/
+  // 用于存储结果
+  const result = {}
+  if (reg.test(val)) {
+    let sum = 0
+    let arrID = val.split('')
+    const arrWi = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
+    const arrY = [1, 0, 10, 9, 8, 7, 6, 5, 4, 3, 2]
+    for (let i = 0; i < arrWi.length; i++) {
+      sum += arrID[i] * arrWi[i]
+    };
+    sum %= 11
+    let lastID = arrID[arrID.length - 1]
+    if (lastID === 'X' || lastID === 'x') {
+      lastID = 10
+    };
+    if (arrY[sum] === Number(lastID)) {
+      result['check'] = true
+      result['birthday'] = val.substr(6, 8)
+      result['cityCode'] = val.substr(0, 6)
+      result['gender'] = (val.substr(14, 3) % 2 === 0) ? '女' : '男'
+    } else {
+      result['check'] = false
+      result['error'] = '身份证号码输入错误'
+    }
+  } else {
+    result['check'] = false
+    result['error'] = '身份证号码格式有误'
   }
-
-  let regexCheck = /^\d{15}$/.test(val) ||
-    /^\d{18}$/.test(val) ||
-    /^\d{17}[xX]$/.test(val)
-  if (!regexCheck) {
-    return false
-  }
-
-  if (val.length === 15) {
-    // 6位地区编码，2位年，2位月，2位日，3位序号。
-    // let year = val.substr(6, 2)
-    let month = parseInt(val.substr(8, 2))
-    let day = parseInt(val.substr(10, 2))
-    if (month < 1 || month > 12) {
-      return false
-    }
-    if (day < 1 || day > 31) {
-      return false
-    }
-    return true
-  } else if (val.length === 18) {
-    // 6位地区编码，4位年，2位月，2位日，3位序号，1位校验号。
-    // 年
-    let year = parseInt(val.substr(6, 4))
-    if (year < 1900 || year > new Date().getFullYear()) {
-      return false
-    }
-
-    // 月
-    let month = parseInt(val.substr(10, 2))
-    if (month < 1 || month > 12) {
-      return false
-    }
-
-    // 日
-    let day = parseInt(val.substr(12, 2))
-    if (day < 1 || day > 31) {
-      return false
-    }
-
-    const ratio = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
-    const mark = ['1', '0', 'x', '9', '8', '7', '6', '5', '4', '3', '2']
-    let calculate = 0
-    for (var i = 0; i < val.length - 1; i++) {
-      calculate += parseInt(val[i]) * ratio[i]
-    }
-    let mod = calculate % 11
-    return val[val.length - 1].toLowerCase() === mark[mod]
-  }
-
-  return false
+  console.log(result.check)
+  return result.check
 }
 
 export function _getLength (val) { // 是否考虑把非 string 转换成 string ? 如数字。。。
