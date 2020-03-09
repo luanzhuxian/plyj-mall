@@ -8,6 +8,7 @@ const WX = window.wx
 export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
   let { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
   // clearInterval(timer)
+  willHide = !title ? ['menuItem:share:appMessage', 'menuItem:share:timeline'] : willHide
   return new Promise((resolve, reject) => {
     const config = getConfig(jsApi, appId)
     WX.config(config)
