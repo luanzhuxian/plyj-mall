@@ -10,7 +10,7 @@
         <div>{{ item.category2Name }}</div>
       </div>
       <div :class="$style.learn">
-        <div>主讲人：{{ item.lecturer }}</div>
+        <div v-show="item.lecturer">主讲人：{{ item.lecturer }}</div>
         <div>
           <span>已学习</span><span>{{ item.learnProgress || 0 }}%</span>
         </div>
