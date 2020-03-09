@@ -31,7 +31,7 @@
       <!-- 课程标签 -->
       <Tags :tags="detail.labelModels" />
 
-      <div :class="$style.field">
+      <div :class="$style.field" v-if="detail.lecturer">
         <div :class="$style.left">
           <pl-svg name="icon-teacher-d2398" width="30" />
           主讲人：
