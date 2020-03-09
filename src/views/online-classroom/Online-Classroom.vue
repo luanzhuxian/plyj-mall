@@ -112,6 +112,10 @@ export default {
         await this.getCategoryTree()
       } */
       this.$refresh = this.$refs.loadMore.refresh
+      // 解决因刷新浏览器后，在beforeRouteEnter无法获取到dom信息，导致无法正常调用refresh问题
+      if (!this.courseList.length) {
+        this.$refresh()
+      }
     } catch (e) {
       throw e
     }
