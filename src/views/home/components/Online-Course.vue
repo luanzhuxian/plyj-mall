@@ -25,7 +25,9 @@
       <div :class="$style.info">
         <div :class="$style.top" v-text="course.courseName" />
         <div :class="$style.middle">
-          {{ `主讲人：${course.lecturer}` }}
+          <span v-if="course.lecturer">
+            {{ `主讲人：${course.lecturer}` }}
+          </span>
         </div>
         <div :class="$style.bottom">
           <span
