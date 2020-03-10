@@ -10,21 +10,11 @@
           [$style.playerBox]: true
         }"
       />
-      <div v-if="!liveStart" :class="$style.playerMask">
-        <img src="https://mallcdn.youpenglai.com/static/mall/2.5.0/live/1.png" alt="">
-        <div :class="$style.timer">
-          <span>直播暂未开始</span>
-        </div>
-      </div>
+      <LiveMask :img-src="detail.coverImg" v-if="!liveStart" />
     </div>
     <!--视频直播-->
-    <div v-if="detail.liveType === 'video'" :class="[$style.playBackBox, $style.livePlayer]">
-      <div :class="$style.playerMask" v-if="recorded.ended">
-        <img src="https://mallcdn.youpenglai.com/static/mall/2.5.0/live/1.png" alt="">
-        <div :class="$style.timer">
-          <span>直播暂未开始</span>
-        </div>
-      </div>
+    <div v-if="detail.liveType === 'video'" :class="$style.playBackBox">
+      <LiveMask :img-src="detail.coverImg" v-if="recorded.ended" />
       <PaidPlayer
         v-else
         :src="recorded.url"
@@ -254,6 +244,7 @@ import CouponItem from '../../components/item/Coupon-Item.vue'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import LivePassword from './components/Live-Password' // 直播口令输入
+import LiveMask from './components/Live-Mask'
 import {
   getRoomStatus,
   getActiveCompleteInfo,
@@ -283,6 +274,7 @@ export default {
   name: 'LiveRoom',
   components: {
     // VueSlider,
+    LiveMask,
     LivePassword,
     CouponItem,
     PaidPlayer
@@ -459,7 +451,7 @@ export default {
     // 查询直播是否开始
     async listenLiveStart (stream) {
       window.clearTimeout(this.liveStatusTimer)
-      this.liveStatusTimer = setTimeout(async () => {
+      this.liveStatusTimer = window.setTimeout(async () => {
         try {
           // end 未直播 live 正在直播
           let result = await isLiveStart(stream)
@@ -907,29 +899,6 @@ export default {
     height: 100vh;
     > .live-player {
       position: relative;
-      > .player-mask {
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 10;
-        width: 100%;
-        height: 100%;
-        > img {
-          width: 101%;
-          height: 80%;
-          vertical-align: top;
-        }
-        > .timer {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 20%;
-          font-size: 36px;
-          font-weight: 600;
-          color: #FFFFFF;
-          background: url('https://mallcdn.youpenglai.com/static/mall/2.5.0/live/组 919@2x.png') top/100% no-repeat;
-        }
-      }
     }
     > .play-back-box {
       position: relative;
