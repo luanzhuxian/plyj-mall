@@ -10,7 +10,7 @@
           [$style.playerBox]: true
         }"
       />
-      <div :class="$style.playerMask">
+      <div v-if="!liveStart" :class="$style.playerMask">
         <img src="https://mallcdn.youpenglai.com/static/mall/2.5.0/live/1.png" alt="">
         <div :class="$style.timer">
           <span>直播暂未开始</span>
@@ -18,7 +18,7 @@
       </div>
     </div>
     <!--视频直播-->
-    <div v-if="detail.liveType === 'video'" :class="$style.playBackBox">
+    <div v-if="detail.liveType === 'video'" :class="[$style.playBackBox, $style.livePlayer]">
       <div :class="$style.playerMask" v-if="recorded.ended">
         <img src="https://mallcdn.youpenglai.com/static/mall/2.5.0/live/1.png" alt="">
         <div :class="$style.timer">
@@ -243,7 +243,7 @@
     </transition>
 
     <!-- 直播口令 -->
-    <LivePassword ref="livePassword" />
+    <LivePassword :activity-id="activityId" ref="livePassword" />
 
   </div>
 </template>
@@ -261,7 +261,8 @@ import {
   hasPied,
   cancelOrder,
   setComeInConut,
-  getVideoMesById
+  getVideoMesById,
+  isLiveStart// 查询直播是否开始
   // setWarmup
 } from '../../apis/live'
 import {
@@ -299,6 +300,9 @@ export default {
       message: '',
       livestartedDuration: 0, // 直播开始时长
       maxRecords: 200, // 最大缓存的聊天记录条数
+      liveStart: false, // 直播是否开始
+      liveStatusTimer: null,
+      activityId: '', // 直播活动Id
       /**
        * 聊天信息记录
        * {
@@ -366,6 +370,16 @@ export default {
       this.channelId = roomId
       this.liveAppId = appId
       this.channeUserId = appUserId
+      // 监听直播是否开始
+      if (detail.liveType === 'live') {
+        this.listenLiveStart(detail.stream)
+      }
+      // 是否要输入密码
+      if (detail.needToken && !detail.isInputToken) {
+        this.activityId = detail.id
+        await this.$nextTick()
+        await this.$refs.livePassword.validate()
+      }
       // 是否需要支付
       if (detail.isPay) {
         if (!this.mchId) {
@@ -441,6 +455,30 @@ export default {
       } catch (e) {
         throw e
       }
+    },
+    // 查询直播是否开始
+    async listenLiveStart (stream) {
+      window.clearTimeout(this.liveStatusTimer)
+      this.liveStatusTimer = setTimeout(async () => {
+        try {
+          // end 未直播 live 正在直播
+          let result = await isLiveStart(stream)
+          result = result.trim()
+          if (result === 'live') {
+            window.clearTimeout(this.liveStatusTimer)
+            this.liveStart = true
+          } else {
+            this.liveStart = false
+            this.listenLiveStart(stream)
+          }
+        } catch (e) {
+          if (e.name === 'ResponseError') {
+            this.$error(JSON.parse(e.message).message)
+          } else {
+            this.$error(e.message)
+          }
+        }
+      }, 5e3)
     },
     // 视频直播情况下获取视频信息
     async getVideoMesById () {
@@ -858,7 +896,8 @@ export default {
     }
   },
   beforeDestroy () {
-    clearInterval(this.videoLiveTimer)
+    window.clearInterval(this.videoLiveTimer)
+    window.clearTimeout(this.liveStatusTimer)
   }
 }
 </script>
@@ -872,6 +911,7 @@ export default {
         position: absolute;
         left: 0;
         top: 0;
+        z-index: 10;
         width: 100%;
         height: 100%;
         > img {
@@ -1291,8 +1331,11 @@ export default {
   .plv-live-player-bar {
     height: 80px!important;
   }
-  .plv-live-cut-off {
-    background: url('https://mallcdn.youpenglai.com/static/mall/2.5.0/live/1.png') top/100% no-repeat;
+  .plv-live-cutOff {
+    display: none !important;
+  }
+  .plv-live-cover__btn {
+    // display: none;
   }
   .plv_controls {
     height: max-content !important;
