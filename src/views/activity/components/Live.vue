@@ -51,6 +51,10 @@
             </span>
           </div>
         </div>
+        <div :class="$style.lock" v-if="live.roomToken">
+          <pl-svg name="icon-lock-plain-7b5ab" width="30" />
+          观看需验证口令
+        </div>
       </div>
     </router-link>
   </div>
@@ -199,6 +203,7 @@ export default {
     padding: 14px 14px 14px 24px;
   }
   .top {
+    margin-bottom: 0;
     height: 76px;
     font-size: 28px;
     font-family: Microsoft YaHei;
@@ -247,6 +252,18 @@ export default {
       > span {
         margin-right: 10px;
       }
+    }
+  }
+  .lock {
+    display: flex;
+    align-items: end;
+    margin-top: 14px;
+    padding: 0 18px;
+    font-size: 24px;
+    line-height: 32px;
+    color: #666666;
+    > svg {
+      margin-right: 12px;
     }
   }
   .highlight {
