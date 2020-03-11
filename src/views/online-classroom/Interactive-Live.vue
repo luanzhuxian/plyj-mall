@@ -104,6 +104,7 @@
                   >
                     看回放
                   </pl-button>
+                  <span v-else :class="$style.notSupport">不支持回放</span>
                 </div>
               </div>
             </li>
@@ -298,6 +299,11 @@ export default {
   .text2 {
     font-size: 22px;
     color: #666;
+  }
+  .notSupport {
+    font-size: 22px;
+    color: #666;
+    margin-right: 20px;
   }
   .list {
     display: flex;
