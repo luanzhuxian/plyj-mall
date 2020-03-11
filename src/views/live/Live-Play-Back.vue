@@ -80,6 +80,11 @@ export default {
     id: {
       type: String,
       default: ''
+    },
+    // 是否需要后台校验直播结束时间，我的直播-需要校验 互动直播-无需校验
+    isValidateEndTime: {
+      type: Number,
+      default: 0
     }
   },
   async activated () {
@@ -96,7 +101,7 @@ export default {
     async isNeedPay () {
       try {
       // needPay 是否需要付费 1需要  0不需要
-        let { result: { needPay, needPaidAmount, paidAmount, activityName } } = await hasPied(this.activityId)
+        let { result: { needPay, needPaidAmount, paidAmount, activityName } } = await hasPied(this.activityId, !!this.isValidateEndTime)
         this.payCount = needPaidAmount / 100 // 单位分转为元
         this.activityName = activityName
         return needPay === 1 && paidAmount === 0

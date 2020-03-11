@@ -51,7 +51,8 @@ export default {
         name: 'LivePlayBack',
         params: {
           id: item.id,
-          activityId: item.activityId
+          activityId: item.activityId,
+          isValidateEndTime: 1
         }
       })
     }
