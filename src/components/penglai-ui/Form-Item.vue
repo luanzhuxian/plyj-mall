@@ -107,7 +107,7 @@ export default {
       if (labelWidth) {
         this.currentLabelWidth = labelWidth / 7.5 + 'vw'
       } else {
-        this.currentLabelWidth = this.labelWidth / 7.5 + 'vw'
+        this.currentLabelWidth = 'max-content'
       }
     }
   }

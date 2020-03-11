@@ -122,13 +122,18 @@
               <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
               <span v-else-if="redEnvelopeList.length">有可用</span>
               <span v-else>无可用</span>
-              <pl-svg name="icon-right" fill="#373737" width="22" />
+              <pl-svg class="ml-10" name="icon-right" fill="#ccc" width="22" />
             </span>
           </div>
         </div>
       </div>
     </div>
 
+    <CustomBlock
+      v-if="isCart"
+      :products="physicalProducts"
+      label="用户信息"
+    />
     <!-- *************************虚拟************************* -->
     <template v-if="virtualProducts.length > 0">
       <div
@@ -182,26 +187,21 @@
             </div>
           </div>
 
-          <div
-            :class="{
-              [$style.infoItem]: true,
-              [$style.lessonError]: lessonErrorId === item.skuCode1
-            }"
-            v-if="isCart && item.needStudentInfo" @click="selectStudent(item)"
-          >
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">学员信息</span>
-              <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.skuCode1">
-                <pl-svg name="icon-warning" fill="#F24724" height="36" width="36" />
-                <span v-text="lessonErrorTip" />
-              </div>
-              <div>
-                <span v-if="CHECKED_STUDENT[item.skuCode1 + item.skuCode2]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
-                <span v-else>已选0人</span>
-                <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
-              </div>
-            </div>
-          </div>
+          <StudentInline
+            v-if="isCart && item.needStudentInfo === 1"
+            :product="item"
+            :count="item.count"
+            :lesson-error-id="lessonErrorId"
+            :students="CHECKED_STUDENT[item.skuCode1 + item.skuCode2] || []"
+            :custom-list="item.formEntityList"
+          />
+
+          <CustomInline
+            v-if="isCart && item.needStudentInfo === 2"
+            :product="item"
+            :count="item.count"
+            :custom-list="item.formEntityList"
+          />
 
           <div :class="$style.infoItem" v-if="isCart">
             <div :class="$style.freightType">
@@ -260,7 +260,7 @@
                 <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
                 <span v-else-if="redEnvelopeList.length">有可用</span>
                 <span v-else>无可用</span>
-                <pl-svg name="icon-right" fill="#373737" width="22" />
+                <pl-svg class="ml-10" name="icon-right" fill="#ccc" width="22" />
               </span>
             </div>
           </div>
@@ -293,11 +293,13 @@
             border
           />
         </div>
-        <div :class="$style.otherInfo">
-          <div :class="$style.infoItem">
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">使用时间</span>
-              <p class="fz-24" v-if="item.validityPeriodStart">
+        <OtherInfo>
+          <InfoItem>
+            <template slot="label">
+              使用时间
+            </template>
+            <template slot="content">
+              <p v-if="item.validityPeriodStart">
                 <span>
                   {{ item.validityPeriodStart | dateFormat('YYYY.MM.DD') }}
                 </span>
@@ -311,100 +313,78 @@
               <p v-else class="fz-24">
                 长期有效
               </p>
-            </div>
-          </div>
+            </template>
+          </InfoItem>
 
-          <div :class="$style.infoItem" v-if="activeProduct === 5 && detail.discount !== 10">
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">春耘折扣</span>
-              <span :class="$style.itemContent">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
+          <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
+            <template slot="label">春耘折扣</template>
+            <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
+          </InfoItem>
 
-            </div>
-          </div>
+          <StudentInline
+            v-if="isCart && item.needStudentInfo === 1"
+            :product="item"
+            :count="item.count"
+            :lesson-error-id="lessonErrorId"
+            :students="CHECKED_STUDENT[item.skuCode1 + item.skuCode2] || []"
+            :custom-list="item.formEntityList"
+          />
 
-          <div
-            :class="{
-              [$style.infoItem]: true,
-              [$style.lessonError]: lessonErrorId === item.skuCode1
-            }"
-            v-if="isCart && item.needStudentInfo" @click="selectStudent(item)"
-          >
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">学员信息</span>
-              <div :class="$style.lessonErrorTip" v-if="lessonErrorId === item.skuCode1">
-                <pl-svg name="icon-warning" fill="#F24724" height="36" width="36" />
-                <span v-text="lessonErrorTip" />
-              </div>
-              <div>
-                <span v-if="CHECKED_STUDENT[item.skuCode1 + item.skuCode2]">已选{{ CHECKED_STUDENT[item.skuCode1 + item.skuCode2].length }}人</span>
-                <span v-else>已选0人</span>
-                <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
-              </div>
-            </div>
-          </div>
+          <CustomInline
+            v-if="isCart && item.needStudentInfo === 2"
+            :product="item"
+            :count="item.count"
+            :custom-list="item.formEntityList"
+          />
 
-          <div :class="$style.infoItem" v-if="isCart">
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">订单备注</span>
-              <input
-                :class="$style.remark"
-                type="text"
-                placeholder="选填"
-                v-model="item.remark"
-              >
-            </div>
-          </div>
+          <InfoItem v-if="isCart">
+            <template slot="label">订单备注</template>
+            <input
+              slot="content"
+              :class="$style.remark"
+              type="text"
+              placeholder="选填"
+              v-model="item.remark"
+            >
+          </InfoItem>
 
-          <div :class="$style.infoItem" v-if="!isCart">
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">购买数量</span>
-              <div :class="$style.editCount">
-                <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
-                <Count
-                  :min="item.minBuyNum"
-                  :max="(activeProduct !== 1 && preActivity === 2) ? (item.activityLimit ? item.activityLimitNumber : item.activeStock) : (item.purchaseQuantity || item.stock)"
-                  :count="item.count"
-                  @change="(count, next) => { countChange(count, item, next) }"
-                />
-              </div>
+          <InfoItem v-if="!isCart">
+            <template slot="label">购买数量</template>
+            <div :class="$style.editCount" slot="content">
+              <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
+              <Count
+                :min="item.minBuyNum"
+                :max="(activeProduct !== 1 && preActivity === 2) ? (item.activityLimit ? item.activityLimitNumber : item.activeStock) : (item.purchaseQuantity || item.stock)"
+                :count="item.count"
+                @change="(count, next) => { countChange(count, item, next) }"
+              />
             </div>
-          </div>
-          <div :class="$style.infoItem">
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">商品金额</span>
-              <span :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+          </InfoItem>
+
+          <InfoItem>
+            <template slot="label">商品金额</template>
+            <span slot="content" :class="$style.subtotalPrice + ' rmb'">{{ item.amount }}</span>
+          </InfoItem>
+
+          <InfoItem v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1">
+            <template slot="label">优惠券</template>
+            <div :class="$style.subtotalPrice" slot="content">
+              <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
+              <span v-else>{{ couponList.length }}张可用</span>
+              <pl-svg class="ml-10" name="icon-right" fill="#ccc" width="24" />
             </div>
-          </div>
-          <div
-            :class="$style.infoItem"
-            v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1"
-            @click="showCoupon = true"
-          >
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">优惠券</span>
-              <span :class="$style.subtotalPrice">
-                <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
-                <span v-else>{{ couponList.length }}张可用</span>
-                <pl-svg name="icon-right" fill="#373737" width="22" />
-              </span>
+          </InfoItem>
+
+          <InfoItem v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1">
+            <template slot="label">奖学金（红包）</template>
+            <div :class="$style.subtotalPrice" slot="content">
+              <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
+              <span v-else-if="redEnvelopeList.length">有可用</span>
+              <span v-else>无可用</span>
+              <pl-svg class="ml-10" name="icon-right" fill="#ccc" width="24" />
             </div>
-          </div>
-          <div
-            :class="$style.infoItem"
-            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
-            @click="showRedEnvelopePopupClick"
-          >
-            <div :class="$style.freightType">
-              <span :class="$style.itemLabel">奖学金（红包）</span>
-              <span :class="$style.subtotalPrice">
-                <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
-                <span v-else-if="redEnvelopeList.length">有可用</span>
-                <span v-else>无可用</span>
-                <pl-svg name="icon-right" fill="#373737" width="22" />
-              </span>
-            </div>
-          </div>
-        </div>
+          </InfoItem>
+        </OtherInfo>
       </div>
     </template>
 
@@ -475,7 +455,7 @@
     </div>
 
     <div
-      v-if="needStudentList.length === 1 && needStudentList[0].needStudentInfo && !isCart"
+      v-if="needStudentList.length === 1 && !isCart"
       :class="$style.itemSelector"
       @click.capture="selectStudent(needStudentList[0])"
     >
@@ -502,6 +482,15 @@
         </ul>
       </pl-fields>
     </div>
+
+    <CustomBlock
+      v-if="customList.length === 1 && !isCart"
+      :product="customList[0]"
+      :count="customList[0].count"
+      :custom-list="customList[0].formEntityList"
+      :label="physicalProducts.length ? '用户信息' : '学员信息'"
+    />
+
     <div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click.capture="chooseContact">
       <pl-fields
         size="middle"
@@ -666,6 +655,11 @@ import Count from '../../components/common/Count.vue'
 import { checkLength, isPhone } from '../../assets/js/validate'
 import { resetForm, setTimeoutSync } from '../../assets/js/util'
 import { getServerTime } from '../../apis/base-api'
+import StudentInline from './components/Student-Inline.vue'
+import CustomInline from './components/Custom-Inline.vue'
+import OtherInfo from './components/Other-Info.vue'
+import InfoItem from './components/Info-Item.vue'
+import CustomBlock from './components/Custom-Block.vue'
 export default {
   name: 'SubmitOrder',
   components: {
@@ -673,7 +667,12 @@ export default {
     OrderItem,
     OrderItemSkeleton,
     AddressItemSkeleton,
-    Count
+    Count,
+    StudentInline,
+    OtherInfo,
+    InfoItem,
+    CustomInline,
+    CustomBlock
   },
   data () {
     this.requestPayDataCount = 0
@@ -693,6 +692,7 @@ export default {
       virtualProducts: [],
       lessonList: [],
       needStudentList: [],
+      customList: [], // 需要自定义表单的商品
       remark: '', // 单商品备注
       physicalRemark: '', // 物理订单备注
       invioceType: 0,
@@ -893,6 +893,7 @@ export default {
         this.lessonList = [...formalClass, ...experienceClass]
         // 是否显示学员选择栏，只要有一个商品允许（item.needStudentInfo === 1）就显示
         this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 1)]
+        this.customList = [...physicalProducts, ...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 2)]
         // 是否显示发票选择栏，只要有一个商品允许（item.showInvoice === 1）就显示
         this.showInvoiceSelector = [...physicalProducts, ...virtualProducts, ...formalClass, ...experienceClass].some(item => item.showInvoice === 1)
         this.loading = false
@@ -967,21 +968,6 @@ export default {
         this.isNotChooseRedEnvelope = true
       }
       return result
-    },
-    selectStudent (pro) {
-      sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
-        name: this.$route.name,
-        query: this.$route.query,
-        params: this.$route.params
-      }))
-      this.$router.push({
-        name: 'StudentList',
-        query: {
-          select: 'YES',
-          sku: pro.skuCode1 + pro.skuCode2,
-          count: pro.count
-        }
-      })
     },
     chooseContact () {
       this.contactInfoForm = Object.assign({}, this.contactInfoForm, this.contactInfoModel)
@@ -1087,13 +1073,13 @@ export default {
     },
     /**
      * 判断是否选择了学生
-     * @param needStudent {Boolean} 是否需要学员
-     * @param currentStudent {Array} 已选学生列表
+     * @param needStudent {Number} 是否需要学员
+     * @param currentStudent {Array} 已选学生列表或者自定义列表
      * @param skuCode1 {string} 规格1的id，作为每个单独商品学员数据存储的key
      * @param count {Number} 商品数量，用来判断学生数量
      */
     hasStudents (needStudent, currentStudent, skuCode1, count) {
-      if (needStudent && !currentStudent) {
+      if (needStudent === 1 && !currentStudent) {
         if (this.isCart) {
           this.lessonErrorId = skuCode1
           this.$nextTick(() => {
@@ -1109,7 +1095,7 @@ export default {
         this.$error('请选择学员信息')
         return false
       }
-      if (needStudent && currentStudent && currentStudent.length < count) {
+      if (needStudent === 1 && currentStudent && currentStudent.length < count) {
         if (this.isCart) {
           this.lessonErrorId = skuCode1
           this.$nextTick(() => {
@@ -1123,6 +1109,31 @@ export default {
           })
         }
         this.$error(`请选择${count}名学员信息`)
+        return false
+      }
+      return true
+    },
+    /**
+     * 判断是否选择了学生
+     * @param needStudent {Number} 是否需要学员
+     * @param customForm {Array} 当前商品的自定义表单
+     * @param skuCode1 {string} 规格
+     * @param count {Number} 商品数量，用来判断学生数量
+     */
+    hasCustomForm (needStudent, customForm, skuCode1, count) {
+      if (needStudent === 2 && customForm.length < count) {
+        this.$error('请填写所有必填信息')
+        // if (this.isCart) {
+        //   this.$nextTick(() => {
+        //     let errorEl = document.querySelector('.' + this.$style.lessonError)
+        //     errorEl.scrollIntoView({
+        //       behavior: 'smooth',
+        //       block: 'center',
+        //       inline: 'nearest'
+        //     })
+        //     this.lessonErrorTip = `请选择${count}名学员信息`
+        //   })
+        // }
         return false
       }
       return true
@@ -1151,9 +1162,10 @@ export default {
         })
       }
       for (const item of this.virtualProducts) {
-        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo } = item
+        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm } = item
         const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
+        if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, count)) return
         cartProducts.push({
           productId,
           skuCode1,
@@ -1162,19 +1174,22 @@ export default {
           count,
           agentUser,
           message: remark,
-          studentIds: needStudentInfo ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null
+          customForm: JSON.stringify(customForm),
+          studentIds: needStudentInfo === 1 ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null
         })
       }
       for (const item of this.lessonList) {
-        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo } = item
+        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm = [] } = item
         const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
+        console.log(customForm)
+        if (!this.hasCustomForm(needStudentInfo, customForm, skuCode1, count)) return
         cartProducts.push({
           productId,
           skuCode1,
           skuCode2,
           productType: item.type,
-          studentIds: needStudentInfo ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null,
+          studentIds: needStudentInfo === 1 ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null,
           count,
           agentUser,
           message: remark
@@ -1349,67 +1364,61 @@ export default {
       padding: 0 24px;
     }
   }
-
-  .otherInfo {
-    margin-top: 44px;
-    > .infoItem {
-      display: flex;
-      padding-left: 68px;
-      padding-right: 28px;
-      justify-content: space-between;
-      line-height: 88px;
-      font-size: 24px;
-      border: 2px solid #fff;
-      &.lessonError {
-        animation: bordrFlicker .15s ease;
-        animation-iteration-count: 5;
-        border: 2px solid #F24724;
-        .lessonErrorTip {
-          flex: 1;
-          display: inline-flex;
-          align-items: center;
-          margin-left: 22px;
-          color: #F24724;
-          > svg {
-            width: 32px;
-          }
-        }
-      }
-      .freightType {
+  .edit-count {
+    display: flex;
+    align-items: center;
+    > span {
+      margin-right: 16px;
+      font-size: 20px;
+      color: #999;
+    }
+  }
+  .remark {
+    flex: 1;
+    height: 100%;
+    padding: 0;
+    margin-left: 22px;
+    font-size: 24px;
+    text-align: right;
+  }
+  .infoItem {
+    display: flex;
+    padding-left: 68px;
+    padding-right: 28px;
+    justify-content: space-between;
+    line-height: 88px;
+    font-size: 24px;
+    border: 2px solid #fff;
+    &.lessonError {
+      animation: bordrFlicker .15s ease;
+      animation-iteration-count: 5;
+      border: 2px solid #F24724;
+      .lessonErrorTip {
         flex: 1;
         display: inline-flex;
-        justify-content: space-between;
-        &.hasFreight{
-          justify-content: flex-start;
-        }
-        .itemLabel {
-          width: max-content;
-          color: #333;
-        }
-        .itemContent {
-          color: #666;
-          margin-left: 24px;
-        }
-        .edit-count {
-          display: flex;
-          align-items: center;
-          > span {
-            margin-right: 16px;
-            font-size: 20px;
-            color: #999;
-          }
-        }
-      }
-      .freight {
-        text-align: right;
-      }
-      .remark {
-        flex: 1;
-        height: 100%;
-        padding: 0;
+        align-items: center;
         margin-left: 22px;
-        font-size: 24px;
+        color: #F24724;
+        > svg {
+          width: 32px;
+        }
       }
+    }
+    .freightType {
+      flex: 1;
+      display: inline-flex;
+      justify-content: space-between;
+      &.hasFreight{
+        justify-content: flex-start;
+      }
+      .itemLabel {
+        width: max-content;
+        color: #333;
+      }
+
+    }
+    .freight {
+      text-align: right;
     }
   }
   .subtotalPrice {

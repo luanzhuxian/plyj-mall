@@ -270,19 +270,21 @@ export default {
     }
     &.pl-input-small {
       min-height: 92px;
+      font-size: 28px;
     }
     &.pl-input-middle {
       min-height: 108px;
+      font-size: 32px;
     }
     .pl-input_box {
       position: relative;
       flex: 1;
       display: inline-flex;
       align-items: center;
+      margin-left: 10px;
       input {
         display: block;
         width: 100%;
-        font-size: 32px;
         color: #333;
         box-sizing: border-box;
         background-color: transparent !important;
@@ -300,6 +302,8 @@ export default {
           -moz-user-select: none;
           -ms-user-select: none;
           user-select: none;
+        }
+        &.small {
         }
       }
       .pl-input_clear {
@@ -333,6 +337,7 @@ export default {
     position: relative;
     width: 100%;
     padding: 24px;
+    margin-left: 10px;
     .pl-input-textarea {
       box-sizing: border-box;
       width: 100%;
