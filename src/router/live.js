@@ -62,7 +62,7 @@ export default [
     }
   },
   {
-    path: '/lived/play-back/:id/:activityId',
+    path: '/lived/play-back/:id/:activityId/:isValidateEndTime',
     name: 'LivePlayBack',
     props: true,
     component: () => import('../views/live/Live-Play-Back.vue'),
