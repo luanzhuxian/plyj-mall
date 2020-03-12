@@ -85,7 +85,7 @@ export default {
             const { result } = await checkRateOfFlow()
             if (!result) {
               this.$alert({
-                message: '课程暂时无法观看',
+                message: '暂时无法观看',
                 viceMessage: '请联系机构管理人员'
               }).finally(() => {
                 this.$router.go(-1)

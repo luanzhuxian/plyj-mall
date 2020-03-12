@@ -101,6 +101,12 @@ export const getLibraryList = () => Instance.get('/apis/v1/mall/live/lib/my_look
 // 根据直播ID从视频库获取视频详情（仅限录播）
 export const getVideoMesById = id => Instance.get(`/apis/v1/mall/live/lib/detail/${id}`)
 
+// 输入直播口令
+export const inputLivePassword = ({activityId,roomToken}) => Instance.get(`/apis/v1/mall/live/lib/activity/${activityId}`,{params:{roomToken}})
+
+//查询直播是否开始
+export const isLiveStart = stream => Instance.get(`/apis/v1/mall/live/room/tatus?stream=${stream}`)
+
 /**
  * 暖场开关
  * @param data {Object} 请求参数

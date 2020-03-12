@@ -1,17 +1,20 @@
 <template>
   <div :class="$style.liveRoom" ref="liveRoom">
     <!--在线直播-->
-    <div
-      v-if="detail.liveType === 'live'"
-      ref="playerBox"
-      id="player"
-      :class="{
-        [$style.playerBox]: true
-      }"
-    />
+    <div :class="$style.livePlayer">
+      <div
+        v-if="detail.liveType === 'live'"
+        ref="playerBox"
+        id="player"
+        :class="{
+          [$style.playerBox]: true
+        }"
+      />
+      <LiveMask :img-src="detail.coverImg" v-if="!liveStart" />
+    </div>
     <!--视频直播-->
     <div v-if="detail.liveType === 'video'" :class="$style.playBackBox">
-      <div class="plv-live-cutOff" v-if="recorded.ended" />
+      <LiveMask :img-src="detail.coverImg" v-if="recorded.ended" />
       <PaidPlayer
         v-else
         :src="recorded.url"
@@ -228,6 +231,10 @@
         </div>
       </div>
     </transition>
+
+    <!-- 直播口令 -->
+    <LivePassword :activity-id="activityId" ref="livePassword" />
+
   </div>
 </template>
 
@@ -236,6 +243,8 @@ import { mapGetters } from 'vuex'
 import CouponItem from '../../components/item/Coupon-Item.vue'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
 import share from '../../assets/js/wechat/wechat-share'
+import LivePassword from './components/Live-Password' // 直播口令输入
+import LiveMask from './components/Live-Mask'
 import {
   getRoomStatus,
   getActiveCompleteInfo,
@@ -243,7 +252,8 @@ import {
   hasPied,
   cancelOrder,
   setComeInConut,
-  getVideoMesById
+  getVideoMesById,
+  isLiveStart// 查询直播是否开始
   // setWarmup
 } from '../../apis/live'
 import {
@@ -264,6 +274,8 @@ export default {
   name: 'LiveRoom',
   components: {
     // VueSlider,
+    LiveMask,
+    LivePassword,
     CouponItem,
     PaidPlayer
   },
@@ -280,6 +292,9 @@ export default {
       message: '',
       livestartedDuration: 0, // 直播开始时长
       maxRecords: 200, // 最大缓存的聊天记录条数
+      liveStart: false, // 直播是否开始
+      liveStatusTimer: null,
+      activityId: '', // 直播活动Id
       /**
        * 聊天信息记录
        * {
@@ -304,6 +319,7 @@ export default {
       receiveCouponIdList: [], // 已领取的优惠券id列表
       // 录播视频信息
       recorded: {
+        fileSize: 0,
         ended: true
       },
       socket: null,
@@ -346,6 +362,16 @@ export default {
       this.channelId = roomId
       this.liveAppId = appId
       this.channeUserId = appUserId
+      // 监听直播是否开始
+      if (detail.liveType === 'live') {
+        this.listenLiveStart(detail.stream)
+      }
+      // 是否要输入密码
+      if (detail.needToken && !detail.isInputToken) {
+        this.activityId = detail.id
+        await this.$nextTick()
+        await this.$refs.livePassword.validate()
+      }
       // 是否需要支付
       if (detail.isPay) {
         if (!this.mchId) {
@@ -422,12 +448,37 @@ export default {
         throw e
       }
     },
+    // 查询直播是否开始
+    async listenLiveStart (stream) {
+      window.clearTimeout(this.liveStatusTimer)
+      this.liveStatusTimer = window.setTimeout(async () => {
+        try {
+          // end 未直播 live 正在直播
+          let result = await isLiveStart(stream)
+          result = result.trim()
+          if (result === 'live') {
+            window.clearTimeout(this.liveStatusTimer)
+            this.liveStart = true
+          } else {
+            this.liveStart = false
+            this.listenLiveStart(stream)
+          }
+        } catch (e) {
+          if (e.name === 'ResponseError') {
+            this.$error(JSON.parse(e.message).message)
+          } else {
+            this.$error(e.message)
+          }
+        }
+      }, 5e3)
+    },
     // 视频直播情况下获取视频信息
     async getVideoMesById () {
       try {
         let recorded = await getVideoMesById(this.detail.videoLibId)
         recorded = recorded || {}
         recorded.ended = true
+        recorded.fileSize = Number(recorded.fileSize) || 0
         this.recorded = recorded // 默认已经结束
       } catch (e) {
         throw e
@@ -837,7 +888,8 @@ export default {
     }
   },
   beforeDestroy () {
-    clearInterval(this.videoLiveTimer)
+    window.clearInterval(this.videoLiveTimer)
+    window.clearTimeout(this.liveStatusTimer)
   }
 }
 </script>
@@ -845,7 +897,11 @@ export default {
 <style module lang="scss">
   .live-room {
     height: 100vh;
+    > .live-player {
+      position: relative;
+    }
     > .play-back-box {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1243,6 +1299,12 @@ export default {
 <style lang="scss">
   .plv-live-player-bar {
     height: 80px!important;
+  }
+  .plv-live-cutOff {
+    display: none !important;
+  }
+  .plv-live-cover__btn {
+    // display: none;
   }
   .plv_controls {
     height: max-content !important;

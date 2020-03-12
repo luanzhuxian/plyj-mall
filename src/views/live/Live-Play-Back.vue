@@ -50,6 +50,8 @@
         </div>
       </div>
     </transition>
+    <!-- 密令弹窗 -->
+    <LivePassword :activity-id="activityId" ref="livePassword" />
   </div>
 </template>
 
@@ -58,10 +60,12 @@ import { getActiveCompleteInfo, getVideoMesById, pay, cancelOrder } from '../../
 import { hasPied } from './../../apis/live-library'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
+import LivePassword from './components/Live-Password'
 export default {
   name: 'LivePlayBack',
   components: {
-    PaidPlayer
+    PaidPlayer,
+    LivePassword
   },
   data () {
     return {
@@ -69,7 +73,9 @@ export default {
       needPay: false,
       payCount: 0, // 价格
       productList: [], // 商品列表
-      videoMes: {}
+      videoMes: {
+        fileSize: 0
+      }
     }
   },
   props: {
@@ -92,8 +98,8 @@ export default {
       this.needPay = false
       this.needPay = await this.isNeedPay()
       if (!this.needPay) {
-        this.getVideoMes()
-        this.getDetail()
+        await this.getVideoMes()
+        await this.getDetail()
       }
     } catch (e) { throw e }
   },
@@ -101,21 +107,33 @@ export default {
     async isNeedPay () {
       try {
       // needPay 是否需要付费 1需要  0不需要
-        let { result: { needPay, needPaidAmount, paidAmount, activityName } } = await hasPied(this.activityId, !!this.isValidateEndTime)
+        let { result: { needPay, needPaidAmount, paidAmount, activityName, isHaveToken, isInputToken } } = await hasPied(this.activityId, !!this.isValidateEndTime)
+        // 是否口令校验
+        await this.getPermission(isHaveToken, isInputToken)
         this.payCount = needPaidAmount / 100 // 单位分转为元
         this.activityName = activityName
         return needPay === 1 && paidAmount === 0
       } catch (e) { throw e }
     },
+    // 是否要输入口令
+    async getPermission (isHaveToken, isInputToken) {
+      try {
+        await this.$nextTick()
+        if (isHaveToken && !isInputToken) {
+          await this.$refs.livePassword.validate()
+        }
+      } catch (e) { throw e }
+    },
     async getDetail () {
       try {
-        let { productList } = await getActiveCompleteInfo()
+        let { productList } = await getActiveCompleteInfo(this.activityId)
         this.productList = productList || []
       } catch (e) { throw e }
     },
     async getVideoMes () {
       try {
         let mes = await getVideoMesById(this.id)
+        mes.fileSize = Number(mes.fileSize) || 0
         this.videoMes = mes
       } catch (e) { throw e }
     },
