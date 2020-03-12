@@ -126,7 +126,7 @@ export default {
     },
     async getDetail () {
       try {
-        let { productList } = await getActiveCompleteInfo()
+        let { productList } = await getActiveCompleteInfo(this.activityId)
         this.productList = productList || []
       } catch (e) { throw e }
     },
