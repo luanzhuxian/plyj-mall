@@ -50,7 +50,7 @@ export default {
             id: item.courseId
           },
           query: {
-            liveId: item.liveId,
+            liveId: item.liveIds.split(',')[0],
             orderId: item.orderId,
             progress: item.learnProgress,
             courseId: item.courseId
