@@ -422,7 +422,7 @@ export default {
         appId: this.appId,
         title: '我心中的年味',
         desc: '翻开记忆中的味道，探寻我心中的年味，赢取年味大礼，快来参与吧！',
-        link: `${this.mallUrl}/new-year-activity${this.id ? '/' + this.id : ''}`,
+        link: `${this.mallUrl}/new-year-activity${this.id ? '/' + this.id : ''}?noCache=${Date.now()}`,
         imgUrl: this.logoUrl
       })
     },

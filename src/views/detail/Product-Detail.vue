@@ -565,9 +565,9 @@ export default {
         this.currentModel.count = result.productSkuModels[0].minBuyNum
         let shareUrl = ''
         if (this.userId) {
-          shareUrl = `${this.mallUrl}/detail/product/${this.productId}/${this.userId}`
+          shareUrl = `${this.mallUrl}/detail/product/${this.productId}/${this.userId}?noCache=${Date.now()}`
         } else {
-          shareUrl = `${this.mallUrl}/detail/product/${this.productId}`
+          shareUrl = `${this.mallUrl}/detail/product/${this.productId}?noCache=${Date.now()}`
         }
         this.shareUrl = shareUrl
         let hide = []

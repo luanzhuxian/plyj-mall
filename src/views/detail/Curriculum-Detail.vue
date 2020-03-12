@@ -209,9 +209,9 @@ export default {
         // 生成分享
         let shareUrl = ''
         if (this.userId) {
-          shareUrl = `${this.mallUrl}/detail/curriculum/${this.productId}/${this.userId}`
+          shareUrl = `${this.mallUrl}/detail/curriculum/${this.productId}/${this.userId}?noCache=${Date.now()}`
         } else {
-          shareUrl = `${this.mallUrl}/detail/curriculum/${this.productId}`
+          shareUrl = `${this.mallUrl}/detail/curriculum/${this.productId}?noCache=${Date.now()}`
         }
         this.shareUrl = shareUrl
         share({

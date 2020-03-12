@@ -149,7 +149,7 @@ export default {
         willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
         inviterStatisitic(this.activityId, shareUserId)
       }
-      let shareUrl = `${this.mallUrl}/yx/${this.activityId}/${this.userId}`
+      let shareUrl = `${this.mallUrl}/yx/${this.activityId}/${this.userId}?noCache=${Date.now()}`
       try {
         await share({
           appId: this.appId,
