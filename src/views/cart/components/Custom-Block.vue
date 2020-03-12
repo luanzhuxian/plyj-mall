@@ -14,7 +14,7 @@
           :key="i"
           @click="editStudent(i)"
         >
-          <div :class="$style.field">学员信息{{ i + 1 }}</div>
+          <div :class="$style.field">{{ label }}{{ i + 1 }}</div>
           <div :class="$style.value">
             <span v-if="isError(i)">未填写</span>
             <span v-else v-text="item[Object.keys(item)[0]]" />
@@ -30,7 +30,7 @@
           :key="i"
           @click="editStudent(i)"
         >
-          <div :class="$style.field">学员信息{{ i + 1 }}</div>
+          <div :class="$style.field">{{ label }}{{ i + 1 }}</div>
           <div :class="$style.value">
             <span v-if="isError(i)">未填写</span>
             <span v-else v-text="item[Object.keys(item)[0]]" />
@@ -102,8 +102,7 @@ export default {
     formData () {
       const formList = []
       const rules = []
-      const count = this.products.productType === 'PHYSICAL_GOODS' ? 1 : this.count
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < this.count; i++) {
         const form = {}
         const rule = {}
         for (const cus of this.customList) {
@@ -116,8 +115,11 @@ export default {
       }
       return { formList, rules }
     },
-    // 用于实体多商品，实体商品需要整合所有自定义为一个表单，最后提交时在拆分，不考虑商品数量
+    // 用于实体多商品，实体商品需要整合所有自定义为一个表单，最后提交时再拆分，不考虑商品数量
     formData2 () {
+      if (!this.products.length) {
+        return {}
+      }
       const formList = []
       const rules = []
       const formEntityList = []
@@ -126,23 +128,20 @@ export default {
           formEntityList.push(cus)
         }
       }
+      const form = {}
+      const rule = {}
       for (const cus of formEntityList) {
         const key = cus.fieldName
-        const form = Object.defineProperty({
-          [key]: '',
-          productId: cus.productId
-        }, 'productId', {
-          enumerable: false
-        })
-        formList.push(form)
-        rules.push({
-          [key]: [{ required: Boolean(cus.required), message: `请输入${cus.fieldName}`, trigger: 'blur' }]
-        })
+        form[key] = ''
+        rule[key] = [{ required: Boolean(cus.required), message: `请输入${cus.fieldName}`, trigger: 'blur' }]
       }
+      formList.push(form)
+      rules.push(rule)
       return { formList, rules }
     }
   },
-  created () {
+  activated () {
+    console.log(123)
   },
   methods: {
     editStudent (index) {
@@ -172,6 +171,10 @@ export default {
       }
     },
     confirm (e) {
+      if (this.products.length) {
+        this.confirmMultipleProduct()
+        return
+      }
       const formList = this.formData.formList
       const rules = this.formData.rules
       const data = []
@@ -184,14 +187,30 @@ export default {
             required: rules[i][key][0].required
           })
         }
-        // 判断必填项是都都填了,如果不是，则不会被传递出去
-        const isAllFill = fields.filter(item => item.required).every(item => item.fieldValue)
-        if (isAllFill) {
-          data.push(fields)
-        }
+        data.push(fields)
       }
       this.product.customForm = data
+      sessionStorage.setItem(`CUSTOM_FORM_${this.product.productId}`, JSON.stringify(data))
       this.$emit('confirm', e)
+    },
+    // 提交多个实体商品
+    confirmMultipleProduct () {
+      const form = this.formData2.formList[0]
+      const rules = this.formData2.rules[0]
+      for (const pro of this.products) {
+        pro.customForm = []
+        for (const cus of pro.formEntityList) {
+          const key = cus.fieldName
+          if (form[key]) {
+            pro.customForm.push({
+              fieldName: key,
+              fieldValue: form[key],
+              required: rules[key][0].required
+            })
+          }
+        }
+        sessionStorage.setItem(`CUSTOM_FORM_${pro.productId}`, JSON.stringify(pro.customForm))
+      }
     }
   }
 }
