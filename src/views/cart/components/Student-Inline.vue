@@ -46,9 +46,27 @@ export default {
       type: String,
       default: ''
     },
+    lessonErrorTip: {
+      type: String,
+      default: ''
+    },
     count: {
       type: Number,
       default: 0
+    }
+  },
+  watch: {
+    lessonErrorTip (val) {
+      if (val) {
+        this.$nextTick(() => {
+          let errorEl = document.querySelector('.' + this.$style.lessonError)
+          errorEl.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+          })
+        })
+      }
     }
   },
   methods: {

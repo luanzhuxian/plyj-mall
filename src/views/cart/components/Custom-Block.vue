@@ -61,7 +61,9 @@ export default {
     return {
       showForm: false,
       currentForm: {},
-      currentRules: {}
+      currentRules: {},
+      formData: {},
+      formData2: {}
     }
   },
   props: {
@@ -97,30 +99,59 @@ export default {
       }
     }
   },
-  computed: {
-    // 但商品
-    formData () {
+  watch: {
+    product: {
+      handler () {
+        this.setFormData()
+      },
+      immediate: true
+    },
+    products: {
+      handler () {
+        this.setFormData2()
+      },
+      immediate: true
+    }
+  },
+  activated () {
+  },
+  methods: {
+    // 单商品
+    setFormData () {
       const formList = []
       const rules = []
       const count = this.product.productType === 'PHYSICAL_GOODS' ? 1 : this.count
+      // 获取上次填写的数据，尝试回填
+      const oldFormList = JSON.parse(sessionStorage.getItem(`CUSTOM_FORM_${this.product.productId}`)) || []
       for (let i = 0; i < count; i++) {
         const form = {}
         const rule = {}
         for (const cus of this.customList) {
           const key = cus.fieldName
-          form[key] = ''
+          // 回填数据
+          if (oldFormList.length) {
+            form[key] = oldFormList[i][key] || ''
+          } else {
+            form[key] = ''
+          }
           rule[key] = [{ required: Boolean(cus.required), message: `请输入${cus.fieldName}`, trigger: 'blur' }]
         }
         formList.push(form)
         rules.push(rule)
       }
-      return { formList, rules }
+      this.formData = { formList, rules }
+      if (oldFormList.length) {
+        this.confirm()
+      }
     },
     // 用于实体多商品，实体商品需要整合所有自定义为一个表单，最后提交时再拆分，不考虑商品数量
-    formData2 () {
+    setFormData2 () {
       if (!this.products.length) {
         return {}
       }
+      // 获取上次填写的数据，尝试回填
+      const oldFormList = JSON.parse(sessionStorage.getItem(`CUSTOM_FORM_${this.products[0].productId}`)) || null
+      const oldForm = oldFormList ? oldFormList[0] : null
       const formList = []
       const rules = []
       const formEntityList = []
@@ -133,18 +164,17 @@ export default {
       const rule = {}
       for (const cus of formEntityList) {
         const key = cus.fieldName
-        form[key] = ''
+        // 回填数据
+        form[key] = oldForm ? oldForm[key] : ''
         rule[key] = [{ required: Boolean(cus.required), message: `请输入${cus.fieldName}`, trigger: 'blur' }]
       }
       formList.push(form)
       rules.push(rule)
-      return { formList, rules }
-    }
-  },
-  activated () {
-    console.log(123)
-  },
-  methods: {
+      this.formData2 = { formList, rules }
+      if (oldForm) {
+        this.confirm()
+      }
+    },
     editStudent (index) {
       if (this.formData.formList.length) {
         this.currentForm = this.formData.formList[index]
@@ -191,7 +221,8 @@ export default {
         data.push(fields)
       }
       this.product.customForm = data
-      sessionStorage.setItem(`CUSTOM_FORM_${this.product.productId}`, JSON.stringify(data))
+      // 确定后，将当前表单列表保存起来，用当前商品ID作为区别
+      sessionStorage.setItem(`CUSTOM_FORM_${this.product.productId}`, JSON.stringify(this.formData.formList))
       this.$emit('confirm', e)
     },
     // 提交多个实体商品
@@ -210,8 +241,9 @@ export default {
           })
         }
         pro.customForm.push(fields)
-        sessionStorage.setItem(`CUSTOM_FORM_${pro.productId}`, JSON.stringify(pro.customForm))
       }
+      // 确定后，将当前表单列表保存起来，用第一个商品ID做区别
+      sessionStorage.setItem(`CUSTOM_FORM_${this.products[0].productId}`, JSON.stringify(this.formData2.formList))
     }
   }
 }

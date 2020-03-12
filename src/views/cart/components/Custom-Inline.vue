@@ -58,7 +58,8 @@ export default {
       collapse: false,
       showForm: false,
       currentForm: {},
-      currentRules: {}
+      currentRules: {},
+      formData: {}
     }
   },
   props: {
@@ -84,26 +85,42 @@ export default {
     }
   },
   watch: {
+    product: {
+      handler () {
+        this.setFormData()
+      },
+      immediate: true
+    }
   },
-  computed: {
-    formData () {
+  methods: {
+    // 单商品
+    setFormData () {
       const formList = []
       const rules = []
-      for (let i = 0; i < this.count; i++) {
+      const count = this.product.productType === 'PHYSICAL_GOODS' ? 1 : this.count
+      // 获取上次填写的数据，尝试回填
+      const oldFormList = JSON.parse(sessionStorage.getItem(`CUSTOM_FORM_${this.product.productId}`)) || []
+      for (let i = 0; i < count; i++) {
         const form = {}
         const rule = {}
         for (const cus of this.customList) {
           const key = cus.fieldName
-          form[key] = ''
+          // 回填数据
+          if (oldFormList.length) {
+            form[key] = oldFormList[i][key] || ''
+          } else {
+            form[key] = ''
+          }
           rule[key] = [{ required: Boolean(cus.required), message: `请输入${cus.fieldName}`, trigger: 'blur' }]
         }
         formList.push(form)
         rules.push(rule)
       }
-      return { formList, rules }
-    }
-  },
-  methods: {
+      this.formData = { formList, rules }
+      if (oldFormList.length) {
+        this.confirm()
+      }
+    },
     selectStudent () {
       const product = this.product
       sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
@@ -150,7 +167,8 @@ export default {
         data.push(fields)
       }
       this.product.customForm = data
-      localStorage.setItem(`CUSTOM_FORM_${this.product.productId}`, JSON.stringify(data))
+      // 确定后，将当前表单列表保存起来
+      sessionStorage.setItem(`CUSTOM_FORM_${this.product.productId}`, JSON.stringify(this.formData.formList))
       this.$emit('confirm', e)
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.infoItem">
+  <div :class="$style.infoItem" @click="clickHandler">
     <div :class="$style.content">
       <div :class="$style.itemLabel">
         <slot name="label" />
@@ -13,7 +13,12 @@
 
 <script>
 export default {
-  name: 'InfoItem'
+  name: 'InfoItem',
+  methods: {
+    clickHandler (e) {
+      this.$emit('click', e)
+    }
+  }
 }
 </script>
 
@@ -26,21 +31,6 @@ export default {
     line-height: 88px;
     font-size: 24px;
     border: 2px solid #fff;
-    &.lessonError {
-      animation: bordrFlicker .15s ease;
-      animation-iteration-count: 5;
-      border: 2px solid #F24724;
-      .lessonErrorTip {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        margin-left: 22px;
-        color: #F24724;
-        > svg {
-          width: 32px;
-        }
-      }
-    }
     .content {
       flex: 1;
       display: inline-flex;
