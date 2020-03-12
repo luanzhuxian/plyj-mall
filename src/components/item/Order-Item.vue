@@ -205,19 +205,17 @@ export default {
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
-      padding-right: 100px;
       height: 52px;
       .name {
         flex: 1;
         line-height: 26px;
+        padding-right: 10px;
         color: #454553;
         font-size: 22px;
         @include elps-wrap(2);
       }
       .price-wrapper {
-        position: absolute;
-        right: 0;
-        top: 0;
+        width: max-content;
       }
       .price {
         font-size: 24px;

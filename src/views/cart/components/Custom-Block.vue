@@ -200,16 +200,16 @@ export default {
       const rules = this.formData2.rules[0]
       for (const pro of this.products) {
         pro.customForm = []
+        const fields = []
         for (const cus of pro.formEntityList) {
           const key = cus.fieldName
-          if (form[key]) {
-            pro.customForm.push({
-              fieldName: key,
-              fieldValue: form[key],
-              required: rules[key][0].required
-            })
-          }
+          fields.push({
+            fieldName: key,
+            fieldValue: form[key],
+            required: rules[key][0].required
+          })
         }
+        pro.customForm.push(fields)
         sessionStorage.setItem(`CUSTOM_FORM_${pro.productId}`, JSON.stringify(pro.customForm))
       }
     }
