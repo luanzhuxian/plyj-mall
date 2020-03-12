@@ -44,7 +44,7 @@
           <pl-svg name="icon-date" width="30" />
           有效期：
         </div>
-        <div :class="$style.right" v-text="detail.validityType ? `购买后${detail.validity}天内学完` : '购买后不限次观看'" />
+        <div :class="$style.right" v-text="detail.validityType ? `购买后${detail.validity}天内学完` : '购买后不限观看次数'" />
       </div>
     </InfoBox>
 
