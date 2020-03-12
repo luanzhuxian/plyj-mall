@@ -53,7 +53,7 @@
               v-for="(item, index) of futureLive"
               :key="index"
               :class="$style.item"
-              @click.capture="() => { (item.isMin && !nowLiveList.length) ? $router.push({ name: 'LiveRoom' }) : '' }"
+              @click.capture="$router.push({ name: 'LiveRoom' })"
             >
               <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
               <div :class="$style.desc">
@@ -66,7 +66,6 @@
                   <pl-button
                     type="primary"
                     size="middle"
-                    v-if="item.isMin && !nowLiveList.length"
                   >
                     去看直播
                   </pl-button>
