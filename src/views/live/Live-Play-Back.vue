@@ -107,7 +107,7 @@ export default {
     async isNeedPay () {
       try {
       // needPay 是否需要付费 1需要  0不需要
-        let { result: { needPay, needPaidAmount, paidAmount, activityName, isHaveToken, isInputToken } } = await hasPied(this.activityId)
+        let { result: { needPay, needPaidAmount, paidAmount, activityName, isHaveToken, isInputToken } } = await hasPied(this.activityId, !!this.isValidateEndTime)
         // 是否口令校验
         await this.getPermission(isHaveToken, isInputToken)
         this.payCount = needPaidAmount / 100 // 单位分转为元
