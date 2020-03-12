@@ -290,6 +290,52 @@
         </ul>
       </pl-fields>
     </div> -->
+    <!-- 用户信息 -->
+    <div :class="[$style.panel, $style.customBlockField]" v-if="userInfo.length">
+      <pl-fields
+        size="middle"
+        text="用户信息"
+        icon="icon-user-7bd73"
+        title-color="#F2B036"
+        :icon-width="40"
+        :icon-gap="12"
+        left-text-weight="bold"
+      >
+        <div :class="$style.detail">
+          <div :class="$style.item" v-for="(item, i) of userInfo" :key="i">
+            <template v-if="item.fieldValue">
+              <span>{{ item.fieldName }}：</span>
+              <span>{{ item.fieldValue }}</span>
+            </template>
+          </div>
+        </div>
+      </pl-fields>
+    </div>
+
+    <!-- 学员信息 -->
+    <template v-if="studentInfo.length">
+      <div :class="[$style.panel, $style.customBlockField]" v-for="(studentItem, i) of studentInfo" :key="i">
+        <pl-fields
+          size="middle"
+          :text="`学员信息${i + 1}`"
+          :right-text="`核销码：${localSeparator(redeemCodeModels[i].redeemCode,' ', 4)}`"
+          icon="icon-name-card"
+          title-color="#F2B036"
+          :icon-width="40"
+          :icon-gap="12"
+          left-text-weight="bold"
+        >
+          <div :class="$style.detail">
+            <div :class="$style.item" v-for="(item, j) of studentItem" :key="j">
+              <template v-if="item.fieldValue">
+                <span>{{ item.fieldName }}：</span>
+                <span>{{ item.fieldValue }}</span>
+              </template>
+            </div>
+          </div>
+        </pl-fields>
+      </div>
+    </template>
 
     <!-- 联系人信息 -->
     <div :class="[$style.panel, $style.contact]" v-if="!shippingAddress.agencyAddress">
@@ -636,6 +682,7 @@ export default {
   },
   data () {
     return {
+      localSeparator: filter.separator,
       loaded: false,
       showContact: false,
       finalPaymentIsStarted: false, // 预购商品是否已到付尾款时间
@@ -661,6 +708,8 @@ export default {
         addressPrefix: ' ',
         agencyAddress: ' '
       },
+      userInfo: [], // 实体订单
+      studentInfo: [], // 虚拟订单
       timer: 0,
       currentPayId: '',
       payloading: false,
@@ -881,7 +930,8 @@ export default {
             orderStatusAlias,
             redeemCodeModels,
             activityData,
-            activeProduct
+            activeProduct,
+            formModelList
           } = result
           this.detail = result
           this.orderStatus = orderStatus
@@ -955,6 +1005,20 @@ export default {
               } else {
                 this.suggestionMap.WAIT_RECEIVE = '长期有效'
               }
+            }
+          }
+          this.userInfo = []
+          this.studentInfo = []
+          let hasCustomBlock = productInfoModel.productDetailModels.filter(item => item.needStudentInfo === 2).length
+          if (hasCustomBlock) {
+            if (orderType === 'PHYSICAL') {
+              formModelList.forEach(productItem => {
+                productItem.forEach(item => {
+                  this.userInfo.push(item)
+                })
+              })
+            } else {
+              this.studentInfo = formModelList
             }
           }
           resolve()
@@ -1361,6 +1425,24 @@ export default {
       }
     }
   }
+  /** 用户信息 **/
+  .custom-block-field {
+    padding-left: 24px;
+    .detail {
+      padding: 14px 24px 24px 0;
+      .item {
+        display: flex;
+        justify-content: space-between;
+        line-height:44px;
+        font-size:24px;
+        color:#222;
+        > span:nth-of-type(1) {
+          color:#999;
+        }
+      }
+    }
+  }
+
   /** 交易信息 **/
   .other-info {
     position: relative;

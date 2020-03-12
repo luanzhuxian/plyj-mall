@@ -16,7 +16,7 @@
         />
         <span
           v-text="text"
-          :style="{ fontWeight: leftTextWeight }"
+          :style="{ fontWeight: leftTextWeight, color: titleColor }"
         />
         <pl-svg
           :fill="iconColor"
@@ -101,6 +101,10 @@ export default {
     text: {
       type: String,
       default: ''
+    },
+    titleColor: {
+      type: String,
+      default: '#2e2e2e'
     },
     rightTextWeight: {
       type: String,
