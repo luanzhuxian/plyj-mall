@@ -104,6 +104,9 @@ export const getVideoMesById = id => Instance.get(`/apis/v1/mall/live/lib/detail
 // 输入直播口令
 export const inputLivePassword = ({activityId,roomToken}) => Instance.get(`/apis/v1/mall/live/lib/activity/${activityId}`,{params:{roomToken}})
 
+//直播报名
+export const liveSignUp = data => Instance.post('/apis/v1/mall/live/c_live_signUp',data)
+
 //查询直播是否开始
 export const isLiveStart = stream => Instance.get(`/apis/v1/mall/live/room/tatus?stream=${stream}`)
 

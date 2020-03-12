@@ -1,20 +1,19 @@
 <template>
   <div :class="$style.liveRoom" ref="liveRoom">
     <!--在线直播-->
-    <div :class="$style.livePlayer">
+    <div v-if="detail.liveType === 'live'" :class="$style.livePlayer">
       <div
-        v-if="detail.liveType === 'live'"
         ref="playerBox"
         id="player"
         :class="{
           [$style.playerBox]: true
         }"
       />
-      <LiveMask :img-src="detail.coverImg" v-if="!liveStart" />
+      <LiveMask :timestamp="livestartedDuration" :img-src="detail.coverImg" v-if="!liveStart" />
     </div>
     <!--视频直播-->
     <div v-if="detail.liveType === 'video'" :class="$style.playBackBox">
-      <LiveMask :img-src="detail.coverImg" v-if="recorded.ended" />
+      <LiveMask :timestamp="livestartedDuration" :img-src="detail.coverImg" v-if="recorded.ended" />
       <PaidPlayer
         v-else
         :src="recorded.url"
@@ -234,6 +233,8 @@
 
     <!-- 直播口令 -->
     <LivePassword :activity-id="activityId" ref="livePassword" />
+    <!-- 报名 -->
+    <LiveSignUp :info="detail" ref="LiveSignUp" />
 
   </div>
 </template>
@@ -245,6 +246,7 @@ import PaidPlayer from '../../components/common/Paid-Player.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import LivePassword from './components/Live-Password' // 直播口令输入
 import LiveMask from './components/Live-Mask'
+import LiveSignUp from './components/Live-Sign-Up'
 import {
   getRoomStatus,
   getActiveCompleteInfo,
@@ -274,6 +276,7 @@ export default {
   name: 'LiveRoom',
   components: {
     // VueSlider,
+    LiveSignUp,
     LiveMask,
     LivePassword,
     CouponItem,
@@ -295,6 +298,7 @@ export default {
       liveStart: false, // 直播是否开始
       liveStatusTimer: null,
       activityId: '', // 直播活动Id
+      timestamp: 0, // 直播倒计时长
       /**
        * 聊天信息记录
        * {
@@ -365,6 +369,11 @@ export default {
       // 监听直播是否开始
       if (detail.liveType === 'live') {
         this.listenLiveStart(detail.stream)
+      }
+      // 是否要报名
+      if (detail.isNeedSignUp === 1 && !detail.isHaveSignUp) {
+        await this.$nextTick()
+        await this.$refs.LiveSignUp.signUp()
       }
       // 是否要输入密码
       if (detail.needToken && !detail.isInputToken) {
