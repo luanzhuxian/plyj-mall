@@ -45,9 +45,8 @@
             v-text="course.originalPrice"
             v-if="course.originalPrice"
           />
-          <div :class="$style.bottomBtn">
-            立即学习
-          </div>
+          <div v-if="!course.orderId" :class="$style.bottomBtn">立即学习</div>
+          <div v-else :class="[$style.bottomBtn, $style.bottomStudy]">观看学习</div>
         </div>
       </div>
     </router-link>
@@ -193,6 +192,9 @@ export default {
       border-radius: 8px;
       font-size: 26px;
       color: #FFFFFF;
+    }
+    &-study {
+      background-color: #F2B036;
     }
   }
 </style>
