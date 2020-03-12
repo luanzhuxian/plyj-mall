@@ -1121,11 +1121,11 @@ export default {
      * @param fields {Array} 字段列表
      */
     hasCustomForm (needStudent, customForm, skuCode1, fields) {
-      if (!customForm || !customForm.length) {
-        this.$error('请填写所有必填信息')
-        return false
-      }
       if (needStudent === 2) {
+        if (!customForm || !customForm.length) {
+          this.$error('请填写所有必填信息')
+          return false
+        }
         for (const field of customForm) {
           if (field.required && !field.fieldValue) {
             this.$error('请填写所有必填信息')
@@ -1168,7 +1168,7 @@ export default {
           productType: 'PHYSICAL_GOODS',
           count,
           agentUser,
-          customForm,
+          customForm: customForm || [],
           message: this.physicalRemark || this.remark
         })
       }
@@ -1185,7 +1185,7 @@ export default {
           count,
           agentUser,
           message: remark,
-          customForm,
+          customForm: customForm || [],
           studentIds: needStudentInfo === 1 ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null
         })
       }
@@ -1202,7 +1202,7 @@ export default {
           studentIds: needStudentInfo === 1 ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null,
           count,
           agentUser,
-          customForm,
+          customForm: customForm || [],
           message: remark
         })
       }
