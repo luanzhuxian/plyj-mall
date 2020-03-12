@@ -1114,15 +1114,25 @@ export default {
       return true
     },
     /**
-     * 判断是否选择了学生
+     * 判断是否填写了自定义表单
      * @param needStudent {Number} 是否需要学员
      * @param customForm {Array} 当前商品的自定义表单
      * @param skuCode1 {string} 规格
-     * @param count {Number} 商品数量，用来判断学生数量
+     * @param fields {Array} 字段列表
      */
-    hasCustomForm (needStudent, customForm, skuCode1, count) {
-      if (needStudent === 2 && customForm.length < count) {
+    hasCustomForm (needStudent, customForm, skuCode1, fields) {
+      if (!customForm || !customForm.length) {
         this.$error('请填写所有必填信息')
+        return false
+      }
+      if (needStudent === 2) {
+        for (const field of customForm) {
+          console.log(field)
+          if (field.required && !field.fieldValue) {
+            this.$error('请填写所有必填信息')
+            return false
+          }
+        }
         // if (this.isCart) {
         //   this.$nextTick(() => {
         //     let errorEl = document.querySelector('.' + this.$style.lessonError)
@@ -1134,7 +1144,6 @@ export default {
         //     this.lessonErrorTip = `请选择${count}名学员信息`
         //   })
         // }
-        return false
       }
       return true
     },
@@ -1150,7 +1159,11 @@ export default {
         return
       }
       for (const item of this.physicalProducts) {
-        const { productId, skuCode1, skuCode2, count, agentUser } = item
+        const { productId, skuCode1, skuCode2, count, agentUser, customForm, needStudentInfo, formEntityList } = item
+        // 实体商品不考虑商品数量，所有count传0
+        console.log(customForm)
+        console.log(customForm, 1165)
+        if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList)) return
         cartProducts.push({
           productId,
           skuCode1,
@@ -1158,14 +1171,16 @@ export default {
           productType: 'PHYSICAL_GOODS',
           count,
           agentUser,
+          customForm,
           message: this.physicalRemark || this.remark
         })
       }
       for (const item of this.virtualProducts) {
-        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm } = item
+        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm, formEntityList } = item
         const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
-        if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, count)) return
+        console.log(customForm, 1181)
+        if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList)) return
         cartProducts.push({
           productId,
           skuCode1,
@@ -1174,16 +1189,16 @@ export default {
           count,
           agentUser,
           message: remark,
-          customForm: JSON.stringify(customForm),
+          customForm,
           studentIds: needStudentInfo === 1 ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null
         })
       }
       for (const item of this.lessonList) {
-        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm = [] } = item
+        const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm = [], formEntityList } = item
         const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
-        console.log(customForm)
-        if (!this.hasCustomForm(needStudentInfo, customForm, skuCode1, count)) return
+        console.log(customForm, 1198)
+        if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList)) return
         cartProducts.push({
           productId,
           skuCode1,
@@ -1192,6 +1207,7 @@ export default {
           studentIds: needStudentInfo === 1 ? this.CHECKED_STUDENT[skuCode1 + skuCode2].map(item => item.id) : null,
           count,
           agentUser,
+          customForm,
           message: remark
         })
       }

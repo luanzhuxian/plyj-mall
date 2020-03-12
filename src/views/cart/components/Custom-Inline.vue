@@ -27,7 +27,7 @@
         :key="i"
         @click="editStudent(i)"
       >
-        <div>学员信息{{ i + 1 }}</div>
+        <div>{{ label }}{{ i + 1 }}</div>
         <div>
           <span v-if="isError(i)">未填写</span>
           <span v-else v-text="item[Object.keys(item)[0]]" />
@@ -40,7 +40,7 @@
       :show.sync="showForm"
       :form="currentForm"
       :rules="currentRules"
-      @confrim="confrim"
+      @confirm="confirm"
       :title="label"
     />
   </div>
@@ -76,7 +76,7 @@ export default {
     },
     label: {
       type: String,
-      default: ''
+      default: '学员信息'
     },
     count: {
       type: Number,
@@ -134,7 +134,23 @@ export default {
         }
       }
     },
-    confrim (e) {
+    confirm (e) {
+      const formList = this.formData.formList
+      const rules = this.formData.rules
+      const data = []
+      for (const [i, form] of formList.entries()) {
+        const fields = []
+        for (const key of Object.keys(form)) {
+          fields.push({
+            fieldName: key,
+            fieldValue: form[key],
+            required: rules[i][key][0].required
+          })
+        }
+        data.push(fields)
+      }
+      this.product.customForm = data
+      localStorage.setItem(`CUSTOM_FORM_${this.product.productId}`, JSON.stringify(data))
       this.$emit('confirm', e)
     }
   }

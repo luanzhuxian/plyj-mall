@@ -102,7 +102,8 @@ export default {
     formData () {
       const formList = []
       const rules = []
-      for (let i = 0; i < this.count; i++) {
+      const count = this.products.productType === 'PHYSICAL_GOODS' ? 1 : this.count
+      for (let i = 0; i < count; i++) {
         const form = {}
         const rule = {}
         for (const cus of this.customList) {
