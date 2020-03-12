@@ -1127,7 +1127,6 @@ export default {
       }
       if (needStudent === 2) {
         for (const field of customForm) {
-          console.log(field)
           if (field.required && !field.fieldValue) {
             this.$error('请填写所有必填信息')
             return false
@@ -1161,8 +1160,6 @@ export default {
       for (const item of this.physicalProducts) {
         const { productId, skuCode1, skuCode2, count, agentUser, customForm, needStudentInfo, formEntityList } = item
         // 实体商品不考虑商品数量，所有count传0
-        console.log(customForm)
-        console.log(customForm, 1165)
         if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList)) return
         cartProducts.push({
           productId,
@@ -1179,7 +1176,6 @@ export default {
         const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm, formEntityList } = item
         const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
-        console.log(customForm, 1181)
         if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList)) return
         cartProducts.push({
           productId,
@@ -1197,7 +1193,6 @@ export default {
         const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm = [], formEntityList } = item
         const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
         if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
-        console.log(customForm, 1198)
         if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList)) return
         cartProducts.push({
           productId,
