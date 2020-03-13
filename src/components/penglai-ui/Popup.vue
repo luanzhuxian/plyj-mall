@@ -73,6 +73,7 @@ export default {
     show: {
       handler: function (val) {
         if (val) {
+          this.lockBody()
           // 显示dialog
           this.showPopup = true
           // 显示mask
@@ -81,6 +82,7 @@ export default {
             this.showBox = true
           }, 200)
         } else {
+          this.unlockBody()
           this.showBox = false
           // 隐藏mask
           setTimeout(() => {
@@ -104,6 +106,16 @@ export default {
     }
   },
   methods: {
+    lockBody () {
+      const body = document.body
+      body.style.height = '100vh'
+      body.style.overflow = 'hidden'
+    },
+    unlockBody () {
+      const body = document.body
+      body.style.height = null
+      body.style.overflow = null
+    },
     close () {
       this.$emit('update:show', false)
       this.$emit('close')
@@ -177,7 +189,7 @@ export default {
   }
 
   &__content {
-    max-height: 70vh;
+    max-height: 80vh;
     overflow: auto;
   }
 

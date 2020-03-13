@@ -93,5 +93,7 @@ export default {
   }
   .form {
     margin-bottom: 50px;
+    max-height: 676px;
+    overflow-y: scroll;
   }
 </style>
