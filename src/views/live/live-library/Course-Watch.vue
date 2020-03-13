@@ -89,7 +89,7 @@ export default {
             message: '视频加载错误',
             viceMessage: '请联系机构管理人员'
           }).finally(() => {
-            this.$router.replace({ name: 'MyCourses' })
+            this.$router.go(-1)
           })
           return
         }
