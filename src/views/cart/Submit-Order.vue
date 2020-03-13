@@ -1081,10 +1081,12 @@ export default {
           this.$error('请填写所有必填信息')
           return false
         }
-        for (const field of customForm) {
-          if (field.required && !field.fieldValue) {
-            this.$error('请填写所有必填信息')
-            return false
+        for (const form of customForm) {
+          for (const field of form) {
+            if (field.required && !field.fieldValue) {
+              this.$error('请填写所有必填信息')
+              return false
+            }
           }
         }
         // if (this.isCart) {
