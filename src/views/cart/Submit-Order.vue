@@ -113,7 +113,7 @@
     </div>
 
     <CustomBlock
-      v-if="isCart && physicalProducts.length"
+      v-if="isCart && physicalProducts.some(item => item.needStudentInfo === 2)"
       :products="physicalProducts"
       label="用户信息"
     />
@@ -617,6 +617,7 @@ import {
   submitOrderPay
 } from '../../apis/shopping-cart'
 import { getCouponOfMax, getCouponByPrice, getRedEnvelopeListByPrice } from '../../apis/my-coupon'
+import { cancelOrder, deleteOrder } from '../../apis/order-manager'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { mapGetters, mapActions } from 'vuex'
 import { STUDENTS } from '../../store/mutation-type'
@@ -1213,7 +1214,7 @@ export default {
           this.requestPayDataCount++
           await this.requestPayData(orderSn)
         } else {
-          await this.pay(payData, payData.orderLists[0], payData.orderLists.length)
+          await this.pay(payData, payData.orderLists, payData.orderLists.length)
         }
       } catch (e) {
         this.requestPayDataCount = 0
@@ -1224,11 +1225,13 @@ export default {
     /**
      * 支付
      * @param CREDENTIAL {Object} 支付数据
-     * @param orderId {String} 订单Id
+     * @param orderIds {Array} 订单Id
      * @param orderCount {Number} 订单数量
      * @returns {Promise<*>}
      */
-    async pay (CREDENTIAL, orderId, orderCount) {
+    async pay (CREDENTIAL, orderIds, orderCount) {
+      console.log(orderIds)
+      const firstOrder = orderIds[0]
       let orderType = ''
       if (this.lessonList.length > 0 && this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
         orderType = 'FORMAL_CLASS'
@@ -1238,25 +1241,42 @@ export default {
           await wechatPay(CREDENTIAL)
         }
         this.submiting = false
-        this.$router.replace({ name: 'PaySuccess', params: { orderId, orderCount }, query: { orderType, productType: this.productType } })
+        this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount }, query: { orderType, productType: this.productType } })
         sessionStorage.removeItem('INVOICE_MODEL')
         sessionStorage.removeItem('CONFIRM_LIST')
+        this.submiting = false
       } catch (e) {
         // 支付失败
-        let vLen = this.virtualProducts.length
-        let pLen = this.physicalProducts.length
-        this.submiting = false
-        if (vLen > 1 || (pLen > 1 && vLen > 0)) {
-          this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
-        } else {
-          // 只有一种商品时，直接进入详情页
-          this.$router.replace({ name: 'OrderDetail', params: { orderId } })
+        // let vLen = this.virtualProducts.length
+        // let pLen = this.physicalProducts.length
+        // TODO: 由于现在没有二次支付，所以支付失败的时候，直接取消订单并删除
+        try {
+          const allCancel = []
+          const allDelete = []
+          for (const id of orderIds) {
+            allCancel.push(cancelOrder(id, '支付失败'))
+            allDelete.push(deleteOrder(id))
+          }
+          await Promise.all(allCancel)
+          await Promise.all(allDelete)
+        } catch (e) {
+          console.warn('订单取消失败')
+          console.error(e)
         }
-        sessionStorage.removeItem('INVOICE_MODEL')
-        sessionStorage.removeItem('CONFIRM_LIST')
-        throw e
-      } finally {
+
+        // 按需跳转页面
+        // if (vLen > 1 || (pLen > 1 && vLen > 0)) {
+        // TODO: 如果有二次支付，应该跳转至待支付列表
+        // this.$router.replace({ name: 'Orders', params: { status: 'WAIT_PAY' } })
+        // this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDER' } })
+        // } else {
+        // 只有一种商品时，直接进入详情页
+        // this.$router.replace({ name: 'OrderDetail', params: { orderId: firstOrder } })
+        // }
+        // sessionStorage.removeItem('INVOICE_MODEL')
+        // sessionStorage.removeItem('CONFIRM_LIST')
         this.submiting = false
+        throw e
       }
     },
     noNeed () {
