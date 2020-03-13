@@ -121,6 +121,11 @@ export default {
           object-fit: cover;
         }
       }
+      .experience {
+        padding: 6px 16px;
+        font-size: 32px;
+        line-height: 40px;
+      }
       .content {
         height: auto;
         .pro-name {
@@ -144,11 +149,10 @@ export default {
     position: absolute;
     top: 16px;
     left: 16px;
-    width: 100px;
+    padding: 4px 12px;
+    line-height: 32px;
     font-size: 24px;
-    text-align: center;
     color: #fff;
-    line-height: 42px;
     background-color: #F2B036;
     border-radius: 6px;
     z-index: 1;
