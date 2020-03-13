@@ -1,68 +1,68 @@
 <template lang="html">
-  <div class="pl-progress steps--vertical">
-    <div class="step__wrapper" v-if="steps.length">
-      <div
-        v-for="(item, index) of steps"
-        :key="index"
-        class="hairline step step--vertical"
-        :class="{ 'step--finish': index < active, 'step--process' : index === active }"
-      >
-        <div class="step__title" style="{ color: index === active ? activeColor : '' }">
-          <div v-text="item.text" />
-          <div class="step__title-desc" v-text="item.desc" />
-        </div>
-        <div class="step__circle-container">
-          <div
-            class="step__circle"
-            :class="{ 'step__active': index === active }"
-            :style="{ backgroundColor: (index < active + 1) ? activeColor : '' }"
-          />
-        </div>
-        <div
-          v-if="index !== 0"
-          class="step__line step__line--before"
-          :style="{ backgroundColor: (index < active + 1) ? activeColor : '' }"
-        />
-        <div
-          v-if="index !== steps.length - 1"
-          class="step__line step__line--after"
-        />
-        <!-- <div
+    <div class="pl-progress steps--vertical">
+        <div class="step__wrapper" v-if="steps.length">
+            <div
+                v-for="(item, index) of steps"
+                :key="index"
+                class="hairline step step--vertical"
+                :class="{ 'step--finish': index < active, 'step--process' : index === active }"
+            >
+                <div class="step__title" style="{ color: index === active ? activeColor : '' }">
+                    <div v-text="item.text" />
+                    <div class="step__title-desc" v-text="item.desc" />
+                </div>
+                <div class="step__circle-container">
+                    <div
+                        class="step__circle"
+                        :class="{ 'step__active': index === active }"
+                        :style="{ backgroundColor: (index < active + 1) ? activeColor : '' }"
+                    />
+                </div>
+                <div
+                    v-if="index !== 0"
+                    class="step__line step__line--before"
+                    :style="{ backgroundColor: (index < active + 1) ? activeColor : '' }"
+                />
+                <div
+                    v-if="index !== steps.length - 1"
+                    class="step__line step__line--after"
+                />
+                <!-- <div
           v-if="index !== steps.length - 1"
           class="step__line step__line--after"
           :style="{ backgroundColor: (index < active + 1) ? activeColor : '' }"
         /> -->
-      </div>
+            </div>
+        </div>
+        <div class="no-content" v-else>
+            没找到您要的信息。。。
+        </div>
     </div>
-    <div class="no-content" v-else>
-      没找到您要的信息。。。
-    </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'PlProgress',
-  props: {
-    steps: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    active: {
-      type: [String, Number],
-      default: 0
-    },
-    direction: {
-      type: String,
-      default: 'horizontal'
-    },
-    activeColor: {
-      type: String,
-      default: '#F2B036'
+    name: 'PlProgress',
+    props: {
+        steps: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        active: {
+            type: [String, Number],
+            default: 0
+        },
+        direction: {
+            type: String,
+            default: 'horizontal'
+        },
+        activeColor: {
+            type: String,
+            default: '#F2B036'
+        }
     }
-  }
 }
 </script>
 

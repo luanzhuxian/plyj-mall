@@ -1,54 +1,54 @@
 <template>
-  <div>
-    <div :class="$style.banner">
-      <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/my/485f13c1-6d89-4b22-8852-ac84f87f498a.png">
-    </div>
-    <div :class="$style.couponList">
-      <div :class="$style.couponHeader">
-        <pl-svg name="icon-coupon2" width="40" height="33" />
-        <span>优惠券</span>
-      </div>
-      <div :class="$style.couponView">
-        <load-more
-          :request-methods="getAvailableCouponList"
-          :form="form"
-          @refresh="refreshHandler"
-          @more="refreshHandler"
-          ref="loadMore"
-          no-content-tip="暂无优惠券"
-          no-icon
-        >
-          <template>
-            <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
-              <pl-svg name="icon-newCouponIcon" width="400" />
+    <div>
+        <div :class="$style.banner">
+            <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/my/485f13c1-6d89-4b22-8852-ac84f87f498a.png">
+        </div>
+        <div :class="$style.couponList">
+            <div :class="$style.couponHeader">
+                <pl-svg name="icon-coupon2" width="40" height="33" />
+                <span>优惠券</span>
             </div>
-            <CouponItem
-              v-for="item in couponList"
-              :key="item.id"
-              :id="item.id"
-              :name="item.couponName"
-              :amount="item.amount"
-              :full="item.useLimitAmount"
-              :subtract="item.amount"
-              :instruction="item.brief"
-              :use-start-time="item.useStartTime"
-              :use-end-time="item.useEndTime"
-              :receive-count="item.count"
-              :coupon-type="item.couponType"
-              :is-over-max="!item.canReceive"
-              :is-claimed="!!item.isClaimed"
-              @couponClick="couponClick(item)"
-            />
-          </template>
-        </load-more>
-      </div>
+            <div :class="$style.couponView">
+                <load-more
+                    :request-methods="getAvailableCouponList"
+                    :form="form"
+                    @refresh="refreshHandler"
+                    @more="refreshHandler"
+                    ref="loadMore"
+                    no-content-tip="暂无优惠券"
+                    no-icon
+                >
+                    <template>
+                        <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
+                            <pl-svg name="icon-newCouponIcon" width="400" />
+                        </div>
+                        <CouponItem
+                            v-for="item in couponList"
+                            :key="item.id"
+                            :id="item.id"
+                            :name="item.couponName"
+                            :amount="item.amount"
+                            :full="item.useLimitAmount"
+                            :subtract="item.amount"
+                            :instruction="item.brief"
+                            :use-start-time="item.useStartTime"
+                            :use-end-time="item.useEndTime"
+                            :receive-count="item.count"
+                            :coupon-type="item.couponType"
+                            :is-over-max="!item.canReceive"
+                            :is-claimed="!!item.isClaimed"
+                            @couponClick="couponClick(item)"
+                        />
+                    </template>
+                </load-more>
+            </div>
+        </div>
+        <div :class="$style.footer">
+            <router-link :to="{ name: 'MyCoupon'}">
+                我的卡券
+            </router-link>
+        </div>
     </div>
-    <div :class="$style.footer">
-      <router-link :to="{ name: 'MyCoupon'}">
-        我的卡券
-      </router-link>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -57,53 +57,56 @@ import LoadMore from '../../../components/common/Load-More.vue'
 import { getAvailableCouponList, receiveCoupon } from '../../../apis/my-coupon'
 
 export default {
-  name: 'CouponCenter',
-  components: {
-    CouponItem,
-    LoadMore
-  },
-  data () {
-    return {
-      couponList: [],
-      form: {
-        current: 1,
-        size: 10
-      },
-      getAvailableCouponList,
-      isCouponLoading: false // 增加节流阀
-    }
-  },
-  activated () {
-    if (this.$refs.loadMore) this.$refs.loadMore.refresh()
-  },
-  methods: {
-    async couponClick (item) {
-      if (this.isCouponLoading) return
-      let id = item.id
-      if (!id) { // TODO.Echo无Id时弹框提示，并打印当前优惠券信息
-        return this.$warning('请刷新页面')
-      }
-      try {
-        this.isCouponLoading = true
-        const { result } = await receiveCoupon({
-          couponId: id
-        })
-        result.isClaimed = true
-        // 只刷新所领取卡券信息
-        let oldCouponIndex = this.couponList.findIndex(item => item.id === id)
-        this.couponList.splice(oldCouponIndex, 1)
-        this.couponList.splice(oldCouponIndex, 0, result)
-        this.$success('领取成功')
-      } catch (e) {
-        throw e
-      } finally {
-        this.isCouponLoading = false
-      }
+    name: 'CouponCenter',
+    components: {
+        CouponItem,
+        LoadMore
     },
-    refreshHandler (list) {
-      this.couponList = list
+    data () {
+        return {
+            couponList: [],
+            form: {
+                current: 1,
+                size: 10
+            },
+            getAvailableCouponList,
+            // 增加节流阀
+            isCouponLoading: false
+        }
+    },
+    activated () {
+        if (this.$refs.loadMore) this.$refs.loadMore.refresh()
+    },
+    methods: {
+        async couponClick (item) {
+            if (this.isCouponLoading) return
+            const { id } = item
+            // TODO.Echo无Id时弹框提示，并打印当前优惠券信息
+            if (!id) {
+                return this.$warning('请刷新页面')
+            }
+            try {
+                this.isCouponLoading = true
+                const { result } = await receiveCoupon({
+                    couponId: id
+                })
+                result.isClaimed = true
+
+                // 只刷新所领取卡券信息
+                const oldCouponIndex = this.couponList.findIndex(item => item.id === id)
+                this.couponList.splice(oldCouponIndex, 1)
+                this.couponList.splice(oldCouponIndex, 0, result)
+                this.$success('领取成功')
+            } catch (e) {
+                throw e
+            } finally {
+                this.isCouponLoading = false
+            }
+        },
+        refreshHandler (list) {
+            this.couponList = list
+        }
     }
-  }
 }
 </script>
 

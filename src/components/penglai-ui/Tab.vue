@@ -1,76 +1,76 @@
 <template>
-  <div :class="['pl-tab' + ` pl-tab__${size}`]">
-    <div
-      v-for="(item, i) of tabs"
-      :key="i"
-      class="pl-tab__pane"
-      :class="{ active: item[options.id] === currentId,'color9': color9 }"
-      @click="handleClick(item)"
-    >
-      {{ item[options.name] }}
-      <slot :name="'tab-pane-' + i" />
+    <div :class="['pl-tab' + ` pl-tab__${size}`]">
+        <div
+            v-for="(item, i) of tabs"
+            :key="i"
+            class="pl-tab__pane"
+            :class="{ active: item[options.id] === currentId,'color9': color9 }"
+            @click="handleClick(item)"
+        >
+            {{ item[options.name] }}
+            <slot :name="'tab-pane-' + i" />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'PlTab',
-  props: {
-    tabs: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    },
-    options: {
-      type: Object,
-      default: function () {
-        return {
-          name: 'name',
-          id: 'id'
+    name: 'PlTab',
+    props: {
+        tabs: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        options: {
+            type: Object,
+            default () {
+                return {
+                    name: 'name',
+                    id: 'id'
+                }
+            }
+        },
+        size: {
+            type: String,
+            default: 'large'
+        },
+        activeId: {
+            type: [String, Number],
+            default: ''
+        },
+        count: {
+            type: Object,
+            default: null
+        },
+        color9: {
+            type: Boolean,
+            default: false
         }
-      }
     },
-    size: {
-      type: String,
-      default: 'large'
+    data () {
+        return {
+            currentId: null
+        }
     },
-    activeId: {
-      type: [String, Number],
-      default: ''
+    watch: {
+        activeId () {
+            this.currentId = this.activeId
+        }
     },
-    count: {
-      type: Object,
-      default: null
+    mounted () {
+        this.currentId = this.activeId
     },
-    color9: {
-      type: Boolean,
-      default: false
+    methods: {
+        handleClick (item) {
+            if (this.currentId !== item[this.options.id]) {
+                this.currentId = item[this.options.id]
+                this.$emit('change', item)
+            }
+            this.$emit('update:activeId', this.currentId)
+        }
     }
-  },
-  data () {
-    return {
-      currentId: null
-    }
-  },
-  watch: {
-    activeId () {
-      this.currentId = this.activeId
-    }
-  },
-  mounted () {
-    this.currentId = this.activeId
-  },
-  methods: {
-    handleClick (item) {
-      if (this.currentId !== item[this.options.id]) {
-        this.currentId = item[this.options.id]
-        this.$emit('change', item)
-      }
-      this.$emit('update:activeId', this.currentId)
-    }
-  }
 }
 </script>
 

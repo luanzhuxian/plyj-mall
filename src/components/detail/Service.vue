@@ -1,25 +1,25 @@
 <template>
-  <div :class="$style.service">
-    <div :class="$style.allService">
-      <div>
-        <pl-svg name="icon-time" />
-        <span>随时退</span>
-      </div>
-      <div>
-        <pl-svg name="icon-time" />
-        <span>过期退</span>
-      </div>
+    <div :class="$style.service">
+        <div :class="$style.allService">
+            <div>
+                <pl-svg name="icon-time" />
+                <span>随时退</span>
+            </div>
+            <div>
+                <pl-svg name="icon-time" />
+                <span>过期退</span>
+            </div>
+        </div>
+        <div :class="$style.count">
+            <pl-svg name="icon-selled" />
+            <span>已售123</span>
+        </div>
     </div>
-    <div :class="$style.count">
-      <pl-svg name="icon-selled" />
-      <span>已售123</span>
-    </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'Service'
+    name: 'Service'
 }
 </script>
 

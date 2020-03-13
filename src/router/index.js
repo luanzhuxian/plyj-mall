@@ -21,6 +21,7 @@ import FightEpidemic from './fight-epidemic.js'
 import OnlineClassroom from './online-classroom.js'
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
+
 /**
  * vue-router新版本给push和replace方法新增了回调（Promise）
  * 有时会有错误抛出，但是并不会影响正常跳转
@@ -32,35 +33,36 @@ Vue.use(Router)
 const originalPush = Router.prototype.push
 const originalReplace = Router.prototype.replace
 Router.prototype.push = function push (location, onResolve, onReject) {
-  if (typeof location === 'object') {
-    if (location.query) {
-      location.query.noCache = Date.now()
-    } else {
-      Object.assign(location, {
-        query: {
-          noCache: Date.now()
+    if (typeof location === 'object') {
+        if (location.query) {
+            location.query.noCache = Date.now()
+        } else {
+            Object.assign(location, {
+                query: {
+                    noCache: Date.now()
+                }
+            })
         }
-      })
     }
-  }
-  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
-  return originalPush.call(this, location).catch(err => err)
+    if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+    return originalPush.call(this, location).catch(err => err)
 }
 Router.prototype.replace = function replace (location, onResolve, onReject) {
-  if (typeof location === 'object') {
-    if (location.query) {
-      location.query.noCache = Date.now()
-    } else {
-      Object.assign(location, {
-        query: {
-          noCache: Date.now()
+    if (typeof location === 'object') {
+        if (location.query) {
+            location.query.noCache = Date.now()
+        } else {
+            Object.assign(location, {
+                query: {
+                    noCache: Date.now()
+                }
+            })
         }
-      })
     }
-  }
-  if (onResolve || onReject) return originalReplace.call(this, location, onResolve, onReject)
-  return originalReplace.call(this, location).catch(err => err)
+    if (onResolve || onReject) return originalReplace.call(this, location, onResolve, onReject)
+    return originalReplace.call(this, location).catch(err => err)
 }
+
 /**
  * ！！！！！！！！！注意！！！！！！！！！！
  * 不要使用from作为query的key，因为为了处理微信分享功能，query中的from将会被无条件删除！
@@ -68,48 +70,49 @@ Router.prototype.replace = function replace (location, onResolve, onReject) {
  * isappinstalled
  */
 export const routes = [
-  {
-    path: '/',
-    redirect: 'home'
-  },
-  {
-    path: '*',
-    name: 'NotFound',
-    component: NotFound,
-    meta: {
-      title: '页面未找到'
+    {
+        path: '/',
+        redirect: 'home'
+    },
+    {
+        path: '*',
+        name: 'NotFound',
+        component: NotFound,
+        meta: {
+            title: '页面未找到'
+        }
+    },
+    {
+        path: '/net-error',
+        name: 'NetError',
+        components: NetError,
+        meta: {
+            title: '无网络'
+        }
     }
-  },
-  {
-    path: '/net-error',
-    name: 'NetError',
-    components: NetError,
-    meta: {
-      title: '无网络'
-    }
-  }
 ]
 const allRoutes = [
-  ...routes,
-  ...home,
-  ...my,
-  ...classify,
-  ...yaji,
-  ...detail,
-  ...order,
-  ...setting,
-  ...Cart,
-  ...Appointment,
-  ...DoubleTwelveDay,
-  ...Live,
-  ...Activity,
-  ...Newcomers,
-  ...InviteNewcomers,
-  ...roadlearning,
-  ...NewYear,
-  ...FightEpidemic,
-  ...OnlineClassroom
+    ...routes,
+    ...home,
+    ...my,
+    ...classify,
+    ...yaji,
+    ...detail,
+    ...order,
+    ...setting,
+    ...Cart,
+    ...Appointment,
+    ...DoubleTwelveDay,
+    ...Live,
+    ...Activity,
+    ...Newcomers,
+    ...InviteNewcomers,
+    ...roadlearning,
+    ...NewYear,
+    ...FightEpidemic,
+    ...OnlineClassroom
 ]
+
 // 为每个路由配置可选参数noCache
 // for (let route of allRoutes) {
 //   const paths = route.path.split('/')
@@ -119,10 +122,10 @@ const allRoutes = [
 // }
 
 export const router = new Router({
-  mode: 'history',
-  base: window.location.pathname.split('/')[1] || '',
-  routes: allRoutes,
-  scrollBehavior (to, from, savedPosition) {
-    return { x: 0, y: 0 }
-  }
+    mode: 'history',
+    base: window.location.pathname.split('/')[1] || '',
+    routes: allRoutes,
+    scrollBehavior (to, from, savedPosition) {
+        return { x: 0, y: 0 }
+    }
 })

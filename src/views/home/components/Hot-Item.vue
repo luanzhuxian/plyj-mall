@@ -1,96 +1,96 @@
 <template>
-  <div :class="$style.hotItem">
-    <div :class="$style.proBox">
-      <template v-for="(item, i) of first">
-        <div
-          v-if="item.goodsInfo"
-          :class="{
-            [$style.first]: true,
-            [$style.proItem]: true,
-            [$style.other]: i > 0
-          }"
-          :key="i"
-          @click="jump(item)"
-        >
-          <div :class="$style.img">
-            <count-down
-              v-if="item.goodsInfo.shoppingStatus === 1"
-              :class="$style.countDown"
-              size="small"
-              :data="item.goodsInfo"
-              :fields="{ end: 'shoppingTimeLong' }"
-            />
-            <img :src="item.image + '?x-oss-process=style/thum-middle'" v-img-error alt="">
-          </div>
-          <div :class="$style.content">
-            <div :class="$style.proName" v-text="item.name" />
-            <tags
-              :class="$style.tags"
-              size="middle"
-              :tags="item.goodsInfo.labelModels"
-            />
-            <div :class="$style.proPrice">
-              <div :class="$style.price">
-                <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
-              </div>
-              <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
-              <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
-                <span :class="$style.howManyPay">
-                  {{ item.goodsInfo.pageviews }}人关注
-                </span>
-              </template>
-              <template v-else-if="item.goodsInfo.salesVolume >= 10">
-                <span :class="$style.howManyPay">
-                  {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
-                </span>
-              </template>
-            </div>
-          </div>
-        </div>
-      </template>
-
-      <div :class="$style.other" v-if="data.values.length > 0">
-        <template v-for="(item, i) of this.data.values">
-          <div
-            v-if="item.goodsInfo"
-            :class="$style.proItem"
-            :key="i"
-            @click="jump(item)"
-          >
-            <div :class="$style.img">
-              <count-down v-if="item.goodsInfo.shoppingStatus === 1" :class="$style.countDown2" size="small" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
-              <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
-            </div>
-            <div :class="$style.content">
-              <div :class="$style.proName" v-text="item.name" />
-              <tags
-                :class="$style.tags"
-                size="small"
-                :tags="item.goodsInfo.labelModels.slice(0, 2)"
-              />
-              <div :class="$style.proPrice">
-                <div :class="$style.price">
-                  <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+    <div :class="$style.hotItem">
+        <div :class="$style.proBox">
+            <template v-for="(item, i) of first">
+                <div
+                    v-if="item.goodsInfo"
+                    :class="{
+                        [$style.first]: true,
+                        [$style.proItem]: true,
+                        [$style.other]: i > 0
+                    }"
+                    :key="i"
+                    @click="jump(item)"
+                >
+                    <div :class="$style.img">
+                        <count-down
+                            v-if="item.goodsInfo.shoppingStatus === 1"
+                            :class="$style.countDown"
+                            size="small"
+                            :data="item.goodsInfo"
+                            :fields="{ end: 'shoppingTimeLong' }"
+                        />
+                        <img :src="item.image + '?x-oss-process=style/thum-middle'" v-img-error alt="">
+                    </div>
+                    <div :class="$style.content">
+                        <div :class="$style.proName" v-text="item.name" />
+                        <tags
+                            :class="$style.tags"
+                            size="middle"
+                            :tags="item.goodsInfo.labelModels"
+                        />
+                        <div :class="$style.proPrice">
+                            <div :class="$style.price">
+                                <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+                            </div>
+                            <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+                            <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                                <span :class="$style.howManyPay">
+                                    {{ item.goodsInfo.pageviews }}人关注
+                                </span>
+                            </template>
+                            <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                                <span :class="$style.howManyPay">
+                                    {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
+                                </span>
+                            </template>
+                        </div>
+                    </div>
                 </div>
-                <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
-                <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
-                  <span :class="$style.howManyPay">
-                    {{ item.goodsInfo.pageviews }}人关注
-                  </span>
+            </template>
+
+            <div :class="$style.other" v-if="data.values.length > 0">
+                <template v-for="(item, i) of this.data.values">
+                    <div
+                        v-if="item.goodsInfo"
+                        :class="$style.proItem"
+                        :key="i"
+                        @click="jump(item)"
+                    >
+                        <div :class="$style.img">
+                            <count-down v-if="item.goodsInfo.shoppingStatus === 1" :class="$style.countDown2" size="small" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+                            <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
+                        </div>
+                        <div :class="$style.content">
+                            <div :class="$style.proName" v-text="item.name" />
+                            <tags
+                                :class="$style.tags"
+                                size="small"
+                                :tags="item.goodsInfo.labelModels.slice(0, 2)"
+                            />
+                            <div :class="$style.proPrice">
+                                <div :class="$style.price">
+                                    <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+                                </div>
+                                <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+                                <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                                    <span :class="$style.howManyPay">
+                                        {{ item.goodsInfo.pageviews }}人关注
+                                    </span>
+                                </template>
+                                <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                                    <span :class="$style.howManyPay">
+                                        {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
+                                    </span>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
                 </template>
-                <template v-else-if="item.goodsInfo.salesVolume >= 10">
-                  <span :class="$style.howManyPay">
-                    {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
-                  </span>
-                </template>
-              </div>
+                <div v-if="data.values.length % 2 === 1" :class="$style.pro" />
             </div>
-          </div>
-        </template>
-        <div v-if="data.values.length % 2 === 1" :class="$style.pro" />
-      </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -98,26 +98,26 @@ import Tags from './Tags.vue'
 import CountDown from '../../../components/product/Count-Down.vue'
 
 export default {
-  name: 'HotItem',
-  components: {
-    Tags,
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
-    }
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    first () {
-      /* eslint-disable */
+    name: 'HotItem',
+    components: {
+        Tags,
+        CountDown
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
+    },
+    data () {
+        return {
+        }
+    },
+    computed: {
+        first () {
+            /* eslint-disable */
       return this.data.values.splice(0, 1)
     },
     moduleName () {

@@ -1,24 +1,24 @@
 <template>
-  <div :class="$style.infoItem" @click="clickHandler">
-    <div :class="$style.content">
-      <div :class="$style.itemLabel">
-        <slot name="label" />
-      </div>
-      <div :class="$style.itemContent">
-        <slot name="content" />
-      </div>
+    <div :class="$style.infoItem" @click="clickHandler">
+        <div :class="$style.content">
+            <div :class="$style.itemLabel">
+                <slot name="label" />
+            </div>
+            <div :class="$style.itemContent">
+                <slot name="content" />
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'InfoItem',
-  methods: {
-    clickHandler (e) {
-      this.$emit('click', e)
+    name: 'InfoItem',
+    methods: {
+        clickHandler (e) {
+            this.$emit('click', e)
+        }
     }
-  }
 }
 </script>
 

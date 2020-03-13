@@ -1,36 +1,36 @@
 <template>
-  <div :class="$style.usefulLife">
-    <div :class="$style.title">
-      <pl-svg name="icon-date" height="28" />
-      <span>有效期：</span>
+    <div :class="$style.usefulLife">
+        <div :class="$style.title">
+            <pl-svg name="icon-date" height="28" />
+            <span>有效期：</span>
+        </div>
+        <div v-if="start" :class="$style.date">
+            <span v-if="start.split(' ')[0] !== end.split(' ')[0]">
+                {{ start | dateFormat('YYYY.MM.DD') }}-{{ end | dateFormat('YYYY.MM.DD') }}
+            </span>
+            <span v-else>
+                {{ start | dateFormat('YYYY.MM.DD') }}
+            </span>
+        </div>
+        <div v-else :class="$style.date">
+            长期有效
+        </div>
     </div>
-    <div v-if="start" :class="$style.date">
-      <span v-if="start.split(' ')[0] !== end.split(' ')[0]">
-        {{ start | dateFormat('YYYY.MM.DD') }}-{{ end | dateFormat('YYYY.MM.DD') }}
-      </span>
-      <span v-else>
-        {{ start | dateFormat('YYYY.MM.DD') }}
-      </span>
-    </div>
-    <div v-else :class="$style.date">
-      长期有效
-    </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'UsefulLife',
-  props: {
-    start: {
-      type: String,
-      default: ''
-    },
-    end: {
-      type: String,
-      default: ''
+    name: 'UsefulLife',
+    props: {
+        start: {
+            type: String,
+            default: ''
+        },
+        end: {
+            type: String,
+            default: ''
+        }
     }
-  }
 }
 </script>
 

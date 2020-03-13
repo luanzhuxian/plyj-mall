@@ -1,97 +1,97 @@
 <template>
-  <div :class="$style.waitPayBalance">
-    <div :class="$style.list">
-      <load-more
-        ref="loadMore"
-        :form="form"
-        :loading.sync="loading"
-        :request-methods="waitPayBalance"
-        no-content-tip="您还没有相关订单~"
-        @refresh="onRefresh"
-        @more="onRefresh"
-      >
-        <template>
-          <div
-            :class="$style.listItem"
-            tag="div"
-            v-for="(item, i) of orderList"
-            :key="i"
-            @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
-          >
-            <div>
-              <div :class="$style.listItemLeft">
-                <span :class="$style.tag">
-                  预购
-                </span>
-                <pl-list
-                  title="订单编号："
-                  :content="item.orderId"
-                />
-              </div>
-              <p :class="$style.status" v-text="item.statusText" />
-            </div>
-            <order-item
-              :img="item.productMainImage + '?x-oss-process=style/thum'"
-              :name="item.productName"
-              :option="item.skuName2 ? `${item.skuName},${item.skuName2}` : item.skuName"
-              :count="item.count"
-              :price="item.productPrice"
-              :status="refundStatusMap[item.afterSalesStatus]"
-              border
-            />
-            <div :class="$style.listItemBottom">
-              <div :class="$style.priceWrapper">
-                <span :class="$style.totalCount">共{{ item.count }}件商品</span>
-                <span :class="$style.bold">定金：</span>
-                <span :class="$style.price">{{ item.price }}</span>
-              </div>
-              <div :class="$style.priceWrapper">
-                <span :class="$style.bold">待付尾款：</span>
-                <span :class="$style.price">{{ item.prePayOrderPrice }}</span>
-              </div>
-              <div :class="$style.buttons">
-                <div :class="$style.time">
-                  <template v-if="!item.pastDue">
-                    <span v-show="item.isStart">剩余尾款支付时间：</span>
-                    <span v-show="!item.isStart">距离开始支付时间：</span>
-                    <span v-show="item.d !== '00'">{{ item.d }}天</span>
-                    <span v-show="item.h !== '00'">{{ item.h }}时</span>
-                    <span>{{ item.m }}分</span>
-                    <span>{{ item.s }}秒</span>
-                  </template>
-                  <!--<span v-if="!item.isStart">
+    <div :class="$style.waitPayBalance">
+        <div :class="$style.list">
+            <load-more
+                ref="loadMore"
+                :form="form"
+                :loading.sync="loading"
+                :request-methods="waitPayBalance"
+                no-content-tip="您还没有相关订单~"
+                @refresh="onRefresh"
+                @more="onRefresh"
+            >
+                <template>
+                    <div
+                        :class="$style.listItem"
+                        tag="div"
+                        v-for="(item, i) of orderList"
+                        :key="i"
+                        @click="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
+                    >
+                        <div>
+                            <div :class="$style.listItemLeft">
+                                <span :class="$style.tag">
+                                    预购
+                                </span>
+                                <pl-list
+                                    title="订单编号："
+                                    :content="item.orderId"
+                                />
+                            </div>
+                            <p :class="$style.status" v-text="item.statusText" />
+                        </div>
+                        <order-item
+                            :img="item.productMainImage + '?x-oss-process=style/thum'"
+                            :name="item.productName"
+                            :option="item.skuName2 ? `${item.skuName},${item.skuName2}` : item.skuName"
+                            :count="item.count"
+                            :price="item.productPrice"
+                            :status="refundStatusMap[item.afterSalesStatus]"
+                            border
+                        />
+                        <div :class="$style.listItemBottom">
+                            <div :class="$style.priceWrapper">
+                                <span :class="$style.totalCount">共{{ item.count }}件商品</span>
+                                <span :class="$style.bold">定金：</span>
+                                <span :class="$style.price">{{ item.price }}</span>
+                            </div>
+                            <div :class="$style.priceWrapper">
+                                <span :class="$style.bold">待付尾款：</span>
+                                <span :class="$style.price">{{ item.prePayOrderPrice }}</span>
+                            </div>
+                            <div :class="$style.buttons">
+                                <div :class="$style.time">
+                                    <template v-if="!item.pastDue">
+                                        <span v-show="item.isStart">剩余尾款支付时间：</span>
+                                        <span v-show="!item.isStart">距离开始支付时间：</span>
+                                        <span v-show="item.d !== '00'">{{ item.d }}天</span>
+                                        <span v-show="item.h !== '00'">{{ item.h }}时</span>
+                                        <span>{{ item.m }}分</span>
+                                        <span>{{ item.s }}秒</span>
+                                    </template>
+                                    <!--<span v-if="!item.isStart">
                     未开始支付
                   </span>
                   <span v-if="item.pastDue">
                     已过期
                   </span>-->
-                </div>
-                <pl-button
-                  v-if="!item.pastDue && item.status !== 'WAIT_PAY'"
-                  type="warning"
-                  round
-                  :disabled="!item.isStart"
-                  @click.stop="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
-                >
-                  去使用
-                </pl-button>
-                <pl-button
-                  v-if="item.status === 'WAIT_PAY' && false"
-                  type="warning"
-                  round
-                  :disabled="!item.isStart || item.pastDue"
-                  :loading="payloading && item.orderId === currentPayId"
-                  @click.stop="balancePayment(item)"
-                >
-                  {{ item.pastDue ? '已过期' : item.isStart ? '去付尾款' : '未开始支付' }}
-                </pl-button>
-              </div>
-            </div>
-          </div>
-        </template>
-      </load-more>
+                                </div>
+                                <pl-button
+                                    v-if="!item.pastDue && item.status !== 'WAIT_PAY'"
+                                    type="warning"
+                                    round
+                                    :disabled="!item.isStart"
+                                    @click.stop="$router.push({ name: 'OrderDetail', params: { orderId: item.orderId } })"
+                                >
+                                    去使用
+                                </pl-button>
+                                <pl-button
+                                    v-if="item.status === 'WAIT_PAY' && false"
+                                    type="warning"
+                                    round
+                                    :disabled="!item.isStart || item.pastDue"
+                                    :loading="payloading && item.orderId === currentPayId"
+                                    @click.stop="balancePayment(item)"
+                                >
+                                    {{ item.pastDue ? '已过期' : item.isStart ? '去付尾款' : '未开始支付' }}
+                                </pl-button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </load-more>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>

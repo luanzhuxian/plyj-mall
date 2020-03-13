@@ -1,64 +1,64 @@
 <template>
-  <router-link
-    :class="$style.maisong"
-    tag="div"
-    :to="{ name: 'Classify' }"
-  >
-    <div
-      :class="{
-        [$style.background]: true,
-        [$style.bg1]: type === 5 || type === 6,
-        [$style.bg2]: type === 7
-      }"
+    <router-link
+        :class="$style.maisong"
+        tag="div"
+        :to="{ name: 'Classify' }"
     >
-      <div :class="$style.wrapper">
-        <div :class="$style.title" v-if="data.otherValue">
-          {{ data.otherValue }}
-        </div>
-        <ul :class="$style.list" v-if="data.values.length">
-          <li
+        <div
             :class="{
-              [$style.listItem]: true,
-              [$style.small]: data.values.length === 3,
-              [$style.middle]: data.values.length === 2,
-              [$style.large]: data.values.length === 1
+                [$style.background]: true,
+                [$style.bg1]: type === 5 || type === 6,
+                [$style.bg2]: type === 7
             }"
-            v-for="(item, i) of data.values"
-            :key="i"
-          >
-            <div :class="$style.imgWrapper">
-              <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
+        >
+            <div :class="$style.wrapper">
+                <div :class="$style.title" v-if="data.otherValue">
+                    {{ data.otherValue }}
+                </div>
+                <ul :class="$style.list" v-if="data.values.length">
+                    <li
+                        :class="{
+                            [$style.listItem]: true,
+                            [$style.small]: data.values.length === 3,
+                            [$style.middle]: data.values.length === 2,
+                            [$style.large]: data.values.length === 1
+                        }"
+                        v-for="(item, i) of data.values"
+                        :key="i"
+                    >
+                        <div :class="$style.imgWrapper">
+                            <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
+                        </div>
+                        <div :class="$style.info">
+                            <pl-svg name="icon-gift-1" v-if="i === 0" />
+                            <pl-svg name="icon-gift-2" v-if="i === 1" />
+                            <pl-svg name="icon-gift-3" v-if="i === 2" />
+                            <div :class="$style.sub">
+                                {{ item.name }}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <div :class="$style.info">
-              <pl-svg name="icon-gift-1" v-if="i === 0" />
-              <pl-svg name="icon-gift-2" v-if="i === 1" />
-              <pl-svg name="icon-gift-3" v-if="i === 2" />
-              <div :class="$style.sub">
-                {{ item.name }}
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </router-link>
+        </div>
+    </router-link>
 </template>
 
 <script>
 export default {
-  name: 'Maisong',
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
-    },
-    type: {
-      type: Number,
-      default: 0
+    name: 'Maisong',
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        },
+        type: {
+            type: Number,
+            default: 0
+        }
     }
-  }
 }
 </script>
 

@@ -1,133 +1,137 @@
 <template lang="html">
-  <div
-    v-show="showPopup"
-    class="pl-popup"
-    :class="{ [`pl-popup__${position}`]: true }"
-    @touchmove.stop="() => {}"
-  >
     <div
-      class="pl-popup__mask"
-      :class="{ show: showMask }"
-      @click="maskClick"
-    />
-    <div
-      class="pl-popup__box"
-      :class="{ show: showBox }"
+        v-show="showPopup"
+        class="pl-popup"
+        :class="{ [`pl-popup__${position}`]: true }"
+        @touchmove.stop="() => {}"
     >
-      <div
-        v-if="title"
-        class="pl-popup__title"
-        :style="{
-          textAlign: titleAlign
-        }"
-      >
-        {{ title }}
-      </div>
-      <slot
-        v-else
-        name="title"
-      />
-      <div class="pl-popup__content">
-        <slot />
-      </div>
-      <div
-        v-if="!hideCloseIcon"
-        class="pl-popup__close-wrapper"
-        @click="close"
-      >
-        <pl-svg
-          class="pl-popup__close"
-          name="icon-close2"
-          fill="#ccc"
-          width="36"
+        <div
+            class="pl-popup__mask"
+            :class="{ show: showMask }"
+            @click="maskClick"
         />
-      </div>
+        <div
+            class="pl-popup__box"
+            :class="{ show: showBox }"
+        >
+            <div
+                v-if="title"
+                class="pl-popup__title"
+                :style="{
+                    textAlign: titleAlign
+                }"
+            >
+                {{ title }}
+            </div>
+            <slot
+                v-else
+                name="title"
+            />
+            <div class="pl-popup__content">
+                <slot />
+            </div>
+            <div
+                v-if="!hideCloseIcon"
+                class="pl-popup__close-wrapper"
+                @click="close"
+            >
+                <pl-svg
+                    class="pl-popup__close"
+                    name="icon-close2"
+                    fill="#ccc"
+                    width="36"
+                />
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'PlPopup',
-  props: {
-    position: {
-      type: String,
-      default: 'bottom'
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    titleAlign: {
-      type: String,
-      default: 'center'
-    },
-    hideCloseIcon: Boolean,
-    show: Boolean,
-    closeOnClickModal: {
-      type: Boolean,
-      default: true
-    }
-  },
-  watch: {
-    show: {
-      handler: function (val) {
-        if (val) {
-          this.lockBody()
-          // 显示dialog
-          this.showPopup = true
-          // 显示mask
-          this.showMask = true
-          setTimeout(() => {
-            this.showBox = true
-          }, 200)
-        } else {
-          this.unlockBody()
-          this.showBox = false
-          // 隐藏mask
-          setTimeout(() => {
-            this.showMask = false
-            // 隐藏dialog
-            setTimeout(() => {
-              this.showPopup = false
-              this.$emit('update:show', false)
-            }, 200)
-          }, 300)
+    name: 'PlPopup',
+    props: {
+        position: {
+            type: String,
+            default: 'bottom'
+        },
+        title: {
+            type: String,
+            default: ''
+        },
+        titleAlign: {
+            type: String,
+            default: 'center'
+        },
+        hideCloseIcon: Boolean,
+        show: Boolean,
+        closeOnClickModal: {
+            type: Boolean,
+            default: true
         }
-      },
-      immediate: true
-    }
-  },
-  data () {
-    return {
-      showPopup: false,
-      showMask: false,
-      showBox: false
-    }
-  },
-  methods: {
-    lockBody () {
-      const body = document.body
-      this.scrollY = window.scrollY
-      body.style.height = '100vh'
-      body.style.overflow = 'hidden'
     },
-    unlockBody () {
-      const body = document.body
-      body.style.height = null
-      body.style.overflow = null
-      window.scrollTo(0, this.scrollY)
+    watch: {
+        show: {
+            handler (val) {
+                if (val) {
+                    this.lockBody()
+
+                    // 显示dialog
+                    this.showPopup = true
+
+                    // 显示mask
+                    this.showMask = true
+                    setTimeout(() => {
+                        this.showBox = true
+                    }, 200)
+                } else {
+                    this.unlockBody()
+                    this.showBox = false
+
+                    // 隐藏mask
+                    setTimeout(() => {
+                        this.showMask = false
+
+                        // 隐藏dialog
+                        setTimeout(() => {
+                            this.showPopup = false
+                            this.$emit('update:show', false)
+                        }, 200)
+                    }, 300)
+                }
+            },
+            immediate: true
+        }
     },
-    close () {
-      this.$emit('update:show', false)
-      this.$emit('close')
+    data () {
+        return {
+            showPopup: false,
+            showMask: false,
+            showBox: false
+        }
     },
-    maskClick () {
-      if (this.closeOnClickModal) {
-        this.close()
-      }
+    methods: {
+        lockBody () {
+            const { body } = document
+            this.scrollY = window.scrollY
+            body.style.height = '100vh'
+            body.style.overflow = 'hidden'
+        },
+        unlockBody () {
+            const { body } = document
+            body.style.height = null
+            body.style.overflow = null
+            window.scrollTo(0, this.scrollY)
+        },
+        close () {
+            this.$emit('update:show', false)
+            this.$emit('close')
+        },
+        maskClick () {
+            if (this.closeOnClickModal) {
+                this.close()
+            }
+        }
     }
-  }
 }
 </script>
 

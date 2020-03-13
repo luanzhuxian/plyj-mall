@@ -1,70 +1,70 @@
 <template>
-  <div
-    :class="{
-      [$style.homeTemplateC]: true,
-      [$style.skinXmas]: skinId === 1,
-      [$style.skinYuanDan]: skinId === 2,
-      [$style.skinNewYear]: skinId === 3,
-      [$style.skinXiaoNian]: skinId === 4,
-      [$style.skinYuanXiao]: skinId === 5,
-      [$style.skinWomenDay]: skinId === 6,
-      [$style.skinCampaign]: skinId === 99
-    }"
-  >
-    <div :class="$style.container">
-      <search :class="$style.search" placeholder="搜索商品" />
-      <propagate :class="$style.propagate" :data="PIN_XUAN" />
-      <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
-      <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
-      <campaign v-if="isCampaignShow" />
-      <activity :class="$style.activity" v-if="isNwEventShow" />
-      <d12-activity :class="$style.activity" />
-      <appointment :class="$style.appointment" :data="YU_YUE" :style-type="2" />
-      <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
-        <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
-        <skin-title
-          v-else
-          :class="$style.skinTitle"
-          :data="POPULAR.moduleName"
-          :skin-id="skinId"
-        />
-        <hot-item :data="POPULAR" />
-      </div>
-      <div :class="$style.teachers" v-if="TEACHERS.showStatue === 1">
-        <div v-if="skinId === 0" :class="$style.title" v-text="TEACHERS.moduleName" />
-        <skin-title
-          v-else
-          :class="$style.skinTitle"
-          :data="TEACHERS.moduleName"
-          :skin-id="skinId"
-        />
-        <teachers :data="TEACHERS" />
-      </div>
-      <div :class="$style.best" v-if="CLASS.showStatue === 1">
-        <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
-        <skin-title
-          v-else
-          :class="$style.skinTitle"
-          :data="CLASS.moduleName"
-          :skin-id="skinId"
-        />
-        <best :data="CLASS" />
-      </div>
-      <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
-        <div v-if="skinId === 0" :class="$style.title" v-text="RECOMMEND.moduleName" />
-        <skin-title
-          v-else
-          :class="$style.skinTitle"
-          :data="RECOMMEND.moduleName"
-          :skin-id="skinId"
-        />
-        <best-recommend :data="RECOMMEND" />
-      </div>
-      <footer :class="$style.footer">
-        — 技术支持 朋来科技 —
-      </footer>
+    <div
+        :class="{
+            [$style.homeTemplateC]: true,
+            [$style.skinXmas]: skinId === 1,
+            [$style.skinYuanDan]: skinId === 2,
+            [$style.skinNewYear]: skinId === 3,
+            [$style.skinXiaoNian]: skinId === 4,
+            [$style.skinYuanXiao]: skinId === 5,
+            [$style.skinWomenDay]: skinId === 6,
+            [$style.skinCampaign]: skinId === 99
+        }"
+    >
+        <div :class="$style.container">
+            <search :class="$style.search" placeholder="搜索商品" />
+            <propagate :class="$style.propagate" :data="PIN_XUAN" />
+            <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
+            <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
+            <campaign v-if="isCampaignShow" />
+            <activity :class="$style.activity" v-if="isNwEventShow" />
+            <d12-activity :class="$style.activity" />
+            <appointment :class="$style.appointment" :data="YU_YUE" :style-type="2" />
+            <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
+                <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
+                <skin-title
+                    v-else
+                    :class="$style.skinTitle"
+                    :data="POPULAR.moduleName"
+                    :skin-id="skinId"
+                />
+                <hot-item :data="POPULAR" />
+            </div>
+            <div :class="$style.teachers" v-if="TEACHERS.showStatue === 1">
+                <div v-if="skinId === 0" :class="$style.title" v-text="TEACHERS.moduleName" />
+                <skin-title
+                    v-else
+                    :class="$style.skinTitle"
+                    :data="TEACHERS.moduleName"
+                    :skin-id="skinId"
+                />
+                <teachers :data="TEACHERS" />
+            </div>
+            <div :class="$style.best" v-if="CLASS.showStatue === 1">
+                <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
+                <skin-title
+                    v-else
+                    :class="$style.skinTitle"
+                    :data="CLASS.moduleName"
+                    :skin-id="skinId"
+                />
+                <best :data="CLASS" />
+            </div>
+            <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
+                <div v-if="skinId === 0" :class="$style.title" v-text="RECOMMEND.moduleName" />
+                <skin-title
+                    v-else
+                    :class="$style.skinTitle"
+                    :data="RECOMMEND.moduleName"
+                    :skin-id="skinId"
+                />
+                <best-recommend :data="RECOMMEND" />
+            </div>
+            <footer :class="$style.footer">
+                — 技术支持 朋来科技 —
+            </footer>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -83,77 +83,77 @@ import SkinTitle from './skin/Skin-Title.vue'
 import Campaign from './components/Campaign'
 
 export default {
-  name: 'HomeTemplateC',
-  inject: ['parent'],
-  components: {
-    Search,
-    Live,
-    OnlineCourse,
-    Activity,
-    D12Activity,
-    HotItem,
-    Best,
-    BestRecommend,
-    Appointment,
-    Propagate,
-    Teachers,
-    SkinTitle,
-    Campaign
-  },
-  props: {
-    type: {
-      type: Number,
-      default: 0
+    name: 'HomeTemplateC',
+    inject: ['parent'],
+    components: {
+        Search,
+        Live,
+        OnlineCourse,
+        Activity,
+        D12Activity,
+        HotItem,
+        Best,
+        BestRecommend,
+        Appointment,
+        Propagate,
+        Teachers,
+        SkinTitle,
+        Campaign
     },
-    skinId: {
-      type: Number,
-      default: 0
+    props: {
+        type: {
+            type: Number,
+            default: 0
+        },
+        skinId: {
+            type: Number,
+            default: 0
+        },
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
     },
-    data: {
-      type: Object,
-      default () {
-        return {}
-      }
+    data () {
+        return {
+        }
+    },
+    computed: {
+        PIN_XUAN () {
+            return this.data.PIN_XUAN || {}
+        },
+        YU_YUE () {
+            return this.data.YU_YUE || {}
+        },
+        POPULAR () {
+            return this.data.POPULAR || {}
+        },
+        TEACHERS () {
+            return this.data.TEACHERS || {}
+        },
+        CLASS () {
+            return this.data.CLASS || {}
+        },
+        RECOMMEND () {
+            return this.data.RECOMMEND || {}
+        },
+        isLiveShow () {
+            const { liveInfo } = this.parent
+            return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+        },
+        isCourseShow () {
+            const { courseInfo } = this.parent
+            return courseInfo && courseInfo.records && courseInfo.records.length
+        },
+        isNwEventShow () {
+            return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
+        },
+        isCampaignShow () {
+            return this.parent.isReportShow || this.parent.isBookShow
+        }
     }
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    PIN_XUAN () {
-      return this.data.PIN_XUAN || {}
-    },
-    YU_YUE () {
-      return this.data.YU_YUE || {}
-    },
-    POPULAR () {
-      return this.data.POPULAR || {}
-    },
-    TEACHERS () {
-      return this.data.TEACHERS || {}
-    },
-    CLASS () {
-      return this.data.CLASS || {}
-    },
-    RECOMMEND () {
-      return this.data.RECOMMEND || {}
-    },
-    isLiveShow () {
-      const { liveInfo } = this.parent
-      return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
-    },
-    isCourseShow () {
-      const { courseInfo } = this.parent
-      return courseInfo && courseInfo.records && courseInfo.records.length
-    },
-    isNwEventShow () {
-      return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
-    },
-    isCampaignShow () {
-      return this.parent.isReportShow || this.parent.isBookShow
-    }
-  }
 }
 </script>
 

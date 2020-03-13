@@ -1,131 +1,131 @@
 <template>
-  <div :class="$style.coffers">
-    <TopText
-      title="小金库"
-      tip="看看你距离人生巅峰还差多少～"
-    />
+    <div :class="$style.coffers">
+        <TopText
+            title="小金库"
+            tip="看看你距离人生巅峰还差多少～"
+        />
 
-    <div :class="$style.myAssets + ' bg-white radius-20 mt-28'">
-      <div :class="$style.title">
-        <pl-svg name="icon-my-assets" />我的资产
-      </div>
-      <div>
-        <div :class="$style.withdrawals">
-          <p class="fz-24 gray-3">
-            可提现润笔
-          </p>
-          <p class="fz-50 bold">
-            {{ balance }} <i class="fz-26">元</i>
-          </p>
-          <router-link
-            tag="button"
-            :to="{ name: 'WithdrawCash' }"
-            style="width: 27.733vw;"
-            :class="$style.myButton + ' mt-22'"
-          >
-            提现
-          </router-link>
+        <div :class="$style.myAssets + ' bg-white radius-20 mt-28'">
+            <div :class="$style.title">
+                <pl-svg name="icon-my-assets" />我的资产
+            </div>
+            <div>
+                <div :class="$style.withdrawals">
+                    <p class="fz-24 gray-3">
+                        可提现润笔
+                    </p>
+                    <p class="fz-50 bold">
+                        {{ balance }} <i class="fz-26">元</i>
+                    </p>
+                    <router-link
+                        tag="button"
+                        :to="{ name: 'WithdrawCash' }"
+                        style="width: 27.733vw;"
+                        :class="$style.myButton + ' mt-22'"
+                    >
+                        提现
+                    </router-link>
+                </div>
+                <div :class="$style.todayRebate">
+                    <p class="fz-24 gray-3">
+                        今日润笔
+                    </p>
+                    <p class="fz-50 bold">
+                        {{ currentBalance }} <i class="fz-26">元</i>
+                    </p>
+                    <p class="gray-4 fz-26 mt-22">
+                        今天你赚了多少
+                    </p>
+                </div>
+            </div>
         </div>
-        <div :class="$style.todayRebate">
-          <p class="fz-24 gray-3">
-            今日润笔
-          </p>
-          <p class="fz-50 bold">
-            {{ currentBalance }} <i class="fz-26">元</i>
-          </p>
-          <p class="gray-4 fz-26 mt-22">
-            今天你赚了多少
-          </p>
+
+        <div :class="'mt-28 ' + $style.more">
+            <div class="radius-20 bg-white">
+                <div>
+                    <div :class="$style.title">
+                        <pl-svg name="icon-my-rebate" />累计润笔
+                    </div>
+                    <div :class="$style.middle">
+                        <p class="fz-44 bold">
+                            {{ cumulativeBalance }} <i class="fz-20 gray-3">元</i>
+                        </p>
+                        <p class="fz-24 gray-2">
+                            您累计赚取的润笔
+                        </p>
+                    </div>
+                    <router-link
+                        tag="button"
+                        :to="{ name: 'AccumulatedRebate' }"
+                        :class="$style.myButton"
+                    >
+                        去看看
+                    </router-link>
+                </div>
+            </div>
+
+            <div class="radius-20 bg-white">
+                <div :class="$style.detail">
+                    <div :class="$style.title">
+                        <pl-svg name="icon-my-withdrawals" />提现明细
+                    </div>
+                    <div :class="'fz-22 gray-2 ' + $style.middle">
+                        <pl-svg name="icon-my-withdrawals2" />
+                        看看你<br>转走了多少财富
+                    </div>
+                    <router-link
+                        tag="button"
+                        :to="{ name: 'WithdrawList' }"
+                        :class="$style.myButton"
+                    >
+                        去查看
+                    </router-link>
+                </div>
+            </div>
+
+            <div class="radius-20 bg-white">
+                <div :class="$style.detail">
+                    <div :class="$style.title">
+                        <pl-svg name="icon-my-rebate-detail2" />润笔明细
+                    </div>
+                    <div :class="'fz-22 gray-2 ' + $style.middle">
+                        <pl-svg name="icon-my-rebate-detail1" />
+                        解锁赚钱新姿势
+                    </div>
+                    <router-link
+                        tag="button"
+                        :to="{ name: 'RebateList' }"
+                        :class="$style.myButton"
+                    >
+                        去查看
+                    </router-link>
+                </div>
+            </div>
+
+            <div class="radius-20 bg-white">
+                <div :class="$style.seeMore">
+                    <pl-svg name="icon-my-more" />
+                    <p>更多功能</p>
+                    <p class="fz-20 gray-3">
+                        敬请期待
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-
-    <div :class="'mt-28 ' + $style.more">
-      <div class="radius-20 bg-white">
-        <div>
-          <div :class="$style.title">
-            <pl-svg name="icon-my-rebate" />累计润笔
-          </div>
-          <div :class="$style.middle">
-            <p class="fz-44 bold">
-              {{ cumulativeBalance }} <i class="fz-20 gray-3">元</i>
-            </p>
-            <p class="fz-24 gray-2">
-              您累计赚取的润笔
-            </p>
-          </div>
-          <router-link
-            tag="button"
-            :to="{ name: 'AccumulatedRebate' }"
-            :class="$style.myButton"
-          >
-            去看看
-          </router-link>
-        </div>
-      </div>
-
-      <div class="radius-20 bg-white">
-        <div :class="$style.detail">
-          <div :class="$style.title">
-            <pl-svg name="icon-my-withdrawals" />提现明细
-          </div>
-          <div :class="'fz-22 gray-2 ' + $style.middle">
-            <pl-svg name="icon-my-withdrawals2" />
-            看看你<br>转走了多少财富
-          </div>
-          <router-link
-            tag="button"
-            :to="{ name: 'WithdrawList' }"
-            :class="$style.myButton"
-          >
-            去查看
-          </router-link>
-        </div>
-      </div>
-
-      <div class="radius-20 bg-white">
-        <div :class="$style.detail">
-          <div :class="$style.title">
-            <pl-svg name="icon-my-rebate-detail2" />润笔明细
-          </div>
-          <div :class="'fz-22 gray-2 ' + $style.middle">
-            <pl-svg name="icon-my-rebate-detail1" />
-            解锁赚钱新姿势
-          </div>
-          <router-link
-            tag="button"
-            :to="{ name: 'RebateList' }"
-            :class="$style.myButton"
-          >
-            去查看
-          </router-link>
-        </div>
-      </div>
-
-      <div class="radius-20 bg-white">
-        <div :class="$style.seeMore">
-          <pl-svg name="icon-my-more" />
-          <p>更多功能</p>
-          <p class="fz-20 gray-3">
-            敬请期待
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
 import TopText from '../../../components/common/Top-Text.vue'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Coffers',
-  components: {
-    TopText
-  },
-  computed: {
-    ...mapGetters(['balance', 'currentBalance', 'cumulativeBalance'])
-  }
+    name: 'Coffers',
+    components: {
+        TopText
+    },
+    computed: {
+        ...mapGetters(['balance', 'currentBalance', 'cumulativeBalance'])
+    }
 }
 </script>
 

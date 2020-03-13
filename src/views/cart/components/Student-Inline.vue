@@ -1,92 +1,92 @@
 <template>
-  <div
-    :class="{
-      [$style.infoItem]: true,
-      [$style.lessonError]: lessonErrorId === product.skuCode1
-    }"
-  >
-    <div :class="$style.content" @click="selectStudent">
-      <span :class="$style.itemLabel">学员信息</span>
-      <div :class="$style.lessonErrorTip" v-if="lessonErrorId === product.skuCode1">
-        <pl-svg name="icon-warning" fill="#F24724" height="36" width="36" />
-        <span v-text="lessonErrorTip" />
-      </div>
-      <div v-if="!students.length">
-        <span>请选择</span>
-        <pl-svg
-          :class="{ [$style.rightArrow]: true }"
-          name="icon-right" fill="#ccc" height="24"
-        />
-      </div>
-      <div v-else>
-        <span>已选{{ students.length }}人</span>
-        <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
-      </div>
+    <div
+        :class="{
+            [$style.infoItem]: true,
+            [$style.lessonError]: lessonErrorId === product.skuCode1
+        }"
+    >
+        <div :class="$style.content" @click="selectStudent">
+            <span :class="$style.itemLabel">学员信息</span>
+            <div :class="$style.lessonErrorTip" v-if="lessonErrorId === product.skuCode1">
+                <pl-svg name="icon-warning" fill="#F24724" height="36" width="36" />
+                <span v-text="lessonErrorTip" />
+            </div>
+            <div v-if="!students.length">
+                <span>请选择</span>
+                <pl-svg
+                    :class="{ [$style.rightArrow]: true }"
+                    name="icon-right" fill="#ccc" height="24"
+                />
+            </div>
+            <div v-else>
+                <span>已选{{ students.length }}人</span>
+                <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'StudentInline',
-  props: {
-    product: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    students: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    lessonErrorId: {
-      type: String,
-      default: ''
-    },
-    lessonErrorTip: {
-      type: String,
-      default: ''
-    },
-    count: {
-      type: Number,
-      default: 0
-    }
-  },
-  watch: {
-    lessonErrorTip (val) {
-      if (val) {
-        this.$nextTick(() => {
-          let errorEl = document.querySelector('.' + this.$style.lessonError)
-          errorEl.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-            inline: 'nearest'
-          })
-        })
-      }
-    }
-  },
-  methods: {
-    selectStudent () {
-      const product = this.product
-      sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
-        name: this.$route.name,
-        query: this.$route.query,
-        params: this.$route.params
-      }))
-      this.$router.push({
-        name: 'StudentList',
-        query: {
-          select: 'YES',
-          sku: product.skuCode1 + product.skuCode2,
-          count: product.count
+    name: 'StudentInline',
+    props: {
+        product: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+        students: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        lessonErrorId: {
+            type: String,
+            default: ''
+        },
+        lessonErrorTip: {
+            type: String,
+            default: ''
+        },
+        count: {
+            type: Number,
+            default: 0
         }
-      })
+    },
+    watch: {
+        lessonErrorTip (val) {
+            if (val) {
+                this.$nextTick(() => {
+                    const errorEl = document.querySelector(`.${ this.$style.lessonError }`)
+                    errorEl.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    })
+                })
+            }
+        }
+    },
+    methods: {
+        selectStudent () {
+            const { product } = this
+            sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
+                name: this.$route.name,
+                query: this.$route.query,
+                params: this.$route.params
+            }))
+            this.$router.push({
+                name: 'StudentList',
+                query: {
+                    select: 'YES',
+                    sku: product.skuCode1 + product.skuCode2,
+                    count: product.count
+                }
+            })
+        }
     }
-  }
 }
 </script>
 

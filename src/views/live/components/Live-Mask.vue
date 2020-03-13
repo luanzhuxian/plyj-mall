@@ -1,21 +1,21 @@
 <template>
-  <div :class="$style.liveMask">
-    <img :src="imgSrc" alt="">
-    <div :class="$style.timer">
-      <span>直播暂未开始</span>
+    <div :class="$style.liveMask">
+        <img :src="imgSrc" alt="">
+        <div :class="$style.timer">
+            <span>直播暂未开始</span>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'LiveMask',
-  props: {
-    imgSrc: {
-      type: String,
-      default: 'https://mallcdn.youpenglai.com/static/mall/2.5.0/live/live-off.png'
+    name: 'LiveMask',
+    props: {
+        imgSrc: {
+            type: String,
+            default: 'https://mallcdn.youpenglai.com/static/mall/2.5.0/live/live-off.png'
+        }
     }
-  }
 }
 </script>
 

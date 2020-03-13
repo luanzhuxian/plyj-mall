@@ -1,73 +1,73 @@
 <template>
-  <div :class="$style.chunyun" class="chunyun">
-    <router-link :class="$style.chunyunBg" tag="div" :to="{ name: 'SpringPloughing' }">
-      <div :class="$style.countDownWrapper">
-        <span v-if="data.values[0].status === 0">距活动开始：</span>
-        <span v-if="data.values[0].status === 1">距活动结束：</span>
-        <span v-if="data.values[0].status === 2">活动已结束</span>
-        <count-down
-          v-if="~[0, 1].indexOf(data.values[0].status)"
-          :timestamp="getTime(data.values[0])"
-          size="middle"
-          color="#184B28"
-          background="#96E3A9"
-          @done="data.values[0].status += 1"
-        />
-      </div>
-      <p :class="$style.link">
-        查看计划礼包 >
-      </p>
-      <pl-svg
-        v-if="data.values[0].quarterVersion"
-        :name="`icon-${map[data.values[0].quarterVersion]}`"
-        width="50"
-        height="105"
-      />
-    </router-link>
-    <ul
-      v-if="data.values.length && data.values[0].combinationDetailList && data.values[0].combinationDetailList.length"
-      :class="[$style.chunyunList, $style[size], size]"
-    >
-      <template v-if="data.values[0].status === 0">
-        <swiper :options="getOptions(data.values[0].combinationDetailList, map1)">
-          <swiper-slide v-for="(item, i) of data.values[0].combinationDetailList" :key="i">
-            <item-chunyun :data="item" :size="size" />
-          </swiper-slide>
-        </swiper>
-      </template>
+    <div :class="$style.chunyun" class="chunyun">
+        <router-link :class="$style.chunyunBg" tag="div" :to="{ name: 'SpringPloughing' }">
+            <div :class="$style.countDownWrapper">
+                <span v-if="data.values[0].status === 0">距活动开始：</span>
+                <span v-if="data.values[0].status === 1">距活动结束：</span>
+                <span v-if="data.values[0].status === 2">活动已结束</span>
+                <count-down
+                    v-if="~[0, 1].indexOf(data.values[0].status)"
+                    :timestamp="getTime(data.values[0])"
+                    size="middle"
+                    color="#184B28"
+                    background="#96E3A9"
+                    @done="data.values[0].status += 1"
+                />
+            </div>
+            <p :class="$style.link">
+                查看计划礼包 >
+            </p>
+            <pl-svg
+                v-if="data.values[0].quarterVersion"
+                :name="`icon-${map[data.values[0].quarterVersion]}`"
+                width="50"
+                height="105"
+            />
+        </router-link>
+        <ul
+            v-if="data.values.length && data.values[0].combinationDetailList && data.values[0].combinationDetailList.length"
+            :class="[$style.chunyunList, $style[size], size]"
+        >
+            <template v-if="data.values[0].status === 0">
+                <swiper :options="getOptions(data.values[0].combinationDetailList, map1)">
+                    <swiper-slide v-for="(item, i) of data.values[0].combinationDetailList" :key="i">
+                        <item-chunyun :data="item" :size="size" />
+                    </swiper-slide>
+                </swiper>
+            </template>
 
-      <template v-if="data.values[0].status === 1">
-        <swiper :options="getOptions(item.productModelList, map2)" v-for="(item, i) of data.values[0].combinationDetailList" :key="i">
-          <swiper-slide>
-            <item-chunyun :data="item" :size="size" />
-          </swiper-slide>
-          <swiper-slide v-for="(prod, j) of item.productModelList" :key="j">
-            <router-link
-              :class="$style.chunyunListProdWrapper"
-              class="chunyun-list-prod-wrapper"
-              tag="li"
-              :to="{ name: 'Product', params: { productId: prod.productId }, query: { currentProductStatus: 5 } }"
-            >
-              <div :class="$style.chunyunListProd">
-                <div :class="$style.imgWrapper">
-                  <img :src="prod.productImage" alt="">
-                </div>
-                <div :class="$style.name">
-                  {{ prod.productName }}
-                </div>
-                <div :class="$style.origin">
-                  {{ `原价：￥${(prod.originPrice * 1000 * prod.count) / 1000}` }}
-                </div>
-                <div :class="$style.current">
-                  {{ `组合价：￥${(prod.price * 1000 * prod.count) / 1000}` }}
-                </div>
-              </div>
-            </router-link>
-          </swiper-slide>
-        </swiper>
-      </template>
-    </ul>
-  </div>
+            <template v-if="data.values[0].status === 1">
+                <swiper :options="getOptions(item.productModelList, map2)" v-for="(item, i) of data.values[0].combinationDetailList" :key="i">
+                    <swiper-slide>
+                        <item-chunyun :data="item" :size="size" />
+                    </swiper-slide>
+                    <swiper-slide v-for="(prod, j) of item.productModelList" :key="j">
+                        <router-link
+                            :class="$style.chunyunListProdWrapper"
+                            class="chunyun-list-prod-wrapper"
+                            tag="li"
+                            :to="{ name: 'Product', params: { productId: prod.productId }, query: { currentProductStatus: 5 } }"
+                        >
+                            <div :class="$style.chunyunListProd">
+                                <div :class="$style.imgWrapper">
+                                    <img :src="prod.productImage" alt="">
+                                </div>
+                                <div :class="$style.name">
+                                    {{ prod.productName }}
+                                </div>
+                                <div :class="$style.origin">
+                                    {{ `原价：￥${(prod.originPrice * 1000 * prod.count) / 1000}` }}
+                                </div>
+                                <div :class="$style.current">
+                                    {{ `组合价：￥${(prod.price * 1000 * prod.count) / 1000}` }}
+                                </div>
+                            </div>
+                        </router-link>
+                    </swiper-slide>
+                </swiper>
+            </template>
+        </ul>
+    </div>
 </template>
 
 <script>
@@ -77,74 +77,74 @@ import CountDown from '../components/Count-Down.vue'
 import ItemChunyun from './Item-Chunyun.vue'
 
 export default {
-  name: 'Chunyun',
-  mixins: [mixin],
-  components: {
-    swiper,
-    swiperSlide,
-    CountDown,
-    ItemChunyun
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
+    name: 'Chunyun',
+    mixins: [mixin],
+    components: {
+        swiper,
+        swiperSlide,
+        CountDown,
+        ItemChunyun
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
+    },
+    data () {
+        return {
+            map1: {
+                0: 1,
+                1: 1,
+                2: 1.2,
+                3: 1.2,
+                4: 1.2,
+                5: 1.2,
+                6: 1.2
+            },
+            map2: {
+                0: 1,
+                1: 2,
+                2: 2.14,
+                3: 2.2,
+                4: 2.25,
+                5: 2.26,
+                6: 2.28
+            },
+            map: {
+                第一季: 'diyiji-adbb7',
+                第二季: 'dierji-bbdb7',
+                第三季: 'disanji-b8ae3',
+                第四季: 'disiji-5d233',
+                第五季: 'diwuji-af921'
+            }
+        }
+    },
+    computed: {
+        size () {
+            const { data } = this
+            let result
+            if (data.values[0].status === 0) {
+                if (data.values[0].combinationDetailList.length === 1) result = 'large'
+                if (data.values[0].combinationDetailList.length > 1) result = 'medium'
+            }
+            if (data.values[0].status === 1) result = 'small'
+            return result
+        }
+    },
+    methods: {
+        getOptions (list, map) {
+            const length = (list && list.length) || 0
+            const swiperOption = {
+                slidesPerView: map[length],
+                spaceBetween: 0,
+                grabCursor: true
+            }
+            return swiperOption
+        }
     }
-  },
-  data () {
-    return {
-      map1: {
-        '0': 1,
-        '1': 1,
-        '2': 1.2,
-        '3': 1.2,
-        '4': 1.2,
-        '5': 1.2,
-        '6': 1.2
-      },
-      map2: {
-        '0': 1,
-        '1': 2,
-        '2': 2.14,
-        '3': 2.2,
-        '4': 2.25,
-        '5': 2.26,
-        '6': 2.28
-      },
-      map: {
-        '第一季': 'diyiji-adbb7',
-        '第二季': 'dierji-bbdb7',
-        '第三季': 'disanji-b8ae3',
-        '第四季': 'disiji-5d233',
-        '第五季': 'diwuji-af921'
-      }
-    }
-  },
-  computed: {
-    size () {
-      const { data } = this
-      let result
-      if (data.values[0].status === 0) {
-        if (data.values[0].combinationDetailList.length === 1) result = 'large'
-        if (data.values[0].combinationDetailList.length > 1) result = 'medium'
-      }
-      if (data.values[0].status === 1) result = 'small'
-      return result
-    }
-  },
-  methods: {
-    getOptions (list, map) {
-      const length = (list && list.length) || 0
-      const swiperOption = {
-        slidesPerView: map[length],
-        spaceBetween: 0,
-        grabCursor: true
-      }
-      return swiperOption
-    }
-  }
 }
 </script>
 

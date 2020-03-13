@@ -1,252 +1,254 @@
 <template>
-  <div
-    :class="{ 'pl-input': true, border, ['pl-input-' + size]: true }"
-    @click="handleClick"
-  >
     <div
-      class="pl-input_prefixicon"
-      v-if="prefixIcon"
+        :class="{ 'pl-input': true, border, ['pl-input-' + size]: true }"
+        @click="handleClick"
     >
-      <pl-svg
-        :class="{ focus }"
-        :name="prefixIcon"
-        fill="#ccc"
-        width="24"
-      />
+        <div
+            class="pl-input_prefixicon"
+            v-if="prefixIcon"
+        >
+            <pl-svg
+                :class="{ focus }"
+                :name="prefixIcon"
+                fill="#ccc"
+                width="24"
+            />
+        </div>
+        <div
+            class="pl-textarea_box"
+            v-if="type === 'textarea'"
+        >
+            <textarea
+                class="pl-input-textarea"
+                :maxlength="maxlength"
+                :value="value"
+                @input="handleInput"
+                @focus="handleFocus"
+                @blur="handleBlur"
+                @change="handleChange"
+                :disabled="disabled"
+                :readonly="readonly"
+                :rows="rows"
+                :placeholder="placeholder"
+            />
+            <span
+                class="pl-input__word-count"
+                v-if="maxlength > 0"
+            >
+                <i v-text="length > maxlength ? maxlength : length" />
+                /
+                <i v-text="maxlength" />
+            </span>
+        </div>
+        <div
+            v-else
+            class="pl-input_box"
+        >
+            <input
+                :type="type === 'password' ? passwordType : type"
+                @input="handleInput"
+                @focus="handleFocus"
+                @blur="handleBlur"
+                @change="handleChange"
+                :value="value"
+                :disabled="disabled"
+                :readonly="readonly"
+                :autocomplete="autocomplete"
+                :placeholder="placeholder"
+                :unselectable="readonly ? 'on' : ''"
+                :style="{
+                    textAlign: align || formAlign
+                }"
+            >
+            <pl-svg
+                v-if="!disabled && type.indexOf('password') === -1"
+                v-show="value"
+                class="pl-input_clear"
+                fill="#ccc"
+                name="icon-close2"
+                @click="clear"
+            />
+            <pl-svg
+                v-if="type === 'password' && passwordType === 'password'"
+                v-show="value"
+                class="pl-input_clear"
+                name="icon-hidden-key"
+                fill="#ccc"
+                @click="passwordType = 'show-password'"
+            />
+            <pl-svg
+                v-if="type === 'password' && passwordType === 'show-password'"
+                v-show="value"
+                class="pl-input_clear"
+                name="icon-show-key"
+                fill="#ccc"
+                @click="passwordType = 'password'"
+            />
+        </div>
+        <div
+            class="pl-input_suffixicon"
+            v-if="suffixIcon"
+        >
+            <pl-svg
+                :class="{ focus }"
+                :name="suffixIcon"
+                fill="#ccc"
+                width="24"
+            />
+        </div>
     </div>
-    <div
-      class="pl-textarea_box"
-      v-if="type === 'textarea'"
-    >
-      <textarea
-        class="pl-input-textarea"
-        :maxlength="maxlength"
-        :value="value"
-        @input="handleInput"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @change="handleChange"
-        :disabled="disabled"
-        :readonly="readonly"
-        :rows="rows"
-        :placeholder="placeholder"
-      />
-      <span
-        class="pl-input__word-count"
-        v-if="maxlength > 0"
-      >
-        <i v-text="length > maxlength ? maxlength : length" />
-        /
-        <i v-text="maxlength" />
-      </span>
-    </div>
-    <div
-      v-else
-      class="pl-input_box"
-    >
-      <input
-        :type="type === 'password' ? passwordType : type"
-        @input="handleInput"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @change="handleChange"
-        :value="value"
-        :disabled="disabled"
-        :readonly="readonly"
-        :autocomplete="autocomplete"
-        :placeholder="placeholder"
-        :unselectable="readonly ? 'on' : ''"
-        :style="{
-          textAlign: align || formAlign
-        }"
-      >
-      <pl-svg
-        v-if="!disabled && type.indexOf('password') === -1"
-        v-show="value"
-        class="pl-input_clear"
-        fill="#ccc"
-        name="icon-close2"
-        @click="clear"
-      />
-      <pl-svg
-        v-if="type === 'password' && passwordType === 'password'"
-        v-show="value"
-        class="pl-input_clear"
-        name="icon-hidden-key"
-        fill="#ccc"
-        @click="passwordType = 'show-password'"
-      />
-      <pl-svg
-        v-if="type === 'password' && passwordType === 'show-password'"
-        v-show="value"
-        class="pl-input_clear"
-        name="icon-show-key"
-        fill="#ccc"
-        @click="passwordType = 'password'"
-      />
-    </div>
-    <div
-      class="pl-input_suffixicon"
-      v-if="suffixIcon"
-    >
-      <pl-svg
-        :class="{ focus }"
-        :name="suffixIcon"
-        fill="#ccc"
-        width="24"
-      />
-    </div>
-  </div>
 </template>
 
 <script>
 import { toArray, hasUnicode } from '../../assets/js/unicode-to-array'
 
 export default {
-  name: 'PlInput',
-  model: {
-    event: 'input',
-    prop: 'value'
-  },
-  props: {
-    placeholder: {
-      type: String,
-      default: ''
+    name: 'PlInput',
+    model: {
+        event: 'input',
+        prop: 'value'
     },
-    size: {
-      type: String,
-      default: 'small'
+    props: {
+        placeholder: {
+            type: String,
+            default: ''
+        },
+        size: {
+            type: String,
+            default: 'small'
+        },
+        type: {
+            type: String,
+            default: 'text'
+        },
+        prefixIcon: {
+            type: String,
+            default: ''
+        },
+        suffixIcon: {
+            type: String,
+            default: ''
+        },
+        autocomplete: {
+            type: String,
+            default: ''
+        },
+        value: {
+            type: [String, Number],
+            default: ''
+        },
+        maxlength: {
+            type: Number,
+            default: 0
+        },
+        minRows: {
+            type: Number,
+            default: 1
+        },
+        maxRows: {
+            type: Number,
+            default: 0
+        },
+        align: {
+            type: String,
+            default: ''
+        },
+        disabled: Boolean,
+        readonly: Boolean,
+        border: Boolean
     },
-    type: {
-      type: String,
-      default: 'text'
+    data () {
+        return {
+            focus: false,
+            rows: 0,
+            formAlign: null,
+            rule: null,
+            prop: '',
+            error: false,
+            passwordType: 'password',
+            bfscrolltop: 0,
+            isIOS: false,
+            getLine: null,
+            $form: null,
+            $formItem: null
+        }
     },
-    prefixIcon: {
-      type: String,
-      default: ''
+    computed: {
+
+        // 统计包含emoji表情的字长
+        length () {
+            if (!this.maxlength) return false
+            const { value } = this
+            return hasUnicode(value) // 是否包含emoji表情
+                ? toArray(value).length
+                : value.length
+        }
     },
-    suffixIcon: {
-      type: String,
-      default: ''
+    watch: {
+
+        // 字数长度达到最大值提醒
+        length (value) {
+            if (!this.maxlength) return false
+            if (value > this.maxlength) {
+                this.$emit('alert')
+            }
+        }
     },
-    autocomplete: {
-      type: String,
-      default: ''
+    mounted () {
+        this.$nextTick(() => {
+            this.rows = this.minRows || 0
+            this.bfscrolltop = document.body.scrollTop
+            this.$form = this.$parent.$parent
+            this.$formItem = this.$parent
+            this.rule = this.$formItem.rule
+            this.prop = this.$formItem.prop
+            this.isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+            this.setAlign()
+        })
     },
-    value: {
-      type: [String, Number],
-      default: ''
-    },
-    maxlength: {
-      type: Number,
-      default: 0
-    },
-    minRows: {
-      type: Number,
-      default: 1
-    },
-    maxRows: {
-      type: Number,
-      default: 0
-    },
-    align: {
-      type: String,
-      default: ''
-    },
-    disabled: Boolean,
-    readonly: Boolean,
-    border: Boolean
-  },
-  data () {
-    return {
-      focus: false,
-      rows: 0,
-      formAlign: null,
-      rule: null,
-      prop: '',
-      error: false,
-      passwordType: 'password',
-      bfscrolltop: 0,
-      isIOS: false,
-      getLine: null,
-      $form: null,
-      $formItem: null
+    methods: {
+        handleInput (e) {
+            const val = e.target.value
+            this.$emit('input', val)
+            this.trigger(e)
+        },
+        handleFocus (e) {
+            if (this.readonly) {
+                /* 防止苹果手机出现‘完成’ */
+                e.target.blur()
+            } else {
+                // if (this.isIOS) document.body.scrollTop = document.body.scrollHeight
+                this.$emit('focus', e)
+                this.focus = true
+                this.trigger(e)
+            }
+        },
+        handleBlur (e) {
+            document.body.scrollTop = this.bfscrolltop
+            this.$emit('blur', e)
+            this.focus = false
+            this.trigger(e)
+        },
+        handleChange (e) {
+            this.$emit('change', e)
+            this.trigger(e)
+        },
+        clear () {
+            this.$emit('input', '')
+            this.$emit('clear')
+        },
+        setAlign () {
+            this.formAlign = this.align || this.$formItem.align || this.$form.align
+        },
+        trigger (event) {
+            if (this.rule) {
+                this.error = !this.$form.validateByFields(this.prop, event)
+            }
+        },
+        handleClick (e) {
+            this.$emit('click', e)
+        }
     }
-  },
-  computed: {
-    // 统计包含emoji表情的字长
-    length () {
-      if (!this.maxlength) return false
-      const { value } = this
-      return hasUnicode(value) // 是否包含emoji表情
-        ? toArray(value).length
-        : value.length
-    }
-  },
-  watch: {
-    // 字数长度达到最大值提醒
-    length (value) {
-      if (!this.maxlength) return false
-      if (value > this.maxlength) {
-        this.$emit('alert')
-      }
-    }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.rows = this.minRows || 0
-      this.bfscrolltop = document.body.scrollTop
-      this.$form = this.$parent.$parent
-      this.$formItem = this.$parent
-      this.rule = this.$formItem.rule
-      this.prop = this.$formItem.prop
-      this.isIOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-      this.setAlign()
-    })
-  },
-  methods: {
-    handleInput (e) {
-      let val = e.target.value
-      this.$emit('input', val)
-      this.trigger(e)
-    },
-    handleFocus (e) {
-      if (this.readonly) {
-        /* 防止苹果手机出现‘完成’ */
-        e.target.blur()
-      } else {
-        // if (this.isIOS) document.body.scrollTop = document.body.scrollHeight
-        this.$emit('focus', e)
-        this.focus = true
-        this.trigger(e)
-      }
-    },
-    handleBlur (e) {
-      document.body.scrollTop = this.bfscrolltop
-      this.$emit('blur', e)
-      this.focus = false
-      this.trigger(e)
-    },
-    handleChange (e) {
-      this.$emit('change', e)
-      this.trigger(e)
-    },
-    clear () {
-      this.$emit('input', '')
-      this.$emit('clear')
-    },
-    setAlign () {
-      this.formAlign = this.align || this.$formItem.align || this.$form.align
-    },
-    trigger (event) {
-      if (this.rule) {
-        this.error = !this.$form.validateByFields(this.prop, event)
-      }
-    },
-    handleClick (e) {
-      this.$emit('click', e)
-    }
-  }
 }
 </script>
 <style lang="scss">

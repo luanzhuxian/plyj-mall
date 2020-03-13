@@ -1,40 +1,40 @@
 <template>
-  <!-- 春耘计划商品组件 -->
-  <div
-    :class="$style.springPloughingProItem"
-    @click="$router.push({ name: 'Product', params: { productId: data.goodsId }, query: { currentProductStatus: 5 } })"
-  >
-    <img :src="data.goodsImage" alt="">
-    <div :class="$style.right">
-      <p :class="$style.name" v-text="data.goodsName" />
-      <p :class="$style.limit">
-        x{{ data.count }}
-      </p>
-      <p :class="$style.sku">
-        <span v-text="data.sku1Name" />
-        <template v-if="data.sku2Name">
-          <span>, {{ data.sku2Name }}</span>
-        </template>
-        <!--数量：{{ data.count }}-->
-        <!--{{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}-->
-      </p>
-      <p :class="$style.price">折后价：￥{{ data.amount }}</p>
-      <p :class="$style.originalPrice">原价：￥{{ data.originPrice }}</p>
+    <!-- 春耘计划商品组件 -->
+    <div
+        :class="$style.springPloughingProItem"
+        @click="$router.push({ name: 'Product', params: { productId: data.goodsId }, query: { currentProductStatus: 5 } })"
+    >
+        <img :src="data.goodsImage" alt="">
+        <div :class="$style.right">
+            <p :class="$style.name" v-text="data.goodsName" />
+            <p :class="$style.limit">
+                x{{ data.count }}
+            </p>
+            <p :class="$style.sku">
+                <span v-text="data.sku1Name" />
+                <template v-if="data.sku2Name">
+                    <span>, {{ data.sku2Name }}</span>
+                </template>
+                <!--数量：{{ data.count }}-->
+                <!--{{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}-->
+            </p>
+            <p :class="$style.price">折后价：￥{{ data.amount }}</p>
+            <p :class="$style.originalPrice">原价：￥{{ data.originPrice }}</p>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'SpringPloughingProItem',
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return {}
-      }
+    name: 'SpringPloughingProItem',
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
     }
-  }
 }
 </script>
 

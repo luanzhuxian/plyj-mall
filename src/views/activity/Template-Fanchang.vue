@@ -1,30 +1,30 @@
 <template>
-  <div :class="$style.templateFanchang">
-    <!-- 直播-->
-    <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
-    <maisong
-      v-if="MAI_SONG.values && MAI_SONG.values.length"
-      :data="MAI_SONG"
-      :type="type"
-    />
-    <miaosha-small
-      v-if="MIAO_SHA.values && MIAO_SHA.values.length && MIAO_SHA.values[0].goodsInfo"
-      :data="MIAO_SHA"
-    />
-    <pintuan
-      v-if="PIN_TUAN.values && PIN_TUAN.values.length"
-      :data="PIN_TUAN"
-    />
-    <fengqiang
-      v-if="FENG_QIANG.values && FENG_QIANG.values.length"
-      :data="FENG_QIANG"
-      :type="type"
-    />
-    <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
-      <div :class="$style.btnBottom" />
-      <best-recommend :data="RECOMMEND" />
+    <div :class="$style.templateFanchang">
+        <!-- 直播-->
+        <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
+        <maisong
+            v-if="MAI_SONG.values && MAI_SONG.values.length"
+            :data="MAI_SONG"
+            :type="type"
+        />
+        <miaosha-small
+            v-if="MIAO_SHA.values && MIAO_SHA.values.length && MIAO_SHA.values[0].goodsInfo"
+            :data="MIAO_SHA"
+        />
+        <pintuan
+            v-if="PIN_TUAN.values && PIN_TUAN.values.length"
+            :data="PIN_TUAN"
+        />
+        <fengqiang
+            v-if="FENG_QIANG.values && FENG_QIANG.values.length"
+            :data="FENG_QIANG"
+            :type="type"
+        />
+        <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
+            <div :class="$style.btnBottom" />
+            <best-recommend :data="RECOMMEND" />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -36,52 +36,52 @@ import MiaoshaSmall from './double-12/Miaosha-Small.vue'
 import BestRecommend from '../home/components/Best-Recommend.vue'
 
 export default {
-  name: 'HomeTemplateB',
-  inject: ['parent'],
-  components: {
-    Live,
-    Pintuan,
-    Maisong,
-    Fengqiang,
-    MiaoshaSmall,
-    BestRecommend
-  },
-  data () {
-    return {}
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
+    name: 'HomeTemplateB',
+    inject: ['parent'],
+    components: {
+        Live,
+        Pintuan,
+        Maisong,
+        Fengqiang,
+        MiaoshaSmall,
+        BestRecommend
+    },
+    data () {
         return {}
-      }
     },
-    type: {
-      type: Number,
-      default: 0
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+        type: {
+            type: Number,
+            default: 0
+        }
+    },
+    computed: {
+        MAI_SONG () {
+            return this.data.MAI_SONG || {}
+        },
+        MIAO_SHA () {
+            return this.data.MIAO_SHA || {}
+        },
+        PIN_TUAN () {
+            return this.data.PIN_TUAN || {}
+        },
+        FENG_QIANG () {
+            return this.data.FENG_QIANG || {}
+        },
+        RECOMMEND () {
+            return this.data.RECOMMEND || {}
+        },
+        isLiveShow () {
+            const { liveInfo } = this.parent
+            return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+        }
     }
-  },
-  computed: {
-    MAI_SONG () {
-      return this.data.MAI_SONG || {}
-    },
-    MIAO_SHA () {
-      return this.data.MIAO_SHA || {}
-    },
-    PIN_TUAN () {
-      return this.data.PIN_TUAN || {}
-    },
-    FENG_QIANG () {
-      return this.data.FENG_QIANG || {}
-    },
-    RECOMMEND () {
-      return this.data.RECOMMEND || {}
-    },
-    isLiveShow () {
-      const { liveInfo } = this.parent
-      return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
-    }
-  }
 }
 </script>
 

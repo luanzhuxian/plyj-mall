@@ -1,51 +1,51 @@
 <template>
-  <transition
-    enter-active-class="animated fadeIn"
-    leave-active-class="animated fadeOut"
-    type="animation"
-    @after-leave="closed"
-  >
-    <div
-      :class="{
-        'pl-loading': true,
-        mask
-      }"
-      v-show="show"
+    <transition
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+        type="animation"
+        @after-leave="closed"
     >
-      <div class="pl-loading-box">
-        <svgicon
-          name="penglai-ui/loading"
-          class="pl-loading-icon"
-          color="#fff"
-        />
-        <div class="pl-loading-message" v-if="message" v-text="message" />
-      </div>
-    </div>
-  </transition>
+        <div
+            :class="{
+                'pl-loading': true,
+                mask
+            }"
+            v-show="show"
+        >
+            <div class="pl-loading-box">
+                <svgicon
+                    name="penglai-ui/loading"
+                    class="pl-loading-icon"
+                    color="#fff"
+                />
+                <div class="pl-loading-message" v-if="message" v-text="message" />
+            </div>
+        </div>
+    </transition>
 </template>
 
 <script>
 export default {
-  name: 'Loading',
-  components: {
-  },
-  data () {
-    return {
-      show: false,
-      message: ''
-    }
-  },
-  props: {
-    mask: Boolean
-  },
-  methods: {
-    close () {
-      this.show = false
+    name: 'Loading',
+    components: {
     },
-    closed () {
-      document.body.removeChild(this.$el)
+    data () {
+        return {
+            show: false,
+            message: ''
+        }
+    },
+    props: {
+        mask: Boolean
+    },
+    methods: {
+        close () {
+            this.show = false
+        },
+        closed () {
+            document.body.removeChild(this.$el)
+        }
     }
-  }
 }
 </script>
 

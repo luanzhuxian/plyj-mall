@@ -1,80 +1,80 @@
 <template>
-  <div :class="$style.propagate">
-    <div :class="$style.content" @click="clickPingXuan">
-      <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
-        <img :src="data.otherValue" :alt="data.values[0].mallName">
-        <div :class="$style.name">
-          <span>{{ data.values[0].mallName }}</span>
-          <div :class="$style.right">
-            <pl-svg name="icon-right" :height="30" fill="#fff" />
-          </div>
-        </div>
-      </div>
-      <div :class="$style.middle" @click="$router.push({ name: 'Appointment' })">
-        <div :class="$style.logo">
-          <img :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'">
-          <!-- <img :src="logoUrl" alt=""> -->
-        </div>
-        <div :class="$style.intro" v-if="data.values[0].mallDesc">
-          {{ data.values[0].mallDesc }}
-        </div>
-      </div>
+    <div :class="$style.propagate">
+        <div :class="$style.content" @click="clickPingXuan">
+            <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
+                <img :src="data.otherValue" :alt="data.values[0].mallName">
+                <div :class="$style.name">
+                    <span>{{ data.values[0].mallName }}</span>
+                    <div :class="$style.right">
+                        <pl-svg name="icon-right" :height="30" fill="#fff" />
+                    </div>
+                </div>
+            </div>
+            <div :class="$style.middle" @click="$router.push({ name: 'Appointment' })">
+                <div :class="$style.logo">
+                    <img :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'">
+                    <!-- <img :src="logoUrl" alt=""> -->
+                </div>
+                <div :class="$style.intro" v-if="data.values[0].mallDesc">
+                    {{ data.values[0].mallDesc }}
+                </div>
+            </div>
 
-      <div :class="$style.bottom" v-if="data.show === 1 && mallBrandingRequestModels.length">
-        <label>教育特色：</label>
-        <ul :class="$style.tags">
-          <template v-for="(item, i) of mallBrandingRequestModels">
-            <li
-              v-if="item.titleName"
-              :key="i"
-              v-text="item.titleName"
-              @click="jump(item)"
-            />
-          </template>
-        </ul>
-      </div>
+            <div :class="$style.bottom" v-if="data.show === 1 && mallBrandingRequestModels.length">
+                <label>教育特色：</label>
+                <ul :class="$style.tags">
+                    <template v-for="(item, i) of mallBrandingRequestModels">
+                        <li
+                            v-if="item.titleName"
+                            :key="i"
+                            v-text="item.titleName"
+                            @click="jump(item)"
+                        />
+                    </template>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Propagate',
-  data () {
-    return {}
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
+    name: 'Propagate',
+    data () {
         return {}
-      }
-    }
-  },
-  computed: {
-    ...mapGetters(['logoUrl']),
-    mallBrandingRequestModels () {
-      return this.data.values.length ? this.data.values[0].mallBrandingRequestModels.filter(item => item.show === 1) : []
-    }
-  },
-  methods: {
-    clickPingXuan () {
-      sessionStorage.removeItem('PIN_XUAN')
     },
-    jump (item) {
-      if (item.type === 1) {
-        this.$router.push({ name: 'SchoolShow' })
-        return
-      }
-      if (item.type === 2) {
-        this.$router.push({ name: 'StudentShow' })
-        return
-      }
-      this.$router.push({ name: 'Appointment', hash: `#${item.type}` })
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['logoUrl']),
+        mallBrandingRequestModels () {
+            return this.data.values.length ? this.data.values[0].mallBrandingRequestModels.filter(item => item.show === 1) : []
+        }
+    },
+    methods: {
+        clickPingXuan () {
+            sessionStorage.removeItem('PIN_XUAN')
+        },
+        jump (item) {
+            if (item.type === 1) {
+                this.$router.push({ name: 'SchoolShow' })
+                return
+            }
+            if (item.type === 2) {
+                this.$router.push({ name: 'StudentShow' })
+                return
+            }
+            this.$router.push({ name: 'Appointment', hash: `#${ item.type }` })
+        }
     }
-  }
 }
 </script>
 

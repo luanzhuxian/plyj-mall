@@ -1,87 +1,87 @@
 <template>
-  <router-link
-    :class="$style.miaosha"
-    tag="div"
-    :to="{ name: 'SecondList' }"
-  >
-    <div :class="$style.background">
-      <div :class="$style.wrapper">
-        <ul :class="$style.list" v-if="data.values.length">
-          <li
-            v-if="data.values[0].goodsInfo && data.values[0].goodsInfo.activityInfo"
-            :class="$style.listItem"
-            @click.stop="$router.push({ name: 'Product', params: { productId: data.values[0].goodsInfo.id },query: { currentProductStatus: 3 } })"
-          >
-            <div :class="$style.imgWrapper">
-              <img :src="data.values[0].goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-              <div :class="$style.countDownWrapper">
-                <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 0">距开始</span>
-                <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 1">距结束</span>
-                <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 2">已结束</span>
-                <count-down
-                  v-if="~[0, 1].indexOf(data.values[0].goodsInfo.activityInfo.status)"
-                  :timestamp="getTime(data.values[0].goodsInfo.activityInfo)"
-                  format="HH:mm"
-                  background="rgba(174, 174, 174, 0.64)"
-                  @done="() => data.values[0].goodsInfo.activityInfo.status += 1"
-                />
-              </div>
+    <router-link
+        :class="$style.miaosha"
+        tag="div"
+        :to="{ name: 'SecondList' }"
+    >
+        <div :class="$style.background">
+            <div :class="$style.wrapper">
+                <ul :class="$style.list" v-if="data.values.length">
+                    <li
+                        v-if="data.values[0].goodsInfo && data.values[0].goodsInfo.activityInfo"
+                        :class="$style.listItem"
+                        @click.stop="$router.push({ name: 'Product', params: { productId: data.values[0].goodsInfo.id },query: { currentProductStatus: 3 } })"
+                    >
+                        <div :class="$style.imgWrapper">
+                            <img :src="data.values[0].goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
+                            <div :class="$style.countDownWrapper">
+                                <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 0">距开始</span>
+                                <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 1">距结束</span>
+                                <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 2">已结束</span>
+                                <count-down
+                                    v-if="~[0, 1].indexOf(data.values[0].goodsInfo.activityInfo.status)"
+                                    :timestamp="getTime(data.values[0].goodsInfo.activityInfo)"
+                                    format="HH:mm"
+                                    background="rgba(174, 174, 174, 0.64)"
+                                    @done="() => data.values[0].goodsInfo.activityInfo.status += 1"
+                                />
+                            </div>
+                        </div>
+                        <div :class="$style.info">
+                            <div :class="$style.main">
+                                {{ data.values[0].goodsInfo.productName }}
+                            </div>
+                            <div :class="$style.current">
+                                <pl-svg name="icon-miaoshajia" width="60" height="26" />
+                                <span :class="$style.price">
+                                    {{ data.values[0].goodsInfo.activityInfo.activityPrice }}
+                                </span>
+                            </div>
+                            <div :class="$style.sub">
+                                <div :class="$style.subLeft">
+                                    <div :class="$style.original">
+                                        <span v-if="data.values[0].goodsInfo.productSkuModels && data.values[0].goodsInfo.productSkuModels.length && getPrice(data.values[0].goodsInfo.productSkuModels)('originalPrice')">
+                                            原价:<span :class="$style.price">{{ getPrice(data.values[0].goodsInfo.productSkuModels)('originalPrice') }}</span>
+                                        </span>
+                                    </div>
+                                    <div :class="$style.progress">
+                                        <div :class="$style.progressInner" :style="{ width: `${(Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock)) / Number(data.values[0].goodsInfo.activityInfo.number) * 100}%` }" />
+                                    </div>
+                                    <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status === 0">
+                                        {{ `${data.values[0].goodsInfo.pageviews}人已关注` }}
+                                    </div>
+                                    <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status > 0 && data.values[0].goodsInfo.activityInfo.activityStock > 0">
+                                        {{ `已抢${Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock)}件` }}
+                                    </div>
+                                    <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status > 0 && data.values[0].goodsInfo.activityInfo.activityStock === 0" style="color: #999999;">
+                                        已抢完
+                                    </div>
+                                </div>
+                                <div
+                                    :class="{
+                                        [$style.subRight]: true,
+                                        [$style.disabled]: data.values[0].goodsInfo.activityInfo.status !== 1
+                                    }"
+                                >
+                                    <pl-svg
+                                        v-if="~[0, 1].indexOf(data.values[0].goodsInfo.activityInfo.status)"
+                                        name="icon-vie-for"
+                                        width="38"
+                                    />
+                                    <pl-svg
+                                        v-else
+                                        name="icon-jieshu"
+                                        width="48"
+                                        height="22"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <div :class="$style.info">
-              <div :class="$style.main">
-                {{ data.values[0].goodsInfo.productName }}
-              </div>
-              <div :class="$style.current">
-                <pl-svg name="icon-miaoshajia" width="60" height="26" />
-                <span :class="$style.price">
-                  {{ data.values[0].goodsInfo.activityInfo.activityPrice }}
-                </span>
-              </div>
-              <div :class="$style.sub">
-                <div :class="$style.subLeft">
-                  <div :class="$style.original">
-                    <span v-if="data.values[0].goodsInfo.productSkuModels && data.values[0].goodsInfo.productSkuModels.length && getPrice(data.values[0].goodsInfo.productSkuModels)('originalPrice')">
-                      原价:<span :class="$style.price">{{ getPrice(data.values[0].goodsInfo.productSkuModels)('originalPrice') }}</span>
-                    </span>
-                  </div>
-                  <div :class="$style.progress">
-                    <div :class="$style.progressInner" :style="{ width: `${(Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock)) / Number(data.values[0].goodsInfo.activityInfo.number) * 100}%` }" />
-                  </div>
-                  <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status === 0">
-                    {{ `${data.values[0].goodsInfo.pageviews}人已关注` }}
-                  </div>
-                  <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status > 0 && data.values[0].goodsInfo.activityInfo.activityStock > 0">
-                    {{ `已抢${Number(data.values[0].goodsInfo.activityInfo.number) - Number(data.values[0].goodsInfo.activityInfo.activityStock)}件` }}
-                  </div>
-                  <div :class="$style.saled" v-if="data.values[0].goodsInfo.activityInfo.status > 0 && data.values[0].goodsInfo.activityInfo.activityStock === 0" style="color: #999999;">
-                    已抢完
-                  </div>
-                </div>
-                <div
-                  :class="{
-                    [$style.subRight]: true,
-                    [$style.disabled]: data.values[0].goodsInfo.activityInfo.status !== 1
-                  }"
-                >
-                  <pl-svg
-                    v-if="~[0, 1].indexOf(data.values[0].goodsInfo.activityInfo.status)"
-                    name="icon-vie-for"
-                    width="38"
-                  />
-                  <pl-svg
-                    v-else
-                    name="icon-jieshu"
-                    width="48"
-                    height="22"
-                  />
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </router-link>
+        </div>
+    </router-link>
 </template>
 
 <script>
@@ -89,22 +89,22 @@ import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
 
 export default {
-  name: 'Miaosha',
-  mixins: [mixin],
-  components: {
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
+    name: 'Miaosha',
+    mixins: [mixin],
+    components: {
+        CountDown
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

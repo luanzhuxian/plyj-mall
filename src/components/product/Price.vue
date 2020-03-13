@@ -1,65 +1,66 @@
 <template>
-  <div
-    ref="price"
-    :class="{
-      [$style.price]: true,
-      [$style[size]]: true,
-      [$style.plain]: plain
-    }"
-  >
-    <div>
-      <span :class="$style.currentPrice" :style="{ marginRight: originalPrice ? '10px' : '0' }">
-        <span
-          v-if="prefixText"
-          :class="$style.prefixText"
-          v-text="prefixText"
-        />
-        <i :class="$style.integer" v-text="integer" />
-        <i v-if="float" :class="$style.float" v-text="float" />
-      </span>
-      <del
-        v-if="originalPrice"
-        v-text="'¥' + originalPrice"
-      />
+    <div
+        ref="price"
+        :class="{
+            [$style.price]: true,
+            [$style[size]]: true,
+            [$style.plain]: plain
+        }"
+    >
+        <div>
+            <span :class="$style.currentPrice" :style="{ marginRight: originalPrice ? '10px' : '0' }">
+                <span
+                    v-if="prefixText"
+                    :class="$style.prefixText"
+                    v-text="prefixText"
+                />
+                <i :class="$style.integer" v-text="integer" />
+                <i v-if="float" :class="$style.float" v-text="float" />
+            </span>
+            <del
+                v-if="originalPrice"
+                v-text="'¥' + originalPrice"
+            />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'Price',
-  props: {
-    price: {
-      type: [String, Number],
-      default: ''
+    name: 'Price',
+    props: {
+        price: {
+            type: [String, Number],
+            default: ''
+        },
+        originalPrice: {
+            type: [String, Number],
+            default: ''
+        },
+
+        /* mini small middle large */
+        size: {
+            type: [String, Number],
+            default: ''
+        },
+        plain: Boolean,
+        prefixText: {
+            type: String,
+            default: ''
+        }
     },
-    originalPrice: {
-      type: [String, Number],
-      default: ''
+    data () {
+        return {
+        }
     },
-    /* mini small middle large */
-    size: {
-      type: [String, Number],
-      default: ''
-    },
-    plain: Boolean,
-    prefixText: {
-      type: String,
-      default: ''
+    computed: {
+        integer () {
+            return this.price ? String(this.price).split('.')[0] : 0
+        },
+        float () {
+            return this.price ? String(this.price).split('.')[1] : 0
+        }
     }
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    integer: function () {
-      return this.price ? String(this.price).split('.')[0] : 0
-    },
-    float: function () {
-      return this.price ? String(this.price).split('.')[1] : 0
-    }
-  }
 }
 </script>
 

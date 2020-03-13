@@ -1,177 +1,181 @@
 <template>
-  <div
-    :class="{
-      [$style.infoItem]: true,
-    }"
-  >
-    <div :class="$style.content">
-      <span :class="$style.itemLabel">{{ label }}</span>
-      <div
-        :class="{ [$style.collapse]: collapse }"
-        @click="collapse = !collapse"
-      >
-        <span>请填写</span>
-        <pl-svg
-          :class="{ [$style.rightArrow]: true }"
-          name="icon-right" fill="#ccc" height="24"
-        />
-      </div>
-    </div>
-
-    <ul
-      :class="{ [$style.list]: true, [$style.collapse]: collapse }"
-      v-if="formData.formList"
+    <div
+        :class="{
+            [$style.infoItem]: true,
+        }"
     >
-      <li
-        v-for="(item, i) of formData.formList"
-        :key="i"
-        @click="editStudent(i)"
-      >
-        <div>{{ label }}{{ i + 1 }}</div>
-        <div>
-          <span v-if="isError(i)">未填写</span>
-          <span v-else v-text="item[Object.keys(item)[0]]" />
-          <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
+        <div :class="$style.content">
+            <span :class="$style.itemLabel">{{ label }}</span>
+            <div
+                :class="{ [$style.collapse]: collapse }"
+                @click="collapse = !collapse"
+            >
+                <span>请填写</span>
+                <pl-svg
+                    :class="{ [$style.rightArrow]: true }"
+                    name="icon-right" fill="#ccc" height="24"
+                />
+            </div>
         </div>
-      </li>
-    </ul>
 
-    <CustomForm
-      :show.sync="showForm"
-      :form="currentForm"
-      :rules="currentRules"
-      @confirm="confirm"
-      :title="label"
-    />
-  </div>
+        <ul
+            :class="{ [$style.list]: true, [$style.collapse]: collapse }"
+            v-if="formData.formList"
+        >
+            <li
+                v-for="(item, i) of formData.formList"
+                :key="i"
+                @click="editStudent(i)"
+            >
+                <div>{{ label }}{{ i + 1 }}</div>
+                <div>
+                    <span v-if="isError(i)">未填写</span>
+                    <span v-else v-text="item[Object.keys(item)[0]]" />
+                    <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
+                </div>
+            </li>
+        </ul>
+
+        <CustomForm
+            :show.sync="showForm"
+            :form="currentForm"
+            :rules="currentRules"
+            @confirm="confirm"
+            :title="label"
+        />
+    </div>
 </template>
 
 <script>
 import CustomForm from './Custom-Form.vue'
 export default {
-  name: 'CustomInline',
-  components: {
-    CustomForm
-  },
-  data () {
-    return {
-      collapse: false,
-      showForm: false,
-      currentForm: {},
-      currentRules: {},
-      formData: {}
-    }
-  },
-  props: {
-    product: {
-      type: Object,
-      default () {
-        return {}
-      }
+    name: 'CustomInline',
+    components: {
+        CustomForm
     },
-    customList: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    label: {
-      type: String,
-      default: '学员信息'
-    },
-    count: {
-      type: Number,
-      default: 0
-    }
-  },
-  watch: {
-    product: {
-      handler () {
-        this.setFormData()
-      },
-      immediate: true
-    }
-  },
-  methods: {
-    // 单商品
-    setFormData () {
-      const formList = []
-      const rules = []
-      const count = this.product.productType === 'PHYSICAL_GOODS' ? 1 : this.count
-      // 获取上次填写的数据，尝试回填
-      const oldFormList = JSON.parse(sessionStorage.getItem(`CUSTOM_FORM_${this.product.productId}`)) || []
-      for (let i = 0; i < count; i++) {
-        const form = {}
-        const rule = {}
-        for (const cus of this.customList) {
-          const key = cus.fieldName
-          // 回填数据
-          if (oldFormList.length) {
-            form[key] = oldFormList[i][key] || ''
-          } else {
-            form[key] = ''
-          }
-          rule[key] = [{ required: Boolean(cus.required), message: `请输入${cus.fieldName}`, trigger: 'blur' }]
+    data () {
+        return {
+            collapse: false,
+            showForm: false,
+            currentForm: {},
+            currentRules: {},
+            formData: {}
         }
-        formList.push(form)
-        rules.push(rule)
-      }
-      this.formData = { formList, rules }
-      if (oldFormList.length) {
-        this.confirm()
-      }
     },
-    selectStudent () {
-      const product = this.product
-      sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
-        name: this.$route.name,
-        query: this.$route.query,
-        params: this.$route.params
-      }))
-      this.$router.push({
-        name: 'StudentList',
-        query: {
-          select: 'YES',
-          sku: product.skuCode1 + product.skuCode2,
-          count: product.count
+    props: {
+        product: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+        customList: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        label: {
+            type: String,
+            default: '学员信息'
+        },
+        count: {
+            type: Number,
+            default: 0
         }
-      })
     },
-    editStudent (index) {
-      this.currentForm = this.formData.formList[index]
-      this.currentRules = this.formData.rules[index]
-      this.showForm = true
-    },
-    isError (index) {
-      const form = this.formData.formList[index]
-      const rule = this.formData.rules[index]
-      for (let key of Object.keys(form)) {
-        if (rule[key][0].required && !form[key]) {
-          return true
+    watch: {
+        product: {
+            handler () {
+                this.setFormData()
+            },
+            immediate: true
         }
-      }
     },
-    confirm (e) {
-      const formList = this.formData.formList
-      const rules = this.formData.rules
-      const data = []
-      for (const [i, form] of formList.entries()) {
-        const fields = []
-        for (const key of Object.keys(form)) {
-          fields.push({
-            fieldName: key,
-            fieldValue: form[key],
-            required: rules[i][key][0].required
-          })
+    methods: {
+
+        // 单商品
+        setFormData () {
+            const formList = []
+            const rules = []
+            const count = this.product.productType === 'PHYSICAL_GOODS' ? 1 : this.count
+
+            // 获取上次填写的数据，尝试回填
+            const oldFormList = JSON.parse(sessionStorage.getItem(`CUSTOM_FORM_${ this.product.productId }`)) || []
+            for (let i = 0; i < count; i++) {
+                const form = {}
+                const rule = {}
+                for (const cus of this.customList) {
+                    const key = cus.fieldName
+
+                    // 回填数据
+                    if (oldFormList.length) {
+                        form[key] = oldFormList[i][key] || ''
+                    } else {
+                        form[key] = ''
+                    }
+                    rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'blur' }]
+                }
+                formList.push(form)
+                rules.push(rule)
+            }
+            this.formData = { formList, rules }
+            if (oldFormList.length) {
+                this.confirm()
+            }
+        },
+        selectStudent () {
+            const { product } = this
+            sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
+                name: this.$route.name,
+                query: this.$route.query,
+                params: this.$route.params
+            }))
+            this.$router.push({
+                name: 'StudentList',
+                query: {
+                    select: 'YES',
+                    sku: product.skuCode1 + product.skuCode2,
+                    count: product.count
+                }
+            })
+        },
+        editStudent (index) {
+            this.currentForm = this.formData.formList[index]
+            this.currentRules = this.formData.rules[index]
+            this.showForm = true
+        },
+        isError (index) {
+            const form = this.formData.formList[index]
+            const rule = this.formData.rules[index]
+            for (const key of Object.keys(form)) {
+                if (rule[key][0].required && !form[key]) {
+                    return true
+                }
+            }
+        },
+        confirm (e) {
+            const { formList } = this.formData
+            const { rules } = this.formData
+            const data = []
+            for (const [i, form] of formList.entries()) {
+                const fields = []
+                for (const key of Object.keys(form)) {
+                    fields.push({
+                        fieldName: key,
+                        fieldValue: form[key],
+                        required: rules[i][key][0].required
+                    })
+                }
+                data.push(fields)
+            }
+            this.product.customForm = data
+
+            // 确定后，将当前表单列表保存起来
+            sessionStorage.setItem(`CUSTOM_FORM_${ this.product.productId }`, JSON.stringify(this.formData.formList))
+            this.$emit('confirm', e)
         }
-        data.push(fields)
-      }
-      this.product.customForm = data
-      // 确定后，将当前表单列表保存起来
-      sessionStorage.setItem(`CUSTOM_FORM_${this.product.productId}`, JSON.stringify(this.formData.formList))
-      this.$emit('confirm', e)
     }
-  }
 }
 </script>
 

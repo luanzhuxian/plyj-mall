@@ -1,36 +1,36 @@
 <template>
-  <div :class="$style.topText">
-    <div :class="$style.left">
-      <h2 v-text="title" />
-      <transition
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
-      >
-        <p
-          v-if="tip"
-          v-text="tip"
-        />
-      </transition>
+    <div :class="$style.topText">
+        <div :class="$style.left">
+            <h2 v-text="title" />
+            <transition
+                enter-active-class="animated fadeIn"
+                leave-active-class="animated fadeOut"
+            >
+                <p
+                    v-if="tip"
+                    v-text="tip"
+                />
+            </transition>
+        </div>
+        <div>
+            <slot />
+        </div>
     </div>
-    <div>
-      <slot />
-    </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'TopText',
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    tip: {
-      type: String,
-      default: ''
+    name: 'TopText',
+    props: {
+        title: {
+            type: String,
+            default: ''
+        },
+        tip: {
+            type: String,
+            default: ''
+        }
     }
-  }
 }
 </script>
 

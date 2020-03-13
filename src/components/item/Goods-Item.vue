@@ -1,54 +1,54 @@
 <template>
-  <div
-    :class="$style.goods"
-    @click="handleClick"
-  >
-    <slot />
-    <div :class="$style.top">
-      <img
-        :class="$style.img"
-        v-lazy="img"
-        :key="img"
-      >
-      <count-down
-        v-if="data.shoppingStatus === 1 && activityProduct === 1"
-        :class="$style.countDown"
-        :data="data"
-        :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }"
-      />
+    <div
+        :class="$style.goods"
+        @click="handleClick"
+    >
+        <slot />
+        <div :class="$style.top">
+            <img
+                :class="$style.img"
+                v-lazy="img"
+                :key="img"
+            >
+            <count-down
+                v-if="data.shoppingStatus === 1 && activityProduct === 1"
+                :class="$style.countDown"
+                :data="data"
+                :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }"
+            />
+        </div>
+        <div :class="$style.bottom">
+            <div
+                v-text="title"
+                :class="$style.name"
+            />
+            <div
+                v-if="tags.length > 0"
+                :class="$style.tag"
+            >
+                <span
+                    v-for="(tag, index) of tags"
+                    :key="index"
+                    v-text="tag"
+                />
+            </div>
+            <div
+                v-if="desc"
+                :class="$style.desc"
+                v-text="desc"
+            />
+            <div :class="$style.price">
+                <price
+                    size="mini"
+                    :price="price"
+                    :original-price="originalPrice"
+                />
+                <span :class="$style.rebate" v-if="rebate">
+                    {{ `返润笔 ¥${rebate}` }}
+                </span>
+            </div>
+        </div>
     </div>
-    <div :class="$style.bottom">
-      <div
-        v-text="title"
-        :class="$style.name"
-      />
-      <div
-        v-if="tags.length > 0"
-        :class="$style.tag"
-      >
-        <span
-          v-for="(tag, index) of tags"
-          :key="index"
-          v-text="tag"
-        />
-      </div>
-      <div
-        v-if="desc"
-        :class="$style.desc"
-        v-text="desc"
-      />
-      <div :class="$style.price">
-        <price
-          size="mini"
-          :price="price"
-          :original-price="originalPrice"
-        />
-        <span :class="$style.rebate" v-if="rebate">
-          {{ `返润笔 ¥${rebate}` }}
-        </span>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -56,70 +56,70 @@ import Price from '../product/Price.vue'
 import { mapGetters } from 'vuex'
 import CountDown from '../product/Count-Down.vue'
 export default {
-  name: 'GoodsItem',
-  components: {
-    Price,
-    CountDown
-  },
-  data () {
-    return {
+    name: 'GoodsItem',
+    components: {
+        Price,
+        CountDown
+    },
+    data () {
+        return {
+        }
+    },
+    props: {
+        id: {
+            type: String,
+            default: ''
+        },
+        img: {
+            type: String,
+            default: ''
+        },
+        title: {
+            type: String,
+            default: ''
+        },
+        tags: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        desc: {
+            type: String,
+            default: ''
+        },
+        price: {
+            type: [String, Number],
+            default: ''
+        },
+        originalPrice: {
+            type: [String, Number],
+            default: ''
+        },
+        rebate: {
+            type: [String, Number],
+            default: 0
+        },
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+        activityProduct: {
+            type: Number,
+            default: 1
+        }
+    },
+    computed: {
+        ...mapGetters(['agentUser', 'userId'])
+    },
+    methods: {
+        async handleClick () {
+            const { id } = this
+            this.$router.push({ name: 'Product', params: { productId: id } })
+        }
     }
-  },
-  props: {
-    id: {
-      type: String,
-      default: ''
-    },
-    img: {
-      type: String,
-      default: ''
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    tags: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    },
-    desc: {
-      type: String,
-      default: ''
-    },
-    price: {
-      type: [String, Number],
-      default: ''
-    },
-    originalPrice: {
-      type: [String, Number],
-      default: ''
-    },
-    rebate: {
-      type: [String, Number],
-      default: 0
-    },
-    data: {
-      type: Object,
-      default: function () {
-        return {}
-      }
-    },
-    activityProduct: {
-      type: Number,
-      default: 1
-    }
-  },
-  computed: {
-    ...mapGetters(['agentUser', 'userId'])
-  },
-  methods: {
-    async handleClick () {
-      const { id } = this
-      this.$router.push({ name: 'Product', params: { productId: id } })
-    }
-  }
 }
 </script>
 

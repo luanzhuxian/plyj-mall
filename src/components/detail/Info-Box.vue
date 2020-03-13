@@ -1,30 +1,30 @@
 <template>
-  <div
-    v-if="!loading"
-    :class="$style.detailInfoBox"
-  >
-    <div :class="$style.detailBox">
-      <slot />
+    <div
+        v-if="!loading"
+        :class="$style.detailInfoBox"
+    >
+        <div :class="$style.detailBox">
+            <slot />
+        </div>
     </div>
-  </div>
-  <div
-    v-else
-    :class="$style.skeleton"
-  >
-    <div :class="$style.skeleton1 + ' ' + $style.skeAnimation" />
-    <div :class="$style.skeleton2 + ' ' + $style.skeAnimation" />
-    <div :class="$style.skeleton3 + ' ' + $style.skeAnimation" />
-    <div :class="$style.skeleton4 + ' ' + $style.skeAnimation" />
-    <div :class="$style.skeleton5 + ' ' + $style.skeAnimation" />
-  </div>
+    <div
+        v-else
+        :class="$style.skeleton"
+    >
+        <div :class="$style.skeleton1 + ' ' + $style.skeAnimation" />
+        <div :class="$style.skeleton2 + ' ' + $style.skeAnimation" />
+        <div :class="$style.skeleton3 + ' ' + $style.skeAnimation" />
+        <div :class="$style.skeleton4 + ' ' + $style.skeAnimation" />
+        <div :class="$style.skeleton5 + ' ' + $style.skeAnimation" />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'DetailInfoBox',
-  props: {
-    loading: Boolean
-  }
+    name: 'DetailInfoBox',
+    props: {
+        loading: Boolean
+    }
 }
 </script>
 

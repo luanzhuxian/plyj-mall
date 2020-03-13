@@ -1,56 +1,56 @@
 <template>
-  <div class="pl-fields">
-    <div
-      :class="'pl-fields_box ' + size"
-      @click="handleClick"
-    >
-      <div class="pl-fields_text">
-        <pl-svg
-          :fill="iconColor"
-          v-if="icon && iconPosition === 'left'"
-          :name="icon"
-          :width="iconWidth"
-          :height="iconHeight"
-          class="pl-fields_icon"
-          :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
-        />
-        <span
-          v-text="text"
-          :style="{ fontWeight: leftTextWeight, color: titleColor }"
-        />
-        <pl-svg
-          :fill="iconColor"
-          v-if="icon && iconPosition === 'right'"
-          :name="icon"
-          type="svg"
-          :width="iconWidth"
-          :height="iconHeight"
-          class="pl-fields_icon"
-          :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
-        />
-      </div>
-      <div class="pl-fields_right" @click.stop="fieldsRightClick">
-        <span
-          v-if="rightText"
-          class="pl-fields_right_text"
-          v-text="rightText"
-          :style="{ fontWeight: rightTextWeight }"
-        />
-        <pl-svg
-          :fill="iconColor"
-          v-if="route || showRightIcon"
-          :name="rightIcon"
-          width="20"
-          height="20"
-          type="svg"
-          :class="{
-            'pl-fields_right_icon': true,
-            'is-collapse': canCollapse && collapse,
-            'no-collapse': canCollapse && !collapse
-          }"
-          :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
-        />
-        <!--<pl-svg
+    <div class="pl-fields">
+        <div
+            :class="'pl-fields_box ' + size"
+            @click="handleClick"
+        >
+            <div class="pl-fields_text">
+                <pl-svg
+                    :fill="iconColor"
+                    v-if="icon && iconPosition === 'left'"
+                    :name="icon"
+                    :width="iconWidth"
+                    :height="iconHeight"
+                    class="pl-fields_icon"
+                    :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
+                />
+                <span
+                    v-text="text"
+                    :style="{ fontWeight: leftTextWeight, color: titleColor }"
+                />
+                <pl-svg
+                    :fill="iconColor"
+                    v-if="icon && iconPosition === 'right'"
+                    :name="icon"
+                    type="svg"
+                    :width="iconWidth"
+                    :height="iconHeight"
+                    class="pl-fields_icon"
+                    :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
+                />
+            </div>
+            <div class="pl-fields_right" @click.stop="fieldsRightClick">
+                <span
+                    v-if="rightText"
+                    class="pl-fields_right_text"
+                    v-text="rightText"
+                    :style="{ fontWeight: rightTextWeight }"
+                />
+                <pl-svg
+                    :fill="iconColor"
+                    v-if="route || showRightIcon"
+                    :name="rightIcon"
+                    width="20"
+                    height="20"
+                    type="svg"
+                    :class="{
+                        'pl-fields_right_icon': true,
+                        'is-collapse': canCollapse && collapse,
+                        'no-collapse': canCollapse && !collapse
+                    }"
+                    :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
+                />
+                <!--<pl-svg
           v-if="route || showRightIcon"
           :class="{
             'pl-fields_right_icon': true,
@@ -59,119 +59,120 @@
           }"
           :name="rightIcon"
         />-->
-      </div>
-    </div>
+            </div>
+        </div>
 
-    <transition name="collapse">
-      <div
-        v-if="hasSlot"
-        v-show="canCollapse ? collapse : true"
-      >
-        <slot />
-      </div>
-    </transition>
-  </div>
+        <transition name="collapse">
+            <div
+                v-if="hasSlot"
+                v-show="canCollapse ? collapse : true"
+            >
+                <slot />
+            </div>
+        </transition>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'PlFields',
-  data () {
-    return {
-      collapse: false
+    name: 'PlFields',
+    data () {
+        return {
+            collapse: false
+        }
+    },
+    props: {
+        icon: {
+            type: String,
+            default: ''
+        },
+        iconColor: {
+            type: String,
+            default: ''
+        },
+        iconGap: {
+            type: Number,
+            default: 0
+        }, // 图片和文字直接的间隙
+        iconPosition: {
+            type: String,
+            default: 'left'
+        },
+        text: {
+            type: String,
+            default: ''
+        },
+        titleColor: {
+            type: String,
+            default: '#2e2e2e'
+        },
+        rightTextWeight: {
+            type: String,
+            default: 'normal'
+        },
+        leftTextWeight: {
+            type: String,
+            default: 'normal'
+        },
+        rightText: {
+            type: String,
+            default: ''
+        },
+        rightIcon: {
+            type: String,
+            default: 'icon-right'
+        },
+        showRightIcon: Boolean,
+        route: {
+            type: Object,
+            default () {
+                return null
+            }
+        },
+        size: {
+            type: String,
+            default: 'large'
+        },
+
+        // 支持展开slot
+        canCollapse: Boolean,
+        iconWidth: {
+            type: Number,
+            default: 50
+        },
+        iconHeight: {
+            type: Number,
+            default: 50
+        }
+    },
+    computed: {
+        hasSlot () {
+            return Boolean(this.$slots.default)
+        },
+        slot () {
+            return this.$slots.default[0] ? this.$slots.default[0].elm : {}
+        },
+        height () {
+            return this.slot
+        }
+    },
+    methods: {
+        handleClick () {
+            this.$emit('click')
+            if (this.route) {
+                this.$router.push(this.route)
+            }
+        },
+        fieldsRightClick () {
+            this.$emit('click')
+            if (this.route) {
+                this.$router.push(this.route)
+            }
+            if (this.canCollapse) {
+                this.collapse = !this.collapse
+            }
+        }
     }
-  },
-  props: {
-    icon: {
-      type: String,
-      default: ''
-    },
-    iconColor: {
-      type: String,
-      default: ''
-    },
-    iconGap: {
-      type: Number,
-      default: 0
-    }, // 图片和文字直接的间隙
-    iconPosition: {
-      type: String,
-      default: 'left'
-    },
-    text: {
-      type: String,
-      default: ''
-    },
-    titleColor: {
-      type: String,
-      default: '#2e2e2e'
-    },
-    rightTextWeight: {
-      type: String,
-      default: 'normal'
-    },
-    leftTextWeight: {
-      type: String,
-      default: 'normal'
-    },
-    rightText: {
-      type: String,
-      default: ''
-    },
-    rightIcon: {
-      type: String,
-      default: 'icon-right'
-    },
-    showRightIcon: Boolean,
-    route: {
-      type: Object,
-      default: function () {
-        return null
-      }
-    },
-    size: {
-      type: String,
-      default: 'large'
-    },
-    // 支持展开slot
-    canCollapse: Boolean,
-    iconWidth: {
-      type: Number,
-      default: 50
-    },
-    iconHeight: {
-      type: Number,
-      default: 50
-    }
-  },
-  computed: {
-    hasSlot () {
-      return Boolean(this.$slots.default)
-    },
-    slot () {
-      return this.$slots.default[0] ? this.$slots.default[0].elm : {}
-    },
-    height () {
-      return this.slot
-    }
-  },
-  methods: {
-    handleClick () {
-      this.$emit('click')
-      if (this.route) {
-        this.$router.push(this.route)
-      }
-    },
-    fieldsRightClick () {
-      this.$emit('click')
-      if (this.route) {
-        this.$router.push(this.route)
-      }
-      if (this.canCollapse) {
-        this.collapse = !this.collapse
-      }
-    }
-  }
 }
 </script>
 

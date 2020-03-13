@@ -1,28 +1,28 @@
 <template>
-  <div :class="$style.titleYuanDan">
-    <div
-      :class="$style.characterWrapper"
-      :style="{ '--length': data.length || 0 }"
-    >
-      <span :class="$style.characterBg" v-for="(item, index) of data" :key="index">
-        {{ item }}
-      </span>
+    <div :class="$style.titleYuanDan">
+        <div
+            :class="$style.characterWrapper"
+            :style="{ '--length': data.length || 0 }"
+        >
+            <span :class="$style.characterBg" v-for="(item, index) of data" :key="index">
+                {{ item }}
+            </span>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'TitleYuanDan',
-  props: {
-    data: {
-      type: String,
-      default: ''
+    name: 'TitleYuanDan',
+    props: {
+        data: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

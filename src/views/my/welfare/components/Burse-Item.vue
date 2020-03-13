@@ -1,69 +1,71 @@
 <template>
-  <div :class="$style.burseItem">
-    <ul>
-      <div @click="check">
-        <li>
-          <span v-if="isEdit" :class="{[$style.checked]: isEdit && item.checked}" />
-        </li>
-        <li>
-          <pl-svg name="icon-hongbao" width="122" height="90" type="svg" />
-        </li>
-      </div>
-      <div>
-        <li>{{ item.activityType === 'GROUPBUGACTIVITY' ? '团购奖学金' : '年味奖学金' }}</li>
-        <li>全场通用</li>
-        <li>{{ item.useStartTime }} 领取</li>
-      </div>
-    </ul>
-    <ul>
-      <li>+{{ item.amount }}</li>
-      <li><span v-if="isWatch" @click.stop="$router.push({name:'MyBurseDetail',params:{id:item.id}})">去查看</span></li>
-    </ul>
-    <!--已使用，已过期图标-->
-    <template v-if="hasStatusImg">
-      <pl-svg v-if="useStatus === 2" name="icon-burse-use" width="186" height="186" type="svg" />
-      <pl-svg v-if="useStatus === 3" name="icon-burse-expire" width="186" height="186" type="svg" />
-    </template>
-  </div>
+    <div :class="$style.burseItem">
+        <ul>
+            <div @click="check">
+                <li>
+                    <span v-if="isEdit" :class="{[$style.checked]: isEdit && item.checked}" />
+                </li>
+                <li>
+                    <pl-svg name="icon-hongbao" width="122" height="90" type="svg" />
+                </li>
+            </div>
+            <div>
+                <li>{{ item.activityType === 'GROUPBUGACTIVITY' ? '团购奖学金' : '年味奖学金' }}</li>
+                <li>全场通用</li>
+                <li>{{ item.useStartTime }} 领取</li>
+            </div>
+        </ul>
+        <ul>
+            <li>+{{ item.amount }}</li>
+            <li><span v-if="isWatch" @click.stop="$router.push({name:'MyBurseDetail',params:{id:item.id}})">去查看</span></li>
+        </ul>
+        <!--已使用，已过期图标-->
+        <template v-if="hasStatusImg">
+            <pl-svg v-if="useStatus === 2" name="icon-burse-use" width="186" height="186" type="svg" />
+            <pl-svg v-if="useStatus === 3" name="icon-burse-expire" width="186" height="186" type="svg" />
+        </template>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'BurseItem',
-  props: {
-    isWatch: {
-      type: Boolean,
-      default: false
+    name: 'BurseItem',
+    props: {
+        isWatch: {
+            type: Boolean,
+            default: false
+        },
+        isEdit: {
+            type: Boolean,
+            default: false
+        },
+        item: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+
+        // 是否显示已使用，已过期图标
+        hasStatusImg: {
+            type: Boolean,
+            default: false
+        },
+
+        // 使用状态  0：待领取；1：待使用； 2：已使用； 3：已过期 ； 4：已失效； 5：已删除  ;
+        useStatus: {
+            type: Number,
+            default: 0
+        }
     },
-    isEdit: {
-      type: Boolean,
-      default: false
-    },
-    item: {
-      type: Object,
-      default () {
-        return {}
-      }
-    },
-    // 是否显示已使用，已过期图标
-    hasStatusImg: {
-      type: Boolean,
-      default: false
-    },
-    // 使用状态  0：待领取；1：待使用； 2：已使用； 3：已过期 ； 4：已失效； 5：已删除  ;
-    useStatus: {
-      type: Number,
-      default: 0
+    methods: {
+        check () {
+            if (this.isEdit) {
+                this.item.checked = !this.item.checked
+                this.$emit('select')
+            }
+        }
     }
-  },
-  methods: {
-    check () {
-      if (this.isEdit) {
-        this.item.checked = !this.item.checked
-        this.$emit('select')
-      }
-    }
-  }
 }
 </script>
 

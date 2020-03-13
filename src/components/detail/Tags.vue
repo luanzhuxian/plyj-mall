@@ -1,24 +1,24 @@
 <template>
-  <ul :class="$style.tags">
-    <li
-      v-for="(tag, index) of tags"
-      :key="index"
-      v-text="tag.labelName"
-    />
-  </ul>
+    <ul :class="$style.tags">
+        <li
+            v-for="(tag, index) of tags"
+            :key="index"
+            v-text="tag.labelName"
+        />
+    </ul>
 </template>
 
 <script>
 export default {
-  name: 'DetailTags',
-  props: {
-    tags: {
-      type: Array,
-      default: function () {
-        return []
-      }
+    name: 'DetailTags',
+    props: {
+        tags: {
+            type: Array,
+            default () {
+                return []
+            }
+        }
     }
-  }
 }
 </script>
 

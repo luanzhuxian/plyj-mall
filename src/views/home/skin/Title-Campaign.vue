@@ -1,21 +1,21 @@
 <template>
-  <div :class="$style.titleCampaign">
-    <div :class="$style.title" v-text="data" />
-  </div>
+    <div :class="$style.titleCampaign">
+        <div :class="$style.title" v-text="data" />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'TitleCampaign',
-  props: {
-    data: {
-      type: String,
-      default: ''
+    name: 'TitleCampaign',
+    props: {
+        data: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

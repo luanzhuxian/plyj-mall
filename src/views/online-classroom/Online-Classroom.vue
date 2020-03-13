@@ -1,188 +1,189 @@
 <template>
-  <div :class="$style.onlineClassroom">
-    <!--TODO.暂时不显示分类-->
-    <div
-      v-if="false"
-      :class="{
-        [$style.classifyMain]: true,
-        [$style.showAll]: isShowAll
-      }"
-    >
-      <ul :class="$style.classifyList">
-        <li
-          v-for="(item, index) in classifyList"
-          :class="{
-            [$style.active]: form.category1 === item.category1 && form.category2===item.category2
-          }"
-          :key="index"
-          @click="classifyClick(item)"
+    <div :class="$style.onlineClassroom">
+        <!--TODO.暂时不显示分类-->
+        <div
+            v-if="false"
+            :class="{
+                [$style.classifyMain]: true,
+                [$style.showAll]: isShowAll
+            }"
         >
-          {{ item.categoryName }}
-        </li>
-        <li :class="$style.close" v-if="isShowAll">
-          <pl-svg
-            name="icon-close"
-            fill="#fff"
-            width="36"
-            @click="isShowAll = false"
-          />
-        </li>
-      </ul>
-      <transition name="fade">
-        <div :class="$style.controlWrap" v-if="classifyList.length">
-          <div :class="$style.control">
-            <pl-svg
-              v-show="!isShowAll"
-              name="icon-group"
-              width="24"
-              fill="#484848"
-              @click="isShowAll = true"
-            />
-          </div>
+            <ul :class="$style.classifyList">
+                <li
+                    v-for="(item, index) in classifyList"
+                    :class="{
+                        [$style.active]: form.category1 === item.category1 && form.category2===item.category2
+                    }"
+                    :key="index"
+                    @click="classifyClick(item)"
+                >
+                    {{ item.categoryName }}
+                </li>
+                <li :class="$style.close" v-if="isShowAll">
+                    <pl-svg
+                        name="icon-close"
+                        fill="#fff"
+                        width="36"
+                        @click="isShowAll = false"
+                    />
+                </li>
+            </ul>
+            <transition name="fade">
+                <div :class="$style.controlWrap" v-if="classifyList.length">
+                    <div :class="$style.control">
+                        <pl-svg
+                            v-show="!isShowAll"
+                            name="icon-group"
+                            width="24"
+                            fill="#484848"
+                            @click="isShowAll = true"
+                        />
+                    </div>
+                </div>
+            </transition>
         </div>
-      </transition>
+        <load-more
+            ref="loadMore"
+            :form="form"
+            :request-methods="requestMethods"
+            :loading.sync="loading"
+            @refresh="refreshHandler"
+            no-content-tip="此分类下还没有课程"
+        >
+            <template>
+                <ul :class="$style.courseList">
+                    <li
+                        v-for="(item, index) of courseList"
+                        :key="index"
+                        :class="$style.courseItem"
+                        @click.capture="study(item)"
+                    >
+                        <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
+                        <div :class="$style.desc">
+                            <div :class="$style.title" v-text="item.courseName" />
+                            <div :class="[$style.text1, item.lecturer? '' : $style.noLecturer]">
+                                <span v-if="item.lecturer">主讲人： {{ item.lecturer }}</span>
+                            </div>
+                            <div :class="$style.bottom">
+                                <span v-if="item.priceType === 1">
+                                    <span :class="$style.price" v-text="item.sellingPrice" />
+                                    <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
+                                </span>
+                                <span v-else :class="$style.free">免费</span>
+                                <pl-button v-if="!item.orderId" type="primary" size="small">立即学习</pl-button>
+                                <pl-button v-else type="warning" size="small">观看学习</pl-button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </template>
+        </load-more>
     </div>
-    <load-more
-      ref="loadMore"
-      :form="form"
-      :request-methods="requestMethods"
-      :loading.sync="loading"
-      @refresh="refreshHandler"
-      no-content-tip="此分类下还没有课程"
-    >
-      <template>
-        <ul :class="$style.courseList">
-          <li
-            v-for="(item, index) of courseList"
-            :key="index"
-            :class="$style.courseItem"
-            @click.capture="study(item)"
-          >
-            <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
-            <div :class="$style.desc">
-              <div :class="$style.title" v-text="item.courseName" />
-              <div :class="[$style.text1, item.lecturer? '' : $style.noLecturer]">
-                <span v-if="item.lecturer">主讲人： {{ item.lecturer }}</span>
-              </div>
-              <div :class="$style.bottom">
-                <span v-if="item.priceType === 1">
-                  <span :class="$style.price" v-text="item.sellingPrice" />
-                  <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
-                </span>
-                <span v-else :class="$style.free">免费</span>
-                <pl-button v-if="!item.orderId" type="primary" size="small">立即学习</pl-button>
-                <pl-button v-else type="warning" size="small">观看学习</pl-button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </template>
-    </load-more>
-  </div>
 </template>
 <script>
 import { getCourse } from '../../apis/online-classroom.js'
 import { getCategoryTree } from '../../apis/classify'
 import LoadMore from '../../components/common/Load-More.vue'
 export default {
-  name: 'OnlineClassroom',
-  components: {
-    LoadMore
-  },
-  data () {
-    return {
-      form: {
-        category1: '',
-        category2: '',
-        current: 1,
-        size: 10
-      },
-      isShowAll: false,
-      classifyList: [],
-      requestMethods: getCourse,
-      loading: false,
-      $refresh: null,
-      courseList: []
-    }
-  },
-  async activated () {
-    try {
-      // TODO.暂时没有分类
-      /* if (!this.classifyList.length) { // 有分类且有默认值才设置默认分类
+    name: 'OnlineClassroom',
+    components: {
+        LoadMore
+    },
+    data () {
+        return {
+            form: {
+                category1: '',
+                category2: '',
+                current: 1,
+                size: 10
+            },
+            isShowAll: false,
+            classifyList: [],
+            requestMethods: getCourse,
+            loading: false,
+            $refresh: null,
+            courseList: []
+        }
+    },
+    async activated () {
+        try {
+            // TODO.暂时没有分类
+            /* if (!this.classifyList.length) { // 有分类且有默认值才设置默认分类
         await this.getCategoryTree()
       } */
-      this.$refresh = this.$refs.loadMore.refresh
-      // 解决因刷新浏览器后，在beforeRouteEnter无法获取到dom信息，导致无法正常调用refresh问题
-      if (!this.courseList.length) {
-        this.$refresh()
-      }
-    } catch (e) {
-      throw e
-    }
-  },
-  deactivated () {
-    this.isShowAll = false
-  },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if (from.name !== 'Curriculum') {
-        vm.$refs.loadMore.refresh()
-      }
-    })
-  },
-  methods: {
-    async getCategoryTree () {
-      try {
-        const { result } = await getCategoryTree()
-        let classifyList = [{
-          category1: '',
-          category2: '',
-          categoryName: '全部'
-        }]
-        if (result.length) {
-          for (let i in result) {
-            let item = result[i]
+            this.$refresh = this.$refs.loadMore.refresh
 
-            if (item.childs) {
-              for (let j in item.childs) {
-                let classifyItem = {}
-                classifyItem.category1 = item.id
-                let subItem = item.childs[j]
-                classifyItem.category2 = subItem.id
-                classifyItem.categoryName = subItem.categoryName
-                classifyList.push(classifyItem)
-              }
-            } else {
-              let classifyItem = {}
-              classifyItem.category1 = item.id
-              classifyItem.category2 = ''
-              classifyItem.categoryName = item.categoryName
-              classifyList.push(classifyItem)
+            // 解决因刷新浏览器后，在beforeRouteEnter无法获取到dom信息，导致无法正常调用refresh问题
+            if (!this.courseList.length) {
+                this.$refresh()
             }
-          }
+        } catch (e) {
+            throw e
         }
-        this.classifyList = classifyList
-      } catch (e) {
-        throw e
-      }
     },
-    async classifyClick (item) {
-      try {
-        this.form.current = 1
-        this.form.category1 = item.category1
-        this.form.category2 = item.category2
+    deactivated () {
         this.isShowAll = false
-        this.$refresh()
-      } catch (e) {
-        throw e
-      }
     },
-    refreshHandler (list) {
-      this.courseList = list
+    beforeRouteEnter (to, from, next) {
+        next(vm => {
+            if (from.name !== 'Curriculum') {
+                vm.$refs.loadMore.refresh()
+            }
+        })
     },
-    study (item) {
-      // 还是跳转到详情页
-      /* if (item.orderId) {
+    methods: {
+        async getCategoryTree () {
+            try {
+                const { result } = await getCategoryTree()
+                const classifyList = [{
+                    category1: '',
+                    category2: '',
+                    categoryName: '全部'
+                }]
+                if (result.length) {
+                    for (const i in result) {
+                        const item = result[i]
+
+                        if (item.childs) {
+                            for (const j in item.childs) {
+                                const classifyItem = {}
+                                classifyItem.category1 = item.id
+                                const subItem = item.childs[j]
+                                classifyItem.category2 = subItem.id
+                                classifyItem.categoryName = subItem.categoryName
+                                classifyList.push(classifyItem)
+                            }
+                        } else {
+                            const classifyItem = {}
+                            classifyItem.category1 = item.id
+                            classifyItem.category2 = ''
+                            classifyItem.categoryName = item.categoryName
+                            classifyList.push(classifyItem)
+                        }
+                    }
+                }
+                this.classifyList = classifyList
+            } catch (e) {
+                throw e
+            }
+        },
+        async classifyClick (item) {
+            try {
+                this.form.current = 1
+                this.form.category1 = item.category1
+                this.form.category2 = item.category2
+                this.isShowAll = false
+                this.$refresh()
+            } catch (e) {
+                throw e
+            }
+        },
+        refreshHandler (list) {
+            this.courseList = list
+        },
+        study (item) {
+            // 还是跳转到详情页
+            /* if (item.orderId) {
         if (!item.liveId) {
           return this.$alert({
             message: '视频已被删除',
@@ -192,9 +193,9 @@ export default {
         this.$router.push({ name: 'CourseWatch', params: { id: item.id }, query: { liveId: item.liveId, orderId: item.orderId, progress: item.learnProgress } })
         return
       } */
-      this.$router.push({ name: 'Curriculum', params: { productId: item.id } })
+            this.$router.push({ name: 'Curriculum', params: { productId: item.id } })
+        }
     }
-  }
 }
 </script>
 <style lang="scss" module>

@@ -1,12 +1,12 @@
 <template>
-  <div :class="$style.otherInfo">
-    <slot />
-  </div>
+    <div :class="$style.otherInfo">
+        <slot />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'OtherInfo'
+    name: 'OtherInfo'
 }
 </script>
 

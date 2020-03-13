@@ -1,43 +1,43 @@
 <template>
-  <div
-    :class="{
-      [$style.cartItem]: true
-    }"
-  >
     <div
-      :class="{
-        [$style.cartItem1]: true,
-        [$style.skeAnimation]: true
-      }"
-    />
-    <div
-      :class="$style.cartItemRight"
+        :class="{
+            [$style.cartItem]: true
+        }"
     >
-      <div
-        :class="{
-          [$style.cartItem2]: true,
-          [$style.skeAnimation]: true
-        }"
-      />
-      <div
-        :class="{
-          [$style.cartItem3]: true,
-          [$style.skeAnimation]: true
-        }"
-      />
-      <div
-        :class="{
-          [$style.cartItem4]: true,
-          [$style.skeAnimation]: true
-        }"
-      />
+        <div
+            :class="{
+                [$style.cartItem1]: true,
+                [$style.skeAnimation]: true
+            }"
+        />
+        <div
+            :class="$style.cartItemRight"
+        >
+            <div
+                :class="{
+                    [$style.cartItem2]: true,
+                    [$style.skeAnimation]: true
+                }"
+            />
+            <div
+                :class="{
+                    [$style.cartItem3]: true,
+                    [$style.skeAnimation]: true
+                }"
+            />
+            <div
+                :class="{
+                    [$style.cartItem4]: true,
+                    [$style.skeAnimation]: true
+                }"
+            />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'CartItem'
+    name: 'CartItem'
 }
 </script>
 

@@ -1,84 +1,84 @@
 <template>
-  <div :class="$style.onlineCourseWrapper">
-    <div :class="$style.onlineCourseHead">
-      <pl-svg name="icon-tv-76530" width="36" height="40" />
-      <b>知识课程</b>
-      <router-link
-        :class="$style.onlineCourseHeadMore"
-        :to="{ name: 'OnlineClassroom' }"
-      >
-        查看全部
-        <pl-svg name="icon-right" height="20" fill="#cccccc" />
-      </router-link>
-    </div>
-    <div :class="$style.onlineCourseHeadSub">
-      {{ `还有${rest}个知识课程，等你来学习` }}
-    </div>
-    <router-link
-      v-if="list.length"
-      :class="$style.onlineCourse"
-      :to="{ name: 'Curriculum', params: { productId: course.id } }"
-    >
-      <div :class="$style.imgWrapper">
-        <img :src="course.courseImg + '?x-oss-process=style/thum-small'">
-      </div>
-      <div :class="$style.info">
-        <div :class="$style.top" v-text="course.courseName" />
-        <div :class="$style.middle">
-          <span v-if="course.lecturer">
-            {{ `主讲人：${course.lecturer}` }}
-          </span>
+    <div :class="$style.onlineCourseWrapper">
+        <div :class="$style.onlineCourseHead">
+            <pl-svg name="icon-tv-76530" width="36" height="40" />
+            <b>知识课程</b>
+            <router-link
+                :class="$style.onlineCourseHeadMore"
+                :to="{ name: 'OnlineClassroom' }"
+            >
+                查看全部
+                <pl-svg name="icon-right" height="20" fill="#cccccc" />
+            </router-link>
         </div>
-        <div :class="$style.bottom">
-          <span
-            :class="{
-              [$style.bottomPrice]: true,
-              [$style.money]: course.sellingPrice
-            }"
-            v-text="course.sellingPrice || '免费'"
-          />
-          <span
-            :class="{
-              [$style.bottomOrigin]: true,
-              [$style.money]: course.originalPrice
-            }"
-            v-text="course.originalPrice"
-            v-if="course.originalPrice"
-          />
-          <div v-if="!course.orderId" :class="$style.bottomBtn">立即学习</div>
-          <div v-else :class="[$style.bottomBtn, $style.bottomStudy]">观看学习</div>
+        <div :class="$style.onlineCourseHeadSub">
+            {{ `还有${rest}个知识课程，等你来学习` }}
         </div>
-      </div>
-    </router-link>
-  </div>
+        <router-link
+            v-if="list.length"
+            :class="$style.onlineCourse"
+            :to="{ name: 'Curriculum', params: { productId: course.id } }"
+        >
+            <div :class="$style.imgWrapper">
+                <img :src="course.courseImg + '?x-oss-process=style/thum-small'">
+            </div>
+            <div :class="$style.info">
+                <div :class="$style.top" v-text="course.courseName" />
+                <div :class="$style.middle">
+                    <span v-if="course.lecturer">
+                        {{ `主讲人：${course.lecturer}` }}
+                    </span>
+                </div>
+                <div :class="$style.bottom">
+                    <span
+                        :class="{
+                            [$style.bottomPrice]: true,
+                            [$style.money]: course.sellingPrice
+                        }"
+                        v-text="course.sellingPrice || '免费'"
+                    />
+                    <span
+                        :class="{
+                            [$style.bottomOrigin]: true,
+                            [$style.money]: course.originalPrice
+                        }"
+                        v-text="course.originalPrice"
+                        v-if="course.originalPrice"
+                    />
+                    <div v-if="!course.orderId" :class="$style.bottomBtn">立即学习</div>
+                    <div v-else :class="[$style.bottomBtn, $style.bottomStudy]">观看学习</div>
+                </div>
+            </div>
+        </router-link>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'OnlineCourse',
-  props: {
-    data: {
-      type: Object,
-      default () {
+    name: 'OnlineCourse',
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
+    },
+    data () {
         return {}
-      }
-    }
-  },
-  data () {
-    return {}
-  },
-  computed: {
-    list () {
-      return this.data.records ? this.data.records : []
     },
-    course () {
-      return this.list.length ? this.list[0] : {}
+    computed: {
+        list () {
+            return this.data.records ? this.data.records : []
+        },
+        course () {
+            return this.list.length ? this.list[0] : {}
+        },
+        rest () {
+            return this.list.length ? this.data.total - 1 : 0
+        }
     },
-    rest () {
-      return this.list.length ? this.data.total - 1 : 0
-    }
-  },
-  created () {}
+    created () {}
 }
 </script>
 

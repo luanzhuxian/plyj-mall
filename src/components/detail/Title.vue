@@ -1,30 +1,30 @@
 <template>
-  <h2 :class="$style.detailTitle">
-    <div v-if="activityTag && activeProduct === 3 && preActivity !== 0" :class="$style.secondLabel">{{ activityTag }}</div> {{ productName }}
-  </h2>
+    <h2 :class="$style.detailTitle">
+        <div v-if="activityTag && activeProduct === 3 && preActivity !== 0" :class="$style.secondLabel">{{ activityTag }}</div> {{ productName }}
+    </h2>
 </template>
 
 <script>
 export default {
-  name: 'DetailTitle',
-  props: {
-    activeProduct: {
-      type: Number,
-      default: 0
-    },
-    preActivity: {
-      type: [Number, String],
-      default: ''
-    },
-    productName: {
-      type: String,
-      default: ''
-    },
-    activityTag: {
-      type: String,
-      default: ''
+    name: 'DetailTitle',
+    props: {
+        activeProduct: {
+            type: Number,
+            default: 0
+        },
+        preActivity: {
+            type: [Number, String],
+            default: ''
+        },
+        productName: {
+            type: String,
+            default: ''
+        },
+        activityTag: {
+            type: String,
+            default: ''
+        }
     }
-  }
 }
 </script>
 

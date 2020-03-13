@@ -1,184 +1,186 @@
 <template>
-  <div
-    :class="{
-      [$style[size]]: true,
-      [$style.orderItem]: true
-    }"
-    :style="{
-      marginBottom: gap / 7.5 + 'vw'
-    }"
-    @click="handleClick"
-  >
-    <img
-      v-lazy="img"
-      :key="img"
-      alt="商品图片"
+    <div
+        :class="{
+            [$style[size]]: true,
+            [$style.orderItem]: true
+        }"
+        :style="{
+            marginBottom: gap / 7.5 + 'vw'
+        }"
+        @click="handleClick"
     >
-    <div :class="$style.right">
-      <div>
-        <div :class="$style.rightTop">
-          <div
-            :class="$style.name"
-            v-text="name"
-          />
-          <div :class="$style.priceWrapper">
-            <div
-              v-if="!hidePrice"
-              :class="$style.price + ' rmb'"
-              v-text="price"
-            />
-            <div
-              :class="$style.count"
-              v-text="count"
-            />
-          </div>
+        <img
+            v-lazy="img"
+            :key="img"
+            alt="商品图片"
+        >
+        <div :class="$style.right">
+            <div>
+                <div :class="$style.rightTop">
+                    <div
+                        :class="$style.name"
+                        v-text="name"
+                    />
+                    <div :class="$style.priceWrapper">
+                        <div
+                            v-if="!hidePrice"
+                            :class="$style.price + ' rmb'"
+                            v-text="price"
+                        />
+                        <div
+                            :class="$style.count"
+                            v-text="count"
+                        />
+                    </div>
+                </div>
+                <div :class="$style.rightBottom">
+                    <div
+                        :class="$style.specification"
+                        v-text="option"
+                    />
+                    <div
+                        v-if="time"
+                        :class="$style.date"
+                    >
+                        <span>时间：</span>
+                        <span v-text="time" />
+                    </div>
+                </div>
+            </div>
+            <div :class="$style.refundInfo">
+                <div>
+                    <span
+                        :class="$style.tip"
+                        v-if="supportRefund === 0 || notSupportActiveProductStatus.indexOf(activeProduct) !== -1"
+                    >
+                        暂不支持退换货
+                    </span>
+                    <span
+                        :class="$style.tip"
+                        v-if="allowInvoice === 0 || notSupportActiveProductStatus.indexOf(activeProduct) !== -1"
+                    >
+                        不支持线上发票
+                    </span>
+                </div>
+                <span
+                    v-if="status"
+                    :class="$style.status"
+                    v-text="status"
+                />
+            </div>
         </div>
-        <div :class="$style.rightBottom">
-          <div
-            :class="$style.specification"
-            v-text="option"
-          />
-          <div
-            v-if="time"
-            :class="$style.date"
-          >
-            <span>时间：</span>
-            <span v-text="time" />
-          </div>
-        </div>
-      </div>
-      <div :class="$style.refundInfo">
-        <div>
-          <span
-            :class="$style.tip"
-            v-if="supportRefund === 0 || notSupportActiveProductStatus.indexOf(activeProduct) !== -1"
-          >
-            暂不支持退换货
-          </span>
-          <span
-            :class="$style.tip"
-            v-if="allowInvoice === 0 || notSupportActiveProductStatus.indexOf(activeProduct) !== -1"
-          >
-            不支持线上发票
-          </span>
-        </div>
-        <span
-          v-if="status"
-          :class="$style.status"
-          v-text="status"
-        />
-      </div>
+        <div v-if="activeProduct === 3 && preActive === 2" :class="$style.activeTag">限时秒杀</div>
+        <div v-else-if="activeProduct === 2 && preActive === 2" :class="$style.activeTag">团购</div>
+        <div v-else-if="activeProduct === 4 && preActive === 2" :class="$style.activeTag">预购</div>
+        <div v-else-if="activeProduct === 5 && preActive === 2" :class="$style.activeTag">春耘</div>
     </div>
-    <div v-if="activeProduct === 3 && preActive === 2" :class="$style.activeTag">限时秒杀</div>
-    <div v-else-if="activeProduct === 2 && preActive === 2" :class="$style.activeTag">团购</div>
-    <div v-else-if="activeProduct === 4 && preActive === 2" :class="$style.activeTag">预购</div>
-    <div v-else-if="activeProduct === 5 && preActive === 2" :class="$style.activeTag">春耘</div>
-  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'OrderItem',
-  data () {
-    return {
-      loading: false,
-      notSupportActiveProductStatus: [2, 3, 4] // 2团购 3限时秒杀 4预购 这三种状态的商品 --> 暂不支持退换货 + 不支持线上发票
+    name: 'OrderItem',
+    data () {
+        return {
+            loading: false,
+            notSupportActiveProductStatus: [2, 3, 4] // 2团购 3限时秒杀 4预购 这三种状态的商品 --> 暂不支持退换货 + 不支持线上发票
+        }
+    },
+    props: {
+
+        // 两个item之间的间距
+        gap: {
+            type: Number,
+            default: 30
+        },
+        size: {
+            type: String,
+            default: 'medium'
+        },
+        img: {
+            type: String,
+            default: ''
+        },
+        name: {
+            type: String,
+            default: ''
+        },
+        option: {
+            type: String,
+            default: ''
+        },
+        price: {
+            type: [String, Number],
+            default: 0
+        },
+        count: {
+            type: [String, Number],
+            default: 0
+        },
+        activeProduct: {
+            type: [String, Number],
+            default: 1
+        },
+        preActive: {
+            type: [String, Number],
+            default: 0
+        },
+        productId: {
+            type: String,
+            default: ''
+        },
+        routeName: {
+            type: String,
+            default: ''
+        },
+        time: {
+            type: String,
+            default: ''
+        },
+        status: {
+            type: String,
+            default: ''
+        },
+
+        // 商品类型（1:实体, 2:虚拟）
+        productType: {
+            type: Number,
+            default: 0
+        },
+        supportRefund: {
+            type: Number,
+            default: -1
+        },
+        allowInvoice: {
+            type: Number,
+            default: -1
+        },
+        hidePrice: Boolean
+    },
+    computed: {
+        ...mapGetters(['userId', 'agentUser'])
+    },
+    created () {
+    },
+    watch: {
+        activeProduct (val) {
+            // console.log(val)
+        }
+    },
+    methods: {
+        handleClick (e) {
+            if (this.productId) {
+                e.stopPropagation()
+                this.$router.push({
+                    name: this.routeName,
+                    params: {
+                        productId: this.productId,
+                        brokerId: this.userId || null
+                    }
+                })
+            }
+        }
     }
-  },
-  props: {
-    // 两个item之间的间距
-    gap: {
-      type: Number,
-      default: 30
-    },
-    size: {
-      type: String,
-      default: 'medium'
-    },
-    img: {
-      type: String,
-      default: ''
-    },
-    name: {
-      type: String,
-      default: ''
-    },
-    option: {
-      type: String,
-      default: ''
-    },
-    price: {
-      type: [String, Number],
-      default: 0
-    },
-    count: {
-      type: [String, Number],
-      default: 0
-    },
-    activeProduct: {
-      type: [String, Number],
-      default: 1
-    },
-    preActive: {
-      type: [String, Number],
-      default: 0
-    },
-    productId: {
-      type: String,
-      default: ''
-    },
-    routeName: {
-      type: String,
-      default: ''
-    },
-    time: {
-      type: String,
-      default: ''
-    },
-    status: {
-      type: String,
-      default: ''
-    },
-    // 商品类型（1:实体, 2:虚拟）
-    productType: {
-      type: Number,
-      default: 0
-    },
-    supportRefund: {
-      type: Number,
-      default: -1
-    },
-    allowInvoice: {
-      type: Number,
-      default: -1
-    },
-    hidePrice: Boolean
-  },
-  computed: {
-    ...mapGetters(['userId', 'agentUser'])
-  },
-  created () {
-  },
-  watch: {
-    activeProduct (val) {
-      // console.log(val)
-    }
-  },
-  methods: {
-    handleClick (e) {
-      if (this.productId) {
-        e.stopPropagation()
-        this.$router.push({
-          name: this.routeName,
-          params: {
-            productId: this.productId,
-            brokerId: this.userId || null
-          }
-        })
-      }
-    }
-  }
 }
 </script>
 

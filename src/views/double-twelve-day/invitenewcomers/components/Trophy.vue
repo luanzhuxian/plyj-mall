@@ -1,45 +1,45 @@
 <template>
-  <div :class="$style.trophy">
-    <div
-      :class="$style.trophyItem"
-      v-for="(item, i) of gifts"
-      :key="'i' + i"
-    >
-      <img :src="item.giftImage" alt="">
-      <div :class="$style.info">
-        <span v-text="item.giftName" />
-      </div>
+    <div :class="$style.trophy">
+        <div
+            :class="$style.trophyItem"
+            v-for="(item, i) of gifts"
+            :key="'i' + i"
+        >
+            <img :src="item.giftImage" alt="">
+            <div :class="$style.info">
+                <span v-text="item.giftName" />
+            </div>
+        </div>
+        <div
+            :class="$style.trophyItem"
+            v-for="(item, i) of conpons"
+            :key="i"
+        >
+            <pl-svg name="icon-youhuiquanj" width="60" height="60" />
+            <div :class="$style.info">
+                <span style="margin: 0;" v-text="item.couponName" /><span>:</span><span>满{{ item.useLimitAmount }}减{{ item.amount }}</span>
+            </div>
+        </div>
     </div>
-    <div
-      :class="$style.trophyItem"
-      v-for="(item, i) of conpons"
-      :key="i"
-    >
-      <pl-svg name="icon-youhuiquanj" width="60" height="60" />
-      <div :class="$style.info">
-        <span style="margin: 0;" v-text="item.couponName" /><span>:</span><span>满{{ item.useLimitAmount }}减{{ item.amount }}</span>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'Trophy',
-  props: {
-    gifts: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    conpons: {
-      type: Array,
-      default () {
-        return []
-      }
+    name: 'Trophy',
+    props: {
+        gifts: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        conpons: {
+            type: Array,
+            default () {
+                return []
+            }
+        }
     }
-  }
 }
 </script>
 

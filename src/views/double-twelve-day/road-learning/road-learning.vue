@@ -1,251 +1,251 @@
 <template>
-  <div class="road-learning">
-    <div class="top">
-      <div class="title-box">
-        <div class="title-left">
-          <pl-svg v-if="isShare" @click="$router.replace({name: 'Activity'})" name="icon-shouye" fill="#fff" width="40" />
-          <pl-svg v-else @click="$router.back()" name="icon-left" fill="#fff" width="32" />
-        </div>
-        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/icon-road-learning-title.png">
-        <div class="title-right rule-btn" @click="showRule = true">
-          活动规则
-        </div>
-        <div class="title-right" @click="drawSharePoster ()">
-          分享海报
-        </div>
-      </div>
-      <div class="user-info">
-        <img :src="avatar"><span>每日坚持签到 累计达10次即可抽大奖！</span>
-      </div>
+    <div class="road-learning">
+        <div class="top">
+            <div class="title-box">
+                <div class="title-left">
+                    <pl-svg v-if="isShare" @click="$router.replace({name: 'Activity'})" name="icon-shouye" fill="#fff" width="40" />
+                    <pl-svg v-else @click="$router.back()" name="icon-left" fill="#fff" width="32" />
+                </div>
+                <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/icon-road-learning-title.png">
+                <div class="title-right rule-btn" @click="showRule = true">
+                    活动规则
+                </div>
+                <div class="title-right" @click="drawSharePoster ()">
+                    分享海报
+                </div>
+            </div>
+            <div class="user-info">
+                <img :src="avatar"><span>每日坚持签到 累计达10次即可抽大奖！</span>
+            </div>
 
-      <swiper :options="swiperOption" v-if="obtainGifts.length > 1" class="swiper">
-        <swiper-slide v-for="(item,index) in obtainGifts" :key="index" class="swiper-no-swiping">
-          <div class="swiper-box">
-            <img :src="item.headImgUrl">
-            <div style="margin-left: 6px"><span v-if="item.nickName">{{ formatName(item.nickName) }}</span>中了{{ item.giftName }}</div>
-          </div>
-        </swiper-slide>
-      </swiper>
+            <swiper :options="swiperOption" v-if="obtainGifts.length > 1" class="swiper">
+                <swiper-slide v-for="(item,index) in obtainGifts" :key="index" class="swiper-no-swiping">
+                    <div class="swiper-box">
+                        <img :src="item.headImgUrl">
+                        <div style="margin-left: 6px"><span v-if="item.nickName">{{ formatName(item.nickName) }}</span>中了{{ item.giftName }}</div>
+                    </div>
+                </swiper-slide>
+            </swiper>
 
-      <div v-if="obtainGifts.length === 1" class="swiper1">
-        <img :src="obtainGifts[0].headImgUrl">
-        <div style="margin-left: 6px"><span v-if="obtainGifts[0].nickName">{{ formatName(obtainGifts[0].nickName) }}</span>中了{{ obtainGifts[0].giftName }}</div>
-      </div>
+            <div v-if="obtainGifts.length === 1" class="swiper1">
+                <img :src="obtainGifts[0].headImgUrl">
+                <div style="margin-left: 6px"><span v-if="obtainGifts[0].nickName">{{ formatName(obtainGifts[0].nickName) }}</span>中了{{ obtainGifts[0].giftName }}</div>
+            </div>
 
-      <div class="ui-base u-p3d">
-        <div class="ball-c" />
-        <!-- 四个组 -->
-        <div class="base u-p3d" v-if="gifts.length === 4">
-          <div class="ball-base u-p3d ball-1"><div class="ball"><img :src="gifts[0].giftImage" alt=""><div>奖品四</div></div></div>
-          <div class="ball-base u-p3d ball-2"><div class="ball"><img :src="gifts[1].giftImage" alt=""><div>奖品三</div></div></div>
-          <div class="ball-base u-p3d ball-3"><div class="ball"><img :src="gifts[2].giftImage" alt=""><div>奖品二</div></div></div>
-          <div class="ball-base u-p3d ball-4"><div class="ball"><img :src="gifts[3].giftImage" alt=""><div>奖品一</div></div></div>
-        </div>
-        <!-- 三个组 -->
-        <div class="base u-p3d" v-if="gifts.length === 3">
-          <div class="ball-base u-p3d ball-5">
-            <div class="ball">
-              <img :src="gifts[0].giftImage" alt=""><div>奖品三</div>
+            <div class="ui-base u-p3d">
+                <div class="ball-c" />
+                <!-- 四个组 -->
+                <div class="base u-p3d" v-if="gifts.length === 4">
+                    <div class="ball-base u-p3d ball-1"><div class="ball"><img :src="gifts[0].giftImage" alt=""><div>奖品四</div></div></div>
+                    <div class="ball-base u-p3d ball-2"><div class="ball"><img :src="gifts[1].giftImage" alt=""><div>奖品三</div></div></div>
+                    <div class="ball-base u-p3d ball-3"><div class="ball"><img :src="gifts[2].giftImage" alt=""><div>奖品二</div></div></div>
+                    <div class="ball-base u-p3d ball-4"><div class="ball"><img :src="gifts[3].giftImage" alt=""><div>奖品一</div></div></div>
+                </div>
+                <!-- 三个组 -->
+                <div class="base u-p3d" v-if="gifts.length === 3">
+                    <div class="ball-base u-p3d ball-5">
+                        <div class="ball">
+                            <img :src="gifts[0].giftImage" alt=""><div>奖品三</div>
+                        </div>
+                    </div>
+                    <div class="ball-base u-p3d ball-6">
+                        <div class="ball">
+                            <img :src="gifts[1].giftImage" alt=""><div>奖品二</div>
+                        </div>
+                    </div>
+                    <div class="ball-base u-p3d ball-7">
+                        <div class="ball">
+                            <img :src="gifts[2].giftImage" alt=""><div>奖品一</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 两个组 -->
+                <div class="base u-p3d" v-if="gifts.length === 2">
+                    <div class="ball-base u-p3d ball-1">
+                        <div class="ball">
+                            <img :src="gifts[0].giftImage" alt=""><div>奖品二</div>
+                        </div>
+                    </div>
+                    <div class="ball-base u-p3d ball-3">
+                        <div class="ball">
+                            <img :src="gifts[1].giftImage" alt=""><div>奖品一</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 一个组 -->
+                <div class="base u-p3d" v-if="gifts.length === 1">
+                    <div class="ball-base u-p3d ball-1">
+                        <div class="ball">
+                            <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="ball-base u-p3d ball-6">
-            <div class="ball">
-              <img :src="gifts[1].giftImage" alt=""><div>奖品二</div>
+        </div>
+        <div class="learning-step">
+            <i class="point small" />
+            <i class="point large" />
+            <div v-if="activeStart">连续签到<span>{{ checkInDetail.continueCheckInNum }}</span>天，累计签到<span>{{ checkInDetail.totalCheckInNum }}</span>天</div>
+            <div v-else>点亮见学之旅</div>
+            <i class="point large" />
+            <i class="point small" />
+        </div>
+        <div class="content">
+            <div class="bg-complete" v-if="checkInDetail.totalCheckInNum === 10" />
+            <div class="bg-uncomplete" v-if="checkInDetail.totalCheckInNum < 10" />
+            <div class="content-time" v-if="activeDetail.status">
+                <div v-if="!activeStart">开始倒计时：</div>
+                <div v-else>结束倒计时：</div>
+                <span>{{ dd }}</span>&nbsp;天&nbsp;<span>{{ hh }}</span><div class="time-padding">:</div><span>{{ mm }}</span><div class="time-padding">:</div><span>{{ ss }}</span>
             </div>
-          </div>
-          <div class="ball-base u-p3d ball-7">
-            <div class="ball">
-              <img :src="gifts[2].giftImage" alt=""><div>奖品一</div>
+            <div class="content-time" v-else>
+                <div>该活动已经结束</div>
             </div>
-          </div>
-        </div>
-        <!-- 两个组 -->
-        <div class="base u-p3d" v-if="gifts.length === 2">
-          <div class="ball-base u-p3d ball-1">
-            <div class="ball">
-              <img :src="gifts[0].giftImage" alt=""><div>奖品二</div>
+            <div class="content-step-box">
+                <div class="step step1" :class="{'step-big':checkInDetail.totalCheckInNum >= 1}">
+                    <span v-if="checkInDetail.totalCheckInNum < 1">1</span>
+                    <pl-svg v-else @click="drawPoster (1)" name="icon-jiaoya" fill="#FFF" width="30" />
+                </div>
+                <div class="step step2" :class="{'step-big':checkInDetail.totalCheckInNum >= 2}">
+                    <span v-if="checkInDetail.totalCheckInNum < 2">2</span>
+                    <pl-svg v-else @click="drawPoster (2)" name="icon-jiaoya" fill="#FFF" width="30" />
+                </div>
+                <div class="step step3" :class="{'step-big':checkInDetail.totalCheckInNum >= 3}">
+                    <span v-if="checkInDetail.totalCheckInNum < 3">3</span>
+                    <pl-svg v-else @click="drawPoster (3)" name="icon-jiaoya" fill="#FFF" width="30" />
+                </div>
+                <div class="step step4" :class="{'step-big':checkInDetail.totalCheckInNum >= 4}">
+                    <span v-if="checkInDetail.totalCheckInNum < 4">4</span>
+                    <pl-svg v-else @click="drawPoster (4)" name="icon-jiaoya" fill="#FFF" width="30" />
+                </div>
+                <div class="step step5" :class="{'step-big':checkInDetail.totalCheckInNum >= 5}">
+                    <span v-if="checkInDetail.totalCheckInNum < 5">5</span>
+                    <pl-svg v-else @click="drawPoster (5)" name="icon-jiaoya" fill="#FFF" width="30" />
+                </div>
+                <div class="step step6" :class="{'step-big':checkInDetail.totalCheckInNum >= 6}">
+                    <span v-if="checkInDetail.totalCheckInNum < 6">6</span>
+                    <pl-svg v-else @click="drawPoster (6)" name="icon-jiaoya" fill="#FFF" width="30" />
+                </div>
+                <div class="step step7" :class="{'step-big':checkInDetail.totalCheckInNum >= 7}">
+                    <span v-if="checkInDetail.totalCheckInNum < 7">7</span>
+                    <pl-svg v-else @click="drawPoster (7)" name="icon-jiaoya" fill="#FFF" width="30" />
+                </div>
+                <div class="step step8" :class="{'step-big':checkInDetail.totalCheckInNum >= 8}">
+                    <span v-if="checkInDetail.totalCheckInNum < 8">8</span>
+                    <pl-svg v-else @click="drawPoster (8)" name="icon-jiaoya" fill="#FFF" width="30" />
+                </div>
+                <div class="step step9" :class="{'step-big':checkInDetail.totalCheckInNum >= 9}">
+                    <span v-if="checkInDetail.totalCheckInNum < 9">9</span>
+                    <pl-svg v-else @click="drawPoster (9)" name="icon-jiaoya" fill="#FFF" width="30" />
+                </div>
+                <div class="step step10" :class="{'step-big':checkInDetail.totalCheckInNum >= 10}">
+                    <pl-svg v-if="checkInDetail.totalCheckInNum < 10" name="icon-liwu" fill="#FFF" width="30" />
+                    <pl-svg v-else @click="drawPoster (10)" name="icon-liwu" fill="#FFF" width="30" />
+                </div>
+                <div class="statistics" v-if="activeStart">
+                    已有 <span>{{ checkInDetail.checkInUserNum }}人</span>参与活动 <span>&nbsp;|&nbsp;</span> <div v-if="checkInDetail.totalCheckInNum < 10">还差 <span>{{ 10 - checkInDetail.totalCheckInNum }}次</span>签到，可冲击大奖</div> <div v-if="checkInDetail.totalCheckInNum === 10">恭喜你 已完成<span>10次</span>签到</div>
+                </div>
             </div>
-          </div>
-          <div class="ball-base u-p3d ball-3">
-            <div class="ball">
-              <img :src="gifts[1].giftImage" alt=""><div>奖品一</div>
+            <div class="btn-box">
+                <div class="btn disabel" v-if="!activeStart && !activeEnd && activeDetail.status === 1">活动未开始</div>
+                <div class="btn active" @click="checkIn ()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status === 2">
+                    <pl-svg v-show="loadingShow" class="rotate loading" name="icon-btn-loading" fill="#fff" width="40" />
+                    立即签到
+                </div>
+                <div class="btn disabel" v-if="!activeDetail.status && (checkInDetail.claimStatus !== 1)">活动已结束</div>
+                <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0 && activeDetail.status === 2" @click="claimGift()">
+                    <pl-svg v-show="loadingShow" class="rotate loading" name="icon-btn-loading" fill="#fff" width="40" />
+                    点击抽大奖
+                </div>
+                <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
+                <div class="btn disabel" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 2 && activeDetail.status === 2">很遗憾没有中奖</div>
+                <div class="btn already" v-if="checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum !== 10 && activeStart && !activeEnd && activeDetail.status === 2">今日已签到</div>
             </div>
-          </div>
         </div>
-        <!-- 一个组 -->
-        <div class="base u-p3d" v-if="gifts.length === 1">
-          <div class="ball-base u-p3d ball-1">
-            <div class="ball">
-              <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+        <pl-popup :show.sync="showRule">
+            <h2
+                class="invioceIntroTitle"
+                slot="title"
+            >
+                活动细则
+            </h2>
+            <div class="invioceIntroContent">
+                <h3>1.活动时间</h3>
+                <p>{{ activeDetail.activityStartTime }} 至 {{ activeDetail.activityEndTime }}
+                </p>
+                <h3>2.活动对象</h3>
+                <p>所有会员
+                </p>
+                <h3>3.活动说明</h3>
+                <div class="rule-explain" v-if="activeDetail.activityBrief">
+                    <p v-for="(item,index) of activeDetail.activityBrief.split('\n')" :key="index">
+                        {{ item }}
+                    </p>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="learning-step">
-      <i class="point small" />
-      <i class="point large" />
-      <div v-if="activeStart">连续签到<span>{{ checkInDetail.continueCheckInNum }}</span>天，累计签到<span>{{ checkInDetail.totalCheckInNum }}</span>天</div>
-      <div v-else>点亮见学之旅</div>
-      <i class="point large" />
-      <i class="point small" />
-    </div>
-    <div class="content">
-      <div class="bg-complete" v-if="checkInDetail.totalCheckInNum === 10" />
-      <div class="bg-uncomplete" v-if="checkInDetail.totalCheckInNum < 10" />
-      <div class="content-time" v-if="activeDetail.status">
-        <div v-if="!activeStart">开始倒计时：</div>
-        <div v-else>结束倒计时：</div>
-        <span>{{ dd }}</span>&nbsp;天&nbsp;<span>{{ hh }}</span><div class="time-padding">:</div><span>{{ mm }}</span><div class="time-padding">:</div><span>{{ ss }}</span>
-      </div>
-      <div class="content-time" v-else>
-        <div>该活动已经结束</div>
-      </div>
-      <div class="content-step-box">
-        <div class="step step1" :class="{'step-big':checkInDetail.totalCheckInNum >= 1}">
-          <span v-if="checkInDetail.totalCheckInNum < 1">1</span>
-          <pl-svg v-else @click="drawPoster (1)" name="icon-jiaoya" fill="#FFF" width="30" />
-        </div>
-        <div class="step step2" :class="{'step-big':checkInDetail.totalCheckInNum >= 2}">
-          <span v-if="checkInDetail.totalCheckInNum < 2">2</span>
-          <pl-svg v-else @click="drawPoster (2)" name="icon-jiaoya" fill="#FFF" width="30" />
-        </div>
-        <div class="step step3" :class="{'step-big':checkInDetail.totalCheckInNum >= 3}">
-          <span v-if="checkInDetail.totalCheckInNum < 3">3</span>
-          <pl-svg v-else @click="drawPoster (3)" name="icon-jiaoya" fill="#FFF" width="30" />
-        </div>
-        <div class="step step4" :class="{'step-big':checkInDetail.totalCheckInNum >= 4}">
-          <span v-if="checkInDetail.totalCheckInNum < 4">4</span>
-          <pl-svg v-else @click="drawPoster (4)" name="icon-jiaoya" fill="#FFF" width="30" />
-        </div>
-        <div class="step step5" :class="{'step-big':checkInDetail.totalCheckInNum >= 5}">
-          <span v-if="checkInDetail.totalCheckInNum < 5">5</span>
-          <pl-svg v-else @click="drawPoster (5)" name="icon-jiaoya" fill="#FFF" width="30" />
-        </div>
-        <div class="step step6" :class="{'step-big':checkInDetail.totalCheckInNum >= 6}">
-          <span v-if="checkInDetail.totalCheckInNum < 6">6</span>
-          <pl-svg v-else @click="drawPoster (6)" name="icon-jiaoya" fill="#FFF" width="30" />
-        </div>
-        <div class="step step7" :class="{'step-big':checkInDetail.totalCheckInNum >= 7}">
-          <span v-if="checkInDetail.totalCheckInNum < 7">7</span>
-          <pl-svg v-else @click="drawPoster (7)" name="icon-jiaoya" fill="#FFF" width="30" />
-        </div>
-        <div class="step step8" :class="{'step-big':checkInDetail.totalCheckInNum >= 8}">
-          <span v-if="checkInDetail.totalCheckInNum < 8">8</span>
-          <pl-svg v-else @click="drawPoster (8)" name="icon-jiaoya" fill="#FFF" width="30" />
-        </div>
-        <div class="step step9" :class="{'step-big':checkInDetail.totalCheckInNum >= 9}">
-          <span v-if="checkInDetail.totalCheckInNum < 9">9</span>
-          <pl-svg v-else @click="drawPoster (9)" name="icon-jiaoya" fill="#FFF" width="30" />
-        </div>
-        <div class="step step10" :class="{'step-big':checkInDetail.totalCheckInNum >= 10}">
-          <pl-svg v-if="checkInDetail.totalCheckInNum < 10" name="icon-liwu" fill="#FFF" width="30" />
-          <pl-svg v-else @click="drawPoster (10)" name="icon-liwu" fill="#FFF" width="30" />
-        </div>
-        <div class="statistics" v-if="activeStart">
-          已有 <span>{{ checkInDetail.checkInUserNum }}人</span>参与活动 <span>&nbsp;|&nbsp;</span> <div v-if="checkInDetail.totalCheckInNum < 10">还差 <span>{{ 10 - checkInDetail.totalCheckInNum }}次</span>签到，可冲击大奖</div> <div v-if="checkInDetail.totalCheckInNum === 10">恭喜你 已完成<span>10次</span>签到</div>
-        </div>
-      </div>
-      <div class="btn-box">
-        <div class="btn disabel" v-if="!activeStart && !activeEnd && activeDetail.status === 1">活动未开始</div>
-        <div class="btn active" @click="checkIn ()" v-if="activeStart && !activeEnd&&!checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum < 10 && activeDetail.status === 2">
-          <pl-svg v-show="loadingShow" class="rotate loading" name="icon-btn-loading" fill="#fff" width="40" />
-          立即签到
-        </div>
-        <div class="btn disabel" v-if="!activeDetail.status && (checkInDetail.claimStatus !== 1)">活动已结束</div>
-        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 0 && activeDetail.status === 2" @click="claimGift()">
-          <pl-svg v-show="loadingShow" class="rotate loading" name="icon-btn-loading" fill="#fff" width="40" />
-          点击抽大奖
-        </div>
-        <div class="btn active" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 1" @click="$router.push({name:'MyPresent'})">查看奖品</div>
-        <div class="btn disabel" v-if="checkInDetail.totalCheckInNum === 10 && checkInDetail.claimStatus === 2 && activeDetail.status === 2">很遗憾没有中奖</div>
-        <div class="btn already" v-if="checkInDetail.hasCheckInToday && checkInDetail.totalCheckInNum !== 10 && activeStart && !activeEnd && activeDetail.status === 2">今日已签到</div>
-      </div>
-    </div>
-    <pl-popup :show.sync="showRule">
-      <h2
-        class="invioceIntroTitle"
-        slot="title"
-      >
-        活动细则
-      </h2>
-      <div class="invioceIntroContent">
-        <h3>1.活动时间</h3>
-        <p>{{ activeDetail.activityStartTime }} 至 {{ activeDetail.activityEndTime }}
-        </p>
-        <h3>2.活动对象</h3>
-        <p>所有会员
-        </p>
-        <h3>3.活动说明</h3>
-        <div class="rule-explain" v-if="activeDetail.activityBrief">
-          <p v-for="(item,index) of activeDetail.activityBrief.split('\n')" :key="index">
-            {{ item }}
-          </p>
-        </div>
-      </div>
-    </pl-popup>
-    <div class="winning-prize" v-if="winningShow">
-      <div class="prize-box">
-        <div class="prize-box-title">恭喜您获得</div>
-        <p class="prize-box-description">奖品已自动存入您的我的礼品中</p>
-        <p class="prize-box-description">您可在我的礼品中查看</p>
-        <div class="item-content">
-          <div class="content-img-box">
-            <img :src="claimGiftDetail.giftImage" alt="">
-          </div>
-          <div class="content-detail-box">
-            <div class="content-box">
-              <div content="content-detail">
-                <p class="detail-name">{{ claimGiftDetail.giftName }}</p>
-                <p class="detail-coupon">{{ claimGiftDetail.giftBrief }}</p>
-              </div>
+        </pl-popup>
+        <div class="winning-prize" v-if="winningShow">
+            <div class="prize-box">
+                <div class="prize-box-title">恭喜您获得</div>
+                <p class="prize-box-description">奖品已自动存入您的我的礼品中</p>
+                <p class="prize-box-description">您可在我的礼品中查看</p>
+                <div class="item-content">
+                    <div class="content-img-box">
+                        <img :src="claimGiftDetail.giftImage" alt="">
+                    </div>
+                    <div class="content-detail-box">
+                        <div class="content-box">
+                            <div content="content-detail">
+                                <p class="detail-name">{{ claimGiftDetail.giftName }}</p>
+                                <p class="detail-coupon">{{ claimGiftDetail.giftBrief }}</p>
+                            </div>
+                        </div>
+                        <p class="detail-date color-c">有效期:{{ claimGiftDetail.useStartTime.split(' ')[0] }}-{{ claimGiftDetail.useEndTime.split(' ')[0] }}</p>
+                    </div>
+                </div>
+                <div class="prize-btn-box">
+                    <div class="prize-btn-know" @click="winningShow = false">朕知道了</div>
+                </div>
             </div>
-            <p class="detail-date color-c">有效期:{{ claimGiftDetail.useStartTime.split(' ')[0] }}-{{ claimGiftDetail.useEndTime.split(' ')[0] }}</p>
-          </div>
+            <div class="winning-prize-close">
+                <pl-svg @click="winningShow = false" name="icon-close3" fill="#fff" width="40" />
+            </div>
         </div>
-        <div class="prize-btn-box">
-          <div class="prize-btn-know" @click="winningShow = false">朕知道了</div>
+        <div class="winning-prize" v-if="unWinningShow">
+            <div class="prize-box">
+                <div class="prize-box-title">很遗憾未中奖</div>
+                <p class="prize-box-description">感谢您参与活动</p>
+                <div class="prize-btn-box">
+                    <div class="prize-btn-know" @click="$router.back()">返回主会场</div>
+                </div>
+                <div class="prize-btn-box">
+                    <div class="unprize-btn-know" @click="unWinningShow = false">朕知道了</div>
+                </div>
+            </div>
+            <div class="winning-prize-close">
+                <pl-svg @click="unWinningShow = false" name="icon-close3" fill="#fff" width="40" />
+            </div>
         </div>
-      </div>
-      <div class="winning-prize-close">
-        <pl-svg @click="winningShow = false" name="icon-close3" fill="#fff" width="40" />
-      </div>
-    </div>
-    <div class="winning-prize" v-if="unWinningShow">
-      <div class="prize-box">
-        <div class="prize-box-title">很遗憾未中奖</div>
-        <p class="prize-box-description">感谢您参与活动</p>
-        <div class="prize-btn-box">
-          <div class="prize-btn-know" @click="$router.back()">返回主会场</div>
+        <div class="winning-prize poster" v-if="posterShow">
+            <div class="prize-box poster-box">
+                <img :src="post" alt="">
+                <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
+            </div>
+            <div class="winning-prize-close poster-close">
+                <pl-svg @click="posterShow = false" name="icon-close3" fill="#fff" width="40" />
+            </div>
         </div>
-        <div class="prize-btn-box">
-          <div class="unprize-btn-know" @click="unWinningShow = false">朕知道了</div>
-        </div>
-      </div>
-      <div class="winning-prize-close">
-        <pl-svg @click="unWinningShow = false" name="icon-close3" fill="#fff" width="40" />
-      </div>
-    </div>
-    <div class="winning-prize poster" v-if="posterShow">
-      <div class="prize-box poster-box">
-        <img :src="post" alt="">
-        <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
-      </div>
-      <div class="winning-prize-close poster-close">
-        <pl-svg @click="posterShow = false" name="icon-close3" fill="#fff" width="40" />
-      </div>
-    </div>
 
-    <div class="winning-prize poster" v-if="sharePosterShow">
-      <div class="prize-box poster-box">
-        <img :src="sharePost" alt="">
-        <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
-      </div>
-      <div class="winning-prize-close poster-close">
-        <pl-svg @click="sharePosterShow = false" name="icon-close3" fill="#fff" width="40" />
-      </div>
+        <div class="winning-prize poster" v-if="sharePosterShow">
+            <div class="prize-box poster-box">
+                <img :src="sharePost" alt="">
+                <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
+            </div>
+            <div class="winning-prize-close poster-close">
+                <pl-svg @click="sharePosterShow = false" name="icon-close3" fill="#fff" width="40" />
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -255,282 +255,282 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 export default {
-  name: 'RoadLearning',
-  components: {
-    swiper,
-    swiperSlide
-  },
-  data () {
-    return {
-      isShare: false,
-      timer: '',
-      showRule: false,
-      winningShow: false,
-      unWinningShow: false,
-      posterShow: false,
-      sharePosterShow: false,
-      activeStart: false,
-      activeEnd: false,
-      activeDetail: {},
-      checkInDetail: {},
-      claimGiftDetail: {},
-      dd: '',
-      hh: '',
-      mm: '',
-      ss: '',
-      qrcode: '',
-      post: '',
-      sharePost: '',
-      gifts: [],
-      obtainGifts: [],
-      swiperOption: {
-        effect: 'coverflow',
-        slidesPerView: 2,
-        centeredSlides: false,
-        coverflowEffect: {
-          rotate: 50,
-          stretch: 5,
-          depth: 5,
-          modifier: 1,
-          slideShadows: false
+    name: 'RoadLearning',
+    components: {
+        swiper,
+        swiperSlide
+    },
+    data () {
+        return {
+            isShare: false,
+            timer: '',
+            showRule: false,
+            winningShow: false,
+            unWinningShow: false,
+            posterShow: false,
+            sharePosterShow: false,
+            activeStart: false,
+            activeEnd: false,
+            activeDetail: {},
+            checkInDetail: {},
+            claimGiftDetail: {},
+            dd: '',
+            hh: '',
+            mm: '',
+            ss: '',
+            qrcode: '',
+            post: '',
+            sharePost: '',
+            gifts: [],
+            obtainGifts: [],
+            swiperOption: {
+                effect: 'coverflow',
+                slidesPerView: 2,
+                centeredSlides: false,
+                coverflowEffect: {
+                    rotate: 50,
+                    stretch: 5,
+                    depth: 5,
+                    modifier: 1,
+                    slideShadows: false
+                },
+                direction: 'vertical',
+                autoHeight: true,
+                autoplay: true,
+                loop: true,
+                noSwiping: true
+            },
+            lottering: false,
+            canClick: true,
+            loadingShow: false
+        }
+    },
+    props: {
+        id: {
+            type: String,
+            default: ''
+        }
+    },
+    computed: {
+        ...mapGetters(['avatar', 'mallUrl', 'userId'])
+    },
+    beforeRouteEnter (to, from, next) {
+        //  这里的vm指的就是vue实例，可以用来当做this使用
+        next(vm => {
+            if (from.name !== 'Activity') {
+                vm.isShare = true
+            } else {
+                vm.isShare = false
+            }
+        })
+    },
+    async activated () {
+        if (!this.userId) {
+            try {
+                await this.$alert({
+                    message: '新用户无法参加见学之旅，请先绑定手机号',
+                    confirmText: '去绑定手机号码'
+                })
+                sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                    name: this.$route.name,
+                    params: { id: this.id }
+                }))
+                this.$router.push({ name: 'BindMobile' })
+            } catch (e) {
+                sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                    name: this.$route.name,
+                    params: { id: this.id }
+                }))
+                this.$router.push({ name: 'BindMobile' })
+            }
+        }
+    },
+    async created () {
+        await this.getDetail()
+        this.getCheckInDetail()
+        this.getGifts()
+        this.getObtainGifts()
+        setInterval(() => {
+            this.getObtainGifts()
+        }, 10000)
+        const qrcode = await generateQrcode(500, `${ this.mallUrl }/road-learning${ this.id ? `/${ this.id }` : '' }`, 100, null, null, 'url')
+        this.qrcode = new Image()
+        this.qrcode.src = qrcode
+    },
+    methods: {
+        async getDetail () {
+            let distanceTime; let result
+            if (this.id) {
+                const { result: res } = await getIDRoadLearningDetail(this.id)
+                result = res
+            } else {
+                const { result: res } = await getRoadLearningDetail()
+                result = res
+            }
+            if (!result) {
+                this.$router.back()
+                this.$warning('暂无活动')
+                return
+            }
+            this.activeDetail = result
+            this.id = this.activeDetail.id
+            const now = Date.now()
+            const start = moment(this.activeDetail.activityStartTime).valueOf()
+            const end = moment(this.activeDetail.activityEndTime).valueOf()
+            if (now < start) {
+                this.activeStart = false
+                this.activeEnd = false
+                distanceTime = start - now
+            } else {
+                this.activeStart = true
+                distanceTime = end - now
+                if (end < now) {
+                    this.activeEnd = true
+                } else {
+                    this.activeEnd = false
+                }
+            }
+            this.countdown(distanceTime)
         },
-        direction: 'vertical',
-        autoHeight: true,
-        autoplay: true,
-        loop: true,
-        noSwiping: true
-      },
-      lottering: false,
-      canClick: true,
-      loadingShow: false
-    }
-  },
-  props: {
-    id: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    ...mapGetters(['avatar', 'mallUrl', 'userId'])
-  },
-  beforeRouteEnter (to, from, next) {
-    next(vm => { //  这里的vm指的就是vue实例，可以用来当做this使用
-      if (from.name !== 'Activity') {
-        vm.isShare = true
-      } else {
-        vm.isShare = false
-      }
-    })
-  },
-  async activated () {
-    if (!this.userId) {
-      try {
-        await this.$alert({
-          message: '新用户无法参加见学之旅，请先绑定手机号',
-          confirmText: '去绑定手机号码'
-        })
-        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-          name: this.$route.name,
-          params: { id: this.id }
-        }))
-        this.$router.push({ name: 'BindMobile' })
-      } catch (e) {
-        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-          name: this.$route.name,
-          params: { id: this.id }
-        }))
-        this.$router.push({ name: 'BindMobile' })
-      }
-    }
-  },
-  async created () {
-    await this.getDetail()
-    this.getCheckInDetail()
-    this.getGifts()
-    this.getObtainGifts()
-    setInterval(() => {
-      this.getObtainGifts()
-    }, 10000)
-    let qrcode = await generateQrcode(500, `${this.mallUrl}/road-learning${this.id ? '/' + this.id : ''}`, 100, null, null, 'url')
-    this.qrcode = new Image()
-    this.qrcode.src = qrcode
-  },
-  methods: {
-    async getDetail () {
-      let distanceTime, result
-      if (this.id) {
-        const { result: res } = await getIDRoadLearningDetail(this.id)
-        result = res
-      } else {
-        const { result: res } = await getRoadLearningDetail()
-        result = res
-      }
-      if (!result) {
-        this.$router.back()
-        this.$warning('暂无活动')
-        return
-      }
-      this.activeDetail = result
-      this.id = this.activeDetail.id
-      let now = Date.now()
-      let start = moment(this.activeDetail.activityStartTime).valueOf()
-      let end = moment(this.activeDetail.activityEndTime).valueOf()
-      if (now < start) {
-        this.activeStart = false
-        this.activeEnd = false
-        distanceTime = start - now
-      } else {
-        this.activeStart = true
-        distanceTime = end - now
-        if (end < now) {
-          this.activeEnd = true
-        } else {
-          this.activeEnd = false
-        }
-      }
-      this.countdown(distanceTime)
-    },
-    async getGifts () {
-      const { result: res } = await getRoadLearningGifts({ activityId: this.activeDetail.id })
-      this.gifts = res.reverse()
-    },
-    async getObtainGifts () {
-      const { result: res } = await getObtainGiftsList(this.activeDetail.id)
-      this.obtainGifts = res.records
-    },
-    countdown (datetime) {
-      if (datetime < 0) return
-      this.timer = setInterval(async () => {
-        let { _data } = moment.duration(datetime)
-        let d = String(Math.floor(moment.duration(datetime).asDays()))
-        let h = String(_data.hours)
-        let m = String(_data.minutes)
-        let s = String(_data.seconds)
-        datetime -= 1000
-        if (datetime <= 0) {
-          clearInterval(this.timer)
-          await this.getDetail()
-          setTimeout(async () => {
-            this.obtainGifts = []
-            this.id = ''
-            await this.getDetail()
-            this.getCheckInDetail()
-            this.getGifts()
-          }, 5000)
-        }
-        this.dd = d.padStart(2, '0')
-        this.hh = h.padStart(2, '0')
-        this.mm = m.padStart(2, '0')
-        this.ss = s.padStart(2, '0')
-      }, 1000)
-    },
-    async getCheckInDetail () {
-      const { result: res } = await getCheckInDetail(this.activeDetail.id)
-      this.checkInDetail = res
-      if (this.lottering) return
-      if (this.checkInDetail.totalCheckInNum === 10 && this.checkInDetail.claimStatus === 1) {
-        await this.$confirm({
-          message: ' 奖品已领取，快去礼品库中看看~~ ',
-          confirmText: '立即查看'
-        })
-        this.$router.push({ name: 'MyPresent' })
-      }
-    },
-    async checkIn () {
-      if (!this.doubleClick()) {
-        return
-      }
-      this.loadingShow = true
-      try {
-        await getCheckIn(this.activeDetail.id)
-      } catch (e) {
-        throw e
-      }
-      await this.getCheckInDetail()
-      this.loadingShow = false
-      this.drawPoster()
-    },
-    doubleClick () {
-      if (this.canClick) {
-        this.canClick = !this.canClick
-        setTimeout(() => {
-          this.canClick = true
-        }, 2000)
-        return true
-      } else {
-        return false
-      }
-    },
-    async claimGift () {
-      if (!this.doubleClick()) {
-        return
-      }
-      this.loadingShow = true
-      const { result: res } = await claimGift(this.activeDetail.id)
-      this.lottering = true
-      await this.getCheckInDetail()
-      this.loadingShow = false
-      this.claimGiftDetail = res
-      if (this.checkInDetail.claimStatus === 1) {
-        this.winningShow = true
-      } else if (this.checkInDetail.claimStatus === 2) {
-        this.unWinningShow = true
-      }
-    },
-    async drawPoster (index) {
-      this.posterShow = true
-      let canImg = new Image()
-      canImg.crossOrigin = ''
-      canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning/jianxue${index || this.checkInDetail.totalCheckInNum}.jpg?time=${Date.now()}`
-      canImg.onload = async () => {
-        let canvas = document.createElement('canvas')
-        canvas.width = canImg.width
-        canvas.height = canImg.height
-        let ctx = canvas.getContext('2d')
-        ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
-        ctx.drawImage(this.qrcode, 20, 1200, 150, 150)
-        let post = canvas.toDataURL('image/jpeg', 0.7)
-        this.post = post
-      }
-    },
-    async drawSharePoster () {
-      this.sharePosterShow = true
-      let canImg = new Image()
-      canImg.crossOrigin = ''
-      canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/1610999569_9928678801_%E8%A7%81%E5%AD%A6%E4%B9%8B%E6%97%85%E5%88%86%E4%BA%AB%E6%B5%B7%E6%8A%A5-2.jpg?time=${Date.now()}`
-      canImg.onload = async () => {
-        let canvas = document.createElement('canvas')
-        canvas.width = canImg.width
-        canvas.height = canImg.height
-        let ctx = canvas.getContext('2d')
-        ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
-        ctx.drawImage(this.qrcode, 270, 1050, 250, 250)
-        let post = canvas.toDataURL('image/jpeg', 0.7)
-        this.sharePost = post
-      }
-    },
-    formatName (name) {
-      let newStr
-      if (name.length === 2) {
-        newStr = name.substr(0, 1) + '*'
-      } else if (name.length > 2) {
-        let char = ''
-        for (let i = 0, len = name.length - 2; i < len; i++) {
-          char += '*'
-        }
-        newStr = name.substr(0, 1) + char + name.substr(-1, 1)
-      } else {
-        newStr = name
-      }
+        async getGifts () {
+            const { result: res } = await getRoadLearningGifts({ activityId: this.activeDetail.id })
+            this.gifts = res.reverse()
+        },
+        async getObtainGifts () {
+            const { result: res } = await getObtainGiftsList(this.activeDetail.id)
+            this.obtainGifts = res.records
+        },
+        countdown (datetime) {
+            if (datetime < 0) return
+            this.timer = setInterval(async () => {
+                const { _data } = moment.duration(datetime)
+                const d = String(Math.floor(moment.duration(datetime).asDays()))
+                const h = String(_data.hours)
+                const m = String(_data.minutes)
+                const s = String(_data.seconds)
+                datetime -= 1000
+                if (datetime <= 0) {
+                    clearInterval(this.timer)
+                    await this.getDetail()
+                    setTimeout(async () => {
+                        this.obtainGifts = []
+                        this.id = ''
+                        await this.getDetail()
+                        this.getCheckInDetail()
+                        this.getGifts()
+                    }, 5000)
+                }
+                this.dd = d.padStart(2, '0')
+                this.hh = h.padStart(2, '0')
+                this.mm = m.padStart(2, '0')
+                this.ss = s.padStart(2, '0')
+            }, 1000)
+        },
+        async getCheckInDetail () {
+            const { result: res } = await getCheckInDetail(this.activeDetail.id)
+            this.checkInDetail = res
+            if (this.lottering) return
+            if (this.checkInDetail.totalCheckInNum === 10 && this.checkInDetail.claimStatus === 1) {
+                await this.$confirm({
+                    message: ' 奖品已领取，快去礼品库中看看~~ ',
+                    confirmText: '立即查看'
+                })
+                this.$router.push({ name: 'MyPresent' })
+            }
+        },
+        async checkIn () {
+            if (!this.doubleClick()) {
+                return
+            }
+            this.loadingShow = true
+            try {
+                await getCheckIn(this.activeDetail.id)
+            } catch (e) {
+                throw e
+            }
+            await this.getCheckInDetail()
+            this.loadingShow = false
+            this.drawPoster()
+        },
+        doubleClick () {
+            if (this.canClick) {
+                this.canClick = !this.canClick
+                setTimeout(() => {
+                    this.canClick = true
+                }, 2000)
+                return true
+            }
+            return false
+        },
+        async claimGift () {
+            if (!this.doubleClick()) {
+                return
+            }
+            this.loadingShow = true
+            const { result: res } = await claimGift(this.activeDetail.id)
+            this.lottering = true
+            await this.getCheckInDetail()
+            this.loadingShow = false
+            this.claimGiftDetail = res
+            if (this.checkInDetail.claimStatus === 1) {
+                this.winningShow = true
+            } else if (this.checkInDetail.claimStatus === 2) {
+                this.unWinningShow = true
+            }
+        },
+        async drawPoster (index) {
+            this.posterShow = true
+            const canImg = new Image()
+            canImg.crossOrigin = ''
+            canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning/jianxue${ index || this.checkInDetail.totalCheckInNum }.jpg?time=${ Date.now() }`
+            canImg.onload = async () => {
+                const canvas = document.createElement('canvas')
+                canvas.width = canImg.width
+                canvas.height = canImg.height
+                const ctx = canvas.getContext('2d')
+                ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
+                ctx.drawImage(this.qrcode, 20, 1200, 150, 150)
+                const post = canvas.toDataURL('image/jpeg', 0.7)
+                this.post = post
+            }
+        },
+        async drawSharePoster () {
+            this.sharePosterShow = true
+            const canImg = new Image()
+            canImg.crossOrigin = ''
+            canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/1610999569_9928678801_%E8%A7%81%E5%AD%A6%E4%B9%8B%E6%97%85%E5%88%86%E4%BA%AB%E6%B5%B7%E6%8A%A5-2.jpg?time=${ Date.now() }`
+            canImg.onload = async () => {
+                const canvas = document.createElement('canvas')
+                canvas.width = canImg.width
+                canvas.height = canImg.height
+                const ctx = canvas.getContext('2d')
+                ctx.drawImage(canImg, 0, 0, canvas.width, canvas.height)
+                ctx.drawImage(this.qrcode, 270, 1050, 250, 250)
+                const post = canvas.toDataURL('image/jpeg', 0.7)
+                this.sharePost = post
+            }
+        },
+        formatName (name) {
+            let newStr
+            if (name.length === 2) {
+                newStr = `${ name.substr(0, 1) }*`
+            } else if (name.length > 2) {
+                let char = ''
+                for (let i = 0, len = name.length - 2; i < len; i++) {
+                    char += '*'
+                }
+                newStr = name.substr(0, 1) + char + name.substr(-1, 1)
+            } else {
+                newStr = name
+            }
 
-      return newStr
+            return newStr
+        }
+    },
+    destroyed () {
+        clearInterval(this.timer)
+        this.loadingShow = false
     }
-  },
-  destroyed () {
-    clearInterval(this.timer)
-    this.loadingShow = false
-  }
 }
 </script>
 

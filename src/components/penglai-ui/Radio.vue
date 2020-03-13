@@ -1,49 +1,49 @@
 <template>
-  <label
-    class="pl-radio"
-    :style="{
-      display: inline ? 'inline-flex' : 'flex',
-      width: inline ? null : '100%'
-    }"
-  >
-    <input
-      :checked="label === value"
-      type="radio"
-      :value="value"
-      @change="handleChange"
+    <label
+        class="pl-radio"
+        :style="{
+            display: inline ? 'inline-flex' : 'flex',
+            width: inline ? null : '100%'
+        }"
     >
-    <span class="pl-radio-inner" />
-    <span class="pl-radio-content">
-      <slot />
-    </span>
-  </label>
+        <input
+            :checked="label === value"
+            type="radio"
+            :value="value"
+            @change="handleChange"
+        >
+        <span class="pl-radio-inner" />
+        <span class="pl-radio-content">
+            <slot />
+        </span>
+    </label>
 </template>
 
 <script>
 export default {
-  name: 'PlRadio',
-  model: {
-    event: 'change',
-    value: 'value'
-  },
-  props: {
-    value: {
-      type: [String, Boolean, Number],
-      default: ''
+    name: 'PlRadio',
+    model: {
+        event: 'change',
+        value: 'value'
     },
-    label: {
-      type: [String, Boolean, Number],
-      default: ''
+    props: {
+        value: {
+            type: [String, Boolean, Number],
+            default: ''
+        },
+        label: {
+            type: [String, Boolean, Number],
+            default: ''
+        },
+        inline: {
+            type: Boolean
+        }
     },
-    inline: {
-      type: Boolean
+    methods: {
+        handleChange (e) {
+            this.$emit('change', this.label)
+        }
     }
-  },
-  methods: {
-    handleChange (e) {
-      this.$emit('change', this.label)
-    }
-  }
 }
 </script>
 

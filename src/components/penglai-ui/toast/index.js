@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import ToastComponent from './Toast.vue'
 
-let ToastConstructor = Vue.extend(ToastComponent)
+const ToastConstructor = Vue.extend(ToastComponent)
+
 /**
 * 显示提示框
 * options: { message, duration }
@@ -9,76 +10,76 @@ let ToastConstructor = Vue.extend(ToastComponent)
 * duration: 显示的时长
 * */
 export const Toast = (options = {}) => {
-  let instance = new ToastConstructor({
-    el: document.createElement('div')
-  })
-  clearTimeout(instance.timer)
-  let duration = options.duration || 3000
-  if (typeof options === 'string') {
-    instance.message = options
-  }
-  if (typeof options === 'object') {
-    instance.message = options.message
-    instance.viceMessage = options.viceMessage
-    instance.type = options.type
-    instance.countDownTime = options.countDownTime
-    if (options.slot) {
-      instance.$slots.default = options.slot
+    const instance = new ToastConstructor({
+        el: document.createElement('div')
+    })
+    clearTimeout(instance.timer)
+    const duration = options.duration || 3000
+    if (typeof options === 'string') {
+        instance.message = options
     }
-  }
-  document.body.appendChild(instance.$el)
-  Vue.nextTick(() => {
-    instance.show = !!instance.message // 消息为空时不显示
-    instance.timer = setTimeout(() => {
-      instance.close()
-    }, duration)
-  })
-  return instance
+    if (typeof options === 'object') {
+        instance.message = options.message
+        instance.viceMessage = options.viceMessage
+        instance.type = options.type
+        instance.countDownTime = options.countDownTime
+        if (options.slot) {
+            instance.$slots.default = options.slot
+        }
+    }
+    document.body.appendChild(instance.$el)
+    Vue.nextTick(() => {
+        instance.show = !!instance.message // 消息为空时不显示
+        instance.timer = setTimeout(() => {
+            instance.close()
+        }, duration)
+    })
+    return instance
 }
 
 Vue.prototype.$toast = options => {
-  if (typeof options !== 'object') {
-    console.error('options must be an object')
-    return
-  }
-  Toast(options)
+    if (typeof options !== 'object') {
+        console.error('options must be an object')
+        return
+    }
+    Toast(options)
 }
 Vue.prototype.$error = message => {
-  if (typeof message === 'string') {
-    Toast({
-      type: 'error',
-      message
-    })
-  } else {
-    Toast({
-      type: 'error',
-      ...message
-    })
-  }
+    if (typeof message === 'string') {
+        Toast({
+            type: 'error',
+            message
+        })
+    } else {
+        Toast({
+            type: 'error',
+            ...message
+        })
+    }
 }
 Vue.prototype.$success = message => {
-  if (typeof message === 'string') {
-    Toast({
-      type: 'success',
-      message
-    })
-  } else {
-    Toast({
-      type: 'success',
-      ...message
-    })
-  }
+    if (typeof message === 'string') {
+        Toast({
+            type: 'success',
+            message
+        })
+    } else {
+        Toast({
+            type: 'success',
+            ...message
+        })
+    }
 }
 Vue.prototype.$warning = message => {
-  if (typeof message === 'string') {
-    Toast({
-      type: 'warning',
-      message
-    })
-  } else {
-    Toast({
-      type: 'warning',
-      ...message
-    })
-  }
+    if (typeof message === 'string') {
+        Toast({
+            type: 'warning',
+            message
+        })
+    } else {
+        Toast({
+            type: 'warning',
+            ...message
+        })
+    }
 }

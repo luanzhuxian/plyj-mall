@@ -1,62 +1,62 @@
 <template>
-  <div :class="$style.instructions">
-    <div :class="$style.title">
-      活动规则
+    <div :class="$style.instructions">
+        <div :class="$style.title">
+            活动规则
+        </div>
+        <ul :class="$style.rule" v-if="activeProduct === 2">
+            <li>
+                <div :class="$style.step1" />
+                <div :class="$style.text">选择需要 的拼团活动</div>
+            </li>
+            <li :class="$style.line" />
+            <li>
+                <div :class="$style.step2" />
+                <div :class="$style.text">支付参团</div>
+            </li>
+            <li :class="$style.line" />
+            <li>
+                <div :class="$style.step3" />
+                <div :class="$style.text">达到人数 拼团成功</div>
+            </li>
+            <li :class="$style.line" />
+            <li>
+                <div :class="$style.step4" />
+                <div :class="$style.text">线上瓜分 奖池</div>
+            </li>
+        </ul>
+        <ul :class="$style.rule" v-if="activeProduct === 4">
+            <li>
+                <div :class="$style.step1" />
+                <div :class="$style.text">选择需要 的预购活动</div>
+            </li>
+            <li :class="$style.line" />
+            <li>
+                <div :class="$style.step2" />
+                <div :class="$style.text">支付定金</div>
+            </li>
+            <li :class="$style.line" />
+            <li>
+                <div :class="$style.step4" />
+                <div :class="$style.text">线下/线上核销 付尾款</div>
+            </li>
+        </ul>
+        <div :class="$style.content" v-html="activityBrief" />
     </div>
-    <ul :class="$style.rule" v-if="activeProduct === 2">
-      <li>
-        <div :class="$style.step1" />
-        <div :class="$style.text">选择需要 的拼团活动</div>
-      </li>
-      <li :class="$style.line" />
-      <li>
-        <div :class="$style.step2" />
-        <div :class="$style.text">支付参团</div>
-      </li>
-      <li :class="$style.line" />
-      <li>
-        <div :class="$style.step3" />
-        <div :class="$style.text">达到人数 拼团成功</div>
-      </li>
-      <li :class="$style.line" />
-      <li>
-        <div :class="$style.step4" />
-        <div :class="$style.text">线上瓜分 奖池</div>
-      </li>
-    </ul>
-    <ul :class="$style.rule" v-if="activeProduct === 4">
-      <li>
-        <div :class="$style.step1" />
-        <div :class="$style.text">选择需要 的预购活动</div>
-      </li>
-      <li :class="$style.line" />
-      <li>
-        <div :class="$style.step2" />
-        <div :class="$style.text">支付定金</div>
-      </li>
-      <li :class="$style.line" />
-      <li>
-        <div :class="$style.step4" />
-        <div :class="$style.text">线下/线上核销 付尾款</div>
-      </li>
-    </ul>
-    <div :class="$style.content" v-html="activityBrief" />
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'TogetherRule',
-  props: {
-    activeProduct: {
-      type: [String, Number],
-      default: ''
-    },
-    activityBrief: {
-      type: String,
-      default: ''
+    name: 'TogetherRule',
+    props: {
+        activeProduct: {
+            type: [String, Number],
+            default: ''
+        },
+        activityBrief: {
+            type: String,
+            default: ''
+        }
     }
-  }
 }
 </script>
 

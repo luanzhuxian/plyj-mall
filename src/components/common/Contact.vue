@@ -1,36 +1,36 @@
 <template>
-  <transition name="fade">
-    <div :class="$style.contact" v-if="show">
-      <div :class="$style.list">
-        <a
-          v-for="(item, i) of servicePhoneModels"
-          :key="i"
-          :href="'tel:' + item.contactWay"
-          v-text="item.contactWay"
-        />
-      </div>
-      <button :class="$style.cancel" @click="close">
-        取消
-      </button>
-    </div>
-  </transition>
+    <transition name="fade">
+        <div :class="$style.contact" v-if="show">
+            <div :class="$style.list">
+                <a
+                    v-for="(item, i) of servicePhoneModels"
+                    :key="i"
+                    :href="'tel:' + item.contactWay"
+                    v-text="item.contactWay"
+                />
+            </div>
+            <button :class="$style.cancel" @click="close">
+                取消
+            </button>
+        </div>
+    </transition>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Contact',
-  props: {
-    show: Boolean
-  },
-  computed: {
-    ...mapGetters(['servicePhoneModels'])
-  },
-  methods: {
-    close () {
-      this.$emit('update:show', false)
+    name: 'Contact',
+    props: {
+        show: Boolean
+    },
+    computed: {
+        ...mapGetters(['servicePhoneModels'])
+    },
+    methods: {
+        close () {
+            this.$emit('update:show', false)
+        }
     }
-  }
 }
 </script>
 

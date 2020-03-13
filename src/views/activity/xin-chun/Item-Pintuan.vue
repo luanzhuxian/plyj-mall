@@ -1,57 +1,57 @@
 <template>
-  <div
-    class="item"
-    :class="$style.item"
-    @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 2 } })"
-  >
-    <div :class="$style.label">
-      众志成团
-    </div>
-    <div :class="$style.ribbon">
-      <span v-if="data.goodsInfo.activityInfo.status === 0">
-        {{ `${data.goodsInfo.pageviews}人关注` }}
-      </span>
-      <span v-else>
-        {{ `${data.goodsInfo.activityInfo.number}人参团` }}
-      </span>
-    </div>
-    <div :class="$style.countDownWrapper">
-      <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>
-      <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束：</span>
-      <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已成功</span>
-      <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 3">已结束</span>
-      <count-down
-        v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)"
-        :timestamp="getTime(data.goodsInfo.activityInfo)"
-        size="mini"
-        color="#FF4B00"
-        @done="() => reset(data)"
-      />
-    </div>
-    <div :class="$style.imgWrapper">
-      <img :src="data.goodsInfo.productMainImage">
-    </div>
-    <div :class="$style.info">
-      <div :class="$style.main">
-        {{ data.goodsInfo.productName }}
-      </div>
-      <div :class="$style.sub1">
-        <div :class="$style.sub1Left">
-          <span v-if="data.goodsInfo.activityInfo.prizePool">
-            成团瓜分
-          </span>
-          <span v-else>新春有礼</span>
+    <div
+        class="item"
+        :class="$style.item"
+        @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 2 } })"
+    >
+        <div :class="$style.label">
+            众志成团
         </div>
-        <div :class="$style.sub1Right" v-if="data.goodsInfo.activityInfo.prizePool">
-          {{ `${data.goodsInfo.activityInfo.prizePool}元` }}
+        <div :class="$style.ribbon">
+            <span v-if="data.goodsInfo.activityInfo.status === 0">
+                {{ `${data.goodsInfo.pageviews}人关注` }}
+            </span>
+            <span v-else>
+                {{ `${data.goodsInfo.activityInfo.number}人参团` }}
+            </span>
         </div>
-      </div>
-      <div :class="$style.sub2">
-        <pl-svg name="icon-tuangoujia" fill="#FF4B00" width="80" height="40" />
-        <span :class="$style.sub2Price">{{ data.goodsInfo.activityInfo.activityPrice }}</span>
-      </div>
+        <div :class="$style.countDownWrapper">
+            <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>
+            <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束：</span>
+            <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已成功</span>
+            <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 3">已结束</span>
+            <count-down
+                v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)"
+                :timestamp="getTime(data.goodsInfo.activityInfo)"
+                size="mini"
+                color="#FF4B00"
+                @done="() => reset(data)"
+            />
+        </div>
+        <div :class="$style.imgWrapper">
+            <img :src="data.goodsInfo.productMainImage">
+        </div>
+        <div :class="$style.info">
+            <div :class="$style.main">
+                {{ data.goodsInfo.productName }}
+            </div>
+            <div :class="$style.sub1">
+                <div :class="$style.sub1Left">
+                    <span v-if="data.goodsInfo.activityInfo.prizePool">
+                        成团瓜分
+                    </span>
+                    <span v-else>新春有礼</span>
+                </div>
+                <div :class="$style.sub1Right" v-if="data.goodsInfo.activityInfo.prizePool">
+                    {{ `${data.goodsInfo.activityInfo.prizePool}元` }}
+                </div>
+            </div>
+            <div :class="$style.sub2">
+                <pl-svg name="icon-tuangoujia" fill="#FF4B00" width="80" height="40" />
+                <span :class="$style.sub2Price">{{ data.goodsInfo.activityInfo.activityPrice }}</span>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -59,22 +59,22 @@ import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
 
 export default {
-  name: 'ItemPintuan',
-  mixins: [mixin],
-  components: {
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { }
-      }
+    name: 'ItemPintuan',
+    mixins: [mixin],
+    components: {
+        CountDown
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { }
+            }
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 <style lang="scss" module>

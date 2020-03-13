@@ -2,7 +2,8 @@
  * 基于localStorage实现的类似 cookie 的存储方式
  */
 export default {
-  /**
+
+    /**
    * 设置storageCookie
    * @param key {string}
    * @param value {string}
@@ -10,21 +11,21 @@ export default {
    * @property config.expires {number} 毫秒值，过期日期时间
    * @property config.path {string} 允许携带的路径
    */
-  set (key, value, config) {
-    localStorage.setItem(key, JSON.stringify({
-      value,
-      expires: config.expires || 0
-    }))
-  },
-  get (key) {
-    const result = JSON.parse(localStorage.getItem(key)) || {}
-    let { expires = 0, value = '' } = result
-    if (expires && expires < Date.now()) {
-      return ''
+    set (key, value, config) {
+        localStorage.setItem(key, JSON.stringify({
+            value,
+            expires: config.expires || 0
+        }))
+    },
+    get (key) {
+        const result = JSON.parse(localStorage.getItem(key)) || {}
+        const { expires = 0, value = '' } = result
+        if (expires && expires < Date.now()) {
+            return ''
+        }
+        return value
+    },
+    remove (key) {
+        localStorage.removeItem(key)
     }
-    return value
-  },
-  remove (key) {
-    localStorage.removeItem(key)
-  }
 }

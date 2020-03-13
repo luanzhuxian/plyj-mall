@@ -1,38 +1,38 @@
 <template>
-  <div :class="$style.schoolShow">
-    <div :class="$style.moduleTitle">
-      <pl-svg :class="$style.moduleIcon" name="icon-school_show" height="36" />
-      <span :class="$style.title" v-text="data.titleName" />
+    <div :class="$style.schoolShow">
+        <div :class="$style.moduleTitle">
+            <pl-svg :class="$style.moduleIcon" name="icon-school_show" height="36" />
+            <span :class="$style.title" v-text="data.titleName" />
+        </div>
+        <p v-for="(item, i) of data.mediaDetailModelList" :key="i">
+            <img v-imger:schoolShow="item.mediaUrl" :src="item.mediaUrl + '?x-oss-process=style/thum-middle'" alt="">
+        </p>
     </div>
-    <p v-for="(item, i) of data.mediaDetailModelList" :key="i">
-      <img v-imger:schoolShow="item.mediaUrl" :src="item.mediaUrl + '?x-oss-process=style/thum-middle'" alt="">
-    </p>
-  </div>
 </template>
 
 <script>
 import { getData } from '../../apis/appointment'
 export default {
-  name: 'SchoolShow',
-  data () {
-    return {
-      data: {}
+    name: 'SchoolShow',
+    data () {
+        return {
+            data: {}
+        }
+    },
+    async mounted () {
+        const data = JSON.parse(sessionStorage.getItem('PIN_XUAN'))
+        if (!data) {
+            try {
+                const { result } = await getData()
+                sessionStorage.setItem('PIN_XUAN', JSON.stringify(result.mallBrandingRequestModels))
+                this.data = result.mallBrandingRequestModels.find(item => item.type === 1)
+            } catch (e) {
+                throw e
+            }
+        } else {
+            this.data = data.find(item => item.type === 1)
+        }
     }
-  },
-  async mounted () {
-    let data = JSON.parse(sessionStorage.getItem('PIN_XUAN'))
-    if (!data) {
-      try {
-        let { result } = await getData()
-        sessionStorage.setItem('PIN_XUAN', JSON.stringify(result.mallBrandingRequestModels))
-        this.data = result.mallBrandingRequestModels.find(item => item.type === 1)
-      } catch (e) {
-        throw e
-      }
-    } else {
-      this.data = data.find(item => item.type === 1)
-    }
-  }
 }
 </script>
 

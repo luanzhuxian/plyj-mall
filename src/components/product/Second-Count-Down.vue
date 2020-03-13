@@ -1,110 +1,111 @@
 <template>
-  <div
-    :class="{
-      [$style.countDown]: true,
-    }"
-    v-show="show"
-  >
-    <span :class="$style.text">
-      <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/time.png">{{ activityText }}
-    </span>
-    <div :class="$style.time">
-      <i>{{ d }}</i><em>天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
+    <div
+        :class="{
+            [$style.countDown]: true,
+        }"
+        v-show="show"
+    >
+        <span :class="$style.text">
+            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/time.png">{{ activityText }}
+        </span>
+        <div :class="$style.time">
+            <i>{{ d }}</i><em>天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 import moment from 'moment'
 import { Countdown } from '../../assets/js/util'
 export default {
-  name: 'SecondCountDown',
-  props: {
-    activityText: {
-      type: [Number, String],
-      default: ''
+    name: 'SecondCountDown',
+    props: {
+        activityText: {
+            type: [Number, String],
+            default: ''
+        },
+        endtime: {
+            type: [Number, String],
+            default: 0
+        },
+        starttime: {
+            type: [Number, String],
+            default: 0
+        },
+        fields: {
+            type: Object,
+            default () {
+                return {
+                    start: 'start',
+                    end: 'end'
+                }
+            }
+        },
+
+        // 数据载体，内部必须包含 start 和 end
+        // 如果不传，那就必须传 endtime， starttime
+        data: {
+            type: Object,
+            default () {
+                return null
+            }
+        }
     },
-    endtime: {
-      type: [Number, String],
-      default: 0
-    },
-    starttime: {
-      type: [Number, String],
-      default: 0
-    },
-    fields: {
-      type: Object,
-      default () {
+    data () {
         return {
-          start: 'start',
-          end: 'end'
+            timer: '',
+            time: '',
+            show: false,
+            endtiemstamp: 0,
+            starttiemstamp: 0,
+            d: 0,
+            h: 0,
+            m: 0,
+            s: 0
         }
-      }
     },
-    // 数据载体，内部必须包含 start 和 end
-    // 如果不传，那就必须传 endtime， starttime
-    data: {
-      type: Object,
-      default () {
-        return null
-      }
-    }
-  },
-  data () {
-    return {
-      timer: '',
-      time: '',
-      show: false,
-      endtiemstamp: 0,
-      starttiemstamp: 0,
-      d: 0,
-      h: 0,
-      m: 0,
-      s: 0
-    }
-  },
-  watch: {
-    endtime (val) {
-      this.endtime = val
-      this.init()
-    }
-  },
-  mounted () {
-    this.init()
-  },
-  methods: {
-    async init () {
-      let serverTiem = await Countdown.getServerTime()
-      this.starttiemstamp = Number(serverTiem)
-      if (this.data) {
-        this.endtiemstamp = Number(this.data[this.fields.end]) || 0
-      } else {
-        this.endtiemstamp = Number(moment(this.endtime).valueOf()) || 0
-      }
-      if (this.starttiemstamp - this.endtiemstamp < 0) {
-        // 启动倒计时
-        console.warn('启动倒计时')
-        this.show = true
-        this.countdown(this.endtiemstamp - this.starttiemstamp)
-      } else {
-        this.show = false
-      }
-    },
-    countdown (duration) {
-      this.COUNTDOWN = new Countdown(duration, data => {
-        if (!data) {
-          this.show = false
-          this.$emit('done', true)
-          this.data[this.fields.start] = 0
+    watch: {
+        endtime (val) {
+            this.endtime = val
+            this.init()
         }
-        this.d = String(data.days).padStart(2, '0')
-        this.h = String(data.hours).padStart(2, '0')
-        this.m = String(data.minutes).padStart(2, '0')
-        this.s = String(data.seconds).padStart(2, '0')
-      })
-      this.COUNTDOWN.start()
+    },
+    mounted () {
+        this.init()
+    },
+    methods: {
+        async init () {
+            const serverTiem = await Countdown.getServerTime()
+            this.starttiemstamp = Number(serverTiem)
+            if (this.data) {
+                this.endtiemstamp = Number(this.data[this.fields.end]) || 0
+            } else {
+                this.endtiemstamp = Number(moment(this.endtime).valueOf()) || 0
+            }
+            if (this.starttiemstamp - this.endtiemstamp < 0) {
+                // 启动倒计时
+                console.warn('启动倒计时')
+                this.show = true
+                this.countdown(this.endtiemstamp - this.starttiemstamp)
+            } else {
+                this.show = false
+            }
+        },
+        countdown (duration) {
+            this.COUNTDOWN = new Countdown(duration, data => {
+                if (!data) {
+                    this.show = false
+                    this.$emit('done', true)
+                    this.data[this.fields.start] = 0
+                }
+                this.d = String(data.days).padStart(2, '0')
+                this.h = String(data.hours).padStart(2, '0')
+                this.m = String(data.minutes).padStart(2, '0')
+                this.s = String(data.seconds).padStart(2, '0')
+            })
+            this.COUNTDOWN.start()
+        }
     }
-  }
 }
 </script>
 

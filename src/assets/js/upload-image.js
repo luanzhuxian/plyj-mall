@@ -5,98 +5,100 @@ const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
 const STSLIFETIME = 600000 // STS有效时间，10分钟
 Compressor.setDefaults({
-  checkOrientation: true, // 检查方向
-  // 表示压缩后的图像尺寸大于原始图像尺寸时，是否输出原始图像而不是压缩后的图像，但以下情况除外:
-  // 设置了mimeType选项，其值与图像的mime类型不同。
-  // 设置了width选项，其值大于图像的自然宽度。
-  // 设置了height选项，其值大于图像的自然高度。
-  // 设置了minWidth选项，其值大于图像的自然宽度。
-  // 设置了minHeight选项，其值大于图像的自然高度。
-  strict: true,
-  // minWidth 输出图像的最小宽度。该值应该大于0，并且不应该大于maxWidth。
-  maxWidth: 1270, // 输出图像的最大宽度。这个值应该大于0。
-  // width: 1920,
-  // minHeight 输出图像的最小高度。该值应该大于0，并且不应该大于maxHeight
-  // maxHeight 输出图像的最大高度。这个值应该大于0
-  // height 输出图像的高度。如果没有指定，则使用原始图像的自然高度，或者如果设置了宽度选项，则使用自然长宽比自动计算高度。
-  quality: 0.75,
-  mimeType: 'image/jpeg',
-  convertSize: 5000000 // 超过此值的PNG文件将转换为jpeg。要禁用此功能，只需将值设置为无穷大
-  // beforeDraw(context, canvas)
-  // drew(context, canvas)
+    checkOrientation: true, // 检查方向
+    // 表示压缩后的图像尺寸大于原始图像尺寸时，是否输出原始图像而不是压缩后的图像，但以下情况除外:
+    // 设置了mimeType选项，其值与图像的mime类型不同。
+    // 设置了width选项，其值大于图像的自然宽度。
+    // 设置了height选项，其值大于图像的自然高度。
+    // 设置了minWidth选项，其值大于图像的自然宽度。
+    // 设置了minHeight选项，其值大于图像的自然高度。
+    strict: true,
+
+    // minWidth 输出图像的最小宽度。该值应该大于0，并且不应该大于maxWidth。
+    maxWidth: 1270, // 输出图像的最大宽度。这个值应该大于0。
+    // width: 1920,
+    // minHeight 输出图像的最小高度。该值应该大于0，并且不应该大于maxHeight
+    // maxHeight 输出图像的最大高度。这个值应该大于0
+    // height 输出图像的高度。如果没有指定，则使用原始图像的自然高度，或者如果设置了宽度选项，则使用自然长宽比自动计算高度。
+    quality: 0.75,
+    mimeType: 'image/jpeg',
+    convertSize: 5000000 // 超过此值的PNG文件将转换为jpeg。要禁用此功能，只需将值设置为无穷大
+    // beforeDraw(context, canvas)
+    // drew(context, canvas)
 })
+
 /*
 * 实例方法：abort 终止
 * */
 export function compress (file, size, fileType) {
-  size = size * 1024 * 1024
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (size <= file.size) {
-        file = await compressImage(file)
-        if (fileType === 'base64') {
-          const base64 = await blobToBase64(file)
-          resolve(base64)
-        } else {
-          resolve(file)
+    size = size * 1024 * 1024
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (size <= file.size) {
+                file = await compressImage(file)
+                if (fileType === 'base64') {
+                    const base64 = await blobToBase64(file)
+                    resolve(base64)
+                } else {
+                    resolve(file)
+                }
+            } else {
+                if (fileType === 'base64') {
+                    const base64 = await blobToBase64(file)
+                    resolve(base64)
+                } else {
+                    resolve(file)
+                }
+            }
+        } catch (e) {
+            reject(e)
         }
-      } else {
-        if (fileType === 'base64') {
-          const base64 = await blobToBase64(file)
-          resolve(base64)
-        } else {
-          resolve(file)
-        }
-      }
-    } catch (e) {
-      reject(e)
-    }
-  })
+    })
 }
 async function getClient () {
-  let sts = JSON.parse(localStorage.getItem('sts')) || {}
-  let credentials = null
+    const sts = JSON.parse(localStorage.getItem('sts')) || {}
+    let credentials = null
 
-  if (!sts.time || STSLIFETIME < Date.now() - sts.time) {
+    if (!sts.time || STSLIFETIME < Date.now() - sts.time) {
     // sts过期
-    let { result } = await getSTS()
-    credentials = result.credentials
-    result.time = Date.now()
-    localStorage.setItem('sts', JSON.stringify(result))
-  } else {
-    credentials = sts.credentials
-  }
-  const { securityToken, accessKeySecret, accessKeyId } = credentials
-  return new OSS({
-    region: REGION,
-    accessKeyId,
-    accessKeySecret,
-    stsToken: securityToken,
-    bucket: BUCKET
-  })
+        const { result } = await getSTS()
+        credentials = result.credentials
+        result.time = Date.now()
+        localStorage.setItem('sts', JSON.stringify(result))
+    } else {
+        credentials = sts.credentials
+    }
+    const { securityToken, accessKeySecret, accessKeyId } = credentials
+    return new OSS({
+        region: REGION,
+        accessKeyId,
+        accessKeySecret,
+        stsToken: securityToken,
+        bucket: BUCKET
+    })
 }
 export async function upload (file) {
-  let ext = null
-  try {
-    ext = /jpg|png|gif|jpeg|bmp/i.exec(file.type)[0]
-  } catch (e) {
-    throw new Error('不允许的图片格式')
-  }
-  let client = await getClient()
-  const key = `img/${randomString()}.${ext}`
-  return new Promise((resolve, reject) => {
-    client.put(key, file)
-      .then(res => {
-        res.url = 'https://mallcdn.youpenglai.com/' + res.name
-        resolve(res)
-      })
-      .catch(e => {
-        reject(e)
-      })
-  })
+    let ext = null
+    try {
+        ext = /jpg|png|gif|jpeg|bmp/i.exec(file.type)[0]
+    } catch (e) {
+        throw new Error('不允许的图片格式')
+    }
+    const client = await getClient()
+    const key = `img/${ randomString() }.${ ext }`
+    return new Promise((resolve, reject) => {
+        client.put(key, file)
+            .then(res => {
+                res.url = `https://mallcdn.youpenglai.com/${ res.name }`
+                resolve(res)
+            })
+            .catch(e => {
+                reject(e)
+            })
+    })
 }
 function compressImage (file) {
-  /* eslint-disable */
+    /* eslint-disable */
   return new Promise((resolve, reject) => {
     new Compressor(file, {
       success (result) {

@@ -1,19 +1,19 @@
 <template>
-  <div class="newcomers-home-entry">
-    <overlay v-if="showSelf">
-      <div class="center-box">
-        <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/30f05ebd-8657-4a15-bea9-beb43396c022.png">
-        <div style="margin-top: 80px; text-align: center;">
-          <span class="btn-goto-get" @click="gotoGet">快去领取</span>
-        </div>
-        <div style="margin-top: 64px; text-align: center;">
-          <span class="btn-close" @click="close">
-            <pl-svg name="icon-close" fill="white" width="24" height="24" />
-          </span>
-        </div>
-      </div>
-    </overlay>
-  </div>
+    <div class="newcomers-home-entry">
+        <overlay v-if="showSelf">
+            <div class="center-box">
+                <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/30f05ebd-8657-4a15-bea9-beb43396c022.png">
+                <div style="margin-top: 80px; text-align: center;">
+                    <span class="btn-goto-get" @click="gotoGet">快去领取</span>
+                </div>
+                <div style="margin-top: 64px; text-align: center;">
+                    <span class="btn-close" @click="close">
+                        <pl-svg name="icon-close" fill="white" width="24" height="24" />
+                    </span>
+                </div>
+            </div>
+        </overlay>
+    </div>
 </template>
 
 <script>
@@ -24,75 +24,75 @@ import { getServerTime } from '../../../apis/base-api'
 import { getCurrentActivity } from '../../../apis/new-year'
 
 export default {
-  name: 'NewYearNewcomersHomeEntry',
-  components: {
-    Overlay
-  },
-  data () {
-    return {
-      activityInfo: { status: 0 },
-      isShowSelf: true,
-      serverTime: false
-    }
-  },
-
-  computed: {
-    ...mapGetters(['userId']),
-    isNewUser () {
-      return this.userId === ''
+    name: 'NewYearNewcomersHomeEntry',
+    components: {
+        Overlay
     },
-    isActivityStoped () {
-      if (this.activityInfo === null) {
-        return true
-      }
-      return moment(this.activityInfo.activityEndTime).isBefore(moment()) || this.activityInfo.status === 0
-    },
-    isActivityStart () {
-      if (this.activityInfo === null) {
-        return false
-      }
-      return moment().isAfter(moment(this.activityInfo.activityStartTime))
-    },
-    showSelf () {
-      // packageType 1双十二 + 2新春
-      return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf && (this.activityInfo.packageType === '2')
-    }
-  },
-
-  async created () {
-    try {
-      await this.getServerTime()
-      await this.getCurrentActivity()
-    } catch (e) {
-      throw e
-    }
-  },
-
-  methods: {
-    async getServerTime () {
-      try {
-        let { result: serverTiem } = await getServerTime()
-        this.serverTime = serverTiem || null
-      } catch (e) {
-        throw e
-      }
-    },
-    async getCurrentActivity () {
-      try {
-        let { result } = await getCurrentActivity()
-        this.activityInfo = result || null
-      } catch (e) {
-        throw e
-      }
-    },
-    gotoGet () {
-      this.$router.push({ name: 'newYearNewcomers', params: { activityId: this.activityInfo.id } })
+    data () {
+        return {
+            activityInfo: { status: 0 },
+            isShowSelf: true,
+            serverTime: false
+        }
     },
 
-    close () {
-      this.isShowSelf = false
+    computed: {
+        ...mapGetters(['userId']),
+        isNewUser () {
+            return this.userId === ''
+        },
+        isActivityStoped () {
+            if (this.activityInfo === null) {
+                return true
+            }
+            return moment(this.activityInfo.activityEndTime).isBefore(moment()) || this.activityInfo.status === 0
+        },
+        isActivityStart () {
+            if (this.activityInfo === null) {
+                return false
+            }
+            return moment().isAfter(moment(this.activityInfo.activityStartTime))
+        },
+        showSelf () {
+            // packageType 1双十二 + 2新春
+            return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf && (this.activityInfo.packageType === '2')
+        }
+    },
+
+    async created () {
+        try {
+            await this.getServerTime()
+            await this.getCurrentActivity()
+        } catch (e) {
+            throw e
+        }
+    },
+
+    methods: {
+        async getServerTime () {
+            try {
+                const { result: serverTiem } = await getServerTime()
+                this.serverTime = serverTiem || null
+            } catch (e) {
+                throw e
+            }
+        },
+        async getCurrentActivity () {
+            try {
+                const { result } = await getCurrentActivity()
+                this.activityInfo = result || null
+            } catch (e) {
+                throw e
+            }
+        },
+        gotoGet () {
+            this.$router.push({ name: 'newYearNewcomers', params: { activityId: this.activityInfo.id } })
+        },
+
+        close () {
+            this.isShowSelf = false
+        }
     }
-  }
 }
 </script>
 

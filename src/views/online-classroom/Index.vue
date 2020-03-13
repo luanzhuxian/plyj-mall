@@ -1,45 +1,45 @@
 <template>
-  <div :class="$style.onlineClassroom">
-    <div :class="$style.tabBox">
-      <pl-tab
-        size="middle"
-        :tabs="tabs"
-        :active-id.sync="activeTabId"
-        @change="tabChange"
-      >
-        <div
-          :class="$style.tabPane"
-          v-for="(item, i) of tabs"
-          :key="i"
-          :slot="'tab-pane-' + i"
-        />
-      </pl-tab>
+    <div :class="$style.onlineClassroom">
+        <div :class="$style.tabBox">
+            <pl-tab
+                size="middle"
+                :tabs="tabs"
+                :active-id.sync="activeTabId"
+                @change="tabChange"
+            >
+                <div
+                    :class="$style.tabPane"
+                    v-for="(item, i) of tabs"
+                    :key="i"
+                    :slot="'tab-pane-' + i"
+                />
+            </pl-tab>
+        </div>
+        <keep-alive>
+            <router-view />
+        </keep-alive>
     </div>
-    <keep-alive>
-      <router-view />
-    </keep-alive>
-  </div>
 </template>
 <script>
 export default {
-  name: 'OnlineClassroomIndex',
-  data () {
-    return {
-      activeTabId: 0,
-      tabs: [
-        { name: '互动直播', routerName: 'InteractiveLive', id: 0 },
-        { name: '知识课程', routerName: 'OnlineClassroom', id: 1 }]
+    name: 'OnlineClassroomIndex',
+    data () {
+        return {
+            activeTabId: 0,
+            tabs: [
+                { name: '互动直播', routerName: 'InteractiveLive', id: 0 },
+                { name: '知识课程', routerName: 'OnlineClassroom', id: 1 }]
+        }
+    },
+    async activated () {
+        this.activeTabId = this.tabs.find(item => item.routerName === this.$route.name).id
+    },
+    methods: {
+        async tabChange (item) {
+            await this.$nextTick()
+            await this.$router.replace({ name: item.routerName })
+        }
     }
-  },
-  async activated () {
-    this.activeTabId = this.tabs.find(item => item.routerName === this.$route.name).id
-  },
-  methods: {
-    async tabChange (item) {
-      await this.$nextTick()
-      await this.$router.replace({ name: item.routerName })
-    }
-  }
 }
 </script>
 <style lang="scss" module>

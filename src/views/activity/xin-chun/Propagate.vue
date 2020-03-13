@@ -1,39 +1,39 @@
 <template>
-  <router-link :class="$style.propagate" tag="div" :to="{ name: 'Appointment' }">
-    <div :class="$style.label">
-      <span>了解我们</span>
-    </div>
-    <div :class="$style.info">
-      <div :class="$style.name" v-text="data.values[0].mallName" />
-      <p
-        :class="$style.intro"
-        v-if="data.values[0].mallDesc"
-        v-text="data.values[0].mallDesc"
-      />
-    </div>
-    <div :class="$style.imgWrapper">
-      <img
-        v-if="data.values[0].mallLogo"
-        :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'"
-      >
-    </div>
-  </router-link>
+    <router-link :class="$style.propagate" tag="div" :to="{ name: 'Appointment' }">
+        <div :class="$style.label">
+            <span>了解我们</span>
+        </div>
+        <div :class="$style.info">
+            <div :class="$style.name" v-text="data.values[0].mallName" />
+            <p
+                :class="$style.intro"
+                v-if="data.values[0].mallDesc"
+                v-text="data.values[0].mallDesc"
+            />
+        </div>
+        <div :class="$style.imgWrapper">
+            <img
+                v-if="data.values[0].mallLogo"
+                :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'"
+            >
+        </div>
+    </router-link>
 </template>
 
 <script>
 export default {
-  name: 'Propagate',
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
+    name: 'Propagate',
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 <style lang="scss" module>

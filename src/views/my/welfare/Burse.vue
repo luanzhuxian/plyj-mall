@@ -1,50 +1,50 @@
 <template>
-  <div :class="$style.burseContainer">
+    <div :class="$style.burseContainer">
 
-    <!--抬头-->
-    <div :class="$style.burseTitle">
-      <ul>
-        <li>我的奖学金（红包）</li>
-        <li>{{ burseMes.waitUseAmount }}</li>
-        <li @click="$router.push({name:'Classify'})">立即使用</li>
-      </ul>
-      <ul>
-        <li>累计获得奖学金</li>
-        <li>{{ burseMes.cumulativeAmount }}</li>
-      </ul>
-    </div>
+        <!--抬头-->
+        <div :class="$style.burseTitle">
+            <ul>
+                <li>我的奖学金（红包）</li>
+                <li>{{ burseMes.waitUseAmount }}</li>
+                <li @click="$router.push({name:'Classify'})">立即使用</li>
+            </ul>
+            <ul>
+                <li>累计获得奖学金</li>
+                <li>{{ burseMes.cumulativeAmount }}</li>
+            </ul>
+        </div>
 
-    <!--奖学金列表-->
-    <load-more
-      ref="loadMore"
-      :form="form"
-      :request-methods="getBurseList"
-      @refresh="refreshList"
-      @more="refreshList"
-      no-content-tip="不敢相信你还没领到奖学金，快去参加活动吧"
-      :no-icon="true"
-    >
-      <img style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">
-      <burse-item :item="item" v-for="(item,index) in burseList" :key="index" />
-    </load-more>
+        <!--奖学金列表-->
+        <load-more
+            ref="loadMore"
+            :form="form"
+            :request-methods="getBurseList"
+            @refresh="refreshList"
+            @more="refreshList"
+            no-content-tip="不敢相信你还没领到奖学金，快去参加活动吧"
+            :no-icon="true"
+        >
+            <img style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">
+            <burse-item :item="item" v-for="(item,index) in burseList" :key="index" />
+        </load-more>
 
-    <!--无奖学金情况-->
-    <div :class="$style.burseNone">
-      <div v-if="burseList.length === 0" @click="$router.push({name:'Home'})" :class="$style.goHome">返回首页参加活动</div>
-    </div>
-    <!-- <div :class="$style.burseNone" v-if="burseList.length === 0">
+        <!--无奖学金情况-->
+        <div :class="$style.burseNone">
+            <div v-if="burseList.length === 0" @click="$router.push({name:'Home'})" :class="$style.goHome">返回首页参加活动</div>
+        </div>
+        <!-- <div :class="$style.burseNone" v-if="burseList.length === 0">
       <img src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">
       <div>不敢相信你还没领到奖学金</div>
       <div>快去参加活动吧</div>
       <div>返回首页参加活动</div>
     </div> -->
 
-    <!--footer-->
-    <div :class="$style.burseFooter" @click="$router.push({name:'MyBurseRecord'})">
-      历史使用记录
-    </div>
+        <!--footer-->
+        <div :class="$style.burseFooter" @click="$router.push({name:'MyBurseRecord'})">
+            历史使用记录
+        </div>
 
-  </div>
+    </div>
 </template>
 
 <script>
@@ -53,40 +53,44 @@ import LoadMore from './../../../components/common/Load-More.vue'
 import { getBurseMes, getBurseList } from './../../../apis/my-burse.js'
 
 export default {
-  name: 'MyBurse',
-  components: { BurseItem, LoadMore },
-  props: {},
-  data () {
-    return {
-      form: {
-        status: 1, //  奖学金状态 0：待领取；1：待使用； 2：已使用； 3：已过期 ； 4：已失效； 5：已删除
-        current: 1,
-        size: 10
-      },
-      burseMes: {
-        cumulativeAmount: 0, // 累计
-        waitUseAmount: 0// 待使用
-      },
-      burseList: [], // 待使用列表
-      getBurseList
+    name: 'MyBurse',
+    components: { BurseItem, LoadMore },
+    props: {},
+    data () {
+        return {
+            form: {
+                //  奖学金状态 0：待领取；1：待使用； 2：已使用； 3：已过期 ； 4：已失效； 5：已删除
+                status: 1,
+                current: 1,
+                size: 10
+            },
+            burseMes: {
+                // 累计
+                cumulativeAmount: 0,
+                // 待使用
+                waitUseAmount: 0
+            },
+            // 待使用列表
+            burseList: [],
+            getBurseList
+        }
+    },
+    async activated () {
+        try {
+            const { status, result } = await getBurseMes({})
+            if (status === 200) {
+                this.burseMes = result
+                await this.$nextTick()
+                this.$refresh = this.$refs.loadMore.refresh
+                this.$refresh()
+            }
+        } catch (e) { throw e }
+    },
+    methods: {
+        refreshList (list) {
+            this.burseList = list
+        }
     }
-  },
-  async activated () {
-    try {
-      let { status, result } = await getBurseMes({})
-      if (status === 200) {
-        this.burseMes = result
-        await this.$nextTick()
-        this.$refresh = this.$refs.loadMore.refresh
-        this.$refresh()
-      }
-    } catch (e) { throw e }
-  },
-  methods: {
-    refreshList (list) {
-      this.burseList = list
-    }
-  }
 }
 </script>
 

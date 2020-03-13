@@ -1,40 +1,40 @@
 <template>
-  <div :class="$style.studentShow">
-    <div :class="$style.moduleTitle">
-      <pl-svg :class="$style.moduleIcon" name="icon-five_pointed" height="36" />
-      <span :class="$style.title" v-text="data.titleName" />
+    <div :class="$style.studentShow">
+        <div :class="$style.moduleTitle">
+            <pl-svg :class="$style.moduleIcon" name="icon-five_pointed" height="36" />
+            <span :class="$style.title" v-text="data.titleName" />
+        </div>
+        <ul :class="$style.studentList">
+            <li v-for="(item, i) of data.mediaDetailModelList" :key="i">
+                <img v-imger:studentShow="item.mediaUrl" :src="item.mediaUrl + '?x-oss-process=style/thum-mini'" alt="">
+            </li>
+        </ul>
     </div>
-    <ul :class="$style.studentList">
-      <li v-for="(item, i) of data.mediaDetailModelList" :key="i">
-        <img v-imger:studentShow="item.mediaUrl" :src="item.mediaUrl + '?x-oss-process=style/thum-mini'" alt="">
-      </li>
-    </ul>
-  </div>
 </template>
 
 <script>
 import { getData } from '../../apis/appointment'
 export default {
-  name: 'StudentShow',
-  data () {
-    return {
-      data: {}
+    name: 'StudentShow',
+    data () {
+        return {
+            data: {}
+        }
+    },
+    async mounted () {
+        const data = JSON.parse(sessionStorage.getItem('PIN_XUAN'))
+        if (!data) {
+            try {
+                const { result } = await getData()
+                sessionStorage.setItem('PIN_XUAN', JSON.stringify(result.mallBrandingRequestModels))
+                this.data = result.mallBrandingRequestModels.find(item => item.type === 2)
+            } catch (e) {
+                throw e
+            }
+        } else {
+            this.data = data.find(item => item.type === 2)
+        }
     }
-  },
-  async mounted () {
-    let data = JSON.parse(sessionStorage.getItem('PIN_XUAN'))
-    if (!data) {
-      try {
-        let { result } = await getData()
-        sessionStorage.setItem('PIN_XUAN', JSON.stringify(result.mallBrandingRequestModels))
-        this.data = result.mallBrandingRequestModels.find(item => item.type === 2)
-      } catch (e) {
-        throw e
-      }
-    } else {
-      this.data = data.find(item => item.type === 2)
-    }
-  }
 }
 </script>
 

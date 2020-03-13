@@ -1,75 +1,75 @@
 <template>
-  <!-- 瓜分奖学金弹窗 -->
-  <div @click.stop="" v-show="show" :class="$style.burseMask">
-    <div :class="$style.burseContainer">
-      <div :class="$style.head">
-        <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/tuan/8fd96d5d-6096-48b2-b2e2-f5e67587264e.png" :class="$style.head">
-      </div>
-      <!--中间内容-->
-      <div :class="$style.con">
-        <div :class="$style.conList">
-          <div :class="$style.conItem" v-for="(item,index) in list" :key="index">
-            <!--左边-->
-            <div>
-              <div><pl-svg width="240" height="58" name="icon-together-buy-success" /></div>
-              <div>立即瓜分<span>{{ item.prize }}元</span>奖学金</div>
+    <!-- 瓜分奖学金弹窗 -->
+    <div @click.stop="" v-show="show" :class="$style.burseMask">
+        <div :class="$style.burseContainer">
+            <div :class="$style.head">
+                <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/tuan/8fd96d5d-6096-48b2-b2e2-f5e67587264e.png" :class="$style.head">
             </div>
-            <!--右边-->
-            <div>
-              <!--瓜分-->
-              <div v-if="item.status === 1" status="1">
-                <div>恭喜瓜得</div>
-                <div>{{ item.amount }}元</div>
-              </div>
-              <!--未瓜分-->
-              <div v-if="item.status === 0" status="0" @click="dispatchBurse(item)">
-                <span>瓜分</span>
-              </div>
+            <!--中间内容-->
+            <div :class="$style.con">
+                <div :class="$style.conList">
+                    <div :class="$style.conItem" v-for="(item,index) in list" :key="index">
+                        <!--左边-->
+                        <div>
+                            <div><pl-svg width="240" height="58" name="icon-together-buy-success" /></div>
+                            <div>立即瓜分<span>{{ item.prize }}元</span>奖学金</div>
+                        </div>
+                        <!--右边-->
+                        <div>
+                            <!--瓜分-->
+                            <div v-if="item.status === 1" status="1">
+                                <div>恭喜瓜得</div>
+                                <div>{{ item.amount }}元</div>
+                            </div>
+                            <!--未瓜分-->
+                            <div v-if="item.status === 0" status="0" @click="dispatchBurse(item)">
+                                <span>瓜分</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div :class="$style.conFooter">
+                    <div @click="$router.push({name:'MyBurse'})">查看奖学金</div>
+                    <div>请在我的→我的奖学金中查看已获得奖学金</div>
+                </div>
             </div>
-          </div>
+            <!--关闭-->
+            <div :class="$style.burseClose" @click="show = false">
+                <span>
+                    <pl-svg @click="sharePosterShow = false" name="icon-close3" fill="#fff" width="40" />
+                </span>
+            </div>
         </div>
-        <div :class="$style.conFooter">
-          <div @click="$router.push({name:'MyBurse'})">查看奖学金</div>
-          <div>请在我的→我的奖学金中查看已获得奖学金</div>
-        </div>
-      </div>
-      <!--关闭-->
-      <div :class="$style.burseClose" @click="show = false">
-        <span>
-          <pl-svg @click="sharePosterShow = false" name="icon-close3" fill="#fff" width="40" />
-        </span>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 import { getDelayBurseList, dispatchBurse } from './../../apis/my-burse.js'
 export default {
-  name: 'SplitBurse',
-  data () {
-    return {
-      show: false,
-      list: []
+    name: 'SplitBurse',
+    data () {
+        return {
+            show: false,
+            list: []
+        }
+    },
+    async activated () {
+        try {
+            const { status, result } = await getDelayBurseList()
+            if (status === 200) {
+                this.list = result
+                this.list.length === 0 ? this.show = false : this.show = true
+            }
+        } catch (e) { throw e }
+    },
+    methods: {
+        async dispatchBurse (row) {
+            try {
+                await dispatchBurse({ id: row.id, activityId: row.activityId })
+                row.status = 1
+            } catch (e) { throw e }
+        }
     }
-  },
-  async activated () {
-    try {
-      let { status, result } = await getDelayBurseList()
-      if (status === 200) {
-        this.list = result
-        this.list.length === 0 ? this.show = false : this.show = true
-      }
-    } catch (e) { throw e }
-  },
-  methods: {
-    async dispatchBurse (row) {
-      try {
-        await dispatchBurse({ id: row.id, activityId: row.activityId })
-        row.status = 1
-      } catch (e) { throw e }
-    }
-  }
 }
 </script>
 
