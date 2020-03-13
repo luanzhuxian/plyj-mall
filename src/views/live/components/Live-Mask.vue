@@ -2,13 +2,18 @@
   <div :class="$style.liveMask">
     <img :src="imgSrc" alt="">
     <div :class="$style.countdown">
-      <div :class="$style.time">
-        <div>倒计时</div>
-        <div>
-          <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span>:</span><i v-text="s" />
-        </div>
+      <div v-if="waiting" :class="$style.waiting">
+        直播即将开始
       </div>
-      <div :class="$style.description">直播暂未开始</div>
+      <template v-else>
+        <div :class="$style.time">
+          <div>倒计时</div>
+          <div>
+            <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span>:</span><i v-text="s" />
+          </div>
+        </div>
+        <div :class="$style.description">直播暂未开始</div>
+      </template>
     </div>
   </div>
 </template>
@@ -29,11 +34,27 @@ export default {
   },
   data () {
     return {
+      waiting: true,
       countdown: null,
       d: 0,
       h: '00',
       m: '00',
       s: '00'
+    }
+  },
+  activated () {
+    this.waiting = true
+  },
+  methods: {
+    setTime ({ seconds, minutes, hours, days }) {
+      this.d = String(days).padStart(2, '0')
+      this.h = String(hours).padStart(2, '0')
+      this.m = String(minutes).padStart(2, '0')
+      this.s = String(seconds).padStart(2, '0')
+    },
+    stop () {
+      this.waiting = true
+      this.countdown && this.countdown.stop()
     }
   },
   computed: {
@@ -48,23 +69,11 @@ export default {
           if (data) {
             this.setTime(data)
           } else {
-            this.countdown.stop()
+            this.stop()
           }
         })
+        this.waiting = false
         this.countdown.start()
-      }
-    }
-  },
-  methods: {
-    setTime ({ seconds, minutes, hours, days }) {
-      this.d = String(days).padStart(2, '0')
-      this.h = String(hours).padStart(2, '0')
-      this.m = String(minutes).padStart(2, '0')
-      this.s = String(seconds).padStart(2, '0')
-    },
-    stop () {
-      if (this.countdown) {
-        this.countdown.stop()
       }
     }
   },
@@ -101,6 +110,12 @@ export default {
       padding: 0 28px;
       box-sizing: border-box;
       background: url('https://mallcdn.youpenglai.com/static/mall/2.5.0/live/组 919@2x.png') top/100% no-repeat;
+      > .waiting {
+        width: 100%;
+        font-size: 36px;
+        text-align: center;
+        color: #FFFFFF;
+      }
       > .time {
         display: flex;
         align-items: center;

@@ -373,7 +373,6 @@ export default {
       }
       // 是否要输入密码
       if (detail.needToken && !detail.isInputToken) {
-        this.activityId = detail.id
         await this.$nextTick()
         await this.$refs.livePassword.validate()
       }
@@ -441,9 +440,8 @@ export default {
             this.couponList = data.couponList.filter(item => item.show)
           }, 2000)
         }
-
         this.productList = data.productList || []
-        this.activeId = data.id
+        this.activityId = data.id
         this.detail = data
         if (data.videoLibId && data.videoLibId !== '0' && data.liveType === 'live') {
           this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })
@@ -734,7 +732,7 @@ export default {
         this.isCouponLoading = true
         await receiveCouponForLive({
           couponId: id,
-          activityId: this.activeId,
+          activityId: this.activityId,
           entityClassName: 'MallLiveActivityEntity'
         })
         this.$success('领取成功')
