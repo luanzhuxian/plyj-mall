@@ -863,8 +863,8 @@ export default {
         this.virtualProducts = virtualProducts
         this.lessonList = [...formalClass, ...experienceClass]
         // 是否显示学员选择栏，只要有一个商品允许（item.needStudentInfo === 1）就显示
-        this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 1)]
-        this.customList = [...physicalProducts, ...formalClass, ...experienceClass, ...virtualProducts.filter(item => item.needStudentInfo === 2)]
+        this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts].filter(item => item.needStudentInfo === 1)
+        this.customList = [...physicalProducts, ...formalClass, ...experienceClass, ...virtualProducts].filter(item => item.needStudentInfo === 2)
         // 是否显示发票选择栏，只要有一个商品允许（item.showInvoice === 1）就显示
         this.showInvoiceSelector = [...physicalProducts, ...virtualProducts, ...formalClass, ...experienceClass].some(item => item.showInvoice === 1)
         this.loading = false
