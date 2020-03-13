@@ -366,10 +366,6 @@ export default {
       this.channelId = roomId
       this.liveAppId = appId
       this.channeUserId = appUserId
-      // 监听直播是否开始
-      if (detail.liveType === 'live') {
-        this.listenLiveStart(detail.stream)
-      }
       // 是否要报名
       if (detail.isNeedSignUp === 1 && !detail.isHaveSignUp) {
         await this.$nextTick()
@@ -394,10 +390,15 @@ export default {
           return
         }
       }
+      // 存入访问记录
       await setComeInConut({
         id: detail.id,
         message: (detail.paidAmount || 0) + '元'
       })
+      // 监听直播是否开始
+      if (detail.liveType === 'live') {
+        this.listenLiveStart(detail.stream)
+      }
       this.initPlayer()
       this.initSocket()
     } catch (e) {

@@ -56,7 +56,8 @@ export default {
       })
     },
     cancel () {
-      this.$emit('validateCancel', 'cancel')
+      // this.$emit('validateCancel', 'cancel')
+      this.$router.go(-1)
       this.show = false
     },
     validatePass () {
