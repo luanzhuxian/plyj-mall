@@ -1,11 +1,8 @@
 import * as type from './mutation-type'
 import Cookie from '../assets/js/storage-cookie'
 import { copyFields } from '../assets/js/util'
-const CalcCookieTime = expire =>
-
 // 本地cookie较服务器提前一小时过期
-    new Date(Date.now() + expire * 1000 - 60000000)
-
+const CalcCookieTime = expire => new Date(Date.now() + expire * 1000 - 60000000)
 export default {
     [type.SET_THEME] (state, theme) {
         state.theme = theme

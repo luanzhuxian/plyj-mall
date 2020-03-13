@@ -27,6 +27,17 @@ import Cookie from '../assets/js/storage-cookie'
 import Qs from 'qs'
 import MessageBox from '../components/penglai-ui/message-box'
 const delay = new DelayExec(500)
+
+const getWeixinURL = (appSecret, appId, componentAppid, search) => {
+    let openIdUrl = ''
+    const href = `${ location.protocol }//${ location.host }${ location.pathname }`
+    if (appSecret) {
+        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }?${ Qs.stringify(search) }&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+    } else {
+        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }?${ Qs.stringify(search) }&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${ componentAppid }#wechat_redirect`
+    }
+    return openIdUrl
+}
 export default {
 
     /* 获取商城信息 */
@@ -216,7 +227,8 @@ export default {
     [type.GET_ACTIVITY_DATA]: async ({ commit }, params) => {
         try {
             let { result } = await getTemplate({ type: 2 })
-            result = result || { type: 0 } // 没有装修主会场, 将模板id置0
+            // 没有装修主会场, 将模板id置0
+            result = result || { type: 0 }
             commit(type.GET_ACTIVITY_DATA, result)
             commit(type.SET_CURRENT_TIME, result.currentTime || Date.now())
             return result.type
@@ -233,14 +245,4 @@ export default {
             throw e
         }
     }
-}
-function getWeixinURL (appSecret, appId, componentAppid, search) {
-    let openIdUrl = ''
-    const href = `${ location.protocol }//${ location.host }${ location.pathname }`
-    if (appSecret) {
-        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }?${ Qs.stringify(search) }&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
-    } else {
-        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }?${ Qs.stringify(search) }&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${ componentAppid }#wechat_redirect`
-    }
-    return openIdUrl
 }

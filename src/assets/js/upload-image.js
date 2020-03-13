@@ -3,9 +3,11 @@ import { getSTS } from '../../apis/base-api'
 const OSS = require('ali-oss')
 const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
-const STSLIFETIME = 600000 // STS有效时间，10分钟
+// STS有效时间，10分钟
+const STSLIFETIME = 600000
 Compressor.setDefaults({
-    checkOrientation: true, // 检查方向
+    // 检查方向
+    checkOrientation: true,
     // 表示压缩后的图像尺寸大于原始图像尺寸时，是否输出原始图像而不是压缩后的图像，但以下情况除外:
     // 设置了mimeType选项，其值与图像的mime类型不同。
     // 设置了width选项，其值大于图像的自然宽度。
@@ -15,14 +17,16 @@ Compressor.setDefaults({
     strict: true,
 
     // minWidth 输出图像的最小宽度。该值应该大于0，并且不应该大于maxWidth。
-    maxWidth: 1270, // 输出图像的最大宽度。这个值应该大于0。
+    // 输出图像的最大宽度。这个值应该大于0。
+    maxWidth: 1270,
     // width: 1920,
     // minHeight 输出图像的最小高度。该值应该大于0，并且不应该大于maxHeight
     // maxHeight 输出图像的最大高度。这个值应该大于0
     // height 输出图像的高度。如果没有指定，则使用原始图像的自然高度，或者如果设置了宽度选项，则使用自然长宽比自动计算高度。
     quality: 0.75,
     mimeType: 'image/jpeg',
-    convertSize: 5000000 // 超过此值的PNG文件将转换为jpeg。要禁用此功能，只需将值设置为无穷大
+    // 超过此值的PNG文件将转换为jpeg。要禁用此功能，只需将值设置为无穷大
+    convertSize: 5000000
     // beforeDraw(context, canvas)
     // drew(context, canvas)
 })
@@ -30,7 +34,7 @@ Compressor.setDefaults({
 /*
 * 实例方法：abort 终止
 * */
-export function compress (file, size, fileType) {
+export const compress = function (file, size, fileType) {
     size = size * 1024 * 1024
     return new Promise(async (resolve, reject) => {
         try {
@@ -55,12 +59,13 @@ export function compress (file, size, fileType) {
         }
     })
 }
-async function getClient () {
+const getClient = async function () {
+    /* eslint-disable */
     const sts = JSON.parse(localStorage.getItem('sts')) || {}
     let credentials = null
 
     if (!sts.time || STSLIFETIME < Date.now() - sts.time) {
-    // sts过期
+        // sts过期
         const { result } = await getSTS()
         credentials = result.credentials
         result.time = Date.now()
@@ -77,7 +82,7 @@ async function getClient () {
         bucket: BUCKET
     })
 }
-export async function upload (file) {
+export const upload = async function (file) {
     let ext = null
     try {
         ext = /jpg|png|gif|jpeg|bmp/i.exec(file.type)[0]
@@ -97,7 +102,7 @@ export async function upload (file) {
             })
     })
 }
-function compressImage (file) {
+const compressImage = function (file) {
     /* eslint-disable */
   return new Promise((resolve, reject) => {
     new Compressor(file, {

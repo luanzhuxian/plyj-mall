@@ -78,7 +78,7 @@ module.exports = {
     }], // http://docs.youpenglai.cn/spec/javascript_specification.html#arrows--use-them
     'arrow-body-style': ["error", "as-needed"], // http://docs.youpenglai.cn/spec/javascript_specification.html#arrows--implicit-return
     'arrow-parens': ["error", "as-needed"], // http://docs.youpenglai.cn/spec/javascript_specification.html#arrows--one-arg-parens
-    'no-confusing-arrow': "error", // http://docs.youpenglai.cn/spec/javascript_specification.html#arrows--confusing
+    // 'no-confusing-arrow': "error", // http://docs.youpenglai.cn/spec/javascript_specification.html#arrows--confusing
     'implicit-arrow-linebreak': ["error", "beside"], // http://docs.youpenglai.cn/spec/javascript_specification.html#whitespace--implicit-arrow-linebreak
     'no-useless-constructor': 'error',
     'no-dupe-class-members': 'error',

@@ -47,23 +47,28 @@ export default {
             type: String,
             default: ''
         },
-        prefixIcon: { // 右侧前边图标
+        // 右侧前边图标
+        prefixIcon: {
             type: String,
             default: ''
         },
-        suffixIcon: { // 右侧后边图标
+        // 右侧后边图标
+        suffixIcon: {
             type: String,
             default: ''
         },
-        iconColor: { // 图标颜色
+        // 图标颜色
+        iconColor: {
             type: String,
             default: '#a8a8a8'
         },
-        tip: { // 右侧文字
+        // 右侧文字
+        tip: {
             type: String,
             default: ''
         },
-        route: { // 右侧跳转路由
+        // 右侧跳转路由
+        route: {
             type: Object,
             default () {
                 return null

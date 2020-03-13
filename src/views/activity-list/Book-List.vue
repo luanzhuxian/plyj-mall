@@ -68,8 +68,11 @@
 <script>
 import { bookActivityPage } from '../../apis/product'
 import CountDown from './Book-Count-Down'
-function sub (arg1, arg2) {
-    let r1; let r2; let m; let n
+const sub = (arg1, arg2) => {
+    let r1 = 0
+    let r2 = 0
+    let m = 0
+    let n = 0
     try {
         r1 = arg1.toString().split('.')[1].length
     } catch (e) {

@@ -83,7 +83,8 @@ export default {
     data () {
         return {
             loading: false,
-            notSupportActiveProductStatus: [2, 3, 4] // 2团购 3限时秒杀 4预购 这三种状态的商品 --> 暂不支持退换货 + 不支持线上发票
+            // 2团购 3限时秒杀 4预购 这三种状态的商品 --> 暂不支持退换货 + 不支持线上发票
+            notSupportActiveProductStatus: [2, 3, 4]
         }
     },
     props: {

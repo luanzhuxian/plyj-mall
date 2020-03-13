@@ -4,12 +4,17 @@ export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, p
         try {
             if (window.WeixinJSBridge) {
                 window.WeixinJSBridge.invoke('getBrandWCPayRequest', {
-                    appId, // 公众号名称，由商户传入
-                    timeStamp, // 时间戳，自1970年以来的秒数
-                    nonceStr, // 随机串
-                    package: packageValue, //
-                    signType, // 微信签名方式:
-                    paySign // 微信签名
+                    // 公众号名称，由商户传入
+                    appId,
+                    // 时间戳，自1970年以来的秒数
+                    timeStamp,
+                    // 随机串
+                    nonceStr,
+                    package: packageValue,
+                    // 微信签名方式:
+                    signType,
+                    // 微信签名
+                    paySign
                 }, res => {
                     if (res.err_msg.indexOf('ok') > -1) {
                         // 支付成功, 由于后端要等待微信服务器的成功回调，导致后端成功回调晚于前端，所以前端延迟执行

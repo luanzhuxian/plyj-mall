@@ -35,13 +35,17 @@ import {
 export default {
     name: 'PaidPlayer',
     data () {
-        this.timeFragment = [] // 缓存每次加载的时间片段，发送给后端后会被清空
+        // 缓存每次加载的时间片段，发送给后端后会被清空
+        this.timeFragment = []
         this.lastLoadedTime = 0
         return {
             test: [],
-            checking: true, // 是否正在检查视频可用性
-            duration: 0, // 视频总长
-            videoSize: 0 // 视频总大小
+            // 是否正在检查视频可用性
+            checking: true,
+            // 视频总长
+            duration: 0,
+            // 视频总大小
+            videoSize: 0
         }
     },
     props: {

@@ -129,7 +129,8 @@ export default {
     },
     data () {
         return {
-            showSpecifica: false, // 显示规格弹框
+            // 显示规格弹框
+            showSpecifica: false,
             clickAddToCart: false,
             clickBuyNow: false,
             loading: false,
@@ -291,7 +292,8 @@ export default {
                 skuCode1,
                 skuCode2,
                 price,
-                agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
+                // 如果当前用户是经纪人，则覆盖其他经纪人的id
+                agentUser: shareBrokerId || this.userId || null
             }]))
             this.showSpecifica = false
             this.$router.push({
@@ -342,7 +344,8 @@ export default {
                         productCount: count,
                         skuCode: skuCode1,
                         skuCode2,
-                        agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
+                        // 如果当前用户是经纪人，则覆盖其他经纪人的id
+                        agentUser: shareBrokerId || this.userId || null
                     })
                     this.$success('已添加到购物车')
                     this.$emit('update:currentSku', options)

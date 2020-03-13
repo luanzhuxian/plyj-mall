@@ -198,10 +198,14 @@ export default {
                     activity.models.sort((a, b) => moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf())
                     for (const group of activity.models) {
                         // 添加倒计时相关字段
-                        group.d = '' // 天
-                        group.h = '' // 时
-                        group.m = '' // 分
-                        group.s = '' // 秒
+                        // 天
+                        group.d = ''
+                        // 时
+                        group.h = ''
+                        // 分
+                        group.m = ''
+                        // 秒
+                        group.s = ''
                         const activityStartTime = moment(group.activityStartTime).valueOf()
                         const activityEndTime = moment(group.activityEndTime).valueOf()
                         const now = Date.now()

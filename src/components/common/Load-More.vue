@@ -85,20 +85,28 @@ export default {
             total: 0,
             list: [],
             startY: 0,
-            defaultTop: -90, // 固定值
-            top: -90, // 动态变化的
-            pulling: false, // 正在向下拉动
-            pending: false, // loading
+            // 固定值
+            defaultTop: -90,
+            // 动态变化的
+            top: -90,
+            // 正在向下拉动
+            pulling: false,
+            // loading
+            pending: false,
             bottomLoading: false,
-            allLoaded: false, // 已全部加载完毕
+            // 已全部加载完毕
+            allLoaded: false,
             timer: 0,
             offsetHeight: 0,
-            rotate: 0, // 记录loading旋转的角度
+            // 记录loading旋转的角度
+            rotate: 0,
             scrollHandler: null,
-            minPullDis: 60, // 最小触发距离
+            // 最小触发距离
+            minPullDis: 60,
             // 缓存发起的所有请求
             requestBuffer: [],
-            identifier: 0 // 手指标识符
+            // 手指标识符
+            identifier: 0
         }
     },
     props: {
@@ -142,7 +150,8 @@ export default {
             default: null
         },
         noIcon: Boolean,
-        isNotShowNoMoreTip: Boolean // 不显示‘没有更多了’提示true, 显示false
+        // 不显示‘没有更多了’提示true, 显示false
+        isNotShowNoMoreTip: Boolean
     },
     computed: {
         pullLoading () {
@@ -184,7 +193,8 @@ export default {
         bindScroll () {
             this.$nextTick(() => {
                 this.offsetHeight = this.$el.offsetHeight
-                this.scrollHandler = throttle(this.infiniteScroll, 200) // 生成滚动监听器
+                // 生成滚动监听器
+                this.scrollHandler = throttle(this.infiniteScroll, 200)
                 window.addEventListener('scroll', this.scrollHandler, { passive: true })
             })
         },
@@ -256,7 +266,8 @@ export default {
         touchstart (e) {
             const touches = Array.from(e.touches)
             if (touches.length > 1) return
-            this.identifier = touches[0].identifier // 记录当前第一根手指的标识符
+            // 记录当前第一根手指的标识符
+            this.identifier = touches[0].identifier
             this.startY = e.touches[0].clientY
         },
 

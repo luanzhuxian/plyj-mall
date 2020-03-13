@@ -7,7 +7,7 @@
                 class="hairline step step--vertical"
                 :class="{ 'step--finish': index < active, 'step--process' : index === active }"
             >
-                <div class="step__title" style="{ color: index === active ? activeColor : '' }">
+                <div class="step__title" :style="{ color: index === active ? activeColor : '' }">
                     <div v-text="item.text" />
                     <div class="step__title-desc" v-text="item.desc" />
                 </div>

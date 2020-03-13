@@ -101,22 +101,37 @@ export default {
     name: 'MImageCrop',
     data () {
         return {
-            state: 1, // 截图状态
-            top: null, // 初始移动Y
-            left: null, // 初始移动X
-            url: null, // 图片地址
+            // 截图状态
+            state: 1,
+            // 初始移动Y
+            top: null,
+            // 初始移动X
+            left: null,
+            // 图片地址
+            url: null,
             img: new Image(),
-            maxSize: 3, // 最大缩放比
-            initViewWidth: 74 / 100, // 初始截取区宽度比例
-            borderWidth: 1, // 截取区border
-            view: { width: 0, height: 0 }, // 屏幕
-            fileSize: { width: 0, height: 0, top: 0, left: 0 }, // 图片
-            fileInitSize: { width: 0, height: 0 }, // 图片初始大小
-            filRealitySize: { width: 0, height: 0 }, // 图片真实大小
-            viewBox: { width: 0, height: 0, left: 0, top: 0 }, // 截取区
-            rotate: 0, // 旋转角度 0 1 2 3
-            point1: null, // 触控点1
-            point2: null // 触控点2
+            // 最大缩放比
+            maxSize: 3,
+            // 初始截取区宽度比例
+            initViewWidth: 74 / 100,
+            // 截取区border
+            borderWidth: 1,
+            // 屏幕
+            view: { width: 0, height: 0 },
+            // 图片
+            fileSize: { width: 0, height: 0, top: 0, left: 0 },
+            // 图片初始大小
+            fileInitSize: { width: 0, height: 0 },
+            // 图片真实大小
+            filRealitySize: { width: 0, height: 0 },
+            // 截取区
+            viewBox: { width: 0, height: 0, left: 0, top: 0 },
+            // 旋转角度 0 1 2 3
+            rotate: 0,
+            // 触控点1
+            point1: null,
+            // 触控点2
+            point2: null
             // indicator: {
             //   visible: false
             // }
@@ -165,9 +180,12 @@ export default {
             type: Object,
             default () {
                 return {
-                    size: 1200, // 图片最大宽度（px）
-                    isSlice: true, // 文件比例一致时是否需要裁剪，与skipCrop不同
-                    path: null // 显示图片时的路径，path参数将直接与图片id拼接(path + id)
+                    // 图片最大宽度（px）
+                    size: 1200,
+                    // 文件比例一致时是否需要裁剪，与skipCrop不同
+                    isSlice: true,
+                    // 显示图片时的路径，path参数将直接与图片id拼接(path + id)
+                    path: null
                 }
             }
         }
@@ -175,11 +193,13 @@ export default {
     components: {},
     beforeDestroy () {
         document.removeEventListener('touchmove', this.preventDefault)
-        document.body.removeChild(this.$refs.fileView) // 退出销毁外置截取区域
+        // 退出销毁外置截取区域
+        document.body.removeChild(this.$refs.fileView)
     },
     mounted () {
-    // 初始化value格式
-        document.body.appendChild(this.$refs.fileView) // 外置截取区域
+        // 初始化value格式
+        // 外置截取区域
+        document.body.appendChild(this.$refs.fileView)
         this.currentValue.origin = {}
         this.$nextTick(function () {
             this.initViewSize()
@@ -281,30 +301,30 @@ export default {
             )
             if (imgWidth / imgHeight >= this.view.width / this.view.height) {
                 // 判断图片长宽比
-                const _fileSize = {
+                const fileSize = {
                     width: this.view.width,
                     height: imgHeight / imgWidth * this.view.width
                 }
-                if (_fileSize.height < this.viewBox.height) {
+                if (fileSize.height < this.viewBox.height) {
                     // 判断是否小于截取区
-                    _fileSize.height = this.viewBox.height
-                    _fileSize.width = imgWidth / imgHeight * _fileSize.height
+                    fileSize.height = this.viewBox.height
+                    fileSize.width = imgWidth / imgHeight * fileSize.height
                 }
-                this.fileSize.width = _fileSize.width
-                this.fileSize.height = _fileSize.height
+                this.fileSize.width = fileSize.width
+                this.fileSize.height = fileSize.height
                 this.fileSize.left = 0
                 this.fileSize.top = (this.view.height - this.fileSize.height) / 2
             } else {
-                const _fileSize = {
+                const fileSize = {
                     width: imgWidth / imgHeight * this.view.height,
                     height: this.view.height
                 }
-                if (_fileSize.width < this.viewBox.width) {
-                    _fileSize.width = this.viewBox.width
-                    _fileSize.height = imgHeight / imgWidth * _fileSize.width
+                if (fileSize.width < this.viewBox.width) {
+                    fileSize.width = this.viewBox.width
+                    fileSize.height = imgHeight / imgWidth * fileSize.width
                 }
-                this.fileSize.height = _fileSize.height
-                this.fileSize.width = _fileSize.width
+                this.fileSize.height = fileSize.height
+                this.fileSize.width = fileSize.width
                 this.fileSize.top = 0
                 this.fileSize.left = (this.view.width - this.fileSize.width) / 2
             }
@@ -443,7 +463,8 @@ export default {
                 sizeFlag = true
             }
             if (sizeFlag) {
-                this.fileSize.left = this.$refs.file.offsetLeft // 阻止移动
+                // 阻止移动
+                this.fileSize.left = this.$refs.file.offsetLeft
                 this.fileSize.top = this.$refs.file.offsetTop
             }
         },
@@ -518,7 +539,8 @@ export default {
         setCanvas () {
             const canvas = document.createElement('canvas')
             const ctx = canvas.getContext('2d')
-            const sizeScale = this.imgSizeScale() // 固定大小宽度比值
+            // 固定大小宽度比值
+            const sizeScale = this.imgSizeScale()
             canvas.setAttribute('width', this.viewBox.width * sizeScale)
             canvas.setAttribute('height', this.viewBox.height * sizeScale)
             ctx.drawImage(
@@ -592,7 +614,8 @@ export default {
         },
         submitFile () {
             this.state = 1
-            this.$refs.path.value = null // 重置选取文件
+            // 重置选取文件
+            this.$refs.path.value = null
             this.setCanvas()
         },
         rotateChange () {
@@ -602,7 +625,8 @@ export default {
         },
         back () {
             this.state = 1
-            this.$refs.path.value = null // 重置选取文件
+            // 重置选取文件
+            this.$refs.path.value = null
             this.$emit('cancel')
         }
     },
@@ -650,12 +674,10 @@ export default {
                 let startX; let startY
 
                 /* 返回角度 */
-                function GetSlideAngle (dx, dy) {
-                    return Math.atan2(dy, dx) * 180 / Math.PI
-                }
+                const GetSlideAngle = (dx, dy) => Math.atan2(dy, dx) * 180 / Math.PI
 
                 /* 根据起点和终点返回方向 1：向上，2：向下，3：向左，4：向右,0：未滑动 */
-                function GetSlideDirection (startX, startY, endX, endY) {
+                const GetSlideDirection = (startX, startY, endX, endY) => {
                     const dy = startY - endY
                     const dx = endX - startX
                     let result = 0
@@ -718,9 +740,8 @@ export default {
                 el.addEventListener(
                     'touchend',
                     ev => {
-                        let endX; let endY
-                        endX = ev.changedTouches[0].pageX
-                        endY = ev.changedTouches[0].pageY
+                        const endX = ev.changedTouches[0].pageX
+                        const endY = ev.changedTouches[0].pageY
                         direction = GetSlideDirection(
                             startX,
                             startY,

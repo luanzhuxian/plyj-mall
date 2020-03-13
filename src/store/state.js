@@ -44,23 +44,33 @@ export default {
         mallUrl: '',
         sequenceNbr: '',
         servicePhoneModels: [],
-        liveRoomEnable: false, // 是否开通云课堂，开通了房间就算
+        // 是否开通云课堂，开通了房间就算
+        liveRoomEnable: false,
         mchId: '',
-        appSecret: false // 是否是老方法授权的
+        // 是否是老方法授权的
+        appSecret: false
     },
     openId: '',
     addressList: [],
     students: [],
-    selectedAddress, // 选中的地址
+    // 选中的地址
+    selectedAddress,
     // 短信类型
     smstype: {
-        AGENCY_MOBILE_REGISTER: 'AGENCY_MOBILE_REGISTER', // 商户后台-免费注册验证码
-        AGENCY_MOBILE_UPDATE: 'AGENCY_MOBILE_UPDATE', // 商户后台-更新资料信息验证码
-        AGENCY_MOBILE_PASSWD_REST: 'AGENCY_MOBILE_PASSWD_REST', // 商户后台-忘记密码验证码
-        AGENT_USER_INFO: 'AGENT_USER_INFO', // 申请Helper短信验证码
-        PUBLIC_USER_INFO: 'PUBLIC_USER_INFO', // 商城端-公网用户短信验证码
-        RDSERVER_MOBILE_REGISTER: 'RDSERVER_MOBILE_REGISTER', // 研发服务端-免费注册验证码
-        PUBLIC_USER_UPDATE_MOBILE: 'PUBLIC_USER_UPDATE_MOBILE'// 研发服务端-免费注册验证码
+        // 商户后台-免费注册验证码
+        AGENCY_MOBILE_REGISTER: 'AGENCY_MOBILE_REGISTER',
+        // 商户后台-更新资料信息验证码
+        AGENCY_MOBILE_UPDATE: 'AGENCY_MOBILE_UPDATE',
+        // 商户后台-忘记密码验证码
+        AGENCY_MOBILE_PASSWD_REST: 'AGENCY_MOBILE_PASSWD_REST',
+        // 申请Helper短信验证码
+        AGENT_USER_INFO: 'AGENT_USER_INFO',
+        // 商城端-公网用户短信验证码
+        PUBLIC_USER_INFO: 'PUBLIC_USER_INFO',
+        // 研发服务端-免费注册验证码
+        RDSERVER_MOBILE_REGISTER: 'RDSERVER_MOBILE_REGISTER',
+        // 研发服务端-免费注册验证码
+        PUBLIC_USER_UPDATE_MOBILE: 'PUBLIC_USER_UPDATE_MOBILE'
     },
     roleMap: {
         SUPER_ADMIN: '超级管理员',
@@ -106,13 +116,22 @@ export default {
 
     // 主会场信息
     activityData: {},
-    skinId: null, // 皮肤id
-    liveInfo: null, // 直播
-    courseInfo: null, // 线上课程
-    d12CouponTotal: null, // 已领双十二优惠卷
-    xinchunCouponTotal: null, // 已领新春优惠卷
-    invitingEvent: null, // 邀新有礼
-    jxEvent: null, // 见学之路
-    nwEvent: null, // 新春年味
-    currentTime: 0 // 服务器时间
+    // 皮肤id
+    skinId: null,
+    // 直播
+    liveInfo: null,
+    // 线上课程
+    courseInfo: null,
+    // 已领双十二优惠卷
+    d12CouponTotal: null,
+    // 已领新春优惠卷
+    xinchunCouponTotal: null,
+    // 邀新有礼
+    invitingEvent: null,
+    // 见学之路
+    jxEvent: null,
+    // 新春年味
+    nwEvent: null,
+    // 服务器时间
+    currentTime: 0
 }

@@ -23,9 +23,7 @@ export const login = openId => axios.post(`/apis/v1/privilege/auth/openId`, { op
 export const getJSApi = appid => axios.get(`/apis/v1/base/baseMall/query/js/api?appid=${ appid }`)
 
 // 获取当前用户信息
-export function getUserInfo () {
-    return axios.get(`/apis/v1/account/account/info`)
-}
+export const getUserInfo = () => axios.get(`/apis/v1/account/account/info`)
 
 // 获取TST数据
 export const getSTS = () => axios.get('/apis/v1/oss/upload/sts')
@@ -43,9 +41,7 @@ export const getPenglaiAppid = () => axios.get(`/apis/v1/agency/AgencyMall/pengl
 export const bindMobile = data => axios.put('/apis/v1/base/baseUserInfo/mobile/bind', data)
 
 // 用户修改手机号
-export function updateMobile (data) {
-    return axios.put('/apis/v1/base/baseUserInfo/mobile/update', data)
-}
+export const updateMobile = data => axios.put('/apis/v1/base/baseUserInfo/mobile/update', data)
 
 //
 export const saveLog = data => axios.post('/apis/v1/systemctl/log', data)

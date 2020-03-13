@@ -13,17 +13,24 @@ export default {
     avatar: state => state.userInfo.img,
     userName: state => state.userInfo.userName,
     realName: state => state.userInfo.realName,
-    agentUser: state => state.userInfo.isAgentUser, // helper
-    isAdmin: state => state.userInfo.roleCode === 'ENTERPRISE_ADMIN', // 企业管理员
-    lockStatus: state => state.userInfo.lockStatus, // 启用状态
+    // helper
+    agentUser: state => state.userInfo.isAgentUser,
+    // 企业管理员
+    isAdmin: state => state.userInfo.roleCode === 'ENTERPRISE_ADMIN',
+    // 启用状态
+    lockStatus: state => state.userInfo.lockStatus,
     mobile: state => state.userInfo.mobile,
     serverTime: state => state.userInfo.serverTime,
     openId: state => state.openId,
     userId: state => state.userInfo.userId,
-    balance: state => state.userInfo.balance, // 可提现金额
-    currentBalance: state => state.userInfo.currentBalance, // 今日润笔
-    cumulativeBalance: state => state.userInfo.cumulativeBalance, // 累计润笔
-    roleCode: state => state.userInfo.roleCode, // 个人角色
+    // 可提现金额
+    balance: state => state.userInfo.balance,
+    // 今日润笔
+    currentBalance: state => state.userInfo.currentBalance,
+    // 累计润笔
+    cumulativeBalance: state => state.userInfo.cumulativeBalance,
+    // 个人角色
+    roleCode: state => state.userInfo.roleCode,
     roleMap: state => state.roleMap,
     roleName: state => state.roleMap[state.userInfo.roleCode] || '',
 

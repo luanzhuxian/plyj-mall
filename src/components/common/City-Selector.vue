@@ -285,7 +285,7 @@ export default {
     left: 0;
     bottom: -100%;
     width: 100%;
-    height: 750;
+    height: 750px;
     background-color: #fff;
     transition: bottom 0.2s ease-in-out;
     &.visabled {

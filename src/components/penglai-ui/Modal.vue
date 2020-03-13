@@ -132,7 +132,8 @@ export default {
             if (value) {
                 this.isShow = value
                 setTimeout(() => {
-                    this.isOverlayShow = this.isModalShow = true
+                    this.isOverlayShow = true
+                    this.isModalShow = true
                 }, 200)
             } else {
                 this.isOverlayShow && this.isModalShow && this.closeModal()
@@ -141,19 +142,22 @@ export default {
     },
     methods: {
         stopLoading () {
-            this.loading.confirm = this.loading.cancel = false
+            this.loading.cancel = false
+            this.loading.confirm = false
         },
         showModal () {
             this.isShow = true
             setTimeout(() => {
-                this.isOverlayShow = this.isModalShow = true
+                this.isModalShow = true
+                this.isOverlayShow = true
             }, 200)
             return new Promise((resolve, reject) => {
                 this.resolve = resolve
             })
         },
         closeModal () {
-            this.isOverlayShow = this.isModalShow = false
+            this.isModalShow = false
+            this.isOverlayShow = false
             setTimeout(() => {
                 this.isShow = false
             }, 200)

@@ -171,19 +171,23 @@ export default {
                 return {}
             }
         },
-        limiting: { // 商品本身限购数量
+        // 商品本身限购数量
+        limiting: {
             type: Number,
             default: 0
         },
-        activeProduct: { // 1普通 2团购 3秒杀 4预购  在选择规格处，只显示作为商品本身的限购数
+        // 1普通 2团购 3秒杀 4预购  在选择规格处，只显示作为商品本身的限购数
+        activeProduct: {
             type: [Number, String],
             default: 1
         },
-        preActivity: { // 0预热未开始 1预热中 2进行中
+        // 0预热未开始 1预热中 2进行中
+        preActivity: {
             type: [Number, String],
             default: 0
         },
-        activityProductModel: { // 活动商品数据
+        // 活动商品数据
+        activityProductModel: {
             type: Object,
             default: null
         }
@@ -194,7 +198,8 @@ export default {
             showSpec: false,
             count: 1,
             min: 1,
-            limit: 0, // 可买数量
+            // 可买数量
+            limit: 0,
             localCurrentSku: {},
             skuCode2List: [],
             currentSku1: '',
@@ -283,7 +288,8 @@ export default {
         // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个(禁用的不能选中)，并触发一次change事件
         init () {
             // 有默认规格，并且默认规格有效
-            this.localCurrentSku.count = this.count = this.sku.count
+            this.localCurrentSku.count = this.sku.count
+            this.count = this.sku.count
             if (this.sku.id && this.sku.stock >= this.sku.minBuyNum && this.sku.count <= this.sku.stock) {
                 this.skuChange(this.sku.skuCode1, this.sku.skuCode2)
             } else {
@@ -395,7 +401,8 @@ export default {
                     this.$warning(`购买的宝贝数超过剩余库存`)
                 }
             }
-            this.count = this.localCurrentSku.count = Number.parseInt(this.count)
+            this.count = Number.parseInt(this.count)
+            this.localCurrentSku.count = this.count
             this.$emit('change', this.localCurrentSku)
         },
         minus () {

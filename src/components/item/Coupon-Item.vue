@@ -99,7 +99,8 @@ export default {
             type: String,
             default: ''
         },
-        couponId: { // 优惠券本身的Id
+        // 优惠券本身的Id
+        couponId: {
             type: String,
             default: ''
         },

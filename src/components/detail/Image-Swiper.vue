@@ -62,7 +62,8 @@ export default {
             zoomEl: false,
             shareEl: false,
             captionEl: false,
-            allowPanToNext: true // 当前项目被缩放时，允许滑动导航到下一个/上一个项目
+            // 当前项目被缩放时，允许滑动导航到下一个/上一个项目
+            allowPanToNext: true
         }
         return {
 

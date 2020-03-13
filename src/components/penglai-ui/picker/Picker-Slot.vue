@@ -43,15 +43,24 @@
 </template>
 
 <script>
-let MAX_TRANSLATE_Y = 0 // 最大位移距离
-let MIN_TRANSLATE_Y = 0 // 最小位移距离
-let startY = 0 // 分时距离
-let startYBase = 0 // 初始位置
-let started = false // 开始滑动的标记
-let startTime = 0 // 开始滑动的时间
-let speedValue = 0 // 分时速度
-let initedSpeed = 0 // 初始速度
-const COEFFICIENT = 0.03 // 摩擦系数 3%
+// 最大位移距离
+let MAX_TRANSLATE_Y = 0
+// 最小位移距离
+let MIN_TRANSLATE_Y = 0
+// 分时距离
+let startY = 0
+// 初始位置
+let startYBase = 0
+// 开始滑动的标记
+let started = false
+// 开始滑动的时间
+let startTime = 0
+// 分时速度
+let speedValue = 0
+// 初始速度
+let initedSpeed = 0
+// 摩擦系数 3%
+const COEFFICIENT = 0.03
 export default {
     name: 'PlPickerSlot',
     props: {

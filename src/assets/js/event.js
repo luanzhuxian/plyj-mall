@@ -1,4 +1,4 @@
-export function on (target, event, handler, passive = false) {
+export const on = function (target, event, handler, passive = false) {
     target.addEventListener(
         event,
         handler,
@@ -6,15 +6,15 @@ export function on (target, event, handler, passive = false) {
     )
 }
 
-export function off (target, event, handler) {
+export const off = function (target, event, handler) {
     target.removeEventListener(event, handler)
 }
 
-export function stopPropagation (event) {
+export const stopPropagation = function (event) {
     event.stopPropagation()
 }
 
-export function preventDefault (event, isStopPropagation) {
+export const preventDefault = function (event, isStopPropagation) {
     event.preventDefault()
 
     if (isStopPropagation) {

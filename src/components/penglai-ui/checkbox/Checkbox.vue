@@ -127,7 +127,8 @@ export default {
                 }
             },
             deep: true,
-            immediate: true // 立即改变，此处不应该深度监听
+            // 立即改变，此处不应该深度监听
+            immediate: true
         }
     },
     computed: {

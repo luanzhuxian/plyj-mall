@@ -90,10 +90,11 @@ export default {
             type: String,
             default: ''
         },
+        // 图片和文字直接的间隙
         iconGap: {
             type: Number,
             default: 0
-        }, // 图片和文字直接的间隙
+        },
         iconPosition: {
             type: String,
             default: 'left'

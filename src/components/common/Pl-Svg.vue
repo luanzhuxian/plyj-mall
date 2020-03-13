@@ -89,6 +89,7 @@ export default {
             immediate: true
         },
         async name (val) {
+            /* eslint-disable */
             if (this.fill && !this.clonedSvg[`${ val }_${ this._uid }`]) {
                 this.setFill(this.fill)
             } else {

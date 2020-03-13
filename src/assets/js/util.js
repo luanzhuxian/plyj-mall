@@ -1,4 +1,5 @@
 // const qrcode = require('../../../static/lib/qrcode/index')
+/* eslint-disable */
 import moment from 'moment'
 import { getServerTime } from '../../apis/base-api'
 

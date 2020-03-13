@@ -179,7 +179,8 @@ export default {
         length () {
             if (!this.maxlength) return false
             const { value } = this
-            return hasUnicode(value) // 是否包含emoji表情
+            // 是否包含emoji表情
+            return hasUnicode(value)
                 ? toArray(value).length
                 : value.length
         }

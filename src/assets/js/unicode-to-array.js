@@ -21,20 +21,20 @@ const rsSeq = rsOptVar + reOptMod + rsOptJoin
 const rsSymbol = `(?:${ [`${ rsNonAstral + rsCombo }?`, rsCombo, rsRegional, rsSurrPair, rsAstral].join('|') })`
 const reUnicode = RegExp(`${ rsFitz }(?=${ rsFitz })|${ rsSymbol }${ rsSeq }`, 'g')
 
-export function toArray (val) {
+export const toArray = function (val) {
     return hasUnicode(val)
         ? unicodeToArray(val)
         : asciiToArray(val)
 }
 
-export function hasUnicode (val) {
+export const hasUnicode = function (val) {
     return reHasUnicode.test(val)
 }
 
-export function unicodeToArray (val) {
+export const unicodeToArray = function (val) {
     return val.match(reUnicode) || []
 }
 
-export function asciiToArray (val) {
+export const asciiToArray = function (val) {
     return val.split('')
 }

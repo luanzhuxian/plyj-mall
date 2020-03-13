@@ -72,8 +72,10 @@ export default {
     data () {
         return {
             adding: false,
-            currentModel: {}, // 当前选中的商品规格
-            showSpecifica: false // 是否显示规格弹框
+            // 当前选中的商品规格
+            currentModel: {},
+            // 是否显示规格弹框
+            showSpecifica: false
         }
     },
     activated () {
@@ -124,7 +126,8 @@ export default {
             // 正常购买途径是否还有库存为准
             return this.detail.productSkuModels.every(item => item.stock < item.minBuyNum)
         },
-        defaultCount () { // 默认选择的数量
+        // 默认选择的数量
+        defaultCount () {
             return this.currentModel.count || 1
         },
         limiting () {
@@ -132,20 +135,22 @@ export default {
         },
         price () {
             const priceList = this.detail.productSkuModels.map(item => item.price)
-            return Math.min.apply(Math, priceList)
+            return Math.min(...priceList)
         }
     },
     methods: {
         ...mapActions({
             getCartCount: GET_CART_COUNT
         }),
-        async handleClick () { // 商品详情
+        // 商品详情
+        async handleClick () {
             this.$router.push({
                 name: 'Product',
                 params: { productId: this.id }
             })
         },
-        addToCart (selected) { // 添加商品到购物车
+        // 添加商品到购物车
+        addToCart (selected) {
             if (!this.hasBind()) {
                 return
             }
@@ -159,7 +164,8 @@ export default {
                         productCount: count,
                         skuCode: skuCode1,
                         skuCode2,
-                        agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
+                        // 如果当前用户是经纪人，则覆盖其他经纪人的id
+                        agentUser: shareBrokerId || this.userId || null
                     })
                     this.$success('已添加到购物车')
                     this.showSpecifica = false
@@ -171,7 +177,8 @@ export default {
                 }
             })
         },
-        hasBind () { // 判断用户有无绑定手机
+        // 判断用户有无绑定手机
+        hasBind () {
             if (!this.mobile) {
                 this.$confirm('您还没有绑定手机，请先绑定手机')
                     .then(() => {

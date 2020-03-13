@@ -1,7 +1,7 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
 import { isIOS } from '../util'
-
+/* eslint-disable */
 // import qs from 'qs'
 const WX = window.wx
 
