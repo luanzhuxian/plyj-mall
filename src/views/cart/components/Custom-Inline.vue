@@ -212,6 +212,7 @@ export default {
     }
     &.collapse {
       height: 0;
+      padding: 0;
     }
   }
   .content {
