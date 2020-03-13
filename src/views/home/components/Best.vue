@@ -4,17 +4,25 @@
             <template v-for="(item, i) of data.values">
                 <li
                     v-if="item.goodsInfo"
-                    :class="$style.proItem"
+                    :class="{
+                        [$style.proItem]: true,
+                        [$style.large]: (i === 0 && isOdd)
+                    }"
                     :key="i"
-                    @click="clickHandler(item)"
+                    @click="jump(item)"
                 >
                     <div :class="$style.img">
-                        <count-down :class="$style.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
-                        <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
+                        <count-down
+                            v-if="item.goodsInfo.shoppingStatus === 1"
+                            :class="[(i === 0 && isOdd) ? $style.countDown : $style.countDown2]"
+                            size="small"
+                            :data="item.goodsInfo"
+                            :fields="{ end: 'shoppingTimeLong' }"
+                        />
+                        <img :src="item.image + '?x-oss-process=style/thum-middle'" v-img-error alt="">
                     </div>
-
                     <span v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'" :class="$style.experience">体验课</span>
-                    <div :class="$style.itemContent">
+                    <div :class="$style.content">
                         <p :class="$style.proName" v-text="item.goodsInfo.productName" />
                         <div :class="$style.bottom">
                             <div :class="$style.priceBox">
@@ -38,8 +46,6 @@
                     </div>
                 </li>
             </template>
-
-            <li v-if="data.values.length % 2 === 1" :class="$style.pro + ' ' + $style.proItem" />
         </ul>
     </div>
 </template>
@@ -70,6 +76,11 @@ export default {
             }
         }
     },
+    computed: {
+        isOdd () {
+            return !!(this.data.values.length % 2)
+        }
+    },
     methods: {
         getMinPrice (skuList) {
             const priceList = skuList.filter(item => item.status === 1).map(item => item.price)
@@ -79,7 +90,7 @@ export default {
             const priceList = skuList.filter(item => item.status === 1).map(item => item.price)
             return Math.max(...priceList)
         },
-        clickHandler (item) {
+        jump (item) {
             this.$router.push({ name: 'Product', params: { productId: item.value } })
         }
     }
@@ -100,20 +111,33 @@ export default {
     overflow: hidden;
     margin-bottom: 20px;
     background-color: #fff;
-    .img {
-      position: relative;
-      > img {
-        width: 340px;
-        height: 228px;
-        object-fit: cover;
-      }
-      > .countDown {
-        display: flex;
+    &.large {
+      width: 100%;
+      .img {
         width: 100%;
-        bottom: 0;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        > img {
+          width: 100%;
+          height: 470px;
+          object-fit: cover;
+        }
       }
+      .content {
+        height: auto;
+        .pro-name {
+          margin-bottom: 14px;
+          height: 36px;
+          font-size: 28px;
+          -webkit-line-clamp: 1;
+        }
+      }
+    }
+  }
+  .img {
+    position: relative;
+    > img {
+      width: 340px;
+      height: 228px;
+      object-fit: cover;
     }
   }
   .experience {
@@ -129,7 +153,7 @@ export default {
     border-radius: 6px;
     z-index: 1;
   }
-  .item-content {
+  .content {
     padding: 16px;
     box-sizing: border-box;
     .pro-name {
@@ -140,43 +164,51 @@ export default {
       color: #000;
       @include elps-wrap(2);
     }
-  }
-  .bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 16px;
-    > button {
-      width: 124px;
-      height: 48px;
-      font-size: 26px;
-      color: #fff;
-      background-color: #fe7700;
-      border-radius: 8px;
-    }
-  }
-  .price-box {
-    .price {
-      font-size: 32px;
-      font-weight: bold;
-      color: #fe7700;
-      &:before {
-        content: '¥';
-        margin-right: 3px;
-        font-size: 20px;
-        vertical-align: 3px;
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      > button {
+        width: 124px;
+        height: 48px;
+        font-size: 26px;
+        color: #fff;
+        background-color: #fe7700;
+        border-radius: 8px;
       }
     }
-    .how-many-buy {
-      font-size: 20px;
-      color: #fe7700;
+    .price-box {
+      .price {
+        font-size: 32px;
+        font-weight: bold;
+        color: #fe7700;
+        &:before {
+          content: '¥';
+          margin-right: 3px;
+          font-size: 20px;
+          vertical-align: 3px;
+        }
+      }
+      .how-many-buy {
+        font-size: 20px;
+        color: #fe7700;
+      }
     }
   }
-  .pro {
-    width: 340px;
-    height: 420px;
-    background: url("https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/product-item.png") no-repeat center center;
-    background-size: 115%;
-    border-radius: 20px;
+
+  .count-down {
+    display: flex;
+    width: 100%;
+    bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .count-down2 {
+    display: flex;
+    width: 100%;
+    bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 </style>
