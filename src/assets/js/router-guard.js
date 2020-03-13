@@ -21,6 +21,7 @@ const map = {
 export const beforeEach = function (to, from, next) {
   if (!isIOS()) return next()
   if (!~Object.keys(map).indexOf(to.name)) return next()
+  // 苹果手机部分页面分享处理
   const { pathname } = location
   const mallUrl = pathname.split('/')[1]
   for (let [key, val] of Object.entries(map)) {

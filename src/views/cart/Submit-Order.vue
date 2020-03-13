@@ -1230,7 +1230,6 @@ export default {
      * @returns {Promise<*>}
      */
     async pay (CREDENTIAL, orderIds, orderCount) {
-      console.log(orderIds)
       const firstOrder = orderIds[0]
       let orderType = ''
       if (this.lessonList.length > 0 && this.physicalProducts.length === 0 && this.virtualProducts.length === 0) {
