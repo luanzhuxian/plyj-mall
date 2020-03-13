@@ -372,6 +372,11 @@ export default {
         await this.$nextTick()
         await this.$refs.livePassword.validate()
       }
+      // 存入访问记录
+      await setComeInConut({
+        id: detail.id,
+        message: (detail.paidAmount || 0) + '元'
+      })
       // 是否需要支付
       if (detail.isPay) {
         if (!this.mchId) {
@@ -385,10 +390,6 @@ export default {
           return
         }
       }
-      await setComeInConut({
-        id: detail.id,
-        message: (detail.paidAmount || 0) + '元'
-      })
       this.initPlayer()
       this.initSocket()
     } catch (e) {
