@@ -67,7 +67,7 @@ export default {
         params: {
           id: item.id,
           activityId: item.activityId,
-          isValidateEndTime: 1
+          isValidateEndTime: '1'
         }
       })
     }

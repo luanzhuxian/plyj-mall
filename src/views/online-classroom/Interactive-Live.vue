@@ -86,7 +86,7 @@
               v-for="(item, index) of pastLive"
               :key="index"
               :class="$style.item"
-              @click.capture="() => { item.videoLibId !== '0' ? $router.push({ name: 'LivePlayBack', params:{ id: item.videoLibId, activityId: item.id, isValidateEndTime: 0 } }) : '' }"
+              @click.capture="() => { item.videoLibId !== '0' ? $router.push({ name: 'LivePlayBack', params:{ id: item.videoLibId, activityId: item.id, isValidateEndTime: '0' } }) : '' }"
             >
               <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
               <div :class="$style.desc">
