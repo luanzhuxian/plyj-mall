@@ -88,7 +88,11 @@ export default {
                 message: '暂时无法观看',
                 viceMessage: '请联系机构管理人员'
               }).finally(() => {
-                this.$router.go(-1)
+                if (window.history.length > 1) {
+                  this.$router.go(-1)
+                } else {
+                  this.$router.replace({ name: 'Home' })
+                }
               })
               return
             }
@@ -205,7 +209,11 @@ export default {
         viceMessage: '请联系机构管理人员'
       })
         .finally(() => {
-          this.$router.go(-1)
+          if (window.history.length > 1) {
+            this.$router.go(-1)
+          } else {
+            this.$router.replace({ name: 'Home' })
+          }
         })
       this.$emit('error', e)
     }

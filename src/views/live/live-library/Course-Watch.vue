@@ -89,7 +89,11 @@ export default {
             message: '视频加载错误',
             viceMessage: '请联系机构管理人员'
           }).finally(() => {
-            this.$router.go(-1)
+            if (window.history.length > 1) {
+              this.$router.go(-1)
+            } else {
+              this.$router.replace({ name: 'Home' })
+            }
           })
           return
         }
