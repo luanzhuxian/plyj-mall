@@ -193,7 +193,7 @@ export default {
     }
   }
   .list {
-    padding: 0 24px 0 88px;
+    padding: 40px 24px 40px 68px;
     background-color: #F8F8F8;
     overflow: hidden;
     transition: max-height .2s linear;
@@ -201,7 +201,11 @@ export default {
       display: flex;
       flex: 1;
       justify-content: space-between;
-      line-height: 116px;
+      margin-bottom: 48px;
+      line-height: 36px;
+      &:nth-last-of-type(1) {
+        margin-bottom: 0;
+      }
       .rightArrow {
         transform: rotate(0);
       }
