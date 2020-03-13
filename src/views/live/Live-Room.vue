@@ -234,7 +234,7 @@
     <!-- 直播口令 -->
     <LivePassword :activity-id="activityId" ref="livePassword" />
     <!-- 报名 -->
-    <LiveSignUp :info="detail" ref="LiveSignUp" />
+    <LiveSignUp :info="detail" :activity-id="activityId" ref="LiveSignUp" />
 
   </div>
 </template>

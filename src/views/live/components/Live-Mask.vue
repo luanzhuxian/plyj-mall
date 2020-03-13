@@ -31,9 +31,9 @@ export default {
     return {
       countdown: null,
       d: 0,
-      h: 0,
-      m: 0,
-      s: 0
+      h: '00',
+      m: '00',
+      s: '00'
     }
   },
   computed: {

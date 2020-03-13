@@ -7,7 +7,6 @@
           label-width="164"
           align="right"
           ref="form"
-          border
           :model="form"
           :rules="rules"
           :label-style="{
@@ -15,19 +14,19 @@
           }"
         >
           <p :class="$style.title">提前报名，直播开始后直接观看</p>
-          <pl-form-item v-if="info.isHaveName" label="姓名" prop="signName">
+          <pl-form-item border v-if="info.isHaveName" label="姓名" prop="signName">
             <pl-input v-model="form.signName" placeholder="请输入姓名" />
           </pl-form-item>
-          <pl-form-item v-if="info.isHaveTelphone" label="电话" prop="signTelphone">
+          <pl-form-item border v-if="info.isHaveTelphone" label="电话" prop="signTelphone">
             <pl-input v-model="form.signTelphone" placeholder="请输入电话" />
           </pl-form-item>
-          <pl-form-item v-if="info.isHaveGrade" label="年级" prop="signGrade">
+          <pl-form-item border v-if="info.isHaveGrade" label="年级" prop="signGrade">
             <pl-input v-model="form.signGrade" placeholder="请输入年级" />
           </pl-form-item>
-          <pl-form-item v-if="info.isHaveRegion" label="所在区域" prop="signRegion">
+          <pl-form-item border v-if="info.isHaveRegion" label="所在区域" prop="signRegion">
             <pl-input @click="showSelector = true" v-model="form.signRegion" placeholder="请选择所在区域" />
           </pl-form-item>
-          <pl-form-item v-if="info.isHaveCustomer" :label="info.isHaveCustomer" prop="signTitle">
+          <pl-form-item border v-if="info.isHaveCustomer" :label="info.isHaveCustomer" prop="signTitle">
             <pl-input v-model="form.signTitle" :placeholder="'请输入' + info.isHaveCustomer" />
           </pl-form-item>
         </pl-form>
@@ -46,7 +45,15 @@ import Popup from './../../../components/penglai-ui/Popup'
 import CitySelector from './../../../components/common/City-Selector'
 export default {
   name: 'LiveSignUp',
+  components: {
+    Popup,
+    CitySelector
+  },
   props: {
+    activityId: {
+      type: String,
+      default: ''
+    },
     info: {
       type: Object,
       default () {
@@ -56,36 +63,6 @@ export default {
           isHaveGrade: 0,
           isHaveRegion: 0,
           isHaveCustomer: ''
-        }
-      }
-    }
-  },
-  components: {
-    Popup,
-    CitySelector
-  },
-  watch: {
-    info: {
-      handler (val) {
-        let obj = {
-          isHaveName: 'signName',
-          isHaveTelphone: 'signTelphone',
-          isHaveGrade: 'signGrade',
-          isHaveRegion: 'signRegion'
-        }
-        let keys = Object.keys(obj)
-        let key
-        this.rules = {}
-        if (this.info['isHaveCustomer']) {
-          this.rules['signTitle'] = [
-            { required: true, message: `请输入${this.info.isHaveCustomer || ''}` }
-          ]
-        }
-        for (let i = 0; i < keys.length; i++) {
-          key = keys[i]
-          if (this.info[key]) {
-            this.rules[obj[key]] = this.rulesTemplate[obj[key]]
-          }
         }
       }
     }
@@ -128,7 +105,7 @@ export default {
       if (!this.$refs.form.validate()) {
         return
       }
-      this.form.liveId = this.info.id
+      this.form.liveId = this.activityId
       await liveSignUp(this.form)
       this.$emit('success', '报名成功')
       this.$success('报名成功')
@@ -150,6 +127,32 @@ export default {
         val[1].name +
         (val[2] ? val[2].name : '') +
         (val[3] ? val[3].name : '')
+    }
+  },
+  watch: {
+    info: {
+      handler (val) {
+        let obj = {
+          isHaveName: 'signName',
+          isHaveTelphone: 'signTelphone',
+          isHaveGrade: 'signGrade',
+          isHaveRegion: 'signRegion'
+        }
+        let keys = Object.keys(obj)
+        let key
+        this.rules = {}
+        if (this.info['isHaveCustomer']) {
+          this.rules['signTitle'] = [
+            { required: true, message: `请输入${this.info.isHaveCustomer || ''}` }
+          ]
+        }
+        for (let i = 0; i < keys.length; i++) {
+          key = keys[i]
+          if (this.info[key]) {
+            this.rules[obj[key]] = this.rulesTemplate[obj[key]]
+          }
+        }
+      }
     }
   }
 }

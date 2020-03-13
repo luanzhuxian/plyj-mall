@@ -52,31 +52,24 @@
     </transition>
     <!-- 密令弹窗 -->
     <LivePassword :activity-id="activityId" ref="livePassword" />
+    <!-- 报名 -->
+    <LiveSignUp :info="detail" :activity-id="activityId" ref="LiveSignUp" />
   </div>
 </template>
 
 <script>
 import { getActiveCompleteInfo, getVideoMesById, pay, cancelOrder } from '../../apis/live.js'
-import { hasPied } from './../../apis/live-library'
+import { getLivePlayBackInfo } from './../../apis/live-library'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
 import LivePassword from './components/Live-Password'
+import LiveSignUp from './components/Live-Sign-Up'
 export default {
   name: 'LivePlayBack',
   components: {
     PaidPlayer,
-    LivePassword
-  },
-  data () {
-    return {
-      activityName: '',
-      needPay: false,
-      payCount: 0, // 价格
-      productList: [], // 商品列表
-      videoMes: {
-        fileSize: 0
-      }
-    }
+    LivePassword,
+    LiveSignUp
   },
   props: {
     activityId: {
@@ -89,40 +82,63 @@ export default {
     },
     // 是否需要后台校验直播结束时间，我的直播-需要校验 互动直播-无需校验
     isValidateEndTime: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
+    }
+  },
+  data () {
+    return {
+      activityName: '',
+      needPay: false,
+      payCount: 0, // 价格
+      productList: [], // 商品列表
+      detail: {},
+      videoMes: {
+        fileSize: 0
+      }
     }
   },
   async activated () {
     try {
       this.needPay = false
-      this.needPay = await this.isNeedPay()
+      await this.getLivePlayBackInfo()
+      await this.getPromission()
+    } catch (e) { throw e }
+  },
+  deactivated () {
+    this.needPay = false
+    this.productList = []
+    this.videoMes = {}
+  },
+  methods: {
+    // 获取回看的信息
+    async getLivePlayBackInfo () {
+      try {
+        let { result } = await getLivePlayBackInfo(this.activityId, this.isValidateEndTime === '1')
+        this.detail = result
+        this.payCount = result.needPaidAmount / 100 // 单位分转为元
+        this.activityName = result.activityName
+      } catch (e) { throw e }
+    },
+    // 是否有权限观看
+    async getPromission () {
+      let detail = this.detail
+      await this.$nextTick()
+      // 是否要报名
+      if (detail.isNeedSignUp === 1 && !detail.isHaveSignUp) {
+        await this.$refs.LiveSignUp.signUp()
+      }
+      // 是否口令校验
+      if (detail.isHaveToken && !detail.isInputToken) {
+        await this.$refs.livePassword.validate()
+      }
+      // needPay 是否需要付费 1需要  0不需要，paidAmount 支付了多少钱
+      this.needPay = (detail.needPay === 1 && detail.paidAmount === 0)
+      // 是否要付费
       if (!this.needPay) {
         await this.getVideoMes()
         await this.getDetail()
       }
-    } catch (e) { throw e }
-  },
-  methods: {
-    async isNeedPay () {
-      try {
-      // needPay 是否需要付费 1需要  0不需要
-        let { result: { needPay, needPaidAmount, paidAmount, activityName, isHaveToken, isInputToken } } = await hasPied(this.activityId, !!this.isValidateEndTime)
-        // 是否口令校验
-        await this.getPermission(isHaveToken, isInputToken)
-        this.payCount = needPaidAmount / 100 // 单位分转为元
-        this.activityName = activityName
-        return needPay === 1 && paidAmount === 0
-      } catch (e) { throw e }
-    },
-    // 是否要输入口令
-    async getPermission (isHaveToken, isInputToken) {
-      try {
-        await this.$nextTick()
-        if (isHaveToken && !isInputToken) {
-          await this.$refs.livePassword.validate()
-        }
-      } catch (e) { throw e }
     },
     async getDetail () {
       try {
@@ -174,11 +190,6 @@ export default {
     cancelPay () {
       this.$router.back()
     }
-  },
-  deactivated () {
-    this.needPay = false
-    this.productList = []
-    this.videoMes = {}
   }
 }
 </script>

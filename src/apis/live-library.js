@@ -4,8 +4,8 @@ import { axios } from '../assets/js/axios'
 // 获取直播观看列表
 export const getLibraryList = params => axios.get('/apis/v1/mall/live/lib/my_lookback', { params })
 
-// 直播回放是否付过费
-export const hasPied = (activityId, isValidateEndTime) => axios.get(`/apis/v1/mall/live/lib/lookback/${activityId}?isValidateEndTime=${isValidateEndTime}`)
+// 直播回放信息
+export const getLivePlayBackInfo = (activityId, isValidateEndTime) => axios.get(`/apis/v1/mall/live/lib/lookback/${activityId}?isValidateEndTime=${isValidateEndTime}`)
 
 // 获取课程列表
 export const getCourseList = params => axios.get('/apis/v1/knowledgeCourse/myVideo', { params })
