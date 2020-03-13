@@ -55,12 +55,11 @@
 </template>
 
 <script>
-import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
+import { getTime } from '../helper.js'
 
 export default {
     name: 'ItemChunyun',
-    mixins: [mixin],
     components: {
         CountDown
     },
@@ -71,7 +70,6 @@ export default {
                 return { }
             }
         },
-
         // small, medium, large
         size: {
             type: String,
@@ -82,6 +80,7 @@ export default {
         return {}
     },
     methods: {
+        getTime,
         async submitOrder (item) {
             if (item.status === 0 || !item.stock) this.$router.push({ name: 'SpringPloughing' })
             if (item.status === 1) {

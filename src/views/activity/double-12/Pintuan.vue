@@ -94,12 +94,11 @@
 </template>
 
 <script>
-import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
+import { getTime, reset } from '../helper.js'
 
 export default {
     name: 'Pintuan',
-    mixins: [mixin],
     components: {
         CountDown
     },
@@ -113,6 +112,10 @@ export default {
     },
     data () {
         return {}
+    },
+    methods: {
+        getTime,
+        reset
     }
 }
 </script>

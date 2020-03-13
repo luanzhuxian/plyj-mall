@@ -37,12 +37,11 @@
 </template>
 
 <script>
-import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
+import { getTime, getTotalPrice } from '../helper.js'
 
 export default {
     name: 'ItemYugou',
-    mixins: [mixin],
     components: {
         CountDown
     },
@@ -58,15 +57,8 @@ export default {
         return {}
     },
     methods: {
-        getTotalPrice (data) {
-            if (!data.goodsInfo) return false
-            if (data.goodsInfo.productSkuModels && !data.goodsInfo.productSkuModels.length) return false
-            const prodPrice = data.goodsInfo.productSkuModels ? this.getPrice(data.goodsInfo.productSkuModels)('price') : data.productPrice
-            if (data.goodsInfo.activityInfo.activityPrice >= prodPrice) {
-                return data.goodsInfo.activityInfo.price
-            }
-            return this.sub(prodPrice, this.sub(data.goodsInfo.activityInfo.activityPrice, data.goodsInfo.activityInfo.price))
-        }
+        getTime,
+        getTotalPrice
     }
 }
 </script>

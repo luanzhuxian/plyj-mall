@@ -157,12 +157,12 @@
 </template>
 
 <script>
-import mixin from '../mixin.js'
+import moment from 'moment'
 import CountDown from '../components/Count-Down.vue'
+import { getPrice, getDate, getTime } from '../helper.js'
 
 export default {
     name: 'Miaosha',
-    mixins: [mixin],
     components: {
         CountDown
     },
@@ -177,6 +177,21 @@ export default {
     data () {
         return {
             miaoshaIndex: 0
+        }
+    },
+    methods: {
+        getPrice,
+        getDate,
+        getTime,
+        getTimeStatus ([start, end]) {
+            let msg = ''
+            const timestamp = this.timestamp || Date.now()
+            const startTs = moment(start).valueOf()
+            const endTs = moment(end).valueOf()
+            if (timestamp < startTs) msg = '未开始'
+            if (timestamp >= startTs && timestamp < endTs) msg = '进行中'
+            if (timestamp >= endTs) msg = '已结束'
+            return msg
         }
     }
 }

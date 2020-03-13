@@ -65,12 +65,11 @@
 </template>
 
 <script>
-import mixin from '../mixin.js'
 import { getMaxCoupon } from '../../../apis/home'
+import { getPrice } from '../helper.js'
 
 export default {
     name: 'Fengqiang',
-    mixins: [mixin],
     props: {
         data: {
             type: Object,
@@ -88,10 +87,16 @@ export default {
             coupon: {}
         }
     },
-    created () {
-        getMaxCoupon().then(({ result }) => {
+    async created () {
+        try {
+            const { result } = await getMaxCoupon()
             this.coupon = result
-        })
+        } catch (error) {
+            throw error
+        }
+    },
+    methods: {
+        getPrice
     }
 }
 </script>

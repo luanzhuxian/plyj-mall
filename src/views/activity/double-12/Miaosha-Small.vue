@@ -85,12 +85,11 @@
 </template>
 
 <script>
-import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
+import { getPrice, getTime } from '../helper.js'
 
 export default {
     name: 'Miaosha',
-    mixins: [mixin],
     components: {
         CountDown
     },
@@ -104,6 +103,10 @@ export default {
     },
     data () {
         return {}
+    },
+    methods: {
+        getPrice,
+        getTime
     }
 }
 </script>

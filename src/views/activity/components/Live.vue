@@ -62,12 +62,10 @@
 
 <script>
 import moment from 'moment'
-import mixin from '../mixin.js'
 import CountDown from './Count-Down.vue'
 
 export default {
     name: 'Live',
-    mixins: [mixin],
     components: {
         CountDown
     },

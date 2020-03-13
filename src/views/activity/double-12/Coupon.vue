@@ -36,11 +36,10 @@
 </template>
 
 <script>
-import mixin from '../mixin.js'
+import { getDate } from '../helper.js'
 
 export default {
     name: 'Coupon',
-    mixins: [mixin],
     props: {
         data: {
             type: Object,
@@ -52,6 +51,9 @@ export default {
             type: Number,
             default: 0
         }
+    },
+    methods: {
+        getDate
     }
 }
 </script>

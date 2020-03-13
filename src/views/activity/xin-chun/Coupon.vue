@@ -48,8 +48,8 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { receiveCoupon } from '../../../apis/my-coupon'
+import { getDate } from '../helper.js'
 
 let isClickable = false
 
@@ -67,10 +67,7 @@ export default {
         return {}
     },
     methods: {
-        getDate (val, format) {
-            if (!val) return
-            return moment(val).format(format)
-        },
+        getDate,
         async getCoupon ({ goodsInfo = {} }) {
             const { id } = goodsInfo
             if (isClickable) return

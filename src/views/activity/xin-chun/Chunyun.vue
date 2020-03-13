@@ -71,14 +71,13 @@
 </template>
 
 <script>
-import mixin from '../mixin.js'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import CountDown from '../components/Count-Down.vue'
 import ItemChunyun from './Item-Chunyun.vue'
+import { getTime } from '../helper.js'
 
 export default {
     name: 'Chunyun',
-    mixins: [mixin],
     components: {
         swiper,
         swiperSlide,
@@ -135,6 +134,7 @@ export default {
         }
     },
     methods: {
+        getTime,
         getOptions (list, map) {
             const length = (list && list.length) || 0
             const swiperOption = {
