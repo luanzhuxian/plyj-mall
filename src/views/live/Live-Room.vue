@@ -376,6 +376,15 @@ export default {
         await this.$nextTick()
         await this.$refs.livePassword.validate()
       }
+      // 存入访问记录
+      await setComeInConut({
+        id: detail.id,
+        message: (detail.paidAmount || 0) + '元'
+      })
+      // 监听直播是否开始
+      if (detail.liveType === 'live') {
+        this.listenLiveStart(detail.stream)
+      }
       // 是否需要支付
       if (detail.isPay) {
         if (!this.mchId) {
@@ -388,15 +397,6 @@ export default {
           this.needPay = true
           return
         }
-      }
-      // 存入访问记录
-      await setComeInConut({
-        id: detail.id,
-        message: (detail.paidAmount || 0) + '元'
-      })
-      // 监听直播是否开始
-      if (detail.liveType === 'live') {
-        this.listenLiveStart(detail.stream)
       }
       this.initPlayer()
       this.initSocket()

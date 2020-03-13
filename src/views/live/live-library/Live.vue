@@ -17,7 +17,7 @@
     </LoadMore>
   </div>
 </template>
-视频库
+
 <script>
 import { getLibraryList } from '../../../apis/live-library'
 import LoadMore from './../../../components/common/Load-More.vue'

@@ -194,7 +194,7 @@ export default {
 }
 </script>
 
-<style lang='scss' module scoped>
+<style lang='scss' module>
 
   .live-play-back {
     > .video-box {
