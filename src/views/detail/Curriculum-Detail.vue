@@ -73,7 +73,7 @@
         </a>
         <button
           v-if="!detail.isBuy"
-          :disabled="detail.status === 2 || loading"
+          :disabled="Number(detail.status) === 2 || loading"
           :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung"
           @click="goSubmit"
         >
@@ -93,7 +93,7 @@
       </div>
     </div>
 
-    <div :class="$style.buttomTip" v-if="detail.status == 2">
+    <div :class="$style.buttomTip" v-if="Number(detail.status) === 2">
       该视频课程已下架
     </div>
 
