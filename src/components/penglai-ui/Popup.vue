@@ -108,6 +108,7 @@ export default {
   methods: {
     lockBody () {
       const body = document.body
+      this.scrollY = window.scrollY
       body.style.height = '100vh'
       body.style.overflow = 'hidden'
     },
@@ -115,6 +116,7 @@ export default {
       const body = document.body
       body.style.height = null
       body.style.overflow = null
+      window.scrollTo(0, this.scrollY)
     },
     close () {
       this.$emit('update:show', false)
