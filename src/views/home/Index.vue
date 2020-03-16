@@ -96,7 +96,8 @@ export default {
                 this.reportId = result ? result.id : ''
             })
             getBookActivity().then(({ result }) => {
-                let { startTime, endTime, systemTime, status, activityId } = result
+                const { systemTime, status, activityId } = result
+                let { startTime, endTime } = result
                 const isActive = status === 0
                 if (isActive) {
                     startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()

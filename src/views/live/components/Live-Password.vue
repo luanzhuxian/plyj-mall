@@ -1,93 +1,93 @@
 <template>
-  <!-- 直播回播口令弹窗 -->
-  <transition name="fade">
-    <div v-if="show" :class="$style.wordWrap">
-      <div :class="$style.wordBox">
-        <div :class="$style.content">
-          <div>
-            该场次直播仅支持口令登录
-          </div>
-          <div :class="$style.pass">
-            <label>密码登录</label>
-            <pl-input :border="true" type="number" :maxlength="4" @change="validatePass" v-model.number="value" placeholder="请输入4位密码" />
-          </div>
-          <div :class="{ [$style.description]: true, [$style.error]: error }">
-            <span v-if="error">密码错误请重新输入，</span>
-            <span>如有问题请联系老师</span>
-          </div>
+    <!-- 直播回播口令弹窗 -->
+    <transition name="fade">
+        <div v-if="show" :class="$style.wordWrap">
+            <div :class="$style.wordBox">
+                <div :class="$style.content">
+                    <div>
+                        该场次直播仅支持口令登录
+                    </div>
+                    <div :class="$style.pass">
+                        <label>密码登录</label>
+                        <pl-input :border="true" type="number" :maxlength="4" @change="validatePass" v-model.number="value" placeholder="请输入4位密码" />
+                    </div>
+                    <div :class="{ [$style.description]: true, [$style.error]: error }">
+                        <span v-if="error">密码错误请重新输入，</span>
+                        <span>如有问题请联系老师</span>
+                    </div>
+                </div>
+                <div :class="$style.buttons">
+                    <button :class="$style.cancelBtn" @click="cancel">取消</button>
+                    <button @click="submit">确定</button>
+                </div>
+            </div>
         </div>
-        <div :class="$style.buttons">
-          <button :class="$style.cancelBtn" @click="cancel">取消</button>
-          <button @click="submit">确定</button>
-        </div>
-      </div>
-    </div>
-  </transition>
+    </transition>
 </template>
 
 <script>
 import { inputLivePassword } from './../../../apis/live'
 export default {
-  name: 'LivePassword',
-  props: {
-    activityId: {
-      type: String,
-      default: ''
-    }
-  },
-  data () {
-    return {
-      show: false,
-      error: false,
-      value: ''
-    }
-  },
-  methods: {
-    async validate () {
-      this.show = true
-      await this.$nextTick()
-      return new Promise((resolve, reject) => {
-        this.$on('validatePass', (result) => {
-          resolve(result)
-        })
-        this.$on('validateCancel', (result) => {
-          reject(result)
-        })
-      })
-    },
-    cancel () {
-      // this.$emit('validateCancel', 'cancel')
-      this.$router.go(-1)
-      this.show = false
-    },
-    validatePass () {
-      let reg = /^\d{4}$/
-      if (!reg.test(this.value)) {
-        this.error = true
-        return false
-      }
-      this.error = false
-      return true
-    },
-    async submit () {
-      try {
-        let validate = this.validatePass()
-        if (validate) {
-          let result = await inputLivePassword({
-            activityId: this.activityId,
-            roomToken: this.value
-          })
-          if (result) {
-            this.$emit('validatePass', this.value)
-            this.show = false
-            this.error = false
-            return
-          }
-          this.error = true
+    name: 'LivePassword',
+    props: {
+        activityId: {
+            type: String,
+            default: ''
         }
-      } catch (e) { throw e }
+    },
+    data () {
+        return {
+            show: false,
+            error: false,
+            value: ''
+        }
+    },
+    methods: {
+        async validate () {
+            this.show = true
+            await this.$nextTick()
+            return new Promise((resolve, reject) => {
+                this.$on('validatePass', result => {
+                    resolve(result)
+                })
+                this.$on('validateCancel', result => {
+                    reject(result)
+                })
+            })
+        },
+        cancel () {
+            // this.$emit('validateCancel', 'cancel')
+            this.$router.go(-1)
+            this.show = false
+        },
+        validatePass () {
+            const reg = /^\d{4}$/
+            if (!reg.test(this.value)) {
+                this.error = true
+                return false
+            }
+            this.error = false
+            return true
+        },
+        async submit () {
+            try {
+                const validate = this.validatePass()
+                if (validate) {
+                    const result = await inputLivePassword({
+                        activityId: this.activityId,
+                        roomToken: this.value
+                    })
+                    if (result) {
+                        this.$emit('validatePass', this.value)
+                        this.show = false
+                        this.error = false
+                        return
+                    }
+                    this.error = true
+                }
+            } catch (e) { throw e }
+        }
     }
-  }
 }
 </script>
 

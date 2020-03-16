@@ -1,85 +1,85 @@
 <template>
-  <div :class="$style.liveMask">
-    <img :src="imgSrc" alt="">
-    <div :class="$style.countdown">
-      <div v-if="waiting" :class="$style.waiting">
-        直播即将开始
-      </div>
-      <template v-else>
-        <div :class="$style.time">
-          <div>倒计时</div>
-          <div>
-            <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span>:</span><i v-text="s" />
-          </div>
+    <div :class="$style.liveMask">
+        <img :src="imgSrc" alt="">
+        <div :class="$style.countdown">
+            <div v-if="waiting" :class="$style.waiting">
+                直播即将开始
+            </div>
+            <template v-else>
+                <div :class="$style.time">
+                    <div>倒计时</div>
+                    <div>
+                        <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span>:</span><i v-text="s" />
+                    </div>
+                </div>
+                <div :class="$style.description">直播暂未开始</div>
+            </template>
         </div>
-        <div :class="$style.description">直播暂未开始</div>
-      </template>
     </div>
-  </div>
 </template>
 
 <script>
 import { Countdown } from './../../../assets/js/util'
 export default {
-  name: 'LiveMask',
-  props: {
-    imgSrc: {
-      type: String,
-      default: 'https://mallcdn.youpenglai.com/static/mall/2.5.0/live/live-off.png'
+    name: 'LiveMask',
+    props: {
+        imgSrc: {
+            type: String,
+            default: 'https://mallcdn.youpenglai.com/static/mall/2.5.0/live/live-off.png'
+        },
+        timestamp: {
+            type: Number,
+            default: 0
+        }
     },
-    timestamp: {
-      type: Number,
-      default: 0
-    }
-  },
-  data () {
-    return {
-      waiting: true,
-      countdown: null,
-      d: 0,
-      h: '00',
-      m: '00',
-      s: '00'
-    }
-  },
-  activated () {
-    this.waiting = true
-  },
-  methods: {
-    setTime ({ seconds, minutes, hours, days }) {
-      this.d = String(days).padStart(2, '0')
-      this.h = String(hours).padStart(2, '0')
-      this.m = String(minutes).padStart(2, '0')
-      this.s = String(seconds).padStart(2, '0')
+    data () {
+        return {
+            waiting: true,
+            countdown: null,
+            d: 0,
+            h: '00',
+            m: '00',
+            s: '00'
+        }
     },
-    stop () {
-      this.waiting = true
-      this.countdown && this.countdown.stop()
+    activated () {
+        this.waiting = true
+    },
+    methods: {
+        setTime ({ seconds, minutes, hours, days }) {
+            this.d = String(days).padStart(2, '0')
+            this.h = String(hours).padStart(2, '0')
+            this.m = String(minutes).padStart(2, '0')
+            this.s = String(seconds).padStart(2, '0')
+        },
+        stop () {
+            this.waiting = true
+            this.countdown && this.countdown.stop()
+        }
+    },
+    computed: {
+        isDayShow () {
+            return this.d && this.d !== '00'
+        }
+    },
+    watch: {
+        timestamp (news, pre) {
+            if (news < 0) {
+                this.countdown = new Countdown(-news, data => {
+                    if (data) {
+                        this.setTime(data)
+                    } else {
+                        this.stop()
+                    }
+                })
+                this.waiting = false
+                this.countdown.start()
+            }
+        }
+    },
+    destroyed () {
+        this.stop()
     }
-  },
-  computed: {
-    isDayShow () {
-      return this.d && this.d !== '00'
-    }
-  },
-  watch: {
-    timestamp (news, pre) {
-      if (news < 0) {
-        this.countdown = new Countdown(-news, (data) => {
-          if (data) {
-            this.setTime(data)
-          } else {
-            this.stop()
-          }
-        })
-        this.waiting = false
-        this.countdown.start()
-      }
-    }
-  },
-  destroyed () {
-    this.stop()
-  }
 }
 </script>
 
