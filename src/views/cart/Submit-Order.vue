@@ -849,10 +849,10 @@ export default {
         ...mapActions([STUDENTS]),
 
         /**
-     * 活动商品详情以及支付价格
-     * @param coupon {object} 当前使用的优惠券
-     * @param redEnvelope {object} 红包列表
-     */
+         * 活动商品详情以及支付价格
+         * @param coupon {object} 当前使用的优惠券
+         * @param redEnvelope {object} 红包列表
+         */
         async getProductDetail (coupon = {}, redEnvelope = {}) {
             try {
                 const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
