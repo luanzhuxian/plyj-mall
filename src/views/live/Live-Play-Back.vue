@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getActiveCompleteInfo, getVideoMesById, pay, cancelOrder } from '../../apis/live.js'
+import { getActiveCompleteInfo, getVideoMesById, pay, cancelOrder, setComeInConut } from '../../apis/live.js'
 import { getLivePlayBackInfo } from './../../apis/live-library'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
@@ -135,6 +135,11 @@ export default {
             if (detail.isHaveToken && !detail.isInputToken) {
                 await this.$refs.livePassword.validate()
             }
+            // 存入访问记录
+            await setComeInConut({
+                id: detail.id,
+                message: `${ detail.paidAmount || 0 }元`
+            })
             // needPay 是否需要付费 1需要  0不需要，paidAmount 支付了多少钱
             this.needPay = (detail.needPay === 1 && detail.paidAmount === 0)
             // 是否要付费
