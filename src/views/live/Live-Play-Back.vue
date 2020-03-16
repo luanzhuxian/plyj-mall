@@ -127,6 +127,11 @@ export default {
         async getPromission () {
             const { detail } = this
             await this.$nextTick()
+            // 存入访问记录
+            await setComeInConut({
+                id: this.activityId,
+                message: `${ (detail.paidAmount / 100) || 0 }元`
+            })
             // 是否要报名
             if (detail.isNeedSignUp === 1 && !detail.isHaveSignUp) {
                 await this.$refs.LiveSignUp.signUp()
@@ -141,11 +146,6 @@ export default {
             if (!this.needPay) {
                 await this.getVideoMes()
                 await this.getDetail()
-                // 存入访问记录
-                await setComeInConut({
-                    id: this.activityId,
-                    message: `${ detail.paidAmount || 0 }元`
-                })
             }
         },
         async getDetail () {

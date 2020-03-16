@@ -393,6 +393,11 @@ export default {
                 }
                 return
             }
+            // 存入访问记录
+            await setComeInConut({
+                id: detail.id,
+                message: `${ detail.orderAmount || 0 }元`
+            })
             // 是否要报名
             if (detail.isNeedSignUp === 1 && !detail.isHaveSignUp) {
                 await this.$nextTick()
@@ -420,11 +425,6 @@ export default {
                     return
                 }
             }
-            // 存入访问记录
-            await setComeInConut({
-                id: detail.id,
-                message: `${ detail.paidAmount || 0 }元`
-            })
             this.initPlayer()
             this.initSocket()
         } catch (e) {
