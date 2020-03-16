@@ -18,7 +18,7 @@
         </div>
         <router-link
             :class="$style.live"
-            :to="{ name: 'LiveRoom' }"
+            :to="{ name: 'LiveRoom', params: { id: data.liveModel.id } }"
         >
             <div :class="$style.imgWrapper">
                 <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">

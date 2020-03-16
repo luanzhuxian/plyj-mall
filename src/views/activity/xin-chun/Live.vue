@@ -3,7 +3,7 @@
         class="live"
         :class="$style.live"
         tag="div"
-        :to="{ name: 'LiveRoom' }"
+        :to="{ name: 'LiveRoom', params: { id: live.id } }"
     >
         <div :class="$style.cover">
             <span :class="$style.status" v-if="isNoticeShow">距开始</span>

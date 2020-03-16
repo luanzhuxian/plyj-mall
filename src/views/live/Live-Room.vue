@@ -284,6 +284,12 @@ export default {
         CouponItem,
         PaidPlayer
     },
+    props: {
+        id: {
+            type: String,
+            default: ''
+        }
+    },
     data () {
         return {
             showEmoticon: false,
@@ -368,7 +374,7 @@ export default {
                 })
             return
         }
-        const reqs = [getRoomStatus(), this.getDetail()]
+        const reqs = [getRoomStatus(), this.getDetail(this.id)]
         try {
             const res = await Promise.all(reqs)
             const data = res[0]
@@ -377,6 +383,16 @@ export default {
             this.channelId = roomId
             this.liveAppId = appId
             this.channeUserId = appUserId
+            // 当前直播是否结束 (1, "开启"), (0, "结束"), (2, "准备中"), (3, "删除"), (4,"直播中"), (99, "其它");
+            if (detail.statue !== 4) {
+                await this.$alert('未在直播中')
+                if (window.history.length > 1) {
+                    this.$router.go(-1)
+                } else {
+                    this.$router.replace({ name: 'Home' })
+                }
+                return
+            }
             // 是否要报名
             if (detail.isNeedSignUp === 1 && !detail.isHaveSignUp) {
                 await this.$nextTick()
@@ -417,9 +433,9 @@ export default {
         }
     },
     methods: {
-        async getDetail () {
+        async getDetail (id) {
             try {
-                const data = await getActiveCompleteInfo()
+                const data = await getActiveCompleteInfo(id)
                 if (!data) {
                     return null
                 }

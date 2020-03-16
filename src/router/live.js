@@ -14,7 +14,8 @@ export default [
         component: () => import('../views/live/Live-Room.vue'),
         meta: {
             title: '直播'
-        }
+        },
+        props: true
     },
     {
         path: '/lived/library',
