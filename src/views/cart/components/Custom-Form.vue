@@ -16,17 +16,15 @@
                 :rules="rules"
                 ref="form"
                 :class="$style.form"
-                :label-style="{ fontSize: 28 / 7.5 + 'vw', color: '#a8a8a8', fontWeight: 'normal' }"
             >
                 <pl-form-item
                     v-for="(key, i) of keys"
                     :key="i"
                     :prop="key"
-                    :label="key"
                     :gap-top="20"
                     border
                 >
-                    <pl-input v-model="form[key]" />
+                    <pl-input v-model="form[key]" :placeholder="key" />
                 </pl-form-item>
             </pl-form>
             <pl-button size="huge" type="warning" @click="confirm">
