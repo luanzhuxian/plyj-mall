@@ -929,7 +929,21 @@ export default {
             }
             return 0
         },
-
+        selectStudent (product) {
+            sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
+                name: this.$route.name,
+                query: this.$route.query,
+                params: this.$route.params
+            }))
+            this.$router.push({
+                name: 'StudentList',
+                query: {
+                    select: 'YES',
+                    sku: product.skuCode1 + product.skuCode2,
+                    count: product.count
+                }
+            })
+        },
         // 修改数量
         async countChange (count, pro, next) {
             const CONFIRM_LIST = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
