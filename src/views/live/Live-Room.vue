@@ -383,8 +383,8 @@ export default {
             this.channelId = roomId
             this.liveAppId = appId
             this.channeUserId = appUserId
-            // 当前直播是否结束 (1, "开启"), (0, "结束"), (2, "准备中"), (3, "删除"), (4,"直播中"), (99, "其它");
-            if (detail.statue !== 4) {
+            // 当前直播是否结束  (0, "结束"), (1, "开启"), (2, "准备中"), (3, "删除"), (4,"直播中"), (99, "其它");
+            if ([1, 2, 4].indexOf(detail.statue) === -1) {
                 await this.$alert('未在直播中')
                 if (window.history.length > 1) {
                     this.$router.go(-1)
