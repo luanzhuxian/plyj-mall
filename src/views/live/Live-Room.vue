@@ -403,11 +403,6 @@ export default {
                 await this.$nextTick()
                 await this.$refs.livePassword.validate()
             }
-            // 存入访问记录
-            await setComeInConut({
-                id: detail.id,
-                message: `${ detail.paidAmount || 0 }元`
-            })
             // 监听直播是否开始
             if (detail.liveType === 'live') {
                 this.listenLiveStart(detail.stream)
@@ -425,6 +420,11 @@ export default {
                     return
                 }
             }
+            // 存入访问记录
+            await setComeInConut({
+                id: detail.id,
+                message: `${ detail.paidAmount || 0 }元`
+            })
             this.initPlayer()
             this.initSocket()
         } catch (e) {
@@ -890,6 +890,7 @@ export default {
                     this.$success('付款成功立即观看')
                     this.needPay = false
                     await setComeInConut({
+                        id: this.detail.id,
                         message: `${ this.detail.paidAmount || 0 }元`
                     })
                 } catch (e) {

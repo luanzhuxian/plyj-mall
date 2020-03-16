@@ -135,17 +135,17 @@ export default {
             if (detail.isHaveToken && !detail.isInputToken) {
                 await this.$refs.livePassword.validate()
             }
-            // 存入访问记录
-            await setComeInConut({
-                id: detail.id,
-                message: `${ detail.paidAmount || 0 }元`
-            })
             // needPay 是否需要付费 1需要  0不需要，paidAmount 支付了多少钱
             this.needPay = (detail.needPay === 1 && detail.paidAmount === 0)
             // 是否要付费
             if (!this.needPay) {
                 await this.getVideoMes()
                 await this.getDetail()
+                // 存入访问记录
+                await setComeInConut({
+                    id: detail.id,
+                    message: `${ detail.paidAmount || 0 }元`
+                })
             }
         },
         async getDetail () {
@@ -175,6 +175,11 @@ export default {
                     this.getVideoMes()
                     this.$success('付款成功立即观看')
                     this.needPay = false
+                    // 存入访问记录
+                    await setComeInConut({
+                        id: this.detail.id,
+                        message: `${ this.payCount || 0 }元`
+                    })
                 } catch (e) {
                     this.needPay = false
                     this.$confirm({
