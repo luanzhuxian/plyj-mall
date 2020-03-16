@@ -1,236 +1,236 @@
 <template>
-  <div :class="$style.personalCenter">
-    <div :class="$style.top">
-      <img :src="avatar" alt="头像">
-      <div :class="$style.basicInfo">
-        <span :class="$style.main" v-text="userName" />
-        <div :class="$style.sub">
-          <span :class="$style.level" v-text="roleName" />
-          <span v-if="isHelperModuleShow && lockStatus === 0" :class="$style.lockStatus">已禁用</span>
-          <router-link
-            v-if="isApplyBtnShow"
-            :class="$style.applyBtn"
-            :to="{ name: 'ApplyHelper' }"
-          >
-            <pl-svg name="icon-helper-apply" width="158" height="44" />
-          </router-link>
-          <div v-if="isProgressBtnShow" :class="$style.progress">
-            <span
-              v-if="applyStatus === 'AWAIT'"
-              :class="$style.progressLeft"
-              v-text="'Helper审核中...'"
-            />
-            <span
-              :class="$style.progressRight"
-              v-text="'查看进度'"
-              @click="isModalShow = true"
-            />
-          </div>
+    <div :class="$style.personalCenter">
+        <div :class="$style.top">
+            <img :src="avatar" alt="头像">
+            <div :class="$style.basicInfo">
+                <span :class="$style.main" v-text="userName" />
+                <div :class="$style.sub">
+                    <span :class="$style.level" v-text="roleName" />
+                    <span v-if="isHelperModuleShow && lockStatus === 0" :class="$style.lockStatus">已禁用</span>
+                    <router-link
+                        v-if="isApplyBtnShow"
+                        :class="$style.applyBtn"
+                        :to="{ name: 'ApplyHelper' }"
+                    >
+                        <pl-svg name="icon-helper-apply" width="158" height="44" />
+                    </router-link>
+                    <div v-if="isProgressBtnShow" :class="$style.progress">
+                        <span
+                            v-if="applyStatus === 'AWAIT'"
+                            :class="$style.progressLeft"
+                            v-text="'Helper审核中...'"
+                        />
+                        <span
+                            :class="$style.progressRight"
+                            v-text="'查看进度'"
+                            @click="isModalShow = true"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div :class="$style.setting">
+                <router-link v-if="!isAdmin" :to="{ name: 'Setting' }">
+                    <pl-svg name="icon-setting-white" width="42" fill="#fff" />
+                </router-link>
+            </div>
         </div>
-      </div>
-      <div :class="$style.setting">
-        <router-link v-if="!isAdmin" :to="{ name: 'Setting' }">
-          <pl-svg name="icon-setting-white" width="42" fill="#fff" />
-        </router-link>
-      </div>
-    </div>
 
-    <div :class="$style.content" v-if="loaded">
-      <!-- 金库 -->
-      <router-link
-        v-if="isHelper"
-        :class="[$style.panel, $style.finance]"
-        :to="{ name: 'Coffers' }"
-      >
-        <div>
-          <p>可提现润笔（元）</p>
-          <p>
-            <span v-text="balance || '0.00'" />
-            <!-- <span :class="$style.withdrawTip">提现</span> -->
-          </p>
-        </div>
-        <div>
-          <p>今日润笔（元）</p>
-          <p v-text="currentBalance || '0.00'" />
-        </div>
-        <pl-svg :class="$style.myRight" name="icon-right" size="18" fill="#ccc" />
-      </router-link>
-
-      <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">
-        <pl-svg name="icon-dingdan" width="28" height="28" fill="#fff" /> 待付尾款订单 <i>{{ count.prePayOrder }}</i> <pl-svg name="icon-right" fill="#fff" width="24" />
-      </div>
-
-      <!-- 我的订单 -->
-      <div :class="$style.panel">
-        <div :class="$style.orderStatus">
-          <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
-            <pl-svg name="icon-wait-pay" width="72" height="90" />
-            <span
-              :class="{ [$style.badge]: true, [$style.oval]: count.waitPayment > 99 }"
-              v-if="count.waitPayment"
-              v-text="count.waitPayment > 99 ? '99+' : count.waitPayment"
-            />
-          </router-link>
-          <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
-            <pl-svg name="icon-wait-ship" width="72" height="90" />
-            <span
-              :class="{ [$style.badge]: true, [$style.oval]: count.waitDelivery > 99 }"
-              v-if="count.waitDelivery"
-              v-text="count.waitDelivery > 99 ? '99+' : count.waitDelivery"
-            />
-          </router-link>
-          <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
-            <pl-svg name="icon-wait-receive" width="72" height="88" />
-            <span
-              :class="{ [$style.badge]: true, [$style.oval]: count.waitCollect > 99 }"
-              v-if="count.waitCollect"
-              v-text="count.waitCollect > 99 ? '99+' : count.waitCollect"
-            />
-          </router-link>
-          <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
-            <pl-svg name="icon-after-sale" width="108" height="88" />
-            <span
-              :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.afterSale > 99 }"
-              v-if="count.afterSale"
-              v-text="count.afterSale > 99 ? '99+' : count.afterSale"
-            />
-          </router-link>
-          <div :class="$style.segmentation">
-            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/my-segmentation.png" alt="">
-          </div>
-          <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
-            <pl-svg name="icon-my-order-list" width="96" height="90" />
-          </router-link>
-        </div>
-        <div v-if="newFreight.length > 0" :class="$style.newLogistics">
-          <div :class="$style.logisticsTitle">
-            最新物流
-          </div>
-          <swiper :options="swiperOption" style="overflow: hidden;">
-            <swiper-slide
-              :class="$style.swiperSlide"
-              v-for="(item, i) of newFreight"
-              :key="i"
+        <div :class="$style.content" v-if="loaded">
+            <!-- 金库 -->
+            <router-link
+                v-if="isHelper"
+                :class="[$style.panel, $style.finance]"
+                :to="{ name: 'Coffers' }"
             >
-              <router-link
-                :class="$style.logisticsContent"
-                :to="{ name: 'Freight', params: { orderId: item.orderId }, query: { img: item.productImageUrls[0] } }"
-              >
-                <div :class="$style.contentLeft">
-                  <img v-img-error :src="item.productImageUrls[0]">
+                <div>
+                    <p>可提现润笔（元）</p>
+                    <p>
+                        <span v-text="balance || '0.00'" />
+                        <!-- <span :class="$style.withdrawTip">提现</span> -->
+                    </p>
                 </div>
-                <div :class="$style.contentRight">
-                  <div :class="$style.deliveryStatus">
-                    派送中
-                  </div>
-                  <div :class="$style.deliveryDetails" v-text="item.orderLogisticTrackModel.content" />
+                <div>
+                    <p>今日润笔（元）</p>
+                    <p v-text="currentBalance || '0.00'" />
                 </div>
-              </router-link>
-            </swiper-slide>
-          </swiper>
-        </div>
-      </div>
-      <!-- 优惠劵 -->
-      <div :class="$style.panel">
-        <div :class="$style.welfare">
-          <router-link :to="{ name: 'MyCoupon'}" :class="$style.welfareItem">
-            <pl-svg name="icon-coupon" width="72" height="72" />
-            <div>
-              <h5>我的卡券</h5>
-              <!-- <span>福利多多帮你省钱</span> -->
-            </div>
-          </router-link>
-          <router-link :to="{ name: 'MyPresent'}" :class="$style.welfareItem">
-            <pl-svg name="icon-present" width="72" height="72" type="svg" />
-            <div>
-              <h5>我的礼品</h5>
-              <!-- <span>到店核销领礼品</span> -->
-            </div>
-          </router-link>
-          <router-link :to="{ name: 'MyBurse'}" :class="$style.welfareItem">
-            <img src="https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png" alt="">
-            <div>
-              <h5>我的奖学金</h5>
-              <!-- <span>和优惠券叠加使用</span> -->
-            </div>
-          </router-link>
-          <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
-            <pl-svg name="icon-live-library" width="72" height="72" type="svg" />
-            <div>
-              <h5>我的视频库</h5>
-              <!-- <span>到店核销领礼品</span> -->
-            </div>
-          </router-link>
-        </div>
-      </div>
-      <router-link
-        v-if="isApplyBtnShow"
-        :class="[$style.panel, $style.tip]"
-        :to="{ name: 'WhatsHelper' }"
-      >
-        <span :class="$style.tipCircle" />
-        <span>成为Helper，第一桶金从这里开始>></span>
-      </router-link>
-      <!-- helper -->
-      <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow && lockStatus">
-        <router-link to="" @click.native="toHelperManagementPage">
-          <pl-svg name="icon-helper-management" width="120" height="115" />
-        </router-link>
-        <router-link :to="{ name: 'HelperPoster' }">
-          <pl-svg name="icon-helper-invatation" width="120" height="115" />
-        </router-link>
-        <router-link :to="{ name: 'ShopPoster'}">
-          <pl-svg name="icon-helper-poster" width="120" height="115" />
-        </router-link>
-        <router-link :to="{ name: 'ShopQrcode'}">
-          <pl-svg name="icon-helper-qrcode" width="120" height="115" />
-        </router-link>
-      </div>
-      <you-like :class="$style.recommend" :is-my="true" />
-      <modal
-        ref="modal"
-        :show.sync="isModalShow"
-        title="Helper认证审核进度"
-        title-align="left"
-        hide-footer
-        close-on-click-overlay
-      >
-        <Progress
-          :class="$style.progressModal"
-          :steps="progress"
-          :active="0"
-        />
-      </modal>
-    </div>
+                <pl-svg :class="$style.myRight" name="icon-right" size="18" fill="#ccc" />
+            </router-link>
 
-    <div :class="$style.skeleton" v-else>
-      <div :class="[$style.skeleton1, $style.panel]">
-        <div :class="$style.itemSmall" v-for="(item, index) of 5" :key="index">
-          <div :class="[$style.icon, $style.skeAnimation]" />
-          <div :class="[$style.text, $style.skeAnimation]" />
+            <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">
+                <pl-svg name="icon-dingdan" width="28" height="28" fill="#fff" /> 待付尾款订单 <i>{{ count.prePayOrder }}</i> <pl-svg name="icon-right" fill="#fff" width="24" />
+            </div>
+
+            <!-- 我的订单 -->
+            <div :class="$style.panel">
+                <div :class="$style.orderStatus">
+                    <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
+                        <pl-svg name="icon-wait-pay" width="72" height="90" />
+                        <span
+                            :class="{ [$style.badge]: true, [$style.oval]: count.waitPayment > 99 }"
+                            v-if="count.waitPayment"
+                            v-text="count.waitPayment > 99 ? '99+' : count.waitPayment"
+                        />
+                    </router-link>
+                    <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
+                        <pl-svg name="icon-wait-ship" width="72" height="90" />
+                        <span
+                            :class="{ [$style.badge]: true, [$style.oval]: count.waitDelivery > 99 }"
+                            v-if="count.waitDelivery"
+                            v-text="count.waitDelivery > 99 ? '99+' : count.waitDelivery"
+                        />
+                    </router-link>
+                    <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
+                        <pl-svg name="icon-wait-receive" width="72" height="88" />
+                        <span
+                            :class="{ [$style.badge]: true, [$style.oval]: count.waitCollect > 99 }"
+                            v-if="count.waitCollect"
+                            v-text="count.waitCollect > 99 ? '99+' : count.waitCollect"
+                        />
+                    </router-link>
+                    <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
+                        <pl-svg name="icon-after-sale" width="108" height="88" />
+                        <span
+                            :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.afterSale > 99 }"
+                            v-if="count.afterSale"
+                            v-text="count.afterSale > 99 ? '99+' : count.afterSale"
+                        />
+                    </router-link>
+                    <div :class="$style.segmentation">
+                        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/my-segmentation.png" alt="">
+                    </div>
+                    <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
+                        <pl-svg name="icon-my-order-list" width="96" height="90" />
+                    </router-link>
+                </div>
+                <div v-if="newFreight.length > 0" :class="$style.newLogistics">
+                    <div :class="$style.logisticsTitle">
+                        最新物流
+                    </div>
+                    <swiper :options="swiperOption" style="overflow: hidden;">
+                        <swiper-slide
+                            :class="$style.swiperSlide"
+                            v-for="(item, i) of newFreight"
+                            :key="i"
+                        >
+                            <router-link
+                                :class="$style.logisticsContent"
+                                :to="{ name: 'Freight', params: { orderId: item.orderId }, query: { img: item.productImageUrls[0] } }"
+                            >
+                                <div :class="$style.contentLeft">
+                                    <img v-img-error :src="item.productImageUrls[0]">
+                                </div>
+                                <div :class="$style.contentRight">
+                                    <div :class="$style.deliveryStatus">
+                                        派送中
+                                    </div>
+                                    <div :class="$style.deliveryDetails" v-text="item.orderLogisticTrackModel.content" />
+                                </div>
+                            </router-link>
+                        </swiper-slide>
+                    </swiper>
+                </div>
+            </div>
+            <!-- 优惠劵 -->
+            <div :class="$style.panel">
+                <div :class="$style.welfare">
+                    <router-link :to="{ name: 'MyCoupon'}" :class="$style.welfareItem">
+                        <pl-svg name="icon-coupon" width="72" height="72" />
+                        <div>
+                            <h5>我的卡券</h5>
+                            <!-- <span>福利多多帮你省钱</span> -->
+                        </div>
+                    </router-link>
+                    <router-link :to="{ name: 'MyPresent'}" :class="$style.welfareItem">
+                        <pl-svg name="icon-present" width="72" height="72" type="svg" />
+                        <div>
+                            <h5>我的礼品</h5>
+                            <!-- <span>到店核销领礼品</span> -->
+                        </div>
+                    </router-link>
+                    <router-link :to="{ name: 'MyBurse'}" :class="$style.welfareItem">
+                        <img src="https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png" alt="">
+                        <div>
+                            <h5>我的奖学金</h5>
+                            <!-- <span>和优惠券叠加使用</span> -->
+                        </div>
+                    </router-link>
+                    <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
+                        <pl-svg name="icon-live-library" width="72" height="72" type="svg" />
+                        <div>
+                            <h5>我的视频库</h5>
+                            <!-- <span>到店核销领礼品</span> -->
+                        </div>
+                    </router-link>
+                </div>
+            </div>
+            <router-link
+                v-if="isApplyBtnShow"
+                :class="[$style.panel, $style.tip]"
+                :to="{ name: 'WhatsHelper' }"
+            >
+                <span :class="$style.tipCircle" />
+                <span>成为Helper，第一桶金从这里开始>></span>
+            </router-link>
+            <!-- helper -->
+            <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow && lockStatus">
+                <router-link to="" @click.native="toHelperManagementPage">
+                    <pl-svg name="icon-helper-management" width="120" height="115" />
+                </router-link>
+                <router-link :to="{ name: 'HelperPoster' }">
+                    <pl-svg name="icon-helper-invatation" width="120" height="115" />
+                </router-link>
+                <router-link :to="{ name: 'ShopPoster'}">
+                    <pl-svg name="icon-helper-poster" width="120" height="115" />
+                </router-link>
+                <router-link :to="{ name: 'ShopQrcode'}">
+                    <pl-svg name="icon-helper-qrcode" width="120" height="115" />
+                </router-link>
+            </div>
+            <you-like :class="$style.recommend" :is-my="true" />
+            <modal
+                ref="modal"
+                :show.sync="isModalShow"
+                title="Helper认证审核进度"
+                title-align="left"
+                hide-footer
+                close-on-click-overlay
+            >
+                <Progress
+                    :class="$style.progressModal"
+                    :steps="progress"
+                    :active="0"
+                />
+            </modal>
         </div>
-      </div>
-      <div :class="[$style.skeleton2, $style.panel]">
-        <div :class="$style.itemLarge" v-for="(item, index) of 4" :key="index">
-          <div :class="[$style.icon, $style.skeAnimation]" />
-          <div :class="[$style.text, $style.skeAnimation]" />
+
+        <div :class="$style.skeleton" v-else>
+            <div :class="[$style.skeleton1, $style.panel]">
+                <div :class="$style.itemSmall" v-for="(item, index) of 5" :key="index">
+                    <div :class="[$style.icon, $style.skeAnimation]" />
+                    <div :class="[$style.text, $style.skeAnimation]" />
+                </div>
+            </div>
+            <div :class="[$style.skeleton2, $style.panel]">
+                <div :class="$style.itemLarge" v-for="(item, index) of 4" :key="index">
+                    <div :class="[$style.icon, $style.skeAnimation]" />
+                    <div :class="[$style.text, $style.skeAnimation]" />
+                </div>
+            </div>
+            <div :class="[$style.skeleton3, $style.title]">
+                <div :class="[$style.text, $style.skeAnimation]" />
+            </div>
+            <div :class="$style.skeleton4">
+                <div :class="$style.item" v-for="(item, index) of 4" :key="index">
+                    <div :class="[$style.itemImage, $style.skeAnimation]" />
+                    <div :class="$style.itemContent">
+                        <div :class="[$style.main, $style.skeAnimation]" />
+                        <div :class="[$style.sub, $style.skeAnimation]" />
+                        <div :class="[$style.text, $style.skeAnimation]" />
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div :class="[$style.skeleton3, $style.title]">
-        <div :class="[$style.text, $style.skeAnimation]" />
-      </div>
-      <div :class="$style.skeleton4">
-        <div :class="$style.item" v-for="(item, index) of 4" :key="index">
-          <div :class="[$style.itemImage, $style.skeAnimation]" />
-          <div :class="$style.itemContent">
-            <div :class="[$style.main, $style.skeAnimation]" />
-            <div :class="[$style.sub, $style.skeAnimation]" />
-            <div :class="[$style.text, $style.skeAnimation]" />
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -254,187 +254,196 @@ import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
 // }
 
 export default {
-  name: 'My',
-  components: {
-    youLike,
-    Modal,
-    Progress,
-    swiper,
-    swiperSlide
-  },
-  data () {
-    return {
-      loaded: false,
-      count: {},
-      swiperOption: {
-        direction: 'vertical',
-        autoHeight: true,
-        autoplay: true,
-        height: window.innerWidth / 750 * 88
-      },
-      newFreight: [],
-      progress: [],
-      applyStatus: 'NOT_APPLY',
-      isModalShow: false
-    }
-  },
-  computed: {
-    ...mapGetters(['avatar', 'userName', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode', 'lockStatus']),
-    isHelper () {
-      return this.roleCode === 'HELPER'
+    name: 'My',
+    components: {
+        youLike,
+        Modal,
+        Progress,
+        swiper,
+        swiperSlide
     },
-    // applyStatus: NOT_APPLY: 未申请 , AWAIT：待审核, PASS：审核通过, REJECT：审核驳回
-    isApplyBtnShow () {
-      return this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT')
+    data () {
+        return {
+            loaded: false,
+            count: {},
+            swiperOption: {
+                direction: 'vertical',
+                autoHeight: true,
+                autoplay: true,
+                height: window.innerWidth / 750 * 88
+            },
+            newFreight: [],
+            progress: [],
+            applyStatus: 'NOT_APPLY',
+            isModalShow: false
+        }
     },
-    // 是否可查询helper申请进度
-    isProgressBtnShow () {
-      return this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'AWAIT' || this.applyStatus === 'REJECT')
-    },
-    // 是否有权限看到helper模块
-    isHelperModuleShow () {
-      return this.roleCode === 'ENTERPRISE_ADMIN' ||
+    computed: {
+        ...mapGetters(['avatar', 'userName', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode', 'lockStatus']),
+        isHelper () {
+            return this.roleCode === 'HELPER'
+        },
+
+        // applyStatus: NOT_APPLY: 未申请 , AWAIT：待审核, PASS：审核通过, REJECT：审核驳回
+        isApplyBtnShow () {
+            return this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT')
+        },
+
+        // 是否可查询helper申请进度
+        isProgressBtnShow () {
+            return this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'AWAIT' || this.applyStatus === 'REJECT')
+        },
+
+        // 是否有权限看到helper模块
+        isHelperModuleShow () {
+            return this.roleCode === 'ENTERPRISE_ADMIN' ||
         this.roleCode === 'ADMIN' ||
         this.roleCode === 'EMPLOYEE'
-    }
-  },
-  created () {
-    if (this.roleCode === 'VISITOR') {
-      this.loaded = true
-    } else {
-      this.loaded = false
-      this.getRecentExpressInfo()
-      this.getNotice()
-    }
-  },
-  async activated () {
-    try {
-      if (this.roleCode === 'VISITOR') {
-        await this.$confirm({
-          message: '为了您的账号安全，请绑定手机号',
-          confirmText: '去绑定',
-          closeOnClickMask: false
-        })
-        setTimeout(() => {
-          this.$router.push({ name: 'BindMobile' })
-        }, 1000)
-      } else {
-        // 下面方法在此钩子函数调用，因为返回此页面时需要刷新数据
-        await Promise.all([this.orderPhysicalorderSummary(), this.getProgress()])
-        this.loaded = true
-      }
-    } catch (e) {
-      throw e
-    }
-  },
-  deactivated () {
-    this.isModalShow = false
-  },
-  methods: {
-    ...mapActions({
-      getAuditNotice: Get_ADUIT_NOTICE
-    }),
-    // 获取各个状态订单数量
-    async orderPhysicalorderSummary () {
-      try {
-        const { result } = await orderPhysicalorderSummary(this.userId)
-        this.count = result
-        if (result.prePayOrder && result.prePayOrder > 99) {
-          result.prePayOrder = '99+'
         }
-      } catch (e) {
-        throw e
-      }
     },
-    // 获取物流信息
-    async getRecentExpressInfo () {
-      try {
-        const { result } = await getNewFreight()
-        this.newFreight = result
-      } catch (e) {
-        throw e
-      }
-    },
-    // 获取helper申请进度
-    async getProgress () {
-      try {
-        const { result } = await getHelperApplicationProgress()
-        this.applyStatus = (result && result.status) ? result.status : 'NOT_APPLY'
-        // 没有申请过helper
-        if (!result) return
-        // 申请过helper且正在审核或驳回
-        if (result.status === 'AWAIT') {
-          this.progress = [{
-            text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
-          }, {
-            text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
-          }]
-        } else if (result.status === 'REJECT') {
-          this.progress = [{
-            text: 'Helper认证资料被驳回', desc: result.auditTime.replace(/-/g, '.')
-          }, {
-            text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
-          }, {
-            text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
-          }]
+    created () {
+        if (this.roleCode === 'VISITOR') {
+            this.loaded = true
+        } else {
+            this.loaded = false
+            this.getRecentExpressInfo()
+            this.getNotice()
         }
-      } catch (e) {
-        throw e
-      }
     },
-    async getNotice () {
-      const { result: noticeData } = await getAduitNotice()
-      if (noticeData && noticeData.noticeStatus === 2) {
-        if (noticeData.status === 'PASS') {
-          this.$alert({
-            message: '审核结果',
-            viceMessage: '恭喜你，helper审核已通过！',
-            confirmText: '朕知道了',
-            confirmStyle: {
-              fontWeight: 'bold'
+    async activated () {
+        try {
+            if (this.roleCode === 'VISITOR') {
+                await this.$confirm({
+                    message: '为了您的账号安全，请绑定手机号',
+                    confirmText: '去绑定',
+                    closeOnClickMask: false
+                })
+                setTimeout(() => {
+                    this.$router.push({ name: 'BindMobile' })
+                }, 1000)
+            } else {
+                // 下面方法在此钩子函数调用，因为返回此页面时需要刷新数据
+                await Promise.all([this.orderPhysicalorderSummary(), this.getProgress()])
+                this.loaded = true
             }
-          })
-        } else if (noticeData.status === 'REJECT') {
-          await this.$alert({
-            message: '审核结果',
-            viceMessage: 'helper审核驳回' + (noticeData.agentWriteBack ? `，${noticeData.agentWriteBack}` : ''),
-            confirmText: '重新申请',
-            confirmStyle: {
-              color: noticeData.status === 'REJECT' ? '#D2524C' : null,
-              fontWeight: 'bold'
-            }
-          })
-          this.$router.push({ name: 'ApplyHelper' })
+        } catch (e) {
+            throw e
         }
-        await updateNoticeStatus()
-        this.getAuditNotice()
-      }
     },
-    toHelperManagementPage () {
-      const PROD = 'mall.youpenglai.com'
-      const DEV = 'dev.xijun.youpenglai.com'
-      const QA = 'qa.xijun.youpenglai.com'
-      const LOCAL = 'localhost'
-      let destination
-      switch (window.location.hostname) {
-        case PROD:
-          destination = 'http://admall.youpenglai.com/h5/home'
-          break
-        case DEV:
-          destination = 'http://192.168.130.33:8083/h5/home'
-          break
-        case QA:
-          destination = 'http://192.168.130.35:8082/h5/home'
-          break
-        case LOCAL:
-          destination = 'http://localhost:5000/h5/home'
-          break
+    deactivated () {
+        this.isModalShow = false
+    },
+    methods: {
+        ...mapActions({
+            getAuditNotice: Get_ADUIT_NOTICE
+        }),
+
+        // 获取各个状态订单数量
+        async orderPhysicalorderSummary () {
+            try {
+                const { result } = await orderPhysicalorderSummary(this.userId)
+                this.count = result
+                if (result.prePayOrder && result.prePayOrder > 99) {
+                    result.prePayOrder = '99+'
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+
+        // 获取物流信息
+        async getRecentExpressInfo () {
+            try {
+                const { result } = await getNewFreight()
+                this.newFreight = result
+            } catch (e) {
+                throw e
+            }
+        },
+
+        // 获取helper申请进度
+        async getProgress () {
+            try {
+                const { result } = await getHelperApplicationProgress()
+                this.applyStatus = (result && result.status) ? result.status : 'NOT_APPLY'
+
+                // 没有申请过helper
+                if (!result) return
+
+                // 申请过helper且正在审核或驳回
+                if (result.status === 'AWAIT') {
+                    this.progress = [{
+                        text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
+                    }, {
+                        text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
+                    }]
+                } else if (result.status === 'REJECT') {
+                    this.progress = [{
+                        text: 'Helper认证资料被驳回', desc: result.auditTime.replace(/-/g, '.')
+                    }, {
+                        text: '正在审核认证资料；', desc: '审核时间为1-3个工作日'
+                    }, {
+                        text: '提交Helper认证资料；', desc: result.applyTime.replace(/-/g, '.')
+                    }]
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+        async getNotice () {
+            const { result: noticeData } = await getAduitNotice()
+            if (noticeData && noticeData.noticeStatus === 2) {
+                if (noticeData.status === 'PASS') {
+                    this.$alert({
+                        message: '审核结果',
+                        viceMessage: '恭喜你，helper审核已通过！',
+                        confirmText: '朕知道了',
+                        confirmStyle: {
+                            fontWeight: 'bold'
+                        }
+                    })
+                } else if (noticeData.status === 'REJECT') {
+                    await this.$alert({
+                        message: '审核结果',
+                        viceMessage: `helper审核驳回${ noticeData.agentWriteBack ? `，${ noticeData.agentWriteBack }` : '' }`,
+                        confirmText: '重新申请',
+                        confirmStyle: {
+                            color: noticeData.status === 'REJECT' ? '#D2524C' : null,
+                            fontWeight: 'bold'
+                        }
+                    })
+                    this.$router.push({ name: 'ApplyHelper' })
+                }
+                await updateNoticeStatus()
+                this.getAuditNotice()
+            }
+        },
+        toHelperManagementPage () {
+            const PROD = 'mall.youpenglai.com'
+            const DEV = 'dev.xijun.youpenglai.com'
+            const QA = 'qa.xijun.youpenglai.com'
+            const LOCAL = 'localhost'
+            let destination
+            switch (window.location.hostname) {
+            case PROD:
+                destination = 'http://admall.youpenglai.com/h5/home'
+                break
+            case DEV:
+                destination = 'http://192.168.130.33:8083/h5/home'
+                break
+            case QA:
+                destination = 'http://192.168.130.35:8082/h5/home'
+                break
+            case LOCAL:
+                destination = 'http://localhost:5000/h5/home'
+                break
+
         // default:
         //   break
-      }
-      window.location.href = destination
+            }
+            window.location.href = destination
+        }
     }
-  }
 }
 </script>
 

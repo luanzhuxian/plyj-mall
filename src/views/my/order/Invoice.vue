@@ -1,152 +1,152 @@
 <template>
-  <div :class="$style.invoice">
-    <Address-Item />
+    <div :class="$style.invoice">
+        <Address-Item />
 
-    <div :class="$style.orderInfo + ' radius-20 mt-28'">
-      <img
-        v-img-error
-        :src="orderInfoModel.img"
-        alt=""
-      >
-      <div :class="$style.right">
-        <div>
-          <span class="fz-28">订单编号 </span>
-          <span
-            class="fz-24"
-            v-text="orderId"
-          />
-        </div>
-        <div>
-          <span class="fz-28">开票金额 </span>
-          <span
-            :class="'rmb fz-26 '+$style.money"
-            v-text="form.amount"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div :class="$style.invoiceInfo+' radius-20 mt-28'">
-      <div :class="$style.invoiceType">
-        <span class="fz-28 bold">发票类型：</span>
-        <span class="fz-24">纸质发票</span>
-      </div>
-
-      <pl-form
-        :class="{ [$style.invoiceForm]: true, [$style.hidden]: form.invoiceType === 0 }"
-        align="right"
-        ref="form"
-        :rules="rules"
-        :model="form"
-      >
-        <pl-form-item
-          label="抬头类型："
-          border
-        >
-          <div :class="$style.invoiceTypeRadio">
-            <pl-radio
-              v-model="form.invoiceType"
-              :label="0"
-              inline
+        <div :class="$style.orderInfo + ' radius-20 mt-28'">
+            <img
+                v-img-error
+                :src="orderInfoModel.img"
+                alt=""
             >
-              个人或事业单位
-            </pl-radio>
-            <pl-radio
-              v-model="form.invoiceType"
-              :label="1"
-              inline
+            <div :class="$style.right">
+                <div>
+                    <span class="fz-28">订单编号 </span>
+                    <span
+                        class="fz-24"
+                        v-text="orderId"
+                    />
+                </div>
+                <div>
+                    <span class="fz-28">开票金额 </span>
+                    <span
+                        :class="'rmb fz-26 '+$style.money"
+                        v-text="form.amount"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div :class="$style.invoiceInfo+' radius-20 mt-28'">
+            <div :class="$style.invoiceType">
+                <span class="fz-28 bold">发票类型：</span>
+                <span class="fz-24">纸质发票</span>
+            </div>
+
+            <pl-form
+                :class="{ [$style.invoiceForm]: true, [$style.hidden]: form.invoiceType === 0 }"
+                align="right"
+                ref="form"
+                :rules="rules"
+                :model="form"
             >
-              企业
-            </pl-radio>
-          </div>
-        </pl-form-item>
-        <pl-form-item
-          prop="invoiceTitle"
-          label="发票抬头："
-          border
+                <pl-form-item
+                    label="抬头类型："
+                    border
+                >
+                    <div :class="$style.invoiceTypeRadio">
+                        <pl-radio
+                            v-model="form.invoiceType"
+                            :label="0"
+                            inline
+                        >
+                            个人或事业单位
+                        </pl-radio>
+                        <pl-radio
+                            v-model="form.invoiceType"
+                            :label="1"
+                            inline
+                        >
+                            企业
+                        </pl-radio>
+                    </div>
+                </pl-form-item>
+                <pl-form-item
+                    prop="invoiceTitle"
+                    label="发票抬头："
+                    border
+                >
+                    <pl-input
+                        v-model="form.invoiceTitle"
+                        placeholder="抬头名"
+                    />
+                </pl-form-item>
+                <pl-form-item
+                    prop="idNo"
+                    label="纳税人识别号："
+                    border
+                >
+                    <pl-input
+                        v-model="form.idNo"
+                        placeholder="请输入纳税人识别号"
+                    />
+                </pl-form-item>
+                <pl-form-item
+                    prop="bankName"
+                    label="开户银行："
+                    border
+                >
+                    <pl-input
+                        v-model="form.bankName"
+                        placeholder="选填"
+                    />
+                </pl-form-item>
+                <pl-form-item
+                    prop="bankAccount"
+                    label="银行账号："
+                    border
+                >
+                    <pl-input
+                        v-model="form.bankAccount"
+                        placeholder="选填"
+                    />
+                </pl-form-item>
+                <pl-form-item
+                    prop="companyAddr"
+                    label="企业地址："
+                    border
+                >
+                    <pl-input
+                        v-model="form.companyAddr"
+                        placeholder="选填"
+                    />
+                </pl-form-item>
+                <pl-form-item
+                    prop="companyPhone"
+                    label="企业电话："
+                    border
+                >
+                    <pl-input
+                        v-model="form.companyPhone"
+                        placeholder="选填"
+                    />
+                </pl-form-item>
+            </pl-form>
+        </div>
+        <div
+            class="radius-20 mt-28 bg-white"
+            style="overflow: hidden; padding-left: 28px;"
         >
-          <pl-input
-            v-model="form.invoiceTitle"
-            placeholder="抬头名"
-          />
-        </pl-form-item>
-        <pl-form-item
-          prop="idNo"
-          label="纳税人识别号："
-          border
+            <pl-fields
+                text="发票内容"
+                :icon-width="40"
+                right-text-weight="bold"
+                icon="icon-warning2"
+                icon-position="right"
+                icon-color="#999"
+                :right-text="content"
+                :icon-gap="10"
+                :route="{ name: 'InvoiceContent', params: { id: orderId } }"
+            />
+        </div>
+        <pl-button
+            class="mt-28"
+            size="large"
+            type="warning"
+            @click="confirm"
         >
-          <pl-input
-            v-model="form.idNo"
-            placeholder="请输入纳税人识别号"
-          />
-        </pl-form-item>
-        <pl-form-item
-          prop="bankName"
-          label="开户银行："
-          border
-        >
-          <pl-input
-            v-model="form.bankName"
-            placeholder="选填"
-          />
-        </pl-form-item>
-        <pl-form-item
-          prop="bankAccount"
-          label="银行账号："
-          border
-        >
-          <pl-input
-            v-model="form.bankAccount"
-            placeholder="选填"
-          />
-        </pl-form-item>
-        <pl-form-item
-          prop="companyAddr"
-          label="企业地址："
-          border
-        >
-          <pl-input
-            v-model="form.companyAddr"
-            placeholder="选填"
-          />
-        </pl-form-item>
-        <pl-form-item
-          prop="companyPhone"
-          label="企业电话："
-          border
-        >
-          <pl-input
-            v-model="form.companyPhone"
-            placeholder="选填"
-          />
-        </pl-form-item>
-      </pl-form>
+            提交
+        </pl-button>
     </div>
-    <div
-      class="radius-20 mt-28 bg-white"
-      style="overflow: hidden; padding-left: 28px;"
-    >
-      <pl-fields
-        text="发票内容"
-        :icon-width="40"
-        right-text-weight="bold"
-        icon="icon-warning2"
-        icon-position="right"
-        icon-color="#999"
-        :right-text="content"
-        :icon-gap="10"
-        :route="{ name: 'InvoiceContent', params: { id: orderId } }"
-      />
-    </div>
-    <pl-button
-      class="mt-28"
-      size="large"
-      type="warning"
-      @click="confirm"
-    >
-      提交
-    </pl-button>
-  </div>
 </template>
 
 <script>
@@ -155,115 +155,118 @@ import { checkLength } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
 import AddressItem from '../../../components/item/Address-Item.vue'
 export default {
-  name: 'Invoice',
-  components: {
-    AddressItem
-  },
-  data () {
-    return {
-      form: {
-        amount: '',
-        bankAccount: '',
-        bankName: '',
-        companyAddr: '',
-        companyName: '',
-        companyPhone: '',
-        idNo: '', // 纳税人识别号
-        invoiceTitle: '',
-        invoiceType: 0, // 个人0 或企业1
-        recvAddr: '',
-        recvMobile: '',
-        recvName: '',
-        sequenceNbr: '',
-        deliveryCast: '到付',
-        invoiceForm: 0, // 默认纸质发票 0
-        userId: '',
-        orderSn: '',
-        detail: ''
-      },
-      rules: {
-        invoiceTitle: [
-          { required: true, message: '请输入发票抬头', trigger: 'blur' }
-        ],
-        idNo: [
-          { required: true, message: '请输入纳税人识别号', trigger: 'blur' },
-          { validator: checkLength(20), message: '不得超过20个字符', trigger: 'blur' }
-        ],
-        bankName: [
-          { required: false, trigger: 'blur' },
-          { validator: checkLength(30), message: '银行名称不得超过30个字符', trigger: 'blur' }
-        ],
-        bankAccount: [
-          { required: false, trigger: 'blur' },
-          { validator: checkLength(20), message: '银行账号不得超过20个字符', trigger: 'blur' }
-        ],
-        companyAddr: [
-          { required: false, trigger: 'blur' },
-          { validator: checkLength(100), message: '地址过长', trigger: 'blur' }
-        ],
-        companyPhone: [
-          { required: false, trigger: 'blur' },
-          { validator: checkLength(20), message: '电话号码过长', trigger: 'blur' }
-        ]
-      },
-      orderInfoModel: {}
-    }
-  },
-  props: {
-    orderId: {
-      type: String,
-      default: null
-    }
-  },
-  computed: {
-    content: function () {
-      return this.$route.query.content || '明细'
+    name: 'Invoice',
+    components: {
+        AddressItem
     },
-    ...mapGetters(['userId', 'selectedAddress'])
-  },
-  async activated () {
-    await this.getOrderDetail()
-  },
-  methods: {
-    async confirm () {
-      try {
-        if (this.form.invoiceType === 1) {
-          if (!this.$refs.form.validate()) return
+    data () {
+        return {
+            form: {
+                amount: '',
+                bankAccount: '',
+                bankName: '',
+                companyAddr: '',
+                companyName: '',
+                companyPhone: '',
+                // 纳税人识别号
+                idNo: '',
+                invoiceTitle: '',
+                // 个人0 或企业1
+                invoiceType: 0,
+                recvAddr: '',
+                recvMobile: '',
+                recvName: '',
+                sequenceNbr: '',
+                deliveryCast: '到付',
+                // 默认纸质发票 0
+                invoiceForm: 0,
+                userId: '',
+                orderSn: '',
+                detail: ''
+            },
+            rules: {
+                invoiceTitle: [
+                    { required: true, message: '请输入发票抬头', trigger: 'blur' }
+                ],
+                idNo: [
+                    { required: true, message: '请输入纳税人识别号', trigger: 'blur' },
+                    { validator: checkLength(20), message: '不得超过20个字符', trigger: 'blur' }
+                ],
+                bankName: [
+                    { required: false, trigger: 'blur' },
+                    { validator: checkLength(30), message: '银行名称不得超过30个字符', trigger: 'blur' }
+                ],
+                bankAccount: [
+                    { required: false, trigger: 'blur' },
+                    { validator: checkLength(20), message: '银行账号不得超过20个字符', trigger: 'blur' }
+                ],
+                companyAddr: [
+                    { required: false, trigger: 'blur' },
+                    { validator: checkLength(100), message: '地址过长', trigger: 'blur' }
+                ],
+                companyPhone: [
+                    { required: false, trigger: 'blur' },
+                    { validator: checkLength(20), message: '电话号码过长', trigger: 'blur' }
+                ]
+            },
+            orderInfoModel: {}
         }
-        if (this.form.invoiceType === 0) {
-          if (!this.form.invoiceTitle.trim()) return this.$warning('请输入发票抬头')
-        }
-        this.form.detail = this.content
-        this.form.orderSn = this.orderId
-        this.form.userId = this.userId
-        this.form.recvAddr = this.selectedAddress.addressPrefix + this.selectedAddress.agencyAddress
-        this.form.recvMobile = this.selectedAddress.mobile
-        this.form.recvName = this.selectedAddress.realName
-        if (!this.form.recvMobile || !this.form.recvMobile) {
-          this.$warning('请选择发票邮寄地址')
-          return
-        }
-        await this.$confirm('检查无误并确定提交？')
-        await applyOrderInvoice(this.form)
-        this.$destroy()
-        this.$router.push({ name: 'Orders' })
-      } catch (e) {
-        throw e
-      }
     },
-    async getOrderDetail () {
-      this.form.orderSn = this.orderId
-      this.form.userId = this.userId
-      try {
-        const { result } = await getOrderDetail(this.form.orderSn)
-        this.orderInfoModel = result.orderInfoModel
-        this.form.amount = this.orderInfoModel.amount
-        this.orderInfoModel.img = result.relationModel[0].mediaInfoModels[0].mediaUrl
-      } catch (e) {
-        throw e
-      }
+    props: {
+        orderId: {
+            type: String,
+            default: null
+        }
+    },
+    computed: {
+        content () {
+            return this.$route.query.content || '明细'
+        },
+        ...mapGetters(['userId', 'selectedAddress'])
+    },
+    async activated () {
+        await this.getOrderDetail()
+    },
+    methods: {
+        async confirm () {
+            try {
+                if (this.form.invoiceType === 1) {
+                    if (!this.$refs.form.validate()) return
+                }
+                if (this.form.invoiceType === 0) {
+                    if (!this.form.invoiceTitle.trim()) return this.$warning('请输入发票抬头')
+                }
+                this.form.detail = this.content
+                this.form.orderSn = this.orderId
+                this.form.userId = this.userId
+                this.form.recvAddr = this.selectedAddress.addressPrefix + this.selectedAddress.agencyAddress
+                this.form.recvMobile = this.selectedAddress.mobile
+                this.form.recvName = this.selectedAddress.realName
+                if (!this.form.recvMobile || !this.form.recvMobile) {
+                    this.$warning('请选择发票邮寄地址')
+                    return
+                }
+                await this.$confirm('检查无误并确定提交？')
+                await applyOrderInvoice(this.form)
+                this.$destroy()
+                this.$router.push({ name: 'Orders' })
+            } catch (e) {
+                throw e
+            }
+        },
+        async getOrderDetail () {
+            this.form.orderSn = this.orderId
+            this.form.userId = this.userId
+            try {
+                const { result } = await getOrderDetail(this.form.orderSn)
+                this.orderInfoModel = result.orderInfoModel
+                this.form.amount = this.orderInfoModel.amount
+                this.orderInfoModel.img = result.relationModel[0].mediaInfoModels[0].mediaUrl
+            } catch (e) {
+                throw e
+            }
+        }
     }
-  }
 }
 </script>
 

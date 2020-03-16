@@ -1,31 +1,31 @@
 <template>
-  <div v-show="helpers.length" :class="$style.helpers">
-    <pl-svg name="icon-zhulihaoyou" fill="60" />
-    <div :class="$style.list">
-      <img
-        v-for="(item, i) of helpers"
-        :key="i"
-        :src="item.headImgUrl"
-        alt=""
-      >
-      <span v-if="helpers.length === 6" :class="$style.soMore">...</span>
+    <div v-show="helpers.length" :class="$style.helpers">
+        <pl-svg name="icon-zhulihaoyou" fill="60" />
+        <div :class="$style.list">
+            <img
+                v-for="(item, i) of helpers"
+                :key="i"
+                :src="item.headImgUrl"
+                alt=""
+            >
+            <span v-if="helpers.length === 6" :class="$style.soMore">...</span>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 import {
 } from '../../../../apis/invitenewcomers'
 export default {
-  name: 'HelperList',
-  props: {
-    helpers: {
-      type: Array,
-      default () {
-        return []
-      }
+    name: 'HelperList',
+    props: {
+        helpers: {
+            type: Array,
+            default () {
+                return []
+            }
+        }
     }
-  }
 }
 </script>
 

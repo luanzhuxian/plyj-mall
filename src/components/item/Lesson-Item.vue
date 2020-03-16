@@ -1,51 +1,51 @@
 <template>
-  <div
-    :class="$style.lesson + ' ' + $style[size] + ' ' + (border ? $style.border : '')"
-    @click="handleClick"
-  >
-    <!-- 课程组件 -->
-    <img
-      :class="$style[size] + ' ' + $style.img"
-      v-lazy="img"
-      :key="img"
-      alt=""
+    <div
+        :class="$style.lesson + ' ' + $style[size] + ' ' + (border ? $style.border : '')"
+        @click="handleClick"
     >
-    <div :class="$style.right">
-      <div>
-        <div
-          v-text="title"
-          :class="$style[size] + ' ' + $style.name"
-        />
-        <div
-          v-if="tags.length > 0"
-          :class="$style.tag"
+        <!-- 课程组件 -->
+        <img
+            :class="$style[size] + ' ' + $style.img"
+            v-lazy="img"
+            :key="img"
+            alt=""
         >
-          <span
-            v-for="(tag, index) of tags"
-            :key="index"
-            v-text="tag"
-          />
+        <div :class="$style.right">
+            <div>
+                <div
+                    v-text="title"
+                    :class="$style[size] + ' ' + $style.name"
+                />
+                <div
+                    v-if="tags.length > 0"
+                    :class="$style.tag"
+                >
+                    <span
+                        v-for="(tag, index) of tags"
+                        :key="index"
+                        v-text="tag"
+                    />
+                </div>
+                <div
+                    v-if="desc"
+                    :class="$style.desc + ' ' + $style[size]"
+                    v-text="desc"
+                />
+            </div>
+            <div
+                v-if="count"
+                :class="$style.count"
+            >
+                已售 <i v-text="count" />
+            </div>
+            <price
+                :size="size"
+                :price="price"
+                :original-price="originalPrice"
+            />
         </div>
-        <div
-          v-if="desc"
-          :class="$style.desc + ' ' + $style[size]"
-          v-text="desc"
-        />
-      </div>
-      <div
-        v-if="count"
-        :class="$style.count"
-      >
-        已售 <i v-text="count" />
-      </div>
-      <price
-        :size="size"
-        :price="price"
-        :original-price="originalPrice"
-      />
+        <count-down v-if="data.shoppingStatus === 1" :data="data" :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }" />
     </div>
-    <count-down v-if="data.shoppingStatus === 1" :data="data" :fields="{ start: 'serverTime', end: 'shoppingTimeLong' }" />
-  </div>
 </template>
 
 <script>
@@ -53,71 +53,71 @@ import Price from '../product/Price.vue'
 import { mapGetters } from 'vuex'
 import CountDown from '../product/Count-Down.vue'
 export default {
-  name: 'LessonItem',
-  components: {
-    Price,
-    CountDown
-  },
-  data () {
-    return {
+    name: 'LessonItem',
+    components: {
+        Price,
+        CountDown
+    },
+    data () {
+        return {
+        }
+    },
+    props: {
+        id: {
+            type: String,
+            default: ''
+        },
+        img: {
+            type: String,
+            default: ''
+        },
+        title: {
+            type: String,
+            default: ''
+        },
+        tags: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        desc: {
+            type: String,
+            default: ''
+        },
+        count: {
+            type: [String, Number],
+            default: ''
+        },
+        price: {
+            type: [String, Number],
+            default: ''
+        },
+        originalPrice: {
+            type: [String, Number],
+            default: ''
+        },
+        size: {
+            type: String,
+            default: 'large'
+        },
+        border: Boolean,
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['userId', 'agentUser'])
+    },
+    methods: {
+        async handleClick () {
+            const { id } = this
+            this.$router.push({ name: 'Product', params: { productId: id } })
+        }
     }
-  },
-  props: {
-    id: {
-      type: String,
-      default: ''
-    },
-    img: {
-      type: String,
-      default: ''
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    tags: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    },
-    desc: {
-      type: String,
-      default: ''
-    },
-    count: {
-      type: [String, Number],
-      default: ''
-    },
-    price: {
-      type: [String, Number],
-      default: ''
-    },
-    originalPrice: {
-      type: [String, Number],
-      default: ''
-    },
-    size: {
-      type: String,
-      default: 'large'
-    },
-    border: Boolean,
-    data: {
-      type: Object,
-      default: function () {
-        return {}
-      }
-    }
-  },
-  computed: {
-    ...mapGetters(['userId', 'agentUser'])
-  },
-  methods: {
-    async handleClick () {
-      const { id } = this
-      this.$router.push({ name: 'Product', params: { productId: id } })
-    }
-  }
 }
 </script>
 

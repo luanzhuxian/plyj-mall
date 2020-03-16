@@ -1,117 +1,117 @@
 <template>
-  <div
-    class="quick-navbar"
-    ref="QuickBox"
-  >
-    <transition name="fade">
-      <div
-        :class="$style.mask"
-        v-show="showBar"
-        @click="showBar = false"
-      />
-    </transition>
-    <ul
-      :class="{
-        [$style.navbar]: true,
-        [$style.showBar]: showBar
-      }"
+    <div
+        class="quick-navbar"
+        ref="QuickBox"
     >
-      <li
-        :class="$style.onOff"
-        @click="showBar = !showBar"
-      >
-        <pl-svg
-          :class="$style.doubleArrow"
-          name="icon-double-arrow"
-          width="24"
-          height="24"
-        />
-        <div :class="$style.tip">
-          <p v-text="showBar ? '收起' : '快速'" />
-          <p v-show="!showBar">
-            导航
-          </p>
-        </div>
-      </li>
-      <router-link
-        tag="li"
-        active-class="active"
-        :to="{name: 'Home'}"
-      >
-        <pl-svg
-          name="icon-find"
-          width="50"
-          height="75"
-        />
-      </router-link>
-      <router-link
-        v-if="liveRoomEnable"
-        tag="li"
-        active-class="active"
-        :to="{name: 'OnlineClassroom'}"
-      >
-        <pl-svg
-          name="icon-icon-onlineClass-552fe"
-          height="75"
-        />
-      </router-link>
-      <router-link
-        tag="li"
-        active-class="active"
-        :to="{name: 'Classify'}"
-      >
-        <pl-svg
-          name="icon-classify"
-          width="50"
-          height="75"
-        />
-      </router-link>
-      <router-link
-        tag="li"
-        active-class="active"
-        :to="{ name: 'ShoppingCart' }"
-      >
-        <pl-svg
-          :class="$style.cart"
-          name="icon-cart"
-          width="66"
-          height="75"
-        />
-      </router-link>
-      <router-link
-        tag="li"
-        active-class="active"
-        :to="{name: 'My'}"
-      >
-        <pl-svg
-          name="icon-my"
-          width="50"
-          height="75"
-        />
-      </router-link>
-    </ul>
-  </div>
+        <transition name="fade">
+            <div
+                :class="$style.mask"
+                v-show="showBar"
+                @click="showBar = false"
+            />
+        </transition>
+        <ul
+            :class="{
+                [$style.navbar]: true,
+                [$style.showBar]: showBar
+            }"
+        >
+            <li
+                :class="$style.onOff"
+                @click="showBar = !showBar"
+            >
+                <pl-svg
+                    :class="$style.doubleArrow"
+                    name="icon-double-arrow"
+                    width="24"
+                    height="24"
+                />
+                <div :class="$style.tip">
+                    <p v-text="showBar ? '收起' : '快速'" />
+                    <p v-show="!showBar">
+                        导航
+                    </p>
+                </div>
+            </li>
+            <router-link
+                tag="li"
+                active-class="active"
+                :to="{name: 'Home'}"
+            >
+                <pl-svg
+                    name="icon-find"
+                    width="50"
+                    height="75"
+                />
+            </router-link>
+            <router-link
+                v-if="liveRoomEnable"
+                tag="li"
+                active-class="active"
+                :to="{name: 'OnlineClassroom'}"
+            >
+                <pl-svg
+                    name="icon-icon-onlineClass-552fe"
+                    height="75"
+                />
+            </router-link>
+            <router-link
+                tag="li"
+                active-class="active"
+                :to="{name: 'Classify'}"
+            >
+                <pl-svg
+                    name="icon-classify"
+                    width="50"
+                    height="75"
+                />
+            </router-link>
+            <router-link
+                tag="li"
+                active-class="active"
+                :to="{ name: 'ShoppingCart' }"
+            >
+                <pl-svg
+                    :class="$style.cart"
+                    name="icon-cart"
+                    width="66"
+                    height="75"
+                />
+            </router-link>
+            <router-link
+                tag="li"
+                active-class="active"
+                :to="{name: 'My'}"
+            >
+                <pl-svg
+                    name="icon-my"
+                    width="50"
+                    height="75"
+                />
+            </router-link>
+        </ul>
+    </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'QuickNavbar',
-  data () {
-    return {
-      hidden: true,
-      QuickBox: null,
-      showBar: false
+    name: 'QuickNavbar',
+    data () {
+        return {
+            hidden: true,
+            QuickBox: null,
+            showBar: false
+        }
+    },
+    watch: {
+        $route () {
+            this.showBar = false
+        }
+    },
+    computed: {
+        ...mapGetters(['agentUser', 'isAdmin', 'liveRoomEnable'])
     }
-  },
-  watch: {
-    $route () {
-      this.showBar = false
-    }
-  },
-  computed: {
-    ...mapGetters(['agentUser', 'isAdmin', 'liveRoomEnable'])
-  }
 }
 </script>
 

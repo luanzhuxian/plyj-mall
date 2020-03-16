@@ -1,61 +1,61 @@
 <template>
-  <label
-    :class="{
-      'pl-switch': true,
-      checked: value
-    }"
-  >
-    <input
-      type="checkbox"
-      :checked="localValue"
-      @change="handleChange"
+    <label
+        :class="{
+            'pl-switch': true,
+            checked: value
+        }"
     >
-    <span
-      :class="{
-        'pl-switch_on_off': true,
-        'pl-switch_on': value,
-        'pl-switch_off': !value
-      }"
-    />
-  </label>
+        <input
+            type="checkbox"
+            :checked="localValue"
+            @change="handleChange"
+        >
+        <span
+            :class="{
+                'pl-switch_on_off': true,
+                'pl-switch_on': value,
+                'pl-switch_off': !value
+            }"
+        />
+    </label>
 </template>
 
 <script>
 export default {
-  name: 'PlSwitch',
-  model: {
-    event: 'change',
-    value: 'value'
-  },
-  props: {
-    value: {
-      type: [Boolean, Number],
-      default: 0
+    name: 'PlSwitch',
+    model: {
+        event: 'change',
+        value: 'value'
     },
-    activeText: {
-      type: [String, Number],
-      default: null
+    props: {
+        value: {
+            type: [Boolean, Number],
+            default: 0
+        },
+        activeText: {
+            type: [String, Number],
+            default: null
+        },
+        inactiveText: {
+            type: [String, Number],
+            default: null
+        }
     },
-    inactiveText: {
-      type: [String, Number],
-      default: null
+    computed: {
+        localValue () {
+            return Boolean(this.value)
+        }
+    },
+    methods: {
+        handleChange (e) {
+            const { checked } = e.target
+            if (this.activeText !== null && this.inactiveText !== null) {
+                this.$emit('change', checked ? this.activeText : this.inactiveText)
+            } else {
+                this.$emit('change', e.target.checked)
+            }
+        }
     }
-  },
-  computed: {
-    localValue () {
-      return Boolean(this.value)
-    }
-  },
-  methods: {
-    handleChange (e) {
-      let checked = e.target.checked
-      if (this.activeText !== null && this.inactiveText !== null) {
-        this.$emit('change', checked ? this.activeText : this.inactiveText)
-      } else {
-        this.$emit('change', e.target.checked)
-      }
-    }
-  }
 }
 </script>
 

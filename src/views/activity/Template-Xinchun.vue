@@ -1,68 +1,68 @@
 <template>
-  <div :class="$style.templateXinchun">
-    <div :class="$style.background">
-      <div :class="$style.container" v-if="allLoaded">
-        <div
-          v-if="parent.xinchunCouponTotal"
-          :class="$style.btnTop"
-          @click="$router.push({ name: 'MyCoupon' })"
-        >
-          <div :class="$style.btnTopBg">
-            您有优惠券可使用！
-          </div>
-          <pl-svg name="icon-jinru" width="116" />
+    <div :class="$style.templateXinchun">
+        <div :class="$style.background">
+            <div :class="$style.container" v-if="allLoaded">
+                <div
+                    v-if="parent.xinchunCouponTotal"
+                    :class="$style.btnTop"
+                    @click="$router.push({ name: 'MyCoupon' })"
+                >
+                    <div :class="$style.btnTopBg">
+                        您有优惠券可使用！
+                    </div>
+                    <pl-svg name="icon-jinru" width="116" />
+                </div>
+                <!-- 直播-->
+                <div :class="[$style.live, $style.module]" v-if="isLiveShow">
+                    <live :data="parent.liveInfo" />
+                </div>
+                <!-- 活动-->
+                <activity
+                    v-if="isNwEventShow"
+                    :class="[$style.activity, $style.module]"
+                    background="#FFFAE6"
+                    box-shadow="0px 8px 12px rgba(121, 30, 5, 0.2)"
+                />
+                <!-- 品宣 -->
+                <div :class="[$style.propagate, $style.module]" v-if="PIN_XUAN && PIN_XUAN.showStatue === 1">
+                    <propagate :data="PIN_XUAN" />
+                </div>
+                <!-- 领券 -->
+                <div :class="[$style.coupon, $style.module]" v-if="COUPON.values && COUPON.values.length">
+                    <coupon :data="COUPON" />
+                </div>
+                <!-- 春耘 -->
+                <div :class="[$style.chunyun, $style.module]" v-if="!!CHUN_YUN.otherValue && CHUN_YUN.values && CHUN_YUN.values.length">
+                    <chunyun :data="CHUN_YUN" />
+                </div>
+                <!-- 拼团 -->
+                <div :class="[$style.pintuan, $style.module]" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
+                    <pintuan :data="PIN_TUAN" />
+                </div>
+                <!-- 预购 -->
+                <div :class="[$style.yugou, $style.module]" v-if="YU_GOU.values && YU_GOU.values.length">
+                    <yugou :data="YU_GOU" />
+                </div>
+                <!-- 疯抢 -->
+                <div :class="[$style.fengqiang, $style.module]" v-if="FENG_QIANG.values && FENG_QIANG.values.length">
+                    <div :class="$style.title">
+                        — 新春优惠感恩大回馈 —
+                    </div>
+                    <best-recommend :data="FENG_QIANG">
+                        <template v-slot:price="{ price }">
+                            <div :class="$style.priceWrapper">
+                                <pl-svg name="icon-fengqiangjia" width="80" height="44" fill="#FE3C5E" />
+                                <span :class="$style.price" v-text="price" />
+                            </div>
+                        </template>
+                    </best-recommend>
+                </div>
+                <footer :class="$style.footer">
+                    — 技术支持 朋来科技 —
+                </footer>
+            </div>
         </div>
-        <!-- 直播-->
-        <div :class="[$style.live, $style.module]" v-if="isLiveShow">
-          <live :data="parent.liveInfo" />
-        </div>
-        <!-- 活动-->
-        <activity
-          v-if="isNwEventShow"
-          :class="[$style.activity, $style.module]"
-          background="#FFFAE6"
-          box-shadow="0px 8px 12px rgba(121, 30, 5, 0.2)"
-        />
-        <!-- 品宣 -->
-        <div :class="[$style.propagate, $style.module]" v-if="PIN_XUAN && PIN_XUAN.showStatue === 1">
-          <propagate :data="PIN_XUAN" />
-        </div>
-        <!-- 领券 -->
-        <div :class="[$style.coupon, $style.module]" v-if="COUPON.values && COUPON.values.length">
-          <coupon :data="COUPON" />
-        </div>
-        <!-- 春耘 -->
-        <div :class="[$style.chunyun, $style.module]" v-if="!!CHUN_YUN.otherValue && CHUN_YUN.values && CHUN_YUN.values.length">
-          <chunyun :data="CHUN_YUN" />
-        </div>
-        <!-- 拼团 -->
-        <div :class="[$style.pintuan, $style.module]" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
-          <pintuan :data="PIN_TUAN" />
-        </div>
-        <!-- 预购 -->
-        <div :class="[$style.yugou, $style.module]" v-if="YU_GOU.values && YU_GOU.values.length">
-          <yugou :data="YU_GOU" />
-        </div>
-        <!-- 疯抢 -->
-        <div :class="[$style.fengqiang, $style.module]" v-if="FENG_QIANG.values && FENG_QIANG.values.length">
-          <div :class="$style.title">
-            — 新春优惠感恩大回馈 —
-          </div>
-          <best-recommend :data="FENG_QIANG">
-            <template v-slot:price="{ price }">
-              <div :class="$style.priceWrapper">
-                <pl-svg name="icon-fengqiangjia" width="80" height="44" fill="#FE3C5E" />
-                <span :class="$style.price" v-text="price" />
-              </div>
-            </template>
-          </best-recommend>
-        </div>
-        <footer :class="$style.footer">
-          — 技术支持 朋来科技 —
-        </footer>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -76,63 +76,63 @@ import Yugou from './xin-chun/Yugou.vue'
 import BestRecommend from '../home/components/Best-Recommend.vue'
 
 export default {
-  name: 'TemplateXinchun',
-  inject: ['parent'],
-  components: {
-    Live,
-    Activity,
-    Propagate,
-    Coupon,
-    Chunyun,
-    Pintuan,
-    Yugou,
-    BestRecommend
-  },
-  data () {
-    return {}
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
+    name: 'TemplateXinchun',
+    inject: ['parent'],
+    components: {
+        Live,
+        Activity,
+        Propagate,
+        Coupon,
+        Chunyun,
+        Pintuan,
+        Yugou,
+        BestRecommend
+    },
+    data () {
         return {}
-      }
     },
-    type: {
-      type: Number,
-      default: 0
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+        type: {
+            type: Number,
+            default: 0
+        }
+    },
+    computed: {
+        PIN_XUAN () {
+            return this.data.PIN_XUAN || {}
+        },
+        COUPON () {
+            return this.data.COUPON || {}
+        },
+        CHUN_YUN () {
+            return this.data.CHUN_YUN || {}
+        },
+        PIN_TUAN () {
+            return this.data.PIN_TUAN || {}
+        },
+        YU_GOU () {
+            return this.data.YU_GOU || {}
+        },
+        FENG_QIANG () {
+            return this.data.FENG_QIANG || {}
+        },
+        isLiveShow () {
+            const { liveInfo } = this.parent
+            return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+        },
+        isNwEventShow () {
+            return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
+        },
+        allLoaded () {
+            return this.parent.allLoaded
+        }
     }
-  },
-  computed: {
-    PIN_XUAN () {
-      return this.data.PIN_XUAN || {}
-    },
-    COUPON () {
-      return this.data.COUPON || {}
-    },
-    CHUN_YUN () {
-      return this.data.CHUN_YUN || {}
-    },
-    PIN_TUAN () {
-      return this.data.PIN_TUAN || {}
-    },
-    YU_GOU () {
-      return this.data.YU_GOU || {}
-    },
-    FENG_QIANG () {
-      return this.data.FENG_QIANG || {}
-    },
-    isLiveShow () {
-      const { liveInfo } = this.parent
-      return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
-    },
-    isNwEventShow () {
-      return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
-    },
-    allLoaded () {
-      return this.parent.allLoaded
-    }
-  }
 }
 </script>
 

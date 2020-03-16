@@ -1,52 +1,52 @@
 <template>
-  <div :class="$style.classify">
-    <div :class="$style.search">
-      <router-link
-        tag="div"
-        :class="$style.searchBox"
-        :to="{ name: 'Search' }"
-      >
-        <pl-svg name="icon-search" width="30" />
-        <input
-          type="text"
-          placeholder="你想要的应有尽有"
-        >
-      </router-link>
-    </div>
+    <div :class="$style.classify">
+        <div :class="$style.search">
+            <router-link
+                tag="div"
+                :class="$style.searchBox"
+                :to="{ name: 'Search' }"
+            >
+                <pl-svg name="icon-search" width="30" />
+                <input
+                    type="text"
+                    placeholder="你想要的应有尽有"
+                >
+            </router-link>
+        </div>
 
-    <main :class="$style.classifyMain">
-      <ul :class="$style.classifyList">
-        <li
-          v-for="(item, index) of classifyList"
-          :class="{[$style.classifyActive]: item.id === currentClassify.id}"
-          :key="index"
-          @click="classifyClick(item)"
-        >
-          <span
-            :class="$style.classifyText"
-            v-text="item.categoryName"
-          />
-        </li>
-      </ul>
-      <div :class="$style.content">
-        <div
-          :class="$style.banner"
-          v-if="currentClassify.parentCode && currentClassify.bannerPic && currentClassify.id !== '1'"
-        >
-          <img :src="currentClassify.bannerPic">
-        </div>
-        <div
-          :class="$style.banner"
-          v-if="currentClassify.id === '1'"
-        >
-          <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/helperBanner.png">
-        </div>
-        <template v-if="currentClassify.childs && currentClassify.childs.length">
-          <sub-classify
-            :children="currentClassify.childs"
-            @click="subClassifyClick"
-          />
-          <!--<div :class="$style.classifyList2">
+        <main :class="$style.classifyMain">
+            <ul :class="$style.classifyList">
+                <li
+                    v-for="(item, index) of classifyList"
+                    :class="{[$style.classifyActive]: item.id === currentClassify.id}"
+                    :key="index"
+                    @click="classifyClick(item)"
+                >
+                    <span
+                        :class="$style.classifyText"
+                        v-text="item.categoryName"
+                    />
+                </li>
+            </ul>
+            <div :class="$style.content">
+                <div
+                    :class="$style.banner"
+                    v-if="currentClassify.parentCode && currentClassify.bannerPic && currentClassify.id !== '1'"
+                >
+                    <img :src="currentClassify.bannerPic">
+                </div>
+                <div
+                    :class="$style.banner"
+                    v-if="currentClassify.id === '1'"
+                >
+                    <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/helperBanner.png">
+                </div>
+                <template v-if="currentClassify.childs && currentClassify.childs.length">
+                    <sub-classify
+                        :children="currentClassify.childs"
+                        @click="subClassifyClick"
+                    />
+                    <!--<div :class="$style.classifyList2">
             &lt;!&ndash;<classify-item
               v-for="item of currentClassify.childs"
               :key="item.id"
@@ -56,57 +56,57 @@
               @click="subClassifyClick"
             />&ndash;&gt;
           </div>-->
-        </template>
-        <div
-          :class="$style.title"
-          v-text="currentClassify.subCategoryIdName || currentClassify.categoryName"
-          v-show="!isEmpty && currentClassify.childs && currentClassify.childs.length"
-        />
-        <div
-          :class="$style.title"
-          style="text-align: center;"
-          v-show="!isEmpty && currentClassify.categoryName && currentClassify.categoryName === '全部'"
-        >
-          全部商品
-        </div>
-        <div
-          :class="$style.title"
-          v-show="!isEmpty && currentClassify.id && currentClassify.id === '1'"
-        >
-          热门推荐
-        </div>
-
-        <load-more
-          ref="loadMore"
-          :form="form"
-          :request-methods="requestMethods"
-          :loading.sync="loading"
-          no-content-tip="此分类下还没有商品"
-          @listState="isEmpty = $event"
-          @refresh="refreshHandler"
-          @more="refreshHandler"
-          :style="`margin-top: ${20/7.5}vw;`"
-        >
-          <template v-slot="{ list }">
-            <div :class="$style.productList">
-              <template v-for="(item, index) of prodList">
-                <goods-item
-                  :key="index"
-                  :id="item.id"
-                  :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
-                  :title="item.productName"
-                  :price="item.price"
-                  :data="item"
-                  :activity-product="item.activityProduct"
-                  :rebate="currentClassify.id === '1' ? item.realRebate : ''"
+                </template>
+                <div
+                    :class="$style.title"
+                    v-text="currentClassify.subCategoryIdName || currentClassify.categoryName"
+                    v-show="!isEmpty && currentClassify.childs && currentClassify.childs.length"
                 />
-              </template>
+                <div
+                    :class="$style.title"
+                    style="text-align: center;"
+                    v-show="!isEmpty && currentClassify.categoryName && currentClassify.categoryName === '全部'"
+                >
+                    全部商品
+                </div>
+                <div
+                    :class="$style.title"
+                    v-show="!isEmpty && currentClassify.id && currentClassify.id === '1'"
+                >
+                    热门推荐
+                </div>
+
+                <load-more
+                    ref="loadMore"
+                    :form="form"
+                    :request-methods="requestMethods"
+                    :loading.sync="loading"
+                    no-content-tip="此分类下还没有商品"
+                    @listState="isEmpty = $event"
+                    @refresh="refreshHandler"
+                    @more="refreshHandler"
+                    :style="`margin-top: ${20/7.5}vw;`"
+                >
+                    <template v-slot="{ list }">
+                        <div :class="$style.productList">
+                            <template v-for="(item, index) of prodList">
+                                <goods-item
+                                    :key="index"
+                                    :id="item.id"
+                                    :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
+                                    :title="item.productName"
+                                    :price="item.price"
+                                    :data="item"
+                                    :activity-product="item.activityProduct"
+                                    :rebate="currentClassify.id === '1' ? item.realRebate : ''"
+                                />
+                            </template>
+                        </div>
+                    </template>
+                </load-more>
             </div>
-          </template>
-        </load-more>
-      </div>
-    </main>
-  </div>
+        </main>
+    </div>
 </template>
 
 <script>
@@ -118,152 +118,155 @@ import { getActivityProduct } from '../../apis/broker'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Classify',
-  components: {
-    GoodsItem,
-    SubClassify,
-    LoadMore
-  },
-  props: {
-    optionId: {
-      type: String,
-      default: null
-    }
-  },
-  data () {
-    return {
-      currentClassify: {
-        id: '',
-        categoryName: '全部',
-        subCategoryName: ''
-      },
-      classifyList: [{
-        id: '',
-        categoryName: '全部'
-      }],
-      classifyFormTemplate: {
-        categoryId: '',
-        subCategoryId: '',
-        current: 1,
-        size: 10
-      },
-      helperFormTemplate: {
-        type: '',
-        current: 1,
-        size: 10
-      },
-      form: {},
-      prodList: [],
-      loading: false,
-      isEmpty: false,
-      agentShow: false,
-      $refresh: null,
-      requestMethods: getProduct
-    }
-  },
-  computed: {
-    ...mapGetters(['agentUser'])
-  },
-  created () {
-  },
-  async mounted () {
-    this.form = this.classifyFormTemplate
-    await this.$nextTick()
-    this.$refresh = this.$refs.loadMore.refresh
-  },
-  async activated () {
+    name: 'Classify',
+    components: {
+        GoodsItem,
+        SubClassify,
+        LoadMore
+    },
+    props: {
+        optionId: {
+            type: String,
+            default: null
+        }
+    },
+    data () {
+        return {
+            currentClassify: {
+                id: '',
+                categoryName: '全部',
+                subCategoryName: ''
+            },
+            classifyList: [{
+                id: '',
+                categoryName: '全部'
+            }],
+            classifyFormTemplate: {
+                categoryId: '',
+                subCategoryId: '',
+                current: 1,
+                size: 10
+            },
+            helperFormTemplate: {
+                type: '',
+                current: 1,
+                size: 10
+            },
+            form: {},
+            prodList: [],
+            loading: false,
+            isEmpty: false,
+            agentShow: false,
+            $refresh: null,
+            requestMethods: getProduct
+        }
+    },
+    computed: {
+        ...mapGetters(['agentUser'])
+    },
+    created () {
+    },
+    async mounted () {
+        this.form = this.classifyFormTemplate
+        await this.$nextTick()
+        this.$refresh = this.$refs.loadMore.refresh
+    },
+    async activated () {
     // 去掉prop传参 refs调用
     // this.$refs.loadMore.setForm(this.form)
     // this.$refs.loadMore.setMethods(getProduct)
-    if (this.classifyList.length > 1) {
-      // 有分类且有默认值才设置默认分类
-      if (this.optionId) {
-        this.findDefault()
-      }
-    } else {
-      // 没有分类列表时请求列表，然后设置默认值
-      await this.getCategoryTree()
-      this.findDefault()
-    }
-  },
-  methods: {
-    findDefault () {
-      if (this.classifyList.length > 1) {
-        let finded = this.classifyList.find(item => item.id === this.optionId)
-        if (finded) {
-          this.classifyClick(finded)
+        if (this.classifyList.length > 1) {
+            // 有分类且有默认值才设置默认分类
+            if (this.optionId) {
+                this.findDefault()
+            }
         } else {
-          finded = this.classifyList.find(item => item.id === '')
-          this.classifyClick(finded)
+            // 没有分类列表时请求列表，然后设置默认值
+            await this.getCategoryTree()
+            this.findDefault()
         }
-      }
     },
-    classifyClick (classify) {
-      if (this.loading || classify === this.currentClassify) return
-      if (classify && (classify.id === '1')) {
-        // 点击的是helper专区
-        this.agentShow = true
-        this.currentClassify = classify
-        this.requestMethods = getActivityProduct
-        this.form = JSON.parse(JSON.stringify(this.helperFormTemplate))
-        this.$router.push({ name: 'Classify', params: { optionId: '1' } })
-        this.$refresh()
-        return
-      }
-      if (classify) {
-        // 点击分类
-        this.agentShow = false
-        this.currentClassify = classify
-        this.currentClassify.subCategoryName = ''
-        // if (!this.form.hasOwnProperty('categoryName')) {
-        this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
-        this.requestMethods = getProduct
-        // }
-        this.form.categoryId = classify.id
-        this.form.subCategoryId = ''
-        this.$router.push({ name: 'Classify', params: { optionId: classify.id || null } })
-        this.$refresh()
-      }
-    },
-    subClassifyClick ({ cid, name }) {
-      if (this.loading) return
-      this.currentClassify.subCategoryName = name
-      this.form.categoryId = this.currentClassify.id
-      this.form.subCategoryId = cid
-      this.form.current = 1
-      this.$refresh()
-    },
-    async getCategoryTree () {
-      try {
-        const { result } = await getCategoryTree()
-        this.classifyList = this.classifyList.concat(result)
-        if (this.agentUser) {
-          this.classifyList.push({
-            categoryName: 'Helper专区',
-            id: '1'
-          })
+    methods: {
+        findDefault () {
+            if (this.classifyList.length > 1) {
+                let finded = this.classifyList.find(item => item.id === this.optionId)
+                if (finded) {
+                    this.classifyClick(finded)
+                } else {
+                    finded = this.classifyList.find(item => item.id === '')
+                    this.classifyClick(finded)
+                }
+            }
+        },
+        classifyClick (classify) {
+            if (this.loading || classify === this.currentClassify) return
+            if (classify && (classify.id === '1')) {
+                // 点击的是helper专区
+                this.agentShow = true
+                this.currentClassify = classify
+                this.requestMethods = getActivityProduct
+                this.form = JSON.parse(JSON.stringify(this.helperFormTemplate))
+                this.$router.push({ name: 'Classify', params: { optionId: '1' } })
+                this.$refresh()
+                return
+            }
+            if (classify) {
+                // 点击分类
+                this.agentShow = false
+                this.currentClassify = classify
+                this.currentClassify.subCategoryName = ''
+
+                // if (!this.form.hasOwnProperty('categoryName')) {
+                this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
+                this.requestMethods = getProduct
+
+                // }
+                this.form.categoryId = classify.id
+                this.form.subCategoryId = ''
+                this.$router.push({ name: 'Classify', params: { optionId: classify.id || null } })
+                this.$refresh()
+            }
+        },
+        subClassifyClick ({ cid, name }) {
+            if (this.loading) return
+            this.currentClassify.subCategoryName = name
+            this.form.categoryId = this.currentClassify.id
+            this.form.subCategoryId = cid
+            this.form.current = 1
+            this.$refresh()
+        },
+        async getCategoryTree () {
+            try {
+                const { result } = await getCategoryTree()
+                this.classifyList = this.classifyList.concat(result)
+                if (this.agentUser) {
+                    this.classifyList.push({
+                        categoryName: 'Helper专区',
+                        id: '1'
+                    })
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+        refreshHandler (list) {
+            for (const item of list) {
+                // item.status: 0: 规格禁用 1: 规格启用
+                const arr = item.productSkuModels.filter(item => item.status === 1)
+                const priceList = arr.map(item => {
+                    if (item.status === 1) {
+                        return Number(item.price)
+                    }
+                    return 0
+                })
+                item.price = Math.min(...priceList) || 0
+                if (this.currentClassify.id === '1') {
+                    item.realRebate = Math.max(...arr.map(item => Number(item.realRebate))) || 0
+                }
+            }
+            this.prodList = list
         }
-      } catch (e) {
-        throw e
-      }
-    },
-    refreshHandler (list) {
-      for (let item of list) {
-        // item.status: 0: 规格禁用 1: 规格启用
-        const arr = item.productSkuModels.filter(item => item.status === 1)
-        let priceList = arr.map(item => {
-          if (item.status === 1) {
-            return Number(item.price)
-          }
-        })
-        item.price = Math.min(...priceList) || 0
-        if (this.currentClassify.id === '1') {
-          item.realRebate = Math.max(...arr.map(item => Number(item.realRebate))) || 0
-        }
-      }
-      this.prodList = list
     }
-  }
 }
 </script>
 

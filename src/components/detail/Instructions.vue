@@ -1,27 +1,28 @@
 <template>
-  <div :class="$style.instructions">
-    <div :class="$style.title">
-      使用须知
+    <div :class="$style.instructions">
+        <div :class="$style.title">
+            使用须知
+        </div>
+        <div :class="$style.content" v-html="lineBreak(content)" />
     </div>
-    <div :class="$style.content" v-html="lineBreak(content)" />
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'Instructions',
-  props: {
-    content: {
-      type: String,
-      default: ''
+    name: 'Instructions',
+    props: {
+        content: {
+            type: String,
+            default: ''
+        }
+    },
+    methods: {
+
+        // 换行
+        lineBreak (value) {
+            return value.replace(/\n/g, '<br>')
+        }
     }
-  },
-  methods: {
-    // 换行
-    lineBreak (value) {
-      return value.replace(/\n/g, '<br>')
-    }
-  }
 }
 </script>
 

@@ -1,58 +1,58 @@
 <template>
-  <transition name="fade">
-    <div :class="$style.messageBox" v-show="show">
-      <div :class="$style.wrap">
-        <div v-if="title" :class="$style.title" v-text="title" />
-        <div v-else>
-          <slot name="title" />
+    <transition name="fade">
+        <div :class="$style.messageBox" v-show="show">
+            <div :class="$style.wrap">
+                <div v-if="title" :class="$style.title" v-text="title" />
+                <div v-else>
+                    <slot name="title" />
+                </div>
+                <div
+                    :class="$style.message"
+                    v-text="message"
+                    :style="{ width: messageWidth / 7.5 + 'vw' }"
+                />
+                <div>
+                    <slot />
+                </div>
+                <button :class="$style.confirmText" v-text="confirmText" @click="confirm" />
+            </div>
+            <pl-svg @click="close" :class="$style.close" name="icon-close2" width="48" fill="#fff" />
         </div>
-        <div
-          :class="$style.message"
-          v-text="message"
-          :style="{ width: messageWidth / 7.5 + 'vw' }"
-        />
-        <div>
-          <slot />
-        </div>
-        <button :class="$style.confirmText" v-text="confirmText" @click="confirm" />
-      </div>
-      <pl-svg @click="close" :class="$style.close" name="icon-close2" width="48" fill="#fff" />
-    </div>
-  </transition>
+    </transition>
 </template>
 
 <script>
 export default {
-  name: 'GiftMessageBox',
-  props: {
-    title: {
-      type: String,
-      default: ''
+    name: 'GiftMessageBox',
+    props: {
+        title: {
+            type: String,
+            default: ''
+        },
+        message: {
+            type: String,
+            default: ''
+        },
+        messageWidth: {
+            type: [Number, String],
+            default: 500
+        },
+        confirmText: {
+            type: String,
+            default: ''
+        },
+        show: Boolean
     },
-    message: {
-      type: String,
-      default: ''
-    },
-    messageWidth: {
-      type: [Number, String],
-      default: 500
-    },
-    confirmText: {
-      type: String,
-      default: ''
-    },
-    show: Boolean
-  },
-  methods: {
-    close () {
-      this.$emit('update:show', false)
-      this.$emit('close')
-    },
-    confirm (e) {
-      this.$emit('confirm', e)
-      this.$emit('update:show', false)
+    methods: {
+        close () {
+            this.$emit('update:show', false)
+            this.$emit('close')
+        },
+        confirm (e) {
+            this.$emit('confirm', e)
+            this.$emit('update:show', false)
+        }
     }
-  }
 }
 </script>
 

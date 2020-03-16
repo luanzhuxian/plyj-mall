@@ -1,60 +1,60 @@
 <template>
-  <div :class="$style.yugou">
-    <div :class="$style.background">
-      <div :class="$style.wrapper">
-        <div :class="$style.navBar">
-          <router-link :class="$style.navLink" tag="div" :to="{ name: 'BookList' }">
-            <span>查看更多</span>
-            <pl-svg name="icon-right" width="20" fill="#ccc" />
-          </router-link>
+    <div :class="$style.yugou">
+        <div :class="$style.background">
+            <div :class="$style.wrapper">
+                <div :class="$style.navBar">
+                    <router-link :class="$style.navLink" tag="div" :to="{ name: 'BookList' }">
+                        <span>查看更多</span>
+                        <pl-svg name="icon-right" width="20" fill="#ccc" />
+                    </router-link>
+                </div>
+                <ul :class="$style.list" v-if="data.values.length">
+                    <template v-for="(item, i) of data.values">
+                        <li
+                            v-if="item.goodsInfo && item.goodsInfo.activityInfo"
+                            :class="$style.listItem"
+                            :key="i"
+                            @click="$router.push({ name: 'Product', params: { productId: item.goodsInfo.id}, query: { currentProductStatus: 4 } })"
+                        >
+                            <div :class="$style.time">
+                                <div :class="$style.timeLeft">
+                                    <span v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
+                                    <span v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
+                                    <span v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
+                                </div>
+                                <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
+                                    <count-down
+                                        :timestamp="getTime(item.goodsInfo.activityInfo)"
+                                        color="#DB4D7D"
+                                        size="mini"
+                                        format="HH:mm"
+                                        @done="() => item.goodsInfo.activityInfo.status += 1"
+                                    />
+                                </div>
+                            </div>
+                            <div :class="$style.listItemWrapper">
+                                <div :class="$style.imgWrapper">
+                                    <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
+                                </div>
+                                <div :class="$style.info">
+                                    <div :class="$style.main">
+                                        {{ item.goodsInfo.productName }}
+                                    </div>
+                                    <div :class="$style.sub1">
+                                        {{ `预售到手价：${getTotalPrice(item)}元` }}
+                                    </div>
+                                    <div :class="$style.sub2">
+                                        <span>{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
+                                        <span v-if="item.goodsInfo.activityInfo.multiple && item.goodsInfo.activityInfo.multipleNumber > 1 && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
         </div>
-        <ul :class="$style.list" v-if="data.values.length">
-          <template v-for="(item, i) of data.values">
-            <li
-              v-if="item.goodsInfo && item.goodsInfo.activityInfo"
-              :class="$style.listItem"
-              :key="i"
-              @click="$router.push({ name: 'Product', params: { productId: item.goodsInfo.id}, query: { currentProductStatus: 4 } })"
-            >
-              <div :class="$style.time">
-                <div :class="$style.timeLeft">
-                  <span v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
-                  <span v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
-                  <span v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
-                </div>
-                <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
-                  <count-down
-                    :timestamp="getTime(item.goodsInfo.activityInfo)"
-                    color="#DB4D7D"
-                    size="mini"
-                    format="HH:mm"
-                    @done="() => item.goodsInfo.activityInfo.status += 1"
-                  />
-                </div>
-              </div>
-              <div :class="$style.listItemWrapper">
-                <div :class="$style.imgWrapper">
-                  <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-                </div>
-                <div :class="$style.info">
-                  <div :class="$style.main">
-                    {{ item.goodsInfo.productName }}
-                  </div>
-                  <div :class="$style.sub1">
-                    {{ `预售到手价：${getTotalPrice(item)}元` }}
-                  </div>
-                  <div :class="$style.sub2">
-                    <span>{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
-                    <span v-if="item.goodsInfo.activityInfo.multiple && item.goodsInfo.activityInfo.multipleNumber > 1 && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </template>
-        </ul>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -62,33 +62,32 @@ import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
 
 export default {
-  name: 'Yugou',
-  mixins: [mixin],
-  components: {
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
+    name: 'Yugou',
+    mixins: [mixin],
+    components: {
+        CountDown
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
+    },
+    data () {
+        return {}
+    },
+    methods: {
+        getTotalPrice (item) {
+            if (!item.goodsInfo || !item.goodsInfo.productSkuModels || !item.goodsInfo.productSkuModels.length) return
+            const prodPrice = this.getPrice(item.goodsInfo.productSkuModels)('price')
+            if (item.goodsInfo.activityInfo.activityPrice >= prodPrice) {
+                return item.goodsInfo.activityInfo.price
+            }
+            return this.sub(prodPrice, this.sub(item.goodsInfo.activityInfo.activityPrice, item.goodsInfo.activityInfo.price))
+        }
     }
-  },
-  data () {
-    return {}
-  },
-  methods: {
-    getTotalPrice (item) {
-      if (!item.goodsInfo || !item.goodsInfo.productSkuModels || !item.goodsInfo.productSkuModels.length) return
-      const prodPrice = this.getPrice(item.goodsInfo.productSkuModels)('price')
-      if (item.goodsInfo.activityInfo.activityPrice >= prodPrice) {
-        return item.goodsInfo.activityInfo.price
-      } else {
-        return this.sub(prodPrice, this.sub(item.goodsInfo.activityInfo.activityPrice, item.goodsInfo.activityInfo.price))
-      }
-    }
-  }
 }
 </script>
 

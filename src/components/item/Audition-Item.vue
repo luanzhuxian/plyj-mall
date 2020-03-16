@@ -1,67 +1,67 @@
 <template>
-  <div
-    :class="$style.auditionItem + ' radius-20'"
-    @click="handleClick"
-  >
-    <!-- 试听组件 -->
-    <div :class="$style.content">
-      <img
-        class="radius-10"
-        v-lazy="img"
-        :key="img"
-        alt=""
-      >
-      <div :class="$style.right">
-        <div :class="$style.title">
-          <h3 v-text="title" />
-          <p><i v-text="count" />人试听过</p>
+    <div
+        :class="$style.auditionItem + ' radius-20'"
+        @click="handleClick"
+    >
+        <!-- 试听组件 -->
+        <div :class="$style.content">
+            <img
+                class="radius-10"
+                v-lazy="img"
+                :key="img"
+                alt=""
+            >
+            <div :class="$style.right">
+                <div :class="$style.title">
+                    <h3 v-text="title" />
+                    <p><i v-text="count" />人试听过</p>
+                </div>
+                <div :class="$style.tag">
+                    <span
+                        v-for="(tag, index) of tags"
+                        :key="index"
+                        v-text="tag"
+                    />
+                </div>
+                <pl-button
+                    type="primary"
+                    :class="$style.button"
+                >
+                    免费试听
+                </pl-button>
+            </div>
         </div>
-        <div :class="$style.tag">
-          <span
-            v-for="(tag, index) of tags"
-            :key="index"
-            v-text="tag"
-          />
-        </div>
-        <pl-button
-          type="primary"
-          :class="$style.button"
-        >
-          免费试听
-        </pl-button>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'AuditionItem',
-  props: {
-    img: {
-      type: String,
-      default: ''
+    name: 'AuditionItem',
+    props: {
+        img: {
+            type: String,
+            default: ''
+        },
+        title: {
+            type: String,
+            default: ''
+        },
+        count: {
+            type: [String, Number],
+            default: ''
+        },
+        tags: {
+            type: Array,
+            default () {
+                return []
+            }
+        }
     },
-    title: {
-      type: String,
-      default: ''
-    },
-    count: {
-      type: [String, Number],
-      default: ''
-    },
-    tags: {
-      type: Array,
-      default: function () {
-        return []
-      }
+    methods: {
+        handleClick () {
+            this.$router.push({ name: 'Audition', params: { id: '123' } })
+        }
     }
-  },
-  methods: {
-    handleClick () {
-      this.$router.push({ name: 'Audition', params: { id: '123' } })
-    }
-  }
 }
 </script>
 

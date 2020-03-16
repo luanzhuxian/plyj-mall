@@ -1,20 +1,20 @@
 <template>
-  <div :class="$style.soldOut">
-    <pl-svg name="icon-sold-out" />
-    <p>抱歉，该商品已删除</p>
-    <pl-button
-      plain
-      size="middle"
-      @click="$router.replace({ name: 'Home' })"
-    >
-      去逛商城
-    </pl-button>
-  </div>
+    <div :class="$style.soldOut">
+        <pl-svg name="icon-sold-out" />
+        <p>抱歉，该商品已删除</p>
+        <pl-button
+            plain
+            size="middle"
+            @click="$router.replace({ name: 'Home' })"
+        >
+            去逛商城
+        </pl-button>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'SoldOut'
+    name: 'SoldOut'
 }
 </script>
 

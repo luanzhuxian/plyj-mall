@@ -1,48 +1,48 @@
 <template>
-  <div :class="$style.activity">
-    <template-xinchun
-      v-if="type === 8"
-      :data="modules"
-      :type="type"
-    />
-    <div :class="$style.d12" v-if="~[5, 6, 7].indexOf(type)">
-      <div :class="$style.background">
-        <search placeholder="搜索商品" />
-        <div :class="$style.container" v-if="allLoaded">
-          <router-link
-            :class="{
-              [$style.btnTop]: true,
-              [$style.coupon]: topBtnType === 1,
-              [$style.default]: topBtnType === 2,
-            }"
-            tag="div"
-            :to="{ name: topBtnType === 1 ? 'MyCoupon' : '' }"
-          />
-          <template-fengqiang
-            v-if="type === 5"
+    <div :class="$style.activity">
+        <template-xinchun
+            v-if="type === 8"
             :data="modules"
             :type="type"
-          />
-          <template-baofa
-            v-if="type === 6"
-            :data="modules"
-            :type="type"
-          />
-          <template-fanchang
-            v-if="type === 7"
-            :data="modules"
-            :type="type"
-          />
+        />
+        <div :class="$style.d12" v-if="~[5, 6, 7].indexOf(type)">
+            <div :class="$style.background">
+                <search placeholder="搜索商品" />
+                <div :class="$style.container" v-if="allLoaded">
+                    <router-link
+                        :class="{
+                            [$style.btnTop]: true,
+                            [$style.coupon]: topBtnType === 1,
+                            [$style.default]: topBtnType === 2,
+                        }"
+                        tag="div"
+                        :to="{ name: topBtnType === 1 ? 'MyCoupon' : '' }"
+                    />
+                    <template-fengqiang
+                        v-if="type === 5"
+                        :data="modules"
+                        :type="type"
+                    />
+                    <template-baofa
+                        v-if="type === 6"
+                        :data="modules"
+                        :type="type"
+                    />
+                    <template-fanchang
+                        v-if="type === 7"
+                        :data="modules"
+                        :type="type"
+                    />
+                </div>
+            </div>
+            <invite-newcomers-home-entry />
         </div>
-      </div>
-      <invite-newcomers-home-entry />
+        <!-- 双十二-新人有礼 -->
+        <newcomers-home-entry />
+        <!-- 新春开学季-新人有礼 -->
+        <new-year-newcomers-home-entry />
+        <pl-svg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
     </div>
-    <!-- 双十二-新人有礼 -->
-    <newcomers-home-entry />
-    <!-- 新春开学季-新人有礼 -->
-    <new-year-newcomers-home-entry />
-    <pl-svg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
-  </div>
 </template>
 
 <script>
@@ -57,136 +57,138 @@ import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntr
 import NewYearNewcomersHomeEntry from '../new-year/newcomers/NewcomersHomeEntry.vue'
 
 export default {
-  name: 'Activity',
-  components: {
-    Search,
-    TemplateFengqiang,
-    TemplateBaofa,
-    TemplateFanchang,
-    TemplateXinchun,
-    InviteNewcomersHomeEntry,
-    NewcomersHomeEntry,
-    NewYearNewcomersHomeEntry
-  },
-  provide () {
-    return {
-      parent: this
-    }
-  },
-  data () {
-    return {
-      type: 0,
-      modules: {
-        COUPON: null,
-        MAI_SONG: null,
-        PIN_TUAN: null,
-        YU_GOU: null,
-        MIAO_SHA: null,
-        FENG_QIANG: null,
-        RECOMMEND: null
-      }
-    }
-  },
-  computed: {
-    ...mapGetters(['activityData', 'activityId', 'liveInfo', 'd12CouponTotal', 'xinchunCouponTotal', 'invitingEvent', 'jxEvent', 'nwEvent']),
-    topBtnType () {
-      if (this.d12CouponTotal === null) return false
-      return this.d12CouponTotal ? 1 : 2
+    name: 'Activity',
+    components: {
+        Search,
+        TemplateFengqiang,
+        TemplateBaofa,
+        TemplateFanchang,
+        TemplateXinchun,
+        InviteNewcomersHomeEntry,
+        NewcomersHomeEntry,
+        NewYearNewcomersHomeEntry
     },
-    allLoaded () {
-      let result
-      // 双十二
-      if ([5, 6, 7].includes(this.activityId)) {
-        result = (this.liveInfo !== null && !!this.liveInfo) &&
+    provide () {
+        return {
+            parent: this
+        }
+    },
+    data () {
+        return {
+            type: 0,
+            modules: {
+                COUPON: null,
+                MAI_SONG: null,
+                PIN_TUAN: null,
+                YU_GOU: null,
+                MIAO_SHA: null,
+                FENG_QIANG: null,
+                RECOMMEND: null
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['activityData', 'activityId', 'liveInfo', 'd12CouponTotal', 'xinchunCouponTotal', 'invitingEvent', 'jxEvent', 'nwEvent']),
+        topBtnType () {
+            if (this.d12CouponTotal === null) return false
+            return this.d12CouponTotal ? 1 : 2
+        },
+        allLoaded () {
+            let result
+
+            // 双十二
+            if ([5, 6, 7].includes(this.activityId)) {
+                result = (this.liveInfo !== null && !!this.liveInfo) &&
         (this.invitingEvent !== null && !!this.invitingEvent) &&
         (this.jxEvent !== null && !!this.jxEvent) &&
         this.d12CouponTotal !== null
-      }
-      // 新春
-      if (this.activityId === 8) {
-        result = (this.liveInfo !== null && !!this.liveInfo) &&
+            }
+
+            // 新春
+            if (this.activityId === 8) {
+                result = (this.liveInfo !== null && !!this.liveInfo) &&
         (this.nwEvent !== null && !!this.nwEvent) &&
         this.xinchunCouponTotal !== null
-      }
-      return result
-    }
-  },
-  watch: {
-    activityId: {
-      handler (id) {
-        if (!id && id !== 0) return
-        this.getTemplate()
-      },
-      immediate: true
-    }
-  },
-  async created () {},
-  methods: {
-    async getTemplate () {
-      try {
-        const { activityId } = this
-        if (activityId === 0) {
-          this.noFinish = true
-          this.$alert('主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
-            .finally(() => {
-              this.$router.replace({ name: 'Classify' })
-            })
-          return false
-        }
-        let { type, moduleModels } = this.activityData
-        if (type === 5) {
-          this.modules.MIAO_SHA = moduleModels[0]
-          this.modules.PIN_TUAN = moduleModels[1]
-          this.modules.MAI_SONG = moduleModels[2]
-          this.modules.COUPON = moduleModels[3]
-          this.modules.YU_GOU = moduleModels[4]
-          this.modules.FENG_QIANG = moduleModels[5]
-          this.modules.RECOMMEND = moduleModels[6]
-        }
-        if (type === 6) {
-          this.modules.COUPON = moduleModels[0]
-          this.modules.MAI_SONG = moduleModels[1]
-          this.modules.MIAO_SHA = moduleModels[2]
-          this.modules.PIN_TUAN = moduleModels[3]
-          this.modules.FENG_QIANG = moduleModels[4]
-          this.modules.MIAO_SHA.values.forEach((item, index) => {
-            if (!item.goodsInfo || !Array.isArray(item.goodsInfo)) {
-              item.goodsInfo = []
             }
-            this.$set(item, 'range', item.valueName.split(','))
-          })
+            return result
         }
-        if (type === 7) {
-          this.modules.MAI_SONG = moduleModels[0]
-          this.modules.MIAO_SHA = moduleModels[1]
-          this.modules.PIN_TUAN = moduleModels[2]
-          this.modules.FENG_QIANG = moduleModels[3]
-          this.modules.RECOMMEND = moduleModels[4]
+    },
+    watch: {
+        activityId: {
+            handler (id) {
+                if (!id && id !== 0) return
+                this.getTemplate()
+            },
+            immediate: true
         }
-        if (type === 8) {
-          this.modules.PIN_XUAN = moduleModels[0]
-          this.modules.COUPON = moduleModels[1]
-          this.modules.CHUN_YUN = moduleModels[2]
-          this.modules.PIN_TUAN = moduleModels[3]
-          this.modules.YU_GOU = moduleModels[4]
-          this.modules.FENG_QIANG = moduleModels[5]
+    },
+    async created () {},
+    methods: {
+        async getTemplate () {
+            try {
+                const { activityId } = this
+                if (activityId === 0) {
+                    this.noFinish = true
+                    this.$alert('主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+                        .finally(() => {
+                            this.$router.replace({ name: 'Classify' })
+                        })
+                    return false
+                }
+                const { type, moduleModels } = this.activityData
+                if (type === 5) {
+                    this.modules.MIAO_SHA = moduleModels[0]
+                    this.modules.PIN_TUAN = moduleModels[1]
+                    this.modules.MAI_SONG = moduleModels[2]
+                    this.modules.COUPON = moduleModels[3]
+                    this.modules.YU_GOU = moduleModels[4]
+                    this.modules.FENG_QIANG = moduleModels[5]
+                    this.modules.RECOMMEND = moduleModels[6]
+                }
+                if (type === 6) {
+                    this.modules.COUPON = moduleModels[0]
+                    this.modules.MAI_SONG = moduleModels[1]
+                    this.modules.MIAO_SHA = moduleModels[2]
+                    this.modules.PIN_TUAN = moduleModels[3]
+                    this.modules.FENG_QIANG = moduleModels[4]
+                    this.modules.MIAO_SHA.values.forEach((item, index) => {
+                        if (!item.goodsInfo || !Array.isArray(item.goodsInfo)) {
+                            item.goodsInfo = []
+                        }
+                        this.$set(item, 'range', item.valueName.split(','))
+                    })
+                }
+                if (type === 7) {
+                    this.modules.MAI_SONG = moduleModels[0]
+                    this.modules.MIAO_SHA = moduleModels[1]
+                    this.modules.PIN_TUAN = moduleModels[2]
+                    this.modules.FENG_QIANG = moduleModels[3]
+                    this.modules.RECOMMEND = moduleModels[4]
+                }
+                if (type === 8) {
+                    this.modules.PIN_XUAN = moduleModels[0]
+                    this.modules.COUPON = moduleModels[1]
+                    this.modules.CHUN_YUN = moduleModels[2]
+                    this.modules.PIN_TUAN = moduleModels[3]
+                    this.modules.YU_GOU = moduleModels[4]
+                    this.modules.FENG_QIANG = moduleModels[5]
+                }
+                this.type = type
+            } catch (e) {
+                throw e
+            }
         }
-        this.type = type
-      } catch (e) {
-        throw e
-      }
+    },
+    beforeRouteEnter (to, from, next) {
+        next(vm => {
+            if (vm.noFinish) {
+                vm.$alert('主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
+                    .finally(() => {
+                        vm.$router.replace({ name: 'Classify' })
+                    })
+            }
+        })
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if (vm.noFinish) {
-        vm.$alert('主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
-          .finally(() => {
-            vm.$router.replace({ name: 'Classify' })
-          })
-      }
-    })
-  }
 }
 </script>
 <style module lang="scss">

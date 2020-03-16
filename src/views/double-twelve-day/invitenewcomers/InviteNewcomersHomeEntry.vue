@@ -1,27 +1,27 @@
 <template>
-  <div class="invite-newcomers-home-entry">
-    <overlay v-if="showSelf">
-      <div class="center-box">
-        <div class="box">
-          <div class="title">
-            快去翻<span class="title-gift">礼品</span>
-          </div>
-          <!--<div class="desc">
+    <div class="invite-newcomers-home-entry">
+        <overlay v-if="showSelf">
+            <div class="center-box">
+                <div class="box">
+                    <div class="title">
+                        快去翻<span class="title-gift">礼品</span>
+                    </div>
+                    <!--<div class="desc">
             已经成功邀请<span class="number">{{ totalHelpers }}</span>个好友助力，立即开豪礼
           </div>-->
-          <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/box@2x.png">
-          <div>
-            <span class="btn-open" @click="openGift">开豪礼<pl-svg name="icon-right" fill="#ccc" width="34" /></span>
-          </div>
-        </div>
-        <div style="margin-top: 64px; text-align: center;">
-          <span class="btn-close" @click="close">
-            <pl-svg name="icon-close" fill="white" width="48" />
-          </span>
-        </div>
-      </div>
-    </overlay>
-  </div>
+                    <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/box@2x.png">
+                    <div>
+                        <span class="btn-open" @click="openGift">开豪礼<pl-svg name="icon-right" fill="#ccc" width="34" /></span>
+                    </div>
+                </div>
+                <div style="margin-top: 64px; text-align: center;">
+                    <span class="btn-close" @click="close">
+                        <pl-svg name="icon-close" fill="white" width="48" />
+                    </span>
+                </div>
+            </div>
+        </overlay>
+    </div>
 </template>
 
 <script>
@@ -30,82 +30,86 @@ import Overlay from './components/Overlay'
 import { mapGetters } from 'vuex'
 import { getHelpers, getCurrentActivity, canClaimGift } from '../../../apis/invitenewcomers'
 export default {
-  name: 'InviteNewcomersHomeEntry',
-  components: {
-    Overlay
-  },
-  data () {
-    return {
-      showSelf: false,
-      totalHelpers: 0,
-      activityInfo: {}
-    }
-  },
-  computed: {
-    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
-    isNewUser () {
-      return this.userId === ''
+    name: 'InviteNewcomersHomeEntry',
+    components: {
+        Overlay
     },
-    // 活动是否已开始
-    isActivityStarted () {
-      if (this.activityInfo === null) {
-        return false
-      }
-      let startTime = moment(this.activityInfo.activityStartTime)
-      return moment().isSameOrAfter(startTime)
+    data () {
+        return {
+            showSelf: false,
+            totalHelpers: 0,
+            activityInfo: {}
+        }
     },
-    // 活动是否已结束
-    isActivityEnd () {
-      if (this.activityInfo === null) {
-        return true
-      }
-      let endTime = moment(this.activityInfo.activityEndTime)
-      return endTime.isBefore(moment())
-    }
-  },
+    computed: {
+        ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+        isNewUser () {
+            return this.userId === ''
+        },
 
-  async activated () {
-    try {
-      await this.getCurrentActivity()
-      await this.getMyFriends()
-    } catch (e) {
-      throw e
-    }
-  },
+        // 活动是否已开始
+        isActivityStarted () {
+            if (this.activityInfo === null) {
+                return false
+            }
+            const startTime = moment(this.activityInfo.activityStartTime)
+            return moment().isSameOrAfter(startTime)
+        },
 
-  methods: {
-    /**
+        // 活动是否已结束
+        isActivityEnd () {
+            if (this.activityInfo === null) {
+                return true
+            }
+            const endTime = moment(this.activityInfo.activityEndTime)
+            return endTime.isBefore(moment())
+        }
+    },
+
+    async activated () {
+        try {
+            await this.getCurrentActivity()
+            await this.getMyFriends()
+        } catch (e) {
+            throw e
+        }
+    },
+
+    methods: {
+
+        /**
      * 活动信息
      * @return {Promise<void>}
      */
-    async getCurrentActivity () {
-      let { result } = await getCurrentActivity()
-      this.activityInfo = result || null
-    },
-    // 获取助力人列表
-    async getMyFriends () {
-      if (!this.userId) {
-        return
-      }
-      if (this.activityInfo === null) {
-        return
-      }
-      try {
-        let { result: helpers } = await getHelpers(this.activityInfo.id, this.userId)
-        this.totalHelpers = helpers.length
-        let { result: can } = await canClaimGift(this.activityInfo.id)
-        this.showSelf = can
-      } catch (e) {
-        throw e
-      }
-    },
-    close () {
-      this.showSelf = false
-    },
-    openGift () {
-      this.$router.push({ name: 'InviteNewcomers', params: { activityId: this.activityInfo.id } })
+        async getCurrentActivity () {
+            const { result } = await getCurrentActivity()
+            this.activityInfo = result || null
+        },
+
+        // 获取助力人列表
+        async getMyFriends () {
+            if (!this.userId) {
+                return
+            }
+            if (this.activityInfo === null) {
+                return
+            }
+            try {
+                const { result: helpers } = await getHelpers(this.activityInfo.id, this.userId)
+                this.totalHelpers = helpers.length
+                const { result: can } = await canClaimGift(this.activityInfo.id)
+                this.showSelf = can
+            } catch (e) {
+                throw e
+            }
+        },
+        close () {
+            this.showSelf = false
+        },
+        openGift () {
+            this.$router.push({ name: 'InviteNewcomers', params: { activityId: this.activityInfo.id } })
+        }
     }
-  }
 }
 </script>
 

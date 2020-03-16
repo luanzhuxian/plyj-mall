@@ -1,17 +1,17 @@
 <!-- order-item 骨架屏 -->
 <template>
-  <div :class="$style.addressitemSke">
-    <div :class="$style.addressitemSke1 + ' ' + $style.skeAnimation" />
-    <div :class="$style.addressitemSke2">
-      <div :class="$style.addressitemSke21 + ' ' + $style.skeAnimation" />
-      <div :class="$style.addressitemSke22 + ' ' + $style.skeAnimation" />
+    <div :class="$style.addressitemSke">
+        <div :class="$style.addressitemSke1 + ' ' + $style.skeAnimation" />
+        <div :class="$style.addressitemSke2">
+            <div :class="$style.addressitemSke21 + ' ' + $style.skeAnimation" />
+            <div :class="$style.addressitemSke22 + ' ' + $style.skeAnimation" />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'OrderItemSkeleton'
+    name: 'OrderItemSkeleton'
 }
 </script>
 

@@ -1,80 +1,80 @@
 <template>
-  <div :class="$style.submitCurriculum">
-    <div :class="$style.product">
-      <div :class="$style.detail">
-        <img :src="courseDetail.courseImg" alt="">
-        <div :class="$style.right">
-          <div :class="$style.name">
-            {{ courseDetail.courseName }}
-          </div>
-          <div :class="$style.price">
-            {{ courseDetail.sellingPrice }}
-          </div>
-          <div :class="$style.tips">
-            购买后即可观看视频课程，不支持退款
-            一次性收费
-          </div>
+    <div :class="$style.submitCurriculum">
+        <div :class="$style.product">
+            <div :class="$style.detail">
+                <img :src="courseDetail.courseImg" alt="">
+                <div :class="$style.right">
+                    <div :class="$style.name">
+                        {{ courseDetail.courseName }}
+                    </div>
+                    <div :class="$style.price">
+                        {{ courseDetail.sellingPrice }}
+                    </div>
+                    <div :class="$style.tips">
+                        购买后即可观看视频课程，不支持退款
+                        一次性收费
+                    </div>
+                </div>
+            </div>
+            <div :class="$style.total">
+                总计：<i>{{ courseDetail.sellingPrice }}</i>
+            </div>
         </div>
-      </div>
-      <div :class="$style.total">
-        总计：<i>{{ courseDetail.sellingPrice }}</i>
-      </div>
-    </div>
-    <div :class="$style.bottom">
-      <div :class="$style.left">
-        <div class="fz-20 gray-2">合计</div>
-        <div class="fz-32">{{ courseDetail.sellingPrice }}</div>
-      </div>
-      <pl-button
-        :class="$style.button"
-        :loading="submiting"
-        type="warning"
-        size="large"
-        @click="submitOrder"
-      >
-        确认提交
-      </pl-button>
-    </div>
+        <div :class="$style.bottom">
+            <div :class="$style.left">
+                <div class="fz-20 gray-2">合计</div>
+                <div class="fz-32">{{ courseDetail.sellingPrice }}</div>
+            </div>
+            <pl-button
+                :class="$style.button"
+                :loading="submiting"
+                type="warning"
+                size="large"
+                @click="submitOrder"
+            >
+                确认提交
+            </pl-button>
+        </div>
 
-    <div :class="$style.itemSelector" @click.capture="chooseContact">
-      <pl-fields
-        size="middle"
-        text="联系人信息"
-        icon="icon-contact"
-        :icon-gap="12"
-        show-right-icon
-        left-text-weight="bold"
-      >
-        <div v-show="contactInfoModel.name && contactInfoModel.mobile" :class="$style.contactDetail">
-          <span class="fz-28" v-text="contactInfoModel.name" />
-          <span class="fz-28" v-text="contactInfoModel.mobile" />
+        <div :class="$style.itemSelector" @click.capture="chooseContact">
+            <pl-fields
+                size="middle"
+                text="联系人信息"
+                icon="icon-contact"
+                :icon-gap="12"
+                show-right-icon
+                left-text-weight="bold"
+            >
+                <div v-show="contactInfoModel.name && contactInfoModel.mobile" :class="$style.contactDetail">
+                    <span class="fz-28" v-text="contactInfoModel.name" />
+                    <span class="fz-28" v-text="contactInfoModel.mobile" />
+                </div>
+            </pl-fields>
         </div>
-      </pl-fields>
-    </div>
 
-    <pl-popup
-      :show.sync="showContactPopup"
-      :close-on-click-modal="false"
-      @close="popupClose"
-    >
-      <div :class="$style.addContact">
-        <div :class="$style.addContactTop">
-          联系人信息
-        </div>
-        <pl-form :model="contactInfoForm" :rules="rules" ref="contactForm">
-          <pl-form-item prop="name" label="姓名：" :label-width="204" :gap-top="20">
-            <pl-input v-model="contactInfoForm.name" />
-          </pl-form-item>
-          <pl-form-item prop="mobile" label="手机号码：" :label-width="204" :gap-top="20">
-            <pl-input v-model="contactInfoForm.mobile" />
-          </pl-form-item>
-        </pl-form>
-        <pl-button size="huge" type="warning" @click="useContact">
-          使用
-        </pl-button>
-      </div>
-    </pl-popup>
-  </div>
+        <pl-popup
+            :show.sync="showContactPopup"
+            :close-on-click-modal="false"
+            @close="popupClose"
+        >
+            <div :class="$style.addContact">
+                <div :class="$style.addContactTop">
+                    联系人信息
+                </div>
+                <pl-form :model="contactInfoForm" :rules="rules" ref="contactForm">
+                    <pl-form-item prop="name" label="姓名：" :label-width="204" :gap-top="20">
+                        <pl-input v-model="contactInfoForm.name" />
+                    </pl-form-item>
+                    <pl-form-item prop="mobile" label="手机号码：" :label-width="204" :gap-top="20">
+                        <pl-input v-model="contactInfoForm.mobile" />
+                    </pl-form-item>
+                </pl-form>
+                <pl-button size="huge" type="warning" @click="useContact">
+                    使用
+                </pl-button>
+            </div>
+        </pl-popup>
+    </div>
 </template>
 
 <script>
@@ -85,134 +85,140 @@ import { setTimeoutSync } from '../../assets/js/util'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 
 export default {
-  name: 'SubmitCurriculum',
-  data () {
-    this.requestPayDataCount = 0
-    return {
-      showContactPopup: false,
-      submiting: false,
-      courseDetail: {},
-      contactInfoForm: {
-        name: '',
-        mobile: ''
-      },
-      contactInfoModel: {
-        name: '',
-        mobile: ''
-      },
-      rules: {
-        name: [
-          { required: true, message: '请输入联系人姓名' },
-          { validator: checkLength(12), message: '联系人姓名为1~12个字符' }
-        ],
-        mobile: [
-          { required: true, message: '请输入联系人手机号' },
-          { validator: isPhone, message: '联系人手机号格式错误' }
-        ]
-      }
-    }
-  },
-  props: {
-    productId: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    ...mapGetters(['mobile', 'userName'])
-  },
-  async activated () {
+    name: 'SubmitCurriculum',
+    data () {
+        this.requestPayDataCount = 0
+        return {
+            showContactPopup: false,
+            submiting: false,
+            courseDetail: {},
+            contactInfoForm: {
+                name: '',
+                mobile: ''
+            },
+            contactInfoModel: {
+                name: '',
+                mobile: ''
+            },
+            rules: {
+                name: [
+                    { required: true, message: '请输入联系人姓名' },
+                    { validator: checkLength(12), message: '联系人姓名为1~12个字符' }
+                ],
+                mobile: [
+                    { required: true, message: '请输入联系人手机号' },
+                    { validator: isPhone, message: '联系人手机号格式错误' }
+                ]
+            }
+        }
+    },
+    props: {
+        productId: {
+            type: String,
+            default: ''
+        }
+    },
+    computed: {
+        ...mapGetters(['mobile', 'userName'])
+    },
+    async activated () {
     // 联系人信息
-    let contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
-    this.contactInfoModel = contactModel || { name: this.realName || this.userName, mobile: this.mobile }
-    try {
-      this.getCourseDetail()
-    } catch (e) {
-      throw e
-    }
-  },
-  methods: {
-    async getCourseDetail () {
-      try {
-        let { result } = await getCourseDetail(this.productId)
-        result.sellingPrice = result.sellingPrice ? result.sellingPrice : 0
-        this.courseDetail = result
-      } catch (e) {
-        throw e
-      }
+        const contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
+        this.contactInfoModel = contactModel || { name: this.realName || this.userName, mobile: this.mobile }
+        try {
+            this.getCourseDetail()
+        } catch (e) {
+            throw e
+        }
     },
-    chooseContact () {
-      this.contactInfoForm = Object.assign({}, this.contactInfoForm, this.contactInfoModel)
-      this.showContactPopup = true
-    },
-    useContact () {
-      if (this.$refs.contactForm.validate()) {
-        this.showContactPopup = false
-        this.contactInfoModel = Object.assign({}, this.contactInfoModel, this.contactInfoForm)
-        localStorage.setItem('CONTACT_INFO_MODEL', JSON.stringify(this.contactInfoModel))
-      }
-    },
-    popupClose () {
-      this.contactInfoForm = {
-        name: '',
-        mobile: ''
-      }
-    },
-    async submitOrder () {
-      if (!this.contactInfoModel.name || !this.contactInfoModel.mobile) {
-        this.$confirm('您还没有添加联系人信息，请先添加联系人信息')
-          .then(() => {
+    methods: {
+        async getCourseDetail () {
+            try {
+                const { result } = await getCourseDetail(this.productId)
+                result.sellingPrice = result.sellingPrice ? result.sellingPrice : 0
+                this.courseDetail = result
+            } catch (e) {
+                throw e
+            }
+        },
+        chooseContact () {
+            this.contactInfoForm = Object.assign({}, this.contactInfoForm, this.contactInfoModel)
             this.showContactPopup = true
-          })
-        return
-      }
-      this.submiting = true
-      // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
-      // 下次请求的开始时间 =  500ms + 当前请求时间
-      if (this.requestPayDataCount >= 20) {
-        this.requestPayDataCount = 0
-        this.submiting = false
-        this.$error('支付失败')
-        return
-      }
-      await setTimeoutSync(500)
-      try {
-        let { result: payData } = await submitOrderAndPay(this.productId, this.contactInfoModel)
-        if (!payData) { // 如果没有拿到请求数据，再次尝试发起请求
-          this.requestPayDataCount++
-          await this.submitOrder()
-        } else { // 如果有，则发起支付
-          if (payData && payData.appId) { // 返回体中有appId时则为非零元课程,非0元需要调用微信支付
-            await this.pay(payData)
-          } else { // 0元商品无需支付
-            this.$success('支付成功')
-            this.submiting = false
-            this.goVideoLibrary()
-          }
+        },
+        useContact () {
+            if (this.$refs.contactForm.validate()) {
+                this.showContactPopup = false
+                this.contactInfoModel = Object.assign({}, this.contactInfoModel, this.contactInfoForm)
+                localStorage.setItem('CONTACT_INFO_MODEL', JSON.stringify(this.contactInfoModel))
+            }
+        },
+        popupClose () {
+            this.contactInfoForm = {
+                name: '',
+                mobile: ''
+            }
+        },
+        async submitOrder () {
+            if (!this.contactInfoModel.name || !this.contactInfoModel.mobile) {
+                this.$confirm('您还没有添加联系人信息，请先添加联系人信息')
+                    .then(() => {
+                        this.showContactPopup = true
+                    })
+                return
+            }
+            this.submiting = true
+
+            // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
+            // 下次请求的开始时间 =  500ms + 当前请求时间
+            if (this.requestPayDataCount >= 20) {
+                this.requestPayDataCount = 0
+                this.submiting = false
+                this.$error('支付失败')
+                return
+            }
+            await setTimeoutSync(500)
+            try {
+                const { result: payData } = await submitOrderAndPay(this.productId, this.contactInfoModel)
+                // 如果没有拿到请求数据，再次尝试发起请求
+                // 如果有，则发起支付
+                if (!payData) {
+                    this.requestPayDataCount++
+                    await this.submitOrder()
+                } else {
+                    // 返回体中有appId时则为非零元课程,非0元需要调用微信支付
+                    if (payData && payData.appId) {
+                        await this.pay(payData)
+                    } else {
+                        // 0元商品无需支付
+                        this.$success('支付成功')
+                        this.submiting = false
+                        this.goVideoLibrary()
+                    }
+                }
+            } catch (e) {
+                this.requestPayDataCount = 0
+                this.submiting = false
+                throw e
+            }
+        },
+        // 支付
+        async pay (CREDENTIAL) {
+            try {
+                if (CREDENTIAL.appId) {
+                    await wechatPay(CREDENTIAL)
+                    this.$success('支付成功')
+                    this.submiting = false
+                    this.goVideoLibrary()
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+        goVideoLibrary () {
+            // 支付成功，去视频库看视频
+            this.$router.replace({ name: 'MyCourses' })
         }
-      } catch (e) {
-        this.requestPayDataCount = 0
-        this.submiting = false
-        throw e
-      }
-    },
-    async pay (CREDENTIAL) { // 支付
-      try {
-        if (CREDENTIAL.appId) {
-          await wechatPay(CREDENTIAL)
-          this.$success('支付成功')
-          this.submiting = false
-          this.goVideoLibrary()
-        }
-      } catch (e) {
-        throw e
-      }
-    },
-    goVideoLibrary () {
-      // 支付成功，去视频库看视频
-      this.$router.replace({ name: 'MyCourses' })
     }
-  }
 }
 </script>
 

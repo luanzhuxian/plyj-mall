@@ -1,67 +1,67 @@
 <template>
-  <div
-    :class="$style.acquisition"
-    v-if="showList.length"
-  >
-    <div :class="$style.title">已获得好礼晒单</div>
-    <div :class="$style.todyCount">
-      今日已有<i v-text="totalClaimers" />人获得豪礼大奖
-    </div>
-    <div :class="$style.list">
-      <div
-        :class="$style.item"
-        v-for="(item, i) of showList"
-        :key="i"
-      >
-        <pl-svg name="icon-gift2" width="50" height="50" />
-        <img :class="$style.avatar" :src="item.headImgUrl" alt="">
-        <div :class="$style.itemRight">
-          <p>{{ item.nickName }}注册成功</p>
-          <p>开出了<i v-text="item.name" /></p>
+    <div
+        :class="$style.acquisition"
+        v-if="showList.length"
+    >
+        <div :class="$style.title">已获得好礼晒单</div>
+        <div :class="$style.todyCount">
+            今日已有<i v-text="totalClaimers" />人获得豪礼大奖
         </div>
-      </div>
+        <div :class="$style.list">
+            <div
+                :class="$style.item"
+                v-for="(item, i) of showList"
+                :key="i"
+            >
+                <pl-svg name="icon-gift2" width="50" height="50" />
+                <img :class="$style.avatar" :src="item.headImgUrl" alt="">
+                <div :class="$style.itemRight">
+                    <p>{{ item.nickName }}注册成功</p>
+                    <p>开出了<i v-text="item.name" /></p>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 import {
-  getActivityStatisiticData,
-  getClaimGiftList
+    getActivityStatisiticData,
+    getClaimGiftList
 } from '../../../../apis/invitenewcomers'
 export default {
-  name: 'AcquisitionGifts',
-  data () {
-    return {
-      showList: [],
-      totalClaimers: 0
+    name: 'AcquisitionGifts',
+    data () {
+        return {
+            showList: [],
+            totalClaimers: 0
+        }
+    },
+    props: {
+        activityId: {
+            type: String,
+            default: ''
+        }
+    },
+    async activated () {
+        try {
+            await this.getOrdersShow()
+        } catch (e) {
+            throw e
+        }
+    },
+    methods: {
+        async getOrdersShow () {
+            try {
+                const { result } = await getClaimGiftList(this.activityId)
+                this.showList = result || []
+                const { result: claimerInfo } = await getActivityStatisiticData(this.activityId)
+                this.totalClaimers = claimerInfo.claimerNum
+            } catch (e) {
+                throw e
+            }
+        }
     }
-  },
-  props: {
-    activityId: {
-      type: String,
-      default: ''
-    }
-  },
-  async activated () {
-    try {
-      await this.getOrdersShow()
-    } catch (e) {
-      throw e
-    }
-  },
-  methods: {
-    async getOrdersShow () {
-      try {
-        let { result } = await getClaimGiftList(this.activityId)
-        this.showList = result || []
-        let { result: claimerInfo } = await getActivityStatisiticData(this.activityId)
-        this.totalClaimers = claimerInfo.claimerNum
-      } catch (e) {
-        throw e
-      }
-    }
-  }
 }
 </script>
 

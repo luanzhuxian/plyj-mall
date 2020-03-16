@@ -1,70 +1,72 @@
 <template>
-  <button
-    :class="{
-      'pl-button': true,
-      [`pl-button__${type}`]: true,
-      [`pl-button__${size}`]: true,
-      'round': round,
-      'plain': plain,
-      'shadow': shadow
-    }"
-    :style="{ background: backgroundColor }"
-    :disabled="disabled || loading"
-    @click.stop="handleClick"
-  >
-    <span>
-      <pl-svg
-        v-show="loading"
-        class="pl-button__loading"
-        name="icon-btn-loading"
-      />
-      <pl-svg
-        class="pl-button__prefix-icon"
-        v-if="prefixIcon"
-        :name="prefixIcon"
-      />
-      <slot>{{ text }}</slot>
-    </span>
-  </button>
+    <button
+        :class="{
+            'pl-button': true,
+            [`pl-button__${type}`]: true,
+            [`pl-button__${size}`]: true,
+            'round': round,
+            'plain': plain,
+            'shadow': shadow
+        }"
+        :style="{ background: backgroundColor }"
+        :disabled="disabled || loading"
+        @click.stop="handleClick"
+    >
+        <span>
+            <pl-svg
+                v-show="loading"
+                class="pl-button__loading"
+                name="icon-btn-loading"
+            />
+            <pl-svg
+                class="pl-button__prefix-icon"
+                v-if="prefixIcon"
+                :name="prefixIcon"
+            />
+            <slot>{{ text }}</slot>
+        </span>
+    </button>
 </template>
 
 <script>
 export default {
-  name: 'PlButton',
-  props: {
-    type: {
-      type: String,
-      default: 'default'
+    name: 'PlButton',
+    props: {
+        type: {
+            type: String,
+            default: 'default'
+        },
+        size: {
+            type: String,
+            default: 'small'
+        },
+        disabled: Boolean,
+
+        // 是否圆角
+        round: Boolean,
+
+        // 是否朴素
+        plain: Boolean,
+        prefixIcon: {
+            type: String,
+            default: ''
+        },
+        text: {
+            type: String,
+            default: ''
+        },
+        loading: Boolean,
+        shadow: Boolean,
+        backgroundColor: {
+            type: String,
+            default: ''
+        }
     },
-    size: {
-      type: String,
-      default: 'small'
-    },
-    disabled: Boolean,
-    // 是否圆角
-    round: Boolean,
-    // 是否朴素
-    plain: Boolean,
-    prefixIcon: {
-      type: String,
-      default: ''
-    },
-    text: {
-      type: String,
-      default: ''
-    },
-    loading: Boolean,
-    shadow: Boolean,
-    backgroundColor: {
-      type: String,
-      default: ''
+    methods: {
+        handleClick (e) {
+            this.$emit('click', e)
+        }
     }
-  },
-  methods: {
-    handleClick (e) {
-      this.$emit('click', e)
-    }
-  }
 }
 </script>
 <style lang="scss">

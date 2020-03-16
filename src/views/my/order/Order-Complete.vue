@@ -1,59 +1,59 @@
 <template>
-  <div
-    class="order-complete"
-    :class="$style.orderComplete"
-  >
-    <div :class="$style.top">
-      <div :class="$style.text">
-        <pl-svg
-          :class="$style.icon"
-          fill="#FFF"
-          name="icon-success"
-        />
-        <span>交易完成</span>
-      </div>
-      <div :class="$style.button">
-        <pl-button
-          plain
-          round
-          size="middle"
-          @click="$router.push({ name: 'Home' })"
-        >
-          返回首页
-        </pl-button>
-        <pl-button
-          plain
-          round
-          size="middle"
-          @click="$router.push({ name: 'OrderDetail', params: { orderId } })"
-        >
-          立即评价
-        </pl-button>
-      </div>
+    <div
+        class="order-complete"
+        :class="$style.orderComplete"
+    >
+        <div :class="$style.top">
+            <div :class="$style.text">
+                <pl-svg
+                    :class="$style.icon"
+                    fill="#FFF"
+                    name="icon-success"
+                />
+                <span>交易完成</span>
+            </div>
+            <div :class="$style.button">
+                <pl-button
+                    plain
+                    round
+                    size="middle"
+                    @click="$router.push({ name: 'Home' })"
+                >
+                    返回首页
+                </pl-button>
+                <pl-button
+                    plain
+                    round
+                    size="middle"
+                    @click="$router.push({ name: 'OrderDetail', params: { orderId } })"
+                >
+                    立即评价
+                </pl-button>
+            </div>
+        </div>
+        <div :class="$style.wrapper">
+            <you-like :is-my="true" />
+        </div>
     </div>
-    <div :class="$style.wrapper">
-      <you-like :is-my="true" />
-    </div>
-  </div>
 </template>
 
 <script>
 import YouLike from '../../home/components/YouLike.vue'
 
 export default {
-  name: 'OrderComplete',
-  components: {
-    YouLike
-  },
-  props: {
-    orderId: {
-      type: String,
-      default: ''
+    name: 'OrderComplete',
+    components: {
+        YouLike
+    },
+    props: {
+        orderId: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

@@ -1,40 +1,40 @@
 <template>
-  <div :class="$style.liveList">
-    <div :class="$style.liveItem" @click="goRoom">
-      <div :class="$style.top">
-        <img src="https://gdp.alicdn.com/imgextra/i4/2880132427/O1CN01usTKTU1TnbobpCK4k_!!2880132427.jpg" alt="">
-        <div :class="$style.foreshow">
-          <span>预告</span>
-          <span>21小时9分钟后开始</span>
+    <div :class="$style.liveList">
+        <div :class="$style.liveItem" @click="goRoom">
+            <div :class="$style.top">
+                <img src="https://gdp.alicdn.com/imgextra/i4/2880132427/O1CN01usTKTU1TnbobpCK4k_!!2880132427.jpg" alt="">
+                <div :class="$style.foreshow">
+                    <span>预告</span>
+                    <span>21小时9分钟后开始</span>
+                </div>
+            </div>
+            <div :class="$style.bottom">
+                圣诞快乐国际化
+            </div>
         </div>
-      </div>
-      <div :class="$style.bottom">
-        圣诞快乐国际化
-      </div>
-    </div>
 
-    <div :class="$style.liveItem">
-      <div :class="$style.top">
-        <img src="https://gdp.alicdn.com/imgextra/i4/2880132427/O1CN01usTKTU1TnbobpCK4k_!!2880132427.jpg" alt="">
-        <div :class="$style.living">
-          <span>直播中</span>
-          <span>1123人观看</span>
+        <div :class="$style.liveItem">
+            <div :class="$style.top">
+                <img src="https://gdp.alicdn.com/imgextra/i4/2880132427/O1CN01usTKTU1TnbobpCK4k_!!2880132427.jpg" alt="">
+                <div :class="$style.living">
+                    <span>直播中</span>
+                    <span>1123人观看</span>
+                </div>
+            </div>
+            <div :class="$style.bottom">
+                圣诞快乐国际化
+            </div>
         </div>
-      </div>
-      <div :class="$style.bottom">
-        圣诞快乐国际化
-      </div>
     </div>
-  </div>
 </template>
 <script>
 export default {
-  name: 'Live',
-  methods: {
-    goRoom () {
-      this.$router.push({ name: 'LiveRoom' })
+    name: 'Live',
+    methods: {
+        goRoom () {
+            this.$router.push({ name: 'LiveRoom' })
+        }
     }
-  }
 }
 </script>
 <style module lang="scss">

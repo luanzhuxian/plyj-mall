@@ -1,64 +1,64 @@
 <template>
-  <div :class="$style.campaign">
-    <div :class="$style.campaignTop">
-      <div :class="$style.campaignTopSide" />
-      <div :class="$style.campaignTopContent">
-        <img src="https://mallcdn.youpenglai.com/static/beat-plague/19e269a6-61da-48ed-afbb-0ce198df7cfb.png" alt="">
-      </div>
-    </div>
-    <ul :class="$style.campaignList">
-      <router-link
-        v-if="isReportShow"
-        :class="$style.campaignListItem"
-        tag="li"
-        :to="{ name: 'BattlefieldReport', params: { id: reportId } }"
-      >
-        <div :class="$style.counter">
-          {{ `疫情爆发的第${days}天` }}
+    <div :class="$style.campaign">
+        <div :class="$style.campaignTop">
+            <div :class="$style.campaignTopSide" />
+            <div :class="$style.campaignTopContent">
+                <img src="https://mallcdn.youpenglai.com/static/beat-plague/19e269a6-61da-48ed-afbb-0ce198df7cfb.png" alt="">
+            </div>
         </div>
-        <img src="https://mallcdn.youpenglai.com/static/beat-plague/report.png" alt="">
-      </router-link>
-      <router-link
-        v-if="isBookShow"
-        :class="$style.campaignListItem"
-        tag="li"
-        :to="{ name: 'EpidemicSignIn', params: { id: bookId } }"
-      >
-        <img src="https://mallcdn.youpenglai.com/static/beat-plague/join.png" alt="">
-      </router-link>
-    </ul>
-  </div>
+        <ul :class="$style.campaignList">
+            <router-link
+                v-if="isReportShow"
+                :class="$style.campaignListItem"
+                tag="li"
+                :to="{ name: 'BattlefieldReport', params: { id: reportId } }"
+            >
+                <div :class="$style.counter">
+                    {{ `疫情爆发的第${days}天` }}
+                </div>
+                <img src="https://mallcdn.youpenglai.com/static/beat-plague/report.png" alt="">
+            </router-link>
+            <router-link
+                v-if="isBookShow"
+                :class="$style.campaignListItem"
+                tag="li"
+                :to="{ name: 'EpidemicSignIn', params: { id: bookId } }"
+            >
+                <img src="https://mallcdn.youpenglai.com/static/beat-plague/join.png" alt="">
+            </router-link>
+        </ul>
+    </div>
 </template>
 
 <script>
 import moment from 'moment'
 export default {
-  name: 'Campaign',
-  inject: ['parent'],
-  data () {
-    return {
-      days: 0
+    name: 'Campaign',
+    inject: ['parent'],
+    data () {
+        return {
+            days: 0
+        }
+    },
+    computed: {
+        isReportShow () {
+            return this.parent.isReportShow
+        },
+        isBookShow () {
+            return this.parent.isBookShow
+        },
+        reportId () {
+            return this.parent.reportId
+        },
+        bookId () {
+            return this.parent.bookId
+        }
+    },
+    created () {
+        const start = moment('2020-01-20 00:00', 'YYYY-MM-DD HH:mm').valueOf()
+        const duration = Date.now() - Number(start)
+        this.days = Math.ceil(moment.duration(duration).asDays())
     }
-  },
-  computed: {
-    isReportShow () {
-      return this.parent.isReportShow
-    },
-    isBookShow () {
-      return this.parent.isBookShow
-    },
-    reportId () {
-      return this.parent.reportId
-    },
-    bookId () {
-      return this.parent.bookId
-    }
-  },
-  created () {
-    const start = moment('2020-01-20 00:00', 'YYYY-MM-DD HH:mm').valueOf()
-    const duration = Date.now() - Number(start)
-    this.days = Math.ceil(moment.duration(duration).asDays())
-  }
 }
 </script>
 

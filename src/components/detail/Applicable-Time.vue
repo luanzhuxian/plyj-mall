@@ -1,22 +1,22 @@
 <template>
-  <div :class="$style.applicableTime + ' radius-20'">
-    <div>
-      <pl-svg name="icon-time3" />
-      <span>使用时间</span>
+    <div :class="$style.applicableTime + ' radius-20'">
+        <div>
+            <pl-svg name="icon-time3" />
+            <span>使用时间</span>
+        </div>
+        <div v-text="time" />
     </div>
-    <div v-text="time" />
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'ApplicableTime',
-  props: {
-    time: {
-      type: String,
-      default: ''
+    name: 'ApplicableTime',
+    props: {
+        time: {
+            type: String,
+            default: ''
+        }
     }
-  }
 }
 </script>
 

@@ -1,66 +1,66 @@
 <template>
-  <transition
-    enter-active-class="animated fadeIn"
-    leave-active-class="animated fadeOut"
-    type="animation"
-    @after-leave="closed"
-  >
-    <div
-      class="pl-toast"
-      v-show="show"
+    <transition
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+        type="animation"
+        @after-leave="closed"
     >
-      <pl-svg
-        v-if="type === 'error'"
-        class="pl-toast-icon"
-        name="icon-shibai"
-        fill="#fff"
-        width="72"
-      />
-      <pl-svg
-        v-if="type === 'success'"
-        class="pl-toast-icon"
-        name="icon-chenggong"
-        fill="#fff"
-        width="72"
-      />
-      <pl-svg
-        v-if="type === 'warning'"
-        class="pl-toast-icon"
-        name="icon-warning"
-        fill="#fff"
-        width="72"
-      />
-      <div class="toast-message">
-        <p v-text="message" />
-        <p class="toast-vice-message" v-text="viceMessage" />
-        <slot />
-      </div>
-    </div>
-  </transition>
+        <div
+            class="pl-toast"
+            v-show="show"
+        >
+            <pl-svg
+                v-if="type === 'error'"
+                class="pl-toast-icon"
+                name="icon-shibai"
+                fill="#fff"
+                width="72"
+            />
+            <pl-svg
+                v-if="type === 'success'"
+                class="pl-toast-icon"
+                name="icon-chenggong"
+                fill="#fff"
+                width="72"
+            />
+            <pl-svg
+                v-if="type === 'warning'"
+                class="pl-toast-icon"
+                name="icon-warning"
+                fill="#fff"
+                width="72"
+            />
+            <div class="toast-message">
+                <p v-text="message" />
+                <p class="toast-vice-message" v-text="viceMessage" />
+                <slot />
+            </div>
+        </div>
+    </transition>
 </template>
 
 <script>
 export default {
-  name: 'Toast',
-  components: {
-  },
-  data () {
-    return {
-      show: false,
-      message: '',
-      viceMessage: '',
-      timer: 0,
-      type: ''
-    }
-  },
-  methods: {
-    close () {
-      this.show = false
+    name: 'Toast',
+    components: {
     },
-    closed () {
-      document.body.removeChild(this.$el)
+    data () {
+        return {
+            show: false,
+            message: '',
+            viceMessage: '',
+            timer: 0,
+            type: ''
+        }
+    },
+    methods: {
+        close () {
+            this.show = false
+        },
+        closed () {
+            document.body.removeChild(this.$el)
+        }
     }
-  }
 }
 </script>
 

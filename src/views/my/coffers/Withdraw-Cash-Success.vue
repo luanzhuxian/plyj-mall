@@ -1,37 +1,37 @@
 <template>
-  <div :class="$style.withdrawCashSuccess">
-    <pl-svg
-      :class="$style.icon"
-      name="icon-withdraw-success"
-    />
-    <p :class="$style.tip1">
-      请求已提交
-    </p>
-    <p :class="$style.tip2">
-      我们已收到您提交的信息，审核需要2-5个工作日
-    </p>
-    <p :class="$style.tip2">
-      您可在“ 我的资产-提现明细”中可查看审核记录
-    </p>
-    <p :class="$style.tip2">
-      若审核通过，将通过【红包】发放给您
-    </p>
-    <p :class="$style.tip2">
-      记得领取哦!
-    </p>
-    <pl-button
-      type="warning"
-      size="huge"
-      @click="$router.go(-1)"
-    >
-      返回
-    </pl-button>
-  </div>
+    <div :class="$style.withdrawCashSuccess">
+        <pl-svg
+            :class="$style.icon"
+            name="icon-withdraw-success"
+        />
+        <p :class="$style.tip1">
+            请求已提交
+        </p>
+        <p :class="$style.tip2">
+            我们已收到您提交的信息，审核需要2-5个工作日
+        </p>
+        <p :class="$style.tip2">
+            您可在“ 我的资产-提现明细”中可查看审核记录
+        </p>
+        <p :class="$style.tip2">
+            若审核通过，将通过【红包】发放给您
+        </p>
+        <p :class="$style.tip2">
+            记得领取哦!
+        </p>
+        <pl-button
+            type="warning"
+            size="huge"
+            @click="$router.go(-1)"
+        >
+            返回
+        </pl-button>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'WithdrawCashSuccess'
+    name: 'WithdrawCashSuccess'
 }
 </script>
 

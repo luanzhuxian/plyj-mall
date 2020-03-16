@@ -1,46 +1,46 @@
 <template>
-  <div class="pl-list">
-    <span
-      class="pl-list_title"
-      v-text="title"
-      :style="{ color: titleColor }"
-    />
-    <span
-      v-if="content"
-      class="pl-list_content"
-      v-text="content"
-      :style="{ color: contentColor }"
-    />
-    <div
-      v-if="!content"
-      class="pl-list_content"
-    >
-      <slot />
+    <div class="pl-list">
+        <span
+            class="pl-list_title"
+            v-text="title"
+            :style="{ color: titleColor }"
+        />
+        <span
+            v-if="content"
+            class="pl-list_content"
+            v-text="content"
+            :style="{ color: contentColor }"
+        />
+        <div
+            v-if="!content"
+            class="pl-list_content"
+        >
+            <slot />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'PlList',
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    content: {
-      type: String,
-      default: ''
-    },
-    titleColor: {
-      type: String,
-      default: '#999'
-    },
-    contentColor: {
-      type: String,
-      default: '#333'
+    name: 'PlList',
+    props: {
+        title: {
+            type: String,
+            default: ''
+        },
+        content: {
+            type: String,
+            default: ''
+        },
+        titleColor: {
+            type: String,
+            default: '#999'
+        },
+        contentColor: {
+            type: String,
+            default: '#333'
+        }
     }
-  }
 }
 </script>
 

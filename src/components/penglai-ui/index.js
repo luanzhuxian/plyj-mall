@@ -19,59 +19,64 @@ import RadioComponent from './radio/Radio.vue'
 import RadioGroupComponent from './radio/Radio-Group.vue'
 import Popup from './Popup.vue'
 import Picker from './picker/Picker.vue'
+
 // import CanvasVideo from './Canvas-Video.vue'
 import { Timeline, TimelineItem } from './timeline'
 import { Indicator } from './indicator'
+
 // import SvgIcon from 'vue-svgicon'
 export { Toast } from './toast'
 export { Loading } from './loading'
 const components = [
-  Button,
-  Input,
-  GetCode,
-  Tab,
-  Form,
-  FormItem,
-  Radio,
-  List,
-  UploadImg,
-  Fields,
-  PlSvg,
-  Switch,
-  MessageBox,
-  Selector,
-  Checkbox,
-  CheckboxGroup,
-  RadioComponent,
-  RadioGroupComponent,
-  Popup,
-  Picker,
-  Timeline,
-  TimelineItem
-  // CanvasVideo
+    Button,
+    Input,
+    GetCode,
+    Tab,
+    Form,
+    FormItem,
+    Radio,
+    List,
+    UploadImg,
+    Fields,
+    PlSvg,
+    Switch,
+    MessageBox,
+    Selector,
+    Checkbox,
+    CheckboxGroup,
+    RadioComponent,
+    RadioGroupComponent,
+    Popup,
+    Picker,
+    Timeline,
+    TimelineItem
+
+    // CanvasVideo
 ]
+
 /* 定义全局安装方法，即在全局使用Vue.use方法 */
 const install = function (Vue, opts = {}) {
-  // Vue.use(SvgIcon, {
-  //   tagName: 'svgicon'
-  // })
-  /* 安装所有组件 */
-  for (let c of components) {
-    if (!c.install) {
-      c.install = function (Vue) {
-        Vue.component(c.name, c)
-      }
+    // Vue.use(SvgIcon, {
+    //   tagName: 'svgicon'
+    // })
+    /* 安装所有组件 */
+    for (const c of components) {
+        if (!c.install) {
+            c.install = function (Vue) {
+                Vue.component(c.name, c)
+            }
+        }
+        Vue.use(c)
     }
-    Vue.use(c)
-  }
-  /* penglai-ui 全局变量 */
-  Vue.prototype.$PL = {
-    size: opts.size || '',
-    zIndex: opts.size || 2000
-  }
-  Vue.prototype.$indicator = Indicator
+
+    /* penglai-ui 全局变量 */
+    Vue.prototype.$PL = {
+        size: opts.size || '',
+        zIndex: opts.size || 2000
+    }
+    Vue.prototype.$indicator = Indicator
 }
 
 export default {
-  install
+    install
 }

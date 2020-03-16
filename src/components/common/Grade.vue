@@ -1,65 +1,66 @@
 <template>
-  <div :class="$style.grade + ' ' + $style[size]">
-    <div :class="$style.stars">
-      <pl-svg
-        v-for="i of 5"
-        :key="i"
-        name="icon-star"
-        :class="{ [$style.selected]: grade >= i, [$style.star]: true }"
-        :fill="grade >= i ? '#f2b036' : '#fcefd7'"
-        :width="iconSize"
-        @click="handleClick(i)"
-      />
+    <div :class="$style.grade + ' ' + $style[size]">
+        <div :class="$style.stars">
+            <pl-svg
+                v-for="i of 5"
+                :key="i"
+                name="icon-star"
+                :class="{ [$style.selected]: grade >= i, [$style.star]: true }"
+                :fill="grade >= i ? '#f2b036' : '#fcefd7'"
+                :width="iconSize"
+                @click="handleClick(i)"
+            />
+        </div>
+        <span
+            v-if="selectable"
+            :class="$style.text + ' fz-26 gray-3'"
+            v-text="gradeText[grade]"
+        />
     </div>
-    <span
-      v-if="selectable"
-      :class="$style.text + ' fz-26 gray-3'"
-      v-text="gradeText[grade]"
-    />
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'Grade',
-  props: {
-    grade: {
-      type: Number,
-      default: 0
+    name: 'Grade',
+    props: {
+        grade: {
+            type: Number,
+            default: 0
+        },
+        size: {
+            type: String,
+            default: 'small'
+        },
+
+        // 是否可以选择等级
+        selectable: Boolean
     },
-    size: {
-      type: String,
-      default: 'small'
+    data () {
+        return {
+            gradeText: ['', '非常差', '差', '一般', '好', '非常好']
+        }
     },
-    // 是否可以选择等级
-    selectable: Boolean
-  },
-  data () {
-    return {
-      gradeText: ['', '非常差', '差', '一般', '好', '非常好']
+    computed: {
+        iconSize () {
+            if (this.size === 'mini') {
+                return 20
+            }
+            if (this.size === 'small') {
+                return 30
+            }
+            if (this.size === 'middle') {
+                return 38
+            }
+            return 16
+        }
+    },
+    methods: {
+        handleClick (grade) {
+            if (this.selectable) {
+                this.$emit('update:grade', grade)
+            }
+        }
     }
-  },
-  computed: {
-    iconSize () {
-      if (this.size === 'mini') {
-        return 20
-      }
-      if (this.size === 'small') {
-        return 30
-      }
-      if (this.size === 'middle') {
-        return 38
-      }
-      return 16
-    }
-  },
-  methods: {
-    handleClick (grade) {
-      if (this.selectable) {
-        this.$emit('update:grade', grade)
-      }
-    }
-  }
 }
 </script>
 

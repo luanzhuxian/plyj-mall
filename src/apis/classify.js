@@ -1,7 +1,6 @@
 import { axios } from '../assets/js/axios'
 
-export const getProduct = ({ categoryId, subCategoryId, current, size }) =>
-  axios.get(`/apis/v1/product/public/productPageByCategoryWithOutHidden?categoryId=${categoryId}&subCategoryId=${subCategoryId}&current=${current}&size=${size}`)
+export const getProduct = ({ categoryId, subCategoryId, current, size }) => axios.get(`/apis/v1/product/public/productPageByCategoryWithOutHidden?categoryId=${ categoryId }&subCategoryId=${ subCategoryId }&current=${ current }&size=${ size }`)
 
 // 获取所有分类
 // export const getCategories = params => axios.get('/apis/v1/product/category/agent/public/list', { params })

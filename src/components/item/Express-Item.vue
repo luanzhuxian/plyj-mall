@@ -1,61 +1,61 @@
 <template>
-  <div
-    :class="$style.expressItem"
-    @click="handleClick"
-  >
-    <pl-svg
-      name="icon-express"
-      :class="$style.icon"
-    />
-    <div :class="$style.right + ' fz-28'">
-      <div :class="$style.main">
-        <span v-text="expressName" />
-        <span v-text="expressNumber" />
-      </div>
-      <div
-        :class="$style.sub"
-        v-text="expressStatus"
-      />
+    <div
+        :class="$style.expressItem"
+        @click="handleClick"
+    >
+        <pl-svg
+            name="icon-express"
+            :class="$style.icon"
+        />
+        <div :class="$style.right + ' fz-28'">
+            <div :class="$style.main">
+                <span v-text="expressName" />
+                <span v-text="expressNumber" />
+            </div>
+            <div
+                :class="$style.sub"
+                v-text="expressStatus"
+            />
+        </div>
+        <pl-svg
+            :class="$style.rightIcon"
+            height="24"
+            name="icon-right"
+            fill="#CCC"
+        />
     </div>
-    <pl-svg
-      :class="$style.rightIcon"
-      height="24"
-      name="icon-right"
-      fill="#CCC"
-    />
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'ExpressItem',
-  props: {
-    orderId: {
-      type: String,
-      default: ''
+    name: 'ExpressItem',
+    props: {
+        orderId: {
+            type: String,
+            default: ''
+        },
+        expressName: {
+            type: String,
+            default: ''
+        },
+        expressNumber: {
+            type: String,
+            default: ''
+        },
+        expressStatus: {
+            type: String,
+            default: ''
+        },
+        img: {
+            type: String,
+            default: ''
+        }
     },
-    expressName: {
-      type: String,
-      default: ''
-    },
-    expressNumber: {
-      type: String,
-      default: ''
-    },
-    expressStatus: {
-      type: String,
-      default: ''
-    },
-    img: {
-      type: String,
-      default: ''
+    methods: {
+        handleClick () {
+            this.$router.push({ name: 'Freight', params: { orderId: this.orderId }, query: { img: this.img } })
+        }
     }
-  },
-  methods: {
-    handleClick () {
-      this.$router.push({ name: 'Freight', params: { orderId: this.orderId }, query: { img: this.img } })
-    }
-  }
 }
 </script>
 

@@ -5,7 +5,7 @@ import { axios } from '../assets/js/axios'
 export const getLibraryList = params => axios.get('/apis/v1/mall/live/lib/my_lookback', { params })
 
 // 直播回放信息
-export const getLivePlayBackInfo = (activityId, isValidateEndTime) => axios.get(`/apis/v1/mall/live/lib/lookback/${activityId}?isValidateEndTime=${isValidateEndTime}`)
+export const getLivePlayBackInfo = (activityId, isValidateEndTime) => axios.get(`/apis/v1/mall/live/lib/lookback/${ activityId }?isValidateEndTime=${ isValidateEndTime }`)
 
 // 获取课程列表
 export const getCourseList = params => axios.get('/apis/v1/knowledgeCourse/myVideo', { params })
@@ -20,10 +20,11 @@ export const getPermission = courseId => axios.get('/apis/v1/knowledgeCourse/cus
 export const setCourseProgress = (orderId, progress) => axios.get('/apis/v1/knowledgeCourse/updateMyVideo', { params: { orderId, progress } })
 
 // 统计学习次数
-export const setStudyCount = (videoId) => axios.get(`/apis/v1/mall/cource/addVod/${videoId}`)
+export const setStudyCount = videoId => axios.get(`/apis/v1/mall/cource/addVod/${ videoId }`)
 
 // 统计观看的时间
-export const setStudyTime = (videoId, watchTime) => axios.get(`/apis/v1/mall/cource/addWatchTime/${videoId}?watchTime=${watchTime}`)
+export const setStudyTime = (videoId, watchTime) => axios.get(`/apis/v1/mall/cource/addWatchTime/${ videoId }?watchTime=${ watchTime }`)
+
 /**
  * 统计视频播放信息，从而据此计费
  * @param data
@@ -37,6 +38,7 @@ export const setStudyTime = (videoId, watchTime) => axios.get(`/apis/v1/mall/cou
  * @returns {*}
  */
 export const setLivePaidData = data => axios.post(`/apis/v1/mall/live/cost/recording`, data)
+
 /**
  * 检查流量是否使用完
  * @returns {*}

@@ -1,28 +1,28 @@
 <template>
-  <div :class="$style.search">
-    <router-link
-      tag="div"
-      :class="$style.searchBox"
-      :to="{ name: 'Search' }"
-    >
-      <pl-svg name="icon-search" fill="#ccc" width="30" />
-      <input
-        type="text"
-        :placeholder="placeholder"
-      >
-    </router-link>
-  </div>
+    <div :class="$style.search">
+        <router-link
+            tag="div"
+            :class="$style.searchBox"
+            :to="{ name: 'Search' }"
+        >
+            <pl-svg name="icon-search" fill="#ccc" width="30" />
+            <input
+                type="text"
+                :placeholder="placeholder"
+            >
+        </router-link>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'Search',
-  props: {
-    placeholder: {
-      type: String,
-      default: '搜索'
+    name: 'Search',
+    props: {
+        placeholder: {
+            type: String,
+            default: '搜索'
+        }
     }
-  }
 }
 </script>
 

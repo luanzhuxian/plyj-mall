@@ -1,25 +1,25 @@
 <template>
-  <!-- 春耘计划礼品组件 -->
-  <div :class="$style.springPloughingGiftItem">
-    <img :src="data.giftImage" alt="">
-    <div :class="$style.right">
-      <p :class="$style.name" v-text="data.giftName" />
-      <p :class="$style.desc" v-text="data.giftBrief" />
+    <!-- 春耘计划礼品组件 -->
+    <div :class="$style.springPloughingGiftItem">
+        <img :src="data.giftImage" alt="">
+        <div :class="$style.right">
+            <p :class="$style.name" v-text="data.giftName" />
+            <p :class="$style.desc" v-text="data.giftBrief" />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'SpringPloughingGiftItem',
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return {}
-      }
+    name: 'SpringPloughingGiftItem',
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
     }
-  }
 }
 </script>
 

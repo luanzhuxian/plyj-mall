@@ -1,12 +1,12 @@
 <template>
-  <div :class="$style.detailDesc">
-    <slot />
-  </div>
+    <div :class="$style.detailDesc">
+        <slot />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'DetailTitle'
+    name: 'DetailTitle'
 }
 </script>
 

@@ -1,159 +1,159 @@
 <template>
-  <div :class="$style.miaosha">
-    <div :class="$style.wrapper" v-if="data.values.length">
-      <ul :class="$style.timeList">
-        <div>
-          <pl-svg
-            name="icon-miaoshazhuanchang"
-            width="78"
-            height="80"
-            fill="#fff"
-            @click="$router.push({ name: 'SecondList' })"
-          />
-        </div>
-        <li
-          v-if="data.values[0]"
-          :class="{
-            [$style.timeListItem]: true,
-            [$style.current]: miaoshaIndex === 0
-          }"
-          @click.stop="miaoshaIndex = 0"
-        >
-          <div :class="$style.wrapper" v-if="data.values[0].range && data.values[0].range.length">
-            <div :class="$style.status">
-              <span>
-                {{ getTimeStatus(data.values[0].range) }}
-              </span>
-            </div>
-            <div :class="$style.time">
-              {{ getDate(data.values[0].range[0], 'HH:mm') }}
-            </div>
-          </div>
-        </li>
-        <span :class="$style.border" v-if="data.values[1]" />
-        <li
-          v-if="data.values[1]"
-          :class="{
-            [$style.timeListItem]: true,
-            [$style.current]: miaoshaIndex === 1
-          }"
-          @click.stop="miaoshaIndex = 1"
-        >
-          <div :class="$style.wrapper" v-if="data.values[1].range && data.values[1].range.length">
-            <div :class="$style.status">
-              {{ getTimeStatus(data.values[1].range) }}
-            </div>
-            <div :class="$style.time">
-              {{ getDate(data.values[1].range[0], 'HH:mm') }}
-            </div>
-          </div>
-        </li>
-        <span :class="$style.border" v-if="data.values[2]" />
-        <li
-          v-if="data.values[2]"
-          :class="{
-            [$style.timeListItem]: true,
-            [$style.current]: miaoshaIndex === 2
-          }"
-          @click.stop="miaoshaIndex = 2"
-        >
-          <div :class="$style.wrapper" v-if="data.values[2].range && data.values[2].range.length">
-            <div :class="$style.status">
-              {{ getTimeStatus(data.values[2].range) }}
-            </div>
-            <div :class="$style.time">
-              {{ getDate(data.values[2].range[0], 'HH:mm') }}
-            </div>
-          </div>
-        </li>
-        <div :class="$style.btn" @click="$router.push({ name: 'SecondList' })">
-          <span>进入专场</span>
-        </div>
-      </ul>
-      <div v-for="(item, index) of data.values" :key="index">
-        <ul
-          :class="$style.list"
-          v-if="item.goodsInfo.length"
-          v-show="index === miaoshaIndex"
-        >
-          <template v-for="(prod, i) of item.goodsInfo">
-            <li
-              :class="$style.listItem"
-              v-if="prod.activityInfo"
-              :key="i"
-              @click="$router.push({ name: 'Product', params: { productId: prod.id }, query: { currentProductStatus: 3 } })"
-            >
-              <div :class="$style.imgWrapper">
-                <img :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">
-                <div :class="$style.countDown">
-                  <span :class="$style.text" v-if="prod.activityInfo.status === 0">距开始</span>
-                  <span :class="$style.text" v-if="prod.activityInfo.status === 1">距结束</span>
-                  <span :class="$style.text" v-if="prod.activityInfo.status === 2">已结束</span>
-                  <count-down
-                    v-if="~[0, 1].indexOf(prod.activityInfo.status)"
-                    :timestamp="getTime(prod.activityInfo)"
-                    format="HH:mm"
-                    background="rgba(174, 174, 174, 0.64)"
-                    @done="() => prod.activityInfo.status += 1"
-                  />
+    <div :class="$style.miaosha">
+        <div :class="$style.wrapper" v-if="data.values.length">
+            <ul :class="$style.timeList">
+                <div>
+                    <pl-svg
+                        name="icon-miaoshazhuanchang"
+                        width="78"
+                        height="80"
+                        fill="#fff"
+                        @click="$router.push({ name: 'SecondList' })"
+                    />
                 </div>
-              </div>
-              <div :class="$style.info">
-                <div :class="$style.main">
-                  {{ prod.productName }}
-                </div>
-                <div :class="$style.current">
-                  <pl-svg name="icon-miaoshajia" width="60" height="26" />
-                  <span :class="$style.price">
-                    {{ prod.activityInfo.activityPrice }}
-                  </span>
-                </div>
-                <div :class="$style.sub">
-                  <div :class="$style.subLeft">
-                    <div :class="$style.original">
-                      <span v-if="prod.productSkuModels && prod.productSkuModels.length && getPrice(prod.productSkuModels)('originalPrice')">
-                        原价:<span :class="$style.price">{{ getPrice(prod.productSkuModels)('originalPrice') }}</span>
-                      </span>
-                    </div>
-                    <div :class="$style.progress">
-                      <div :class="$style.progressInner" :style="{ width: `${(Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)) / Number(prod.activityInfo.number) * 100}%` }" />
-                    </div>
-                    <div :class="$style.saled" v-if="prod.activityInfo.status === 0">
-                      {{ `${prod.pageviews}人已关注` }}
-                    </div>
-                    <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock > 0">
-                      {{ `已抢${Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)}件` }}
-                    </div>
-                    <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock === 0" style="color: #999999;">
-                      已抢完
-                    </div>
-                  </div>
-                  <div
+                <li
+                    v-if="data.values[0]"
                     :class="{
-                      [$style.subRight]: true,
-                      [$style.disabled]: prod.activityInfo.status !== 1
+                        [$style.timeListItem]: true,
+                        [$style.current]: miaoshaIndex === 0
                     }"
-                  >
-                    <pl-svg
-                      v-if="~[0, 1].indexOf(prod.activityInfo.status)"
-                      name="icon-vie-for"
-                      width="38"
-                    />
-                    <pl-svg
-                      v-else
-                      name="icon-jieshu"
-                      width="48"
-                      height="22"
-                    />
-                  </div>
+                    @click.stop="miaoshaIndex = 0"
+                >
+                    <div :class="$style.wrapper" v-if="data.values[0].range && data.values[0].range.length">
+                        <div :class="$style.status">
+                            <span>
+                                {{ getTimeStatus(data.values[0].range) }}
+                            </span>
+                        </div>
+                        <div :class="$style.time">
+                            {{ getDate(data.values[0].range[0], 'HH:mm') }}
+                        </div>
+                    </div>
+                </li>
+                <span :class="$style.border" v-if="data.values[1]" />
+                <li
+                    v-if="data.values[1]"
+                    :class="{
+                        [$style.timeListItem]: true,
+                        [$style.current]: miaoshaIndex === 1
+                    }"
+                    @click.stop="miaoshaIndex = 1"
+                >
+                    <div :class="$style.wrapper" v-if="data.values[1].range && data.values[1].range.length">
+                        <div :class="$style.status">
+                            {{ getTimeStatus(data.values[1].range) }}
+                        </div>
+                        <div :class="$style.time">
+                            {{ getDate(data.values[1].range[0], 'HH:mm') }}
+                        </div>
+                    </div>
+                </li>
+                <span :class="$style.border" v-if="data.values[2]" />
+                <li
+                    v-if="data.values[2]"
+                    :class="{
+                        [$style.timeListItem]: true,
+                        [$style.current]: miaoshaIndex === 2
+                    }"
+                    @click.stop="miaoshaIndex = 2"
+                >
+                    <div :class="$style.wrapper" v-if="data.values[2].range && data.values[2].range.length">
+                        <div :class="$style.status">
+                            {{ getTimeStatus(data.values[2].range) }}
+                        </div>
+                        <div :class="$style.time">
+                            {{ getDate(data.values[2].range[0], 'HH:mm') }}
+                        </div>
+                    </div>
+                </li>
+                <div :class="$style.btn" @click="$router.push({ name: 'SecondList' })">
+                    <span>进入专场</span>
                 </div>
-              </div>
-            </li>
-          </template>
-        </ul>
-      </div>
+            </ul>
+            <div v-for="(item, index) of data.values" :key="index">
+                <ul
+                    :class="$style.list"
+                    v-if="item.goodsInfo.length"
+                    v-show="index === miaoshaIndex"
+                >
+                    <template v-for="(prod, i) of item.goodsInfo">
+                        <li
+                            :class="$style.listItem"
+                            v-if="prod.activityInfo"
+                            :key="i"
+                            @click="$router.push({ name: 'Product', params: { productId: prod.id }, query: { currentProductStatus: 3 } })"
+                        >
+                            <div :class="$style.imgWrapper">
+                                <img :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">
+                                <div :class="$style.countDown">
+                                    <span :class="$style.text" v-if="prod.activityInfo.status === 0">距开始</span>
+                                    <span :class="$style.text" v-if="prod.activityInfo.status === 1">距结束</span>
+                                    <span :class="$style.text" v-if="prod.activityInfo.status === 2">已结束</span>
+                                    <count-down
+                                        v-if="~[0, 1].indexOf(prod.activityInfo.status)"
+                                        :timestamp="getTime(prod.activityInfo)"
+                                        format="HH:mm"
+                                        background="rgba(174, 174, 174, 0.64)"
+                                        @done="() => prod.activityInfo.status += 1"
+                                    />
+                                </div>
+                            </div>
+                            <div :class="$style.info">
+                                <div :class="$style.main">
+                                    {{ prod.productName }}
+                                </div>
+                                <div :class="$style.current">
+                                    <pl-svg name="icon-miaoshajia" width="60" height="26" />
+                                    <span :class="$style.price">
+                                        {{ prod.activityInfo.activityPrice }}
+                                    </span>
+                                </div>
+                                <div :class="$style.sub">
+                                    <div :class="$style.subLeft">
+                                        <div :class="$style.original">
+                                            <span v-if="prod.productSkuModels && prod.productSkuModels.length && getPrice(prod.productSkuModels)('originalPrice')">
+                                                原价:<span :class="$style.price">{{ getPrice(prod.productSkuModels)('originalPrice') }}</span>
+                                            </span>
+                                        </div>
+                                        <div :class="$style.progress">
+                                            <div :class="$style.progressInner" :style="{ width: `${(Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)) / Number(prod.activityInfo.number) * 100}%` }" />
+                                        </div>
+                                        <div :class="$style.saled" v-if="prod.activityInfo.status === 0">
+                                            {{ `${prod.pageviews}人已关注` }}
+                                        </div>
+                                        <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock > 0">
+                                            {{ `已抢${Number(prod.activityInfo.number) - Number(prod.activityInfo.activityStock)}件` }}
+                                        </div>
+                                        <div :class="$style.saled" v-if="prod.activityInfo.status > 0 && prod.activityInfo.activityStock === 0" style="color: #999999;">
+                                            已抢完
+                                        </div>
+                                    </div>
+                                    <div
+                                        :class="{
+                                            [$style.subRight]: true,
+                                            [$style.disabled]: prod.activityInfo.status !== 1
+                                        }"
+                                    >
+                                        <pl-svg
+                                            v-if="~[0, 1].indexOf(prod.activityInfo.status)"
+                                            name="icon-vie-for"
+                                            width="38"
+                                        />
+                                        <pl-svg
+                                            v-else
+                                            name="icon-jieshu"
+                                            width="48"
+                                            height="22"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -161,24 +161,24 @@ import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
 
 export default {
-  name: 'Miaosha',
-  mixins: [mixin],
-  components: {
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
+    name: 'Miaosha',
+    mixins: [mixin],
+    components: {
+        CountDown
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
+    },
+    data () {
+        return {
+            miaoshaIndex: 0
+        }
     }
-  },
-  data () {
-    return {
-      miaoshaIndex: 0
-    }
-  }
 }
 </script>
 

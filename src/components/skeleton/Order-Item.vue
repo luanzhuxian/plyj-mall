@@ -1,18 +1,18 @@
 <!-- order-item 骨架屏 -->
 <template>
-  <div :class="$style.orderItemSke">
-    <div :class="$style.orderItemSke1 + ' ' + $style.skeAnimation" />
-    <div :class="$style.orderItemSke2">
-      <div :class="$style.orderItemSke21 + ' ' + $style.skeAnimation" />
-      <div :class="$style.orderItemSke22 + ' ' + $style.skeAnimation" />
-      <div :class="$style.orderItemSke23 + ' ' + $style.skeAnimation" />
+    <div :class="$style.orderItemSke">
+        <div :class="$style.orderItemSke1 + ' ' + $style.skeAnimation" />
+        <div :class="$style.orderItemSke2">
+            <div :class="$style.orderItemSke21 + ' ' + $style.skeAnimation" />
+            <div :class="$style.orderItemSke22 + ' ' + $style.skeAnimation" />
+            <div :class="$style.orderItemSke23 + ' ' + $style.skeAnimation" />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'OrderItemSkeleton'
+    name: 'OrderItemSkeleton'
 }
 </script>
 

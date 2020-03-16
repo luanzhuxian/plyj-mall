@@ -1,21 +1,21 @@
 <template>
-  <div :class="$style.titleXmas">
-    <div :class="$style.title" v-text="data" />
-  </div>
+    <div :class="$style.titleXmas">
+        <div :class="$style.title" v-text="data" />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'TitleXmas',
-  props: {
-    data: {
-      type: String,
-      default: ''
+    name: 'TitleXmas',
+    props: {
+        data: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

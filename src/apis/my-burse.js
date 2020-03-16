@@ -11,7 +11,7 @@ export const dispatchBurse = data => axios.post('/apis/v1/scholarship/reveive', 
 export const getBurseMes = () => axios.get('/apis/v1/scholarship/manager')
 
 // 奖学金详情
-export const getBurseDetail = id => axios.get(`/apis/v1/scholarship/${id}`)
+export const getBurseDetail = id => axios.get(`/apis/v1/scholarship/${ id }`)
 
 // 删除奖学金
 export const deleteBurse = ids => axios.put('/apis/v1/scholarship/delete', ids)

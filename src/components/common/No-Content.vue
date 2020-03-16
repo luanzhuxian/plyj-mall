@@ -1,30 +1,31 @@
 <template>
-  <div :class="$style.noContent">
-    <pl-svg :name="icon" />
-    <p
-      :class="$style.text"
-      v-text="text"
-    />
-  </div>
+    <div :class="$style.noContent">
+        <pl-svg :name="icon" />
+        <p
+            :class="$style.text"
+            v-text="text"
+        />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'NoContent',
-  props: {
-    text: {
-      type: String,
-      default: ''
-    },
-    /*
+    name: 'NoContent',
+    props: {
+        text: {
+            type: String,
+            default: ''
+        },
+
+        /*
     * no-content
     * no-content2
     * */
-    icon: {
-      type: String,
-      default: 'icon-no-content'
+        icon: {
+            type: String,
+            default: 'icon-no-content'
+        }
     }
-  }
 }
 </script>
 

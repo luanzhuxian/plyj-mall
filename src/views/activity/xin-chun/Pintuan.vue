@@ -1,48 +1,48 @@
 <template>
-  <div :class="$style.pintuan">
-    <div :class="$style.pintuanTop">
-      <div :class="$style.pintuanTopSide" />
-      <router-link :class="$style.pintuanTopContent" tag="div" :to="{ name: 'SpringGroup' }">
-        <h3>新春团购大联欢</h3>
-        <p v-if="Number(data.otherValue)">
-          {{ `还有${data.otherValue}个团 点击查看>` }}
-        </p>
-        <p v-else>
-          查看更多>
-        </p>
-      </router-link>
+    <div :class="$style.pintuan">
+        <div :class="$style.pintuanTop">
+            <div :class="$style.pintuanTopSide" />
+            <router-link :class="$style.pintuanTopContent" tag="div" :to="{ name: 'SpringGroup' }">
+                <h3>新春团购大联欢</h3>
+                <p v-if="Number(data.otherValue)">
+                    {{ `还有${data.otherValue}个团 点击查看>` }}
+                </p>
+                <p v-else>
+                    查看更多>
+                </p>
+            </router-link>
+        </div>
+        <ul :class="$style.pintuanList" v-if="data.values.length">
+            <template v-for="(item, i) of data.values">
+                <item
+                    v-if="item.goodsInfo && item.goodsInfo.activityInfo"
+                    :data="item"
+                    :key="i"
+                />
+            </template>
+        </ul>
     </div>
-    <ul :class="$style.pintuanList" v-if="data.values.length">
-      <template v-for="(item, i) of data.values">
-        <item
-          v-if="item.goodsInfo && item.goodsInfo.activityInfo"
-          :data="item"
-          :key="i"
-        />
-      </template>
-    </ul>
-  </div>
 </template>
 
 <script>
 import Item from './Item-Pintuan.vue'
 
 export default {
-  name: 'Pintuan',
-  components: {
-    Item
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
+    name: 'Pintuan',
+    components: {
+        Item
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

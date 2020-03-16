@@ -1,19 +1,19 @@
 <template>
-  <div class="newcomers-home-entry">
-    <overlay v-if="showSelf">
-      <div class="center-box">
-        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/newcomers/newcomers-home.png">
-        <div style="margin-top: 80px; text-align: center;">
-          <span class="btn-goto-get" @click="gotoGet">快去领取</span>
-        </div>
-        <div style="margin-top: 64px; text-align: center;">
-          <span class="btn-close" @click="close">
-            <pl-svg name="icon-close" fill="white" width="24" height="24" />
-          </span>
-        </div>
-      </div>
-    </overlay>
-  </div>
+    <div class="newcomers-home-entry">
+        <overlay v-if="showSelf">
+            <div class="center-box">
+                <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/newcomers/newcomers-home.png">
+                <div style="margin-top: 80px; text-align: center;">
+                    <span class="btn-goto-get" @click="gotoGet">快去领取</span>
+                </div>
+                <div style="margin-top: 64px; text-align: center;">
+                    <span class="btn-close" @click="close">
+                        <pl-svg name="icon-close" fill="white" width="24" height="24" />
+                    </span>
+                </div>
+            </div>
+        </overlay>
+    </div>
 </template>
 
 <script>
@@ -23,65 +23,65 @@ import Overlay from '../invitenewcomers/components/Overlay'
 import { getCurrentActivity } from '../../../apis/newcomers'
 
 export default {
-  name: 'NewcomersHomeEntry',
-  components: {
-    Overlay
-  },
-  data () {
-    return {
-      activityInfo: { status: 0 },
-      isShowSelf: true
-    }
-  },
-
-  computed: {
-    ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
-    isNewUser () {
-      return this.userId === ''
+    name: 'NewcomersHomeEntry',
+    components: {
+        Overlay
     },
-    isActivityStoped () {
-      if (this.activityInfo === null) {
-        return true
-      }
-      return moment(this.activityInfo.activityEndTime).isBefore(moment()) || this.activityInfo.status === 0
-    },
-    isActivityStart () {
-      if (this.activityInfo === null) {
-        return false
-      }
-      return moment().isAfter(moment(this.activityInfo.activityStartTime))
-    },
-    showSelf () {
-      // packageType 1双十二 + 2新春
-      return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf && this.activityInfo.packageType === '1'
-    }
-  },
-
-  async created () {
-    try {
-      await this.getCurrentActivity()
-    } catch (e) {
-      throw e
-    }
-  },
-
-  methods: {
-    async getCurrentActivity () {
-      try {
-        let { result } = await getCurrentActivity()
-        this.activityInfo = result || null
-      } catch (e) {
-        throw e
-      }
-    },
-    gotoGet () {
-      this.$router.push({ name: 'Newcomers', params: { activityId: this.activityInfo.id } })
+    data () {
+        return {
+            activityInfo: { status: 0 },
+            isShowSelf: true
+        }
     },
 
-    close () {
-      this.isShowSelf = false
+    computed: {
+        ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+        isNewUser () {
+            return this.userId === ''
+        },
+        isActivityStoped () {
+            if (this.activityInfo === null) {
+                return true
+            }
+            return moment(this.activityInfo.activityEndTime).isBefore(moment()) || this.activityInfo.status === 0
+        },
+        isActivityStart () {
+            if (this.activityInfo === null) {
+                return false
+            }
+            return moment().isAfter(moment(this.activityInfo.activityStartTime))
+        },
+        showSelf () {
+            // packageType 1双十二 + 2新春
+            return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf && this.activityInfo.packageType === '1'
+        }
+    },
+
+    async created () {
+        try {
+            await this.getCurrentActivity()
+        } catch (e) {
+            throw e
+        }
+    },
+
+    methods: {
+        async getCurrentActivity () {
+            try {
+                const { result } = await getCurrentActivity()
+                this.activityInfo = result || null
+            } catch (e) {
+                throw e
+            }
+        },
+        gotoGet () {
+            this.$router.push({ name: 'Newcomers', params: { activityId: this.activityInfo.id } })
+        },
+
+        close () {
+            this.isShowSelf = false
+        }
     }
-  }
 }
 </script>
 

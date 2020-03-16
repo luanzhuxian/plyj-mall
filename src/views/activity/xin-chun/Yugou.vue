@@ -1,48 +1,48 @@
 <template>
-  <div :class="$style.yugou">
-    <div :class="$style.yugouTop">
-      <div :class="$style.yugouTopSide" />
-      <router-link :class="$style.yugouTopContent" tag="div" :to="{ name: 'SpringBook' }">
-        <h3>预购享翻倍</h3>
-        <p v-if="Number(data.otherValue)">
-          {{ `${data.otherValue}人参与 查看更多>` }}
-        </p>
-        <p v-else>
-          查看更多>
-        </p>
-      </router-link>
+    <div :class="$style.yugou">
+        <div :class="$style.yugouTop">
+            <div :class="$style.yugouTopSide" />
+            <router-link :class="$style.yugouTopContent" tag="div" :to="{ name: 'SpringBook' }">
+                <h3>预购享翻倍</h3>
+                <p v-if="Number(data.otherValue)">
+                    {{ `${data.otherValue}人参与 查看更多>` }}
+                </p>
+                <p v-else>
+                    查看更多>
+                </p>
+            </router-link>
+        </div>
+        <ul :class="$style.yugouList" v-if="data.values.length">
+            <template v-for="(item, i) of data.values">
+                <item
+                    v-if="item.goodsInfo && item.goodsInfo.activityInfo"
+                    :data="item"
+                    :key="i"
+                />
+            </template>
+        </ul>
     </div>
-    <ul :class="$style.yugouList" v-if="data.values.length">
-      <template v-for="(item, i) of data.values">
-        <item
-          v-if="item.goodsInfo && item.goodsInfo.activityInfo"
-          :data="item"
-          :key="i"
-        />
-      </template>
-    </ul>
-  </div>
 </template>
 
 <script>
 import Item from './Item-Yugou.vue'
 
 export default {
-  name: 'Yugou',
-  components: {
-    Item
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
+    name: 'Yugou',
+    components: {
+        Item
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

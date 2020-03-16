@@ -1,37 +1,37 @@
 <template>
-  <div :class="$style.together" v-if="detail">
-    <div v-if="detail.preActivity === 1" :class="$style.preTogether">
-      <div :class="$style.preText" />
-      <div :class="$style.line" />
-      <div>
-        <together-count-down
-          @done="started"
-          activity-text="距活动开始仅剩"
-          :endtime="detail.activityProductModel.activityStartTime"
-        />
-        <div :class="$style.desc" v-if="detail.activityProductModel.multiplt === 1">
-          预交定金翻{{ detail.activityProductModel.multipltNumber }}倍，
-          最低{{ (detail.activityProductModel.lowestPrice + detail.activityProductModel.price).toFixed(2) }}元可得商品</div>
-      </div>
-    </div>
-    <div v-if="detail.preActivity === 2" :class="$style.nowTogether">
-      <div :class="$style.nowText" />
-      <div :class="$style.line" />
-      <div>
-        <together-count-down
-          @done="ended"
-          activity-text="距活动结束仅剩"
-          :endtime="detail.activityProductModel.activityEndTime"
-        />
-        <div :class="$style.desc">
-          <div :class="$style.progress">
-            <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
-          </div>
-          <div>{{ detail.activityProductModel.stock || 0 }}人</div>
+    <div :class="$style.together" v-if="detail">
+        <div v-if="detail.preActivity === 1" :class="$style.preTogether">
+            <div :class="$style.preText" />
+            <div :class="$style.line" />
+            <div>
+                <together-count-down
+                    @done="started"
+                    activity-text="距活动开始仅剩"
+                    :endtime="detail.activityProductModel.activityStartTime"
+                />
+                <div :class="$style.desc" v-if="detail.activityProductModel.multiplt === 1">
+                    预交定金翻{{ detail.activityProductModel.multipltNumber }}倍，
+                    最低{{ (detail.activityProductModel.lowestPrice + detail.activityProductModel.price).toFixed(2) }}元可得商品</div>
+            </div>
         </div>
-      </div>
+        <div v-if="detail.preActivity === 2" :class="$style.nowTogether">
+            <div :class="$style.nowText" />
+            <div :class="$style.line" />
+            <div>
+                <together-count-down
+                    @done="ended"
+                    activity-text="距活动结束仅剩"
+                    :endtime="detail.activityProductModel.activityEndTime"
+                />
+                <div :class="$style.desc">
+                    <div :class="$style.progress">
+                        <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
+                    </div>
+                    <div>{{ detail.activityProductModel.stock || 0 }}人</div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>

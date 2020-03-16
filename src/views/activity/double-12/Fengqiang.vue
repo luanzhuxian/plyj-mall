@@ -1,67 +1,67 @@
 <template>
-  <div
-    :class="{
-      [$style.fengqiang]: true,
-      [$style.bg1]: type === 5,
-      [$style.bg2]: type === 6,
-      [$style.bg3]: type === 7
-    }"
-  >
-    <div :class="$style.background">
-      <div :class="$style.wrapper">
-        <ul :class="$style.list" v-if="data.values.length">
-          <template v-for="(item, i) of data.values">
-            <li
-              v-if="item.goodsInfo"
-              :class="{
-                [$style.listItem]: true,
-                [$style.large]: data.values.length % 2 === 1,
-                [$style.small]: data.values.length % 2 === 0
-              }"
-              :key="i"
-              @click="$router.push({ name: 'Product', params: { productId: item.goodsInfo.id } })"
-            >
-              <div :class="$style.imgWrapper">
-                <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-              </div>
-              <div :class="$style.itemInfo" v-if="type === 5 || type === 7">
-                <h4>{{ item.goodsInfo.productName }}</h4>
-                <div :class="$style.infoText">
-                  <pl-svg name="icon-fengqiangjia" width="78" height="34" />
-                  <span :class="$style.price" v-if="item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length">
-                    {{ getPrice(item.goodsInfo.productSkuModels)('price') }}
-                  </span>
-                  <span :class="$style.pay" v-if="item.goodsInfo.salesVolume < 10">
-                    {{ item.goodsInfo.pageviews }}人关注
-                  </span>
-                  <span :class="$style.pay" v-else>
-                    {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}` }}人付款
-                  </span>
-                  <div :class="$style.btnHighlight">
-                    <pl-svg name="icon-mashangqiang" width="118" height="46" />
-                  </div>
-                </div>
-              </div>
-              <div :class="$style.itemInfo" v-if="type === 6">
-                <h4>{{ item.goodsInfo.productName }}</h4>
-                <div :class="$style.infoText">
-                  <span :class="$style.price" v-if="item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length">
-                    {{ getPrice(item.goodsInfo.productSkuModels)('price') }}
-                  </span>
-                  <div :class="$style.tag" v-if="coupon && coupon.useLimitAmount && coupon.amount">
-                    {{ `满${coupon.useLimitAmount}减${coupon.amount}` }}
-                  </div>
-                  <div :class="$style.btn">
-                    马上抢！
-                  </div>
-                </div>
-              </div>
-            </li>
-          </template>
-        </ul>
-      </div>
+    <div
+        :class="{
+            [$style.fengqiang]: true,
+            [$style.bg1]: type === 5,
+            [$style.bg2]: type === 6,
+            [$style.bg3]: type === 7
+        }"
+    >
+        <div :class="$style.background">
+            <div :class="$style.wrapper">
+                <ul :class="$style.list" v-if="data.values.length">
+                    <template v-for="(item, i) of data.values">
+                        <li
+                            v-if="item.goodsInfo"
+                            :class="{
+                                [$style.listItem]: true,
+                                [$style.large]: data.values.length % 2 === 1,
+                                [$style.small]: data.values.length % 2 === 0
+                            }"
+                            :key="i"
+                            @click="$router.push({ name: 'Product', params: { productId: item.goodsInfo.id } })"
+                        >
+                            <div :class="$style.imgWrapper">
+                                <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
+                            </div>
+                            <div :class="$style.itemInfo" v-if="type === 5 || type === 7">
+                                <h4>{{ item.goodsInfo.productName }}</h4>
+                                <div :class="$style.infoText">
+                                    <pl-svg name="icon-fengqiangjia" width="78" height="34" />
+                                    <span :class="$style.price" v-if="item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length">
+                                        {{ getPrice(item.goodsInfo.productSkuModels)('price') }}
+                                    </span>
+                                    <span :class="$style.pay" v-if="item.goodsInfo.salesVolume < 10">
+                                        {{ item.goodsInfo.pageviews }}人关注
+                                    </span>
+                                    <span :class="$style.pay" v-else>
+                                        {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}` }}人付款
+                                    </span>
+                                    <div :class="$style.btnHighlight">
+                                        <pl-svg name="icon-mashangqiang" width="118" height="46" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div :class="$style.itemInfo" v-if="type === 6">
+                                <h4>{{ item.goodsInfo.productName }}</h4>
+                                <div :class="$style.infoText">
+                                    <span :class="$style.price" v-if="item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length">
+                                        {{ getPrice(item.goodsInfo.productSkuModels)('price') }}
+                                    </span>
+                                    <div :class="$style.tag" v-if="coupon && coupon.useLimitAmount && coupon.amount">
+                                        {{ `满${coupon.useLimitAmount}减${coupon.amount}` }}
+                                    </div>
+                                    <div :class="$style.btn">
+                                        马上抢！
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -69,30 +69,30 @@ import mixin from '../mixin.js'
 import { getMaxCoupon } from '../../../apis/home'
 
 export default {
-  name: 'Fengqiang',
-  mixins: [mixin],
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
+    name: 'Fengqiang',
+    mixins: [mixin],
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        },
+        type: {
+            type: Number,
+            default: 0
+        }
     },
-    type: {
-      type: Number,
-      default: 0
+    data () {
+        return {
+            coupon: {}
+        }
+    },
+    created () {
+        getMaxCoupon().then(({ result }) => {
+            this.coupon = result
+        })
     }
-  },
-  data () {
-    return {
-      coupon: {}
-    }
-  },
-  created () {
-    getMaxCoupon().then(({ result }) => {
-      this.coupon = result
-    })
-  }
 }
 </script>
 

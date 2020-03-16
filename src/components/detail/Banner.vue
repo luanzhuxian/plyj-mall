@@ -1,124 +1,124 @@
 <template>
-  <div
-    v-if="banners.length > 0"
-    :class="{
-      'detail-banner': true,
-      [$style.detailBanner]: true
-    }"
-  >
-    <swiper ref="swiper" :options="swiperOption" @slideChange="slideChange">
-      <swiperSlide
-        v-for="(img, index) of banners"
-        :key="index"
-        :class="{ 'swiper-no-swiping': banners.length < 2 }"
-      >
-        <img
-          v-if="img.indexOf('video/') > -1"
-          :src="img + '?x-oss-process=video/snapshot,t_5000,m_fast'"
-          ref="img"
-          :class="$style.bannerImg"
-        >
-        <img
-          v-else
-          :class="$style.bannerImg"
-          :src="img"
-          ref="img"
-        >
-        <pl-svg v-if="img.indexOf('video/') > -1" @click="play(img)" :class="$style.playBtn" name="icon-play" fill="#fff" />
-      </swiperSlide>
-    </swiper>
-    <div v-show="banners.length > 1" :class="'swiper-pagination ' + $style.pagination" />
-    <slot />
-    <transition name="fade">
-      <div
-        v-show="isPlay"
-        :class="$style.videoBox"
-      >
-        <video
-          :src="url"
-          ref="video"
-          crossorigin="anonymous"
-          @loadeddata="loadeddata"
-          @canplay="canplay"
-          @ended="ended"
-          x5-video-player-type="h5-page"
-          playsinline
-          preload
-          controls
-          :class="{ [$style.playVideo]: isPlay }"
-        />
-        <pl-svg @click="close" :class="$style.close" name="icon-close" fill="#bbb" />
-      </div>
-    </transition>
-  </div>
+    <div
+        v-if="banners.length > 0"
+        :class="{
+            'detail-banner': true,
+            [$style.detailBanner]: true
+        }"
+    >
+        <swiper ref="swiper" :options="swiperOption" @slideChange="slideChange">
+            <swiperSlide
+                v-for="(img, index) of banners"
+                :key="index"
+                :class="{ 'swiper-no-swiping': banners.length < 2 }"
+            >
+                <img
+                    v-if="img.indexOf('video/') > -1"
+                    :src="img + '?x-oss-process=video/snapshot,t_5000,m_fast'"
+                    ref="img"
+                    :class="$style.bannerImg"
+                >
+                <img
+                    v-else
+                    :class="$style.bannerImg"
+                    :src="img"
+                    ref="img"
+                >
+                <pl-svg v-if="img.indexOf('video/') > -1" @click="play(img)" :class="$style.playBtn" name="icon-play" fill="#fff" />
+            </swiperSlide>
+        </swiper>
+        <div v-show="banners.length > 1" :class="'swiper-pagination ' + $style.pagination" />
+        <slot />
+        <transition name="fade">
+            <div
+                v-show="isPlay"
+                :class="$style.videoBox"
+            >
+                <video
+                    :src="url"
+                    ref="video"
+                    crossorigin="anonymous"
+                    @loadeddata="loadeddata"
+                    @canplay="canplay"
+                    @ended="ended"
+                    x5-video-player-type="h5-page"
+                    playsinline
+                    preload
+                    controls
+                    :class="{ [$style.playVideo]: isPlay }"
+                />
+                <pl-svg @click="close" :class="$style.close" name="icon-close" fill="#bbb" />
+            </div>
+        </transition>
+    </div>
 
-  <div
-    v-else
-    :class="$style.skeleton"
-  />
+    <div
+        v-else
+        :class="$style.skeleton"
+    />
 </template>
 
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
-  name: 'DetailBanner',
-  components: {
-    swiper,
-    swiperSlide
-  },
-  props: {
-    banners: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    }
-  },
-  data () {
-    return {
-      swiperOption: {
-        autoplay: true,
-        pagination: {
-          el: '.swiper-pagination'
+    name: 'DetailBanner',
+    components: {
+        swiper,
+        swiperSlide
+    },
+    props: {
+        banners: {
+            type: Array,
+            default () {
+                return []
+            }
         }
-      },
-      isPlay: false,
-      url: ''
-    }
-  },
-  computed: {
-    swiper () {
-      return this.$refs.swiper.swiper
-    }
-  },
-  updated () {
-    if (this.$refs.img) {
-      this.$emit('slideChange', this.$refs.img, 0)
-    }
-  },
-  methods: {
-    slideChange () {
-      this.$emit('slideChange', this.$refs.img, this.swiper.activeIndex)
     },
-    async play (url) {
-      this.url = url
-      this.isPlay = true
-      await this.$nextTick()
-      this.$refs.video.play()
+    data () {
+        return {
+            swiperOption: {
+                autoplay: true,
+                pagination: {
+                    el: '.swiper-pagination'
+                }
+            },
+            isPlay: false,
+            url: ''
+        }
     },
-    loadeddata () {},
-    canplay () {},
-    ended () {
-      this.isPlay = false
+    computed: {
+        swiper () {
+            return this.$refs.swiper.swiper
+        }
     },
-    close () {
-      this.$refs.video.pause()
-      this.isPlay = false
+    updated () {
+        if (this.$refs.img) {
+            this.$emit('slideChange', this.$refs.img, 0)
+        }
+    },
+    methods: {
+        slideChange () {
+            this.$emit('slideChange', this.$refs.img, this.swiper.activeIndex)
+        },
+        async play (url) {
+            this.url = url
+            this.isPlay = true
+            await this.$nextTick()
+            this.$refs.video.play()
+        },
+        loadeddata () {},
+        canplay () {},
+        ended () {
+            this.isPlay = false
+        },
+        close () {
+            this.$refs.video.pause()
+            this.isPlay = false
+        }
+    },
+    deactivated () {
+        this.isPlay = false
     }
-  },
-  deactivated () {
-    this.isPlay = false
-  }
 }
 </script>
 

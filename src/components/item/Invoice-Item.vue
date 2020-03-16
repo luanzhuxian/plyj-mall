@@ -1,46 +1,46 @@
 <template>
-  <div :class="$style.invoiceItem">
-    <div :class="$style.left">
-      <p
-        :class="$style.name"
-        v-text="data.entName"
-      />
-      <p
-        :class="$style.number"
-        v-text="data.tin"
-      />
+    <div :class="$style.invoiceItem">
+        <div :class="$style.left">
+            <p
+                :class="$style.name"
+                v-text="data.entName"
+            />
+            <p
+                :class="$style.number"
+                v-text="data.tin"
+            />
+        </div>
+        <div
+            :class="$style.right"
+            @click.stop.prevent="edit"
+        >
+            编辑
+        </div>
     </div>
-    <div
-      :class="$style.right"
-      @click.stop.prevent="edit"
-    >
-      编辑
-    </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'InvoiceItem',
-  props: {
-    data: {
-      type: Object,
-      default: function () {
-        return {}
-      }
+    name: 'InvoiceItem',
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
+    },
+    methods: {
+        edit () {
+            // 点击编辑时，保存当前路由，修改后返回当前页面
+            localStorage.setItem('EDIT_INVOICE_FROM', JSON.stringify({
+                name: this.$route.name,
+                params: this.$route.params,
+                query: this.$route.query
+            }))
+            this.$router.push({ name: 'AddInvoice', params: { id: this.data.id } })
+        }
     }
-  },
-  methods: {
-    edit () {
-      // 点击编辑时，保存当前路由，修改后返回当前页面
-      localStorage.setItem('EDIT_INVOICE_FROM', JSON.stringify({
-        name: this.$route.name,
-        params: this.$route.params,
-        query: this.$route.query
-      }))
-      this.$router.push({ name: 'AddInvoice', params: { id: this.data.id } })
-    }
-  }
 }
 </script>
 

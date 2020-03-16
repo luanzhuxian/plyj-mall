@@ -1,48 +1,48 @@
 <template>
-  <div :class="$style.teachers">
-    <swiper v-if="data.values.length" :options="swiperOption">
-      <swiper-slide v-for="(item, i) of data.values" :key="i">
-        <li :class="$style.listItem">
-          <div :class="$style.imgWrapper">
-            <img :src="item.image" alt="">
-            <p :class="$style.name" v-text="item.name" />
-          </div>
-          <div :class="$style.info">
-            <p :class="$style.main" v-text="item.value" />
-            <p :class="$style.intro">
-              简介：{{ item.valueName }}
-            </p>
-          </div>
-        </li>
-      </swiper-slide>
-    </swiper>
-  </div>
+    <div :class="$style.teachers">
+        <swiper v-if="data.values.length" :options="swiperOption">
+            <swiper-slide v-for="(item, i) of data.values" :key="i">
+                <li :class="$style.listItem">
+                    <div :class="$style.imgWrapper">
+                        <img :src="item.image" alt="">
+                        <p :class="$style.name" v-text="item.name" />
+                    </div>
+                    <div :class="$style.info">
+                        <p :class="$style.main" v-text="item.value" />
+                        <p :class="$style.intro">
+                            简介：{{ item.valueName }}
+                        </p>
+                    </div>
+                </li>
+            </swiper-slide>
+        </swiper>
+    </div>
 </template>
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
 export default {
-  name: 'Teachers',
-  components: {
-    swiper,
-    swiperSlide
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
+    name: 'Teachers',
+    components: {
+        swiper,
+        swiperSlide
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
+    },
+    data () {
+        return {
+            swiperOption: {
+                slidesPerView: 3,
+                spaceBetween: 10
+            }
+        }
     }
-  },
-  data () {
-    return {
-      swiperOption: {
-        slidesPerView: 3,
-        spaceBetween: 10
-      }
-    }
-  }
 }
 </script>
 <style lang="scss" module>
