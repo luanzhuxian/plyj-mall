@@ -3,7 +3,7 @@
         <img :src="imgSrc" alt="">
         <div :class="$style.countdown">
             <div v-if="waiting" :class="$style.waiting">
-                直播即将开始
+                直播暂未开始
             </div>
             <template v-else>
                 <div :class="$style.time">
