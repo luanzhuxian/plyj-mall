@@ -9,7 +9,7 @@ export default [
     //   }
     // },
     {
-        path: '/lived/room',
+        path: '/lived/room/:id',
         name: 'LiveRoom',
         component: () => import('../views/live/Live-Room.vue'),
         meta: {
