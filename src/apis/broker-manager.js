@@ -17,16 +17,10 @@ export const getAduitNotice = () => axios.get(`/apis/v1/agent/user/info/audit/no
 export const updateNoticeStatus = () => axios.put(`/apis/v1/agent/user/info/audit/updateNoticeStatus`)
 
 // PUT 修改经纪人审核状态
-export function changeBrokerStatus (id) {
-    return axios.put(`/v1/agent/user/info/audit/${ id }/PASS`)
-}
+export const changeBrokerStatus = id => axios.put(`/v1/agent/user/info/audit/${ id }/PASS`)
 
 // PUT 修改经纪人信息
-export function changeBrokerInfo (id, data) {
-    return axios.post(`/apis/v1/agent/user/info/audit/${ id }`, data)
-}
+export const changeBrokerInfo = (id, data) => axios.post(`/apis/v1/agent/user/info/audit/${ id }`, data)
 
 // DELETE 删除经纪人
-export function deleteBroker (id) {
-    return axios.delete(`/apis/v1/agent/user/info/audit/${ id }`)
-}
+export const deleteBroker = id => axios.delete(`/apis/v1/agent/user/info/audit/${ id }`)

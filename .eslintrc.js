@@ -27,9 +27,10 @@ module.exports = {
     'vue/html-indent': ['error', 4], // vue-html 4个缩进
     'quote-props': ["error", "as-needed"], // 详见: http://docs.youpenglai.cn/spec/javascript_specification.html#objects--quoted-props
     'array-callback-return': "error", // 详见: http://docs.youpenglai.cn/spec/javascript_specification.html#arrays--callback-return
+    // 这有bug
     "prefer-destructuring": ["error", {
       "array": false,
-      "object": true
+      "object": false
     }, {
       "enforceForRenamedProperties": false
     }], // http://docs.youpenglai.cn/spec/javascript_specification.html#destructuring--object

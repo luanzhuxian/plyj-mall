@@ -1,5 +1,5 @@
 // 返回字符串所占用的字节数
-export function codePointNo (str) {
+export const codePointNo = str => {
     let num = 0
     let i = 0
     let codePoint = str.codePointAt(i)
@@ -16,7 +16,7 @@ export function codePointNo (str) {
 }
 
 // 是否有值。检查"必填"项。
-export function hasValue (val) {
+export const hasValue = val => {
     if (val === undefined || val === null || val === '') {
         return false
     }
@@ -24,14 +24,10 @@ export function hasValue (val) {
 }
 
 // 检测长度是否符合指定的长度
-export function checkLength (length) {
-    return function (val) {
-        return String(val).length < length
-    }
-}
+export const checkLength = length => val => String(val).length < length
 
 // 姓名检查
-export function isName (name) {
+export const isName = name => {
     if (codePointNo(name) <= 20) {
         return /^[a-zA-Z_\u4e00-\u9fa5\\-]{2,50}$/.test(name)
     }
@@ -40,70 +36,45 @@ export function isName (name) {
 
 // 中英文检查
 // isZhEn
-export function isEn (val) {
-    return /^([A-Za-z]{2,20})$/.test(val)
-}
+export const isEn = val => /^([A-Za-z]{2,20})$/.test(val)
 
-export function isEmoji (val) {
-    return /[\uD800-\uDBFF\uDC00-\uDFFF]/g.test(val)
-}
+export const isEmoji = val => /[\uD800-\uDBFF\uDC00-\uDFFF]/g.test(val)
 
 // 校验快递单号
-export function isExpressNumber (str) {
-    return /^[0-9a-zA-Z]+$/.test(str)
-}
+export const isExpressNumber = str => /^[0-9a-zA-Z]+$/.test(str)
 
-export function isUrl (url) {
+export const isUrl = url => {
     const reg = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/
     return reg.test(url)
 }
 
 // 是否数字。（不能有小数点）
-export function isDigit (val) { // 经测试，对于非字符串，不会报错，返回 false
-    return /^\d+$/.test(val)
-}
+// 经测试，对于非字符串，不会报错，返回 false
+export const isDigit = val => /^\d+$/.test(val)
 
-export function isPassWord (val) {
-    return /[\da-zA-Z_%.*]{6,20}/.test(val)
-}
+export const isPassWord = val => /[\da-zA-Z_%.*]{6,20}/.test(val)
 
 // 是否整数。能否使用 parseInt 转换成整数。据说能识别42位十进制整数，未验证。
-export function isInteger (val) {
-    return !window.isNaN(window.parseInt(val))
-}
+export const isInteger = val => !window.isNaN(window.parseInt(val))
 
 // 是否小数。能否使用 parseFloat 转换成浮点数。
-export function isFloat (val) {
-    return !window.isNaN(window.parseFloat(val))
-}
+export const isFloat = val => !window.isNaN(window.parseFloat(val))
 
-export function isQQ (val) {
-    return /^\d{1,12}$/.test(val)
-}
+export const isQQ = val => /^\d{1,12}$/.test(val)
 
 // 是否手机号码
-export function isPhone (val) {
-    return /^1[0-9]{10}$/.test(val)
-}
+export const isPhone = val => /^1[0-9]{10}$/.test(val)
 
 // 是否Email
-export function isEmail (val) {
-    return /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(val)
-}
+export const isEmail = val => /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(val)
 
-export function isChZn (val) {
-    return /^[\u4E00-\u9FA5\uff08\uff09()]+$/.test(val)
-}
+export const isChZn = val => /^[\u4E00-\u9FA5\uff08\uff09()]+$/.test(val)
 
-export function isBankId (val) {
-    return /^\d{8,28}$/.test(val)
-}
+export const isBankId = val => /^\d{8,28}$/.test(val)
 
-export function isMoney (val) {
-    return /(^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$)/.test(val)
-}
+export const isMoney = val => /(^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$)/.test(val)
 
-export function isPositive (val) {
+export const isPositive = val => {
     if (val <= 0) {
         return false
     }
@@ -111,12 +82,10 @@ export function isPositive (val) {
 }
 
 /* 校验税号 */
-export function isDutyNumber (val) {
-    return /^[\da-zA-Z]{1,25}$/.test(val)
-}
+export const isDutyNumber = val => /^[\da-zA-Z]{1,25}$/.test(val)
 
 // 判断身份证号码是否正确
-export function isIdCard (val) {
+export const isIdCard = val => {
     if (!val || !val.trim()) {
         return false
     }
@@ -154,8 +123,8 @@ export function isIdCard (val) {
     console.log(result.check)
     return result.check
 }
-
-export function _getLength (val) { // 是否考虑把非 string 转换成 string ? 如数字。。。
+// 是否考虑把非 string 转换成 string ? 如数字。。。
+export const getLength = val => {
     let length = 0
     val = String(val)
     if (val && val.length) {
@@ -164,12 +133,13 @@ export function _getLength (val) { // 是否考虑把非 string 转换成 string
     return length
 }
 
-export function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
+export const createText = (ctx, x, y, text, lineHeight, width, lineNumber) => {
     // 填充商品名称
     let charArr = []
     const strArr = []
     let txtWidth = 0
-    let lineCount = 0 // 文字行数
+    // 文字行数
+    let lineCount = 0
     const ellipsisWidth = ctx.measureText('...').width
     for (let i = 0; i < text.length; i++) {
         const char = text[i]
