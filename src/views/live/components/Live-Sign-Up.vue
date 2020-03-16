@@ -100,6 +100,16 @@ export default {
             }
         }
     },
+    deactivated () {
+        this.form = {
+            liveId: '',
+            signName: '',
+            signTelphone: '',
+            signGrade: '',
+            signRegion: '',
+            signTitle: ''
+        }
+    },
     methods: {
         async submit () {
             if (!this.$refs.form.validate()) {

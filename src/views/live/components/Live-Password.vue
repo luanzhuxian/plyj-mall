@@ -42,6 +42,9 @@ export default {
             value: ''
         }
     },
+    deactivated () {
+        this.value = ''
+    },
     methods: {
         async validate () {
             this.show = true
