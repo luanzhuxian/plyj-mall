@@ -103,12 +103,14 @@ export default {
     methods: {
         onClickIcon () {
             if (!this.isDisabled) {
-                this.currentValue = this.name // 触发setter
+                // 触发setter
+                this.currentValue = this.name
             }
         },
         onClickLabel () {
             if (!this.isDisabled && !this.labelDisabled) {
-                this.currentValue = this.name // 触发setter
+                // 触发setter
+                this.currentValue = this.name
             }
         },
         onClick (event) {

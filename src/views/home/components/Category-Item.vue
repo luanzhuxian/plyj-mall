@@ -84,7 +84,8 @@ export default {
             type: String,
             default: ''
         },
-        isActive: Boolean, // 是否加入经济人活动,
+        // 是否加入经济人活动,
+        isActive: Boolean,
         sale: {
             type: [Number, String],
             default: 0

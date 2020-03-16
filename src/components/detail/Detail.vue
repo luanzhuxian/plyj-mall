@@ -56,8 +56,10 @@ export default {
             e.stopPropagation()
             if (e.target.tagName === 'IMG') {
                 window.wx.previewImage({
-                    current: e.target.dataset.src, // 当前显示图片的http链接
-                    urls: [...this.imgList] // 需要预览的图片http链接列表
+                    // 当前显示图片的http链接
+                    current: e.target.dataset.src,
+                    // 需要预览的图片http链接列表
+                    urls: [...this.imgList]
                 })
             }
         }

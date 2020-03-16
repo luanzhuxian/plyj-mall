@@ -77,7 +77,8 @@ export default {
             default: null
         },
         scrolling: {
-            type: Boolean // 正在滚动
+            // 正在滚动
+            type: Boolean
         }
     },
     data () {
@@ -86,14 +87,18 @@ export default {
             activeOffsetHeight: 0,
             translateY: 0,
             active: 0,
-            trasition: false // 列表是否需要过度动效
+            // 列表是否需要过度动效
+            trasition: false
         }
     },
     mounted () {
     // 初始化位移单位高度
-        this.activeOffsetTop = Math.floor(window.innerWidth * 65 / 750) // 选中标记物的坐标
-        this.activeOffsetHeight = Math.floor(window.innerWidth * 75 / 750) // 选中标记物的高度
-        MAX_TRANSLATE_Y = this.translateY = this.activeOffsetTop
+        // 选中标记物的坐标
+        this.activeOffsetTop = Math.floor(window.innerWidth * 65 / 750)
+        // 选中标记物的高度
+        this.activeOffsetHeight = Math.floor(window.innerWidth * 75 / 750)
+        this.translateY = this.activeOffsetTop
+        MAX_TRANSLATE_Y = this.translateY
         MIN_TRANSLATE_Y = -this.activeOffsetTop * (this.data.values.length - 1)
     },
     methods: {
@@ -125,7 +130,8 @@ export default {
             e.stopPropagation()
             started = false
             document.removeEventListener('touchmove', this.touchmvoe)
-            initedSpeed = speedValue = this.speed(e.changedTouches[0].clientY)
+            speedValue = this.speed(e.changedTouches[0].clientY)
+            initedSpeed = speedValue
             requestAnimationFrame(this.inertia)
         },
 

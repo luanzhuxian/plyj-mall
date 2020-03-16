@@ -1,4 +1,4 @@
-export function ChildrenMixin (parent, options = {}) {
+export const ChildrenMixin = function (parent, options = {}) {
     const indexKey = options.indexKey || 'index'
 
     return {
@@ -51,7 +51,7 @@ export function ChildrenMixin (parent, options = {}) {
     }
 }
 
-export function ParentMixin (parent) {
+export const ParentMixin = function (parent) {
     return {
         provide () {
             return {

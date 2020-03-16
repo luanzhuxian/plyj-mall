@@ -11,7 +11,7 @@ export const getLivePlayBackInfo = (activityId, isValidateEndTime) => axios.get(
 export const getCourseList = params => axios.get('/apis/v1/knowledgeCourse/myVideo', { params })
 
 // 获取观看课程信息
-export const getCourseDetail = liveId => axios.get(`/apis/v1/mall/live/lib/detail/${liveId}`)
+export const getCourseDetail = liveId => axios.get(`/apis/v1/mall/live/lib/detail/${ liveId }`)
 
 // 获取课程观看权限
 export const getPermission = courseId => axios.get('/apis/v1/knowledgeCourse/customer/video', { params: { courseId } })

@@ -44,7 +44,7 @@ export default {
             this.$emit('done')
         },
         sub (arg1, arg2) {
-            let r1; let r2; let m; let n
+            let r1; let r2
             try {
                 r1 = arg1.toString().split('.')[1].length
             } catch (e) {
@@ -55,8 +55,8 @@ export default {
             } catch (e) {
                 r2 = 0
             }
-            m = Math.pow(10, Math.max(r1, r2))
-            n = (r1 >= r2) ? r1 : r2
+            const m = Math.pow(10, Math.max(r1, r2))
+            const n = (r1 >= r2) ? r1 : r2
             return ((arg1 * m - arg2 * m) / m).toFixed(n)
         }
     }

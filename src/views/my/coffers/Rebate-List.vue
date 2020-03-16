@@ -165,6 +165,7 @@ export default {
             let m = listTemp[0].month
             let y = listTemp[0].year
             while (!this.foramtListLength()) {
+                // eslint-disable-next-line no-loop-func
                 const filter = this.list.filter(item => m === item.month && item.year === y)
                 filter.month = m
                 filter.year = y

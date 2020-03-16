@@ -29,7 +29,8 @@ export const Toast = (options = {}) => {
     }
     document.body.appendChild(instance.$el)
     Vue.nextTick(() => {
-        instance.show = !!instance.message // 消息为空时不显示
+        // 消息为空时不显示
+        instance.show = !!instance.message
         instance.timer = setTimeout(() => {
             instance.close()
         }, duration)
