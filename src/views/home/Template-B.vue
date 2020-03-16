@@ -148,7 +148,7 @@ export default {
         },
         isLiveShow () {
             const { liveInfo } = this.parent
-            return this.type === 4 && liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+            return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
         },
         isCourseShow () {
             const { courseInfo } = this.parent
