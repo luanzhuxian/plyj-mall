@@ -14,7 +14,7 @@
                     :key="i"
                     @click="editStudent(i)"
                 >
-                    <div :class="$style.field">{{ label }}{{ i + 1 }}</div>
+                    <div :class="$style.field">{{ label }}<i v-if="formData2.formList.length > 1">{{ i + 1 }}</i></div>
                     <div :class="$style.value">
                         <span v-if="isError(i)">未填写</span>
                         <span v-else v-text="item[Object.keys(item)[0]]" />
@@ -30,7 +30,7 @@
                     :key="i"
                     @click="editStudent(i)"
                 >
-                    <div :class="$style.field">{{ label }}{{ i + 1 }}</div>
+                    <div :class="$style.field">{{ label }}<i v-if="formData2.formList.length > 1">{{ i + 1 }}</i></div>
                     <div :class="$style.value">
                         <span v-if="isError(i)">未填写</span>
                         <span v-else v-text="item[Object.keys(item)[0]]" />
