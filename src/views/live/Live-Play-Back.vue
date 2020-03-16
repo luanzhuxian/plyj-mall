@@ -143,7 +143,7 @@ export default {
                 await this.getDetail()
                 // 存入访问记录
                 await setComeInConut({
-                    id: detail.id,
+                    id: this.activityId,
                     message: `${ detail.paidAmount || 0 }元`
                 })
             }
@@ -177,7 +177,7 @@ export default {
                     this.needPay = false
                     // 存入访问记录
                     await setComeInConut({
-                        id: this.detail.id,
+                        id: this.activityId,
                         message: `${ this.payCount || 0 }元`
                     })
                 } catch (e) {
