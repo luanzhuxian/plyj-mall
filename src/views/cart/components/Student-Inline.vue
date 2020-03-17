@@ -139,4 +139,10 @@ export default {
     padding-left: 68px;
     padding-right: 28px;
   }
+
+  @keyframes bordrFlicker {
+      0% { border-color: #F24724 }
+      50% { border-color: transparent }
+      100% { border-color: #F24724 }
+  }
 </style>

@@ -19,7 +19,11 @@
         </div>
 
         <ul
-            :class="{ [$style.list]: true, [$style.collapse]: collapse }"
+            :class="{
+                [$style.list]: true,
+                [$style.collapse]: collapse,
+                [$style.error]: errorItemId === product.productId,
+            }"
             v-if="formData.formList"
         >
             <li
@@ -48,6 +52,7 @@
 
 <script>
 import CustomForm from './Custom-Form.vue'
+
 export default {
     name: 'CustomInline',
     components: {
@@ -79,6 +84,11 @@ export default {
             type: String,
             default: '学员信息'
         },
+        // 报错的项目id（该项未填写）
+        errorItemId: {
+            type: String,
+            default: ''
+        },
         count: {
             type: Number,
             default: 0
@@ -90,6 +100,16 @@ export default {
                 this.setFormData()
             },
             immediate: true
+        },
+        errorItemId () {
+            this.$nextTick(() => {
+                const list = document.querySelector(`.${ this.$style.error }`)
+                list.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'nearest'
+                })
+            })
         }
     },
     methods: {
@@ -114,7 +134,11 @@ export default {
                     } else {
                         form[key] = ''
                     }
-                    rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'blur' }]
+                    rule[key] = [{
+                        required: Boolean(cus.required),
+                        message: `请输入${ cus.fieldName }`,
+                        trigger: 'blur'
+                    }]
                 }
                 formList.push(form)
                 rules.push(rule)
@@ -178,50 +202,70 @@ export default {
 </script>
 
 <style module lang="scss">
-  .infoItem {
-    line-height: 88px;
-    font-size: 24px;
-    border: 2px solid #fff;
-  }
-  .rightArrow {
-    margin-left: 10px;
-    vertical-align: -4px;
-    transition: transform .2s linear;
-    transform: rotate(90deg);
-  }
-  .collapse {
-    > .rightArrow {
-      transform: rotate(0);
+    .infoItem {
+        line-height: 88px;
+        font-size: 24px;
+        border: 2px solid #fff;
     }
-  }
-  .list {
-    padding: 40px 24px 40px 68px;
-    background-color: #F8F8F8;
-    overflow: hidden;
-    transition: max-height .2s linear;
-    > li {
-      display: flex;
-      flex: 1;
-      justify-content: space-between;
-      margin-bottom: 48px;
-      line-height: 36px;
-      &:nth-last-of-type(1) {
-        margin-bottom: 0;
-      }
-      .rightArrow {
-        transform: rotate(0);
-      }
+
+    .rightArrow {
+        margin-left: 10px;
+        vertical-align: -4px;
+        transition: transform .2s linear;
+        transform: rotate(90deg);
     }
-    &.collapse {
-      height: 0;
-      padding: 0;
+
+    .collapse {
+        > .rightArrow {
+            transform: rotate(0);
+        }
     }
-  }
-  .content {
-    display: flex;
-    flex: 1;
-    justify-content: space-between;
-    padding-left: 68px;
-    padding-right: 28px;
-  }
+
+    .list {
+        padding: 40px 24px 40px 68px;
+        background-color: #F8F8F8;
+        overflow: hidden;
+        transition: max-height .2s linear;
+
+        > li {
+            display: flex;
+            flex: 1;
+            justify-content: space-between;
+            margin-bottom: 48px;
+            line-height: 36px;
+
+            &:nth-last-of-type(1) {
+                margin-bottom: 0;
+            }
+
+            .rightArrow {
+                transform: rotate(0);
+            }
+        }
+
+        &.collapse {
+            height: 0;
+            padding: 0;
+        }
+
+        &.error {
+            animation: bordrFlicker .15s ease;
+            animation-iteration-count: 8;
+            border: 2px solid red;
+            box-sizing: border-box;
+        }
+    }
+
+    .content {
+        display: flex;
+        flex: 1;
+        justify-content: space-between;
+        padding-left: 68px;
+        padding-right: 28px;
+    }
+    @keyframes bordrFlicker {
+        0% { border-color: #F24724 }
+        50% { border-color: transparent }
+        100% { border-color: #F24724 }
+    }
 </style>

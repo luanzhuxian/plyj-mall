@@ -182,6 +182,7 @@
                         :key="item.productId"
                         :count="item.count"
                         :custom-list="item.formEntityList"
+                        :error-item-id="customErrorId"
                     />
 
                     <InfoItem v-if="isCart">
@@ -308,6 +309,7 @@
                         :product="item"
                         :count="item.count"
                         :custom-list="item.formEntityList"
+                        :error-item-id="customErrorId"
                     />
 
                     <InfoItem v-if="isCart">
@@ -697,8 +699,12 @@ export default {
                 mobile: ''
             },
             detail: {},
+            // 学员信息错误标记点
             lessonErrorId: '',
+            // 学员信息错误标记点提示语
             lessonErrorTip: '',
+            // 自定义表单错误信息点
+            customErrorId: '',
             // 推荐使用的优惠券Id
             recommendCouponId: '',
             // 服务器时间
@@ -1138,20 +1144,22 @@ export default {
 
         /**
          * 判断是否填写了自定义表单
-         * @param needStudent {Number} 是否需要学员
-         * @param customForm {Array} 当前商品的自定义表单
-         * @param skuCode1 {string} 规格
-         * @param productType {string} 商品类型
-         * @param fields {Array} 字段列表
+         * @property needStudentInfo {Number} 是否需要学员
+         * @property customForm {Array} 当前商品的自定义表单
+         * @property productId {string} 规格
+         * @property productType {string} 商品类型
+         * @property fields {Array} 字段列表
          */
-        hasCustomForm (needStudent, customForm, skuCode1, fields, productType) {
-            if (needStudent === 2) {
+        hasCustomForm ({ needStudentInfo, customForm, productId, fields, productType }) {
+            // console.log(needStudentInfo, customForm, productId, fields, productType)
+            if (needStudentInfo === 2) {
                 if (!customForm || !customForm.length) {
                     if (productType === 'PHYSICAL_GOODS') {
                         this.$error('请填写所有用户信息')
                     } else {
                         this.$error('请填写所有学员信息')
                     }
+                    this.customErrorId = productId
                     return false
                 }
                 for (const form of customForm) {
@@ -1162,6 +1170,7 @@ export default {
                             } else {
                                 this.$error('请填写所有学员信息')
                             }
+                            this.customErrorId = productId
                             return false
                         }
                     }
@@ -1184,7 +1193,7 @@ export default {
                 const { productId, skuCode1, skuCode2, count, agentUser, customForm, needStudentInfo, formEntityList } = item
 
                 // 实体商品不考虑商品数量，所有count传0
-                if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList, 'PHYSICAL_GOODS')) return
+                if (!this.hasCustomForm({ needStudentInfo, customForm: customForm || [], productId, fields: formEntityList, productType: 'PHYSICAL_GOODS' })) return
                 cartProducts.push({
                     productId,
                     skuCode1,
@@ -1200,7 +1209,7 @@ export default {
                 const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm, formEntityList } = item
                 const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
                 if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
-                if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList)) return
+                if (!this.hasCustomForm({ needStudentInfo, customForm: customForm || [], productId, fields: formEntityList })) return
                 cartProducts.push({
                     productId,
                     skuCode1,
@@ -1217,7 +1226,7 @@ export default {
                 const { productId, skuCode1, skuCode2, count, agentUser, remark = this.remark, needStudentInfo, customForm = [], formEntityList } = item
                 const currentStudent = this.CHECKED_STUDENT[skuCode1 + skuCode2]
                 if (!this.hasStudents(needStudentInfo, currentStudent, skuCode1, count)) return
-                if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList)) return
+                if (!this.hasCustomForm({ needStudentInfo, customForm: customForm || [], productId, fields: formEntityList })) return
                 cartProducts.push({
                     productId,
                     skuCode1,
@@ -1719,10 +1728,5 @@ export default {
   }
   .skeAnimation {
     @include skeAnimation(#eee)
-  }
-  @keyframes bordrFlicker {
-    0% { border-color: #F24724 }
-    50% { border-color: transparent }
-    100% { border-color: #F24724 }
   }
 </style>
