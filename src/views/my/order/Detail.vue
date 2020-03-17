@@ -303,9 +303,10 @@
             >
                 <div :class="$style.detail">
                     <div :class="$style.item" v-for="(item, i) of userInfo" :key="i">
-                        <template v-if="item.fieldValue">
+                        <template>
                             <span>{{ item.fieldName }}：</span>
-                            <span>{{ item.fieldValue }}</span>
+                            <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
+                            <span v-else style="color: #999;">未填写</span>
                         </template>
                     </div>
                 </div>
@@ -327,9 +328,10 @@
                 >
                     <div :class="$style.detail">
                         <div :class="$style.item" v-for="(item, j) of studentItem" :key="j">
-                            <template v-if="item.fieldValue">
+                            <template>
                                 <span>{{ item.fieldName }}：</span>
-                                <span>{{ item.fieldValue }}</span>
+                                <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
+                                <span v-else style="color: #999;">未填写</span>
                             </template>
                         </div>
                     </div>
