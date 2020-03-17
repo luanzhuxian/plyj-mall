@@ -9,7 +9,7 @@
     >
         <span v-if="textBefore">{{ textBefore }}</span>
         <div class="time">
-            <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span v-if="isSecondsShow || !isDayShow">:</span><i v-if="isSecondsShow || !isDayShow" v-text="s" />
+            <i v-if="isDayShow" :class="$style.day">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span v-if="isSecondsShow || !isDayShow">:</span><i v-if="isSecondsShow || !isDayShow" v-text="s" />
         </div>
         <span v-if="textAfter">{{ textAfter }}</span>
     </div>
@@ -178,6 +178,10 @@ export default {
             height: 36px;
             background: var(--background);
             border-radius: 4px;
+            &.day {
+              width: auto;
+              min-width: 40px;
+            }
           }
         }
       }
@@ -195,6 +199,10 @@ export default {
           height: 40px;
           background: var(--background);
           border-radius: 6px;
+          &.day {
+            width: auto;
+            min-width: 40px;
+          }
         }
       }
     }
