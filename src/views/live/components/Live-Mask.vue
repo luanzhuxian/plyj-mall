@@ -132,8 +132,8 @@ export default {
           }
           > i {
             display: inline-block;
-            width: 40px;
-            box-sizing: border-box;
+            min-width: 28px;
+            padding: 0 8px;
             border-radius: 6px;
             line-height: 40px;
             text-align: center;
