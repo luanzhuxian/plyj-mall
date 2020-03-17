@@ -154,9 +154,7 @@ export default {
                 rules.push(rule)
             }
             this.formData = { formList, rules }
-            if (oldFormList.length) {
-                this.confirm()
-            }
+            this.confirm()
         },
 
         /**
@@ -197,9 +195,7 @@ export default {
             formList.push(form)
             rules.push(rule)
             this.formData2 = { formList, rules }
-            if (oldForm) {
-                this.confirm()
-            }
+            this.confirm()
         },
         editStudent (index) {
             if (this.formData.formList.length) {

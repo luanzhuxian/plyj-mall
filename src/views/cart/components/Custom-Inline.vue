@@ -120,9 +120,7 @@ export default {
                 rules.push(rule)
             }
             this.formData = { formList, rules }
-            if (oldFormList.length) {
-                this.confirm()
-            }
+            this.confirm()
         },
         selectStudent () {
             const { product } = this
