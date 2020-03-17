@@ -8,11 +8,11 @@
                         该场次直播仅支持口令登录
                     </div>
                     <div :class="$style.pass">
-                        <label>密码登录</label>
-                        <pl-input :border="true" type="number" :maxlength="4" @change="validatePass" v-model.number="value" placeholder="请输入4位密码" />
+                        <label>口令登录</label>
+                        <pl-input :border="true" type="number" :maxlength="4" @change="validatePass" v-model.number="value" placeholder="请输入4位口令" />
                     </div>
                     <div :class="{ [$style.description]: true, [$style.error]: error }">
-                        <span v-if="error">密码错误请重新输入，</span>
+                        <span v-if="error">口令错误请重新输入，</span>
                         <span>如有问题请联系老师</span>
                     </div>
                 </div>
