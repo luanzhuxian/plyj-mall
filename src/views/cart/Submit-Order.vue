@@ -1139,34 +1139,31 @@ export default {
          * @param needStudent {Number} 是否需要学员
          * @param customForm {Array} 当前商品的自定义表单
          * @param skuCode1 {string} 规格
+         * @param productType {string} 商品类型
          * @param fields {Array} 字段列表
          */
-        hasCustomForm (needStudent, customForm, skuCode1, fields) {
+        hasCustomForm (needStudent, customForm, skuCode1, fields, productType) {
             if (needStudent === 2) {
                 if (!customForm || !customForm.length) {
-                    this.$error('请填写所有必填信息')
+                    if (productType === 'PHYSICAL_GOODS') {
+                        this.$error('请填写所有用户信息')
+                    } else {
+                        this.$error('请填写所有学员信息')
+                    }
                     return false
                 }
                 for (const form of customForm) {
                     for (const field of form) {
                         if (field.required && !field.fieldValue) {
-                            this.$error('请填写所有必填信息')
+                            if (productType === 'PHYSICAL_GOODS') {
+                                this.$error('请填写所有用户信息')
+                            } else {
+                                this.$error('请填写所有学员信息')
+                            }
                             return false
                         }
                     }
                 }
-
-                // if (this.isCart) {
-                //   this.$nextTick(() => {
-                //     let errorEl = document.querySelector('.' + this.$style.lessonError)
-                //     errorEl.scrollIntoView({
-                //       behavior: 'smooth',
-                //       block: 'center',
-                //       inline: 'nearest'
-                //     })
-                //     this.lessonErrorTip = `请选择${count}名学员信息`
-                //   })
-                // }
             }
             return true
         },
@@ -1185,7 +1182,7 @@ export default {
                 const { productId, skuCode1, skuCode2, count, agentUser, customForm, needStudentInfo, formEntityList } = item
 
                 // 实体商品不考虑商品数量，所有count传0
-                if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList)) return
+                if (!this.hasCustomForm(needStudentInfo, customForm || [], skuCode1, formEntityList, 'PHYSICAL_GOODS')) return
                 cartProducts.push({
                     productId,
                     skuCode1,
