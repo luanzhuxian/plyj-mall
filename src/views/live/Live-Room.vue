@@ -277,7 +277,7 @@ const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/m
 export default {
     name: 'LiveRoom',
     components: {
-    // VueSlider,
+        // VueSlider,
         LiveSignUp,
         LiveMask,
         LivePassword,
@@ -356,7 +356,7 @@ export default {
         }
     },
     async created () {
-    // 缓存消息方法
+        // 缓存消息方法
         this.cacheMessage = throttle(() => {
             localStorage.setItem(`LIVE_MESSAGE_${ this.mallDomain }`, JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
         }, 2000)

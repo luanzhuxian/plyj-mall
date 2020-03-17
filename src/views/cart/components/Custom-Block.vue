@@ -255,7 +255,7 @@ export default {
                     fields.push({
                         fieldName: key,
                         fieldValue: form[key],
-                        required: rules[i][key][0].required
+                        required: Number(rules[i][key][0].required)
                     })
                 }
                 data.push(fields)
@@ -284,7 +284,7 @@ export default {
                     fields.push({
                         fieldName: key,
                         fieldValue: form[key],
-                        required: rules[key][0].required
+                        required: Number(rules[key][0].required)
                     })
                 }
                 pro.customForm.push(fields)
