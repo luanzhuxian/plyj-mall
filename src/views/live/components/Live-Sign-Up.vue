@@ -4,7 +4,7 @@
             <div :class="$style.content">
                 <pl-form
                     :class="$style.form"
-                    label-width="164"
+                    label-width="170"
                     align="right"
                     ref="form"
                     :model="form"
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { isPhone } from './../../../assets/js/validate'
+import { isPhone, checkLength } from './../../../assets/js/validate'
 import { liveSignUp } from './../../../apis/live'
 import Popup from './../../../components/penglai-ui/Popup'
 import CitySelector from './../../../components/common/City-Selector'
@@ -82,20 +82,24 @@ export default {
             rules: {},
             rulesTemplate: {
                 signName: [
-                    { required: true, message: '请输入姓名' }
+                    { required: true, message: '请输入姓名' },
+                    { validator: checkLength(20), message: '长度在20字以内' }
                 ],
                 signTelphone: [
                     { required: true, message: '请输入手机号' },
                     { validator: isPhone, message: '请输入正确的手机号' }
                 ],
                 signGrade: [
-                    { required: true, message: '请输入年级' }
+                    { required: true, message: '请输入年级' },
+                    { validator: checkLength(20), message: '长度在20字以内' }
                 ],
                 signRegion: [
-                    { required: true, message: '请选择区域' }
+                    { required: true, message: '请选择区域' },
+                    { validator: checkLength(20), message: '长度在20字以内' }
                 ],
                 signTitle: [
-                    { required: true, message: `请输入${ this.info.isHaveCustomer || '' }` }
+                    { required: true, message: `请输入${ this.info.isHaveCustomer || '' }` },
+                    { validator: checkLength(20), message: '长度在20字以内' }
                 ]
             }
         }
