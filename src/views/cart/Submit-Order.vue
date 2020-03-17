@@ -1108,12 +1108,12 @@ export default {
         },
 
         /**
-     * 判断是否选择了学生
-     * @param needStudent {Number} 是否需要学员
-     * @param currentStudent {Array} 已选学生列表或者自定义列表
-     * @param skuCode1 {string} 规格1的id，作为每个单独商品学员数据存储的key
-     * @param count {Number} 商品数量，用来判断学生数量
-     */
+         * 判断是否选择了学生
+         * @param needStudent {Number} 是否需要学员
+         * @param currentStudent {Array} 已选学生列表或者自定义列表
+         * @param skuCode1 {string} 规格1的id，作为每个单独商品学员数据存储的key
+         * @param count {Number} 商品数量，用来判断学生数量
+         */
         hasStudents (needStudent, currentStudent, skuCode1, count) {
             if (needStudent === 1 && !currentStudent) {
                 if (this.isCart) {
@@ -1135,12 +1135,12 @@ export default {
         },
 
         /**
-     * 判断是否填写了自定义表单
-     * @param needStudent {Number} 是否需要学员
-     * @param customForm {Array} 当前商品的自定义表单
-     * @param skuCode1 {string} 规格
-     * @param fields {Array} 字段列表
-     */
+         * 判断是否填写了自定义表单
+         * @param needStudent {Number} 是否需要学员
+         * @param customForm {Array} 当前商品的自定义表单
+         * @param skuCode1 {string} 规格
+         * @param fields {Array} 字段列表
+         */
         hasCustomForm (needStudent, customForm, skuCode1, fields) {
             if (needStudent === 2) {
                 if (!customForm || !customForm.length) {
@@ -1292,12 +1292,12 @@ export default {
         },
 
         /**
-     * 支付
-     * @param CREDENTIAL {Object} 支付数据
-     * @param orderIds {Array} 订单Id
-     * @param orderCount {Number} 订单数量
-     * @returns {Promise<*>}
-     */
+         * 支付
+         * @param CREDENTIAL {Object} 支付数据
+         * @param orderIds {Array} 订单Id
+         * @param orderCount {Number} 订单数量
+         * @returns {Promise<*>}
+         */
         async pay (CREDENTIAL, orderIds, orderCount) {
             const firstOrder = orderIds[0]
             let orderType = ''
