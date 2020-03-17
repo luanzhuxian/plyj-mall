@@ -114,9 +114,11 @@
 </template>
 
 <script>
+import moment from 'moment'
+import { mapGetters } from 'vuex'
 import SpringPloughingProItem from './components/Spring-Ploughing-Pro-Item.vue'
 import SpringPloughingGiftItem from './components/Spring-Ploughing-Gift-Item.vue'
-import { mapGetters } from 'vuex'
+import { getSpringCombination } from '../../apis/product'
 import {
     generateQrcode,
     createText,
@@ -124,8 +126,7 @@ import {
     loadImage,
     Countdown
 } from '../../assets/js/util'
-import { getSpringCombination } from '../../apis/product'
-import moment from 'moment'
+
 const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/4b676734-b0c9-4aca-942d-ce62e481ebcf.jpeg'
 
 export default {
@@ -141,10 +142,8 @@ export default {
             poster: '',
             creating: false,
             list: [],
-
             // 倒计时实例列表
             countInstaceList: [],
-
             // 全部结束
             allEnd: {
                 d: '',
@@ -182,7 +181,11 @@ export default {
     methods: {
         async getSpringCombination () {
             try {
-                const { result } = await getSpringCombination({ current: 1, size: 60 })
+                const { result } = await getSpringCombination({
+                    current: 1,
+                    size: 60,
+                    batchType: 2 // 新春春耘
+                })
                 if (!result.records.length) {
                     this.$alert({
                         message: '您无法参与活动',
@@ -198,29 +201,21 @@ export default {
                     activity.models.sort((a, b) => moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf())
                     for (const group of activity.models) {
                         // 添加倒计时相关字段
-                        // 天
-                        group.d = ''
-                        // 时
-                        group.h = ''
-                        // 分
-                        group.m = ''
-                        // 秒
-                        group.s = ''
+                        group.d = '' // 天
+                        group.h = '' // 时
+                        group.m = '' // 分
+                        group.s = '' // 秒
                         const activityStartTime = moment(group.activityStartTime).valueOf()
                         const activityEndTime = moment(group.activityEndTime).valueOf()
                         const now = Date.now()
-
                         // 是否开始
                         group.wasStarted = now - activityStartTime >= 0
-
                         // 是否结束
                         group.wasEnded = now - activityEndTime >= 0
-
                         // 未开始倒计时(距离开始)
                         if (!group.wasStarted) {
                             this.setCountdownTime(group, activityStartTime - now)
                         }
-
                         // 开始倒计时(距离结束)
                         if (group.wasStarted && !group.wasEnded) {
                             this.setCountdownTime(group, activityEndTime - now)
@@ -233,12 +228,10 @@ export default {
                 const now = Date.now()
                 this.allEnd.wasStarted = now - lastStartTime >= 0
                 this.allEnd.wasEnded = now - lastEndTime >= 0
-
                 // // 未开始倒计时(距离开始)
                 if (!this.allEnd.wasStarted) {
                     this.setCountdownTime(this.allEnd, lastStartTime - now)
                 }
-
                 // 开始倒计时(距离结束)
                 if (this.allEnd.wasStarted && !this.allEnd.wasEnded) {
                     this.setCountdownTime(this.allEnd, lastEndTime - now)
@@ -296,7 +289,6 @@ export default {
                 }
             })
         },
-
         // 判断绑定手机
         hasBind () {
             if (!this.mobile) {

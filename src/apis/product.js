@@ -39,6 +39,7 @@ export const getCurrentLimit = (productId, activityproduct = 1) => axios.get(`/a
  * 获取春耘计划组合商品
  * @param productId
  * @param activityproduct
+ * @property params.batchType {number} 1：组合商品 2: 新春春耘
  * @return {*}
  */
 export const getSpringCombination = params => axios.get(`/apis/v1/combination/home/page`, { params })
