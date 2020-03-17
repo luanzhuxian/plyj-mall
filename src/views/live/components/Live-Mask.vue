@@ -45,17 +45,11 @@ export default {
     activated () {
         this.waiting = true
     },
-    methods: {
-        setTime ({ seconds, minutes, hours, days }) {
-            this.d = String(days).padStart(2, '0')
-            this.h = String(hours).padStart(2, '0')
-            this.m = String(minutes).padStart(2, '0')
-            this.s = String(seconds).padStart(2, '0')
-        },
-        stop () {
-            this.waiting = true
-            this.countdown && this.countdown.stop()
-        }
+    beforeDestroy () {
+        this.stop()
+    },
+    deactivated () {
+        this.stop()
     },
     computed: {
         isDayShow () {
@@ -77,8 +71,17 @@ export default {
             }
         }
     },
-    destroyed () {
-        this.stop()
+    methods: {
+        setTime ({ seconds, minutes, hours, days }) {
+            this.d = String(days).padStart(2, '0')
+            this.h = String(hours).padStart(2, '0')
+            this.m = String(minutes).padStart(2, '0')
+            this.s = String(seconds).padStart(2, '0')
+        },
+        stop () {
+            this.waiting = true
+            this.countdown && this.countdown.stop()
+        }
     }
 }
 </script>
