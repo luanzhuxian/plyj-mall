@@ -1030,7 +1030,10 @@ export default {
                         if (orderType === 'PHYSICAL') {
                             formModelList.forEach(productItem => {
                                 productItem.forEach(item => {
-                                    this.userInfo.push(item)
+                                    const isRepeat = this.userInfo.filter(iItem => iItem.fieldName === item.fieldName).length
+                                    if (!isRepeat) {
+                                        this.userInfo.push(item)
+                                    }
                                 })
                             })
                         } else {
