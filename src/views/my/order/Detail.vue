@@ -951,8 +951,7 @@ export default {
                         orderStatusAlias,
                         redeemCodeModels,
                         activityData,
-                        activeProduct,
-                        formModelList
+                        activeProduct
                     } = result
                     this.detail = result
                     this.orderStatus = orderStatus
@@ -1029,18 +1028,22 @@ export default {
                     this.studentInfo = []
                     const hasCustomBlock = productInfoModel.productDetailModels.filter(item => item.needStudentInfo === 2).length
                     if (hasCustomBlock) {
-                        if (orderType === 'PHYSICAL') {
-                            formModelList.forEach(productItem => {
-                                productItem.forEach(item => {
-                                    const isRepeat = this.userInfo.filter(iItem => iItem.fieldName === item.fieldName).length
-                                    if (!isRepeat) {
-                                        this.userInfo.push(item)
-                                    }
+                        productInfoModel.productDetailModels.forEach(productItem => {
+                            if (orderType === 'PHYSICAL') {
+                                productItem.customForm.forEach(customItem => {
+                                    customItem.forEach(item => {
+                                        const isRepeat = this.userInfo.filter(iItem => iItem.fieldName === item.fieldName).length
+                                        if (!isRepeat) {
+                                            this.userInfo.push(item)
+                                        }
+                                    })
                                 })
-                            })
-                        } else {
-                            this.studentInfo = formModelList
-                        }
+                            } else {
+                                productItem.customForm.forEach(customItem => {
+                                    this.studentInfo.push(customItem)
+                                })
+                            }
+                        })
                     }
                     resolve()
                 } catch (e) {
