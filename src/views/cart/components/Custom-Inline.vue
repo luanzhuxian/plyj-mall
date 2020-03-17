@@ -30,7 +30,7 @@
                 <div>{{ label }}{{ i + 1 }}</div>
                 <div>
                     <span v-if="isError(i)">未填写</span>
-                    <span v-else v-text="item[Object.keys(item)[0]]" />
+                    <span v-else-if="Object.keys(item)[0]" v-text="item[Object.keys(item)[0]]" />
                     <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
                 </div>
             </li>
@@ -109,7 +109,7 @@ export default {
                     const key = cus.fieldName
 
                     // 回填数据
-                    if (oldFormList.length) {
+                    if (oldFormList[i]) {
                         form[key] = oldFormList[i][key] || ''
                     } else {
                         form[key] = ''

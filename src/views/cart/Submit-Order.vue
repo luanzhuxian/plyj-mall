@@ -179,6 +179,7 @@
                     <CustomInline
                         v-if="isCart && item.needStudentInfo === 2"
                         :product="item"
+                        :key="item.productId"
                         :count="item.count"
                         :custom-list="item.formEntityList"
                     />
@@ -302,6 +303,7 @@
                     />
 
                     <CustomInline
+                        :key="item.productId"
                         v-if="isCart && item.needStudentInfo === 2"
                         :product="item"
                         :count="item.count"
