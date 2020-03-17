@@ -122,13 +122,13 @@ export default {
     methods: {
 
         /**
-     * 单商品生存表单，虚拟商品取决于数量
-     * 如下，每一个商品都有一个表单对象，比如2个商品，formList 就有2个元素
-     * {
-     *   formList: [{ field1: '', field2: '', field3: '' }, { field1: '', field2: '', field3: '' }],
-     *   rules: []
-     * }
-     */
+         * 单商品生存表单，虚拟商品取决于数量
+         * 如下，每一个商品都有一个表单对象，比如2个商品，formList 就有2个元素
+         * {
+         *   formList: [{ field1: '', field2: '', field3: '' }, { field1: '', field2: '', field3: '' }],
+         *   rules: []
+         * }
+         */
         setFormData () {
             const formList = []
             const rules = []
@@ -160,15 +160,15 @@ export default {
         },
 
         /**
-     * 提交多个实体商品
-     * 多个实体商品要将每个商品的自定义表单进行合并，最终只得到一个表单，就像对待一个商品那样
-     * 最后提交时会按照每个商品需要的自定义字段进行拆分，不考虑商品数量
-     * 数据结构如：
-     * {
-     *   formList: [{ field1: '', field2: '', field3: '' }],
-     *   rules: []
-     * }
-     */
+         * 提交多个实体商品
+         * 多个实体商品要将每个商品的自定义表单进行合并，最终只得到一个表单，就像对待一个商品那样
+         * 最后提交时会按照每个商品需要的自定义字段进行拆分，不考虑商品数量
+         * 数据结构如：
+         * {
+         *   formList: [{ field1: '', field2: '', field3: '' }],
+         *   rules: []
+         * }
+         */
         setFormData2 () {
             if (!this.products.length) {
                 return
@@ -229,22 +229,22 @@ export default {
         },
 
         /**
-     * 提交单个非实体商品，提交的时候要拆分
-     * 拆分时要注意一点，表单中的每个字段，要转成一个对象，对象包括 fieldName， fieldValue 属性
-     * 所以会形成如下的数据结构
-     * [
-     *  // 第一个商品的表单
-     *  [
-     *    { fieldName: 'field1', fieldValue: 'a' },
-     *    { fieldName: 'field2', fieldValue: 'b' }
-     *  ],
-     *  // 第二个商品的表单
-     *  [
-     *    { fieldName: 'field1', fieldValue: 'aa' },
-     *    { fieldName: 'field2', fieldValue: 'bb' }
-     *  ]
-     * ]
-     */
+         * 提交单个非实体商品，提交的时候要拆分
+         * 拆分时要注意一点，表单中的每个字段，要转成一个对象，对象包括 fieldName， fieldValue 属性
+         * 所以会形成如下的数据结构
+         * [
+         *  // 第一个商品的表单
+         *  [
+         *    { fieldName: 'field1', fieldValue: 'a' },
+         *    { fieldName: 'field2', fieldValue: 'b' }
+         *  ],
+         *  // 第二个商品的表单
+         *  [
+         *    { fieldName: 'field1', fieldValue: 'aa' },
+         *    { fieldName: 'field2', fieldValue: 'bb' }
+         *  ]
+         * ]
+         */
         confirm (e) {
             if (this.products.length) {
                 this.confirmMultipleProduct()
@@ -272,11 +272,11 @@ export default {
         },
 
         /**
-     * 提交多个实体商品，提交的时候要拆分
-     * 拆分时要注意一点，表单中的每个字段，要转成一个对象，对象包括 fieldName， fieldValue 属性
-     * 所以会形成如下的数据结构
-     * [[{ fieldName: 'field1', fieldValue: 'a'  }, { fieldName: 'field2', fieldValue: 'b'  }]]
-     */
+         * 提交多个实体商品，提交的时候要拆分
+         * 拆分时要注意一点，表单中的每个字段，要转成一个对象，对象包括 fieldName， fieldValue 属性
+         * 所以会形成如下的数据结构
+         * [[{ fieldName: 'field1', fieldValue: 'a'  }, { fieldName: 'field2', fieldValue: 'b'  }]]
+         */
         confirmMultipleProduct () {
             const form = this.formData2.formList[0]
             const rules = this.formData2.rules[0]
