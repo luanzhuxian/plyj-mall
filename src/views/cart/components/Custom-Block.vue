@@ -246,8 +246,7 @@ export default {
                 this.confirmMultipleProduct()
                 return
             }
-            const { formList } = this.formData
-            const { rules } = this.formData
+            const { formList, rules } = this.formData
             const data = []
             for (const [i, form] of formList.entries()) {
                 const fields = []

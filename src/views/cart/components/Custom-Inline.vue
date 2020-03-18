@@ -177,8 +177,7 @@ export default {
             }
         },
         confirm (e) {
-            const { formList } = this.formData
-            const { rules } = this.formData
+            const { rules, formList } = this.formData
             const data = []
             for (const [i, form] of formList.entries()) {
                 const fields = []
