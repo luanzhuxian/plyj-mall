@@ -600,7 +600,10 @@ export default {
         this.tab = 2
     },
     async mounted () {
-        sessionStorage.setItem('shareBrokerId', this.brokerId || '')
+        // 缓存分享人的id
+        if (this.brokerId) {
+            sessionStorage.setItem('shareBrokerId', this.brokerId)
+        }
     },
     methods: {
         ...mapActions({
