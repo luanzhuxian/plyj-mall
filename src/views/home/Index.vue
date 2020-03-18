@@ -18,6 +18,8 @@
             <new-year-newcomers-home-entry />
             <!--瓜分奖学金-->
             <split-burse />
+            <!--送课弹框-->
+            <send-live />
         </template>
         <div :class="$style.skeleton" v-else>
             <div :class="$style.skeletonA" />
@@ -40,6 +42,7 @@ import InviteNewcomersHomeEntry from '../double-twelve-day/invitenewcomers/Invit
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
 import NewYearNewcomersHomeEntry from '../new-year/newcomers/NewcomersHomeEntry.vue'
 import SplitBurse from './../../components/common/Split-Burse.vue'
+import SendLive from './../../components/common/Send-Live.vue'
 import { getTemplate } from '../../apis/home'
 import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
 
@@ -51,9 +54,8 @@ export default {
         InviteNewcomersHomeEntry,
         NewYearNewcomersHomeEntry,
         NewcomersHomeEntry,
-        SplitBurse
-
-    // WWEC
+        SplitBurse,
+        SendLive
     },
     provide () {
         return {

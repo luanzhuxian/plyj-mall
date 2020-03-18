@@ -1,5 +1,13 @@
 <template>
     <div :class="$style.interactiveLive">
+        <div
+            :class="$style.sendLive"
+            v-if="sendLiveList.length"
+            @click="isShowSendLiveDialog = true"
+        >
+            <span>赠送了您{{ sendLiveList.length }}堂直播课程哦，快来学习吧~</span>
+            <span>查看></span>
+        </div>
         <load-more
             ref="LiveLoadMore"
             :form="form"
@@ -91,7 +99,7 @@
                             <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                             <div :class="$style.desc">
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
-                                <div :class="$style.text2">已结束： {{ moment(item.liveEndTime).format('YYYY-MM-DD HH:mm') }}</div>
+                                <div :class="$style.text2">已结束： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
                                 <div :class="$style.text2" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
                                 <div :class="$style.bottom">
                                     <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
@@ -111,20 +119,21 @@
                 </div>
             </template>
         </load-more>
+        <send-live :show.sync="isShowSendLiveDialog" />
     </div>
 </template>
 <script>
-import { getLiveList } from '../../apis/online-classroom.js'
+import { getLiveList, getSendLiveList } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
-import moment from 'moment'
+import SendLive from '../../components/common/Send-Live.vue'
 export default {
     name: 'InteractiveLive',
     components: {
-        LoadMore
+        LoadMore,
+        SendLive
     },
     data () {
         return {
-            moment,
             form: {
                 current: 1,
                 size: 10,
@@ -147,7 +156,9 @@ export default {
                 FUTURE: 0
             },
             loading: false,
-            requestMethods: getLiveList
+            requestMethods: getLiveList,
+            sendLiveList: [{}],
+            isShowSendLiveDialog: false
         }
     },
     async activated () {
@@ -180,6 +191,13 @@ export default {
             try {
                 await this.$nextTick()
                 await this.$refs.LiveLoadMore.refresh()
+            } catch (e) {
+                throw e
+            }
+        },
+        async getLiveList () {
+            try {
+                await getSendLiveList()
             } catch (e) {
                 throw e
             }
@@ -232,7 +250,15 @@ export default {
   .interactive-live {
     padding: 0 20px;
   }
-
+  .send-live {
+    display: flex;
+    padding: 0 32px 0 24px;
+    justify-content: space-between;
+    line-height: 80px;
+    font-size:28px;
+    background-color: #448AE1;
+    color: #FFF;
+  }
   .title {
     margin: 32px 0 20px;
     line-height: 42px;
