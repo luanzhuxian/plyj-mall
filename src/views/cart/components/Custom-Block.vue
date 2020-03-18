@@ -148,7 +148,7 @@ export default {
                     } else {
                         form[key] = ''
                     }
-                    rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'blur' }]
+                    rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'none' }]
                 }
                 formList.push(form)
                 rules.push(rule)
@@ -190,7 +190,7 @@ export default {
 
                 // 回填数据
                 form[key] = oldForm ? oldForm[key] : ''
-                rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'blur' }]
+                rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'none' }]
             }
             formList.push(form)
             rules.push(rule)

@@ -3,7 +3,6 @@
         v-show="showPopup"
         class="pl-popup"
         :class="{ [`pl-popup__${position}`]: true }"
-        @touchmove.stop="() => {}"
     >
         <div
             class="pl-popup__mask"

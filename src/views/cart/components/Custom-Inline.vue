@@ -137,7 +137,7 @@ export default {
                     rule[key] = [{
                         required: Boolean(cus.required),
                         message: `请输入${ cus.fieldName }`,
-                        trigger: 'blur'
+                        trigger: 'none'
                     }]
                 }
                 formList.push(form)
