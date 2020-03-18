@@ -1,94 +1,100 @@
 <template>
-  <div :class="$style.title + ' ' + $style[size]">
-    <h2
-      ref="h2"
-      v-text="title"
-      :class="{ [$style.badge]: badge }"
-      :data-badge="badge"
-    />
-    <div
-      :class="$style.right"
-      @click="clickHandle"
-    >
-      <pl-svg
-        v-if="prefixIcon"
-        :name="prefixIcon"
-      />
-      <div
-        v-if="prefixIcon && tip"
-        :class="$style.gap"
-      >
-        <!-- 间隙 -->
-      </div>
-      <span
-        v-if="tip"
-        :class="$style.tip"
-        v-text="tip"
-      />
-      <div
-        v-if="suffixIcon && tip"
-        :class="$style.gap"
-      >
-        <!-- 间隙 -->
-      </div>
-      <pl-svg
-        v-if="suffixIcon"
-        :name="suffixIcon"
-      />
+    <div :class="$style.title + ' ' + $style[size]">
+        <h2
+            ref="h2"
+            v-text="title"
+            :class="{ [$style.badge]: badge }"
+            :data-badge="badge"
+        />
+        <div
+            :class="$style.right"
+            @click="clickHandle"
+        >
+            <pl-svg
+                v-if="prefixIcon"
+                :name="prefixIcon"
+            />
+            <div
+                v-if="prefixIcon && tip"
+                :class="$style.gap"
+            >
+                <!-- 间隙 -->
+            </div>
+            <span
+                v-if="tip"
+                :class="$style.tip"
+                v-text="tip"
+            />
+            <div
+                v-if="suffixIcon && tip"
+                :class="$style.gap"
+            >
+                <!-- 间隙 -->
+            </div>
+            <pl-svg
+                v-if="suffixIcon"
+                :name="suffixIcon"
+            />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'ModuleTitle',
-  props: {
-    title: {
-      type: String,
-      default: ''
+    name: 'ModuleTitle',
+    props: {
+        title: {
+            type: String,
+            default: ''
+        },
+        // 右侧前边图标
+        prefixIcon: {
+            type: String,
+            default: ''
+        },
+        // 右侧后边图标
+        suffixIcon: {
+            type: String,
+            default: ''
+        },
+        // 图标颜色
+        iconColor: {
+            type: String,
+            default: '#a8a8a8'
+        },
+        // 右侧文字
+        tip: {
+            type: String,
+            default: ''
+        },
+        // 右侧跳转路由
+        route: {
+            type: Object,
+            default () {
+                return null
+            }
+        },
+
+        // 标记
+        badge: {
+            type: String,
+            default: ''
+        },
+        size: {
+            type: String,
+            default: 'small'
+        }
     },
-    prefixIcon: { // 右侧前边图标
-      type: String,
-      default: ''
+    mounted () {
     },
-    suffixIcon: { // 右侧后边图标
-      type: String,
-      default: ''
-    },
-    iconColor: { // 图标颜色
-      type: String,
-      default: '#a8a8a8'
-    },
-    tip: { // 右侧文字
-      type: String,
-      default: ''
-    },
-    route: { // 右侧跳转路由
-      type: Object,
-      default: function () {
-        return null
-      }
-    },
-    // 标记
-    badge: {
-      type: String,
-      default: ''
-    },
-    size: {
-      type: String,
-      default: 'small'
+    methods: {
+        clickHandle () {
+            if (this.route) {
+                this.$router.push(this.route)
+            }
+            return false
+        }
     }
-  },
-  mounted () {
-  },
-  methods: {
-    clickHandle () {
-      if (this.route) {
-        this.$router.push(this.route)
-      }
-      return false
-    }
-  }
 }
 </script>
 

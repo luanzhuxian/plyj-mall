@@ -6,7 +6,7 @@ import './assets/js/axios-config'
 import 'moment/locale/zh-cn'
 import './assets/scss/index.scss'
 import directive from './directive'
-import { beforeEach, beforeResolve, onError } from './assets/js/router-guard'
+import { beforeResolve, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
 import animated from 'animate.css'
 import VueLazyload from 'vue-lazyload'
@@ -16,22 +16,24 @@ import './assets/css/quill.css'
 import PlSvg from './components/common/Pl-Svg.vue'
 import { errorlog } from './apis/base-api'
 Vue.use(VueLazyload, {
-  error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
-  lazyComponent: true,
-  throttleWait: 150
+    error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
+    lazyComponent: true,
+    throttleWait: 150
 })
 Vue.use(animated)
 Vue.use(VueClipboard)
 Vue.component('pl-svg', PlSvg)
+
 // Vue.use(SvgIcon, {
 //   tagName: 'svgicon'
 // })
-for (let k of Object.keys(directive)) {
-  Vue.directive(k, directive[k])
+for (const k of Object.keys(directive)) {
+    Vue.directive(k, directive[k])
 }
-for (let k of Object.keys(filters)) {
-  Vue.filter(k, filters[k])
+for (const k of Object.keys(filters)) {
+    Vue.filter(k, filters[k])
 }
+
 // UI组件库
 Vue.use(PenglaiUI)
 Vue.config.productionTip = false
@@ -46,7 +48,6 @@ new Vue({
   }
 })
 
-router.beforeEach(beforeEach)
 router.beforeResolve(beforeResolve)
 router.onError(onError)
 /* 处理所有组件抛出的错误 */

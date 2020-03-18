@@ -1,12 +1,12 @@
 <template>
-  <div class="invite-newcomers-overlay">
-    <slot />
-  </div>
+    <div class="invite-newcomers-overlay">
+        <slot />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'InviteNewcomersOverlay'
+    name: 'InviteNewcomersOverlay'
 }
 </script>
 

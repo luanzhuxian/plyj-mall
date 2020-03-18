@@ -1,21 +1,21 @@
 <template>
-  <div :class="$style.titleWomenDay">
-    <div :class="$style.title" v-text="data" />
-  </div>
+    <div :class="$style.titleWomenDay">
+        <div :class="$style.title" v-text="data" />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'TitleWomenDay',
-  props: {
-    data: {
-      type: String,
-      default: ''
+    name: 'TitleWomenDay',
+    props: {
+        data: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

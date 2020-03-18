@@ -1,57 +1,57 @@
 <template>
-  <router-link
-    :class="[$style.item, $style[size]]"
-    tag="div"
-    :to="{ name: 'SpringPloughing' }"
-  >
-    <div :class="$style.title">
-      {{ data.name }}
-    </div>
-    <div :class="$style.imgWrapper">
-      <img :src="data.imageUrl" alt="">
-    </div>
-    <div :class="$style.countDownWrapper" v-if="size === 'small'">
-      <span v-if="data.status === 0">距开始：</span>
-      <span v-if="data.status === 1">距结束：</span>
-      <span v-if="data.status === 2">已结束</span>
-      <count-down
-        v-if="~[0, 1].indexOf(data.status)"
-        :timestamp="getTime(data)"
-        color="#184B28"
-        background="#92F4C7"
-        format="HH:mm"
-        @done="data.status += 1"
-      />
-    </div>
-    <div :class="$style.price">
-      <div :class="$style.origin">
-        <span :class="$style.left">
-          {{ `原价：￥${data.totalPrice}` }}
-        </span>
-        <span :class="$style.right" v-if="size === 'small'">
-          {{ `${data.salesVolume}人已买` }}
-        </span>
-      </div>
-      <div :class="$style.current" @click.stop="submitOrder(data)">
-        <template v-if="data.status === 2">
-          已结束
-        </template>
-        <template v-else>
-          <template v-if="data.stock">
-            <span v-if="data.status === 0">{{ `组合价：￥${data.discountTotalPrice}` }}</span>
-            <span v-if="data.status === 1">{{ `组合到手${data.discountTotalPrice}元` }}</span>
-          </template>
-          <template v-else>
-            太火爆，已抢空
-          </template>
-        </template>
-      </div>
-    </div>
-    <div :class="[$style.cornner, $style.topLeft]" />
-    <div :class="[$style.cornner, $style.topRight]" />
-    <div :class="[$style.cornner, $style.bottomRight]" />
-    <div :class="[$style.cornner, $style.bottomLeft]" />
-  </router-link>
+    <router-link
+        :class="[$style.item, $style[size]]"
+        tag="div"
+        :to="{ name: 'SpringPloughing' }"
+    >
+        <div :class="$style.title">
+            {{ data.name }}
+        </div>
+        <div :class="$style.imgWrapper">
+            <img :src="data.imageUrl" alt="">
+        </div>
+        <div :class="$style.countDownWrapper" v-if="size === 'small'">
+            <span v-if="data.status === 0">距开始：</span>
+            <span v-if="data.status === 1">距结束：</span>
+            <span v-if="data.status === 2">已结束</span>
+            <count-down
+                v-if="~[0, 1].indexOf(data.status)"
+                :timestamp="getTime(data)"
+                color="#184B28"
+                background="#92F4C7"
+                format="HH:mm"
+                @done="data.status += 1"
+            />
+        </div>
+        <div :class="$style.price">
+            <div :class="$style.origin">
+                <span :class="$style.left">
+                    {{ `原价：￥${data.totalPrice}` }}
+                </span>
+                <span :class="$style.right" v-if="size === 'small'">
+                    {{ `${data.salesVolume}人已买` }}
+                </span>
+            </div>
+            <div :class="$style.current" @click.stop="submitOrder(data)">
+                <template v-if="data.status === 2">
+                    已结束
+                </template>
+                <template v-else>
+                    <template v-if="data.stock">
+                        <span v-if="data.status === 0">{{ `组合价：￥${data.discountTotalPrice}` }}</span>
+                        <span v-if="data.status === 1">{{ `组合到手${data.discountTotalPrice}元` }}</span>
+                    </template>
+                    <template v-else>
+                        太火爆，已抢空
+                    </template>
+                </template>
+            </div>
+        </div>
+        <div :class="[$style.cornner, $style.topLeft]" />
+        <div :class="[$style.cornner, $style.topRight]" />
+        <div :class="[$style.cornner, $style.bottomRight]" />
+        <div :class="[$style.cornner, $style.bottomLeft]" />
+    </router-link>
 </template>
 
 <script>
@@ -59,55 +59,56 @@ import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
 
 export default {
-  name: 'ItemChunyun',
-  mixins: [mixin],
-  components: {
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { }
-      }
+    name: 'ItemChunyun',
+    mixins: [mixin],
+    components: {
+        CountDown
     },
-    // small, medium, large
-    size: {
-      type: String,
-      default: 'large'
-    }
-  },
-  data () {
-    return {}
-  },
-  methods: {
-    async submitOrder (item) {
-      if (item.status === 0 || !item.stock) this.$router.push({ name: 'SpringPloughing' })
-      if (item.status === 1) {
-        const confirmList = []
-        for (let prod of item.productModelList) {
-          confirmList.push({
-            productId: prod.productId,
-            skuCode1: prod.skuCode1,
-            skuCode2: prod.skuCode2,
-            count: prod.count,
-            price: prod.price,
-            agentUser: ''
-          })
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { }
+            }
+        },
+
+        // small, medium, large
+        size: {
+            type: String,
+            default: 'large'
         }
-        sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
-        await this.$router.push({
-          name: 'SubmitOrder',
-          query: {
-            isCart: 'YES',
-            activeProduct: 5,
-            preActivity: 2,
-            activityId: item.id
-          }
-        })
-      }
+    },
+    data () {
+        return {}
+    },
+    methods: {
+        async submitOrder (item) {
+            if (item.status === 0 || !item.stock) this.$router.push({ name: 'SpringPloughing' })
+            if (item.status === 1) {
+                const confirmList = []
+                for (const prod of item.productModelList) {
+                    confirmList.push({
+                        productId: prod.productId,
+                        skuCode1: prod.skuCode1,
+                        skuCode2: prod.skuCode2,
+                        count: prod.count,
+                        price: prod.price,
+                        agentUser: ''
+                    })
+                }
+                sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
+                await this.$router.push({
+                    name: 'SubmitOrder',
+                    query: {
+                        isCart: 'YES',
+                        activeProduct: 5,
+                        preActivity: 2,
+                        activityId: item.id
+                    }
+                })
+            }
+        }
     }
-  }
 }
 </script>
 

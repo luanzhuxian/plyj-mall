@@ -1,64 +1,64 @@
 <template>
-  <div :class="$style.bestRecommend">
-    <ul>
-      <template v-for="(item, i) of data.values">
-        <li
-          v-if="item.goodsInfo"
-          :class="$style.product"
-          :key="i"
-          @click="clickHandler(item)"
-        >
-          <div :class="$style.img" :style="{ backgroundImage: `url(${item.goodsInfo.productMainImage})` }">
-            <div :class="$style.typeBox">
-              <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
-                体验课
-              </div>
-              <count-down
-                v-if="item.goodsInfo.shoppingStatus === 1"
-                :class="$style.countDown"
-                size="small"
-                :data="item.goodsInfo"
-                :fields="{ end: 'shoppingTimeLong' }"
-              />
-            </div>
-            <div :class="$style.howManyBuy">
-              <pl-svg name="icon-hot" height="40" fill="#FFF" />
-              <span v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
-              <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
-                <span>
-                  {{ item.goodsInfo.pageviews }}人关注
-                </span>
-              </template>
-              <template v-else-if="item.goodsInfo.salesVolume >= 10">
-                <span>
-                  {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
-                </span>
-              </template>
-            </div>
-          </div>
-          <div :class="$style.content">
-            <div :class="$style.name" v-text="item.goodsInfo.productName" />
-            <tags
-              :class="$style.tags"
-              size="middle"
-              :tags="item.goodsInfo.labelModels"
-            />
-            <div :class="$style.bottom">
-              <slot name="price" :price="getMinPrice(item.goodsInfo.productSkuModels)" v-if="$scopedSlots.price" />
-              <div :class="$style.priceBox" v-else>
-                <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
-                <del>
-                  ¥{{ getMaxOrinalPrice(item.goodsInfo.productSkuModels) }}
-                </del>
-              </div>
-              <button>
-                {{ `立即${productTypeMap[item.goodsInfo.productType]}` }}
-              </button>
-            </div>
-          </div>
-        </li>
-      </template>
-    </ul>
+    <div :class="$style.bestRecommend">
+        <ul>
+            <template v-for="(item, i) of data.values">
+                <li
+                    v-if="item.goodsInfo"
+                    :class="$style.product"
+                    :key="i"
+                    @click="clickHandler(item)"
+                >
+                    <div :class="$style.img" :style="{ backgroundImage: `url(${item.goodsInfo.productMainImage})` }">
+                        <div :class="$style.typeBox">
+                            <div :class="$style.type" v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'">
+                                体验课
+                            </div>
+                            <count-down
+                                v-if="item.goodsInfo.shoppingStatus === 1"
+                                :class="$style.countDown"
+                                size="small"
+                                :data="item.goodsInfo"
+                                :fields="{ end: 'shoppingTimeLong' }"
+                            />
+                        </div>
+                        <div :class="$style.howManyBuy">
+                            <pl-svg name="icon-hot" height="40" fill="#FFF" />
+                            <span v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+                            <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                                <span>
+                                    {{ item.goodsInfo.pageviews }}人关注
+                                </span>
+                            </template>
+                            <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                                <span>
+                                    {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+                    <div :class="$style.content">
+                        <div :class="$style.name" v-text="item.goodsInfo.productName" />
+                        <tags
+                            :class="$style.tags"
+                            size="middle"
+                            :tags="item.goodsInfo.labelModels"
+                        />
+                        <div :class="$style.bottom">
+                            <slot name="price" :price="getMinPrice(item.goodsInfo.productSkuModels)" v-if="$scopedSlots.price" />
+                            <div :class="$style.priceBox" v-else>
+                                <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+                                <del>
+                                    ¥{{ getMaxOrinalPrice(item.goodsInfo.productSkuModels) }}
+                                </del>
+                            </div>
+                            <button>
+                                {{ `立即${productTypeMap[item.goodsInfo.productType]}` }}
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </template>
+        </ul>
     <!-- 瀑布流 -->
     <!-- <div v-if="styleType === 1" :class="$style.waterfallBox">
       <ul
@@ -137,7 +137,7 @@
       <span>查看全部</span>
       <pl-svg name="right" color="#272536" />
     </button> -->
-  </div>
+    </div>
 </template>
 
 <script>
@@ -145,81 +145,84 @@ import Tags from './Tags.vue'
 import CountDown from '../../../components/product/Count-Down.vue'
 
 export default {
-  name: 'BestRecommend',
-  components: {
-    Tags,
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return {
-          values: []
+    name: 'BestRecommend',
+    components: {
+        Tags,
+        CountDown
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {
+                    values: []
+                }
+            }
         }
-      }
-    }
-  },
-  data () {
-    return {
-      // 最小查看数量
-      minSee: 10,
-      productTypeMap: {
-        'PHYSICAL_GOODS': '购买',
-        'VIRTUAL_GOODS': '购买',
-        'FORMAL_CLASS': '学习',
-        'EXPERIENCE_CLASS': '报名'
-      }
-    }
-  },
-  computed: {
-    // listLeft () {
-    //   return this.localValue.filter((item, i) => i % 2 === 0)
-    // },
-    // listRight () {
-    //   return this.localValue.filter((item, i) => (i + 1) % 2 === 0)
-    // },
-    // localValue () {
-    //   return this.data.values.slice(0, this.minSee)
-    // },
-    // maxSee () {
-    //   return this.data.values.length
-    // },
-    styleType () {
-      return this.data.styleType || -1
-    }
-  },
-  methods: {
-    getMinPrice (skuList) {
-      if (!skuList) return
-      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
-      return Math.min(...priceList)
     },
-    getMinOrinalPrice (skuList) {
-      if (!skuList) return
-      let priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
-      return Math.min(...priceList)
+    data () {
+        return {
+
+            // 最小查看数量
+            minSee: 10,
+            productTypeMap: {
+                PHYSICAL_GOODS: '购买',
+                VIRTUAL_GOODS: '购买',
+                FORMAL_CLASS: '学习',
+                EXPERIENCE_CLASS: '报名'
+            }
+        }
     },
-    getMaxOrinalPrice (skuList) {
-      if (!skuList) return
-      let priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
-      return Math.max(...priceList)
+    computed: {
+
+        // listLeft () {
+        //   return this.localValue.filter((item, i) => i % 2 === 0)
+        // },
+        // listRight () {
+        //   return this.localValue.filter((item, i) => (i + 1) % 2 === 0)
+        // },
+        // localValue () {
+        //   return this.data.values.slice(0, this.minSee)
+        // },
+        // maxSee () {
+        //   return this.data.values.length
+        // },
+        styleType () {
+            return this.data.styleType || -1
+        }
     },
-    getMaxPrice (skuList) {
-      if (!skuList) return
-      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
-      return Math.max(...priceList)
-    },
-    // seeAll () {
-    //   // if (this.minSee < this.maxSee) {
-    //   //   this.minSee++
-    //   // }
-    //   this.minSee = this.maxSee
-    // },
-    clickHandler (item) {
-      this.$router.push({ name: 'Product', params: { productId: item.value } })
+    methods: {
+        getMinPrice (skuList) {
+            if (!skuList) return
+            const priceList = skuList.filter(item => item.status === 1).map(item => item.price)
+            return Math.min(...priceList)
+        },
+        getMinOrinalPrice (skuList) {
+            if (!skuList) return
+            const priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
+            return Math.min(...priceList)
+        },
+        getMaxOrinalPrice (skuList) {
+            if (!skuList) return
+            const priceList = skuList.filter(item => item.status === 1).map(item => item.originalPrice)
+            return Math.max(...priceList)
+        },
+        getMaxPrice (skuList) {
+            if (!skuList) return
+            const priceList = skuList.filter(item => item.status === 1).map(item => item.price)
+            return Math.max(...priceList)
+        },
+
+        // seeAll () {
+        //   // if (this.minSee < this.maxSee) {
+        //   //   this.minSee++
+        //   // }
+        //   this.minSee = this.maxSee
+        // },
+        clickHandler (item) {
+            this.$router.push({ name: 'Product', params: { productId: item.value } })
+        }
     }
-  }
 }
 </script>
 

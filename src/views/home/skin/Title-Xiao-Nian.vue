@@ -1,34 +1,34 @@
 <template>
-  <div
-    :class="[
-      $style.titleXiaoNian,
-      $style['length' + data.split('').length
-      ]
-    ]"
-  >
-    <span :class="$style.characterBg" v-for="(item, index) of data" :key="index">
-      {{ item }}
-    </span>
-  </div>
+    <div
+        :class="[
+            $style.titleXiaoNian,
+            $style['length' + data.split('').length
+            ]
+        ]"
+    >
+        <span :class="$style.characterBg" v-for="(item, index) of data" :key="index">
+            {{ item }}
+        </span>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'TitleXiaoNian',
-  props: {
-    data: {
-      type: String,
-      default: ''
+    name: 'TitleXiaoNian',
+    props: {
+        data: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {}
+    },
+    computed: {
+        length () {
+            return this.data ? this.data.length : 0
+        }
     }
-  },
-  data () {
-    return {}
-  },
-  computed: {
-    length () {
-      return this.data ? this.data.length : 0
-    }
-  }
 }
 </script>
 

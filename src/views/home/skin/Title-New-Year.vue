@@ -1,23 +1,23 @@
 <template>
-  <div :class="$style.titleNewYear">
-    <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
-      {{ item }}
-    </span>
-  </div>
+    <div :class="$style.titleNewYear">
+        <span :class="$style.characterBg" v-for="(item, index) of data.split('')" :key="index">
+            {{ item }}
+        </span>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'TitleNewYear',
-  props: {
-    data: {
-      type: String,
-      default: ''
+    name: 'TitleNewYear',
+    props: {
+        data: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

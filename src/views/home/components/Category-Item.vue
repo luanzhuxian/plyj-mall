@@ -1,118 +1,120 @@
 <template>
-  <div
-    :class="{
-      [$style.proItem]: true,
-      [$style.proItemSmall]: size === 'small',
-      [$style.proItemMiddle]: size === 'middle',
-      [$style.proItemMini]: size === 'mini',
-    }"
-    :style="{margin}"
-    @click="jump"
-  >
-    <img v-lazy="img" :alt="productName">
-    <p :class="{ [$style.name]: true, [$style.isActive]: false }" v-text="productName" />
-    <p
-      :class="$style.desc"
-      v-if="size === 'middle'"
-      v-text="productDesc"
-    />
-    <div :class="{ [$style.price]: true, [$style.flex]: sale }">
-      <Price
-        :price="price"
-        :original-price="originPrice"
-        :size="size"
-        :style="{ display: sale ? 'inline-block' : 'block' }"
-      />
-      <span :class="$style.sale" v-if="sale" v-text="`${sale >= 9999 ? '9999+' : sale}人付款`" />
+    <div
+        :class="{
+            [$style.proItem]: true,
+            [$style.proItemSmall]: size === 'small',
+            [$style.proItemMiddle]: size === 'middle',
+            [$style.proItemMini]: size === 'mini',
+        }"
+        :style="{margin}"
+        @click="jump"
+    >
+        <img v-lazy="img" :alt="productName">
+        <p :class="{ [$style.name]: true, [$style.isActive]: false }" v-text="productName" />
+        <p
+            :class="$style.desc"
+            v-if="size === 'middle'"
+            v-text="productDesc"
+        />
+        <div :class="{ [$style.price]: true, [$style.flex]: sale }">
+            <Price
+                :price="price"
+                :original-price="originPrice"
+                :size="size"
+                :style="{ display: sale ? 'inline-block' : 'block' }"
+            />
+            <span :class="$style.sale" v-if="sale" v-text="`${sale >= 9999 ? '9999+' : sale}人付款`" />
+        </div>
+        <div :class="$style.labels" v-if="labels.length">
+            <span
+                :class="$style.label"
+                :style="{ color: labelColor[i], borderColor: labelColor[i] }"
+                v-for="(item, i) of labels"
+                :key="i"
+            >
+                {{ item.labelName }}
+            </span>
+        </div>
     </div>
-    <div :class="$style.labels" v-if="labels.length">
-      <span
-        :class="$style.label"
-        :style="{ color: labelColor[i], borderColor: labelColor[i] }"
-        v-for="(item, i) of labels"
-        :key="i"
-      >
-        {{ item.labelName }}
-      </span>
-    </div>
-  </div>
 </template>
 
 <script>
 import Price from '../../../components/product/Price.vue'
 
 export default {
-  name: 'CategoryItem',
-  components: {
-    Price
-  },
-  props: {
-    productId: {
-      type: String,
-      require: true,
-      default: ''
+    name: 'CategoryItem',
+    components: {
+        Price
     },
-    img: {
-      type: String,
-      require: true,
-      default: ''
+    props: {
+        productId: {
+            type: String,
+            require: true,
+            default: ''
+        },
+        img: {
+            type: String,
+            require: true,
+            default: ''
+        },
+        productName: {
+            type: String,
+            require: true,
+            default: ''
+        },
+        price: {
+            type: [String, Number],
+            require: true,
+            default: ''
+        },
+        originPrice: {
+            type: [String, Number],
+            require: true,
+            default: ''
+        },
+        size: {
+            type: String,
+            default: 'middle'
+        },
+        margin: {
+            type: String,
+            default: ''
+        },
+        productDesc: {
+            type: String,
+            default: ''
+        },
+        // 是否加入经济人活动,
+        isActive: Boolean,
+        sale: {
+            type: [Number, String],
+            default: 0
+        },
+        labels: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+
+        // 是否采用 replace 的方式跳转至详情
+        replace: Boolean
     },
-    productName: {
-      type: String,
-      require: true,
-      default: ''
+    data () {
+        return {
+            labelColor: ['#E83B27', '#92B1E5', '#F3BE41', '#60C684']
+        }
     },
-    price: {
-      type: [String, Number],
-      require: true,
-      default: ''
-    },
-    originPrice: {
-      type: [String, Number],
-      require: true,
-      default: ''
-    },
-    size: {
-      type: String,
-      default: 'middle'
-    },
-    margin: {
-      type: String,
-      default: ''
-    },
-    productDesc: {
-      type: String,
-      default: ''
-    },
-    isActive: Boolean, // 是否加入经济人活动,
-    sale: {
-      type: [Number, String],
-      default: 0
-    },
-    labels: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    // 是否采用 replace 的方式跳转至详情
-    replace: Boolean
-  },
-  data () {
-    return {
-      labelColor: ['#E83B27', '#92B1E5', '#F3BE41', '#60C684']
+    methods: {
+        async jump () {
+            const { productId } = this
+            if (this.replace) {
+                this.$router.replace({ name: 'Product', params: { productId } })
+            } else {
+                this.$router.push({ name: 'Product', params: { productId } })
+            }
+        }
     }
-  },
-  methods: {
-    async jump () {
-      const { productId } = this
-      if (this.replace) {
-        this.$router.replace({ name: 'Product', params: { productId: productId } })
-      } else {
-        this.$router.push({ name: 'Product', params: { productId: productId } })
-      }
-    }
-  }
 }
 </script>
 

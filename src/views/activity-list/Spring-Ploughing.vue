@@ -1,116 +1,116 @@
 <template>
-  <div :class="$style.springPloughing">
-    <div :class="$style.countdown">
-      <div :class="$style.globalEndCountdown" v-if="allEnd.s">
-        <template v-if="!allEnd.wasEnded">
-          <span v-if="allEnd.wasStarted">距活动结束: </span>
-          <span v-else>距活动开始: </span>
-          <span :class="$style.val + ' ' + $style.day" v-text="allEnd.d" />
-          <span :class="$style.unit">天</span>
-          <span :class="$style.val" v-text="allEnd.h" />
-          <span :class="$style.unit">:</span>
-          <span :class="$style.val" v-text="allEnd.m" />
-          <span :class="$style.unit">:</span>
-          <span :class="$style.val" v-text="allEnd.s" />
-        </template>
-        <span v-else>已结束</span>
-      </div>
-      <div :class="$style.topRight" @click="createPoster">活动海报</div>
-      <div :class="$style.topRight" @click="showRules = true">活动规则</div>
-      <pl-svg
-        v-if="list.length && list[0].quarterVersion"
-        :name="`icon-${map[list[0].quarterVersion]}`"
-        width="50"
-        height="105"
-      />
+    <div :class="$style.springPloughing">
+        <div :class="$style.countdown">
+            <div :class="$style.globalEndCountdown" v-if="allEnd.s">
+                <template v-if="!allEnd.wasEnded">
+                    <span v-if="allEnd.wasStarted">距活动结束: </span>
+                    <span v-else>距活动开始: </span>
+                    <span :class="$style.val + ' ' + $style.day" v-text="allEnd.d" />
+                    <span :class="$style.unit">天</span>
+                    <span :class="$style.val" v-text="allEnd.h" />
+                    <span :class="$style.unit">:</span>
+                    <span :class="$style.val" v-text="allEnd.m" />
+                    <span :class="$style.unit">:</span>
+                    <span :class="$style.val" v-text="allEnd.s" />
+                </template>
+                <span v-else>已结束</span>
+            </div>
+            <div :class="$style.topRight" @click="createPoster">活动海报</div>
+            <div :class="$style.topRight" @click="showRules = true">活动规则</div>
+            <pl-svg
+                v-if="list.length && list[0].quarterVersion"
+                :name="`icon-${map[list[0].quarterVersion]}`"
+                width="50"
+                height="105"
+            />
+        </div>
+
+        <div
+            :class="$style.activity"
+            v-for="(activity, a) of list"
+            :key="a"
+        >
+            <div :class="$style.activityName" v-text="activity.activityName" />
+            <div
+                :class="$style.content"
+                v-for="(item, i) of activity.models"
+                :key="a + '-' + i"
+            >
+                <div :class="$style.groupName" v-text="item.activityName" />
+                <div :class="$style.discount">
+                    <span>组合打包{{ item.discount }}折起</span>
+                    <span>|</span>
+                    <span>{{ item.purchaseQuantity }}人已购</span>
+                </div>
+                <div :class="$style.endCountdown">
+                    <template v-if="!item.wasEnded">
+                        <span v-if="item.wasStarted">距活动结束: </span>
+                        <span v-else>距活动开始: </span>
+                        <span :class="$style.val" v-text="item.d" />
+                        <span :class="$style.unit">天</span>
+                        <span :class="$style.val" v-text="item.h" />
+                        <span :class="$style.unit">:</span>
+                        <span :class="$style.val" v-text="item.m" />
+                        <span :class="$style.unit">:</span>
+                        <span :class="$style.val" v-text="item.s" />
+                    </template>
+                    <span v-else>已结束</span>
+                </div>
+                <div :class="$style.proList">
+                    <SpringPloughingProItem
+                        v-for="(pro, j) of item.products"
+                        :key="a + '-' + i + '-' + j"
+                        :data="pro"
+                    />
+                </div>
+                <div :class="$style.giftList" v-if="item.gifts.length">
+                    <div :class="$style.title">
+                        更享更多伴手礼
+                    </div>
+                    <SpringPloughingGiftItem
+                        v-for="(gift, k) of item.gifts"
+                        :key="a + '-' + i + '-' + k"
+                        :data="gift"
+                    />
+                </div>
+                <button v-if="!item.stock" :class="$style.buy">
+                    太火爆了，都被抢空了
+                </button>
+                <button v-else-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
+                    点击购买 组合到手<i v-text="item.amount" />元
+                </button>
+                <button v-else-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
+                    暂未开启，敬请期待
+                </button>
+                <button v-else-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
+                    暂未开启，敬请期待
+                </button>
+                <div :class="$style.corner + ' ' + $style.topLeft" />
+                <div :class="$style.corner + ' ' + $style.topRight" />
+                <div :class="$style.corner + ' ' + $style.bottomLeft" />
+                <div :class="$style.corner + ' ' + $style.bottomRight" />
+            </div>
+        </div>
+
+        <pl-popup
+            :show.sync="showRules"
+            title="活动规则"
+        >
+            <ul :class="$style.rules">
+                <li>1. 设置活动，活动期间该页面展示的所有组合购买商品均以组合折扣价位售卖</li>
+                <li>2. 活动期间商品不退款，不支持线上发票</li>
+                <li>3. 仅在该页面下单可享受优惠，其他页面点击或购物车购买不享受优惠</li>
+                <li>4. 结束以时间和数量购买完截止结束</li>
+            </ul>
+        </pl-popup>
+
+        <transition name="fade">
+            <div v-if="showPoster" :class="$style.poster">
+                <img :src="poster" alt="" style="width: 80%;">
+                <pl-svg name="icon-close3" width="36" @click="showPoster = false" />
+            </div>
+        </transition>
     </div>
-
-    <div
-      :class="$style.activity"
-      v-for="(activity, a) of list"
-      :key="a"
-    >
-      <div :class="$style.activityName" v-text="activity.activityName" />
-      <div
-        :class="$style.content"
-        v-for="(item, i) of activity.models"
-        :key="a + '-' + i"
-      >
-        <div :class="$style.groupName" v-text="item.activityName" />
-        <div :class="$style.discount">
-          <span>组合打包{{ item.discount }}折起</span>
-          <span>|</span>
-          <span>{{ item.purchaseQuantity }}人已购</span>
-        </div>
-        <div :class="$style.endCountdown">
-          <template v-if="!item.wasEnded">
-            <span v-if="item.wasStarted">距活动结束: </span>
-            <span v-else>距活动开始: </span>
-            <span :class="$style.val" v-text="item.d" />
-            <span :class="$style.unit">天</span>
-            <span :class="$style.val" v-text="item.h" />
-            <span :class="$style.unit">:</span>
-            <span :class="$style.val" v-text="item.m" />
-            <span :class="$style.unit">:</span>
-            <span :class="$style.val" v-text="item.s" />
-          </template>
-          <span v-else>已结束</span>
-        </div>
-        <div :class="$style.proList">
-          <SpringPloughingProItem
-            v-for="(pro, j) of item.products"
-            :key="a + '-' + i + '-' + j"
-            :data="pro"
-          />
-        </div>
-        <div :class="$style.giftList" v-if="item.gifts.length">
-          <div :class="$style.title">
-            更享更多伴手礼
-          </div>
-          <SpringPloughingGiftItem
-            v-for="(gift, k) of item.gifts"
-            :key="a + '-' + i + '-' + k"
-            :data="gift"
-          />
-        </div>
-        <button v-if="!item.stock" :class="$style.buy">
-          太火爆了，都被抢空了
-        </button>
-        <button v-else-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
-          点击购买 组合到手<i v-text="item.amount" />元
-        </button>
-        <button v-else-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
-          暂未开启，敬请期待
-        </button>
-        <button v-else-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
-          暂未开启，敬请期待
-        </button>
-        <div :class="$style.corner + ' ' + $style.topLeft" />
-        <div :class="$style.corner + ' ' + $style.topRight" />
-        <div :class="$style.corner + ' ' + $style.bottomLeft" />
-        <div :class="$style.corner + ' ' + $style.bottomRight" />
-      </div>
-    </div>
-
-    <pl-popup
-      :show.sync="showRules"
-      title="活动规则"
-    >
-      <ul :class="$style.rules">
-        <li>1. 设置活动，活动期间该页面展示的所有组合购买商品均以组合折扣价位售卖</li>
-        <li>2. 活动期间商品不退款，不支持线上发票</li>
-        <li>3. 仅在该页面下单可享受优惠，其他页面点击或购物车购买不享受优惠</li>
-        <li>4. 结束以时间和数量购买完截止结束</li>
-      </ul>
-    </pl-popup>
-
-    <transition name="fade">
-      <div v-if="showPoster" :class="$style.poster">
-        <img :src="poster" alt="" style="width: 80%;">
-        <pl-svg name="icon-close3" width="36" @click="showPoster = false" />
-      </div>
-    </transition>
-  </div>
 </template>
 
 <script>
@@ -118,224 +118,236 @@ import SpringPloughingProItem from './components/Spring-Ploughing-Pro-Item.vue'
 import SpringPloughingGiftItem from './components/Spring-Ploughing-Gift-Item.vue'
 import { mapGetters } from 'vuex'
 import {
-  generateQrcode,
-  createText,
-  cutArcImage,
-  loadImage,
-  Countdown
+    generateQrcode,
+    createText,
+    cutArcImage,
+    loadImage,
+    Countdown
 } from '../../assets/js/util'
 import { getSpringCombination } from '../../apis/product'
 import moment from 'moment'
 const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/4b676734-b0c9-4aca-942d-ce62e481ebcf.jpeg'
 
 export default {
-  name: 'SpringPloughing',
-  components: {
-    SpringPloughingProItem,
-    SpringPloughingGiftItem
-  },
-  data () {
-    return {
-      showRules: false,
-      showPoster: false,
-      poster: '',
-      creating: false,
-      list: [],
-      // 倒计时实例列表
-      countInstaceList: [],
-      // 全部结束
-      allEnd: {
-        d: '',
-        h: '',
-        m: '',
-        s: '',
-        wasStarted: false,
-        wasEnded: false
-      },
-      map: {
-        '第一季': 'diyiji-adbb7',
-        '第二季': 'dierji-bbdb7',
-        '第三季': 'disanji-b8ae3',
-        '第四季': 'disiji-5d233',
-        '第五季': 'diwuji-af921'
-      }
-    }
-  },
-  computed: {
-    ...mapGetters(['avatar', 'userName', 'mobile'])
-  },
-  async activated () {
-    try {
-      await this.getSpringCombination()
-      let t = await Countdown.getServerTime()
-      console.log(t)
-    } catch (e) {
-      throw e
-    }
-  },
-  deactivated () {
-    this.countInstaceList.map(item => item.stop())
-    this.countInstaceList = []
-  },
-  methods: {
-    async getSpringCombination () {
-      try {
-        const { result } = await getSpringCombination({ current: 1, size: 60 })
-        if (!result.records.length) {
-          this.$alert({
-            message: '您无法参与活动',
-            viceMessage: '返回主会场，更多活动等您开启',
-            confirmText: '去主会场'
-          })
-            .finally(() => {
-              this.$router.push({ name: 'Activity' })
-            })
-          return
-        }
-        for (const activity of result.records) {
-          activity.models.sort((a, b) => {
-            return moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf()
-          })
-          for (const group of activity.models) {
-            // 添加倒计时相关字段
-            group.d = '' // 天
-            group.h = '' // 时
-            group.m = '' // 分
-            group.s = '' // 秒
-            const activityStartTime = moment(group.activityStartTime).valueOf()
-            const activityEndTime = moment(group.activityEndTime).valueOf()
-            const now = Date.now()
-            // 是否开始
-            group.wasStarted = now - activityStartTime >= 0
-            // 是否结束
-            group.wasEnded = now - activityEndTime >= 0
-            // 未开始倒计时(距离开始)
-            if (!group.wasStarted) {
-              this.setCountdownTime(group, activityStartTime - now)
-            }
-            // 开始倒计时(距离结束)
-            if (group.wasStarted && !group.wasEnded) {
-              this.setCountdownTime(group, activityEndTime - now)
-            }
-          }
-        }
-        this.list = result.records
-        const lastEndTime = moment(this.list[0].activityEndTime).valueOf()
-        const lastStartTime = moment(this.list[0].activityStartTime).valueOf()
-        const now = Date.now()
-        this.allEnd.wasStarted = now - lastStartTime >= 0
-        this.allEnd.wasEnded = now - lastEndTime >= 0
-        // // 未开始倒计时(距离开始)
-        if (!this.allEnd.wasStarted) {
-          this.setCountdownTime(this.allEnd, lastStartTime - now)
-        }
-        // 开始倒计时(距离结束)
-        if (this.allEnd.wasStarted && !this.allEnd.wasEnded) {
-          this.setCountdownTime(this.allEnd, lastEndTime - now)
-        }
-      } catch (e) {
-        throw e
-      }
+    name: 'SpringPloughing',
+    components: {
+        SpringPloughingProItem,
+        SpringPloughingGiftItem
     },
-    /**
+    data () {
+        return {
+            showRules: false,
+            showPoster: false,
+            poster: '',
+            creating: false,
+            list: [],
+
+            // 倒计时实例列表
+            countInstaceList: [],
+
+            // 全部结束
+            allEnd: {
+                d: '',
+                h: '',
+                m: '',
+                s: '',
+                wasStarted: false,
+                wasEnded: false
+            },
+            map: {
+                第一季: 'diyiji-adbb7',
+                第二季: 'dierji-bbdb7',
+                第三季: 'disanji-b8ae3',
+                第四季: 'disiji-5d233',
+                第五季: 'diwuji-af921'
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['avatar', 'userName', 'mobile'])
+    },
+    async activated () {
+        try {
+            await this.getSpringCombination()
+            const t = await Countdown.getServerTime()
+            console.log(t)
+        } catch (e) {
+            throw e
+        }
+    },
+    deactivated () {
+        this.countInstaceList.map(item => item.stop())
+        this.countInstaceList = []
+    },
+    methods: {
+        async getSpringCombination () {
+            try {
+                const { result } = await getSpringCombination({ current: 1, size: 60 })
+                if (!result.records.length) {
+                    this.$alert({
+                        message: '您无法参与活动',
+                        viceMessage: '返回主会场，更多活动等您开启',
+                        confirmText: '去主会场'
+                    })
+                        .finally(() => {
+                            this.$router.push({ name: 'Activity' })
+                        })
+                    return
+                }
+                for (const activity of result.records) {
+                    activity.models.sort((a, b) => moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf())
+                    for (const group of activity.models) {
+                        // 添加倒计时相关字段
+                        // 天
+                        group.d = ''
+                        // 时
+                        group.h = ''
+                        // 分
+                        group.m = ''
+                        // 秒
+                        group.s = ''
+                        const activityStartTime = moment(group.activityStartTime).valueOf()
+                        const activityEndTime = moment(group.activityEndTime).valueOf()
+                        const now = Date.now()
+
+                        // 是否开始
+                        group.wasStarted = now - activityStartTime >= 0
+
+                        // 是否结束
+                        group.wasEnded = now - activityEndTime >= 0
+
+                        // 未开始倒计时(距离开始)
+                        if (!group.wasStarted) {
+                            this.setCountdownTime(group, activityStartTime - now)
+                        }
+
+                        // 开始倒计时(距离结束)
+                        if (group.wasStarted && !group.wasEnded) {
+                            this.setCountdownTime(group, activityEndTime - now)
+                        }
+                    }
+                }
+                this.list = result.records
+                const lastEndTime = moment(this.list[0].activityEndTime).valueOf()
+                const lastStartTime = moment(this.list[0].activityStartTime).valueOf()
+                const now = Date.now()
+                this.allEnd.wasStarted = now - lastStartTime >= 0
+                this.allEnd.wasEnded = now - lastEndTime >= 0
+
+                // // 未开始倒计时(距离开始)
+                if (!this.allEnd.wasStarted) {
+                    this.setCountdownTime(this.allEnd, lastStartTime - now)
+                }
+
+                // 开始倒计时(距离结束)
+                if (this.allEnd.wasStarted && !this.allEnd.wasEnded) {
+                    this.setCountdownTime(this.allEnd, lastEndTime - now)
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+
+        /**
      * 设置到计时时间
      * @param data {object} 每组数据
      * @param duration {number} 倒计时时长
      */
-    setCountdownTime (data, duration) {
-      const countdown = new Countdown(duration, async countdownData => {
-        if (!countdownData) {
-          // 倒计时结束，刷新数据
-          await this.getSpringCombination()
-          return
+        setCountdownTime (data, duration) {
+            const countdown = new Countdown(duration, async countdownData => {
+                if (!countdownData) {
+                    // 倒计时结束，刷新数据
+                    await this.getSpringCombination()
+                    return
+                }
+                const d = String(countdownData.days)
+                const h = String(countdownData.hours)
+                const m = String(countdownData.minutes)
+                const s = String(countdownData.seconds)
+                data.d = d.padStart(2, '0')
+                data.h = h.padStart(2, '0')
+                data.m = m.padStart(2, '0')
+                data.s = s.padStart(2, '0')
+            })
+            this.countInstaceList.push(countdown)
+            countdown.start()
+        },
+        async buy (data) {
+            if (!this.hasBind()) return
+            const confirmList = []
+            for (const pro of data.products) {
+                confirmList.push({
+                    productId: pro.goodsId,
+                    skuCode1: pro.sku1,
+                    skuCode2: pro.sku2,
+                    count: pro.count,
+                    price: pro.amount,
+                    agentUser: ''
+                })
+            }
+            sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
+            await this.$router.push({
+                name: 'SubmitOrder',
+                query: {
+                    isCart: 'YES',
+                    activeProduct: 5,
+                    preActivity: 2,
+                    activityId: data.activityId
+                }
+            })
+        },
+
+        // 判断绑定手机
+        hasBind () {
+            if (!this.mobile) {
+                this.$confirm('您还没有绑定手机，请先绑定手机')
+                    .then(() => {
+                        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                            name: this.$route.name,
+                            params: this.$route.params,
+                            query: this.$route.query
+                        }))
+                        this.$router.push({ name: 'BindMobile' })
+                    })
+                    .catch(() => {})
+                return false
+            }
+            return true
+        },
+        async createPoster () {
+            if (this.creating) {
+                return
+            }
+            if (this.poster) {
+                this.showPoster = true
+                return
+            }
+            this.creating = true
+            const cvs = document.createElement('canvas')
+            const ctx = cvs.getContext('2d')
+            const Result = await Promise.all([
+                loadImage(POSTER_BG),
+                loadImage(this.avatar)
+            ])
+            const BG = Result[0]
+            const AVATAR = await cutArcImage(Result[1])
+            cvs.width = 638
+            cvs.height = 1134
+            ctx.fillStyle = '#397432'
+            ctx.fillRect(0, 0, 638, 88)
+            ctx.drawImage(AVATAR, 20, 12, 64, 64)
+            ctx.font = '24px Microsoft YaHei UI'
+            ctx.fillStyle = '#fff'
+            ctx.textBaseline = 'hanging'
+            createText(ctx, 100, 32, `${ this.userName } 邀你一起春耘计划`, 34, 510, 1)
+            ctx.drawImage(BG, 0, 88, 638, 1046)
+            const QR = await generateQrcode(200, location.href, 0, null, 0, 'canvas')
+            ctx.drawImage(QR, 216, 826, 204, 204)
+            this.poster = cvs.toDataURL('image/jpeg', 0.9)
+            this.showPoster = true
+            this.creating = false
         }
-        let d = String(countdownData.days)
-        let h = String(countdownData.hours)
-        let m = String(countdownData.minutes)
-        let s = String(countdownData.seconds)
-        data.d = d.padStart(2, '0')
-        data.h = h.padStart(2, '0')
-        data.m = m.padStart(2, '0')
-        data.s = s.padStart(2, '0')
-      })
-      this.countInstaceList.push(countdown)
-      countdown.start()
-    },
-    async buy (data) {
-      if (!this.hasBind()) return
-      const confirmList = []
-      for (let pro of data.products) {
-        confirmList.push({
-          productId: pro.goodsId,
-          skuCode1: pro.sku1,
-          skuCode2: pro.sku2,
-          count: pro.count,
-          price: pro.amount,
-          agentUser: ''
-        })
-      }
-      sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
-      await this.$router.push({
-        name: 'SubmitOrder',
-        query: {
-          isCart: 'YES',
-          activeProduct: 5,
-          preActivity: 2,
-          activityId: data.activityId
-        }
-      })
-    },
-    // 判断绑定手机
-    hasBind () {
-      if (!this.mobile) {
-        this.$confirm('您还没有绑定手机，请先绑定手机')
-          .then(() => {
-            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-              name: this.$route.name,
-              params: this.$route.params,
-              query: this.$route.query
-            }))
-            this.$router.push({ name: 'BindMobile' })
-          })
-          .catch(() => {})
-        return false
-      }
-      return true
-    },
-    async createPoster () {
-      if (this.creating) {
-        return
-      }
-      if (this.poster) {
-        this.showPoster = true
-        return
-      }
-      this.creating = true
-      const cvs = document.createElement('canvas')
-      const ctx = cvs.getContext('2d')
-      const Result = await Promise.all([
-        loadImage(POSTER_BG),
-        loadImage(this.avatar)
-      ])
-      const BG = Result[0]
-      const AVATAR = await cutArcImage(Result[1])
-      cvs.width = 638
-      cvs.height = 1134
-      ctx.fillStyle = '#397432'
-      ctx.fillRect(0, 0, 638, 88)
-      ctx.drawImage(AVATAR, 20, 12, 64, 64)
-      ctx.font = '24px Microsoft YaHei UI'
-      ctx.fillStyle = '#fff'
-      ctx.textBaseline = 'hanging'
-      createText(ctx, 100, 32, this.userName + ' 邀你一起春耘计划', 34, 510, 1)
-      ctx.drawImage(BG, 0, 88, 638, 1046)
-      const QR = await generateQrcode(200, location.href, 0, null, 0, 'canvas')
-      ctx.drawImage(QR, 216, 826, 204, 204)
-      this.poster = cvs.toDataURL('image/jpeg', 0.9)
-      this.showPoster = true
-      this.creating = false
     }
-  }
 }
 </script>
 

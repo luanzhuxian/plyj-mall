@@ -1,189 +1,215 @@
 <template>
-  <div :class="$style.livePlayBack">
-    <div :class="$style.videoBox">
-      <PaidPlayer
-        :size="videoMes.fileSize"
-        :src="videoMes.url"
-        :video-id="id"
-        :resource-id="activityId"
-        :resource-name="activityName"
-      />
-      <div>商品</div>
+    <div :class="$style.livePlayBack">
+        <div :class="$style.videoBox">
+            <PaidPlayer
+                :size="videoMes.fileSize"
+                :src="videoMes.url"
+                :video-id="id"
+                :resource-id="activityId"
+                :resource-name="activityName"
+            />
+            <div>商品</div>
+        </div>
+        <div :class="$style.productList" v-if="productList.length">
+            <div :class="$style.tabTitle">
+                精选商品（{{ productList.length }}件）
+            </div>
+            <div
+                v-for="(item, i) of productList"
+                :key="i"
+                :class="$style.product"
+                @click="$router.push({ name: 'Product', params: { productId: item.id } })"
+            >
+                <img :src="item.productMainImage" alt="">
+                <div :class="$style.left">
+                    <div :class="$style.name" v-text="item.productName" />
+                    <div :class="$style.price">
+                        ￥{{ item.price }}元
+                    </div>
+                    <!--<div :class="$style.count">3</div>-->
+                </div>
+                <div :class="$style.vieFor">
+                    <pl-svg name="icon-vie-for" fill="#fff" width="40" height="70" />
+                </div>
+            </div>
+        </div>
+        <!-- 支付弹框 -->
+        <transition name="fade">
+            <div :class="$style.payWrap" v-if="needPay">
+                <div :class="$style.payBox">
+                    <div :class="$style.title">
+                        支付提示
+                    </div>
+                    <div :class="$style.message">
+                        该直播视频需支付￥{{ payCount }}后可观看回放，确认要观看吗？
+                    </div>
+                    <div :class="$style.buttons">
+                        <button :class="$style.cancelBtn" @click="cancelPay">取消</button>
+                        <button @click="submitOrder">确定</button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 密令弹窗 -->
+        <LivePassword :activity-id="activityId" ref="livePassword" />
+        <!-- 报名 -->
+        <LiveSignUp :info="detail" :activity-id="activityId" ref="LiveSignUp" />
     </div>
-    <div :class="$style.productList" v-if="productList.length">
-      <div :class="$style.tabTitle">
-        精选商品（{{ productList.length }}件）
-      </div>
-      <div
-        v-for="(item, i) of productList"
-        :key="i"
-        :class="$style.product"
-        @click="$router.push({ name: 'Product', params: { productId: item.id } })"
-      >
-        <img :src="item.productMainImage" alt="">
-        <div :class="$style.left">
-          <div :class="$style.name" v-text="item.productName" />
-          <div :class="$style.price">
-            ￥{{ item.price }}元
-          </div>
-          <!--<div :class="$style.count">3</div>-->
-        </div>
-        <div :class="$style.vieFor">
-          <pl-svg name="icon-vie-for" fill="#fff" width="40" height="70" />
-        </div>
-      </div>
-    </div>
-    <!-- 支付弹框 -->
-    <transition name="fade">
-      <div :class="$style.payWrap" v-if="needPay">
-        <div :class="$style.payBox">
-          <div :class="$style.title">
-            支付提示
-          </div>
-          <div :class="$style.message">
-            该直播视频需支付￥{{ payCount }}后可观看回放，确认要观看吗？
-          </div>
-          <div :class="$style.buttons">
-            <button :class="$style.cancelBtn" @click="cancelPay">取消</button>
-            <button @click="submitOrder">确定</button>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <!-- 密令弹窗 -->
-    <LivePassword :activity-id="activityId" ref="livePassword" />
-  </div>
 </template>
 
 <script>
-import { getActiveCompleteInfo, getVideoMesById, pay, cancelOrder } from '../../apis/live.js'
-import { hasPied } from './../../apis/live-library'
+import { getActiveCompleteInfo, getVideoMesById, pay, cancelOrder, setComeInConut } from '../../apis/live.js'
+import { getLivePlayBackInfo } from './../../apis/live-library'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
 import LivePassword from './components/Live-Password'
+import LiveSignUp from './components/Live-Sign-Up'
 export default {
-  name: 'LivePlayBack',
-  components: {
-    PaidPlayer,
-    LivePassword
-  },
-  data () {
-    return {
-      activityName: '',
-      needPay: false,
-      payCount: 0, // 价格
-      productList: [], // 商品列表
-      videoMes: {
-        fileSize: 0
-      }
-    }
-  },
-  props: {
-    activityId: {
-      type: String,
-      default: ''
+    name: 'LivePlayBack',
+    components: {
+        PaidPlayer,
+        LivePassword,
+        LiveSignUp
     },
-    id: {
-      type: String,
-      default: ''
-    },
-    // 是否需要后台校验直播结束时间，我的直播-需要校验 互动直播-无需校验
-    isValidateEndTime: {
-      type: Number,
-      default: 0
-    }
-  },
-  async activated () {
-    try {
-      this.needPay = false
-      this.needPay = await this.isNeedPay()
-      if (!this.needPay) {
-        await this.getVideoMes()
-        await this.getDetail()
-      }
-    } catch (e) { throw e }
-  },
-  methods: {
-    async isNeedPay () {
-      try {
-      // needPay 是否需要付费 1需要  0不需要
-        let { result: { needPay, needPaidAmount, paidAmount, activityName, isHaveToken, isInputToken } } = await hasPied(this.activityId, !!this.isValidateEndTime)
-        // 是否口令校验
-        await this.getPermission(isHaveToken, isInputToken)
-        this.payCount = needPaidAmount / 100 // 单位分转为元
-        this.activityName = activityName
-        return needPay === 1 && paidAmount === 0
-      } catch (e) { throw e }
-    },
-    // 是否要输入口令
-    async getPermission (isHaveToken, isInputToken) {
-      try {
-        await this.$nextTick()
-        if (isHaveToken && !isInputToken) {
-          await this.$refs.livePassword.validate()
+    props: {
+        activityId: {
+            type: String,
+            default: ''
+        },
+        id: {
+            type: String,
+            default: ''
+        },
+        // 是否需要后台校验直播结束时间，我的直播-需要校验 互动直播-无需校验
+        isValidateEndTime: {
+            type: String,
+            default: ''
         }
-      } catch (e) { throw e }
     },
-    async getDetail () {
-      try {
-        let { productList } = await getActiveCompleteInfo(this.activityId)
-        this.productList = productList || []
-      } catch (e) { throw e }
+    data () {
+        return {
+            activityName: '',
+            needPay: false,
+            // 价格
+            payCount: 0,
+            // 商品列表
+            productList: [],
+            detail: {},
+            videoMes: {
+                fileSize: 0
+            }
+        }
     },
-    async getVideoMes () {
-      try {
-        let mes = await getVideoMesById(this.id)
-        mes.fileSize = Number(mes.fileSize) || 0
-        this.videoMes = mes
-      } catch (e) { throw e }
-    },
-    async submitOrder () {
-      try {
-        let mes = await pay(this.activityId)
-        await this.pay(mes)
-      } catch (e) { throw e }
-    },
-    async pay (CREDENTIAL) {
-      return new Promise(async (resolve, reject) => {
+    async activated () {
         try {
-          await wechatPay(CREDENTIAL)
-          this.getDetail()
-          this.getVideoMes()
-          this.$success('付款成功立即观看')
-          this.needPay = false
-        } catch (e) {
-          this.needPay = false
-          this.$confirm({
-            message: '支付失败',
-            viceMessage: '<p>若要正常观看</p><p>请重新发起支付</p>',
-            confirmText: '重新支付',
-            useDangersHtml: true
-          }).then(() => {
-            this.needPay = true
-          }).catch(() => {
-            this.cancelPay()
-          })
-          await cancelOrder(this.activityId).then(res => {
-            reject(e)
-          }).catch(err => {
-            reject(err)
-          })
-        }
-      })
+            this.needPay = false
+            await this.getLivePlayBackInfo()
+            await this.getPromission()
+        } catch (e) { throw e }
     },
-    cancelPay () {
-      this.$router.back()
+    deactivated () {
+        this.needPay = false
+        this.productList = []
+        this.videoMes = {}
+    },
+    methods: {
+    // 获取回看的信息
+        async getLivePlayBackInfo () {
+            try {
+                const { result } = await getLivePlayBackInfo(this.activityId, this.isValidateEndTime === '1')
+                this.detail = result
+                // 单位分转为元
+                this.payCount = result.needPaidAmount / 100
+                this.activityName = result.activityName
+            } catch (e) { throw e }
+        },
+        // 是否有权限观看
+        async getPromission () {
+            const { detail } = this
+            await this.$nextTick()
+            // 存入访问记录
+            await setComeInConut({
+                id: this.activityId,
+                message: `${ (detail.paidAmount / 100) || 0 }元`
+            })
+            // 是否要报名
+            if (detail.isNeedSignUp === 1 && !detail.isHaveSignUp) {
+                await this.$refs.LiveSignUp.signUp()
+            }
+            // 是否口令校验
+            if (detail.isHaveToken && !detail.isInputToken) {
+                await this.$refs.livePassword.validate()
+            }
+            // needPay 是否需要付费 1需要  0不需要，paidAmount 支付了多少钱
+            this.needPay = (detail.needPay === 1 && detail.paidAmount === 0)
+            // 是否要付费
+            if (!this.needPay) {
+                await this.getVideoMes()
+                await this.getDetail()
+            }
+        },
+        async getDetail () {
+            try {
+                const { productList } = await getActiveCompleteInfo(this.activityId)
+                this.productList = productList || []
+            } catch (e) { throw e }
+        },
+        async getVideoMes () {
+            try {
+                const mes = await getVideoMesById(this.id)
+                mes.fileSize = Number(mes.fileSize) || 0
+                this.videoMes = mes
+            } catch (e) { throw e }
+        },
+        async submitOrder () {
+            try {
+                const mes = await pay(this.activityId)
+                await this.pay(mes)
+            } catch (e) { throw e }
+        },
+        async pay (CREDENTIAL) {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    await wechatPay(CREDENTIAL)
+                    this.getDetail()
+                    this.getVideoMes()
+                    this.$success('付款成功立即观看')
+                    this.needPay = false
+                    // 存入访问记录
+                    await setComeInConut({
+                        id: this.activityId,
+                        message: `${ this.payCount || 0 }元`
+                    })
+                } catch (e) {
+                    this.needPay = false
+                    this.$confirm({
+                        message: '支付失败',
+                        viceMessage: '<p>若要正常观看</p><p>请重新发起支付</p>',
+                        confirmText: '重新支付',
+                        useDangersHtml: true
+                    }).then(() => {
+                        this.needPay = true
+                    })
+                        .catch(() => {
+                            this.cancelPay()
+                        })
+                    await cancelOrder(this.activityId).then(res => {
+                        reject(e)
+                    })
+                        .catch(err => {
+                            reject(err)
+                        })
+                }
+            })
+        },
+        cancelPay () {
+            this.$router.back()
+        }
     }
-  },
-  deactivated () {
-    this.needPay = false
-    this.productList = []
-    this.videoMes = {}
-  }
 }
 </script>
 
-<style lang='scss' module scoped>
+<style lang='scss' module>
 
   .live-play-back {
     > .video-box {

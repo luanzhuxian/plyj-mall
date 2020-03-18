@@ -1,59 +1,59 @@
 <template>
-  <div>
-    <div
-      :class="$style.goodItem"
-      @click="handleClick"
-    >
-      <div :class="$style.goodLeft">
-        <img
-          :class="$style.img"
-          v-lazy="img"
-          :key="img"
+    <div>
+        <div
+            :class="$style.goodItem"
+            @click="handleClick"
         >
-      </div>
-      <div :class="$style.goodRight">
-        <h1 v-text="title" />
-        <div :class="$style.tag">春节特价</div>
-        <div :class="$style.price">
-          <Price
-            :class="$style.priceItem"
-            size="middle"
-            :price="price"
-            :original-price="originalPrice"
-          />
-          <button :class="$style.addCart"
-                  :disabled="noStock || adding"
-                  @click.stop="showSpecifica = true"
-          >
-            {{ noStock? '商品已售罄':'加入购物车' }}
-          </button>
+            <div :class="$style.goodLeft">
+                <img
+                    :class="$style.img"
+                    v-lazy="img"
+                    :key="img"
+                >
+            </div>
+            <div :class="$style.goodRight">
+                <h1 v-text="title" />
+                <div :class="$style.tag">春节特价</div>
+                <div :class="$style.price">
+                    <Price
+                        :class="$style.priceItem"
+                        size="middle"
+                        :price="price"
+                        :original-price="originalPrice"
+                    />
+                    <button :class="$style.addCart"
+                            :disabled="noStock || adding"
+                            @click.stop="showSpecifica = true"
+                    >
+                        {{ noStock? '商品已售罄':'加入购物车' }}
+                    </button>
+                </div>
+                <div :class="$style.salesVolume">{{ salesVolume }}人付款</div>
+            </div>
         </div>
-        <div :class="$style.salesVolume">{{ salesVolume }}人付款</div>
-      </div>
-    </div>
-    <!-- 规格弹框 -->
-    <SpecificationPop
-      :key="id"
-      :default-count="defaultCount"
-      :visible.sync="showSpecifica"
-      :product-image="img"
-      :sku.sync="currentModel"
-      :limiting="limiting"
-      :sku-attr-list="detail.productAttributes"
-      :sku-list="detail.productSkuModels"
-    >
-      <template v-slot:footer="{ currentSku }">
-        <pl-button
-          type="warning"
-          size="large"
-          :loading="adding"
-          @click="addToCart(currentSku)"
+        <!-- 规格弹框 -->
+        <SpecificationPop
+            :key="id"
+            :default-count="defaultCount"
+            :visible.sync="showSpecifica"
+            :product-image="img"
+            :sku.sync="currentModel"
+            :limiting="limiting"
+            :sku-attr-list="detail.productAttributes"
+            :sku-list="detail.productSkuModels"
         >
-          确定
-        </pl-button>
-      </template>
-    </SpecificationPop>
-  </div>
+            <template v-slot:footer="{ currentSku }">
+                <pl-button
+                    type="warning"
+                    size="large"
+                    :loading="adding"
+                    @click="addToCart(currentSku)"
+                >
+                    确定
+                </pl-button>
+            </template>
+        </SpecificationPop>
+    </div>
 </template>
 
 <script>
@@ -64,132 +64,138 @@ import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import { addToCart } from '../../apis/shopping-cart'
 
 export default {
-  name: 'CouponGoodItem',
-  components: {
-    Price,
-    SpecificationPop
-  },
-  data () {
-    return {
-      adding: false,
-      currentModel: {}, // 当前选中的商品规格
-      showSpecifica: false // 是否显示规格弹框
-    }
-  },
-  activated () {
-    this.showSpecifica = false
-    this.currentModel = this.detail.productSkuModels.find(item => item.minBuyNum <= item.stock) || this.detail.productSkuModels[0]
-  },
-  deactivated () {
-    this.showSpecifica = false
-    this.currentModel = {}
-  },
-  props: {
-    id: {
-      type: String,
-      default: ''
+    name: 'CouponGoodItem',
+    components: {
+        Price,
+        SpecificationPop
     },
-    img: {
-      type: String,
-      default: ''
+    data () {
+        return {
+            adding: false,
+            // 当前选中的商品规格
+            currentModel: {},
+            // 是否显示规格弹框
+            showSpecifica: false
+        }
     },
-    title: {
-      type: String,
-      default: ''
+    activated () {
+        this.showSpecifica = false
+        this.currentModel = this.detail.productSkuModels.find(item => item.minBuyNum <= item.stock) || this.detail.productSkuModels[0]
     },
-    originalPrice: {
-      type: [String, Number],
-      default: ''
+    deactivated () {
+        this.showSpecifica = false
+        this.currentModel = {}
     },
-    salesVolume: {
-      type: [String, Number],
-      default: ''
+    props: {
+        id: {
+            type: String,
+            default: ''
+        },
+        img: {
+            type: String,
+            default: ''
+        },
+        title: {
+            type: String,
+            default: ''
+        },
+        originalPrice: {
+            type: [String, Number],
+            default: ''
+        },
+        salesVolume: {
+            type: [String, Number],
+            default: ''
+        },
+        detail: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
     },
-    detail: {
-      type: Object,
-      default: function () {
-        return {}
-      }
-    }
-  },
-  computed: {
-    ...mapGetters(['userId', 'mobile']),
-    /**
+    computed: {
+        ...mapGetters(['userId', 'mobile']),
+
+        /**
        * 判断是否还有库存
        *
        * 其它活动商品的库存同意用
        */
-    noStock () {
-      // 正常购买途径是否还有库存为准
-      return this.detail.productSkuModels.every(item =>
-        item.stock < item.minBuyNum
-      )
-    },
-    defaultCount () { // 默认选择的数量
-      return this.currentModel.count || 1
-    },
-    limiting () {
-      return this.detail.purchaseLimit ? (this.detail.purchaseQuantity) : 0
-    },
-    price () {
-      let priceList = this.detail.productSkuModels.map(item => item.price)
-      return Math.min.apply(Math, priceList)
-    }
-  },
-  methods: {
-    ...mapActions({
-      getCartCount: GET_CART_COUNT
-    }),
-    async handleClick () { // 商品详情
-      this.$router.push({
-        name: 'Product',
-        params: { productId: this.id }
-      })
-    },
-    addToCart (selected) { // 添加商品到购物车
-      if (!this.hasBind()) {
-        return
-      }
-      this.adding = true
-      const { count, skuCode2 = '', skuCode1 } = selected
-      const shareBrokerId = sessionStorage.getItem('shareBrokerId')
-      return new Promise(async (resolve, reject) => {
-        try {
-          await addToCart({
-            productId: this.id,
-            productCount: count,
-            skuCode: skuCode1,
-            skuCode2,
-            agentUser: shareBrokerId || this.userId || null // 如果当前用户是经纪人，则覆盖其他经纪人的id
-          })
-          this.$success('已添加到购物车')
-          this.showSpecifica = false
-          this.getCartCount()
-        } catch (e) {
-          reject(e)
-        } finally {
-          this.adding = false
+        noStock () {
+            // 正常购买途径是否还有库存为准
+            return this.detail.productSkuModels.every(item => item.stock < item.minBuyNum)
+        },
+        // 默认选择的数量
+        defaultCount () {
+            return this.currentModel.count || 1
+        },
+        limiting () {
+            return this.detail.purchaseLimit ? (this.detail.purchaseQuantity) : 0
+        },
+        price () {
+            const priceList = this.detail.productSkuModels.map(item => item.price)
+            return Math.min(...priceList)
         }
-      })
     },
-    hasBind () { // 判断用户有无绑定手机
-      if (!this.mobile) {
-        this.$confirm('您还没有绑定手机，请先绑定手机')
-          .then(() => {
-            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-              name: this.$route.name,
-              params: this.$route.params,
-              query: this.$route.query
-            }))
-            this.$router.push({ name: 'BindMobile' })
-          })
-          .catch(() => {
-          })
-        return false
-      }
-      return true
+    methods: {
+        ...mapActions({
+            getCartCount: GET_CART_COUNT
+        }),
+        // 商品详情
+        async handleClick () {
+            this.$router.push({
+                name: 'Product',
+                params: { productId: this.id }
+            })
+        },
+        // 添加商品到购物车
+        addToCart (selected) {
+            if (!this.hasBind()) {
+                return
+            }
+            this.adding = true
+            const { count, skuCode2 = '', skuCode1 } = selected
+            const shareBrokerId = sessionStorage.getItem('shareBrokerId')
+            return new Promise(async (resolve, reject) => {
+                try {
+                    await addToCart({
+                        productId: this.id,
+                        productCount: count,
+                        skuCode: skuCode1,
+                        skuCode2,
+                        // 如果当前用户是经纪人，则覆盖其他经纪人的id
+                        agentUser: shareBrokerId || this.userId || null
+                    })
+                    this.$success('已添加到购物车')
+                    this.showSpecifica = false
+                    this.getCartCount()
+                } catch (e) {
+                    reject(e)
+                } finally {
+                    this.adding = false
+                }
+            })
+        },
+        // 判断用户有无绑定手机
+        hasBind () {
+            if (!this.mobile) {
+                this.$confirm('您还没有绑定手机，请先绑定手机')
+                    .then(() => {
+                        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                            name: this.$route.name,
+                            params: this.$route.params,
+                            query: this.$route.query
+                        }))
+                        this.$router.push({ name: 'BindMobile' })
+                    })
+                    .catch(() => {
+                    })
+                return false
+            }
+            return true
+        }
     }
-  }
 }
 </script>
 

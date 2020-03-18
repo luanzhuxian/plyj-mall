@@ -1,77 +1,77 @@
 <template>
-  <div :class="$style.commentDetail" v-if="detail">
-    <div :class="$style.top">
-      <img :src="detail.headUrl" alt="">
-      <div :class="$style.topRight">
-        <div :class="$style.nickname" v-text="detail.nickName" />
-        <div class="fz-24">
-          评分 <Grade class="ml-10" size="mini" :grade="detail.goodsScore" />
+    <div :class="$style.commentDetail" v-if="detail">
+        <div :class="$style.top">
+            <img :src="detail.headUrl" alt="">
+            <div :class="$style.topRight">
+                <div :class="$style.nickname" v-text="detail.nickName" />
+                <div class="fz-24">
+                    评分 <Grade class="ml-10" size="mini" :grade="detail.goodsScore" />
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <p :class="$style.time" v-text="detail.createTimeText" />
-    <div :class="$style.content">
-      <div :class="$style.text" v-text="detail.content" />
-      <div :class="$style.imgs">
-        <img v-for="(item, i) of detail.mediaInfoEntityList" :key="i" :src="item.mediaUrl" v-imger:comment alt="">
-      </div>
-      <div :class="$style.reply" v-if="detail.childs.length">
-        <span>商家回复：</span>
-        {{ detail.childs[0].content }}
-      </div>
-    </div>
+        <p :class="$style.time" v-text="detail.createTimeText" />
+        <div :class="$style.content">
+            <div :class="$style.text" v-text="detail.content" />
+            <div :class="$style.imgs">
+                <img v-for="(item, i) of detail.mediaInfoEntityList" :key="i" :src="item.mediaUrl" v-imger:comment alt="">
+            </div>
+            <div :class="$style.reply" v-if="detail.childs.length">
+                <span>商家回复：</span>
+                {{ detail.childs[0].content }}
+            </div>
+        </div>
 
-    <div :class="$style.product">
-      <div :class="$style.sku">
-        {{ detail.orderProductREntity.attribute1 }} “{{ detail.orderProductREntity.skuName }}”
-        <template v-if="detail.orderProductREntity.skuName2">
-          ，{{ detail.orderProductREntity.attribute2 }} “{{ detail.orderProductREntity.skuName2 }}”
-        </template>
-      </div>
-      <div :class="$style.detail">
-        <img v-img-error :src="detail.orderProductREntity.productImg" alt="">
-        <div>
-          <p :class="$style.name" v-text="orderProductREntity.productName" />
-          <p :class="$style.price" v-text="orderProductREntity.price" />
+        <div :class="$style.product">
+            <div :class="$style.sku">
+                {{ detail.orderProductREntity.attribute1 }} “{{ detail.orderProductREntity.skuName }}”
+                <template v-if="detail.orderProductREntity.skuName2">
+                    ，{{ detail.orderProductREntity.attribute2 }} “{{ detail.orderProductREntity.skuName2 }}”
+                </template>
+            </div>
+            <div :class="$style.detail">
+                <img v-img-error :src="detail.orderProductREntity.productImg" alt="">
+                <div>
+                    <p :class="$style.name" v-text="orderProductREntity.productName" />
+                    <p :class="$style.price" v-text="orderProductREntity.price" />
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 import Grade from '../../components/common/Grade.vue'
 export default {
-  name: 'CommentDetail',
-  components: {
-    Grade
-  },
-  data () {
-    return {
-      detail: null
+    name: 'CommentDetail',
+    components: {
+        Grade
+    },
+    data () {
+        return {
+            detail: null
+        }
+    },
+    activated () {
+        this.getDetail()
+    },
+    deactivated () {
+        sessionStorage.removeItem('comment')
+    },
+    computed: {
+        orderProductREntity () {
+            return this.detail.orderProductREntity
+        }
+    },
+    methods: {
+        getDetail () {
+            const detail = JSON.parse(sessionStorage.getItem('comment'))
+            if (detail) {
+                this.detail = detail
+            } else {
+                this.$router.replace({ name: 'Home' })
+            }
+        }
     }
-  },
-  activated () {
-    this.getDetail()
-  },
-  deactivated () {
-    sessionStorage.removeItem('comment')
-  },
-  computed: {
-    orderProductREntity () {
-      return this.detail.orderProductREntity
-    }
-  },
-  methods: {
-    getDetail () {
-      let detail = JSON.parse(sessionStorage.getItem('comment'))
-      if (detail) {
-        this.detail = detail
-      } else {
-        this.$router.replace({ name: 'Home' })
-      }
-    }
-  }
 }
 </script>
 

@@ -1,103 +1,103 @@
 <template>
-  <div class="tuan">
-    <div>
-      <div class="price">
-        定金&nbsp;<span>{{ detail.activityProductModel.price }}</span>
-        <div class="deposit" v-if="detail.activityProductModel.multiplt === 1">
-          抵&nbsp;<span>{{ detail.activityProductModel.depositTotal }}</span>
+    <div class="tuan">
+        <div>
+            <div class="price">
+                定金&nbsp;<span>{{ detail.activityProductModel.price }}</span>
+                <div class="deposit" v-if="detail.activityProductModel.multiplt === 1">
+                    抵&nbsp;<span>{{ detail.activityProductModel.depositTotal }}</span>
+                </div>
+            </div>
+            <div class="current-price" style="margin-bottom: 4px;">
+                <span>预售到手价</span>&nbsp;
+                <span class="rmb">
+                    <template v-if="detail.activityProductModel.lowestPrice">
+                        <i v-text="detail.activityProductModel.lowestPrice" />
+                        <i>~</i>
+                    </template>
+                    <i v-text="detail.activityProductModel.highestPrice" />
+                </span>
+            </div>
+            <div class="pro-info">
+                <div class="current-price">
+                    现价：
+                    <i class="rmb" v-text="minPrice" />
+                    <template v-if="minPrice !== maxPrice">
+                        ~ <i v-text="maxPrice" />
+                    </template>
+                </div>
+                <div class="original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice">原价：<del v-text="maxOriginalPrice" /></div>
+                <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
+            </div>
         </div>
-      </div>
-      <div class="current-price" style="margin-bottom: 4px;">
-        <span>预售到手价</span>&nbsp;
-        <span class="rmb">
-          <template v-if="detail.activityProductModel.lowestPrice">
-            <i v-text="detail.activityProductModel.lowestPrice" />
-            <i>~</i>
-          </template>
-          <i v-text="detail.activityProductModel.highestPrice" />
-        </span>
-      </div>
-      <div class="pro-info">
-        <div class="current-price">
-          现价：
-          <i class="rmb" v-text="minPrice" />
-          <template v-if="minPrice !== maxPrice">
-            ~ <i v-text="maxPrice" />
-          </template>
+        <div class="priceRight" v-if="agentUser && (minRebate || maxRebate) && detail.preActivity !== 2">
+            <p class="fz-22 gray-1">
+                <span class="returnRunbi">
+                    润笔
+                </span>
+                <i v-if="minRebate" class="rmb" v-text="minRebate" />
+                <i v-if="minRebate && maxRebate && minRebate !== maxRebate">~</i>
+                <i v-if="maxRebate && minRebate !== maxRebate" v-text="maxRebate" />
+            </p>
+            <p class="fz-22 gray-3">
+                分享下单即可获得润笔
+            </p>
         </div>
-        <div class="original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice">原价：<del v-text="maxOriginalPrice" /></div>
-        <div class="buy-num">{{ detail.salesVolume }}人已购买</div>
-      </div>
     </div>
-    <div class="priceRight" v-if="agentUser && (minRebate || maxRebate) && detail.preActivity !== 2">
-      <p class="fz-22 gray-1">
-        <span class="returnRunbi">
-          润笔
-        </span>
-        <i v-if="minRebate" class="rmb" v-text="minRebate" />
-        <i v-if="minRebate && maxRebate && minRebate !== maxRebate">~</i>
-        <i v-if="maxRebate && minRebate !== maxRebate" v-text="maxRebate" />
-      </p>
-      <p class="fz-22 gray-3">
-        分享下单即可获得润笔
-      </p>
-    </div>
-  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'BookingPrice',
-  props: {
-    detail: {
-      type: Object,
-      default: null
+    name: 'BookingPrice',
+    props: {
+        detail: {
+            type: Object,
+            default: null
+        }
+    },
+    data () {
+        return {
+        }
+    },
+    computed: {
+        ...mapGetters(['agentUser']),
+        skuList () {
+            return this.detail.productSkuModels || []
+        },
+        priceList () {
+            return this.skuList.map(item => item.price) || []
+        },
+        originalPriceList () {
+            return this.skuList.map(item => item.originalPrice) || []
+        },
+        maxPrice () {
+            return Math.max(...this.priceList)
+        },
+        minPrice () {
+            return Math.min(...this.priceList)
+        },
+        maxOriginalPrice () {
+            return Math.max(...this.originalPriceList)
+        },
+        rebateList () {
+            return this.skuList.filter(item => Number(item.realRebate) !== 0).map(item => item.realRebate) || []
+        },
+        maxRebate () {
+            return this.rebateList.length ? Math.max(...this.rebateList) : 0
+        },
+        minRebate () {
+            return this.rebateList.length ? Math.min(...this.rebateList) : 0
+        },
+        productStatus () {
+            return this.detail.productStatus
+        },
+        salesVolume () {
+            return this.detail.salesVolume
+        },
+        pageviews () {
+            return this.detail.pageviews
+        }
     }
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    ...mapGetters(['agentUser']),
-    skuList () {
-      return this.detail.productSkuModels || []
-    },
-    priceList () {
-      return this.skuList.map(item => item.price) || []
-    },
-    originalPriceList () {
-      return this.skuList.map(item => item.originalPrice) || []
-    },
-    maxPrice () {
-      return Math.max(...this.priceList)
-    },
-    minPrice () {
-      return Math.min(...this.priceList)
-    },
-    maxOriginalPrice () {
-      return Math.max(...this.originalPriceList)
-    },
-    rebateList () {
-      return this.skuList.filter(item => Number(item.realRebate) !== 0).map(item => item.realRebate) || []
-    },
-    maxRebate () {
-      return this.rebateList.length ? Math.max(...this.rebateList) : 0
-    },
-    minRebate () {
-      return this.rebateList.length ? Math.min(...this.rebateList) : 0
-    },
-    productStatus () {
-      return this.detail.productStatus
-    },
-    salesVolume () {
-      return this.detail.salesVolume
-    },
-    pageviews () {
-      return this.detail.pageviews
-    }
-  }
 }
 </script>
 

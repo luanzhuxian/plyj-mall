@@ -1,156 +1,157 @@
 <template>
-  <div :class="$style.invoiceDetail">
-    <div style="position: relative;">
-      <top-text
-        title="已完成"
-        tip="2019年02月11日"
-      />
-      <a :href="`tel:${$store.getters.supportPhone}`">
-        <pl-svg
-          :class="$style.callMe"
-          name="icon-phone2"
-        />
-      </a>
-    </div>
-
-    <div :class="$style.addressInfo + ' mt-28 radius-20 bg-white'">
-      <pl-svg name="icon-address3" />
-      <div :class="$style.right + ' fz-24 gray-2'">
-        <div :class="$style.name">
-          收货人：<i v-text="InvoiceDetail.recvName" />&nbsp;<i
-            class="bold"
-            v-text="InvoiceDetail.recvMobile"
-          />
+    <div :class="$style.invoiceDetail">
+        <div style="position: relative;">
+            <top-text
+                title="已完成"
+                tip="2019年02月11日"
+            />
+            <a :href="`tel:${$store.getters.supportPhone}`">
+                <pl-svg
+                    :class="$style.callMe"
+                    name="icon-phone2"
+                />
+            </a>
         </div>
-        <div
-          :class="$style.address"
-          v-text="InvoiceDetail.recvAddr"
-        />
-      </div>
-    </div>
 
-    <div :class="$style.invoices + ' radius-20'">
-      <div :class="$style.title">
-        增值税普通发票
-      </div>
-      <div :class="$style.invoicesContent">
-        <ul class="invoice-list">
-          <li :class="$style.invoiceItem">
-            <span>发票形式</span>
-            <span v-text="InvoiceDetail.invoiceFormText" />
-          </li>
-          <li :class="$style.invoiceItem">
-            <span>发票类型</span>
-            <span v-text="InvoiceDetail.invoiceTypeText" />
-          </li>
-          <li :class="$style.invoiceItem">
-            <span>发票抬头</span>
-            <span v-text="InvoiceDetail.invoiceTitle" />
-          </li>
-          <li
-            :class="$style.invoiceItem"
-            v-if="InvoiceDetail.idNo"
-          >
-            <span>纳税人识别号</span>
-            <span v-text="InvoiceDetail.idNo" />
-          </li>
-          <li
-            :class="$style.invoiceItem"
-            v-if="InvoiceDetail.bankName"
-          >
-            <span>开户银行</span>
-            <span v-text="InvoiceDetail.bankName" />
-          </li>
-          <li
-            :class="$style.invoiceItem"
-            v-if="InvoiceDetail.bankAccount"
-          >
-            <span>银行账户</span>
-            <span v-text="InvoiceDetail.bankAccount" />
-          </li>
-          <li
-            :class="$style.invoiceItem"
-            v-if="InvoiceDetail.companyName"
-          >
-            <span>企业名称</span>
-            <span v-text="InvoiceDetail.companyName" />
-          </li>
-          <li
-            :class="$style.invoiceItem"
-            v-if="InvoiceDetail.companyAddr"
-          >
-            <span>企业地址</span>
-            <span v-text="InvoiceDetail.companyAddr" />
-          </li>
-          <li
-            :class="$style.invoiceItem"
-            v-if="InvoiceDetail.companyPhone"
-          >
-            <span>企业电话</span>
-            <span v-text="InvoiceDetail.companyPhone" />
-          </li>
-          <li
-            :class="$style.invoiceItem"
-            v-if="InvoiceDetail.detail"
-          >
-            <span>发票内容</span>
-            <span v-text="InvoiceDetail.detail" />
-          </li>
-        </ul>
-      </div>
+        <div :class="$style.addressInfo + ' mt-28 radius-20 bg-white'">
+            <pl-svg name="icon-address3" />
+            <div :class="$style.right + ' fz-24 gray-2'">
+                <div :class="$style.name">
+                    收货人：<i v-text="InvoiceDetail.recvName" />&nbsp;<i
+                        class="bold"
+                        v-text="InvoiceDetail.recvMobile"
+                    />
+                </div>
+                <div
+                    :class="$style.address"
+                    v-text="InvoiceDetail.recvAddr"
+                />
+            </div>
+        </div>
+
+        <div :class="$style.invoices + ' radius-20'">
+            <div :class="$style.title">
+                增值税普通发票
+            </div>
+            <div :class="$style.invoicesContent">
+                <ul class="invoice-list">
+                    <li :class="$style.invoiceItem">
+                        <span>发票形式</span>
+                        <span v-text="InvoiceDetail.invoiceFormText" />
+                    </li>
+                    <li :class="$style.invoiceItem">
+                        <span>发票类型</span>
+                        <span v-text="InvoiceDetail.invoiceTypeText" />
+                    </li>
+                    <li :class="$style.invoiceItem">
+                        <span>发票抬头</span>
+                        <span v-text="InvoiceDetail.invoiceTitle" />
+                    </li>
+                    <li
+                        :class="$style.invoiceItem"
+                        v-if="InvoiceDetail.idNo"
+                    >
+                        <span>纳税人识别号</span>
+                        <span v-text="InvoiceDetail.idNo" />
+                    </li>
+                    <li
+                        :class="$style.invoiceItem"
+                        v-if="InvoiceDetail.bankName"
+                    >
+                        <span>开户银行</span>
+                        <span v-text="InvoiceDetail.bankName" />
+                    </li>
+                    <li
+                        :class="$style.invoiceItem"
+                        v-if="InvoiceDetail.bankAccount"
+                    >
+                        <span>银行账户</span>
+                        <span v-text="InvoiceDetail.bankAccount" />
+                    </li>
+                    <li
+                        :class="$style.invoiceItem"
+                        v-if="InvoiceDetail.companyName"
+                    >
+                        <span>企业名称</span>
+                        <span v-text="InvoiceDetail.companyName" />
+                    </li>
+                    <li
+                        :class="$style.invoiceItem"
+                        v-if="InvoiceDetail.companyAddr"
+                    >
+                        <span>企业地址</span>
+                        <span v-text="InvoiceDetail.companyAddr" />
+                    </li>
+                    <li
+                        :class="$style.invoiceItem"
+                        v-if="InvoiceDetail.companyPhone"
+                    >
+                        <span>企业电话</span>
+                        <span v-text="InvoiceDetail.companyPhone" />
+                    </li>
+                    <li
+                        :class="$style.invoiceItem"
+                        v-if="InvoiceDetail.detail"
+                    >
+                        <span>发票内容</span>
+                        <span v-text="InvoiceDetail.detail" />
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 import TopText from '../../../components/common/Top-Text.vue'
 import { getOrderDetail, invoiceDetail } from '../../../apis/order-manager'
 export default {
-  name: 'InvoiceDetail',
-  components: {
-    TopText
-  },
-  data () {
-    return {
-      InvoiceDetail: {
-        invoiceFormText: '123'
-      }
-    }
-  },
-  props: {
-    orderId: {
-      type: String,
-      default: null
-    }
-  },
-  activated () {
-    this.getInvoice(this.orderId)
-    this.getOrderDetail(this.orderId)
-  },
-  methods: {
-    async getInvoice (id) {
-      try {
-        const { result } = await invoiceDetail(id)
-        this.InvoiceDetail = result
-        // this.InvoiceDetail.amountDx = DX(this.InvoiceDetail.amount)
-        this.InvoiceDetail.invoiceType === 0 ? this.InvoiceDetail.invoiceTypeText = '个人' : this.InvoiceDetail.invoiceTypeText = '企业'
-        this.InvoiceDetail.invoiceForm === 0 ? this.InvoiceDetail.invoiceFormText = '纸质发票' : this.InvoiceDetail.invoiceFormText = '电子发票'
-      } catch (e) {
-        throw e
-      }
+    name: 'InvoiceDetail',
+    components: {
+        TopText
     },
-    async getOrderDetail (id) {
-      try {
-        const { result } = await getOrderDetail(id)
-        const { orderDetailModel, orderInfoModel, relationModel } = result
-        this.orderDetailModel = orderDetailModel
-        this.orderInfoModel = orderInfoModel
-        this.relationModel = relationModel
-      } catch (e) {
-        throw e
-      }
+    data () {
+        return {
+            InvoiceDetail: {
+                invoiceFormText: '123'
+            }
+        }
+    },
+    props: {
+        orderId: {
+            type: String,
+            default: null
+        }
+    },
+    activated () {
+        this.getInvoice(this.orderId)
+        this.getOrderDetail(this.orderId)
+    },
+    methods: {
+        async getInvoice (id) {
+            try {
+                const { result } = await invoiceDetail(id)
+                this.InvoiceDetail = result
+
+                // this.InvoiceDetail.amountDx = DX(this.InvoiceDetail.amount)
+                this.InvoiceDetail.invoiceType === 0 ? this.InvoiceDetail.invoiceTypeText = '个人' : this.InvoiceDetail.invoiceTypeText = '企业'
+                this.InvoiceDetail.invoiceForm === 0 ? this.InvoiceDetail.invoiceFormText = '纸质发票' : this.InvoiceDetail.invoiceFormText = '电子发票'
+            } catch (e) {
+                throw e
+            }
+        },
+        async getOrderDetail (id) {
+            try {
+                const { result } = await getOrderDetail(id)
+                const { orderDetailModel, orderInfoModel, relationModel } = result
+                this.orderDetailModel = orderDetailModel
+                this.orderInfoModel = orderInfoModel
+                this.relationModel = relationModel
+            } catch (e) {
+                throw e
+            }
+        }
     }
-  }
 }
 </script>
 

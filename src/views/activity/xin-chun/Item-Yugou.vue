@@ -1,39 +1,39 @@
 <template>
-  <div
-    class="item"
-    :class="$style.item"
-    @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id } , query: { currentProductStatus: 4 }})"
-  >
-    <div :class="$style.time">
-      <div :class="$style.timeLeft">
-        <span v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>
-        <span v-if="data.goodsInfo.activityInfo.status === 1">距结束：</span>
-        <span v-if="data.goodsInfo.activityInfo.status === 2">已结束</span>
-      </div>
-      <div :class="$style.timeRight" v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)">
-        <count-down
-          :timestamp="getTime(data.goodsInfo.activityInfo)"
-          size="mini"
-          @done="() => data.goodsInfo.activityInfo.status += 1"
-        />
-      </div>
+    <div
+        class="item"
+        :class="$style.item"
+        @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id } , query: { currentProductStatus: 4 }})"
+    >
+        <div :class="$style.time">
+            <div :class="$style.timeLeft">
+                <span v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>
+                <span v-if="data.goodsInfo.activityInfo.status === 1">距结束：</span>
+                <span v-if="data.goodsInfo.activityInfo.status === 2">已结束</span>
+            </div>
+            <div :class="$style.timeRight" v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)">
+                <count-down
+                    :timestamp="getTime(data.goodsInfo.activityInfo)"
+                    size="mini"
+                    @done="() => data.goodsInfo.activityInfo.status += 1"
+                />
+            </div>
+        </div>
+        <div :class="$style.info">
+            <div :class="$style.main">
+                {{ data.goodsInfo.productName }}
+            </div>
+            <div :class="$style.sub1">
+                <span>{{ `预交定金￥${data.goodsInfo.activityInfo.price}` }}</span>
+                <span v-if="data.goodsInfo.activityInfo.multiple && data.goodsInfo.activityInfo.multipleNumber > 1 && data.goodsInfo.activityInfo.activityPrice">{{ `抵￥${data.goodsInfo.activityInfo.activityPrice}` }}</span>
+            </div>
+            <div :class="$style.sub2">
+                {{ `预售到手价：${getTotalPrice(data)}元` }}
+            </div>
+        </div>
+        <div :class="$style.imgWrapper">
+            <img :src="data.goodsInfo.productMainImage">
+        </div>
     </div>
-    <div :class="$style.info">
-      <div :class="$style.main">
-        {{ data.goodsInfo.productName }}
-      </div>
-      <div :class="$style.sub1">
-        <span>{{ `预交定金￥${data.goodsInfo.activityInfo.price}` }}</span>
-        <span v-if="data.goodsInfo.activityInfo.multiple && data.goodsInfo.activityInfo.multipleNumber > 1 && data.goodsInfo.activityInfo.activityPrice">{{ `抵￥${data.goodsInfo.activityInfo.activityPrice}` }}</span>
-      </div>
-      <div :class="$style.sub2">
-        {{ `预售到手价：${getTotalPrice(data)}元` }}
-      </div>
-    </div>
-    <div :class="$style.imgWrapper">
-      <img :src="data.goodsInfo.productMainImage">
-    </div>
-  </div>
 </template>
 
 <script>
@@ -41,34 +41,33 @@ import mixin from '../mixin.js'
 import CountDown from '../components/Count-Down.vue'
 
 export default {
-  name: 'ItemYugou',
-  mixins: [mixin],
-  components: {
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { }
-      }
+    name: 'ItemYugou',
+    mixins: [mixin],
+    components: {
+        CountDown
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { }
+            }
+        }
+    },
+    data () {
+        return {}
+    },
+    methods: {
+        getTotalPrice (data) {
+            if (!data.goodsInfo) return false
+            if (data.goodsInfo.productSkuModels && !data.goodsInfo.productSkuModels.length) return false
+            const prodPrice = data.goodsInfo.productSkuModels ? this.getPrice(data.goodsInfo.productSkuModels)('price') : data.productPrice
+            if (data.goodsInfo.activityInfo.activityPrice >= prodPrice) {
+                return data.goodsInfo.activityInfo.price
+            }
+            return this.sub(prodPrice, this.sub(data.goodsInfo.activityInfo.activityPrice, data.goodsInfo.activityInfo.price))
+        }
     }
-  },
-  data () {
-    return {}
-  },
-  methods: {
-    getTotalPrice (data) {
-      if (!data.goodsInfo) return false
-      if (data.goodsInfo.productSkuModels && !data.goodsInfo.productSkuModels.length) return false
-      const prodPrice = data.goodsInfo.productSkuModels ? this.getPrice(data.goodsInfo.productSkuModels)('price') : data.productPrice
-      if (data.goodsInfo.activityInfo.activityPrice >= prodPrice) {
-        return data.goodsInfo.activityInfo.price
-      } else {
-        return this.sub(prodPrice, this.sub(data.goodsInfo.activityInfo.activityPrice, data.goodsInfo.activityInfo.price))
-      }
-    }
-  }
 }
 </script>
 <style lang="scss" module>

@@ -1,303 +1,304 @@
 
 <template>
-  <div>
-    <div class="tab-box">
-      <div class="pl-tab pl-tab__small">
-        <div
-          v-for="(item, i) of tabs"
-          :key="i"
-          class="pl-tab__pane color9"
-          :class="{ active: item.id === activeId }"
-          @click="handleClick(item)"
-        >
-          {{ item.name }}
-        </div>
-      </div>
-      <div @click="edit" class="management">管理</div>
-    </div>
-    <div class="code-mongolian" v-if="isCodeShow">
-      <div class="code-box">
-        <div class="code-box-title">
-          <p class="code-title">
-            礼品核销
-          </p>
-          <p class="code-date">
-            使用有效期至 {{ activeItem.useEndTime }}
-          </p>
-        </div>
-        <div class="code-box-content">
-          <div class="code-img">
-            <img :src="qrcode" alt="">
-          </div>
-          <p class="code-num">{{ activeItem.redeemCode.slice(0 ,2) }} {{ activeItem.redeemCode.slice(2) | separator(' ', 4) }}</p>
-          <p class="code-description">请出示核销码给机构人员</p>
-        </div>
-        <div class="code-save">长按图片保存分享给好友</div>
-        <div class="code-close">
-          <pl-svg @click="codeShow" name="icon-close3" width="50" fill="ffffff" />
-        </div>
-      </div>
-    </div>
-    <div class="delete-button" v-if="isEdit">
-      <pl-button @click="deleteCode" size="squarelarge" background-color="#FE7700">删除</pl-button>
-    </div>
-    <div class="item-box" v-show="activeId === 0">
-      <div class="empty" v-if="!data0.length">
-        <pl-svg name="icon-newCouponIcon" width="400" />
-        <span>暂无礼品券</span>
-      </div>
-      <div class="items" v-else v-for="(item,index) of data0" :key="index">
-        <div class="delete-box" v-if="isEdit">
-          <pl-svg @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" fill="#FE7700" width="28" />
-          <pl-svg @click="choose(item)" v-else name="icon-chenggong" fill="#ccc" width="28" />
-        </div>
-        <div class="item">
-          <div class="item-content">
-            <div class="content-img-box">
-              <img :src="item.giftImage" alt="">
-            </div>
-            <div class="content-detail-box">
-              <div class="content-box">
-                <div content="content-detail">
-                  <p class="detail-name color3">{{ item.giftName }}</p>
-                  <p class="detail-coupon color-E16">{{ item.giftBrief }}</p>
+    <div>
+        <div class="tab-box">
+            <div class="pl-tab pl-tab__small">
+                <div
+                    v-for="(item, i) of tabs"
+                    :key="i"
+                    class="pl-tab__pane color9"
+                    :class="{ active: item.id === activeId }"
+                    @click="handleClick(item)"
+                >
+                    {{ item.name }}
                 </div>
-                <div class="content-button">
-                  <pl-button round="round" background-color="#EB5C20" @click="checkCode(item)">立即兑换</pl-button>
-                </div>
-              </div>
-              <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
             </div>
-          </div>
-          <div class="item-description">
-            <p class="color6" v-for="desc in instructions" :key="desc" v-text="desc" />
-          </div>
+            <div @click="edit" class="management">管理</div>
         </div>
-      </div>
+        <div class="code-mongolian" v-if="isCodeShow">
+            <div class="code-box">
+                <div class="code-box-title">
+                    <p class="code-title">
+                        礼品核销
+                    </p>
+                    <p class="code-date">
+                        使用有效期至 {{ activeItem.useEndTime }}
+                    </p>
+                </div>
+                <div class="code-box-content">
+                    <div class="code-img">
+                        <img :src="qrcode" alt="">
+                    </div>
+                    <p class="code-num">{{ activeItem.redeemCode.slice(0 ,2) }} {{ activeItem.redeemCode.slice(2) | separator(' ', 4) }}</p>
+                    <p class="code-description">请出示核销码给机构人员</p>
+                </div>
+                <div class="code-save">长按图片保存分享给好友</div>
+                <div class="code-close">
+                    <pl-svg @click="codeShow" name="icon-close3" width="50" fill="ffffff" />
+                </div>
+            </div>
+        </div>
+        <div class="delete-button" v-if="isEdit">
+            <pl-button @click="deleteCode" size="squarelarge" background-color="#FE7700">删除</pl-button>
+        </div>
+        <div class="item-box" v-show="activeId === 0">
+            <div class="empty" v-if="!data0.length">
+                <pl-svg name="icon-newCouponIcon" width="400" />
+                <span>暂无礼品券</span>
+            </div>
+            <div class="items" v-else v-for="(item,index) of data0" :key="index">
+                <div class="delete-box" v-if="isEdit">
+                    <pl-svg @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" fill="#FE7700" width="28" />
+                    <pl-svg @click="choose(item)" v-else name="icon-chenggong" fill="#ccc" width="28" />
+                </div>
+                <div class="item">
+                    <div class="item-content">
+                        <div class="content-img-box">
+                            <img :src="item.giftImage" alt="">
+                        </div>
+                        <div class="content-detail-box">
+                            <div class="content-box">
+                                <div content="content-detail">
+                                    <p class="detail-name color3">{{ item.giftName }}</p>
+                                    <p class="detail-coupon color-E16">{{ item.giftBrief }}</p>
+                                </div>
+                                <div class="content-button">
+                                    <pl-button round="round" background-color="#EB5C20" @click="checkCode(item)">立即兑换</pl-button>
+                                </div>
+                            </div>
+                            <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
+                        </div>
+                    </div>
+                    <div class="item-description">
+                        <p class="color6" v-for="desc in instructions" :key="desc" v-text="desc" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="item-box" v-show="activeId === 1">
+            <div class="empty" v-if="!data1.length">
+                <pl-svg name="icon-newCouponIcon" width="400" />
+                <span>暂无礼品券</span>
+            </div>
+            <div class="items" v-else v-for="(item,index) of data1" :key="index">
+                <div class="delete-box" v-if="isEdit">
+                    <pl-svg @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" fill="#FE7700" width="28" />
+                    <pl-svg @click="choose(item)" v-else name="icon-chenggong" fill="#ccc" width="28" />
+                </div>
+                <div class="item">
+                    <div class="item-content">
+                        <pl-svg class="stamp" name="icon-yiduihuan" width="200" height="200" />
+                        <div class="content-img-box">
+                            <img :src="item.giftImage" alt="">
+                        </div>
+                        <div class="content-detail-box">
+                            <div class="content-box">
+                                <div content="content-detail">
+                                    <p class="detail-name color-c">{{ item.giftName }}</p>
+                                    <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
+                                </div>
+                                <div class="content-button">
+                                    <pl-button :disabled="true" round="round" background-color="#EEEEEE">已兑换</pl-button>
+                                </div>
+                            </div>
+                            <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
+                        </div>
+                    </div>
+                    <div class="item-description">
+                        <p class="color6" v-for="desc in instructions" :key="desc" v-text="desc" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="item-box" v-show="activeId === 99">
+            <div class="empty" v-if="!data99.length">
+                <pl-svg name="icon-newCouponIcon" width="400" />
+                <span>暂无礼品券</span>
+            </div>
+            <div class="items" v-else v-for="(item,index) of data99" :key="index">
+                <div class="delete-box" v-if="isEdit">
+                    <pl-svg @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" fill="#FE7700" width="28" />
+                    <pl-svg @click="choose(item)" v-else name="icon-chenggong" fill="#ccc" width="28" />
+                </div>
+                <div class="item">
+                    <div class="item-content">
+                        <pl-svg class="stamp" name="icon-yiguoqi" width="200" height="200" />
+                        <div class="content-img-box">
+                            <img :src="item.giftImage" alt="">
+                        </div>
+                        <div class="content-detail-box">
+                            <div class="content-box">
+                                <div content="content-detail">
+                                    <p class="detail-name color-c">{{ item.giftName }}</p>
+                                    <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
+                                </div>
+                                <div class="content-button">
+                                    <pl-button :disabled="true" round="round" background-color="#EEEEEE">立即兑换</pl-button>
+                                </div>
+                            </div>
+                            <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
+                        </div>
+                    </div>
+                    <div class="item-description">
+                        <p class="color6" v-for="desc in instructions" :key="desc" v-text="desc" />
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="item-box" v-show="activeId === 1">
-      <div class="empty" v-if="!data1.length">
-        <pl-svg name="icon-newCouponIcon" width="400" />
-        <span>暂无礼品券</span>
-      </div>
-      <div class="items" v-else v-for="(item,index) of data1" :key="index">
-        <div class="delete-box" v-if="isEdit">
-          <pl-svg @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" fill="#FE7700" width="28" />
-          <pl-svg @click="choose(item)" v-else name="icon-chenggong" fill="#ccc" width="28" />
-        </div>
-        <div class="item">
-          <div class="item-content">
-            <pl-svg class="stamp" name="icon-yiduihuan" width="200" height="200" />
-            <div class="content-img-box">
-              <img :src="item.giftImage" alt="">
-            </div>
-            <div class="content-detail-box">
-              <div class="content-box">
-                <div content="content-detail">
-                  <p class="detail-name color-c">{{ item.giftName }}</p>
-                  <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
-                </div>
-                <div class="content-button">
-                  <pl-button :disabled="true" round="round" background-color="#EEEEEE">已兑换</pl-button>
-                </div>
-              </div>
-              <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
-            </div>
-          </div>
-          <div class="item-description">
-            <p class="color6" v-for="desc in instructions" :key="desc" v-text="desc" />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="item-box" v-show="activeId === 99">
-      <div class="empty" v-if="!data99.length">
-        <pl-svg name="icon-newCouponIcon" width="400" />
-        <span>暂无礼品券</span>
-      </div>
-      <div class="items" v-else v-for="(item,index) of data99" :key="index">
-        <div class="delete-box" v-if="isEdit">
-          <pl-svg @click="choose(item)" v-if="item.isSelect" name="icon-xuanzhong" fill="#FE7700" width="28" />
-          <pl-svg @click="choose(item)" v-else name="icon-chenggong" fill="#ccc" width="28" />
-        </div>
-        <div class="item">
-          <div class="item-content">
-            <pl-svg class="stamp" name="icon-yiguoqi" width="200" height="200" />
-            <div class="content-img-box">
-              <img :src="item.giftImage" alt="">
-            </div>
-            <div class="content-detail-box">
-              <div class="content-box">
-                <div content="content-detail">
-                  <p class="detail-name color-c">{{ item.giftName }}</p>
-                  <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
-                </div>
-                <div class="content-button">
-                  <pl-button :disabled="true" round="round" background-color="#EEEEEE">立即兑换</pl-button>
-                </div>
-              </div>
-              <p class="detail-date color-c">有效期:{{ item.useStartTime.replace(/-/g,'.').split(' ')[0] }}-{{ item.useEndTime.replace(/-/g,'.').split(' ')[0] }}</p>
-            </div>
-          </div>
-          <div class="item-description">
-            <p class="color6" v-for="desc in instructions" :key="desc" v-text="desc" />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
 import { generateQrcode } from '../../../assets/js/util'
 import { getCityListByParentId, deleteGift, getGiftDetailById } from '../../../apis/my-coupon'
 export default {
-  name: 'HelperPoster',
-  data () {
-    return {
-      activeItem: {},
-      qrcode: '',
-      tabs: [{ name: '未兑换', id: 0 }, { name: '已兑换', id: 1 }, { name: '已过期', id: 99 }],
-      activeId: 0,
-      isEdit: false,
-      isCodeShow: false,
-      data0: [],
-      data1: [],
-      data99: [],
-      timer: '',
-      instructions: [
-        '1.仅支持线下到店进行礼品兑换，兑换时请出示二维码;',
-        '2.仅支持兑换有效期内进行礼品兑换，逾期未兑换，请与客服联系；',
-        '3.我的礼品仅支持兑换礼品，不支持折算现金；',
-        '4.请联系客服，到指定门店领取礼品；'
-      ]
+    name: 'HelperPoster',
+    data () {
+        return {
+            activeItem: {},
+            qrcode: '',
+            tabs: [{ name: '未兑换', id: 0 }, { name: '已兑换', id: 1 }, { name: '已过期', id: 99 }],
+            activeId: 0,
+            isEdit: false,
+            isCodeShow: false,
+            data0: [],
+            data1: [],
+            data99: [],
+            timer: '',
+            instructions: [
+                '1.仅支持线下到店进行礼品兑换，兑换时请出示二维码;',
+                '2.仅支持兑换有效期内进行礼品兑换，逾期未兑换，请与客服联系；',
+                '3.我的礼品仅支持兑换礼品，不支持折算现金；',
+                '4.请联系客服，到指定门店领取礼品；'
+            ]
+        }
+    },
+    async activated () {
+        try {
+            // 打开'我的礼品'页面后，默认进入第一个Tab
+            this.activeId = 0
+            this.getList()
+        } catch (e) {
+            throw e
+        }
+    },
+    deactivated () {
+        clearInterval(this.timer)
+    },
+    methods: {
+        async deleteCode () {
+            const array = []
+            let data = []
+            if (this.activeId === 0) {
+                data = this.data0
+            }
+            if (this.activeId === 1) {
+                data = this.data1
+            }
+            if (this.activeId === 99) {
+                data = this.data99
+            }
+            for (const item of data) {
+                if (item.isSelect) {
+                    array.push(item.id)
+                }
+            }
+            if (!array.length) {
+                this.$warning('请选择删除的礼品')
+            }
+            try {
+                await deleteGift(array)
+                this.$success('删除成功')
+                this.getList()
+                this.isEdit = false
+            } catch (e) {
+                throw e
+            }
+        },
+        choose (item) {
+            item.isSelect = !item.isSelect
+        },
+        async checkCode (item) {
+            this.isCodeShow = true
+            this.activeItem = item
+            this.qrcode = await generateQrcode(500, `${ item.redeemCode }`, 0, null, null, 'url')
+            this.checkCodeComplete(item.id)
+        },
+        async checkCodeComplete (id) {
+            clearInterval(this.timer)
+            this.timer = setInterval(async () => {
+                const { result: res } = await getGiftDetailById({ id })
+                if (res.status) {
+                    clearInterval(this.timer)
+                    await this.getList()
+                    await this.$confirm({
+                        message: '核销成功',
+                        viceMessage: '感谢您参与活动',
+                        confirmText: '去逛逛'
+                    })
+                    this.$router.push({ name: 'Classify' })
+                }
+            }, 3000)
+        },
+        async getList () {
+            try {
+                const { result: res } = await getCityListByParentId({
+                    current: 1,
+                    size: 100,
+                    status: this.activeId
+                })
+                const { records } = res
+                for (const item of records) {
+                    item.isSelect = false
+                }
+                if (this.activeId === 0) {
+                    this.data0 = records
+                }
+                if (this.activeId === 1) {
+                    this.data1 = records
+                }
+                if (this.activeId === 99) {
+                    this.data99 = records
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+        async handleClick (item) {
+            try {
+                this.activeId = item.id
+                await this.getList()
+            } catch (e) {
+                throw e
+            }
+        },
+        async edit () {
+            let data = []
+            if (this.activeId === 0) {
+                data = this.data0
+            }
+            if (this.activeId === 1) {
+                data = this.data1
+            }
+            if (this.activeId === 99) {
+                data = this.data99
+            }
+            if (!data.length) return
+            this.isEdit = !this.isEdit
+        },
+        codeShow () {
+            this.isCodeShow = false
+        }
+    },
+    watch: {
+        activeId (newVal, oldVal) {
+            /* 切换Tab时，1- 取消可编辑状态； 2- 取消所离开Tab优惠券的选中状态 */
+            this.isEdit = false
+            for (const item of this[`data${ oldVal }`]) {
+                item.isSelect = false
+            }
+        }
     }
-  },
-  async activated () {
-    try {
-      this.activeId = 0 // 打开'我的礼品'页面后，默认进入第一个Tab
-      this.getList()
-    } catch (e) {
-      throw e
-    }
-  },
-  deactivated () {
-    clearInterval(this.timer)
-  },
-  methods: {
-    async deleteCode () {
-      const array = []
-      let data = []
-      if (this.activeId === 0) {
-        data = this.data0
-      }
-      if (this.activeId === 1) {
-        data = this.data1
-      }
-      if (this.activeId === 99) {
-        data = this.data99
-      }
-      for (const item of data) {
-        if (item.isSelect) {
-          array.push(item.id)
-        }
-      }
-      if (!array.length) {
-        this.$warning('请选择删除的礼品')
-      }
-      try {
-        await deleteGift(array)
-        this.$success('删除成功')
-        this.getList()
-        this.isEdit = false
-      } catch (e) {
-        throw e
-      }
-    },
-    choose (item) {
-      item.isSelect = !item.isSelect
-    },
-    async checkCode (item) {
-      this.isCodeShow = true
-      this.activeItem = item
-      this.qrcode = await generateQrcode(500, `${item.redeemCode}`, 0, null, null, 'url')
-      this.checkCodeComplete(item.id)
-    },
-    async checkCodeComplete (id) {
-      clearInterval(this.timer)
-      this.timer = setInterval(async () => {
-        const { result: res } = await getGiftDetailById({ id: id })
-        if (res.status) {
-          clearInterval(this.timer)
-          await this.getList()
-          await this.$confirm({
-            message: '核销成功',
-            viceMessage: '感谢您参与活动',
-            confirmText: '去逛逛'
-          })
-          this.$router.push({ name: 'Classify' })
-        }
-      }, 3000)
-    },
-    async getList () {
-      try {
-        const { result: res } = await getCityListByParentId({
-          current: 1,
-          size: 100,
-          status: this.activeId
-        })
-        const records = res.records
-        for (const item of records) {
-          item.isSelect = false
-        }
-        if (this.activeId === 0) {
-          this.data0 = records
-        }
-        if (this.activeId === 1) {
-          this.data1 = records
-        }
-        if (this.activeId === 99) {
-          this.data99 = records
-        }
-      } catch (e) {
-        throw e
-      }
-    },
-    async handleClick (item) {
-      try {
-        this.activeId = item.id
-        await this.getList()
-      } catch (e) {
-        throw e
-      }
-    },
-    async edit () {
-      let data = []
-      if (this.activeId === 0) {
-        data = this.data0
-      }
-      if (this.activeId === 1) {
-        data = this.data1
-      }
-      if (this.activeId === 99) {
-        data = this.data99
-      }
-      if (!data.length) return
-      this.isEdit = !this.isEdit
-    },
-    codeShow () {
-      this.isCodeShow = false
-    }
-  },
-  watch: {
-    activeId (newVal, oldVal) {
-      /* 切换Tab时，1- 取消可编辑状态； 2- 取消所离开Tab优惠券的选中状态 */
-      this.isEdit = false
-      for (const item of this[`data${oldVal}`]) {
-        item.isSelect = false
-      }
-    }
-  }
 }
 </script>
 

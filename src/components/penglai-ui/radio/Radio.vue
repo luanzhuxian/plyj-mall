@@ -1,120 +1,122 @@
 <template>
-  <div
-    role="radio"
-    class="radio"
-    @click="onClick"
-  >
     <div
-      class="radio__icon"
-      :class="{ ['radio__icon--' + shape]: shape, 'radio__icon--disabled': isDisabled, 'radio__icon--checked': checked, 'radio__icon--border': border }"
-      :style="{ fontSize: iconSize / 7.5 + 'vw' }"
-      @click="onClickIcon"
+        role="radio"
+        class="radio"
+        @click="onClick"
     >
-      <pl-svg
-        v-if="icon && checked"
-        :name="icon"
-        fill="#FFF"
-      />
-      <slot
-        v-else
-        name="icon"
-      />
+        <div
+            class="radio__icon"
+            :class="{ ['radio__icon--' + shape]: shape, 'radio__icon--disabled': isDisabled, 'radio__icon--checked': checked, 'radio__icon--border': border }"
+            :style="{ fontSize: iconSize / 7.5 + 'vw' }"
+            @click="onClickIcon"
+        >
+            <pl-svg
+                v-if="icon && checked"
+                :name="icon"
+                fill="#FFF"
+            />
+            <slot
+                v-else
+                name="icon"
+            />
+        </div>
+        <div
+            v-if="$slots.default"
+            class="radio__label"
+            :class="{ ['radio__label--' + labelPosition]: labelPosition, 'radio__icon--disabled': isDisabled }"
+            @click="onClickLabel"
+        >
+            <slot />
+        </div>
     </div>
-    <div
-      v-if="$slots.default"
-      class="radio__label"
-      :class="{ ['radio__label--' + labelPosition]: labelPosition, 'radio__icon--disabled': isDisabled }"
-      @click="onClickLabel"
-    >
-      <slot />
-    </div>
-  </div>
 </template>
 
 <script>
 import { ChildrenMixin } from '../../../mixins/relation'
 
 export default {
-  name: 'RadioComponent',
-  mixins: [ChildrenMixin('RadioGroupComponent')],
-  props: {
-    name: {
-      type: [String, Number],
-      default () {
-        return null
-      }
+    name: 'RadioComponent',
+    mixins: [ChildrenMixin('RadioGroupComponent')],
+    props: {
+        name: {
+            type: [String, Number],
+            default () {
+                return null
+            }
+        },
+        value: {
+            type: [String, Number],
+            default () {
+                return null
+            }
+        },
+        icon: {
+            type: String,
+            default: 'icon-check'
+        },
+        iconSize: {
+            type: Number,
+            default: 40
+        },
+        checkedColor: {
+            type: String,
+            default: '#FE7700'
+        },
+        labelPosition: {
+            type: String,
+            default: ''
+        },
+        disabled: Boolean,
+        labelDisabled: Boolean,
+        border: Boolean,
+        shape: {
+            type: String,
+            default: 'round'
+        }
     },
-    value: {
-      type: [String, Number],
-      default () {
-        return null
-      }
+    data () {
+        return {
+        }
     },
-    icon: {
-      type: String,
-      default: 'icon-check'
+    computed: {
+        isDisabled () {
+            return (this.parent && this.parent.disabled) || this.disabled
+        },
+        tabindex () {
+            if (this.isDisabled || !this.checked) {
+                return -1
+            }
+            return 0
+        },
+        currentValue: {
+            get () {
+                return this.parent ? this.parent.value : this.value
+            },
+            set (val) {
+                (this.parent || this).$emit('input', val)
+            }
+        },
+        checked () {
+            return this.currentValue === this.name
+        }
     },
-    iconSize: {
-      type: Number,
-      default: 40
-    },
-    checkedColor: {
-      type: String,
-      default: '#FE7700'
-    },
-    labelPosition: {
-      type: String,
-      default: ''
-    },
-    disabled: Boolean,
-    labelDisabled: Boolean,
-    border: Boolean,
-    shape: {
-      type: String,
-      default: 'round'
+    methods: {
+        onClickIcon () {
+            if (!this.isDisabled) {
+                // 触发setter
+                this.currentValue = this.name
+            }
+        },
+        onClickLabel () {
+            if (!this.isDisabled && !this.labelDisabled) {
+                // 触发setter
+                this.currentValue = this.name
+            }
+        },
+        onClick (event) {
+            this.$emit('click', event)
+        }
     }
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    isDisabled () {
-      return (this.parent && this.parent.disabled) || this.disabled
-    },
-    tabindex () {
-      if (this.isDisabled || !this.checked) {
-        return -1
-      }
-      return 0
-    },
-    currentValue: {
-      get () {
-        return this.parent ? this.parent.value : this.value
-      },
-      set (val) {
-        (this.parent || this).$emit('input', val)
-      }
-    },
-    checked () {
-      return this.currentValue === this.name
-    }
-  },
-  methods: {
-    onClickIcon () {
-      if (!this.isDisabled) {
-        this.currentValue = this.name // 触发setter
-      }
-    },
-    onClickLabel () {
-      if (!this.isDisabled && !this.labelDisabled) {
-        this.currentValue = this.name // 触发setter
-      }
-    },
-    onClick (event) {
-      this.$emit('click', event)
-    }
-  }
 }
 </script>
 

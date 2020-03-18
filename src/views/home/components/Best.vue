@@ -1,88 +1,88 @@
 <template>
-  <div :class="$style.best">
-    <ul :class="$style.proList">
-      <template v-for="(item, i) of data.values">
-        <li
-          v-if="item.goodsInfo"
-          :class="$style.proItem"
-          :key="i"
-          @click="clickHandler(item)"
-        >
-          <div :class="$style.img">
-            <count-down :class="$style.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
-            <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
-          </div>
+    <div :class="$style.best">
+        <ul :class="$style.proList">
+            <template v-for="(item, i) of data.values">
+                <li
+                    v-if="item.goodsInfo"
+                    :class="$style.proItem"
+                    :key="i"
+                    @click="clickHandler(item)"
+                >
+                    <div :class="$style.img">
+                        <count-down :class="$style.countDown" size="small" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
+                        <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
+                    </div>
 
-          <span v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'" :class="$style.experience">体验课</span>
-          <div :class="$style.itemContent">
-            <p :class="$style.proName" v-text="item.goodsInfo.productName" />
-            <div :class="$style.bottom">
-              <div :class="$style.priceBox">
-                <div :class="$style.price">
-                  <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
-                </div>
-                <span :class="$style.howManyBuy" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
-                <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
-                  <span :class="$style.howManyBuy">
-                    {{ item.goodsInfo.pageviews }}人关注
-                  </span>
-                </template>
-                <template v-else-if="item.goodsInfo.salesVolume >= 10">
-                  <span :class="$style.howManyBuy">
-                    {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
-                  </span>
-                </template>
-              </div>
-              <button>{{ `立即${productTypeMap[item.goodsInfo.productType]}` }}</button>
-            </div>
-          </div>
-        </li>
-      </template>
+                    <span v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'" :class="$style.experience">体验课</span>
+                    <div :class="$style.itemContent">
+                        <p :class="$style.proName" v-text="item.goodsInfo.productName" />
+                        <div :class="$style.bottom">
+                            <div :class="$style.priceBox">
+                                <div :class="$style.price">
+                                    <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+                                </div>
+                                <span :class="$style.howManyBuy" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+                                <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                                    <span :class="$style.howManyBuy">
+                                        {{ item.goodsInfo.pageviews }}人关注
+                                    </span>
+                                </template>
+                                <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                                    <span :class="$style.howManyBuy">
+                                        {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
+                                    </span>
+                                </template>
+                            </div>
+                            <button>{{ `立即${productTypeMap[item.goodsInfo.productType]}` }}</button>
+                        </div>
+                    </div>
+                </li>
+            </template>
 
-      <li v-if="data.values.length % 2 === 1" :class="$style.pro + ' ' + $style.proItem" />
-    </ul>
-  </div>
+            <li v-if="data.values.length % 2 === 1" :class="$style.pro + ' ' + $style.proItem" />
+        </ul>
+    </div>
 </template>
 
 <script>
 import CountDown from '../../../components/product/Count-Down.vue'
 
 export default {
-  name: 'Best',
-  components: {
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
-  },
-  data () {
-    return {
-      productTypeMap: {
-        'PHYSICAL_GOODS': '购买',
-        'VIRTUAL_GOODS': '购买',
-        'FORMAL_CLASS': '学习',
-        'EXPERIENCE_CLASS': '报名'
-      }
-    }
-  },
-  methods: {
-    getMinPrice (skuList) {
-      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
-      return Math.min(...priceList)
+    name: 'Best',
+    components: {
+        CountDown
     },
-    getMaxPrice (skuList) {
-      let priceList = skuList.filter(item => item.status === 1).map(item => item.price)
-      return Math.max(...priceList)
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
     },
-    clickHandler (item) {
-      this.$router.push({ name: 'Product', params: { productId: item.value } })
+    data () {
+        return {
+            productTypeMap: {
+                PHYSICAL_GOODS: '购买',
+                VIRTUAL_GOODS: '购买',
+                FORMAL_CLASS: '学习',
+                EXPERIENCE_CLASS: '报名'
+            }
+        }
+    },
+    methods: {
+        getMinPrice (skuList) {
+            const priceList = skuList.filter(item => item.status === 1).map(item => item.price)
+            return Math.min(...priceList)
+        },
+        getMaxPrice (skuList) {
+            const priceList = skuList.filter(item => item.status === 1).map(item => item.price)
+            return Math.max(...priceList)
+        },
+        clickHandler (item) {
+            this.$router.push({ name: 'Product', params: { productId: item.value } })
+        }
     }
-  }
 }
 </script>
 

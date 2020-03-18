@@ -1,64 +1,71 @@
 <template>
-  <div :class="$style.studyItem" @click="target(item)">
-    <div :class="$style.img">
-      <div v-if="item.validityType === 1">{{ item.validity }}天内完成学习</div>
-      <img :src="item.courseImg" alt="">
-    </div>
-    <div :class="$style.content">
-      <div :class="$style.description">
-        <div>{{ item.courseName }}</div>
-        <div>{{ item.category2Name }}</div>
-      </div>
-      <div :class="$style.learn">
-        <div v-show="item.lecturer">主讲人：{{ item.lecturer }}</div>
-        <div>
-          <span>已学习</span><span>{{ item.learnProgress || 0 }}%</span>
+    <div :class="$style.studyItem" @click="target(item)">
+        <div :class="$style.img">
+            <div v-if="item.validityType === 1">{{ item.validity }}天内完成学习</div>
+            <img :src="item.courseImg" alt="">
         </div>
-        <div v-if="$route.params.learnStatus !== '3'">
-          学习课程
+        <div :class="$style.content">
+            <div :class="$style.description">
+                <div>{{ item.courseName }}</div>
+                <div>{{ item.category2Name }}</div>
+            </div>
+            <div :class="$style.learn">
+                <div v-show="item.lecturer">主讲人：{{ item.lecturer }}</div>
+                <div>
+                    <span>已学习</span><span>{{ item.learnProgress || 0 }}%</span>
+                </div>
+                <div v-if="$route.params.learnStatus !== '3'">
+                    学习课程
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'StudyItem',
-  props: {
-    item: {
-      type: Object,
-      default () {
-        return {
-          validityType: '', // 0 不限制时间，1 限制
-          courseImg: '', // 图片地址
-          courseName: '', // 课程名字
-          category2Name: '', // 二级标签
-          lecturer: '', // 主讲人
-          learnStatus: '', // 1 未学习 2 学习中 3 学习完
-          learnProgress: 0// 进度
+    name: 'StudyItem',
+    props: {
+        item: {
+            type: Object,
+            default () {
+                return {
+                    // 0 不限制时间，1 限制
+                    validityType: '',
+                    // 图片地址
+                    courseImg: '',
+                    // 课程名字
+                    courseName: '',
+                    // 二级标签
+                    category2Name: '',
+                    // 主讲人
+                    lecturer: '',
+                    // 1 未学习 2 学习中 3 学习完
+                    learnStatus: '',
+                    // 进度
+                    learnProgress: 0
+                }
+            }
         }
-      }
+    },
+    methods: {
+        target (item) {
+            if (this.$route.params.learnStatus !== '3') {
+                this.$router.push({
+                    name: 'CourseWatch',
+                    params: {
+                        id: item.courseId
+                    },
+                    query: {
+                        liveId: item.liveId,
+                        orderId: item.orderId,
+                        progress: item.learnProgress,
+                        courseId: item.courseId
+                    }
+                })
+            }
+        }
     }
-  },
-  methods: {
-    target (item) {
-      if (this.$route.params.learnStatus !== '3') {
-        this.$router.push({
-          name: 'CourseWatch',
-          params: {
-            id: item.courseId
-          },
-          query: {
-            liveId: item.liveId,
-            orderId: item.orderId,
-            progress: item.learnProgress,
-            courseId: item.courseId
-          }
-        })
-      }
-    }
-  }
 }
 </script>
 

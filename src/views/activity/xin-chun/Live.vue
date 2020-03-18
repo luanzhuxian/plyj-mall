@@ -1,38 +1,38 @@
 <template>
-  <router-link
-    class="live"
-    :class="$style.live"
-    tag="div"
-    :to="{ name: 'LiveRoom' }"
-  >
-    <div :class="$style.cover">
-      <span :class="$style.status" v-if="isNoticeShow">距开始</span>
-      <span :class="$style.status" v-if="live.statue === 4">正在直播</span>
-      <span :class="$style.status" v-if="live.statue === 0">已结束</span>
-      <count-down
-        v-if="isNoticeShow"
-        :timestamp="ts"
-        size="medium"
-        color="#FF4B00"
-        background="#FFF"
-        @done="done"
-      />
-      <span v-if="live.statue === 4">
-        {{ `${live.visitTimes}人观看` }}
-      </span>
-    </div>
-    <div :class="$style.imgWrapper">
-      <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">
-      <pl-svg name="icon-play" width="100" />
-      <div :class="$style.info">
-        <div :class="$style.status">
-          <span v-if="isNoticeShow">预告</span>
-          <span v-if="live.statue === 4">直播中</span>
+    <router-link
+        class="live"
+        :class="$style.live"
+        tag="div"
+        :to="{ name: 'LiveRoom', params: { id: live.id } }"
+    >
+        <div :class="$style.cover">
+            <span :class="$style.status" v-if="isNoticeShow">距开始</span>
+            <span :class="$style.status" v-if="live.statue === 4">正在直播</span>
+            <span :class="$style.status" v-if="live.statue === 0">已结束</span>
+            <count-down
+                v-if="isNoticeShow"
+                :timestamp="ts"
+                size="medium"
+                color="#FF4B00"
+                background="#FFF"
+                @done="done"
+            />
+            <span v-if="live.statue === 4">
+                {{ `${live.visitTimes}人观看` }}
+            </span>
         </div>
-        <span :class="$style.name" v-text="live.name" />
-      </div>
-    </div>
-  </router-link>
+        <div :class="$style.imgWrapper">
+            <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">
+            <pl-svg name="icon-play" width="100" />
+            <div :class="$style.info">
+                <div :class="$style.status">
+                    <span v-if="isNoticeShow">预告</span>
+                    <span v-if="live.statue === 4">直播中</span>
+                </div>
+                <span :class="$style.name" v-text="live.name" />
+            </div>
+        </div>
+    </router-link>
 </template>
 
 <script>
@@ -40,46 +40,46 @@ import moment from 'moment'
 import CountDown from '../components/Count-Down.vue'
 
 export default {
-  name: 'Live',
-  components: {
-    CountDown
-  },
-  props: {
-    data: {
-      type: Object,
-      default () {
+    name: 'Live',
+    components: {
+        CountDown
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
+    },
+    data () {
         return {}
-      }
-    }
-  },
-  data () {
-    return {}
-  },
-  computed: {
-    live () {
-      return this.data.liveModel || {}
     },
-    isNoticeShow () {
-      return this.live.statue === 2 && this.live.hasNotice
+    computed: {
+        live () {
+            return this.data.liveModel || {}
+        },
+        isNoticeShow () {
+            return this.live.statue === 2 && this.live.hasNotice
+        },
+        ts () {
+            const { liveStartTime, hasNotice, statue } = this.live
+            let ts
+            if (statue === 2 && hasNotice && liveStartTime) {
+                ts = moment(liveStartTime).valueOf()
+            }
+            return ts
+        }
     },
-    ts () {
-      const { liveStartTime, hasNotice, statue } = this.live
-      let ts
-      if (statue === 2 && hasNotice && liveStartTime) {
-        ts = moment(liveStartTime).valueOf()
-      }
-      return ts
+    methods: {
+        done () {
+            if (this.live.statue === 2) {
+                this.live.statue = 4
+            } else if (this.live.statue === 4) {
+                this.live.statue = 0
+            }
+        }
     }
-  },
-  methods: {
-    done () {
-      if (this.live.statue === 2) {
-        this.live.statue = 4
-      } else if (this.live.statue === 4) {
-        this.live.statue = 0
-      }
-    }
-  }
 }
 </script>
 

@@ -1,62 +1,62 @@
 <template>
-  <div :class="$style.addStudent">
-    <TopText
-      :title="id ? '编辑学员信息' : '添加学员信息'"
-      tip="重要信息，请认真填写。"
-    />
-
-    <pl-form
-      ref="form"
-      :model="form"
-      :class="$style.form + ' radius-20'"
-      label-width="40"
-      :rules="rules"
-    >
-      <pl-form-item
-        border
-        prop="stuName"
-      >
-        <pl-input
-          placeholder="学员姓名"
-          v-model.trim="form.stuName"
-          size="middle"
+    <div :class="$style.addStudent">
+        <TopText
+            :title="id ? '编辑学员信息' : '添加学员信息'"
+            tip="重要信息，请认真填写。"
         />
-      </pl-form-item>
-      <pl-form-item
-        border
-        prop="stuMobile"
-      >
-        <pl-input
-          placeholder="手机号码"
-          v-model.trim="form.stuMobile"
-          size="middle"
-        />
-      </pl-form-item>
-    </pl-form>
 
-    <div :class="$style.setDefault + ' radius-20'">
-      <span class="fz-30">设为默认学员</span>
-      <pl-switch v-model="form.defaultStatus" :active-text="1" :inactive-text="0" />
+        <pl-form
+            ref="form"
+            :model="form"
+            :class="$style.form + ' radius-20'"
+            label-width="40"
+            :rules="rules"
+        >
+            <pl-form-item
+                border
+                prop="stuName"
+            >
+                <pl-input
+                    placeholder="学员姓名"
+                    v-model.trim="form.stuName"
+                    size="middle"
+                />
+            </pl-form-item>
+            <pl-form-item
+                border
+                prop="stuMobile"
+            >
+                <pl-input
+                    placeholder="手机号码"
+                    v-model.trim="form.stuMobile"
+                    size="middle"
+                />
+            </pl-form-item>
+        </pl-form>
+
+        <div :class="$style.setDefault + ' radius-20'">
+            <span class="fz-30">设为默认学员</span>
+            <pl-switch v-model="form.defaultStatus" :active-text="1" :inactive-text="0" />
+        </div>
+
+        <div
+            v-if="id"
+            :class="$style.remove"
+            @click="remove"
+        >
+            删除该学员
+        </div>
+
+        <pl-button
+            :class="$style.submit"
+            size="huge"
+            type="warning"
+            :loading="loading"
+            @click="confirm"
+        >
+            {{ canSelect ? '保存并使用' : '保存' }}
+        </pl-button>
     </div>
-
-    <div
-      v-if="id"
-      :class="$style.remove"
-      @click="remove"
-    >
-      删除该学员
-    </div>
-
-    <pl-button
-      :class="$style.submit"
-      size="huge"
-      type="warning"
-      :loading="loading"
-      @click="confirm"
-    >
-      {{ canSelect ? '保存并使用' : '保存' }}
-    </pl-button>
-  </div>
 </template>
 
 <script>
@@ -64,184 +64,187 @@ import TopText from '../../../components/common/Top-Text.vue'
 import { isPhone, isName } from '../../../assets/js/validate'
 import { resetForm } from '../../../assets/js/util'
 import {
-  add,
-  remove,
-  edit,
-  getDetail,
-  wouldINeedOpenDefault
+    add,
+    remove,
+    edit,
+    getDetail,
+    wouldINeedOpenDefault
 } from '../../../apis/student'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'AddStudent',
-  components: {
-    TopText
-  },
-  data () {
-    return {
-      defaultStatus: false,
-      form: {
-        defaultStatus: 0,
-        stuMobile: '',
-        stuName: ''
-      },
-      rules: {
-        stuName: [
-          { required: true, message: '请输入学员姓名', trigger: 'blur' },
-          { validator: isName, message: '姓名只支持中英文，且中文为2~10字，英文为2~20字', trigger: 'blur' }
-        ],
-        stuMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' },
-          { validator: isPhone, message: '手机号码格式错误', trigger: 'blur' }
-        ]
-      },
-      loading: false
-    }
-  },
-  props: {
-    id: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    ...mapGetters(['mobile']),
-    canSelect () {
-      return this.$route.query.select === 'YES'
+    name: 'AddStudent',
+    components: {
+        TopText
     },
-    proId () {
-      return this.$route.query.sku
+    data () {
+        return {
+            defaultStatus: false,
+            form: {
+                defaultStatus: 0,
+                stuMobile: '',
+                stuName: ''
+            },
+            rules: {
+                stuName: [
+                    { required: true, message: '请输入学员姓名', trigger: 'blur' },
+                    { validator: isName, message: '姓名只支持中英文，且中文为2~10字，英文为2~20字', trigger: 'blur' }
+                ],
+                stuMobile: [
+                    { required: true, message: '请输入手机号码', trigger: 'blur' },
+                    { validator: isPhone, message: '手机号码格式错误', trigger: 'blur' }
+                ]
+            },
+            loading: false
+        }
     },
-    count () {
-      return this.$route.query.count
-    }
-  },
-  async activated () {
-  },
-  deactivated () {
-    resetForm(this.form)
-    delete this.form.id
-  },
-  methods: {
-    async confirm () {
-      if (this.$refs.form.validate()) {
-        try {
-          this.loading = true
-          let result
-          if (this.id) {
-            let { result: res } = await edit([this.form])
-            if (res) {
-              result = res
+    props: {
+        id: {
+            type: String,
+            default: ''
+        }
+    },
+    computed: {
+        ...mapGetters(['mobile']),
+        canSelect () {
+            return this.$route.query.select === 'YES'
+        },
+        proId () {
+            return this.$route.query.sku
+        },
+        count () {
+            return this.$route.query.count
+        }
+    },
+    async activated () {
+    },
+    deactivated () {
+        resetForm(this.form)
+        delete this.form.id
+    },
+    methods: {
+        async confirm () {
+            if (this.$refs.form.validate()) {
+                try {
+                    this.loading = true
+                    let result
+                    if (this.id) {
+                        const { result: res } = await edit([this.form])
+                        if (res) {
+                            result = res
+                        }
+                    } else {
+                        const { result: res } = await add(this.form)
+                        result = res
+                    }
+                    if (this.canSelect) {
+                        const checkedData = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
+                        const checked = checkedData[this.proId] || []
+                        const finded = checked.find(item => item.id === result.id)
+                        // 编辑的是已选择的项
+                        if (finded) {
+                            Object.assign(finded, result)
+                            // 编辑的不是已选择的，但是是默认的
+                        } else if (result.defaultStatus === 1) {
+                            const def = checked.find(item => item.defaultStatus === 1)
+                            // 如果原来选中的里边有默认的，就替换这个默认的
+                            if (def) {
+                                Object.assign(def, result)
+                            } else if (checked.length < this.count) {
+                                checked.push(result)
+                            } else {
+                                checked.splice(-1, 1, result)
+                            }
+                        } else if (checked.length < this.count) {
+                            // 编辑的不是选中的，且选中的数量不超过最大选中数量
+                            checked.push(result)
+                        } else {
+                            // 编辑的不是选中的，且选中的数量等于最大选中数量，则替换最后一个
+                            checked.splice(-1, 1, result)
+                        }
+                        sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
+                    }
+                    this.$router.replace({
+                        name: 'StudentList',
+                        query: this.$route.query
+                    })
+                } catch (e) {
+                    throw e
+                } finally {
+                    this.loading = false
+                }
             }
-          } else {
-            let { result: res } = await add(this.form)
-            result = res
-          }
-          if (this.canSelect) {
-            let checkedData = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-            let checked = checkedData[this.proId] || []
-            let finded = checked.find(item => item.id === result.id)
-            if (finded) { // 编辑的是已选择的项
-              Object.assign(finded, result)
-            } else if (result.defaultStatus === 1) { // 编辑的不是已选择的，但是是默认的
-              let def = checked.find(item => item.defaultStatus === 1)
-              if (def) { // 如果原来选中的里边有默认的，就替换这个默认的
-                Object.assign(def, result)
-              } else if (checked.length < this.count) {
-                checked.push(result)
-              } else {
-                checked.splice(-1, 1, result)
-              }
-            } else if (checked.length < this.count) {
-              // 编辑的不是选中的，且选中的数量不超过最大选中数量
-              checked.push(result)
+        },
+        async remove () {
+            await this.$confirm({
+                message: '是否删除该学员？',
+                confirmText: '删除'
+            })
+            try {
+                const { result } = await remove([this.id])
+                if (result) {
+                    this.$success('删除成功')
+                    this.$router.replace({
+                        name: 'StudentList',
+                        query: this.$route.query
+                    })
+                    const checkedData = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
+                    if (checkedData[this.proId]) {
+                        const find = checkedData[this.proId].find(item => item.id === this.id)
+                        if (find) {
+                            const index = checkedData[this.proId].indexOf(find)
+                            checkedData[this.proId].splice(index, 1)
+                            sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
+                        }
+                    }
+                }
+            } catch (e) {
+                throw e
+            }
+        }
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name !== 'StudentList') {
+            sessionStorage.removeItem('SELECT_STUDENT_FROM')
+        }
+        next()
+    },
+    beforeRouteEnter (to, from, next) {
+        next(async vm => {
+            if (!vm.mobile) {
+                try {
+                    await vm.$confirm('请先绑定手机')
+                    sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                        name: vm.$route.name,
+                        params: vm.$route.params,
+                        query: vm.$route.query
+                    }))
+                    vm.$router.replace({
+                        name: 'BindMobile'
+                    })
+                } catch (e) {
+                    vm.$router.push({
+                        name: from.name,
+                        query: from.query,
+                        params: from.params
+                    })
+                }
             } else {
-              // 编辑的不是选中的，且选中的数量等于最大选中数量，则替换最后一个
-              checked.splice(-1, 1, result)
+                const { result } = await wouldINeedOpenDefault()
+                vm.form.defaultStatus = result ? 0 : 1
+                if (vm.id) {
+                    vm.form.id = vm.id
+                    try {
+                        const { result } = await getDetail(vm.id)
+                        vm.form.stuName = result.stuName
+                        vm.form.stuMobile = result.stuMobile
+                        vm.form.defaultStatus = result.defaultStatus
+                    } catch (e) {
+                        throw e
+                    }
+                }
             }
-            sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
-          }
-          this.$router.replace({
-            name: 'StudentList',
-            query: this.$route.query
-          })
-        } catch (e) {
-          throw e
-        } finally {
-          this.loading = false
-        }
-      }
-    },
-    async remove () {
-      await this.$confirm({
-        message: '是否删除该学员？',
-        confirmText: '删除'
-      })
-      try {
-        let { result } = await remove([this.id])
-        if (result) {
-          this.$success('删除成功')
-          this.$router.replace({
-            name: 'StudentList',
-            query: this.$route.query
-          })
-          let checkedData = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-          if (checkedData[this.proId]) {
-            let find = checkedData[this.proId].find(item => item.id === this.id)
-            if (find) {
-              let index = checkedData[this.proId].indexOf(find)
-              checkedData[this.proId].splice(index, 1)
-              sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
-            }
-          }
-        }
-      } catch (e) {
-        throw e
-      }
+        })
     }
-  },
-  beforeRouteLeave (to, from, next) {
-    if (to.name !== 'StudentList') {
-      sessionStorage.removeItem('SELECT_STUDENT_FROM')
-    }
-    next()
-  },
-  beforeRouteEnter (to, from, next) {
-    next(async vm => {
-      if (!vm.mobile) {
-        try {
-          await vm.$confirm('请先绑定手机')
-          sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-            name: vm.$route.name,
-            params: vm.$route.params,
-            query: vm.$route.query
-          }))
-          vm.$router.replace({
-            name: 'BindMobile'
-          })
-        } catch (e) {
-          vm.$router.push({
-            name: from.name,
-            query: from.query,
-            params: from.params
-          })
-        }
-      } else {
-        let { result } = await wouldINeedOpenDefault()
-        vm.form.defaultStatus = result ? 0 : 1
-        if (vm.id) {
-          vm.form.id = vm.id
-          try {
-            let { result } = await getDetail(vm.id)
-            vm.form.stuName = result.stuName
-            vm.form.stuMobile = result.stuMobile
-            vm.form.defaultStatus = result.defaultStatus
-          } catch (e) {
-            throw e
-          }
-        }
-      }
-    })
-  }
 }
 </script>
 

@@ -5,11 +5,13 @@ import { axios } from '../assets/js/axios'
  * @return {*}
  */
 export const createInfo = () => axios.post(`/apis/v1/mall/doublet/twelve/create`)
+
 /**
  * 用户助力
  * @return {*}
  */
 export const userHelp = () => axios.post(`/apis/v1/mall/doublet/twelve/like`)
+
 /**
  * 分页查询机构信息
  * @return {*}
@@ -21,6 +23,7 @@ export const userHelp = () => axios.post(`/apis/v1/mall/doublet/twelve/like`)
  * @return {*}
  */
 export const appointmentOnline = params => axios.post(`/apis/v1/mall/doublet/twelve/reservation`, params)
+
 /**
  * 查询机构详情
  * @param params

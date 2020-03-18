@@ -1,33 +1,33 @@
 <template>
-  <div :class="$style.invoice">
-    <template v-if="list.length > 0">
-      <InvoiceItem
-        v-for="(item, i) of list"
-        :key="i"
-        :data="item"
-      />
-    </template>
-    <NoContent
-      v-else
-      text="暂无发票信息记录"
-      icon="icon-no-content2"
-    />
-    <router-link
-      tag="div"
-      :to="{ name: 'AddInvoice' }"
-      :class="{
-        [$style.addInvoice]: true,
-        [$style.bottom]: true,
-        'fz-28 bold radius-20': true
-      }"
-    >
-      <span>点击这里，添加一个发票信息</span>
-      <pl-svg
-        name="icon-add"
-        fill="#fff"
-      />
-    </router-link>
-  </div>
+    <div :class="$style.invoice">
+        <template v-if="list.length > 0">
+            <InvoiceItem
+                v-for="(item, i) of list"
+                :key="i"
+                :data="item"
+            />
+        </template>
+        <NoContent
+            v-else
+            text="暂无发票信息记录"
+            icon="icon-no-content2"
+        />
+        <router-link
+            tag="div"
+            :to="{ name: 'AddInvoice' }"
+            :class="{
+                [$style.addInvoice]: true,
+                [$style.bottom]: true,
+                'fz-28 bold radius-20': true
+            }"
+        >
+            <span>点击这里，添加一个发票信息</span>
+            <pl-svg
+                name="icon-add"
+                fill="#fff"
+            />
+        </router-link>
+    </div>
 </template>
 
 <script>
@@ -36,36 +36,36 @@ import NoContent from '../../../components/common/No-Content.vue'
 import { getInvoiceList } from '../../../apis/invoice'
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Invoice',
-  components: {
-    InvoiceItem,
-    NoContent
-  },
-  data () {
-    return {
-      list: []
+    name: 'Invoice',
+    components: {
+        InvoiceItem,
+        NoContent
+    },
+    data () {
+        return {
+            list: []
+        }
+    },
+    computed: {
+        ...mapGetters(['userId'])
+    },
+    activated () {
+        try {
+            this.getList()
+        } catch (e) {
+            throw e
+        }
+    },
+    methods: {
+        async getList () {
+            try {
+                const { result } = await getInvoiceList(this.userId)
+                this.list = result
+            } catch (e) {
+                throw e
+            }
+        }
     }
-  },
-  computed: {
-    ...mapGetters(['userId'])
-  },
-  activated () {
-    try {
-      this.getList()
-    } catch (e) {
-      throw e
-    }
-  },
-  methods: {
-    async getList () {
-      try {
-        const { result } = await getInvoiceList(this.userId)
-        this.list = result
-      } catch (e) {
-        throw e
-      }
-    }
-  }
 }
 </script>
 

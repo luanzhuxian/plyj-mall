@@ -1,148 +1,148 @@
 <template>
-  <div
-    class="pl-collapse-item"
-    :class="{ 'hairline--top': index }"
-  >
     <div
-      :aria-expanded="expanded"
-      class="pl-collapse-item__title"
-      :class="{ 'pl-collapse-item__title--expanded': expanded, 'pl-collapse-item__title--disabled': disabled }"
-      @click="onClick"
+        class="pl-collapse-item"
+        :class="{ 'hairline--top': index }"
     >
-      <div
-        v-if="title"
-        class="pl-collapse-item__title-text"
-      >
-        <span
-          :class="titleClass"
-          :style="titleStyle"
+        <div
+            :aria-expanded="expanded"
+            class="pl-collapse-item__title"
+            :class="{ 'pl-collapse-item__title--expanded': expanded, 'pl-collapse-item__title--disabled': disabled }"
+            @click="onClick"
         >
-          {{ title }}
-        </span>
-        <span
-          v-if="value"
-          :class="valueClass"
+            <div
+                v-if="title"
+                class="pl-collapse-item__title-text"
+            >
+                <span
+                    :class="titleClass"
+                    :style="titleStyle"
+                >
+                    {{ title }}
+                </span>
+                <span
+                    v-if="value"
+                    :class="valueClass"
+                >
+                    {{ value }}
+                </span>
+            </div>
+            <slot
+                v-else
+                name="title"
+            />
+            <pl-svg
+                v-if="!$slots['icon-right'] && !disabled"
+                class="pl-collapse-item__icon--right"
+                :name="iconRight.name"
+                width="24"
+                height="24"
+                fill="#CCC"
+            />
+            <slot
+                v-else
+                name="icon-right"
+            />
+        </div>
+        <div
+            class="pl-collapse-item__wrapper"
+            :style="{ height: `${contentHeight}px` }"
         >
-          {{ value }}
-        </span>
-      </div>
-      <slot
-        v-else
-        name="title"
-      />
-      <pl-svg
-        v-if="!$slots['icon-right'] && !disabled"
-        class="pl-collapse-item__icon--right"
-        :name="iconRight.name"
-        width="24"
-        height="24"
-        fill="#CCC"
-      />
-      <slot
-        v-else
-        name="icon-right"
-      />
+            <div
+                ref="content"
+                class="pl-collapse-item__content"
+            >
+                <slot />
+            </div>
+        </div>
     </div>
-    <div
-      class="pl-collapse-item__wrapper"
-      :style="{ height: `${contentHeight}px` }"
-    >
-      <div
-        ref="content"
-        class="pl-collapse-item__content"
-      >
-        <slot />
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
 import { ChildrenMixin } from '../../../mixins/relation'
 import { isDef } from '../../../assets/js/util'
 export default {
-  name: 'CollapseItem',
-  mixins: [ChildrenMixin('Collapse')],
-  props: {
-    iconRight: {
-      type: Object,
-      default () {
-        return {
-          name: 'icon-right',
-          color: '#CCC'
+    name: 'CollapseItem',
+    mixins: [ChildrenMixin('Collapse')],
+    props: {
+        iconRight: {
+            type: Object,
+            default () {
+                return {
+                    name: 'icon-right',
+                    color: '#CCC'
+                }
+            }
+        },
+        center: Boolean,
+        disabled: Boolean,
+        titleStyle: {
+            type: Object,
+            default: null
+        },
+        titleClass: {
+            type: Object,
+            default: null
+        },
+        valueClass: {
+            type: Object,
+            default: null
+        },
+        title: {
+            type: [String, Number],
+            default: null
+        },
+        value: {
+            type: [String, Number],
+            default: null
+        },
+        name: {
+            type: [String, Number],
+            default: null
+        },
+        border: {
+            type: Boolean,
+            default: true
         }
-      }
     },
-    center: Boolean,
-    disabled: Boolean,
-    titleStyle: {
-      type: Object,
-      default: null
+    data () {
+        return {
+            contentHeight: 0
+        }
     },
-    titleClass: {
-      type: Object,
-      default: null
+    computed: {
+        currentName () {
+            return isDef(this.name) ? this.name : this.index
+        },
+        expanded () {
+            if (!this.$parent) {
+                return null
+            }
+            const { value } = this.$parent
+            return this.$parent.accordion
+                ? value === this.currentName
+                : value.some(name => name === this.currentName)
+        },
+        offsetHeight () {
+            return this.$refs.content ? this.$refs.content.offsetHeight : 0
+        }
     },
-    valueClass: {
-      type: Object,
-      default: null
+    watch: {
+        expanded (expanded) {
+            this.$nextTick(() => {
+                this.contentHeight = expanded ? this.offsetHeight : 0
+            })
+        }
     },
-    title: {
-      type: [String, Number],
-      default: null
-    },
-    value: {
-      type: [String, Number],
-      default: null
-    },
-    name: {
-      type: [String, Number],
-      default: null
-    },
-    border: {
-      type: Boolean,
-      default: true
+    methods: {
+        onClick () {
+            if (this.disabled) {
+                return
+            }
+            const { $parent } = this
+            const name = $parent.accordion && this.currentName === $parent.value ? '' : this.currentName
+            this.$parent.switch(name, !this.expanded)
+        }
     }
-  },
-  data () {
-    return {
-      contentHeight: 0
-    }
-  },
-  computed: {
-    currentName () {
-      return isDef(this.name) ? this.name : this.index
-    },
-    expanded () {
-      if (!this.$parent) {
-        return null
-      }
-      const { value } = this.$parent
-      return this.$parent.accordion
-        ? value === this.currentName
-        : value.some(name => name === this.currentName)
-    },
-    offsetHeight () {
-      return this.$refs.content ? this.$refs.content.offsetHeight : 0
-    }
-  },
-  watch: {
-    expanded (expanded) {
-      this.$nextTick(() => {
-        this.contentHeight = expanded ? this.offsetHeight : 0
-      })
-    }
-  },
-  methods: {
-    onClick () {
-      if (this.disabled) {
-        return
-      }
-      const { $parent } = this
-      const name = $parent.accordion && this.currentName === $parent.value ? '' : this.currentName
-      this.$parent.switch(name, !this.expanded)
-    }
-  }
 }
 </script>
 

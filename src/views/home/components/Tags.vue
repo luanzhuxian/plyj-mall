@@ -1,49 +1,49 @@
 <template>
-  <ul
-    :class="{
-      [$style.tags]: true,
-      [$style.small]: size === 'small',
-      [$style.middle]: size === 'middle'
-    }"
-  >
-    <template v-for="(item, i) of tags">
-      <li
-        v-if="item && !!item.labelName"
-        :key="i"
-        :class="$style.tag"
-        :style="{ color: color[i] }"
-      >
-        {{ item.labelName }}
-      </li>
-    </template>
-  </ul>
+    <ul
+        :class="{
+            [$style.tags]: true,
+            [$style.small]: size === 'small',
+            [$style.middle]: size === 'middle'
+        }"
+    >
+        <template v-for="(item, i) of tags">
+            <li
+                v-if="item && !!item.labelName"
+                :key="i"
+                :class="$style.tag"
+                :style="{ color: color[i] }"
+            >
+                {{ item.labelName }}
+            </li>
+        </template>
+    </ul>
 </template>
 
 <script>
 export default {
-  name: 'Tags',
-  data () {
-    return {
-      color: [
-        '#E83B27',
-        '#92B1E5',
-        '#F3BE41',
-        '#60C684'
-      ]
-    }
-  },
-  props: {
-    size: {
-      type: String,
-      default: 'small'
+    name: 'Tags',
+    data () {
+        return {
+            color: [
+                '#E83B27',
+                '#92B1E5',
+                '#F3BE41',
+                '#60C684'
+            ]
+        }
     },
-    tags: {
-      type: Array,
-      default () {
-        return []
-      }
+    props: {
+        size: {
+            type: String,
+            default: 'small'
+        },
+        tags: {
+            type: Array,
+            default () {
+                return []
+            }
+        }
     }
-  }
 }
 </script>
 

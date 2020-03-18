@@ -1,64 +1,64 @@
 <template>
-  <div
-    :class="{ 'pl-selector': true, ['pl-selector-' + size]: true }"
-    @click="onOff"
-  >
-    <span v-text="label" />
-    <pl-svg
-      name="icon-go-down"
-      :class="{ 'pl-selector-open': showSelect }"
-    />
-    <transition name="fade">
-      <ul
-        class="pl-selector-picker"
-        ref="picker"
-        v-show="showSelect"
-      >
-        <li
-          v-for="(item, i) of data"
-          :key="i"
-          class="pl-selector-picker-item"
-          v-text="item.label"
-          @click="handleChange(item)"
+    <div
+        :class="{ 'pl-selector': true, ['pl-selector-' + size]: true }"
+        @click="onOff"
+    >
+        <span v-text="label" />
+        <pl-svg
+            name="icon-go-down"
+            :class="{ 'pl-selector-open': showSelect }"
         />
-      </ul>
-    </transition>
-  </div>
+        <transition name="fade">
+            <ul
+                class="pl-selector-picker"
+                ref="picker"
+                v-show="showSelect"
+            >
+                <li
+                    v-for="(item, i) of data"
+                    :key="i"
+                    class="pl-selector-picker-item"
+                    v-text="item.label"
+                    @click="handleChange(item)"
+                />
+            </ul>
+        </transition>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'PlSelector',
-  data () {
-    return {
-      showSelect: false,
-      label: ''
-    }
-  },
-  props: {
-    data: {
-      type: Array,
-      default: function () {
-        return []
-      }
+    name: 'PlSelector',
+    data () {
+        return {
+            showSelect: false,
+            label: ''
+        }
     },
-    size: {
-      type: String,
-      default: 'small'
-    }
-  },
-  created () {
-    this.label = this.data[0].label
-  },
-  methods: {
-    onOff () {
-      this.showSelect = !this.showSelect
+    props: {
+        data: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        size: {
+            type: String,
+            default: 'small'
+        }
     },
-    handleChange (item) {
-      this.label = item.label
-      this.$emit('change', item)
+    created () {
+        this.label = this.data[0].label
+    },
+    methods: {
+        onOff () {
+            this.showSelect = !this.showSelect
+        },
+        handleChange (item) {
+            this.label = item.label
+            this.$emit('change', item)
+        }
     }
-  }
 }
 </script>
 

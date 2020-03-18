@@ -1,63 +1,63 @@
 <template>
-  <div :class="$style.setting">
-    <div :class="$style.top">
-      <img
-        :src="avatar"
-        alt=""
-      >
-      <div :class="$style.baseInfo">
-        <span
-          :class="$style.name"
-          v-text="userName"
-        />
-        <span
-          :class="$style.phoneNumber"
-          v-text="mobile?`${mobile.substring(0, 3)}****${mobile.substring(mobile.length-4)}`:'未设置'"
-        />
-      </div>
-      <router-link
-        :to="{ name: 'SettingEdit' }"
-      >
-        <div :class="$style.edit">
-          编辑
+    <div :class="$style.setting">
+        <div :class="$style.top">
+            <img
+                :src="avatar"
+                alt=""
+            >
+            <div :class="$style.baseInfo">
+                <span
+                    :class="$style.name"
+                    v-text="userName"
+                />
+                <span
+                    :class="$style.phoneNumber"
+                    v-text="mobile?`${mobile.substring(0, 3)}****${mobile.substring(mobile.length-4)}`:'未设置'"
+                />
+            </div>
+            <router-link
+                :to="{ name: 'SettingEdit' }"
+            >
+                <div :class="$style.edit">
+                    编辑
+                </div>
+            </router-link>
         </div>
-      </router-link>
-    </div>
 
-    <div :class="$style.set">
-      <pl-fields
-        text="我的地址"
-        icon="icon-my-address"
-        :icon-gap="24"
-        :icon-width="40"
-        color="#387af6"
-        :route="{ name: 'Address' }"
-      />
-      <pl-fields
-        text="我的发票"
-        icon="icon-my-invoice"
-        :icon-width="40"
-        :icon-gap="24"
-        :route="{ name: 'Invoice' }"
-      />
-      <pl-fields
-        text="学员管理"
-        icon="icon-student-manage"
-        :icon-width="40"
-        :icon-gap="24"
-        :route="{ name: 'StudentList' }"
-      />
+        <div :class="$style.set">
+            <pl-fields
+                text="我的地址"
+                icon="icon-my-address"
+                :icon-gap="24"
+                :icon-width="40"
+                color="#387af6"
+                :route="{ name: 'Address' }"
+            />
+            <pl-fields
+                text="我的发票"
+                icon="icon-my-invoice"
+                :icon-width="40"
+                :icon-gap="24"
+                :route="{ name: 'Invoice' }"
+            />
+            <pl-fields
+                text="学员管理"
+                icon="icon-student-manage"
+                :icon-width="40"
+                :icon-gap="24"
+                :route="{ name: 'StudentList' }"
+            />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'Index',
-  computed: {
-    ...mapGetters(['avatar', 'userName', 'mobile', 'roleName'])
-  }
+    name: 'Index',
+    computed: {
+        ...mapGetters(['avatar', 'userName', 'mobile', 'roleName'])
+    }
 }
 </script>
 

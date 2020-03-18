@@ -1,32 +1,32 @@
 <template>
-  <div
-    role="radiogroup"
-    class="radio-group"
-  >
-    <slot />
-  </div>
+    <div
+        role="radiogroup"
+        class="radio-group"
+    >
+        <slot />
+    </div>
 </template>
 
 <script>
 import { ParentMixin } from '../../../mixins/relation'
 
 export default {
-  name: 'RadioGroupComponent',
-  mixins: [ParentMixin('RadioGroupComponent')],
-  props: {
-    value: {
-      type: [String, Number],
-      default () {
-        return null
-      }
+    name: 'RadioGroupComponent',
+    mixins: [ParentMixin('RadioGroupComponent')],
+    props: {
+        value: {
+            type: [String, Number],
+            default () {
+                return null
+            }
+        },
+        disabled: Boolean
     },
-    disabled: Boolean
-  },
-  watch: {
-    value (value) {
-      this.$emit('change', value)
+    watch: {
+        value (value) {
+            this.$emit('change', value)
+        }
     }
-  }
 }
 </script>
 

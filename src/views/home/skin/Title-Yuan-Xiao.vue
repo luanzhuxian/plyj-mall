@@ -1,26 +1,26 @@
 <template>
-  <div
-    :class="[
-      $style.titleYuanXiao,
-      data.split('').length > 2 ? $style.large : $style.small
-    ]"
-  >
-    <div :class="$style.title" v-text="data" />
-  </div>
+    <div
+        :class="[
+            $style.titleYuanXiao,
+            data.split('').length > 2 ? $style.large : $style.small
+        ]"
+    >
+        <div :class="$style.title" v-text="data" />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'TitleYuanXiao',
-  props: {
-    data: {
-      type: String,
-      default: ''
+    name: 'TitleYuanXiao',
+    props: {
+        data: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {}
     }
-  },
-  data () {
-    return {}
-  }
 }
 </script>
 

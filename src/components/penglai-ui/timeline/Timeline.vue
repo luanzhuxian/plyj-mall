@@ -1,12 +1,12 @@
 <template>
-  <ul class="pl-timeline">
-    <slot />
-  </ul>
+    <ul class="pl-timeline">
+        <slot />
+    </ul>
 </template>
 
 <script>
 export default {
-  name: 'PlTimeline'
+    name: 'PlTimeline'
 }
 </script>
 

@@ -1,55 +1,56 @@
 <template>
-  <div :class="$style.burseDetail">
+    <div :class="$style.burseDetail">
 
-    <ul>
-      <li>奖学金{{ burseStatus[detail.status] }}</li>
-      <li><span>奖学金名称</span><span>{{ detail.activityType === 'GROUPBUGACTIVITY' ? '团购奖学金' : '年味奖学金' }}</span></li>
-      <li><span>奖学金金额</span><span>{{ detail.amount }} 元</span></li>
-      <li><span>使用限制</span><span>全场通用</span></li>
-      <li><span>开始时间</span><span>{{ detail.useStartTime }}</span></li>
-      <li><span>结束时间</span><span>{{ detail.useEndTime }}</span></li>
-    </ul>
+        <ul>
+            <li>奖学金{{ burseStatus[detail.status] }}</li>
+            <li><span>奖学金名称</span><span>{{ detail.activityType === 'GROUPBUGACTIVITY' ? '团购奖学金' : '年味奖学金' }}</span></li>
+            <li><span>奖学金金额</span><span>{{ detail.amount }} 元</span></li>
+            <li><span>使用限制</span><span>全场通用</span></li>
+            <li><span>开始时间</span><span>{{ detail.useStartTime }}</span></li>
+            <li><span>结束时间</span><span>{{ detail.useEndTime }}</span></li>
+        </ul>
 
-    <div>使用关联订单</div>
+        <div>使用关联订单</div>
 
-    <div :class="$style.orderList" v-for="(item,index) in detail.list" :key="index">
-      <div>
-        <div>订单编号：{{ item.id }}</div>
-        <div @click="$router.push({name:'OrderDetail',params:{orderId:item.id}})">去查看</div>
-      </div>
-      <div v-for="it in item.products" :key="it.productId">
-        <div>
-          <img :src="it.productImg" alt="">
+        <div :class="$style.orderList" v-for="(item,index) in detail.list" :key="index">
+            <div>
+                <div>订单编号：{{ item.id }}</div>
+                <div @click="$router.push({name:'OrderDetail',params:{orderId:item.id}})">去查看</div>
+            </div>
+            <div v-for="it in item.products" :key="it.productId">
+                <div>
+                    <img :src="it.productImg" alt="">
+                </div>
+                <div>
+                    <div>{{ it.productName }}</div>
+                    <div>{{ item.payTime }} 购买时使用</div>
+                </div>
+            </div>
         </div>
-        <div>
-          <div>{{ it.productName }}</div>
-          <div>{{ item.payTime }} 购买时使用</div>
-        </div>
-      </div>
+
     </div>
-
-  </div>
 </template>
 
 <script>
 import { getBurseDetail } from './../../../apis/my-burse.js'
 export default {
-  name: 'MyBurseDetail',
-  data () {
-    return {
-      detail: {
-        list: []
-      },
-      burseStatus: ['待领取', '待使用', '已使用', '已过期', '已失效', '已删除']// 奖学金状态 0：待领取；1：待使用； 2：已使用； 3：已过期 ； 4：已失效； 5：已删除
+    name: 'MyBurseDetail',
+    data () {
+        return {
+            detail: {
+                list: []
+            },
+            // 奖学金状态 0：待领取；1：待使用； 2：已使用； 3：已过期 ； 4：已失效； 5：已删除
+            burseStatus: ['待领取', '待使用', '已使用', '已过期', '已失效', '已删除']
+        }
+    },
+    async activated () {
+        try {
+            const { params: { id } } = this.$route
+            const { result } = await getBurseDetail(id)
+            this.detail = result
+        } catch (e) { throw e }
     }
-  },
-  async activated () {
-    try {
-      let { params: { id } } = this.$route
-      let { result } = await getBurseDetail(id)
-      this.detail = result
-    } catch (e) { throw e }
-  }
 }
 </script>
 

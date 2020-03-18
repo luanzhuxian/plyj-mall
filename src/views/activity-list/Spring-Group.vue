@@ -1,108 +1,108 @@
 <template>
-  <div :class="$style.springGroup">
-    <div :class="$style.springGroupWrapper">
-      <div :class="$style.springGroupTop">
-        <div :class="$style.springGroupTopSide" />
-        <div :class="$style.springGroupTopContent">
-          <h3>新春团购大联欢</h3>
-          <p>特色课程齐上阵</p>
-        </div>
-      </div>
-      <div :class="$style.springGroupContent">
-        <div :class="$style.current" v-if="listCurrent.length">
-          <div :class="$style.title">
-            <span>正在进行中</span>
-          </div>
-          <ul :class="$style.springGroupList">
-            <template v-for="(item, i) of listCurrent">
-              <item
-                :data="item"
-                :key="i"
-                @done="getData"
-              />
-            </template>
-          </ul>
-        </div>
+    <div :class="$style.springGroup">
+        <div :class="$style.springGroupWrapper">
+            <div :class="$style.springGroupTop">
+                <div :class="$style.springGroupTopSide" />
+                <div :class="$style.springGroupTopContent">
+                    <h3>新春团购大联欢</h3>
+                    <p>特色课程齐上阵</p>
+                </div>
+            </div>
+            <div :class="$style.springGroupContent">
+                <div :class="$style.current" v-if="listCurrent.length">
+                    <div :class="$style.title">
+                        <span>正在进行中</span>
+                    </div>
+                    <ul :class="$style.springGroupList">
+                        <template v-for="(item, i) of listCurrent">
+                            <item
+                                :data="item"
+                                :key="i"
+                                @done="getData"
+                            />
+                        </template>
+                    </ul>
+                </div>
 
-        <div :class="$style.preview" v-if="listPreview.length">
-          <div :class="$style.title">
-            <span>即将开始</span>
-          </div>
-          <ul :class="$style.springGroupList">
-            <template v-for="(item, i) of listPreview">
-              <item
-                :data="item"
-                :key="i"
-                @done="getData"
-              />
-            </template>
-          </ul>
+                <div :class="$style.preview" v-if="listPreview.length">
+                    <div :class="$style.title">
+                        <span>即将开始</span>
+                    </div>
+                    <ul :class="$style.springGroupList">
+                        <template v-for="(item, i) of listPreview">
+                            <item
+                                :data="item"
+                                :key="i"
+                                @done="getData"
+                            />
+                        </template>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 <script>
 import Item from '../activity/xin-chun/Item-Pintuan'
 import { tuanActivityPage } from '../../apis/product'
 
 export default {
-  name: 'SpringGroup',
-  components: {
-    Item
-  },
-  data () {
-    return {
-      listPreview: [],
-      listCurrent: []
-    }
-  },
-  activated () {
-    this.getData()
-  },
-  methods: {
-    async getData () {
-      try {
-        let { result } = await tuanActivityPage({ type: '2019_02' })
-        if (!result[0].length && !result[1].length) {
-          this.$alert({
-            message: '暂无数据',
-            viceMessage: '逛逛主会场吧~',
-            confirmText: '再逛逛'
-          }).finally(() => {
-            this.$router.go(-1)
-          })
-          return
+    name: 'SpringGroup',
+    components: {
+        Item
+    },
+    data () {
+        return {
+            listPreview: [],
+            listCurrent: []
         }
-        for (let key of Object.keys(result)) {
-          for (let item of result[key]) {
-            let obj = {
-              goodsInfo: {
-                id: item.productId,
-                pageviews: item.pageViews,
-                productMainImage: item.productMainImage,
-                productName: item.productName,
-                activityInfo: {
-                  status: item.status,
-                  number: item.number,
-                  prizePool: item.prizePool,
-                  activityPrice: item.price,
-                  activityStartTime: item.activityStartTime,
-                  activityEndTime: item.activityEndTime
+    },
+    activated () {
+        this.getData()
+    },
+    methods: {
+        async getData () {
+            try {
+                const { result } = await tuanActivityPage({ type: '2019_02' })
+                if (!result[0].length && !result[1].length) {
+                    this.$alert({
+                        message: '暂无数据',
+                        viceMessage: '逛逛主会场吧~',
+                        confirmText: '再逛逛'
+                    }).finally(() => {
+                        this.$router.go(-1)
+                    })
+                    return
                 }
-              }
+                for (const key of Object.keys(result)) {
+                    for (const item of result[key]) {
+                        const obj = {
+                            goodsInfo: {
+                                id: item.productId,
+                                pageviews: item.pageViews,
+                                productMainImage: item.productMainImage,
+                                productName: item.productName,
+                                activityInfo: {
+                                    status: item.status,
+                                    number: item.number,
+                                    prizePool: item.prizePool,
+                                    activityPrice: item.price,
+                                    activityStartTime: item.activityStartTime,
+                                    activityEndTime: item.activityEndTime
+                                }
+                            }
+                        }
+                        Object.assign(item, obj)
+                    }
+                }
+                this.listPreview = result[0]
+                this.listCurrent = result[1]
+                return result
+            } catch (e) {
+                throw e
             }
-            Object.assign(item, obj)
-          }
         }
-        this.listPreview = result[0]
-        this.listCurrent = result[1]
-        return result
-      } catch (e) {
-        throw e
-      }
     }
-  }
 }
 </script>
 

@@ -1,136 +1,137 @@
 <template>
-  <div
-    class="pl-picker"
-    v-if="showPicker"
-    @touchmove="touchmove"
-  >
-    <transition name="fade">
-      <div
-        class="pl-picker-mask"
-        v-show="showMask"
-      />
-    </transition>
-    <transition name="picker-translate">
-      <div
-        class="pl-picker-box"
-        v-show="showBox"
-      >
-        <div class="pl-picker-box__toolbar">
-          <button
-            class="pl-picker-box__cancel"
-            :disabled="scrolling"
-            @click="close"
-          >
-            取消
-          </button>
-          <button
-            class="pl-picker-box__confirm"
-            :disabled="scrolling"
-            @click="confirm"
-          >
-            确定
-          </button>
-        </div>
+    <div
+        class="pl-picker"
+        v-if="showPicker"
+        @touchmove="touchmove"
+    >
+        <transition name="fade">
+            <div
+                class="pl-picker-mask"
+                v-show="showMask"
+            />
+        </transition>
+        <transition name="picker-translate">
+            <div
+                class="pl-picker-box"
+                v-show="showBox"
+            >
+                <div class="pl-picker-box__toolbar">
+                    <button
+                        class="pl-picker-box__cancel"
+                        :disabled="scrolling"
+                        @click="close"
+                    >
+                        取消
+                    </button>
+                    <button
+                        class="pl-picker-box__confirm"
+                        :disabled="scrolling"
+                        @click="confirm"
+                    >
+                        确定
+                    </button>
+                </div>
 
-        <div class="pl-picker-content">
-          <picker-slot
-            v-for="(item, i) of slots"
-            :key="i"
-            :data="item"
-            :scrolling.sync="scrolling"
-            :values-key="valuesKey"
-            @change="(val, index) => { slotChange(val, index, i) }"
-          />
-        </div>
-      </div>
-    </transition>
-  </div>
+                <div class="pl-picker-content">
+                    <picker-slot
+                        v-for="(item, i) of slots"
+                        :key="i"
+                        :data="item"
+                        :scrolling.sync="scrolling"
+                        :values-key="valuesKey"
+                        @change="(val, index) => { slotChange(val, index, i) }"
+                    />
+                </div>
+            </div>
+        </transition>
+    </div>
 </template>
 <script>
 import PickerSlot from './Picker-Slot.vue'
 export default {
-  name: 'PlPicker',
-  components: {
-    PickerSlot
-  },
-  data () {
-    return {
-      showMask: false,
-      showBox: false,
-      showPicker: false,
-      scrolling: false,
-      selected: []
-    }
-  },
-  props: {
-    /*
+    name: 'PlPicker',
+    components: {
+        PickerSlot
+    },
+    data () {
+        return {
+            showMask: false,
+            showBox: false,
+            showPicker: false,
+            scrolling: false,
+            selected: []
+        }
+    },
+    props: {
+
+        /*
     * [{
     *   flex number
     *   values array 要展示的数据源，元素可以是字符串，可以是对象，是对象时，必须指定valuesKey
     *   textAlign string
     * }]
     * */
-    slots: {
-      type: Array,
-      default: function () {
-        return []
-      }
+        slots: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        valuesKey: {
+            type: String,
+            default: null
+        },
+        show: {
+            type: Boolean
+        }
     },
-    valuesKey: {
-      type: String,
-      default: null
+    watch: {
+        show (val) {
+            if (!val) {
+                this.close()
+                document.documentElement.style.overflow = null
+            } else {
+                document.documentElement.style.overflow = 'hidden'
+                this.showPicker = true
+                this.$nextTick(() => {
+                    this.showMask = true
+                    setTimeout(() => {
+                        this.showBox = true
+                        this.init()
+                    }, 200)
+                })
+            }
+        }
     },
-    show: {
-      type: Boolean
+    methods: {
+        init () {
+            for (const slot of this.slots) {
+                this.selected.push(slot.values[0])
+            }
+        },
+        close () {
+            this.showBox = false
+            setTimeout(() => {
+                this.showMask = false
+                this.$emit('update:show', false)
+                setTimeout(() => {
+                    this.showPicker = false
+                    this.selected = []
+                    this.$emit('close')
+                }, 200)
+            }, 200)
+        },
+        slotChange (val, index, slotIndex) {
+            this.selected[slotIndex] = val
+        },
+        confirm () {
+            this.$emit('confirm', this.selected)
+            this.close()
+        },
+        touchmove (e) {
+            e.preventDefault()
+        }
     }
-  },
-  watch: {
-    show (val) {
-      if (!val) {
-        this.close()
-        document.documentElement.style.overflow = null
-      } else {
-        document.documentElement.style.overflow = 'hidden'
-        this.showPicker = true
-        this.$nextTick(() => {
-          this.showMask = true
-          setTimeout(() => {
-            this.showBox = true
-            this.init()
-          }, 200)
-        })
-      }
-    }
-  },
-  methods: {
-    init () {
-      for (let slot of this.slots) {
-        this.selected.push(slot.values[0])
-      }
-    },
-    close () {
-      this.showBox = false
-      setTimeout(() => {
-        this.showMask = false
-        this.$emit('update:show', false)
-        setTimeout(() => {
-          this.showPicker = false
-          this.selected = []
-          this.$emit('close')
-        }, 200)
-      }, 200)
-    },
-    slotChange (val, index, slotIndex) {
-      this.selected[slotIndex] = val
-    },
-    confirm () {
-      this.$emit('confirm', this.selected)
-      this.close()
-    },
-    touchmove (e) {
-      e.preventDefault()
-    }
-  }
 }
 </script>
 <style lang="scss">

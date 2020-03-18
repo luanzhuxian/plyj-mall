@@ -1,38 +1,38 @@
 <template>
-  <div class="share-layer">
-    <overlay>
-      <div class="guide-line">
-        <div>
-          <i class="circle en" />
-          <i class="circle ws" />
-        </div>
-      </div>
-      <div class="content">
-        <div class="title">点击右上角图标</div>
-        <p class="desc">
-          分享活动给好友，邀请好友注册成为会员<br>
-          一起参与领红包活动！
-        </p>
-        <div class="btn-known" @click="close">知道了</div>
-      </div>
-    </overlay>
-  </div>
+    <div class="share-layer">
+        <overlay>
+            <div class="guide-line">
+                <div>
+                    <i class="circle en" />
+                    <i class="circle ws" />
+                </div>
+            </div>
+            <div class="content">
+                <div class="title">点击右上角图标</div>
+                <p class="desc">
+                    分享活动给好友，邀请好友注册成为会员<br>
+                    一起参与领红包活动！
+                </p>
+                <div class="btn-known" @click="close">知道了</div>
+            </div>
+        </overlay>
+    </div>
 </template>
 
 <script>
 import Overlay from './Overlay'
 
 export default {
-  name: 'ShareLayer',
-  components: {
-    Overlay
-  },
+    name: 'ShareLayer',
+    components: {
+        Overlay
+    },
 
-  methods: {
-    close () {
-      this.$emit('close')
+    methods: {
+        close () {
+            this.$emit('close')
+        }
     }
-  }
 }
 </script>
 

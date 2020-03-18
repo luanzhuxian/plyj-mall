@@ -1,34 +1,34 @@
 <template>
-  <div class="winning-prize poster" v-if="show">
-    <div class="prize-box poster-box">
-      <img :src="poster">
-      <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
+    <div class="winning-prize poster" v-if="show">
+        <div class="prize-box poster-box">
+            <img :src="poster">
+            <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
+        </div>
+        <div class="winning-prize-close poster-close">
+            <pl-svg @click="close" name="icon-close3" fill="#fff" width="40" />
+        </div>
     </div>
-    <div class="winning-prize-close poster-close">
-      <pl-svg @click="close" name="icon-close3" fill="#fff" width="40" />
-    </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'SharePoster',
-  props: {
-    show: {
-      type: Boolean,
-      default: false
+    name: 'SharePoster',
+    props: {
+        show: {
+            type: Boolean,
+            default: false
+        },
+        poster: {
+            type: String,
+            default: ''
+        }
     },
-    poster: {
-      type: String,
-      default: ''
+    methods: {
+        close () {
+            this.$emit('update:show', false)
+            this.$emit('close')
+        }
     }
-  },
-  methods: {
-    close () {
-      this.$emit('update:show', false)
-      this.$emit('close')
-    }
-  }
 }
 </script>
 

@@ -1,50 +1,50 @@
 <template>
-  <router-link :class="$style.coupon" tag="div" :to="{ name: 'CouponCenter' }">
-    <div :class="$style.bg">
-      <div :class="$style.couponTitle">
-        购物先领券 就要划算
-      </div>
-      <div :class="$style.couponSubtitle">
-        {{ data.otherValue > 0 ? `${data.otherValue}人已领券 快来领取` : '快来领取' }}
-      </div>
-      <div :class="$style.couponButton">
-        <pl-svg name="icon-envelope-mini" width="28" />
-        <span :class="$style.text">优惠券中心</span>
-        <span :class="$style.btn">
-          <span>领取更多</span>
-          <pl-svg name="icon-right" fill="#FFE9BE" width="20" />
-        </span>
-      </div>
-      <ul :class="$style.couponList" v-if="data.values.length">
-        <template v-for="(item, i) of data.values">
-          <li
-            v-if="item.goodsInfo"
-            :class="$style.couponListItem"
-            :key="i"
-          >
-            <div :class="$style.left">
-              <span :class="$style.number">{{ item.goodsInfo.amount }}</span>
+    <router-link :class="$style.coupon" tag="div" :to="{ name: 'CouponCenter' }">
+        <div :class="$style.bg">
+            <div :class="$style.couponTitle">
+                购物先领券 就要划算
             </div>
-            <div :class="$style.middle">
-              <b :class="$style.main">
-                <span v-if="item.goodsInfo.couponType === 1">满减券</span>
-                <span v-if="item.goodsInfo.couponType === 2">品类券</span>
-              </b>
-              <p :class="$style.sub">
-                {{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}
-              </p>
-              <p :class="$style.date">
-                {{ `(有效期至${getDate(item.goodsInfo.useEndTime, 'YYYY.MM.DD')})` }}
-              </p>
+            <div :class="$style.couponSubtitle">
+                {{ data.otherValue > 0 ? `${data.otherValue}人已领券 快来领取` : '快来领取' }}
             </div>
-            <div :class="$style.right" @click.stop="getCoupon(item)">
-              免费领取
+            <div :class="$style.couponButton">
+                <pl-svg name="icon-envelope-mini" width="28" />
+                <span :class="$style.text">优惠券中心</span>
+                <span :class="$style.btn">
+                    <span>领取更多</span>
+                    <pl-svg name="icon-right" fill="#FFE9BE" width="20" />
+                </span>
             </div>
-          </li>
-        </template>
-      </ul>
-    </div>
-  </router-link>
+            <ul :class="$style.couponList" v-if="data.values.length">
+                <template v-for="(item, i) of data.values">
+                    <li
+                        v-if="item.goodsInfo"
+                        :class="$style.couponListItem"
+                        :key="i"
+                    >
+                        <div :class="$style.left">
+                            <span :class="$style.number">{{ item.goodsInfo.amount }}</span>
+                        </div>
+                        <div :class="$style.middle">
+                            <b :class="$style.main">
+                                <span v-if="item.goodsInfo.couponType === 1">满减券</span>
+                                <span v-if="item.goodsInfo.couponType === 2">品类券</span>
+                            </b>
+                            <p :class="$style.sub">
+                                {{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}
+                            </p>
+                            <p :class="$style.date">
+                                {{ `(有效期至${getDate(item.goodsInfo.useEndTime, 'YYYY.MM.DD')})` }}
+                            </p>
+                        </div>
+                        <div :class="$style.right" @click.stop="getCoupon(item)">
+                            免费领取
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </router-link>
 </template>
 
 <script>
@@ -54,38 +54,38 @@ import { receiveCoupon } from '../../../apis/my-coupon'
 let isClickable = false
 
 export default {
-  name: 'Coupon',
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return { values: [] }
-      }
-    }
-  },
-  data () {
-    return {}
-  },
-  methods: {
-    getDate (val, format) {
-      if (!val) return
-      return moment(val).format(format)
+    name: 'Coupon',
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
     },
-    async getCoupon ({ goodsInfo = {} }) {
-      const { id } = goodsInfo
-      if (isClickable) return
-      if (!id) return
-      isClickable = true
-      try {
-        await receiveCoupon({ couponId: id })
-        this.$success('领取成功！')
-      } catch (e) {
-        throw e
-      } finally {
-        setTimeout(() => (isClickable = false), 500)
-      }
+    data () {
+        return {}
+    },
+    methods: {
+        getDate (val, format) {
+            if (!val) return
+            return moment(val).format(format)
+        },
+        async getCoupon ({ goodsInfo = {} }) {
+            const { id } = goodsInfo
+            if (isClickable) return
+            if (!id) return
+            isClickable = true
+            try {
+                await receiveCoupon({ couponId: id })
+                this.$success('领取成功！')
+            } catch (e) {
+                throw e
+            } finally {
+                setTimeout(() => (isClickable = false), 500)
+            }
+        }
     }
-  }
 }
 </script>
 

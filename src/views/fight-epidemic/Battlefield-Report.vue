@@ -1,110 +1,110 @@
 <template>
-  <div :class="$style.battlefieldReport">
-    <div :class="$style.banner">
-      <img src="https://mallcdn.youpenglai.com/static/beat-plague/dd0bb858-2faa-4be3-9eba-5a6edf68687a.png" alt="">
-    </div>
-    <div :class="$style.map" ref="map">
-      <!--<img :src="epidemicMap" alt="">-->
-    </div>
-    <div :class="$style.nationwide">
-      <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/%23%E5%85%A8%E5%9B%BD%E7%96%AB%E6%83%85%23%402x.png" alt="">
-    </div>
-    <div :class="$style.count" v-if="epidemicData">
-      <div>
-        <p v-text="epidemicData.confirmed" style="color: #DD5D32;" />
-        <p>确诊病例</p>
-      </div>
-      <div>
-        <p v-text="epidemicData.suspectedCount" style="color: #dda201;" />
-        <p>疑似病例</p>
-      </div>
-      <div>
-        <p v-text="epidemicData.deadCount" style="color: #000;" />
-        <p>死亡病例</p>
-      </div>
-      <div>
-        <p v-text="epidemicData.cure" style="color: #3B7DB7;" />
-        <p>治愈病例</p>
-      </div>
-    </div>
-
-    <div :class="$style.module" v-if="data.content || data.mediaUrl">
-      <div :class="$style.title">
-        战疫宣誓  与您携手
-      </div>
-      <div :class="$style.toPatriarch">
-        <PlVideo
-          v-if="data.mediaUrl"
-          :url="data.mediaUrl"
-          :radius="0"
-          :width="750"
-          :height="422"
-        />
-        <template v-if="data.content && data.content.length > 30">
-          <article :style="{ '--line': line }">
-            <p>致家长书：</p>
-            <p v-text="data.content" />
-          </article>
-          <button @click="line = 100" v-show="line !== 100">查看更多</button>
-        </template>
-      </div>
-    </div>
-
-    <div :class="$style.module">
-      <div :class="$style.title">
-        最新消息
-      </div>
-      <div :class="$style.news">
-        <div
-          :class="$style.newsItem"
-          v-for="(item, i) of news"
-          :key="i"
-        >
-          <div :class="$style.timeRad" />
-          <div :class="$style.timeLine" />
-          <div :class="$style.datetime" v-text="item.pubDateStr" />
-          <div :class="$style.content">
-            <div :class="$style.title" v-text="item.title" />
-            <div :class="$style.detail" v-text="item.summary" />
-            <div :class="$style.from">
-              来源：{{ item.source }}
-            </div>
-          </div>
+    <div :class="$style.battlefieldReport">
+        <div :class="$style.banner">
+            <img src="https://mallcdn.youpenglai.com/static/beat-plague/dd0bb858-2faa-4be3-9eba-5a6edf68687a.png" alt="">
         </div>
-      </div>
-    </div>
-
-    <div :class="$style.module">
-      <div :class="$style.title">
-        那些感动我的瞬间
-      </div>
-      <swiper :options="swiperOptions">
-        <swiperSlide v-for="(item, i) of touched" :key="i">
-          <div :class="$style.imageText">
-            <div :class="$style.image">
-              <img :src="item.img" alt="">
-              <span>来源：{{ item.from }}</span>
+        <div :class="$style.map" ref="map">
+            <!--<img :src="epidemicMap" alt="">-->
+        </div>
+        <div :class="$style.nationwide">
+            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/%23%E5%85%A8%E5%9B%BD%E7%96%AB%E6%83%85%23%402x.png" alt="">
+        </div>
+        <div :class="$style.count" v-if="epidemicData">
+            <div>
+                <p v-text="epidemicData.confirmed" style="color: #DD5D32;" />
+                <p>确诊病例</p>
             </div>
+            <div>
+                <p v-text="epidemicData.suspectedCount" style="color: #dda201;" />
+                <p>疑似病例</p>
+            </div>
+            <div>
+                <p v-text="epidemicData.deadCount" style="color: #000;" />
+                <p>死亡病例</p>
+            </div>
+            <div>
+                <p v-text="epidemicData.cure" style="color: #3B7DB7;" />
+                <p>治愈病例</p>
+            </div>
+        </div>
+
+        <div :class="$style.module" v-if="data.content || data.mediaUrl">
             <div :class="$style.title">
-              <p v-text="item.desc" />
+                战疫宣誓  与您携手
             </div>
-          </div>
-        </swiperSlide>
-      </swiper>
-    </div>
+            <div :class="$style.toPatriarch">
+                <PlVideo
+                    v-if="data.mediaUrl"
+                    :url="data.mediaUrl"
+                    :radius="0"
+                    :width="750"
+                    :height="422"
+                />
+                <template v-if="data.content && data.content.length > 30">
+                    <article :style="{ '--line': line }">
+                        <p>致家长书：</p>
+                        <p v-text="data.content" />
+                    </article>
+                    <button @click="line = 100" v-show="line !== 100">查看更多</button>
+                </template>
+            </div>
+        </div>
 
-    <div :class="$style.module">
-      <div :class="$style.title">
-        防疫我必须知道的事
-      </div>
-      <div :class="$style.imageText">
-        <img
-          src="https://mallcdn.youpenglai.com/static/beat-plague/928e0156-28ab-42bd-85fd-d7f634aa78d4.png"
-          alt=""
-        >
-      </div>
+        <div :class="$style.module">
+            <div :class="$style.title">
+                最新消息
+            </div>
+            <div :class="$style.news">
+                <div
+                    :class="$style.newsItem"
+                    v-for="(item, i) of news"
+                    :key="i"
+                >
+                    <div :class="$style.timeRad" />
+                    <div :class="$style.timeLine" />
+                    <div :class="$style.datetime" v-text="item.pubDateStr" />
+                    <div :class="$style.content">
+                        <div :class="$style.title" v-text="item.title" />
+                        <div :class="$style.detail" v-text="item.summary" />
+                        <div :class="$style.from">
+                            来源：{{ item.source }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div :class="$style.module">
+            <div :class="$style.title">
+                那些感动我的瞬间
+            </div>
+            <swiper :options="swiperOptions">
+                <swiperSlide v-for="(item, i) of touched" :key="i">
+                    <div :class="$style.imageText">
+                        <div :class="$style.image">
+                            <img :src="item.img" alt="">
+                            <span>来源：{{ item.from }}</span>
+                        </div>
+                        <div :class="$style.title">
+                            <p v-text="item.desc" />
+                        </div>
+                    </div>
+                </swiperSlide>
+            </swiper>
+        </div>
+
+        <div :class="$style.module">
+            <div :class="$style.title">
+                防疫我必须知道的事
+            </div>
+            <div :class="$style.imageText">
+                <img
+                    src="https://mallcdn.youpenglai.com/static/beat-plague/928e0156-28ab-42bd-85fd-d7f634aa78d4.png"
+                    alt=""
+                >
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -115,133 +115,140 @@ import { getReportDetail } from '../../apis/fight-epidemic'
 import China from '../../../static/china.json'
 import moment from 'moment'
 const request = axios.create({
-  responseType: 'json'
+    responseType: 'json'
 })
 export default {
-  name: 'BattlefieldReport',
-  components: {
-    PlVideo,
-    swiper,
-    swiperSlide
-  },
-  data () {
-    return {
-      swiperOptions: {
-        autoplay: true,
-        slidesPerView: 1.15,
-        spaceBetween: 30,
-        loop: true
-      },
-      line: 2,
-      // 疫情分别图
-      epidemicMap: '',
-      // 治愈的
-      epidemicData: null,
-      // 感动瞬间
-      touched: [],
-      // 新闻
-      news: [],
-      // 视频数据
-      data: {}
-    }
-  },
-  props: {
-    id: {
-      type: String,
-      default: ''
-    }
-  },
-  async created () {
-  },
-  async mounted () {
-    const res = await request.get(`https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/data/battlefield-report-data.json?time=${Date.now()}`)
-    let {
-      news,
-      epidemicMap,
-      epidemicData,
-      touched,
-      dataList
-    } = res.data
-    news.map(item => {
-      item.pubDateStr = moment(item.pubDate).fromNow()
-    })
-    this.news = news
-    this.epidemicMap = epidemicMap
-    this.epidemicData = epidemicData
-    this.touched = touched
-    if (this.id) {
-      try {
-        const { result } = await getReportDetail(this.id)
-        const { content, mediaUrl } = result
-        this.data = {
-          content,
-          mediaUrl
-        }
-      } catch (e) {
-        throw e
-      }
-    }
-    const myChart = window.echarts.init(this.$refs.map)
-    const option = { tooltip: {
-      formatter: function (params, ticket, callback) {
-        return params.seriesName + '<br />' + params.name + '：' + params.value
-      }
+    name: 'BattlefieldReport',
+    components: {
+        PlVideo,
+        swiper,
+        swiperSlide
     },
-    visualMap: {
-      type: 'piecewise',
-      left: 20,
-      bottom: 80,
-      itemWidth: 50,
-      itemHeight: 30,
-      pieces: [
-        { min: 5000, color: '#390f0f' }, // 不指定 max，表示 max 为无限大（Infinity）。
-        { min: 1000, max: 4999, color: '#70161d' }, // 不指定 max，表示 max 为无限大（Infinity）。
-        { min: 500, max: 999, color: '#cb2a2f' },
-        { min: 100, max: 499, color: '#e55a4e' },
-        { min: 10, max: 99, color: '#f59e83' },
-        { min: 1, max: 9, color: '#fdebcf' }
-      ],
-      textStyle: {
-        fontSize: 24
-      },
-      show: true
-    },
-    geo: {
-      map: 'china',
-      roam: false,
-      zoom: 1,
-      label: {
-        normal: {
-          show: true,
-          fontSize: 14,
-          color: '#ff8500'
+    data () {
+        return {
+            swiperOptions: {
+                autoplay: true,
+                slidesPerView: 1.15,
+                spaceBetween: 30,
+                loop: true
+            },
+            line: 2,
+
+            // 疫情分别图
+            epidemicMap: '',
+
+            // 治愈的
+            epidemicData: null,
+
+            // 感动瞬间
+            touched: [],
+
+            // 新闻
+            news: [],
+
+            // 视频数据
+            data: {}
         }
-      },
-      itemStyle: {
-        normal: {
-          borderColor: 'rgba(0, 0, 0, 0.2)'
+    },
+    props: {
+        id: {
+            type: String,
+            default: ''
+        }
+    },
+    async created () {
+    },
+    async mounted () {
+        const res = await request.get(`https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/data/battlefield-report-data.json?time=${ Date.now() }`)
+        const {
+            news,
+            epidemicMap,
+            epidemicData,
+            touched,
+            dataList
+        } = res.data
+        for (const item of news) {
+            item.pubDateStr = moment(item.pubDate).fromNow()
+        }
+        this.news = news
+        this.epidemicMap = epidemicMap
+        this.epidemicData = epidemicData
+        this.touched = touched
+        if (this.id) {
+            try {
+                const { result } = await getReportDetail(this.id)
+                const { content, mediaUrl } = result
+                this.data = {
+                    content,
+                    mediaUrl
+                }
+            } catch (e) {
+                throw e
+            }
+        }
+        const myChart = window.echarts.init(this.$refs.map)
+        const option = { tooltip: {
+            formatter (params, ticket, callback) {
+                return `${ params.seriesName }<br />${ params.name }：${ params.value }`
+            }
         },
-        emphasis: {
-          areaColor: '#F3B329',
-          shadowOffsetX: 0,
-          shadowOffsetY: 0,
-          shadowBlur: 20,
-          borderWidth: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      }
-    },
-    series: [
-      {
-        name: '感染人数',
-        type: 'map',
-        geoIndex: 0,
-        data: dataList
-      }
-    ] }
-    window.echarts.registerMap('china', China)
-    myChart.setOption(option)
-  }
+        visualMap: {
+            type: 'piecewise',
+            left: 20,
+            bottom: 80,
+            itemWidth: 50,
+            itemHeight: 30,
+            pieces: [
+                // 不指定 max，表示 max 为无限大（Infinity）。
+                { min: 5000, color: '#390f0f' },
+                // 不指定 max，表示 max 为无限大（Infinity）。
+                { min: 1000, max: 4999, color: '#70161d' },
+                { min: 500, max: 999, color: '#cb2a2f' },
+                { min: 100, max: 499, color: '#e55a4e' },
+                { min: 10, max: 99, color: '#f59e83' },
+                { min: 1, max: 9, color: '#fdebcf' }
+            ],
+            textStyle: {
+                fontSize: 24
+            },
+            show: true
+        },
+        geo: {
+            map: 'china',
+            roam: false,
+            zoom: 1,
+            label: {
+                normal: {
+                    show: true,
+                    fontSize: 14,
+                    color: '#ff8500'
+                }
+            },
+            itemStyle: {
+                normal: {
+                    borderColor: 'rgba(0, 0, 0, 0.2)'
+                },
+                emphasis: {
+                    areaColor: '#F3B329',
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                    shadowBlur: 20,
+                    borderWidth: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        },
+        series: [
+            {
+                name: '感染人数',
+                type: 'map',
+                geoIndex: 0,
+                data: dataList
+            }
+        ] }
+        window.echarts.registerMap('china', China)
+        myChart.setOption(option)
+    }
 }
 </script>
 

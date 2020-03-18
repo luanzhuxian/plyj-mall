@@ -1,41 +1,41 @@
 <template>
-  <li class="pl-timeline-item">
-    <div class="pl-timeline-datetime">
-      <span
-        class="pl-timeline-item-date"
-        v-text="date"
-      />
-      <span
-        class="pl-timeline-item-time"
-        v-text="time"
-      />
-    </div>
+    <li class="pl-timeline-item">
+        <div class="pl-timeline-datetime">
+            <span
+                class="pl-timeline-item-date"
+                v-text="date"
+            />
+            <span
+                class="pl-timeline-item-time"
+                v-text="time"
+            />
+        </div>
 
-    <div class="pl-timeline-item-content">
-      <slot />
-    </div>
-  </li>
+        <div class="pl-timeline-item-content">
+            <slot />
+        </div>
+    </li>
 </template>
 
 <script>
 import moment from 'moment'
 export default {
-  name: 'PlTimelineItem',
-  props: {
-    timestamp: {
-      required: true,
-      type: [Number, String],
-      default: 0
-    }
-  },
-  computed: {
-    date () {
-      return moment(this.timestamp).format('MM-DD')
+    name: 'PlTimelineItem',
+    props: {
+        timestamp: {
+            required: true,
+            type: [Number, String],
+            default: 0
+        }
     },
-    time () {
-      return moment(this.timestamp).format('HH:mm')
+    computed: {
+        date () {
+            return moment(this.timestamp).format('MM-DD')
+        },
+        time () {
+            return moment(this.timestamp).format('HH:mm')
+        }
     }
-  }
 }
 </script>
 

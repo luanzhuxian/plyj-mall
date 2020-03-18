@@ -1,42 +1,42 @@
 <template>
-  <div :class="$style.together" v-if="detail">
-    <div :class="$style.productInfo" v-if="detail.preActivity === 1">
-      <div :class="$style.price">
-        <div :class="$style.secondPrice">
-          {{ detail.activityProductModel.price }}
+    <div :class="$style.together" v-if="detail">
+        <div :class="$style.productInfo" v-if="detail.preActivity === 1">
+            <div :class="$style.price">
+                <div :class="$style.secondPrice">
+                    {{ detail.activityProductModel.price }}
+                </div>
+                <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
+            </div>
+            <div :class="$style.desc">活动限量{{ detail.activityProductModel.stock }}件</div>
         </div>
-        <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
-      </div>
-      <div :class="$style.desc">活动限量{{ detail.activityProductModel.stock }}件</div>
+        <div :class="$style.productInfo" v-if="detail.preActivity === 2">
+            <div :class="$style.price">
+                <div :class="$style.secondPrice">
+                    {{ detail.activityProductModel.price }}
+                </div>
+                <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
+                <div :class="$style.number">已抢 {{ detail.activityProductModel.number }}</div>
+            </div>
+            <div :class="$style.desc">
+                <div :class="$style.progress">
+                    <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
+                </div>
+                <div>共 {{ detail.activityProductModel.stock || 0 }} 件</div>
+            </div>
+        </div>
+        <count-down
+            @done="ended"
+            activity-text="距离结束"
+            v-if="detail.preActivity === 2"
+            :endtime="detail.activityProductModel.activityEndTime"
+        />
+        <count-down
+            @done="started"
+            activity-text="距离开始"
+            v-if="detail.preActivity === 1"
+            :endtime="detail.activityProductModel.activityStartTime"
+        />
     </div>
-    <div :class="$style.productInfo" v-if="detail.preActivity === 2">
-      <div :class="$style.price">
-        <div :class="$style.secondPrice">
-          {{ detail.activityProductModel.price }}
-        </div>
-        <del :class="$style.original" v-if="(minPrice !== maxPrice || maxOriginalPrice !== maxPrice) && maxOriginalPrice" v-text="maxOriginalPrice" />
-        <div :class="$style.number">已抢 {{ detail.activityProductModel.number }}</div>
-      </div>
-      <div :class="$style.desc">
-        <div :class="$style.progress">
-          <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
-        </div>
-        <div>共 {{ detail.activityProductModel.stock || 0 }} 件</div>
-      </div>
-    </div>
-    <count-down
-      @done="ended"
-      activity-text="距离结束"
-      v-if="detail.preActivity === 2"
-      :endtime="detail.activityProductModel.activityEndTime"
-    />
-    <count-down
-      @done="started"
-      activity-text="距离开始"
-      v-if="detail.preActivity === 1"
-      :endtime="detail.activityProductModel.activityStartTime"
-    />
-  </div>
 </template>
 
 <script>

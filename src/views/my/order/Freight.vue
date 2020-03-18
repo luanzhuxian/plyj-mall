@@ -1,101 +1,101 @@
 <template>
-  <div :class="$style.freight">
-    <div :class="[$style.panel, $style.panelTop]">
-      <img
-        v-img-error
-        :src="img + '?x-oss-process=style/thum'"
-        alt=""
-      >
-      <div :class="$style.middle">
-        <div
-          :class="$style.main"
-          v-text="lastRecord"
-        />
-        <div :class="$style.sub">
-          <span v-text="courierCompany" />
-          <span v-text="courierNo" />
+    <div :class="$style.freight">
+        <div :class="[$style.panel, $style.panelTop]">
+            <img
+                v-img-error
+                :src="img + '?x-oss-process=style/thum'"
+                alt=""
+            >
+            <div :class="$style.middle">
+                <div
+                    :class="$style.main"
+                    v-text="lastRecord"
+                />
+                <div :class="$style.sub">
+                    <span v-text="courierCompany" />
+                    <span v-text="courierNo" />
+                </div>
+            </div>
+            <div :class="$style.right">
+                <a :href="`tel: ${courierCompanyMobile}`">
+                    <pl-svg
+                        :class="$style.icon"
+                        name="icon-service"
+                    />
+                    <div :class="$style.iconText">
+                        物流客服
+                    </div>
+                </a>
+            </div>
         </div>
-      </div>
-      <div :class="$style.right">
-        <a :href="`tel: ${courierCompanyMobile}`">
-          <pl-svg
-            :class="$style.icon"
-            name="icon-service"
-          />
-          <div :class="$style.iconText">
-            物流客服
-          </div>
-        </a>
-      </div>
+        <pl-timeline
+            v-if="freightData.length > 0"
+            :class="$style.timeline"
+        >
+            <pl-timeline-item
+                v-for="(item, i) of freightData"
+                :key="i"
+                :timestamp="item.msgTime * 1000"
+            >
+                <div
+                    :class="$style.freightContent"
+                    v-text="item.content"
+                />
+            </pl-timeline-item>
+        </pl-timeline>
+        <p
+            :class="$style.tip"
+            v-else-if="!loading"
+        >
+            暂无物流信息
+        </p>
     </div>
-    <pl-timeline
-      v-if="freightData.length > 0"
-      :class="$style.timeline"
-    >
-      <pl-timeline-item
-        v-for="(item, i) of freightData"
-        :key="i"
-        :timestamp="item.msgTime * 1000"
-      >
-        <div
-          :class="$style.freightContent"
-          v-text="item.content"
-        />
-      </pl-timeline-item>
-    </pl-timeline>
-    <p
-      :class="$style.tip"
-      v-else-if="!loading"
-    >
-      暂无物流信息
-    </p>
-  </div>
 </template>
 
 <script>
 import { getFreightData } from '../../../apis/order-manager'
 
 export default {
-  name: 'Freight',
-  props: {
-    orderId: {
-      type: String,
-      default: ''
+    name: 'Freight',
+    props: {
+        orderId: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {
+            loading: false,
+            img: '',
+            freightData: [],
+            courierCompany: '',
+            courierNo: '',
+            courierCompanyMobile: '',
+            lastRecord: ''
+        }
+    },
+    async activated () {
+        try {
+            this.loading = true
+            this.img = this.$route.query.img || ''
+            const { result } = await getFreightData(this.orderId)
+            result.trackModelList.sort((a, b) => b.msgTime - a.msgTime)
+            this.freightData = result.trackModelList
+            this.courierCompany = result.courierCompany
+            this.courierNo = result.courierNo
+            this.courierCompanyMobile = result.courierCompanyMobile
+            if (this.freightData.length > 0) {
+                this.lastRecord = this.freightData[0].content
+            }
+        } catch (e) {
+            throw e
+        } finally {
+            this.loading = false
+        }
+    },
+    deactivated () {
+        this.lastRecord = ''
     }
-  },
-  data () {
-    return {
-      loading: false,
-      img: '',
-      freightData: [],
-      courierCompany: '',
-      courierNo: '',
-      courierCompanyMobile: '',
-      lastRecord: ''
-    }
-  },
-  async activated () {
-    try {
-      this.loading = true
-      this.img = this.$route.query.img || ''
-      let { result } = await getFreightData(this.orderId)
-      result.trackModelList.sort((a, b) => b.msgTime - a.msgTime)
-      this.freightData = result.trackModelList
-      this.courierCompany = result.courierCompany
-      this.courierNo = result.courierNo
-      this.courierCompanyMobile = result.courierCompanyMobile
-      if (this.freightData.length > 0) {
-        this.lastRecord = this.freightData[0].content
-      }
-    } catch (e) {
-      throw e
-    } finally {
-      this.loading = false
-    }
-  },
-  deactivated () {
-    this.lastRecord = ''
-  }
 }
 </script>
 

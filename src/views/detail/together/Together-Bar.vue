@@ -1,35 +1,35 @@
 <template>
-  <div :class="$style.together" v-if="detail">
-    <div v-if="detail.preActivity !== 2" :class="$style.preTogether">
-      <div :class="$style.preText" />
-      <div :class="$style.line" />
-      <div>
-        <together-count-down
-          @done="started"
-          activity-text="距活动开始仅剩"
-          :endtime="detail.activityProductModel.activityStartTime"
-        />
-        <div :class="$style.desc">活动商品数量{{ detail.activityProductModel.stock }}件{{ detail.activityProductModel.prizePool == 0 ? '' : '，成团最多瓜分' + detail.activityProductModel.prizePool + '元' }}</div>
-      </div>
-    </div>
-    <div v-if="detail.preActivity === 2" :class="$style.nowTogether">
-      <div :class="$style.nowText" />
-      <div :class="$style.line" />
-      <div>
-        <together-count-down
-          @done="ended"
-          activity-text="距活动结束仅剩"
-          :endtime="detail.activityProductModel.activityEndTime"
-        />
-        <div :class="$style.desc">
-          <div :class="$style.progress">
-            <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
-          </div>
-          <div>{{ detail.activityProductModel.stock || 0 }}人</div>
+    <div :class="$style.together" v-if="detail">
+        <div v-if="detail.preActivity !== 2" :class="$style.preTogether">
+            <div :class="$style.preText" />
+            <div :class="$style.line" />
+            <div>
+                <together-count-down
+                    @done="started"
+                    activity-text="距活动开始仅剩"
+                    :endtime="detail.activityProductModel.activityStartTime"
+                />
+                <div :class="$style.desc">活动商品数量{{ detail.activityProductModel.stock }}件{{ detail.activityProductModel.prizePool == 0 ? '' : '，成团最多瓜分' + detail.activityProductModel.prizePool + '元' }}</div>
+            </div>
         </div>
-      </div>
+        <div v-if="detail.preActivity === 2" :class="$style.nowTogether">
+            <div :class="$style.nowText" />
+            <div :class="$style.line" />
+            <div>
+                <together-count-down
+                    @done="ended"
+                    activity-text="距活动结束仅剩"
+                    :endtime="detail.activityProductModel.activityEndTime"
+                />
+                <div :class="$style.desc">
+                    <div :class="$style.progress">
+                        <div :class="$style.percent" :style="{width: (detail.activityProductModel.number / detail.activityProductModel.stock) * 100 + '%' }" />
+                    </div>
+                    <div>{{ detail.activityProductModel.stock || 0 }}人</div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>

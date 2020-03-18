@@ -1,358 +1,358 @@
 <template>
-  <div
-    v-if="loaded"
-    class="refund-detail"
-    :class="$style.refundDetail"
-  >
-    <div :class="$style.title">
-      <top-text
-        :title="refundDetail.returnStatusText"
-        :tip="suggestionMap[refundStatus]"
-      />
-    </div>
-
-    <section
-      v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN' || refundStatus === 'REFUND_PRODUCT'"
-      :class="[$style.panel, $style.expressPanel]"
+    <div
+        v-if="loaded"
+        class="refund-detail"
+        :class="$style.refundDetail"
     >
-      <div
-        v-if="refundStatus === 'REFUND_PRODUCT'"
-        :class="$style.expressItem"
-      >
-        <pl-svg
-          :class="$style.expressIcon"
-          name="icon-express"
-        />
-        <div :class="$style.right">
-          <div
-            :class="[$style.main, $style.bold]"
-            v-text="refundDetail.shipChannelText"
-          />
-          <div
-            :class="$style.sub"
-            v-text="`运单号：${refundDetail.shipSn}`"
-          />
-        </div>
-      </div>
-      <div :class="$style.expressItem">
-        <pl-svg
-          :class="$style.expressIcon"
-          name="icon-express-receive"
-        />
-        <div :class="$style.right">
-          <div :class="$style.main">
-            <span
-              :class="$style.name"
-              v-text="`退货信息：${refundDetail.refundUserName}`"
+        <div :class="$style.title">
+            <top-text
+                :title="refundDetail.returnStatusText"
+                :tip="suggestionMap[refundStatus]"
             />
-            <span
-              :class="$style.phone"
-              v-text="refundDetail.refundMobile"
-            />
-          </div>
-          <div
-            :class="$style.sub"
-            v-text="refundDetail.refundAddress"
-          />
         </div>
-      </div>
-    </section>
 
-    <section
-      v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
-      :class="[$style.panel, $style.expressInfoPanel]"
-    >
-      <pl-fields
-        text="快递公司："
-        :right-text="form.expressName || '请选择'"
-        right-text-weight="bold"
-        show-right-icon
-        @click="isPickerShow=true"
-      />
-      <pl-form-item>
-        <label
-          for="expressNo"
-          :class="$style.expressNo"
+        <section
+            v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN' || refundStatus === 'REFUND_PRODUCT'"
+            :class="[$style.panel, $style.expressPanel]"
         >
-          快递单号：
-        </label>
-        <pl-input
-          type="text"
-          v-model="form.expressNo"
-          placeholder="请输入快递单号"
-          align="right"
-        />
-      </pl-form-item>
-    </section>
-
-    <section :class="[$style.panel, $style.amountPanel]">
-      <div :class="$style.top">
-        <div :class="$style.item">
-          <span :class="[$style.itemLeft, $style.bold]">
-            应退金额：
-          </span>
-          <span :class="$style.itemRight">
             <div
-              v-if="refundDetail.shouldRefund"
-              :class="$style.price"
-              v-text="`￥${refundDetail.shouldRefund}`"
-            />
-          </span>
-        </div>
-        <div :class="[$style.item, $style.larger]">
-          <span :class="[$style.itemLeft, $style.bold]">
-            实退金额：
-          </span>
-          <span
-            v-if="refundDetail.actualRefund"
-            :class="[$style.itemRight, $style.price]"
-            v-text="`￥${refundDetail.actualRefund}`"
-          />
-        </div>
-        <div
-          v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT_WAIT_RETURN'"
-          :class="$style.tips"
-        >
-          <span>运费不可退，</span>
-          <span v-if="refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.couponAmount">优惠{{ refundDetail.mallOrderProductRModel.couponAmount }}元不可退，</span>
-          <span v-if="refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.scholarShipAmount">红包(奖学金){{ refundDetail.mallOrderProductRModel.scholarShipAmount }}元不可退，</span>
-          如有疑问，请联系商家协商
-        </div>
-        <div
-          v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
-          :class="$style.tips"
-        >
-          <div>退款返还您的实际付款金额，优惠劵、红包(奖学金)将不予退回</div>
-          <div>退款到帐时间，请查看您的付款账户</div>
-        </div>
-      </div>
-      <div :class="$style.bottom">
-        <collapse v-model="collepseActiveNames">
-          <collapse-item
-            name="1"
-            title="退款进度"
-          >
-            <pl-timeline>
-              <pl-timeline-item
-                v-for="(item, i) of refundProgress"
-                :key="i"
-                :timestamp="item.createTime"
-              >
-                <div
-                  :class="$style.refundProgressContent"
-                  v-text="item.operatingLog"
+                v-if="refundStatus === 'REFUND_PRODUCT'"
+                :class="$style.expressItem"
+            >
+                <pl-svg
+                    :class="$style.expressIcon"
+                    name="icon-express"
                 />
-              </pl-timeline-item>
-            </pl-timeline>
-          </collapse-item>
-        </collapse>
-      </div>
-    </section>
+                <div :class="$style.right">
+                    <div
+                        :class="[$style.main, $style.bold]"
+                        v-text="refundDetail.shipChannelText"
+                    />
+                    <div
+                        :class="$style.sub"
+                        v-text="`运单号：${refundDetail.shipSn}`"
+                    />
+                </div>
+            </div>
+            <div :class="$style.expressItem">
+                <pl-svg
+                    :class="$style.expressIcon"
+                    name="icon-express-receive"
+                />
+                <div :class="$style.right">
+                    <div :class="$style.main">
+                        <span
+                            :class="$style.name"
+                            v-text="`退货信息：${refundDetail.refundUserName}`"
+                        />
+                        <span
+                            :class="$style.phone"
+                            v-text="refundDetail.refundMobile"
+                        />
+                    </div>
+                    <div
+                        :class="$style.sub"
+                        v-text="refundDetail.refundAddress"
+                    />
+                </div>
+            </div>
+        </section>
 
-    <div :class="[$style.panel, $style.refundInfoPanel]">
-      <module-title
-        title="退款信息"
-        size="mini"
-      />
-      <div :class="$style.productInfo">
-        <order-item
-          :img="refundDetail.productPic + '?x-oss-process=style/thum'"
-          :name="refundDetail.productName"
-          :price="refundDetail.productPrice"
-          :count="refundDetail.productCount"
-          :option="refundDetail.skuName2 ? `${refundDetail.skuName},${refundDetail.skuName2}` : refundDetail.skuName"
-          :product-id="refundDetail.productId"
-          route-name="Product"
-        />
-      </div>
-      <div :class="$style.infoList">
-        <pl-list
-          title="退单编号："
-          :content="refundDetail.id"
-        />
-        <pl-list
-          title="订单编号："
-          :content="refundDetail.orderId"
-        />
-        <pl-list
-          title="服务类型："
-          :content="refundTypeMap[refundDetail.refundType]"
-        />
-        <pl-list
-          v-if="refundDetail.refundType === 1 && refundDetail.orderType === 'PHYSICAL'"
-          title="货物状态："
-          :content="receiveStatusMap[refundDetail.receiveStatus]"
-        />
-        <pl-list
-          v-if="refundDetail.applyReasonText"
-          title="退款原因："
-          :content="refundDetail.applyReasonText"
-        />
-        <pl-list
-          title="申请件数："
-          :content="`${refundDetail.productCount}件`"
-        />
-        <pl-list
-          title="申请时间："
-          :content="refundDetail.applyTime"
-        />
-      </div>
-      <div :class="[$style.infoList, $style.borderTop]" v-if="refundDetail.pictures.length || refundDetail.applyContent">
-        <pl-list
-          v-if="refundDetail.applyContent"
-          title="问题描述："
-          :content="refundDetail.applyContent"
-        />
-        <pl-list
-          v-if="refundDetail.pictures.length"
-          :class="$style.imgListWrapper"
-          title="问题描述："
+        <section
+            v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
+            :class="[$style.panel, $style.expressInfoPanel]"
         >
-          <div :class="$style.imgList">
-            <img
-              v-for="(img, i) of refundDetail.pictures"
-              :key="i"
-              :src="img + '?x-oss-process=style/thum'"
-              v-img-error
-              v-imger:refundImg="img"
-              alt="退款图片"
-            >
-          </div>
-        </pl-list>
-      </div>
-    </div>
+            <pl-fields
+                text="快递公司："
+                :right-text="form.expressName || '请选择'"
+                right-text-weight="bold"
+                show-right-icon
+                @click="isPickerShow=true"
+            />
+            <pl-form-item>
+                <label
+                    for="expressNo"
+                    :class="$style.expressNo"
+                >
+                    快递单号：
+                </label>
+                <pl-input
+                    type="text"
+                    v-model="form.expressNo"
+                    placeholder="请输入快递单号"
+                    align="right"
+                />
+            </pl-form-item>
+        </section>
 
-    <div
-      v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
-      :class="$style.footerSubmit"
-    >
-      <pl-button
-        size="larger"
-        type="warning"
-        :loading="loading"
-        :disabled="loading"
-        @click="submit"
-      >
-        提交申请
-      </pl-button>
-    </div>
-    <div
-      v-else
-      :class="$style.footer"
-    >
-      <pl-button
-        v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
-        round
-        plain
-        @click="deleteOrder"
-      >
-        删除
-      </pl-button>
-      <pl-button
-        round
-        plain
-        @click="isPopupShow=true"
-      >
-        联系我们
-      </pl-button>
-      <pl-button
-        v-if="refundStatus==='WAIT_CHECK'"
-        round
-        plain
-        @click="$router.push({ name: 'RefundApply', params: { orderId: refundDetail.orderId, orderProductRId: refundDetail.orderDetailId, refundType: refundDetail.refundType, type: 'MODIFY', refundId: refundDetail.id } })"
-      >
-        更改退单
-      </pl-button>
-      <pl-button
-        v-if="refundStatus==='WAIT_CHECK'"
-        round
-        plain
-        @click="cancelApplication"
-      >
-        取消申请
-      </pl-button>
-    </div>
-    <pl-popup
-      ref="contact"
-      :show.sync="isPopupShow"
-    >
-      <template name="title">
-        <div :class="$style.popupTitle">
-          <pl-svg
-            :class="$style.popupTitleIcon"
-            name="icon-rows"
-          />
-          <span>联系我们</span>
+        <section :class="[$style.panel, $style.amountPanel]">
+            <div :class="$style.top">
+                <div :class="$style.item">
+                    <span :class="[$style.itemLeft, $style.bold]">
+                        应退金额：
+                    </span>
+                    <span :class="$style.itemRight">
+                        <div
+                            v-if="refundDetail.shouldRefund"
+                            :class="$style.price"
+                            v-text="`￥${refundDetail.shouldRefund}`"
+                        />
+                    </span>
+                </div>
+                <div :class="[$style.item, $style.larger]">
+                    <span :class="[$style.itemLeft, $style.bold]">
+                        实退金额：
+                    </span>
+                    <span
+                        v-if="refundDetail.actualRefund"
+                        :class="[$style.itemRight, $style.price]"
+                        v-text="`￥${refundDetail.actualRefund}`"
+                    />
+                </div>
+                <div
+                    v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT_WAIT_RETURN'"
+                    :class="$style.tips"
+                >
+                    <span>运费不可退，</span>
+                    <span v-if="refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.couponAmount">优惠{{ refundDetail.mallOrderProductRModel.couponAmount }}元不可退，</span>
+                    <span v-if="refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.scholarShipAmount">红包(奖学金){{ refundDetail.mallOrderProductRModel.scholarShipAmount }}元不可退，</span>
+                    如有疑问，请联系商家协商
+                </div>
+                <div
+                    v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
+                    :class="$style.tips"
+                >
+                    <div>退款返还您的实际付款金额，优惠劵、红包(奖学金)将不予退回</div>
+                    <div>退款到帐时间，请查看您的付款账户</div>
+                </div>
+            </div>
+            <div :class="$style.bottom">
+                <collapse v-model="collepseActiveNames">
+                    <collapse-item
+                        name="1"
+                        title="退款进度"
+                    >
+                        <pl-timeline>
+                            <pl-timeline-item
+                                v-for="(item, i) of refundProgress"
+                                :key="i"
+                                :timestamp="item.createTime"
+                            >
+                                <div
+                                    :class="$style.refundProgressContent"
+                                    v-text="item.operatingLog"
+                                />
+                            </pl-timeline-item>
+                        </pl-timeline>
+                    </collapse-item>
+                </collapse>
+            </div>
+        </section>
+
+        <div :class="[$style.panel, $style.refundInfoPanel]">
+            <module-title
+                title="退款信息"
+                size="mini"
+            />
+            <div :class="$style.productInfo">
+                <order-item
+                    :img="refundDetail.productPic + '?x-oss-process=style/thum'"
+                    :name="refundDetail.productName"
+                    :price="refundDetail.productPrice"
+                    :count="refundDetail.productCount"
+                    :option="refundDetail.skuName2 ? `${refundDetail.skuName},${refundDetail.skuName2}` : refundDetail.skuName"
+                    :product-id="refundDetail.productId"
+                    route-name="Product"
+                />
+            </div>
+            <div :class="$style.infoList">
+                <pl-list
+                    title="退单编号："
+                    :content="refundDetail.id"
+                />
+                <pl-list
+                    title="订单编号："
+                    :content="refundDetail.orderId"
+                />
+                <pl-list
+                    title="服务类型："
+                    :content="refundTypeMap[refundDetail.refundType]"
+                />
+                <pl-list
+                    v-if="refundDetail.refundType === 1 && refundDetail.orderType === 'PHYSICAL'"
+                    title="货物状态："
+                    :content="receiveStatusMap[refundDetail.receiveStatus]"
+                />
+                <pl-list
+                    v-if="refundDetail.applyReasonText"
+                    title="退款原因："
+                    :content="refundDetail.applyReasonText"
+                />
+                <pl-list
+                    title="申请件数："
+                    :content="`${refundDetail.productCount}件`"
+                />
+                <pl-list
+                    title="申请时间："
+                    :content="refundDetail.applyTime"
+                />
+            </div>
+            <div :class="[$style.infoList, $style.borderTop]" v-if="refundDetail.pictures.length || refundDetail.applyContent">
+                <pl-list
+                    v-if="refundDetail.applyContent"
+                    title="问题描述："
+                    :content="refundDetail.applyContent"
+                />
+                <pl-list
+                    v-if="refundDetail.pictures.length"
+                    :class="$style.imgListWrapper"
+                    title="问题描述："
+                >
+                    <div :class="$style.imgList">
+                        <img
+                            v-for="(img, i) of refundDetail.pictures"
+                            :key="i"
+                            :src="img + '?x-oss-process=style/thum'"
+                            v-img-error
+                            v-imger:refundImg="img"
+                            alt="退款图片"
+                        >
+                    </div>
+                </pl-list>
+            </div>
         </div>
-      </template>
-      <template>
-        <div :class="$style.popupContent">
-          <div :class="$style.popupAddress">
-            <pl-svg
-              :class="$style.popupAddressLeftIcon"
-              name="icon-address-blue"
-            />
-            <span
-              :class="$style.popupAddressText"
-              v-text="address"
-            />
-            <pl-svg
-              :class="$style.popupAddressRightIcon"
-              name="icon-copy"
-              @click="doCopy"
-            />
-          </div>
-          <a :href="`tel: ${supportPhone}`">
+
+        <div
+            v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
+            :class="$style.footerSubmit"
+        >
             <pl-button
-              size="larger"
-              background-color="#387AF6"
-              prefix-icon="icon-mobile-blue"
-              round
+                size="larger"
+                type="warning"
+                :loading="loading"
+                :disabled="loading"
+                @click="submit"
             >
-              立即拨打
+                提交申请
             </pl-button>
-          </a>
         </div>
-      </template>
-    </pl-popup>
-    <pl-picker
-      :show.sync="isPickerShow"
-      :slots="pickerColumns"
-      @confirm="onPickerConfirm"
-    />
-  </div>
+        <div
+            v-else
+            :class="$style.footer"
+        >
+            <pl-button
+                v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
+                round
+                plain
+                @click="deleteOrder"
+            >
+                删除
+            </pl-button>
+            <pl-button
+                round
+                plain
+                @click="isPopupShow=true"
+            >
+                联系我们
+            </pl-button>
+            <pl-button
+                v-if="refundStatus==='WAIT_CHECK'"
+                round
+                plain
+                @click="$router.push({ name: 'RefundApply', params: { orderId: refundDetail.orderId, orderProductRId: refundDetail.orderDetailId, refundType: refundDetail.refundType, type: 'MODIFY', refundId: refundDetail.id } })"
+            >
+                更改退单
+            </pl-button>
+            <pl-button
+                v-if="refundStatus==='WAIT_CHECK'"
+                round
+                plain
+                @click="cancelApplication"
+            >
+                取消申请
+            </pl-button>
+        </div>
+        <pl-popup
+            ref="contact"
+            :show.sync="isPopupShow"
+        >
+            <template name="title">
+                <div :class="$style.popupTitle">
+                    <pl-svg
+                        :class="$style.popupTitleIcon"
+                        name="icon-rows"
+                    />
+                    <span>联系我们</span>
+                </div>
+            </template>
+            <template>
+                <div :class="$style.popupContent">
+                    <div :class="$style.popupAddress">
+                        <pl-svg
+                            :class="$style.popupAddressLeftIcon"
+                            name="icon-address-blue"
+                        />
+                        <span
+                            :class="$style.popupAddressText"
+                            v-text="address"
+                        />
+                        <pl-svg
+                            :class="$style.popupAddressRightIcon"
+                            name="icon-copy"
+                            @click="doCopy"
+                        />
+                    </div>
+                    <a :href="`tel: ${supportPhone}`">
+                        <pl-button
+                            size="larger"
+                            background-color="#387AF6"
+                            prefix-icon="icon-mobile-blue"
+                            round
+                        >
+                            立即拨打
+                        </pl-button>
+                    </a>
+                </div>
+            </template>
+        </pl-popup>
+        <pl-picker
+            :show.sync="isPickerShow"
+            :slots="pickerColumns"
+            @confirm="onPickerConfirm"
+        />
+    </div>
 
-  <div
-    v-else
-    :class="$style.skeleton"
-  >
-    <div :class="[$style.skeleton1 + ' ' + $style.skeAnimation]" />
-    <div :class="[$style.skeleton2 + ' ' + $style.skeAnimation]" />
-    <div :class="$style.skeleton3">
-      <AddressItemSkeleton />
-      <AddressItemSkeleton />
+    <div
+        v-else
+        :class="$style.skeleton"
+    >
+        <div :class="[$style.skeleton1 + ' ' + $style.skeAnimation]" />
+        <div :class="[$style.skeleton2 + ' ' + $style.skeAnimation]" />
+        <div :class="$style.skeleton3">
+            <AddressItemSkeleton />
+            <AddressItemSkeleton />
+        </div>
+        <div :class="$style.skeleton4">
+            <div :class="$style.skeletonPrice">
+                <div :class="[$style.skeletonPriceLeft, $style.skeAnimation]" />
+                <div :class="[$style.skeletonPriceRight, $style.skeAnimation]" />
+            </div>
+            <div :class="$style.skeletonPrice">
+                <div :class="[$style.skeletonPriceLeft, $style.skeAnimation]" />
+                <div :class="[$style.skeletonPriceRight, $style.skeAnimation]" />
+            </div>
+        </div>
+        <div :class="$style.skeleton4">
+            <div :class="[$style.skeleton41, $style.skeAnimation]" />
+            <div :class="[$style.skeleton42, $style.skeAnimation]" />
+            <OrderItemSkeleton />
+            <div :class="[$style.skeleton44, $style.skeAnimation]" />
+            <div :class="[$style.skeleton45, $style.skeAnimation]" />
+            <div :class="[$style.skeleton46, $style.skeAnimation]" />
+            <div :class="[$style.skeleton47, $style.skeAnimation]" />
+            <div :class="[$style.skeleton48, $style.skeAnimation]" />
+        </div>
     </div>
-    <div :class="$style.skeleton4">
-      <div :class="$style.skeletonPrice">
-        <div :class="[$style.skeletonPriceLeft, $style.skeAnimation]" />
-        <div :class="[$style.skeletonPriceRight, $style.skeAnimation]" />
-      </div>
-      <div :class="$style.skeletonPrice">
-        <div :class="[$style.skeletonPriceLeft, $style.skeAnimation]" />
-        <div :class="[$style.skeletonPriceRight, $style.skeAnimation]" />
-      </div>
-    </div>
-    <div :class="$style.skeleton4">
-      <div :class="[$style.skeleton41, $style.skeAnimation]" />
-      <div :class="[$style.skeleton42, $style.skeAnimation]" />
-      <OrderItemSkeleton />
-      <div :class="[$style.skeleton44, $style.skeAnimation]" />
-      <div :class="[$style.skeleton45, $style.skeAnimation]" />
-      <div :class="[$style.skeleton46, $style.skeAnimation]" />
-      <div :class="[$style.skeleton47, $style.skeAnimation]" />
-      <div :class="[$style.skeleton48, $style.skeAnimation]" />
-    </div>
-  </div>
 </template>
 
 <script>
@@ -371,209 +371,209 @@ import { mapGetters } from 'vuex'
 const expressMapCode = 'KYYQJKDGS'
 
 const suggestionMap = {
-  WAIT_CHECK: '请耐心等待商家审核，如有问题请联系客服',
-  REFUNDING: '请耐心等待商家审核，如有问题请联系客服',
-  REFUND_PRODUCT_WAIT_RETURN: '请根据商家收货地址，将商品寄回',
-  REFUND_PRODUCT: '请耐心等待商家收货',
-  FINISHED: '您的退款申请已受理完成',
-  CLOSED: '因为您超时操作，本次退款申请已关闭',
-  CANCEL: '您已撤销退款申请，退款已关闭',
-  REJECT: '商家驳回您的退款申请，如有问题请尽快与商家协商'
+    WAIT_CHECK: '请耐心等待商家审核，如有问题请联系客服',
+    REFUNDING: '请耐心等待商家审核，如有问题请联系客服',
+    REFUND_PRODUCT_WAIT_RETURN: '请根据商家收货地址，将商品寄回',
+    REFUND_PRODUCT: '请耐心等待商家收货',
+    FINISHED: '您的退款申请已受理完成',
+    CLOSED: '因为您超时操作，本次退款申请已关闭',
+    CANCEL: '您已撤销退款申请，退款已关闭',
+    REJECT: '商家驳回您的退款申请，如有问题请尽快与商家协商'
 }
 
 const receiveStatusMap = {
-  '1': '已收到货',
-  '2': '未收到货'
+    1: '已收到货',
+    2: '未收到货'
 }
 
-function rebuildDate (list) {
-  let array = list.split(' ')
-  array[0] = array[0].slice(array[0].indexOf('-') + 1)
-  array[1] = array[1].slice(0, array[1].lastIndexOf(':'))
-  return array
+const rebuildDate = list => {
+    const array = list.split(' ')
+    array[0] = array[0].slice(array[0].indexOf('-') + 1)
+    array[1] = array[1].slice(0, array[1].lastIndexOf(':'))
+    return array
 }
 
-function replaceMobile (mobile) {
-  return mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
-}
+const replaceMobile = mobile => mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
 
-function updateLocalStorage (key, value) {
-  const arr = JSON.parse(localStorage.getItem(key) || '[]')
-  arr.push(value)
-  localStorage.setItem(key, JSON.stringify(arr))
+const updateLocalStorage = (key, value) => {
+    const arr = JSON.parse(localStorage.getItem(key) || '[]')
+    arr.push(value)
+    localStorage.setItem(key, JSON.stringify(arr))
 }
 
 export default {
-  name: 'RefundDetail',
-  components: {
-    TopText,
-    ModuleTitle,
-    OrderItem,
-    OrderItemSkeleton,
-    AddressItemSkeleton,
-    Collapse,
-    CollapseItem
-  },
-  props: {
-    id: {
-      type: String,
-      default: null
-    }
-  },
-  data () {
-    return {
-      loading: false,
-      loaded: false,
-      // refundStatus WAIT_CHECK: '待审核', REFUNDING: '退款中', REFUND_PRODUCT_WAIT_RETURN: '退换货-待退货', REFUND_PRODUCT: '退换货-已退货', FINISHED: '退款成功', CLOSED: '退款关闭', CANCEL: '退款关闭', REJECT: '退款关闭'
-      refundStatus: '',
-      refundDetail: {},
-      form: {
-        expressName: '',
-        expressNo: ''
-      },
-      refundProgress: [],
-      isPopupShow: false,
-      isPickerShow: false,
-      pickerColumns: [
-        {
-          flex: 1,
-          textAlign: 'center',
-          values: []
+    name: 'RefundDetail',
+    components: {
+        TopText,
+        ModuleTitle,
+        OrderItem,
+        OrderItemSkeleton,
+        AddressItemSkeleton,
+        Collapse,
+        CollapseItem
+    },
+    props: {
+        id: {
+            type: String,
+            default: null
         }
-      ],
-      collepseActiveNames: [],
-      suggestionMap,
-      receiveStatusMap,
-      expressMap: []
-    }
-  },
-  computed: {
-    ...mapGetters(['refundTypeMap', 'address', 'supportPhone'])
-  },
-  activated () {
-    this.getDetail()
-    this.getExpressMap()
-  },
-  deactivated () {
-    resetForm(this.form)
-    this.collepseActiveNames = []
-  },
-  methods: {
-    async getDetail () {
-      try {
-        this.loaded = false
-        const { id, refundDetail } = this
-        const { result } = await getRefundOrderDetail({ id })
+    },
+    data () {
+        return {
+            loading: false,
+            loaded: false,
+
+            // refundStatus WAIT_CHECK: '待审核', REFUNDING: '退款中', REFUND_PRODUCT_WAIT_RETURN: '退换货-待退货', REFUND_PRODUCT: '退换货-已退货', FINISHED: '退款成功', CLOSED: '退款关闭', CANCEL: '退款关闭', REJECT: '退款关闭'
+            refundStatus: '',
+            refundDetail: {},
+            form: {
+                expressName: '',
+                expressNo: ''
+            },
+            refundProgress: [],
+            isPopupShow: false,
+            isPickerShow: false,
+            pickerColumns: [
+                {
+                    flex: 1,
+                    textAlign: 'center',
+                    values: []
+                }
+            ],
+            collepseActiveNames: [],
+            suggestionMap,
+            receiveStatusMap,
+            expressMap: []
+        }
+    },
+    computed: {
+        ...mapGetters(['refundTypeMap', 'address', 'supportPhone'])
+    },
+    activated () {
+        this.getDetail()
+        this.getExpressMap()
+    },
+    deactivated () {
+        resetForm(this.form)
+        this.collepseActiveNames = []
+    },
+    methods: {
+        async getDetail () {
+            try {
+                this.loaded = false
+                const { id, refundDetail } = this
+                const { result } = await getRefundOrderDetail({ id })
         this.refundStatus = result.returnStatus;  // eslint-disable-line
-        ({
-          id: refundDetail.id,
-          orderId: refundDetail.orderId,
-          orderDetailId: refundDetail.orderDetailId,
-          orderType: refundDetail.orderType,
-          orderStatus: refundDetail.orderStatus,
-          refundType: refundDetail.refundType,
-          receiveStatus: refundDetail.receiveStatus,
-          returnStatusText: refundDetail.returnStatusText,
-          shipSn: refundDetail.shipSn,
-          shipChannelText: refundDetail.shipChannelText,
-          refundUserName: refundDetail.refundUserName,
-          refundMobile: refundDetail.refundMobile,
-          refundAddress: refundDetail.refundAddress,
-          actualRefund: refundDetail.actualRefund,
-          mallOrderProductRModel: refundDetail.mallOrderProductRModel,
-          shouldRefund: refundDetail.shouldRefund,
-          productId: refundDetail.productId,
-          productPic: refundDetail.productPic,
-          productPrice: refundDetail.productPrice,
-          productName: refundDetail.productName,
-          productCount: refundDetail.productCount,
-          skuName: refundDetail.skuName,
-          skuName2: refundDetail.skuName2,
-          applyReasonText: refundDetail.applyReasonText,
-          applyTime: refundDetail.applyTime,
-          applyContent: refundDetail.applyContent,
-          pictures: refundDetail.pictures
-        } = result)
-        if (result.refundMobile) {
-          this.refundDetail.refundMobile = replaceMobile(result.refundMobile)
+                ({
+                    id: refundDetail.id,
+                    orderId: refundDetail.orderId,
+                    orderDetailId: refundDetail.orderDetailId,
+                    orderType: refundDetail.orderType,
+                    orderStatus: refundDetail.orderStatus,
+                    refundType: refundDetail.refundType,
+                    receiveStatus: refundDetail.receiveStatus,
+                    returnStatusText: refundDetail.returnStatusText,
+                    shipSn: refundDetail.shipSn,
+                    shipChannelText: refundDetail.shipChannelText,
+                    refundUserName: refundDetail.refundUserName,
+                    refundMobile: refundDetail.refundMobile,
+                    refundAddress: refundDetail.refundAddress,
+                    actualRefund: refundDetail.actualRefund,
+                    mallOrderProductRModel: refundDetail.mallOrderProductRModel,
+                    shouldRefund: refundDetail.shouldRefund,
+                    productId: refundDetail.productId,
+                    productPic: refundDetail.productPic,
+                    productPrice: refundDetail.productPrice,
+                    productName: refundDetail.productName,
+                    productCount: refundDetail.productCount,
+                    skuName: refundDetail.skuName,
+                    skuName2: refundDetail.skuName2,
+                    applyReasonText: refundDetail.applyReasonText,
+                    applyTime: refundDetail.applyTime,
+                    applyContent: refundDetail.applyContent,
+                    pictures: refundDetail.pictures
+                } = result)
+                if (result.refundMobile) {
+                    this.refundDetail.refundMobile = replaceMobile(result.refundMobile)
+                }
+                this.refundProgress = result.operations.map(item => {
+                    item.createTimeArray = rebuildDate(item.createTime)
+                    return item
+                })
+                this.loaded = true
+            } catch (e) {
+                throw e
+            }
+        },
+
+        // 获取快递公司数据字典
+        async getExpressMap () {
+            const { result: expressMap } = await getExpressMap(expressMapCode)
+            this.expressMap = expressMap
+            this.pickerColumns[0].values = expressMap.map(item => item.dictDataValue)
+        },
+        onPickerConfirm (selected) {
+            this.form.expressName = selected[0]
+            this.isPickerShow = false
+        },
+        async cancelApplication () {
+            try {
+                const { id } = this
+                await this.$confirm('退单正在审核中，确定要取消？')
+                await cancelRefundApplication({ id })
+                this.$success('取消申请成功')
+                this.getDetail()
+                updateLocalStorage('UPDATE_REFUND_LIST', { id, action: 'cancel' })
+            } catch (e) {
+                throw e
+            }
+        },
+        async deleteOrder () {
+            try {
+                const { id } = this
+                await this.$confirm('是否删除当前订单？ 删除后不可找回')
+                await deleteRefundOrder({ id })
+                this.$success('删除成功')
+                updateLocalStorage('UPDATE_REFUND_LIST', { id, action: 'delete' })
+                setTimeout(() => {
+                    this.$router.go(-1)
+                }, 2000)
+            } catch (e) {
+                throw e
+            }
+        },
+        async submit () {
+            try {
+                if (!this.form.expressName) return this.$warning('请选择物流公司')
+                if (!this.form.expressNo.trim()) return this.$warning('请输入快递单号')
+                if (!isExpressNumber(this.form.expressNo)) return this.$warning('请输入正确的快递单号')
+                this.loading = true
+                const { dictDataKey: shipChannel } = this.expressMap.find(item => item.dictDataValue === this.form.expressName)
+                const params = {
+                    id: this.id,
+                    shipChannel,
+                    shipSn: this.form.expressNo
+                }
+                await submitExpressInfo(params)
+                this.loading = false
+                this.$success('提交申请成功')
+                this.getDetail()
+                updateLocalStorage('UPDATE_REFUND_LIST', { id: this.id, action: 'ship' })
+            } catch (e) {
+                throw e
+            } finally {
+                this.loading = false
+            }
+        },
+        doCopy () {
+            this.$copyText(this.address)
+                .then(e => {
+                    this.$success('复制成功')
+                }, e => {
+                    console.error(e)
+                })
         }
-        this.refundProgress = result.operations.map(item => {
-          item.createTimeArray = rebuildDate(item.createTime)
-          return item
-        })
-        this.loaded = true
-      } catch (e) {
-        throw e
-      }
-    },
-    // 获取快递公司数据字典
-    async getExpressMap () {
-      const { result: expressMap } = await getExpressMap(expressMapCode)
-      this.expressMap = expressMap
-      this.pickerColumns[0].values = expressMap.map(item => item.dictDataValue)
-    },
-    onPickerConfirm (selected) {
-      this.form.expressName = selected[0]
-      this.isPickerShow = false
-    },
-    async cancelApplication () {
-      try {
-        const { id } = this
-        await this.$confirm('退单正在审核中，确定要取消？')
-        await cancelRefundApplication({ id })
-        this.$success('取消申请成功')
-        this.getDetail()
-        updateLocalStorage('UPDATE_REFUND_LIST', { id, action: 'cancel' })
-      } catch (e) {
-        throw e
-      }
-    },
-    async deleteOrder () {
-      try {
-        const { id } = this
-        await this.$confirm('是否删除当前订单？ 删除后不可找回')
-        await deleteRefundOrder({ id })
-        this.$success('删除成功')
-        updateLocalStorage('UPDATE_REFUND_LIST', { id, action: 'delete' })
-        setTimeout(() => {
-          this.$router.go(-1)
-        }, 2000)
-      } catch (e) {
-        throw e
-      }
-    },
-    async submit () {
-      try {
-        if (!this.form.expressName) return this.$warning('请选择物流公司')
-        if (!this.form.expressNo.trim()) return this.$warning('请输入快递单号')
-        if (!isExpressNumber(this.form.expressNo)) return this.$warning('请输入正确的快递单号')
-        this.loading = true
-        const { dictDataKey: shipChannel } = this.expressMap.find(item => item.dictDataValue === this.form.expressName)
-        const params = {
-          id: this.id,
-          shipChannel,
-          shipSn: this.form.expressNo
-        }
-        await submitExpressInfo(params)
-        this.loading = false
-        this.$success('提交申请成功')
-        this.getDetail()
-        updateLocalStorage('UPDATE_REFUND_LIST', { id: this.id, action: 'ship' })
-      } catch (e) {
-        throw e
-      } finally {
-        this.loading = false
-      }
-    },
-    doCopy () {
-      this.$copyText(this.address)
-        .then(e => {
-          this.$success('复制成功')
-        }, e => {
-          console.error(e)
-        })
     }
-  }
 }
 </script>
 

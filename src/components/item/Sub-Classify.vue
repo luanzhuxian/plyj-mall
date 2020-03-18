@@ -1,49 +1,49 @@
 <template>
-  <div :class="$style.subClassify">
-    <div
-      v-for="(item, i) of children"
-      :key="i"
-      :class="{
-        [$style.classifyItem]: true,
-        [$style.active]: id === item.id || !id
-      }"
-      @click="itemClick(item)"
-    >
-      <img
-        class="radius-20"
-        :src="item.categoryPic + '?x-oss-process=style/thum-small'"
-        v-img-error="'classifyIcon'"
-      >
-      <div v-text="item.categoryName" />
+    <div :class="$style.subClassify">
+        <div
+            v-for="(item, i) of children"
+            :key="i"
+            :class="{
+                [$style.classifyItem]: true,
+                [$style.active]: id === item.id || !id
+            }"
+            @click="itemClick(item)"
+        >
+            <img
+                class="radius-20"
+                :src="item.categoryPic + '?x-oss-process=style/thum-small'"
+                v-img-error="'classifyIcon'"
+            >
+            <div v-text="item.categoryName" />
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: 'SubClassify',
-  data () {
-    return {
-      id: ''
+    name: 'SubClassify',
+    data () {
+        return {
+            id: ''
+        }
+    },
+    props: {
+        children: {
+            type: Array,
+            default () {
+                return []
+            }
+        }
+    },
+    methods: {
+        itemClick (item) {
+            this.id = item.id
+            this.$emit('click', {
+                cid: item.id,
+                name: item.categoryName
+            })
+        }
     }
-  },
-  props: {
-    children: {
-      type: Array,
-      default () {
-        return []
-      }
-    }
-  },
-  methods: {
-    itemClick (item) {
-      this.id = item.id
-      this.$emit('click', {
-        cid: item.id,
-        name: item.categoryName
-      })
-    }
-  }
 }
 </script>
 

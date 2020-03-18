@@ -1,94 +1,96 @@
 <template>
-  <div :class="$style.count">
-    <button
-      :class="$style.subtract"
-      @click.stop="subtract"
-      :disabled="localCount <= min || loading || disabled"
-    />
-    <input
-      :class="$style.input"
-      type="tel"
-      :value="localCount"
-      :disabled="disabled"
-      @change="valueChange"
-    >
-    <button
-      :class="$style.add"
-      @click.stop="add"
-      :disabled="localCount >= max || loading || disabled"
-    />
-  </div>
+    <div :class="$style.count">
+        <button
+            :class="$style.subtract"
+            @click.stop="subtract"
+            :disabled="localCount <= min || loading || disabled"
+        />
+        <input
+            :class="$style.input"
+            type="tel"
+            :value="localCount"
+            :disabled="disabled"
+            @change="valueChange"
+        >
+        <button
+            :class="$style.add"
+            @click.stop="add"
+            :disabled="localCount >= max || loading || disabled"
+        />
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'Count',
-  data () {
-    return {
-      localCount: 1,
-      loading: false
-    }
-  },
-  props: {
-    max: {
-      type: [Number, String],
-      default: Number.MAX_VALUE
+    name: 'Count',
+    data () {
+        return {
+            localCount: 1,
+            loading: false
+        }
     },
-    min: {
-      type: [Number, String],
-      default: 1
+    props: {
+        max: {
+            type: [Number, String],
+            default: Number.MAX_VALUE
+        },
+        min: {
+            type: [Number, String],
+            default: 1
+        },
+        count: {
+            type: [Number, String],
+            default: 1
+        },
+        disabled: Boolean
     },
-    count: {
-      type: [Number, String],
-      default: 1
+    watch: {
+        count: {
+            handler (val) {
+                this.localCount = val
+            },
+            immediate: true
+        }
     },
-    disabled: Boolean
-  },
-  watch: {
-    count: {
-      handler (val) {
-        this.localCount = val
-      },
-      immediate: true
-    }
-  },
-  methods: {
-    add () {
-      let temp = this.localCount
-      temp++
-      this.emitChange(temp)
-    },
-    subtract () {
-      let temp = this.localCount
-      temp--
-      this.emitChange(temp)
-    },
-    valueChange (e) {
-      let val = Number.parseInt(e.currentTarget.value)
-      if (val && (val <= this.max && val >= this.min)) {
-        this.emitChange(val)
-      } else {
-        e.target.value = this.localCount
-      }
-    },
-    /**
+    methods: {
+        add () {
+            let temp = this.localCount
+            temp++
+            this.emitChange(temp)
+        },
+        subtract () {
+            let temp = this.localCount
+            temp--
+            this.emitChange(temp)
+        },
+        valueChange (e) {
+            const val = Number.parseInt(e.currentTarget.value)
+            if (val && (val <= this.max && val >= this.min)) {
+                this.emitChange(val)
+            } else {
+                e.target.value = this.localCount
+            }
+        },
+
+        /**
      * 数值改变事件
      * @param count {number} 即将改变的值
      */
-    emitChange (count) {
-      this.loading = true
-      /**
+        emitChange (count) {
+            this.loading = true
+
+            /**
        * 触发change事件，在外部调用回调函数后，再改变localCount，并且可以指定localCount
        * 如果err存在，则不改变当前数值
        */
-      this.$emit('change', count, (err) => {
-        if (!err) {
-          this.localCount = count
+            this.$emit('change', count, err => {
+                if (!err) {
+                    this.localCount = count
+                }
+                this.loading = false
+            })
         }
-        this.loading = false
-      })
     }
-  }
 }
 </script>
 
