@@ -15,19 +15,19 @@
                 >
                     <p :class="$style.title">提前报名，直播开始后直接观看</p>
                     <pl-form-item border v-if="info.isHaveName" label="姓名" prop="signName">
-                        <pl-input v-model="form.signName" placeholder="请输入姓名" />
+                        <pl-input v-model.trim="form.signName" placeholder="请输入姓名" />
                     </pl-form-item>
                     <pl-form-item border v-if="info.isHaveTelphone" label="电话" prop="signTelphone">
-                        <pl-input v-model="form.signTelphone" placeholder="请输入电话" />
+                        <pl-input v-model.trim="form.signTelphone" placeholder="请输入电话" />
                     </pl-form-item>
                     <pl-form-item border v-if="info.isHaveGrade" label="年级" prop="signGrade">
-                        <pl-input v-model="form.signGrade" placeholder="请输入年级" />
+                        <pl-input v-model.trim="form.signGrade" placeholder="请输入年级" />
                     </pl-form-item>
                     <pl-form-item border v-if="info.isHaveRegion" label="所在区域" prop="signRegion">
-                        <pl-input @click="showSelector = true" v-model="form.signRegion" placeholder="请选择所在区域" />
+                        <pl-input @click="showSelector = true" v-model.trim="form.signRegion" placeholder="请选择所在区域" />
                     </pl-form-item>
                     <pl-form-item border v-if="info.isHaveCustomer" :label="info.isHaveCustomer" prop="signTitle">
-                        <pl-input v-model="form.signTitle" :placeholder="'请输入' + info.isHaveCustomer" />
+                        <pl-input v-model.trim="form.signTitle" :placeholder="'请输入' + info.isHaveCustomer" />
                     </pl-form-item>
                 </pl-form>
                 <div :class="$style.button" @click="submit">立即报名</div>
@@ -43,9 +43,9 @@ import { isPhone, checkLength } from './../../../assets/js/validate'
 import { liveSignUp } from './../../../apis/live'
 import Popup from './../../../components/penglai-ui/Popup'
 import CitySelector from './../../../components/common/City-Selector'
-// 验证是否中英文数字
+// 验证是否中英文数字，中间可以有空格
 const signValidator = value => {
-    const reg = /^[a-zA-Z_\u4e00-\u9fa5_1-9]{1,60}$/
+    const reg = /^[a-zA-Z_\u4e00-\u9fa5_0-9_\s_\\-]{1,60}$/
     if (!reg.test(value)) {
         return false
     }
