@@ -190,7 +190,12 @@ export default {
 
                 // 回填数据
                 form[key] = oldForm ? oldForm[key] : ''
-                rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'none' }]
+                // 合并多个实体商品的自定义表单的时候，字段可能重复，此时要判断重复的字段的必填性，以必填为准
+                if (Reflect.has(rule, key) && cus.required) {
+                    rule[key] = [{ required: true, message: `请输入${ cus.fieldName }`, trigger: 'none' }]
+                } else {
+                    rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'none' }]
+                }
             }
             formList.push(form)
             rules.push(rule)
@@ -274,7 +279,7 @@ export default {
          */
         confirmMultipleProduct () {
             const form = this.formData2.formList[0]
-            const rules = this.formData2.rules[0]
+            // const rules = this.formData2.rules[0]
             for (const pro of this.products) {
                 pro.customForm = []
                 const fields = []
@@ -283,7 +288,7 @@ export default {
                     fields.push({
                         fieldName: key,
                         fieldValue: form[key],
-                        required: Number(rules[key][0].required)
+                        required: cus.required
                     })
                 }
                 pro.customForm.push(fields)
