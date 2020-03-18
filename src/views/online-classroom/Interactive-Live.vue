@@ -22,7 +22,7 @@
                             v-for="(item, index) of nowLive"
                             :key="index"
                             :class="$style.nowLiveItem"
-                            @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
+                            @click.capture="$router.push({ name: 'LiveRoom', params: { liveId: item.id } })"
                         >
                             <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                             <div :class="$style.itemBottom">
@@ -53,7 +53,7 @@
                             v-for="(item, index) of futureLive"
                             :key="index"
                             :class="$style.item"
-                            @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
+                            @click.capture="$router.push({ name: 'LiveRoom', params: { liveId: item.id } })"
                         >
                             <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                             <div :class="$style.desc">
