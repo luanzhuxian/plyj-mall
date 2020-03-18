@@ -132,6 +132,7 @@ export default {
         setFormData () {
             const formList = []
             const rules = []
+            // 实体商品的自定义表单不受商品数量的影响
             const count = this.product.productType === 'PHYSICAL_GOODS' ? 1 : this.count
 
             // 获取上次填写的数据，尝试回填
