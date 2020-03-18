@@ -1029,10 +1029,12 @@ export default {
                     const obj = {}
                     for (const productItem of hasCustomBlock) {
                         if (orderType === 'PHYSICAL') {
-                            const userInfo = [...[...productItem.customForm].flat(2)]
-                            // 进行字段去重，去重应注意，如果某个字段已有值了，就不要覆盖了
-                            for (const field of userInfo) {
-                                obj[field.fieldName] = obj[field.fieldName] ? obj[field.fieldName] : field.fieldValue
+                            for (const fields of productItem.customForm) {
+                                const userInfo = [...fields]
+                                // 进行字段去重，去重应注意，如果某个字段已有值了，就不要覆盖了
+                                for (const field of userInfo) {
+                                    obj[field.fieldName] = obj[field.fieldName] ? obj[field.fieldName] : field.fieldValue
+                                }
                             }
                         } else {
                             this.studentInfo = [...productItem.customForm]
@@ -1129,10 +1131,10 @@ export default {
         },
 
         /**
-     * 支付
-     * @param type {number} 1: 普通支付 2: 付尾款
-     * @return {Promise<void>}
-     */
+         * 支付
+         * @param type {number} 1: 普通支付 2: 付尾款
+         * @return {Promise<void>}
+         */
         async pay (type) {
             try {
                 const { orderId } = this
