@@ -385,7 +385,7 @@ export default {
             this.channeUserId = appUserId
             // 当前直播是否结束  (0, "结束"), (1, "开启"), (2, "准备中"), (3, "删除"), (4,"直播中"), (99, "其它");
             if ([1, 2, 4].indexOf(detail.statue) === -1) {
-                await this.$alert('未在直播中')
+                await this.$alert('直播已结束')
                 if (window.history.length > 1) {
                     this.$router.go(-1)
                 } else {
@@ -940,51 +940,51 @@ export default {
 </script>
 
 <style module lang="scss">
-  .live-room {
+.live-room {
     height: 100vh;
     > .live-player {
-      position: relative;
+        position: relative;
     }
     > .play-back-box {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 442px;
-      background-color: #000;
-      > video {
-        height: 100%;
-        object-fit: fill;
-        background-color: #000;
-      }
-      > div {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 100%;
-        height: 100%;
-      }
+        height: 442px;
+        background-color: #000;
+        > video {
+            height: 100%;
+            object-fit: fill;
+            background-color: #000;
+        }
+        > div {
+            width: 100%;
+            height: 100%;
+        }
     }
-  }
-  .player-box {
+}
+.player-box {
     position: relative;
     height: 442px !important;
     > .coverImg {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 442px;
-      object-fit: cover;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 442px;
+        object-fit: cover;
     }
     video {
-      /*object-position: center top;*/
+        /*object-position: center top;*/
     }
-  }
-  .chat-room {
+}
+.chat-room {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 442px) !important;
-  }
-  .tabs {
+}
+.tabs {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -992,41 +992,41 @@ export default {
     font-size: 26px;
     background-color: #fff;
     > div {
-      display: flex;
-      align-items: center;
+        display: flex;
+        align-items: center;
     }
     .tab-item {
-      position: relative;
-      margin-right: 70px;
-      line-height: 68px;
-      > i {
-        font-size: 22px;
-        color: #F2B036;
-      }
-      &:nth-last-of-type(1) {
-        margin-right: 0;
-      }
-      &.active {
-        &:after {
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          content: '';
-          width: 100%;
-          height: 6px;
-          background-color: #F2B036;
-          border-radius: 3px;
+        position: relative;
+        margin-right: 70px;
+        line-height: 68px;
+        > i {
+            font-size: 22px;
+            color: #f2b036;
         }
-      }
+        &:nth-last-of-type(1) {
+            margin-right: 0;
+        }
+        &.active {
+            &:after {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                content: '';
+                width: 100%;
+                height: 6px;
+                background-color: #f2b036;
+                border-radius: 3px;
+            }
+        }
     }
-  }
-  .chat-wrap {
+}
+.chat-wrap {
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
-  }
-  .chat-records {
+}
+.chat-records {
     display: flex;
     min-height: 100%;
     flex-direction: column;
@@ -1034,69 +1034,69 @@ export default {
     padding: 12px 16px;
     box-sizing: border-box;
     > .message-wrap {
-      display: flex;
-      margin-top: 30px;
-      line-height: 36px;
-      font-size: 26px;
-      &.self-message {
-        > .user-name {
-          color: #e84655;
+        display: flex;
+        margin-top: 30px;
+        line-height: 36px;
+        font-size: 26px;
+        &.self-message {
+            > .user-name {
+                color: #e84655;
+            }
         }
-      }
-      &.gift {
-        position: relative;
-      }
-      &.custom-message {
-        padding: 0 8px;
-        line-height: 48px;
-        background-color: #FCE6B7;
-        border-radius: 4px;
-        > .user-name {
-          color: #896437;
+        &.gift {
+            position: relative;
         }
-        > .message {
-          color: #FE7700;
+        &.custom-message {
+            padding: 0 8px;
+            line-height: 48px;
+            background-color: #fce6b7;
+            border-radius: 4px;
+            > .user-name {
+                color: #896437;
+            }
+            > .message {
+                color: #fe7700;
+            }
         }
-      }
     }
     .user-name {
-      color: #999;
-      &:after {
-        content: ':';
-        margin-right: 10px;
-      }
+        color: #999;
+        &:after {
+            content: ':';
+            margin-right: 10px;
+        }
     }
     .message {
-      flex: 1;
-      width: 600px;
-      word-break: break-all;
-      white-space: pre-wrap;
-      > span {
-        &:nth-of-type(1) {
-          margin-right: 10px;
+        flex: 1;
+        width: 600px;
+        word-break: break-all;
+        white-space: pre-wrap;
+        > span {
+            &:nth-of-type(1) {
+                margin-right: 10px;
+            }
         }
-      }
-      > .error {
-        > .faild {
-          font-size: 24px;
-          color: red;
-          opacity: 0.5;
+        > .error {
+            > .faild {
+                font-size: 24px;
+                color: red;
+                opacity: .5;
+            }
         }
-      }
     }
     .message-loading {
-      margin: 0 5px;
-      animation: rotate 2s linear infinite;
+        margin: 0 5px;
+        animation: rotate 2s linear infinite;
     }
-  }
-  .send-message {
+}
+.send-message {
     position: relative;
     display: flex;
     align-items: center;
     padding: 12px 16px;
     background-color: #fff;
-  }
-  .emoticon {
+}
+.emoticon {
     position: absolute;
     left: 0;
     display: grid;
@@ -1111,11 +1111,11 @@ export default {
     z-index: 2002;
     box-shadow: 0 -5px 10px rgba(100, 100, 100, .1);
     > img {
-      width: 50px;
-      height: 50px;
+        width: 50px;
+        height: 50px;
     }
-  }
-  .input-box {
+}
+.input-box {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -1124,20 +1124,20 @@ export default {
     padding: 0 140px 0 16px;
     line-height: 74px;
     background-color: #f7f7f7;
-    border: 1px solid #EEEEEE;
+    border: 1px solid #eee;
     border-radius: 8px;
     box-sizing: border-box;
     > input {
-      display: inline-block;
-      width: 100%;
-      margin-left: 16px;
-      font-size: 26px;
-      line-height: 36px;
-      background-color: transparent;
+        display: inline-block;
+        width: 100%;
+        margin-left: 16px;
+        font-size: 26px;
+        line-height: 36px;
+        background-color: transparent;
     }
-  }
+}
 
-  .send-btn {
+.send-btn {
     position: absolute;
     top: -1;
     right: 0;
@@ -1148,10 +1148,10 @@ export default {
     font-size: 28px;
     border-bottom-right-radius: 8px;
     border-top-right-radius: 8px;
-    background-color: #F2B036;
-  }
+    background-color: #f2b036;
+}
 
-  .send-flower {
+.send-flower {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1162,20 +1162,20 @@ export default {
     text-align: center;
     border-radius: 36px;
     background: linear-gradient(180deg, #ee7f62, #eb5a36);
-  }
+}
 
-  .coupon-list {
+.coupon-list {
     padding: 22px 24px 0 24px;
-  }
-  .product-list {
+}
+.product-list {
     padding: 22px 24px 0 24px;
-  }
-  .tab-title {
+}
+.tab-title {
     margin-bottom: 32px;
     font-size: 32px;
     line-height: 44px;
-  }
-  .product {
+}
+.product {
     position: relative;
     display: flex;
     height: 262px;
@@ -1185,50 +1185,50 @@ export default {
     border-radius: 20px;
     box-sizing: border-box;
     > .vie-for {
-      position: absolute;
-      bottom: 20px;
-      right: 16px;
-      width: 72px;
-      height: 72px;
-      line-height: 72px;
-      text-align: center;
-      background-color: #fe7700;
-      border-radius: 36px;
+        position: absolute;
+        bottom: 20px;
+        right: 16px;
+        width: 72px;
+        height: 72px;
+        line-height: 72px;
+        text-align: center;
+        background-color: #fe7700;
+        border-radius: 36px;
     }
     > img {
-      width: 314px;
-      height: 208px;
-      margin-right: 20px;
-      object-fit: cover;
-      border-radius: 16px;
+        width: 314px;
+        height: 208px;
+        margin-right: 20px;
+        object-fit: cover;
+        border-radius: 16px;
     }
     > .left {
-      display: flex;
-      flex-direction: column;
-      margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
         flex: 1;
-      > .name {
-        line-height: 38px;
-        font-size: 28px;
-        @include elps-wrap(2);
-      }
-      > .price {
-        margin-top: 28px;
-        font-size: 36px;
-        line-height: 50px;
-        color: #fe7700;
-        font-weight: bold;
-      }
-      > .count {
-        margin-top: 4px;
-        font-size: 24px;
-        color: #999;
-        line-height: 34px;
-      }
+        > .name {
+            line-height: 38px;
+            font-size: 28px;
+            @include elps-wrap(2);
+        }
+        > .price {
+            margin-top: 28px;
+            font-size: 36px;
+            line-height: 50px;
+            color: #fe7700;
+            font-weight: bold;
+        }
+        > .count {
+            margin-top: 4px;
+            font-size: 24px;
+            color: #999;
+            line-height: 34px;
+        }
     }
-  }
+}
 
-  .pay-wrap {
+.pay-wrap {
     position: fixed;
     top: 0;
     left: 0;
@@ -1236,76 +1236,76 @@ export default {
     height: 100%;
     z-index: 2002;
     background-color: rgba(0, 0, 0, .65);
-  }
-  .pay-box {
+}
+.pay-box {
     width: 704px;
     box-sizing: border-box;
     margin: 280px auto 0;
     padding: 22px 24px;
     background-color: #fff;
     > .box-top {
-      display: flex;
-      padding-bottom: 28px;
-      border-bottom: 1px solid #e7e7e7;
-      > img {
-        width: 224px;
-        height: 164px;
-        margin-right: 20px;
-        object-fit: cover;
-      }
-      > .top-right {
-        > .title {
-          margin-bottom: 12px;
-          font-size: 22px;
-          line-height: 32px;
+        display: flex;
+        padding-bottom: 28px;
+        border-bottom: 1px solid #e7e7e7;
+        > img {
+            width: 224px;
+            height: 164px;
+            margin-right: 20px;
+            object-fit: cover;
         }
-        > .time {
-          margin-bottom: 10px;
-          line-height: 28px;
-          font-size: 20px;
-          color: #999;
-          &:before {
-            content: '时间：';
-          }
+        > .top-right {
+            > .title {
+                margin-bottom: 12px;
+                font-size: 22px;
+                line-height: 32px;
+            }
+            > .time {
+                margin-bottom: 10px;
+                line-height: 28px;
+                font-size: 20px;
+                color: #999;
+                &:before {
+                    content: '时间：';
+                }
+            }
+            > .price {
+                margin-bottom: 4px;
+                font-size: 24px;
+                color: #000;
+                &:before {
+                    content: '¥';
+                    font-size: 16px;
+                }
+            }
+            > .live-tip {
+                font-size: 18px;
+                color: #a8a8a8;
+            }
         }
-        > .price {
-          margin-bottom: 4px;
-          font-size: 24px;
-          color: #000;
-          &:before {
-            content: '¥';
-            font-size: 16px;
-          }
-        }
-        > .live-tip {
-          font-size: 18px;
-          color: #a8a8a8;
-        }
-      }
     }
     > .truth-price {
-      margin:  20px 0 28px 0;
-      text-align: right;
-      font-size: 32px;
-      > span {
-        color: #333;
-      }
-      > i {
-        color: #fe7700;
-        &:before {
-          content: '￥';
-          font-size: 20px;
+        margin: 20px 0 28px 0;
+        text-align: right;
+        font-size: 32px;
+        > span {
+            color: #333;
         }
-      }
+        > i {
+            color: #fe7700;
+            &:before {
+                content: '￥';
+                font-size: 20px;
+            }
+        }
     }
     > .buttons {
-      text-align: right;
-      > button {
-        margin-left: 20px;
-      }
+        text-align: right;
+        > button {
+            margin-left: 20px;
+        }
     }
-  }
-  .poster {
+}
+.poster {
     position: fixed;
     top: 0;
     left: 0;
@@ -1317,59 +1317,63 @@ export default {
     z-index: 99999;
     background-color: rgba(0, 0, 0, .65);
     font-size: 0;
-     > .poster-wrap {
-       width: 638px;
-       text-align: center;
-       > img {
-         width: 100%;
-       }
-       > div {
-         line-height: 66px;
-         font-size: 28px;
-         color: #fff;
-         text-align: center;
-         background-color: #f27918;
-       }
-       > i {
-         margin-top: 64px;
-       }
-     }
-  }
+    > .poster-wrap {
+        width: 638px;
+        text-align: center;
+        > img {
+            width: 100%;
+        }
+        > div {
+            line-height: 66px;
+            font-size: 28px;
+            color: #fff;
+            text-align: center;
+            background-color: #f27918;
+        }
+        > i {
+            margin-top: 64px;
+        }
+    }
+}
 
-  @keyframes rotate {
-    0% { transform: rotate(0deg) }
-    100% { transform: rotate(360deg) }
-  }
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 </style>
 <style lang="scss">
-  .plv-live-player-bar {
+.plv-live-player-bar {
     height: 80px!important;
-  }
-  .plv-live-cutOff {
+}
+.plv-live-cutOff {
     display: none !important;
-  }
-  .plv-live-cover__btn {
+}
+.plv-live-cover__btn {
     // display: none;
-  }
-  .plv_controls {
+}
+.plv_controls {
     height: max-content !important;
     padding: 20px;
     box-sizing: border-box !important;
     span:not([display=none]) {
-      display: inline-block;
-      min-width: 40px !important;
-      height: 40px !important;
-      line-height: 40px !important;
-      font-size: 20px !important;
+        display: inline-block;
+        min-width: 40px !important;
+        height: 40px !important;
+        line-height: 40px !important;
+        font-size: 20px !important;
     }
-  }
-  .plv-line-select-mask > span {
+}
+.plv-line-select-mask > span {
     width: 180px !important;
     height: 60px !important;
     line-height: 60px !important;
     font-size: 20px !important;
     border-radius: 30px !important;
-  }
-</style>
-<style>
+}
+
 </style>
