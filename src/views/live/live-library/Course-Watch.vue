@@ -42,8 +42,14 @@ export default {
             detail: {
                 url: ''
             },
+            // 设置观看时长定时器
             setStudyTimer: null,
-            setProgressTimer: null
+            // 设置学习进度定时器
+            setProgressTimer: null,
+            // 设置观看时长方法
+            setStudyTime: null,
+            // 设置学习进度方法
+            setProgress: null
         }
     },
     computed: {
@@ -123,7 +129,7 @@ export default {
 
                     // 用于已购买的课程列表显示
                     if (progress > 0) {
-                        await setCourseProgress(this.orderId, progress)
+                        await this.setProgress(progress)
                     }
                 } catch (e) {
                     this.error(e)
@@ -173,7 +179,11 @@ export default {
                     const video = e.target
                     this.duration = video.duration
                     const playTime = this.progress === 100 ? 0 : ((this.progress / 100) * this.duration)
+
+                    // 得到设置进度条和设置观看时长的方法
                     this.setStudyTime = this.returnSetStudyTime(playTime || 0)
+                    this.setProgress = this.returnSetProgress(this.progress)
+
                     if (this.progress < 100) {
                         this.currentTime = playTime
 
@@ -206,6 +216,7 @@ export default {
                     if (currentProgress > preProgress) {
                         await setCourseProgress(this.orderId, currentProgress)
                     }
+                    preProgress = currentProgress
                 } catch (e) { throw e }
             }
             return setProgress
