@@ -15,7 +15,7 @@
         </load-more>
         <!--无数据情况-->
         <div v-if="loading" :class="$style.none">
-            <div @click="$router.push({name:'OnlineClassroom'})" :class="$style.goLearning">去学习课程</div>
+            <div @click="$router.push({ name: 'OnlineClassroom' })" :class="$style.goLearning">去学习课程</div>
         </div>
     </div>
 </template>
@@ -72,24 +72,25 @@ export default {
 </script>
 
 <style module lang='scss'>
-  .course-learning {
+.course-learning {
     padding: 6px 28px 20px 28px;
     box-sizing: border-box;
-    background-color: #FFFFFF;
-  }
-  .none {
+    background-color: #fff;
+}
+.none {
     margin-top: 20px;
     text-align: center;
     > .go-learning {
-      display: inline-block;
-      width: 280px;
-      border:2px solid #FE7700;
-      border-radius:8px;
-      font-size:28px;
-      font-weight:400;
-      line-height: 60px;
-      color: #FE7700;
-      background:rgba(255,244,235,1);
+        display: inline-block;
+        width: 280px;
+        border: 2px solid #fe7700;
+        border-radius: 8px;
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 60px;
+        color: #fe7700;
+        background: rgba(255,244,235,1);
     }
-  }
+}
+
 </style>

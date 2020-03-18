@@ -76,7 +76,6 @@ export default {
         } catch (e) { throw e }
     },
     methods: {
-
         // 获取课程信息
         async getCourseDetail () {
             try {
@@ -93,17 +92,19 @@ export default {
                         message: '视频加载错误',
                         viceMessage: '请联系机构管理人员'
                     }).finally(() => {
-                        this.$router.replace({ name: 'MyCourses' })
+                        if (window.history.length > 1) {
+                            this.$router.go(-1)
+                        } else {
+                            this.$router.replace({ name: 'MyCourses' })
+                        }
                     })
                     return
                 }
-
                 // mes.url = 'https://oss-live-1.videocc.net/record/record/recordf/1ff6dda78b20191021185719049/2020-02-08-15-34-36_2020-02-08-15-39-07.mp4'
                 mes.fileSize = Number(mes.fileSize) || 0
                 this.detail = mes
             } catch (e) { throw e }
         },
-
         // 向后台存储播放进度
         async updateProgress () {
             if (this.duration === 0) return
@@ -131,7 +132,6 @@ export default {
                 }
             }, times * 1000)
         },
-
         // 向后台存储观看时长
         updateStudyTime () {
             if (this.duration === 0) return
@@ -153,7 +153,6 @@ export default {
                 }
             }, times * 1000)
         },
-
         // 进来首次播放调用
         async updateProgressOnce () {
             try {
@@ -161,14 +160,12 @@ export default {
                 await setCourseProgress(this.orderId, 1)
             } catch (e) { throw e }
         },
-
         // 统计观看次数，只有第一次播放时统计
         async setStudyCount () {
             try {
                 await setStudyCount(this.liveId)
             } catch (e) { throw e }
         },
-
         // 开始播放时做一些事
         async playing (e) {
             try {
@@ -202,7 +199,6 @@ export default {
                 }
             } catch (e) { throw e }
         },
-
         // 设置更新进度
         returnSetProgress (preProgress) {
             const setProgress = async currentProgress => {
@@ -214,7 +210,6 @@ export default {
             }
             return setProgress
         },
-
         // 设置观看时长
         returnSetStudyTime (preTime) {
             const setStydyTime = async currentTime => {
@@ -240,10 +235,12 @@ export default {
 </script>
 
 <style module lang='scss'>
-  .course-watch {
+
+.course-watch {
     display: flex;
     align-items: center;
     height: 100vh;
     background-color: #000;
-  }
+}
+
 </style>

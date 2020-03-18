@@ -93,7 +93,11 @@ export default {
                                 message: '暂时无法观看',
                                 viceMessage: '请联系机构管理人员'
                             }).finally(() => {
-                                this.$router.go(-1)
+                                if (window.history.length > 1) {
+                                    this.$router.go(-1)
+                                } else {
+                                    this.$router.replace({ name: 'Home' })
+                                }
                             })
                             return
                         }
@@ -214,7 +218,11 @@ export default {
                 viceMessage: '请联系机构管理人员'
             })
                 .finally(() => {
-                    this.$router.go(-1)
+                    if (window.history.length > 1) {
+                        this.$router.go(-1)
+                    } else {
+                        this.$router.replace({ name: 'Home' })
+                    }
                 })
             this.$emit('error', e)
         }
@@ -223,26 +231,28 @@ export default {
 </script>
 
 <style module lang="scss">
+
 .paid-player {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 422px;
-  width: 100vw;
-  max-width: 100vw;
-  margin: 0 !important;
-  padding: 0 !important;
-  background-color: #000 !important;
-  > video {
-    height: 422px;
-    background-color: #000;
-    &.auto-height {
-      width: 100vw;
-      height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 422px;
+    width: 100vw;
+    max-width: 100vw;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: #000 !important;
+    > video {
+        height: 422px;
+        background-color: #000;
+        &.auto-height {
+            width: 100vw;
+            height: auto;
+        }
     }
-  }
 }
 
 @media screen and (orientation:landscape) {
 }
+
 </style>
