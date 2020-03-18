@@ -234,7 +234,7 @@ export default {
         }
       }
       .list {
-        height: 800px;
+        height: 760px;
         margin-top: 40px;
         overflow: auto;
         text-align: left;
@@ -243,6 +243,7 @@ export default {
           >img {
             width: 100%;
             height: 420px;
+            border-radius:20px 20px 0px 0px;
             vertical-align: middle;
             object-fit: cover;
           }
