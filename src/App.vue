@@ -15,7 +15,7 @@ import QuickNavbar from './components/common/Quick-Navbar.vue'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
 import { SET_THEME, USER_INFO, GET_MALL_INFO, LOGIN, GET_ACTIVITY_DATA, GET_SKIN_ID, SET_LIVE_INFO, SET_COURSE_INFO, SET_COUPON_INFO, SET_INVITING_EVENT, SET_JX_EVENT, SET_NW_EVENT } from './store/mutation-type'
 import share from './assets/js/wechat/wechat-share'
-import { isIOS } from './assets/js/util'
+// import { isIOS } from './assets/js/util'
 import Cookie from './assets/js/storage-cookie'
 import qs from 'qs'
 import { getLiveInfo, getJianxueInfo, getNianweiInfo, getMyCouponInfo } from './apis/home'
@@ -28,8 +28,8 @@ import { getCurrentActivity } from './apis/invitenewcomers'
  */
 const disposeUrl = () => {
     const { href } = location
-    let query = href.split('?')[1]
     const { protocol, host, pathname } = location
+    let query = href.split('?')[1]
     let newUrl = ''
 
     // let hasWeixin = false
@@ -109,9 +109,9 @@ export default {
         $route: {
             handler (route) {
                 this.routeName = route.name
-                if (isIOS() && route.name && !window.initialUrl) {
-                    window.initialUrl = disposeUrl()
-                }
+                // if (isIOS() && route.name && !window.initialUrl) {
+                // }
+                window.initialUrl = disposeUrl()
                 if (route.name && this.customShare.indexOf(route.name) === -1) {
                     console.log('默认分享')
                     // 如果不是商品详情页面，采用其他分享策略
@@ -160,7 +160,6 @@ export default {
             throw e
         }
     },
-    async mounted () {},
     methods: {
         ...mapMutations({
             setTheme: SET_THEME,
@@ -179,11 +178,12 @@ export default {
             getSkinId: GET_SKIN_ID
         }),
         share (willHide = []) {
+            console.log(window.initialUrl)
             share({
                 appId: this.appId,
                 title: `${ this.mallName }-${ this.$route.meta.title }`,
                 desc: this.mallDesc,
-                link: window.location.href,
+                link: window.initialUrl,
                 imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
                 willHide
             })
