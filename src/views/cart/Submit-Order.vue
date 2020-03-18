@@ -161,7 +161,7 @@
                         </p>
                     </InfoItem>
 
-                    <InfoItem>
+                    <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
                         <template slot="label">春耘折扣</template>
                     </InfoItem>
                     <span slot="content" :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (item.originPrice - item.price) * item.count }}</span>
