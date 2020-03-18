@@ -464,7 +464,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl', 'mchId']),
+        ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl', 'mchId', 'roleCode']),
 
         // 活动商品的可购买数量
         activeStock () {
@@ -601,7 +601,10 @@ export default {
     },
     async mounted () {
         // 缓存分享人的id
-        if (this.brokerId) {
+        // 企业管理员，高级管理员，子账号进入页面时使用自己的id作为分享id
+        if (this.roleCode === 'EMPLOYEE' || this.roleCode === 'ADMIN' || this.roleCode === 'ENTERPRISE_ADMIN') {
+            sessionStorage.setItem('shareBrokerId', this.userId)
+        } else {
             sessionStorage.setItem('shareBrokerId', this.brokerId)
         }
     },
