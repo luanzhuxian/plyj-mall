@@ -109,7 +109,7 @@ export default {
           coverImg: 'https://mallcdn.youpenglai.com/static/timg.jpg',
           liveStartTime: '2020.2.12  19:00',
           liveEndTime: '2020.2.12  19:00',
-          lecturer: '王老师',
+          lecturer: '名师伴我学名师伴我学名师伴我学名师伴我学',
           actuallyPaidAmount: 3
         },
         {
@@ -284,8 +284,10 @@ export default {
             font-weight: bold;
           }
           .live-lecturer {
+            width: 200px;
             font-size:26px;
             color:#222;
+            @include elps();
             > svg {
               vertical-align: -4px;
             }
@@ -330,8 +332,10 @@ export default {
               }
             }
             .live-lecturer {
+              width: 250px;
               font-size:24px;
               color:#666;
+              @include elps();
               > svg {
                 vertical-align: -4px;
               }
@@ -348,7 +352,6 @@ export default {
                 content: '¥';
                 margin-right: 4px;
                 font-size: 20px;
-                vertical-align: 3px;
               }
             }
             .free {
