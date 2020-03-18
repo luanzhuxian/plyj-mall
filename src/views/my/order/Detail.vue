@@ -1024,26 +1024,30 @@ export default {
                             }
                         }
                     }
-                    this.userInfo = []
-                    this.studentInfo = []
-                    const hasCustomBlock = productInfoModel.productDetailModels.filter(item => item.needStudentInfo === 2).length
+                    const hasCustomBlock = productInfoModel.productDetailModels.some(item => item.needStudentInfo === 2)
                     if (hasCustomBlock) {
-                        productInfoModel.productDetailModels.forEach(productItem => {
+                        const newUserInfo = []
+                        const obj = {}
+                        for (const productItem of productInfoModel.productDetailModels) {
                             if (orderType === 'PHYSICAL') {
-                                productItem.customForm.forEach(customItem => {
-                                    customItem.forEach(item => {
-                                        const isRepeat = this.userInfo.filter(iItem => iItem.fieldName === item.fieldName).length
-                                        if (!isRepeat) {
-                                            this.userInfo.push(item)
-                                        }
-                                    })
-                                })
+                                const userInfo = [...[...productItem.customForm].flat(2)]
+                                // 进行字段去重，去重应注意，如果某个字段已有值了，就不要覆盖了
+                                for (const field of userInfo) {
+                                    obj[field.fieldName] = obj[field.fieldName] ? obj[field.fieldName] : field.fieldValue
+                                }
                             } else {
-                                productItem.customForm.forEach(customItem => {
-                                    this.studentInfo.push(customItem)
-                                })
+                                this.studentInfo = [...productItem.customForm]
                             }
-                        })
+                        }
+                        // 去重完成，将对象转为想要的数组
+                        for (const key of Object.keys(obj)) {
+                            newUserInfo.push({
+                                fieldName: key,
+                                fieldValue: obj[key]
+                            })
+                        }
+                        // 去掉字段重复的项目
+                        this.userInfo = newUserInfo
                     }
                     resolve()
                 } catch (e) {
