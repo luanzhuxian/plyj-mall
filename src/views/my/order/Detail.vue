@@ -1027,6 +1027,7 @@ export default {
                     const hasCustomBlock = productInfoModel.productDetailModels.filter(item => item.needStudentInfo === 2)
                     const newUserInfo = []
                     const obj = {}
+                    let studentInfo = []
                     for (const productItem of hasCustomBlock) {
                         if (orderType === 'PHYSICAL') {
                             for (const fields of productItem.customForm) {
@@ -1037,7 +1038,7 @@ export default {
                                 }
                             }
                         } else {
-                            this.studentInfo = [...productItem.customForm]
+                            studentInfo = [...studentInfo, ...productItem.customForm]
                         }
                     }
                     // 去重完成，将对象转为想要的数组
@@ -1049,6 +1050,7 @@ export default {
                     }
                     // 去掉字段重复的项目
                     this.userInfo = newUserInfo
+                    this.studentInfo = studentInfo
                     resolve()
                 } catch (e) {
                     reject(e)
