@@ -73,7 +73,7 @@
                 </a>
                 <button
                     v-if="!detail.isBuy"
-                    :disabled="Number(detail.status) || loading"
+                    :disabled="Number(detail.status) === 2 || loading"
                     :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung"
                     @click="goSubmit"
                 >
