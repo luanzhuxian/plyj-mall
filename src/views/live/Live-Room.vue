@@ -257,7 +257,8 @@ import {
     setComeInConut,
     getVideoMesById,
     // 查询直播是否开始
-    isLiveStart
+    isLiveStart,
+    sign
     // setWarmup
 } from '../../apis/live'
 import {
@@ -270,8 +271,8 @@ import {
     generateQrcode,
     cutArcImage,
     loadImage,
-    createText,
-    throttle
+    createText
+    // throttle
 } from '../../assets/js/util'
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 export default {
@@ -350,16 +351,12 @@ export default {
     computed: {
         ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId'])
     },
-    watch: {
-        soundValue (val) {
-            this.liveSdk.player.setVolume(val / 100)
-        }
-    },
     async created () {
         // 缓存消息方法
-        this.cacheMessage = throttle(() => {
-            localStorage.setItem(`LIVE_MESSAGE_${ this.mallDomain }`, JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
-        }, 2000)
+        // this.cacheMessage = throttle(() => {
+        //     localStorage.setItem(`LIVE_MESSAGE_${ this.mallDomain }`, JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
+        // }, 2000)
+        localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
         this.receiveCouponIdList = []
         if (this.roleCode === 'VISITOR') {
             await this.$confirm({
@@ -425,8 +422,7 @@ export default {
                     return
                 }
             }
-            this.initPlayer()
-            this.initSocket()
+            this.init()
         } catch (e) {
             this.$error(e.message)
             throw e
@@ -547,29 +543,38 @@ export default {
         async initPlayer () {
             // 默认在线直播
             if (this.detail.liveType === 'live') {
-                const { channelId, channeUserId } = this
-                window.polyvObject('#player').livePlayer({
-                    wrap: '#player',
-                    width: '100%',
-                    height: '100%',
-                    autoplay: true,
-                    uid: channeUserId,
-                    isAutoChange: true,
-                    vid: channelId,
-                    x5: false,
-                    hasControl: false,
-                    x5FullPage: false,
-                    forceH5: true,
-                    useH5Page: true,
-                    param1: this.userId,
-                    param2: this.userName
+                const { channelId, avatar, liveAppId: appId, userId, userName } = this
+                const timestamp = Date.now()
+                const signStr = await sign({
+                    roomId: channelId,
+                    signMsg: `appId${appId}channelId${channelId}timestamp${timestamp}`
                 })
-                // await setWarmup({
-                //   appId: '',
-                //   warmUpEnabled: 'Y',
-                //   channelId,
-                //   sign: ''
-                // })
+                const liveSdk = new PolyvLiveSdk({
+                    channelId,
+                    sign: signStr, // 频道验证签名
+                    timestamp, // 毫秒级时间戳
+                    appId, // polyv 后台的appId
+                    chat: true,
+                    controller: true,
+                    barrage: false,
+                    socket: this.socket,
+                    type: 'live',
+                    user: {
+                        userId: userId,
+                        userName,
+                        pic: avatar
+                    }
+                });
+                liveSdk.on(PolyvLiveSdk.EVENTS.CHANNEL_DATA_INIT, (event, data) => {
+                    liveSdk.setupPlayer({
+                        el: '#player',
+                        width: '100vw',
+                        height: 442 / 7.5 + 'vw',
+                    })
+                    // this.onMessage()
+                    // this.inited = true
+                })
+                this.liveSdk = liveSdk
             }
         },
 
@@ -609,10 +614,30 @@ export default {
             this.socket = socket
             this.chatRecords = [...(JSON.parse(localStorage.getItem(`LIVE_MESSAGE_${ this.mallDomain }`)) || []), ...this.chatRecords]
         },
+        init () {
+            this.initSocket()
+            this.initPlayer()
+        },
 
         /* 接收消息 */
         onMessage (data) {
             const mData = JSON.parse(data)
+            // const liveSdk = this.liveSdk
+            // const {
+            //     HISTORY_MESSAGE,
+            //     SPEAK,
+            //     LOGIN
+            // } = PolyvLiveSdk.EVENTS
+            // liveSdk.on(SPEAK, (e, data) => {
+            //     const { user, content: message } = data
+            //     console.log(data)
+            //     this.pushMessage({
+            //         message,
+            //         name: user.nick,
+            //         success: true,
+            //         type: 'SPEAK'
+            //     })
+            // })
             if (mData && mData.EVENT) {
                 const { user } = mData
                 switch (mData.EVENT) {
@@ -711,7 +736,7 @@ export default {
                 this.chatRecords = this.chatRecords.slice(len - maxRecords)
             }
             this.chatRecords.push(msg)
-            this.cacheMessage()
+            // this.cacheMessage()
         },
 
         /* 重新发送 */
@@ -787,8 +812,8 @@ export default {
         },
 
         /**
-     * 提交订单
-     */
+         * 提交订单
+         */
         async submitOrder () {
             try {
                 const res = await pay(this.detail.id)
@@ -877,16 +902,15 @@ export default {
         },
 
         /**
-     * 调起微信支付接口
-     * @param CREDENTIAL {Object} 支付数据
-     * @returns {Promise<*>}
-     */
+         * 调起微信支付接口
+         * @param CREDENTIAL {Object} 支付数据
+         * @returns {Promise<*>}
+         */
         async pay (CREDENTIAL) {
             return new Promise(async (resolve, reject) => {
                 try {
                     await wechatPay(CREDENTIAL)
-                    this.initPlayer()
-                    this.initSocket()
+                    this.init()
                     this.$success('付款成功立即观看')
                     this.needPay = false
                     await setComeInConut({
