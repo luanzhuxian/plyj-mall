@@ -178,14 +178,14 @@ export default {
         this.countInstaceList.map(item => item.stop())
         this.countInstaceList = []
     },
-    /* eslint-disable */
     methods: {
+        // batchType 1: 组合课 2: 春耘
         async getSpringCombination () {
             try {
                 const { result } = await getSpringCombination({
                     current: 1,
                     size: 60,
-                    batchType: 2 // 新春春耘
+                    batchType: 2
                 })
                 if (!result.records.length) {
                     this.$alert({
@@ -193,19 +193,19 @@ export default {
                         viceMessage: '返回主会场，更多活动等您开启',
                         confirmText: '去主会场'
                     })
-                    .finally(() => {
-                        this.$router.push({ name: 'Activity' })
-                    })
+                        .finally(() => {
+                            this.$router.push({ name: 'Activity' })
+                        })
                     return
                 }
                 for (const activity of result.records) {
                     activity.models.sort((a, b) => moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf())
                     for (const group of activity.models) {
                         // 添加倒计时相关字段
-                        group.d = '' // 天
-                        group.h = '' // 时
-                        group.m = '' // 分
-                        group.s = '' // 秒
+                        group.d = ''
+                        group.h = ''
+                        group.m = ''
+                        group.s = ''
                         const activityStartTime = moment(group.activityStartTime).valueOf()
                         const activityEndTime = moment(group.activityEndTime).valueOf()
                         const now = Date.now()
