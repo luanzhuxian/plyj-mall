@@ -1,6 +1,6 @@
 <template>
     <!-- 春耘计划礼品组件 -->
-    <div :class="$style.springPloughingGiftItem">
+    <div :class="[$style.springPloughingGiftItem, $style[color]]">
         <img :src="data.giftImage" alt="">
         <div :class="$style.right">
             <p :class="$style.name" v-text="data.giftName" />
@@ -18,6 +18,10 @@ export default {
             default () {
                 return {}
             }
+        },
+        color: {
+            type: String,
+            default: 'green'
         }
     }
 }
@@ -58,5 +62,16 @@ export default {
   .desc {
     color: #fff;
     @include elps()
+  }
+  // 黄色
+  .yellow {
+    background-color: #F5C36C;
+    box-shadow: none;
+    > img {
+      border: 2px solid #C94828;
+    }
+    .name {
+      color: #C94828;
+    }
   }
 </style>

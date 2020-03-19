@@ -1,25 +1,31 @@
 <template>
     <!-- 春耘计划商品组件 -->
     <div
-        :class="$style.springPloughingProItem"
-        @click="$router.push({ name: 'Product', params: { productId: data.goodsId }, query: { currentProductStatus: 5 } })"
+        :class="[$style.springPloughingProItem, $style[color]]"
+        @click="$router.push({
+            name: 'Product',
+            params: { productId: data.goodsId },
+            query: { currentProductStatus: 5 }
+        })"
     >
         <img :src="data.goodsImage" alt="">
         <div :class="$style.right">
-            <p :class="$style.name" v-text="data.goodsName" />
-            <p :class="$style.limit">
+            <div :class="$style.name" v-text="data.goodsName" />
+            <div :class="$style.limit">
                 x{{ data.count }}
-            </p>
-            <p :class="$style.sku">
+            </div>
+            <div :class="$style.sku">
                 <span v-text="data.sku1Name" />
                 <template v-if="data.sku2Name">
                     <span>, {{ data.sku2Name }}</span>
                 </template>
                 <!--数量：{{ data.count }}-->
                 <!--{{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}-->
-            </p>
-            <p :class="$style.price">折后价：￥{{ data.amount }}</p>
-            <p :class="$style.originalPrice">原价：￥{{ data.originPrice }}</p>
+            </div>
+            <div :class="$style.price">折后价：￥{{ data.amount }}</div>
+            <div :class="$style.originalPrice">
+                原价：<span :class="$style.text">￥{{ data.originPrice }}</span>
+            </div>
         </div>
     </div>
 </template>
@@ -33,6 +39,10 @@ export default {
             default () {
                 return {}
             }
+        },
+        color: {
+            type: String,
+            default: 'green'
         }
     }
 }
@@ -44,6 +54,8 @@ export default {
     justify-content: space-between;
     margin-top: 20px;
     padding: 16px;
+    box-sizing: border-box;
+    height: 220px;
     background-color: #26601F;
     box-shadow: 0 0 0 2px #A3D816 inset;
     > img {
@@ -62,6 +74,7 @@ export default {
   }
   .name {
     width: 256px;
+    line-height: 38px;
     margin-bottom: 8px;
     font-size: 28px;
     color: #fff;
@@ -76,13 +89,14 @@ export default {
     color: #74B06E;
   }
   .sku {
-    width: 256px;
-    margin: 8px 0 20px 0;
+    margin: 8px 0 16px;
     padding: 0 20px;
+    width: 256px;
     font-size: 24px;
-    line-height: 40px;
+    height: 40px;
     color: #74B06E;
     background-color: #17560F;
+    border-radius: 10px;
     @include elps();
   }
   .price {
@@ -94,5 +108,29 @@ export default {
   .original-price {
     font-size: 24px;
     color: #D1E42C;
+    > .text {
+      text-decoration: line-through;
+    }
+  }
+  // 黄色
+  .yellow {
+    background-color: #F5C36C;
+    box-shadow: none;
+    .name {
+      color: #663A15;
+    }
+    .limit {
+      color: #C94828;
+    }
+    .sku {
+      color: #FFFFFF;
+      background-color: #E97F40;
+    }
+    .price {
+      color: #663A15;
+    }
+    .original-price {
+      color: #663A15;
+    }
   }
 </style>

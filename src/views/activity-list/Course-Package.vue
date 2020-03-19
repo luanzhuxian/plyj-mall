@@ -1,48 +1,47 @@
 <template>
-    <div :class="$style.springPloughing">
-        <div :class="$style.countdown">
-            <div :class="$style.globalEndCountdown" v-if="allEnd.s">
-                <template v-if="!allEnd.wasEnded">
-                    <span v-if="allEnd.wasStarted">距活动结束: </span>
+    <div :class="$style.coursePackage">
+        <div :class="$style.background">
+            <div :class="$style.countdown" v-if="count.s">
+                <template v-if="!count.wasEnded">
+                    <span v-if="count.wasStarted">距活动结束: </span>
                     <span v-else>距活动开始: </span>
-                    <span :class="$style.val + ' ' + $style.day" v-text="allEnd.d" />
+                    <span :class="$style.val + ' ' + $style.day" v-text="count.d" />
                     <span :class="$style.unit">天</span>
-                    <span :class="$style.val" v-text="allEnd.h" />
+                    <span :class="$style.val" v-text="count.h" />
                     <span :class="$style.unit">:</span>
-                    <span :class="$style.val" v-text="allEnd.m" />
+                    <span :class="$style.val" v-text="count.m" />
                     <span :class="$style.unit">:</span>
-                    <span :class="$style.val" v-text="allEnd.s" />
+                    <span :class="$style.val" v-text="count.s" />
                 </template>
                 <span v-else>已结束</span>
             </div>
-            <div :class="$style.topRight" @click="createPoster">活动海报</div>
             <div :class="$style.topRight" @click="showRules = true">活动规则</div>
-            <pl-svg
-                v-if="list.length && list[0].quarterVersion"
-                :name="`icon-${map[list[0].quarterVersion]}`"
-                width="50"
-                height="105"
-            />
+            <div :class="$style.topRight" @click="createPoster">活动海报</div>
         </div>
-
         <div
             :class="$style.activity"
-            v-for="(activity, a) of list"
-            :key="a"
+            v-for="(activity, index) of list"
+            :key="index"
         >
-            <div :class="$style.activityName" v-text="activity.activityName" />
+            <div :class="$style.activityName">
+                <div :class="$style.front">
+                    <div :class="$style.frontTop" />
+                    <div :class="$style.frontFront" v-text="activity.activityName" />
+                </div>
+                <div :class="$style.back" />
+            </div>
             <div
                 :class="$style.content"
                 v-for="(item, i) of activity.models"
-                :key="a + '-' + i"
+                :key="index + '-' + i"
             >
-                <div :class="$style.groupName" v-text="item.activityName" />
+                <!-- <div :class="$style.groupName" v-text="item.activityName" /> -->
                 <div :class="$style.discount">
                     <span>组合打包{{ item.discount }}折起</span>
                     <span>|</span>
                     <span>{{ item.purchaseQuantity }}人已购</span>
                 </div>
-                <div :class="$style.endCountdown">
+                <div :class="$style.packageCountdown">
                     <template v-if="!item.wasEnded">
                         <span v-if="item.wasStarted">距活动结束: </span>
                         <span v-else>距活动开始: </span>
@@ -59,8 +58,9 @@
                 <div :class="$style.proList">
                     <SpringPloughingProItem
                         v-for="(pro, j) of item.products"
-                        :key="a + '-' + i + '-' + j"
+                        :key="index + '-' + i + '-' + j"
                         :data="pro"
+                        color="yellow"
                     />
                 </div>
                 <div :class="$style.giftList" v-if="item.gifts.length">
@@ -69,26 +69,27 @@
                     </div>
                     <SpringPloughingGiftItem
                         v-for="(gift, k) of item.gifts"
-                        :key="a + '-' + i + '-' + k"
+                        :key="index + '-' + i + '-' + k"
                         :data="gift"
+                        color="yellow"
                     />
                 </div>
-                <button v-if="!item.stock" :class="$style.buy">
+                <button v-if="!item.stock" :class="$style.button">
                     太火爆了，都被抢空了
                 </button>
-                <button v-else-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
+                <button
+                    v-else-if="item.wasStarted && !item.wasEnded"
+                    :class="$style.button"
+                    @click="buy(item)"
+                >
                     点击购买 组合到手<i v-text="item.amount" />元
                 </button>
-                <button v-else-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
+                <button v-else-if="!item.wasStarted" :class="$style.button">
                     暂未开启，敬请期待
                 </button>
-                <button v-else-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
+                <button v-else-if="item.wasEnded" :class="$style.button">
                     暂未开启，敬请期待
                 </button>
-                <div :class="$style.corner + ' ' + $style.topLeft" />
-                <div :class="$style.corner + ' ' + $style.topRight" />
-                <div :class="$style.corner + ' ' + $style.bottomLeft" />
-                <div :class="$style.corner + ' ' + $style.bottomRight" />
             </div>
         </div>
 
@@ -120,14 +121,12 @@ import SpringPloughingProItem from './components/Spring-Ploughing-Pro-Item.vue'
 import SpringPloughingGiftItem from './components/Spring-Ploughing-Gift-Item.vue'
 import { getSpringCombination } from '../../apis/product'
 import {
-    generateQrcode,
-    createText,
-    cutArcImage,
-    loadImage,
+    // generateQrcode,
+    // createText,
+    // cutArcImage,
+    // loadImage,
     Countdown
 } from '../../assets/js/util'
-
-const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/4b676734-b0c9-4aca-942d-ce62e481ebcf.jpeg'
 
 export default {
     name: 'SpringPloughing',
@@ -144,21 +143,13 @@ export default {
             list: [],
             // 倒计时实例列表
             countInstaceList: [],
-            // 全部结束
-            allEnd: {
+            count: {
                 d: '',
                 h: '',
                 m: '',
                 s: '',
                 wasStarted: false,
                 wasEnded: false
-            },
-            map: {
-                第一季: 'diyiji-adbb7',
-                第二季: 'dierji-bbdb7',
-                第三季: 'disanji-b8ae3',
-                第四季: 'disiji-5d233',
-                第五季: 'diwuji-af921'
             }
         }
     },
@@ -178,14 +169,14 @@ export default {
         this.countInstaceList.map(item => item.stop())
         this.countInstaceList = []
     },
-    /* eslint-disable */
     methods: {
+        // batchType 1: 组合课 2: 春耘
         async getSpringCombination () {
             try {
                 const { result } = await getSpringCombination({
                     current: 1,
                     size: 60,
-                    batchType: 2 // 新春春耘
+                    batchType: 1
                 })
                 if (!result.records.length) {
                     this.$alert({
@@ -193,19 +184,19 @@ export default {
                         viceMessage: '返回主会场，更多活动等您开启',
                         confirmText: '去主会场'
                     })
-                    .finally(() => {
-                        this.$router.push({ name: 'Activity' })
-                    })
+                        .finally(() => {
+                            this.$router.push({ name: 'Activity' })
+                        })
                     return
                 }
                 for (const activity of result.records) {
                     activity.models.sort((a, b) => moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf())
                     for (const group of activity.models) {
                         // 添加倒计时相关字段
-                        group.d = '' // 天
-                        group.h = '' // 时
-                        group.m = '' // 分
-                        group.s = '' // 秒
+                        group.d = ''
+                        group.h = ''
+                        group.m = ''
+                        group.s = ''
                         const activityStartTime = moment(group.activityStartTime).valueOf()
                         const activityEndTime = moment(group.activityEndTime).valueOf()
                         const now = Date.now()
@@ -227,15 +218,15 @@ export default {
                 const lastEndTime = moment(this.list[0].activityEndTime).valueOf()
                 const lastStartTime = moment(this.list[0].activityStartTime).valueOf()
                 const now = Date.now()
-                this.allEnd.wasStarted = now - lastStartTime >= 0
-                this.allEnd.wasEnded = now - lastEndTime >= 0
+                this.count.wasStarted = now - lastStartTime >= 0
+                this.count.wasEnded = now - lastEndTime >= 0
                 // // 未开始倒计时(距离开始)
-                if (!this.allEnd.wasStarted) {
-                    this.setCountdownTime(this.allEnd, lastStartTime - now)
+                if (!this.count.wasStarted) {
+                    this.setCountdownTime(this.count, lastStartTime - now)
                 }
                 // 开始倒计时(距离结束)
-                if (this.allEnd.wasStarted && !this.allEnd.wasEnded) {
-                    this.setCountdownTime(this.allEnd, lastEndTime - now)
+                if (this.count.wasStarted && !this.count.wasEnded) {
+                    this.setCountdownTime(this.count, lastEndTime - now)
                 }
             } catch (e) {
                 throw e
@@ -307,261 +298,192 @@ export default {
             }
             return true
         },
-        async createPoster () {
-            if (this.creating) {
-                return
-            }
-            if (this.poster) {
-                this.showPoster = true
-                return
-            }
-            this.creating = true
-            const cvs = document.createElement('canvas')
-            const ctx = cvs.getContext('2d')
-            const Result = await Promise.all([
-                loadImage(POSTER_BG),
-                loadImage(this.avatar)
-            ])
-            const BG = Result[0]
-            const AVATAR = await cutArcImage(Result[1])
-            cvs.width = 638
-            cvs.height = 1134
-            ctx.fillStyle = '#397432'
-            ctx.fillRect(0, 0, 638, 88)
-            ctx.drawImage(AVATAR, 20, 12, 64, 64)
-            ctx.font = '24px Microsoft YaHei UI'
-            ctx.fillStyle = '#fff'
-            ctx.textBaseline = 'hanging'
-            createText(ctx, 100, 32, `${ this.userName } 邀你一起春耘计划`, 34, 510, 1)
-            ctx.drawImage(BG, 0, 88, 638, 1046)
-            const QR = await generateQrcode(200, location.href, 0, null, 0, 'canvas')
-            ctx.drawImage(QR, 216, 826, 204, 204)
-            this.poster = cvs.toDataURL('image/jpeg', 0.9)
-            this.showPoster = true
-            this.creating = false
-        }
+        async createPoster () {}
     }
 }
 </script>
 
-<style module lang="scss">
-  .spring-ploughing {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 182px;
-    background-color: #8dc607;
-  }
-  .countdown {
-    position: relative;
-    height: 674px;
-    padding-top: 20px;
-    background: #f9dfbe url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png") no-repeat center 20px;
-    background-size: 100%;
-    > .top-right {
-      position: absolute;
-      right: 0;
-      top: 16px;
-      width: 128px;
-      font-size: 24px;
-      color: #88DE9E;
-      text-align: center;
-      line-height: 50px;
-      background-color: rgba(0, 0, 0, .5);
-      border-radius: 40px 0 0 40px;
-      &:nth-of-type(2) {
-        margin-top: 66px;
-      }
-    }
-    > svg {
-      position: absolute;
-      top: 175px;
-      right: 95px;
-    }
-  }
-  .content {
-    position: relative;
-    width: 686px;
-    padding: 24px;
-    margin: 14px auto 48px;
-    background-color: #428b42;
-    box-shadow: 0 0 0 2px #A3D816 inset;
-    box-sizing: border-box;
-  }
-  .activity-name {
-    position: relative;
-    width: max-content;
-    margin: 26px auto 32px;
-    font-size: 36px;
-    text-align: center;
-    color: #fff;
-    font-weight: bold;
-    &:before {
-      content: '';
-      position: absolute;
-      left: -86px;
-      top: 50%;
-      width: 54px;
-      height: 42px;
-      transform: rotate(180deg) translateY(50%);
-      background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png") no-repeat center center;
-      background-size: 100%;
-    }
-    &:after {
-      content: '';
-      position: absolute;
-      right: -86px;
-      top: 50%;
-      width: 54px;
-      height: 42px;
-      transform: translateY(-50%);
-      background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png") no-repeat center center;
-      background-size: 100%;
-    }
-  }
-  .group-name {
-    max-width: 458px;
-    margin: 16px auto;
-    padding: 16px 100px;
-    font-size: 28px;
-    line-height: 36px;
-    color: #dcfd8c;
-    text-align: center;
-    font-weight: bold;
-    background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/e009100a-579a-4369-8238-db258fb2d91b.png") no-repeat center center;
-    background-size: 100% 100%;
-    background-clip: border-box;
-  }
-  .discount {
-    margin-bottom: 20px;
-    text-align: center;
-    color: #88DE9E;
-    font-size: 24px;
-    > span:nth-of-type(2) {
-      margin: 0 12px;
-      vertical-align: 2px;
-    }
-  }
-
-  .end-countdown, .global-end-countdown {
-    width: 400px;
-    margin: 0 auto;
-    line-height: 80px;
-    font-size: 24px;
-    text-align: center;
-    color: #88DE9E;
-    background-color: #397432;
-    border-radius: 20px;
-    > .unit {
-      padding: 0 4px;
-    }
-    > .val {
-      display: inline-block;
-      padding: 4px;
-      line-height: 30px;
-      color: #184B28;
-      background-color: #8DE5A8;
-      border-radius: 6px;
-    }
-  }
-  .global-end-countdown {
-    margin-top: 286px;
-    background: none;
-    > .val {
-      background-color: #ffd6a7;
-      &.day {
-        background-color: #8DE5A8;
-      }
-    }
-  }
-
-  .gift-list {
-    .title {
-      margin: 24px 0;
-      font-weight: bold;
-      font-size: 40px;
-      color: #fae47f;
-      &:before {
-        display: inline-block;
-        content: '';
-        width: 8px;
-        height: 40px;
-        vertical-align: -6px;
-        border-radius: 4px;
-        background-color: #fae47f;
-      }
-    }
-  }
-
-  .buy {
-    display: block;
-    min-width: 400px;
-    margin: 48px auto 36px;
-    padding: 0 20px;
-    line-height: 78px;
-    font-size: 32px;
-    color: #184b28;
-    background-color: #8DE5A8;
-    border-radius: 39px;
-    font-weight: bold;
-    box-shadow: 0 6px 12px rgba(132, 0 ,0, 0.16);
-    &.not-start {
-      font-weight: normal;
-      color: #A6482F;
-    }
-    &.ended {
-      color: #184B28;
-      font-weight: normal;
-      background-color: #67b875;
-    }
-  }
-  .corner {
+<style lang="scss" module>
+.course-package {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 35px;
+  background: #F5C36C;
+}
+.background {
+  position: relative;
+  height: 576px;
+  background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png") no-repeat center top;
+  background-size: 100% auto;
+  > .top-right {
     position: absolute;
-    width: 46px;
-    height: 42px;
-    z-index: 1;
-    background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/1c11b4a5-091d-4f8d-a88c-e8334dfc9d88.png") no-repeat center center;
-    background-size: 100% 100%;
-    &.top-left {
-      top: 0;
-      left: 0;
-    }
-    &.top-right {
-      top: 0;
-      right: 0;
-      transform: rotateY(180deg);
-    }
-    &.bottom-right {
-      bottom: 0;
-      right: 0;
-      transform: rotateY(180deg) rotateX(180deg);
-    }
-    &.bottom-left {
-      bottom: 0;
-      left: 0;
-      transform: rotateX(180deg);
+    right: 0;
+    bottom: 0;
+    width: 128px;
+    font-size: 24px;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 50px;
+    background-color: #EA7635;
+    border-radius: 40px 0 0 40px;
+    &:nth-of-type(2) {
+      bottom: 66px;
     }
   }
-  .rules {
-    padding: 24px 24px 60px;
-    font-size: 26px;
-    line-height: 56px;
-  }
-  .poster {
-    position: fixed;
-    left: 0;
+}
+.activity {
+  padding: 0 18px;
+  margin-bottom: 38px;
+}
+.activity-name {
+  position: relative;
+  bottom: -30px;
+  padding: 7.5px 0 6px;
+  z-index: 1;
+  .front {
+    position: absolute;
     top: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .5);
-    z-index: 10;
-    > img {
-      margin-top: 20px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    &-top {
+      border: 12px solid;
+      border-bottom: 7.5px solid;
+      border-top: none;
+      border-color: transparent transparent #C94828 transparent;
     }
-    > svg {
-      margin-top: 20px;
+    &-front {
+      width: 600px;
+      line-height: 68px;
+      background: #EA7635;
+      border-top: 1px solid #F5C36C;
+      text-align: center;
+      font-size: 30px;
+      font-family: Microsoft YaHei;
+      font-weight: bold;
+      color: #FFFFFF;
+      letter-spacing: 2px;
     }
   }
+  .back {
+    width: 712px;
+    height: 60px;
+    background: #C94828;
+    border-radius: 10px;
+    z-index: 1;
+  }
+}
+.content {
+  position: relative;
+  padding: 48px 24px;
+  margin: 14px auto 48px;
+  background-color: #FBEFD7;
+  border-radius: 20px;
+  box-sizing: border-box;
+  &:nth-last-of-type(1) {
+    margin-bottom: 0;
+  }
+}
+.discount {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #663A15;
+  font-size: 24px;
+  > span:nth-of-type(2) {
+    margin: 0 12px;
+    vertical-align: 2px;
+  }
+}
+.countdown,
+.package-countdown {
+  width: 400px;
+  margin: 0 auto;
+  line-height: 80px;
+  font-size: 24px;
+  text-align: center;
+  color: #FBEFD7;
+  background-color: #DF5B2F;
+  border-radius: 20px;
+  > .unit {
+    padding: 0 4px;
+  }
+  > .val {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 4px;
+    min-width: 38px;
+    line-height: 30px;
+    color: #DF5B2F;
+    background-color: #FBEFD7;
+    border-radius: 6px;
+  }
+}
+.countdown {
+  margin-top: 286px;
+  background: none;
+  > .val {
+    background-color: #ffd6a7;
+    &.day {
+      background-color: #8DE5A8;
+    }
+  }
+}
+.pro-list {
+  margin-top: 32px;
+}
+.gift-list {
+  padding: 0 14px;
+  .title {
+    margin: 24px 0;
+    font-weight: bold;
+    font-size: 40px;
+    color: #EA7635;
+    &:before {
+      display: inline-block;
+      content: '';
+      width: 8px;
+      height: 40px;
+      vertical-align: -6px;
+      border-radius: 4px;
+      background-color: #EA7635;
+    }
+  }
+}
+.button {
+  display: block;
+  min-width: 400px;
+  margin: 46px auto 0;
+  padding: 0 20px;
+  line-height: 78px;
+  font-size: 32px;
+  color: #FFFFFF;
+  background-color: #FE782F;
+  border-radius: 39px;
+  font-weight: bold;
+  box-shadow: 0px 6px 12px rgba(132, 0, 0, 0.16);
+}
+.rules {
+  padding: 24px 24px 60px;
+  font-size: 26px;
+  line-height: 56px;
+}
+.poster {
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+  z-index: 10;
+  > img {
+    margin-top: 20px;
+  }
+  > svg {
+    margin-top: 20px;
+  }
+}
 </style>

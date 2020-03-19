@@ -140,7 +140,7 @@ export default {
         isActivityAuth: {
             handler (val) {
                 if (val === true && !this.$router.currentRoute.meta.from) {
-                    window.myAssign(`/${ this.mallDomain }/activity`)
+                    window.myAssign(`/${ this.mallDomain }/course-package`)
                 }
             },
             immediate: true

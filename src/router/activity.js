@@ -54,5 +54,13 @@ export default [
         meta: {
             title: '新春预购'
         }
+    },
+    {
+        path: '/course-package',
+        name: 'CoursePackage',
+        component: () => import('../views/activity-list/Course-Package.vue'),
+        meta: {
+            title: '组合课'
+        }
     }
 ]
