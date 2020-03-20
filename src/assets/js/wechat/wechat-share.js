@@ -1,6 +1,6 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
-import { isIOS } from '../util'
+// import { isIOS } from '../util'
 /* eslint-disable */
 // import qs from 'qs'
 const WX = window.wx
@@ -12,7 +12,7 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
     // clearInterval(timer)
     willHide = !title ? ['menuItem:share:appMessage', 'menuItem:share:timeline'] : willHide
     return new Promise((resolve, reject) => {
-        const config = getConfig(jsApi, appId)
+        const config = getConfig(jsApi, appId, link)
         WX.config(config)
         WX.ready(() => {
             setWechatShare(title, desc, imgUrl, link, willHide)
@@ -113,12 +113,13 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
  * 生成微信分享配置对象
  * @param jsapi {string}
  * @param appId {string}
+ * @param url {string}
  * @return {{debug: boolean, jsApiList: string[], signature: *, appId: *, nonceStr: *, timestamp: number}}
  */
-function getConfig (jsapi, appId) {
+function getConfig (jsapi, appId, url) {
     const nonceStr = randomString()
     const timestamp = Number.parseInt(Date.now() / 1000)
-    const url = (isIOS() && window.initialUrl) ? window.initialUrl : location.href
+    // const url = (isIOS() && window.initialUrl) ? window.initialUrl : location.href
 
     // let url = location.href
     // let url = disposeUrl()

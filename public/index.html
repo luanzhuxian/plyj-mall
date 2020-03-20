@@ -7,15 +7,15 @@
                 location.replace(location.href.replace('http://', 'https://'))
                 return
             }
-            var search = ''
-            if (location.search.indexOf('tr') === -1) {
-                if (location.search) {
-                    search = '&tr=' + Date.now() + Math.random();
-                } else {
-                    search = '?tr=' + Date.now() + Math.random();
-                }
-                location.assign(location.href + search)
-            }
+            // var search = ''
+            // if (location.search.indexOf('tr') === -1) {
+            //     if (location.search) {
+            //         search = '&tr=' + Date.now() + Math.random();
+            //     } else {
+            //         search = '?tr=' + Date.now() + Math.random();
+            //     }
+            //     location.assign(location.href + search)
+            // }
             var devicePixelRatio = window.devicePixelRatio
             var initialScale = 1 / devicePixelRatio
             var maximumScale = 1 / devicePixelRatio

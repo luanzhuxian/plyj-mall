@@ -15,6 +15,36 @@ import filters from './filter'
 import './assets/css/quill.css'
 import PlSvg from './components/common/Pl-Svg.vue'
 import { errorlog } from './apis/base-api'
+import qs from 'qs'
+
+/**
+ * 处理url，删除微信加的参数
+ * @return {string}
+ */
+const disposeUrl = () => {
+    const { href } = location
+    const { protocol, host, pathname } = location
+    let query = href.split('?')[1]
+    let newUrl = ''
+
+    query = qs.parse(query)
+    if (query.hasOwnProperty('from') || query.hasOwnProperty('isappinstalled')) {
+        delete query.isappinstalled
+        delete query.from
+    }
+    query = qs.stringify(query)
+    if (query) {
+        newUrl = `${ protocol }//${ host }${ pathname }?${ query }`
+    } else {
+        newUrl = `${ protocol }//${ host }${ pathname }`
+    }
+    return newUrl
+}
+const newUrl = disposeUrl()
+if (newUrl !== location.href) {
+    location.assign(newUrl)
+}
+
 Vue.use(VueLazyload, {
     error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
     lazyComponent: true,
