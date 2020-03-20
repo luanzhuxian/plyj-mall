@@ -5,16 +5,9 @@
             :class="$style.container"
             :options="swiperOptionBanner"
         >
-            <!-- <swiperSlide v-if="mallId === '1057573777392603136'">
-        <img
-          :class="$style.img"
-          src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820banner.jpg"
-          @click="wwec"
-        >
-      </swiperSlide> -->
             <swiperSlide v-for="(item, i) of data.values" :key="i">
                 <count-down v-if="item.shoppingStatus === 1" :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
-                <img :class="$style.img" :src="item.image" :alt="item.name" @click="imgClick(item)">
+                <img :class="$style.img" :src="item.image" :alt="item.name" @click="handelClick(item)">
             </swiperSlide>
             <div v-show="data.values.length > 1" class="banner-pagination-home-b" slot="pagination" />
         </swiper>
@@ -23,8 +16,6 @@
 
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-
-// import { wasRegist } from '../../../apis/wwec'
 import CountDown from '../../../components/product/Count-Down.vue'
 
 export default {
@@ -58,49 +49,54 @@ export default {
         }
     },
     methods: {
-        imgClick (item) {
-            if (!item.value) return
-            if (item.type === 1) {
-                this.$router.push({ name: 'Classify', params: { optionId: item.value || null } })
-            } else if (item.type === 2) {
-                this.$router.push({ name: 'Product', params: { productId: item.value } })
+        handelClick ({ type, value }) {
+            const routeMap = {
+                41: {
+                    name: 'CoursePackage'
+                },
+                42: {
+                    name: 'BattlefieldReport'
+                },
+                43: {
+                    name: 'EpidemicSignIn'
+                },
+                5: {
+                    name: 'InteractiveLive'
+                },
+                6: {
+                    name: 'Appointment'
+                }
             }
-        },
-        async wwec () {
-            location.href = 'http://admall.youpenglai.com/h5/register-login'
-
-            // location.href = 'http://192.168.130.33:8083/h5/register-login'
-            // try {
-            //   let { result } = await wasRegist()
-            //   if (result.status === 1) {
-            //     this.$router.push({ name: 'Code820' })
-            //   } else if (result.status === 0) {
-            //     this.$router.push({ name: 'SignUp' })
-            //   } else if (result.status === 2) {
-            //     this.$router.push({ name: 'GetSuccess' })
-            //   }
-            // } catch (e) {
-            //   throw e
-            // }
+            // if (!value) return false
+            if (type === 1) {
+                this.$router.push({ name: 'Classify', params: { optionId: value || null } })
+            }
+            if (type === 2) {
+                this.$router.push({ name: 'Product', params: { productId: value } })
+            }
+            if (type in routeMap) {
+                this.$router.push({ name: routeMap[type].name })
+            }
         }
     }
 }
 </script>
 
 <style module lang="scss">
-  .banner {
+.banner {
     .container {
-      border-radius: 20px;
-      overflow: hidden;
+        border-radius: 20px;
+        overflow: hidden;
     }
     .img {
-      width: 100%;
-      height: 470px;
+        width: 100%;
+        height: 470px;
     }
-  }
+}
+
 </style>
 <style scoped lang="scss">
-  .banner-pagination-home-b {
+.banner-pagination-home-b {
     position: absolute;
     left: 50%;
     bottom: 16px;
@@ -113,18 +109,19 @@ export default {
     background-color: rgba(0, 0, 0, .3);
     border-radius: 9px;
     z-index: 1;
-    /deep/.swiper-pagination-bullet {
-      width: 10px !important;
-      height: 10px !important;
-      margin-right: 8px;
-      border-radius: 5px;
-      background-color: #ccc;
-      &.swiper-pagination-bullet-active {
-        background-color: #fff;
-      }
-      &:nth-last-of-type(1) {
-        margin-right: 0;
-      }
+    /deep/ .swiper-pagination-bullet {
+        width: 10px !important;
+        height: 10px !important;
+        margin-right: 8px;
+        border-radius: 5px;
+        background-color: #ccc;
+        &.swiper-pagination-bullet-active {
+            background-color: #fff;
+        }
+        &:nth-last-of-type(1) {
+            margin-right: 0;
+        }
     }
-  }
+}
+
 </style>
