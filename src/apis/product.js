@@ -52,7 +52,7 @@ export const getSpringCombination = params => axios.get(`/apis/v1/combination/ho
 export const getCourseDetail = mallCourseId => axios.get(`/apis/v1/mall/cource/courseInfo/${ mallCourseId }`)
 
 /**
- * 提交订单（获取订单号）
+ * 视频课提交订单（获取订单号）
  * @param data {Object}
  * @return {*}
  */

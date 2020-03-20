@@ -293,6 +293,11 @@
                         <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
                     </InfoItem>
 
+                    <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
+                        <template slot="label">课程折扣</template>
+                        <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
+                    </InfoItem>
+
                     <StudentInline
                         v-if="isCart && item.needStudentInfo === 1"
                         :product="item"
@@ -786,6 +791,7 @@ export default {
         }
     },
     async activated () {
+        // TODO: 前方高能！！！！不熟悉下单逻辑的人勿动
         const {
             realName,
             userName,
@@ -862,6 +868,7 @@ export default {
          * @param redEnvelope {object} 红包列表
          */
         async getProductDetail (coupon = {}, redEnvelope = {}) {
+            // TODO: 前方高能！！！！不熟悉下单逻辑的人勿动
             try {
                 const proList = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
                 if (this.activeProduct === 1 && !coupon.id && !this.isNotChooseCoupon) {
@@ -886,7 +893,7 @@ export default {
                     scholarshipId: redEnvelope.id || '',
                     addressSeq: this.selectedAddress.sequenceNbr
                 })
-                const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass } = result
+                const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass, knowledgeCourse } = result
 
                 // 为每个虚拟订单都添加备注字段
                 for (const p of physicalProducts) {
@@ -901,13 +908,17 @@ export default {
                 for (const item of virtualProducts) {
                     item.type = 'VIRTUAL_GOODS'
                 }
+                for (const item of knowledgeCourse) {
+                    item.type = 'KNOWLEDGE_COURSE'
+                }
                 this.detail = result
                 this.physicalAmount = amount
                 this.totalAmount = totalAmount
                 this.freight = Number(freight)
                 this.physicalProducts = physicalProducts
                 this.virtualProducts = virtualProducts
-                this.lessonList = [...formalClass, ...experienceClass]
+                // 将先上课归到课程中
+                this.lessonList = [...formalClass, ...experienceClass, ...knowledgeCourse]
 
                 // 是否显示学员选择栏，只要有一个商品允许（item.needStudentInfo === 1）就显示
                 this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts].filter(item => item.needStudentInfo === 1)

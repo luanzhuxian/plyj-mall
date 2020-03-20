@@ -272,7 +272,7 @@ export default {
                 name: 'SubmitOrder',
                 query: {
                     isCart: 'YES',
-                    activeProduct: 5,
+                    activeProduct: 6,
                     preActivity: 2,
                     activityId: data.activityId
                 }
