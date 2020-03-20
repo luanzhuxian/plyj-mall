@@ -114,7 +114,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'liveInfo', 'courseInfo', 'invitingEvent', 'jxEvent', 'nwEvent']),
+        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'liveInfo', 'courseInfo', 'invitingEvent', 'jxEvent', 'nwEvent', 'mallDomain']),
         allLoaded () {
             let result
             if (this.type === 3) {
@@ -140,7 +140,7 @@ export default {
         isActivityAuth: {
             handler (val) {
                 if (val === true && !this.$router.currentRoute.meta.from) {
-                    this.$router.push({ name: 'Activity' })
+                    location.assign(`/${ this.mallDomain }/activity?noCache=${ Date.now() }`)
                 }
             },
             immediate: true

@@ -34,12 +34,13 @@ const originalPush = Router.prototype.push
 const originalReplace = Router.prototype.replace
 Router.prototype.push = function push (location, onResolve, onReject) {
     if (typeof location === 'object') {
+        const noCache = `${ Date.now() }_${ Number.parseInt(Math.random() * 100000000000) }`
         if (location.query) {
-            location.query.noCache = Date.now()
+            location.query.noCache = noCache
         } else {
             Object.assign(location, {
                 query: {
-                    noCache: Date.now()
+                    noCache
                 }
             })
         }
@@ -49,12 +50,13 @@ Router.prototype.push = function push (location, onResolve, onReject) {
 }
 Router.prototype.replace = function replace (location, onResolve, onReject) {
     if (typeof location === 'object') {
+        const noCache = `${ Date.now() }_${ Number.parseInt(Math.random() * 100000000000) }`
         if (location.query) {
-            location.query.noCache = Date.now()
+            location.query.noCache = noCache
         } else {
             Object.assign(location, {
                 query: {
-                    noCache: Date.now()
+                    noCache
                 }
             })
         }

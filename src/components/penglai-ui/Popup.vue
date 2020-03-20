@@ -108,6 +108,14 @@ export default {
             showBox: false
         }
     },
+    deactivated () {
+        this.close()
+        this.unlockBody()
+    },
+    beforeDestroy () {
+        this.close()
+        this.unlockBody()
+    },
     methods: {
         lockBody () {
             const { body } = document
