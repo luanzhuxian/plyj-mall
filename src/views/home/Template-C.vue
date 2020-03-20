@@ -220,7 +220,7 @@ export default {
 
   .live,
   .course {
-    margin-top: 20px;
+    padding: 24px 24px 0;
   }
 
   .activity,

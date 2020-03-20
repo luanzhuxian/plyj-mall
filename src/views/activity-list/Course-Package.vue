@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.coursePackage">
         <div :class="$style.background">
-            <div :class="$style.countdown" v-if="count.s">
+            <div :class="$style.topCountdown" v-if="count.s">
                 <template v-if="!count.wasEnded">
                     <span v-if="count.wasStarted">距活动结束: </span>
                     <span v-else>距活动开始: </span>
@@ -13,7 +13,7 @@
                     <span :class="$style.unit">:</span>
                     <span :class="$style.val" v-text="count.s" />
                 </template>
-                <span v-else>已结束</span>
+                <span v-else>活动已结束</span>
             </div>
             <div :class="$style.topRight" @click="showRules = true">活动规则</div>
             <div :class="$style.topRight" @click="createPoster">活动海报</div>
@@ -93,10 +93,7 @@
             </div>
         </div>
 
-        <pl-popup
-            :show.sync="showRules"
-            title="活动规则"
-        >
+        <pl-popup :show.sync="showRules" title="活动规则">
             <ul :class="$style.rules">
                 <li>1. 设置活动，活动期间该页面展示的所有组合购买商品均以组合折扣价位售卖</li>
                 <li>2. 活动期间商品不退款，不支持线上发票</li>
@@ -305,185 +302,201 @@ export default {
 
 <style lang="scss" module>
 .course-package {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 35px;
-  background: #F5C36C;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 35px;
+    background: #f5c36c;
 }
 .background {
-  position: relative;
-  height: 576px;
-  background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png") no-repeat center top;
-  background-size: 100% auto;
-  > .top-right {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 128px;
-    font-size: 24px;
-    color: #FFFFFF;
-    text-align: center;
-    line-height: 50px;
-    background-color: #EA7635;
-    border-radius: 40px 0 0 40px;
-    &:nth-of-type(2) {
-      bottom: 66px;
+    position: relative;
+    height: 560px;
+    background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/course-package-bg.jpg') no-repeat center top;
+    background-size: 100% auto;
+    > .top-right {
+        position: absolute;
+        right: 0;
+        bottom: -16px;
+        width: 128px;
+        font-size: 24px;
+        color: #fff;
+        text-align: center;
+        line-height: 50px;
+        background-color: #ea7635;
+        border-radius: 40px 0 0 40px;
+        &:nth-of-type(2) {
+            bottom: 50px;
+        }
     }
-  }
 }
 .activity {
-  padding: 0 18px;
-  margin-bottom: 38px;
+    padding: 0 18px;
+    margin-bottom: 38px;
 }
 .activity-name {
-  position: relative;
-  bottom: -30px;
-  padding: 7.5px 0 6px;
-  z-index: 1;
-  .front {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    &-top {
-      border: 12px solid;
-      border-bottom: 7.5px solid;
-      border-top: none;
-      border-color: transparent transparent #C94828 transparent;
-    }
-    &-front {
-      width: 600px;
-      line-height: 68px;
-      background: #EA7635;
-      border-top: 1px solid #F5C36C;
-      text-align: center;
-      font-size: 30px;
-      font-family: Microsoft YaHei;
-      font-weight: bold;
-      color: #FFFFFF;
-      letter-spacing: 2px;
-    }
-  }
-  .back {
-    width: 712px;
-    height: 60px;
-    background: #C94828;
-    border-radius: 10px;
+    position: relative;
+    bottom: -30px;
+    padding: 7.5px 0 6px;
     z-index: 1;
-  }
+    .front {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        &-top {
+            border: 12px solid;
+            border-bottom: 7.5px solid;
+            border-top: none;
+            border-color: transparent transparent #c94828 transparent;
+        }
+        &-front {
+            box-sizing: border-box;
+            padding: 0 20px;
+            width: 600px;
+            line-height: 68px;
+            background: #ea7635;
+            border-top: 1px solid #f5c36c;
+            text-align: center;
+            font-size: 30px;
+            font-family: Microsoft YaHei;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 2px;
+            @include elps();
+        }
+    }
+    .back {
+        width: 712px;
+        height: 60px;
+        background: #c94828;
+        border-radius: 10px;
+        z-index: 1;
+    }
 }
 .content {
-  position: relative;
-  padding: 48px 24px;
-  margin: 14px auto 48px;
-  background-color: #FBEFD7;
-  border-radius: 20px;
-  box-sizing: border-box;
-  &:nth-last-of-type(1) {
-    margin-bottom: 0;
-  }
+    position: relative;
+    padding: 48px 24px;
+    margin: 14px auto 48px;
+    background-color: #fbefd7;
+    border-radius: 20px;
+    box-sizing: border-box;
+    &:nth-last-of-type(1) {
+        margin-bottom: 0;
+    }
 }
 .discount {
-  margin-bottom: 20px;
-  text-align: center;
-  color: #663A15;
-  font-size: 24px;
-  > span:nth-of-type(2) {
-    margin: 0 12px;
-    vertical-align: 2px;
-  }
-}
-.countdown,
-.package-countdown {
-  width: 400px;
-  margin: 0 auto;
-  line-height: 80px;
-  font-size: 24px;
-  text-align: center;
-  color: #FBEFD7;
-  background-color: #DF5B2F;
-  border-radius: 20px;
-  > .unit {
-    padding: 0 4px;
-  }
-  > .val {
-    display: inline-block;
-    box-sizing: border-box;
-    padding: 4px;
-    min-width: 38px;
-    line-height: 30px;
-    color: #DF5B2F;
-    background-color: #FBEFD7;
-    border-radius: 6px;
-  }
-}
-.countdown {
-  margin-top: 286px;
-  background: none;
-  > .val {
-    background-color: #ffd6a7;
-    &.day {
-      background-color: #8DE5A8;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #663a15;
+    font-size: 24px;
+    > span:nth-of-type(2) {
+        margin: 0 12px;
+        vertical-align: 2px;
     }
-  }
+}
+.package-countdown {
+    margin: 0 auto;
+    width: 400px;
+    line-height: 80px;
+    text-align: center;
+    font-size: 24px;
+    color: #fbefd7;
+    background-color: #df5b2f;
+    border-radius: 20px;
+    > .unit {
+        padding: 0 4px;
+    }
+    > .val {
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 4px;
+        min-width: 38px;
+        line-height: 30px;
+        color: #df5b2f;
+        background-color: #fbefd7;
+        border-radius: 6px;
+    }
+}
+.top-countdown {
+    margin: 340px auto 0;
+    width: 455px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 28px;
+    color: #663a15;
+    background-color: #f5c36c;
+    border-radius: 40px;
+    > .unit {
+        padding: 0 8px;
+    }
+    > .val {
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 0 4px;
+        min-width: 42px;
+        line-height: 40px;
+        color: #fff;
+        background-color: #e97f40;
+        border-radius: 6px;
+    }
 }
 .pro-list {
-  margin-top: 32px;
+    margin-top: 32px;
 }
 .gift-list {
-  padding: 0 14px;
-  .title {
-    margin: 24px 0;
-    font-weight: bold;
-    font-size: 40px;
-    color: #EA7635;
-    &:before {
-      display: inline-block;
-      content: '';
-      width: 8px;
-      height: 40px;
-      vertical-align: -6px;
-      border-radius: 4px;
-      background-color: #EA7635;
+    padding: 0 14px;
+    .title {
+        margin: 24px 0;
+        font-weight: bold;
+        font-size: 40px;
+        color: #ea7635;
+        &:before {
+            display: inline-block;
+            content: '';
+            width: 8px;
+            height: 40px;
+            vertical-align: -6px;
+            border-radius: 4px;
+            background-color: #ea7635;
+        }
     }
-  }
 }
 .button {
-  display: block;
-  min-width: 400px;
-  margin: 46px auto 0;
-  padding: 0 20px;
-  line-height: 78px;
-  font-size: 32px;
-  color: #FFFFFF;
-  background-color: #FE782F;
-  border-radius: 39px;
-  font-weight: bold;
-  box-shadow: 0px 6px 12px rgba(132, 0, 0, 0.16);
+    display: block;
+    min-width: 400px;
+    margin: 46px auto 0;
+    padding: 0 20px;
+    line-height: 78px;
+    font-size: 32px;
+    color: #fff;
+    background-color: #fe782f;
+    border-radius: 39px;
+    font-weight: bold;
+    box-shadow: 0 6px 12px rgba(132, 0, 0, .16);
 }
 .rules {
-  padding: 24px 24px 60px;
-  font-size: 26px;
-  line-height: 56px;
+    padding: 24px 24px 60px;
+    font-size: 26px;
+    line-height: 56px;
 }
 .poster {
-  position: fixed;
-  left: 0;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-  z-index: 10;
-  > img {
-    margin-top: 20px;
-  }
-  > svg {
-    margin-top: 20px;
-  }
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 10;
+    > img {
+        margin-top: 20px;
+    }
+    > svg {
+        margin-top: 20px;
+    }
 }
+
 </style>

@@ -1,62 +1,64 @@
 <template>
-    <div :class="$style.liveWrapper">
-        <div :class="$style.liveHead">
-            <pl-svg name="icon-live-a8210" width="36" height="40" />
-            <b>互动直播</b>
+    <div>
+        <div :class="$style.liveWrapper">
+            <div :class="$style.liveHead">
+                <pl-svg name="icon-live-a8210" width="36" height="40" />
+                <b>互动直播</b>
+                <router-link
+                    :class="$style.liveHeadMore"
+                    :to="{ name: 'InteractiveLive' }"
+                >
+                    查看全部
+                    <pl-svg name="icon-right" height="20" fill="#cccccc" />
+                </router-link>
+            </div>
+            <div :class="$style.liveHeadSub">
+                <span>{{ `直播中 ${data.nowCount || 0}` }}</span>
+                <span>{{ `即将开始 ${data.futrueCount || 0}` }}</span>
+                <span>{{ `往期直播 ${data.pastCount || 0}` }}</span>
+            </div>
             <router-link
-                :class="$style.liveHeadMore"
-                :to="{ name: 'InteractiveLive' }"
+                :class="$style.live"
+                :to="{ name: 'LiveRoom', params: { id: data.liveModel.id } }"
             >
-                查看全部
-                <pl-svg name="icon-right" height="20" fill="#cccccc" />
+                <div :class="$style.imgWrapper">
+                    <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
+                    <div :class="$style.label" v-if="isNoticeShow">
+                        预告
+                    </div>
+                    <pl-svg name="icon-play" width="60" />
+                </div>
+                <div :class="$style.info">
+                    <div :class="$style.top">
+                        {{ live.name }}
+                    </div>
+                    <div :class="$style.bottom">
+                        <div :class="$style.bottomLeft">
+                            <pl-svg name="icon-clock" fill="#fff" width="26" />
+                        </div>
+                        <div :class="$style.bottomRight">
+                            <span v-if="isNoticeShow">距开始仅剩</span>
+                            <span v-if="live.statue === 4" :class="$style.highlight">正在直播</span>
+                            <span v-if="live.statue === 0" :class="$style.highlight">已结束</span>
+                            <count-down
+                                v-if="isNoticeShow"
+                                :timestamp="ts"
+                                color="#333"
+                                size="mini"
+                                @done="done"
+                            />
+                            <span v-if="live.statue === 4" :class="$style.highlight">
+                                {{ `${live.visitTimes}人观看` }}
+                            </span>
+                        </div>
+                    </div>
+                    <div :class="$style.lock" v-if="live.roomToken">
+                        <pl-svg name="icon-lock-plain-7b5ab" width="30" />
+                        观看需验证口令
+                    </div>
+                </div>
             </router-link>
         </div>
-        <div :class="$style.liveHeadSub">
-            <span>{{ `直播中 ${data.nowCount || 0}` }}</span>
-            <span>{{ `即将开始 ${data.futrueCount || 0}` }}</span>
-            <span>{{ `往期直播 ${data.pastCount || 0}` }}</span>
-        </div>
-        <router-link
-            :class="$style.live"
-            :to="{ name: 'LiveRoom', params: { id: data.liveModel.id } }"
-        >
-            <div :class="$style.imgWrapper">
-                <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
-                <div :class="$style.label" v-if="isNoticeShow">
-                    预告
-                </div>
-                <pl-svg name="icon-play" width="60" />
-            </div>
-            <div :class="$style.info">
-                <div :class="$style.top">
-                    {{ live.name }}
-                </div>
-                <div :class="$style.bottom">
-                    <div :class="$style.bottomLeft">
-                        <pl-svg name="icon-clock" fill="#fff" width="26" />
-                    </div>
-                    <div :class="$style.bottomRight">
-                        <span v-if="isNoticeShow">距开始仅剩</span>
-                        <span v-if="live.statue === 4" :class="$style.highlight">正在直播</span>
-                        <span v-if="live.statue === 0" :class="$style.highlight">已结束</span>
-                        <count-down
-                            v-if="isNoticeShow"
-                            :timestamp="ts"
-                            color="#333"
-                            size="mini"
-                            @done="done"
-                        />
-                        <span v-if="live.statue === 4" :class="$style.highlight">
-                            {{ `${live.visitTimes}人观看` }}
-                        </span>
-                    </div>
-                </div>
-                <div :class="$style.lock" v-if="live.roomToken">
-                    <pl-svg name="icon-lock-plain-7b5ab" width="30" />
-                    观看需验证口令
-                </div>
-            </div>
-        </router-link>
     </div>
 </template>
 

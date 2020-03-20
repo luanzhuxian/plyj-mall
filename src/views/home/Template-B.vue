@@ -264,7 +264,7 @@ export default {
 
   .live,
   .course {
-    margin-top: 24px;
+    padding: 24px 24px 0;
   }
 
   .adv,

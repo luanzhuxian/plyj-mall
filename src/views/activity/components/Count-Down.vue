@@ -145,7 +145,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
   .count-down {
     box-sizing: border-box;
     display: flex;
