@@ -1,6 +1,7 @@
 export default [
     {
         path: '/detail/product/:productId/:brokerId?',
+        alias: '/detail/lesson/:productId/:brokerId?',
         name: 'Product',
         component: () => import('../views/detail/Product-Detail.vue'),
         props: true,
