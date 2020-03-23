@@ -154,18 +154,14 @@ export default {
                 inviterStatisitic(this.activityId, shareUserId)
             }
             const shareUrl = `${ this.mallUrl }/yx/${ this.activityId }/${ this.userId }?noCache=${ Date.now() }`
-            try {
-                await share({
-                    appId: this.appId,
-                    title: `${ this.userName }已领取豪礼`,
-                    desc: '快来参加活动，一起领取豪礼！',
-                    link: shareUrl,
-                    imgUrl: this.logoUrl,
-                    willHide
-                })
-            } catch (e) {
-                console.error(e)
-            }
+            share({
+                appId: this.appId,
+                title: `${ this.userName }已领取豪礼`,
+                desc: '快来参加活动，一起领取豪礼！',
+                link: shareUrl,
+                imgUrl: this.logoUrl,
+                willHide
+            })
         },
         async createHaibao () {
             if (this.poster) {

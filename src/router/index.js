@@ -34,7 +34,7 @@ const originalPush = Router.prototype.push
 const originalReplace = Router.prototype.replace
 Router.prototype.push = function push (location, onResolve, onReject) {
     if (typeof location === 'object') {
-        const noCache = `${ Date.now() }_${ Number.parseInt(Math.random() * 100000000000) }`
+        const noCache = `${ Date.now() }`
         if (location.query) {
             location.query.noCache = noCache
         } else {
@@ -50,7 +50,7 @@ Router.prototype.push = function push (location, onResolve, onReject) {
 }
 Router.prototype.replace = function replace (location, onResolve, onReject) {
     if (typeof location === 'object') {
-        const noCache = `${ Date.now() }_${ Number.parseInt(Math.random() * 100000000000) }`
+        const noCache = `${ Date.now() }`
         if (location.query) {
             location.query.noCache = noCache
         } else {

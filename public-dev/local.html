@@ -3,14 +3,37 @@
 <head>
     <script>
         (function () {
-            var devicePixelRatio = window.devicePixelRatio
-            var initialScale = 1 / devicePixelRatio
-            var maximumScale = 1 / devicePixelRatio
-            var minimumScale = 1 / devicePixelRatio
-            var meta = document.createElement('meta')
-            meta.name = 'viewport'
-            meta.content = 'width=device-width,initial-scale=' + initialScale + ',maximum-scale=' + maximumScale + ',minimum-scale=' + minimumScale + ',user-scalable=no'
-            document.head.appendChild(meta)
+            var search = location.search;
+            var myAssign = new Proxy((url) => {
+                location.assign(url);
+            }, {
+                apply (target, thisArg, argArray) {
+                    var url = argArray[0];
+                    var search = url.split('?')[1] || '';
+                    var path = url.split('?')[0];
+                    if (search) {
+                        search += '&random=' + Math.random();
+                        search = '?' + search;
+                    } else {
+                        search = '?random=' + Math.random();
+                    }
+                    path += search;
+                    Reflect.apply(target, thisArg, [path]);
+                }
+            })
+            if (search.indexOf('random') === -1) {
+                myAssign(location.href);
+                return
+            }
+            window.myAssign = myAssign;
+            var devicePixelRatio = window.devicePixelRatio;
+            var initialScale = 1 / devicePixelRatio;
+            var maximumScale = 1 / devicePixelRatio;
+            var minimumScale = 1 / devicePixelRatio;
+            var meta = document.createElement('meta');
+            meta.name = 'viewport';
+            meta.content = 'width=device-width,initial-scale=' + initialScale + ',maximum-scale=' + maximumScale + ',minimum-scale=' + minimumScale + ',user-scalable=no';
+            document.head.appendChild(meta);
         })()
     </script>
 
@@ -19,7 +42,7 @@
         // localStorage.setItem('openId_pljs', 'oEV5S0TEXD9jXfXS6AN8YAdbnYfk');
         // localStorage.setItem('openId_1171626378752233472', 'oCdvat20teJYp0ROabshkaEIdxu0');
         // localStorage.setItem('openId_test', 'oAp-z1DzS9Q745uKgim5y3o3Zufw'); // Echo
-        // localStorage.setItem('openId_test', 'oAp-z1MISokZLSDSjgP2pssPVxjs'); // Randy
+        localStorage.setItem('openId_test', 'oAp-z1MISokZLSDSjgP2pssPVxjs') // Randy
         // localStorage.setItem('openId_1188825424185786368', 'oOC22wuUlOiY_1NCFAj6PtNQ992o'); // Echo
         //   localStorage.setItem('openId_1187253589229010944', 'oGLaF0mIHT8cbpNDxRwWQE-8YZEQ'); // Echo
     </script>

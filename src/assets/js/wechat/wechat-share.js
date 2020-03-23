@@ -11,16 +11,15 @@ export default async function share ({ appId, title, desc, imgUrl, link, willHid
     const { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
     // clearInterval(timer)
     willHide = !title ? ['menuItem:share:appMessage', 'menuItem:share:timeline'] : willHide
-    return new Promise((resolve, reject) => {
-        const config = getConfig(jsApi, appId, link)
-        WX.config(config)
-        WX.ready(() => {
-            setWechatShare(title, desc, imgUrl, link, willHide)
-            resolve('wechat config: ok!')
-        })
-        WX.error(res => {
-            reject(res)
-        })
+    const config = getConfig(jsApi, appId, link)
+    WX.config(config)
+    WX.ready(() => {
+        setWechatShare(title, desc, imgUrl, link, willHide)
+        console.warn('分享配置成功')
+    })
+    WX.error(res => {
+        console.warn('分享配置失败')
+        console.error(res)
     })
 }
 
@@ -76,9 +75,10 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
             'menuItem:share:facebook',
             'menuItem:share:QZone',
             'menuItem:share:weiboApp',
-
-            // 'menuItem:share:appMessage', // 发送给朋友
-            // 'menuItem:share:timeline', // 分享到朋友圈
+            'menuItem:share:facebook',
+            'menuItem:share:QZone',
+            'menuItem:favorite',
+            'menuItem:setFont',
             ...willHide // 以上是默认隐藏的按钮
         ]
     })
@@ -113,17 +113,12 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
  * 生成微信分享配置对象
  * @param jsapi {string}
  * @param appId {string}
- * @param url {string}
  * @return {{debug: boolean, jsApiList: string[], signature: *, appId: *, nonceStr: *, timestamp: number}}
  */
-function getConfig (jsapi, appId, url) {
+function getConfig (jsapi, appId) {
     const nonceStr = randomString()
     const timestamp = Number.parseInt(Date.now() / 1000)
-    // const url = (isIOS() && window.initialUrl) ? window.initialUrl : location.href
-
-    // let url = location.href
-    // let url = disposeUrl()
-    const sign = `jsapi_ticket=${ jsapi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ url }`
+    const sign = `jsapi_ticket=${ jsapi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ location.href }`
     const signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
     return {
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。

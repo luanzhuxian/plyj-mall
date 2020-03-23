@@ -104,30 +104,6 @@ export default {
     computed: {
         ...mapGetters(['userId', 'openId', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
     },
-    watch: {
-        $route: {
-            handler (route) {
-                // this.routeName = route.name
-                // if (isIOS() && route.name && !window.initialUrl) {
-                // }
-                // window.initialUrl = disposeUrl()
-                // if (route.name && this.customShare.indexOf(route.name) === -1) {
-                //     // 如果不是商品详情页面，采用其他分享策略
-                //     let willHide = []
-                //     if (this.shareRoutes.indexOf(route.name) === -1) {
-                //         console.warn('禁止分享')
-                //         willHide = ['menuItem:share:appMessage', 'menuItem:share:timeline']
-                //     } else {
-                //         console.warn('默认分享')
-                //     }
-                //     if (this.appId) {
-                //         this.share(willHide)
-                //     }
-                // }
-            },
-            immediate: true
-        }
-    },
     async created () {
         try {
             await this.getMallInfo()
@@ -165,18 +141,6 @@ export default {
             getActivityData: GET_ACTIVITY_DATA,
             getSkinId: GET_SKIN_ID
         }),
-        // share (willHide = []) {
-        //     console.log(window.initialUrl)
-        //     share({
-        //         appId: this.appId,
-        //         title: `${ this.mallName }-${ this.$route.meta.title }`,
-        //         desc: this.mallDesc,
-        //         link: window.initialUrl,
-        //         imgUrl: this.logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
-        //         willHide
-        //     })
-        // },
-
         // 获取首页、主会场页所需数据
         async getEntryData () {
             try {
