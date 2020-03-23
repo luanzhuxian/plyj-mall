@@ -56,6 +56,11 @@
                     </template>
                 </InfoItem>
 
+                <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
+                    <template slot="label">课程折扣</template>
+                    <span slot="content">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}</span>
+                </InfoItem>
+
                 <InfoItem v-if="isCart">
                     <template slot="label">订单备注</template>
                     <template slot="content">
@@ -164,8 +169,13 @@
 
                     <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
                         <template slot="label">春耘折扣</template>
+                        <span slot="content" :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (item.originPrice - item.price) * item.count }}</span>
                     </InfoItem>
-                    <span slot="content" :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (item.originPrice - item.price) * item.count }}</span>
+
+                    <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
+                        <template slot="label">课程折扣</template>
+                        <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
+                    </InfoItem>
 
                     <StudentInline
                         v-if="isCart && item.needStudentInfo === 1"
@@ -760,7 +770,8 @@ export default {
 
         // 实体商品原价总和
         physicalProductOriginalPrice () {
-            if (this.activeProduct === 5) {
+            const { activeProduct = 0 } = this
+            if (activeProduct === 5 || activeProduct === 6) {
                 return this.physicalProducts.map(item => (item.originPrice * 1000 * item.count) / 1000).reduce((total, num) => total + num)
             }
             return 0
