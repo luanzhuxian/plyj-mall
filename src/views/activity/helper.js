@@ -52,7 +52,7 @@ export const sub = (arg1, arg2) => {
 }
 
 export const getTotalPrice = item => {
-    if (!item.goodsInfo || !item.goodsInfo.productSkuModels || !item.goodsInfo.productSkuModels.length) return
+    if (!item.goodsInfo || !item.goodsInfo.productSkuModels || !item.goodsInfo.productSkuModels.length) return ''
     const prodPrice = getPrice(item.goodsInfo.productSkuModels)('price')
 
     if (item.goodsInfo.activityInfo.activityPrice >= prodPrice) {
