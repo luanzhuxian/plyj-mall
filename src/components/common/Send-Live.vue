@@ -1,189 +1,161 @@
 <template>
-  <!-- 送课窗口提示 -->
-  <div @click.stop="" v-show="show || showShelf" :class="$style.mask">
-    <div :class="$style.container">
-      <div :class="$style.main">
-        <div :class="$style.head">
-          <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/send-live.png">
-        </div>
-        <div :class="$style.title">
-          <span>您获得了{{ liveList.length }}堂直播课程</span>
-          <span>
-            <template v-if="liveList.length === 1">
-              <template v-if="isNotStart(liveList[0])">直播还未开始，请在直播开始时进入直播间学习</template>
-              <template v-if="isDoing(liveList[0])">直播进行中，可点击查看直播进入直播间学习</template>
-              <template v-if="isEnd(liveList[0])">直播已结束，您可看回放进行直播课程学习</template>
-            </template>
-            <template v-else>
-              您可选择正在直播中的直播课程进行学习哦~
-            </template>
-          </span>
-        </div>
-        <div :class="$style.list">
-          <!--只有一节赠课时-->
-          <template v-if="liveList.length === 1">
-            <div
-              :class="$style.single"
-              v-for="(item, index) of liveList"
-              :key="index"
-            >
-              <img :src="item.coverImg" alt="">
-              <div :class="$style.desc">
-                <div :class="$style.liveTitle">{{ item.name }}</div>
-                <div :class="$style.liveTime">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
-                <div :class="$style.bottom">
-                  <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
-                  <span :class="$style.free" v-else>免费</span>
-                  <span :class="$style.liveLecturer" v-if="item.lecturer">
-                    <PlSvg name="icon-office-man-35b25" width="32" height="32" />
-                    {{ item.lecturer }}
-                  </span>
+    <!-- 送课窗口提示 -->
+    <div @click.stop="" v-show="show || showShelf" :class="$style.mask">
+        <div :class="$style.container">
+            <div :class="$style.main">
+                <div :class="$style.head">
+                    <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/send-live.png">
                 </div>
-                <pl-button
-                  type="primary"
-                  size="middle"
-                  @click.capture="goToWatchLive(item)"
-                >
-                  {{ isEnd(item)? '看回放' : '去看直播' }}
-                </pl-button>
-              </div>
+                <div :class="$style.title">
+                    <span>您获得了{{ liveList.length }}堂直播课程</span>
+                    <span>
+                        <template v-if="liveList.length === 1">
+                            <template v-if="isNotStart(liveList[0])">直播还未开始，请在直播开始时进入直播间学习</template>
+                            <template v-if="isDoing(liveList[0])">直播进行中，可点击查看直播进入直播间学习</template>
+                            <template v-if="isEnd(liveList[0])">直播已结束，您可看回放进行直播课程学习</template>
+                        </template>
+                        <template v-else>
+                            您可选择正在直播中的直播课程进行学习哦~
+                        </template>
+                    </span>
+                </div>
+                <div :class="$style.list">
+                    <!--只有一节赠课时-->
+                    <template v-if="liveList.length === 1">
+                        <div
+                            :class="$style.single"
+                            v-for="(item, index) of liveList"
+                            :key="index"
+                        >
+                            <img :src="item.coverImg" alt="">
+                            <div :class="$style.desc">
+                                <div :class="$style.liveTitle">{{ item.name }}</div>
+                                <div :class="$style.liveTime">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
+                                <div :class="$style.bottom">
+                                    <span :class="$style.price" v-if="item.paidAmount" v-text="item.paidAmount" />
+                                    <span :class="$style.free" v-else>免费</span>
+                                    <span :class="$style.liveLecturer" v-if="item.lecturerName">
+                                        <PlSvg name="icon-office-man-35b25" width="32" height="32" />
+                                        {{ item.lecturerName }}
+                                    </span>
+                                </div>
+                                <pl-button
+                                    type="primary"
+                                    size="middle"
+                                    @click.capture="goToWatchLive(item)"
+                                >
+                                    {{ item.videoLibId && item.videoLibId !== '0' ? '看回放' : '去看直播' }}
+                                </pl-button>
+                            </div>
+                        </div>
+                    </template>
+                    <!--有多节赠课时-->
+                    <template v-if="liveList.length > 1">
+                        <div
+                            :class="$style.item"
+                            v-for="(item, index) of liveList"
+                            :key="index"
+                            @click.capture="goToWatchLive(item)"
+                        >
+                            <img :src="item.coverImg" alt="">
+                            <div :class="$style.desc">
+                                <div :class="$style.liveTitle">{{ item.name }}</div>
+                                <div :class="$style.liveTime">
+                                    <PlSvg name="icon-time-machine-ff547" width="24" height="24" />
+                                    {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}
+                                </div>
+                                <div :class="$style.liveLecturer" v-if="item.lecturerName">
+                                    <PlSvg name="icon-office-man-35b25" width="24" height="24" />
+                                    {{ item.lecturerName }}
+                                </div>
+                                <div :class="$style.bottom">
+                                    <span :class="$style.price" v-if="item.paidAmount" v-text="item.paidAmount" />
+                                    <span :class="$style.free" v-else>免费</span>
+                                    <pl-button
+                                        type="primary"
+                                        size="middle"
+                                    >
+                                        {{ item.videoLibId && item.videoLibId !== '0' ? '看回放' : '去看直播' }}
+                                    </pl-button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </div>
-          </template>
-          <!--有多节赠课时-->
-          <template v-if="liveList.length > 1">
-            <div
-              :class="$style.item"
-              v-for="(item, index) of liveList"
-              :key="index"
-              @click.capture="goToWatchLive(item)"
-            >
-              <img :src="item.coverImg" alt="">
-              <div :class="$style.desc">
-                <div :class="$style.liveTitle">{{ item.name }}</div>
-                <div :class="$style.liveTime">
-                  <PlSvg name="icon-time-machine-ff547" width="24" height="24" />
-                  {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}
-                </div>
-                <div :class="$style.liveLecturer" v-if="item.lecturer">
-                  <PlSvg name="icon-office-man-35b25" width="24" height="24" />
-                  {{ item.lecturer }}
-                </div>
-                <div :class="$style.bottom">
-                  <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
-                  <span :class="$style.free" v-else>免费</span>
-                  <pl-button
-                    type="primary"
-                    size="middle"
-                  >
-                    {{ isEnd(item)? '看回放' : '去看直播' }}
-                  </pl-button>
-                </div>
-              </div>
+            <div :class="$style.close" @click="close">
+                <span>
+                    <pl-svg name="icon-close3" fill="#fff" width="40" />
+                </span>
             </div>
-          </template>
         </div>
-      </div>
-      <div :class="$style.close" @click="close">
-        <span>
-          <pl-svg name="icon-close3" fill="#fff" width="40" />
-        </span>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
 import moment from 'moment'
 import { getSendLiveList } from '../../apis/online-classroom.js'
 export default {
-  name: 'SendLive',
-  props: {
-    show: Boolean
-  },
-  data () {
-    return {
-      showShelf: false,
-      liveList: [
-        {
-          name: '线上欢乐营 名师伴我学',
-          coverImg: 'https://mallcdn.youpenglai.com/static/timg.jpg',
-          liveStartTime: '2020.2.12  19:00',
-          liveEndTime: '2020.2.12  19:00',
-          lecturer: '名师伴我学名师伴我学名师伴我学名师伴我学',
-          actuallyPaidAmount: 3
-        },
-        {
-          name: '线上欢乐营 名师伴我学 线上欢乐营  线上欢乐营',
-          coverImg: 'https://mallcdn.youpenglai.com/static/timg.jpg',
-          liveStartTime: '2020.2.12  19:00',
-          liveEndTime: '2020.6.12  19:00',
-          lecturer: '王老师',
-          actuallyPaidAmount: 3
-        },
-        {
-          name: '线上欢乐营 名师伴我学',
-          coverImg: 'https://mallcdn.youpenglai.com/static/timg.jpg',
-          liveStartTime: '2020.2.12  19:00',
-          liveEndTime: '2020.2.12  19:00',
-          lecturer: '王老师',
-          actuallyPaidAmount: 3
-        },
-        {
-          name: '线上欢乐营 名师伴我学',
-          coverImg: 'https://mallcdn.youpenglai.com/static/timg.jpg',
-          liveStartTime: '2020.2.12  19:00',
-          liveEndTime: '2020.2.12  19:00',
-          lecturer: '王老师',
-          actuallyPaidAmount: 3
-        },
-        {
-          name: '线上欢乐营 名师伴我学',
-          coverImg: 'https://mallcdn.youpenglai.com/static/timg.jpg',
-          liveStartTime: '2020.2.12  19:00',
-          liveEndTime: '2020.2.12  19:00',
-          lecturer: '王老师',
-          actuallyPaidAmount: 3
+    name: 'SendLive',
+    props: {
+        show: Boolean
+    },
+    data () {
+        return {
+            showShelf: false,
+
+            /*
+            数据结构
+            {
+                    name: '线上欢乐营 名师伴我学',
+                    coverImg: 'https://mallcdn.youpenglai.com/static/timg.jpg',
+                    liveStartTime: '2020.2.12  19:00',
+                    liveEndTime: '2020.2.12  19:00',
+                    lecturerName: '名师伴我学名师伴我学名师伴我学名师伴我学',
+                    paidAmount: 3
+                }
+             */
+            liveList: []
         }
-      ]
+    },
+    async activated () {
+        try {
+            await this.getLiveList()
+        } catch (e) {
+            throw e
+        }
+    },
+    methods: {
+        async getLiveList () {
+            try {
+                const { data: { result } } = await getSendLiveList()
+                this.liveList = result
+                this.showShelf = !!this.liveList.length
+            } catch (e) {
+                throw e
+            }
+        },
+        isNotStart (row) {
+            return moment(row.liveStartTime).isAfter(moment())
+        },
+        isDoing (row) {
+            return moment(row.liveStartTime).isBefore(moment()) && moment(row.liveEndTime).isAfter(moment())
+        },
+        isEnd (row) {
+            return moment(row.liveEndTime).isBefore(moment())
+        },
+        goToWatchLive (row) {
+            if (this.isEnd(row)) {
+                this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: 0 } })
+            } else {
+                this.$router.push({ name: 'LiveRoom', params: { id: row.id } })
+            }
+        },
+        close () {
+            this.showShelf = false
+            this.$emit('update:show', false)
+        }
     }
-  },
-  async activated () {
-    try {
-      await this.getLiveList()
-    } catch (e) {
-      throw e
-    }
-  },
-  methods: {
-    async getLiveList () {
-      try {
-        await getSendLiveList()
-        this.showShelf = !!this.liveList.length
-      } catch (e) {
-        throw e
-      }
-    },
-    isNotStart (row) {
-      return moment(row.liveStartTime).isAfter(moment())
-    },
-    isDoing (row) {
-      return moment(row.liveStartTime).isBefore(moment()) && moment(row.liveEndTime).isAfter(moment())
-    },
-    isEnd (row) {
-      return moment(row.liveEndTime).isBefore(moment())
-    },
-    goToWatchLive (row) {
-      if (this.isEnd(row)) {
-        this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: 0 } })
-      } else {
-        this.$router.push({ name: 'LiveRoom', params: { liveId: row.id } })
-      }
-    },
-    close () {
-      this.showShelf = false
-      this.$emit('update:show', false)
-    }
-  }
 }
 </script>
 

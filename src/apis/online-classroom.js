@@ -10,4 +10,4 @@ export const getCourse = params => axios.get('/apis/v1/knowledgeCourse/onlineCla
 export const getLiveList = params => axios.get('/apis/v1/mall/live/activity/current/list', { params })
 
 // 获取当前用户送课列表
-export const getSendLiveList = _ => axios.get('/apis/v1/mall/live/activity/current/list', { params: { current: 1, size: 10, type: 'PAST' } })
+export const getSendLiveList = _ => axios.get('/apis/v1/mall/live/activity/giveNotice')
