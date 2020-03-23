@@ -959,6 +959,7 @@ export default {
     beforeDestroy () {
         window.clearInterval(this.videoLiveTimer)
         window.clearTimeout(this.liveStatusTimer)
+        if (this.liveSdk) this.liveSdk.destroy(true)
     }
 }
 </script>

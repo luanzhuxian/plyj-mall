@@ -57,7 +57,7 @@
                 </InfoItem>
 
                 <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
-                    <template slot="label">课程折扣</template>
+                    <template slot="label">组合折扣</template>
                     <span slot="content">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}</span>
                 </InfoItem>
 
@@ -120,6 +120,7 @@
         <CustomBlock
             v-if="isCart && physicalProducts.some(item => item.needStudentInfo === 2)"
             :products="physicalProducts"
+            :error-item-id="customErrorId"
             label="用户信息"
         />
 
@@ -173,7 +174,7 @@
                     </InfoItem>
 
                     <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
-                        <template slot="label">课程折扣</template>
+                        <template slot="label">组合折扣</template>
                         <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
                     </InfoItem>
 
@@ -305,7 +306,7 @@
                     </InfoItem>
 
                     <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
-                        <template slot="label">课程折扣</template>
+                        <template slot="label">组合折扣</template>
                         <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
                     </InfoItem>
 

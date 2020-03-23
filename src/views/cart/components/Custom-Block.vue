@@ -1,5 +1,10 @@
 <template>
-    <div :class="$style.customBlock">
+    <div
+        :class="{
+            [$style.customBlock]: true,
+            [$style.error]: errorItemId === product.productId || products.some(item => item.productId === errorItemId)
+        }"
+    >
         <pl-fields
             size="middle"
             :text="label"
@@ -7,16 +12,23 @@
             :icon-gap="12"
             left-text-weight="bold"
         >
-            <ul v-if="formData.formList && formData.formList.length" :class="$style.customList">
+            <ul
+                v-if="formData.formList && formData.formList.length"
+                :class="{
+                    [$style.customList]: true
+                }"
+            >
                 <li
                     :class="$style.customItem"
                     v-for="(form, i) of formData.formList"
                     :key="i"
                     @click="editStudent(i)"
                 >
-                    <div :class="$style.field">{{ label }}<i v-if="formData.formList && formData.formList.length > 1">{{ i + 1 }}</i></div>
+                    <div :class="$style.field">{{ label }}<i v-if="formData.formList && formData.formList.length > 1">{{
+                        i + 1 }}</i></div>
                     <div :class="$style.value">
-                        <span v-if="Object.keys(form).some(key => formData.rules[i][key].required && !form[key])">未填写</span>
+                        <span
+                            v-if="Object.keys(form).some(key => formData.rules[i][key].required && !form[key])">未填写</span>
                         <span v-else v-text="form[Object.keys(form)[0]]" />
                         <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
                     </div>
@@ -30,9 +42,11 @@
                     :key="i"
                     @click="editStudent(i)"
                 >
-                    <div :class="$style.field">{{ label }}<i v-if="formData2.formList && formData2.formList.length > 1">{{ i + 1 }}</i></div>
+                    <div :class="$style.field">{{ label }}<i v-if="formData2.formList && formData2.formList.length > 1">{{
+                        i + 1 }}</i></div>
                     <div :class="$style.value">
-                        <span v-if="Object.keys(form).some(key => formData2.rules[i][key].required && !form[key])">未填写</span>
+                        <span
+                            v-if="Object.keys(form).some(key => formData2.rules[i][key].required && !form[key])">未填写</span>
                         <span v-else v-text="form[Object.keys(form)[0]]" />
                         <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
                     </div>
@@ -52,6 +66,7 @@
 
 <script>
 import CustomForm from './Custom-Form.vue'
+
 export default {
     name: 'CustomBlock',
     components: {
@@ -98,6 +113,10 @@ export default {
             default () {
                 return []
             }
+        },
+        errorItemId: {
+            type: String,
+            default: ''
         }
     },
     watch: {
@@ -119,6 +138,18 @@ export default {
         },
         count () {
             this.setFormData()
+        },
+        errorItemId () {
+            this.$nextTick(() => {
+                const list = document.querySelector(`.${ this.$style.error }`)
+                if (list) {
+                    list.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    })
+                }
+            })
         }
     },
     activated () {
@@ -126,13 +157,13 @@ export default {
     methods: {
 
         /**
-         * 单商品生存表单，虚拟商品取决于数量
-         * 如下，每一个商品都有一个表单对象，比如2个商品，formList 就有2个元素
-         * {
-         *   formList: [{ field1: '', field2: '', field3: '' }, { field1: '', field2: '', field3: '' }],
-         *   rules: []
-         * }
-         */
+             * 单商品生存表单，虚拟商品取决于数量
+             * 如下，每一个商品都有一个表单对象，比如2个商品，formList 就有2个元素
+             * {
+             *   formList: [{ field1: '', field2: '', field3: '' }, { field1: '', field2: '', field3: '' }],
+             *   rules: []
+             * }
+             */
         setFormData () {
             const formList = []
             const rules = []
@@ -153,7 +184,11 @@ export default {
                     } else {
                         form[key] = ''
                     }
-                    rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'none' }]
+                    rule[key] = [{
+                        required: Boolean(cus.required),
+                        message: `请输入${ cus.fieldName }`,
+                        trigger: 'none'
+                    }]
                 }
                 formList.push(form)
                 rules.push(rule)
@@ -163,15 +198,15 @@ export default {
         },
 
         /**
-         * 提交多个实体商品
-         * 多个实体商品要将每个商品的自定义表单进行合并，最终只得到一个表单，就像对待一个商品那样
-         * 最后提交时会按照每个商品需要的自定义字段进行拆分，不考虑商品数量
-         * 数据结构如：
-         * {
-         *   formList: [{ field1: '', field2: '', field3: '' }],
-         *   rules: []
-         * }
-         */
+             * 提交多个实体商品
+             * 多个实体商品要将每个商品的自定义表单进行合并，最终只得到一个表单，就像对待一个商品那样
+             * 最后提交时会按照每个商品需要的自定义字段进行拆分，不考虑商品数量
+             * 数据结构如：
+             * {
+             *   formList: [{ field1: '', field2: '', field3: '' }],
+             *   rules: []
+             * }
+             */
         setFormData2 () {
             if (!this.products.length) {
                 return
@@ -199,7 +234,11 @@ export default {
                 if (Reflect.has(rule, key) && cus.required) {
                     rule[key] = [{ required: true, message: `请输入${ cus.fieldName }`, trigger: 'none' }]
                 } else {
-                    rule[key] = [{ required: Boolean(cus.required), message: `请输入${ cus.fieldName }`, trigger: 'none' }]
+                    rule[key] = [{
+                        required: Boolean(cus.required),
+                        message: `请输入${ cus.fieldName }`,
+                        trigger: 'none'
+                    }]
                 }
             }
             formList.push(form)
@@ -237,22 +276,22 @@ export default {
         },
 
         /**
-         * 提交单个非实体商品，提交的时候要拆分
-         * 拆分时要注意一点，表单中的每个字段，要转成一个对象，对象包括 fieldName， fieldValue 属性
-         * 所以会形成如下的数据结构
-         * [
-         *  // 第一个商品的表单
-         *  [
-         *    { fieldName: 'field1', fieldValue: 'a' },
-         *    { fieldName: 'field2', fieldValue: 'b' }
-         *  ],
-         *  // 第二个商品的表单
-         *  [
-         *    { fieldName: 'field1', fieldValue: 'aa' },
-         *    { fieldName: 'field2', fieldValue: 'bb' }
-         *  ]
-         * ]
-         */
+             * 提交单个非实体商品，提交的时候要拆分
+             * 拆分时要注意一点，表单中的每个字段，要转成一个对象，对象包括 fieldName， fieldValue 属性
+             * 所以会形成如下的数据结构
+             * [
+             *  // 第一个商品的表单
+             *  [
+             *    { fieldName: 'field1', fieldValue: 'a' },
+             *    { fieldName: 'field2', fieldValue: 'b' }
+             *  ],
+             *  // 第二个商品的表单
+             *  [
+             *    { fieldName: 'field1', fieldValue: 'aa' },
+             *    { fieldName: 'field2', fieldValue: 'bb' }
+             *  ]
+             * ]
+             */
         confirm (e) {
             if (this.products.length) {
                 this.confirmMultipleProduct()
@@ -279,11 +318,11 @@ export default {
         },
 
         /**
-         * 提交多个实体商品，提交的时候要拆分
-         * 拆分时要注意一点，表单中的每个字段，要转成一个对象，对象包括 fieldName， fieldValue 属性
-         * 所以会形成如下的数据结构
-         * [[{ fieldName: 'field1', fieldValue: 'a'  }, { fieldName: 'field2', fieldValue: 'b'  }]]
-         */
+             * 提交多个实体商品，提交的时候要拆分
+             * 拆分时要注意一点，表单中的每个字段，要转成一个对象，对象包括 fieldName， fieldValue 属性
+             * 所以会形成如下的数据结构
+             * [[{ fieldName: 'field1', fieldValue: 'a'  }, { fieldName: 'field2', fieldValue: 'b'  }]]
+             */
         confirmMultipleProduct () {
             const form = this.formData2.formList[0]
             for (const pro of this.products) {
@@ -308,36 +347,53 @@ export default {
 </script>
 
 <style module lang="scss">
-  .customBlock {
-    margin-bottom: 20px;
-    padding-left: 24px;
-    background-color: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-  }
-  .customList {
-    margin-top: 20px;
-    margin-bottom: 32px;
-    padding-right: 24px;
-  }
-  .customItem {
-    display: flex;
-    align-content: center;
-    justify-content: space-between;
-    margin-bottom: 48px;
-    &:nth-last-of-type(1) {
-      margin-bottom: 0;
+    .customBlock {
+        margin-bottom: 20px;
+        padding-left: 24px;
+        background-color: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+
+        &.error {
+            border: 1px solid red;
+            animation: bordrFlicker .15s ease;
+            animation-iteration-count: 10;
+        }
     }
-  }
-  .field {
-    font-size: 26px;
-  }
-  .value {
-    font-size: 26px;
-    color: #999;
-    > svg {
-      margin-left: 10px;
-      vertical-align: -4px;
+    @keyframes bordrFlicker {
+        0% { border-color: #F24724 }
+        50% { border-color: transparent }
+        100% { border-color: #F24724 }
     }
-  }
+
+    .customList {
+        margin-top: 20px;
+        margin-bottom: 32px;
+        padding-right: 24px;
+    }
+
+    .customItem {
+        display: flex;
+        align-content: center;
+        justify-content: space-between;
+        margin-bottom: 48px;
+
+        &:nth-last-of-type(1) {
+            margin-bottom: 0;
+        }
+    }
+
+    .field {
+        font-size: 26px;
+    }
+
+    .value {
+        font-size: 26px;
+        color: #999;
+
+        > svg {
+            margin-left: 10px;
+            vertical-align: -4px;
+        }
+    }
 </style>

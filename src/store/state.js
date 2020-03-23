@@ -107,7 +107,8 @@ export default {
         PHYSICAL: '实体商品',
         VIRTUAL: '虚拟商品',
         FORMAL_CLASS: '课程商品',
-        EXPERIENCE_CLASS: '课程商品'
+        EXPERIENCE_CLASS: '课程商品',
+        KNOWLEDGE_COURSE: '知识课程'
     },
     refundTypeMap: {
         1: '仅退款',

@@ -225,6 +225,10 @@
                     <span>春耘减免</span>
                     <span v-text="'-¥' + (activityData.combinationSpecialPrice || 0)" />
                 </p>
+                <p v-if="activeProduct === 6">
+                    <span>组合折扣</span>
+                    <span v-text="'-¥' + (activityData.combinationSpecialPrice || 0)" />
+                </p>
                 <p v-if="productInfoModel.totalCouponAmount > 0">
                     <span>优惠</span>
                     <span v-text="'-¥' + (productInfoModel.totalCouponAmount || 0)" />
@@ -705,7 +709,7 @@ export default {
             activityData: {},
             // 如果时预购商品，单表是否已到付尾款时间，true 已到 false 未到
             isStart: false,
-            // 1普通订单，2团购订单，3秒杀订单，4.预购订单， 5春耘订单
+            // 1普通订单，2团购订单，3秒杀订单，4.预购订单， 5春耘订单，6组合课订单
             activeProduct: 1,
             orderStatusAlias: '',
             shippingAddress: {

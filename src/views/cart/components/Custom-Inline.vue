@@ -104,11 +104,13 @@ export default {
         errorItemId () {
             this.$nextTick(() => {
                 const list = document.querySelector(`.${ this.$style.error }`)
-                list.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'nearest'
-                })
+                if (list) {
+                    list.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    })
+                }
             })
         }
     },
