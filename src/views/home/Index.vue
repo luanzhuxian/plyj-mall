@@ -140,7 +140,7 @@ export default {
         isActivityAuth: {
             handler (val) {
                 if (val === true && !this.$router.currentRoute.meta.from) {
-                    location.assign(`/${ this.mallDomain }/activity?noCache=${ Date.now() }`)
+                    window.myAssign(`/${ this.mallDomain }/activity`)
                 }
             },
             immediate: true

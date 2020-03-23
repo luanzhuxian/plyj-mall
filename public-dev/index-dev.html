@@ -4,23 +4,18 @@
     <script>
         (function () {
             var search = location.search;
-            var myAssign = new Proxy((url) => {
-                location.assign(url);
-            }, {
-                apply (target, thisArg, argArray) {
-                    var url = argArray[0];
-                    var search = url.split('?')[1] || '';
-                    var path = url.split('?')[0];
-                    if (search) {
-                        search += '&random=' + Date.now();
-                        search = '?' + search;
-                    } else {
-                        search = '?random=' + Date.now();
-                    }
-                    path += search;
-                    Reflect.apply(target, thisArg, [path]);
+            var myAssign = function (url) {
+                var search = url.split('?')[1] || '';
+                var path = url.split('?')[0];
+                if (search) {
+                    search += '&random=' + Date.now();
+                    search = '?' + search;
+                } else {
+                    search = '?random=' + Date.now();
                 }
-            })
+                path += search;
+                location.assign(path);
+            }
             if (search.indexOf('random') === -1) {
                 myAssign(location.href);
                 return
