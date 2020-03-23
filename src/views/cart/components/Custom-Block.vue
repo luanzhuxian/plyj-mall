@@ -10,14 +10,14 @@
             <ul v-if="formData.formList && formData.formList.length" :class="$style.customList">
                 <li
                     :class="$style.customItem"
-                    v-for="(item, i) of formData.formList"
+                    v-for="(form, i) of formData.formList"
                     :key="i"
                     @click="editStudent(i)"
                 >
                     <div :class="$style.field">{{ label }}<i v-if="formData.formList && formData.formList.length > 1">{{ i + 1 }}</i></div>
                     <div :class="$style.value">
-                        <span v-if="isError(i)">未填写</span>
-                        <span v-else v-text="item[Object.keys(item)[0]]" />
+                        <span v-if="Object.keys(form).some(key => formData.rules[i][key].required && !form[key])">未填写</span>
+                        <span v-else v-text="form[Object.keys(form)[0]]" />
                         <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
                     </div>
                 </li>
@@ -26,14 +26,14 @@
             <ul v-else :class="$style.customList">
                 <li
                     :class="$style.customItem"
-                    v-for="(item, i) of formData2.formList"
+                    v-for="(form, i) of formData2.formList"
                     :key="i"
                     @click="editStudent(i)"
                 >
                     <div :class="$style.field">{{ label }}<i v-if="formData2.formList && formData2.formList.length > 1">{{ i + 1 }}</i></div>
                     <div :class="$style.value">
-                        <span v-if="isError(i)">未填写</span>
-                        <span v-else v-text="item[Object.keys(item)[0]]" />
+                        <span v-if="Object.keys(form).some(key => formData2.rules[i][key].required && !form[key])">未填写</span>
+                        <span v-else v-text="form[Object.keys(form)[0]]" />
                         <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
                     </div>
                 </li>
@@ -102,14 +102,18 @@ export default {
     },
     watch: {
         product: {
-            handler () {
-                this.setFormData()
+            handler (val) {
+                if (val.productId) {
+                    this.setFormData()
+                }
             },
             immediate: true
         },
         products: {
-            handler () {
-                this.setFormData2()
+            handler (val) {
+                if (val.length) {
+                    this.setFormData2()
+                }
             },
             immediate: true
         },
@@ -204,7 +208,7 @@ export default {
             this.confirm()
         },
         editStudent (index) {
-            if (this.formData.formList.length) {
+            if (this.formData.formList && this.formData.formList.length) {
                 this.currentForm = this.formData.formList[index]
                 this.currentRules = this.formData.rules[index]
             } else {
@@ -213,10 +217,10 @@ export default {
             }
             this.showForm = true
         },
-        isError (index) {
+        async isError (index) {
             let form
             let rule
-            if (this.formData.formList.length) {
+            if (this.formData.formList && this.formData.formList.length) {
                 form = this.formData.formList[index]
                 rule = this.formData.rules[index]
             } else {
@@ -225,9 +229,11 @@ export default {
             }
             for (const key of Object.keys(form)) {
                 if (rule[key][0].required && !form[key]) {
+                    console.log(true)
                     return true
                 }
             }
+            return false
         },
 
         /**
@@ -280,7 +286,6 @@ export default {
          */
         confirmMultipleProduct () {
             const form = this.formData2.formList[0]
-            // const rules = this.formData2.rules[0]
             for (const pro of this.products) {
                 pro.customForm = []
                 const fields = []

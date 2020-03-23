@@ -117,6 +117,7 @@
             :products="physicalProducts"
             label="用户信息"
         />
+
         <!-- *************************虚拟************************* -->
         <template v-if="virtualProducts.length > 0">
             <div
