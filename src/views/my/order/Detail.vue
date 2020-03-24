@@ -151,7 +151,7 @@
                 </div>
                 <div
                     :class="$style.explain"
-                    v-if="orderType !== 'PHYSICAL'"
+                    v-if="orderType !== 'PHYSICAL' && item.productUseMethod"
                 >
                     <ModuleTitle
                         title="使用说明"
@@ -1032,6 +1032,7 @@ export default {
                     const newUserInfo = []
                     const obj = {}
                     let studentInfo = []
+                    console.log(hasCustomBlock)
                     for (const productItem of hasCustomBlock) {
                         if (orderType === 'PHYSICAL') {
                             for (const fields of productItem.customForm) {
