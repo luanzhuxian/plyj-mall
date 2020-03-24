@@ -283,7 +283,7 @@
                             有效期
                         </template>
                         <template slot="content">
-                            {{ item.validityType ? `购买后${ detail.validity }天内学完` : '购买后不限观看次数' }}
+                            {{ item.validity ? `购买后${ item.validity }天内学完` : '购买后不限观看次数' }}
                         </template>
                     </InfoItem>
 
