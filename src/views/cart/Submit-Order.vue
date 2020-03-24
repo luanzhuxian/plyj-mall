@@ -264,7 +264,7 @@
                         :key="index"
                         :img="item.productImg"
                         :name="item.productName"
-                        :count="item.count"
+                        :count="item.count || 1"
                         :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
                         :price="activeProduct === 5 ? item.originPrice : item.price"
                         :support-refund="item.supportRefund"

@@ -45,8 +45,7 @@
                     <div :class="$style.field">{{ label }}<i v-if="formData2.formList && formData2.formList.length > 1">{{
                         i + 1 }}</i></div>
                     <div :class="$style.value">
-                        <span
-                            v-if="Object.keys(form).some(key => formData2.rules[i][key].required && !form[key])">未填写</span>
+                        <span v-if="Object.keys(form).some(key => formData2.rules[i][key][0].required && !form[key])">未填写</span>
                         <span v-else v-text="form[Object.keys(form)[0]]" />
                         <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
                     </div>
