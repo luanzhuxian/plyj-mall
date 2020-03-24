@@ -278,7 +278,16 @@
                     />
                 </div>
                 <OtherInfo>
-                    <InfoItem>
+                    <InfoItem v-if="item.productType === 'KNOWLEDGE_COURSE'">
+                        <template slot="label">
+                            有效期
+                        </template>
+                        <template slot="content">
+                            {{ item.validityType ? `购买后${ detail.validity }天内学完` : '购买后不限观看次数' }}
+                        </template>
+                    </InfoItem>
+
+                    <InfoItem v-else>
                         <template slot="label">
                             使用时间
                         </template>

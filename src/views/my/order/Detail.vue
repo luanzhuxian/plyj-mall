@@ -191,7 +191,7 @@
                     </p>
                 </template>
                 <!-- 使用优惠券价格 -->
-                <p v-else-if="activeProduct === 5">
+                <p v-else-if="activeProduct === 5 || activeProduct === 6">
                     <span>商品金额</span>
                     <span
                         class="rmb"

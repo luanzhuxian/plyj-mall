@@ -56,8 +56,9 @@ export default [
         ]
     },
     {
-        path: '/lived/course-watch/:id',
+        path: '/lived/course-watch/:courseId',
         name: 'CourseWatch',
+        props: true,
         component: () => import('../views/live/live-library/Course-Watch.vue'),
         meta: {
             title: '观看课程'

@@ -132,7 +132,15 @@
                                     确认收货
                                 </pl-button>
                                 <pl-button
-                                    v-if="item.orderType !== 'PHYSICAL' && item.status === 'WAIT_RECEIVE'"
+                                    v-if="item.orderType === 'KNOWLEDGE_COURSE' && item.status === 'WAIT_RECEIVE'"
+                                    type="warning"
+                                    round
+                                    @click="$router.push({ name: 'CourseWatch', params: { courseId: item.products[0].productId }, query: { liveId: item.products[0].liveId, orderId: item.id, progress: item.products[0].learnProgress } })"
+                                >
+                                    去学习
+                                </pl-button>
+                                <pl-button
+                                    v-else-if="item.orderType !== 'PHYSICAL' && item.status === 'WAIT_RECEIVE'"
                                     type="warning"
                                     round
                                     @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"

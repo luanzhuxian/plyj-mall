@@ -83,12 +83,9 @@
                     v-else
                     :disabled="loading"
                     :class="$style.button + ' ' + $style.hasStudied"
-                    @click="$router.push({ name: 'CourseWatch', params: { id: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress, courseId: productId } })"
+                    @click="$router.push({ name: 'CourseWatch', params: { courseId: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress } })"
                 >
                     观看学习
-                    <!--<i v-if="detail.vodNumber">
-            ({{ detail.vodNumber }}次)
-          </i>-->
                 </button>
             </div>
         </div>

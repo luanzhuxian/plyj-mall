@@ -54,13 +54,12 @@ export default {
                 this.$router.push({
                     name: 'CourseWatch',
                     params: {
-                        id: item.courseId
+                        courseId: item.courseId
                     },
                     query: {
                         liveId: item.liveId,
                         orderId: item.orderId,
-                        progress: item.learnProgress,
-                        courseId: item.courseId
+                        progress: item.learnProgress
                     }
                 })
             }

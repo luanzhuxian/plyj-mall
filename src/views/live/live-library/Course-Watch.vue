@@ -52,6 +52,12 @@ export default {
             setProgress: null
         }
     },
+    props: {
+        courseId: {
+            type: String,
+            default: ''
+        }
+    },
     computed: {
         liveId () {
             return this.$route.query.liveId
@@ -61,9 +67,6 @@ export default {
         },
         progress () {
             return Number(this.$route.query.progress) || 0
-        },
-        courseId () {
-            return this.$route.query.courseId
         }
     },
     async activated () {
@@ -85,11 +88,10 @@ export default {
         // 获取课程信息
         async getCourseDetail () {
             try {
-                const courseId = this.$route.params.id
-                const { result } = await getPermission(courseId)
+                const { result } = await getPermission(this.courseId)
                 if (!result) {
                     await this.$warning('请先购买课程')
-                    this.$router.push({ name: 'Curriculum', params: { productId: courseId } })
+                    this.$router.push({ name: 'Curriculum', params: { productId: this.courseId } })
                     return
                 }
                 const { result: mes } = await getCourseDetail(this.liveId)
