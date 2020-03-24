@@ -13,13 +13,13 @@
     >
         <div :class="$style.container">
             <search :class="$style.search" placeholder="搜索商品" />
-            <propagate :class="$style.propagate" :data="PIN_XUAN" />
+            <propagate :class="$style.propagate" :data="PROPAGATE" />
             <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
             <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
             <campaign v-if="isCampaignShow" />
             <activity :class="$style.activity" v-if="isNwEventShow" />
             <d12-activity :class="$style.activity" />
-            <appointment :class="$style.appointment" :data="YU_YUE" :style-type="2" />
+            <appointment :class="$style.appointment" :data="APPOINTMENT" :style-type="2" />
             <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
                 <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
                 <skin-title
@@ -121,11 +121,11 @@ export default {
         }
     },
     computed: {
-        PIN_XUAN () {
-            return this.data.PIN_XUAN || {}
+        PROPAGATE () {
+            return this.data.PROPAGATE || {}
         },
-        YU_YUE () {
-            return this.data.YU_YUE || {}
+        APPOINTMENT () {
+            return this.data.APPOINTMENT || {}
         },
         POPULAR () {
             return this.data.POPULAR || {}

@@ -13,6 +13,12 @@
                 :skin-id="skinId"
                 :data="modules"
             />
+            <TemplateD
+                v-if="type === 9"
+                :type="type"
+                :skin-id="skinId"
+                :data="modules"
+            />
             <invite-newcomers-home-entry />
             <newcomers-home-entry />
             <new-year-newcomers-home-entry />
@@ -36,6 +42,7 @@ import moment from 'moment'
 import 'swiper/dist/css/swiper.css'
 import TemplateB from './Template-B.vue'
 import TemplateC from './Template-C.vue'
+import TemplateD from './Template-D.vue'
 import InviteNewcomersHomeEntry from '../double-twelve-day/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
 import NewYearNewcomersHomeEntry from '../new-year/newcomers/NewcomersHomeEntry.vue'
@@ -45,20 +52,19 @@ import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
 
 export default {
     name: 'Home',
-    components: {
-        TemplateB,
-        TemplateC,
-        InviteNewcomersHomeEntry,
-        NewYearNewcomersHomeEntry,
-        NewcomersHomeEntry,
-        SplitBurse
-
-    // WWEC
-    },
     provide () {
         return {
             parent: this
         }
+    },
+    components: {
+        TemplateB,
+        TemplateC,
+        TemplateD,
+        InviteNewcomersHomeEntry,
+        NewYearNewcomersHomeEntry,
+        NewcomersHomeEntry,
+        SplitBurse
     },
     data () {
         return {
@@ -68,21 +74,14 @@ export default {
                 BANNER: null,
                 ADV: null,
                 POPULAR: null,
-                YU_YUE: null,
-                PIN_XUAN: null,
+                APPOINTMENT: null,
+                PROPAGATE: null,
                 CLASS: null,
                 RECOMMEND: null
-
-                // MODULE_A: null,
-                // MODULE_B: null,
-                // MODULE_C: null,
-                // MODULE_D: null,
-                // MODULE_E: null
             },
-            dataMoonLightBox: {},
-
+            // dataMoonLightBox: {},
             // 820用户注册次数
-            registerCountFor820: 0,
+            // registerCountFor820: 0,
             isReportShow: false,
             isBookShow: false,
             reportId: '',
@@ -118,20 +117,31 @@ export default {
         allLoaded () {
             let result
             if (this.type === 3) {
-                result = this.loaded && this.skinId !== null
+                result = this.loaded &&
+                this.skinId !== null &&
+                (this.liveInfo !== null && !!this.liveInfo) &&
+                (this.courseInfo !== null && !!this.courseInfo)
             }
             if (this.type === 4) {
                 result = this.loaded &&
-        this.skinId !== null &&
-        (this.liveInfo !== null && !!this.liveInfo) &&
-        (this.invitingEvent !== null && !!this.invitingEvent) &&
-        (this.jxEvent !== null && !!this.jxEvent)
+                this.skinId !== null &&
+                (this.liveInfo !== null && !!this.liveInfo) &&
+                (this.courseInfo !== null && !!this.courseInfo) &&
+                (this.invitingEvent !== null && !!this.invitingEvent) &&
+                (this.jxEvent !== null && !!this.jxEvent)
             }
             if (this.type === -1) {
                 result = this.loaded &&
-        this.skinId !== null &&
-        (this.liveInfo !== null && !!this.liveInfo) &&
-        (this.nwEvent !== null && !!this.nwEvent)
+                this.skinId !== null &&
+                (this.liveInfo !== null && !!this.liveInfo) &&
+                (this.courseInfo !== null && !!this.courseInfo) &&
+                (this.nwEvent !== null && !!this.nwEvent)
+            }
+            if (this.type === 9) {
+                result = this.loaded &&
+                this.skinId !== null &&
+                (this.liveInfo !== null && !!this.liveInfo) &&
+                (this.courseInfo !== null && !!this.courseInfo)
             }
             return result
         }
@@ -140,7 +150,7 @@ export default {
         isActivityAuth: {
             handler (val) {
                 if (val === true && !this.$router.currentRoute.meta.from) {
-                    window.myAssign(`/${ this.mallDomain }/course-package`)
+                    window.myAssign(`/${ this.mallDomain }/activity`)
                 }
             },
             immediate: true
@@ -162,8 +172,8 @@ export default {
                 if (type === 3) {
                     this.modules.BANNER = moduleModels[0]
                     this.modules.POPULAR = moduleModels[1]
-                    this.modules.YU_YUE = moduleModels[2]
-                    this.modules.PIN_XUAN = moduleModels[3]
+                    this.modules.APPOINTMENT = moduleModels[2]
+                    this.modules.PROPAGATE = moduleModels[3]
                     this.modules.CLASS = moduleModels[4]
                     this.modules.RECOMMEND = moduleModels[5]
                 }
@@ -171,18 +181,29 @@ export default {
                     this.modules.BANNER = moduleModels[0]
                     this.modules.ADV = moduleModels[1]
                     this.modules.POPULAR = moduleModels[2]
-                    this.modules.YU_YUE = moduleModels[3]
-                    this.modules.PIN_XUAN = moduleModels[4]
+                    this.modules.APPOINTMENT = moduleModels[3]
+                    this.modules.PROPAGATE = moduleModels[4]
                     this.modules.CLASS = moduleModels[5]
                     this.modules.RECOMMEND = moduleModels[6]
                 }
                 if (type === -1) {
-                    this.modules.PIN_XUAN = moduleModels[0]
-                    this.modules.YU_YUE = moduleModels[1]
+                    this.modules.PROPAGATE = moduleModels[0]
+                    this.modules.APPOINTMENT = moduleModels[1]
                     this.modules.POPULAR = moduleModels[2]
                     this.modules.TEACHERS = moduleModels[3]
                     this.modules.CLASS = moduleModels[4]
                     this.modules.RECOMMEND = moduleModels[5]
+                }
+                if (type === 9) {
+                    this.modules.BANNER = moduleModels[0]
+                    this.modules.COUPON = moduleModels[1]
+                    this.modules.ACTIVITY = moduleModels[2]
+                    this.modules.APPOINTMENT = moduleModels[3]
+                    this.modules.POPULAR = moduleModels[4]
+                    this.modules.PACKAGE = moduleModels[5]
+                    this.modules.CLASS = moduleModels[6]
+                    this.modules.PROPAGATE = moduleModels[7]
+                    this.modules.RECOMMEND = moduleModels[8]
                 }
                 this.type = type
 

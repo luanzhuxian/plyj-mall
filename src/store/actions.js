@@ -205,15 +205,6 @@ export default {
         } catch (e) {
             throw e
         }
-
-    // return new Promise(async (resolve, reject) => {
-    //   try {
-    //
-    //     resolve()
-    //   } catch (e) {
-    //     reject(e)
-    //   }
-    // })
     },
     [type.STUDENTS]: async ({ commit }, params) => {
         try {

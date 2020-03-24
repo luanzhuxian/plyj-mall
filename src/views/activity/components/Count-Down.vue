@@ -1,14 +1,14 @@
 <template>
     <div
         v-show="show"
-        :class="['count-down', size, (!!background ? 'bg' : '')]"
+        :class="[$style.countDown, $style[size], (!!background ? $style.bg : '')]"
         :style="{
             color,
             '--background': background
         }"
     >
         <span v-if="textBefore">{{ textBefore }}</span>
-        <div class="time">
+        <div :class="$style.time">
             <i v-if="isDayShow" :class="$style.day">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span v-if="isSecondsShow || !isDayShow">:</span><i v-if="isSecondsShow || !isDayShow" v-text="s" />
         </div>
         <span v-if="textAfter">{{ textAfter }}</span>
@@ -169,7 +169,7 @@ export default {
       font-size: 24px;
       line-height: 36px;
       &.bg {
-        .time {
+        > .time {
           > span {
             padding: 0 5px;
           }

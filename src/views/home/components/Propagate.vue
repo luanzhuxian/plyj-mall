@@ -61,7 +61,7 @@ export default {
     },
     methods: {
         clickPingXuan () {
-            sessionStorage.removeItem('PIN_XUAN')
+            sessionStorage.removeItem('PROPAGATE')
         },
         jump (item) {
             if (item.type === 1) {

@@ -1,7 +1,7 @@
 <template>
     <div
         :class="{
-            [$style.homeTemplateB]: true,
+            [$style.homeTemplateD]: true,
             [$style.skinXmas]: skinId === 1,
             [$style.skinYuanDan]: skinId === 2,
             [$style.skinNewYear]: skinId === 3,
@@ -14,12 +14,12 @@
         <div :class="$style.container">
             <search :class="$style.search" placeholder="搜索商品" />
             <banner :class="$style.banner" :data="BANNER" />
-            <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
+            <coupon :class="$style.coupon" :data="COUPON" />
+            <activity :class="$style.activity" :data="ACTIVITY" />
             <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
             <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
             <campaign v-if="isCampaignShow" />
-            <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
-            <d12-activity :class="$style.activity" v-if="type === 4" />
+            <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" />
             <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
                 <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
                 <skin-title
@@ -30,15 +30,16 @@
                 />
                 <hot-item :data="POPULAR" />
             </div>
-            <appointment
-                :class="$style.appointment"
-                :data="APPOINTMENT"
-                :slides-per-view="2"
-            />
-            <propagate
-                :class="$style.propagate"
-                :data="PROPAGATE"
-            />
+            <div :class="$style.package" v-if="PACKAGE.showStatue === 1">
+                <div v-if="skinId === 0" :class="$style.title" v-text="PACKAGE.moduleName" />
+                <skin-title
+                    v-else
+                    :class="$style.skinTitle"
+                    :data="PACKAGE.moduleName"
+                    :skin-id="skinId"
+                />
+                <package :data="PACKAGE" />
+            </div>
             <div :class="$style.best" v-if="CLASS.showStatue === 1">
                 <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
                 <skin-title
@@ -49,12 +50,9 @@
                 />
                 <best :data="CLASS" />
             </div>
+            <propagate :class="$style.propagate" :data="PROPAGATE" />
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
-                <div v-if="skinId === 0" :class="$style.title">
-                    <span>-</span>
-                    <span v-text="RECOMMEND.moduleName" />
-                    <span>-</span>
-                </div>
+                <div v-if="skinId === 0" :class="$style.title" v-text="RECOMMEND.moduleName" />
                 <skin-title
                     v-else
                     :class="$style.skinTitle"
@@ -72,36 +70,36 @@
 
 <script>
 import Search from './components/Search.vue'
-import Live from '../activity/components/Live.vue'
-import OnlineCourse from '../activity/components/Online-Course.vue'
-import Activity from '../activity/xin-chun/Activity.vue'
-import D12Activity from './components/Activity.vue'
 import Banner from './components/Banner.vue'
-import Adv from './components/Adv.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import BestRecommend from './components/Best-Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
+import Live from '../activity/components/Live.vue'
+import OnlineCourse from '../activity/components/Online-Course.vue'
+import Coupon from '../activity/nian-nian-fan/Coupon.vue'
+import Activity from '../activity/nian-nian-fan/Activity.vue'
+import Package from '../activity/nian-nian-fan/Package.vue'
 import SkinTitle from './skin/Skin-Title.vue'
 import Campaign from './components/Campaign'
 
 export default {
-    name: 'HomeTemplateB',
+    name: 'HomeTemplateD',
     inject: ['parent'],
     components: {
         Search,
-        Live,
-        OnlineCourse,
-        Activity,
-        D12Activity,
         Banner,
-        Adv,
         HotItem,
         Best,
         BestRecommend,
         Appointment,
         Propagate,
+        Live,
+        OnlineCourse,
+        Coupon,
+        Activity,
+        Package,
         SkinTitle,
         Campaign
     },
@@ -122,29 +120,36 @@ export default {
         }
     },
     data () {
-        return {}
+        return {
+        }
     },
     computed: {
         BANNER () {
             return this.data.BANNER || {}
         },
-        ADV () {
-            return this.data.ADV || {}
+        COUPON () {
+            return this.data.COUPON || {}
         },
-        POPULAR () {
-            return this.data.POPULAR || {}
-        },
-        CLASS () {
-            return this.data.CLASS || {}
-        },
-        RECOMMEND () {
-            return this.data.RECOMMEND || {}
+        ACTIVITY () {
+            return this.data.ACTIVITY || {}
         },
         APPOINTMENT () {
             return this.data.APPOINTMENT || {}
         },
+        POPULAR () {
+            return this.data.POPULAR || {}
+        },
+        PACKAGE () {
+            return this.data.PACKAGE || {}
+        },
+        CLASS () {
+            return this.data.CLASS || {}
+        },
         PROPAGATE () {
             return this.data.PROPAGATE || {}
+        },
+        RECOMMEND () {
+            return this.data.RECOMMEND || {}
         },
         isLiveShow () {
             const { liveInfo } = this.parent
@@ -153,9 +158,6 @@ export default {
         isCourseShow () {
             const { courseInfo } = this.parent
             return courseInfo && courseInfo.records && courseInfo.records.length
-        },
-        isNwEventShow () {
-            return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
         },
         isCampaignShow () {
             return this.parent.isReportShow || this.parent.isBookShow
@@ -167,9 +169,26 @@ export default {
 <style module lang="scss">
   @import "./skin/skin.scss";
 
-  .home-template-b {
-    background-color: #EDEDED;
+  .home-template-d {
+    background-color: #F4F5F9;
     font-size: 0;
+  }
+  .title {
+    padding: 40px 0 20px;
+    display: flex;
+    align-items: center;
+    color: #333333;
+    font-size: 40px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    &::before {
+      display: inline-block;
+      content: '';
+      width: 6px;
+      height: 38px;
+      background: #FE7700;
+      margin-right: 14px;
+    }
   }
   .search {
     position: relative;
@@ -181,20 +200,12 @@ export default {
     border-radius: 20px 20px 0 0;
   }
   .hot-item {
-    padding: 34px 24px 0;
-    background-color: #F4F5F9;
+    position: relative;
     .title {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 20px;
-      position: relative;
-      font-size: 36px;
-      font-weight: bold;
       &:after {
         position: absolute;
-        top: 0;
-        left: 136px;
+        top: 38px;
+        left: 190px;
         content: 'HOT';
         width: 44px;
         line-height: 24px;
@@ -213,45 +224,23 @@ export default {
       100% { background-position: -50% 0 }
     }
   }
-  .best {
-    padding: 24px;
-    background-color: #f4f5f9;
-    .title {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 20px;
-      position: relative;
-      font-size: 36px;
-      font-weight: bold;
-    }
-  }
+
+  .package,
+  .hot-item,
+  .best,
   .recommend {
     padding: 0 24px;
-    color: #000;
-    background: #EAE9F7;
-    .title {
-      position: relative;
-      text-align: center;
-      font-size: 36px;
-      font-weight: bolder;
-      color: #F2B036;
-      letter-spacing: 14px;
-      padding: 40px 0 34px;
-      span {
-        display: inline-block;
-        &:nth-last-of-type(1) {
-          transform: scaleX(2);
-          margin-left: 18px;
-        }
-        &:nth-of-type(1) {
-          margin-right: 18px;
-          transform: scaleX(2);
-          transform-origin: 0;
-        }
-      }
-    }
   }
+
+  .activity,
+  .live,
+  .course,
+  .coupon,
+  .propagate,
+  .appointment {
+    padding: 20px 24px 0;
+  }
+
   .footer {
     display: flex;
     justify-content: center;
@@ -259,23 +248,5 @@ export default {
     height: 140px;
     font-size: 26px;
     color: #999;
-    background: #EAE9F7;
-  }
-
-  .live,
-  .course {
-    padding: 24px 24px 0;
-  }
-
-  .adv,
-  // .live,
-  .activity {
-    padding: 20px 24px 0;
-    background-color: #F4F5F9;
-  }
-  .appointment,
-  .propagate {
-    padding: 24px 24px 0;
-    background-color: #F4F5F9;
   }
 </style>

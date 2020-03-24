@@ -3,7 +3,7 @@
         <router-link
             :class="$style.packageTitle"
             tag="div"
-            :to="{ name: '' }"
+            :to="{ name: 'CoursePackage' }"
         >
             <div :class="$style.packageTitleBtn">
                 查看计划礼包
@@ -12,7 +12,7 @@
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
                 <li
-                    v-if="item.goodsInfo && item.goodsInfo.activityInfo"
+                    v-if="item.combinationDetailList && item.combinationDetailList.length"
                     :class="{
                         [$style.listItem]: true,
                         [$style.large]: i === 0 || data.values.length % 2 === 0,
@@ -22,51 +22,50 @@
                     @click="$router.push({ name: 'Product', params: { productId: item.goodsInfo.id }, query: { currentProductStatus: 2 } })"
                 >
                     <div :class="$style.imgWrapper">
-                        <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-                        <div :class="$style.countDownWrapper" v-if="item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
-                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
-                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
-                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
-                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 3">已结束</span>
+                        <img :src="item.combinationDetailList[0].imageUrl">
+                        <div :class="$style.countDownWrapper">
+                            <span :class="$style.text" v-if="item.combinationDetailList[0].status === 0">距开始</span>
+                            <span :class="$style.text" v-if="item.combinationDetailList[0].status === 1">距结束</span>
+                            <span :class="$style.text" v-if="item.combinationDetailList[0].status === 2">已结束</span>
                             <count-down
-                                v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
-                                :timestamp="getTime(item.goodsInfo.activityInfo)"
+                                v-if="~[0, 1].indexOf(item.combinationDetailList[0].status)"
+                                :timestamp="getTime(item.combinationDetailList[0])"
                                 format="HH:mm"
                                 background="rgba(174, 174, 174, 0.64)"
-                                @done="() => reset(item)"
+                                @done="() => item.combinationDetailList[0].status += 1"
                             />
                         </div>
                     </div>
                     <div :class="$style.info">
                         <div :class="$style.main">
-                            {{ item.goodsInfo.productName }}
+                            {{ item.activityName }}
                         </div>
                         <div :class="$style.sub">
                             <div :class="$style.subLeft">
                                 <div :class="$style.subLeftMain">
-                                    <span v-if="item.goodsInfo.activityInfo.status === 0">
+                                    <!-- <span v-if="item.combinationDetailList[0].status === 0">
                                         {{ `${item.goodsInfo.pageviews}人已关注` }}
-                                    </span>
-                                    <span v-else>
-                                        {{ `已有${item.goodsInfo.activityInfo.number || 0}人参与` }}
+                                    </span> -->
+                                    <span v-if="~[1, 2].indexOf(item.combinationDetailList[0].status)">
+                                        {{ `已有${item.combinationDetailList[0].salesVolume || 0}人参与` }}
                                     </span>
                                 </div>
                                 <div :class="$style.subLeftMiddle">
-                                    {{ `原价￥${item.goodsInfo.activityInfo.activityPrice}` }}
+                                    {{ `原价￥${item.combinationDetailList[0].totalPrice}` }}
                                 </div>
                                 <div :class="$style.subLeftSub">
-                                    <pl-svg name="icon-tuangoujia" width="80" height="35" />
-                                    <span :class="$style.price">{{ item.goodsInfo.activityInfo.activityPrice }}</span>
+                                    组合价
+                                    <span :class="$style.price">{{ item.combinationDetailList[0].discountTotalPrice }}</span>
                                 </div>
                             </div>
                             <div
                                 :class="{
                                     [$style.subRight]: true,
-                                    [$style.disabled]: item.goodsInfo.activityInfo.status !== 1
+                                    [$style.disabled]: item.combinationDetailList[0].status !== 1
                                 }"
                             >
                                 <pl-svg
-                                    v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                                    v-if="~[0, 1].indexOf(item.combinationDetailList[0].status)"
                                     name="icon-vie-for"
                                     :width="(i === 0 || data.values.length % 2 === 0) ? 40 : 32"
                                 />
@@ -86,7 +85,7 @@
 
 <script>
 import CountDown from '../components/Count-Down.vue'
-import { getTime, reset } from '../helper.js'
+import { getTime } from '../helper.js'
 
 export default {
     name: 'Package',
@@ -105,8 +104,7 @@ export default {
         return {}
     },
     methods: {
-        getTime,
-        reset
+        getTime
     }
 }
 </script>
@@ -117,6 +115,7 @@ export default {
     border-radius: 20px;
     overflow: hidden;
     &-title {
+        box-sizing: border-box;
         display: flex;
         justify-content: center;
         padding-top: 92px;
@@ -169,13 +168,6 @@ export default {
               &-main {
                 font-size: 24px;
               }
-              &-sub {
-                svg {
-                  width: 88px;
-                  height: 40px;
-                  padding-bottom: 2px;
-                }
-              }
             }
             &-right {
               width: 72px;
@@ -197,13 +189,6 @@ export default {
             &-left {
               &-main {
                 font-size: 20px;
-              }
-              &-sub {
-                svg {
-                  width: 72px;
-                  height: 32px;
-                  padding-bottom: 2px;
-                }
               }
             }
             &-right {
@@ -283,6 +268,8 @@ export default {
           &-sub {
             display: flex;
             align-items: flex-end;
+            font-size: 28px;
+            font-weight: bold;
             color: #fe7700;
             @include elps();
             .price {

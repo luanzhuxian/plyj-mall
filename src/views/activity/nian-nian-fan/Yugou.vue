@@ -42,6 +42,7 @@
                         </div>
                         <div :class="$style.sub">
                             <div :class="$style.subLeft">
+                                预享价
                                 <span :class="$style.price">{{ getTotalPrice(item) }}</span>
                             </div>
                             <div
@@ -237,6 +238,10 @@ export default {
         &-left {
           flex: 1;
           width: 0;
+          display: flex;
+          align-items: flex-end;
+          font-size: 14px;
+          font-weight: bold;
           color: #fe7700;
           @include elps();
           .price {

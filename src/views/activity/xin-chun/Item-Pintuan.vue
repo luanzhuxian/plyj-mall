@@ -173,6 +173,7 @@ export default {
       text-align: center;
       margin-top: 12px;
       width: fit-content;
+      max-width: 100%;
       height: 34px;
       line-height: 30px;
       border: 2px solid #EC6BA4;

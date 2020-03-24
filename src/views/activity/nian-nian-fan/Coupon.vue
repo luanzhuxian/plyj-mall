@@ -1,48 +1,47 @@
 <template>
-    <div :class="$style.coupon">
-        <div :class="$style.couponTitle">
-            <div :class="$style.couponTitleLeft">
-                <pl-svg name="icon-speaker-57132" width="26" />
-                您有优惠券可使用！
+    <div>
+        <div :class="$style.coupon">
+            <div :class="$style.couponTitle">
+                <div :class="$style.couponTitleLeft">
+                    <pl-svg name="icon-speaker-bb20d" width="26" height="26" />
+                    您有优惠券可使用！
+                </div>
+                <div :class="$style.couponTitleRight">
+                    <span>立即领取</span>
+                    <pl-svg name="icon-right" width="26" height="26" fill="#7E6E4D" />
+                </div>
             </div>
-            <div :class="$style.couponTitleRight">
-                立即领取
-                <pl-svg name="icon-you" width="28" />
-            </div>
-        </div>
-        <!-- <div :class="$style.coupon-title" v-else>
-      - 快来领取 -
-    </div> -->
-        <ul :class="$style.couponList" v-if="data.values.length">
-            <template v-for="(item, i) of data.values">
-                <li
-                    v-if="item.goodsInfo"
-                    :class="{
-                        [$style.couponListItem]: true,
-                        [$style.large]: data.values.length === 1,
-                        [$style.medium]: data.values.length === 2,
-                        [$style.small]: data.values.length === 3
-                    }"
-                    :key="i"
-                >
-                    <div :class="$style.couponListItemWrapper">
-                        <div :class="$style.price">
-                            ￥<span :class="$style.number">{{ item.goodsInfo.amount }}</span>
-                        </div>
-                        <div>
-                            <div>{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
-                            <div :class="$style.date">
-                                <span v-if="data.values.length === 1">{{ `${getDate(item.goodsInfo.useStartTime, 'YYYY/MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'YYYY/MM/DD')}` }}</span>
-                                <span v-else>{{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}</span>
+            <ul :class="$style.couponList" v-if="data.values.length">
+                <template v-for="(item, i) of data.values">
+                    <li
+                        v-if="item.goodsInfo"
+                        :class="{
+                            [$style.couponListItem]: true,
+                            [$style.large]: data.values.length === 1,
+                            [$style.medium]: data.values.length === 2,
+                            [$style.small]: data.values.length === 3
+                        }"
+                        :key="i"
+                    >
+                        <div :class="$style.couponListItemWrapper">
+                            <div :class="$style.price">
+                                ￥<span :class="$style.number">{{ item.goodsInfo.amount }}</span>
+                            </div>
+                            <div>
+                                <div>{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
+                                <div :class="$style.date">
+                                    <span v-if="data.values.length === 1">{{ `${getDate(item.goodsInfo.useStartTime, 'YYYY/MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'YYYY/MM/DD')}` }}</span>
+                                    <span v-else>{{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div :class="$style.couponListItemCover">
-                        立即领取
-                    </div>
-                </li>
-            </template>
-        </ul>
+                        <div :class="$style.couponListItemCover">
+                            立即领取
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -84,6 +83,8 @@ export default {
       background: #FBEFD7;
       color: #7E6E4D;
       &-left {
+        display: flex;
+        align-content: center;
         font-size: 26px;
         font-family: Microsoft YaHei;
         color: #FF8533;
@@ -142,6 +143,7 @@ export default {
           top: 0;
           right: 0;
           bottom: 0;
+          box-sizing: border-box;
           display: flex;
           justify-content: center;
           align-items: center;

@@ -216,6 +216,7 @@ export default {
     margin: 12px auto 0;
     padding: 0 20px;
     max-width: fit-content;
+    max-width: 100%;
     height: 90px;
     line-height: 90px;
     background: #DEF3CA;

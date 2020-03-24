@@ -59,7 +59,7 @@
                                     </span>
                                 </div>
                                 <div :class="$style.subLeftSub">
-                                    <pl-svg name="icon-tuangoujia" width="80" height="35" />
+                                    团购价
                                     <span :class="$style.price">{{ item.goodsInfo.activityInfo.activityPrice }}</span>
                                 </div>
                             </div>
@@ -173,13 +173,6 @@ export default {
               &-main {
                 font-size: 24px;
               }
-              &-sub {
-                svg {
-                  width: 88px;
-                  height: 40px;
-                  padding-bottom: 2px;
-                }
-              }
             }
             &-right {
               width: 72px;
@@ -201,13 +194,6 @@ export default {
             &-left {
               &-main {
                 font-size: 20px;
-              }
-              &-sub {
-                svg {
-                  width: 72px;
-                  height: 32px;
-                  padding-bottom: 2px;
-                }
               }
             }
             &-right {
@@ -268,6 +254,8 @@ export default {
         text-align: center;
         margin-bottom: 18px;
         width: fit-content;
+        max-width: 100%;
+        max-width: 100%;
         height: 34px;
         line-height: 35px;
         border: 2px solid #ff772b;
@@ -307,6 +295,8 @@ export default {
           &-sub {
             display: flex;
             align-items: flex-end;
+            font-size: 28px;
+            font-weight: bold;
             color: #fe7700;
             @include elps();
             .price {
