@@ -66,7 +66,7 @@
                             <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                             <div :class="$style.desc">
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
-                                <div :class="$style.text2">直播时间： {{ moment(item.liveStartTime).format('YYYY-MM-DD HH:mm') }}</div>
+                                <div :class="$style.text2">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
                                 <div :class="$style.text2" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
                                 <div :class="$style.bottom">
                                     <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
