@@ -231,6 +231,7 @@ export default {
                 this.$router.push({ name: 'Classify', params: { optionId: classify.id || null } })
                 this.$refresh()
             }
+            this.share()
         },
         subClassifyClick ({ cid, name }) {
             if (this.loading) return
@@ -239,7 +240,6 @@ export default {
             this.form.subCategoryId = cid
             this.form.current = 1
             this.$refresh()
-            this.share()
         },
         async getCategoryTree () {
             try {
