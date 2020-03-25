@@ -22,10 +22,12 @@
                 <!--数量：{{ data.count }}-->
                 <!--{{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}-->
             </div>
+            <!-- <div> -->
             <div :class="$style.price">折后价：￥{{ data.amount }}</div>
             <div :class="$style.originalPrice">
                 原价：<span :class="$style.text">￥{{ data.originPrice }}</span>
             </div>
+            <!-- </div> -->
         </div>
     </div>
 </template>
@@ -67,16 +69,18 @@ export default {
 .right {
     position: relative;
     flex: 1;
+    width: 0;
     display: inline-flex;
     flex-direction: column;
+    justify-content: space-between;
     margin-left: 16px;
     padding: 8px 0;
 }
 .name {
-    width: 256px;
+    width: 280px;
     line-height: 38px;
-    margin-bottom: 8px;
     font-size: 28px;
+    font-family: Microsoft YaHei;
     color: #fff;
     @include elps();
 }
@@ -84,28 +88,29 @@ export default {
     position: absolute;
     top: 12px;
     right: 0;
-    margin-bottom: 20px;
     font-size: 24px;
     color: #74b06e;
 }
 .sku {
-    margin: 8px 0 16px;
-    padding: 0 20px;
-    width: 256px;
+    margin-top: 4px;
+    padding: 0 12px;
+    width: fit-content;
+    max-width: 256px;
     font-size: 24px;
-    line-height: 38px;
+    line-height: 41px;
     color: #74b06e;
     background-color: #17560f;
     border-radius: 10px;
     @include elps();
 }
 .price {
-    margin-bottom: 4px;
+    margin-top: auto;
     font-weight: bold;
     font-size: 28px;
     color: #d1e42c;
 }
 .original-price {
+    margin-top: 4px;
     font-size: 24px;
     color: #d1e42c;
     > .text {
