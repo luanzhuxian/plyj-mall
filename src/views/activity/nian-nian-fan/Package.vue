@@ -19,7 +19,7 @@
                         [$style.small]: i !== 0 && data.values.length % 2 === 1
                     }"
                     :key="i"
-                    @click="$router.push({ name: 'Product', params: { productId: item.goodsInfo.id }, query: { currentProductStatus: 2 } })"
+                    @click="$router.push({ name: 'CoursePackage' })"
                 >
                     <div :class="$style.imgWrapper">
                         <img :src="item.combinationDetailList[0].imageUrl">

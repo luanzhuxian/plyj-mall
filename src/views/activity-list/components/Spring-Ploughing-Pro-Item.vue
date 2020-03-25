@@ -3,7 +3,7 @@
     <div
         :class="[$style.springPloughingProItem, $style[color]]"
         @click="$router.push({
-            name: 'Product',
+            name: data.productType ==='KNOWLEDGE_COURSE' ? 'Curriculum' : 'Product',
             params: { productId: data.goodsId },
             query: { currentProductStatus: 5 }
         })"
