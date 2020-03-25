@@ -83,11 +83,12 @@
                     :count="item.count"
                     :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
                     :product-id="item.productId"
+                    :order-type="orderType"
                     :support-refund="item.supportRefund"
                     :allow-invoice="item.invoiceType"
                     :active-product="activeProduct"
                     :pre-active="2"
-                    route-name="Product"
+                    :route-name="orderType === 'KNOWLEDGE_COURSE' ? 'Curriculum' : 'Product'"
                 />
                 <div :class="$style.buttons">
                     <pl-button

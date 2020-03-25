@@ -144,10 +144,9 @@ export default {
             default: ''
         },
 
-        // 商品类型（1:实体, 2:虚拟）
-        productType: {
-            type: Number,
-            default: 0
+        orderType: {
+            type: String,
+            default: ''
         },
         supportRefund: {
             type: Number,
@@ -171,8 +170,8 @@ export default {
     },
     methods: {
         handleClick (e) {
+            e.stopPropagation()
             if (this.productId) {
-                e.stopPropagation()
                 this.$router.push({
                     name: this.routeName,
                     params: {
