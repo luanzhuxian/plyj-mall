@@ -1,6 +1,6 @@
 <template>
     <!-- 送课窗口提示 -->
-    <div @click.stop="" v-show="showShelf" :class="$style.mask">
+    <div @click.stop="" v-show="show || showShelf" :class="$style.mask">
         <div :class="$style.container">
             <div :class="$style.main">
                 <div :class="$style.head">
@@ -99,6 +99,16 @@ import moment from 'moment'
 import { getSendLiveList } from '../../apis/online-classroom.js'
 export default {
     name: 'SendLive',
+    props: {
+        show: {
+            type: Boolean,
+            default: false
+        },
+        isNotice: {
+            type: String,
+            default: '0'
+        }
+    },
     data () {
         return {
             showShelf: false,
@@ -119,7 +129,14 @@ export default {
     },
     async activated () {
         try {
-            await this.getLiveList()
+            if (this.isNotice === '0') await this.getLiveList()
+        } catch (e) {
+            throw e
+        }
+    },
+    async created () {
+        try {
+            if (this.isNotice === '1') await this.getLiveList()
         } catch (e) {
             throw e
         }
@@ -127,7 +144,7 @@ export default {
     methods: {
         async getLiveList () {
             try {
-                const { result } = await getSendLiveList()
+                const { result } = await getSendLiveList(this.isNotice)
                 this.liveList = result
                 this.showShelf = !!this.liveList.length
             } catch (e) {
@@ -146,6 +163,7 @@ export default {
         },
         close () {
             this.showShelf = false
+            this.$emit('update:show', false)
         }
     }
 }

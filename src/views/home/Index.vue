@@ -25,7 +25,7 @@
             <!--瓜分奖学金-->
             <split-burse />
             <!--送课弹框-->
-            <send-live />
+            <send-live is-notice="0" />
         </template>
         <div :class="$style.skeleton" v-else>
             <div :class="$style.skeletonA" />

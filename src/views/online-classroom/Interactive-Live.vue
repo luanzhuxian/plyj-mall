@@ -1,121 +1,135 @@
 <template>
-    <div :class="$style.interactiveLive">
-        <load-more
-            ref="LiveLoadMore"
-            :form="form"
-            :request-methods="requestMethods"
-            :loading.sync="loading"
-            :before-refresh="beforeRefresh"
-            @refresh="refreshed"
-            @more="more"
-            icon="icon-no-content-sleep"
+    <div>
+        <div
+            :class="$style.sendLive"
+            v-if="unaccalimedSendCount"
+            @click="isShowSendLiveDialog = true"
         >
-            <template>
-                <div v-if="nowLive.length">
-                    <div :class="$style.title">
-                        <pl-svg name="icon-live-a8210" width="36" />
-                        正在直播
-                        <span>({{ totals.NOW }})</span>
+            <span>赠送了您{{ unaccalimedSendCount }}堂直播课程哦，快来学习吧~</span>
+            <span>查看></span>
+        </div>
+        <div :class="$style.interactiveLive">
+            <load-more
+                ref="LiveLoadMore"
+                :form="form"
+                :request-methods="requestMethods"
+                :loading.sync="loading"
+                :before-refresh="beforeRefresh"
+                @refresh="refreshed"
+                @more="more"
+                icon="icon-no-content-sleep"
+            >
+                <template>
+                    <div v-if="nowLive.length">
+                        <div :class="$style.title">
+                            <pl-svg name="icon-live-a8210" width="36" />
+                            正在直播
+                            <span>({{ totals.NOW }})</span>
+                        </div>
+                        <ul>
+                            <li
+                                v-for="(item, index) of nowLive"
+                                :key="index"
+                                :class="$style.nowLiveItem"
+                                @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
+                            >
+                                <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
+                                <div :class="$style.itemBottom">
+                                    <div :class="$style.desc">
+                                        <div :class="$style.liveName" v-text="item.name" />
+                                        <div :class="$style.text1">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
+                                        <div :class="$style.text1" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
+                                    </div>
+
+                                    <div :class="$style.right">
+                                        <span v-if="item.actuallyPaidAmount" :class="$style.price" v-text="item.actuallyPaidAmount" />
+                                        <span :class="$style.free" v-else>免费</span>
+                                        <pl-button type="primary" size="middle">去看直播</pl-button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <ul>
-                        <li
-                            v-for="(item, index) of nowLive"
-                            :key="index"
-                            :class="$style.nowLiveItem"
-                            @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
-                        >
-                            <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
-                            <div :class="$style.itemBottom">
+
+                    <div v-if="futureLive.length">
+                        <div :class="$style.title">
+                            <pl-svg name="icon-time-866c0" width="36" />
+                            即将开始
+                            <span>({{ totals.FUTURE }})</span>
+                        </div>
+                        <ul :class="$style.list">
+                            <li
+                                v-for="(item, index) of futureLive"
+                                :key="index"
+                                :class="$style.item"
+                                @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
+                            >
+                                <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                                 <div :class="$style.desc">
-                                    <div :class="$style.liveName" v-text="item.name" />
-                                    <div :class="$style.text1">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
-                                    <div :class="$style.text1" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
+                                    <div :class="$style.liveTitle">{{ item.name }}</div>
+                                    <div :class="$style.text2">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
+                                    <div :class="$style.text2" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
+                                    <div :class="$style.bottom">
+                                        <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
+                                        <span :class="$style.free" v-else>免费</span>
+                                        <pl-button
+                                            type="primary"
+                                            size="middle"
+                                        >
+                                            去看直播
+                                        </pl-button>
+                                    </div>
                                 </div>
-
-                                <div :class="$style.right">
-                                    <span v-if="item.actuallyPaidAmount" :class="$style.price" v-text="item.actuallyPaidAmount" />
-                                    <span :class="$style.free" v-else>免费</span>
-                                    <pl-button type="primary" size="middle">去看直播</pl-button>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div v-if="futureLive.length">
-                    <div :class="$style.title">
-                        <pl-svg name="icon-time-866c0" width="36" />
-                        即将开始
-                        <span>({{ totals.FUTURE }})</span>
+                            </li>
+                        </ul>
                     </div>
-                    <ul :class="$style.list">
-                        <li
-                            v-for="(item, index) of futureLive"
-                            :key="index"
-                            :class="$style.item"
-                            @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
-                        >
-                            <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
-                            <div :class="$style.desc">
-                                <div :class="$style.liveTitle">{{ item.name }}</div>
-                                <div :class="$style.text2">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
-                                <div :class="$style.text2" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
-                                <div :class="$style.bottom">
-                                    <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
-                                    <span :class="$style.free" v-else>免费</span>
-                                    <pl-button
-                                        type="primary"
-                                        size="middle"
-                                    >
-                                        去看直播
-                                    </pl-button>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
 
-                <div v-if="pastLive.length">
-                    <div :class="$style.title">
-                        <pl-svg name="icon-tv-76530" width="36" />
-                        往期直播
-                        <span>({{ totals.PAST }})</span>
-                    </div>
-                    <ul :class="$style.list">
-                        <li
-                            v-for="(item, index) of pastLive"
-                            :key="index"
-                            :class="$style.item"
-                            @click.capture="() => { item.videoLibId !== '0' ? $router.push({ name: 'LivePlayBack', params:{ id: item.videoLibId, activityId: item.id, isValidateEndTime: '0' } }) : '' }"
-                        >
-                            <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
-                            <div :class="$style.desc">
-                                <div :class="$style.liveTitle">{{ item.name }}</div>
-                                <div :class="$style.text2">已结束： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
-                                <div :class="$style.text2" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
-                                <div :class="$style.bottom">
-                                    <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
-                                    <span :class="$style.free" v-else>免费</span>
-                                    <pl-button
-                                        type="warning"
-                                        size="middle"
-                                        v-if="item.videoLibId !== '0'"
-                                    >
-                                        看回放
-                                    </pl-button>
-                                    <span v-else :class="$style.notSupport">不支持回放</span>
+                    <div v-if="pastLive.length">
+                        <div :class="$style.title">
+                            <pl-svg name="icon-tv-76530" width="36" />
+                            往期直播
+                            <span>({{ totals.PAST }})</span>
+                        </div>
+                        <ul :class="$style.list">
+                            <li
+                                v-for="(item, index) of pastLive"
+                                :key="index"
+                                :class="$style.item"
+                                @click.capture="() => { item.videoLibId !== '0' ? $router.push({ name: 'LivePlayBack', params:{ id: item.videoLibId, activityId: item.id, isValidateEndTime: '0' } }) : '' }"
+                            >
+                                <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
+                                <div :class="$style.desc">
+                                    <div :class="$style.liveTitle">{{ item.name }}</div>
+                                    <div :class="$style.text2">已结束： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
+                                    <div :class="$style.text2" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
+                                    <div :class="$style.bottom">
+                                        <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
+                                        <span :class="$style.free" v-else>免费</span>
+                                        <pl-button
+                                            type="warning"
+                                            size="middle"
+                                            v-if="item.videoLibId !== '0'"
+                                        >
+                                            看回放
+                                        </pl-button>
+                                        <span v-else :class="$style.notSupport">不支持回放</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </template>
-        </load-more>
-        <send-live />
+                            </li>
+                        </ul>
+                    </div>
+                </template>
+            </load-more>
+            <send-live
+                v-if="isShowSendLiveDialog"
+                :show.sync="isShowSendLiveDialog"
+                is-notice="1"
+            />
+        </div>
     </div>
 </template>
 <script>
-import { getLiveList } from '../../apis/online-classroom.js'
+import { getLiveList, getSendLiveList } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
 import SendLive from '../../components/common/Send-Live.vue'
 export default {
@@ -149,25 +163,25 @@ export default {
             },
             loading: false,
             requestMethods: getLiveList,
+            unaccalimedSendCount: 0,
             isShowSendLiveDialog: false
         }
     },
     async activated () {
+        this.isShowSendLiveDialog = false
         this.init()
         this.getData()
+        this.getSendLiveCount()
     },
     computed: {
-
         // 正在直播
         nowLive () {
             return this.formatPaidAmount(this.list.NOW)
         },
-
         // 即将开始
         futureLive () {
             return this.formatPaidAmount(this.list.FUTURE)
         },
-
         // 往期直播
         pastLive () {
             return this.formatPaidAmount(this.list.PAST)
@@ -182,6 +196,14 @@ export default {
             try {
                 await this.$nextTick()
                 await this.$refs.LiveLoadMore.refresh()
+            } catch (e) {
+                throw e
+            }
+        },
+        async getSendLiveCount () {
+            try {
+                const { result } = await getSendLiveList('1')
+                this.unaccalimedSendCount = result.length
             } catch (e) {
                 throw e
             }
@@ -233,6 +255,15 @@ export default {
 <style lang="scss" module>
   .interactive-live {
     padding: 0 20px;
+  }
+  .send-live {
+    display: flex;
+    padding: 0 32px 0 24px;
+    justify-content: space-between;
+    line-height: 80px;
+    font-size:28px;
+    background-color: #448AE1;
+    color: #FFF;
   }
   .title {
     margin: 32px 0 20px;
