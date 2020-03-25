@@ -189,7 +189,6 @@ export default {
             await this.getCategoryTree()
             this.findDefault()
         }
-        this.share()
     },
     methods: {
         findDefault () {
@@ -231,7 +230,6 @@ export default {
                 this.$router.push({ name: 'Classify', params: { optionId: classify.id || null } })
                 this.$refresh()
             }
-            this.share()
         },
         subClassifyClick ({ cid, name }) {
             if (this.loading) return
@@ -302,6 +300,11 @@ export default {
                 })
             }
         }
+    },
+    async beforeRouteUpdate (to, from, next) {
+        await next()
+        await this.$nextTick()
+        this.share()
     }
 }
 </script>
