@@ -77,21 +77,6 @@ export default {
     computed: {
         ...mapGetters(['nwEvent'])
     }
-
-    // computed: {
-    //   invitingEvent () {
-    //     return (this.parent && this.parent.invitingEvent) || {}
-    //   },
-    //   jxEvent () {
-    //     return (this.parent && this.parent.jxEvent) || {}
-    //   },
-    //   hasInvitingEvent () {
-    //     return !~[1, 2].indexOf(this.invitingEvent.status)
-    //   },
-    //   hasJxEvent () {
-    //     return !~[1, 2].indexOf(this.jxEvent.status)
-    //   }
-    // }
 }
 </script>
 

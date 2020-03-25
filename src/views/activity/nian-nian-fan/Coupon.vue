@@ -3,13 +3,13 @@
         <div :class="$style.coupon">
             <div :class="$style.couponTitle">
                 <div :class="$style.couponTitleLeft">
-                    <pl-svg name="icon-speaker-bb20d" width="26" height="26" />
+                    <pl-svg name="icon-speaker-bb20d" width="27" height="27" />
                     您有优惠券可使用！
                 </div>
-                <div :class="$style.couponTitleRight">
+                <router-link :class="$style.couponTitleRight" tag="div" :to="{ name: 'CouponCenter' }">
                     <span>立即领取</span>
-                    <pl-svg name="icon-right" width="26" height="26" fill="#7E6E4D" />
-                </div>
+                    <pl-svg name="icon-right" width="28" height="28" fill="#7E6E4D" />
+                </router-link>
             </div>
             <ul :class="$style.couponList" v-if="data.values.length">
                 <template v-for="(item, i) of data.values">
@@ -28,7 +28,7 @@
                                 ￥<span :class="$style.number">{{ item.goodsInfo.amount }}</span>
                             </div>
                             <div>
-                                <div>{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
+                                <div :class="$style.rule">{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
                                 <div :class="$style.date">
                                     <span v-if="data.values.length === 1">{{ `${getDate(item.goodsInfo.useStartTime, 'YYYY/MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'YYYY/MM/DD')}` }}</span>
                                     <span v-else>{{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}</span>
@@ -84,13 +84,20 @@ export default {
       color: #7E6E4D;
       &-left {
         display: flex;
-        align-content: center;
+        align-items: center;
         font-size: 26px;
         font-family: Microsoft YaHei;
         color: #FF8533;
         letter-spacing: 2px;
-        svg {
-          margin-right: 6px;
+        > svg {
+          margin-right: 10px;
+        }
+      }
+      &-right {
+        display: flex;
+        align-items: center;
+        > svg {
+          margin-left: 10px;
         }
       }
     }
@@ -99,8 +106,8 @@ export default {
       justify-content: space-around;
       padding: 24px 12px 40px;
       &-item {
-        position: relative;
         box-sizing: border-box;
+        position: relative;
         padding: 10px;
         width: 214px;
         font-size: 20px;
@@ -118,32 +125,55 @@ export default {
             height: 142px;
           }
           .price {
-            font-size: 40px;
+            margin-right: 6px;
+            font-size: 62px;
           }
           .number {
             font-size: 84px;
-            margin-right: 6px;
+          }
+          .rule {
+            font-size: 28px;
+          }
+          .date {
+            font-size: 28px;
           }
         }
         &.medium {
           width: 320px;
-          .number {
-            font-size: 40px;
+          .coupon-list-item-wrapper {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-right: 44px;
+          }
+          .price {
             margin-right: 6px;
+            font-size: 45px;
+          }
+          .number {
+            font-size: 60px;
+          }
+          .rule {
+            font-size: 22px;
+          }
+          .date {
+            font-size: 22px;
           }
         }
         &-wrapper {
-          padding: 6px 12px 10px;
+          box-sizing: border-box;
+          padding: 6px 12px 12px;
+          height: 110px;
           border: 2px solid #F29E5E;
           border-style: dashed;
           border-radius: 10px;
         }
         &-cover {
+          box-sizing: border-box;
           position: absolute;
           top: 0;
           right: 0;
           bottom: 0;
-          box-sizing: border-box;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -154,7 +184,7 @@ export default {
           font-size: 18px;
           font-family: Microsoft YaHei;
           font-weight: bold;
-          line-height: 28px;
+          line-height: 22px;
           color:#F34436;
         }
         .price {
@@ -166,8 +196,12 @@ export default {
           font-family: San Francisco Display;
           font-weight: bold;
         }
+        .rule {
+          font-size: 20px;
+        }
         .date {
           margin-top: 4px;
+          font-size: 18px;
           font-family: San Francisco Display;
         }
       }

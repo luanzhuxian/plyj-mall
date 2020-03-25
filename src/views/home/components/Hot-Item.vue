@@ -106,7 +106,6 @@ export default {
   .pro-list {
     display: flex;
     flex-wrap: wrap;
-    // margin-top: 22px;
     margin-bottom: -20px;
     justify-content: space-between;
   }

@@ -20,10 +20,19 @@ import CountDown from '../../../components/product/Count-Down.vue'
 
 export default {
     name: 'Banner',
+    inject: ['parent'],
     components: {
         swiper,
         swiperSlide,
         CountDown
+    },
+    props: {
+        data: {
+            type: Object,
+            default () {
+                return { values: [] }
+            }
+        }
     },
     data () {
         return {
@@ -40,12 +49,12 @@ export default {
             }
         }
     },
-    props: {
-        data: {
-            type: Object,
-            default () {
-                return { values: [] }
-            }
+    computed: {
+        bookId () {
+            return this.parent.bookId
+        },
+        reportId () {
+            return this.parent.reportId
         }
     },
     methods: {
@@ -67,12 +76,21 @@ export default {
                     name: 'Appointment'
                 }
             }
-            // if (!value) return false
             if (type === 1) {
                 this.$router.push({ name: 'Classify', params: { optionId: value || null } })
+                return
             }
             if (type === 2) {
                 this.$router.push({ name: 'Product', params: { productId: value } })
+                return
+            }
+            if (type === 42) {
+                this.$router.push({ name: 'BattlefieldReport', params: { id: this.reportId } })
+                return
+            }
+            if (type === 43) {
+                this.$router.push({ name: 'EpidemicSignIn', params: { id: this.bookId } })
+                return
             }
             if (type in routeMap) {
                 this.$router.push({ name: routeMap[type].name })

@@ -2,7 +2,7 @@
     <div :class="$style.activity">
         <ul :class="$style.activityList" v-if="show">
             <template v-for="(item, i) of list">
-                <router-link
+                <div
                     v-if="map[item.value]"
                     :class="{
                         [$style.activityListItem]: true,
@@ -10,8 +10,7 @@
                         [$style.marginTop0]: (i === 0) || (i === 1 && !isOdd)
                     }"
                     :key="i"
-                    tag="li"
-                    :to="{ name: map[item.value].path }"
+                    @click="jump(item)"
                 >
                     <div :class="$style.activityListItemLeft">
                         <div :class="$style.activityListItemLeftMain">
@@ -24,15 +23,18 @@
                     <div :class="$style.activityListItemRight">
                         <pl-svg :name="map[item.value].icon" :width="map[item.value].width" />
                     </div>
-                </router-link>
+                </div>
             </template>
         </ul>
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'Activity',
+    inject: ['parent'],
     props: {
         data: {
             type: Object,
@@ -58,7 +60,7 @@ export default {
                     sub: '停课不停学',
                     icon: 'icon-cloud-play-592ce',
                     width: '70',
-                    path: ''
+                    path: 'OnlineClassroom'
                 },
                 sign: {
                     main: '抗疫签到',
@@ -72,7 +74,7 @@ export default {
                     sub: '翻开记忆中的味道',
                     icon: 'icon-pocket-8fb26',
                     width: '70',
-                    path: 'OnlineClassroom'
+                    path: 'NewYearActivity'
                 },
                 report: {
                     main: '防疫情报站',
@@ -85,6 +87,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['nwEvent']),
         isOdd () {
             return !!(this.list.length % 2)
         },
@@ -93,8 +96,34 @@ export default {
         },
         show () {
             return this.list.length
+        },
+        bookId () {
+            return this.parent.bookId
+        },
+        reportId () {
+            return this.parent.reportId
+        }
+    },
+    methods: {
+        jump ({ value }) {
+            const { map } = this
+            let id
+            if (value === 'newyear') {
+                id = this.nwEvent.id
+            }
+            if (value === 'sign') {
+                id = this.bookId
+            }
+            if (value === 'report') {
+                id = this.reportId
+            }
+            this.$router.push({
+                name: map[value].path,
+                ...(id ? { params: { id } } : null)
+            })
         }
     }
+
 }
 </script>
 
