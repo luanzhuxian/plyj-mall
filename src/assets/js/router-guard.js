@@ -6,11 +6,11 @@ const customShare = [
     'Curriculum',
     'LiveRoom',
     'InviteNewcomers',
-    'Newcomers'
+    'Newcomers',
+    'Classify'
 ]
 const shareRoutes = [
     'Home',
-    'Classify',
     'My',
     'Appointment',
     'DoubleTwelveDay',

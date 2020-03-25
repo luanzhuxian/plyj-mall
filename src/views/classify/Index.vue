@@ -116,6 +116,7 @@ import LoadMore from '../../components/common/Load-More.vue'
 import { getCategoryTree, getProduct } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
 import { mapGetters } from 'vuex'
+import share from '../../assets/js/wechat/wechat-share'
 
 export default {
     name: 'Classify',
@@ -162,7 +163,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['agentUser'])
+        ...mapGetters(['agentUser', 'appId', 'logoUrl', 'mallName', 'mallDesc']),
+        currentClassifyData () {
+            return this.classifyList.find(item => item.id === this.optionId)
+        }
     },
     created () {
     },
@@ -185,6 +189,7 @@ export default {
             await this.getCategoryTree()
             this.findDefault()
         }
+        this.share()
     },
     methods: {
         findDefault () {
@@ -234,6 +239,7 @@ export default {
             this.form.subCategoryId = cid
             this.form.current = 1
             this.$refresh()
+            this.share()
         },
         async getCategoryTree () {
             try {
@@ -265,6 +271,36 @@ export default {
                 }
             }
             this.prodList = list
+        },
+        share () {
+            const {
+                appId,
+                logoUrl,
+                mallName,
+                currentClassifyData = {}
+            } = this
+            const {
+                categoryName,
+                categoryPic,
+                bannerPic
+            } = currentClassifyData
+            if (categoryName) {
+                share({
+                    appId,
+                    title: `${ mallName }-${ categoryName }`,
+                    desc: '好东西都在这里了~',
+                    link: location.href,
+                    imgUrl: categoryPic || bannerPic || logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
+                })
+            } else {
+                share({
+                    appId,
+                    title: `${ mallName }-全部商品`,
+                    desc: '好东西都在这里了~',
+                    link: location.href,
+                    imgUrl: categoryPic || bannerPic || logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'
+                })
+            }
         }
     }
 }
