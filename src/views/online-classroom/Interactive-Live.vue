@@ -1,13 +1,5 @@
 <template>
     <div :class="$style.interactiveLive">
-        <div
-            :class="$style.sendLive"
-            v-if="sendLiveList.length"
-            @click="isShowSendLiveDialog = true"
-        >
-            <span>赠送了您{{ sendLiveList.length }}堂直播课程哦，快来学习吧~</span>
-            <span>查看></span>
-        </div>
         <load-more
             ref="LiveLoadMore"
             :form="form"
@@ -119,11 +111,11 @@
                 </div>
             </template>
         </load-more>
-        <send-live :show.sync="isShowSendLiveDialog" />
+        <send-live />
     </div>
 </template>
 <script>
-import { getLiveList, getSendLiveList } from '../../apis/online-classroom.js'
+import { getLiveList } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
 import SendLive from '../../components/common/Send-Live.vue'
 export default {
@@ -157,7 +149,6 @@ export default {
             },
             loading: false,
             requestMethods: getLiveList,
-            sendLiveList: [],
             isShowSendLiveDialog: false
         }
     },
@@ -191,14 +182,6 @@ export default {
             try {
                 await this.$nextTick()
                 await this.$refs.LiveLoadMore.refresh()
-            } catch (e) {
-                throw e
-            }
-        },
-        async getLiveList () {
-            try {
-                const { data: { result } } = await getSendLiveList()
-                this.sendLiveList = result
             } catch (e) {
                 throw e
             }
@@ -250,15 +233,6 @@ export default {
 <style lang="scss" module>
   .interactive-live {
     padding: 0 20px;
-  }
-  .send-live {
-    display: flex;
-    padding: 0 32px 0 24px;
-    justify-content: space-between;
-    line-height: 80px;
-    font-size:28px;
-    background-color: #448AE1;
-    color: #FFF;
   }
   .title {
     margin: 32px 0 20px;

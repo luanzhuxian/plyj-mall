@@ -1,6 +1,6 @@
 <template>
     <!-- 送课窗口提示 -->
-    <div @click.stop="" v-show="show || showShelf" :class="$style.mask">
+    <div @click.stop="" v-show="showShelf" :class="$style.mask">
         <div :class="$style.container">
             <div :class="$style.main">
                 <div :class="$style.head">
@@ -10,9 +10,11 @@
                     <span>您获得了{{ liveList.length }}堂直播课程</span>
                     <span>
                         <template v-if="liveList.length === 1">
+                            <!--直播未开始-->
                             <template v-if="isNotStart(liveList[0])">直播还未开始，请在直播开始时进入直播间学习</template>
-                            <template v-if="isDoing(liveList[0])">直播进行中，可点击查看直播进入直播间学习</template>
-                            <template v-if="isEnd(liveList[0])">直播已结束，您可看回放进行直播课程学习</template>
+                            <!--有videoLibId，说明直播已结束，可回放-->
+                            <template v-else-if="liveList[0].videoLibId && liveList[0].videoLibId !== '0'">直播已结束，您可看回放进行直播课程学习</template>
+                            <template v-else>直播进行中，可点击查看直播进入直播间学习</template>
                         </template>
                         <template v-else>
                             您可选择正在直播中的直播课程进行学习哦~
@@ -97,9 +99,6 @@ import moment from 'moment'
 import { getSendLiveList } from '../../apis/online-classroom.js'
 export default {
     name: 'SendLive',
-    props: {
-        show: Boolean
-    },
     data () {
         return {
             showShelf: false,
@@ -128,7 +127,7 @@ export default {
     methods: {
         async getLiveList () {
             try {
-                const { data: { result } } = await getSendLiveList()
+                const { result } = await getSendLiveList()
                 this.liveList = result
                 this.showShelf = !!this.liveList.length
             } catch (e) {
@@ -138,22 +137,15 @@ export default {
         isNotStart (row) {
             return moment(row.liveStartTime).isAfter(moment())
         },
-        isDoing (row) {
-            return moment(row.liveStartTime).isBefore(moment()) && moment(row.liveEndTime).isAfter(moment())
-        },
-        isEnd (row) {
-            return moment(row.liveEndTime).isBefore(moment())
-        },
         goToWatchLive (row) {
-            if (this.isEnd(row)) {
-                this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: 0 } })
+            if (row.videoLibId && row.videoLibId !== '0') {
+                this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: '0' } })
             } else {
                 this.$router.push({ name: 'LiveRoom', params: { id: row.id } })
             }
         },
         close () {
             this.showShelf = false
-            this.$emit('update:show', false)
         }
     }
 }
@@ -206,7 +198,7 @@ export default {
         }
       }
       .list {
-        height: 760px;
+        max-height: 760px;
         margin-top: 40px;
         overflow: auto;
         text-align: left;
@@ -279,6 +271,7 @@ export default {
           margin-bottom: 16px;
           border-radius:20px;
           overflow: hidden;
+          background-color: #FFF;
           img {
             width:292px;
             height:194px;
@@ -288,7 +281,6 @@ export default {
           .desc {
             flex: 1;
             padding: 12px 24px 12px 16px;
-            background-color: #FFF;
             .live-title {
               width: 250px;
               font-size:28px;

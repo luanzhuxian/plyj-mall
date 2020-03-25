@@ -70,11 +70,6 @@ export default {
         SplitBurse,
         SendLive
     },
-    provide () {
-        return {
-            parent: this
-        }
-    },
     data () {
         return {
             loaded: false,
