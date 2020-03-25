@@ -20,7 +20,7 @@ module.exports = {
   rules: {
     'no-debugger': 'off',
     'camelcase': 0,
-    'indent': ['error', 4],
+    'indent': ['error', 4, { 'SwitchCase': 1 }],
     'prefer-const': 'error', // http://docs.youpenglai.cn/spec/javascript_specification.html#variables--const
     'no-var': 'error', // http://docs.youpenglai.cn/spec/javascript_specification.html#variables--one-const
     'object-shorthand': 'error', // http://docs.youpenglai.cn/spec/javascript_specification.html#es6-object-shorthand

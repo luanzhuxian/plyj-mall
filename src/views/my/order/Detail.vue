@@ -836,12 +836,11 @@ export default {
         this.countdownInstance.stop()
     },
     methods: {
-
         // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
         isCommentBtnShow (item) {
             return this.orderStatus === 'FINISHED' &&
-      item.assessmentStatus === 0 &&
-      ((this.orderType === 'PHYSICAL' && ~[0, 3, 6].indexOf(item.afterSalesStatus)) || (this.orderType !== 'PHYSICAL' && this.redeemCodeModels.some(item => item.statusCode === 1)))
+                item.assessmentStatus === 0 &&
+                ((this.orderType === 'PHYSICAL' && ~[0, 3, 6].indexOf(item.afterSalesStatus)) || (this.orderType !== 'PHYSICAL' && this.redeemCodeModels.some(item => item.statusCode === 1)))
         },
         isRefundBtnShow (item) {
             return item.supportRefund && Number(item.refundPrice) > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
@@ -1006,28 +1005,40 @@ export default {
                         }
                     }
 
-                    if (orderStatus === 'CLOSED') {
-                        this.suggestionMap.CLOSED = this.isAllProductRefund ? '退款完成' : '订单取消'
-                    }
-                    if (orderStatus === 'WAIT_PAY' || orderStatus === 'WAIT_PAY_REPAYMENT') {
-                        this.setTime(result, orderStatus)
-                    }
-                    if (orderStatus === 'WAIT_RECEIVE') {
-                        if (orderType === 'PHYSICAL') {
-                            this.setTime(result, 'WAIT_RECEIVE')
-                        } else {
-                            const { validityPeriodStart, validityPeriodEnd } = productInfoModel.productDetailModels[0]
-                            if (validityPeriodStart) {
-                                const start = moment(validityPeriodStart).format('YYYY-MM-DD')
-                                const end = moment(validityPeriodEnd).format('YYYY-MM-DD')
-                                this.suggestionMap.WAIT_RECEIVE = (start === end)
-                                    ? `有效期 ${ start }`
-                                    : `有效期 ${ start } 至 ${ end }`
-                            } else {
-                                this.suggestionMap.WAIT_RECEIVE = '长期有效'
+                    const { validityPeriodStart, validityPeriodEnd, validity } = productInfoModel.productDetailModels[0]
+                    switch (orderStatus) {
+                        case 'CLOSED':
+                            this.suggestionMap.CLOSED = this.isAllProductRefund ? '退款完成' : '订单取消'
+                            break
+                        case 'WAIT_PAY':
+                            this.setTime(result, orderStatus)
+                            break
+                        case 'WAIT_PAY_REPAYMENT':
+                            this.setTime(result, orderStatus)
+                            break
+                        case 'WAIT_RECEIVE':
+                            switch (orderType) {
+                                case 'PHYSICAL':
+                                    this.setTime(result, 'WAIT_RECEIVE')
+                                    break
+                                case 'KNOWLEDGE_COURSE':
+                                    this.suggestionMap.WAIT_RECEIVE = validity ? `购买后${ validity }天内学完` : '购买后不限观看次数'
+                                    break
+                                default:
+                                    if (validityPeriodStart) {
+                                        const start = moment(validityPeriodStart)
+                                            .format('YYYY-MM-DD')
+                                        const end = moment(validityPeriodEnd)
+                                            .format('YYYY-MM-DD')
+                                        this.suggestionMap.WAIT_RECEIVE = (start === end)
+                                            ? `有效期 ${ start }`
+                                            : `有效期 ${ start } 至 ${ end }`
+                                    } else {
+                                        this.suggestionMap.WAIT_RECEIVE = '长期有效'
+                                    }
                             }
-                        }
                     }
+
                     const hasCustomBlock = productInfoModel.productDetailModels.filter(item => item.needStudentInfo === 2)
                     const newUserInfo = []
                     const obj = {}
