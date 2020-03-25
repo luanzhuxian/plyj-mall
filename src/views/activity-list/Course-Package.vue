@@ -118,10 +118,10 @@ import SpringPloughingProItem from './components/Spring-Ploughing-Pro-Item.vue'
 import SpringPloughingGiftItem from './components/Spring-Ploughing-Gift-Item.vue'
 import { getSpringCombination } from '../../apis/product'
 import {
-    // generateQrcode,
-    // createText,
-    // cutArcImage,
-    // loadImage,
+    generateQrcode,
+    createText,
+    cutArcImage,
+    loadImage,
     Countdown
 } from '../../assets/js/util'
 
@@ -231,7 +231,7 @@ export default {
         },
 
         /**
-         * 设置到计时时间
+         * 设置倒计时时间
          * @param data {object} 每组数据
          * @param duration {number} 倒计时时长
          */
@@ -295,7 +295,41 @@ export default {
             }
             return true
         },
-        async createPoster () {}
+        async createPoster () {
+            const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.8.0/package-poster.png'
+
+            if (this.creating) {
+                return
+            }
+            if (this.poster) {
+                this.showPoster = true
+                return
+            }
+            this.creating = true
+            const cvs = document.createElement('canvas')
+            const ctx = cvs.getContext('2d')
+            const Result = await Promise.all([
+                loadImage(POSTER_BG),
+                loadImage(this.avatar)
+            ])
+            const BG = Result[0]
+            const AVATAR = await cutArcImage(Result[1])
+            cvs.width = 638
+            cvs.height = 1134
+            ctx.fillStyle = '#EA7635'
+            ctx.fillRect(0, 0, 638, 88)
+            ctx.drawImage(AVATAR, 20, 12, 64, 64)
+            ctx.font = '24px Microsoft YaHei UI'
+            ctx.fillStyle = '#fff'
+            ctx.textBaseline = 'hanging'
+            createText(ctx, 100, 32, `${ this.userName } 邀您参加少年当自强`, 34, 510, 1)
+            ctx.drawImage(BG, 0, 88, 638, 1046)
+            const QR = await generateQrcode(200, location.href, 0, null, 0, 'canvas')
+            ctx.drawImage(QR, 204, 730, 238, 238)
+            this.poster = cvs.toDataURL('image/jpeg', 0.9)
+            this.showPoster = true
+            this.creating = false
+        }
     }
 }
 </script>
