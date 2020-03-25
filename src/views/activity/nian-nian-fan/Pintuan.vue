@@ -77,7 +77,7 @@
                                 <pl-svg
                                     v-else
                                     name="icon-jieshu"
-                                    :width="(i === 0 || data.values.length % 2 === 0) ? 40 : 32"
+                                    :width="(i === 0 || data.values.length % 2 === 0) ? 46 : 38"
                                 />
                             </div>
                         </div>
@@ -116,7 +116,7 @@ export default {
 </script>
 
 <style module lang="scss">
-  .pintuan {
+.pintuan {
     background: #fff8eb;
     border-radius: 20px;
     overflow: hidden;
@@ -140,195 +140,196 @@ export default {
         }
     }
     .list {
-      padding: 30px 20px 40px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+        padding: 30px 20px 40px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
     .list-item {
-      display: flex;
-      margin-top: 20px;
-      box-sizing: border-box;
-      background-color: #FFF;
-      border-radius: 20px;
-      overflow: hidden;
-      &:nth-of-type(1) {
-          margin-top: 0;
-      }
-      &.large {
-        padding: 16px;
-        width: 100%;
-        .img-wrapper {
-          margin-right: 16px;
-          width: 280px;
-          height: 188px;
-          border-radius: 12px;
-        }
-        .info {
-          flex: 1;
-          width: 0;
-          height: 188px;
-          .sub {
-            &-left {
-              &-main {
-                font-size: 24px;
-              }
-            }
-            &-right {
-              width: 72px;
-              height: 72px;
-            }
-          }
-        }
-      }
-      &.small {
-        flex-direction: column;
-        width: 320px;
-        .img-wrapper {
-          height: 214px;
-        }
-        .info {
-          padding: 12px;
-          height: 196px;
-          .sub {
-            &-left {
-              &-main {
-                font-size: 20px;
-              }
-            }
-            &-right {
-              width: 58px;
-              height: 58px;
-              // .qiang {
-              //   width: 32px;
-              // }
-            }
-          }
-        }
-      }
-      .img-wrapper {
-        position: relative;
-        overflow: hidden;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        .count-down-wrapper {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          line-height: 36px;
-          font-size: 24px;
-          background: rgba(0, 0, 0, 0.65);
-          color: #FFF;
-          padding: 8px 0;
-        }
-        .text {
-          margin-right: 10px;
-        }
-      }
-      .info {
-        flex: 1;
-        position: relative;
         display: flex;
-        justify-content: space-between;
-        flex-direction: column;
+        margin-top: 20px;
         box-sizing: border-box;
-      }
-      .main {
-        margin-bottom: 8px;
-        font-size: 28px;
-        font-weight: bold;
-        line-height: 32px;
-        color: #000000;
-        @include elps();
-      }
-      .time {
-        display: inline-flex;
-        align-items: center;
-        text-align: center;
-        margin-bottom: 18px;
-        width: fit-content;
-        max-width: 100%;
-        max-width: 100%;
-        height: 34px;
-        line-height: 35px;
-        border: 2px solid #ff772b;
-        border-radius: 4px;
-        @include elps();
-        &-left {
-          padding: 6px;
-          min-width: 105px;
-          font-size: 24px;
-          color: #ffffff;
-          background: #ff772b;
-          overflow: hidden;
+        background-color: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        &:nth-of-type(1) {
+            margin-top: 0;
         }
-        &-right {
-          flex: 1;
-          padding: 0 10px;
-          font-size: 24px;
-          font-family: San Francisco Display;
-          background: #ffff00;
-          color: #ff772b;
-          @include elps();
+        &.large {
+            padding: 16px;
+            width: 100%;
+            .img-wrapper {
+                margin-right: 16px;
+                width: 280px;
+                height: 188px;
+                border-radius: 12px;
+            }
+            .info {
+                flex: 1;
+                width: 0;
+                height: 188px;
+                .sub {
+                    &-left {
+                        &-main {
+                            font-size: 24px;
+                        }
+                    }
+                    &-right {
+                        width: 72px;
+                        height: 72px;
+                    }
+                }
+            }
         }
-      }
-      .sub {
-        display: flex;
-        align-items: flex-end;
-        &-left {
-          flex: 1;
-          width: 0;
-          &-main {
-            font-weight: bold;
-            height: 36px;
-            line-height: 36px;
-            color: #999999;
-            @include elps();
-          }
-          &-sub {
+        &.small {
+            flex-direction: column;
+            width: 320px;
+            .img-wrapper {
+                height: 214px;
+            }
+            .info {
+                padding: 12px;
+                height: 196px;
+                .sub {
+                    &-left {
+                        &-main {
+                            font-size: 20px;
+                        }
+                    }
+                    &-right {
+                        width: 58px;
+                        height: 58px;
+                        // .qiang {
+                        //   width: 32px;
+                        // }
+                    }
+                }
+            }
+        }
+        .img-wrapper {
+            position: relative;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .count-down-wrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                line-height: 36px;
+                font-size: 24px;
+                background: rgba(0, 0, 0, .65);
+                color: #fff;
+                padding: 8px 0;
+            }
+            .text {
+                margin-right: 10px;
+            }
+        }
+        .info {
+            flex: 1;
+            position: relative;
             display: flex;
-            align-items: flex-end;
+            justify-content: space-between;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+        .main {
+            margin-bottom: 8px;
             font-size: 28px;
             font-weight: bold;
-            color: #fe7700;
+            line-height: 32px;
+            color: #000;
             @include elps();
-            .price {
-              flex: 1;
-              width: 0;
-              margin-left: 4px;
-              font-size: 32px;
-              font-family: San Francisco Display;
-              font-weight: bold;
-              @include elps();
-              &:before {
-                content: '￥';
-                font-size: 20px;
-                font-family: Microsoft YaHei;
-                font-weight: bold;
-              }
+        }
+        .time {
+            display: inline-flex;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 18px;
+            width: fit-content;
+            max-width: 100%;
+            max-width: 100%;
+            height: 34px;
+            line-height: 35px;
+            border: 2px solid #ff772b;
+            border-radius: 4px;
+            @include elps();
+            &-left {
+                padding: 6px;
+                min-width: 105px;
+                font-size: 24px;
+                color: #fff;
+                background: #ff772b;
+                overflow: hidden;
             }
-          }
+            &-right {
+                flex: 1;
+                padding: 0 10px;
+                font-size: 24px;
+                font-family: San Francisco Display;
+                background: #ff0;
+                color: #ff772b;
+                @include elps();
+            }
         }
-        &-right {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background-color: #fe7700;
-          border-radius: 50%;
-          overflow: hidden;
-          color: #ffffff;
-          &.disabled {
-            background: linear-gradient(231deg, rgba(204, 204, 204, 1) 0%, rgba(153, 153, 153, 1) 100%);
-          }
+        .sub {
+            display: flex;
+            align-items: flex-end;
+            &-left {
+                flex: 1;
+                width: 0;
+                &-main {
+                    font-weight: bold;
+                    height: 36px;
+                    line-height: 36px;
+                    color: #999;
+                    @include elps();
+                }
+                &-sub {
+                    display: flex;
+                    align-items: flex-end;
+                    font-size: 28px;
+                    font-weight: bold;
+                    color: #fe7700;
+                    @include elps();
+                    .price {
+                        flex: 1;
+                        width: 0;
+                        margin-left: 4px;
+                        font-size: 32px;
+                        font-family: San Francisco Display;
+                        font-weight: bold;
+                        @include elps();
+                        &:before {
+                            content: '￥';
+                            font-size: 20px;
+                            font-family: Microsoft YaHei;
+                            font-weight: bold;
+                        }
+                    }
+                }
+            }
+            &-right {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #fe7700;
+                border-radius: 50%;
+                overflow: hidden;
+                color: #fff;
+                &.disabled {
+                    background: linear-gradient(231deg, rgba(204, 204, 204, 1) 0%, rgba(153, 153, 153, 1) 100%);
+                }
+            }
         }
-      }
     }
-  }
+}
+
 </style>

@@ -73,7 +73,7 @@
                                 <pl-svg
                                     v-else
                                     name="icon-jieshu"
-                                    :width="(i === 0 || data.values.length % 2 === 0) ? 40 : 32"
+                                    :width="(i === 0 || data.values.length % 2 === 0) ? 46 : 38"
                                 />
                             </div>
                         </div>

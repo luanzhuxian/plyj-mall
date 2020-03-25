@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <div :class="$style.bottom">
+        <div :class="$style.bottom" v-if="productActive !== 5">
             <div :class="$style.content">
                 <router-link :class="$style.link" :to="{ name: 'Home' }">
                     <pl-svg name="icon-home" width="38" height="70" />
@@ -168,6 +168,10 @@ export default {
         },
         tagIds () {
             return this.detail.tagIds
+        },
+        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入
+        productActive () {
+            return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
         }
     },
     async activated () {
@@ -357,115 +361,115 @@ export default {
 </script>
 
 <style module lang="scss">
-  .curriculum {
+.curriculum {
     padding-bottom: 190px;
-  }
-  .priceBox {
+}
+.priceBox {
     > .price {
-      font-size: 46px;
-      color: #FE7700;
-      &:before {
-        content: '¥';
-        margin-right: 3px;
-        font-size: 24px;
-        vertical-align: 3px;
-      }
+        font-size: 46px;
+        color: #fe7700;
+        &:before {
+            content: '¥';
+            margin-right: 3px;
+            font-size: 24px;
+            vertical-align: 3px;
+        }
     }
     .free {
-      font-size: 46px;
-      color: #FE7700;
+        font-size: 46px;
+        color: #fe7700;
     }
     > .original {
-      display: flex;
-      align-items: center;
-      margin-top: 4px;
-      color: #999;
-      font-size: 26px;
-      del {
-        &:before {
-          content: '¥';
+        display: flex;
+        align-items: center;
+        margin-top: 4px;
+        color: #999;
+        font-size: 26px;
+        del {
+            &:before {
+                content: '¥';
+            }
         }
-      }
     }
-  }
-  .field {
+}
+.field {
     display: flex;
     align-items: center;
     line-height: 78px;
     font-size: 24px;
     border-top: 1px solid #e7e7e7;
     > .left {
-      color: #999;
-      > svg {
-        vertical-align: -6px;
-      }
+        color: #999;
+        > svg {
+            vertical-align: -6px;
+        }
     }
     > .right {
-      color: #000;
+        color: #000;
     }
-  }
-  .detailOrComment {
+}
+.detailOrComment {
     margin-top: 20px;
     background-color: #fff;
-  }
-  .tabs {
+}
+.tabs {
     display: flex;
     justify-content: space-around;
     align-items: center;
     border-bottom: 1px solid #e7e7e7;
     > div {
-      width: max-content;
-      font-size: 26px;
-      color: #999;
-      height: 90px;
-      line-height: 90px;
-      box-sizing: border-box;
-      font-weight: bold;
-      &.activeTab {
-        color: #000;
-        border-bottom: 2px solid #000;
-      }
+        width: max-content;
+        font-size: 26px;
+        color: #999;
+        height: 90px;
+        line-height: 90px;
+        box-sizing: border-box;
+        font-weight: bold;
+        &.activeTab {
+            color: #000;
+            border-bottom: 2px solid #000;
+        }
     }
-  }
-  .bottom {
+}
+.bottom {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     background-color: #fff;
     > .content {
-      display: flex;
-      align-items: center;
-      height: 110px;
-      border-top: 1px solid #e7e7e7;
+        display: flex;
+        align-items: center;
+        height: 110px;
+        border-top: 1px solid #e7e7e7;
     }
     .link {
-      margin-left: 42px;
-      &.callUs {
-        margin-left: 36px;
-      }
+        margin-left: 42px;
+        &.callUs {
+            margin-left: 36px;
+        }
     }
     .button {
-      width: 496px;
-      margin-left: 40px;
-      line-height: 80px;
-      font-size: 26px;
-      text-align: center;
-      color: #fff;
-      border-radius: 10px;
+        width: 496px;
+        margin-left: 40px;
+        line-height: 80px;
+        font-size: 26px;
+        text-align: center;
+        color: #fff;
+        border-radius: 10px;
     }
     .click-me-because-you-are-young {
-      background-color: #FE7700;
-      &:disabled {
-        background-color: rgba(254, 119, 0, 0.4);
-      }
+        background-color: #fe7700;
+        &:disabled {
+            background-color: rgba(254, 119, 0, .4);
+        }
     }
     .has-studied {
-      background-color: #F2B036;
+        background-color: #f2b036;
     }
-  }
+}
 
-  .haibao {
+.haibao {
     position: fixed;
     right: 0;
     top: 20px;
@@ -482,13 +486,13 @@ export default {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     > svg {
-      width: 33px;
+        width: 33px;
     }
     > p {
-      margin-top: 4px;
+        margin-top: 4px;
     }
-  }
-  .saveHaibao {
+}
+.saveHaibao {
     position: fixed;
     top: 0;
     left: 0;
@@ -501,36 +505,36 @@ export default {
     background-color: rgba(0, 0, 0, .7);
     z-index: 10000;
     .saveHaibaoContent {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      width: max-content;
-      height: max-content;
-      > .saveButton {
-        width: 560px;
-        margin-top: -4px;
-        text-align: center;
-        line-height: 66px;
-        font-size: 28px;
-        color: #666;
-        background-color: #FBFBFB;
-      }
-      > img {
-        width: 560px;
-        object-fit: cover;
-      }
-      > svg {
-        position: absolute;
-        top: -64px;
-        right: 0;
-        width: 48px;
-        height: 48px;
-        color: #fff;
-      }
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: max-content;
+        height: max-content;
+        > .saveButton {
+            width: 560px;
+            margin-top: -4px;
+            text-align: center;
+            line-height: 66px;
+            font-size: 28px;
+            color: #666;
+            background-color: #fbfbfb;
+        }
+        > img {
+            width: 560px;
+            object-fit: cover;
+        }
+        > svg {
+            position: absolute;
+            top: -64px;
+            right: 0;
+            width: 48px;
+            height: 48px;
+            color: #fff;
+        }
     }
-  }
-  .buttomTip {
+}
+.buttomTip {
     position: fixed;
     bottom: 130px;
     left: 50%;
@@ -544,12 +548,13 @@ export default {
     color: #fff;
     z-index: 13;
     &:before {
-      position: absolute;
-      left: 78px;
-      bottom: -28px;
-      content: '';
-      border: 14px solid transparent;
-      border-top-color: rgba(0, 0, 0, .7);
+        position: absolute;
+        left: 78px;
+        bottom: -28px;
+        content: '';
+        border: 14px solid transparent;
+        border-top-color: rgba(0, 0, 0, .7);
     }
-  }
+}
+
 </style>
