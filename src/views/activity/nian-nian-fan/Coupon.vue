@@ -68,143 +68,145 @@ export default {
 </script>
 
 <style module lang="scss">
-  .coupon {
-    background-color: #FFF;
+.coupon {
+    background-color: #fff;
     border-radius: 20px;
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .05);
     overflow: hidden;
     &-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 24px;
-      font-size: 24px;
-      line-height: 64px;
-      background: #FBEFD7;
-      color: #7E6E4D;
-      &-left {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        font-size: 26px;
-        font-family: Microsoft YaHei;
-        color: #FF8533;
-        letter-spacing: 2px;
-        > svg {
-          margin-right: 10px;
+        padding: 0 24px;
+        font-size: 24px;
+        line-height: 64px;
+        background: #fbefd7;
+        color: #7e6e4d;
+        &-left {
+            display: flex;
+            align-items: center;
+            font-size: 26px;
+            font-family: Microsoft YaHei;
+            color: #ff8533;
+            letter-spacing: 2px;
+            > svg {
+                margin-right: 10px;
+            }
         }
-      }
-      &-right {
-        display: flex;
-        align-items: center;
-        > svg {
-          margin-left: 10px;
+        &-right {
+            display: flex;
+            align-items: center;
+            > svg {
+                margin-left: 10px;
+            }
         }
-      }
     }
     &-list {
-      display: flex;
-      justify-content: space-around;
-      padding: 24px 12px 40px;
-      &-item {
-        box-sizing: border-box;
-        position: relative;
-        padding: 10px;
-        width: 214px;
-        font-size: 20px;
-        color: #F34436;
-        background-color: #FBEFD7;
-        border-radius: 10px;
-        &.large {
-          width: 570px;
-          font-size: 28px;
-          .coupon-list-item-wrapper {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding-right: 44px;
-            height: 142px;
-          }
-          .price {
-            margin-right: 6px;
-            font-size: 62px;
-          }
-          .number {
-            font-size: 84px;
-          }
-          .rule {
-            font-size: 28px;
-          }
-          .date {
-            font-size: 28px;
-          }
+        display: flex;
+        justify-content: space-around;
+        padding: 24px 12px 40px;
+        &-item {
+            box-sizing: border-box;
+            position: relative;
+            padding: 10px;
+            width: 214px;
+            font-size: 20px;
+            color: #f34436;
+            background-color: #fbefd7;
+            border-radius: 10px;
+            &.large {
+                width: 570px;
+                font-size: 28px;
+                .coupon-list-item-wrapper {
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+                    padding-right: 44px;
+                    box-sizing: border-box;
+                    height: 142px;
+                }
+                .price {
+                    margin-right: 6px;
+                    font-size: 62px;
+                }
+                .number {
+                    font-size: 84px;
+                }
+                .rule {
+                    font-size: 28px;
+                }
+                .date {
+                    font-size: 28px;
+                }
+            }
+            &.medium {
+                width: 320px;
+                .coupon-list-item-wrapper {
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+                    padding: 11px 45px 17px 12px;
+                }
+                .price {
+                    margin-right: 6px;
+                    font-size: 45px;
+                }
+                .number {
+                    font-size: 60px;
+                }
+                .rule {
+                    font-size: 22px;
+                }
+                .date {
+                    font-size: 22px;
+                }
+            }
+            &-wrapper {
+                // box-sizing: border-box;
+                padding: 6px 12px 12px;
+                // height: 110px;
+                border: 2px solid #f29e5e;
+                border-style: dashed;
+                border-radius: 10px;
+            }
+            &-cover {
+                box-sizing: border-box;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 16px;
+                width: 54px;
+                background: #f6ce9a;
+                border-radius: 0 10px 10px 0;
+                font-size: 18px;
+                font-family: Microsoft YaHei;
+                font-weight: bold;
+                line-height: 22px;
+                color: #f34436;
+            }
+            .price {
+                font-size: 24px;
+                margin-right: 6px;
+            }
+            .number {
+                font-size: 32px;
+                font-family: San Francisco Display;
+                font-weight: bold;
+            }
+            .rule {
+                font-size: 20px;
+            }
+            .date {
+                margin-top: 4px;
+                font-size: 18px;
+                font-family: San Francisco Display;
+            }
         }
-        &.medium {
-          width: 320px;
-          .coupon-list-item-wrapper {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding-right: 44px;
-          }
-          .price {
-            margin-right: 6px;
-            font-size: 45px;
-          }
-          .number {
-            font-size: 60px;
-          }
-          .rule {
-            font-size: 22px;
-          }
-          .date {
-            font-size: 22px;
-          }
-        }
-        &-wrapper {
-          box-sizing: border-box;
-          padding: 6px 12px 12px;
-          height: 110px;
-          border: 2px solid #F29E5E;
-          border-style: dashed;
-          border-radius: 10px;
-        }
-        &-cover {
-          box-sizing: border-box;
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 0 16px;
-          width: 54px;
-          background: #F6CE9A;
-          border-radius: 0px 10px 10px 0px;
-          font-size: 18px;
-          font-family: Microsoft YaHei;
-          font-weight: bold;
-          line-height: 22px;
-          color:#F34436;
-        }
-        .price {
-          font-size: 24px;
-          margin-right: 6px;
-        }
-        .number {
-          font-size: 32px;
-          font-family: San Francisco Display;
-          font-weight: bold;
-        }
-        .rule {
-          font-size: 20px;
-        }
-        .date {
-          margin-top: 4px;
-          font-size: 18px;
-          font-family: San Francisco Display;
-        }
-      }
     }
-  }
+}
+
 </style>
