@@ -220,10 +220,9 @@ export default {
                 this.shareUrl = shareUrl
                 share({
                     appId: this.appId,
-                    title: result.productName,
-                    desc: result.productDesc,
-                    link: shareUrl,
-                    imgUrl: result.productMainImage
+                    title: result.courseName,
+                    desc: result.lecturer,
+                    imgUrl: result.courseImg
                 })
                 this.haibaoImg = await loadImage(courseImg)
                 return result

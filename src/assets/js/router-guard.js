@@ -46,7 +46,6 @@ const setShare = to => {
                 appId: appid,
                 title: `${ mallName }-${ to.meta.title }`,
                 desc: mallDesc,
-                link: location.href,
                 imgUrl: logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
                 willHide
             })

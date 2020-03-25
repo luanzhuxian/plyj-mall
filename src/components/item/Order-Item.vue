@@ -170,8 +170,8 @@ export default {
     },
     methods: {
         handleClick (e) {
-            e.stopPropagation()
             if (this.productId) {
+                e.stopPropagation()
                 this.$router.push({
                     name: this.routeName,
                     params: {

@@ -7,11 +7,10 @@ const WX = window.wx
 
 // let timer = 0
 
-export default async function share ({ appId, title, desc, imgUrl, link, willHide }) {
+export default async function share ({ appId, title, desc, imgUrl, link = location.href, willHide }) {
     const { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
-    // clearInterval(timer)
     willHide = !title ? ['menuItem:share:appMessage', 'menuItem:share:timeline'] : willHide
-    const config = getConfig(jsApi, appId, link)
+    const config = getConfig(jsApi, appId)
     WX.config(config)
     WX.ready(() => {
         setWechatShare(title, desc, imgUrl, link, willHide)
@@ -86,7 +85,7 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
     // 分享到朋友圈
     if (!~willHide.indexOf('menuItem:share:timeline')) {
         WX.updateTimelineShareData({
-            title: `${ title } ${ desc }`, // 分享标题
+            title: `${ title } (${ desc })`, // 分享标题
             link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: `${ imgUrl }?x-oss-process=style/thum`, // 分享图标
             success: () => {
