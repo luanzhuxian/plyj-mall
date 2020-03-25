@@ -178,11 +178,11 @@ export default {
                 if (!result.records.length) {
                     this.$alert({
                         message: '您无法参与活动',
-                        viceMessage: '返回主会场，更多活动等您开启',
-                        confirmText: '去主会场'
+                        viceMessage: '返回首页，更多活动等您开启',
+                        confirmText: '去首页'
                     })
                         .finally(() => {
-                            this.$router.push({ name: 'Activity' })
+                            this.$router.push({ name: 'Home' })
                         })
                     return
                 }
