@@ -8,6 +8,7 @@
             [$style.skinXiaoNian]: skinId === 4,
             [$style.skinYuanXiao]: skinId === 5,
             [$style.skinWomenDay]: skinId === 6,
+            [$style.skinNianNianFan]: skinId === 7,
             [$style.skinCampaign]: skinId === 99
         }"
     >
@@ -42,14 +43,6 @@
             tag="div"
             :to="{ name: 'Classify' }"
         >
-            <!--云课堂-->
-            <!--<router-link
-      :class="{
-        [$style.route]: true,
-        [$style.active]: classifyActive
-      }"
-      tag="div"
-      :to="{ name: 'OnlineClassroom' }"-->
             <template v-if="isSkinShow">
                 <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
                 <div :class="$style.tabName">分类</div>
@@ -203,6 +196,16 @@ export default {
                     my: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/my.png',
                     myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/my-active.png'
                 },
+                7: {
+                    home: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/home.png',
+                    homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/home.png',
+                    classify: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/classify.png',
+                    classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/classify.png',
+                    shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/cart.png',
+                    shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/cart.png',
+                    my: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/my.png',
+                    myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/my.png'
+                },
                 99: {
                     home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
                     homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
@@ -231,7 +234,7 @@ export default {
             return this.$route.matched.some(val => val.name === 'My')
         },
         isSkinShow () {
-            return ~[1, 2, 3, 4, 5, 6, 99].indexOf(this.skinId)
+            return ~[1, 2, 3, 4, 5, 6, 7, 99].indexOf(this.skinId)
         },
         isD12Show () {
             return ~[5, 6, 7].indexOf(this.activityId)
@@ -265,122 +268,125 @@ export default {
 
 <style module lang="scss">
 .navbar {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  background-color: #fff;
-  z-index: 9;
-  overflow: hidden;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+    z-index: 9;
+    overflow: hidden;
 }
 .route {
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: center;
-  font-size: 20px;
-  height: 88px;
-  .alertMessage{
-    background-color: #D2524C;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    position: absolute;
-    top: 10px;
-    right: 60px;
-  }
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 20px;
+    height: 88px;
+    .alertMessage {
+        background-color: #d2524c;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        right: 60px;
+    }
 }
 .icon-d12 {
-  box-sizing: content-box;
-  padding-bottom: 10px;
-  width: 76px !important;
-  height: auto !important;
+    box-sizing: content-box;
+    padding-bottom: 10px;
+    width: 76px !important;
+    height: auto !important;
 }
 .icon-xinchun {
-  width: 105px !important;
-  height: auto !important;
+    width: 105px !important;
+    height: auto !important;
 }
 
-/* 皮肤 */
+/****************** 皮肤 ******************/
 .skin-xmas,
 .skin-yuan-dan,
 .skin-new-year,
 .skin-xiao-nian,
 .skin-yuan-xiao,
 .skin-women-day,
+.skin-nian-nian-fan,
 .skin-campaign {
-  .route {
-    box-sizing: border-box;
-    &.active > .tab-name {
-      color: #C81819;
+    .route {
+        box-sizing: border-box;
+        &.active > .tab-name {
+            color: #c81819;
+        }
+        img {
+            width: 71px;
+            height: 62px;
+        }
     }
-    img {
-      width: 71px;
-      height: 62px;
+    .tab-name {
+        margin-top: 1px;
+        padding-bottom: 4px;
+        line-height: 18px;
+        font-size: 18px;
+        font-family: Adobe Heiti Std;
+        color: #242424;
+        text-align: center;
     }
-  }
-  .tab-name {
-    margin-top: 1px;
-    padding-bottom: 4px;
-    line-height: 18px;
-    font-size: 18px;
-    font-family: Adobe Heiti Std;
-    color: #242424;
-    text-align: center;
-  }
-  .icon {
-    margin-bottom: 0 !important;
-  }
+    .icon {
+        margin-bottom: 0 !important;
+    }
 }
 
 .skin-xmas {
-  background: url("https://mallcdn.youpenglai.com/static/admall/skin/xmas/83295b48-251d-40a0-9e07-e3fb9eb95138.png") no-repeat center;
-  background-size: 100%;
+    background: url('https://mallcdn.youpenglai.com/static/admall/skin/xmas/83295b48-251d-40a0-9e07-e3fb9eb95138.png') no-repeat center;
+    background-size: 100%;
 }
 .skin-new-year {
-  background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/00b470fc-1ba0-4c3a-a039-177d6564eb0e.png") no-repeat center;
-  background-size: 100%;
+    background: url('https://mallcdn.youpenglai.com/static/admall/skin/new-year/00b470fc-1ba0-4c3a-a039-177d6564eb0e.png') no-repeat center;
+    background-size: 100%;
 }
 .skin-yuan-xiao {
-  background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/0172699a-7d24-45ae-8e27-46d0a88dfb39.png") no-repeat center;
-  background-size: 101%;
-  .route {
-    .tab-name {
-      color: #ffffff;
+    background: url('https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/0172699a-7d24-45ae-8e27-46d0a88dfb39.png') no-repeat center;
+    background-size: 101%;
+    .route {
+        .tab-name {
+            color: #fff;
+        }
+        &.active > .tab-name {
+            color: #fff;
+        }
     }
-    &.active > .tab-name {
-      color: #ffffff;
-    }
-  }
 }
 .skin-women-day {
-  .route {
-    .tab-name {
-      margin-top: 0;
-      color: #999999;
+    .route {
+        .tab-name {
+            margin-top: 0;
+            color: #999;
+        }
+        &.active > .tab-name {
+            color: #fb908f;
+        }
     }
-    &.active > .tab-name {
-      color: #FB908F;
-    }
-  }
 }
 .skin-campaign {
-  background: url("https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0ab57391-3717-43c2-bc47-549f7b1a94a3.png") no-repeat center;
-  background-size: 100%;
-  .route {
-    .tab-name {
-      color: #ffffff;
+    background: url('https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0ab57391-3717-43c2-bc47-549f7b1a94a3.png') no-repeat center;
+    background-size: 100%;
+    .route {
+        .tab-name {
+            color: #fff;
+        }
+        &.active > .tab-name {
+            color: #ad0f02;
+        }
     }
-    &.active > .tab-name {
-      color: #ad0f02;
-    }
-  }
 }
+
 </style>
 <style lang="scss">
   .router-link-active {
     color: $--warning-color;
   }
+
 </style>

@@ -1704,30 +1704,32 @@ export default {
     @include skeAnimation(#eee)
   }
   /** skeleton end **/
+
 </style>
 
 <style lang="scss">
-  .refund-finish {
+.refund-finish {
     .pl-button__default.plain {
-      color: #CCC;
+        color: #ccc;
     }
     .pl-button__small.plain:after {
-      border: 1px solid #CCC;
+        border: 1px solid #ccc;
     }
-  }
-  .pl-collapse-item {
+}
+.pl-collapse-item {
     .pl-collapse-item__content {
-      padding-bottom: 20px;
+        padding-bottom: 20px;
     }
     &:nth-last-of-type(1) {
-      .pl-collapse-item__content {
-        padding-bottom: 0;
-      }
+        .pl-collapse-item__content {
+            padding-bottom: 0;
+        }
     }
-  }
-  .pl-button__warning.plain {
-    background-color: #FFF;
-    border: 1px solid #FE7700;
-    color: #FE7700;
-  }
+}
+.pl-button__warning.plain {
+    background-color: #fff;
+    border: 1px solid #fe7700;
+    color: #fe7700;
+}
+
 </style>

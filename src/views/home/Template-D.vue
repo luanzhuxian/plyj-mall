@@ -8,6 +8,7 @@
             [$style.skinXiaoNian]: skinId === 4,
             [$style.skinYuanXiao]: skinId === 5,
             [$style.skinWomenDay]: skinId === 6,
+            [$style.skinNianNianFan]: skinId === 7,
             [$style.skinCampaign]: skinId === 99
         }"
     >

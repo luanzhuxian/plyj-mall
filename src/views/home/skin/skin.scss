@@ -1,222 +1,253 @@
 /*  common */
 .skin-common {
-  .banner,
-  .hot-item,
-  .best {
-    padding: 0 24px !important;
-    background: transparent !important;
-  }
-  .shuang12,
-  .adv,
-  // .live,
-  .activity,
-  .appointment,
-  .propagate,
-  .recommend {
-    background: transparent !important;
-  }
+    .banner,
+    .hot-item,
+    .best {
+        padding: 0 24px !important;
+        background: transparent !important;
+    }
+    .shuang12,
+    .adv,
+    // .live,
+    .activity,
+    .appointment,
+    .propagate,
+    .recommend {
+        background: transparent !important;
+    }
 }
 
 // 圣诞皮肤
 .skin-xmas {
-  @extend .skin-common;
-  background-color: #C81819 !important;
-  .container {
-    padding-top: 58px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/xmas/7a2048fd-b958-48af-8861-34c672b5fe84.png") no-repeat center top !important;
-    background-size: 100% auto !important;
-  }
-  .search {
-    &::before {
-      position: absolute;
-      top: -10px;
-      left: 6px;
-      content: '';
-      width: 80px;
-      height: 96px;
-      background: url("https://mallcdn.youpenglai.com/static/admall/skin/xmas/7393611f-65e9-4aa7-ad55-5dedc1241183.png") no-repeat center;
-      background-size: 100%;
-      z-index: 1;
+    @extend .skin-common;
+    background-color: #c81819 !important;
+    .container {
+        padding-top: 58px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/xmas/7a2048fd-b958-48af-8861-34c672b5fe84.png') no-repeat center top !important;
+        background-size: 100% auto !important;
     }
-  }
-  .footer {
-    position: relative;
-    height: 120px !important;
-    color: #FFFFFF !important;
-    background: transparent !important;
-    &::before {
-      position: absolute;
-      bottom: 10px;
-      left: 80px;
-      content: '';
-      width: 60px;
-      height: 80px;
-      background: url("https://mallcdn.youpenglai.com/static/admall/skin/xmas/7da66cb2-96f6-4bef-9e1d-0038a3003283.png") no-repeat center;
-      background-size: 100%;
+    .search {
+        &::before {
+            position: absolute;
+            top: -10px;
+            left: 6px;
+            content: '';
+            width: 80px;
+            height: 96px;
+            background: url('https://mallcdn.youpenglai.com/static/admall/skin/xmas/7393611f-65e9-4aa7-ad55-5dedc1241183.png') no-repeat center;
+            background-size: 100%;
+            z-index: 1;
+        }
     }
-    &::after {
-      position: absolute;
-      bottom: 20px;
-      right: 80px;
-      content: '';
-      width: 44px;
-      height: 70px;
-      background: url("https://mallcdn.youpenglai.com/static/admall/skin/xmas/7da66cb2-96f6-4bef-9e1d-0038a3003283.png") no-repeat center;
-      background-size: 100%;
+    .footer {
+        position: relative;
+        height: 120px !important;
+        color: #fff !important;
+        background: transparent !important;
+        &::before {
+            position: absolute;
+            bottom: 10px;
+            left: 80px;
+            content: '';
+            width: 60px;
+            height: 80px;
+            background: url('https://mallcdn.youpenglai.com/static/admall/skin/xmas/7da66cb2-96f6-4bef-9e1d-0038a3003283.png') no-repeat center;
+            background-size: 100%;
+        }
+        &::after {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            content: '';
+            width: 44px;
+            height: 70px;
+            background: url('https://mallcdn.youpenglai.com/static/admall/skin/xmas/7da66cb2-96f6-4bef-9e1d-0038a3003283.png') no-repeat center;
+            background-size: 100%;
+        }
     }
-  }
-  .skin-title {
-    margin: 0 -24px;
-  }
+    .skin-title {
+        margin: 0 -24px;
+    }
 }
 
 // 元旦皮肤
 .skin-yuan-dan {
-  @extend .skin-common;
-  background-color: #E4D1A3 !important;
-  .container {
-    padding-top: 52px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/84792abd-69ab-4de4-9e3f-0b00c3123e9c.png") no-repeat center top !important;
-    background-size: 100% auto !important;
-  }
-  .search {
-    padding: 0 92px !important;
-  }
-  .footer {
-    height: 300px !important;
-    color: #F2E2BA !important;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/cbfbc6a1-6e57-4cf8-82d9-54bb17d600ba.png") no-repeat center !important;
-    background-size: 100% !important;
-  }
+    @extend .skin-common;
+    background-color: #e4d1a3 !important;
+    .container {
+        padding-top: 52px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/84792abd-69ab-4de4-9e3f-0b00c3123e9c.png') no-repeat center top !important;
+        background-size: 100% auto !important;
+    }
+    .search {
+        padding: 0 92px !important;
+    }
+    .footer {
+        height: 300px !important;
+        color: #f2e2ba !important;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/cbfbc6a1-6e57-4cf8-82d9-54bb17d600ba.png') no-repeat center !important;
+        background-size: 100% !important;
+    }
 }
 
 // 新年皮肤
 .skin-new-year {
-  @extend .skin-common;
-  background-color: #AE1A10 !important;
-  .container {
-    padding-top: 52px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/32724153-3431-4331-9589-b3018075aed6.png") no-repeat center top !important;
-    background-size: 100% auto !important;
-  }
-  .search {
-    padding: 0 92px !important;
-  }
-  .footer {
-    height: 150px !important;
-    color: #FFFFFF !important;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/new-year/9c269eae-f95d-4651-9e37-1efbba2a3534.png") no-repeat center !important;
-    background-size: 100% !important;
-  }
-  .skin-title {
-    margin: 0 -24px;
-  }
+    @extend .skin-common;
+    background-color: #ae1a10 !important;
+    .container {
+        padding-top: 52px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/new-year/32724153-3431-4331-9589-b3018075aed6.png') no-repeat center top !important;
+        background-size: 100% auto !important;
+    }
+    .search {
+        padding: 0 92px !important;
+    }
+    .footer {
+        height: 150px !important;
+        color: #fff !important;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/new-year/9c269eae-f95d-4651-9e37-1efbba2a3534.png') no-repeat center !important;
+        background-size: 100% !important;
+    }
+    .skin-title {
+        margin: 0 -24px;
+    }
 }
 
 // 小年皮肤
 .skin-xiao-nian {
-  @extend .skin-common;
-  background-color: #FF8401 !important;
-  .container {
-    padding-top: 90px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/558e1a1d-37a9-428e-9b4a-74b3d9edb9be.png") no-repeat center top !important;
-    background-size: 100% auto !important;
-  }
-  .search {
-    padding: 0 92px !important;
-  }
-  .footer {
-    height: 90px !important;
-    color: #F2E2BA !important;
-    background: #FF8401 !important;
-  }
+    @extend .skin-common;
+    background-color: #ff8401 !important;
+    .container {
+        padding-top: 90px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/558e1a1d-37a9-428e-9b4a-74b3d9edb9be.png') no-repeat center top !important;
+        background-size: 100% auto !important;
+    }
+    .search {
+        padding: 0 92px !important;
+    }
+    .footer {
+        height: 90px !important;
+        color: #f2e2ba !important;
+        background: #ff8401 !important;
+    }
 }
 
 // 元宵
 .skin-yuan-xiao {
-  @extend .skin-common;
-  background-color: #D6922D !important;
-  .container {
-    padding-top: 90px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/b0c4d8b7-ccec-4d96-a571-10c365ff95ea.png") no-repeat center top !important;
-    background-size: 100% auto !important;
-  }
-  .search {
-    padding: 0 92px !important;
-  }
-  .footer {
-    height: 70px;
-    color: #F2E2BA;
-    background: #D6922D;
-  }
-  .teachers,
-  .hot-item,
-  .best,
-  .recommend {
-    background: #DFAB5F !important;
-    padding-bottom: 26px !important;
-  }
-  .skin-title {
-    margin: 0 -24px 14px;
-  }
-}
-
-// 妇女节
-.skin-women-day {
-  @extend .skin-common;
-  background-color: #F6DDE0 !important;
-  .container {
-    padding-top: 75px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/women-day/bg.jpg") no-repeat center top !important;
-    background-size: 100% auto !important;
+    @extend .skin-common;
+    background-color: #d6922d !important;
+    .container {
+        padding-top: 90px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/b0c4d8b7-ccec-4d96-a571-10c365ff95ea.png') no-repeat center top !important;
+        background-size: 100% auto !important;
+    }
     .search {
-      margin-bottom: 15px;
-      padding: 0 92px !important;
-      height: 55px !important;
+        padding: 0 92px !important;
     }
     .footer {
-      padding-top: 10px;
-      height: 90px;
-      color: #EA615F;
-      background: transparent;
+        height: 70px;
+        color: #f2e2ba;
+        background: #d6922d;
     }
     .teachers,
     .hot-item,
     .best,
     .recommend {
-      background: transparent !important;
+        background: #dfab5f !important;
+        padding-bottom: 26px !important;
     }
     .skin-title {
-      margin: 0 -24px 10px;
+        margin: 0 -24px 14px;
     }
-  }
+}
+
+// 妇女节
+.skin-women-day {
+    @extend .skin-common;
+    background-color: #f6dde0 !important;
+    .container {
+        padding-top: 75px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/women-day/bg.jpg') no-repeat center top !important;
+        background-size: 100% auto !important;
+        .search {
+            margin-bottom: 15px;
+            padding: 0 92px !important;
+            height: 55px !important;
+        }
+        .footer {
+            padding-top: 10px;
+            height: 90px;
+            color: #ea615f;
+            background: transparent;
+        }
+        .teachers,
+        .hot-item,
+        .best,
+        .recommend {
+            background: transparent !important;
+        }
+        .skin-title {
+            margin: 0 -24px 10px;
+        }
+    }
+}
+
+// 年年翻
+.skin-nian-nian-fan {
+    @extend .skin-common;
+    background-color: #f2c757 !important;
+    .container {
+        padding-top: 65px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/bg.jpg') no-repeat center top !important;
+        background-size: 100% auto !important;
+        .search {
+            margin-bottom: 25px;
+            padding: 0 92px !important;
+            height: 55px !important;
+        }
+        .footer {
+            padding-top: 10px;
+            height: 90px;
+            color: #f35815;
+            background: transparent;
+        }
+        .package,
+        .hot-item,
+        .best,
+        .recommend {
+            background: transparent !important;
+        }
+        .skin-title {
+            margin: 25px -24px;
+        }
+    }
 }
 
 // 共战疫
 .skin-campaign {
-  @extend .skin-common;
-  background-color: #D1E5FE !important;
-  .container {
-    padding-top: 136px;
-    background: url("https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/847981f6-e571-4dcd-a105-ee1a6a8ccddc.png") no-repeat center top !important;
-    background-size: 100% auto !important;
-  }
-  .search {
-    padding: 0 92px !important;
-  }
-  .footer {
-    height: 90px;
-    color: #FFF;
-    background: transparent;
-  }
-  .teachers,
-  .hot-item,
-  .best,
-  .recommend {
-    background: transparent !important;
-  }
-  .skin-title {
-    margin: 42px -24px 22px;
-  }
+    @extend .skin-common;
+    background-color: #d1e5fe !important;
+    .container {
+        padding-top: 136px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/847981f6-e571-4dcd-a105-ee1a6a8ccddc.png') no-repeat center top !important;
+        background-size: 100% auto !important;
+    }
+    .search {
+        padding: 0 92px !important;
+    }
+    .footer {
+        height: 90px;
+        color: #fff;
+        background: transparent;
+    }
+    .teachers,
+    .hot-item,
+    .best,
+    .recommend {
+        background: transparent !important;
+    }
+    .skin-title {
+        margin: 42px -24px 22px;
+    }
 }
 

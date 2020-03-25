@@ -262,38 +262,38 @@ export default {
             const canvas = document.createElement('canvas')
             const ctx = canvas.getContext('2d')
             switch (this.rotate) {
-            case 0:
-                canvas.setAttribute('width', imgWidth)
-                canvas.setAttribute('height', imgHeight)
-                ctx.drawImage(this.img, 0, 0, imgWidth, imgHeight)
-                break
-            case 1:
-                imgWidth += imgHeight
-                imgHeight = imgWidth - imgHeight
-                imgWidth = imgWidth - imgHeight
-                canvas.setAttribute('width', imgWidth)
-                canvas.setAttribute('height', imgHeight)
-                ctx.translate(imgWidth, 0)
-                ctx.rotate(90 * Math.PI / 180)
-                ctx.drawImage(this.img, 0, 0, imgHeight, imgWidth)
-                break
-            case 2:
-                canvas.setAttribute('width', imgWidth)
-                canvas.setAttribute('height', imgHeight)
-                ctx.translate(imgWidth, imgHeight)
-                ctx.rotate(180 * Math.PI / 180)
-                ctx.drawImage(this.img, 0, 0, imgWidth, imgHeight)
-                break
-            case 3:
-                imgWidth += imgHeight
-                imgHeight = imgWidth - imgHeight
-                imgWidth = imgWidth - imgHeight
-                canvas.setAttribute('width', imgWidth)
-                canvas.setAttribute('height', imgHeight)
-                ctx.translate(0, imgHeight)
-                ctx.rotate(270 * Math.PI / 180)
-                ctx.drawImage(this.img, 0, 0, imgHeight, imgWidth)
-                break
+                case 0:
+                    canvas.setAttribute('width', imgWidth)
+                    canvas.setAttribute('height', imgHeight)
+                    ctx.drawImage(this.img, 0, 0, imgWidth, imgHeight)
+                    break
+                case 1:
+                    imgWidth += imgHeight
+                    imgHeight = imgWidth - imgHeight
+                    imgWidth = imgWidth - imgHeight
+                    canvas.setAttribute('width', imgWidth)
+                    canvas.setAttribute('height', imgHeight)
+                    ctx.translate(imgWidth, 0)
+                    ctx.rotate(90 * Math.PI / 180)
+                    ctx.drawImage(this.img, 0, 0, imgHeight, imgWidth)
+                    break
+                case 2:
+                    canvas.setAttribute('width', imgWidth)
+                    canvas.setAttribute('height', imgHeight)
+                    ctx.translate(imgWidth, imgHeight)
+                    ctx.rotate(180 * Math.PI / 180)
+                    ctx.drawImage(this.img, 0, 0, imgWidth, imgHeight)
+                    break
+                case 3:
+                    imgWidth += imgHeight
+                    imgHeight = imgWidth - imgHeight
+                    imgWidth = imgWidth - imgHeight
+                    canvas.setAttribute('width', imgWidth)
+                    canvas.setAttribute('height', imgHeight)
+                    ctx.translate(0, imgHeight)
+                    ctx.rotate(270 * Math.PI / 180)
+                    ctx.drawImage(this.img, 0, 0, imgHeight, imgWidth)
+                    break
             }
             this.url = canvas.toDataURL(
                 this.currentValue.origin.type,
@@ -754,35 +754,35 @@ export default {
                             binding.value(ev)
                         }
                         switch (direction) {
-                        case 0:
-                            break
-                        case 'tap':
-                            if (touchType === 'tap') {
-                                binding.value(ev)
-                            }
-                            break
-                        case 'swipeup':
-                            if (touchType === 'swipeup') {
-                                binding.value(ev)
-                            }
-                            break
-                        case 'swipedown':
-                            if (touchType === 'swipedown') {
-                                binding.value(ev)
-                            }
-                            break
-                        case 'swipeleft':
-                            if (touchType === 'swipeleft') {
-                                binding.value(ev)
-                            }
-                            break
-                        case 'swiperight':
-                            if (touchType === 'swiperight') {
-                                binding.value(ev)
-                            }
-                            break
-                        default:
-                            break
+                            case 0:
+                                break
+                            case 'tap':
+                                if (touchType === 'tap') {
+                                    binding.value(ev)
+                                }
+                                break
+                            case 'swipeup':
+                                if (touchType === 'swipeup') {
+                                    binding.value(ev)
+                                }
+                                break
+                            case 'swipedown':
+                                if (touchType === 'swipedown') {
+                                    binding.value(ev)
+                                }
+                                break
+                            case 'swipeleft':
+                                if (touchType === 'swipeleft') {
+                                    binding.value(ev)
+                                }
+                                break
+                            case 'swiperight':
+                                if (touchType === 'swiperight') {
+                                    binding.value(ev)
+                                }
+                                break
+                            default:
+                                break
                         }
                     },
                     {
@@ -838,7 +838,7 @@ export default {
     top: 0;
     left: 0;
     z-index: 9999;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, .9);
     .file {
         position: absolute;
         top: 0;
@@ -850,7 +850,7 @@ export default {
         top: 0;
         left: 0;
         z-index: 2;
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, .4);
     }
     .imgViewBox {
         position: absolute;
@@ -880,30 +880,32 @@ export default {
         font-size: 16px;
         color: white;
         height: 100px;
-      background-color: #000;
-      border-top: 1px solid #666;
+        background-color: #000;
+        border-top: 1px solid #666;
         & > div {
             line-height: 50px;
             /*border: 1px solid fade(white, 10%);*/
             background: fade(white, 10%);
             flex: 1;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 }
+
 </style>
 <style module lang="scss">
-  .rotate{
-    svg{
-      width: 40px;
-      height: 40px;
+.rotate {
+    svg {
+        width: 40px;
+        height: 40px;
     }
-  }
-  .ctrl{
-    >div{
-      font-size: 30px;
+}
+.ctrl {
+    > div {
+        font-size: 30px;
     }
-  }
+}
+
 </style>
