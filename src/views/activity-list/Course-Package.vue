@@ -163,6 +163,8 @@ export default {
         }
     },
     deactivated () {
+        this.showRules = false
+        this.showPoster = false
         this.countInstaceList.map(item => item.stop())
         this.countInstaceList = []
     },

@@ -85,118 +85,121 @@ export default {
 </script>
 
 <style module lang="scss">
-  .online-course-wrapper {
+.online-course-wrapper {
     padding: 32px 20px 40px;
     background-color: #fff;
-  }
-  .online-course-head {
+    border-radius: 20px;
+    overflow: hidden;
+}
+.online-course-head {
     display: flex;
     align-items: end;
     margin-bottom: 12px;
     line-height: 46px;
     > b {
-      margin-left: 16px;
-      font-size: 32px;
-      color: #333333;
+        margin-left: 16px;
+        font-size: 32px;
+        color: #333;
     }
     &-sub {
-      margin-bottom: 32px;
-      font-size: 22px;
-      line-height: 32px;
-      color: #1592E6;
+        margin-bottom: 32px;
+        font-size: 22px;
+        line-height: 32px;
+        color: #1592e6;
     }
     &-more {
-      display: flex;
-      align-items: center;
-      margin-left: auto;
-      font-size: 24px;
-      color: #999999;
-      > svg {
-        margin-left: 4px;
-      }
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        font-size: 24px;
+        color: #999;
+        > svg {
+            margin-left: 4px;
+        }
     }
-  }
-  .online-course {
+}
+.online-course {
     display: flex;
-    background-color: #FFF;
+    background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
-  }
-  .img-wrapper {
+}
+.img-wrapper {
     position: relative;
     width: 280px;
     height: 186px;
     border-radius: 20px;
     overflow: hidden;
     img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
-  }
-  .info {
+}
+.info {
     flex: 1;
     width: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 14px 0 14px 24px;
-  }
-  .top {
+}
+.top {
     font-size: 28px;
     font-family: Microsoft YaHei;
     font-weight: bold;
     line-height: 36px;
-    color: #333333;
+    color: #333;
     text-align: justify;
     @include elps();
-  }
-  .middle {
+}
+.middle {
     margin-top: 12px;
     font-size: 24px;
     line-height: 34px;
-    color: #666666;
+    color: #666;
     @include elps();
-  }
-  .bottom {
+}
+.bottom {
     margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
     &-price {
-      font-size: 40px;
-      font-family: San Francisco Display;
-      font-weight: bold;
-      line-height: 34px;
-      color: #FE7700;
-      &.money::before {
-        content: '￥';
-        font-size: 28px;
-      }
+        font-size: 40px;
+        font-family: San Francisco Display;
+        font-weight: bold;
+        line-height: 34px;
+        color: #fe7700;
+        &.money::before {
+            content: '￥';
+            font-size: 28px;
+        }
     }
     &-origin {
-      margin-left: 12px;
-      font-size: 28px;
-      line-height: 34px;
-      color: #999999;
-      text-decoration: line-through;
-      &.money::before {
-        content: '￥';
-      }
+        margin-left: 12px;
+        font-size: 28px;
+        line-height: 34px;
+        color: #999;
+        text-decoration: line-through;
+        &.money::before {
+            content: '￥';
+        }
     }
     &-btn {
-      margin-left: auto;
-      width: 124px;
-      height: 48px;
-      line-height: 48px;
-      text-align: center;
-      background-color: #FE7700;
-      border-radius: 8px;
-      font-size: 26px;
-      color: #FFFFFF;
+        margin-left: auto;
+        width: 124px;
+        height: 48px;
+        line-height: 48px;
+        text-align: center;
+        background-color: #fe7700;
+        border-radius: 8px;
+        font-size: 26px;
+        color: #fff;
     }
     &-study {
-      background-color: #F2B036;
+        background-color: #f2b036;
     }
-  }
+}
+
 </style>

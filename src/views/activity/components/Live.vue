@@ -115,110 +115,112 @@ export default {
 </script>
 
 <style module lang="scss">
-  .live-wrapper {
+.live-wrapper {
     padding: 32px 20px 40px;
     background-color: #fff;
-  }
-  .live-head {
+    border-radius: 20px;
+    overflow: hidden;
+}
+.live-head {
     display: flex;
     align-items: end;
     margin-bottom: 12px;
     line-height: 46px;
     > b {
-      margin-left: 16px;
-      font-size: 32px;
-      color: #333333;
+        margin-left: 16px;
+        font-size: 32px;
+        color: #333;
     }
     &-sub {
-      margin-bottom: 32px;
-      > span {
-        font-size: 22px;
-        line-height: 32px;
-        color: #1592E6;
-        margin-left: 10px;
-        padding-left: 10px;
-        border-left: 2px solid #E7E7E7;
-        &:nth-of-type(1) {
-          margin-left: 0;
-          padding-left: 0;
-          border-left: none;
+        margin-bottom: 32px;
+        > span {
+            font-size: 22px;
+            line-height: 32px;
+            color: #1592e6;
+            margin-left: 10px;
+            padding-left: 10px;
+            border-left: 2px solid #e7e7e7;
+            &:nth-of-type(1) {
+                margin-left: 0;
+                padding-left: 0;
+                border-left: none;
+            }
         }
-      }
     }
     &-more {
-      display: flex;
-      align-items: center;
-      margin-left: auto;
-      font-size: 24px;
-      color: #999999;
-      > svg {
-        margin-left: 4px;
-      }
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        font-size: 24px;
+        color: #999;
+        > svg {
+            margin-left: 4px;
+        }
     }
-  }
-  .live {
+}
+.live {
     display: flex;
-    background-color: #FFF;
+    background-color: #fff;
     border-radius: 40px 20px 20px 20px;
     overflow: hidden;
-  }
-  .img-wrapper {
+}
+.img-wrapper {
     position: relative;
     width: 280px;
     height: 186px;
     border-radius: 20px;
     overflow: hidden;
     img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
     svg {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
-  }
-  .label {
+}
+.label {
     position: absolute;
     top: 0;
     left: 0;
     width: 130px;
     height: 48px;
     line-height: 48px;
-    background: #FB7D55;
-    border-radius: 0 0px 40px 0px;
+    background: #fb7d55;
+    border-radius: 0 0 40px 0;
     font-size: 24px;
     font-family: Microsoft YaHei;
-    color: #FFFFFF;
+    color: #fff;
     text-align: center;
-  }
-  .info {
+}
+.info {
     flex: 1;
     width: 0;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     padding: 14px 14px 14px 24px;
-  }
-  .top {
+}
+.top {
     margin-bottom: 0;
     height: 76px;
     font-size: 28px;
     font-family: Microsoft YaHei;
     font-weight: bold;
     line-height: 36px;
-    color: #333333;
+    color: #333;
     text-align: justify;
     @include elps-wrap(2);
-  }
-  .bottom {
+}
+.bottom {
     display: inline-flex;
     width: max-content;
     min-width: 300px;
     height: 40px;
-    border: 2px solid #FF9800;
+    border: 2px solid #ff9800;
     border-radius: 20px;
     overflow: hidden;
     // &.active {
@@ -231,43 +233,44 @@ export default {
     //   }
     // }
     &-left {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      width: 60px;
-      font-size: 26px;
-      color: #FFF;
-      background: linear-gradient(360deg, rgba(247, 91, 35, 1) 0%, rgba(250, 133, 57, 1) 100%);
-      overflow: hidden;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        font-size: 26px;
+        color: #fff;
+        background: linear-gradient(360deg, rgba(247, 91, 35, 1) 0%, rgba(250, 133, 57, 1) 100%);
+        overflow: hidden;
     }
     &-right {
-      flex: 1;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0 12px;
-      font-size: 24px;
-      font-family: MicrosoftYaHei;
-      color: #333333;
-      > span {
-        margin-right: 10px;
-      }
+        flex: 1;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 12px;
+        font-size: 24px;
+        font-family: MicrosoftYaHei;
+        color: #333;
+        > span {
+            margin-right: 10px;
+        }
     }
-  }
-  .lock {
+}
+.lock {
     display: flex;
     align-items: end;
     margin-top: 14px;
     padding: 0 18px;
     font-size: 24px;
     line-height: 32px;
-    color: #666666;
+    color: #666;
     > svg {
-      margin-right: 12px;
+        margin-right: 12px;
     }
-  }
-  .highlight {
+}
+.highlight {
     color: #fe7b21;
     font-weight: bold;
-  }
+}
+
 </style>
