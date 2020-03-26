@@ -16,7 +16,8 @@ const shareRoutes = [
     'DoubleTwelveDay',
     'Activity',
     'BattlefieldReport',
-    'EpidemicSignIn'
+    'EpidemicSignIn',
+    'CoursePackage'
 ]
 const setShare = to => {
     const {
