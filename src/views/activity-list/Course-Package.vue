@@ -160,7 +160,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['avatar', 'userName', 'mobile', 'appId', 'userId', 'mallUrl'])
+        ...mapGetters(['avatar', 'userName', 'mobile', 'appId', 'userId', 'mallUrl', 'shareId'])
     },
     mounted () {
         // 全局缓存分享人id
@@ -280,7 +280,7 @@ export default {
                     skuCode2: pro.sku2,
                     count: pro.count,
                     price: pro.amount,
-                    agentUser: ''
+                    agentUser: this.shareId
                 })
             }
             sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
