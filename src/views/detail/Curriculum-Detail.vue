@@ -123,6 +123,7 @@ import { getCourseDetail } from '../../apis/product'
 import share from '../../assets/js/wechat/wechat-share'
 import { generateQrcode, cutImageCenter, cutArcImage, loadImage, createText } from '../../assets/js/util'
 import { mapGetters } from 'vuex'
+import { SET_SHARE_ID } from '../../store/mutation-type'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 export default {
     name: 'CurriculumDetail',
@@ -186,7 +187,7 @@ export default {
         this.haibao = ''
     },
     async mounted () {
-        sessionStorage.setItem('shareBrokerId', this.brokerId || '')
+        this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
     methods: {
 
@@ -211,16 +212,18 @@ export default {
                 this.detail = result
 
                 // 生成分享
-                let shareUrl = ''
-                if (this.userId) {
-                    shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
-                } else {
-                    shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?noCache=${ Date.now() }`
-                }
-                this.shareUrl = shareUrl
+                // let shareUrl = ''
+                // if (this.userId) {
+                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
+                // } else {
+                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?noCache=${ Date.now() }`
+                // }
+                // TODO: 以后可能需要自定义分享链接，现在直接使用当前连接
+                this.shareUrl = location.href
                 share({
                     appId: this.appId,
                     title: result.courseName,
+                    link: this.shareUrl,
                     desc: result.lecturer,
                     imgUrl: result.courseImg
                 })

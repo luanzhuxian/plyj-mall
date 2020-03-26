@@ -115,7 +115,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userId', 'mobile']),
+        ...mapGetters(['userId', 'mobile', 'shareId']),
 
         /**
        * 判断是否还有库存
@@ -156,7 +156,6 @@ export default {
             }
             this.adding = true
             const { count, skuCode2 = '', skuCode1 } = selected
-            const shareBrokerId = sessionStorage.getItem('shareBrokerId')
             return new Promise(async (resolve, reject) => {
                 try {
                     await addToCart({
@@ -165,7 +164,7 @@ export default {
                         skuCode: skuCode1,
                         skuCode2,
                         // 如果当前用户是经纪人，则覆盖其他经纪人的id
-                        agentUser: shareBrokerId || this.userId || null
+                        agentUser: this.shareId
                     })
                     this.$success('已添加到购物车')
                     this.showSpecifica = false

@@ -124,6 +124,8 @@ import {
     loadImage,
     Countdown
 } from '../../assets/js/util'
+import share from '../../assets/js/wechat/wechat-share'
+import { SET_SHARE_ID } from '../../store/mutation-type'
 
 export default {
     name: 'SpringPloughing',
@@ -150,8 +152,19 @@ export default {
             }
         }
     },
+    props: {
+        // 分享人id
+        brokerId: {
+            type: String,
+            default: ''
+        }
+    },
     computed: {
-        ...mapGetters(['avatar', 'userName', 'mobile'])
+        ...mapGetters(['avatar', 'userName', 'mobile', 'appId', 'userId', 'mallUrl'])
+    },
+    mounted () {
+        // 全局缓存分享人id
+        this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
     async activated () {
         try {
@@ -227,6 +240,7 @@ export default {
                 if (this.count.wasStarted && !this.count.wasEnded) {
                     this.setCountdownTime(this.count, lastEndTime - now)
                 }
+                this.share()
             } catch (e) {
                 throw e
             }
@@ -325,12 +339,34 @@ export default {
             ctx.fillStyle = '#fff'
             ctx.textBaseline = 'hanging'
             createText(ctx, 100, 32, `${ this.userName } 邀您参加组合聚惠学`, 34, 510, 1)
+            console.log(this.shareUrl)
             ctx.drawImage(BG, 0, 88, 638, 1046)
-            const QR = await generateQrcode(200, location.href, 0, null, 0, 'canvas')
+            const QR = await generateQrcode(200, this.shareUrl, 0, null, 0, 'canvas')
             ctx.drawImage(QR, 204, 730, 238, 238)
             this.poster = cvs.toDataURL('image/jpeg', 0.9)
             this.showPoster = true
             this.creating = false
+        },
+        share () {
+            let shareUrl = ''
+            let img
+            const { appId, mallUrl, userId } = this
+            if (userId) {
+                shareUrl = `${ mallUrl }/course-package/${ userId }?noCache=${ Date.now() }`
+            } else {
+                shareUrl = `${ mallUrl }/course-package?noCache=${ Date.now() }`
+            }
+            this.shareUrl = shareUrl
+            if (this.list.length) {
+                img = this.list[0].models[0].image
+            }
+            share({
+                appId,
+                title: `${ this.userName } 邀您参加组合聚惠学`,
+                desc: '组合好课，全面发展，起飞在起跑线上',
+                link: shareUrl,
+                imgUrl: img
+            })
         }
     }
 }

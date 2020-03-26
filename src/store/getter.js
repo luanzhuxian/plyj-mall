@@ -62,5 +62,8 @@ export default {
     invitingEvent: state => state.invitingEvent,
     jxEvent: state => state.jxEvent,
     nwEvent: state => state.nwEvent,
-    currentTime: state => state.currentTime
+    currentTime: state => state.currentTime,
+
+    // 全局数据
+    shareId: state => state.SHARE_ID
 }

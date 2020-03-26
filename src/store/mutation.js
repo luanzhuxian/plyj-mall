@@ -105,5 +105,19 @@ export default {
     },
     [type.SET_CURRENT_TIME] (state, payload) {
         state.currentTime = payload
+    },
+    [type.SET_SHARE_ID] (state, brokerId) {
+        const {
+            roleCode,
+            userId
+        } = state.userInfo
+        // 缓存分享人的id，sessionStorage中的shareBrokerId在提交订单的时候会携带上
+        // 企业管理员，高级管理员，子账号进入页面时使用自己的id作为分享id
+        if (roleCode === 'EMPLOYEE' || roleCode === 'ADMIN' || roleCode === 'ENTERPRISE_ADMIN') {
+            state.SHARE_ID = userId
+        } else {
+            state.SHARE_ID = brokerId || userId || null
+        }
+        sessionStorage.setItem('SHARE_ID', state.SHARE_ID)
     }
 }

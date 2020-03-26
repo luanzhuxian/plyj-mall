@@ -322,7 +322,7 @@ import { getProductDetail, getCouponInDetail } from '../../apis/product'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { mapGetters, mapActions } from 'vuex'
-import { GET_CART_COUNT } from '../../store/mutation-type'
+import { GET_CART_COUNT, SET_SHARE_ID } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
 import youLike from './../home/components/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
@@ -464,7 +464,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl', 'mchId', 'roleCode']),
+        ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl', 'mchId', 'roleCode', 'shareId']),
 
         // 活动商品的可购买数量
         activeStock () {
@@ -601,12 +601,7 @@ export default {
     },
     async mounted () {
         // 缓存分享人的id
-        // 企业管理员，高级管理员，子账号进入页面时使用自己的id作为分享id
-        if (this.roleCode === 'EMPLOYEE' || this.roleCode === 'ADMIN' || this.roleCode === 'ENTERPRISE_ADMIN') {
-            sessionStorage.setItem('shareBrokerId', this.userId)
-        } else {
-            sessionStorage.setItem('shareBrokerId', this.brokerId)
-        }
+        this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
     methods: {
         ...mapActions({
@@ -716,7 +711,6 @@ export default {
             const { count, skuCode2 = '', skuCode1 } = selected
 
             // 分享时携带的id
-            const shareBrokerId = sessionStorage.getItem('shareBrokerId')
             return new Promise(async (resolve, reject) => {
                 try {
                     await addToCart({
@@ -725,7 +719,7 @@ export default {
                         skuCode: skuCode1,
                         skuCode2,
                         // 如果当前用户是经纪人，则覆盖其他经纪人的id
-                        agentUser: shareBrokerId || this.userId || null
+                        agentUser: this.shareId
                     })
                     this.$success('已添加到购物车')
                     this.showSpecifica = false
@@ -756,7 +750,6 @@ export default {
             const { skuCode1, count, skuCode2, price } = selected
 
             // 分享时携带的id
-            const shareBrokerId = sessionStorage.getItem('shareBrokerId')
             sessionStorage.setItem('CONFIRM_LIST', JSON.stringify([{
                 productId: this.productId,
                 count,
@@ -764,7 +757,7 @@ export default {
                 skuCode2,
                 price,
                 // 如果当前用户是经纪人，则覆盖其他经纪人的id
-                agentUser: shareBrokerId || this.userId || null
+                agentUser: this.shareId
             }]))
             this.showSpecifica = false
             this.$router.push({

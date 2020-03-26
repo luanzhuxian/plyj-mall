@@ -1,4 +1,6 @@
 const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress'))
+const SHARE_ID = sessionStorage.getItem('SHARE_ID')
+
 export default {
     theme: 'base-theme',
     cartCount: 0,
@@ -134,5 +136,7 @@ export default {
     // 新春年味
     nwEvent: null,
     // 服务器时间
-    currentTime: 0
+    currentTime: 0,
+    // 链接中携带的分享人id
+    SHARE_ID: SHARE_ID || null
 }

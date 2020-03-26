@@ -56,8 +56,9 @@ export default [
         }
     },
     {
-        path: '/course-package',
+        path: '/course-package/:brokerId?',
         name: 'CoursePackage',
+        props: true,
         component: () => import('../views/activity-list/Course-Package.vue'),
         meta: {
             title: '组合课'

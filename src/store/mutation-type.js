@@ -5,7 +5,6 @@ export const USER_INFO = 'USER_INFO'
 export const SET_TOKEN = 'LOGIN_INFO'
 export const ADDRESS_LIST = 'ADDRESS_LIST'
 export const SELETC_ADDRESS = 'SELETC_ADDRESS'
-export const GET_SHARE_ID = 'GET_SHARE_ID'
 export const LOG_OUT = 'LOG_OUT'
 export const SET_OPENID = 'SET_OPENID'
 export const GET_OPENID = 'GET_OPENID'
@@ -25,3 +24,12 @@ export const SET_INVITING_EVENT = 'SET_INVITING_EVENT'
 export const SET_JX_EVENT = 'SET_JX_EVENT'
 export const SET_NW_EVENT = 'SET_NW_EVENT'
 export const SET_CURRENT_TIME = 'SET_CURRENT_TIME'
+
+/*
+   设置分享人的id
+   部分页面需要记录分享人的id，这些分享人的id会在提交订单的时候进行携带，
+   用于统计订单的分享来源；
+   由于提交订单页面时唯一的获取源，但是可能存在多个页面需要记录分享人id，
+   因此需要统一存储和获取
+ */
+export const SET_SHARE_ID = 'SET_SHARE_ID'

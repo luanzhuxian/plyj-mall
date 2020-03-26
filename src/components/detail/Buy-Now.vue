@@ -209,7 +209,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['servicePhoneModels', 'mallDomain', 'mobile', 'agentUser', 'userId', 'cartCount']),
+        ...mapGetters(['servicePhoneModels', 'mallDomain', 'mobile', 'agentUser', 'userId', 'cartCount', 'shareId']),
 
         // 所有规格禁用状态
         allDisabled () {
@@ -285,7 +285,6 @@ export default {
             const { count, skuCode1, skuCode2 = '', price } = options
 
             // helper分享时携带的id
-            const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
             sessionStorage.setItem('CONFIRM_LIST', JSON.stringify([{
                 productId: this.productId,
                 count,
@@ -293,7 +292,7 @@ export default {
                 skuCode2,
                 price,
                 // 如果当前用户是经纪人，则覆盖其他经纪人的id
-                agentUser: shareBrokerId || this.userId || null
+                agentUser: this.shareId
             }]))
             this.showSpecifica = false
             this.$router.push({
@@ -336,7 +335,6 @@ export default {
             const { count, skuCode1, skuCode2 = '' } = options
 
             // helper分享时携带的id
-            const shareBrokerId = sessionStorage.getItem('shareBrokerId') || ''
             return new Promise(async (resolve, reject) => {
                 try {
                     await addToCart({
@@ -345,7 +343,7 @@ export default {
                         skuCode: skuCode1,
                         skuCode2,
                         // 如果当前用户是经纪人，则覆盖其他经纪人的id
-                        agentUser: shareBrokerId || this.userId || null
+                        agentUser: this.shareId
                     })
                     this.$success('已添加到购物车')
                     this.$emit('update:currentSku', options)

@@ -7,7 +7,8 @@ const customShare = [
     'LiveRoom',
     'InviteNewcomers',
     'Newcomers',
-    'Classify'
+    'Classify',
+    'CoursePackage'
 ]
 const shareRoutes = [
     'Home',
@@ -16,8 +17,7 @@ const shareRoutes = [
     'DoubleTwelveDay',
     'Activity',
     'BattlefieldReport',
-    'EpidemicSignIn',
-    'CoursePackage'
+    'EpidemicSignIn'
 ]
 const setShare = to => {
     const {
