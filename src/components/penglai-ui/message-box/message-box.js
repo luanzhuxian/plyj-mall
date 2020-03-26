@@ -1,12 +1,6 @@
 import Vue from 'vue'
 import MessageBpx from './Message-Box.vue'
-class MessageBoxCancel extends Error {
-    constructor (message) {
-        super(message)
-        this.message = message
-        this.name = 'MessageBoxCancel'
-    }
-}
+/* eslint-disable */
 const MessageBoxClass = Vue.extend(MessageBpx)
 const Instance = new MessageBoxClass({
     el: document.createElement('div')
@@ -31,7 +25,7 @@ const confirm = (config = {}) => new Promise((resolve, reject) => {
         Instance.show = true
         Instance.closeOnClickMask = closeOnClickMask
         Instance.$on('cancel', () => {
-            reject(new MessageBoxCancel('cancel'))
+            reject(false)
         })
         Instance.$on('confirm', () => {
             resolve()
@@ -56,7 +50,7 @@ const alert = (config = {}) => new Promise((resolve, reject) => {
         Instance.icon = icon
         Instance.show = true
         Instance.$on('cancel', () => {
-            reject(new MessageBoxCancel('cancel'))
+            reject(false)
         })
         Instance.$on('confirm', () => {
             resolve()
@@ -82,7 +76,7 @@ const propmt = (config = {}) => new Promise((resolve, reject) => {
         Instance.icon = icon
         Instance.show = true
         Instance.$on('cancel', () => {
-            reject(new MessageBoxCancel('cancel'))
+            reject(false)
         })
         Instance.$on('confirm', val => {
             resolve(val)

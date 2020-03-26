@@ -405,8 +405,10 @@ export default {
             // 初始化播放器
             this.init()
         } catch (e) {
-            this.$error(e.message)
-            throw e
+            if (e) {
+                this.$error(e.message)
+                throw e
+            }
         }
     },
     methods: {
@@ -439,46 +441,46 @@ export default {
         },
         // 是否送课
         async hasPermission () {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    // isGive 是否被送 isRange 是否有权限观看
-                    const { isGive, isRange } = await hasPermission(this.id)
-                    this.isGive = isGive
-                    if (!isRange) {
-                        if (window.history.length > 1) {
-                            this.$router.go(-1)
-                        } else {
-                            this.$router.replace({ name: 'Home' })
-                        }
-                        return
+            /* eslint-disable no-throw-literal */
+            try {
+                // isGive 是否被送 isRange 是否有权限观看
+                const { isGive, isRange } = await hasPermission(this.id)
+                this.isGive = isGive
+                if (!isRange) {
+                    if (window.history.length > 1) {
+                        this.$router.go(-1)
+                    } else {
+                        this.$router.replace({ name: 'Home' })
                     }
-                    resolve()
-                } catch (e) { reject(e) }
-            })
+                    throw false
+                }
+            } catch (e) {
+                throw e
+            }
         },
         // 是否支付
         async hasPay () {
+            /* eslint-disable no-throw-literal */
             // 已送课
             if (this.isGive) {
-                return
+                throw false
             }
-            return new Promise(async (resolve, reject) => {
+            if (this.detail.isPay) {
+                if (!this.mchId) {
+                    this.$confirm('商家未开通支付，请联系管理员')
+                    throw false
+                }
                 try {
-                    if (this.detail.isPay) {
-                        if (!this.mchId) {
-                            this.$confirm('商家未开通支付，请联系管理员')
-                            return
-                        }
-                        const needPay = await hasPied(this.detail.id)
-                        if (!needPay) {
-                            // 还没支付
-                            this.needPay = true
-                            return
-                        }
+                    const needPay = await hasPied(this.detail.id)
+                    if (!needPay) {
+                        // 还没支付
+                        this.needPay = true
+                        throw false
                     }
-                    resolve()
-                } catch (e) { reject(e) }
-            })
+                } catch (e) {
+                    throw e
+                }
+            }
         },
         // 访问记录 0第一次插入 1修改记录信息
         async setComeInConut (type) {

@@ -50,7 +50,8 @@ router.beforeResolve(beforeResolve)
 router.onError(onError)
 /* 处理所有组件抛出的错误 */
 Vue.config.errorHandler = async function (err, vm, info) {
-  try {
+    if (!err) return
+    try {
     if (err.name === 'ResponseError') {
       // 响应出错
       let error = JSON.parse(err.message)
@@ -81,8 +82,6 @@ Vue.config.errorHandler = async function (err, vm, info) {
     }
     console.error(err)
   } catch (e) {
-    if (err.name !== 'MessageBoxCancel') {
-      console.error(err)
-    }
+      if (e) console.error(err)
   }
 }
