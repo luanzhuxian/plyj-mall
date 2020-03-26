@@ -298,7 +298,7 @@ export default {
             return true
         },
         async createPoster () {
-            const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.8.0/package-poster.png'
+            const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.8.0/package-poster.jpg'
 
             if (this.creating) {
                 return
@@ -324,7 +324,7 @@ export default {
             ctx.font = '24px Microsoft YaHei UI'
             ctx.fillStyle = '#fff'
             ctx.textBaseline = 'hanging'
-            createText(ctx, 100, 32, `${ this.userName } 邀您参加少年当自强`, 34, 510, 1)
+            createText(ctx, 100, 32, `${ this.userName } 邀您参加组合聚惠学`, 34, 510, 1)
             ctx.drawImage(BG, 0, 88, 638, 1046)
             const QR = await generateQrcode(200, location.href, 0, null, 0, 'canvas')
             ctx.drawImage(QR, 204, 730, 238, 238)
@@ -346,7 +346,7 @@ export default {
 .background {
     position: relative;
     height: 560px;
-    background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/course-package-bg.jpg') no-repeat center top;
+    background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/package-bg.jpg') no-repeat center top;
     background-size: 100% auto;
     > .top-right {
         position: absolute;
