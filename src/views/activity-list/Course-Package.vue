@@ -339,7 +339,6 @@ export default {
             ctx.fillStyle = '#fff'
             ctx.textBaseline = 'hanging'
             createText(ctx, 100, 32, `${ this.userName } 邀您参加组合聚惠学`, 34, 510, 1)
-            console.log(this.shareUrl)
             ctx.drawImage(BG, 0, 88, 638, 1046)
             const QR = await generateQrcode(200, this.shareUrl, 0, null, 0, 'canvas')
             ctx.drawImage(QR, 204, 730, 238, 238)

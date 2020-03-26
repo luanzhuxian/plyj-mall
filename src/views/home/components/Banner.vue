@@ -6,7 +6,11 @@
             :options="swiperOptionBanner"
         >
             <swiperSlide v-for="(item, i) of data.values" :key="i">
-                <count-down v-if="item.shoppingStatus === 1" :data="item" :fields="{ start: 'serverTime', end: 'shoppingTime' }" />
+                <count-down
+                    v-if="item.shoppingStatus === 1"
+                    :data="item"
+                    :fields="{ start: 'serverTime', end: 'shoppingTime' }"
+                />
                 <img :class="$style.img" :src="item.image" :alt="item.name" @click="handelClick(item)">
             </swiperSlide>
             <div v-show="data.values.length > 1" class="banner-pagination-home-b" slot="pagination" />
@@ -17,10 +21,10 @@
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import CountDown from '../../../components/product/Count-Down.vue'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'Banner',
-    inject: ['parent'],
     components: {
         swiper,
         swiperSlide,
@@ -50,14 +54,22 @@ export default {
         }
     },
     computed: {
-        bookId () {
-            return this.parent.bookId
+        ...mapGetters(['campaignReport', 'campaignBook']),
+        isReportShow () {
+            return !!this.campaignReport && this.campaignReport.isReportShow
+        },
+        isBookShow () {
+            return !!this.campaignBook && this.campaignBook.isBookShow
         },
         reportId () {
-            return this.parent.reportId
+            return this.isReportShow ? this.campaignReport.id : null
+        },
+        bookId () {
+            return this.isBookShow ? this.campaignBook.activityId : null
         }
     },
     methods: {
+        // 根据装修时添加的信息做相应的跳转
         handelClick ({ type, value }) {
             const routeMap = {
                 41: {
@@ -76,24 +88,31 @@ export default {
                     name: 'Appointment'
                 }
             }
+            // 分类
             if (type === 1) {
-                this.$router.push({ name: 'Classify', params: { optionId: value || null } })
-                return
+                return this.$router.push({ name: 'Classify', params: { optionId: value || null } })
             }
+            // 商品
             if (type === 2) {
-                this.$router.push({ name: 'Product', params: { productId: value } })
-                return
+                return this.$router.push({ name: 'Product', params: { productId: value } })
             }
+            // 知识课程
+            if (type === 3) {
+                return this.$router.push({ name: 'Curriculum', params: { productId: value } })
+            }
+            // 疫情战报
             if (type === 42) {
-                this.$router.push({ name: 'BattlefieldReport', params: { id: this.reportId } })
-                return
+                if (!this.isReportShow || !this.reportId) return false
+                return this.$router.push({ name: 'BattlefieldReport', params: { id: this.reportId } })
             }
+            // 疫情签到
             if (type === 43) {
-                this.$router.push({ name: 'EpidemicSignIn', params: { id: this.bookId } })
-                return
+                if (!this.isBookShow || !this.bookId) return false
+                return this.$router.push({ name: 'EpidemicSignIn', params: { id: this.bookId } })
             }
+            // 其他
             if (type in routeMap) {
-                this.$router.push({ name: routeMap[type].name })
+                return this.$router.push({ name: routeMap[type].name })
             }
         }
     }

@@ -135,6 +135,10 @@ export default {
     jxEvent: null,
     // 新春年味
     nwEvent: null,
+    // 疫情战报
+    campaignReport: null,
+    // 疫情签到
+    campaignBook: null,
     // 服务器时间
     currentTime: 0,
     // 链接中携带的分享人id

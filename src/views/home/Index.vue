@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import moment from 'moment'
 import 'swiper/dist/css/swiper.css'
 import TemplateB from './Template-B.vue'
@@ -52,6 +52,7 @@ import SplitBurse from './../../components/common/Split-Burse.vue'
 import SendLive from './../../components/common/Send-Live.vue'
 import { getTemplate } from '../../apis/home'
 import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
+import { SET_CAMPAIGN_REPORT, SET_CAMPAIGN_BOOK } from '../../store/mutation-type'
 
 export default {
     name: 'Home',
@@ -92,32 +93,6 @@ export default {
             bookId: ''
         }
     },
-    async created () {
-        try {
-            // 疫情战报
-            getReportActivity().then(({ result }) => {
-                this.isReportShow = result ? !!result.status : false
-                this.reportId = result ? result.id : ''
-            })
-            // 疫情签到
-            getBookActivity().then(({ result }) => {
-                const { systemTime, status, activityId } = result
-                let { startTime, endTime } = result
-                const isActive = status === 0
-                if (isActive) {
-                    startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
-                    endTime = moment(endTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
-                }
-                this.isBookShow = isActive
-                    ? Number(systemTime) >= Number(startTime) && Number(systemTime) < Number(endTime)
-                    : false
-                this.bookId = activityId
-            })
-            this.getTemplate()
-        } catch (e) {
-            throw e
-        }
-    },
     computed: {
         ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'liveInfo', 'courseInfo', 'invitingEvent', 'jxEvent', 'nwEvent', 'mallDomain']),
         allLoaded () {
@@ -156,7 +131,43 @@ export default {
             immediate: true
         }
     },
+    async created () {
+        try {
+            // 疫情战报
+            getReportActivity().then(({ result }) => {
+                result.isReportShow = result ? !!result.status : false
+                this.isReportShow = result.isReportShow
+                this.reportId = result ? result.id : ''
+                this.setCampaignReport(result)
+            })
+            // 疫情签到
+            getBookActivity().then(({ result }) => {
+                const { systemTime, status, activityId } = result
+                let { startTime, endTime } = result
+                const isActive = status === 0
+
+                if (isActive) {
+                    startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+                    endTime = moment(endTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+                }
+                result.isBookShow = isActive
+                    ? Number(systemTime) >= Number(startTime) && Number(systemTime) < Number(endTime)
+                    : false
+
+                this.isBookShow = result.isBookShow
+                this.bookId = activityId
+                this.setCampaignBook(result)
+            })
+            this.getTemplate()
+        } catch (e) {
+            throw e
+        }
+    },
     methods: {
+        ...mapMutations({
+            setCampaignReport: SET_CAMPAIGN_REPORT,
+            setCampaignBook: SET_CAMPAIGN_BOOK
+        }),
         async getTemplate () {
             try {
                 const { result } = await getTemplate({ type: 1 })
@@ -228,28 +239,29 @@ export default {
 }
 </script>
 <style lang="scss" module>
-  .home {
+.home {
     padding-bottom: 88px;
-  }
-  .skeleton {
+}
+.skeleton {
     padding: 24px;
     .skeleton-a {
-      width: 70vw;
-      height: 60px;
-      @include skeAnimation(#eee)
+        width: 70vw;
+        height: 60px;
+        @include skeAnimation(#eee);
     }
     .skeleton-b {
-      width: 50vw;
-      height: 40px;
-      margin-top: 20px;
-      @include skeAnimation(#eee)
+        width: 50vw;
+        height: 40px;
+        margin-top: 20px;
+        @include skeAnimation(#eee);
     }
     .skeleton-c {
-      height: 320px;
-      margin-top: 20px;
-      margin-bottom: 20px;
-      border-radius: 20px;
-      @include skeAnimation(#eee)
+        height: 320px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+        @include skeAnimation(#eee);
     }
-  }
+}
+
 </style>

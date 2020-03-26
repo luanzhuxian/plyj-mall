@@ -32,26 +32,28 @@
 
 <script>
 import moment from 'moment'
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'Campaign',
-    inject: ['parent'],
     data () {
         return {
             days: 0
         }
     },
     computed: {
+        ...mapGetters(['campaignReport', 'campaignBook']),
         isReportShow () {
-            return this.parent.isReportShow
+            return !!this.campaignReport && this.campaignReport.isReportShow
         },
         isBookShow () {
-            return this.parent.isBookShow
+            return !!this.campaignBook && this.campaignBook.isBookShow
         },
         reportId () {
-            return this.parent.reportId
+            return this.isReportShow ? this.campaignReport.id : null
         },
         bookId () {
-            return this.parent.bookId
+            return this.isBookShow ? this.campaignBook.activityId : null
         }
     },
     created () {
@@ -66,26 +68,26 @@ export default {
 .campaign {
     margin-top: 50px;
     &-top {
-      &-side {
-        border: 64px solid;
-        border-bottom: 12px solid;
-        border-top: none;
-        border-color: transparent transparent #5DA5E3 transparent;
-      }
-      &-content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100px;
-        background: #3B7DB7;
-        img {
-            width: 460px;
+        &-side {
+            border: 64px solid;
+            border-bottom: 12px solid;
+            border-top: none;
+            border-color: transparent transparent #5da5e3 transparent;
         }
-      }
+        &-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            background: #3b7db7;
+            img {
+                width: 460px;
+            }
+        }
     }
     &-list {
         padding: 24px 20px;
-        background: #D1E5FE;
+        background: #d1e5fe;
         &-item {
             position: relative;
             margin-bottom: 16px;
@@ -109,12 +111,13 @@ export default {
         right: 0;
         padding: 0 18px;
         height: 50px;
-        background: #F76025;
-        border-radius: 0px 20px 0px 20px;
+        background: #f76025;
+        border-radius: 0 20px 0 20px;
         font-size: 30px;
         font-family: Hiragino Sans GB;
         line-height: 50px;
-        color: #FFF;
+        color: #fff;
     }
 }
+
 </style>

@@ -34,7 +34,6 @@ import { mapGetters } from 'vuex'
 
 export default {
     name: 'Activity',
-    inject: ['parent'],
     props: {
         data: {
             type: Object,
@@ -87,7 +86,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['nwEvent']),
+        ...mapGetters(['nwEvent', 'campaignReport', 'campaignBook']),
         isOdd () {
             return !!(this.list.length % 2)
         },
@@ -97,11 +96,17 @@ export default {
         show () {
             return this.list.length
         },
-        bookId () {
-            return this.parent.bookId
+        isReportShow () {
+            return !!this.campaignReport && this.campaignReport.isReportShow
+        },
+        isBookShow () {
+            return !!this.campaignBook && this.campaignBook.isBookShow
         },
         reportId () {
-            return this.parent.reportId
+            return this.isReportShow ? this.campaignReport.id : null
+        },
+        bookId () {
+            return this.isBookShow ? this.campaignBook.activityId : null
         }
     },
     methods: {
@@ -109,13 +114,13 @@ export default {
             const { map } = this
             let id
             if (value === 'newyear') {
-                id = this.nwEvent.id
-            }
-            if (value === 'sign') {
-                id = this.bookId
+                if (!this.nwEvent || !this.nwEvent.permissionStatus || !this.nwEvent.id) return this.$warning('活动已结束')
             }
             if (value === 'report') {
-                id = this.reportId
+                if (!this.isReportShow || !this.reportId) return this.$warning('活动已结束')
+            }
+            if (value === 'sign') {
+                if (!this.isBookShow || !this.bookId) return this.$warning('活动已结束')
             }
             this.$router.push({
                 name: map[value].path,

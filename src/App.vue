@@ -12,7 +12,7 @@
 <script>
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
-import { mapMutations, mapActions, mapGetters } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import {
     SET_THEME,
     USER_INFO,

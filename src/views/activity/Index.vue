@@ -99,16 +99,16 @@ export default {
             // 双十二
             if ([5, 6, 7].includes(this.activityId)) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
-        (this.invitingEvent !== null && !!this.invitingEvent) &&
-        (this.jxEvent !== null && !!this.jxEvent) &&
-        this.d12CouponTotal !== null
+                (this.invitingEvent !== null && !!this.invitingEvent) &&
+                (this.jxEvent !== null && !!this.jxEvent) &&
+                this.d12CouponTotal !== null
             }
 
             // 新春
             if (this.activityId === 8) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
-        (this.nwEvent !== null && !!this.nwEvent) &&
-        this.xinchunCouponTotal !== null
+                (this.nwEvent !== null && !!this.nwEvent) &&
+                this.xinchunCouponTotal !== null
             }
             return result
         }
@@ -192,51 +192,52 @@ export default {
 }
 </script>
 <style module lang="scss">
-  .activity {
+.activity {
     position: relative;
-  }
-  .loading {
+}
+.loading {
     position: absolute;
     top: 50%;
     left: 50%;
     transform-origin: 0 0;
     animation: rotate 1.2s linear infinite;
     z-index: 999;
-  }
-  @keyframes rotate {
+}
+@keyframes rotate {
     from {
-      transform: rotate(0deg) translate(-50%, -50%);
+        transform: rotate(0deg) translate(-50%, -50%);
     }
     to {
-      transform: rotate(359deg) translate(-50%, -50%);
+        transform: rotate(359deg) translate(-50%, -50%);
     }
-  }
-  .d12 {
+}
+.d12 {
     position: relative;
     background: #d20001;
     .background {
-      background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/admall/2.0.0/main-bg.jpg") no-repeat center top;
-      background-size: 100% auto;
-      min-height: 100vh;
+        background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/admall/2.0.0/main-bg.jpg') no-repeat center top;
+        background-size: 100% auto;
+        min-height: 100vh;
     }
     .container {
-      padding: 236px 24px 176px;
+        padding: 236px 24px 176px;
     }
     .btn-top {
-      width: 520px;
-      height: 78px;
-      border-radius: 70px;
-      margin: 0 auto 28px;
-      &.coupon {
-        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-top.png") no-repeat center center;
-        background-size: 100% auto;
-        box-shadow: 18px 6px 25px #800F0F;
-      }
-      &.default {
-        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/Button 4.png") no-repeat center center;
-        background-size: 100% auto;
-        box-shadow: 18px 6px 25px #800F0F;
-      }
+        width: 520px;
+        height: 78px;
+        border-radius: 70px;
+        margin: 0 auto 28px;
+        &.coupon {
+            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-top.png') no-repeat center center;
+            background-size: 100% auto;
+            box-shadow: 18px 6px 25px #800f0f;
+        }
+        &.default {
+            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/Button 4.png') no-repeat center center;
+            background-size: 100% auto;
+            box-shadow: 18px 6px 25px #800f0f;
+        }
     }
-  }
+}
+
 </style>

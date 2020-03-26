@@ -51,6 +51,8 @@ export default {
     cartCount: state => state.cartCount,
     noticeStatus: state => state.aduitNotice.noticeStatus,
     aduitStatus: state => state.aduitNotice.status,
+
+    // 首页 / 主会场活动数据
     activityData: state => state.activityData,
     activityId: state => state.activityData.type,
     isActivityAuth: state => !!state.activityData.type,
@@ -62,6 +64,9 @@ export default {
     invitingEvent: state => state.invitingEvent,
     jxEvent: state => state.jxEvent,
     nwEvent: state => state.nwEvent,
+    campaignReport: state => state.campaignReport,
+    campaignBook: state => state.campaignBook,
+    // 服务器时间
     currentTime: state => state.currentTime,
 
     // 全局数据

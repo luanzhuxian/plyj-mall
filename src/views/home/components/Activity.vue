@@ -60,18 +60,20 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'Activity',
-    inject: ['parent'],
     data () {
         return {}
     },
     computed: {
+        ...mapGetters(['invitingEvent', 'jxEvent']),
         invitingEvent () {
-            return (this.parent && this.parent.invitingEvent) || {}
+            return this.invitingEvent || {}
         },
         jxEvent () {
-            return (this.parent && this.parent.jxEvent) || {}
+            return this.jxEvent || {}
         },
         hasInvitingEvent () {
             return ~[1, 2].indexOf(this.invitingEvent.status)
@@ -84,79 +86,80 @@ export default {
 </script>
 
 <style module lang="scss">
-  .activity {
+.activity {
     .wrapper {
-      display: flex;
-      padding: 28px 0;
-      background: #fff;
-      border-radius: 20px;
-      overflow: hidden;
+        display: flex;
+        padding: 28px 0;
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
     }
     .item {
-      flex: 1;
-      width: 0;
-      display: flex;
-      align-items: center;
-      padding: 0 24px;
-      &:nth-of-type(1) {
-        border-right: 2px solid #EEEEEE;
-      }
-      &.large {
-        border: none !important;
-        .item-left {
-          .main {
-            font-size: 42px;
-            line-height: 58px;
-          }
-          .sub {
-            display: flex;
-            align-items: center;
-            font-size: 30px;
-            line-height: 40px;
-          }
-          .label {
-            display: inline-flex;
-            align-items: center;
-            margin-left: 18px;
-            padding: 0 6px;
-            height: 36px;
-            line-height: 36px;
-            background: #F2B036;
-            text-align: center;
-            font-size: 22px;
-            color: #FFF;
-            svg {
-              margin-left: 8px;
-              color: #FFF;
-              vertical-align: -4px;
+        flex: 1;
+        width: 0;
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        &:nth-of-type(1) {
+            border-right: 2px solid #eee;
+        }
+        &.large {
+            border: none !important;
+            .item-left {
+                .main {
+                    font-size: 42px;
+                    line-height: 58px;
+                }
+                .sub {
+                    display: flex;
+                    align-items: center;
+                    font-size: 30px;
+                    line-height: 40px;
+                }
+                .label {
+                    display: inline-flex;
+                    align-items: center;
+                    margin-left: 18px;
+                    padding: 0 6px;
+                    height: 36px;
+                    line-height: 36px;
+                    background: #f2b036;
+                    text-align: center;
+                    font-size: 22px;
+                    color: #fff;
+                    svg {
+                        margin-left: 8px;
+                        color: #fff;
+                        vertical-align: -4px;
+                    }
+                }
             }
-          }
         }
-      }
-      &.small {
-        .item-left {
-          .main {
-            font-size: 32px;
-            line-height: 44px;
-          }
-          .sub {
-            font-size: 24px;
-            line-height: 34px;
-          }
+        &.small {
+            .item-left {
+                .main {
+                    font-size: 32px;
+                    line-height: 44px;
+                }
+                .sub {
+                    font-size: 24px;
+                    line-height: 34px;
+                }
+            }
         }
-      }
     }
     .item-left {
-      flex: 1;
-      width: 0;
-      .main {
-        font-weight: bold;
-        color: #333333;
-        margin-bottom: 4px;
-      }
-      .sub {
-        color: #999999;
-      }
+        flex: 1;
+        width: 0;
+        .main {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .sub {
+            color: #999;
+        }
     }
-  }
+}
+
 </style>

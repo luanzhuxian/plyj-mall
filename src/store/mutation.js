@@ -103,6 +103,12 @@ export default {
     [type.SET_NW_EVENT] (state, payload) {
         state.nwEvent = payload && payload.length ? payload[0] : {}
     },
+    [type.SET_CAMPAIGN_REPORT] (state, payload) {
+        state.campaignReport = payload
+    },
+    [type.SET_CAMPAIGN_BOOK] (state, payload) {
+        state.campaignBook = payload
+    },
     [type.SET_CURRENT_TIME] (state, payload) {
         state.currentTime = payload
     },
