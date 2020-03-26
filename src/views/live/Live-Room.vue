@@ -684,6 +684,7 @@ export default {
                         width: '100vw',
                         height: `${ 442 / 7.5 }vw`
                     })
+                    this.setComeInConut(1)
                 })
                 this.liveSdk = liveSdk
             }
