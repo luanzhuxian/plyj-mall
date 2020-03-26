@@ -10,6 +10,7 @@
                 <div>直播时间：{{ item.startTime }}</div>
             </div>
             <div :class="$style.content">
+                <div v-if="item.lecturerName" :class="$style.lecturer">主讲人：{{ item.lecturerName }}</div>
                 <div :class="$style.price">
                     <template v-if="item.needPay === 0">
                         <span>免费</span>
@@ -134,9 +135,19 @@ export default {
       }
       > .content {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         width: 100%;
         align-items: center;
+        > .lecturer {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-bottom: 4px;
+          font-size: 24px;
+          white-space: nowrap;
+          color: #666666;
+        }
         > .price {
           font-size: 24px;
         }
