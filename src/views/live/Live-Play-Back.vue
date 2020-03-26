@@ -142,40 +142,42 @@ export default {
         },
         // 是否有权限观看
         async getPromission () {
-            // 是否有权限观看
-            await this.hasPermission()
-            // 存入访问记录
-            await this.setComeInConut(0)
-            // 是否要报名
-            await this.signUp()
-            // 是否要输入口令
-            await this.inputToken()
-            // 是否支付
-            await this.hasPay()
-            // 是否要付费
-            if (!this.needPay) {
-                await this.getVideoMes()
-                await this.getDetail()
+            try {
+                // 是否有权限观看
+                await this.hasPermission()
+                // 存入访问记录
+                await this.setComeInConut(0)
+                // 是否要报名
+                await this.signUp()
+                // 是否要输入口令
+                await this.inputToken()
+                // 是否支付
+                this.hasPay()
+                // 是否要付费
+                if (!this.needPay) {
+                    await this.getVideoMes()
+                    await this.getDetail()
+                }
+            } catch (e) {
+                if (e) throw e
             }
         },
         // 是否有权限观看
         async hasPermission () {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    // isGive 是否被送 isRange 是否有权限观看
-                    const { isGive, isRange } = await hasPermission(this.activityId)
-                    this.isGive = isGive
-                    if (!isRange) {
-                        if (window.history.length > 1) {
-                            this.$router.go(-1)
-                        } else {
-                            this.$router.replace({ name: 'Home' })
-                        }
-                        return
+            try {
+                // isGive 是否被送 isRange 是否有权限观看
+                const { isGive, isRange } = await hasPermission(this.activityId)
+                this.isGive = isGive
+                if (!isRange) {
+                    if (window.history.length > 1) {
+                        this.$router.go(-1)
+                    } else {
+                        this.$router.replace({ name: 'Home' })
                     }
-                    resolve()
-                } catch (e) { reject(e) }
-            })
+                    // eslint-disable-next-line no-throw-literal
+                    throw false
+                }
+            } catch (e) { throw e }
         },
         // 是否要报名
         async signUp () {
@@ -211,7 +213,7 @@ export default {
             } catch (e) { throw e }
         },
         // 是否支付
-        async hasPay () {
+        hasPay () {
             // 已送课
             if (this.isGive) {
                 return
