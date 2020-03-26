@@ -53,7 +53,7 @@ export default {
         },
         showSelf () {
             // packageType 1双十二 + 2新春
-            return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf && this.activityInfo.packageType === '1'
+            return this.isActivityStart && (!this.isActivityStoped) && this.isNewUser && this.isShowSelf
         }
     },
 
