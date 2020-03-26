@@ -95,6 +95,9 @@ export const setComeInConut = params => Instance.get(`/apis/v1/mall/live/activit
   params
 })
 
+//查看用户是否有权限观看
+export const hasPermission = activityId => Instance.put(`/apis/v1/mall/live/activity/isGive/${activityId}`)
+
 //获取直播观看列表
 export const getLibraryList = () => Instance.get('/apis/v1/mall/live/lib/my_lookback')
 

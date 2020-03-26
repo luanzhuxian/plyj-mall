@@ -20,6 +20,7 @@
                 :resource-name="recorded.name"
                 :video-id="recorded.id"
                 :size="recorded.fileSize"
+                @playing.once="livePlaying"
             />
         </div>
         <!-- 聊天 -->
@@ -258,7 +259,9 @@ import {
     getVideoMesById,
     // 查询直播是否开始
     isLiveStart,
-    sign
+    sign,
+    // 是否有权限观看
+    hasPermission
     // setWarmup
 } from '../../apis/live'
 import {
@@ -313,6 +316,8 @@ export default {
             activityId: '',
             // 直播倒计时长
             timestamp: 0,
+            // 是否被送课
+            isGive: false,
 
             /**
              * 聊天信息记录
@@ -390,38 +395,20 @@ export default {
                 }
                 return
             }
+            // 下面是按照固定顺序，不可改变
+            // 是否有权限观看
+            await this.hasPermission()
             // 存入访问记录
-            await setComeInConut({
-                id: detail.id,
-                message: `${ detail.orderAmount || 0 }元`
-            })
+            await this.setComeInConut(0)
             // 是否要报名
-            if (detail.isNeedSignUp === 1 && !detail.isHaveSignUp) {
-                await this.$nextTick()
-                await this.$refs.LiveSignUp.signUp()
-            }
-            // 是否要输入密码
-            if (detail.needToken && !detail.isInputToken) {
-                await this.$nextTick()
-                await this.$refs.livePassword.validate()
-            }
-            // 监听直播是否开始
-            if (detail.liveType === 'live') {
-                this.listenLiveStart(detail.stream)
-            }
+            await this.signUp()
+            // 是否要输入口令
+            await this.inputToken()
             // 是否需要支付
-            if (detail.isPay) {
-                if (!this.mchId) {
-                    this.$confirm('商家未开通支付，请联系管理员')
-                    return
-                }
-                const needPay = await hasPied(detail.id)
-                if (!needPay) {
-                    // 还没支付
-                    this.needPay = true
-                    return
-                }
-            }
+            await this.hasPay()
+            // 根据直播状态获取播放时所需数据
+            await this.handleByLiveType()
+            // 初始化播放器
             this.init()
         } catch (e) {
             this.$error(e.message)
@@ -429,6 +416,106 @@ export default {
         }
     },
     methods: {
+        // 报名
+        async signUp () {
+            try {
+                // 私享课
+                if (this.detail.liveMode === 'private') {
+                    return
+                }
+                // 公开课，送过课
+                if (this.detail.liveMode === 'public' && this.isGive) {
+                    return
+                }
+                // 是否要报名
+                if (this.detail.isNeedSignUp === 1 && !this.detail.isHaveSignUp) {
+                    await this.$nextTick()
+                    await this.$refs.LiveSignUp.signUp()
+                }
+            } catch (e) { throw e }
+        },
+        // 输入口令
+        async inputToken () {
+            try {
+                if (this.detail.needToken && !this.detail.isInputToken) {
+                    await this.$nextTick()
+                    await this.$refs.livePassword.validate()
+                }
+            } catch (e) { throw e }
+        },
+        // 是否送课
+        async hasPermission () {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    // isGive 是否被送 isRange 是否有权限观看
+                    const { isGive, isRange } = await hasPermission(this.id)
+                    this.isGive = isGive
+                    if (!isRange) {
+                        if (window.history.length > 1) {
+                            this.$router.go(-1)
+                        } else {
+                            this.$router.replace({ name: 'Home' })
+                        }
+                        return
+                    }
+                    resolve()
+                } catch (e) { reject(e) }
+            })
+        },
+        // 是否支付
+        async hasPay () {
+            // 已送课
+            if (this.isGive) {
+                return
+            }
+            return new Promise(async (resolve, reject) => {
+                try {
+                    if (this.detail.isPay) {
+                        if (!this.mchId) {
+                            this.$confirm('商家未开通支付，请联系管理员')
+                            return
+                        }
+                        const needPay = await hasPied(this.detail.id)
+                        if (!needPay) {
+                            // 还没支付
+                            this.needPay = true
+                            return
+                        }
+                    }
+                    resolve()
+                } catch (e) { reject(e) }
+            })
+        },
+        // 访问记录 0第一次插入 1修改记录信息
+        async setComeInConut (type) {
+            try {
+                const shareUserId = this.$route.query.shareUserId || ''
+                await setComeInConut({
+                    id: this.detail.id,
+                    shareUserId,
+                    type
+                })
+            } catch (e) { throw e }
+        },
+        // 开始播放时
+        async livePlaying () {
+            try {
+                await this.setComeInConut(1)
+            } catch (e) { throw e }
+        },
+        // 根据直播状态获取播放时所需数据
+        async handleByLiveType () {
+            try {
+                if (this.detail.liveType === 'live') {
+                // 监听直播是否开始
+                    this.listenLiveStart(this.detail.stream)
+                } else if (this.detail.liveType === 'video') {
+                    // 获取录播视频详情
+                    await this.getVideoMesById()
+                    this.controlVideo()
+                }
+            } catch (e) { throw e }
+        },
         async getDetail (id) {
             try {
                 const data = await getActiveCompleteInfo(id)
@@ -436,7 +523,7 @@ export default {
                     return null
                 }
                 data.liveType = data.liveType || 'live'
-                this.livestartedDuration = data.serviceLongTime - data.liveStartLongTime
+                this.livestartedDuration = data.serviceLongTime - moment(data.liveStartTime).valueOf()
                 share({
                     appId: this.appId,
                     title: data.name,
@@ -468,11 +555,6 @@ export default {
                 this.detail = data
                 if (data.videoLibId && data.videoLibId !== '0' && data.liveType === 'live') {
                     this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })
-                }
-                // 获取录播视频详情
-                if (data.liveType === 'video') {
-                    await this.getVideoMesById()
-                    this.controlVideo()
                 }
                 return data
             } catch (e) {
@@ -520,14 +602,15 @@ export default {
         async controlVideo () {
             /* eslint-disable */
             let {
-                liveStartLongTime,
+                liveStartTime,
                 liveEndTime,
                 serviceLongTime: now
             } = this.detail
+            liveStartTime = moment(liveStartTime).valueOf()
             liveEndTime = moment(liveEndTime).valueOf()
             now = Number(now)
             // 已开播时长（秒）
-            const startedDuration = parseInt(now - liveStartLongTime)
+            const startedDuration = parseInt(now - liveStartTime)
             // 已结束时长
             const endDuration = parseInt(liveEndTime - now)
             // 直播还未开始的时候，等待直播开始后，刷新页面
@@ -851,8 +934,13 @@ export default {
             } = this.detail
             // 生成二维码
             try {
+                let shareUserId = this.$route.query.shareUserId || ''
+                let url = location.href
+                let [path, search] = url.split('?')
+                search = search ? `${search}&shareUserId=${shareUserId}` : `shareUserId=${shareUserId}`
+                url = `${path}?${search}`
                 const all = [
-                    generateQrcode(300, location.href, 0, null, 0, 'canvas'),
+                    generateQrcode(300, url, 0, null, 0, 'canvas'),
                     loadImage(POSTER_BG),
                     loadImage(this.avatar),
                     loadImage(coverImg)
@@ -910,13 +998,11 @@ export default {
             return new Promise(async (resolve, reject) => {
                 try {
                     await wechatPay(CREDENTIAL)
+                    await this.handleByLiveType()
                     this.init()
                     this.$success('付款成功立即观看')
                     this.needPay = false
-                    await setComeInConut({
-                        id: this.detail.id,
-                        message: `${ this.detail.paidAmount || 0 }元`
-                    })
+                    await this.setComeInConut(1)
                 } catch (e) {
                     this.needPay = false
                     this.$confirm({

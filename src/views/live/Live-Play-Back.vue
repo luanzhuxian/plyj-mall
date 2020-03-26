@@ -7,6 +7,7 @@
                 :video-id="id"
                 :resource-id="activityId"
                 :resource-name="activityName"
+                @playing.once="livePlaying"
             />
             <div>商品</div>
         </div>
@@ -58,7 +59,15 @@
 </template>
 
 <script>
-import { getActiveCompleteInfo, getVideoMesById, pay, cancelOrder, setComeInConut } from '../../apis/live.js'
+import {
+    getActiveCompleteInfo,
+    getVideoMesById,
+    pay,
+    cancelOrder,
+    setComeInConut,
+    // 是否有权限观看
+    hasPermission
+} from '../../apis/live.js'
 import { getLivePlayBackInfo } from './../../apis/live-library'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
@@ -94,6 +103,8 @@ export default {
             payCount: 0,
             // 商品列表
             productList: [],
+            // 是否被送课
+            isGive: false,
             detail: {},
             videoMes: {
                 fileSize: 0
@@ -113,7 +124,13 @@ export default {
         this.videoMes = {}
     },
     methods: {
-    // 获取回看的信息
+        // 开始播放时
+        async livePlaying () {
+            try {
+                await this.setComeInConut(1)
+            } catch (e) { throw e }
+        },
+        // 获取回看的信息
         async getLivePlayBackInfo () {
             try {
                 const { result } = await getLivePlayBackInfo(this.activityId, this.isValidateEndTime === '1')
@@ -125,28 +142,82 @@ export default {
         },
         // 是否有权限观看
         async getPromission () {
-            const { detail } = this
-            await this.$nextTick()
+            // 是否有权限观看
+            await this.hasPermission()
             // 存入访问记录
-            await setComeInConut({
-                id: this.activityId,
-                message: `${ (detail.paidAmount / 100) || 0 }元`
-            })
+            await this.setComeInConut(0)
             // 是否要报名
-            if (detail.isNeedSignUp === 1 && !detail.isHaveSignUp) {
-                await this.$refs.LiveSignUp.signUp()
-            }
-            // 是否口令校验
-            if (detail.isHaveToken && !detail.isInputToken) {
-                await this.$refs.livePassword.validate()
-            }
-            // needPay 是否需要付费 1需要  0不需要，paidAmount 支付了多少钱
-            this.needPay = (detail.needPay === 1 && detail.paidAmount === 0)
+            await this.signUp()
+            // 是否要输入口令
+            await this.inputToken()
+            // 是否支付
+            await this.hasPay()
             // 是否要付费
             if (!this.needPay) {
                 await this.getVideoMes()
                 await this.getDetail()
             }
+        },
+        // 是否有权限观看
+        async hasPermission () {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    // isGive 是否被送 isRange 是否有权限观看
+                    const { isGive, isRange } = await hasPermission(this.activityId)
+                    this.isGive = isGive
+                    if (!isRange) {
+                        if (window.history.length > 1) {
+                            this.$router.go(-1)
+                        } else {
+                            this.$router.replace({ name: 'Home' })
+                        }
+                        return
+                    }
+                    resolve()
+                } catch (e) { reject(e) }
+            })
+        },
+        // 是否要报名
+        async signUp () {
+            // 私享课
+            if (this.detail.liveMode === 'private') {
+                return
+            }
+            // 公开课，送过课
+            if (this.detail.liveMode === 'public' && this.isGive) {
+                return
+            }
+            if (this.detail.isNeedSignUp === 1 && !this.detail.isHaveSignUp) {
+                await this.$nextTick()
+                await this.$refs.LiveSignUp.signUp()
+            }
+        },
+        // 是否输入口令
+        async inputToken () {
+            if (this.detail.isHaveToken && !this.detail.isInputToken) {
+                await this.$nextTick()
+                await this.$refs.livePassword.validate()
+            }
+        },
+        // 访问记录 0第一次插入 1修改记录信息
+        async setComeInConut (type) {
+            try {
+                const shareUserId = this.$route.query.shareUserId || ''
+                await setComeInConut({
+                    id: this.activityId,
+                    shareUserId,
+                    type
+                })
+            } catch (e) { throw e }
+        },
+        // 是否支付
+        async hasPay () {
+            // 已送课
+            if (this.isGive) {
+                return
+            }
+            // needPay 是否需要付费 1需要  0不需要，paidAmount 支付了多少钱
+            this.needPay = (this.detail.needPay === 1 && this.detail.paidAmount === 0)
         },
         async getDetail () {
             try {
@@ -175,11 +246,7 @@ export default {
                     this.getVideoMes()
                     this.$success('付款成功立即观看')
                     this.needPay = false
-                    // 存入访问记录
-                    await setComeInConut({
-                        id: this.activityId,
-                        message: `${ this.payCount || 0 }元`
-                    })
+                    await this.setComeInConut(1)
                 } catch (e) {
                     this.needPay = false
                     this.$confirm({
