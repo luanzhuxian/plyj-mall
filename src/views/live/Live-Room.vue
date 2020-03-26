@@ -936,7 +936,7 @@ export default {
             try {
                 let url = location.href
                 let search = url.split('?')[1]
-                const shareUserId = this.$route.query.shareUserId || ''
+                const shareUserId = this.$store.getters.userId || ''
                 const path = url.split('?')[0]
                 search = search ? `${ search }&shareUserId=${ shareUserId }` : `shareUserId=${ shareUserId }`
                 url = `${ path }?${ search }`
