@@ -1,16 +1,19 @@
 /* eslint-disable */
 import Axios from 'axios'
 import Cookie from '../assets/js/storage-cookie'
+
 const Instance = Axios.create({
-  timeout: 15000
+    timeout: 15000
 })
+
 class ResponseError extends Error {
-  constructor (message) {
-    super(message)
-    this.message = message
-    this.name = 'ResponseError'
-  }
+    constructor (message) {
+        super(message)
+        this.message = message
+        this.name = 'ResponseError'
+    }
 }
+
 // 添加请求拦截器
 Instance.interceptors.request.use(request, reqError)
 // 添加响应拦截器
@@ -32,9 +35,21 @@ Instance.interceptors.response.use(response, resError)
  * @returns {Promise<AxiosResponse<T>>}
  */
 export const sendMessage = data => {
-  data = createFormData(data)
-  return Instance.post('/live/v3/channel/chat/send-admin-msg', data)
+    data = createFormData(data)
+    return Instance.post('/live/v3/channel/chat/send-admin-msg', data)
 }
+/**
+ * 设置会暖场图片
+ * @param channelId {number}
+ * @param data {object}
+ * @property data.appId {string}
+ * @property data.timestamp {string}
+ * @property data.coverImage {string}
+ * @property data.coverHref {string}
+ * @property data.sign {string}
+ * @return {Promise<AxiosResponse<T>>}
+ */
+export const setcCverImg = (channelId, data) => Instance.post(`http://api.polyv.net/live/v2/channels/${ channelId }/update`, data)
 /**
  * 发送自定义消息
  * @param channelId (必填)  { Integer }频道号
@@ -47,8 +62,8 @@ export const sendMessage = data => {
  * @returns {Promise<AxiosResponse<T>>}
  */
 export const sendCustomMessage = (channelId, data) => {
-  data = createFormData(data)
-  return Instance.post(`/live/v1/channelSetting/${channelId}/send-chat`, data)
+    data = createFormData(data)
+    return Instance.post(`/live/v1/channelSetting/${ channelId }/send-chat`, data)
 }
 /**
  * 从我们服务器获取去签名
@@ -63,7 +78,7 @@ export const sign = data => Instance.post(`/apis/v1/mall/live/room/sign`, data)
  * @param id
  * @return {Promise<AxiosResponse<T>>}
  */
-export const getActiveCompleteInfo = (id = '') => Instance.get(`/apis/v1/mall/live/activity/current/complete?id=${id}`)
+export const getActiveCompleteInfo = (id = '') => Instance.get(`/apis/v1/mall/live/activity/current/complete?id=${ id }`)
 /**
  * 获取直播信息
  */
@@ -73,45 +88,45 @@ export const getRoomStatus = () => Instance.get(`/apis/v1/mall/live/room/statue`
  * @param liveActivityId {String}
  * @return {Promise<AxiosResponse<T>>}
  */
-export const pay = liveActivityId => Instance.post(`/apis/v1/mall/live/order/unifiedOrder?liveActivityId=${liveActivityId}`)
+export const pay = liveActivityId => Instance.post(`/apis/v1/mall/live/order/unifiedOrder?liveActivityId=${ liveActivityId }`)
 /**
  * 是否支付过
  * @param liveActivityId {String}
  * @return {Promise<AxiosResponse<T>>}
  */
-export const hasPied = liveActivityId => Instance.post(`/apis/v1/mall/live/order/customer/payed?liveActivityId=${liveActivityId}`)
+export const hasPied = liveActivityId => Instance.post(`/apis/v1/mall/live/order/customer/payed?liveActivityId=${ liveActivityId }`)
 /**
  * 取消订单
  * @param liveActivityId {String}
  * @return {Promise<AxiosResponse<T>>}
  */
-export const cancelOrder = liveActivityId => Instance.post(`/apis/v1/mall/live/order/cancelOrder?liveActivityId=${liveActivityId}`)
+export const cancelOrder = liveActivityId => Instance.post(`/apis/v1/mall/live/order/cancelOrder?liveActivityId=${ liveActivityId }`)
 /**
  * 设置用户进入直播间
  * @param params
  * @return {Promise<AxiosResponse<T>>}
  */
 export const setComeInConut = params => Instance.get(`/apis/v1/mall/live/activity/watchLog`, {
-  params
+    params
 })
 
 //查看用户是否有权限观看
-export const hasPermission = activityId => Instance.put(`/apis/v1/mall/live/activity/isGive/${activityId}`)
+export const hasPermission = activityId => Instance.put(`/apis/v1/mall/live/activity/isGive/${ activityId }`)
 
 //获取直播观看列表
 export const getLibraryList = () => Instance.get('/apis/v1/mall/live/lib/my_lookback')
 
 // 根据直播ID从视频库获取视频详情（仅限录播）
-export const getVideoMesById = id => Instance.get(`/apis/v1/mall/live/lib/detail/${id}`)
+export const getVideoMesById = id => Instance.get(`/apis/v1/mall/live/lib/detail/${ id }`)
 
 // 输入直播口令
-export const inputLivePassword = ({activityId,roomToken}) => Instance.get(`/apis/v1/mall/live/lib/activity/${activityId}`,{params:{roomToken}})
+export const inputLivePassword = ({ activityId, roomToken }) => Instance.get(`/apis/v1/mall/live/lib/activity/${ activityId }`, { params: { roomToken } })
 
 //直播报名
-export const liveSignUp = data => Instance.post('/apis/v1/mall/live/c_live_signUp',data)
+export const liveSignUp = data => Instance.post('/apis/v1/mall/live/c_live_signUp', data)
 
 //查询直播是否开始
-export const isLiveStart = stream => Instance.get(`/apis/v1/mall/live/room/tatus?stream=${stream}`)
+export const isLiveStart = stream => Instance.get(`/apis/v1/mall/live/room/tatus?stream=${ stream }`)
 
 /**
  * 暖场开关
@@ -126,64 +141,67 @@ export const isLiveStart = stream => Instance.get(`/apis/v1/mall/live/room/tatus
 export const setWarmup = data => Instance.post('https://api.polyv.net/live/v3/channel/set-warmup-enabled', data)
 
 function request (config) {
-  let mallDomain = location.pathname.split('/')[1]
-  config.headers.openId = localStorage.getItem(`openId_${mallDomain}`) || ''
-  config.headers.mallId = Cookie.get('mallId')
-  config.headers.agencyCode = Cookie.get('agencyCode')
-  config.headers.token = Cookie.get('token')
-  config.headers.refresh_token = Cookie.get('refresh_token')
-  return config
+    let mallDomain = location.pathname.split('/')[1]
+    config.headers.openId = localStorage.getItem(`openId_${ mallDomain }`) || ''
+    config.headers.mallId = Cookie.get('mallId')
+    config.headers.agencyCode = Cookie.get('agencyCode')
+    config.headers.token = Cookie.get('token')
+    config.headers.refresh_token = Cookie.get('refresh_token')
+    return config
 }
+
 function reqError (error) {
-  return Promise.reject(error)
+    return Promise.reject(error)
 }
+
 function response (response) {
-  const data = response.data
-  const config = response.config
-  if (data.code === 200 || data.status === 200) {
-    if (data.hasOwnProperty('result')) {
-      return data.result
+    const data = response.data
+    const config = response.config
+    if (data.code === 200 || data.status === 200) {
+        if (data.hasOwnProperty('result')) {
+            return data.result
+        }
+        return data
     }
-    return data
-  }
-  let err = {
-    method: config.method,
-    url: config.url,
-    data: config.data ? JSON.parse(config.data) : null,
-    params: config.params || null,
-    devMessage: data.devMessage || '',
-    message: data.message || ''
-  }
-  return Promise.reject(new ResponseError(JSON.stringify(err)))
+    let err = {
+        method: config.method,
+        url: config.url,
+        data: config.data ? JSON.parse(config.data) : null,
+        params: config.params || null,
+        devMessage: data.devMessage || '',
+        message: data.message || ''
+    }
+    return Promise.reject(new ResponseError(JSON.stringify(err)))
 }
+
 function resError (error) {
-  let msg = error.message
-  if (msg.indexOf('timeout') > -1) {
-    msg = '请求超时◔̯◔'
-  }
-  if (msg.indexOf('40') > -1) {
-    msg = '您似乎在蓬莱岛迷路了'
-  }
-  if (msg.indexOf('50') > -1) {
-    msg = '蓬莱岛消失在了迷雾中~( ˶‾᷄࿀‾᷅˵ )'
-  }
-  if (msg.indexOf('Network Error') > -1) {
-    msg = '网络不给力'
-    // router.push({ name: 'NetError' })
-    return
-  }
-  return Promise.reject(new ResponseError(JSON.stringify({
-    message: msg
-  }, null, 4)))
+    let msg = error.message
+    if (msg.indexOf('timeout') > -1) {
+        msg = '请求超时◔̯◔'
+    }
+    if (msg.indexOf('40') > -1) {
+        msg = '您似乎在蓬莱岛迷路了'
+    }
+    if (msg.indexOf('50') > -1) {
+        msg = '蓬莱岛消失在了迷雾中~( ˶‾᷄࿀‾᷅˵ )'
+    }
+    if (msg.indexOf('Network Error') > -1) {
+        msg = '网络不给力'
+        // router.push({ name: 'NetError' })
+        return
+    }
+    return Promise.reject(new ResponseError(JSON.stringify({
+        message: msg
+    }, null, 4)))
 }
 
 // 生成formData数据
 function createFormData (obj) {
-  let keys = Object.keys(obj)
-  let formData = new FormData()
-  for (let k of keys) {
-    formData.append(k, obj[k])
-  }
-  return formData
+    let keys = Object.keys(obj)
+    let formData = new FormData()
+    for (let k of keys) {
+        formData.append(k, obj[k])
+    }
+    return formData
 }
 

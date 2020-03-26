@@ -260,6 +260,7 @@ import {
     // 查询直播是否开始
     isLiveStart,
     sign,
+    // setcCverImg,
     // 是否有权限观看
     hasPermission
     // setWarmup
@@ -278,6 +279,7 @@ import {
     // throttle
 } from '../../assets/js/util'
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
+const PolyvLiveSdk = window.PolyvLiveSdk
 export default {
     name: 'LiveRoom',
     components: {
@@ -357,10 +359,6 @@ export default {
         ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId'])
     },
     async created () {
-        // 缓存消息方法
-        // this.cacheMessage = throttle(() => {
-        //     localStorage.setItem(`LIVE_MESSAGE_${ this.mallDomain }`, JSON.stringify(this.chatRecords.filter(item => item.type === 'SPEAK')))
-        // }, 2000)
         localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
         this.receiveCouponIdList = []
         if (this.roleCode === 'VISITOR') {
@@ -376,17 +374,13 @@ export default {
                 })
             return
         }
-        const reqs = [getRoomStatus(), this.getDetail(this.id)]
         try {
-            const res = await Promise.all(reqs)
-            const data = res[0]
-            const detail = res[1]
-            const { roomId, appId, appUserId } = data
-            this.channelId = roomId
-            this.liveAppId = appId
-            this.channeUserId = appUserId
+            const res = await Promise.all([
+                this.getRoomStatus(),
+                this.getDetail()
+            ])
             // 当前直播是否结束  (0, "结束"), (1, "开启"), (2, "准备中"), (3, "删除"), (4,"直播中"), (99, "其它");
-            if ([1, 2, 4].indexOf(detail.statue) === -1) {
+            if ([1, 2, 4].indexOf(res[1].statue) === -1) {
                 await this.$alert('直播已结束')
                 if (window.history.length > 1) {
                     this.$router.go(-1)
@@ -507,7 +501,7 @@ export default {
         async handleByLiveType () {
             try {
                 if (this.detail.liveType === 'live') {
-                // 监听直播是否开始
+                    // 监听直播是否开始
                     this.listenLiveStart(this.detail.stream)
                 } else if (this.detail.liveType === 'video') {
                     // 获取录播视频详情
@@ -516,9 +510,21 @@ export default {
                 }
             } catch (e) { throw e }
         },
-        async getDetail (id) {
+        // 获取直播状态
+        async getRoomStatus () {
             try {
-                const data = await getActiveCompleteInfo(id)
+                const data = await getRoomStatus()
+                const { appId, appUserId } = data
+                this.liveAppId = appId
+                this.channeUserId = appUserId
+            } catch (e) {
+                throw e
+            }
+        },
+        // 获取直播详情
+        async getDetail () {
+            try {
+                const data = await getActiveCompleteInfo(this.id)
                 if (!data) {
                     return null
                 }
@@ -552,10 +558,11 @@ export default {
                 }
                 this.productList = data.productList || []
                 this.activityId = data.id
-                this.detail = data
                 if (data.videoLibId && data.videoLibId !== '0' && data.liveType === 'live') {
                     this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })
                 }
+                this.channelId = data.roomId
+                this.detail = data
                 return data
             } catch (e) {
                 throw e
@@ -600,7 +607,6 @@ export default {
         },
         // 播放开始跳转到固定时间,且隐藏控件
         async controlVideo () {
-            /* eslint-disable */
             let {
                 liveStartTime,
                 liveEndTime,
@@ -623,6 +629,25 @@ export default {
                 this.recorded.ended = endDuration < 0
             }
         },
+        // 设置封面
+        // async setcCverImg (sign) {
+        //     const { channelId, liveAppId: appId, detail: { coverImg } } = this
+        //     const timestamp = Date.now()
+        //     try {
+        //         await setcCverImg(channelId, {
+        //             appId,
+        //             coverImage: coverImg,
+        //             timestamp,
+        //             sign
+        //         })
+        //     } catch (e) {
+        //         throw e
+        //     }
+        // },
+        init () {
+            this.initSocket()
+            this.initPlayer()
+        },
         async initPlayer () {
             // 默认在线直播
             if (this.detail.liveType === 'live') {
@@ -630,32 +655,33 @@ export default {
                 const timestamp = Date.now()
                 const signStr = await sign({
                     roomId: channelId,
-                    signMsg: `appId${appId}channelId${channelId}timestamp${timestamp}`
+                    signMsg: `appId${ appId }channelId${ channelId }timestamp${ timestamp }`
                 })
                 const liveSdk = new PolyvLiveSdk({
                     channelId,
-                    sign: signStr, // 频道验证签名
-                    timestamp, // 毫秒级时间戳
-                    appId, // polyv 后台的appId
+                    // 频道验证签名
+                    sign: signStr,
+                    // 毫秒级时间戳
+                    timestamp,
+                    // polyv 后台的appId
+                    appId,
                     chat: true,
                     controller: true,
                     barrage: false,
                     socket: this.socket,
                     type: 'live',
                     user: {
-                        userId: userId,
+                        userId,
                         userName,
                         pic: avatar
                     }
-                });
+                })
                 liveSdk.on(PolyvLiveSdk.EVENTS.CHANNEL_DATA_INIT, (event, data) => {
                     liveSdk.setupPlayer({
                         el: '#player',
                         width: '100vw',
-                        height: 442 / 7.5 + 'vw',
+                        height: `${ 442 / 7.5 }vw`
                     })
-                    // this.onMessage()
-                    // this.inited = true
                 })
                 this.liveSdk = liveSdk
             }
@@ -672,7 +698,7 @@ export default {
             socket.on('connect', () => {
                 console.warn('chantroom connect success!')
             })
-            socket.on('disconnect', function (e) {
+            socket.on('disconnect', e => {
                 console.error(e)
                 console.error('chantroom connect error!')
                 this.$confirm({
@@ -690,70 +716,53 @@ export default {
             /* 登录到聊天服务器 */
             socket.emit('message', JSON.stringify({
                 EVENT: 'LOGIN',
-                values: [userName, avatar, userId || openId], // 登录用户信息，不可为空
-                roomId: channelId, // 当前房间号
-                type: 'slice' // 用户类型，可为空,teacher（教师）、assistant（助教）、manager（管理员）、slice（云课堂学员）
+                // 登录用户信息，不可为空
+                values: [userName, avatar, userId || openId],
+                // 当前房间号
+                roomId: channelId,
+                // 用户类型，可为空,teacher（教师）、assistant（助教）、manager（管理员）、slice（云课堂学员）
+                type: 'slice'
             }))
             this.socket = socket
             this.chatRecords = [...(JSON.parse(localStorage.getItem(`LIVE_MESSAGE_${ this.mallDomain }`)) || []), ...this.chatRecords]
-        },
-        init () {
-            this.initSocket()
-            this.initPlayer()
         },
 
         /* 接收消息 */
         onMessage (data) {
             const mData = JSON.parse(data)
-            // const liveSdk = this.liveSdk
-            // const {
-            //     HISTORY_MESSAGE,
-            //     SPEAK,
-            //     LOGIN
-            // } = PolyvLiveSdk.EVENTS
-            // liveSdk.on(SPEAK, (e, data) => {
-            //     const { user, content: message } = data
-            //     console.log(data)
-            //     this.pushMessage({
-            //         message,
-            //         name: user.nick,
-            //         success: true,
-            //         type: 'SPEAK'
-            //     })
-            // })
             if (mData && mData.EVENT) {
                 const { user } = mData
                 switch (mData.EVENT) {
-                case 'LOGIN':
-                    this.pushMessage({
-                        message: '进入了直播间',
-                        name: user.nick,
-                        custom: true,
-                        success: true,
-                        type: 'LOGIN'
-                    })
-                    break
-                case 'SPEAK':
-                    if (this.userName !== user.nick) {
-                        const message = mData.values.join(',')
+                    case 'LOGIN':
                         this.pushMessage({
-                            message,
+                            message: '进入了直播间',
                             name: user.nick,
+                            custom: true,
                             success: true,
-                            type: 'SPEAK'
+                            type: 'LOGIN'
                         })
-                    }
-                    break
-                case 'FLOWERS':
-                    this.pushMessage({
-                        message: '',
-                        name: mData.nick,
-                        gift: true,
-                        giftType: 'flower',
-                        success: true,
-                        type: 'FLOWERS'
-                    })
-                    break
+                        break
+                    case 'SPEAK':
+                        if (this.userName !== user.nick) {
+                            const message = mData.values.join(',')
+                            this.pushMessage({
+                                message,
+                                name: user.nick,
+                                success: true,
+                                type: 'SPEAK'
+                            })
+                        }
+                        break
+                    case 'FLOWERS':
+                        this.pushMessage({
+                            message: '',
+                            name: mData.nick,
+                            gift: true,
+                            giftType: 'flower',
+                            success: true,
+                            type: 'FLOWERS'
+                        })
+                        break
                 }
                 this.scrollBottom()
             }
@@ -765,7 +774,8 @@ export default {
                 const { channelId } = this
                 this.socket.emit('message', JSON.stringify({
                     EVENT: 'SPEAK',
-                    values: [message], // 发言内容
+                    // 发言内容
+                    values: [message],
                     roomId: channelId
                 }))
             } catch (e) {
@@ -784,7 +794,8 @@ export default {
             if (this.message.length > 100) {
                 return this.$warning('字数不得超过100字')
             }
-            this.hasSended = true // 标记为已发送过消息，下次发送必须3秒以后
+            // 标记为已发送过消息，下次发送必须3秒以后
+            this.hasSended = true
             const o = {
                 name: this.userName,
                 message: this.message,
@@ -819,7 +830,6 @@ export default {
                 this.chatRecords = this.chatRecords.slice(len - maxRecords)
             }
             this.chatRecords.push(msg)
-            // this.cacheMessage()
         },
 
         /* 重新发送 */
@@ -846,9 +856,12 @@ export default {
             const { channelId, userName } = this
             this.socket.emit('message', JSON.stringify({
                 EVENT: 'FLOWERS',
-                roomId: channelId, // 当前房间号
-                nick: userName, // 送花人昵称
-                uimg: '' // 送花人头像，为新增的属性，可不传
+                // 当前房间号
+                roomId: channelId,
+                // 送花人昵称
+                nick: userName,
+                // 送花人头像，为新增的属性，可不传
+                uimg: ''
             }))
             this.sended = true
             setTimeout(() => {
@@ -857,16 +870,8 @@ export default {
         },
         async scrollBottom () {
             await this.$nextTick()
-            // await this.$nextTick()
-            // 判断最后一条非自己发送消息是不是可见，如果不可见，则不自动滚动
-            // let latestEle = document.getElementById(`chat_item_${this.chatRecords.length - 1}`)
-            // if (!this.isElementInViewport(this.$refs.chatRecords)) {
-            //   return
-            // }
-            // this.isElementInViewport(this.$refs.chatRecords)
             const box = this.$refs.chatWrap
             if (box) box.scrollBy(0, box.offsetHeight)
-            // let scrollHeight = box.scrollHeight
         },
         async couponClick (id) {
             if (this.isCouponLoading) return
@@ -913,13 +918,6 @@ export default {
                 this.$router.push({ name: 'Home' })
             }
         },
-        // 设置封面
-        setcCverImg () {
-            const image = document.createElement('img')
-            image.src = this.detail.coverImg
-            image.classList.add(this.$style.coverImg)
-            this.$refs.playerBox.appendChild(image)
-        },
         async share () {
             if (this.poster) {
                 this.showPoster = true
@@ -934,11 +932,12 @@ export default {
             } = this.detail
             // 生成二维码
             try {
-                let shareUserId = this.$route.query.shareUserId || ''
                 let url = location.href
-                let [path, search] = url.split('?')
-                search = search ? `${search}&shareUserId=${shareUserId}` : `shareUserId=${shareUserId}`
-                url = `${path}?${search}`
+                let search = url.split('?')[1]
+                const shareUserId = this.$route.query.shareUserId || ''
+                const path = url.split('?')[0]
+                search = search ? `${ search }&shareUserId=${ shareUserId }` : `shareUserId=${ shareUserId }`
+                url = `${ path }?${ search }`
                 const all = [
                     generateQrcode(300, url, 0, null, 0, 'canvas'),
                     loadImage(POSTER_BG),
