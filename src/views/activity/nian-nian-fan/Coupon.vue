@@ -138,6 +138,10 @@ export default {
                 .date {
                     font-size: 28px;
                 }
+                .coupon-list-item-cover {
+                    font-size: 26px;
+                    line-height: 30px;
+                }
             }
             &.medium {
                 width: 320px;
