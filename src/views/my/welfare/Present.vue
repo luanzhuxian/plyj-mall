@@ -53,7 +53,7 @@
                 </div>
                 <div class="item">
                     <div class="item-content">
-                        <div class="content-img-box">
+                        <div :class="{'content-img-box': true, 'h-180': item.activityName }">
                             <img :src="item.giftImage" alt="">
                         </div>
                         <div class="content-detail-box">
@@ -61,6 +61,9 @@
                                 <div content="content-detail">
                                     <p class="detail-name color3">{{ item.giftName }}</p>
                                     <p class="detail-coupon color-E16">{{ item.giftBrief }}</p>
+                                    <p class="detail-coupon color-E16" v-if="item.activityName">
+                                        <span>{{ item.activityName }}</span>
+                                    </p>
                                 </div>
                                 <div class="content-button">
                                     <pl-button round="round" background-color="#EB5C20" @click="checkCode(item)">立即兑换</pl-button>
@@ -88,7 +91,7 @@
                 <div class="item">
                     <div class="item-content">
                         <pl-svg class="stamp" name="icon-yiduihuan" width="200" height="200" />
-                        <div class="content-img-box">
+                        <div :class="{'content-img-box': true, 'h-180': item.activityName }">
                             <img :src="item.giftImage" alt="">
                         </div>
                         <div class="content-detail-box">
@@ -96,6 +99,9 @@
                                 <div content="content-detail">
                                     <p class="detail-name color-c">{{ item.giftName }}</p>
                                     <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
+                                    <p class="detail-coupon color-c" v-if="item.activityName">
+                                        <span class="disabled">{{ item.activityName }}</span>
+                                    </p>
                                 </div>
                                 <div class="content-button">
                                     <pl-button :disabled="true" round="round" background-color="#EEEEEE">已兑换</pl-button>
@@ -123,7 +129,7 @@
                 <div class="item">
                     <div class="item-content">
                         <pl-svg class="stamp" name="icon-yiguoqi" width="200" height="200" />
-                        <div class="content-img-box">
+                        <div :class="{'content-img-box': true, 'h-180': item.activityName }">
                             <img :src="item.giftImage" alt="">
                         </div>
                         <div class="content-detail-box">
@@ -131,6 +137,9 @@
                                 <div content="content-detail">
                                     <p class="detail-name color-c">{{ item.giftName }}</p>
                                     <p class="detail-coupon color-c">{{ item.giftBrief }}</p>
+                                    <p class="detail-coupon color-c" v-if="item.activityName">
+                                        <span class="disabled">{{ item.activityName }}</span>
+                                    </p>
                                 </div>
                                 <div class="content-button">
                                     <pl-button :disabled="true" round="round" background-color="#EEEEEE">立即兑换</pl-button>
@@ -496,9 +505,13 @@ export default {
           position: relative;
           padding: 8px 24px;
           border-right: 6px dotted #f4f5f9;
+          &.h-180{
+            height: 180px;
+          }
           img{
             width: 100%;
             height: 100%;
+            object-fit: cover;
           }
         }
         .content-img-box:before{
@@ -532,6 +545,7 @@ export default {
           }
           .detail-name{
             font-size: 24px;
+            font-weight: bold;
             line-height: 34px;
           }
           .detail-coupon{
@@ -539,6 +553,21 @@ export default {
             margin-top: 10px;
             font-size: 22px;
             line-height: 32px;
+            @include elps();
+            >span{
+              display: inline-block;
+              max-width: 180px;
+              padding: 0 8px;
+              border-radius: 10px;
+              line-height:32px;
+              background-color: #EFE0C3;
+              color: #FF3323;
+              @include elps();
+              &.disabled {
+                background-color: #CCC;
+                color: #FFF;
+              }
+            }
           }
           .detail-date{
             margin-top: 15px;
