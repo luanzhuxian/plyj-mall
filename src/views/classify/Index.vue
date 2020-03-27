@@ -284,7 +284,7 @@ export default {
                 for (const item of list) {
                     item.productMainImage = item.courseImg
                     item.productName = item.courseName
-                    item.price = item.priceType === 1 ? '' : '免费'
+                    item.price = item.priceType === 1 ? item.sellingPrice : '免费'
                     item.activityProduct = -1
                     item.productType = 'KNOWLEDGE_COURSE'
                 }
