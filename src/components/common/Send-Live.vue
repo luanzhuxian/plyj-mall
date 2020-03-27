@@ -34,7 +34,7 @@
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
                                 <div :class="$style.liveTime">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
                                 <div :class="$style.bottom">
-                                    <span :class="$style.price" v-if="item.paidAmount" v-text="item.paidAmount" />
+                                    <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
                                     <span :class="$style.free" v-else>免费</span>
                                     <span :class="$style.liveLecturer" v-if="item.lecturerName">
                                         <PlSvg name="icon-office-man-35b25" width="32" height="32" />
@@ -71,7 +71,7 @@
                                     {{ item.lecturerName }}
                                 </div>
                                 <div :class="$style.bottom">
-                                    <span :class="$style.price" v-if="item.paidAmount" v-text="item.paidAmount" />
+                                    <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
                                     <span :class="$style.free" v-else>免费</span>
                                     <pl-button
                                         type="primary"
@@ -145,11 +145,18 @@ export default {
         async getLiveList () {
             try {
                 const { result } = await getSendLiveList(this.isNotice)
-                this.liveList = result
+                this.liveList = this.formatPaidAmount(result)
                 this.showShelf = !!this.liveList.length
             } catch (e) {
                 throw e
             }
+        },
+        formatPaidAmount (list) {
+        // 后台返回的paidAmount单位为分，要转换为元
+            list.forEach(item => {
+                item.actuallyPaidAmount = Number(Number(item.paidAmount / 100).toFixed(2))
+            })
+            return list
         },
         isNotStart (row) {
             return moment(row.liveStartTime).isAfter(moment())
