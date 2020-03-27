@@ -30,8 +30,7 @@
                             <div>
                                 <div :class="$style.rule">{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
                                 <div :class="$style.date">
-                                    <span v-if="data.values.length === 1">{{ `${getDate(item.goodsInfo.useStartTime, 'YYYY/MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'YYYY/MM/DD')}` }}</span>
-                                    <span v-else>{{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}</span>
+                                    <span>{{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}</span>
                                 </div>
                             </div>
                         </div>
@@ -127,10 +126,10 @@ export default {
                 }
                 .price {
                     margin-right: 6px;
-                    font-size: 62px;
+                    font-size: 48px;
                 }
                 .number {
-                    font-size: 84px;
+                    font-size: 76px;
                 }
                 .rule {
                     font-size: 28px;
@@ -145,18 +144,11 @@ export default {
             }
             &.medium {
                 width: 320px;
-                .coupon-list-item-wrapper {
-                    display: flex;
-                    justify-content: space-around;
-                    align-items: center;
-                    padding: 11px 45px 17px 12px;
-                }
                 .price {
-                    margin-right: 6px;
-                    font-size: 45px;
+                    font-size: 30px;
                 }
                 .number {
-                    font-size: 60px;
+                    font-size: 44px;
                 }
                 .rule {
                     font-size: 22px;
@@ -164,11 +156,13 @@ export default {
                 .date {
                     font-size: 22px;
                 }
+                .coupon-list-item-cover {
+                    font-size: 22px;
+                    line-height: 25px;
+                }
             }
             &-wrapper {
-                // box-sizing: border-box;
-                padding: 6px 12px 12px;
-                // height: 110px;
+                padding: 6px 45px 12px 12px;
                 border: 2px solid #f29e5e;
                 border-style: dashed;
                 border-radius: 10px;
@@ -195,6 +189,7 @@ export default {
             .price {
                 font-size: 24px;
                 margin-right: 6px;
+                @include elps();
             }
             .number {
                 font-size: 32px;
@@ -208,6 +203,7 @@ export default {
                 margin-top: 4px;
                 font-size: 18px;
                 font-family: San Francisco Display;
+                @include elps();
             }
         }
     }
