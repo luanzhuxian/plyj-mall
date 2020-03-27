@@ -7,7 +7,7 @@
                     <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/send-live.png">
                 </div>
                 <div :class="$style.title">
-                    <span>您获得了{{ liveList.length }}堂直播课程</span>
+                    <span>您获得了{{ liveList.length }}节直播课程</span>
                     <span>
                         <template v-if="liveList.length === 1">
                             <!--直播未开始-->
@@ -46,7 +46,7 @@
                                     size="middle"
                                     @click.capture="goToWatchLive(item)"
                                 >
-                                    {{ item.videoLibId && item.videoLibId !== '0' ? '看回放' : '去看直播' }}
+                                    立即观看
                                 </pl-button>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                                         type="primary"
                                         size="middle"
                                     >
-                                        {{ item.videoLibId && item.videoLibId !== '0' ? '看回放' : '去看直播' }}
+                                        立即观看
                                     </pl-button>
                                 </div>
                             </div>
