@@ -704,6 +704,10 @@ export default {
                 console.warn('chantroom connect success!')
             })
             socket.on('disconnect', e => {
+                // 退出直播间不抛出错误
+                if (this.$route.name !== 'LiveRoom') {
+                    return
+                }
                 console.error(e)
                 console.error('chantroom connect error!')
                 this.$confirm({
