@@ -42,7 +42,7 @@
                                     </div>
 
                                     <div :class="$style.right">
-                                        <span v-if="item.actuallyPaidAmount" :class="$style.price" v-text="item.actuallyPaidAmount" />
+                                        <span v-if="(item.isPay !== 0) && item.actuallyPaidAmount" :class="$style.price" v-text="item.actuallyPaidAmount" />
                                         <span :class="$style.free" v-else>免费</span>
                                         <pl-button type="primary" size="middle">去看直播</pl-button>
                                     </div>
@@ -70,7 +70,7 @@
                                     <div :class="$style.text2">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
                                     <div :class="$style.text2" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
                                     <div :class="$style.bottom">
-                                        <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
+                                        <span :class="$style.price" v-if="(item.isPay !== 0) && item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
                                         <span :class="$style.free" v-else>免费</span>
                                         <pl-button
                                             type="primary"
@@ -103,7 +103,7 @@
                                     <div :class="$style.text2">已结束： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
                                     <div :class="$style.text2" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
                                     <div :class="$style.bottom">
-                                        <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
+                                        <span :class="$style.price" v-if="(item.isPay !== 0) && item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
                                         <span :class="$style.free" v-else>免费</span>
                                         <pl-button
                                             type="warning"
