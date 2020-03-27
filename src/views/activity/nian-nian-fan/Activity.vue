@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -111,16 +112,25 @@ export default {
     },
     methods: {
         jump ({ value }) {
-            const { map } = this
+            const { map, nwEvent } = this
             let id
             if (value === 'newyear') {
-                if (!this.nwEvent || !this.nwEvent.permissionStatus || !this.nwEvent.id) return this.$warning('活动已结束')
+                if (!nwEvent || !nwEvent.id) return this.$warning('活动已结束')
+                if (!nwEvent.permissionStatus) return this.$warning('您无法参与活动')
+
+                const startTime = moment(nwEvent.activityStartTime).valueOf()
+                const endTime = moment(nwEvent.activityEndTime).valueOf()
+                if (startTime > Date.now()) return this.$warning('活动未开始')
+                if (endTime < Date.now()) return this.$warning('活动已结束')
+                id = nwEvent.id
             }
             if (value === 'report') {
                 if (!this.isReportShow || !this.reportId) return this.$warning('活动已结束')
+                id = this.reportId
             }
             if (value === 'sign') {
                 if (!this.isBookShow || !this.bookId) return this.$warning('活动已结束')
+                id = this.bookId
             }
             this.$router.push({
                 name: map[value].path,

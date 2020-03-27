@@ -159,88 +159,93 @@ export default {
 </script>
 
 <style module lang="scss">
-  @import "./skin/skin.scss";
+@import './skin/skin.scss';
 
-  .home-template-c {
-    background-color: #EDEDED;
+.home-template-c {
+    background-color: #ededed;
     font-size: 0;
-  }
-  .title {
+}
+.title {
     padding: 40px 0 20px;
     display: flex;
     align-items: center;
-    color: #333333;
+    color: #333;
     font-size: 40px;
     font-family: Microsoft YaHei;
     font-weight: bold;
     &::before {
-      position: relative;
-      top: 2px;
-      display: inline-block;
-      content: '';
-      width: 6px;
-      height: 38px;
-      background: #FE7700;
-      margin-right: 14px;
+        position: relative;
+        //   top: 2px;
+        display: inline-block;
+        content: '';
+        width: 6px;
+        height: 38px;
+        background: #fe7700;
+        margin-right: 14px;
     }
-  }
-  .search {
+}
+.search {
     position: relative;
     padding: 0 20px;
-  }
-  .hot-item {
+}
+.hot-item {
     position: relative;
     .title {
-      &:after {
-        position: absolute;
-        top: 38px;
-        left: 190px;
-        content: 'HOT';
-        width: 44px;
-        line-height: 24px;
-        text-align: center;
-        font-size: 14px;
-        color: #fff;
-        font-weight: normal;
-        background: linear-gradient(60deg, #FE7700 35%, rgba(255, 255, 255, .5), #FE7700 75%);
-        background-size: 200%;
-        border-radius: 12px;
-        animation: bgc-move 2s ease infinite;
-      }
+        &:after {
+            position: absolute;
+            top: 38px;
+            left: 190px;
+            content: 'HOT';
+            width: 44px;
+            line-height: 24px;
+            text-align: center;
+            font-size: 14px;
+            color: #fff;
+            font-weight: normal;
+            background: linear-gradient(60deg, #fe7700 35%, rgba(255, 255, 255, .5), #fe7700 75%);
+            background-size: 200%;
+            border-radius: 12px;
+            animation: bgc-move 2s ease infinite;
+        }
     }
     @keyframes bgc-move {
-      0% { background-position: 150% 0 }
-      100% { background-position: -50% 0 }
+        0% {
+            background-position: 150% 0;
+        }
+        100% {
+            background-position: -50% 0;
+        }
     }
-  }
+}
 
-  .hot-item,
-  .teachers,
-  .best,
-  .recommend {
+.hot-item,
+.teachers,
+.best,
+.recommend {
     padding: 0 20px;
-  }
+}
 
-  .live,
-  .course {
+.live,
+.course {
     padding: 24px 24px 0;
-  }
+}
 
-  .activity,
-  .appointment {
+.activity,
+.appointment {
     padding: 24px 20px 0;
-  }
+}
 
-  .propagate {
+.propagate {
     padding: 10px 20px 0;
-  }
+}
 
-  .footer {
+.footer {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 140px;
     font-size: 26px;
     color: #999;
-  }
+}
+
 </style>

@@ -193,7 +193,7 @@ export default {
     font-weight: bold;
     &::before {
         position: relative;
-        top: 2px;
+        // top: 2px;
         display: inline-block;
         content: '';
         width: 6px;

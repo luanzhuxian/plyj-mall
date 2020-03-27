@@ -190,11 +190,11 @@ export default {
                 if (!result.records.length) {
                     this.$alert({
                         message: '您无法参与活动',
-                        viceMessage: '返回主会场，更多活动等您开启',
-                        confirmText: '去主会场'
+                        viceMessage: '返回首页，更多活动等您开启',
+                        confirmText: '去首页'
                     })
                         .finally(() => {
-                            this.$router.push({ name: 'Activity' })
+                            this.$router.push({ name: 'Home' })
                         })
                     return
                 }
@@ -345,49 +345,49 @@ export default {
 </script>
 
 <style module lang="scss">
-  .spring-ploughing {
+.spring-ploughing {
     display: flex;
     flex-direction: column;
     padding-bottom: 182px;
     background-color: #8dc607;
-  }
-  .countdown {
+}
+.countdown {
     position: relative;
     height: 674px;
     padding-top: 20px;
-    background: #f9dfbe url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png") no-repeat center 20px;
+    background: #f9dfbe url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png') no-repeat center 20px;
     background-size: 100%;
     > .top-right {
-      position: absolute;
-      right: 0;
-      top: 16px;
-      width: 128px;
-      font-size: 24px;
-      color: #88DE9E;
-      text-align: center;
-      line-height: 50px;
-      background-color: rgba(0, 0, 0, .5);
-      border-radius: 40px 0 0 40px;
-      &:nth-of-type(2) {
-        margin-top: 66px;
-      }
+        position: absolute;
+        right: 0;
+        top: 16px;
+        width: 128px;
+        font-size: 24px;
+        color: #88de9e;
+        text-align: center;
+        line-height: 50px;
+        background-color: rgba(0, 0, 0, .5);
+        border-radius: 40px 0 0 40px;
+        &:nth-of-type(2) {
+            margin-top: 66px;
+        }
     }
     > svg {
-      position: absolute;
-      top: 175px;
-      right: 95px;
+        position: absolute;
+        top: 175px;
+        right: 95px;
     }
-  }
-  .content {
+}
+.content {
     position: relative;
     width: 686px;
     padding: 24px;
     margin: 14px auto 48px;
     background-color: #428b42;
-    box-shadow: 0 0 0 2px #A3D816 inset;
+    box-shadow: 0 0 0 2px #a3d816 inset;
     box-sizing: border-box;
-  }
-  .activity-name {
+}
+.activity-name {
     position: relative;
     width: max-content;
     margin: 26px auto 32px;
@@ -396,29 +396,29 @@ export default {
     color: #fff;
     font-weight: bold;
     &:before {
-      content: '';
-      position: absolute;
-      left: -86px;
-      top: 50%;
-      width: 54px;
-      height: 42px;
-      transform: rotate(180deg) translateY(50%);
-      background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png") no-repeat center center;
-      background-size: 100%;
+        content: '';
+        position: absolute;
+        left: -86px;
+        top: 50%;
+        width: 54px;
+        height: 42px;
+        transform: rotate(180deg) translateY(50%);
+        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png') no-repeat center center;
+        background-size: 100%;
     }
     &:after {
-      content: '';
-      position: absolute;
-      right: -86px;
-      top: 50%;
-      width: 54px;
-      height: 42px;
-      transform: translateY(-50%);
-      background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png") no-repeat center center;
-      background-size: 100%;
+        content: '';
+        position: absolute;
+        right: -86px;
+        top: 50%;
+        width: 54px;
+        height: 42px;
+        transform: translateY(-50%);
+        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png') no-repeat center center;
+        background-size: 100%;
     }
-  }
-  .group-name {
+}
+.group-name {
     max-width: 458px;
     margin: 16px auto;
     padding: 16px 100px;
@@ -427,72 +427,73 @@ export default {
     color: #dcfd8c;
     text-align: center;
     font-weight: bold;
-    background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/e009100a-579a-4369-8238-db258fb2d91b.png") no-repeat center center;
+    background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/e009100a-579a-4369-8238-db258fb2d91b.png') no-repeat center center;
     background-size: 100% 100%;
     background-clip: border-box;
-  }
-  .discount {
+}
+.discount {
     margin-bottom: 20px;
     text-align: center;
-    color: #88DE9E;
+    color: #88de9e;
     font-size: 24px;
     > span:nth-of-type(2) {
-      margin: 0 12px;
-      vertical-align: 2px;
+        margin: 0 12px;
+        vertical-align: 2px;
     }
-  }
+}
 
-  .end-countdown, .global-end-countdown {
+.end-countdown,
+.global-end-countdown {
     width: 400px;
     margin: 0 auto;
     line-height: 80px;
     font-size: 24px;
     text-align: center;
-    color: #88DE9E;
+    color: #88de9e;
     background-color: #397432;
     border-radius: 20px;
     > .unit {
-      padding: 0 4px;
+        padding: 0 4px;
     }
     > .val {
-      display: inline-block;
-      padding: 4px;
-      line-height: 30px;
-      color: #184B28;
-      background-color: #8DE5A8;
-      border-radius: 6px;
+        display: inline-block;
+        padding: 4px;
+        line-height: 30px;
+        color: #184b28;
+        background-color: #8de5a8;
+        border-radius: 6px;
     }
-  }
-  .global-end-countdown {
+}
+.global-end-countdown {
     margin-top: 286px;
     background: none;
     > .val {
-      background-color: #ffd6a7;
-      &.day {
-        background-color: #8DE5A8;
-      }
+        background-color: #ffd6a7;
+        &.day {
+            background-color: #8de5a8;
+        }
     }
-  }
+}
 
-  .gift-list {
+.gift-list {
     .title {
-      margin: 24px 0;
-      font-weight: bold;
-      font-size: 40px;
-      color: #fae47f;
-      &:before {
-        display: inline-block;
-        content: '';
-        width: 8px;
-        height: 40px;
-        vertical-align: -6px;
-        border-radius: 4px;
-        background-color: #fae47f;
-      }
+        margin: 24px 0;
+        font-weight: bold;
+        font-size: 40px;
+        color: #fae47f;
+        &:before {
+            display: inline-block;
+            content: '';
+            width: 8px;
+            height: 40px;
+            vertical-align: -6px;
+            border-radius: 4px;
+            background-color: #fae47f;
+        }
     }
-  }
+}
 
-  .buy {
+.buy {
     display: block;
     min-width: 400px;
     margin: 48px auto 36px;
@@ -500,53 +501,53 @@ export default {
     line-height: 78px;
     font-size: 32px;
     color: #184b28;
-    background-color: #8DE5A8;
+    background-color: #8de5a8;
     border-radius: 39px;
     font-weight: bold;
-    box-shadow: 0 6px 12px rgba(132, 0 ,0, 0.16);
+    box-shadow: 0 6px 12px rgba(132, 0 ,0, .16);
     &.not-start {
-      font-weight: normal;
-      color: #A6482F;
+        font-weight: normal;
+        color: #a6482f;
     }
     &.ended {
-      color: #184B28;
-      font-weight: normal;
-      background-color: #67b875;
+        color: #184b28;
+        font-weight: normal;
+        background-color: #67b875;
     }
-  }
-  .corner {
+}
+.corner {
     position: absolute;
     width: 46px;
     height: 42px;
     z-index: 1;
-    background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/1c11b4a5-091d-4f8d-a88c-e8334dfc9d88.png") no-repeat center center;
+    background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/1c11b4a5-091d-4f8d-a88c-e8334dfc9d88.png') no-repeat center center;
     background-size: 100% 100%;
     &.top-left {
-      top: 0;
-      left: 0;
+        top: 0;
+        left: 0;
     }
     &.top-right {
-      top: 0;
-      right: 0;
-      transform: rotateY(180deg);
+        top: 0;
+        right: 0;
+        transform: rotateY(180deg);
     }
     &.bottom-right {
-      bottom: 0;
-      right: 0;
-      transform: rotateY(180deg) rotateX(180deg);
+        bottom: 0;
+        right: 0;
+        transform: rotateY(180deg) rotateX(180deg);
     }
     &.bottom-left {
-      bottom: 0;
-      left: 0;
-      transform: rotateX(180deg);
+        bottom: 0;
+        left: 0;
+        transform: rotateX(180deg);
     }
-  }
-  .rules {
+}
+.rules {
     padding: 24px 24px 60px;
     font-size: 26px;
     line-height: 56px;
-  }
-  .poster {
+}
+.poster {
     position: fixed;
     left: 0;
     top: 0;
@@ -558,10 +559,11 @@ export default {
     background-color: rgba(0, 0, 0, .5);
     z-index: 10;
     > img {
-      margin-top: 20px;
+        margin-top: 20px;
     }
     > svg {
-      margin-top: 20px;
+        margin-top: 20px;
     }
-  }
+}
+
 </style>
