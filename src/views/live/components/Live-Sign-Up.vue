@@ -140,7 +140,7 @@ export default {
             setTimeout(() => {
                 this.show = true
             }, 1000)
-            return new Promise((resolve, reject) => {
+            return new Promise(resolve => {
                 this.$on('success', result => {
                     resolve(result)
                 })
@@ -148,9 +148,9 @@ export default {
         },
         selectCity (val) {
             this.form.signRegion = val[0].name +
-        val[1].name +
-        (val[2] ? val[2].name : '') +
-        (val[3] ? val[3].name : '')
+                val[1].name +
+                (val[2] ? val[2].name : '') +
+                (val[3] ? val[3].name : '')
         }
     },
     watch: {

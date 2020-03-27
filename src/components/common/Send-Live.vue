@@ -114,8 +114,8 @@ export default {
             showShelf: false,
 
             /*
-            数据结构
-            {
+                数据结构
+                {
                     name: '线上欢乐营 名师伴我学',
                     coverImg: 'https://mallcdn.youpenglai.com/static/timg.jpg',
                     liveStartTime: '2020.2.12  19:00',
@@ -169,7 +169,7 @@ export default {
 }
 </script>
 
-<style module lang='scss' scoped>
+<style module lang='scss'>
     .mask {
       position: fixed;
       z-index: 999;
