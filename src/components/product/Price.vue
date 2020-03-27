@@ -14,7 +14,13 @@
                     :class="$style.prefixText"
                     v-text="prefixText"
                 />
-                <i :class="$style.integer" v-text="integer" />
+                <i
+                    :class="{
+                        [$style.integer]: true,
+                        [$style.isNumber]: isNumber
+                    }"
+                    v-text="integer"
+                />
                 <i v-if="float" :class="$style.float" v-text="float" />
             </span>
             <del
@@ -59,6 +65,9 @@ export default {
         },
         float () {
             return this.price ? String(this.price).split('.')[1] : 0
+        },
+        isNumber () {
+            return !Number.isNaN(Number(this.price))
         }
     }
 }
@@ -195,9 +204,11 @@ export default {
     font-weight: bold;
   }
   .integer {
-    &:before {
-      content: '¥ ';
-    }
+      &.isNumber {
+          &:before {
+              content: '¥ ';
+          }
+      }
   }
   .float {
     &:before {

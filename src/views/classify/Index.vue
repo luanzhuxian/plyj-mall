@@ -47,15 +47,15 @@
                         @click="subClassifyClick"
                     />
                     <!--<div :class="$style.classifyList2">
-            &lt;!&ndash;<classify-item
-              v-for="item of currentClassify.childs"
-              :key="item.id"
-              :cid="item.id"
-              :img="item.categoryPic"
-              :text="item.categoryName"
-              @click="subClassifyClick"
-            />&ndash;&gt;
-          </div>-->
+                        &lt;!&ndash;<classify-item
+                          v-for="item of currentClassify.childs"
+                          :key="item.id"
+                          :cid="item.id"
+                          :img="item.categoryPic"
+                          :text="item.categoryName"
+                          @click="subClassifyClick"
+                        />&ndash;&gt;
+                      </div>-->
                 </template>
                 <div
                     :class="$style.title"
@@ -115,6 +115,7 @@ import SubClassify from '../../components/item/Sub-Classify.vue'
 import LoadMore from '../../components/common/Load-More.vue'
 import { getCategoryTree, getProduct } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
+import { getCourse } from '../../apis/online-classroom'
 import { mapGetters } from 'vuex'
 import share from '../../assets/js/wechat/wechat-share'
 
@@ -202,8 +203,16 @@ export default {
                 }
             }
         },
+        // 切换主分类
         classifyClick (classify) {
             if (this.loading || classify === this.currentClassify) return
+            if (classify && (classify.id === '2')) {
+                // 点击知识课程
+                this.currentClassify = classify
+                this.$router.push({ name: 'Classify', params: { optionId: '2' } })
+                this.getCourse()
+                return
+            }
             if (classify && (classify.id === '1')) {
                 // 点击的是helper专区
                 this.agentShow = true
@@ -249,11 +258,37 @@ export default {
                         id: '1'
                     })
                 }
+                this.classifyList.push({
+                    id: '2',
+                    categoryName: '知识课程',
+                    subCategoryName: '',
+                    childs: null
+                })
             } catch (e) {
                 throw e
             }
         },
         refreshHandler (list) {
+            if (this.requestMethods === getCourse) {
+                // TODO: 谁也没想到要在分类页面请求知识课程，所以有如下骚操作
+                // 知识课程的请求
+                /*
+                * :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
+                                    :title="item.productName"
+                                    :price="item.price"
+                                    :data="item"
+                                    :activity-product="item.activityProduct"
+                                    :rebate="currentClassify.id === '1' ? item.realRebate : ''"
+                * */
+                for (const item of list) {
+                    item.productMainImage = item.courseImg
+                    item.productName = item.courseName
+                    item.price = item.priceType === 1 ? '' : '免费'
+                    item.activityProduct = -1
+                }
+                this.prodList = list
+                return
+            }
             for (const item of list) {
                 // item.status: 0: 规格禁用 1: 规格启用
                 const arr = item.productSkuModels.filter(item => item.status === 1)
@@ -269,6 +304,9 @@ export default {
                 }
             }
             this.prodList = list
+        },
+        async getCourse () {
+            this.requestMethods = getCourse
         },
         share () {
             const {

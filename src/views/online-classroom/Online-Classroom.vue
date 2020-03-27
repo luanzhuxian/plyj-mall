@@ -109,8 +109,8 @@ export default {
         try {
             // TODO.暂时没有分类
             /* if (!this.classifyList.length) { // 有分类且有默认值才设置默认分类
-        await this.getCategoryTree()
-      } */
+                await this.getCategoryTree()
+              } */
             this.$refresh = this.$refs.loadMore.refresh
 
             // 解决因刷新浏览器后，在beforeRouteEnter无法获取到dom信息，导致无法正常调用refresh问题

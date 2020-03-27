@@ -123,9 +123,9 @@ export default {
         },
 
         /*
-    * 请求参数
-    * 必须包含：current: 页码
-    * */
+        * 请求参数
+        * 必须包含：current: 页码
+        * */
         form: {
             type: Object,
             required: true,
@@ -174,6 +174,10 @@ export default {
         },
         empty (val) {
             this.$emit('listState', val)
+        },
+        // 更换请求方法的时候
+        requestMethods () {
+            this.refresh()
         }
     },
     activated () {
