@@ -69,17 +69,11 @@ export default {
     },
     computed: {
         ...mapGetters(['invitingEvent', 'jxEvent']),
-        invitingEvent () {
-            return this.invitingEvent || {}
-        },
-        jxEvent () {
-            return this.jxEvent || {}
-        },
         hasInvitingEvent () {
-            return ~[1, 2].indexOf(this.invitingEvent.status)
+            return this.invitingEvent && ~[1, 2].indexOf(this.invitingEvent.status)
         },
         hasJxEvent () {
-            return ~[1, 2].indexOf(this.jxEvent.status)
+            return this.jxEvent && ~[1, 2].indexOf(this.jxEvent.status)
         }
     }
 }

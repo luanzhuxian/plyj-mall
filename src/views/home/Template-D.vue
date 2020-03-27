@@ -152,6 +152,7 @@ export default {
         RECOMMEND () {
             return this.data.RECOMMEND || {}
         },
+        // statue: 1、开启 2、预热期 3、进行中
         isLiveShow () {
             const { liveInfo } = this.parent
             return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))

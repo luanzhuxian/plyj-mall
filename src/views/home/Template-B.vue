@@ -147,6 +147,7 @@ export default {
         PROPAGATE () {
             return this.data.PROPAGATE || {}
         },
+        // statue: 1、开启 2、预热期 3、进行中
         isLiveShow () {
             const { liveInfo } = this.parent
             return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
@@ -166,117 +167,122 @@ export default {
 </script>
 
 <style module lang="scss">
-  @import "./skin/skin.scss";
+@import './skin/skin.scss';
 
-  .home-template-b {
-    background-color: #EDEDED;
+.home-template-b {
+    background-color: #ededed;
     font-size: 0;
-  }
-  .search {
+}
+.search {
     position: relative;
     padding: 0 20px;
-  }
-  .banner {
+}
+.banner {
     padding: 24px 24px 32px;
     background-color: #fff;
     border-radius: 20px 20px 0 0;
-  }
-  .hot-item {
+}
+.hot-item {
     padding: 34px 24px 0;
-    background-color: #F4F5F9;
+    background-color: #f4f5f9;
     .title {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 20px;
-      position: relative;
-      font-size: 36px;
-      font-weight: bold;
-      &:after {
-        position: absolute;
-        top: 0;
-        left: 136px;
-        content: 'HOT';
-        width: 44px;
-        line-height: 24px;
-        text-align: center;
-        font-size: 14px;
-        color: #fff;
-        font-weight: normal;
-        background: linear-gradient(60deg, #FE7700 35%, rgba(255, 255, 255, .5), #FE7700 75%);
-        background-size: 200%;
-        border-radius: 12px;
-        animation: bgc-move 2s ease infinite;
-      }
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 20px;
+        position: relative;
+        font-size: 36px;
+        font-weight: bold;
+        &:after {
+            position: absolute;
+            top: 0;
+            left: 136px;
+            content: 'HOT';
+            width: 44px;
+            line-height: 24px;
+            text-align: center;
+            font-size: 14px;
+            color: #fff;
+            font-weight: normal;
+            background: linear-gradient(60deg, #fe7700 35%, rgba(255, 255, 255, .5), #fe7700 75%);
+            background-size: 200%;
+            border-radius: 12px;
+            animation: bgc-move 2s ease infinite;
+        }
     }
     @keyframes bgc-move {
-      0% { background-position: 150% 0 }
-      100% { background-position: -50% 0 }
+        0% {
+            background-position: 150% 0;
+        }
+        100% {
+            background-position: -50% 0;
+        }
     }
-  }
-  .best {
+}
+.best {
     padding: 24px;
     background-color: #f4f5f9;
     .title {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 20px;
-      position: relative;
-      font-size: 36px;
-      font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 20px;
+        position: relative;
+        font-size: 36px;
+        font-weight: bold;
     }
-  }
-  .recommend {
+}
+.recommend {
     padding: 0 24px;
     color: #000;
-    background: #EAE9F7;
+    background: #eae9f7;
     .title {
-      position: relative;
-      text-align: center;
-      font-size: 36px;
-      font-weight: bolder;
-      color: #F2B036;
-      letter-spacing: 14px;
-      padding: 40px 0 34px;
-      span {
-        display: inline-block;
-        &:nth-last-of-type(1) {
-          transform: scaleX(2);
-          margin-left: 18px;
+        position: relative;
+        text-align: center;
+        font-size: 36px;
+        font-weight: bolder;
+        color: #f2b036;
+        letter-spacing: 14px;
+        padding: 40px 0 34px;
+        span {
+            display: inline-block;
+            &:nth-last-of-type(1) {
+                transform: scaleX(2);
+                margin-left: 18px;
+            }
+            &:nth-of-type(1) {
+                margin-right: 18px;
+                transform: scaleX(2);
+                transform-origin: 0;
+            }
         }
-        &:nth-of-type(1) {
-          margin-right: 18px;
-          transform: scaleX(2);
-          transform-origin: 0;
-        }
-      }
     }
-  }
-  .footer {
+}
+.footer {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 140px;
     font-size: 26px;
     color: #999;
-    background: #EAE9F7;
-  }
+    background: #eae9f7;
+}
 
-  .live,
-  .course {
+.live,
+.course {
     padding: 24px 24px 0;
-  }
+}
 
-  .adv,
-  // .live,
+.adv,
+// .live,
   .activity {
     padding: 20px 24px 0;
-    background-color: #F4F5F9;
-  }
-  .appointment,
-  .propagate {
+    background-color: #f4f5f9;
+}
+.appointment,
+.propagate {
     padding: 24px 24px 0;
-    background-color: #F4F5F9;
-  }
+    background-color: #f4f5f9;
+}
+
 </style>
