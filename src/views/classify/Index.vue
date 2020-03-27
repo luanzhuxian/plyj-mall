@@ -96,6 +96,7 @@
                                     :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
                                     :title="item.productName"
                                     :price="item.price"
+                                    :product-type="item.productType"
                                     :data="item"
                                     :activity-product="item.activityProduct"
                                     :rebate="currentClassify.id === '1' ? item.realRebate : ''"
@@ -285,6 +286,7 @@ export default {
                     item.productName = item.courseName
                     item.price = item.priceType === 1 ? '' : '免费'
                     item.activityProduct = -1
+                    item.productType = 'KNOWLEDGE_COURSE'
                 }
                 this.prodList = list
                 return

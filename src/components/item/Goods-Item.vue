@@ -109,6 +109,10 @@ export default {
         activityProduct: {
             type: Number,
             default: 1
+        },
+        productType: {
+            type: String,
+            default: ''
         }
     },
     computed: {
@@ -116,8 +120,11 @@ export default {
     },
     methods: {
         async handleClick () {
-            const { id } = this
-            this.$router.push({ name: 'Product', params: { productId: id } })
+            if (this.productType === 'KNOWLEDGE_COURSE') {
+                this.$router.push({ name: 'Curriculum', params: { productId: this.id } })
+            } else {
+                this.$router.push({ name: 'Product', params: { productId: this.id } })
+            }
         }
     }
 }
