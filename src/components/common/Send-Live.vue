@@ -124,25 +124,28 @@ export default {
                     paidAmount: 3
                 }
              */
-            liveList: []
+            liveList: [],
+            isAlreadyNotice: false
         }
     },
     async activated () {
         try {
-            if (this.isNotice === '0') await this.getLiveList()
+            await this.getLiveList()
         } catch (e) {
             throw e
         }
     },
     async created () {
         try {
-            if (this.isNotice === '1') await this.getLiveList()
+            await this.getLiveList()
         } catch (e) {
             throw e
         }
     },
     methods: {
         async getLiveList () {
+            if (this.isNotice === '0' && this.isAlreadyNotice) return
+            this.isAlreadyNotice = this.isAlreadyNotice === '0'
             try {
                 const { result } = await getSendLiveList(this.isNotice)
                 this.liveList = this.formatPaidAmount(result)
@@ -162,8 +165,8 @@ export default {
             return moment(row.liveStartTime).isAfter(moment())
         },
         goToWatchLive (row) {
-            if (row.videoLibId && row.videoLibId !== '0') {
-                this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: '0' } })
+            if (row.liveCloseTime && moment(row.liveCloseTime).isBefore(moment())) {
+                if (row.videoLibId && row.videoLibId !== '0') this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: '0' } })
             } else {
                 this.$router.push({ name: 'LiveRoom', params: { id: row.id } })
             }
