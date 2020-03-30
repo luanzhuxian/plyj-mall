@@ -166,7 +166,11 @@ export default {
         },
         goToWatchLive (row) {
             if (row.liveCloseTime && moment(row.liveCloseTime).isBefore(moment())) {
-                if (row.videoLibId && row.videoLibId !== '0') this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: '0' } })
+                if (row.videoLibId && row.videoLibId !== '0') {
+                    this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: '0' } })
+                } else {
+                    this.$error('该视频无法观看')
+                }
             } else {
                 this.$router.push({ name: 'LiveRoom', params: { id: row.id } })
             }
