@@ -208,7 +208,7 @@ export default {
       border-radius:20px;
       width: 620px;
       min-height: 500px;
-      padding: 60px 32px 64px;
+      padding: 50px 32px 32px;
       background:linear-gradient(180deg,#FF7542 0%,#F96C38 100%);
       .head {
         position: absolute;
