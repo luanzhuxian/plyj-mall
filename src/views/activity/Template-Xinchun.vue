@@ -124,7 +124,7 @@ export default {
         },
         isLiveShow () {
             const { liveInfo } = this.parent
-            return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+            return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 0 || liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
         },
         isNwEventShow () {
             return this.parent.nwEvent && this.parent.nwEvent.permissionStatus

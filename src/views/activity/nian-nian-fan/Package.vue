@@ -32,7 +32,7 @@
                                 :timestamp="getTime(item.combinationDetailList[0])"
                                 format="HH:mm"
                                 background="rgba(174, 174, 174, 0.64)"
-                                @done="() => item.combinationDetailList[0].status += 1"
+                                @done="reload(item)"
                             />
                         </div>
                     </div>
@@ -90,6 +90,7 @@ import { getTime } from '../helper.js'
 
 export default {
     name: 'Package',
+    inject: ['parent'],
     components: {
         CountDown
     },
@@ -105,7 +106,11 @@ export default {
         return {}
     },
     methods: {
-        getTime
+        getTime,
+        reload (item) {
+            item.combinationDetailList[0].status += 1
+            this.parent.getTemplate()
+        }
     }
 }
 </script>

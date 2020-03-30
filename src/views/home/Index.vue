@@ -122,14 +122,14 @@ export default {
         }
     },
     watch: {
-        isActivityAuth: {
-            handler (val) {
-                if (val === true && !this.$router.currentRoute.meta.from) {
-                    window.myAssign(`/${ this.mallDomain }/activity`)
-                }
-            },
-            immediate: true
-        }
+        // isActivityAuth: {
+        //     handler (val) {
+        //         if (val === true && !this.$router.currentRoute.meta.from) {
+        //             window.myAssign(`/${ this.mallDomain }/activity`)
+        //         }
+        //     },
+        //     immediate: true
+        // }
     },
     async created () {
         try {

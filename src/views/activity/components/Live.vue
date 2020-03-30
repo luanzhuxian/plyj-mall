@@ -36,10 +36,10 @@
                         <div :class="$style.bottomLeft">
                             <pl-svg name="icon-clock" fill="#fff" width="26" />
                         </div>
-                        <div :class="$style.bottomRight">
+                        <div :class="$style.bottomRight" v-if="live.statue !== 0">
                             <span v-if="isNoticeShow">距开始仅剩</span>
                             <span v-if="live.statue === 4" :class="$style.highlight">正在直播</span>
-                            <span v-if="live.statue === 0" :class="$style.highlight">已结束</span>
+                            <!-- <span v-if="live.statue === 0" :class="$style.highlight">已结束</span> -->
                             <count-down
                                 v-if="isNoticeShow"
                                 :timestamp="ts"
