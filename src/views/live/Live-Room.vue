@@ -63,7 +63,7 @@
                     <template v-for="(item, i) of chatRecords">
                         <!-- 一般消息 -->
                         <div
-                            v-if="!item.gift && !item.custom"
+                            v-if="!item.gift && !item.custom && !item.inform"
                             :key="i"
                             :id="`chat_item_${i}`"
                             :class="{
@@ -114,6 +114,17 @@
                             <span :class="$style.userName" v-text="item.name" />
                             <span>&nbsp;赠送给老师&nbsp;</span>
                             <pl-svg v-if="item.giftType === 'flower'" name="icon-meiguihua" width="36" height="36" />
+                        </div>
+                        <!-- 通知 -->
+                        <div
+                            :key="i"
+                            v-else-if="item.inform"
+                            :class="{
+                                [$style.messageWrap]: true,
+                                [$style.inform]: true
+                            }"
+                        >
+                            {{ item.message }}
                         </div>
                     </template>
                 </div>
@@ -168,18 +179,18 @@
 
             <div v-if="tab === 1" :class="$style.sendMessage">
                 <form :class="$style.inputBox" @submit.prevent="messageConfirm">
-                    <input
+                    <pl-input
                         v-model.trim="message"
                         placeholder=" 进来了说点什么呗~"
                         type="text"
                         @blur="messageBoxBlur"
-                        :disabled="!socket"
-                    >
-                    <button :class="$style.sendBtn">发送</button>
+                        :disabled="!socket || allowedSpeak"
+                    />
+                    <pl-button :disabled="allowedSpeak" :class="$style.sendBtn">发送</pl-button>
                 </form>
-                <div :class="$style.sendFlower" @click="sendFlower">
+                <pl-button :disabled="allowedSpeak" type="text" :class="$style.sendFlower" @click="sendFlower">
                     <pl-svg name="icon-flower" width="37" />
-                </div>
+                </pl-button>
 
                 <!--<transition name="fade">
           <div v-if="showEmoticon" :class="$style.emoticon">
@@ -320,6 +331,8 @@ export default {
             timestamp: 0,
             // 是否被送课
             isGive: false,
+            // 是否禁言
+            allowedSpeak: false,
 
             /**
              * 聊天信息记录
@@ -803,6 +816,15 @@ export default {
                             type: 'FLOWERS'
                         })
                         break
+                    // (禁止,开始)聊天
+                    case 'CLOSEROOM':
+                        this.allowedSpeak = mData.value.closed
+                        this.pushInform({
+                            message: mData.value.closed ? '聊天室暂时关闭' : '聊天室已经打开',
+                            inform: true,
+                            type: 'CLOSEROOM'
+                        })
+                        break
                 }
                 this.scrollBottom()
             }
@@ -870,6 +892,9 @@ export default {
                 this.chatRecords = this.chatRecords.slice(len - maxRecords)
             }
             this.chatRecords.push(msg)
+        },
+        pushInform (data) {
+            this.chatRecords.push(data)
         },
 
         /* 重新发送 */
@@ -1209,6 +1234,9 @@ export default {
             }
         }
     }
+    > .inform {
+        justify-content: center;
+    }
     .user-name {
         color: #999;
         &:after {
@@ -1308,10 +1336,17 @@ export default {
     width: 72px;
     height: 72px;
     line-height: 72px;
-    margin-left: 24px;
+    margin-left: 24px !important;
     text-align: center;
     border-radius: 36px;
     background: linear-gradient(180deg, #ee7f62, #eb5a36);
+    &:disabled {
+        background: #ccc !important;
+        opacity: .5 !important;
+    }
+    > span {
+        display: inline-flex;
+    }
 }
 
 .coupon-list {
