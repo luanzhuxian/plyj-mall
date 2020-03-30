@@ -1,6 +1,5 @@
 import Compressor from 'compressorjs'
 import { getSTS } from '../../apis/base-api'
-import { v1 as uuidv1 } from 'uuid'
 const OSS = require('ali-oss')
 const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
@@ -127,7 +126,7 @@ export function blobToBase64 (blob) {
 }
 // 生成随机字符串
 function randomString () {
-    return `mall-${uuidv1()}-${Date.now()}`
+    return `mall-${uuid.v1()}-${Math.random().toString().replace('.', '')}`
 }
 
 export function createObjectUrl (blob) {
