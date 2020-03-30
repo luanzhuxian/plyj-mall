@@ -464,7 +464,7 @@ export default {
             /* eslint-disable no-throw-literal */
             // 已送课
             if (this.isGive) {
-                throw false
+                return
             }
             if (this.detail.isPay) {
                 if (!this.mchId) {
