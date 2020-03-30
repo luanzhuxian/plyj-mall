@@ -74,5 +74,21 @@
 <script src="https://mallcdn.youpenglai.com/cdn/echarts/echarts_v4.5.0.min.js"></script>
 <script src="https://mallcdn.youpenglai.com/cdn/eruda.js"></script>
 <script>eruda.init()</script>
+<script>
+    (function () {
+        var isResize = false;
+        window.onresize = e => {
+            isResize = true;
+        }
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && !isResize) {
+                location.reload();
+            }
+            setTimeout(() => {
+                isResize = false;
+            }, 3000)
+        })
+    })()
+</script>
 </body>
 </html>

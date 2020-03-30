@@ -1,5 +1,6 @@
 import Compressor from 'compressorjs'
 import { getSTS } from '../../apis/base-api'
+import { v1 as uuidv1 } from 'uuid'
 const OSS = require('ali-oss')
 const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
@@ -126,31 +127,7 @@ export function blobToBase64 (blob) {
 }
 // 生成随机字符串
 function randomString () {
-  // 随机串的长度为 10 ~ 50 的随机数
-  const len = Number.parseInt(Math.random() * 51 + 10)
-  // const date = new Date()
-  // 48~57 数字， 65~90 大写，  97~122 小写
-  const LIB = 'qQwWeErRtTyYuUiIoOpPaAsSdDfFgGhHjJkKlLzZxXcCvVbBnNmM1234567890'
-  const parseInt = Number.parseInt
-  const random = Math.random
-  const randomStr = []
-  for (let i = 0; i < len; i++) {
-    const index = parseInt(random() * 62)
-    randomStr.push(LIB[index])
-    if (i !== 0 && i % 8 === 0) {
-      randomStr.push('-')
-    }
-  }
-  // let dateString = `
-  //   ${date.getFullYear()}
-  //   ${String(date.getMonth() + 1).padStart(2, '0')}
-  //   ${String(date.getDate()).padStart(2, '0')}
-  //   ${String(date.getHours()).padStart(2, '0')}
-  //   ${String(date.getMinutes()).padStart(2, '0')}
-  //   ${String(date.getSeconds()).padStart(2, '0')}
-  // `
-  // dateString = dateString.replace(/\s/g, '')
-  return randomStr.join('') + '-' + Date.now()
+    return `mall-${uuidv1()}-${Date.now()}`
 }
 
 export function createObjectUrl (blob) {
