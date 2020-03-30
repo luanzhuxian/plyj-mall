@@ -389,6 +389,7 @@ export default {
                 }
                 return
             }
+            this.listenLiveStart = this.listenLiveStart()
             // 下面是按照固定顺序，不可改变
             // 是否有权限观看
             await this.hasPermission()
@@ -571,28 +572,58 @@ export default {
             }
         },
         // 查询直播是否开始
-        async listenLiveStart (stream) {
-            window.clearTimeout(this.liveStatusTimer)
-            this.liveStatusTimer = window.setTimeout(async () => {
+        listenLiveStart () {
+            let flag
+            const isStart = async stream => {
                 try {
                     // end 未直播 live 正在直播
-                    let result = await isLiveStart(stream)
-                    result = result.trim()
-                    if (result === 'live') {
-                        window.clearTimeout(this.liveStatusTimer)
-                        this.liveStart = true
-                    } else {
-                        this.liveStart = false
-                        this.listenLiveStart(stream)
-                    }
+                    const result = await isLiveStart(stream)
+                    return result.trim()
                 } catch (e) {
-                    if (e.name === 'ResponseError') {
-                        this.$error(JSON.parse(e.message).message)
-                    } else {
-                        this.$error(e.message)
+                    throw e
+                }
+            }
+            const liveListener = async stream => {
+                if (!stream) return
+                if (!flag) {
+                    try {
+                        const result = await isStart(stream)
+                        flag = true
+                        if (result === 'live') {
+                            this.liveStart = true
+                            return
+                        }
+                        liveListener(stream)
+                    } catch (e) {
+                        if (e.name === 'ResponseError') {
+                            this.$error(JSON.parse(e.message).message)
+                        } else {
+                            this.$error(e.message)
+                        }
                     }
                 }
-            }, 5e3)
+                window.clearTimeout(this.liveStatusTimer)
+                this.liveStatusTimer = window.setTimeout(async () => {
+                    try {
+                        // end 未直播 live 正在直播
+                        const result = await isStart(stream)
+                        if (result === 'live') {
+                            this.liveStart = true
+                            window.clearTimeout(this.liveStatusTimer)
+                        } else {
+                            this.liveStart = false
+                            liveListener(stream)
+                        }
+                    } catch (e) {
+                        if (e.name === 'ResponseError') {
+                            this.$error(JSON.parse(e.message).message)
+                        } else {
+                            this.$error(e.message)
+                        }
+                    }
+                }, 5e3)
+            }
+            return liveListener
         },
         // 视频直播情况下获取视频信息
         async getVideoMesById () {
