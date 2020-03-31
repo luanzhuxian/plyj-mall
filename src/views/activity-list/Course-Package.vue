@@ -19,6 +19,7 @@
             <div :class="$style.topRight" @click="createPoster">活动海报</div>
         </div>
         <div
+            :id="'activity-' + index"
             :class="$style.activity"
             v-for="(activity, index) of list"
             :key="index"
@@ -160,7 +161,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['avatar', 'userName', 'mobile', 'appId', 'userId', 'mallUrl', 'shareId'])
+        ...mapGetters(['avatar', 'userName', 'mobile', 'appId', 'userId', 'mallUrl', 'shareId']),
+        activityId () {
+            return this.$route.query.activityId
+        }
     },
     mounted () {
         // 全局缓存分享人id
@@ -171,6 +175,9 @@ export default {
             await this.getSpringCombination()
             const t = await Countdown.getServerTime()
             console.log(t)
+            if (this.activityId) {
+                this.scrollToTarget()
+            }
         } catch (e) {
             throw e
         }
@@ -182,6 +189,14 @@ export default {
         this.countInstaceList = []
     },
     methods: {
+        scrollToTarget () {
+            const { activityId } = this
+            const index = this.list.findIndex(item => item.models.some(model => model.activityId === activityId))
+            if (index && index !== -1) {
+                const top = document.querySelector(`#activity-${ index }`).getBoundingClientRect().top
+                window.scrollTo(0, top)
+            }
+        },
         // batchType 1: 组合课 2: 春耘
         async getSpringCombination () {
             const getLatestEndTime = (data = []) => {
@@ -347,7 +362,7 @@ export default {
             ctx.drawImage(BG, 0, 88, 638, 1046)
             const QR = await generateQrcode(200, this.shareUrl, 0, null, 0, 'canvas')
             ctx.drawImage(QR, 204, 730, 238, 238)
-            this.poster = cvs.toDataURL('image/jpeg', 0.9)
+            this.poster = cvs.toDataURL('image/jpeg', 1)
             this.showPoster = true
             this.creating = false
         },
