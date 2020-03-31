@@ -55,7 +55,7 @@
                         商品<i>({{ productList.length }})</i>
                     </div>
                 </div>
-                <pl-button v-if="detail.coverImg" style="padding:0 24px" @click="share" type="warning" size="small">分享海报</pl-button>
+                <pl-button v-if="detail.coverImg && detail.liveMode === 'public'" style="padding:0 24px" @click="share" type="warning" size="small">分享海报</pl-button>
             </div>
 
             <div :class="$style.chatWrap" ref="chatWrap">
@@ -461,6 +461,7 @@ export default {
                 const { isGive, isRange } = await hasPermission(this.id)
                 this.isGive = isGive
                 if (!isRange) {
+                    await this.$warning('您没有权限观看该场直播')
                     if (window.history.length > 1) {
                         this.$router.go(-1)
                     } else {

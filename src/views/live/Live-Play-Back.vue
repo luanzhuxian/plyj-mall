@@ -152,7 +152,14 @@ export default {
                 // 单位分转为元
                 this.payCount = result.needPaidAmount / 100
                 this.activityName = result.activityName
-            } catch (e) { throw e }
+            } catch (e) {
+                if (window.history.length > 1) {
+                    this.$router.go(-1)
+                } else {
+                    this.$router.replace({ name: 'Home' })
+                }
+                throw e
+            }
         },
         // 是否有权限观看
         async getPromission () {
@@ -184,6 +191,7 @@ export default {
                 const { isGive, isRange } = await hasPermission(this.activityId)
                 this.isGive = isGive
                 if (!isRange) {
+                    await this.$warning('您没有权限观看该场直播')
                     if (window.history.length > 1) {
                         this.$router.go(-1)
                     } else {
@@ -241,6 +249,7 @@ export default {
                 const result = await getActiveCompleteInfo(this.activityId)
                 // 直播已经删除
                 if (result.statue === 3) {
+                    await this.$warning('该直播已经删除')
                     if (window.history.length > 1) {
                         this.$router.go(-1)
                     } else {
