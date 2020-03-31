@@ -5,8 +5,6 @@ import { getJSApi } from '../../../apis/base-api'
 // import qs from 'qs'
 const WX = window.wx
 
-// let timer = 0
-
 export default async function share ({ appId, title, desc, imgUrl, link = location.href, willHide }) {
     const { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
     willHide = !title ? ['menuItem:share:appMessage', 'menuItem:share:timeline'] : willHide

@@ -84,7 +84,9 @@ export default {
                         delete search.code
                         location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
                     })
-                    .catch(() => {})
+                    .catch(() => {
+                        window.wx.closeWindow()
+                    })
             } else {
                 throw e
             }
