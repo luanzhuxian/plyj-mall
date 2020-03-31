@@ -499,6 +499,14 @@
                 去付款
             </pl-button>
             <pl-button
+                v-if="orderType === 'KNOWLEDGE_COURSE' && orderStatus === 'FINISHED'"
+                type="warning"
+                round
+                @click="$router.push({ name: 'MyCourses' })"
+            >
+                去学习
+            </pl-button>
+            <pl-button
                 v-if="orderStatus === 'WAIT_PAY_REPAYMENT'"
                 type="warning"
                 round
@@ -831,10 +839,14 @@ export default {
         this.collepseActiveNames = []
         clearInterval(this.timer)
         clearInterval(this.timer2)
-        this.countdownInstance.stop()
+        if (this.countdownInstance) {
+            this.countdownInstance.stop()
+        }
     },
     beforeDestroy () {
-        this.countdownInstance.stop()
+        if (this.countdownInstance) {
+            this.countdownInstance.stop()
+        }
     },
     methods: {
         // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消

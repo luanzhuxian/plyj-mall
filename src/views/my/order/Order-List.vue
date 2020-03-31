@@ -132,10 +132,10 @@
                                     确认收货
                                 </pl-button>
                                 <pl-button
-                                    v-if="item.orderType === 'KNOWLEDGE_COURSE' && item.status === 'WAIT_RECEIVE'"
+                                    v-if="item.orderType === 'KNOWLEDGE_COURSE' && item.status === 'FINISHED'"
                                     type="warning"
                                     round
-                                    @click="$router.push({ name: 'CourseWatch', params: { courseId: item.products[0].productId }, query: { liveId: item.products[0].liveId, orderId: item.id, progress: item.products[0].learnProgress } })"
+                                    @click="$router.push({ name: 'MyCourses' })"
                                 >
                                     去学习
                                 </pl-button>
