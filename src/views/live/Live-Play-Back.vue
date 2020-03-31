@@ -115,7 +115,6 @@ export default {
     async activated () {
         try {
             this.needPay = false
-            localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
             if (this.roleCode === 'VISITOR') {
                 await this.$confirm({
                     message: '为了您的账号安全，请绑定手机号',
@@ -164,6 +163,7 @@ export default {
         // 是否有权限观看
         async getPromission () {
             try {
+                // 下面顺序不可改变
                 // 获取活动信息
                 await this.getDetail()
                 // 是否有权限观看

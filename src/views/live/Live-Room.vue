@@ -402,7 +402,7 @@ export default {
                 }
                 return
             }
-            this.listenLiveStart = this.listenLiveStart()
+            this.listenLiveStart = this.returnListenLiveStart()
             // 下面是按照固定顺序，不可改变
             // 是否有权限观看
             await this.hasPermission()
@@ -586,7 +586,9 @@ export default {
             }
         },
         // 查询直播是否开始
-        listenLiveStart () {
+        listenLiveStart () {},
+        // 返回直播监听函数
+        returnListenLiveStart () {
             let flag
             const isStart = async stream => {
                 try {
