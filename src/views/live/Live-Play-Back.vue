@@ -73,6 +73,7 @@ import wechatPay from '../../assets/js/wechat/wechat-pay'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
 import LivePassword from './components/Live-Password'
 import LiveSignUp from './components/Live-Sign-Up'
+import { mapGetters } from 'vuex'
 export default {
     name: 'LivePlayBack',
     components: {
@@ -114,6 +115,19 @@ export default {
     async activated () {
         try {
             this.needPay = false
+            localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
+            if (this.roleCode === 'VISITOR') {
+                await this.$confirm({
+                    message: '为了您的账号安全，请绑定手机号',
+                    confirmText: '去绑定',
+                    closeOnClickMask: false
+                }).finally(() => {
+                    const { name, params, query } = this.$route
+                    sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({ name, query, params }))
+                    this.$router.push({ name: 'BindMobile' })
+                })
+                return
+            }
             await this.getLivePlayBackInfo()
             await this.getPromission()
         } catch (e) { throw e }
@@ -143,6 +157,8 @@ export default {
         // 是否有权限观看
         async getPromission () {
             try {
+                // 获取活动信息
+                await this.getDetail()
                 // 是否有权限观看
                 await this.hasPermission()
                 // 存入访问记录
@@ -156,7 +172,6 @@ export default {
                 // 是否要付费
                 if (!this.needPay) {
                     await this.getVideoMes()
-                    await this.getDetail()
                 }
             } catch (e) {
                 if (e) throw e
@@ -223,8 +238,18 @@ export default {
         },
         async getDetail () {
             try {
-                const { productList } = await getActiveCompleteInfo(this.activityId)
-                this.productList = productList || []
+                const result = await getActiveCompleteInfo(this.activityId)
+                // 直播已经删除
+                if (result.statue === 3) {
+                    if (window.history.length > 1) {
+                        this.$router.go(-1)
+                    } else {
+                        this.$router.replace({ name: 'Home' })
+                    }
+                    // eslint-disable-next-line no-throw-literal
+                    throw false
+                }
+                this.productList = result.productList || []
             } catch (e) { throw e }
         },
         async getVideoMes () {
@@ -274,6 +299,9 @@ export default {
         cancelPay () {
             this.$router.back()
         }
+    },
+    computed: {
+        ...mapGetters(['mallDomain', 'roleCode'])
     }
 }
 </script>
