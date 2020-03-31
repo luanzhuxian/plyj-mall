@@ -22,7 +22,7 @@
                 :to="{ name: 'LiveRoom', params: { id: data.liveModel.id } }"
             >
                 <div :class="$style.imgWrapper">
-                    <img :src="(live.hasNotice ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
+                    <img :src="(isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
                     <div :class="$style.label" v-if="isNoticeShow">
                         预告
                     </div>
