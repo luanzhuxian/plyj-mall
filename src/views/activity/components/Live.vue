@@ -17,10 +17,7 @@
                 <span>{{ `即将开始 ${data.futrueCount || 0}` }}</span>
                 <span>{{ `往期直播 ${data.pastCount || 0}` }}</span>
             </div>
-            <router-link
-                :class="$style.live"
-                :to="{ name: 'LiveRoom', params: { id: data.liveModel.id } }"
-            >
+            <div :class="$style.live" @click="toLivePage">
                 <div :class="$style.imgWrapper">
                     <img :src="(isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
                     <div :class="$style.label" v-if="isNoticeShow">
@@ -57,7 +54,7 @@
                         观看需验证口令
                     </div>
                 </div>
-            </router-link>
+            </div>
         </div>
     </div>
 </template>
@@ -108,6 +105,26 @@ export default {
                 this.live.statue = 0
                 this.data.nowCount -= 1
                 this.data.pastCount += 1
+            }
+        },
+        toLivePage () {
+            // 直播已结束
+            if (this.live.statue === 0) {
+                if (!this.live.videoLibId) {
+                    // 没有往期回放
+                    this.$router.push({ name: 'InteractiveLive' })
+                } else {
+                    this.$router.push({
+                        name: 'LivePlayBack',
+                        params: {
+                            id: this.live.videoLibId,
+                            activityId: this.live.id,
+                            isValidateEndTime: '0'
+                        }
+                    })
+                }
+            } else {
+                this.$router.push({ name: 'LiveRoom', params: { id: this.live.id } })
             }
         }
     }

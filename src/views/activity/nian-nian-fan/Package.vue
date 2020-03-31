@@ -61,7 +61,7 @@
                             <div
                                 :class="{
                                     [$style.subRight]: true,
-                                    [$style.disabled]: item.combinationDetailList[0].stock === 0 || item.combinationDetailList[0].status !== 1
+                                    [$style.disabled]: !item.combinationDetailList[0].stock || item.combinationDetailList[0].status !== 1
                                 }"
                             >
                                 <pl-svg

@@ -1,10 +1,5 @@
 <template>
-    <router-link
-        class="live"
-        :class="$style.live"
-        tag="div"
-        :to="{ name: 'LiveRoom', params: { id: live.id } }"
-    >
+    <div class="live" :class="$style.live" @click="toLivePage">
         <div :class="$style.cover">
             <span :class="$style.status" v-if="isNoticeShow">距开始</span>
             <span :class="$style.status" v-if="live.statue === 4">正在直播</span>
@@ -32,7 +27,7 @@
                 <span :class="$style.name" v-text="live.name" />
             </div>
         </div>
-    </router-link>
+    </div>
 </template>
 
 <script>
@@ -77,6 +72,26 @@ export default {
                 this.live.statue = 4
             } else if (this.live.statue === 4) {
                 this.live.statue = 0
+            }
+        },
+        toLivePage () {
+            // 直播已结束
+            if (this.live.statue === 0) {
+                if (!this.live.videoLibId) {
+                    // 没有往期回放
+                    this.$router.push({ name: 'InteractiveLive' })
+                } else {
+                    this.$router.push({
+                        name: 'LivePlayBack',
+                        params: {
+                            id: this.live.videoLibId,
+                            activityId: this.live.id,
+                            isValidateEndTime: '0'
+                        }
+                    })
+                }
+            } else {
+                this.$router.push({ name: 'LiveRoom', params: { id: this.live.id } })
             }
         }
     }

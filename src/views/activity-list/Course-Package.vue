@@ -184,6 +184,11 @@ export default {
     methods: {
         // batchType 1: 组合课 2: 春耘
         async getSpringCombination () {
+            const getLatestEndTime = (data = []) => {
+                const list = data.map(item => moment(item.activityEndTime).valueOf())
+                return Math.max.apply(null, list)
+            }
+
             try {
                 const { result } = await getSpringCombination({
                     current: 1,
@@ -228,7 +233,7 @@ export default {
                 }
                 this.list = result.records
                 const lastStartTime = moment(this.list[0].activityStartTime).valueOf()
-                const lastEndTime = moment(this.list[this.list.length - 1].activityEndTime).valueOf()
+                const lastEndTime = getLatestEndTime(this.list)
                 const now = Date.now()
                 this.count.wasStarted = now - lastStartTime >= 0
                 this.count.wasEnded = now - lastEndTime >= 0
