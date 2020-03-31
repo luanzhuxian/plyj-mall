@@ -199,6 +199,7 @@ export default {
     }
     .container{
       display: flex;
+      margin-top: 40px;
       flex-wrap: wrap;
       justify-content: center;
       text-align: center;
@@ -366,7 +367,7 @@ export default {
       }
     }
     .close {
-      margin-top: 48px;
+      margin-top: 10px;
       width: 100%;
       > span {
         display: inline-block;
