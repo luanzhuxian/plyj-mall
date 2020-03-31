@@ -110,7 +110,7 @@ export default {
     methods: {
         getTime,
         reload (item) {
-            item.combinationDetailList[0].status += 1
+            // item.combinationDetailList[0].status += 1
             this.parent.getTemplate()
         }
     }

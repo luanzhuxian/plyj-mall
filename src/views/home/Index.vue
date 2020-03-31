@@ -75,15 +75,7 @@ export default {
         return {
             loaded: false,
             type: 0,
-            modules: {
-                BANNER: null,
-                ADV: null,
-                POPULAR: null,
-                APPOINTMENT: null,
-                PROPAGATE: null,
-                CLASS: null,
-                RECOMMEND: null
-            },
+            modules: {},
             // dataMoonLightBox: {},
             // 820用户注册次数
             // registerCountFor820: 0,
@@ -180,45 +172,45 @@ export default {
                     return
                 }
                 const { type, moduleModels } = result
+                const modules = {}
                 if (type === 3) {
-                    this.modules.BANNER = moduleModels[0]
-                    this.modules.POPULAR = moduleModels[1]
-                    this.modules.APPOINTMENT = moduleModels[2]
-                    this.modules.PROPAGATE = moduleModels[3]
-                    this.modules.CLASS = moduleModels[4]
-                    this.modules.RECOMMEND = moduleModels[5]
+                    modules.BANNER = moduleModels[0]
+                    modules.POPULAR = moduleModels[1]
+                    modules.APPOINTMENT = moduleModels[2]
+                    modules.PROPAGATE = moduleModels[3]
+                    modules.CLASS = moduleModels[4]
+                    modules.RECOMMEND = moduleModels[5]
                 }
                 if (type === 4) {
-                    this.modules.BANNER = moduleModels[0]
-                    this.modules.ADV = moduleModels[1]
-                    this.modules.POPULAR = moduleModels[2]
-                    this.modules.APPOINTMENT = moduleModels[3]
-                    this.modules.PROPAGATE = moduleModels[4]
-                    this.modules.CLASS = moduleModels[5]
-                    this.modules.RECOMMEND = moduleModels[6]
+                    modules.BANNER = moduleModels[0]
+                    modules.ADV = moduleModels[1]
+                    modules.POPULAR = moduleModels[2]
+                    modules.APPOINTMENT = moduleModels[3]
+                    modules.PROPAGATE = moduleModels[4]
+                    modules.CLASS = moduleModels[5]
+                    modules.RECOMMEND = moduleModels[6]
                 }
                 if (type === -1) {
-                    this.modules.PROPAGATE = moduleModels[0]
-                    this.modules.APPOINTMENT = moduleModels[1]
-                    this.modules.POPULAR = moduleModels[2]
-                    this.modules.TEACHERS = moduleModels[3]
-                    this.modules.CLASS = moduleModels[4]
-                    this.modules.RECOMMEND = moduleModels[5]
+                    modules.PROPAGATE = moduleModels[0]
+                    modules.APPOINTMENT = moduleModels[1]
+                    modules.POPULAR = moduleModels[2]
+                    modules.TEACHERS = moduleModels[3]
+                    modules.CLASS = moduleModels[4]
+                    modules.RECOMMEND = moduleModels[5]
                 }
                 if (type === 9) {
-                    this.modules.BANNER = moduleModels[0]
-                    this.modules.COUPON = moduleModels[1]
-                    this.modules.ACTIVITY = moduleModels[2]
-                    this.modules.APPOINTMENT = moduleModels[3]
-                    this.modules.POPULAR = moduleModels[4]
-                    this.modules.PACKAGE = moduleModels[5]
-                    this.modules.CLASS = moduleModels[6]
-                    this.modules.PROPAGATE = moduleModels[7]
-                    this.modules.RECOMMEND = moduleModels[8]
+                    modules.BANNER = moduleModels[0]
+                    modules.COUPON = moduleModels[1]
+                    modules.ACTIVITY = moduleModels[2]
+                    modules.APPOINTMENT = moduleModels[3]
+                    modules.POPULAR = moduleModels[4]
+                    modules.PACKAGE = moduleModels[5]
+                    modules.CLASS = moduleModels[6]
+                    modules.PROPAGATE = moduleModels[7]
+                    modules.RECOMMEND = moduleModels[8]
                 }
                 this.type = type
-
-                // this.skinId = skinStatus
+                this.modules = modules
                 this.loaded = true
             } catch (e) {
                 throw e
