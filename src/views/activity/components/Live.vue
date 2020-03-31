@@ -29,11 +29,11 @@
                     <div :class="$style.top">
                         {{ live.name }}
                     </div>
-                    <div :class="$style.bottom">
+                    <div :class="$style.bottom" v-if="live.statue !== 0">
                         <div :class="$style.bottomLeft">
                             <pl-svg name="icon-clock" fill="#fff" width="26" />
                         </div>
-                        <div :class="$style.bottomRight" v-if="live.statue !== 0">
+                        <div :class="$style.bottomRight">
                             <span v-if="isNoticeShow">距开始仅剩</span>
                             <span v-if="live.statue === 4" :class="$style.highlight">正在直播</span>
                             <!-- <span v-if="live.statue === 0" :class="$style.highlight">已结束</span> -->
