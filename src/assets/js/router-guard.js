@@ -19,13 +19,9 @@ const shareRoutes = [
     'BattlefieldReport',
     'EpidemicSignIn'
 ]
+let timer = 0
 const setShare = to => {
-    const {
-        appid,
-        mallName,
-        mallDesc,
-        logoUrl
-    } = store.state.mallInfo
+    clearTimeout(timer)
     // const fullUrl = `${ location.origin }/${ mallDomain }${ to.fullPath }`
     // console.log(location.href)
     // console.log(appid)
@@ -42,15 +38,23 @@ const setShare = to => {
         } else {
             console.warn('默认分享')
         }
-        if (appid) {
-            share({
-                appId: appid,
-                title: `${ mallName }-${ to.meta.title }`,
-                desc: mallDesc,
-                imgUrl: logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
-                willHide
-            })
-        }
+        timer = setTimeout(() => {
+            const {
+                appid,
+                mallName,
+                mallDesc,
+                logoUrl
+            } = store.state.mallInfo
+            if (appid) {
+                share({
+                    appId: appid,
+                    title: `${ mallName }-${ to.meta.title }`,
+                    desc: mallDesc,
+                    imgUrl: logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0',
+                    willHide
+                })
+            }
+        }, 1500)
     }
 }
 

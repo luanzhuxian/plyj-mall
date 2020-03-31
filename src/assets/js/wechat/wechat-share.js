@@ -20,6 +20,7 @@ export default async function share ({ appId, title, desc, imgUrl, link = locati
         console.warn('分享配置失败')
         console.error(res)
     })
+
 }
 
 /**
