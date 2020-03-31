@@ -39,7 +39,6 @@
                     <div :class="$style.info">
                         <div :class="$style.main">
                             {{ item.activityName }}
-                            {{ item.combinationDetailList[0].status }}
                         </div>
                         <div :class="$style.sub">
                             <div :class="$style.subLeft">
