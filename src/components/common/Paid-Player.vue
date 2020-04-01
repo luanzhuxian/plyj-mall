@@ -11,7 +11,6 @@
             playsinline=""
             x-webkit-airplay="true"
             @loadedmetadata="videoLoadedmetadata"
-            @progress="videoProgress"
             @loadeddata="loadeddata"
             @play="playHandler"
             @playing="playingHandler"
@@ -38,6 +37,10 @@ export default {
         // 缓存每次加载的时间片段，发送给后端后会被清空
         this.timeFragment = []
         this.lastLoadedTime = 0
+        // 总的观看的时长，每隔10s给后端发一次
+        this.totalWatchTime = 0
+        // timeupdate上一个执行周期的时间
+        this.lastWatchTime = 0
         return {
             test: [],
             // 是否正在检查视频可用性
@@ -203,8 +206,20 @@ export default {
             this.duration = e.target.duration
             this.$emit('play', e)
         },
+        // 观看的时间发生变化时
         timeupdate (e) {
-            this.$emit('timeupdate', e)
+            const DURATION = e.target.currentTime - this.lastWatchTime
+            // 如果两次差值大于10或者小于0，可能是快进/快退了，就不计费
+            if (DURATION > 10 || DURATION < 0) {
+                this.lastWatchTime = e.target.currentTime
+                return
+            }
+            this.totalWatchTime += DURATION
+            this.lastWatchTime = e.target.currentTime
+            if (this.totalWatchTime >= 10) {
+                this.sendFlow(this.totalWatchTime)
+                this.totalWatchTime = 0
+            }
         },
         ended (e) {
             this.$emit('ended', e)
