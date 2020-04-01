@@ -1,7 +1,6 @@
 /* eslint-disable */
 import Axios from 'axios'
 import Cookie from '../assets/js/storage-cookie'
-
 const Instance = Axios.create({
     timeout: 15000
 })
@@ -34,10 +33,10 @@ Instance.interceptors.response.use(response, resError)
  * freeReview        { String } 当频道开启审核后消息是否需要经过审核，Y表示不需要，N表示需要，默认为N
  * @returns {Promise<AxiosResponse<T>>}
  */
-export const sendMessage = data => {
-    data = createFormData(data)
-    return Instance.post('/live/v3/channel/chat/send-admin-msg', data)
-}
+// export const sendMessage = data => {
+//     data = createFormData(data)
+//     return Instance.post('/live/v3/channel/chat/send-admin-msg', data)
+// }
 /**
  * 设置会暖场图片
  * @param channelId {number}
@@ -49,7 +48,7 @@ export const sendMessage = data => {
  * @property data.sign {string}
  * @return {Promise<AxiosResponse<T>>}
  */
-export const setcCverImg = (channelId, data) => Instance.post(`http://api.polyv.net/live/v2/channels/${ channelId }/update`, data)
+// export const setcCverImg = (channelId, data) => Instance.post(`http://api.polyv.net/live/v2/channels/${ channelId }/update`, data)
 /**
  * 发送自定义消息
  * @param channelId (必填)  { Integer }频道号
@@ -61,10 +60,10 @@ export const setcCverImg = (channelId, data) => Instance.post(`http://api.polyv.
  * content/imgUrl   需要发送的图片或是文字，二者不能同时为空，可以同时提交, content需要进行base64编码，编码规则参(http://dev.polyv.net/2016/liveproduct/zblts/send-chat/)
  * @returns {Promise<AxiosResponse<T>>}
  */
-export const sendCustomMessage = (channelId, data) => {
-    data = createFormData(data)
-    return Instance.post(`/live/v1/channelSetting/${ channelId }/send-chat`, data)
-}
+// export const sendCustomMessage = (channelId, data) => {
+//     data = createFormData(data)
+//     return Instance.post(`/live/v1/channelSetting/${ channelId }/send-chat`, data)
+// }
 /**
  * 从我们服务器获取去签名
  * @param data {Object} 要签名的字符串

@@ -420,7 +420,6 @@ export default {
             this.init()
         } catch (e) {
             if (e) {
-                this.$error(e.message)
                 throw e
             }
         }

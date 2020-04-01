@@ -141,12 +141,5 @@ function getConfig (jsapi, appId) {
 
 // 生成随机字符串
 function randomString () {
-    // 48~57 数字， 65~90 大写，  97~122 小写
-    const LIB = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'
-    const randomStr = []
-    for (let i = 0; i < 16; i++) {
-        const index = Number.parseInt(Math.random() * 62)
-        randomStr.push(LIB[index])
-    }
-    return randomStr.join('')
+    return (Math.random() * 10e17).toString(16)
 }

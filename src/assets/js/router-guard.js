@@ -52,7 +52,7 @@ const setShare = to => {
         } else {
             setTimeout(() => {
                 setShare(to)
-            }, 100)
+            }, 500)
         }
     } else {
         window.wx.showOptionMenu()
