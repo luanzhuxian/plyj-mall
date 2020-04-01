@@ -81,6 +81,10 @@
                                     </div>
                                 </div>
                             </li>
+                            <li v-if="totals.FUTURE % 2 === 1" :class="[$style.item, $style.noContent]">
+                                <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
+                                <div :class="$style.desc">敬请期待</div>
+                            </li>
                         </ul>
                     </div>
 
@@ -115,6 +119,10 @@
                                         <span v-else :class="$style.notSupport">不支持回放</span>
                                     </div>
                                 </div>
+                            </li>
+                            <li v-if="totals.PAST % 2 === 1" :class="[$style.item, $style.noContent]">
+                                <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
+                                <div :class="$style.desc">敬请期待</div>
                             </li>
                         </ul>
                     </div>
@@ -393,6 +401,22 @@ export default {
         font-size: 28px;
         color: #FE7700;
       }
+    }
+  }
+  .noContent {
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 20px;
+    text-align: center;
+    @include skeAnimation(#eee);
+    > img {
+      object-fit: contain!important;
+    }
+    > .desc {
+      padding-top: 20px;
+      letter-spacing: 3px;
+      font-size: 32px;
+      color: #bbb;
     }
   }
 </style>
