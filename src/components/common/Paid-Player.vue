@@ -14,7 +14,7 @@
             @loadeddata="loadeddata"
             @play="playHandler"
             @playing="playingHandler"
-            @progress="videoProgress"
+            @timeupdate="timeupdate"
             @ended="ended"
             @pause="pause"
             @error="error"
@@ -207,20 +207,20 @@ export default {
             this.$emit('play', e)
         },
         // 观看的时间发生变化时
-        // timeupdate (e) {
-        //     const DURATION = e.target.currentTime - this.lastWatchTime
-        //     // 如果两次差值大于10或者小于0，可能是快进/快退了，就不计费
-        //     if (DURATION > 10 || DURATION < 0) {
-        //         this.lastWatchTime = e.target.currentTime
-        //         return
-        //     }
-        //     this.totalWatchTime += DURATION
-        //     this.lastWatchTime = e.target.currentTime
-        //     if (this.totalWatchTime >= 10) {
-        //         this.sendFlow(this.totalWatchTime)
-        //         this.totalWatchTime = 0
-        //     }
-        // },
+        timeupdate (e) {
+            const DURATION = e.target.currentTime - this.lastWatchTime
+            // 如果两次差值大于10或者小于0，可能是快进/快退了，就不计费
+            if (DURATION > 10 || DURATION < 0) {
+                this.lastWatchTime = e.target.currentTime
+                return
+            }
+            this.totalWatchTime += DURATION
+            this.lastWatchTime = e.target.currentTime
+            if (this.totalWatchTime >= 10) {
+                this.sendFlow(this.totalWatchTime)
+                this.totalWatchTime = 0
+            }
+        },
         ended (e) {
             this.$emit('ended', e)
         },
