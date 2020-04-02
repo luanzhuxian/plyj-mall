@@ -1363,15 +1363,23 @@ export default {
                     const allCancel = []
                     const allDelete = []
                     for (const id of orderIds) {
-                        allDelete.push(deleteOrder(id))
-                        // 春耘计划和年年翻组合课只取消一个订单全部订单就会被取消
-                        if ((this.activeProduct === 5 || this.activeProduct === 6) && allCancel.length === 0) {
+                        // 春耘计划和年年翻组合课只取消一个订单全部订单就会被取消, 其他订单会被全部取消
+                        if (this.activeProduct === 5 || this.activeProduct === 6) {
+                            if (allCancel.length === 0) {
+                                allCancel.push(cancelOrder(id, '支付失败'))
+                            }
+                        } else {
                             allCancel.push(cancelOrder(id, '支付失败'))
                         }
                     }
                     await Promise.all(allCancel)
-                    await setTimeoutSync(1000)
-                    await Promise.all(allDelete)
+                    // 删除订单的动作需要延迟进行
+                    setTimeout(async () => {
+                        for (const id of orderIds) {
+                            allDelete.push(deleteOrder(id))
+                        }
+                        await Promise.all(allDelete)
+                    }, 1000)
                 } catch (e) {
                     console.warn('订单取消失败')
                     console.error(e)
