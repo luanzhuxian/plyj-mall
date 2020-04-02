@@ -34,8 +34,10 @@
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
                                 <div :class="$style.liveTime">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
                                 <div :class="$style.bottom">
-                                    <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
-                                    <span :class="$style.free" v-else>免费</span>
+                                    <span :class="$style.free">
+                                        赠送
+                                        <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
+                                    </span>
                                     <span :class="$style.liveLecturer" v-if="item.lecturerName">
                                         <PlSvg name="icon-office-man-35b25" width="32" height="32" />
                                         {{ item.lecturerName }}
@@ -71,8 +73,10 @@
                                     {{ item.lecturerName }}
                                 </div>
                                 <div :class="$style.bottom">
-                                    <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
-                                    <span :class="$style.free" v-else>免费</span>
+                                    <span :class="$style.free">
+                                        赠送
+                                        <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
+                                    </span>
                                     <pl-button
                                         type="primary"
                                         size="middle"
@@ -265,9 +269,11 @@ export default {
             justify-content: space-between;
           }
           .price {
+            margin-left: 10px;
             font-size: 40px;
             color: #FE7700;
             font-weight: bold;
+            text-decoration: line-through;
             &:before {
               content: '¥';
               margin-right: 4px;
@@ -343,8 +349,10 @@ export default {
               justify-content: space-between;
             }
             .price {
+              margin-left: 10px;
               font-size: 28px;
               color: #FE7700;
+              text-decoration: line-through;
               &:before {
                 content: '¥';
                 margin-right: 4px;
