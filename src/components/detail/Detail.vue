@@ -67,29 +67,28 @@ export default {
 }
 </script>
 <style module lang="scss">
-  .detail-info {
-    padding: 30px 40px ;
-    h3 {
-      margin-bottom: 28px;
-      font-size: 32px;
-      color: #000;
-      font-weight: bold;
+    .detail-info {
+        padding: 30px 40px;
+
+        h3 {
+            margin-bottom: 28px;
+            font-size: 32px;
+            color: #000;
+            font-weight: bold;
+        }
     }
-  }
-  .content {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    color: #999 !important;
-    font-size: 16px !important;
-    img {
-      width: 670px !important;
-      height: auto !important;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        color: #999 !important;
+        font-size: 16px !important;
+
+        img {
+            display: inline-block;
+            width: 670px !important;
+            height: auto !important;
+        }
     }
-    > p, > div {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-    }
-  }
 </style>
