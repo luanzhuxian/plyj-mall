@@ -103,7 +103,7 @@ export default {
                         if (window.history.length > 1) {
                             this.$router.go(-1)
                         } else {
-                            this.$router.replace({ name: 'MyCourses' })
+                            this.$router.replace({ name: 'MySingleCourses' })
                         }
                     })
                     return

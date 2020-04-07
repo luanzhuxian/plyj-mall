@@ -1,25 +1,27 @@
 <template>
-    <div :class="{ [$style.liveLibrary]: true, [$style.myLive]: routeName === 'MyLive' }">
+    <div :class="{ [$style.liveLibrary]: true, [$style.myLive]: isLiveCourse }">
         <div :class="$style.nav">
             <div :class="$style.head">
                 <div :class="$style.tabs" @click="$router.push({ name: 'MyLive' })">
-                    <div :class="{ [$style.tabFocus]: routeName === 'MyLive' }">我的直播</div>
-                    <div :class="{ [$style.line]: true, [$style.lineFocus]: routeName === 'MyLive' }" />
+                    <div :class="{ [$style.tabFocus]: isLiveCourse }">直播课</div>
+                    <div :class="{ [$style.line]: true, [$style.lineFocus]: isLiveCourse }" />
                 </div>
-                <div :class="$style.tabs" @click="$router.push({ name: 'MyCourses' })">
-                    <div :class="{ [$style.tabFocus]: routeName !== 'MyLive' }">我的课程</div>
-                    <div :class="{ [$style.line]: true, [$style.lineFocus]: routeName !== 'MyLive' }" />
+                <div :class="$style.tabs" @click="$router.push({ name: 'MySingleCourses' })">
+                    <div :class="{ [$style.tabFocus]: isSingleCourse }">单课</div>
+                    <div :class="{ [$style.line]: true, [$style.lineFocus]: isSingleCourse }" />
+                </div>
+                <div :class="$style.tabs" @click="$router.push({ name: 'MySeriesCourses' })">
+                    <div :class="{ [$style.tabFocus]: isSeriesCourse }">系列课</div>
+                    <div :class="{ [$style.line]: true, [$style.lineFocus]: isSeriesCourse }" />
                 </div>
             </div>
-            <div v-if="routeName !== 'MyLive'" :class="$style.studyTabs">
-                <div :class="{ [$style.focus]: learnStatus === '1' }" @click="$router.push({ name: 'CourseLearning', params: { learnStatus: '1' } })">未学习</div>
-                <div :class="{ [$style.focus]: learnStatus === '2' }" @click="$router.push({ name: 'CourseLearning', params: { learnStatus: '2' } })">学习中</div>
-                <div :class="{ [$style.focus]: learnStatus === '3' }" @click="$router.push({ name: 'CourseLearning', params: { learnStatus: '3' } })">已过期</div>
+            <div v-if="!isLiveCourse" :class="$style.studyTabs">
+                <div :class="{ [$style.focus]: item.learnStatus === learnStatus }" v-for="(item,index) in tabs" :key="index" @click="target(item.learnStatus)">{{ item.name }}</div>
             </div>
             <div v-if="learnStatus === '3'" :class="$style.description">
                 已过期课程不支持观看
             </div>
-            <div v-else-if="$route.name !== 'MyLive' && learnStatus !== '3'" :class="$style.description">
+            <div v-else-if="!isLiveCourse && learnStatus !== '3'" :class="$style.description">
                 仅支持观看已成功购买的线上视频课程
             </div>
         </div>
@@ -32,12 +34,41 @@
 <script>
 export default {
     name: 'LiveLibrary',
+    data () {
+        return {
+            tabs: [
+                {
+                    learnStatus: '1',
+                    name: '未学习'
+                },
+                {
+                    learnStatus: '2',
+                    name: '学习中'
+                },
+                {
+                    learnStatus: '3',
+                    name: '已过期'
+                }
+            ]
+        }
+    },
+    methods: {
+        target (learnStatus) {
+            this.$router.push({ name: this.$route.name, params: { learnStatus } })
+        }
+    },
     computed: {
-        routeName () {
-            return this.$route.name
-        },
         learnStatus () {
             return this.$route.params.learnStatus
+        },
+        isLiveCourse () {
+            return this.$route.name === 'MyLive'
+        },
+        isSingleCourse () {
+            return this.$route.name === 'SingleCourseLearning'
+        },
+        isSeriesCourse () {
+            return this.$route.name === 'SeriesCourseLearning'
         }
     }
 }

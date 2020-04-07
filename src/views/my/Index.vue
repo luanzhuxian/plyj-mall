@@ -157,7 +157,7 @@
                     <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
                         <pl-svg name="icon-live-library" width="72" height="72" type="svg" />
                         <div>
-                            <h5>我的视频库</h5>
+                            <h5>我的视频</h5>
                             <!-- <span>到店核销领礼品</span> -->
                         </div>
                     </router-link>
