@@ -1,6 +1,11 @@
+import store from '../../../store'
 // 微信支付方法
 export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, paySign, signType }) {
     return new Promise((resolve, reject) => {
+        if (store.getters.forbiddenPay) {
+            reject(new ResponseError(JSON.stringify({ message: `支付失败` })))
+            return
+        }
         try {
             if (window.WeixinJSBridge) {
                 window.WeixinJSBridge.invoke('getBrandWCPayRequest', {

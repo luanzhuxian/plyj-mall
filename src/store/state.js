@@ -142,5 +142,10 @@ export default {
     // 服务器时间
     currentTime: 0,
     // 链接中携带的分享人id
-    SHARE_ID: SHARE_ID || null
+    SHARE_ID: SHARE_ID || null,
+    // 不允许支付的商城
+    theMallForbiddenPay: [
+        '1187288967105314816',
+        '1071966573238960128'
+    ]
 }
