@@ -31,21 +31,40 @@ export default [
                 name: 'MyLive',
                 component: () => import('../views/live/live-library/Live.vue'),
                 meta: {
-                    title: '我的直播'
+                    title: '直播课'
                 }
             },
             {
                 path: '/lived/library/courses',
-                name: 'MyCourses',
+                name: 'MySingleCourses',
                 component: () => import('../views/live/live-library/Courses.vue'),
-                redirect: '/lived/library/courses/course-learning/1',
+                redirect: '/lived/library/courses/single-course-learning/1',
                 meta: {
-                    title: '我的课程'
+                    title: '单课'
                 },
                 children: [
                     {
-                        path: '/lived/library/courses/course-learning/:learnStatus',
-                        name: 'CourseLearning',
+                        path: '/lived/library/courses/single-course-learning/:learnStatus',
+                        name: 'SingleCourseLearning',
+                        component: () => import('../views/live/live-library/Course-Learning.vue'),
+                        meta: {
+                            title: '课程学习'
+                        }
+                    }
+                ]
+            },
+            {
+                path: '/lived/library/series-courses',
+                name: 'MySeriesCourses',
+                component: () => import('../views/live/live-library/Courses.vue'),
+                redirect: '/lived/library/courses/series-course-learning/1',
+                meta: {
+                    title: '系列课'
+                },
+                children: [
+                    {
+                        path: '/lived/library/courses/series-course-learning/:learnStatus',
+                        name: 'SeriesCourseLearning',
                         component: () => import('../views/live/live-library/Course-Learning.vue'),
                         meta: {
                             title: '课程学习'
