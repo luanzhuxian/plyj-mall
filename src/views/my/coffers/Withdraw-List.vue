@@ -33,7 +33,7 @@
                                 :class="{ [$style.selectItem]: true, [$style.selected]: item.id === form.status }"
                                 :key="item.id"
                                 v-text="item.name"
-                                @click="tabChange(item)"
+                                @click="onTabChange(item)"
                             />
                         </ul>
                     </div>
@@ -138,7 +138,7 @@ export default {
         this.$refresh()
     },
     methods: {
-        tabChange (item) {
+        onTabChange (item) {
             this.form.status = item.id
             this.currentSelect = item.name
             this.$refresh()

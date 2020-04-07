@@ -5,7 +5,7 @@
             size="small"
             :tabs="tabs"
             :active-id.sync="form.orderStatus"
-            @change="tabChange"
+            @change="onTabChange"
         >
             <div
                 :class="$style.tabPane"
@@ -336,7 +336,7 @@ export default {
     deactivated () {
     },
     methods: {
-        tabChange (item) {
+        onTabChange (item) {
             this.$nextTick(() => {
                 this.$router.replace({ name: 'Orders', params: { status: item.id || null } })
                 this.$refresh()
@@ -415,13 +415,13 @@ export default {
                 await wechatPay(result)
                 if (orderType === 'PHYSICAL') {
                     this.form.orderStatus = 'WAIT_SHIP'
-                    this.tabChange({
+                    this.onTabChange({
                         name: '待发货',
                         id: 'WAIT_SHIP'
                     })
                 } else {
                     this.form.orderStatus = 'WAIT_RECEIVE'
-                    this.tabChange({
+                    this.onTabChange({
                         name: '待收货',
                         id: 'WAIT_RECEIVE'
                     })
@@ -444,13 +444,13 @@ export default {
                 await wechatPay(result)
                 if (orderType === 'PHYSICAL') {
                     this.form.orderStatus = 'WAIT_SHIP'
-                    this.tabChange({
+                    this.onTabChange({
                         name: '待发货',
                         id: 'WAIT_SHIP'
                     })
                 } else {
                     this.form.orderStatus = 'WAIT_RECEIVE'
-                    this.tabChange({
+                    this.onTabChange({
                         name: '待收货',
                         id: 'WAIT_RECEIVE'
                     })
