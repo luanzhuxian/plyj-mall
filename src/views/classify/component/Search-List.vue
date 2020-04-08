@@ -68,7 +68,11 @@
                                 :img="item.coverImg + '?x-oss-process=style/thum-middle'"
                                 :price="item.paidAmount"
                                 :original-price="item.needPaidAmount"
-                            />
+                            >
+                                <template>
+                                    <div :class="$style.lecturer" v-text="item.lecturerName" />
+                                </template>
+                            </lesson-item>
                         </template>
                     </load-more>
                 </div>
@@ -233,5 +237,11 @@ export default {
     &:nth-of-type(1) {
         margin-top: 0;
     }
+}
+.lecturer {
+    margin-top: 18px;
+    font-size: 24px;
+    line-height: 34px;
+    color: #666666;
 }
 </style>

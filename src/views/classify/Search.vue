@@ -92,9 +92,6 @@ export default {
             searched: false
         }
     },
-    // mounted () {
-    //     console.log(this.$refs.searchList.$refresh)
-    // },
     activated () {
         this.getHotKeyword()
         this.getHistory()
@@ -104,7 +101,6 @@ export default {
         async search (keyword) {
             if (!keyword) return this.$warning('请输入要搜索的内容')
             this.searchContent = keyword
-            // this.form.searchContent = keyword
             this.searched = true
             this.$nextTick(() => this.$refs.searchList.refresh(keyword))
         },
@@ -137,7 +133,6 @@ export default {
                 return this.$router.go(-1)
             }
             this.searchContent = ''
-            // this.form.searchContent = ''
             this.searched = false
         }
     },
@@ -201,13 +196,8 @@ export default {
       }
     }
   }
-  .content {
-    // padding-left: 40px;
-  }
   .search-select {
     position: relative;
-    // width: 670px;
-    // margin: 0 auto;
     padding: 0 40px 50px;
     border-bottom: 1px solid #f7f7f7;
     .top {
