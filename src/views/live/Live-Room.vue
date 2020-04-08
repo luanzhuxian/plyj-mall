@@ -500,7 +500,9 @@ export default {
         async setComeInConut (type) {
             try {
                 let shareUserId = this.$route.query.shareUserId || ''
+                console.log(shareUserId, '111')
                 shareUserId = Array.isArray(shareUserId) ? shareUserId.slice(-1)[0] : shareUserId
+                console.log(shareUserId, '222')
                 await setComeInConut({
                     id: this.detail.id,
                     shareUserId,
@@ -1016,6 +1018,7 @@ export default {
                 query.push(`shareUserId=${ shareUserId }`)
                 search = query.join('&')
                 url = `${ path }?${ search }`
+                console.log('url:', url)
                 const all = [
                     generateQrcode(300, url, 0, null, 0, 'canvas'),
                     loadImage(POSTER_BG),
