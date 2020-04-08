@@ -16,7 +16,7 @@
             </button>
         </div>
 
-        <div :class="$style.content" v-show="searched">
+        <div :class="$style.content" v-if="searched">
             <search-list
                 ref="searchList"
                 :query="searchContent"

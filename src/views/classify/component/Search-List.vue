@@ -19,7 +19,7 @@
             swipeable
         >
             <tab-container-item id="PRODUCT">
-                <ul :class="$style.list">
+                <div ref="productListContainer" :class="$style.list">
                     <load-more
                         ref="productList"
                         :form="productForm"
@@ -44,10 +44,10 @@
                             />
                         </template>
                     </load-more>
-                </ul>
+                </div>
             </tab-container-item>
             <tab-container-item id="COURSE">
-                <ul :class="$style.list">
+                <div ref="courseListContainer" :class="$style.list">
                     <load-more
                         ref="courseList"
                         :form="courseForm"
@@ -71,7 +71,7 @@
                             />
                         </template>
                     </load-more>
-                </ul>
+                </div>
             </tab-container-item>
         </tab-container>
     </div>
@@ -86,6 +86,7 @@ import TabContainerItem from './Tab-Container-Item'
 import { searchProduct } from '../../../apis/search'
 // import { getVideoList } from '../../../apis/online-classroom'
 import { getLibraryList } from '../../../apis/live-library'
+import { throttle } from '../../../assets/js/util'
 
 export default {
     name: 'SearchList',
@@ -125,7 +126,9 @@ export default {
                 status: ''
             },
             searchProduct,
-            getLibraryList
+            getLibraryList,
+            productScrollHandler: null,
+            courseScrollHandler: null
         }
     },
     computed: {
@@ -134,9 +137,34 @@ export default {
     created () {
         this.type = 'PRODUCT'
     },
-    activated () {},
-    mounted () {},
+    mounted () {
+        const {
+            productList,
+            productListContainer,
+            courseList,
+            courseListContainer
+        } = this.$refs
+
+        this.productScrollHandler = this.initLoadMore(productList, productListContainer)
+        this.courseScrollHandler = this.initLoadMore(courseList, courseListContainer)
+    },
+    beforeDestroy () {
+        const { productListContainer, courseListContainer } = this.$refs
+        productListContainer.removeEventListener('scroll', this.productScrollHandler)
+        courseListContainer.removeEventListener('scroll', this.courseScrollHandler)
+        this.productScrollHandler = null
+        this.courseScrollHandler = null
+    },
     methods: {
+        initLoadMore (loadMore, container) {
+            const handler = e => loadMore.infiniteScroll(e, loadMore.$el.offsetHeight, container.scrollTop, container.clientHeight)
+
+            loadMore.$el.addEventListener('touchstart', loadMore.touchstart, { passive: true })
+            loadMore.$el.addEventListener('touchmove', loadMore.touchMove)
+            loadMore.$el.addEventListener('touchend', loadMore.touchend, { passive: true })
+            container.addEventListener('scroll', throttle(handler, 200), { passive: true })
+            return handler
+        },
         onTabChange ({ id, ref }) {
             this.type = id
         },
@@ -199,11 +227,11 @@ export default {
     padding: 38px 28px;
     height: calc(100vh - 93px - 90px);
     overflow-y: scroll;
-    &-item {
-        margin-top: 20px;
-        &:nth-of-type(1) {
-            margin-top: 0;
-        }
+}
+.list-item {
+    margin-top: 20px;
+    &:nth-of-type(1) {
+        margin-top: 0;
     }
 }
 </style>

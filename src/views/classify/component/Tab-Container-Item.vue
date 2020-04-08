@@ -38,7 +38,5 @@ export default {
   .tab-container-item {
       flex-shrink: 0;
       width: 100%;
-      font-size: 36px;
-      overflow-y: scroll;
   }
 </style>

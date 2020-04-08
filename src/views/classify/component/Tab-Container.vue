@@ -1,12 +1,12 @@
 <template>
     <div
         :class="$style.tabContainer"
-        @touchstart.stop="startDrag"
-        @mousedown.stop="startDrag"
-        @touchmove.stop="onDrag"
-        @mousemove.stop="onDrag"
-        @mouseup.stop="endDrag"
-        @touchend.stop="endDrag"
+        @touchstart="startDrag"
+        @mousedown="startDrag"
+        @touchmove="onDrag"
+        @mousemove="onDrag"
+        @mouseup="endDrag"
+        @touchend="endDrag"
     >
         <div
             ref="wrapper"
