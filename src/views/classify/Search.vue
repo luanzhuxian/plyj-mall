@@ -169,6 +169,7 @@ export default {
     height: 92px;
     background-color: #fff;
     border-bottom: 1px solid #f7f7f7;
+    z-index: 999;
     button {
       font-size: 28px;
       color: #1890FF;
