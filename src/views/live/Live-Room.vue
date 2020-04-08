@@ -369,9 +369,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId'])
+        ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId', 'mallUrl'])
     },
     async created () {
+        console.log(this.$route.query.shareUserId)
         localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
         this.receiveCouponIdList = []
         if (this.roleCode === 'VISITOR') {
@@ -499,12 +500,7 @@ export default {
         // 访问记录 0第一次插入 1修改记录信息
         async setComeInConut (type) {
             try {
-                console.log('location', location.href)
-                console.log('query', JSON.stringify(this.$route.query))
-                let shareUserId = this.$route.query.shareUserId || ''
-                console.log(shareUserId, '111')
-                shareUserId = Array.isArray(shareUserId) ? shareUserId.slice(-1)[0] : shareUserId
-                console.log(shareUserId, '222')
+                const shareUserId = this.$route.query.shareUserId || ''
                 await setComeInConut({
                     id: this.detail.id,
                     shareUserId,
@@ -1004,23 +1000,7 @@ export default {
             } = this.detail
             // 生成二维码
             try {
-                const shareUserId = this.$store.getters.userId || ''
-                let url = location.href
-                const path = url.split('?')[0]
-                let search = url.split('?')[1]
-                let query = []
-                if (search) {
-                    query = search.split('&')
-                    for (let i = query.length - 1; i >= 0; i--) {
-                        if (query[i].indexOf('shareUserId') !== -1) {
-                            query.splice(i, 1)
-                        }
-                    }
-                }
-                query.push(`shareUserId=${ shareUserId }`)
-                search = query.join('&')
-                url = `${ path }?${ search }`
-                console.log('url:', url)
+                const url = `${ this.mallUrl }/lived/room/${ this.id }?shareUserId=${ this.userId }&random=${ Date.now() }`
                 const all = [
                     generateQrcode(300, url, 0, null, 0, 'canvas'),
                     loadImage(POSTER_BG),
