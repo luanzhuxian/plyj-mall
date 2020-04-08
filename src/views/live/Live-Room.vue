@@ -499,7 +499,8 @@ export default {
         // 访问记录 0第一次插入 1修改记录信息
         async setComeInConut (type) {
             try {
-                const shareUserId = this.$route.query.shareUserId || ''
+                let shareUserId = this.$route.query.shareUserId || ''
+                shareUserId = Array.isArray(shareUserId) ? shareUserId.slice(-1)[0] : shareUserId
                 await setComeInConut({
                     id: this.detail.id,
                     shareUserId,
@@ -999,11 +1000,21 @@ export default {
             } = this.detail
             // 生成二维码
             try {
-                let url = location.href
-                let search = url.split('?')[1]
                 const shareUserId = this.$store.getters.userId || ''
+                let url = location.href
                 const path = url.split('?')[0]
-                search = search ? `${ search }&shareUserId=${ shareUserId }` : `shareUserId=${ shareUserId }`
+                let search = url.split('?')[1]
+                let query = []
+                if (search) {
+                    query = search.split('&')
+                    for (let i = query.length - 1; i >= 0; i--) {
+                        if (query[i].indexOf('shareUserId') !== -1) {
+                            query.splice(i, 1)
+                        }
+                    }
+                }
+                query.push(`shareUserId=${ shareUserId }`)
+                search = query.join('&')
                 url = `${ path }?${ search }`
                 const all = [
                     generateQrcode(300, url, 0, null, 0, 'canvas'),
