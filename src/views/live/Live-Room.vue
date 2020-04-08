@@ -499,6 +499,7 @@ export default {
         // 访问记录 0第一次插入 1修改记录信息
         async setComeInConut (type) {
             try {
+                console.log('route', this.$route)
                 let shareUserId = this.$route.query.shareUserId || ''
                 console.log(shareUserId, '111')
                 shareUserId = Array.isArray(shareUserId) ? shareUserId.slice(-1)[0] : shareUserId
