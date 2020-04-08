@@ -71,7 +71,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userId', 'openId', 'appId', 'balance'])
+        ...mapGetters(['userId', 'openId', 'appId', 'balance', 'idCardFlag', 'agentUser'])
     },
     created () {
         this.form.userId = this.userId
@@ -105,6 +105,23 @@ export default {
                 this.form.price = this.balance
             }
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        next(vm => {
+            if (!vm.idCardFlag || !vm.agentUser) {
+                if (from.name) {
+                    const {
+                        name,
+                        params,
+                        query
+                    } = from
+                    vm.$router.replace({ name, params, query })
+                } else {
+                    console.log(123)
+                    vm.$router.replace({ name: 'Home' })
+                }
+            }
+        })
     }
 }
 </script>
