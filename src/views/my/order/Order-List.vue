@@ -333,8 +333,6 @@ export default {
         this.form.orderStatus = this.status
         this.$refresh()
     },
-    deactivated () {
-    },
     methods: {
         onTabChange (item) {
             this.$nextTick(() => {

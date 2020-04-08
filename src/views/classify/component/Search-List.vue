@@ -1,0 +1,209 @@
+<template>
+    <div :class="$style.searchList">
+        <pl-tab
+            :class="$style.tabBar"
+            size="small"
+            :tabs="tabs"
+            :active-id.sync="type"
+            @change="onTabChange"
+        >
+            <div
+                :class="$style.tabPane"
+                v-for="(item, i) of tabs"
+                :key="i"
+                :slot="'tab-pane-' + i"
+            />
+        </pl-tab>
+        <tab-container
+            v-model="type"
+            swipeable
+        >
+            <tab-container-item id="PRODUCT">
+                <ul :class="$style.list">
+                    <load-more
+                        ref="productList"
+                        :form="productForm"
+                        :request-methods="searchProduct"
+                        icon="icon-no-search"
+                        no-content-tip="抱歉，没有相关商品"
+                        @refresh="refreshProductHandler"
+                        @more="refreshProductHandler"
+                    >
+                        <template v-slot="{ list }">
+                            <lesson-item
+                                :class="$style.listItem"
+                                v-for="(item, index) of productList"
+                                :key="index"
+                                :data="item"
+                                :id="item.id"
+                                :title="item.productName"
+                                :desc="item.productDesc"
+                                :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
+                                :price="item.productSkuModels.length && item.productSkuModels[0].price"
+                                :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
+                            />
+                        </template>
+                    </load-more>
+                </ul>
+            </tab-container-item>
+            <tab-container-item id="COURSE">
+                <ul :class="$style.list">
+                    <load-more
+                        ref="courseList"
+                        :form="courseForm"
+                        :request-methods="getLibraryList"
+                        icon="icon-no-search"
+                        no-content-tip="抱歉，没有相关商品"
+                        @refresh="refreshCourseHandler"
+                        @more="refreshCourseHandler"
+                    >
+                        <template v-slot="{ list }">
+                            <lesson-item
+                                :class="$style.listItem"
+                                v-for="(item, index) of courseList"
+                                :key="index"
+                                :data="item"
+                                :id="item.id"
+                                :title="item.videoName"
+                                :img="item.coverImg + '?x-oss-process=style/thum-middle'"
+                                :price="item.paidAmount"
+                                :original-price="item.needPaidAmount"
+                            />
+                        </template>
+                    </load-more>
+                </ul>
+            </tab-container-item>
+        </tab-container>
+    </div>
+</template>
+
+<script>
+import { mapGetters } from 'vuex'
+import LessonItem from '../../../components/item/Lesson-Item.vue'
+import LoadMore from '../../../components/common/Load-More.vue'
+import TabContainer from './Tab-Container'
+import TabContainerItem from './Tab-Container-Item'
+import { searchProduct } from '../../../apis/search'
+// import { getVideoList } from '../../../apis/online-classroom'
+import { getLibraryList } from '../../../apis/live-library'
+
+export default {
+    name: 'SearchList',
+    components: {
+        LessonItem,
+        LoadMore,
+        TabContainer,
+        TabContainerItem
+    },
+    props: {
+        query: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {
+            tabs: [{
+                name: '精选商品',
+                id: 'PRODUCT'
+            }, {
+                name: '线上课程',
+                id: 'COURSE'
+            }],
+            type: 'PRODUCT',
+            productList: [],
+            courseList: [],
+            productForm: {
+                searchContent: '',
+                current: 1,
+                size: 10
+            },
+            courseForm: {
+                searchParam: '',
+                current: 1,
+                size: 10,
+                status: ''
+            },
+            searchProduct,
+            getLibraryList
+        }
+    },
+    computed: {
+        ...mapGetters(['userId'])
+    },
+    created () {
+        this.type = 'PRODUCT'
+    },
+    activated () {},
+    mounted () {},
+    methods: {
+        onTabChange ({ id, ref }) {
+            this.type = id
+        },
+        refreshProductHandler (list) {
+            for (const item of list) {
+                item.productSkuModels.sort((a, b) => a.price - b.price)
+            }
+            this.productList = list
+            this.$emit('refresh')
+        },
+        refreshCourseHandler (list) {
+            this.courseList = list
+            this.$emit('refresh')
+        },
+        refresh (query = this.query) {
+            this.productForm.searchContent = query
+            this.courseForm.searchParam = query
+            this.$refs.productList.refresh()
+            this.$refs.courseList.refresh()
+        }
+    }
+}
+</script>
+
+<style module lang="scss">
+.search-list {
+    position: relative;
+    padding-top: 90px;
+    :global {
+        .pl-tab {
+            justify-content: space-between;
+        }
+        .pl-tab__pane {
+            height: 90px !important;
+            font-size: 30px;
+            font-family: Microsoft YaHei;
+            &.active:after {
+                left: 50%;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 8px;
+                border-radius: 4px;
+                background-image: linear-gradient(90deg, #F3AD3C, #F7CF54);
+            }
+        }
+    }
+}
+.tab-bar {
+    position: fixed;
+    top: 92px;
+    left: 0;
+    right: 0;
+    z-index: 2999;
+    padding: 0 224px;
+    border-top: 2px solid #F5F5F5;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.04);
+}
+.list {
+    box-sizing: border-box;
+    padding: 38px 28px;
+    height: calc(100vh - 93px - 90px);
+    overflow-y: scroll;
+    &-item {
+        margin-top: 20px;
+        &:nth-of-type(1) {
+            margin-top: 0;
+        }
+    }
+}
+</style>
