@@ -159,9 +159,9 @@ export default {
         initLoadMore (loadMore, container) {
             const handler = e => loadMore.infiniteScroll(e, loadMore.$el.offsetHeight, container.scrollTop, container.clientHeight)
 
-            loadMore.$el.addEventListener('touchstart', loadMore.touchstart, { passive: true })
-            loadMore.$el.addEventListener('touchmove', loadMore.touchMove)
-            loadMore.$el.addEventListener('touchend', loadMore.touchend, { passive: true })
+            // loadMore.$el.addEventListener('touchstart', loadMore.touchstart, { passive: true })
+            // loadMore.$el.addEventListener('touchmove', loadMore.touchMove)
+            // loadMore.$el.addEventListener('touchend', loadMore.touchend, { passive: true })
             container.addEventListener('scroll', throttle(handler, 200), { passive: true })
             return handler
         },
