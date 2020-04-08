@@ -372,7 +372,6 @@ export default {
         ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId', 'mallUrl'])
     },
     async created () {
-        console.log(this.$route.query.shareUserId)
         localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
         this.receiveCouponIdList = []
         if (this.roleCode === 'VISITOR') {

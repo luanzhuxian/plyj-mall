@@ -12,7 +12,7 @@
 <script>
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
-import { mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import {
     SET_THEME,
     USER_INFO,
@@ -59,11 +59,14 @@ export default {
             ]
         }
     },
-    computed: {
-        ...mapGetters(['userId', 'openId', 'appId', 'mallName', 'mallDesc', 'logoUrl'])
-    },
     async created () {
         try {
+            // 切换了商城之后，清空所有登录数据
+            const mallDomain = window.location.pathname.split('/')[1]
+            const localOpengId = localStorage.getItem(`openId_${ mallDomain }`)
+            if (!localOpengId) {
+                localStorage.clear()
+            }
             await this.getMallInfo()
             const mallId = Cookie.get('mallId')
             const token = Cookie.get('token')
