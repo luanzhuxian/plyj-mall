@@ -120,6 +120,7 @@ import TopText from '../../../components/common/Top-Text.vue'
 import { isIdCard } from '../../../assets/js/validate'
 import { bindIdCard } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
+import { USER_INFO } from '../../../store/mutation-type'
 export default {
     name: 'Coffers',
     components: {
@@ -150,6 +151,7 @@ export default {
                         /* eslint-disable */
                         throw false
                     }
+                    await this.$store.dispatch(USER_INFO)
                 }
                 await this.$router.push({ name: 'WithdrawCash' })
             } catch (e) {
