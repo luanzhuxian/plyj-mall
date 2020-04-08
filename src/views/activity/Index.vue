@@ -99,8 +99,8 @@ export default {
             // 双十二
             if ([5, 6, 7].includes(this.activityId)) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
-                (this.invitingEvent !== null && !!this.invitingEvent) &&
-                (this.jxEvent !== null && !!this.jxEvent) &&
+                // (this.invitingEvent !== null && !!this.invitingEvent) &&
+                // (this.jxEvent !== null && !!this.jxEvent) &&
                 this.d12CouponTotal !== null
             }
 

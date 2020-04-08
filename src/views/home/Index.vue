@@ -99,9 +99,9 @@ export default {
                 result = this.loaded &&
                 this.skinId !== null &&
                 (this.liveInfo !== null && !!this.liveInfo) &&
-                (this.courseInfo !== null && !!this.courseInfo) &&
-                (this.invitingEvent !== null && !!this.invitingEvent) &&
-                (this.jxEvent !== null && !!this.jxEvent)
+                (this.courseInfo !== null && !!this.courseInfo)
+                // (this.invitingEvent !== null && !!this.invitingEvent)
+                // (this.jxEvent !== null && !!this.jxEvent)
             }
             if (this.type === -1 || this.type === 9) {
                 result = this.loaded &&
