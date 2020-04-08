@@ -101,7 +101,6 @@ export default {
         },
 
         startDrag (evt) {
-            console.log('startDrag')
             if (!this.swipeable) return
             const e = evt.changedTouches ? evt.changedTouches[0] : evt
             this.dragging = true
@@ -110,7 +109,6 @@ export default {
         },
 
         onDrag (evt) {
-            console.log('onDrag')
             if (!this.dragging) return
             const e = evt.changedTouches ? evt.changedTouches[0] : evt
             const offsetTop = e.pageY - this.start.y
@@ -118,9 +116,10 @@ export default {
             const y = Math.abs(offsetTop)
             const x = Math.abs(offsetLeft)
 
-            const swiping = !(x < 5 || (x >= 5 && y >= x * 1.73))
+            const swiping = !(x < 10 || (x >= 10 && y >= x * 1.73))
             if (!swiping) return
             evt.preventDefault()
+            console.log(x, y, y >= x * 1.73, swiping)
 
             const length = this.$children.length - 1
             const index = this.$children.findIndex(child => child.id === this.currentTab)
@@ -130,8 +129,8 @@ export default {
             const absOffset = Math.abs(offset)
 
             if (absOffset > length * this.pageWidth || (offset > 0 && offset < this.pageWidth)) {
-                console.log('onDrag', 'absOffset > length * this.pageWidth', absOffset, length, this.pageWidth)
-                console.log('onDrag', 'offset > 0 && offset < this.pageWidth', offset > 0 && offset < this.pageWidth)
+                // console.log('onDrag', 'absOffset > length * this.pageWidth', absOffset, length, this.pageWidth)
+                // console.log('onDrag', 'offset > 0 && offset < this.pageWidth', offset > 0 && offset < this.pageWidth)
                 this.swiping = false
                 return
             }

@@ -24,8 +24,8 @@
                         ref="productList"
                         :form="productForm"
                         :request-methods="searchProduct"
-                        icon="icon-no-search"
-                        no-content-tip="抱歉，没有相关商品"
+                        icon="icon-search-no-content-05634"
+                        no-content-tip="抱歉，没有找到相关商品"
                         @refresh="refreshProductHandler"
                         @more="refreshProductHandler"
                     >
@@ -52,8 +52,8 @@
                         ref="courseList"
                         :form="courseForm"
                         :request-methods="getLibraryList"
-                        icon="icon-no-search"
-                        no-content-tip="抱歉，没有相关商品"
+                        icon="icon-search-no-content-05634"
+                        no-content-tip="抱歉，没有找到相关课程"
                         @refresh="refreshCourseHandler"
                         @more="refreshCourseHandler"
                     >
