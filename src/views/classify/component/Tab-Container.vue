@@ -116,7 +116,7 @@ export default {
             const y = Math.abs(offsetTop)
             const x = Math.abs(offsetLeft)
 
-            const swiping = !(x < 10 || y > 100 || (x >= 10 && y >= x * 1.73))
+            const swiping = !(x < 10 || y > 150 || (x >= 10 && y >= x * 1.73))
             if (!swiping) return
             evt.preventDefault()
             console.log(x, y, y >= x * 1.73, swiping)
