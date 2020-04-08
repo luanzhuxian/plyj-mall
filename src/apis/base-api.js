@@ -66,3 +66,13 @@ export const getServerTime = () => axios.post('/apis/v1/order/current/date')
  * @return {*}
  */
 export const errorlog = data => axios.post('/apis/v1/log/web/error', data)
+
+/**
+ * 绑定身份证号码
+ * @param data
+ * @property data.name
+ * @property data.mobile
+ * @property data.idCard
+ * @return {*}
+ */
+export const bindIdCard = data => axios.post('/apis/v1/base/baseUserInfo/idCard/bind', data)

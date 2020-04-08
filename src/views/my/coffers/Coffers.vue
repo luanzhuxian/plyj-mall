@@ -17,14 +17,14 @@
                     <p class="fz-50 bold">
                         {{ balance }} <i class="fz-26">元</i>
                     </p>
-                    <router-link
+                    <button
                         tag="button"
-                        :to="{ name: 'WithdrawCash' }"
+                        @click="withdraw"
                         style="width: 27.733vw;"
                         :class="$style.myButton + ' mt-22'"
                     >
                         提现
-                    </router-link>
+                    </button>
                 </div>
                 <div :class="$style.todayRebate">
                     <p class="fz-24 gray-3">
@@ -117,6 +117,8 @@
 
 <script>
 import TopText from '../../../components/common/Top-Text.vue'
+import { isIdCard } from '../../../assets/js/validate'
+import { bindIdCard } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 export default {
     name: 'Coffers',
@@ -124,7 +126,36 @@ export default {
         TopText
     },
     computed: {
-        ...mapGetters(['balance', 'currentBalance', 'cumulativeBalance'])
+        ...mapGetters(['balance', 'currentBalance', 'cumulativeBalance', 'idCardFlag', 'mobile', 'realName'])
+    },
+    methods: {
+        async withdraw () {
+            try {
+                if (!this.idCardFlag) {
+                    const idCard = await this.$propmt({
+                        message: '请绑定身份证',
+                        placeholder: '请输入身份证号',
+                        rules: [
+                            { reuqired: true, message: '请输入身份证号' },
+                            { validator: isIdCard, message: '身份证号格式错误' }
+                        ]
+                    })
+                    const { result } = await bindIdCard({
+                        name: this.realName,
+                        mobile: this.mobile,
+                        idCard
+                    })
+                    if (!result) {
+                        this.$error('绑定失败')
+                        /* eslint-disable */
+                        throw false
+                    }
+                }
+                await this.$router.push({ name: 'WithdrawCash' })
+            } catch (e) {
+                if (e) throw e
+            }
+        }
     }
 }
 </script>

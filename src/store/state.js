@@ -25,7 +25,9 @@ export default {
         successBalance: 0,
         userId: '',
         userName: '',
-        serverTime: ''
+        serverTime: '',
+        realName: '',
+        idCardFlag: false
     },
     loginInfo: {
         SESSION_ID: '',

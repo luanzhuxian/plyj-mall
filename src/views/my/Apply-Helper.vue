@@ -46,20 +46,6 @@
                 />
             </pl-form-item>
             <pl-form-item
-                prop="idCard"
-                border
-            >
-                <pl-input
-                    :disabled="form.auditStatus === 'AWAIT' || form.auditStatus === 'PASS'"
-                    placeholder="请输入您的身份证号"
-                    prefix-icon="icon-id-card"
-                    v-model="form.idCard"
-                    size="middle"
-                    @focus="agreeIsShow = false"
-                    @blur="agreeIsShow = true"
-                />
-            </pl-form-item>
-            <pl-form-item
                 prop="mobile"
                 border
             >
@@ -200,7 +186,7 @@ import {
     agentUserInfoAudit,
     updateAudit
 } from '../../apis/broker-manager'
-import { hasValue, isPhone, isName, isIdCard } from '../../assets/js/validate'
+import { hasValue, isPhone, isName } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
 import { REFRESH_TOKEN, USER_INFO } from '../../store/mutation-type'
 
@@ -219,7 +205,6 @@ export default {
             visible: false,
             form: {
                 name: '',
-                idCard: '',
                 mobile: '',
                 verificationCode: '',
                 auditStatus: '',
@@ -239,10 +224,6 @@ export default {
                 name: [
                     { required: true, message: '请输入真实姓名', trigger: 'blur' },
                     { validator: isName, message: '姓名只支持中英文，且中文为2~10字，英文为2~50字', trigger: 'blur' }
-                ],
-                idCard: [
-                    { required: true, message: '请输入身份证号码', trigger: 'blur' },
-                    { validator: isIdCard, message: '请填写正确的身份证号', trigger: 'blur' }
                 ],
                 mobile: [
                     { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -286,9 +267,6 @@ export default {
         ...mapGetters(['smstype', 'isAdmin', 'mobile', 'mallId', 'roleCode']),
         isNameValid () {
             return hasValue(this.form.name) && isName(this.form.name)
-        },
-        isIDValid () {
-            return hasValue(this.form.idCard) && isIdCard(this.form.idCard)
         },
         isMobileValid () {
             return hasValue(this.form.mobile) && isPhone(this.form.mobile)

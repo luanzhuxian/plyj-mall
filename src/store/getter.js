@@ -13,6 +13,7 @@ export default {
     avatar: state => state.userInfo.img,
     userName: state => state.userInfo.userName,
     realName: state => state.userInfo.realName,
+    idCardFlag: state => state.userInfo.idCardFlag,
     // helper
     agentUser: state => state.userInfo.isAgentUser,
     // 企业管理员
