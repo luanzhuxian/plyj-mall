@@ -153,7 +153,8 @@ export default {
           color: #E95338;
         }
         > em {
-          line-height: 33px;
+          line-height: 28px;
+          align-self: center;
         }
       }
       span {
