@@ -99,7 +99,7 @@ import { getServerTime } from '../../apis/base-api'
 import { getCourse } from '../../apis/online-classroom.js'
 import { getCategoryTree } from '../../apis/classify'
 import LoadMore from '../../components/common/Load-More.vue'
-import CountDown from './components/Count-Down'
+import CountDown from '../../components/product/Courses-Count-Down.vue'
 export default {
     name: 'OnlineClassroom',
     components: {

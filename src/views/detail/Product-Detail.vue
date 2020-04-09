@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.lesson">
-        <!-- activeProduct - 1-正常商品 2-团购 3-秒杀 4-团购 -->
+        <!-- activeProduct - 1-正常商品 2-团购 3-秒杀 4-预购 -->
         <!-- productStatus - 0：已删除 1：下架 2：上架  3：草稿箱 -->
 
         <!-- 正常商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->

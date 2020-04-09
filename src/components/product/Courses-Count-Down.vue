@@ -1,4 +1,5 @@
 <template>
+    <!-- 单课/系列课倒计时 -->
     <div
         :class="[$style.countDown, $style[theme]]"
         v-if="endtime"
@@ -19,7 +20,7 @@
 
 <script>
 import moment from 'moment'
-import { Countdown } from '../../../assets/js/util'
+import { Countdown } from '../../assets/js/util'
 export default {
     name: 'CountDown',
     props: {
