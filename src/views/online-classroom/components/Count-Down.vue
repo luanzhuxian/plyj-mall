@@ -4,7 +4,7 @@
         v-if="endtime"
         v-show="show"
     >
-        <span>距开始</span>
+        <span>{{ prefix }}</span>
         <div :class="$style.time">
             <i v-if="Number(d)">{{ d }}</i>
             <em v-if="Number(d)">天</em>
@@ -30,6 +30,10 @@ export default {
         theme: {
             type: String,
             default: 'small'
+        },
+        prefix: {
+            type: String,
+            default: '距开始'
         }
     },
     data () {
@@ -132,14 +136,14 @@ export default {
       background-size: 100% auto;
       &:before{
         content: '即将开始';
-        padding: 10px 24px 12px;
+        padding: 0 24px;
         white-space: nowrap;
         font-size:30px;
         font-weight:bold;
       }
       .time {
         > i {
-          margin: 0 4px;
+          margin: 0 8px;
           padding: 3px;
           border-radius:8px;
           line-height: 28px;
@@ -149,12 +153,12 @@ export default {
           color: #E95338;
         }
         > em {
-          line-height: 28px;
+          line-height: 33px;
         }
       }
       span {
-        padding-left: 52px;
-        margin-right: 12px;
+        padding-left: 40px;
+        padding-right: 8px;
         font-size:28px;
       }
     }
