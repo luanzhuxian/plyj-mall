@@ -128,14 +128,14 @@ export default {
     }
     &.orange {
       font-size: 24px;
-      background:linear-gradient(93deg,rgba(244,136,46,1) 0%,rgba(255,107,77,1) 100%);
+      background: url("https://mallcdn.youpenglai.com/static/mall/2.9.0/orange-count-down.png") no-repeat center center;
+      background-size: 100% auto;
       &:before{
         content: '即将开始';
         padding: 10px 24px 12px;
         white-space: nowrap;
         font-size:30px;
         font-weight:bold;
-        background:linear-gradient(270deg,rgba(235,106,72,1) 0%,rgba(246,67,62,1) 100%);
       }
       .time {
         > i {
@@ -156,7 +156,6 @@ export default {
         padding-left: 52px;
         margin-right: 12px;
         font-size:28px;
-        background:linear-gradient(93deg,rgba(244,136,46,1) 0%,rgba(255,107,77,0.2) 100%);
       }
     }
   }
