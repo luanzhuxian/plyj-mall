@@ -7,27 +7,43 @@
                     <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/send-live.png">
                 </div>
                 <div :class="$style.title">
-                    <span>您获得了{{ liveList.length }}节直播课程</span>
                     <span>
-                        <template v-if="liveList.length === 1">
+                        <template v-if="courseList.length === 1">您免费获得了1节{{ courseType[courseList[0].courseType ] }}</template>
+                        <template v-else>您免费获得了{{ courseList.length }}节课程</template>
+                    </span>
+                    <span>
+                        <template v-if="(courseList.length === 1) && (courseList[0].courseType === 1)">
                             <!--直播未开始-->
-                            <template v-if="isNotStart(liveList[0])">直播还未开始，请在直播开始时进入直播间学习</template>
+                            <template v-if="isNotStart(courseList[0])">直播还未开始，请在直播开始时进入直播间学习</template>
                             <!--有videoLibId，说明直播已结束，可回放-->
-                            <template v-else-if="liveList[0].videoLibId && liveList[0].videoLibId !== '0'">直播已结束，您可看回放进行直播课程学习</template>
+                            <template v-else-if="courseList[0].videoLibId && courseList[0].videoLibId !== '0'">直播已结束，您可看回放进行直播课程学习</template>
                             <template v-else>直播进行中，可点击查看直播进入直播间学习</template>
                         </template>
-                        <template v-else>
+                        <template v-else-if="currentCourseTypeCount(1) === courseList.length">
                             您可选择正在直播中的直播课程进行学习哦~
+                        </template>
+                        <template v-else>
+                            <div :class="$style.count">
+                                <b v-if="currentCourseTypeCount(1)">互动直播 {{ currentCourseTypeCount(1) }} </b>
+                                <b v-if="currentCourseTypeCount(2)">精选单课 {{ currentCourseTypeCount(2) }} </b>
+                                <b v-if="currentCourseTypeCount(3)">精选系列课 {{ currentCourseTypeCount(3) }} </b>
+                            </div>
                         </template>
                     </span>
                 </div>
                 <div :class="$style.list">
                     <!--只有一节赠课时-->
-                    <template v-if="liveList.length === 1">
+                    <template v-if="courseList.length === 1">
                         <div
-                            :class="$style.single"
-                            v-for="(item, index) of liveList"
+                            v-for="(item, index) of courseList"
                             :key="index"
+                            :class="{
+                                [$style.single]: true,
+                                [$style.icon]: true,
+                                [$style.isLiveCourse]: item.courseType === 1,
+                                [$style.isSingleCourse]: item.courseType === 2,
+                                [$style.isSeriesCourse]: item.courseType === 3
+                            }"
                         >
                             <img :src="item.coverImg" alt="">
                             <div :class="$style.desc">
@@ -54,10 +70,16 @@
                         </div>
                     </template>
                     <!--有多节赠课时-->
-                    <template v-if="liveList.length > 1">
+                    <template v-if="courseList.length > 1">
                         <div
-                            :class="$style.item"
-                            v-for="(item, index) of liveList"
+                            :class="{
+                                [$style.item]: true,
+                                [$style.icon]: true,
+                                [$style.isLiveCourse]: item.courseType === 1,
+                                [$style.isSingleCourse]: item.courseType === 2,
+                                [$style.isSeriesCourse]: item.courseType === 3
+                            }"
+                            v-for="(item, index) of courseList"
                             :key="index"
                             @click.capture="goToWatchLive(item)"
                         >
@@ -128,45 +150,54 @@ export default {
                     paidAmount: 3
                 }
              */
-            liveList: [],
+            courseList: [],
+            courseType: {
+                1: '互动直播',
+                2: '知识课程',
+                3: '系列课'
+            },
             isAlreadyNotice: false
         }
     },
     async activated () {
         try {
-            await this.getLiveList()
+            await this.getcourseList()
         } catch (e) {
             throw e
         }
     },
     async created () {
         try {
-            await this.getLiveList()
+            await this.getcourseList()
         } catch (e) {
             throw e
         }
     },
     methods: {
-        async getLiveList () {
+        async getcourseList () {
             if (this.isNotice === '0' && this.isAlreadyNotice) return
             this.isAlreadyNotice = this.isAlreadyNotice === '0'
             try {
                 const { result } = await getSendLiveList(this.isNotice)
-                this.liveList = this.formatPaidAmount(result)
-                this.showShelf = !!this.liveList.length
+                this.courseList = this.addAttr(result)
+                this.showShelf = !!this.courseList.length
             } catch (e) {
                 throw e
             }
         },
-        formatPaidAmount (list) {
+        addAttr (list) {
         // 后台返回的paidAmount单位为分，要转换为元
             list.forEach(item => {
                 item.actuallyPaidAmount = Number(Number(item.paidAmount / 100).toFixed(2))
+                item.courseType = 1
             })
             return list
         },
         isNotStart (row) {
             return moment(row.liveStartTime).isAfter(moment())
+        },
+        currentCourseTypeCount (type) {
+            return this.courseList.filter(item => item.courseType === type).length
         },
         goToWatchLive (row) {
             if (row.liveCloseTime && moment(row.liveCloseTime).isBefore(moment())) {
@@ -232,6 +263,22 @@ export default {
           display: block;
           margin-top: 12px;
           font-size:28px;
+        }
+        .count {
+          b {
+            padding: 6px 0; /*视觉上，垂直方向的padding不起作用，但是可以增加点击区域*/
+            font-weight: normal;
+            &:first-child:before {
+              padding: 0;
+            }
+            &:before {
+              content: '';
+              font-size: 0;
+              padding: 24px 12px 2px;
+              margin-left: 18px;
+              border-left: 2px solid rgba(255,255,255, 0.8);
+            }
+          }
         }
       }
       .list {
@@ -371,6 +418,46 @@ export default {
               background:#F2B036;
             }
           }
+        }
+      }
+      .is-single-course {
+        position: relative;
+        &:before {
+          content: '单课';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width:100px;
+          border-radius:20px 0px 20px 0px;
+          background-color:#F2B036;
+          line-height:42px;
+          text-align: center;
+          font-size:24px;
+          color: #fff;
+        }
+      }
+      .icon {
+        position: relative;
+        &.is-single-course:before {
+          content: '单课';
+        }
+        &.is-series-course:before {
+          content: '系列课';
+        }
+        &.is-live-course:before {
+          content: '直播';
+        }
+        &:before {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width:100px;
+          border-radius:20px 0px 20px 0px;
+          background-color:#F2B036;
+          line-height:42px;
+          text-align: center;
+          font-size:24px;
+          color: #fff;
         }
       }
     }

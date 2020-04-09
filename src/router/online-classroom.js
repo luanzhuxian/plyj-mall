@@ -13,7 +13,16 @@ export default [
                 name: 'OnlineClassroom',
                 component: () => import('../views/online-classroom/Online-Classroom.vue'),
                 meta: {
-                    // 知识课程
+                    // 精选单课
+                    title: '云课堂'
+                }
+            },
+            {
+                path: 'list',
+                name: 'seriesOfCourses',
+                component: () => import('../views/online-classroom/Series-Of-Courses.vue'),
+                meta: {
+                    // 系列精品课
                     title: '云课堂'
                 }
             },

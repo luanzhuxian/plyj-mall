@@ -1,13 +1,5 @@
 <template>
     <div>
-        <div
-            :class="$style.sendLive"
-            v-if="unaccalimedSendCount"
-            @click="isShowSendLiveDialog = true"
-        >
-            <span>赠送了您{{ unaccalimedSendCount }}节直播课程哦，快来学习吧~</span>
-            <span>查看></span>
-        </div>
         <div :class="$style.interactiveLive">
             <load-more
                 ref="LiveLoadMore"
@@ -128,23 +120,16 @@
                     </div>
                 </template>
             </load-more>
-            <send-live
-                v-if="isShowSendLiveDialog"
-                :show.sync="isShowSendLiveDialog"
-                is-notice="1"
-            />
         </div>
     </div>
 </template>
 <script>
-import { getLiveList, getSendLiveList } from '../../apis/online-classroom.js'
+import { getLiveList } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
-import SendLive from '../../components/common/Send-Live.vue'
 export default {
     name: 'InteractiveLive',
     components: {
-        LoadMore,
-        SendLive
+        LoadMore
     },
     data () {
         return {
@@ -170,16 +155,12 @@ export default {
                 FUTURE: 0
             },
             loading: false,
-            requestMethods: getLiveList,
-            unaccalimedSendCount: 0,
-            isShowSendLiveDialog: false
+            requestMethods: getLiveList
         }
     },
     async activated () {
-        this.isShowSendLiveDialog = false
         this.init()
         this.getData()
-        this.getSendLiveCount()
     },
     computed: {
         // 正在直播
@@ -204,14 +185,6 @@ export default {
             try {
                 await this.$nextTick()
                 await this.$refs.LiveLoadMore.refresh()
-            } catch (e) {
-                throw e
-            }
-        },
-        async getSendLiveCount () {
-            try {
-                const { result } = await getSendLiveList('1')
-                this.unaccalimedSendCount = result.length
             } catch (e) {
                 throw e
             }
@@ -263,15 +236,6 @@ export default {
 <style lang="scss" module>
   .interactive-live {
     padding: 0 20px;
-  }
-  .send-live {
-    display: flex;
-    padding: 0 32px 0 24px;
-    justify-content: space-between;
-    line-height: 80px;
-    font-size:28px;
-    background-color: #448AE1;
-    color: #FFF;
   }
   .title {
     margin: 32px 0 20px;
