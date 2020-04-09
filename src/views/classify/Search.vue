@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import SearchList from './component/Search-List.vue'
+import SearchList from './components/Search-List.vue'
 import {
     getHotKeyword,
     getHistoryKeyword,

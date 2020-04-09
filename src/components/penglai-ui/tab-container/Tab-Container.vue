@@ -119,7 +119,6 @@ export default {
             const swiping = !(x < 10 || y > 200 || (x >= 10 && y >= x * 1.73))
             if (!swiping) return
             evt.preventDefault()
-            console.log(x, y, y >= x * 1.73, swiping)
 
             const length = this.$children.length - 1
             const index = this.$children.findIndex(child => child.id === this.currentTab)

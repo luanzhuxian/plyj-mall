@@ -85,8 +85,8 @@
 import { mapGetters } from 'vuex'
 import LessonItem from '../../../components/item/Lesson-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
-import TabContainer from './Tab-Container'
-import TabContainerItem from './Tab-Container-Item'
+import TabContainer from '../../../components/penglai-ui/tab-container/Tab-Container.vue'
+import TabContainerItem from '../../../components/penglai-ui/tab-container/Tab-Container-Item.vue'
 import { searchProduct } from '../../../apis/search'
 // import { getVideoList } from '../../../apis/online-classroom'
 import { getLibraryList } from '../../../apis/live-library'
@@ -154,6 +154,7 @@ export default {
     },
     beforeDestroy () {
         const { productListContainer, courseListContainer } = this.$refs
+
         productListContainer.removeEventListener('scroll', this.productScrollHandler)
         courseListContainer.removeEventListener('scroll', this.courseScrollHandler)
         this.productScrollHandler = null
