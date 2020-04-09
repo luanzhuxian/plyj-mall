@@ -86,7 +86,7 @@ export default {
                 CTX.font = '20px Microsoft YaHei'
                 createText(CTX, 44, 902, TEXT5, 28, 400, 1)
 
-                const qrcode = await generateQrcode(300, `${ this.mallUrl }/fight-epidemic/sign-in/${ this.id }`, 0, null, 0, 'canvas')
+                const qrcode = await generateQrcode(300, `${ this.mallUrl }/fight-epidemic/sign-in/${ this.id }?t=${ Date.now() }`, 0, null, 0, 'canvas')
                 CTX.drawImage(qrcode, 462, 806, 124, 124)
                 let AVATAR = await loadImage(this.avatar)
                 AVATAR = cutArcImage(AVATAR)

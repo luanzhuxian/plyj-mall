@@ -999,7 +999,7 @@ export default {
             } = this.detail
             // 生成二维码
             try {
-                const url = `${ this.mallUrl }/lived/room/${ this.id }?shareUserId=${ this.userId }&random=${ Date.now() }`
+                const url = `${ this.mallUrl }/lived/room/${ this.id }?shareUserId=${ this.userId }&t=${ Date.now() }`
                 const all = [
                     generateQrcode(300, url, 0, null, 0, 'canvas'),
                     loadImage(POSTER_BG),
