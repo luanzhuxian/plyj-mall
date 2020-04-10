@@ -18,7 +18,7 @@
                 :label="'视频课'"
                 :top="'【第一节】张三三老师带您体课张三三老师带您体课张三三老师带您体课张三三老师带您体课...'"
                 :bottom-left="'220人已购'"
-                :line="2"
+                :max-line="2"
                 round
                 border
             />
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import ProductCard from '../components/Product-Card.vue'
+import ProductCard from './Product-Card.vue'
 
 export default {
     name: 'SlideCourses',

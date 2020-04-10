@@ -19,9 +19,11 @@
                         <span :class="$style.warn">{{ `暂未开始   敬请期待` }}</span>
                     </template>
                     <template slot="bottomLeft" v-else>
-                        <span>20分钟</span>
-                        <span>231人观看</span>
-                        <span :class="$style.progress" v-if="!flag">学习20%</span>
+                        <div :class="$style.listBottomLeft">
+                            <span>20分钟</span>
+                            <span :class="$style.view">231人观看</span>
+                            <span :class="$style.progress" v-if="!flag">学习20%</span>
+                        </div>
                     </template>
                 </product-card>
             </li>
@@ -34,7 +36,7 @@
 </template>
 
 <script>
-import ProductCard from '../components/Product-Card.vue'
+import ProductCard from './Product-Card.vue'
 
 export default {
     name: 'SeriesCourses',
@@ -80,6 +82,9 @@ export default {
         &:nth-of-type(1) {
             padding-top: 0;
         }
+        .view {
+            margin-left: 24px;
+        }
         .progress {
             margin-left: 32px;
         }
@@ -97,6 +102,9 @@ export default {
         line-height: 34px;
         color: #828282;
         text-align: center;
+    }
+    &-bottom-left {
+        @include elps();
     }
 }
 

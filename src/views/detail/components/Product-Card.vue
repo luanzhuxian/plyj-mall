@@ -5,16 +5,17 @@
             [$style.round]: round,
             [$style.border]: border
         }"
-        @click="jump"
+        @click="clickHandler"
     >
         <div :class="$style.imgWrapper">
             <img :src="image + '?x-oss-process=style/thum-middle'" alt="">
             <div :class="$style.label" v-if="label" v-text="label" />
         </div>
+
         <div :class="$style.info">
             <div
                 :class="$style.top"
-                :style="{ '--line': line }"
+                :style="{ '--line': maxLine }"
                 v-if="top"
                 v-text="top"
             />
@@ -75,13 +76,13 @@ export default {
             type: String,
             default: ''
         },
-        line: {
+        maxLine: {
             type: Number,
             default: 1
         },
         round: Boolean,
         border: Boolean,
-        router: {
+        route: {
             type: Object,
             default () {
                 return {}
@@ -94,10 +95,13 @@ export default {
         }
     },
     methods: {
-        jump () {
-            const { name, params, query } = this.router
+        clickHandler (e) {
+            this.$emit('click', e)
+
+            const { name, params, query } = this.route
             if (!name) return false
-            this.$router.push({
+
+            this.$route.push({
                 name,
                 ...(params ? { params } : null),
                 ...(query ? { query } : null)
@@ -178,9 +182,11 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
+    @include elps();
     &-left {
         flex: 1;
         width: 0;
+        line-height: 48px;
         color: #999;
         @include elps();
     }

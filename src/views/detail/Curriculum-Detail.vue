@@ -43,21 +43,21 @@
             <!-- 课程标签 -->
             <tags :tags="detail.labelModels" />
 
-            <div :class="$style.field" v-if="detail.lecturer">
-                <div :class="$style.left">
-                    <pl-svg name="icon-teacher-d2398" width="30" />
-                    主讲人：
-                </div>
-                <div :class="$style.right" v-text="detail.lecturer" />
-            </div>
-
-            <div :class="$style.field">
-                <div :class="$style.left">
-                    <pl-svg name="icon-date" width="30" />
-                    有效期：
-                </div>
-                <div :class="$style.right" v-text="detail.validityType ? `购买后${detail.validity}天内学完` : '购买后不限观看次数'" />
-            </div>
+            <field
+                v-if="detail.lecturer"
+                :class="$style.field"
+                size="small"
+                icon="icon-teacher-d2398"
+                label="主讲人："
+                :content="detail.lecturer"
+            />
+            <field
+                :class="$style.field"
+                size="small"
+                icon="icon-date"
+                label="有效期："
+                :content="getExpiration(detail)"
+            />
         </info-box>
 
         <!-- 相关课程 -->
@@ -136,6 +136,7 @@ import DetailInfo from '../../components/detail/Detail.vue'
 import Tags from '../../components/detail/Tags.vue'
 import Contact from '../../components/common/Contact.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
+import Field from './components/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
 import share from '../../assets/js/wechat/wechat-share'
@@ -163,6 +164,7 @@ export default {
         DetailInfo,
         Contact,
         CountDown,
+        Field,
         SlideCourses,
         SeriseCourses
     },
@@ -260,6 +262,9 @@ export default {
             } catch (e) {
                 throw e
             }
+        },
+        getExpiration (detail) {
+            return detail.validityType ? `购买后${ detail.validity }天内可观看学习` : '购买后不限观看次数'
         },
         goSubmit () {
             if (!this.mobile) {
@@ -440,20 +445,7 @@ export default {
     }
 }
 .field {
-    display: flex;
-    align-items: center;
-    line-height: 78px;
-    font-size: 24px;
     border-top: 1px solid #e7e7e7;
-    > .left {
-        color: #999;
-        > svg {
-            vertical-align: -6px;
-        }
-    }
-    > .right {
-        color: #000;
-    }
 }
 .slide-courses {
     margin-top: 20px;
