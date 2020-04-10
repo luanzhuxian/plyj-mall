@@ -3,17 +3,20 @@
         <div :class="$style.top">
             <span>知识内容(20)</span>
             <span :class="$style.lighter">持续更新中...</span>
+            <!-- TODO: <span :class="$style.lighter">更新已完结</span> -->
         </div>
         <ul :class="$style.list">
             <li :class="$style.listItem" v-for="n of 20" :key="n">
+                <!-- TODO: 试看 单独购买 去学习(免费 已购 赠课) -->
                 <product-card
                     :image="'https://mallcdn.youpenglai.com/static/admall/mall-management/active/prod-default.png'"
                     :label="'视频课'"
                     :top="'【第一节】张三三老师带您体课张三三老师带您体课张三三老师带您体课张三三老师带您体课...'"
                     :sub-top="`主讲人：王老师`"
                     :bottom-left="'视频课'"
-                    :button-text="flag ? '试看' : ''"
+                    :button-text="flag ? '试看' : '单独购买'"
                     round
+                    @btn-click="handleBtnClick"
                 >
                     <template slot="bottom" v-if="false">
                         <span :class="$style.warn">{{ `暂未开始   敬请期待` }}</span>
@@ -52,6 +55,9 @@ export default {
     methods: {
         jump () {
 
+        },
+        handleBtnClick (e) {
+            console.log(e)
         }
     }
 }

@@ -5,7 +5,7 @@
             [$style.round]: round,
             [$style.border]: border
         }"
-        @click="clickHandler"
+        @click="handleClick"
     >
         <div :class="$style.imgWrapper">
             <img :src="image + '?x-oss-process=style/thum-middle'" alt="">
@@ -33,6 +33,7 @@
                         :class="$style.bottomButton"
                         v-if="buttonText"
                         v-text="buttonText"
+                        @click.stop="handleBtnClick"
                     />
                 </div>
                 <slot name="bottomRight" v-else />
@@ -95,7 +96,7 @@ export default {
         }
     },
     methods: {
-        clickHandler (e) {
+        handleClick (e) {
             this.$emit('click', e)
 
             const { name, params, query } = this.route
@@ -106,6 +107,9 @@ export default {
                 ...(params ? { params } : null),
                 ...(query ? { query } : null)
             })
+        },
+        handleBtnClick (e) {
+            this.$emit('btn-click', e.target.innerHTML)
         }
     }
 }

@@ -23,8 +23,11 @@
             <div :class="$style.priceBox">
                 <div v-if="detail.sellingPrice" :class="$style.price" v-text="detail.sellingPrice" />
                 <div v-else :class="$style.free">免费</div>
+                <!-- TODO: <div :class="$style.free">赠课</div> -->
                 <div :class="$style.original">
-                    <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">原价：<del v-text="detail.originalPrice" /></div>
+                    <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
+                        原价：<del v-text="detail.originalPrice" />
+                    </div>
                     <div>
                         <span v-if="detail.sale === 0">正在热销中</span>
                         <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
@@ -60,6 +63,9 @@
             />
         </info-box>
 
+        <!-- 订购须知 -->
+        <instructions v-if="!detail.useDesc" title="订购须知" :content="detail.useDesc" />
+
         <!-- 相关课程 -->
         <slide-courses :class="$style.slideCourses" v-if="true" />
 
@@ -79,30 +85,43 @@
             </div>
         </div>
 
+        <!-- 底部购买 -->
         <div :class="$style.bottom" v-if="productActive !== 5">
             <div :class="$style.content">
                 <router-link :class="$style.link" :to="{ name: 'Home' }">
-                    <pl-svg name="icon-home" width="38" height="70" />
+                    <pl-svg name="icon-home" width="38.5" height="70" />
                 </router-link>
-                <a :class="$style.link + ' ' + $style.callUs" @click="showContact = true">
-                    <pl-svg name="icon-call-us" width="80" height="72" />
+                <a :class="$style.callUs" @click="showContact = true">
+                    <pl-svg name="icon-call-us" width="80" height="70" />
                 </a>
-                <button
-                    v-if="!detail.isBuy"
-                    :disabled="Number(detail.status) === 2 || loading"
-                    :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung"
-                    @click="goSubmit"
-                >
-                    立即学习
-                </button>
-                <button
-                    v-else
-                    :disabled="loading"
-                    :class="$style.button + ' ' + $style.hasStudied"
-                    @click="$router.push({ name: 'CourseWatch', params: { courseId: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress } })"
-                >
-                    观看学习
-                </button>
+                <div :class="$style.buttonWrapper">
+                    <button
+                        v-if="canPreview"
+                        :class="$style.button + ' ' + $style.yellow"
+                        :disabled="Number(detail.status) === 2 || loading"
+                        @click="preview"
+                    >
+                        试看视频
+                    </button>
+                    <button
+                        v-if="!detail.isBuy"
+                        :class="$style.button + ' ' + $style.orange"
+                        :disabled="Number(detail.status) === 2 || loading"
+                        @click="submit"
+                    >
+                        <!-- TODO: 暂未开售，敬请期待 -->
+                        立即订购
+                    </button>
+                    <button
+                        v-else
+                        :class="$style.button + ' ' + $style.yellow"
+                        :disabled="loading"
+                        @click="$router.push({ name: 'CourseWatch', params: { courseId: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress } })"
+                    >
+                        <!-- TODO: 获得赠课，去学习 -->
+                        立即学习
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -139,6 +158,7 @@ import CountDown from '../../components/product/Courses-Count-Down.vue'
 import Field from './components/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
+import Instructions from '../../components/detail/Instructions.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { getCourseDetail } from '../../apis/product'
 import {
@@ -166,7 +186,8 @@ export default {
         CountDown,
         Field,
         SlideCourses,
-        SeriseCourses
+        SeriseCourses,
+        Instructions
     },
     data () {
         return {
@@ -205,6 +226,9 @@ export default {
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘/组合课活动进入
         productActive () {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
+        },
+        canPreview () {
+            return false
         }
     },
     async activated () {
@@ -263,10 +287,14 @@ export default {
                 throw e
             }
         },
-        getExpiration (detail) {
-            return detail.validityType ? `购买后${ detail.validity }天内可观看学习` : '购买后不限观看次数'
+        getExpiration ({ validityType, validity }) {
+            // TODO: `订购后${2020.3.25}前可观看学习`
+            return validityType ? `购买后${ validity }天内可观看学习` : '购买后不限观看次数'
         },
-        goSubmit () {
+        preview () {
+
+        },
+        submit () {
             if (!this.mobile) {
                 this.$confirm('您还没有绑定手机，请先绑定手机')
                     .then(() => {
@@ -481,32 +509,40 @@ export default {
     background-color: #fff;
     > .content {
         display: flex;
+        justify-content: space-between;
         align-items: center;
+        padding: 0 16px;
         height: 110px;
         border-top: 1px solid #e7e7e7;
     }
     .link {
-        margin-left: 42px;
-        &.call-us {
-            margin-left: 36px;
-        }
+        margin-left: 12px;
+    }
+    .call-us {
+        margin-left: 36px;
+    }
+    .button-wrapper {
+        display: flex;
+        margin-left: auto;
+        width: 496px;
+        border-radius: 10px;
+        overflow: hidden;
     }
     .button {
-        width: 496px;
-        margin-left: 40px;
+        flex: 1;
+        width: 0;
         line-height: 80px;
-        font-size: 26px;
         text-align: center;
+        font-size: 26px;
         color: #fff;
-        border-radius: 10px;
     }
-    .click-me-because-you-are-young {
+    .orange {
         background-color: #fe7700;
         &:disabled {
             background-color: rgba(254, 119, 0, .4);
         }
     }
-    .has-studied {
+    .yellow {
         background-color: #f2b036;
     }
 }
