@@ -77,15 +77,19 @@
                                 <span v-if="item.lecturer">主讲人： {{ item.lecturer }}</span>
                             </div>
                             <div :class="$style.bottom">
-                                <span v-if="item.priceType === 1">
-                                    <span :class="$style.price" v-text="item.sellingPrice" />
-                                    <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
-                                </span>
-                                <span v-else :class="$style.free">免费</span>
-                                <pl-button :class="$style.isNotStart" v-if="item.isStart" type="primary" size="small">暂未开始</pl-button>
-                                <pl-button v-else-if="item.orderId" type="warning" size="small">学习中</pl-button>
-                                <pl-button v-else-if="item.isSend" type="primary" size="small">已赠课</pl-button>
-                                <pl-button v-else type="primary" size="small">订购中</pl-button>
+                                <template>
+                                    <span v-if="item.priceType === 1">
+                                        <span :class="$style.price" v-text="item.sellingPrice" />
+                                        <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
+                                    </span>
+                                    <span v-else :class="$style.free">免费</span>
+                                </template>
+                                <template>
+                                    <pl-button :class="$style.isNotStart" v-if="item.isNotStart" type="primary">暂未开始</pl-button>
+                                    <pl-button v-else-if="item.isGive" type="primary">已赠课</pl-button>
+                                    <pl-button v-else-if="item.orderId || (item.isGive && item.isWatch)" type="warning">学习中</pl-button>
+                                    <pl-button v-else type="primary">订购中</pl-button>
+                                </template>
                             </div>
                         </div>
                     </li>
@@ -111,6 +115,7 @@ export default {
             form: {
                 category1: '',
                 category2: '',
+                courseType: 1,
                 current: 1,
                 size: 10
             },

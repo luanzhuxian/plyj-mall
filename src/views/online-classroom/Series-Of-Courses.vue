@@ -77,11 +77,11 @@
                                     {{ item.courseName }}
                                 </div>
                                 <div :class="$style.saleInfo">
-                                    <span v-if="item.sellingPrice">已有{{ item.sellingPrice }}人订阅</span>
+                                    <span v-if="item.orderCount">已有{{ item.orderCount }}人订阅</span>
                                     <span v-else>正在热销中</span>
                                 </div>
                                 <div :class="$style.courseCount">
-                                    <span>包含{{ item.sellingPrice }}节课程</span>
+                                    <span>包含{{ item.courseCount }}节课程</span>
                                 </div>
                             </div>
                             <div :class="$style.right">
@@ -93,9 +93,9 @@
                                     <span v-else :class="$style.free">免费</span>
                                 </div>
                                 <div :class="$style.btns">
-                                    <pl-button :class="$style.isNotStart" v-if="item.isStart" type="primary">即将开售</pl-button>
-                                    <pl-button v-else-if="item.orderId" type="warning">学习中</pl-button>
-                                    <pl-button v-else-if="item.isSend" type="primary">已赠课</pl-button>
+                                    <pl-button :class="$style.isNotStart" v-if="item.isNotStart" type="primary">即将开售</pl-button>
+                                    <pl-button v-else-if="item.isGive" type="primary">已赠课</pl-button>
+                                    <pl-button v-else-if="item.orderId || (item.isGive && item.isWatch)" type="warning">学习中</pl-button>
                                     <pl-button v-else type="primary">立即订购</pl-button>
                                 </div>
                             </div>
@@ -123,6 +123,7 @@ export default {
             form: {
                 category1: '',
                 category2: '',
+                courseType: 2,
                 current: 1,
                 size: 10
             },

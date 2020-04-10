@@ -20,7 +20,7 @@
             v-if="unaccalimedSendCount"
             @click="isShowSendLiveDialog = true"
         >
-            <span>赠送了您{{ unaccalimedSendCount }}节直播课程哦，快来学习吧~</span>
+            <span>赠送了您{{ unaccalimedSendCount }}节课程哦，快来学习吧~</span>
             <span>查看></span>
         </div>
         <keep-alive>
