@@ -328,6 +328,7 @@ export default {
     &.had-buy:before {
       content: '已购';
       position: absolute;
+      z-index: 1;
       top: 0;
       left: 0;
       width:100px;
