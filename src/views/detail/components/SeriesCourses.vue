@@ -7,14 +7,14 @@
         </div>
         <ul :class="$style.list">
             <li :class="$style.listItem" v-for="n of 20" :key="n">
-                <!-- TODO: 试看 单独购买 去学习(免费 已购 赠课) -->
+                <!-- TODO: 试看(系列课单集试看) 单独购买(不支持试看且是单课) 去学习(s免费 已购 赠课) -->
                 <product-card
                     :image="'https://mallcdn.youpenglai.com/static/admall/mall-management/active/prod-default.png'"
                     :label="'视频课'"
                     :top="'【第一节】张三三老师带您体课张三三老师带您体课张三三老师带您体课张三三老师带您体课...'"
                     :sub-top="`主讲人：王老师`"
                     :bottom-left="'视频课'"
-                    :button-text="flag ? '试看' : '单独购买'"
+                    :button-text="getBtnText()"
                     round
                     @btn-click="handleBtnClick"
                 >
@@ -53,6 +53,9 @@ export default {
         }
     },
     methods: {
+        getBtnText () {
+            return this.flag ? '试看' : '单独购买'
+        },
         jump () {
 
         },
