@@ -406,6 +406,7 @@ export default {
       }
       .btns {
         margin-top: 20px;
+        text-align: right;
         button {
           width: 150px;
           line-height: 58px;

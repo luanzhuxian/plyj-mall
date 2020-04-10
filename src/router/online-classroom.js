@@ -18,7 +18,7 @@ export default [
                 }
             },
             {
-                path: 'list',
+                path: 'series-of-courses',
                 name: 'seriesOfCourses',
                 component: () => import('../views/online-classroom/Series-Of-Courses.vue'),
                 meta: {
