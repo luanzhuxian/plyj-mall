@@ -69,6 +69,7 @@ export default {
 <style module lang="scss">
     .detail-info {
         padding: 30px 40px;
+        background-color: #fff;
 
         h3 {
             margin-bottom: 28px;

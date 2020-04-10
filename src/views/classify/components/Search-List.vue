@@ -46,6 +46,7 @@
                     </load-more>
                 </div>
             </tab-container-item>
+
             <tab-container-item id="COURSE">
                 <div ref="courseListContainer" :class="$style.list">
                     <load-more

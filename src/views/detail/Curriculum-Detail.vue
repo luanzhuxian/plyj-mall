@@ -1,13 +1,25 @@
 <template>
     <div :class="$style.curriculum">
-        <!-- 海报按钮 -->
-        <div :class="$style.haibao">
-            <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-            <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createHaibao" />
-            <p>分享海报</p>
+        <div :class="$style.bannerWrapper">
+            <!-- 海报按钮 -->
+            <div :class="$style.haibao">
+                <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createHaibao" />
+                <p>分享海报</p>
+            </div>
+            <banner :banners="banners" />
+
+            <!-- 倒计时 -->
+            <count-down
+                :class="$style.countDownBar"
+                endtime="2020-9-9 14:05:38"
+                theme="orange"
+                prefix="距抢课开始仅剩"
+                @done="refresh"
+            />
         </div>
-        <Banner :banners="banners" />
-        <InfoBox>
+
+        <info-box>
             <div :class="$style.priceBox">
                 <div v-if="detail.sellingPrice" :class="$style.price" v-text="detail.sellingPrice" />
                 <div v-else :class="$style.free">免费</div>
@@ -15,9 +27,9 @@
                     <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">原价：<del v-text="detail.originalPrice" /></div>
                     <div>
                         <span v-if="detail.sale === 0">正在热销中</span>
-                        <!--<template v-else-if="detail.sale > 0 && detail.sale < 10">
-              <span v-text="detail.sale" />人关注
-            </template>-->
+                        <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
+                            <span v-text="detail.sale" />人关注
+                        </template> -->
                         <template v-else>
                             <span v-text="detail.sale" />人已学
                         </template>
@@ -25,11 +37,11 @@
                 </div>
             </div>
             <!-- 课程名称 -->
-            <DetailTitle :product-name="detail.courseName" />
+            <detail-title :product-name="detail.courseName" />
             <!-- 课程描述 -->
-            <DetailDesc v-text="detail.courseBrief" />
+            <detail-desc v-text="detail.courseBrief" />
             <!-- 课程标签 -->
-            <Tags :tags="detail.labelModels" />
+            <tags :tags="detail.labelModels" />
 
             <div :class="$style.field" v-if="detail.lecturer">
                 <div :class="$style.left">
@@ -46,20 +58,24 @@
                 </div>
                 <div :class="$style.right" v-text="detail.validityType ? `购买后${detail.validity}天内学完` : '购买后不限观看次数'" />
             </div>
-        </InfoBox>
+        </info-box>
 
+        <!-- 相关课程 -->
+        <slide-courses :class="$style.slideCourses" v-if="true" />
+
+        <!-- 课程详情 -->
         <div :class="$style.detailOrComment">
             <div :class="$style.tabs">
+                <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
+                    课程介绍
+                </div>
                 <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2">
-                    商品详情
+                    目录
                 </div>
             </div>
-
             <div>
-                <DetailInfo
-                    v-show="tab === 2"
-                    :content="detail.details || '暂无详情'"
-                />
+                <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
+                <serise-courses v-show="tab === 2" />
             </div>
         </div>
 
@@ -94,7 +110,7 @@
             该视频课程已下架
         </div>
 
-        <Contact :show.sync="showContact" />
+        <contact :show.sync="showContact" />
 
         <!-- 海报弹框 -->
         <transition name="fade">
@@ -119,12 +135,23 @@ import DetailDesc from '../../components/detail/Desc.vue'
 import DetailInfo from '../../components/detail/Detail.vue'
 import Tags from '../../components/detail/Tags.vue'
 import Contact from '../../components/common/Contact.vue'
-import { getCourseDetail } from '../../apis/product'
+import CountDown from '../../components/product/Courses-Count-Down.vue'
+import SlideCourses from './components/SlideCourses'
+import SeriseCourses from './components/SeriesCourses'
 import share from '../../assets/js/wechat/wechat-share'
-import { generateQrcode, cutImageCenter, cutArcImage, loadImage, createText } from '../../assets/js/util'
+import { getCourseDetail } from '../../apis/product'
+import {
+    generateQrcode,
+    cutImageCenter,
+    cutArcImage,
+    loadImage,
+    createText
+} from '../../assets/js/util'
 import { mapGetters } from 'vuex'
 import { SET_SHARE_ID } from '../../store/mutation-type'
+
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
+
 export default {
     name: 'CurriculumDetail',
     components: {
@@ -134,20 +161,23 @@ export default {
         DetailDesc,
         Tags,
         DetailInfo,
-        Contact
+        Contact,
+        CountDown,
+        SlideCourses,
+        SeriseCourses
     },
     data () {
         return {
             banners: [],
             detail: {},
             agentProduct: false,
-            loading: false,
             tab: 2,
+            loading: false,
             studied: true,
             showContact: false,
+            haibao: '',
             creating: false,
-            showHaibao: false,
-            haibao: ''
+            showHaibao: false
         }
     },
     props: {
@@ -164,13 +194,13 @@ export default {
         ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl']),
 
         // 0 全部，1 helper，2 会员，3 部分用户
-        targetGroups () {
-            return this.detail.targetGroups
-        },
-        tagIds () {
-            return this.detail.tagIds
-        },
-        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入
+        // targetGroups () {
+        //     return this.detail.targetGroups
+        // },
+        // tagIds () {
+        //     return this.detail.tagIds
+        // },
+        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘/组合课活动进入
         productActive () {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
         }
@@ -205,9 +235,7 @@ export default {
                     return
                 }
                 this.loading = false
-                const {
-                    courseImg
-                } = result
+                const { courseName, courseImg, lecturer } = result
                 this.banners = [courseImg]
                 this.detail = result
 
@@ -222,10 +250,10 @@ export default {
                 this.shareUrl = location.href
                 share({
                     appId: this.appId,
-                    title: result.courseName,
+                    title: courseName,
                     link: this.shareUrl,
-                    desc: result.lecturer,
-                    imgUrl: result.courseImg
+                    desc: lecturer,
+                    imgUrl: courseImg
                 })
                 this.haibaoImg = await loadImage(courseImg)
                 return result
@@ -247,7 +275,13 @@ export default {
                     .catch(() => {})
                 return
             }
-            this.$router.push({ name: 'SubmitCurriculum', params: { productId: this.productId, count: 1 } })
+            this.$router.push({
+                name: 'SubmitCurriculum',
+                params: {
+                    productId: this.productId,
+                    count: 1
+                }
+            })
         },
         resetState () {
             this.banners.splice(0, 1000000)
@@ -366,7 +400,18 @@ export default {
 .curriculum {
     padding-bottom: 190px;
 }
-.priceBox {
+.banner-wrapper {
+    position: relative;
+}
+.count-down-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 80px !important;
+    z-index: 1;
+}
+.price-box {
     > .price {
         font-size: 46px;
         color: #fe7700;
@@ -410,14 +455,17 @@ export default {
         color: #000;
     }
 }
-.detailOrComment {
+.slide-courses {
     margin-top: 20px;
-    background-color: #fff;
+}
+.detail-or-comment {
+    margin-top: 20px;
 }
 .tabs {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    background-color: #fff;
     border-bottom: 1px solid #e7e7e7;
     > div {
         width: max-content;
@@ -427,7 +475,7 @@ export default {
         line-height: 90px;
         box-sizing: border-box;
         font-weight: bold;
-        &.activeTab {
+        &.active-tab {
             color: #000;
             border-bottom: 2px solid #000;
         }
@@ -447,7 +495,7 @@ export default {
     }
     .link {
         margin-left: 42px;
-        &.callUs {
+        &.call-us {
             margin-left: 36px;
         }
     }
@@ -494,7 +542,7 @@ export default {
         margin-top: 4px;
     }
 }
-.saveHaibao {
+.save-haibao {
     position: fixed;
     top: 0;
     left: 0;
@@ -506,14 +554,14 @@ export default {
     height: 100%;
     background-color: rgba(0, 0, 0, .7);
     z-index: 10000;
-    .saveHaibaoContent {
+    .save-haibao-content {
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         width: max-content;
         height: max-content;
-        > .saveButton {
+        > .save-button {
             width: 560px;
             margin-top: -4px;
             text-align: center;
@@ -536,7 +584,7 @@ export default {
         }
     }
 }
-.buttomTip {
+.buttom-tip {
     position: fixed;
     bottom: 130px;
     left: 50%;
