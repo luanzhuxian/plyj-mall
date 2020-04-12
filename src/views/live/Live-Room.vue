@@ -744,27 +744,40 @@ export default {
             const { userName, userId, openId, avatar, channelId } = this
             const socket = io.connect('https://chat.polyv.net', {
                 // query: 'token=' + chatToken, // 文档上说，暂时为空
-                transports: ['websocket']
+                transports: ['websocket'],
+                // 是否自动重连
+                reconnection: true,
+                timeout: 30000
             })
             socket.on('connect', () => {
                 console.warn('chantroom connect success!')
             })
-            socket.on('disconnect', e => {
+            socket.on('disconnect', reason => {
                 // 退出直播间不抛出错误
                 if (this.$route.name !== 'LiveRoom') {
                     return
                 }
-                console.error(e)
-                console.error('chantroom connect error!')
-                this.$confirm({
-                    icon: 'icon-close3',
-                    message: '聊天室链接错误，请重试'
-                })
-                    .then(() => {
-                        this.socket = null
-                        this.initSocket()
-                    })
-                    .catch(() => {})
+                console.warn('disconnect reason: ', reason)
+                if (reason === 'io server disconnect') {
+                    // 断开是由服务器发起的，您需要手动重新连接
+                    socket.connect()
+                    console.warn('服务器发起了断开操作，正在重新连接....')
+                }
+            })
+            socket.on('reconnecting', attemptNumber => {
+                console.warn(`尝试第${ attemptNumber }次重连`)
+            })
+            socket.on('reconnect', attemptNumber => {
+                console.warn(`在第${ attemptNumber }次重连成功`)
+            })
+            socket.on('error', error => {
+                console.error(error)
+            })
+            socket.on('reconnect_error', error => {
+                console.error(error)
+            })
+            socket.on('reconnect_failed', () => {
+                console.warn('重连失败')
             })
             socket.on('message', this.onMessage)
 
@@ -1107,6 +1120,7 @@ export default {
         window.clearInterval(this.videoLiveTimer)
         window.clearTimeout(this.liveStatusTimer)
         if (this.liveSdk) this.liveSdk.destroy(true)
+        if (this.socket) this.socket.close()
     }
 }
 </script>

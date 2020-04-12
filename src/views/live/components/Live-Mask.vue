@@ -12,7 +12,7 @@
                         <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span>:</span><i v-text="s" />
                     </div>
                 </div>
-                <div :class="$style.description">直播暂未开始</div>
+                <div :class="$style.description">直播即将开始</div>
             </template>
         </div>
     </div>
