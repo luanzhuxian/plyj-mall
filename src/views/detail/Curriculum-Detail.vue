@@ -64,10 +64,14 @@
         </info-box>
 
         <!-- 订购须知 -->
-        <instructions v-if="!detail.useDesc" title="订购须知" :content="detail.useDesc" />
+        <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
 
         <!-- 相关课程 -->
-        <slide-courses :class="$style.slideCourses" v-if="true" />
+        <slide-courses
+            v-if="courseType === 1 && relatedCourses.length"
+            :class="$style.slideCourses"
+            :data="relatedCourses"
+        />
 
         <!-- 课程详情 -->
         <div :class="$style.detailOrComment">
@@ -75,7 +79,7 @@
                 <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
                     课程介绍
                 </div>
-                <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2">
+                <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2" v-if="courseType === 2">
                     目录
                 </div>
             </div>
@@ -155,7 +159,7 @@ import DetailInfo from '../../components/detail/Detail.vue'
 import Tags from '../../components/detail/Tags.vue'
 import Contact from '../../components/common/Contact.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
-import Field from './components/Field.vue'
+import Field from '../../components/detail/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
 import Instructions from '../../components/detail/Instructions.vue'
@@ -191,7 +195,11 @@ export default {
     },
     data () {
         return {
+            // 1 单课 2 系列课
+            courseType: 1,
             banners: [],
+            relatedCourses: [],
+            seriesCourses: [],
             detail: {},
             agentProduct: false,
             tab: 2,
@@ -260,9 +268,21 @@ export default {
                     this.$router.go(-1)
                     return
                 }
+
                 this.loading = false
-                const { courseName, courseImg, lecturer } = result
+                const {
+                    courseType,
+                    courseName,
+                    courseImg,
+                    lecturer,
+                    relatedCoursesModels = [],
+                    videoLibEntities = []
+                } = result
+                this.tab = courseType
+                this.courseType = courseType
                 this.banners = [courseImg]
+                this.relatedCourses = relatedCoursesModels
+                this.seriesCourses = videoLibEntities
                 this.detail = result
 
                 // 生成分享

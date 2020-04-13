@@ -12,12 +12,12 @@
         <ul :class="$style.list">
             <product-card
                 :class="$style.listItem"
-                v-for="n of length"
-                :key="n"
-                :image="'https://mallcdn.youpenglai.com/static/admall/mall-management/active/prod-default.png'"
+                v-for="(item, index) of data"
+                :key="index"
+                :image="item.courseImg"
                 :label="'视频课'"
-                :top="'【第一节】张三三老师带您体课张三三老师带您体课张三三老师带您体课张三三老师带您体课...'"
-                :bottom-left="'220人已购'"
+                :top="item.courseName"
+                :bottom-left="`${item.sale}人已购`"
                 :max-line="2"
                 round
                 border
@@ -34,15 +34,20 @@ export default {
     components: {
         ProductCard
     },
-    props: {},
-    data () {
-        return {
-            length: 5
+    props: {
+        data: {
+            type: Array,
+            default () {
+                return []
+            }
         }
+    },
+    data () {
+        return {}
     },
     computed: {
         swipable () {
-            return this.length > 1
+            return this.data.length > 1
         }
     },
     methods: {
@@ -60,9 +65,9 @@ export default {
     &.swipable {
         .list-item {
             width: 648px;
-            &:nth-last-of-type(1) {
-                margin-right: 28px;
-            }
+            // &:nth-last-of-type(1) {
+            //     margin-right: 28px;
+            // }
         }
     }
 }

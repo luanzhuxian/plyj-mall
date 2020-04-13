@@ -52,12 +52,12 @@
                 <info-header :detail="detail" v-else />
                 <!-- 开售倒计时 -->
                 <count-down
-                    size="large"
-                    @done="countFinished"
                     :class="$style.countDown"
                     v-if="detail.shoppingStatus === 1 && (activeProduct === 1 || !preActivity)"
+                    size="large"
                     :starttime="detail.serverTime"
                     :endtime="detail.shoppingTimeLong"
+                    @done="countFinished"
                 />
                 <!-- 商品名称 -->
                 <DetailTitle :active-product="activeProduct" :pre-activity="preActivity" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
@@ -81,6 +81,7 @@
             />
 
             <Field
+                :class="$style.field"
                 v-if="productType === 'PHYSICAL_GOODS'"
                 label="发货"
                 :label-width="120"
@@ -89,9 +90,10 @@
 
             <!-- 正常商品 按照 商品本身的规格显示; 活动商品 按照 活动中的商品显示，已下架也需显示规格 -->
             <Field
+                :class="$style.field"
                 label="选择"
                 :label-width="120"
-                :can-click="!noStock && !isDown"
+                :clickable="!noStock && !isDown"
                 @click="showSpecifica = true;"
             >
                 <template v-if="currentModel.skuCode1Name">
@@ -1381,4 +1383,8 @@ export default {
       height: 160px;
     }
   }
+.field {
+    margin-top: 20px;
+    padding: 0 24px;
+}
 </style>

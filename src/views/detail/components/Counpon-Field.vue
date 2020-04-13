@@ -1,9 +1,10 @@
 <template>
     <div>
         <Field
+            :class="$style.field"
             label="优惠券"
-            can-click
             :label-width="120"
+            clickable
             @click="clickHandler"
         >
             <span
@@ -107,24 +108,28 @@ export default {
 </script>
 
 <style module lang="scss">
-  .coupontItem {
-    line-height: 36px;
-    color: #FE7700;
-    &:nth-last-of-type(1) {
-      &:after {
-        content: '';
-      }
+    .field {
+        margin-top: 20px;
+        padding: 0 24px;
     }
-    &:after {
-      content: ',';
-      color: #333;
+    .coupontItem {
+        line-height: 36px;
+        color: #FE7700;
+        &:nth-last-of-type(1) {
+            &:after {
+            content: '';
+            }
+        }
+        &:after {
+            content: ',';
+            color: #333;
+        }
     }
-  }
 
-  .coupon {
-    padding: 0 24px;
-    > .coupon-list {
-      margin-top: 48px;
+    .coupon {
+        padding: 0 24px;
+        > .coupon-list {
+            margin-top: 48px;
+        }
     }
-  }
 </style>
