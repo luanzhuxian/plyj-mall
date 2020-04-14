@@ -406,7 +406,7 @@ export default {
               @include elps();
             }
             .live-time {
-              margin: 10px 0 4px;
+              margin-top: 10px;
               font-size:24px;
               color:#666;
               > svg {
@@ -414,6 +414,7 @@ export default {
               }
             }
             .live-lecturer {
+              margin-top: 4px;
               width: 250px;
               font-size:24px;
               color:#666;
