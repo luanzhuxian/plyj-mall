@@ -1,16 +1,16 @@
 <template>
     <div :class="$style.lottery">
         <div :class="$style.container">
-            <!--<div :class="$style.lotteryBox">
+            <div :class="$style.lotteryBox">
                 <div :class="$style.baseInfo">
-                    <div :class="$style.status">距活动结束</div>
-                    &lt;!&ndash;<div :class="{ [$style.status]: true, [$style.end]: true }">活动已结束</div>&ndash;&gt;
-                    &lt;!&ndash;<div :class="$style.status">距活动开始</div>&ndash;&gt;
-                    <div :class="$style.time">21天12小时23分</div>
+                    <!--<div :class="$style.status">距活动结束</div>-->
+                    <div :class="{ [$style.status]: true, [$style.end]: true }">活动已结束</div>
+                    <!--<div :class="$style.status">距活动开始</div>-->
+                    <!--<div :class="$style.time">21天12小时23分</div>-->
                     <div :class="$style.viewer">已有23333人关注</div>
                     <div :class="$style.chance">您还有0次抽奖机会</div>
                 </div>
-            </div>-->
+            </div>
             <div :class="$style.awards">
                 <div :class="$style.title">
                     <pl-svg name="icon-present-6233e" width="32" />活动奖品
@@ -18,13 +18,6 @@
                 <div :class="$style.awardsBox">
                     <div :class="$style.inner" ref="inner">
                         <div :class="$style.content">
-                            <div :class="$style.gift">
-                                <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                                <div>
-                                    <div :class="$style.level">一等奖</div>
-                                    <div :class="$style.name">豪华游艇一艘</div>
-                                </div>
-                            </div>
                             <div :class="$style.gift">
                                 <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
                                 <div>
@@ -177,25 +170,31 @@ export default {
             }
         }
     },
-    async mounted () {
-        setTimeout(() => {
+    activated () {
+        this.timer = setInterval(() => {
             this.setLights()
-        }, 1000)
+            IS_WHITE = !IS_WHITE
+            console.log(123)
+        }, 800)
+    },
+    deactivated () {
+        clearInterval(this.timer)
     },
     methods: {
         setLights () {
-            let index = 0
+            let index = IS_WHITE ? 1 : 0
             const canvas = this.$refs.canvas
             const inner = this.$refs.inner
             canvas.width = inner.offsetWidth
             canvas.height = inner.offsetHeight
+            const ctx = canvas.getContext('2d')
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
             // 灯的大小
             const lightSize = transformSize(9)
             // 灯间距
-            const linghtGap = transformSize(70)
+            const linghtGap = transformSize(69)
             // 灯的开始点位
             const lightStart = transformSize(96)
-            const ctx = canvas.getContext('2d')
             // 计算横着能放几个灯, 计算公式，lightSize * x * 2 + (x - 1) * linghtGap + lightStart * 2 = canvas.width
             const lightCountX = (canvas.width + linghtGap - lightStart * 2) / (2 * lightSize + linghtGap)
             // 计算竖着能放几个灯, 计算公式，lightSize * x * 2 + (x - 1) * linghtGap + lightStart * 2 = canvas.height
@@ -206,74 +205,75 @@ export default {
             // 计算每个灯直接要补偿的间距
             const linghtGapXAdded = ((lightCountX - lightCountXInt) * lightSize * 2) / (lightCountXInt - 1)
             const linghtGapYAdded = ((lightCountY - lightCountYInt) * lightSize * 2) / (lightCountYInt - 1)
-            console.log(lightCountX, lightCountXInt, linghtGapXAdded)
-            console.log(lightCountY, lightCountYInt, linghtGapYAdded)
+            ctx.shadowBlur = 20;
+            // console.log(lightCountX, lightCountXInt, linghtGapXAdded)
+            // console.log(lightCountY, lightCountYInt, linghtGapYAdded)
             // let lastX = 0
             // 顶部灯
             for (let i = 1; i <= lightCountX; i++) {
                 index++
                 ctx.beginPath()
                 ctx.arc(lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapXAdded) * (i - 1)), transformSize(20), lightSize, 0, 2 * Math.PI)
-                ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+                ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
+                ctx.shadowColor = ctx.fillStyle
                 ctx.fill()
-                console.log(index, ctx.fillStyle)
             }
             // 右上角
             index++
             ctx.beginPath()
             ctx.arc(transformSize(615), transformSize(40), lightSize, 0, 2 * Math.PI)
-            ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+            ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
+            ctx.shadowColor = ctx.fillStyle
             ctx.fill()
-            console.log(index, ctx.fillStyle)
 
             // 右侧灯
             for (let i = 1; i <= lightCountY; i++) {
                 index++
                 ctx.beginPath()
                 ctx.arc(transformSize(630), lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapYAdded) * (i - 1)), lightSize, 0, 2 * Math.PI)
-                ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+                ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
+                ctx.shadowColor = ctx.fillStyle
                 ctx.fill()
-                console.log(index, ctx.fillStyle)
             }
             // 右下角
             index++
             ctx.beginPath()
             ctx.arc(transformSize(620), canvas.height - transformSize(48), lightSize, 0, 2 * Math.PI)
-            ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+            ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
+            ctx.shadowColor = ctx.fillStyle
             ctx.fill()
-            console.log(index, ctx.fillStyle)
             // 底部灯
             for (let i = 1; i <= lightCountX; i++) {
                 index++
                 ctx.beginPath()
                 ctx.arc(lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapXAdded) * (i - 1)), canvas.height - transformSize(20), lightSize, 0, 2 * Math.PI)
-                ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+                ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
+                ctx.shadowColor = ctx.fillStyle
                 ctx.fill()
-                console.log(index, ctx.fillStyle)
             }
             // 左下角
             index++
             ctx.beginPath()
             ctx.arc(transformSize(36), canvas.height - transformSize(48), lightSize, 0, 2 * Math.PI)
-            ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+            ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
+            ctx.shadowColor = ctx.fillStyle
             ctx.fill()
-            console.log(index, ctx.fillStyle)
             // 左侧灯
             for (let i = 1; i <= lightCountY; i++) {
                 index++
                 ctx.beginPath()
                 ctx.arc(transformSize(20), lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapYAdded) * (i - 1)), lightSize, 0, 2 * Math.PI)
-                ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+                ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
+                ctx.shadowColor = ctx.fillStyle
                 ctx.fill()
-                console.log(index, ctx.fillStyle)
             }
             // 左上角
             index++
             ctx.beginPath()
             ctx.arc(transformSize(36), transformSize(40), lightSize, 0, 2 * Math.PI)
-            ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+            ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
+            ctx.shadowColor = ctx.fillStyle
             ctx.fill()
-            console.log(index, ctx.fillStyle)
         },
         slide (index) {
             this.$refs.swiper.swiper.slideTo(index)
@@ -300,33 +300,37 @@ export default {
     }
     .lotteryBox {
         height: 1163px;
-        padding-top: 300px;
+        padding-top: 276px;
         text-align: center;
         color: #eccbb4;
         background: url("https://mallcdn.youpenglai.com/static/admall/2.9.0/弹窗.png") no-repeat center top;
         background-size: 100%;
         > .baseInfo {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 214px;
             padding-left: 16px;
             > .status {
+                margin-top: 34px;
                 font-size: 28px;
                 &.end {
-                    margin-top: 20px;
-                    margin-bottom: 28px;
+                    margin-top: 36px;
                     font-size: 40px;
                 }
             }
             > .time {
-                margin-top: 12px;
                 font-size: 30px;
             }
             > .viewer {
-                margin-top: 12px;
                 font-size: 20px;
                 text-decoration: underline;
             }
             .chance {
                 width: max-content;
-                margin: 20px auto 0;
+                margin-top: 20px;
+                margin-bottom: 2px;
                 padding: 0 16px;
                 line-height: 46px;
                 font-size: 24px;
