@@ -2,7 +2,14 @@
     <div :class="$style.lottery">
         <div :class="$style.container">
             <div :class="$style.lotteryBox">
-                1
+                <div :class="$style.baseInfo">
+                    <div :class="$style.status">距活动结束</div>
+                    <!--<div :class="{ [$style.status]: true, [$style.end]: true }">活动已结束</div>-->
+                    <!--<div :class="$style.status">距活动开始</div>-->
+                    <div :class="$style.time">21天12小时23分</div>
+                    <div :class="$style.viewer">已有23333人关注</div>
+                    <div :class="$style.chance">您还有0次抽奖机会</div>
+                </div>
             </div>
             <div :class="$style.awards">
                 <div :class="$style.title">
@@ -40,7 +47,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!--<div :class="$style.demo" />-->
                         <!-- 灯 -->
                         <canvas ref="canvas" :class="$style.lights" />
                     </div>
@@ -79,20 +85,51 @@
                 </div>
             </div>
         </div>
+
+        <div :class="$style.share" @click="showPoster = true">
+            <pl-svg name="icon-poster-512b1" width="24" />
+            海报
+        </div>
+
+        <div :class="$style.rule" @click="showRule = true">
+            活动锦囊
+        </div>
+
+        <pl-mask :show.sync="showPoster">
+            123
+        </pl-mask>
+
+        <pl-popup
+            :show.sync="showRule"
+            title="活动说明"
+        >
+            <dl :class="$style.ruleContent">
+                <dt class="fz-32">1. 活动时间</dt>
+                <dd class="fz-28 mb-48">2019-05-20 10:00:00 至 2019-06-20 12:00:00</dd>
+                <dt class="fz-32">2. 活动对象</dt>
+                <dd class="fz-28 mb-48">所有会员</dd>
+                <dt class="fz-32">3. 活动说明</dt>
+                <dd class="fz-28">在活动有效期内，成功邀请3位好友绑定手机号注册成为店铺的会员，即可获得翻好礼的机会1次；有机会获得大额满减券；领取成功后，将自动存入到会员的现金卡包中</dd>
+            </dl>
+        </pl-popup>
     </div>
 </template>
 
 <script>
 // 根据屏幕大小转换canvas中使用的长度大小
+import PlMask from '../../components/penglai-ui/Mask'
 const transformSize = num => num / 7.5 * (window.innerWidth / 100)
 /* eslint-disable */
 // 白色灯泡的下标，后面灯泡的颜色交替更换，默认第0个，即左上角第一个
 const WHITE_LIGHT_INDEX = 0
 export default {
     name: 'Lottery',
+    components: { PlMask },
     data () {
         return {
-            tab: 0
+            tab: 0,
+            showRule: false,
+            showPoster: false
         }
     },
     mounted () {
@@ -161,8 +198,43 @@ export default {
     }
     .lotteryBox {
         height: 1163px;
-        background: url("https://mallcdn.youpenglai.com/static/admall/2.9.0/弹窗.png") no-repeat center center;
+        padding-top: 300px;
+        text-align: center;
+        color: #eccbb4;
+        background: url("https://mallcdn.youpenglai.com/static/admall/2.9.0/弹窗.png") no-repeat center top;
         background-size: 100%;
+        > .baseInfo {
+            padding-left: 16px;
+            > .status {
+                font-size: 28px;
+                &.end {
+                    margin-top: 20px;
+                    margin-bottom: 28px;
+                    font-size: 40px;
+                }
+            }
+            > .time {
+                margin-top: 12px;
+                font-size: 30px;
+            }
+            > .viewer {
+                margin-top: 12px;
+                font-size: 20px;
+                text-decoration: underline;
+            }
+            .chance {
+                width: max-content;
+                margin: 20px auto 0;
+                padding: 0 16px;
+                line-height: 46px;
+                font-size: 24px;
+                color: #d33f44;
+                background-color: #f3baa0;
+                border-radius: 12px 12px 0 0;
+                box-shadow: 0 -3px 2px #c54c4c;
+            }
+        }
+
     }
     .awards {
         margin-top: 64px;
@@ -303,10 +375,39 @@ export default {
             color: #999;
         }
     }
-    .demo {
-        width: 18px;
-        height: 18px;
-        border-radius: 9px;
-        background-color: #fff;
+    .share {
+        position: fixed;
+        right: 0;
+        top: 16px;
+        width: 104px;
+        line-height: 48px;
+        font-size: 24px;
+        color: #000;
+        background-color: #FCE0B5;
+        border-radius: 24px 0 0 24px;
+        > svg {
+            margin-left: 16px;
+            vertical-align: -3px;
+        }
+    }
+    .rule {
+        position: fixed;
+        right: 0;
+        top: 84px;
+        width: 120px;
+        padding-left: 16px;
+        line-height: 48px;
+        font-size: 24px;
+        color: #000;
+        background-color: #FCE0B5;
+        border-radius: 24px 0 0 24px;
+        box-sizing: border-box;
+    }
+    .ruleContent {
+        padding: 40px;
+        color: #000;
+        > dt {
+            margin-bottom: 8px;
+        }
     }
 </style>

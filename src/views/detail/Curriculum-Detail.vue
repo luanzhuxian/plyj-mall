@@ -3,7 +3,7 @@
         <!-- 海报按钮 -->
         <div :class="$style.haibao">
             <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-            <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createHaibao" />
+            <pl-svg :key="2" v-else name="icon-poster-512b1" fill="#fff" width="35" @click="createHaibao" />
             <p>分享海报</p>
         </div>
         <Banner :banners="banners" />

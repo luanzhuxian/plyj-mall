@@ -16,7 +16,7 @@
                 </swiper>
                 <!-- 展示海报按钮 -->
                 <button class="show-poster" @click="showPoster">
-                    <pl-svg name="icon-haibao" height="25" />
+                    <pl-svg name="icon-poster-512b1" fill="#fff" height="25" />
                     <span>海报</span>
                 </button>
                 <!-- 展示活动规则按钮 -->
