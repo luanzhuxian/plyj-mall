@@ -38,6 +38,8 @@ export default {
             form: {
                 // 1：未学习  2：学习中  3：已过期
                 learnStatus: 1,
+                // 1单课 2系列课
+                courseType: 1,
                 current: 1,
                 size: 10
             }
@@ -45,12 +47,13 @@ export default {
     },
     async created () {
         try {
-            const { learnStatus } = this.$route.params
+            const { learnStatus, courseType } = this.$route.params
             if (learnStatus) {
                 this.list = []
                 this.loading = false
                 this.form.current = 1
                 this.form.learnStatus = Number(learnStatus)
+                this.form.courseType = Number(courseType)
                 await this.$nextTick()
                 await this.$refs.loadMore.refresh()
             }

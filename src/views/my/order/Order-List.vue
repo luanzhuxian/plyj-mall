@@ -135,7 +135,7 @@
                                     v-if="item.orderType === 'KNOWLEDGE_COURSE' && item.status === 'FINISHED'"
                                     type="warning"
                                     round
-                                    @click="$router.push({ name: 'MySingleCourses' })"
+                                    @click="$router.push({ name: 'Courses', params: { courseType: '1' } })"
                                 >
                                     去学习
                                 </pl-button>

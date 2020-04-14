@@ -1,6 +1,8 @@
 <template>
     <div :class="$style.courses">
-        <router-view :key="$route.path" />
+        <keep-alive>
+            <router-view :key="$route.path" />
+        </keep-alive>
     </div>
 </template>
 

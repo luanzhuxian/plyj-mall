@@ -6,11 +6,11 @@
                     <div :class="{ [$style.tabFocus]: isLiveCourse }">直播课</div>
                     <div :class="{ [$style.line]: true, [$style.lineFocus]: isLiveCourse }" />
                 </div>
-                <div :class="$style.tabs" @click="$router.push({ name: 'MySingleCourses' })">
+                <div :class="$style.tabs" @click="$router.push({ name: 'Courses', params: { courseType: '1' } })">
                     <div :class="{ [$style.tabFocus]: isSingleCourse }">单课</div>
                     <div :class="{ [$style.line]: true, [$style.lineFocus]: isSingleCourse }" />
                 </div>
-                <div :class="$style.tabs" @click="$router.push({ name: 'MySeriesCourses' })">
+                <div :class="$style.tabs" @click="$router.push({ name: 'Courses', params: { courseType: '2' } })">
                     <div :class="{ [$style.tabFocus]: isSeriesCourse }">系列课</div>
                     <div :class="{ [$style.line]: true, [$style.lineFocus]: isSeriesCourse }" />
                 </div>
@@ -65,10 +65,10 @@ export default {
             return this.$route.name === 'MyLive'
         },
         isSingleCourse () {
-            return this.$route.name === 'SingleCourseLearning'
+            return this.$route.name === 'CourseLearning' && this.$route.params.courseType === '1'
         },
         isSeriesCourse () {
-            return this.$route.name === 'SeriesCourseLearning'
+            return this.$route.name === 'CourseLearning' && this.$route.params.courseType === '2'
         }
     }
 }

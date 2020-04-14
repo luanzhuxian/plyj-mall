@@ -217,7 +217,7 @@ export default {
         },
         goVideoLibrary () {
             // 支付成功，去视频库看视频
-            this.$router.replace({ name: 'MySingleCourses' })
+            this.$router.replace({ name: 'Courses', params: { courseType: '1' } })
         }
     }
 }

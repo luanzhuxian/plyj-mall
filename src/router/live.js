@@ -35,36 +35,19 @@ export default [
                 }
             },
             {
-                path: '/lived/library/courses',
-                name: 'MySingleCourses',
+                path: '/lived/library/courses/:courseType',
+                name: 'Courses',
                 component: () => import('../views/live/live-library/Courses.vue'),
-                redirect: '/lived/library/courses/single-course-learning/1',
+                redirect: '/lived/library/courses/:courseType/single-course-learning/1',
                 meta: {
-                    title: '单课'
+                    // 单课，系列课
+                    title: '我的课程'
                 },
                 children: [
                     {
-                        path: '/lived/library/courses/single-course-learning/:learnStatus',
-                        name: 'SingleCourseLearning',
-                        component: () => import('../views/live/live-library/Course-Learning.vue'),
-                        meta: {
-                            title: '课程学习'
-                        }
-                    }
-                ]
-            },
-            {
-                path: '/lived/library/series-courses',
-                name: 'MySeriesCourses',
-                component: () => import('../views/live/live-library/Courses.vue'),
-                redirect: '/lived/library/courses/series-course-learning/1',
-                meta: {
-                    title: '系列课'
-                },
-                children: [
-                    {
-                        path: '/lived/library/courses/series-course-learning/:learnStatus',
-                        name: 'SeriesCourseLearning',
+                        path: '/lived/library/courses/:courseType/single-course-learning/:learnStatus',
+                        name: 'CourseLearning',
+                        props: true,
                         component: () => import('../views/live/live-library/Course-Learning.vue'),
                         meta: {
                             title: '课程学习'
