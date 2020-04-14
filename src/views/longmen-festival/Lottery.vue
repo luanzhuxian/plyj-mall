@@ -1,16 +1,16 @@
 <template>
     <div :class="$style.lottery">
         <div :class="$style.container">
-            <div :class="$style.lotteryBox">
+            <!--<div :class="$style.lotteryBox">
                 <div :class="$style.baseInfo">
                     <div :class="$style.status">距活动结束</div>
-                    <!--<div :class="{ [$style.status]: true, [$style.end]: true }">活动已结束</div>-->
-                    <!--<div :class="$style.status">距活动开始</div>-->
+                    &lt;!&ndash;<div :class="{ [$style.status]: true, [$style.end]: true }">活动已结束</div>&ndash;&gt;
+                    &lt;!&ndash;<div :class="$style.status">距活动开始</div>&ndash;&gt;
                     <div :class="$style.time">21天12小时23分</div>
                     <div :class="$style.viewer">已有23333人关注</div>
                     <div :class="$style.chance">您还有0次抽奖机会</div>
                 </div>
-            </div>
+            </div>-->
             <div :class="$style.awards">
                 <div :class="$style.title">
                     <pl-svg name="icon-present-6233e" width="32" />活动奖品
@@ -18,6 +18,13 @@
                 <div :class="$style.awardsBox">
                     <div :class="$style.inner" ref="inner">
                         <div :class="$style.content">
+                            <div :class="$style.gift">
+                                <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                <div>
+                                    <div :class="$style.level">一等奖</div>
+                                    <div :class="$style.name">豪华游艇一艘</div>
+                                </div>
+                            </div>
                             <div :class="$style.gift">
                                 <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
                                 <div>
@@ -55,33 +62,63 @@
 
             <div :class="$style.myAwards">
                 <div :class="$style.tabs">
-                    <div :class="{ [$style.tab]: true, [$style.active]: tab === 0 }" @click="tab = 0">我的奖品</div>
-                    <div :class="{ [$style.tab]: true, [$style.active]: tab === 1 }" @click="tab = 1">获奖记录</div>
+                    <div :class="{ [$style.tab]: true, [$style.active]: tab === 0 }" @click="slide(0)">我的奖品</div>
+                    <div :class="{ [$style.tab]: true, [$style.active]: tab === 1 }" @click="slide(1)">获奖记录</div>
                 </div>
-                <div :class="$style.wrap">
-                    <ul :class="$style.awardList">
-                        <li :class="$style.awardItem">
-                            <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                            <div>
-                                <div :class="$style.name">豪华游艇一艘</div>
-                                <div :class="$style.date">2020.02.23</div>
-                            </div>
-                        </li>
-                        <li :class="$style.awardItem">
-                            <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                            <div>
-                                <div :class="$style.name">豪华游艇一艘</div>
-                                <div :class="$style.date">2020.02.23</div>
-                            </div>
-                        </li>
-                        <li :class="$style.awardItem">
-                            <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                            <div>
-                                <div :class="$style.name">豪华游艇一艘</div>
-                                <div :class="$style.date">2020.02.23</div>
-                            </div>
-                        </li>
-                    </ul>
+                <div :class="{ [$style.wrap]: true, [$style.active]: tab === 0 }">
+                    <swiper :options="swiperOption" ref="swiper" @slideChangeTransitionEnd="slideChangeTransitionEnd">
+                        <swiperSlide>
+                            <ul :class="$style.awardList">
+                                <li :class="$style.awardItem">
+                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                    <div>
+                                        <div :class="$style.name">豪华游艇一艘</div>
+                                        <div :class="$style.date">2020.02.23</div>
+                                    </div>
+                                </li>
+                                <li :class="$style.awardItem">
+                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                    <div>
+                                        <div :class="$style.name">豪华游艇一艘</div>
+                                        <div :class="$style.date">2020.02.23</div>
+                                    </div>
+                                </li>
+                                <li :class="$style.awardItem">
+                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                    <div>
+                                        <div :class="$style.name">豪华游艇一艘</div>
+                                        <div :class="$style.date">2020.02.23</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </swiperSlide>
+                        <swiperSlide>
+                            <table :class="$style.records">
+                                <thead>
+                                    <th>头像</th>
+                                    <th>昵称</th>
+                                    <th>奖品</th>
+                                    <th>获奖时间</th>
+                                </thead>
+                                <tr>
+                                    <td>
+                                        <img :class="$style.avatar" src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                    </td>
+                                    <td class="fz-24" :class="$style.nickname">阿斯顿噶的</td>
+                                    <td class="fz-24 primary-color" :class="$style.awardName">优惠券</td>
+                                    <td class="fz-24">2020.02.03</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img :class="$style.avatar" src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                    </td>
+                                    <td class="fz-24" :class="$style.nickname">阿斯顿噶的</td>
+                                    <td class="fz-24 primary-color" :class="$style.awardName">优惠券</td>
+                                    <td class="fz-24">2020.02.03</td>
+                                </tr>
+                            </table>
+                        </swiperSlide>
+                    </swiper>
                 </div>
             </div>
         </div>
@@ -118,67 +155,132 @@
 <script>
 // 根据屏幕大小转换canvas中使用的长度大小
 import PlMask from '../../components/penglai-ui/Mask'
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
 const transformSize = num => num / 7.5 * (window.innerWidth / 100)
 /* eslint-disable */
 // 白色灯泡的下标，后面灯泡的颜色交替更换，默认第0个，即左上角第一个
-const WHITE_LIGHT_INDEX = 0
+let IS_WHITE = true
 export default {
     name: 'Lottery',
-    components: { PlMask },
+    components: {
+        PlMask,
+        swiper,
+        swiperSlide
+    },
     data () {
         return {
             tab: 0,
             showRule: false,
-            showPoster: false
+            showPoster: false,
+            swiperOption: {
+                spaceBetween : 20
+            }
         }
     },
-    mounted () {
-        // this.setLights()
+    async mounted () {
+        setTimeout(() => {
+            this.setLights()
+        }, 1000)
     },
     methods: {
         setLights () {
+            let index = 0
             const canvas = this.$refs.canvas
             const inner = this.$refs.inner
             canvas.width = inner.offsetWidth
             canvas.height = inner.offsetHeight
             // 灯的大小
-            const lightSize = 18
-            console.log(lightSize)
+            const lightSize = transformSize(9)
             // 灯间距
-            const linghtGap = 35
+            const linghtGap = transformSize(70)
             // 灯的开始点位
-            const lightStart = 48
-            // 容器的周长
-            const L = (canvas.width + canvas.height) * 2
+            const lightStart = transformSize(96)
             const ctx = canvas.getContext('2d')
-            // 计算横着能放几个灯, 计算公式，18 * x + (x - 1) * 70 + 96 * 2 = canvas.width
-            const lightCountX = (canvas.width + linghtGap - lightStart * 2) / (lightSize + linghtGap)
-            // 计算竖着能放几个灯, 计算公式，18 * x + (x - 1) * 70 + 96 * 2 = canvas.height
-            const lightCountY = (canvas.height + linghtGap - lightStart * 2) / (lightSize + linghtGap)
+            // 计算横着能放几个灯, 计算公式，lightSize * x * 2 + (x - 1) * linghtGap + lightStart * 2 = canvas.width
+            const lightCountX = (canvas.width + linghtGap - lightStart * 2) / (2 * lightSize + linghtGap)
+            // 计算竖着能放几个灯, 计算公式，lightSize * x * 2 + (x - 1) * linghtGap + lightStart * 2 = canvas.height
+            const lightCountY = (canvas.height + linghtGap - lightStart * 2) / (2 * lightSize + linghtGap)
             // 灯的个数可能有小数部分，将小数部分计算成长度，增加至灯的间距
             const lightCountXInt = Number.parseInt(lightCountX)
             const lightCountYInt = Number.parseInt(lightCountY)
-            // 计算横坐标间距的富余值，
-            const linghtGapXAdded = (lightCountX - lightCountXInt) / (lightCountXInt - 1)
-            const linghtGapYAdded = (lightCountY - lightCountYInt) / (lightCountYInt - 1)
+            // 计算每个灯直接要补偿的间距
+            const linghtGapXAdded = ((lightCountX - lightCountXInt) * lightSize * 2) / (lightCountXInt - 1)
+            const linghtGapYAdded = ((lightCountY - lightCountYInt) * lightSize * 2) / (lightCountYInt - 1)
             console.log(lightCountX, lightCountXInt, linghtGapXAdded)
             console.log(lightCountY, lightCountYInt, linghtGapYAdded)
-            for (let i = 0; i < lightCountX; i++) {
+            // let lastX = 0
+            // 顶部灯
+            for (let i = 1; i <= lightCountX; i++) {
+                index++
                 ctx.beginPath()
-                // ctx.arc(105, 30, lightSize, 0, 2 * Math.PI)
-                ctx.arc((lightStart + lightSize / 2) + (linghtGap + lightSize) * i, transformSize(30), lightSize, 0, 2 * Math.PI)
-                ctx.fillStyle = '#fff'
+                ctx.arc(lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapXAdded) * (i - 1)), transformSize(20), lightSize, 0, 2 * Math.PI)
+                ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
                 ctx.fill()
+                console.log(index, ctx.fillStyle)
             }
-            // ctx.beginPath()
-            // ctx.arc(96 + 9, 30, lightSize, 0, 2 * Math.PI)
-            // ctx.arc(96 + 9 + 18 + 140, 30, lightSize, 0, 2 * Math.PI)
-            // ctx.arc(96 + 9 + 18 * 2  + 140 * 2, 30, lightSize, 0, 2 * Math.PI)
-            // ctx.arc(96 + 9 + 18 * 3  + 140 * 3, 30, lightSize, 0, 2 * Math.PI)
-            // ctx.arc(96 + 9 + 18 * 4  + 140 * 4, 30, lightSize, 0, 2 * Math.PI)
-            // ctx.arc(96 + 9 + 18 * 5  + 140 * 5, 30, lightSize, 0, 2 * Math.PI)
-            // ctx.fillStyle = '#fff'
-            // ctx.fill()
+            // 右上角
+            index++
+            ctx.beginPath()
+            ctx.arc(transformSize(615), transformSize(40), lightSize, 0, 2 * Math.PI)
+            ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+            ctx.fill()
+            console.log(index, ctx.fillStyle)
+
+            // 右侧灯
+            for (let i = 1; i <= lightCountY; i++) {
+                index++
+                ctx.beginPath()
+                ctx.arc(transformSize(630), lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapYAdded) * (i - 1)), lightSize, 0, 2 * Math.PI)
+                ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+                ctx.fill()
+                console.log(index, ctx.fillStyle)
+            }
+            // 右下角
+            index++
+            ctx.beginPath()
+            ctx.arc(transformSize(620), canvas.height - transformSize(48), lightSize, 0, 2 * Math.PI)
+            ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+            ctx.fill()
+            console.log(index, ctx.fillStyle)
+            // 底部灯
+            for (let i = 1; i <= lightCountX; i++) {
+                index++
+                ctx.beginPath()
+                ctx.arc(lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapXAdded) * (i - 1)), canvas.height - transformSize(20), lightSize, 0, 2 * Math.PI)
+                ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+                ctx.fill()
+                console.log(index, ctx.fillStyle)
+            }
+            // 左下角
+            index++
+            ctx.beginPath()
+            ctx.arc(transformSize(36), canvas.height - transformSize(48), lightSize, 0, 2 * Math.PI)
+            ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+            ctx.fill()
+            console.log(index, ctx.fillStyle)
+            // 左侧灯
+            for (let i = 1; i <= lightCountY; i++) {
+                index++
+                ctx.beginPath()
+                ctx.arc(transformSize(20), lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapYAdded) * (i - 1)), lightSize, 0, 2 * Math.PI)
+                ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+                ctx.fill()
+                console.log(index, ctx.fillStyle)
+            }
+            // 左上角
+            index++
+            ctx.beginPath()
+            ctx.arc(transformSize(36), transformSize(40), lightSize, 0, 2 * Math.PI)
+            ctx.fillStyle = index % 2 === 0 && IS_WHITE ? '#fff' : '#FFF603'
+            ctx.fill()
+            console.log(index, ctx.fillStyle)
+        },
+        slide (index) {
+            this.$refs.swiper.swiper.slideTo(index)
+            this.tab = index
+        },
+        slideChangeTransitionEnd () {
+            this.tab = this.$refs.swiper.swiper.activeIndex
         }
     }
 }
@@ -317,6 +419,7 @@ export default {
     .my-awards {
         width: 670px;
         margin: 0 auto;
+        overflow: hidden;
         > .tabs {
             display: flex;
             align-items: flex-end;
@@ -337,7 +440,7 @@ export default {
                 }
             }
         }
-        > .wrap {
+        .wrap {
             padding: 32px 24px;
             background-color: #FFB31E;
         }
@@ -385,6 +488,7 @@ export default {
         color: #000;
         background-color: #FCE0B5;
         border-radius: 24px 0 0 24px;
+        z-index: 1;
         > svg {
             margin-left: 16px;
             vertical-align: -3px;
@@ -402,12 +506,46 @@ export default {
         background-color: #FCE0B5;
         border-radius: 24px 0 0 24px;
         box-sizing: border-box;
+        z-index: 1;
     }
     .ruleContent {
         padding: 40px;
         color: #000;
         > dt {
             margin-bottom: 8px;
+        }
+    }
+    .records {
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+        > thead {
+            line-height: 72px;
+            font-size: 24px;
+            color: #9F9D3C;
+            background-color: #fff2cc;
+        }
+        th {
+            padding: 0 20px;
+        }
+        tr {
+            background-color: #fff;
+            &:nth-of-type(2n-1) {
+                background-color: #F8F8F8;
+            }
+            > td {
+                padding: 12px 20px;
+                text-align: center;
+            }
+            .nickname, .awardName {
+                max-width: 100px;
+            }
+        }
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            object-fit: cover;
         }
     }
 </style>
