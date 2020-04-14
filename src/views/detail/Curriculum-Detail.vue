@@ -23,7 +23,7 @@
         <template v-if="loaded">
             <info-box>
                 <div :class="$style.priceBox">
-                    <div v-if="detail.sellingPrice" :class="$style.price" v-text="detail.sellingPrice" />
+                    <div v-if="detail.priceType" :class="$style.price" v-text="detail.sellingPrice" />
                     <div v-else :class="$style.free">免费</div>
                     <!-- TODO: <div :class="$style.free">赠课</div> -->
                     <div :class="$style.original">
@@ -93,10 +93,8 @@
                         :course-id="detail.courseId"
                         :order-id="detail.orderId"
                         :is-buy="!!detail.isBuy"
-                        :is-free="!detail.priceType"
                         :is-finish="!detail.haveNoVideo"
                         :status="Number(detail.status)"
-                        :course-status="detail.courseStatus"
                         @preview="previewCourse"
                     />
                 </div>
@@ -122,14 +120,14 @@
                         </button>
                         <template v-if="!detail.isBuy">
                             <button
-                                v-if="detail.isOpenSale === 0"
+                                v-if="detail.isOpenSale === 1 && detail.courseStatus === 2"
                                 :class="$style.button + ' ' + $style.orange"
                                 disabled
                             >
                                 暂未开售 敬请期待
                             </button>
                             <button
-                                v-if="detail.isOpenSale === 1"
+                                v-if="detail.isOpenSale === 0 || (detail.isOpenSale === 1 && detail.courseStatus === 1)"
                                 :class="$style.button + ' ' + $style.orange"
                                 :disabled="Number(detail.status) === 2 || loading"
                                 @click="submit"
@@ -137,26 +135,30 @@
                                 立即订购
                             </button>
                         </template>
-                        <button
-                            v-else
-                            :class="$style.button + ' ' + $style.yellow"
-                            :disabled="loading"
-                            @click="$router.push({
-                                name: 'CourseWatch',
-                                params: {
-                                    courseId: productId
-                                },
-                                query: {
-                                    liveId: detail.liveId,
-                                    orderId: detail.orderId,
-                                    progress: detail.learnProgress
-                                }
-                            })"
-                        >
-                            <!-- TODO: 获得赠课 去学习 -->
-                            <span v-if="courseType === 1">立即学习</span>
-                            <span v-if="courseType === 2">{{ `已学习${detail.learnedNumber}节/${detail.totalLiveNumber}节，立即学习` }}</span>
-                        </button>
+                        <template v-else>
+                            <button
+                                v-if="courseType === 1"
+                                :class="$style.button + ' ' + $style.orange"
+                                :disabled="loading"
+                                @click="$router.push({
+                                    name: 'CourseWatch',
+                                    params: {
+                                        courseId: productId
+                                    },
+                                    query: {
+                                        liveId: detail.liveId,
+                                        orderId: detail.orderId,
+                                        progress: detail.learnProgress
+                                    }
+                                })"
+                            >
+                                <!-- TODO: 获得赠课 去学习 -->
+                                <span>立即学习</span>
+                            </button>
+                            <span v-if="courseType === 2" :class="$style.progress">
+                                {{ `已学习 ${detail.learnedNumber}/${detail.totalLiveNumber} 节` }}
+                            </span>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -285,12 +287,11 @@ export default {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
         },
         isCountdownShow () {
-            const { isOpenSale = 0, regularSaleTime } = this.detail
-            return isOpenSale === 1 && regularSaleTime
+            const { isOpenSale = 0, courseStatus = 0, regularSaleTime } = this.detail
+            return isOpenSale === 1 && courseStatus === 2 && regularSaleTime
         },
         canPreview () {
-            const { supportWatch, isBuy } = this.detail
-            return supportWatch && !isBuy
+            return !this.detail.isBuy && this.detail.supportWatch
         }
     },
     watch: {
@@ -349,8 +350,8 @@ export default {
          * @property {String} result.learnProgress - 学习进度
          * @property {String} result.payNotice - 购买须知
          * @property {String} result.status - 状态 (1 上架 2 下架)
+         * @property {Boolean} result.isOpenSale - 是否开启定时开售 (0 不开启 1 开启)
          * @property {Number} result.courseStatus - 开售状态 (1 已开售 2 未开售 0 默认值啥也不是)
-         * @property {Boolean} result.isOpenSale - 是否开启定时上架 (0 不开启 1 开启)
          * @property {String} result.regularSaleTime - 定时开售时间
          * @property {Boolean} result.supportWatch - 是否支持试看 (单课程才有)
          * @property {String} result.supportWatchUrl - 试看地址
@@ -668,6 +669,12 @@ export default {
         text-align: center;
         font-size: 26px;
         color: #fff;
+    }
+    .progress {
+        margin-left: auto;
+        margin-right: 30px;
+        font-weight: bold;
+        color: #fe7700;
     }
     .orange {
         background-color: #fe7700;
