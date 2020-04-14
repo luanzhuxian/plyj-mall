@@ -102,14 +102,14 @@ export default {
             const { name, params, query } = this.route
             if (!name) return false
 
-            this.$route.push({
+            this.$router.push({
                 name,
                 ...(params ? { params } : null),
                 ...(query ? { query } : null)
             })
         },
         handleBtnClick (e) {
-            this.$emit('btn-click', e.target.innerHTML)
+            this.$emit('btn-click', e)
         }
     }
 }
@@ -133,6 +133,7 @@ export default {
     position: relative;
     width: 280px;
     height: 186px;
+    border-radius: 20px;
     overflow: hidden;
     img {
         width: 100%;

@@ -14,13 +14,17 @@
                 :class="$style.listItem"
                 v-for="(item, index) of data"
                 :key="index"
+                label="系列课"
                 :image="item.courseImg"
-                :label="'视频课'"
                 :top="item.courseName"
                 :bottom-left="`${item.sale}人已购`"
                 :max-line="2"
                 round
                 border
+                :route="{
+                    name: 'Curriculum',
+                    params: { productId: item.id }
+                }"
             />
         </ul>
     </div>
@@ -48,11 +52,6 @@ export default {
     computed: {
         swipable () {
             return this.data.length > 1
-        }
-    },
-    methods: {
-        jump () {
-
         }
     }
 }

@@ -1,38 +1,36 @@
 <template>
     <div :class="$style.seriesCourses">
         <div :class="$style.top">
-            <span>知识内容(20)</span>
-            <span :class="$style.lighter">持续更新中...</span>
-            <!-- TODO: <span :class="$style.lighter">更新已完结</span> -->
+            <span>{{ `知识内容(${data.length})` }}</span>
+            <span :class="$style.lighter" v-if="isFinish">更新已完结</span>
+            <span :class="$style.lighter" v-else>持续更新中...</span>
         </div>
         <ul :class="$style.list">
-            <li :class="$style.listItem" v-for="n of 20" :key="n">
-                <!-- TODO: 试看(系列课单集试看) 单独购买(不支持试看且是单课) 去学习(s免费 已购 赠课) -->
+            <li :class="$style.listItem" v-for="(item, index) of data" :key="index">
+                <!-- TODO: 试看(系列课单集试看) 单独购买(不支持试看且是单课) 去学习(免费 已购 赠课) -->
                 <product-card
-                    :image="'https://mallcdn.youpenglai.com/static/admall/mall-management/active/prod-default.png'"
-                    :label="'视频课'"
-                    :top="'【第一节】张三三老师带您体课张三三老师带您体课张三三老师带您体课张三三老师带您体课...'"
-                    :sub-top="`主讲人：王老师`"
-                    :bottom-left="'视频课'"
-                    :button-text="getBtnText()"
+                    label="视频课"
+                    :image="item.lessonsImg"
+                    :top="item.name"
+                    :sub-top="item.lecturer ? `主讲人：${item.lecturer}` : ''"
+                    :button-text="getBtnText(item)"
                     round
-                    @btn-click="handleBtnClick"
+                    @btn-click="e => handleBtnClick(e, item)"
                 >
-                    <template slot="bottom" v-if="false">
-                        <span :class="$style.warn">{{ `暂未开始   敬请期待` }}</span>
+                    <template slot="bottom" v-if="!item.url">
+                        <span :class="$style.warn">{{ `课程内容更新中 敬请期待` }}</span>
                     </template>
                     <template slot="bottomLeft" v-else>
                         <div :class="$style.listBottomLeft">
-                            <span>20分钟</span>
-                            <span :class="$style.view">231人观看</span>
-                            <span :class="$style.progress" v-if="!flag">学习20%</span>
+                            <span :class="$style.duration" v-if="item.resourceTime">{{ `${item.resourceTime}分钟` }}</span>
+                            <span :class="$style.view" v-if="item.vodNumber">{{ `${item.vodNumber}人观看` }}</span>
+                            <span v-if="canLearn && item.learnProgress">{{ `学习${item.learnProgress}%` }}</span>
                         </div>
                     </template>
                 </product-card>
             </li>
             <li :class="$style.listBottom">
-                <p>课程内容订购后即可学习~</p>
-                <p>{{ `课程内容2020.3.20已更新，请及时查看学习~` }}</p>
+                <p v-if="!canLearn">课程内容订购后即可学习~</p>
             </li>
         </ul>
     </div>
@@ -46,21 +44,87 @@ export default {
     components: {
         ProductCard
     },
-    props: {},
+    props: {
+        data: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        courseId: {
+            type: String,
+            default: ''
+        },
+        orderId: {
+            type: String,
+            default: ''
+        },
+        // 1 上架 2 下架
+        status: {
+            type: Number,
+            default: 0
+        },
+        // 1 已开售 2 未开售
+        courseStatus: {
+            type: Number,
+            default: 0
+        },
+        isBuy: Boolean,
+        isFree: Boolean,
+        isFinish: Boolean
+    },
     data () {
-        return {
-            flag: true
+        return {}
+    },
+    computed: {
+        // 已开售 且 已购 / 免费 / 赠课
+        canLearn () {
+            return this.courseStatus === 1 && (this.isBuy || this.isFree)
+        },
+        // 上架且已开售
+        isValid () {
+            return this.status === 1 || this.courseStatus === 1
         }
     },
     methods: {
-        getBtnText () {
-            return this.flag ? '试看' : '单独购买'
+        getBtnText ({ url, supportWatch = 0, learnProgress, haveSingleVideoCourse = false, singleVideoCourseId }) {
+            // 无关联视频
+            if (!url) return ''
+            if (this.canLearn) {
+                return learnProgress ? '' : '去学习'
+            }
+            // 上架中且支持试看
+            if (this.status === 1 && supportWatch === 1) return '试看'
+            // 关联其他单课
+            if (haveSingleVideoCourse && singleVideoCourseId) return '单独购买'
+            return ''
         },
-        jump () {
+        handleBtnClick (e, { id, url, singleVideoCourseId, learnProgress }) {
+            const { courseId, orderId } = this
+            const btnText = e.target.innerHTML
 
-        },
-        handleBtnClick (e) {
-            console.log(e)
+            if (btnText === '试看') {
+                this.$emit('preview', url)
+            }
+            if (btnText === '单独购买') {
+                this.$router.push({
+                    name: 'Curriculum',
+                    params: { productId: singleVideoCourseId }
+                })
+            }
+            if (btnText === '去学习') {
+                this.$router.push({
+                    name: 'CourseWatch',
+                    params: {
+                        courseId
+                    },
+                    query: {
+                        liveId: id,
+                        orderId,
+                        progress: learnProgress
+                    }
+                })
+            }
         }
     }
 }
@@ -91,11 +155,11 @@ export default {
         &:nth-of-type(1) {
             padding-top: 0;
         }
-        .view {
-            margin-left: 24px;
+        .duration {
+            margin-right: 24px;
         }
-        .progress {
-            margin-left: 32px;
+        .view {
+            margin-right: 32px;
         }
         .warn {
             margin-top: auto;

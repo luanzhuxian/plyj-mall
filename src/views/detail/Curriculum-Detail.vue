@@ -11,142 +11,190 @@
 
             <!-- 倒计时 -->
             <count-down
+                v-if="isCountdownShow"
                 :class="$style.countDownBar"
-                endtime="2020-9-9 14:05:38"
+                :endtime="detail.regularSaleTime"
                 theme="orange"
                 prefix="距抢课开始仅剩"
                 @done="refresh"
             />
         </div>
 
-        <info-box>
-            <div :class="$style.priceBox">
-                <div v-if="detail.sellingPrice" :class="$style.price" v-text="detail.sellingPrice" />
-                <div v-else :class="$style.free">免费</div>
-                <!-- TODO: <div :class="$style.free">赠课</div> -->
-                <div :class="$style.original">
-                    <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
-                        原价：<del v-text="detail.originalPrice" />
+        <template v-if="loaded">
+            <info-box>
+                <div :class="$style.priceBox">
+                    <div v-if="detail.sellingPrice" :class="$style.price" v-text="detail.sellingPrice" />
+                    <div v-else :class="$style.free">免费</div>
+                    <!-- TODO: <div :class="$style.free">赠课</div> -->
+                    <div :class="$style.original">
+                        <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
+                            原价：<del v-text="detail.originalPrice" />
+                        </div>
+                        <div>
+                            <span v-if="detail.sale === 0">正在热销中</span>
+                            <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
+                                <span v-text="detail.sale" />人关注
+                            </template> -->
+                            <template v-else>
+                                <span v-text="detail.sale" />人已学
+                            </template>
+                        </div>
                     </div>
-                    <div>
-                        <span v-if="detail.sale === 0">正在热销中</span>
-                        <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
-                            <span v-text="detail.sale" />人关注
-                        </template> -->
-                        <template v-else>
-                            <span v-text="detail.sale" />人已学
+                </div>
+                <!-- 课程名称 -->
+                <detail-title :product-name="detail.courseName" />
+                <!-- 课程描述 -->
+                <detail-desc v-text="detail.courseBrief" />
+                <!-- 课程标签 -->
+                <tags :tags="detail.labelModels" />
+
+                <field
+                    v-if="detail.lecturer"
+                    :class="$style.field"
+                    size="small"
+                    icon="icon-teacher-d2398"
+                    label="主讲人："
+                    :content="detail.lecturer"
+                />
+                <field
+                    :class="$style.field"
+                    size="small"
+                    icon="icon-date"
+                    label="有效期："
+                    :content="getExpiration(detail)"
+                />
+            </info-box>
+
+            <!-- 订购须知 -->
+            <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
+
+            <!-- 相关课程 -->
+            <slide-courses
+                v-if="courseType === 1 && relatedCourses.length"
+                :class="$style.slideCourses"
+                :data="relatedCourses"
+            />
+
+            <!-- 课程详情 -->
+            <div :class="$style.detailOrComment">
+                <div :class="$style.tabs">
+                    <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
+                        课程介绍
+                    </div>
+                    <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2" v-if="courseType === 2">
+                        目录
+                    </div>
+                </div>
+                <div>
+                    <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
+                    <serise-courses
+                        v-show="tab === 2"
+                        :data="seriesCourses"
+                        :course-id="detail.courseId"
+                        :order-id="detail.orderId"
+                        :is-buy="!!detail.isBuy"
+                        :is-free="!detail.priceType"
+                        :is-finish="!detail.haveNoVideo"
+                        :status="Number(detail.status)"
+                        :course-status="detail.courseStatus"
+                        @preview="previewCourse"
+                    />
+                </div>
+            </div>
+
+            <!-- 底部购买 -->
+            <div :class="$style.bottom" v-if="productActive !== 5">
+                <div :class="$style.content">
+                    <router-link :class="$style.link" :to="{ name: 'Home' }">
+                        <pl-svg name="icon-home" width="38.5" height="70" />
+                    </router-link>
+                    <a :class="$style.callUs" @click="showContact = true">
+                        <pl-svg name="icon-call-us" width="80" height="70" />
+                    </a>
+                    <div :class="$style.buttonWrapper">
+                        <!-- TODO: preview -->
+                        <button
+                            v-if="canPreview && courseType === 1"
+                            :class="$style.button + ' ' + $style.yellow"
+                            :disabled="Number(detail.status) === 2 || loading"
+                            @click="previewCourse(detail)"
+                        >
+                            试看视频
+                        </button>
+                        <template v-if="!detail.isBuy">
+                            <button
+                                v-if="detail.isOpenSale === 0"
+                                :class="$style.button + ' ' + $style.orange"
+                                disabled
+                            >
+                                暂未开售 敬请期待
+                            </button>
+                            <button
+                                v-if="detail.isOpenSale === 1"
+                                :class="$style.button + ' ' + $style.orange"
+                                :disabled="Number(detail.status) === 2 || loading"
+                                @click="submit"
+                            >
+                                立即订购
+                            </button>
                         </template>
+                        <button
+                            v-else
+                            :class="$style.button + ' ' + $style.yellow"
+                            :disabled="loading"
+                            @click="$router.push({
+                                name: 'CourseWatch',
+                                params: {
+                                    courseId: productId
+                                },
+                                query: {
+                                    liveId: detail.liveId,
+                                    orderId: detail.orderId,
+                                    progress: detail.learnProgress
+                                }
+                            })"
+                        >
+                            <!-- TODO: 获得赠课 去学习 -->
+                            <span v-if="courseType === 1">立即学习</span>
+                            <span v-if="courseType === 2">{{ `已学习${detail.learnedNumber}节/${detail.totalLiveNumber}节，立即学习` }}</span>
+                        </button>
                     </div>
                 </div>
             </div>
-            <!-- 课程名称 -->
-            <detail-title :product-name="detail.courseName" />
-            <!-- 课程描述 -->
-            <detail-desc v-text="detail.courseBrief" />
-            <!-- 课程标签 -->
-            <tags :tags="detail.labelModels" />
 
-            <field
-                v-if="detail.lecturer"
-                :class="$style.field"
-                size="small"
-                icon="icon-teacher-d2398"
-                label="主讲人："
-                :content="detail.lecturer"
-            />
-            <field
-                :class="$style.field"
-                size="small"
-                icon="icon-date"
-                label="有效期："
-                :content="getExpiration(detail)"
-            />
-        </info-box>
-
-        <!-- 订购须知 -->
-        <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
-
-        <!-- 相关课程 -->
-        <slide-courses
-            v-if="courseType === 1 && relatedCourses.length"
-            :class="$style.slideCourses"
-            :data="relatedCourses"
-        />
-
-        <!-- 课程详情 -->
-        <div :class="$style.detailOrComment">
-            <div :class="$style.tabs">
-                <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
-                    课程介绍
-                </div>
-                <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2" v-if="courseType === 2">
-                    目录
-                </div>
+            <div :class="$style.buttomTip" v-if="Number(detail.status) === 2">
+                该视频课程已下架
             </div>
-            <div>
-                <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
-                <serise-courses v-show="tab === 2" />
-            </div>
-        </div>
 
-        <!-- 底部购买 -->
-        <div :class="$style.bottom" v-if="productActive !== 5">
-            <div :class="$style.content">
-                <router-link :class="$style.link" :to="{ name: 'Home' }">
-                    <pl-svg name="icon-home" width="38.5" height="70" />
-                </router-link>
-                <a :class="$style.callUs" @click="showContact = true">
-                    <pl-svg name="icon-call-us" width="80" height="70" />
-                </a>
-                <div :class="$style.buttonWrapper">
-                    <button
-                        v-if="canPreview"
-                        :class="$style.button + ' ' + $style.yellow"
-                        :disabled="Number(detail.status) === 2 || loading"
-                        @click="preview"
-                    >
-                        试看视频
-                    </button>
-                    <button
-                        v-if="!detail.isBuy"
-                        :class="$style.button + ' ' + $style.orange"
-                        :disabled="Number(detail.status) === 2 || loading"
-                        @click="submit"
-                    >
-                        <!-- TODO: 暂未开售，敬请期待 -->
-                        立即订购
-                    </button>
-                    <button
-                        v-else
-                        :class="$style.button + ' ' + $style.yellow"
-                        :disabled="loading"
-                        @click="$router.push({ name: 'CourseWatch', params: { courseId: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress } })"
-                    >
-                        <!-- TODO: 获得赠课，去学习 -->
-                        立即学习
-                    </button>
-                </div>
-            </div>
-        </div>
+            <contact :show.sync="showContact" />
 
-        <div :class="$style.buttomTip" v-if="Number(detail.status) === 2">
-            该视频课程已下架
-        </div>
-
-        <contact :show.sync="showContact" />
-
-        <!-- 海报弹框 -->
-        <transition name="fade">
-            <div :class="$style.saveHaibao" v-if="showHaibao">
-                <div :class="$style.saveHaibaoContent">
-                    <img :src="haibao" alt="">
-                    <div :class="$style.saveButton">
-                        长按识别或保存二维码，分享给朋友吧！
+            <!-- 海报弹框 -->
+            <transition name="fade">
+                <div :class="$style.saveHaibao" v-if="showHaibao">
+                    <div :class="$style.saveHaibaoContent">
+                        <img :src="haibao" alt="">
+                        <div :class="$style.saveButton">
+                            长按识别或保存二维码，分享给朋友吧！
+                        </div>
+                        <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false" />
                     </div>
-                    <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false" />
                 </div>
-            </div>
-        </transition>
+            </transition>
+
+            <transition name="fade">
+                <pl-video
+                    ref="videoPlayer"
+                    v-if="preview.show"
+                    :url="preview.url"
+                    :radius="0"
+                    :width="750"
+                    :height="422"
+                />
+            </transition>
+        </template>
+
+        <!-- 骨架屏 -->
+        <skeleton v-else />
     </div>
 </template>
 
@@ -163,6 +211,8 @@ import Field from '../../components/detail/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
 import Instructions from '../../components/detail/Instructions.vue'
+import PlVideo from '../../components/common/Video.vue'
+import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { getCourseDetail } from '../../apis/product'
 import {
@@ -191,7 +241,9 @@ export default {
         Field,
         SlideCourses,
         SeriseCourses,
-        Instructions
+        Instructions,
+        PlVideo,
+        Skeleton
     },
     data () {
         return {
@@ -203,12 +255,17 @@ export default {
             detail: {},
             agentProduct: false,
             tab: 2,
+            loaded: false,
             loading: false,
-            studied: true,
+            // studied: true,
             showContact: false,
             haibao: '',
+            showHaibao: false,
             creating: false,
-            showHaibao: false
+            preview: {
+                show: false,
+                url: ''
+            }
         }
     },
     props: {
@@ -235,8 +292,20 @@ export default {
         productActive () {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
         },
+        isCountdownShow () {
+            const { isOpenSale = 0, regularSaleTime } = this.detail
+            return isOpenSale === 1 && regularSaleTime
+        },
         canPreview () {
-            return false
+            const { supportWatch, isBuy } = this.detail
+            return supportWatch && !isBuy
+        }
+    },
+    watch: {
+        '$route' (to, from) {
+            if (from.params.productId && to.params.productId) {
+                this.refresh()
+            }
         }
     },
     async activated () {
@@ -247,17 +316,61 @@ export default {
         }
     },
     deactivated () {
+        this.loaded = false
+        this.loading = false
+        this.showContact = false
         this.showHaibao = false
+        this.creating = false
         this.haibao = ''
+        this.preview.show = false
     },
     async mounted () {
         this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
     methods: {
 
-        //  获取商品详情
+        /**
+         * 获取商品详
+         * @returns {Object} result - 商品详情
+         * @property {String} result.id
+         * @property {String} result.orderId
+         * @property {String} result.courseName
+         * @property {String} result.courseImg
+         * @property {String} result.liveIds
+         * @property {String} result.courseBrief
+         * @property {String} result.lecturer
+         * @property {String} result.details
+         * @property {Number} result.sale
+         * @property {Number} result.views
+         * @property {Number} result.vodNumber - 点播量
+         * @property {Number} result.watchTime
+         * @property {Number} result.targetGroups
+         * @property {Array} result.tagIds
+         * @property {Number} result.courseType - 课程类型 (1 单课 2 系列课)
+         * @property {Number} result.priceType - 价格类型 (0 免费 1 付费)
+         * @property {Number} result.originalPrice - 原价
+         * @property {Number} result.sellingPrice - 售价
+         * @property {Number} result.validityType - 有效期类型 (0 不限制有效期 1 限制有效期)
+         * @property {Number} result.validity - 有效期 / 天
+         * @property {String} result.validityDate - 免费课截止日期
+         * @property {Boolean} result.isBuy - 是否已购买
+         * @property {String} result.learnProgress - 学习进度
+         * @property {String} result.payNotice - 购买须知
+         * @property {String} result.status - 状态 (1 上架 2 下架)
+         * @property {Number} result.courseStatus - 开售状态 (1 已开售 2 未开售 0 默认值啥也不是)
+         * @property {Boolean} result.isOpenSale - 是否开启定时上架 (0 不开启 1 开启)
+         * @property {String} result.regularSaleTime - 定时开售时间
+         * @property {Boolean} result.supportWatch - 是否支持试看 (单课程才有)
+         * @property {String} result.supportWatchUrl - 试看地址
+         * @property {Array} result.relatedCoursesModels - 单课的相关课程列表
+         * @property {Array} result.videoLibEntities - 系列课关联的视频资源列表
+         * @property {Boolean} result.haveNoVideo - 系列课是否有课程未关联视频
+         * @property {Number} result.totalLiveNumber - 系列课课程总数
+         * @property {Number} result.learnedNumber - 系列课已经学习课程数
+         */
         async getDetail () {
             try {
+                this.loaded = false
                 this.loading = true
                 // 重置一些状态
                 this.resetState()
@@ -269,21 +382,22 @@ export default {
                     return
                 }
 
-                this.loading = false
                 const {
                     courseType,
                     courseName,
                     courseImg,
                     lecturer,
-                    relatedCoursesModels = [],
-                    videoLibEntities = []
+                    relatedCoursesModels,
+                    videoLibEntities
                 } = result
                 this.tab = courseType
                 this.courseType = courseType
                 this.banners = [courseImg]
-                this.relatedCourses = relatedCoursesModels
-                this.seriesCourses = videoLibEntities
+                this.relatedCourses = relatedCoursesModels || []
+                this.seriesCourses = videoLibEntities || []
                 this.detail = result
+                this.loading = false
+                this.loaded = true
 
                 // 生成分享
                 // let shareUrl = ''
@@ -307,12 +421,39 @@ export default {
                 throw e
             }
         },
-        getExpiration ({ validityType, validity }) {
-            // TODO: `订购后${2020.3.25}前可观看学习`
-            return validityType ? `购买后${ validity }天内可观看学习` : '购买后不限观看次数'
+        getExpiration ({ validityType, validity, validityDate = '', priceType = 1 }) {
+            return priceType
+                ? validityType
+                    ? `购买后 ${ validity } 天内可观看学习`
+                    : '购买后不限观看次数'
+                : `订购后 ${ validityDate.replace(/-/g, '.') } 前可观看学习`
         },
-        preview () {
-
+        previewCourse (url) {
+            this.preview.url = url
+            this.preview.show = true
+            // 此方法不可以在異步任務中執行，否則火狐無法全屏
+            console.log(this.$refs.videoPlayer)
+            // const player =
+            //             if (player.requestFullscreen) {
+            //                 player.requestFullscreen()
+            //             } else if (player.mozRequestFullScreen) {
+            //                 player.mozRequestFullScreen()
+            //             } else if (player.msRequestFullscreen) {
+            //                 player.msRequestFullscreen()
+            //             } else if (player.oRequestFullscreen) {
+            //                 player.oRequestFullscreen()
+            //             } else if (player.webkitRequestFullscreen) {
+            //                 player.webkitRequestFullScreen()
+            //             } else {
+            //                 const docHtml = document.documentElement
+            //                 const docBody = document.body
+            //                 const videobox = document.getElementById('videobox')
+            //                 const cssText = 'width:100%;height:100%;overflow:hidden;'
+            //                 docHtml.style.cssText = cssText
+            //                 docBody.style.cssText = cssText
+            //                 videobox.style.cssText = `${ cssText };` + `margin:0px;padding:0px;`
+            //                 document.IsFullScreen = true
+            //             }
         },
         submit () {
             if (!this.mobile) {
