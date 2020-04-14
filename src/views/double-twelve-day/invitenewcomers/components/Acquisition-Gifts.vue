@@ -13,7 +13,7 @@
                 v-for="(item, i) of showList"
                 :key="i"
             >
-                <pl-svg name="icon-gift2" width="50" height="50" />
+                <pl-svg name="icon-present" width="50" height="50" />
                 <img :class="$style.avatar" :src="item.headImgUrl" alt="">
                 <div :class="$style.itemRight">
                     <p>{{ item.nickName }}注册成功</p>

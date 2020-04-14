@@ -19,6 +19,7 @@ import roadlearning from './roadlearning'
 import NewYear from './new-year.js'
 import FightEpidemic from './fight-epidemic.js'
 import OnlineClassroom from './online-classroom.js'
+import LongmenFestival from './longmen-festival.js'
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
 
@@ -112,7 +113,8 @@ const allRoutes = [
     ...roadlearning,
     ...NewYear,
     ...FightEpidemic,
-    ...OnlineClassroom
+    ...OnlineClassroom,
+    ...LongmenFestival
 ]
 
 // 为每个路由配置可选参数noCache
