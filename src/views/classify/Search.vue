@@ -137,7 +137,7 @@ export default {
         }
     },
     beforeRouteLeave (to, from, next) {
-        this.searched = false
+        // this.searched = false
         this.searchContent = ''
         next()
     }

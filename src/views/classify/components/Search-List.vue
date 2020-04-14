@@ -34,6 +34,7 @@
                                 :class="$style.listItem"
                                 v-for="(item, index) of productList"
                                 :key="index"
+                                type="COURSE"
                                 :data="item"
                                 :id="item.id"
                                 :title="item.productName"
@@ -52,7 +53,7 @@
                     <load-more
                         ref="courseList"
                         :form="courseForm"
-                        :request-methods="getLibraryList"
+                        :request-methods="getVideoList"
                         icon="icon-search-no-content-05634"
                         no-content-tip="抱歉，没有找到相关课程"
                         @refresh="refreshCourseHandler"
@@ -63,12 +64,14 @@
                                 :class="$style.listItem"
                                 v-for="(item, index) of courseList"
                                 :key="index"
+                                type="COURSE"
                                 :data="item"
                                 :id="item.id"
-                                :title="item.videoName"
-                                :img="item.coverImg + '?x-oss-process=style/thum-middle'"
-                                :price="item.paidAmount"
-                                :original-price="item.needPaidAmount"
+                                :label="item.courseType === 2 ? '系列课' : '视频课'"
+                                :title="item.courseName"
+                                :img="item.courseImg + '?x-oss-process=style/thum-middle'"
+                                :price="item.sellingPrice"
+                                :original-price="item.originalPrice"
                             >
                                 <template>
                                     <div :class="$style.lecturer" v-text="item.lecturerName" />
@@ -89,8 +92,7 @@ import LoadMore from '../../../components/common/Load-More.vue'
 import TabContainer from '../../../components/penglai-ui/tab-container/Tab-Container.vue'
 import TabContainerItem from '../../../components/penglai-ui/tab-container/Tab-Container-Item.vue'
 import { searchProduct } from '../../../apis/search'
-// import { getVideoList } from '../../../apis/online-classroom'
-import { getLibraryList } from '../../../apis/live-library'
+import { getVideoList } from '../../../apis/online-classroom'
 import { throttle } from '../../../assets/js/util'
 
 export default {
@@ -127,11 +129,10 @@ export default {
             courseForm: {
                 searchParam: '',
                 current: 1,
-                size: 10,
-                status: ''
+                size: 10
             },
             searchProduct,
-            getLibraryList,
+            getVideoList,
             productScrollHandler: null,
             courseScrollHandler: null
         }
@@ -164,10 +165,6 @@ export default {
     methods: {
         initLoadMore (loadMore, container) {
             const handler = e => loadMore.infiniteScroll(e, loadMore.$el.offsetHeight, container.scrollTop, container.clientHeight)
-
-            // loadMore.$el.addEventListener('touchstart', loadMore.touchstart, { passive: true })
-            // loadMore.$el.addEventListener('touchmove', loadMore.touchMove)
-            // loadMore.$el.addEventListener('touchend', loadMore.touchend, { passive: true })
             container.addEventListener('scroll', throttle(handler, 200), { passive: true })
             return handler
         },

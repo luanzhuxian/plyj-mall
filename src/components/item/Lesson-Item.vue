@@ -112,6 +112,10 @@ export default {
         originalPrice: {
             type: [String, Number],
             default: ''
+        },
+        type: {
+            type: String,
+            default: 'PRODUCT'
         }
     },
     computed: {
@@ -119,8 +123,11 @@ export default {
     },
     methods: {
         async handleClick () {
-            const { id } = this
-            this.$router.push({ name: 'Product', params: { productId: id } })
+            const { id, type } = this
+            this.$router.push({
+                name: type === 'COURSE' ? 'Curriculum' : 'Product',
+                params: { productId: id }
+            })
         }
     }
 }
@@ -163,8 +170,9 @@ export default {
   position: relative;
   border-radius: 20px;
   overflow: hidden;
-  .img {
+  img {
     width: 100%;
+    height: 100%;
     object-fit: cover;
   }
   .label {
