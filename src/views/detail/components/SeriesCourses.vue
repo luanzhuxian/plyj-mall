@@ -7,7 +7,6 @@
         </div>
         <ul :class="$style.list">
             <li :class="$style.listItem" v-for="(item, index) of data" :key="index">
-                <!-- TODO: 试看(系列课单集试看) 单独购买(不支持试看且是单课) 去学习(免费 已购 赠课) -->
                 <product-card
                     label="视频课"
                     :image="item.lessonsImg"
@@ -24,13 +23,14 @@
                         <div :class="$style.listBottomLeft">
                             <span :class="$style.duration" v-if="item.resourceTime">{{ `${item.resourceTime}分钟` }}</span>
                             <span :class="$style.view" v-if="item.vodNumber">{{ `${item.vodNumber}人观看` }}</span>
-                            <span v-if="isBuy && item.learnProgress">{{ `学习${item.learnProgress}%` }}</span>
+                            <span v-if="canLearn && item.learnProgress">{{ `学习${item.learnProgress}%` }}</span>
                         </div>
                     </template>
                 </product-card>
             </li>
             <li :class="$style.listBottom">
-                <p v-if="!isBuy">课程内容订购后即可学习~</p>
+                <p v-if="!canLearn">课程内容订购后即可学习~</p>
+                <p v-else>没有更多了~</p>
             </li>
         </ul>
     </div>
@@ -75,24 +75,25 @@ export default {
         //     default: 0
         // },
         isBuy: Boolean,
+        isPresent: Boolean,
         // isFree: Boolean,
         isFinish: Boolean
     },
     data () {
         return {}
     },
-    // computed: {
-    //     // 已开售 且 已购 / 免费 / 赠课
-    //     canLearn () {
-    //         const { isOpenSale, courseStatus, isBuy, isFree } = this
-    //         return (isOpenSale === 0 || (isOpenSale === 1 && courseStatus === 1)) && (isBuy || isFree)
-    //     }
-    // },
+    computed: {
+        // 已开售 且 已购 / 赠课
+        canLearn () {
+            const { isOpenSale, courseStatus, isBuy, isPresent } = this
+            return (isOpenSale === 0 || (isOpenSale === 1 && courseStatus === 1)) && (isBuy || isPresent)
+        }
+    },
     methods: {
         getBtnText ({ url, supportWatch = 0, learnProgress, haveSingleVideoCourse = false, singleVideoCourseId }) {
             // 无关联视频
             if (!url) return ''
-            if (this.isBuy) {
+            if (this.canLearn) {
                 return learnProgress ? '' : '去学习'
             }
             // 上架中且支持试看

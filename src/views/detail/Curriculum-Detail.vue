@@ -23,11 +23,15 @@
         <template v-if="loaded">
             <info-box>
                 <div :class="$style.priceBox">
-                    <div v-if="detail.priceType" :class="$style.price" v-text="detail.sellingPrice" />
-                    <div v-else :class="$style.free">免费</div>
-                    <!-- TODO: <div :class="$style.free">赠课</div> -->
+                    <template v-if="isPresent">
+                        <div :class="$style.free">赠课</div>
+                    </template>
+                    <template v-else>
+                        <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
+                        <div v-else :class="$style.free">免费</div>
+                    </template>
                     <div :class="$style.original">
-                        <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
+                        <div v-if="detail.priceType === 1 && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
                             原价：<del v-text="detail.originalPrice" />
                         </div>
                         <div>
@@ -93,6 +97,7 @@
                         :course-id="detail.id"
                         :order-id="detail.orderId"
                         :is-buy="!!detail.isBuy"
+                        :is-present="isPresent"
                         :is-finish="!detail.haveNoVideo"
                         :status="Number(detail.status)"
                         @preview="previewCourse"
@@ -118,7 +123,7 @@
                         >
                             试看视频
                         </button>
-                        <template v-if="!detail.isBuy">
+                        <template v-if="!detail.canLearn">
                             <button
                                 v-if="detail.isOpenSale === 1 && detail.courseStatus === 2"
                                 :class="$style.button + ' ' + $style.orange"
@@ -152,8 +157,8 @@
                                     }
                                 })"
                             >
-                                <!-- TODO: 获得赠课 去学习 -->
-                                <span>立即学习</span>
+                                <span v-if="isPresent">获得赠课 去学习</span>
+                                <span v-else>立即学习</span>
                             </button>
                             <span v-if="courseType === 2" :class="$style.progress">
                                 {{ `已学习 ${detail.learnedNumber}/${detail.totalLiveNumber} 节` }}
@@ -251,7 +256,7 @@ export default {
             tab: 2,
             loaded: false,
             loading: false,
-            // studied: true,
+            isPresent: false,
             showContact: false,
             haibao: '',
             showHaibao: false,
@@ -290,8 +295,11 @@ export default {
             const { isOpenSale = 0, courseStatus = 0, regularSaleTime } = this.detail
             return isOpenSale === 1 && courseStatus === 2 && regularSaleTime
         },
+        canLearn () {
+            return this.isBuy || this.isPresent
+        },
         canPreview () {
-            return !this.detail.isBuy && this.detail.supportWatch
+            return !this.detail.canLearn && this.detail.supportWatch
         }
     },
     watch: {
@@ -415,7 +423,7 @@ export default {
             }
         },
         getExpiration ({ validityType, validity, validityDate = '', priceType = 1 }) {
-            return priceType
+            return priceType === 1
                 ? validityType
                     ? `购买后 ${ validity } 天内可观看学习`
                     : '购买后不限观看次数'
@@ -588,6 +596,9 @@ export default {
             font-size: 24px;
             vertical-align: 3px;
         }
+        &.line {
+            text-decoration: line-through;
+        }
     }
     .free {
         font-size: 46px;
@@ -673,6 +684,7 @@ export default {
     .progress {
         margin-left: auto;
         margin-right: 30px;
+        font-size: 32px;
         font-weight: bold;
         color: #fe7700;
     }
