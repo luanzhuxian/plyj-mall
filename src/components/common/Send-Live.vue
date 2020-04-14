@@ -100,8 +100,8 @@
                                     [$style.mtLarge]: !item.liveStartTime && !item.lecturerName,
                                 }">
                                     <span :class="$style.free">
-                                        赠送
-                                        <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
+                                        <span class="mr-10">赠送</span>
+                                        <del :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
                                     </span>
                                     <pl-button
                                         type="primary"
@@ -366,6 +366,7 @@ export default {
             font-weight: bold;
           }
           .live-lecturer {
+            margin-top: 10px;
             width: 200px;
             font-size:26px;
             color:#222;
@@ -392,7 +393,7 @@ export default {
           background-color: #FFF;
           img {
             width:292px;
-            height:194px;
+            min-height:194px;
             object-fit: cover;
             vertical-align: middle;
           }
@@ -427,35 +428,35 @@ export default {
               display: flex;
               margin-top: 14px;
               justify-content: space-between;
+              align-items: flex-end;
               &.mt-middle {
                 margin-top: 52px;
               }
               &.mt-large {
                 margin-top: 90px;
               }
-            }
-            .free {
-              font-size: 28px;
-              color: #FE7700;
-            }
-            .price {
-              display: inline-block;
-              margin-left: 10px;
-              font-size: 28px;
-              color: #FE7700;
-              text-decoration: line-through;
-              &:before {
-                content: '¥';
-                margin-right: 4px;
-                font-size: 20px;
+              .free {
+                max-width: calc(100% - 140px);
+                font-size: 28px;
+                color: #FE7700;
+                .price {
+                  display: inline-block;
+                  &:before {
+                    content: '¥';
+                    margin-right: 4px;
+                    font-size: 20px;
+                  }
+                }
               }
-            }
-            button {
-              width:140px;
-              line-height: 42px;
-              border-radius:4px;
-              font-size:24px;
-              background:#F2B036;
+
+              button {
+                width: 140px;
+                max-height: 42px;
+                border-radius:4px;
+                line-height: 42px;
+                font-size:24px;
+                background:#F2B036;
+              }
             }
           }
         }
