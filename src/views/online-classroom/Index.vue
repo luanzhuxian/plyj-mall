@@ -66,7 +66,9 @@ export default {
         async getSendLiveCount () {
             try {
                 const { result } = await getSendLiveList('1')
-                this.unaccalimedSendCount = result.length
+                const liveList = (result.liveList && result.liveList) || []
+                const courseList = (result.courseList && result.courseList) || []
+                this.unaccalimedSendCount = liveList.length + courseList.length
             } catch (e) {
                 throw e
             }

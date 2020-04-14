@@ -12,21 +12,21 @@
                         <template v-else>您免费获得了{{ courseList.length }}节课程</template>
                     </span>
                     <span>
-                        <template v-if="(courseList.length === 1) && (courseList[0].courseType === 1)">
+                        <template v-if="(courseList.length === 1) && (courseList[0].courseType === LIVE_TYPE)">
                             <!--直播未开始-->
                             <template v-if="isNotStart(courseList[0])">直播还未开始，请在直播开始时进入直播间学习</template>
                             <!--有videoLibId，说明直播已结束，可回放-->
                             <template v-else-if="courseList[0].videoLibId && courseList[0].videoLibId !== '0'">直播已结束，您可看回放进行直播课程学习</template>
                             <template v-else>直播进行中，可点击查看直播进入直播间学习</template>
                         </template>
-                        <template v-else-if="currentCourseTypeCount(1) === courseList.length">
+                        <template v-else-if="currentCourseTypeCount(LIVE_TYPE) === courseList.length">
                             您可选择正在直播中的直播课程进行学习哦~
                         </template>
                         <template v-else>
                             <div :class="$style.count">
-                                <b v-if="currentCourseTypeCount(1)">互动直播 {{ currentCourseTypeCount(1) }} </b>
-                                <b v-if="currentCourseTypeCount(2)">精选单课 {{ currentCourseTypeCount(2) }} </b>
-                                <b v-if="currentCourseTypeCount(3)">精选系列课 {{ currentCourseTypeCount(3) }} </b>
+                                <b v-if="currentCourseTypeCount(LIVE_TYPE)">互动直播 {{ currentCourseTypeCount(LIVE_TYPE) }} </b>
+                                <b v-if="currentCourseTypeCount(SIGLE_TYPE)">精选单课 {{ currentCourseTypeCount(SIGLE_TYPE) }} </b>
+                                <b v-if="currentCourseTypeCount(SERIES_TYPE)">精选系列课 {{ currentCourseTypeCount(SERIES_TYPE) }} </b>
                             </div>
                         </template>
                     </span>
@@ -40,15 +40,15 @@
                             :class="{
                                 [$style.single]: true,
                                 [$style.icon]: true,
-                                [$style.isLiveCourse]: item.courseType === 1,
-                                [$style.isSingleCourse]: item.courseType === 2,
-                                [$style.isSeriesCourse]: item.courseType === 3
+                                [$style.isLiveCourse]: item.courseType === LIVE_TYPE,
+                                [$style.isSingleCourse]: item.courseType === SIGLE_TYPE,
+                                [$style.isSeriesCourse]: item.courseType === SERIES_TYPE
                             }"
                         >
                             <img :src="item.coverImg" alt="">
                             <div :class="$style.desc">
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
-                                <div :class="$style.liveTime">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
+                                <div :class="$style.liveTime" v-if="item.liveStartTime">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
                                 <div :class="$style.bottom">
                                     <span :class="$style.free">
                                         赠送
@@ -75,9 +75,9 @@
                             :class="{
                                 [$style.item]: true,
                                 [$style.icon]: true,
-                                [$style.isLiveCourse]: item.courseType === 1,
-                                [$style.isSingleCourse]: item.courseType === 2,
-                                [$style.isSeriesCourse]: item.courseType === 3
+                                [$style.isLiveCourse]: item.courseType === LIVE_TYPE,
+                                [$style.isSingleCourse]: item.courseType === SIGLE_TYPE,
+                                [$style.isSeriesCourse]: item.courseType === SERIES_TYPE
                             }"
                             v-for="(item, index) of courseList"
                             :key="index"
@@ -86,7 +86,7 @@
                             <img :src="item.coverImg" alt="">
                             <div :class="$style.desc">
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
-                                <div :class="$style.liveTime">
+                                <div :class="$style.liveTime" v-if="item.liveStartTime">
                                     <PlSvg name="icon-time-machine-ff547" width="24" height="24" />
                                     {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}
                                 </div>
@@ -94,7 +94,11 @@
                                     <PlSvg name="icon-office-man-35b25" width="24" height="24" />
                                     {{ item.lecturerName }}
                                 </div>
-                                <div :class="$style.bottom">
+                                <div :class="{
+                                    [$style.bottom]: true,
+                                    [$style.mtMiddle]: !item.liveStartTime || !item.lecturerName,
+                                    [$style.mtLarge]: !item.liveStartTime && !item.lecturerName,
+                                }">
                                     <span :class="$style.free">
                                         赠送
                                         <span :class="$style.price" v-if="item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
@@ -151,10 +155,13 @@ export default {
                 }
              */
             courseList: [],
+            LIVE_TYPE: 0,
+            SIGLE_TYPE: 1,
+            SERIES_TYPE: 2,
             courseType: {
-                1: '互动直播',
-                2: '知识课程',
-                3: '系列课'
+                0: '互动直播',
+                1: '知识课程',
+                2: '系列课'
             },
             isAlreadyNotice: false
         }
@@ -185,12 +192,32 @@ export default {
                 throw e
             }
         },
-        addAttr (list) {
-        // 后台返回的paidAmount单位为分，要转换为元
-            list.forEach(item => {
+        addAttr (data) {
+            let list = []
+            // 直播
+            const liveList = (data && data.liveList) || []
+            liveList.forEach(item => {
+                // 后台返回的paidAmount单位为分，要转换为元
                 item.actuallyPaidAmount = Number(Number(item.paidAmount / 100).toFixed(2))
-                item.courseType = 1
+                item.courseType = this.LIVE_TYPE
+                list.push(item)
             })
+            // 单课 + 系列课
+            const courseList = (data && data.courseList) || []
+            const seriesCourse = []
+            const sigleCourse = []
+            courseList.forEach(item => {
+                const newItem = {
+                    id: item.id,
+                    courseType: item.courseType,
+                    coverImg: item.courseImg,
+                    name: item.courseName,
+                    actuallyPaidAmount: item.payAmount,
+                    lecturerName: item.lecturer
+                }
+                item.courseType === this.SIGLE_TYPE ? sigleCourse.push(newItem) : seriesCourse.push(newItem)
+            })
+            list = [...list, ...seriesCourse, ...sigleCourse]
             return list
         },
         isNotStart (row) {
@@ -200,15 +227,20 @@ export default {
             return this.courseList.filter(item => item.courseType === type).length
         },
         goToWatchLive (row) {
-            if (row.liveCloseTime && moment(row.liveCloseTime).isBefore(moment())) {
-                if (row.videoLibId && row.videoLibId !== '0') {
-                    this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: '0' } })
+            // 互动直播
+            if (row.courseType === this.LIVE_TYPE) {
+                if (row.liveCloseTime && moment(row.liveCloseTime).isBefore(moment())) {
+                    if (row.videoLibId && row.videoLibId !== '0') {
+                        this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: '0' } })
+                    } else {
+                        this.$error('该视频无法观看')
+                    }
                 } else {
-                    this.$error('该视频无法观看')
+                    this.$router.push({ name: 'LiveRoom', params: { id: row.id } })
                 }
-            } else {
-                this.$router.push({ name: 'LiveRoom', params: { id: row.id } })
             }
+            // 单课+系列课
+            this.$router.push({ name: 'Curriculum', params: { productId: row.id } })
         },
         close () {
             this.showShelf = false
@@ -287,7 +319,7 @@ export default {
         overflow: auto;
         text-align: left;
         .single {
-          padding: 0 12px;
+          margin: 0 12px;
           >img {
             width: 100%;
             height: 420px;
@@ -394,8 +426,19 @@ export default {
               display: flex;
               margin-top: 14px;
               justify-content: space-between;
+              &.mt-middle {
+                margin-top: 52px;
+              }
+              &.mt-large {
+                margin-top: 90px;
+              }
+            }
+            .free {
+              font-size: 28px;
+              color: #FE7700;
             }
             .price {
+              display: inline-block;
               margin-left: 10px;
               font-size: 28px;
               color: #FE7700;
@@ -405,10 +448,6 @@ export default {
                 margin-right: 4px;
                 font-size: 20px;
               }
-            }
-            .free {
-              font-size: 28px;
-              color: #FE7700;
             }
             button {
               width:140px;
@@ -423,7 +462,6 @@ export default {
       .is-single-course {
         position: relative;
         &:before {
-          content: '单课';
           position: absolute;
           top: 0;
           left: 0;
