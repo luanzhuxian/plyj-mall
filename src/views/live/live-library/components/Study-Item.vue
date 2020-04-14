@@ -12,7 +12,10 @@
             <div :class="$style.learn">
                 <div v-show="item.lecturer">主讲人：{{ item.lecturer }}</div>
                 <div>
-                    <span>已学习</span><span>{{ item.learnProgress || 0 }}%</span>
+                    <!-- 单课程学习进度 -->
+                    <span v-if="this.courseType === '1'">已学习{{ item.learnProgress || 0 }}%</span>
+                    <!-- 系列课学习进度 -->
+                    <span v-else>已学习{{ item.learnedNumber || 0 }}节/{{ item.totalLiveNumber || 1 }}节课</span>
                 </div>
                 <div v-if="$route.params.learnStatus !== '3'">
                     学习课程
@@ -26,6 +29,16 @@
 export default {
     name: 'StudyItem',
     props: {
+        // 1单课 2系列课
+        courseType: {
+            type: String,
+            default: '1'
+        },
+        // 1 未学习 2 学习中 3 学习完
+        learnStatus: {
+            type: String,
+            default: '1'
+        },
         item: {
             type: Object,
             default () {

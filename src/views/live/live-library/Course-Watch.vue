@@ -165,7 +165,11 @@ export default {
         async updateProgressOnce () {
             try {
                 // 用于已购买的课程列表显示
-                await setCourseProgress(this.orderId, 1)
+                await setCourseProgress({
+                    orderId: this.orderId,
+                    liveId: this.liveId,
+                    progress: 1
+                })
             } catch (e) { throw e }
         },
         // 统计观看次数，只有第一次播放时统计
@@ -207,7 +211,14 @@ export default {
                     const videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
 
                     // 依此用于已购买的课程列表显示,课程详情页面的显示
-                    await Promise.all([setCourseProgress(this.orderId, 100), this.setStudyTime(Number.parseInt(videoTime))])
+                    await Promise.all([
+                        setCourseProgress({
+                            orderId: this.orderId,
+                            liveId: this.liveId,
+                            progress: 100
+                        }),
+                        this.setStudyTime(Number.parseInt(videoTime))
+                    ])
                 }
             } catch (e) { throw e }
         },
@@ -216,7 +227,11 @@ export default {
             const setProgress = async currentProgress => {
                 try {
                     if (currentProgress > preProgress) {
-                        await setCourseProgress(this.orderId, currentProgress)
+                        await setCourseProgress({
+                            orderId: this.orderId,
+                            liveId: this.liveId,
+                            progress: currentProgress
+                        })
                     }
                     preProgress = currentProgress
                 } catch (e) { throw e }

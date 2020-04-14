@@ -90,7 +90,7 @@
                     <serise-courses
                         v-show="tab === 2"
                         :data="seriesCourses"
-                        :course-id="detail.courseId"
+                        :course-id="detail.id"
                         :order-id="detail.orderId"
                         :is-buy="!!detail.isBuy"
                         :is-finish="!detail.haveNoVideo"
