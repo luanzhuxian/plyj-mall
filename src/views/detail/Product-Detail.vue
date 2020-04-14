@@ -12,7 +12,7 @@
             <!-- 海报按钮 -->
             <div :class="$style.haibao">
                 <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createHaibao(activeProduct)" />
+                <pl-svg :key="2" v-else name="icon-poster-512b1" fill="#fff" width="35" @click="createHaibao(activeProduct)" />
                 <p>分享海报</p>
             </div>
             <!-- 商品banner -->
@@ -248,20 +248,18 @@
             </specification-pop>
 
             <!-- 海报弹框 -->
-            <transition name="fade">
-                <div :class="$style.saveHaibao" v-if="showHaibao">
-                    <div :class="$style.saveHaibaoContent">
-                        <img :src="haibao" alt="">
-                        <div :class="$style.saveButton" v-if="activeProduct === 1">
-                            长按识别或保存二维码，分享给朋友吧！
-                        </div>
-                        <div :class="$style.saveButton1" v-else>
-                            长按识别或保存二维码，分享给朋友吧！
-                        </div>
-                        <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />
+            <pl-mask :show.sync="showHaibao">
+                <div :class="$style.saveHaibaoContent">
+                    <img :src="haibao" alt="">
+                    <div :class="$style.saveButton" v-if="activeProduct === 1">
+                        长按识别或保存二维码，分享给朋友吧！
                     </div>
+                    <div :class="$style.saveButton1" v-else>
+                        长按识别或保存二维码，分享给朋友吧！
+                    </div>
+                    <!--<pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />-->
                 </div>
-            </transition>
+            </pl-mask>
 
             <!--团购的提醒， 团购 且 进行中 显示-->
             <div
@@ -1184,19 +1182,7 @@ export default {
       margin-top: 4px;
     }
   }
-  .saveHaibao {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .7);
-    z-index: 10000;
-    .saveHaibaoContent {
+  .saveHaibaoContent {
       position: relative;
       display: flex;
       flex-direction: column;
@@ -1204,36 +1190,27 @@ export default {
       width: max-content;
       height: max-content;
       > .saveButton {
-        width: 560px;
-        margin-top: -4px;
-        text-align: center;
-        line-height: 66px;
-        font-size: 28px;
-        color: #666;
-        background-color: #FBFBFB;
+          width: 560px;
+          margin-top: -4px;
+          text-align: center;
+          line-height: 66px;
+          font-size: 28px;
+          color: #666;
+          background-color: #FBFBFB;
       }
       > .saveButton1{
-        width: 560px;
-        margin-top: -4px;
-        text-align: center;
-        line-height: 66px;
-        font-size: 28px;
-        color: #FA4D2F;
-        background-color: #FEDB63;
+          width: 560px;
+          margin-top: -4px;
+          text-align: center;
+          line-height: 66px;
+          font-size: 28px;
+          color: #FA4D2F;
+          background-color: #FEDB63;
       }
       > img {
-        width: 560px;
-        object-fit: cover;
+          width: 560px;
+          object-fit: cover;
       }
-      > svg {
-        position: absolute;
-        top: -64px;
-        right: 0;
-        width: 48px;
-        height: 48px;
-        color: #fff;
-      }
-    }
   }
   .count-down {
     top: 0;
