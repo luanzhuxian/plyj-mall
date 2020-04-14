@@ -112,12 +112,11 @@
                         <pl-svg name="icon-call-us" width="80" height="70" />
                     </a>
                     <div :class="$style.buttonWrapper">
-                        <!-- TODO: preview -->
                         <button
                             v-if="canPreview && courseType === 1"
                             :class="$style.button + ' ' + $style.yellow"
                             :disabled="Number(detail.status) === 2 || loading"
-                            @click="previewCourse(detail)"
+                            @click="previewCourse"
                         >
                             试看视频
                         </button>
@@ -182,14 +181,7 @@
             </transition>
 
             <transition name="fade">
-                <pl-video
-                    ref="videoPlayer"
-                    v-if="preview.show"
-                    :url="preview.url"
-                    :radius="0"
-                    :width="750"
-                    :height="422"
-                />
+                <video-player ref="videoPlayer" :show.sync="preview.show" :url="preview.url" />
             </transition>
         </template>
 
@@ -211,7 +203,7 @@ import Field from '../../components/detail/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
 import Instructions from '../../components/detail/Instructions.vue'
-import PlVideo from '../../components/common/Video.vue'
+import VideoPlayer from './components/Video-Player.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { getCourseDetail } from '../../apis/product'
@@ -242,7 +234,7 @@ export default {
         SlideCourses,
         SeriseCourses,
         Instructions,
-        PlVideo,
+        VideoPlayer,
         Skeleton
     },
     data () {
@@ -373,7 +365,7 @@ export default {
                 this.loaded = false
                 this.loading = true
                 // 重置一些状态
-                this.resetState()
+                this.banners.splice(0, 1000000)
                 // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
                 const { result } = await getCourseDetail(this.productId)
                 if (!result) {
@@ -428,32 +420,15 @@ export default {
                     : '购买后不限观看次数'
                 : `订购后 ${ validityDate.replace(/-/g, '.') } 前可观看学习`
         },
-        previewCourse (url) {
+        previewCourse (url = this.detail.supportWatchUrl) {
             this.preview.url = url
             this.preview.show = true
-            // 此方法不可以在異步任務中執行，否則火狐無法全屏
-            console.log(this.$refs.videoPlayer)
-            // const player =
-            //             if (player.requestFullscreen) {
-            //                 player.requestFullscreen()
-            //             } else if (player.mozRequestFullScreen) {
-            //                 player.mozRequestFullScreen()
-            //             } else if (player.msRequestFullscreen) {
-            //                 player.msRequestFullscreen()
-            //             } else if (player.oRequestFullscreen) {
-            //                 player.oRequestFullscreen()
-            //             } else if (player.webkitRequestFullscreen) {
-            //                 player.webkitRequestFullScreen()
-            //             } else {
-            //                 const docHtml = document.documentElement
-            //                 const docBody = document.body
-            //                 const videobox = document.getElementById('videobox')
-            //                 const cssText = 'width:100%;height:100%;overflow:hidden;'
-            //                 docHtml.style.cssText = cssText
-            //                 docBody.style.cssText = cssText
-            //                 videobox.style.cssText = `${ cssText };` + `margin:0px;padding:0px;`
-            //                 document.IsFullScreen = true
-            //             }
+            this.$nextTick(() => {
+                const player = this.$refs.videoPlayer
+                if (player) {
+                    player.play()
+                }
+            })
         },
         submit () {
             if (!this.mobile) {
@@ -476,9 +451,6 @@ export default {
                     count: 1
                 }
             })
-        },
-        resetState () {
-            this.banners.splice(0, 1000000)
         },
         async refresh () {
             try {
