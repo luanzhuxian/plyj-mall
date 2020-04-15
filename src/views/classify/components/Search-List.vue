@@ -74,7 +74,7 @@
                                 :original-price="item.originalPrice"
                             >
                                 <template>
-                                    <div :class="$style.lecturer" v-text="item.lecturerName" />
+                                    <div :class="$style.lecturer" v-if="item.lecturer" v-text="`主讲人：${item.lecturer}`" />
                                 </template>
                             </lesson-item>
                         </template>
@@ -210,7 +210,7 @@ export default {
                 width: 40px;
                 height: 8px;
                 border-radius: 4px;
-                background-image: linear-gradient(90deg, #F3AD3C, #F7CF54);
+                background-image: linear-gradient(90deg, #f3ad3c, #f7cf54);
             }
         }
     }
@@ -222,8 +222,8 @@ export default {
     right: 0;
     z-index: 999;
     padding: 0 224px;
-    border-top: 2px solid #F5F5F5;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.04);
+    border-top: 2px solid #f5f5f5;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, .04);
 }
 .list {
     box-sizing: border-box;
@@ -241,6 +241,7 @@ export default {
     margin-top: 18px;
     font-size: 24px;
     line-height: 34px;
-    color: #666666;
+    color: #666;
 }
+
 </style>
