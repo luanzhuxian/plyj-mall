@@ -143,18 +143,18 @@ export default {
             this.translateY += y * 2 / 3
 
             /*
-      * 规律：
-      * 位移每减少一个this.translateY，active就增加1
-      * this.activeOffsetTop / 2 表示，离活动区域过当前项 1/2 高度时就选中
-      **/
+              * 规律：
+              * 位移每减少一个this.translateY，active就增加1
+              * this.activeOffsetTop / 2 表示，离活动区域过当前项 1/2 高度时就选中
+              **/
             this.active = Number.parseInt((activeOffsetTop - this.translateY + activeOffsetTop / 2) / activeOffsetTop)
         },
 
         /*
-    * 计算手指滑动的速度
-    * endY 滑动结束时的坐标
-    * return 每15ms运动过的距离（px）,大约为 1 帧
-    * */
+        * 计算手指滑动的速度
+        * endY 滑动结束时的坐标
+        * return 每15ms运动过的距离（px）,大约为 1 帧
+        * */
         speed (endY) {
             const t = Date.now() - startTime
             const s = endY - startYBase

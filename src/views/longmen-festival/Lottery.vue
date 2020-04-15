@@ -10,6 +10,44 @@
                     <div :class="$style.viewer">已有23333人关注</div>
                     <div :class="$style.chance">您还有0次抽奖机会</div>
                 </div>
+                <div :class="$style.turntable" v-if="turntableAwards.length">
+                    <!--<div
+                        v-for="(item, i) of turntableAwards"
+                        :key="i"
+                        :class="{ [$style.item]: true, [$style.active]: true }"
+                    >
+                        {{ item.name }}
+                    </div>-->
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 0 }">
+                        {{ turntableAwards[0].name }}
+                    </div>
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 1 }">
+                        {{ turntableAwards[1].name }}
+                    </div>
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 2 }">
+                        {{ turntableAwards[2].name }}
+                    </div>
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 3 }">
+                        {{ turntableAwards[3].name }}
+                    </div>
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 7 }">
+                        {{ turntableAwards[7].name }}
+                    </div>
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 6 }">
+                        {{ turntableAwards[6].name }}
+                    </div>
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 5 }">
+                        {{ turntableAwards[5].name }}
+                    </div>
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 4 }">
+                        {{ turntableAwards[4].name }}
+                    </div>
+                </div>
+                <div :class="$style.buttons">
+                    <button @click="drawLottery" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框.png');" />
+                    <!--<button style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框 3.png');" />-->
+                    <!--<button style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框 2.png');" />-->
+                </div>
             </div>
             <div :class="$style.awards">
                 <div :class="$style.title">
@@ -142,45 +180,115 @@
                 <dd class="fz-28">在活动有效期内，成功邀请3位好友绑定手机号注册成为店铺的会员，即可获得翻好礼的机会1次；有机会获得大额满减券；领取成功后，将自动存入到会员的现金卡包中</dd>
             </dl>
         </pl-popup>
+
+        <gift-pop-up
+            :show.sync="showGift"
+            button-left-text="继续抽奖"
+            button-right-text="开心收下"
+            title="恭喜您获得一等奖"
+            message="奖品已自动存入您的我的礼品中您可在我的礼品中查看"
+        >
+            <div />
+        </gift-pop-up>
     </div>
 </template>
 
 <script>
 // 根据屏幕大小转换canvas中使用的长度大小
-import PlMask from '../../components/penglai-ui/Mask'
+import GiftPopUp from '../../components/activity/Gift-Pop-Up.vue'
+import { shuffle } from '../../assets/js/loadsh'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 const transformSize = num => num / 7.5 * (window.innerWidth / 100)
-/* eslint-disable */
 // 白色灯泡的下标，后面灯泡的颜色交替更换，默认第0个，即左上角第一个
 let IS_WHITE = true
 export default {
     name: 'Lottery',
     components: {
-        PlMask,
         swiper,
-        swiperSlide
+        swiperSlide,
+        GiftPopUp
     },
     data () {
         return {
             tab: 0,
             showRule: false,
             showPoster: false,
+            showGift: true,
+            current: -1,
             swiperOption: {
-                spaceBetween : 20
-            }
+                spaceBetween: 20
+            },
+            awards: [
+                {
+                    id: 1,
+                    name: '一等奖'
+                },
+                {
+                    id: 2,
+                    name: '二等奖'
+                },
+                {
+                    id: 3,
+                    name: '三等奖'
+                }
+            ],
+            // 要显示在转盘上的奖品，如果奖品时8个，那么就等于awards，如果不是8个，需要填充
+            turntableAwards: []
         }
     },
     activated () {
         this.timer = setInterval(() => {
             this.setLights()
             IS_WHITE = !IS_WHITE
-            console.log(123)
         }, 800)
+        this.setAwards()
     },
     deactivated () {
         clearInterval(this.timer)
     },
     methods: {
+        setAwards () {
+            const turntableAwards = [...this.awards]
+            for (let i = this.awards.length; i < 8; i++) {
+                turntableAwards.push({
+                    id: i,
+                    name: '谢谢参与'
+                })
+            }
+            this.turntableAwards = shuffle(turntableAwards)
+        },
+        // 开始抽奖
+        drawLottery () {
+            const index = Math.floor(Math.random() * 8)
+            this.run(index)
+        },
+
+        /**
+         * 启动动画
+         * @param index
+         */
+        run (index) {
+            // 旋转的圈数
+            const TURNS = 6
+            // 总次数
+            const COUNT = TURNS * this.turntableAwards.length + index
+            const SPEED = 10
+            // this.current % 8 === 0 = index
+            const step = 0
+            this.rotate(SPEED, COUNT, step)
+        },
+        rotate (SPEED, COUNT, step) {
+            setTimeout(() => {
+                this.current = step
+                if (COUNT === step) {
+                    return
+                }
+                step++
+                SPEED += SPEED * 0.078
+                this.rotate(SPEED, COUNT, step)
+            }, SPEED)
+        },
+        // 绘制灯泡
         setLights () {
             let index = IS_WHITE ? 1 : 0
             const canvas = this.$refs.canvas
@@ -205,7 +313,7 @@ export default {
             // 计算每个灯直接要补偿的间距
             const linghtGapXAdded = ((lightCountX - lightCountXInt) * lightSize * 2) / (lightCountXInt - 1)
             const linghtGapYAdded = ((lightCountY - lightCountYInt) * lightSize * 2) / (lightCountYInt - 1)
-            ctx.shadowBlur = 20;
+            ctx.shadowBlur = 20
             // console.log(lightCountX, lightCountXInt, linghtGapXAdded)
             // console.log(lightCountY, lightCountYInt, linghtGapYAdded)
             // let lastX = 0
@@ -293,17 +401,18 @@ export default {
         > .container {
             padding-top: 40px;
             padding-bottom: 118px;
-            background: linear-gradient(180deg, #cc4e54 1px, transparent 2px, transparent 40px) fixed;
+            background-image: linear-gradient(180deg, #cc4e54 1px, transparent 2px, transparent 40px);
             background-size: 40px 40px;
+            background-attachment: fixed;
             overflow: auto;
         }
     }
     .lotteryBox {
-        height: 1163px;
         padding-top: 276px;
+        padding-bottom: 70px;
         text-align: center;
         color: #eccbb4;
-        background: url("https://mallcdn.youpenglai.com/static/admall/2.9.0/弹窗.png") no-repeat center top;
+        background: url("https://mallcdn.youpenglai.com/static/mall/2.9.0/弹窗.png") no-repeat center top;
         background-size: 100%;
         > .baseInfo {
             display: flex;
@@ -341,6 +450,56 @@ export default {
             }
         }
 
+    }
+    .turntable {
+        display: flex;
+        flex-wrap: wrap;
+        width: 510px;
+        margin: 36px auto 0;
+        > .item {
+            width: 126px;
+            height: 126px;
+            margin: 0 2px 2px 0;
+            flex-flow: wrap-reverse;
+            border: 2px solid #311c1d;
+            font-size: 20px;
+            font-weight: 600;
+            color: #d34219;
+            text-align: center;
+            background-color: #fff;
+            box-sizing: border-box;
+            &.active {
+                background-color: #fced5c;
+                border: 7px solid #d4ff02;
+                box-shadow: 0 0 10px rgba(0, 0, 0, .3) inset;
+            }
+            &:nth-of-type(1) {
+                border-top-left-radius: 50px;
+            }
+            &:nth-of-type(4) {
+                margin-right: 0;
+                border-top-right-radius: 50px;
+            }
+            &:nth-of-type(5) {
+                border-bottom-left-radius: 50px;
+            }
+            &:nth-of-type(8) {
+                margin-right: 0;
+                border-bottom-right-radius: 50px;
+            }
+        }
+    }
+    .buttons {
+        width: 394px;
+        height: 142px;
+        margin: 166px auto 0;
+        transform: translateX(-4px);
+        > button {
+            width: 100%;
+            height: 100%;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+        }
     }
     .awards {
         margin-top: 64px;

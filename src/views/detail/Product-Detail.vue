@@ -16,7 +16,7 @@
                 <p>分享海报</p>
             </div>
             <!-- 商品banner -->
-            <DetailBanner :banners="banners" />
+            <DetailBanner :banners="banners" :main="detail.productMainImage" />
             <template v-if="detail.id">
                 <!-- 团购倒计时条 -->
                 <TogetherBar

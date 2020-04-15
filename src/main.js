@@ -13,6 +13,7 @@ import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
 import './assets/css/quill.css'
+import './assets/css/fonts.css'
 import PlSvg from './components/common/Pl-Svg.vue'
 import { errorlog } from './apis/base-api'
 

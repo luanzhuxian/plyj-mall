@@ -8,7 +8,7 @@
     >
         <swiper ref="swiper" :options="swiperOption" @slideChange="slideChange">
             <swiperSlide
-                v-for="(img, index) of banners"
+                v-for="(img, index) of main ? [main, ...banners.slice(1)] : banners"
                 :key="index"
                 :class="{ 'swiper-no-swiping': banners.length < 2 }"
             >
@@ -72,6 +72,10 @@ export default {
             default () {
                 return []
             }
+        },
+        main: {
+            type: String,
+            default: ''
         }
     },
     data () {
