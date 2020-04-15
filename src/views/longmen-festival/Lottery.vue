@@ -154,8 +154,9 @@
             </div>
         </div>
 
-        <div :class="$style.share" @click="showPoster = true">
-            <pl-svg name="icon-poster-512b1" width="24" />
+        <div :class="$style.share" @click="generatePoster">
+            <pl-svg v-if="creating" class="rotate" name="icon-btn-loading" width="24" />
+            <pl-svg v-else name="icon-poster-512b1" width="24" />
             海报
         </div>
 
@@ -164,7 +165,7 @@
         </div>
 
         <pl-mask :show.sync="showPoster">
-            123
+            <img :src="poster" style="width: 70vw;" alt="">
         </pl-mask>
 
         <pl-popup
@@ -197,7 +198,9 @@
 // 根据屏幕大小转换canvas中使用的长度大小
 import GiftPopUp from '../../components/activity/Gift-Pop-Up.vue'
 import { shuffle } from '../../assets/js/loadsh'
+import { loadImage, cutArcImage, generateQrcode } from '../../assets/js/util'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { mapGetters } from 'vuex'
 const transformSize = num => num / 7.5 * (window.innerWidth / 100)
 // 白色灯泡的下标，后面灯泡的颜色交替更换，默认第0个，即左上角第一个
 let IS_WHITE = true
@@ -213,7 +216,9 @@ export default {
             tab: 0,
             showRule: false,
             showPoster: false,
+            creating: false,
             showGift: true,
+            poster: '',
             current: -1,
             swiperOption: {
                 spaceBetween: 20
@@ -246,6 +251,9 @@ export default {
     deactivated () {
         clearInterval(this.timer)
     },
+    computed: {
+        ...mapGetters(['logoUrl'])
+    },
     methods: {
         setAwards () {
             const turntableAwards = [...this.awards]
@@ -261,6 +269,13 @@ export default {
         drawLottery () {
             const index = Math.floor(Math.random() * 8)
             this.run(index)
+        },
+        slide (index) {
+            this.$refs.swiper.swiper.slideTo(index)
+            this.tab = index
+        },
+        slideChangeTransitionEnd () {
+            this.tab = this.$refs.swiper.swiper.activeIndex
         },
 
         /**
@@ -383,12 +398,45 @@ export default {
             ctx.shadowColor = ctx.fillStyle
             ctx.fill()
         },
-        slide (index) {
-            this.$refs.swiper.swiper.slideTo(index)
-            this.tab = index
-        },
-        slideChangeTransitionEnd () {
-            this.tab = this.$refs.swiper.swiper.activeIndex
+        // 绘制海报
+        async generatePoster () {
+            this.creating = true
+            try {
+                const IMG = await loadImage('https://mallcdn.youpenglai.com/static/mall/2.9.0/longmen-poster.jpg')
+                const CVS = document.createElement('canvas')
+                const CTX = CVS.getContext('2d')
+                let logo = null
+                CVS.width = IMG.width
+                CVS.height = IMG.height
+                CTX.drawImage(IMG, 0, 0)
+                // 加载logo
+                try {
+                    logo = await loadImage(this.logoUrl)
+                } catch (e) {}
+                // 截取logo为圆形
+                if (logo) {
+                    try {
+                        logo = await cutArcImage(logo)
+                    } catch (e) {}
+                }
+                if (logo) {
+                    CTX.drawImage(logo, 16, 16, 68, 68)
+                }
+                const QRCODE = await generateQrcode({
+                    size: 158,
+                    text: location.href,
+                    img: logo,
+                    centerPadding: 2,
+                    type: 'canvas'
+                })
+                CTX.drawImage(QRCODE, 318, 568, 158, 158)
+                this.poster = CVS.toDataURL('image/jpeg', 0.8)
+                this.showPoster = true
+            } catch (e) {
+                throw e
+            } finally {
+                this.creating = false
+            }
         }
     }
 }

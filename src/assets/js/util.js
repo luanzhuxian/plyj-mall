@@ -164,7 +164,7 @@ export function isIOS () {
  * @param type {string} 生成的类型 canvas: 生成canvas, url 生成base64
  * @returns {Promise<*>}
  */
-export async function generateQrcode (size, text, padding = 0, img = null, centerPadding = 0, type = 'url') {
+export async function generateQrcode ({ size, text, padding = 0, img = null, centerPadding = 0, type = 'url' }) {
     const imageSize = 80 // 中心图片的宽高
     const { devicePixelRatio } = window
     let canvas

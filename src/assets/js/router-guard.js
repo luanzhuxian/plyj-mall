@@ -17,7 +17,9 @@ const shareRoutes = [
     'DoubleTwelveDay',
     'Activity',
     'BattlefieldReport',
-    'EpidemicSignIn'
+    'EpidemicSignIn',
+    'LongmenLottery',
+    'LongmenSignIn'
 ]
 const setShare = to => {
     // const fullUrl = `${ location.origin }/${ mallDomain }${ to.fullPath }`
