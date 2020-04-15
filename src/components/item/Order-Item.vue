@@ -69,8 +69,8 @@
                 />
             </div>
         </div>
-        <div v-if="activeProduct === 3 && preActive === 2" :class="$style.activeTag">限时秒杀</div>
-        <div v-else-if="activeProduct === 2 && preActive === 2" :class="$style.activeTag">团购</div>
+        <div v-if="activeProduct === 2 && preActive === 2" :class="$style.activeTag">团购</div>
+        <div v-else-if="activeProduct === 3 && preActive === 2" :class="$style.activeTag">限时秒杀</div>
         <div v-else-if="activeProduct === 4 && preActive === 2" :class="$style.activeTag">预购</div>
         <div v-else-if="activeProduct === 5 && preActive === 2" :class="$style.activeTag">春耘</div>
         <div v-else-if="activeProduct === 6 && preActive === 2" :class="$style.activeTag">组合课</div>
@@ -119,6 +119,7 @@ export default {
             type: [String, Number],
             default: 0
         },
+        // 2团购 3限时秒杀 4预购 5春耘 6组合课
         activeProduct: {
             type: [String, Number],
             default: 1
@@ -160,13 +161,6 @@ export default {
     },
     computed: {
         ...mapGetters(['userId', 'agentUser'])
-    },
-    created () {
-    },
-    watch: {
-        activeProduct (val) {
-            // console.log(val)
-        }
     },
     methods: {
         handleClick (e) {
@@ -304,4 +298,5 @@ export default {
     font-size: 22px;
     background-color: #EFE0C3;
   }
+
 </style>
