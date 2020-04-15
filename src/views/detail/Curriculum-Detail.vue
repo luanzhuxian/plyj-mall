@@ -282,13 +282,6 @@ export default {
     computed: {
         ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl']),
 
-        // 0 全部，1 helper，2 会员，3 部分用户
-        // targetGroups () {
-        //     return this.detail.targetGroups
-        // },
-        // tagIds () {
-        //     return this.detail.tagIds
-        // },
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入
         productActive () {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1

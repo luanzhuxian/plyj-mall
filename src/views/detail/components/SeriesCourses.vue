@@ -15,6 +15,7 @@
                     :button-text="getBtnText(item)"
                     round
                     round-image
+                    @click="e => handleClick(e, item)"
                     @btn-click="e => handleBtnClick(e, item)"
                 >
                     <template slot="bottom" v-if="!item.url">
@@ -22,7 +23,7 @@
                     </template>
                     <template slot="bottomLeft" v-else>
                         <div :class="$style.listBottomLeft">
-                            <span :class="$style.duration" v-if="item.resourceTime">{{ `${item.resourceTime}分钟` }}</span>
+                            <span :class="$style.duration" v-if="item.resourceTime" v-text="getDuration(item.resourceTime)" />
                             <span :class="$style.view" v-if="item.vodNumber">{{ `${item.vodNumber}人观看` }}</span>
                             <span v-if="canLearn && item.learnProgress">{{ `学习${item.learnProgress}%` }}</span>
                         </div>
@@ -38,6 +39,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import ProductCard from './Product-Card.vue'
 
 export default {
@@ -102,6 +104,20 @@ export default {
             if (haveSingleVideoCourse && singleVideoCourseId) return '单独购买'
             return ''
         },
+        getDuration (duration = 0) {
+            let result = ''
+            const { _data: { hours, minutes, seconds } } = moment.duration(duration * 1000)
+            if (hours) {
+                result += `${ hours }时`
+            }
+            if (minutes) {
+                result += `${ minutes }分`
+            }
+            if (seconds) {
+                result += `${ seconds }秒`
+            }
+            return result
+        },
         handleBtnClick (e, { id, url, singleVideoCourseId, learnProgress }) {
             const { courseId, orderId } = this
             const btnText = e.target.innerHTML
@@ -116,6 +132,23 @@ export default {
                 })
             }
             if (btnText === '去学习') {
+                this.$router.push({
+                    name: 'CourseWatch',
+                    params: {
+                        courseId
+                    },
+                    query: {
+                        liveId: id,
+                        orderId,
+                        progress: learnProgress
+                    }
+                })
+            }
+        },
+        handleClick (e, { id, singleVideoCourseId, learnProgress }) {
+            const { courseId, orderId } = this
+
+            if (this.canLearn) {
                 this.$router.push({
                     name: 'CourseWatch',
                     params: {
