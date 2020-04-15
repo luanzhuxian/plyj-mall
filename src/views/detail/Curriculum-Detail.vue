@@ -106,7 +106,7 @@
             </div>
 
             <!-- 底部购买 -->
-            <div :class="$style.bottom" v-if="productActive !== 5">
+            <div :class="$style.bottom" v-if="!~[5, 6].indexOf(productActive)">
                 <div :class="$style.content">
                     <router-link :class="$style.link" :to="{ name: 'Home' }">
                         <pl-svg name="icon-home" width="38.5" height="70" />
@@ -168,7 +168,7 @@
                 </div>
             </div>
 
-            <div :class="$style.buttomTip" v-if="Number(detail.status) === 2">
+            <div :class="$style.buttomTip" v-if="Number(detail.status) === 2 && !~[5, 6].indexOf(productActive)">
                 该视频课程已下架
             </div>
 
@@ -287,7 +287,7 @@ export default {
         // tagIds () {
         //     return this.detail.tagIds
         // },
-        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘/组合课活动进入
+        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入
         productActive () {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
         },

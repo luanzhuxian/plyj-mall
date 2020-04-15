@@ -4,8 +4,12 @@
         :class="[$style.springPloughingProItem, $style[color]]"
         @click="$router.push({
             name: data.productType ==='KNOWLEDGE_COURSE' ? 'Curriculum' : 'Product',
-            params: { productId: data.goodsId },
-            query: { currentProductStatus: 5 }
+            params: {
+                productId: data.goodsId
+                },
+            query: {
+                currentProductStatus: data.productType ==='KNOWLEDGE_COURSE' ? 6 : 5
+                }
         })"
     >
         <img :src="data.goodsImage" alt="">
