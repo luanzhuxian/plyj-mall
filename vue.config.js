@@ -52,7 +52,7 @@ module.exports = {
         },
         proxy: {
 
-            // 37测试 34开发 王恩74 李宾哲132 赵伟116 牛昌昌92 张涛77 任钊64
+            // 37测试 34开发 王恩74 李宾哲132 赵伟116 牛昌昌92 张涛149 任钊64
             '/apis': {
 
                 // target: 'https://mall.youpenglai.com'

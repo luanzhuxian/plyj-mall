@@ -4,7 +4,7 @@
             <!-- 海报按钮 -->
             <div :class="$style.haibao">
                 <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createHaibao" />
+                <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createPoster" />
                 <p>分享海报</p>
             </div>
             <banner :banners="banners" />
@@ -123,7 +123,7 @@
                         >
                             试看视频
                         </button>
-                        <template v-if="!detail.canLearn">
+                        <template v-if="!canLearn">
                             <button
                                 v-if="detail.isOpenSale === 1 && detail.courseStatus === 2"
                                 :class="$style.button + ' ' + $style.orange"
@@ -213,7 +213,7 @@ import Instructions from '../../components/detail/Instructions.vue'
 import VideoPlayer from './components/Video-Player.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
-import { getCourseDetail } from '../../apis/product'
+import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
 import {
     generateQrcode,
     cutImageCenter,
@@ -299,7 +299,7 @@ export default {
             return this.isBuy || this.isPresent
         },
         canPreview () {
-            return !this.detail.canLearn && this.detail.supportWatch
+            return !this.canLearn && this.detail.supportWatch
         }
     },
     watch: {
@@ -329,6 +329,22 @@ export default {
         this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
     methods: {
+        async refresh () {
+            try {
+                this.loaded = false
+                this.loading = true
+                const list = [
+                    this.getDetail(),
+                    this.checkIsPresentCourse()
+                ]
+                await Promise.all(list.map(p => p.catch(e => null)))
+                this.createShare()
+                this.loading = false
+                this.loaded = true
+            } catch (error) {
+                throw error
+            }
+        },
 
         /**
          * 获取商品详
@@ -371,8 +387,6 @@ export default {
          */
         async getDetail () {
             try {
-                this.loaded = false
-                this.loading = true
                 // 重置一些状态
                 this.banners.splice(0, 1000000)
                 // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
@@ -385,41 +399,31 @@ export default {
 
                 const {
                     courseType,
-                    courseName,
                     courseImg,
-                    lecturer,
                     relatedCoursesModels,
                     videoLibEntities
                 } = result
+
                 this.tab = courseType
                 this.courseType = courseType
                 this.banners = [courseImg]
                 this.relatedCourses = relatedCoursesModels || []
                 this.seriesCourses = videoLibEntities || []
                 this.detail = result
-                this.loading = false
-                this.loaded = true
 
-                // 生成分享
-                // let shareUrl = ''
-                // if (this.userId) {
-                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
-                // } else {
-                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?noCache=${ Date.now() }`
-                // }
-                // TODO: 以后可能需要自定义分享链接，现在直接使用当前连接
-                this.shareUrl = location.href
-                share({
-                    appId: this.appId,
-                    title: courseName,
-                    link: this.shareUrl,
-                    desc: lecturer,
-                    imgUrl: courseImg
-                })
-                this.haibaoImg = await loadImage(courseImg)
                 return result
             } catch (e) {
                 throw e
+            }
+        },
+        // 是否是赠课
+        async checkIsPresentCourse () {
+            try {
+                const { result } = await checkIsPresentCourse(this.productId)
+                this.isPresent = result
+                return result
+            } catch (error) {
+                throw error
             }
         },
         getExpiration ({ validityType, validity, validityDate = '', priceType = 1 }) {
@@ -461,14 +465,32 @@ export default {
                 }
             })
         },
-        async refresh () {
+        // 生成分享
+        async createShare () {
+            const { courseName, lecturer, courseImg } = this.detail
             try {
-                await this.getDetail()
-            } catch (e) {
-                throw e
+                // let shareUrl = ''
+                // if (this.userId) {
+                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
+                // } else {
+                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?noCache=${ Date.now() }`
+                // }
+                // TODO: 以后可能需要自定义分享链接，现在直接使用当前连接
+                this.shareUrl = location.href
+                share({
+                    appId: this.appId,
+                    title: courseName,
+                    link: this.shareUrl,
+                    desc: lecturer,
+                    imgUrl: courseImg
+                })
+                this.haibaoImg = await loadImage(courseImg)
+            } catch (error) {
+                throw error
             }
         },
-        async createHaibao (type) {
+        // 生成海报
+        async createPoster (type) {
             if (this.loading) {
                 return
             }
@@ -596,9 +618,6 @@ export default {
             font-size: 24px;
             vertical-align: 3px;
         }
-        &.line {
-            text-decoration: line-through;
-        }
     }
     .free {
         font-size: 46px;
@@ -684,7 +703,7 @@ export default {
     .progress {
         margin-left: auto;
         margin-right: 30px;
-        font-size: 32px;
+        font-size: 26px;
         font-weight: bold;
         color: #fe7700;
     }

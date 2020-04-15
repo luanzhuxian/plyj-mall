@@ -115,14 +115,14 @@ export default {
                     .catch(e => this.setLiveInfo({}))
                 getCourse().then(({ result }) => this.setCourseInfo(result))
                     .catch(e => this.setCourseInfo({}))
-                // getInvitingEvent().then(({ result }) => this.setInvitingEvent(result))
-                //     .catch(e => this.setInvitingEvent({}))
-                // getJianxueInfo().then(({ result }) => this.setJxEvent(result))
-                //     .catch(e => this.setJxEvent({}))
                 getNianweiInfo().then(({ result }) => this.setNwEvent(result))
                     .catch(e => this.setNwEvent({}))
                 getMyCouponInfo().then(({ result }) => this.setCouponInfo(result))
                     .catch(e => this.setCouponInfo({}))
+                // getInvitingEvent().then(({ result }) => this.setInvitingEvent(result))
+                //     .catch(e => this.setInvitingEvent({}))
+                // getJianxueInfo().then(({ result }) => this.setJxEvent(result))
+                //     .catch(e => this.setJxEvent({}))
             } catch (error) {
                 throw error
             }
