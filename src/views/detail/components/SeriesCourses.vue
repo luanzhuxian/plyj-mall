@@ -14,6 +14,7 @@
                     :sub-top="item.lecturer ? `主讲人：${item.lecturer}` : ''"
                     :button-text="getBtnText(item)"
                     round
+                    round-image
                     @btn-click="e => handleBtnClick(e, item)"
                 >
                     <template slot="bottom" v-if="!item.url">

@@ -62,11 +62,11 @@ export default {
     background: #fff;
     overflow: hidden;
     &.swipable {
-        .list-item {
-            width: 648px;
-            // &:nth-last-of-type(1) {
-            //     margin-right: 28px;
-            // }
+        .list {
+            overflow-x: scroll;
+            &-item {
+                width: 648px;
+            }
         }
     }
 }
@@ -89,20 +89,30 @@ export default {
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
-    padding: 40px 28px;
+    padding: 40px 0;
     width: 100%;
-    overflow-x: scroll;
-    overflow-y: hidden;
+    overflow-x: hidden;
+    &::after {
+        content: '.';
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
     &::-webkit-scrollbar {
         display: none;
     }
     &-item {
+        box-sizing: border-box;
         flex-shrink: 0;
         margin-left: 20px;
         padding-right: 28px;
-        width: 100%;
+        width: calc(100vw - 56px);
         &:nth-of-type(1) {
-            margin-left: 0;
+            margin-left: 28px;
+        }
+        &:nth-last-of-type(1) {
+            margin-right: 28px;
         }
     }
 }

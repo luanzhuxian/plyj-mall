@@ -7,7 +7,10 @@
         }"
         @click="handleClick"
     >
-        <div :class="$style.imgWrapper">
+        <div :class="{
+            [$style.imgWrapper]: true,
+            [$style.round]: roundImage
+        }">
             <img :src="image + '?x-oss-process=style/thum-middle'" alt="">
             <div :class="$style.label" v-if="label" v-text="label" />
         </div>
@@ -82,6 +85,7 @@ export default {
             default: 1
         },
         round: Boolean,
+        roundImage: Boolean,
         border: Boolean,
         route: {
             type: Object,
@@ -133,8 +137,10 @@ export default {
     position: relative;
     width: 280px;
     height: 186px;
-    border-radius: 20px;
     overflow: hidden;
+    &.round {
+        border-radius: 20px;
+    }
     img {
         width: 100%;
         height: 100%;
