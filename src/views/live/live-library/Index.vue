@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div v-if="!isLiveCourse" :class="$style.studyTabs">
-                <div :class="{ [$style.focus]: item.learnStatus === learnStatus }" v-for="(item,index) in tabs" :key="index" @click="target(item.learnStatus)">{{ item.name }}</div>
+                <div :class="{ [$style.focus]: item.learnStatus === learnStatus }" v-for="(item,index) in tabs" :key="index" @click="target(item.learnStatus)">{{ item.name }}({{ item.num }})</div>
             </div>
             <div v-if="learnStatus === '3'" :class="$style.description">
                 已过期课程不支持观看
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { getCourseStudyNum } from './../../../apis/live-library'
 export default {
     name: 'LiveLibrary',
     data () {
@@ -39,15 +40,18 @@ export default {
             tabs: [
                 {
                     learnStatus: '1',
-                    name: '未学习'
+                    name: '未学习',
+                    num: 0
                 },
                 {
                     learnStatus: '2',
-                    name: '学习中'
+                    name: '学习中',
+                    num: 0
                 },
                 {
                     learnStatus: '3',
-                    name: '已过期'
+                    name: '已过期',
+                    num: 0
                 }
             ]
         }
@@ -55,6 +59,30 @@ export default {
     methods: {
         target (learnStatus) {
             this.$router.push({ name: this.$route.name, params: { learnStatus } })
+        },
+        async getStudyNum (courseType) {
+            try {
+                const { result } = await getCourseStudyNum(courseType)
+                this.tabs[0].num = result.noStartLearnCount || 0
+                this.tabs[1].num = result.startLearningCount || 0
+                this.tabs[2].num = result.startEndCount || 0
+            } catch (e) { throw e }
+        }
+    },
+    watch: {
+        '$route.params.courseType': {
+            async handler (val) {
+                try {
+                    if (val) await this.getStudyNum(val)
+                } catch (e) {
+                    if (e.name === 'ResponseError') {
+                        this.$error(JSON.parse(e.message).message)
+                    } else {
+                        this.$error(e.message)
+                    }
+                }
+            },
+            immediate: true
         }
     },
     computed: {

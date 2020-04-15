@@ -13,7 +13,7 @@
                 <div v-show="item.lecturer">主讲人：{{ item.lecturer }}</div>
                 <div>
                     <!-- 单课程学习进度 -->
-                    <span v-if="this.courseType === '1'">已学习{{ item.learnProgress || 0 }}%</span>
+                    <span v-if="courseType === '1'">已学习{{ (item.recordModels && item.recordModels[0] && item.recordModels[0].learnProgress) || 0 }}%</span>
                     <!-- 系列课学习进度 -->
                     <span v-else>已学习{{ item.learnedNumber || 0 }}节/{{ item.totalLiveNumber || 1 }}节课</span>
                 </div>
@@ -29,16 +29,6 @@
 export default {
     name: 'StudyItem',
     props: {
-        // 1单课 2系列课
-        courseType: {
-            type: String,
-            default: '1'
-        },
-        // 1 未学习 2 学习中 3 学习完
-        learnStatus: {
-            type: String,
-            default: '1'
-        },
         item: {
             type: Object,
             default () {
@@ -63,19 +53,35 @@ export default {
     },
     methods: {
         target (item) {
-            if (this.$route.params.learnStatus !== '3') {
-                this.$router.push({
-                    name: 'CourseWatch',
-                    params: {
-                        courseId: item.courseId
-                    },
-                    query: {
-                        liveId: item.liveId,
-                        orderId: item.orderId,
-                        progress: item.learnProgress
-                    }
-                })
+            if (this.courseType === '1') {
+                if (this.learnStatus !== '3') {
+                    this.$router.push({
+                        name: 'CourseWatch',
+                        params: {
+                            courseId: item.courseId
+                        },
+                        query: {
+                            liveId: item.liveIdList && item.liveIdList[0],
+                            orderId: item.orderId,
+                            progress: item.learnProgress
+                        }
+                    })
+                } else {
+                    this.$router.push({ name: 'Curriculum', params: { productId: item.courseId } })
+                }
+            } else {
+                this.$router.push({ name: 'Curriculum', params: { productId: item.courseId } })
             }
+        }
+    },
+    computed: {
+        courseType () {
+            // 1单课 2系列课
+            return this.$route.params.courseType || '1'
+        },
+        learnStatus () {
+            // 1 未学习 2 学习中 3 学习完
+            return this.$route.params.learnStatus || '1'
         }
     }
 }

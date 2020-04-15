@@ -173,7 +173,7 @@ export default {
             } catch (e) { throw e }
         },
         // 统计观看次数，只有第一次播放时统计
-        async setStudyCount () {
+        async setStudyCountOnce () {
             try {
                 await setStudyCount(this.liveId)
             } catch (e) { throw e }
@@ -198,7 +198,7 @@ export default {
                     }
                     this.isStudy = true
                     this.updateStudyTime()
-                    await this.setStudyCount()
+                    await this.setStudyCountOnce()
                     await this.updateProgressOnce()
                 }
             } catch (e) { throw e }
@@ -240,7 +240,7 @@ export default {
         },
         // 设置观看时长
         returnSetStudyTime (preTime) {
-            const setStydyTime = async currentTime => {
+            const setStudyTimes = async currentTime => {
                 try {
                     if (currentTime > preTime) {
                         const duration = Number.parseInt(currentTime - preTime) || 0
@@ -249,7 +249,7 @@ export default {
                     preTime = currentTime
                 } catch (e) { throw e }
             }
-            return setStydyTime
+            return setStudyTimes
         },
         error (e) {
             if (e.name === 'ResponseError') {

@@ -47,7 +47,6 @@ export default [
                     {
                         path: '/lived/library/courses/:courseType/single-course-learning/:learnStatus',
                         name: 'CourseLearning',
-                        props: true,
                         component: () => import('../views/live/live-library/Course-Learning.vue'),
                         meta: {
                             title: '课程学习'

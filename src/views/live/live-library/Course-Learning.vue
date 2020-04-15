@@ -15,7 +15,7 @@
         </load-more>
         <!--无数据情况-->
         <div v-if="loading" :class="$style.none">
-            <div @click="$router.push({ name: 'OnlineClassroom' })" :class="$style.goLearning">去学习课程</div>
+            <div @click="goLearning" :class="$style.goLearning">去学习课程</div>
         </div>
     </div>
 </template>
@@ -45,7 +45,7 @@ export default {
             }
         }
     },
-    async created () {
+    async activated () {
         try {
             const { learnStatus, courseType } = this.$route.params
             if (learnStatus) {
@@ -60,11 +60,15 @@ export default {
         } catch (e) { throw e }
     },
     methods: {
+        getCourseList,
         refreshList (list) {
             this.list = list
             this.loading = list.length === 0
         },
-        getCourseList
+        goLearning () {
+            const name = this.$route.params.courseType === '1' ? 'OnlineClassroom' : 'seriesOfCourses'
+            this.$router.push({ name })
+        }
     },
     computed: {
         learnTxt () {
