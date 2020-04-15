@@ -545,14 +545,20 @@ export default {
                 // 填充商品名称
                 // let str = this.detail.courseName
                 const line = (type !== 1 && this.preActivity === 2) ? 1 : 2
-                const price = this.detail.sellingPrice
-                const { originalPrice } = this.detail
+                const { sellingPrice: price, originalPrice, totalLiveNumber } = this.detail
                 ctx.textBaseline = 'top'
                 ctx.font = '56px Microsoft YaHei UI'
                 ctx.fillStyle = '#000'
 
+                // 商品名称
+                createText(ctx, 49, 978, this.detail.courseName, 80, 620, line)
+                if (this.courseType === 2) {
+                    ctx.font = '48px Microsoft YaHei UI'
+                    ctx.fillStyle = '#999'
+                    ctx.fillText(`包含${ totalLiveNumber }节课程`, 48, 1058)
+                }
+
                 // 填充价钱
-                createText(ctx, 48, 978, this.detail.courseName, 80, 620, line)
                 if (price) {
                     ctx.fillStyle = '#FE7700'
                     ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
