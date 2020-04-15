@@ -96,10 +96,12 @@
                         :data="seriesCourses"
                         :course-id="detail.id"
                         :order-id="detail.orderId"
-                        :is-buy="!!detail.isBuy"
                         :is-present="isPresent"
+                        :is-buy="!!detail.isBuy"
                         :is-finish="!detail.haveNoVideo"
                         :status="Number(detail.status)"
+                        :is-open-sale="detail.isOpenSale"
+                        :course-status="detail.courseStatus"
                         @preview="previewCourse"
                     />
                 </div>
@@ -296,7 +298,7 @@ export default {
             return isOpenSale === 1 && courseStatus === 2 && regularSaleTime
         },
         canLearn () {
-            return this.isBuy || this.isPresent
+            return this.detail.isBuy || this.isPresent
         },
         canPreview () {
             return !this.canLearn && this.detail.supportWatch

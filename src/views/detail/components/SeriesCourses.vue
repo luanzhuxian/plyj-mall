@@ -65,19 +65,18 @@ export default {
             type: Number,
             default: 0
         },
-        // // 是否开启定时售卖
-        // isOpenSale: {
-        //     type: Number,
-        //     default: 0
-        // },
-        // // 1 已开售 2 未开售
-        // courseStatus: {
-        //     type: Number,
-        //     default: 0
-        // },
-        isBuy: Boolean,
+        // 是否开启定时售卖
+        isOpenSale: {
+            type: Number,
+            default: 0
+        },
+        // 1 已开售 2 未开售
+        courseStatus: {
+            type: Number,
+            default: 0
+        },
         isPresent: Boolean,
-        // isFree: Boolean,
+        isBuy: Boolean,
         isFinish: Boolean
     },
     data () {
