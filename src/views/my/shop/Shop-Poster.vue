@@ -37,7 +37,7 @@ export default {
                 ctx.font = 'bold 84px Georgia'
                 ctx.textAlign = 'center'
                 ctx.fillText(this.mallName, 500, 150)
-                const qrcode = await generateQrcode(500, this.mallUrl, 0, null, null, 'url')
+                const qrcode = await generateQrcode({ size: 500, text: this.mallUrl })
                 const qrCodeImg = new Image()
                 qrCodeImg.src = qrcode
                 qrCodeImg.onload = () => {

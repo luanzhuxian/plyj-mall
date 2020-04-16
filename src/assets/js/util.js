@@ -158,10 +158,10 @@ export function isIOS () {
  * 生成商品二维码
  * @param size {number} 二维码尺寸，必填
  * @param text {string} 二维码内容，必填
- * @param padding {number} 二维码的白边大小，默认未0
- * @param img {HTMLElement} 二维码中心图片,可以是img或canvas
- * @param centerPadding 二维码中心图片的白边大小，默认未0
- * @param type {string} 生成的类型 canvas: 生成canvas, url 生成base64
+ * @param [padding] {number} 二维码的白边大小，默认未0
+ * @param [img] {HTMLElement} 二维码中心图片,可以是img或canvas
+ * @param [centerPadding] 二维码中心图片的白边大小，默认未0
+ * @param [type] {string} 生成的类型 canvas: 生成canvas, url 生成base64
  * @returns {Promise<*>}
  */
 export async function generateQrcode ({ size, text, padding = 0, img = null, centerPadding = 0, type = 'url' }) {

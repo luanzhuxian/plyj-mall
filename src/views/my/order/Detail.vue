@@ -862,7 +862,7 @@ export default {
             this.isPosterShow = true
             const start = this.productInfoModel.productDetailModels[0].validityPeriodStart.split(' ')[0]
             const end = this.productInfoModel.productDetailModels[0].validityPeriodEnd.split(' ')[0]
-            const qrcode = await generateQrcode(300, `${ item.redeemCode }`, 0, null, null, 'url')
+            const qrcode = await generateQrcode({ size: 300, text: `${ item.redeemCode }` })
             const mulitImg = [
                 `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${ Date.now() }`,
                 `${ qrcode }`,
@@ -941,7 +941,7 @@ export default {
             })
         },
         generateQrcode (orderId) {
-            generateQrcode(300, orderId, 34, null, null, 'url')
+            generateQrcode({ size: 300, text: orderId, padding: 34 })
                 .then(async base64 => {
                     this.qrImg = base64
                 })

@@ -519,7 +519,7 @@ export default {
                 await this.getSignInIconList()
 
                 // 生成当前活动的二维码
-                const qrcode = await generateQrcode(500, `${ this.mallUrl }/new-year-activity${ this.id ? `/${ this.id }` : '' }?t=${ Date.now() }`, 100, null, null, 'url')
+                const qrcode = await generateQrcode({ size: 500, text: `${ this.mallUrl }/new-year-activity${ this.id ? `/${ this.id }` : '' }?t=${ Date.now() }`, padding: 100 })
                 this.qrcode = new Image()
                 this.qrcode.src = qrcode
             } catch (e) {

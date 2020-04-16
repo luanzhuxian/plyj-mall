@@ -256,7 +256,7 @@ export default {
             let { avatar } = this
             const { userName } = this
             try {
-                codeCanvas = await generateQrcode(300, location.href, 0, null, 0, 'canvas')
+                codeCanvas = await generateQrcode({ size: 300, text: location.href, type: 'canvas' })
                 cvs = document.createElement('canvas')
                 cvs.width = 606
                 cvs.height = 766

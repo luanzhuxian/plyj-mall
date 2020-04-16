@@ -47,7 +47,7 @@ export default {
         ...mapGetters(['mallName', 'mallUrl', 'avatar', 'userName', 'userId', 'roleCode'])
     },
     async mounted () {
-        this.qrcode = await generateQrcode(500, `${ this.mallUrl }/my/apply-helper?shareUserId=${ this.userId }&t=${ Date.now() }`, 0, null, null, 'url')
+        this.qrcode = await generateQrcode({ size: 500, text: `${ this.mallUrl }/my/apply-helper?shareUserId=${ this.userId }&t=${ Date.now() }` })
         this.$refs.qrcode.onload = () => {
             this.drawPost()
         }

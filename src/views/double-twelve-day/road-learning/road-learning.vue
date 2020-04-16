@@ -353,7 +353,7 @@ export default {
         setInterval(() => {
             this.getObtainGifts()
         }, 10000)
-        const qrcode = await generateQrcode(500, `${ this.mallUrl }/road-learning${ this.id ? `/${ this.id }` : '' }?t=${ Date.now() }`, 100, null, null, 'url')
+        const qrcode = await generateQrcode({ size: 500, text: `${ this.mallUrl }/road-learning${ this.id ? `/${ this.id }` : '' }?t=${ Date.now() }`, padding: 100 })
         this.qrcode = new Image()
         this.qrcode.src = qrcode
     },

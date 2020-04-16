@@ -360,7 +360,7 @@ export default {
             ctx.textBaseline = 'hanging'
             createText(ctx, 100, 32, `${ this.userName } 邀您参加组合聚惠学`, 34, 510, 1)
             ctx.drawImage(BG, 0, 88, 638, 1046)
-            const QR = await generateQrcode(200, this.shareUrl, 0, null, 0, 'canvas')
+            const QR = await generateQrcode({ size: 200, text: this.shareUrl, type: 'canvas' })
             ctx.drawImage(QR, 204, 730, 238, 238)
             this.poster = cvs.toDataURL('image/jpeg', 1)
             this.showPoster = true

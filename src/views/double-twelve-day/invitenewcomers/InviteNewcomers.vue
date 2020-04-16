@@ -176,7 +176,7 @@ export default {
                 const cvs = document.createElement('canvas')
                 let ctx = null
                 const shareUrl = `${ this.mallUrl }/yx/${ this.activityId }/${ this.userId }?t=${ Date.now() }`
-                const qrcode = await generateQrcode(300, shareUrl, 0, null, 0, 'canvas')
+                const qrcode = await generateQrcode({ size: 300, text: shareUrl, type: 'canvas' })
                 const endTime = `活动结束时间 ${ moment(this.detail.invitingEventsEntity.activityEndTime).format('YYYY年MM月DD日 hh:mm:ss') }`
                 cvs.width = 654
                 cvs.height = 1162

@@ -31,7 +31,7 @@ export default {
     },
     methods: {
         async drawQrCode () {
-            this.qrcode = await generateQrcode(500, this.mallUrl, 0, null, null, 'url')
+            this.qrcode = await generateQrcode({ size: 500, text: this.mallUrl })
         }
     }
 }
