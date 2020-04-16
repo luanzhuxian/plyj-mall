@@ -34,7 +34,7 @@
                                 :class="$style.listItem"
                                 v-for="(item, index) of productList"
                                 :key="index"
-                                type="COURSE"
+                                type="PRODUCT"
                                 :data="item"
                                 :id="item.id"
                                 :title="item.productName"
