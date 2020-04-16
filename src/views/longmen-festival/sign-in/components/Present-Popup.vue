@@ -7,7 +7,7 @@
                     <template class="bg-gray" v-if="!isLastIcon && presentStage === 1">
                         <div class="present-box">
                             <div class="top">
-                                恭喜您积攒{{ activeDetail.signedInNumber }}个年味
+                                恭喜您签到参与{{ activeDetail.signedInNumber }}个端午活动
                                 <p class="has-underline">获得{{ awardTypeDesc[currentPresentDetail.awardType] }}</p>
                             </div>
                             <div class="detail">
@@ -59,15 +59,15 @@
                         <div class="present-box">
                             <div class="top">
                                 很遗憾 您与奖品擦肩而过
-                                <p>新年喜临门 感谢您的参与</p>
+                                <p>感谢您的参与</p>
                             </div>
                             <div class="detail">
                                 <div class="no-present">
-                                    <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png">
+                                    <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png">
                                 </div>
                             </div>
                             <div class="info">
-                                <p>您再获得{{ activeDetail.nextPresentIndex - activeDetail.signedInNumber }}个年味即可参与抽奖</p>
+                                <p>您再参与{{ activeDetail.nextPresentIndex - activeDetail.signedInNumber }}个端午活动即可参与抽奖</p>
                             </div>
                             <div class="footer">
                                 <button class="iKnow" @click="close">朕知道了</button>
@@ -81,12 +81,12 @@
                     <template class="bg-gray" v-if="isLastIcon && presentStage === 0">
                         <div class="grand-present-tip-box">
                             <div class="top">
-                                <p>恭喜你已集齐我心中的年味</p>
-                                <p>请抽出我心中的年味大礼</p>
+                                <p>恭喜你已签到参与所有端午活动</p>
+                                <p>请抽取粽粽大礼</p>
                             </div>
                             <div class="detail">
-                                <img class="gift" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/ac9e7b86-69d4-4356-9ba7-c233e711056d.png">
-                                <img class="light" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/1565326e-6f2a-42f7-9303-c8ad3221f92b.png">
+                                <img class="gift" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/large-gift.png">
+                                <span>粽粽大礼</span>
                             </div>
                             <div class="footer">
                                 <button @click="close(true)">立即抽奖</button>
@@ -99,8 +99,8 @@
                     <!-- 中年味大奖弹框 -->
                     <template class="bg-gray" v-if="isLastIcon && presentStage === 1">
                         <div class="grand-present-box">
-                            <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/6d5c54f0-e972-4fd2-b28b-021a12c78e39.png">
-                            <div class="top">恭喜你获得年味大礼</div>
+                            <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/obtain-gift-head.png">
+                            <div class="top">恭喜你获得粽粽大礼</div>
                             <div class="bottom">
                                 <div class="detail">
                                     <img :src="currentPresentDetail.awardImg">
@@ -123,9 +123,9 @@
                                 很遗憾 您与奖品擦肩而过
                                 <p>新年喜临门 感谢您的参与</p>
                             </div>
-                            <div class="detail">
+                            <div class="detail" style="height: 300px; margin-top: 50px;">
                                 <div class="no-present">
-                                    <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png">
+                                    <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png">
                                 </div>
                             </div>
                             <div class="footer">
@@ -240,7 +240,7 @@ export default {
         padding-top: 60px;
         height: 170px;
         text-align: center;
-        background: url('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/29b608e1-4954-4676-aa03-7f4c322d52c9.png') center top no-repeat;
+        background: url('https://mallcdn.youpenglai.com/static/admall/2.9.0/gift-head.png') center top no-repeat;
         background-size: cover;
         font-size: 40px;
         color: #ffdcb3;
@@ -416,25 +416,23 @@ export default {
         .accept {
             width: 326px;
             height: 52px;
-            background: linear-gradient(180deg, #f5651a 0%, #f01b15 100%);
-            box-shadow: 0 3px 6px #f01c15;
+            background: #FF9F4B;
             border-radius: 50px;
             line-height: 52px;
             color: #ffdcb3;
         }
 
-        .iKnow {
-            color: #f01516;
-        }
-
         .btns {
             font-size: 30px;
-            color: #a8a8a8;
             display: flex;
 
             button {
                 flex: 1;
                 position: relative;
+                color: #A8A8A8;
+                &.iKnow {
+                  color: #FF9F4B;
+                }
             }
 
             .iKnow:after {
@@ -467,33 +465,33 @@ export default {
     }
 
     .detail {
+        position: relative;
         .gift {
             width: 400px;
-            margin: 10px auto;
+            margin: 30px auto;
         }
-
-        .light {
-            position: absolute;
-            transform: translate(-50%, -50%);
-            left: 50%;
-            top: 50%;
-            z-index: -1;
+        span {
+          position: absolute;
+          bottom: 48px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 40px;
+          color: #fff;
         }
     }
 
     .footer {
-        padding-top: 60px;
+        padding-top: 20px;
         text-align: center;
 
         button {
             width: 326px;
             height: 52px;
-            background: linear-gradient(180deg, #f5651a 0%, #f01b15 100%);
-            box-shadow: 0 3px 6px #f01c15;
+            background-color: #FF9F4B;
             border-radius: 50px;
             font-size: 30px;
             line-height: 52px;
-            color: #ffdcb3;
+            color: #fff;
         }
     }
 }
@@ -509,33 +507,29 @@ export default {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        top: -120px;
-        z-index: -1;
+        top: -50px;
     }
 
     .top {
-        background-color: #fff;
-        width: 400px;
-        height: 70px;
-        line-height: 70px;
+        position: relative;
         margin: 0 auto;
-        border-radius: 20px 20px 0 0;
+        padding-top: 10px;
+        padding-left: 10px;
+        line-height: 70px;
         text-align: center;
         font-size: 30px;
-        color: #f01516;
+        color: #FFDCB3;
     }
 
     .bottom {
-        background: #fff;
-        box-shadow: 0 3px 5px #f00;
         border-radius: 42px;
         padding: 10px 10px 20px 10px;
-        width: 500px;
+        width: 460px;
         .detail {
             text-align: center;
             border-radius: 30px;
             padding: 60px 0;
-            background: #f01516 url('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/83e5925d-2d8a-4dd8-b009-755f3b2823d1.png') bottom no-repeat;
+            background: #3E9F7F url('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/83e5925d-2d8a-4dd8-b009-755f3b2823d1.png') bottom no-repeat;
             background-size: contain;
             > img {
                 width: 260px;
@@ -575,8 +569,7 @@ export default {
             button {
                 width: 326px;
                 height: 52px;
-                background: linear-gradient(180deg, #f5651a 0%, #f01b15 100%);
-                box-shadow: 0 3px 6px #f01c15;
+                background: #FF9F4B;
                 border-radius: 50px;
                 font-size: 30px;
                 line-height: 52px;

@@ -67,8 +67,8 @@
                             <template
                                 v-if="previousPresentIsReceive && currentSignIn.name && (!currentSignIn.hasSignin || (currentSignIn.hasSignin && !currentSignIn.hasAward))">
                                 <p class="no-padding">
-                                    <span>今日可获得{{ currentSignIn.hasSignin? 0 : 1 }}个端午活动</span>
-                                    <span>还差{{ activeDetail.differenceNumber }}个活动即有机会参与抽奖</span>
+                                    <span>今日可签到参与{{ currentSignIn.hasSignin? 0 : 1 }}个端午活动</span>
+                                    <span>还需签到参与{{ activeDetail.differenceNumber }}个端午活动即有机会参与抽奖</span>
                                 </p>
                                 <!-- 当前节点为已签到，灰化 -->
                                 <button
@@ -82,7 +82,7 @@
                             <!-- 立即领奖，显示条件: 上一个节点的礼品未领取 或者 当前节点已签到 + 当前节点有礼品 -->
                             <template v-if="(currentSignIn.hasSignin && currentSignIn.hasAward) || !previousPresentIsReceive">
                                 <p>
-                                    <span>{{ activeDetail.completeNumber }}人已集齐</span>
+                                    <span>{{ activeDetail.completeNumber }}人已签到参与所有端午活动</span>
                                     <span>可参与抽奖获得粽粽大礼</span>
                                 </p>
                                 <!-- 当前礼品已领取，按钮灰化 -->
@@ -186,7 +186,7 @@
             <div class="bottom">
                 <div class="sun-present" v-if="presentListType === 1">
                     <div class="statistics">
-                        已有<span>{{ sunPresentListTotal }}人</span>获得端午奖励
+                        已有<span>{{ sunPresentListTotal }}人</span>获得端午礼品
                     </div>
                     <div class="no-sun-present" v-if="sunPresentList.length === 0">
                         <img
@@ -213,7 +213,7 @@
                                 <img class="avatar" :src="item.userImg" :onerror="default_avatar">
                                 <!-- 礼品描述 -->
                                 <h3>
-                                    <p>{{ item.userName }}积攒了<span class="orange">{{ item.signinNum }}</span>个</p>
+                                    <p>{{ item.userName }}签到参与了<span class="orange">{{ item.signinNum }}</span>个端午活动</p>
                                     <p> 开启礼品 获得{{ item.awardName }} </p>
                                 </h3>
                             </div>
@@ -229,7 +229,7 @@
                 </div>
                 <div class="my-present" v-if="presentListType === 2">
                     <div class="statistics">
-                        我获得<span>{{ myPresentList.length }}个</span>端午奖励
+                        我获得<span>{{ myPresentList.length }}个</span>端午礼品
                     </div>
                     <div class="no-sun-present" v-if="myPresentList.length === 0">
                         <img
@@ -431,7 +431,7 @@ export default {
         if (!this.userId) {
             try {
                 await this.$alert({
-                    message: '新用户无法参加粽粽有礼，请先绑定手机号',
+                    message: '新用户无法参加粽粽有礼活动，请先绑定手机号',
                     confirmText: '去绑定手机号码'
                 })
                 sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
@@ -491,8 +491,8 @@ export default {
         share () {
             share({
                 appId: this.appId,
-                title: '端午佳话，粽粽有礼',
-                desc: '粽行四海，端午安康！',
+                title: '粽粽有礼, 端午安康',
+                desc: '参与端午活动，赢取粽粽大礼，快来参与吧！',
                 link: `${ this.mallUrl }/longmen-festival/sign-in/${ this.id ? `/${ this.id }` : '' }?noCache=${ Date.now() }`,
                 imgUrl: this.logoUrl
             })
@@ -797,8 +797,8 @@ export default {
             if (!isSignIN) {
                 if (!this.activityIsStart) return this.$warning('活动未开始')
                 if (this.activityIsOver) return this.$warning('活动已结束')
-                if (!this.currentSignIn.hasSignin) return this.$warning('今日可获得1个粽粽签到，请点击获取')
-                return this.$warning('今日已获得粽粽签到，请明日再来~')
+                if (!this.currentSignIn.hasSignin) return this.$warning('今日可签到参与1个端午活动，请点击获取')
+                return this.$warning('今日已签到参与1个端午活动，请明日再来~')
             }
             if (this.isLoading) return
             try {
@@ -862,8 +862,8 @@ export default {
             if (item.hasSignin) return
             if (!this.activityIsStart) return this.$warning('活动未开始')
             if (this.activityIsOver) return this.$warning('活动已结束')
-            if (item.isGrandPrsent) return this.$warning(`集齐${ item.presentIndex + 1 }个粽粽签到，有机会抽取粽粽大礼~`)
-            return this.$warning(`获得${ item.presentIndex + 1 }个粽粽签到，即可领取粽粽礼品~`)
+            if (item.isGrandPrsent) return this.$warning(`签到参与所有${ item.presentIndex + 1 }个端午活动，有机会抽取粽粽大礼~`)
+            return this.$warning(`签到参与${ item.presentIndex + 1 }个端午活动，即可领取粽粽礼品~`)
         },
 
         // 加载图片
@@ -909,7 +909,7 @@ export default {
 
         // 返回
         backMainActivityCenter () {
-        // TODO.this.$router.replace({ name: 'Home' })
+            this.$router.replace({ name: 'Home' })
         },
 
         // 倒计时
