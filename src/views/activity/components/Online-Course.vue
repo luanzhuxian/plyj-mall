@@ -171,6 +171,7 @@ export default {
         font-weight: bold;
         line-height: 34px;
         color: #fe7700;
+        @include elps();
         &.money::before {
             content: '￥';
             font-size: 28px;
@@ -182,11 +183,13 @@ export default {
         line-height: 34px;
         color: #999;
         text-decoration: line-through;
+        @include elps();
         &.money::before {
             content: '￥';
         }
     }
     &-btn {
+        flex-shrink: 0;
         margin-left: auto;
         width: 124px;
         height: 48px;
