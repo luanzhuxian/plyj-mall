@@ -121,7 +121,7 @@
                             v-if="canPreview && courseType === 1"
                             :class="$style.button + ' ' + $style.yellow"
                             :disabled="Number(detail.status) === 2 || loading"
-                            @click="previewCourse"
+                            @click="previewCourse(detail.supportWatchUrl)"
                         >
                             试看视频
                         </button>
@@ -432,7 +432,10 @@ export default {
                     : '购买后不限观看次数'
                 : `订购后 ${ validityDate.replace(/-/g, '.') } 前可观看学习`
         },
-        previewCourse (url = this.detail.supportWatchUrl) {
+        previewCourse (url) {
+            if (!url) {
+                return this.$warning('该视频不支持试看')
+            }
             this.preview.url = url
             this.preview.show = true
             this.$nextTick(() => {
