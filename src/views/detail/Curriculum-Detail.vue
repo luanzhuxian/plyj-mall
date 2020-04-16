@@ -86,15 +86,15 @@
             <!-- 订购须知 -->
             <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
 
-            <!-- 公益棕活动规则 -->
-            <rule :class="$style.rule" v-if="false" />
-
             <!-- 相关课程 -->
             <slide-courses
                 v-if="courseType === 1 && relatedCourses.length"
                 :class="$style.slideCourses"
                 :data="relatedCourses"
             />
+
+            <!-- 公益棕活动规则 -->
+            <rule :class="$style.rule" v-if="false" />
 
             <!-- 课程详情 -->
             <div :class="$style.detailOrComment">
