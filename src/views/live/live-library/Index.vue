@@ -70,10 +70,10 @@ export default {
         }
     },
     watch: {
-        '$route.params.courseType': {
-            async handler (val) {
+        '$route.params': {
+            async handler ({ courseType }) {
                 try {
-                    if (val) await this.getStudyNum(val)
+                    if (courseType) await this.getStudyNum(courseType)
                 } catch (e) {
                     if (e.name === 'ResponseError') {
                         this.$error(JSON.parse(e.message).message)
@@ -82,7 +82,8 @@ export default {
                     }
                 }
             },
-            immediate: true
+            immediate: true,
+            deep: true
         }
     },
     computed: {
