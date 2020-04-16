@@ -174,8 +174,10 @@ export default {
     &-text {
         display: flex;
         align-items: center;
+        max-width: 300px;
         font-size: 22px;
         line-height: 32px;
+        @include elps();
         > b {
             padding: 0 4px;
             font-size: 26px;

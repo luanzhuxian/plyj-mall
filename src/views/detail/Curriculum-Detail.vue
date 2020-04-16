@@ -18,8 +18,9 @@
                 prefix="距抢课开始仅剩"
                 @done="refresh"
             />
-            <!-- 公益活动倒计时 -->
+            <!-- 公益棕活动倒计时 -->
             <countdown-bar
+                v-if="false"
                 :class="$style.countDownBar"
                 :starttime="'2020-09-09 20:00:00'"
                 :endtime="detail.regularSaleTime"
@@ -29,29 +30,35 @@
 
         <template v-if="loaded">
             <info-box>
-                <div :class="$style.priceBox">
-                    <template v-if="isPresent">
-                        <div :class="$style.free">赠课</div>
-                    </template>
-                    <template v-else>
-                        <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
-                        <div v-else :class="$style.free">免费</div>
-                    </template>
-                    <div :class="$style.original">
-                        <div v-if="detail.priceType === 1 && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
-                            原价：<del v-text="detail.originalPrice" />
-                        </div>
-                        <div>
-                            <span v-if="detail.sale === 0">正在热销中</span>
-                            <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
+                <div :class="$style.priceBoxWrapper">
+                    <div :class="$style.priceBox">
+                        <template v-if="isPresent">
+                            <div :class="$style.free">赠课</div>
+                        </template>
+                        <template v-else>
+                            <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
+                            <div v-else :class="$style.free">免费</div>
+                        </template>
+                        <div :class="$style.original">
+                            <div v-if="detail.priceType === 1 && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
+                                原价：<del v-text="detail.originalPrice" />
+                            </div>
+                            <div>
+                                <span v-if="detail.sale === 0">正在热销中</span>
+                                <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
                                 <span v-text="detail.sale" />人关注
                             </template> -->
-                            <template v-else>
-                                <span v-text="detail.sale" />人已学
-                            </template>
+                                <template v-else>
+                                    <span v-text="detail.sale" />人已学
+                                </template>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- 公益棕用户头像 -->
+                    <join v-if="false" />
                 </div>
+
                 <!-- 课程名称 -->
                 <detail-title :product-name="detail.courseName" />
                 <!-- 课程描述 -->
@@ -78,6 +85,9 @@
 
             <!-- 订购须知 -->
             <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
+
+            <!-- 公益棕活动规则 -->
+            <rule :class="$style.rule" v-if="false" />
 
             <!-- 相关课程 -->
             <slide-courses
@@ -214,13 +224,15 @@ import DetailDesc from '../../components/detail/Desc.vue'
 import DetailInfo from '../../components/detail/Detail.vue'
 import Tags from '../../components/detail/Tags.vue'
 import Contact from '../../components/common/Contact.vue'
-import CountDown from '../../components/product/Courses-Count-Down.vue'
-import CountdownBar from './charity/Countdown-Bar.vue'
 import Field from '../../components/detail/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
 import Instructions from '../../components/detail/Instructions.vue'
 import VideoPlayer from './components/Video-Player.vue'
+import CountDown from '../../components/product/Courses-Count-Down.vue'
+import CountdownBar from './charity/Countdown-Bar.vue'
+import Join from './charity/Join.vue'
+import Rule from './charity/Rule.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
@@ -246,13 +258,15 @@ export default {
         Tags,
         DetailInfo,
         Contact,
-        CountDown,
-        CountdownBar,
         Field,
         SlideCourses,
         SeriseCourses,
         Instructions,
         VideoPlayer,
+        CountDown,
+        CountdownBar,
+        Join,
+        Rule,
         Skeleton
     },
     data () {
@@ -627,7 +641,13 @@ export default {
         height: 80px !important;
     }
 }
+.price-box-wrapper {
+    display: flex;
+    align-items: center;
+}
 .price-box {
+    flex: 1;
+    width: 0;
     > .price {
         font-size: 46px;
         color: #fe7700;
@@ -655,15 +675,17 @@ export default {
         }
     }
 }
+
 .field {
     border-top: 1px solid #e7e7e7;
 }
-.slide-courses {
-    margin-top: 20px;
-}
+
+.rule,
+.slide-courses,
 .detail-or-comment {
     margin-top: 20px;
 }
+
 .tabs {
     display: flex;
     justify-content: space-around;
