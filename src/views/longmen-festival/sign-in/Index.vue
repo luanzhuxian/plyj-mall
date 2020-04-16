@@ -10,16 +10,24 @@
                     <div class="title">神秘大奖等你拿</div>
                     <div class="content">
                         <div class="one-present" v-if="presentList.length === 1">
-                            <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/large-gift.png" alt="">
-                            <span>粽粽大礼</span>
+                            <img class="gift-bg" v-if="presentList[0].show" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-large-gift.png" alt="">
+                            <img class="gift-bg" v-else src="https://mallcdn.youpenglai.com/static/admall/2.9.0/large-gift.png" alt="">
+                            <!--礼品图片-->
+                            <img class="gift" v-if="presentList[0].show" :src="presentList[0].awardImg">
+                            <span>{{ presentList[0].awardName || '粽粽大礼' }}</span>
                         </div>
                         <swiper :options="swiperOption" v-if="presentList.length > 1" class="swiper">
                             <swiper-slide v-for="(item,index) in presentList" :key="index" class="swiper-no-swiping">
                                 <div class="swiper-box">
-                                    <div>
-                                        <img :src="item.awardImg" :class="{ 'no-desc': !item.show }">
+                                    <div class="img">
+                                        <!--有礼品图片时的背景-->
+                                        <img v-if="item.show" class="gift-bg" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-gift.png" alt="">
+                                        <!--无礼品图片时的背景-->
+                                        <img v-else class="gift-bg" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/small-gift-style.png" alt="">
+                                        <!--礼品图片-->
+                                        <img v-if="item.show" :src="item.awardImg" class="gift">
+                                        <span>{{ item.awardName }}</span>
                                     </div>
-                                    <p v-if="item.show">{{ item.awardName }}</p>
                                 </div>
                             </swiper-slide>
                         </swiper>
@@ -100,52 +108,64 @@
                             >
                                 <div class="icon">
                                     <img v-if="item.hasSignin"
-                                         src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/46322250-3be6-4c39-99fd-2b07fbde4915.png">
+                                         src="https://mallcdn.youpenglai.com/static/admall/2.9.0/did-siginin-icon.jpg">
                                     <img v-else class="not-sign"
-                                         src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/30a904a8-a0ae-4154-895e-1f9aefd9a6bf.png">
-                                    <span class="not-sign">{{ item.materialDesc }}</span>
+                                         src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-signin-icon.jpg">
+                                    <span v-if="!item.hasSignin" class="not-sign">{{ item.materialDesc }}</span>
                                 </div>
                                 <p :class="{'not-sign': !item.hasSignin}">{{ item.name }}</p>
                             </div>
                             <div v-else class="prensent-icon-item" @click="presentWarning(item)">
                                 <!-- 未抽奖前普通奖品展示-->
                                 <div v-if="!item.hasSignin && !item.isGrandPrsent">
-                                    <span>
-                                        <pl-svg name="icon-welfare" width="60" fill="#ffe3c8" />
-                                    </span>
+                                    <pl-svg class="icon" name="icon-present" width="50" height="50" type="svg" />
+                                    <img class="icon-bg" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg" alt="">
                                     <p class="not-sign">礼品</p>
                                 </div>
                                 <!-- 未抽奖前年味大奖奖品展示-->
                                 <div v-if="!item.hasSignin && item.isGrandPrsent">
                                     <img
-                                        src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/65044768-ee0c-4987-907b-b69e71cb067c.png">
-                                    <p :class="{'not-sign': !item.hasSignin}">年味大奖</p>
+                                        class="icon-bg"
+                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/small-gift-style.png">
+                                    <p :class="{'not-sign': !item.hasSignin}">粽粽大礼</p>
                                 </div>
                                 <!-- 已抽奖,但是未抽中-->
                                 <div v-if="item.hasSignin && (item.awardType === 0)">
+                                    <img style="margin-left: 5px;" class="icon" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png" alt="">
                                     <img
-                                        src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/974d057c-214a-4e44-90b6-26ed88e28fac.png">
+                                        class="icon-bg"
+                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg">
                                     <p>未中奖</p>
                                 </div>
                                 <!-- 奖品为礼品-->
                                 <div v-if="item.hasSignin && (item.awardType === 1)">
-                                    <img :src="item.awardImg">
+                                    <img style="margin-left: 2px; margin-top: -2px;" class="icon" :src="item.awardImg || 'https://mallcdn.youpenglai.com/static/admall/2.9.0/series-course.png'">
+                                    <img
+                                        class="icon-bg"
+                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg">
                                     <p>已获得</p>
                                 </div>
                                 <!-- 奖品为奖学金-->
                                 <div v-if="item.hasSignin && (item.awardType === 2)">
                                     <img
+                                        class="icon"
                                         src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
+                                    <img
+                                        class="icon-bg"
+                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg">
                                     <p>已获得</p>
                                 </div>
                                 <!-- 奖品为优惠券-->
                                 <div v-if="item.hasSignin && (item.awardType === 3 || item.awardType === 4)">
                                     <img
+                                        class="icon"
                                         src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
+                                    <img
+                                        class="icon-bg"
+                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg">
                                     <p>已获得</p>
                                 </div>
                             </div>
-                            <div v-if="(index !== signInIconList.length -1) && ((index + 1) % 5 !== 0)" class="underline" />
                         </div>
                     </div>
                 </div>
@@ -176,11 +196,10 @@
                         <template v-for="(item, index) in sunPresentList">
                             <div class="sun-present-item" v-if="index < 3 || showSunPresentListMore" :key="index">
                                 <!-- 礼品展示 -->
-                                <!--年味大奖-->
                                 <span v-if="item.awardType === 1 && item.flauntAward === 2" class="grand-present">
                                     <img class="small"
-                                         src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/6d5c54f0-e972-4fd2-b28b-021a12c78e39.png">
-                                    <i> 年味大奖</i>
+                                         src="https://mallcdn.youpenglai.com/static/admall/2.9.0/small-gift-style.png">
+                                    <i> 粽粽大礼</i>
                                 </span>
                                 <!-- 奖学金 -->
                                 <img v-else-if="item.awardType === 2"
@@ -194,7 +213,7 @@
                                 <img class="avatar" :src="item.userImg" :onerror="default_avatar">
                                 <!-- 礼品描述 -->
                                 <h3>
-                                    <p>{{ item.userName }}积攒了<span class="orange">{{ item.signinNum }}</span>个年味</p>
+                                    <p>{{ item.userName }}积攒了<span class="orange">{{ item.signinNum }}</span>个</p>
                                     <p> 开启礼品 获得{{ item.awardName }} </p>
                                 </h3>
                             </div>
@@ -229,7 +248,7 @@
                                     <!-- 全场满减券/品类券 -->
                                     <img v-else-if="item.awardType === 3 || item.awardType === 4"
                                          src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
-                                    <i :class="{'grand-prize': item.isGrandPrsent}"> 年味大奖</i>
+                                    <i :class="{'grand-prize': item.isGrandPrsent}">粽粽大礼</i>
                                 </span>
                                 <!-- 礼品描述 -->
                                 <h3>
@@ -297,7 +316,6 @@ const activity_member = {
     2: '普通会员',
     3: '商家指定用户'
 }
-const default_present_img = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/bd63ba94-e164-411a-b62d-a5d7e803a59d.png'
 const default_avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 const countdownInstanceList = []
 export default {
@@ -415,6 +433,7 @@ export default {
         })
     },
     async activated () {
+        this.id = this.$route.params.id
         // 是否绑定手机,未绑定手机,去绑定手机
         if (!this.userId) {
             try {
@@ -526,22 +545,9 @@ export default {
 
                 // 年味大奖列表awardType只为1(礼品)，其他类型不可作为年味大奖
                 this.presentList = result.map(item => {
-                    item.awardImg = item.show ? item.awardImg : default_present_img
-                    item.awardName = item.show ? item.awardName : '****'
+                    item.awardName = item.show ? item.awardName : '神秘大奖'
                     return item
                 })
-
-                // 轮播图至少有三个才能旋转
-                if (this.presentList.length === 1) {
-                    this.presentList.push(this.presentList[0])
-                    this.presentList.push(this.presentList[0])
-                }
-
-                // 轮播图至少有三个才能旋转
-                if (this.presentList.length === 2) {
-                    this.presentList.push(this.presentList[0])
-                    this.presentList.push(this.presentList[1])
-                }
             } catch (e) {
                 throw e
             }
@@ -1006,14 +1012,25 @@ export default {
               transform: translateX(-50%);
               text-align: center;
 
-              > img {
+              .gift-bg {
                 width: 354px;
                 object-fit: cover;
               }
 
+              .gift {
+                position: absolute;
+                top: 56px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 150px;
+                height: 150px;
+                margin-left: -2px;
+                border-radius: 50%;
+              }
+
               > span {
                 position: absolute;
-                bottom: 10px;
+                bottom: 12px;
                 left: 50%;
                 transform: translateX(-50%);
                 font-size: 40px;
@@ -1026,46 +1043,44 @@ export default {
         .swiper {
           width: 80vw;
           position: absolute;
-          top: 200px;
+          top: 100px;
           left: 50%;
           transform: translateX(-50%);
 
           .swiper-no-swiping {
             .swiper-box {
-              background-color: #ee4620;
-              height: 230px;
-              overflow: hidden;
-              border-radius: 20px;
               position: relative;
+              width: 200px;
+              height: 300px;
+              border-radius: 20px;
+              overflow: hidden;
 
-              > div {
-                width: 190px;
-                height: 190px;
-
-                img {
-                  width: 100%;
-                  height: 100%;
-
-                  &.no-desc {
-                    height: 100%;
-                    position: absolute;
-                    left: 50%;
-                    bottom: 0;
-                    transform: translateX(-50%);
-                    object-fit: contain;
-                  }
-                }
-              }
-
-              > p {
-                margin-top: 6px;
+              .img {
+                position: relative;
                 text-align: center;
-                color: #fff;
-                font-size: 24px;
-                width: 190px;
-                word-break: keep-all;
-                white-space: nowrap;
-                text-overflow: ellipsis;
+                .gift-bg {
+                  width: 200px;
+                  text-align: center;
+                  object-fit: cover;
+                }
+                .gift {
+                  position: absolute;
+                  top: 62px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  width: 140px;
+                  height: 140px;
+                  border-radius: 50%;
+                }
+                span {
+                  position: absolute;
+                  bottom: 35px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  font-size: 24px;
+                  color: #56b396;
+                  @include elps();
+                }
               }
             }
           }
@@ -1175,13 +1190,13 @@ export default {
         }
 
         .join-activity {
-          margin: 200px 13px 0;
+          margin: 175px 13px 0;
           min-height: 500px;
           background: #fff;
           border-radius: 20px;
 
           .control-top {
-            padding: 30px 0;
+            padding: 60px 0 30px;
             display: flex;
             justify-content: center;
             box-shadow: 0 3px 6px rgba(0, 0, 0, .16);
@@ -1204,8 +1219,7 @@ export default {
             > .desc-control {
               display: flex;
               flex-direction: row;
-              justify-content: space-around;
-              padding: 0 24px;
+              justify-content: space-between;
 
               p {
                 display: inline-block;
@@ -1234,8 +1248,10 @@ export default {
             padding: 20px 30px;
 
             .sign-in-icon-item {
-              padding: 10px 0;
               display: inline-block;
+              box-sizing: border-box;
+              width: 20%;
+              padding: 10px 0;
 
               .icon-item {
                 display: inline-block;
@@ -1245,13 +1261,9 @@ export default {
                   text-align: center;
 
                   img {
-                    width: 90px;
-                    height: 90px;
-                    object-fit: cover;
-
-                    &.not-sign {
-                      width: 90px;
-                    }
+                    width: 95px;
+                    height: 112px;
+                    object-fit: contain;
                   }
 
                   span {
@@ -1259,6 +1271,7 @@ export default {
                     left: 50%;
                     top: 50%;
                     transform: translateX(-50%) translateY(-50%);
+                    margin-top: -3px;
                     color: #ffe3c8;
                     font-size: 36px;
 
@@ -1269,13 +1282,13 @@ export default {
                 }
 
                 > p {
-                  color: #f60000;
-                  font-size: 24px;
+                  color: #FFA659;
+                  font-size: 20px;
                   line-height: 40px;
                   text-align: center;
 
                   &.not-sign {
-                    color: #373737;
+                    color: #2E9472;
                   }
                 }
               }
@@ -1287,45 +1300,32 @@ export default {
                   position: relative;
                   text-align: center;
 
-                  > img {
-                    width: 90px;
-                    height: 90px;
-                    object-fit: cover;
+                  > .icon-bg {
+                    width: 95px;
+                    height: 112px;
+                    object-fit: contain;
+                  }
+                  .icon {
+                    position: absolute;
+                    top: 33px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    object-fit: contain;
                   }
 
                   > p {
-                    color: #f60000;
-                    font-size: 24px;
+                    color: #FFA659;
+                    font-size: 20px;
                     line-height: 40px;
 
                     &.not-sign {
-                      color: #000;
-                    }
-                  }
-
-                  > span {
-                    width: 90px;
-                    height: 90px;
-                    border-radius: 50%;
-                    background-color: #fd461f;
-                    position: relative;
-                    display: inline-block;
-
-                    > svg {
-                      position: absolute;
-                      left: 50%;
-                      top: 50%;
-                      transform: translateX(-50%) translateY(-50%);
+                      color: #2E9472;
                     }
                   }
                 }
-              }
-
-              .underline {
-                display: inline-block;
-                width: 18px;
-                border: 1px solid #ff8a8a;
-                margin: 60px 6px;
               }
             }
           }
@@ -1406,6 +1406,7 @@ export default {
 
             img {
               width: 200px;
+              object-fit: contain;
             }
 
             i {
@@ -1414,13 +1415,13 @@ export default {
               position: absolute;
               top: 0;
               left: 50%;
-              background: #fec252;
-              border-radius: 20px;
-              height: 30px;
-              line-height: 30px;
               width: 80px;
+              height: 30px;
+              border-radius: 20px;
+              line-height: 30px;
               font-size: 20px;
-              color: #fe4923;
+              background-color: #2E9472;
+              color: #fff;
             }
           }
 
@@ -1471,8 +1472,16 @@ export default {
 
           > span {
             position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #FF9F4B;
 
             img {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%);
               width: 80px;
               height: 100px;
               object-fit: contain;
@@ -1488,7 +1497,7 @@ export default {
               position: absolute;
               top: 0;
               left: 50%;
-              background: #fec252;
+              background-color: #2E9472;
               border-radius: 20px;
               height: 30px;
               line-height: 30px;
