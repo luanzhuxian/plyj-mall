@@ -137,22 +137,25 @@ export default {
         }
     },
     beforeRouteLeave (to, from, next) {
-        // this.searched = false
-        this.searchContent = ''
+        console.log(to, from)
+        if (to && to.name === 'Classify') {
+            this.searchContent = ''
+            this.searched = false
+        }
         next()
     }
 }
 </script>
 
 <style module lang="scss">
-  .search {
+.search {
     box-sizing: border-box;
     padding-top: 93px;
     height: 100vh;
     overflow: hidden;
     background-color: #fff;
-  }
-  .search-bar {
+}
+.search-bar {
     position: fixed;
     top: 0;
     left: 0;
@@ -166,11 +169,11 @@ export default {
     border-bottom: 1px solid #f7f7f7;
     z-index: 999;
     button {
-      font-size: 28px;
-      color: #1890FF;
+        font-size: 28px;
+        color: #1890ff;
     }
-  }
-  .search-box {
+}
+.search-box {
     display: flex;
     align-items: center;
     width: 574px;
@@ -178,50 +181,51 @@ export default {
     border-radius: 30px;
     height: 60px;
     svg {
-      width: 32px;
-      height: 32px;
-      margin-left: 30px;
-      vertical-align: -5px;
+        width: 32px;
+        height: 32px;
+        margin-left: 30px;
+        vertical-align: -5px;
     }
     input {
-      width: 500px;
-      padding: 0 15px;
-      font-size: 28px;
-      font-weight: bold;
-      overflow: hidden;
-      background-color: transparent;
-      &::placeholder {
-        color: #BCBCBC;
-        letter-spacing: 3px;
-      }
+        width: 500px;
+        padding: 0 15px;
+        font-size: 28px;
+        font-weight: bold;
+        overflow: hidden;
+        background-color: transparent;
+        &::placeholder {
+            color: #bcbcbc;
+            letter-spacing: 3px;
+        }
     }
-  }
-  .search-select {
+}
+.search-select {
     position: relative;
     padding: 0 40px 50px;
     border-bottom: 1px solid #f7f7f7;
     .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      line-height: 96px;
-      font-size: 26px;
-      color: #666;
-      svg {
-        width: 26px;
-        height: 28px;
-      }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        line-height: 96px;
+        font-size: 26px;
+        color: #666;
+        svg {
+            width: 26px;
+            height: 28px;
+        }
     }
-  }
-  .key-word-list {
+}
+.key-word-list {
     display: flex;
     flex-wrap: wrap;
     li {
-      margin-right: 20px;
-      margin-bottom: 24px;
-      padding: 4px 25px;
-      background: #f5f5f5;
-      border-radius: 10px;
+        margin-right: 20px;
+        margin-bottom: 24px;
+        padding: 4px 25px;
+        background: #f5f5f5;
+        border-radius: 10px;
     }
-  }
+}
+
 </style>

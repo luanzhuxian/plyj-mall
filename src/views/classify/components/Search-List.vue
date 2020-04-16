@@ -26,6 +26,7 @@
                         :request-methods="searchProduct"
                         icon="icon-search-no-content-05634"
                         no-content-tip="抱歉，没有找到相关商品"
+                        no-pull-refresh
                         @refresh="refreshProductHandler"
                         @more="refreshProductHandler"
                     >
@@ -56,6 +57,7 @@
                         :request-methods="getVideoList"
                         icon="icon-search-no-content-05634"
                         no-content-tip="抱歉，没有找到相关课程"
+                        no-pull-refresh
                         @refresh="refreshCourseHandler"
                         @more="refreshCourseHandler"
                     >
