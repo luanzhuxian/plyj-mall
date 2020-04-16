@@ -63,7 +63,7 @@
                     <div class="control-top">
                         <button v-if="!activityIsOver && !activityIsStart">活动未开始</button>
                         <div class="desc-control" v-else-if="!activityIsOver && activityIsStart">
-                            <!-- 获得我的年味，显示条件: 上一个年味礼品已被领取 + 当前图标为年味图标 + 当前图标未签到/已签到但是没有礼品 -->
+                            <!-- 获得粽粽签到，显示条件: 上一个粽粽礼品已被领取 + 当前图标为粽粽有礼图标 + 当前图标未签到/已签到但是没有礼品 -->
                             <template
                                 v-if="previousPresentIsReceive && currentSignIn.name && (!currentSignIn.hasSignin || (currentSignIn.hasSignin && !currentSignIn.hasAward))">
                                 <p class="no-padding">
@@ -95,7 +95,7 @@
                                 </button>
                             </template>
                         </div>
-                        <!-- 活动已结束，但上一个年味的礼品未领取 -->
+                        <!-- 活动已结束，但上一个粽粽有礼的礼品未领取 -->
                         <button v-else-if="activityIsOver && (!previousPresentIsReceive || isGrandPrsentSignIn)"
                                 @click="receivePresent">立即抽奖
                         </button>
@@ -119,10 +119,10 @@
                                 <!-- 未抽奖前普通奖品展示-->
                                 <div v-if="!item.hasSignin && !item.isGrandPrsent">
                                     <pl-svg class="icon" name="icon-present" width="50" height="50" type="svg" />
-                                    <img class="icon-bg" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg" alt="">
+                                    <img class="icon-bg" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-gift-icon.png" alt="">
                                     <p class="not-sign">礼品</p>
                                 </div>
-                                <!-- 未抽奖前年味大奖奖品展示-->
+                                <!-- 未抽奖前粽粽大奖奖品展示-->
                                 <div v-if="!item.hasSignin && item.isGrandPrsent">
                                     <img
                                         class="icon-bg"
@@ -275,7 +275,7 @@
         <!-- 显示分享海报 -->
         <SharePoster :show.sync="isShowSharePoster" :poster="sharePoster" />
 
-        <!-- 显示年味海报 -->
+        <!-- 显示粽粽签到海报 -->
         <SharePoster :show.sync="isShowNewYearPoster" :poster="newYearPoster" @close="hiddenNewYearCardPoster" />
 
         <!--显示中奖信息-->
@@ -329,7 +329,8 @@ export default {
     },
     data () {
         return {
-        // 是否为分享页面
+            id: '',
+            // 是否为分享页面
             isShare: false,
             // 当前活动是否开始
             activityIsStart: false,
@@ -349,11 +350,11 @@ export default {
             showSunPresentListMore: false,
             // 是否显示所有我的奖品
             showMyPresentListMore: false,
-            // 是否显示年味海报
+            // 是否显示粽粽有礼海报
             isShowNewYearPoster: false,
             // 海报是否在加载中
             isLoading: false,
-            // 是否正在获取年味
+            // 是否正在获取粽粽签到
             isGetMyNewYearCard: false,
             // 是否正在领取奖品
             isReceivePresent: false,
@@ -374,7 +375,7 @@ export default {
             qrcode: '',
             // 分享海报
             sharePoster: '',
-            // 年味海报
+            // 粽粽有礼海报
             newYearPoster: '',
             // 倒计时
             time: {
@@ -410,14 +411,6 @@ export default {
                 4: '品类券'
             },
             default_avatar: `this.src="${ default_avatar }"`
-        }
-    },
-    props: {
-
-        // 活动id
-        id: {
-            type: String,
-            default: ''
         }
     },
     computed: {
@@ -519,7 +512,7 @@ export default {
                 await this.getSignInIconList()
 
                 // 生成当前活动的二维码
-                const qrcode = await generateQrcode({ size: 500, text: `${ this.mallUrl }/new-year-activity${ this.id ? `/${ this.id }` : '' }?t=${ Date.now() }`, padding: 100 })
+                const qrcode = await generateQrcode({ size: 500, text: `${ this.mallUrl }/new-year-activity${ this.id ? `/${ this.id }` : '' }?t=${ Date.now() }` })
                 this.qrcode = new Image()
                 this.qrcode.src = qrcode
             } catch (e) {
@@ -538,12 +531,12 @@ export default {
             }
         },
 
-        // 获取年味大奖列表
+        // 获取粽粽大奖列表
         async getPresentList () {
             try {
                 const { result } = await getPresentList(this.id)
 
-                // 年味大奖列表awardType只为1(礼品)，其他类型不可作为年味大奖
+                // 粽粽大奖列表awardType只为1(礼品)，其他类型不可作为粽粽大奖
                 this.presentList = result.map(item => {
                     item.awardName = item.show ? item.awardName : '神秘大奖'
                     return item
@@ -553,7 +546,7 @@ export default {
             }
         },
 
-        // 获取年味大奖列表
+        // 获取粽粽大奖列表
         async getSignInIconList () {
             try {
                 const { result } = await getSignInIconList(this.id)
@@ -613,10 +606,10 @@ export default {
                 // 上一个节点无礼品 或者 有礼品且awardType !== ''表示礼品已经被领取
                 this.previousPresentIsReceive = currentIndex ? (notes[currentIndex - 1].hasAward && notes[currentIndex - 1].awardType !== '') || !notes[currentIndex - 1].hasAward : true
 
-                // 大奖是否被领取，是-最后一个年味，且awardType !== ''
+                // 大奖是否被领取，是-最后一粽粽，且awardType !== ''
                 this.isGrandPrsentSignIn = this.currentSignIn.isLastIcon ? this.currentSignIn.awardType !== '' : false
 
-                // 最后一个节点已签到，但未领取年味大奖, 弹框提示领取最终奖品
+                // 最后一个节点已签到，但未领取粽粽大奖, 弹框提示领取最终奖品
                 if (this.currentSignIn.isLastIcon && this.currentSignIn.hasSignin && !this.isGrandPrsentSignIn) {
                     this.isShowPresentPopup = true
                     this.presentStage = 0
@@ -636,15 +629,15 @@ export default {
                     currentSignin,
                     // 下一个要签到的节点
                     nextSigninNote,
-                    // 积攒我心中的年味的人数
+                    // 积攒粽粽有礼的人数
                     signinNumber,
-                    // 集齐年味的人数
+                    // 集齐粽粽有礼的人数
                     completeNumber,
                     // 已经签到的个数
                     signedInNumber: this.currentSignIn.hasSignin ? currentIndex + 1 : currentIndex,
-                    // 还差多少个年味即可抽年味大奖
+                    // 还差多少个粽粽签到即可抽粽粽大奖
                     differenceNumber: this.currentSignIn.hasSignin ? notes.length - currentIndex - 1 : notes.length - currentIndex,
-                    // 还差多少个年味即可参与抽奖
+                    // 还差多少个签到即可参与抽奖
                     nextPresentIndex,
                     currentReceivePresentNote: this.previousPresentIsReceive ? this.currentSignIn.index : notes[currentIndex - 1].index,
                     activity_member: activity_member[userScope],
@@ -689,7 +682,7 @@ export default {
             }
         },
 
-        // 获得年味
+        // 获得粽粽签到
         async getMyNewYearCard () {
             try {
                 if (this.isGetMyNewYearCard) return
@@ -777,15 +770,14 @@ export default {
                     return
                 }
                 this.isLoading = true
-                const bgImgUrl = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/160d4ff6-7691-4d29-9239-0b0730454007.png'
+                const bgImgUrl = 'https://mallcdn.youpenglai.com/static/admall/2.9.0/poster.png'
                 const bgImg = await this.loadImage(bgImgUrl)
                 const canvas = document.createElement('canvas')
                 canvas.width = bgImg.width
                 canvas.height = bgImg.height
                 const ctx = canvas.getContext('2d')
                 ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
-                drawRoundRect(ctx, canvas.width / 2 - 100, canvas.height / 2 + 200, 200, 200, 2, '#FE613F', '#FE613F')
-                ctx.drawImage(this.qrcode, canvas.width / 2 - 100, canvas.height / 2 + 200, 200, 200)
+                ctx.drawImage(this.qrcode, canvas.width / 2 - 100, canvas.height / 2 + 180, 240, 240)
                 const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
                 this.sharePoster = sharePoster
                 this.isShowSharePoster = true
@@ -796,16 +788,17 @@ export default {
             }
         },
 
-        // 生成年味海报
+        // 生成粽粽有礼海报
         async drawNewYearCardPoster (item) {
             const imgUrl = item.posterUrl
             const desc = item.name
+
             const isSignIN = item.hasSignin
             if (!isSignIN) {
                 if (!this.activityIsStart) return this.$warning('活动未开始')
                 if (this.activityIsOver) return this.$warning('活动已结束')
-                if (!this.currentSignIn.hasSignin) return this.$warning('今日可获得1个年味，请点击获取')
-                return this.$warning('今日已获得年味，请明日再来~')
+                if (!this.currentSignIn.hasSignin) return this.$warning('今日可获得1个粽粽签到，请点击获取')
+                return this.$warning('今日已获得粽粽签到，请明日再来~')
             }
             if (this.isLoading) return
             try {
@@ -836,12 +829,12 @@ export default {
                 drawRoundRect(ctx, 50, 810, 60, 60, 30, '#FE613F', '#FE613F')
                 ctx.drawImage(avatar, 50, 810, 60, 60)
 
-                // 绘制年味描述
+                // 绘制粽粽有礼描述
                 ctx.font = '20px bold'
                 ctx.fillStyle = '#000'
                 ctx.textBaseline = 'hanging'
                 createText(ctx, 118, 820, desc, 34, 138, 1)
-                createText(ctx, 118, 850, '我心中的年味', 34, 138, 1)
+                createText(ctx, 118, 850, '粽粽有礼', 34, 138, 1)
 
                 // 绘制二维码
                 drawRoundRect(ctx, 242, 800, 80, 80, 2, '#FE613F', '#FFF')
@@ -869,8 +862,8 @@ export default {
             if (item.hasSignin) return
             if (!this.activityIsStart) return this.$warning('活动未开始')
             if (this.activityIsOver) return this.$warning('活动已结束')
-            if (item.isGrandPrsent) return this.$warning(`集齐${ item.presentIndex + 1 }个年味，有机会抽取年味大礼~`)
-            return this.$warning(`获得${ item.presentIndex + 1 }个年味，即可领取年味礼品~`)
+            if (item.isGrandPrsent) return this.$warning(`集齐${ item.presentIndex + 1 }个粽粽签到，有机会抽取粽粽大礼~`)
+            return this.$warning(`获得${ item.presentIndex + 1 }个粽粽签到，即可领取粽粽礼品~`)
         },
 
         // 加载图片
@@ -903,11 +896,11 @@ export default {
             this.showSunPresentListMore = false
         },
 
-        // 隐藏年味海报
+        // 隐藏粽粽有礼海报
         hiddenNewYearCardPoster () {
             this.isShowNewYearPoster = false
 
-            // 最后一个节点已签到，但未领取年味大奖, 弹框提示领取最终奖品
+            // 最后一个节点已签到，但未领取粽粽有礼大奖, 弹框提示领取最终奖品
             if (this.currentSignIn.isLastIcon && !this.isGrandPrsentSignIn) {
                 this.isShowPresentPopup = true
                 this.presentStage = 0
