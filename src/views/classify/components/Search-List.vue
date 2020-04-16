@@ -67,7 +67,7 @@
                                 type="COURSE"
                                 :data="item"
                                 :id="item.id"
-                                :label="item.courseType === 2 ? '系列课' : '视频课'"
+                                :label="item.courseType === 2 ? '系列课' : '单课'"
                                 :title="item.courseName"
                                 :img="item.courseImg + '?x-oss-process=style/thum-middle'"
                                 :price="item.sellingPrice"

@@ -8,7 +8,7 @@
         <ul :class="$style.list">
             <li :class="$style.listItem" v-for="(item, index) of data" :key="index">
                 <product-card
-                    label="视频课"
+                    label="单课"
                     :image="item.lessonsImg"
                     :top="item.name"
                     :sub-top="item.lecturer ? `主讲人：${item.lecturer}` : ''"
