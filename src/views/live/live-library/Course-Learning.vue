@@ -72,7 +72,7 @@ export default {
     },
     computed: {
         learnTxt () {
-            return `暂无${ this.learnStatus[(this.$route.params.learnStatus - 1) || 1] }的课程`
+            return `暂无${ this.learnStatus[(this.$route.params.learnStatus || 1) - 1] }的课程`
         }
     }
 }
