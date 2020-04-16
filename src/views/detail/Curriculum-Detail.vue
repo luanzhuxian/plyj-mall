@@ -332,7 +332,11 @@ export default {
                     this.getDetail(),
                     this.checkIsPresentCourse()
                 ]
-                await Promise.all(list.map(p => p.catch(e => null)))
+                const [detail] = await Promise.all(list.map(p => p.catch(e => e)))
+                if (detail instanceof Error) {
+                    throw detail
+                }
+
                 this.createShare()
                 this.loading = false
                 this.loaded = true
