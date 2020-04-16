@@ -396,7 +396,7 @@ export default {
         }
       }
       .original {
-        margin-left: 12px;
+        display: block;
         font-size: 30px;
         color: #999;
       }

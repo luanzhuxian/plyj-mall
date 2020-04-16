@@ -238,9 +238,10 @@ export default {
                 } else {
                     this.$router.push({ name: 'LiveRoom', params: { id: row.id } })
                 }
+            } else {
+                // 单课+系列课
+                this.$router.push({ name: 'Curriculum', params: { productId: row.id } })
             }
-            // 单课+系列课
-            this.$router.push({ name: 'Curriculum', params: { productId: row.id } })
         },
         close () {
             this.showShelf = false

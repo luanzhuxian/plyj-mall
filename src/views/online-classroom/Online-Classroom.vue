@@ -78,14 +78,14 @@
                             </div>
                             <div :class="$style.bottom">
                                 <template>
-                                    <span v-if="item.priceType === 1">
+                                    <span v-if="item.priceType === 1" :class="$style.priceZoom">
                                         <span :class="$style.price" v-text="item.sellingPrice" />
                                         <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
                                     </span>
                                     <span v-else :class="$style.free">免费</span>
                                 </template>
                                 <template>
-                                    <pl-button :class="$style.isNotStart" v-if="item.isNotStart" type="primary">暂未开始</pl-button>
+                                    <pl-button :class="$style.notStart" v-if="item.isNotStart" type="primary">暂未开始</pl-button>
                                     <pl-button v-else-if="item.isGive" type="primary">已赠课</pl-button>
                                     <pl-button v-else-if="item.orderId || (item.isGive && item.isWatch)" type="warning">学习中</pl-button>
                                     <pl-button v-else type="primary">订购中</pl-button>
@@ -366,6 +366,9 @@ export default {
     justify-content: space-between;
     align-items: flex-end;
     margin-top: 18px;
+    .price-zoom {
+      max-width: 200px;
+    }
     .price {
       font-size: 32px;
       color: #FE7700;
@@ -378,7 +381,7 @@ export default {
       }
     }
     .original {
-      margin-left: 12px;
+      display: block;
       font-size: 20px;
       color: #999;
     }
