@@ -12,10 +12,17 @@
             <!-- 倒计时 -->
             <count-down
                 v-if="isCountdownShow"
-                :class="$style.countDownBar"
+                :class="[$style.countDownBar, $style.regular]"
                 :endtime="detail.regularSaleTime"
                 theme="orange"
                 prefix="距抢课开始仅剩"
+                @done="refresh"
+            />
+            <!-- 公益活动倒计时 -->
+            <countdown-bar
+                :class="$style.countDownBar"
+                :starttime="'2020-09-09 20:00:00'"
+                :endtime="detail.regularSaleTime"
                 @done="refresh"
             />
         </div>
@@ -208,6 +215,7 @@ import DetailInfo from '../../components/detail/Detail.vue'
 import Tags from '../../components/detail/Tags.vue'
 import Contact from '../../components/common/Contact.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
+import CountdownBar from './charity/Countdown-Bar.vue'
 import Field from '../../components/detail/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
@@ -239,6 +247,7 @@ export default {
         DetailInfo,
         Contact,
         CountDown,
+        CountdownBar,
         Field,
         SlideCourses,
         SeriseCourses,
@@ -613,8 +622,10 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 80px !important;
     z-index: 1;
+    &.regular {
+        height: 80px !important;
+    }
 }
 .price-box {
     > .price {

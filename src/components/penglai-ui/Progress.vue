@@ -1,7 +1,7 @@
 <template>
     <div :class="[$style.progress, $style[type]]">
         <div :class="$style.progressBar" v-if="type === 'bar'">
-            <div :class="$style.progressBarOuter" :style="{ height: strokeWidth / 7.5 + 'vw' }">
+            <div :class="$style.progressBarOuter" :style="{ height: strokeWidth / 7.5 + 'vw', backgroundColor: outterColor }">
                 <div :class="$style.progressBarInner" :style="barStyle" />
             </div>
         </div>
@@ -10,7 +10,7 @@
                 <path
                     :class="$style.progressCircleTrack"
                     :d="trackPath"
-                    stroke="#e5e9f2"
+                    :stroke="outterColor"
                     fill="none"
                     :stroke-width="relativeStrokeWidth"
                     :style="trailPathStyle" />
@@ -63,7 +63,11 @@ export default {
         },
         color: {
             type: [String, Array, Function],
-            default: ''
+            default: '#fff'
+        },
+        outterColor: {
+            type: String,
+            default: '#e5e9f2'
         },
         showContent: {
             type: Boolean,
@@ -173,20 +177,17 @@ export default {
     position: relative;
     line-height: 1;
     &-bar {
-        // margin-right: 0;
-        // padding-right: 0;
-        // display: block;
-
-        display: inline-block;
+        flex: 1;
+        width: 0;
         box-sizing: border-box;
+        // display: inline-block;
         // margin-right: -55px;
         // padding-right: 50px;
-        vertical-align: middle;
+        // vertical-align: middle;
         // width: 100%;
         &-outer {
             position: relative;
             vertical-align: middle;
-            background-color: #999;
             border-radius: 200px;
             overflow: hidden;
         }
@@ -194,13 +195,15 @@ export default {
             position: absolute;
             left: 0;
             top: 0;
-            text-align: right;
+            // text-align: right;
             height: 100%;
             line-height: 1;
-            background-color: blue;
             border-radius: 200px;
             white-space: nowrap;
-            transition: width 0.6s ease;
+            transition: width .6s ease;
+        }
+        &-content {
+            flex-shrink: 0;
         }
     }
     &-content {
@@ -211,6 +214,10 @@ export default {
         font-size: 28px;
         // color: $--color-text-regular;
     }
+}
+.bar {
+    display: flex;
+    align-items: center;
 }
 .circle {
     display: inline-block;
@@ -225,12 +232,13 @@ export default {
     }
 }
 @keyframes progress {
-  0% {
-    background-position: 0 0;
-  }
+    0% {
+        background-position: 0 0;
+    }
 
-  100% {
-    background-position: 64px 0;
-  }
+    100% {
+        background-position: 64px 0;
+    }
 }
+
 </style>
