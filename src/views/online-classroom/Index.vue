@@ -15,29 +15,63 @@
                 />
             </pl-tab>
         </div>
+        <div
+            :class="$style.sendLive"
+            v-if="unaccalimedSendCount"
+            @click="isShowSendLiveDialog = true"
+        >
+            <span>赠送了您{{ unaccalimedSendCount }}节课程哦，快来学习吧~</span>
+            <span>查看></span>
+        </div>
         <keep-alive>
             <router-view />
         </keep-alive>
+        <!--赠课弹框-->
+        <send-live
+            v-if="isShowSendLiveDialog"
+            :show.sync="isShowSendLiveDialog"
+            is-notice="1"
+        />
     </div>
 </template>
 <script>
+import { getSendLiveList } from '../../apis/online-classroom.js'
+import SendLive from '../../components/common/Send-Live.vue'
 export default {
     name: 'OnlineClassroomIndex',
+    components: {
+        SendLive
+    },
     data () {
         return {
             activeTabId: 0,
             tabs: [
                 { name: '互动直播', routerName: 'InteractiveLive', id: 0 },
-                { name: '知识课程', routerName: 'OnlineClassroom', id: 1 }]
+                { name: '精选单课', routerName: 'OnlineClassroom', id: 1 },
+                { name: '系列精品课', routerName: 'seriesOfCourses', id: 2 }
+            ],
+            unaccalimedSendCount: 0,
+            isShowSendLiveDialog: false
         }
     },
     async activated () {
         this.activeTabId = this.tabs.find(item => item.routerName === this.$route.name).id
+        this.getSendLiveCount()
     },
     methods: {
         async tabChange (item) {
             await this.$nextTick()
             await this.$router.replace({ name: item.routerName })
+        },
+        async getSendLiveCount () {
+            try {
+                const { result } = await getSendLiveList('1')
+                const liveList = (result.liveList && result.liveList) || []
+                const courseList = (result.courseList && result.courseList) || []
+                this.unaccalimedSendCount = liveList.length + courseList.length
+            } catch (e) {
+                throw e
+            }
         }
     }
 }
@@ -69,5 +103,14 @@ export default {
         background-image: linear-gradient(90deg, #F3AD3C, #F7CF54);
       }
     }
+  }
+  .send-live {
+    display: flex;
+    padding: 0 32px 0 24px;
+    justify-content: space-between;
+    line-height: 80px;
+    font-size:28px;
+    background-color: #448AE1;
+    color: #FFF;
   }
 </style>

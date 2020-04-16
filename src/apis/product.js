@@ -57,3 +57,10 @@ export const getCourseDetail = mallCourseId => axios.get(`/apis/v1/mall/cource/c
  * @return {*}
  */
 export const submitOrderAndPay = (courseId, params) => axios.post(`/apis/v1/mall/live/order/create/course/order/${ courseId }`, params)
+
+/**
+ * 查询是否是赠课
+ * @param mallCourseId {string} 课程id
+ * @returns {Promise<AxiosResponse<Object>>}
+ */
+export const checkIsPresentCourse = mallCourseId => axios.get(`/apis/v1/mall/cource/isGiveClass/${ mallCourseId }`)

@@ -1,110 +1,198 @@
 <template>
     <div :class="$style.curriculum">
-        <!-- 海报按钮 -->
-        <div :class="$style.haibao">
-            <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-            <pl-svg :key="2" v-else name="icon-poster-512b1" fill="#fff" width="35" @click="createHaibao" />
-            <p>分享海报</p>
+        <div :class="$style.bannerWrapper">
+            <!-- 海报按钮 -->
+            <div :class="$style.haibao">
+                <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                <pl-svg :key="2" v-else name="icon-poster-512b1" fill="#fff" width="35" @click="createHaibao" />
+                <p>分享海报</p>
+            </div>
+            <banner :banners="banners" />
+
+            <!-- 倒计时 -->
+            <count-down
+                v-if="isCountdownShow"
+                :class="$style.countDownBar"
+                :endtime="detail.regularSaleTime"
+                theme="orange"
+                prefix="距抢课开始仅剩"
+                @done="refresh"
+            />
         </div>
-        <Banner :banners="banners" />
-        <InfoBox>
-            <div :class="$style.priceBox">
-                <div v-if="detail.sellingPrice" :class="$style.price" v-text="detail.sellingPrice" />
-                <div v-else :class="$style.free">免费</div>
-                <div :class="$style.original">
-                    <div v-if="detail.priceType && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">原价：<del v-text="detail.originalPrice" /></div>
-                    <div>
-                        <span v-if="detail.sale === 0">正在热销中</span>
-                        <!--<template v-else-if="detail.sale > 0 && detail.sale < 10">
-              <span v-text="detail.sale" />人关注
-            </template>-->
+
+        <template v-if="loaded">
+            <info-box>
+                <div :class="$style.priceBox">
+                    <template v-if="isPresent">
+                        <div :class="$style.free">赠课</div>
+                    </template>
+                    <template v-else>
+                        <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
+                        <div v-else :class="$style.free">免费</div>
+                    </template>
+                    <div :class="$style.original">
+                        <div v-if="detail.priceType === 1 && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
+                            原价：<del v-text="detail.originalPrice" />
+                        </div>
+                        <div>
+                            <span v-if="detail.sale === 0">正在热销中</span>
+                            <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
+                                <span v-text="detail.sale" />人关注
+                            </template> -->
+                            <template v-else>
+                                <span v-text="detail.sale" />人已学
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <!-- 课程名称 -->
+                <detail-title :product-name="detail.courseName" />
+                <!-- 课程描述 -->
+                <detail-desc v-text="detail.courseBrief" />
+                <!-- 课程标签 -->
+                <tags :tags="detail.labelModels" />
+
+                <field
+                    v-if="detail.lecturer"
+                    :class="$style.field"
+                    size="small"
+                    icon="icon-teacher-d2398"
+                    label="主讲人："
+                    :content="detail.lecturer"
+                />
+                <field
+                    :class="$style.field"
+                    size="small"
+                    icon="icon-date"
+                    label="有效期："
+                    :content="getExpiration(detail)"
+                />
+            </info-box>
+
+            <!-- 订购须知 -->
+            <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
+
+            <!-- 相关课程 -->
+            <slide-courses
+                v-if="courseType === 1 && relatedCourses.length"
+                :class="$style.slideCourses"
+                :data="relatedCourses"
+            />
+
+            <!-- 课程详情 -->
+            <div :class="$style.detailOrComment">
+                <div :class="$style.tabs">
+                    <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
+                        课程介绍
+                    </div>
+                    <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2" v-if="courseType === 2">
+                        目录
+                    </div>
+                </div>
+                <div>
+                    <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
+                    <serise-courses
+                        v-show="tab === 2"
+                        :data="seriesCourses"
+                        :course-id="detail.id"
+                        :order-id="detail.orderId"
+                        :is-present="isPresent"
+                        :is-buy="!!detail.isBuy"
+                        :is-finish="!detail.haveNoVideo"
+                        :status="Number(detail.status)"
+                        :is-open-sale="detail.isOpenSale"
+                        :course-status="detail.courseStatus"
+                        @preview="previewCourse"
+                    />
+                </div>
+            </div>
+
+            <!-- 底部购买 -->
+            <div :class="$style.bottom" v-if="!~[5, 6].indexOf(productActive)">
+                <div :class="$style.content">
+                    <router-link :class="$style.link" :to="{ name: 'Home' }">
+                        <pl-svg name="icon-home" width="38.5" height="70" />
+                    </router-link>
+                    <a :class="$style.callUs" @click="showContact = true">
+                        <pl-svg name="icon-call-us" width="80" height="70" />
+                    </a>
+                    <div :class="$style.buttonWrapper">
+                        <button
+                            v-if="canPreview && courseType === 1"
+                            :class="$style.button + ' ' + $style.yellow"
+                            :disabled="Number(detail.status) === 2 || loading"
+                            @click="previewCourse"
+                        >
+                            试看视频
+                        </button>
+                        <template v-if="!canLearn">
+                            <button
+                                v-if="detail.isOpenSale === 1 && detail.courseStatus === 2"
+                                :class="$style.button + ' ' + $style.orange"
+                                disabled
+                            >
+                                暂未开售 敬请期待
+                            </button>
+                            <button
+                                v-if="detail.isOpenSale === 0 || (detail.isOpenSale === 1 && detail.courseStatus === 1)"
+                                :class="$style.button + ' ' + $style.orange"
+                                :disabled="Number(detail.status) === 2 || loading"
+                                @click="submit"
+                            >
+                                立即订购
+                            </button>
+                        </template>
                         <template v-else>
-                            <span v-text="detail.sale" />人已学
+                            <button
+                                v-if="courseType === 1"
+                                :class="$style.button + ' ' + $style.orange"
+                                :disabled="loading"
+                                @click="$router.push({
+                                    name: 'CourseWatch',
+                                    params: {
+                                        courseId: productId
+                                    },
+                                    query: {
+                                        liveId: detail.liveId,
+                                        orderId: detail.orderId,
+                                        progress: detail.learnProgress
+                                    }
+                                })"
+                            >
+                                <span v-if="isPresent">获得赠课 去学习</span>
+                                <span v-else>立即学习</span>
+                            </button>
+                            <span v-if="courseType === 2" :class="$style.progress">
+                                {{ `已学习 ${detail.learnedNumber}/${detail.totalLiveNumber} 节` }}
+                            </span>
                         </template>
                     </div>
                 </div>
             </div>
-            <!-- 课程名称 -->
-            <DetailTitle :product-name="detail.courseName" />
-            <!-- 课程描述 -->
-            <DetailDesc v-text="detail.courseBrief" />
-            <!-- 课程标签 -->
-            <Tags :tags="detail.labelModels" />
 
-            <div :class="$style.field" v-if="detail.lecturer">
-                <div :class="$style.left">
-                    <pl-svg name="icon-teacher-d2398" width="30" />
-                    主讲人：
+            <div :class="$style.buttomTip" v-if="Number(detail.status) === 2 && !~[5, 6].indexOf(productActive)">
+                该视频课程已下架
+            </div>
+
+            <contact :show.sync="showContact" />
+
+            <!-- 海报弹框 -->
+            <pl-mask :show.sync="showHaibao">
+                <div :class="$style.saveHaibaoContent">
+                    <img :src="haibao" alt="">
+                    <div :class="$style.saveButton">
+                        长按识别或保存二维码，分享给朋友吧！
+                    </div>
                 </div>
-                <div :class="$style.right" v-text="detail.lecturer" />
-            </div>
+            </pl-mask>
 
-            <div :class="$style.field">
-                <div :class="$style.left">
-                    <pl-svg name="icon-date" width="30" />
-                    有效期：
-                </div>
-                <div :class="$style.right" v-text="detail.validityType ? `购买后${detail.validity}天内学完` : '购买后不限观看次数'" />
-            </div>
-        </InfoBox>
+            <transition name="fade">
+                <video-player ref="videoPlayer" :show.sync="preview.show" :url="preview.url" />
+            </transition>
+        </template>
 
-        <div :class="$style.detailOrComment">
-            <div :class="$style.tabs">
-                <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2">
-                    商品详情
-                </div>
-            </div>
-
-            <div>
-                <DetailInfo
-                    v-show="tab === 2"
-                    :content="detail.details || '暂无详情'"
-                />
-            </div>
-        </div>
-
-        <div :class="$style.bottom" v-if="productActive !== 5">
-            <div :class="$style.content">
-                <router-link :class="$style.link" :to="{ name: 'Home' }">
-                    <pl-svg name="icon-home" width="38" height="70" />
-                </router-link>
-                <a :class="$style.link + ' ' + $style.callUs" @click="showContact = true">
-                    <pl-svg name="icon-call-us" width="80" height="72" />
-                </a>
-                <button
-                    v-if="!detail.isBuy"
-                    :disabled="Number(detail.status) === 2 || loading"
-                    :class="$style.button + ' ' + $style.clickMeBecauseYouAreYoung"
-                    @click="goSubmit"
-                >
-                    立即学习
-                </button>
-                <button
-                    v-else
-                    :disabled="loading"
-                    :class="$style.button + ' ' + $style.hasStudied"
-                    @click="$router.push({ name: 'CourseWatch', params: { courseId: productId }, query: { liveId: detail.liveId, orderId: detail.orderId, progress: detail.learnProgress } })"
-                >
-                    观看学习
-                </button>
-            </div>
-        </div>
-
-        <div :class="$style.buttomTip" v-if="Number(detail.status) === 2">
-            该视频课程已下架
-        </div>
-
-        <Contact :show.sync="showContact" />
-
-        <!-- 海报弹框 -->
-        <pl-mask :show.sync="showHaibao">
-            <div :class="$style.saveHaibaoContent">
-                <img :src="haibao" alt="">
-                <div :class="$style.saveButton">
-                    长按识别或保存二维码，分享给朋友吧！
-                </div>
-            </div>
-        </pl-mask>
+        <!-- 骨架屏 -->
+        <skeleton v-else />
     </div>
 </template>
 
@@ -116,12 +204,27 @@ import DetailDesc from '../../components/detail/Desc.vue'
 import DetailInfo from '../../components/detail/Detail.vue'
 import Tags from '../../components/detail/Tags.vue'
 import Contact from '../../components/common/Contact.vue'
-import { getCourseDetail } from '../../apis/product'
+import CountDown from '../../components/product/Courses-Count-Down.vue'
+import Field from '../../components/detail/Field.vue'
+import SlideCourses from './components/SlideCourses'
+import SeriseCourses from './components/SeriesCourses'
+import Instructions from '../../components/detail/Instructions.vue'
+import VideoPlayer from './components/Video-Player.vue'
+import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
-import { generateQrcode, cutImageCenter, cutArcImage, loadImage, createText } from '../../assets/js/util'
+import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
+import {
+    generateQrcode,
+    cutImageCenter,
+    cutArcImage,
+    loadImage,
+    createText
+} from '../../assets/js/util'
 import { mapGetters } from 'vuex'
 import { SET_SHARE_ID } from '../../store/mutation-type'
+
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
+
 export default {
     name: 'CurriculumDetail',
     components: {
@@ -131,20 +234,36 @@ export default {
         DetailDesc,
         Tags,
         DetailInfo,
-        Contact
+        Contact,
+        CountDown,
+        Field,
+        SlideCourses,
+        SeriseCourses,
+        Instructions,
+        VideoPlayer,
+        Skeleton
     },
     data () {
         return {
+            // 1 单课 2 系列课
+            courseType: 1,
             banners: [],
+            relatedCourses: [],
+            seriesCourses: [],
             detail: {},
             agentProduct: false,
-            loading: false,
             tab: 2,
-            studied: true,
+            loaded: false,
+            loading: false,
+            isPresent: false,
             showContact: false,
-            creating: false,
+            haibao: '',
             showHaibao: false,
-            haibao: ''
+            creating: false,
+            preview: {
+                show: false,
+                url: ''
+            }
         }
     },
     props: {
@@ -160,16 +279,26 @@ export default {
     computed: {
         ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl']),
 
-        // 0 全部，1 helper，2 会员，3 部分用户
-        targetGroups () {
-            return this.detail.targetGroups
-        },
-        tagIds () {
-            return this.detail.tagIds
-        },
-        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入
+        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入
         productActive () {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
+        },
+        isCountdownShow () {
+            const { isOpenSale = 0, courseStatus = 0, regularSaleTime } = this.detail
+            return isOpenSale === 1 && courseStatus === 2 && regularSaleTime
+        },
+        canLearn () {
+            return this.detail.isBuy || this.isPresent
+        },
+        canPreview () {
+            return !this.canLearn && this.detail.supportWatch
+        }
+    },
+    watch: {
+        '$route' (to, from) {
+            if (from.params.productId && to.params.productId) {
+                this.refresh()
+            }
         }
     },
     async activated () {
@@ -180,20 +309,82 @@ export default {
         }
     },
     deactivated () {
+        this.loaded = false
+        this.loading = false
+        this.showContact = false
         this.showHaibao = false
+        this.creating = false
         this.haibao = ''
+        this.preview.show = false
     },
     async mounted () {
         this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
     methods: {
+        async refresh () {
+            try {
+                this.loaded = false
+                this.loading = true
+                const list = [
+                    this.getDetail(),
+                    this.checkIsPresentCourse()
+                ]
+                const [detail] = await Promise.all(list.map(p => p.catch(e => e)))
+                if (detail instanceof Error) {
+                    throw detail
+                }
 
-        //  获取商品详情
+                this.createShare()
+                this.loading = false
+                this.loaded = true
+            } catch (error) {
+                throw error
+            }
+        },
+
+        /**
+         * 获取商品详
+         * @returns {Object} result - 商品详情
+         * @property {String} result.id
+         * @property {String} result.orderId
+         * @property {String} result.courseName
+         * @property {String} result.courseImg
+         * @property {String} result.liveIds
+         * @property {String} result.courseBrief
+         * @property {String} result.lecturer
+         * @property {String} result.details
+         * @property {Number} result.sale
+         * @property {Number} result.views
+         * @property {Number} result.vodNumber - 点播量
+         * @property {Number} result.watchTime
+         * @property {Number} result.targetGroups
+         * @property {Array} result.tagIds
+         * @property {Number} result.courseType - 课程类型 (1 单课 2 系列课)
+         * @property {Number} result.priceType - 价格类型 (0 免费 1 付费)
+         * @property {Number} result.originalPrice - 原价
+         * @property {Number} result.sellingPrice - 售价
+         * @property {Number} result.validityType - 有效期类型 (0 不限制有效期 1 限制有效期)
+         * @property {Number} result.validity - 有效期 / 天
+         * @property {String} result.validityDate - 免费课截止日期
+         * @property {Boolean} result.isBuy - 是否已购买
+         * @property {String} result.learnProgress - 学习进度
+         * @property {String} result.payNotice - 购买须知
+         * @property {String} result.status - 状态 (1 上架 2 下架)
+         * @property {Boolean} result.isOpenSale - 是否开启定时开售 (0 不开启 1 开启)
+         * @property {Number} result.courseStatus - 开售状态 (1 已开售 2 未开售 0 默认值啥也不是)
+         * @property {String} result.regularSaleTime - 定时开售时间
+         * @property {Boolean} result.supportWatch - 是否支持试看 (单课程才有)
+         * @property {String} result.supportWatchUrl - 试看地址
+         * @property {Array} result.relatedCoursesModels - 单课的相关课程列表
+         * @property {Array} result.videoLibEntities - 系列课关联的视频资源列表
+         * @property {Boolean} result.haveNoVideo - 系列课是否有课程未关联视频
+         * @property {Number} result.totalLiveNumber - 系列课课程总数
+         * @property {Number} result.learnedNumber - 系列课已经学习课程数
+         */
         async getDetail () {
             try {
-                this.loading = true
                 // 重置一些状态
-                this.resetState()
+                this.banners.splice(0, 1000000)
                 // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
                 const { result } = await getCourseDetail(this.productId)
                 if (!result) {
@@ -201,36 +392,54 @@ export default {
                     this.$router.go(-1)
                     return
                 }
-                this.loading = false
+
                 const {
-                    courseImg
+                    courseType,
+                    courseImg,
+                    relatedCoursesModels,
+                    videoLibEntities
                 } = result
+
+                this.tab = courseType
+                this.courseType = courseType
                 this.banners = [courseImg]
+                this.relatedCourses = relatedCoursesModels || []
+                this.seriesCourses = videoLibEntities || []
                 this.detail = result
 
-                // 生成分享
-                // let shareUrl = ''
-                // if (this.userId) {
-                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
-                // } else {
-                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?noCache=${ Date.now() }`
-                // }
-                // TODO: 以后可能需要自定义分享链接，现在直接使用当前连接
-                this.shareUrl = location.href
-                share({
-                    appId: this.appId,
-                    title: result.courseName,
-                    link: this.shareUrl,
-                    desc: result.lecturer,
-                    imgUrl: result.courseImg
-                })
-                this.haibaoImg = await loadImage(courseImg)
                 return result
             } catch (e) {
                 throw e
             }
         },
-        goSubmit () {
+        // 是否是赠课
+        async checkIsPresentCourse () {
+            try {
+                const { result } = await checkIsPresentCourse(this.productId)
+                this.isPresent = result
+                return result
+            } catch (error) {
+                throw error
+            }
+        },
+        getExpiration ({ validityType, validity, validityDate = '', priceType = 1 }) {
+            return priceType === 1
+                ? validityType
+                    ? `购买后 ${ validity } 天内可观看学习`
+                    : '购买后不限观看次数'
+                : `订购后 ${ validityDate.replace(/-/g, '.') } 前可观看学习`
+        },
+        previewCourse (url = this.detail.supportWatchUrl) {
+            this.preview.url = url
+            this.preview.show = true
+            this.$nextTick(() => {
+                const player = this.$refs.videoPlayer
+                if (player) {
+                    player.play()
+                }
+            })
+        },
+        submit () {
             if (!this.mobile) {
                 this.$confirm('您还没有绑定手机，请先绑定手机')
                     .then(() => {
@@ -244,19 +453,40 @@ export default {
                     .catch(() => {})
                 return
             }
-            this.$router.push({ name: 'SubmitCurriculum', params: { productId: this.productId, count: 1 } })
+            this.$router.push({
+                name: 'SubmitCurriculum',
+                params: {
+                    productId: this.productId,
+                    count: 1
+                }
+            })
         },
-        resetState () {
-            this.banners.splice(0, 1000000)
-        },
-        async refresh () {
+        // 生成分享
+        async createShare () {
+            const { courseName, lecturer, courseImg } = this.detail
             try {
-                await this.getDetail()
-            } catch (e) {
-                throw e
+                // let shareUrl = ''
+                // if (this.userId) {
+                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
+                // } else {
+                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?noCache=${ Date.now() }`
+                // }
+                // TODO: 以后可能需要自定义分享链接，现在直接使用当前连接
+                this.shareUrl = location.href
+                share({
+                    appId: this.appId,
+                    title: courseName,
+                    link: this.shareUrl,
+                    desc: lecturer,
+                    imgUrl: courseImg
+                })
+                this.haibaoImg = await loadImage(courseImg)
+            } catch (error) {
+                throw error
             }
         },
-        async createHaibao (type) {
+        // 生成海报
+        async createPoster (type) {
             if (this.loading) {
                 return
             }
@@ -311,14 +541,20 @@ export default {
                 // 填充商品名称
                 // let str = this.detail.courseName
                 const line = (type !== 1 && this.preActivity === 2) ? 1 : 2
-                const price = this.detail.sellingPrice
-                const { originalPrice } = this.detail
+                const { sellingPrice: price, originalPrice, totalLiveNumber } = this.detail
                 ctx.textBaseline = 'top'
                 ctx.font = '56px Microsoft YaHei UI'
                 ctx.fillStyle = '#000'
 
+                // 商品名称
+                createText(ctx, 49, 978, this.detail.courseName, 80, 620, line)
+                if (this.courseType === 2) {
+                    ctx.font = '48px Microsoft YaHei UI'
+                    ctx.fillStyle = '#999'
+                    ctx.fillText(`包含${ totalLiveNumber }节课程`, 48, 1058)
+                }
+
                 // 填充价钱
-                createText(ctx, 48, 978, this.detail.courseName, 80, 620, line)
                 if (price) {
                     ctx.fillStyle = '#FE7700'
                     ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
@@ -363,7 +599,18 @@ export default {
 .curriculum {
     padding-bottom: 190px;
 }
-.priceBox {
+.banner-wrapper {
+    position: relative;
+}
+.count-down-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 80px !important;
+    z-index: 1;
+}
+.price-box {
     > .price {
         font-size: 46px;
         color: #fe7700;
@@ -392,29 +639,19 @@ export default {
     }
 }
 .field {
-    display: flex;
-    align-items: center;
-    line-height: 78px;
-    font-size: 24px;
     border-top: 1px solid #e7e7e7;
-    > .left {
-        color: #999;
-        > svg {
-            vertical-align: -6px;
-        }
-    }
-    > .right {
-        color: #000;
-    }
 }
-.detailOrComment {
+.slide-courses {
     margin-top: 20px;
-    background-color: #fff;
+}
+.detail-or-comment {
+    margin-top: 20px;
 }
 .tabs {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    background-color: #fff;
     border-bottom: 1px solid #e7e7e7;
     > div {
         width: max-content;
@@ -424,7 +661,7 @@ export default {
         line-height: 90px;
         box-sizing: border-box;
         font-weight: bold;
-        &.activeTab {
+        &.active-tab {
             color: #000;
             border-bottom: 2px solid #000;
         }
@@ -438,32 +675,47 @@ export default {
     background-color: #fff;
     > .content {
         display: flex;
+        justify-content: space-between;
         align-items: center;
+        padding: 0 16px;
         height: 110px;
         border-top: 1px solid #e7e7e7;
     }
     .link {
-        margin-left: 42px;
-        &.callUs {
-            margin-left: 36px;
-        }
+        margin-left: 12px;
+    }
+    .call-us {
+        margin-left: 36px;
+    }
+    .button-wrapper {
+        display: flex;
+        margin-left: auto;
+        width: 496px;
+        border-radius: 10px;
+        overflow: hidden;
     }
     .button {
-        width: 496px;
-        margin-left: 40px;
+        flex: 1;
+        width: 0;
         line-height: 80px;
-        font-size: 26px;
         text-align: center;
+        font-size: 26px;
         color: #fff;
-        border-radius: 10px;
     }
-    .click-me-because-you-are-young {
+    .progress {
+        margin-left: auto;
+        margin-right: 30px;
+        font-size: 26px;
+        font-weight: bold;
+        color: #fe7700;
+    }
+    .orange {
         background-color: #fe7700;
         &:disabled {
             background-color: rgba(254, 119, 0, .4);
         }
     }
-    .has-studied {
+    .yellow {
         background-color: #f2b036;
     }
 }
@@ -512,7 +764,7 @@ export default {
         object-fit: cover;
     }
 }
-.buttomTip {
+.buttom-tip {
     position: fixed;
     bottom: 130px;
     left: 50%;

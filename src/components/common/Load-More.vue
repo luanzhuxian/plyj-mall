@@ -337,10 +337,10 @@ export default {
             }
             this.rotate = deltaY
         },
-        async infiniteScroll () {
+        async infiniteScroll (e, offsetHeight = this.offsetHeight, scrollTop = window.scrollY, clientHeight = window.innerHeight) {
             // console.log(this.offsetHeight, window.scrollY, window.innerHeight, this.pending, this.allLoaded)
-            if (this.offsetHeight === 0) return
-            if (this.offsetHeight - window.scrollY - window.innerHeight <= 0 && !this.pending && !this.allLoaded) {
+            if (offsetHeight === 0) return
+            if (offsetHeight - scrollTop - clientHeight <= 0 && !this.pending && !this.allLoaded) {
                 this.options.current++
                 try {
                     this.bottomLoading = true

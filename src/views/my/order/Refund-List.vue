@@ -5,7 +5,7 @@
             size="small"
             :tabs="tabs"
             :active-id.sync="form.returnStatus"
-            @change="tabChange"
+            @change="onTabChange"
         >
             <div
                 :class="$style.tabPane"
@@ -213,7 +213,7 @@ export default {
         this.$refresh()
     },
     methods: {
-        tabChange (item) {
+        onTabChange (item) {
             this.$nextTick(() => {
                 this.$router.replace({ name: 'RefundList', params: { status: item.id } })
                 this.$refresh()

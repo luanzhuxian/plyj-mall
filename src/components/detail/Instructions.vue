@@ -1,8 +1,6 @@
 <template>
     <div :class="$style.instructions">
-        <div :class="$style.title">
-            使用须知
-        </div>
+        <div :class="$style.title" v-text="title" />
         <div :class="$style.content" v-html="lineBreak(content)" />
     </div>
 </template>
@@ -11,6 +9,10 @@
 export default {
     name: 'Instructions',
     props: {
+        title: {
+            type: String,
+            default: '使用须知'
+        },
         content: {
             type: String,
             default: ''
@@ -27,19 +29,19 @@ export default {
 </script>
 
 <style module lang="scss">
-  .instructions {
+.instructions {
     margin-top: 20px;
     padding: 0 24px;
     background-color: #fff;
-  }
-  .title {
+}
+.title {
     line-height: 100px;
     color: #000;
     font-size: 32px;
     font-weight: bold;
     border-bottom: 1px solid #e7e7e7;
-  }
-  .content {
+}
+.content {
     width: 100%;
     padding: 40px 0 48px 0;
     font-size: 28px;
@@ -47,5 +49,6 @@ export default {
     word-break: break-all;
     white-space: pre-wrap;
     color: #666;
-  }
+}
+
 </style>

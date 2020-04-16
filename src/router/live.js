@@ -31,20 +31,21 @@ export default [
                 name: 'MyLive',
                 component: () => import('../views/live/live-library/Live.vue'),
                 meta: {
-                    title: '我的直播'
+                    title: '直播课'
                 }
             },
             {
-                path: '/lived/library/courses',
-                name: 'MyCourses',
+                path: '/lived/library/courses/:courseType',
+                name: 'Courses',
                 component: () => import('../views/live/live-library/Courses.vue'),
-                redirect: '/lived/library/courses/course-learning/1',
+                redirect: '/lived/library/courses/:courseType/single-course-learning/1',
                 meta: {
+                    // 单课，系列课
                     title: '我的课程'
                 },
                 children: [
                     {
-                        path: '/lived/library/courses/course-learning/:learnStatus',
+                        path: '/lived/library/courses/:courseType/single-course-learning/:learnStatus',
                         name: 'CourseLearning',
                         component: () => import('../views/live/live-library/Course-Learning.vue'),
                         meta: {

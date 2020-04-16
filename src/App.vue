@@ -29,9 +29,15 @@ import {
 } from './store/mutation-type'
 
 import Cookie from './assets/js/storage-cookie'
-import { getLiveInfo, getJianxueInfo, getNianweiInfo, getMyCouponInfo } from './apis/home'
-import { getCourseInfo } from './apis/online-classroom'
-import { getCurrentActivity } from './apis/invitenewcomers'
+import {
+    getLiveInfo,
+    // getJianxueInfo,
+    getNianweiInfo,
+    getMyCouponInfo
+} from './apis/home'
+import { getCourse } from './apis/online-classroom'
+// import { getCurrentActivity as getInvitingEvent } from './apis/invitenewcomers'
+
 export default {
     components: {
         Navbar,
@@ -110,16 +116,16 @@ export default {
                 this.getActivityData()
                 getLiveInfo().then(({ result }) => this.setLiveInfo(result))
                     .catch(e => this.setLiveInfo({}))
-                getCourseInfo().then(({ result }) => this.setCourseInfo(result))
+                getCourse().then(({ result }) => this.setCourseInfo(result))
                     .catch(e => this.setCourseInfo({}))
-                getCurrentActivity().then(({ result }) => this.setInvitingEvent(result))
-                    .catch(e => this.setInvitingEvent({}))
-                getJianxueInfo().then(({ result }) => this.setJxEvent(result))
-                    .catch(e => this.setJxEvent({}))
                 getNianweiInfo().then(({ result }) => this.setNwEvent(result))
                     .catch(e => this.setNwEvent({}))
                 getMyCouponInfo().then(({ result }) => this.setCouponInfo(result))
                     .catch(e => this.setCouponInfo({}))
+                // getInvitingEvent().then(({ result }) => this.setInvitingEvent(result))
+                //     .catch(e => this.setInvitingEvent({}))
+                // getJianxueInfo().then(({ result }) => this.setJxEvent(result))
+                //     .catch(e => this.setJxEvent({}))
             } catch (error) {
                 throw error
             }

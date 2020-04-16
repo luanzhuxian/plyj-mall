@@ -15,7 +15,7 @@
         </load-more>
         <!--无数据情况-->
         <div v-if="loading" :class="$style.none">
-            <div @click="$router.push({ name: 'OnlineClassroom' })" :class="$style.goLearning">去学习课程</div>
+            <div @click="goLearning" :class="$style.goLearning">去学习课程</div>
         </div>
     </div>
 </template>
@@ -38,34 +38,41 @@ export default {
             form: {
                 // 1：未学习  2：学习中  3：已过期
                 learnStatus: 1,
+                // 1单课 2系列课
+                courseType: 1,
                 current: 1,
                 size: 10
             }
         }
     },
-    async created () {
+    async activated () {
         try {
-            const { learnStatus } = this.$route.params
+            const { learnStatus, courseType } = this.$route.params
             if (learnStatus) {
                 this.list = []
                 this.loading = false
                 this.form.current = 1
                 this.form.learnStatus = Number(learnStatus)
+                this.form.courseType = Number(courseType)
                 await this.$nextTick()
                 await this.$refs.loadMore.refresh()
             }
         } catch (e) { throw e }
     },
     methods: {
+        getCourseList,
         refreshList (list) {
             this.list = list
             this.loading = list.length === 0
         },
-        getCourseList
+        goLearning () {
+            const name = this.$route.params.courseType === '1' ? 'OnlineClassroom' : 'seriesOfCourses'
+            this.$router.push({ name })
+        }
     },
     computed: {
         learnTxt () {
-            return `暂无${ this.learnStatus[(this.$route.params.learnStatus - 1) || 1] }的课程`
+            return `暂无${ this.learnStatus[(this.$route.params.learnStatus || 1) - 1] }的课程`
         }
     }
 }

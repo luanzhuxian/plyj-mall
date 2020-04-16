@@ -5,10 +5,10 @@
                 <pl-svg name="icon-search" width="30" />
                 <input
                     v-model.trim="searchContent"
+                    ref="input"
                     type="search"
                     placeholder="你想要的应有尽有"
                     @search="search(searchContent)"
-                    ref="input"
                 >
             </div>
             <button @click="cancel">
@@ -16,37 +16,20 @@
             </button>
         </div>
 
-        <div :class="$style.content">
-            <load-more
-                ref="loadMore"
-                v-show="seached"
-                :form="form"
-                :request-methods="searchProduct"
-                icon="icon-no-search"
-                no-content-tip="抱歉，没有相关商品"
-                @refresh="refreshHandler"
-                @more="refreshHandler"
-            >
-                <template v-slot="{ list }">
-                    <lesson-item
-                        border
-                        v-for="(item, index) of prodList"
-                        :key="index"
-                        :id="item.id"
-                        :title="item.productName"
-                        :desc="item.productDesc"
-                        :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
-                        :price="item.productSkuModels.length && item.productSkuModels[0].price"
-                        :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
-                        :data="item"
-                    />
-                </template>
-            </load-more>
+        <div :class="$style.content" v-if="searched">
+            <search-list
+                ref="searchList"
+                :query="searchContent"
+                @refresh="getHistory"
+            />
         </div>
 
         <div
-            v-show="!seached"
-            :class="{ [$style.searchSelect]: true, [$style.border]: true }"
+            v-show="!searched"
+            :class="{
+                [$style.searchSelect]: true,
+                [$style.border]: true
+            }"
         >
             <div :class="$style.top">
                 <span>热门搜索</span>
@@ -63,7 +46,7 @@
         </div>
 
         <div
-            v-show="!seached"
+            v-show="!searched"
             :class="$style.searchSelect"
         >
             <div :class="$style.top">
@@ -88,44 +71,26 @@
 </template>
 
 <script>
+import SearchList from './components/Search-List.vue'
 import {
-    searchProduct,
     getHotKeyword,
     getHistoryKeyword,
     deleteHistoryKeyword
 } from '../../apis/search'
-import LessonItem from '../../components/item/Lesson-Item.vue'
-import LoadMore from '../../components/common/Load-More.vue'
-import { mapGetters } from 'vuex'
 
 export default {
     name: 'Search',
     components: {
-        LessonItem,
-        LoadMore
+        SearchList
     },
     data () {
         return {
             searchContent: '',
-            form: {
-                searchContent: '',
-                current: 1,
-                size: 10
-            },
             hot: [],
             history: [],
-            prodList: [],
             // 标记是否搜索过
-            seached: false,
-            $refresh: null,
-            searchProduct
+            searched: false
         }
-    },
-    computed: {
-        ...mapGetters(['userId'])
-    },
-    mounted () {
-        this.$refresh = this.$refs.loadMore.refresh
     },
     activated () {
         this.getHotKeyword()
@@ -136,9 +101,8 @@ export default {
         async search (keyword) {
             if (!keyword) return this.$warning('请输入要搜索的内容')
             this.searchContent = keyword
-            this.form.searchContent = keyword
-            this.seached = true
-            this.$refresh()
+            this.searched = true
+            this.$nextTick(() => this.$refs.searchList.refresh(keyword))
         },
         async getHotKeyword () {
             try {
@@ -165,24 +129,15 @@ export default {
             }
         },
         cancel () {
-            if (!this.form.searchContent && !this.searchContent) {
-                // return this.$router.push({ name: 'Classify' })
+            if (!this.searchContent) {
                 return this.$router.go(-1)
             }
             this.searchContent = ''
-            this.form.searchContent = ''
-            this.seached = false
-        },
-        refreshHandler (list) {
-            for (const item of list) {
-                item.productSkuModels.sort((a, b) => a.price - b.price)
-            }
-            this.prodList = list
-            this.getHistory()
+            this.searched = false
         }
     },
     beforeRouteLeave (to, from, next) {
-        this.seached = false
+        // this.searched = false
         this.searchContent = ''
         next()
     }
@@ -191,18 +146,25 @@ export default {
 
 <style module lang="scss">
   .search {
+    box-sizing: border-box;
+    padding-top: 93px;
     height: 100vh;
-    overflow: auto;
+    overflow: hidden;
     background-color: #fff;
   }
   .search-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
-    height: 92px;
     padding: 0 40px;
+    height: 92px;
+    background-color: #fff;
     border-bottom: 1px solid #f7f7f7;
+    z-index: 999;
     button {
       font-size: 28px;
       color: #1890FF;
@@ -234,15 +196,9 @@ export default {
       }
     }
   }
-  .content {
-    padding-left: 40px;
-    margin-top: 40px;
-  }
   .search-select {
     position: relative;
-    width: 670px;
-    margin: 0 auto;
-    padding-bottom: 50px;
+    padding: 0 40px 50px;
     border-bottom: 1px solid #f7f7f7;
     .top {
       display: flex;

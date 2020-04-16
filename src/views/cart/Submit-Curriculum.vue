@@ -20,21 +20,6 @@
                 总计：<i>{{ courseDetail.sellingPrice }}</i>
             </div>
         </div>
-        <div :class="$style.bottom">
-            <div :class="$style.left">
-                <div class="fz-20 gray-2">合计</div>
-                <div class="fz-32">{{ courseDetail.sellingPrice }}</div>
-            </div>
-            <pl-button
-                :class="$style.button"
-                :loading="submiting"
-                type="warning"
-                size="large"
-                @click="submitOrder"
-            >
-                确认提交
-            </pl-button>
-        </div>
 
         <div :class="$style.itemSelector" @click.capture="chooseContact">
             <pl-fields
@@ -50,6 +35,22 @@
                     <span class="fz-28" v-text="contactInfoModel.mobile" />
                 </div>
             </pl-fields>
+        </div>
+
+        <div :class="$style.bottom">
+            <div :class="$style.left">
+                <div class="fz-20 gray-2">合计</div>
+                <div class="fz-32">{{ courseDetail.sellingPrice }}</div>
+            </div>
+            <pl-button
+                :class="$style.button"
+                :loading="submiting"
+                type="warning"
+                size="large"
+                @click="submitOrder"
+            >
+                确认提交
+            </pl-button>
         </div>
 
         <pl-popup
@@ -79,16 +80,22 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { checkLength, isPhone } from '../../assets/js/validate'
 import { getCourseDetail, submitOrderAndPay } from '../../apis/product'
 import { setTimeoutSync } from '../../assets/js/util'
+import { checkLength, isPhone } from '../../assets/js/validate'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 
 export default {
     name: 'SubmitCurriculum',
+    props: {
+        productId: {
+            type: String,
+            default: ''
+        }
+    },
     data () {
-        this.requestPayDataCount = 0
         return {
+            requestPayDataCount: 0,
             showContactPopup: false,
             submiting: false,
             courseDetail: {},
@@ -112,17 +119,11 @@ export default {
             }
         }
     },
-    props: {
-        productId: {
-            type: String,
-            default: ''
-        }
-    },
     computed: {
         ...mapGetters(['mobile', 'userName'])
     },
     async activated () {
-    // 联系人信息
+        // 联系人信息
         const contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
         this.contactInfoModel = contactModel || { name: this.realName || this.userName, mobile: this.mobile }
         try {
@@ -216,67 +217,67 @@ export default {
         },
         goVideoLibrary () {
             // 支付成功，去视频库看视频
-            this.$router.replace({ name: 'MyCourses' })
+            this.$router.replace({ name: 'Courses', params: { courseType: '1' } })
         }
     }
 }
 </script>
 
 <style module lang="scss">
-  .submit-curriculum {
+.submit-curriculum {
     color: #000;
     padding: 20px 24px 120px;
-  }
-  .product {
+}
+.product {
     padding: 26px 24px;
     background-color: #fff;
     border-radius: 20px;
-  }
-  .detail {
+}
+.detail {
     display: flex;
     > img {
-      width: 244px;
-      height: 164px;
-      margin-right: 20px;
-      object-fit: cover;
+        width: 244px;
+        height: 164px;
+        margin-right: 20px;
+        object-fit: cover;
     }
     > .right {
-      > .name {
-        height: 64px;
-        margin-bottom: 20px;
-        line-height: 32px;
-        font-size: 22px;
-        @include elps-wrap(2);
-      }
-      > .price {
-        margin-bottom: 8px;
-        font-size: 24px;
-        &:before {
-          content: '￥';
-          font-size: 18px;
+        > .name {
+            height: 64px;
+            margin-bottom: 20px;
+            line-height: 32px;
+            font-size: 22px;
+            @include elps-wrap(2);
         }
-      }
-      > .tips {
-        font-size: 18px;
-        color: #A8A8A8;
-      }
+        > .price {
+            margin-bottom: 8px;
+            font-size: 24px;
+            &:before {
+                content: '￥';
+                font-size: 18px;
+            }
+        }
+        > .tips {
+            font-size: 18px;
+            color: #a8a8a8;
+        }
     }
-  }
-  .total {
+}
+.total {
     margin-top: 40px;
     text-align: right;
     font-size: 32px;
     font-weight: bold;
     > i {
-      color: #FE7700;
-      font-weight: 500;
-      &:before {
-        content: '￥';
-        font-size: 20px;
-      }
+        color: #fe7700;
+        font-weight: 500;
+        &:before {
+            content: '￥';
+            font-size: 20px;
+        }
     }
-  }
-  .bottom {
+}
+.bottom {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -290,56 +291,57 @@ export default {
     background-color: #fff;
     border-top: 1px solid #e7e7e7;
     > .left {
-      > div {
-        &:nth-of-type(1) {
-          margin-bottom: 4px;
+        > div {
+            &:nth-of-type(1) {
+                margin-bottom: 4px;
+            }
+            &:nth-of-type(2):before {
+                content: '￥';
+                font-size: 20px;
+            }
         }
-        &:nth-of-type(2):before {
-          content: '￥';
-          font-size: 20px;
-        }
-      }
     }
     > .button {
-      width: 206px;
-      line-height: 80px;
-      color: #fff;
-      font-size: 32px;
-      text-align: center;
-      background-color: #F2B036;
-      border-radius: 20px;
+        width: 206px;
+        line-height: 80px;
+        color: #fff;
+        font-size: 32px;
+        text-align: center;
+        background-color: #f2b036;
+        border-radius: 20px;
     }
-  }
-  .item-selector {
+}
+.item-selector {
     margin-top: 20px;
     padding-left: 24px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
-  }
-  .add-contact {
+}
+.add-contact {
     padding: 40px 20px;
     .add-contact-top {
-      margin-bottom: 20px;
-      font-size: 40px;
-      color: #000;
+        margin-bottom: 20px;
+        font-size: 40px;
+        color: #000;
     }
     button {
-      margin-top: 48px;
+        margin-top: 48px;
     }
     label {
-      background-color: #f9f9f9 !important;
-      padding-left: 32px;
-      span {
-        color: #999 !important;
-      }
+        background-color: #f9f9f9 !important;
+        padding-left: 32px;
+        span {
+            color: #999 !important;
+        }
     }
-  }
-  .contact-detail {
+}
+.contact-detail {
     padding: 24px 0;
     > span:nth-of-type(1) {
-      margin-right: 24px;
-      font-weight: 500;
+        margin-right: 24px;
+        font-weight: 500;
     }
-  }
+}
+
 </style>

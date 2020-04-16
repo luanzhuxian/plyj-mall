@@ -58,11 +58,11 @@ export default {
             default: 20
         },
         width: {
-            type: Number,
+            type: [Number, String],
             default: 702
         },
         height: {
-            type: Number,
+            type: [Number, String],
             default: 356
         }
     },

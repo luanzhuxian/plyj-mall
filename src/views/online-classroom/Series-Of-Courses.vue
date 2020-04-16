@@ -66,30 +66,38 @@
                             <div :class="$style.countDown">
                                 <count-down
                                     :endtime="item.regularSaleTime"
-                                    theme="black"
+                                    theme="orange"
                                     @done="$refresh"
                                 />
                             </div>
                         </div>
                         <div :class="$style.desc">
-                            <div :class="$style.title" v-text="item.courseName" />
-                            <div :class="[$style.text1, item.lecturer? '' : $style.noLecturer]">
-                                <span v-if="item.lecturer">主讲人： {{ item.lecturer }}</span>
+                            <div :class="$style.left">
+                                <div :class="$style.title">
+                                    {{ item.courseName }}
+                                </div>
+                                <div :class="$style.saleInfo">
+                                    <span v-if="item.orderCount">已有{{ item.orderCount }}人订阅</span>
+                                    <span v-else>正在热销中</span>
+                                </div>
+                                <div :class="$style.courseCount">
+                                    <span>包含{{ item.courseCount }}节课程</span>
+                                </div>
                             </div>
-                            <div :class="$style.bottom">
-                                <template>
-                                    <span v-if="item.priceType === 1" :class="$style.priceZoom">
+                            <div :class="$style.right">
+                                <div>
+                                    <template v-if="item.priceType === 1">
                                         <span :class="$style.price" v-text="item.sellingPrice" />
                                         <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
-                                    </span>
+                                    </template>
                                     <span v-else :class="$style.free">免费</span>
-                                </template>
-                                <template>
-                                    <pl-button :class="$style.notStart" v-if="item.isNotStart" type="primary">暂未开始</pl-button>
+                                </div>
+                                <div :class="$style.btns">
+                                    <pl-button :class="$style.isNotStart" v-if="item.isNotStart" type="primary">即将开售</pl-button>
                                     <pl-button v-else-if="item.isGive" type="primary">已赠课</pl-button>
                                     <pl-button v-else-if="item.orderId || (item.isGive && item.isWatch)" type="warning">学习中</pl-button>
-                                    <pl-button v-else type="primary">订购中</pl-button>
-                                </template>
+                                    <pl-button v-else type="primary">立即订购</pl-button>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -105,7 +113,7 @@ import { getCategoryTree } from '../../apis/classify'
 import LoadMore from '../../components/common/Load-More.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
 export default {
-    name: 'OnlineClassroom',
+    name: 'SeriesOfCourses',
     components: {
         LoadMore,
         CountDown
@@ -115,7 +123,7 @@ export default {
             form: {
                 category1: '',
                 category2: '',
-                courseType: 1,
+                courseType: 2,
                 current: 1,
                 size: 10
             },
@@ -130,10 +138,10 @@ export default {
     },
     async activated () {
         try {
-            // TODO.暂时没有分类
-            /* if (!this.classifyList.length) { // 有分类且有默认值才设置默认分类
-                await this.getCategoryTree()
-              } */
+        // TODO.暂时没有分类
+        /* if (!this.classifyList.length) { // 有分类且有默认值才设置默认分类
+            await this.getCategoryTree()
+          } */
             this.$refresh = this.$refs.loadMore.refresh
 
             // 解决因刷新浏览器后，在beforeRouteEnter无法获取到dom信息，导致无法正常调用refresh问题
@@ -315,15 +323,8 @@ export default {
       display: none;
     }
   }
-  .course-list {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-  }
   .course-item {
     position: relative;
-    width: calc(50% - 15px);
     margin-bottom: 32px;
     &.had-buy:before {
       content: '已购';
@@ -333,7 +334,7 @@ export default {
       left: 0;
       width:100px;
       border-radius:20px 0px 20px 0px;
-      background:#FE7700;
+      background:#F2B036;
       line-height:42px;
       text-align: center;
       font-size:24px;
@@ -341,10 +342,9 @@ export default {
     }
     > .img {
       position: relative;
-      width: 340px;
-      height: 228px;
-      margin-bottom: 16px;
-      border-radius: 20px;
+      width: 100%;
+      height: 474px;
+      border-radius:20px 20px 0px 0px;
       overflow: hidden;
       .count-down{
         position: absolute;
@@ -361,53 +361,61 @@ export default {
       }
     }
   }
-  .bottom {
+  .desc {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 18px;
-    .price-zoom {
-      max-width: 200px;
-    }
-    .price {
-      font-size: 32px;
-      color: #FE7700;
-      font-weight: bold;
-      &:before {
-        content: '¥';
-        margin-right: 4px;
-        font-size: 20px;
-        vertical-align: 3px;
+    padding: 20px 24px;
+    border-radius:0px 0px 20px 20px;
+    background-color: #F8F8F8;
+    .left {
+      max-width: 70%;
+      font-size:26px;
+      color: #828282;
+      .title {
+        margin-bottom: 4px;
+        font-size:30px;
+        font-weight:bold;
+        color: #222;
+        @include elps();
+      }
+      .sale-info {
+        margin: 8px 0;
       }
     }
-    .original {
-      display: block;
-      font-size: 20px;
-      color: #999;
+    .right {
+      margin-top: 20px;
+      .price {
+        font-size: 48px;
+        color: #FE7700;
+        font-weight: bold;
+        &:before {
+          content: '¥';
+          margin-right: 4px;
+          font-size: 20px;
+          vertical-align: 3px;
+        }
+      }
+      .original {
+        display: block;
+        font-size: 30px;
+        color: #999;
+      }
+      .free {
+        font-size: 48px;
+        color: #FE7700;
+      }
+      .btns {
+        margin-top: 20px;
+        text-align: right;
+        button {
+          width: 150px;
+          line-height: 58px;
+          font-size:30px;
+        }
+        .not-start {
+          background-color: rgba(254,119,0,0.3);
+        }
+      }
     }
-    .free {
-      font-size: 28px;
-      color: #FE7700;
-    }
-    .not-start {
-      background-color: rgba(254,119,0,0.3);
-    }
-  }
-  .title {
-    width: 340px;
-    margin-bottom: 4px;
-    font-size: 24px;
-    color: #000;
-    font-weight: bold;
-    @include elps();
-  }
-  .noLecturer {
-    margin-bottom: 45px;
-  }
-  .text1 {
-    width: 340px;
-    font-size: 22px;
-    color: #666;
-    @include elps();
   }
 </style>

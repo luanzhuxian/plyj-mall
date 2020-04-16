@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.lesson">
-        <!-- activeProduct - 1-正常商品 2-团购 3-秒杀 4-团购 -->
+        <!-- activeProduct - 1-正常商品 2-团购 3-秒杀 4-预购 -->
         <!-- productStatus - 0：已删除 1：下架 2：上架  3：草稿箱 -->
 
         <!-- 正常商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
@@ -52,12 +52,12 @@
                 <info-header :detail="detail" v-else />
                 <!-- 开售倒计时 -->
                 <count-down
-                    size="large"
-                    @done="countFinished"
                     :class="$style.countDown"
                     v-if="detail.shoppingStatus === 1 && (activeProduct === 1 || !preActivity)"
+                    size="large"
                     :starttime="detail.serverTime"
                     :endtime="detail.shoppingTimeLong"
+                    @done="countFinished"
                 />
                 <!-- 商品名称 -->
                 <DetailTitle :active-product="activeProduct" :pre-activity="preActivity" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
@@ -76,11 +76,12 @@
 
             <!-- 选择优惠券 -->
             <counpon-field
-                v-if="couponList.length && preActivity !== 2 && productActive !== 5"
+                v-if="couponList.length && preActivity !== 2 && !~[5, 6].indexOf(productActive)"
                 :coupon-list="couponList"
             />
 
             <Field
+                :class="$style.field"
                 v-if="productType === 'PHYSICAL_GOODS'"
                 label="发货"
                 :label-width="120"
@@ -89,9 +90,10 @@
 
             <!-- 正常商品 按照 商品本身的规格显示; 活动商品 按照 活动中的商品显示，已下架也需显示规格 -->
             <Field
+                :class="$style.field"
                 label="选择"
                 :label-width="120"
-                :can-click="!noStock && !isDown"
+                :clickable="!noStock && !isDown"
                 @click="showSpecifica = true;"
             >
                 <template v-if="currentModel.skuCode1Name">
@@ -144,7 +146,7 @@
 
             <!--底部购买按钮  -->
             <buy-now
-                v-if="productActive !== 5 && mchId"
+                v-if="!~[5, 6].indexOf(productActive) && mchId"
                 type="warning"
                 ref="buyNow"
                 :image="detail.productMainImage"
@@ -175,7 +177,7 @@
                 :activity-product-model="detail.activityProductModel || null"
                 :pre-activity="preActivity"
             >
-                <template v-slot:footer="{ currentSku, limiting, limit }" v-if="productActive !== 5 && mchId">
+                <template v-slot:footer="{ currentSku, limiting, limit }" v-if="!~[5, 6].indexOf(productActive) && mchId">
                     <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
                         <!-- 活动商品库存不足时，显示该按钮 -->
                         <button
@@ -287,7 +289,7 @@
             </div>
 
             <!-- 正常商品 或 未开始的活动商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
-            <div :class="$style.buttomTip" v-if="!loading && isDown && activeProduct === 1 && productActive !== 5 && mchId">
+            <div :class="$style.buttomTip" v-if="!loading && isDown && activeProduct === 1 && !~[5, 6].indexOf(productActive) && mchId">
                 该商品已下架
             </div>
             <div :class="$style.buttomTip" v-if="!loading && noStock && mchId">
@@ -469,7 +471,7 @@ export default {
             return this.activityProductModel ? this.activityProductModel.buyCount : 0
         },
 
-        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入
+        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入
         productActive () {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
         },
@@ -573,7 +575,7 @@ export default {
 
         // 是否展示"商品已删除"提醒
         isDeletedShow () {
-            return this.productActive !== 5 && this.activeProduct === 1 && this.productStatus === 0
+            return !~[5, 6].indexOf(this.productActive) && this.activeProduct === 1 && this.productStatus === 0
         }
     },
     watch: {
@@ -1358,4 +1360,9 @@ export default {
       height: 160px;
     }
   }
+.field {
+    margin-top: 20px;
+    padding: 0 24px;
+}
+
 </style>

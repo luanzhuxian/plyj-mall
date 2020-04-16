@@ -1,25 +1,27 @@
 <template>
-    <div :class="{ [$style.liveLibrary]: true, [$style.myLive]: routeName === 'MyLive' }">
+    <div :class="{ [$style.liveLibrary]: true, [$style.myLive]: isLiveCourse }">
         <div :class="$style.nav">
             <div :class="$style.head">
                 <div :class="$style.tabs" @click="$router.push({ name: 'MyLive' })">
-                    <div :class="{ [$style.tabFocus]: routeName === 'MyLive' }">我的直播</div>
-                    <div :class="{ [$style.line]: true, [$style.lineFocus]: routeName === 'MyLive' }" />
+                    <div :class="{ [$style.tabFocus]: isLiveCourse }">直播课</div>
+                    <div :class="{ [$style.line]: true, [$style.lineFocus]: isLiveCourse }" />
                 </div>
-                <div :class="$style.tabs" @click="$router.push({ name: 'MyCourses' })">
-                    <div :class="{ [$style.tabFocus]: routeName !== 'MyLive' }">我的课程</div>
-                    <div :class="{ [$style.line]: true, [$style.lineFocus]: routeName !== 'MyLive' }" />
+                <div :class="$style.tabs" @click="$router.push({ name: 'Courses', params: { courseType: '1' } })">
+                    <div :class="{ [$style.tabFocus]: isSingleCourse }">单课</div>
+                    <div :class="{ [$style.line]: true, [$style.lineFocus]: isSingleCourse }" />
+                </div>
+                <div :class="$style.tabs" @click="$router.push({ name: 'Courses', params: { courseType: '2' } })">
+                    <div :class="{ [$style.tabFocus]: isSeriesCourse }">系列课</div>
+                    <div :class="{ [$style.line]: true, [$style.lineFocus]: isSeriesCourse }" />
                 </div>
             </div>
-            <div v-if="routeName !== 'MyLive'" :class="$style.studyTabs">
-                <div :class="{ [$style.focus]: learnStatus === '1' }" @click="$router.push({ name: 'CourseLearning', params: { learnStatus: '1' } })">未学习</div>
-                <div :class="{ [$style.focus]: learnStatus === '2' }" @click="$router.push({ name: 'CourseLearning', params: { learnStatus: '2' } })">学习中</div>
-                <div :class="{ [$style.focus]: learnStatus === '3' }" @click="$router.push({ name: 'CourseLearning', params: { learnStatus: '3' } })">已过期</div>
+            <div v-if="!isLiveCourse" :class="$style.studyTabs">
+                <div :class="{ [$style.focus]: item.learnStatus === learnStatus }" v-for="(item,index) in tabs" :key="index" @click="target(item.learnStatus)">{{ item.name }}({{ item.num }})</div>
             </div>
             <div v-if="learnStatus === '3'" :class="$style.description">
                 已过期课程不支持观看
             </div>
-            <div v-else-if="$route.name !== 'MyLive' && learnStatus !== '3'" :class="$style.description">
+            <div v-else-if="!isLiveCourse && learnStatus !== '3'" :class="$style.description">
                 仅支持观看已成功购买的线上视频课程
             </div>
         </div>
@@ -30,14 +32,72 @@
 </template>
 
 <script>
+import { getCourseStudyNum } from './../../../apis/live-library'
 export default {
     name: 'LiveLibrary',
-    computed: {
-        routeName () {
-            return this.$route.name
+    data () {
+        return {
+            tabs: [
+                {
+                    learnStatus: '1',
+                    name: '未学习',
+                    num: 0
+                },
+                {
+                    learnStatus: '2',
+                    name: '学习中',
+                    num: 0
+                },
+                {
+                    learnStatus: '3',
+                    name: '已过期',
+                    num: 0
+                }
+            ]
+        }
+    },
+    methods: {
+        target (learnStatus) {
+            this.$router.push({ name: this.$route.name, params: { learnStatus } })
         },
+        async getStudyNum (courseType) {
+            try {
+                const { result } = await getCourseStudyNum(courseType)
+                this.tabs[0].num = result.noStartLearnCount || 0
+                this.tabs[1].num = result.startLearningCount || 0
+                this.tabs[2].num = result.startEndCount || 0
+            } catch (e) { throw e }
+        }
+    },
+    watch: {
+        '$route.params': {
+            async handler ({ courseType }) {
+                try {
+                    if (courseType) await this.getStudyNum(courseType)
+                } catch (e) {
+                    if (e.name === 'ResponseError') {
+                        this.$error(JSON.parse(e.message).message)
+                    } else {
+                        this.$error(e.message)
+                    }
+                }
+            },
+            immediate: true,
+            deep: true
+        }
+    },
+    computed: {
         learnStatus () {
             return this.$route.params.learnStatus
+        },
+        isLiveCourse () {
+            return this.$route.name === 'MyLive'
+        },
+        isSingleCourse () {
+            return this.$route.name === 'CourseLearning' && this.$route.params.courseType === '1'
+        },
+        isSeriesCourse () {
+            return this.$route.name === 'CourseLearning' && this.$route.params.courseType === '2'
         }
     }
 }
