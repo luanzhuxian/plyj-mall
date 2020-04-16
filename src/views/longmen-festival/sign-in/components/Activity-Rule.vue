@@ -10,7 +10,7 @@
             <h3>2.活动对象</h3>
             <p>{{ activeDetail.activity_member }}</p>
             <h3>3.活动奖品</h3>
-            <p>年味大礼</p>
+            <p>粽粽大礼</p>
             <h3>4.活动说明</h3>
             <template v-if="activeDetail.activityRule">
                 <span v-for="(item,index) of activeDetail.activityRule.split('\n')" :key="index">
