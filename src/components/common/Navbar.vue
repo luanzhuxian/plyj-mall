@@ -9,6 +9,7 @@
             [$style.skinYuanXiao]: skinId === 5,
             [$style.skinWomenDay]: skinId === 6,
             [$style.skinNianNianFan]: skinId === 7,
+            [$style.skinEarthDay]: skinId === 8,
             [$style.skinCampaign]: skinId === 99
         }"
     >
@@ -206,6 +207,16 @@ export default {
                     my: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/my.png',
                     myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/my.png'
                 },
+                8: {
+                    home: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/home.png',
+                    homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/home.png',
+                    classify: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/classify.png',
+                    classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/classify.png',
+                    shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/cart.png',
+                    shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/cart.png',
+                    my: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/my.png',
+                    myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/my.png'
+                },
                 99: {
                     home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
                     homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
@@ -234,7 +245,7 @@ export default {
             return this.$route.matched.some(val => val.name === 'My')
         },
         isSkinShow () {
-            return ~[1, 2, 3, 4, 5, 6, 7, 99].indexOf(this.skinId)
+            return ~[1, 2, 3, 4, 5, 6, 7, 8, 99].indexOf(this.skinId)
         },
         isD12Show () {
             return ~[5, 6, 7].indexOf(this.activityId)
@@ -306,7 +317,7 @@ export default {
     height: auto !important;
 }
 
-/****************** 皮肤 ******************/
+/****************** 皮肤 start ******************/
 .skin-xmas,
 .skin-yuan-dan,
 .skin-new-year,
@@ -314,6 +325,7 @@ export default {
 .skin-yuan-xiao,
 .skin-women-day,
 .skin-nian-nian-fan,
+.skin-earth-day,
 .skin-campaign {
     .route {
         box-sizing: border-box;
@@ -370,6 +382,13 @@ export default {
         }
     }
 }
+.skin-earth-day {
+    .route {
+        &.active > .tab-name {
+            color: #19b47b;
+        }
+    }
+}
 .skin-campaign {
     background: url('https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0ab57391-3717-43c2-bc47-549f7b1a94a3.png') no-repeat center;
     background-size: 100%;
@@ -382,6 +401,7 @@ export default {
         }
     }
 }
+/****************** 皮肤 end ******************/
 
 </style>
 <style lang="scss">

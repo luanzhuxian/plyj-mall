@@ -7,6 +7,7 @@
         <title-yuan-xiao v-if="skinId === 5" :data="data" />
         <title-women-day v-if="skinId === 6" :data="data" />
         <title-nian-nian-fan v-if="skinId === 7" :data="data" />
+        <title-earth-day v-if="skinId === 8" :data="data" />
         <title-campaign v-if="skinId === 99" :data="data" />
     </div>
 </template>
@@ -19,6 +20,7 @@ import TitleXiaoNian from './Title-Xiao-Nian.vue'
 import TitleYuanXiao from './Title-Yuan-Xiao.vue'
 import TitleWomenDay from './Title-Women-Day.vue'
 import TitleNianNianFan from './Title-Nian-Nian-Fan.vue'
+import TitleEarthDay from './Title-Earth-Day.vue'
 import TitleCampaign from './Title-Campaign.vue'
 
 export default {
@@ -31,6 +33,7 @@ export default {
         TitleYuanXiao,
         TitleWomenDay,
         TitleNianNianFan,
+        TitleEarthDay,
         TitleCampaign
     },
     props: {
