@@ -55,8 +55,8 @@ module.exports = {
             // 37测试 34开发 王恩74 李宾哲132 赵伟116 牛昌昌92 张涛77 任钊64
             '/apis': {
 
-                // target: 'https://mall.youpenglai.com'
-                target: `http://192.168.130.${ SERVER || 115 }`
+                target: 'https://mall.youpenglai.com'
+                // target: `http://192.168.130.${ SERVER || 115 }`
 
                 // target: 'http://192.168.255.14'
             },
