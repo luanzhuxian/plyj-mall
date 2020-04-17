@@ -209,6 +209,7 @@ export default {
             courseList.forEach(item => {
                 const newItem = {
                     id: item.id,
+                    courseId: item.courseId,
                     courseType: item.courseType,
                     coverImg: item.courseImg,
                     name: item.courseName,
