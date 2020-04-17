@@ -83,9 +83,6 @@
                 />
             </info-box>
 
-            <!-- 订购须知 -->
-            <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
-
             <!-- 相关课程 -->
             <slide-courses
                 v-if="courseType === 1 && relatedCourses.length"
@@ -123,6 +120,9 @@
                     />
                 </div>
             </div>
+
+            <!-- 订购须知 -->
+            <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
 
             <!-- 底部购买 -->
             <div :class="$style.bottom" v-if="!~[5, 6].indexOf(productActive)">
@@ -453,7 +453,7 @@ export default {
                 ? validityType
                     ? `购买后 ${ validity } 天内可观看学习`
                     : '购买后不限观看次数'
-                : `订购后 ${ validityDate.replace(/-/g, '.') } 前可观看学习`
+                : `订购后 ${ validityDate.split(' ')[0].replace(/-/g, '.') } 前可观看学习`
         },
         previewCourse (url) {
             if (!url) {

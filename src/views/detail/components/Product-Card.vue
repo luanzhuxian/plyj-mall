@@ -22,8 +22,10 @@
                 v-if="top"
                 v-text="top"
             />
-            <div :class="$style.subTop" v-if="subTop" v-text="subTop" />
-            <div :class="$style.middle" v-if="middle" v-text="middle" />
+            <div :class="$style.subTop" v-if="!$slots.subTop" v-text="subTop" />
+            <slot name="middle" v-else />
+            <div :class="$style.middle" v-if="!$slots.middle" v-text="middle" />
+            <slot name="middle" v-else />
             <div :class="$style.bottom" v-if="!$slots.bottom">
                 <span
                     :class="$style.bottomLeft"
