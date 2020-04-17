@@ -240,7 +240,7 @@ export default {
                 }
             } else {
                 // 单课+系列课
-                this.$router.push({ name: 'Curriculum', params: { productId: row.id } })
+                this.$router.push({ name: 'Curriculum', params: { productId: row.courseId } })
             }
         },
         close () {
