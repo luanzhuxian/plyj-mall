@@ -170,7 +170,7 @@
                                         courseId: productId
                                     },
                                     query: {
-                                        liveId: detail.liveId,
+                                        liveId: detail.liveIds,
                                         orderId: detail.orderId,
                                         progress: detail.learnProgress
                                     }
@@ -375,7 +375,7 @@ export default {
          * @property {String} result.orderId
          * @property {String} result.courseName
          * @property {String} result.courseImg
-         * @property {String} result.liveIds
+         * @property {String} result.liveIds - 课程相关视频id，系列课是多个id用逗号拼接
          * @property {String} result.courseBrief
          * @property {String} result.lecturer
          * @property {String} result.details
