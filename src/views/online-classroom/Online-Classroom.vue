@@ -125,7 +125,8 @@ export default {
             loading: false,
             $refresh: null,
             courseList: [],
-            serverTime: ''
+            // 当前本地时间与服务器时间的差值
+            duration: 0
         }
     },
     async activated () {
@@ -207,9 +208,9 @@ export default {
                 const now = Date.now()
                 const { result: time } = await getServerTime()
                 const end = Date.now()
-
                 // 返回的时间加上请求时间
-                this.serverTime = Number(time) + (end - now) + difference
+                const serverTime = Number(time) + (end - now) + difference
+                this.duration = new Date(serverTime).valueOf() - new Date().valueOf()
             } catch (e) {
                 throw e
             }
@@ -218,8 +219,9 @@ export default {
             this.courseList = this.addAtrToItem(list)
         },
         addAtrToItem (list) {
+            const currentTimeStamp = new Date().valueOf() + this.duration
             for (const item of list) {
-                item.isNotStart = new Date(item.regularSaleTime).getTime() > this.serverTime
+                item.isNotStart = new Date(item.regularSaleTime).valueOf() > currentTimeStamp
             }
             return list
         },

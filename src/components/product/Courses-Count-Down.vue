@@ -77,7 +77,7 @@ export default {
                     this.show = false
                     this.$emit('done', true)
                 }
-                this.d = String(data.days).padStart(2, '0')
+                this.d = data.days ? String(data.days).padStart(2, '0') : ''
                 this.h = String(data.hours).padStart(2, '0')
                 this.m = String(data.minutes).padStart(2, '0')
                 this.s = String(data.seconds).padStart(2, '0')
