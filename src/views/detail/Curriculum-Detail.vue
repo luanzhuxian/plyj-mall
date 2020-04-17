@@ -569,7 +569,7 @@ export default {
 
                 // 填充商品名称
                 // let str = this.detail.courseName
-                const line = (type !== 1 && this.preActivity === 2) ? 1 : 2
+                const line = ((type !== 1 && this.preActivity === 2) || this.courseType === 2) ? 1 : 2
                 const { sellingPrice: price, originalPrice, totalLiveNumber } = this.detail
                 ctx.textBaseline = 'top'
                 ctx.font = '56px Microsoft YaHei UI'
