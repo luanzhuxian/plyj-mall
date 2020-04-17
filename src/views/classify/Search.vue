@@ -137,8 +137,7 @@ export default {
         }
     },
     beforeRouteLeave (to, from, next) {
-        console.log(to, from)
-        if (to && to.name === 'Classify') {
+        if (to && ['Product', 'Curriculum'].indexOf(to.name) === -1) {
             this.searchContent = ''
             this.searched = false
         }
