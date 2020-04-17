@@ -193,6 +193,9 @@
 
             <contact :show.sync="showContact" />
 
+            <!-- 试看视频 -->
+            <video-player ref="videoPlayer" :show.sync="preview.show" :url="preview.url" />
+
             <!-- 海报弹框 -->
             <transition name="fade">
                 <div :class="$style.saveHaibao" v-if="showHaibao">
@@ -206,8 +209,14 @@
                 </div>
             </transition>
 
+            <!-- 公益棕海报 -->
             <transition name="fade">
-                <video-player ref="videoPlayer" :show.sync="preview.show" :url="preview.url" />
+                <poster
+                    :show.sync="isCharityPosterShow"
+                    :data="detail"
+                    :share="shareUrl"
+                    @done="poster => haibao = poster"
+                />
             </transition>
         </template>
 
@@ -217,6 +226,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { SET_SHARE_ID } from '../../store/mutation-type'
 import Banner from '../../components/detail/Banner.vue'
 import InfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
@@ -233,6 +244,7 @@ import CountDown from '../../components/product/Courses-Count-Down.vue'
 import CountdownBar from './charity/Countdown-Bar.vue'
 import Join from './charity/Join.vue'
 import Rule from './charity/Rule.vue'
+import Poster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
@@ -243,8 +255,6 @@ import {
     loadImage,
     createText
 } from '../../assets/js/util'
-import { mapGetters } from 'vuex'
-import { SET_SHARE_ID } from '../../store/mutation-type'
 
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
@@ -267,6 +277,7 @@ export default {
         CountdownBar,
         Join,
         Rule,
+        Poster,
         Skeleton
     },
     data () {
@@ -283,13 +294,14 @@ export default {
             loading: false,
             isPresent: false,
             showContact: false,
-            haibao: '',
-            showHaibao: false,
-            creating: false,
             preview: {
                 show: false,
                 url: ''
-            }
+            },
+            haibao: '',
+            creating: false,
+            showHaibao: false,
+            isCharityPosterShow: false
         }
     },
     props: {
@@ -509,7 +521,6 @@ export default {
                     desc: lecturer,
                     imgUrl: courseImg
                 })
-                this.haibaoImg = await loadImage(courseImg)
             } catch (error) {
                 throw error
             }
@@ -519,16 +530,18 @@ export default {
             if (this.loading) {
                 return
             }
-            let img = this.haibaoImg
+            // if (this.haibao) {
+            //     this.showHaibao = true
+            //     return
+            // }
+
+            this.creating = true
+
+            let img = await loadImage(this.detail.courseImg)
             if (!img) {
                 this.$error('图片加载错误')
                 return
             }
-            if (this.haibao) {
-                this.showHaibao = true
-                return
-            }
-            this.creating = true
 
             // 截取头像
             let lodedAvatar
@@ -616,6 +629,24 @@ export default {
                 this.showHaibao = true
             } catch (e) {
                 throw e
+            } finally {
+                this.creating = false
+            }
+        },
+        createCharityPoster () {
+            try {
+                if (this.loading) {
+                    return
+                }
+                // if (this.haibao) {
+                //     this.isCharityPosterShow = true
+                //     return
+                // }
+
+                this.creating = true
+                this.isCharityPosterShow = true
+            } catch (error) {
+                throw error
             } finally {
                 this.creating = false
             }
