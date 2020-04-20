@@ -11,13 +11,6 @@
                     <div :class="$style.chance">您还有0次抽奖机会</div>
                 </div>
                 <div :class="$style.turntable" v-if="turntableAwards.length">
-                    <!--<div
-                        v-for="(item, i) of turntableAwards"
-                        :key="i"
-                        :class="{ [$style.item]: true, [$style.active]: true }"
-                    >
-                        {{ item.name }}
-                    </div>-->
                     <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 0 }">
                         {{ turntableAwards[0].name }}
                     </div>
@@ -182,11 +175,21 @@
             </dl>
         </pl-popup>
 
-        <gift-pop-up
+        <!--<gift-pop-up
             :show.sync="showGift"
             button-left-text="继续抽奖"
             button-right-text="开心收下"
             title="恭喜您获得一等奖"
+            message="奖品已自动存入您的我的礼品中您可在我的礼品中查看"
+        >
+            <div />
+        </gift-pop-up>-->
+
+        <gift-pop-up
+            :show.sync="showGift"
+            button-left-text="继续抽奖"
+            button-right-text="返回首页"
+            title="很遗憾，与奖品擦肩而过"
             message="奖品已自动存入您的我的礼品中您可在我的礼品中查看"
         >
             <div />

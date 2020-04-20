@@ -67,7 +67,7 @@ export default {
 
 <style module lang="scss">
     .content {
-        width: 506px;
+        width: 606px;
         padding: 48px 16px;
         border-radius: 20px;
         background: #d6565c url("https://mallcdn.youpenglai.com/static/mall/2.9.0/gift-bg.png") no-repeat center top;
