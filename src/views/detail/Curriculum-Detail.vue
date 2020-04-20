@@ -1,34 +1,34 @@
 <template>
     <div :class="$style.curriculum">
-        <div :class="$style.bannerWrapper">
-            <!-- 海报按钮 -->
-            <div :class="$style.haibao">
-                <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createPoster" />
-                <p>分享海报</p>
-            </div>
-            <banner :banners="banners" />
-
-            <!-- 倒计时 -->
-            <count-down
-                v-if="isCountdownShow"
-                :class="[$style.countDownBar, $style.regular]"
-                :endtime="detail.regularSaleTime"
-                theme="orange"
-                prefix="距抢课开始仅剩"
-                @done="refresh"
-            />
-            <!-- 公益棕活动倒计时 -->
-            <countdown-bar
-                v-if="false"
-                :class="$style.countDownBar"
-                :starttime="'2020-09-09 20:00:00'"
-                :endtime="detail.regularSaleTime"
-                @done="refresh"
-            />
-        </div>
-
         <template v-if="loaded">
+            <div :class="$style.bannerWrapper">
+                <!-- 海报按钮 -->
+                <div :class="$style.haibao">
+                    <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                    <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createPoster" />
+                    <p>分享海报</p>
+                </div>
+                <banner :banners="banners" />
+
+                <!-- 倒计时 -->
+                <count-down
+                    v-if="isCountdownShow"
+                    :class="[$style.countDownBar, $style.regular]"
+                    :endtime="detail.regularSaleTime"
+                    theme="orange"
+                    prefix="距抢课开始仅剩"
+                    @done="refresh"
+                />
+                <!-- 公益棕活动倒计时 -->
+                <countdown-bar
+                    v-if="false"
+                    :class="$style.countDownBar"
+                    :starttime="'2020-09-09 20:00:00'"
+                    :endtime="detail.regularSaleTime"
+                    @done="refresh"
+                />
+            </div>
+
             <info-box>
                 <div :class="$style.priceBoxWrapper">
                     <div :class="$style.priceBox">
@@ -349,9 +349,9 @@ export default {
     deactivated () {
         this.loaded = false
         this.loading = false
+        this.creating = false
         this.showContact = false
         this.showHaibao = false
-        this.creating = false
         this.haibao = ''
         this.preview.show = false
     },
@@ -365,18 +365,19 @@ export default {
                 this.loading = true
                 const list = [
                     this.getDetail(),
-                    this.checkIsPresentCourse()
+                    this.checkIsPresentCourse().catch(e => {
+                        console.error(e.message)
+                        return e
+                    })
                 ]
-                const [detail] = await Promise.all(list.map(p => p.catch(e => e)))
-                if (detail instanceof Error) {
-                    throw detail
-                }
 
+                await Promise.all(list)
                 this.createShare()
-                this.loading = false
                 this.loaded = true
             } catch (error) {
                 throw error
+            } finally {
+                this.loading = false
             }
         },
 

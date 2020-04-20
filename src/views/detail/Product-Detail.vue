@@ -5,304 +5,309 @@
 
         <!-- 正常商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
 
-        <!-- 售罄 -->
-        <SoldOut v-if="isDeletedShow" />
-
-        <template v-else>
-            <!-- 海报按钮 -->
-            <div :class="$style.haibao">
-                <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createHaibao(activeProduct)" />
-                <p>分享海报</p>
-            </div>
-            <!-- 商品banner -->
-            <DetailBanner :banners="banners" />
-            <template v-if="detail.id">
-                <!-- 团购倒计时条 -->
-                <TogetherBar
-                    v-if="activeProduct === 2 && preActivity !== 0"
-                    :detail="detail"
-                    @started="refresh(2)"
-                    @ended="refresh(1)"
-                />
-                <!-- 秒杀倒计时条 -->
-                <SecondBar
-                    v-if="activeProduct === 3 && preActivity !== 0"
-                    :detail="detail"
-                    @started="refresh(3)"
-                    @ended="refresh(1)"
-                />
-                <!-- 预购倒计时条 -->
-                <BookingBar
-                    v-if="activeProduct === 4 && preActivity !== 0"
-                    :detail="detail"
-                    @started="refresh(4)"
-                    @ended="refresh(1)"
-                />
-            </template>
-            <!-- 商品基本信息 -->
-            <DetailInfoBox :loading="loading">
-                <!-- 团购信息: 活动进行中，或者，活动预热中且需要隐藏价格，才需要显示这个组件，组件内部会根据活动状态进行显示 -->
-                <TogetherPrice :detail="detail" v-if="activeProduct === 2 && (preActivity === 2 || (preActivity === 1 && !detail.activityProductModel.hidePrice))" />
-                <!-- 秒杀信息 -->
-                <SecondPrice :detail="detail" v-else-if="activeProduct === 3 && preActivity !== 0" />
-                <!-- 预购信息 -->
-                <BookingPrice :detail="detail" v-else-if="activeProduct === 4 && preActivity !== 0" />
-                <!-- 加个 润笔 购买数量，关注人数 登信息 -->
-                <info-header :detail="detail" v-else />
-                <!-- 开售倒计时 -->
-                <count-down
-                    :class="$style.countDown"
-                    v-if="detail.shoppingStatus === 1 && (activeProduct === 1 || !preActivity)"
-                    size="large"
-                    :starttime="detail.serverTime"
-                    :endtime="detail.shoppingTimeLong"
-                    @done="countFinished"
-                />
-                <!-- 商品名称 -->
-                <DetailTitle :active-product="activeProduct" :pre-activity="preActivity" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
-                <!-- 商品描述 -->
-                <DetailDesc v-text="detail.productDesc" />
-                <!-- 商品标签 -->
-                <Tags :tags="detail.labelModels" />
-                <!-- 使用期限(注意：预购商品取 activityProductModel.validityPeriodStar，表示预购核销时间) -->
-                <!-- 新春团购或新春预购并且活动进行中 走 activityProductModel (注意：双十二团购无核销时间) -->
-                <useful-life
-                    v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
-                    :start="([2,4].indexOf(activeProduct) !== -1 && preActivity === 2) ? (activeProduct === 2 && detail.activityProductModel.type !== '2019_02' ? detail.validityPeriodStart : detail.activityProductModel.validityPeriodStart) : detail.validityPeriodStart"
-                    :end="([2,4].indexOf(activeProduct) !== -1 && preActivity === 2) ? (activeProduct === 2 && detail.activityProductModel.type !== '2019_02' ? detail.validityPeriodEnd : detail.activityProductModel.validityPeriodEnd) : detail.validityPeriodEnd"
-                />
-            </DetailInfoBox>
-
-            <!-- 选择优惠券 -->
-            <counpon-field
-                v-if="couponList.length && preActivity !== 2 && !~[5, 6].indexOf(productActive)"
-                :coupon-list="couponList"
-            />
-
-            <Field
-                :class="$style.field"
-                v-if="productType === 'PHYSICAL_GOODS'"
-                label="发货"
-                :label-width="120"
-                content="普通快递"
-            />
-
-            <!-- 正常商品 按照 商品本身的规格显示; 活动商品 按照 活动中的商品显示，已下架也需显示规格 -->
-            <Field
-                :class="$style.field"
-                label="选择"
-                :label-width="120"
-                :clickable="!noStock && !isDown"
-                @click="showSpecifica = true;"
-            >
-                <template v-if="currentModel.skuCode1Name">
-                    已选择：“<span v-text="currentModel.skuCode1Name" />
-                </template>
-                <template v-if="currentModel.skuCode2Name">，<i v-text="currentModel.skuCode2Name" /></template>”
-                <span v-if="!currentModel.id">请选择规格</span>
-            </Field>
-
-            <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
-
-            <div :class="$style.detailOrComment">
-                <div :class="$style.tabs">
-                    <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2">
-                        商品详情
-                    </div>
-                    <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
-                        雅客评论({{ detail.assessmentCount }})
-                    </div>
+        <template v-if="loaded">
+            <!-- 售罄 -->
+            <SoldOut v-if="isDeletedShow" />
+            <template v-else>
+                <!-- 海报按钮 -->
+                <div :class="$style.haibao">
+                    <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                    <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createHaibao(activeProduct)" />
+                    <p>分享海报</p>
                 </div>
-
-                <div>
-                    <Comments v-show="tab === 1" :product-id="productId" :show="tab === 1" />
-                    <DetailInfo
-                        v-show="tab === 2"
-                        :content="detail.detail || '暂无详情'"
+                <!-- 商品banner -->
+                <DetailBanner :banners="banners" />
+                <template v-if="detail.id">
+                    <!-- 团购倒计时条 -->
+                    <TogetherBar
+                        v-if="activeProduct === 2 && preActivity !== 0"
+                        :detail="detail"
+                        @started="refresh(2)"
+                        @ended="refresh(1)"
                     />
-                </div>
-            </div>
-
-            <!-- 使用说明 -->
-            <Instructions
-                v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
-                :content="detail.useDesc"
-            />
-
-            <!-- 品宣入口 -->
-            <div v-if="showBranding" :class="$style.pingxuan" @click="$router.push({ name: 'Appointment', query: { showStatus: 'ALL' } })">
-                <div :class="$style.pingxuanLeft">
-                    <div :class="$style.mallName" v-text="mallName" />
-                    <div :class="$style.mallDesc" v-text="mallDesc" />
-                </div>
-                <div :class="$style.pingxuanMiddle">
-                    <img :src="logoUrl" alt="">
-                </div>
-                <div :class="$style.pingxuanRight">
-                    <pl-svg name="icon-right" fill="#ccc" width="20" height="25" />
-                </div>
-            </div>
-
-            <!--底部购买按钮  -->
-            <buy-now
-                v-if="!~[5, 6].indexOf(productActive) && mchId"
-                type="warning"
-                ref="buyNow"
-                :image="detail.productMainImage"
-                :product-id="productId"
-                :sku-list="detail.productSkuModels"
-                :sku-attr-list="detail.productAttributes"
-                :current-sku.sync="currentModel"
-                :product-status="detail.productStatus"
-                :confirm-text="confirmText"
-                :disable-confirm="confirmText === '暂未开售' || noStock || loading"
-                :disable-add-cart="loading"
-                :limiting="limiting"
-                :active-product="activeProduct"
-                :activity-product-model="detail.activityProductModel || null"
-                :pre-activity="preActivity"
-            />
-
-            <!-- 规格弹框 -->
-            <specification-pop
-                :default-count="defaultCount"
-                :sku-list="detail.productSkuModels"
-                :sku-attr-list="detail.productAttributes"
-                :product-image="detail.productMainImage"
-                :visible.sync="showSpecifica"
-                :sku.sync="currentModel"
-                :limiting="limiting"
-                :active-product="activeProduct"
-                :activity-product-model="detail.activityProductModel || null"
-                :pre-activity="preActivity"
-            >
-                <template v-slot:footer="{ currentSku, limiting, limit }" v-if="!~[5, 6].indexOf(productActive) && mchId">
-                    <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
-                        <!-- 活动商品库存不足时，显示该按钮 -->
-                        <button
-                            v-if="showNormalBuy"
-                            :class="$style.add"
-                            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
-                            @click="buyNow(currentSku, 1, limiting, limit)"
-                        >
-                            单独购买
-                            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-                        </button>
-                        <button
-                            :class="$style.buy"
-                            :disabled="activeStock <= 0 || loading"
-                            @click="buyNow(currentSku, -1, limiting, limit)"
-                        >
-                            {{ activeStock > 0 ? '我要参团' : '已售罄' }}
-                            <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
-                        </button>
-                    </div>
-                    <!-- 秒杀商品下单 -->
-                    <div :class="$style.buttons" v-else-if="activeProduct === 3 && preActivity === 2">
-                        <!-- 活动商品库存不足时，显示该按钮 -->
-                        <button
-                            v-if="showNormalBuy"
-                            :class="$style.add"
-                            :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
-                            @click="buyNow(currentSku, 1, limiting, limit)"
-                        >
-                            原价购买
-                            <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
-                        </button>
-                        <button
-                            :class="$style.buy"
-                            :disabled="activeStock <= 0 || loading"
-                            @click="buyNow(currentSku, -1, limiting, limit)"
-                        >
-                            {{ activeStock > 0 ? '立即秒杀' : '已售罄' }}
-                            <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
-                        </button>
-                    </div>
-                    <!-- 预购商品下单 -->
-                    <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2">
-                        <button
-                            :class="$style.preBtn"
-                            :disabled="activeStock <= 0"
-                            @click="buyNow(currentSku, -1, limiting, limit)"
-                        >
-                            {{ activeStock > 0 ? '定金购买' : '已售罄' }}
-                            <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
-                        </button>
-                    </div>
-                    <div :class="$style.buttons" v-else>
-                        <button
-                            :class="$style.add"
-                            :disabled="adding || noStock || loading"
-                            @click="addToCart(currentSku, limiting, limit)"
-                        >
-                            加入购物车
-                        </button>
-                        <button
-                            :class="$style.buy"
-                            :disabled="adding || noStock || confirmText === '暂未开售' || loading"
-                            @click="buyNow(currentSku, 1, limiting, limit)"
-                        >
-                            {{ confirmText }}
-                        </button>
-                    </div>
+                    <!-- 秒杀倒计时条 -->
+                    <SecondBar
+                        v-if="activeProduct === 3 && preActivity !== 0"
+                        :detail="detail"
+                        @started="refresh(3)"
+                        @ended="refresh(1)"
+                    />
+                    <!-- 预购倒计时条 -->
+                    <BookingBar
+                        v-if="activeProduct === 4 && preActivity !== 0"
+                        :detail="detail"
+                        @started="refresh(4)"
+                        @ended="refresh(1)"
+                    />
                 </template>
-            </specification-pop>
 
-            <!-- 海报弹框 -->
-            <transition name="fade">
-                <div :class="$style.saveHaibao" v-if="showHaibao">
-                    <div :class="$style.saveHaibaoContent">
-                        <img :src="haibao" alt="">
-                        <div :class="$style.saveButton" v-if="activeProduct === 1">
-                            长按识别或保存二维码，分享给朋友吧！
+                <!-- 商品基本信息 -->
+                <DetailInfoBox :loading="loading">
+                    <!-- 团购信息: 活动进行中，或者，活动预热中且需要隐藏价格，才需要显示这个组件，组件内部会根据活动状态进行显示 -->
+                    <TogetherPrice :detail="detail" v-if="activeProduct === 2 && (preActivity === 2 || (preActivity === 1 && !detail.activityProductModel.hidePrice))" />
+                    <!-- 秒杀信息 -->
+                    <SecondPrice :detail="detail" v-else-if="activeProduct === 3 && preActivity !== 0" />
+                    <!-- 预购信息 -->
+                    <BookingPrice :detail="detail" v-else-if="activeProduct === 4 && preActivity !== 0" />
+                    <!-- 加个 润笔 购买数量，关注人数 登信息 -->
+                    <info-header :detail="detail" v-else />
+                    <!-- 开售倒计时 -->
+                    <count-down
+                        :class="$style.countDown"
+                        v-if="detail.shoppingStatus === 1 && (activeProduct === 1 || !preActivity)"
+                        size="large"
+                        :starttime="detail.serverTime"
+                        :endtime="detail.shoppingTimeLong"
+                        @done="countFinished"
+                    />
+                    <!-- 商品名称 -->
+                    <DetailTitle :active-product="activeProduct" :pre-activity="preActivity" :activity-tag="detail.activityProductModel && detail.activityProductModel.activityTag" :product-name="detail.productName" />
+                    <!-- 商品描述 -->
+                    <DetailDesc v-text="detail.productDesc" />
+                    <!-- 商品标签 -->
+                    <Tags :tags="detail.labelModels" />
+                    <!-- 使用期限(注意：预购商品取 activityProductModel.validityPeriodStar，表示预购核销时间) -->
+                    <!-- 新春团购或新春预购并且活动进行中 走 activityProductModel (注意：双十二团购无核销时间) -->
+                    <useful-life
+                        v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
+                        :start="([2,4].indexOf(activeProduct) !== -1 && preActivity === 2) ? (activeProduct === 2 && detail.activityProductModel.type !== '2019_02' ? detail.validityPeriodStart : detail.activityProductModel.validityPeriodStart) : detail.validityPeriodStart"
+                        :end="([2,4].indexOf(activeProduct) !== -1 && preActivity === 2) ? (activeProduct === 2 && detail.activityProductModel.type !== '2019_02' ? detail.validityPeriodEnd : detail.activityProductModel.validityPeriodEnd) : detail.validityPeriodEnd"
+                    />
+                </DetailInfoBox>
+
+                <!-- 选择优惠券 -->
+                <counpon-field
+                    v-if="couponList.length && preActivity !== 2 && !~[5, 6].indexOf(productActive)"
+                    :coupon-list="couponList"
+                />
+
+                <Field
+                    :class="$style.field"
+                    v-if="productType === 'PHYSICAL_GOODS'"
+                    label="发货"
+                    :label-width="120"
+                    content="普通快递"
+                />
+
+                <!-- 正常商品 按照 商品本身的规格显示; 活动商品 按照 活动中的商品显示，已下架也需显示规格 -->
+                <Field
+                    :class="$style.field"
+                    label="选择"
+                    :label-width="120"
+                    :clickable="!noStock && !isDown"
+                    @click="showSpecifica = true;"
+                >
+                    <template v-if="currentModel.skuCode1Name">
+                        已选择：“<span v-text="currentModel.skuCode1Name" />
+                    </template>
+                    <template v-if="currentModel.skuCode2Name">，<i v-text="currentModel.skuCode2Name" /></template>”
+                    <span v-if="!currentModel.id">请选择规格</span>
+                </Field>
+
+                <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
+
+                <div :class="$style.detailOrComment">
+                    <div :class="$style.tabs">
+                        <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2">
+                            商品详情
                         </div>
-                        <div :class="$style.saveButton1" v-else>
-                            长按识别或保存二维码，分享给朋友吧！
+                        <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
+                            雅客评论({{ detail.assessmentCount }})
                         </div>
-                        <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />
+                    </div>
+
+                    <div>
+                        <Comments v-show="tab === 1" :product-id="productId" :show="tab === 1" />
+                        <DetailInfo
+                            v-show="tab === 2"
+                            :content="detail.detail || '暂无详情'"
+                        />
                     </div>
                 </div>
-            </transition>
 
-            <!--团购的提醒， 团购 且 进行中 显示-->
-            <div
-                v-if="(detail.activityProductModel && activeProduct === 2 && preActivity === 2) && (detail.activityProductModel.percolatorCount || detail.activityProductModel.flag)"
-                :class="$style.togetherWarn"
-            >
-                <!--双十二团购阶梯奖提醒，在 新春 且 团购 且 进行中 且 设置了阶梯 的条件下显示-->
-                <template v-if="detail.activityProductModel.percolatorCount">
-                    <ul>
-                        <li
-                            v-for="(item, index) in detail.activityProductModel.payUserImageList.slice(-3)"
-                            :key="index"
-                        >
-                            <img :src="item.headImgURL">
-                        </li>
-                        <li v-if="!detail.activityProductModel.payUserImageList.length"><div>+{{ detail.activityProductModel.percolatorCount }}</div></li>
-                        <li v-if="detail.activityProductModel.payUserImageList.length > 3"><div>...</div></li>
-                    </ul>
-                    <div :class="$style.carveUp">
-                        <div>还差{{ detail.activityProductModel.percolatorCount }}人即可瓜分<span>{{ detail.activityProductModel.prize }}元</span>红包</div>
-                        <div v-if="detail.activityProductModel.flag">有人未付款，还有机会哟，请稍后刷新尝试</div>
+                <!-- 使用说明 -->
+                <Instructions
+                    v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
+                    :content="detail.useDesc"
+                />
+
+                <!-- 品宣入口 -->
+                <div v-if="showBranding" :class="$style.pingxuan" @click="$router.push({ name: 'Appointment', query: { showStatus: 'ALL' } })">
+                    <div :class="$style.pingxuanLeft">
+                        <div :class="$style.mallName" v-text="mallName" />
+                        <div :class="$style.mallDesc" v-text="mallDesc" />
                     </div>
-                </template>
-                <div v-else :class="$style.waitPay">有人未付款，还有机会哟，请稍后刷新尝试</div>
-            </div>
+                    <div :class="$style.pingxuanMiddle">
+                        <img :src="logoUrl" alt="">
+                    </div>
+                    <div :class="$style.pingxuanRight">
+                        <pl-svg name="icon-right" fill="#ccc" width="20" height="25" />
+                    </div>
+                </div>
 
-            <!-- 正常商品 或 未开始的活动商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
-            <div :class="$style.buttomTip" v-if="!loading && isDown && activeProduct === 1 && !~[5, 6].indexOf(productActive) && mchId">
-                该商品已下架
-            </div>
-            <div :class="$style.buttomTip" v-if="!loading && noStock && mchId">
-                该商品已全部售罄，请选择其它商品购买
+                <!--底部购买按钮  -->
+                <buy-now
+                    v-if="!~[5, 6].indexOf(productActive) && mchId"
+                    type="warning"
+                    ref="buyNow"
+                    :image="detail.productMainImage"
+                    :product-id="productId"
+                    :sku-list="detail.productSkuModels"
+                    :sku-attr-list="detail.productAttributes"
+                    :current-sku.sync="currentModel"
+                    :product-status="detail.productStatus"
+                    :confirm-text="confirmText"
+                    :disable-confirm="confirmText === '暂未开售' || noStock || loading"
+                    :disable-add-cart="loading"
+                    :limiting="limiting"
+                    :active-product="activeProduct"
+                    :activity-product-model="detail.activityProductModel || null"
+                    :pre-activity="preActivity"
+                />
+
+                <!-- 规格弹框 -->
+                <specification-pop
+                    :default-count="defaultCount"
+                    :sku-list="detail.productSkuModels"
+                    :sku-attr-list="detail.productAttributes"
+                    :product-image="detail.productMainImage"
+                    :visible.sync="showSpecifica"
+                    :sku.sync="currentModel"
+                    :limiting="limiting"
+                    :active-product="activeProduct"
+                    :activity-product-model="detail.activityProductModel || null"
+                    :pre-activity="preActivity"
+                >
+                    <template v-slot:footer="{ currentSku, limiting, limit }" v-if="!~[5, 6].indexOf(productActive) && mchId">
+                        <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
+                            <!-- 活动商品库存不足时，显示该按钮 -->
+                            <button
+                                v-if="showNormalBuy"
+                                :class="$style.add"
+                                :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
+                                @click="buyNow(currentSku, 1, limiting, limit)"
+                            >
+                                单独购买
+                                <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+                            </button>
+                            <button
+                                :class="$style.buy"
+                                :disabled="activeStock <= 0 || loading"
+                                @click="buyNow(currentSku, -1, limiting, limit)"
+                            >
+                                {{ activeStock > 0 ? '我要参团' : '已售罄' }}
+                                <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+                            </button>
+                        </div>
+                        <!-- 秒杀商品下单 -->
+                        <div :class="$style.buttons" v-else-if="activeProduct === 3 && preActivity === 2">
+                            <!-- 活动商品库存不足时，显示该按钮 -->
+                            <button
+                                v-if="showNormalBuy"
+                                :class="$style.add"
+                                :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
+                                @click="buyNow(currentSku, 1, limiting, limit)"
+                            >
+                                原价购买
+                                <div :class="$style.btnText">¥ {{ currentSku.price }}</div>
+                            </button>
+                            <button
+                                :class="$style.buy"
+                                :disabled="activeStock <= 0 || loading"
+                                @click="buyNow(currentSku, -1, limiting, limit)"
+                            >
+                                {{ activeStock > 0 ? '立即秒杀' : '已售罄' }}
+                                <div v-if="activeStock > 0" :class="$style.text">¥ {{ detail.activityProductModel.price }}</div>
+                            </button>
+                        </div>
+                        <!-- 预购商品下单 -->
+                        <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2">
+                            <button
+                                :class="$style.preBtn"
+                                :disabled="activeStock <= 0"
+                                @click="buyNow(currentSku, -1, limiting, limit)"
+                            >
+                                {{ activeStock > 0 ? '定金购买' : '已售罄' }}
+                                <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
+                            </button>
+                        </div>
+                        <div :class="$style.buttons" v-else>
+                            <button
+                                :class="$style.add"
+                                :disabled="adding || noStock || loading"
+                                @click="addToCart(currentSku, limiting, limit)"
+                            >
+                                加入购物车
+                            </button>
+                            <button
+                                :class="$style.buy"
+                                :disabled="adding || noStock || confirmText === '暂未开售' || loading"
+                                @click="buyNow(currentSku, 1, limiting, limit)"
+                            >
+                                {{ confirmText }}
+                            </button>
+                        </div>
+                    </template>
+                </specification-pop>
+
+                <!-- 海报弹框 -->
+                <transition name="fade">
+                    <div :class="$style.saveHaibao" v-if="showHaibao">
+                        <div :class="$style.saveHaibaoContent">
+                            <img :src="haibao" alt="">
+                            <div :class="$style.saveButton" v-if="activeProduct === 1">
+                                长按识别或保存二维码，分享给朋友吧！
+                            </div>
+                            <div :class="$style.saveButton1" v-else>
+                                长按识别或保存二维码，分享给朋友吧！
+                            </div>
+                            <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />
+                        </div>
+                    </div>
+                </transition>
+
+                <!--团购的提醒， 团购 且 进行中 显示-->
+                <div
+                    v-if="(detail.activityProductModel && activeProduct === 2 && preActivity === 2) && (detail.activityProductModel.percolatorCount || detail.activityProductModel.flag)"
+                    :class="$style.togetherWarn"
+                >
+                    <!--双十二团购阶梯奖提醒，在 新春 且 团购 且 进行中 且 设置了阶梯 的条件下显示-->
+                    <template v-if="detail.activityProductModel.percolatorCount">
+                        <ul>
+                            <li
+                                v-for="(item, index) in detail.activityProductModel.payUserImageList.slice(-3)"
+                                :key="index"
+                            >
+                                <img :src="item.headImgURL">
+                            </li>
+                            <li v-if="!detail.activityProductModel.payUserImageList.length"><div>+{{ detail.activityProductModel.percolatorCount }}</div></li>
+                            <li v-if="detail.activityProductModel.payUserImageList.length > 3"><div>...</div></li>
+                        </ul>
+                        <div :class="$style.carveUp">
+                            <div>还差{{ detail.activityProductModel.percolatorCount }}人即可瓜分<span>{{ detail.activityProductModel.prize }}元</span>红包</div>
+                            <div v-if="detail.activityProductModel.flag">有人未付款，还有机会哟，请稍后刷新尝试</div>
+                        </div>
+                    </template>
+                    <div v-else :class="$style.waitPay">有人未付款，还有机会哟，请稍后刷新尝试</div>
+                </div>
+
+                <!-- 正常商品 或 未开始的活动商品 按照 商品本身的状态显示; 活动商品 按照 活动中的商品显示，不理会商品本身的状态 -->
+                <div :class="$style.buttomTip" v-if="!loading && isDown && activeProduct === 1 && !~[5, 6].indexOf(productActive) && mchId">
+                    该商品已下架
+                </div>
+                <div :class="$style.buttomTip" v-if="!loading && noStock && mchId">
+                    该商品已全部售罄，请选择其它商品购买
+                </div>
+            </template>
+
+            <!-- 猜你喜欢 -->
+            <div style="background-color: #f4f5f9;">
+                <you-like :product-id="productId" :is-my="true" />
             </div>
         </template>
 
-        <!-- 猜你喜欢 -->
-        <div style="background-color: #f4f5f9;">
-            <you-like :product-id="productId" :is-my="true" />
-        </div>
+        <!-- 骨架屏 -->
+        <skeleton v-else />
 
     </div>
 </template>
@@ -338,6 +343,7 @@ import TogetherRule from './together/Together-Rule'
 import TogetherPrice from './together/Together-Price'
 import SecondPrice from './second/Second-Price'
 import BookingPrice from './booking/Booking-Price'
+import Skeleton from './components/Skeleton.vue'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
 /**
@@ -423,7 +429,8 @@ export default {
         UsefulLife,
         InfoHeader,
         Instructions,
-        CountDown
+        CountDown,
+        Skeleton
     },
     data () {
         return {
@@ -444,6 +451,7 @@ export default {
             },
             agentProduct: false,
             showHaibao: false,
+            loaded: false,
             loading: false,
             adding: false,
             creating: false,
@@ -595,10 +603,13 @@ export default {
         }
     },
     deactivated () {
+        this.loaded = false
+        this.loading = false
+        this.creating = false
         this.showSpecifica = false
-        this.currentModel = {}
-        this.haibao = ''
         this.showHaibao = false
+        this.haibao = ''
+        this.currentModel = {}
         this.tab = 2
     },
     async mounted () {
@@ -609,11 +620,35 @@ export default {
         ...mapActions({
             getCartCount: GET_CART_COUNT
         }),
+        async refresh (productActive) {
+            try {
+                this.currentModel = {}
+                this.haibao = ''
+                this.tab = 2
+                this.showSpecifica = false
+                this.loading = true
+
+                const list = [
+                    this.getDetail(productActive),
+                    this.getCouponList().catch(e => {
+                        console.error(e.message)
+                        return e
+                    })
+                ]
+
+                await Promise.all(list)
+                this.createShare()
+                this.loaded = true
+            } catch (e) {
+                throw e
+            } finally {
+                this.loading = false
+            }
+        },
 
         //  获取商品详情
         async getDetail (productActive) {
             try {
-                this.loading = true
                 // 重置一些状态
                 this.resetState()
                 // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
@@ -634,41 +669,14 @@ export default {
 
                 // 所有图片
                 this.banners = mediaInfoIds
-                this.detail = result
                 this.productSkuModels = result.productSkuModels
                 this.currentModel = result.productSkuModels.find(item => item.minBuyNum <= item.stock) || result.productSkuModels[0]
                 this.currentModel.count = result.productSkuModels[0].minBuyNum
-                let shareUrl = ''
-                if (this.userId) {
-                    shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
-                } else {
-                    shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }?noCache=${ Date.now() }`
-                }
-                this.shareUrl = shareUrl
-                let hide = []
-                if (this.detail.activeProduct !== 1) {
-                    // 活动商品隐藏分享到朋友圈
-                    hide = ['menuItem:share:timeline']
-                }
-                share({
-                    appId: this.appId,
-                    title: result.productName,
-                    desc: result.productDesc,
-                    link: shareUrl,
-                    imgUrl: result.productMainImage,
-                    willHide: hide
-                })
-                this.haibaoImg = await loadImage(result.productMainImage)
+                this.detail = result
 
-                // let img = await loadImage(result.productMainImage)
-                // img = cutImageCenter(img)
-                // let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'url')
-                // this.qrcode = qrcode
                 return result
             } catch (e) {
                 throw e
-            } finally {
-                this.loading = false
             }
         },
 
@@ -788,6 +796,40 @@ export default {
                 return false
             }
             return true
+        },
+        // 生成分享
+        async createShare () {
+            const { productName, productDesc, productMainImage } = this.detail
+            try {
+                let shareUrl = ''
+                if (this.userId) {
+                    shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
+                } else {
+                    shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }?noCache=${ Date.now() }`
+                }
+                this.shareUrl = shareUrl
+                let hide = []
+                if (this.detail.activeProduct !== 1) {
+                    // 活动商品隐藏分享到朋友圈
+                    hide = ['menuItem:share:timeline']
+                }
+                share({
+                    appId: this.appId,
+                    title: productName,
+                    desc: productDesc,
+                    link: shareUrl,
+                    imgUrl: productMainImage,
+                    willHide: hide
+                })
+                this.haibaoImg = await loadImage(productMainImage)
+
+                // let img = await loadImage(productMainImage)
+                // img = cutImageCenter(img)
+                // let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'url')
+                // this.qrcode = qrcode
+            } catch (error) {
+                throw error
+            }
         },
         async createHaibao (type) {
             if (this.loading) {
@@ -958,18 +1000,6 @@ export default {
             // this.$set(this.detail, 'preActivity', 2)
             // location.reload()
             this.refresh()
-        },
-        async refresh (productActive) {
-            try {
-                this.showSpecifica = false
-                this.currentModel = {}
-                this.haibao = ''
-                this.tab = 2
-                await this.getDetail(productActive)
-                await this.getCouponList()
-            } catch (e) {
-                throw e
-            }
         }
     },
     async beforeRouteUpdate (to, from, next) {
