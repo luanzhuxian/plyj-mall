@@ -133,7 +133,7 @@ export default {
 
 <style module lang="scss">
 .live-wrapper {
-    padding: 32px 20px 40px;
+    padding: 20px 16px 20px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
@@ -178,13 +178,12 @@ export default {
 .live {
     display: flex;
     background-color: #fff;
-    border-radius: 40px 20px 20px 20px;
     overflow: hidden;
 }
 .img-wrapper {
     position: relative;
-    width: 280px;
-    height: 186px;
+    width: 240px;
+    height: 160px;
     border-radius: 20px;
     overflow: hidden;
     img {
@@ -207,7 +206,7 @@ export default {
     height: 48px;
     line-height: 48px;
     background: #fb7d55;
-    border-radius: 0 0 40px 0;
+    border-radius: 0 0 20px 0;
     font-size: 24px;
     font-family: Microsoft YaHei;
     color: #fff;
@@ -219,7 +218,7 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    padding: 14px 14px 14px 24px;
+    padding: 8px 0 8px 20px;
 }
 .top {
     margin-bottom: 0;
