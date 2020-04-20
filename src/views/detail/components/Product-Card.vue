@@ -1,41 +1,48 @@
 <template>
     <div
-        :class="{
-            [$style.productCard]: true,
-            [$style.round]: round,
-            [$style.border]: border
-        }"
+        class="product-card"
+        :class="[{ round, border }, customClass]"
         @click="handleClick"
     >
-        <div :class="{
-            [$style.imgWrapper]: true,
-            [$style.round]: roundImage
-        }">
+        <div class="product-card__img-wrapper">
             <img :src="image + '?x-oss-process=style/thum-middle'" alt="">
-            <div :class="$style.label" v-if="label" v-text="label" />
+            <div class="product-card__label" v-if="label" v-text="label" />
         </div>
 
-        <div :class="$style.info">
+        <div class="product-card__info">
             <div
-                :class="$style.top"
+                class="product-card__info-top"
                 :style="{ '--line': maxLine }"
                 v-if="top"
                 v-text="top"
             />
-            <div :class="$style.subTop" v-if="!$slots.subTop" v-text="subTop" />
+            <div class="product-card__info-subtop" v-if="!$slots.subTop" v-text="subTop" />
             <slot name="middle" v-else />
-            <div :class="$style.middle" v-if="!$slots.middle" v-text="middle" />
+            <div
+                class="product-card__info-middle"
+                :class="{
+                    marginTopAuto: !$slots.subTop && !subTop
+                }"
+                v-if="!$slots.middle"
+                v-text="middle"
+            />
             <slot name="middle" v-else />
-            <div :class="$style.bottom" v-if="!$slots.bottom">
+            <div
+                class="product-card__info-bottom"
+                :class="{
+                    marginTopAuto: !$slots.middle && !middle
+                }"
+                v-if="!$slots.bottom"
+            >
                 <span
-                    :class="$style.bottomLeft"
+                    class="product-card__info-bottom-left"
                     v-if="!$slots.bottomLeft"
                     v-text="bottomLeft"
                 />
                 <slot name="bottomLeft" v-else />
-                <div :class="$style.bottomRight" v-if="!$slots.bottomRight">
+                <div class="product-card__info-bottom-right" v-if="!$slots.bottomRight">
                     <button
-                        :class="$style.bottomButton"
+                        class="product-card__info-bottom-button"
                         v-if="buttonText"
                         v-text="buttonText"
                         @click.stop="handleBtnClick"
@@ -52,6 +59,10 @@
 export default {
     name: 'ProductCard',
     props: {
+        customClass: {
+            type: String,
+            default: ''
+        },
         image: {
             type: String,
             default: '',
@@ -121,7 +132,7 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
+<style lang="scss">
 .product-card {
     box-sizing: border-box;
     display: flex;
@@ -134,85 +145,91 @@ export default {
     &.border {
         border: 2px solid #e7e7e7;
     }
-}
-.img-wrapper {
-    position: relative;
-    width: 280px;
-    height: 186px;
-    overflow: hidden;
-    &.round {
-        border-radius: 20px;
+
+    &__img-wrapper {
+        position: relative;
+        width: 280px;
+        height: 186px;
+        overflow: hidden;
+        // &.round {
+        //     border-radius: 20px;
+        // }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    &__label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100px;
+        line-height: 42px;
+        text-align: center;
+        background: #f2b036;
+        border-radius: 20px 0 20px 0;
+        font-size: 24px;
+        color: #fff;
     }
-}
-.label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100px;
-    line-height: 42px;
-    text-align: center;
-    background: #f2b036;
-    border-radius: 20px 0 20px 0;
-    font-size: 24px;
-    color: #fff;
-}
-.info {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-left: 18px;
-    padding: 8px 0;
-    flex: 1;
-    width: 0;
-    height: 100%;
-    font-size: 24px;
-    line-height: 34px;
-    color: #666;
-}
-.top {
-    font-size: 28px;
-    font-family: Microsoft YaHei;
-    font-weight: bold;
-    color: #373737;
-    line-height: 34px;
-    @include elps-wrap(var(--line));
-}
-.sub-top {
-    margin-top: 16px;
-    @include elps();
-}
-.middle {
-    @include elps();
-}
-.bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-    @include elps();
-    &-left {
+    &__info {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        // justify-content: space-between;
+        margin-left: 18px;
+        padding: 8px 0;
         flex: 1;
         width: 0;
-        line-height: 48px;
-        color: #999;
-        @include elps();
+        height: 100%;
+        font-size: 24px;
+        line-height: 34px;
+        color: #666;
+
+        &-top {
+            font-size: 28px;
+            font-family: Microsoft YaHei;
+            font-weight: bold;
+            color: #373737;
+            line-height: 34px;
+            @include elps-wrap(var(--line));
+        }
+        &-subtop {
+            margin-top: 16px;
+            @include elps();
+        }
+        &-middle {
+            margin-top: 10px;
+            @include elps();
+        }
+        &-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            // margin-top: auto;
+            @include elps();
+            &-left {
+                flex: 1;
+                width: 0;
+                line-height: 48px;
+                color: #999;
+                @include elps();
+            }
+            &-button {
+                margin-right: 8px;
+                width: 124px;
+                height: 48px;
+                text-align: center;
+                border: 2px solid #fe7700;
+                border-radius: 8px;
+                font-size: 26px;
+                color: #fe7700;
+            }
+        }
     }
-    &-button {
-        margin-right: 8px;
-        width: 124px;
-        height: 48px;
-        text-align: center;
-        border: 2px solid #fe7700;
-        border-radius: 8px;
-        font-size: 26px;
-        color: #fe7700;
-    }
+}
+.margin-top-auto {
+    margin-top: auto;
 }
 
 </style>

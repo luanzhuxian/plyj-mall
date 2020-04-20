@@ -9,19 +9,19 @@
             <li :class="$style.listItem" v-for="(item, index) of data" :key="index">
                 <product-card
                     label="单课"
+                    :custom-class="$style.productCard"
                     :image="item.lessonsImg"
                     :top="item.name"
                     :sub-top="item.lecturer ? `主讲人：${item.lecturer}` : ''"
                     :button-text="getBtnText(item)"
                     round
-                    round-image
                     @btn-click="e => handleBtnClick(e, item)"
                 >
                     <template slot="bottom" v-if="!item.url">
                         <span :class="$style.warn">{{ `课程内容更新中 敬请期待` }}</span>
                     </template>
                     <template slot="middle" v-else>
-                        <div :class="$style.info">
+                        <div :class="[$style.info, item.lecturer && $style.marginTop]">
                             <span :class="$style.duration" v-if="item.resourceTime" v-text="getDuration(item.resourceTime)" />
                             <span :class="$style.view" v-if="item.vodNumber">{{ `${item.vodNumber}人观看` }}</span>
                             <span v-if="item.learnProgress">{{ `学习${item.learnProgress}%` }}</span>
@@ -174,6 +174,9 @@ export default {
         .info {
             margin-top: auto;
             @include elps();
+            &.margin-top {
+                margin-top: 10px;
+            }
         }
         .duration {
             margin-right: 24px;
@@ -195,6 +198,11 @@ export default {
         line-height: 34px;
         color: #828282;
         text-align: center;
+    }
+    .product-card {
+        img {
+            border-radius: 20px;
+        }
     }
 }
 
