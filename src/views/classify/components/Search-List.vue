@@ -54,7 +54,7 @@
                     <load-more
                         ref="courseList"
                         :form="courseForm"
-                        :request-methods="getVideoList"
+                        :request-methods="searchCourse"
                         icon="icon-search-no-content-05634"
                         no-content-tip="抱歉，没有找到相关课程"
                         no-pull-refresh
@@ -94,7 +94,7 @@ import LoadMore from '../../../components/common/Load-More.vue'
 import TabContainer from '../../../components/penglai-ui/tab-container/Tab-Container.vue'
 import TabContainerItem from '../../../components/penglai-ui/tab-container/Tab-Container-Item.vue'
 import { searchProduct } from '../../../apis/search'
-import { getVideoList } from '../../../apis/online-classroom'
+import { searchCourse } from '../../../apis/online-classroom'
 import { throttle } from '../../../assets/js/util'
 
 export default {
@@ -129,12 +129,12 @@ export default {
                 size: 10
             },
             courseForm: {
-                searchParam: '',
+                searchContent: '',
                 current: 1,
                 size: 10
             },
             searchProduct,
-            getVideoList,
+            searchCourse,
             productScrollHandler: null,
             courseScrollHandler: null
         }
@@ -186,7 +186,7 @@ export default {
         },
         refresh (query = this.query) {
             this.productForm.searchContent = query
-            this.courseForm.searchParam = query
+            this.courseForm.searchContent = query
             this.$refs.productList.refresh()
             this.$refs.courseList.refresh()
         }
