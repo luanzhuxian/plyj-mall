@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.poster" v-if="show">
+    <div :class="$style.poster" v-if="isShow">
         <div :class="$style.content">
             <img :src="poster" alt="">
             <pl-svg name="icon-close3" fill="#fff" width="48" @click="close" />
@@ -57,6 +57,7 @@ export default {
     },
     data () {
         return {
+            isShow: false,
             poster: ''
         }
     },
@@ -72,11 +73,20 @@ export default {
             return this.data.sellingPrice || 0
         }
     },
+    watch: {
+        show (val) {
+            this.isShow = !!val
+            if (val) {
+                this.createPoster()
+            }
+        }
+    },
     created () {
-        this.createPoster()
+        // this.createPoster()
     },
     methods: {
         close () {
+            this.isShow = false
             this.$emit('update:show', false)
         },
 
@@ -108,8 +118,11 @@ export default {
                 canvas.height = 1156
                 const ctx = canvas.getContext('2d')
 
+                // 背景、头像
                 ctx.drawImage(bg, 0, 0, 654, 1156)
                 ctx.drawImage(arcAvatar, 280, 192, 96, 96)
+                ctx.fillStyle = '#00c75b'
+                ctx.fillRect(280, 286, 96, 5)
 
                 // 用户名
                 ctx.font = '28px Microsoft YaHei UI'
@@ -164,16 +177,21 @@ export default {
                 ctx.fillText(text, 407, 608)
 
                 // 二维码
-                const qrcode = await generateQrcode(380, share, 20, image, 0, 'canvas')
-                console.log(qrcode)
-                ctx.drawImage(qrcode, 0, 0, qrcode.width, qrcode.height, 134, 676, 380, 380)
+                const qrcode = await generateQrcode(330, share, 0, image, 10, 'canvas', 150)
+                ctx.drawImage(qrcode, 162, 688, 330, 330)
                 ctx.font = 'bold 24px Microsoft YaHei UI'
+                ctx.strokeStyle = '#000'
+                ctx.setLineDash([8, 2])
+                ctx.strokeRect(136, 662, 382, 382)
                 ctx.fillStyle = '#333'
                 ctx.textAlign = 'center'
-                ctx.fillText('长按识别或保存二维码，分享给朋友吧！', 327, 1076)
+                ctx.fillText('长按识别或保存二维码，分享给朋友吧！', 340, 1076)
 
                 this.poster = canvas.toDataURL('image/jpeg', 0.9)
+                this.isShow = true
+
                 this.$emit('done', this.poster)
+                return this.poster
             } catch (e) {
                 throw e
             }

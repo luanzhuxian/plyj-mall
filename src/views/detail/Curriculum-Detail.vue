@@ -212,10 +212,9 @@
             <!-- 公益棕海报 -->
             <transition name="fade">
                 <poster
-                    :show.sync="isCharityPosterShow"
+                    ref="charityPoster"
                     :data="detail"
                     :share="shareUrl"
-                    @done="poster => haibao = poster"
                 />
             </transition>
         </template>
@@ -300,8 +299,7 @@ export default {
             },
             haibao: '',
             creating: false,
-            showHaibao: false,
-            isCharityPosterShow: false
+            showHaibao: false
         }
     },
     props: {
@@ -531,18 +529,17 @@ export default {
             if (this.loading) {
                 return
             }
-            // if (this.haibao) {
-            //     this.showHaibao = true
-            //     return
-            // }
-
-            this.creating = true
 
             let img = await loadImage(this.detail.courseImg)
             if (!img) {
                 this.$error('图片加载错误')
                 return
             }
+            // if (this.haibao) {
+            //     this.showHaibao = true
+            //     return
+            // }
+            this.creating = true
 
             // 截取头像
             let lodedAvatar
@@ -634,18 +631,14 @@ export default {
                 this.creating = false
             }
         },
-        createCharityPoster () {
+        async createCharityPoster () {
             try {
                 if (this.loading) {
                     return
                 }
-                // if (this.haibao) {
-                //     this.isCharityPosterShow = true
-                //     return
-                // }
 
                 this.creating = true
-                this.isCharityPosterShow = true
+                this.haibao = await this.$refs.charityPoster.createPoster()
             } catch (error) {
                 throw error
             } finally {
