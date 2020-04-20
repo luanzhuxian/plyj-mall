@@ -42,7 +42,7 @@
                 </template>
 
                 <!-- 商品基本信息 -->
-                <DetailInfoBox :loading="loading">
+                <DetailInfoBox>
                     <!-- 团购信息: 活动进行中，或者，活动预热中且需要隐藏价格，才需要显示这个组件，组件内部会根据活动状态进行显示 -->
                     <TogetherPrice :detail="detail" v-if="activeProduct === 2 && (preActivity === 2 || (preActivity === 1 && !detail.activityProductModel.hidePrice))" />
                     <!-- 秒杀信息 -->
