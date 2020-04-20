@@ -49,7 +49,7 @@
                                 <span v-text="detail.sale" />人关注
                             </template> -->
                                 <template v-else>
-                                    <span v-text="detail.sale" />人已学
+                                    <span v-text="detail.sale" />人订阅
                                 </template>
                             </div>
                         </div>
