@@ -104,6 +104,7 @@ import { getCourse } from '../../apis/online-classroom.js'
 import { getCategoryTree } from '../../apis/classify'
 import LoadMore from '../../components/common/Load-More.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
+import moment from 'moment'
 export default {
     name: 'OnlineClassroom',
     components: {
@@ -203,14 +204,14 @@ export default {
                 throw e
             }
         },
-        async getServerTime (difference = 0) {
+        async getServerTime () {
             try {
-                const now = Date.now()
+                const now = Number(moment().valueOf())
                 const { result: time } = await getServerTime()
-                const end = Date.now()
+                const end = Number(moment().valueOf())
                 // 返回的时间加上请求时间
-                const serverTime = Number(time) + (end - now) + difference
-                this.duration = new Date(serverTime).valueOf() - new Date().valueOf()
+                const serverTime = Number(time) + (end - now)
+                this.duration = Number(moment(serverTime).valueOf()) - Number(moment().valueOf())
             } catch (e) {
                 throw e
             }
@@ -219,9 +220,9 @@ export default {
             this.courseList = this.addAtrToItem(list)
         },
         addAtrToItem (list) {
-            const currentTimeStamp = new Date().valueOf() + this.duration
+            const currentTimeStamp = Number(moment().valueOf()) + this.duration
             for (const item of list) {
-                item.isNotStart = new Date(item.regularSaleTime).valueOf() > currentTimeStamp
+                item.isNotStart = Number(moment(item.regularSaleTime).valueOf()) > currentTimeStamp
             }
             return list
         },
