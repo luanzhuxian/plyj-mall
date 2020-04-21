@@ -899,7 +899,7 @@ export default {
             }
             try {
                 // 二维码
-                const qrcode = await generateQrcode(300, this.shareUrl, 15, img, 10, 'canvas')
+                const qrcode = await generateQrcode({ size: 300, text: this.shareUrl, padding: 15, img, centerPadding: 10, type: 'canvas' })
 
                 // 商品图片
                 ctx.drawImage(img, 0, 0, img.width, img.height, 0, 192, 1120, 746)

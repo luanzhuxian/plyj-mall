@@ -167,7 +167,7 @@ export function isIOS () {
  * @param imageSize {number} 中心图片的大小
  * @returns {Promise<*>}
  */
-export async function generateQrcode (size, text, padding = 0, img = null, centerPadding = 0, type = 'url', imageSize = 80) {
+export async function generateQrcode ({ size, text, padding = 0, img = null, centerPadding = 0, type = 'url', imageSize = 80 }) {
     const { devicePixelRatio } = window
     let canvas
     canvas = new window.Qrcode({
