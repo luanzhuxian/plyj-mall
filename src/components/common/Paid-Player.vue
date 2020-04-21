@@ -6,6 +6,7 @@
             v-if="!checking && type === 'video' && src"
             preload
             controls
+            controlsList="nodownload"
             x5-video-player-type="h5-page"
             :src="src"
             playsinline=""
