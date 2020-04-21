@@ -18,7 +18,7 @@
                             :key="item.productId"
                             :is-helper="isHelper"
                             :product-id="item.productId"
-                            :product-type="item.productType"
+                            :product-type="item.type"
                             :product-img="item.productImg"
                             :product-name="item.productName"
                             :rebate="item.rebate"
@@ -69,8 +69,8 @@ export default {
     methods: {
         async  getList () {
             try {
-                const { result: { records } } = await getHelperProductList()
-                this.productList = records
+                const { result } = await getHelperProductList()
+                this.productList = result
             } catch (e) {
                 throw e
             }
