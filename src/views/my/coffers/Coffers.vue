@@ -26,6 +26,14 @@
                         提现
                     </button>
                 </div>
+                <div :class="$style.todayRebate" style="padding-left: 0;">
+                    <p class="fz-24 gray-3">
+                        待入账润笔
+                    </p>
+                    <p class="fz-50 bold">
+                        {{ userInfo.awaitBalance }} <i class="fz-26">元</i>
+                    </p>
+                </div>
                 <div :class="$style.todayRebate">
                     <p class="fz-24 gray-3">
                         今日润笔
@@ -119,7 +127,7 @@
 import TopText from '../../../components/common/Top-Text.vue'
 import { isIdCard } from '../../../assets/js/validate'
 import { bindIdCard } from '../../../apis/base-api'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { USER_INFO } from '../../../store/mutation-type'
 export default {
     name: 'Coffers',
@@ -127,7 +135,8 @@ export default {
         TopText
     },
     computed: {
-        ...mapGetters(['balance', 'currentBalance', 'cumulativeBalance', 'idCardFlag', 'mobile', 'realName'])
+        ...mapGetters(['balance', 'currentBalance', 'cumulativeBalance', 'idCardFlag', 'mobile', 'realName']),
+        ...mapState(['userInfo'])
     },
     methods: {
         async withdraw () {
@@ -135,6 +144,7 @@ export default {
                 if (!this.idCardFlag) {
                     const idCard = await this.$propmt({
                         message: '请绑定身份证',
+                        viceMessage: '请完成提现身份验证，通过后即可提现',
                         placeholder: '请输入身份证号',
                         rules: [
                             { reuqired: true, message: '请输入身份证号' },

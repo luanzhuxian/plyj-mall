@@ -23,5 +23,13 @@ export default [
         meta: {
             title: '公益粽行动'
         }
+    },
+    {
+        path: '/longmen-festival/helper',
+        name: 'LongMenHelper',
+        component: () => import('../views/longmen-festival/helper/Index.vue'),
+        meta: {
+            title: '全民来分销'
+        }
     }
 ]

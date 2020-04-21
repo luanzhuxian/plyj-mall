@@ -63,6 +63,8 @@
                                         </span>
                                     </p>
                                 </div>
+
+                                <div v-if="item.definiteType" :class="$style.itemLogo">{{ item.definiteType }}</div>
                             </li>
                             <!--<li v-for="(pro, j) of item"-->
                             <!--:key="j"-->
@@ -210,6 +212,7 @@ export default {
   }
   .item {
     background-color: #fff;
+    position: relative;
     > .main-content {
       padding: 30px 30px 16px 30px;
       display: flex;
@@ -240,6 +243,16 @@ export default {
         }
       }
     }
+  }
+  .item-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 6px 12px;
+    border-radius:0 0px 20px 0px;
+    font-size:24px;
+    background-color: #F2B036;
+    color: #fff;
   }
   .item-right {
     display: inline-flex;
