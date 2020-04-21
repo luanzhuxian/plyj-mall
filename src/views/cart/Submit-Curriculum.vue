@@ -120,12 +120,13 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mobile', 'userName'])
+        ...mapGetters(['mobile', 'userName', 'shareId'])
     },
     async activated () {
         // 联系人信息
         const contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
         this.contactInfoModel = contactModel || { name: this.realName || this.userName, mobile: this.mobile }
+        this.contactInfoModel.shareUserId = this.shareId || ''
         try {
             this.getCourseDetail()
         } catch (e) {
