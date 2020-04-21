@@ -40,8 +40,13 @@
                             <div v-else :class="$style.free">免费</div>
                         </template>
                         <div :class="$style.original">
-                            <div v-if="detail.priceType === 1 && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
-                                原价：<del v-text="detail.originalPrice" />
+                            <div v-if="detail.priceType === 1" class="mr-30">
+                                <template v-if="isPresent">
+                                    售价：<del v-text="detail.sellingPrice" />
+                                </template>
+                                <template v-else-if="detail.originalPrice && detail.originalPrice !== detail.sellingPrice">
+                                    原价：<del v-text="detail.originalPrice" />
+                                </template>
                             </div>
                             <div>
                                 <span v-if="detail.sale === 0">正在热销中</span>
