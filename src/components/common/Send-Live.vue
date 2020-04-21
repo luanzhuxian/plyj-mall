@@ -209,6 +209,7 @@ export default {
             courseList.forEach(item => {
                 const newItem = {
                     id: item.id,
+                    courseId: item.courseId,
                     courseType: item.courseType,
                     coverImg: item.courseImg,
                     name: item.courseName,
@@ -240,7 +241,7 @@ export default {
                 }
             } else {
                 // 单课+系列课
-                this.$router.push({ name: 'Curriculum', params: { productId: row.id } })
+                this.$router.push({ name: 'Curriculum', params: { productId: row.courseId } })
             }
         },
         close () {

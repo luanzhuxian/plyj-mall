@@ -181,7 +181,7 @@ export async function generateQrcode ({ size, text, padding = 0, img = null, cen
     // imageSize: 30
     })
     return new Promise(resolve => {
-    // 生成中心图片内边距
+        // 生成中心图片内边距
         if (img) {
             if (centerPadding > 0) {
                 const tempCanvas = document.createElement('canvas')

@@ -11,10 +11,10 @@
         </div>
         <ul :class="$style.list">
             <product-card
-                :class="$style.listItem"
                 v-for="(item, index) of data"
                 :key="index"
                 label="系列课"
+                :custom-class="$style.listItem"
                 :image="item.courseImg"
                 :top="item.courseName"
                 :bottom-left="`${item.sale}人已购`"

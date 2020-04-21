@@ -151,7 +151,9 @@ export default {
         },
         noIcon: Boolean,
         // 不显示‘没有更多了’提示true, 显示false
-        isNotShowNoMoreTip: Boolean
+        isNotShowNoMoreTip: Boolean,
+        // 禁止下拉事件
+        noPullRefresh: Boolean
     },
     computed: {
         pullLoading () {
@@ -182,9 +184,11 @@ export default {
     },
     activated () {
         const el = this.$el
-        el.addEventListener('touchstart', this.touchstart, { passive: true })
-        el.addEventListener('touchmove', this.touchMove)
-        el.addEventListener('touchend', this.touchend, { passive: true })
+        if (!this.noPullRefresh) {
+            el.addEventListener('touchstart', this.touchstart, { passive: true })
+            el.addEventListener('touchmove', this.touchMove)
+            el.addEventListener('touchend', this.touchend, { passive: true })
+        }
         if (!this.scrollHandler) {
             // 延迟绑定滚动事件
             // 因为如果其它页面如果滚动过一段距离，当路由切换的时候，会从新滚动到0的位置，会触发一次滚动事件
@@ -379,11 +383,11 @@ export default {
 </script>
 
 <style module lang="scss">
-  .loadMore {
+.loadMore {
     position: relative;
     overflow: hidden;
-  }
-  .pullLoading {
+}
+.pullLoading {
     position: absolute;
     left: 50%;
     top: 0;
@@ -398,43 +402,48 @@ export default {
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     z-index: 9;
     .pullLoadingIcon {
-      width: 50px;
-      height: 50px;
-      &.rotate {
-        animation: rotate .8s infinite linear;
-      }
+        width: 50px;
+        height: 50px;
+        &.rotate {
+            animation: rotate .8s infinite linear;
+        }
     }
-  }
-  .loadMoreContainer {
+}
+.loadMoreContainer {
     min-height: 200px;
     .bottomLoadingIcon {
-      margin: 30px auto 30px;
-      width: 50px;
-      height: 50px;
-      &.btoRotate {
-        animation: rotate .8s linear infinite;
-      }
+        margin: 30px auto 30px;
+        width: 50px;
+        height: 50px;
+        &.btoRotate {
+            animation: rotate .8s linear infinite;
+        }
     }
-  }
-  .noMore {
+}
+.noMore {
     line-height: 90px;
     font-size: 28px;
     color: #999;
     text-align: center;
-  }
-  .noContent {
+}
+.noContent {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 200px;
-  }
-  .noContentTip {
+}
+.noContentTip {
     margin-top: 20px;
     font-size: 32px;
     color: #999;
-  }
-  @keyframes rotate {
-    from { transform: rotate(0deg) }
-    to { transform: rotate(360deg) }
-  }
+}
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 </style>

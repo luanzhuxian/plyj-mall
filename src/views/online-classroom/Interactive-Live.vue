@@ -268,7 +268,7 @@ export default {
     .desc {
       flex: 1;
       .live-name {
-        width: 490px;
+        width: calc(100vw - 320px);
         margin-bottom: 12px;
         font-size: 30px;
         font-weight: bold;

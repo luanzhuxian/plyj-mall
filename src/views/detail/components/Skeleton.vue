@@ -1,15 +1,18 @@
 <template>
     <div :class="$style.skeleton">
-        <div :class="[$style.price, $style.skeAnimation]" />
-        <div :class="[$style.originalPrice, $style.skeAnimation]" />
-        <div :class="[$style.main, $style.main1, $style.skeAnimation]" />
-        <div :class="[$style.main, $style.main2, $style.skeAnimation]" />
-        <div :class="[$style.sub, $style.skeAnimation]" />
-        <div :class="$style.fieldWrapper">
-            <div :class="[$style.field, $style.skeAnimation]" />
-        </div>
-        <div :class="$style.fieldWrapper">
-            <div :class="[$style.field, $style.skeAnimation]" />
+        <div :class="[$style.banner, $style.skeAnimation]" />
+        <div :class="$style.panel">
+            <div :class="[$style.price, $style.skeAnimation]" />
+            <div :class="[$style.originalPrice, $style.skeAnimation]" />
+            <div :class="[$style.main, $style.main1, $style.skeAnimation]" />
+            <div :class="[$style.main, $style.main2, $style.skeAnimation]" />
+            <div :class="[$style.sub, $style.skeAnimation]" />
+            <div :class="$style.fieldWrapper">
+                <div :class="[$style.field, $style.skeAnimation]" />
+            </div>
+            <div :class="$style.fieldWrapper">
+                <div :class="[$style.field, $style.skeAnimation]" />
+            </div>
         </div>
     </div>
 </template>
@@ -26,10 +29,15 @@ export default {
 <style lang="scss" module>
 .skeleton {
     position: relative;
+}
+.banner {
+    width: 100%;
+    height: 502px;
+}
+.panel {
     padding: 12px 24px;
     background-color: #fff;
 }
-
 .price {
     margin-bottom: 8px;
     width: 150px;

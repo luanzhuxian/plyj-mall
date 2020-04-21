@@ -53,8 +53,7 @@ module.exports = {
         // 如果设置为true，devServer会把编译后的文件存入磁盘，而不是存入内存，这样热刷新会慢一点，但是会节省内存
         writeToDisk: true,
         proxy: {
-
-            // 37测试 34开发 王恩74 李宾哲132 赵伟116 牛昌昌92 张涛149 任钊64
+            // 测试37 开发34 王恩74 李宾哲132 牛昌昌92 张涛149 刘兵227 任钊64 崔璐115
             '/apis': {
 
                 // target: 'https://mall.youpenglai.com'

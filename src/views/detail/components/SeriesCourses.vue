@@ -8,24 +8,23 @@
         <ul :class="$style.list">
             <li :class="$style.listItem" v-for="(item, index) of data" :key="index">
                 <product-card
-                    label="单课"
+                    label="视频课"
+                    :custom-class="$style.productCard"
                     :image="item.lessonsImg"
                     :top="item.name"
                     :sub-top="item.lecturer ? `主讲人：${item.lecturer}` : ''"
                     :button-text="getBtnText(item)"
                     round
-                    round-image
-                    @click="e => handleClick(e, item)"
                     @btn-click="e => handleBtnClick(e, item)"
                 >
                     <template slot="bottom" v-if="!item.url">
                         <span :class="$style.warn">{{ `课程内容更新中 敬请期待` }}</span>
                     </template>
-                    <template slot="bottomLeft" v-else>
-                        <div :class="$style.listBottomLeft">
+                    <template slot="middle" v-else>
+                        <div :class="[$style.info, item.lecturer && $style.marginTop]">
                             <span :class="$style.duration" v-if="item.resourceTime" v-text="getDuration(item.resourceTime)" />
                             <span :class="$style.view" v-if="item.vodNumber">{{ `${item.vodNumber}人观看` }}</span>
-                            <span v-if="canLearn && item.learnProgress">{{ `学习${item.learnProgress}%` }}</span>
+                            <span v-if="item.learnProgress">{{ `学习${item.learnProgress}%` }}</span>
                         </div>
                     </template>
                 </product-card>
@@ -95,9 +94,7 @@ export default {
         getBtnText ({ url, supportWatch = 0, learnProgress, haveSingleVideoCourse = false, singleVideoCourseId }) {
             // 无关联视频
             if (!url) return ''
-            if (this.canLearn) {
-                return learnProgress ? '' : '去学习'
-            }
+            if (this.canLearn) return '去学习'
             // 上架中且支持试看
             if (this.status === 1 && supportWatch === 1) return '试看'
             // 关联其他单课
@@ -144,23 +141,6 @@ export default {
                     }
                 })
             }
-        },
-        handleClick (e, { id, singleVideoCourseId, learnProgress }) {
-            const { courseId, orderId } = this
-
-            if (this.canLearn) {
-                this.$router.push({
-                    name: 'CourseWatch',
-                    params: {
-                        courseId
-                    },
-                    query: {
-                        liveId: id,
-                        orderId,
-                        progress: learnProgress
-                    }
-                })
-            }
         }
     }
 }
@@ -191,6 +171,13 @@ export default {
         &:nth-of-type(1) {
             padding-top: 0;
         }
+        .info {
+            margin-top: auto;
+            @include elps();
+            &.margin-top {
+                margin-top: 10px;
+            }
+        }
         .duration {
             margin-right: 24px;
         }
@@ -212,8 +199,10 @@ export default {
         color: #828282;
         text-align: center;
     }
-    &-bottom-left {
-        @include elps();
+    .product-card {
+        img {
+            border-radius: 20px;
+        }
     }
 }
 

@@ -1,7 +1,9 @@
 <template>
     <div :class="$style.studyItem" @click="target(item)">
         <div :class="$style.img">
-            <div v-if="item.validityType === 1">{{ item.validity }}天内完成学习</div>
+            <div v-if="item.validityType === 1">
+                {{ item.priceType === 0 ? `${moment(item.validityDate).format('YYYY-MM-DD')} 到期` : `${item.validity} 天内完成学习` }}
+            </div>
             <img :src="item.courseImg" alt="">
         </div>
         <div :class="$style.content">
@@ -26,6 +28,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
     name: 'StudyItem',
     props: {
@@ -52,9 +55,10 @@ export default {
         }
     },
     methods: {
+        moment,
         target (item) {
-            if (this.courseType === '1') {
-                if (this.learnStatus !== '3') {
+            if (this.learnStatus !== '3') {
+                if (this.courseType === '1') {
                     this.$router.push({
                         name: 'CourseWatch',
                         params: {
@@ -69,8 +73,6 @@ export default {
                 } else {
                     this.$router.push({ name: 'Curriculum', params: { productId: item.courseId } })
                 }
-            } else {
-                this.$router.push({ name: 'Curriculum', params: { productId: item.courseId } })
             }
         }
     },
@@ -80,7 +82,7 @@ export default {
             return this.$route.params.courseType || '1'
         },
         learnStatus () {
-            // 1 未学习 2 学习中 3 学习完
+            // 1 未学习 2 学习中 3 已过期
             return this.$route.params.learnStatus || '1'
         }
     }

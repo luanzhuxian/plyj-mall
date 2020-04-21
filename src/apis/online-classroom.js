@@ -10,4 +10,4 @@ export const getLiveList = params => axios.get('/apis/v1/mall/live/activity/curr
 export const getSendLiveList = isNotice => axios.get(`/apis/v1/mall/live/activity/giveNotice?isNotice=${ isNotice }`)
 
 // 查询视频课程列表 单课/系列课
-export const getVideoList = params => axios.get('/apis/v1/knowledgeCourse/findVideoList', { params })
+export const searchCourse = params => axios.get('/apis/v1/knowledgeCourse/search', { params })

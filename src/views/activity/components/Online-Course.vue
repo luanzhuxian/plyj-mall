@@ -86,7 +86,7 @@ export default {
 
 <style module lang="scss">
 .online-course-wrapper {
-    padding: 32px 20px 40px;
+    padding: 20px 16px 20px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
@@ -121,13 +121,12 @@ export default {
 .online-course {
     display: flex;
     background-color: #fff;
-    border-radius: 20px;
     overflow: hidden;
 }
 .img-wrapper {
     position: relative;
-    width: 280px;
-    height: 186px;
+    width: 240px;
+    height: 160px;
     border-radius: 20px;
     overflow: hidden;
     img {
@@ -142,7 +141,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 14px 0 14px 24px;
+    padding: 8px 0 8px 20px;
 }
 .top {
     font-size: 28px;
@@ -171,6 +170,7 @@ export default {
         font-weight: bold;
         line-height: 34px;
         color: #fe7700;
+        @include elps();
         &.money::before {
             content: '￥';
             font-size: 28px;
@@ -182,11 +182,13 @@ export default {
         line-height: 34px;
         color: #999;
         text-decoration: line-through;
+        @include elps();
         &.money::before {
             content: '￥';
         }
     }
     &-btn {
+        flex-shrink: 0;
         margin-left: auto;
         width: 124px;
         height: 48px;

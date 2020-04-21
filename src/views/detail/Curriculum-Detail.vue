@@ -1,50 +1,64 @@
 <template>
     <div :class="$style.curriculum">
-        <div :class="$style.bannerWrapper">
-            <!-- 海报按钮 -->
-            <div :class="$style.haibao">
-                <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                <pl-svg :key="2" v-else name="icon-poster-512b1" fill="#fff" width="35" @click="createHaibao" />
-                <p>分享海报</p>
-            </div>
-            <banner :banners="banners" />
-
-            <!-- 倒计时 -->
-            <count-down
-                v-if="isCountdownShow"
-                :class="$style.countDownBar"
-                :endtime="detail.regularSaleTime"
-                theme="orange"
-                prefix="距抢课开始仅剩"
-                @done="refresh"
-            />
-        </div>
-
         <template v-if="loaded">
+            <div :class="$style.bannerWrapper">
+                <!-- 海报按钮 -->
+                <div :class="$style.haibao">
+                    <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                    <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createPoster" />
+                    <p>分享海报</p>
+                </div>
+                <banner :banners="banners" />
+
+                <!-- 倒计时 -->
+                <count-down
+                    v-if="isCountdownShow"
+                    :class="[$style.countDownBar, $style.regular]"
+                    :endtime="detail.regularSaleTime"
+                    theme="orange"
+                    prefix="距抢课开始仅剩"
+                    @done="refresh"
+                />
+                <!-- 公益棕活动倒计时 -->
+                <countdown-bar
+                    v-if="false"
+                    :class="$style.countDownBar"
+                    :starttime="'2020-09-09 20:00:00'"
+                    :endtime="detail.regularSaleTime"
+                    @done="refresh"
+                />
+            </div>
+
             <info-box>
-                <div :class="$style.priceBox">
-                    <template v-if="isPresent">
-                        <div :class="$style.free">赠课</div>
-                    </template>
-                    <template v-else>
-                        <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
-                        <div v-else :class="$style.free">免费</div>
-                    </template>
-                    <div :class="$style.original">
-                        <div v-if="detail.priceType === 1 && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
-                            原价：<del v-text="detail.originalPrice" />
-                        </div>
-                        <div>
-                            <span v-if="detail.sale === 0">正在热销中</span>
-                            <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
+                <div :class="$style.priceBoxWrapper">
+                    <div :class="$style.priceBox">
+                        <template v-if="isPresent">
+                            <div :class="$style.free">赠课</div>
+                        </template>
+                        <template v-else>
+                            <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
+                            <div v-else :class="$style.free">免费</div>
+                        </template>
+                        <div :class="$style.original">
+                            <div v-if="detail.priceType === 1 && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
+                                原价：<del v-text="detail.originalPrice" />
+                            </div>
+                            <div>
+                                <span v-if="detail.sale === 0">正在热销中</span>
+                                <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
                                 <span v-text="detail.sale" />人关注
                             </template> -->
-                            <template v-else>
-                                <span v-text="detail.sale" />人已学
-                            </template>
+                                <template v-else>
+                                    <span v-text="detail.sale" />人订阅
+                                </template>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- 公益棕用户头像 -->
+                    <join v-if="false" />
                 </div>
+
                 <!-- 课程名称 -->
                 <detail-title :product-name="detail.courseName" />
                 <!-- 课程描述 -->
@@ -69,15 +83,15 @@
                 />
             </info-box>
 
-            <!-- 订购须知 -->
-            <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
-
             <!-- 相关课程 -->
             <slide-courses
                 v-if="courseType === 1 && relatedCourses.length"
                 :class="$style.slideCourses"
                 :data="relatedCourses"
             />
+
+            <!-- 公益棕活动规则 -->
+            <rule :class="$style.rule" v-if="false" />
 
             <!-- 课程详情 -->
             <div :class="$style.detailOrComment">
@@ -107,6 +121,9 @@
                 </div>
             </div>
 
+            <!-- 订购须知 -->
+            <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
+
             <!-- 底部购买 -->
             <div :class="$style.bottom" v-if="!~[5, 6].indexOf(productActive)">
                 <div :class="$style.content">
@@ -121,7 +138,7 @@
                             v-if="canPreview && courseType === 1"
                             :class="$style.button + ' ' + $style.yellow"
                             :disabled="Number(detail.status) === 2 || loading"
-                            @click="previewCourse"
+                            @click="previewCourse(detail.supportWatchUrl)"
                         >
                             试看视频
                         </button>
@@ -153,7 +170,7 @@
                                         courseId: productId
                                     },
                                     query: {
-                                        liveId: detail.liveId,
+                                        liveId: detail.liveIds,
                                         orderId: detail.orderId,
                                         progress: detail.learnProgress
                                     }
@@ -176,6 +193,9 @@
 
             <contact :show.sync="showContact" />
 
+            <!-- 试看视频 -->
+            <video-player ref="videoPlayer" :show.sync="preview.show" :url="preview.url" />
+
             <!-- 海报弹框 -->
             <pl-mask :show.sync="showHaibao">
                 <div :class="$style.saveHaibaoContent">
@@ -186,8 +206,13 @@
                 </div>
             </pl-mask>
 
+            <!-- 公益棕海报 -->
             <transition name="fade">
-                <video-player ref="videoPlayer" :show.sync="preview.show" :url="preview.url" />
+                <poster
+                    ref="charityPoster"
+                    :data="detail"
+                    :share="shareUrl"
+                />
             </transition>
         </template>
 
@@ -197,6 +222,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { SET_SHARE_ID } from '../../store/mutation-type'
 import Banner from '../../components/detail/Banner.vue'
 import InfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
@@ -204,12 +231,16 @@ import DetailDesc from '../../components/detail/Desc.vue'
 import DetailInfo from '../../components/detail/Detail.vue'
 import Tags from '../../components/detail/Tags.vue'
 import Contact from '../../components/common/Contact.vue'
-import CountDown from '../../components/product/Courses-Count-Down.vue'
 import Field from '../../components/detail/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
 import Instructions from '../../components/detail/Instructions.vue'
 import VideoPlayer from './components/Video-Player.vue'
+import CountDown from '../../components/product/Courses-Count-Down.vue'
+import CountdownBar from './charity/Countdown-Bar.vue'
+import Join from './charity/Join.vue'
+import Rule from './charity/Rule.vue'
+import Poster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
@@ -220,8 +251,6 @@ import {
     loadImage,
     createText
 } from '../../assets/js/util'
-import { mapGetters } from 'vuex'
-import { SET_SHARE_ID } from '../../store/mutation-type'
 
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
@@ -235,12 +264,16 @@ export default {
         Tags,
         DetailInfo,
         Contact,
-        CountDown,
         Field,
         SlideCourses,
         SeriseCourses,
         Instructions,
         VideoPlayer,
+        CountDown,
+        CountdownBar,
+        Join,
+        Rule,
+        Poster,
         Skeleton
     },
     data () {
@@ -257,13 +290,13 @@ export default {
             loading: false,
             isPresent: false,
             showContact: false,
-            haibao: '',
-            showHaibao: false,
-            creating: false,
             preview: {
                 show: false,
                 url: ''
-            }
+            },
+            haibao: '',
+            creating: false,
+            showHaibao: false
         }
     },
     props: {
@@ -311,9 +344,9 @@ export default {
     deactivated () {
         this.loaded = false
         this.loading = false
+        this.creating = false
         this.showContact = false
         this.showHaibao = false
-        this.creating = false
         this.haibao = ''
         this.preview.show = false
     },
@@ -327,18 +360,19 @@ export default {
                 this.loading = true
                 const list = [
                     this.getDetail(),
-                    this.checkIsPresentCourse()
+                    this.checkIsPresentCourse().catch(e => {
+                        console.error(e.message)
+                        return e
+                    })
                 ]
-                const [detail] = await Promise.all(list.map(p => p.catch(e => e)))
-                if (detail instanceof Error) {
-                    throw detail
-                }
 
+                await Promise.all(list)
                 this.createShare()
-                this.loading = false
                 this.loaded = true
             } catch (error) {
                 throw error
+            } finally {
+                this.loading = false
             }
         },
 
@@ -349,7 +383,7 @@ export default {
          * @property {String} result.orderId
          * @property {String} result.courseName
          * @property {String} result.courseImg
-         * @property {String} result.liveIds
+         * @property {String} result.liveIds - 课程相关视频id，系列课是多个id用逗号拼接
          * @property {String} result.courseBrief
          * @property {String} result.lecturer
          * @property {String} result.details
@@ -427,9 +461,12 @@ export default {
                 ? validityType
                     ? `购买后 ${ validity } 天内可观看学习`
                     : '购买后不限观看次数'
-                : `订购后 ${ validityDate.replace(/-/g, '.') } 前可观看学习`
+                : `订购后 ${ validityDate.split(' ')[0].replace(/-/g, '.') } 前可观看学习`
         },
-        previewCourse (url = this.detail.supportWatchUrl) {
+        previewCourse (url) {
+            if (!url) {
+                return this.$warning('该视频不支持试看')
+            }
             this.preview.url = url
             this.preview.show = true
             this.$nextTick(() => {
@@ -480,7 +517,6 @@ export default {
                     desc: lecturer,
                     imgUrl: courseImg
                 })
-                this.haibaoImg = await loadImage(courseImg)
             } catch (error) {
                 throw error
             }
@@ -490,15 +526,16 @@ export default {
             if (this.loading) {
                 return
             }
-            let img = this.haibaoImg
+
+            let img = await loadImage(this.detail.courseImg)
             if (!img) {
                 this.$error('图片加载错误')
                 return
             }
-            if (this.haibao) {
-                this.showHaibao = true
-                return
-            }
+            // if (this.haibao) {
+            //     this.showHaibao = true
+            //     return
+            // }
             this.creating = true
 
             // 截取头像
@@ -540,7 +577,7 @@ export default {
 
                 // 填充商品名称
                 // let str = this.detail.courseName
-                const line = (type !== 1 && this.preActivity === 2) ? 1 : 2
+                const line = ((type !== 1 && this.preActivity === 2) || this.courseType === 2) ? 1 : 2
                 const { sellingPrice: price, originalPrice, totalLiveNumber } = this.detail
                 ctx.textBaseline = 'top'
                 ctx.font = '56px Microsoft YaHei UI'
@@ -590,6 +627,20 @@ export default {
             } finally {
                 this.creating = false
             }
+        },
+        async createCharityPoster () {
+            try {
+                if (this.loading) {
+                    return
+                }
+
+                this.creating = true
+                this.haibao = await this.$refs.charityPoster.createPoster()
+            } catch (error) {
+                throw error
+            } finally {
+                this.creating = false
+            }
         }
     }
 }
@@ -607,10 +658,18 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 80px !important;
     z-index: 1;
+    &.regular {
+        height: 80px !important;
+    }
+}
+.price-box-wrapper {
+    display: flex;
+    align-items: center;
 }
 .price-box {
+    flex: 1;
+    width: 0;
     > .price {
         font-size: 46px;
         color: #fe7700;
@@ -638,15 +697,17 @@ export default {
         }
     }
 }
+
 .field {
     border-top: 1px solid #e7e7e7;
 }
-.slide-courses {
-    margin-top: 20px;
-}
+
+.rule,
+.slide-courses,
 .detail-or-comment {
     margin-top: 20px;
 }
+
 .tabs {
     display: flex;
     justify-content: space-around;
