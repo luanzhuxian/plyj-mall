@@ -4,8 +4,8 @@
             <div :class="$style.bannerWrapper">
                 <!-- 海报按钮 -->
                 <div :class="$style.haibao">
-                    <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                    <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createPoster" />
+                    <pl-svg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                    <pl-svg :key="2" v-show="!creating" name="icon-poster-512b1" fill="#fff" width="35" @click="createCharityPoster" />
                     <p>分享海报</p>
                 </div>
                 <banner :banners="banners" />
@@ -210,13 +210,11 @@
             </transition>
 
             <!-- 公益棕海报 -->
-            <transition name="fade">
-                <poster
-                    ref="charityPoster"
-                    :data="detail"
-                    :share="shareUrl"
-                />
-            </transition>
+            <poster
+                ref="charityPoster"
+                :data="detail"
+                :share="shareUrl"
+            />
         </template>
 
         <!-- 骨架屏 -->
@@ -638,7 +636,7 @@ export default {
                 }
 
                 this.creating = true
-                this.haibao = await this.$refs.charityPoster.createPoster()
+                this.$refs.charityPoster.createPoster()
             } catch (error) {
                 throw error
             } finally {

@@ -1,10 +1,9 @@
 <template>
-    <div :class="$style.poster" v-if="isShow">
+    <pl-mask :show.sync="isShow">
         <div :class="$style.content">
             <img :src="poster" alt="">
-            <pl-svg name="icon-close3" fill="#fff" width="48" @click="close" />
         </div>
-    </div>
+    </pl-mask>
 </template>
 
 <script>
@@ -92,6 +91,10 @@ export default {
 
         // 生成海报
         async createPoster (type) {
+            if (this.poster) {
+                this.isShow = true
+                return
+            }
             try {
                 const { avatar, userName, share, courseImg, courseName, price } = this
                 let image = await loadImage(courseImg)
@@ -177,7 +180,7 @@ export default {
                 ctx.fillText(text, 407, 608)
 
                 // 二维码
-                const qrcode = await generateQrcode(330, share, 0, image, 10, 'canvas', 150)
+                const qrcode = await generateQrcode({ size: 330, text: share, img: image, centerPadding: 10, type: 'canvas', imageSize: 150 })
                 ctx.drawImage(qrcode, 162, 688, 330, 330)
                 ctx.font = 'bold 24px Microsoft YaHei UI'
                 ctx.strokeStyle = '#000'
@@ -201,19 +204,6 @@ export default {
 </script>
 
 <style lang="scss" module>
-.poster {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .7);
-    z-index: 10000;
-}
 .content {
     position: relative;
     width: max-content;

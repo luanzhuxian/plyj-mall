@@ -11,8 +11,8 @@
             <template v-else>
                 <!-- 海报按钮 -->
                 <div :class="$style.haibao">
-                    <pl-svg :key="1" v-if="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                    <pl-svg :key="2" v-else name="icon-haibao" width="35" @click="createHaibao(activeProduct)" />
+                    <pl-svg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                    <pl-svg :key="2" v-show="!creating" name="icon-poster-512b1" fill="#fff" width="35" @click="createHaibao(activeProduct)" />
                     <p>分享海报</p>
                 </div>
                 <!-- 商品banner -->
@@ -95,7 +95,7 @@
                     label="选择"
                     :label-width="120"
                     :clickable="!noStock && !isDown"
-                    @click="showSpecifica = true;"
+                    @click="showSpecifica = true"
                 >
                     <template v-if="currentModel.skuCode1Name">
                         已选择：“<span v-text="currentModel.skuCode1Name" />
@@ -261,7 +261,7 @@
                             <div :class="$style.saveButton1" v-else>
                                 长按识别或保存二维码，分享给朋友吧！
                             </div>
-                            <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />
+                            <pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false" />
                         </div>
                     </div>
                 </transition>
