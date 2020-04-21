@@ -12,7 +12,7 @@
                 <!-- 海报按钮 -->
                 <div :class="$style.haibao">
                     <pl-svg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                    <pl-svg :key="2" v-show="!creating" name="icon-poster-512b1" width="35" @click="createHaibao(activeProduct)" />
+                    <pl-svg :key="2" v-show="!creating" name="icon-poster-512b1" fill="#fff" width="35" @click="createHaibao(activeProduct)" />
                     <p>分享海报</p>
                 </div>
                 <!-- 商品banner -->
