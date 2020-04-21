@@ -95,7 +95,7 @@
                     label="选择"
                     :label-width="120"
                     :clickable="!noStock && !isDown"
-                    @click="showSpecifica = true;"
+                    @click="showSpecifica = true"
                 >
                     <template v-if="currentModel.skuCode1Name">
                         已选择：“<span v-text="currentModel.skuCode1Name" />
@@ -899,7 +899,7 @@ export default {
             }
             try {
                 // 二维码
-                const qrcode = await generateQrcode({ size: 300, text: this.shareUrl, padding: 15, img, centerPadding: 10, type: 'canvas' })
+                const qrcode = await generateQrcode(300, this.shareUrl, 15, img, 10, 'canvas')
 
                 // 商品图片
                 ctx.drawImage(img, 0, 0, img.width, img.height, 0, 192, 1120, 746)
