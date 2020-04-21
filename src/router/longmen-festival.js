@@ -14,5 +14,13 @@ export default [
         meta: {
             title: '端午佳话，粽粽有礼'
         }
+    },
+    {
+        path: '/longmen-festival/action',
+        name: 'LongmenAction',
+        component: () => import('../views/longmen-festival/action/Index.vue'),
+        meta: {
+            title: '公益粽行动'
+        }
     }
 ]
