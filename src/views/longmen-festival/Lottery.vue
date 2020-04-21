@@ -86,36 +86,11 @@
 
             <div :class="$style.myAwards">
                 <div :class="$style.tabs">
-                    <div :class="{ [$style.tab]: true, [$style.active]: tab === 0 }" @click="slide(0)">我的奖品</div>
-                    <div :class="{ [$style.tab]: true, [$style.active]: tab === 1 }" @click="slide(1)">获奖记录</div>
+                    <div :class="{ [$style.tab]: true, [$style.active]: tab === 0 }" @click="slide(0)">获奖记录</div>
+                    <div :class="{ [$style.tab]: true, [$style.active]: tab === 1 }" @click="slide(1)">我的奖品</div>
                 </div>
                 <div :class="{ [$style.wrap]: true, [$style.active]: tab === 0 }">
                     <swiper :options="swiperOption" ref="swiper" @slideChangeTransitionEnd="slideChangeTransitionEnd">
-                        <swiperSlide>
-                            <ul :class="$style.awardList">
-                                <li :class="$style.awardItem">
-                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                                    <div>
-                                        <div :class="$style.name">豪华游艇一艘</div>
-                                        <div :class="$style.date">2020.02.23</div>
-                                    </div>
-                                </li>
-                                <li :class="$style.awardItem">
-                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                                    <div>
-                                        <div :class="$style.name">豪华游艇一艘</div>
-                                        <div :class="$style.date">2020.02.23</div>
-                                    </div>
-                                </li>
-                                <li :class="$style.awardItem">
-                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                                    <div>
-                                        <div :class="$style.name">豪华游艇一艘</div>
-                                        <div :class="$style.date">2020.02.23</div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </swiperSlide>
                         <swiperSlide>
                             <table :class="$style.records">
                                 <thead>
@@ -141,6 +116,31 @@
                                     <td class="fz-24">2020.02.03</td>
                                 </tr>
                             </table>
+                        </swiperSlide>
+                        <swiperSlide>
+                            <ul :class="$style.awardList">
+                                <li :class="$style.awardItem">
+                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                    <div>
+                                        <div :class="$style.name">豪华游艇一艘</div>
+                                        <div :class="$style.date">2020.02.23</div>
+                                    </div>
+                                </li>
+                                <li :class="$style.awardItem">
+                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                    <div>
+                                        <div :class="$style.name">豪华游艇一艘</div>
+                                        <div :class="$style.date">2020.02.23</div>
+                                    </div>
+                                </li>
+                                <li :class="$style.awardItem">
+                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                    <div>
+                                        <div :class="$style.name">豪华游艇一艘</div>
+                                        <div :class="$style.date">2020.02.23</div>
+                                    </div>
+                                </li>
+                            </ul>
                         </swiperSlide>
                     </swiper>
                 </div>
