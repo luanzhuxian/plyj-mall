@@ -1,7 +1,8 @@
 export default [
     {
-        path: '/longmen-festival/lottery',
+        path: '/longmen-festival/lottery/:id?',
         name: 'LongmenLottery',
+        props: true,
         component: () => import('../views/longmen-festival/Lottery.vue'),
         meta: {
             title: '龙门抽大奖，有粽你就来'

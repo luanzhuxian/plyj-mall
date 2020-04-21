@@ -508,17 +508,19 @@ export default {
         width: 510px;
         margin: 36px auto 0;
         > .item {
-            width: 126px;
-            height: 126px;
-            margin: 0 2px 2px 0;
+            width: 124px;
+            height: 124px;
+            margin: 0 3px 3px 0;
+            padding-top: 80px;
             flex-flow: wrap-reverse;
-            border: 2px solid #311c1d;
             font-size: 20px;
             font-weight: 600;
             color: #d34219;
             text-align: center;
-            background-color: #fff;
             box-sizing: border-box;
+            border: 7px solid #fff;
+            background-size: 80px !important;
+            box-shadow: 0 0 0 1px #311c1d;
             &.active {
                 background-color: #fced5c;
                 border: 7px solid #d4ff02;
@@ -526,17 +528,33 @@ export default {
             }
             &:nth-of-type(1) {
                 border-top-left-radius: 50px;
+                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (1).png") no-repeat center 15px;
+            }
+            &:nth-of-type(2) {
+                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (2).png") no-repeat center 12px;
+            }
+            &:nth-of-type(3) {
+                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (3).png") no-repeat center 10px;
             }
             &:nth-of-type(4) {
                 margin-right: 0;
                 border-top-right-radius: 50px;
+                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (4).png") no-repeat center 15px;
             }
             &:nth-of-type(5) {
                 border-bottom-left-radius: 50px;
+                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (5).png") no-repeat center 4px;
+            }
+            &:nth-of-type(6) {
+                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (6).png") no-repeat center 4px;
+            }
+            &:nth-of-type(7) {
+                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (7).png") no-repeat center 2px;
             }
             &:nth-of-type(8) {
                 margin-right: 0;
                 border-bottom-right-radius: 50px;
+                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (8).png") no-repeat center 12px;
             }
         }
     }
