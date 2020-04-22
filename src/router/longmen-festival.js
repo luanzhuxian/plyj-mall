@@ -17,8 +17,9 @@ export default [
         }
     },
     {
-        path: '/longmen-festival/action',
+        path: '/longmen-festival/action/:id',
         name: 'LongmenAction',
+        props: true,
         component: () => import('../views/longmen-festival/action/Index.vue'),
         meta: {
             title: '公益粽行动'

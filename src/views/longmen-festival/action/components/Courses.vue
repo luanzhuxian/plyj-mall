@@ -1,19 +1,19 @@
 <template>
     <div :class="$style.courses">
-        <div :class="$style.item" v-for="item in 10" :key="item">
+        <div :class="$style.item" v-for="(item,index) in list" :key="index" @click="target(item)">
             <div :class="$style.img">
-                <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/public-goods-title.png" alt="">
-                <div :class="$style.tag"> 系列课 </div>
+                <img :src="item.img" alt="">
+                <div :class="$style.tag"> {{ item.type }} </div>
             </div>
             <div :class="$style.goodsInfo">
-                <div :class="$style.name">线上欢乐营 名师伴我学师伴我学名师伴我学师伴我学</div>
+                <div :class="$style.name">{{ item.name }}</div>
                 <div :class="$style.price">
                     <span>公益价</span>
-                    <span>1000元</span>
+                    <span>{{ item.price }}元</span>
                 </div>
-                <div :class="$style.description">购买将捐赠5元公益金</div>
+                <div :class="$style.description">购买将捐赠{{ item.donationAmount }}元公益金</div>
                 <div :class="$style.buy">
-                    <div :class="$style.button">立即购买</div>
+                    <div :class="$style.button" v-if="activityStatus === 2">立即购买</div>
                 </div>
             </div>
         </div>
@@ -22,7 +22,33 @@
 
 <script>
 export default {
-    name: 'Courses'
+    name: 'Courses',
+    props: {
+        // 1未开始，2进行中，3已过期，4已结束
+        activityStatus: {
+            type: Number,
+            default: 0
+        },
+        list: {
+            type: Array,
+            default () {
+                return []
+            }
+        }
+    },
+    methods: {
+        target (item) {
+            if (this.activityStatus !== 2) {
+                return
+            }
+            // 商品为 1 课程为 2
+            if (item.productType === 1) {
+                this.$router.push({ name: 'Product', params: { productId: item.productId } })
+                return
+            }
+            this.$router.push({ name: 'Curriculum', params: { productId: item.productId } })
+        }
+    }
 }
 </script>
 
@@ -106,6 +132,7 @@ export default {
             > .buy {
                 display: flex;
                 justify-content: flex-end;
+                min-height: 50px;
                 > .button {
                     width: 152px;
                     line-height: 50px;

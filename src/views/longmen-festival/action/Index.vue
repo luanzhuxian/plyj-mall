@@ -11,7 +11,11 @@
         </header>
 
         <main :class="$style.main">
-            <Progress color="pink" :percentage="percentage" />
+            <Statistics
+                :percentage="percentage"
+                :join-num="statistics.orderNo"
+                :countdown="countdown"
+            />
             <div :class="$style.activityHandle">
                 <div @click="isShowRule = true">
                     <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/分享海报.png" alt="">
@@ -30,8 +34,8 @@
                 <div :class="{ [$style.active]: active === 1 }" @click="slide(1)">公益榜单</div>
             </div>
             <swiper :options="swiperOption" ref="swiper" @slideChangeTransitionEnd="slideChangeTransitionEnd">
-                <swiperSlide :class="$style.slide"> <Courses /> </swiperSlide>
-                <swiperSlide :class="$style.slide"> <Crunchies />  </swiperSlide>
+                <swiperSlide :class="$style.slide"> <Courses :activity-status="detail.definiteStatus" :list="detail.productList" /> </swiperSlide>
+                <swiperSlide :class="$style.slide"> <Crunchies :amounts="myPublicBenefitAmounts" :list="publicBenefitList" />  </swiperSlide>
             </swiper>
         </div>
 
@@ -44,15 +48,15 @@
             <div :class="$style.ruleContent">
                 <dl>
                     <dt>1.活动时间</dt>
-                    <dd>21515</dd>
+                    <dd>{{ detail.startTime }} 至 {{ detail.endTime }}</dd>
                 </dl>
                 <dl>
                     <dt>2.活动对象</dt>
-                    <dd>21515</dd>
+                    <dd>{{ userScope[detail.userScope] }}</dd>
                 </dl>
                 <dl>
                     <dt>3.活动说明</dt>
-                    <dd>21515</dd>
+                    <dd v-html="detail.activityDesc || ''">}</dd>
                 </dl>
             </div>
         </pl-popup>
@@ -60,18 +64,30 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import Progress from './components/Progress'
+import Statistics from './components/Statistics'
 import Courses from './components/Courses'
 import Crunchies from './components/Crunchies'
+import {
+    getPublicBenefitDetail,
+    getPublicBenefitStatistics,
+    getPublicBenefitList
+} from './../../../apis/longmen-festival/lottery'
 export default {
     name: 'LongmenAction',
     components: {
         swiper,
         swiperSlide,
-        Progress,
+        Statistics,
         Courses,
         Crunchies
+    },
+    props: {
+        id: {
+            type: String,
+            default: ''
+        }
     },
     data () {
         return {
@@ -80,10 +96,89 @@ export default {
             active: 0,
             swiperOption: {
                 spaceBetween: 20
-            }
+            },
+            userScope: {
+                0: '全部用户',
+                1: 'Helper',
+                2: '普通会员',
+                3: '部分用户组'
+            },
+            detail: {
+                productList: []
+            },
+            statistics: {
+                // 加入人数
+                orderNo: 0,
+                // 累计公益金
+                donationAmount: 0
+            },
+            // 我累计的公益金
+            myPublicBenefitAmounts: 0,
+            // 公益榜单
+            publicBenefitList: [],
+            // 据活动开始的时间戳
+            countdown: 0,
+            countdownTimer: null
         }
     },
+    async activated () {
+        try {
+            await this.getStatistics()
+            await Promise.all([
+                this.getDetail(),
+                this.getPublicBenefitList()
+            ])
+        } catch (e) { throw e }
+    },
+    deactivated () {
+        window.clearTimeout(this.countdownTimer)
+    },
     methods: {
+        async getDetail () {
+            try {
+                const { result } = await getPublicBenefitDetail(this.id)
+                const { productModels = [], courseModels = [] } = result
+                const productList = productModels.concat(courseModels).map(item => ({
+                    productId: item.productId,
+                    // 商品为 1 课程为 2
+                    productType: item.courseType ? 2 : 1,
+                    img: item.productImage,
+                    type: item.productTypeDesc || item.courseTypeDesc,
+                    name: item.productName || item.courseName,
+                    price: item.activityPrice,
+                    donationAmount: item.donationAmount
+                }))
+                result.productList = productList
+                // 进度
+                this.percentage = (this.statistics.donationAmount / result.topAmount) * 100
+                // 活动开始剩余时间戳
+                this.countdown = moment(result.startTime).valueOf() - moment(result.systemTime).valueOf()
+                // 未开始状态
+                if (result.definiteStatus === 1) {
+                    this.countdownTimer = setTimeout(() => {
+                        window.location.reload()
+                    }, this.countdown)
+                }
+                this.detail = result
+            } catch (e) { throw e }
+        },
+        async getStatistics () {
+            try {
+                const { result } = await getPublicBenefitStatistics(this.id)
+                this.statistics = result
+            } catch (e) { throw e }
+        },
+        async getPublicBenefitList () {
+            try {
+                const { result } = await getPublicBenefitList(this.id)
+                let amounts = 0
+                for (const item of result) {
+                    if (item.flag) amounts += item.donationAmount
+                }
+                this.myPublicBenefitAmounts = amounts
+                this.publicBenefitList = result
+            } catch (e) { throw e }
+        },
         slide (index) {
             this.$refs.swiper.swiper.slideTo(index)
             this.active = index
@@ -171,6 +266,7 @@ export default {
         text-align: left;
         > dl {
             margin-bottom: 20px;
+            white-space: pre-wrap;
             font-size: 28px;
             color: #000;
             &:nth-last-of-type(1) {
