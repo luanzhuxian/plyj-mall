@@ -149,35 +149,10 @@
                         <pl-svg name="icon-call-us" width="80" height="70" />
                     </a>
                     <div :class="$style.buttonWrapper">
-                        <button
-                            v-if="canPreview && courseType === 1"
-                            :class="$style.button + ' ' + $style.yellow"
-                            :disabled="Number(detail.status) === 2 || loading"
-                            @click="previewCourse(detail.supportWatchUrl)"
-                        >
-                            试看视频
-                        </button>
-                        <template v-if="!canLearn">
-                            <button
-                                v-if="detail.isOpenSale === 1 && detail.courseStatus === 2"
-                                :class="$style.button + ' ' + $style.orange"
-                                disabled
-                            >
-                                暂未开售 敬请期待
-                            </button>
-                            <button
-                                v-if="detail.isOpenSale === 0 || (detail.isOpenSale === 1 && detail.courseStatus === 1)"
-                                :class="$style.button + ' ' + $style.orange"
-                                :disabled="Number(detail.status) === 2 || loading"
-                                @click="submit"
-                            >
-                                立即订购
-                            </button>
-                        </template>
-                        <template v-else>
+                        <template v-if="canLearn">
                             <button
                                 v-if="courseType === 1"
-                                :class="$style.button + ' ' + $style.orange"
+                                :class="$style.button + ' ' + $style.yellow"
                                 :disabled="loading"
                                 @click="$router.push({
                                     name: 'CourseWatch',
@@ -197,6 +172,31 @@
                             <span v-if="courseType === 2" :class="$style.progress">
                                 {{ `已学习 ${detail.learnedNumber}/${detail.totalLiveNumber} 节` }}
                             </span>
+                        </template>
+                        <template v-else>
+                            <button
+                                v-if="courseType === 1 && detail.supportWatch"
+                                :class="$style.button + ' ' + $style.yellow"
+                                :disabled="Number(detail.status) === 2 || loading"
+                                @click="previewCourse(detail.supportWatchUrl)"
+                            >
+                                试看视频
+                            </button>
+                            <button
+                                v-if="detail.isOpenSale === 1 && detail.courseStatus === 2"
+                                :class="$style.button + ' ' + $style.orange"
+                                disabled
+                            >
+                                暂未开售 敬请期待
+                            </button>
+                            <button
+                                v-if="detail.isOpenSale === 0 || (detail.isOpenSale === 1 && detail.courseStatus === 1)"
+                                :class="$style.button + ' ' + $style.orange"
+                                :disabled="Number(detail.status) === 2 || loading"
+                                @click="submit"
+                            >
+                                立即订购
+                            </button>
                         </template>
                     </div>
                 </div>
@@ -331,13 +331,10 @@ export default {
         },
         isCountdownShow () {
             const { isOpenSale = 0, courseStatus = 0, regularSaleTime } = this.detail
-            return isOpenSale === 1 && courseStatus === 2 && regularSaleTime
+            return !this.isPresent && isOpenSale === 1 && courseStatus === 2 && regularSaleTime
         },
         canLearn () {
             return this.detail.isBuy || this.isPresent
-        },
-        canPreview () {
-            return !this.canLearn && this.detail.supportWatch
         }
     },
     watch: {
