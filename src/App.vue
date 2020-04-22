@@ -35,6 +35,7 @@ import {
     getNianweiInfo,
     getMyCouponInfo
 } from './apis/home'
+import { setFirstVisit } from './apis/longmen-festival/lottery'
 import { getCourse } from './apis/online-classroom'
 // import { getCurrentActivity as getInvitingEvent } from './apis/invitenewcomers'
 
@@ -87,6 +88,8 @@ export default {
             }
             this.logined = true
             this.getEntryData()
+            // 标记首次访问
+            setFirstVisit()
         } catch (e) {
             throw e
         }

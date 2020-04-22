@@ -1,6 +1,6 @@
 export default [
     {
-        path: '/longmen-festival/lottery/:id?',
+        path: '/longmen-festival/lottery/:id',
         name: 'LongmenLottery',
         props: true,
         component: () => import('../views/longmen-festival/Lottery.vue'),
