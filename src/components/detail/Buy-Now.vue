@@ -301,7 +301,7 @@ export default {
                     isCart: 'NO',
                     activeProduct: this.activeProduct || 1,
                     preActivity: this.preActivity || '',
-                    activityId: this.activityProductModel.activityId || ''
+                    activityId: this.activityProductModel ? this.activityProductModel.activityId || '' : ''
                 }
             })
         },
