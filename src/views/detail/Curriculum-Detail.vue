@@ -59,7 +59,17 @@
                             </div>
                         </div>
                     </div>
-
+                    <div :class="$style.priceRight" v-if="agentUser && detail.rebate">
+                        <p class="fz-22 gray-1">
+                            <span :class="$style.returnRunbi">
+                                润笔
+                            </span>
+                            <i class="rmb" v-text="detail.rebate" />
+                        </p>
+                        <p class="fz-22 gray-3">
+                            分享下单即可获得润笔
+                        </p>
+                    </div>
                     <!-- 公益棕用户头像 -->
                     <join v-if="false" />
                 </div>
@@ -313,7 +323,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId']),
+        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser']),
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入
         productActive () {
@@ -851,4 +861,26 @@ export default {
     }
 }
 
+.priceRight {
+  flex: 1;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 5px;
+  > p {
+    margin-top: 6px;
+  }
+  .returnRunbi {
+    display: inline-block;
+    width: 60px;
+    height: 28px;
+    margin-right: 10px;
+    border-radius: 13px;
+    line-height: 28px;
+    text-align: center;
+    font-size: 18px;
+    background-color: #FE7700;
+    color: #fff;
+  }
+}
 </style>
