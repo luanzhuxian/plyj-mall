@@ -535,10 +535,16 @@ export default {
         async getPresentList () {
             try {
                 const { result } = await getPresentList(this.id)
-
+                // 神秘大奖的名称
+                let index = 1
+                const isMulNotShowPresent = result.filter(item => !item.show).length > 1
                 // 粽粽大奖列表awardType只为1(礼品)，其他类型不可作为粽粽大奖
                 this.presentList = result.map(item => {
                     item.awardName = item.show ? item.awardName : '神秘大奖'
+                    if (!item.show && isMulNotShowPresent) {
+                        item.awardName = `神秘大奖${ index }`
+                        index++
+                    }
                     return item
                 })
                 if (this.presentList.length === 2) {
@@ -1030,6 +1036,8 @@ export default {
                 bottom: 12px;
                 left: 50%;
                 transform: translateX(-50%);
+                width: 120px;
+                @include elps();
                 font-size: 40px;
                 color: #FFF;
               }
@@ -1076,6 +1084,7 @@ export default {
                   transform: translateX(-50%);
                   font-size: 24px;
                   color: #56b396;
+                  width: 120px;
                   @include elps();
                 }
               }
@@ -1243,6 +1252,7 @@ export default {
 
           .sign-in-icon-bottom {
             padding: 20px 30px;
+            margin-right: -36px;
 
             .sign-in-icon-item {
               display: inline-block;
