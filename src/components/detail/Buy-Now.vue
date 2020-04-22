@@ -134,14 +134,14 @@ export default {
             clickAddToCart: false,
             clickBuyNow: false,
             loading: false,
-            showContact: false,
+            showContact: false
 
             /**
        * 购买方式
        * 2 按正常商品购买
        * 3 按活动商品购买
        */
-            buyWay: 2
+            // buyWay: 2
         }
     },
     props: {
@@ -256,7 +256,7 @@ export default {
                     if (!this.checkLimit(options, limiting, limit)) {
                         return
                     }
-                    this.submit(options)
+                    await this.submit(options)
                 }
             } catch (e) {
                 throw e
@@ -299,9 +299,9 @@ export default {
                 name: 'SubmitOrder',
                 query: {
                     isCart: 'NO',
-                    activeProduct: this.buyWay === 2 ? 1 : this.activeProduct,
-                    preActivity: this.buyWay === 3 ? this.preActivity : '',
-                    activityId: this.buyWay === 3 ? this.activityProductModel.activityId : ''
+                    activeProduct: this.activeProduct || 1,
+                    preActivity: this.preActivity || '',
+                    activityId: this.activityProductModel.activityId || ''
                 }
             })
         },
@@ -319,14 +319,14 @@ export default {
             if (type === 2) {
                 this.clickBuyNow = true
                 this.clickAddToCart = false
-                this.buyWay = 2
+                // this.buyWay = 2
             }
 
             // 立即购买按钮or定金购买
             if (type === 3) {
                 this.clickBuyNow = true
                 this.clickAddToCart = false
-                this.buyWay = 3
+                // this.buyWay = 3
             }
             this.showSpecifica = true
         },
