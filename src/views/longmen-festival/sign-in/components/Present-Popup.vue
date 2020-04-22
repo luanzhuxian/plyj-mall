@@ -336,7 +336,7 @@ export default {
             margin: 0 15px;
             display: flex;
             box-sizing: border-box;
-            border: 1px solid #f01516;
+            border: 1px solid #FCE6D3;
 
             img {
                 width: 180px;
@@ -350,7 +350,7 @@ export default {
                 height: 120px;
                 box-sizing: border-box;
                 flex: 1;
-                background-color: #ffe9e9;
+                background-color: #FCE6D3;
 
                 h3 {
                     font-size: 32px;
@@ -419,7 +419,7 @@ export default {
             background: #FF9F4B;
             border-radius: 50px;
             line-height: 52px;
-            color: #ffdcb3;
+            color: #FFF;
         }
 
         .btns {
@@ -507,7 +507,7 @@ export default {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        top: -50px;
+        top: -40px;
     }
 
     .top {
@@ -573,7 +573,7 @@ export default {
                 border-radius: 50px;
                 font-size: 30px;
                 line-height: 52px;
-                color: #ffdcb3;
+                color: #FFF;
             }
         }
     }

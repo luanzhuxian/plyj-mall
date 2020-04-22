@@ -541,12 +541,16 @@ export default {
                     item.awardName = item.show ? item.awardName : '神秘大奖'
                     return item
                 })
+                if (this.presentList.length === 2) {
+                    this.presentList.push(this.presentList[0])
+                    this.presentList.push(this.presentList[1])
+                }
             } catch (e) {
                 throw e
             }
         },
 
-        // 获取粽粽大奖列表
+        // 获取粽粽签到列表
         async getSignInIconList () {
             try {
                 const { result } = await getSignInIconList(this.id)
@@ -1216,7 +1220,7 @@ export default {
 
               p {
                 display: inline-block;
-                padding-right: 150px;
+                padding-right: 100px;
 
                 &.no-padding {
                   padding-right: 20px;
@@ -1474,9 +1478,10 @@ export default {
               position: absolute;
               top: 50%;
               left: 50%;
-              transform: translate(-50%);
+              transform: translate(-50%, -50%);
               width: 80px;
               height: 100px;
+              border-radius: 50%;
               object-fit: contain;
             }
 
@@ -1496,7 +1501,7 @@ export default {
               line-height: 30px;
               width: 80px;
               font-size: 20px;
-              color: #fe4923;
+              color: #FFF;
             }
           }
 
