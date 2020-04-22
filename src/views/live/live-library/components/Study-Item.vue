@@ -2,7 +2,7 @@
     <div :class="$style.studyItem" @click="target(item)">
         <div :class="$style.img">
             <div v-if="item.validityType === 1">
-                {{ item.priceType === 0 ? `${moment(item.validityDate).format('YYYY-MM-DD')} 到期` : `${item.validity} 天内完成学习` }}
+                {{ item.validity }} 天内完成学习
             </div>
             <img :src="item.courseImg" alt="">
         </div>
@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 export default {
     name: 'StudyItem',
     props: {
@@ -55,7 +54,6 @@ export default {
         }
     },
     methods: {
-        moment,
         target (item) {
             if (this.learnStatus !== '3') {
                 if (this.courseType === '1') {
@@ -91,95 +89,95 @@ export default {
 
 <style module lang='scss'>
 
-  .study-item {
+.study-item {
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin-bottom: 20px;
-    background: #FFFFFF;
+    background: #fff;
     &:nth-last-of-type(1) {
-      margin-bottom: 0;
+        margin-bottom: 0;
     }
     > .img {
-      position: relative;
-      width: 280px;
-      height: 186px;
-      border-radius: 20px;
-      overflow: hidden;
-      > img {
-        width: 100%;
-        height: 100%;
-        vertical-align: top;
-      }
-      > div {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        font-size: 24px;
-        line-height: 46px;
-        text-align: center;
-        color: #FFFFFF;
-        background-color: #F2B036;
-      }
+        position: relative;
+        width: 280px;
+        height: 186px;
+        border-radius: 20px;
+        overflow: hidden;
+        > img {
+            width: 100%;
+            height: 100%;
+            vertical-align: top;
+        }
+        > div {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            font-size: 24px;
+            line-height: 46px;
+            text-align: center;
+            color: #fff;
+            background-color: #f2b036;
+        }
     }
     > .content {
-      display: flex;
-      flex-wrap: wrap;
-      align-content: space-between;
-      width: calc(100% - 304px);
-      > .description {
-        width: 100%;
-        font-size: 24px;
-        color: #666666;
-        > div:nth-of-type(1) {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 32px;
-          font-weight: 800;
-          color: #373737;
-        }
-        > div:nth-of-type(2) {
-          display: inline-block;
-          margin: 14px 0;
-          padding: 0 14px;
-          border-radius: 20px;
-          line-height: 36px;
-          color: #B58A48;
-          background: #FFFAE6;
-        }
-      }
-      > .learn {
         display: flex;
-        justify-content: space-between;
         flex-wrap: wrap;
-        align-items: center;
-        width: 100%;
-        > div:nth-of-type(1) {
-          width: 100%;
-          margin-bottom: 4px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          font-size: 24px;
-          white-space: nowrap;
-          color: #666666;
+        align-content: space-between;
+        width: calc(100% - 304px);
+        > .description {
+            width: 100%;
+            font-size: 24px;
+            color: #666;
+            > div:nth-of-type(1) {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 32px;
+                font-weight: 800;
+                color: #373737;
+            }
+            > div:nth-of-type(2) {
+                display: inline-block;
+                margin: 14px 0;
+                padding: 0 14px;
+                border-radius: 20px;
+                line-height: 36px;
+                color: #b58a48;
+                background: #fffae6;
+            }
         }
-        > div:nth-of-type(2) {
-          font-size: 28px;
-          color: #F2B036;
+        > .learn {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+            width: 100%;
+            > div:nth-of-type(1) {
+                width: 100%;
+                margin-bottom: 4px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size: 24px;
+                white-space: nowrap;
+                color: #666;
+            }
+            > div:nth-of-type(2) {
+                font-size: 28px;
+                color: #f2b036;
+            }
+            > div:nth-of-type(3) {
+                font-size: 26px;
+                text-align: center;
+                background: #fe7700;
+                color: #fff;
+                width: 140px;
+                line-height: 48px;
+                border-radius: 8px;
+            }
         }
-        > div:nth-of-type(3){
-          font-size: 26px;
-          text-align: center;
-          background: #FE7700;
-          color: #FFFFFF;
-          width: 140px;
-          line-height: 48px;
-          border-radius:8px;
-        }
-      }
     }
-  }
+}
 
 </style>
