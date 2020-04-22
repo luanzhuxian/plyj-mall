@@ -306,7 +306,7 @@ import share from '../../../assets/js/wechat/wechat-share'
 import { getServerTime } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
-import SharePoster from './components/Share-Poster.vue'
+import SharePoster from '../../../components/common/Share-Poster'
 import PresentPopup from './components/Present-Popup.vue'
 import ActivityRule from './components/Activity-Rule.vue'
 
