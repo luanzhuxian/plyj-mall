@@ -826,25 +826,25 @@ export default {
                 let avatar = this.avatar || default_avatar
                 avatar = await this.loadImage(avatar)
                 avatar = await cutArcImage(avatar)
-                drawRoundRect(ctx, 50, 810, 60, 60, 30, '#FE613F', '#FE613F')
-                ctx.drawImage(avatar, 50, 810, 60, 60)
+                drawRoundRect(ctx, 24, 840, 100, 100, 50, '#038C1A', '#038C1A')
+                ctx.drawImage(avatar, 25, 841, 98, 98)
 
                 // 绘制粽粽有礼描述
                 ctx.font = '20px bold'
                 ctx.fillStyle = '#000'
                 ctx.textBaseline = 'hanging'
-                createText(ctx, 118, 820, desc, 34, 138, 1)
-                createText(ctx, 118, 850, '粽粽有礼', 34, 138, 1)
+                createText(ctx, 134, 860, desc, 34, 138, 1)
+                createText(ctx, 134, 890, '粽粽有礼', 34, 138, 1)
 
                 // 绘制二维码
-                drawRoundRect(ctx, 242, 800, 80, 80, 2, '#FE613F', '#FFF')
-                ctx.drawImage(this.qrcode, 242, 800, 80, 80)
+                drawRoundRect(ctx, 250, 840, 100, 100, 10, '#038C1A', '#038C1A')
+                ctx.drawImage(this.qrcode, 252, 842, 96, 96)
 
                 // 绘制二维码旁的文字
                 ctx.font = '20px bold'
                 ctx.fillStyle = '#000'
                 ctx.textBaseline = 'hanging'
-                createText(ctx, 332, 800, '长按识别保存图片分享给好友，一起参与活动', 24, 136, 3)
+                createText(ctx, 360, 852, '长按识别保存图片分享给好友，一起参与活动', 24, 136, 3)
 
                 const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
                 this.newYearPoster = sharePoster
