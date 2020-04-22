@@ -40,8 +40,13 @@
                             <div v-else :class="$style.free">免费</div>
                         </template>
                         <div :class="$style.original">
-                            <div v-if="detail.priceType === 1 && detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
-                                原价：<del v-text="detail.originalPrice" />
+                            <div v-if="detail.priceType === 1" class="mr-30">
+                                <template v-if="isPresent">
+                                    售价：<del v-text="detail.sellingPrice" />
+                                </template>
+                                <template v-else-if="detail.originalPrice && detail.originalPrice !== detail.sellingPrice">
+                                    原价：<del v-text="detail.originalPrice" />
+                                </template>
                             </div>
                             <div>
                                 <span v-if="detail.sale === 0">正在热销中</span>
@@ -308,7 +313,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl']),
+        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId']),
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入
         productActive () {
@@ -500,14 +505,14 @@ export default {
         async createShare () {
             const { courseName, lecturer, courseImg } = this.detail
             try {
-                // let shareUrl = ''
-                // if (this.userId) {
-                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
-                // } else {
-                //     shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?noCache=${ Date.now() }`
-                // }
+                let shareUrl = ''
+                if (this.userId) {
+                    shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
+                } else {
+                    shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?noCache=${ Date.now() }`
+                }
                 // TODO: 以后可能需要自定义分享链接，现在直接使用当前连接
-                this.shareUrl = location.href
+                this.shareUrl = shareUrl
                 share({
                     appId: this.appId,
                     title: courseName,
