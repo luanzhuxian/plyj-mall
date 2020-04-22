@@ -167,7 +167,7 @@
                         <template v-else>
                             <button
                                 v-if="courseType === 1"
-                                :class="$style.button + ' ' + $style.orange"
+                                :class="$style.button + ' ' + $style.yellow"
                                 :disabled="loading"
                                 @click="$router.push({
                                     name: 'CourseWatch',
@@ -324,7 +324,7 @@ export default {
         },
         isCountdownShow () {
             const { isOpenSale = 0, courseStatus = 0, regularSaleTime } = this.detail
-            return isOpenSale === 1 && courseStatus === 2 && regularSaleTime
+            return !this.isPresent && isOpenSale === 1 && courseStatus === 2 && regularSaleTime
         },
         canLearn () {
             return this.detail.isBuy || this.isPresent
