@@ -65,6 +65,7 @@
                             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
                             <div :class="$style.countDown">
                                 <count-down
+                                    prefix="距抢课开始仅剩"
                                     :endtime="item.regularSaleTime"
                                     theme="orange"
                                     @done="$refresh"
@@ -405,7 +406,9 @@ export default {
         color: #999;
       }
       .free {
-        font-size: 48px;
+        display: block;
+        text-align: right;
+        font-size: 30px;
         color: #FE7700;
       }
       .btns {
