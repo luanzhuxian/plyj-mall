@@ -39,6 +39,14 @@
                         @started="refresh(4)"
                         @ended="refresh(1)"
                     />
+                    <!-- 公益棕活动倒计时 -->
+                    <countdown-bar
+                        v-if="false"
+                        :class="$style.countDownBar"
+                        :starttime="'2020-09-09 20:00:00'"
+                        :endtime="detail.regularSaleTime"
+                        @done="refresh"
+                    />
                 </template>
 
                 <!-- 商品基本信息 -->
@@ -105,6 +113,9 @@
                 </Field>
 
                 <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
+
+                <!-- 公益棕活动规则 -->
+                <rule :class="$style.rule" v-if="false" />
 
                 <div :class="$style.detailOrComment">
                     <div :class="$style.tabs">
@@ -264,6 +275,13 @@
                     </div>
                 </pl-mask>
 
+                <!-- 公益棕海报 -->
+                <poster
+                    ref="charityPoster"
+                    :data="detail"
+                    :share="shareUrl"
+                />
+
                 <!--团购的提醒， 团购 且 进行中 显示-->
                 <div
                     v-if="(detail.activityProductModel && activeProduct === 2 && preActivity === 2) && (detail.activityProductModel.percolatorCount || detail.activityProductModel.flag)"
@@ -341,6 +359,10 @@ import TogetherRule from './together/Together-Rule'
 import TogetherPrice from './together/Together-Price'
 import SecondPrice from './second/Second-Price'
 import BookingPrice from './booking/Booking-Price'
+import CountdownBar from './charity/Countdown-Bar.vue'
+// import Join from './charity/Join.vue'
+import Rule from './charity/Rule.vue'
+import Poster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
@@ -428,6 +450,10 @@ export default {
         InfoHeader,
         Instructions,
         CountDown,
+        CountdownBar,
+        // Join,
+        Rule,
+        Poster,
         Skeleton
     },
     data () {
@@ -988,6 +1014,20 @@ export default {
                 this.showHaibao = true
             } catch (e) {
                 throw e
+            } finally {
+                this.creating = false
+            }
+        },
+        async createCharityPoster () {
+            try {
+                if (this.loading) {
+                    return
+                }
+
+                this.creating = true
+                this.$refs.charityPoster.createPoster()
+            } catch (error) {
+                throw error
             } finally {
                 this.creating = false
             }
