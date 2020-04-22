@@ -49,15 +49,23 @@ export default {
         },
         run () {
             if (!this.list.length) return
-            this.timer = setTimeout(() => {
+            this.timer = setTimeout(async () => {
                 this.start()
                 if (this.index + 1 >= this.list.length) {
                     this.index = 0
+                    // await this.waitCarousel()
                 } else {
                     this.index++
                 }
                 this.run()
             }, this.gap * 1000)
+        },
+        waitCarousel () {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve()
+                }, this.duration * 500)
+            })
         }
     },
     watch: {

@@ -43,10 +43,10 @@ export default {
             }
             // 商品为 1 课程为 2
             if (item.productType === 1) {
-                this.$router.push({ name: 'Product', params: { productId: item.productId } })
+                this.$router.push({ name: 'Product', params: { productId: item.productId }, query: { currentProductStatus: 7 } })
                 return
             }
-            this.$router.push({ name: 'Curriculum', params: { productId: item.productId } })
+            this.$router.push({ name: 'Curriculum', params: { productId: item.productId }, query: { currentProductStatus: 7 } })
         }
     }
 }

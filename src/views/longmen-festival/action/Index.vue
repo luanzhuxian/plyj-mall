@@ -13,6 +13,7 @@
         <main :class="$style.main">
             <Statistics
                 :percentage="percentage"
+                :donation-amount="statistics.donationAmount"
                 :join-num="statistics.orderNo"
                 :countdown="countdown"
             />

@@ -40,7 +40,7 @@
                         @ended="refresh(1)"
                     />
                     <!-- 公益棕活动倒计时 -->
-                    <countdown-bar
+                    <CountdownBar
                         v-if="false"
                         :class="$style.countDownBar"
                         :starttime="'2020-09-09 20:00:00'"
@@ -115,7 +115,7 @@
                 <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
 
                 <!-- 公益棕活动规则 -->
-                <rule :class="$style.rule" v-if="false" />
+                <Rule :class="$style.rule" v-if="false" />
 
                 <div :class="$style.detailOrComment">
                     <div :class="$style.tabs">
