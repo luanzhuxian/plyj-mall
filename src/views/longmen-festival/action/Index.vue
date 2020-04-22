@@ -25,6 +25,7 @@
                     <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/规则.png" alt="">
                     <span>分享海报</span>
                 </div>
+                <Barrage :class="$style.barrage" :list="publicBenefitList" />
             </div>
         </main>
 
@@ -69,6 +70,7 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import Statistics from './components/Statistics'
 import Courses from './components/Courses'
 import Crunchies from './components/Crunchies'
+import Barrage from './components/Barrage'
 import {
     getPublicBenefitDetail,
     getPublicBenefitStatistics,
@@ -81,7 +83,8 @@ export default {
         swiperSlide,
         Statistics,
         Courses,
-        Crunchies
+        Crunchies,
+        Barrage
     },
     props: {
         id: {
@@ -229,6 +232,11 @@ export default {
                     height: 106px;
                     margin-bottom: 10px;
                 }
+            }
+            > .barrage {
+                position: absolute;
+                left: -24px;
+                top: -70px;
             }
         }
     }
