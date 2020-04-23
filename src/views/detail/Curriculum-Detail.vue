@@ -9,6 +9,11 @@
                     <p>分享海报</p>
                 </div>
                 <banner :banners="banners" />
+                <!-- 弹幕 -->
+                <Barrage
+                    :class="$style.barrage"
+                    :list="charityMembers"
+                />
 
                 <template v-if="isCountdownShow">
                     <!-- 公益棕活动倒计时 -->
@@ -16,8 +21,8 @@
                         v-if="productActive === 7"
                         :class="$style.countDownBar"
                         :endtime="detail.regularSaleTime"
-                        :donation-amount="charityStastics.donationAmount"
-                        :top-amount="charityStastics.topAmount"
+                        :donation="charityStastics.donationAmount"
+                        :total="charityStastics.topAmount"
                         @done="refresh"
                     />
                     <!-- 倒计时 -->
@@ -259,6 +264,7 @@ import Rule from './charity/Rule.vue'
 import Poster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
+import Barrage from './../longmen-festival/action/components/Barrage'
 import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
 import {
     generateQrcode,
@@ -294,7 +300,8 @@ export default {
         Join,
         Rule,
         Poster,
-        Skeleton
+        Skeleton,
+        Barrage
     },
     data () {
         return {
@@ -698,6 +705,14 @@ export default {
 </script>
 
 <style module lang="scss">
+
+.barrage {
+    position: absolute;
+    left: 0;
+    bottom: 116px;
+    z-index: 2;
+}
+
 .curriculum {
     padding-bottom: 190px;
 }
