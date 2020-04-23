@@ -630,7 +630,7 @@ export default {
                     ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1190 + (80 - 56) / 2 + 80 / 3)
                     ctx.stroke()
                 }
-                this.haibao = canvas.toDataURL('image/jpeg', 0.7)
+                this.haibao = canvas.toDataURL('image/jpeg', 0.9)
                 this.showHaibao = true
             } catch (e) {
                 throw e
