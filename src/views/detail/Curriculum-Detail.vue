@@ -331,7 +331,7 @@ export default {
         },
         isCountdownShow () {
             const { isOpenSale = 0, courseStatus = 0, regularSaleTime } = this.detail
-            return !this.isPresent && isOpenSale === 1 && courseStatus === 2 && regularSaleTime
+            return !this.canLearn && isOpenSale === 1 && courseStatus === 2 && regularSaleTime
         },
         canLearn () {
             return this.detail.isBuy || this.isPresent

@@ -52,18 +52,20 @@
         >
             <template>
                 <ul :class="$style.courseList">
+                    <!--只有实际购买的人不显示已购角标-->
                     <li
                         v-for="(item, index) of courseList"
                         :key="index"
                         :class="{
                             [$style.courseItem]: true,
-                            [$style.hadBuy]: item.orderId
+                            [$style.hadBuy]: !item.isGive && item.orderId
                         }"
                         @click.capture="study(item)"
                     >
                         <div :class="$style.img">
                             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
-                            <div :class="$style.countDown">
+                            <!--没有订单才显示倒计时-->
+                            <div v-if="!item.orderId" :class="$style.countDown">
                                 <count-down
                                     :endtime="item.regularSaleTime"
                                     theme="black"
@@ -85,9 +87,11 @@
                                     <span v-else :class="$style.free">免费</span>
                                 </template>
                                 <template>
-                                    <pl-button :class="$style.notStart" v-if="item.isNotStart" type="primary">暂未开始</pl-button>
+                                    <!--实际购买的人 & 赠课并观看的人 显示 学习中-->
+                                    <pl-button v-if="(!item.isGive && item.orderId) || (item.isGive && item.isWatch)" type="warning">学习中</pl-button>
+                                    <!--赠课的人优先显示 已赠课 -->
                                     <pl-button v-else-if="item.isGive" type="primary">已赠课</pl-button>
-                                    <pl-button v-else-if="item.orderId || (item.isGive && item.isWatch)" type="warning">学习中</pl-button>
+                                    <pl-button v-else-if="item.isNotStart" type="primary" :class="$style.notStart">暂未开始</pl-button>
                                     <pl-button v-else type="primary">订购中</pl-button>
                                 </template>
                             </div>
