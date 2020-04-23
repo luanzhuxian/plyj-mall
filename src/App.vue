@@ -71,6 +71,7 @@ export default {
             // 切换了商城之后，清空所有登录数据
             const mallDomain = window.location.pathname.split('/')[1]
             const localOpengId = localStorage.getItem(`openId_${ mallDomain }`)
+            // 用户切换商城的时候，清空所有登录认证信息
             if (!localOpengId) {
                 localStorage.clear()
             }
