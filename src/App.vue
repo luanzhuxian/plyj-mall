@@ -51,6 +51,7 @@ export default {
                 'LiveRoom',
                 'PaySuccess'
             ],
+            // 以下路由名称，不显示快速导航
             showNavbar: [
                 'Home',
                 'My',
@@ -61,7 +62,8 @@ export default {
                 'InviteNewcomers',
                 'SpringPloughing',
                 'OnlineClassroom',
-                'InteractiveLive'
+                'InteractiveLive',
+                'seriesOfCourses'
             ]
         }
     },
