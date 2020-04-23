@@ -64,7 +64,7 @@
                                     </p>
                                 </div>
 
-                                <div v-if="item.definiteType" :class="$style.itemLogo">{{ item.definiteType }}</div>
+                                <div v-if="pro.definiteType" :class="$style.itemLogo">{{ pro.definiteType }}</div>
                             </li>
                             <!--<li v-for="(pro, j) of item"-->
                             <!--:key="j"-->
