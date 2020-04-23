@@ -64,8 +64,8 @@
                     >
                         <div :class="$style.img">
                             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
-                            <!--有订单不显示倒计时-->
-                            <div v-if="item.orderId" :class="$style.countDown">
+                            <!--没有订单才显示倒计时-->
+                            <div v-if="!item.orderId" :class="$style.countDown">
                                 <count-down
                                     :endtime="item.regularSaleTime"
                                     theme="black"
