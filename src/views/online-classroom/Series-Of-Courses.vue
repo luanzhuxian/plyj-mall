@@ -89,7 +89,7 @@
                                 <div>
                                     <template v-if="item.priceType === 1">
                                         <span :class="$style.price" v-text="item.sellingPrice" />
-                                        <del v-if="item.originalPrice" :class="$style.original" v-text="item.originalPrice" class="rmb" />
+                                        <del v-if="item.originalPrice && (item.originalPrice > item.sellingPrice)" :class="$style.original" v-text="item.originalPrice" class="rmb" />
                                     </template>
                                     <span v-else :class="$style.free">免费</span>
                                 </div>
