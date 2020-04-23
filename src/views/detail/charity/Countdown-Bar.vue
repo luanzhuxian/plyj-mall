@@ -6,7 +6,6 @@
             </div>
             <div :class="$style.contentRight">
                 <div :class="$style.contentRightTop">
-                    <!-- <span>距活动开始仅剩</span> -->
                     <span>距活动结束仅剩</span>
                     <div :class="$style.countdown" v-if="show">
                         <i>{{ d }}</i><em>天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />
@@ -21,7 +20,7 @@
                         outter-color="rgba(255, 255, 255, 0.5)"
                     >
                         <span slot="content" :class="$style.progressText">
-                            累计公益金<b>2050102</b>元
+                            累计公益金<b>{{ donation }}</b>元
                         </span>
                     </Progress>
                 </div>
@@ -41,17 +40,21 @@ export default {
         Progress
     },
     props: {
-        // data: {
-        //     type: Object,
-        //     default () {
-        //         return {}
-        //     }
-        // },
         starttime: {
             type: [Number, String],
             default: 0
         },
         endtime: {
+            type: [Number, String],
+            default: 0
+        },
+        // 捐赠总额
+        donation: {
+            type: [Number, String],
+            default: 0
+        },
+        // 捐赠上限
+        total: {
             type: [Number, String],
             default: 0
         }
@@ -62,15 +65,21 @@ export default {
             d: 0,
             h: 0,
             m: 0,
-            s: 0,
-            percentage: 0
+            s: 0
+        }
+    },
+    computed: {
+        percentage () {
+            const { donation, total } = this
+            if (!donation || !total) {
+                return 0
+            }
+            const percentage = parseInt(donation * 100 / total)
+            return percentage > 100 ? 100 : percentage
         }
     },
     created () {
         this.init()
-        this.percentage = 50
-    },
-    mounted () {
     },
     methods: {
         async init () {

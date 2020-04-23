@@ -10,23 +10,26 @@
                 </div>
                 <banner :banners="banners" />
 
-                <!-- 倒计时 -->
-                <count-down
-                    v-if="isCountdownShow"
-                    :class="[$style.countDownBar, $style.regular]"
-                    :endtime="detail.regularSaleTime"
-                    theme="orange"
-                    prefix="距抢课开始仅剩"
-                    @done="refresh"
-                />
-                <!-- 公益棕活动倒计时 -->
-                <countdown-bar
-                    v-if="false"
-                    :class="$style.countDownBar"
-                    :starttime="'2020-09-09 20:00:00'"
-                    :endtime="detail.regularSaleTime"
-                    @done="refresh"
-                />
+                <template v-if="isCountdownShow">
+                    <!-- 公益棕活动倒计时 -->
+                    <countdown-bar
+                        v-if="productActive === 7"
+                        :class="$style.countDownBar"
+                        :endtime="detail.regularSaleTime"
+                        :donation-amount="charityStastics.donationAmount"
+                        :top-amount="charityStastics.topAmount"
+                        @done="refresh"
+                    />
+                    <!-- 倒计时 -->
+                    <count-down
+                        v-else
+                        :class="[$style.countDownBar, $style.regular]"
+                        :endtime="detail.regularSaleTime"
+                        theme="orange"
+                        prefix="距抢课开始仅剩"
+                        @done="refresh"
+                    />
+                </template>
             </div>
 
             <info-box>
@@ -71,7 +74,7 @@
                         </p>
                     </div>
                     <!-- 公益棕用户头像 -->
-                    <join v-if="false" />
+                    <join v-if="productActive === 7" :data="charityMembers" :donation="12" />
                 </div>
 
                 <!-- 课程名称 -->
@@ -106,7 +109,7 @@
             />
 
             <!-- 公益棕活动规则 -->
-            <rule :class="$style.rule" v-if="false" />
+            <rule :class="$style.rule" v-if="productActive === 7" />
 
             <!-- 课程详情 -->
             <div :class="$style.detailOrComment">
@@ -264,6 +267,10 @@ import {
     loadImage,
     createText
 } from '../../assets/js/util'
+import {
+    getPublicBenefitStatistics,
+    getPublicBenefitList
+} from '../../apis/longmen-festival/lottery'
 
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
@@ -309,7 +316,11 @@ export default {
             },
             haibao: '',
             creating: false,
-            showHaibao: false
+            showHaibao: false,
+            // 公益棕统计数据
+            charityStastics: 0,
+            // 公益榜单
+            charityMembers: []
         }
     },
     props: {
@@ -325,7 +336,7 @@ export default {
     computed: {
         ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser']),
 
-        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入
+        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益棕活动进入
         productActive () {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
         },
@@ -373,7 +384,17 @@ export default {
                     this.checkIsPresentCourse().catch(e => {
                         console.error(e.message)
                         return e
-                    })
+                    }),
+                    ...(this.productActive === 7 ? [
+                        this.getPublicBenefitStatistics().catch(e => {
+                            console.error(e.message)
+                            return e
+                        }),
+                        this.getPublicBenefitList().catch(e => {
+                            console.error(e.message)
+                            return e
+                        })
+                    ] : [])
                 ]
 
                 await Promise.all(list)
@@ -461,6 +482,26 @@ export default {
             try {
                 const { result } = await checkIsPresentCourse(this.productId)
                 this.isPresent = result
+                return result
+            } catch (error) {
+                throw error
+            }
+        },
+        // 查询公益棕活动统计数据
+        async getPublicBenefitStatistics () {
+            try {
+                const { result } = await getPublicBenefitStatistics(this.productId)
+                this.charityStastics = result
+                return result
+            } catch (error) {
+                throw error
+            }
+        },
+        // 查询公益榜单
+        async getPublicBenefitList () {
+            try {
+                const { result } = await getPublicBenefitList(this.productId)
+                this.charityMembers = result
                 return result
             } catch (error) {
                 throw error
@@ -859,25 +900,26 @@ export default {
 }
 
 .priceRight {
-  flex: 1;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
-  margin-top: 5px;
-  > p {
-    margin-top: 6px;
-  }
-  .returnRunbi {
-    display: inline-block;
-    width: 60px;
-    height: 28px;
-    margin-right: 10px;
-    border-radius: 13px;
-    line-height: 28px;
-    text-align: center;
-    font-size: 18px;
-    background-color: #FE7700;
-    color: #fff;
-  }
+    flex: 1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 5px;
+    > p {
+        margin-top: 6px;
+    }
+    .returnRunbi {
+        display: inline-block;
+        width: 60px;
+        height: 28px;
+        margin-right: 10px;
+        border-radius: 13px;
+        line-height: 28px;
+        text-align: center;
+        font-size: 18px;
+        background-color: #fe7700;
+        color: #fff;
+    }
 }
+
 </style>

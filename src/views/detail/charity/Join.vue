@@ -4,18 +4,18 @@
             <ul :class="$style.avatarList">
                 <li
                     :class="$style.avatar"
-                    v-for="(item, k) in [1, 2, 3, 4].slice(-4)"
+                    v-for="(item, k) of data.slice(-4)"
                     :key="k"
                 >
-                    <img :src="'https://mallcdn.youpenglai.com/static/admall/mall-management/default.png' + '?x-oss-process=style/thum-small'" :alt="item">
+                    <img :src="item.headImgUrl + '?x-oss-process=style/thum-small'" :alt="item.name">
                 </li>
             </ul>
-            <span v-if="1 > 0">200人和你一起参与</span>
+            <span>{{ `${data.length}人和你一起参与` }}</span>
         </div>
         <div :class="$style.joinBottom">
             <span :class="$style.joinBottomLeft">购买可捐赠</span>
             <pl-svg name="icon-zongzi-03e21" width="30" height="30" />
-            <span>20元公益金</span>
+            <span>{{ `${donation}元公益金` }}</span>
         </div>
     </div>
 </template>
@@ -25,10 +25,14 @@ export default {
     name: 'Join',
     props: {
         data: {
-            type: Object,
+            type: Array,
             default () {
-                return {}
+                return []
             }
+        },
+        donation: {
+            type: [Number, String],
+            default: 0
         }
     },
     data () {
