@@ -158,7 +158,6 @@ export function isIOS () {
  * 生成商品二维码
  * @param size {number} 二维码尺寸，必填
  * @param text {string} 二维码内容，必填
-<<<<<<< HEAD
  * @param [padding] {number} 二维码的白边大小，默认未0
  * @param [img] {HTMLElement} 二维码中心图片,可以是img或canvas
  * @param [centerPadding] 二维码中心图片的白边大小，默认未0

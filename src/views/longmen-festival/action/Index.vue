@@ -19,11 +19,12 @@
             />
             <div :class="$style.activityHandle">
                 <div @click="isShowRule = true">
-                    <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/分享海报.png" alt="">
+                    <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/规则.png" alt="">
                     <span>活动规则</span>
                 </div>
-                <div>
-                    <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/规则.png" alt="">
+                <div @click="share">
+                    <pl-svg v-if="createPosterLoading" name="icon-btn-loading" width="100" fill="#fff" class="rotate" style="margin-bottom:1.333333vw" />
+                    <img v-else src="https://mallcdn.youpenglai.com/static/mall/2.9.0/分享海报.png" alt="">
                     <span>分享海报</span>
                 </div>
                 <Barrage :class="$style.barrage" :list="publicBenefitList" />
@@ -58,10 +59,18 @@
                 </dl>
                 <dl>
                     <dt>3.活动说明</dt>
-                    <dd v-html="detail.activityDesc || ''">}</dd>
+                    <dd :class="$style.activityDesc" v-html="detail.activityDesc || ''">}</dd>
                 </dl>
             </div>
         </pl-popup>
+
+        <!-- 海报 -->
+        <Poster
+            ref="poster"
+            :data="detail"
+            :share="shareUrl"
+        />
+
     </div>
 </template>
 
@@ -72,11 +81,13 @@ import Statistics from './components/Statistics'
 import Courses from './components/Courses'
 import Crunchies from './components/Crunchies'
 import Barrage from './components/Barrage'
+import Poster from './components/Poster'
 import {
     getPublicBenefitDetail,
     getPublicBenefitStatistics,
     getPublicBenefitList
 } from './../../../apis/longmen-festival/lottery'
+import { mapGetters } from 'vuex'
 export default {
     name: 'LongmenAction',
     components: {
@@ -85,7 +96,8 @@ export default {
         Statistics,
         Courses,
         Crunchies,
-        Barrage
+        Barrage,
+        Poster
     },
     props: {
         id: {
@@ -95,6 +107,8 @@ export default {
     },
     data () {
         return {
+            createPosterLoading: false,
+            shareUrl: '',
             isShowRule: false,
             percentage: 0,
             active: 0,
@@ -189,7 +203,18 @@ export default {
         },
         slideChangeTransitionEnd () {
             this.active = this.$refs.swiper.swiper.activeIndex
+        },
+        async share () {
+            try {
+                this.createPosterLoading = true
+                this.shareUrl = `${ this.mallUrl }/longmen-festival/action/${ this.id }?shareUserId=${ this.userId }&t=${ Date.now() }`
+                await this.$refs.poster.createPoster()
+                this.createPosterLoading = false
+            } catch (e) { throw e }
         }
+    },
+    computed: {
+        ...mapGetters(['mallUrl', 'userId'])
     }
 }
 </script>
@@ -285,6 +310,9 @@ export default {
                 margin-bottom: 10px;
                 font-size: 32px;
                 font-weight: bold;
+            }
+            > .activity-desc {
+                line-height: 50px;
             }
         }
     }
