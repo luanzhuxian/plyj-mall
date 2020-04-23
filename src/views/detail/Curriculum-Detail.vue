@@ -152,7 +152,7 @@
                         <template v-if="canLearn">
                             <button
                                 v-if="courseType === 1"
-                                :class="$style.button + ' ' + $style.yellow"
+                                :class="$style.button + ' ' + isPresent ? $style.orange : $style.yellow"
                                 :disabled="loading"
                                 @click="$router.push({
                                     name: 'CourseWatch',
