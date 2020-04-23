@@ -57,13 +57,13 @@
                         :key="index"
                         :class="{
                             [$style.courseItem]: true,
-                            [$style.hadBuy]: item.orderId
+                            [$style.hadBuy]: !item.isGive && item.orderId
                         }"
                         @click.capture="study(item)"
                     >
                         <div :class="$style.img">
                             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
-                            <div :class="$style.countDown">
+                            <div v-if="item.orderId" :class="$style.countDown">
                                 <count-down
                                     prefix="距抢课开始仅剩"
                                     :endtime="item.regularSaleTime"
@@ -94,9 +94,11 @@
                                     <span v-else :class="$style.free">免费</span>
                                 </div>
                                 <div :class="$style.btns">
-                                    <pl-button :class="$style.isNotStart" v-if="item.isNotStart" type="primary">即将开售</pl-button>
+                                    <!--实际购买的人 & 赠课并观看的人 显示 学习中-->
+                                    <pl-button v-if="(!item.isGive && item.orderId) || (item.isGive && item.isWatch)" type="warning">学习中</pl-button>
+                                    <!--赠课的人优先显示 已赠课 -->
                                     <pl-button v-else-if="item.isGive" type="primary">已赠课</pl-button>
-                                    <pl-button v-else-if="item.orderId || (item.isGive && item.isWatch)" type="warning">学习中</pl-button>
+                                    <pl-button v-else-if="item.isNotStart" type="primary" :class="$style.notStart">即将开售</pl-button>
                                     <pl-button v-else type="primary">立即订购</pl-button>
                                 </div>
                             </div>
