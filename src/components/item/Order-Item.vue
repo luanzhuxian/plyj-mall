@@ -74,6 +74,7 @@
         <div v-else-if="activeProduct === 4 && preActive === 2" :class="$style.activeTag">预购</div>
         <div v-else-if="activeProduct === 5 && preActive === 2" :class="$style.activeTag">春耘</div>
         <div v-else-if="activeProduct === 6 && preActive === 2" :class="$style.activeTag">组合课</div>
+        <div v-else-if="activeProduct === 7 && preActive === 2" :class="[$style.activeTag, $style.publicBenefitTag]">公益助力</div>
     </div>
 </template>
 
@@ -297,6 +298,10 @@ export default {
     color: #FF3323;
     font-size: 22px;
     background-color: #EFE0C3;
+  }
+  .public-benefit-tag {
+      color: #FFFFFF;
+      background-color: #75A4FF;
   }
 
 </style>
