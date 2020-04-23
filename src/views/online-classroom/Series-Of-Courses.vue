@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                             <div :class="$style.right">
-                                <div>
+                                <div :class="$style.priceContent">
                                     <template v-if="item.priceType === 1">
                                         <span :class="$style.price" v-text="item.sellingPrice" />
                                         <del v-if="item.originalPrice && (item.originalPrice > item.sellingPrice)" :class="$style.original" v-text="item.originalPrice" class="rmb" />
@@ -391,10 +391,12 @@ export default {
     }
     .right {
       margin-top: 20px;
+      .priceContent {
+        text-align: right;
+      }
       .price {
         font-size: 48px;
         color: #FE7700;
-        font-weight: bold;
         &:before {
           content: '¥';
           margin-right: 4px;
@@ -408,8 +410,6 @@ export default {
         color: #999;
       }
       .free {
-        display: block;
-        text-align: right;
         font-size: 30px;
         color: #FE7700;
       }
