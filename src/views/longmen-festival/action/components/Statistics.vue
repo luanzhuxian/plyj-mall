@@ -1,9 +1,9 @@
 <template>
-    <div :class="$style.progress">
-        <Progress v-bind="$attrs" />
+    <div :class="$style.statistics">
+        <Progress :class="$style.progress" v-bind="$attrs" />
         <div :class="$style.content">
             <div :class="$style.join">
-                <div v-if="timer">活动还未开始奥~</div>
+                <div v-if="activityStatus === 1">活动还未开始奥~</div>
                 <template v-else>
                     <span>加入</span>
                     <span :class="[$style.peopleNum, $style.green]"> {{ joinNum }} </span>
@@ -18,13 +18,19 @@
                 <span>元</span>
             </div>
             <div :class="$style.timeout">
-                <template v-if="timer">
-                    <span>距活动开始仅剩</span>
+                <template v-if="activityStatus === 1 || activityStatus === 2">
+                    <span v-if="activityStatus === 1">距活动开始仅剩</span>
+                    <span v-else>距活动结束仅剩</span>
                     <span :class="[$style.green]">
                         <i v-if="isDayShow">{{ d }}</i><span v-if="isDayShow">天</span><i v-text="h" /><span>:</span><i v-text="m" /><span>:</span><i v-text="s" />
                     </span>
                 </template>
-                <div v-else>活动进行中</div>
+                <span v-else-if="activityStatus === 3">
+                    活动已过期
+                </span>
+                <span v-else-if="activityStatus === 4">
+                    活动已结束
+                </span>
             </div>
         </div>
     </div>
@@ -50,6 +56,11 @@ export default {
         countdown: {
             type: Number,
             default: 0
+        },
+        // 1 未开始 2 进行中，3 已过期，4 已结束
+        activityStatus: {
+            type: Number,
+            default: 1
         }
     },
     data () {
@@ -62,8 +73,7 @@ export default {
         }
     },
     deactivated () {
-        this.timer && this.timer.stop()
-        this.timer = null
+        this.done()
     },
     methods: {
         setTime ({ seconds, minutes, hours, days }) {
@@ -71,17 +81,21 @@ export default {
             this.h = String(hours).padStart(2, '0')
             this.m = String(minutes).padStart(2, '0')
             this.s = String(seconds).padStart(2, '0')
+        },
+        done () {
+            this.timer && this.timer.stop()
+            this.timer = null
         }
     },
     watch: {
         countdown (news) {
             if (news > 0) {
-                this.timer = new Countdown(news, data => {
+                this.timer = new Countdown(Math.abs(news), data => {
                     if (data) {
                         this.setTime(data)
                     } else {
-                        this.timer && this.timer.stop()
-                        this.timer = null
+                        this.done()
+                        this.$emit('done')
                     }
                 })
                 this.timer.start()
@@ -103,16 +117,21 @@ export default {
 
 <style module lang='scss'>
 
-.progress {
+.statistics {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
     width: 560px;
     height: 560px;
     border-radius: 50%;
     overflow: hidden;
-    > .content {
+    > .progress {
         position: absolute;
-        left: 40px;
-        top: 40px;
+        top: 0;
+        left: 0;
+    }
+    > .content {
         width: 480px;
         height: 480px;
         padding: 98px 0;

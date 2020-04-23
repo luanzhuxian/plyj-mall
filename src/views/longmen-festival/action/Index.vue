@@ -16,6 +16,8 @@
                 :donation-amount="statistics.donationAmount"
                 :join-num="statistics.orderNo"
                 :countdown="countdown"
+                :activity-status="detail.definiteStatus"
+                @done="refresh"
             />
             <div :class="$style.activityHandle">
                 <div @click="isShowRule = true">
@@ -155,6 +157,15 @@ export default {
         async getDetail () {
             try {
                 const { result } = await getPublicBenefitDetail(this.id)
+                // 活动不存在，弹出去
+                if (result.definiteStatus === '') {
+                    if (window.history.length > 1) {
+                        this.$router.go(-1)
+                        return
+                    }
+                    this.$router.replace({ name: 'home' })
+                    return
+                }
                 const { productModels = [], courseModels = [] } = result
                 const productList = productModels.concat(courseModels).map(item => ({
                     productId: item.productId,
@@ -169,13 +180,11 @@ export default {
                 result.productList = productList
                 // 进度
                 this.percentage = (this.statistics.donationAmount / result.topAmount) * 100
-                // 活动开始剩余时间戳
-                this.countdown = moment(result.startTime).valueOf() - moment(result.systemTime).valueOf()
-                // 未开始状态
-                if (result.definiteStatus === 1) {
-                    this.countdownTimer = setTimeout(() => {
-                        window.location.reload()
-                    }, this.countdown)
+                // definiteStatus 1未开始，2进行中，3已过期，4已结束
+                if (result.definiteStatus === 1 || result.definiteStatus === 2) {
+                    // 活动开始剩余或活动结束时间戳
+                    const countdown = moment(result.startTime).valueOf() - moment(result.systemTime).valueOf()
+                    this.countdown = countdown > 0 ? countdown : moment(result.endTime).valueOf() - moment(result.systemTime).valueOf()
                 }
                 this.detail = result
             } catch (e) { throw e }
@@ -210,6 +219,15 @@ export default {
                 this.shareUrl = `${ this.mallUrl }/longmen-festival/action/${ this.id }?shareUserId=${ this.userId }&t=${ Date.now() }`
                 await this.$refs.poster.createPoster()
                 this.createPosterLoading = false
+            } catch (e) { throw e }
+        },
+        async refresh () {
+            try {
+                await this.getStatistics()
+                await Promise.all([
+                    this.getDetail(),
+                    this.getPublicBenefitList()
+                ])
             } catch (e) { throw e }
         }
     },

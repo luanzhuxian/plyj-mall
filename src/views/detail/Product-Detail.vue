@@ -17,34 +17,34 @@
                 </div>
                 <!-- 商品banner -->
                 <DetailBanner :banners="banners" :main="detail.productMainImage" />
-                <template v-if="detail.id">
+                <template v-if="detail.id && preActivity !== 0">
                     <!-- 团购倒计时条 -->
                     <TogetherBar
-                        v-if="activeProduct === 2 && preActivity !== 0"
+                        v-if="activeProduct === 2"
                         :detail="detail"
                         @started="refresh(2)"
                         @ended="refresh(1)"
                     />
                     <!-- 秒杀倒计时条 -->
                     <SecondBar
-                        v-if="activeProduct === 3 && preActivity !== 0"
+                        v-else-if="activeProduct === 3"
                         :detail="detail"
                         @started="refresh(3)"
                         @ended="refresh(1)"
                     />
                     <!-- 预购倒计时条 -->
                     <BookingBar
-                        v-if="activeProduct === 4 && preActivity !== 0"
+                        v-else-if="activeProduct === 4"
                         :detail="detail"
                         @started="refresh(4)"
                         @ended="refresh(1)"
                     />
                     <!-- 公益棕活动倒计时 -->
                     <CountdownBar
-                        v-if="false"
+                        v-else-if="activeProduct === 7"
                         :class="$style.countDownBar"
-                        :starttime="'2020-09-09 20:00:00'"
-                        :endtime="detail.regularSaleTime"
+                        :starttime="detail.activityProductModel.activityStartTime"
+                        :endtime="detail.activityProductModel.activityEndTime"
                         @done="refresh"
                     />
                 </template>
@@ -115,7 +115,7 @@
                 <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
 
                 <!-- 公益棕活动规则 -->
-                <Rule :class="$style.rule" v-if="false" />
+                <CharityRule v-if="activeProduct === 7 && preActivity === 2" :active-product="activeProduct" :class="$style.rule" />
 
                 <div :class="$style.detailOrComment">
                     <div :class="$style.tabs">
@@ -276,7 +276,7 @@
                 </pl-mask>
 
                 <!-- 公益棕海报 -->
-                <poster
+                <CharityPoster
                     ref="charityPoster"
                     :data="detail"
                     :share="shareUrl"
@@ -361,8 +361,8 @@ import SecondPrice from './second/Second-Price'
 import BookingPrice from './booking/Booking-Price'
 import CountdownBar from './charity/Countdown-Bar.vue'
 // import Join from './charity/Join.vue'
-import Rule from './charity/Rule.vue'
-import Poster from './charity/Poster.vue'
+import CharityRule from './charity/Rule.vue'
+import CharityPoster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
@@ -452,8 +452,8 @@ export default {
         CountDown,
         CountdownBar,
         // Join,
-        Rule,
-        Poster,
+        CharityRule,
+        CharityPoster,
         Skeleton
     },
     data () {
