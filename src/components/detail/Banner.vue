@@ -8,7 +8,7 @@
     >
         <swiper ref="swiper" :options="swiperOption" @slideChange="slideChange">
             <swiperSlide
-                v-for="(img, index) of main ? [main, ...banners.slice(1)] : banners"
+                v-for="(img, index) of localBanner"
                 :key="index"
                 :class="{ 'swiper-no-swiping': banners.length < 2 }"
             >
@@ -93,6 +93,16 @@ export default {
     computed: {
         swiper () {
             return this.$refs.swiper.swiper
+        },
+        localBanner () {
+            if (!this.main) {
+                return this.banners
+            }
+            // banner中存在视频，替换主图从第2个元素开始
+            if (this.banners.some(item => item.indexOf('video/') > -1)) {
+                return [this.banners[0], this.main, ...this.banners.slice(2)]
+            }
+            return [this.main, ...this.banners.slice(1)]
         }
     },
     updated () {
