@@ -10,30 +10,14 @@
             <AddressItem ref="addAddressItem" />
         </div>
 
-        <!-- *************************实体************************* -->
-        <div
-            v-if="physicalProducts.length > 0"
-            :class="$style.productBox"
+        <ProductVeiwer
+            :physical-products="physicalProducts"
+            :virtual-products="virtualProducts"
+            :lesson-list="lessonList"
+            :pre-activity="preActivity"
+            :active-product="activeProduct"
         >
-            <div :class="$style.orderItemBox">
-                <OrderItem
-                    v-for="(item, index) of physicalProducts"
-                    :key="index"
-                    :img="item.productImg"
-                    :name="item.productName"
-                    :count="item.count"
-                    :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-                    :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.price"
-                    :support-refund="item.supportRefund"
-                    :gap="32"
-                    :product-type="1"
-                    :pre-active="preActivity"
-                    :active-product="activeProduct"
-                    :allow-invoice="item.showInvoice"
-                    border
-                />
-            </div>
-            <OtherInfo>
+            <div slot="physical" v-if="physicalProducts.length">
                 <InfoItem>
                     <div slot="label">
                         <span>配送方式</span>
@@ -114,8 +98,108 @@
                         <pl-svg class="ml-10" name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" />
                     </span>
                 </InfoItem>
-            </OtherInfo>
-        </div>
+            </div>
+
+            <!-- 非实体商品显示（虚拟和课程） -->
+            <template v-slot:noPhysical="{ type, product: item }">
+                <InfoItem v-if="item.productType === 'KNOWLEDGE_COURSE'">
+                    <template slot="label">
+                        有效期
+                    </template>
+                    <template slot="content">
+                        {{ item.validity ? `购买后${ item.validity }天内学完` : '购买后不限观看次数' }}
+                    </template>
+                </InfoItem>
+                <InfoItem v-else>
+                    <template slot="label">使用时间</template>
+                    <p slot="content" class="fz-24" v-if="item.validityPeriodStart">
+                        <span>
+                            {{ item.validityPeriodStart | dateFormat('YYYY.MM.DD') }}
+                        </span>
+                        <template v-if="item.validityPeriodStart.split(' ')[0] !== item.validityPeriodEnd.split(' ')[0]">
+                            -
+                            <span>
+                                {{ item.validityPeriodEnd | dateFormat('YYYY.MM.DD') }}
+                            </span>
+                        </template>
+                    </p>
+                    <p slot="content" v-else class="fz-24">
+                        长期有效
+                    </p>
+                </InfoItem>
+                <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
+                    <template slot="label">春耘折扣</template>
+                    <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
+                </InfoItem>
+                <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
+                    <template slot="label">组合折扣</template>
+                    <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
+                </InfoItem>
+                <StudentInline
+                    v-if="isCart && item.needStudentInfo === 1"
+                    :product="item"
+                    :count="item.count"
+                    :lesson-error-id="lessonErrorId"
+                    :lesson-error-tip="lessonErrorTip"
+                    :students="CHECKED_STUDENT[item.skuCode1 + item.skuCode2] || []"
+                    :custom-list="item.formEntityList"
+                />
+                <CustomInline
+                    :key="item.skuCode1 + item.skuCode2"
+                    v-if="isCart && item.needStudentInfo === 2"
+                    :product="item"
+                    :count="item.count"
+                    :custom-list="item.formEntityList"
+                    :error-item-id="customErrorId"
+                />
+                <InfoItem v-if="isCart">
+                    <template slot="label">订单备注</template>
+                    <input
+                        slot="content"
+                        :class="$style.remark"
+                        type="text"
+                        placeholder="选填"
+                        v-model="item.remark"
+                    >
+                </InfoItem>
+                <InfoItem v-if="!isCart">
+                    <template slot="label">购买数量</template>
+                    <div :class="$style.editCount" slot="content">
+                        <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
+                        <Count
+                            :min="item.minBuyNum"
+                            :max="(activeProduct !== 1 && preActivity === 2) ? (item.activityLimit ? item.activityLimitNumber : item.activeStock) : (item.purchaseQuantity || item.stock)"
+                            :count="item.count"
+                            @change="(count, next) => { countChange(count, item, next) }"
+                        />
+                    </div>
+                </InfoItem>
+                <InfoItem>
+                    <template slot="label">商品金额</template>
+                    <span slot="content" class="gray-1">¥ {{ item.amount }}</span>
+                </InfoItem>
+                <InfoItem v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1">
+                    <template slot="label">优惠券</template>
+                    <div slot="content">
+                        <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
+                        <span v-else>{{ couponList.length }}张可用</span>
+                        <pl-svg name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" class="ml-10" />
+                    </div>
+                </InfoItem>
+                <InfoItem
+                    v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
+                    @click="showRedEnvelopePopupClick"
+                >
+                    <template slot="label">奖学金（红包）</template>
+                    <div slot="content">
+                        <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
+                        <span v-else-if="redEnvelopeList.length">有可用</span>
+                        <span v-else>无可用</span>
+                        <pl-svg name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" class="ml-10" />
+                    </div>
+                </InfoItem>
+            </template>
+        </ProductVeiwer>
 
         <CustomBlock
             v-if="isCart && physicalProducts.some(item => item.needStudentInfo === 2)"
@@ -123,271 +207,6 @@
             :error-item-id="customErrorId"
             label="用户信息"
         />
-
-        <!-- *************************虚拟************************* -->
-        <template v-if="virtualProducts.length > 0">
-            <div
-                v-for="(item, index) of virtualProducts"
-                :key="item.skuCode1"
-                :class="$style.productBox"
-            >
-                <div :class="$style.orderItemBox">
-                    <OrderItem
-                        :key="index"
-                        :img="item.productImg"
-                        :name="item.productName"
-                        :count="item.count"
-                        :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-                        :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.price"
-                        :support-refund="item.supportRefund"
-                        is-submit
-                        :gap="32"
-                        :product-type="2"
-                        :active-product="activeProduct"
-                        :allow-invoice="item.showInvoice"
-                        :pre-active="preActivity"
-                        border
-                    />
-                </div>
-                <OtherInfo>
-                    <InfoItem>
-                        <template slot="label">使用时间</template>
-                        <p slot="content" class="fz-24" v-if="item.validityPeriodStart">
-                            <span>
-                                {{ item.validityPeriodStart | dateFormat('YYYY.MM.DD') }}
-                            </span>
-                            <template v-if="item.validityPeriodStart.split(' ')[0] !== item.validityPeriodEnd.split(' ')[0]">
-                                -
-                                <span>
-                                    {{ item.validityPeriodEnd | dateFormat('YYYY.MM.DD') }}
-                                </span>
-                            </template>
-                        </p>
-                        <p slot="content" v-else class="fz-24">
-                            长期有效
-                        </p>
-                    </InfoItem>
-
-                    <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
-                        <template slot="label">春耘折扣</template>
-                        <span slot="content" :class="$style.itemContent">{{ detail.discount }}折 -¥{{ (item.originPrice - item.price) * item.count }}</span>
-                    </InfoItem>
-
-                    <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
-                        <template slot="label">组合折扣</template>
-                        <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
-                    </InfoItem>
-
-                    <StudentInline
-                        v-if="isCart && item.needStudentInfo === 1"
-                        :product="item"
-                        :count="item.count"
-                        :lesson-error-id="lessonErrorId"
-                        :lesson-error-tip="lessonErrorTip"
-                        :students="CHECKED_STUDENT[item.skuCode1 + item.skuCode2] || []"
-                        :custom-list="item.formEntityList"
-                    />
-
-                    <CustomInline
-                        v-if="isCart && item.needStudentInfo === 2"
-                        :product="item"
-                        :key="item.productId"
-                        :count="item.count"
-                        :custom-list="item.formEntityList"
-                        :error-item-id="customErrorId"
-                    />
-
-                    <InfoItem v-if="isCart">
-                        <template slot="label" :class="$style.itemLabel">订单备注</template>
-                        <input
-                            slot="content"
-                            :class="$style.remark"
-                            type="text"
-                            placeholder="选填"
-                            v-model="item.remark"
-                        >
-                    </InfoItem>
-
-                    <InfoItem v-if="!isCart">
-                        <template slot="label" :class="$style.itemLabel">购买数量</template>
-                        <template slot="label">购买数量</template>
-                        <div :class="$style.editCount" slot="content">
-                            <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
-                            <Count
-                                :min="item.minBuyNum"
-                                :max="(activeProduct !== 1 && preActivity === 2) ? (item.activityLimit ? item.activityLimitNumber : item.activeStock) : (item.purchaseQuantity || item.stock)"
-                                :count="item.count"
-                                @change="(count, next) => { countChange(count, item, next) }"
-                            />
-                        </div>
-                    </InfoItem>
-
-                    <InfoItem>
-                        <template slot="label">商品金额</template>
-                        <span slot="content" class="gray-1">¥ {{ item.amount }}</span>
-                    </InfoItem>
-
-                    <InfoItem v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1">
-                        <template slot="label">优惠券</template>
-                        <div slot="content">
-                            <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
-                            <span v-else>{{ couponList.length }}张可用</span>
-                            <pl-svg name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" class="ml-10" />
-                        </div>
-                    </InfoItem>
-
-                    <InfoItem
-                        v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
-                        @click="showRedEnvelopePopupClick"
-                    >
-                        <template slot="label">奖学金（红包）</template>
-                        <div slot="content">
-                            <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
-                            <span v-else-if="redEnvelopeList.length">有可用</span>
-                            <span v-else>无可用</span>
-                            <pl-svg name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" class="ml-10" />
-                        </div>
-                    </InfoItem>
-                </OtherInfo>
-            </div>
-        </template>
-
-        <!-- *************************课程************************* -->
-        <template v-if="lessonList.length > 0">
-            <div
-                v-for="(item, index) of lessonList"
-                :key="index"
-                :class="$style.productBox"
-            >
-                <div :class="$style.orderItemBox">
-                    <OrderItem
-                        :key="index"
-                        :img="item.productImg"
-                        :name="item.productName"
-                        :count="item.count || 1"
-                        :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-                        :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.price"
-                        :support-refund="item.supportRefund"
-                        is-submit
-                        :gap="32"
-                        :product-type="2"
-                        :active-product="activeProduct"
-                        :pre-active="preActivity"
-                        :allow-invoice="item.showInvoice"
-                        border
-                    />
-                </div>
-                <OtherInfo>
-                    <InfoItem v-if="item.productType === 'KNOWLEDGE_COURSE'">
-                        <template slot="label">
-                            有效期
-                        </template>
-                        <template slot="content">
-                            {{ item.validity ? `购买后${ item.validity }天内学完` : '购买后不限观看次数' }}
-                        </template>
-                    </InfoItem>
-
-                    <InfoItem v-else>
-                        <template slot="label">
-                            使用时间
-                        </template>
-                        <template slot="content">
-                            <p v-if="item.validityPeriodStart">
-                                <span>
-                                    {{ item.validityPeriodStart | dateFormat('YYYY.MM.DD') }}
-                                </span>
-                                <template v-if="item.validityPeriodStart.split(' ')[0] !== item.validityPeriodEnd.split(' ')[0]">
-                                    -
-                                    <span>
-                                        {{ item.validityPeriodEnd | dateFormat('YYYY.MM.DD') }}
-                                    </span>
-                                </template>
-                            </p>
-                            <p v-else class="fz-24">
-                                长期有效
-                            </p>
-                        </template>
-                    </InfoItem>
-
-                    <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
-                        <template slot="label">春耘折扣</template>
-                        <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
-                    </InfoItem>
-
-                    <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
-                        <template slot="label">组合折扣</template>
-                        <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
-                    </InfoItem>
-
-                    <StudentInline
-                        v-if="isCart && item.needStudentInfo === 1"
-                        :product="item"
-                        :count="item.count"
-                        :lesson-error-id="lessonErrorId"
-                        :lesson-error-tip="lessonErrorTip"
-                        :students="CHECKED_STUDENT[item.skuCode1 + item.skuCode2] || []"
-                        :custom-list="item.formEntityList"
-                    />
-
-                    <CustomInline
-                        :key="item.productId"
-                        v-if="isCart && item.needStudentInfo === 2"
-                        :product="item"
-                        :count="item.count"
-                        :custom-list="item.formEntityList"
-                        :error-item-id="customErrorId"
-                    />
-
-                    <InfoItem v-if="isCart">
-                        <template slot="label">订单备注</template>
-                        <input
-                            slot="content"
-                            :class="$style.remark"
-                            type="text"
-                            placeholder="选填"
-                            v-model="item.remark"
-                        >
-                    </InfoItem>
-
-                    <InfoItem v-if="!isCart">
-                        <template slot="label">购买数量</template>
-                        <div :class="$style.editCount" slot="content">
-                            <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
-                            <Count
-                                :min="item.minBuyNum"
-                                :max="(activeProduct !== 1 && preActivity === 2) ? (item.activityLimit ? item.activityLimitNumber : item.activeStock) : (item.purchaseQuantity || item.stock)"
-                                :count="item.count"
-                                @change="(count, next) => { countChange(count, item, next) }"
-                            />
-                        </div>
-                    </InfoItem>
-
-                    <InfoItem>
-                        <template slot="label">商品金额</template>
-                        <span slot="content" class="gray-1">¥ {{ item.amount }}</span>
-                    </InfoItem>
-
-                    <InfoItem v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1">
-                        <template slot="label">优惠券</template>
-                        <div slot="content">
-                            <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
-                            <span v-else>{{ couponList.length }}张可用</span>
-                            <pl-svg name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" class="ml-10" />
-                        </div>
-                    </InfoItem>
-
-                    <InfoItem v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1">
-                        <template slot="label">奖学金（红包）</template>
-                        <div slot="content">
-                            <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
-                            <span v-else-if="redEnvelopeList.length">有可用</span>
-                            <span v-else>无可用</span>
-                            <pl-svg name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" class="ml-10" />
-                        </div>
-                    </InfoItem>
-                </OtherInfo>
-            </div>
-        </template>
 
         <div :class="$style.confirm">
             <div>
@@ -639,7 +458,7 @@
 
 <script>
 import AddressItem from '../../components/item/Address-Item.vue'
-import OrderItem from '../../components/item/Order-Item.vue'
+// import OrderItem from '../../components/item/Order-Item.vue'
 import moment from 'moment'
 import {
     confirmCart,
@@ -659,22 +478,24 @@ import { resetForm, setTimeoutSync } from '../../assets/js/util'
 import { getServerTime } from '../../apis/base-api'
 import StudentInline from './components/Student-Inline.vue'
 import CustomInline from './components/Custom-Inline.vue'
-import OtherInfo from './components/Other-Info.vue'
+// import OtherInfo from './components/Other-Info.vue'
 import InfoItem from './components/Info-Item.vue'
 import CustomBlock from './components/Custom-Block.vue'
+import ProductVeiwer from './components/Product-Veiwer.vue'
 export default {
     name: 'SubmitOrder',
     components: {
         AddressItem,
-        OrderItem,
+        // OrderItem,
         OrderItemSkeleton,
         AddressItemSkeleton,
         Count,
         StudentInline,
-        OtherInfo,
+        // OtherInfo,
         InfoItem,
         CustomInline,
-        CustomBlock
+        CustomBlock,
+        ProductVeiwer
     },
     data () {
         this.requestPayDataCount = 0
@@ -1460,318 +1281,5 @@ export default {
 </script>
 
 <style module lang="scss">
-  .submitOrder {
-    padding: 20px 24px 120px;
-  }
-  .productBox {
-    width: 100%;
-    margin: 0 0 20px 0;
-    padding: 32px 0 24px 0;
-    border-radius: $--radius1;
-    background-color: #fff;
-    box-sizing: border-box;
-    .orderItemBox {
-      padding: 0 24px;
-    }
-  }
-  .edit-count {
-    display: flex;
-    align-items: center;
-    > span {
-      margin-right: 16px;
-      font-size: 20px;
-      color: #999;
-    }
-  }
-  .remark {
-    flex: 1;
-    height: 100%;
-    padding: 0;
-    margin-left: 22px;
-    font-size: 24px;
-    text-align: right;
-  }
-  .address {
-    margin-bottom: 28px;
-    background-color: #fff;
-  }
-  .product, .remark {
-    padding: 24px 28px 18px;
-    background-color: #fff;
-  }
-  .orderTop {
-    position: relative;
-    font-size: 28px;
-    font-weight: bold;
-    padding-bottom: 22px;
-    margin-bottom: 30px;
-    border-bottom: 1px solid #e7e7e7;
-  }
-  .money {
-    position: relative;
-    padding: 22px 0;
-    border-bottom: 1px solid #e7e7e7;
-    > p {
-      display: flex;
-      justify-content: space-between;
-      line-height: 52px;
-      &:nth-of-type(2) > span:nth-of-type(2) {
-        color: $--primary-color;
-      }
-    }
-  }
-  .item-selector {
-    margin-bottom: 20px;
-    padding-left: 24px;
-    background-color: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-  }
-  .invioceBox {
-    .title {
-      position: relative;
-      height: 114px;
-      line-height: 114px;
-      font-size: 36px;
-      padding: 0 40px;
-      border-bottom: 1px solid #e7e7e7;
-    }
-    .content {
-      padding: 62px 40px;
-      > button {
-        width: 100%;
-        height: 88px;
-        margin-bottom: 28px;
-        font-size: 32px;
-        color: #387AF6;
-        font-weight: 500;
-        background-color: #F1F0F7;
-        border-radius: $--radius2;
-      }
-    }
-  }
-
-  .total-money {
-    line-height: 66px;
-    text-align: right;
-    > span:nth-of-type(2) {
-      color: $--primary-color;
-    }
-  }
-  .confirm {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 24px;
-    height: 110px;
-    background-color: #fff;
-    box-sizing: border-box;
-    z-index: 2;
-    > div {
-      display: flex;
-      flex-direction: column;
-      padding-right: 20px;
-      min-width: 200px;
-    }
-  }
-  .oneProductMark {
-    display: flex;
-    margin-top: 20px;
-    padding: 0 28px;
-    line-height: 88px;
-    font-size: 28px;
-    background-color: #fff;
-    border-radius: 20px;
-    > input {
-      flex: 1;
-      margin-left: 68px;
-      background-color: transparent;
-    }
-  }
-  .student-list {
-    background-color: #fff;
-    padding-right: 24px;
-    .student-item {
-      padding: 24px 0;
-      font-size: 28px;
-      line-height: 40px;
-      border-bottom: 1px solid #e7e7e7;
-      &:nth-last-of-type(1) {
-        border-bottom: none;
-      }
-      > .student-name {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 26px;
-      }
-      > .student-phone {
-        display: flex;
-        justify-content: space-between;
-      }
-    }
-  }
-  .contact-detail {
-    padding: 24px 0;
-    > span:nth-of-type(1) {
-      margin-right: 24px;
-      font-weight: 500;
-    }
-  }
-  .add-contact {
-    padding: 40px 20px;
-    .add-contact-top {
-      margin-bottom: 20px;
-      font-size: 40px;
-      color: #000;
-    }
-    button {
-      margin-top: 48px;
-    }
-    label {
-      background-color: #f9f9f9 !important;
-      padding-left: 32px;
-      span {
-        color: #999 !important;
-      }
-    }
-  }
-
-  .coupon {
-    padding: 0 24px;
-    > .coupon-list {
-      margin-top: 48px;
-      padding-bottom: 40px;
-
-      .coupon-item {
-        height: 72px;
-        line-height: 72px;
-        position: relative;
-        overflow: hidden;
-        font-size: 24px;
-
-        .button {
-          display: inline-block;
-          width: 120px;
-          height: 40px;
-          border: 2px solid #F2B036;
-          border-radius: 8px;
-          line-height: 40px;
-          color: #F2B036;
-          text-align: center;
-          margin-top: 10px;
-          float: left;
-        }
-
-        .full {
-          display: inline-block;
-          font-size: 28px;
-          color: #373737;
-          float: left;
-          margin-left: 20px;
-        }
-
-        .time-desc {
-          display: inline-block;
-          color: #B5B5B5;
-          float: left;
-          margin-left: 20px;
-        }
-        .recommend {
-          color:#FE0D0D;
-          margin-left: 20px;
-        }
-        .choices {
-          position: absolute;
-          right: 20px;
-          top: 50%;
-          transform: translateY(-50%);
-          >svg {
-            vertical-align: middle;
-          }
-        }
-        .not-choose-coupon{
-          font-size:28px;
-          line-height: 72px;
-          color:#C1C1C1;
-        }
-      }
-    }
-  }
-
-  .red-envelope {
-    padding: 0 24px;
-    >.red-envelope-list {
-      margin-top: 20px;
-      padding-bottom: 40px;
-      .red-envelope-item {
-        height: 60px;
-        line-height: 60px;
-        position: relative;
-
-        .count {
-          margin-left: 24px;
-          font-size:32px;
-          color:#373737;
-        }
-        .is-over {
-          margin-left: 20px;
-          font-size:24px;
-          color:#999999;
-        }
-        .choices {
-          line-height: 0;
-          position: absolute;
-          right: 20px;
-          top: 50%;
-          transform: translateY(-50%);
-        }
-        .not-choose-red-envelope {
-          font-size:28px;
-          line-height: 72px;
-          color:#C1C1C1;
-        }
-      }
-      svg {
-        vertical-align: text-bottom;
-      }
-    }
-  }
-
-  .skeleton {
-    padding: 20px 40px;
-  }
-  .skeleton1 {
-    background-color: #fff;
-  }
-  .skeleton2 {
-    margin-top: 28px;
-    padding: 20px 28px;
-    background-color: #fff;
-  }
-  .skeleton2-1 {
-    width: 112px;
-    height: 37px;
-  }
-  .skeleton2-2 {
-    width: 122px;
-    height: 37px;
-    margin-top: 23px;
-  }
-  .skeleton2-3 {
-    width: 112px;
-    height: 37px;
-    margin-top: 13px;
-  }
-  .skeleton2-4 {
-    width: 150px;
-    height: 37px;
-    margin-top: 28px;
-  }
-  .skeAnimation {
-    @include skeAnimation(#eee)
-  }
+    @import "scss/submit-order";
 </style>
