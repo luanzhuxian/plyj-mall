@@ -9,8 +9,10 @@
                     <p>分享海报</p>
                 </div>
                 <banner :banners="banners" />
+
                 <!-- 弹幕 -->
                 <Barrage
+                    v-if="productActive === 7"
                     :class="$style.barrage"
                     :list="charityMembers"
                 />
@@ -705,19 +707,17 @@ export default {
 </script>
 
 <style module lang="scss">
-
-.barrage {
-    position: absolute;
-    left: 0;
-    bottom: 116px;
-    z-index: 2;
-}
-
 .curriculum {
     padding-bottom: 190px;
 }
 .banner-wrapper {
     position: relative;
+}
+.barrage {
+    position: absolute;
+    left: 0;
+    bottom: 116px;
+    z-index: 2;
 }
 .count-down-bar {
     position: absolute;
