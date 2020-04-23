@@ -22,7 +22,7 @@
         />
         <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
             <div :class="$style.btnBottom" />
-            <best-recommend :data="RECOMMEND" />
+            <recommend :data="RECOMMEND" />
         </div>
     </div>
 </template>
@@ -33,7 +33,7 @@ import Pintuan from './double-12/Pintuan.vue'
 import Maisong from './double-12/Maisong.vue'
 import Fengqiang from './double-12/Fengqiang.vue'
 import MiaoshaSmall from './double-12/Miaosha-Small.vue'
-import BestRecommend from '../home/components/Best-Recommend.vue'
+import Recommend from '../home/components/Recommend.vue'
 
 export default {
     name: 'HomeTemplateB',
@@ -44,7 +44,7 @@ export default {
         Maisong,
         Fengqiang,
         MiaoshaSmall,
-        BestRecommend
+        Recommend
     },
     data () {
         return {}
@@ -86,15 +86,16 @@ export default {
 </script>
 
 <style module lang="scss">
-  .live {
+.live {
     margin: 0 0 16px;
-  }
-  .btn-bottom {
+}
+.btn-bottom {
     width: 520px;
     height: 78px;
-    background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-bottom.png") no-repeat center center;
+    background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/button-bottom.png') no-repeat center center;
     background-size: 100% auto;
     border-radius: 70px;
     margin: 48px auto 32px;
-  }
+}
+
 </style>

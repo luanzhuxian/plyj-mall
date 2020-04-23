@@ -48,14 +48,14 @@
                     <div :class="$style.title">
                         — 新春优惠感恩大回馈 —
                     </div>
-                    <best-recommend :data="FENG_QIANG">
+                    <recommend :data="FENG_QIANG">
                         <template v-slot:price="{ price }">
                             <div :class="$style.priceWrapper">
                                 <pl-svg name="icon-fengqiangjia" width="80" height="44" fill="#FE3C5E" />
                                 <span :class="$style.price" v-text="price" />
                             </div>
                         </template>
-                    </best-recommend>
+                    </recommend>
                 </div>
                 <footer :class="$style.footer">
                     — 技术支持 朋来科技 —
@@ -73,7 +73,7 @@ import Coupon from './xin-chun/Coupon.vue'
 import Chunyun from './xin-chun/Chunyun.vue'
 import Pintuan from './xin-chun/Pintuan.vue'
 import Yugou from './xin-chun/Yugou.vue'
-import BestRecommend from '../home/components/Best-Recommend.vue'
+import Recommend from '../home/components/Recommend.vue'
 
 export default {
     name: 'TemplateXinchun',
@@ -86,7 +86,7 @@ export default {
         Chunyun,
         Pintuan,
         Yugou,
-        BestRecommend
+        Recommend
     },
     data () {
         return {}
@@ -138,113 +138,114 @@ export default {
 
 <style module lang="scss">
 .template-xinchun {
-  background-color: #F2D04A;
+    background-color: #f2d04a;
 }
 .background {
-  position: relative;
-  background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/df2dd58e-5cad-42af-9965-19cffcadf064.png") no-repeat center top;
-  background-size: 100% auto;
-  min-height: 100vh;
+    position: relative;
+    background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/df2dd58e-5cad-42af-9965-19cffcadf064.png') no-repeat center top;
+    background-size: 100% auto;
+    min-height: 100vh;
 }
 .container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 700px 0 88px;
-  > .module {
-    &:nth-of-type(1) {
-      padding-top: 0 !important;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 700px 0 88px;
+    > .module {
+        &:nth-of-type(1) {
+            padding-top: 0 !important;
+        }
     }
-  }
 }
 
 .btn-top {
-  position: relative;
-  box-sizing: border-box;
-  margin: 0 auto;
-  padding: 12px;
-  width: 658px;
-  height: 100px;
-  background: #FFF;
-  border-radius: 20px;
-  box-shadow: 0px 16px 24px rgba(121, 30, 5, 0.2);
-  &-bg {
-    background: linear-gradient(180deg, rgba(255, 193, 74, 1) 0%, rgba(255, 113, 56, 1) 100%);
-    border-radius: 10px;
-    font-size: 40px;
-    font-family: Microsoft YaHei;
-    font-weight: bold;
-    line-height: 76px;
-    color: #FFF;
-    letter-spacing: 4px;
-    text-align: center;
-  }
-  svg {
-    position: absolute;
-    top: -2px;
-    right: -45px;
-  }
+    position: relative;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 12px;
+    width: 658px;
+    height: 100px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 16px 24px rgba(121, 30, 5, .2);
+    &-bg {
+        background: linear-gradient(180deg, rgba(255, 193, 74, 1) 0%, rgba(255, 113, 56, 1) 100%);
+        border-radius: 10px;
+        font-size: 40px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        line-height: 76px;
+        color: #fff;
+        letter-spacing: 4px;
+        text-align: center;
+    }
+    svg {
+        position: absolute;
+        top: -2px;
+        right: -45px;
+    }
 }
 
 .live {
-  padding: 54px 24px 0;
+    padding: 54px 24px 0;
 }
 
 .activity,
 .propagate,
 .coupon {
-  padding: 32px 24px 0;
+    padding: 32px 24px 0;
 }
 
 .chunyun {
-  padding: 48px 0 0;
+    padding: 48px 0 0;
 }
 
 .pintuan,
 .yugou {
-  padding: 32px 0 0;
+    padding: 32px 0 0;
 }
 
 .fengqiang {
-  padding: 34px 24px 0;
-  background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/9f67ef6c-6a54-4e6b-ac11-090b8853a1ba.png") no-repeat right top;
-  background-size: 200px auto;
-  .title {
-    padding: 8px 0 32px;
-    text-align: center;
-    color: #9D8218;
-    font-size: 40px;
-    font-weight: bolder;
-    letter-spacing: 4px;
-  }
-  .price-wrapper {
-    flex: 1;
-    width: 0;
-    display: flex;
-    align-items: flex-end;
-    @include elps();
-  }
-  .price {
-    margin-left: 10px;
-    font-size: 44px;
-    font-family: Helvetica;
-    font-weight: bold;
-    color: #FE3C5E;
-    &:before {
-      content: '¥';
-      font-size: 22px;
+    padding: 34px 24px 0;
+    background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/9f67ef6c-6a54-4e6b-ac11-090b8853a1ba.png') no-repeat right top;
+    background-size: 200px auto;
+    .title {
+        padding: 8px 0 32px;
+        text-align: center;
+        color: #9d8218;
+        font-size: 40px;
+        font-weight: bolder;
+        letter-spacing: 4px;
     }
-  }
+    .price-wrapper {
+        flex: 1;
+        width: 0;
+        display: flex;
+        align-items: flex-end;
+        @include elps();
+    }
+    .price {
+        margin-left: 10px;
+        font-size: 44px;
+        font-family: Helvetica;
+        font-weight: bold;
+        color: #fe3c5e;
+        &:before {
+            content: '¥';
+            font-size: 22px;
+        }
+    }
 }
 
 footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 140px;
-  color: #FFF;
-  font-size: 26px;
-  font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 140px;
+    color: #fff;
+    font-size: 26px;
+    font-weight: 600;
 }
+
 </style>

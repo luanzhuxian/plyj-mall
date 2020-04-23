@@ -60,7 +60,7 @@
                     :data="RECOMMEND.moduleName"
                     :skin-id="skinId"
                 />
-                <best-recommend :data="RECOMMEND" />
+                <recommend :data="RECOMMEND" />
             </div>
             <footer :class="$style.footer">
                 — 技术支持 朋来科技 —
@@ -74,7 +74,7 @@ import Search from './components/Search.vue'
 import Banner from './components/Banner.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
-import BestRecommend from './components/Best-Recommend.vue'
+import Recommend from './components/Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
 import Live from '../activity/components/Live.vue'
@@ -93,7 +93,7 @@ export default {
         Banner,
         HotItem,
         Best,
-        BestRecommend,
+        Recommend,
         Appointment,
         Propagate,
         Live,

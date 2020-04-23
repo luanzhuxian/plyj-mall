@@ -59,7 +59,7 @@
                     :data="RECOMMEND.moduleName"
                     :skin-id="skinId"
                 />
-                <best-recommend :data="RECOMMEND" />
+                <recommend :data="RECOMMEND" />
             </div>
             <footer :class="$style.footer">
                 — 技术支持 朋来科技 —
@@ -76,7 +76,7 @@ import Activity from '../activity/xin-chun/Activity.vue'
 import D12Activity from './components/Activity.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
-import BestRecommend from './components/Best-Recommend.vue'
+import Recommend from './components/Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate.vue'
 import Teachers from './components/Teachers'
@@ -94,7 +94,7 @@ export default {
         D12Activity,
         HotItem,
         Best,
-        BestRecommend,
+        Recommend,
         Appointment,
         Propagate,
         Teachers,
