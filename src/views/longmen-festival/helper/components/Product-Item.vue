@@ -49,7 +49,7 @@ export default {
         },
         // 商品润笔金额
         rebate: {
-            type: Number,
+            type: [Number, String],
             default: 0
         },
         // 商品类型 单课/系列课 + 实体商品/虚拟商品/体验课/正式课

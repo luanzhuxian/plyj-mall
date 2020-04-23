@@ -23,8 +23,8 @@
                 <span :class="$style.returnRunbi">
                     润笔
                 </span>
-                <i v-if="minRebate" class="rmb" v-text="minRebate" />
-                <i v-if="minRebate && maxRebate && minRebate !== maxRebate">~</i>
+                <i v-if="minRebate || (minRebate === 0)" class="rmb" v-text="minRebate" />
+                <i v-if="(minRebate || (minRebate === 0)) && maxRebate && minRebate !== maxRebate">~</i>
                 <i v-if="maxRebate && minRebate !== maxRebate" v-text="maxRebate" />
             </p>
             <p class="fz-22 gray-3">
@@ -64,7 +64,7 @@ export default {
             return Math.min(...this.priceList)
         },
         rebateList () {
-            return this.skuList.filter(item => Number(item.realRebate) !== 0).map(item => item.realRebate) || []
+            return this.skuList.map(item => Number(item.realRebate)) || []
         },
         maxRebate () {
             return this.rebateList.length ? Math.max(...this.rebateList) : 0
