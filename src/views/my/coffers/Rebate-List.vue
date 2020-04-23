@@ -64,7 +64,7 @@
                                     </p>
                                 </div>
 
-                                <div v-if="pro.definiteType" :class="$style.itemLogo">{{ pro.definiteType }}</div>
+                                <div v-if="pro.definiteType" :class="$style.itemLogo">{{ pro.definiteType.split('订单')[0] }}</div>
                             </li>
                             <!--<li v-for="(pro, j) of item"-->
                             <!--:key="j"-->
