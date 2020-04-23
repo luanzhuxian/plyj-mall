@@ -33,7 +33,6 @@ export default {
             const template = `
                 <div style="--duration: ${ this.duration }s; --position: ${ -200 }px" class="${ this.$style.item }" >
                     <img class="${ this.$style.via }" src="${ item.headImgUrl }" alt="">
-                    <div>
                         ${ item.name.split('')[0] } **
                         已捐赠 ${ item.donationAmount } 元
                     </div>
@@ -53,7 +52,7 @@ export default {
                 this.start()
                 if (this.index + 1 >= this.list.length) {
                     this.index = 0
-                    // await this.waitCarousel()
+                    await this.waitCarousel()
                 } else {
                     this.index++
                 }
@@ -64,15 +63,18 @@ export default {
             return new Promise(resolve => {
                 setTimeout(() => {
                     resolve()
-                }, this.duration * 500)
+                }, this.duration * 1000)
             })
         }
     },
     watch: {
-        list (val) {
-            this.$nextTick(() => {
-                if (val.length) this.run()
-            })
+        list: {
+            handler (val) {
+                this.$nextTick(() => {
+                    if (val.length) this.run()
+                })
+            },
+            immediate: true
         }
     }
 }
@@ -91,11 +93,12 @@ export default {
             top: 0;
             display: flex;
             align-items: center;
-            padding: 6px 16px;
             width: max-content;
-            white-space: nowrap;
-            background-color: rgba(0,0,0,1);
+            padding: 6px 16px;
             border-radius: 0 8px 8px 0;
+            color: #fff;
+            background-color: rgba(0,0,0,1);
+            white-space: nowrap;
             animation: run var(--duration) linear;
             > .via {
                 width: 44px;

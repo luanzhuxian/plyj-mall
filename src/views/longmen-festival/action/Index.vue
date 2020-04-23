@@ -160,11 +160,9 @@ export default {
                 // 活动不存在，弹出去
                 if (result.definiteStatus === '') {
                     if (window.history.length > 1) {
-                        this.$router.go(-1)
-                        return
+                        return this.$router.go(-1)
                     }
-                    this.$router.replace({ name: 'home' })
-                    return
+                    return this.$router.replace({ name: 'home' })
                 }
                 const { productModels = [], courseModels = [] } = result
                 const productList = productModels.concat(courseModels).map(item => ({
@@ -181,7 +179,7 @@ export default {
                 // 进度
                 this.percentage = (this.statistics.donationAmount / result.topAmount) * 100
                 // definiteStatus 1未开始，2进行中，3已过期，4已结束
-                if (result.definiteStatus === 1 || result.definiteStatus === 2) {
+                if ([1, 2].indexOf(result.definiteStatus) !== -1) {
                     // 活动开始剩余或活动结束时间戳
                     const countdown = moment(result.startTime).valueOf() - moment(result.systemTime).valueOf()
                     this.countdown = countdown > 0 ? countdown : moment(result.endTime).valueOf() - moment(result.systemTime).valueOf()
