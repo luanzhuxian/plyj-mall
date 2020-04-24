@@ -39,7 +39,7 @@
                 <div :class="{ [$style.active]: active === 1 }" @click="slide(1)">公益榜单</div>
             </div>
             <swiper :options="swiperOption" ref="swiper" @slideChangeTransitionEnd="slideChangeTransitionEnd">
-                <swiperSlide :class="$style.slide"> <Courses :activity-status="detail.definiteStatus" :list="detail.productList" /> </swiperSlide>
+                <swiperSlide :class="$style.slide"> <Courses :activity-status="detail.definiteStatus" :activity-id="id" :list="detail.productList" /> </swiperSlide>
                 <swiperSlide :class="$style.slide"> <Crunchies :amounts="myPublicBenefitAmounts" :list="publicBenefitList" />  </swiperSlide>
             </swiper>
         </div>

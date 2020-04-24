@@ -13,10 +13,9 @@
             <div :class="$style.item" v-for="(item,index) in list" :key="index">
                 <div :class="$style.customer">
                     <img :src="item.headImgUrl" alt="">
-                    <div>{{ item.name }}</div>
+                    <div>{{ item.name.split('')[0] }}**</div>
                 </div>
                 <div :class="$style.price">
-                    <div>购买{{ item.productName }}</div>
                     <div :class="$style.publicBenefit">
                         <PlSvg name="icon-zongzi-03e21" width="30" />
                         <span>贡献{{ item.donationAmount }}元公益金</span>
@@ -108,6 +107,7 @@ export default {
                 }
             }
             > .price {
+                display: flex;
                 font-size: 24px;
                 color: #666;
                 > .public-benefit {

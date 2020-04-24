@@ -15,6 +15,12 @@
                     <pl-svg :key="2" v-show="!creating" name="icon-poster-512b1" fill="#fff" width="35" @click="createHaibao(activeProduct)" />
                     <p>分享海报</p>
                 </div>
+                <!-- 公益粽弹幕 -->
+                <Barrage
+                    v-if="activeProduct === 7"
+                    :class="$style.barrage"
+                    :list="charityMembers"
+                />
                 <!-- 商品banner -->
                 <DetailBanner :banners="banners" :main="detail.productMainImage" />
                 <template v-if="detail.id && preActivity !== 0">
@@ -45,6 +51,8 @@
                         :class="$style.countDownBar"
                         :starttime="detail.activityProductModel.activityStartTime"
                         :endtime="detail.activityProductModel.activityEndTime"
+                        :donation="charityStastics.donationAmount"
+                        :total="charityStastics.topAmount"
                         @done="refresh"
                     />
                 </template>
@@ -57,6 +65,8 @@
                     <SecondPrice :detail="detail" v-else-if="activeProduct === 3 && preActivity !== 0" />
                     <!-- 预购信息 -->
                     <BookingPrice :detail="detail" v-else-if="activeProduct === 4 && preActivity !== 0" />
+                    <!-- 公益棕信息 -->
+                    <CharityPrice :detail="detail" :charity-members="charityMembers" v-else-if="productActive === 7 && preActivity !== 0" />
                     <!-- 加个 润笔 购买数量，关注人数 登信息 -->
                     <info-header :detail="detail" v-else />
                     <!-- 开售倒计时 -->
@@ -360,10 +370,15 @@ import TogetherPrice from './together/Together-Price'
 import SecondPrice from './second/Second-Price'
 import BookingPrice from './booking/Booking-Price'
 import CountdownBar from './charity/Countdown-Bar.vue'
-// import Join from './charity/Join.vue'
 import CharityRule from './charity/Rule.vue'
 import CharityPoster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
+import Barrage from './../longmen-festival/action/components/Barrage'
+import CharityPrice from './charity/Charity-Price'
+import {
+    getPublicBenefitStatistics,
+    getPublicBenefitList
+} from '../../apis/longmen-festival/lottery'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
 /**
@@ -451,10 +466,11 @@ export default {
         Instructions,
         CountDown,
         CountdownBar,
-        // Join,
         CharityRule,
         CharityPoster,
-        Skeleton
+        Skeleton,
+        Barrage,
+        CharityPrice
     },
     data () {
         return {
@@ -482,6 +498,10 @@ export default {
             haibao: '',
             tab: 2,
             imgels: [],
+            // 公益棕统计数据
+            charityStastics: 0,
+            // 公益榜单
+            charityMembers: [],
 
             // 活动类型
             qrcode: ''
@@ -505,7 +525,7 @@ export default {
             return this.activityProductModel ? this.activityProductModel.buyCount : 0
         },
 
-        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入
+        // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益粽子行动
         productActive () {
             return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
         },
@@ -657,7 +677,8 @@ export default {
                     this.getCouponList().catch(e => {
                         console.error(e.message)
                         return e
-                    })
+                    }),
+                    ...(this.productActive === 7 ? [this.getPublicBenefitInfo()] : [])
                 ]
 
                 await Promise.all(list)
@@ -668,6 +689,33 @@ export default {
             } finally {
                 this.loading = false
             }
+        },
+
+        // 查询公益粽想关信息
+        async getPublicBenefitInfo () {
+            try {
+                await Promise.all([
+                    this.getPublicBenefitStatistics(),
+                    this.getPublicBenefitList()
+                ])
+            } catch (e) { throw e }
+        },
+
+        // 查询公益棕活动统计数据
+        async getPublicBenefitStatistics () {
+            try {
+                const activityId = this.$route.query.activityId
+                const { result } = await getPublicBenefitStatistics(activityId, this.productId)
+                this.charityStastics = result
+            } catch (e) { throw e }
+        },
+        // 查询公益榜单
+        async getPublicBenefitList () {
+            try {
+                const activityId = this.$route.query.activityId
+                const { result } = await getPublicBenefitList(activityId, this.productId)
+                this.charityMembers = result
+            } catch (e) { throw e }
         },
 
         //  获取商品详情
@@ -1053,8 +1101,16 @@ export default {
 </script>
 
 <style module lang="scss">
+
   .lesson {
+    position: relative;
     padding-bottom: 120px;
+    > .barrage {
+        position: absolute;
+        left: 0;
+        top: 446px;
+        z-index: 2;
+    }
   }
   .buttons {
     display: flex;

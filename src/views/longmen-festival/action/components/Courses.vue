@@ -24,6 +24,10 @@
 export default {
     name: 'Courses',
     props: {
+        activityId: {
+            type: String,
+            default: ''
+        },
         // 1未开始，2进行中，3已过期，4已结束
         activityStatus: {
             type: Number,
@@ -43,10 +47,10 @@ export default {
             }
             // 商品为 1 课程为 2
             if (item.productType === 1) {
-                this.$router.push({ name: 'Product', params: { productId: item.productId }, query: { currentProductStatus: 7 } })
+                this.$router.push({ name: 'Product', params: { productId: item.productId }, query: { currentProductStatus: 7, activityId: this.activityId } })
                 return
             }
-            this.$router.push({ name: 'Curriculum', params: { productId: item.productId }, query: { currentProductStatus: 7 } })
+            this.$router.push({ name: 'Curriculum', params: { productId: item.productId }, query: { currentProductStatus: 7, activityId: this.activityId } })
         }
     }
 }
