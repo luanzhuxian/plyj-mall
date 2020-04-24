@@ -240,6 +240,7 @@
 
             <!-- 公益棕海报 -->
             <charity-poster
+                v-if="productActive === 7"
                 ref="charityPoster"
                 :data="detail"
                 :donation="charityStastics.donationAmount"
@@ -468,7 +469,7 @@ export default {
                 // 重置一些状态
                 this.banners.splice(0, 1000000)
                 // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
-                const { result } = await getCourseDetail(this.productId)
+                const { result } = await getCourseDetail(this.productId, this.productActive)
                 if (!result) {
                     this.$error('该课程异常')
                     this.$router.go(-1)

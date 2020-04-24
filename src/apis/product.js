@@ -49,7 +49,7 @@ export const getSpringCombination = params => axios.get(`/apis/v1/combination/ho
  * @param mallCourseId {string} 课程id
  * @returns {Promise<AxiosResponse<Object>>}
  */
-export const getCourseDetail = mallCourseId => axios.get(`/apis/v1/mall/cource/courseInfo/${ mallCourseId }`)
+export const getCourseDetail = (mallCourseId, productStatus) => axios.get(`/apis/v1/mall/cource/courseInfo/${ mallCourseId }?productStatus=${ productStatus }`)
 
 /**
  * 视频课提交订单（获取订单号）
