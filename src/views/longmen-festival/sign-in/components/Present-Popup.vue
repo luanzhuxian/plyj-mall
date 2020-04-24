@@ -15,7 +15,7 @@
                                     <img :src="currentPresentDetail.awardImg">
                                     <div class="product-detail">
                                         <h3>{{ currentPresentDetail.awardName }}</h3>
-                                        <h4>有效期：{{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</h4>
+                                        <h4>有效期：{{ currentPresentDetail.formatStartTime | dateFormat('YYYY.MM.DD') }}-{{ currentPresentDetail.formatEndTime | dateFormat('YYYY.MM.DD') }}</h4>
                                     </div>
                                 </div>
                                 <div class="scholarship" v-if="currentPresentDetail.awardType === 2">
@@ -34,7 +34,7 @@
                                                 <p>{{ currentPresentDetail.couponName }}</p>
                                                 <p>{{ awardTypeDesc[currentPresentDetail.awardType] }}</p>
                                             </div>
-                                            <p class="expiration">有效期 {{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</p>
+                                            <p class="expiration">有效期 {{ currentPresentDetail.formatStartTime | dateFormat('YYYY.MM.DD') }}-{{ currentPresentDetail.formatEndTime | dateFormat('YYYY.MM.DD') }}</p>
                                         </div>
                                         <div class="right">
                                             立即<br>领取
@@ -105,7 +105,7 @@
                                 <div class="detail">
                                     <img :src="currentPresentDetail.awardImg">
                                     <h3>{{ currentPresentDetail.awardName }}</h3>
-                                    <p>有效期：{{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</p>
+                                    <p>有效期：{{ currentPresentDetail.formatStartTime| dateFormat('YYYY.MM.DD') }}-{{ currentPresentDetail.formatEndTime | dateFormat('YYYY.MM.DD') }}</p>
                                 </div>
                                 <div class="footer">
                                     <button @click="close">开心收下</button>

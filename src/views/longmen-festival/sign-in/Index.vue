@@ -1212,7 +1212,7 @@ export default {
               width: 220px;
               line-height: 64px;
               font-size: 26px;
-              color: rgba(255, 227, 200, 1);
+              color: #FFF;
               background: #FF9F4B;
               border-radius: 10px;
               text-align: center;
