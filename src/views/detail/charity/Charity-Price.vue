@@ -2,7 +2,7 @@
     <div :class="$style.tuan">
         <div v-if="detail.preActivity === 2">
             <div :class="$style.price">活动价： <span v-text="detail.activityProductModel.price" /></div>
-            <div :class="$style.original">原价：<del v-text="maxPrice" /></div>
+            <div :class="$style.original">原价：<del v-text="maxOriginalPrice" /></div>
         </div>
         <div>
             <!-- 用户头像 -->
@@ -92,17 +92,13 @@ export default {
       margin-bottom: 4px;
       color: #FE7700;
       font-size: 30px;
-      span {
+      > span {
         font-size: 48px;
         &:before {
           content: '¥';
           font-size: 24px;
         }
       }
-    }
-    .pro-info{
-      display: flex;
-      color: #999999;
     }
     .original{
       display: flex;
@@ -118,9 +114,6 @@ export default {
         }
       }
     }
-    .buy-num{
-      font-size: 26px;
-    }
     .join{
       display: flex;
       flex-wrap: wrap;
@@ -129,14 +122,14 @@ export default {
       max-width: 360px;
       font-size: 26px;
       color: #999999;
-      .avatarList {
+      > .avatarList {
         display: flex;
         align-items: center;
         margin-right: 30px;
-        .avatar {
+        > .avatar {
           width: 30px;
           height: 48px;
-          img {
+          > img {
             width: 48px;
             height: 48px;
             border-radius: 50%;
@@ -151,28 +144,6 @@ export default {
         text-align: right;
         font-size:26px;
         margin-top: 8px;
-      }
-    }
-    .priceRight {
-      flex: 1;
-      display: inline-flex;
-      flex-direction: column;
-      align-items: flex-end;
-      margin-top: 5px;
-      > p {
-        margin-top: 6px;
-      }
-      .returnRunbi {
-        display: inline-block;
-        width: 60px;
-        height: 28px;
-        line-height: 28px;
-        margin-right: 10px;
-        text-align: center;
-        color: #fff;
-        font-size: 18px;
-        background-color: #FE7700;
-        border-radius: 13px;
       }
     }
   }
