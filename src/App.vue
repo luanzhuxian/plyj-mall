@@ -91,7 +91,7 @@ export default {
             }
             this.logined = true
             this.getEntryData()
-            // 标记首次访问
+            // 标记一天中首次访问
             setFirstVisit()
         } catch (e) {
             throw e

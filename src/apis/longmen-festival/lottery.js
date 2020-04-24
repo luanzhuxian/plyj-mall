@@ -39,14 +39,14 @@ export const getDetail = activityId => axios.get(`/apis/v1/luckdraw/detail/${ ac
  * @param activityId
  * @returns {*}
  */
-export const getLotteryRecords = activityId => axios.get(`/apis/v1/luckdraw/my_award/${ activityId }`)
+export const getLotteryRecords = activityId => axios.get(`/apis/v1/luckdraw/my_award/${ activityId }`, { params: { size: 10e5, current: 1 } })
 
 /**
  * 获取我中过的奖品
  * @param activityId
  * @returns {*}
  */
-export const getAwardRecords = activityId => axios.get(`/apis/v1/luckdraw/award/${ activityId }`)
+export const getAwardRecords = activityId => axios.get(`/apis/v1/luckdraw/award/${ activityId }`, { params: { size: 10e5, current: 1 } })
 
 /**
  * 设置首次访问，每天只访问一次

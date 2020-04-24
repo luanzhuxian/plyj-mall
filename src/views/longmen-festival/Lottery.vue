@@ -88,10 +88,10 @@
                     <div :class="{ [$style.tab]: true, [$style.active]: tab === 0 }" @click="slide(0)">获奖记录</div>
                     <div :class="{ [$style.tab]: true, [$style.active]: tab === 1 }" @click="slide(1)">我的奖品</div>
                 </div>
-                <div :class="{ [$style.wrap]: true, [$style.active]: tab === 0 }">
+                <div :class="{ [$style.wrap]: true, [$style.noContent]: (tab === 0 && !lotteryRecords.length) || (tab === 1 && !awardRecords.length) }">
                     <swiper :options="swiperOption" ref="swiper" @slideChangeTransitionEnd="slideChangeTransitionEnd">
                         <swiperSlide>
-                            <table :class="$style.records">
+                            <table :class="$style.records" v-if="lotteryRecords.length">
                                 <thead>
                                     <th>头像</th>
                                     <th>昵称</th>
@@ -99,55 +99,38 @@
                                     <th>获奖时间</th>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr
+                                        v-for="(item, i) of lotteryRecords"
+                                        :key="i"
+                                    >
                                         <td>
-                                            <img :class="$style.avatar" src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                                            <img :class="$style.avatar" :src="item.userImg" alt="">
                                         </td>
-                                        <td class="fz-24" :class="$style.nickname">阿斯顿噶的</td>
-                                        <td class="fz-24 primary-color" :class="$style.awardName">优惠券</td>
-                                        <td class="fz-24">2020.02.03</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <img :class="$style.avatar" src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                                        </td>
-                                        <td class="fz-24" :class="$style.nickname">阿斯顿噶的</td>
-                                        <td class="fz-24 primary-color" :class="$style.awardName">优惠券</td>
-                                        <td class="fz-24">2020.02.03</td>
+                                        <td class="fz-24" :class="$style.nickname" v-text="item.userName" />
+                                        <td class="fz-24 primary-color" :class="$style.awardName" v-text="awardTypeMap[item.awardType]" />
+                                        <td class="fz-24" v-text="item.awardTime" />
                                     </tr>
                                 </tbody>
                             </table>
+                            <img height="300" v-else src="https://mallcdn.youpenglai.com/static/mall/2.9.0/no-awards.png" alt="">
                         </swiperSlide>
                         <swiperSlide>
-                            <ul :class="$style.awardList">
-                                <template v-for="(item, i) of awardList">
-                                    <li
-                                        :class="$style.awardItem"
-                                        :key="i"
-                                        v-if="Number(item.awardType) === 1"
-                                    >
-                                        <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                                        <div>
-                                            <div :class="$style.name" v-text="item.awardName" />
-                                            <div :class="$style.date" v-text="item.giftUseStartTime" />
-                                        </div>
-                                    </li>
-                                </template>
-                                <li :class="$style.awardItem">
-                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
+                            <ul :class="$style.awardList" v-if="awardRecords.length">
+                                <li
+                                    v-for="(item, i) of awardRecords"
+                                    :class="$style.awardItem"
+                                    :key="i"
+                                >
+                                    <img v-if="Number(item.awardType) === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="">
+                                    <img v-else-if="Number(item.awardType) === 3 || Number(item.awardType) === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="">
+                                    <img v-else :src="item.giftImage" alt="">
                                     <div>
-                                        <div :class="$style.name">豪华游艇一艘</div>
-                                        <div :class="$style.date">2020.02.23</div>
-                                    </div>
-                                </li>
-                                <li :class="$style.awardItem">
-                                    <img src="http://img0.imgtn.bdimg.com/it/u=2768793229,662123591&fm=26&gp=0.jpg" alt="">
-                                    <div>
-                                        <div :class="$style.name">豪华游艇一艘</div>
-                                        <div :class="$style.date">2020.02.23</div>
+                                        <div :class="$style.name" v-text="item.awardName" />
+                                        <div :class="$style.date" v-text="item.awardTime" />
                                     </div>
                                 </li>
                             </ul>
+                            <img height="300" v-else src="https://mallcdn.youpenglai.com/static/mall/2.9.0/no-award-2.png" alt="">
                         </swiperSlide>
                     </swiper>
                 </div>
@@ -173,16 +156,16 @@
             title="活动说明"
         >
             <dl :class="$style.ruleContent">
-                <dt class="fz-32">1. 活动时间</dt>
-                <dd class="fz-28 mb-48">{{ detail.startTime }} 至 {{ detail.endTime }}</dd>
-                <dt class="fz-32">2. 活动对象</dt>
-                <dd class="fz-28 mb-48" v-text="userGroupMap[detail.userRange]" />
-                <dd class="fz-28" v-if="Number(detail.userRange) === 3">
+                <dt class="fz-28">1. 活动时间</dt>
+                <dd class="fz-24 gray-2 mb-48">{{ detail.startTime }} 至 {{ detail.endTime }}</dd>
+                <dt class="fz-28">2. 活动对象</dt>
+                <dd class="fz-24 gray-2 mb-48" v-text="userGroupMap[detail.userRange]" />
+                <dd class="fz-24 gray-2" v-if="Number(detail.userRange) === 3">
                     asf
                 </dd>
-                <dt class="fz-32">3. 抽奖条件</dt>
+                <dt class="fz-28">3. 抽奖条件</dt>
                 <dd
-                    class="fz-28"
+                    class="fz-24 gray-2"
                     v-for="(item, i) of detail.terms"
                     :key="i"
                 >
@@ -195,8 +178,8 @@
                     <span v-text="item.availableLuckDrawNumber" />
                     <span> 次抽奖机会</span>
                 </dd>
-                <dt class="fz-32 mt-40">4. 活动说明</dt>
-                <dd class="fz-28">在活动有效期内，成功邀请3位好友绑定手机号注册成为店铺的会员，即可获得翻好礼的机会1次；有机会获得大额满减券；领取成功后，将自动存入到会员的现金卡包中</dd>
+                <dt class="fz-28 mt-40">4. 活动说明</dt>
+                <dd class="fz-24 gray-2">在活动有效期内，成功邀请3位好友绑定手机号注册成为店铺的会员，即可获得翻好礼的机会1次；有机会获得大额满减券；领取成功后，将自动存入到会员的现金卡包中</dd>
             </dl>
         </pl-popup>
 
@@ -275,7 +258,9 @@ export default {
                 'Helper',
                 '普通会员',
                 '部分用户分组可用'
-            ]
+            ],
+            // 1 礼品 2 奖学金 3 全场满减券 4 品类券
+            awardTypeMap: ['', '礼品', '奖学金', '满减券', '品类券']
         }
     },
     props: {
@@ -305,20 +290,13 @@ export default {
         async getDetail () {
           try {
               const { result } = await getDetail(this.id)
-              for (const [i, award] of result.gifts.entries()) {
-                  award.grade = `${SectionToChinese(i + 1)}等奖`
-                  this.turntableAwards.push({
-                      id: award.id,
-                      name: award.grade
-                  })
-              }
               this.awardList = result.gifts
               this.detail = result
               const { result: count } = await getLotteryCount(this.id)
               this.count = count
-              const { result: awardRecords } = await getAwardRecords(this.id)
+              const { result: { records: awardRecords } } = await getAwardRecords(this.id)
               this.awardRecords = awardRecords
-              const { result: lotteryRecords } = await getLotteryRecords(this.id)
+              const { result: { records: lotteryRecords } } = await getLotteryRecords(this.id)
               this.lotteryRecords = lotteryRecords
               this.setAwards()
           }  catch (e) {
@@ -326,7 +304,14 @@ export default {
           }
         },
         setAwards () {
-            const turntableAwards = [...this.turntableAwards]
+            const turntableAwards = []
+            for (const [i, award] of this.awardList.entries()) {
+                award.grade = `${SectionToChinese(i + 1)}等奖`
+                turntableAwards.push({
+                    id: award.id,
+                    name: award.grade
+                })
+            }
             for (let i = this.awardList.length; i < 8; i++) {
                 turntableAwards.push({
                     id: i,
@@ -742,6 +727,10 @@ export default {
         .wrap {
             padding: 32px 24px;
             background-color: #FFB31E;
+            &.no-content {
+                text-align: center;
+                background-color: #fff;
+            }
         }
     }
     .awardList {
