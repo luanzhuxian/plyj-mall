@@ -50,6 +50,13 @@ export const getLotteryRecords = activityId => axios.get(`/apis/v1/luckdraw/my_a
 export const getAwardRecords = activityId => axios.get(`/apis/v1/luckdraw/award/${ activityId }`, { params: { size: 10e5, current: 1 } })
 
 /**
+ * 抽奖
+ * @param activityId {string}
+ * @returns {*}
+ */
+export const lottery = activityId => axios.post(`/apis/v1/luckdraw/${ activityId }`)
+
+/**
  * 设置首次访问，每天只访问一次
  * @returns {*}
  */

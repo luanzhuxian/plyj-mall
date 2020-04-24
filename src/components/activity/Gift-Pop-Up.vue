@@ -1,7 +1,7 @@
 <template>
     <pl-mask :show="show" @close="close">
         <div :class="$style.content">
-            <template v-if="dangerousRenderHTML">
+            <template v-if="dangerousRenderHtml">
                 <div :class="$style.title" v-html="title" />
                 <div :class="$style.message" v-html="message" />
             </template>
@@ -39,7 +39,7 @@ export default {
             type: String,
             default: ''
         },
-        dangerousRenderHTML: Boolean
+        dangerousRenderHtml: Boolean
     },
     methods: {
         close () {

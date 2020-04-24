@@ -195,12 +195,24 @@
 
         <gift-pop-up
             :show.sync="showGift"
-            button-left-text="继续抽奖"
-            button-right-text="返回首页"
-            title="很遗憾，与奖品擦肩而过"
-            message="奖品已自动存入您的我的礼品中您可在我的礼品中查看"
+            :button-left-text="lotteryResult.leftButtonText"
+            :button-right-text="lotteryResult.rightButtonText"
+            :title="lotteryResult.title"
+            :message="lotteryResult.message"
+            dangerous-render-html
         >
-            <div />
+            <div v-if="lotteryResult.awardType === 1">
+                礼品
+            </div>
+            <div v-else-if="lotteryResult.awardType === 2">
+                奖学金
+            </div>
+            <div v-else-if="lotteryResult.awardType === 3">
+                满减券
+            </div>
+            <div v-else-if="lotteryResult.awardType === 4">
+                品类券
+            </div>
         </gift-pop-up>
     </div>
 </template>
@@ -211,18 +223,21 @@
 import GiftPopUp from '../../components/activity/Gift-Pop-Up.vue'
 import CouponItem from '../../components/item/Coupon-Item.vue'
 import { shuffle } from '../../assets/js/loadsh'
-import { loadImage, cutArcImage, generateQrcode, SectionToChinese } from '../../assets/js/util'
+import { loadImage, cutArcImage, generateQrcode, SectionToChinese, promise } from '../../assets/js/util'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
 import {
     getDetail,
     getLotteryCount,
     getAwardRecords,
-    getLotteryRecords
+    getLotteryRecords,
+    lottery
 } from '../../apis/longmen-festival/lottery'
 const transformSize = num => num / 7.5 * (window.innerWidth / 100)
 // 白色灯泡的下标，后面灯泡的颜色交替更换，默认第0个，即左上角第一个
 let IS_WHITE = true
+// 是否正在抽奖
+let drawing = false
 export default {
     name: 'Lottery',
     components: {
@@ -237,7 +252,7 @@ export default {
             showRule: false,
             showPoster: false,
             creating: false,
-            showGift: true,
+            showGift: false,
             poster: '',
             current: -1,
             swiperOption: {
@@ -260,7 +275,11 @@ export default {
                 '部分用户分组可用'
             ],
             // 1 礼品 2 奖学金 3 全场满减券 4 品类券
-            awardTypeMap: ['', '礼品', '奖学金', '满减券', '品类券']
+            awardTypeMap: ['', '礼品', '奖学金', '满减券', '品类券'],
+            // 抽奖结果弹框对象
+            lotteryResult: {},
+            // 抽到的奖品
+            lottery: null
         }
     },
     props: {
@@ -270,10 +289,6 @@ export default {
         }
     },
     async activated () {
-        this.timer = setInterval(() => {
-            this.setLights()
-            IS_WHITE = !IS_WHITE
-        }, 800)
         try {
             await this.getDetail()
         } catch (e) {
@@ -299,6 +314,11 @@ export default {
               const { result: { records: lotteryRecords } } = await getLotteryRecords(this.id)
               this.lotteryRecords = lotteryRecords
               this.setAwards()
+              await this.$nextTick()
+              this.timer = setInterval(() => {
+                  this.setLights()
+                  IS_WHITE = !IS_WHITE
+              }, 800)
           }  catch (e) {
               throw e
           }
@@ -321,9 +341,96 @@ export default {
             this.turntableAwards = shuffle(turntableAwards)
         },
         // 开始抽奖
-        drawLottery () {
-            const index = Math.floor(Math.random() * 8)
-            this.run(index)
+        async drawLottery () {
+            if (drawing) {
+                return
+            }
+            drawing = true
+            this.showGift = false
+            try {
+                let index = 0
+                const { result } = await lottery(this.id)
+                if (result.isAward) {
+                    index = this.turntableAwards.findIndex(item => item.id === result.id)
+                    this.lottery = this.turntableAwards.find(item => item.id === result.id)
+                } else {
+                    index = this.turntableAwards.findIndex(item => item.name === '谢谢参与')
+                }
+                await this.runLottery(index)
+            } catch (e) {
+                throw e
+            } finally {
+                drawing = false
+            }
+        },
+        /**
+         * 启动抽奖动画
+         * @param index
+         */
+        async runLottery (index) {
+            // 旋转的圈数
+            const TURNS = 6
+            // 总次数
+            const COUNT = TURNS * this.turntableAwards.length + index
+            const SPEED = 10
+            // this.current % 8 === 0 = index
+            const step = 0
+            try {
+                await this.rotate(SPEED, COUNT, step)
+            } catch (e) {
+                throw e
+            }
+        },
+        // 抽奖动画函数
+        async rotate (SPEED, COUNT, step) {
+            try {
+                await promise.timeout(SPEED)
+                this.current = step
+                if (COUNT === step) {
+                    await this.lotteryEnd()
+                    return
+                }
+                step++
+                SPEED += SPEED * 0.078
+                this.rotate(SPEED, COUNT, step)
+            } catch (e) {
+                throw e
+            }
+        },
+        // 抽奖动画结束
+        async lotteryEnd () {
+            try {
+                // 重新获取可用抽奖次数
+                const { result: count } = await getLotteryCount(this.id)
+                this.count = count
+                this.showResult()
+            } catch (e) {
+                throw e
+            }
+        },
+        // 显示抽奖结果
+        showResult () {
+            if (this.lottery) {
+                // 中奖了
+                let { grade, awardType } = this.lottery
+                this.lotteryResult = {
+                    title: `恭喜您获得<i stype="#FCE804">${ grade }</i>`,
+                    message: '奖品已自动存入您的我的礼品中您可在我的礼品中查看',
+                    awardType,
+                    leftButtonText: this.count > 0 ? '继续抽奖' : '开心收下',
+                    leftButtonHandler: this.count > 0 ? this.drawLottery : () => this.showGift = false
+                }
+            } else {
+                this.lotteryResult = {
+                    title: '很遗憾，于奖品擦肩而过',
+                    message: '感谢您参与活动',
+                    leftButtonText: this.count > 0 ? '继续抽奖' : '',
+                    leftButtonHandler: this.drawLottery,
+                    rightButtonText: '返回首页',
+                    rightButtonHadnler: () => this.$router.push({ name: 'Home' })
+                }
+            }
+            this.showGift = true
         },
         slide (index) {
             this.$refs.swiper.swiper.slideTo(index)
@@ -333,34 +440,9 @@ export default {
             this.tab = this.$refs.swiper.swiper.activeIndex
         },
 
-        /**
-         * 启动动画
-         * @param index
-         */
-        run (index) {
-            // 旋转的圈数
-            const TURNS = 6
-            // 总次数
-            const COUNT = TURNS * this.turntableAwards.length + index
-            const SPEED = 10
-            // this.current % 8 === 0 = index
-            const step = 0
-            this.rotate(SPEED, COUNT, step)
-        },
-        rotate (SPEED, COUNT, step) {
-            setTimeout(() => {
-                this.current = step
-                if (COUNT === step) {
-                    return
-                }
-                step++
-                SPEED += SPEED * 0.078
-                this.rotate(SPEED, COUNT, step)
-            }, SPEED)
-        },
         // 绘制灯泡
         setLights () {
-            let index = IS_WHITE ? 1 : 0
+            let index = IS_WHITE ? 1 : 2
             const canvas = this.$refs.canvas
             const inner = this.$refs.inner
             canvas.width = inner.offsetWidth
@@ -388,10 +470,13 @@ export default {
             // console.log(lightCountY, lightCountYInt, linghtGapYAdded)
             // let lastX = 0
             // 顶部灯
+            const GAP_X = linghtGap + linghtGapXAdded
+            const GAP_Y = linghtGap + linghtGapYAdded
+            const PI2 = Math.PI * 2
             for (let i = 1; i <= lightCountX; i++) {
                 index++
                 ctx.beginPath()
-                ctx.arc(lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapXAdded) * (i - 1)), transformSize(20), lightSize, 0, 2 * Math.PI)
+                ctx.arc(lightStart + lightSize * (2 * i - 1) + GAP_X * (i - 1), transformSize(20), lightSize, 0, PI2)
                 ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
                 ctx.shadowColor = ctx.fillStyle
                 ctx.fill()
@@ -399,7 +484,7 @@ export default {
             // 右上角
             index++
             ctx.beginPath()
-            ctx.arc(transformSize(615), transformSize(40), lightSize, 0, 2 * Math.PI)
+            ctx.arc(transformSize(615), transformSize(40), lightSize, 0, PI2)
             ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
             ctx.shadowColor = ctx.fillStyle
             ctx.fill()
@@ -408,7 +493,7 @@ export default {
             for (let i = 1; i <= lightCountY; i++) {
                 index++
                 ctx.beginPath()
-                ctx.arc(transformSize(630), lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapYAdded) * (i - 1)), lightSize, 0, 2 * Math.PI)
+                ctx.arc(transformSize(630), lightStart + lightSize * (2 * i - 1) + GAP_Y * (i - 1), lightSize, 0, PI2)
                 ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
                 ctx.shadowColor = ctx.fillStyle
                 ctx.fill()
@@ -416,7 +501,7 @@ export default {
             // 右下角
             index++
             ctx.beginPath()
-            ctx.arc(transformSize(620), canvas.height - transformSize(48), lightSize, 0, 2 * Math.PI)
+            ctx.arc(transformSize(620), canvas.height - transformSize(48), lightSize, 0, PI2)
             ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
             ctx.shadowColor = ctx.fillStyle
             ctx.fill()
@@ -424,7 +509,7 @@ export default {
             for (let i = 1; i <= lightCountX; i++) {
                 index++
                 ctx.beginPath()
-                ctx.arc(lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapXAdded) * (i - 1)), canvas.height - transformSize(20), lightSize, 0, 2 * Math.PI)
+                ctx.arc(canvas.width - (lightStart + lightSize * (2 * i - 1) + GAP_X * (i - 1)), canvas.height - transformSize(20), lightSize, 0, PI2)
                 ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
                 ctx.shadowColor = ctx.fillStyle
                 ctx.fill()
@@ -432,7 +517,7 @@ export default {
             // 左下角
             index++
             ctx.beginPath()
-            ctx.arc(transformSize(36), canvas.height - transformSize(48), lightSize, 0, 2 * Math.PI)
+            ctx.arc(transformSize(36), canvas.height - transformSize(48), lightSize, 0, PI2)
             ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
             ctx.shadowColor = ctx.fillStyle
             ctx.fill()
@@ -440,7 +525,7 @@ export default {
             for (let i = 1; i <= lightCountY; i++) {
                 index++
                 ctx.beginPath()
-                ctx.arc(transformSize(20), lightStart + (i * lightSize * 2 - lightSize + (linghtGap + linghtGapYAdded) * (i - 1)), lightSize, 0, 2 * Math.PI)
+                ctx.arc(transformSize(20), lightStart + lightSize * (2 * i - 1) + GAP_Y * (i - 1), lightSize, 0, PI2)
                 ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
                 ctx.shadowColor = ctx.fillStyle
                 ctx.fill()
@@ -448,7 +533,7 @@ export default {
             // 左上角
             index++
             ctx.beginPath()
-            ctx.arc(transformSize(36), transformSize(40), lightSize, 0, 2 * Math.PI)
+            ctx.arc(transformSize(36), transformSize(40), lightSize, 0, PI2)
             ctx.fillStyle = index % 2 === 0 ? '#fff' : '#FFF603'
             ctx.shadowColor = ctx.fillStyle
             ctx.fill()
