@@ -10,7 +10,7 @@
                 </li>
             </div>
             <div>
-                <li>{{ item.activityType === 'GROUPBUGACTIVITY' ? '团购奖学金' : '年味奖学金' }}</li>
+                <li>{{ item.activityType === 'GROUPBUGACTIVITY' ? '团购奖学金' : '签到奖学金' }}</li>
                 <li>全场通用</li>
                 <li>{{ item.useStartTime }} 领取</li>
             </div>
