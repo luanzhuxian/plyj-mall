@@ -162,16 +162,16 @@ export function isIOS () {
  * @param [img] {HTMLElement} 二维码中心图片,可以是img或canvas
  * @param [centerPadding] 二维码中心图片的白边大小，默认未0
  * @param [type] {string} 生成的类型 canvas: 生成canvas, url 生成base64
- * @returns {Promise<*>}
+ * @param [correctLevel] {number} 纠错等级[1,2,3]
  * @param imageSize {number} 中心图片的大小
  * @returns {Promise<*>}
  */
-export async function generateQrcode ({ size, text, padding = 0, img = null, centerPadding = 0, type = 'url', imageSize = 80 }) {
+export async function generateQrcode ({ size, text, padding = 0, img = null, centerPadding = 0, type = 'url', imageSize = 80, correctLevel = 2 }) {
     const { devicePixelRatio } = window
     let canvas
     canvas = new window.Qrcode({
         render: 'canvas',
-        correctLevel: 3, // 纠错级别
+        correctLevel, // 纠错级别
         text, // 内容
         size, // 大小
         background: '#ffffff',

@@ -76,7 +76,10 @@ module.exports = {
                 camelCase: 'only'
             },
             sass: {
-                data: `@import "@/assets/scss/config.scss";`
+                data: `@import "@/assets/scss/config.scss";`,
+                options: {
+                    implementation: require('sass')
+                }
             },
             postcss: {
                 plugins: loader => [

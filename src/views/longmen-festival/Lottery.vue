@@ -478,14 +478,15 @@ export default {
                     CTX.drawImage(logo, 16, 16, 68, 68)
                 }
                 const QRCODE = await generateQrcode({
-                    size: 158,
+                    size: 300,
                     text: location.href,
                     img: logo,
                     centerPadding: 2,
-                    type: 'canvas'
+                    type: 'canvas',
+                    correctLevel: 2
                 })
                 CTX.drawImage(QRCODE, 318, 568, 158, 158)
-                this.poster = CVS.toDataURL('image/jpeg', 0.8)
+                this.poster = CVS.toDataURL('image/jpeg', 1)
                 this.showPoster = true
             } catch (e) {
                 throw e

@@ -220,7 +220,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .item {
-  /deep/ .count-down {
+    >>> .count-down {
     font-size: 26px;
   }
 }

@@ -1066,7 +1066,7 @@ export default {
                         ctx.stroke()
                     }
                 }
-                this.haibao = canvas.toDataURL('image/jpeg', 0.9)
+                this.haibao = canvas.toDataURL('image/jpeg', 1)
                 this.showHaibao = true
             } catch (e) {
                 throw e

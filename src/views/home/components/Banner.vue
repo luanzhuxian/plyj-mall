@@ -146,7 +146,7 @@ export default {
     background-color: rgba(0, 0, 0, .3);
     border-radius: 9px;
     z-index: 1;
-    /deep/ .swiper-pagination-bullet {
+    ::v-deep swiper-pagination-bullet {
         width: 10px !important;
         height: 10px !important;
         margin-right: 8px;
