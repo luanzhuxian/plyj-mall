@@ -855,6 +855,9 @@ export default {
     }
     .yellow {
         background-color: #f2b036;
+        &:disabled {
+            opacity: .4 !important;
+        }
     }
 }
 
