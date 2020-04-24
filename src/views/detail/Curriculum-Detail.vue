@@ -165,7 +165,7 @@
                         </template>
                         <template v-else>
                             <button
-                                v-if="Number(detail.status) === 1 && courseType === 1 && detail.supportWatch"
+                                v-if="courseType === 1 && detail.supportWatch"
                                 :class="$style.button + ' ' + $style.yellow"
                                 :disabled="Number(detail.status) === 2 || loading"
                                 @click="previewCourse(detail.supportWatchUrl)"
@@ -781,6 +781,9 @@ export default {
     }
     .yellow {
         background-color: #f2b036;
+        &:disabled {
+            opacity: .4 !important;
+        }
     }
 }
 
