@@ -278,7 +278,7 @@ export default {
             > .barrage {
                 position: absolute;
                 left: -24px;
-                top: -70px;
+                top: -240px;
             }
         }
     }
