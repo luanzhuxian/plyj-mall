@@ -18,7 +18,7 @@
                         name="icon-poster-512b1"
                         fill="#fff"
                         width="35"
-                        @click="() => activeProduct === 7 ? createCharityPoster() : createPoster(activeProduct)"
+                        @click="() => activeProduct === 7 ? createCharityPoster() : createHaibao(activeProduct)"
                     />
                     <p>分享海报</p>
                 </div>
