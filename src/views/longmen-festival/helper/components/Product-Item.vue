@@ -10,7 +10,7 @@
                 <div class="price">
                     <b v-if="price" v-text="price" />
                     <span v-else>免费</span>
-                    <del v-if="originPrice" v-text="originPrice" />
+                    <!-- <del v-if="originPrice" v-text="originPrice" />-->
                 </div>
                 <button>
                     {{ isHelper? '立即分享' : '查看详情' }}
@@ -123,7 +123,7 @@ export default {
       display: flex;
       justify-content: space-between;
       .price {
-        max-width: 160px;
+        max-width: 200px;
         b {
           font-size:32px;
           color: #FE7700;
