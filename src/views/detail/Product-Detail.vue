@@ -12,7 +12,14 @@
                 <!-- 海报按钮 -->
                 <div :class="$style.haibao">
                     <pl-svg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                    <pl-svg :key="2" v-show="!creating" name="icon-poster-512b1" fill="#fff" width="35" @click="createHaibao(activeProduct)" />
+                    <pl-svg
+                        :key="2"
+                        v-show="!creating"
+                        name="icon-poster-512b1"
+                        fill="#fff"
+                        width="35"
+                        @click="() => activeProduct === 7 ? createCharityPoster() : createPoster(activeProduct)"
+                    />
                     <p>分享海报</p>
                 </div>
                 <!-- 公益粽弹幕 -->
@@ -289,6 +296,7 @@
                 <CharityPoster
                     ref="charityPoster"
                     :data="detail"
+                    :donation="charityStastics.donationAmount"
                     :share="shareUrl"
                 />
 
@@ -1489,6 +1497,9 @@ export default {
 .field {
     margin-top: 20px;
     padding: 0 24px;
+}
+.rule {
+    margin-top: 20px;
 }
 
 </style>

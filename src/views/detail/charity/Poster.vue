@@ -52,6 +52,10 @@ export default {
         share: {
             type: String,
             default: ''
+        },
+        donation: {
+            type: [Number, String],
+            default: 0
         }
     },
     data () {
@@ -62,14 +66,21 @@ export default {
     },
     computed: {
         ...mapGetters(['userName', 'avatar']),
-        courseImg () {
-            return this.data.courseImg || ''
+        productImg () {
+            return this.data.productMainImage || this.data.courseImg || ''
         },
-        courseName () {
-            return this.data.courseName || ''
+        productName () {
+            return this.data.productName || this.data.courseName || ''
         },
         price () {
-            return this.data.sellingPrice || 0
+            let price
+            if ('courseType' in this.data) {
+                price = this.data.sellingPrice || ''
+            }
+            if ('productType' in this.data) {
+                price = this.data.activityProductModel ? this.data.activityProductModel.price : 0
+            }
+            return price
         }
     },
     watch: {
@@ -95,9 +106,10 @@ export default {
                 this.isShow = true
                 return
             }
+
             try {
-                const { avatar, userName, share, courseImg, courseName, price } = this
-                let image = await loadImage(courseImg)
+                const { avatar, userName, share, productImg, productName, price, donation } = this
+                let image = await loadImage(productImg)
                 if (!image) {
                     this.$error('图片加载错误')
                     return
@@ -151,7 +163,7 @@ export default {
                 ctx.font = 'bold 28px Microsoft YaHei UI'
                 ctx.fillStyle = '#333'
                 ctx.textAlign = 'left'
-                createText(ctx, 312, 506, courseName, 40, 278, 1)
+                createText(ctx, 312, 506, productName, 40, 278, 1)
                 // 商品价格
                 drawRectWithText(ctx, 312, 529, 68, 26, 4, '#fe7700', '#fe7700')('活动价', '20px Microsoft YaHei UI', '#fff', 20, 'center')
                 if (price) {
@@ -167,7 +179,7 @@ export default {
                 }
                 // 商品公益金
                 ctx.font = '24px Microsoft YaHei UI'
-                const text = `${ 999 }元公益金`
+                const text = `${ donation }元公益金`
                 const textWidth = ctx.measureText(text).width > 174 ? 184 : ctx.measureText(text).width
                 const padding = 10
                 const left = 84

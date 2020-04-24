@@ -5,13 +5,20 @@
                 <!-- 海报按钮 -->
                 <div :class="$style.haibao">
                     <pl-svg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                    <pl-svg :key="2" v-show="!creating" name="icon-poster-512b1" fill="#fff" width="35" @click="createCharityPoster" />
+                    <pl-svg
+                        :key="2"
+                        v-show="!creating"
+                        name="icon-poster-512b1"
+                        fill="#fff"
+                        width="35"
+                        @click="() => productActive === 7 ? createCharityPoster() : createPoster()"
+                    />
                     <p>分享海报</p>
                 </div>
                 <banner :banners="banners" />
 
                 <!-- 弹幕 -->
-                <Barrage
+                <barrage
                     v-if="productActive === 7"
                     :class="$style.barrage"
                     :list="charityMembers"
@@ -19,7 +26,7 @@
 
                 <template v-if="isCountdownShow">
                     <!-- 公益棕活动倒计时 -->
-                    <countdown-bar
+                    <charity-countdown-bar
                         v-if="productActive === 7"
                         :class="$style.countDownBar"
                         :endtime="detail.regularSaleTime"
@@ -81,7 +88,7 @@
                         </p>
                     </div>
                     <!-- 公益棕用户头像 -->
-                    <join v-if="productActive === 7" :data="charityMembers" :donation="12" />
+                    <charity-join v-if="productActive === 7" :data="charityMembers" :donation="12" />
                 </div>
 
                 <!-- 课程名称 -->
@@ -116,7 +123,7 @@
             />
 
             <!-- 公益棕活动规则 -->
-            <rule :class="$style.rule" v-if="productActive === 7" />
+            <charity-rule :class="$style.rule" v-if="productActive === 7" />
 
             <!-- 课程详情 -->
             <div :class="$style.detailOrComment">
@@ -232,9 +239,10 @@
             </pl-mask>
 
             <!-- 公益棕海报 -->
-            <poster
+            <charity-poster
                 ref="charityPoster"
                 :data="detail"
+                :donation="charityStastics.donationAmount"
                 :share="shareUrl"
             />
         </template>
@@ -260,10 +268,10 @@ import SeriseCourses from './components/SeriesCourses'
 import Instructions from '../../components/detail/Instructions.vue'
 import VideoPlayer from './components/Video-Player.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
-import CountdownBar from './charity/Countdown-Bar.vue'
-import Join from './charity/Join.vue'
-import Rule from './charity/Rule.vue'
-import Poster from './charity/Poster.vue'
+import CharityCountdownBar from './charity/Countdown-Bar.vue'
+import CharityJoin from './charity/Join.vue'
+import CharityRule from './charity/Rule.vue'
+import CharityPoster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import Barrage from './../longmen-festival/action/components/Barrage'
@@ -298,10 +306,10 @@ export default {
         Instructions,
         VideoPlayer,
         CountDown,
-        CountdownBar,
-        Join,
-        Rule,
-        Poster,
+        CharityCountdownBar,
+        CharityJoin,
+        CharityRule,
+        CharityPoster,
         Skeleton,
         Barrage
     },
@@ -499,7 +507,8 @@ export default {
         // 查询公益棕活动统计数据
         async getPublicBenefitStatistics () {
             try {
-                const { result } = await getPublicBenefitStatistics(this.productId)
+                const { activityId } = this.$route.query
+                const { result } = await getPublicBenefitStatistics(activityId)
                 this.charityStastics = result
                 return result
             } catch (error) {
@@ -509,7 +518,8 @@ export default {
         // 查询公益榜单
         async getPublicBenefitList () {
             try {
-                const { result } = await getPublicBenefitList(this.productId)
+                const { activityId } = this.$route.query
+                const { result } = await getPublicBenefitList(activityId)
                 this.charityMembers = result
                 return result
             } catch (error) {
