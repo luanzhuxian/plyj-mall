@@ -51,11 +51,22 @@ export default {
         return {}
     },
     computed: {
+        liveModel () {
+            const { data } = this
+
+            if (!data.liveModel || !data.liveModel.length) {
+                return []
+            }
+            return data.liveModel.filter(item => item.statue === 0 || item.statue === 4 || (item.statue === 2 && item.hasNotice))
+        },
+        isLiveShow () {
+            return !!this.liveModel.length
+        },
         live () {
-            return this.data.liveModel || {}
+            return this.isLiveShow ? this.liveModel[0] : {}
         },
         isNoticeShow () {
-            return this.live.statue === 2 && this.live.hasNotice
+            return this.live && this.live.statue === 2 && this.live.hasNotice
         },
         ts () {
             const { liveStartTime, hasNotice, statue } = this.live
@@ -91,7 +102,12 @@ export default {
                     })
                 }
             } else {
-                this.$router.push({ name: 'LiveRoom', params: { id: this.live.id } })
+                this.$router.push({
+                    name: 'LiveRoom',
+                    params: {
+                        id: this.live.id
+                    }
+                })
             }
         }
     }

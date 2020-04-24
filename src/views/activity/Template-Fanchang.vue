@@ -79,7 +79,11 @@ export default {
         },
         isLiveShow () {
             const { liveInfo } = this.parent
-            return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 0 || liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+            if (!liveInfo.liveModel || !liveInfo.liveModel.length) {
+                return false
+            }
+            const list = liveInfo.liveModel.filter(item => item.statue === 0 || item.statue === 4 || (item.statue === 2 && item.hasNotice))
+            return !!list.length
         }
     }
 }

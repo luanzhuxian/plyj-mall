@@ -155,7 +155,11 @@ export default {
         // statue: 1、开启 2、预热期 3、进行中
         isLiveShow () {
             const { liveInfo } = this.parent
-            return liveInfo && liveInfo.liveModel && (liveInfo.liveModel.statue === 0 || liveInfo.liveModel.statue === 4 || (liveInfo.liveModel.statue === 2 && liveInfo.liveModel.hasNotice))
+            if (!liveInfo.liveModel || !liveInfo.liveModel.length) {
+                return false
+            }
+            const list = liveInfo.liveModel.filter(item => item.statue === 0 || item.statue === 4 || (item.statue === 2 && item.hasNotice))
+            return !!list.length
         },
         isCourseShow () {
             const { courseInfo } = this.parent
