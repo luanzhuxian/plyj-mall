@@ -64,7 +64,7 @@ export default {
         },
         // 商品原价
         originPrice: {
-            type: Number,
+            type: [Number, String],
             default: 0
         }
     },
