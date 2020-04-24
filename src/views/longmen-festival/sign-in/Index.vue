@@ -1036,7 +1036,7 @@ export default {
                 bottom: 12px;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 120px;
+                width: 200px;
                 @include elps();
                 font-size: 40px;
                 color: #FFF;
