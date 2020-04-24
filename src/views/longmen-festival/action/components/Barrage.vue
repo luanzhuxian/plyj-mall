@@ -25,10 +25,17 @@ export default {
     },
     deactivated () {
         this.index = 0
-        clearTimeout(this.timer)
+        window.clearTimeout(this.timer)
+    },
+    destroyed () {
+        this.index = 0
+        window.clearTimeout(this.timer)
     },
     methods: {
         start () {
+            if (!this.$refs.container) {
+                return
+            }
             const item = this.list[this.index]
             const template = `
                 <div style="--duration: ${ this.duration }s; --position: ${ -200 }px" class="${ this.$style.item }" >
@@ -47,7 +54,7 @@ export default {
             })
         },
         run () {
-            if (!this.list.length) return
+            window.clearTimeout(this.timer)
             this.timer = setTimeout(async () => {
                 this.start()
                 if (this.index + 1 >= this.list.length) {
@@ -70,8 +77,11 @@ export default {
     watch: {
         list: {
             handler (val) {
+                if (!val.length) {
+                    return
+                }
                 this.$nextTick(() => {
-                    if (val.length) this.run()
+                    this.run()
                 })
             },
             immediate: true

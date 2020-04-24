@@ -713,7 +713,7 @@ export default {
         async getPublicBenefitStatistics () {
             try {
                 const activityId = this.$route.query.activityId
-                const { result } = await getPublicBenefitStatistics(activityId, this.productId)
+                const { result } = await getPublicBenefitStatistics(activityId)
                 this.charityStastics = result
             } catch (e) { throw e }
         },
