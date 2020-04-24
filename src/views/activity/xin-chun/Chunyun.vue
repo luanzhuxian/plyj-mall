@@ -249,7 +249,7 @@ export default {
 
 <style lang="scss" scoped>
 .chunyun {
-    >>> .count-down > .time > span {
+    ::v-deep .count-down > .time > span {
     padding: 0 8px;
     font-size: 24px;
     line-height: 40px;

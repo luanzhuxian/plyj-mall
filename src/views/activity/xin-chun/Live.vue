@@ -182,7 +182,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .live {
-    >>> .count-down > .time > span {
+    ::v-deep .count-down > .time > span {
     padding: 0 8px;
     font-size: 24px;
     font-family: Microsoft YaHei;
