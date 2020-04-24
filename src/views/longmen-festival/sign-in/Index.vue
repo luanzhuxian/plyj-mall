@@ -512,7 +512,7 @@ export default {
                 await this.getSignInIconList()
 
                 // 生成当前活动的二维码
-                const qrcode = await generateQrcode({ size: 500, text: `${ this.mallUrl }/new-year-activity${ this.id ? `/${ this.id }` : '' }?t=${ Date.now() }` })
+                const qrcode = await generateQrcode({ size: 500, text: `${ this.mallUrl }/longmen-festival/sign-in${ this.id ? `/${ this.id }` : '' }?t=${ Date.now() }` })
                 this.qrcode = new Image()
                 this.qrcode.src = qrcode
             } catch (e) {
@@ -787,7 +787,7 @@ export default {
                 canvas.height = bgImg.height
                 const ctx = canvas.getContext('2d')
                 ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
-                ctx.drawImage(this.qrcode, canvas.width / 2 - 100, canvas.height / 2 + 180, 240, 240)
+                ctx.drawImage(this.qrcode, canvas.width / 2 - 98, canvas.height / 2 + 175, 240, 240)
                 const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
                 this.sharePoster = sharePoster
                 this.isShowSharePoster = true
