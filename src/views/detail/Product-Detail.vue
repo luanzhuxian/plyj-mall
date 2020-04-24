@@ -721,7 +721,7 @@ export default {
         async getPublicBenefitList () {
             try {
                 const activityId = this.$route.query.activityId
-                const { result } = await getPublicBenefitList(activityId, this.productId)
+                const { result } = await getPublicBenefitList({ activityId, productId: this.productId })
                 this.charityMembers = result
             } catch (e) { throw e }
         },

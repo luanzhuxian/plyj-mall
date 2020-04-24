@@ -195,7 +195,7 @@ export default {
         },
         async getPublicBenefitList () {
             try {
-                const { result } = await getPublicBenefitList(this.id)
+                const { result } = await getPublicBenefitList({ activityId: this.id })
                 let amounts = 0
                 for (const item of result) {
                     if (item.flag) amounts += item.donationAmount

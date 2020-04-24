@@ -520,7 +520,7 @@ export default {
         async getPublicBenefitList () {
             try {
                 const { activityId } = this.$route.query
-                const { result } = await getPublicBenefitList(activityId)
+                const { result } = await getPublicBenefitList({ activityId, productId: this.productId })
                 this.charityMembers = result
                 return result
             } catch (error) {

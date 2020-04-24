@@ -19,7 +19,7 @@ export const getPublicBenefitStatistics = activityId => axios.get(`/apis/v1/comm
  * @param {string} activityId
  * @param {string} productId
  */
-export const getPublicBenefitList = (activityId, productId = '') => axios.get(`/apis/v1/commonweal/${ activityId }/list?productId=${ productId }`)
+export const getPublicBenefitList = ({ activityId, productId = '' }) => axios.get(`/apis/v1/commonweal/${ activityId }/list?productId=${ productId }`)
 
 /**
  * 获取可用抽奖次数
