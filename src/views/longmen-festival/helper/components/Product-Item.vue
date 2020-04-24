@@ -4,7 +4,7 @@
         <div class="desc">
             <div class="title" v-text="productName" />
             <div class="rebate">
-                分享购买成功后获得润笔 <span v-text="rebate" />
+                分享购买可获得润笔 <span v-text="rebate" />
             </div>
             <div class="bottom">
                 <div class="price">

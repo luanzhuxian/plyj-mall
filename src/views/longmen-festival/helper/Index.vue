@@ -1,7 +1,11 @@
 <template>
     <div class="long-men-helper">
         <div class="product-list">
-            <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/longmen-helper-main.png" alt="" class="title">
+            <img
+                :src="isHelper ? 'https://mallcdn.youpenglai.com/static/admall/2.9.0/helper-title-helper-member.png' : 'https://mallcdn.youpenglai.com/static/admall/2.9.0/helper-title-normal-member.png'"
+                alt=""
+                class="title"
+            >
             <div class="content">
                 <div class="list">
                     <div v-if="!productList.length" class="no-content">
