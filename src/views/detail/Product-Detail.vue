@@ -259,6 +259,17 @@
                                 <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
                             </button>
                         </div>
+                        <!-- 公益商品下单 -->
+                        <div :class="$style.button" v-else-if="activeProduct === 7 && preActivity === 2">
+                            <button
+                                :class="$style.preBtn"
+                                :disabled="activeStock <= 0"
+                                @click="buyNow(currentSku, 7, limiting, limit)"
+                            >
+                                {{ activeStock > 0 ? '公益购买' : '已售罄' }}
+                                <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
+                            </button>
+                        </div>
                         <div :class="$style.buttons" v-else>
                             <button
                                 :class="$style.add"

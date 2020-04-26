@@ -165,6 +165,21 @@ export default {
         window.clearTimeout(this.countdownTimer)
     },
     methods: {
+        // 格式化获取的各个规格商品，聚合为一个商品
+        formatProductModels (productModels) {
+            const obj = {}
+            for (const item of productModels) {
+                if (!obj[item.productId]) {
+                    obj[item.productId] = { minPrice: '' }
+                } else {
+                    const minPrice = obj[item.productId].minPrice
+                    obj[item.productId].minPrice = minPrice === ''
+                        ? (item.activityPrice)
+                        : (minPrice > item.activityPrice ? item.activityPrice : minPrice)
+                }
+            }
+            return Object.keys(obj).map(key => productModels.find(({ productId, activityPrice }) => (key === productId) && (obj[key].minPrice === activityPrice)))
+        },
         async getDetail () {
             try {
                 const { result } = await getPublicBenefitDetail(this.id)
@@ -175,7 +190,9 @@ export default {
                     }
                     return this.$router.replace({ name: 'home' })
                 }
-                const { productModels = [], courseModels = [] } = result
+                // eslint-disable-next-line prefer-const
+                let { productModels = [], courseModels = [] } = result
+                productModels = this.formatProductModels(productModels)
                 const productList = productModels.concat(courseModels).map(item => ({
                     productId: item.productId,
                     // 商品为 1 课程为 2
