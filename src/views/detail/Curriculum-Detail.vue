@@ -372,7 +372,9 @@ export default {
             // 公益棕统计数据
             charityStastics: 0,
             // 公益榜单
-            charityMembers: []
+            charityMembers: [],
+            // 分享链接
+            shareUrl: ''
         }
     },
     props: {
@@ -739,6 +741,13 @@ export default {
             try {
                 if (this.loading) {
                     return
+                }
+
+                const { activityId } = this.$route.query
+                if (this.userId) {
+                    this.shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }/${ this.userId }?currentProductStatus=7&activityId=${ activityId }&noCache=${ Date.now() }`
+                } else {
+                    this.shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }?currentProductStatus=7&activityId=${ activityId }&noCache=${ Date.now() }`
                 }
 
                 this.creating = true
