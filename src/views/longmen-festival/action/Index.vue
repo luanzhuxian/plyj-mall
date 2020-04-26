@@ -170,12 +170,10 @@ export default {
             const obj = {}
             for (const item of productModels) {
                 if (!obj[item.productId]) {
-                    obj[item.productId] = { minPrice: '' }
+                    obj[item.productId] = { minPrice: item.activityPrice }
                 } else {
                     const minPrice = obj[item.productId].minPrice
-                    obj[item.productId].minPrice = minPrice === ''
-                        ? (item.activityPrice)
-                        : (minPrice > item.activityPrice ? item.activityPrice : minPrice)
+                    obj[item.productId].minPrice = minPrice > item.activityPrice ? item.activityPrice : minPrice
                 }
             }
             return Object.keys(obj).map(key => productModels.find(({ productId, activityPrice }) => (key === productId) && (obj[key].minPrice === activityPrice)))
