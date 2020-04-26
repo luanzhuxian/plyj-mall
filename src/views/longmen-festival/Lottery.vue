@@ -3,12 +3,17 @@
         <div :class="$style.container">
             <div :class="$style.lotteryBox">
                 <div :class="$style.baseInfo">
-                    <!--<div :class="$style.status">距活动结束</div>-->
-                    <div :class="{ [$style.status]: true, [$style.end]: true }">活动已结束</div>
-                    <!--<div :class="$style.status">距活动开始</div>-->
-                    <!--<div :class="$style.time">21天12小时23分</div>-->
+                    <div :class="$style.status" v-if="status === 2">距活动结束</div>
+                    <div v-if="status === 3 || status === 4" :class="{ [$style.status]: true, [$style.end]: true }">活动已结束</div>
+                    <div :class="$style.status" v-if="status === 1">距活动开始</div>
+                    <div :class="$style.time">
+                        <span v-if="date.days" v-text="date.days" style="--unit: '天'" />
+                        <span v-text="date.hours" style="--unit: '小时'" />
+                        <span v-text="date.minutes" style="--unit: '分'" />
+                        <span v-text="date.seconds" style="--unit: '秒'" />
+                    </div>
                     <div :class="$style.viewer">已有23333人关注</div>
-                    <div :class="$style.chance">您还有0次抽奖机会</div>
+                    <div :class="$style.chance">您还有{{ count }}次抽奖机会</div>
                 </div>
                 <div :class="$style.turntable" v-if="turntableAwards.length">
                     <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 0 }">
@@ -123,7 +128,7 @@
                                 >
                                     <img v-if="Number(item.awardType) === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="">
                                     <img v-else-if="Number(item.awardType) === 3 || Number(item.awardType) === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="">
-                                    <img v-else :src="item.giftImage" alt="">
+                                    <img v-else :src="item.giftImg" alt="">
                                     <div>
                                         <div :class="$style.name" v-text="item.awardName" />
                                         <div :class="$style.date" v-text="item.awardTime" />
@@ -194,12 +199,15 @@
         </gift-pop-up>-->
 
         <gift-pop-up
+            v-if="showGift"
             :show.sync="showGift"
             :button-left-text="lotteryResult.leftButtonText"
             :button-right-text="lotteryResult.rightButtonText"
             :title="lotteryResult.title"
             :message="lotteryResult.message"
             dangerous-render-html
+            @buttonLeftClick="lotteryResult.leftButtonHandler"
+            @buttonRightClick="lotteryResult.rightButtonHadnler"
         >
             <div v-if="lotteryResult.awardType === 1">
                 礼品
@@ -223,7 +231,7 @@
 import GiftPopUp from '../../components/activity/Gift-Pop-Up.vue'
 import CouponItem from '../../components/item/Coupon-Item.vue'
 import { shuffle } from '../../assets/js/loadsh'
-import { loadImage, cutArcImage, generateQrcode, SectionToChinese, promise } from '../../assets/js/util'
+import { loadImage, cutArcImage, generateQrcode, SectionToChinese, promise, Countdown } from '../../assets/js/util'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
 import {
@@ -233,6 +241,7 @@ import {
     getLotteryRecords,
     lottery
 } from '../../apis/longmen-festival/lottery'
+import moment from 'moment'
 const transformSize = num => num / 7.5 * (window.innerWidth / 100)
 // 白色灯泡的下标，后面灯泡的颜色交替更换，默认第0个，即左上角第一个
 let IS_WHITE = true
@@ -258,8 +267,12 @@ export default {
             swiperOption: {
                 spaceBetween: 20
             },
+            // 倒计时数据
+            date: {},
             // 可用抽奖次数
             count: 0,
+            // 状态
+            status: 0,
             awardList: [],
             // 要显示在转盘上的奖品，如果奖品时8个，那么就等于awards，如果不是8个，需要填充
             turntableAwards: [],
@@ -307,19 +320,60 @@ export default {
               const { result } = await getDetail(this.id)
               this.awardList = result.gifts
               this.detail = result
+              this.status = Number(result.status)
+              await this.$nextTick()
+              this.setAwards()
+              this.timer = setInterval(() => {
+                  this.setLights()
+                  IS_WHITE = !IS_WHITE
+              }, 800)
+              await this.getRecords()
+              await this.countDown()
+          }  catch (e) {
+              throw e
+          }
+        },
+        async countDown () {
+            try {
+                const currentTime = await Countdown.getServerTime()
+                let duration = 0
+                console.log(currentTime)
+                console.log(moment(this.detail.endTime).valueOf())
+                if (this.status === 1) {
+                    duration = moment(this.detail.startTime).valueOf() - Number(currentTime)
+                } else if (this.status === 2) {
+                    duration = moment(this.detail.endTime).valueOf() - Number(currentTime)
+                }
+                if (duration) {
+                    const toString = function (num) {
+                        return String(num).padStart(2, '0')
+                    }
+                    // 启动倒计时
+                    const countDown = new Countdown(duration, ({ seconds, minutes, hours, days }) => {
+                        this.date = {
+                            seconds: toString(seconds),
+                            minutes: toString(minutes),
+                            hours,
+                            days
+                        }
+                    })
+                    countDown.start()
+                    this.countDown = countDown
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+        // 获取奖品记录
+        async getRecords () {
+          try {
               const { result: count } = await getLotteryCount(this.id)
               this.count = count
               const { result: { records: awardRecords } } = await getAwardRecords(this.id)
               this.awardRecords = awardRecords
               const { result: { records: lotteryRecords } } = await getLotteryRecords(this.id)
               this.lotteryRecords = lotteryRecords
-              this.setAwards()
-              await this.$nextTick()
-              this.timer = setInterval(() => {
-                  this.setLights()
-                  IS_WHITE = !IS_WHITE
-              }, 800)
-          }  catch (e) {
+          } catch (e) {
               throw e
           }
         },
@@ -329,19 +383,21 @@ export default {
                 award.grade = `${SectionToChinese(i + 1)}等奖`
                 turntableAwards.push({
                     id: award.id,
-                    name: award.grade
+                    name: award.grade,
+                    awardType: award.awardType
                 })
             }
             for (let i = this.awardList.length; i < 8; i++) {
                 turntableAwards.push({
                     id: i,
-                    name: '谢谢参与'
+                    name: '谢谢参与',
+                    awardType: -1
                 })
             }
             this.turntableAwards = shuffle(turntableAwards)
         },
         // 开始抽奖
-        async drawLottery () {
+        async drawLottery (evt, close) {
             if (drawing) {
                 return
             }
@@ -400,9 +456,7 @@ export default {
         // 抽奖动画结束
         async lotteryEnd () {
             try {
-                // 重新获取可用抽奖次数
-                const { result: count } = await getLotteryCount(this.id)
-                this.count = count
+                await this.getRecords()
                 this.showResult()
             } catch (e) {
                 throw e
@@ -412,22 +466,24 @@ export default {
         showResult () {
             if (this.lottery) {
                 // 中奖了
-                let { grade, awardType } = this.lottery
+                let { name, awardType } = this.lottery
                 this.lotteryResult = {
-                    title: `恭喜您获得<i stype="#FCE804">${ grade }</i>`,
+                    title: `恭喜您获得<i style="color: #FCE804;">${ name }</i>`,
                     message: '奖品已自动存入您的我的礼品中您可在我的礼品中查看',
                     awardType,
-                    leftButtonText: this.count > 0 ? '继续抽奖' : '开心收下',
-                    leftButtonHandler: this.count > 0 ? this.drawLottery : () => this.showGift = false
+                    leftButtonText: this.count > 0 ? '继续抽奖' : '',
+                    rightButtonText: this.count === 0 ? '开心收下' : '',
+                    leftButtonHandler: (evt, close) => { close(); this.count > 0 && this.drawLottery() },
+                    rightButtonHadnler: (evt, close) => { close() }
                 }
             } else {
                 this.lotteryResult = {
                     title: '很遗憾，于奖品擦肩而过',
                     message: '感谢您参与活动',
                     leftButtonText: this.count > 0 ? '继续抽奖' : '',
-                    leftButtonHandler: this.drawLottery,
                     rightButtonText: '返回首页',
-                    rightButtonHadnler: () => this.$router.push({ name: 'Home' })
+                    leftButtonHandler: (evt, close) => { close(); this.count > 0 && this.drawLottery() },
+                    rightButtonHadnler: (evt, close) => { close(); this.$router.push({ name: 'Home' }) }
                 }
             }
             this.showGift = true
@@ -620,6 +676,9 @@ export default {
             }
             > .time {
                 font-size: 30px;
+                ::after {
+                    content: var(--unit);
+                }
             }
             > .viewer {
                 font-size: 20px;
