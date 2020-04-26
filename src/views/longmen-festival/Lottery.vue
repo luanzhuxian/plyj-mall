@@ -43,7 +43,7 @@
                 </div>
                 <div :class="$style.buttons">
                     <button v-if="status === 2 && count <= 0" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框(用完).png');" />
-                    <button v-else-if="status === 2" @click="drawLottery" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框.png');" />
+                    <button v-else-if="status === 2 && count > 0" @click="drawLottery" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框.png');" />
                     <button v-else-if="status === 3 || status === 4" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框 3.png');" />
                     <button v-else style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框 2.png');" />
                 </div>
@@ -165,9 +165,9 @@
                 <dt class="fz-28">1. 活动时间</dt>
                 <dd class="fz-24 gray-2 mb-48">{{ detail.startTime }} 至 {{ detail.endTime }}</dd>
                 <dt class="fz-28">2. 活动对象</dt>
-                <dd class="fz-24 gray-2 mb-48" v-text="userGroupMap[detail.userRange]" />
-                <dd class="fz-24 gray-2" v-if="Number(detail.userRange) === 3">
-                    asf
+                <dd class="fz-24 gray-2" :class="Number(detail.userRange) !== 3 && 'mb-48'" v-text="userGroupMap[detail.userRange]" />
+                <dd class="fz-24 gray-2 mb-48" v-if="Number(detail.userRange) === 3">
+                    <span :class="$style.tag" v-for="item of detail.userGroups" :key="item.groupName" v-text="item.groupName" />
                 </dd>
                 <dt class="fz-28">3. 抽奖条件</dt>
                 <dd
@@ -336,12 +336,19 @@ export default {
               this.status = Number(result.status)
               await this.$nextTick()
               this.setAwards()
-              this.timer = setInterval(() => {
-                  this.setLights()
-                  IS_WHITE = !IS_WHITE
-              }, 800)
               await this.getRecords()
               await this.countDown()
+
+              // 启动灯的动画
+              const canvas = this.$refs.canvas
+              const inner = this.$refs.inner
+              canvas.width = inner.offsetWidth
+              canvas.height = inner.offsetHeight
+              const ctx = canvas.getContext('2d')
+              this.timer = setInterval(() => {
+                  this.setLights(canvas, ctx)
+                  IS_WHITE = !IS_WHITE
+              }, 800)
           }  catch (e) {
               throw e
           }
@@ -513,13 +520,8 @@ export default {
         },
 
         // 绘制灯泡
-        setLights () {
+        setLights (canvas, ctx) {
             let index = IS_WHITE ? 1 : 2
-            const canvas = this.$refs.canvas
-            const inner = this.$refs.inner
-            canvas.width = inner.offsetWidth
-            canvas.height = inner.offsetHeight
-            const ctx = canvas.getContext('2d')
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             // 灯的大小
             const lightSize = transformSize(9)
@@ -820,7 +822,6 @@ export default {
             border-radius: 70px;
             box-sizing: border-box;
             > .content {
-                min-height: 570px;
                 padding: 16px;
                 border-radius: 48px;
                 z-index: 2;
@@ -996,5 +997,14 @@ export default {
             border-radius: 24px;
             object-fit: cover;
         }
+    }
+    .tag {
+        display: inline-block;
+        margin: 10px 6px 0 0;
+        padding: 0 5px;
+        color: $--primary-color;
+        font-size: 16px;
+        border: 1px solid $--primary-color;
+        border-radius: 4px;
     }
 </style>
