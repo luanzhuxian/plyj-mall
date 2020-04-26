@@ -175,7 +175,8 @@ export default {
         // 统计观看次数，只有第一次播放时统计
         async setStudyCountOnce () {
             try {
-                await setStudyCount(this.liveId)
+                const { courseId, liveId } = this
+                await setStudyCount({ courseId, liveId })
             } catch (e) { throw e }
         },
         // 开始播放时做一些事
@@ -244,7 +245,12 @@ export default {
                 try {
                     if (currentTime > preTime) {
                         const duration = Number.parseInt(currentTime - preTime) || 0
-                        await setStudyTime(this.liveId, duration)
+                        // await setStudyTime(this.liveId, duration)
+                        await setStudyTime({
+                            courseId: this.courseId,
+                            liveId: this.liveId,
+                            watchTime: duration
+                        })
                     }
                     preTime = currentTime
                 } catch (e) { throw e }

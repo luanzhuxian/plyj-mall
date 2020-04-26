@@ -23,10 +23,10 @@ export const getPermission = courseId => axios.get('/apis/v1/knowledgeCourse/cus
 export const setCourseProgress = ({ orderId, liveId, progress }) => axios.get('/apis/v1/knowledgeCourse/updateMyVideo', { params: { orderId, liveId, progress } })
 
 // 统计学习次数
-export const setStudyCount = videoId => axios.get(`/apis/v1/mall/cource/addVod/${ videoId }`)
+export const setStudyCount = ({ courseId, liveId }) => axios.get(`/apis/v1/mall/cource/addVod/${ courseId }/${ liveId }`)
 
 // 统计观看的时间
-export const setStudyTime = (videoId, watchTime) => axios.get(`/apis/v1/mall/cource/addWatchTime/${ videoId }?watchTime=${ watchTime }`)
+export const setStudyTime = ({ courseId, liveId, watchTime }) => axios.get(`/apis/v1/mall/cource/addWatchTime/${ courseId }/${ liveId }?watchTime=${ watchTime }`)
 
 /**
  * 统计视频播放信息，从而据此计费
