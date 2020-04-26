@@ -115,12 +115,12 @@ export default {
             }
             return result
         },
-        handleBtnClick (e, { id, url, singleVideoCourseId, learnProgress }) {
+        handleBtnClick (e, { id, url, singleVideoCourseId, learnProgress, resourceSize }) {
             const { courseId, orderId } = this
             const btnText = e.target.innerHTML
 
             if (btnText === '试看') {
-                this.$emit('preview', url)
+                this.$emit('preview', { url, id, resourceSize })
             }
             if (btnText === '单独购买') {
                 this.$router.push({

@@ -139,7 +139,7 @@
                     <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
                     <serise-courses
                         v-show="tab === 2"
-                        :data="seriesCourses"
+                        :data="videoList"
                         :course-id="detail.id"
                         :order-id="detail.orderId"
                         :is-present="isPresent"
@@ -177,7 +177,7 @@
                                         courseId: productId
                                     },
                                     query: {
-                                        liveId: detail.liveIds,
+                                        liveId: videoList[0].id,
                                         orderId: detail.orderId,
                                         progress: detail.learnProgress
                                     }
@@ -195,7 +195,7 @@
                                 v-if="courseType === 1 && detail.supportWatch"
                                 :class="$style.button + ' ' + $style.yellow"
                                 :disabled="Number(detail.status) === 2 || loading"
-                                @click="previewCourse(detail.supportWatchUrl)"
+                                @click="previewCourse(videoList[0])"
                             >
                                 试看视频
                             </button>
@@ -226,7 +226,14 @@
             <contact :show.sync="showContact" />
 
             <!-- 试看视频 -->
-            <video-player ref="videoPlayer" :show.sync="preview.show" :url="preview.url" />
+            <paid-player
+                v-if="preview.show"
+                :size="preview.size"
+                :src="preview.url"
+                :video-id="preview.id"
+                :resource-id="detail.id"
+                :resource-name="detail.courseName"
+            />
 
             <!-- 海报弹框 -->
             <pl-mask :show.sync="showHaibao">
@@ -267,7 +274,7 @@ import Field from '../../components/detail/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
 import Instructions from '../../components/detail/Instructions.vue'
-import VideoPlayer from './components/Video-Player.vue'
+import PaidPlayer from '../../components/common/Paid-Player.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
 import CharityCountdownBar from './charity/Countdown-Bar.vue'
 import CharityJoin from './charity/Join.vue'
@@ -305,7 +312,7 @@ export default {
         SlideCourses,
         SeriseCourses,
         Instructions,
-        VideoPlayer,
+        PaidPlayer,
         CountDown,
         CharityCountdownBar,
         CharityJoin,
@@ -320,7 +327,7 @@ export default {
             courseType: 1,
             banners: [],
             relatedCourses: [],
-            seriesCourses: [],
+            videoList: [],
             detail: {},
             agentProduct: false,
             tab: 2,
@@ -330,7 +337,9 @@ export default {
             showContact: false,
             preview: {
                 show: false,
-                url: ''
+                id: '',
+                url: '',
+                fileSize: ''
             },
             haibao: '',
             creating: false,
@@ -459,7 +468,7 @@ export default {
          * @property {Boolean} result.supportWatch - 是否支持试看 (单课程才有)
          * @property {String} result.supportWatchUrl - 试看地址
          * @property {Array} result.relatedCoursesModels - 单课的相关课程列表
-         * @property {Array} result.videoLibEntities - 系列课关联的视频资源列表
+         * @property {Array} result.videoLibEntities - 课程关联的视频资源列表
          * @property {Boolean} result.haveNoVideo - 系列课是否有课程未关联视频
          * @property {Number} result.totalLiveNumber - 系列课课程总数
          * @property {Number} result.learnedNumber - 系列课已经学习课程数
@@ -487,7 +496,7 @@ export default {
                 this.courseType = courseType
                 this.banners = [courseImg]
                 this.relatedCourses = relatedCoursesModels || []
-                this.seriesCourses = videoLibEntities || []
+                this.videoList = videoLibEntities || []
                 this.detail = result
 
                 return result
@@ -534,11 +543,13 @@ export default {
                     : '购买后不限观看次数'
                 : `订购后 ${ validityDate.split(' ')[0].replace(/-/g, '.') } 前可观看学习`
         },
-        previewCourse (url) {
+        previewCourse ({ url, id, resourceSize }) {
             if (!url) {
                 return this.$warning('该视频不支持试看')
             }
+            this.preview.id = id
             this.preview.url = url
+            this.preview.size = Number(resourceSize)
             this.preview.show = true
             this.$nextTick(() => {
                 const player = this.$refs.videoPlayer
