@@ -96,7 +96,7 @@
                             </template>
                         </div>
                         <!-- 活动已结束，但上一个粽粽有礼的礼品未领取 -->
-                        <button v-else-if="activityIsOver && (!previousPresentIsReceive || isGrandPrsentSignIn)"
+                        <button v-else-if="activityIsOver && !previousPresentIsReceive"
                                 @click="receivePresent">立即抽奖
                         </button>
                         <button v-else>活动已结束</button>
@@ -194,29 +194,16 @@
                     </div>
                     <template v-else>
                         <template v-for="(item, index) in sunPresentList">
-                            <div class="sun-present-item" v-if="index < 3 || showSunPresentListMore" :key="index">
-                                <!-- 礼品展示 -->
-                                <span v-if="item.awardType === 1 && item.flauntAward === 2" class="grand-present">
-                                    <img class="small"
-                                         src="https://mallcdn.youpenglai.com/static/admall/2.9.0/small-gift-style.png">
-                                    <i> 粽粽大礼</i>
-                                </span>
-                                <!-- 奖学金 -->
-                                <img v-else-if="item.awardType === 2"
-                                     src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
-                                <!-- 优惠券 -->
-                                <img v-else-if="item.awardType === 3 || item.awardType === 4"
-                                     src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
-                                <img v-else class="small"
-                                     src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png">
-                                <!-- 头像-->
-                                <img class="avatar" :src="item.userImg" :onerror="default_avatar">
-                                <!-- 礼品描述 -->
-                                <h3>
-                                    <p>{{ item.userName }}签到参与了<span class="orange">{{ item.signinNum }}</span>个端午活动</p>
-                                    <p> 开启礼品 获得{{ item.awardName }} </p>
-                                </h3>
-                            </div>
+                            <SunPresentItem
+                                v-if="index < 3 || showSunPresentListMore" :key="index"
+                                :user-img="item.userImg"
+                                :user-name="item.userName"
+                                :award-type="item.awardType"
+                                :flaunt-award="item.flauntAward"
+                                :signin-num="item.signinNum"
+                                :award-name="item.awardName"
+                                :flaunt-award-name="FLAUNT_AWARD_NAME"
+                            />
                         </template>
                         <div
                             v-if="sunPresentList.length > 3 && !showSunPresentListMore"
@@ -237,25 +224,15 @@
                     </div>
                     <template v-else>
                         <template v-for="(item, index) in myPresentList">
-                            <div class="my-present-item" v-if="index < 3 || showMyPresentListMore" :key="index">
-                                <!-- 礼品展示 -->
-                                <span>
-                                    <!-- 礼品 -->
-                                    <img v-if="item.awardType === 1" :src="item.awardImg">
-                                    <!-- 奖学金 -->
-                                    <img v-else-if="item.awardType === 2"
-                                         src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
-                                    <!-- 全场满减券/品类券 -->
-                                    <img v-else-if="item.awardType === 3 || item.awardType === 4"
-                                         src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
-                                    <i :class="{'grand-prize': item.isGrandPrsent}">粽粽大礼</i>
-                                </span>
-                                <!-- 礼品描述 -->
-                                <h3>
-                                    <p>奖品 【{{ awardTypeDesc[item.awardType] }}】 </p>
-                                    <p class="orange">{{ item.awardName }}</p>
-                                </h3>
-                            </div>
+                            <MyPresentItem
+                                v-if="index < 3 || showMyPresentListMore"
+                                :key="index"
+                                :award-type="item.awardType"
+                                :award-img="item.awardImg"
+                                :award-name="item.awardName"
+                                :is-grand-prsent="item.isGrandPrsent"
+                                :flaunt-award-name="FLAUNT_AWARD_NAME"
+                            />
                         </template>
                         <div
                             v-if="myPresentList.length > 3 && !showMyPresentListMore"
@@ -309,6 +286,8 @@ import moment from 'moment'
 import SharePoster from '../../../components/common/Share-Poster'
 import PresentPopup from './components/Present-Popup.vue'
 import ActivityRule from './components/Activity-Rule.vue'
+import SunPresentItem from './components/Sun-Present-Item'
+import MyPresentItem from './components/My-Present-Item'
 
 const activity_member = {
     0: '所有注册用户',
@@ -317,6 +296,7 @@ const activity_member = {
     3: '商家指定用户'
 }
 const default_avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
+const flaunt_Award_Name = '粽粽大礼'
 const countdownInstanceList = []
 export default {
     name: 'NewYearActivity',
@@ -325,7 +305,9 @@ export default {
         swiperSlide,
         SharePoster,
         PresentPopup,
-        ActivityRule
+        ActivityRule,
+        SunPresentItem,
+        MyPresentItem
     },
     data () {
         return {
@@ -406,13 +388,7 @@ export default {
                 observer: true,
                 observeParents: true
             },
-            awardTypeDesc: {
-                1: '礼品',
-                2: '奖学金',
-                3: '全场满减券',
-                4: '品类券'
-            },
-            default_avatar: `this.src="${ default_avatar }"`
+            FLAUNT_AWARD_NAME: flaunt_Award_Name
         }
     },
     computed: {
@@ -1402,135 +1378,6 @@ export default {
 
           > img {
             width: 200px;
-          }
-        }
-
-        .sun-present-item {
-          display: flex;
-          align-items: center;
-          margin: 15px 30px;
-          border-bottom: 1px solid #c9c9c9;
-          padding-bottom: 15px;
-
-          .grand-present {
-            position: relative;
-            display: inline-block;
-
-            img {
-              width: 200px;
-              object-fit: contain;
-            }
-
-            i {
-              padding: 0 8px;
-              display: block;
-              position: absolute;
-              top: 0;
-              left: 50%;
-              width: 80px;
-              height: 30px;
-              border-radius: 20px;
-              line-height: 30px;
-              font-size: 20px;
-              background-color: #2E9472;
-              color: #fff;
-            }
-          }
-
-          img {
-            width: 80px;
-            object-fit: contain;
-
-            &.small {
-              width: 60px;
-              margin: 0 10px;
-            }
-
-            &.avatar {
-              width: 100px;
-              height: 100px;
-              border-radius: 50%;
-              margin-left: 30px;
-              object-fit: cover;
-            }
-          }
-
-          h3 {
-            text-align: left;
-            margin-left: 25px;
-            font-size: 26px;
-            line-height: 40px;
-            color: #333;
-            font-weight: 400;
-
-            p:last-child {
-              font-size: 24px;
-              color: #999;
-            }
-
-            .orange {
-              color: #fa4d2f;
-            }
-          }
-        }
-
-        .my-present-item {
-          display: flex;
-          align-items: center;
-          margin: 15px 30px;
-          border-bottom: 1px solid #c9c9c9;
-          padding-left: 20px;
-          padding-bottom: 15px;
-
-          > span {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: #FF9F4B;
-
-            img {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              width: 80px;
-              height: 100px;
-              border-radius: 50%;
-              object-fit: contain;
-            }
-
-            i {
-              display: none;
-            }
-
-            .grand-prize {
-              padding: 0 8px;
-              display: block;
-              position: absolute;
-              top: 0;
-              left: 50%;
-              background-color: #2E9472;
-              border-radius: 20px;
-              height: 30px;
-              line-height: 30px;
-              width: 80px;
-              font-size: 20px;
-              color: #FFF;
-            }
-          }
-
-          h3 {
-            text-align: left;
-            font-size: 26px;
-            font-weight: 400;
-            line-height: 40px;
-            color: #333;
-            margin-left: 70px;
-
-            .orange {
-              color: #fa4d2f;
-            }
           }
         }
 
