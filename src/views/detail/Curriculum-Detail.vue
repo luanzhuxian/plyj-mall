@@ -745,11 +745,10 @@ export default {
 
                 const { activityId } = this.$route.query
                 if (this.userId) {
-                    this.shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }/${ this.userId }?currentProductStatus=7&activityId=${ activityId }&noCache=${ Date.now() }`
+                    this.shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?currentProductStatus=7&activityId=${ activityId }&noCache=${ Date.now() }`
                 } else {
-                    this.shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }?currentProductStatus=7&activityId=${ activityId }&noCache=${ Date.now() }`
+                    this.shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?currentProductStatus=7&activityId=${ activityId }&noCache=${ Date.now() }`
                 }
-
                 this.creating = true
                 this.$refs.charityPoster.createPoster()
             } catch (error) {
