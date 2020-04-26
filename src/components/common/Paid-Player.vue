@@ -53,35 +53,41 @@ export default {
         }
     },
     props: {
+        // 音频还是视频，默认视频
         type: {
             type: String,
             default: 'video'
         },
+        // 视频地址
         src: {
             type: String,
             default: ''
         },
+        // 视频开始播放的时间
         currentTime: {
             type: Number,
             default: 0
         },
+        // 视频大小
         size: {
             type: Number,
             default: 0
         },
+        // 视频id
         videoId: {
             type: String,
             default: ''
         },
+        // 资源名称（课程名称）
         resourceName: {
             type: String,
             default: ''
         },
+        // 资源所在id（课程id）
         resourceId: {
             type: String,
             default: '0'
         },
-
         // 定义视频的高度是否自动
         autoHeight: Boolean,
         autoFullScreen: Boolean
