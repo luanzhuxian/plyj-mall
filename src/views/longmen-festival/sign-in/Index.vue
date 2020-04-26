@@ -52,7 +52,7 @@
                         <h3>
                             已有<span>{{ activeDetail.signinNumber }}</span>人参加端午粽粽有礼活动
                         </h3>
-                        <div v-if="!activityIsOver">
+                        <div v-if="!activityIsOver && !activityEarlyIsOver">
                             距活动{{ activityIsStart? '结束' : '开始' }}仅剩<span>{{ time.d }}</span>天<span>{{ time.h }}</span>：<span>{{ time.m }}</span>：<span>{{ time.s }}</span>
                         </div>
                         <div v-else>活动已结束</div>
@@ -72,8 +72,8 @@
                                 </p>
                                 <!-- 当前节点为已签到，灰化 -->
                                 <button
-                                    :class="{disabled: currentSignIn.hasSignin }"
-                                    :disabled="currentSignIn.hasSignin"
+                                    :class="{disabled: currentSignIn.hasSignin || activityEarlyIsOver }"
+                                    :disabled="currentSignIn.hasSignin || activityEarlyIsOver"
                                     @click="getMyNewYearCard"
                                 >
                                     立即签到
@@ -332,6 +332,8 @@ export default {
             id: '',
             // 是否为分享页面
             isShare: false,
+            // 活动是否提前结束或者删除
+            activityEarlyIsOver: false,
             // 当前活动是否开始
             activityIsStart: false,
             // 活动是否已结束
@@ -572,8 +574,11 @@ export default {
                     signinNumber,
                     completeNumber,
                     isShowLog,
-                    logImgUrl
+                    logImgUrl,
+                    activityStatus
                 } = result
+                // 活动状态 0 未开始 1 进行中  2 结束  3 已删除
+                this.activityEarlyIsOver = [2, 3].indexOf(activityStatus) !== -1
 
                 // 获取节点是否有奖品 + 获取已领取的奖品
                 this.myPresentList.length = 0
@@ -581,7 +586,7 @@ export default {
                 for (let i = 0; i < notes.length; i++) {
                     const item = notes[i]
 
-                    // awardType ''表示尚未签到 0 未抽中 1 礼品 2 奖学金 3 全场满减券 4 品类券/**/
+                    // awardType ''表示尚未签到 0 未抽中 1 礼品 2 奖学金 3 全场满减券 4 品类券
                     // 当前节点有奖品,提取出奖品信息
                     if (item.hasAward) {
                         presentList.push({

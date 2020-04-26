@@ -123,7 +123,7 @@
                                 很遗憾 您与奖品擦肩而过
                                 <p>新年喜临门 感谢您的参与</p>
                             </div>
-                            <div class="detail" style="height: 300px; margin-top: 50px;">
+                            <div class="detail no-present-detail">
                                 <div class="no-present">
                                     <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png">
                                 </div>
@@ -389,6 +389,9 @@ export default {
         }
 
         /* 错过奖品 */
+        &.no-present-detail {
+          margin: 30px;
+        }
         .no-present {
             text-align: center;
 
@@ -507,7 +510,8 @@ export default {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        top: -40px;
+        top: -96px;
+        margin-left: -10px;
     }
 
     .top {
@@ -517,7 +521,7 @@ export default {
         padding-left: 10px;
         line-height: 70px;
         text-align: center;
-        font-size: 30px;
+        font-size: 45px;
         color: #FFDCB3;
     }
 
