@@ -383,6 +383,7 @@ export default {
                 bottom: 40px;
                 left: 50%;
                 transform: translateX(-50%);
+                margin-left: -4px;
                 font-size: 24px;
                 color: #ffdcb3;
             }
