@@ -227,7 +227,6 @@
 
             <!-- 试看视频 -->
             <div :class="$style.videoPlayer" v-if="preview.show">
-
                 <paid-player
                     :size="preview.size"
                     :src="preview.url"
