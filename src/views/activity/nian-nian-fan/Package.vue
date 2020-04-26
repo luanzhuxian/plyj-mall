@@ -54,11 +54,11 @@
                                     </span>
                                 </div>
                                 <div :class="$style.subLeftMiddle">
-                                    {{ `原价￥${item.combinationDetailList[0].totalPrice}` }}
+                                    原价<del>{{ `￥${item.combinationDetailList[0].totalPrice}` }}</del>
                                 </div>
                                 <div :class="$style.subLeftSub">
                                     组合价
-                                    <span :class="$style.price">{{ item.combinationDetailList[0].discountTotalPrice }}</span>
+                                    <b :class="$style.price">{{ item.combinationDetailList[0].discountTotalPrice }}</b>
                                 </div>
                             </div>
                             <div
@@ -271,7 +271,6 @@ export default {
                     font-family: Microsoft YaHei;
                     line-height: 36px;
                     color: #fe7700;
-                    text-decoration: line-through;
                 }
                 &-sub {
                     display: flex;
@@ -285,14 +284,10 @@ export default {
                         width: 0;
                         margin-left: 4px;
                         font-size: 32px;
-                        font-family: San Francisco Display;
-                        font-weight: bold;
                         @include elps();
                         &:before {
                             content: '￥';
                             font-size: 20px;
-                            font-family: Microsoft YaHei;
-                            font-weight: bold;
                         }
                     }
                 }
