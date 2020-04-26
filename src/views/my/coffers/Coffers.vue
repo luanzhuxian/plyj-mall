@@ -138,6 +138,13 @@ export default {
         ...mapGetters(['balance', 'currentBalance', 'cumulativeBalance', 'idCardFlag', 'mobile', 'realName']),
         ...mapState(['userInfo'])
     },
+    async activated () {
+        try {
+            await this.$store.dispatch(USER_INFO)
+        } catch (e) {
+            throw e
+        }
+    },
     methods: {
         async withdraw () {
             try {
