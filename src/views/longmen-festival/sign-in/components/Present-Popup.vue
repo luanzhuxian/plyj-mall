@@ -508,10 +508,13 @@ export default {
     transform: translateX(-50%);
 
     > img {
+        width: 96vw;
+        height: 28vw;
+        object-fit: cover;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        top: -96px;
+        top: -13vw;
         margin-left: -10px;
     }
 
