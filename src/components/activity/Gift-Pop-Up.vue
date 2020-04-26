@@ -67,22 +67,23 @@ export default {
 
 <style module lang="scss">
     .content {
-        width: 606px;
+        width: 506px;
         padding: 48px 16px;
         border-radius: 20px;
         background: #d6565c url("https://mallcdn.youpenglai.com/static/mall/2.9.0/gift-bg.png") no-repeat center top;
         background-size: 100%;
     }
     .title {
-        font-size: 52px;
+        font-size: 40px;
         font-weight: bold;
         text-align: center;
         color: #fff;
     }
     .message {
-        margin-top: 18px;
+        margin-top: 24px;
+        margin-bottom: 32px;
         padding: 0 60px;
-        font-size: 20px;
+        font-size: 24px;
         text-align: center;
         color: #EEE;
     }
