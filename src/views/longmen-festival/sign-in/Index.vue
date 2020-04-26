@@ -780,14 +780,14 @@ export default {
                     return
                 }
                 this.isLoading = true
-                const bgImgUrl = 'https://mallcdn.youpenglai.com/static/admall/2.9.0/poster.png'
+                const bgImgUrl = 'https://mallcdn.youpenglai.com/static/admall/2.9.0/longmen-signin-poster.png'
                 const bgImg = await this.loadImage(bgImgUrl)
                 const canvas = document.createElement('canvas')
                 canvas.width = bgImg.width
                 canvas.height = bgImg.height
                 const ctx = canvas.getContext('2d')
                 ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
-                ctx.drawImage(this.qrcode, canvas.width / 2 - 98, canvas.height / 2 + 175, 240, 240)
+                ctx.drawImage(this.qrcode, canvas.width / 2 - 118, canvas.height / 2 + 175, 240, 240)
                 const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
                 this.sharePoster = sharePoster
                 this.isShowSharePoster = true
