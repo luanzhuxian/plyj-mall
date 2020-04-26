@@ -217,7 +217,7 @@ export default {
 
     /* 关闭按钮 */
     .close {
-        margin-top: 920px;
+        margin-top: 960px;
         text-align: center;
         &.small {
             margin-top: 250px;
@@ -536,8 +536,8 @@ export default {
             background: #3E9F7F url('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/83e5925d-2d8a-4dd8-b009-755f3b2823d1.png') bottom no-repeat;
             background-size: contain;
             > img {
-                width: 260px;
-                height: 150px;
+                width: 300px;
+                height: 300px;
                 object-fit: cover;
             }
             h3 {
