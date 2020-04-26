@@ -226,14 +226,23 @@
             <contact :show.sync="showContact" />
 
             <!-- 试看视频 -->
-            <paid-player
-                v-if="preview.show"
-                :size="preview.size"
-                :src="preview.url"
-                :video-id="preview.id"
-                :resource-id="detail.id"
-                :resource-name="detail.courseName"
-            />
+            <div :class="$style.videoPlayer" v-if="preview.show">
+
+                <paid-player
+                    :size="preview.size"
+                    :src="preview.url"
+                    :video-id="preview.id"
+                    :resource-id="detail.id"
+                    :resource-name="detail.courseName"
+                />
+                <pl-svg
+                    :class="$style.close"
+                    name="icon-close"
+                    fill="#bbb"
+                    :height="30"
+                    @click="preview.show = false"
+                />
+            </div>
 
             <!-- 海报弹框 -->
             <pl-mask :show.sync="showHaibao">
@@ -895,14 +904,14 @@ export default {
         margin-top: 4px;
     }
 }
-.saveHaibaoContent {
+.saveh-haibao-content {
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     width: max-content;
     height: max-content;
-    > .saveButton {
+    > .save-button {
         width: 560px;
         margin-top: -4px;
         text-align: center;
@@ -939,7 +948,7 @@ export default {
     }
 }
 
-.priceRight {
+.price-right {
     flex: 1;
     display: inline-flex;
     flex-direction: column;
@@ -948,7 +957,7 @@ export default {
     > p {
         margin-top: 6px;
     }
-    .returnRunbi {
+    .return-runbi {
         display: inline-block;
         width: 60px;
         height: 28px;
@@ -961,5 +970,23 @@ export default {
         color: #fff;
     }
 }
+
+.video-player {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 9999;
+    .close {
+        position: absolute;
+        right: 30px;
+        top: 30px;
+        padding: 20px;
+    }
+  }
 
 </style>
