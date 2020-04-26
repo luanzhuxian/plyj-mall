@@ -168,7 +168,7 @@ export default {
         font-size: 40px;
         font-family: San Francisco Display;
         font-weight: bold;
-        line-height: 34px;
+        line-height: 44px;
         color: #fe7700;
         @include elps();
         &.money::before {
