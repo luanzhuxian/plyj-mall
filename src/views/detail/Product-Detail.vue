@@ -206,7 +206,7 @@
                     :activity-product-model="detail.activityProductModel || null"
                     :pre-activity="preActivity"
                 >
-                    <template v-slot:footer="{ currentSku, limiting, limit }" v-if="!~[5, 6].indexOf(productActive) && mchId">
+                    <template v-slot:footer="{ currentSku, limiting, limit,publicBenefitCurrentSku }" v-if="!~[5, 6].indexOf(productActive) && mchId">
                         <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
                             <!-- 活动商品库存不足时，显示该按钮 -->
                             <button
@@ -263,11 +263,11 @@
                         <div :class="$style.button" v-else-if="activeProduct === 7 && preActivity === 2">
                             <button
                                 :class="$style.preBtn"
-                                :disabled="activeStock <= 0"
-                                @click="buyNow(currentSku, 7, limiting, limit)"
+                                :disabled="publicBenefitCurrentSku.activityPrice <= 0"
+                                @click="buyNow(currentSku, -1, 0, limit)"
                             >
-                                {{ activeStock > 0 ? '公益购买' : '已售罄' }}
-                                <div :class="$style.btnText">¥ {{ detail.activityProductModel.price }}</div>
+                                {{ publicBenefitCurrentSku.activityPrice > 0 ? '公益购买' : '已售罄' }}
+                                <div :class="$style.btnText">¥ {{ publicBenefitCurrentSku.activityPrice }}</div>
                             </button>
                         </div>
                         <div :class="$style.buttons" v-else>
@@ -307,7 +307,7 @@
                 <CharityPoster
                     ref="charityPoster"
                     :data="detail"
-                    :donation="charityStastics.donationAmount"
+                    :donation="detail.activityProductModel.donationAmount"
                     :share="shareUrl"
                 />
 

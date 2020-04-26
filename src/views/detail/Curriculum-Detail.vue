@@ -23,13 +23,13 @@
                     :class="$style.barrage"
                     :list="charityMembers"
                 />
-
                 <template v-if="isCountdownShow">
                     <!-- 公益棕活动倒计时 -->
                     <charity-countdown-bar
                         v-if="productActive === 7"
                         :class="$style.countDownBar"
-                        :endtime="detail.regularSaleTime"
+                        :starttime="detail.currentTime"
+                        :endtime="detail.activityEndTime"
                         :donation="charityStastics.donationAmount"
                         :total="charityStastics.topAmount"
                         @done="refresh"
@@ -48,7 +48,24 @@
 
             <info-box>
                 <div :class="$style.priceBoxWrapper">
-                    <div :class="$style.priceBox">
+                    <!-- 公益活动 -->
+                    <div :class="$style.priceBox" v-if="productActive === 7">
+                        <template>
+                            <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
+                            <div v-else :class="$style.free">免费</div>
+                        </template>
+                        <div :class="$style.original">
+                            <div v-if="detail.priceType === 1" class="mr-30">
+                                <template v-if="isPresent">
+                                    售价：<del v-text="detail.sellingPrice" />
+                                </template>
+                                <template v-else-if="detail.originalPrice && detail.originalPrice !== detail.sellingPrice">
+                                    原价：<del v-text="detail.originalPrice" />
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    <div :class="$style.priceBox" v-else>
                         <template v-if="isPresent">
                             <div :class="$style.free">赠课</div>
                         </template>
@@ -88,7 +105,7 @@
                         </p>
                     </div>
                     <!-- 公益棕用户头像 -->
-                    <charity-join v-if="productActive === 7" :data="charityMembers" :donation="12" />
+                    <charity-join v-if="productActive === 7" :data="charityMembers" :donation="detail.donationAmount" />
                 </div>
 
                 <!-- 课程名称 -->
@@ -258,7 +275,7 @@
                 v-if="productActive === 7"
                 ref="charityPoster"
                 :data="detail"
-                :donation="charityStastics.donationAmount"
+                :donation="detail.donationAmount"
                 :share="shareUrl"
             />
         </template>

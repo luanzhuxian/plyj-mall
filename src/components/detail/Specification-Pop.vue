@@ -18,13 +18,19 @@
                                 alt=""
                             >
                             <div :class="$style.baseInfoRight">
+                                <!-- 公益活动 -->
                                 <p
+                                    v-if="activeProduct == 7"
                                     :class="$style.price"
-                                    v-text="currentSku.price"
-                                    v-if="activeType === 1"
+                                    v-text="publicBenefitCurrentSku.activityPrice"
                                 />
                                 <p
-                                    v-if="activeType !== 1"
+                                    v-else-if="activeType === 1"
+                                    :class="$style.price"
+                                    v-text="currentSku.price"
+                                />
+                                <p
+                                    v-else-if="activeType !== 1"
                                     :class="$style.price"
                                     v-text="activityProductModel.price"
                                 />
@@ -101,7 +107,17 @@
                                     type="number"
                                     @input="countChange"
                                 >
+                                <!-- 公益活动 -->
                                 <button
+                                    v-if="activeProduct == 7"
+                                    :disabled="count >= publicBenefitCurrentSku.activityStock"
+                                    @click.stop="add"
+                                >
+                                    +
+                                </button>
+                                <!-- 其他 -->
+                                <button
+                                    v-else
                                     :disabled="(activeType === 1 && count >= localCurrentSku.stock) || (activeType !== 1 && activityProductModel && count >= activityProductModel.buyCount)"
                                     @click.stop="add"
                                 >
@@ -109,7 +125,11 @@
                                 </button>
                                 <p :class="$style.residue">
                                     <!-- 活动商品库存展示，如果商品不是预购且活动库存不足，则显示正常库存 -->
-                                    <template v-if="activeType !== 1">
+                                    <!-- 注意：公益活动例外 -->
+                                    <template v-if="activeProduct == 7">
+                                        库存<i v-text="publicBenefitCurrentSku.activityStock" />件
+                                    </template>
+                                    <template v-else-if="activeType !== 1">
                                         总库存<i v-text="activeAllResidue" />件
                                     </template>
                                     <template v-else>
@@ -122,6 +142,7 @@
                     <div :class="$style.footer" v-if="localCurrentSku.id" @click.capture="slotClickHandler">
                         <slot
                             name="footer"
+                            :publicBenefitCurrentSku="publicBenefitCurrentSku"
                             :currentSku="localCurrentSku"
                             :revert="revert"
                             :limit="limit"
@@ -243,6 +264,11 @@ export default {
     created () {
     },
     computed: {
+        // 公益活动所选规格
+        publicBenefitCurrentSku () {
+            const list = this.activityProductModel.productModels || []
+            return list.find(({ sku1, sku2 }) => sku1 === this.currentSku1 && sku2 === this.currentSku2) || {}
+        },
         currentSku () {
             const current = this.skuList.find(item => item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2) || {}
             if (this.sku.skuCode1 === current.skuCode1 && this.sku.skuCode2 === current.skuCode2) {
