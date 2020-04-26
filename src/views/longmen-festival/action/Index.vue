@@ -88,7 +88,7 @@ import {
     getPublicBenefitDetail,
     getPublicBenefitStatistics,
     getPublicBenefitList
-} from './../../../apis/longmen-festival/lottery'
+} from './../../../apis/longmen-festival/public-benefit'
 import { mapGetters } from 'vuex'
 export default {
     name: 'LongmenAction',

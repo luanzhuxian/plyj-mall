@@ -386,7 +386,7 @@ import CharityPrice from './charity/Charity-Price'
 import {
     getPublicBenefitStatistics,
     getPublicBenefitList
-} from '../../apis/longmen-festival/lottery'
+} from '../../apis/longmen-festival/public-benefit'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
 /**
