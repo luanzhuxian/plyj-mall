@@ -61,7 +61,8 @@ export default {
         // 视频地址
         src: {
             type: String,
-            default: ''
+            default: '',
+            required: true
         },
         // 视频开始播放的时间
         currentTime: {
@@ -71,17 +72,20 @@ export default {
         // 视频大小
         size: {
             type: Number,
-            default: 0
+            default: 0,
+            required: true
         },
         // 视频id
         videoId: {
             type: String,
-            default: ''
+            default: '',
+            required: true
         },
         // 资源名称（课程名称）
         resourceName: {
             type: String,
-            default: ''
+            default: '',
+            required: true
         },
         // 资源所在id（课程id）
         resourceId: {
