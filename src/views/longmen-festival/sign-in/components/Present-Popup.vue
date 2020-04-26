@@ -217,7 +217,7 @@ export default {
 
     /* 关闭按钮 */
     .close {
-        margin-top: 960px;
+        margin-top: 980px;
         text-align: center;
         &.small {
             margin-top: 250px;
