@@ -16,28 +16,28 @@
                     <div :class="$style.chance">您还有{{ count }}次抽奖机会</div>
                 </div>
                 <div :class="$style.turntable" v-if="turntableAwards.length">
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 0 }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 0 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (1).png')` }">
                         {{ turntableAwards[0].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 1 }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 1 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (2).png')` }">
                         {{ turntableAwards[1].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 2 }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 2 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (3).png')` }">
                         {{ turntableAwards[2].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 3 }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 3 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (4).png')` }">
                         {{ turntableAwards[3].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 7 }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 7 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (5).png')` }">
                         {{ turntableAwards[7].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 6 }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 6 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (6).png')` }">
                         {{ turntableAwards[6].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 5 }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 5 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (7).png')` }">
                         {{ turntableAwards[5].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 4 }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 4 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (8).png')` }">
                         {{ turntableAwards[4].grade }}
                     </div>
                 </div>
@@ -734,8 +734,9 @@ export default {
             text-align: center;
             box-sizing: border-box;
             border: 7px solid #fff;
-            background-size: 80px !important;
             box-shadow: 0 0 0 1px #311c1d;
+            background: #fff var(--image) no-repeat center 15px;
+            background-size: 80px;
             &.active {
                 background-color: #fced5c;
                 border: 7px solid #d4ff02;
@@ -743,33 +744,17 @@ export default {
             }
             &:nth-of-type(1) {
                 border-top-left-radius: 50px;
-                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (1).png") no-repeat center 15px;
-            }
-            &:nth-of-type(2) {
-                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (2).png") no-repeat center 12px;
-            }
-            &:nth-of-type(3) {
-                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (3).png") no-repeat center 10px;
             }
             &:nth-of-type(4) {
                 margin-right: 0;
                 border-top-right-radius: 50px;
-                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (4).png") no-repeat center 15px;
             }
             &:nth-of-type(5) {
                 border-bottom-left-radius: 50px;
-                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (5).png") no-repeat center 4px;
-            }
-            &:nth-of-type(6) {
-                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (6).png") no-repeat center 4px;
-            }
-            &:nth-of-type(7) {
-                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (7).png") no-repeat center 2px;
             }
             &:nth-of-type(8) {
                 margin-right: 0;
                 border-bottom-right-radius: 50px;
-                background: #fff url("https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (8).png") no-repeat center 12px;
             }
         }
     }
