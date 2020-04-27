@@ -189,7 +189,17 @@ export default {
             }
             await setTimeoutSync(500)
             try {
-                const { result: payData } = await submitOrderAndPay(this.productId, this.contactInfoModel)
+                let params = {}
+                const { activityId, productActive } = this.$route.query
+                // 公益活动
+                if (productActive === '7') {
+                    params = {
+                        activityId,
+                        activeProduct: Number(productActive),
+                        ...this.contactInfoModel
+                    }
+                }
+                const { result: payData } = await submitOrderAndPay(this.productId, params)
                 // 如果没有拿到请求数据，再次尝试发起请求
                 // 如果有，则发起支付
                 if (!payData) {

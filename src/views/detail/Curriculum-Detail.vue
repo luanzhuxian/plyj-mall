@@ -400,6 +400,9 @@ export default {
         },
         canLearn () {
             return this.detail.isBuy || this.isPresent
+        },
+        activityId () {
+            return this.$route.query.activityId
         }
     },
     watch: {
@@ -544,8 +547,7 @@ export default {
         // 查询公益棕活动统计数据
         async getPublicBenefitStatistics () {
             try {
-                const { activityId } = this.$route.query
-                const { result } = await getPublicBenefitStatistics(activityId)
+                const { result } = await getPublicBenefitStatistics(this.activityId)
                 this.charityStastics = result
                 return result
             } catch (error) {
@@ -555,8 +557,7 @@ export default {
         // 查询公益榜单
         async getPublicBenefitList () {
             try {
-                const { activityId } = this.$route.query
-                const { result } = await getPublicBenefitList({ activityId, productId: this.productId })
+                const { result } = await getPublicBenefitList({ activityId: this.activityId, productId: this.productId })
                 this.charityMembers = result
                 return result
             } catch (error) {
@@ -606,7 +607,8 @@ export default {
                     count: 1
                 },
                 query: {
-                    productActive: this.productActive
+                    productActive: this.productActive,
+                    activityId: this.activityId
                 }
             })
         },
@@ -746,11 +748,10 @@ export default {
                     return
                 }
 
-                const { activityId } = this.$route.query
                 if (this.userId) {
-                    this.shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?currentProductStatus=7&activityId=${ activityId }&noCache=${ Date.now() }`
+                    this.shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?currentProductStatus=7&activityId=${ this.activityId }&noCache=${ Date.now() }`
                 } else {
-                    this.shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?currentProductStatus=7&activityId=${ activityId }&noCache=${ Date.now() }`
+                    this.shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?currentProductStatus=7&activityId=${ this.activityId }&noCache=${ Date.now() }`
                 }
 
                 this.creating = true
