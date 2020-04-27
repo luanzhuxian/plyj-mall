@@ -121,6 +121,7 @@ export default {
 </script>
 
 <style lang="scss" module>
+
 .content {
     position: relative;
     width: max-content;

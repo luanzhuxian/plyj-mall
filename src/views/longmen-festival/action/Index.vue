@@ -168,7 +168,7 @@ export default {
     },
     methods: {
         // 格式化获取的各个规格商品，聚合为一个商品
-        formatProductModels (productModels) {
+        formatProductModels (productModels = []) {
             const obj = {}
             for (const item of productModels) {
                 if (!obj[item.productId]) {
@@ -180,9 +180,23 @@ export default {
             }
             return Object.keys(obj).map(key => productModels.find(({ productId, activityPrice }) => (key === productId) && (obj[key].minPrice === activityPrice)))
         },
+        // 聚合课程和商品
+        formatProductList (productModels = [], courseModels = []) {
+            return productModels.concat(courseModels).map(item => ({
+                productId: item.productId,
+                // 商品为 1 课程为 2
+                productType: item.courseType ? 2 : 1,
+                img: item.productImage,
+                type: item.productTypeDesc || item.courseTypeDesc,
+                name: item.productName || item.courseName,
+                price: item.activityPrice,
+                donationAmount: item.donationAmount
+            }))
+        },
         async getDetail () {
             try {
                 const { result } = await getPublicBenefitDetail(this.id)
+
                 // 活动不存在，弹出去
                 if (result.definiteStatus === '') {
                     if (window.history.length > 1) {
@@ -190,28 +204,22 @@ export default {
                     }
                     return this.$router.replace({ name: 'home' })
                 }
+
                 // eslint-disable-next-line prefer-const
-                let { productModels = [], courseModels = [] } = result
+                let { productModels, courseModels } = result
                 productModels = this.formatProductModels(productModels)
-                const productList = productModels.concat(courseModels).map(item => ({
-                    productId: item.productId,
-                    // 商品为 1 课程为 2
-                    productType: item.courseType ? 2 : 1,
-                    img: item.productImage,
-                    type: item.productTypeDesc || item.courseTypeDesc,
-                    name: item.productName || item.courseName,
-                    price: item.activityPrice,
-                    donationAmount: item.donationAmount
-                }))
-                result.productList = productList
+                result.productList = this.formatProductList(productModels, courseModels)
+
                 // 进度
                 this.percentage = (this.statistics.donationAmount / result.topAmount) * 100
+
                 // definiteStatus 1未开始，2进行中，3已过期，4已结束
                 if ([1, 2].indexOf(result.definiteStatus) !== -1) {
                     // 活动开始剩余或活动结束时间戳
                     const countdown = moment(result.startTime).valueOf() - moment(result.systemTime).valueOf()
                     this.countdown = countdown > 0 ? countdown : moment(result.endTime).valueOf() - moment(result.systemTime).valueOf()
                 }
+
                 this.detail = result
             } catch (e) { throw e }
         },

@@ -89,17 +89,19 @@ export default {
     },
     watch: {
         countdown (news) {
-            if (news > 0) {
-                this.timer = new Countdown(Math.abs(news), data => {
-                    if (data) {
-                        this.setTime(data)
-                    } else {
-                        this.done()
-                        this.$emit('done')
-                    }
-                })
-                this.timer.start()
+            if (news <= 0) {
+                return
             }
+
+            this.timer = new Countdown(Math.abs(news), data => {
+                if (data) {
+                    this.setTime(data)
+                } else {
+                    this.done()
+                    this.$emit('done')
+                }
+            })
+            this.timer.start()
         }
     },
     computed: {

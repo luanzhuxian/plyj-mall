@@ -41,16 +41,21 @@ export default {
         }
     },
     methods: {
-        target (item) {
+        target ({ productType, productId }) {
             if (this.activityStatus !== 2) {
                 return
             }
+
             // 商品为 1 课程为 2
-            if (item.productType === 1) {
-                this.$router.push({ name: 'Product', params: { productId: item.productId }, query: { currentProductStatus: 7, activityId: this.activityId } })
-                return
-            }
-            this.$router.push({ name: 'Curriculum', params: { productId: item.productId }, query: { currentProductStatus: 7, activityId: this.activityId } })
+            const name = productType === 1 ? 'Product' : 'Curriculum'
+            this.$router.push({
+                name,
+                params: { productId },
+                query: {
+                    currentProductStatus: 7,
+                    activityId: this.activityId
+                }
+            })
         }
     }
 }
