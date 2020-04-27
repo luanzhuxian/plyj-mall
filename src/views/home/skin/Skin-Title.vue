@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.skinTitle">
+    <div>
         <title-xmas v-if="skinId === 1" :data="data" />
         <title-yuan-dan v-if="skinId === 2" :data="data" />
         <title-new-year v-if="skinId === 3" :data="data" />
@@ -56,4 +56,5 @@ export default {
 </script>
 
 <style lang="scss" module>
+
 </style>

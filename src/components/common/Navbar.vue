@@ -256,7 +256,7 @@ export default {
             return this.$route.matched.some(val => val.name === 'My')
         },
         isSkinShow () {
-            return ~[1, 2, 3, 4, 5, 6, 7, 8, 99].indexOf(this.skinId)
+            return ~[1, 2, 3, 4, 5, 6, 7, 8, 9, 99].indexOf(this.skinId)
         },
         isD12Show () {
             return ~[5, 6, 7].indexOf(this.activityId)

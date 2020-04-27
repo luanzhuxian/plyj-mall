@@ -25,9 +25,29 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 88px;
+    height: 100px;
     background: url('https://mallcdn.youpenglai.com/static/admall/skin/labour-day/title.png') no-repeat center;
-    background-size: 100%;
+    background-size: auto 100%;
+    ::before {
+        position: absolute;
+        top: 16px;
+        left: -70px;
+        content: '';
+        width: 58px;
+        height: 27px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/labour-day/title-left.png') no-repeat center;
+        background-size: 100%;
+    }
+    ::after {
+        position: absolute;
+        top: 16px;
+        right: -70px;
+        content: '';
+        width: 58px;
+        height: 27px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/labour-day/title-right.png') no-repeat center;
+        background-size: 100%;
+    }
     .title {
         position: relative;
         max-width: 310px;
