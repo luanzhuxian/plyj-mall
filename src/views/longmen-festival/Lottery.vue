@@ -185,7 +185,7 @@
                     <span> 次抽奖机会</span>
                 </dd>
                 <dt class="fz-28 mt-40">4. 活动说明</dt>
-                <dd class="fz-24 gray-2">在活动有效期内，成功邀请3位好友绑定手机号注册成为店铺的会员，即可获得翻好礼的机会1次；有机会获得大额满减券；领取成功后，将自动存入到会员的现金卡包中</dd>
+                <dd class="fz-24 gray-2" style="word-break: break-all; white-space: pre-line;" v-text="detail.activityRule" />
             </dl>
         </pl-popup>
 
