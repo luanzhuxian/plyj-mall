@@ -6,7 +6,7 @@
                     <div :class="$style.status" v-if="status === 2">距活动结束</div>
                     <div v-if="status === 3 || status === 4" :class="{ [$style.status]: true, [$style.end]: true }">活动已结束</div>
                     <div :class="$style.status" v-if="status === 1">距活动开始</div>
-                    <div :class="$style.time">
+                    <div :class="$style.time" v-if="status === 1 || status === 2">
                         <span v-if="date.days" v-text="date.days" style="--unit: '天'" />
                         <span v-text="date.hours" style="--unit: '小时'" />
                         <span v-text="date.minutes" style="--unit: '分'" />
@@ -350,6 +350,7 @@ export default {
                   IS_WHITE = !IS_WHITE
               }, 800)
           }  catch (e) {
+              this.$router.replace({ name: 'Home' })
               throw e
           }
         },
