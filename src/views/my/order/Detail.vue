@@ -89,6 +89,8 @@
                     :active-product="activeProduct"
                     :pre-active="2"
                     :route-name="orderType === 'KNOWLEDGE_COURSE' ? 'Curriculum' : 'Product'"
+                    :activity-status="activityData.status"
+                    :activity-id="activityData.id"
                 />
                 <div :class="$style.buttons">
                     <pl-button

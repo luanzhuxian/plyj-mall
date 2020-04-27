@@ -242,6 +242,7 @@ export default {
             try {
                 this.createPosterLoading = true
                 this.shareUrl = `${ this.mallUrl }/longmen-festival/action/${ this.id }?shareUserId=${ this.userId }&t=${ Date.now() }`
+                await this.$nextTick()
                 await this.$refs.poster.createPoster()
                 this.createPosterLoading = false
             } catch (e) { throw e }

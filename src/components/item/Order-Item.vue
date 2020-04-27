@@ -158,7 +158,17 @@ export default {
             type: Number,
             default: -1
         },
-        hidePrice: Boolean
+        hidePrice: Boolean,
+        // 所属活动状态  0删除，1正常，2关闭
+        activityStatus: {
+            type: Number,
+            default: 0
+        },
+        // 所属活动 id
+        activityId: {
+            type: String,
+            default: ''
+        }
     },
     computed: {
         ...mapGetters(['userId', 'agentUser'])
@@ -167,12 +177,19 @@ export default {
         handleClick (e) {
             if (this.productId) {
                 e.stopPropagation()
+                const query = {}
+                // 公益活动
+                if (Number(this.activeProduct) === 7 && this.activityStatus === 1) {
+                    query.currentProductStatus = 7
+                    query.activityId = this.activityId
+                }
                 this.$router.push({
                     name: this.routeName,
                     params: {
                         productId: this.productId,
                         brokerId: this.userId || null
-                    }
+                    },
+                    query
                 })
             }
         }
