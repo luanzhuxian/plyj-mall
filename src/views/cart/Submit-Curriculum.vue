@@ -189,10 +189,12 @@ export default {
             }
             await setTimeoutSync(500)
             try {
-                let params = {}
+                let params = {
+                    ...this.contactInfoModel
+                }
                 const { activityId, productActive } = this.$route.query
                 // 公益活动
-                if (productActive === '7') {
+                if (Number(productActive) === 7) {
                     params = {
                         activityId,
                         activeProduct: Number(productActive),
