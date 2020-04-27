@@ -436,7 +436,6 @@ export default {
                 } else {
                     index = this.turntableAwards.findIndex(item => item.grade === '谢谢参与')
                 }
-                console.log(index)
                 await this.runLottery(index)
             } catch (e) {
                 throw e
@@ -878,6 +877,16 @@ export default {
             &.no-content {
                 text-align: center;
                 background-color: #fff;
+            }
+            :global {
+                .swiper-slide {
+                    height: 0;
+                    overflow: hidden;
+                    &.swiper-slide-active {
+                        height: max-content !important;
+                        overflow: auto;
+                    }
+                }
             }
         }
     }
