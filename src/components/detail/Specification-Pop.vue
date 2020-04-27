@@ -266,7 +266,7 @@ export default {
     computed: {
         // 公益活动所选规格
         publicBenefitCurrentSku () {
-            const list = this.activityProductModel.productModels || []
+            const list = (this.activityProductModel && this.activityProductModel.productModels) || []
             return list.find(({ sku1, sku2 }) => sku1 === this.currentSku1 && sku2 === this.currentSku2) || {}
         },
         currentSku () {
