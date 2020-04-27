@@ -23,27 +23,25 @@
                     :class="$style.barrage"
                     :list="charityMembers"
                 />
-                <template v-if="isCountdownShow">
-                    <!-- 公益棕活动倒计时 -->
-                    <charity-countdown-bar
-                        v-if="productActive === 7"
-                        :class="$style.countDownBar"
-                        :starttime="detail.currentTime"
-                        :endtime="detail.activityEndTime"
-                        :donation="charityStastics.donationAmount"
-                        :total="charityStastics.topAmount"
-                        @done="refresh"
-                    />
-                    <!-- 倒计时 -->
-                    <count-down
-                        v-else
-                        :class="[$style.countDownBar, $style.regular]"
-                        :endtime="detail.regularSaleTime"
-                        theme="orange"
-                        prefix="距抢课开始仅剩"
-                        @done="refresh"
-                    />
-                </template>
+                <!-- 公益棕活动倒计时 -->
+                <charity-countdown-bar
+                    v-if="productActive === 7"
+                    :class="$style.countDownBar"
+                    :starttime="detail.currentTime"
+                    :endtime="detail.activityEndTime"
+                    :donation="charityStastics.donationAmount"
+                    :total="charityStastics.topAmount"
+                    @done="refresh"
+                />
+                <!-- 倒计时 -->
+                <count-down
+                    v-else-if="isCountdownShow"
+                    :class="[$style.countDownBar, $style.regular]"
+                    :endtime="detail.regularSaleTime"
+                    theme="orange"
+                    prefix="距抢课开始仅剩"
+                    @done="refresh"
+                />
             </div>
 
             <info-box>
@@ -93,7 +91,11 @@
                             </div>
                         </div>
                     </div>
-                    <div :class="$style.priceRight" v-if="agentUser && detail.rebate">
+
+                    <!-- 公益棕用户头像 -->
+                    <charity-join v-if="productActive === 7" :data="charityMembers" :donation="detail.donationAmount" />
+
+                    <div :class="$style.priceRight" v-else-if="agentUser && detail.rebate">
                         <p class="fz-22 gray-1">
                             <span :class="$style.returnRunbi">
                                 润笔
@@ -104,8 +106,6 @@
                             分享下单即可获得润笔
                         </p>
                     </div>
-                    <!-- 公益棕用户头像 -->
-                    <charity-join v-if="productActive === 7" :data="charityMembers" :donation="detail.donationAmount" />
                 </div>
 
                 <!-- 课程名称 -->
