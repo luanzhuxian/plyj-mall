@@ -81,27 +81,36 @@ export default {
     [type.GET_ACTIVITY_DATA] (state, payload) {
         state.activityData = payload
     },
-    [type.GET_SKIN_ID] (state, payload) {
-        state.skinId = payload || 0
+    [type.GET_SKIN_ID] (state, payload = 0) {
+        state.skinId = payload
     },
-    [type.SET_LIVE_INFO] (state, payload) {
-        state.liveInfo = payload || {}
+    [type.SET_LIVE_INFO] (state, payload = {}) {
+        state.liveInfo = payload
     },
-    [type.SET_COURSE_INFO] (state, payload) {
-        state.courseInfo = payload || {}
+    [type.SET_COURSE_INFO] (state, payload = {}) {
+        state.courseInfo = payload
     },
     [type.SET_COUPON_INFO] (state, payload) {
         state.d12CouponTotal = payload.doubleTwelveCount || 0
         state.xinchunCouponTotal = payload.newYearCount || 0
     },
-    [type.SET_INVITING_EVENT] (state, payload) {
-        state.invitingEvent = payload || {}
-    },
-    [type.SET_JX_EVENT] (state, payload) {
-        state.jxEvent = payload || {}
-    },
+    // [type.SET_INVITING_EVENT] (state, payload = {}) {
+    //     state.invitingEvent = payload
+    // },
+    // [type.SET_JX_EVENT] (state, payload = {}) {
+    //     state.jxEvent = payload
+    // },
     [type.SET_NW_EVENT] (state, payload) {
         state.nwEvent = payload && payload.length ? payload[0] : {}
+    },
+    [type.SET_DRAGON_GATE_CHARITY] (state, payload = {}) {
+        state.dragonGateCharity = payload
+    },
+    [type.SET_DRAGON_GATE_SIGN] (state, payload = {}) {
+        state.dragonGateSign = payload
+    },
+    [type.SET_DRAGON_GATE_PLAY] (state, payload = {}) {
+        state.dragonGatePlay = payload
     },
     [type.SET_CAMPAIGN_REPORT] (state, payload) {
         state.campaignReport = payload

@@ -131,12 +131,18 @@ export default {
     d12CouponTotal: null,
     // 已领新春优惠卷
     xinchunCouponTotal: null,
-    // 邀新有礼
-    invitingEvent: null,
-    // 见学之路
-    jxEvent: null,
+    // // 邀新有礼
+    // invitingEvent: null,
+    // // 见学之路
+    // jxEvent: null,
     // 新春年味
     nwEvent: null,
+    // 龙门节公益
+    dragonGateCharity: null,
+    // 龙门节签到
+    dragonGateSign: null,
+    // 龙门节抽奖
+    dragonGatePlay: null,
     // 疫情战报
     campaignReport: null,
     // 疫情签到

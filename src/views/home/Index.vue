@@ -203,11 +203,12 @@ export default {
                     modules.COUPON = moduleModels[1]
                     modules.ACTIVITY = moduleModels[2]
                     modules.APPOINTMENT = moduleModels[3]
-                    modules.POPULAR = moduleModels[4]
+                    modules.MIAO_SHA = moduleModels[4]
                     modules.PACKAGE = moduleModels[5]
-                    modules.CLASS = moduleModels[6]
-                    modules.PROPAGATE = moduleModels[7]
-                    modules.RECOMMEND = moduleModels[8]
+                    modules.PIN_TUAN = moduleModels[6]
+                    modules.YU_GOU = moduleModels[7]
+                    modules.PROPAGATE = moduleModels[8]
+                    modules.RECOMMEND = moduleModels[9]
                 }
                 this.type = type
                 this.modules = modules

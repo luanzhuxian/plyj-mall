@@ -45,15 +45,6 @@ export default {
     },
     data () {
         return {
-            defaultData: [{
-                value: 'cloud'
-            }, {
-                value: 'sign'
-            }, {
-                value: 'newyear'
-            }, {
-                value: 'report'
-            }],
             map: {
                 cloud: {
                     main: '云课堂',
@@ -61,13 +52,6 @@ export default {
                     icon: 'icon-cloud-play-592ce',
                     width: '70',
                     path: 'OnlineClassroom'
-                },
-                sign: {
-                    main: '抗疫签到',
-                    sub: '共携手抗战疫',
-                    icon: 'icon-medicine-173e3',
-                    width: '60',
-                    path: 'EpidemicSignIn'
                 },
                 newyear: {
                     main: '我心中的年味',
@@ -80,14 +64,49 @@ export default {
                     main: '防疫情报站',
                     sub: '众志成城抗击疫情',
                     icon: 'icon-document-ae13e',
-                    width: '60',
+                    width: '64',
                     path: 'BattlefieldReport'
+                },
+                sign: {
+                    main: '抗疫签到',
+                    sub: '共携手抗战疫',
+                    icon: 'icon-medicine-173e3',
+                    width: '64',
+                    path: 'EpidemicSignIn'
+                },
+                distribution: {
+                    main: '全民来分销',
+                    sub: 'Helper福利享不停',
+                    icon: 'icon-cup-ccb99',
+                    width: '64',
+                    path: 'HelperActivity'
+                },
+                'dragon-gate-charity': {
+                    main: '公益粽行动',
+                    sub: '学子携手共献爱心',
+                    icon: 'icon-charity-4ef51',
+                    width: '64',
+                    path: 'LongmenAction'
+                },
+                'dragon-gate-sign': {
+                    main: '粽粽有礼',
+                    sub: '粽行四海端午安康',
+                    icon: 'icon-check-bd315',
+                    width: '64',
+                    path: 'LongmenSignIn'
+                },
+                'dragon-gate-play': {
+                    main: '龙门大抽奖',
+                    sub: '抽奖嗨翻天',
+                    icon: 'icon-present-7f640',
+                    width: '64',
+                    path: 'LongmenLottery'
                 }
             }
         }
     },
     computed: {
-        ...mapGetters(['nwEvent', 'campaignReport', 'campaignBook']),
+        ...mapGetters(['nwEvent', 'campaignReport', 'campaignBook', 'dragonGateCharity', 'dragonGateSign', 'dragonGatePlay']),
         isOdd () {
             return !!(this.list.length % 2)
         },
@@ -97,17 +116,20 @@ export default {
         show () {
             return this.list.length
         },
+        isDragonGateCharityShow () {
+            return !!this.dragonGateCharity && this.dragonGateCharity.id
+        },
+        isDragonGateSignShow () {
+            return !!this.dragonGateSign && this.dragonGateSign.id
+        },
+        isDragonGatePlayShow () {
+            return !!this.dragonGatePlay && this.dragonGatePlay.id
+        },
         isReportShow () {
-            return !!this.campaignReport && this.campaignReport.isReportShow
+            return !!this.campaignReport && this.campaignReport.isReportShow && this.campaignReport.id
         },
         isBookShow () {
-            return !!this.campaignBook && this.campaignBook.isBookShow
-        },
-        reportId () {
-            return this.isReportShow ? this.campaignReport.id : null
-        },
-        bookId () {
-            return this.isBookShow ? this.campaignBook.activityId : null
+            return !!this.campaignBook && this.campaignBook.isBookShow && this.campaignBook.activityId
         }
     },
     methods: {
@@ -124,13 +146,25 @@ export default {
                 if (endTime < Date.now()) return this.$warning('活动已结束')
                 id = nwEvent.id
             }
+            if (value === 'dragon-gate-charity') {
+                if (!this.isDragonGateCharityShow) return this.$warning('活动已结束')
+                id = this.dragonGateCharity.id
+            }
+            if (value === 'dragon-gate-sign') {
+                if (!this.isDragonGateSignShow) return this.$warning('活动已结束')
+                id = this.dragonGateSign.id
+            }
+            if (value === 'dragon-gate-play') {
+                if (!this.isDragonGatePlayShow) return this.$warning('活动已结束')
+                id = this.dragonGatePlay.id
+            }
             if (value === 'report') {
-                if (!this.isReportShow || !this.reportId) return this.$warning('活动已结束')
-                id = this.reportId
+                if (!this.isReportShow) return this.$warning('活动已结束')
+                id = this.campaignReport.id
             }
             if (value === 'sign') {
-                if (!this.isBookShow || !this.bookId) return this.$warning('活动已结束')
-                id = this.bookId
+                if (!this.isBookShow) return this.$warning('活动已结束')
+                id = this.campaignBook.activityId
             }
             this.$router.push({
                 name: map[value].path,
@@ -138,7 +172,6 @@ export default {
             })
         }
     }
-
 }
 </script>
 

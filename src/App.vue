@@ -23,20 +23,25 @@ import {
     SET_LIVE_INFO,
     SET_COURSE_INFO,
     SET_COUPON_INFO,
-    SET_INVITING_EVENT,
-    SET_JX_EVENT,
-    SET_NW_EVENT
+    SET_NW_EVENT,
+    SET_DRAGON_GATE_CHARITY,
+    SET_DRAGON_GATE_SIGN,
+    SET_DRAGON_GATE_PLAY
+    // SET_INVITING_EVENT,
+    // SET_JX_EVENT,
 } from './store/mutation-type'
 
 import Cookie from './assets/js/storage-cookie'
 import {
     getLiveInfo,
-    // getJianxueInfo,
     getNianweiInfo,
-    getMyCouponInfo
+    getMyCouponInfo,
+    getDragonGateCharityInfo,
+    getDragonGateSignInfo,
+    getDragonGatePlayInfo
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
-import { getCourse } from './apis/online-classroom'
+import { getCourse as getCourseInfo } from './apis/online-classroom'
 // import { getCurrentActivity as getInvitingEvent } from './apis/invitenewcomers'
 
 export default {
@@ -103,9 +108,12 @@ export default {
             setLiveInfo: SET_LIVE_INFO,
             setCourseInfo: SET_COURSE_INFO,
             setCouponInfo: SET_COUPON_INFO,
-            setInvitingEvent: SET_INVITING_EVENT,
-            setJxEvent: SET_JX_EVENT,
-            setNwEvent: SET_NW_EVENT
+            setNwEvent: SET_NW_EVENT,
+            setDragonGateCharity: SET_DRAGON_GATE_CHARITY,
+            setDragonGateSign: SET_DRAGON_GATE_SIGN,
+            setDragonGatePlay: SET_DRAGON_GATE_PLAY
+            // setInvitingEvent: SET_INVITING_EVENT,
+            // setJxEvent: SET_JX_EVENT,
         }),
         ...mapActions({
             getUserInfo: USER_INFO,
@@ -120,18 +128,33 @@ export default {
                 // 获取皮肤id
                 this.getSkinId()
                 this.getActivityData()
-                getLiveInfo().then(({ result }) => this.setLiveInfo(result))
-                    .catch(e => this.setLiveInfo({}))
-                getCourse().then(({ result }) => this.setCourseInfo(result))
-                    .catch(e => this.setCourseInfo({}))
-                getNianweiInfo().then(({ result }) => this.setNwEvent(result))
-                    .catch(e => this.setNwEvent({}))
-                getMyCouponInfo().then(({ result }) => this.setCouponInfo(result))
-                    .catch(e => this.setCouponInfo({}))
-                // getInvitingEvent().then(({ result }) => this.setInvitingEvent(result))
-                //     .catch(e => this.setInvitingEvent({}))
-                // getJianxueInfo().then(({ result }) => this.setJxEvent(result))
-                //     .catch(e => this.setJxEvent({}))
+
+                const activityList = [
+                    getLiveInfo(),
+                    getCourseInfo(),
+                    getNianweiInfo(),
+                    getMyCouponInfo(),
+                    getDragonGateCharityInfo(),
+                    getDragonGateSignInfo(),
+                    getDragonGatePlayInfo()
+                ]
+
+                const [
+                    { result: live },
+                    { result: course },
+                    { result: nianwei },
+                    { result: coupon },
+                    { result: charity },
+                    { result: sign },
+                    { result: play }
+                ] = await Promise.all(activityList.map(p => p.catch(e => ({ result: {} }))))
+                this.setLiveInfo(live)
+                this.setCourseInfo(course)
+                this.setNwEvent(nianwei)
+                this.setCouponInfo(coupon)
+                this.setDragonGateCharity(charity)
+                this.setDragonGateSign(sign)
+                this.setDragonGatePlay(play)
             } catch (error) {
                 throw error
             }

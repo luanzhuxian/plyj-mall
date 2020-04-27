@@ -54,38 +54,86 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['campaignReport', 'campaignBook']),
+        ...mapGetters(['campaignReport', 'campaignBook', 'dragonGateCharity', 'dragonGateSign', 'dragonGatePlay']),
         isReportShow () {
-            return !!this.campaignReport && this.campaignReport.isReportShow
+            return !!this.campaignReport && this.campaignReport.isReportShow && this.campaignReport.id
         },
         isBookShow () {
-            return !!this.campaignBook && this.campaignBook.isBookShow
+            return !!this.campaignBook && this.campaignBook.isBookShow && this.campaignBook.activityId
         },
-        reportId () {
-            return this.isReportShow ? this.campaignReport.id : null
+        isDragonGateCharityShow () {
+            return !!this.dragonGateCharity && this.dragonGateCharity.id
         },
-        bookId () {
-            return this.isBookShow ? this.campaignBook.activityId : null
+        isDragonGateSignShow () {
+            return !!this.dragonGateSign && this.dragonGateSign.id
+        },
+        isDragonGatePlayShow () {
+            return !!this.dragonGatePlay && this.dragonGatePlay.id
         }
     },
     methods: {
         // 根据装修时添加的信息做相应的跳转
         handelClick ({ type, value }) {
             const routeMap = {
+                1: {
+                    name: '分类',
+                    path: 'Classify'
+                },
+                2: {
+                    name: '商品',
+                    path: 'Product'
+                },
+                3: {
+                    name: '课程',
+                    path: 'Curriculum'
+                },
                 41: {
-                    name: 'CoursePackage'
+                    name: '全民来分销',
+                    path: 'HelperActivity'
                 },
                 42: {
-                    name: 'BattlefieldReport'
+                    name: '团购',
+                    path: ''
                 },
                 43: {
-                    name: 'EpidemicSignIn'
+                    name: '预购',
+                    path: ''
+                },
+                44: {
+                    name: '秒杀',
+                    path: ''
+                },
+                45: {
+                    name: '组合聚惠学',
+                    path: 'CoursePackage'
+                },
+                46: {
+                    name: '防疫情报站',
+                    path: 'BattlefieldReport'
+                },
+                47: {
+                    name: '疫情签到',
+                    path: 'EpidemicSignIn'
+                },
+                48: {
+                    name: '公益棕行动',
+                    path: 'LongmenAction'
+                },
+                49: {
+                    name: '端午佳话粽粽有礼',
+                    path: 'LongmenSignIn'
+                },
+                410: {
+                    name: '龙门大抽奖',
+                    path: 'LongmenLottery'
                 },
                 5: {
-                    name: 'InteractiveLive'
+                    name: '互动直播',
+                    path: 'InteractiveLive'
                 },
                 6: {
-                    name: 'Appointment'
+                    name: '店铺主页',
+                    path: 'Appointment'
                 }
             }
             // 分类
@@ -96,23 +144,38 @@ export default {
             if (type === 2) {
                 return this.$router.push({ name: 'Product', params: { productId: value } })
             }
-            // 知识课程
+            // 课程
             if (type === 3) {
                 return this.$router.push({ name: 'Curriculum', params: { productId: value } })
             }
-            // 疫情战报
-            if (type === 42) {
-                if (!this.isReportShow || !this.reportId) return false
-                return this.$router.push({ name: 'BattlefieldReport', params: { id: this.reportId } })
+            // 防疫情报站
+            if (type === 46) {
+                if (!this.isReportShow) return false
+                return this.$router.push({ name: 'BattlefieldReport', params: { id: this.campaignReport.id } })
             }
             // 疫情签到
-            if (type === 43) {
-                if (!this.isBookShow || !this.bookId) return false
-                return this.$router.push({ name: 'EpidemicSignIn', params: { id: this.bookId } })
+            if (type === 47) {
+                if (!this.isBookShow) return false
+                return this.$router.push({ name: 'EpidemicSignIn', params: { id: this.campaignBook.activityId } })
+            }
+            // 公益棕行动
+            if (type === 48) {
+                if (!this.isDragonGateCharityShow) return false
+                return this.$router.push({ name: 'LongmenAction', params: { id: this.dragonGateCharity.id } })
+            }
+            // 粽粽有礼
+            if (type === 49) {
+                if (!this.isDragonGateSignShow) return false
+                return this.$router.push({ name: 'LongmenSignIn', params: { id: this.dragonGateSign.id } })
+            }
+            // 龙门大抽奖
+            if (type === 410) {
+                if (!this.isDragonGatePlayShow) return false
+                return this.$router.push({ name: 'LongmenLottery', params: { id: this.dragonGatePlay.id } })
             }
             // 其他
             if (type in routeMap) {
-                return this.$router.push({ name: routeMap[type].name })
+                return this.$router.push({ name: routeMap[type].path })
             }
         }
     }

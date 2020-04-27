@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { getDate } from '../helper'
+import { getDate } from '../../activity/helper'
 
 export default {
     name: 'Coupon',

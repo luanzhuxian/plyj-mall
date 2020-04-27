@@ -1,58 +1,74 @@
 <template>
-    <div :class="$style.yugou">
-        <div :class="$style.yugouTitle">
-            <div :class="$style.yugouTitleBtn">
-                查看更多预购
+    <div :class="$style.package">
+        <router-link
+            :class="$style.packageTitle"
+            tag="div"
+            :to="{ name: 'CoursePackage' }"
+        >
+            <div :class="$style.packageTitleBtn">
+                查看计划礼包
             </div>
-        </div>
+        </router-link>
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
                 <li
-                    v-if="item.goodsInfo && item.goodsInfo.activityInfo"
+                    v-if="item.combinationDetailList && item.combinationDetailList.length"
                     :class="{
                         [$style.listItem]: true,
                         [$style.large]: i === 0 || data.values.length % 2 === 0,
                         [$style.small]: i !== 0 && data.values.length % 2 === 1
                     }"
                     :key="i"
-                    @click="$router.push({ name: 'Product', params: { productId: item.goodsInfo.id }, query: { currentProductStatus: 2 } })"
+                    @click="$router.push({
+                        name: 'CoursePackage',
+                        query: { activityId: item.combinationDetailList[0].id }
+                    })"
                 >
                     <div :class="$style.imgWrapper">
-                        <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-                        <div :class="$style.countDownWrapper" v-if="item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
-                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
-                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
-                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
+                        <img :src="item.combinationDetailList[0].imageUrl">
+                        <div :class="$style.countDownWrapper">
+                            <span :class="$style.text" v-if="item.combinationDetailList[0].status === 0">距开始</span>
+                            <span :class="$style.text" v-if="item.combinationDetailList[0].status === 1">距结束</span>
+                            <span :class="$style.text" v-if="item.combinationDetailList[0].status === 2">已结束</span>
                             <count-down
-                                v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
-                                :timestamp="getTime(item.goodsInfo.activityInfo)"
+                                v-if="~[0, 1].indexOf(item.combinationDetailList[0].status)"
+                                :timestamp="getTime(item.combinationDetailList[0])"
                                 format="HH:mm"
                                 background="rgba(174, 174, 174, 0.64)"
-                                @done="() => item.goodsInfo.activityInfo.status += 1"
+                                @done="reload(item)"
                             />
                         </div>
                     </div>
                     <div :class="$style.info">
                         <div :class="$style.main">
-                            {{ item.goodsInfo.productName }}
-                        </div>
-                        <div :class="$style.rule">
-                            <span>{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
-                            <span v-if="item.goodsInfo.activityInfo.multiple && item.goodsInfo.activityInfo.multipleNumber > 1 && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
+                            {{ item.activityName }}
                         </div>
                         <div :class="$style.sub">
                             <div :class="$style.subLeft">
-                                预享价
-                                <span :class="$style.price">{{ getTotalPrice(item) }}</span>
+                                <div :class="$style.subLeftMain">
+                                    <!-- <span v-if="item.combinationDetailList[0].status === 0">
+                                        {{ `${item.goodsInfo.pageviews}人已关注` }}
+                                    </span> -->
+                                    <span v-if="~[1, 2].indexOf(item.combinationDetailList[0].status)">
+                                        {{ `已有${item.combinationDetailList[0].salesVolume || 0}人参与` }}
+                                    </span>
+                                </div>
+                                <div :class="$style.subLeftMiddle">
+                                    原价<del>{{ `￥${item.combinationDetailList[0].totalPrice}` }}</del>
+                                </div>
+                                <div :class="$style.subLeftSub">
+                                    组合价
+                                    <b :class="$style.price">{{ item.combinationDetailList[0].discountTotalPrice }}</b>
+                                </div>
                             </div>
                             <div
                                 :class="{
                                     [$style.subRight]: true,
-                                    [$style.disabled]: item.goodsInfo.activityInfo.status !== 1
+                                    [$style.disabled]: !item.combinationDetailList[0].stock || item.combinationDetailList[0].status !== 1
                                 }"
                             >
                                 <pl-svg
-                                    v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                                    v-if="~[0, 1].indexOf(item.combinationDetailList[0].status)"
                                     name="icon-vie-for"
                                     :width="(i === 0 || data.values.length % 2 === 0) ? 40 : 32"
                                 />
@@ -71,11 +87,12 @@
 </template>
 
 <script>
-import CountDown from '../components/Count-Down.vue'
-import { getTime, getTotalPrice } from '../helper.js'
+import CountDown from '../../activity/components/Count-Down.vue'
+import { getTime } from '../../activity/helper'
 
 export default {
-    name: 'Yugou',
+    name: 'Package',
+    inject: ['parent'],
     components: {
         CountDown
     },
@@ -92,22 +109,26 @@ export default {
     },
     methods: {
         getTime,
-        getTotalPrice
+        reload (item) {
+            // item.combinationDetailList[0].status += 1
+            this.parent.getTemplate()
+        }
     }
 }
 </script>
 
 <style module lang="scss">
-.yugou {
+.package {
     background: #fff8eb;
     border-radius: 20px;
     overflow: hidden;
     &-title {
+        box-sizing: border-box;
         display: flex;
         justify-content: center;
         padding-top: 92px;
         height: 152px;
-        background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/title-yu-gou.png') no-repeat center;
+        background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/title-course-package.png') no-repeat center;
         background-size: 100%;
         &-btn {
             width: 222px;
@@ -151,6 +172,11 @@ export default {
                 width: 0;
                 height: 188px;
                 .sub {
+                    &-left {
+                        &-main {
+                            font-size: 24px;
+                        }
+                    }
                     &-right {
                         width: 72px;
                         height: 72px;
@@ -165,9 +191,14 @@ export default {
                 height: 214px;
             }
             .info {
-                padding: 12px 12px 24px;
+                padding: 12px;
                 height: 196px;
                 .sub {
+                    &-left {
+                        &-main {
+                            font-size: 20px;
+                        }
+                    }
                     &-right {
                         width: 58px;
                         height: 58px;
@@ -220,17 +251,6 @@ export default {
             color: #000;
             @include elps();
         }
-        .rule {
-            padding: 0 10px;
-            width: max-content;
-            max-width: 100%;
-            line-height: 38px;
-            background: #fbefd7;
-            font-size: 20px;
-            font-family: Microsoft YaHei;
-            color: #7e6e4d;
-            @include elps();
-        }
         .sub {
             display: flex;
             align-items: flex-end;
@@ -238,21 +258,37 @@ export default {
             &-left {
                 flex: 1;
                 width: 0;
-                display: flex;
-                align-items: flex-end;
-                font-size: 14px;
-                font-weight: bold;
-                color: #fe7700;
-                @include elps();
-                .price {
-                    margin-left: 4px;
-                    font-size: 32px;
-                    font-family: Microsoft YaHei;
+                &-main {
                     font-weight: bold;
+                    height: 36px;
+                    line-height: 36px;
+                    color: #999;
                     @include elps();
-                    &:before {
-                        content: '￥';
-                        font-size: 20px;
+                }
+                &-middle {
+                    margin-top: 8px;
+                    font-size: 20px;
+                    font-family: Microsoft YaHei;
+                    line-height: 36px;
+                    color: #fe7700;
+                }
+                &-sub {
+                    display: flex;
+                    align-items: flex-end;
+                    font-size: 28px;
+                    font-weight: bold;
+                    color: #fe7700;
+                    @include elps();
+                    .price {
+                        flex: 1;
+                        width: 0;
+                        margin-left: 4px;
+                        font-size: 32px;
+                        @include elps();
+                        &:before {
+                            content: '￥';
+                            font-size: 20px;
+                        }
                     }
                 }
             }

@@ -55,8 +55,8 @@
 </template>
 
 <script>
-import CountDown from '../components/Count-Down.vue'
-import { getTime, reset } from '../helper.js'
+import CountDown from '../../activity/components/Count-Down.vue'
+import { getTime, reset } from '../../activity/helper'
 
 export default {
     name: 'ItemPintuan',
