@@ -277,6 +277,8 @@
                 :data="detail"
                 :donation="detail.donationAmount"
                 :share="shareUrl"
+                :show-logo="detail.logoShow"
+                :logo-url="detail.logoUrl"
             />
         </template>
 

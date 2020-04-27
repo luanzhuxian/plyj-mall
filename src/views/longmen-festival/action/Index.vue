@@ -82,6 +82,8 @@
             ref="poster"
             :data="detail"
             :share="shareUrl"
+            :show-logo="detail.logoShow"
+            :logo-url="detail.logoUrl"
         />
 
     </div>

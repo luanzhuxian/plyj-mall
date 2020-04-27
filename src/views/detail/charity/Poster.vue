@@ -56,6 +56,11 @@ export default {
         donation: {
             type: [Number, String],
             default: 0
+        },
+        showLogo: Boolean,
+        logoUrl: {
+            type: String,
+            default: ''
         }
     },
     data () {
@@ -138,6 +143,16 @@ export default {
                 ctx.drawImage(arcAvatar, 280, 192, 96, 96)
                 ctx.fillStyle = '#00c75b'
                 ctx.fillRect(280, 286, 96, 5)
+
+                // logo
+                if (this.showLogo) {
+                    const img = await loadImage(this.logoUrl)
+                    ctx.save()
+                    ctx.arc(50, 48, 34, 0, 2 * Math.PI)
+                    ctx.clip()
+                    ctx.drawImage(img, 16, 14, 68, 68)
+                    ctx.restore()
+                }
 
                 // 用户名
                 ctx.font = '28px Microsoft YaHei UI'

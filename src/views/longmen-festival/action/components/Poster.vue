@@ -22,6 +22,11 @@ export default {
         share: {
             type: String,
             default: ''
+        },
+        showLogo: Boolean,
+        logoUrl: {
+            type: String,
+            default: ''
         }
     },
     data () {
@@ -78,6 +83,16 @@ export default {
                 // 背景、头像
                 ctx.drawImage(bg, 0, 0, 654, 982)
                 ctx.drawImage(arcAvatar, 280, 292, 96, 96)
+
+                // logo
+                if (this.showLogo) {
+                    const img = await loadImage(this.logoUrl)
+                    ctx.save()
+                    ctx.arc(50, 48, 34, 0, 2 * Math.PI)
+                    ctx.clip()
+                    ctx.drawImage(img, 16, 14, 68, 68)
+                    ctx.restore()
+                }
 
                 // 用户名
                 ctx.font = '28px Microsoft YaHei UI'

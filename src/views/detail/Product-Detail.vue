@@ -309,6 +309,8 @@
                     :data="detail"
                     :donation="detail.activityProductModel.donationAmount"
                     :share="shareUrl"
+                    :show-logo="detail.activityProductModel.logoShow"
+                    :logo-url="detail.activityProductModel.logoUrl"
                 />
 
                 <!--团购的提醒， 团购 且 进行中 显示-->
