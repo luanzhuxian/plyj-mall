@@ -65,12 +65,12 @@
             :to="{ name: 'Activity' }"
         >
             <img
-                v-if="isD12Show"
+                v-if="~[5, 6, 7].indexOf(this.activityId)"
                 :class="$style.iconD12"
                 src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/d12-tabbar.png"
             >
             <img
-                v-if="isXinChunShow"
+                v-if="activityId === 8"
                 :class="$style.iconXinchun"
                 src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/87033906-c3d9-412f-b504-e9f777f334d4.png"
             >
@@ -256,13 +256,7 @@ export default {
             return this.$route.matched.some(val => val.name === 'My')
         },
         isSkinShow () {
-            return ~[1, 2, 3, 4, 5, 6, 7, 8, 9, 99].indexOf(this.skinId)
-        },
-        isD12Show () {
-            return ~[5, 6, 7].indexOf(this.activityId)
-        },
-        isXinChunShow () {
-            return this.activityId === 8
+            return !!this.skinId
         }
     },
     watch: {
