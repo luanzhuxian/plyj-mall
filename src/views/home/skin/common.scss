@@ -8,7 +8,6 @@
     }
     .shuang12,
     .adv,
-    // .live,
     .activity,
     .appointment,
     .propagate,
@@ -180,12 +179,6 @@
             color: #ea615f;
             background: transparent;
         }
-        .teachers,
-        .hot-item,
-        .best,
-        .recommend {
-            background: transparent !important;
-        }
         .skin-title {
             margin: 0 -24px 10px;
         }
@@ -210,12 +203,6 @@
             height: 90px;
             color: #f35815;
             background: transparent;
-        }
-        .package,
-        .hot-item,
-        .best,
-        .recommend {
-            background: transparent !important;
         }
         .skin-title {
             margin: 25px -24px;
@@ -242,11 +229,30 @@
             color: #19b47b;
             background: transparent;
         }
-        .package,
-        .hot-item,
-        .best,
-        .recommend {
-            background: transparent !important;
+        .skin-title {
+            margin: 9px -24px 20px;
+        }
+    }
+}
+
+// 地球日
+.skin-labour-day {
+    @extend .skin-common;
+    background-color: #c2462e !important;
+    .container {
+        padding-top: 65px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/skin/labour-day/bg.jpg') no-repeat center top !important;
+        background-size: 100% auto !important;
+        .search {
+            margin-bottom: 25px;
+            padding: 0 92px !important;
+            height: 55px !important;
+        }
+        .footer {
+            padding-top: 10px;
+            height: 90px;
+            color: #efc573;
+            background: transparent;
         }
         .skin-title {
             margin: 9px -24px 20px;
@@ -270,12 +276,6 @@
         height: 90px;
         color: #fff;
         background: transparent;
-    }
-    .teachers,
-    .hot-item,
-    .best,
-    .recommend {
-        background: transparent !important;
     }
     .skin-title {
         margin: 42px -24px 22px;

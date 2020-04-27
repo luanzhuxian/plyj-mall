@@ -10,6 +10,7 @@
             [$style.skinWomenDay]: skinId === 6,
             [$style.skinNianNianFan]: skinId === 7,
             [$style.skinEarthDay]: skinId === 8,
+            [$style.skinLabourDay]: skinId === 9,
             [$style.skinCampaign]: skinId === 99
         }"
     >
@@ -161,7 +162,7 @@ export default {
 </script>
 
 <style module lang="scss">
-@import './skin/skin.scss';
+@import './skin/common.scss';
 
 .home-template-c {
     background-color: #ededed;
