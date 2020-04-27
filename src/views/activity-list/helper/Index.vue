@@ -41,12 +41,10 @@
 
 <script>
 import ProductItem from './components/Product-Item'
-
 import { mapGetters } from 'vuex'
-
-import { getHelperProductList } from './../../../apis/longmen-festival/helper'
+import { getHelperProductList } from './../../../apis/helper-manager'
 export default {
-    name: 'LongMenHelper',
+    name: 'HelperActivity',
     components: {
         ProductItem
     },

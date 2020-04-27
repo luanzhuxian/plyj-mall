@@ -63,5 +63,13 @@ export default [
         meta: {
             title: '组合课'
         }
+    },
+    {
+        path: '/helper',
+        name: 'HelperActivity',
+        component: () => import('../views/activity-list/helper/Index.vue'),
+        meta: {
+            title: '全民来分销'
+        }
     }
 ]
