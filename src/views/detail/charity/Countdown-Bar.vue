@@ -16,7 +16,7 @@
                         :class="$style.progress"
                         :percentage="percentage"
                         :stroke-width="10"
-                        color="#fff"
+                        color="#11FD74"
                         outter-color="rgba(255, 255, 255, 0.5)"
                     >
                         <span slot="content" :class="$style.progressText">

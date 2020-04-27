@@ -749,6 +749,7 @@ export default {
                 } else {
                     this.shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?currentProductStatus=7&activityId=${ activityId }&noCache=${ Date.now() }`
                 }
+
                 this.creating = true
                 this.$refs.charityPoster.createPoster()
             } catch (error) {
