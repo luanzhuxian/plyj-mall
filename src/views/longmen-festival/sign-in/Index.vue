@@ -247,22 +247,72 @@
         </div>
 
         <!-- 活动规则 -->
-        <ActivityRule :show.sync="isShowRule" :active-detail="activeDetail" />
+        <ActivityRule
+            :show.sync="isShowRule"
+            :flaunt-award-name="FLAUNT_AWARD_NAME"
+            :active-detail="activeDetail"
+        />
 
         <!-- 显示分享海报 -->
-        <SharePoster :show.sync="isShowSharePoster" :poster="sharePoster" />
+        <SharePoster
+            :show.sync="isShowSharePoster"
+            :poster="sharePoster"
+        />
 
         <!-- 显示粽粽签到海报 -->
-        <SharePoster :show.sync="isShowNewYearPoster" :poster="newYearPoster" @close="hiddenNewYearCardPoster" />
+        <SharePoster
+            :show.sync="isShowNewYearPoster"
+            :poster="newYearPoster"
+            @close="hiddenNewYearCardPoster"
+        />
 
-        <!--显示中奖信息-->
-        <PresentPopup
+        <!-- 中阶梯奖品弹框 -->
+        <WinningGeneralPrize
+            v-if="!currentSignIn.isLastIcon && presentStage === 1"
             :show.sync="isShowPresentPopup"
-            :is-last-icon="currentSignIn.isLastIcon"
-            :present-stage="presentStage"
-            :active-detail="activeDetail"
+            :signed-in-number="activeDetail.signedInNumber"
+            :award-type="currentPresentDetail.awardType"
+            :award-img="currentPresentDetail.awardImg"
+            :award-name="currentPresentDetail.awardName"
+            :start-time="currentPresentDetail.formatStartTime"
+            :end-time="currentPresentDetail.formatEndTime"
+            :scholarship-amount="currentPresentDetail.price"
+            :amount="currentPresentDetail.price"
+            :coupon-name="currentPresentDetail.couponName"
             :current-present-detail="currentPresentDetail"
+        />
+
+        <!-- 错过阶梯奖品弹框 -->
+        <MissingGeneralPrize
+            v-if="!currentSignIn.isLastIcon && presentStage === 2"
+            :show.sync="isShowPresentPopup"
+            :need-sign-in-count="activeDetail.nextPresentIndex - activeDetail.signedInNumber"
+            :active-detail="activeDetail"
+        />
+
+        <!-- 中年味大奖前提示 -->
+        <NoticingGrandPrize
+            v-if="currentSignIn.isLastIcon && presentStage === 0"
+            :show.sync="isShowPresentPopup"
+            :flaunt-award-name="FLAUNT_AWARD_NAME"
             @close="receivePresent"
+        />
+
+        <!-- 中年味大奖弹框 -->
+        <WinningGrandPrize
+            v-if="currentSignIn.isLastIcon && presentStage === 1"
+            :show.sync="isShowPresentPopup"
+            :flaunt-award-name="FLAUNT_AWARD_NAME"
+            :award-img="currentPresentDetail.awardImg"
+            :award-name="currentPresentDetail.awardName"
+            :start-time="currentPresentDetail.formatStartTime"
+            :end-time="currentPresentDetail.formatEndTime"
+        />
+
+        <!-- 错过年味大奖弹框 -->
+        <MissingGrandPrize
+            v-if="currentSignIn.isLastIcon && presentStage === 2"
+            :show.sync="isShowPresentPopup"
         />
     </div>
 </template>
@@ -284,7 +334,11 @@ import { getServerTime } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import SharePoster from '../../../components/common/Share-Poster'
-import PresentPopup from './components/Present-Popup.vue'
+import WinningGeneralPrize from './components/Winning-General-Prize'
+import MissingGeneralPrize from './components/Missing-General-Prize'
+import NoticingGrandPrize from './components/Noticing-Grand-Prize'
+import WinningGrandPrize from './components/Winning-Grand-Prize'
+import MissingGrandPrize from './components/Missing-Grand-Prize'
 import ActivityRule from './components/Activity-Rule.vue'
 import SunPresentItem from './components/Sun-Present-Item'
 import MyPresentItem from './components/My-Present-Item'
@@ -303,11 +357,15 @@ export default {
     components: {
         swiper,
         swiperSlide,
-        SharePoster,
-        PresentPopup,
         ActivityRule,
         SunPresentItem,
-        MyPresentItem
+        MyPresentItem,
+        SharePoster,
+        WinningGeneralPrize,
+        MissingGeneralPrize,
+        NoticingGrandPrize,
+        WinningGrandPrize,
+        MissingGrandPrize
     },
     data () {
         return {
