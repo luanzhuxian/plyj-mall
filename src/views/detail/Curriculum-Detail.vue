@@ -604,6 +604,9 @@ export default {
                 params: {
                     productId: this.productId,
                     count: 1
+                },
+                query: {
+                    productActive: this.productActive
                 }
             })
         },
@@ -751,6 +754,7 @@ export default {
                 }
 
                 this.creating = true
+                await this.$nextTick()
                 this.$refs.charityPoster.createPoster()
             } catch (error) {
                 throw error

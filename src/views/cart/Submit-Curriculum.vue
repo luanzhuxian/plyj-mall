@@ -120,7 +120,11 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mobile', 'userName', 'shareId'])
+        ...mapGetters(['mobile', 'userName', 'shareId']),
+        // 7 公益棕活动进入
+        productActive () {
+            return this.$route.query.productActive && Number(this.$route.query.productActive)
+        }
     },
     async activated () {
         // 联系人信息
@@ -136,7 +140,12 @@ export default {
     methods: {
         async getCourseDetail () {
             try {
-                const { result } = await getCourseDetail(this.productId)
+                const params = {}
+                // 若参与公益活动
+                if (this.productActive === 7) {
+                    params.productStatus = this.productActive
+                }
+                const { result } = await getCourseDetail(this.productId, params)
                 result.sellingPrice = result.sellingPrice ? result.sellingPrice : 0
                 this.courseDetail = result
             } catch (e) {
