@@ -4,141 +4,116 @@
             <transition name="fade">
                 <div>
                     <!-- 中阶梯奖品弹框 -->
-                    <template class="bg-gray" v-if="!isLastIcon && presentStage === 1">
-                        <div class="present-box">
-                            <div class="top">
-                                恭喜您签到参与{{ activeDetail.signedInNumber }}个端午活动
-                                <p class="has-underline">获得{{ awardTypeDesc[currentPresentDetail.awardType] }}</p>
-                            </div>
-                            <div class="detail">
-                                <div class="product" v-if="currentPresentDetail.awardType === 1">
-                                    <img :src="currentPresentDetail.awardImg">
-                                    <div class="product-detail">
-                                        <h3>{{ currentPresentDetail.awardName }}</h3>
-                                        <h4>有效期：{{ currentPresentDetail.formatStartTime | dateFormat('YYYY.MM.DD') }}-{{ currentPresentDetail.formatEndTime | dateFormat('YYYY.MM.DD') }}</h4>
-                                    </div>
-                                </div>
-                                <div class="scholarship" v-if="currentPresentDetail.awardType === 2">
-                                    <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f3f449e6-43f1-4ddc-a68b-9a0a536a88e5.png">
-                                    <span>{{ currentPresentDetail.price }}</span>
-                                </div>
-                                <div class="coupon" v-if="currentPresentDetail.awardType === 3 || currentPresentDetail.awardType === 4">
-                                    <img v-if="currentPresentDetail.awardType === 4" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/category-coupon.png">
-                                    <img v-else src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/full-coupon.png">
-                                    <div class="wrap">
-                                        <div class="left">
-                                            <div class="coupon-price">
-                                                {{ currentPresentDetail.price }}
-                                            </div>
-                                            <div class="desc">
-                                                <p>{{ currentPresentDetail.couponName }}</p>
-                                                <p>{{ awardTypeDesc[currentPresentDetail.awardType] }}</p>
-                                            </div>
-                                            <p class="expiration">有效期 {{ currentPresentDetail.formatStartTime | dateFormat('YYYY.MM.DD') }}-{{ currentPresentDetail.formatEndTime | dateFormat('YYYY.MM.DD') }}</p>
-                                        </div>
-                                        <div class="right">
-                                            立即<br>领取
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="info">
-                                <p>{{ awardTypeDesc[currentPresentDetail.awardType] }}已经自动存入您的“{{ awardPackage[currentPresentDetail.awardType] }}”</p>
-                                <p>您可在“{{ awardPackage[currentPresentDetail.awardType] }}”中查看</p>
-                            </div>
-                            <div class="footer">
-                                <button class="accept" @click="close">开心收下</button>
-                            </div>
+                    <div class="present-box" v-if="!isLastIcon && presentStage === 1">
+                        <div class="top">
+                            恭喜您签到参与{{ activeDetail.signedInNumber }}个端午活动
+                            <p class="has-underline">获得{{ awardTypeDesc[currentPresentDetail.awardType] }}</p>
                         </div>
-                        <div class="close">
-                            <pl-svg name="icon-close3" fill="#fff" width="40" @click="close" />
-                        </div>
-                    </template>
-                    <!-- 错过阶梯奖品弹框 -->
-                    <template class="bg-gray" v-if="!isLastIcon && presentStage === 2">
-                        <div class="present-box">
-                            <div class="top">
-                                很遗憾 您与奖品擦肩而过
-                                <p>感谢您的参与</p>
-                            </div>
-                            <div class="detail">
-                                <div class="no-present">
-                                    <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png">
-                                </div>
-                            </div>
-                            <div class="info">
-                                <p>您再参与{{ activeDetail.nextPresentIndex - activeDetail.signedInNumber }}个端午活动即可参与抽奖</p>
-                            </div>
-                            <div class="footer">
-                                <button class="iKnow" @click="close">朕知道了</button>
-                            </div>
-                        </div>
-                        <div class="close">
-                            <pl-svg name="icon-close3" fill="#fff" width="40" @click="close" />
-                        </div>
-                    </template>
-                    <!-- 中年味大奖前提示 -->
-                    <template class="bg-gray" v-if="isLastIcon && presentStage === 0">
-                        <div class="grand-present-tip-box">
-                            <div class="top">
-                                <p>恭喜你已签到参与所有端午活动</p>
-                                <p>请抽取粽粽大礼</p>
-                            </div>
-                            <div class="detail">
-                                <img class="gift" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/large-gift.png">
-                                <span>粽粽大礼</span>
-                            </div>
-                            <div class="footer">
-                                <button @click="close(true)">立即抽奖</button>
-                            </div>
-                        </div>
-                        <div class="close small">
-                            <pl-svg name="icon-close3" fill="#fff" width="40" @click="close" />
-                        </div>
-                    </template>
-                    <!-- 中年味大奖弹框 -->
-                    <template class="bg-gray" v-if="isLastIcon && presentStage === 1">
-                        <div class="grand-present-box">
-                            <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/obtain-gift-head.png">
-                            <div class="top">恭喜你获得粽粽大礼</div>
-                            <div class="bottom">
-                                <div class="detail">
-                                    <img :src="currentPresentDetail.awardImg">
+                        <div class="detail">
+                            <div class="product" v-if="currentPresentDetail.awardType === 1">
+                                <img :src="currentPresentDetail.awardImg">
+                                <div class="product-detail">
                                     <h3>{{ currentPresentDetail.awardName }}</h3>
-                                    <p>有效期：{{ currentPresentDetail.formatStartTime| dateFormat('YYYY.MM.DD') }}-{{ currentPresentDetail.formatEndTime | dateFormat('YYYY.MM.DD') }}</p>
+                                    <h4>有效期：{{ currentPresentDetail.formatStartTime | dateFormat('YYYY.MM.DD') }}-{{ currentPresentDetail.formatEndTime | dateFormat('YYYY.MM.DD') }}</h4>
                                 </div>
-                                <div class="footer">
-                                    <button @click="close">开心收下</button>
+                            </div>
+                            <div class="scholarship" v-if="currentPresentDetail.awardType === 2">
+                                <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f3f449e6-43f1-4ddc-a68b-9a0a536a88e5.png">
+                                <span>{{ currentPresentDetail.price }}</span>
+                            </div>
+                            <div class="coupon" v-if="currentPresentDetail.awardType === 3 || currentPresentDetail.awardType === 4">
+                                <img v-if="currentPresentDetail.awardType === 4" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/category-coupon.png">
+                                <img v-else src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/full-coupon.png">
+                                <div class="wrap">
+                                    <div class="left">
+                                        <div class="coupon-price">
+                                            {{ currentPresentDetail.price }}
+                                        </div>
+                                        <div class="desc">
+                                            <p>{{ currentPresentDetail.couponName }}</p>
+                                            <p>{{ awardTypeDesc[currentPresentDetail.awardType] }}</p>
+                                        </div>
+                                        <p class="expiration">有效期 {{ currentPresentDetail.formatStartTime | dateFormat('YYYY.MM.DD') }}-{{ currentPresentDetail.formatEndTime | dateFormat('YYYY.MM.DD') }}</p>
+                                    </div>
+                                    <div class="right">
+                                        立即<br>领取
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="close">
-                            <pl-svg name="icon-close3" fill="#fff" width="40" @click="close" />
+                        <div class="info">
+                            <p>{{ awardTypeDesc[currentPresentDetail.awardType] }}已经自动存入您的“{{ awardPackage[currentPresentDetail.awardType] }}”</p>
+                            <p>您可在“{{ awardPackage[currentPresentDetail.awardType] }}”中查看</p>
                         </div>
-                    </template>
-                    <!-- 错过年味大奖弹框 -->
-                    <template class="bg-gray" v-if="isLastIcon && presentStage === 2">
-                        <div class="present-box">
-                            <div class="top">
-                                很遗憾 您与奖品擦肩而过
-                                <p>新年喜临门 感谢您的参与</p>
+                        <div class="footer">
+                            <button class="accept" @click="close">开心收下</button>
+                        </div>
+                    </div>
+                    <!-- 错过阶梯奖品弹框 -->
+                    <div class="present-box" v-if="!isLastIcon && presentStage === 2">
+                        <div class="top">
+                            很遗憾 您与奖品擦肩而过
+                            <p>感谢您的参与</p>
+                        </div>
+                        <div class="detail">
+                            <div class="no-present">
+                                <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png">
                             </div>
-                            <div class="detail no-present-detail">
-                                <div class="no-present">
-                                    <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png">
-                                </div>
+                        </div>
+                        <div class="info">
+                            <p>您再参与{{ activeDetail.nextPresentIndex - activeDetail.signedInNumber }}个端午活动即可参与抽奖</p>
+                        </div>
+                        <div class="footer">
+                            <button class="iKnow" style="color: #FF9F4B;" @click="close">朕知道了</button>
+                        </div>
+                    </div>
+                    <!-- 中年味大奖前提示 -->
+                    <div class="grand-present-tip-box" v-if="isLastIcon && presentStage === 0">
+                        <div class="top">
+                            <p>恭喜你已签到参与所有端午活动</p>
+                            <p>请抽取粽粽大礼</p>
+                        </div>
+                        <div class="detail">
+                            <img class="gift" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/large-gift.png">
+                            <span>粽粽大礼</span>
+                        </div>
+                        <div class="footer">
+                            <button @click="close(true)">立即抽奖</button>
+                        </div>
+                    </div>
+                    <!-- 中年味大奖弹框 -->
+                    <div class="grand-present-box" v-if="isLastIcon && presentStage === 1">
+                        <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/obtain-gift-head.png">
+                        <div class="top">恭喜你获得粽粽大礼</div>
+                        <div class="bottom">
+                            <div class="detail">
+                                <img :src="currentPresentDetail.awardImg">
+                                <h3>{{ currentPresentDetail.awardName }}</h3>
+                                <p>有效期：{{ currentPresentDetail.formatStartTime| dateFormat('YYYY.MM.DD') }}-{{ currentPresentDetail.formatEndTime | dateFormat('YYYY.MM.DD') }}</p>
                             </div>
                             <div class="footer">
-                                <div class="btns">
-                                    <button class="iKnow" @click="close">朕知道了</button>
-                                    <button @click="backMainActivityCenter">返回首页</button>
-                                </div>
+                                <button @click="close">开心收下</button>
                             </div>
                         </div>
-                        <div class="close">
-                            <pl-svg name="icon-close3" fill="#fff" width="40" @click="close" />
+                    </div>
+                    <!-- 错过年味大奖弹框 -->
+                    <div class="present-box" v-if="isLastIcon && presentStage === 2">
+                        <div class="top">
+                            很遗憾 您与奖品擦肩而过
+                            <p>新年喜临门 感谢您的参与</p>
                         </div>
-                    </template>
+                        <div class="detail no-present-detail">
+                            <div class="no-present">
+                                <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png">
+                            </div>
+                        </div>
+                        <div class="footer">
+                            <div class="btns">
+                                <button class="iKnow" @click="close">朕知道了</button>
+                                <button @click="backMainActivityCenter">返回首页</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </transition>
         </div>
@@ -214,15 +189,6 @@ export default {
     left: 0;
     z-index: 9999;
     background: rgba(0, 0, 0, .65);
-
-    /* 关闭按钮 */
-    .close {
-        margin-top: 980px;
-        text-align: center;
-        &.small {
-            margin-top: 250px;
-        }
-    }
 }
 
 /* 中奖弹框样式 */
