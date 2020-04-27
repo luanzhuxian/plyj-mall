@@ -1,13 +1,13 @@
 <template>
-    <div :class="$style.yugou">
-        <div :class="$style.yugouTitle">
-            <div :class="$style.yugouTitleBtn">
+    <div :class="$style.miaosha">
+        <div :class="$style.miaoshaTitle">
+            <div :class="$style.miaoshaTitleBtn">
                 查看更多
             </div>
         </div>
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
-                <item-yugou
+                <item-miaosha
                     v-if="item.goodsInfo && item.goodsInfo.activityInfo"
                     :data="item"
                     :key="i"
@@ -18,12 +18,11 @@
 </template>
 
 <script>
-import ItemYugou from './Item-Yugou.vue'
-
+import ItemMiaosha from './Item-Miaosha.vue'
 export default {
-    name: 'Yugou',
+    name: 'Miaosha',
     components: {
-        ItemYugou
+        ItemMiaosha
     },
     props: {
         data: {
@@ -39,8 +38,8 @@ export default {
 }
 </script>
 
-<style module lang="scss">
-.yugou {
+<style lang="scss" module>
+.miaosha {
     background: #fff8eb;
     border-radius: 20px;
     overflow: hidden;
@@ -50,7 +49,7 @@ export default {
         box-sizing: border-box;
         padding-top: 92px;
         height: 152px;
-        background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/title-yu-gou.png') no-repeat center;
+        background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/title-miao-sha.png') no-repeat center;
         background-size: 100%;
         &-btn {
             width: 222px;

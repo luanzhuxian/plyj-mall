@@ -67,16 +67,7 @@
                                     [$style.disabled]: !item.combinationDetailList[0].stock || item.combinationDetailList[0].status !== 1
                                 }"
                             >
-                                <pl-svg
-                                    v-if="~[0, 1].indexOf(item.combinationDetailList[0].status)"
-                                    name="icon-vie-for"
-                                    :width="(i === 0 || data.values.length % 2 === 0) ? 40 : 32"
-                                />
-                                <pl-svg
-                                    v-else
-                                    name="icon-jieshu"
-                                    :width="(i === 0 || data.values.length % 2 === 0) ? 46 : 38"
-                                />
+                                <pl-svg name="icon-vie-for" width="32" />
                             </div>
                         </div>
                     </div>
@@ -178,8 +169,8 @@ export default {
                         }
                     }
                     &-right {
-                        width: 72px;
-                        height: 72px;
+                        width: 58px;
+                        height: 58px;
                     }
                 }
             }
@@ -202,9 +193,6 @@ export default {
                     &-right {
                         width: 58px;
                         height: 58px;
-                        // .qiang {
-                        //   width: 32px;
-                        // }
                     }
                 }
             }
@@ -273,16 +261,12 @@ export default {
                     color: #fe7700;
                 }
                 &-sub {
-                    display: flex;
-                    align-items: flex-end;
-                    font-size: 28px;
+                    font-size: 24px;
                     font-weight: bold;
                     color: #fe7700;
                     @include elps();
                     .price {
-                        flex: 1;
-                        width: 0;
-                        margin-left: 4px;
+                        vertical-align: -1px;
                         font-size: 32px;
                         @include elps();
                         &:before {

@@ -72,6 +72,11 @@
                 :class="$style.iconXinchun"
                 src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/87033906-c3d9-412f-b504-e9f777f334d4.png"
             >
+            <img
+                v-if="activityId === 10"
+                :class="$style.iconDragonGate"
+                src="https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/main-icon.png"
+            >
         </router-link>
         <!-- 购物车 -->
         <router-link
@@ -277,7 +282,7 @@ export default {
     width: 100%;
     background-color: #fff;
     z-index: 9;
-    overflow: hidden;
+    // overflow: hidden;
 }
 .route {
     display: inline-flex;
@@ -304,6 +309,12 @@ export default {
 .icon-xinchun {
     width: 105px !important;
     height: auto !important;
+}
+.icon-dragon-gate {
+    display: block;
+    margin-bottom: 40px;
+    width: 125px !important;
+    height: 104px !important;
 }
 
 /****************** 皮肤 ******************/

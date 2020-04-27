@@ -21,15 +21,15 @@
             <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
             <campaign v-if="isCampaignShow" />
             <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" />
-            <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
-                <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
+            <div :class="$style.miaosha" v-if="MIAO_SHA.showStatue === 1">
+                <div v-if="skinId === 0" :class="$style.title" v-text="MIAO_SHA.moduleName" />
                 <skin-title
                     v-else
                     :class="$style.skinTitle"
-                    :data="POPULAR.moduleName"
+                    :data="MIAO_SHA.moduleName"
                     :skin-id="skinId"
                 />
-                <hot-item :data="POPULAR" />
+                <miaosha :data="MIAO_SHA" />
             </div>
             <div :class="$style.package" v-if="PACKAGE.showStatue === 1 && isPackageShow">
                 <div v-if="skinId === 0" :class="$style.title" v-text="PACKAGE.moduleName" />
@@ -41,15 +41,25 @@
                 />
                 <package :data="PACKAGE" />
             </div>
-            <div :class="$style.best" v-if="CLASS.showStatue === 1">
-                <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
+            <div :class="$style.pintuan" v-if="PIN_TUAN.showStatue === 1">
+                <div v-if="skinId === 0" :class="$style.title" v-text="PIN_TUAN.moduleName" />
                 <skin-title
                     v-else
                     :class="$style.skinTitle"
-                    :data="CLASS.moduleName"
+                    :data="PIN_TUAN.moduleName"
                     :skin-id="skinId"
                 />
-                <best :data="CLASS" />
+                <pintuan :data="PIN_TUAN" />
+            </div>
+            <div :class="$style.yugou" v-if="YU_GOU.showStatue === 1">
+                <div v-if="skinId === 0" :class="$style.title" v-text="YU_GOU.moduleName" />
+                <skin-title
+                    v-else
+                    :class="$style.skinTitle"
+                    :data="YU_GOU.moduleName"
+                    :skin-id="skinId"
+                />
+                <yugou :data="YU_GOU" />
             </div>
             <propagate :class="$style.propagate" :data="PROPAGATE" />
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
@@ -72,8 +82,6 @@
 <script>
 import Search from './components/Search.vue'
 import Banner from './components/Banner.vue'
-import HotItem from './components/Hot-Item.vue'
-import Best from './components/Best.vue'
 import Recommend from './components/Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
@@ -81,6 +89,9 @@ import Live from '../activity/components/Live.vue'
 import OnlineCourse from '../activity/components/Online-Course.vue'
 import Coupon from './activity/Coupon.vue'
 import Activity from './activity/Activity.vue'
+import Miaosha from './activity/Miaosha.vue'
+import Pintuan from './activity/Pintuan.vue'
+import Yugou from './activity/Yugou.vue'
 import Package from './activity/Package.vue'
 import SkinTitle from './skin/Skin-Title.vue'
 import Campaign from './components/Campaign'
@@ -91,8 +102,6 @@ export default {
     components: {
         Search,
         Banner,
-        HotItem,
-        Best,
         Recommend,
         Appointment,
         Propagate,
@@ -100,6 +109,9 @@ export default {
         OnlineCourse,
         Coupon,
         Activity,
+        Miaosha,
+        Pintuan,
+        Yugou,
         Package,
         SkinTitle,
         Campaign
@@ -121,8 +133,7 @@ export default {
         }
     },
     data () {
-        return {
-        }
+        return {}
     },
     computed: {
         BANNER () {
@@ -137,14 +148,17 @@ export default {
         APPOINTMENT () {
             return this.data.APPOINTMENT || {}
         },
-        POPULAR () {
-            return this.data.POPULAR || {}
+        MIAO_SHA () {
+            return this.data.MIAO_SHA || {}
+        },
+        PIN_TUAN () {
+            return this.data.PIN_TUAN || {}
+        },
+        YU_GOU () {
+            return this.data.YU_GOU || {}
         },
         PACKAGE () {
             return this.data.PACKAGE || {}
-        },
-        CLASS () {
-            return this.data.CLASS || {}
         },
         PROPAGATE () {
             return this.data.PROPAGATE || {}
@@ -216,39 +230,11 @@ export default {
     background-color: #fff;
     border-radius: 20px 20px 0 0;
 }
-.hot-item {
-    position: relative;
-    .title {
-        &:after {
-            position: absolute;
-            top: 38px;
-            left: 190px;
-            content: 'HOT';
-            width: 44px;
-            line-height: 24px;
-            text-align: center;
-            font-size: 14px;
-            color: #fff;
-            font-weight: normal;
-            background: linear-gradient(60deg, #fe7700 35%, rgba(255, 255, 255, .5), #fe7700 75%);
-            background-size: 200%;
-            border-radius: 12px;
-            animation: bgc-move 2s ease infinite;
-        }
-    }
-    @keyframes bgc-move {
-        0% {
-            background-position: 150% 0;
-        }
-        100% {
-            background-position: -50% 0;
-        }
-    }
-}
 
 .package,
-.hot-item,
-.best,
+.miaosha,
+.pintuan,
+.yugou,
 .recommend {
     padding: 0 24px;
 }
