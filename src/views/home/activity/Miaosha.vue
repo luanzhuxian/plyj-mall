@@ -1,10 +1,10 @@
 <template>
     <div :class="$style.miaosha">
-        <div :class="$style.miaoshaTitle">
+        <router-link :class="$style.miaoshaTitle" tag="div" :to="{ name: 'SecondActivity' }">
             <div :class="$style.miaoshaTitleBtn">
                 查看更多
             </div>
-        </div>
+        </router-link>
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
                 <item-miaosha

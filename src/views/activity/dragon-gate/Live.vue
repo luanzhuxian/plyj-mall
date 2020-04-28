@@ -1,21 +1,5 @@
 <template>
     <panel :custom-class="$style.livePanel" :title="panelTitle" @click="$router.push({ name: 'InteractiveLive' })">
-        <!-- <div class="cover">
-        <span class="status" v-if="isNoticeShow">距开始</span>
-        <span class="status" v-if="live.statue === 4">正在直播</span>
-        <span class="status" v-if="live.statue === 0">已结束</span>
-        <count-down
-          v-if="isNoticeShow"
-          :timestamp="ts"
-          size="medium"
-          color="#FF4B00"
-          background="#FFF"
-          @done="done"
-        />
-        <span v-if="live.statue === 4">
-          {{ `${live.visitTimes}人观看` }}
-        </span>
-      </div> -->
         <ul :class="$style.liveList">
             <template v-for="(live, index) of liveModel.slice(0, 3)">
                 <li
@@ -36,7 +20,7 @@
                         <h4 v-text="live.name" />
                         <p>
                             <template v-if="live.isNoticeShow">
-                                <span>直播时间 2020.04.20 16:00</span>
+                                <span>{{ `直播时间 ${getTime(live.liveStartTime)}` }}</span>
                             </template>
                             <template v-else>
                                 <span>正在直播</span>
@@ -63,7 +47,7 @@
                     <div :class="$style.liveInfo">
                         <h4 v-text="live.name" />
                         <p v-if="live.isNoticeShow">
-                            直播时间 2020.04.20 16:00
+                            {{ `直播时间 ${getTime(live.liveStartTime)}` }}
                         </p>
                         <p v-else>
                             {{ `${live.visitTimes}人正在观看` }}
@@ -78,13 +62,11 @@
 <script>
 import moment from 'moment'
 import Panel from './Panel.vue'
-// import CountDown from '../../components/Count-Down.vue'
 
 export default {
     name: 'Live',
     components: {
         Panel
-    // CountDown
     },
     props: {
         data: {
@@ -133,6 +115,11 @@ export default {
             } else if (this.live.statue === 4) {
                 this.live.statue = 0
             }
+        },
+        getTime (time) {
+            if (!time) return ''
+            const index = time.lastIndexOf(':')
+            return time.slice(0, index)
         },
         toLivePage (live) {
             // 直播已结束

@@ -3,7 +3,7 @@
         <div :class="$style.background">
             <div :class="$style.container" v-if="allLoaded">
                 <!-- 优惠券 -->
-                <div :class="[$style.coupon, $style.module]" v-if="COUPON.values && COUPON.values.length">
+                <div :class="[$style.coupon, $style.module]" v-if="COUPON.values.length">
                     <coupon :data="COUPON" />
                 </div>
                 <!-- 直播-->
@@ -11,27 +11,35 @@
                     <live :data="parent.liveInfo" />
                 </div>
                 <!-- 公益-->
-                <div :class="[$style.charity, $style.module]" v-if="CHARITY.values && CHARITY.values.length">
+                <div :class="[$style.charity, $style.module]" v-if="CHARITY.showStatue === 1 && CHARITY.values.length">
                     <charity :data="CHARITY" />
                 </div>
                 <!-- 活动-->
-                <div :class="[$style.activity, $style.module]" v-if="ACTIVITY.values && ACTIVITY.values.length">
+                <div :class="[$style.activity, $style.module]" v-if="ACTIVITY.showStatue === 1 && ACTIVITY.values.length">
                     <activity :data="ACTIVITY" />
                 </div>
-                <!-- 春耘 -->
-                <!-- <div :class="[$style.chunyun, $style.module]" v-if="!!CHUN_YUN.otherValue && CHUN_YUN.values && CHUN_YUN.values.length">
-                    <chunyun :data="CHUN_YUN" />
-                </div> -->
+                <!-- 秒杀 -->
+                <div :class="[$style.miaosha, $style.module]" v-if="MIAO_SHA.showStatue === 1 && MIAO_SHA.values.length">
+                    <miaosha :data="MIAO_SHA" />
+                </div>
+                <!-- 分销 -->
+                <div :class="[$style.distribution, $style.module]" v-if="DISTRIBUTION.showStatue === 1 && DISTRIBUTION.values.length">
+                    <distribution :data="DISTRIBUTION" />
+                </div>
                 <!-- 拼团 -->
-                <!-- <div :class="[$style.pintuan, $style.module]" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
+                <div :class="[$style.pintuan, $style.module]" v-if="PIN_TUAN.showStatue === 1 && PIN_TUAN.values.length">
                     <pintuan :data="PIN_TUAN" />
-                </div> -->
+                </div>
                 <!-- 预购 -->
-                <!-- <div :class="[$style.yugou, $style.module]" v-if="YU_GOU.values && YU_GOU.values.length">
+                <div :class="[$style.yugou, $style.module]" v-if="YU_GOU.showStatue === 1 && YU_GOU.values.length">
                     <yugou :data="YU_GOU" />
-                </div> -->
+                </div>
+                <!-- 组合课 -->
+                <div :class="[$style.package, $style.module]" v-if="PACKAGE.showStatue === 1 && PACKAGE.values.length">
+                    <package :data="PACKAGE" />
+                </div>
                 <!-- 精品推荐 -->
-                <div :class="[$style.recommend, $style.module]" v-if="RECOMMEND.values && RECOMMEND.values.length">
+                <div :class="[$style.recommend, $style.module]" v-if="RECOMMEND.values.length">
                     <panel :custom-class="$style.panel" :title="panelTitle" hide-button>
                         <recommend :data="RECOMMEND" btn-color="#FF341B" border="4px solid #222222" />
                     </panel>
@@ -49,11 +57,11 @@ import Live from '../dragon-gate/Live.vue'
 import Coupon from '../dragon-gate/Coupon.vue'
 import Charity from '../dragon-gate/Charity.vue'
 import Activity from '../dragon-gate/Activity.vue'
-// import Miaosha from '../dragon-gate/Miaosha.vue'
-// import Distribution from '../dragon-gate/Distribution.vue'
-// import Pintuan from '../dragon-gate/Pintuan.vue'
-// import Yugou from '../dragon-gate/Yugou.vue'
-// import Package from '../dragon-gate/Package.vue'
+import Miaosha from '../dragon-gate/Miaosha.vue'
+import Distribution from '../dragon-gate/Distribution.vue'
+import Pintuan from '../dragon-gate/Pintuan.vue'
+import Yugou from '../dragon-gate/Yugou.vue'
+import Package from '../dragon-gate/Package.vue'
 import Recommend from '../../home/components/Recommend.vue'
 import Panel from '../dragon-gate/Panel.vue'
 
@@ -65,11 +73,11 @@ export default {
         Coupon,
         Charity,
         Activity,
-        // Miaosha,
-        // Distribution,
-        // Pintuan,
-        // Yugou,
-        // Package,
+        Miaosha,
+        Distribution,
+        Pintuan,
+        Yugou,
+        Package,
         Recommend,
         Panel
     },
@@ -96,31 +104,31 @@ export default {
     },
     computed: {
         COUPON () {
-            return this.data.COUPON || {}
+            return this.data.COUPON || { values: [] }
         },
         CHARITY () {
-            return this.data.CHARITY || {}
+            return this.data.CHARITY || { values: [] }
         },
         ACTIVITY () {
-            return this.data.ACTIVITY || {}
+            return this.data.ACTIVITY || { values: [] }
         },
         MIAO_SHA () {
-            return this.data.MIAO_SHA || {}
+            return this.data.MIAO_SHA || { values: [] }
         },
         DISTRIBUTION () {
-            return this.data.DISTRIBUTION || {}
+            return this.data.DISTRIBUTION || { values: [] }
         },
         PIN_TUAN () {
-            return this.data.PIN_TUAN || {}
+            return this.data.PIN_TUAN || { values: [] }
         },
         YU_GOU () {
-            return this.data.YU_GOU || {}
+            return this.data.YU_GOU || { values: [] }
         },
         PACKAGE () {
-            return this.data.PACKAGE || {}
+            return this.data.PACKAGE || { values: [] }
         },
         RECOMMEND () {
-            return this.data.RECOMMEND || {}
+            return this.data.RECOMMEND || { values: [] }
         },
         isLiveShow () {
             const { liveInfo } = this.parent

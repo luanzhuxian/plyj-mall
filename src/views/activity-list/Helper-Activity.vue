@@ -40,9 +40,10 @@
 </template>
 
 <script>
-import ProductItem from './components/Product-Item'
 import { mapGetters } from 'vuex'
-import { getHelperProductList } from './../../../apis/helper-manager'
+import ProductItem from './components/Helper-Product-Item'
+import { getHelperProductList } from '../../apis/helper-manager'
+
 export default {
     name: 'HelperActivity',
     components: {
@@ -82,51 +83,52 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .long-men-helper {
+.long-men-helper {
     width: calc(100vw - 20px * 2);
     min-height: calc(100vh - 30px - 56px);
     padding: 30px 20px 56px;
-    background-color: #FFDE8A;
-  }
+    background-color: #ffde8a;
+}
 
-  .product-list {
+.product-list {
     width: 100%;
     min-height: calc(100vh - 30px - 56px - 64px);
     padding-bottom: 64px;
-    border-radius:20px;
-    background-color: rgba(255, 255, 255, 0.6);
-  }
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, .6);
+}
 
-  .title {
+.title {
     width: 100%;
     margin-bottom: 30px;
-  }
-  .content {
+}
+.content {
     .list {
-      width: calc(100% - 16px * 2);
-      padding: 0 16px;
+        width: calc(100% - 16px * 2);
+        padding: 0 16px;
     }
-  }
-  .no-content{
+}
+.no-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 200px;
     p {
-      margin-top: 20px;
-      font-size: 32px;
-      color: #999;
+        margin-top: 20px;
+        font-size: 32px;
+        color: #999;
     }
-  }
-  .long-men-apply-helper {
+}
+.long-men-apply-helper {
     position: fixed;
     bottom: 30vh;
     right: 0;
     padding: 0 16px;
-    border-radius:60px 0px 0px 60px;
+    border-radius: 60px 0 0 60px;
     line-height: 66px;
-    font-size:24px;
-    color: #FFF;
-    background-color: #F2B036;
-  }
+    font-size: 24px;
+    color: #fff;
+    background-color: #f2b036;
+}
+
 </style>

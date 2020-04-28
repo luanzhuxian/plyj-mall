@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-export const getPrice = list => key => {
+export const getPrice = (list = []) => key => {
     const arr = list.map(item => item[key])
     return key === 'originalPrice' ? Math.max(...arr) : Math.min(...arr)
 }

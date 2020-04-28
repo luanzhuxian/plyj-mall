@@ -29,7 +29,11 @@
                 </template>
             </ul>
         </div>
-        <router-link :class="$style.button" :to="{ name: 'MyCoupon' }">
+        <router-link
+            :class="$style.button"
+            tag="div"
+            :to="{ name: 'CouponCenter' }"
+        >
             您有优惠券可领取
             <pl-svg name="icon-right" height="36" fill="#00237A" />
         </router-link>

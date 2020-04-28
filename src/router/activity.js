@@ -9,26 +9,34 @@ export default [
     },
     {
         path: '/second',
-        name: 'SecondList',
-        component: () => import('../views/activity-list/Second-List.vue'),
+        name: 'SecondActivity',
+        component: () => import('../views/activity-list/Second-Activity.vue'),
         meta: {
-            title: '限时秒杀'
+            title: '秒杀'
         }
     },
     {
-        path: '/tuan',
-        name: 'TuanList',
-        component: () => import('../views/activity-list/Tuan-List.vue'),
+        path: '/group',
+        name: 'GroupActivity',
+        component: () => import('../views/activity-list/Group-Activity.vue'),
         meta: {
-            title: '多人拼团'
+            title: '团购'
         }
     },
     {
         path: '/book',
-        name: 'BookList',
-        component: () => import('../views/activity-list/Book-List.vue'),
+        name: 'BookActivity',
+        component: () => import('../views/activity-list/Book-Activity.vue'),
         meta: {
             title: '预购'
+        }
+    },
+    {
+        path: '/helper',
+        name: 'HelperActivity',
+        component: () => import('../views/activity-list/Helper-Activity.vue'),
+        meta: {
+            title: '全民来分销'
         }
     },
     {
@@ -62,14 +70,6 @@ export default [
         component: () => import('../views/activity-list/Course-Package.vue'),
         meta: {
             title: '组合课'
-        }
-    },
-    {
-        path: '/helper',
-        name: 'HelperActivity',
-        component: () => import('../views/activity-list/helper/Index.vue'),
-        meta: {
-            title: '全民来分销'
         }
     }
 ]

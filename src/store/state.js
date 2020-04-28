@@ -127,10 +127,8 @@ export default {
     liveInfo: null,
     // 线上课程
     courseInfo: null,
-    // 已领双十二优惠卷
-    d12CouponTotal: null,
-    // 已领新春优惠卷
-    xinchunCouponTotal: null,
+    // 待领优惠卷
+    couponToReceive: null,
     // // 邀新有礼
     // invitingEvent: null,
     // // 见学之路

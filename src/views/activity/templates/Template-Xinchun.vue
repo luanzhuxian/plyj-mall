@@ -3,7 +3,7 @@
         <div :class="$style.background">
             <div :class="$style.container" v-if="allLoaded">
                 <div
-                    v-if="parent.xinchunCouponTotal"
+                    v-if="parent.couponToReceive"
                     :class="$style.btnTop"
                     @click="$router.push({ name: 'MyCoupon' })"
                 >

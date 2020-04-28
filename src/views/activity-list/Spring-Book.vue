@@ -63,7 +63,7 @@ export default {
     methods: {
         async getData () {
             try {
-                const { result } = await bookActivityPage({ type: '2019_02' })
+                const { result } = await bookActivityPage()
                 if (!result[0].length && !result[1].length) {
                     this.$alert({
                         message: '暂无数据',

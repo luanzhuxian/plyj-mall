@@ -1,10 +1,10 @@
 <template>
     <div :class="$style.pintuan">
-        <div :class="$style.pintuanTitle">
+        <router-link :class="$style.pintuanTitle" tag="div" :to="{ name: 'GroupActivity' }">
             <div :class="$style.pintuanTitleBtn">
                 查看更多
             </div>
-        </div>
+        </router-link>
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
                 <item-pintuan

@@ -16,7 +16,7 @@ export const receiveCoupon = couponId => axios.post(`/apis/v1/coupon/receive?cou
 export const secondActivityPage = params => axios.get('/apis/v1/seckill/activity/queryList', { params })
 
 // C 端拼团列表
-export const tuanActivityPage = params => axios.get('/apis/v1/group/buy/queryList', { params })
+export const groupActivityPage = params => axios.get('/apis/v1/group/buy/queryList', { params })
 
 // C 端预购列表
 export const bookActivityPage = params => axios.get('/apis/v1/pre/buy/queryList', { params })

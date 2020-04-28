@@ -1,10 +1,6 @@
 <template>
     <div :class="$style.package">
-        <router-link
-            :class="$style.packageTitle"
-            tag="div"
-            :to="{ name: 'CoursePackage' }"
-        >
+        <router-link :class="$style.packageTitle" tag="div" :to="{ name: 'CoursePackage' }">
             <div :class="$style.packageTitleBtn">
                 查看计划礼包
             </div>

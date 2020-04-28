@@ -1,10 +1,10 @@
 <template>
     <div :class="$style.yugou">
-        <div :class="$style.yugouTitle">
+        <router-link :class="$style.yugouTitle" tag="div" :to="{ name: 'BookActivity' }">
             <div :class="$style.yugouTitleBtn">
                 查看更多
             </div>
-        </div>
+        </router-link>
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
                 <item-yugou

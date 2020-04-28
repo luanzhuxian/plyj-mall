@@ -129,6 +129,7 @@ export default {
         }
     }
     &.long {
+        display: flex;
         flex-direction: row;
         padding: 10px;
         width: 100%;

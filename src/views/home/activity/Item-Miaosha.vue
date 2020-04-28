@@ -1,7 +1,7 @@
 <template>
     <li
         :class="$style.itemMiaosha"
-        @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 2 } })"
+        @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 3 } })"
     >
         <div :class="$style.imgWrapper">
             <img :src="data.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">

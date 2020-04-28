@@ -21,7 +21,11 @@
                 tag="div"
                 :to="{
                     name: ('courseType' in item) ? 'Curriculum' : 'Product',
-                    params: { productId: item.productId }
+                    params: { productId: item.productId },
+                    query: {
+                        currentProductStatus: 7,
+                        activityId
+                    }
                 }"
             >
                 <label>{{ item.productTypeDesc }}</label>
@@ -74,6 +78,9 @@ export default {
         }
     },
     computed: {
+        activityId () {
+            return this.data.values.length ? this.data.values[0].id : ''
+        },
         productList () {
             const { data } = this
             if (!data.values.length) {
@@ -100,7 +107,7 @@ export default {
             if (this.data.values.length) {
                 this.$router.push({
                     name: 'LongmenAction',
-                    params: { id: this.data.values[0].id }
+                    params: { id: this.activityId }
                 })
             }
         }

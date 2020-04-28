@@ -1,19 +1,25 @@
 <template>
-    <panel custom-class="yugou-panel" :title="panelTitle">
-        <ul class="yugou-list" v-if="data.values.length">
+    <panel :title="panelTitle" @click="$router.push({ name: 'BookActivity' })">
+        <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
-                <li
+                <router-link
                     v-if="item.goodsInfo && item.goodsInfo.activityInfo"
-                    class="yugou-list-item"
+                    :class="$style.listItem"
                     :key="i"
+                    tag="li"
+                    :to="{
+                        name: 'Product',
+                        params: { productId: item.goodsInfo.id },
+                        query: { currentProductStatus: 4 }
+                    }"
                 >
-                    <!-- <div class="count-down-wrapper">
-            <div class="time-left">
+                    <!-- <div :class="$style.countDownWrapper">
+            <div :class="$style.timeLeft">
               <span v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
               <span v-if="item.goodsInfo.activityInfo.status === 1">距结束：</span>
               <span v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
             </div>
-            <div class="time-right" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
+            <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
               <count-down
                 :timestamp="getTime(item.goodsInfo.activityInfo)"
                 size="mini"
@@ -21,44 +27,23 @@
               />
             </div>
           </div> -->
-                    <div class="info">
-                        <div class="main">
+                    <div :class="$style.info">
+                        <div :class="$style.main">
                             {{ item.goodsInfo.productName }}
                         </div>
-                        <div class="sub-1">
+                        <div :class="$style.sub">
                             <span>{{ `预交定金￥${item.goodsInfo.activityInfo.price}` }}</span>
                             <span v-if="item.goodsInfo.activityInfo.multiple && item.goodsInfo.activityInfo.multipleNumber > 1 && item.goodsInfo.activityInfo.activityPrice">{{ `抵￥${item.goodsInfo.activityInfo.activityPrice}` }}</span>
                         </div>
-                        <div class="sub-2">
+                        <div :class="$style.price">
                             {{ `预售到手价：${getTotalPrice(item)}元` }}
                         </div>
                     </div>
-                    <div class="img-wrapper">
+                    <div :class="$style.imgWrapper">
                         <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
                     </div>
-                </li>
+                </router-link>
             </template>
-        </ul>
-        <ul class="yugou-list" v-else>
-            <li class="yugou-list-item" v-for="(item, i) of 2" :key="i">
-                <div class="count-down-wrapper">
-                    距结束：2天23:59:59
-                </div>
-                <div class="info">
-                    <div class="main">
-                        非常好用的蜡笔张三三老师 带您体验课
-                    </div>
-                    <div class="sub-1">
-                        预交定金￥100抵￥200
-                    </div>
-                    <div class="sub-2">
-                        预售到手价：2000元
-                    </div>
-                </div>
-                <div class="img-wrapper">
-                    <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/47aa30db-205d-40b8-a564-eba87f8d6e03.png" alt="">
-                </div>
-            </li>
         </ul>
     </panel>
 </template>
@@ -66,7 +51,7 @@
 <script>
 import Panel from './Panel.vue'
 // import CountDown from '../../components/Count-Down.vue'
-import { getTime, getTotalPrice } from '../../utils/helper'
+import { getTime, getTotalPrice } from '../helper'
 
 export default {
     name: 'Yugou',
@@ -85,9 +70,9 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-ygxfb-9c661',
-                width: 184,
-                height: 40
+                name: 'icon-ygxfb-1a813',
+                width: 368,
+                height: 80
             }
         }
     },
@@ -98,79 +83,77 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.yugou {
-    &-list-item {
-        position: relative;
-        display: flex;
-        margin-top: 20px;
-        background: #ba95ff;
-        border: 2px solid #222;
+<style lang="scss" module>
+.list-item {
+    position: relative;
+    display: flex;
+    margin-top: 40px;
+    background: #ba95ff;
+    border: 4px solid #222;
+    border-radius: 20px;
+    &:nth-of-type(1) {
+        margin: 0;
+    }
+    .count-down-wrapper {
+        position: absolute;
+        top: -20px;
+        left: 18px;
+        width: 324px;
+        line-height: 48px;
+        text-align: center;
+        background: #ffe701;
+        border: 4px solid #222;
         border-radius: 10px;
-        &:nth-of-type(1) {
-            margin: 0;
-        }
-        .count-down-wrapper {
-            position: absolute;
-            top: -10px;
-            left: 9px;
-            width: 162px;
-            line-height: 24px;
-            text-align: center;
-            background: #ffe701;
-            border: 2px solid #222;
-            border-radius: 5px;
-            color: #ff341b;
-            font-size: 13px;
-            font-family: Helvetica;
-            font-weight: bold;
-            @include elps();
-        }
-        .info {
-            flex: 1;
-            width: 0;
-            display: flex;
-            justify-content: flex-end;
-            flex-direction: column;
-            padding: 0 8px 8px;
-            color: #fff;
-        }
-        .main {
-            font-size: 14px;
-            font-weight: bold;
-            line-height: 18px;
-            color: #00237a;
-            @include elps();
-        }
-        .sub-1 {
-            margin-top: 2px;
-            padding: 0 6px;
-            height: 26px;
-            line-height: 26px;
-            background: #8c4cff;
-            font-size: 12px;
-            font-family: San Francisco Display;
-            font-weight: bold;
-            text-align: center;
-            @include elps();
-        }
-        .sub-2 {
-            margin-top: 6px;
-            font-size: 12px;
-            font-family: Microsoft YaHei;
-            @include elps();
-        }
-        .img-wrapper {
-            width: 150px;
-            height: 100px;
-            border-radius: 50px 10px 10px 50px;
-            overflow: hidden;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        color: #ff341b;
+        font-size: 26px;
+        font-family: Helvetica;
+        font-weight: bold;
+        @include elps();
+    }
+    .info {
+        flex: 1;
+        width: 0;
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: column;
+        padding: 0 16px 16px;
+        color: #fff;
+    }
+    .main {
+        font-size: 28px;
+        font-weight: bold;
+        line-height: 36px;
+        color: #00237a;
+        @include elps();
+    }
+    .sub {
+        margin-top: 4px;
+        padding: 0 12px;
+        height: 52px;
+        line-height: 52px;
+        background: #8c4cff;
+        font-size: 24px;
+        font-family: San Francisco Display;
+        font-weight: bold;
+        text-align: center;
+        @include elps();
+    }
+    .price {
+        margin-top: 12px;
+        font-size: 24px;
+        font-family: Microsoft YaHei;
+        @include elps();
+    }
+    .img-wrapper {
+        width: 300px;
+        height: 200px;
+        border-radius: 100px 20px 20px 100px;
+        overflow: hidden;
+    }
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 }
 

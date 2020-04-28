@@ -150,133 +150,135 @@ export default {
 
 <style lang="scss" module>
 .chunyun {
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  &-bg {
-    position: relative;
-    background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png") no-repeat center top;
-    background-size: 100% auto;
-    height: 682px;
-    .count-down-wrapper {
-      position: absolute;
-      top: 293px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      width: 420px;
-      height: 70px;
-      line-height: 70px;
-      font-size: 28px;
-      color: #96E3A9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
-    .link {
-      position: absolute;
-      top: 390px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 26px;
-      font-family: Microsoft YaHei;
-      color: #184B28;
-    }
-    > svg {
-      position: absolute;
-      top: 155px;
-      right: 95px;
-    }
-  }
-  &-list {
-    padding: 0 32px 48px;
-    background: #8DC607;
-    &.medium {
-      padding: 0 0 48px 32px;
-    }
-    &.small {
-      padding: 0 0 48px 32px;
-      .chunyun-list-prod-wrapper {
-        display: flex;
-        align-items: center;
-        padding: 0 8px;
-        height: 440px;
-        background: #749529;
-      }
-      .chunyun-list-prod {
-        box-sizing: border-box;
-        padding: 12px;
-        width: 280px;
-        height: 330px;
-        background: #BFE36A;
-        .img-wrapper {
-          height: 172px;
+    &-bg {
+        position: relative;
+        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png') no-repeat center top;
+        background-size: 100% auto;
+        height: 682px;
+        .count-down-wrapper {
+            position: absolute;
+            top: 293px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            width: 420px;
+            height: 70px;
+            line-height: 70px;
+            font-size: 28px;
+            color: #96e3a9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .name {
-          padding: 0 12px;
-          height: 44px;
-          line-height: 44px;
-          background: #397432;
-          font-size: 24px;
-          font-family: Microsoft YaHei;
-          color: #92F4C7;
-          text-align: center;
-          @include elps();
+        .link {
+            position: absolute;
+            top: 390px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 26px;
+            font-family: Microsoft YaHei;
+            color: #184b28;
         }
-        .origin {
-          margin-top: 12px;
-          font-size: 24px;
-          line-height: 30px;
-          color: #02684F;
-          @include elps();
+        > svg {
+            position: absolute;
+            top: 155px;
+            right: 95px;
         }
-        .current {
-          margin-top: 6px;
-          font-size: 24px;
-          font-weight: bold;
-          line-height: 30px;
-          color: #A6482F;
-          @include elps();
-        }
-      }
     }
-  }
+    &-list {
+        padding: 0 32px 48px;
+        background: #8dc607;
+        &.medium {
+            padding: 0 0 48px 32px;
+        }
+        &.small {
+            padding: 0 0 48px 32px;
+            .chunyun-list-prod-wrapper {
+                display: flex;
+                align-items: center;
+                padding: 0 8px;
+                height: 440px;
+                background: #749529;
+            }
+            .chunyun-list-prod {
+                box-sizing: border-box;
+                padding: 12px;
+                width: 280px;
+                height: 330px;
+                background: #bfe36a;
+                .img-wrapper {
+                    height: 172px;
+                }
+                .name {
+                    padding: 0 12px;
+                    height: 44px;
+                    line-height: 44px;
+                    background: #397432;
+                    font-size: 24px;
+                    font-family: Microsoft YaHei;
+                    color: #92f4c7;
+                    text-align: center;
+                    @include elps();
+                }
+                .origin {
+                    margin-top: 12px;
+                    font-size: 24px;
+                    line-height: 30px;
+                    color: #02684f;
+                    @include elps();
+                }
+                .current {
+                    margin-top: 6px;
+                    font-size: 24px;
+                    font-weight: bold;
+                    line-height: 30px;
+                    color: #a6482f;
+                    @include elps();
+                }
+            }
+        }
+    }
 }
+
 </style>
 
 <style lang="scss" scoped>
 .chunyun {
     ::v-deep .count-down > .time > span {
-    padding: 0 8px;
-    font-size: 24px;
-    line-height: 40px;
-    color: #96E3A9;
-  }
+        padding: 0 8px;
+        font-size: 24px;
+        line-height: 40px;
+        color: #96e3a9;
+    }
 }
 .small {
-  .swiper-container {
-    margin-top: 32px;
-    &:nth-of-type(1) {
-      margin: 0;
+    .swiper-container {
+        margin-top: 32px;
+        &:nth-of-type(1) {
+            margin: 0;
+        }
+        > .swiper-wrapper > .swiper-slide {
+            display: flex;
+            align-items: center;
+            width: auto !important;
+            height: 508px !important;
+            &:nth-of-type(1) {
+                width: auto !important;
+            }
+            &:nth-of-type(2) > .chunyun-list-prod-wrapper {
+                padding-left: 20px;
+            }
+            &:nth-last-of-type(1) > .chunyun-list-prod-wrapper {
+                padding-right: 20px;
+            }
+        }
     }
-    > .swiper-wrapper > .swiper-slide {
-      display: flex;
-      align-items: center;
-      width: auto !important;
-      height: 508px !important;
-      &:nth-of-type(1) {
-        width: auto !important;
-      }
-      &:nth-of-type(2) > .chunyun-list-prod-wrapper {
-        padding-left: 20px;
-      }
-      &:nth-last-of-type(1) > .chunyun-list-prod-wrapper {
-        padding-right: 20px;
-      }
-    }
-  }
 }
+
 </style>

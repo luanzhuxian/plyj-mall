@@ -95,10 +95,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['activityData', 'activityId', 'liveInfo', 'd12CouponTotal', 'xinchunCouponTotal', 'invitingEvent', 'jxEvent', 'nwEvent']),
+        ...mapGetters(['activityData', 'activityId', 'liveInfo', 'couponToReceive', 'invitingEvent', 'jxEvent', 'nwEvent']),
         topBtnType () {
-            if (this.d12CouponTotal === null) return false
-            return this.d12CouponTotal ? 1 : 2
+            if (this.couponToReceive === null) return false
+            return this.couponToReceive ? 1 : 2
         },
         allLoaded () {
             let result
@@ -108,14 +108,14 @@ export default {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
                 // (this.invitingEvent !== null && !!this.invitingEvent) &&
                 // (this.jxEvent !== null && !!this.jxEvent) &&
-                this.d12CouponTotal !== null
+                this.couponToReceive !== null
             }
 
             // 新春
             if (this.activityId === 8) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
                 (this.nwEvent !== null && !!this.nwEvent) &&
-                this.xinchunCouponTotal !== null
+                this.couponToReceive !== null
             }
 
             // 龙门节

@@ -1,7 +1,7 @@
 <template>
     <li
         :class="$style.itemYugou"
-        @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 2 } })"
+        @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 4 } })"
     >
         <div :class="$style.imgWrapper">
             <img :src="data.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
@@ -9,13 +9,13 @@
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 0">距开始</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已结束</span>
-                <count-down
+                <!-- <count-down
                     v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)"
                     :timestamp="getTime(data.goodsInfo.activityInfo)"
                     format="HH:mm"
                     background="rgba(174, 174, 174, 0.64)"
                     @done="() => data.goodsInfo.activityInfo.status += 1"
-                />
+                /> -->
             </div>
         </div>
         <div :class="$style.info">
@@ -38,13 +38,13 @@
 </template>
 
 <script>
-import CountDown from '../../activity/components/Count-Down.vue'
+// import CountDown from '../../activity/components/Count-Down.vue'
 import { getTime, getPrice, getTotalPrice } from '../../activity/helper'
 
 export default {
     name: 'ItemYugou',
     components: {
-        CountDown
+        // CountDown
     },
     props: {
         data: {

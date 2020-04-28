@@ -13,7 +13,7 @@
                 />
                 <img :class="$style.img" :src="item.image" :alt="item.name" @click="handelClick(item)">
             </swiperSlide>
-            <div v-show="data.values.length > 1" class="banner-pagination-home-b" slot="pagination" />
+            <div v-show="data.values.length > 1" class="swiper-pagination" slot="pagination" />
         </swiper>
     </div>
 </template>
@@ -41,12 +41,14 @@ export default {
     data () {
         return {
             swiperOptionBanner: {
-                autoplay: {
-                    disableOnInteraction: false
-                },
+                autoplay: this.data.values.length > 1
+                    ? {
+                        disableOnInteraction: false
+                    }
+                    : false,
                 spaceBetween: 40,
                 pagination: {
-                    el: '.banner-pagination-home-b',
+                    el: '.swiper-pagination',
                     clickable: true
                 },
                 loop: true
@@ -93,15 +95,15 @@ export default {
                 },
                 42: {
                     name: '团购',
-                    path: ''
+                    path: 'GroupActivity'
                 },
                 43: {
                     name: '预购',
-                    path: ''
+                    path: 'BookActivity'
                 },
                 44: {
                     name: '秒杀',
-                    path: ''
+                    path: 'SecondActivity'
                 },
                 45: {
                     name: '组合聚惠学',
@@ -196,7 +198,7 @@ export default {
 
 </style>
 <style scoped lang="scss">
-.banner-pagination-home-b {
+.swiper-pagination {
     position: absolute;
     left: 50%;
     bottom: 16px;
@@ -209,7 +211,7 @@ export default {
     background-color: rgba(0, 0, 0, .3);
     border-radius: 9px;
     z-index: 1;
-    ::v-deep swiper-pagination-bullet {
+    ::v-deep .swiper-pagination-bullet {
         width: 10px !important;
         height: 10px !important;
         margin-right: 8px;

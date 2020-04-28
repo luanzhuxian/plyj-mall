@@ -1,16 +1,20 @@
 <template>
-    <panel custom-class="pintuan-panel" :title="panelTitle">
-        <ul class="pintuan-list" v-if="data.values.length">
+    <panel :title="panelTitle" @click="$router.push({ name: 'GroupActivity' })">
+        <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
-                <li
+                <router-link
                     v-if="item.goodsInfo && item.goodsInfo.activityInfo"
-                    class="pintuan-list-item"
+                    :class="$style.listItem"
                     :key="i"
+                    tag="li"
+                    :to="{
+                        name: 'Product',
+                        params: { productId: item.goodsInfo.id },
+                        query: { currentProductStatus: 2 }
+                    }"
                 >
-                    <label>
-                        众志成团
-                    </label>
-                    <div class="ribbon">
+                    <label>众志成团</label>
+                    <div :class="$style.ribbon">
                         <span v-if="item.goodsInfo.activityInfo.status === 0">
                             {{ `${item.goodsInfo.pageviews}人关注` }}
                         </span>
@@ -18,11 +22,11 @@
                             {{ `${item.goodsInfo.activityInfo.number}人参团` }}
                         </span>
                     </div>
-                    <!-- <div class="count-down-wrapper" v-if="item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
-            <span class="text" v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
-            <span class="text" v-if="item.goodsInfo.activityInfo.status === 1">距结束：</span>
-            <span class="text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
-            <span class="text" v-if="item.goodsInfo.activityInfo.status === 3">已结束</span>
+                    <!-- <div :class="$style.countDownWrapper" v-if="item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
+            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
+            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束：</span>
+            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
+            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 3">已结束</span>
             <count-down
               v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
               :timestamp="getTime(item.goodsInfo.activityInfo)"
@@ -31,68 +35,31 @@
               @done="() => reset(item)"
             />
           </div> -->
-                    <div class="img-wrapper">
+                    <div :class="$style.imgWrapper">
                         <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
                     </div>
-                    <div class="info">
-                        <div class="main">
+                    <div :class="$style.info">
+                        <div :class="$style.main">
                             {{ item.goodsInfo.productName }}
                         </div>
-                        <div class="sub-1">
-                            <div class="sub-1-left">
+                        <div :class="$style.sub">
+                            <div :class="$style.subLeft">
                                 <span v-if="item.goodsInfo.activityInfo.prizePool">
                                     成团瓜分
                                 </span>
                                 <span v-else>龙门节有礼</span>
                             </div>
-                            <div class="sub-1-right" v-if="item.goodsInfo.activityInfo.prizePool">
+                            <div :class="$style.subRight" v-if="item.goodsInfo.activityInfo.prizePool">
                                 {{ item.goodsInfo.activityInfo.prizePool }}
                             </div>
                         </div>
-                        <div class="sub-2">
-                            <pl-svg name="icon-tgj-52197" width="40" height="20" />
-                            <span class="sub-2-price">{{ item.goodsInfo.activityInfo.activityPrice }}</span>
+                        <div :class="$style.price">
+                            <pl-svg name="icon-tgj-782d3" width="80" height="40" />
+                            <b>{{ item.goodsInfo.activityInfo.activityPrice }}</b>
                         </div>
                     </div>
-                </li>
+                </router-link>
             </template>
-        </ul>
-        <ul class="pintuan-list" v-else>
-            <li
-                v-for="(item, i) of 3"
-                :key="i"
-                class="pintuan-list-item"
-            >
-                <label>
-                    众志成团
-                </label>
-                <div class="ribbon">
-                    9999人参团
-                </div>
-                <div class="count-down-wrapper">
-                    距结束：2天23:59:59
-                </div>
-                <div class="img-wrapper">
-                    <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/47aa30db-205d-40b8-a564-eba87f8d6e03.png" alt="">
-                </div>
-                <div class="info">
-                    <div class="main">
-                        神奇的逻辑思维游戏畅销书
-                    </div>
-                    <div class="sub-1">
-                        <div class="sub-1-left">
-                            成团瓜分
-                        </div>
-                        <div class="sub-1-right">
-                            99999
-                        </div>
-                    </div>
-                    <div class="sub-2">
-                        <pl-svg name="icon-tgj-52197" width="40" height="20" />
-                        <span class="sub-2-price">99999</span>
-                    </div>
-                </div>
-            </li>
         </ul>
     </panel>
 </template>
@@ -100,7 +67,7 @@
 <script>
 import Panel from './Panel.vue'
 // import CountDown from '../../components/Count-Down.vue'
-import { getTime, reset } from '../../utils/helper'
+import { getTime, reset } from '../helper'
 
 export default {
     name: 'Pintuan',
@@ -119,9 +86,9 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-zzct-aeeb8',
-                width: 163,
-                height: 40
+                name: 'icon-zzct-4e0e9',
+                width: 326,
+                height: 80
             }
         }
     },
@@ -132,144 +99,142 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.pintuan {
-    &-list-item {
-        position: relative;
-        display: flex;
-        margin-top: 20px;
-        background: #fff;
-        border-radius: 10px;
+<style lang="scss" module>
+.list-item {
+    position: relative;
+    display: flex;
+    margin-top: 40px;
+    background: #fff;
+    border-radius: 20px;
+    border: 4px solid #222;
+    &:nth-of-type(1) {
+        margin: 0;
+    }
+    label {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        width: 112px;
+        line-height: 34px;
+        text-align: center;
+        background: #ffe100;
+        border-radius: 6px;
+        font-size: 24px;
+        font-family: PingFang SC;
+        font-weight: 800;
+        color: #00237a;
         border: 2px solid #222;
-        &:nth-of-type(1) {
-            margin: 0;
-        }
-        label {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            width: 56px;
-            line-height: 17px;
-            text-align: center;
-            background: #ffe100;
-            border-radius: 3px;
-            font-size: 12px;
+    }
+    .ribbon {
+        position: absolute;
+        right: -18px;
+        bottom: 10px;
+        box-sizing: border-box;
+        width: 146px;
+        height: 56px;
+        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/ribbon.png') no-repeat center;
+        background-size: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 6px;
+        font-size: 24px;
+        font-family: Microsoft YaHei;
+        color: #00237a;
+        @include elps();
+    }
+    .count-down-wrapper {
+        position: absolute;
+        top: -24px;
+        right: -8px;
+        width: 332px;
+        line-height: 44px;
+        text-align: center;
+        background: #ffe701;
+        border: 4px solid #222;
+        border-radius: 20px 10px 10px 10px;
+        box-shadow: 0 4px 8px #a02e09;
+        color: #ff341b;
+        font-size: 26px;
+        font-family: Helvetica;
+        font-weight: bold;
+        @include elps();
+    }
+    .img-wrapper {
+        width: 294px;
+        height: 196px;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .info {
+        flex: 1;
+        width: 0;
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: column;
+        padding: 0 12px 14px;
+    }
+    .main {
+        font-size: 28px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
+        line-height: 34px;
+        color: #000;
+        text-shadow: 0 2px 2px rgba(0, 0, 0, .16);
+        @include elps();
+    }
+    .sub {
+        display: inline-flex;
+        align-items: center;
+        text-align: center;
+        margin-top: 10px;
+        width: fit-content;
+        max-width: 100%;
+        height: 34px;
+        line-height: 30px;
+        border: 2px solid #ff331b;
+        border-radius: 4px;
+        @include elps();
+        &-left {
+            padding: 6px;
+            min-width: 104px;
+            font-size: 24px;
             font-family: PingFang SC;
-            font-weight: 800;
-            color: #00237a;
-            border: 1px solid #222;
+            font-weight: bold;
+            color: #fff;
+            background: #ff331b;
         }
-        .ribbon {
-            position: absolute;
-            right: -9px;
-            bottom: 5px;
-            box-sizing: border-box;
-            width: 73px;
-            height: 28px;
-            background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/ribbon.png') no-repeat center;
-            background-size: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            padding-bottom: 3px;
-            font-size: 12px;
-            font-family: Microsoft YaHei;
-            color: #00237a;
+        &-right {
+            flex: 1;
+            padding: 0 10px;
+            font-size: 24px;
+            background: #ffe701;
+            color: #ff331b;
             @include elps();
         }
-        .count-down-wrapper {
-            position: absolute;
-            top: -12px;
-            right: -4px;
-            width: 166px;
-            line-height: 22px;
-            text-align: center;
-            background: #ffe701;
-            border: 2px solid #222;
-            border-radius: 10px 5px 5px 5px;
-            box-shadow: 0 2px 4px #a02e09;
-            color: #ff341b;
-            font-size: 13px;
+    }
+    .price {
+        display: flex;
+        align-items: flex-end;
+        margin-top: 18px;
+        padding-right: 100px;
+        > b {
+            position: relative;
+            top: 2px;
+            margin-left: 4px;
+            font-size: 36px;
             font-family: Helvetica;
             font-weight: bold;
+            color: #ff331b;
             @include elps();
-        }
-        .img-wrapper {
-            width: 147px;
-            height: 98px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .info {
-            flex: 1;
-            width: 0;
-            display: flex;
-            justify-content: flex-end;
-            flex-direction: column;
-            padding: 0 6px 7px;
-        }
-        .main {
-            font-size: 14px;
-            font-family: Microsoft YaHei;
-            font-weight: bold;
-            line-height: 17px;
-            color: #000;
-            text-shadow: 0 1px 1px rgba(0, 0, 0, .16);
-            @include elps();
-        }
-        .sub-1 {
-            display: inline-flex;
-            align-items: center;
-            text-align: center;
-            margin-top: 5px;
-            width: fit-content;
-            max-width: 100%;
-            height: 17px;
-            line-height: 15px;
-            border: 1px solid #ff331b;
-            border-radius: 2px;
-            @include elps();
-            &-left {
-                padding: 3px;
-                min-width: 52px;
-                font-size: 12px;
-                font-family: PingFang SC;
-                font-weight: bold;
-                color: #fff;
-                background: #ff331b;
-            }
-            &-right {
-                flex: 1;
-                padding: 0 5px;
-                font-size: 12px;
-                background: #ffe701;
-                color: FF331B;
-                @include elps();
-            }
-        }
-        .sub-2 {
-            display: flex;
-            align-items: flex-end;
-            margin-top: 9px;
-            padding-right: 50px;
-            &-price {
-                position: relative;
-                top: 1px;
-                margin-left: 2px;
-                font-size: 18px;
-                font-family: Helvetica;
-                font-weight: bold;
-                color: #ff331b;
-                @include elps();
-                &::before {
-                    content: '￥';
-                    font-size: 12px;
-                }
+            &::before {
+                content: '￥';
+                font-size: 24px;
             }
         }
     }

@@ -44,7 +44,7 @@
 </template>
 <script>
 import Item from '../activity/spring/Item-Pintuan'
-import { tuanActivityPage } from '../../apis/product'
+import { groupActivityPage } from '../../apis/product'
 
 export default {
     name: 'SpringGroup',
@@ -63,7 +63,7 @@ export default {
     methods: {
         async getData () {
             try {
-                const { result } = await tuanActivityPage({ type: '2019_02' })
+                const { result } = await groupActivityPage()
                 if (!result[0].length && !result[1].length) {
                     this.$alert({
                         message: '暂无数据',
