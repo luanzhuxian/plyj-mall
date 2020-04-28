@@ -22,7 +22,7 @@
                                 <p
                                     v-if="activeProduct == 7"
                                     :class="$style.price"
-                                    v-text="publicBenefitCurrentSku.activityPrice"
+                                    v-text="publicBenefitActiveStock"
                                 />
                                 <p
                                     v-else-if="activeType === 1"
@@ -110,7 +110,7 @@
                                 <!-- 公益活动 -->
                                 <button
                                     v-if="activeProduct == 7"
-                                    :disabled="count >= publicBenefitCurrentSku.activityStock"
+                                    :disabled="count >= publicBenefitActiveStock"
                                     @click.stop="add"
                                 >
                                     +
@@ -127,7 +127,7 @@
                                     <!-- 活动商品库存展示，如果商品不是预购且活动库存不足，则显示正常库存 -->
                                     <!-- 注意：公益活动例外 -->
                                     <template v-if="activeProduct == 7">
-                                        库存<i v-text="publicBenefitCurrentSku.activityStock" />件
+                                        库存<i v-text="publicBenefitActiveStock" />件
                                     </template>
                                     <template v-else-if="activeType !== 1">
                                         总库存<i v-text="activeAllResidue" />件
@@ -142,7 +142,7 @@
                     <div :class="$style.footer" v-if="localCurrentSku.id" @click.capture="slotClickHandler">
                         <slot
                             name="footer"
-                            :publicBenefitCurrentSku="publicBenefitCurrentSku"
+                            :publicBenefitActiveStock="publicBenefitActiveStock"
                             :currentSku="localCurrentSku"
                             :revert="revert"
                             :limit="limit"
@@ -264,10 +264,11 @@ export default {
     created () {
     },
     computed: {
-        // 公益活动所选规格
-        publicBenefitCurrentSku () {
+        // 公益活动所选规格的库存
+        publicBenefitActiveStock () {
             const list = (this.activityProductModel && this.activityProductModel.productModels) || []
-            return list.find(({ sku1, sku2 }) => sku1 === this.currentSku1 && sku2 === this.currentSku2) || {}
+            const currentSku = list.find(({ sku1, sku2 }) => sku1 === this.currentSku1 && sku2 === this.currentSku2) || {}
+            return currentSku.activityStock || 0
         },
         currentSku () {
             const current = this.skuList.find(item => item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2) || {}
