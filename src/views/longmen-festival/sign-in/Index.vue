@@ -230,7 +230,7 @@
             :award-name="currentPresentDetail.awardName"
             :start-time="currentPresentDetail.formatStartTime"
             :end-time="currentPresentDetail.formatEndTime"
-            :scholarship-amount="currentPresentDetail.price"
+            :scholarship-amount="currentPresentDetail.scholarshipPrice"
             :amount="currentPresentDetail.price"
             :coupon-name="currentPresentDetail.couponName"
             :current-present-detail="currentPresentDetail"
@@ -723,10 +723,6 @@ export default {
                     const priceList = (result.awardName).match(/(\d+\.?\d*)/gi)
                     result.price = (priceList && priceList.length > 1 && priceList[1]) || 0
                     result.couponName = `满${ priceList[0] }减${ result.price }`
-                }
-                if ([2].indexOf(result.awardType) !== -1) {
-                    const priceList = (result.awardName).match(/(\d+\.?\d*)/gi)
-                    result.price = (priceList && priceList.length && priceList[0]) || 0
                 }
                 this.currentPresentDetail = result
 
