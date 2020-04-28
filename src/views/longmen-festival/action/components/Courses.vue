@@ -13,7 +13,7 @@
                 </div>
                 <div :class="$style.description">购买将捐赠{{ item.donationAmount }}元公益金</div>
                 <div :class="$style.buy">
-                    <div :class="$style.button" v-if="activityStatus === 2 && item.activityStock > 0">立即购买</div>
+                    <div :class="$style.button" v-if="activityStatus === 2">立即购买</div>
                 </div>
             </div>
         </div>
