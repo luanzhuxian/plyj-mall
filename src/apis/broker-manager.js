@@ -17,7 +17,7 @@ export const getAduitNotice = () => axios.get(`/apis/v1/agent/user/info/audit/no
 export const updateNoticeStatus = () => axios.put(`/apis/v1/agent/user/info/audit/updateNoticeStatus`)
 
 // PUT 修改经纪人审核状态
-export const changeBrokerStatus = id => axios.put(`/v1/agent/user/info/audit/${ id }/PASS`)
+export const changeBrokerStatus = id => axios.put(`/apis/v1/agent/user/info/audit/${ id }/PASS`)
 
 // PUT 修改经纪人信息
 export const changeBrokerInfo = (id, data) => axios.post(`/apis/v1/agent/user/info/audit/${ id }`, data)
