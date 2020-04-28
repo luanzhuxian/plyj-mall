@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import Live from '../components/Live.vue'
+import Live from '../../home/components/Live.vue'
 import Pintuan from '../double-12/Pintuan.vue'
 import Coupon from '../double-12/Coupon.vue'
 import Maisong from '../double-12/Maisong.vue'

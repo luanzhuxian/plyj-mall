@@ -61,7 +61,7 @@
 
 <script>
 import moment from 'moment'
-import CountDown from './Count-Down.vue'
+import CountDown from '../../activity/components/Count-Down.vue'
 
 export default {
     name: 'Live',

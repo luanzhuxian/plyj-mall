@@ -73,8 +73,8 @@
 
 <script>
 import Search from './components/Search.vue'
-import Live from '../activity/components/Live.vue'
-import OnlineCourse from '../activity/components/Online-Course.vue'
+import Live from './components/Live.vue'
+import OnlineCourse from './components/Online-Course.vue'
 import Activity from '../activity/spring/Activity.vue'
 import D12Activity from './components/Activity.vue'
 import Banner from './components/Banner.vue'
