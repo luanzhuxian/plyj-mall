@@ -5,6 +5,11 @@
             :data="modules"
             :type="type"
         />
+        <template-dragon-gate
+            v-if="type === 10"
+            :data="modules"
+            :type="type"
+        />
         <div :class="$style.d12" v-if="~[5, 6, 7].indexOf(type)">
             <div :class="$style.background">
                 <search placeholder="搜索商品" />
@@ -52,6 +57,7 @@ import TemplateFengqiang from './templates/Template-Fengqiang.vue'
 import TemplateBaofa from './templates/Template-Baofa.vue'
 import TemplateFanchang from './templates/Template-Fanchang.vue'
 import TemplateXinchun from './templates/Template-Xinchun.vue'
+import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
 import InviteNewcomersHomeEntry from '../double-twelve-day/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
 import NewYearNewcomersHomeEntry from '../new-year/newcomers/NewcomersHomeEntry.vue'
@@ -64,6 +70,7 @@ export default {
         TemplateBaofa,
         TemplateFanchang,
         TemplateXinchun,
+        TemplateDragonGate,
         InviteNewcomersHomeEntry,
         NewcomersHomeEntry,
         NewYearNewcomersHomeEntry
@@ -109,6 +116,11 @@ export default {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
                 (this.nwEvent !== null && !!this.nwEvent) &&
                 this.xinchunCouponTotal !== null
+            }
+
+            // 龙门节
+            if (this.activityId === 10) {
+                result = (this.liveInfo !== null && !!this.liveInfo)
             }
             return result
         }
@@ -172,6 +184,17 @@ export default {
                     this.modules.PIN_TUAN = moduleModels[3]
                     this.modules.YU_GOU = moduleModels[4]
                     this.modules.FENG_QIANG = moduleModels[5]
+                }
+                if (type === 10) {
+                    this.modules.COUPON = moduleModels[0]
+                    this.modules.CHARITY = moduleModels[1]
+                    this.modules.ACTIVITY = moduleModels[2]
+                    this.modules.MIAO_SHA = moduleModels[3]
+                    this.modules.DISTRIBUTION = moduleModels[4]
+                    this.modules.PIN_TUAN = moduleModels[5]
+                    this.modules.YU_GOU = moduleModels[6]
+                    this.modules.PACKAGE = moduleModels[7]
+                    this.modules.RECOMMEND = moduleModels[8]
                 }
                 this.type = type
             } catch (e) {

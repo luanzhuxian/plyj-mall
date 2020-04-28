@@ -311,8 +311,9 @@ export default {
     height: auto !important;
 }
 .icon-dragon-gate {
+    position: relative;
+    top: -22px;
     display: block;
-    margin-bottom: 40px;
     width: 125px !important;
     height: 104px !important;
 }
@@ -396,8 +397,8 @@ export default {
 
 </style>
 <style lang="scss">
-  .router-link-active {
-    color: $--warning-color;
-  }
+.router-link-active {
+    color: #f2b036;
+}
 
 </style>

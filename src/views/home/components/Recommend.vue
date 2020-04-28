@@ -46,12 +46,12 @@
                         <div :class="$style.bottom">
                             <slot name="price" :price="getMinPrice(item.goodsInfo.productSkuModels)" v-if="$scopedSlots.price" />
                             <div :class="$style.priceBox" v-else>
-                                <b v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
+                                <b :style="{ color: btnColor }" v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
                                 <del>
                                     ¥{{ getMaxOrinalPrice(item.goodsInfo.productSkuModels) }}
                                 </del>
                             </div>
-                            <button>
+                            <button :style="{ backgroundColor: btnColor }">
                                 {{ `立即${productTypeMap[item.goodsInfo.productType]}` }}
                             </button>
                         </div>

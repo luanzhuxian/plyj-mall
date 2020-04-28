@@ -88,9 +88,6 @@ export default {
         Yugou,
         Recommend
     },
-    data () {
-        return {}
-    },
     props: {
         data: {
             type: Object,
@@ -102,6 +99,9 @@ export default {
             type: Number,
             default: 0
         }
+    },
+    data () {
+        return {}
     },
     computed: {
         PIN_XUAN () {

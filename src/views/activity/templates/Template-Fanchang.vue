@@ -46,9 +46,6 @@ export default {
         MiaoshaSmall,
         Recommend
     },
-    data () {
-        return {}
-    },
     props: {
         data: {
             type: Object,
@@ -60,6 +57,9 @@ export default {
             type: Number,
             default: 0
         }
+    },
+    data () {
+        return {}
     },
     computed: {
         MAI_SONG () {
