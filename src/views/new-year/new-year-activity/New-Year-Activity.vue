@@ -680,6 +680,7 @@ export default {
                 this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
                 this.activeDetail.signedInNumber += 1
                 this.activeDetail.differenceNumber -= 1
+                this.isGrandPrsentSignIn = this.currentSignIn.isLastIcon ? this.currentSignIn.awardType !== '' : false
 
                 // 统计签到人数
                 this.activeDetail.signinNumber = this.activeDetail.nextSigninNote === 1 ? this.activeDetail.signinNumber += 1 : this.activeDetail.signinNumber

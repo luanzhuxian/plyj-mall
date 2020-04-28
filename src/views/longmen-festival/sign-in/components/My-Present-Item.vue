@@ -31,8 +31,8 @@ export default {
         },
         // 奖品图片
         awardImg: {
-            type: Number,
-            default: 1
+            type: String,
+            default: ''
         },
         // 奖品名称
         awardName: {
@@ -40,10 +40,7 @@ export default {
             default: ''
         },
         // 是否为大奖
-        isGrandPrsent: {
-            type: String,
-            default: ''
-        },
+        isGrandPrsent: Boolean,
         // 大奖名称
         flauntAwardName: {
             type: String,
