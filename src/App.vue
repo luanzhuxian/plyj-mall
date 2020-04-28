@@ -55,7 +55,8 @@ export default {
             exclude: [
                 'ShoppingCart',
                 'LiveRoom',
-                'PaySuccess'
+                'PaySuccess',
+                'LongmenLottery'
             ],
             // 以下路由名称，不显示快速导航
             showNavbar: [

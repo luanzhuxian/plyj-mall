@@ -259,7 +259,7 @@ let IS_WHITE = true
 let drawing = false
 let countDownInstance = null
 export default {
-    name: 'Lottery',
+    name: 'LongmenLottery',
     components: {
         swiper,
         swiperSlide,
@@ -313,14 +313,14 @@ export default {
             default: ''
         }
     },
-    async activated () {
+    async created () {
         try {
             await this.getDetail()
         } catch (e) {
             throw e
         }
     },
-    deactivated () {
+    beforeDestroy () {
         clearInterval(this.timer)
     },
     computed: {
@@ -435,6 +435,7 @@ export default {
                     this.lottery = this.turntableAwards.find(item => item.id === result.id)
                 } else {
                     index = this.turntableAwards.findIndex(item => item.grade === '谢谢参与')
+                    this.lottery = null
                 }
                 await this.runLottery(index)
             } catch (e) {
@@ -738,8 +739,9 @@ export default {
             background: #fff var(--image) no-repeat center 15px;
             background-size: 80px;
             &.active {
-                background-color: #fced5c;
-                border: 7px solid #d4ff02;
+                background: #fdec5a var(--image) no-repeat center 15px;
+                border-color: #d4ff02;
+                background-size: 80px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, .3) inset;
             }
             &:nth-of-type(1) {
