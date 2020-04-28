@@ -10,7 +10,11 @@
                 </li>
             </div>
             <div>
-                <li>{{ item.activityType === 'GROUPBUGACTIVITY' ? '团购奖学金' : '签到奖学金' }}</li>
+                <li>
+                    <template v-if="item.activityType === 'GROUPBUGACTIVITY'">团购奖学金</template>
+                    <template v-if="item.activityType === 'LUCK_DRAW_ACTIVITY'">抽奖奖学金</template>
+                    <template v-if="item.activityType === 'SIGNIN_ACTIVITY'">签到奖学金</template>
+                </li>
                 <li>全场通用</li>
                 <li>{{ item.useStartTime }} 领取</li>
             </div>
