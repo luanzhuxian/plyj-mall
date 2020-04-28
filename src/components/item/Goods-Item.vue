@@ -5,10 +5,11 @@
     >
         <slot />
         <div :class="$style.top">
-            <img v-imgError
-                 :class="$style.img"
-                 v-lazy="img"
-                 :key="img"
+            <img
+                v-imgError
+                :class="$style.img"
+                :src="img"
+                :key="img"
             >
             <count-down
                 v-if="data.shoppingStatus === 1 && activityProduct === 1"

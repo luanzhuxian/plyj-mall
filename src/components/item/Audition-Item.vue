@@ -7,7 +7,7 @@
         <div :class="$style.content">
             <img v-imgError
                  class="radius-10"
-                 v-lazy="img"
+                 :src="img"
                  :key="img"
                  alt=""
             >

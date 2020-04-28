@@ -7,7 +7,7 @@
             <div :class="$style.goodLeft">
                 <img v-imgError
                      :class="$style.img"
-                     v-lazy="img"
+                     :src="img"
                      :key="img"
                 >
             </div>

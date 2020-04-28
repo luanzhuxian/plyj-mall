@@ -6,7 +6,7 @@
         <!-- 课程组件 -->
         <img v-imgError
              :class="$style[size] + ' ' + $style.img"
-             v-lazy="img"
+             :src="img"
              :key="img"
              alt=""
         >

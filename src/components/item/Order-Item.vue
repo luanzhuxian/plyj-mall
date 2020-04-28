@@ -10,7 +10,7 @@
         @click="handleClick"
     >
         <img v-imgError
-             v-lazy="img"
+             :src="img"
              :key="img"
              alt="商品图片"
         >
