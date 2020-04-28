@@ -2,7 +2,7 @@
     <div :class="$style.studyItem" @click="target(item)">
         <div :class="$style.img">
             <div v-if="item.validityType === 1">
-                {{ item.validity }} 天内完成学习
+                {{ item.priceType === 0 ? `${moment(item.validityDate).format('YYYY-MM-DD')} 到期` : `${item.validity} 天内完成学习` }}
             </div>
             <img :src="item.courseImg" alt="">
         </div>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
     name: 'StudyItem',
     props: {
@@ -54,6 +55,7 @@ export default {
         }
     },
     methods: {
+        moment,
         target (item) {
             if (this.learnStatus !== '3') {
                 if (this.courseType === '1') {
