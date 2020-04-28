@@ -1,7 +1,8 @@
 <template>
     <div :class="$style.studyItem" @click="target(item)">
         <div :class="$style.img">
-            <div v-if="item.validityType === 1">
+            <div :class="$style.give" v-if="item.transactionId === 0">送课</div>
+            <div :class="$style.validity" v-if="item.validityType === 1">
                 {{ item.priceType === 0 ? `${moment(item.validityDate).format('YYYY-MM-DD')} 到期` : `${item.validity} 天内完成学习` }}
             </div>
             <img :src="item.courseImg" alt="">
@@ -111,7 +112,19 @@ export default {
             height: 100%;
             vertical-align: top;
         }
-        > div {
+        > .give {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 120px;
+            border-radius: 20px 0px;
+            font-size: 22px;
+            line-height: 46px;
+            text-align: center;
+            color: #FFFFFF;
+            background: #F2B036;
+        }
+        > .validity {
             position: absolute;
             left: 0;
             bottom: 0;
