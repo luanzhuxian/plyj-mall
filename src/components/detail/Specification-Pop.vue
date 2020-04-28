@@ -22,7 +22,7 @@
                                 <p
                                     v-if="activeProduct == 7"
                                     :class="$style.price"
-                                    v-text="publicBenefitActiveStock"
+                                    v-text="publicBenefitActivePrice"
                                 />
                                 <p
                                     v-else-if="activeType === 1"
@@ -264,11 +264,16 @@ export default {
     created () {
     },
     computed: {
+        publicBenefitActive () {
+            const list = (this.activityProductModel && this.activityProductModel.productModels) || []
+            return list.find(({ sku1, sku2 }) => sku1 === this.currentSku1 && sku2 === this.currentSku2) || {}
+        },
         // 公益活动所选规格的库存
         publicBenefitActiveStock () {
-            const list = (this.activityProductModel && this.activityProductModel.productModels) || []
-            const currentSku = list.find(({ sku1, sku2 }) => sku1 === this.currentSku1 && sku2 === this.currentSku2) || {}
-            return currentSku.activityStock || 0
+            return this.publicBenefitActive.activityStock
+        },
+        publicBenefitActivePrice () {
+            return this.publicBenefitActive.activityPrice
         },
         currentSku () {
             const current = this.skuList.find(item => item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2) || {}
