@@ -423,16 +423,19 @@ export default {
                     params: { id: this.id }
                 }))
                 this.$router.push({ name: 'BindMobile' })
+                return
             } catch (e) {
                 sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
                     name: this.$route.name,
                     params: { id: this.id }
                 }))
                 this.$router.push({ name: 'BindMobile' })
+                return
             }
         }
         if (!this.id) {
             this.canNotJoinCurrentActivity()
+            return
         }
         try {
         // 统计访问量
