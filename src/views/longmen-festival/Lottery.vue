@@ -112,9 +112,9 @@
                                         <td>
                                             <img :class="$style.avatar" :src="item.userImg" alt="">
                                         </td>
-                                        <td class="fz-24" :class="$style.nickname" v-text="item.userName" />
-                                        <td class="fz-24 primary-color" :class="$style.awardName" v-text="awardTypeMap[item.awardType]" />
-                                        <td class="fz-24" v-text="item.awardTime" />
+                                        <td class="fz-20" :class="$style.nickname" v-text="item.userName" />
+                                        <td class="fz-20 primary-color" :class="$style.awardName" v-text="item.awardName" />
+                                        <td class="fz-20" v-text="item.awardTime" />
                                     </tr>
                                 </tbody>
                             </table>
@@ -304,7 +304,9 @@ export default {
             // 抽奖结果弹框对象
             lotteryResult: {},
             // 抽到的奖品
-            lottery: null
+            lottery: null,
+            // 获奖记录页码
+            awardRecordsPage: 1
         }
     },
     props: {
@@ -320,13 +322,38 @@ export default {
             throw e
         }
     },
+    mounted () {
+      window.addEventListener('scroll', this.scrollHandler)
+    },
     beforeDestroy () {
         clearInterval(this.timer)
+        window.removeEventListener('scroll', this.scrollHandler)
     },
     computed: {
         ...mapGetters(['logoUrl'])
     },
     methods: {
+        scrollHandler () {
+            let scrollHeight = document.body.scrollHeight
+            if (window.innerHeight + window.scrollY + 100 >= scrollHeight && !this.loading && !this.done) {
+                clearTimeout(this.timer)
+                this.timer = setTimeout(async () => {
+                    this.awardRecordsPage++
+                    try {
+                        this.loading = true
+                        const { result: { records: awardRecords } } = await getAwardRecords(this.id, this.awardRecordsPage)
+                        this.lotteryRecords = this.lotteryRecords.concat(awardRecords)
+                        if (!awardRecords.length) {
+                            this.done = true
+                        }
+                    } catch (e) {
+                        throw e
+                    } finally {
+                        this.loading = false
+                    }
+                }, 200)
+            }
+        },
         async getDetail () {
           try {
               clearInterval(this.timer)
