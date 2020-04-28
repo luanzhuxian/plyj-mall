@@ -143,6 +143,7 @@
                         <slot
                             name="footer"
                             :publicBenefitActiveStock="publicBenefitActiveStock"
+                            :publicBenefitActivePrice="publicBenefitActivePrice"
                             :currentSku="localCurrentSku"
                             :revert="revert"
                             :limit="limit"

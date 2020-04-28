@@ -206,7 +206,7 @@
                     :activity-product-model="detail.activityProductModel || null"
                     :pre-activity="preActivity"
                 >
-                    <template v-slot:footer="{ currentSku, limiting, limit, publicBenefitActiveStock}" v-if="!~[5, 6].indexOf(productActive) && mchId">
+                    <template v-slot:footer="{ currentSku, limiting, limit, publicBenefitActiveStock, publicBenefitActivePrice}" v-if="!~[5, 6].indexOf(productActive) && mchId">
                         <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">
                             <!-- 活动商品库存不足时，显示该按钮 -->
                             <button
@@ -267,7 +267,7 @@
                                 @click="buyNow(currentSku, -1, 0, limit)"
                             >
                                 {{ publicBenefitActiveStock > 0 ? '公益购买' : '已售罄' }}
-                                <div :class="$style.btnText">¥ {{ publicBenefitActiveStock }}</div>
+                                <div :class="$style.btnText">¥ {{ publicBenefitActivePrice }}</div>
                             </button>
                         </div>
                         <div :class="$style.buttons" v-else>
