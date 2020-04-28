@@ -30,6 +30,7 @@
 
 <script>
 import moment from 'moment'
+import { isRange } from './../../../../apis/live-library'
 export default {
     name: 'StudyItem',
     props: {
@@ -57,8 +58,19 @@ export default {
     },
     methods: {
         moment,
-        target (item) {
-            if (this.learnStatus !== '3') {
+        async target (item) {
+            if (this.learnStatus === '3') {
+                return
+            }
+
+            try {
+                // 免费
+                if (item.priceType === 0) {
+                    const { result } = await isRange(item.courseId)
+                    if (!result) {
+                        return this.$warning('您不是该课程的适用用户')
+                    }
+                }
                 if (this.courseType === '1') {
                     this.$router.push({
                         name: 'CourseWatch',
@@ -74,7 +86,7 @@ export default {
                 } else {
                     this.$router.push({ name: 'Curriculum', params: { productId: item.courseId } })
                 }
-            }
+            } catch (e) { throw e }
         }
     },
     computed: {

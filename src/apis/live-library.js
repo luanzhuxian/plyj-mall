@@ -28,6 +28,9 @@ export const setStudyCount = ({ courseId, liveId }) => axios.get(`/apis/v1/mall/
 // 统计观看的时间
 export const setStudyTime = ({ courseId, liveId, watchTime }) => axios.get(`/apis/v1/mall/cource/addWatchTime/${ courseId }/${ liveId }?watchTime=${ watchTime }`)
 
+// 是否有权限观看课程
+export const isRange = courseId => axios.get(`/apis/v1/knowledgeCourse/isRange/${ courseId }`)
+
 /**
  * 统计视频播放信息，从而据此计费
  * @param data
