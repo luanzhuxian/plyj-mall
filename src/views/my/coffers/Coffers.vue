@@ -12,10 +12,10 @@
             <div>
                 <div :class="$style.withdrawals">
                     <p class="fz-24 gray-3">
-                        可提现润笔
+                        可提现润笔(元)
                     </p>
                     <p class="fz-50 bold">
-                        {{ balance }} <i class="fz-26">元</i>
+                        {{ balance }}
                     </p>
                     <button
                         tag="button"
@@ -28,18 +28,18 @@
                 </div>
                 <div :class="$style.todayRebate" style="padding-left: 0;">
                     <p class="fz-24 gray-3">
-                        待入账润笔
+                        待入账润笔(元)
                     </p>
                     <p class="fz-50 bold">
-                        {{ userInfo.awaitBalance }} <i class="fz-26">元</i>
+                        {{ userInfo.awaitBalance }}
                     </p>
                 </div>
                 <div :class="$style.todayRebate">
                     <p class="fz-24 gray-3">
-                        今日润笔
+                        今日润笔(元)
                     </p>
                     <p class="fz-50 bold">
-                        {{ currentBalance }} <i class="fz-26">元</i>
+                        {{ currentBalance }}
                     </p>
                     <p class="gray-4 fz-26 mt-22">
                         今天你赚了多少
@@ -194,14 +194,14 @@ export default {
     }
   }
   .my-assets {
-    padding: 0 28px;
+    padding-left: 28px;
     > div:nth-of-type(2) {
       display: flex;
+      justify-content:space-around;
     }
     .today-rebate, .withdrawals {
       flex: 1;
       height: 243px;
-      padding-left: 48px;
       background-color: #fff;
     }
   }
