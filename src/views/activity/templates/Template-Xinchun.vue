@@ -66,14 +66,14 @@
 </template>
 
 <script>
-import Live from './xin-chun/Live.vue'
-import Activity from './xin-chun/Activity.vue'
-import Propagate from './xin-chun/Propagate.vue'
-import Coupon from './xin-chun/Coupon.vue'
-import Chunyun from './xin-chun/Chunyun.vue'
-import Pintuan from './xin-chun/Pintuan.vue'
-import Yugou from './xin-chun/Yugou.vue'
-import Recommend from '../home/components/Recommend.vue'
+import Live from '../spring/Live.vue'
+import Activity from '../spring/Activity.vue'
+import Propagate from '../spring/Propagate.vue'
+import Coupon from '../spring/Coupon.vue'
+import Chunyun from '../spring/Chunyun.vue'
+import Pintuan from '../spring/Pintuan.vue'
+import Yugou from '../spring/Yugou.vue'
+import Recommend from '../../home/components/Recommend.vue'
 
 export default {
     name: 'TemplateXinchun',

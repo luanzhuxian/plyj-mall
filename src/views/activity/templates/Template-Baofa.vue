@@ -56,12 +56,12 @@
 </template>
 
 <script>
-import Live from './components/Live.vue'
-import Pintuan from './double-12/Pintuan.vue'
-import Coupon from './double-12/Coupon.vue'
-import Maisong from './double-12/Maisong.vue'
-import Fengqiang from './double-12/Fengqiang.vue'
-import Miaosha from './double-12/Miaosha.vue'
+import Live from '../components/Live.vue'
+import Pintuan from '../double-12/Pintuan.vue'
+import Coupon from '../double-12/Coupon.vue'
+import Maisong from '../double-12/Maisong.vue'
+import Fengqiang from '../double-12/Fengqiang.vue'
+import Miaosha from '../double-12/Miaosha.vue'
 
 export default {
     name: 'HomeTemplateB',
@@ -130,38 +130,39 @@ export default {
 </script>
 
 <style module lang="scss">
-  .live {
+.live {
     margin: 0 0 16px;
-  }
+}
 
-  // 活动
-  .module-activity {
+// 活动
+.module-activity {
     display: flex;
     justify-content: space-between;
     margin-top: 32px;
     .small {
-      width: 340px;
-      height: 176px;
-      &.road {
-        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-small.png") no-repeat center center;
-        background-size: 100% auto;
-      }
-      &.invitation {
-        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small-v2.png") no-repeat center center;
-        background-size: 100% auto;
-      }
+        width: 340px;
+        height: 176px;
+        &.road {
+            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-small.png') no-repeat center center;
+            background-size: 100% auto;
+        }
+        &.invitation {
+            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small-v2.png') no-repeat center center;
+            background-size: 100% auto;
+        }
     }
     .large {
-      width: 100%;
-      height: 176px;
-      &.road {
-        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-large.png") no-repeat center center;
-        background-size: 100% auto;
-      }
-      &.invitation {
-        background: url("http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large-v2.png") no-repeat center center;
-        background-size: 100% auto;
-      }
+        width: 100%;
+        height: 176px;
+        &.road {
+            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-large.png') no-repeat center center;
+            background-size: 100% auto;
+        }
+        &.invitation {
+            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large-v2.png') no-repeat center center;
+            background-size: 100% auto;
+        }
     }
-  }
+}
+
 </style>

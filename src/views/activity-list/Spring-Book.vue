@@ -43,7 +43,7 @@
     </div>
 </template>
 <script>
-import Item from '../activity/xin-chun/Item-Yugou'
+import Item from '../activity/spring/Item-Yugou'
 import { bookActivityPage } from '../../apis/product'
 
 export default {
@@ -107,85 +107,86 @@ export default {
 
 <style lang="scss" module>
 .spring-book {
-  box-sizing: border-box;
-  background: #F2D04A;
-  padding-top: 32px;
-  &-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 32px);
-  }
-  &-top {
-    &-side {
-      border: 64px solid;
-      border-bottom: 32px solid;
-      border-top: none;
-      border-color: transparent transparent #DC4F44 transparent;
+    box-sizing: border-box;
+    background: #f2d04a;
+    padding-top: 32px;
+    &-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 32px);
+    }
+    &-top {
+        &-side {
+            border: 64px solid;
+            border-bottom: 32px solid;
+            border-top: none;
+            border-color: transparent transparent #dc4f44 transparent;
+        }
+        &-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 136px;
+            border-top: 4px solid #f3867e;
+            background: #fb2a33;
+            font-size: 26px;
+            font-family: Microsoft YaHei;
+            color: #fff;
+            text-shadow: 0 2px 2px rgba(0, 0, 0, .20);
+            > h3 {
+                font-size: 48px;
+                font-weight: bold;
+            }
+            > p {
+                margin-top: 8px;
+                width: 230px;
+                height: 40px;
+                line-height: 40px;
+                background: #feae8c;
+                opacity: .8;
+                border-radius: 96px;
+                font-size: 26px;
+                font-family: Microsoft YaHei;
+                color: rgba(255, 255, 255, 1);
+                text-shadow: 0 1px 1px rgba(0, 0, 0, .20);
+                text-align: center;
+            }
+        }
     }
     &-content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 136px;
-      border-top: 4px solid #F3867E;
-      background: #FB2A33;
-      font-size: 26px;
-      font-family: Microsoft YaHei;
-      color: #FFFFFF;
-      text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.20);
-      > h3 {
-        font-size: 48px;
+        flex: 1;
+        padding: 0 32px 48px;
+        background: #f5574b;
+    }
+    &-list {
+        margin: 32px 0;
+    }
+    .title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 32px 0;
+        font-size: 36px;
         font-weight: bold;
-      }
-      > p {
-        margin-top: 8px;
-        width: 230px;
-        height: 40px;
-        line-height: 40px;
-        background: #FEAE8C;
-        opacity: 0.8;
-        border-radius: 96px;
-        font-size: 26px;
-        font-family: Microsoft YaHei;
-        color: rgba(255, 255, 255, 1);
-        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.20);
+        color: #fff;
         text-align: center;
-      }
+        &:before,
+        &:after {
+            display: inline-block;
+            content: '';
+            width: 54px;
+            height: 50px;
+            background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/1d46c9d5-bae7-4f3f-9cff-ac1bad805880.png') no-repeat center;
+            background-size: 100%;
+        }
+        &:after {
+            transform: rotate(180deg);
+        }
+        > span {
+            margin: 0 32px;
+        }
     }
-  }
-  &-content {
-    flex: 1;
-    padding: 0 32px 48px;
-    background: #F5574B;
-  }
-  &-list {
-    margin: 32px 0;
-  }
-  .title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 32px 0;
-    font-size: 36px;
-    font-weight: bold;
-    color: #FFFFFF;
-    text-align: center;
-    &:before,
-    &:after {
-      display: inline-block;
-      content: '';
-      width: 54px;
-      height: 50px;
-      background: url("https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/1d46c9d5-bae7-4f3f-9cff-ac1bad805880.png") no-repeat center;
-      background-size: 100%;
-    }
-    &:after {
-      transform: rotate(180deg);
-    }
-    >span {
-      margin: 0 32px;
-    }
-  }
 }
+
 </style>
