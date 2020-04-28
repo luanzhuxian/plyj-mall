@@ -391,9 +391,9 @@ export default {
               const { result: count } = await getLotteryCount(this.id)
               this.count = count
               const { result: { records: awardRecords } } = await getAwardRecords(this.id)
-              this.awardRecords = awardRecords
+              this.lotteryRecords = awardRecords
               const { result: { records: lotteryRecords } } = await getLotteryRecords(this.id)
-              this.lotteryRecords = lotteryRecords
+              this.awardRecords = lotteryRecords
           } catch (e) {
               throw e
           }
