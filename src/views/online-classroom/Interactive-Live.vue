@@ -82,7 +82,7 @@
                                 </div>
                             </li>
                             <li v-if="totals.FUTURE % 2 === 1" :class="[$style.item, $style.noContent]">
-                                <img v-imgError src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
+                                <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
                                 <div :class="$style.desc">敬请期待</div>
                             </li>
                         </ul>
@@ -121,7 +121,7 @@
                                 </div>
                             </li>
                             <li v-if="totals.PAST % 2 === 1" :class="[$style.item, $style.noContent]">
-                                <img v-imgError src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
+                                <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
                                 <div :class="$style.desc">敬请期待</div>
                             </li>
                         </ul>

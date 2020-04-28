@@ -9,7 +9,7 @@
                     <!--<div class="desc">
             已经成功邀请<span class="number">{{ totalHelpers }}</span>个好友助力，立即开豪礼
           </div>-->
-                    <img v-imgError src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/box@2x.png">
+                    <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/box@2x.png">
                     <div>
                         <span class="btn-open" @click="openGift">开豪礼<pl-svg name="icon-right" fill="#ccc" width="34" /></span>
                     </div>

@@ -4,7 +4,7 @@
         <div :class="$style.container">
             <div :class="$style.main">
                 <div :class="$style.head">
-                    <img v-imgError src="https://mallcdn.youpenglai.com/static/mall/2.9.0/send-live.png">
+                    <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/send-live.png">
                 </div>
                 <div :class="$style.title">
                     <span>您获得了{{ liveList.length }}节直播课程</span>

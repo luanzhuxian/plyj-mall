@@ -8,7 +8,7 @@
                 <div :class="$style.content">
                     <div :class="{[$style.line]:index + 1 !== list.length,[$style.lineSuccess]:signInStatus(item,index)}" />
                     <div :class="{[$style.icon]:true,[$style.iconSuccess]:signInStatus(item,index)}">
-                        <img v-imgError v-if="signInStatus(item,index)" src="https://mallcdn.youpenglai.com/static/beat-plague/73b1df62-f7ad-47fe-9b6c-bdab788f5021.png" alt="">
+                        <img v-if="signInStatus(item,index)" src="https://mallcdn.youpenglai.com/static/beat-plague/73b1df62-f7ad-47fe-9b6c-bdab788f5021.png" alt="">
                         <span :class="$style.signInNo" v-else-if="item.currentDay < 0 && item.healthValue === 0">未签</span>
                         <span v-else>+{{ item.healthValue }}</span>
                     </div>

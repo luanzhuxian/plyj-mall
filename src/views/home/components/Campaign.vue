@@ -3,7 +3,7 @@
         <div :class="$style.campaignTop">
             <div :class="$style.campaignTopSide" />
             <div :class="$style.campaignTopContent">
-                <img v-imgError src="https://mallcdn.youpenglai.com/static/beat-plague/19e269a6-61da-48ed-afbb-0ce198df7cfb.png" alt="">
+                <img src="https://mallcdn.youpenglai.com/static/beat-plague/19e269a6-61da-48ed-afbb-0ce198df7cfb.png" alt="">
             </div>
         </div>
         <ul :class="$style.campaignList">
@@ -16,7 +16,7 @@
                 <div :class="$style.counter">
                     {{ `疫情爆发的第${days}天` }}
                 </div>
-                <img v-imgError src="https://mallcdn.youpenglai.com/static/beat-plague/report.png" alt="">
+                <img src="https://mallcdn.youpenglai.com/static/beat-plague/report.png" alt="">
             </router-link>
             <router-link
                 v-if="isBookShow"
@@ -24,7 +24,7 @@
                 tag="li"
                 :to="{ name: 'EpidemicSignIn', params: { id: bookId } }"
             >
-                <img v-imgError src="https://mallcdn.youpenglai.com/static/beat-plague/join.png" alt="">
+                <img src="https://mallcdn.youpenglai.com/static/beat-plague/join.png" alt="">
             </router-link>
         </ul>
     </div>

@@ -5,7 +5,7 @@
                 <div>
                     --------- 千家机构携手双十二 ---------
                 </div>
-                <img v-imgError src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png" alt="">
+                <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png" alt="">
             </div>
             <p :class="$style.dataTitle"><span>**********</span> <i>双十二疯狂同学会总数据</i> <span>**********</span></p>
 
@@ -65,12 +65,12 @@
                     </div>
                 </div>
                 <template v-if="cacheInfo">
-                    <img v-imgError
-                         :class="$style.subscribe"
-                         v-if="!entDetail.alreadyReserved"
-                         src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/%E7%AB%8B%E5%8D%B3%E9%A2%84%E7%BA%A6.png"
-                         alt=""
-                         @click="showPop = true"
+                    <img
+                        :class="$style.subscribe"
+                        v-if="!entDetail.alreadyReserved"
+                        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/%E7%AB%8B%E5%8D%B3%E9%A2%84%E7%BA%A6.png"
+                        alt=""
+                        @click="showPop = true"
                     >
                     <div :class="$style.subscribe + ' ' + $style.twoIcon" v-if="entDetail.alreadyReserved">
                         <img v-imgError
@@ -79,10 +79,10 @@
                              v-if="entDetail.numberOfBoosts < 3"
                              @click="userHelp"
                         >
-                        <img v-imgError
-                             src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help2.png"
-                             alt=""
-                             v-else
+                        <img
+                            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help2.png"
+                            alt=""
+                            v-else
                         >
                         <div :class="$style.count">
                             x {{ entDetail.numberOfBoosts }}

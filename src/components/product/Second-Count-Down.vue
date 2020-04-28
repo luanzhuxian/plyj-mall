@@ -6,7 +6,7 @@
         v-show="show"
     >
         <span :class="$style.text">
-            <img v-imgError src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/time.png">{{ activityText }}
+            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/time.png">{{ activityText }}
         </span>
         <div :class="$style.time">
             <i>{{ d }}</i><em>天</em><i v-if="h" v-text="h" /><em>:</em><i v-if="m" v-text="m" /><em>:</em><i v-if="s" v-text="s" />

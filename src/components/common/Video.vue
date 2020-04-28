@@ -10,7 +10,7 @@
              }"
              alt=""
         >
-        <img v-imgError v-if="url" :class="$style.play" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/play.png" alt="" @click="play">
+        <img v-if="url" :class="$style.play" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/play.png" alt="" @click="play">
         <div
             v-if="isPlay"
             :class="$style.videoBox"

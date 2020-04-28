@@ -10,6 +10,7 @@
             [$style.skinWomenDay]: skinId === 6,
             [$style.skinNianNianFan]: skinId === 7,
             [$style.skinEarthDay]: skinId === 8,
+            [$style.skinLabourDay]: skinId === 9,
             [$style.skinCampaign]: skinId === 99
         }"
     >
@@ -216,6 +217,16 @@ export default {
                     shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/cart.png',
                     my: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/my.png',
                     myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/my.png'
+                },
+                9: {
+                    home: 'https://mallcdn.youpenglai.com/static/admall/skin/labour-day/homt.png',
+                    homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/labour-day/homt.png',
+                    classify: 'https://mallcdn.youpenglai.com/static/admall/skin/labour-day/classify.png',
+                    classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/labour-day/classify.png',
+                    shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/labour-day/cart.png',
+                    shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/labour-day/cart.png',
+                    my: 'https://mallcdn.youpenglai.com/static/admall/skin/labour-day/my.png',
+                    myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/labour-day/my.png'
                 },
                 99: {
                     home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',

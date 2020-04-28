@@ -32,7 +32,7 @@
                         <!--签到打卡-->
                         <div>
                             <div>
-                                <img v-imgError src="https://mallcdn.youpenglai.com/static/beat-plague/03c085e7-ab35-4c75-b01d-b454d4e8b778.png" alt="">
+                                <img src="https://mallcdn.youpenglai.com/static/beat-plague/03c085e7-ab35-4c75-b01d-b454d4e8b778.png" alt="">
                                 <span>可用健康值：{{ signInInfo.usableHealthValue || 0 }}</span>
                             </div>
                             <div>累计获得健康值：{{ signInInfo.totalHealthValue || 0 }}</div>
@@ -78,7 +78,7 @@
         <Popup :show.sync="showDetail" :hide-close-icon="false">
             <div :class="$style.detail">
                 <div :class="$style.title">
-                    <img v-imgError src="https://mallcdn.youpenglai.com/static/beat-plague/2ed59881-e182-408e-afff-4e9ee89575fa.png" alt="">
+                    <img src="https://mallcdn.youpenglai.com/static/beat-plague/2ed59881-e182-408e-afff-4e9ee89575fa.png" alt="">
                     <ul>
                         <li>活动时间：{{ activityInfo.startTime }} ~ {{ activityInfo.endTime }}</li>
                         <li>活动对象：全部会员</li>
@@ -102,7 +102,7 @@
                         <!-- <p>如果未连续签到，则要重新开始连续签到的计算健康值仅支持本活动种的奖励兑换，活动结束后，未进行兑换的用户，视为防窃兑换奖励，健康值将清零，请大家在活动有效期内及时进行奖励兑换。</p> -->
                         <p v-html="activityInfo.detailedRule" />
                         <div>
-                            <img v-imgError src="https://mallcdn.youpenglai.com/static/beat-plague/d3e0c8bb-08d4-4438-9712-b20b34f3307f.png" alt="">
+                            <img src="https://mallcdn.youpenglai.com/static/beat-plague/d3e0c8bb-08d4-4438-9712-b20b34f3307f.png" alt="">
                         </div>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                 <ul>
                     <li>请选择您想说的话，进行健康打卡，声援武汉</li>
                     <li @click="signIn(item)" v-for="(item,index) in wishList" :key="index">
-                        <img v-imgError src="https://mallcdn.youpenglai.com/static/beat-plague/b843e0f1-166c-42ce-b13a-02a26339dbba.png">
+                        <img src="https://mallcdn.youpenglai.com/static/beat-plague/b843e0f1-166c-42ce-b13a-02a26339dbba.png">
                         <span>{{ item }}</span>
                     </li>
                 </ul>

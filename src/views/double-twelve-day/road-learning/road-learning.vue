@@ -6,7 +6,7 @@
                     <pl-svg v-if="isShare" @click="$router.replace({name: 'Activity'})" name="icon-shouye" fill="#fff" width="40" />
                     <pl-svg v-else @click="$router.back()" name="icon-left" fill="#fff" width="32" />
                 </div>
-                <img v-imgError src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/icon-road-learning-title.png">
+                <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/road-learning/icon-road-learning-title.png">
                 <div class="title-right rule-btn" @click="showRule = true">
                     活动规则
                 </div>

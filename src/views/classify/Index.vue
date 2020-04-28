@@ -39,7 +39,7 @@
                     :class="$style.banner"
                     v-if="currentClassify.id === '1'"
                 >
-                    <img v-imgError src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/helperBanner.png">
+                    <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/helperBanner.png">
                 </div>
                 <template v-if="currentClassify.childs && currentClassify.childs.length">
                     <sub-classify
