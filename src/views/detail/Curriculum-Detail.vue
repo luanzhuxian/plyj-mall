@@ -243,22 +243,15 @@
             <contact :show.sync="showContact" />
 
             <!-- 试看视频 -->
-            <div :class="$style.videoPlayer" v-if="preview.show">
-                <paid-player
-                    :size="preview.size"
-                    :src="preview.url"
-                    :video-id="preview.id"
-                    :resource-id="detail.id"
-                    :resource-name="detail.courseName"
-                />
-                <pl-svg
-                    :class="$style.close"
-                    name="icon-close"
-                    fill="#bbb"
-                    :height="30"
-                    @click="preview.show = false"
-                />
-            </div>
+            <VideoPlayer
+                :show.sync="preview.show"
+                :size="preview.size"
+                :src="preview.url"
+                :video-id="preview.id"
+                :resource-id="detail.id"
+                :resource-name="detail.courseName"
+                :has-statistics="detail.courseType === 2"
+            />
 
             <!-- 海报弹框 -->
             <pl-mask :show.sync="showHaibao">
@@ -301,7 +294,6 @@ import Field from '../../components/detail/Field.vue'
 import SlideCourses from './components/SlideCourses'
 import SeriseCourses from './components/SeriesCourses'
 import Instructions from '../../components/detail/Instructions.vue'
-import PaidPlayer from '../../components/common/Paid-Player.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
 import CharityCountdownBar from './charity/Countdown-Bar.vue'
 import CharityJoin from './charity/Join.vue'
@@ -310,6 +302,7 @@ import CharityPoster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import Barrage from './../longmen-festival/action/components/Barrage'
+import VideoPlayer from './components/Video-Player'
 import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
 import {
     generateQrcode,
@@ -339,14 +332,14 @@ export default {
         SlideCourses,
         SeriseCourses,
         Instructions,
-        PaidPlayer,
         CountDown,
         CharityCountdownBar,
         CharityJoin,
         CharityRule,
         CharityPoster,
         Skeleton,
-        Barrage
+        Barrage,
+        VideoPlayer
     },
     data () {
         return {
@@ -581,12 +574,6 @@ export default {
             this.preview.url = url
             this.preview.size = Number(resourceSize)
             this.preview.show = true
-            this.$nextTick(() => {
-                const player = this.$refs.videoPlayer
-                if (player) {
-                    player.play()
-                }
-            })
         },
         submit () {
             if (!this.mobile) {
@@ -1002,23 +989,5 @@ export default {
         color: #fff;
     }
 }
-
-.video-player {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background-color: #000;
-    z-index: 9999;
-    .close {
-        position: absolute;
-        right: 30px;
-        top: 30px;
-        padding: 20px;
-    }
-  }
 
 </style>
