@@ -9,7 +9,7 @@
         :style="{margin}"
         @click="jump"
     >
-        <img :src="img" :alt="productName">
+        <img v-imgError :src="img" :alt="productName">
         <p :class="{ [$style.name]: true, [$style.isActive]: false }" v-text="productName" />
         <p
             :class="$style.desc"
