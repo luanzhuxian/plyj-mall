@@ -299,12 +299,7 @@ import PresentIcon from './components/Present-Icon'
 import SunPresentItem from './components/Sun-Present-Item'
 import MyPresentItem from './components/My-Present-Item'
 
-const activity_member = {
-    0: '所有注册用户',
-    1: 'Helper用户',
-    2: '普通会员',
-    3: '商家指定用户'
-}
+const activity_member = { 0: '所有注册用户', 1: 'Helper用户', 2: '普通会员', 3: '商家指定用户' }
 const default_avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 const flaunt_Award_Name = '粽粽大礼'
 const countdownInstanceList = []
@@ -378,12 +373,7 @@ export default {
             // 粽粽有礼海报
             newYearPoster: '',
             // 倒计时
-            time: {
-                d: '',
-                h: '',
-                m: '',
-                s: ''
-            },
+            time: { d: '', h: '', m: '', s: '' },
             //  1- 好礼晒单 2-我的奖品
             presentListType: 1,
             // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
@@ -668,21 +658,10 @@ export default {
                     const now = serverTime
                     const start = moment(this.activeDetail.activityStartTime).valueOf()
                     const end = moment(this.activeDetail.activityEndTime).valueOf()
-                    // 活动未开始
-                    if (start > now) {
-                        this.activityIsStart = false
-                        this.countdown(start - now)
-                        // 活动未结束
-                    } else if (end > now) {
-                        this.activityIsStart = true
-                        this.countdown(end - now)
-                        // 活动已结束
-                    } else if (now > end) {
-                        this.activityIsOver = true
-                        this.activityIsStart = true
-                    } else {
-                        this.canNotJoinCurrentActivity()
-                    }
+                    this.activityIsStart = now > start
+                    this.activityIsOver = now > end
+                    const duration = this.activityIsOver ? 0 : this.activityIsStart ? end - now : start - now
+                    if (duration) this.countdown(duration)
                 }
             } catch (e) {
                 throw e
@@ -958,9 +937,23 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $mainColor1: #56b396;
+  $mainColor2: #ff9f4b;
+  $mainColor3: #84ece1;
+  $mainColor4: #3e9f7f;
+  $mainColor5: #EAA529;
+  $mainColorDisable: rgba(255,159,75, .5);
+  $fontColor1: #fff;
+  $fontColor2: #ffc885;
+  $fontColor3: #787878;
+  $fontColor4: #41AF8A;
+  $fontColor5: #EBAC3A;
+  $fontColor6: #333;
+  $borderColor: #C9C9C9;
+  $backgroundColor: #F8F7DE;
   .new-year-activity {
     width: 100vw;
-    background-color: #56b396;
+    background-color: $mainColor1;
     padding-bottom: 60px;
     position: relative;
 
@@ -990,7 +983,7 @@ export default {
             line-height: 150px;
             text-align: center;
             font-size: 34px;
-            color: #F8F7DE;
+            color: $fontColor1;
             background: url('https://mallcdn.youpenglai.com/static/admall/2.9.0/longmen-signin-title.png') top no-repeat;
             background-size: contain;
           }
@@ -1000,7 +993,7 @@ export default {
             height: 441px;
             margin: 0 24px;
             border-radius: 15px;
-            background-color: #FFFFF8;
+            background-color: $fontColor1;
             background-image: url('https://mallcdn.youpenglai.com/static/admall/2.9.0/spray.png');
             background-position: bottom;
             background-repeat: no-repeat;
@@ -1037,7 +1030,7 @@ export default {
                 width: 200px;
                 @include elps();
                 font-size: 40px;
-                color: #FFF;
+                color: $fontColor1;
               }
             }
           }
@@ -1081,7 +1074,7 @@ export default {
                   left: 50%;
                   transform: translateX(-50%);
                   font-size: 24px;
-                  color: #56b396;
+                  color: $mainColor1;
                   width: 120px;
                   @include elps();
                 }
@@ -1097,11 +1090,11 @@ export default {
           z-index: 1;
           width: 100px;
           height: 48px;
-          border: 1px solid rgba(255, 159, 75, 1);
+          border: 1px solid $mainColor2;
           border-right: none;
           border-radius: 24px 0 0 24px;
           line-height: 48px;
-          background: linear-gradient(90deg, rgba(132, 236, 225, 1) 0%, rgba(85, 179, 148, 1) 100%);
+          background: linear-gradient(90deg, $mainColor3 0%, $mainColor1 100%);
           letter-spacing: 2px;
 
           > svg {
@@ -1116,7 +1109,7 @@ export default {
             display: inline-block;
             margin-left: 32px;
             font-size: 20px;
-            color: #fff;
+            color: $fontColor1;
           }
         }
 
@@ -1126,14 +1119,14 @@ export default {
           top: 366px;
           width: 120px;
           height: 48px;
-          border: 1px solid rgba(255, 159, 75, 1);
+          border: 1px solid $mainColor2;
           border-right: none;
           border-radius: 24px 0 0 24px;
           line-height: 48px;
-          background: linear-gradient(90deg, rgba(131, 234, 223, 1) 0%, rgba(85, 179, 148, 1) 100%);
+          background: linear-gradient(90deg, $mainColor3 0%, $mainColor1 100%);
           z-index: 1;
           font-size: 20px;
-          color: #fff;
+          color: $fontColor1;
           text-align: right;
           padding-right: 8px;
           letter-spacing: 2px;
@@ -1166,17 +1159,17 @@ export default {
 
             > h3 {
               font-size: 28px;
-              color: #F8F7DE;
+              color: $fontColor1;
 
               span {
-                color: #FFC885;
+                color: $fontColor2;
               }
             }
 
             > div {
               margin-top: 10px;
               font-size: 26px;
-              color: #FFC885;
+              color: $fontColor2;
 
               span {
                 min-width: 32px;
@@ -1186,8 +1179,8 @@ export default {
                 border-radius:4px;
                 text-align: center;
                 display: inline-block;
-                background-color: #F8F7DE;
-                color: #3E9F7F;
+                background-color: $fontColor1;
+                color: $mainColor4;
               }
             }
           }
@@ -1196,7 +1189,7 @@ export default {
         .join-activity {
           margin: 175px 13px 0;
           min-height: 500px;
-          background: #fff;
+          background: $fontColor1;
           border-radius: 20px;
 
           .control-top {
@@ -1210,13 +1203,13 @@ export default {
               width: 220px;
               line-height: 64px;
               font-size: 26px;
-              color: #FFF;
-              background: #FF9F4B;
+              color: $fontColor1;
+              background: $mainColor2;
               border-radius: 10px;
               text-align: center;
 
               &.disabled {
-                background: rgba(255,159,75, .5);
+                background: $mainColorDisable;
               }
             }
 
@@ -1236,11 +1229,11 @@ export default {
                 span {
                   display: block;
                   font-size: 26px;
-                  color: #3E9F7F;
+                  color: $mainColor4;
 
                   &:last-child {
                     font-size: 22px;
-                    color: #EAA529;
+                    color: $mainColor5;
                     padding-top: 10px;
                   }
                 }
@@ -1267,7 +1260,7 @@ export default {
       min-height: 500px;
       padding-bottom: 20px;
       margin: 14px 32px 0;
-      background-color: #fff;
+      background-color: $fontColor1;
       border-radius: 20px;
 
       .top {
@@ -1277,13 +1270,13 @@ export default {
         justify-content: center;
 
         button {
-          color: #787878;
+          color: $fontColor3;
           font-size: 32px;
           position: relative;
 
           &.is-selected {
             font-weight:bold;
-            color: #41AF8A;
+            color: $fontColor4;
 
             span {
               position: relative;
@@ -1297,7 +1290,7 @@ export default {
           display: inline-block;
           width: 0;
           height: 34px;
-          border: 2px solid rgba(201, 201, 201, 1);
+          border: 2px solid $borderColor;
         }
       }
 
@@ -1308,10 +1301,10 @@ export default {
           margin: 0 150px;
           height: 54px;
           line-height: 54px;
-          background: #F8F7DE;
+          background-color: $backgroundColor;
           border-radius: 34px;
           font-size: 26px;
-          color: #EBAC3A;
+          color: $fontColor5;
         }
 
         .no-sun-present {
@@ -1326,7 +1319,7 @@ export default {
         .more {
           font-size: 26px;
           line-height: 35px;
-          color: #333;
+          color: $fontColor6;
         }
       }
     }
