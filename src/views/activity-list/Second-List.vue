@@ -9,7 +9,7 @@
                 </div>
                 <div class="item" v-for="(item, k) in ingList" :key="k" @click="jumpToDetail(item.productId)">
                     <div class="img">
-                        <img :src="item.productMainImage" object-fit="cover">
+                        <img v-imgError :src="item.productMainImage" object-fit="cover">
                         <div class="count-down">
                             <count-down
                                 activity-text="距结束"
@@ -45,7 +45,7 @@
                 </div>
                 <div class="item" v-for="(item, k) in comingList" :key="k" @click="jumpToDetail(item.productId)">
                     <div class="img">
-                        <img :src="item.productMainImage">
+                        <img v-imgError :src="item.productMainImage">
                         <div class="count-down">
                             <count-down
                                 activity-text="距开始"

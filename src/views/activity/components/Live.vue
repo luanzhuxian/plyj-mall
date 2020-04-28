@@ -19,7 +19,7 @@
             </div>
             <div :class="$style.live" @click="toLivePage">
                 <div :class="$style.imgWrapper">
-                    <img :src="(isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
+                    <img v-imgError :src="(isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
                     <div :class="$style.label" v-if="isNoticeShow">
                         预告
                     </div>

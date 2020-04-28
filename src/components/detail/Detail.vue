@@ -39,7 +39,7 @@ export default {
         detail: {
             async handler (val) {
                 if (val) {
-                    this.afterHtml = val.replace(/<img[^>]+src="([^"]*)"[^>]*>/g, '<img data-src="$1" src=$1?x-oss-process=style/thum-middle>')
+                    this.afterHtml = val.replace(/<img [^>]+src="([^"]*)"[^>]*>/g, '<img v-imgError data-src="$1" src=$1?x-oss-process=style/thum-middle>')
                 }
                 await this.$nextTick()
                 this.setPreview()

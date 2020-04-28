@@ -11,7 +11,7 @@
             :class="$style.qrcodeBox"
             v-if="redeemCodeModels.length > 0 && orderStatus !== 'WAIT_PAY' && orderStatus !== 'CLOSED'"
         >
-            <img :src="qrImg" alt="" v-imger:QR="qrImg" :style="{ opacity: isAllCodeUseless ? 0.4 : 1 }">
+            <img v-imgError :src="qrImg" alt="" v-imger:QR="qrImg" :style="{ opacity: isAllCodeUseless ? 0.4 : 1 }">
             <div
                 :class="{
                     [$style.codeListBox]: true,
@@ -582,7 +582,7 @@
         <!-- 分享核销码弹窗 -->
         <div :class="$style.shareImgBox" v-if="isPosterShow">
             <div :class="$style.imgBox">
-                <img :src="poster" alt="">
+                <img v-imgError :src="poster" alt="">
             </div>
             <div :class="$style.description">
                 <p class="mt-22">长按保存分享给好友</p>

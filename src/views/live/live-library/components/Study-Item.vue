@@ -2,7 +2,7 @@
     <div :class="$style.studyItem" @click="target(item)">
         <div :class="$style.img">
             <div v-if="item.validityType === 1">{{ item.validity }}天内完成学习</div>
-            <img :src="item.courseImg" alt="">
+            <img v-imgError :src="item.courseImg" alt="">
         </div>
         <div :class="$style.content">
             <div :class="$style.description">

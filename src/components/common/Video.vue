@@ -1,16 +1,16 @@
 <template>
     <div :class="$style.video">
-        <img
-            :class="$style.cover"
-            :src="`${url}?x-oss-process=video/snapshot,t_10000,m_fast`"
-            :style="{
-                width: width / 7.5 + 'vw',
-                height: height / 7.5 + 'vw',
-                borderRadius: radius / 7.5 + 'vw'
-            }"
-            alt=""
+        <img v-imgError
+             :class="$style.cover"
+             :src="`${url}?x-oss-process=video/snapshot,t_10000,m_fast`"
+             :style="{
+                 width: width / 7.5 + 'vw',
+                 height: height / 7.5 + 'vw',
+                 borderRadius: radius / 7.5 + 'vw'
+             }"
+             alt=""
         >
-        <img v-if="url" :class="$style.play" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/play.png" alt="" @click="play">
+        <img v-imgError v-if="url" :class="$style.play" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/play.png" alt="" @click="play">
         <div
             v-if="isPlay"
             :class="$style.videoBox"

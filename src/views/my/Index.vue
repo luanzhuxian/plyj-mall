@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.personalCenter">
         <div :class="$style.top">
-            <img :src="avatar" alt="头像">
+            <img v-imgError :src="avatar" alt="头像">
             <div :class="$style.basicInfo">
                 <span :class="$style.main" v-text="userName" />
                 <div :class="$style.sub">
@@ -96,7 +96,7 @@
                         />
                     </router-link>
                     <div :class="$style.segmentation">
-                        <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/my-segmentation.png" alt="">
+                        <img v-imgError src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/my-segmentation.png" alt="">
                     </div>
                     <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
                         <pl-svg name="icon-my-order-list" width="96" height="90" />
@@ -117,7 +117,7 @@
                                 :to="{ name: 'Freight', params: { orderId: item.orderId }, query: { img: item.productImageUrls[0] } }"
                             >
                                 <div :class="$style.contentLeft">
-                                    <img v-img-error :src="item.productImageUrls[0]">
+                                    <img v-imgError v-img-error :src="item.productImageUrls[0]">
                                 </div>
                                 <div :class="$style.contentRight">
                                     <div :class="$style.deliveryStatus">
@@ -148,7 +148,7 @@
                         </div>
                     </router-link>
                     <router-link :to="{ name: 'MyBurse'}" :class="$style.welfareItem">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png" alt="">
+                        <img v-imgError src="https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png" alt="">
                         <div>
                             <h5>我的奖学金</h5>
                             <!-- <span>和优惠券叠加使用</span> -->

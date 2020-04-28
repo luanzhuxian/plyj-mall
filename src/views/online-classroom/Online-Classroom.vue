@@ -58,7 +58,7 @@
                         :class="$style.courseItem"
                         @click.capture="study(item)"
                     >
-                        <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
+                        <img v-imgError :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
                         <div :class="$style.desc">
                             <div :class="$style.title" v-text="item.courseName" />
                             <div :class="[$style.text1, item.lecturer? '' : $style.noLecturer]">

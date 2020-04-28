@@ -96,7 +96,7 @@
             <div :class="$style.giftList" v-if="mallInvitingEventsGiftEntity">
                 <div :class="$style.giftItem">
                     <div :class="$style.left">
-                        <img :src="mallInvitingEventsGiftEntity.giftImage" alt="">
+                        <img v-imgError :src="mallInvitingEventsGiftEntity.giftImage" alt="">
                     </div>
                     <div :class="$style.right">
                         <div :class="$style.name" v-text="mallInvitingEventsGiftEntity.giftName" />
@@ -119,7 +119,7 @@
         <!-- 新人自动领取礼物成功 -->
         <transition name="fade">
             <div :class="$style.successHelp" v-show="showNewUserSuccess">
-                <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/invitenewcomers/%E5%8A%A9%E5%8A%9B%2B%E6%96%B0%E4%BA%BA.png" alt="">
+                <img v-imgError src="https://mallcdn.youpenglai.com/static/mall/2.0.0/invitenewcomers/%E5%8A%A9%E5%8A%9B%2B%E6%96%B0%E4%BA%BA.png" alt="">
                 <button @click="IWantToGetAGiftToo">我也想翻豪礼</button>
             </div>
         </transition>

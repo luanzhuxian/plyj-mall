@@ -25,7 +25,7 @@
                     })"
                 >
                     <div :class="$style.imgWrapper">
-                        <img :src="item.combinationDetailList[0].imageUrl">
+                        <img v-imgError :src="item.combinationDetailList[0].imageUrl">
                         <div :class="$style.countDownWrapper">
                             <span :class="$style.text" v-if="item.combinationDetailList[0].status === 0">距开始</span>
                             <span :class="$style.text" v-if="item.combinationDetailList[0].status === 1">距结束</span>

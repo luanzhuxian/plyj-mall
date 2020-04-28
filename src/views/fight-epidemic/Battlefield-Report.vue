@@ -1,13 +1,13 @@
 <template>
     <div :class="$style.battlefieldReport">
         <div :class="$style.banner">
-            <img src="https://mallcdn.youpenglai.com/static/beat-plague/dd0bb858-2faa-4be3-9eba-5a6edf68687a.png" alt="">
+            <img v-imgError src="https://mallcdn.youpenglai.com/static/beat-plague/dd0bb858-2faa-4be3-9eba-5a6edf68687a.png" alt="">
         </div>
         <div :class="$style.map" ref="map">
-            <!--<img :src="epidemicMap" alt="">-->
+            <!--<img v-imgError :src="epidemicMap" alt="">-->
         </div>
         <div :class="$style.nationwide">
-            <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/%23%E5%85%A8%E5%9B%BD%E7%96%AB%E6%83%85%23%402x.png" alt="">
+            <img v-imgError src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/%23%E5%85%A8%E5%9B%BD%E7%96%AB%E6%83%85%23%402x.png" alt="">
         </div>
         <div :class="$style.count" v-if="epidemicData">
             <div>
@@ -82,7 +82,7 @@
                 <swiperSlide v-for="(item, i) of touched" :key="i">
                     <div :class="$style.imageText">
                         <div :class="$style.image">
-                            <img :src="item.img" alt="">
+                            <img v-imgError :src="item.img" alt="">
                             <span>来源：{{ item.from }}</span>
                         </div>
                         <div :class="$style.title">
@@ -98,9 +98,9 @@
                 防疫我必须知道的事
             </div>
             <div :class="$style.imageText">
-                <img
-                    src="https://mallcdn.youpenglai.com/static/beat-plague/928e0156-28ab-42bd-85fd-d7f634aa78d4.png"
-                    alt=""
+                <img v-imgError
+                     src="https://mallcdn.youpenglai.com/static/beat-plague/928e0156-28ab-42bd-85fd-d7f634aa78d4.png"
+                     alt=""
                 >
             </div>
         </div>

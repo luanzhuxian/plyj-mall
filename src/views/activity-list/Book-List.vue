@@ -15,7 +15,7 @@
                     />
                     <div class="book-ing-content">
                         <div class="img book-img">
-                            <img :src="item.productMainImage">
+                            <img v-imgError :src="item.productMainImage">
                         </div>
                         <div>
                             <div class="title book-title">{{ item.productName }}</div>
@@ -41,7 +41,7 @@
                     />
                     <div class="book-ing-content">
                         <div class="img book-img">
-                            <img :src="item.productMainImage">
+                            <img v-imgError :src="item.productMainImage">
                         </div>
                         <div>
                             <div class="title book-title">{{ item.productName }}</div>

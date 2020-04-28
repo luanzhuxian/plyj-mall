@@ -11,7 +11,7 @@
         <template v-if="list.length > 0">
             <div :class="$style.commentItem" v-for="(item, i) of list" :id="'item' + i" :key="item.id" @click="goDetail(item)">
                 <!-- 头像 -->
-                <img v-img-error :src="item.headUrl || ''" alt="">
+                <img v-imgError v-img-error :src="item.headUrl || ''" alt="">
                 <div :class="$style.content">
                     <div :class="$style.contentTop">
                         <div :class="$style.name" v-text="item.nickName" />
@@ -37,13 +37,13 @@
                     <div :class="$style.commentContent" v-text="item.content" />
                     <!-- 图片 -->
                     <div :class="$style.imgs + ' radius-20'" v-if="item.mediaInfoEntityList.length > 0">
-                        <img
-                            v-for="(img, j) of item.mediaInfoEntityList"
-                            :key="j"
-                            v-img-error
-                            :src="img.mediaUrl + '?x-oss-process=style/thum'"
-                            @click.stop="preview(img.mediaUrl)"
-                            alt=""
+                        <img v-imgError
+                             v-for="(img, j) of item.mediaInfoEntityList"
+                             :key="j"
+                             v-img-error
+                             :src="img.mediaUrl + '?x-oss-process=style/thum'"
+                             @click.stop="preview(img.mediaUrl)"
+                             alt=""
                         >
                     </div>
                     <!-- 回复 -->

@@ -6,11 +6,11 @@
         }"
         v-if="data"
     >
-        <img
-            :class="$style.cartItemImage"
-            :src="currentImage + '?x-oss-process=style/thum'"
-            alt=""
-            @click="goDetail"
+        <img v-imgError
+             :class="$style.cartItemImage"
+             :src="currentImage + '?x-oss-process=style/thum'"
+             alt=""
+             @click="goDetail"
         >
         <CountDown
             v-if="notStart"

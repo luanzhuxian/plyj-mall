@@ -1,12 +1,18 @@
 const img = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png'
+
 let IMGERLIST = {}
 let id = 0
 export default {
     imgError: {
         inserted (el, { value }) {
+            if (el.src.indexOf('http://') > -1) {
+                el.src = el.src.replace('http://', 'https://')
+                return
+            }
             if (el.tagName === 'IMG') {
                 el.onerror = function () {
                     if (value === 'classifyIcon') {
+                        // 分类默认图片
                         el.src = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/category-default.png'
                     } else {
                         el.src = img

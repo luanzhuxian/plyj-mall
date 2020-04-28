@@ -162,7 +162,7 @@
                         :class="$style.product"
                         @click="$router.push({ name: 'Product', params: { productId: item.id } })"
                     >
-                        <img :src="item.productMainImage" alt="">
+                        <img v-imgError :src="item.productMainImage" alt="">
                         <div :class="$style.left">
                             <div :class="$style.name" v-text="item.productName" />
                             <div :class="$style.price">
@@ -194,7 +194,7 @@
 
                 <!--<transition name="fade">
           <div v-if="showEmoticon" :class="$style.emoticon">
-            <img
+            <img v-imgError
               v-for="(item, i) of emoticon"
               :key="i"
               :src="item.url"
@@ -210,7 +210,7 @@
             <div :class="$style.payWrap" v-if="needPay">
                 <div :class="$style.payBox">
                     <div :class="$style.boxTop">
-                        <img :src="detail.coverImg + '?x-oss-process=style/thum-middle'" alt="">
+                        <img v-imgError :src="detail.coverImg + '?x-oss-process=style/thum-middle'" alt="">
                         <div :class="$style.topRight">
                             <div :class="$style.title" v-text="detail.name" />
                             <div :class="$style.time" v-text=" detail.livestartedDuration" />
@@ -236,7 +236,7 @@
         <transition name="fade">
             <div :class="$style.poster" v-if="showPoster">
                 <div :class="$style.posterWrap">
-                    <img :src="poster" alt="">
+                    <img v-imgError :src="poster" alt="">
                     <div>长按识别或保存二维码，分享给朋友吧！</div>
                     <pl-svg class="mt-22" name="icon-close" width="48" fill="#fff" @click="showPoster = false" />
                 </div>

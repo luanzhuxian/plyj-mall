@@ -14,7 +14,7 @@
                 :key="i"
             >
                 <pl-svg name="icon-gift2" width="50" height="50" />
-                <img :class="$style.avatar" :src="item.headImgUrl" alt="">
+                <img v-imgError :class="$style.avatar" :src="item.headImgUrl" alt="">
                 <div :class="$style.itemRight">
                     <p>{{ item.nickName }}注册成功</p>
                     <p>开出了<i v-text="item.name" /></p>

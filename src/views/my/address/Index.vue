@@ -10,9 +10,9 @@
                 @click="handleClick(item)"
                 :key="i"
             >
-                <img
-                    :src="createImage(item.realName[0])"
-                    alt=""
+                <img v-imgError
+                     :src="createImage(item.realName[0])"
+                     alt=""
                 >
                 <div :class="$style.controller">
                     <div :class="$style.detail">
@@ -26,10 +26,10 @@
                             </span>
                         </div>
                         <p :class="$style.addressDetail + ' fz-24'">
-                            <img
-                                v-if="item.defaultAddress === 'YES'"
-                                :src="createType('默认')"
-                                alt=""
+                            <img v-imgError
+                                 v-if="item.defaultAddress === 'YES'"
+                                 :src="createType('默认')"
+                                 alt=""
                             > <span v-text="item.addressPrefix" /> <span v-text="item.agencyAddress" />
                         </p>
                     </div>

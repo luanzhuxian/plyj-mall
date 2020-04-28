@@ -3,7 +3,7 @@
     <div @click.stop="" v-show="show" :class="$style.burseMask">
         <div :class="$style.burseContainer">
             <div :class="$style.head">
-                <img src="https://mallcdn.youpenglai.com/static/mall/2.0.0/tuan/8fd96d5d-6096-48b2-b2e2-f5e67587264e.png" :class="$style.head">
+                <img v-imgError src="https://mallcdn.youpenglai.com/static/mall/2.0.0/tuan/8fd96d5d-6096-48b2-b2e2-f5e67587264e.png" :class="$style.head">
             </div>
             <!--中间内容-->
             <div :class="$style.con">

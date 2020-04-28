@@ -2,7 +2,7 @@
     <div :class="$style.helperQrcode">
         <tab :tabs="array" :active-id.sync="activeId" :color9="true" />
         <div v-show="activeId === 1" :class="$style.helperGuidelines">
-            <div :class="$style.imgBox"><img :src="post" alt=""></div>
+            <div :class="$style.imgBox"><img v-imgError :src="post" alt=""></div>
             <div :class="$style.descriptionBox">
                 <p>推广指引：</p>
                 <ol>
@@ -14,7 +14,7 @@
         </div>
         <div v-show="activeId === 2" :class="$style.qoceBox">
             <div :class="$style.imgBox" ref="imgBox">
-                <img :src="qrcode" alt="" ref="qrcode">
+                <img v-imgError :src="qrcode" alt="" ref="qrcode">
             </div>
             <div :class="$style.qrcodeTip">
                 <p>快速申请helper通道，出示二维码给用户</p>

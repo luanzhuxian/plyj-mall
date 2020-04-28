@@ -4,11 +4,11 @@
         @click="handleClick"
     >
         <!-- 课程组件 -->
-        <img
-            :class="$style[size] + ' ' + $style.img"
-            v-lazy="img"
-            :key="img"
-            alt=""
+        <img v-imgError
+             :class="$style[size] + ' ' + $style.img"
+             v-lazy="img"
+             :key="img"
+             alt=""
         >
         <div :class="$style.right">
             <div>

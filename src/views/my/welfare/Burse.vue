@@ -24,7 +24,7 @@
             no-content-tip="不敢相信你还没领到奖学金，快去参加活动吧"
             :no-icon="true"
         >
-            <img style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">
+            <img v-imgError style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">
             <burse-item :item="item" v-for="(item,index) in burseList" :key="index" />
         </load-more>
 
@@ -33,7 +33,7 @@
             <div v-if="burseList.length === 0" @click="$router.push({name:'Home'})" :class="$style.goHome">返回首页参加活动</div>
         </div>
         <!-- <div :class="$style.burseNone" v-if="burseList.length === 0">
-      <img src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">
+      <img v-imgError src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">
       <div>不敢相信你还没领到奖学金</div>
       <div>快去参加活动吧</div>
       <div>返回首页参加活动</div>

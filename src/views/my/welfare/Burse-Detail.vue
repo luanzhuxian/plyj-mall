@@ -19,7 +19,7 @@
             </div>
             <div v-for="it in item.products" :key="it.productId">
                 <div>
-                    <img :src="it.productImg" alt="">
+                    <img v-imgError :src="it.productImg" alt="">
                 </div>
                 <div>
                     <div>{{ it.productName }}</div>

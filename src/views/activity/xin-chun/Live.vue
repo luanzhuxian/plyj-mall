@@ -17,7 +17,7 @@
             </span>
         </div>
         <div :class="$style.imgWrapper">
-            <img :src="(isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">
+            <img v-imgError :src="(isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">
             <pl-svg name="icon-play" width="100" />
             <div :class="$style.info">
                 <div :class="$style.status">

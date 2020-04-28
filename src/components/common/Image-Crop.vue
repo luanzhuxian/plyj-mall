@@ -1,8 +1,8 @@
 <template>
     <div class="m-image-crop">
-        <img
-            class="show-img"
-            :src="currentValue | fileSrc"
+        <img v-imgError
+             class="show-img"
+             :src="currentValue | fileSrc"
         >
         <svg
             v-if="hasRemove"
@@ -29,11 +29,11 @@
             v-touch:end="end"
             v-touch:scale="scale"
         >
-            <img
-                class="file"
-                ref="file"
-                :src="url"
-                alt=""
+            <img v-imgError
+                 class="file"
+                 ref="file"
+                 :src="url"
+                 alt=""
             >
             <div
                 class="imgView"
@@ -43,11 +43,11 @@
                     class="imgViewBox"
                     ref="imgViewBox"
                 >
-                    <img
-                        class="file"
-                        ref="file2"
-                        :src="url"
-                        alt=""
+                    <img v-imgError
+                         class="file"
+                         ref="file2"
+                         :src="url"
+                         alt=""
                     >
                 </div>
             </div>

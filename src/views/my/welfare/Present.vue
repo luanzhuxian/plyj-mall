@@ -27,7 +27,7 @@
                 </div>
                 <div class="code-box-content">
                     <div class="code-img">
-                        <img :src="qrcode" alt="">
+                        <img v-imgError :src="qrcode" alt="">
                     </div>
                     <p class="code-num">{{ activeItem.redeemCode.slice(0 ,2) }} {{ activeItem.redeemCode.slice(2) | separator(' ', 4) }}</p>
                     <p class="code-description">请出示核销码给机构人员</p>
@@ -54,7 +54,7 @@
                 <div class="item">
                     <div class="item-content">
                         <div :class="{'content-img-box': true, 'h-180': item.activityName }">
-                            <img :src="item.giftImage" alt="">
+                            <img v-imgError :src="item.giftImage" alt="">
                         </div>
                         <div class="content-detail-box">
                             <div class="content-box">
@@ -92,7 +92,7 @@
                     <div class="item-content">
                         <pl-svg class="stamp" name="icon-yiduihuan" width="200" height="200" />
                         <div :class="{'content-img-box': true, 'h-180': item.activityName }">
-                            <img :src="item.giftImage" alt="">
+                            <img v-imgError :src="item.giftImage" alt="">
                         </div>
                         <div class="content-detail-box">
                             <div class="content-box">
@@ -130,7 +130,7 @@
                     <div class="item-content">
                         <pl-svg class="stamp" name="icon-yiguoqi" width="200" height="200" />
                         <div :class="{'content-img-box': true, 'h-180': item.activityName }">
-                            <img :src="item.giftImage" alt="">
+                            <img v-imgError :src="item.giftImage" alt="">
                         </div>
                         <div class="content-detail-box">
                             <div class="content-box">

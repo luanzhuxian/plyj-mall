@@ -11,11 +11,11 @@
                     <pl-svg :class="$style.close" name="icon-close2" width="30" fill="#ccc" @click.stop="close" />
                     <div>
                         <div :class="$style.baseInfo" v-if="currentSku">
-                            <img
-                                v-if="currentSku.skuImage"
-                                v-img-error
-                                :src="skuImage + '?x-oss-process=style/thum'"
-                                alt=""
+                            <img v-imgError
+                                 v-if="currentSku.skuImage"
+                                 v-img-error
+                                 :src="skuImage + '?x-oss-process=style/thum'"
+                                 alt=""
                             >
                             <div :class="$style.baseInfoRight">
                                 <p

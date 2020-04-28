@@ -100,7 +100,7 @@
         <transition name="fade">
             <div :class="$style.saveHaibao" v-if="showHaibao">
                 <div :class="$style.saveHaibaoContent">
-                    <img :src="haibao" alt="">
+                    <img v-imgError :src="haibao" alt="">
                     <div :class="$style.saveButton">
                         长按识别或保存二维码，分享给朋友吧！
                     </div>

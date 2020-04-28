@@ -2,7 +2,7 @@
     <div :class="$style.liveItem" @click="target(item)">
         <div :class="$style.img">
             <div>支持回放</div>
-            <img :src="item.coverImg" alt="">
+            <img v-imgError :src="item.coverImg" alt="">
         </div>
         <div :class="$style.description">
             <div :class="$style.title">

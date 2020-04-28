@@ -24,7 +24,7 @@
                         v-for="(item, k) in detail.activityProductModel.userImageList.slice(-4)"
                         :key="k"
                     >
-                        <img :src="item.headImgURL">
+                        <img v-imgError :src="item.headImgURL">
                     </li>
                 </ul>
                 <div v-if="detail.activityProductModel.number > 0">{{ detail.activityProductModel.number }}人和你一起参与</div>

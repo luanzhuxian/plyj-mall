@@ -33,7 +33,7 @@
                                 :class="$style.nowLiveItem"
                                 @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
                             >
-                                <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
+                                <img v-imgError :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                                 <div :class="$style.itemBottom">
                                     <div :class="$style.desc">
                                         <div :class="$style.liveName" v-text="item.name" />
@@ -64,7 +64,7 @@
                                 :class="$style.item"
                                 @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
                             >
-                                <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
+                                <img v-imgError :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                                 <div :class="$style.desc">
                                     <div :class="$style.liveTitle">{{ item.name }}</div>
                                     <div :class="$style.text2">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
@@ -82,7 +82,7 @@
                                 </div>
                             </li>
                             <li v-if="totals.FUTURE % 2 === 1" :class="[$style.item, $style.noContent]">
-                                <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
+                                <img v-imgError src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
                                 <div :class="$style.desc">敬请期待</div>
                             </li>
                         </ul>
@@ -101,7 +101,7 @@
                                 :class="$style.item"
                                 @click.capture="() => { item.videoLibId !== '0' ? $router.push({ name: 'LivePlayBack', params:{ id: item.videoLibId, activityId: item.id, isValidateEndTime: '0' } }) : '' }"
                             >
-                                <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
+                                <img v-imgError :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                                 <div :class="$style.desc">
                                     <div :class="$style.liveTitle">{{ item.name }}</div>
                                     <div :class="$style.text2">已结束： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
@@ -121,7 +121,7 @@
                                 </div>
                             </li>
                             <li v-if="totals.PAST % 2 === 1" :class="[$style.item, $style.noContent]">
-                                <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
+                                <img v-imgError src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
                                 <div :class="$style.desc">敬请期待</div>
                             </li>
                         </ul>

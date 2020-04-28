@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div :class="$style.imgWrapper">
-                <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/61795ee4-ca67-49c5-b5c2-d3f8769e98dc.png" alt="">
+                <img v-imgError src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/61795ee4-ca67-49c5-b5c2-d3f8769e98dc.png" alt="">
             </div>
         </router-link>
 
@@ -40,7 +40,7 @@
             :to="{ name: '' }"
         >
             <div :class="$style.imgWrapper">
-                <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/2545d06c-3ae5-431b-926e-0feb36572222.png" alt="">
+                <img v-imgError src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/2545d06c-3ae5-431b-926e-0feb36572222.png" alt="">
             </div>
             <div :class="$style.info">
                 <div :class="$style.sub">

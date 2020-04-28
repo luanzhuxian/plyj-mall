@@ -6,9 +6,9 @@
                 v-for="(img, i) of images"
                 :key="i"
             >
-                <img
-                    v-imger:uploadList="img"
-                    :src="img + '?x-oss-process=style/thum'"
+                <img v-imgError
+                     v-imger:uploadList="img"
+                     :src="img + '?x-oss-process=style/thum'"
                 >
                 <div class="remove-btn">
                     <pl-svg

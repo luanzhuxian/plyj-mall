@@ -22,11 +22,11 @@
                                 :class="{ [$style.item]: true, partition: j < item.length }"
                             >
                                 <div :class="$style.mainContent">
-                                    <img
-                                        :class="$style.listItemImg"
-                                        v-img-error
-                                        :src="pro.mediaInfoModels[0]"
-                                        alt=""
+                                    <img v-imgError
+                                         :class="$style.listItemImg"
+                                         v-img-error
+                                         :src="pro.mediaInfoModels[0]"
+                                         alt=""
                                     >
                                     <div :class="$style.itemRight">
                                         <div :class="$style.titlePrice">
@@ -67,7 +67,7 @@
                             <!--<li v-for="(pro, j) of item"-->
                             <!--:key="j"-->
                             <!--:class="{ [$style.item]: true, partition: j < item.length - 1 }" >-->
-                            <!--<img v-img-error :src="pro.mediaInfoModels[0].mediaUrl" alt="">-->
+                            <!--<img v-imgError v-img-error :src="pro.mediaInfoModels[0].mediaUrl" alt="">-->
                             <!--<div :class="$style.itemRight">-->
                             <!--<div :class="$style.titlePrice">-->
                             <!--<p class="fz-28" v-text="pro.productName" />-->

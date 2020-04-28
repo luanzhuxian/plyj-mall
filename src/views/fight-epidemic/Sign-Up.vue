@@ -4,7 +4,7 @@
             <div :class="$style.slogn" />
             <main :class="$style.main">
                 <div :class="$style.oath">
-                    <img src="https://mallcdn.youpenglai.com/static/beat-plague/4baf5d68-a0cf-4cfb-814f-f8887413fd61.png" alt="">
+                    <img v-imgError src="https://mallcdn.youpenglai.com/static/beat-plague/4baf5d68-a0cf-4cfb-814f-f8887413fd61.png" alt="">
                     <div :class="$style.text">
                         <p>2020年的中国春节前的一场疫情，牵动了每一位中国人的心!我们倡议大家都取消外出活动，为阻挡疫情的扩散，尽着自己的力量。</p>
                         <p>在抗击疫情最关键的时刻，全国上下齐心协力、众志成城，同样，作为莘莘学子们也希望和战斗在一线逆行的先锋们携手战斗，和疫情赛跑，以自己的方式为这场战斗贡献力量。</p>

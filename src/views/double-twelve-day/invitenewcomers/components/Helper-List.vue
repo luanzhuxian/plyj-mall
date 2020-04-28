@@ -2,11 +2,11 @@
     <div v-show="helpers.length" :class="$style.helpers">
         <pl-svg name="icon-zhulihaoyou" fill="60" />
         <div :class="$style.list">
-            <img
-                v-for="(item, i) of helpers"
-                :key="i"
-                :src="item.headImgUrl"
-                alt=""
+            <img v-imgError
+                 v-for="(item, i) of helpers"
+                 :key="i"
+                 :src="item.headImgUrl"
+                 alt=""
             >
             <span v-if="helpers.length === 6" :class="$style.soMore">...</span>
         </div>

@@ -5,10 +5,10 @@
             @click="handleClick"
         >
             <div :class="$style.goodLeft">
-                <img
-                    :class="$style.img"
-                    v-lazy="img"
-                    :key="img"
+                <img v-imgError
+                     :class="$style.img"
+                     v-lazy="img"
+                     :key="img"
                 >
             </div>
             <div :class="$style.goodRight">

@@ -8,7 +8,7 @@
             {{ data.name }}
         </div>
         <div :class="$style.imgWrapper">
-            <img :src="data.imageUrl" alt="">
+            <img v-imgError :src="data.imageUrl" alt="">
         </div>
         <div :class="$style.countDownWrapper" v-if="size === 'small'">
             <span v-if="data.status === 0">距开始：</span>

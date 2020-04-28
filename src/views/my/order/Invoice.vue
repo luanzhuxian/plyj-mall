@@ -3,10 +3,10 @@
         <Address-Item />
 
         <div :class="$style.orderInfo + ' radius-20 mt-28'">
-            <img
-                v-img-error
-                :src="orderInfoModel.img"
-                alt=""
+            <img v-imgError
+                 v-img-error
+                 :src="orderInfoModel.img"
+                 alt=""
             >
             <div :class="$style.right">
                 <div>

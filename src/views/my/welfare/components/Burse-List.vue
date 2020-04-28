@@ -9,7 +9,7 @@
             no-content-tip="暂无数据"
             :no-icon="true"
         >
-            <!-- <img style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt=""> -->
+            <!-- <img v-imgError style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt=""> -->
             <burse-item @select="select" v-bind="$attrs" :is-edit="isEdit" is-watch :item="item" v-for="(item,index) in burseList" :key="index" />
         </load-more>
         <div :class="$style.btn">

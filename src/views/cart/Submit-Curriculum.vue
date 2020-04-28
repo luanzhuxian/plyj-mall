@@ -2,7 +2,7 @@
     <div :class="$style.submitCurriculum">
         <div :class="$style.product">
             <div :class="$style.detail">
-                <img :src="courseDetail.courseImg" alt="">
+                <img v-imgError :src="courseDetail.courseImg" alt="">
                 <div :class="$style.right">
                     <div :class="$style.name">
                         {{ courseDetail.courseName }}

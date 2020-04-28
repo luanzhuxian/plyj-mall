@@ -9,10 +9,10 @@
         />
         <main class="radius-20 bg-white mt-28">
             <div :class="$style.grade">
-                <img
-                    v-img-error
-                    :src="productImg + '?x-oss-process=style/thum'"
-                    alt=""
+                <img v-imgError
+                     v-img-error
+                     :src="productImg + '?x-oss-process=style/thum'"
+                     alt=""
                 >
                 <span class="fz-26 gray-2">本次感受</span>
                 <Grade

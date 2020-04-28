@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.liveMask">
-        <img :src="imgSrc" alt="">
+        <img v-imgError :src="imgSrc" alt="">
         <div :class="$style.countdown">
             <div v-if="waiting" :class="$style.waiting">
                 直播暂未开始

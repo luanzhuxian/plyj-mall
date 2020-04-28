@@ -5,11 +5,11 @@
     >
         <!-- 试听组件 -->
         <div :class="$style.content">
-            <img
-                class="radius-10"
-                v-lazy="img"
-                :key="img"
-                alt=""
+            <img v-imgError
+                 class="radius-10"
+                 v-lazy="img"
+                 :key="img"
+                 alt=""
             >
             <div :class="$style.right">
                 <div :class="$style.title">

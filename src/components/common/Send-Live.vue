@@ -4,7 +4,7 @@
         <div :class="$style.container">
             <div :class="$style.main">
                 <div :class="$style.head">
-                    <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/send-live.png">
+                    <img v-imgError src="https://mallcdn.youpenglai.com/static/mall/2.9.0/send-live.png">
                 </div>
                 <div :class="$style.title">
                     <span>您获得了{{ liveList.length }}节直播课程</span>
@@ -29,7 +29,7 @@
                             v-for="(item, index) of liveList"
                             :key="index"
                         >
-                            <img :src="item.coverImg" alt="">
+                            <img v-imgError :src="item.coverImg" alt="">
                             <div :class="$style.desc">
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
                                 <div :class="$style.liveTime">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
@@ -61,7 +61,7 @@
                             :key="index"
                             @click.capture="goToWatchLive(item)"
                         >
-                            <img :src="item.coverImg" alt="">
+                            <img v-imgError :src="item.coverImg" alt="">
                             <div :class="$style.desc">
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
                                 <div :class="$style.liveTime">

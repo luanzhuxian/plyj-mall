@@ -84,7 +84,7 @@
                             @click="$router.push({ name: 'Product', params: { productId: prod.id }, query: { currentProductStatus: 3 } })"
                         >
                             <div :class="$style.imgWrapper">
-                                <img :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">
+                                <img v-imgError :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">
                                 <div :class="$style.countDown">
                                     <span :class="$style.text" v-if="prod.activityInfo.status === 0">距开始</span>
                                     <span :class="$style.text" v-if="prod.activityInfo.status === 1">距结束</span>

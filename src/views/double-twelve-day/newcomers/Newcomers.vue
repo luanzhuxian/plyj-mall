@@ -1,6 +1,6 @@
 <template>
     <div class="newcomers">
-        <img class="banner" src="https://mallcdn.youpenglai.com/static/admall/2.8.0/5a03b2b938af4.jpg">
+        <img v-imgError class="banner" src="https://mallcdn.youpenglai.com/static/admall/2.8.0/5a03b2b938af4.jpg">
         <div class="title-bar">
             <i class="icon-gift" />
             优惠大礼包

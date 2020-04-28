@@ -1,7 +1,7 @@
 <template>
     <div class="winning-prize poster" v-if="show">
         <div class="prize-box poster-box">
-            <img :src="poster">
+            <img v-imgError :src="poster">
             <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
         </div>
         <div class="winning-prize-close poster-close">

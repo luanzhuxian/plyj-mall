@@ -209,13 +209,13 @@
                     title="问题描述："
                 >
                     <div :class="$style.imgList">
-                        <img
-                            v-for="(img, i) of refundDetail.pictures"
-                            :key="i"
-                            :src="img + '?x-oss-process=style/thum'"
-                            v-img-error
-                            v-imger:refundImg="img"
-                            alt="退款图片"
+                        <img v-imgError
+                             v-for="(img, i) of refundDetail.pictures"
+                             :key="i"
+                             :src="img + '?x-oss-process=style/thum'"
+                             v-img-error
+                             v-imger:refundImg="img"
+                             alt="退款图片"
                         >
                     </div>
                 </pl-list>

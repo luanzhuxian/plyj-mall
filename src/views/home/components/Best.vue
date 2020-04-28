@@ -19,7 +19,7 @@
                             :data="item.goodsInfo"
                             :fields="{ end: 'shoppingTimeLong' }"
                         />
-                        <img :src="item.image + '?x-oss-process=style/thum-middle'" v-img-error alt="">
+                        <img v-imgError :src="item.image + '?x-oss-process=style/thum-middle'" v-img-error alt="">
                     </div>
                     <span v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'" :class="$style.experience">体验课</span>
                     <div :class="$style.content">

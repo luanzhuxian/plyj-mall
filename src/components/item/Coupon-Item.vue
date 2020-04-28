@@ -1,10 +1,10 @@
 <template>
     <div :class="[$style.couponItem, status ? $style.unavailable : '']">
         <!-- 根据优惠券类型显示图片，2-品类券 1-满减券 -->
-        <img v-if="isShowReceive"
+        <img v-imgError v-if="isShowReceive"
              :src="couponType === 2 ? 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/category-coupon.png' : 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/full-coupon.png'"
         >
-        <img v-if="!isShowReceive"
+        <img v-imgError v-if="!isShowReceive"
              :src="couponType === 2 ? 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/76e59b16-6299-40d1-9a70-ac4193f08398.png' : 'https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/e7b54027-efd5-4724-98e1-8393c7bdd883.png'"
         >
         <div :class="$style.wrap">

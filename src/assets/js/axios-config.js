@@ -68,6 +68,7 @@ async function response (response) {
       return Promise.reject(e)
     }
   }
+  console.log(data)
   return data
 }
 
@@ -90,4 +91,15 @@ function resError (error) {
   return Promise.reject(new ResponseError(JSON.stringify({
     message: msg
   }, null, 4)))
+}
+// 把http协议的图片换成https协议
+function httpToHttps(data) {
+  data = JSON.stringify(data)
+  for (const k of Object.keys(data)) {
+    if (typeof data[k] === 'string') {
+
+    } else {
+      continue
+    }
+  }
 }

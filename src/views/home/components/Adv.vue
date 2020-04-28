@@ -7,10 +7,10 @@
             :src="data.values[0].image"
             :to="getRouteLink(data.values[0])"
         />
-        <img
-            :class="$style.img"
-            v-else
-            :src="data.values[0].image"
+        <img v-imgError
+             :class="$style.img"
+             v-else
+             :src="data.values[0].image"
         >
     </div>
 </template>

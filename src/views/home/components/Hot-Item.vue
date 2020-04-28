@@ -19,7 +19,7 @@
                             :data="item.goodsInfo"
                             :fields="{ end: 'shoppingTimeLong' }"
                         />
-                        <img :src="item.image + '?x-oss-process=style/thum-middle'" v-img-error alt="">
+                        <img v-imgError :src="item.image + '?x-oss-process=style/thum-middle'" v-img-error alt="">
                     </div>
                     <div :class="$style.content">
                         <div :class="$style.proName" v-text="item.name" />

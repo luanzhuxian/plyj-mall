@@ -135,7 +135,7 @@
                     <div :class="$style.mallDesc" v-text="mallDesc" />
                 </div>
                 <div :class="$style.pingxuanMiddle">
-                    <img :src="logoUrl" alt="">
+                    <img v-imgError :src="logoUrl" alt="">
                 </div>
                 <div :class="$style.pingxuanRight">
                     <pl-svg name="icon-right" fill="#ccc" width="20" height="25" />
@@ -251,7 +251,7 @@
             <transition name="fade">
                 <div :class="$style.saveHaibao" v-if="showHaibao">
                     <div :class="$style.saveHaibaoContent">
-                        <img :src="haibao" alt="">
+                        <img v-imgError :src="haibao" alt="">
                         <div :class="$style.saveButton" v-if="activeProduct === 1">
                             长按识别或保存二维码，分享给朋友吧！
                         </div>
@@ -275,7 +275,7 @@
                             v-for="(item, index) in detail.activityProductModel.payUserImageList.slice(-3)"
                             :key="index"
                         >
-                            <img :src="item.headImgURL">
+                            <img v-imgError :src="item.headImgURL">
                         </li>
                         <li v-if="!detail.activityProductModel.payUserImageList.length"><div>+{{ detail.activityProductModel.percolatorCount }}</div></li>
                         <li v-if="detail.activityProductModel.payUserImageList.length > 3"><div>...</div></li>

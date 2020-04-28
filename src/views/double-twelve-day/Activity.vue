@@ -5,7 +5,7 @@
                 <div>
                     --------- 千家机构携手双十二 ---------
                 </div>
-                <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png" alt="">
+                <img v-imgError src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/double-twelve-header-1571393161453.png" alt="">
             </div>
             <p :class="$style.dataTitle"><span>**********</span> <i>双十二疯狂同学会总数据</i> <span>**********</span></p>
 
@@ -42,7 +42,7 @@
                     <div>
                         <div :class="$style.contentBox">
                             <div :class="$style.contentTop">
-                                <img :class="$style.logo" :src="logoUrl" alt="">
+                                <img v-imgError :class="$style.logo" :src="logoUrl" alt="">
                                 <pl-svg v-if="cacheInfo" name="icon-jigoushuju" fill="#565776" width="48" />
                                 <span :class="$style.mallName" v-else>{{ mallName }}</span>
                             </div>
@@ -65,24 +65,24 @@
                     </div>
                 </div>
                 <template v-if="cacheInfo">
-                    <img
-                        :class="$style.subscribe"
-                        v-if="!entDetail.alreadyReserved"
-                        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/%E7%AB%8B%E5%8D%B3%E9%A2%84%E7%BA%A6.png"
-                        alt=""
-                        @click="showPop = true"
+                    <img v-imgError
+                         :class="$style.subscribe"
+                         v-if="!entDetail.alreadyReserved"
+                         src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/%E7%AB%8B%E5%8D%B3%E9%A2%84%E7%BA%A6.png"
+                         alt=""
+                         @click="showPop = true"
                     >
                     <div :class="$style.subscribe + ' ' + $style.twoIcon" v-if="entDetail.alreadyReserved">
-                        <img
-                            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help1.png"
-                            alt=""
-                            v-if="entDetail.numberOfBoosts < 3"
-                            @click="userHelp"
+                        <img v-imgError
+                             src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help1.png"
+                             alt=""
+                             v-if="entDetail.numberOfBoosts < 3"
+                             @click="userHelp"
                         >
-                        <img
-                            src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help2.png"
-                            alt=""
-                            v-else
+                        <img v-imgError
+                             src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help2.png"
+                             alt=""
+                             v-else
                         >
                         <div :class="$style.count">
                             x {{ entDetail.numberOfBoosts }}
@@ -131,7 +131,7 @@
         <!-- 预约成功 -->
         <transition name="fade">
             <div :class="$style.share" v-if="showShare">
-                <img :src="haiBao || 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help-me-up.png'" alt="">
+                <img v-imgError :src="haiBao || 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.5/help-me-up.png'" alt="">
                 <template v-if="!haiBaoLoading">
                     <p>长按图片保存分享给好友</p>
                     <pl-svg name="icon-close3" width="48" fill="#fff" @click="showShare = false" />

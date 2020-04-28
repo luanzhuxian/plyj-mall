@@ -29,7 +29,7 @@
             />
         </div>
         <div :class="$style.imgWrapper">
-            <img :src="data.goodsInfo.productMainImage">
+            <img v-imgError :src="data.goodsInfo.productMainImage">
         </div>
         <div :class="$style.info">
             <div :class="$style.main">
