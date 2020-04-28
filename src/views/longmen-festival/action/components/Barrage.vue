@@ -51,6 +51,7 @@ export default {
             this.$refs.container.appendChild(child)
             child.addEventListener('animationend', () => {
                 child.remove()
+                node.remove()
             })
         },
         run () {

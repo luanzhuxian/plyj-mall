@@ -140,7 +140,7 @@ export default {
         box-sizing: border-box;
         font-size: 24px;
         color: #fff;
-        background: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/粽子.png') no-repeat;
+        background: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/粽子.png') 100%/100% no-repeat;
         > .join {
             display: flex;
             justify-content: center;
