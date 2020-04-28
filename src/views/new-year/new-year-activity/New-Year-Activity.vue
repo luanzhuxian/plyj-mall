@@ -880,7 +880,7 @@ export default {
             this.isShowNewYearPoster = false
 
             // 最后一个节点已签到，但未领取年味大奖, 弹框提示领取最终奖品
-            if (this.currentSignIn.isLastIcon && !this.isGrandPrsentSignIn) {
+            if (this.currentSignIn.isLastIcon && this.currentSignIn.hasSignin && !this.isGrandPrsentSignIn) {
                 this.isShowPresentPopup = true
                 this.presentStage = 0
             }

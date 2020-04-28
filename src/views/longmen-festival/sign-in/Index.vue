@@ -68,7 +68,7 @@
                                 v-if="previousPresentIsReceive && currentSignIn.name && (!currentSignIn.hasSignin || (currentSignIn.hasSignin && !currentSignIn.hasAward))">
                                 <p class="no-padding">
                                     <span>今日可签到参与{{ currentSignIn.hasSignin? 0 : 1 }}个端午活动</span>
-                                    <span>还需签到参与{{ activeDetail.differenceNumber }}个端午活动即有机会参与抽奖</span>
+                                    <span>还需签到参与{{ activeDetail.differenceNumber }}个端午活动即可参与抽奖</span>
                                 </p>
                                 <!-- 当前节点为已签到，灰化 -->
                                 <button
@@ -103,69 +103,23 @@
                     </div>
                     <div class="sign-in-icon-bottom">
                         <div class="sign-in-icon-item" v-for="(item, index) in signInIconList" :key="index">
-                            <div v-if="!item.isPresent" class="icon-item"
-                                 @click="drawNewYearCardPoster(item)"
-                            >
-                                <div class="icon">
-                                    <img v-if="item.hasSignin"
-                                         src="https://mallcdn.youpenglai.com/static/admall/2.9.0/did-siginin-icon.jpg">
-                                    <img v-else class="not-sign"
-                                         src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-signin-icon.jpg">
-                                    <span v-if="!item.hasSignin" class="not-sign">{{ item.materialDesc }}</span>
-                                </div>
-                                <p :class="{'not-sign': !item.hasSignin}">{{ item.name }}</p>
-                            </div>
-                            <div v-else class="prensent-icon-item" @click="presentWarning(item)">
-                                <!-- 未抽奖前普通奖品展示-->
-                                <div v-if="!item.hasSignin && !item.isGrandPrsent">
-                                    <pl-svg class="icon" name="icon-present" width="50" height="50" type="svg" />
-                                    <img class="icon-bg" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-gift-icon.png" alt="">
-                                    <p class="not-sign">礼品</p>
-                                </div>
-                                <!-- 未抽奖前粽粽大奖奖品展示-->
-                                <div v-if="!item.hasSignin && item.isGrandPrsent">
-                                    <img
-                                        class="icon-bg"
-                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/small-gift-style.png">
-                                    <p :class="{'not-sign': !item.hasSignin}">粽粽大礼</p>
-                                </div>
-                                <!-- 已抽奖,但是未抽中-->
-                                <div v-if="item.hasSignin && (item.awardType === 0)">
-                                    <img style="margin-left: 5px;" class="icon" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png" alt="">
-                                    <img
-                                        class="icon-bg"
-                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg">
-                                    <p>未中奖</p>
-                                </div>
-                                <!-- 奖品为礼品-->
-                                <div v-if="item.hasSignin && (item.awardType === 1)">
-                                    <img style="margin-left: 2px; margin-top: -2px;" class="icon" :src="item.awardImg || 'https://mallcdn.youpenglai.com/static/admall/2.9.0/series-course.png'">
-                                    <img
-                                        class="icon-bg"
-                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg">
-                                    <p>已获得</p>
-                                </div>
-                                <!-- 奖品为奖学金-->
-                                <div v-if="item.hasSignin && (item.awardType === 2)">
-                                    <img
-                                        class="icon"
-                                        src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
-                                    <img
-                                        class="icon-bg"
-                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg">
-                                    <p>已获得</p>
-                                </div>
-                                <!-- 奖品为优惠券-->
-                                <div v-if="item.hasSignin && (item.awardType === 3 || item.awardType === 4)">
-                                    <img
-                                        class="icon"
-                                        src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
-                                    <img
-                                        class="icon-bg"
-                                        src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-signin-icon.jpg">
-                                    <p>已获得</p>
-                                </div>
-                            </div>
+                            <SigninIcon
+                                v-if="!item.isPresent"
+                                :detail="item"
+                                :has-signin="item.hasSignin"
+                                :material-desc="item.materialDesc"
+                                :icon-name="item.name"
+                                @clickHandler="drawNewYearCardPoster"
+                            />
+                            <PresentIcon
+                                v-else
+                                :detail="item"
+                                :has-signin="item.hasSignin"
+                                :is-grand-prsent="item.isGrandPrsent"
+                                :award-type="item.awardType"
+                                :award-img="item.awardImg"
+                                @clickHandler="presentWarning"
+                            />
                         </div>
                     </div>
                 </div>
@@ -339,7 +293,9 @@ import MissingGeneralPrize from './components/Missing-General-Prize'
 import NoticingGrandPrize from './components/Noticing-Grand-Prize'
 import WinningGrandPrize from './components/Winning-Grand-Prize'
 import MissingGrandPrize from './components/Missing-Grand-Prize'
-import ActivityRule from './components/Activity-Rule.vue'
+import ActivityRule from './components/Activity-Rule'
+import SigninIcon from './components/Signin-Icon'
+import PresentIcon from './components/Present-Icon'
 import SunPresentItem from './components/Sun-Present-Item'
 import MyPresentItem from './components/My-Present-Item'
 
@@ -365,7 +321,9 @@ export default {
         MissingGeneralPrize,
         NoticingGrandPrize,
         WinningGrandPrize,
-        MissingGrandPrize
+        MissingGrandPrize,
+        SigninIcon,
+        PresentIcon
     },
     data () {
         return {
@@ -950,7 +908,7 @@ export default {
             this.isShowNewYearPoster = false
 
             // 最后一个节点已签到，但未领取粽粽有礼大奖, 弹框提示领取最终奖品
-            if (this.currentSignIn.isLastIcon && !this.isGrandPrsentSignIn) {
+            if (this.currentSignIn.isLastIcon && this.currentSignIn.hasSignin && !this.isGrandPrsentSignIn) {
                 this.isShowPresentPopup = true
                 this.presentStage = 0
             }
@@ -1298,81 +1256,6 @@ export default {
               box-sizing: border-box;
               width: 20%;
               padding: 10px 0;
-
-              .icon-item {
-                display: inline-block;
-
-                .icon {
-                  position: relative;
-                  text-align: center;
-
-                  img {
-                    width: 95px;
-                    height: 112px;
-                    object-fit: contain;
-                  }
-
-                  span {
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    transform: translateX(-50%) translateY(-50%);
-                    margin-top: -3px;
-                    color: #ffe3c8;
-                    font-size: 36px;
-
-                    &.not-sign {
-                      color: #fff;
-                    }
-                  }
-                }
-
-                > p {
-                  color: #FFA659;
-                  font-size: 20px;
-                  line-height: 40px;
-                  text-align: center;
-
-                  &.not-sign {
-                    color: #2E9472;
-                  }
-                }
-              }
-
-              .prensent-icon-item {
-                display: inline-block;
-
-                > div {
-                  position: relative;
-                  text-align: center;
-
-                  > .icon-bg {
-                    width: 95px;
-                    height: 112px;
-                    object-fit: contain;
-                  }
-                  .icon {
-                    position: absolute;
-                    top: 33px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: 50px;
-                    height: 50px;
-                    border-radius: 50%;
-                    object-fit: contain;
-                  }
-
-                  > p {
-                    color: #FFA659;
-                    font-size: 20px;
-                    line-height: 40px;
-
-                    &.not-sign {
-                      color: #2E9472;
-                    }
-                  }
-                }
-              }
             }
           }
         }
