@@ -37,6 +37,7 @@
                 <video
                     :src="url"
                     ref="video"
+                    controlslist="nodownload"
                     crossorigin="anonymous"
                     @loadeddata="loadeddata"
                     @canplay="canplay"
