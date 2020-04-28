@@ -63,12 +63,12 @@ async function response (response) {
           openId: headers.openId
         }
       })
-      return res
+      return httpToHttps(res)
     } catch (e) {
       return Promise.reject(e)
     }
   }
-  return data
+  return httpToHttps(data)
 }
 
 function resError (error) {
@@ -90,4 +90,15 @@ function resError (error) {
   return Promise.reject(new ResponseError(JSON.stringify({
     message: msg
   }, null, 4)))
+}
+// 将数据中存在的资源http协议改成https协议
+function httpToHttps(data) {
+  try {
+    let temp = JSON.stringify(data)
+    temp = temp.replace(/http:\/\/mallcdn.youpenglai.com/g, 'https://mallcdn.youpenglai.com')
+    temp = temp.replace(/http:\/\/penglai-weimall.oss-cn-hangzhou.aliyuncs.com/g, 'https://mallcdn.youpenglai.com')
+    return JSON.parse(temp)
+  } catch (e) {
+    return data
+  }
 }

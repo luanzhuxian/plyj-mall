@@ -5,10 +5,10 @@ let id = 0
 export default {
     imgError: {
         inserted (el, { value }) {
-            if (el.src.indexOf('http://') > -1) {
-                el.src = el.src.replace('http://', 'https://')
-                return
-            }
+            // if (el.src.indexOf('http://') > -1) {
+            //     el.src = el.src.replace('http://', 'https://')
+            //     return
+            // }
             if (el.tagName === 'IMG') {
                 el.onerror = function () {
                     if (value === 'classifyIcon') {
