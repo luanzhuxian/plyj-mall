@@ -21,6 +21,10 @@ export default class Countdown {
      * @param callback {function} 接收倒计时数据
      */
     constructor (duration, callback) {
+        if (new.target !== Countdown) {
+            console.error('必须new实例才能使用')
+            return
+        }
         // this.duration = duration
         this.total = duration
         this.callback = callback
