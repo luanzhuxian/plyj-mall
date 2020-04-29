@@ -711,8 +711,6 @@ export default {
                 if ((!this.currentSignIn.hasAward || this.currentSignIn.awardType !== '') && this.previousPresentIsReceive) return
                 const { result } = await receivePresent(this.id, this.activeDetail.currentReceivePresentNote)
 
-                /* 显示中奖信息弹框 */
-                this.isShowPresentPopup = true
                 // 当前获得奖品的阶段 0-领取前提示，1-中奖， 2-未中奖
                 this.presentStage = result.awardType ? 1 : 2
                 // 初始化获奖信息
@@ -742,6 +740,9 @@ export default {
                     this.myPresentList.push(result)
                 }
                 this.isReceivePresent = false
+
+                /* 显示中奖信息弹框 */
+                this.isShowPresentPopup = true
             } catch (e) {
                 throw e
             }
