@@ -93,6 +93,7 @@ export default {
                         item.goodsInfo = {
                             ...item,
                             id: item.productId,
+                            pageviews: item.pageViews,
                             activityInfo: {
                                 status: item.status,
                                 prizePool: item.prizePool,
@@ -104,8 +105,8 @@ export default {
                         }
                     }
                 }
-                this.ongoingList = result[0]
-                this.incomingList = result[1]
+                this.ongoingList = result[1]
+                this.incomingList = result[0]
                 return result
             } catch (e) {
                 throw e

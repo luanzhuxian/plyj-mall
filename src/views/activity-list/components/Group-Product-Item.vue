@@ -160,6 +160,8 @@ export default {
     .img-wrapper {
         position: relative;
         overflow: hidden;
+        width: 100%;
+        height: 214px;
         img {
             width: 100%;
             height: 100%;
@@ -209,7 +211,7 @@ export default {
         width: fit-content;
         max-width: 100%;
         height: 38px;
-        line-height: 34px;
+        line-height: 38px;
         border: 2px solid #ff772b;
         border-radius: 4px;
         @include elps();

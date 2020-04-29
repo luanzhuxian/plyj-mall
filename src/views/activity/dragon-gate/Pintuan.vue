@@ -196,7 +196,7 @@ export default {
         width: fit-content;
         max-width: 100%;
         height: 34px;
-        line-height: 30px;
+        line-height: 34px;
         border: 2px solid #ff331b;
         border-radius: 4px;
         @include elps();
