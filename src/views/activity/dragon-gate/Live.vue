@@ -22,10 +22,13 @@
                             <template v-if="live.isNoticeShow">
                                 <span>{{ `直播时间 ${getTime(live.liveStartTime)}` }}</span>
                             </template>
-                            <template v-else>
+                            <template v-if="live.statue === 4">
                                 <span>正在直播</span>
                                 <span>|</span>
                                 <span>{{ `${live.visitTimes}人观看` }}</span>
+                            </template>
+                            <template v-if="live.statue === 0">
+                                <span>直播已结束</span>
                             </template>
                         </p>
                     </div>
@@ -49,8 +52,11 @@
                         <p v-if="live.isNoticeShow">
                             {{ `直播时间 ${getTime(live.liveStartTime)}` }}
                         </p>
-                        <p v-else>
+                        <p v-if="live.statue === 4">
                             {{ `${live.visitTimes}人正在观看` }}
+                        </p>
+                        <p v-if="live.statue === 0">
+                            直播已结束
                         </p>
                     </div>
                 </li>
