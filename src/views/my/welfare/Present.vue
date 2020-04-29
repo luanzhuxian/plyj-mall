@@ -90,7 +90,7 @@
                 </div>
                 <div class="item">
                     <div class="item-content">
-                        <pl-svg class="stamp" name="icon-yiduihuan" width="200" height="200" />
+                        <pl-svg type="img" class="stamp" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/yiduihuan.png" width="200" height="200" />
                         <div :class="{'content-img-box': true, 'h-180': item.activityName }">
                             <img :src="item.giftImage" alt="">
                         </div>
@@ -128,7 +128,7 @@
                 </div>
                 <div class="item">
                     <div class="item-content">
-                        <pl-svg class="stamp" name="icon-yiguoqi" width="200" height="200" />
+                        <pl-svg type="img" class="stamp" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/yiguoqi.png" width="200" height="200" />
                         <div :class="{'content-img-box': true, 'h-180': item.activityName }">
                             <img :src="item.giftImage" alt="">
                         </div>

@@ -102,7 +102,7 @@
                                     {{ prod.productName }}
                                 </div>
                                 <div :class="$style.current">
-                                    <pl-svg name="icon-miaoshajia" width="60" height="26" />
+                                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/miaoshajia.png" width="60" height="26" />
                                     <span :class="$style.price">
                                         {{ prod.activityInfo.activityPrice }}
                                     </span>

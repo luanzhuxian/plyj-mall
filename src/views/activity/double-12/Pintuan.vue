@@ -62,7 +62,7 @@
                                             </span>
                                         </div>
                                         <div :class="$style.subLeftSub">
-                                            <pl-svg name="icon-tuangoujia" width="80" height="35" />
+                                            <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/tuangoujia.png" width="80" height="35" />
                                             <span :class="$style.price">{{ item.goodsInfo.activityInfo.activityPrice }}</span>
                                         </div>
                                     </div>
@@ -185,11 +185,6 @@ export default {
                 font-size: 24px;
               }
               &-sub {
-                svg {
-                  width: 88px;
-                  height: 40px;
-                  padding-bottom: 2px;
-                }
                 .price {
                   font-size: 36px;
                   &:before {
@@ -220,11 +215,6 @@ export default {
                 font-size: 20px;
               }
               &-sub {
-                svg {
-                  width: 72px;
-                  height: 32px;
-                  padding-bottom: 2px;
-                }
                 .price {
                   font-size: 32px;
                   &:before {

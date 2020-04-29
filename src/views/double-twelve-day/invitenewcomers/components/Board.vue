@@ -4,8 +4,8 @@
             <div :class="$style.timer">
                 <template v-if="status !== 0">
                     <div :class="$style.timerTip">
-                        <pl-svg v-if="status === 2" name="icon-julijieshu" width="68" height="82" />
-                        <pl-svg v-if="status === 1" name="icon-julikaishi" width="68" height="82" />
+                        <pl-svg type="img" v-if="status === 2" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/julijieshu.png" width="68" height="82" />
+                        <pl-svg type="img" v-if="status === 1" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/julikaishi.png" width="68" height="82" />
                     </div>
                     <div :class="$style.timerContent">
                         <div>
@@ -32,7 +32,7 @@
             <template v-if="friendUserId">
                 <div v-if="friendUserId" :class="$style.inviteFriends">
                     <!--小手一点帮我助力-->
-                    <pl-svg name="icon-invite-users" :width="560" height="70" />
+                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/invite.png" width="560" height="70" />
                 </div>
                 <div :class="$style.shortOf">
                     你也可以参与活动拿豪礼大奖哦！
@@ -40,11 +40,8 @@
             </template>
             <template v-else>
                 <div :class="$style.inviteFriends">
-                    <pl-svg name="icon-invite-users" :width="560" height="70" />
+                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/invite.png" width="560" height="70" />
                 </div>
-                <!--<div v-if="inviteDescription > 0" :class="$style.shortOf">
-          还差<i v-text="inviteDescription" />个好友注册
-        </div>-->
                 <div v-if="hasShare" :class="$style.shortOf">
                     已成功注册<i v-text="totalHelpers" />个好友，立即开豪礼
                 </div>

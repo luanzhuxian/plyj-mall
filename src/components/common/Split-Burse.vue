@@ -11,7 +11,7 @@
                     <div :class="$style.conItem" v-for="(item,index) in list" :key="index">
                         <!--左边-->
                         <div>
-                            <div><pl-svg width="240" height="58" name="icon-together-buy-success" /></div>
+                            <div><pl-svg type="img" width="240" height="58" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/togetherbuy.png" /></div>
                             <div>立即瓜分<span>{{ item.prize }}元</span>奖学金</div>
                         </div>
                         <!--右边-->

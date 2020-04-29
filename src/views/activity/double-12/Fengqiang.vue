@@ -27,7 +27,7 @@
                             <div :class="$style.itemInfo" v-if="type === 5 || type === 7">
                                 <h4>{{ item.goodsInfo.productName }}</h4>
                                 <div :class="$style.infoText">
-                                    <pl-svg name="icon-fengqiangjia" width="78" height="34" />
+                                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/fengqiangjia.png" width="78" height="34" />
                                     <span :class="$style.price" v-if="item.goodsInfo && item.goodsInfo.productSkuModels && item.goodsInfo.productSkuModels.length">
                                         {{ getPrice(item.goodsInfo.productSkuModels)('price') }}
                                     </span>
@@ -38,7 +38,7 @@
                                         {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}` }}人付款
                                     </span>
                                     <div :class="$style.btnHighlight">
-                                        <pl-svg name="icon-mashangqiang" width="118" height="46" />
+                                        <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/mashangqiang.png" width="118" height="46" />
                                     </div>
                                 </div>
                             </div>
@@ -223,7 +223,7 @@ export default {
             font-size: 22px;
             color: #999999;
             @include elps();
-            svg {
+            img {
               min-width: 78px;
               padding-bottom: 4px;
             }

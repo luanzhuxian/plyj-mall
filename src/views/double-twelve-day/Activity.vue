@@ -43,7 +43,7 @@
                         <div :class="$style.contentBox">
                             <div :class="$style.contentTop">
                                 <img :class="$style.logo" :src="logoUrl" alt="">
-                                <pl-svg v-if="cacheInfo" name="icon-jigoushuju" fill="#565776" width="48" />
+                                <pl-svg type="img" v-if="cacheInfo" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/jigoushuju.png" height="48" />
                                 <span :class="$style.mallName" v-else>{{ mallName }}</span>
                             </div>
                             <template v-if="cacheInfo">

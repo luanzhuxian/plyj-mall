@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div :class="$style.sub2">
-                <pl-svg name="icon-tuangoujia" fill="#FF4B00" width="80" height="40" />
+                <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/tuangoujia.png" width="80" height="40" />
                 <span :class="$style.sub2Price">{{ data.goodsInfo.activityInfo.activityPrice }}</span>
             </div>
         </div>

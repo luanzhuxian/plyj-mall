@@ -1,6 +1,6 @@
 <template>
     <div v-show="helpers.length" :class="$style.helpers">
-        <pl-svg name="icon-zhulihaoyou" fill="60" />
+        <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/zhulihaoyou.png" width="60" />
         <div :class="$style.list">
             <img
                 v-for="(item, i) of helpers"
