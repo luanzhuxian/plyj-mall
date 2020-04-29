@@ -301,6 +301,7 @@ export default {
             display: flex;
             justify-content: space-between;
             position: absolute;
+            left: 0;
             bottom: -28px;
             width: 100%;
             > div {

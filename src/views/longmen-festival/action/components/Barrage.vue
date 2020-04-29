@@ -19,7 +19,7 @@ export default {
         return {
             index: 0,
             duration: 3,
-            gap: 1,
+            gap: 1.4,
             timer: null
         }
     },
