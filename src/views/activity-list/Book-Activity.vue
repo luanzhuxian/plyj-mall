@@ -77,7 +77,6 @@ export default {
         async getList () {
             try {
                 const { result = { 0: [], 1: [] } } = await bookActivityPage()
-                this.loaded = true
 
                 if (!result[0].length && !result[1].length) {
                     return this.$alert({
@@ -115,6 +114,8 @@ export default {
                 return result
             } catch (e) {
                 throw e
+            } finally {
+                this.loaded = true
             }
         }
     }
