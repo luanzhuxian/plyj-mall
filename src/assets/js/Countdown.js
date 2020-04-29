@@ -50,7 +50,6 @@ export default class Countdown {
         delete data.months
         this.callback(data)
         this.timer = setTimeout(() => {
-            // this.duration -= 1000
             this.start()
         }, 1000)
     }

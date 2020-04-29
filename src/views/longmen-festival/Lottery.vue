@@ -16,28 +16,28 @@
                     <div :class="$style.chance">您还有{{ count }}次抽奖机会</div>
                 </div>
                 <div :class="$style.turntable" v-if="turntableAwards.length">
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 0 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (1).png')` }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 0 }" :style="{ backgroundImage: `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (1).png')` }">
                         {{ turntableAwards[0].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 1 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (2).png')` }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 1 }" :style="{ backgroundImage: `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (2).png')` }">
                         {{ turntableAwards[1].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 2 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (3).png')` }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 2 }" :style="{ backgroundImage: `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (3).png')` }">
                         {{ turntableAwards[2].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 3 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (4).png')` }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 3 }" :style="{ backgroundImage: `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (4).png')` }">
                         {{ turntableAwards[3].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 7 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (5).png')` }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 7 }" :style="{ backgroundImage: `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (5).png')` }">
                         {{ turntableAwards[7].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 6 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (6).png')` }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 6 }" :style="{ backgroundImage: `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (6).png')` }">
                         {{ turntableAwards[6].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 5 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (7).png')` }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 5 }" :style="{ backgroundImage: `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (7).png')` }">
                         {{ turntableAwards[5].grade }}
                     </div>
-                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 4 }" :style="{ '--image': `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (8).png')` }">
+                    <div :class="{ [$style.item]: true, [$style.active]: current % 8 === 4 }" :style="{ backgroundImage: `url('https://mallcdn.youpenglai.com/static/mall/2.9.0/lottory (8).png')` }">
                         {{ turntableAwards[4].grade }}
                     </div>
                 </div>
@@ -219,7 +219,7 @@
                 :gift-image="lottery.giftImage"
             />
             <div v-else-if="lotteryResult.awardType === 2" style="text-align: center; color: #FDEC5A;">
-                <strong class="fz-60">5000</strong>
+                <strong class="fz-60" v-text="lottery.scholarshipPrice" />
                 <span class="fz-30">元</span>
             </div>
             <CouponItemViewer
@@ -766,10 +766,10 @@ export default {
             box-sizing: border-box;
             border: 7px solid #fff;
             box-shadow: 0 0 0 1px #311c1d;
-            background: #fff var(--image) no-repeat center 15px;
+            background: #fff no-repeat center 15px;
             background-size: 80px;
             &.active {
-                background: #fdec5a var(--image) no-repeat center 15px;
+                background: #fdec5a no-repeat center 15px;
                 border-color: #d4ff02;
                 background-size: 80px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, .3) inset;
