@@ -4,7 +4,7 @@
             <div :class="$style.top" />
             <div :class="$style.content">
                 <template v-if="loaded && !noContent">
-                    <section v-if="!ongoingList.length">
+                    <section v-if="ongoingList.length">
                         <div :class="$style.status">
                             <div :class="$style.icon">
                                 <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/lightening-orange.png" style="width: 3.5vw;" alt="">
