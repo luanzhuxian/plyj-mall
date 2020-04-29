@@ -181,6 +181,7 @@
                     :image="detail.productMainImage"
                     :product-id="productId"
                     :sku-list="detail.productSkuModels"
+                    :public-benefit-sku-list="detail.activityProductModel.productModels"
                     :sku-attr-list="detail.productAttributes"
                     :current-sku.sync="currentModel"
                     :product-status="detail.productStatus"
@@ -263,7 +264,7 @@
                         <div :class="$style.button" v-else-if="activeProduct === 7 && preActivity === 2">
                             <button
                                 :class="$style.preBtn"
-                                :disabled="publicBenefitActiveStock <= 0"
+                                :disabled="publicBenefitActiveStock <= 0 || productStatus !== 2"
                                 @click="buyNow(currentSku, -1, 0, limit)"
                             >
                                 {{ publicBenefitActiveStock > 0 ? '公益购买' : '已售罄' }}
@@ -542,6 +543,12 @@ export default {
     computed: {
         ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl', 'mchId', 'roleCode', 'shareId']),
 
+        // 公益活动可购买数量
+        publicBenefitActiveStock () {
+            const list = this.detail.activityProductModel.productModels || []
+            return Math.max(...list.map(item => item.activityStock)) || 0
+        },
+
         // 活动商品的可购买数量
         activeStock () {
             return this.activityProductModel ? this.activityProductModel.buyCount : 0
@@ -589,6 +596,10 @@ export default {
          * 其它活动商品的库存同意用
          */
         noStock () {
+            // 公益活动
+            if (this.activeProduct === 7 && this.preActivity === 2) {
+                return !this.publicBenefitActiveStock
+            }
             // 如果时预购的商品，根据当前活动库存来判断
             if (this.activeProduct === 4 && this.preActivity === 2) {
                 return !this.activeStock
@@ -646,6 +657,8 @@ export default {
 
         // 是否下架
         isDown () {
+            // activeProduct - 1-正常商品 2-团购 3-秒杀 4-预购
+            // productStatus - 0：已删除 1：下架 2：上架  3：草稿箱
             return (this.activeProduct === 1 || this.preActivity !== 2) && (this.productStatus === 1 || this.productStatus === 0)
         },
 

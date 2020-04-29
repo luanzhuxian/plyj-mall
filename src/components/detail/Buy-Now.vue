@@ -156,6 +156,12 @@ export default {
                 return []
             }
         },
+        publicBenefitSkuList: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
         skuAttrList: {
             type: Array,
             default () {
@@ -214,6 +220,10 @@ export default {
 
         // 所有规格禁用状态
         allDisabled () {
+            // 公益活动
+            if (this.activeProduct === 7) {
+                return this.publicBenefitSkuList.every(item => item.activityStock <= 0) || this.productStatus !== 2
+            }
             return this.skuList.every(item => item.stock < item.minBuyNum) || this.productStatus !== 2
         },
         activeStock () {
