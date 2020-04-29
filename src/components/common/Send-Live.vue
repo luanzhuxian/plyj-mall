@@ -1,6 +1,6 @@
 <template>
     <!-- 送课窗口提示 -->
-    <div @click.stop="" v-show="show || showShelf" :class="$style.mask">
+    <div @click.stop="" v-show="show || showShelf" :class="[$style.mask, $style.sendLive]">
         <div :class="$style.container">
             <div :class="$style.main">
                 <div :class="$style.head">
@@ -253,7 +253,8 @@ export default {
 </script>
 
 <style module lang='scss'>
-    .mask {
+  .send-live{
+    &.mask {
       position: fixed;
       z-index: 999;
       left: 0;
@@ -377,7 +378,7 @@ export default {
               vertical-align: -4px;
             }
           }
-           button {
+          button {
             width:100%;
             height:100px;
             margin-top: 20px;
@@ -511,4 +512,5 @@ export default {
         padding: 0 10px;
       }
     }
+  }
 </style>
