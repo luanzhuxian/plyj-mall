@@ -10,11 +10,10 @@ export const getDate = (val, format) => {
     return moment(val).format(format)
 }
 
-export const getTime = item => {
+export const getTime = ({ activityStartTime, activityEndTime, startTime, endTime, status }) => {
     // 0: 未开始 1: 进行中
-    const startTs = moment(item.activityStartTime || item.startTime).valueOf()
-    const endTs = moment(item.activityEndTime || item.endTime).valueOf()
-    const status = item.status
+    const startTs = moment(activityStartTime || startTime).valueOf()
+    const endTs = moment(activityEndTime || endTime).valueOf()
     let ts
     if (status === 0) {
         ts = startTs
@@ -22,6 +21,11 @@ export const getTime = item => {
         ts = endTs
     }
     return ts
+}
+
+export const getDuration = (activity = {}) => {
+    const duration = Date.now().valueOf() - getTime(activity)
+    return Math.abs(duration)
 }
 
 export const reset = item => {

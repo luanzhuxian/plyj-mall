@@ -163,7 +163,7 @@ export default {
     .img-wrapper {
         width: 294px;
         height: 196px;
-        border-radius: 20px;
+        border-radius: 20px 0 0 20px;
         overflow: hidden;
         > img {
             width: 100%;
@@ -196,7 +196,7 @@ export default {
         width: fit-content;
         max-width: 100%;
         height: 34px;
-        line-height: 30px;
+        line-height: 34px;
         border: 2px solid #ff331b;
         border-radius: 4px;
         @include elps();

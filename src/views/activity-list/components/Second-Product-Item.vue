@@ -27,9 +27,7 @@
             </div>
             <div :class="$style.current">
                 秒杀价
-                <b :class="$style.price">
-                    {{ data.goodsInfo.activityInfo.activityPrice }}
-                </b>
+                <b :class="$style.price">{{ data.goodsInfo.activityInfo.activityPrice }}</b>
             </div>
             <div :class="$style.sub">
                 <div :class="$style.subLeft">

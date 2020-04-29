@@ -14,18 +14,15 @@
                     }"
                 >
                     <!-- <div :class="$style.countDownWrapper">
-            <div :class="$style.timeLeft">
               <span v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
               <span v-if="item.goodsInfo.activityInfo.status === 1">距结束：</span>
               <span v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
-            </div>
-            <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
               <count-down
+               v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
                 :timestamp="getTime(item.goodsInfo.activityInfo)"
                 size="mini"
                 @done="() => item.goodsInfo.activityInfo.status += 1"
               />
-            </div>
           </div> -->
                     <div :class="$style.info">
                         <div :class="$style.main">
