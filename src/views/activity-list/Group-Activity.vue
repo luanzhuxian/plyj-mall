@@ -20,7 +20,7 @@
                     <section v-if="incomingList.length">
                         <div :class="$style.status">
                             <div :class="$style.icon">
-                                <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/clock-orange.png" sizes="width: 3.5vw;" alt="">
+                                <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/clock-orange.png" style="width: 3.5vw;" alt="">
                             </div>
                             即将开始
                         </div>
