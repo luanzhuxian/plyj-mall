@@ -27,6 +27,7 @@
                 <div :class="$style.tabName">首页</div>
             </template>
             <img
+                v-else
                 :src="homeActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/find (1).png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/find.png'"
                 style="width: 5.86vw; height: 9.06vw;"
                 alt=""
@@ -46,6 +47,7 @@
                 <div :class="$style.tabName">分类</div>
             </template>
             <img
+                v-else
                 :src="classifyActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/classify.png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/classify (1).png'"
                 style="width: 5.86vw; height: 9.06vw;"
                 alt=""
@@ -88,6 +90,7 @@
                 <div :class="$style.tabName">购物车</div>
             </template>
             <img
+                v-else
                 :src="shoppingChartActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/cart.png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/cart (1).png'"
                 style="width: 8.53vw; height: 10.13vw;"
                 alt=""
@@ -107,6 +110,7 @@
                 <div :class="$style.tabName">我的</div>
             </template>
             <img
+                v-else
                 :src="myActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/my (1).png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/my.png'"
                 style="width: 5.87vw; height: 9.87vw;"
                 alt=""
