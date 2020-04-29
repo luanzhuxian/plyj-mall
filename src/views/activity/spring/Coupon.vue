@@ -8,7 +8,7 @@
                 {{ data.otherValue > 0 ? `${data.otherValue}人已领券 快来领取` : '快来领取' }}
             </div>
             <div :class="$style.couponButton">
-                <pl-svg name="icon-envelope-mini" width="28" />
+                <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/envelope.png" style="width: 3.73vw;" alt="">
                 <span :class="$style.text">优惠券中心</span>
                 <span :class="$style.btn">
                     <span>领取更多</span>

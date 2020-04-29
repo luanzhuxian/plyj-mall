@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div :class="$style.price">
-                            <pl-svg name="icon-tgj-782d3" width="80" height="40" />
+                            <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/tgj.png" style="width: 10.66vw" alt="">
                             <b>{{ item.goodsInfo.activityInfo.activityPrice }}</b>
                         </div>
                     </div>

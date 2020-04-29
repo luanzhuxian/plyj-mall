@@ -10,7 +10,7 @@
                     <div :class="$style.btnTopBg">
                         您有优惠券可使用！
                     </div>
-                    <pl-svg name="icon-jinru" width="116" />
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/jinru.png" style="width: 15.47vw;" alt="">
                 </div>
                 <!-- 直播-->
                 <div :class="[$style.live, $style.module]" v-if="isLiveShow">
@@ -184,7 +184,7 @@ export default {
         letter-spacing: 4px;
         text-align: center;
     }
-    svg {
+    img {
         position: absolute;
         top: -2px;
         right: -45px;

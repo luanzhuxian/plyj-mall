@@ -13,7 +13,7 @@
                     <img :class="$style.first" :src="'https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/activity-present.png' + '?x-oss-process=style/thum-middle'">
                 </div>
                 <p>粽粽有礼 端午安康</p>
-                <pl-svg name="icon-jinru-yellow-46435" width="116" height="78" />
+                <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/jinru-yellow.png" style="width: 15.47vw; height: 10.4vw;" alt="">
             </router-link>
             <router-link
                 v-if="isPlayShow"
@@ -27,7 +27,7 @@
                     <img :class="$style.second" :src="'https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/activity-play.png' + '?x-oss-process=style/thum-middle'">
                 </div>
                 <p>龙门抽大奖 有粽你就来</p>
-                <pl-svg name="icon-jinru-yellow-46435" width="116" height="78" />
+                <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/jinru-yellow.png" style="width: 15.47vw; height: 10.4vw;" alt="">
             </router-link>
         </ul>
     </panel>

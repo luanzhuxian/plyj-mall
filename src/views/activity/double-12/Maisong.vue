@@ -30,9 +30,9 @@
                             <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
                         </div>
                         <div :class="$style.info">
-                            <pl-svg name="icon-gift-1" v-if="i === 0" />
-                            <pl-svg name="icon-gift-2" v-if="i === 1" />
-                            <pl-svg name="icon-gift-3" v-if="i === 2" />
+                            <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/gift (2).png" v-if="i === 0" alt="">
+                            <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/gift (1).png" v-if="i === 1" alt="">
+                            <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/gift.png" v-if="i === 2" alt="">
                             <div :class="$style.sub">
                                 {{ item.name }}
                             </div>
@@ -106,9 +106,6 @@ export default {
         overflow: hidden;
         &:nth-of-type(1) {
           .info {
-            svg {
-              color: #EC7A05;
-            }
             .sub {
               background: #EC7A05;
             }
@@ -128,11 +125,11 @@ export default {
             flex: 1;
             width: 0;
             justify-content: center;
-          }
-          svg {
-            margin-bottom: 20px;
-            width: 110px;
-            height: 68px;
+              > img {
+                  margin-bottom: 20px;
+                  width: 110px;
+                  height: 68px;
+              }
           }
           .sub {
             padding: 0 26px;
@@ -147,11 +144,11 @@ export default {
           .img-wrapper {
             height: 210px;
           }
-          svg {
-            margin-bottom: 20px;
-            width: 110px;
-            height: 68px;
-          }
+            .info > img {
+                margin-bottom: 20px;
+                width: 110px;
+                height: 68px;
+            }
           .sub {
             height: 52px;
             line-height: 52px;
@@ -161,11 +158,11 @@ export default {
       }
       .img-wrapper {
         height: 136px;
-      }
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+          > img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+          }
       }
       .info {
         padding: 16px 26px 30px;
@@ -174,12 +171,12 @@ export default {
         justify-content: space-between;
         align-items: center;
         background: #FFF;
-      }
-      svg {
-        margin-bottom: 12px;
-        width: 70px;
-        height: 22px;
-        color: #B1712F;
+          > img {
+              margin-bottom: 12px;
+              width: 70px;
+              height: 22px;
+              color: #B1712F;
+          }
       }
       .sub {
         padding: 0 12px;

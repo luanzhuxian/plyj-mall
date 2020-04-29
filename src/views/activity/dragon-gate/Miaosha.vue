@@ -33,7 +33,7 @@
                             {{ item.goodsInfo.productName }}
                         </div>
                         <div :class="$style.current">
-                            <pl-svg name="icon-msj-2630b" width="60" height="38" />
+                            <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/msj.png" style="width: 8vw;" alt="">
                             <span :class="$style.price">{{ item.goodsInfo.activityInfo.activityPrice }}</span>
                         </div>
                         <div :class="$style.sub">

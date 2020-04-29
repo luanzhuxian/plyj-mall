@@ -68,7 +68,7 @@
         <!-- 不可使用的状态，文字描述 -->
         <div :class="$style.unavailableDesc" v-if="status" v-text="status" />
         <div v-if="isClaimed" :class="$style.claimed">
-            <pl-svg name="icon-claimed" width="200" />
+            <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/claimed.png" :style="{ width: 200 / 7.5 + 'vw' }" alt="">
         </div>
     </div>
 </template>

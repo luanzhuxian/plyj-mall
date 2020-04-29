@@ -3,13 +3,12 @@
         <div :class="$style.wrapper" v-if="data.values.length">
             <ul :class="$style.timeList">
                 <div>
-                    <pl-svg
-                        name="icon-miaoshazhuanchang"
-                        width="78"
-                        height="80"
-                        fill="#fff"
+                    <img
+                        src="https://mallcdn.youpenglai.com/static/mall/icons/olds/miaoshazhuanchang.png"
+                        :style="{ width: 78 / 7.5 + 'vw', height: 80 / 7.5 + 'vw' }"
                         @click="$router.push({ name: 'SecondList' })"
-                    />
+                        alt=""
+                    >
                 </div>
                 <li
                     v-if="data.values[0]"

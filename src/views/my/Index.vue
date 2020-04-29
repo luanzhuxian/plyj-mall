@@ -64,7 +64,7 @@
             <div :class="$style.panel">
                 <div :class="$style.orderStatus">
                     <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
-                        <pl-svg name="icon-wait-pay" width="72" height="90" />
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/wait (2).png" :style="{ width: 72 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
                         <span
                             :class="{ [$style.badge]: true, [$style.oval]: count.waitPayment > 99 }"
                             v-if="count.waitPayment"
@@ -72,7 +72,7 @@
                         />
                     </router-link>
                     <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
-                        <pl-svg name="icon-wait-ship" width="72" height="90" />
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/wait.png" :style="{ width: 72 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
                         <span
                             :class="{ [$style.badge]: true, [$style.oval]: count.waitDelivery > 99 }"
                             v-if="count.waitDelivery"
@@ -80,7 +80,7 @@
                         />
                     </router-link>
                     <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
-                        <pl-svg name="icon-wait-receive" width="72" height="88" />
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/wait (1).png" :style="{ width: 72 / 7.5 + 'vw', height: 88 / 7.5 + 'vw' }" alt="">
                         <span
                             :class="{ [$style.badge]: true, [$style.oval]: count.waitCollect > 99 }"
                             v-if="count.waitCollect"
@@ -88,7 +88,7 @@
                         />
                     </router-link>
                     <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
-                        <pl-svg name="icon-after-sale" width="108" height="88" />
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/after.png" :style="{ width: 108 / 7.5 + 'vw', height: 88 / 7.5 + 'vw' }" alt="">
                         <span
                             :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.afterSale > 99 }"
                             v-if="count.afterSale"
@@ -99,7 +99,7 @@
                         <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/my-segmentation.png" alt="">
                     </div>
                     <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
-                        <pl-svg name="icon-my-order-list" width="96" height="90" />
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/myorder.png" :style="{ width: 96 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
                     </router-link>
                 </div>
                 <div v-if="newFreight.length > 0" :class="$style.newLogistics">
@@ -155,7 +155,7 @@
                         </div>
                     </router-link>
                     <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
-                        <pl-svg name="icon-live-library" width="72" height="72" type="svg" />
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/live.png" alt="">
                         <div>
                             <h5>我的视频</h5>
                             <!-- <span>到店核销领礼品</span> -->
@@ -639,7 +639,7 @@ export default {
         }
     }
     svg {
-        height: 85px;
+        /*height: 85px;*/
     }
     .badge {
         display: inline-flex;
@@ -738,14 +738,13 @@ export default {
         margin: auto;
     }
 
-    .welfare-item {
+    .welfareItem {
         display: inline-flex;
         flex-direction: column;
         align-items: center;
         flex: 1;
         margin: 28px 20px;
         > img {
-            width: 130px;
             height: 72px;
         }
         > div {

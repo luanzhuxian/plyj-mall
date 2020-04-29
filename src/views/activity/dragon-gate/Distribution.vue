@@ -26,7 +26,8 @@
                         <div :class="$style.bottom">
                             <b :class="$style.price">{{ item.goodsInfo.price }}</b>
                             <del :class="$style.original">{{ item.goodsInfo.originPrice }}</del>
-                            <pl-svg name="icon-fenxiang-yellow-5ba8f" width="120" height="58" />
+                            <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/fenxiang-yellow.png" style="width: 16vw;" alt="">
+                            <!--<pl-svg name="icon-fenxiang-yellow-5ba8f" width="120" height="58" />-->
                         </div>
                     </div>
                 </router-link>
@@ -148,7 +149,7 @@ export default {
                 content: '￥';
             }
         }
-        > svg {
+        > img {
             flex-shrink: 0;
             margin-left: auto;
         }

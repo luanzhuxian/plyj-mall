@@ -6,7 +6,7 @@
                     <span v-if="isEdit" :class="{[$style.checked]: isEdit && item.checked}" />
                 </li>
                 <li>
-                    <pl-svg name="icon-hongbao" width="122" height="90" type="svg" />
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/hongbao.png" :style="{ width: 122 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
                 </li>
             </div>
             <div>
@@ -25,8 +25,8 @@
         </ul>
         <!--已使用，已过期图标-->
         <template v-if="hasStatusImg">
-            <pl-svg v-if="useStatus === 2" name="icon-burse-use" width="186" height="186" type="svg" />
-            <pl-svg v-if="useStatus === 3" name="icon-burse-expire" width="186" height="186" type="svg" />
+            <img v-if="useStatus === 2" src="https://mallcdn.youpenglai.com/static/mall/icons/olds/burse (1).png" style="width: 24.8vw" alt="">
+            <img v-if="useStatus === 3" src="https://mallcdn.youpenglai.com/static/mall/icons/olds/burse.png" style="width: 24.8vw" alt="">
         </template>
     </div>
 </template>
@@ -130,7 +130,7 @@ export default {
             background-color: #ddd;
           }
         }
-        svg {
+        img {
           vertical-align: middle;
         }
       }
@@ -180,7 +180,7 @@ export default {
         }
       }
     }
-    > svg {
+    > img {
       position: absolute;
       top: -50px;
       right: 124px;

@@ -18,7 +18,7 @@
                 <div :class="$style.sub">
                     翻开记忆的味道
                 </div>
-                <pl-svg name="icon-nianwei" width="264" height="54" />
+                <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/nianwei.png" style="width: 35.2vw; height: 7.2vw;" alt="">
                 <div :class="$style.btn">
                     立即参加
                 </div>

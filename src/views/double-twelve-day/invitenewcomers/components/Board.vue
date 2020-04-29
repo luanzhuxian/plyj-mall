@@ -11,7 +11,7 @@
                         <div>
                             <span v-for="(dd, i) of d" :key="i" v-text="dd" />
                         </div>
-                        <pl-svg style="margin: 0 1.333vw" name="icon-tian" width="34" height="34" />
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/tian.png" :style="{ width: 34 / 7.5 + 'vw', margin: '0 1.333vw' }" alt="">
                         <div>
                             <span v-for="(hh, i) of h" :key="i" v-text="hh" />
                         </div>
