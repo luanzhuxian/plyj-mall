@@ -20,7 +20,7 @@
                             <div :class="$style.baseInfoRight">
                                 <!-- 公益活动 -->
                                 <p
-                                    v-if="activeProduct == 7"
+                                    v-if="activeProduct === 7"
                                     :class="$style.price"
                                     v-text="publicBenefitActivePrice"
                                 />
@@ -109,7 +109,7 @@
                                 >
                                 <!-- 公益活动 -->
                                 <button
-                                    v-if="activeProduct == 7"
+                                    v-if="activeProduct === 7"
                                     :disabled="count >= publicBenefitActiveStock"
                                     @click.stop="add"
                                 >
@@ -126,7 +126,7 @@
                                 <p :class="$style.residue">
                                     <!-- 活动商品库存展示，如果商品不是预购且活动库存不足，则显示正常库存 -->
                                     <!-- 注意：公益活动例外 -->
-                                    <template v-if="activeProduct == 7">
+                                    <template v-if="activeProduct === 7">
                                         库存<i v-text="publicBenefitActiveStock" />件
                                     </template>
                                     <template v-else-if="activeType !== 1">

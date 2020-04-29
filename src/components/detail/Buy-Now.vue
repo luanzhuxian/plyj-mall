@@ -99,11 +99,12 @@
             :pre-activity="preActivity"
             :activity-product-model="activityProductModel"
         >
-            <template v-slot:footer="{ currentSku, limiting, limit }">
+            <template v-slot:footer="{ currentSku, limiting, limit, publicBenefitActiveStock }">
                 <pl-button
                     type="warning"
                     size="large"
                     :loading="loading"
+                    :disabled="activeProduct === 7 && publicBenefitActiveStock <= 0"
                     @click="confirm(currentSku, limiting, limit)"
                 >
                     确定
