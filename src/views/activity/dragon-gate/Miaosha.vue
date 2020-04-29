@@ -115,6 +115,7 @@ export default {
     padding: 16px;
     width: 100%;
     background-color: #ffe701;
+    border: 4px solid rgba(34, 34, 34, 1);
     border-radius: 20px;
     overflow: hidden;
     &:nth-of-type(1) {
@@ -125,6 +126,7 @@ export default {
         margin-right: 16px;
         width: 280px;
         height: 188px;
+        border: 4px solid rgba(34, 34, 34, 1);
         border-radius: 12px;
         overflow: hidden;
         img {
