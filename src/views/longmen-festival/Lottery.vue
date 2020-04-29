@@ -653,7 +653,7 @@ export default {
                 CTX.drawImage(IMG, 0, 0)
                 // 加载logo
                 try {
-                    logo = await loadImage(this.logoUrl)
+                    logo = await loadImage(this.detail.logImageUrl || this.logoUrl)
                 } catch (e) {}
                 // 截取logo为圆形
                 if (logo) {
