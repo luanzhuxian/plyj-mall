@@ -18,7 +18,7 @@
             </div>
             <div :class="$style.qrcodeTip">
                 <p>快速申请helper通道，出示二维码给用户</p>
-                <pl-svg class="mt-40" name="icon-helper-guidelines" height="187" />
+                <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/helper (4).png" class="mt-40" style="height: 15vw;" alt="">
             </div>
         </div>
     </div>
@@ -139,9 +139,6 @@ export default {
         > p {
           font-size: 24px;
           color: #999;
-        }
-        > svg {
-          width: 100%;
         }
       }
     }

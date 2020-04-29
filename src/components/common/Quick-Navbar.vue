@@ -38,11 +38,7 @@
                 active-class="active"
                 :to="{name: 'Home'}"
             >
-                <pl-svg
-                    name="icon-find"
-                    width="50"
-                    height="75"
-                />
+                <img style="width: 6vw; height: 10vw;" src="https://mallcdn.youpenglai.com/static/mall/icons/olds/find.png" alt="">
             </router-link>
             <router-link
                 v-if="liveRoomEnable"
@@ -60,34 +56,21 @@
                 active-class="active"
                 :to="{name: 'Classify'}"
             >
-                <pl-svg
-                    name="icon-classify"
-                    width="50"
-                    height="75"
-                />
+                <img style="width: 6vw; height: 10vw;" src="https://mallcdn.youpenglai.com/static/mall/icons/olds/classify (1).png" alt="">
             </router-link>
             <router-link
                 tag="li"
                 active-class="active"
                 :to="{ name: 'ShoppingCart' }"
             >
-                <pl-svg
-                    :class="$style.cart"
-                    name="icon-cart"
-                    width="66"
-                    height="75"
-                />
+                <img :class="$style.cart" src="https://mallcdn.youpenglai.com/static/mall/icons/olds/cart (1).png" alt="">
             </router-link>
             <router-link
                 tag="li"
                 active-class="active"
                 :to="{name: 'My'}"
             >
-                <pl-svg
-                    name="icon-my"
-                    width="50"
-                    height="75"
-                />
+                <img style="width: 6vw; height: 10vw;" src="https://mallcdn.youpenglai.com/static/mall/icons/olds/my.png" alt="">
             </router-link>
         </ul>
     </div>
@@ -149,8 +132,8 @@ export default {
       margin-top: 10px;
     }
     .cart {
-      width: 72px !important;
-      height: 76px;
+      width: 65px;
+      height: 75px;
     }
   }
   .on-off {

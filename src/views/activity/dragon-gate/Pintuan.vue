@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div :class="$style.price">
-                            <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/tgj.png" style="width: 10.66vw" alt="">
+                            <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/tgj.png" width="80" height="30" />
                             <b>{{ item.goodsInfo.activityInfo.activityPrice }}</b>
                         </div>
                     </div>
@@ -165,11 +165,11 @@ export default {
         height: 196px;
         border-radius: 20px;
         overflow: hidden;
-    }
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
     .info {
         flex: 1;
@@ -196,7 +196,7 @@ export default {
         width: fit-content;
         max-width: 100%;
         height: 34px;
-        line-height: 34px;
+        line-height: 30px;
         border: 2px solid #ff331b;
         border-radius: 4px;
         @include elps();

@@ -26,13 +26,11 @@
                 <img :src="homeActive ? skinMap[skinId].homeActive : skinMap[skinId].home">
                 <div :class="$style.tabName">首页</div>
             </template>
-            <pl-svg
-                v-else-if="skinId !== null"
-                :name="homeActive ? 'icon-find-active' : 'icon-find'"
-                width="44"
-                height="68"
-                :key="0"
-            />
+            <img
+                :src="homeActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/find (1).png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/find.png'"
+                style="width: 5.86vw; height: 9.06vw;"
+                alt=""
+            >
         </router-link>
         <!-- 分类 -->
         <router-link
@@ -47,13 +45,11 @@
                 <img :src="classifyActive ? skinMap[skinId].classifyActive : skinMap[skinId].classify">
                 <div :class="$style.tabName">分类</div>
             </template>
-            <pl-svg
-                v-else-if="skinId !== null"
-                :name="classifyActive ? 'icon-classify-active' : 'icon-classify'"
-                width="60"
-                height="72"
-                :key="1"
-            />
+            <img
+                :src="classifyActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/classify.png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/classify (1).png'"
+                style="width: 5.86vw; height: 9.06vw;"
+                alt=""
+            >
         </router-link>
         <!-- 中间的活动button -->
         <router-link
@@ -91,13 +87,11 @@
                 <img :src="shoppingChartActive ? skinMap[skinId].shoppingChartActive : skinMap[skinId].shoppingChart">
                 <div :class="$style.tabName">购物车</div>
             </template>
-            <pl-svg
-                v-else-if="skinId !== null"
-                width="64"
-                height="76"
-                :key="2"
-                :name="shoppingChartActive ? 'icon-cart-active' : 'icon-cart'"
-            />
+            <img
+                :src="shoppingChartActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/cart.png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/cart (1).png'"
+                style="width: 8.53vw; height: 10.13vw;"
+                alt=""
+            >
         </router-link>
         <!-- 我的 -->
         <router-link
@@ -112,13 +106,11 @@
                 <img :src="myActive ? skinMap[skinId].myActive : skinMap[skinId].my">
                 <div :class="$style.tabName">我的</div>
             </template>
-            <pl-svg
-                v-else-if="skinId !== null"
-                :name="myActive ? 'icon-my-active' : 'icon-my'"
-                width="44"
-                height="74"
-                :key="3"
-            />
+            <img
+                :src="myActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/my (1).png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/my.png'"
+                style="width: 5.87vw; height: 9.87vw;"
+                alt=""
+            >
             <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
         </router-link>
     </nav>

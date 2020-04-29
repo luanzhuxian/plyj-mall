@@ -174,16 +174,16 @@
             <!-- helper -->
             <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow && lockStatus">
                 <router-link to="" @click.native="toHelperManagementPage">
-                    <pl-svg name="icon-helper-management" width="120" height="115" />
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/helper (2).png" style="width: 16vw; height: 15.33vw" alt="">
                 </router-link>
                 <router-link :to="{ name: 'HelperPoster' }">
-                    <pl-svg name="icon-helper-invatation" width="120" height="115" />
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/helper (3).png" style="width: 16vw; height: 15.33vw" alt="">
                 </router-link>
                 <router-link :to="{ name: 'ShopPoster'}">
-                    <pl-svg name="icon-helper-poster" width="120" height="115" />
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/helper (1).png" style="width: 13vw;" alt="">
                 </router-link>
                 <router-link :to="{ name: 'ShopQrcode'}">
-                    <pl-svg name="icon-helper-qrcode" width="120" height="115" />
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/helper.png" style="width: 16vw; height: 15.33vw" alt="">
                 </router-link>
             </div>
             <you-like :class="$style.recommend" :is-my="true" />

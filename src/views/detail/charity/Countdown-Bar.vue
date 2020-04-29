@@ -2,7 +2,7 @@
     <div :class="$style.countdownBar">
         <div :class="$style.content">
             <div :class="$style.contentLeft">
-                <pl-svg name="icon-gyxd-0532e" width="80" />
+                <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/gyxd.png" width="80" />
             </div>
             <div :class="$style.contentRight">
                 <div :class="$style.contentRightTop">
