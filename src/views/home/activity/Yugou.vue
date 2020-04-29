@@ -7,7 +7,7 @@
         </router-link>
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
-                <item-yugou
+                <product-item
                     v-if="item.goodsInfo && item.goodsInfo.activityInfo"
                     :data="item"
                     :key="i"
@@ -18,12 +18,12 @@
 </template>
 
 <script>
-import ItemYugou from './Item-Yugou.vue'
+import ProductItem from '../../activity-list/components/Book-Product-Item.vue'
 
 export default {
     name: 'Yugou',
     components: {
-        ItemYugou
+        ProductItem
     },
     props: {
         data: {

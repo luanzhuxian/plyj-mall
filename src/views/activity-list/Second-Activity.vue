@@ -13,10 +13,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of ongoingList">
-                                <item-miaosha
-                                    :key="'ongoing-' + i"
-                                    :data="item"
-                                />
+                                <product-item :key="'ongoing-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
@@ -29,11 +26,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of incomingList">
-                                <item-miaosha
-                                    :key="'incoming-' + i"
-                                    :data="item"
-                                    size="long"
-                                />
+                                <product-item :key="'incoming-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
@@ -52,13 +45,13 @@
 </template>
 
 <script>
-import ItemMiaosha from '../home/activity/Item-Miaosha.vue'
+import ProductItem from './components/Second-Product-Item.vue'
 import { secondActivityPage } from '../../apis/product'
 
 export default {
     name: 'SecondActivity',
     components: {
-        ItemMiaosha
+        ProductItem
     },
     data () {
         return {

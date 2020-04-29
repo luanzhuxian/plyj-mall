@@ -13,11 +13,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of ongoingList">
-                                <item-yugou
-                                    :key="'ongoing-' + i"
-                                    :data="item"
-                                    size="long"
-                                />
+                                <product-item :key="'ongoing-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
@@ -30,11 +26,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of incomingList">
-                                <item-yugou
-                                    :key="'incoming-' + i"
-                                    :data="item"
-                                    size="long"
-                                />
+                                <product-item :key="'incoming-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
@@ -53,13 +45,13 @@
 </template>
 
 <script>
-import ItemYugou from '../home/activity/Item-Yugou.vue'
+import ProductItem from './components/Book-Product-Item.vue'
 import { bookActivityPage } from '../../apis/product'
 
 export default {
     name: 'BookActivity',
     components: {
-        ItemYugou
+        ProductItem
     },
     data () {
         return {

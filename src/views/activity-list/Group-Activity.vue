@@ -13,11 +13,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of ongoingList">
-                                <item-pintuan
-                                    :key="'ongoing-' + i"
-                                    :data="item"
-                                    size="long"
-                                />
+                                <product-item :key="'ongoing-' + i" :data="item" size="long" />
                             </template>
                         </ul>
                     </section>
@@ -30,11 +26,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of incomingList">
-                                <item-pintuan
-                                    :key="'incoming-' + i"
-                                    :data="item"
-                                    size="long"
-                                />
+                                <product-item :key="'incoming-' + i" :data="item" size="long" />
                             </template>
                         </ul>
                     </section>
@@ -53,13 +45,13 @@
 </template>
 
 <script>
-import ItemPintuan from '../home/activity/Item-Pintuan.vue'
+import ProductItem from './components/Group-Product-Item.vue'
 import { groupActivityPage } from '../../apis/product'
 
 export default {
     name: 'GroupActivity',
     components: {
-        ItemPintuan
+        ProductItem
     },
     data () {
         return {
