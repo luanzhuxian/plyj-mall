@@ -105,7 +105,7 @@ export default {
                             },
                             productSkuModels: [{
                                 price: item.productPrice,
-                                originalPrice: 1234567899999999999999999999999999999
+                                originalPrice: item.productOriginPrice
                             }]
                         }
                     }
