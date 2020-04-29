@@ -130,7 +130,7 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-zhjhx-3f171',
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zhjhx.png',
                 width: 368,
                 height: 80
             }

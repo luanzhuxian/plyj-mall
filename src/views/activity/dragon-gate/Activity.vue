@@ -53,7 +53,7 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-rmhd-2c30d',
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/rmhd.png',
                 width: 326,
                 height: 80
             }

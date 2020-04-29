@@ -7,7 +7,7 @@
                     <section v-if="ongoingList.length">
                         <div :class="$style.status">
                             <div :class="$style.icon">
-                                <pl-svg name="icon-lightening-orange-bad83" width="26" height="26" />
+                                <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/lightening-orange.png" style="width: 3.5vw;" alt="">
                             </div>
                             正在进行中
                         </div>
@@ -20,7 +20,7 @@
                     <section v-if="incomingList.length">
                         <div :class="$style.status">
                             <div :class="$style.icon">
-                                <pl-svg name="icon-clock-orange-3e84b" width="26" height="26" />
+                                <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/clock-orange.png" sizes="width: 3.5vw;" alt="">
                             </div>
                             即将开始
                         </div>

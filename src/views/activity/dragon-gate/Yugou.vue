@@ -70,7 +70,7 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-ygxfb-1a813',
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/ygxfb.png',
                 width: 368,
                 height: 80
             }

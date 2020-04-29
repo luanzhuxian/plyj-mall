@@ -54,7 +54,7 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-qmlfx-f2ec1',
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/qmlfx.png',
                 width: 368,
                 height: 80
             }

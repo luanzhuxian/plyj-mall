@@ -86,7 +86,7 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-zzct-4e0e9',
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zzct.png',
                 width: 326,
                 height: 80
             }

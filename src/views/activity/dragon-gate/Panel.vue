@@ -1,7 +1,7 @@
 <template>
     <div class="dragon-panel" :class="[customClass]">
         <div class="dragon-panel-title" v-if="!$slots.title">
-            <pl-svg :name="title.name" :width="title.width" :height="title.height" v-if="isSvg" />
+            <img v-if="isSvg" :src="title.name" alt="" :style="{ width: title.width / 7.5 + 'vw' }">
             <title v-text="title" v-else />
         </div>
         <slot name="title" v-else />

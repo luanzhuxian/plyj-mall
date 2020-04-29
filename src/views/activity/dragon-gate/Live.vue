@@ -85,7 +85,7 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-zbfys-91a2a',
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zbfys.png',
                 width: 368,
                 height: 80
             }

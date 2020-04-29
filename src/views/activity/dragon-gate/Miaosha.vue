@@ -62,7 +62,7 @@
                                     [$style.disabled]: item.goodsInfo.activityInfo.status !== 1
                                 }"
                             >
-                                <pl-svg name="icon-qiang-2dcd1" width="38" height="38" />
+                                <pl-svg name="icon-vie-for" width="38" height="38" />
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-xsms-78363',
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/xsms.png',
                 width: 326,
                 height: 80
             }

@@ -96,7 +96,7 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'icon-jptj-71d47',
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/jptj.png',
                 width: 326,
                 height: 80
             }
