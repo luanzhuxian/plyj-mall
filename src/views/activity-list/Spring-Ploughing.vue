@@ -123,9 +123,9 @@ import {
     generateQrcode,
     createText,
     cutArcImage,
-    loadImage,
-    Countdown
+    loadImage
 } from '../../assets/js/util'
+import Countdown from '../../assets/js/Countdown'
 
 const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/4b676734-b0c9-4aca-942d-ce62e481ebcf.jpeg'
 

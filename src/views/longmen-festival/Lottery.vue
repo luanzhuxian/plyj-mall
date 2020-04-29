@@ -241,7 +241,8 @@ import GiftPopUp from '../../components/activity/Gift-Pop-Up.vue'
 import CouponItemViewer from '../../components/item/Coupon-Item-Viewer.vue'
 import GiftItem from '../../components/item/Gift-Item.vue'
 import { shuffle } from '../../assets/js/loadsh'
-import { loadImage, cutArcImage, generateQrcode, SectionToChinese, promise, Countdown } from '../../assets/js/util'
+import { loadImage, cutArcImage, generateQrcode, SectionToChinese, promise } from '../../assets/js/util'
+import Countdown from '../../assets/js/Countdown'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
 import {
@@ -398,7 +399,9 @@ export default {
                         return String(num).padStart(2, '0')
                     }
                     // 启动倒计时
-                    countDownInstance = new Countdown(duration, ({ seconds, minutes, hours, days }) => {
+                    countDownInstance = new Countdown(duration, (data) => {
+                        if (!data) return location.reload()
+                        const { seconds, minutes, hours, days } = data
                         this.date = {
                             seconds: toString(seconds),
                             minutes: toString(minutes),

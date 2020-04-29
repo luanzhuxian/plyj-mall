@@ -14,7 +14,7 @@
 
 <script>
 import moment from 'moment'
-import { Countdown } from '../../assets/js/util'
+import Countdown from '../../assets/js/Countdown'
 export default {
     name: 'TogetherCountDown',
     props: {

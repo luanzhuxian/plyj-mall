@@ -184,7 +184,7 @@ import {
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
-import { Countdown } from '../../../assets/js/util'
+import Countdown from '../../../assets/js/Countdown'
 const tabs = [{
     name: '全部',
     id: 'ALL_ORDER'

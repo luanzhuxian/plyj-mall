@@ -31,7 +31,7 @@
 
 <script>
 import moment from 'moment'
-import { Countdown } from '../../../assets/js/util'
+import Countdown from '../../../assets/js/Countdown'
 import Progress from '../../../components/penglai-ui/Progress.vue'
 
 export default {

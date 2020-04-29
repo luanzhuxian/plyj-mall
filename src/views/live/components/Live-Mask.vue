@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { Countdown } from './../../../assets/js/util'
+import Countdown from '../../../assets/js/Countdown'
 export default {
     name: 'LiveMask',
     props: {

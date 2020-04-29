@@ -646,7 +646,8 @@ import {
     getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
-import { generateQrcode, Countdown } from '../../../assets/js/util'
+import { generateQrcode } from '../../../assets/js/util'
+import Countdown from '../../../assets/js/Countdown'
 import { createText } from '../../../assets/js/validate'
 import filter from '../../../filter/index'
 

@@ -103,7 +103,7 @@ import {
   getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
-import { Countdown } from '../../../assets/js/util'
+import Countdown from '../../../assets/js/Countdown'
 import moment from 'moment'
 const countdownInstanceList = []
 export default {
