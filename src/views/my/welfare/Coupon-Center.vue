@@ -5,7 +5,7 @@
         </div>
         <div :class="$style.couponList">
             <div :class="$style.couponHeader">
-                <pl-svg name="icon-coupon2" width="40" height="33" />
+                <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/coupon2.png" width="40" height="33" />
                 <span>优惠券</span>
             </div>
             <div :class="$style.couponView">
@@ -124,9 +124,8 @@ export default {
     .coupon-header {
       line-height: 44px;
 
-      svg {
-        display: inline-block;
-        vertical-align: text-bottom;
+      img {
+        vertical-align: -4px;
       }
 
       span {

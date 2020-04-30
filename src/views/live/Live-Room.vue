@@ -113,7 +113,7 @@
                         >
                             <span :class="$style.userName" v-text="item.name" />
                             <span>&nbsp;赠送给老师&nbsp;</span>
-                            <pl-svg v-if="item.giftType === 'flower'" name="icon-meiguihua" width="36" height="36" />
+                            <pl-svg v-if="item.giftType === 'flower'" type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/meiguihua.png" width="36" height="36" />
                         </div>
                         <!-- 通知 -->
                         <div
@@ -189,7 +189,7 @@
                     <pl-button :disabled="allowedSpeak" :class="$style.sendBtn">发送</pl-button>
                 </form>
                 <pl-button :disabled="allowedSpeak" type="text" :class="$style.sendFlower" @click="sendFlower">
-                    <pl-svg name="icon-flower" width="37" />
+                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/flower.png" width="37" />
                 </pl-button>
 
                 <!--<transition name="fade">

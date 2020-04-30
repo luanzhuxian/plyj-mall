@@ -2,7 +2,7 @@
     <!-- 春耘计划礼品组件 -->
     <div :class="[$style.springPloughingGiftItem, $style[color]]">
         <div :class="$style.imageWrapper" v-if="isCoupon">
-            <pl-svg name="icon-coupon-default-32cbf" width="120" height="81" />
+            <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/coupon-default.png" width="120" height="81" />
         </div>
         <img :src="data.giftImage" alt="" v-else>
         <div :class="$style.right">

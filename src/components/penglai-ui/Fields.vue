@@ -10,6 +10,7 @@
                     v-if="icon && iconPosition === 'left'"
                     :name="icon"
                     :width="iconWidth"
+                    :type="iconType"
                     :height="iconHeight"
                     class="pl-fields_icon"
                     :style="{ paddingRight: iconGap / 7.5 + 'vw'}"
@@ -22,7 +23,7 @@
                     :fill="iconColor"
                     v-if="icon && iconPosition === 'right'"
                     :name="icon"
-                    type="svg"
+                    :type="iconType"
                     :width="iconWidth"
                     :height="iconHeight"
                     class="pl-fields_icon"
@@ -42,7 +43,7 @@
                     :name="rightIcon"
                     width="20"
                     height="20"
-                    type="svg"
+                    :type="iconType"
                     :class="{
                         'pl-fields_right_icon': true,
                         'is-collapse': canCollapse && collapse,
@@ -85,6 +86,10 @@ export default {
         icon: {
             type: String,
             default: ''
+        },
+        iconType: {
+            type: String,
+            default: 'svg'
         },
         iconColor: {
             type: String,

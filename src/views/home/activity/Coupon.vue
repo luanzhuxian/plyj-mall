@@ -3,7 +3,7 @@
         <div :class="$style.coupon">
             <router-link :class="$style.couponTitle" tag="div" :to="{ name: 'CouponCenter' }">
                 <div :class="$style.couponTitleLeft">
-                    <pl-svg name="icon-speaker-bb20d" width="27" height="27" />
+                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/speaker.png" width="27" height="27" />
                     您有优惠券可使用！
                 </div>
                 <div :class="$style.couponTitleRight">
