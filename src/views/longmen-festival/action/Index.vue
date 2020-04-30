@@ -178,7 +178,11 @@ export default {
                     obj[item.productId].minPrice = minPrice > item.activityPrice ? item.activityPrice : minPrice
                 }
             }
-            return Object.keys(obj).map(key => productModels.find(({ productId, activityPrice }) => (key === productId) && (obj[key].minPrice === activityPrice)))
+
+            return Object.keys(obj).map(key => {
+                const list = productModels.filter(({ productId, activityPrice }) => (key === productId) && (obj[key].minPrice === activityPrice))
+                return list.sort((next, pre) => next.donationAmount - pre.donationAmount)[0]
+            })
         },
         // 聚合课程和商品
         formatProductList (productModels = [], courseModels = []) {
