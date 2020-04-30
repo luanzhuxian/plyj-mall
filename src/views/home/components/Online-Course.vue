@@ -2,7 +2,7 @@
     <div>
         <div :class="$style.onlineCourseWrapper">
             <div :class="$style.onlineCourseHead">
-                <pl-svg name="icon-tv-76530" width="36" height="40" />
+                <pl-svg name="icon-tv-76530" width="36" height="45" />
                 <b>知识课程</b>
                 <router-link
                     :class="$style.onlineCourseHeadMore"

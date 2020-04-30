@@ -11,7 +11,7 @@
                     <label>
                         <span v-if="live.isNoticeShow">即将开始</span>
                         <span v-if="live.statue === 4">直播中</span>
-                        <span v-if="live.statue === 0">已结束</span>
+                        <span v-if="live.statue === 0">看回放</span>
                     </label>
                     <div :class="$style.imgWrapper">
                         <img :src="(live.isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
@@ -42,7 +42,7 @@
                     <label>
                         <span v-if="live.isNoticeShow">即将开始</span>
                         <span v-if="live.statue === 4">直播中</span>
-                        <span v-if="live.statue === 0">已结束</span>
+                        <span v-if="live.statue === 0">看回放</span>
                     </label>
                     <div :class="$style.imgWrapper">
                         <img :src="(live.isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">

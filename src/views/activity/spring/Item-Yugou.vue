@@ -5,18 +5,15 @@
         @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id } , query: { currentProductStatus: 4 }})"
     >
         <div :class="$style.time">
-            <div :class="$style.timeLeft">
-                <span v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>
-                <span v-if="data.goodsInfo.activityInfo.status === 1">距结束：</span>
-                <span v-if="data.goodsInfo.activityInfo.status === 2">已结束</span>
-            </div>
-            <div :class="$style.timeRight" v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)">
-                <count-down
-                    :timestamp="getTime(data.goodsInfo.activityInfo)"
-                    size="mini"
-                    @done="() => data.goodsInfo.activityInfo.status += 1"
-                />
-            </div>
+            <span v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>
+            <span v-if="data.goodsInfo.activityInfo.status === 1">距结束：</span>
+            <span v-if="data.goodsInfo.activityInfo.status === 2">已结束</span>
+            <countdown
+                v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)"
+                :duration="getDuration(data.goodsInfo.activityInfo)"
+                format="DD天HH:mm:ss"
+                @finish="() => data.goodsInfo.activityInfo.status += 1"
+            />
         </div>
         <div :class="$style.info">
             <div :class="$style.main">
@@ -37,13 +34,13 @@
 </template>
 
 <script>
-import CountDown from '../components/Count-Down.vue'
-import { getTime, getTotalPrice } from '../helper.js'
+import Countdown from '../components/Countdown.vue'
+import { getDuration, getTotalPrice } from '../helper.js'
 
 export default {
     name: 'ItemYugou',
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -57,7 +54,7 @@ export default {
         return {}
     },
     methods: {
-        getTime,
+        getDuration,
         getTotalPrice
     }
 }

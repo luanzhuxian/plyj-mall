@@ -27,13 +27,22 @@
                                     <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
                                     <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
                                     <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 3">已结束</span>
-                                    <count-down
+                                    <countdown
+                                        :class="$style.countdown"
                                         v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
-                                        :timestamp="getTime(item.goodsInfo.activityInfo)"
-                                        format="HH:mm"
-                                        background="rgba(174, 174, 174, 0.64)"
-                                        @done="() => reset(item)"
-                                    />
+                                        :duration="getDuration(item.goodsInfo.activityInfo)"
+                                        @finish="() => reset(item)"
+                                    >
+                                        <template v-slot="{time}">
+                                            <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                                            <span :class="$style.colon">天</span>
+                                            <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                                            <span :class="$style.colon">:</span>
+                                            <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                                            <span :class="$style.colon">:</span>
+                                            <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                                        </template>
+                                    </countdown>
                                 </div>
                             </div>
                             <div :class="$style.info">
@@ -94,13 +103,13 @@
 </template>
 
 <script>
-import CountDown from '../components/Count-Down.vue'
-import { getTime, reset } from '../helper.js'
+import Countdown from '../components/Countdown.vue'
+import { getDuration, reset } from '../helper.js'
 
 export default {
     name: 'Pintuan',
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -114,7 +123,7 @@ export default {
         return {}
     },
     methods: {
-        getTime,
+        getDuration,
         reset
     }
 }
@@ -244,20 +253,30 @@ export default {
         }
         .count-down-wrapper {
           display: flex;
-          justify-content: center;
+          justify-content: space-around;
           align-items: center;
           position: absolute;
           left: 0;
           right: 0;
           bottom: 0;
-          line-height: 36px;
+          height: 52px;
           font-size: 24px;
           background: rgba(0, 0, 0, 0.65);
           color: #FFF;
-          padding: 8px 0;
         }
-        .text {
-          margin-right: 10px;
+        .countdown {
+            display: inline-flex;
+            justify-content: space-around;
+            flex: 1;
+        }
+        .block {
+            display: inline-block;
+            box-sizing: border-box;
+            padding: 0 4px;
+            height: 36px;
+            line-height: 36px;
+            background: rgba(174, 174, 174, .64);
+            border-radius: 4px;
         }
       }
       .info {

@@ -36,16 +36,27 @@
                         <div :class="$style.bottomRight">
                             <span v-if="isNoticeShow">距开始仅剩</span>
                             <span v-if="live.statue === 4" :class="$style.highlight">正在直播</span>
-                            <!-- <span v-if="live.statue === 0" :class="$style.highlight">已结束</span> -->
-                            <count-down
+                            <span v-if="live.statue === 0" :class="$style.highlight">已结束</span>
+                            <countdown
                                 v-if="isNoticeShow"
-                                :timestamp="ts"
-                                color="#333"
-                                size="mini"
-                                @done="done"
-                            />
+                                :duration="duration"
+                                @finish="done"
+                            >
+                                <template v-slot="{time}">
+                                    <i class="block">{{ String(time.days).padStart(2, '0') }}</i>
+                                    <span class="colon">天</span>
+                                    <i class="block">{{ String(time.hours).padStart(2, '0') }}</i>
+                                    <span class="colon">:</span>
+                                    <i class="block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                                    <span class="colon">:</span>
+                                    <i class="block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                                </template>
+                            </countdown>
                             <span v-if="live.statue === 4" :class="$style.highlight">
                                 {{ `${live.visitTimes}人观看` }}
+                            </span>
+                            <span v-if="live.statue === 0" :class="$style.highlight">
+                                直播已结束，去看回放
                             </span>
                         </div>
                     </div>
@@ -61,12 +72,12 @@
 
 <script>
 import moment from 'moment'
-import CountDown from '../../activity/components/Count-Down.vue'
+import Countdown from '../../activity/components/Countdown.vue'
 
 export default {
     name: 'Live',
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -78,7 +89,7 @@ export default {
     },
     data () {
         return {
-            ts: ''
+            duration: ''
         }
     },
     computed: {
@@ -103,7 +114,8 @@ export default {
     created () {
         const { liveStartTime, hasNotice } = this.live
         if (hasNotice && liveStartTime) {
-            this.ts = moment(liveStartTime).valueOf()
+            const duration = Date.now().valueOf() - moment(liveStartTime).valueOf()
+            this.duration = Math.abs(duration)
         }
     },
     methods: {

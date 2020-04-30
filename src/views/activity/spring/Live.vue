@@ -4,14 +4,21 @@
             <span :class="$style.status" v-if="isNoticeShow">距开始</span>
             <span :class="$style.status" v-if="live.statue === 4">正在直播</span>
             <!-- <span :class="$style.status" v-if="live.statue === 0">已结束</span> -->
-            <count-down
+            <countdown
                 v-if="isNoticeShow"
-                :timestamp="ts"
-                size="medium"
-                color="#FF4B00"
-                background="#FFF"
-                @done="done"
-            />
+                :duration="duration"
+                @finish="done"
+            >
+                <template v-slot="{time}">
+                    <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                    <span :class="$style.colon">天</span>
+                    <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                    <span :class="$style.colon">:</span>
+                    <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                    <span :class="$style.colon">:</span>
+                    <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                </template>
+            </countdown>
             <span v-if="live.statue === 4">
                 {{ `${live.visitTimes}人观看` }}
             </span>
@@ -32,12 +39,12 @@
 
 <script>
 import moment from 'moment'
-import CountDown from '../components/Count-Down.vue'
+import Countdown from '../components/Countdown.vue'
 
 export default {
     name: 'Live',
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -68,13 +75,14 @@ export default {
         isNoticeShow () {
             return this.live && this.live.statue === 2 && this.live.hasNotice
         },
-        ts () {
+        duration () {
             const { liveStartTime, hasNotice, statue } = this.live
             let ts
             if (statue === 2 && hasNotice && liveStartTime) {
                 ts = moment(liveStartTime).valueOf()
             }
-            return ts
+            const duration = Date.now().valueOf() - ts
+            return Math.abs(duration)
         }
     },
     methods: {
@@ -134,7 +142,6 @@ export default {
       width: 525px;
       height: 86px;
       color: #FFF;
-      font-size: 28px;
       z-index: 1;
       .status {
         margin-right: 10px;
@@ -142,6 +149,24 @@ export default {
         font-family: Microsoft YaHei;
         font-weight: bold;
         line-height: 34px;
+      }
+      .block {
+          display: inline-block;
+          box-sizing: border-box;
+          padding: 0 4px;
+          height: 46px;
+          line-height: 46px;
+          background: #fff;
+          border-radius: 10px;
+          font-size: 32px;
+          font-weight: bold;
+          color: #FF4B00;
+      }
+      .colon {
+        padding: 0 8px;
+        font-size: 32px;
+        font-family: Microsoft YaHei;
+        font-weight: bold;
       }
     }
     .img-wrapper {

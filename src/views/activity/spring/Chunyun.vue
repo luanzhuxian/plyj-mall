@@ -5,14 +5,21 @@
                 <span v-if="data.values[0].status === 0">距活动开始：</span>
                 <span v-if="data.values[0].status === 1">距活动结束：</span>
                 <span v-if="data.values[0].status === 2">活动已结束</span>
-                <count-down
+                <countdown
                     v-if="~[0, 1].indexOf(data.values[0].status)"
-                    :timestamp="getTime(data.values[0])"
-                    size="middle"
-                    color="#184B28"
-                    background="#96E3A9"
-                    @done="data.values[0].status += 1"
-                />
+                    :duration="getDuration(data.values[0])"
+                    @finish="data.values[0].status += 1"
+                >
+                    <template v-slot="{time}">
+                        <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                        <span :class="$style.colon">天</span>
+                        <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                        <span :class="$style.colon">:</span>
+                        <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                        <span :class="$style.colon">:</span>
+                        <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                    </template>
+                </countdown>
             </div>
             <p :class="$style.link">
                 查看计划礼包 >
@@ -72,16 +79,16 @@
 
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import CountDown from '../components/Count-Down.vue'
+import Countdown from '../components/Countdown.vue'
 import ItemChunyun from './Item-Chunyun.vue'
-import { getTime } from '../helper.js'
+import { getDuration } from '../helper.js'
 
 export default {
     name: 'Chunyun',
     components: {
         swiper,
         swiperSlide,
-        CountDown,
+        Countdown,
         ItemChunyun
     },
     props: {
@@ -134,7 +141,7 @@ export default {
         }
     },
     methods: {
-        getTime,
+        getDuration,
         getOptions (list, map) {
             const length = (list && list.length) || 0
             const swiperOption = {
@@ -175,6 +182,18 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
+            .block {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 40px;
+                height: 40px;
+                background: #96e3a9;
+                border-radius: 6px;
+                font-size: 28px;
+                color: #184b28;
+                margin: 0 4px;
+            }
         }
         .link {
             position: absolute;

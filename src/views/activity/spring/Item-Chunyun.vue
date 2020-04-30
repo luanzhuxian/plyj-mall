@@ -11,17 +11,24 @@
             <img :src="data.imageUrl" alt="">
         </div>
         <div :class="$style.countDownWrapper" v-if="size === 'small'">
-            <span v-if="data.status === 0">距开始：</span>
-            <span v-if="data.status === 1">距结束：</span>
+            <span v-if="data.status === 0">距开始</span>
+            <span v-if="data.status === 1">距结束</span>
             <span v-if="data.status === 2">已结束</span>
-            <count-down
+            <countdown
                 v-if="~[0, 1].indexOf(data.status)"
-                :timestamp="getTime(data)"
-                color="#184B28"
-                background="#92F4C7"
-                format="HH:mm"
-                @done="data.status += 1"
-            />
+                :duration="getDuration(data)"
+                @finish="data.status += 1"
+            >
+                <template v-slot="{time}">
+                    <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                    <span :class="$style.colon">天</span>
+                    <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                    <span :class="$style.colon">:</span>
+                    <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                    <span :class="$style.colon">:</span>
+                    <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                </template>
+            </countdown>
         </div>
         <div :class="$style.price">
             <div :class="$style.origin">
@@ -55,13 +62,13 @@
 </template>
 
 <script>
-import CountDown from '../components/Count-Down.vue'
-import { getTime } from '../helper.js'
+import Countdown from '../components/Countdown.vue'
+import { getDuration } from '../helper.js'
 
 export default {
     name: 'ItemChunyun',
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -70,17 +77,17 @@ export default {
                 return { }
             }
         },
-        // small, medium, large
         size: {
             type: String,
-            default: 'large'
+            default: 'large',
+            validator: val => ~['small', 'medium', 'large'].indexOf(val)
         }
     },
     data () {
         return {}
     },
     methods: {
-        getTime,
+        getDuration,
         async submitOrder (item) {
             if (item.status === 0 || !item.stock) this.$router.push({ name: 'SpringPloughing' })
             if (item.status === 1) {
@@ -142,7 +149,7 @@ export default {
     }
     .count-down-wrapper {
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       align-items: center;
       padding: 0 8px;
       height: 62px;
@@ -150,6 +157,18 @@ export default {
       background: #397432;
       font-size: 24px;
       color: #92F4C7;
+      .block {
+          display: inline-block;
+          box-sizing: border-box;
+          margin: 0 4px;
+          width: 36px;
+          height: 38px;
+          line-height: 38px;
+          text-align: center;
+          background-color: #92F4C7;
+          color: #4076cc;
+          border-radius: 4px;
+      }
     }
     .origin {
       display: flex;

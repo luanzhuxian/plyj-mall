@@ -20,12 +20,11 @@
             <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束：</span>
             <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已成功</span>
             <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 3">已结束</span>
-            <count-down
+            <countdown
                 v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)"
-                :timestamp="getTime(data.goodsInfo.activityInfo)"
-                size="mini"
-                color="#FF4B00"
-                @done="() => reset(data)"
+                :duration="getDuration(data.goodsInfo.activityInfo)"
+                format="DD天HH:mm:ss"
+                @finish="() => reset(data)"
             />
         </div>
         <div :class="$style.imgWrapper">
@@ -55,13 +54,13 @@
 </template>
 
 <script>
-import CountDown from '../components/Count-Down.vue'
-import { getTime, reset } from '../helper.js'
+import Countdown from '../components/Countdown.vue'
+import { getDuration, reset } from '../helper.js'
 
 export default {
     name: 'ItemPintuan',
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -75,7 +74,7 @@ export default {
         return {}
     },
     methods: {
-        getTime,
+        getDuration,
         reset
     }
 }

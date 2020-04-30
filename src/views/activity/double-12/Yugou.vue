@@ -23,12 +23,10 @@
                                     <span v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
                                 </div>
                                 <div :class="$style.timeRight" v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)">
-                                    <count-down
-                                        :timestamp="getTime(item.goodsInfo.activityInfo)"
-                                        color="#DB4D7D"
-                                        size="mini"
-                                        format="HH:mm"
-                                        @done="() => item.goodsInfo.activityInfo.status += 1"
+                                    <countdown
+                                        :duration="getDuration(item.goodsInfo.activityInfo)"
+                                        format="DD天HH:mm:ss"
+                                        @finish="() => item.goodsInfo.activityInfo.status += 1"
                                     />
                                 </div>
                             </div>
@@ -58,13 +56,13 @@
 </template>
 
 <script>
-import CountDown from '../components/Count-Down.vue'
-import { getTime, getTotalPrice } from '../helper.js'
+import Countdown from '../components/Countdown.vue'
+import { getDuration, getTotalPrice } from '../helper.js'
 
 export default {
     name: 'Yugou',
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -78,7 +76,7 @@ export default {
         return {}
     },
     methods: {
-        getTime,
+        getDuration,
         getTotalPrice
     }
 }
@@ -156,7 +154,7 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 160px;
+            width: 170px;
             font-size: 24px;
             font-family: San Francisco Display;
             color: #DB4D7D;

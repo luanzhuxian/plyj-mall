@@ -84,17 +84,26 @@
                         >
                             <div :class="$style.imgWrapper">
                                 <img :src="prod.productMainImage + '?x-oss-process=style/thum-middle'">
-                                <div :class="$style.countDown">
+                                <div :class="$style.countDownWrapper">
                                     <span :class="$style.text" v-if="prod.activityInfo.status === 0">距开始</span>
                                     <span :class="$style.text" v-if="prod.activityInfo.status === 1">距结束</span>
                                     <span :class="$style.text" v-if="prod.activityInfo.status === 2">已结束</span>
-                                    <count-down
+                                    <countdown
+                                        :class="$style.countdown"
                                         v-if="~[0, 1].indexOf(prod.activityInfo.status)"
-                                        :timestamp="getTime(prod.activityInfo)"
-                                        format="HH:mm"
-                                        background="rgba(174, 174, 174, 0.64)"
-                                        @done="() => prod.activityInfo.status += 1"
-                                    />
+                                        :duration="getDuration(prod.activityInfo)"
+                                        @finish="() => prod.activityInfo.status += 1"
+                                    >
+                                        <template v-slot="{time}">
+                                            <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                                            <span :class="$style.colon">天</span>
+                                            <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                                            <span :class="$style.colon">:</span>
+                                            <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                                            <span :class="$style.colon">:</span>
+                                            <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                                        </template>
+                                    </countdown>
                                 </div>
                             </div>
                             <div :class="$style.info">
@@ -157,13 +166,13 @@
 
 <script>
 import moment from 'moment'
-import CountDown from '../components/Count-Down.vue'
-import { getPrice, getDate, getTime } from '../helper.js'
+import Countdown from '../components/Countdown.vue'
+import { getPrice, getDate, getDuration } from '../helper.js'
 
 export default {
     name: 'Miaosha',
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -181,7 +190,7 @@ export default {
     methods: {
         getPrice,
         getDate,
-        getTime,
+        getDuration,
         getTimeStatus ([start, end]) {
             let msg = ''
             const timestamp = this.timestamp || Date.now()
@@ -291,22 +300,32 @@ export default {
           margin-right: 16px;
           width: 280px;
           height: 188px;
-          .count-down {
+          .count-down-wrapper {
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
             position: absolute;
             left: 0;
             right: 0;
             bottom: 0;
+            height: 52px;
             font-size: 24px;
-            line-height: 36px;
             background: rgba(0, 0, 0, 0.65);
             color: #FFF;
-            padding: 8px 0;
           }
-          .text {
-            margin-right: 10px;
+          .countdown {
+              display: inline-flex;
+              justify-content: space-around;
+              flex: 1;
+          }
+          .block {
+              display: inline-block;
+              box-sizing: border-box;
+              padding: 0 4px;
+              height: 36px;
+              line-height: 36px;
+              background: rgba(174, 174, 174, .64);
+              border-radius: 4px;
           }
         }
         img {
