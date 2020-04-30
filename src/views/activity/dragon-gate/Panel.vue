@@ -60,7 +60,7 @@ export default {
     border-radius: 16px;
     &-title {
         position: absolute;
-        top: -42px;
+        top: -28px;
         left: 0;
         right: 0;
         text-align: center;

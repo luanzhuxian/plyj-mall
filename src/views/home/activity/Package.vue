@@ -26,13 +26,22 @@
                             <span :class="$style.text" v-if="item.combinationDetailList[0].status === 0">距开始</span>
                             <span :class="$style.text" v-if="item.combinationDetailList[0].status === 1">距结束</span>
                             <span :class="$style.text" v-if="item.combinationDetailList[0].status === 2">已结束</span>
-                            <count-down
+                            <countdown
+                                :class="$style.countdown"
                                 v-if="~[0, 1].indexOf(item.combinationDetailList[0].status)"
-                                :timestamp="getTime(item.combinationDetailList[0])"
-                                format="HH:mm"
-                                background="rgba(174, 174, 174, 0.64)"
-                                @done="reload(item)"
-                            />
+                                :duration="getDuration(item.combinationDetailList[0])"
+                                @finish="() => item.combinationDetailList[0].status += 1"
+                            >
+                                <template v-slot="{time}">
+                                    <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                                    <span :class="$style.colon">天</span>
+                                    <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                                    <span :class="$style.colon">:</span>
+                                    <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                                    <span :class="$style.colon">:</span>
+                                    <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                                </template>
+                            </countdown>
                         </div>
                     </div>
                     <div :class="$style.info">
@@ -42,9 +51,6 @@
                         <div :class="$style.sub">
                             <div :class="$style.subLeft">
                                 <div :class="$style.subLeftMain">
-                                    <!-- <span v-if="item.combinationDetailList[0].status === 0">
-                                        {{ `${item.goodsInfo.pageviews}人已关注` }}
-                                    </span> -->
                                     <span v-if="~[1, 2].indexOf(item.combinationDetailList[0].status)">
                                         {{ `已有${item.combinationDetailList[0].salesVolume || 0}人参与` }}
                                     </span>
@@ -74,14 +80,14 @@
 </template>
 
 <script>
-import CountDown from '../../activity/components/Count-Down.vue'
-import { getTime } from '../../activity/helper'
+import Countdown from '../../activity/components/Countdown.vue'
+import { getDuration } from '../../activity/helper'
 
 export default {
     name: 'Package',
     inject: ['parent'],
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -95,11 +101,11 @@ export default {
         return {}
     },
     methods: {
-        getTime,
-        reload (item) {
-            // item.combinationDetailList[0].status += 1
-            this.parent.getTemplate()
-        }
+        getDuration
+        // reload (item) {
+        //     // item.combinationDetailList[0].status += 1
+        //     this.parent.getTemplate()
+        // }
     }
 }
 </script>
@@ -203,20 +209,35 @@ export default {
             }
             .count-down-wrapper {
                 display: flex;
-                justify-content: center;
+                justify-content: space-around;
                 align-items: center;
                 position: absolute;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                line-height: 36px;
+                height: 52px;
                 font-size: 24px;
                 background: rgba(0, 0, 0, .65);
                 color: #fff;
-                padding: 8px 0;
             }
             .text {
-                margin-right: 10px;
+                display: inline-block;
+                width: 80px;
+                text-align: center;
+            }
+            .countdown {
+              display: inline-flex;
+              justify-content: space-around;
+              flex: 1;
+            }
+            .block {
+                display: inline-block;
+                box-sizing: border-box;
+                padding: 0 4px;
+                height: 36px;
+                line-height: 36px;
+                background: rgba(174, 174, 174, .64);
+                border-radius: 4px;
             }
         }
         .info {

@@ -13,17 +13,17 @@
                         query: { currentProductStatus: 4 }
                     }"
                 >
-                    <!-- <div :class="$style.countDownWrapper">
-              <span v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
-              <span v-if="item.goodsInfo.activityInfo.status === 1">距结束：</span>
-              <span v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
-              <count-down
-               v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
-                :timestamp="getTime(item.goodsInfo.activityInfo)"
-                size="mini"
-                @done="() => item.goodsInfo.activityInfo.status += 1"
-              />
-          </div> -->
+                    <div :class="$style.countDownWrapper">
+                        <span v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
+                        <span v-if="item.goodsInfo.activityInfo.status === 1">距结束：</span>
+                        <span v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
+                        <countdown
+                            v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                            :duration="getDuration(item.goodsInfo.activityInfo)"
+                            format="DD天HH:mm:ss"
+                            @finish="() => item.goodsInfo.activityInfo.status += 1"
+                        />
+                    </div>
                     <div :class="$style.info">
                         <div :class="$style.main">
                             {{ item.goodsInfo.productName }}
@@ -47,14 +47,14 @@
 
 <script>
 import Panel from './Panel.vue'
-// import CountDown from '../../components/Count-Down.vue'
-import { getTime, getTotalPrice } from '../helper'
+import Countdown from '../components/Countdown.vue'
+import { getDuration, getTotalPrice } from '../helper'
 
 export default {
     name: 'Yugou',
     components: {
-        Panel
-    // CountDown
+        Panel,
+        Countdown
     },
     props: {
         data: {
@@ -74,7 +74,7 @@ export default {
         }
     },
     methods: {
-        getTime,
+        getDuration,
         getTotalPrice
     }
 }
@@ -103,7 +103,6 @@ export default {
         border-radius: 10px;
         color: #ff341b;
         font-size: 26px;
-        font-family: Helvetica;
         font-weight: bold;
         @include elps();
     }

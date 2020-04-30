@@ -1,16 +1,16 @@
 <template>
     <div>
         <div :class="$style.coupon">
-            <div :class="$style.couponTitle">
+            <router-link :class="$style.couponTitle" tag="div" :to="{ name: 'CouponCenter' }">
                 <div :class="$style.couponTitleLeft">
                     <pl-svg name="icon-speaker-bb20d" width="27" height="27" />
                     您有优惠券可使用！
                 </div>
-                <router-link :class="$style.couponTitleRight" tag="div" :to="{ name: 'CouponCenter' }">
+                <div :class="$style.couponTitleRight">
                     <span>立即领取</span>
                     <pl-svg name="icon-right" width="28" height="28" fill="#7E6E4D" />
-                </router-link>
-            </div>
+                </div>
+            </router-link>
             <ul :class="$style.couponList" v-if="data.values.length">
                 <template v-for="(item, i) of data.values">
                     <li

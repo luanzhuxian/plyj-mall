@@ -15,18 +15,27 @@
                 >
                     <div :class="$style.imgWrapper">
                         <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-                        <!-- <div :class="$style.countDownWrapper">
-                  <span :class="$style.text" v-if="item.activityInfo.status === 0">距开始</span>
-                  <span :class="$style.text" v-if="item.activityInfo.status === 1">距结束</span>
-                  <span :class="$style.text" v-if="item.activityInfo.status === 2">已结束</span>
-                  <count-down
-                    v-if="~[0, 1].indexOf(item.activityInfo.status)"
-                    :timestamp="getTime(item.activityInfo)"
-                    format="HH:mm"
-                    background="rgba(174, 174, 174, 0.64)"
-                    @done="() => item.activityInfo.status += 1"
-                  />
-                </div> -->
+                        <div :class="$style.countDownWrapper">
+                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
+                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
+                            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
+                            <countdown
+                                :class="$style.countdown"
+                                v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                                :duration="getDuration(item.goodsInfo.activityInfo)"
+                                @finish="() => item.goodsInfo.activityInfo.status += 1"
+                            >
+                                <template v-slot="{time}">
+                                    <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                                    <span :class="$style.colon">天</span>
+                                    <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                                    <span :class="$style.colon">:</span>
+                                    <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                                    <span :class="$style.colon">:</span>
+                                    <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                                </template>
+                            </countdown>
+                        </div>
                     </div>
                     <div :class="$style.info">
                         <div :class="$style.main">
@@ -74,14 +83,14 @@
 
 <script>
 import Panel from './Panel.vue'
-// import CountDown from '../../components/Count-Down.vue'
-import { getPrice, getTime } from '../helper'
+import Countdown from '../components/Countdown.vue'
+import { getPrice, getDuration } from '../helper'
 
 export default {
     name: 'Miaosha',
     components: {
-        Panel
-    // CountDown
+        Panel,
+        Countdown
     },
     props: {
         data: {
@@ -102,7 +111,7 @@ export default {
     },
     methods: {
         getPrice,
-        getTime
+        getDuration
     }
 }
 </script>
@@ -136,26 +145,28 @@ export default {
         }
         .count-down-wrapper {
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
             align-items: center;
             position: absolute;
             left: 0;
             right: 0;
             bottom: 0;
-            line-height: 36px;
+            height: 52px;
+            font-size: 24px;
             background: rgba(0, 0, 0, .65);
             color: #fff;
-            padding: 8px 0;
         }
-        .text {
-            margin-right: 10px;
+        .countdown {
+            display: inline-flex;
+            justify-content: space-around;
+            flex: 1;
         }
-        .num {
+        .block {
+            display: inline-block;
             box-sizing: border-box;
-            margin: 0 5px;
-            padding: 4px;
+            padding: 0 4px;
             height: 36px;
-            line-height: 32px;
+            line-height: 36px;
             background: rgba(174, 174, 174, .64);
             border-radius: 4px;
         }

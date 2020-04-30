@@ -23,17 +23,25 @@
                                 <div :class="$style.imgWrapper">
                                     <img :src="combination.imageUrl + '?x-oss-process=style/thum-middle'" alt="">
                                     <div :class="$style.countDownWrapper">
-                                        <span v-if="combination.status === 0">距开始：</span>
-                                        <span v-if="combination.status === 1">距结束：</span>
+                                        <span v-if="combination.status === 0">距开始</span>
+                                        <span v-if="combination.status === 1">距结束</span>
                                         <span v-if="combination.status === 2">已结束</span>
-                                        <count-down
+                                        <countdown
+                                            :class="$style.countdown"
                                             v-if="~[0, 1].indexOf(combination.status)"
-                                            :timestamp="getTime(combination)"
-                                            color="#4076CC"
-                                            background="#fff"
-                                            format="HH:mm"
-                                            @done="combination.status += 1"
-                                        />
+                                            :duration="getDuration(combination)"
+                                            @finish="combination.status += 1"
+                                        >
+                                            <template v-slot="{time}">
+                                                <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                                                <span :class="$style.colon">天</span>
+                                                <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                                                <span :class="$style.colon">:</span>
+                                                <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                                                <span :class="$style.colon">:</span>
+                                                <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                                            </template>
+                                        </countdown>
                                     </div>
                                 </div>
                                 <div :class="$style.price">
@@ -98,8 +106,8 @@
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import Panel from './Panel.vue'
-import CountDown from '../../activity/components/Count-Down.vue'
-import { getTime } from '../helper'
+import Countdown from '../components/Countdown.vue'
+import { getDuration } from '../helper'
 
 const map = {
     0: 1,
@@ -116,7 +124,7 @@ export default {
     components: {
         swiper,
         swiperSlide,
-        CountDown,
+        Countdown,
         Panel
     },
     props: {
@@ -137,7 +145,7 @@ export default {
         }
     },
     methods: {
-        getTime,
+        getDuration,
         getOptions (list = []) {
             const length = (list && list.length) || 0
             const swiperOption = {
@@ -202,16 +210,20 @@ export default {
         }
         .count-down-wrapper {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
-            padding: 0 8px;
             height: 60px;
-            line-height: 60px;
             background-color: #4076cc;
             font-size: 24px;
-            font-family: Helvetica;
             color: #fff;
-            > .num {
+            .countdown {
+                display: inline-flex;
+                align-items: center;
+            }
+            .block {
+                display: inline-block;
+                box-sizing: border-box;
+                margin: 0 4px;
                 width: 36px;
                 height: 38px;
                 line-height: 38px;

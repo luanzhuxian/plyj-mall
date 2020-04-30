@@ -22,19 +22,18 @@
                             {{ `${item.goodsInfo.activityInfo.number}人参团` }}
                         </span>
                     </div>
-                    <!-- <div :class="$style.countDownWrapper" v-if="item.goodsInfo.activityInfo.preActivity && item.goodsInfo.activityInfo.preActivity !== 0">
-            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
-            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束：</span>
-            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
-            <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 3">已结束</span>
-            <count-down
-              v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
-              :timestamp="getTime(item.goodsInfo.activityInfo)"
-              size="mini"
-              color="#FF4B00"
-              @done="() => reset(item)"
-            />
-          </div> -->
+                    <div :class="$style.countDownWrapper">
+                        <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
+                        <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束：</span>
+                        <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已成功</span>
+                        <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 3">已结束</span>
+                        <countdown
+                            v-if="~[0, 1].indexOf(item.goodsInfo.activityInfo.status)"
+                            :duration="getDuration(item.goodsInfo.activityInfo)"
+                            format="DD天HH:mm:ss"
+                            @finish="() => reset(item)"
+                        />
+                    </div>
                     <div :class="$style.imgWrapper">
                         <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
                     </div>
@@ -66,14 +65,14 @@
 
 <script>
 import Panel from './Panel.vue'
-// import CountDown from '../../components/Count-Down.vue'
-import { getTime, reset } from '../helper'
+import Countdown from '../components/Countdown.vue'
+import { getDuration, reset } from '../helper'
 
 export default {
     name: 'Pintuan',
     components: {
-        Panel
-    // CountDown
+        Panel,
+        Countdown
     },
     props: {
         data: {
@@ -93,7 +92,7 @@ export default {
         }
     },
     methods: {
-        getTime,
+        getDuration,
         reset
     }
 }
@@ -156,7 +155,6 @@ export default {
         box-shadow: 0 4px 8px #a02e09;
         color: #ff341b;
         font-size: 26px;
-        font-family: Helvetica;
         font-weight: bold;
         @include elps();
     }

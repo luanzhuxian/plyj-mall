@@ -5,18 +5,27 @@
     >
         <div :class="$style.imgWrapper">
             <img :src="data.goodsInfo.productMainImage">
-            <div :class="$style.countDownWrapper" v-if="data.goodsInfo.activityInfo.preActivity && data.goodsInfo.activityInfo.preActivity !== 0">
+            <div :class="$style.countDownWrapper">
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 0">距开始</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已成功</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 3">已结束</span>
-                <count-down
+                <countdown
+                    :class="$style.countdown"
                     v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)"
-                    :timestamp="getTime(data.goodsInfo.activityInfo)"
-                    format="HH:mm"
-                    background="rgba(174, 174, 174, 0.64)"
-                    @done="() => reset(data)"
-                />
+                    :duration="getDuration(data.goodsInfo.activityInfo)"
+                    @finish="() => reset(data)"
+                >
+                    <template v-slot="{time}">
+                        <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                        <span :class="$style.colon">天</span>
+                        <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                        <span :class="$style.colon">:</span>
+                        <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                        <span :class="$style.colon">:</span>
+                        <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                    </template>
+                </countdown>
             </div>
         </div>
         <div :class="$style.info">
@@ -63,13 +72,13 @@
 </template>
 
 <script>
-import CountDown from '../../activity/components/Count-Down.vue'
-import { getTime, reset } from '../../activity/helper'
+import Countdown from '../../activity/components/Countdown.vue'
+import { getDuration, reset } from '../../activity/helper'
 
 export default {
-    name: 'ItemPintuan',
+    name: 'GroupProductItem',
     components: {
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -88,7 +97,7 @@ export default {
         return {}
     },
     methods: {
-        getTime,
+        getDuration,
         reset
     }
 }
@@ -113,10 +122,25 @@ export default {
             height: 444px;
         }
         .count-down-wrapper {
-            line-height: 36px;
-            padding: 24px 0;
+            display: flex;
+            justify-content: center;
             height: 80px;
-            font-size: 28px;
+            font-size: 32px;
+            .text {
+                display: inline-block;
+                width: auto;
+                text-align: center;
+            }
+            .countdown {
+                justify-content: center;
+                flex: none;
+            }
+            .block {
+                margin: 0 8px;
+                padding: 0 6px;
+                height: 40px;
+                line-height: 40px;
+            }
         }
         .info {
             padding-bottom: 20px;
@@ -170,20 +194,33 @@ export default {
     }
     .count-down-wrapper {
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
         position: absolute;
         left: 0;
         right: 0;
         bottom: 0;
-        box-sizing: border-box;
         height: 52px;
-        line-height: 36px;
         font-size: 24px;
         background: rgba(0, 0, 0, .65);
         color: #fff;
         .text {
-            margin-right: 10px;
+            width: auto;
+            padding: 0 4px;
+        }
+        .countdown {
+            display: inline-flex;
+            justify-content: space-around;
+            flex: 1;
+        }
+        .block {
+            display: inline-block;
+            box-sizing: border-box;
+            padding: 0 4px;
+            height: 36px;
+            line-height: 36px;
+            background: rgba(174, 174, 174, .64);
+            border-radius: 4px;
         }
     }
     .info {
