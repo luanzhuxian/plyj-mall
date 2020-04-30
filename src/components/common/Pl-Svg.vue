@@ -15,7 +15,7 @@
     <img
         v-else
         :src="name"
-        :style="{ width: truthWidth, height: truthHeight }"
+        :style="{ width: width ? width / 7.5 + 'vw' : 'auto', height: height ? height / 7.5 + 'vw' : 'auto' }"
         alt=""
         @hover="hoverHandler"
         @click="clickHandler"

@@ -5,7 +5,7 @@
             <template v-for="(item, i) of progress">
                 <li :key="'item' + i" :class="$style.item">
                     <div :class="$style.imgWrapper">
-                        <pl-svg :name="item.icon" :width="item.width" :height="item.width" />
+                        <pl-svg type="img" :name="item.icon" :width="item.width" />
                     </div>
                     <div :class="{
                         [$style.text]: true,
@@ -47,24 +47,24 @@ export default {
     data () {
         return {
             progress: [{
-                icon: 'icon-bag-3dd51',
+                icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/bag.png',
                 text: ['选择参与', '公益的商品'],
                 width: 46,
                 active: false
             }, {
-                icon: 'icon-zongzi-03e21',
+                icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zongzi.png',
                 text: ['贡献公益金'],
                 width: 54,
                 active: true
 
             }, {
-                icon: 'icon-share-c69f1',
+                icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/share.png',
                 text: ['分享好友', '一起参与'],
                 width: 46,
                 active: false
 
             }, {
-                icon: 'icon-check-ee110',
+                icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/check (1).png',
                 text: ['活动结束', '捐献公益金'],
                 width: 46,
                 active: false

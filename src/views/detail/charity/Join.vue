@@ -14,7 +14,7 @@
         </div>
         <div :class="$style.joinBottom">
             <span :class="$style.joinBottomLeft">购买可捐赠</span>
-            <pl-svg name="icon-zongzi-03e21" width="30" height="30" />
+            <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zongzi.png" width="30" height="30" />
             <span>{{ `${donation}元公益金` }}</span>
         </div>
     </div>
@@ -67,7 +67,7 @@ export default {
             margin-right: 10px;
             color: #fe7700;
         }
-        > svg {
+        > img {
             margin-right: 4px;
         }
         > span {

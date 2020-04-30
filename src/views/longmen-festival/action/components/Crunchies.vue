@@ -17,7 +17,7 @@
                 </div>
                 <div :class="$style.price">
                     <div :class="$style.publicBenefit">
-                        <PlSvg name="icon-zongzi-03e21" width="30" />
+                        <PlSvg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zongzi.png" width="30" />
                         <span>贡献{{ item.donationAmount }}元公益金</span>
                     </div>
                 </div>

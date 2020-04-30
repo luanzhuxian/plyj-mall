@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div :class="$style.activityListItemRight">
-                        <pl-svg :name="map[item.value].icon" :width="map[item.value].width" />
+                        <pl-svg type="img" :name="map[item.value].icon" :width="map[item.value].width" />
                     </div>
                 </div>
             </template>
@@ -49,56 +49,56 @@ export default {
                 cloud: {
                     main: '云课堂',
                     sub: '停课不停学',
-                    icon: 'icon-cloud-play-592ce',
+                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/cloud-play.png',
                     width: '70',
                     path: 'OnlineClassroom'
                 },
                 newyear: {
                     main: '我心中的年味',
                     sub: '翻开记忆中的味道',
-                    icon: 'icon-pocket-8fb26',
+                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/pocket.png',
                     width: '70',
                     path: 'NewYearActivity'
                 },
                 report: {
                     main: '防疫情报站',
                     sub: '众志成城抗击疫情',
-                    icon: 'icon-document-ae13e',
+                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/document.png',
                     width: '64',
                     path: 'BattlefieldReport'
                 },
                 sign: {
                     main: '抗疫签到',
                     sub: '共携手抗战疫',
-                    icon: 'icon-medicine-173e3',
+                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/medicine.png',
                     width: '64',
                     path: 'EpidemicSignIn'
                 },
                 distribution: {
                     main: '全民来分销',
                     sub: 'Helper福利享不停',
-                    icon: 'icon-cup-ccb99',
+                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/cup.png',
                     width: '64',
                     path: 'HelperActivity'
                 },
                 'dragon-gate-charity': {
                     main: '公益粽行动',
                     sub: '学子携手共献爱心',
-                    icon: 'icon-charity-4ef51',
+                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/charity.png',
                     width: '64',
                     path: 'LongmenAction'
                 },
                 'dragon-gate-sign': {
                     main: '粽粽有礼',
                     sub: '粽行四海端午安康',
-                    icon: 'icon-check-bd315',
+                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/check.png',
                     width: '64',
                     path: 'LongmenSignIn'
                 },
                 'dragon-gate-play': {
                     main: '龙门大抽奖',
                     sub: '抽奖嗨翻天',
-                    icon: 'icon-present-7f640',
+                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/present.png',
                     width: '64',
                     path: 'LongmenLottery'
                 }
