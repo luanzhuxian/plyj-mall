@@ -299,13 +299,9 @@
                 <pl-mask :show.sync="showHaibao">
                     <div :class="$style.saveHaibaoContent">
                         <img :src="haibao" alt="">
-                        <div :class="$style.saveButton" v-if="activeProduct === 1">
+                        <div :class="$style.saveButton">
                             长按识别或保存二维码，分享给朋友吧！
                         </div>
-                        <div :class="$style.saveButton1" v-else>
-                            长按识别或保存二维码，分享给朋友吧！
-                        </div>
-                        <!--<pl-svg name="icon-close3" fill="#fff" width="30" @click="showHaibao = false;" />-->
                     </div>
                 </pl-mask>
 
@@ -361,7 +357,6 @@
 
         <!-- 骨架屏 -->
         <skeleton v-else />
-
     </div>
 </template>
 
@@ -1373,15 +1368,6 @@ export default {
           font-size: 28px;
           color: #666;
           background-color: #FBFBFB;
-      }
-      > .saveButton1{
-          width: 560px;
-          margin-top: -4px;
-          text-align: center;
-          line-height: 66px;
-          font-size: 28px;
-          color: #FA4D2F;
-          background-color: #FEDB63;
       }
       > img {
           width: 560px;

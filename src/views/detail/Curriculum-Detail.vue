@@ -930,7 +930,7 @@ export default {
         margin-top: 4px;
     }
 }
-.saveh-haibao-content {
+.save-haibao-content {
     position: relative;
     display: flex;
     flex-direction: column;
