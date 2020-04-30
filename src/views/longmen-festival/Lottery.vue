@@ -177,7 +177,7 @@
                 >
                     <span>用户 {{ ['', '首次注册', '每天进入商城', '单笔订单实际支付满'][item.luckDrawType] }}</span>
                     <template v-if="item.luckDrawType === 3">
-                        <span v-text="item.money" />
+                        <span v-text="Number(item.money / 100).toFixed(2)" />
                         <span> 元，</span>
                     </template>
                     <span> 即可获得 </span>
