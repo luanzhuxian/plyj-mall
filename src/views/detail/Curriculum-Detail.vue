@@ -240,7 +240,10 @@
                 </div>
             </div>
 
-            <div :class="$style.buttomTip" v-if="Number(detail.status) === 2 && !~[5, 6].indexOf(productActive)">
+            <div
+                :class="$style.buttomTip"
+                v-if="Number(detail.status) === 2 && !~[5, 6].indexOf(productActive) && !detail.isBuy"
+            >
                 该视频课程已下架
             </div>
 
