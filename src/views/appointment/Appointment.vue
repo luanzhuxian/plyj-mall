@@ -7,10 +7,10 @@
             <img :src="A.mediaDetailModelList[0] ? A.mediaDetailModelList[0].mediaUrl : 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/ping-xuan.jpg'" alt="">
             <div :class="$style.topContent">
                 <a v-if="servicePhoneModels.length === 1" :class="$style.callService" :href="`tel:${servicePhoneModels[0].contactWay}`">
-                    <pl-svg name="icon-call-service" />
+                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/call.png" />
                 </a>
                 <a v-else :class="$style.callService" @click="showContact = true">
-                    <pl-svg name="icon-call-service" />
+                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/call.png" />
                 </a>
                 <div :class="$style.mallName">
                     <img :class="$style.img" :src="mallLogo">
@@ -309,7 +309,7 @@ export default {
         position: absolute;
         top: -74px;
         right: 26px;
-        > svg {
+        > img {
           width: 128px;
         }
       }
