@@ -140,7 +140,11 @@
             />
 
             <!-- 公益棕活动规则 -->
-            <charity-rule :class="$style.rule" v-if="productActive === 7" />
+            <charity-rule
+                :class="$style.rule"
+                v-if="productActive === 7"
+                :detail="detail.activityBrief"
+            />
 
             <!-- 课程详情 -->
             <div :class="$style.detailOrComment">

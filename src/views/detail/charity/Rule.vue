@@ -22,14 +22,7 @@
                 <li :key="'line-' + i" :class="$style.line" v-if="i !== (progress.length - 1)" />
             </template>
         </ul>
-        <ol :class="$style.detail">
-            <li
-                v-for="(item, index) of detail"
-                :key="index"
-            >
-                {{ item }}
-            </li>
-        </ol>
+        <ol :class="$style.detail" v-html="detail" />
     </div>
 </template>
 
@@ -42,6 +35,10 @@ export default {
             default () {
                 return {}
             }
+        },
+        detail: {
+            type: String,
+            default: '暂无'
         }
     },
     data () {
@@ -69,13 +66,7 @@ export default {
                 width: 46,
                 active: false
 
-            }],
-            detail: [
-                '1.任何人均可参团，每个人开团数和参团数不得超过最高设定',
-                '2.选择参团科目（每个团只能选择一个科目），填写报名基本信息',
-                '3.提交报名信息，完成线上支付预定名额',
-                '4.活动分享给好友，邀请好友加入你的团，一起赢优惠'
-            ]
+            }]
         }
     }
 }
@@ -137,9 +128,7 @@ export default {
     border-top: 2px solid #e7e7e7;
     list-style: unset !important;
     list-style-type: decimal;
-    > li {
-        list-style-position: outside;
-    }
+    white-space: pre-wrap;
 }
 
 </style>

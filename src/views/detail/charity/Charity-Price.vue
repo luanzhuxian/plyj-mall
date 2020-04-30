@@ -17,7 +17,7 @@
                     </li>
                 </ul>
                 <div v-if="charityMembers.length > 0">{{ charityMembers.length }}人和你一起参与</div>
-                <div :class="$style.burse">购买可捐赠 <PlSvg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zongzi.png" width="30" style="margin: 0 10px" /> {{ detail.activityProductModel.donationAmount }}元公益金</div>
+                <div :class="$style.burse">购买可捐赠 <PlSvg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zongzi.png" width="30" height="30" style="margin: 0 10px" /> {{ detail.activityProductModel.donationAmount }}元公益金</div>
             </div>
         </div>
     </div>

@@ -132,7 +132,12 @@
                 <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
 
                 <!-- 公益棕活动规则 -->
-                <CharityRule v-if="activeProduct === 7 && preActivity === 2" :active-product="activeProduct" :class="$style.rule" />
+                <CharityRule
+                    v-if="activeProduct === 7 && preActivity === 2"
+                    :active-product="activeProduct"
+                    :detail="detail.activityProductModel.activityBrief"
+                    :class="$style.rule"
+                />
 
                 <div :class="$style.detailOrComment">
                     <div :class="$style.tabs">
