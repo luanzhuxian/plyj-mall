@@ -20,7 +20,7 @@
                 >
                     <template>
                         <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
-                            <pl-svg name="icon-newCouponIcon" width="400" />
+                            <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png" width="400" />
                         </div>
                         <CouponItem
                             v-for="item in couponList"

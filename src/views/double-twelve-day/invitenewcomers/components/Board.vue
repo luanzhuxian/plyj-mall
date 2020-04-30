@@ -71,8 +71,8 @@
             @confirm="giftConfirm"
         >
             <div slot="title">
-                <pl-svg v-if="hasGift" name="icon-gongxininhuode" fill="#fff" width="60" />
-                <pl-svg v-else name="icon-ganxiecanyu" fill="#fff" width="60" />
+                <pl-svg v-if="hasGift" type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/gongxininhuode.png" width="60" />
+                <pl-svg v-else type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/ganxiecanyu.png" width="60" />
             </div>
             <!-- 优惠券 -->
             <div :class="$style.couponList" v-if="mallCouponEntity">

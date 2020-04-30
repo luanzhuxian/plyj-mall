@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.schoolShow">
         <div :class="$style.moduleTitle">
-            <pl-svg :class="$style.moduleIcon" name="icon-school_show" height="36" />
+            <pl-svg :class="$style.moduleIcon" type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/school_show.png" height="36" />
             <span :class="$style.title" v-text="data.titleName" />
         </div>
         <p v-for="(item, i) of data.mediaDetailModelList" :key="i">
@@ -40,7 +40,7 @@ export default {
   .school-show {
     padding: 32px 24px;
     background-color: #fff;
-    img {
+    > p > img {
       width: 100%;
       margin-bottom: 20px;
       border-radius: 20px;

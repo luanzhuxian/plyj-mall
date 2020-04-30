@@ -49,7 +49,7 @@
             v-if="B"
         >
             <div :id="typeMap[B.type]" :class="$style.moduleTitle" v-if="B">
-                <pl-svg :class="$style.moduleIcon" name="icon-school_show" height="36" />
+                <pl-svg :class="$style.moduleIcon" type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/school_show.png" height="36" />
                 <span :class="$style.title" v-text="B.titleName" />
                 <pl-svg @click="$router.push({ name: 'SchoolShow' })" :class="$style.enter" name="icon-enter" height="30" />
             </div>
@@ -71,7 +71,7 @@
             v-if="C"
         >
             <div :id="typeMap[C.type]" :class="$style.moduleTitle">
-                <pl-svg :class="$style.moduleIcon" name="icon-five_pointed" height="36" />
+                <pl-svg :class="$style.moduleIcon" type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/five_pointed.png" height="36" />
                 <span :class="$style.title" v-text="C.titleName" />
                 <pl-svg @click="$router.push({ name: 'StudentShow' })" :class="$style.enter" name="icon-enter" height="30" />
             </div>
@@ -93,7 +93,7 @@
             v-if="D && D.mediaDetailModelList.length"
         >
             <div :id="typeMap[D.type]" :class="$style.moduleTitle">
-                <pl-svg :class="$style.moduleIcon" name="icon-video" height="36" />
+                <pl-svg :class="$style.moduleIcon" type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/video.png" height="36" />
                 <span :class="$style.title" v-text="D.titleName" />
             </div>
             <pl-video :url="D.mediaDetailModelList[0].mediaUrl" />
@@ -107,7 +107,7 @@
             v-if="E"
         >
             <div :id="typeMap[E.type]" :class="$style.moduleTitle">
-                <pl-svg :class="$style.moduleIcon" name="icon-school_intro" height="36" />
+                <pl-svg :class="$style.moduleIcon" type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/school_intro.png" height="36" />
                 <span :class="$style.title" v-text="E.titleName" />
             </div>
             <div
@@ -130,7 +130,7 @@
             v-if="F"
         >
             <div :id="typeMap[F.type]" :class="$style.moduleTitle">
-                <pl-svg :class="$style.moduleIcon" name="icon-aptitude" height="36" />
+                <pl-svg :class="$style.moduleIcon" type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/aptitude.png" height="36" />
                 <span :class="$style.title" v-text="F.titleName" />
             </div>
             <ul :class="$style.contentList">

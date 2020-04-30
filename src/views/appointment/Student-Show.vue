@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.studentShow">
         <div :class="$style.moduleTitle">
-            <pl-svg :class="$style.moduleIcon" name="icon-five_pointed" height="36" />
+            <pl-svg :class="$style.moduleIcon" type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/five_pointed.png" height="36" />
             <span :class="$style.title" v-text="data.titleName" />
         </div>
         <ul :class="$style.studentList">

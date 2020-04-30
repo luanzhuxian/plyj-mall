@@ -43,7 +43,7 @@
         </div>
         <div class="item-box" v-show="activeId === 0">
             <div class="empty" v-if="!data0.length">
-                <pl-svg name="icon-newCouponIcon" width="400" />
+                <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png" width="400" />
                 <span>暂无礼品券</span>
             </div>
             <div class="items" v-else v-for="(item,index) of data0" :key="index">
@@ -80,7 +80,7 @@
         </div>
         <div class="item-box" v-show="activeId === 1">
             <div class="empty" v-if="!data1.length">
-                <pl-svg name="icon-newCouponIcon" width="400" />
+                <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png" width="400" />
                 <span>暂无礼品券</span>
             </div>
             <div class="items" v-else v-for="(item,index) of data1" :key="index">
@@ -118,7 +118,7 @@
         </div>
         <div class="item-box" v-show="activeId === 99">
             <div class="empty" v-if="!data99.length">
-                <pl-svg name="icon-newCouponIcon" width="400" />
+                <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png" width="400" />
                 <span>暂无礼品券</span>
             </div>
             <div class="items" v-else v-for="(item,index) of data99" :key="index">

@@ -16,7 +16,7 @@
                 >
                     <template>
                         <div name="icon" :class="$style.noCouponIcon" v-if="usedCouponList.length === 0">
-                            <pl-svg name="icon-newCouponIcon" width="400" />
+                            <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png" width="400" />
                         </div>
                         <div v-for="item in usedCouponList" :key="item.id"
                              :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
@@ -59,7 +59,7 @@
                 >
                     <template>
                         <div name="icon" :class="$style.noCouponIcon" v-if="overduedCouponList.length === 0">
-                            <pl-svg name="icon-newCouponIcon" width="400" />
+                            <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png" width="400" />
                         </div>
                         <div v-for="item in overduedCouponList" :key="item.id"
                              :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"

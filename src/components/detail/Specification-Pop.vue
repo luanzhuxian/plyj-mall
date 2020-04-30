@@ -502,17 +502,17 @@ export default {
     bottom: 0;
     background-color: #fff;
     box-sizing: border-box;
-    img {
-      width: 108px;
-      height: 108px;
-      margin-right: 22px;
-      object-fit: cover;
-    }
     .base-info {
       display: flex;
       align-items: flex-end;
       padding-bottom: 24px;
       border-bottom: 1px solid #e7e7e7;
+        > img {
+            width: 162px;
+            height: 108px;
+            margin-right: 22px;
+            object-fit: cover;
+        }
     }
   }
   .base-info-right {

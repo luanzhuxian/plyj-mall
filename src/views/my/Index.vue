@@ -12,7 +12,7 @@
                         :class="$style.applyBtn"
                         :to="{ name: 'ApplyHelper' }"
                     >
-                        <pl-svg name="icon-helper-apply" width="158" height="44" />
+                        <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/apply-helper.png" width="158" height="44" />
                     </router-link>
                     <div v-if="isProgressBtnShow" :class="$style.progress">
                         <span
@@ -473,7 +473,7 @@ export default {
     align-items: center;
     padding: 16px 32px 54px 46px;
     background-color: #f2b036;
-    img {
+    > img {
         width: 110px;
         height: 110px;
         object-fit: cover;
