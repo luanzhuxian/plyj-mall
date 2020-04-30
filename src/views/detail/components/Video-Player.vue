@@ -7,6 +7,7 @@
             :video-id="videoId"
             :resource-id="resourceId"
             :resource-name="resourceName"
+            :is-pay="hasStatistics"
             @playing.once="playing"
         />
         <pl-svg
@@ -54,7 +55,7 @@ export default {
             type: String,
             default: ''
         },
-        // 是否统计观看次数和时长
+        // 是否是系列课， 系列课统计观看次数，时长和计费
         hasStatistics: Boolean
     },
     data () {

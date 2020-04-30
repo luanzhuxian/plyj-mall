@@ -94,7 +94,9 @@ export default {
         },
         // 定义视频的高度是否自动
         autoHeight: Boolean,
-        autoFullScreen: Boolean
+        autoFullScreen: Boolean,
+        // 是否要计费
+        isPay: Boolean
     },
     watch: {
         src: {
@@ -154,32 +156,34 @@ export default {
         videoLoadedmetadata (e) {
             this.duration = e.target.duration
         },
-        videoProgress (e) {
-            const video = e.target
-            const timeRanges = video.buffered
-            if (!timeRanges.length) return
-            let loadedTime = 0
-            for (let i = 0; i < timeRanges.length; i++) {
-                const duration = timeRanges.end(i) - timeRanges.start(i)
-                loadedTime += duration
-            }
-            this.timeFragment.push(Math.abs(loadedTime - this.lastLoadedTime) || 0)
-
-            // console.log(loadedTime, timeRanges.length, this.timeFragment.length)
-            // console.log(loadedTime, this.lastLoadedTime, this.timeFragment.reduce((a, b) => a + b))
-            if (this.timeFragment.length) {
-                const total = this.timeFragment.reduce((a, b) => a + b)
-
-                // 加载的时间片段长度超过6秒就发一次请求，着并不意味着请求频率是1次/6秒
-                // console.log(total, 149)
-                if (total > 6) {
-                    this.sendFlow(total)
-                }
-            }
-            this.lastLoadedTime = loadedTime
-        },
+        // TODO: 此方法暂不使用
+        // videoProgress (e) {
+        //     const video = e.target
+        //     const timeRanges = video.buffered
+        //     if (!timeRanges.length) return
+        //     let loadedTime = 0
+        //     for (let i = 0; i < timeRanges.length; i++) {
+        //         const duration = timeRanges.end(i) - timeRanges.start(i)
+        //         loadedTime += duration
+        //     }
+        //     this.timeFragment.push(Math.abs(loadedTime - this.lastLoadedTime) || 0)
+        //
+        //     // console.log(loadedTime, timeRanges.length, this.timeFragment.length)
+        //     // console.log(loadedTime, this.lastLoadedTime, this.timeFragment.reduce((a, b) => a + b))
+        //     if (this.timeFragment.length) {
+        //         const total = this.timeFragment.reduce((a, b) => a + b)
+        //
+        //         // 加载的时间片段长度超过6秒就发一次请求，着并不意味着请求频率是1次/6秒
+        //         // console.log(total, 149)
+        //         if (total > 6) {
+        //             this.sendFlow(total)
+        //         }
+        //     }
+        //     this.lastLoadedTime = loadedTime
+        // },
         async setLivePaidData ({ watchTime, dataFlowSize }) {
             if (!this.videoId) return
+            if (!this.isPay) return
             const data = {
                 id: this.livePaidId || '',
                 resourceId: this.resourceId,
@@ -196,6 +200,7 @@ export default {
                 this.$error(JSON.parse(e.message).message)
             }
         },
+        // TODO: 此方法暂不使用
         sendFlow (time) {
             this.setLivePaidData({
                 watchTime: Number(time.toFixed(3)),
