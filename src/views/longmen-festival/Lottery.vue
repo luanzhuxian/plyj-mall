@@ -327,7 +327,7 @@ export default {
       window.addEventListener('scroll', this.scrollHandler)
     },
     beforeDestroy () {
-        clearInterval(this.timer)
+        clearInterval(this.drawLotteryTimer)
         window.removeEventListener('scroll', this.scrollHandler)
     },
     computed: {
@@ -357,7 +357,7 @@ export default {
         },
         async getDetail () {
           try {
-              clearInterval(this.timer)
+              clearInterval(this.drawLotteryTimer)
               const { result } = await getDetail(this.id)
               this.awardList = result.gifts
               this.detail = result
@@ -373,7 +373,7 @@ export default {
               canvas.width = inner.offsetWidth
               canvas.height = inner.offsetHeight
               const ctx = canvas.getContext('2d')
-              this.timer = setInterval(() => {
+              this.drawLotteryTimer = setInterval(() => {
                   this.setLights(canvas, ctx)
                   IS_WHITE = !IS_WHITE
               }, 800)
