@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { reedemGift } from './../../../apis/fight-epidemic'
+import { reedemGift } from '../../../../apis/fight-epidemic'
 export default {
     name: 'Award',
     props: {

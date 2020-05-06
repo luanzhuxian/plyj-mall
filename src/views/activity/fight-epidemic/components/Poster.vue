@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { loadImage, cutArcImage, createText, cutImageCenter, generateQrcode } from '../../../assets/js/util'
+import { loadImage, cutArcImage, createText, cutImageCenter, generateQrcode } from '../../../../assets/js/util'
 import { mapGetters } from 'vuex'
 
 // import moment from 'moment'

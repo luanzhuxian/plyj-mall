@@ -134,12 +134,12 @@
 </template>
 
 <script>
-import Popup from './../../components/penglai-ui/Popup'
+import Popup from '../../../components/penglai-ui/Popup'
 import Award from './components/Award'
 import Barrage from './components/Barrage'
 import Poster from './components/Poster.vue'
 import Step from './components/Step'
-import { getSignInInfo, getactivityInfo, getGiftInfo, signIn, getBarrage } from './../../apis/fight-epidemic'
+import { getSignInInfo, getactivityInfo, getGiftInfo, signIn, getBarrage } from '../../../apis/fight-epidemic'
 export default {
     name: 'SignIn',
     components: {

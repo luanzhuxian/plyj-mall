@@ -108,11 +108,11 @@
 </template>
 
 <script>
-import PlVideo from '../../components/common/Video.vue'
+import PlVideo from '../../../components/common/Video.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import axios from 'axios'
-import { getReportDetail } from '../../apis/fight-epidemic'
-import China from '../../../static/china.json'
+import { getReportDetail } from '../../../apis/fight-epidemic'
+import China from '../../../../static/china.json'
 import moment from 'moment'
 const request = axios.create({
     responseType: 'json'

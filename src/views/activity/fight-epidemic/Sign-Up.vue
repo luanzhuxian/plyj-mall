@@ -81,8 +81,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import CitySelector from '../../components/common/City-Selector.vue'
-import { signInfo, signUp, incrAccess } from '../../apis/fight-epidemic'
+import CitySelector from '../../../components/common/City-Selector.vue'
+import { signInfo, signUp, incrAccess } from '../../../apis/fight-epidemic'
 export default {
     name: 'SignUp',
     components: {
