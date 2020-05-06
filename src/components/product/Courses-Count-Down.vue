@@ -53,6 +53,14 @@ export default {
     mounted () {
         this.init()
     },
+    watch: {
+        endtime () {
+            if (this.COUNTDOWN) {
+                this.COUNTDOWN.stop()
+            }
+            this.init()
+        }
+    },
     beforeDestroy () {
         if (this.COUNTDOWN) {
             this.COUNTDOWN.stop()

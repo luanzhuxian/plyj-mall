@@ -213,7 +213,7 @@ export default {
                     courseType: item.courseType,
                     coverImg: item.courseImg,
                     name: item.courseName,
-                    actuallyPaidAmount: item.payAmount,
+                    actuallyPaidAmount: item.sellingPrice,
                     lecturerName: item.lecturer
                 }
                 item.courseType === this.SIGLE_TYPE ? sigleCourse.push(newItem) : seriesCourse.push(newItem)
