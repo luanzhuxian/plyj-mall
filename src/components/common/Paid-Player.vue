@@ -96,7 +96,10 @@ export default {
         autoHeight: Boolean,
         autoFullScreen: Boolean,
         // 是否要计费
-        isPay: Boolean
+        isPay: {
+            type: Boolean,
+            default: true
+        }
     },
     watch: {
         src: {
