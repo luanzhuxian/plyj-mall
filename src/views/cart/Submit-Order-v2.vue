@@ -31,7 +31,7 @@
                     </template>
                 </InfoItem>
 
-                <InfoItem v-if="isCart && activeProduct === 5 && detail.discount !== 10">
+                <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
                     <template slot="label">春耘折扣</template>
                     <template slot="content">
                         {{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}
@@ -201,7 +201,7 @@
         </ProductVeiwer>
 
         <CustomBlock
-            v-if="isCart && physicalProducts.some(item => item.needStudentInfo === 2)"
+            v-if="physicalProducts.some(item => item.needStudentInfo === 2)"
             :products="physicalProducts"
             :error-item-id="customErrorId"
             label="用户信息"
@@ -227,7 +227,7 @@
         </div>
 
         <div
-            v-if="(coupon.amount || isNotChooseCoupon) && isCart && activeProduct === 1"
+            v-if="(coupon.amount || !coupon.id) && activeProduct === 1"
             :class="$style.itemSelector"
             @click.capture="showCoupon = true"
         >
@@ -237,15 +237,15 @@
                 icon="icon-coupon"
                 :icon-gap="12"
                 show-right-icon
-                :right-text="isNotChooseCoupon ? couponList.length +'张可用' : '-¥' + coupon.amount "
+                :right-text="!coupon.id ? couponList.length +'张可用' : '-¥' + coupon.amount "
                 left-text-weight="bold"
             />
         </div>
 
-        <!--<div
-            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && isCart && activeProduct === 1"
+        <div
+            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && redEnvelopeList.length && activeProduct === 1 && coupon.scholarship !== 0"
             :class="$style.itemSelector"
-            @click.capture="showRedEnvelopePopupClick"
+            @click.capture="showRedEnvelopePopup = true"
         >
             <pl-fields
                 size="middle"
@@ -253,10 +253,10 @@
                 icon="icon-RedEnvelope"
                 :icon-gap="12"
                 show-right-icon
-                :right-text="isNotChooseRedEnvelope ? '有可用' : '-¥' + currentRedEnvelope.amount"
+                :right-text="!currentRedEnvelope.id ? '有可用' : '-¥' + currentRedEnvelope.amount"
                 left-text-weight="bold"
             />
-        </div>-->
+        </div>
 
         <!--<div
             v-if="totalAmount > 0 && showInvoiceSelector && activeProduct === 1"
@@ -303,7 +303,7 @@
         </div>-->
 
         <CustomBlock
-            v-if="customList.length === 1 && !isCart"
+            v-if="customList.length === 1"
             :product="customList[0]"
             :count="customList[0].count"
             :custom-list="customList[0].formEntityList"
@@ -373,7 +373,7 @@
         </pl-popup>
 
         <!-- 优惠券弹框 -->
-        <!--<pl-popup
+        <pl-popup
             :show.sync="showCoupon"
             title="领取优惠券"
             title-align="left"
@@ -393,19 +393,19 @@
                             </span>
                         </div>
                     </template>
-                    <div :class="$style.couponItem" @click="couponClick({}, true)">
+                    <div :class="$style.couponItem" @click="couponClick({})">
                         <div :class="$style.notChooseCoupon">不参加优惠</div>
                         <span :class="$style.choices">
-                            <pl-svg v-if="isNotChooseCoupon" name="icon-xuanzhong" width="40" />
+                            <pl-svg v-if="!coupon.id" name="icon-xuanzhong" width="40" />
                             <pl-svg v-else name="icon-weixuanzhong1" width="40" />
                         </span>
                     </div>
                 </div>
             </div>
-        </pl-popup>-->
+        </pl-popup>
 
         <!-- 红包弹框 -->
-        <!--<pl-popup
+        <pl-popup
             :show.sync="showRedEnvelopePopup"
             title="奖学金（红包）"
             title-align="left"
@@ -429,13 +429,13 @@
                     <div :class="$style.redEnvelopeItem" @click="redEnvelopeClick({}, true)">
                         <span :class="$style.notChooseRedEnvelope">不使用</span>
                         <span :class="$style.choices">
-                            <pl-svg v-if="isNotChooseRedEnvelope" name="icon-xuanzhong" width="40" />
+                            <pl-svg v-if="!currentRedEnvelope.id" name="icon-xuanzhong" width="40" />
                             <pl-svg v-else name="icon-weixuanzhong1" width="40" />
                         </span>
                     </div>
                 </div>
             </div>
-        </pl-popup>-->
+        </pl-popup>
     </div>
 
     <div
@@ -564,13 +564,9 @@ export default {
             recommendCouponId: '',
             // 服务器时间
             serverTime: '',
-            // 是否选择'不参与优惠'
-            isNotChooseCoupon: false,
             showRedEnvelopePopup: false,
             // 红包列表
             redEnvelopeList: [],
-            // 是否选择'不使用'红包, 默认选择不使用红包
-            isNotChooseRedEnvelope: true,
             // 当前选中的红包
             currentRedEnvelope: {},
             /* ******************* v2 ********************* */
@@ -625,7 +621,7 @@ export default {
     },
     async created () {
         try {
-            await this.getProductDetail()
+            await this.init()
         } catch (e) {
             throw e
         }
@@ -633,11 +629,22 @@ export default {
     deactivated () {
     },
     methods: {
+        // 初始化，执行顺序不能乱
+        async init () {
+            try {
+                const CONFIRM_LIST = await this.initProductInfo()
+                await this.getCouponList(CONFIRM_LIST)
+                await this.getCouponOfMax(CONFIRM_LIST)
+                await this.getRedEnvelopeList(CONFIRM_LIST)
+                await this.getProductDetail()
+            } catch (e) {
+                throw e
+            }
+        },
         // 根据初始化的商品基本信息，获取商品详情和价格
         async getProductDetail () {
             try {
                 // 选择合适的优惠券
-                await this.initProductInfo()
                 const { result } = await confirmOrder(this.form)
                 const {
                     amount,
@@ -648,11 +655,10 @@ export default {
                         PHYSICAL_GOODS = []
                     }
                 } = result
-                this.goodsAmount = goodsTotalPrice
-                this.totalAmount = amount
-                this.freight = Number(freightAmount)
+                this.goodsAmount = goodsTotalPrice / 100
+                this.totalAmount = amount / 100
+                this.freight = Number(freightAmount) / 100
                 this.physicalProducts = PHYSICAL_GOODS
-                // this.virtualProducts = VIRTUAL_GOODS
                 // 将线上课归到课程中
                 this.products = skus
             } catch (e) {
@@ -680,18 +686,12 @@ export default {
                 if (!CONFIRM_LIST || !CONFIRM_LIST.length) {
                     return this.$router.replace({ name: 'Home' })
                 }
-                const COUPON = await this.getCouponOfMax(CONFIRM_LIST)
                 this.form.activityId = this.activityId
                 this.form.helper = this.shareId
                 this.form.source = this.activeProduct
                 if (this.selectedAddress) {
                     this.form.userAddress = {
                         addressSeq: this.selectedAddress.sequenceNbr
-                    }
-                }
-                if (COUPON.id) {
-                    this.form.cartCouponModel = {
-                        userCouponId: COUPON.id
                     }
                 }
                 this.form.skus = CONFIRM_LIST.map(item => ({
@@ -702,46 +702,43 @@ export default {
                     sku1: item.skuCode1,
                     sku2: item.skuCode2
                 }))
+                return  CONFIRM_LIST
             } catch (e) {
                 throw e
             }
         },
-        // 根据商品总价，获取合适的优惠券
+        // 根据商品总价，获取合适的优惠券，并设置为当前的优惠券
         async getCouponOfMax (proList = []) {
             try {
                 // 获取优惠券信息
-                const amount = proList.map(item => item.price * item.count).reduce((total, price) => total + price)
                 const { result } = await getCouponOfMax({
                     activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
                     activityId: this.activityId,
                     cartProducts: proList,
                     addressSeq: this.selectedAddress.sequenceNbr
                 })
-                if (this.activeProduct === 1) {
-                    await this.getCouponList(amount, {
-                        activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-                        activityId: this.activityId,
-                        cartProducts: proList,
-                        addressSeq: this.selectedAddress.sequenceNbr
-                    })
+                // 设置优惠券
+                if (result.id) {
+                    this.form.cartCouponModel = {
+                        userCouponId: result.id
+                    }
                 }
-                this.coupon = result
-
-                // 当前选择的优惠券不支持使用奖学金时，置空选择的奖学金
-                if (this.coupon.scholarship === 0) {
-                    this.currentRedEnvelope = {}
-                    this.isNotChooseRedEnvelope = true
-                }
-                console.log(result)
+                this.coupon = result.id ? result : { scholarship: 1 }
                 return result
             } catch (e) {
                 throw e
             }
         },
         // 获取优惠券列表
-        async getCouponList (amount, data) {
+        async getCouponList (proList) {
             try {
-                const { result } = await getCouponByPrice(data)
+                if (this.activeProduct !== 1) return
+                const { result } = await getCouponByPrice({
+                    activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+                    activityId: this.activityId,
+                    cartProducts: proList,
+                    addressSeq: this.selectedAddress.sequenceNbr
+                })
                 const { serverTime } = this
                 this.couponList = result.map(item => {
                     const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
@@ -750,6 +747,59 @@ export default {
                     if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
                     return item
                 })
+            } catch (e) {
+                throw e
+            }
+        },
+        // 选择优惠券, 选择完成后，重新计算价格
+        async couponClick (item) {
+            // 设置奖学金
+            if (item.scholarship === 0) {
+                this.currentRedEnvelope = {}
+                this.form.scholarshipModel = null
+            } else {
+                item.scholarship = 1
+                this.currentRedEnvelope = this.redEnvelopeList[0] || {}
+                this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
+            }
+            this.form.cartCouponModel = item.id ? { userCouponId: item.id } : null
+            this.coupon = item
+            try {
+                await this.getProductDetail()
+            } catch (e) {
+                throw e
+            }
+        },
+        // 获取红包列表，必须放置于获取优惠券之后
+        async getRedEnvelopeList (proList = []) {
+            // 只有普通商品支持使用红包
+            if (this.activeProduct !== 1) return
+            const amount = proList.map(item => item.price * item.count).reduce((total, price) => total + price)
+            try {
+                const { result } = await getRedEnvelopeListByPrice(amount)
+                const { serverTime } = this
+                this.redEnvelopeList = result.map(item => {
+                    const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                    const day = Math.floor(moment.duration(duration).asDays())
+                    item.timeDesc = ''
+                    if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                    return item
+                })
+                // 有优惠券，并且当前这个优惠券能与奖学金共用
+                if (Number(this.coupon.scholarship) === 1) {
+                    this.currentRedEnvelope = this.redEnvelopeList[0] || {}
+                    this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+        // 选择红包
+        async redEnvelopeClick (item) {
+            this.currentRedEnvelope = item
+            this.form.scholarshipModel = item.id ? { scholarshipId: item.id } : null
+            try {
+                await this.getProductDetail()
             } catch (e) {
                 throw e
             }

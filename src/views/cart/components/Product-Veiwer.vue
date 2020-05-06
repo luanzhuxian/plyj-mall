@@ -13,7 +13,7 @@
                     :name="item.goodsName"
                     :count="item.count"
                     :option="item.skuName2 ? `${item.skuName},${item.skuName2}` : item.skuName"
-                    :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.amount"
+                    :price="(activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.amount) / 100"
                     :support-refund="item.supportAfterSales"
                     :gap="32"
                     :product-type="1"
