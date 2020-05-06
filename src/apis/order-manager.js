@@ -127,3 +127,10 @@ export const checkGetGift = orderSn => axios.get(`/apis/v1/order/gift?orderId=${
  * @return {*}
  */
 export const confirmOrder = data => axios.post(`/apis/v2/order/confirm`, data)
+
+/**
+ * 提交订单，参数于confirmOrder相同
+ * @param data {Object}
+ * @return {*}
+ */
+export const submitOrder = data => axios.post(`/apis/v2/order/uniformly`, data)

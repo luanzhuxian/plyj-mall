@@ -2,33 +2,36 @@
     <div class="submit-products-viewer">
         <!-- 实体商品 -->
         <div
-            v-if="physicalProducts.length > 0"
+            v-if="products.length > 0"
             :class="$style.productBox"
         >
             <div :class="$style.orderItemBox">
                 <OrderItem
-                    v-for="(item, index) of physicalProducts"
+                    v-for="(item, index) of products"
                     :key="index"
-                    :img="item.productImg"
-                    :name="item.productName"
+                    :img="item.goodsImage"
+                    :name="item.goodsName"
                     :count="item.count"
-                    :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-                    :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.price"
-                    :support-refund="item.supportRefund"
+                    :option="item.skuName2 ? `${item.skuName},${item.skuName2}` : item.skuName"
+                    :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.amount"
+                    :support-refund="item.supportAfterSales"
                     :gap="32"
                     :product-type="1"
                     :pre-active="preActivity"
                     :active-product="activeProduct"
-                    :allow-invoice="item.showInvoice"
+                    :allow-invoice="item.supportInvoice"
                     border
                 />
+                <OtherInfo>
+                    <slot />
+                </OtherInfo>
             </div>
-            <OtherInfo>
+            <!--<OtherInfo>
                 <slot name="physical" />
-            </OtherInfo>
+            </OtherInfo>-->
         </div>
 
-        <template v-if="virtualProducts.length > 0">
+        <!--<template v-if="virtualProducts.length > 0">
             <div
                 v-for="(item, index) of virtualProducts"
                 :key="item.skuCode1 + item.skuCode2"
@@ -41,7 +44,7 @@
                         :name="item.productName"
                         :count="item.count"
                         :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-                        :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.price"
+                        :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.sellingPrice"
                         :support-refund="item.supportRefund"
                         is-submit
                         :gap="32"
@@ -86,7 +89,7 @@
                     <slot name="noPhysical" type="lesson" :product="item" />
                 </OtherInfo>
             </div>
-        </template>
+        </template>-->
     </div>
 </template>
 
@@ -100,24 +103,30 @@ export default {
         OrderItem
     },
     props: {
-        physicalProducts: {
+        products: {
             type: Array,
             default () {
                 return []
             }
         },
-        virtualProducts: {
-            type: Array,
-            default () {
-                return []
-            }
-        },
-        lessonList: {
-            type: Array,
-            default () {
-                return []
-            }
-        },
+        // physicalProducts: {
+        //     type: Array,
+        //     default () {
+        //         return []
+        //     }
+        // },
+        // virtualProducts: {
+        //     type: Array,
+        //     default () {
+        //         return []
+        //     }
+        // },
+        // lessonList: {
+        //     type: Array,
+        //     default () {
+        //         return []
+        //     }
+        // },
         preActivity: {
             type: [Number, String],
             default: ''
