@@ -224,7 +224,7 @@ export default {
             result = result || { type: 0 }
             commit(type.GET_ACTIVITY_DATA, result)
             commit(type.SET_CURRENT_TIME, result.currentTime || Date.now())
-            return result.type
+            return result
         } catch (e) {
             throw e
         }
@@ -233,6 +233,7 @@ export default {
         try {
             const { result } = await getSkinStatus({ type: 1 })
             commit(type.GET_SKIN_ID, result)
+            return result
         } catch (e) {
             commit(type.GET_SKIN_ID, 0)
             throw e

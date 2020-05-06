@@ -96,7 +96,7 @@ export default {
                 await this.getUserInfo()
             }
             this.logined = true
-            this.getEntryData()
+            await this.getEntryData()
             // 标记一天中首次访问
             setFirstVisit()
         } catch (e) {
@@ -126,10 +126,6 @@ export default {
         // 获取首页、主会场页所需数据
         async getEntryData () {
             try {
-                // 获取皮肤id
-                this.getSkinId()
-                this.getActivityData()
-
                 const activityList = [
                     getLiveInfo(),
                     getCourseInfo(),
@@ -137,7 +133,9 @@ export default {
                     getMyCouponInfo(),
                     getDragonGateCharityInfo(),
                     getDragonGateSignInfo(),
-                    getDragonGatePlayInfo()
+                    getDragonGatePlayInfo(),
+                    this.getActivityData(),
+                    this.getSkinId()
                 ]
 
                 const [
@@ -148,7 +146,10 @@ export default {
                     { result: charity },
                     { result: sign },
                     { result: play }
-                ] = await Promise.all(activityList.map(p => p.catch(e => ({ result: {} }))))
+                ] = await Promise.all(activityList.map(p => p.catch(e => {
+                    console.error(e)
+                    return { result: {} }
+                })))
                 this.setLiveInfo(live)
                 this.setCourseInfo(course)
                 this.setNwEvent(nianwei)
