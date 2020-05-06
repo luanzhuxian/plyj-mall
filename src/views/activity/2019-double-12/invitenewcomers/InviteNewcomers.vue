@@ -57,14 +57,14 @@
 import moment from 'moment'
 import Board from './components/Board'
 import AcquisitionGifts from './components/Acquisition-Gifts.vue'
-import youLike from './../../home/components/YouLike.vue'
-import share from '../../../assets/js/wechat/wechat-share'
+import youLike from '../../../home/components/YouLike.vue'
+import share from '../../../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
 import {
     getActiveDetail,
     inviterStatisitic
-} from '../../../apis/invitenewcomers'
-import { loadImage, generateQrcode, createText, drawRoundRect, cutArcImage } from '../../../assets/js/util'
+} from '../../../../apis/invitenewcomers'
+import { loadImage, generateQrcode, createText, drawRoundRect, cutArcImage } from '../../../../assets/js/util'
 export default {
     name: 'InviteNewcomers',
     components: {

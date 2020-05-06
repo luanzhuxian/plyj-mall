@@ -143,14 +143,14 @@
 </template>
 
 <script>
-import { generateQrcode, cutArcImage, createText, drawRoundRect } from '../../assets/js/util'
+import { generateQrcode, cutArcImage, createText, drawRoundRect } from '../../../assets/js/util'
 import {
     userHelp,
     appointmentOnline,
     getEntDetail
-} from '../../apis/double-twelve-day'
+} from '../../../apis/double-twelve-day'
 import { mapGetters } from 'vuex'
-import share from '../../assets/js/wechat/wechat-share'
+import share from '../../../assets/js/wechat/wechat-share'
 export default {
     name: 'DoubleTwelveDayActivity',
     data () {

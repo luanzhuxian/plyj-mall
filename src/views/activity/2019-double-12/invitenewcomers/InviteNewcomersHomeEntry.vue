@@ -28,7 +28,7 @@
 import moment from 'moment'
 import Overlay from './components/Overlay'
 import { mapGetters } from 'vuex'
-import { getHelpers, getCurrentActivity, canClaimGift } from '../../../apis/invitenewcomers'
+import { getHelpers, getCurrentActivity, canClaimGift } from '../../../../apis/invitenewcomers'
 export default {
     name: 'InviteNewcomersHomeEntry',
     components: {

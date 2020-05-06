@@ -15,7 +15,7 @@
 
 <script>
 import {
-} from '../../../../apis/invitenewcomers'
+} from '../../../../../apis/invitenewcomers'
 export default {
     name: 'HelperList',
     props: {

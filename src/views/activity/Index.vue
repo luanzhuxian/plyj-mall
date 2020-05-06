@@ -58,8 +58,8 @@ import TemplateBaofa from './templates/Template-Baofa.vue'
 import TemplateFanchang from './templates/Template-Fanchang.vue'
 import TemplateXinchun from './templates/Template-Xinchun.vue'
 import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
-import InviteNewcomersHomeEntry from '../double-twelve-day/invitenewcomers/InviteNewcomersHomeEntry.vue'
-import NewcomersHomeEntry from '../double-twelve-day/newcomers/NewcomersHomeEntry.vue'
+import InviteNewcomersHomeEntry from './2019-double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
+import NewcomersHomeEntry from './2019-double-12/newcomers/NewcomersHomeEntry.vue'
 import NewYearNewcomersHomeEntry from '../new-year/newcomers/NewcomersHomeEntry.vue'
 
 export default {
