@@ -650,27 +650,22 @@ export default {
                 const IMG = await loadImage('https://mallcdn.youpenglai.com/static/mall/2.9.0/longmen-poster.jpg')
                 const CVS = document.createElement('canvas')
                 const CTX = CVS.getContext('2d')
-                let logo = null
                 CVS.width = IMG.width
                 CVS.height = IMG.height
                 CTX.drawImage(IMG, 0, 0)
-                // 加载logo
-                try {
-                    logo = await loadImage(this.detail.logImageUrl || this.logoUrl)
-                } catch (e) {}
-                // 截取logo为圆形
-                if (logo) {
+                if (this.detail.isShowLog) {
+                    // 加载logo
                     try {
+                        let logo = await loadImage(this.detail.logImageUrl || this.logoUrl)
                         logo = await cutArcImage(logo)
-                    } catch (e) {}
-                }
-                if (logo) {
-                    CTX.drawImage(logo, 16, 16, 68, 68)
+                        CTX.drawImage(logo, 16, 16, 68, 68)
+                    } catch (e) {
+
+                    }
                 }
                 const QRCODE = await generateQrcode({
                     size: 300,
                     text: location.href,
-                    img: logo,
                     centerPadding: 2,
                     type: 'canvas',
                     correctLevel: 2
