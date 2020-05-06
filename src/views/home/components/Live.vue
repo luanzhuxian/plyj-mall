@@ -40,18 +40,9 @@
                             <countdown
                                 v-if="isNoticeShow"
                                 :duration="duration"
+                                format="DD天HH:mm:ss"
                                 @finish="done"
-                            >
-                                <template v-slot="{time}">
-                                    <i class="block">{{ String(time.days).padStart(2, '0') }}</i>
-                                    <span class="colon">天</span>
-                                    <i class="block">{{ String(time.hours).padStart(2, '0') }}</i>
-                                    <span class="colon">:</span>
-                                    <i class="block">{{ String(time.minutes).padStart(2, '0') }}</i>
-                                    <span class="colon">:</span>
-                                    <i class="block">{{ String(time.seconds).padStart(2, '0') }}</i>
-                                </template>
-                            </countdown>
+                            />
                             <span v-if="live.statue === 4" :class="$style.highlight">
                                 {{ `${live.visitTimes}人观看` }}
                             </span>
@@ -267,15 +258,6 @@ export default {
     border: 2px solid #ff9800;
     border-radius: 20px;
     overflow: hidden;
-    // &.active {
-    //   border: 2px solid #EFB835;
-    //   .time-left {
-    //     background: linear-gradient(90deg, rgba(243, 190, 65, 1) 0%, rgba(239, 184, 53, 1) 100%);
-    //   }
-    //   .time-right {
-    //     color: #EFB835;
-    //   }
-    // }
     &-left {
         display: inline-flex;
         justify-content: center;
@@ -293,7 +275,6 @@ export default {
         align-items: center;
         padding: 0 12px;
         font-size: 24px;
-        font-family: MicrosoftYaHei;
         color: #333;
         > span {
             margin-right: 10px;
