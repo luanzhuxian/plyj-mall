@@ -20,8 +20,8 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import Overlay from './components/Overlay'
-import { getServerTime } from '../../../apis/base-api'
-import { getCurrentActivity } from '../../../apis/new-year'
+import { getServerTime } from '../../../../apis/base-api'
+import { getCurrentActivity } from '../../../../apis/new-year'
 
 export default {
     name: 'NewYearNewcomersHomeEntry',
