@@ -709,14 +709,14 @@ export default {
 
                 const list = [
                     this.getDetail(productActive),
-                    this.getCouponList().catch(e => {
-                        console.error(e.message)
-                        return e
-                    }),
+                    this.getCouponList(),
                     ...(this.productActive === 7 ? [this.getPublicBenefitInfo()] : [])
                 ]
 
-                await Promise.all(list)
+                await Promise.all(list.map(p => p.catch(e => {
+                    console.error(e)
+                    return {}
+                })))
                 this.createShare()
                 this.loaded = true
             } catch (e) {

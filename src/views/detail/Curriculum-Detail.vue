@@ -408,17 +408,21 @@ export default {
         }
     },
     watch: {
-        '$route' (to, from) {
+        async '$route' (to, from) {
             if (from.params.productId && to.params.productId) {
-                this.refresh()
+                try {
+                    await this.refresh()
+                } catch (error) {
+                    throw error
+                }
             }
         }
     },
     async activated () {
         try {
             await this.refresh()
-        } catch (e) {
-            throw e
+        } catch (error) {
+            throw error
         }
     },
     deactivated () {
@@ -440,23 +444,17 @@ export default {
                 this.loading = true
                 const list = [
                     this.getDetail(),
-                    this.checkIsPresentCourse().catch(e => {
-                        console.error(e.message)
-                        return e
-                    }),
+                    this.checkIsPresentCourse(),
                     ...(this.productActive === 7 ? [
-                        this.getPublicBenefitStatistics().catch(e => {
-                            console.error(e.message)
-                            return e
-                        }),
-                        this.getPublicBenefitList().catch(e => {
-                            console.error(e.message)
-                            return e
-                        })
+                        this.getPublicBenefitStatistics(),
+                        this.getPublicBenefitList()
                     ] : [])
                 ]
 
-                await Promise.all(list)
+                await Promise.all(list.map(p => p.catch(e => {
+                    console.error(e)
+                    return {}
+                })))
                 this.createShare()
                 this.loaded = true
             } catch (error) {
