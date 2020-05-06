@@ -395,7 +395,7 @@ import CountdownBar from './charity/Countdown-Bar.vue'
 import CharityRule from './charity/Rule.vue'
 import CharityPoster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
-import Barrage from './../longmen-festival/action/components/Barrage'
+import Barrage from '../marketing-activity/longmen-festival/action/components/Barrage'
 import CharityPrice from './charity/Charity-Price'
 import {
     getPublicBenefitStatistics,

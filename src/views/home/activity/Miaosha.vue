@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import ProductItem from '../../activity-list/components/Second-Product-Item.vue'
+import ProductItem from '../../marketing-activity/components/Second-Product-Item.vue'
 export default {
     name: 'Miaosha',
     components: {

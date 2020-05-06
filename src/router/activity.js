@@ -10,7 +10,7 @@ export default [
     {
         path: '/second',
         name: 'SecondActivity',
-        component: () => import('../views/activity-list/Second-Activity.vue'),
+        component: () => import('../views/marketing-activity/second/Second-Activity.vue'),
         meta: {
             title: '秒杀'
         }
@@ -18,7 +18,7 @@ export default [
     {
         path: '/group',
         name: 'GroupActivity',
-        component: () => import('../views/activity-list/Group-Activity.vue'),
+        component: () => import('../views/marketing-activity/group-purchase/Group-Activity.vue'),
         meta: {
             title: '团购'
         }
@@ -26,7 +26,7 @@ export default [
     {
         path: '/book',
         name: 'BookActivity',
-        component: () => import('../views/activity-list/Book-Activity.vue'),
+        component: () => import('../views/marketing-activity/purchase-in-advance/Book-Activity.vue'),
         meta: {
             title: '预购'
         }
@@ -34,7 +34,7 @@ export default [
     {
         path: '/helper',
         name: 'HelperActivity',
-        component: () => import('../views/activity-list/Helper-Activity.vue'),
+        component: () => import('../views/marketing-activity/helper/Helper-Activity.vue'),
         meta: {
             title: '全民来分销'
         }
@@ -42,7 +42,7 @@ export default [
     {
         path: '/spring-ploughing',
         name: 'SpringPloughing',
-        component: () => import('../views/activity-list/Spring-Ploughing.vue'),
+        component: () => import('../views/marketing-activity/spring/Spring-Ploughing.vue'),
         meta: {
             title: '春耘计划'
         }
@@ -50,7 +50,7 @@ export default [
     {
         path: '/spring-group',
         name: 'SpringGroup',
-        component: () => import('../views/activity-list/Spring-Group.vue'),
+        component: () => import('../views/marketing-activity/spring/Spring-Group.vue'),
         meta: {
             title: '新春团购'
         }
@@ -58,7 +58,7 @@ export default [
     {
         path: '/spring-book',
         name: 'SpringBook',
-        component: () => import('../views/activity-list/Spring-Book.vue'),
+        component: () => import('../views/marketing-activity/spring/Spring-Book.vue'),
         meta: {
             title: '新春预购'
         }
@@ -67,7 +67,7 @@ export default [
         path: '/course-package/:brokerId?',
         name: 'CoursePackage',
         props: true,
-        component: () => import('../views/activity-list/Course-Package.vue'),
+        component: () => import('../views/marketing-activity/combination-of-class/Course-Package.vue'),
         meta: {
             title: '组合课'
         }

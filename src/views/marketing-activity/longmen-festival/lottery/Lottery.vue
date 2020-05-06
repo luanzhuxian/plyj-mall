@@ -237,12 +237,12 @@
 <script>
 /* eslint-disable */
 // 根据屏幕大小转换canvas中使用的长度大小
-import GiftPopUp from '../../components/activity/Gift-Pop-Up.vue'
-import CouponItemViewer from '../../components/item/Coupon-Item-Viewer.vue'
-import GiftItem from '../../components/item/Gift-Item.vue'
-import { shuffle } from '../../assets/js/loadsh'
-import { loadImage, cutArcImage, generateQrcode, SectionToChinese, promise } from '../../assets/js/util'
-import Countdown from '../../assets/js/Countdown'
+import GiftPopUp from '../../../../components/activity/Gift-Pop-Up.vue'
+import CouponItemViewer from '../../../../components/item/Coupon-Item-Viewer.vue'
+import GiftItem from '../../../../components/item/Gift-Item.vue'
+import { shuffle } from '../../../../assets/js/loadsh'
+import { loadImage, cutArcImage, generateQrcode, SectionToChinese, promise } from '../../../../assets/js/util'
+import Countdown from '../../../../assets/js/Countdown'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { mapGetters } from 'vuex'
 import {
@@ -251,7 +251,7 @@ import {
     getAwardRecords,
     getLotteryRecords,
     lottery
-} from '../../apis/longmen-festival/lottery'
+} from '../../../../apis/longmen-festival/lottery'
 import moment from 'moment'
 const transformSize = num => num / 7.5 * (window.innerWidth / 100)
 // 白色灯泡的下标，后面灯泡的颜色交替更换，默认第0个，即左上角第一个

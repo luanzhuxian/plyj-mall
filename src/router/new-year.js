@@ -3,7 +3,7 @@ export default [
         path: '/new-year-activity/:id?',
         name: 'NewYearActivity',
         props: true,
-        component: () => import('../views/activity/new-year/new-year-activity/New-Year-Activity.vue'),
+        component: () => import('../views/marketing-activity/new-year/new-year-activity/New-Year-Activity.vue'),
         meta: {
             title: '我心中的年味'
         }
@@ -11,7 +11,7 @@ export default [
     {
         path: '/newcomers/:activityId',
         name: 'newYearNewcomers',
-        component: () => import('../views/activity/new-year/newcomers/Newcomers.vue'),
+        component: () => import('../views/marketing-activity/new-year/newcomers/Newcomers.vue'),
         meta: {
             title: '新人有礼'
         }

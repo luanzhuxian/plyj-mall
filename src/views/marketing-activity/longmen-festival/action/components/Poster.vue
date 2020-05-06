@@ -13,7 +13,7 @@ import {
     cutArcImage,
     loadImage,
     createText
-} from '../../../../assets/js/util'
+} from '../../../../../assets/js/util'
 
 export default {
     name: 'Poster',

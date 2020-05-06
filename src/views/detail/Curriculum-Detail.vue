@@ -308,7 +308,7 @@ import CharityRule from './charity/Rule.vue'
 import CharityPoster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
-import Barrage from './../longmen-festival/action/components/Barrage'
+import Barrage from '../marketing-activity/longmen-festival/action/components/Barrage'
 import VideoPlayer from './components/Video-Player'
 import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
 import {

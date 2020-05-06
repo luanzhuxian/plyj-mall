@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import Countdown from '../../../../assets/js/Countdown'
+import Countdown from '../../../../../assets/js/Countdown'
 import Progress from './Progress'
 export default {
     name: 'Statistics',

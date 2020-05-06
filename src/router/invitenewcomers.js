@@ -4,7 +4,7 @@ export default [
         name: 'InviteNewcomers',
         alias: '/invitenewcomers/:activityId/:shareUserId?',
         props: true,
-        component: () => import('../views/activity/2019-double-12/invitenewcomers/InviteNewcomers.vue'),
+        component: () => import('../views/marketing-activity/double-12/invitenewcomers/InviteNewcomers.vue'),
         meta: {
             title: '赢取豪礼'
         }

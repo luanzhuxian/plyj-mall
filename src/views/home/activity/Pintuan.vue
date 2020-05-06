@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import ProductItem from '../../activity-list/components/Group-Product-Item.vue'
+import ProductItem from '../../marketing-activity/components/Group-Product-Item.vue'
 
 export default {
     name: 'Pintuan',

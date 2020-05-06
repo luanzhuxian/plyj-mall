@@ -280,15 +280,15 @@ import {
     receivePresent,
     checkIsParticipateableActivity,
     statisticsViews
-} from '../../../apis/new-year'
+} from '../../../../apis/new-year'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import { generateQrcode, drawRoundRect, cutArcImage, createText } from '../../../assets/js/util'
-import Countdown from '../../../assets/js/Countdown'
-import share from '../../../assets/js/wechat/wechat-share'
-import { getServerTime } from '../../../apis/base-api'
+import { generateQrcode, drawRoundRect, cutArcImage, createText } from '../../../../assets/js/util'
+import Countdown from '../../../../assets/js/Countdown'
+import share from '../../../../assets/js/wechat/wechat-share'
+import { getServerTime } from '../../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
-import SharePoster from '../../../components/common/Share-Poster'
+import SharePoster from '../../../../components/common/Share-Poster'
 import WinningGeneralPrize from './components/Winning-General-Prize'
 import MissingGeneralPrize from './components/Missing-General-Prize'
 import NoticingGrandPrize from './components/Noticing-Grand-Prize'

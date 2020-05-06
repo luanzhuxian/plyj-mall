@@ -1,19 +1,19 @@
 <template>
-    <div :class="$style.springBook">
-        <div :class="$style.springBookWrapper">
-            <div :class="$style.springBookTop">
-                <div :class="$style.springBookTopSide" />
-                <div :class="$style.springBookTopContent">
-                    <h3>预购享翻倍</h3>
-                    <p>现金翻番番</p>
+    <div :class="$style.springGroup">
+        <div :class="$style.springGroupWrapper">
+            <div :class="$style.springGroupTop">
+                <div :class="$style.springGroupTopSide" />
+                <div :class="$style.springGroupTopContent">
+                    <h3>新春团购大联欢</h3>
+                    <p>特色课程齐上阵</p>
                 </div>
             </div>
-            <div :class="$style.springBookContent">
+            <div :class="$style.springGroupContent">
                 <div :class="$style.current" v-if="listCurrent.length">
                     <div :class="$style.title">
                         <span>正在进行中</span>
                     </div>
-                    <ul :class="$style.springBookList">
+                    <ul :class="$style.springGroupList">
                         <template v-for="(item, i) of listCurrent">
                             <item
                                 :data="item"
@@ -28,7 +28,7 @@
                     <div :class="$style.title">
                         <span>即将开始</span>
                     </div>
-                    <ul :class="$style.springBookList">
+                    <ul :class="$style.springGroupList">
                         <template v-for="(item, i) of listPreview">
                             <item
                                 :data="item"
@@ -43,11 +43,11 @@
     </div>
 </template>
 <script>
-import Item from '../activity/spring/Item-Yugou'
-import { bookActivityPage } from '../../apis/product'
+import Item from '../../activity/spring/Item-Pintuan'
+import { groupActivityPage } from '../../../apis/product'
 
 export default {
-    name: 'SpringBook',
+    name: 'SpringGroup',
     components: {
         Item
     },
@@ -63,7 +63,7 @@ export default {
     methods: {
         async getData () {
             try {
-                const { result } = await bookActivityPage()
+                const { result } = await groupActivityPage()
                 if (!result[0].length && !result[1].length) {
                     this.$alert({
                         message: '暂无数据',
@@ -79,13 +79,14 @@ export default {
                         const obj = {
                             goodsInfo: {
                                 id: item.productId,
+                                pageviews: item.pageViews,
                                 productMainImage: item.productMainImage,
                                 productName: item.productName,
                                 activityInfo: {
                                     status: item.status,
-                                    multiple: item.multiple,
-                                    price: item.price,
-                                    activityPrice: item.multiple ? item.price * item.multipleNumber : item.price,
+                                    number: item.number,
+                                    prizePool: item.prizePool,
+                                    activityPrice: item.price,
                                     activityStartTime: item.activityStartTime,
                                     activityEndTime: item.activityEndTime
                                 }
@@ -106,7 +107,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-.spring-book {
+.spring-group {
     box-sizing: border-box;
     background: #f2d04a;
     padding-top: 32px;
@@ -120,7 +121,7 @@ export default {
             border: 64px solid;
             border-bottom: 32px solid;
             border-top: none;
-            border-color: transparent transparent #dc4f44 transparent;
+            border-color: transparent transparent #fe834f transparent;
         }
         &-content {
             display: flex;
@@ -128,8 +129,8 @@ export default {
             align-items: center;
             flex-direction: column;
             height: 136px;
-            border-top: 4px solid #f3867e;
-            background: #fb2a33;
+            border-top: 4px solid #ffb89a;
+            background: #fd6c2f;
             font-size: 26px;
             font-family: Microsoft YaHei;
             color: #fff;
@@ -157,7 +158,7 @@ export default {
     &-content {
         flex: 1;
         padding: 0 32px 48px;
-        background: #f5574b;
+        background: #f6501d;
     }
     &-list {
         margin: 32px 0;
@@ -177,7 +178,7 @@ export default {
             content: '';
             width: 54px;
             height: 50px;
-            background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/1d46c9d5-bae7-4f3f-9cff-ac1bad805880.png') no-repeat center;
+            background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/6a46ee61-8198-4315-a70d-c97a42a5782b.png') no-repeat center;
             background-size: 100%;
         }
         &:after {

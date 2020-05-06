@@ -1,48 +1,48 @@
 <template>
-    <div :class="$style.coursePackage">
-        <div :class="$style.background">
-            <div :class="$style.topCountdown" v-if="count.s">
-                <template v-if="!count.wasEnded">
-                    <span v-if="count.wasStarted">距活动结束: </span>
+    <div :class="$style.springPloughing">
+        <div :class="$style.countdown">
+            <div :class="$style.globalEndCountdown" v-if="allEnd.s">
+                <template v-if="!allEnd.wasEnded">
+                    <span v-if="allEnd.wasStarted">距活动结束: </span>
                     <span v-else>距活动开始: </span>
-                    <span :class="$style.val + ' ' + $style.day" v-text="count.d" />
+                    <span :class="$style.val + ' ' + $style.day" v-text="allEnd.d" />
                     <span :class="$style.unit">天</span>
-                    <span :class="$style.val" v-text="count.h" />
+                    <span :class="$style.val" v-text="allEnd.h" />
                     <span :class="$style.unit">:</span>
-                    <span :class="$style.val" v-text="count.m" />
+                    <span :class="$style.val" v-text="allEnd.m" />
                     <span :class="$style.unit">:</span>
-                    <span :class="$style.val" v-text="count.s" />
+                    <span :class="$style.val" v-text="allEnd.s" />
                 </template>
-                <span v-else>活动已结束</span>
+                <span v-else>已结束</span>
             </div>
-            <div :class="$style.topRight" @click="showRules = true">活动规则</div>
             <div :class="$style.topRight" @click="createPoster">活动海报</div>
+            <div :class="$style.topRight" @click="showRules = true">活动规则</div>
+            <pl-svg
+                v-if="list.length && list[0].quarterVersion"
+                :name="`icon-${map[list[0].quarterVersion]}`"
+                width="50"
+                height="105"
+            />
         </div>
+
         <div
-            :id="'activity-' + index"
             :class="$style.activity"
-            v-for="(activity, index) of list"
-            :key="index"
+            v-for="(activity, a) of list"
+            :key="a"
         >
-            <div :class="$style.activityName">
-                <div :class="$style.front">
-                    <div :class="$style.frontTop" />
-                    <div :class="$style.frontFront" v-text="activity.activityName" />
-                </div>
-                <div :class="$style.back" />
-            </div>
+            <div :class="$style.activityName" v-text="activity.activityName" />
             <div
                 :class="$style.content"
                 v-for="(item, i) of activity.models"
-                :key="index + '-' + i"
+                :key="a + '-' + i"
             >
-                <!-- <div :class="$style.groupName" v-text="item.activityName" /> -->
+                <div :class="$style.groupName" v-text="item.activityName" />
                 <div :class="$style.discount">
                     <span>组合打包{{ item.discount }}折起</span>
                     <span>|</span>
                     <span>{{ item.purchaseQuantity }}人已购</span>
                 </div>
-                <div :class="$style.packageCountdown">
+                <div :class="$style.endCountdown">
                     <template v-if="!item.wasEnded">
                         <span v-if="item.wasStarted">距活动结束: </span>
                         <span v-else>距活动开始: </span>
@@ -59,9 +59,8 @@
                 <div :class="$style.proList">
                     <SpringPloughingProItem
                         v-for="(pro, j) of item.products"
-                        :key="index + '-' + i + '-' + j"
+                        :key="a + '-' + i + '-' + j"
                         :data="pro"
-                        color="yellow"
                     />
                 </div>
                 <div :class="$style.giftList" v-if="item.gifts.length">
@@ -70,36 +69,38 @@
                     </div>
                     <SpringPloughingGiftItem
                         v-for="(gift, k) of item.gifts"
-                        :key="index + '-' + i + '-' + k"
+                        :key="a + '-' + i + '-' + k"
                         :data="gift"
-                        color="yellow"
                     />
                 </div>
-                <button v-if="!item.stock" :class="$style.button">
+                <button v-if="!item.stock" :class="$style.buy">
                     太火爆了，都被抢空了
                 </button>
-                <button
-                    v-else-if="item.wasStarted && !item.wasEnded"
-                    :class="$style.button"
-                    @click="buy(item)"
-                >
+                <button v-else-if="item.wasStarted && !item.wasEnded" :class="$style.buy" @click="buy(item)">
                     点击购买 组合到手<i v-text="item.amount" />元
                 </button>
-                <button v-else-if="!item.wasStarted" :class="$style.button">
+                <button v-else-if="!item.wasStarted" :class="$style.buy + ' ' + $style.notStart">
                     暂未开启，敬请期待
                 </button>
-                <button v-else-if="item.wasEnded" :class="$style.button">
+                <button v-else-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
                     暂未开启，敬请期待
                 </button>
+                <div :class="$style.corner + ' ' + $style.topLeft" />
+                <div :class="$style.corner + ' ' + $style.topRight" />
+                <div :class="$style.corner + ' ' + $style.bottomLeft" />
+                <div :class="$style.corner + ' ' + $style.bottomRight" />
             </div>
         </div>
 
-        <pl-popup :show.sync="showRules" title="活动规则">
+        <pl-popup
+            :show.sync="showRules"
+            title="活动规则"
+        >
             <ul :class="$style.rules">
                 <li>1. 设置活动，活动期间该页面展示的所有组合购买商品均以组合折扣价位售卖</li>
-                <li>2. 活动期间不支持退款，不支持线上发票</li>
+                <li>2. 活动期间商品不退款，不支持线上发票</li>
                 <li>3. 仅在该页面下单可享受优惠，其他页面点击或购物车购买不享受优惠</li>
-                <li>4. 结束以活动截止时间为准</li>
+                <li>4. 结束以时间和数量购买完截止结束</li>
             </ul>
         </pl-popup>
 
@@ -115,18 +116,18 @@
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-import SpringPloughingProItem from './components/Spring-Ploughing-Pro-Item.vue'
-import SpringPloughingGiftItem from './components/Spring-Ploughing-Gift-Item.vue'
-import { getSpringCombination } from '../../apis/product'
+import SpringPloughingProItem from '../components/Spring-Ploughing-Pro-Item.vue'
+import SpringPloughingGiftItem from '../components/Spring-Ploughing-Gift-Item.vue'
+import { getSpringCombination } from '../../../apis/product'
 import {
     generateQrcode,
     createText,
     cutArcImage,
     loadImage
-} from '../../assets/js/util'
-import Countdown from '../../assets/js/Countdown'
-import share from '../../assets/js/wechat/wechat-share'
-import { SET_SHARE_ID } from '../../store/mutation-type'
+} from '../../../assets/js/util'
+import Countdown from '../../../assets/js/Countdown'
+
+const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/4b676734-b0c9-4aca-942d-ce62e481ebcf.jpeg'
 
 export default {
     name: 'SpringPloughing',
@@ -143,72 +144,48 @@ export default {
             list: [],
             // 倒计时实例列表
             countInstaceList: [],
-            count: {
+            // 全部结束
+            allEnd: {
                 d: '',
                 h: '',
                 m: '',
                 s: '',
                 wasStarted: false,
                 wasEnded: false
+            },
+            map: {
+                第一季: 'diyiji-adbb7',
+                第二季: 'dierji-bbdb7',
+                第三季: 'disanji-b8ae3',
+                第四季: 'disiji-5d233',
+                第五季: 'diwuji-af921'
             }
         }
     },
-    props: {
-        // 分享人id
-        brokerId: {
-            type: String,
-            default: ''
-        }
-    },
     computed: {
-        ...mapGetters(['avatar', 'userName', 'mobile', 'appId', 'userId', 'mallUrl', 'shareId']),
-        activityId () {
-            return this.$route.query.activityId
-        }
-    },
-    mounted () {
-        // 全局缓存分享人id
-        this.$store.commit(SET_SHARE_ID, this.brokerId)
+        ...mapGetters(['avatar', 'userName', 'mobile'])
     },
     async activated () {
         try {
             await this.getSpringCombination()
             const t = await Countdown.getServerTime()
             console.log(t)
-            if (this.activityId) {
-                this.scrollToTarget()
-            }
         } catch (e) {
             throw e
         }
     },
     deactivated () {
-        this.showRules = false
-        this.showPoster = false
         this.countInstaceList.map(item => item.stop())
         this.countInstaceList = []
     },
     methods: {
-        scrollToTarget () {
-            const { activityId } = this
-            const index = this.list.findIndex(item => item.models.some(model => model.activityId === activityId))
-            if (index && index !== -1) {
-                const top = document.querySelector(`#activity-${ index }`).getBoundingClientRect().top
-                window.scrollTo(0, top)
-            }
-        },
         // batchType 1: 组合课 2: 春耘
         async getSpringCombination () {
-            const getLatestEndTime = (data = []) => {
-                const list = data.map(item => moment(item.activityEndTime).valueOf())
-                return Math.max.apply(null, list)
-            }
-
             try {
                 const { result } = await getSpringCombination({
                     current: 1,
                     size: 60,
-                    batchType: 1
+                    batchType: 2
                 })
                 if (!result.records.length) {
                     this.$alert({
@@ -247,27 +224,26 @@ export default {
                     }
                 }
                 this.list = result.records
+                const lastEndTime = moment(this.list[0].activityEndTime).valueOf()
                 const lastStartTime = moment(this.list[0].activityStartTime).valueOf()
-                const lastEndTime = getLatestEndTime(this.list)
                 const now = Date.now()
-                this.count.wasStarted = now - lastStartTime >= 0
-                this.count.wasEnded = now - lastEndTime >= 0
+                this.allEnd.wasStarted = now - lastStartTime >= 0
+                this.allEnd.wasEnded = now - lastEndTime >= 0
                 // // 未开始倒计时(距离开始)
-                if (!this.count.wasStarted) {
-                    this.setCountdownTime(this.count, lastStartTime - now)
+                if (!this.allEnd.wasStarted) {
+                    this.setCountdownTime(this.allEnd, lastStartTime - now)
                 }
                 // 开始倒计时(距离结束)
-                if (this.count.wasStarted && !this.count.wasEnded) {
-                    this.setCountdownTime(this.count, lastEndTime - now)
+                if (this.allEnd.wasStarted && !this.allEnd.wasEnded) {
+                    this.setCountdownTime(this.allEnd, lastEndTime - now)
                 }
-                this.share()
             } catch (e) {
                 throw e
             }
         },
 
         /**
-         * 设置倒计时时间
+         * 设置到计时时间
          * @param data {object} 每组数据
          * @param duration {number} 倒计时时长
          */
@@ -300,7 +276,7 @@ export default {
                     skuCode2: pro.sku2,
                     count: pro.count,
                     price: pro.amount,
-                    agentUser: this.shareId
+                    agentUser: ''
                 })
             }
             sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
@@ -308,7 +284,7 @@ export default {
                 name: 'SubmitOrder',
                 query: {
                     isCart: 'YES',
-                    activeProduct: 6,
+                    activeProduct: 5,
                     preActivity: 2,
                     activityId: data.activityId
                 }
@@ -332,8 +308,6 @@ export default {
             return true
         },
         async createPoster () {
-            const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.8.0/package-poster.jpg'
-
             if (this.creating) {
                 return
             }
@@ -352,196 +326,161 @@ export default {
             const AVATAR = await cutArcImage(Result[1])
             cvs.width = 638
             cvs.height = 1134
-            ctx.fillStyle = '#EA7635'
+            ctx.fillStyle = '#397432'
             ctx.fillRect(0, 0, 638, 88)
             ctx.drawImage(AVATAR, 20, 12, 64, 64)
             ctx.font = '24px Microsoft YaHei UI'
             ctx.fillStyle = '#fff'
             ctx.textBaseline = 'hanging'
-            createText(ctx, 100, 32, `${ this.userName } 邀您参加组合聚惠学`, 34, 510, 1)
+            createText(ctx, 100, 32, `${ this.userName } 邀你一起春耘计划`, 34, 510, 1)
             ctx.drawImage(BG, 0, 88, 638, 1046)
-            const QR = await generateQrcode({ size: 200, text: this.shareUrl, type: 'canvas' })
-            ctx.drawImage(QR, 204, 730, 238, 238)
-            this.poster = cvs.toDataURL('image/jpeg', 1)
+            const QR = await generateQrcode({ size: 200, text: location.href, type: 'canvas' })
+            ctx.drawImage(QR, 216, 826, 204, 204)
+            this.poster = cvs.toDataURL('image/jpeg', 0.9)
             this.showPoster = true
             this.creating = false
-        },
-        share () {
-            let shareUrl = ''
-            let img
-            const { appId, mallUrl, userId } = this
-            if (userId) {
-                shareUrl = `${ mallUrl }/course-package/${ userId }?noCache=${ Date.now() }`
-            } else {
-                shareUrl = `${ mallUrl }/course-package?noCache=${ Date.now() }`
-            }
-            this.shareUrl = shareUrl
-            if (this.list.length) {
-                img = this.list[0].models[0].image
-            }
-            share({
-                appId,
-                title: `${ this.userName } 邀您参加组合聚惠学`,
-                desc: '组合好课，全面发展，起飞在起跑线上',
-                link: shareUrl,
-                imgUrl: img
-            })
         }
     }
 }
 </script>
 
-<style lang="scss" module>
-.course-package {
+<style module lang="scss">
+.spring-ploughing {
     display: flex;
     flex-direction: column;
-    padding-bottom: 35px;
-    background: #f5c36c;
+    padding-bottom: 182px;
+    background-color: #8dc607;
 }
-.background {
+.countdown {
     position: relative;
-    height: 560px;
-    background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/package-bg.jpg') no-repeat center top;
-    background-size: 100% auto;
+    height: 674px;
+    padding-top: 20px;
+    background: #f9dfbe url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png') no-repeat center 20px;
+    background-size: 100%;
     > .top-right {
         position: absolute;
         right: 0;
-        bottom: -16px;
+        top: 16px;
         width: 128px;
         font-size: 24px;
-        color: #fff;
+        color: #88de9e;
         text-align: center;
         line-height: 50px;
-        background-color: #ea7635;
+        background-color: rgba(0, 0, 0, .5);
         border-radius: 40px 0 0 40px;
         &:nth-of-type(2) {
-            bottom: 50px;
+            margin-top: 66px;
         }
     }
-}
-.activity {
-    padding: 0 18px;
-    margin-bottom: 38px;
-}
-.activity-name {
-    position: relative;
-    bottom: -30px;
-    padding: 7.5px 0 6px;
-    z-index: 1;
-    .front {
+    > svg {
         position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 2;
-        &-top {
-            border: 12px solid;
-            border-bottom: 7.5px solid;
-            border-top: none;
-            border-color: transparent transparent #c94828 transparent;
-        }
-        &-front {
-            box-sizing: border-box;
-            padding: 0 20px;
-            width: 600px;
-            line-height: 68px;
-            background: #ea7635;
-            border-top: 1px solid #f5c36c;
-            text-align: center;
-            font-size: 30px;
-            font-family: Microsoft YaHei;
-            font-weight: bold;
-            color: #fff;
-            letter-spacing: 2px;
-            @include elps();
-        }
-    }
-    .back {
-        width: 712px;
-        height: 60px;
-        background: #c94828;
-        border-radius: 10px;
-        z-index: 1;
+        top: 175px;
+        right: 95px;
     }
 }
 .content {
     position: relative;
-    padding: 48px 24px;
+    width: 686px;
+    padding: 24px;
     margin: 14px auto 48px;
-    background-color: #fbefd7;
-    border-radius: 20px;
+    background-color: #428b42;
+    box-shadow: 0 0 0 2px #a3d816 inset;
     box-sizing: border-box;
-    &:nth-last-of-type(1) {
-        margin-bottom: 0;
+}
+.activity-name {
+    position: relative;
+    width: max-content;
+    margin: 26px auto 32px;
+    font-size: 36px;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    &:before {
+        content: '';
+        position: absolute;
+        left: -86px;
+        top: 50%;
+        width: 54px;
+        height: 42px;
+        transform: rotate(180deg) translateY(50%);
+        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png') no-repeat center center;
+        background-size: 100%;
     }
+    &:after {
+        content: '';
+        position: absolute;
+        right: -86px;
+        top: 50%;
+        width: 54px;
+        height: 42px;
+        transform: translateY(-50%);
+        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/78c17f27-4fa9-4a18-a821-e4202e7aa0a1.png') no-repeat center center;
+        background-size: 100%;
+    }
+}
+.group-name {
+    max-width: 458px;
+    margin: 16px auto;
+    padding: 16px 100px;
+    font-size: 28px;
+    line-height: 36px;
+    color: #dcfd8c;
+    text-align: center;
+    font-weight: bold;
+    background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/e009100a-579a-4369-8238-db258fb2d91b.png') no-repeat center center;
+    background-size: 100% 100%;
+    background-clip: border-box;
 }
 .discount {
     margin-bottom: 20px;
     text-align: center;
-    color: #663a15;
+    color: #88de9e;
     font-size: 24px;
     > span:nth-of-type(2) {
         margin: 0 12px;
         vertical-align: 2px;
     }
 }
-.package-countdown {
-    margin: 0 auto;
+
+.end-countdown,
+.global-end-countdown {
     width: 400px;
+    margin: 0 auto;
     line-height: 80px;
-    text-align: center;
     font-size: 24px;
-    color: #fbefd7;
-    background-color: #df5b2f;
+    text-align: center;
+    color: #88de9e;
+    background-color: #397432;
     border-radius: 20px;
     > .unit {
         padding: 0 4px;
     }
     > .val {
         display: inline-block;
-        box-sizing: border-box;
         padding: 4px;
-        min-width: 38px;
         line-height: 30px;
-        color: #df5b2f;
-        background-color: #fbefd7;
+        color: #184b28;
+        background-color: #8de5a8;
         border-radius: 6px;
     }
 }
-.top-countdown {
-    margin: 340px auto 0;
-    width: 455px;
-    line-height: 60px;
-    text-align: center;
-    font-size: 28px;
-    color: #663a15;
-    background-color: #f5c36c;
-    border-radius: 40px;
-    > .unit {
-        padding: 0 8px;
-    }
+.global-end-countdown {
+    margin-top: 286px;
+    background: none;
     > .val {
-        display: inline-block;
-        box-sizing: border-box;
-        padding: 0 4px;
-        min-width: 42px;
-        line-height: 40px;
-        color: #fff;
-        background-color: #e97f40;
-        border-radius: 6px;
+        background-color: #ffd6a7;
+        &.day {
+            background-color: #8de5a8;
+        }
     }
 }
-.pro-list {
-    margin-top: 32px;
-}
+
 .gift-list {
-    padding: 0 14px;
     .title {
         margin: 24px 0;
         font-weight: bold;
         font-size: 40px;
-        color: #ea7635;
+        color: #fae47f;
         &:before {
             display: inline-block;
             content: '';
@@ -549,22 +488,59 @@ export default {
             height: 40px;
             vertical-align: -6px;
             border-radius: 4px;
-            background-color: #ea7635;
+            background-color: #fae47f;
         }
     }
 }
-.button {
+
+.buy {
     display: block;
     min-width: 400px;
-    margin: 46px auto 0;
+    margin: 48px auto 36px;
     padding: 0 20px;
     line-height: 78px;
     font-size: 32px;
-    color: #fff;
-    background-color: #fe782f;
+    color: #184b28;
+    background-color: #8de5a8;
     border-radius: 39px;
     font-weight: bold;
-    box-shadow: 0 6px 12px rgba(132, 0, 0, .16);
+    box-shadow: 0 6px 12px rgba(132, 0 ,0, .16);
+    &.not-start {
+        font-weight: normal;
+        color: #a6482f;
+    }
+    &.ended {
+        color: #184b28;
+        font-weight: normal;
+        background-color: #67b875;
+    }
+}
+.corner {
+    position: absolute;
+    width: 46px;
+    height: 42px;
+    z-index: 1;
+    background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/1c11b4a5-091d-4f8d-a88c-e8334dfc9d88.png') no-repeat center center;
+    background-size: 100% 100%;
+    &.top-left {
+        top: 0;
+        left: 0;
+    }
+    &.top-right {
+        top: 0;
+        right: 0;
+        transform: rotateY(180deg);
+    }
+    &.bottom-right {
+        bottom: 0;
+        right: 0;
+        transform: rotateY(180deg) rotateX(180deg);
+    }
+    &.bottom-left {
+        bottom: 0;
+        left: 0;
+        transform: rotateX(180deg);
+    }
 }
 .rules {
     padding: 24px 24px 60px;
