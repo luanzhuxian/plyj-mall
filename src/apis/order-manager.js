@@ -120,3 +120,10 @@ export const getWaitPayBalanceInfo = orderSn => axios.post(`/apis/v1/order/preOr
  * @return {*}
  */
 export const checkGetGift = orderSn => axios.get(`/apis/v1/order/gift?orderId=${ orderSn }`)
+
+/**
+ * 订单确认，用于计算订单金额，获取钉钉商品详情等，进入提交页面时最先调用的接口
+ * @param data {Object}
+ * @return {*}
+ */
+export const confirmOrder = data => axios.post(`/apis/v2/order/confirm`, data)

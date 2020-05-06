@@ -190,6 +190,10 @@ export default {
             type: String,
             default: ''
         },
+        productType: {
+            type: String,
+            default: ''
+        },
         productStatus: {
             type: Number,
             default: 2
@@ -303,7 +307,8 @@ export default {
                 skuCode2,
                 price,
                 // 如果当前用户是经纪人，则覆盖其他经纪人的id
-                agentUser: this.shareId
+                agentUser: this.shareId,
+                productType: this.productType
             }]))
             this.showSpecifica = false
             this.$router.push({

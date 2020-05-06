@@ -11,7 +11,7 @@ export default [
     {
         path: '/order/submit/:brokerId?/:activeProduct?',
         name: 'SubmitOrder',
-        component: () => import('../views/cart/Submit-Order.vue'),
+        component: () => import('../views/cart/Submit-Order-v2.vue'),
         props: true,
         meta: {
             title: '提交订单'

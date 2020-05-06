@@ -99,7 +99,8 @@ export default {
                         skuCode2: prod.skuCode2,
                         count: prod.count,
                         price: prod.price,
-                        agentUser: ''
+                        agentUser: '',
+                        productType: prod.productType
                     })
                 }
                 sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))

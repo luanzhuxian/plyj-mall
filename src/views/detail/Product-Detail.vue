@@ -197,6 +197,7 @@
                     :active-product="activeProduct"
                     :activity-product-model="detail.activityProductModel || null"
                     :pre-activity="preActivity"
+                    :product-type="productType"
                 />
 
                 <!-- 规格弹框 -->
@@ -560,11 +561,13 @@ export default {
         },
 
         /**
-         * 活动类型
+         * 传入的活动类型
          * 1 正常商品
          * 2 团购
          * 3 秒杀
          * 4 预购
+         * 5 春耘
+         * 6 组合课
          */
         activeProduct () {
             return this.detail.activeProduct || 1
@@ -874,7 +877,8 @@ export default {
                 skuCode2,
                 price,
                 // 如果当前用户是经纪人，则覆盖其他经纪人的id
-                agentUser: this.shareId
+                agentUser: this.shareId,
+                productType: this.productType
             }]))
             this.showSpecifica = false
             this.$router.push({
