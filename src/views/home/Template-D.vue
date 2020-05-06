@@ -21,7 +21,7 @@
             <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
             <campaign v-if="isCampaignShow" />
             <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" />
-            <div :class="$style.miaosha" v-if="MIAO_SHA.showStatue === 1">
+            <div :class="$style.miaosha" v-if="isMiaoshaShow">
                 <div v-if="skinId === 0" :class="$style.title" v-text="MIAO_SHA.moduleName" />
                 <skin-title
                     v-else
@@ -31,7 +31,7 @@
                 />
                 <miaosha :data="MIAO_SHA" />
             </div>
-            <div :class="$style.package" v-if="PACKAGE.showStatue === 1 && isPackageShow">
+            <div :class="$style.package" v-if="isPackageShow">
                 <div v-if="skinId === 0" :class="$style.title" v-text="PACKAGE.moduleName" />
                 <skin-title
                     v-else
@@ -41,7 +41,7 @@
                 />
                 <package :data="PACKAGE" />
             </div>
-            <div :class="$style.pintuan" v-if="PIN_TUAN.showStatue === 1">
+            <div :class="$style.pintuan" v-if="isPintuanShow">
                 <div v-if="skinId === 0" :class="$style.title" v-text="PIN_TUAN.moduleName" />
                 <skin-title
                     v-else
@@ -51,7 +51,7 @@
                 />
                 <pintuan :data="PIN_TUAN" />
             </div>
-            <div :class="$style.yugou" v-if="YU_GOU.showStatue === 1">
+            <div :class="$style.yugou" v-if="isYugouShow">
                 <div v-if="skinId === 0" :class="$style.title" v-text="YU_GOU.moduleName" />
                 <skin-title
                     v-else
@@ -186,10 +186,19 @@ export default {
             return this.COUPON.values && this.COUPON.values.length
         },
         isActivityShow () {
-            return this.ACTIVITY.values && this.ACTIVITY.values.length
+            return this.ACTIVITY.showStatue === 1 && this.ACTIVITY.values && this.ACTIVITY.values.length
+        },
+        isMiaoshaShow () {
+            return this.MIAO_SHA.showStatue === 1 && this.MIAO_SHA.values && this.MIAO_SHA.values.length
+        },
+        isPintuanShow () {
+            return this.PIN_TUAN.showStatue === 1 && this.PIN_TUAN.values && this.PIN_TUAN.values.length
+        },
+        isYugouShow () {
+            return this.YU_GOU.showStatue === 1 && this.YU_GOU.values && this.YU_GOU.values.length
         },
         isPackageShow () {
-            return this.PACKAGE.values && this.PACKAGE.values.length
+            return this.PACKAGE.showStatue === 1 && this.PACKAGE.values && this.PACKAGE.values.length
         }
     }
 }
