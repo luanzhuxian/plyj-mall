@@ -49,19 +49,21 @@
                             即将开始
                             <span>({{ totals.FUTURE }})</span>
                         </div>
-                        <ul :class="$style.list">
+                        <ul>
                             <li
                                 v-for="(item, index) of futureLive"
                                 :key="index"
-                                :class="$style.item"
+                                :class="$style.nowLiveItem"
                                 @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
                             >
                                 <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
-                                <div :class="$style.desc">
-                                    <div :class="$style.liveTitle">{{ item.name }}</div>
-                                    <div :class="$style.text2">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
-                                    <div :class="$style.text2" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
-                                    <div :class="$style.bottom">
+                                <div :class="$style.itemBottom">
+                                    <div :class="$style.desc">
+                                        <div :class="$style.liveName">{{ item.name }}</div>
+                                        <div :class="$style.text1">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
+                                        <div :class="$style.text1" v-if="item.lecturer">主讲人： {{ item.lecturer }}</div>
+                                    </div>
+                                    <div :class="$style.right">
                                         <span :class="$style.price" v-if="(item.isPay !== 0) && item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
                                         <span :class="$style.free" v-else>免费</span>
                                         <pl-button
@@ -72,10 +74,6 @@
                                         </pl-button>
                                     </div>
                                 </div>
-                            </li>
-                            <li v-if="totals.FUTURE % 2 === 1" :class="[$style.item, $style.noContent]">
-                                <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-live.png?x-oss-process=style/thum-small" alt="">
-                                <div :class="$style.desc">敬请期待</div>
                             </li>
                         </ul>
                     </div>
