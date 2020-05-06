@@ -88,9 +88,7 @@ export default {
         }
     },
     data () {
-        return {
-            duration: ''
-        }
+        return {}
     },
     computed: {
         liveModel () {
@@ -109,13 +107,15 @@ export default {
         },
         isNoticeShow () {
             return this.live && this.live.statue === 2 && this.live.hasNotice
-        }
-    },
-    created () {
-        const { liveStartTime, hasNotice } = this.live
-        if (hasNotice && liveStartTime) {
-            const duration = Date.now().valueOf() - moment(liveStartTime).valueOf()
-            this.duration = Math.abs(duration)
+        },
+        duration () {
+            const { liveStartTime, hasNotice } = this.live
+            let ts
+            if (hasNotice && liveStartTime) {
+                ts = moment(liveStartTime).valueOf()
+            }
+            const duration = Date.now().valueOf() - ts
+            return Math.abs(duration)
         }
     },
     methods: {
@@ -230,9 +230,9 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    width: 130px;
-    height: 48px;
-    line-height: 48px;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
     background: #fb7d55;
     border-radius: 0 0 20px 0;
     font-size: 24px;

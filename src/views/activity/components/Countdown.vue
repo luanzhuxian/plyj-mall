@@ -156,7 +156,6 @@ export default {
                 }
 
                 const remain = this.getRemain()
-
                 this.updateRemain(remain)
 
                 if (this.remain > 0) {
@@ -182,7 +181,10 @@ export default {
                 this.raf.clear(this.rafId)
             }
         },
-        reset () {
+        reset (duration) {
+            if (!duration) {
+                return false
+            }
             if (!this.raf) {
                 this.raf = new Raf()
             }
