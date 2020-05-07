@@ -1,19 +1,5 @@
 <template>
-    <div
-        :class="{
-            [$style.homeTemplateC]: true,
-            [$style.skinXmas]: skinId === 1,
-            [$style.skinYuanDan]: skinId === 2,
-            [$style.skinNewYear]: skinId === 3,
-            [$style.skinXiaoNian]: skinId === 4,
-            [$style.skinYuanXiao]: skinId === 5,
-            [$style.skinWomenDay]: skinId === 6,
-            [$style.skinNianNianFan]: skinId === 7,
-            [$style.skinEarthDay]: skinId === 8,
-            [$style.skinLabourDay]: skinId === 9,
-            [$style.skinCampaign]: skinId === 99
-        }"
-    >
+    <div :class="[$style.homeTemplateD, $style[skinClassNameMap[skinId]]]">
         <div :class="$style.container">
             <search :class="$style.search" placeholder="搜索商品" />
             <propagate :class="$style.propagate" :data="PROPAGATE" />
@@ -84,6 +70,7 @@ import Propagate from './components/Propagate.vue'
 import Teachers from './components/Teachers'
 import SkinTitle from './skin/Skin-Title.vue'
 import Campaign from './components/Campaign'
+import { skinClassNameMap } from './skin/map'
 
 export default {
     name: 'HomeTemplateC',
@@ -121,6 +108,7 @@ export default {
     },
     data () {
         return {
+            skinClassNameMap
         }
     },
     computed: {

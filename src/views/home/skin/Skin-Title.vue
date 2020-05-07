@@ -9,6 +9,7 @@
         <title-nian-nian-fan v-if="skinId === 7" :data="data" />
         <title-earth-day v-if="skinId === 8" :data="data" />
         <title-labour-day v-if="skinId === 9" :data="data" />
+        <title-mothers-day v-if="skinId === 10" :data="data" />
         <title-campaign v-if="skinId === 99" :data="data" />
     </div>
 </template>
@@ -23,6 +24,7 @@ import TitleWomenDay from './Title-Women-Day.vue'
 import TitleNianNianFan from './Title-Nian-Nian-Fan.vue'
 import TitleEarthDay from './Title-Earth-Day.vue'
 import TitleLabourDay from './Title-Labour-Day.vue'
+import TitleMothersDay from './Title-Mothers-Day.vue'
 import TitleCampaign from './Title-Campaign.vue'
 
 export default {
@@ -37,6 +39,7 @@ export default {
         TitleNianNianFan,
         TitleEarthDay,
         TitleLabourDay,
+        TitleMothersDay,
         TitleCampaign
     },
     props: {
