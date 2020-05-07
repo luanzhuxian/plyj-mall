@@ -41,14 +41,11 @@
                         <div :class="$style.main">
                             {{ item.goodsInfo.productName }}
                         </div>
-                        <div :class="$style.sub">
+                        <div :class="$style.sub" v-if="item.goodsInfo.activityInfo.prizePool">
                             <div :class="$style.subLeft">
-                                <span v-if="item.goodsInfo.activityInfo.prizePool">
-                                    成团瓜分
-                                </span>
-                                <span v-else>龙门节有礼</span>
+                                成团瓜分
                             </div>
-                            <div :class="$style.subRight" v-if="item.goodsInfo.activityInfo.prizePool">
+                            <div :class="$style.subRight">
                                 {{ item.goodsInfo.activityInfo.prizePool }}
                             </div>
                         </div>
