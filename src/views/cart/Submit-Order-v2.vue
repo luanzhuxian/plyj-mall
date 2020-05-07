@@ -225,53 +225,33 @@
                 确认付款
             </pl-button>
         </div>
+        <Coupon
+            v-if="loaded"
+            :active-product="activeProduct"
+            @change="couponChange"
+        />
+        <Scholarship
+            v-if="loaded"
+            :active-product="activeProduct"
+            :total-amount="totalAmount"
+            :freight="freight"
+            :current-coupon="currentCoupon"
+            @change="scholarshipChange"
+        />
+        <Invoice
+            v-if="loaded && showInvoiceSelector"
+            :active-product="activeProduct"
+            :total-amount="totalAmount"
+            :products="products"
+            :contact-info-model="form.userAddress"
+            @selected="invoiceSelected"
+        />
+        <ContactInfo
+            :physical-products="physicalProducts"
+            @change="contactInfoChange"
+        />
 
-        <div
-            v-if="(coupon.amount || !coupon.id) && activeProduct === 1"
-            :class="$style.itemSelector"
-            @click.capture="showCoupon = true"
-        >
-            <pl-fields
-                size="middle"
-                text="优惠"
-                icon="icon-coupon"
-                :icon-gap="12"
-                show-right-icon
-                :right-text="!coupon.id ? couponList.length +'张可用' : '-¥' + coupon.amount "
-                left-text-weight="bold"
-            />
-        </div>
-
-        <div
-            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && redEnvelopeList.length && activeProduct === 1 && coupon.scholarship !== 0"
-            :class="$style.itemSelector"
-            @click.capture="showRedEnvelopePopup = true"
-        >
-            <pl-fields
-                size="middle"
-                text="奖学金（红包）"
-                icon="icon-RedEnvelope"
-                :icon-gap="12"
-                show-right-icon
-                :right-text="!currentRedEnvelope.id ? '有可用' : '-¥' + currentRedEnvelope.amount"
-                left-text-weight="bold"
-            />
-        </div>
-
-        <!--<div
-            v-if="totalAmount > 0 && showInvoiceSelector && activeProduct === 1"
-            :class="$style.itemSelector" @click.capture="selectInvoice"
-        >
-            <pl-fields
-                size="middle"
-                text="发票"
-                icon="icon-invoice"
-                :icon-gap="12"
-                show-right-icon
-                :right-text="invioceType === 0 ? '不需要' : '纸质发票'"
-                left-text-weight="bold"
-            />
-        </div>-->
+        <!---->
 
         <!--<div
             v-if="needStudentList.length === 1 && !isCart"
@@ -310,132 +290,13 @@
             :label="physicalProducts.length ? '用户信息' : '学员信息'"
         />
 
-        <!--<div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click.capture="chooseContact">
-            <pl-fields
-                size="middle"
-                text="联系人信息"
-                icon="icon-contact"
-                :icon-gap="12"
-                :right-text="contactInfoModel.name && contactInfoModel.mobile ? '已选择' : `未选择`"
-                show-right-icon
-                left-text-weight="bold"
-            >
-                <div v-show="contactInfoModel.name && contactInfoModel.mobile" :class="$style.contactDetail">
-                    <span class="fz-28" v-text="contactInfoModel.name" />
-                    <span class="fz-28" v-text="contactInfoModel.mobile" />
-                </div>
-            </pl-fields>
-        </div>-->
-
         <!-- 订单备注（只有一个商品时显示） -->
         <div :class="$style.oneProductMark">
             <span>订单备注</span>
             <input type="text" placeholder="请和商家协商一致后填写" v-model="form.orderPostscript">
         </div>
 
-        <!--<pl-popup :show.sync="showPopup">
-            <div :class="$style.invioceBox">
-                <div :class="$style.title">
-                    是否需要发票？
-                </div>
-                <div :class="$style.content">
-                    <button @click="noNeed">
-                        不需要
-                    </button>
-                    <button @click="need">
-                        纸质发票
-                    </button>
-                </div>
-            </div>
-        </pl-popup>-->
-
-        <pl-popup
-            :show.sync="showContactPopup"
-            :close-on-click-modal="false"
-            @close="contactInfoForm.name = ''; contactInfoForm.mobile = '';"
-        >
-            <div :class="$style.addContact">
-                <div :class="$style.addContactTop">
-                    联系人信息
-                </div>
-                <pl-form :model="contactInfoForm" :rules="rules" ref="contactForm">
-                    <pl-form-item prop="name" label="姓名：" :label-width="204" :gap-top="20">
-                        <pl-input v-model="contactInfoForm.name" />
-                    </pl-form-item>
-                    <pl-form-item prop="mobile" label="手机号码：" :label-width="204" :gap-top="20">
-                        <pl-input v-model="contactInfoForm.mobile" />
-                    </pl-form-item>
-                </pl-form>
-                <!--<pl-button size="huge" type="warning" @click="useContact">
-                    使用
-                </pl-button>-->
-            </div>
-        </pl-popup>
-
-        <!-- 优惠券弹框 -->
-        <pl-popup
-            :show.sync="showCoupon"
-            title="领取优惠券"
-            title-align="left"
-        >
-            <div :class="$style.coupon">
-                <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
-                <div :class="$style.couponList">
-                    <template v-for="(item, i) of couponList">
-                        <div :key="i" :class="$style.couponItem" @click="couponClick(item)">
-                            <div :class="$style.button">省{{ item.amount }}</div>
-                            <div :class="$style.full">满{{ item.useLimitAmount }}减{{ item.amount }}</div>
-                            <span :class="$style.timeDesc">{{ item.timeDesc }}</span>
-                            <span :class="$style.recommend" v-if="recommendCouponId === item.id">推荐使用</span>
-                            <span :class="$style.choices">
-                                <pl-svg v-if="item.id === coupon.id" name="icon-xuanzhong" width="40" />
-                                <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                            </span>
-                        </div>
-                    </template>
-                    <div :class="$style.couponItem" @click="couponClick({})">
-                        <div :class="$style.notChooseCoupon">不参加优惠</div>
-                        <span :class="$style.choices">
-                            <pl-svg v-if="!coupon.id" name="icon-xuanzhong" width="40" />
-                            <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </pl-popup>
-
-        <!-- 红包弹框 -->
-        <pl-popup
-            :show.sync="showRedEnvelopePopup"
-            title="奖学金（红包）"
-            title-align="left"
-        >
-            <div :class="$style.redEnvelope">
-                <p class="fz-28 gray-3">仅支持选择一个奖学金进行抵扣</p>
-                <div :class="$style.redEnvelopeList">
-                    <template v-for="(item, i) of redEnvelopeList">
-                        <div :key="i" :class="$style.redEnvelopeItem" @click="redEnvelopeClick(item, false)">
-                            <span>
-                                <pl-svg name="icon-RedEnvelope" width="40" />
-                            </span>
-                            <span :class="$style.count">￥{{ item.amount }}</span>
-                            <span v-if="item.amount > (totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0))" :class="$style.isOver">使用后超出抵用金额不返还</span>
-                            <span :class="$style.choices">
-                                <pl-svg v-if="item.id === currentRedEnvelope.id" name="icon-xuanzhong" width="40" />
-                                <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                            </span>
-                        </div>
-                    </template>
-                    <div :class="$style.redEnvelopeItem" @click="redEnvelopeClick({}, true)">
-                        <span :class="$style.notChooseRedEnvelope">不使用</span>
-                        <span :class="$style.choices">
-                            <pl-svg v-if="!currentRedEnvelope.id" name="icon-xuanzhong" width="40" />
-                            <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </pl-popup>
+        <!---->
     </div>
 
     <div
@@ -487,6 +348,10 @@ import CustomInline from './components/Custom-Inline.vue'
 import InfoItem from './components/Info-Item.vue'
 import CustomBlock from './components/Custom-Block.vue'
 import ProductVeiwer from './components/Product-Veiwer.vue'
+import Coupon from './components/Coupon.vue'
+import Scholarship from './components/Scholarship.vue'
+import Invoice from './components/Invoice.vue'
+import ContactInfo from './components/Contact-Info.vue'
 export default {
     name: 'SubmitOrderV2',
     components: {
@@ -500,7 +365,11 @@ export default {
         InfoItem,
         CustomInline,
         CustomBlock,
-        ProductVeiwer
+        ProductVeiwer,
+        Coupon,
+        Scholarship,
+        Invoice,
+        ContactInfo
     },
     data () {
         this.requestPayDataCount = 0
@@ -519,7 +388,7 @@ export default {
             // 总消费价格
             goodsAmount: 0,
             // 优惠券信息
-            coupon: {},
+            currentCoupon: {},
             // 优惠券信息
             couponList: [],
             // 实体商品
@@ -535,24 +404,6 @@ export default {
             invioceType: 0,
             INVOICE_MODEL: {},
             CHECKED_STUDENT: {},
-            rules: {
-                name: [
-                    { required: true, message: '请输入联系人姓名' },
-                    { validator: checkLength(12), message: '联系人姓名为1~12个字符' }
-                ],
-                mobile: [
-                    { required: true, message: '请输入联系人手机号' },
-                    { validator: isPhone, message: '联系人手机号格式错误' }
-                ]
-            },
-            contactInfoModel: {
-                name: '',
-                mobile: ''
-            },
-            contactInfoForm: {
-                name: '',
-                mobile: ''
-            },
             detail: {},
             // 学员信息错误标记点
             lessonErrorId: '',
@@ -560,8 +411,6 @@ export default {
             lessonErrorTip: '',
             // 自定义表单错误信息点
             customErrorId: '',
-            // 推荐使用的优惠券Id
-            recommendCouponId: '',
             // 服务器时间
             serverTime: '',
             showRedEnvelopePopup: false,
@@ -587,7 +436,8 @@ export default {
                 cartCouponModel: null,
                 // 发票
                 invoiceInfoModel: null,
-            }
+            },
+            loaded: false
         }
     },
     computed: {
@@ -619,7 +469,7 @@ export default {
     },
     watch: {
     },
-    async created () {
+    async mounted () {
         try {
             await this.init()
         } catch (e) {
@@ -632,11 +482,10 @@ export default {
         // 初始化，执行顺序不能乱
         async init () {
             try {
-                const CONFIRM_LIST = await this.initProductInfo()
-                await this.getCouponList(CONFIRM_LIST)
-                await this.getCouponOfMax(CONFIRM_LIST)
-                await this.getRedEnvelopeList(CONFIRM_LIST)
-                await this.getProductDetail()
+                await this.initProductInfo()
+                const { result: serverTime } = await getServerTime()
+                this.serverTime = serverTime
+                this.loaded = true
             } catch (e) {
                 throw e
             }
@@ -661,6 +510,7 @@ export default {
                 this.physicalProducts = PHYSICAL_GOODS
                 // 将线上课归到课程中
                 this.products = skus
+                this.showInvoiceSelector = skus.some(item => item.supportInvoice === 1)
             } catch (e) {
                 throw e
             }
@@ -691,7 +541,9 @@ export default {
                 this.form.source = this.activeProduct
                 if (this.selectedAddress) {
                     this.form.userAddress = {
-                        addressSeq: this.selectedAddress.sequenceNbr
+                        addressSeq: this.selectedAddress.sequenceNbr,
+                        mobile: this.selectedAddress.mobile,
+                        name: this.selectedAddress.realName
                     }
                 }
                 this.form.skus = CONFIRM_LIST.map(item => ({
@@ -708,101 +560,89 @@ export default {
             }
         },
         // 根据商品总价，获取合适的优惠券，并设置为当前的优惠券
-        async getCouponOfMax (proList = []) {
-            try {
-                // 获取优惠券信息
-                const { result } = await getCouponOfMax({
-                    activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-                    activityId: this.activityId,
-                    cartProducts: proList,
-                    addressSeq: this.selectedAddress.sequenceNbr
-                })
-                // 设置优惠券
-                if (result.id) {
-                    this.form.cartCouponModel = {
-                        userCouponId: result.id
-                    }
-                }
-                this.coupon = result.id ? result : { scholarship: 1 }
-                return result
-            } catch (e) {
-                throw e
-            }
-        },
+        // async getCouponOfMax (proList = []) {
+        //     try {
+        //         // 获取优惠券信息
+        //         const { result } = await getCouponOfMax({
+        //             activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+        //             activityId: this.activityId,
+        //             cartProducts: proList,
+        //             addressSeq: this.selectedAddress.sequenceNbr
+        //         })
+        //         // 设置优惠券
+        //         if (result.id) {
+        //             this.form.cartCouponModel = {
+        //                 userCouponId: result.id
+        //             }
+        //         }
+        //         this.coupon = result.id ? result : { scholarship: 1 }
+        //         return result
+        //     } catch (e) {
+        //         throw e
+        //     }
+        // },
         // 获取优惠券列表
-        async getCouponList (proList) {
-            try {
-                if (this.activeProduct !== 1) return
-                const { result } = await getCouponByPrice({
-                    activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-                    activityId: this.activityId,
-                    cartProducts: proList,
-                    addressSeq: this.selectedAddress.sequenceNbr
-                })
-                const { serverTime } = this
-                this.couponList = result.map(item => {
-                    const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
-                    const day = Math.floor(moment.duration(duration).asDays())
-                    item.timeDesc = ''
-                    if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
-                    return item
-                })
-            } catch (e) {
-                throw e
-            }
-        },
+        // async getCouponList (proList) {
+        //     try {
+        //         if (this.activeProduct !== 1) return
+        //         const { result } = await getCouponByPrice({
+        //             activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+        //             activityId: this.activityId,
+        //             cartProducts: proList,
+        //             addressSeq: this.selectedAddress.sequenceNbr
+        //         })
+        //         const { serverTime } = this
+        //         this.couponList = result.map(item => {
+        //             const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+        //             const day = Math.floor(moment.duration(duration).asDays())
+        //             item.timeDesc = ''
+        //             if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+        //             return item
+        //         })
+        //     } catch (e) {
+        //         throw e
+        //     }
+        // },
         // 选择优惠券, 选择完成后，重新计算价格
-        async couponClick (item) {
-            // 设置奖学金
-            if (item.scholarship === 0) {
-                this.currentRedEnvelope = {}
-                this.form.scholarshipModel = null
-            } else {
-                item.scholarship = 1
-                this.currentRedEnvelope = this.redEnvelopeList[0] || {}
-                this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
-            }
-            this.form.cartCouponModel = item.id ? { userCouponId: item.id } : null
-            this.coupon = item
+        // async couponClick (item) {
+        //     this.form.cartCouponModel = item.id ? { userCouponId: item.id } : null
+        // },
+        // 修改优惠券
+        async couponChange (coupon) {
+            this.currentCoupon = coupon
+            this.form.cartCouponModel = coupon.id ? { userCouponId: coupon.id } : null
+            // 优惠券的改变会引起奖学金的改变，因此，等待奖学金改变后，在调用
+            await this.$nextTick()
             try {
                 await this.getProductDetail()
             } catch (e) {
                 throw e
             }
         },
-        // 获取红包列表，必须放置于获取优惠券之后
-        async getRedEnvelopeList (proList = []) {
-            // 只有普通商品支持使用红包
-            if (this.activeProduct !== 1) return
-            const amount = proList.map(item => item.price * item.count).reduce((total, price) => total + price)
-            try {
-                const { result } = await getRedEnvelopeListByPrice(amount)
-                const { serverTime } = this
-                this.redEnvelopeList = result.map(item => {
-                    const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
-                    const day = Math.floor(moment.duration(duration).asDays())
-                    item.timeDesc = ''
-                    if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
-                    return item
-                })
-                // 有优惠券，并且当前这个优惠券能与奖学金共用
-                if (Number(this.coupon.scholarship) === 1) {
-                    this.currentRedEnvelope = this.redEnvelopeList[0] || {}
-                    this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
-                }
-            } catch (e) {
-                throw e
-            }
-        },
-        // 选择红包
-        async redEnvelopeClick (item) {
-            this.currentRedEnvelope = item
-            this.form.scholarshipModel = item.id ? { scholarshipId: item.id } : null
+        // 修改红包
+        async scholarshipChange (scholarship) {
+            this.form.scholarshipModel = scholarship.id ? { scholarshipId: scholarship.id } : null
             try {
                 await this.getProductDetail()
             } catch (e) {
                 throw e
             }
+        },
+        // 修改联系人
+        contactInfoChange ({ name, mobile }) {
+            this.form.userAddress = name ? {
+                mobile,
+                name
+            } : null
+        },
+        // 选择了发票
+        invoiceSelected (data) {
+            this.form.invoiceInfoModel = data ? {
+                invoiceTitle: data.invoiceTitle,
+                invoiceType: data.invoiceType,
+                taxpayerNumber: data.tin,
+                skus: data.orderDetails
+            } : null
         },
         submitOrder () {
             console.log(this.physicalProducts)

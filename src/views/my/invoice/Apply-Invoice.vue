@@ -132,7 +132,6 @@
                 <li
                     v-for="(prod, i) of applyInvoice"
                     :key="i"
-                    v-show="prod.returnStatus === 0 || prod.returnStatus === 3 || prod.returnStatus === 6 || prod.returnStatus === ''"
                 >
                     <label>
                         <input
@@ -141,11 +140,11 @@
                             :checked="isSelected(prod)"
                             @change="e => { selectChange(e, prod) }"
                         >
-                        <img v-imgError
-                             :class="$style.proImg"
-                             :src="prod.productImg"
-                             v-img-error
-                             alt=""
+                        <img
+                            :class="$style.proImg"
+                            :src="prod.goodsImage"
+                            v-img-error
+                            alt=""
                         >
                         <pl-svg
                             :class="$style.selectIcon"
@@ -271,9 +270,7 @@ export default {
     },
     methods: {
         isSelected (pro) {
-            return this.checkedList.some(item => item.skuCode1 === pro.skuCode1 &&
-          item.skuCode2 === pro.skuCode2 &&
-          (item.returnStatus === 0 || item.returnStatus === 3 || pro.returnStatus === 6 || pro.returnStatus === ''))
+            return this.checkedList.some(item => item.sku1 === pro.sku1 && item.sku2 === pro.sku2)
         },
         change (type) {
             this.type = type
@@ -350,9 +347,11 @@ export default {
             for (const prod of this.checkedList) {
                 invoiceAmount += Number(prod.amount) * 100
                 orderDetails.push({
-                    productId: prod.productId,
-                    skuCode1: prod.skuCode1,
-                    skuCode2: prod.skuCode2
+                    productId: prod.goodsId,
+                    goodsType: prod.goodsType,
+                    count: prod.count,
+                    sku1: prod.sku1,
+                    sku2: prod.sku2
                 })
             }
             invoiceModel.orderDetails = orderDetails

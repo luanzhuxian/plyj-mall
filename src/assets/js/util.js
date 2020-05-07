@@ -284,8 +284,8 @@ export function cutArcImage (img) {
 
 export function setTimeoutSync (duration) {
     return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
+        const timer = setTimeout(() => {
+            resolve(timer)
         }, duration)
     })
 }
