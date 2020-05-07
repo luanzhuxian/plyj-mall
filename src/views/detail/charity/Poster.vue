@@ -18,7 +18,7 @@ import {
 } from '../../../assets/js/util'
 
 const defaultAvatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
-const background = 'https://mallcdn.youpenglai.com/static/mall/2.9.0/charity-product-poster.png'
+const background = 'https://mallcdn.youpenglai.com/static/mall/2.9.0/公益行动海报1.png'
 
 const drawRectWithText = (ctx, x, y, width, height, radius, strokeStyle, fillStyle) => function (text, font, textFillStyle, lineHeight, textAlign) {
     if (radius) {

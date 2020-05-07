@@ -82,7 +82,7 @@ export default {
                     path: 'HelperActivity'
                 },
                 'dragon-gate-charity': {
-                    main: '公益粽行动',
+                    main: '公益行动',
                     sub: '学子携手共献爱心',
                     icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/charity.png',
                     width: '64',

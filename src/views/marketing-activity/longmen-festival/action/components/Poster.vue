@@ -60,7 +60,7 @@ export default {
             }
             try {
                 const defaultAvatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
-                const background = 'https://mallcdn.youpenglai.com/static/admall/2.9.0/public-poster.png'
+                const background = 'https://mallcdn.youpenglai.com/static/mall/2.9.0/公益行动海报.png'
                 const { avatar, userName, share } = this
 
                 const bg = await loadImage(background)

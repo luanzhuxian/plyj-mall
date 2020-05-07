@@ -2,7 +2,7 @@
     <div :class="$style.longmenAction">
 
         <header :class="$style.header">
-            <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/public-goods.png" alt="">
+            <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/公益行动.png" alt="">
             <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/public-goods-title.png" alt="">
             <div :class="$style.description">
                 <p>用户累计捐赠公益金</p>

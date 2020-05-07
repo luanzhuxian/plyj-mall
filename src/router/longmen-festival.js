@@ -22,7 +22,7 @@ export default [
         props: true,
         component: () => import('../views/marketing-activity/longmen-festival/action/Index.vue'),
         meta: {
-            title: '公益粽行动'
+            title: '公益行动'
         }
     }
 ]
