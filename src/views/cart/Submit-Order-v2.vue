@@ -48,156 +48,6 @@
                     <span slot="content" class="gray-1">¥ {{ goodsAmount }}</span>
                 </InfoItem>
             </template>
-            <!--<div slot="physical">
-                &lt;!&ndash;<InfoItem v-if="isCart">
-                    <template slot="label">订单备注</template>
-                    <template slot="content">
-                        <input
-                            :class="$style.remark"
-                            type="text"
-                            placeholder="选填"
-                            v-model="physicalRemark"
-                        >
-                    </template>
-                </InfoItem>&ndash;&gt;
-
-                <InfoItem v-if="!isCart">
-                    <template slot="label">购买数量</template>
-                    <template slot="content">
-                        <div :class="$style.editCount">
-                            <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? physicalProducts[0].activeStock : physicalProducts[0].stock }}件</span>
-                            <Count
-                                :min="physicalProducts[0].minBuyNum"
-                                :max="(activeProduct !== 1 && preActivity === 2) ? (physicalProducts[0].activityLimit ? physicalProducts[0].activityLimitNumber : physicalProducts[0].activeStock) : (physicalProducts[0].purchaseQuantity || physicalProducts[0].stock)"
-                                :count="physicalProducts[0].count"
-                                @change="(count, next) => { countChange(count, physicalProducts[0], next) }"
-                            />
-                        </div>
-                    </template>
-                </InfoItem>
-
-                &lt;!&ndash;<InfoItem v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1" @click="showCoupon = true">
-                    <template slot="label">优惠券</template>
-                    <span slot="content">
-                        <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
-                        <span v-else>{{ couponList.length }}张可用</span>
-                        <pl-svg name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" class="ml-10" />
-                    </span>
-                </InfoItem>&ndash;&gt;
-
-                &lt;!&ndash;<InfoItem
-                    v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
-                    @click="showRedEnvelopePopupClick"
-                >
-                    <template slot="label">奖学金（红包）</template>
-                    <span slot="content">
-                        <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
-                        <span v-else-if="redEnvelopeList.length">有可用</span>
-                        <span v-else>无可用</span>
-                        <pl-svg class="ml-10" name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" />
-                    </span>
-                </InfoItem>&ndash;&gt;
-            </div>-->
-
-            <!-- 非实体商品显示（虚拟和课程） -->
-            <!--<template v-slot:noPhysical="{ type, product: item }">
-                <InfoItem v-if="item.productType === 'KNOWLEDGE_COURSE'">
-                    <template slot="label">
-                        有效期
-                    </template>
-                    <template slot="content">
-                        {{ item.validity ? `购买后${ item.validity }天内学完` : '购买后不限观看次数' }}
-                    </template>
-                </InfoItem>
-                <InfoItem v-else>
-                    <template slot="label">使用时间</template>
-                    <p slot="content" class="fz-24" v-if="item.validityPeriodStart">
-                        <span>
-                            {{ item.validityPeriodStart | dateFormat('YYYY.MM.DD') }}
-                        </span>
-                        <template v-if="item.validityPeriodStart.split(' ')[0] !== item.validityPeriodEnd.split(' ')[0]">
-                            -
-                            <span>
-                                {{ item.validityPeriodEnd | dateFormat('YYYY.MM.DD') }}
-                            </span>
-                        </template>
-                    </p>
-                    <p slot="content" v-else class="fz-24">
-                        长期有效
-                    </p>
-                </InfoItem>
-                <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
-                    <template slot="label">春耘折扣</template>
-                    <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
-                </InfoItem>
-                <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
-                    <template slot="label">组合折扣</template>
-                    <span slot="content">{{ detail.discount }}折 -¥{{ ((item.originPrice - item.price) * item.count).toFixed(2) }}</span>
-                </InfoItem>
-                <StudentInline
-                    v-if="isCart && item.needStudentInfo === 1"
-                    :product="item"
-                    :count="item.count"
-                    :lesson-error-id="lessonErrorId"
-                    :lesson-error-tip="lessonErrorTip"
-                    :students="CHECKED_STUDENT[item.skuCode1 + item.skuCode2] || []"
-                    :custom-list="item.formEntityList"
-                />
-                <CustomInline
-                    :key="item.skuCode1 + item.skuCode2"
-                    v-if="isCart && item.needStudentInfo === 2"
-                    :product="item"
-                    :count="item.count"
-                    :custom-list="item.formEntityList"
-                    :error-item-id="customErrorId"
-                />
-                &lt;!&ndash;<InfoItem v-if="isCart">
-                    <template slot="label">订单备注</template>
-                    <input
-                        slot="content"
-                        :class="$style.remark"
-                        type="text"
-                        placeholder="选填"
-                        v-model="item.remark"
-                    >
-                </InfoItem>&ndash;&gt;
-                <InfoItem v-if="!isCart">
-                    <template slot="label">购买数量</template>
-                    <div :class="$style.editCount" slot="content">
-                        <span>剩余{{ (activeProduct !== 1 && preActivity === 2) ? item.activeStock : item.stock }}件</span>
-                        <Count
-                            :min="item.minBuyNum"
-                            :max="(activeProduct !== 1 && preActivity === 2) ? (item.activityLimit ? item.activityLimitNumber : item.activeStock) : (item.purchaseQuantity || item.stock)"
-                            :count="item.count"
-                            @change="(count, next) => { countChange(count, item, next) }"
-                        />
-                    </div>
-                </InfoItem>
-                <InfoItem>
-                    <template slot="label">商品金额</template>
-                    <span slot="content" class="gray-1">¥ {{ item.amount }}</span>
-                </InfoItem>
-                <InfoItem v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1">
-                    <template slot="label">优惠券</template>
-                    <div slot="content">
-                        <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>
-                        <span v-else>{{ couponList.length }}张可用</span>
-                        <pl-svg name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" class="ml-10" />
-                    </div>
-                </InfoItem>
-                &lt;!&ndash;<InfoItem
-                    v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && (currentRedEnvelope.amount || isNotChooseRedEnvelope) && redEnvelopeList.length && !isCart && activeProduct === 1"
-                    @click="showRedEnvelopePopupClick"
-                >
-                    <template slot="label">奖学金（红包）</template>
-                    <div slot="content">
-                        <span v-if="!isNotChooseRedEnvelope">-¥{{ currentRedEnvelope.amount }}</span>
-                        <span v-else-if="redEnvelopeList.length">有可用</span>
-                        <span v-else>无可用</span>
-                        <pl-svg name="icon-right" fill="#ccc" width="22" style="vertical-align: -2px;" class="ml-10" />
-                    </div>
-                </InfoItem>&ndash;&gt;
-            </template>-->
         </ProductVeiwer>
 
         <CustomBlock
@@ -227,13 +77,11 @@
         </div>
 
         <Coupon
-            v-if="loaded"
             :active-product="activeProduct"
             @change="couponChange"
         />
 
         <Scholarship
-            v-if="loaded"
             :active-product="activeProduct"
             :total-amount="totalAmount"
             :freight="freight"
@@ -242,7 +90,6 @@
         />
 
         <Invoice
-            v-if="loaded && showInvoiceSelector"
             :active-product="activeProduct"
             :total-amount="totalAmount"
             :products="products"
@@ -355,7 +202,7 @@ export default {
             showPopup: false,
             showContactPopup: false,
             submiting: false,
-            loading: false,
+            loading: true,
             showCoupon: false,
             // 是否显示选择发票
             showInvoiceSelector: false,
@@ -414,8 +261,7 @@ export default {
                 cartCouponModel: null,
                 // 发票
                 invoiceInfoModel: null,
-            },
-            loaded: false
+            }
         }
     },
     computed: {
@@ -449,9 +295,12 @@ export default {
     },
     async mounted () {
         try {
+            this.loading = true
             await this.init()
         } catch (e) {
             throw e
+        } finally {
+            this.loading = false
         }
     },
     deactivated () {
@@ -463,7 +312,6 @@ export default {
                 await this.initProductInfo()
                 const { result: serverTime } = await getServerTime()
                 this.serverTime = serverTime
-                this.loaded = true
             } catch (e) {
                 throw e
             }
@@ -537,56 +385,9 @@ export default {
                 throw e
             }
         },
-        // 根据商品总价，获取合适的优惠券，并设置为当前的优惠券
-        // async getCouponOfMax (proList = []) {
-        //     try {
-        //         // 获取优惠券信息
-        //         const { result } = await getCouponOfMax({
-        //             activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-        //             activityId: this.activityId,
-        //             cartProducts: proList,
-        //             addressSeq: this.selectedAddress.sequenceNbr
-        //         })
-        //         // 设置优惠券
-        //         if (result.id) {
-        //             this.form.cartCouponModel = {
-        //                 userCouponId: result.id
-        //             }
-        //         }
-        //         this.coupon = result.id ? result : { scholarship: 1 }
-        //         return result
-        //     } catch (e) {
-        //         throw e
-        //     }
-        // },
-        // 获取优惠券列表
-        // async getCouponList (proList) {
-        //     try {
-        //         if (this.activeProduct !== 1) return
-        //         const { result } = await getCouponByPrice({
-        //             activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-        //             activityId: this.activityId,
-        //             cartProducts: proList,
-        //             addressSeq: this.selectedAddress.sequenceNbr
-        //         })
-        //         const { serverTime } = this
-        //         this.couponList = result.map(item => {
-        //             const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
-        //             const day = Math.floor(moment.duration(duration).asDays())
-        //             item.timeDesc = ''
-        //             if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
-        //             return item
-        //         })
-        //     } catch (e) {
-        //         throw e
-        //     }
-        // },
-        // 选择优惠券, 选择完成后，重新计算价格
-        // async couponClick (item) {
-        //     this.form.cartCouponModel = item.id ? { userCouponId: item.id } : null
-        // },
         // 修改优惠券
         async couponChange (coupon) {
+            console.log(123123123)
             this.currentCoupon = coupon
             this.form.cartCouponModel = coupon.id ? { userCouponId: coupon.id } : null
             // 优惠券的改变会引起奖学金的改变，因此，等待奖学金改变后，在调用
