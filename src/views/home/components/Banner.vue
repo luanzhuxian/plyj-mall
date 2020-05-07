@@ -126,7 +126,7 @@ export default {
                     path: 'LongmenSignIn'
                 },
                 410: {
-                    name: '龙门大抽奖',
+                    name: '龙门抽大奖',
                     path: 'LongmenLottery'
                 },
                 5: {
@@ -170,7 +170,7 @@ export default {
                 if (!this.isDragonGateSignShow) return false
                 return this.$router.push({ name: 'LongmenSignIn', params: { id: this.dragonGateSign.id } })
             }
-            // 龙门大抽奖
+            // 龙门抽大奖
             if (type === 410) {
                 if (!this.isDragonGatePlayShow) return false
                 return this.$router.push({ name: 'LongmenLottery', params: { id: this.dragonGatePlay.id } })

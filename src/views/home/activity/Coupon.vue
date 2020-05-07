@@ -13,7 +13,7 @@
             </router-link>
             <ul :class="$style.couponList" v-if="data.values.length">
                 <template v-for="(item, i) of data.values">
-                    <li
+                    <router-link
                         v-if="item.goodsInfo"
                         :class="{
                             [$style.couponListItem]: true,
@@ -22,6 +22,8 @@
                             [$style.small]: data.values.length === 3
                         }"
                         :key="i"
+                        tag="li"
+                        :to="{ name: 'CouponCenter' }"
                     >
                         <div :class="$style.couponListItemWrapper">
                             <div :class="$style.price">
@@ -37,7 +39,7 @@
                         <div :class="$style.couponListItemCover">
                             立即领取
                         </div>
-                    </li>
+                    </router-link>
                 </template>
             </ul>
         </div>

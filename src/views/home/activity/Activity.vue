@@ -96,7 +96,7 @@ export default {
                     path: 'LongmenSignIn'
                 },
                 'dragon-gate-play': {
-                    main: '龙门大抽奖',
+                    main: '龙门抽大奖',
                     sub: '抽奖嗨翻天',
                     icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/present.png',
                     width: '64',
