@@ -225,11 +225,13 @@
                 确认付款
             </pl-button>
         </div>
+
         <Coupon
             v-if="loaded"
             :active-product="activeProduct"
             @change="couponChange"
         />
+
         <Scholarship
             v-if="loaded"
             :active-product="activeProduct"
@@ -238,6 +240,7 @@
             :current-coupon="currentCoupon"
             @change="scholarshipChange"
         />
+
         <Invoice
             v-if="loaded && showInvoiceSelector"
             :active-product="activeProduct"
@@ -246,16 +249,16 @@
             :contact-info-model="form.userAddress"
             @selected="invoiceSelected"
         />
+
         <ContactInfo
             :physical-products="physicalProducts"
             @change="contactInfoChange"
         />
+
         <Student
             :products="products"
             @selected="studentSelected"
         />
-
-        <!---->
 
         <CustomBlock
             v-if="customList.length === 1"
@@ -270,8 +273,6 @@
             <span>订单备注</span>
             <input type="text" placeholder="请和商家协商一致后填写" v-model="form.orderPostscript">
         </div>
-
-        <!---->
     </div>
 
     <div
@@ -628,8 +629,13 @@ export default {
                 mobile: item.stuMobile
             }))
         },
-        submitOrder () {
-            console.log(this.physicalProducts)
+        async submitOrder () {
+            console.log(this.form)
+            try {
+                await submitOrder(this.form)
+            } catch (e) {
+                throw e
+            }
         }
     },
     beforeRouteLeave (to, from, next) {

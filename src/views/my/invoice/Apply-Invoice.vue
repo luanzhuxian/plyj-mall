@@ -347,7 +347,7 @@ export default {
             for (const prod of this.checkedList) {
                 invoiceAmount += Number(prod.amount) * 100
                 orderDetails.push({
-                    productId: prod.goodsId,
+                    goodsId: prod.goodsId,
                     goodsType: prod.goodsType,
                     count: prod.count,
                     sku1: prod.sku1,
