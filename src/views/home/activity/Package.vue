@@ -226,14 +226,16 @@ export default {
                 text-align: center;
             }
             .countdown {
-              display: inline-flex;
-              justify-content: space-around;
-              flex: 1;
+                display: inline-flex;
+                justify-content: space-around;
+                flex: 1;
             }
             .block {
                 display: inline-block;
                 box-sizing: border-box;
-                padding: 0 4px;
+                text-align: center;
+                // padding: 0 4px;
+                min-width: 36px;
                 height: 36px;
                 line-height: 36px;
                 background: rgba(174, 174, 174, .64);
