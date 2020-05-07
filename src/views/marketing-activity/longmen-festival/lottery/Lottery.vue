@@ -431,7 +431,7 @@ export default {
         setAwards () {
             const turntableAwards = []
             for (const [i, award] of this.awardList.entries()) {
-                award.grade = `${SectionToChinese(i + 1)}等奖`
+                award.grade = i < 3 ? `${SectionToChinese(i + 1)}等奖` : '好礼'
                 turntableAwards.push({
                     ...award
                 })
@@ -761,10 +761,12 @@ export default {
             box-sizing: border-box;
             border: 7px solid #fff;
             box-shadow: 0 0 0 1px #311c1d;
-            background: #fff no-repeat center 15px;
+            background-color: #fff;
+            background-repeat: no-repeat;
+            background-position: center 15px;
             background-size: 80px;
             &.active {
-                background: #fdec5a no-repeat center 15px;
+                background-color: #fdec5a;
                 border-color: #d4ff02;
                 background-size: 80px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, .3) inset;
@@ -772,12 +774,22 @@ export default {
             &:nth-of-type(1) {
                 border-top-left-radius: 50px;
             }
+            &:nth-of-type(3) {
+                background-position: center 10px;
+            }
             &:nth-of-type(4) {
                 margin-right: 0;
                 border-top-right-radius: 50px;
             }
             &:nth-of-type(5) {
                 border-bottom-left-radius: 50px;
+                background-position: center 10px;
+            }
+            &:nth-of-type(6) {
+                background-position: center 6px;
+            }
+            &:nth-of-type(7) {
+                background-position: center 6px;
             }
             &:nth-of-type(8) {
                 margin-right: 0;
