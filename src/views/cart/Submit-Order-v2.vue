@@ -1,140 +1,141 @@
 <template>
-    <div
-        v-if="!loading"
-        :class="$style.submitOrder"
-    >
+    <div>
         <div
-            :class="$style.address + ' radius-20'"
-            v-if="physicalProducts.length > 0"
+            v-show="!loading"
+            :class="$style.submitOrder"
         >
-            <AddressItem ref="addAddressItem" />
-        </div>
-
-        <ProductVeiwer
-            :products="products"
-            :pre-activity="preActivity"
-            :active-product="activeProduct"
-        >
-            <template>
-                <InfoItem v-if="physicalProducts.length > 0">
-                    <div slot="label">
-                        <span>配送方式</span>
-                        <span v-if="freight > 0" class="ml-10">普通快递</span>
-                    </div>
-                    <template slot="content">
-                        <span v-if="freight === 0" :class="$style.itemContent">
-                            快递免邮
-                        </span>
-                        <span v-if="freight > 0" :class="$style.freight">
-                            ¥ {{ freight }}
-                        </span>
-                    </template>
-                </InfoItem>
-
-                <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
-                    <template slot="label">春耘折扣</template>
-                    <template slot="content">
-                        {{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}
-                    </template>
-                </InfoItem>
-
-                <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
-                    <template slot="label">组合折扣</template>
-                    <span slot="content">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}</span>
-                </InfoItem>
-
-                <InfoItem>
-                    <template slot="label">商品金额</template>
-                    <span slot="content" class="gray-1">¥ {{ goodsAmount }}</span>
-                </InfoItem>
-            </template>
-        </ProductVeiwer>
-
-        <CustomBlock
-            v-if="physicalProducts.some(item => item.needStudentInfo === 2)"
-            :products="physicalProducts"
-            :error-item-id="customErrorId"
-            label="用户信息"
-        />
-
-        <div :class="$style.confirm">
-            <div>
-                <span class="fz-20 gray-2">合计</span>
-                <span
-                    class="rmb fz-32"
-                    v-text="totalAmount || 0"
-                />
-            </div>
-            <pl-button
-                style="width: 28vw;"
-                :loading="submiting"
-                type="warning"
-                size="large"
-                @click="submitOrder"
+            <div
+                :class="$style.address + ' radius-20'"
+                v-if="physicalProducts.length > 0"
             >
-                确认付款
-            </pl-button>
+                <AddressItem ref="addAddressItem" />
+            </div>
+
+            <ProductVeiwer
+                :products="products"
+                :pre-activity="preActivity"
+                :active-product="activeProduct"
+            >
+                <template>
+                    <InfoItem v-if="physicalProducts.length > 0">
+                        <div slot="label">
+                            <span>配送方式</span>
+                            <span v-if="freight > 0" class="ml-10">普通快递</span>
+                        </div>
+                        <template slot="content">
+                            <span v-if="freight === 0" :class="$style.itemContent">
+                                快递免邮
+                            </span>
+                            <span v-if="freight > 0" :class="$style.freight">
+                                ¥ {{ freight }}
+                            </span>
+                        </template>
+                    </InfoItem>
+
+                    <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
+                        <template slot="label">春耘折扣</template>
+                        <template slot="content">
+                            {{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}
+                        </template>
+                    </InfoItem>
+
+                    <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
+                        <template slot="label">组合折扣</template>
+                        <span slot="content">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}</span>
+                    </InfoItem>
+
+                    <InfoItem>
+                        <template slot="label">商品金额</template>
+                        <span slot="content" class="gray-1">¥ {{ goodsAmount }}</span>
+                    </InfoItem>
+                </template>
+            </ProductVeiwer>
+
+            <CustomBlock
+                v-if="physicalProducts.some(item => item.needStudentInfo === 2)"
+                :products="physicalProducts"
+                :error-item-id="customErrorId"
+                label="用户信息"
+            />
+
+            <div :class="$style.confirm">
+                <div>
+                    <span class="fz-20 gray-2">合计</span>
+                    <span
+                        class="rmb fz-32"
+                        v-text="totalAmount || 0"
+                    />
+                </div>
+                <pl-button
+                    style="width: 28vw;"
+                    :loading="submiting"
+                    type="warning"
+                    size="large"
+                    @click="submitOrder"
+                >
+                    确认付款
+                </pl-button>
+            </div>
+
+            <Coupon
+                :active-product="activeProduct"
+                @change="couponChange"
+            />
+
+            <Scholarship
+                :active-product="activeProduct"
+                :total-amount="totalAmount"
+                :freight="freight"
+                :current-coupon="currentCoupon"
+                @change="scholarshipChange"
+            />
+
+            <Invoice
+                :active-product="activeProduct"
+                :total-amount="totalAmount"
+                :products="products"
+                :contact-info-model="form.userAddress"
+                @selected="invoiceSelected"
+            />
+
+            <ContactInfo
+                :physical-products="physicalProducts"
+                @change="contactInfoChange"
+            />
+
+            <Student
+                :products="products"
+                @selected="studentSelected"
+            />
+
+            <CustomBlock
+                v-if="customList.length === 1"
+                :product="customList[0]"
+                :count="customList[0].count"
+                :custom-list="customList[0].formEntityList"
+                :label="physicalProducts.length ? '用户信息' : '学员信息'"
+            />
+
+            <!-- 订单备注（只有一个商品时显示） -->
+            <div :class="$style.oneProductMark">
+                <span>订单备注</span>
+                <input type="text" placeholder="请和商家协商一致后填写" v-model="form.orderPostscript">
+            </div>
         </div>
-
-        <Coupon
-            :active-product="activeProduct"
-            @change="couponChange"
-        />
-
-        <Scholarship
-            :active-product="activeProduct"
-            :total-amount="totalAmount"
-            :freight="freight"
-            :current-coupon="currentCoupon"
-            @change="scholarshipChange"
-        />
-
-        <Invoice
-            :active-product="activeProduct"
-            :total-amount="totalAmount"
-            :products="products"
-            :contact-info-model="form.userAddress"
-            @selected="invoiceSelected"
-        />
-
-        <ContactInfo
-            :physical-products="physicalProducts"
-            @change="contactInfoChange"
-        />
-
-        <Student
-            :products="products"
-            @selected="studentSelected"
-        />
-
-        <CustomBlock
-            v-if="customList.length === 1"
-            :product="customList[0]"
-            :count="customList[0].count"
-            :custom-list="customList[0].formEntityList"
-            :label="physicalProducts.length ? '用户信息' : '学员信息'"
-        />
-
-        <!-- 订单备注（只有一个商品时显示） -->
-        <div :class="$style.oneProductMark">
-            <span>订单备注</span>
-            <input type="text" placeholder="请和商家协商一致后填写" v-model="form.orderPostscript">
-        </div>
-    </div>
-
-    <div
-        :class="$style.skeleton"
-        v-else
-    >
-        <div :class="$style.skeleton1">
-            <AddressItemSkeleton />
-        </div>
-        <div :class="$style.skeleton2">
-            <div :class="$style.skeleton21 + ' ' + $style.skeAnimation" />
-            <OrderItemSkeleton />
-            <div :class="$style.skeleton22 + ' ' + $style.skeAnimation" />
-            <div :class="$style.skeleton23 + ' ' + $style.skeAnimation" />
-            <div :class="$style.skeleton24 + ' ' + $style.skeAnimation" />
+        <div
+            :class="$style.skeleton"
+            v-show="loading"
+        >
+            <div :class="$style.skeleton1">
+                <AddressItemSkeleton />
+            </div>
+            <div :class="$style.skeleton2">
+                <div :class="$style.skeleton21 + ' ' + $style.skeAnimation" />
+                <OrderItemSkeleton />
+                <div :class="$style.skeleton22 + ' ' + $style.skeAnimation" />
+                <div :class="$style.skeleton23 + ' ' + $style.skeAnimation" />
+                <div :class="$style.skeleton24 + ' ' + $style.skeAnimation" />
+            </div>
         </div>
     </div>
 </template>
@@ -299,8 +300,6 @@ export default {
             await this.init()
         } catch (e) {
             throw e
-        } finally {
-            this.loading = false
         }
     },
     deactivated () {
@@ -396,6 +395,8 @@ export default {
                 await this.getProductDetail()
             } catch (e) {
                 throw e
+            } finally {
+                this.loading = false
             }
         },
         // 修改红包
@@ -431,7 +432,6 @@ export default {
             }))
         },
         async submitOrder () {
-            console.log(this.form)
             try {
                 await submitOrder(this.form)
             } catch (e) {

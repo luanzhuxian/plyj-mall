@@ -26,70 +26,7 @@
                     <slot />
                 </OtherInfo>
             </div>
-            <!--<OtherInfo>
-                <slot name="physical" />
-            </OtherInfo>-->
         </div>
-
-        <!--<template v-if="virtualProducts.length > 0">
-            <div
-                v-for="(item, index) of virtualProducts"
-                :key="item.skuCode1 + item.skuCode2"
-                :class="$style.productBox"
-            >
-                <div :class="$style.orderItemBox">
-                    <OrderItem
-                        :key="index"
-                        :img="item.productImg"
-                        :name="item.productName"
-                        :count="item.count"
-                        :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-                        :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.sellingPrice"
-                        :support-refund="item.supportRefund"
-                        is-submit
-                        :gap="32"
-                        :product-type="2"
-                        :active-product="activeProduct"
-                        :allow-invoice="item.showInvoice"
-                        :pre-active="preActivity"
-                        border
-                    />
-                </div>
-                <OtherInfo>
-                    <slot name="noPhysical" type="virtual" :product="item" />
-                </OtherInfo>
-            </div>
-        </template>
-
-        <template v-if="lessonList.length > 0">
-            <div
-                v-for="(item, index) of lessonList"
-                :key="item.skuCode1 + item.skuCode2"
-                :class="$style.productBox"
-            >
-                <div :class="$style.orderItemBox">
-                    <OrderItem
-                        :key="index"
-                        :img="item.productImg"
-                        :name="item.productName"
-                        :count="item.count || 1"
-                        :option="item.skuCode2Name ? `${item.skuCode1Name},${item.skuCode2Name}` : item.skuCode1Name"
-                        :price="activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.price"
-                        :support-refund="item.supportRefund"
-                        is-submit
-                        :gap="32"
-                        :product-type="2"
-                        :active-product="activeProduct"
-                        :pre-active="preActivity"
-                        :allow-invoice="item.showInvoice"
-                        border
-                    />
-                </div>
-                <OtherInfo>
-                    <slot name="noPhysical" type="lesson" :product="item" />
-                </OtherInfo>
-            </div>
-        </template>-->
     </div>
 </template>
 
