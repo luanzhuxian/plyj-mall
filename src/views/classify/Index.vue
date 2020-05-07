@@ -99,7 +99,7 @@
                                     :product-type="item.productType"
                                     :data="item"
                                     :activity-product="item.activityProduct"
-                                    :rebate="currentClassify.id === '1' ? item.realRebate : ''"
+                                    :rebate="currentClassify.id === '1' ? item.rebate : ''"
                                 />
                             </template>
                         </div>
@@ -151,7 +151,6 @@ export default {
                 size: 10
             },
             helperFormTemplate: {
-                type: '',
                 current: 1,
                 size: 10
             },
@@ -291,6 +290,19 @@ export default {
                 this.prodList = list
                 return
             }
+            // TODO: helper分区里要同时展示普通商品+知识课程
+            if (this.currentClassify.id === '1') {
+                for (const item of list) {
+                    item.id = item.productId
+                    item.productMainImage = item.productImg
+                    item.price = item.price ? item.price : '免费'
+                    // type 1-实体商品+虚拟商品+正式课程 2-知识课程
+                    item.productType = item.type === 2 ? 'KNOWLEDGE_COURSE' : ''
+                    item.activityProduct = -1
+                }
+                this.prodList = list
+                return
+            }
             for (const item of list) {
                 // item.status: 0: 规格禁用 1: 规格启用
                 const arr = item.productSkuModels.filter(item => item.status === 1)
@@ -301,9 +313,6 @@ export default {
                     return 0
                 })
                 item.price = Math.min(...priceList) || 0
-                if (this.currentClassify.id === '1') {
-                    item.realRebate = Math.max(...arr.map(item => Number(item.realRebate))) || 0
-                }
             }
             this.prodList = list
         },
