@@ -5,13 +5,13 @@
             <div :class="$style.line" />
             <div>
                 <together-count-down
-                    @done="started"
                     activity-text="距活动开始仅剩"
                     :endtime="detail.activityProductModel.activityStartTime"
+                    @done="started"
                 />
                 <div :class="$style.desc" v-if="detail.activityProductModel.multiplt === 1">
                     预交定金翻{{ detail.activityProductModel.multipltNumber }}倍，
-                    最低{{ (detail.activityProductModel.lowestPrice + detail.activityProductModel.price).toFixed(2) }}元可得商品</div>
+                    最低{{ Number(detail.activityProductModel.lowestPrice).toFixed(2) }}元可得商品</div>
             </div>
         </div>
         <div v-if="detail.preActivity === 2" :class="$style.nowTogether">
@@ -35,35 +35,36 @@
 </template>
 
 <script>
-/* eslint-disable */
-  import TogetherCountDown from '../../../components/product/Together-Count-Down.vue'
-  export default {
+import TogetherCountDown from '../../../components/product/Together-Count-Down.vue'
+
+export default {
     components: {
-      TogetherCountDown
-    },
-    data () {
-      return {
-      }
+        TogetherCountDown
     },
     props: {
-      detail: {
-        type: Object,
-        default: null
-      }
+        detail: {
+            type: Object,
+            default () {
+                return {}
+            }
+        }
+    },
+    data () {
+        return {}
     },
     methods: {
-      started () {
-        this.$emit('started')
-      },
-      ended () {
-        this.$emit('ended')
-      },
-      countFinished () {
-        this.$set(this.detail, 'serverTime', '')
-        this.$set(this.detail, 'shoppingTimeLong', '')
-      }
+        started () {
+            this.$emit('started')
+        },
+        ended () {
+            this.$emit('ended')
+        },
+        countFinished () {
+            this.$set(this.detail, 'serverTime', '')
+            this.$set(this.detail, 'shoppingTimeLong', '')
+        }
     }
-  }
+}
 </script>
 
 <style module lang="scss">
