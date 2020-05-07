@@ -15,19 +15,21 @@
         </div>
 
         <main :class="$style.classifyMain">
-            <ul :class="$style.classifyList">
-                <li
-                    v-for="(item, index) of classifyList"
-                    :class="{[$style.classifyActive]: item.id === currentClassify.id}"
-                    :key="index"
-                    @click="classifyClick(item)"
-                >
-                    <span
-                        :class="$style.classifyText"
-                        v-text="item.categoryName"
-                    />
-                </li>
-            </ul>
+            <div :class="$style.classifyContent">
+                <ul :class="$style.classifyList">
+                    <li
+                        v-for="(item, index) of classifyList"
+                        :class="{[$style.classifyActive]: item.id === currentClassify.id}"
+                        :key="index"
+                        @click="classifyClick(item)"
+                    >
+                        <span
+                            :class="$style.classifyText"
+                            v-text="item.categoryName"
+                        />
+                    </li>
+                </ul>
+            </div>
             <div :class="$style.content">
                 <div
                     :class="$style.banner"
@@ -409,38 +411,40 @@ export default {
   background-color: #fff;
   box-sizing: border-box;
 }
-.classify-list {
+.classify-content {
   position: fixed;
   height: calc(100vh - 180px);
   background-color: #f1f4f5;
   overflow: auto;
   z-index: 2;
-  > li {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-    min-height: 88px;
-    padding: 10px 20px;
-    font-size: 26px;
-    text-align: center;
-    white-space: pre-wrap;
-    border-bottom: 1px solid #fff;
-    &:nth-last-of-type(1) {
-      margin-bottom: 108px;
-      &:after {
-        display: none;
+  .classify-list {
+    > li {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      min-height: 88px;
+      padding: 10px 20px;
+      font-size: 26px;
+      text-align: center;
+      white-space: pre-wrap;
+      border-bottom: 1px solid #fff;
+      &:nth-last-of-type(1) {
+        margin-bottom: 108px;
+        &:after {
+          display: none;
+        }
       }
+      transition: background-color .2s linear, color .2s linear;
     }
-    transition: background-color .2s linear, color .2s linear;
-  }
-  .classify-active {
-    background-color: #fff;
-    color: #aaaabb;
-  }
-  .classifyText {
-    line-height: 36px;
+    .classify-active {
+      background-color: #fff;
+      color: #aaaabb;
+    }
+    .classifyText {
+      line-height: 36px;
+    }
   }
 }
 .content {
