@@ -87,8 +87,7 @@ export default {
     },
     async activated () {
         await this.getList()
-        this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || null
-        this.setDefaultChecked(this.list)
+        this.setDefaultChecked()
     },
     deactivated () {
         this.checked = []
@@ -118,15 +117,10 @@ export default {
             }
         },
         addNew () {
-            if (this.canSelect) {
-                sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify({ [this.proId]: this.checked }))
-            }
             this.$router.push({ name: 'AddStudent', query: this.$route.query })
         },
         confirmSelect () {
-            const checked = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-            checked[this.proId] = this.checked
-            sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
+            sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(this.checked))
             const { name, params, query } = JSON.parse(sessionStorage.getItem('SELECT_STUDENT_FROM')) || {}
             if (name) {
                 this.$router.replace({
@@ -156,14 +150,14 @@ export default {
 
             return canvas.toDataURL()
         },
-        setDefaultChecked (list) {
-            if (this.CHECKED_STUDENT && this.CHECKED_STUDENT[this.proId]) {
-                const current = this.CHECKED_STUDENT[this.proId].map(item => item.id)
-                for (const item of list) {
-                    item.checked = current.indexOf(item.id) > -1
-                    if (current.indexOf(item.id) > -1) {
-                        this.checked.push(item)
-                    }
+        setDefaultChecked () {
+            const CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || []
+            console.log(CHECKED_STUDENT)
+            for (const item of this.list) {
+                const HAS = CHECKED_STUDENT.some(checked => item.id === checked.id)
+                if (HAS) {
+                    item.checked = true
+                    this.checked.push(item)
                 }
             }
         }

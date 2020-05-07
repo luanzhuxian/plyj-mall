@@ -250,37 +250,12 @@
             :physical-products="physicalProducts"
             @change="contactInfoChange"
         />
+        <Student
+            :products="products"
+            @selected="studentSelected"
+        />
 
         <!---->
-
-        <!--<div
-            v-if="needStudentList.length === 1 && !isCart"
-            :class="$style.itemSelector"
-            @click.capture="selectStudent(needStudentList[0])"
-        >
-            <pl-fields
-                size="middle"
-                text="学员信息"
-                icon="icon-name-card"
-                :icon-gap="12"
-                :right-text="`已选${getStudentCountByProId(needStudentList[0].skuCode1 + needStudentList[0].skuCode2)}人`"
-                show-right-icon
-                left-text-weight="bold"
-            >
-                <ul :class="$style.studentList" v-show="CHECKED_STUDENT[needStudentList[0].skuCode1 + needStudentList[0].skuCode2] && CHECKED_STUDENT[needStudentList[0].skuCode1 + needStudentList[0].skuCode2].length > 0">
-                    <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT[needStudentList[0].skuCode1 + needStudentList[0].skuCode2]" :key="i">
-                        <p :class="$style.studentName">
-                            <span>姓名</span>
-                            <span v-text="item.stuName" />
-                        </p>
-                        <p :class="$style.studentPhone">
-                            <span>电话</span>
-                            <span v-text="item.stuMobile" />
-                        </p>
-                    </li>
-                </ul>
-            </pl-fields>
-        </div>-->
 
         <CustomBlock
             v-if="customList.length === 1"
@@ -352,6 +327,7 @@ import Coupon from './components/Coupon.vue'
 import Scholarship from './components/Scholarship.vue'
 import Invoice from './components/Invoice.vue'
 import ContactInfo from './components/Contact-Info.vue'
+import Student from './components/Student.vue'
 export default {
     name: 'SubmitOrderV2',
     components: {
@@ -369,7 +345,8 @@ export default {
         Coupon,
         Scholarship,
         Invoice,
-        ContactInfo
+        ContactInfo,
+        Student
     },
     data () {
         this.requestPayDataCount = 0
@@ -643,6 +620,13 @@ export default {
                 taxpayerNumber: data.tin,
                 skus: data.orderDetails
             } : null
+        },
+        // 选择了学员
+        studentSelected (data) {
+            this.form.students = data.map(item => ({
+                name: item.stuName,
+                mobile: item.stuMobile
+            }))
         },
         submitOrder () {
             console.log(this.physicalProducts)
