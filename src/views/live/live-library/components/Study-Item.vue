@@ -92,11 +92,11 @@ export default {
     computed: {
         courseType () {
             // 1单课 2系列课
-            return this.$route.params.courseType || '1'
+            return this.$route.params.courseType
         },
         learnStatus () {
             // 1 未学习 2 学习中 3 已过期
-            return this.$route.params.learnStatus || '1'
+            return this.$route.params.learnStatus
         }
     }
 }
@@ -109,7 +109,7 @@ export default {
     justify-content: space-between;
     width: 100%;
     margin-bottom: 20px;
-    background: #fff;
+    background-color: #fff;
     &:nth-last-of-type(1) {
         margin-bottom: 0;
     }
@@ -129,12 +129,12 @@ export default {
             top: 0;
             left: 0;
             width: 120px;
-            border-radius: 20px 0px;
+            border-radius: 20px 0;
             font-size: 22px;
             line-height: 46px;
             text-align: center;
-            color: #FFFFFF;
-            background: #F2B036;
+            color: #fff;
+            background-color: #f2b036;
         }
         > .validity {
             position: absolute;
@@ -172,7 +172,7 @@ export default {
                 border-radius: 20px;
                 line-height: 36px;
                 color: #b58a48;
-                background: #fffae6;
+                background-color: #fffae6;
             }
         }
         > .learn {
@@ -197,7 +197,7 @@ export default {
             > div:nth-of-type(3) {
                 font-size: 26px;
                 text-align: center;
-                background: #fe7700;
+                background-color: #fe7700;
                 color: #fff;
                 width: 140px;
                 line-height: 48px;
