@@ -21,7 +21,7 @@
                 :to="{ name: 'Curriculum', params: { productId: course.id } }"
             >
                 <div :class="$style.imgWrapper">
-                    <img :src="course.courseImg + '?x-oss-process=style/thum-small'">
+                    <img :src="course.courseMainImg + '?x-oss-process=style/thum-small'">
                 </div>
                 <div :class="$style.info">
                     <div :class="$style.top" v-text="course.courseName" />
