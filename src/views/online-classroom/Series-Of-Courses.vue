@@ -62,7 +62,7 @@
                         @click.capture="study(item)"
                     >
                         <div :class="$style.img">
-                            <img :src="item.courseMainImg + '?x-oss-process=style/thum-small'" alt="">
+                            <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
                             <div v-if="!(item.orderId || item.isGive)" :class="$style.countDown">
                                 <count-down
                                     prefix="距抢课开始仅剩"

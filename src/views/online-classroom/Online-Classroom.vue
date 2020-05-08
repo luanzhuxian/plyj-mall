@@ -63,7 +63,7 @@
                         @click.capture="study(item)"
                     >
                         <div :class="$style.img">
-                            <img :src="item.courseMainImg + '?x-oss-process=style/thum-small'" alt="">
+                            <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
                             <!-- 不是 订单或者赠课 才显示倒计时-->
                             <div v-if="!(item.orderId || item.isGive)" :class="$style.countDown">
                                 <count-down

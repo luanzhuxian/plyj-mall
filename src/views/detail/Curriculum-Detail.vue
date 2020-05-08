@@ -471,7 +471,6 @@ export default {
          * @property {String} result.orderId
          * @property {String} result.courseName
          * @property {String} result.courseImg
-         * @property {String} result.courseMainImg
          * @property {String} result.liveIds - 课程相关视频id，系列课是多个id用逗号拼接
          * @property {String} result.courseBrief
          * @property {String} result.lecturer
@@ -518,14 +517,14 @@ export default {
 
                 const {
                     courseType,
-                    courseMainImg,
+                    courseImg,
                     relatedCoursesModels,
                     videoLibEntities
                 } = result
 
                 this.tab = courseType
                 this.courseType = courseType
-                this.banners = [courseMainImg]
+                this.banners = [courseImg]
                 this.relatedCourses = relatedCoursesModels || []
                 this.videoList = videoLibEntities || []
                 this.detail = result
@@ -609,7 +608,7 @@ export default {
         },
         // 生成分享
         async createShare () {
-            const { courseName, lecturer, courseMainImg } = this.detail
+            const { courseName, lecturer, courseImg } = this.detail
             try {
                 let shareUrl = ''
                 if (this.userId) {
@@ -624,7 +623,7 @@ export default {
                     title: courseName,
                     link: this.shareUrl,
                     desc: lecturer,
-                    imgUrl: courseMainImg
+                    imgUrl: courseImg
                 })
             } catch (error) {
                 throw error
@@ -636,7 +635,7 @@ export default {
                 return
             }
 
-            let img = await loadImage(this.detail.courseMainImg)
+            let img = await loadImage(this.detail.courseImg)
             if (!img) {
                 this.$error('图片加载错误')
                 return
