@@ -41,7 +41,7 @@
                         <template slot="content">
                             <Count
                                 :min="item.minBuyNum"
-                                :max="(activeProduct !== 1 && preActivity === 2) ? (item.activityLimit ? item.activityLimitNumber : item.activeStock) : (item.purchaseQuantity || item.stock)"
+                                :max="item.purchaseQuantity || item.stock"
                                 :count="item.count"
                                 @change="(count, next) => { countChange(count, item, next) }"
                             />
