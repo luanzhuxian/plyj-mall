@@ -19,6 +19,7 @@ const shareRoutes = [
     'BattlefieldReport',
     'EpidemicSignIn',
     'LongmenLottery',
+    'LongmenAction',
     'LongmenSignIn'
 ]
 const setShare = to => {
