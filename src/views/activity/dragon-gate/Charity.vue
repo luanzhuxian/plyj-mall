@@ -71,7 +71,7 @@ export default {
     data () {
         return {
             panelTitle: {
-                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/gyzxd.png',
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/ngyzxd.png',
                 width: 368,
                 height: 80
             }

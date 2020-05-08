@@ -481,7 +481,7 @@ export default {
                 appId: this.appId,
                 title: '粽粽有礼, 端午安康',
                 desc: '参与端午活动，赢取粽粽大礼，快来参与吧！',
-                link: `${ this.mallUrl }/longmen-festival/sign-in/${ this.id ? `/${ this.id }` : '' }?noCache=${ Date.now() }`,
+                link: `${ this.mallUrl }/longmen-festival/sign-in${ this.id ? `/${ this.id }` : '' }?noCache=${ Date.now() }`,
                 imgUrl: this.logoUrl
             })
         },
