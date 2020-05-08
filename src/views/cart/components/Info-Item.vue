@@ -28,7 +28,7 @@ export default {
     padding-left: 68px;
     padding-right: 28px;
     justify-content: space-between;
-    line-height: 88px;
+    line-height: 50px;
     font-size: 24px;
     border: 2px solid #fff;
     .content {

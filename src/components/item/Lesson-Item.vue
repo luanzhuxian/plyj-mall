@@ -6,7 +6,7 @@
         <!-- 课程组件 -->
         <div :class="$style.imgWrapper">
             <img
-                v-lazy="img"
+                :src="img + '?x-oss-process=style/thum-middle'"
                 :key="img"
                 alt=""
             >

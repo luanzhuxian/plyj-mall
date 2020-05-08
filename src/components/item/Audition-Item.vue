@@ -5,11 +5,11 @@
     >
         <!-- 试听组件 -->
         <div :class="$style.content">
-            <img v-imgError
-                 class="radius-10"
-                 :src="img"
-                 :key="img"
-                 alt=""
+            <img
+                class="radius-10"
+                :src="img + '?x-oss-process=style/thum-middle'"
+                :key="img"
+                alt=""
             >
             <div :class="$style.right">
                 <div :class="$style.title">

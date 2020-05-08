@@ -10,11 +10,11 @@
             icon="icon-name-card"
             :icon-gap="12"
             show-right-icon
-            :right-text="CHECKED_STUDENT.length ? `已选择${ CHECKED_STUDENT.length }位` : '未选择'"
+            :right-text="students.length ? `已选择${ students.length }位` : '未选择'"
             left-text-weight="bold"
         >
             <ul :class="$style.studentList">
-                <li :class="$style.studentItem" v-for="(item, i) of CHECKED_STUDENT" :key="i">
+                <li :class="$style.studentItem" v-for="(item, i) of students" :key="i">
                     <p :class="$style.studentName">
                         <span>姓名</span>
                         <span v-text="item.stuName" />
@@ -31,23 +31,26 @@
 
 <script>
 export default {
-    name: 'SubmitOrderStudent',
+    name: 'SubmitOrderStudentBlock',
     data () {
         return {
-            CHECKED_STUDENT: []
+            students: []
         }
     },
     props: {
-        products: {
-            type: Array,
+        product: {
+            type: Object,
             default () {
-                return []
+                return {}
             }
         }
     },
-    mounted () {
-        this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || []
-        this.$emit('selected', this.CHECKED_STUDENT)
+    watch: {
+        products () {
+            const CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
+            const { sku1, sku2 } = this.product
+            this.students = CHECKED_STUDENT[sku1 + sku2] || []
+        }
     },
     computed: {
         needStudentList () {

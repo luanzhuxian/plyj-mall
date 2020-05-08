@@ -9,7 +9,7 @@
         :style="{margin}"
         @click="jump"
     >
-        <img v-imgError :src="img" :alt="productName">
+        <img :src="img + '?x-oss-process=style/thum-middle'" :alt="productName">
         <p :class="{ [$style.name]: true, [$style.isActive]: false }" v-text="productName" />
         <p
             :class="$style.desc"

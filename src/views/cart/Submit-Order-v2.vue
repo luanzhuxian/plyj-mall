@@ -15,47 +15,8 @@
                 :products="products"
                 :pre-activity="preActivity"
                 :active-product="activeProduct"
-            >
-                <template>
-                    <InfoItem v-if="physicalProducts.length > 0">
-                        <div slot="label">
-                            <span>配送方式</span>
-                            <span v-if="freight > 0" class="ml-10">普通快递</span>
-                        </div>
-                        <template slot="content">
-                            <span v-if="freight === 0" :class="$style.itemContent">
-                                快递免邮
-                            </span>
-                            <span v-if="freight > 0" :class="$style.freight">
-                                ¥ {{ freight }}
-                            </span>
-                        </template>
-                    </InfoItem>
-
-                    <InfoItem v-if="activeProduct === 5 && detail.discount !== 10">
-                        <template slot="label">春耘折扣</template>
-                        <template slot="content">
-                            {{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}
-                        </template>
-                    </InfoItem>
-
-                    <InfoItem v-if="activeProduct === 6 && detail.discount !== 10">
-                        <template slot="label">组合折扣</template>
-                        <span slot="content">{{ detail.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}</span>
-                    </InfoItem>
-
-                    <InfoItem>
-                        <template slot="label">商品金额</template>
-                        <span slot="content" class="gray-1">¥ {{ goodsAmount }}</span>
-                    </InfoItem>
-                </template>
-            </ProductVeiwer>
-
-            <CustomBlock
-                v-if="physicalProducts.some(item => item.needStudentInfo === 2)"
-                :products="physicalProducts"
-                :error-item-id="customErrorId"
-                label="用户信息"
+                @studentInited="studentInited"
+                @countChange="countChange"
             />
 
             <div :class="$style.confirm">
@@ -78,11 +39,13 @@
             </div>
 
             <Coupon
+                v-show="goodsAmount > 0"
                 :active-product="activeProduct"
                 @change="couponChange"
             />
 
             <Scholarship
+                v-show="goodsAmount > 0"
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :freight="freight"
@@ -91,6 +54,7 @@
             />
 
             <Invoice
+                v-show="goodsAmount > 0"
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :products="products"
@@ -103,17 +67,11 @@
                 @change="contactInfoChange"
             />
 
-            <Student
-                :products="products"
-                @selected="studentSelected"
-            />
-
             <CustomBlock
-                v-if="customList.length === 1"
-                :product="customList[0]"
-                :count="customList[0].count"
-                :custom-list="customList[0].formEntityList"
+                v-if="customList.length"
+                :products="customList"
                 :label="physicalProducts.length ? '用户信息' : '学员信息'"
+                @confirm="customFormConfirm"
             />
 
             <!-- 订单备注（只有一个商品时显示） -->
@@ -162,21 +120,20 @@ import { mapGetters, mapActions } from 'vuex'
 import { STUDENTS } from '../../store/mutation-type'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
-import Count from '../../components/common/Count.vue'
 import { checkLength, isPhone } from '../../assets/js/validate'
 import { resetForm, setTimeoutSync } from '../../assets/js/util'
 import { getServerTime } from '../../apis/base-api'
 import StudentInline from './components/Student-Inline.vue'
 import CustomInline from './components/Custom-Inline.vue'
 // import OtherInfo from './components/Other-Info.vue'
-import InfoItem from './components/Info-Item.vue'
+// import InfoItem from './components/Info-Item.vue'
 import CustomBlock from './components/Custom-Block.vue'
 import ProductVeiwer from './components/Product-Veiwer.vue'
 import Coupon from './components/Coupon.vue'
 import Scholarship from './components/Scholarship.vue'
 import Invoice from './components/Invoice.vue'
 import ContactInfo from './components/Contact-Info.vue'
-import Student from './components/Student.vue'
+import StudentBlock from './components/Student-Block.vue'
 export default {
     name: 'SubmitOrderV2',
     components: {
@@ -184,10 +141,9 @@ export default {
         // OrderItem,
         OrderItemSkeleton,
         AddressItemSkeleton,
-        Count,
         StudentInline,
         // OtherInfo,
-        InfoItem,
+        // InfoItem,
         CustomInline,
         CustomBlock,
         ProductVeiwer,
@@ -195,7 +151,7 @@ export default {
         Scholarship,
         Invoice,
         ContactInfo,
-        Student
+        StudentBlock
     },
     data () {
         this.requestPayDataCount = 0
@@ -221,9 +177,6 @@ export default {
             physicalProducts: [],
             // 全部商品列表
             products: [],
-            // physicalProducts: [],
-            // virtualProducts: [],
-            // lessonList: [],
             needStudentList: [],
             // 需要自定义表单的商品
             customList: [],
@@ -251,7 +204,6 @@ export default {
                 // 商品来源：1 正常购买下单， 2 团购商品购买下单，3秒杀商品购买下单，4.预购商品下单确认，5春耘，6组合商品
                 source: 1,
                 skus: [],
-                students: [],
                 // 地址信息
                 userAddress: null,
                 // 留言
@@ -336,6 +288,7 @@ export default {
                 // 将线上课归到课程中
                 this.products = skus
                 this.showInvoiceSelector = skus.some(item => item.supportInvoice === 1)
+                this.customList = skus.filter(item => item.skuCustoms.length)
             } catch (e) {
                 throw e
             }
@@ -426,10 +379,42 @@ export default {
         },
         // 选择了学员
         studentSelected (data) {
-            this.form.students = data.map(item => ({
-                name: item.stuName,
-                mobile: item.stuMobile
-            }))
+            // this.form.students = data.map(item => ({
+            //     name: item.stuName,
+            //     mobile: item.stuMobile
+            // }))
+        },
+        /**
+         * 学员被修改
+         * @param students {Array}
+         * @param product {Object} 对应的商品
+         */
+        studentInited ({ students, product }) {
+            for (const pro of this.form.skus) {
+                if (pro.goodsId === product.goodsId) {
+                    pro.students = students
+                }
+            }
+        },
+        /**
+         * @param count {Number} 数量
+         * @param product {Object} 对应的商品
+         */
+        countChange ({ count, product }) {
+            for (const pro of this.form.skus) {
+                if (pro.goodsId === product.goodsId) {
+                    pro.count = count
+                }
+            }
+        },
+        /**
+         * 自定义表单确认
+         * @param customForm {Object} 表单数据
+         */
+        customFormConfirm (customForm) {
+            for (const pro of this.form.skus) {
+                pro.productCustomInfo = customForm[pro.goodsId] ? JSON.stringify(customForm[pro.goodsId]) : ''
+            }
         },
         async submitOrder () {
             try {
