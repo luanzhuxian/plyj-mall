@@ -84,8 +84,6 @@ function resError (error) {
   }
   if (msg.indexOf('Network Error') > -1) {
     msg = '网络不给力'
-    // router.push({ name: 'NetError' })
-    return
   }
   return Promise.reject(new ResponseError(JSON.stringify({
     message: msg
