@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
         <div :class="$style.poster" v-if="localShow">
-            <img :src="poster" alt="">
+            <img v-imgError :src="poster" alt="">
             <pl-svg name="icon-shibai" width="40" @click="close" />
         </div>
     </transition>

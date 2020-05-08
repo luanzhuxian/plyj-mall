@@ -93,7 +93,7 @@
             <div :class="$style.giftList" v-if="mallInvitingEventsGiftEntity">
                 <div :class="$style.giftItem">
                     <div :class="$style.left">
-                        <img :src="mallInvitingEventsGiftEntity.giftImage" alt="">
+                        <img v-imgError :src="mallInvitingEventsGiftEntity.giftImage" alt="">
                     </div>
                     <div :class="$style.right">
                         <div :class="$style.name" v-text="mallInvitingEventsGiftEntity.giftName" />

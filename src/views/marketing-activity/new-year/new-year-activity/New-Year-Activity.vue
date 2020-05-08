@@ -8,7 +8,7 @@
                     <swiper-slide v-for="(item,index) in presentList" :key="index" class="swiper-no-swiping">
                         <div class="swiper-box">
                             <div>
-                                <img :src="item.awardImg" :class="{ 'no-desc': !item.show }">
+                                <img v-imgError :src="item.awardImg" :class="{ 'no-desc': !item.show }">
                             </div>
                             <p v-if="item.show">{{ item.awardName }}</p>
                         </div>
@@ -110,7 +110,7 @@
                                 </div>
                                 <!-- 奖品为礼品-->
                                 <div v-if="item.hasSignin && (item.awardType === 1)">
-                                    <img :src="item.awardImg">
+                                    <img v-imgError :src="item.awardImg">
                                     <p>已获得</p>
                                 </div>
                                 <!-- 奖品为奖学金-->
@@ -167,7 +167,7 @@
                                 <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
                                 <img v-else class="small" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png">
                                 <!-- 头像-->
-                                <img class="avatar" :src="item.userImg" :onerror="default_avatar">
+                                <img v-imgError class="avatar" :src="item.userImg" :onerror="default_avatar">
                                 <!-- 礼品描述 -->
                                 <h3>
                                     <p>{{ item.userName }}积攒了<span class="orange">{{ item.signinNum }}</span>个年味</p>
@@ -197,7 +197,7 @@
                                 <!-- 礼品展示 -->
                                 <span>
                                     <!-- 礼品 -->
-                                    <img v-if="item.awardType === 1" :src="item.awardImg">
+                                    <img v-imgError v-if="item.awardType === 1" :src="item.awardImg">
                                     <!-- 奖学金 -->
                                     <img v-else-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
                                     <!-- 全场满减券/品类券 -->

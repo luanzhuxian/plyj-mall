@@ -16,10 +16,10 @@
                     :src="item.image"
                     :to="getRouteLink(item)"
                 />
-                <img
-                    :class="$style.img"
-                    v-else
-                    :src="item.image"
+                <img v-imgError
+                     :class="$style.img"
+                     v-else
+                     :src="item.image"
                 >
             </swiper-slide>
             <div class="home-banner-pagination" slot="pagination" />
@@ -58,10 +58,10 @@
                 :src="data['MODULE_B'].values[0].image"
                 :to="getRouteLink(data['MODULE_B'].values[0])"
             />
-            <img
-                :class="$style.img"
-                v-else
-                :src="data['MODULE_B'].values[0].image"
+            <img v-imgError
+                 :class="$style.img"
+                 v-else
+                 :src="data['MODULE_B'].values[0].image"
             >
         </div>
 
@@ -101,10 +101,10 @@
                 :src="data['MODULE_D'].values[0].image"
                 :to="getRouteLink(data['MODULE_D'].values[0])"
             />
-            <img
-                :class="$style.img"
-                v-else
-                :src="data['MODULE_D'].values[0].image"
+            <img v-imgError
+                 :class="$style.img"
+                 v-else
+                 :src="data['MODULE_D'].values[0].image"
             >
         </div>
 

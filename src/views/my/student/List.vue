@@ -19,7 +19,7 @@
                 <div :class="$style.content">
                     <div :class="$style.name">
                         <span v-text="item.stuName" />
-                        <img v-if="item.defaultStatus === 1" :src="createType('默认')" alt="">
+                        <img v-imgError v-if="item.defaultStatus === 1" :src="createType('默认')" alt="">
                     </div>
                     <div :class="$style.phone" v-text="item.stuMobile" />
                 </div>

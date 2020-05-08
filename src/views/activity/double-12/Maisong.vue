@@ -27,7 +27,7 @@
                         :key="i"
                     >
                         <div :class="$style.imgWrapper">
-                            <img :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
+                            <img v-imgError :src="item.image + '?x-oss-process=style/thum-middle'" alt="">
                         </div>
                         <div :class="$style.info">
                             <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/gift (2).png" v-if="i === 0" alt="">

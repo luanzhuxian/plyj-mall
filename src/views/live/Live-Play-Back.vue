@@ -21,7 +21,7 @@
                 :class="$style.product"
                 @click="$router.push({ name: 'Product', params: { productId: item.id } })"
             >
-                <img :src="item.productMainImage" alt="">
+                <img v-imgError :src="item.productMainImage" alt="">
                 <div :class="$style.left">
                     <div :class="$style.name" v-text="item.productName" />
                     <div :class="$style.price">

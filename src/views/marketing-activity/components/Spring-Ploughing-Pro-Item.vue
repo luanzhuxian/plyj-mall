@@ -12,7 +12,7 @@
             }
         })"
     >
-        <img :src="data.goodsImage" alt="">
+        <img v-imgError :src="data.goodsImage" alt="">
         <div :class="$style.right">
             <div :class="$style.name" v-text="data.goodsName" />
             <div :class="$style.limit">

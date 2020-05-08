@@ -12,9 +12,9 @@
             />
         </div>
         <div :class="$style.imgWrapper">
-            <img
-                v-if="data.values[0].mallLogo"
-                :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'"
+            <img v-imgError
+                 v-if="data.values[0].mallLogo"
+                 :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'"
             >
         </div>
     </router-link>

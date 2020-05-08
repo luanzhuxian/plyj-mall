@@ -12,17 +12,17 @@
                 :key="index"
                 :class="{ 'swiper-no-swiping': banners.length < 2 }"
             >
-                <img
-                    v-if="img.indexOf('video/') > -1"
-                    :src="img + '?x-oss-process=video/snapshot,t_5000,m_fast'"
-                    ref="img"
-                    :class="$style.bannerImg"
+                <img v-imgError
+                     v-if="img.indexOf('video/') > -1"
+                     :src="img + '?x-oss-process=video/snapshot,t_5000,m_fast'"
+                     ref="img"
+                     :class="$style.bannerImg"
                 >
-                <img
-                    v-else
-                    :class="$style.bannerImg"
-                    :src="img"
-                    ref="img"
+                <img v-imgError
+                     v-else
+                     :class="$style.bannerImg"
+                     :src="img"
+                     ref="img"
                 >
                 <pl-svg v-if="img.indexOf('video/') > -1" @click="play(img)" :class="$style.playBtn" name="icon-play" fill="#fff" />
             </swiperSlide>
@@ -37,6 +37,7 @@
                 <video
                     :src="url"
                     ref="video"
+                    controlslist="nodownload"
                     crossorigin="anonymous"
                     @loadeddata="loadeddata"
                     @canplay="canplay"

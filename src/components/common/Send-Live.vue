@@ -45,7 +45,7 @@
                                 [$style.isSeriesCourse]: item.courseType === SERIES_TYPE
                             }"
                         >
-                            <img :src="item.coverImg" alt="">
+                            <img v-imgError :src="item.coverImg" alt="">
                             <div :class="$style.desc">
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
                                 <div :class="$style.liveTime" v-if="item.liveStartTime">直播时间： {{ item.liveStartTime | dateFormat('YYYY-MM-DD HH:mm') }}</div>
@@ -83,7 +83,7 @@
                             :key="index"
                             @click.capture="goToWatchLive(item)"
                         >
-                            <img :src="item.coverImg" alt="">
+                            <img v-imgError :src="item.coverImg" alt="">
                             <div :class="$style.desc">
                                 <div :class="$style.liveTitle">{{ item.name }}</div>
                                 <div :class="$style.liveTime" v-if="item.liveStartTime">

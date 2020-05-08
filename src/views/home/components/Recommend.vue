@@ -75,7 +75,7 @@
           @click="clickHandler(item)"
         >
           <div :class="$style.topImg">
-            <img :src="item.image" alt="">
+            <img v-imgError :src="item.image" alt="">
             <count-down :class="$style.countDown2" size="mini" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
           </div>
           <div :class="$style.content">
@@ -109,7 +109,7 @@
           @click="clickHandler(item)"
         >
           <div :class="$style.topImg">
-            <img :src="item.image" alt="">
+            <img v-imgError :src="item.image" alt="">
             <count-down :class="$style.countDown2" size="mini" v-if="item.goodsInfo.shoppingStatus === 1" :data="item.goodsInfo" :fields="{ end: 'shoppingTimeLong' }" />
           </div>
           <div :class="$style.content">

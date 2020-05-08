@@ -1,17 +1,5 @@
 <template>
-    <div
-        :class="{
-            [$style.homeTemplateD]: true,
-            [$style.skinXmas]: skinId === 1,
-            [$style.skinYuanDan]: skinId === 2,
-            [$style.skinNewYear]: skinId === 3,
-            [$style.skinXiaoNian]: skinId === 4,
-            [$style.skinYuanXiao]: skinId === 5,
-            [$style.skinWomenDay]: skinId === 6,
-            [$style.skinNianNianFan]: skinId === 7,
-            [$style.skinCampaign]: skinId === 99
-        }"
-    >
+    <div :class="[$style.homeTemplateD, $style[skinClassNameMap[skinId]]]">
         <div :class="$style.container">
             <search :class="$style.search" placeholder="搜索商品" />
             <banner :class="$style.banner" :data="BANNER" />
@@ -95,6 +83,7 @@ import Yugou from './activity/Yugou.vue'
 import Package from './activity/Package.vue'
 import SkinTitle from './skin/Skin-Title.vue'
 import Campaign from './components/Campaign'
+import { skinClassNameMap } from './skin/map'
 
 export default {
     name: 'HomeTemplateD',
@@ -133,7 +122,9 @@ export default {
         }
     },
     data () {
-        return {}
+        return {
+            skinClassNameMap
+        }
     },
     computed: {
         BANNER () {
@@ -205,7 +196,7 @@ export default {
 </script>
 
 <style module lang="scss">
-@import './skin/skin.scss';
+@import './skin/common.scss';
 
 .home-template-d {
     background-color: #f4f5f9;

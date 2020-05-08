@@ -12,7 +12,7 @@
                             </div>
                             <div class="detail">
                                 <div class="product" v-if="currentPresentDetail.awardType === 1">
-                                    <img :src="currentPresentDetail.awardImg">
+                                    <img v-imgError :src="currentPresentDetail.awardImg">
                                     <div class="product-detail">
                                         <h3>{{ currentPresentDetail.awardName }}</h3>
                                         <h4>有效期：{{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</h4>
@@ -103,7 +103,7 @@
                             <div class="top">恭喜你获得年味大礼</div>
                             <div class="bottom">
                                 <div class="detail">
-                                    <img :src="currentPresentDetail.awardImg">
+                                    <img v-imgError :src="currentPresentDetail.awardImg">
                                     <h3>{{ currentPresentDetail.awardName }}</h3>
                                     <p>有效期：{{ currentPresentDetail.formatStartTime }}-{{ currentPresentDetail.formatEndTime }}</p>
                                 </div>

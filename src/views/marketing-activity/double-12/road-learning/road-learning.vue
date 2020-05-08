@@ -15,20 +15,20 @@
                 </div>
             </div>
             <div class="user-info">
-                <img :src="avatar"><span>每日坚持签到 累计达10次即可抽大奖！</span>
+                <img v-imgError :src="avatar"><span>每日坚持签到 累计达10次即可抽大奖！</span>
             </div>
 
             <swiper :options="swiperOption" v-if="obtainGifts.length > 1" class="swiper">
                 <swiper-slide v-for="(item,index) in obtainGifts" :key="index" class="swiper-no-swiping">
                     <div class="swiper-box">
-                        <img :src="item.headImgUrl">
+                        <img v-imgError :src="item.headImgUrl">
                         <div style="margin-left: 6px"><span v-if="item.nickName">{{ formatName(item.nickName) }}</span>中了{{ item.giftName }}</div>
                     </div>
                 </swiper-slide>
             </swiper>
 
             <div v-if="obtainGifts.length === 1" class="swiper1">
-                <img :src="obtainGifts[0].headImgUrl">
+                <img v-imgError :src="obtainGifts[0].headImgUrl">
                 <div style="margin-left: 6px"><span v-if="obtainGifts[0].nickName">{{ formatName(obtainGifts[0].nickName) }}</span>中了{{ obtainGifts[0].giftName }}</div>
             </div>
 
@@ -36,26 +36,26 @@
                 <div class="ball-c" />
                 <!-- 四个组 -->
                 <div class="base u-p3d" v-if="gifts.length === 4">
-                    <div class="ball-base u-p3d ball-1"><div class="ball"><img :src="gifts[0].giftImage" alt=""><div>奖品四</div></div></div>
-                    <div class="ball-base u-p3d ball-2"><div class="ball"><img :src="gifts[1].giftImage" alt=""><div>奖品三</div></div></div>
-                    <div class="ball-base u-p3d ball-3"><div class="ball"><img :src="gifts[2].giftImage" alt=""><div>奖品二</div></div></div>
-                    <div class="ball-base u-p3d ball-4"><div class="ball"><img :src="gifts[3].giftImage" alt=""><div>奖品一</div></div></div>
+                    <div class="ball-base u-p3d ball-1"><div class="ball"><img v-imgError :src="gifts[0].giftImage" alt=""><div>奖品四</div></div></div>
+                    <div class="ball-base u-p3d ball-2"><div class="ball"><img v-imgError :src="gifts[1].giftImage" alt=""><div>奖品三</div></div></div>
+                    <div class="ball-base u-p3d ball-3"><div class="ball"><img v-imgError :src="gifts[2].giftImage" alt=""><div>奖品二</div></div></div>
+                    <div class="ball-base u-p3d ball-4"><div class="ball"><img v-imgError :src="gifts[3].giftImage" alt=""><div>奖品一</div></div></div>
                 </div>
                 <!-- 三个组 -->
                 <div class="base u-p3d" v-if="gifts.length === 3">
                     <div class="ball-base u-p3d ball-5">
                         <div class="ball">
-                            <img :src="gifts[0].giftImage" alt=""><div>奖品三</div>
+                            <img v-imgError :src="gifts[0].giftImage" alt=""><div>奖品三</div>
                         </div>
                     </div>
                     <div class="ball-base u-p3d ball-6">
                         <div class="ball">
-                            <img :src="gifts[1].giftImage" alt=""><div>奖品二</div>
+                            <img v-imgError :src="gifts[1].giftImage" alt=""><div>奖品二</div>
                         </div>
                     </div>
                     <div class="ball-base u-p3d ball-7">
                         <div class="ball">
-                            <img :src="gifts[2].giftImage" alt=""><div>奖品一</div>
+                            <img v-imgError :src="gifts[2].giftImage" alt=""><div>奖品一</div>
                         </div>
                     </div>
                 </div>
@@ -63,12 +63,12 @@
                 <div class="base u-p3d" v-if="gifts.length === 2">
                     <div class="ball-base u-p3d ball-1">
                         <div class="ball">
-                            <img :src="gifts[0].giftImage" alt=""><div>奖品二</div>
+                            <img v-imgError :src="gifts[0].giftImage" alt=""><div>奖品二</div>
                         </div>
                     </div>
                     <div class="ball-base u-p3d ball-3">
                         <div class="ball">
-                            <img :src="gifts[1].giftImage" alt=""><div>奖品一</div>
+                            <img v-imgError :src="gifts[1].giftImage" alt=""><div>奖品一</div>
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                 <div class="base u-p3d" v-if="gifts.length === 1">
                     <div class="ball-base u-p3d ball-1">
                         <div class="ball">
-                            <img :src="gifts[0].giftImage" alt=""><div>奖品一</div>
+                            <img v-imgError :src="gifts[0].giftImage" alt=""><div>奖品一</div>
                         </div>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                 <p class="prize-box-description">您可在我的礼品中查看</p>
                 <div class="item-content">
                     <div class="content-img-box">
-                        <img :src="claimGiftDetail.giftImage" alt="">
+                        <img v-imgError :src="claimGiftDetail.giftImage" alt="">
                     </div>
                     <div class="content-detail-box">
                         <div class="content-box">
@@ -228,7 +228,7 @@
         </div>
         <div class="winning-prize poster" v-if="posterShow">
             <div class="prize-box poster-box">
-                <img :src="post" alt="">
+                <img v-imgError :src="post" alt="">
                 <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
             </div>
             <div class="winning-prize-close poster-close">
@@ -238,7 +238,7 @@
 
         <div class="winning-prize poster" v-if="sharePosterShow">
             <div class="prize-box poster-box">
-                <img :src="sharePost" alt="">
+                <img v-imgError :src="sharePost" alt="">
                 <div class="press-save">长按识别或保存海报，分享给朋友吧！</div>
             </div>
             <div class="winning-prize-close poster-close">

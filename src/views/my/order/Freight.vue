@@ -1,10 +1,10 @@
 <template>
     <div :class="$style.freight">
         <div :class="[$style.panel, $style.panelTop]">
-            <img
-                v-img-error
-                :src="img + '?x-oss-process=style/thum'"
-                alt=""
+            <img v-imgError
+                 v-img-error
+                 :src="img + '?x-oss-process=style/thum'"
+                 alt=""
             >
             <div :class="$style.middle">
                 <div

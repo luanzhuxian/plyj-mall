@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.commentDetail" v-if="detail">
         <div :class="$style.top">
-            <img :src="detail.headUrl" alt="">
+            <img v-imgError :src="detail.headUrl" alt="">
             <div :class="$style.topRight">
                 <div :class="$style.nickname" v-text="detail.nickName" />
                 <div class="fz-24">
@@ -13,7 +13,7 @@
         <div :class="$style.content">
             <div :class="$style.text" v-text="detail.content" />
             <div :class="$style.imgs">
-                <img v-for="(item, i) of detail.mediaInfoEntityList" :key="i" :src="item.mediaUrl" v-imger:comment alt="">
+                <img v-imgError v-for="(item, i) of detail.mediaInfoEntityList" :key="i" :src="item.mediaUrl" v-imger:comment alt="">
             </div>
             <div :class="$style.reply" v-if="detail.childs.length">
                 <span>商家回复：</span>
@@ -29,7 +29,7 @@
                 </template>
             </div>
             <div :class="$style.detail">
-                <img v-img-error :src="detail.orderProductREntity.productImg" alt="">
+                <img v-imgError v-img-error :src="detail.orderProductREntity.productImg" alt="">
                 <div>
                     <p :class="$style.name" v-text="orderProductREntity.productName" />
                     <p :class="$style.price" v-text="orderProductREntity.price" />

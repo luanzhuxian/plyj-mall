@@ -4,7 +4,7 @@
             <img src="https://mallcdn.youpenglai.com/static/beat-plague/dd0bb858-2faa-4be3-9eba-5a6edf68687a.png" alt="">
         </div>
         <div :class="$style.map" ref="map">
-            <!--<img :src="epidemicMap" alt="">-->
+            <!--<img v-imgError :src="epidemicMap" alt="">-->
         </div>
         <div :class="$style.nationwide">
             <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/beat-plague/%23%E5%85%A8%E5%9B%BD%E7%96%AB%E6%83%85%23%402x.png" alt="">
@@ -82,7 +82,7 @@
                 <swiperSlide v-for="(item, i) of touched" :key="i">
                     <div :class="$style.imageText">
                         <div :class="$style.image">
-                            <img :src="item.img" alt="">
+                            <img v-imgError :src="item.img" alt="">
                             <span>来源：{{ item.from }}</span>
                         </div>
                         <div :class="$style.title">

@@ -11,7 +11,7 @@
                     :data="item"
                     :fields="{ start: 'serverTime', end: 'shoppingTime' }"
                 />
-                <img :class="$style.img" :src="item.image" :alt="item.name" @click="handelClick(item)">
+                <img v-imgError :class="$style.img" :src="item.image" :alt="item.name" @click="handelClick(item)">
             </swiperSlide>
             <div v-show="data.values.length > 1" class="swiper-pagination" slot="pagination" />
         </swiper>

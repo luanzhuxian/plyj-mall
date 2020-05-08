@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.shopPost">
-        <img :src="post" alt="">
+        <img v-imgError :src="post" alt="">
         <p :class="$style.description">请长按海报图片分享或保存到相册</p>
     </div>
 </template>

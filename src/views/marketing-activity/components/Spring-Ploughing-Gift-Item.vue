@@ -4,7 +4,7 @@
         <div :class="$style.imageWrapper" v-if="isCoupon">
             <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/coupon-default.png" width="120" height="81" />
         </div>
-        <img :src="data.giftImage" alt="" v-else>
+        <img v-imgError :src="data.giftImage" alt="" v-else>
         <div :class="$style.right">
             <p :class="$style.name" v-text="data.giftName" />
             <p :class="$style.desc" v-text="data.giftBrief" />

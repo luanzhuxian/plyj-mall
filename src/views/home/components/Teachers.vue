@@ -4,7 +4,7 @@
             <swiper-slide v-for="(item, i) of data.values" :key="i">
                 <li :class="$style.listItem">
                     <div :class="$style.imgWrapper">
-                        <img :src="item.image" alt="">
+                        <img v-imgError :src="item.image" alt="">
                         <p :class="$style.name" v-text="item.name" />
                     </div>
                     <div :class="$style.info">

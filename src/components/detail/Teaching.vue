@@ -1,9 +1,9 @@
 <template>
     <div :class="$style.teaching + ' radius-20'">
         <div :class="$style.teacherFace">
-            <img
-                src="//img.alicdn.com/imgextra/i2/1652742042/TB2sV2wGv9TBuNjy0FcXXbeiFXa_!!1652742042.jpg_2200x2200Q50s50.jpg_.webp"
-                alt=""
+            <img v-imgError
+                 src="//img.alicdn.com/imgextra/i2/1652742042/TB2sV2wGv9TBuNjy0FcXXbeiFXa_!!1652742042.jpg_2200x2200Q50s50.jpg_.webp"
+                 alt=""
             >
             <div :class="$style.right">
                 <span :class="$style.name">阎老师</span>

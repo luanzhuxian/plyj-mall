@@ -2,7 +2,7 @@
     <div :class="$style.propagate">
         <div :class="$style.content" @click="clickPingXuan">
             <div :class="$style.top" @click="$router.push({ name: 'Appointment' })">
-                <img :src="data.otherValue" :alt="data.values[0].mallName">
+                <img v-imgError :src="data.otherValue" :alt="data.values[0].mallName">
                 <div :class="$style.name">
                     <span>{{ data.values[0].mallName }}</span>
                     <div :class="$style.right">
@@ -12,8 +12,8 @@
             </div>
             <div :class="$style.middle" @click="$router.push({ name: 'Appointment' })">
                 <div :class="$style.logo">
-                    <img :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'">
-                    <!-- <img :src="logoUrl" alt=""> -->
+                    <img v-imgError :src="data.values[0].mallLogo + '?x-oss-process=style/thum-small'">
+                    <!-- <img v-imgError :src="logoUrl" alt=""> -->
                 </div>
                 <div :class="$style.intro" v-if="data.values[0].mallDesc">
                     {{ data.values[0].mallDesc }}

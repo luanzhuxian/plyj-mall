@@ -18,7 +18,7 @@
         >
             <div :class="$style.scroll">
                 <div v-for="(item,index) in awardList" :key="index">
-                    <img :src="item.giftImage" alt="">
+                    <img v-imgError :src="item.giftImage" alt="">
                     <div :class="$style.info">
                         <p>{{ item.name }}</p>
                         <p>{{ item.healthValue }}个健康值可兑换</p>

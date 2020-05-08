@@ -9,10 +9,10 @@
         }"
         @click="handleClick"
     >
-        <img
-            v-lazy="img"
-            :key="img"
-            alt="商品图片"
+        <img v-imgError
+             :src="img"
+             :key="img"
+             alt="商品图片"
         >
         <div :class="$style.right">
             <div>

@@ -5,7 +5,7 @@
             v-for="(item, i) of gifts"
             :key="'i' + i"
         >
-            <img :src="item.giftImage" alt="">
+            <img v-imgError :src="item.giftImage" alt="">
             <div :class="$style.info">
                 <span v-text="item.giftName" />
             </div>

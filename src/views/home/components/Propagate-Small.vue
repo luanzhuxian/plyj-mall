@@ -11,7 +11,7 @@
                     <div :class="$style.desc" v-text="data.values[0].mallDesc" />
                 </div>
                 <div :class="$style.center">
-                    <img :src="logoUrl" alt="">
+                    <img v-imgError :src="logoUrl" alt="">
                 </div>
                 <div :class="$style.right">
                     <pl-svg name="icon-right" :height="30" fill="#ccc" />

@@ -57,7 +57,7 @@
                         >
                             <div :class="$style.chunyunListProd">
                                 <div :class="$style.imgWrapper">
-                                    <img :src="prod.productImage" alt="">
+                                    <img v-imgError :src="prod.productImage" alt="">
                                 </div>
                                 <div :class="$style.name">
                                     {{ prod.productName }}

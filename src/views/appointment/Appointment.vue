@@ -4,7 +4,7 @@
             v-if="A"
             :class="$style.top"
         >
-            <img :src="A.mediaDetailModelList[0] ? A.mediaDetailModelList[0].mediaUrl : 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/ping-xuan.jpg'" alt="">
+            <img v-imgError :src="A.mediaDetailModelList[0] ? A.mediaDetailModelList[0].mediaUrl : 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/ping-xuan.jpg'" alt="">
             <div :class="$style.topContent">
                 <a v-if="servicePhoneModels.length === 1" :class="$style.callService" :href="`tel:${servicePhoneModels[0].contactWay}`">
                     <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/call.png" />
@@ -13,7 +13,7 @@
                     <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/call.png" />
                 </a>
                 <div :class="$style.mallName">
-                    <img :class="$style.img" :src="mallLogo">
+                    <img v-imgError :class="$style.img" :src="mallLogo">
                     <div :class="$style.name" v-text="mallName" />
                 </div>
                 <div :class="$style.bottom">
@@ -138,7 +138,7 @@
                     v-for="(item, i) of F.mediaDetailModelList"
                     :key="i"
                 >
-                    <img v-imger:zizhi="item.mediaUrl" :src="item.mediaUrl + '?x-oss-process=style/thum-small'" alt="">
+                    <img v-imgError v-imger:zizhi="item.mediaUrl" :src="item.mediaUrl + '?x-oss-process=style/thum-small'" alt="">
                     <p v-if="item.mediaTitle" v-text="item.mediaTitle" />
                 </li>
                 <li />

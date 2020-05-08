@@ -9,10 +9,10 @@
             }"
             @click="itemClick(item)"
         >
-            <img
-                class="radius-20"
-                :src="item.categoryPic + '?x-oss-process=style/thum-small'"
-                v-img-error="'classifyIcon'"
+            <img v-imgError
+                 class="radius-20"
+                 :src="item.categoryPic + '?x-oss-process=style/thum-small'"
+                 v-img-error="'classifyIcon'"
             >
             <div v-text="item.categoryName" />
         </div>

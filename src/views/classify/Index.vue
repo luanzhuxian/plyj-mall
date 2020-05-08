@@ -35,7 +35,7 @@
                     :class="$style.banner"
                     v-if="currentClassify.parentCode && currentClassify.bannerPic && currentClassify.id !== '1'"
                 >
-                    <img :src="currentClassify.bannerPic">
+                    <img v-imgError :src="currentClassify.bannerPic">
                 </div>
                 <div
                     :class="$style.banner"

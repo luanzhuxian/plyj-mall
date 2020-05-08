@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.shopQrcode">
         <span :class="$style.titleText">{{ mallName }}</span>
-        <div :class="$style.imgBox"><img :src="qrcode" alt=""></div>
+        <div :class="$style.imgBox"><img v-imgError :src="qrcode" alt=""></div>
         <div :class="$style.descriptionBox">
             <p>操作指引：</p>
             <ol>

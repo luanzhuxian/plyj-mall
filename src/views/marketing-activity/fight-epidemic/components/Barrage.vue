@@ -131,7 +131,7 @@ export default {
         class="${ $style.item }"
         style="--speed: ${ speed }; --top: ${ top };"
       >
-        <img src="${ info.userImg }" alt="">
+        <img v-imgError src="${ info.userImg }" alt="">
         <div class="${ $style.right }">
           <div class="${ $style.name }">
             ${ info.name } 抗击疫情第${ info.signinDays }天

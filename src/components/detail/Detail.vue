@@ -39,6 +39,8 @@ export default {
         detail: {
             async handler (val) {
                 if (val) {
+                    val = val.replace('http://mallcdn.youpenglai.com', 'https://mallcdn.youpenglai.com')
+                    val = val.replace('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com', 'https://mallcdn.youpenglai.com')
                     this.afterHtml = val.replace(/<img[^>]+src="([^"]*)"[^>]*>/g, '<img data-src="$1" src=$1?x-oss-process=style/thum-middle>')
                 }
                 await this.$nextTick()

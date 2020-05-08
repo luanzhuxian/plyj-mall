@@ -6,8 +6,9 @@
         <slot />
         <div :class="$style.top">
             <img
+                v-imgError
                 :class="$style.img"
-                v-lazy="img"
+                :src="img"
                 :key="img"
             >
             <count-down

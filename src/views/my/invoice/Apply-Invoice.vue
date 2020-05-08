@@ -141,11 +141,11 @@
                             :checked="isSelected(prod)"
                             @change="e => { selectChange(e, prod) }"
                         >
-                        <img
-                            :class="$style.proImg"
-                            :src="prod.productImg"
-                            v-img-error
-                            alt=""
+                        <img v-imgError
+                             :class="$style.proImg"
+                             :src="prod.productImg"
+                             v-img-error
+                             alt=""
                         >
                         <pl-svg
                             :class="$style.selectIcon"
