@@ -123,8 +123,7 @@ export default {
          * @param next {Function} 执行成功后调用，否则按钮处于禁用状态
          */
         countChange (count, product, next) {
-            this.$emit('countChange', { count, product })
-            next()
+            this.$emit('countChange', { count, product, next })
         }
     }
 }

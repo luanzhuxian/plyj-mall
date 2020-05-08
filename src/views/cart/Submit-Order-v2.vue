@@ -332,14 +332,14 @@ export default {
                     sku1: item.skuCode1,
                     sku2: item.skuCode2
                 }))
-                return  CONFIRM_LIST
+                this.CONFIRM_LIST = CONFIRM_LIST
+                return CONFIRM_LIST
             } catch (e) {
                 throw e
             }
         },
         // 修改优惠券
         async couponChange (coupon) {
-            console.log(123123123)
             this.currentCoupon = coupon
             this.form.cartCouponModel = coupon.id ? { userCouponId: coupon.id } : null
             // 优惠券的改变会引起奖学金的改变，因此，等待奖学金改变后，在调用
@@ -377,15 +377,8 @@ export default {
                 skus: data.orderDetails
             } : null
         },
-        // 选择了学员
-        studentSelected (data) {
-            // this.form.students = data.map(item => ({
-            //     name: item.stuName,
-            //     mobile: item.stuMobile
-            // }))
-        },
         /**
-         * 学员被修改
+         * 修改学员
          * @param students {Array}
          * @param product {Object} 对应的商品
          */
@@ -397,14 +390,27 @@ export default {
             }
         },
         /**
+         * 修改数量
          * @param count {Number} 数量
          * @param product {Object} 对应的商品
          */
-        countChange ({ count, product }) {
+        async countChange ({ count, product, next }) {
+            const cache = this.CONFIRM_LIST.find(item => item.productId === product.goodsId)
             for (const pro of this.form.skus) {
                 if (pro.goodsId === product.goodsId) {
                     pro.count = count
+                    break
                 }
+            }
+            try {
+                await this.getProductDetail()
+                // 修改成功后需要更新缓存中的数据
+                cache.count = count
+                sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(this.CONFIRM_LIST))
+                next()
+            } catch (e) {
+                next(e)
+                throw e
             }
         },
         /**
