@@ -106,7 +106,8 @@ export default {
     .title {
       max-width: 100%;
       font-size:28px;
-      color: #373737;
+      font-weight: bold;
+      color: #000;
       @include elps();
     }
     .rebate {
