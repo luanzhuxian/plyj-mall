@@ -41,7 +41,7 @@
                         <template slot="content">
                             <Count
                                 :min="item.minBuyNum"
-                                :max="item.purchaseQuantity || item.stock"
+                                :max="item.purchaseQuantity > 0 ? item.purchaseQuantity : item.stock"
                                 :count="item.count"
                                 @change="(count, next) => { countChange(count, item, next) }"
                             />
