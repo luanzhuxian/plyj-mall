@@ -70,6 +70,7 @@
             />
 
             <ContactInfo
+                v-if="!physicalProducts.length"
                 :physical-products="physicalProducts"
                 @change="contactInfoChange"
             />
@@ -114,6 +115,7 @@ import {
     cancelOrder,
     confirmOrder,
     submitOrder,
+    getOrderPayData,
     deleteOrder
 } from '../../apis/order-manager'
 import { mapGetters, mapActions } from 'vuex'
@@ -127,6 +129,9 @@ import Coupon from './components/Coupon.vue'
 import Scholarship from './components/Scholarship.vue'
 import Invoice from './components/Invoice.vue'
 import ContactInfo from './components/Contact-Info.vue'
+import {setTimeoutSync} from "../../assets/js/util";
+import {submitOrderPay} from "../../apis/shopping-cart";
+import wechatPay from "../../assets/js/wechat/wechat-pay";
 export default {
     name: 'SubmitOrderV2',
     components: {
@@ -451,11 +456,60 @@ export default {
             }
             try {
                 this.submiting = true
-                await submitOrder(this.form)
+                const { result: orderBatchNumber } = await submitOrder(this.form)
+                await this.requestPayData(orderBatchNumber)
             } catch (e) {
                 throw e
             } finally {
                 this.submiting = false
+            }
+        },
+        async requestPayData (orderBatchNumber) {
+            // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
+            // 下次请求的开始时间 =  500ms + 当前请求时间
+            if (this.requestPayDataCount >= 20) {
+                this.requestPayDataCount = 0
+                this.submiting = false
+                this.$error('支付失败')
+                return
+            }
+            await setTimeoutSync(500)
+            try {
+                // 如果没有拿到请求数据，再次尝试发起请求
+                // 如果有，则发起支付
+                const { result: payData } = await getOrderPayData(orderBatchNumber)
+                if (!payData) {
+                    this.requestPayDataCount++
+                    await this.requestPayData(orderBatchNumber)
+                } else {
+                    await this.pay(payData, payData.orderIds, payData.orderIds.length)
+                }
+            } catch (e) {
+                this.requestPayDataCount = 0
+                throw e
+            }
+        },
+        /**
+         * 支付
+         * @param CREDENTIAL {Object} 支付数据
+         * @param orderIds {Array} 订单Id
+         * @param orderCount {Number} 订单数量
+         * @returns {Promise<*>}
+         */
+        async pay (CREDENTIAL, orderIds, orderCount) {
+            const firstOrder = orderIds[0]
+            // 订单是否位课程类型
+            const FORMALS = ['FORMAL_CLASS', 'EXPERIENCE_CLASS', 'KNOWLEDGE_COURSE', 'SERIES_OF_COURSE']
+            const orderType = this.products.some(item => FORMALS.includes(item.goodsType))
+            try {
+                if (CREDENTIAL.appId) {
+                    await wechatPay(CREDENTIAL)
+                    this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount }, query: { orderType } })
+                } else {
+                    throw new Error('支付失败')
+                }
+            } catch (e) {
+                throw e
             }
         },
         // 校验数据

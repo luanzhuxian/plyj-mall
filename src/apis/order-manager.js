@@ -134,3 +134,10 @@ export const confirmOrder = data => axios.post(`/apis/v2/order/confirm`, data)
  * @return {*}
  */
 export const submitOrder = data => axios.post(`/apis/v2/order/uniformly`, data)
+
+/**
+ * 获取支付数据
+ * @param orderBatchNumber {String} 批次号
+ * @return {*}
+ */
+export const getOrderPayData = orderBatchNumber => axios.post(`/apis/v2/order/pay/paymentCode?orderBatchNumber=${ orderBatchNumber }`)

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="physicalProducts.length === 0" :class="$style.itemSelector" @click.capture="chooseContact">
+        <div :class="$style.itemSelector" @click.capture="chooseContact">
             <pl-fields
                 size="middle"
                 text="联系人信息"
@@ -70,19 +70,12 @@ export default {
             }
         }
     },
-    props: {
-        physicalProducts: {
-            type: Array,
-            default () {
-                return []
-            }
-        }
-    },
     computed: {
         ...mapGetters(['selectedAddress'])
     },
     mounted () {
         this.contactInfoModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL')) || this.contactInfoModel
+        this.$emit('change', JSON.parse(JSON.stringify(this.contactInfoModel)))
     },
     methods: {
         chooseContact () {
