@@ -1,7 +1,6 @@
 <template>
     <div>
         <div
-            v-if="(coupon.amount || !coupon.id) && activeProduct === 1"
             :class="$style.itemSelector"
             @click.capture="showCoupon = true"
         >
@@ -49,85 +48,48 @@
 </template>
 
 <script>
-import { getCouponByPrice, getCouponOfMax } from '../../../apis/my-coupon'
-import moment from 'moment'
-import { mapGetters } from 'vuex'
 export default {
     name: 'SubmitOrderCoupon',
     data () {
         return {
-            showCoupon: false,
-            coupon: {},
-            couponList: [],
-            recommendCouponId: ''
+            showCoupon: false
         }
     },
     props: {
-        activeProduct: {
-            type: Number,
-            default: 1
+        // 当前选择的优惠券
+        coupon: {
+            type: Object,
+            default () {
+                return {
+                    scholarship: 1
+                }
+            }
         },
-        serverTime: {
-            type: Number,
-            default: 0
+        // 优惠券列表
+        couponList: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        // 推荐的优惠券
+        recommendCoupon: {
+            type: Object,
+            default () {
+                return {}
+            }
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress'])
-    },
-    async mounted () {
-        try {
-            const CONFIRM_LIST = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-            await this.getCouponList(CONFIRM_LIST)
-            await this.getCouponOfMax(CONFIRM_LIST)
-        } catch (e) {
-            throw e
+        recommendCouponId () {
+            return this.recommendCoupon.id || ''
         }
     },
     methods: {
-        // 根据商品总价，获取合适的优惠券，并设置为当前的优惠券
-        async getCouponOfMax (proList = []) {
-            try {
-                // 获取优惠券信息
-                const { result } = await getCouponOfMax({
-                    activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-                    activityId: this.activityId,
-                    cartProducts: proList,
-                    addressSeq: this.selectedAddress.sequenceNbr
-                })
-                this.coupon = result.id ? result : { scholarship: 1 }
-                this.$emit('change', JSON.parse(JSON.stringify(this.coupon)))
-                this.recommendCouponId = result.id
-            } catch (e) {
-                throw e
-            }
-        },
-        // 获取优惠券列表
-        async getCouponList (proList) {
-            try {
-                if (this.activeProduct !== 1) return
-                const { result } = await getCouponByPrice({
-                    activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-                    activityId: this.activityId,
-                    cartProducts: proList,
-                    addressSeq: this.selectedAddress.sequenceNbr
-                })
-                const { serverTime } = this
-                this.couponList = result.map(item => {
-                    const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
-                    const day = Math.floor(moment.duration(duration).asDays())
-                    item.timeDesc = ''
-                    if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
-                    return item
-                })
-            } catch (e) {
-                throw e
-            }
-        },
         // 选择优惠券, 选择完成后，重新计算价格
         async couponClick (item) {
-            this.$emit('change', JSON.parse(JSON.stringify(item)))
-            this.coupon = item
+            this.$emit('change', item)
+            this.$emit('update:coupon', item)
         }
     }
 }

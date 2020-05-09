@@ -50,22 +50,11 @@
 </template>
 
 <script>
-import { getRedEnvelopeListByPrice } from '../../../apis/my-coupon'
-import moment from 'moment'
 export default {
     name: 'SubmitOrderScholarship',
     data () {
         return {
-            currentRedEnvelope: {},
-            redEnvelopeList: [],
             showRedEnvelopePopup: false
-        }
-    },
-    async mounted () {
-        try {
-            await this.getRedEnvelopeList()
-        } catch (e) {
-            throw e
         }
     },
     props: {
@@ -87,48 +76,39 @@ export default {
             default () {
                 return {}
             }
+        },
+        currentRedEnvelope: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+        redEnvelopeList: {
+            type: Array,
+            default () {
+                return []
+            }
         }
     },
     watch: {
+        // 监听优惠券的修改
         currentCoupon (coupon) {
-            // 设置奖学金
+            // 设置奖学金，虽然此时奖学金也发生了改变，但是切忌触发change事件
+            // 因为一旦触发change事件，就会导致多请求一次数据
+            // 所以这里仅仅只需要默默的修改当前选中的奖学金，更新数据在外部优惠券组件的change事件中完成
             if (coupon.scholarship === 0) {
-                this.currentRedEnvelope = {}
+                this.$emit('update:currentRedEnvelope', {})
             } else {
                 coupon.scholarship = 1
-                this.currentRedEnvelope = this.redEnvelopeList[0] || {}
-            }
-        },
-        currentRedEnvelope (newVal, oldVal) {
-            if (newVal.id !== oldVal.id) {
-                this.$emit('change', JSON.parse(JSON.stringify(newVal)))
+                this.$emit('update:currentRedEnvelope', this.redEnvelopeList[0] || {})
             }
         }
     },
     methods: {
-        // 获取红包列表，必须放置于获取优惠券之后
-        async getRedEnvelopeList () {
-            const CONFIRM_LIST = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
-            // 只有普通商品支持使用红包
-            if (this.activeProduct !== 1) return
-            const amount = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
-            try {
-                const { result } = await getRedEnvelopeListByPrice(amount)
-                const { serverTime } = this
-                this.redEnvelopeList = result.map(item => {
-                    const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
-                    const day = Math.floor(moment.duration(duration).asDays())
-                    item.timeDesc = ''
-                    if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
-                    return item
-                })
-            } catch (e) {
-                throw e
-            }
-        },
         // 选择红包
         async redEnvelopeClick (item) {
-            this.currentRedEnvelope = item
+            this.$emit('update:currentRedEnvelope', item)
+            this.$emit('change', item)
         }
     }
 }

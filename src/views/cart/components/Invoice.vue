@@ -1,7 +1,7 @@
 <template>
     <div>
         <div
-            v-if="totalAmount > 0 && activeProduct === 1"
+            v-if="totalAmount > 0 && activeProduct === 1 && showInvoiceSelector"
             :class="$style.itemSelector" @click.capture="selectInvoice"
         >
             <pl-fields
@@ -37,7 +37,6 @@ export default {
     name: 'SubmitOrderInvoice',
     data () {
         return {
-            showInvoiceSelector: false,
             showPopup: false,
             invioceType: 0
         }
@@ -68,6 +67,11 @@ export default {
             default () {
                 return []
             }
+        }
+    },
+    computed: {
+        showInvoiceSelector () {
+            return this.products.some(item => item.supportInvoice === 1)
         }
     },
     mounted () {

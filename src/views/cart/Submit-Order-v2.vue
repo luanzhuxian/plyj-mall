@@ -1,7 +1,7 @@
 <template>
     <div>
         <div
-            v-show="!loading"
+            v-if="!loading"
             :class="$style.submitOrder"
         >
             <div
@@ -39,8 +39,11 @@
             </div>
 
             <Coupon
-                v-show="goodsAmount > 0"
+                v-if="activeProduct === 1 && goodsAmount > 0"
                 :active-product="activeProduct"
+                :coupon.sync="currentCoupon"
+                :coupon-list="couponList"
+                :recommend-coupon="recommendCoupon"
                 @change="couponChange"
             />
 
@@ -49,6 +52,8 @@
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :freight="freight"
+                :red-envelope-list="redEnvelopeList"
+                :current-red-envelope.sync="currentRedEnvelope"
                 :current-coupon="currentCoupon"
                 @change="scholarshipChange"
             />
@@ -59,6 +64,7 @@
                 :total-amount="totalAmount"
                 :products="products"
                 :contact-info-model="form.userAddress"
+                :physical-products="physicalProducts"
                 @selected="invoiceSelected"
             />
 
@@ -82,7 +88,7 @@
         </div>
         <div
             :class="$style.skeleton"
-            v-show="loading"
+            v-else
         >
             <div :class="$style.skeleton1">
                 <AddressItemSkeleton />
@@ -156,13 +162,10 @@ export default {
     data () {
         this.requestPayDataCount = 0
         return {
-            showPopup: false,
-            showContactPopup: false,
+            // 提交中
             submiting: false,
+            // 加载数据中
             loading: true,
-            showCoupon: false,
-            // 是否显示选择发票
-            showInvoiceSelector: false,
             // 物流价格
             freight: 0,
             // 商品价格，不含其它费用
@@ -171,28 +174,18 @@ export default {
             goodsAmount: 0,
             // 优惠券信息
             currentCoupon: {},
+            // 推荐的优惠券
+            recommendCoupon: {},
             // 优惠券信息
             couponList: [],
             // 实体商品
             physicalProducts: [],
             // 全部商品列表
             products: [],
-            needStudentList: [],
             // 需要自定义表单的商品
             customList: [],
-            invioceType: 0,
-            INVOICE_MODEL: {},
-            CHECKED_STUDENT: {},
-            detail: {},
-            // 学员信息错误标记点
-            lessonErrorId: '',
-            // 学员信息错误标记点提示语
-            lessonErrorTip: '',
-            // 自定义表单错误信息点
-            customErrorId: '',
             // 服务器时间
             serverTime: '',
-            showRedEnvelopePopup: false,
             // 红包列表
             redEnvelopeList: [],
             // 当前选中的红包
@@ -250,6 +243,8 @@ export default {
         try {
             this.loading = true
             await this.init()
+            await this.getProductDetail()
+            this.loading = false
         } catch (e) {
             throw e
         }
@@ -260,9 +255,48 @@ export default {
         // 初始化，执行顺序不能乱
         async init () {
             try {
-                await this.initProductInfo()
+                const CONFIRM_LIST =  this.initProductInfo()
+                const AMOUNT = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
+                const COUPON_DATA = {
+                    activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+                    activityId: this.activityId,
+                    cartProducts: CONFIRM_LIST,
+                    addressSeq: this.selectedAddress.sequenceNbr
+                }
+                // 初始化优惠券列表
+                const { result: COUPON_LIST } = await getCouponByPrice(COUPON_DATA)
+                // 获取推荐的优惠券
+                const { result: MAX_COUPON } = await getCouponOfMax(COUPON_DATA)
+                // 获取奖学金
+                const { result: RED_ENVELOP } = await getRedEnvelopeListByPrice(AMOUNT)
+                // 获取服务器时间
                 const { result: serverTime } = await getServerTime()
+                // 设置服务器时间
                 this.serverTime = serverTime
+                // 设置优惠券列表
+                this.couponList = COUPON_LIST.map(item => {
+                    const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                    const day = Math.floor(moment.duration(duration).asDays())
+                    item.timeDesc = ''
+                    if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                    return item
+                })
+                // 设置当前选中的优惠券
+                this.currentCoupon = COUPON_LIST.find(coupon => coupon.id === MAX_COUPON.id) || {}
+                // 设置推荐的优惠券
+                this.recommendCoupon = MAX_COUPON
+                // 设置奖学金列表
+                this.redEnvelopeList = RED_ENVELOP.map(item => {
+                    const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                    const day = Math.floor(moment.duration(duration).asDays())
+                    item.timeDesc = ''
+                    if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                    return item
+                })
+                // 设置当前选中的奖学金
+                this.currentRedEnvelope = this.currentCoupon.scholarship === 0 ? {} : this.redEnvelopeList[0] || {}
+                this.form.cartCouponModel = this.currentCoupon.id ? { userCouponId: this.currentCoupon.id } : null
+                this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
             } catch (e) {
                 throw e
             }
@@ -287,14 +321,13 @@ export default {
                 this.physicalProducts = PHYSICAL_GOODS
                 // 将线上课归到课程中
                 this.products = skus
-                this.showInvoiceSelector = skus.some(item => item.supportInvoice === 1)
                 this.customList = skus.filter(item => item.skuCustoms.length)
             } catch (e) {
                 throw e
             }
         },
         // 初始化商品基本信息
-        async initProductInfo () {
+        initProductInfo () {
             /*
                 CONFIRM_LIST 的格式
                 [
@@ -338,18 +371,20 @@ export default {
                 throw e
             }
         },
-        // 修改优惠券
+
+        /**
+         * 修改优惠券
+         * 需要注意的是，每次修改优惠券的时候，奖学金会联动的做出改变
+         * @param coupon {Object} 当前优惠券
+         */
         async couponChange (coupon) {
-            this.currentCoupon = coupon
             this.form.cartCouponModel = coupon.id ? { userCouponId: coupon.id } : null
-            // 优惠券的改变会引起奖学金的改变，因此，等待奖学金改变后，在调用
-            await this.$nextTick()
             try {
+                await this.$nextTick()
+                this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
                 await this.getProductDetail()
             } catch (e) {
                 throw e
-            } finally {
-                this.loading = false
             }
         },
         // 修改红包
@@ -424,9 +459,12 @@ export default {
         },
         async submitOrder () {
             try {
+                this.submiting = true
                 await submitOrder(this.form)
             } catch (e) {
                 throw e
+            } finally {
+                this.submiting = false
             }
         }
     },
