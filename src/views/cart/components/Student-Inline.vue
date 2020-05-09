@@ -21,28 +21,39 @@ export default {
         }
     },
     props: {
+        // 商品
         product: {
             type: Object,
             default () {
                 return {}
             }
         },
+        // 商品数量
         count: {
             type: Number,
             default: 0
+        },
+        // 已选中并缓存的学员
+        checkedStudents: {
+            type: Object,
+            default () {
+                return {}
+            }
         }
     },
     mounted () {
-        const CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-        const { sku1, sku2 } = this.product
-        this.students = CHECKED_STUDENT[sku1 + sku2] || []
-        if (this.students.length > this.count) {
-            this.students = this.students.slice(0, this.count)
-        }
-        this.$emit('inited', this.students.map(item => ({
-            name: item.stuName,
-            mobile: item.stuMobile
-        })))
+        this.$nextTick(() => {
+            const { sku1, sku2 } = this.product
+            this.students = this.checkedStudents[sku1 + sku2] || []
+            // 如果缓存的学员数量比当前商品数量大,需要截取一下
+            if (this.students.length > this.count) {
+                this.students = this.students.slice(0, this.count)
+            }
+            this.$emit('inited', this.students.map(item => ({
+                name: item.stuName,
+                mobile: item.stuMobile
+            })))
+        })
     },
     methods: {
         selectStudent () {

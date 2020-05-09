@@ -33,6 +33,7 @@
                         <template slot="content">
                             <StudentInline
                                 :product="item"
+                                :checked-students="CHECKED_STUDENT"
                                 :count="item.count"
                                 @inited="students => studentInited(students, item)"
                             />
@@ -98,6 +99,12 @@ export default {
         StudentInline,
         Count
     },
+    data () {
+        return {
+            // 已选中并缓存的学员
+            CHECKED_STUDENT: {}
+        }
+    },
     props: {
         products: {
             type: Array,
@@ -113,6 +120,10 @@ export default {
             type: Number,
             default: 1
         }
+    },
+    mounted () {
+        // 已选中并缓存的学员
+        this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
     },
     methods: {
         studentInited (students, product) {
