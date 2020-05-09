@@ -56,23 +56,23 @@
                             :option="product.skuName2 ? `${product.skuName},${product.skuName2}` : product.skuName"
                             :count="product.purchaseQuantity"
                             :price="product.unitPrice"
-                            :status="refundStatusMap[product.afterSalesStatus]"
+                            :status="refundStatusMap[product.aftersaleStatus]"
                             :active-product="item.activeProduct"
                             :pre-active="item.activeProduct !== 1 ? 2 : ''"
                             border
                         />
                         <div :class="$style.listItemBottom">
                             <div :class="$style.priceWrapper">
-                                <span :class="$style.totalCount">{{ `共${item.totalCount}件商品` }}</span>
+                                <span :class="$style.totalCount">{{ `共${item.count}件商品` }}</span>
                                 <span :class="$style.bold">总价：</span>
                                 <span :class="$style.price">{{ item.actuallyAmount }}</span>
                             </div>
                             <div
                                 :class="$style.buttons"
-                                v-if="item.status !== 'WAIT_SHIP'"
+                                v-if="item.orderStatus !== 'WAIT_SHIP'"
                             >
                                 <pl-button
-                                    v-if="item.status === 'WAIT_PAY'"
+                                    v-if="item.orderStatus === 'WAIT_PAY'"
                                     round
                                     plain
                                     @click="cancelOrder(item, i)"
@@ -80,7 +80,7 @@
                                     取消订单
                                 </pl-button>
                                 <pl-button
-                                    v-if="item.status === 'WAIT_PAY' && false"
+                                    v-if="item.orderStatus === 'WAIT_PAY' && false"
                                     type="warning"
                                     round
                                     :loading="payloading && currentPayId === item.id"
@@ -89,7 +89,7 @@
                                 >
                                     去付款
                                 </pl-button>
-                                <span v-if="item.activeProduct === 4 && !item.pastDue && item.status === 'WAIT_PAY_REPAYMENT'" class="fz-24 gray-3 mr-10">
+                                <span v-if="item.activeProduct === 4 && !item.pastDue && item.orderStatus === 'WAIT_PAY_REPAYMENT'" class="fz-24 gray-3 mr-10">
                                     <span v-show="item.isStart">剩余尾款支付时间：</span>
                                     <span v-show="!item.isStart">距离开始支付时间：</span>
                                     <span v-show="item.d !== '00'">{{ item.d }}天</span>
@@ -98,7 +98,7 @@
                                     <span>{{ item.s }}秒</span>
                                 </span>
                                 <pl-button
-                                    v-if="item.status === 'WAIT_PAY_REPAYMENT'"
+                                    v-if="item.orderStatus === 'WAIT_PAY_REPAYMENT'"
                                     type="warning"
                                     round
                                     :loading="payloading && currentPayId === item.id"
@@ -108,7 +108,7 @@
                                     {{ item.pastDue ? '已过期' : item.isStart ? '去付尾款' : '未开始付尾款' }}
                                 </pl-button>
                                 <pl-button
-                                    v-if="(item.status === 'FINISHED' || item.status === 'CLOSED') && item.isDeleteBtnShow"
+                                    v-if="(item.orderStatus === 'FINISHED' || item.orderStatus === 'CLOSED') && item.isDeleteBtnShow"
                                     round
                                     plain
                                     @click="deleteOrder(item, i)"
@@ -116,7 +116,7 @@
                                     删除订单
                                 </pl-button>
                                 <pl-button
-                                    v-if="item.orderType === 'PHYSICAL' && (item.status === 'WAIT_RECEIVE' || item.status === 'FINISHED')"
+                                    v-if="item.orderType === 'PHYSICAL' && (item.orderStatus === 'WAIT_RECEIVE' || item.orderStatus === 'FINISHED')"
                                     round
                                     plain
                                     @click="$router.push({ name: 'Freight', params: { orderId: item.id }, query: { img: item.products.length && item.products[0].productImg } })"
@@ -124,7 +124,7 @@
                                     查看物流
                                 </pl-button>
                                 <pl-button
-                                    v-if="item.orderType === 'PHYSICAL' && item.status === 'WAIT_RECEIVE'"
+                                    v-if="item.orderType === 'PHYSICAL' && item.orderStatus === 'WAIT_RECEIVE'"
                                     type="warning"
                                     round
                                     @click="confirmReceipt(item, i)"
@@ -132,7 +132,7 @@
                                     确认收货
                                 </pl-button>
                                 <pl-button
-                                    v-if="item.orderType === 'KNOWLEDGE_COURSE' && item.status === 'FINISHED'"
+                                    v-if="item.orderType === 'KNOWLEDGE_COURSE' && item.orderStatus === 'FINISHED'"
                                     type="warning"
                                     round
                                     @click="$router.push({ name: 'Courses', params: { courseType: '1' } })"
@@ -140,7 +140,7 @@
                                     去学习
                                 </pl-button>
                                 <pl-button
-                                    v-else-if="item.orderType !== 'PHYSICAL' && item.status === 'WAIT_RECEIVE'"
+                                    v-else-if="item.orderType !== 'PHYSICAL' && item.orderStatus === 'WAIT_RECEIVE'"
                                     type="warning"
                                     round
                                     @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"
@@ -148,7 +148,7 @@
                                     去使用
                                 </pl-button>
                                 <pl-button
-                                    v-if="item.status === 'FINISHED' && item.commentStatus === 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)"
+                                    v-if="item.orderStatus === 'FINISHED' && item.commentStatus === 0 && ~[0, 3, 6].indexOf(item.aftersaleStatus)"
                                     round
                                     plain
                                     @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"
@@ -268,7 +268,7 @@ export default {
             if (action === 'pay') {
                 return (order, index) => {
                     if (this.status === 'ALL_ORDER') {
-                        order.status = order.orderType === 'PHYSICAL' ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
+                        order.orderStatus = order.orderType === 'PHYSICAL' ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
                     } else if (this.status === 'WAIT_PAY') {
                         this.orderList.splice(index, 1)
                     }
@@ -277,7 +277,7 @@ export default {
             if (action === 'receive') {
                 return (order, index) => {
                     if (this.status === 'ALL_ORDER') {
-                        order.status = 'FINISHED'
+                        order.orderStatus = 'FINISHED'
                     } else if (this.status === 'WAIT_RECEIVE') {
                         this.orderList.splice(index, 1)
                     }
@@ -286,7 +286,7 @@ export default {
             if (action === 'cancel') {
                 return (order, index) => {
                     if (this.status === 'ALL_ORDER') {
-                        order.status = 'CLOSED'
+                        order.orderStatus = 'CLOSED'
                     } else if (this.status === 'WAIT_PAY') {
                         const isCombinedOrder = order.activeProduct === 5 || order.activeProduct === 6
                         if (isCombinedOrder) {
@@ -332,6 +332,7 @@ export default {
         }
 
         this.form.orderStatus = this.status
+        this.form.orderStatus = this.status === 'ALL_ORDER' ? '' : this.status
         this.$refresh()
     },
     methods: {
@@ -350,29 +351,31 @@ export default {
         },
         onRefresh (list, total) {
             this.clearCountdown()
-            const counter = array => key => array.reduce((acc, current) => acc + (key ? current[key] : current), 0)
-            for (const [i, item] of list.entries()) {
-                item.totalCount = counter(item.products)('purchaseQuantity')
-                // 只要有一个商品在售后状态则不显示删除按钮
-                item.isDeleteBtnShow = !item.products.some(product => ![0, 2, 3, 6].includes(product.afterSalesStatus))
-                if (item.status === 'WAIT_PAY_REPAYMENT') {
-                    // 是否开始付尾款
-                    const now = Number(item.currentServerTime)
-                    const useStartTime = moment(item.useStartTime).valueOf()
-                    const useEndTime = moment(item.useEndTime).valueOf()
-                    item.isStart = now - useStartTime >= 0
-                    item.pastDue = now - useEndTime >= 0
-                    if (!item.isStart) {
-                        // 可以开始支付了，倒计时支付
-                        this.countDown(useStartTime - now, i, item)
-                    } else if (!item.pastDue) {
-                        // 可以开始支付了，倒计时支付
-                        this.countDown(useEndTime - now, i, item)
-                    }
-                }
+            for (let i = 0; i < list.length; i < list.length) {
+                const item = list[i]
+                // 只要商品在售后状态则不显示删除按钮
+                item.isDeleteBtnShow = [0, 2, 3, 6].includes(item.aftersaleStatus)
+                // this.setCountDown(item, i)
             }
             this.orderList = list
             this.total = total
+        },
+        // 待支付订单，支付时间倒计时
+        setCountDown (item, i) {
+            if (item.orderStatus !== 'WAIT_PAY_REPAYMENT') return
+            // 是否开始付尾款
+            const now = Number(item.currentServerTime)
+            const useStartTime = moment(item.useStartTime).valueOf()
+            const useEndTime = moment(item.useEndTime).valueOf()
+            item.isStart = now - useStartTime >= 0
+            item.pastDue = now - useEndTime >= 0
+            if (!item.isStart) {
+            // 可以开始支付了，倒计时支付
+                this.countDown(useStartTime - now, i, item)
+            } else if (!item.pastDue) {
+            // 可以开始支付了，倒计时支付
+                this.countDown(useEndTime - now, i, item)
+            }
         },
 
         // 开始倒计时
@@ -468,7 +471,7 @@ export default {
                 await confirmReceipt(orderId)
                 this.$success('确认收货成功')
                 if (orderStatus === 'ALL_ORDER') {
-                    item.status = 'FINISHED'
+                    item.orderStatus = 'FINISHED'
                     item.statusText = '已完成'
                 } else {
                     this.orderList.splice(index, 1)
@@ -492,7 +495,7 @@ export default {
                 await cancelOrder(orderId, reason)
                 this.$success('交易关闭')
                 if (orderStatus === 'ALL_ORDER') {
-                    item.status = 'CLOSED'
+                    item.orderStatus = 'CLOSED'
                     item.statusText = '已关闭'
                 } else {
                     // 取消组合订单中的所有相关订单，干脆直接刷新页面
@@ -523,7 +526,7 @@ export default {
                         const counter = array => key => array.reduce((acc, current) => acc + (key ? current[key] : current), 0)
                         currentLastOrder.totalCount = counter(item.products)('purchaseQuantity')
                         // 只要有一个商品在售后状态则不显示删除按钮
-                        currentLastOrder.isDeleteBtnShow = !item.products.some(product => ![0, 2, 3, 6].includes(product.afterSalesStatus))
+                        currentLastOrder.isDeleteBtnShow = !item.products.some(product => ![0, 2, 3, 6].includes(product.aftersaleStatus))
                         this.orderList.push(currentLastOrder)
                     }
                 }

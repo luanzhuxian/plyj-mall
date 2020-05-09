@@ -1,5 +1,8 @@
 <template>
     <div :class="$style.home">
+        <pl-button type="warning"
+                   size="huge"
+                   @click="$router.push({ name: 'OrderDetail', params: {orderId: '1258605194502119424'}})">订单详情</pl-button>
         <template v-if="allLoaded">
             <TemplateB
                 v-if="~[3, 4].indexOf(type)"
