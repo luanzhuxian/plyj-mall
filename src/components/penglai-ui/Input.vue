@@ -11,7 +11,6 @@
                 :class="{ focus }"
                 :name="prefixIcon"
                 fill="#ccc"
-                width="24"
             />
         </div>
         <div
