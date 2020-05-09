@@ -23,39 +23,27 @@ export default {
 </script>
 
 <style module lang="scss">
-  .infoItem {
-    display: flex;
-    padding-left: 68px;
-    padding-right: 28px;
-    justify-content: space-between;
-    line-height: 50px;
-    font-size: 24px;
-    border: 2px solid #fff;
-    .content {
-      flex: 1;
-      display: inline-flex;
-      justify-content: space-between;
-      &.hasFreight{
-        justify-content: flex-start;
-      }
-      .itemLabel {
-        width: max-content;
-        color: #333;
-      }
-      .itemContent {
-        color: #666;
-        margin-left: 24px;
-      }
+    .infoItem {
+        display: flex;
+        padding-left: 68px;
+        padding-right: 28px;
+        justify-content: space-between;
+        line-height: 50px;
+        font-size: 24px;
+        border: 2px solid #fff;
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+
+            .itemLabel {
+                width: max-content;
+                color: #333;
+            }
+        }
+        .itemContent {
+            margin-left: 24px;
+            color: #666;
+        }
     }
-    .freight {
-      text-align: right;
-    }
-    .remark {
-      flex: 1;
-      height: 100%;
-      padding: 0;
-      margin-left: 22px;
-      font-size: 24px;
-    }
-  }
 </style>

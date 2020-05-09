@@ -1,20 +1,14 @@
 <template>
-    <div :class="$style.content" @click="selectStudent">
-        <div v-if="!students.length">
-            <span>请选择</span>
-            <pl-svg
-                :class="{ [$style.rightArrow]: true }"
-                name="icon-right" fill="#ccc" height="24"
-            />
-        </div>
-        <div v-else>
+    <div :class="$style.studentInline" @click="selectStudent">
+        <span v-if="!students.length">请选择</span>
+        <div :class="$style.studentList" v-else>
             <span
                 v-for="(stu, i) of students"
                 :key="i"
                 v-text="stu.stuName + (i === students.length - 1 ? '' : ',')"
             />
-            <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
         </div>
+        <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
     </div>
 </template>
 
@@ -69,21 +63,20 @@ export default {
 </script>
 
 <style module lang="scss">
-  .rightArrow {
-    margin-left: 10px;
-    vertical-align: -4px;
-    transition: transform .2s linear;
-  }
-  .content {
-    display: flex;
-    flex: 1;
-    justify-content: space-between;
-    padding-left: 68px;
-  }
+    .student-inline {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-  @keyframes bordrFlicker {
-      0% { border-color: #F24724 }
-      50% { border-color: transparent }
-      100% { border-color: #F24724 }
-  }
+    .rightArrow {
+        vertical-align: -4px;
+    }
+
+    .studentList {
+        width: 400px;
+        text-align: right;
+        @include elps();
+    }
 </style>

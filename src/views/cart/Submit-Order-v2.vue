@@ -17,6 +17,7 @@
                 :active-product="activeProduct"
                 @studentInited="studentInited"
                 @countChange="countChange"
+                ref="productVeiwer"
             />
 
             <div :class="$style.confirm">
@@ -196,6 +197,7 @@ export default {
                 helper: '',
                 // 商品来源：1 正常购买下单， 2 团购商品购买下单，3秒杀商品购买下单，4.预购商品下单确认，5春耘，6组合商品
                 source: 1,
+                // 其中的goodType包括: PHYSICAL_GOODS VIRTUAL_GOODS SERIES_OF_COURSE EXPERIENCE_CLASS KNOWLEDGE_COURSE SERIES_OF_COURSE LIVE_GOODS
                 skus: [],
                 // 地址信息
                 userAddress: null,
@@ -350,7 +352,7 @@ export default {
                 this.form.activityId = this.activityId
                 this.form.helper = this.shareId
                 this.form.source = this.activeProduct
-                if (this.selectedAddress) {
+                if (this.selectedAddress && CONFIRM_LIST.some(item => item.productType === 'PHYSICAL_GOODS')) {
                     this.form.userAddress = {
                         addressSeq: this.selectedAddress.sequenceNbr,
                         mobile: this.selectedAddress.mobile,
@@ -396,6 +398,7 @@ export default {
                 throw e
             }
         },
+
         // 修改联系人
         contactInfoChange ({ name, mobile }) {
             this.form.userAddress = name ? {
@@ -403,6 +406,7 @@ export default {
                 name
             } : null
         },
+
         // 选择了发票
         invoiceSelected (data) {
             this.form.invoiceInfoModel = data ? {
@@ -412,8 +416,9 @@ export default {
                 skus: data.orderDetails
             } : null
         },
+
         /**
-         * 修改学员
+         * 修改学员事件
          * @param students {Array}
          * @param product {Object} 对应的商品
          */
@@ -424,8 +429,9 @@ export default {
                 }
             }
         },
+
         /**
-         * 修改数量
+         * 修改商品数量事件
          * @param count {Number} 数量
          * @param product {Object} 对应的商品
          */
@@ -448,8 +454,9 @@ export default {
                 throw e
             }
         },
+
         /**
-         * 自定义表单确认
+         * 自定义表单确认事件
          * @param customForm {Object} 表单数据
          */
         customFormConfirm (customForm) {
@@ -457,7 +464,11 @@ export default {
                 pro.productCustomInfo = customForm[pro.goodsId] ? JSON.stringify(customForm[pro.goodsId]) : ''
             }
         },
+        // 提交订单
         async submitOrder () {
+            if (!this.checkData()) {
+                return
+            }
             try {
                 this.submiting = true
                 await submitOrder(this.form)
@@ -466,6 +477,21 @@ export default {
             } finally {
                 this.submiting = false
             }
+        },
+        // 校验数据
+        checkData () {
+            if (this.physicalProducts.length && !this.selectedAddress.mobile) {
+                this.$warning('请选择收获地址')
+                return false
+            }
+            if (!this.physicalProducts.length && !(this.form.userAddress && this.form.userAddress.mobile)) {
+                this.$warning('请输入联系人信息')
+                return false
+            }
+            if (!this.$refs.productVeiwer.checkStudents()) {
+                return false
+            }
+            return true
         }
     },
     beforeRouteLeave (to, from, next) {

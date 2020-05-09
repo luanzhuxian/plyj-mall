@@ -25,7 +25,10 @@
                     border
                 />
                 <OtherInfo>
-                    <InfoItem v-if="item.needStudents">
+                    <InfoItem
+                        v-if="item.needStudents"
+                        :id="item.sku1 + item.sku2"
+                    >
                         <template slot="label">学员信息</template>
                         <template slot="content">
                             <StudentInline
@@ -124,6 +127,28 @@ export default {
          */
         countChange (count, product, next) {
             this.$emit('countChange', { count, product, next })
+        },
+        checkStudents () {
+            const CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
+            for (const pro of this.products) {
+                const students = CHECKED_STUDENT[pro.sku1 + pro.sku2] || []
+                if (pro.needStudents && students.length < pro.count) {
+                    if (students.length) {
+                        this.$warning(`请再选择${ pro.count - students.length }名学员信息`)
+                    } else {
+                        this.$warning(`请选择${ pro.count }名学员信息`)
+                    }
+                    const EL = document.getElementById(pro.sku1 + pro.sku2)
+                    EL.classList.add(this.$style.infoItemError)
+                    EL.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    })
+                    return false
+                }
+            }
+            return true
         }
     }
 }
@@ -139,5 +164,14 @@ export default {
             border-radius: $--radius1;
             background-color: #fff;
         }
+    }
+    .info-item-error {
+        animation: bordrFlicker .15s ease 8;
+        animation-fill-mode: forwards;
+    }
+    @keyframes bordrFlicker {
+        0% { border-color: #F24724 }
+        50% { border-color: transparent }
+        100% { border-color: #F24724 }
     }
 </style>

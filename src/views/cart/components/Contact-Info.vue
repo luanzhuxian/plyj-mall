@@ -81,6 +81,9 @@ export default {
     computed: {
         ...mapGetters(['selectedAddress'])
     },
+    mounted () {
+        this.contactInfoModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL')) || this.contactInfoModel
+    },
     methods: {
         chooseContact () {
             this.contactInfoForm = Object.assign({}, this.contactInfoForm, this.contactInfoModel)
@@ -93,6 +96,7 @@ export default {
                 localStorage.setItem('CONTACT_INFO_MODEL', JSON.stringify(this.contactInfoModel))
                 this.$emit('change', JSON.parse(JSON.stringify(this.contactInfoModel)))
             }
+            localStorage.setItem('CONTACT_INFO_MODEL', JSON.stringify(this.contactInfoModel))
         }
     }
 }
