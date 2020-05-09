@@ -108,13 +108,7 @@
 <script>
 /* eslint-disable */
 import AddressItem from '../../components/item/Address-Item.vue'
-// import OrderItem from '../../components/item/Order-Item.vue'
 import moment from 'moment'
-import {
-    confirmCart,
-    // submitOrder,
-    submitOrderPay
-} from '../../apis/shopping-cart'
 import { getCouponOfMax, getCouponByPrice, getRedEnvelopeListByPrice } from '../../apis/my-coupon'
 import {
     cancelOrder,
@@ -122,43 +116,30 @@ import {
     submitOrder,
     deleteOrder
 } from '../../apis/order-manager'
-import wechatPay from '../../assets/js/wechat/wechat-pay'
 import { mapGetters, mapActions } from 'vuex'
-import { STUDENTS } from '../../store/mutation-type'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
-import { checkLength, isPhone } from '../../assets/js/validate'
-import { resetForm, setTimeoutSync } from '../../assets/js/util'
 import { getServerTime } from '../../apis/base-api'
 import StudentInline from './components/Student-Inline.vue'
-import CustomInline from './components/Custom-Inline.vue'
-// import OtherInfo from './components/Other-Info.vue'
-// import InfoItem from './components/Info-Item.vue'
 import CustomBlock from './components/Custom-Block.vue'
 import ProductVeiwer from './components/Product-Veiwer.vue'
 import Coupon from './components/Coupon.vue'
 import Scholarship from './components/Scholarship.vue'
 import Invoice from './components/Invoice.vue'
 import ContactInfo from './components/Contact-Info.vue'
-import StudentBlock from './components/Student-Block.vue'
 export default {
     name: 'SubmitOrderV2',
     components: {
         AddressItem,
-        // OrderItem,
         OrderItemSkeleton,
         AddressItemSkeleton,
         StudentInline,
-        // OtherInfo,
-        // InfoItem,
-        CustomInline,
         CustomBlock,
         ProductVeiwer,
         Coupon,
         Scholarship,
         Invoice,
-        ContactInfo,
-        StudentBlock
+        ContactInfo
     },
     data () {
         this.requestPayDataCount = 0
@@ -191,7 +172,6 @@ export default {
             redEnvelopeList: [],
             // 当前选中的红包
             currentRedEnvelope: {},
-            /* ******************* v2 ********************* */
             form: {
                 activityId: '',
                 helper: '',
