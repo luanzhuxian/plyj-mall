@@ -80,6 +80,7 @@
                 :products="customList"
                 :label="physicalProducts.length ? '用户信息' : '学员信息'"
                 @confirm="customFormConfirm"
+                ref="customBlock"
             />
 
             <!-- 订单备注（只有一个商品时显示） -->
@@ -519,10 +520,13 @@ export default {
                 return false
             }
             if (!this.physicalProducts.length && !(this.form.userAddress && this.form.userAddress.mobile)) {
-                this.$warning('请输入联系人信息')
+                this.$warning('请填写联系人信息')
                 return false
             }
             if (!this.$refs.productVeiwer.checkStudents()) {
+                return false
+            }
+            if (this.$refs.customBlock && !this.$refs.customBlock.checkForm()) {
                 return false
             }
             return true

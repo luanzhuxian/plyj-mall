@@ -36,6 +36,9 @@ export default {
         const CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
         const { sku1, sku2 } = this.product
         this.students = CHECKED_STUDENT[sku1 + sku2] || []
+        if (this.students.length > this.count) {
+            this.students = this.students.slice(0, this.count)
+        }
         this.$emit('inited', this.students.map(item => ({
             name: item.stuName,
             mobile: item.stuMobile

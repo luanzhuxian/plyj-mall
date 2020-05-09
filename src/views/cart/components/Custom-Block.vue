@@ -42,6 +42,7 @@
 
 <script>
 import CustomForm from './Custom-Form.vue'
+import { checkLength } from '../../../assets/js/validate'
 
 export default {
     name: 'CustomBlock',
@@ -53,6 +54,7 @@ export default {
             showForm: false,
             currentForm: {},
             currentRules: {},
+            // 自定义表单的所有信息，包括字段值和字段描述
             formData: {}
         }
     },
@@ -124,17 +126,24 @@ export default {
                 for (const custom of pro.skuCustoms) {
                     // 获取具体某个字段值对象
                     const CACHE_VALUE = CACHE_FORM.find(item => item.fieldName === custom.fieldName)
+                    const RULE = [
+                        {
+                            required: Boolean(custom.required),
+                            message: `请输入${ custom.fieldName }`,
+                            trigger: 'none'
+                        },
+                        {
+                            validator: checkLength(custom.length),
+                            message: `最多输入${ custom.length }个字符`,
+                            trigger: 'none'
+                        }
+                    ]
                     form[custom.fieldName] = CACHE_VALUE ? CACHE_VALUE.fieldValue || '' : ''
-                    rule[custom.fieldName] = [{
-                        required: Boolean(custom.required),
-                        message: `请输入${ custom.fieldName }`,
-                        trigger: 'none'
-                    }]
-                    form.valueType = ''
-                    form.required = ''
-                    form.length = ''
-                    form.sort = ''
-                    Object.defineProperties(form, {
+                    // form.valueType = ''
+                    // form.required = ''
+                    // form.length = ''
+                    // form.sort = ''
+                    Object.defineProperties(RULE, {
                         valueType: {
                             enumerable: false,
                             value: custom.valueType
@@ -143,7 +152,7 @@ export default {
                             enumerable: false,
                             value: custom.required
                         },
-                        length: {
+                        maxLength: {
                             enumerable: false,
                             value: custom.length
                         },
@@ -152,6 +161,7 @@ export default {
                             value: custom.sort
                         }
                     })
+                    rule[custom.fieldName] = RULE
                 }
                 formList.set(pro.goodsId, form)
                 rules.set(pro.goodsId, rule)
@@ -182,24 +192,39 @@ export default {
               将数据缓存起来，以便下次遇到相同商品时使用
               每组数据与之商品id一一对应
              */
-            const CACHE_FORM = {}
+            const CONFIRM_FORM = {}
+            const RULES = this.formData.rules
             for (const [proId, form] of this.formData.formList) {
-                CACHE_FORM[proId] = []
+                CONFIRM_FORM[proId] = []
+                const rules = RULES.get(proId)
                 for (const k of Object.keys(form)) {
+                    const fieldRule = rules[k]
                     const FIELD = {
                         fieldName: k,
                         fieldValue: form[k],
-                        valueType: form.valueType,
-                        required: form.required,
-                        length: form.length,
-                        sort: form.sort
+                        valueType: fieldRule.valueType,
+                        length: fieldRule.maxLength,
+                        required: fieldRule.required,
+                        sort: fieldRule.sort
                     }
-                    CACHE_FORM[proId].push(FIELD)
+                    CONFIRM_FORM[proId].push(FIELD)
                 }
             }
-            this.$emit('confirm', CACHE_FORM)
+            this.$emit('confirm', CONFIRM_FORM)
+            this.CONFIRM_FORM = CONFIRM_FORM
             // 缓存已经填写的表单
-            localStorage.setItem('CUSTOM_FORM_CACHE', JSON.stringify(CACHE_FORM))
+            localStorage.setItem('CUSTOM_FORM_CACHE', JSON.stringify(CONFIRM_FORM))
+        },
+        checkForm () {
+            for (const key of Object.keys(this.CONFIRM_FORM)) {
+                for (const field of this.CONFIRM_FORM[key]) {
+                    if (field.required && !field.fieldValue) {
+                        this.$warning('请填写用户信息')
+                        return false
+                    }
+                }
+            }
+            return true
         }
     }
 }
