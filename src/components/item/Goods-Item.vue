@@ -7,7 +7,7 @@
         <div :class="$style.top">
             <img
                 :class="$style.img"
-                :src="img + '?x-oss-process=style/thum-middle'"
+                :src="img"
             >
             <count-down
                 v-if="data.shoppingStatus === 1 && activityProduct === 1"
