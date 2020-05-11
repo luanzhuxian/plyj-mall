@@ -50,6 +50,26 @@
                 <yugou :data="YU_GOU" />
             </div>
             <propagate :class="$style.propagate" :data="PROPAGATE" />
+            <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
+                <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
+                <skin-title
+                    v-else
+                    :class="$style.skinTitle"
+                    :data="POPULAR.moduleName"
+                    :skin-id="skinId"
+                />
+                <hot-item :data="POPULAR" />
+            </div>
+            <div :class="$style.best" v-if="CLASS.showStatue === 1">
+                <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
+                <skin-title
+                    v-else
+                    :class="$style.skinTitle"
+                    :data="CLASS.moduleName"
+                    :skin-id="skinId"
+                />
+                <best :data="CLASS" />
+            </div>
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
                 <div v-if="skinId === 0" :class="$style.title" v-text="RECOMMEND.moduleName" />
                 <skin-title
@@ -70,7 +90,6 @@
 <script>
 import Search from './components/Search.vue'
 import Banner from './components/Banner.vue'
-import Recommend from './components/Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
 import Live from './components/Live.vue'
@@ -81,6 +100,9 @@ import Miaosha from './activity/Miaosha.vue'
 import Pintuan from './activity/Pintuan.vue'
 import Yugou from './activity/Yugou.vue'
 import Package from './activity/Package.vue'
+import HotItem from './components/Hot-Item.vue'
+import Best from './components/Best.vue'
+import Recommend from './components/Recommend.vue'
 import SkinTitle from './skin/Skin-Title.vue'
 import Campaign from './components/Campaign'
 import { skinClassNameMap } from './skin/map'
@@ -91,7 +113,6 @@ export default {
     components: {
         Search,
         Banner,
-        Recommend,
         Appointment,
         Propagate,
         Live,
@@ -102,6 +123,9 @@ export default {
         Pintuan,
         Yugou,
         Package,
+        HotItem,
+        Best,
+        Recommend,
         SkinTitle,
         Campaign
     },
@@ -154,6 +178,12 @@ export default {
         PROPAGATE () {
             return this.data.PROPAGATE || {}
         },
+        POPULAR () {
+            return this.data.POPULAR || {}
+        },
+        CLASS () {
+            return this.data.CLASS || {}
+        },
         RECOMMEND () {
             return this.data.RECOMMEND || {}
         },
@@ -190,6 +220,12 @@ export default {
         },
         isPackageShow () {
             return this.PACKAGE.showStatue === 1 && this.PACKAGE.values && this.PACKAGE.values.length
+        },
+        isPopularShow () {
+            return this.POPULAR.showStatue === 1 && this.POPULAR.values && this.POPULAR.values.length
+        },
+        isClassShow () {
+            return this.CLASS.showStatue === 1 && this.CLASS.values && this.CLASS.values.length
         }
     }
 }
@@ -235,6 +271,8 @@ export default {
 .miaosha,
 .pintuan,
 .yugou,
+.hot-item,
+.best,
 .recommend {
     padding: 0 24px;
 }
