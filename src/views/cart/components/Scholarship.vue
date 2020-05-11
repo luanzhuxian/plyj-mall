@@ -1,7 +1,7 @@
 <template>
     <div>
         <div
-            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && redEnvelopeList.length && activeProduct === 1 && currentCoupon.scholarship !== 0"
+            v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && redEnvelopeList.length && currentCoupon.scholarship !== 0"
             :class="$style.itemSelector"
             @click.capture="showRedEnvelopePopup = true"
         >

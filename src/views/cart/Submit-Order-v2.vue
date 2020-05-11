@@ -49,7 +49,7 @@
             />
 
             <Scholarship
-                v-show="goodsAmount > 0"
+                v-show="goodsAmount > 0 && activeProduct === 1"
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :freight="freight"
@@ -241,47 +241,50 @@ export default {
         async init () {
             try {
                 const CONFIRM_LIST =  this.initProductInfo()
-                const AMOUNT = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
-                const COUPON_DATA = {
-                    activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-                    activityId: this.activityId,
-                    cartProducts: CONFIRM_LIST,
-                    addressSeq: this.selectedAddress.sequenceNbr
+                // 以下是设置订单红包和优惠券，只有普通订单才可以使用优惠券和红包
+                if (this.activeProduct === 1) {
+                    const AMOUNT = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
+                    const COUPON_DATA = {
+                        activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+                        activityId: this.activityId,
+                        cartProducts: CONFIRM_LIST,
+                        addressSeq: this.selectedAddress.sequenceNbr
+                    }
+                    // 初始化优惠券列表
+                    const { result: COUPON_LIST } = await getCouponByPrice(COUPON_DATA)
+                    // 获取推荐的优惠券
+                    const { result: MAX_COUPON } = await getCouponOfMax(COUPON_DATA)
+                    // 获取奖学金
+                    const { result: RED_ENVELOP } = await getRedEnvelopeListByPrice(AMOUNT)
+                    // 获取服务器时间
+                    const { result: serverTime } = await getServerTime()
+                    // 设置服务器时间
+                    this.serverTime = serverTime
+                    // 设置优惠券列表
+                    this.couponList = COUPON_LIST.map(item => {
+                        const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                        const day = Math.floor(moment.duration(duration).asDays())
+                        item.timeDesc = ''
+                        if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                        return item
+                    })
+                    // 设置当前选中的优惠券
+                    this.currentCoupon = COUPON_LIST.find(coupon => coupon.id === MAX_COUPON.id) || {}
+                    // 设置推荐的优惠券
+                    this.recommendCoupon = MAX_COUPON
+                    // 设置奖学金列表
+                    this.redEnvelopeList = RED_ENVELOP.map(item => {
+                        const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                        const day = Math.floor(moment.duration(duration).asDays())
+                        item.timeDesc = ''
+                        if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                        return item
+                    })
+                    // 设置当前选中的奖学金
+                    this.currentRedEnvelope = this.currentCoupon.scholarship === 0 ? {} : this.redEnvelopeList[0] || {}
+                    this.form.cartCouponModel = this.currentCoupon.id ? { userCouponId: this.currentCoupon.id } : null
+                    this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
                 }
-                // 初始化优惠券列表
-                const { result: COUPON_LIST } = await getCouponByPrice(COUPON_DATA)
-                // 获取推荐的优惠券
-                const { result: MAX_COUPON } = await getCouponOfMax(COUPON_DATA)
-                // 获取奖学金
-                const { result: RED_ENVELOP } = await getRedEnvelopeListByPrice(AMOUNT)
-                // 获取服务器时间
-                const { result: serverTime } = await getServerTime()
-                // 设置服务器时间
-                this.serverTime = serverTime
-                // 设置优惠券列表
-                this.couponList = COUPON_LIST.map(item => {
-                    const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
-                    const day = Math.floor(moment.duration(duration).asDays())
-                    item.timeDesc = ''
-                    if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
-                    return item
-                })
-                // 设置当前选中的优惠券
-                this.currentCoupon = COUPON_LIST.find(coupon => coupon.id === MAX_COUPON.id) || {}
-                // 设置推荐的优惠券
-                this.recommendCoupon = MAX_COUPON
-                // 设置奖学金列表
-                this.redEnvelopeList = RED_ENVELOP.map(item => {
-                    const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
-                    const day = Math.floor(moment.duration(duration).asDays())
-                    item.timeDesc = ''
-                    if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
-                    return item
-                })
-                // 设置当前选中的奖学金
-                this.currentRedEnvelope = this.currentCoupon.scholarship === 0 ? {} : this.redEnvelopeList[0] || {}
-                this.form.cartCouponModel = this.currentCoupon.id ? { userCouponId: this.currentCoupon.id } : null
-                this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
             } catch (e) {
                 throw e
             }
