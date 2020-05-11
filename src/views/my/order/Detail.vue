@@ -77,51 +77,38 @@
                 />
                 <div :class="$style.buttons">
                     <pl-button
-                        v-if="isRefundBtnShow(detail) && detail.supportAfterSales"
+                        v-if="detail.amount && detail.supportAfterSales"
                         plain
                         round
-                        @click="$router.push({
-                            name: 'Refund',
-                            params: { orderId, orderProductRId: goodsModel.orderProductRId },
-                            query: {
-                                orderStatus: detail.status,
-                                orderType: detail.orderType,
-                                productId: goodsModel.id,
-                                productImg: goodsModel.img,
-                                productName: goodsModel.name,
-                                skuCode1Name: goodsModel.sku,
-                                skuCode2Name: goodsModel.subSku,
-                                count: detail.orderType === 'PHYSICAL' ? goodsModel.count : usefulCodeNumber
-                            }
-                        })"
+                        @click="applyRefund"
                     >
-                        {{ (goodsModel.afterSalesStatus === 3 || goodsModel.afterSalesStatus === 6) ? '再次申请' : '申请退款' }}
+                        {{ detail.refundId ? '再次申请' : '申请退款' }}
                     </pl-button>
                     <pl-button
-                        v-if="~[1, 4, 9].indexOf(goodsModel.afterSalesStatus)"
+                        v-if="detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSING"
                         plain
                         round
-                        @click="$router.push({ name: 'RefundDetail', params: { id: goodsModel.mallRefundId } })"
+                        @click="$router.push({ name: 'RefundDetail', params: { id: detail.refundId } })"
                     >
                         退款中
                     </pl-button>
                     <pl-button
                         class="refund-finish"
-                        v-if="goodsModel.afterSalesStatus === 2"
+                        v-if="detail.afterSalesStatus === aftersaleStatusKeyMap.PROCESSING_COMPLETED"
                         plain
                         round
-                        :style="{ opacity: goodsModel.afterSalesStatusExtend === 5 ? 0.3 : 1 }"
-                        @click="goodsModel.afterSalesStatusExtend === 5 ? '' : $router.push({ name: 'RefundDetail', params: { id: goodsModel.mallRefundId } })"
+                        :style="{ opacity: goodsModel.afterSalesStatusExtend === aftersaleStatusKeyMap.PROCESSING ? 0.3 : 1 }"
+                        @click="goodsModel.afterSalesStatusExtend === aftersaleStatusKeyMap.PROCESSING ? '' : $router.push({ name: 'RefundDetail', params: { id: detail.refundId } })"
                     >
                         退款完成
                     </pl-button>
                     <pl-button
                         :class="$style.large"
-                        v-if="goodsModel.afterSalesStatus === 5"
+                        v-if="detail.orderType === orderStatuskeyMap.WAIT_RECEIVE"
                         type="warning"
                         plain
                         round
-                        @click="$router.push({ name: 'RefundDetail', params: { id: goodsModel.mallRefundId } })"
+                        @click="$router.push({ name: 'RefundDetail', params: { id: detail.refundId } })"
                     >
                         寄件运单号
                     </pl-button>
@@ -137,7 +124,7 @@
                 </div>
                 <div
                     :class="$style.explain"
-                    v-if="detail.orderType !== 'PHYSICAL' && goodsModel.productUseMethod"
+                    v-if="detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && goodsModel.productUseMethod"
                 >
                     <ModuleTitle
                         title="使用说明"
@@ -152,7 +139,7 @@
 
             <div :class="$style.productPrice">
                 <!-- 正常商品价格 -->
-                <p v-if="detail.orderSource === 1">
+                <p v-if="detail.orderSource === skuSourceKeyMap.NORMAL">
                     <span>商品金额</span>
                     <span
                         class="rmb"
@@ -160,12 +147,12 @@
                     />
                 </p>
                 <!-- 预购商品价格 -->
-                <template v-else-if="detail.orderSource === 4">
+                <template v-else-if="detail.orderSource === skuSourceKeyMap.BOOKING">
                     <p>
                         <span>待付尾款</span>
                         <span
                             class="rmb"
-                            v-text="activityData.tailAount || 0"
+                            v-text="detail.tailAmonut || 0"
                         />
                     </p>
                     <p>
@@ -177,7 +164,7 @@
                     </p>
                 </template>
                 <!-- 使用优惠券价格 -->
-                <p v-else-if="detail.orderSource === 5 || detail.orderSource === 6">
+                <p v-else-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING || detail.orderSource === skuSourceKeyMap.COURSEPACKAGE">
                     <span>商品金额</span>
                     <span
                         class="rmb"
@@ -199,26 +186,26 @@
                         v-text="'-' + goodsModel.couponeAmount || 0"
                     />
                 </p>
-                <p v-if="detail.orderType === 'PHYSICAL'">
+                <p v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS">
                     <span>运费</span>
                     <span
                         class="rmb"
                         v-text="goodsModel.freight || 0"
                     />
                 </p>
-                <p v-if="detail.orderSource === 5">
+                <p v-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING">
                     <span>春耘减免</span>
                     <span v-text="'-¥' + (activityData.combinationSpecialPrice || 0)" />
                 </p>
-                <p v-if="detail.orderSource === 6">
+                <p v-if="detail.orderSource === skuSourceKeyMap.COURSEPACKAGE">
                     <span>组合折扣</span>
                     <span v-text="'-¥' + (activityData.combinationSpecialPrice || 0)" />
                 </p>
-                <p v-if="goodsModel.couponeAmount > 0">
+                <p v-if="goodsModel.couponeAmount">
                     <span>优惠</span>
                     <span v-text="'-¥' + (goodsModel.couponeAmount || 0)" />
                 </p>
-                <p v-if="goodsModel.scholarship > 0">
+                <p v-if="goodsModel.scholarship">
                     <span>奖学金（红包）</span>
                     <span v-text="'-¥' + (goodsModel.scholarship || 0)" />
                 </p>
@@ -483,57 +470,12 @@
         />
 
         <!-- 联系我们底部弹窗 -->
-        <pl-popup ref="contact" :show.sync="isPopupShow">
-            <template name="title">
-                <div :class="$style.popupTitle">
-                    <pl-svg
-                        :class="$style.popupTitleIcon"
-                        name="icon-rows"
-                        height="40"
-                    />
-                    <span>联系我们</span>
-                </div>
-            </template>
-            <template>
-                <div :class="$style.popupContent">
-                    <div :class="$style.popupAddress">
-                        <pl-svg
-                            :class="$style.popupAddressLeftIcon"
-                            name="icon-address-blue"
-                        />
-                        <span
-                            :class="$style.popupAddressText"
-                            v-text="address"
-                        />
-                        <pl-svg
-                            :class="$style.popupAddressRightIcon"
-                            name="icon-copy"
-                            @click="doCopy"
-                        />
-                    </div>
-                    <a v-if="servicePhoneModels.length === 1" :href="`tel: ${servicePhoneModels[0].contactWay}`">
-                        <pl-button
-                            size="larger"
-                            background-color="#387AF6"
-                            prefix-icon="icon-mobile-blue"
-                            round
-                        >
-                            立即拨打
-                        </pl-button>
-                    </a>
-                    <pl-button
-                        v-else
-                        size="larger"
-                        background-color="#387AF6"
-                        prefix-icon="icon-mobile-blue"
-                        round
-                        data-i="123"
-                        @click="showContact = true; isPopupShow = false;"
-                    >
-                        立即拨打
-                    </pl-button>
-                </div>
-            </template>
+        <pl-popup :show.sync="isPopupShow">
+            <ContantPop
+                ref="contact"
+                :show.sync="isPopupShow"
+                @callUs="callUs"
+            />
         </pl-popup>
 
         <!-- 分享核销码弹窗 -->
@@ -542,6 +484,8 @@
             :poster="poster"
             @close="isPosterShow = false"
         />
+
+        <!--拨号-->
         <Contact :show.sync="showContact" />
     </div>
 </template>
@@ -560,6 +504,7 @@ import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.
 import OrderDetailSkeleton from './components/Order-detail-Skeleton'
 import OrderCodeItem from './components/Order-Code-Item'
 import SharePoster from '../../../components/common/Share-Poster'
+import ContantPop from './components/Contant-Pop'
 import {
     getOrderDetail,
     getAwaitPayInfo,
@@ -615,7 +560,8 @@ export default {
         CollapseItem,
         Contact,
         OrderCodeItem,
-        SharePoster
+        SharePoster,
+        ContantPop
     },
     props: {
         orderId: {
@@ -687,7 +633,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['address', 'servicePhoneModels', 'skuSourceKeyMap', 'orderStatusMap', 'orderTypeKeyMap', 'orderStatuskeyMap']),
+        ...mapGetters(['address', 'servicePhoneModels', 'skuSourceKeyMap', 'orderStatusMap', 'orderTypeKeyMap', 'orderStatuskeyMap', 'aftersaleStatusKeyMap', 'skuSourceKeyMap']),
         isClosedByCancle () {
             return this.detail.status === 'CLOSED' && !this.detail.payTime
         },
@@ -832,9 +778,6 @@ export default {
                 item.assessmentStatus === 0 &&
                 ((this.detail.orderType === 'PHYSICAL' && ~[0, 3, 6].indexOf(item.afterSalesStatus)) || (this.detail.orderType !== 'PHYSICAL' && this.redeemCodeModels.some(item => item.statusCode === 1)))
         },
-        isRefundBtnShow (item) {
-            return item.supportRefund && Number(item.refundPrice) > 0 && ~[0, 3, 6].indexOf(item.afterSalesStatus)
-        },
         generateQrcode (orderId) {
             generateQrcode({ size: 300, text: orderId, padding: 34 })
                 .then(async base64 => {
@@ -848,7 +791,29 @@ export default {
             this.poster = url
             this.isPosterShow = true
         },
-
+        callUs () {
+            this.showContact = true
+            this.isPopupShow = false
+        },
+        applyRefund () {
+            this.$router.push({
+                name: 'Refund',
+                params: {
+                    orderId: this.orderId,
+                    orderProductRId: this.goodsModel.orderProductRId
+                },
+                query: {
+                    orderStatus: this.detail.status,
+                    orderType: this.detail.orderType,
+                    productId: this.goodsModel.id,
+                    productImg: this.goodsModel.img,
+                    productName: this.goodsModel.name,
+                    skuCode1Name: this.goodsModel.sku,
+                    skuCode2Name: this.goodsModel.subSku,
+                    count: this.detail.orderType === 'PHYSICAL' ? this.goodsModel.count : this.usefulCodeNumber
+                }
+            })
+        },
         // 倒计时
         countDown (remanent, orderStatus) {
             if (this.countdownInstance) {
@@ -993,10 +958,7 @@ export default {
         },
         // 申请发票
         applyInvoice () {
-            const physicalProducts = this.goodsModel.productDetailModels.filter(item => item.price > 0 &&
-          item.invoiceType === 1 &&
-          item.invoiceStatus === 8 && ~[0, 3, 6].indexOf(item.afterSalesStatus))
-            sessionStorage.setItem('APPLY_INVOICE', JSON.stringify([...physicalProducts]))
+            sessionStorage.setItem('APPLY_INVOICE', JSON.stringify([this.goodsModel.productDetailModels]))
             sessionStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
                 name: this.$route.name,
                 params: this.$route.params,
@@ -1011,13 +973,6 @@ export default {
                     receiveMobile: mobile,
                     receiveName: name
                 }
-            })
-        },
-        doCopy () {
-            this.$copyText(this.address).then(e => {
-                this.$success('复制成功')
-            }, e => {
-                console.error(e)
             })
         },
         // 定时器，实时刷新核销状态，如果有核销的话
@@ -1294,49 +1249,6 @@ export default {
         margin-left: 0;
       }
     }
-  }
-
-  /** 联系我们底部弹窗 **/
-  .popup-title {
-    padding: 40px 42px 32px;
-    display: flex;
-    align-items: center;
-    font-size:40px;
-    font-family: PingFangSC-Semibold;
-    font-weight: 600;
-    color: #000000;
-    line-height: 56px;
-  }
-  .popup-title-icon {
-    width: 26px;
-    margin-right: 26px
-  }
-  .popup-content {
-    padding: 35px 30px;
-  }
-  .popup-address {
-    padding: 20px 30px;
-    margin-bottom: 20px;
-    background-color: #F9F9F9;
-    display: flex;
-    align-items: center;
-    font-size: 28px;
-    font-family: PingFangSC-Medium;
-    font-weight: 500;
-    color: #000;
-    line-height: 40px;
-    border-radius: 10px;
-  }
-  .popup-address-text {
-    flex: 1;
-  }
-  .popup-address-left-icon {
-    width: 36px;
-    margin-right: 24px
-  }
-  .popup-address-right-icon {
-    width: 39px;
-    margin-left: 40px
   }
 </style>
 <style lang="scss">

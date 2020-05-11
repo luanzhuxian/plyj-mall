@@ -111,7 +111,6 @@ const order = {
             PROCESSING: 'PROCESSING',
             // 处理完成
             PROCESSING_COMPLETED: 'PROCESSING_COMPLETED'
-
         }
     },
     getters: {
