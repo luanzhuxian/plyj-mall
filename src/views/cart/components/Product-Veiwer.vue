@@ -55,7 +55,7 @@
                     <InfoItem v-if="(activeProduct === 5 || activeProduct === 6) && item.discount < 100">
                         <template slot="label" v-if="activeProduct === 5">春耘折扣</template>
                         <template slot="label" v-else-if="activeProduct === 6">组合折扣</template>
-                        <span slot="content">
+                        <span slot="content" class="primary-color">
                             {{ item.discount / 10 }}折
                         </span>
                     </InfoItem>
@@ -77,7 +77,7 @@
 
                     <InfoItem v-if="item.postageAmount > 0">
                         <template slot="label">普通快递</template>
-                        <span slot="content" class="gray-1">¥{{ item.postageAmount / 100 }}</span>
+                        <span slot="content" style="color: red;">+ ¥{{ item.postageAmount / 100 }}</span>
                     </InfoItem>
 
                     <InfoItem>
