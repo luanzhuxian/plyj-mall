@@ -140,7 +140,7 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import { getOrderDetail, getRefundOrderDetail, applyRefund, modifyRefund, getMap as getRefundReasonMap, getMaxRefund } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
 import { isPositive } from '../../../assets/js/validate'
-import { refundTypeMap } from '../../../assets/js/constant'
+import { mapGetters } from 'vuex'
 
 const refundTypePopupOptions = [
     {
@@ -200,7 +200,6 @@ export default {
     },
     data () {
         return {
-            refundTypeMap,
             loading: false,
             orderStatus: '',
             productInfo: {},
@@ -243,6 +242,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['refundTypeMap']),
         isWaitShip () {
             return this.orderStatus === 'WAIT_SHIP'
         },

@@ -128,15 +128,7 @@
 
 <script>
 import OrderItem from '../../../../components/item/Order-Item.vue'
-import {
-    skuSourceKeyMap,
-    orderTypeMap,
-    orderTypeKeyMap,
-    orderStatusMap,
-    orderStatuskeyMap,
-    refundStatusMap,
-    aftersaleStatusKeyMap
-} from '../../../../assets/js/constant'
+import { mapGetters } from 'vuex'
 export default {
     name: 'OrderListItem',
     components: {
@@ -247,16 +239,8 @@ export default {
             default: 0
         }
     },
-    data () {
-        return {
-            orderTypeMap,
-            orderTypeKeyMap,
-            orderStatusMap,
-            orderStatuskeyMap,
-            aftersaleStatusKeyMap,
-            refundStatusMap,
-            skuSourceKeyMap
-        }
+    computed: {
+        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusKeyMap'])
     },
     methods: {
         // 取消订单

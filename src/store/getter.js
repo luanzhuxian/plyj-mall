@@ -72,5 +72,17 @@ export default {
 
     // 杂项
     // 是否禁止支付
-    forbiddenPay: state => state.theMallForbiddenPay.includes(state.mallInfo.sequenceNbr)
+    forbiddenPay: state => state.theMallForbiddenPay.includes(state.mallInfo.sequenceNbr),
+
+    // 订单相关状态常量
+    smstype: state => state.order.smstype,
+    skuSourceMap: state => state.order.skuSourceMap,
+    skuSourceKeyMap: state => state.order.skuSourceKeyMap,
+    orderStatusMap: state => state.order.orderStatusMap,
+    orderStatuskeyMap: state => state.order.orderStatuskeyMap,
+    orderTypeMap: state => state.order.orderTypeMap,
+    orderTypeKeyMap: state => state.order.orderTypeKeyMap,
+    refundStatusMap: state => state.order.refundStatusMap,
+    refundTypeMap: state => state.order.refundTypeMap,
+    aftersaleStatusKeyMap: state => state.order.aftersaleStatusKeyMap
 }

@@ -117,7 +117,6 @@ import {
     cancelRefundApplication,
     deleteRefundOrder
 } from '../../../apis/order-manager'
-import { refundTypeMap } from '../../../assets/js/constant'
 import { mapGetters } from 'vuex'
 
 const tabs = [{
@@ -148,7 +147,6 @@ export default {
     },
     data () {
         return {
-            refundTypeMap,
             tabs,
             orderList: [],
             form: {
@@ -162,7 +160,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['orderTypeMap'])
+        ...mapGetters(['orderTypeMap', 'refundTypeMap'])
     },
     beforeRouteEnter (to, from, next) {
         to.meta.noRefresh = from.name === 'RefundDetail'

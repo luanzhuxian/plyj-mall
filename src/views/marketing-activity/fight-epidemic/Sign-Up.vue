@@ -81,7 +81,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { smstype } from '../../../assets/js/constant'
 import CitySelector from '../../../components/common/City-Selector.vue'
 import { signInfo, signUp, incrAccess } from '../../../apis/fight-epidemic'
 export default {
@@ -91,7 +90,6 @@ export default {
     },
     data () {
         return {
-            smstype,
             showCitySelector: false,
             showPicker: false,
             loading: false,
@@ -127,7 +125,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mobile'])
+        ...mapGetters(['mobile', 'smstype'])
     },
     props: {
         id: {

@@ -82,15 +82,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { skuSourceMap } from '../../assets/js/constant'
 export default {
     name: 'OrderItem',
     data () {
         return {
             loading: false,
             // 2团购 3限时秒杀 4预购 6-组合聚惠学 --> 暂不支持退换货 + 不支持线上发票
-            notSupportActiveProductStatus: [2, 3, 4, 6],
-            skuSourceMap
+            notSupportActiveProductStatus: [2, 3, 4, 6]
         }
     },
     props: {
@@ -175,7 +173,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userId', 'agentUser'])
+        ...mapGetters(['userId', 'agentUser', 'skuSourceMap'])
     },
     methods: {
         handleClick (e) {

@@ -81,7 +81,7 @@ import {
     deleteOrder,
     getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
-import { skuSourceKeyMap, orderTypeMap, orderTypeKeyMap, orderStatuskeyMap } from '../../../assets/js/constant'
+import { mapGetters } from 'vuex'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import moment from 'moment'
 import Countdown from '../../../assets/js/Countdown'
@@ -99,6 +99,9 @@ export default {
             default: ''
         }
     },
+    computed: {
+        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatuskeyMap'])
+    },
     data () {
         return {
             tabs: [
@@ -108,10 +111,6 @@ export default {
                 { name: '待收货', id: 'WAIT_RECEIVE' },
                 { name: '待评价', id: 'FINISHED' }
             ],
-            skuSourceKeyMap,
-            orderTypeMap,
-            orderTypeKeyMap,
-            orderStatuskeyMap,
             orderList: [],
             // 倒计时实例列表
             countdownInstances: [],
