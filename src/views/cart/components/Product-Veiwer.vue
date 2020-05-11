@@ -7,8 +7,8 @@
         >
             <div
                 :class="$style.orderItemBox"
-                v-for="(item, index) of products"
-                :key="index"
+                v-for="item of products"
+                :key="item.sku1 + item.sku2 + '_' + item.count"
             >
                 <OrderItem
                     :img="item.goodsImage"
@@ -40,7 +40,7 @@
                         </template>
                     </InfoItem>
 
-                    <InfoItem>
+                    <InfoItem v-if="activeProduct === 1">
                         <template slot="label">修改数量</template>
                         <template slot="content">
                             <Count
