@@ -188,6 +188,7 @@ import {
 } from '../../apis/broker-manager'
 import { hasValue, isPhone, isName } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
+import { smstype } from '../../assets/js/constant'
 import { REFRESH_TOKEN, USER_INFO } from '../../store/mutation-type'
 
 const isCode = code => code.length === 4
@@ -198,6 +199,7 @@ export default {
     },
     data () {
         return {
+            smstype,
             agreeIsShow: true,
             showInvioceIntro: false,
             loading: false,
@@ -264,7 +266,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['smstype', 'isAdmin', 'mobile', 'mallId', 'roleCode']),
+        ...mapGetters(['isAdmin', 'mobile', 'mallId', 'roleCode']),
         isNameValid () {
             return hasValue(this.form.name) && isName(this.form.name)
         },

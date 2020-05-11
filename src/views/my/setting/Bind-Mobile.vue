@@ -103,6 +103,7 @@ import { mapGetters } from 'vuex'
 import { LOGIN, USER_INFO } from '../../../store/mutation-type'
 import { resetForm } from '../../../assets/js/util'
 import { isPhone } from '../../../assets/js/validate'
+import { smstype } from '../../../assets/js/constant'
 import Cookie from '../../../assets/js/storage-cookie'
 export default {
     name: 'BindMobile',
@@ -111,6 +112,7 @@ export default {
     },
     data () {
         return {
+            smstype,
             loading: false,
             bindForm: {
                 mobile: '',
@@ -133,7 +135,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mobile', 'smstype', 'openId']),
+        ...mapGetters(['mobile', 'openId']),
         title () {
             if (this.step === 1 && this.mobile) {
                 return '修改手机'

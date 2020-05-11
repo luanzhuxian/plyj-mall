@@ -69,24 +69,28 @@
                 />
             </div>
         </div>
-        <div v-if="activeProduct === 2 && preActive === 2" :class="$style.activeTag">团购</div>
-        <div v-else-if="activeProduct === 3 && preActive === 2" :class="$style.activeTag">限时秒杀</div>
-        <div v-else-if="activeProduct === 4 && preActive === 2" :class="$style.activeTag">预购</div>
-        <div v-else-if="activeProduct === 5 && preActive === 2" :class="$style.activeTag">春耘</div>
-        <div v-else-if="activeProduct === 6 && preActive === 2" :class="$style.activeTag">组合课</div>
-        <div v-else-if="activeProduct === 7 && preActive === 2" :class="[$style.activeTag, $style.publicBenefitTag]">公益助力</div>
+        <div
+            v-if="[2,3,4,5,6,7].includes(activeProduct) && preActive === 2"
+            :class="{
+                [$style.activeTag]: true,
+                [$style.publicBenefitTag]: activeProduct === 7
+            }">
+            {{ skuSourceMap[activeProduct] }}
+        </div>
     </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { skuSourceMap } from '../../assets/js/constant'
 export default {
     name: 'OrderItem',
     data () {
         return {
             loading: false,
-            // 2团购 3限时秒杀 4预购 这三种状态的商品 --> 暂不支持退换货 + 不支持线上发票
-            notSupportActiveProductStatus: [2, 3, 4, 6]
+            // 2团购 3限时秒杀 4预购 6-组合聚惠学 --> 暂不支持退换货 + 不支持线上发票
+            notSupportActiveProductStatus: [2, 3, 4, 6],
+            skuSourceMap
         }
     },
     props: {

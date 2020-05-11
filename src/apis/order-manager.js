@@ -38,7 +38,7 @@ export const getOrderList = ({ current, size, orderStatus }) => axios.get(`/apis
 export const orderPhysicalorderSummary = () => axios.get(`/apis/v1/order/current/user`)
 
 // 订单详情
-export const getOrderDetail = orderId => axios.get(`/apis/v2/order/detail?orderId=${ orderId }?source=1`)
+export const getOrderDetail = orderId => axios.get(`/apis/v2/order/detail?orderId=${ orderId }`)
 
 // 申请发票
 export const applyOrderInvoice = data => axios.post(`/apis/v1/invoice/OrderInvoice/add/v2`, data)

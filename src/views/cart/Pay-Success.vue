@@ -18,7 +18,7 @@
                 :to="
                     orderCount === 1
                         ? { name: 'OrderDetail', params: { orderId } }
-                        : { name: 'Orders', params: { status: 'ALL_ORDER' } }
+                        : { name: 'Orders', params: { status: '' } }
                 "
             >
                 查看订单

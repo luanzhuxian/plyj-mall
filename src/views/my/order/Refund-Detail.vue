@@ -366,6 +366,7 @@ import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication, deleteRefundOrder } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
 import { isExpressNumber } from '../../../assets/js/validate'
+import { refundTypeMap } from '../../../assets/js/constant'
 import { mapGetters } from 'vuex'
 
 const expressMapCode = 'KYYQJKDGS'
@@ -420,6 +421,7 @@ export default {
     },
     data () {
         return {
+            refundTypeMap,
             loading: false,
             loaded: false,
 
@@ -447,7 +449,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['refundTypeMap', 'address', 'supportPhone'])
+        ...mapGetters(['address', 'supportPhone'])
     },
     activated () {
         this.getDetail()

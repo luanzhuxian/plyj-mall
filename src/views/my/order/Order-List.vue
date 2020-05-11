@@ -1,8 +1,8 @@
 <template>
     <div :class="$style.orderList">
         <pl-tab
-            :class="$style.tabBar"
             size="small"
+            :class="$style.tabBar"
             :tabs="tabs"
             :active-id.sync="form.orderStatus"
             @change="onTabChange"
@@ -26,137 +26,38 @@
             >
                 <template v-slot="{ list }">
                     <router-link
-                        :class="$style.listItem"
                         tag="div"
                         v-for="(item, i) of orderList"
                         :key="i"
-                        :to="{ name: 'OrderDetail', params: { orderId: item.id } }"
+                        :to="{ name: 'OrderDetail', params: { orderId: item.orderId } }"
                     >
-                        <div>
-                            <div :class="$style.listItemLeft">
-                                <span
-                                    :class="$style.tag"
-                                    v-text="orderTypeMap[item.orderType]"
-                                />
-                                <pl-list
-                                    title="订单编号："
-                                    :content="item.id"
-                                />
-                            </div>
-                            <p
-                                :class="$style.status"
-                                v-text="item.statusText"
-                            />
-                        </div>
-                        <order-item
-                            v-for="(product, j) of item.products"
-                            :key="j"
-                            :img="product.productImg + '?x-oss-process=style/thum'"
-                            :name="product.productName"
-                            :option="product.skuName2 ? `${product.skuName},${product.skuName2}` : product.skuName"
-                            :count="product.purchaseQuantity"
-                            :price="product.unitPrice"
-                            :status="refundStatusMap[product.aftersaleStatus]"
-                            :active-product="item.activeProduct"
-                            :pre-active="item.activeProduct !== 1 ? 2 : ''"
-                            border
+                        <OrderListItem
+                            :detail="item"
+                            :index="i"
+                            :order-id="item.orderId"
+                            :order-type="item.orderType"
+                            :order-status="item.orderStatus"
+                            :goods-images="item.goodsImages"
+                            :goods-name="item.goodsName"
+                            :sku-name="item.skuName"
+                            :sub-sku-name="item.subSkuName"
+                            :unit-price="item.unitPrice"
+                            :count="item.count"
+                            :cui-lu-status="item.cuiLuStatus"
+                            :aftersale-status="item.aftersaleStatus"
+                            :sku-source="item.skuSource"
+                            :amount="item.amount"
+                            :is-start="item.isStart"
+                            :past-due="item.pastDue"
+                            :count-down="item.countDown"
+                            :comment-status="item.commentStatus"
+                            :is-payloading="payloading && currentPayId === item.orderId"
+                            @cancelOrder="cancelOrder"
+                            @pay="pay"
+                            @balancePayment="balancePayment"
+                            @deleteOrder="deleteOrder"
+                            @confirmReceipt="confirmReceipt"
                         />
-                        <div :class="$style.listItemBottom">
-                            <div :class="$style.priceWrapper">
-                                <span :class="$style.totalCount">{{ `共${item.count}件商品` }}</span>
-                                <span :class="$style.bold">总价：</span>
-                                <span :class="$style.price">{{ item.actuallyAmount }}</span>
-                            </div>
-                            <div
-                                :class="$style.buttons"
-                                v-if="item.orderStatus !== 'WAIT_SHIP'"
-                            >
-                                <pl-button
-                                    v-if="item.orderStatus === 'WAIT_PAY'"
-                                    round
-                                    plain
-                                    @click="cancelOrder(item, i)"
-                                >
-                                    取消订单
-                                </pl-button>
-                                <pl-button
-                                    v-if="item.orderStatus === 'WAIT_PAY' && false"
-                                    type="warning"
-                                    round
-                                    :loading="payloading && currentPayId === item.id"
-                                    :disabled="payloading && currentPayId === item.id"
-                                    @click="pay(item.id, item.orderType)"
-                                >
-                                    去付款
-                                </pl-button>
-                                <span v-if="item.activeProduct === 4 && !item.pastDue && item.orderStatus === 'WAIT_PAY_REPAYMENT'" class="fz-24 gray-3 mr-10">
-                                    <span v-show="item.isStart">剩余尾款支付时间：</span>
-                                    <span v-show="!item.isStart">距离开始支付时间：</span>
-                                    <span v-show="item.d !== '00'">{{ item.d }}天</span>
-                                    <span v-show="item.h !== '00'">{{ item.h }}时</span>
-                                    <span>{{ item.m }}分</span>
-                                    <span>{{ item.s }}秒</span>
-                                </span>
-                                <pl-button
-                                    v-if="item.orderStatus === 'WAIT_PAY_REPAYMENT'"
-                                    type="warning"
-                                    round
-                                    :loading="payloading && currentPayId === item.id"
-                                    :disabled="payloading && currentPayId === item.id || !item.isStart || item.pastDue"
-                                    @click="balancePayment(item.id, item.orderType)"
-                                >
-                                    {{ item.pastDue ? '已过期' : item.isStart ? '去付尾款' : '未开始付尾款' }}
-                                </pl-button>
-                                <pl-button
-                                    v-if="(item.orderStatus === 'FINISHED' || item.orderStatus === 'CLOSED') && item.isDeleteBtnShow"
-                                    round
-                                    plain
-                                    @click="deleteOrder(item, i)"
-                                >
-                                    删除订单
-                                </pl-button>
-                                <pl-button
-                                    v-if="item.orderType === 'PHYSICAL' && (item.orderStatus === 'WAIT_RECEIVE' || item.orderStatus === 'FINISHED')"
-                                    round
-                                    plain
-                                    @click="$router.push({ name: 'Freight', params: { orderId: item.id }, query: { img: item.products.length && item.products[0].productImg } })"
-                                >
-                                    查看物流
-                                </pl-button>
-                                <pl-button
-                                    v-if="item.orderType === 'PHYSICAL' && item.orderStatus === 'WAIT_RECEIVE'"
-                                    type="warning"
-                                    round
-                                    @click="confirmReceipt(item, i)"
-                                >
-                                    确认收货
-                                </pl-button>
-                                <pl-button
-                                    v-if="item.orderType === 'KNOWLEDGE_COURSE' && item.orderStatus === 'FINISHED'"
-                                    type="warning"
-                                    round
-                                    @click="$router.push({ name: 'Courses', params: { courseType: '1' } })"
-                                >
-                                    去学习
-                                </pl-button>
-                                <pl-button
-                                    v-else-if="item.orderType !== 'PHYSICAL' && item.orderStatus === 'WAIT_RECEIVE'"
-                                    type="warning"
-                                    round
-                                    @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"
-                                >
-                                    去使用
-                                </pl-button>
-                                <pl-button
-                                    v-if="item.orderStatus === 'FINISHED' && item.commentStatus === 0 && ~[0, 3, 6].indexOf(item.aftersaleStatus)"
-                                    round
-                                    plain
-                                    @click="$router.push({ name: 'OrderDetail', params: { orderId: item.id } })"
-                                >
-                                    去评价
-                                </pl-button>
-                            </div>
-                        </div>
                     </router-link>
                 </template>
             </load-more>
@@ -171,7 +72,6 @@
 </template>
 
 <script>
-import OrderItem from '../../../components/item/Order-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
 import {
     getOrderList,
@@ -181,42 +81,37 @@ import {
     deleteOrder,
     getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
+import { skuSourceKeyMap, orderTypeMap, orderTypeKeyMap, orderStatuskeyMap } from '../../../assets/js/constant'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
-import { mapGetters } from 'vuex'
 import moment from 'moment'
 import Countdown from '../../../assets/js/Countdown'
-const tabs = [{
-    name: '全部',
-    id: 'ALL_ORDER'
-}, {
-    name: '待付款',
-    id: 'WAIT_PAY'
-}, {
-    name: '待发货',
-    id: 'WAIT_SHIP'
-}, {
-    name: '待收货',
-    id: 'WAIT_RECEIVE'
-}, {
-    name: '待评价',
-    id: 'FINISHED'
-}]
+import OrderListItem from './components/Order-List-Item'
 
 export default {
     name: 'OrderList',
     components: {
         LoadMore,
-        OrderItem
+        OrderListItem
     },
     props: {
         status: {
             type: String,
-            default: null
+            default: ''
         }
     },
     data () {
         return {
-            tabs,
+            tabs: [
+                { name: '全部', id: '' },
+                { name: '待付款', id: 'WAIT_PAY' },
+                { name: '待发货', id: 'WAIT_SHIP' },
+                { name: '待收货', id: 'WAIT_RECEIVE' },
+                { name: '待评价', id: 'FINISHED' }
+            ],
+            skuSourceKeyMap,
+            orderTypeMap,
+            orderTypeKeyMap,
+            orderStatuskeyMap,
             orderList: [],
             // 倒计时实例列表
             countdownInstances: [],
@@ -240,21 +135,8 @@ export default {
                     values: ['不想买了', '信息填写错误，重新拍', '线下自提', '其他原因'],
                     textAlign: 'center'
                 }
-            ],
-            refundStatusMap: {
-                1: '退款中',
-                2: '退款成功',
-                3: '退款驳回',
-                //  退换货-已退货
-                4: '退款中',
-                //  退换货-待退货
-                5: '待退货',
-                9: '退款中'
-            }
+            ]
         }
-    },
-    computed: {
-        ...mapGetters(['orderTypeMap'])
     },
     beforeRouteEnter (to, from, next) {
         to.meta.noRefresh = from.name === 'OrderDetail' || from.name === 'Freight'
@@ -267,8 +149,8 @@ export default {
         const handler = action => {
             if (action === 'pay') {
                 return (order, index) => {
-                    if (this.status === 'ALL_ORDER') {
-                        order.orderStatus = order.orderType === 'PHYSICAL' ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
+                    if (!this.status) {
+                        order.orderStatus = order.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
                     } else if (this.status === 'WAIT_PAY') {
                         this.orderList.splice(index, 1)
                     }
@@ -276,8 +158,8 @@ export default {
             }
             if (action === 'receive') {
                 return (order, index) => {
-                    if (this.status === 'ALL_ORDER') {
-                        order.orderStatus = 'FINISHED'
+                    if (!this.status) {
+                        order.orderStatus = this.orderStatuskeyMap.FINISHED
                     } else if (this.status === 'WAIT_RECEIVE') {
                         this.orderList.splice(index, 1)
                     }
@@ -285,10 +167,10 @@ export default {
             }
             if (action === 'cancel') {
                 return (order, index) => {
-                    if (this.status === 'ALL_ORDER') {
+                    if (!this.status) {
                         order.orderStatus = 'CLOSED'
                     } else if (this.status === 'WAIT_PAY') {
-                        const isCombinedOrder = order.activeProduct === 5 || order.activeProduct === 6
+                        const isCombinedOrder = [this.skuSourceKeyMap.SPRINGPLOUGHING, this.skuSourceKeyMap.COURSEPACKAGE](order.activeProduct)
                         if (isCombinedOrder) {
                             this.$refresh()
                         } else {
@@ -332,13 +214,12 @@ export default {
         }
 
         this.form.orderStatus = this.status
-        this.form.orderStatus = this.status === 'ALL_ORDER' ? '' : this.status
         this.$refresh()
     },
     methods: {
         onTabChange (item) {
             this.$nextTick(() => {
-                this.$router.replace({ name: 'Orders', params: { status: item.id || null } })
+                this.$router.replace({ name: 'Orders', params: { status: item.id || '' } })
                 this.$refresh()
             })
         },
@@ -351,24 +232,22 @@ export default {
         },
         onRefresh (list, total) {
             this.clearCountdown()
-            for (let i = 0; i < list.length; i < list.length) {
-                const item = list[i]
-                // 只要商品在售后状态则不显示删除按钮
-                item.isDeleteBtnShow = [0, 2, 3, 6].includes(item.aftersaleStatus)
-                // this.setCountDown(item, i)
+            for (const [i, item] of list.entries()) {
+                item.amount = Number(item.amount.toFixed(2))
+                this.setCountDown(item, i)
             }
             this.orderList = list
             this.total = total
         },
         // 待支付订单，支付时间倒计时
         setCountDown (item, i) {
-            if (item.orderStatus !== 'WAIT_PAY_REPAYMENT') return
+            if (item.orderStatus !== this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) return
             // 是否开始付尾款
-            const now = Number(item.currentServerTime)
-            const useStartTime = moment(item.useStartTime).valueOf()
-            const useEndTime = moment(item.useEndTime).valueOf()
-            item.isStart = now - useStartTime >= 0
-            item.pastDue = now - useEndTime >= 0
+            const now = Number(item.currentTime)
+            const useStartTime = moment(item.startTime).valueOf()
+            const useEndTime = moment(item.endTime).valueOf()
+            item.isStart = now >= useStartTime
+            item.pastDue = now >= useEndTime
             if (!item.isStart) {
             // 可以开始支付了，倒计时支付
                 this.countDown(useStartTime - now, i, item)
@@ -390,10 +269,12 @@ export default {
                 const h = String(data.hours)
                 const m = String(data.minutes)
                 const s = String(data.seconds)
-                item.d = d.padStart(2, '0')
-                item.h = h.padStart(2, '0')
-                item.m = m.padStart(2, '0')
-                item.s = s.padStart(2, '0')
+                item.countDown = {
+                    d: d.padStart(2, '0'),
+                    h: h.padStart(2, '0'),
+                    m: m.padStart(2, '0'),
+                    s: s.padStart(2, '0')
+                }
                 this.$set(this.orderList, index, item)
             })
             countdownInstance.start()
@@ -407,27 +288,22 @@ export default {
             }
             this.countdownInstances = []
         },
-        async pay (orderId, orderType) {
+        async pay (index) {
+            const detail = this.orderList[index]
+            const orderId = detail.orderId
+            const orderType = detail.orderType
             this.payloading = true
             this.currentPayId = orderId
             try {
                 const { result } = await getAwaitPayInfo(orderId)
-
                 // 调用微信支付api
                 await wechatPay(result)
-                if (orderType === 'PHYSICAL') {
-                    this.form.orderStatus = 'WAIT_SHIP'
-                    this.onTabChange({
-                        name: '待发货',
-                        id: 'WAIT_SHIP'
-                    })
-                } else {
-                    this.form.orderStatus = 'WAIT_RECEIVE'
-                    this.onTabChange({
-                        name: '待收货',
-                        id: 'WAIT_RECEIVE'
-                    })
-                }
+                const next_order_status = orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
+                this.form.orderStatus = next_order_status
+                this.onTabChange({
+                    name: next_order_status === 'WAIT_SHIP' ? '待发货' : '待收货',
+                    id: next_order_status
+                })
             } catch (e) {
                 throw e
             } finally {
@@ -436,7 +312,10 @@ export default {
         },
 
         // 去付尾款
-        async balancePayment (orderId, orderType) {
+        async balancePayment (index) {
+            const detail = this.orderList[index]
+            const orderId = detail.orderId
+            const orderType = detail.orderType
             this.currentPayId = orderId
             this.payloading = true
             try {
@@ -444,38 +323,27 @@ export default {
 
                 // 调用微信支付api
                 await wechatPay(result)
-                if (orderType === 'PHYSICAL') {
-                    this.form.orderStatus = 'WAIT_SHIP'
-                    this.onTabChange({
-                        name: '待发货',
-                        id: 'WAIT_SHIP'
-                    })
-                } else {
-                    this.form.orderStatus = 'WAIT_RECEIVE'
-                    this.onTabChange({
-                        name: '待收货',
-                        id: 'WAIT_RECEIVE'
-                    })
-                }
+                const next_order_status = orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
+                this.form.orderStatus = next_order_status
+                this.onTabChange({
+                    name: next_order_status === 'WAIT_SHIP' ? '待发货' : '待收货',
+                    id: next_order_status
+                })
             } catch (e) {
                 throw e
             } finally {
                 this.payloading = false
             }
         },
-        async confirmReceipt (item, index) {
-            const orderId = item.id
+        async confirmReceipt (index) {
+            const detail = this.orderList[index]
+            const orderId = detail.orderId
             const { orderStatus } = this.form
             try {
                 await this.$confirm('您确定收货吗？')
                 await confirmReceipt(orderId)
                 this.$success('确认收货成功')
-                if (orderStatus === 'ALL_ORDER') {
-                    item.orderStatus = 'FINISHED'
-                    item.statusText = '已完成'
-                } else {
-                    this.orderList.splice(index, 1)
-                }
+                orderStatus === '' ? detail.orderStatus = this.orderStatuskeyMap.FINISHED : this.orderList.splice(index, 1)
                 setTimeout(() => {
                     this.$router.push({ name: 'OrderComplete', params: { orderId } })
                 }, 2000)
@@ -483,34 +351,33 @@ export default {
                 throw e
             }
         },
-        async cancelOrder (item, index) {
-            const orderId = item.id
+        async cancelOrder (index) {
+            const detail = this.orderList[index]
+            const orderId = detail.orderId
             const { orderStatus } = this.form
 
             // 5春耘订单 6组合课订单
-            const isCombinedOrder = item.activeProduct === 5 || item.activeProduct === 6
+            const isCombinedOrder = [5, 6].includes(detail.skuSource)
             try {
                 const reason = await this.showPicker()
                 await this.$confirm(isCombinedOrder ? `是否取消该订单，取消后组合订单将同步取消？` : '订单一旦取消，将无法恢复 确认要取消订单？')
                 await cancelOrder(orderId, reason)
                 this.$success('交易关闭')
-                if (orderStatus === 'ALL_ORDER') {
-                    item.orderStatus = 'CLOSED'
-                    item.statusText = '已关闭'
+                if (orderStatus === '') {
+                    // 全部订单时手动修改订单状态
+                    detail.orderStatus = this.orderStatuskeyMap.CLOSED
                 } else {
                     // 取消组合订单中的所有相关订单，干脆直接刷新页面
-                    if (isCombinedOrder) {
-                        this.$refresh()
-                    } else {
-                        this.orderList.splice(index, 1)
-                    }
+                    isCombinedOrder ? this.$refresh() : this.orderList.splice(index, 1)
                 }
             } catch (e) {
                 throw e
             }
         },
-        async deleteOrder (item, index) {
-            const orderId = item.id
+        // 删除订单
+        async deleteOrder (index) {
+            const detail = this.orderList[index]
+            const orderId = detail.orderId
             try {
                 await this.$confirm('是否删除当前订单？ 删除后不可找回')
                 await deleteOrder(orderId)
@@ -523,10 +390,7 @@ export default {
                     const currentLastOrder = result.records[result.records.length - 1]
                     // 因删除过订单后offsetHeight不足初始获取的值，无法在加载更多，将删除留下的空位填充用currentPage的最后一个数据
                     if (currentLastOrder) {
-                        const counter = array => key => array.reduce((acc, current) => acc + (key ? current[key] : current), 0)
-                        currentLastOrder.totalCount = counter(item.products)('purchaseQuantity')
-                        // 只要有一个商品在售后状态则不显示删除按钮
-                        currentLastOrder.isDeleteBtnShow = !item.products.some(product => ![0, 2, 3, 6].includes(product.aftersaleStatus))
+                        currentLastOrder.amount = currentLastOrder.amount.toFixed(2)
                         this.orderList.push(currentLastOrder)
                     }
                 }
@@ -570,78 +434,6 @@ export default {
   }
   .list {
     padding: 22px 24px 120px;
-  }
-  .list-item {
-    margin-bottom: 20px;
-    padding: 0 24px 28px;
-    border-radius: 20px;
-    background-color: #fff;
-    > div {
-      &:nth-of-type(1) {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 22px 0 36px;
-      }
-    }
-    .status {
-      color: $--primary-color;
-      font-size: 24px;
-      line-height: 34px;
-    }
-  }
-  .list-item-bottom {
-    margin-top: 16px;
-    > div {
-      display: flex;
-      justify-content: flex-end;
-      align-items: baseline;
-    }
-    .price-wrapper {
-      display: flex;
-      align-items: center;
-    }
-    .total-count {
-      font-size: 20px;
-      font-family: MicrosoftYaHeiUI;
-      color: #999999;
-      margin-right: 12px;
-    }
-    .bold {
-      font-size: 30px;
-      font-weight: bold;
-      color: #333333;
-    }
-    .price {
-      align-self: flex-end;
-      font-size: 32px;
-      color: #FE7700;
-      &:before {
-        // margin-right: 10px;
-        padding-bottom: 4px;
-        font-size: 20px;
-        content: '¥';
-      }
-    }
-    .buttons {
-      margin-top: 24px;
-    }
-  }
-  .list-item-left {
-    display: inline-flex;
-    align-items: center;
-    .tag {
-      width: 104px;
-      height: 28px;
-      background: #F2B036;
-      border-radius: 14px;
-      font-size: 20px;
-      color: #FFFFFF;
-      line-height: 28px;
-      margin-right: 12px;
-      text-align: center;
-    }
   }
 
 </style>
