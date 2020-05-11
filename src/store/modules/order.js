@@ -114,7 +114,17 @@ const order = {
 
         }
     },
-    mutations: {},
-    actions: {}
+    getters: {
+        smstype: state => state.smstype,
+        skuSourceMap: state => state.skuSourceMap,
+        skuSourceKeyMap: state => state.skuSourceKeyMap,
+        orderStatusMap: state => state.orderStatusMap,
+        orderStatuskeyMap: state => state.orderStatuskeyMap,
+        orderTypeMap: state => state.orderTypeMap,
+        orderTypeKeyMap: state => state.orderTypeKeyMap,
+        refundStatusMap: state => state.refundStatusMap,
+        refundTypeMap: state => state.refundTypeMap,
+        aftersaleStatusKeyMap: state => state.aftersaleStatusKeyMap
+    }
 }
 export default order

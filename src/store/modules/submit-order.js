@@ -1,6 +1,7 @@
 /* 处理提交订单页面再多个页面都需要使用的数据 */
 const CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
 export const submitOrder = {
+    // 开启命名空间
     namespaced: true,
     state: {
         checkedStudents: CHECKED_STUDENT
