@@ -14,12 +14,20 @@
                 <img :src="homeActive ? skinNavMap[skinId].homeActive : skinNavMap[skinId].home">
                 <div :class="$style.tabName">首页</div>
             </template>
-            <img
-                v-else
-                :src="homeActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/find (1).png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/find.png'"
-                style="width: 5.86vw; height: 9.06vw;"
-                alt=""
-            >
+            <template v-else>
+                <img
+                    :class="$style.icon"
+                    src="https://mallcdn.youpenglai.com/static/mall/icons/olds/find.png"
+                    style="width: 5.86vw; height: 9.06vw;"
+                    alt=""
+                >
+                <img
+                    :class="{ [$style.icon]: true, [$style.active]: true, [$style.show]: homeActive }"
+                    src="https://mallcdn.youpenglai.com/static/mall/icons/olds/find (1).png"
+                    style="width: 5.86vw; height: 9.06vw;"
+                    alt=""
+                >
+            </template>
         </router-link>
         <!-- 分类 -->
         <router-link
@@ -34,12 +42,20 @@
                 <img :src="classifyActive ? skinNavMap[skinId].classifyActive : skinNavMap[skinId].classify">
                 <div :class="$style.tabName">分类</div>
             </template>
-            <img
-                v-else
-                :src="classifyActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/classify.png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/classify (1).png'"
-                style="width: 5.86vw; height: 9.06vw;"
-                alt=""
-            >
+            <template v-else>
+                <img
+                    :class="$style.icon"
+                    src="https://mallcdn.youpenglai.com/static/mall/icons/olds/classify (1).png"
+                    style="width: 5.86vw; height: 9.06vw;"
+                    alt=""
+                >
+                <img
+                    :class="{ [$style.icon]: true, [$style.active]: true, [$style.show]: classifyActive }"
+                    src="https://mallcdn.youpenglai.com/static/mall/icons/olds/classify.png"
+                    style="width: 5.86vw; height: 9.06vw;"
+                    alt=""
+                >
+            </template>
         </router-link>
         <!-- 中间的活动button -->
         <router-link
@@ -77,12 +93,21 @@
                 <img v-imgError :src="shoppingChartActive ? skinNavMap[skinId].shoppingChartActive : skinNavMap[skinId].shoppingChart">
                 <div :class="$style.tabName">购物车</div>
             </template>
-            <img
-                v-else
-                :src="shoppingChartActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/cart.png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/cart (1).png'"
-                style="width: 8.53vw; height: 10.13vw;"
-                alt=""
-            >
+            <template v-else>
+                <img
+                    :class="$style.icon"
+                    src="https://mallcdn.youpenglai.com/static/mall/icons/olds/cart (1).png"
+                    style="width: 8.53vw; height: 10.13vw;"
+                    alt=""
+                >
+                <img
+                    :class="{ [$style.icon]: true, [$style.active]: true, [$style.show]: shoppingChartActive }"
+                    src="https://mallcdn.youpenglai.com/static/mall/icons/olds/cart.png"
+                    style="width: 8.53vw; height: 10.13vw;"
+                    alt=""
+                >
+            </template>
+
         </router-link>
         <!-- 我的 -->
         <router-link
@@ -97,12 +122,20 @@
                 <img v-imgError :src="myActive ? skinNavMap[skinId].myActive : skinNavMap[skinId].my">
                 <div :class="$style.tabName">我的</div>
             </template>
-            <img
-                v-else
-                :src="myActive ? 'https://mallcdn.youpenglai.com/static/mall/icons/olds/my (1).png' : 'https://mallcdn.youpenglai.com/static/mall/icons/olds/my.png'"
-                style="width: 5.87vw; height: 9.87vw;"
-                alt=""
-            >
+            <template v-else>
+                <img
+                    :class="$style.icon"
+                    src="https://mallcdn.youpenglai.com/static/mall/icons/olds/my.png"
+                    style="width: 5.87vw; height: 9.87vw;"
+                    alt=""
+                >
+                <img
+                    :class="{ [$style.icon]: true, [$style.active]: true, [$style.show]: myActive }"
+                    src="https://mallcdn.youpenglai.com/static/mall/icons/olds/my (1).png"
+                    style="width: 5.87vw; height: 9.87vw;"
+                    alt=""
+                >
+            </template>
             <div v-if="noticeStatus === 2" :class="$style.alertMessage" />
         </router-link>
     </nav>
@@ -184,9 +217,11 @@ export default {
     // overflow: hidden;
 }
 .route {
+    position: relative;
     display: inline-flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     font-size: 20px;
     height: 88px;
     .alertMessage {
@@ -197,6 +232,21 @@ export default {
         position: absolute;
         top: 10px;
         right: 60px;
+    }
+    > .icon {
+        width: 71px;
+        height: 62px;
+        &.active {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            transition: opacity .3s;
+            &.show {
+                opacity: 1;
+            }
+        }
     }
 }
 .icon-d12 {
