@@ -65,7 +65,7 @@
                         <div :class="$style.img">
                             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
                             <!-- 不是 订单或者赠课 才显示倒计时-->
-                            <div v-if="!(item.orderId || item.isGive)" :class="$style.countDown">
+                            <div v-if="!(item.orderId || item.isGive) && item.regularSaleTime" :class="$style.countDown">
                                 <count-down
                                     :endtime="item.regularSaleTime"
                                     theme="black"
@@ -237,13 +237,13 @@ export default {
 }
 </script>
 <style lang="scss" module>
-  .online-classroom {
+.online-classroom {
     /*padding: 14vw 20px 20px;*/
     padding: 20px;
     min-height: 50vh;
     background-color: #fff;
-  }
-  .classify-main {
+}
+.classify-main {
     position: fixed;
     top: 91px;
     left: 0;
@@ -255,26 +255,26 @@ export default {
     overflow-y: hidden;
     background-color: #fff;
     z-index: 10;
-  }
-  .control-wrap {
+}
+.control-wrap {
     position: fixed;
     top: 117px;
     right: 0;
     padding-left: 20px;
     overflow-y: hidden;
-  }
-  .control {
+}
+.control {
     width: 70px;
     height: 46px;
     display: inline-flex;
     align-items: center;
-    background-color: #FFF;
+    background-color: #fff;
     box-shadow: -3px 0 6px rgba(0, 0, 0, .2);
     > svg {
-      margin-left: 18px;
+        margin-left: 18px;
     }
-  }
-  .classify-list {
+}
+.classify-list {
     position: relative;
     display: flex;
     align-items: center;
@@ -285,136 +285,137 @@ export default {
     background-color: #fff;
     box-sizing: border-box;
     > li {
-      display: inline-block;
-      padding: 0 15px;
-      line-height: 42px;
-      text-align: center;
-      font-size: 22px;
-      color: #666666;
-      word-break: keep-all;
-      white-space : nowrap;
-      &.active {
-        background: #FDF5E7;
-        border: 1px solid #F3AD3C;
-        border-radius: 22px;
-        color: #F3AD3C;
-      }
+        display: inline-block;
+        padding: 0 15px;
+        line-height: 42px;
+        text-align: center;
+        font-size: 22px;
+        color: #666;
+        word-break: keep-all;
+        white-space: nowrap;
+        &.active {
+            background: #fdf5e7;
+            border: 1px solid #f3ad3c;
+            border-radius: 22px;
+            color: #f3ad3c;
+        }
     }
     .close {
-      position: absolute;
-      bottom: -70px;
-      left: 50%;
-      transform: translateX(-50%);
+        position: absolute;
+        bottom: -70px;
+        left: 50%;
+        transform: translateX(-50%);
     }
-  }
-  .show-all {
+}
+.show-all {
     padding: 0;
     height: calc(100vh - 178px);
     box-shadow: 0 5px 5px rgba(0, 0, 0, .1);
     background-color: rgba(0, 0, 0, .3);
     .classify-list {
-      width: 100%;
-      flex-wrap: wrap;
-      padding-right: 28px;
-      padding-left: 28px;
+        width: 100%;
+        flex-wrap: wrap;
+        padding-right: 28px;
+        padding-left: 28px;
     }
     .control {
-      display: none;
+        display: none;
     }
-  }
-  .course-list {
+}
+.course-list {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-  }
-  .course-item {
+}
+.course-item {
     position: relative;
     width: calc(50% - 15px);
     margin-bottom: 32px;
     &.had-buy:before {
-      content: '已购';
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      left: 0;
-      width:100px;
-      border-radius:20px 0px 20px 0px;
-      background:#FE7700;
-      line-height:42px;
-      text-align: center;
-      font-size:24px;
-      color: #fff;
+        content: '已购';
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        width: 100px;
+        border-radius: 20px 0 20px 0;
+        background: #fe7700;
+        line-height: 42px;
+        text-align: center;
+        font-size: 24px;
+        color: #fff;
     }
     > .img {
-      position: relative;
-      width: 340px;
-      height: 228px;
-      margin-bottom: 16px;
-      border-radius: 20px;
-      overflow: hidden;
-      .count-down{
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        height: 52px;
-        border-radius: 0 0 12px 12px;
-      }
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+        position: relative;
+        width: 340px;
+        height: 228px;
+        margin-bottom: 16px;
+        border-radius: 20px;
+        overflow: hidden;
+        .count-down {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            height: 52px;
+            border-radius: 0 0 12px 12px;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
-  }
-  .bottom {
+}
+.bottom {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     margin-top: 18px;
     .price-zoom {
-      max-width: 200px;
+        max-width: 200px;
     }
     .price {
-      font-size: 32px;
-      color: #FE7700;
-      font-weight: bold;
-      &:before {
-        content: '¥';
-        margin-right: 4px;
-        font-size: 20px;
-        vertical-align: 3px;
-      }
+        font-size: 32px;
+        color: #fe7700;
+        font-weight: bold;
+        &:before {
+            content: '¥';
+            margin-right: 4px;
+            font-size: 20px;
+            vertical-align: 3px;
+        }
     }
     .original {
-      display: block;
-      font-size: 20px;
-      color: #999;
+        display: block;
+        font-size: 20px;
+        color: #999;
     }
     .free {
-      font-size: 28px;
-      color: #FE7700;
+        font-size: 28px;
+        color: #fe7700;
     }
     .not-start {
-      background-color: rgba(254,119,0,0.3);
+        background-color: rgba(254,119,0,.3);
     }
-  }
-  .title {
+}
+.title {
     width: 340px;
     margin-bottom: 4px;
     font-size: 24px;
     color: #000;
     font-weight: bold;
     @include elps();
-  }
-  .noLecturer {
+}
+.noLecturer {
     margin-bottom: 45px;
-  }
-  .text1 {
+}
+.text1 {
     width: 340px;
     font-size: 22px;
     color: #666;
     @include elps();
-  }
+}
+
 </style>
