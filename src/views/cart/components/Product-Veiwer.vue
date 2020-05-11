@@ -15,7 +15,7 @@
                     :name="item.goodsName"
                     :count="item.count"
                     :option="item.skuName2 ? `${item.skuName},${item.skuName2}` : item.skuName"
-                    :price="(activeProduct === 5 || activeProduct === 6 ? item.originPrice : item.sellingPrice) / 100"
+                    :price="item.sellingPrice / 100"
                     :support-refund="item.supportAfterSales"
                     :gap="32"
                     :product-type="1"
@@ -52,17 +52,18 @@
                         </template>
                     </InfoItem>
 
-                    <InfoItem v-if="activeProduct === 5 && item.discount !== 100">
-                        <template slot="label">春耘折扣</template>
-                        <template slot="content">
-                            {{ item.discount / 100 }}折 -¥{{ 0 }}
-                        </template>
+                    <InfoItem v-if="(activeProduct === 5 || activeProduct === 6) && item.discount < 100">
+                        <template slot="label" v-if="activeProduct === 5">春耘折扣</template>
+                        <template slot="label" v-else-if="activeProduct === 6">组合折扣</template>
+                        <span slot="content">
+                            {{ item.discount / 10 }}折
+                        </span>
                     </InfoItem>
 
-                    <InfoItem v-if="activeProduct === 6 && item.discount !== 10">
+                    <!--<InfoItem v-if="activeProduct === 6 && item.discount !== 100">
                         <template slot="label">组合折扣</template>
-                        <span slot="content">{{ item.discount }}折 -¥{{ (physicalProductOriginalPrice - physicalProductPrice).toFixed(2) }}</span>
-                    </InfoItem>
+                        <span slot="content">{{ item.discount / 10 }}折 -¥{{ ((item.sellingPrice - item.amount) / 100).toFixed(2) }}</span>
+                    </InfoItem>-->
 
                     <InfoItem v-if="item.couponAmount > 0">
                         <template slot="label">优惠券</template>
@@ -72,6 +73,11 @@
                     <InfoItem v-if="item.scholarship > 0">
                         <template slot="label">奖学金</template>
                         <span slot="content" class="gray-1">-¥{{ item.scholarship / 100 }}</span>
+                    </InfoItem>
+
+                    <InfoItem v-if="item.postageAmount > 0">
+                        <template slot="label">普通快递</template>
+                        <span slot="content" class="gray-1">¥{{ item.postageAmount / 100 }}</span>
                     </InfoItem>
 
                     <InfoItem>

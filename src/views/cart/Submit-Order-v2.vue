@@ -39,6 +39,19 @@
                 </pl-button>
             </div>
 
+            <div
+                :class="$style.itemSelector"
+            >
+                <pl-fields
+                    size="middle"
+                    text="普通快递"
+                    icon="icon-express"
+                    :icon-gap="12"
+                    :right-text="'¥' + freight"
+                    left-text-weight="bold"
+                />
+            </div>
+
             <Coupon
                 v-if="activeProduct === 1 && goodsAmount > 0"
                 :active-product="activeProduct"
@@ -242,6 +255,7 @@ export default {
             try {
                 const CONFIRM_LIST =  this.initProductInfo()
                 // 以下是设置订单红包和优惠券，只有普通订单才可以使用优惠券和红包
+                console.log(this.activeProduct)
                 if (this.activeProduct === 1) {
                     const AMOUNT = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
                     const COUPON_DATA = {
