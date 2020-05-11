@@ -18,12 +18,12 @@
 
 <script>
 import {
-    getCourseDetail,
     getPermission,
     setCourseProgress,
     setStudyCount,
     setStudyTime
-} from './../../../apis/live-library'
+} from '../../../apis/live-library'
+import { getVideoMesById as getCourseDetail } from './../../../apis/live'
 import PaidPlayer from '../../../components/common/Paid-Player.vue'
 export default {
     name: 'CourseWatch',
