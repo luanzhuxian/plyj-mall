@@ -113,13 +113,11 @@ import AddressItem from '../../components/item/Address-Item.vue'
 import moment from 'moment'
 import { getCouponOfMax, getCouponByPrice, getRedEnvelopeListByPrice } from '../../apis/my-coupon'
 import {
-    cancelOrder,
     confirmOrder,
     submitOrder,
     getOrderPayData,
-    deleteOrder
 } from '../../apis/order-manager'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import { getServerTime } from '../../apis/base-api'
@@ -130,8 +128,7 @@ import Coupon from './components/Coupon.vue'
 import Scholarship from './components/Scholarship.vue'
 import Invoice from './components/Invoice.vue'
 import ContactInfo from './components/Contact-Info.vue'
-import {setTimeoutSync} from "../../assets/js/util";
-import {submitOrderPay} from "../../apis/shopping-cart";
+import { setTimeoutSync } from "../../assets/js/util";
 import wechatPay from "../../assets/js/wechat/wechat-pay";
 export default {
     name: 'SubmitOrderV2',
@@ -533,6 +530,12 @@ export default {
         }
     },
     beforeRouteLeave (to, from, next) {
+        if (to.name !== 'ApplyInvoice' &&
+            to.name !== 'Address' &&
+            to.name !== 'AddAddress' &&
+            to.name !== 'StudentList') {
+            sessionStorage.removeItem('CONFIRM_LIST')
+        }
         next()
     }
 }

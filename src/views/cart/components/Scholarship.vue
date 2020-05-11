@@ -109,6 +109,7 @@ export default {
         async redEnvelopeClick (item) {
             this.$emit('update:currentRedEnvelope', item)
             this.$emit('change', item)
+            this.showRedEnvelopePopup = false
         }
     }
 }

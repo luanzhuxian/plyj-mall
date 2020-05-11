@@ -70,7 +70,7 @@ import {
     getDetail,
     wouldINeedOpenDefault
 } from '../../../apis/student'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
     name: 'AddStudent',
     components: {
@@ -108,7 +108,7 @@ export default {
         canSelect () {
             return this.$route.query.select === 'YES'
         },
-        proId () {
+        sku () {
             return this.$route.query.sku
         },
         count () {
@@ -122,6 +122,7 @@ export default {
         delete this.form.id
     },
     methods: {
+        ...mapMutations([`submitOrder/setCheckedStudent`, `submitOrder/removeStudent`]),
         async confirm () {
             if (this.$refs.form.validate()) {
                 try {
@@ -136,32 +137,8 @@ export default {
                         const { result: res } = await add(this.form)
                         result = res
                     }
-                    if (this.canSelect) {
-                        const checkedData = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-                        const checked = checkedData[this.proId] || []
-                        const finded = checked.find(item => item.id === result.id)
-                        // 编辑的是已选择的项
-                        if (finded) {
-                            Object.assign(finded, result)
-                            // 编辑的不是已选择的，但是是默认的
-                        } else if (result.defaultStatus === 1) {
-                            const def = checked.find(item => item.defaultStatus === 1)
-                            // 如果原来选中的里边有默认的，就替换这个默认的
-                            if (def) {
-                                Object.assign(def, result)
-                            } else if (checked.length < this.count) {
-                                checked.push(result)
-                            } else {
-                                checked.splice(-1, 1, result)
-                            }
-                        } else if (checked.length < this.count) {
-                            // 编辑的不是选中的，且选中的数量不超过最大选中数量
-                            checked.push(result)
-                        } else {
-                            // 编辑的不是选中的，且选中的数量等于最大选中数量，则替换最后一个
-                            checked.splice(-1, 1, result)
-                        }
-                        sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
+                    if (this.sku) {
+                        this[`submitOrder/setCheckedStudent`]({ sku: this.sku, student: result, count: this.count })
                     }
                     this.$router.replace({
                         name: 'StudentList',
@@ -187,14 +164,9 @@ export default {
                         name: 'StudentList',
                         query: this.$route.query
                     })
-                    const checkedData = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-                    if (checkedData[this.proId]) {
-                        const find = checkedData[this.proId].find(item => item.id === this.id)
-                        if (find) {
-                            const index = checkedData[this.proId].indexOf(find)
-                            checkedData[this.proId].splice(index, 1)
-                            sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
-                        }
+                    // 删除学员时，需要同步删除提交订单那边选择的学员
+                    if (this.sku) {
+                        this[`submitOrder/removeStudent`]({ sku: this.sku, studentId: this.id })
                     }
                 }
             } catch (e) {

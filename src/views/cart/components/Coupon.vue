@@ -90,6 +90,7 @@ export default {
         async couponClick (item) {
             this.$emit('change', item)
             this.$emit('update:coupon', item)
+            this.showCoupon = false
         }
     }
 }

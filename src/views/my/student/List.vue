@@ -58,6 +58,7 @@
 
 <script>
 import { getList } from '../../../apis/student'
+import { mapMutations, mapGetters } from 'vuex'
 export default {
     name: 'StudentList',
     data () {
@@ -71,12 +72,13 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['submitOrder/checkedStudents']),
         canSelect () {
             return this.$route.query.select === 'YES'
         },
 
         // 选择的学员所对应的商品
-        proId () {
+        sku () {
             return this.$route.query.sku
         },
 
@@ -94,6 +96,7 @@ export default {
         this.$destroy()
     },
     methods: {
+        ...mapMutations([`submitOrder/setCheckedStudent`]),
         async getList () {
             try {
                 const { result } = await getList()
@@ -120,9 +123,7 @@ export default {
             this.$router.push({ name: 'AddStudent', query: this.$route.query })
         },
         confirmSelect () {
-            const CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-            CHECKED_STUDENT[this.proId] = this.checked
-            sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(CHECKED_STUDENT))
+            this['submitOrder/setCheckedStudent']({ sku: this.sku, student: this.checked })
             const { name, params, query } = JSON.parse(sessionStorage.getItem('SELECT_STUDENT_FROM')) || {}
             if (name) {
                 this.$router.replace({
@@ -153,8 +154,7 @@ export default {
             return canvas.toDataURL()
         },
         setDefaultChecked () {
-            const CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-            const CURRENT_CHECKED_STUDENT = CHECKED_STUDENT[this.proId] || []
+            const CURRENT_CHECKED_STUDENT = this['submitOrder/checkedStudents'][this.sku] || []
             if (CURRENT_CHECKED_STUDENT.length) {
                 for (const item of this.list) {
                     const HAS = CURRENT_CHECKED_STUDENT.some(checked => item.id === checked.id)

@@ -90,6 +90,7 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import InfoItem from './Info-Item.vue'
 import StudentInline from './Student-Inline.vue'
 import Count from '../../../components/common/Count.vue'
+import { mapGetters } from 'vuex'
 export default {
     name: 'SubmitProductsViewer',
     components: {
@@ -98,12 +99,6 @@ export default {
         InfoItem,
         StudentInline,
         Count
-    },
-    data () {
-        return {
-            // 已选中并缓存的学员
-            CHECKED_STUDENT: {}
-        }
     },
     props: {
         products: {
@@ -121,9 +116,10 @@ export default {
             default: 1
         }
     },
-    mounted () {
-        // 已选中并缓存的学员
-        this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
+    computed: {
+        ...mapGetters({
+            CHECKED_STUDENT: 'submitOrder/checkedStudents'
+        })
     },
     methods: {
         studentInited (students, product) {
@@ -140,9 +136,8 @@ export default {
             this.$emit('countChange', { count, product, next })
         },
         checkStudents () {
-            const CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
             for (const pro of this.products) {
-                const students = CHECKED_STUDENT[pro.sku1 + pro.sku2] || []
+                const students = this.CHECKED_STUDENT[pro.sku1 + pro.sku2] || []
                 if (pro.needStudents && students.length < pro.count) {
                     if (students.length) {
                         this.$warning(`请再选择${ pro.count - students.length }名学员信息`)
