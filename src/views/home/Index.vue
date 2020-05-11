@@ -54,6 +54,11 @@ import { getTemplate } from '../../apis/home'
 import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
 import { SET_CAMPAIGN_REPORT, SET_CAMPAIGN_BOOK } from '../../store/mutation-type'
 
+/* eslint-disable func-style */
+function findModule (id) {
+    return this.find(module => module.moduleType === id)
+}
+
 export default {
     name: 'Home',
     provide () {
@@ -199,16 +204,18 @@ export default {
                     modules.RECOMMEND = moduleModels[5]
                 }
                 if (type === 9) {
-                    modules.BANNER = moduleModels[0]
-                    modules.COUPON = moduleModels[1]
-                    modules.ACTIVITY = moduleModels[2]
-                    modules.APPOINTMENT = moduleModels[3]
-                    modules.MIAO_SHA = moduleModels[4]
-                    modules.PACKAGE = moduleModels[5]
-                    modules.PIN_TUAN = moduleModels[6]
-                    modules.YU_GOU = moduleModels[7]
-                    modules.PROPAGATE = moduleModels[8]
-                    modules.RECOMMEND = moduleModels[9]
+                    modules.BANNER = findModule.bind(moduleModels)(1)
+                    modules.COUPON = findModule.bind(moduleModels)(9)
+                    modules.ACTIVITY = findModule.bind(moduleModels)(15)
+                    modules.APPOINTMENT = findModule.bind(moduleModels)(5)
+                    modules.MIAO_SHA = findModule.bind(moduleModels)(10)
+                    modules.PACKAGE = findModule.bind(moduleModels)(16)
+                    modules.PIN_TUAN = findModule.bind(moduleModels)(8)
+                    modules.YU_GOU = findModule.bind(moduleModels)(11)
+                    modules.PROPAGATE = findModule.bind(moduleModels)(6)
+                    modules.POPULAR = findModule.bind(moduleModels)(2)
+                    modules.CLASS = findModule.bind(moduleModels)(3)
+                    modules.RECOMMEND = findModule.bind(moduleModels)(4)
                 }
                 this.type = type
                 this.modules = modules
