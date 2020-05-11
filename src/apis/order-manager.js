@@ -22,7 +22,7 @@ export const physicalorderPaymentSuccessVirtual = orderSn => axios.put(`/apis/v1
 export const returnRequest = ({ orderId, operationType, type, refundModel, expressInfoModel }) => axios.put(`/apis/v1/order/physicalorder/refundment/${ orderId }?operationType=${ operationType }&serviceType=${ type }`, { refundModel, expressInfoModel })
 
 // 用户取消订单 userType：1 用户取消  2 商户取消
-export const cancelOrder = (orderId, cancelReason) => axios.put(`/apis/v1/order/cancel/${ orderId }?userType=1&cancelReason=${ cancelReason }`)
+export const cancelOrder = (orderId, cancelReason) => axios.get(`/apis/v2/order/cancel?orderId=${ orderId }&message=${ cancelReason }`)
 
 // 用户删除订单
 export const deleteOrder = orderId => axios.delete(`/apis/v1/order/current/user/order/${ orderId }`)
