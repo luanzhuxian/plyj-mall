@@ -56,7 +56,8 @@ export default {
                 'ShoppingCart',
                 'LiveRoom',
                 'PaySuccess',
-                'LongmenLottery'
+                'LongmenLottery',
+                'SubmitOrderV2'
             ],
             // 以下路由名称，不显示快速导航
             showNavbar: [
@@ -82,6 +83,7 @@ export default {
             // 用户切换商城的时候，清空所有登录认证信息
             if (!localOpengId) {
                 localStorage.clear()
+                sessionStorage.clear()
             }
             await this.getMallInfo()
             const mallId = Cookie.get('mallId')
