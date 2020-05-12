@@ -1,23 +1,20 @@
 <template>
-    <div
-        :class="{ [$style.codeItem]: true, [$style.used]: statusCode !== 0 }"
-        :key="i"
-    >
+    <div :class="{ [$style.codeItem]: true, [$style.used]: status !== 0 }">
         <div>
             <div :class="$style.codeBox">
                 <code :class="$style.codeValue">
                     {{ redeemCode | separator(' ', 4) }}
                 </code>
-                <span :class="$style.codeStatus" v-text="status" />
+                <span :class="$style.codeStatus" v-text="statuText[status]" />
             </div>
             <div :class="$style.whoUse" v-show="!collapseQrCode && name">
-                <pl-svg name="icon-name-card" :fill="statusCode !== 0 ? '#e1e1e1' : '#ccc'" />
+                <pl-svg name="icon-name-card" :fill="status !== 0 ? '#e1e1e1' : '#ccc'" />
                 <span :class="{ [$style.name]: true }" v-text="name" />
                 <span :class="{ [$style.phone]: true }" v-text="mobile" />
             </div>
         </div>
-        <div :class="$style.shareCode" v-if="statusCode === 0">
-            <div :class="$style.shareButton" @click="drawPoster(detail)">分享</div>
+        <div :class="$style.shareCode" v-if="status === 0">
+            <div :class="$style.shareButton" @click="drawPoster">分享</div>
         </div>
     </div>
 </template>
@@ -46,12 +43,8 @@ export default {
             type: Number,
             default: 0
         },
-        statusCode: {
-            type: Number,
-            default: 0
-        },
         redeemCode: {
-            type: Number,
+            type: [Number, String],
             default: 0
         },
         name: {
@@ -66,14 +59,17 @@ export default {
     data () {
         return {
             isPosterShow: false,
-            poster: ''
+            poster: '',
+            statuText: {
+                0: '未使用'
+            }
         }
     },
     methods: {
         async drawPoster () {
-            const start = this.goodsModel.validityPeriodStart.split(' ')[0]
-            const end = this.goodsModel.validityPeriodEnd.split(' ')[0]
-            const qrcode = await generateQrcode({ size: 300, text: `${ this.detail.redeemCode }` })
+            const start = (this.goodsModel.validityPeriodStart || '').split(' ')[0]
+            const end = (this.goodsModel.validityPeriodEnd || '').split(' ')[0]
+            const qrcode = await generateQrcode({ size: 300, text: `${ this.redeemCode }` })
             const mulitImg = [
                 `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/0C18FB91-C64E-4364-A391-1532CD691009.png?time=${ Date.now() }`,
                 `${ qrcode }`,
@@ -110,21 +106,21 @@ export default {
                 ctx.font = 'bold 78px Microsoft YaHei'
                 ctx.fillStyle = '#333'
                 ctx.textAlign = 'center'
-                ctx.fillText(`${ filter.separator(this.detail.redeemCode, ' ', 4) }`, 526, 880)
+                ctx.fillText(`${ filter.separator(this.redeemCode, ' ', 4) }`, 526, 880)
                 ctx.font = '42px Microsoft YaHei'
                 ctx.fillStyle = '#666'
                 ctx.textAlign = 'left'
                 ctx.fillText(`学员姓名：`, 265, 990)
                 ctx.font = '600 42px Microsoft YaHei'
                 ctx.fillStyle = '#333'
-                ctx.fillText(`${ this.detail.name }`, 475, 990)
+                ctx.fillText(`${ this.name }`, 475, 990)
                 ctx.font = '42px Microsoft YaHei'
                 ctx.fillStyle = '#666'
                 ctx.textAlign = 'left'
                 ctx.fillText(`学员电话：`, 265, 1070)
                 ctx.font = '600 42px Microsoft YaHei'
                 ctx.fillStyle = '#333'
-                ctx.fillText(`${ this.detail.mobile }`, 475, 1070)
+                ctx.fillText(`${ this.mobile }`, 475, 1070)
                 ctx.font = '33px Microsoft YaHei'
                 ctx.fillStyle = '#333'
                 createText(ctx, 330, 1250, `${ this.goodsModel.name }`, 50, 500, 2)
@@ -140,7 +136,7 @@ export default {
                 ctx.textAlign = 'left'
                 ctx.fillStyle = '#999'
                 ctx.fillText(`${ skuText }`, 350, 1380)
-                if (!this.detail.name) {
+                if (!this.name) {
                     ctx.fillStyle = '#fff'
                     ctx.fillRect(210, 920, 700, 200)
                 }

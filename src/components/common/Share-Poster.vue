@@ -56,7 +56,7 @@ export default {
     }
   }
   .poster {
-    padding: 50px 110px 0 110px;
+    padding: 80px 110px 0 110px;
 
     .poster-box {
       padding: 0;
@@ -70,8 +70,8 @@ export default {
       .press-save {
         padding: 14px 0;
         text-align: center;
-        background: #FEDB63;
-        color: #FA4D2F;
+        background-color: #fff;
+        color: #bbb;
         font-size: 28px;
         font-weight: 400;
       }

@@ -59,12 +59,6 @@
                                         <span>{{ item.m }}分</span>
                                         <span>{{ item.s }}秒</span>
                                     </template>
-                                    <!--<span v-if="!item.isStart">
-                    未开始支付
-                  </span>
-                  <span v-if="item.pastDue">
-                    已过期
-                  </span>-->
                                 </div>
                                 <pl-button
                                     v-if="!item.pastDue && item.status !== 'WAIT_PAY'"

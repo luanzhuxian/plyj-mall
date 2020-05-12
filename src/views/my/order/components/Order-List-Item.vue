@@ -39,7 +39,7 @@
             >
                 <!--付款倒计时-->
                 <span class="fz-24 gray-3 mr-10" v-if="isStart && !pastDue">
-                    <span v-show="isStart">剩余{{ orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY? '尾款': '' }}支付时间：</span>
+                    <span v-show="isStart">剩余{{ orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY? '尾款': '' }}支付时间：</span>
                     <span v-show="!isStart">距离开始支付时间：</span>
                     <span v-show="countDown.d !== '00'">{{ countDown.d }}天</span>
                     <span v-show="countDown.h !== '00'">{{ countDown.h }}时</span>

@@ -106,7 +106,7 @@ export default {
         },
         // 申请售后后的状态
         aftersaleStatusKeyMap: {
-        // 无售后
+            // 无售后
             NO_AFTER_SALES: 'NO_AFTER_SALES',
             // 处理中
             PROCESSING: 'PROCESSING',

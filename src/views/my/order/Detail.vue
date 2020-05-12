@@ -5,7 +5,7 @@
         <div :class="$style.top">
             <top-text
                 :title="orderStatusMap[detail.status]"
-                :tip="suggestionMap[detail.status]"
+                :tip="orderStatusTip"
             />
         </div>
         <!-- 核销码 -->
@@ -17,11 +17,11 @@
             <div :class="{[$style.codeListBox]: true, [$style.collapse]: collapseQrCode}">
                 <h2 :class="$style.title">核销码</h2>
                 <pl-svg
-                    v-if="isArrowShow"
+                    v-if="redeemCodeModels.length > 1"
                     :class="{ [$style.collapse]: collapseQrCode }"
                     name="icon-right"
                     fill="#999"
-                    @click="() => { isArrowShow ? collapseQrCode = !collapseQrCode : '' }"
+                    @click="() => { redeemCodeModels.length > 1 ? collapseQrCode = !collapseQrCode : '' }"
                 />
                 <div :class="$style.codeList">
                     <template v-for="(item, i) of redeemCodeModels">
@@ -32,10 +32,9 @@
                                 :detail="item"
                                 :goods-model="goodsModel"
                                 :status="item.status"
-                                :status-code="item.statusCode"
-                                :redeem-code="item.redeemCode"
-                                :name="item.name"
-                                :mobile="item.mobile"
+                                :redeem-code="item.code"
+                                :name="item.userName"
+                                :mobile="item.userMobile"
                                 @drawPoster="drawPoster"
                             />
                         </div>
@@ -78,7 +77,7 @@
                 <div :class="$style.buttons">
                     <!--实际支付大于0 + 支持售后 支持 申请退款-->
                     <pl-button
-                        v-if="!detail.amount && !detail.supportAfterSales"
+                        v-if="detail.amount && !detail.supportAfterSales"
                         plain
                         round
                         @click="applyRefund"
@@ -251,7 +250,7 @@
                 <pl-fields
                     size="middle"
                     :text="`学员信息${i + 1}`"
-                    :right-text="i < redeemCodeModels.length ? `核销码：${localSeparator(redeemCodeModels[i].redeemCode,' ', 4)}`: ''"
+                    :right-text="i < studentItem.code ? `核销码：${localSeparator(studentItem.code,' ', 4)}`: ''"
                     icon="icon-name-card"
                     title-color="#F2B036"
                     :icon-width="40"
@@ -300,12 +299,13 @@
                 <pl-list
                     v-if="detail.status !== orderStatuskeyMap.WAIT_PAY && !isClosedByCancle"
                     title="支付方式："
-                    :content="detail.payMethod || '微信支付'"
+                    :content="orderLastPayInfo.paymentMethod === 'WX'? '微信支付' : ''"
                 />
+                <!--orderLastPayInfo最终支付信息-->
                 <pl-list
                     v-if="detail.status !== orderStatuskeyMap.WAIT_PAY && !isClosedByCancle"
                     title="支付时间："
-                    :content="detail.payTime"
+                    :content="orderLastPayInfo.callbackTime"
                 />
                 <pl-list
                     v-if="detail.status !== orderStatuskeyMap.WAIT_PAY && !isClosedByCancle && hasExpressInfo"
@@ -566,16 +566,14 @@ export default {
             detail: {},
             // 商品详情
             goodsModel: {},
-            // 订单交易记录
-            orderPayTransInfos: {},
+            // 订单最后一次交易记录
+            orderLastPayInfo: {},
             // 物流详情
             logisticsInfoModel: {},
             // 发票信息
             invoiceModelList: [],
             // 联系人信息
             receiverModel: {},
-            // 学员信息
-            studentInfoModels: [],
             // 核销码
             redeemCodeModels: [],
             // 实体订单-用户信息
@@ -597,7 +595,7 @@ export default {
                     textAlign: 'center'
                 }
             ],
-            suggestionMap,
+            orderStatusTip: '',
             invoiceMap,
             // 核销码
             collapseQrCode: true,
@@ -612,24 +610,26 @@ export default {
         ...mapGetters(['address', 'servicePhoneModels', 'skuSourceKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'aftersaleStatusKeyMap']),
         // 订单是否因取消而关闭
         isClosedByCancle () {
-            return this.detail.status === this.orderStatuskeyMap.CLOSED && !this.detail.payTime
+            return this.detail.status === this.orderStatuskeyMap.CLOSED && !(this.orderLastPayInfo.callbackTime)
         },
         // 有物流信息
         hasExpressInfo () {
             // 实体订单 + 有物流信息
             return this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && this.logisticsInfoModel && this.logisticsInfoModel.courierNo
         },
-        // 核销码全部过期或核销，statusCode: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
+        // 核销码全部过期或核销，status: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
         isAllCodeUseless () {
-            return this.redeemCodeModels.every(item => [1, 3, 4].includes(item.statusCode))
+            return this.redeemCodeModels.every(item => [1, 3, 4].includes(item.status))
         },
         // 当前可用的核销码数量
         usefulCodeNumber () {
-            return this.redeemCodeModels.filter(item => item.statusCode === 0).length
+            return this.redeemCodeModels.filter(item => item.status === 0).length
         },
-        // 核销码总数量 + 学员总数量 大于一
-        isArrowShow () {
-            return this.studentInfoModels.length || this.redeemCodeModels.length > 1
+        // 是否显示评价按钮
+        isCommentBtnShow () {
+            return this.detail.status === this.orderStatuskeyMap.FINISHED && this.goodsModel.assessmentStatus === 0 &&
+          (((this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS) && (this.detail.afterSalesStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES)) ||
+            ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType) && this.redeemCodeModels.some(item => item.status === 1)))
         }
     },
     async activated () {
@@ -642,13 +642,12 @@ export default {
         }
     },
     async deactivated () {
-        this.suggestionMap.WAIT_RECEIVE = ''
-        this.suggestionMap.WAIT_PAY = ''
+        this.poster = ''
+        this.orderStatusTip = ''
         this.collapseQrCode = true
         this.isPopupShow = false
         this.isPickerShow = false
         this.isPosterShow = false
-        this.poster = ''
         this.logisticsInfoModel = null
         clearInterval(this.timerId)
         clearInterval(this.timerId2)
@@ -665,20 +664,25 @@ export default {
         async getDetail () {
             try {
                 const { result } = await getOrderDetail(this.orderId)
-                const { goodsModel, orderPayTransInfos } = result
+                const { goodsModel, orderPayTransInfos, redeemCodeModels } = result
                 this.detail = result
+                // 商品详情
                 this.goodsModel = goodsModel
-                this.orderPayTransInfos = orderPayTransInfos
+                // 支付信息
+                this.orderLastPayInfo = orderPayTransInfos[orderPayTransInfos.length - 1] || {}
+                // 联系人信息
                 this.receiverModel = {
                     name: result.consigneeName,
                     mobile: result.consigneeMobile,
                     address: result.address
                 }
+                // 物流信息
                 this.logisticsInfoModel = {}
-                this.goodsModel = goodsModel
+                // 发票信息
                 this.invoiceModelList = []
-                this.studentInfoModels = []
-                this.redeemCodeModels = []
+                // 核销码信息
+                this.redeemCodeModels = redeemCodeModels || []
+                this.setTime()
 
                 // 虚拟商品 正式课 体验课 生成核销码
                 if ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(result.orderType) && this.redeemCodeModels.length) {
@@ -692,29 +696,27 @@ export default {
                 }
                 // 设置订单文案
                 {
+                    let tip = ''
                     const { validityPeriodStart, validityPeriodEnd, validity } = goodsModel
-                    if (result.status === this.orderStatuskeyMap.CLOSED) {
-                        this.suggestionMap.CLOSED = this.detail.aftersaleStatus === 'PROCESSING_COMPLETED' ? '退款完成' : '订单取消'
-                    }
-                    if ([this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(result.status)) {
-                        this.setTime()
-                    }
+                    tip = suggestionMap[result.status]
+                    tip = this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.PROCESSING_COMPLETED ? '退款完成' : '订单取消'
                     if (result.status === this.orderStatuskeyMap.WAIT_RECEIVE) {
-                        this.suggestionMap.CLOSED = this.detail.aftersaleStatus === 'PROCESSING_COMPLETED' ? '退款完成' : '订单取消'
-                        if (result.status === this.orderTypeKeyMap.PHYSICAL_GOODS) {
-                            this.setTime()
-                        } else if (result.status === this.orderTypeKeyMap.KNOWLEDGE_COURSE) {
-                            this.suggestionMap.WAIT_RECEIVE = validity ? `购买后${ validity }天内学完` : '购买后不限观看次数'
-                        } else {
+                        // 知识课程/系列课程 观看有效期
+                        if ([this.orderTypeKeyMap.KNOWLEDGE_COURSE, this.orderTypeKeyMap.SERIES_OF_COURSE].includes(result.orderType)) {
+                            tip = validity ? `购买后${ validity }天内学完` : '购买后不限观看次数'
+                        }
+                        // 虚拟商品/正式课/体验课 使用有效期
+                        if ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(result.orderType)) {
                             if (validityPeriodStart) {
                                 const start = moment(validityPeriodStart).format('YYYY-MM-DD')
                                 const end = moment(validityPeriodEnd).format('YYYY-MM-DD')
-                                this.suggestionMap.WAIT_RECEIVE = (start === end) ? `有效期 ${ start }` : `有效期 ${ start } 至 ${ end }`
+                                tip = (start === end) ? `有效期 ${ start }` : `有效期 ${ start } 至 ${ end }`
                             } else {
-                                this.suggestionMap.WAIT_RECEIVE = '长期有效'
+                                tip = '长期有效'
                             }
                         }
                     }
+                    this.orderStatusTip = tip
                 }
                 // 自定义表单信息/学员信息
                 {
@@ -762,43 +764,21 @@ export default {
         },
         // 设置时间
         setTime () {
-            const orderStatus = this.detail.orderStatus
-            let waitPayTime = 0
+            if (![this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(this.detail.status)) return
             // 服务器时间
             const now = Number(this.detail.currentServerTime)
-            if (this.detail.orderSource === this.skuSourceKeyMap.NORMAL) {
-                // 24小时
-                waitPayTime = 24 * 60 * 60 * 1000
-            } else if (this.detail.orderSource === this.skuSourceKeyMap.BOOKING && orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
-                // 预购倒计时逻辑
-                const useStartTime = moment((this.detail.startExpire)).valueOf()
-                const useEndTime = moment((this.detail.endExpire)).valueOf()
-                // 是否开始
-                this.finalPaymentIsStarted = now - useStartTime >= 0
-                // 是否过期
-                this.finalPaymentIsEnded = now - useEndTime >= 0
-                // 未开始支付
-                if (!this.finalPaymentIsStarted) {
-                    waitPayTime = useStartTime - now
-                }
-                if (this.finalPaymentIsStarted && !this.finalPaymentIsEnded) {
-                    waitPayTime = useEndTime - now
-                }
-
-                // 使用计算出的待付尾款时间启动倒计时
-                this.countDown(waitPayTime, orderStatus)
-                return
-            } else {
-                // 活动商品未付款5分钟
-                waitPayTime = 5 * 60 * 1000
-            }
-
-            // 开始时间，如果是待付款，取订单创建时间，如果是其他状态（待发货），取发货时间
-            const time = orderStatus === this.orderStatuskeyMap.WAIT_PAY ? this.detail.createTime : this.detail.shipTime
-            const duration = orderStatus === this.orderStatuskeyMap.WAIT_PAY ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
-            const startTime = moment(time).valueOf()
-            if (now - startTime < duration) {
-                this.countDown(duration + startTime - now + 2000, orderStatus)
+            const useStartTime = moment((this.detail.startExpire)).valueOf()
+            const useEndTime = moment((this.detail.endExpire)).valueOf()
+            // 是否开始
+            this.finalPaymentIsStarted = now >= useStartTime
+            // 是否过期
+            this.finalPaymentIsEnded = now >= useEndTime
+            if (!this.finalPaymentIsStarted) {
+                // 可以开始支付了，倒计时支付
+                this.countDown(useStartTime - now)
+            } else if (!this.finalPaymentIsEnded) {
+                // 可以开始支付了，倒计时支付
+                this.countDown(useEndTime - now)
             }
         },
         // 设置倒计时
@@ -808,9 +788,9 @@ export default {
             }
             const countdownInstance = new Countdown(remanent, data => {
                 if (!data) {
-                    this.suggestionMap.WAIT_PAY = ''
-                    this.suggestionMap.WAIT_RECEIVE = ''
-                    this.suggestionMap.WAIT_PAY_REPAYMENT = ''
+                    if ([this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(this.detail.status)) {
+                        this.orderStatusTip = ''
+                    }
                     this.getDetail()
                     return
                 }
@@ -818,17 +798,17 @@ export default {
                 const h = String(data.hours)
                 const m = String(data.minutes)
                 const s = String(data.seconds)
-                if (this.detail.orderStatus === this.orderStatuskeyMap.WAIT_PAY) {
-                    this.suggestionMap.WAIT_PAY = `还剩${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒 订单自动关闭`
+                if (this.detail.status === this.orderStatuskeyMap.WAIT_PAY) {
+                    this.orderStatusTip = `还剩${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒 订单自动关闭`
                     return
                 }
-                if (this.detail.orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
+                if (this.detail.status === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
                     const tip = this.finalPaymentIsStarted ? '剩余尾款支付时间' : '距离开始支付时间'
-                    this.suggestionMap.WAIT_PAY_REPAYMENT = `${ tip }：${ d.padStart(2, '0') }天${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒`
+                    this.orderStatusTip = `${ tip }：${ d.padStart(2, '0') }天${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒`
                     return
                 }
-                if (this.detail.orderStatus === this.orderStatuskeyMap.WAIT_RECEIVE) {
-                    this.suggestionMap.WAIT_RECEIVE = `还剩${ d }天${ h.padStart(2, '0') }时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒后自动收货`
+                if (this.detail.status === this.orderStatuskeyMap.WAIT_RECEIVE) {
+                    this.orderStatusTip = `还剩${ d }天${ h.padStart(2, '0') }时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒后自动收货`
                 }
             })
             countdownInstance.start()
@@ -837,7 +817,7 @@ export default {
         // 定时器，实时刷新核销状态，如果有核销的话
         updateQrcode () {
             clearInterval(this.timerId2)
-            if (this.redeemCodeModels.some(item => item.statusCode === 0)) {
+            if (this.redeemCodeModels.some(item => item.status === 0)) {
                 this.timerId2 = setInterval(async () => {
                     try {
                         const { result } = await getVerificationStatus(this.orderId)
@@ -849,13 +829,6 @@ export default {
                     }
                 }, 3000)
             }
-        },
-        // 是否显示评价按钮
-        isCommentBtnShow () {
-            // 订单完成并且未评论 + 实体订单无售后时 + 虚拟订单核销码已使用
-            return this.detail.status === this.orderStatuskeyMap.FINISHED && this.goodsModel.assessmentStatus === 0 &&
-                (((this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS) && (this.detail.afterSalesStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES)) ||
-                ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType) && this.redeemCodeModels.some(item => item.statusCode === 1)))
         },
         drawPoster (url) {
             this.poster = url
@@ -889,15 +862,15 @@ export default {
         async pay () {
             try {
                 let result = null
-                const orderStatus = this.detail.orderStatus
+                const orderStatus = this.detail.status
                 this.payloading = true
                 if (orderStatus === this.orderStatuskeyMap.WAIT_PAY) {
-                    const { result: waitPayInfo } = await getAwaitPayInfo(this.orderId)
-                    result = waitPayInfo
+                    const { result: data } = await getAwaitPayInfo(this.orderId)
+                    result = data
                 }
                 if (orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
-                    const { result: balanceInfo } = await getAwaitTailPayInfo(this.orderId)
-                    result = balanceInfo
+                    const { result: data } = await getAwaitTailPayInfo(this.orderId)
+                    result = data
                 }
 
                 // 调用微信支付api

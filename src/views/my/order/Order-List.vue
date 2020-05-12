@@ -128,73 +128,13 @@ export default {
         this.$refresh = this.$refs.loadMore.refresh
     },
     activated () {
-        const handler = action => {
-            if (action === 'pay') {
-                return (order, index) => {
-                    if (!this.status) {
-                        order.orderStatus = order.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
-                    } else if (this.status === 'WAIT_PAY') {
-                        this.orderList.splice(index, 1)
-                    }
-                }
-            }
-            if (action === 'receive') {
-                return (order, index) => {
-                    if (!this.status) {
-                        order.orderStatus = this.orderStatuskeyMap.FINISHED
-                    } else if (this.status === 'WAIT_RECEIVE') {
-                        this.orderList.splice(index, 1)
-                    }
-                }
-            }
-            if (action === 'cancel') {
-                return (order, index) => {
-                    if (!this.status) {
-                        order.orderStatus = 'CLOSED'
-                    } else if (this.status === 'WAIT_PAY') {
-                        const isCombinedOrder = [this.skuSourceKeyMap.SPRINGPLOUGHING, this.skuSourceKeyMap.COURSEPACKAGE](order.activeProduct)
-                        if (isCombinedOrder) {
-                            this.$refresh()
-                        } else {
-                            this.orderList.splice(index, 1)
-                        }
-                    }
-                }
-            }
-            if (action === 'delete') {
-                return (order, index) => {
-                    this.orderList.splice(index, 1)
-                }
-            }
-            if (action === 'comment') {
-                return (order, index, pid) => {
-                    const product = order.products.find(prod => prod.productId === pid)
-                    if (!product) return
-                    // 商品评价状态改为已评价
-                    product.assessmentStatus = 1
-                    // 根据所有商品的评价状态重新设置订单的评价状态，0：有商品待评价 1：所有商品已评价
-                    order.commentStatus = !order.products.some(prod => prod.assessmentStatus !== 1)
-                    if (this.status === 'FINISHED' && order.commentStatus) {
-                        this.orderList.splice(index, 1)
-                    }
-                }
-            }
-        }
-
+        // 从 订单详情/物流 来的，需原地刷新页面
         if (this.orderList.length && this.$router.currentRoute.meta.noRefresh) {
             const arr = JSON.parse(localStorage.getItem('UPDATE_ORDER_LIST') || '[]')
             if (!arr.length) return
-
-            for (const item of arr) {
-                const index = this.orderList.findIndex(order => order.id === item.id)
-                if (index === -1) continue
-                handler(item.action)(this.orderList[index], index, item.pid)
-            }
-            localStorage.removeItem('UPDATE_ORDER_LIST')
-            this.orderList.length ? this.$forceUpdate() : this.$refresh()
+            this.handleCurrentOrder(arr)
             return
         }
-
         this.form.orderStatus = this.status
         this.$refresh()
     },
@@ -215,6 +155,68 @@ export default {
                 this.reject = reject
             })
         },
+        handleCurrentOrder (arr) {
+            const handler = action => {
+                // 上个页面有 支付 操作
+                if (action === 'pay') {
+                    return (order, index) => {
+                        if (!this.status) {
+                            order.orderStatus = order.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
+                        }
+                        if (this.status === 'WAIT_PAY') {
+                            this.orderList.splice(index, 1)
+                        }
+                    }
+                }
+                // 上个页面有 确认收货 操作
+                if (action === 'receive') {
+                    return (order, index) => {
+                        if (!this.status) {
+                            order.orderStatus = this.orderStatuskeyMap.FINISHED
+                        }
+                        if (this.status === 'WAIT_RECEIVE') {
+                            this.orderList.splice(index, 1)
+                        }
+                    }
+                }
+                // 上个页面有 取消订单 操作
+                if (action === 'cancel') {
+                    return (order, index) => {
+                        if (!this.status) {
+                            order.orderStatus = this.orderStatuskeyMap.CLOSED
+                        }
+                        if (this.status === 'WAIT_PAY') {
+                            // 5-春耘计划 + 6-组合聚惠学 取消订单后，会同步取消掉统一批次下的所有订单，所以重新刷新页面
+                            const isCombinedOrder = [5, 6](order.skuSource)
+                            isCombinedOrder ? this.$refresh() : this.orderList.splice(index, 1)
+                        }
+                    }
+                }
+                // 上个页面有 删除订单 操作
+                if (action === 'delete') {
+                    return (order, index) => {
+                        this.orderList.splice(index, 1)
+                    }
+                }
+                // 上个页面有 评论订单 操作
+                if (action === 'comment') {
+                    return (order, index) => {
+                        // 当前订单的评论状态变为已评论
+                        order.commentStatus = 1
+                        if (this.status === 'FINISHED' && order.commentStatus) {
+                            this.orderList.splice(index, 1)
+                        }
+                    }
+                }
+            }
+            for (const item of arr) {
+                const index = this.orderList.findIndex(order => order.id === item.id)
+                if (index === -1) continue
+                handler(item.action)(this.orderList[index], index, item.pid)
+            }
+            localStorage.removeItem('UPDATE_ORDER_LIST')
+            this.orderList.length ? this.$forceUpdate() : this.$refresh()
+        },
         onRefresh (list, total) {
             this.clearCountdown()
             for (const [i, item] of list.entries()) {
@@ -226,37 +228,17 @@ export default {
         },
         // 待支付订单，支付时间倒计时
         setCountDown (item, i) {
-            // 是否开始付尾款
             const now = moment(item.currentTime).valueOf()
-            let waitPayTime = 0
-            const skuSource = item.skuSource
-            if (skuSource === this.skuSourceKeyMap.NORMAL) {
-                // 24小时
-                waitPayTime = 24 * 60 * 60 * 1000
-            } else if (skuSource === this.skuSourceKeyMap.BOOKING && item.orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
-                const useStartTime = moment(item.startTime).valueOf()
-                const useEndTime = moment(item.endTime).valueOf()
-                item.isStart = now >= useStartTime
-                item.pastDue = now >= useEndTime
-                if (!item.isStart) {
+            const useStartTime = moment(item.startTime).valueOf()
+            const useEndTime = moment(item.endTime).valueOf()
+            item.isStart = now >= useStartTime
+            item.pastDue = now >= useEndTime
+            if (!item.isStart) {
                 // 可以开始支付了，倒计时支付
-                    this.countDown(useStartTime - now, i, item)
-                } else if (!item.pastDue) {
+                this.countDown(useStartTime - now, i, item)
+            } else if (!item.pastDue) {
                 // 可以开始支付了，倒计时支付
-                    this.countDown(useEndTime - now, i, item)
-                }
-                return
-            } else {
-                // 活动商品未付款5分钟
-                waitPayTime = 5 * 60 * 1000
-            }
-            // 开始时间，如果是待付款，取订单创建时间，如果是其他状态（待发货），取发货时间
-            const startTime = moment(item.createTime).valueOf()
-            const endTime = startTime + waitPayTime
-            item.isStart = now >= startTime
-            item.pastDue = now >= endTime
-            if (now - startTime < waitPayTime) {
-                this.countDown(waitPayTime + startTime - now + 2000, i, item)
+                this.countDown(useEndTime - now, i, item)
             }
         },
 
@@ -289,7 +271,6 @@ export default {
             // 存储所有计时器实例，退出页面后清除这样计时器
             this.countdownInstances.push(countdownInstance)
         },
-
         // 停止所有定时器
         clearCountdown () {
             for (const countdownInstances of this.countdownInstances) {
@@ -299,13 +280,13 @@ export default {
         },
         // 付款 + 付尾款
         async pay (index) {
-            const detail = this.orderList[index]
-            const orderId = detail.orderId
-            const orderType = detail.orderType
-            const orderStatus = detail.orderStatus
-            this.payloading = true
-            this.currentPayId = orderId
             try {
+                this.payloading = true
+                const detail = this.orderList[index]
+                const orderId = detail.orderId
+                const orderType = detail.orderType
+                const orderStatus = detail.orderStatus
+                this.currentPayId = orderId
                 let result
                 // 正常二次支付
                 if (orderStatus === this.orderStatuskeyMap.WAIT_PAY) {
@@ -331,11 +312,12 @@ export default {
                 this.payloading = false
             }
         },
+        // 确认收货
         async confirmReceipt (index) {
-            const detail = this.orderList[index]
-            const orderId = detail.orderId
-            const { orderStatus } = this.form
             try {
+                const detail = this.orderList[index]
+                const orderId = detail.orderId
+                const { orderStatus } = this.form
                 await this.$confirm('您确定收货吗？')
                 await confirmReceipt(orderId)
                 this.$success('确认收货成功')
@@ -348,18 +330,15 @@ export default {
             }
         },
         async cancelOrder (index) {
-            const detail = this.orderList[index]
-            const orderId = detail.orderId
-            const { orderStatus } = this.form
-
-            // 5春耘订单 6组合课订单
-            const isCombinedOrder = [5, 6].includes(detail.skuSource)
             try {
+                const detail = this.orderList[index]
+                // 5春耘订单 6组合课订单
+                const isCombinedOrder = [5, 6].includes(detail.skuSource)
                 const reason = await this.showPicker()
                 await this.$confirm(isCombinedOrder ? `是否取消该订单，取消后组合订单将同步取消？` : '订单一旦取消，将无法恢复 确认要取消订单？')
-                await cancelOrder(orderId, reason)
+                await cancelOrder(detail.orderId, reason)
                 this.$success('交易关闭')
-                if (orderStatus === '') {
+                if (!this.form.orderStatus) {
                     // 全部订单时手动修改订单状态
                     detail.orderStatus = this.orderStatuskeyMap.CLOSED
                 } else {
@@ -372,11 +351,10 @@ export default {
         },
         // 删除订单
         async deleteOrder (index) {
-            const detail = this.orderList[index]
-            const orderId = detail.orderId
             try {
+                const detail = this.orderList[index]
                 await this.$confirm('是否删除当前订单？ 删除后不可找回')
-                await deleteOrder(orderId)
+                await deleteOrder(detail.orderId)
                 this.orderList.splice(index, 1)
 
                 --this.total
