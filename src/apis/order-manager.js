@@ -20,10 +20,6 @@ export const physicalorderPaymentSuccessVirtual = orderSn => axios.put(`/apis/v1
 
 // 用户申请退货退款
 export const returnRequest = ({ orderId, operationType, type, refundModel, expressInfoModel }) => axios.put(`/apis/v1/order/physicalorder/refundment/${ orderId }?operationType=${ operationType }&serviceType=${ type }`, { refundModel, expressInfoModel })
-
-// 用户取消订单 userType：1 用户取消  2 商户取消
-export const cancelOrder = (orderId, cancelReason) => axios.get(`/apis/v2/order/cancel?orderId=${ orderId }&message=${ cancelReason }`)
-
 // 用户删除订单
 export const deleteOrder = orderId => axios.delete(`/apis/v1/order/current/user/order/${ orderId }`)
 
@@ -36,13 +32,6 @@ export const getOrderList = ({ current, size, orderStatus }) => axios.get(`/apis
 
 // 查看每种订单的数量
 export const orderPhysicalorderSummary = () => axios.get(`/apis/v1/order/current/user`)
-
-// 订单详情
-export const getOrderDetail = orderId => axios.get(`/apis/v2/order/detail?orderId=${ orderId }`)
-
-// 申请发票
-export const applyOrderInvoice = data => axios.post(`/apis/v1/invoice/OrderInvoice/add/v2`, data)
-
 // 发票详情
 export const invoiceDetail = orderNo => axios.get(`/apis/v1/invoice/OrderInvoice/findByOrderSn?orderSn=${ orderNo }`)
 
@@ -121,6 +110,7 @@ export const getWaitPayBalanceInfo = orderSn => axios.post(`/apis/v1/order/preOr
  */
 export const checkGetGift = orderSn => axios.get(`/apis/v1/order/gift?orderId=${ orderSn }`)
 
+/* ***************************************************************************** v2 ********************************************************************************** */
 /**
  * 订单确认，用于计算订单金额，获取钉钉商品详情等，进入提交页面时最先调用的接口
  * @param data {Object}
@@ -141,3 +131,25 @@ export const submitOrder = data => axios.post(`/apis/v2/order/uniformly`, data)
  * @return {*}
  */
 export const getOrderPayData = orderBatchNumber => axios.post(`/apis/v2/order/pay/paymentCode?orderBatchNumber=${ orderBatchNumber }`)
+
+/**
+ * 订单详情
+ * @param orderId {String}
+ * @return {*}
+ */
+export const getOrderDetail = orderId => axios.get(`/apis/v2/order/detail?orderId=${ orderId }`)
+
+/**
+ * 申请发票
+ * @param data {Object}
+ * @return {*}
+ */
+export const applyOrderInvoice = data => axios.post(`/apis/v1/invoice/OrderInvoice/add/v2`, data)
+
+/**
+ * 用户取消订单
+ * @param orderId {String}
+ * @param cancelReason {String}
+ * @return {*}
+ */
+export const cancelOrder = (orderId, cancelReason) => axios.get(`/apis/v2/order/cancel?orderId=${ orderId }&message=${ cancelReason }`)
