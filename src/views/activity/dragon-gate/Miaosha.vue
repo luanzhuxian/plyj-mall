@@ -191,7 +191,7 @@ export default {
     .current {
         margin-bottom: 2px;
         display: flex;
-        align-items: flex-end;
+        align-items: baseline;
         color: #ff341b;
         @include elps();
         .price {
