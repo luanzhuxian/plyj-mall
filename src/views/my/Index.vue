@@ -230,11 +230,6 @@
                 </div>
             </div>
         </div>
-
-        <input v-model="templateForm.qr_code_infos[0].qr_code_index" type="text">
-        <span>
-            {{ templateForm.qr_code_infos[0].qr_code_index }}
-        </span>
     </div>
 </template>
 
@@ -269,71 +264,6 @@ export default {
     },
     data () {
         return {
-            templateForm: {
-                "device_type":"WT100",
-                "qr_code_count":2,
-                "door_count":4,
-                "lock_count":4,
-                "layer_count":8,
-                "qr_code_infos":[
-                    {
-                        "qr_code_index":0,
-                        "door_indexs":[
-                            0,
-                            1
-                        ]
-                    },
-                    {
-                        "qr_code_index":1,
-                        "door_indexs":[
-                            2,
-                            3
-                        ]
-                    }
-                ],
-                "door_infos":[
-                    {
-                        "door_index":0,
-                        "lock_indexs":[
-                            0
-                        ],
-                        "layer_indexs":[
-                            0,
-                            1
-                        ]
-                    },
-                    {
-                        "door_index":1,
-                        "lock_indexs":[
-                            1
-                        ],
-                        "layer_indexs":[
-                            2,
-                            3
-                        ]
-                    },
-                    {
-                        "door_index":2,
-                        "lock_indexs":[
-                            2
-                        ],
-                        "layer_indexs":[
-                            4,
-                            5
-                        ]
-                    },
-                    {
-                        "door_index":3,
-                        "lock_indexs":[
-                            3
-                        ],
-                        "layer_indexs":[
-                            6,
-                            7
-                        ]
-                    }
-                ]
-            },
             loaded: false,
             count: {},
             swiperOption: {
