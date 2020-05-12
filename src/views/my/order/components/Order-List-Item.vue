@@ -55,7 +55,7 @@
                 >
                     去付款
                 </pl-button>
-                <span v-if="skuSource === skuSourceKeyMap.BOOKING && !pastDue && orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY" class="fz-24 gray-3 mr-10">
+                <span class="fz-24 gray-3 mr-10">
                     <span v-show="isStart">剩余尾款支付时间：</span>
                     <span v-show="!isStart">距离开始支付时间：</span>
                     <span v-show="countDown.d !== '00'">{{ countDown.d }}天</span>
@@ -135,13 +135,6 @@ export default {
         OrderItem
     },
     props: {
-        // 订单详情
-        detail: {
-            type: Object,
-            default () {
-                return {}
-            }
-        },
         index: {
             type: Number,
             default: 0

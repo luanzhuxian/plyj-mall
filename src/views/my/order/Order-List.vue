@@ -199,6 +199,9 @@ export default {
         this.form.orderStatus = this.status
         this.$refresh()
     },
+    deactivated () {
+        this.clearCountdown()
+    },
     methods: {
         onTabChange (item) {
             this.$nextTick(() => {
@@ -224,23 +227,27 @@ export default {
         },
         // 待支付订单，支付时间倒计时
         setCountDown (item, i) {
-            if (item.orderStatus !== this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) return
             // 是否开始付尾款
-            const now = Number(item.currentTime)
+            const now = moment(item.currentTime).valueOf()
             const useStartTime = moment(item.startTime).valueOf()
             const useEndTime = moment(item.endTime).valueOf()
             item.isStart = now >= useStartTime
             item.pastDue = now >= useEndTime
             if (!item.isStart) {
-            // 可以开始支付了，倒计时支付
+                // 可以开始支付了，倒计时支付
                 this.countDown(useStartTime - now, i, item)
             } else if (!item.pastDue) {
-            // 可以开始支付了，倒计时支付
+                // 可以开始支付了，倒计时支付
                 this.countDown(useEndTime - now, i, item)
             }
         },
 
-        // 开始倒计时
+        /**
+         * 开始每条订单的倒计时
+         * @param duration {Number}
+         * @param index {Number} 订单下标
+         * @param item {Object} 订单数据，用于绑定倒计时数据
+         */
         countDown (duration, index, item) {
             const countdownInstance = new Countdown(duration, data => {
                 if (!data) {
@@ -252,6 +259,7 @@ export default {
                 const h = String(data.hours)
                 const m = String(data.minutes)
                 const s = String(data.seconds)
+                console.log(d, h, m, s)
                 item.countDown = {
                     d: d.padStart(2, '0'),
                     h: h.padStart(2, '0'),
@@ -261,6 +269,7 @@ export default {
                 this.$set(this.orderList, index, item)
             })
             countdownInstance.start()
+            // 存储所有计时器实例，退出页面后清除这样计时器
             this.countdownInstances.push(countdownInstance)
         },
 
