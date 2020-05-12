@@ -369,7 +369,7 @@
         >
             <!-- 待付款/待付尾款 支持 取消订单-->
             <pl-button
-                v-if="detail.status === orderStatuskeyMap.WAIT_PAY || orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONE"
+                v-if="detail.status === orderStatuskeyMap.WAIT_PAY || detail.status === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
                 round
                 plain
                 @click="isPickerShow = true"
