@@ -1,6 +1,4 @@
 import { axios } from '../../assets/js/axios'
-import Cookie from '../../assets/js/storage-cookie'
-import moment from 'moment'
 
 /**
  * 获取可用抽奖次数
@@ -41,23 +39,4 @@ export const lottery = activityId => axios.post(`/apis/v1/luckdraw/${ activityId
  * 设置首次访问，每天只访问一次
  * @returns {*}
  */
-export const setFirstVisit = async () => {
-    // 设置标记，当天23:59:59过期
-    const FIRST_VISIT = Cookie.get('FIRST_VISIT')
-
-    try {
-        if (!FIRST_VISIT) {
-            Cookie.set('FIRST_VISIT', 1, {
-                expires: moment()
-                    .endOf('day')
-                    .valueOf()
-            })
-            const { result } = await axios.post('/apis/v1/luckdraw/visit')
-            if (result === 0) {
-                Cookie.remove('FIRST_VISIT')
-            }
-        }
-    } catch (e) {
-        throw e
-    }
-}
+export const setFirstVisit = async () => axios.post('/apis/v1/luckdraw/visit')

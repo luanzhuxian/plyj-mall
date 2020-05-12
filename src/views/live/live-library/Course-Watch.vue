@@ -18,12 +18,12 @@
 
 <script>
 import {
-    getCourseDetail,
     getPermission,
     setCourseProgress,
     setStudyCount,
     setStudyTime
-} from './../../../apis/live-library'
+} from '../../../apis/live-library'
+import { getVideoMesById as getCourseDetail } from './../../../apis/live'
 import PaidPlayer from '../../../components/common/Paid-Player.vue'
 export default {
     name: 'CourseWatch',
@@ -94,10 +94,10 @@ export default {
                     this.$router.push({ name: 'Curriculum', params: { productId: this.courseId } })
                     return
                 }
-                const { result: mes } = await getCourseDetail(this.liveId)
+                const mes = await getCourseDetail(this.liveId)
                 if (!mes) {
                     this.$alert({
-                        message: '视频加载错误',
+                        message: '视频不存在',
                         viceMessage: '请联系机构管理人员'
                     }).finally(() => {
                         if (window.history.length > 1) {

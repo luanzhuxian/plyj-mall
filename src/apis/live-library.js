@@ -13,9 +13,6 @@ export const getCourseList = params => axios.get('/apis/v1/knowledgeCourse/myVid
 // 获取课程学习数量
 export const getCourseStudyNum = courseType => axios.get(`/apis/v1/knowledgeCourse/myVideoTotalCount`, { params: { courseType } })
 
-// 获取观看课程信息
-export const getCourseDetail = liveId => axios.get(`/apis/v1/mall/live/lib/detail/${ liveId }`)
-
 // 获取课程观看权限
 export const getPermission = courseId => axios.get('/apis/v1/knowledgeCourse/customer/video', { params: { courseId } })
 
