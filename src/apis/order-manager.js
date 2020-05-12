@@ -57,7 +57,7 @@ export const getMap = code => axios.get(`/apis/v1/systemctl/sysdictionary/detail
 export const getMaxRefund = orderProductRId => axios.get(`/apis/v1/refund/refund/getAmountOfRefundable/${ orderProductRId }`)
 
 // 申请售后
-export const applyRefund = params => axios.post(`/apis/v1/refund/refund/customer/apply`, params)
+// export const applyRefund = params => axios.post(`/apis/v1/refund/refund/customer/apply`, params)
 
 // 更改退单
 export const modifyRefund = params => axios.post(`/apis/v1/refund/refund/customer/modifyRefund`, params)
@@ -92,21 +92,21 @@ export const setVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpb
  * @param params
  * @property {number} params.current
  * @property {number} params.size
- * @return {*}
+ * @return {Promise<*>}
  */
 export const waitPayBalance = params => axios.get(`/apis/v1/order/current/user/pre/page`, { params })
 
 /**
  * 获取待付尾款订单支付信息
  * @param orderSn {string}
- * @return {*}
+ * @return {Promise<*>}
  */
 export const getWaitPayBalanceInfo = orderSn => axios.post(`/apis/v1/order/preOrderSecondaryPayment/${ orderSn }`)
 
 /**
  * 检查购买后是否领到礼物
  * @param orderSn
- * @return {*}
+ * @return {Promise<*>}
  */
 export const checkGetGift = orderSn => axios.get(`/apis/v1/order/gift?orderId=${ orderSn }`)
 
@@ -114,35 +114,35 @@ export const checkGetGift = orderSn => axios.get(`/apis/v1/order/gift?orderId=${
 /**
  * 订单确认，用于计算订单金额，获取钉钉商品详情等，进入提交页面时最先调用的接口
  * @param data {Object}
- * @return {*}
+ * @return {Promise<*>}
  */
 export const confirmOrder = data => axios.post(`/apis/v2/order/confirm`, data)
 
 /**
  * 提交订单，参数于confirmOrder相同
  * @param data {Object}
- * @return {*}
+ * @return {Promise<*>}
  */
 export const submitOrder = data => axios.post(`/apis/v2/order/uniformly`, data)
 
 /**
  * 获取支付数据
  * @param orderBatchNumber {String} 批次号
- * @return {*}
+ * @return {Promise<*>}
  */
 export const getOrderPayData = orderBatchNumber => axios.post(`/apis/v2/order/pay/paymentCode?orderBatchNumber=${ orderBatchNumber }`)
 
 /**
  * 订单详情
  * @param orderId {String}
- * @return {*}
+ * @return {Promise<*>}
  */
 export const getOrderDetail = orderId => axios.get(`/apis/v2/order/detail?orderId=${ orderId }`)
 
 /**
  * 申请发票
  * @param data {Object}
- * @return {*}
+ * @return {Promise<*>}
  */
 export const applyOrderInvoice = data => axios.post(`/apis/v1/invoice/OrderInvoice/add/v2`, data)
 
@@ -150,6 +150,13 @@ export const applyOrderInvoice = data => axios.post(`/apis/v1/invoice/OrderInvoi
  * 用户取消订单
  * @param orderId {String}
  * @param cancelReason {String}
- * @return {*}
+ * @return {Promise<*>}
  */
 export const cancelOrder = (orderId, cancelReason) => axios.get(`/apis/v2/order/cancel?orderId=${ orderId }&message=${ cancelReason }`)
+
+/**
+ * 申请售后
+ * @param data {Array} 订单数据
+ * @return {Promise<*>}
+ */
+export const applyRefund = data => axios.post('/apis/v2/order/refunds/apply/refund', data)
