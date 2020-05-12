@@ -38,7 +38,6 @@
                             :is-payloading="payloading && currentPayId === item.orderId"
                             @cancelOrder="cancelOrder"
                             @pay="pay"
-                            @balancePayment="balancePayment"
                             @deleteOrder="deleteOrder"
                             @confirmReceipt="confirmReceipt"
                         />
@@ -60,10 +59,10 @@ import LoadMore from '../../../components/common/Load-More.vue'
 import {
     getOrderList,
     getAwaitPayInfo,
+    getAwaitTailPayInfo,
     confirmReceipt,
     cancelOrder,
-    deleteOrder,
-    getWaitPayBalanceInfo
+    deleteOrder
 } from '../../../apis/order-manager'
 import { mapGetters } from 'vuex'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
@@ -279,39 +278,26 @@ export default {
             }
             this.countdownInstances = []
         },
+        // 付款 + 付尾款
         async pay (index) {
             const detail = this.orderList[index]
             const orderId = detail.orderId
             const orderType = detail.orderType
+            const orderStatus = detail.orderStatus
             this.payloading = true
             this.currentPayId = orderId
             try {
-                const { result } = await getAwaitPayInfo(orderId)
-                // 调用微信支付api
-                await wechatPay(result)
-                const next_order_status = orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
-                this.form.orderStatus = next_order_status
-                this.onTabChange({
-                    name: next_order_status === 'WAIT_SHIP' ? '待发货' : '待收货',
-                    id: next_order_status
-                })
-            } catch (e) {
-                throw e
-            } finally {
-                this.payloading = false
-            }
-        },
-
-        // 去付尾款
-        async balancePayment (index) {
-            const detail = this.orderList[index]
-            const orderId = detail.orderId
-            const orderType = detail.orderType
-            this.currentPayId = orderId
-            this.payloading = true
-            try {
-                const { result } = await getWaitPayBalanceInfo(orderId)
-
+                let result
+                // 正常二次支付
+                if (orderStatus === this.orderStatuskeyMap.WAIT_PAY) {
+                    const { result: data } = await getAwaitPayInfo(orderId)
+                    result = data
+                }
+                // 支付尾款
+                if (orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
+                    const { result: data } = await getAwaitTailPayInfo(orderId)
+                    result = data
+                }
                 // 调用微信支付api
                 await wechatPay(result)
                 const next_order_status = orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 'WAIT_SHIP' : 'WAIT_RECEIVE'

@@ -37,14 +37,16 @@
                 :class="$style.buttons"
                 v-if="orderStatus !== orderStatuskeyMap.WAIT_SHIP"
             >
+                <!-- 待付款/待付尾款 支持 取消订单-->
                 <pl-button
-                    v-if="orderStatus === orderStatuskeyMap.WAIT_PAY"
+                    v-if="orderStatus === orderStatuskeyMap.WAIT_PAY || orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
                     round
                     plain
                     @click="doOperation('cancelOrder')"
                 >
                     取消订单
                 </pl-button>
+                <!--正常待付款 支持 付款(目前只区别于预购的待付尾款)-->
                 <pl-button
                     v-if="orderStatus === orderStatuskeyMap.WAIT_PAY"
                     type="warning"
@@ -55,6 +57,7 @@
                 >
                     去付款
                 </pl-button>
+                <!--付款倒计时-->
                 <span class="fz-24 gray-3 mr-10" v-if="isStart && !pastDue">
                     <span v-show="isStart">剩余尾款支付时间：</span>
                     <span v-show="!isStart">距离开始支付时间：</span>
@@ -63,24 +66,27 @@
                     <span>{{ countDown.m }}分</span>
                     <span>{{ countDown.s }}秒</span>
                 </span>
+                <!--预购待付尾款-->
                 <pl-button
                     v-if="orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
                     type="warning"
                     round
                     :loading="isPayloading"
                     :disabled="isPayloading || !isStart || pastDue"
-                    @click="doOperation('balancePayment')"
+                    @click="doOperation('pay')"
                 >
                     {{ pastDue ? '已过期' : isStart ? '去付尾款' : '未开始付尾款' }}
                 </pl-button>
+                <!--售后非处理中 支持删除订单-->
                 <pl-button
-                    v-if="[orderStatuskeyMap.FINISHED, orderStatuskeyMap.CLOSED ].includes(orderStatus) && aftersaleStatus !== aftersaleStatusKeyMap.PROCESSING"
+                    v-if="aftersaleStatus !== aftersaleStatusKeyMap.PROCESSING"
                     round
                     plain
                     @click="doOperation('deleteOrder')"
                 >
                     删除订单
                 </pl-button>
+                <!--实体 + 待收货/订单完成 支持查看物流-->
                 <pl-button
                     v-if="orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(orderStatus)"
                     round
@@ -89,6 +95,7 @@
                 >
                     查看物流
                 </pl-button>
+                <!--实体 + 待收货 支持确认收货-->
                 <pl-button
                     v-if="orderType === orderTypeKeyMap.PHYSICAL_GOODS && (orderStatus === orderStatuskeyMap.WAIT_RECEIVE)"
                     type="warning"
@@ -97,6 +104,7 @@
                 >
                     确认收货
                 </pl-button>
+                <!--知识课程 + 订单完成 支持 去学习-->
                 <pl-button
                     v-if="orderType === orderTypeKeyMap.KNOWLEDGE_COURSE && (orderStatus === orderStatuskeyMap.FINISHED)"
                     type="warning"
@@ -105,6 +113,7 @@
                 >
                     去学习
                 </pl-button>
+                <!--虚拟商品/正式课/体验课 + 待收货 支持 去使用-->
                 <pl-button
                     v-if="[orderTypeKeyMap.PHYSICAL_GOODS, orderTypeKeyMap.FORMAL_CLASS, orderTypeKeyMap.EXPERIENCE_CLASS].includes(orderType) && orderStatus === orderStatuskeyMap.WAIT_RECEIVE"
                     type="warning"
@@ -113,8 +122,9 @@
                 >
                     去使用
                 </pl-button>
+                <!--订单完成 + 未评论 + 无售后 支持 去评价-->
                 <pl-button
-                    v-if="orderStatus === orderStatuskeyMap.FINISHED && commentStatus === 0 && ~[0, 3, 6].indexOf(cuiLuStatus)"
+                    v-if="orderStatus === orderStatuskeyMap.FINISHED && commentStatus === 0 && aftersaleStatus !== aftersaleStatusKeyMap.NO_AFTER_SALES"
                     round
                     plain
                     @click="$router.push({ name: 'OrderDetail', params: { orderId: orderId } })"

@@ -45,7 +45,7 @@ export const invoiceDetail = orderNo => axios.get(`/apis/v1/invoice/OrderInvoice
 // }
 
 // 获取待支付商品支付需要的数据（二次支付）
-export const getAwaitPayInfo = orderId => axios.post(`/apis/v1/order/secondaryPayment/${ orderId }`)
+// export const getAwaitPayInfo = orderId => axios.post(`/apis/v1/order/secondaryPayment/${ orderId }`)
 
 /* GET 商城端-获取订单物流信息 */
 export const getFreightData = orderId => axios.get(`/apis/v1/order/logistics/${ orderId }`)
@@ -166,3 +166,17 @@ export const cancelOrder = (orderId, cancelReason) => axios.get(`/apis/v2/order/
  * @return {Promise<Object>}
  */
 export const applyRefund = data => axios.post('/apis/v2/order/refunds/apply/refund', data)
+
+/**
+ * 获取待支付商品支付需要的数据（二次支付）
+ * @param {string} orderId - 订单id
+ * @return {Promise<Object>}
+ */
+export const getAwaitPayInfo = orderId => axios.post('/apis/v2/order/pay/sub/paymentCode', { orderId })
+
+/**
+ * 获取待支付商品支付需要的数据（二次支付）
+ * @param {string} orderId - 订单id
+ * @return {Promise<Object>}
+ */
+export const getAwaitTailPayInfo = orderId => axios.post('/apis/v2/order/pay/tail/money', { orderId })

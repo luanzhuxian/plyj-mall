@@ -76,6 +76,7 @@
                     :activity-id="activityDataId"
                 />
                 <div :class="$style.buttons">
+                    <!--实际支付大于0 + 支持售后 支持 申请退款-->
                     <pl-button
                         v-if="detail.amount && detail.supportAfterSales"
                         plain
@@ -84,6 +85,7 @@
                     >
                         {{ detail.refundId ? '再次申请' : '申请退款' }}
                     </pl-button>
+                    <!--实际支付大于0 + 支持售后 支持 申请退款-->
                     <pl-button
                         v-if="detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSING"
                         plain
@@ -92,6 +94,7 @@
                     >
                         退款中
                     </pl-button>
+                    <!--售后完成 支持 退款完成显示-->
                     <pl-button
                         class="refund-finish"
                         v-if="detail.afterSalesStatus === aftersaleStatusKeyMap.PROCESSING_COMPLETED"
@@ -102,6 +105,7 @@
                     >
                         退款完成
                     </pl-button>
+                    <!--待收货 支持 寄件运单号显示-->
                     <pl-button
                         :class="$style.large"
                         v-if="detail.orderType === orderStatuskeyMap.WAIT_RECEIVE"
@@ -112,6 +116,7 @@
                     >
                         寄件运单号
                     </pl-button>
+                    <!--订单完成并且未评论 + 实体订单无售后时 + 虚拟订单核销码已使用 支持 寄件运单号显示-->
                     <pl-button
                         v-if="isCommentBtnShow"
                         type="warning"
@@ -362,14 +367,16 @@
             class="footer"
             :class="$style.footer"
         >
+            <!-- 待付款/待付尾款 支持 取消订单-->
             <pl-button
-                v-if="detail.status === orderStatuskeyMap.WAIT_PAY"
+                v-if="detail.status === orderStatuskeyMap.WAIT_PAY || orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONE"
                 round
                 plain
                 @click="isPickerShow = true"
             >
                 取消订单
             </pl-button>
+            <!--售后非处理中 支持 删除订单-->
             <pl-button
                 v-if="detail.aftersaleStatus !== aftersaleStatusKeyMap.PROCESSING"
                 plain
@@ -385,6 +392,7 @@
             >
                 联系我们
             </pl-button>
+            <!-- 实体订单 + 有物流信息 支持 查看物流-->
             <pl-button
                 v-if="hasExpressInfo"
                 plain
@@ -393,6 +401,7 @@
             >
                 查看物流
             </pl-button>
+            <!-- 支持申请发票 + 无发票id 支持 申请发票-->
             <pl-button
                 v-if="detail.supportInvoice && !detail.invoiceId"
                 round
@@ -401,6 +410,7 @@
             >
                 申请发票
             </pl-button>
+            <!--实体订单 + 待收货 支持 确认收货-->
             <pl-button
                 v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && detail.status === orderStatuskeyMap.WAIT_RECEIVE"
                 round
@@ -409,15 +419,17 @@
             >
                 确认收货
             </pl-button>
+            <!--待付款 支持 去付款-->
             <pl-button
-                v-if="[orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(detail.status)"
+                v-if="detail.status === orderStatuskeyMap.WAIT_PAY"
                 type="warning"
                 round
-                :loading="payloading && currentPayId === orderId"
-                @click="pay(1)"
+                :loading="payloading"
+                @click="pay"
             >
                 去付款
             </pl-button>
+            <!--知识课程 + 订单完成 支持 去学习-->
             <pl-button
                 v-if="detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE && detail.status === orderStatuskeyMap.FINISHED"
                 type="warning"
@@ -426,13 +438,14 @@
             >
                 去学习
             </pl-button>
+            <!--知识课程 + 订单完成 支持 去学习-->
             <pl-button
                 v-if="detail.status === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
                 type="warning"
                 round
-                :loading="payloading && currentPayId === orderId"
+                :loading="payloading"
                 :disabled="payloading || finalPaymentIsEnded || !finalPaymentIsStarted"
-                @click="pay(2)"
+                @click="pay"
             >
                 {{ finalPaymentIsEnded ? '已过期' : finalPaymentIsStarted ? '去付尾款' : '未开始付尾款' }}
             </pl-button>
@@ -484,12 +497,12 @@ import ContantPop from './components/Contant-Pop'
 import {
     getOrderDetail,
     getAwaitPayInfo,
+    getAwaitTailPayInfo,
     confirmReceipt,
     cancelOrder,
     deleteOrder,
     getVerificationStatus,
-    setVerificationStatus,
-    getWaitPayBalanceInfo
+    setVerificationStatus
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { generateQrcode } from '../../../assets/js/util'
@@ -549,8 +562,6 @@ export default {
             isPopupShow: false,
             // 显示取消退款原因选项
             isPickerShow: false,
-            // 当前支付的orderId
-            currentPayId: '',
             // 订单详情
             detail: {},
             // 商品详情
@@ -605,6 +616,7 @@ export default {
         },
         // 有物流信息
         hasExpressInfo () {
+            // 实体订单 + 有物流信息
             return this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && this.logisticsInfoModel && this.logisticsInfoModel.courierNo
         },
         // 核销码全部过期或核销，statusCode: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
@@ -671,7 +683,7 @@ export default {
                 // 虚拟商品 正式课 体验课 生成核销码
                 if ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(result.orderType) && this.redeemCodeModels.length) {
                     if ([this.orderStatuskeyMap.WAIT_SHIP, this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(result.status)) {
-                        this.generateQrcode(this.orderId)
+                        this.generateQrcode()
                     }
                     if (result.status !== this.orderStatuskeyMap.CLOSED) {
                         await setVerificationStatus(this.orderId)
@@ -685,12 +697,12 @@ export default {
                         this.suggestionMap.CLOSED = this.detail.aftersaleStatus === 'PROCESSING_COMPLETED' ? '退款完成' : '订单取消'
                     }
                     if ([this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(result.status)) {
-                        this.setTime(result, this.detail.status)
+                        this.setTime()
                     }
                     if (result.status === this.orderStatuskeyMap.WAIT_RECEIVE) {
                         this.suggestionMap.CLOSED = this.detail.aftersaleStatus === 'PROCESSING_COMPLETED' ? '退款完成' : '订单取消'
                         if (result.status === this.orderTypeKeyMap.PHYSICAL_GOODS) {
-                            this.setTime(result, 'WAIT_RECEIVE')
+                            this.setTime()
                         } else if (result.status === this.orderTypeKeyMap.KNOWLEDGE_COURSE) {
                             this.suggestionMap.WAIT_RECEIVE = validity ? `购买后${ validity }天内学完` : '购买后不限观看次数'
                         } else {
@@ -739,8 +751,8 @@ export default {
             }
         },
         // 生成核销码二维码
-        generateQrcode (orderId) {
-            generateQrcode({ size: 300, text: orderId, padding: 34 })
+        generateQrcode () {
+            generateQrcode({ size: 300, text: this.orderId, padding: 34 })
                 .then(async base64 => {
                     this.qrImg = base64
                 })
@@ -749,17 +761,18 @@ export default {
                 })
         },
         // 设置时间
-        setTime (result, orderStatus) {
+        setTime () {
+            const orderStatus = this.detail.orderStatus
             let waitPayTime = 0
             // 服务器时间
-            const now = Number(result.currentServerTime)
+            const now = Number(this.detail.currentServerTime)
             if (this.detail.orderSource === this.skuSourceKeyMap.NORMAL) {
                 // 24小时
                 waitPayTime = 24 * 60 * 60 * 1000
             } else if (this.detail.orderSource === this.skuSourceKeyMap.BOOKING && orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
                 // 预购倒计时逻辑
-                const useStartTime = moment((result.startExpire)).valueOf()
-                const useEndTime = moment((result.endExpire)).valueOf()
+                const useStartTime = moment((this.detail.startExpire)).valueOf()
+                const useEndTime = moment((this.detail.endExpire)).valueOf()
                 // 是否开始
                 this.finalPaymentIsStarted = now - useStartTime >= 0
                 // 是否过期
@@ -781,7 +794,7 @@ export default {
             }
 
             // 开始时间，如果是待付款，取订单创建时间，如果是其他状态（待发货），取发货时间
-            const time = orderStatus === this.orderStatuskeyMap.WAIT_PAY ? result.createTime : result.shipTime
+            const time = orderStatus === this.orderStatuskeyMap.WAIT_PAY ? this.detail.createTime : this.detail.shipTime
             const duration = orderStatus === this.orderStatuskeyMap.WAIT_PAY ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
             const startTime = moment(time).valueOf()
             if (now - startTime < duration) {
@@ -789,7 +802,7 @@ export default {
             }
         },
         // 设置倒计时
-        countDown (remanent, orderStatus) {
+        countDown (remanent) {
             if (this.countdownInstance) {
                 this.countdownInstance.stop()
             }
@@ -805,16 +818,16 @@ export default {
                 const h = String(data.hours)
                 const m = String(data.minutes)
                 const s = String(data.seconds)
-                if (orderStatus === this.orderStatuskeyMap.WAIT_PAY) {
+                if (this.detail.orderStatus === this.orderStatuskeyMap.WAIT_PAY) {
                     this.suggestionMap.WAIT_PAY = `还剩${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒 订单自动关闭`
                     return
                 }
-                if (orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
+                if (this.detail.orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
                     const tip = this.finalPaymentIsStarted ? '剩余尾款支付时间' : '距离开始支付时间'
                     this.suggestionMap.WAIT_PAY_REPAYMENT = `${ tip }：${ d.padStart(2, '0') }天${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒`
                     return
                 }
-                if (orderStatus === this.orderStatuskeyMap.WAIT_RECEIVE) {
+                if (this.detail.orderStatus === this.orderStatuskeyMap.WAIT_RECEIVE) {
                     this.suggestionMap.WAIT_RECEIVE = `还剩${ d }天${ h.padStart(2, '0') }时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒后自动收货`
                 }
             })
@@ -878,24 +891,24 @@ export default {
          * @param type {number} 1: 普通支付 2: 付尾款
          * @return {Promise<void>}
          */
-        async pay (type) {
+        async pay () {
             try {
-                const { orderId } = this
                 let result = null
-                this.currentPayId = orderId
+                const orderStatus = this.detail.orderStatus
                 this.payloading = true
-                if (type === 1) {
-                    const { result: waitPayInfo } = await getAwaitPayInfo(orderId)
+                if (orderStatus === this.orderStatuskeyMap.WAIT_PAY) {
+                    const { result: waitPayInfo } = await getAwaitPayInfo(this.orderId)
                     result = waitPayInfo
-                } else if (type === 2) {
-                    const { result: balanceInfo } = await getWaitPayBalanceInfo(orderId)
+                }
+                if (orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
+                    const { result: balanceInfo } = await getAwaitTailPayInfo(this.orderId)
                     result = balanceInfo
                 }
 
                 // 调用微信支付api
                 await wechatPay(result)
-                updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'pay' })
-                this.$router.push({ name: 'PaySuccess', params: { orderId }, query: { orderType: this.detail.orderType } })
+                updateLocalStorage('UPDATE_ORDER_LIST', { id: this.orderId, action: 'pay' })
+                this.$router.push({ name: 'PaySuccess', params: { orderId: this.orderId }, query: { orderType: this.detail.orderType } })
             } catch (e) {
                 throw e
             } finally {
