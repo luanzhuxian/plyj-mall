@@ -178,9 +178,9 @@ export default {
     }
     /* small */
     &__small {
-      padding: 0 10px;
-      line-height: 48px;
-      font-size: 26px;
+      padding: 0 14px;
+      line-height: 44px;
+      font-size: 24px;
       border-radius: 10px;
       &:nth-of-type(n + 1) {
         margin-right: 10px;

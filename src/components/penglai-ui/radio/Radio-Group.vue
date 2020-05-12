@@ -1,29 +1,51 @@
 <template>
     <div
         role="radiogroup"
-        class="radio-group"
+        class="pl-radio-group"
+        :class="{ 'radio-group__inline': inline }"
     >
         <slot />
     </div>
 </template>
 
 <script>
-import { ParentMixin } from '../../../mixins/relation'
 
 export default {
-    name: 'RadioGroupComponent',
-    mixins: [ParentMixin('RadioGroupComponent')],
+    name: 'PlRadioGroup',
     props: {
         value: {
-            type: [String, Number],
+            type: [String, Number, Boolean, Object, Array],
             default () {
                 return null
             }
         },
+        inline: Boolean,
         disabled: Boolean
+    },
+    data () {
+        return {
+            values: {
+                defaultValue: null
+            }
+        }
+    },
+    model: {
+        event: 'change',
+        prop: 'value'
     },
     watch: {
         value (value) {
+            this.values.defaultValue = value
+        }
+    },
+    provide () {
+        return {
+            changeHandler: this.changeHandler,
+            values: this.values
+        }
+    },
+    methods: {
+        changeHandler (value) {
             this.$emit('change', value)
         }
     }

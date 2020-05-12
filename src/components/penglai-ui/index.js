@@ -5,7 +5,6 @@ import GetCode from './Get-Code.vue'
 import Tab from './Tab.vue'
 import Form from './Form'
 import FormItem from './Form-Item'
-import Radio from './Radio.vue'
 import List from './List.vue'
 import UploadImg from './Upload-Img.vue'
 import Fields from './Fields.vue'
@@ -35,7 +34,6 @@ const components = [
     Tab,
     Form,
     FormItem,
-    Radio,
     List,
     UploadImg,
     Fields,

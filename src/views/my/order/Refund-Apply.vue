@@ -103,24 +103,25 @@
             @close="popup.isPopupShow = false"
         >
             <template>
-                <ul :class="$style.popupContentWrapper">
-                    <radio-group-component v-model="radio[popup.currentPopupName]">
-                        <template>
+                <div :class="$style.popupContentWrapper">
+                    <pl-radio-group v-model="radio[popup.currentPopupName]">
+                        <pl-radio
+                            v-for="(item, index) of popup.popupOptions"
+                            :key="index"
+                            :label="item.dictDataValue"
+                        >
                             <div
                                 :class="$style.popupItem"
-                                v-for="(item, index) of popup.popupOptions"
-                                :key="index"
                                 @click="handleRadioClick(item)"
                             >
                                 <div
                                     :class="$style.popupItemText"
                                     v-text="item.dictDataValue"
                                 />
-                                <radio-component :name="item.dictDataKey" />
                             </div>
-                        </template>
-                    </radio-group-component>
-                </ul>
+                        </pl-radio>
+                    </pl-radio-group>
+                </div>
                 <div :class="$style.popupButtonWrapper">
                     <pl-button
                         size="larger"
@@ -500,7 +501,7 @@ export default {
   }
 
   .popup-content-wrapper {
-    padding: 28px 0 0 24px;
+    padding: 28px 24px;
     background-color: #FFF;
     height: 526px;
     overflow-y: scroll;
