@@ -37,15 +37,15 @@
                 :class="$style.buttons"
                 v-if="orderStatus !== orderStatuskeyMap.WAIT_SHIP"
             >
-                <!-- 待付款/待付尾款 支持 取消订单-->
-                <pl-button
-                    v-if="orderStatus === orderStatuskeyMap.WAIT_PAY || orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
-                    round
-                    plain
-                    @click="doOperation('cancelOrder')"
-                >
-                    取消订单
-                </pl-button>
+                <!--付款倒计时-->
+                <span class="fz-24 gray-3 mr-10" v-if="isStart && !pastDue">
+                    <span v-show="isStart">剩余{{ orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY? '尾款': '' }}支付时间：</span>
+                    <span v-show="!isStart">距离开始支付时间：</span>
+                    <span v-show="countDown.d !== '00'">{{ countDown.d }}天</span>
+                    <span v-show="countDown.h !== '00'">{{ countDown.h }}时</span>
+                    <span>{{ countDown.m }}分</span>
+                    <span>{{ countDown.s }}秒</span>
+                </span>
                 <!--正常待付款 支持 付款(目前只区别于预购的待付尾款)-->
                 <pl-button
                     v-if="orderStatus === orderStatuskeyMap.WAIT_PAY"
@@ -57,15 +57,6 @@
                 >
                     去付款
                 </pl-button>
-                <!--付款倒计时-->
-                <span class="fz-24 gray-3 mr-10" v-if="isStart && !pastDue">
-                    <span v-show="isStart">剩余尾款支付时间：</span>
-                    <span v-show="!isStart">距离开始支付时间：</span>
-                    <span v-show="countDown.d !== '00'">{{ countDown.d }}天</span>
-                    <span v-show="countDown.h !== '00'">{{ countDown.h }}时</span>
-                    <span>{{ countDown.m }}分</span>
-                    <span>{{ countDown.s }}秒</span>
-                </span>
                 <!--预购待付尾款-->
                 <pl-button
                     v-if="orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
@@ -76,6 +67,15 @@
                     @click="doOperation('pay')"
                 >
                     {{ pastDue ? '已过期' : isStart ? '去付尾款' : '未开始付尾款' }}
+                </pl-button>
+                <!-- 待付款/待付尾款 支持 取消订单-->
+                <pl-button
+                    v-if="orderStatus === orderStatuskeyMap.WAIT_PAY || orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
+                    round
+                    plain
+                    @click="doOperation('cancelOrder')"
+                >
+                    取消订单
                 </pl-button>
                 <!--售后非处理中 支持删除订单-->
                 <pl-button

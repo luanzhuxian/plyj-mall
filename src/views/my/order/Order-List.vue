@@ -228,16 +228,35 @@ export default {
         setCountDown (item, i) {
             // 是否开始付尾款
             const now = moment(item.currentTime).valueOf()
-            const useStartTime = moment(item.startTime).valueOf()
-            const useEndTime = moment(item.endTime).valueOf()
-            item.isStart = now >= useStartTime
-            item.pastDue = now >= useEndTime
-            if (!item.isStart) {
+            let waitPayTime = 0
+            const skuSource = item.skuSource
+            if (skuSource === this.skuSourceKeyMap.NORMAL) {
+                // 24小时
+                waitPayTime = 24 * 60 * 60 * 1000
+            } else if (skuSource === this.skuSourceKeyMap.BOOKING && item.orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
+                const useStartTime = moment(item.startTime).valueOf()
+                const useEndTime = moment(item.endTime).valueOf()
+                item.isStart = now >= useStartTime
+                item.pastDue = now >= useEndTime
+                if (!item.isStart) {
                 // 可以开始支付了，倒计时支付
-                this.countDown(useStartTime - now, i, item)
-            } else if (!item.pastDue) {
+                    this.countDown(useStartTime - now, i, item)
+                } else if (!item.pastDue) {
                 // 可以开始支付了，倒计时支付
-                this.countDown(useEndTime - now, i, item)
+                    this.countDown(useEndTime - now, i, item)
+                }
+                return
+            } else {
+                // 活动商品未付款5分钟
+                waitPayTime = 5 * 60 * 1000
+            }
+            // 开始时间，如果是待付款，取订单创建时间，如果是其他状态（待发货），取发货时间
+            const startTime = moment(item.createTime).valueOf()
+            const endTime = startTime + waitPayTime
+            item.isStart = now >= startTime
+            item.pastDue = now >= endTime
+            if (now - startTime < waitPayTime) {
+                this.countDown(waitPayTime + startTime - now + 2000, i, item)
             }
         },
 
