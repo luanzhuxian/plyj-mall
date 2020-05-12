@@ -65,7 +65,7 @@
                     :price="goodsModel.sellingPrice"
                     :count="goodsModel.count"
                     :option="goodsModel.subSku ? `${goodsModel.sku},${goodsModel.subSku}` : goodsModel.sku"
-                    :product-id="goodsModel.id"
+                    :product-id="detail.goodId"
                     :order-type="detail.orderType"
                     :support-refund="detail.supportAfterSales"
                     :allow-invoice="detail.supportInvoice"
