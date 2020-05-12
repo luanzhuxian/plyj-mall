@@ -106,7 +106,7 @@ export default {
 
             // 视频短的取用十分之一播放时长调用
             let times = (this.duration / 10) || 0
-            times = times > 10e4 ? 10e4 : times
+            times = times > 100 ? 100 : times
             this.setStudyTimer = window.setTimeout(async () => {
                 try {
                     const videoTime = (this.$refs.paidPlayer && this.$refs.paidPlayer.video && this.$refs.paidPlayer.video.currentTime) || 0
