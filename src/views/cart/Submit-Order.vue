@@ -40,6 +40,7 @@
             </div>
 
             <div
+                v-if="freight"
                 :class="$style.itemSelector"
             >
                 <pl-fields
@@ -144,7 +145,7 @@ import ContactInfo from './components/Contact-Info.vue'
 import { setTimeoutSync } from "../../assets/js/util";
 import wechatPay from "../../assets/js/wechat/wechat-pay";
 export default {
-    name: 'SubmitOrderV2',
+    name: 'SubmitOrder',
     components: {
         AddressItem,
         OrderItemSkeleton,
@@ -519,6 +520,8 @@ export default {
             try {
                 if (CREDENTIAL.appId) {
                     await wechatPay(CREDENTIAL)
+                    this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount }, query: { orderType } })
+                } else if (this.totalAmount === 0) {
                     this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount }, query: { orderType } })
                 } else {
                     throw new Error('支付失败')

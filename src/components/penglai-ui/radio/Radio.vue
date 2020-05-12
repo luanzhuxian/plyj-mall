@@ -52,7 +52,7 @@ export default {
         },
         icon: {
             type: String,
-            default: 'icon-check'
+            default: 'icon-xuanzhong'
         },
         iconSize: {
             type: Number,

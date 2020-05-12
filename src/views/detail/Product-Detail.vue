@@ -1127,12 +1127,16 @@ export default {
                 this.creating = false
             }
         },
-        countFinished () {
+        async countFinished () {
             // this.$set(this.detail, 'serverTime', '')
             // this.$set(this.detail, 'shoppingTimeLong', '')
             // this.$set(this.detail, 'preActivity', 2)
             // location.reload()
-            this.refresh()
+            try {
+                await this.refresh()
+            } catch (e) {
+                throw e
+            }
         }
     },
     async beforeRouteUpdate (to, from, next) {

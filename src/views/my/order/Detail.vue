@@ -78,7 +78,7 @@
                 <div :class="$style.buttons">
                     <!--实际支付大于0 + 支持售后 支持 申请退款-->
                     <pl-button
-                        v-if="detail.amount && detail.supportAfterSales"
+                        v-if="!detail.amount && !detail.supportAfterSales"
                         plain
                         round
                         @click="applyRefund"
@@ -867,21 +867,16 @@ export default {
         },
         // 跳转申请退款页面
         applyRefund () {
+            const { goodsModel, orderId, detail } = this
+            goodsModel.goodId = detail.goodId
+            goodsModel.orderStatus = detail.status
+            goodsModel.orderType = detail.orderType
+            goodsModel.orderId = orderId
+            this.$store.commit('setRefundGoods', goodsModel)
             this.$router.push({
                 name: 'Refund',
                 params: {
-                    orderId: this.orderId,
-                    orderProductRId: this.goodsModel.orderProductRId
-                },
-                query: {
-                    orderStatus: this.detail.status,
-                    orderType: this.detail.orderType,
-                    productId: this.goodsModel.id,
-                    productImg: this.goodsModel.img,
-                    productName: this.goodsModel.name,
-                    skuCode1Name: this.goodsModel.sku,
-                    skuCode2Name: this.goodsModel.subSku,
-                    count: this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? this.goodsModel.count : this.usefulCodeNumber
+                    orderId
                 }
             })
         },

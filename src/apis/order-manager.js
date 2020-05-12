@@ -54,7 +54,7 @@ export const getFreightData = orderId => axios.get(`/apis/v1/order/logistics/${ 
 export const getMap = code => axios.get(`/apis/v1/systemctl/sysdictionary/detail/list/${ code }`)
 
 // 获取最大退款值
-export const getMaxRefund = orderProductRId => axios.get(`/apis/v1/refund/refund/getAmountOfRefundable/${ orderProductRId }`)
+// export const getMaxRefund = orderProductRId => axios.get(`/apis/v1/refund/refund/getAmountOfRefundable/${ orderProductRId }`)
 
 // 申请售后
 // export const applyRefund = params => axios.post(`/apis/v1/refund/refund/customer/apply`, params)
@@ -180,3 +180,11 @@ export const getAwaitPayInfo = orderId => axios.post('/apis/v2/order/pay/sub/pay
  * @return {Promise<Object>}
  */
 export const getAwaitTailPayInfo = orderId => axios.post('/apis/v2/order/pay/tail/money', { orderId })
+
+/**
+ * 计算可退款最大金额
+ * @param {string} orderId - 订单id
+ * @param {string} type - 售后类型
+ * @return {*}
+ */
+export const getMaxRefund = (orderId, type) => axios.post('/apis/v2/order/refunds/max/amount', { orderId, type })

@@ -2,7 +2,7 @@
     <div :class="$style.refund">
         <section :class="$style.orderInfo">
             <order-item
-                :img="productImg + '?x-oss-process=style/thum'"
+                :img="productImg"
                 :name="productName"
                 :count="count"
                 :option="skuCode2Name ? `${skuCode1Name},${skuCode2Name}` : skuCode1Name"
@@ -18,7 +18,7 @@
                     :class="$style.item"
                     tag="div"
                     replace
-                    :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '1', type: 'APPLY' } }"
+                    :to="{ name: 'RefundApply', params: { orderId, refundType: '1', type: 'APPLY' } }"
                 >
                     <div :class="$style.itemLeft">
                         <div :class="$style.itemTitle">
@@ -34,6 +34,7 @@
                         :class="$style.itemRight"
                         name="icon-right"
                         fill="#DEDEDE"
+                        width="22"
                     />
                 </router-link>
 
@@ -42,7 +43,7 @@
                     :class="$style.item"
                     tag="div"
                     replace
-                    :to="{ name: 'RefundApply', params: { orderId, orderProductRId, refundType: '2', type: 'APPLY' } }"
+                    :to="{ name: 'RefundApply', params: { orderId, refundType: '2', type: 'APPLY' } }"
                 >
                     <div :class="$style.itemLeft">
                         <div :class="$style.itemTitle">
@@ -58,6 +59,7 @@
                         :class="$style.itemRight"
                         name="icon-right"
                         fill="#DEDEDE"
+                        width="22"
                     />
                 </router-link>
             </div>
@@ -67,7 +69,7 @@
 
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
-
+import { mapGetters } from 'vuex'
 export default {
     name: 'Refund',
     components: {
@@ -77,11 +79,10 @@ export default {
         orderId: {
             type: String,
             default: null
-        },
-        orderProductRId: {
-            type: String,
-            default: null
         }
+    },
+    computed: {
+        ...mapGetters(['refundGoodsInfo'])
     },
     data () {
         return {
@@ -96,14 +97,28 @@ export default {
         }
     },
     activated () {
-        this.orderStatus = this.$route.query.orderStatus || ''
-        this.orderType = this.$route.query.orderType || ''
-        this.productId = this.$route.query.productId || ''
-        this.productImg = this.$route.query.productImg || ''
-        this.productName = this.$route.query.productName || ''
-        this.skuCode1Name = this.$route.query.skuCode1Name || ''
-        this.skuCode2Name = this.$route.query.skuCode2Name || ''
-        this.count = this.$route.query.count || ''
+        const {
+            goodId,
+            sku,
+            subSku,
+            count,
+            img,
+            name,
+            orderType,
+            orderStatus
+        } = this.refundGoodsInfo
+        if (!goodId) {
+            this.$router.go(-1)
+            return
+        }
+        this.orderStatus = orderStatus
+        this.orderType = orderType
+        this.productId = goodId
+        this.productImg = img
+        this.productName = name
+        this.skuCode1Name = sku
+        this.skuCode2Name = subSku
+        this.count = count
     }
 }
 </script>

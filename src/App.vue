@@ -57,7 +57,8 @@ export default {
                 'LiveRoom',
                 'PaySuccess',
                 'LongmenLottery',
-                'SubmitOrderV2'
+                'SubmitOrder',
+                'RefundApply'
             ],
             // 以下路由名称，不显示快速导航
             showNavbar: [

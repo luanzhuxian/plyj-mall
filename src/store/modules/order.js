@@ -1,4 +1,5 @@
-const order = {
+const refundGoodsInfo = JSON.parse(sessionStorage.getItem('REFUND_GOODS'))
+export default {
     state: {
         // 短信类型
         smstype: {
@@ -111,6 +112,16 @@ const order = {
             PROCESSING: 'PROCESSING',
             // 处理完成
             PROCESSING_COMPLETED: 'PROCESSING_COMPLETED'
+        },
+        // 要申请售后的商品信息
+        refundGoodsInfo
+    },
+    mutations: {
+        // 缓存要申请售后的商品信息
+        setRefundGoods: (state, goods) => {
+            const goodsStr = JSON.stringify(goods)
+            state.refundGoodsInfo = JSON.parse(goodsStr)
+            sessionStorage.setItem('REFUND_GOODS', goodsStr)
         }
     },
     getters: {
@@ -123,7 +134,7 @@ const order = {
         orderTypeKeyMap: state => state.orderTypeKeyMap,
         refundStatusMap: state => state.refundStatusMap,
         refundTypeMap: state => state.refundTypeMap,
-        aftersaleStatusKeyMap: state => state.aftersaleStatusKeyMap
+        aftersaleStatusKeyMap: state => state.aftersaleStatusKeyMap,
+        refundGoodsInfo: state => state.refundGoodsInfo
     }
 }
-export default order

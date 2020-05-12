@@ -5,11 +5,11 @@
     >
         <section :class="$style.orderInfo">
             <order-item
-                :img="productInfo.productImg + '?x-oss-process=style/thum'"
-                :name="productInfo.productName"
-                :count="count"
-                :option="productInfo.skuCode2Name ? `${productInfo.skuCode1Name},${productInfo.skuCode2Name}` : productInfo.skuCode1Name"
-                :product-id="productInfo.productId"
+                :img="refundGoodsInfo.img"
+                :name="refundGoodsInfo.name"
+                :count="refundGoodsInfo.count"
+                :option="refundGoodsInfo.subSku ? `${refundGoodsInfo.sku},${refundGoodsInfo.subSku}` : refundGoodsInfo.sku"
+                :product-id="refundGoodsInfo.goodId"
                 hide-price
                 route-name="Product"
             />
@@ -22,20 +22,20 @@
                     text="服务类型："
                     :right-text="radio.refundTypeText || '请选择'"
                     :show-right-icon="canRefundTypeChange"
-                    @click="() => {canRefundTypeChange ? showPopup('refundType') : ''}"
+                    @click="() => {if (canRefundTypeChange) showPopup('refundType') }"
                 />
                 <pl-fields
                     text="货物状态："
-                    v-if="detail.orderType === 'PHYSICAL'"
+                    v-if="refundGoodsInfo.orderType === 'PHYSICAL'"
                     :right-text="radio.goodsStatusText || '请选择'"
                     show-right-icon
-                    @click="() => {canGoodsStatusChange ? showPopup('goodsStatus') : ''}"
+                    @click="() => { if (canGoodsStatusChange) showPopup('goodsStatus') }"
                 />
                 <pl-fields
-                    text="退货原因："
+                    :text="refundGoodsInfo.orderType === 'PHYSICAL' ? '退货原因：' : '退款原因'"
                     :right-text="radio.refundReasonText || '请选择'"
                     show-right-icon
-                    @click="() => {canRefundReasonChange ? showPopup('refundReason') : ''}"
+                    @click="() => { if (canRefundReasonChange) showPopup('refundReason') }"
                 />
                 <div :class="$style.item">
                     <span :class="$style.itemLeft">
@@ -88,7 +88,7 @@
                 type="warning"
                 :loading="loading"
                 :disabled="loading"
-                @click="confirm"
+                @click="submitApply"
             >
                 提交申请
             </pl-button>
@@ -136,31 +136,12 @@
 </template>
 
 <script>
+/* eslint-disable */
 import OrderItem from '../../../components/item/Order-Item.vue'
 import { getOrderDetail, getRefundOrderDetail, applyRefund, modifyRefund, getMap as getRefundReasonMap, getMaxRefund } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
 import { isPositive } from '../../../assets/js/validate'
 import { mapGetters } from 'vuex'
-
-const refundTypePopupOptions = [
-    {
-        dictDataKey: '1',
-        dictDataValue: '仅退款'
-    }, {
-        dictDataKey: '2',
-        dictDataValue: '退款退货'
-    }
-]
-
-const goodsStatusPopupOptions = [
-    {
-        dictDataKey: '1',
-        dictDataValue: '已收到货'
-    }, {
-        dictDataKey: '2',
-        dictDataValue: '未收到货'
-    }
-]
 
 const goodsStatusMap = {
     1: '已收到货',
@@ -174,10 +155,6 @@ export default {
     },
     props: {
         orderId: {
-            type: String,
-            default: null
-        },
-        orderProductRId: {
             type: String,
             default: null
         },
@@ -201,9 +178,7 @@ export default {
     data () {
         return {
             loading: false,
-            orderStatus: '',
             productInfo: {},
-            detail: {},
             form: {
                 orderDetailId: this.orderProductRId,
                 actualRefund: '',
@@ -220,11 +195,27 @@ export default {
             },
             refundTypeInfo: {
                 title: '服务类型',
-                options: refundTypePopupOptions
+                options: [
+                    {
+                        dictDataKey: '1',
+                        dictDataValue: '仅退款'
+                    }, {
+                        dictDataKey: '2',
+                        dictDataValue: '退款退货'
+                    }
+                ]
             },
             goodsStatusInfo: {
                 title: '货物状态',
-                options: goodsStatusPopupOptions
+                options: [
+                    {
+                        dictDataKey: '1',
+                        dictDataValue: '已收到货'
+                    }, {
+                        dictDataKey: '2',
+                        dictDataValue: '未收到货'
+                    }
+                ]
             },
             refundReasonInfo: {
                 title: '退款原因',
@@ -242,15 +233,18 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['refundTypeMap']),
+        ...mapGetters(['refundTypeMap', 'refundGoodsInfo']),
         isWaitShip () {
             return this.orderStatus === 'WAIT_SHIP'
         },
-
-        // 退款退货，货物状态默认为已收到货，不可修改
-        isRefundGoods () {
-            return this.radio.refundType === '2'
+        orderStatus () {
+            return this.refundGoodsInfo.orderStatus
         },
+        //
+        // // 退款退货，货物状态默认为已收到货，不可修改
+        // isRefundGoods () {
+        //     return this.radio.refundType === '2'
+        // },
         canRefundTypeChange () {
             return !this.isWaitShip && this.type === 'MODIFY'
         },
@@ -258,10 +252,10 @@ export default {
             return !this.isWaitShip && !this.isRefundGoods
         },
         canRefundReasonChange () {
-            return this.detail.orderType !== 'PHYSICAL' || (this.radio.goodsStatus && this.radio.goodsStatusText)
+            return this.refundGoodsInfo.orderType !== 'PHYSICAL' || (this.radio.goodsStatus && this.radio.goodsStatusText)
         },
         refundReasonCode () {
-            return this.detail.orderType !== 'PHYSICAL'
+            return this.refundGoodsInfo.orderType !== 'PHYSICAL'
                 ? 'REASONREFUNDVIRTURALANDCLASS'
                 : (this.orderStatus === 'WAIT_SHIP'
                     ? 'REASONBUYERPAID'
@@ -274,33 +268,44 @@ export default {
                         : '')
         }
     },
-    async activated () {
-        this.form.orderDetailId = this.orderProductRId
+    async created () {
+        //     this.form.orderDetailId = this.orderProductRId
         this.radio.refundType = String(this.refundType)
         this.radio.refundTypeText = this.refundTypeMap[this.refundType]
-        if (this.isRefundGoods) {
-            this.radio.goodsStatus = '1'
-            this.radio.goodsStatusText = '已收到货'
+    //     if (this.isRefundGoods) {
+    //         this.radio.goodsStatus = '1'
+    //         this.radio.goodsStatusText = '已收到货'
+    //     }
+    //     await this.getOrderDetail()
+    //     if (this.type === 'APPLY') {
+    //         const { result: { refundableAmount, refundableCount } } = await getMaxRefund(this.orderProductRId)
+    //         this.form.actualRefund = refundableAmount
+    //         this.maxRefund = refundableAmount
+    //         this.count = refundableCount
+    //     }
+    //     if (this.type === 'MODIFY') {
+    //         this.getRefundInfo()
+    // };  // eslint-disable-line
+        try {
+            ({ result: this.refundReasonInfo.options } = await getRefundReasonMap(this.refundReasonCode))
+            await getMaxRefund(this.orderId)
+        } catch (e) {
+            throw e
         }
-        await this.getOrderDetail()
-        if (this.type === 'APPLY') {
-            const { result: { refundableAmount, refundableCount } } = await getMaxRefund(this.orderProductRId)
-            this.form.actualRefund = refundableAmount
-            this.maxRefund = refundableAmount
-            this.count = refundableCount
-        }
-        if (this.type === 'MODIFY') {
-            this.getRefundInfo()
-    };  // eslint-disable-line
-        // 获取数据字典
-        ({ result: this.refundReasonInfo.options } = await getRefundReasonMap(this.refundReasonCode))
     },
     deactivated () {
-        resetForm(this.form)
-        resetForm(this.radio)
-        this.popup.isPopupShow = false
+        // resetForm(this.form)
+        // resetForm(this.radio)
+        // this.popup.isPopupShow = false
     },
     methods: {
+        async submitApply () {
+            try {
+                await applyRefund()
+            } catch (e) {
+                throw e
+            }
+        },
         alert () {
             this.$toast(`最多输入${ this.maxLength }个字`)
         },
@@ -314,53 +319,54 @@ export default {
                 }
             })
         },
-        async getOrderDetail () {
-            const { result } = await getOrderDetail(this.orderId)
-            this.orderStatus = result.orderStatus
-            this.detail = result
-            this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
-
-            // 待发货状态默认为未收到货
-            if (result.orderStatus === 'WAIT_SHIP') {
-                this.radio.goodsStatus = '2'
-                this.radio.goodsStatusText = '未收到货'
-            }
-            return Promise.resolve()
-        },
-        getRefundInfo () {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const {
-                        result: {
-                            actualRefund,
-                            applyContent,
-                            pictures,
-                            applyReason,
-                            applyReasonText,
-                            orderStatus,
-                            receiveStatus
-                        }
-                    } = await getRefundOrderDetail({ id: this.refundId })
-                    this.form.actualRefund = actualRefund
-                    this.maxRefund = actualRefund
-                    this.form.applyContent = applyContent
-                    this.form.pictures = [...pictures]
-                    this.imgList = [...pictures]
-                    this.radio.refundReason = String(applyReason)
-                    this.radio.refundReasonText = applyReasonText
-
-                    // 待发货状态默认为未收到货
-                    if (orderStatus !== 'WAIT_SHIP') {
-                        this.radio.goodsStatus = String(receiveStatus)
-                        this.radio.goodsStatusText = goodsStatusMap[receiveStatus]
-                    }
-                    resolve(true)
-                } catch (e) {
-                    reject(e)
-                }
-            })
-        },
+        // async getOrderDetail () {
+        //     const { result } = await getOrderDetail(this.orderId)
+        //     this.orderStatus = result.orderStatus
+        //     this.detail = result
+        //     this.productInfo = result.productInfoModel.productDetailModels.filter(product => product.orderProductRId === this.orderProductRId)[0] || {}
+        //
+        //     // 待发货状态默认为未收到货
+        //     if (result.orderStatus === 'WAIT_SHIP') {
+        //         this.radio.goodsStatus = '2'
+        //         this.radio.goodsStatusText = '未收到货'
+        //     }
+        //     return Promise.resolve()
+        // },
+        // getRefundInfo () {
+        //     return new Promise(async (resolve, reject) => {
+        //         try {
+        //             const {
+        //                 result: {
+        //                     actualRefund,
+        //                     applyContent,
+        //                     pictures,
+        //                     applyReason,
+        //                     applyReasonText,
+        //                     orderStatus,
+        //                     receiveStatus
+        //                 }
+        //             } = await getRefundOrderDetail({ id: this.refundId })
+        //             this.form.actualRefund = actualRefund
+        //             this.maxRefund = actualRefund
+        //             this.form.applyContent = applyContent
+        //             this.form.pictures = [...pictures]
+        //             this.imgList = [...pictures]
+        //             this.radio.refundReason = String(applyReason)
+        //             this.radio.refundReasonText = applyReasonText
+        //
+        //             // 待发货状态默认为未收到货
+        //             if (orderStatus !== 'WAIT_SHIP') {
+        //                 this.radio.goodsStatus = String(receiveStatus)
+        //                 this.radio.goodsStatusText = goodsStatusMap[receiveStatus]
+        //             }
+        //             resolve(true)
+        //         } catch (e) {
+        //             reject(e)
+        //         }
+        //     })
+        // },
         showPopup (name) {
+            console.log(name)
             this.popup.currentPopupName = name
             this.popup.opupTitle = this[`${ name }Info`].title
             this.popup.popupOptions = this[`${ name }Info`].options
@@ -386,39 +392,39 @@ export default {
                 ({ result: this.refundReasonInfo.options } = await getRefundReasonMap(this.refundReasonCode))
             }
         },
-        async confirm () {
-            if (!this.radio.goodsStatus && this.detail.orderType === 'PHYSICAL') return this.$warning('请选择货物状态')
-            if (!this.radio.refundReason) return this.$warning('请选择退货原因')
-            if (!isPositive(this.form.actualRefund)) return this.$warning('退款金额必须大于零，小数点后最多两位')
-            if (this.form.actualRefund > this.maxRefund) return this.$warning('退款金额大于最大退款金额，请修改')
-            try {
-                this.loading = true
-                const { type, form: { actualRefund, ...rest } } = this
-                const params = {
-                    ...rest,
-                    actualRefund: Number(actualRefund),
-                    refundType: this.radio.refundType,
-                    receiveStatus: this.radio.goodsStatus,
-                    applyReason: this.radio.refundReason,
-                    ...(type === 'MODIFY' ? { id: this.refundId } : null)
-                }
-                const fn = type === 'MODIFY' ? modifyRefund : applyRefund
-                const message = type === 'MODIFY' ? '更改退单成功，请等待卖家反馈' : '申请售后成功，请等待卖家反馈'
-                await this.$confirm('确定提交吗？')
-                const { result } = await fn(params)
-                this.$success(message)
-                setTimeout(() => {
-                    this.loading = false
-                    this.type === 'APPLY'
-                        ? this.$router.replace({ name: 'RefundDetail', params: { id: result.id } })
-                        : this.$router.go(-1)
-                }, 2000)
-            } catch (e) {
-                throw e
-            } finally {
-                this.loading = false
-            }
-        }
+        // async confirm () {
+        //     if (!this.radio.goodsStatus && this.detail.orderType === 'PHYSICAL') return this.$warning('请选择货物状态')
+        //     if (!this.radio.refundReason) return this.$warning('请选择退货原因')
+        //     if (!isPositive(this.form.actualRefund)) return this.$warning('退款金额必须大于零，小数点后最多两位')
+        //     if (this.form.actualRefund > this.maxRefund) return this.$warning('退款金额大于最大退款金额，请修改')
+        //     try {
+        //         this.loading = true
+        //         const { type, form: { actualRefund, ...rest } } = this
+        //         const params = {
+        //             ...rest,
+        //             actualRefund: Number(actualRefund),
+        //             refundType: this.radio.refundType,
+        //             receiveStatus: this.radio.goodsStatus,
+        //             applyReason: this.radio.refundReason,
+        //             ...(type === 'MODIFY' ? { id: this.refundId } : null)
+        //         }
+        //         const fn = type === 'MODIFY' ? modifyRefund : applyRefund
+        //         const message = type === 'MODIFY' ? '更改退单成功，请等待卖家反馈' : '申请售后成功，请等待卖家反馈'
+        //         await this.$confirm('确定提交吗？')
+        //         const { result } = await fn(params)
+        //         this.$success(message)
+        //         setTimeout(() => {
+        //             this.loading = false
+        //             this.type === 'APPLY'
+        //                 ? this.$router.replace({ name: 'RefundDetail', params: { id: result.id } })
+        //                 : this.$router.go(-1)
+        //         }, 2000)
+        //     } catch (e) {
+        //         throw e
+        //     } finally {
+        //         this.loading = false
+        //     }
+        // }
     }
 }
 </script>
