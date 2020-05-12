@@ -1,5 +1,5 @@
 <template>
-    <label
+    <div
         role="radio"
         class="pl-radio"
         :class="{ 'pl-radio__inline': inline }"
@@ -27,7 +27,7 @@
                 width="36"
             />
         </div>
-    </label>
+    </div>
 </template>
 
 <script>
