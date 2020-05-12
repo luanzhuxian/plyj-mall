@@ -72,8 +72,8 @@
                     :active-product="detail.orderSource"
                     :pre-active="2"
                     :route-name="detail.orderType === 'KNOWLEDGE_COURSE' ? 'Curriculum' : 'Product'"
-                    :activity-status="activityData.status"
-                    :activity-id="activityData.id"
+                    :activity-status="activityDataStatus"
+                    :activity-id="activityDataId"
                 />
                 <div :class="$style.buttons">
                     <pl-button
@@ -113,7 +113,7 @@
                         寄件运单号
                     </pl-button>
                     <pl-button
-                        v-if="isCommentBtnShow(goodsModel)"
+                        v-if="isCommentBtnShow"
                         type="warning"
                         plain
                         round
@@ -124,7 +124,7 @@
                 </div>
                 <div
                     :class="$style.explain"
-                    v-if="detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && goodsModel.productUseMethod"
+                    v-if="detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && goodsModel.goodsDescription"
                 >
                     <ModuleTitle
                         title="使用说明"
@@ -132,82 +132,62 @@
                     />
                     <div
                         :class="$style.explainBox"
-                        v-text="goodsModel.productUseMethod"
+                        v-text="goodsModel.goodsDescription"
                     />
                 </div>
             </div>
 
             <div :class="$style.productPrice">
-                <!-- 正常商品价格 -->
-                <p v-if="detail.orderSource === skuSourceKeyMap.NORMAL">
-                    <span>商品金额</span>
-                    <span
-                        class="rmb"
-                        v-text="goodsModel.amount || 0"
-                    />
-                </p>
                 <!-- 预购商品价格 -->
-                <template v-else-if="detail.orderSource === skuSourceKeyMap.BOOKING">
+                <template v-if="detail.orderSource === skuSourceKeyMap.BOOKING">
                     <p>
                         <span>待付尾款</span>
                         <span
                             class="rmb"
-                            v-text="detail.tailAmonut || 0"
+                            v-text="detail.orderAmountTailMoney || 0"
                         />
                     </p>
                     <p>
-                        <span>定金(不退<i v-if="activityData.multiple">，翻{{ activityData.multipleNumber }}倍</i>)</span>
+                        <span>定金(不退<i v-if="detail.orderIntentionAmountDouble > 1">，翻{{ detail.orderIntentionAmountDouble }}倍</i>)</span>
                         <span
                             class="rmb"
-                            v-text="activityData.price || 0"
+                            v-text="detail.orderIntentionAmount || 0"
                         />
                     </p>
                 </template>
-                <!-- 使用优惠券价格 -->
-                <p v-else-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING || detail.orderSource === skuSourceKeyMap.COURSEPACKAGE">
-                    <span>商品金额</span>
-                    <span
-                        class="rmb"
-                        v-text="goodsModel.amount || 0"
-                    />
-                </p>
-                <!-- 其他活动商品（秒杀，团购） -->
+                <!-- 其他商品价格 -->
                 <p v-else>
-                    <span v-text="activeProductStatus[detail.orderSource]" />
+                    <span v-text="activeProductStatus[detail.orderSource] || '商品金额'" />
                     <span
                         class="rmb"
-                        v-text="goodsModel.activityProductAmount || 0"
+                        v-text="detail.amount || 0"
                     />
                 </p>
-                <p v-if="goodsModel.couponeAmount > 0">
+                <!--优惠券-->
+                <p v-if="detail.couponeAmount">
                     <span>优惠券</span>
-                    <span
-                        class="rmb"
-                        v-text="'-' + goodsModel.couponeAmount || 0"
-                    />
+                    <span class="rmb" v-text="'-' + detail.couponeAmount" />
+                    <span v-text="'-¥' + detail.couponeAmount" />
                 </p>
-                <p v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS">
-                    <span>运费</span>
-                    <span
-                        class="rmb"
-                        v-text="goodsModel.freight || 0"
-                    />
+                <!--奖学金-->
+                <p v-if="detail.scholarship">
+                    <span>奖学金（红包）</span>
+                    <span v-text="'-¥' + detail.scholarship" />
                 </p>
+                <!--春耘减免-->
                 <p v-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING">
                     <span>春耘减免</span>
-                    <span v-text="'-¥' + (activityData.combinationSpecialPrice || 0)" />
+                    <span v-text="'-¥' + (detail.combinationSpecialPrice || 0)" />
                 </p>
+                <!--组合折扣-->
                 <p v-if="detail.orderSource === skuSourceKeyMap.COURSEPACKAGE">
                     <span>组合折扣</span>
-                    <span v-text="'-¥' + (activityData.combinationSpecialPrice || 0)" />
+                    <span v-text="'-¥' + (detail.combinationSpecialPrice || 0)" />
                 </p>
-                <p v-if="goodsModel.couponeAmount">
-                    <span>优惠</span>
-                    <span v-text="'-¥' + (goodsModel.couponeAmount || 0)" />
-                </p>
-                <p v-if="goodsModel.scholarship">
-                    <span>奖学金（红包）</span>
-                    <span v-text="'-¥' + (goodsModel.scholarship || 0)" />
+                <!--运费-->
+                <p v-if="detail.freight">
+                    <span>运费</span>
+                    <span class="rmb" v-text="detail.freight" />
                 </p>
             </div>
 
@@ -252,11 +232,9 @@
             >
                 <div :class="$style.detail">
                     <div :class="$style.item" v-for="(item, i) of userInfo" :key="i">
-                        <template>
-                            <span>{{ item.fieldName }}：</span>
-                            <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
-                            <span v-else style="color: #999;">未填写</span>
-                        </template>
+                        <span>{{ item.fieldName }}：</span>
+                        <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
+                        <span v-else style="color: #999;">未填写</span>
                     </div>
                 </div>
             </pl-fields>
@@ -277,11 +255,9 @@
                 >
                     <div :class="$style.detail">
                         <div :class="$style.item" v-for="(item, j) of studentItem" :key="j">
-                            <template>
-                                <span>{{ item.fieldName }}：</span>
-                                <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
-                                <span v-else style="color: #999;">未填写</span>
-                            </template>
+                            <span>{{ item.fieldName }}：</span>
+                            <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
+                            <span v-else style="color: #999;">未填写</span>
                         </div>
                     </div>
                 </pl-fields>
@@ -317,22 +293,22 @@
                     :content="orderId"
                 />
                 <pl-list
-                    v-if="detail.status !== 'WAIT_PAY' && !isClosedByCancle"
+                    v-if="detail.status !== orderStatuskeyMap.WAIT_PAY && !isClosedByCancle"
                     title="支付方式："
-                    :content="detail.payMethod"
+                    :content="detail.payMethod || '微信支付'"
                 />
                 <pl-list
-                    v-if="detail.status !== 'WAIT_PAY' && !isClosedByCancle"
+                    v-if="detail.status !== orderStatuskeyMap.WAIT_PAY && !isClosedByCancle"
                     title="支付时间："
                     :content="detail.payTime"
                 />
                 <pl-list
-                    v-if="detail.status !== 'WAIT_PAY' && !isClosedByCancle && hasExpressInfo"
+                    v-if="detail.status !== orderStatuskeyMap.WAIT_PAY && !isClosedByCancle && hasExpressInfo"
                     title="配送方式："
                     :content="detail.courierCompany"
                 />
                 <pl-list
-                    v-if="detail.status !== 'WAIT_PAY' && !isClosedByCancle && hasExpressInfo"
+                    v-if="detail.status !== orderStatuskeyMap.WAIT_PAY && !isClosedByCancle && hasExpressInfo"
                     title="发货时间："
                     :content="detail.shipTime"
                 />
@@ -347,7 +323,7 @@
 
         <!-- 发票信息 -->
         <div v-if="detail.supportInvoice" :class="[$style.panel, $style.invoice]">
-            <collapse v-model="collepseActiveNames">
+            <collapse>
                 <template v-if="invoiceModelList && invoiceModelList.length">
                     <collapse-item>
                         <template slot="title">
@@ -387,7 +363,7 @@
             :class="$style.footer"
         >
             <pl-button
-                v-if="detail.status === 'WAIT_PAY'"
+                v-if="detail.status === orderStatuskeyMap.WAIT_PAY"
                 round
                 plain
                 @click="isPickerShow = true"
@@ -395,7 +371,7 @@
                 取消订单
             </pl-button>
             <pl-button
-                v-if="(detail.status === 'FINISHED' || detail.status === 'CLOSED') && goodsModel.aftersaleStatus !== 'PROCESSING'"
+                v-if="detail.aftersaleStatus !== aftersaleStatusKeyMap.PROCESSING"
                 plain
                 round
                 @click="deleteOrder"
@@ -426,7 +402,7 @@
                 申请发票
             </pl-button>
             <pl-button
-                v-if="detail.orderType === 'PHYSICAL' && detail.status === 'WAIT_RECEIVE'"
+                v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && detail.status === orderStatuskeyMap.WAIT_RECEIVE"
                 round
                 type="warning"
                 @click="confirmReceipt"
@@ -434,7 +410,7 @@
                 确认收货
             </pl-button>
             <pl-button
-                v-if="detail.status === 'WAIT_PAY' && false"
+                v-if="[orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(detail.status)"
                 type="warning"
                 round
                 :loading="payloading && currentPayId === orderId"
@@ -443,7 +419,7 @@
                 去付款
             </pl-button>
             <pl-button
-                v-if="detail.orderType === 'KNOWLEDGE_COURSE' && detail.status === 'FINISHED'"
+                v-if="detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE && detail.status === orderStatuskeyMap.FINISHED"
                 type="warning"
                 round
                 @click="$router.push({ name: 'Courses', params: { courseType: '1' } })"
@@ -451,14 +427,14 @@
                 去学习
             </pl-button>
             <pl-button
-                v-if="detail.status === 'WAIT_PAY_REPAYMENT'"
+                v-if="detail.status === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
                 type="warning"
                 round
                 :loading="payloading && currentPayId === orderId"
-                :disabled="payloading || this.finalPaymentIsEnded || !this.finalPaymentIsStarted"
+                :disabled="payloading || finalPaymentIsEnded || !finalPaymentIsStarted"
                 @click="pay(2)"
             >
-                {{ this.finalPaymentIsEnded ? '已过期' : this.finalPaymentIsStarted ? '去付尾款' : '未开始付尾款' }}
+                {{ finalPaymentIsEnded ? '已过期' : finalPaymentIsStarted ? '去付尾款' : '未开始付尾款' }}
             </pl-button>
         </div>
 
@@ -535,31 +511,28 @@ const suggestionMap = {
     WAIT_PAY_REPAYMENT: ''
 }
 const invoiceMap = {
-    1: {
-        main: '个人',
-        sub: '手机号：',
-        fields: 'receiverMobile'
-    },
-    2: {
-        main: '单位',
-        sub: '纳税人识别号：',
-        fields: 'tin'
-    }
+    1: { main: '个人', sub: '手机号：', fields: 'receiverMobile' },
+    2: { main: '单位', sub: '纳税人识别号：', fields: 'tin' }
+}
+// 5-春耘组合订单 6-组合聚惠学订单
+const cancelMessae = {
+    5: '是否取消该订单，取消后春耘组合订单将同步取消？',
+    6: '是否取消该订单，取消后组合聚惠学订单将同步取消？'
 }
 
 export default {
     name: 'OrderDetail',
     components: {
         TopText,
-        OrderItem,
         ModuleTitle,
+        OrderItem,
         ExpressItem,
         AddressItem,
+        CollapseItem,
+        OrderCodeItem,
         OrderDetailSkeleton,
         Collapse,
-        CollapseItem,
         Contact,
-        OrderCodeItem,
         SharePoster,
         ContantPop
     },
@@ -573,6 +546,16 @@ export default {
         return {
             localSeparator: filter.separator,
             loading: false,
+            // 显示拨号
+            showContact: false,
+            // 当前是否正在支付
+            payloading: false,
+            // 显示联系我们
+            isPopupShow: false,
+            // 显示取消退款原因选项
+            isPickerShow: false,
+            // 当前支付的orderId
+            currentPayId: '',
             // 订单详情
             detail: {},
             // 商品详情
@@ -583,30 +566,24 @@ export default {
             logisticsInfoModel: {},
             // 发票信息
             invoiceModelList: [],
+            // 联系人信息
+            receiverModel: {},
             // 学员信息
             studentInfoModels: [],
             // 核销码
             redeemCodeModels: [],
-            // 活动数据详情
-            activityData: {},
-
-            showContact: false,
+            // 实体订单-用户信息
+            userInfo: [],
+            // 虚拟订单-学员信息
+            studentInfo: [],
+            activityDataStatus: 1,
+            activityDataId: '',
             // 预购商品是否已到付尾款时间
             finalPaymentIsStarted: false,
             // 预购商品付尾款时间已过
             finalPaymentIsEnded: false,
-            receiverModel: {},
-            // 如果时预购商品，单表是否已到付尾款时间，true 已到 false 未到
-            isStart: false,
-            // 实体订单
-            userInfo: [],
-            // 虚拟订单
-            studentInfo: [],
-            timer: 0,
-            currentPayId: '',
-            payloading: false,
-            isPopupShow: false,
-            isPickerShow: false,
+            timerId: 0,
+            timerId2: 0,
             pickerColumns: [
                 {
                     flex: 1,
@@ -614,39 +591,36 @@ export default {
                     textAlign: 'center'
                 }
             ],
-            collepseActiveNames: [],
             suggestionMap,
             invoiceMap,
-
             // 核销码
             collapseQrCode: true,
             qrImg: '',
-
             // 海报
             isPosterShow: false,
             poster: '',
-            activeProductStatus: {
-                2: '团购金额',
-                3: '限时秒杀',
-                4: '定金'
-            }
+            activeProductStatus: { 2: '团购金额', 3: '限时秒杀', 4: '定金' }
         }
     },
     computed: {
-        ...mapGetters(['address', 'servicePhoneModels', 'skuSourceKeyMap', 'orderStatusMap', 'orderTypeKeyMap', 'orderStatuskeyMap', 'aftersaleStatusKeyMap', 'skuSourceKeyMap']),
+        ...mapGetters(['address', 'servicePhoneModels', 'skuSourceKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'aftersaleStatusKeyMap']),
+        // 订单是否因取消而关闭
         isClosedByCancle () {
-            return this.detail.status === 'CLOSED' && !this.detail.payTime
+            return this.detail.status === this.orderStatuskeyMap.CLOSED && !this.detail.payTime
         },
+        // 有物流信息
         hasExpressInfo () {
-            return this.detail.orderType === 'PHYSICAL' && this.logisticsInfoModel && this.logisticsInfoModel.courierNo
+            return this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && this.logisticsInfoModel && this.logisticsInfoModel.courierNo
         },
         // 核销码全部过期或核销，statusCode: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
         isAllCodeUseless () {
-            return this.redeemCodeModels.every(item => item.statusCode === 1 || item.statusCode === 3 || item.statusCode === 4)
+            return this.redeemCodeModels.every(item => [1, 3, 4].includes(item.statusCode))
         },
+        // 当前可用的核销码数量
         usefulCodeNumber () {
             return this.redeemCodeModels.filter(item => item.statusCode === 0).length
         },
+        // 核销码总数量 + 学员总数量 大于一
         isArrowShow () {
             return this.studentInfoModels.length || this.redeemCodeModels.length > 1
         }
@@ -669,9 +643,8 @@ export default {
         this.isPosterShow = false
         this.poster = ''
         this.logisticsInfoModel = null
-        this.collepseActiveNames = []
-        clearInterval(this.timer)
-        clearInterval(this.timer2)
+        clearInterval(this.timerId)
+        clearInterval(this.timerId2)
         if (this.countdownInstance) {
             this.countdownInstance.stop()
         }
@@ -699,12 +672,10 @@ export default {
                 this.invoiceModelList = []
                 this.studentInfoModels = []
                 this.redeemCodeModels = []
-                this.activityData = {}
 
                 // 虚拟商品 正式课 体验课 生成核销码
                 if ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(result.orderType) && this.redeemCodeModels.length) {
                     if ([this.orderStatuskeyMap.WAIT_SHIP, this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(result.status)) {
-                        // 生成核销码二维码
                         this.generateQrcode(this.orderId)
                     }
                     if (result.status !== this.orderStatuskeyMap.CLOSED) {
@@ -772,12 +743,7 @@ export default {
                 throw e
             }
         },
-        // afterSalesStatus 0：无售后，1 退款中待审核，2 退款成功，3 退款驳回，4 退换货-已退货，5 退换货-待退货，6 退款取消
-        isCommentBtnShow (item) {
-            return this.detail.status === 'FINISHED' &&
-                item.assessmentStatus === 0 &&
-                ((this.detail.orderType === 'PHYSICAL' && ~[0, 3, 6].indexOf(item.afterSalesStatus)) || (this.detail.orderType !== 'PHYSICAL' && this.redeemCodeModels.some(item => item.statusCode === 1)))
-        },
+        // 生成核销码二维码
         generateQrcode (orderId) {
             generateQrcode({ size: 300, text: orderId, padding: 34 })
                 .then(async base64 => {
@@ -787,77 +753,18 @@ export default {
                     this.$error('生成二维码失败')
                 })
         },
-        drawPoster (url) {
-            this.poster = url
-            this.isPosterShow = true
-        },
-        callUs () {
-            this.showContact = true
-            this.isPopupShow = false
-        },
-        applyRefund () {
-            this.$router.push({
-                name: 'Refund',
-                params: {
-                    orderId: this.orderId,
-                    orderProductRId: this.goodsModel.orderProductRId
-                },
-                query: {
-                    orderStatus: this.detail.status,
-                    orderType: this.detail.orderType,
-                    productId: this.goodsModel.id,
-                    productImg: this.goodsModel.img,
-                    productName: this.goodsModel.name,
-                    skuCode1Name: this.goodsModel.sku,
-                    skuCode2Name: this.goodsModel.subSku,
-                    count: this.detail.orderType === 'PHYSICAL' ? this.goodsModel.count : this.usefulCodeNumber
-                }
-            })
-        },
-        // 倒计时
-        countDown (remanent, orderStatus) {
-            if (this.countdownInstance) {
-                this.countdownInstance.stop()
-            }
-            const countdownInstance = new Countdown(remanent, data => {
-                if (!data) {
-                    this.suggestionMap.WAIT_PAY = ''
-                    this.suggestionMap.WAIT_RECEIVE = ''
-                    this.suggestionMap.WAIT_PAY_REPAYMENT = ''
-                    this.getDetail()
-                    return
-                }
-                const d = String(data.days)
-                const h = String(data.hours)
-                const m = String(data.minutes)
-                const s = String(data.seconds)
-                if (orderStatus === 'WAIT_PAY') {
-                    this.suggestionMap.WAIT_PAY = `还剩${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒 订单自动关闭`
-                    return
-                }
-                if (orderStatus === 'WAIT_PAY_REPAYMENT') {
-                    const tip = this.finalPaymentIsStarted ? '剩余尾款支付时间' : '距离开始支付时间'
-                    this.suggestionMap.WAIT_PAY_REPAYMENT = `${ tip }：${ d.padStart(2, '0') }天${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒`
-                    return
-                }
-                if (orderStatus === 'WAIT_RECEIVE') {
-                    this.suggestionMap.WAIT_RECEIVE = `还剩${ d }天${ h.padStart(2, '0') }时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒后自动收货`
-                }
-            })
-            countdownInstance.start()
-            this.countdownInstance = countdownInstance
-        },
+        // 设置时间
         setTime (result, orderStatus) {
             let waitPayTime = 0
             // 服务器时间
             const now = Number(result.currentServerTime)
-            if (this.detail.orderSource === 1 || this.detail.orderSource === 0) {
+            if (this.detail.orderSource === this.skuSourceKeyMap.NORMAL) {
                 // 24小时
                 waitPayTime = 24 * 60 * 60 * 1000
-            } else if (this.detail.orderSource === 4 && orderStatus === 'WAIT_PAY_REPAYMENT') {
+            } else if (this.detail.orderSource === this.skuSourceKeyMap.BOOKING && orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
                 // 预购倒计时逻辑
-                const useStartTime = moment((result.activityData.useStartTime)).valueOf()
-                const useEndTime = moment((result.activityData.useEndTime)).valueOf()
+                const useStartTime = moment((result.startExpire)).valueOf()
+                const useEndTime = moment((result.endExpire)).valueOf()
                 // 是否开始
                 this.finalPaymentIsStarted = now - useStartTime >= 0
                 // 是否过期
@@ -879,12 +786,96 @@ export default {
             }
 
             // 开始时间，如果是待付款，取订单创建时间，如果是其他状态（待发货），取发货时间
-            const time = orderStatus === 'WAIT_PAY' ? result.createTime : result.logisticsInfoModel.shipTime
-            const duration = orderStatus === 'WAIT_PAY' ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
+            const time = orderStatus === this.orderStatuskeyMap.WAIT_PAY ? result.createTime : result.shipTime
+            const duration = orderStatus === this.orderStatuskeyMap.WAIT_PAY ? waitPayTime : (10 * 24 * 60 * 60 * 1000)
             const startTime = moment(time).valueOf()
             if (now - startTime < duration) {
                 this.countDown(duration + startTime - now + 2000, orderStatus)
             }
+        },
+        // 设置倒计时
+        countDown (remanent, orderStatus) {
+            if (this.countdownInstance) {
+                this.countdownInstance.stop()
+            }
+            const countdownInstance = new Countdown(remanent, data => {
+                if (!data) {
+                    this.suggestionMap.WAIT_PAY = ''
+                    this.suggestionMap.WAIT_RECEIVE = ''
+                    this.suggestionMap.WAIT_PAY_REPAYMENT = ''
+                    this.getDetail()
+                    return
+                }
+                const d = String(data.days)
+                const h = String(data.hours)
+                const m = String(data.minutes)
+                const s = String(data.seconds)
+                if (orderStatus === this.orderStatuskeyMap.WAIT_PAY) {
+                    this.suggestionMap.WAIT_PAY = `还剩${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒 订单自动关闭`
+                    return
+                }
+                if (orderStatus === this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY) {
+                    const tip = this.finalPaymentIsStarted ? '剩余尾款支付时间' : '距离开始支付时间'
+                    this.suggestionMap.WAIT_PAY_REPAYMENT = `${ tip }：${ d.padStart(2, '0') }天${ h.padStart(2, '0') }小时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒`
+                    return
+                }
+                if (orderStatus === this.orderStatuskeyMap.WAIT_RECEIVE) {
+                    this.suggestionMap.WAIT_RECEIVE = `还剩${ d }天${ h.padStart(2, '0') }时${ m.padStart(2, '0') }分${ s.padStart(2, '0') }秒后自动收货`
+                }
+            })
+            countdownInstance.start()
+            this.countdownInstance = countdownInstance
+        },
+        // 定时器，实时刷新核销状态，如果有核销的话
+        updateQrcode () {
+            clearInterval(this.timerId2)
+            if (this.redeemCodeModels.some(item => item.statusCode === 0)) {
+                this.timerId2 = setInterval(async () => {
+                    try {
+                        const { result } = await getVerificationStatus(this.orderId)
+                        if (result) {
+                            this.getDetail()
+                        }
+                    } catch (e) {
+                        clearInterval(this.timerId2)
+                    }
+                }, 3000)
+            }
+        },
+        // 是否显示评价按钮
+        isCommentBtnShow () {
+            // 订单完成并且未评论 + 实体订单无售后时 + 虚拟订单核销码已使用
+            return this.detail.status === this.orderStatuskeyMap.FINISHED && this.goodsModel.assessmentStatus === 0 &&
+                (((this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS) && (this.detail.afterSalesStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES)) ||
+                ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType) && this.redeemCodeModels.some(item => item.statusCode === 1)))
+        },
+        drawPoster (url) {
+            this.poster = url
+            this.isPosterShow = true
+        },
+        callUs () {
+            this.showContact = true
+            this.isPopupShow = false
+        },
+        // 跳转申请退款页面
+        applyRefund () {
+            this.$router.push({
+                name: 'Refund',
+                params: {
+                    orderId: this.orderId,
+                    orderProductRId: this.goodsModel.orderProductRId
+                },
+                query: {
+                    orderStatus: this.detail.status,
+                    orderType: this.detail.orderType,
+                    productId: this.goodsModel.id,
+                    productImg: this.goodsModel.img,
+                    productName: this.goodsModel.name,
+                    skuCode1Name: this.goodsModel.sku,
+                    skuCode2Name: this.goodsModel.subSku,
+                    count: this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? this.goodsModel.count : this.usefulCodeNumber
+                }
+            })
         },
 
         /**
@@ -916,6 +907,7 @@ export default {
                 this.payloading = false
             }
         },
+        // 确认收货
         async confirmReceipt () {
             const { orderId } = this
             try {
@@ -930,10 +922,10 @@ export default {
                 throw e
             }
         },
+        // 取消订单
         async cancelOrder (reason) {
             try {
-                const isCombinedOrder = this.detail.orderSource === 5
-                await this.$confirm(isCombinedOrder ? '是否取消该订单，取消后春耘组合订单将同步取消？' : '订单一旦取消，将无法恢复 确认要取消订单？')
+                await this.$confirm(cancelMessae[this.detail.orderSource] || '订单一旦取消，将无法恢复 确认要取消订单？')
                 await cancelOrder(this.orderId, reason)
                 this.$success('交易关闭')
                 this.getDetail()
@@ -942,6 +934,7 @@ export default {
                 throw e
             }
         },
+        // 删除订单
         async deleteOrder () {
             const { orderId } = this
             try {
@@ -974,22 +967,6 @@ export default {
                     receiveName: name
                 }
             })
-        },
-        // 定时器，实时刷新核销状态，如果有核销的话
-        updateQrcode () {
-            clearInterval(this.timer2)
-            if (this.redeemCodeModels.some(item => item.statusCode === 0)) {
-                this.timer2 = setInterval(async () => {
-                    try {
-                        const { result } = await getVerificationStatus(this.orderId)
-                        if (result) {
-                            this.getDetail()
-                        }
-                    } catch (e) {
-                        clearInterval(this.timer2)
-                    }
-                }, 3000)
-            }
         }
     }
 }
