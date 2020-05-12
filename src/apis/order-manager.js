@@ -156,7 +156,13 @@ export const cancelOrder = (orderId, cancelReason) => axios.get(`/apis/v2/order/
 
 /**
  * 申请售后
- * @param data {Array} 订单数据
- * @return {Promise<*>}
+ * @param {Object[]} data - 订单数据
+ * @param {number} data[].amount - 退款金额
+ * @param {string} data[].content - 退款描述
+ * @param {boolean} data[].freightRefund - 是否退运费
+ * @param {string[]} data[].images - 图片地址列表
+ * @param {string} data[].orderId - 订单id
+ * @param {Number} data[].type
+ * @return {Promise<Object>}
  */
 export const applyRefund = data => axios.post('/apis/v2/order/refunds/apply/refund', data)
