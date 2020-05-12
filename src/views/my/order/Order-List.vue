@@ -259,7 +259,6 @@ export default {
                 const h = String(data.hours)
                 const m = String(data.minutes)
                 const s = String(data.seconds)
-                console.log(d, h, m, s)
                 item.countDown = {
                     d: d.padStart(2, '0'),
                     h: h.padStart(2, '0'),

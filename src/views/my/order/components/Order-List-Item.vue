@@ -55,7 +55,7 @@
                 >
                     去付款
                 </pl-button>
-                <span class="fz-24 gray-3 mr-10">
+                <span class="fz-24 gray-3 mr-10" v-if="isStart && !pastDue">
                     <span v-show="isStart">剩余尾款支付时间：</span>
                     <span v-show="!isStart">距离开始支付时间：</span>
                     <span v-show="countDown.d !== '00'">{{ countDown.d }}天</span>

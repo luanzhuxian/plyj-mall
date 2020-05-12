@@ -1,6 +1,7 @@
 <template>
+    <RefundDetailSkeleton v-if="detailLoading" />
     <div
-        v-if="loaded"
+        v-else
         class="refund-detail"
         :class="$style.refundDetail"
     >
@@ -321,48 +322,15 @@
             @confirm="onPickerConfirm"
         />
     </div>
-
-    <div
-        v-else
-        :class="$style.skeleton"
-    >
-        <div :class="[$style.skeleton1 + ' ' + $style.skeAnimation]" />
-        <div :class="[$style.skeleton2 + ' ' + $style.skeAnimation]" />
-        <div :class="$style.skeleton3">
-            <AddressItemSkeleton />
-            <AddressItemSkeleton />
-        </div>
-        <div :class="$style.skeleton4">
-            <div :class="$style.skeletonPrice">
-                <div :class="[$style.skeletonPriceLeft, $style.skeAnimation]" />
-                <div :class="[$style.skeletonPriceRight, $style.skeAnimation]" />
-            </div>
-            <div :class="$style.skeletonPrice">
-                <div :class="[$style.skeletonPriceLeft, $style.skeAnimation]" />
-                <div :class="[$style.skeletonPriceRight, $style.skeAnimation]" />
-            </div>
-        </div>
-        <div :class="$style.skeleton4">
-            <div :class="[$style.skeleton41, $style.skeAnimation]" />
-            <div :class="[$style.skeleton42, $style.skeAnimation]" />
-            <OrderItemSkeleton />
-            <div :class="[$style.skeleton44, $style.skeAnimation]" />
-            <div :class="[$style.skeleton45, $style.skeAnimation]" />
-            <div :class="[$style.skeleton46, $style.skeAnimation]" />
-            <div :class="[$style.skeleton47, $style.skeAnimation]" />
-            <div :class="[$style.skeleton48, $style.skeAnimation]" />
-        </div>
-    </div>
 </template>
 
 <script>
+import RefundDetailSkeleton from './components/Refund-Detail-Skeleton'
 import TopText from '../../../components/common/Top-Text.vue'
 import ModuleTitle from '../../../components/common/Module-Title.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
-import OrderItemSkeleton from '../../../components/skeleton/Order-Item.vue'
-import AddressItemSkeleton from '../../../components/skeleton/Address-Item.vue'
 import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication, deleteRefundOrder } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
 import { isExpressNumber } from '../../../assets/js/validate'
@@ -404,11 +372,10 @@ const updateLocalStorage = (key, value) => {
 export default {
     name: 'RefundDetail',
     components: {
+        RefundDetailSkeleton,
         TopText,
         ModuleTitle,
         OrderItem,
-        OrderItemSkeleton,
-        AddressItemSkeleton,
         Collapse,
         CollapseItem
     },
@@ -421,7 +388,7 @@ export default {
     data () {
         return {
             loading: false,
-            loaded: false,
+            detailLoading: false,
 
             // refundStatus WAIT_CHECK: '待审核', REFUNDING: '退款中', REFUND_PRODUCT_WAIT_RETURN: '退换货-待退货', REFUND_PRODUCT: '退换货-已退货', FINISHED: '退款成功', CLOSED: '退款关闭', CANCEL: '退款关闭', REJECT: '退款关闭'
             refundStatus: '',
@@ -460,7 +427,7 @@ export default {
     methods: {
         async getDetail () {
             try {
-                this.loaded = false
+                this.detailLoading = true
                 const { id, refundDetail } = this
                 const { result } = await getRefundOrderDetail({ id })
         this.refundStatus = result.returnStatus;  // eslint-disable-line
@@ -500,7 +467,7 @@ export default {
                     item.createTimeArray = rebuildDate(item.createTime)
                     return item
                 })
-                this.loaded = true
+                this.detailLoading = false
             } catch (e) {
                 throw e
             }
@@ -797,76 +764,6 @@ export default {
     line-height: 32px;
     color: #999;
   }
-  .skeleton {
-    padding: 28px 40px;
-  }
-  .skeleton1 {
-    width: 200px;
-    height: 53px;
-  }
-  .skeleton2 {
-    width: 500px;
-    height: 37px;
-    margin-top: 14px;
-  }
-  .skeleton3 {
-    margin-top: 30px;
-    background-color: #fff;
-  }
-  .skeleton4 {
-    margin-top: 30px;
-    padding: 24px 28px;
-    background-color: #fff;
-  }
-  .skeleton4-1 {
-    width: 364px;
-    height: 32px;
-  }
-  .skeleton4-2 {
-    width: 214px;
-    height: 32px;
-    margin-top: 8px;
-  }
-  .skeleton4-4 {
-    width: 112px;
-    height: 37px;
-    margin-top: 80px;
-  }
-  .skeleton4-5 {
-    width: 300px;
-    height: 40px;
-    margin-top: 12px;
-  }
-  .skeleton4-6 {
-    width: 150px;
-    height: 37px;
-    margin-top: 50px;
-  }
-  .skeleton4-7 {
-    width: 250px;
-    height: 37px;
-    margin-top: 14px;
-  }
-  .skeleton4-8 {
-    width: 350px;
-    height: 40px;
-    margin-top: 50px;
-  }
-  .skeleton-price {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .skeleton-price-left,
-  .skeleton-price-right {
-    width: 120px;
-    height: 37px;
-  }
-  .skeAnimation {
-    @include skeAnimation(#eee)
-  }
-  /** skeleton end **/
 </style>
 
 <style lang="scss">

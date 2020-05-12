@@ -514,11 +514,6 @@ const invoiceMap = {
     1: { main: '个人', sub: '手机号：', fields: 'receiverMobile' },
     2: { main: '单位', sub: '纳税人识别号：', fields: 'tin' }
 }
-// 5-春耘组合订单 6-组合聚惠学订单
-const cancelMessae = {
-    5: '是否取消该订单，取消后春耘组合订单将同步取消？',
-    6: '是否取消该订单，取消后组合聚惠学订单将同步取消？'
-}
 
 export default {
     name: 'OrderDetail',
@@ -925,7 +920,9 @@ export default {
         // 取消订单
         async cancelOrder (reason) {
             try {
-                await this.$confirm(cancelMessae[this.detail.orderSource] || '订单一旦取消，将无法恢复 确认要取消订单？')
+                // 5春耘订单 6组合课订单
+                const isCombinedOrder = [5, 6].includes(this.detail.orderSource)
+                await this.$confirm(isCombinedOrder ? `是否取消该订单，取消后组合订单将同步取消？` : '订单一旦取消，将无法恢复 确认要取消订单？')
                 await cancelOrder(this.orderId, reason)
                 this.$success('交易关闭')
                 this.getDetail()
