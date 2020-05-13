@@ -359,7 +359,6 @@ export default {
                 try {
                     this.loading = true
                     await applyInvoice({
-                        skus: orderDetails,
                         orderIds: [this.orderId],
                         invoiceTitle: this.type === 1 ? this.receiveName : this.form.firmName,
                         invoiceType: this.type,
