@@ -347,7 +347,6 @@ export default {
                         name: this.selectedAddress.realName
                     }
                 }
-                console.log(CONFIRM_LIST)
                 this.form.skus = CONFIRM_LIST.map(item => ({
                     count: item.count,
                     goodsId: item.productId,

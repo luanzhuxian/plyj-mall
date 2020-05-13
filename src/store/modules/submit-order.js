@@ -3,7 +3,7 @@ const CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {
 const ORDER_PRODUCTS = JSON.parse(sessionStorage.getItem('CONFIRM_LIST')) || []
 const INVOICE_PRODUCTS = JSON.parse(sessionStorage.getItem('APPLY_INVOICE')) || []
 const INVOICE_FROM_ROUTE = JSON.parse(sessionStorage.getItem('APPLY_INVOICE_FROM')) || {}
-const INVOICE_INFO = JSON.parse(localStorage.getItem('INVOICE_MODEL')) || []
+const INVOICE_INFO = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || []
 export const submitOrder = {
     // 开启命名空间
     namespaced: true,
