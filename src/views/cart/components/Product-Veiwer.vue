@@ -40,6 +40,16 @@
                         </template>
                     </InfoItem>
 
+                    <InfoItem v-if="item.skuCustoms.length" :id="'custom_' + item.sku1 + item.sku2" has-collapse>
+                        <template slot="label">{{ item.goodsType === 'PHYSICAL_GOODS' ? '用户信息' : '学员信息' }}</template>
+                        <CustomInline
+                            slot="footer"
+                            :product="item"
+                            :label="item.goodsType === 'PHYSICAL_GOODS' ? '用户信息' : '学员信息'"
+                            ref="CustomInline"
+                        />
+                    </InfoItem>
+
                     <InfoItem v-if="activeProduct === 1">
                         <template slot="label">修改数量</template>
                         <template slot="content">
@@ -95,6 +105,7 @@ import OtherInfo from './Other-Info.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import InfoItem from './Info-Item.vue'
 import StudentInline from './Student-Inline.vue'
+import CustomInline from './Custom-Inline.vue'
 import Count from '../../../components/common/Count.vue'
 import { mapGetters } from 'vuex'
 export default {
@@ -104,7 +115,8 @@ export default {
         OrderItem,
         InfoItem,
         StudentInline,
-        Count
+        Count,
+        CustomInline
     },
     props: {
         products: {
@@ -151,6 +163,22 @@ export default {
                         this.$warning(`请选择${ pro.count }名学员信息`)
                     }
                     const EL = document.getElementById(pro.sku1 + pro.sku2)
+                    EL.classList.add(this.$style.infoItemError)
+                    EL.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    })
+                    return false
+                }
+            }
+            return true
+        },
+        // 检查自定义表单
+        checkCustom () {
+            for (const item of this.$refs.CustomInline) {
+                if (!item.checkForm()) {
+                    const EL = document.getElementById(`custom_${ item.product.sku1 + item.product.sku2 }`)
                     EL.classList.add(this.$style.infoItemError)
                     EL.scrollIntoView({
                         behavior: 'smooth',

@@ -89,14 +89,6 @@
                 @change="contactInfoChange"
             />
 
-            <CustomBlock
-                v-if="customList.length"
-                :products="customList"
-                :label="physicalProducts.length ? '用户信息' : '学员信息'"
-                @confirm="customFormConfirm"
-                ref="customBlock"
-            />
-
             <!-- 订单备注（只有一个商品时显示） -->
             <div :class="$style.oneProductMark">
                 <span>订单备注</span>
@@ -122,36 +114,31 @@
 </template>
 
 <script>
-/* eslint-disable */
 import AddressItem from '../../components/item/Address-Item.vue'
 import moment from 'moment'
 import { getCouponOfMax, getCouponByPrice, getRedEnvelopeListByPrice } from '../../apis/my-coupon'
 import {
     confirmOrder,
     submitOrder,
-    getOrderPayData,
+    getOrderPayData
 } from '../../apis/order-manager'
 import { mapGetters } from 'vuex'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import { getServerTime } from '../../apis/base-api'
-import StudentInline from './components/Student-Inline.vue'
-import CustomBlock from './components/Custom-Block.vue'
 import ProductVeiwer from './components/Product-Veiwer.vue'
 import Coupon from './components/Coupon.vue'
 import Scholarship from './components/Scholarship.vue'
 import Invoice from './components/Invoice.vue'
 import ContactInfo from './components/Contact-Info.vue'
-import { setTimeoutSync } from "../../assets/js/util";
-import wechatPay from "../../assets/js/wechat/wechat-pay";
+import { setTimeoutSync } from '../../assets/js/util'
+import wechatPay from '../../assets/js/wechat/wechat-pay'
 export default {
     name: 'SubmitOrder',
     components: {
         AddressItem,
         OrderItemSkeleton,
         AddressItemSkeleton,
-        StudentInline,
-        CustomBlock,
         ProductVeiwer,
         Coupon,
         Scholarship,
@@ -205,12 +192,13 @@ export default {
                 // 优惠券
                 cartCouponModel: null,
                 // 发票
-                invoiceInfoModel: null,
+                invoiceInfoModel: null
             }
         }
     },
     computed: {
         ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId']),
+
         /**
          * 传入的活动类型
          * 1 正常商品
@@ -234,7 +222,7 @@ export default {
         // 是否为购物车页面购买，有些活动页面的购买逻辑类似于购物车购买逻辑，因此也需要传YES, 如：组合课活动下单
         isCart () {
             return this.$route.query.isCart === 'YES'
-        },
+        }
     },
     watch: {
     },
@@ -254,7 +242,7 @@ export default {
         // 初始化，执行顺序不能乱
         async init () {
             try {
-                const CONFIRM_LIST =  this.initProductInfo()
+                const CONFIRM_LIST = this.initProductInfo()
                 // 以下是设置订单红包和优惠券，只有普通订单才可以使用优惠券和红包
                 console.log(this.activeProduct)
                 if (this.activeProduct === 1) {
@@ -455,20 +443,14 @@ export default {
                 throw e
             }
         },
-
-        /**
-         * 自定义表单确认事件
-         * @param customForm {Object} 表单数据
-         */
-        customFormConfirm (customForm) {
-            for (const pro of this.form.skus) {
-                pro.productCustomInfo = customForm[pro.goodsId] ? JSON.stringify(customForm[pro.goodsId]) : ''
-            }
-        },
         // 提交订单
         async submitOrder () {
             if (!this.checkData()) {
                 return
+            }
+            const CUSTOM_FORM_CACHE = JSON.parse(localStorage.getItem('CUSTOM_FORM_CACHE')) || {}
+            for (const pro of this.form.skus) {
+                pro.productCustomInfo = CUSTOM_FORM_CACHE[pro.sku1 + pro.sku2] ? JSON.stringify(CUSTOM_FORM_CACHE[pro.sku1 + pro.sku2]) : ''
             }
             try {
                 this.submiting = true
@@ -505,6 +487,7 @@ export default {
                 throw e
             }
         },
+
         /**
          * 支付
          * @param CREDENTIAL {Object} 支付数据
@@ -540,7 +523,7 @@ export default {
                 this.$warning('请填写联系人信息')
                 return false
             }
-            if (!this.$refs.productVeiwer.checkStudents()) {
+            if (!this.$refs.productVeiwer.checkStudents() || !this.$refs.productVeiwer.checkCustom()) {
                 return false
             }
             if (this.$refs.customBlock && !this.$refs.customBlock.checkForm()) {
