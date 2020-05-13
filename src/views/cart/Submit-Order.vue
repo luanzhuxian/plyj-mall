@@ -242,9 +242,8 @@ export default {
         // 初始化，执行顺序不能乱
         async init () {
             try {
-                const CONFIRM_LIST = this.initProductInfo()
+                const CONFIRM_LIST = await this.initProductInfo()
                 // 以下是设置订单红包和优惠券，只有普通订单才可以使用优惠券和红包
-                console.log(this.activeProduct)
                 if (this.activeProduct === 1) {
                     const AMOUNT = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
                     const COUPON_DATA = {
@@ -318,7 +317,7 @@ export default {
             }
         },
         // 初始化商品基本信息
-        initProductInfo () {
+        async initProductInfo () {
             /*
                 CONFIRM_LIST 的格式
                 [
@@ -348,6 +347,7 @@ export default {
                         name: this.selectedAddress.realName
                     }
                 }
+                console.log(CONFIRM_LIST)
                 this.form.skus = CONFIRM_LIST.map(item => ({
                     count: item.count,
                     goodsId: item.productId,
@@ -526,9 +526,6 @@ export default {
             if (!this.$refs.productVeiwer.checkStudents() || !this.$refs.productVeiwer.checkCustom()) {
                 return false
             }
-            if (this.$refs.customBlock && !this.$refs.customBlock.checkForm()) {
-                return false
-            }
             return true
         }
     },
@@ -537,7 +534,7 @@ export default {
             to.name !== 'Address' &&
             to.name !== 'AddAddress' &&
             to.name !== 'StudentList') {
-            this.$store.commit('submitOrder/removeOrderProducts')
+            // this.$store.commit('submitOrder/removeOrderProducts')
         }
         next()
     }

@@ -230,7 +230,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress', 'userId']),
+        ...mapGetters(['selectedAddress', 'userId', 'submitOrder/invoiceProducts', 'submitOrder/invoiceFromRoute']),
         realName () {
             return this.selectedAddress.realName
         },
@@ -251,7 +251,7 @@ export default {
         }
     },
     activated () {
-        const APPLY_INVOICE = JSON.parse(sessionStorage.getItem('APPLY_INVOICE'))
+        const APPLY_INVOICE = this['submitOrder/invoiceProducts']
         if (!APPLY_INVOICE) {
             this.$router.go(-1)
             this.$destroy()
@@ -378,10 +378,10 @@ export default {
                     this.loading = false
                 }
             } else {
-                sessionStorage.setItem('INVOICE_MODEL', JSON.stringify(invoiceModel))
+                this.$store.commit('submitOrder/setInvoiceInfo', invoiceModel)
             }
 
-            const APPLY_INVOICE_FROM = JSON.parse(sessionStorage.getItem('APPLY_INVOICE_FROM')) || {}
+            const APPLY_INVOICE_FROM = this['submitOrder/invoiceFromRoute']
             if (APPLY_INVOICE_FROM.name) {
                 this.$router.replace({
                     name: APPLY_INVOICE_FROM.name,
@@ -395,8 +395,7 @@ export default {
     },
     beforeRouteLeave (to, from, next) {
         if (to.name !== 'AddInvoice') {
-            sessionStorage.removeItem('APPLY_INVOICE')
-            sessionStorage.removeItem('APPLY_INVOICE_FROM')
+            this.$store.commit('submitOrder/removeInvoiceProducts')
         }
         next()
     }

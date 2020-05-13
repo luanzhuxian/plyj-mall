@@ -38,13 +38,13 @@ Vue.use(PenglaiUI)
 Vue.config.productionTip = false
 /* eslint-disable */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App),
-  renderError: (h, err) => {
-    console.log(err)
-  }
+    store,
+    el: '#app',
+    router,
+    render: h => h(App),
+    renderError: (h, err) => {
+        console.log(err)
+    }
 })
 
 router.beforeResolve(beforeResolve)
@@ -53,36 +53,36 @@ router.onError(onError)
 Vue.config.errorHandler = async function (err, vm, info) {
     if (!err) return
     try {
-    if (err.name === 'ResponseError') {
-      // 响应出错
-      let error = JSON.parse(err.message)
-      vm.$error(error.message)
-    } else {
-      if (err.message === 'cancel' || err.message === '取消支付') {
-        return
-      }
-      errorlog({
-        info,
-        message: err.message,
-        url: location.href,
-        userId: vm.$store.getters.userId,
-        openId: vm.$store.getters.openId,
-        mallId: vm.$store.getters.mallId,
-        userAgent: navigator.userAgent,
-        project: 'mall',
-        vm: {
-          name: vm.$options.name || '',
-          class: Array.from(vm.$el.classList || []).join(';'),
-          id: vm.$el.id || '',
-          parent: {
-            class: Array.from(vm.$parent.$el.classList || []).join(';'),
-            id: vm.$parent.$el.id || '',
-          }
+        if (err.name === 'ResponseError') {
+            // 响应出错
+            let error = JSON.parse(err.message)
+            vm.$error(error.message)
+        } else {
+            if (err.message === 'cancel' || err.message === '取消支付') {
+                return
+            }
+            errorlog({
+                info,
+                message: err.message,
+                url: location.href,
+                userId: vm.$store.getters.userId,
+                openId: vm.$store.getters.openId,
+                mallId: vm.$store.getters.mallId,
+                userAgent: navigator.userAgent,
+                project: 'mall',
+                vm: {
+                    name: vm.$options.name || '',
+                    class: Array.from(vm.$el.classList || []).join(';'),
+                    id: vm.$el.id || '',
+                    parent: {
+                        class: Array.from(vm.$parent.$el.classList || []).join(';'),
+                        id: vm.$parent.$el.id || '',
+                    }
+                }
+            })
         }
-      })
+        console.error(err)
+    } catch (e) {
+        if (e) console.error(err)
     }
-    console.error(err)
-  } catch (e) {
-      if (e) console.error(err)
-  }
 }

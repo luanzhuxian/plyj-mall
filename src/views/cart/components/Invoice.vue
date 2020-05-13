@@ -75,9 +75,9 @@ export default {
         }
     },
     mounted () {
-        const INVOICE_MODEL = sessionStorage.getItem('INVOICE_MODEL')
+        const INVOICE_MODEL = this.$store.getters['submitOrder/invoiceInfo']
         if (INVOICE_MODEL) {
-            this.$emit('selected', JSON.parse(INVOICE_MODEL))
+            this.$emit('selected', INVOICE_MODEL)
             this.invioceType = 1
         }
     },
@@ -92,19 +92,20 @@ export default {
         noNeed () {
             this.invioceType = 0
             this.showPopup = false
-            sessionStorage.removeItem('INVOICE_MODEL')
+            this.$storm.commit('submitOrder/removeInvoiceInfo')
             this.$emit('selected', null)
         },
         need () {
-            const applyInvoice = [
-                ...this.products.filter(item => item.sellingPrice !== 0 && item.supportInvoice === 1)
-            ]
-            sessionStorage.setItem('APPLY_INVOICE', JSON.stringify(applyInvoice))
-            sessionStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
-                name: this.$route.name,
-                params: this.$route.params,
-                query: this.$route.query
-            }))
+            this.$store.commit('submitOrder/setInvoiceProducts', {
+                products: [
+                    ...this.products.filter(item => item.sellingPrice !== 0 && item.supportInvoice === 1)
+                ],
+                fromRoute: {
+                    name: this.$route.name,
+                    params: this.$route.params,
+                    query: this.$route.query
+                }
+            })
             if (this.contactInfoModel.mobile) {
                 this.$router.push({
                     name: 'ApplyInvoice',

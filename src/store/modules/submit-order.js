@@ -1,12 +1,18 @@
 /* 处理提交订单页面再多个页面都需要使用的数据 */
 const CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
-const ORDER_PRODUCTS = JSON.parse(localStorage.getItem('CONFIRM_LIST')) || []
+const ORDER_PRODUCTS = JSON.parse(sessionStorage.getItem('CONFIRM_LIST')) || []
+const INVOICE_PRODUCTS = JSON.parse(sessionStorage.getItem('APPLY_INVOICE')) || []
+const INVOICE_FROM_ROUTE = JSON.parse(sessionStorage.getItem('APPLY_INVOICE_FROM')) || {}
+const INVOICE_INFO = JSON.parse(localStorage.getItem('INVOICE_MODEL')) || []
 export const submitOrder = {
     // 开启命名空间
     namespaced: true,
     state: {
         checkedStudents: CHECKED_STUDENT,
-        orderProducts: ORDER_PRODUCTS
+        orderProducts: ORDER_PRODUCTS,
+        invoiceProducts: INVOICE_PRODUCTS,
+        invoiceFromRoute: INVOICE_FROM_ROUTE,
+        invoiceInfo: INVOICE_INFO
     },
     mutations: {
 
@@ -66,7 +72,45 @@ export const submitOrder = {
             state.checkedStudents = checkedData
             localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
         },
-        applyInvoice: (state, { product, fromRoute }) => {
+        clearStudent: state => {
+            localStorage.removeItem('CHECKED_STUDENT')
+            state.checkedStudents = []
+        },
+
+        /**
+         * 设置要申请发票的商品
+         * @param state
+         * @param product {Array} 商品列表
+         * @param fromRoute {Object} 设置完发票
+         */
+        setInvoiceProducts: (state, { products, fromRoute }) => {
+            const invoiceProducts = JSON.stringify(products)
+            const invoiceFromRoute = JSON.stringify(fromRoute)
+            sessionStorage.setItem('APPLY_INVOICE', invoiceProducts)
+            sessionStorage.setItem('APPLY_INVOICE_FROM', invoiceFromRoute)
+            state.invoiceProducts = JSON.parse(invoiceProducts)
+            state.invoiceFromRoute = JSON.parse(invoiceFromRoute)
+        },
+
+        /**
+         * 设置发票数据
+         * @param state
+         * @param payload
+         */
+        setInvoiceInfo: (state, payload) => {
+            const invoiceInfo = JSON.stringify(payload)
+            sessionStorage.setItem('INVOICE_MODEL', invoiceInfo)
+            state.invoiceInfo = JSON.parse(invoiceInfo)
+        },
+        removeInvoiceInfo: state => {
+            sessionStorage.removeItem('INVOICE_MODEL')
+            state.invoiceInfo = []
+        },
+        removeInvoiceProducts: state => {
+            sessionStorage.removeItem('APPLY_INVOICE')
+            sessionStorage.removeItem('APPLY_INVOICE_FROM')
+            state.invoiceProducts = []
+            state.invoiceFromRoute = {}
         },
 
         /**
@@ -82,7 +126,7 @@ export const submitOrder = {
          * @param {string} products[].productType - 商品类型  store.getters.orderTypeKeyMap 种的值
          */
         setOrderProducts: (state, products) => {
-            const orderProducts = JSON.stringify(products)
+            const orderProducts = JSON.stringify(products) || []
             sessionStorage.setItem('CONFIRM_LIST', orderProducts)
             state.orderProducts = JSON.parse(orderProducts)
         },
@@ -93,6 +137,9 @@ export const submitOrder = {
     },
     getters: {
         checkedStudents: state => state.checkedStudents,
-        orderProducts: state => state.orderProducts
+        orderProducts: state => state.orderProducts,
+        invoiceProducts: state => state.invoiceProducts,
+        invoiceFromRoute: state => state.invoiceFromRoute,
+        invoiceInfo: state => state.invoiceInfo
     }
 }
