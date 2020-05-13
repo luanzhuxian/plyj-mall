@@ -870,7 +870,7 @@ export default {
             const { skuCode1, count, skuCode2, price } = selected
 
             // 分享时携带的id
-            sessionStorage.setItem('CONFIRM_LIST', JSON.stringify([{
+            this.$store.commit('submitOrder/setOrderProducts', [{
                 productId: this.productId,
                 count,
                 skuCode1,
@@ -879,7 +879,7 @@ export default {
                 // 如果当前用户是经纪人，则覆盖其他经纪人的id
                 agentUser: this.shareId,
                 productType: this.productType
-            }]))
+            }])
             this.showSpecifica = false
             this.$router.push({
                 name: 'SubmitOrder',

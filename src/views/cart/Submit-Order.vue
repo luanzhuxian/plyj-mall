@@ -197,7 +197,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId']),
+        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'submitOrder/orderProducts']),
 
         /**
          * 传入的活动类型
@@ -334,7 +334,7 @@ export default {
                 ]
             */
             try {
-                const CONFIRM_LIST = JSON.parse(sessionStorage.getItem('CONFIRM_LIST'))
+                const CONFIRM_LIST = this['submitOrder/orderProducts']
                 if (!CONFIRM_LIST || !CONFIRM_LIST.length) {
                     return this.$router.replace({ name: 'Home' })
                 }
@@ -436,7 +436,7 @@ export default {
                 await this.getProductDetail()
                 // 修改成功后需要更新缓存中的数据
                 cache.count = count
-                sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(this.CONFIRM_LIST))
+                this.$store.commit('submitOrder/setOrderProducts', this.CONFIRM_LIST)
                 next()
             } catch (e) {
                 next(e)
@@ -537,7 +537,7 @@ export default {
             to.name !== 'Address' &&
             to.name !== 'AddAddress' &&
             to.name !== 'StudentList') {
-            sessionStorage.removeItem('CONFIRM_LIST')
+            this.$store.commit('submitOrder/removeOrderProducts')
         }
         next()
     }

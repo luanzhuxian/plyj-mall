@@ -497,7 +497,7 @@ export default {
                     productType: pro.goodsType
                 })
             }
-            sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
+            this.$store.commit('submitOrder/setOrderProducts', confirmList)
             this.$router.push({
                 name: 'SubmitOrder',
                 query: {

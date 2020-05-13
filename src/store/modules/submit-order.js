@@ -1,10 +1,12 @@
 /* 处理提交订单页面再多个页面都需要使用的数据 */
 const CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
+const ORDER_PRODUCTS = JSON.parse(localStorage.getItem('CONFIRM_LIST')) || []
 export const submitOrder = {
     // 开启命名空间
     namespaced: true,
     state: {
-        checkedStudents: CHECKED_STUDENT
+        checkedStudents: CHECKED_STUDENT,
+        orderProducts: ORDER_PRODUCTS
     },
     mutations: {
 
@@ -63,9 +65,34 @@ export const submitOrder = {
             }
             state.checkedStudents = checkedData
             localStorage.setItem('CHECKED_STUDENT', JSON.stringify(checkedData))
+        },
+        applyInvoice: (state, { product, fromRoute }) => {
+        },
+
+        /**
+         * 设置提交订单使用的商品
+         * @param state
+         * @param {Array} products - 商品数据
+         * @param {string} products[].productId - 商品id
+         * @param {number} products[].count - 商品数量
+         * @param {string} products[].skuCode1 - 规格1
+         * @param {string} products[].skuCode2 - 规格2
+         * @param {number} products[].price - 价格
+         * @param {string} products[].agentUser - helper id, store.getters.shareId
+         * @param {string} products[].productType - 商品类型  store.getters.orderTypeKeyMap 种的值
+         */
+        setOrderProducts: (state, products) => {
+            const orderProducts = JSON.stringify(products)
+            sessionStorage.setItem('CONFIRM_LIST', orderProducts)
+            state.orderProducts = JSON.parse(orderProducts)
+        },
+        removeOrderProducts: state => {
+            sessionStorage.removeItem('CONFIRM_LIST')
+            state.orderProducts = []
         }
     },
     getters: {
-        checkedStudents: state => state.checkedStudents
+        checkedStudents: state => state.checkedStudents,
+        orderProducts: state => state.orderProducts
     }
 }
