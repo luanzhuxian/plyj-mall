@@ -101,8 +101,9 @@ export default {
             9: '退款中'
         },
         refundTypeMap: {
-            1: '仅退款',
-            2: '退款退货'
+            2: '仅退款',
+            1: '退款退货',
+            3: '仅退货'
         },
         // 申请售后后的状态
         aftersaleStatusKeyMap: {
