@@ -223,8 +223,8 @@
             />
         </div>
 
-        <!-- 用户信息 -->
-        <div :class="[$style.panel, $style.customBlockField]" v-if="userInfo.length">
+        <!-- 实体订单-用户信息 -->
+        <div :class="[$style.panel, $style.customBlockField]" v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && studentInfo.length">
             <pl-fields
                 size="middle"
                 text="用户信息"
@@ -235,7 +235,7 @@
                 left-text-weight="bold"
             >
                 <div :class="$style.detail">
-                    <div :class="$style.item" v-for="(item, i) of userInfo" :key="i">
+                    <div :class="$style.item" v-for="(item, i) of studentInfo[0]" :key="i">
                         <span>{{ item.fieldName }}：</span>
                         <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
                         <span v-else style="color: #999;">未填写</span>
@@ -244,13 +244,13 @@
             </pl-fields>
         </div>
 
-        <!-- 学员信息 -->
-        <template v-if="studentInfo.length">
+        <!-- 虚拟订单-学员信息 -->
+        <template v-if="needCodeOrderTypeList.includes(detail.orderType) && studentInfo.length">
             <div :class="[$style.panel, $style.customBlockField]" v-for="(studentItem, i) of studentInfo" :key="i">
                 <pl-fields
                     size="middle"
                     :text="`学员信息${i + 1}`"
-                    :right-text="i < studentItem.code ? `核销码：${localSeparator(studentItem.code,' ', 4)}`: ''"
+                    :right-text="i < redeemCodeModels.length ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
                     icon="icon-name-card"
                     title-color="#F2B036"
                     :icon-width="40"
@@ -576,9 +576,7 @@ export default {
             receiverModel: {},
             // 核销码
             redeemCodeModels: [],
-            // 实体订单-用户信息
-            userInfo: [],
-            // 虚拟订单-学员信息
+            //  实体订单-用户信息 / 虚拟订单-学员信息
             studentInfo: [],
             activityDataStatus: 1,
             activityDataId: '',
@@ -603,7 +601,9 @@ export default {
             // 海报
             isPosterShow: false,
             poster: '',
-            activeProductStatus: { 2: '团购金额', 3: '限时秒杀', 4: '定金' }
+            activeProductStatus: { 2: '团购金额', 3: '限时秒杀', 4: '定金' },
+            // 需要核销的订单类型
+            needCodeOrderTypeList: []
         }
     },
     computed: {
@@ -635,6 +635,7 @@ export default {
     async activated () {
         try {
             this.loading = true
+            this.needCodeOrderTypeList = [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS]
             await this.getDetail()
             this.loading = false
         } catch (e) {
@@ -664,7 +665,7 @@ export default {
         async getDetail () {
             try {
                 const { result } = await getOrderDetail(this.orderId)
-                const { goodsModel, orderPayTransInfos, redeemCodeModels } = result
+                const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo } = result
                 this.detail = result
                 // 商品详情
                 this.goodsModel = goodsModel
@@ -720,33 +721,22 @@ export default {
                 }
                 // 自定义表单信息/学员信息
                 {
-                    const hasCustomBlock = goodsModel.needStudentInfo === 2 ? [{}] : []
-                    const newUserInfo = []
-                    const obj = {}
-                    let studentInfo = []
-                    for (const productItem of hasCustomBlock) {
-                        if (this.detail.orderType === 'PHYSICAL') {
-                            for (const fields of productItem.customForm) {
-                                const userInfo = [...fields]
-                                // 进行字段去重，去重应注意，如果某个字段已有值了，就不要覆盖了
-                                for (const field of userInfo) {
-                                    obj[field.fieldName] = obj[field.fieldName] ? obj[field.fieldName] : field.fieldValue
-                                }
+                    /*
+                      虚拟订单-学员信息有两种来源： 1-核销码上携带的默认填写的学员信息 2-自定义表单
+                      实体订单-用户信息 来源于： 自定义表单
+                    */
+                    const newStudentInfo = productCustomInfo ? JSON.parse(productCustomInfo) : []
+                    if (!newStudentInfo.length && this.needCodeOrderTypeList.includes(result.orderType)) {
+                        redeemCodeModels.forEach(item => {
+                            if (item.userName || item.userMobile) {
+                                newStudentInfo.push([
+                                    { fieldName: '姓名', fieldValue: item.userName },
+                                    { fieldName: '电话', fieldValue: item.userMobile }
+                                ])
                             }
-                        } else {
-                            studentInfo = [...studentInfo, ...productItem.customForm]
-                        }
-                    }
-                    // 去重完成，将对象转为想要的数组
-                    for (const key of Object.keys(obj)) {
-                        newUserInfo.push({
-                            fieldName: key,
-                            fieldValue: obj[key]
                         })
                     }
-                    // 去掉字段重复的项目
-                    this.userInfo = newUserInfo
-                    this.studentInfo = studentInfo
+                    this.studentInfo = newStudentInfo
                 }
             } catch (e) {
                 throw e

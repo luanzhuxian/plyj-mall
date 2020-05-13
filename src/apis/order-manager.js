@@ -101,7 +101,7 @@ export const waitPayBalance = params => axios.get(`/apis/v1/order/current/user/p
  * @param orderSn {string}
  * @return {Promise<*>}
  */
-export const getWaitPayBalanceInfo = orderSn => axios.post(`/apis/v1/order/preOrderSecondaryPayment/${ orderSn }`)
+// export const getWaitPayBalanceInfo = orderSn => axios.post(`/apis/v1/order/preOrderSecondaryPayment/${ orderSn }`)
 
 /**
  * 检查购买后是否领到礼物
