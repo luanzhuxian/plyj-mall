@@ -48,7 +48,6 @@
                 >
                     去付款
                 </pl-button>
-                <!--预购待付尾款-->
                 <pl-button
                     v-if="orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
                     type="warning"

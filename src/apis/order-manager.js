@@ -149,8 +149,8 @@ export const applyOrderInvoice = data => axios.post(`/apis/v1/invoice/OrderInvoi
 /**
  * 用户取消订单
  * @param orderId {String}
- * @param cancelReason {String}
- * @return {Promise<*>}
+ * @param cancelReason {String} 取消订单理由
+ * @return {*}
  */
 export const cancelOrder = (orderId, cancelReason) => axios.get(`/apis/v2/order/cancel?orderId=${ orderId }&message=${ cancelReason }`)
 
