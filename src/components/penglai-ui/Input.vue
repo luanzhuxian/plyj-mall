@@ -138,7 +138,7 @@ export default {
         },
         maxlength: {
             type: Number,
-            default: 0
+            default: Number.MAX_SAFE_INTEGER
         },
         minRows: {
             type: Number,
@@ -209,6 +209,7 @@ export default {
     methods: {
         handleInput (e) {
             const val = e.target.value
+            console.log(val)
             this.$emit('input', val)
             this.trigger(e)
         },

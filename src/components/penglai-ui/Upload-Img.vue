@@ -14,7 +14,7 @@
                     <pl-svg
                         class="remove-btn--close"
                         name="icon-close"
-                        width="30"
+                        width="16"
                         fill="#fff"
                         @click="removeImg(i)"
                     />

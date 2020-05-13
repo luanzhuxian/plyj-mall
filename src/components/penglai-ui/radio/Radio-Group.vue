@@ -34,8 +34,11 @@ export default {
         prop: 'value'
     },
     watch: {
-        value (value) {
-            this.values.defaultValue = value
+        value: {
+            handler (value) {
+                this.values.defaultValue = value
+            },
+            immediate: true
         }
     },
     provide () {
