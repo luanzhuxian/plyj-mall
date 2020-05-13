@@ -98,7 +98,7 @@
                     <div :class="$style.segmentation">
                         <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/my-segmentation.png" alt="">
                     </div>
-                    <router-link :to="{ name: 'Orders', params: { status: '' } }">
+                    <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDERS' } }">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/myorder.png" :style="{ width: 96 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
                     </router-link>
                 </div>

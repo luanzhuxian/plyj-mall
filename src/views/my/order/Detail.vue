@@ -218,7 +218,7 @@
                     addressPrefix: '',
                     agencyAddress: receiverModel.address
                 }"
-                :hide-address="detail.orderType === 'VIRTUAL'"
+                :hide-address="detail.orderType === orderTypeKeyMap.VIRTUAL_GOODS"
                 not-link
             />
         </div>

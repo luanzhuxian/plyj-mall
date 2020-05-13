@@ -1,5 +1,6 @@
 export default [
     {
+        // 全部订单:ALL_ORDERS 待付款:WAIT_PAY 待发货:WAIT_SHIP 待收货:WAIT_RECEIVE 待评价:FINISHED
         path: '/my/orders/:status?',
         name: 'Orders',
         component: () => import('../views/my/order/Order-List.vue'),
@@ -33,15 +34,6 @@ export default [
         props: true,
         meta: {
             title: '发表评论'
-        }
-    },
-    {
-        path: '/my/orders/invoice/:orderId/detail',
-        name: 'InvoiceDetail',
-        component: () => import('../views/my/order/Invoice-Detail.vue'),
-        props: true,
-        meta: {
-            title: '发票详情'
         }
     },
     {

@@ -2,10 +2,7 @@
     <div :class="$style.applyInvoice">
         <div :class="$style.tips">
             <div :class="$style.top">
-                <pl-svg
-                    :class="$style.warning"
-                    name="icon-warning2"
-                />
+                <pl-svg :class="$style.warning" name="icon-warning2" />
                 <p v-text="type === 1 ? '自营产品订单完成后24小时内开具，点击“我的订单”查看。' : '发票将会与商品同时邮寄，单商品仅支持一次开票服务，请确保填写开票信息真实有效。'" />
             </div>
             <button

@@ -76,17 +76,12 @@ export default {
         LoadMore,
         OrderListItem
     },
-    props: {
-        status: {
-            type: String,
-            default: ''
-        }
-    },
     computed: {
         ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatuskeyMap'])
     },
     data () {
         return {
+            status: '',
             tabs: [
                 { name: '全部', id: '' },
                 { name: '待付款', id: 'WAIT_PAY' },
@@ -128,6 +123,7 @@ export default {
         this.$refresh = this.$refs.loadMore.refresh
     },
     activated () {
+        this.status = this.$route.params.status === 'ALL_ORDERS' ? '' : this.$route.params.status
         // 从 订单详情/物流 来的，需原地刷新页面
         if (this.orderList.length && this.$router.currentRoute.meta.noRefresh) {
             const arr = JSON.parse(localStorage.getItem('UPDATE_ORDER_LIST') || '[]')
@@ -144,7 +140,7 @@ export default {
     methods: {
         onTabChange (item) {
             this.$nextTick(() => {
-                this.$router.replace({ name: 'Orders', params: { status: item.id || '' } })
+                this.$router.replace({ name: 'Orders', params: { status: item.id || 'ALL_ORDERS' } })
                 this.$refresh()
             })
         },

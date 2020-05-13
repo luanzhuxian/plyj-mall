@@ -37,15 +37,6 @@
                 :class="$style.buttons"
                 v-if="orderStatus !== orderStatuskeyMap.WAIT_SHIP"
             >
-                <!--付款倒计时-->
-                <span class="fz-24 gray-3 mr-10" v-if="isStart && !pastDue">
-                    <span v-show="isStart">剩余{{ orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY? '尾款': '' }}支付时间：</span>
-                    <span v-show="!isStart">距离开始支付时间：</span>
-                    <span v-show="countDown.d !== '00'">{{ countDown.d }}天</span>
-                    <span v-show="countDown.h !== '00'">{{ countDown.h }}时</span>
-                    <span>{{ countDown.m }}分</span>
-                    <span>{{ countDown.s }}秒</span>
-                </span>
                 <!--正常待付款 支持 付款(目前只区别于预购的待付尾款)-->
                 <pl-button
                     v-if="orderStatus === orderStatuskeyMap.WAIT_PAY"
@@ -131,6 +122,15 @@
                 >
                     去评价
                 </pl-button>
+            </div>
+            <!--付款倒计时-->
+            <div class="fz-24 gray-3 mt-28" v-if="isStart && !pastDue">
+                <span v-show="isStart">剩余{{ orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY? '尾款': '' }}支付时间：</span>
+                <span v-show="!isStart">距离开始支付时间：</span>
+                <span v-show="countDown.d !== '00'">{{ countDown.d }}天</span>
+                <span v-show="countDown.h !== '00'">{{ countDown.h }}时</span>
+                <span>{{ countDown.m }}分</span>
+                <span>{{ countDown.s }}秒</span>
             </div>
         </div>
     </div>
