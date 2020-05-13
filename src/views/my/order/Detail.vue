@@ -44,7 +44,14 @@
         </div>
 
         <!-- 物流信息 -->
-        <div :class="$style.panel" v-if="hasExpressInfo">
+        <div :class="[$style.panel, $style.express]"
+             v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE].includes(detail.orderStatus)&& !isClosedByCancle"
+        >
+            <pl-svg name="icon-express" :class="$style.icon" />
+            <span :class="$style.content">{{ orderStatusMap[detail.orderStatus] }}</span>
+        </div>
+
+        <div :class="$style.panel" v-if="hasExpressInfo && false">
             <express-item
                 :order-id="orderId"
                 :express-name="logisticsInfoModel.courierCompany"
@@ -308,12 +315,12 @@
                     :content="orderLastPayInfo.callbackTime"
                 />
                 <pl-list
-                    v-if="detail.status !== orderStatuskeyMap.WAIT_PAY && !isClosedByCancle && hasExpressInfo"
+                    v-if="detail.status === orderStatuskeyMap.WAIT_RECEIVE && !isClosedByCancle"
                     title="配送方式："
                     :content="detail.courierCompany"
                 />
                 <pl-list
-                    v-if="detail.status !== orderStatuskeyMap.WAIT_PAY && !isClosedByCancle && hasExpressInfo"
+                    v-if="detail.status === orderStatuskeyMap.WAIT_RECEIVE && !isClosedByCancle"
                     title="发货时间："
                     :content="detail.shipTime"
                 />
@@ -327,38 +334,21 @@
         </div>
 
         <!-- 发票信息 -->
-        <div v-if="detail.supportInvoice" :class="[$style.panel, $style.invoice]">
-            <collapse>
-                <template v-if="invoiceModelList && invoiceModelList.length">
-                    <collapse-item>
-                        <template slot="title">
-                            <div>
-                                <span :class="$style.invoiceTitle">发票信息：{{ invoiceModelList.length }}个</span>
-                            </div>
-                        </template>
-                        <div :class="$style.item" v-for="(item, i) of invoiceModelList" :key="i">
-                            <div>
-                                <span :class="$style.type" v-text="invoiceMap[item.invoiceType].main" />
-                                <span :class="$style.name" v-text="item.invoiceTitle" />
-                            </div>
-                            <div>
-                                <span v-text="invoiceMap[item.invoiceType].sub" />
-                                <span v-text="item[invoiceMap[item.invoiceType].fields]" />
-                            </div>
-                        </div>
-                    </collapse-item>
-                </template>
-                <template v-else>
-                    <collapse-item disabled>
-                        <template slot="title">
-                            <div>
-                                <span :class="$style.invoiceTitle">发票信息：</span>
-                                <span>未开票</span>
-                            </div>
-                        </template>
-                    </collapse-item>
-                </template>
-            </collapse>
+        <div :class="[$style.panel, $style.invoice]">
+            <div :class="$style.title">
+                发票信息：<span :class="$style.color222" v-if="!detail.invoiceId">未开票</span>
+            </div>
+            <div v-if="detail.invoiceId">
+                <div>
+                    <span :class="$style.type" v-text="invoiceMap[invoiceModel.invoiceType].main" />
+                    <span :class="$style.name" v-text="invoiceModel.invoiceTitle" />
+                </div>
+                <div>
+                    <span v-text="invoiceMap[invoiceModel.invoiceType].sub" />
+                    <!--个人发票 - 取 收货人电话； 单位发票-取 纳税人识别号 -->
+                    <span v-text="invoiceModel.invoiceType === 1? receiverModel.mobile : invoiceModel.taxpayerNumber" />
+                </div>
+            </div>
         </div>
 
         <!-- footer -->
@@ -394,7 +384,7 @@
             </pl-button>
             <!-- 实体订单 + 有物流信息 支持 查看物流-->
             <pl-button
-                v-if="hasExpressInfo"
+                v-if="hasExpressInfo && false"
                 plain
                 round
                 @click="$router.push({ name: 'Freight', params: { orderId }, query: { img: goodsModel.img } })"
@@ -488,8 +478,6 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import ModuleTitle from '../../../components/common/Module-Title.vue'
 import ExpressItem from '../../../components/item/Express-Item.vue'
 import AddressItem from '../../../components/item/Address-Item.vue'
-import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
-import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import OrderDetailSkeleton from './components/Order-detail-Skeleton'
 import OrderCodeItem from './components/Order-Code-Item'
 import SharePoster from '../../../components/common/Share-Poster'
@@ -524,8 +512,8 @@ const suggestionMap = {
     WAIT_PAY_REPAYMENT: ''
 }
 const invoiceMap = {
-    1: { main: '个人', sub: '手机号：', fields: 'receiverMobile' },
-    2: { main: '单位', sub: '纳税人识别号：', fields: 'tin' }
+    1: { main: '个人', sub: '手机号：' },
+    2: { main: '单位', sub: '纳税人识别号：' }
 }
 
 export default {
@@ -536,10 +524,8 @@ export default {
         OrderItem,
         ExpressItem,
         AddressItem,
-        CollapseItem,
         OrderCodeItem,
         OrderDetailSkeleton,
-        Collapse,
         Contact,
         SharePoster,
         ContantPop
@@ -568,10 +554,10 @@ export default {
             goodsModel: {},
             // 订单最后一次交易记录
             orderLastPayInfo: {},
-            // 物流详情
+            // TODO.20200513物流详情 暂时不显示，发货后直接显示已发货
             logisticsInfoModel: {},
             // 发票信息
-            invoiceModelList: [],
+            invoiceModel: {},
             // 联系人信息
             receiverModel: {},
             // 核销码
@@ -665,7 +651,7 @@ export default {
         async getDetail () {
             try {
                 const { result } = await getOrderDetail(this.orderId)
-                const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo } = result
+                const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo, invoiceInfoModel } = result
                 this.detail = result
                 // 商品详情
                 this.goodsModel = goodsModel
@@ -680,7 +666,7 @@ export default {
                 // 物流信息
                 this.logisticsInfoModel = {}
                 // 发票信息
-                this.invoiceModelList = []
+                this.invoiceModel = invoiceInfoModel || {}
                 // 核销码信息
                 this.redeemCodeModels = redeemCodeModels || []
                 this.setTime()
@@ -919,22 +905,33 @@ export default {
         },
         // 申请发票
         applyInvoice () {
-            sessionStorage.setItem('APPLY_INVOICE', JSON.stringify([this.goodsModel.productDetailModels]))
-            sessionStorage.setItem('APPLY_INVOICE_FROM', JSON.stringify({
-                name: this.$route.name,
-                params: this.$route.params,
-                query: this.$route.query
-            }))
-            const { mobile, name } = this.receiverModel
-            this.$router.push({
-                name: 'ApplyInvoice',
-                query: {
-                    orderId: this.orderId,
-                    orderType: this.detail.orderType,
-                    receiveMobile: mobile,
-                    receiveName: name
+            const { img, goodsType, count } = this.goodsModel
+            this.$store.commit('submitOrder/setInvoiceProducts', {
+                products: [{
+                    goodsId: this.detail.goodId,
+                    goodsImage: img,
+                    goodsType,
+                    count
+                }],
+                fromRoute: {
+                    name: this.$route.name,
+                    params: this.$route.params,
+                    query: this.$route.query
                 }
             })
+            if (this.receiverModel.mobile) {
+                this.$router.push({
+                    name: 'ApplyInvoice',
+                    query: {
+                        orderId: this.orderId,
+                        orderType: this.detail.orderType,
+                        receiveMobile: this.receiverModel.mobile,
+                        receiveName: this.receiverModel.name
+                    }
+                })
+            } else {
+                this.$router.push({ name: 'ApplyInvoice' })
+            }
         }
     }
 }
@@ -958,52 +955,69 @@ export default {
     overflow: hidden;
   }
 
-    .qrcode-box {
+  .qrcode-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 48px 0 32px 0;
+  background-color: #fff;
+  border-radius: 20px;
+  > img {
+    width: 298px;
+    margin-bottom: 32px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  .title {
+    margin-right: 32px;
+    margin-top: 5px;
+    font-size: 24px;
+    color: #999;
+  }
+  .code-list-box {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 48px 0 32px 0;
-    background-color: #fff;
-    border-radius: 20px;
-    > img {
-      width: 298px;
-      margin-bottom: 32px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+    padding: 12px 20px;
+    padding-right: 60px;
+    background-color: #f7f7f7;
+    overflow: hidden;
+    &.collapse {
+      height: 38px;
     }
-    .title {
-      margin-right: 32px;
-      margin-top: 5px;
-      font-size: 24px;
-      color: #999;
-    }
-    .code-list-box {
-      position: relative;
-      display: flex;
-      padding: 12px 20px;
-      padding-right: 60px;
-      background-color: #f7f7f7;
-      overflow: hidden;
+    > svg {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 22px;
+      height: 22px;
+      transform: rotate(-90deg);
+      transition: transform .2s linear;
       &.collapse {
-        height: 38px;
-      }
-      > svg {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        width: 22px;
-        height: 22px;
-        transform: rotate(-90deg);
-        transition: transform .2s linear;
-        &.collapse {
-          transform: rotate(90deg);
-        }
+        transform: rotate(90deg);
       }
     }
-    .code-list {
-      flex: 1;
-      margin-top: -2px;
+  }
+  .code-list {
+    flex: 1;
+    margin-top: -2px;
+  }
+  }
+
+  /*物流信息*/
+  .express {
+    padding: 0 24px;
+    line-height: 80px;
+    .icon {
+      width: 64px;
+      height: 64px;
+      margin-right: 28px;
+      vertical-align: middle;
+      fill: $--warning-color;
+    }
+    .content {
+      font-size: 26px;
+      color: #666666;
     }
   }
 
@@ -1132,46 +1146,36 @@ export default {
   /** 发票信息 **/
   .invoice {
     padding: 24px;
-    .invoice-title {
-      color: #666666;
+    font-size: 28px;
+    .title {
+      margin-bottom: 20px;
+      color: #666;
     }
-    .item {
-      font-size: 24px;
-      font-family: Helvetica;
-      font-weight: 400;
-      line-height: 28px;
-      color: #333333;
-      border-bottom: 1px solid #F0F0F0;
-      padding: 24px 0 14px;
-      &:nth-of-type(1) {
-        padding-top: 0;
-      }
-      &:nth-last-of-type(1) {
-        border-bottom: none;
-        padding-bottom: 0;
-      }
+    > div {
+      color: #222;
       > div {
-        padding-bottom: 8px;
+        margin-top: 12px;
+        .type {
+          display: inline-block;
+          width: 74px;
+          height: 32px;
+          margin-right: 12px;
+          border-radius: 4px;
+          line-height: 32px;
+          text-align: center;
+          font-size: 24px;
+          background-color: #FDEFD6;
+          color: #FE7700;
+        }
+        .name {
+          line-height: 40px;
+          font-weight: bold;
+          color: #2E2E2E;
+        }
       }
     }
-    .type {
-      display: inline-block;
-      width: 74px;
-      height: 32px;
-      line-height: 32px;
-      background: #FDEFD6;
-      border-radius: 4px;
-      font-size: 24px;
-      color: #FE7700;
-      text-align: center;
-      margin-right: 12px;
-    }
-    .name {
-      font-size: 28px;
-      font-family: PingFangSC-Medium;
-      font-weight: bold;
-      color: #2E2E2E;
-      line-height: 40px;
+    .color-222{
+      color: #222;
     }
   }
 
