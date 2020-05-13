@@ -356,21 +356,14 @@ export default {
 
             if (this.orderId) {
                 // 二次申请发票
-                const orderDetailsTemp = []
-                for (const item of this.checkedList) {
-                    orderDetailsTemp.push({
-                        orderId: this.orderId,
-                        orderDetailId: item.orderProductRId
-                    })
-                }
                 try {
                     this.loading = true
                     await applyInvoice({
-                        invoiceType: this.type,
+                        skus: orderDetails,
+                        orderIds: [this.orderId],
                         invoiceTitle: this.type === 1 ? this.receiveName : this.form.firmName,
-                        tin: this.type === 2 ? this.form.tin : '',
-                        orderDetails: orderDetailsTemp,
-                        ...(this.orderType ? { logisticStatus: this.orderType === 'PHYSICAL' ? 0 : 1 } : null)
+                        invoiceType: this.type,
+                        taxpayerNumber: this.type === 2 ? this.form.tin : ''
                     })
                 } catch (e) {
                     throw e

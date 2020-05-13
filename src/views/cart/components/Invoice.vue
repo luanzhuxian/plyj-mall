@@ -76,6 +76,7 @@ export default {
     },
     mounted () {
         const INVOICE_MODEL = this.$store.getters['submitOrder/invoiceInfo']
+        console.log(INVOICE_MODEL)
         if (INVOICE_MODEL) {
             this.$emit('selected', INVOICE_MODEL)
             this.invioceType = 1
