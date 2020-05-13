@@ -4,7 +4,6 @@
         class="pl-radio"
         :class="{ 'pl-radio__inline': inline }"
         @click="onClick"
-        :for="id"
     >
         <div v-if="position === 'left'" class="pl-radio-icon pl-radio-icon__left">
             <pl-svg
@@ -55,7 +54,16 @@ export default {
             }
         }
     },
-    inject: ['values', 'changeHandler'],
+    inject: {
+        values: {
+            from: 'values',
+            default: null
+        },
+        changeHandler: {
+            from: 'changeHandler',
+            default: null
+        }
+    },
     model: {
         event: 'change',
         prop: 'value'
@@ -66,7 +74,7 @@ export default {
             return `pl-radio_${ uid }`
         },
         checked () {
-            return this.label === this.value || this.label === this.values.defaultValue
+            return this.label === this.value || this.label === (this.values ? this.values.defaultValue : null)
         }
     },
     methods: {
@@ -83,10 +91,15 @@ export default {
 <style lang="scss">
     .pl-radio {
         display: flex;
+        flex: 1;
         justify-content: space-between;
         align-items: center;
+        padding: 0 20px;
         &__inline {
             display: inline-flex;
+        }
+        > .pl-radio-content {
+            width: 100%;
         }
     }
 </style>

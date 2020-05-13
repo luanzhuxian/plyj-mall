@@ -77,7 +77,6 @@
                 <div :class="$style.buttons">
                     <!--实际支付大于0 + 支持售后 支持 申请退款-->
                     <pl-button
-                        v-if="detail.amount && detail.supportAfterSales"
                         plain
                         round
                         @click="applyRefund"

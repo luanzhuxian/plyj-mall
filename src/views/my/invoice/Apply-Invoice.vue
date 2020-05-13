@@ -488,7 +488,6 @@ export default {
     }
   }
   .firmInvioce {
-    padding-left: 40px;
   }
   .invioceIntroTitle {
     font-size: 36px;
