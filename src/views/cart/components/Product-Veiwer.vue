@@ -176,7 +176,7 @@ export default {
         },
         // 检查自定义表单
         checkCustom () {
-            for (const item of this.$refs.CustomInline) {
+            for (const item of this.$refs.CustomInline || []) {
                 if (!item.checkForm()) {
                     const EL = document.getElementById(`custom_${ item.product.sku1 + item.product.sku2 }`)
                     EL.classList.add(this.$style.infoItemError)
