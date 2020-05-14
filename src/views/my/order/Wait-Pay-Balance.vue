@@ -28,7 +28,7 @@
                             :sub-sku-name="item.skuName2"
                             :unit-price="item.productPrice"
                             :count="item.count"
-                            :cui-lu-status="item.cuiLuStatus"
+                            :business-status="item.businessStatus"
                             :order-intention-amount="item.price"
                             :order-amount-tail-money="item.prePayOrderPrice"
                             :is-start="item.isStart"

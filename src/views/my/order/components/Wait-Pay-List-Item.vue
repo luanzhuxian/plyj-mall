@@ -13,7 +13,7 @@
             :option="subSkuName ? `${skuName},${subSkuName}` : skuName"
             :count="countt"
             :price="unitPrice"
-            :status="refundStatusMap[cuiLuStatus]"
+            :status="refundStatusMap[businessStatus]"
             border
         />
         <div :class="$style.listItemBottom">
@@ -121,8 +121,8 @@ export default {
             type: Number,
             default: 0
         },
-        // TODO.售后状态
-        cuiLuStatus: {
+        // 售后状态
+        businessStatus: {
             type: Number,
             default: 0
         },

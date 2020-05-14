@@ -22,7 +22,7 @@
             :option="subSkuName ? `${skuName},${subSkuName}` : skuName"
             :count="count"
             :price="unitPrice"
-            :status="refundStatusMap[cuiLuStatus] || ''"
+            :status="refundStatusMap[businessStatus] || ''"
             :active-product="skuSource"
             :pre-active="skuSource !== 1 ? 2 : ''"
             border
@@ -191,8 +191,8 @@ export default {
             type: Number,
             default: 0
         },
-        // TODO.售后状态
-        cuiLuStatus: {
+        // 售后状态
+        businessStatus: {
             type: Number,
             default: 0
         },

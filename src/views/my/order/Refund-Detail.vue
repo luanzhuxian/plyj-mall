@@ -334,7 +334,7 @@ import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.
 import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication, deleteRefundOrder } from '../../../apis/order-manager'
 import { resetForm } from '../../../assets/js/util'
 import { isExpressNumber } from '../../../assets/js/validate'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 const expressMapCode = 'KYYQJKDGS'
 
@@ -362,12 +362,6 @@ const rebuildDate = list => {
 }
 
 const replaceMobile = mobile => mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
-
-const updateLocalStorage = (key, value) => {
-    const arr = JSON.parse(localStorage.getItem(key) || '[]')
-    arr.push(value)
-    localStorage.setItem(key, JSON.stringify(arr))
-}
 
 export default {
     name: 'RefundDetail',
@@ -414,7 +408,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['address', 'supportPhone', 'refundTypeMap'])
+        ...mapGetters(['address', 'supportPhone', 'refundTypeMap', 'orderActionMap'])
     },
     activated () {
         this.getDetail()
@@ -425,6 +419,7 @@ export default {
         this.collepseActiveNames = []
     },
     methods: {
+        ...mapMutations(['setRefundOperatedList']),
         async getDetail () {
             try {
                 this.detailLoading = true
@@ -490,7 +485,7 @@ export default {
                 await cancelRefundApplication({ id })
                 this.$success('取消申请成功')
                 this.getDetail()
-                updateLocalStorage('UPDATE_REFUND_LIST', { id, action: 'cancel' })
+                this.$store.commit('setRefundOperatedList', { id, action: this.orderActionMap.cancel })
             } catch (e) {
                 throw e
             }
@@ -501,7 +496,7 @@ export default {
                 await this.$confirm('是否删除当前订单？ 删除后不可找回')
                 await deleteRefundOrder({ id })
                 this.$success('删除成功')
-                updateLocalStorage('UPDATE_REFUND_LIST', { id, action: 'delete' })
+                this.$store.commit('setRefundOperatedList', { id, action: this.orderActionMap.delete })
                 setTimeout(() => {
                     this.$router.go(-1)
                 }, 2000)
@@ -525,7 +520,7 @@ export default {
                 this.loading = false
                 this.$success('提交申请成功')
                 this.getDetail()
-                updateLocalStorage('UPDATE_REFUND_LIST', { id: this.id, action: 'ship' })
+                this.$store.commit('setRefundOperatedList', { id: this.id, action: this.orderActionMap.ship })
             } catch (e) {
                 throw e
             } finally {

@@ -4,13 +4,13 @@
             :class="$style.tabBar"
             size="small"
             :tabs="tabs"
-            :active-id.sync="form.returnStatus"
+            :active-id.sync="form.auditStatus"
             @change="onTabChange"
         >
             <div
                 :class="$style.tabPane"
                 v-for="i of tabs"
-                :key="i"
+                :key="'tab' + i"
                 :slot="'tab-pane-' + i"
             />
         </pl-tab>
@@ -27,7 +27,7 @@
                     <router-link
                         tag="div"
                         v-for="(item, i) of orderList"
-                        :key="i"
+                        :key="item.id"
                         :to="{ name: 'RefundDetail', params: { id: item.id } }"
                     >
                         <RefundListItem
@@ -35,15 +35,15 @@
                             :order-id="item.id"
                             :order-type="item.orderType"
                             :order-status="item.orderStatus"
-                            :refund-type="item.refundType"
-                            :refund-status="item.returnStatus"
-                            :goods-images="item.productPic"
-                            :goods-name="item.productName"
+                            :refund-type="item.type"
+                            :refund-status="item.businessStatus"
+                            :goods-images="item.goodsImage"
+                            :goods-name="item.goodsName"
                             :sku-name="item.skuName"
-                            :sub-sku-name="item.skuName2"
-                            :count="item.productCount"
-                            :unit-price="item.productPrice"
-                            :actual-refund="item.actualRefund"
+                            :sub-sku-name="item.subSkuName"
+                            :count="item.count"
+                            :unit-price="item.unitPrice"
+                            :refund-amount="item.refundAmount"
                             @cancelApplication="cancelApplication"
                             @deleteOrder="deleteOrder"
                         />
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
 import LoadMore from '../../../components/common/Load-More.vue'
 import RefundListItem from './components/Refund-List-Item'
 import {
@@ -69,16 +70,14 @@ export default {
         LoadMore,
         RefundListItem
     },
-    props: {
-        status: {
-            type: String,
-            default: null
-        }
+    computed: {
+        ...mapGetters(['refundOperatedList', 'orderActionMap'])
     },
     data () {
         return {
+            status: '',
             tabs: [
-                { name: '全部', id: 'ALL_ORDER' },
+                { name: '全部', id: '' },
                 { name: '待审核', id: 'WAIT_CHECK' },
                 { name: '退换货', id: 'REFUND_PRODUCT' },
                 { name: '退款成功', id: 'FINISHED' }
@@ -87,7 +86,7 @@ export default {
             form: {
                 current: 1,
                 size: 10,
-                returnStatus: ''
+                auditStatus: ''
             },
             getRefundOrderList,
             loading: false,
@@ -102,49 +101,17 @@ export default {
         this.$refresh = this.$refs.loadMore.refresh
     },
     activated () {
-        const handler = action => {
-            if (action === 'cancel') {
-                return (order, index) => {
-                    if (this.status === 'ALL_ORDER') {
-                        order.returnStatus = 'CANCEL'
-                    } else if (this.status === 'WAIT_CHECK') {
-                        this.orderList.splice(index, 1)
-                    }
-                }
-            }
-            if (action === 'ship') {
-                return (order, index) => {
-                    if (this.status === 'ALL_ORDER') {
-                        order.returnStatus = 'REFUND_PRODUCT'
-                    } else if (this.status === 'WAIT_CHECK') {
-                        this.orderList.splice(index, 1)
-                    }
-                }
-            }
-            if (action === 'delete') {
-                return (order, index) => {
-                    this.orderList.splice(index, 1)
-                }
-            }
-        }
-
+        this.status = this.$route.params.status === 'ALL_ORDERS' ? '' : this.$route.params.status
+        this.form.auditStatus = this.status
         if (this.orderList.length && this.$router.currentRoute.meta.noRefresh) {
-            const arr = JSON.parse(localStorage.getItem('UPDATE_REFUND_LIST') || '[]')
-            if (!arr.length) return
-            for (const item of arr) {
-                const index = this.orderList.findIndex(order => order.id === item.id)
-                if (index === -1) continue
-                handler(item.action)(this.orderList[index], index)
-            }
-            localStorage.removeItem('UPDATE_REFUND_LIST')
-            this.orderList.length ? this.$forceUpdate() : this.$refresh()
+            if (!this.refundOperatedList.length) return
+            this.handleCurrentOrder(this.refundOperatedList)
             return
         }
-
-        this.form.returnStatus = this.status
         this.$refresh()
     },
     methods: {
+        ...mapMutations(['clearRefundOperatedList']),
         onTabChange (item) {
             this.$nextTick(() => {
                 this.$router.replace({ name: 'RefundList', params: { status: item.id } })
@@ -153,6 +120,39 @@ export default {
         },
         onRefresh (list, total) {
             this.orderList = list
+        },
+        handleCurrentOrder (arr) {
+            const handler = action => {
+                if (action === this.orderActionMap.cancel) {
+                    return (order, index) => {
+                        if (!this.status || this.status === 'WAIT_CHECK') {
+                            this.orderList.splice(index, 1)
+                        }
+                    }
+                }
+                if (action === this.orderActionMap.ship) {
+                    return (order, index) => {
+                        if (!this.status) {
+                            order.businessStatus = 2
+                        }
+                        if (this.status === 'WAIT_CHECK') {
+                            this.orderList.splice(index, 1)
+                        }
+                    }
+                }
+                if (action === this.orderActionMap.delete) {
+                    return (order, index) => {
+                        this.orderList.splice(index, 1)
+                    }
+                }
+            }
+            for (const item of arr) {
+                const index = this.orderList.findIndex(order => order.id === item.id)
+                if (index === -1) continue
+                handler(item.action)(this.orderList[index], index)
+            }
+            this.$store.commit('clearRefundOperatedList')
+            this.orderList.length ? this.$forceUpdate() : this.$refresh()
         },
         async cancelApplication (index) {
             try {

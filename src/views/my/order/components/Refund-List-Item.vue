@@ -28,40 +28,43 @@
             <div :class="$style.priceWrapper">
                 <span :class="$style.totalCount">{{ `共${count}件商品` }}</span>
                 <span :class="$style.bold">总价：</span>
-                <span :class="$style.price">{{ actualRefund }}</span>
+                <span :class="$style.price">{{ refundAmount }}</span>
             </div>
             <div :class="$style.buttons">
                 <span
                     :class="$style.reundType"
                     v-text="refundTypeMap[refundType]"
                 />
+                <!--退款中/退款成功 不支持取消申请-->
                 <pl-button
-                    v-if="refundStatus === 'WAIT_CHECK'"
+                    v-if="~[5, 6].indexOf(refundStatus)"
                     round
                     plain
                     @click="doOperation('cancelApplication')"
                 >
                     取消申请
                 </pl-button>
+                <!-- 仅退款成功 支持删除 -->
                 <pl-button
-                    v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
+                    v-if="refundStatus === 6"
                     round
                     plain
                     @click="doOperation('deleteOrder')"
                 >
                     删除
                 </pl-button>
+                <!--任何状态都 支持 查看详情-->
                 <pl-button
-                    v-if="~['WAIT_CHECK', 'REFUND_PRODUCT', 'FINISHED', 'REFUNDING'].indexOf(refundStatus)"
                     round
                     plain
                     @click="$router.push({ name: 'RefundDetail', params: { id: orderId } })"
                 >
                     查看详情
                 </pl-button>
+                <!--退款退货 + 售后状态不为待退货 支持 寄件运单号-->
                 <pl-button
                     :class="$style.large"
-                    v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
+                    v-if="refundType === 1 && refundStatus !== 1"
                     type="warning"
                     plain
                     round
@@ -102,12 +105,12 @@ export default {
             type: String,
             default: ''
         },
-        // 退换货类型 1:仅退款 2:退款退货
+        // 退换货类型 1:退款退货 2:仅退款 3:仅退货
         refundType: {
             type: Number,
             default: 0
         },
-        // 退换货状态
+        // 退换货状态 1:待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 7:退款失败
         refundStatus: {
             type: Number,
             default: 0
@@ -143,7 +146,7 @@ export default {
             default: 0
         },
         // 实际退款金额
-        actualRefund: {
+        refundAmount: {
             type: Number,
             default: 0
         }

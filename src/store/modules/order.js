@@ -1,5 +1,6 @@
 const refundGoodsInfo = JSON.parse(sessionStorage.getItem('REFUND_GOODS'))
 const orderOperatedList = JSON.parse(sessionStorage.getItem('UPDATE_ORDER_LIST') || '[]')
+const refundOperatedList = JSON.parse(sessionStorage.getItem('UPDATE_REFUND_LIST') || '[]')
 export default {
     state: {
         // 短信类型
@@ -43,22 +44,12 @@ export default {
         orderStatusMap: {
             NEW: '待提交',
             WAIT_PAY: '待付款',
-            WAIT_PAY_TAIL_MONEY: '待付款',
+            WAIT_PAY_TAIL_MONEY: '待付尾款',
             WAIT_SHIP: '待发货',
             WAIT_RECEIVE: '待收货',
             FINISHED: '交易成功',
             // 取消订单/申请售后 后的订单
-            CLOSED: '订单关闭',
-            // AFTER_SALE  售后状态
-            // WAIT_REFUND: '待退款',
-            // WAIT_RETURN: '等待买家发货',
-            // RETURN_RECEIVE: '等待商家收货',
-            // 待发货的待退款
-            WAIT_SHIP_REFUND: '待退款',
-            // 待收货的待退款
-            WAIT_RECEIVE_REFUND: '待退款',
-            // 交易成功的待退款
-            FINISHED_REFUND: '待退款'
+            CLOSED: '订单关闭'
         },
         // 订单状态关键字
         orderStatuskeyMap: {
@@ -93,18 +84,19 @@ export default {
         },
         // 售后状态
         refundStatusMap: {
-            1: '退款中',
-            2: '退款成功',
-            3: '退款驳回',
+            1: '待退货',
+            2: '待收货',
+            3: '退货完成',
             //  退换货-已退货
-            4: '退款中',
+            4: '待退款',
             //  退换货-待退货
-            5: '待退货',
-            9: '退款中'
+            5: '退款中',
+            6: '退款成功',
+            7: '退款失败'
         },
         refundTypeMap: {
-            2: '仅退款',
             1: '退款退货',
+            2: '仅退款',
             3: '仅退货'
         },
         // 申请售后后的状态
@@ -118,6 +110,7 @@ export default {
         },
         // 要申请售后的商品信息
         refundGoodsInfo,
+        // 订单操作方式
         orderActionMap: {
             // 支付订单
             pay: 'pay',
@@ -128,9 +121,12 @@ export default {
             // 删除订单
             delete: 'delete',
             // 已评论
-            comment: 'comment'
+            comment: 'comment',
+            // 已发货
+            ship: 'ship'
         },
-        orderOperatedList
+        orderOperatedList,
+        refundOperatedList
     },
     mutations: {
         // 缓存要申请售后的商品信息
@@ -150,6 +146,18 @@ export default {
         // 更新订单列表后，清楚配置项
         clearOrderOperatedList: state => {
             localStorage.removeItem('UPDATE_ORDER_LIST')
+        },
+        // 在订单列表子页面操作记录，返回子元素列表后原地更新
+        setRefundOperatedList: (state, actionInfo) => {
+            const arr = JSON.parse(localStorage.getItem('UPDATE_REFUND_LIST') || '[]')
+            arr.push(actionInfo)
+            state.refundOperatedList = arr
+            console.log(arr)
+            localStorage.setItem('UPDATE_REFUND_LIST', JSON.stringify(arr))
+        },
+        // 更新订单列表后，清楚配置项
+        clearRefundOperatedList: state => {
+            localStorage.removeItem('UPDATE_REFUND_LIST')
         }
     },
     getters: {
@@ -165,6 +173,7 @@ export default {
         aftersaleStatusKeyMap: state => state.aftersaleStatusKeyMap,
         refundGoodsInfo: state => state.refundGoodsInfo,
         orderActionMap: state => state.orderActionMap,
-        orderOperatedList: state => state.orderOperatedList
+        orderOperatedList: state => state.orderOperatedList,
+        refundOperatedList: state => state.refundOperatedList
     }
 }
