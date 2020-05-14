@@ -75,6 +75,7 @@ export default {
     },
     data () {
         return {
+            getRefundOrderList,
             status: '',
             tabs: [
                 { name: '全部', id: '' },
@@ -88,7 +89,6 @@ export default {
                 size: 10,
                 auditStatus: ''
             },
-            getRefundOrderList,
             loading: false,
             $refresh: null
         }

@@ -94,7 +94,7 @@ export const setVerificationStatus = orderId => axios.get(`/apis/v1/redeem/jumpb
  * @property {number} params.size
  * @return {Promise<*>}
  */
-export const waitPayBalance = params => axios.get(`/apis/v1/order/current/user/pre/page`, { params })
+// export const waitPayBalance = params => axios.get(`/apis/v1/order/current/user/pre/page`, { params })
 
 /**
  * 获取待付尾款订单支付信息

@@ -5,7 +5,7 @@
                 ref="loadMore"
                 :form="form"
                 :loading.sync="loading"
-                :request-methods="waitPayBalance"
+                :request-methods="getOrderList"
                 no-content-tip="您还没有相关订单~"
                 @refresh="onRefresh"
                 @more="onRefresh"
@@ -21,16 +21,16 @@
                             :index="i"
                             :order-id="item.orderId"
                             :order-type="item.orderType"
-                            :order-status="item.status"
-                            :goods-images="item.productMainImage"
-                            :goods-name="item.productName"
+                            :order-status="item.orderStatus"
+                            :goods-images="item.goodsImages"
+                            :goods-name="item.goodsName"
                             :sku-name="item.skuName"
-                            :sub-sku-name="item.skuName2"
-                            :unit-price="item.productPrice"
+                            :sub-sku-name="item.subSkuName"
+                            :unit-price="item.unitPrice"
                             :count="item.count"
                             :business-status="item.businessStatus"
-                            :order-intention-amount="item.price"
-                            :order-amount-tail-money="item.prePayOrderPrice"
+                            :order-intention-amount="item.orderIntentionAmount"
+                            :order-amount-tail-money="item.orderAmountTailMoney"
                             :is-start="item.isStart"
                             :past-due="item.pastDue"
                             :count-down="item.countDown"
@@ -49,7 +49,7 @@ import Countdown from '../../../assets/js/Countdown'
 import moment from 'moment'
 import LoadMore from '../../../components/common/Load-More.vue'
 import WaitPayListItem from './components/Wait-Pay-List-Item'
-import { waitPayBalance, getAwaitTailPayInfo } from '../../../apis/order-manager'
+import { getAwaitTailPayInfo, getOrderList } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 export default {
     components: {
@@ -59,14 +59,15 @@ export default {
     name: 'WaitPayBalance',
     data () {
         return {
-            waitPayBalance,
+            form: {
+                current: 1,
+                size: 10,
+                orderStatus: 'WAIT_PAY_TAIL_MONEY'
+            },
+            getOrderList,
             loading: false,
             payloading: false,
             currentPayId: '',
-            form: {
-                current: 1,
-                size: 10
-            },
             orderList: [],
             countdownInstances: []
         }
