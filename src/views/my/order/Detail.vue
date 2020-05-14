@@ -448,21 +448,17 @@
             @confirm="(selected) => { cancelOrder(selected[0]) }"
         />
 
-        <!-- 联系我们底部弹窗 -->
-        <pl-popup :show.sync="isPopupShow">
-            <ContantPop
-                ref="contact"
-                :show.sync="isPopupShow"
-                @callUs="callUs"
-            />
-        </pl-popup>
-
         <!-- 分享核销码弹窗 -->
         <SharePoster
             :show.sync="isPosterShow"
             :poster="poster"
             @close="isPosterShow = false"
         />
+
+        <!-- 联系我们底部弹窗 -->
+        <pl-popup :show.sync="isPopupShow">
+            <ContantPop @callUs="callUs" />
+        </pl-popup>
 
         <!--拨号-->
         <Contact :show.sync="showContact" />
@@ -587,7 +583,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['address', 'servicePhoneModels', 'skuSourceKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'aftersaleStatusKeyMap', 'orderActionMap']),
+        ...mapGetters(['skuSourceKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'aftersaleStatusKeyMap', 'orderActionMap']),
         // 订单是否因取消而关闭
         isClosedByCancle () {
             return this.detail.status === this.orderStatuskeyMap.CLOSED && !(this.orderLastPayInfo.callbackTime)

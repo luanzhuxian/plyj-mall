@@ -201,44 +201,20 @@
             </pl-button>
         </div>
 
-        <!--联系我们弹框-->
-        <pl-popup ref="contact" :show.sync="isPopupShow">
-            <template name="title">
-                <div :class="$style.popupTitle">
-                    <pl-svg :class="$style.popupTitleIcon" name="icon-rows" />
-                    <span>联系我们</span>
-                </div>
-            </template>
-            <template>
-                <div :class="$style.popupContent">
-                    <div :class="$style.popupAddress">
-                        <pl-svg :class="$style.popupAddressLeftIcon" name="icon-address-blue" />
-                        <span :class="$style.popupAddressText" v-text="address" />
-                        <pl-svg
-                            :class="$style.popupAddressRightIcon"
-                            name="icon-copy"
-                            @click="doCopy"
-                        />
-                    </div>
-                    <a :href="`tel: ${supportPhone}`">
-                        <pl-button
-                            size="larger"
-                            background-color="#387AF6"
-                            prefix-icon="icon-mobile-blue"
-                            round
-                        >
-                            立即拨打
-                        </pl-button>
-                    </a>
-                </div>
-            </template>
-        </pl-popup>
         <!--选择快递公司-->
         <pl-picker
             :show.sync="isPickerShow"
             :slots="pickerColumns"
             @confirm="onPickerConfirm"
         />
+
+        <!-- 联系我们底部弹窗 -->
+        <pl-popup :show.sync="isPopupShow">
+            <ContantPop @callUs="callUs" />
+        </pl-popup>
+
+        <!--拨号-->
+        <Contact :show.sync="showContact" />
     </div>
 </template>
 
@@ -265,11 +241,6 @@ const suggestionMap = {
     CLOSED: '因为您超时操作，本次退款申请已关闭',
     CANCEL: '您已撤销退款申请，退款已关闭',
     REJECT: '商家驳回您的退款申请，如有问题请尽快与商家协商'
-}
-
-const receiveStatusMap = {
-    1: '已收到货',
-    2: '未收到货'
 }
 
 const rebuildDate = list => {
@@ -301,7 +272,9 @@ export default {
         return {
             loading: false,
             detailLoading: false,
-
+            isPopupShow: false,
+            showContact: false,
+            isPickerShow: false,
             // refundStatus WAIT_CHECK: '待审核', REFUNDING: '退款中', REFUND_PRODUCT_WAIT_RETURN: '退换货-待退货', REFUND_PRODUCT: '退换货-已退货', FINISHED: '退款成功', CLOSED: '退款关闭', CANCEL: '退款关闭', REJECT: '退款关闭'
             refundStatus: '',
             refundDetail: {},
@@ -310,23 +283,17 @@ export default {
                 expressNo: ''
             },
             refundProgress: [],
-            isPopupShow: false,
-            isPickerShow: false,
             pickerColumns: [
-                {
-                    flex: 1,
-                    textAlign: 'center',
-                    values: []
-                }
+                { flex: 1, textAlign: 'center', values: [] }
             ],
             collepseActiveNames: [],
             suggestionMap,
-            receiveStatusMap,
+            receiveStatusMap: { 1: '已收到货', 2: '未收到货' },
             expressMap: []
         }
     },
     computed: {
-        ...mapGetters(['address', 'supportPhone', 'refundTypeMap', 'orderActionMap'])
+        ...mapGetters(['refundTypeMap', 'orderActionMap'])
     },
     activated () {
         this.getDetail()
@@ -391,6 +358,10 @@ export default {
             const { result: expressMap } = await getExpressMap(expressMapCode)
             this.expressMap = expressMap
             this.pickerColumns[0].values = expressMap.map(item => item.dictDataValue)
+        },
+        callUs () {
+            this.showContact = true
+            this.isPopupShow = false
         },
         onPickerConfirm (selected) {
             this.form.expressName = selected[0]
