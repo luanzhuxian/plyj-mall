@@ -61,10 +61,10 @@
                 >
                     查看详情
                 </pl-button>
-                <!--退款退货 + 售后状态不为待退货 支持 寄件运单号-->
+                <!--退款退货 + 待退货 支持去填写 寄件运单号-->
                 <pl-button
                     :class="$style.large"
-                    v-if="refundType === 1 && refundStatus !== 1"
+                    v-if="refundType === 1 && refundStatus === 1"
                     type="warning"
                     plain
                     round

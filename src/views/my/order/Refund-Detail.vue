@@ -1,10 +1,6 @@
 <template>
     <RefundDetailSkeleton v-if="detailLoading" />
-    <div
-        v-else
-        class="refund-detail"
-        :class="$style.refundDetail"
-    >
+    <div v-else :class="$style.refundDetail">
         <div :class="$style.title">
             <top-text
                 :title="refundDetail.returnStatusText"
@@ -12,53 +8,31 @@
             />
         </div>
 
+        <!--实体订单 待收货 退货物流 + 退货信息-->
         <section
             v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN' || refundStatus === 'REFUND_PRODUCT'"
             :class="[$style.panel, $style.expressPanel]"
         >
-            <div
-                v-if="refundStatus === 'REFUND_PRODUCT'"
-                :class="$style.expressItem"
-            >
-                <pl-svg
-                    :class="$style.expressIcon"
-                    name="icon-express"
-                />
+            <div v-if="refundStatus === 'REFUND_PRODUCT'" :class="$style.expressItem">
+                <pl-svg :class="$style.expressIcon" name="icon-express" />
                 <div :class="$style.right">
-                    <div
-                        :class="[$style.main, $style.bold]"
-                        v-text="refundDetail.shipChannelText"
-                    />
-                    <div
-                        :class="$style.sub"
-                        v-text="`运单号：${refundDetail.shipSn}`"
-                    />
+                    <div :class="[$style.main, $style.bold]" v-text="refundDetail.shipChannelText" />
+                    <div :class="$style.sub" v-text="`运单号：${refundDetail.shipSn}`" />
                 </div>
             </div>
             <div :class="$style.expressItem">
-                <pl-svg
-                    :class="$style.expressIcon"
-                    name="icon-express-receive"
-                />
+                <pl-svg :class="$style.expressIcon" name="icon-express-receive" />
                 <div :class="$style.right">
                     <div :class="$style.main">
-                        <span
-                            :class="$style.name"
-                            v-text="`退货信息：${refundDetail.refundUserName}`"
-                        />
-                        <span
-                            :class="$style.phone"
-                            v-text="refundDetail.refundMobile"
-                        />
+                        <span :class="$style.name" v-text="`退货信息：${refundDetail.refundUserName}`" />
+                        <span :class="$style.phone" v-text="refundDetail.refundMobile" />
                     </div>
-                    <div
-                        :class="$style.sub"
-                        v-text="refundDetail.refundAddress"
-                    />
+                    <div :class="$style.sub" v-text="refundDetail.refundAddress" />
                 </div>
             </div>
         </section>
 
+        <!--实体订单 待退货 填写物流信息-->
         <section
             v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
             :class="[$style.panel, $style.expressInfoPanel]"
@@ -71,12 +45,7 @@
                 @click="isPickerShow=true"
             />
             <pl-form-item>
-                <label
-                    for="expressNo"
-                    :class="$style.expressNo"
-                >
-                    快递单号：
-                </label>
+                <label for="expressNo" :class="$style.expressNo"> 快递单号：</label>
                 <pl-input
                     type="text"
                     v-model="form.expressNo"
@@ -86,12 +55,11 @@
             </pl-form-item>
         </section>
 
-        <section :class="[$style.panel, $style.amountPanel]">
+        <!--退款金额-详情 + 退款进度-->
+        <section :class="[$style.panel, $style.amoufntPanel]">
             <div :class="$style.top">
                 <div :class="$style.item">
-                    <span :class="[$style.itemLeft, $style.bold]">
-                        应退金额：
-                    </span>
+                    <span :class="[$style.itemLeft, $style.bold]"> 应退金额：</span>
                     <span :class="$style.itemRight">
                         <div
                             v-if="refundDetail.shouldRefund"
@@ -101,48 +69,34 @@
                     </span>
                 </div>
                 <div :class="[$style.item, $style.larger]">
-                    <span :class="[$style.itemLeft, $style.bold]">
-                        实退金额：
-                    </span>
+                    <span :class="[$style.itemLeft, $style.bold]"> 实退金额：</span>
                     <span
                         v-if="refundDetail.actualRefund"
                         :class="[$style.itemRight, $style.price]"
                         v-text="`￥${refundDetail.actualRefund}`"
                     />
                 </div>
-                <div
-                    v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT_WAIT_RETURN'"
-                    :class="$style.tips"
-                >
+                <div v-if="refundStatus==='WAIT_CHECK' || refundStatus==='REFUND_PRODUCT_WAIT_RETURN'" :class="$style.tips">
                     <span>运费不可退，</span>
                     <span v-if="refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.couponAmount">优惠{{ refundDetail.mallOrderProductRModel.couponAmount }}元不可退，</span>
                     <span v-if="refundDetail.mallOrderProductRModel && refundDetail.mallOrderProductRModel.scholarShipAmount">红包(奖学金){{ refundDetail.mallOrderProductRModel.scholarShipAmount }}元不可退，</span>
                     如有疑问，请联系商家协商
                 </div>
-                <div
-                    v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
-                    :class="$style.tips"
-                >
+                <div v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)" :class="$style.tips">
                     <div>退款返还您的实际付款金额，优惠劵、红包(奖学金)将不予退回</div>
                     <div>退款到帐时间，请查看您的付款账户</div>
                 </div>
             </div>
             <div :class="$style.bottom">
                 <collapse v-model="collepseActiveNames">
-                    <collapse-item
-                        name="1"
-                        title="退款进度"
-                    >
+                    <collapse-item name="1" title="退款进度">
                         <pl-timeline>
                             <pl-timeline-item
                                 v-for="(item, i) of refundProgress"
                                 :key="i"
                                 :timestamp="item.createTime"
                             >
-                                <div
-                                    :class="$style.refundProgressContent"
-                                    v-text="item.operatingLog"
-                                />
+                                <div :class="$style.refundProgressContent" v-text="item.operatingLog" />
                             </pl-timeline-item>
                         </pl-timeline>
                     </collapse-item>
@@ -150,11 +104,9 @@
             </div>
         </section>
 
+        <!--订单详情 + 退款描述 + 上传凭证图片-->
         <div :class="[$style.panel, $style.refundInfoPanel]">
-            <module-title
-                title="退款信息"
-                size="mini"
-            />
+            <module-title title="退款信息" size="mini" />
             <div :class="$style.productInfo">
                 <order-item
                     :img="refundDetail.productPic + '?x-oss-process=style/thum'"
@@ -167,18 +119,9 @@
                 />
             </div>
             <div :class="$style.infoList">
-                <pl-list
-                    title="退单编号："
-                    :content="refundDetail.id"
-                />
-                <pl-list
-                    title="订单编号："
-                    :content="refundDetail.orderId"
-                />
-                <pl-list
-                    title="服务类型："
-                    :content="refundTypeMap[refundDetail.refundType]"
-                />
+                <pl-list title="退单编号：" :content="refundDetail.id" />
+                <pl-list title="订单编号：" :content="refundDetail.orderId" />
+                <pl-list title="服务类型：" :content="refundTypeMap[refundDetail.refundType]" />
                 <pl-list
                     v-if="refundDetail.refundType === 1 && refundDetail.orderType === 'PHYSICAL'"
                     title="货物状态："
@@ -189,14 +132,8 @@
                     title="退款原因："
                     :content="refundDetail.applyReasonText"
                 />
-                <pl-list
-                    title="申请件数："
-                    :content="`${refundDetail.productCount}件`"
-                />
-                <pl-list
-                    title="申请时间："
-                    :content="refundDetail.applyTime"
-                />
+                <pl-list title="申请件数：" :content="`${refundDetail.productCount}件`" />
+                <pl-list title="申请时间：" :content="refundDetail.applyTime" />
             </div>
             <div :class="[$style.infoList, $style.borderTop]" v-if="refundDetail.pictures.length || refundDetail.applyContent">
                 <pl-list
@@ -223,24 +160,14 @@
             </div>
         </div>
 
-        <div
-            v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
-            :class="$style.footerSubmit"
-        >
-            <pl-button
-                size="larger"
-                type="warning"
-                :loading="loading"
-                :disabled="loading"
-                @click="submit"
-            >
+        <!--实体订单 待退货 填写物流信息 后确认按钮-->
+        <div v-if="refundStatus === 'REFUND_PRODUCT_WAIT_RETURN'" :class="$style.footerSubmit">
+            <pl-button size="larger" type="warning" :loading="loading" :disabled="loading" @click="submit">
                 提交申请
             </pl-button>
         </div>
-        <div
-            v-else
-            :class="$style.footer"
-        >
+
+        <div v-else :class="$style.footer">
             <pl-button
                 v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(refundStatus)"
                 round
@@ -273,30 +200,20 @@
                 取消申请
             </pl-button>
         </div>
-        <pl-popup
-            ref="contact"
-            :show.sync="isPopupShow"
-        >
+
+        <!--联系我们弹框-->
+        <pl-popup ref="contact" :show.sync="isPopupShow">
             <template name="title">
                 <div :class="$style.popupTitle">
-                    <pl-svg
-                        :class="$style.popupTitleIcon"
-                        name="icon-rows"
-                    />
+                    <pl-svg :class="$style.popupTitleIcon" name="icon-rows" />
                     <span>联系我们</span>
                 </div>
             </template>
             <template>
                 <div :class="$style.popupContent">
                     <div :class="$style.popupAddress">
-                        <pl-svg
-                            :class="$style.popupAddressLeftIcon"
-                            name="icon-address-blue"
-                        />
-                        <span
-                            :class="$style.popupAddressText"
-                            v-text="address"
-                        />
+                        <pl-svg :class="$style.popupAddressLeftIcon" name="icon-address-blue" />
+                        <span :class="$style.popupAddressText" v-text="address" />
                         <pl-svg
                             :class="$style.popupAddressRightIcon"
                             name="icon-copy"
@@ -316,6 +233,7 @@
                 </div>
             </template>
         </pl-popup>
+        <!--选择快递公司-->
         <pl-picker
             :show.sync="isPickerShow"
             :slots="pickerColumns"
