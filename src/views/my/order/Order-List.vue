@@ -64,7 +64,7 @@ import {
     cancelOrder,
     deleteOrder
 } from '../../../apis/order-manager'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import moment from 'moment'
 import Countdown from '../../../assets/js/Countdown'
@@ -77,7 +77,7 @@ export default {
         OrderListItem
     },
     computed: {
-        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatuskeyMap'])
+        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatuskeyMap', 'orderOperatedList', 'orderActionMap'])
     },
     data () {
         return {
@@ -126,9 +126,8 @@ export default {
         this.status = this.$route.params.status === 'ALL_ORDERS' ? '' : this.$route.params.status
         // 从 订单详情/物流 来的，需原地刷新页面
         if (this.orderList.length && this.$router.currentRoute.meta.noRefresh) {
-            const arr = JSON.parse(localStorage.getItem('UPDATE_ORDER_LIST') || '[]')
-            if (!arr.length) return
-            this.handleCurrentOrder(arr)
+            if (!this.orderOperatedList.length) return
+            this.handleCurrentOrder(this.orderOperatedList)
             return
         }
         this.form.orderStatus = this.status
@@ -138,6 +137,7 @@ export default {
         this.clearCountdown()
     },
     methods: {
+        ...mapMutations(['clearOrderOperatedList']),
         onTabChange (item) {
             this.$nextTick(() => {
                 this.$router.replace({ name: 'Orders', params: { status: item.id || 'ALL_ORDERS' } })
@@ -154,7 +154,7 @@ export default {
         handleCurrentOrder (arr) {
             const handler = action => {
                 // 上个页面有 支付 操作
-                if (action === 'pay') {
+                if (action === this.orderActionMap.pay) {
                     return (order, index) => {
                         if (!this.status) {
                             order.orderStatus = order.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
@@ -165,7 +165,7 @@ export default {
                     }
                 }
                 // 上个页面有 确认收货 操作
-                if (action === 'receive') {
+                if (action === this.orderActionMap.receive) {
                     return (order, index) => {
                         if (!this.status) {
                             order.orderStatus = this.orderStatuskeyMap.FINISHED
@@ -176,7 +176,7 @@ export default {
                     }
                 }
                 // 上个页面有 取消订单 操作
-                if (action === 'cancel') {
+                if (action === this.orderActionMap.cancel) {
                     return (order, index) => {
                         if (!this.status) {
                             order.orderStatus = this.orderStatuskeyMap.CLOSED
@@ -189,13 +189,13 @@ export default {
                     }
                 }
                 // 上个页面有 删除订单 操作
-                if (action === 'delete') {
+                if (action === this.orderActionMap.delete) {
                     return (order, index) => {
                         this.orderList.splice(index, 1)
                     }
                 }
                 // 上个页面有 评论订单 操作
-                if (action === 'comment') {
+                if (action === this.orderActionMap.comment) {
                     return (order, index) => {
                         // 当前订单的评论状态变为已评论
                         order.commentStatus = 1
@@ -206,11 +206,11 @@ export default {
                 }
             }
             for (const item of arr) {
-                const index = this.orderList.findIndex(order => order.id === item.id)
+                const index = this.orderList.findIndex(order => order.orderId === item.id)
                 if (index === -1) continue
-                handler(item.action)(this.orderList[index], index, item.pid)
+                handler(item.action)(this.orderList[index], index)
             }
-            localStorage.removeItem('UPDATE_ORDER_LIST')
+            this.$store.commit('clearOrderOperatedList')
             this.orderList.length ? this.$forceUpdate() : this.$refresh()
         },
         onRefresh (list, total) {

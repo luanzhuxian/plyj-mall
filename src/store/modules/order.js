@@ -1,4 +1,5 @@
 const refundGoodsInfo = JSON.parse(sessionStorage.getItem('REFUND_GOODS'))
+const orderOperatedList = JSON.parse(sessionStorage.getItem('UPDATE_ORDER_LIST') || '[]')
 export default {
     state: {
         // 短信类型
@@ -42,10 +43,11 @@ export default {
         orderStatusMap: {
             NEW: '待提交',
             WAIT_PAY: '待付款',
-            WAIT_PAY_TAIL_MONEY: '待付尾款',
+            WAIT_PAY_TAIL_MONEY: '待付款',
             WAIT_SHIP: '待发货',
             WAIT_RECEIVE: '待收货',
             FINISHED: '交易成功',
+            // 取消订单/申请售后 后的订单
             CLOSED: '订单关闭',
             // AFTER_SALE  售后状态
             // WAIT_REFUND: '待退款',
@@ -115,7 +117,20 @@ export default {
             PROCESSING_COMPLETED: 'PROCESSING_COMPLETED'
         },
         // 要申请售后的商品信息
-        refundGoodsInfo
+        refundGoodsInfo,
+        orderActionMap: {
+            // 支付订单
+            pay: 'pay',
+            // 确认收货
+            receive: 'receive',
+            // 取消订单
+            cancel: 'cancel',
+            // 删除订单
+            delete: 'delete',
+            // 已评论
+            comment: 'comment'
+        },
+        orderOperatedList
     },
     mutations: {
         // 缓存要申请售后的商品信息
@@ -123,6 +138,18 @@ export default {
             const goodsStr = JSON.stringify(goods)
             state.refundGoodsInfo = JSON.parse(goodsStr)
             sessionStorage.setItem('REFUND_GOODS', goodsStr)
+        },
+        // 在订单列表子页面操作记录，返回子元素列表后原地更新
+        setOrderOperatedList: (state, actionInfo) => {
+            const arr = JSON.parse(localStorage.getItem('UPDATE_ORDER_LIST') || '[]')
+            arr.push(actionInfo)
+            state.orderOperatedList = arr
+            console.log(arr)
+            localStorage.setItem('UPDATE_ORDER_LIST', JSON.stringify(arr))
+        },
+        // 更新订单列表后，清楚配置项
+        clearOrderOperatedList: state => {
+            localStorage.removeItem('UPDATE_ORDER_LIST')
         }
     },
     getters: {
@@ -136,6 +163,8 @@ export default {
         refundStatusMap: state => state.refundStatusMap,
         refundTypeMap: state => state.refundTypeMap,
         aftersaleStatusKeyMap: state => state.aftersaleStatusKeyMap,
-        refundGoodsInfo: state => state.refundGoodsInfo
+        refundGoodsInfo: state => state.refundGoodsInfo,
+        orderActionMap: state => state.orderActionMap,
+        orderOperatedList: state => state.orderOperatedList
     }
 }

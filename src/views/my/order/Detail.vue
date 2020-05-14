@@ -82,9 +82,9 @@
                     :activity-id="activityDataId"
                 />
                 <div :class="$style.buttons">
-                    <!--实际支付大于0 + 支持售后 支持 申请退款-->
+                    <!--实际支付大于0 + 支持售后 + 订单状态为待发货/待收货 支持 申请退款-->
                     <pl-button
-                        v-if="detail.amount && detail.supportAfterSales"
+                        v-if="detail.amount && detail.supportAfterSales && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE].includes(detail.status)"
                         plain
                         round
                         @click="applyRefund"
@@ -111,10 +111,10 @@
                     >
                         退款完成
                     </pl-button>
-                    <!--待收货 支持 寄件运单号显示-->
+                    <!--退货中 支持 寄件运单号显示-->
                     <pl-button
                         :class="$style.large"
-                        v-if="detail.orderType === orderStatuskeyMap.WAIT_RECEIVE"
+                        v-if="detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSINGE"
                         type="warning"
                         plain
                         round
@@ -359,16 +359,16 @@
         >
             <!-- 待付款/待付尾款 支持 取消订单-->
             <pl-button
-                v-if="detail.status === orderStatuskeyMap.WAIT_PAY || detail.status === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
+                v-if="[orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(detail.status)"
                 round
                 plain
                 @click="isPickerShow = true"
             >
                 取消订单
             </pl-button>
-            <!--售后非处理中 支持 删除订单-->
+            <!--订单完成/关闭 支持 删除订单-->
             <pl-button
-                v-if="detail.aftersaleStatus !== aftersaleStatusKeyMap.PROCESSING"
+                v-if="[orderStatuskeyMap.FINISHED, orderStatuskeyMap.CLOSED].includes(detail.status)"
                 plain
                 round
                 @click="deleteOrder"
@@ -391,9 +391,9 @@
             >
                 查看物流
             </pl-button>
-            <!-- 支持申请发票 + 无发票id 支持 申请发票-->
+            <!-- 支持 订单创建后未取消 + 可申请发票 + 未申请过发票 支持 申请发票-->
             <pl-button
-                v-if="detail.supportInvoice && !detail.invoiceId"
+                v-if="[orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && detail.supportInvoice && !detail.invoiceId"
                 round
                 plain
                 @click="applyInvoice"
@@ -402,7 +402,7 @@
             </pl-button>
             <!--实体订单 + 待收货 支持 确认收货-->
             <pl-button
-                v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && detail.status === orderStatuskeyMap.WAIT_RECEIVE"
+                v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && (detail.status === orderStatuskeyMap.WAIT_RECEIVE)"
                 round
                 type="warning"
                 @click="confirmReceipt"
@@ -421,14 +421,14 @@
             </pl-button>
             <!--知识课程 + 订单完成 支持 去学习-->
             <pl-button
-                v-if="detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE && detail.status === orderStatuskeyMap.FINISHED"
+                v-if="detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE && (detail.status === orderStatuskeyMap.FINISHED)"
                 type="warning"
                 round
                 @click="$router.push({ name: 'Courses', params: { courseType: '1' } })"
             >
                 去学习
             </pl-button>
-            <!--知识课程 + 订单完成 支持 去学习-->
+            <!--去付尾款-->
             <pl-button
                 v-if="detail.status === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
                 type="warning"
@@ -470,7 +470,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import moment from 'moment'
 import TopText from '../../../components/common/Top-Text.vue'
 import Contact from '../../../components/common/Contact.vue'
@@ -496,12 +496,6 @@ import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import { generateQrcode } from '../../../assets/js/util'
 import Countdown from '../../../assets/js/Countdown'
 import filter from '../../../filter/index'
-
-const updateLocalStorage = (key, value) => {
-    const arr = JSON.parse(localStorage.getItem(key) || '[]')
-    arr.push(value)
-    localStorage.setItem(key, JSON.stringify(arr))
-}
 
 const suggestionMap = {
     WAIT_PAY: '',
@@ -593,7 +587,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['address', 'servicePhoneModels', 'skuSourceKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'aftersaleStatusKeyMap']),
+        ...mapGetters(['address', 'servicePhoneModels', 'skuSourceKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'aftersaleStatusKeyMap', 'orderActionMap']),
         // 订单是否因取消而关闭
         isClosedByCancle () {
             return this.detail.status === this.orderStatuskeyMap.CLOSED && !(this.orderLastPayInfo.callbackTime)
@@ -648,6 +642,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations([`submitOrder/setInvoiceProducts`, 'setOrderOperatedList']),
         async getDetail () {
             try {
                 const { result } = await getOrderDetail(this.orderId)
@@ -810,6 +805,9 @@ export default {
             this.poster = url
             this.isPosterShow = true
         },
+        setOrderOperatedList (action) {
+            this.$store.commit('setOrderOperatedList', { id: this.orderId, action })
+        },
         callUs () {
             this.showContact = true
             this.isPopupShow = false
@@ -851,7 +849,7 @@ export default {
 
                 // 调用微信支付api
                 await wechatPay(result)
-                updateLocalStorage('UPDATE_ORDER_LIST', { id: this.orderId, action: 'pay' })
+                this.setOrderOperatedList(this.orderActionMap.pay)
                 this.$router.push({ name: 'PaySuccess', params: { orderId: this.orderId }, query: { orderType: this.detail.orderType } })
             } catch (e) {
                 throw e
@@ -866,7 +864,7 @@ export default {
                 await this.$confirm('您确定收货吗？')
                 await confirmReceipt(orderId)
                 this.$success('确认收货成功')
-                updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'receive' })
+                this.setOrderOperatedList(this.orderActionMap.receive)
                 setTimeout(() => {
                     this.$router.push({ name: 'OrderComplete', params: { orderId } })
                 }, 2000)
@@ -883,19 +881,18 @@ export default {
                 await cancelOrder(this.orderId, reason)
                 this.$success('交易关闭')
                 this.getDetail()
-                updateLocalStorage('UPDATE_ORDER_LIST', { id: this.orderId, action: 'cancel' })
+                this.setOrderOperatedList(this.orderActionMap.cancel)
             } catch (e) {
                 throw e
             }
         },
         // 删除订单
         async deleteOrder () {
-            const { orderId } = this
             try {
                 await this.$confirm('是否删除当前订单？ 删除后不可找回')
-                await deleteOrder(orderId)
+                await deleteOrder(this.orderId)
                 this.$success('删除成功')
-                updateLocalStorage('UPDATE_ORDER_LIST', { id: orderId, action: 'delete' })
+                this.setOrderOperatedList(this.orderActionMap.delete)
                 setTimeout(() => {
                     this.$router.go(-1)
                 }, 2000)

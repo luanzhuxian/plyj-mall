@@ -59,13 +59,7 @@ import TopText from '../../../components/common/Top-Text.vue'
 import Grade from '../../../components/common/Grade.vue'
 import { submitComment } from '../../../apis/comment'
 import { resetForm } from '../../../assets/js/util'
-import { mapGetters } from 'vuex'
-
-const updateLocalStorage = (key, value) => {
-    const arr = JSON.parse(localStorage.getItem(key) || '[]')
-    arr.push(value)
-    localStorage.setItem(key, JSON.stringify(arr))
-}
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
     name: 'Comment',
@@ -102,7 +96,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['openId'])
+        ...mapGetters(['openId', 'orderActionMap'])
     },
     watch: {
         images (val) {
@@ -131,6 +125,7 @@ export default {
         this.images = []
     },
     methods: {
+        ...mapMutations(['setOrderOperatedList']),
         alert () {
             this.$toast(`最多输入${ this.maxLength }个字`)
         },
@@ -147,7 +142,7 @@ export default {
                 await submitComment(this.openId, params)
                 this.loading = false
                 this.$success('评价成功')
-                updateLocalStorage('UPDATE_ORDER_LIST', { id: this.orderId, pid: this.productId, action: 'comment' })
+                this.$store.commit('setOrderOperatedList', { id: this.orderId, action: this.orderActionMap.comment })
                 setTimeout(() => {
                     this.$router.go(-1)
                 }, 2000)

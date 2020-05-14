@@ -10,7 +10,7 @@ import { axios } from '../assets/js/axios'
 // }
 
 // 用户确认收货
-export const confirmReceipt = orderId => axios.put(`/apis/v1/order/receiving/${ orderId }`)
+// export const confirmReceipt = orderId => axios.put(`/apis/v1/order/receiving/${ orderId }`)
 
 // 订单支付成功回调-实体
 export const physicalorderPaymentSuccess = orderSn => axios.put(`/apis/v1/order/physicalorder/payment/success/${ orderSn }`)
@@ -21,7 +21,7 @@ export const physicalorderPaymentSuccessVirtual = orderSn => axios.put(`/apis/v1
 // 用户申请退货退款
 export const returnRequest = ({ orderId, operationType, type, refundModel, expressInfoModel }) => axios.put(`/apis/v1/order/physicalorder/refundment/${ orderId }?operationType=${ operationType }&serviceType=${ type }`, { refundModel, expressInfoModel })
 // 用户删除订单
-export const deleteOrder = orderId => axios.delete(`/apis/v1/order/current/user/order/${ orderId }`)
+// export const deleteOrder = orderId => axios.delete(`/apis/v1/order/current/user/order/${ orderId }`)
 
 // PUT 用户发货
 export const physicalorderShipmentPublic = orderSn => axios.put(`/apis/v1/order/physicalorder/shipment/public/${ orderSn }`)
@@ -188,3 +188,17 @@ export const getAwaitTailPayInfo = orderId => axios.post('/apis/v2/order/pay/tai
  * @return {*}
  */
 export const getMaxRefund = (orderId, type) => axios.post('/apis/v2/order/refunds/max/amount', { orderId, type })
+
+/**
+ * 确认收货
+ * @param {string} orderId - 订单id
+ * @return {*}
+ */
+export const confirmReceipt = orderId => axios.get(`/apis/v2/order/confirm/receipt?orderId=${ orderId }`)
+
+/**
+ * 删除订单
+ * @param {string} orderId - 订单id
+ * @return {*}
+ */
+export const deleteOrder = orderId => axios.get(`/apis/v2/order/delete?orderId=${ orderId }`)

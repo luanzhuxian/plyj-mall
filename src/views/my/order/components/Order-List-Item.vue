@@ -33,10 +33,7 @@
                 <span :class="$style.bold">总价：</span>
                 <span :class="$style.price">{{ amount }}</span>
             </div>
-            <div
-                :class="$style.buttons"
-                v-if="orderStatus !== orderStatuskeyMap.WAIT_SHIP"
-            >
+            <div :class="$style.buttons">
                 <!--正常待付款 支持 付款(目前只区别于预购的待付尾款)-->
                 <pl-button
                     v-if="orderStatus === orderStatuskeyMap.WAIT_PAY"
@@ -48,6 +45,7 @@
                 >
                     去付款
                 </pl-button>
+                <!--预购 待付尾款-->
                 <pl-button
                     v-if="orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
                     type="warning"
@@ -60,25 +58,25 @@
                 </pl-button>
                 <!-- 待付款/待付尾款 支持 取消订单-->
                 <pl-button
-                    v-if="orderStatus === orderStatuskeyMap.WAIT_PAY || orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY"
+                    v-if="[orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(orderStatus)"
                     round
                     plain
                     @click="doOperation('cancelOrder')"
                 >
                     取消订单
                 </pl-button>
-                <!--售后非处理中 支持删除订单-->
+                <!--订单完成/关闭 支持删除订单-->
                 <pl-button
-                    v-if="aftersaleStatus !== aftersaleStatusKeyMap.PROCESSING"
+                    v-if="[orderStatuskeyMap.FINISHED, orderStatuskeyMap.CLOSED].includes(orderStatus)"
                     round
                     plain
                     @click="doOperation('deleteOrder')"
                 >
                     删除订单
                 </pl-button>
-                <!--实体 + 待收货/订单完成 支持查看物流-->
+                <!--TODO.当前不支持查看物流 实体 + 待收货/订单完成 支持查看物流-->
                 <pl-button
-                    v-if="orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(orderStatus)"
+                    v-if="false && orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(orderStatus)"
                     round
                     plain
                     @click="$router.push({ name: 'Freight', params: { orderId: orderId }, query: { img: goodsImages } })"
@@ -112,9 +110,9 @@
                 >
                     去使用
                 </pl-button>
-                <!--订单完成 + 未评论 + 无售后 支持 去评价-->
+                <!--订单完成 + 未评论 支持 去评价-->
                 <pl-button
-                    v-if="orderStatus === orderStatuskeyMap.FINISHED && commentStatus === 0 && aftersaleStatus !== aftersaleStatusKeyMap.NO_AFTER_SALES"
+                    v-if="orderStatus === orderStatuskeyMap.FINISHED && commentStatus === 0"
                     round
                     plain
                     @click="$router.push({ name: 'OrderDetail', params: { orderId: orderId } })"
