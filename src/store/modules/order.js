@@ -96,8 +96,7 @@ export default {
         },
         refundTypeMap: {
             1: '退款退货',
-            2: '仅退款',
-            3: '仅退货'
+            2: '仅退款'
         },
         // 申请售后后的状态
         aftersaleStatusKeyMap: {
@@ -140,7 +139,6 @@ export default {
             const arr = JSON.parse(localStorage.getItem('UPDATE_ORDER_LIST') || '[]')
             arr.push(actionInfo)
             state.orderOperatedList = arr
-            console.log(arr)
             localStorage.setItem('UPDATE_ORDER_LIST', JSON.stringify(arr))
         },
         // 更新订单列表后，清楚配置项
