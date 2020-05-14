@@ -209,7 +209,6 @@ export default {
     methods: {
         handleInput (e) {
             const val = e.target.value
-            console.log(val)
             this.$emit('input', val)
             this.trigger(e)
         },
@@ -284,7 +283,6 @@ export default {
       flex: 1;
       display: inline-flex;
       align-items: center;
-      margin-left: 10px;
       input {
         display: block;
         width: 100%;

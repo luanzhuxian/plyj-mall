@@ -401,7 +401,10 @@ export default {
                 invoiceTitle: data.invoiceTitle,
                 invoiceType: data.invoiceType,
                 taxpayerNumber: data.tin,
-                skus: data.orderDetails
+                skus: data.orderDetails,
+                companyPhone: data.receiverMobile,
+                mailingMethod: data.mailingMethod,
+                companyAddr: data.userAddress
             } : null
         },
 
@@ -533,7 +536,7 @@ export default {
             to.name !== 'Address' &&
             to.name !== 'AddAddress' &&
             to.name !== 'StudentList') {
-            // this.$store.commit('submitOrder/removeOrderProducts')
+            this.$store.commit('submitOrder/removeOrderProducts')
         }
         next()
     }

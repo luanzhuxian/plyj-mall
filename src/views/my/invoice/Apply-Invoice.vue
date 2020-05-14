@@ -100,7 +100,7 @@
                 >
                     <pl-radio
                         :key="i"
-                        :label="item.id"
+                        :label="item"
                         v-model="currentInvoice"
                     >
                         <InvoiceItem :data="item" />
@@ -118,6 +118,27 @@
                 />
                 <span>添加信息</span>
             </button>
+        </div>
+
+        <div :class="$style.receiveInfo">
+            <div :class="$style.title">收票信息：</div>
+            <pl-form>
+                <pl-form-item label="收票方式">
+                    <pl-radio v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="0">自提</pl-radio>
+                    <pl-radio v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="1">邮寄</pl-radio>
+                </pl-form-item>
+                <template v-if="receiveInfo.mailingMethod === 1">
+                    <pl-form-item label="联系电话">
+                        <pl-input v-model="receiveInfo.mobile" placeholder="联系电话" />
+                    </pl-form-item>
+                    <pl-form-item label="选择区域">
+                        <pl-input v-model="receiveInfo.city" readonly placeholder="选择区域" @click="showCitySelector = true" />
+                    </pl-form-item>
+                    <pl-form-item label="详细地址">
+                        <pl-input v-model="receiveInfo.address" placeholder="详细地址" />
+                    </pl-form-item>
+                </template>
+            </pl-form>
         </div>
 
         <div :class="$style.selectProducts">
@@ -190,10 +211,17 @@
                 <p> 您可向贵单位的财务部门索取；另外也可以根据单位名称在国家企业信用信息公示系统 <a href="https://www.gsxt.gov.cnlindex.html">（https://www.gsxt.gov.cnlindex.html）</a>查询统一社会信用代码。</p>
             </div>
         </pl-popup>
+
+        <CitySelector
+            :show.sync="showCitySelector"
+            @select="selectCity"
+            ref="citySelector"
+        />
     </div>
 </template>
 
 <script>
+/* eslint-disable */
 import { mapGetters } from 'vuex'
 import {
     addInvoice,
@@ -201,15 +229,18 @@ import {
     applyInvoice
 } from '../../../apis/invoice'
 import InvoiceItem from '../../../components/item/Invoice-Item'
+import CitySelector from '../../../components/common/City-Selector.vue'
 export default {
     name: 'ApplyInvoice',
     components: {
-        InvoiceItem
+        InvoiceItem,
+        CitySelector
     },
     data () {
         return {
             showInvioceIntro: false,
             showInvioceNum: false,
+            showCitySelector: false,
             // 待开票商品
             applyInvoice: [],
             checkedList: [],
@@ -217,10 +248,16 @@ export default {
             invoiceList: [],
             type: 1,
             // 当前选中的发票信息
-            currentInvoice: '',
+            currentInvoice: null,
             form: {
                 tin: '',
                 firmName: ''
+            },
+            receiveInfo: {
+                mobile: '',
+                city: '',
+                address: '',
+                mailingMethod: 0
             },
             rules: {
                 firmName: [{ required: true, message: '请输入单位名称', trigger: 'blur' }],
@@ -259,6 +296,9 @@ export default {
         }
         this.checkedList = [...APPLY_INVOICE]
         this.applyInvoice = APPLY_INVOICE
+        this.receiveInfo.mobile = this.mobile || this.receiveMobile
+        this.receiveInfo.city = this.selectedAddress.addressPrefix
+        this.receiveInfo.address = this.selectedAddress.agencyAddress
         try {
             this.getInvoiceList()
         } catch (e) {
@@ -276,17 +316,10 @@ export default {
             try {
                 const { result } = await getInvoiceList(this.userId)
                 this.invoiceList = result
-                if (result[0]) {
-                    this.currentInvoice = this.$route.query.id || this.currentInvoice || result[0].id
-                } else {
-                    this.currentInvoice = this.$route.query.id || this.currentInvoice
-                }
+                this.currentInvoice = result[0]
             } catch (e) {
                 throw e
             }
-        },
-        getCurrentInvoice () {
-            return this.invoiceList.find(item => item.id === this.currentInvoice)
         },
         selectChange (e, prod) {
             const { checked } = e.target
@@ -309,30 +342,41 @@ export default {
                 this.$warning('请选择要开票的商品')
                 return
             }
+            const receiveInfo = this.receiveInfo
+            // const invoiceModel = {
+            //     invoiceType: this.type,
+            //     invoiceTitle: this.realName || this.receiveName,
+            //     receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : (this.mobile || this.receiveMobile),
+            //     userAddress: `${ receiveInfo.city }${ receiveInfo.address }`,
+            //     mailingMethod: receiveInfo.mailingMethod
+            // }
             let invoiceModel = null
             let invoiceAmount = 0
             const orderDetails = []
             if (this.type === 1) {
                 invoiceModel = {
                     invoiceType: 1,
+                    mailingMethod: receiveInfo.mailingMethod,
                     invoiceTitle: this.realName || this.receiveName,
-                    receiverMobile: this.mobile || this.receiveMobile,
-                    userAddressId: this.selectedAddress.sequenceNbr
+                    receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : (this.mobile || this.receiveMobile),
+                    userAddress: receiveInfo.mailingMethod === 1 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
                 }
             } else {
-                const currentInvoice = this.getCurrentInvoice()
-                if (currentInvoice) {
-                    this.form.tin = currentInvoice.tin
-                    this.form.firmName = currentInvoice.entName
+                if (this.currentInvoice) {
+                    this.form.tin = this.currentInvoice.tin
+                    this.form.firmName = this.currentInvoice.entName
                 }
                 if (!this.$refs.form.validate()) return
                 invoiceModel = {
                     invoiceType: 2,
                     tin: this.form.tin,
                     invoiceTitle: this.form.firmName,
-                    userAddressId: this.selectedAddress.sequenceNbr
+                    receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : (this.mobile || this.receiveMobile),
+                    mailingMethod: receiveInfo.mailingMethod,
+                    userAddress: receiveInfo.mailingMethod === 1 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
                 }
-                if (!currentInvoice || !currentInvoice.id) {
+                // 一个发票都没有，把填的发票保存起来
+                if (!this.currentInvoice || !this.currentInvoice.id) {
                     addInvoice({
                         userId: this.userId,
                         entName: this.form.firmName,
@@ -359,10 +403,13 @@ export default {
                 try {
                     this.loading = true
                     await applyInvoice({
-                        orderIds: [this.orderId],
                         invoiceTitle: this.type === 1 ? this.receiveName : this.form.firmName,
                         invoiceType: this.type,
-                        taxpayerNumber: this.type === 2 ? this.form.tin : ''
+                        taxpayerNumber: this.type === 2 ? this.form.tin : '',
+                        orderIds: [this.orderId],
+                        companyPhone: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : (this.mobile || this.receiveMobile),
+                        mailingMethod: receiveInfo.mailingMethod,
+                        companyAddr: receiveInfo.mailingMethod === 1 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
                     })
                 } catch (e) {
                     throw e
@@ -383,6 +430,10 @@ export default {
             } else {
                 this.$router.go(-1)
             }
+        },
+        // 选择城市
+        selectCity (data) {
+            this.receiveInfo.city = data.map(item => item.name).join('')
         }
     },
     beforeRouteLeave (to, from, next) {
@@ -561,5 +612,20 @@ export default {
     width: 36px;
     height: 36px;
   }
+    .receiveInfo {
+        margin-top: 30px;
+        background-color: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        > .title {
+            padding: 0 26px;
+            font-size: 28px;
+            line-height: 80px;
+            border-bottom: 1px solid #e7e7e7;
+        }
+        > form {
+            padding: 0 25px;
+        }
+    }
 
 </style>

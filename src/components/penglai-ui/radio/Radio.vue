@@ -2,7 +2,11 @@
     <div
         role="radio"
         class="pl-radio"
-        :class="{ 'pl-radio__inline': inline }"
+        :class="{
+            'pl-radio__inline': inline,
+            [`pl-radio__${size}`]: true
+        }"
+        :style="{ '--align': align }"
         @click="onClick"
     >
         <div v-if="position === 'left'" class="pl-radio-icon pl-radio-icon__left">
@@ -38,6 +42,11 @@ export default {
             type: String,
             default: 'right'
         },
+        // 按钮与内容的对齐反射方式
+        align: {
+            type: String,
+            default: 'space-between'
+        },
         inline: Boolean,
         // 要绑定的值
         label: {
@@ -45,6 +54,10 @@ export default {
             default () {
                 return null
             }
+        },
+        size: {
+            type: String,
+            default: 'small'
         },
         // 绑定的值
         value: {
@@ -92,14 +105,27 @@ export default {
     .pl-radio {
         display: flex;
         flex: 1;
-        justify-content: space-between;
+        justify-content: var(--align);
         align-items: center;
-        padding: 0 20px;
         &__inline {
+            flex: none;
             display: inline-flex;
         }
+        &:nth-of-type(n+2) {
+            margin-left: 20px;
+        }
         > .pl-radio-content {
-            width: 100%;
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        &__mini {
+            min-height: 88px;
+        }
+        &__small {
+            min-height: 92px;
+        }
+        &__middle {
+            min-height: 108px;
         }
     }
 </style>
