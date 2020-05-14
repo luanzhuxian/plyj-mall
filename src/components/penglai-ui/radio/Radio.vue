@@ -102,30 +102,40 @@ export default {
 </script>
 
 <style lang="scss">
+    @import "../assets/scss/config";
     .pl-radio {
         display: flex;
         flex: 1;
         justify-content: var(--align);
         align-items: center;
+        > .pl-radio-content {
+            margin-right: 10px;
+            width: 100%;
+        }
         &__inline {
             flex: none;
             display: inline-flex;
-        }
-        &:nth-of-type(n+2) {
-            margin-left: 20px;
-        }
-        > .pl-radio-content {
-            margin-right: 10px;
-            font-size: 28px;
+            &:nth-of-type(n+2) {
+                margin-left: 20px;
+            }
+            > .pl-radio-content {
+                width: max-content;
+            }
         }
         &__mini {
-            min-height: 88px;
+            min-height: $--form-min-height;
         }
         &__small {
-            min-height: 92px;
+            min-height: $--form-small-height;
+            > .pl-radio-content {
+                font-size: $--form-small-font-size;
+            }
         }
         &__middle {
-            min-height: 108px;
+            min-height: $--form-middle-height;
+            > .pl-radio-content {
+                font-size: $--form-middle-font-size;
+            }
         }
     }
 </style>

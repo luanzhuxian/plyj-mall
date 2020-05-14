@@ -252,118 +252,142 @@ export default {
 }
 </script>
 <style lang="scss">
-  .pl-input {
-    position: relative;
-    display: inline-flex;
-    flex: 1;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    background-color: transparent;
-    box-sizing: border-box;
-    &.border {
-      padding: 0 24px;
-      height: 100%;
-      border: 1px solid #e7e7e7;
-      border-radius: 16px;
-    }
-    &.pl-input-mini {
-      min-height: 88px;
-    }
-    &.pl-input-small {
-      min-height: 92px;
-      font-size: 28px;
-    }
-    &.pl-input-middle {
-      min-height: 108px;
-      font-size: 32px;
-    }
-    .pl-input_box {
-      position: relative;
-      flex: 1;
-      display: inline-flex;
-      align-items: center;
-      input {
-        display: block;
+    @import "./assets/scss/config";
+
+    .pl-input {
+        position: relative;
+        display: inline-flex;
+        flex: 1;
         width: 100%;
-        color: #333;
+        height: 100%;
+        align-items: center;
+        background-color: transparent;
         box-sizing: border-box;
-        background-color: transparent !important;
-        &::-webkit-input-placeholder {
-          font-size: 28px;
-          color: #ccc;
+
+        &.border {
+            padding: 0 24px;
+            height: 100%;
+            border: 1px solid #e7e7e7;
+            border-radius: 16px;
         }
-        &:disabled {
-          background-color: #fff !important;
-          color: #999 !important;
-          opacity: 1 !important;
+
+        &.pl-input-mini {
+            min-height: $--form-min-height;
+            font-size: $--form-min-font-size;
         }
-        &:read-only {
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
+
+        &.pl-input-small {
+            min-height: $--form-small-height;
+            font-size: $--form-small-font-size;
         }
-        &.small {
+
+        &.pl-input-middle {
+            min-height: $--form-middle-height;
+            font-size: $--form-middle-font-size;
         }
-      }
-      .pl-input_clear {
-        width: 40px;
-        height: 40px;
-        padding-right: 20px;
+
+        .pl-input_box {
+            position: relative;
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+
+            input {
+                display: block;
+                width: 100%;
+                color: #333;
+                box-sizing: border-box;
+                background-color: transparent !important;
+
+                &::-webkit-input-placeholder {
+                    font-size: 28px;
+                    color: #ccc;
+                }
+
+                &:disabled {
+                    background-color: #fff !important;
+                    color: #999 !important;
+                    opacity: 1 !important;
+                }
+
+                &:read-only {
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                }
+
+                &.small {
+                }
+            }
+
+            .pl-input_clear {
+                width: 40px;
+                height: 40px;
+                padding-right: 20px;
+                margin-left: 10px;
+            }
+        }
+
+        .pl-input_prefixicon, .pl-input_suffixicon {
+            margin-right: 10px;
+
+            svg {
+                width: 36px;
+                height: 36px;
+                vertical-align: -8px;
+                fill: #ccc;
+
+                &.focus {
+                    fill: #333;
+
+                    path {
+                        fill: #333;
+                    }
+                }
+            }
+        }
+
+        .pl-input_suffixicon {
+            margin-left: 10px;
+            margin-right: 0;
+        }
+    }
+
+    .pl-textarea_box {
+        position: relative;
+        width: 100%;
+        padding: 24px;
         margin-left: 10px;
-      }
-    }
-    .pl-input_prefixicon, .pl-input_suffixicon {
-      margin-right: 10px;
-      svg {
-        width: 36px;
-        height: 36px;
-        vertical-align: -8px;
-        fill: #ccc;
-        &.focus {
-          fill: #333;
-          path {
-            fill: #333;
-          }
+
+        .pl-input-textarea {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 100px;
+            line-height: 40px;
+            font-size: 26px;
+            border: none;
+            outline: none;
+            resize: none;
+            background: transparent;
         }
-      }
-    }
-    .pl-input_suffixicon {
-      margin-left: 10px;
-      margin-right: 0;
-    }
-  }
-  .pl-textarea_box {
-    position: relative;
-    width: 100%;
-    padding: 24px;
-    margin-left: 10px;
-    .pl-input-textarea {
-      box-sizing: border-box;
-      width: 100%;
-      min-height: 100px;
-      line-height: 40px;
-      font-size: 26px;
-      border: none;
-      outline: none;
-      resize: none;
-      background: transparent;
-    }
-    .pl-input__word-count {
-      position: absolute;
-      bottom: 0;
-      font-size: 20px;
-      right: 28px;
-      line-height: 32px;
-      > i {
-        &:nth-of-type(1) {
-          color: #666;
+
+        .pl-input__word-count {
+            position: absolute;
+            bottom: 0;
+            font-size: 20px;
+            right: 28px;
+            line-height: 32px;
+
+            > i {
+                &:nth-of-type(1) {
+                    color: #666;
+                }
+
+                &:nth-of-type(2) {
+                    color: #999;
+                }
+            }
         }
-        &:nth-of-type(2) {
-          color: #999;
-        }
-      }
     }
-  }
 </style>
