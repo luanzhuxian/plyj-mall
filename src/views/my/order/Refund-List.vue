@@ -56,6 +56,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+import filter from '../../../filter/index'
 import LoadMore from '../../../components/common/Load-More.vue'
 import RefundListItem from './components/Refund-List-Item'
 import {
@@ -119,6 +120,10 @@ export default {
             })
         },
         onRefresh (list, total) {
+            for (const item of list) {
+                item.unitPrice = filter.formatAmount(item.unitPrice)
+                item.refundAmount = filter.formatAmount(item.refundAmount)
+            }
             this.orderList = list
         },
         handleCurrentOrder (arr) {
@@ -158,7 +163,7 @@ export default {
             try {
                 const detail = this.orderList[index]
                 await this.$confirm('退单正在审核中，确定要取消？')
-                await cancelRefundApplication({ id: detail.id })
+                await cancelRefundApplication(detail.id)
                 this.$success('取消申请成功')
                 this.orderList.splice(index, 1)
             } catch (e) {
@@ -169,7 +174,7 @@ export default {
             try {
                 const detail = this.orderList[index]
                 await this.$confirm('是否删除当前订单？ 删除后不可找回')
-                await deleteRefundOrder({ id: detail.id })
+                await deleteRefundOrder(detail.id)
                 this.orderList.splice(index, 1)
                 this.$forceUpdate()
                 this.$success('删除成功')

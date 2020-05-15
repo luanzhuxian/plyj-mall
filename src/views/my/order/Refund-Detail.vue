@@ -62,27 +62,23 @@
                 <div :class="$style.item">
                     <span :class="[$style.itemLeft, $style.bold]"> 应退金额：</span>
                     <span :class="$style.itemRight">
-                        <div
-                            v-if="refundDetail.refundsAmount"
-                            :class="$style.price"
-                            v-text="`￥${refundDetail.refundsAmount}`"
-                        />
+                        <div v-if="refundDetail.refundsAmount" :class="$style.price">
+                            ￥{{ refundDetail.refundsAmount | formatAmount }}
+                        </div>
                     </span>
                 </div>
                 <div :class="[$style.item, $style.larger]">
                     <span :class="[$style.itemLeft, $style.bold]"> 实退金额：</span>
-                    <span
-                        v-if="refundDetail.refundsAmount"
-                        :class="[$style.itemRight, $style.price]"
-                        v-text="`￥${refundDetail.refundsAmount}`"
-                    />
+                    <span v-if="refundDetail.refundsAmount" :class="[$style.itemRight, $style.price]">
+                        ￥{{ refundDetail.refundsAmount | formatAmount }}
+                    </span>
                 </div>
                 <!--退款成功6/退款失败7 将不显示 不退还金额 内容-->
                 <div v-if="~[6, 7].indexOf(refundStatus)" :class="$style.tips">
                     <!--实体订单 + 发货后 + 运费不为0  运费不可退-->
-                    {{ refundType === 1 && refundDetail.orderStatus === orderDetails.status && !orderDetails.freight? '运费不可退，' : '' }}
-                    {{ orderDetails.couponAmount ? `优惠${orderDetails.couponAmount}元不可退，` : '' }}
-                    {{ orderDetails.scholarship ? `红包(奖学金)${orderDetails.scholarship}元不可退，` : '' }}
+                    {{ refundType === 1 && refundDetail.orderStatus === orderDetails.status && !orderDetails.freight? `运费${orderDetails.freight | formatAmount}不可退，` : '' }}
+                    {{ orderDetails.couponAmount ? `优惠${orderDetails.couponAmount | formatAmount}元不可退，` : '' }}
+                    {{ orderDetails.scholarship ? `红包(奖学金)${orderDetails.scholarship | formatAmount}元不可退，` : '' }}
                     如有疑问，请联系商家协商
                 </div>
                 <div v-if="[4, 5, 6].indexOf(refundStatus)" :class="$style.tips">
@@ -225,6 +221,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+import filter from '../../../filter/index'
 import { resetForm } from '../../../assets/js/util'
 import { isExpressNumber } from '../../../assets/js/validate'
 import RefundDetailSkeleton from './components/Refund-Detail-Skeleton'
@@ -336,6 +333,7 @@ export default {
                 this.refundType = result.serviceType
                 this.refundDetail = result
                 this.orderDetails = result.orderDetailsModel || {}
+                this.orderDetails.goodsModel.sellingPrice = filter.formatAmount(this.orderDetails.goodsModel.sellingPrice)
                 this.goodsModel = this.orderDetails.goodsModel || {}
                 if (result.refundMobile) {
                     this.refundDetail.refundMobile = replaceMobile(result.refundMobile)
@@ -369,7 +367,7 @@ export default {
             try {
                 const { id } = this
                 await this.$confirm('退单正在审核中，确定要取消？')
-                await cancelRefundApplication({ id })
+                await cancelRefundApplication(id)
                 this.$success('取消申请成功')
                 this.getDetail()
                 this.$store.commit('setRefundOperatedList', { id, action: this.orderActionMap.cancel })

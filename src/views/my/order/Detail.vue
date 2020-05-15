@@ -153,52 +153,42 @@
                 <template v-if="detail.orderSource === skuSourceKeyMap.BOOKING">
                     <p>
                         <span>待付尾款</span>
-                        <span
-                            class="rmb"
-                            v-text="detail.orderAmountTailMoney || 0"
-                        />
+                        <span class="rmb">{{ detail.orderAmountTailMoney | formatAmount }}</span>
                     </p>
                     <p>
                         <span>定金(不退<i v-if="detail.orderIntentionAmountDouble > 1">，翻{{ detail.orderIntentionAmountDouble }}倍</i>)</span>
-                        <span
-                            class="rmb"
-                            v-text="detail.orderIntentionAmount || 0"
-                        />
+                        <span class="rmb">{{ detail.orderIntentionAmount | formatAmount }}</span>
                     </p>
                 </template>
                 <!-- 其他商品价格 -->
                 <p v-else>
                     <span v-text="activeProductStatus[detail.orderSource] || '商品金额'" />
-                    <span
-                        class="rmb"
-                        v-text="detail.amount || 0"
-                    />
+                    <span class="rmb">{{ detail.amount | formatAmount }}</span>
                 </p>
                 <!--优惠券-->
                 <p v-if="detail.couponeAmount">
                     <span>优惠券</span>
-                    <span class="rmb" v-text="'-' + detail.couponeAmount" />
-                    <span v-text="'-¥' + detail.couponeAmount" />
+                    <span>-¥{{ detail.couponeAmount | formatAmount }}</span>
                 </p>
                 <!--奖学金-->
                 <p v-if="detail.scholarship">
                     <span>奖学金（红包）</span>
-                    <span v-text="'-¥' + detail.scholarship" />
+                    <span>-¥{{ detail.scholarship | formatAmount }}</span>
                 </p>
                 <!--春耘减免-->
                 <p v-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING">
                     <span>春耘减免</span>
-                    <span v-text="'-¥' + (detail.combinationSpecialPrice || 0)" />
+                    <span>-¥{{ detail.combinationSpecialPrice | formatAmount }}</span>
                 </p>
                 <!--组合折扣-->
                 <p v-if="detail.orderSource === skuSourceKeyMap.COURSEPACKAGE">
                     <span>组合折扣</span>
-                    <span v-text="'-¥' + (detail.combinationSpecialPrice || 0)" />
+                    <span>-¥{{ detail.combinationSpecialPrice | formatAmount }}</span>
                 </p>
                 <!--运费-->
                 <p v-if="detail.freight">
                     <span>运费</span>
-                    <span class="rmb" v-text="detail.freight" />
+                    <span class="rmb">-¥{{ detail.freight | formatAmount }}</span>
                 </p>
             </div>
 
@@ -208,10 +198,7 @@
                     总价：
                 </span>
                 <!-- 预购商品时，总价 = 定金 + 尾款 -->
-                <span
-                    :class="$style.totalMoney + ' fz-30 rmb'"
-                    v-text="detail.amount || 0"
-                />
+                <span :class="$style.totalMoney + ' fz-30 rmb'">{{ detail.amount | formatAmount }}</span>
             </div>
         </div>
 
@@ -644,6 +631,7 @@ export default {
                 const { result } = await getOrderDetail(this.orderId)
                 const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo, invoiceInfoModel } = result
                 this.detail = result
+                goodsModel.sellingPrice = filter.formatAmount(goodsModel.sellingPrice)
                 // 商品详情
                 this.goodsModel = goodsModel
                 // 支付信息

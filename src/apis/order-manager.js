@@ -75,10 +75,10 @@ export const refundOrderSummary = () => axios.get(`/apis/v1/refund/refund/consum
 export const submitExpressInfo = params => axios.post(`/apis/v1/refund/refund/consumer/shipModify`, params)
 
 // 取消售后申请
-export const cancelRefundApplication = params => axios.post(`/apis/v1/refund/refund/admin/cancel`, params)
+// export const cancelRefundApplication = params => axios.post(`/apis/v1/refund/refund/admin/cancel`, params)
 
 // 删除售后申请
-export const deleteRefundOrder = params => axios.post(`/apis/v1/refund/refund/admin/delete`, params)
+// export const deleteRefundOrder = params => axios.post(`/apis/v1/refund/refund/admin/delete`, params)
 
 // 查看申请helper进度
 export const getHelperApplicationProgress = () => axios.get(`/apis/v1/agent/user/info/audit/status`)
@@ -216,3 +216,17 @@ export const getRefundOrderList = params => axios.get(`/apis/v2/order/refunds/or
  * @return {*}
  */
 export const getRefundOrderDetail = id => axios.get(`/apis/v2/order/refunds/detail?id=${ id }`)
+
+/**
+ * 取消售后
+ * @param {Object} id - 售后单id
+ * @return {*}
+ */
+export const cancelRefundApplication = id => axios.post(`/apis/v2/order/refunds/cancel?id=${ id }`)
+
+/**
+ * 删除售后
+ * @param {Object} id - 售后单id
+ * @return {*}
+ */
+export const deleteRefundOrder = id => axios.post(`/apis/v2/order/refunds/delete?orderId=${ id }`)

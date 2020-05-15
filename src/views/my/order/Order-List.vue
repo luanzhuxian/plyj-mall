@@ -69,6 +69,7 @@ import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import moment from 'moment'
 import Countdown from '../../../assets/js/Countdown'
 import OrderListItem from './components/Order-List-Item'
+import filter from '../../../filter/index'
 
 export default {
     name: 'OrderList',
@@ -216,7 +217,8 @@ export default {
         onRefresh (list, total) {
             this.clearCountdown()
             for (const [i, item] of list.entries()) {
-                item.amount = Number(item.amount.toFixed(2))
+                item.unitPrice = filter.formatAmount(item.unitPrice)
+                item.amount = filter.formatAmount(item.amount)
                 this.setCountDown(item, i)
             }
             this.orderList = list
