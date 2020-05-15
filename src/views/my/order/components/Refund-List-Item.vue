@@ -44,9 +44,9 @@
                 >
                     取消申请
                 </pl-button>
-                <!-- 仅退款成功 支持删除 -->
+                <!-- 退款成功/失败 支持删除 -->
                 <pl-button
-                    v-if="refundStatus === 6"
+                    v-if="[6, 7].indexOf(refundStatus)"
                     round
                     plain
                     @click="doOperation('deleteOrder')"
@@ -147,7 +147,7 @@ export default {
         },
         // 实际退款金额
         refundAmount: {
-            type: Number,
+            type: [Number, String],
             default: 0
         }
     },

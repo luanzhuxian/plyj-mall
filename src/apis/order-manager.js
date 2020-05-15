@@ -66,7 +66,7 @@ export const modifyRefund = params => axios.post(`/apis/v1/refund/refund/custome
 // export const getRefundOrderList = params => axios.post(`/apis/v1/refund/refund/consumer/selectRefund`, params)
 
 // 售后详情查询
-export const getRefundOrderDetail = params => axios.post(`/apis/v1/refund/refund/admin/selectRefundDetail`, params)
+// export const getRefundOrderDetail = params => axios.post(`/apis/v1/refund/refund/admin/selectRefundDetail`, params)
 
 // 售后数量汇总
 export const refundOrderSummary = () => axios.get(`/apis/v1/refund/refund/consumer/selectRefundCountTotal`)
@@ -209,3 +209,10 @@ export const deleteOrder = orderId => axios.get(`/apis/v2/order/delete?orderId=$
  * @return {*}
  */
 export const getRefundOrderList = params => axios.get(`/apis/v2/order/refunds/orderRefund/consumer/page`, params)
+
+/**
+ * 售后详情查询
+ * @param {Object} id - 售后单id
+ * @return {*}
+ */
+export const getRefundOrderDetail = id => axios.get(`/apis/v2/order/refunds/detail?id=${ id }`)
