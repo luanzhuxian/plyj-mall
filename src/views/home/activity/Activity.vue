@@ -204,7 +204,7 @@ export default {
                 margin-top: 4px;
                 font-size: 24px;
                 font-family: PingFang SC;
-                line-height: 34px;
+                line-height: 44px;
                 color: #999;
             }
         }
